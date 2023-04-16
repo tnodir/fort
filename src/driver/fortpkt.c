@@ -282,7 +282,7 @@ inline static void fort_shaper_packet_free_cloned(PNET_BUFFER_LIST clonedNetBufL
     FwpsFreeCloneNetBufferList0(clonedNetBufList, 0);
 }
 
-inline static void fort_shaper_packet_free_base(PFORT_PACKET_IO pkt)
+inline static void fort_shaper_packet_free_io(PFORT_PACKET_IO pkt)
 {
     if ((pkt->flags & FORT_PACKET_INBOUND) == 0) {
         if (pkt->out.controlData != NULL) {
@@ -299,7 +299,7 @@ static void fort_shaper_packet_free(
         PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList)
 {
     fort_shaper_packet_free_cloned(clonedNetBufList);
-    fort_shaper_packet_free_base(&pkt->io);
+    fort_shaper_packet_free_io(&pkt->io);
 
     fort_shaper_packet_put(shaper, pkt);
 }
@@ -318,17 +318,17 @@ static void NTAPI fort_packet_inject_complete(
 }
 
 static NTSTATUS fort_packet_inject_in(const PFORT_PACKET_IO pkt, PNET_BUFFER_LIST clonedNetBufList,
-        HANDLE injection_id, ADDRESS_FAMILY addressFamily)
+        PVOID context, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
 {
     const PFORT_PACKET_IN pkt_in = &pkt->in;
 
     return FwpsInjectTransportReceiveAsync0(injection_id, NULL, NULL, 0, addressFamily,
             pkt->compartmentId, pkt_in->interfaceIndex, pkt_in->subInterfaceIndex, clonedNetBufList,
-            (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
+            (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, context);
 }
 
 static NTSTATUS fort_packet_inject_out(const PFORT_PACKET_IO pkt, PNET_BUFFER_LIST clonedNetBufList,
-        HANDLE injection_id, ADDRESS_FAMILY addressFamily)
+        PVOID context, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
 {
     PFORT_PACKET_OUT pkt_out = &pkt->out;
 
@@ -340,7 +340,7 @@ static NTSTATUS fort_packet_inject_out(const PFORT_PACKET_IO pkt, PNET_BUFFER_LI
 
     return FwpsInjectTransportSendAsync0(injection_id, NULL, pkt_out->endpointHandle, 0, &sendArgs,
             addressFamily, pkt->compartmentId, clonedNetBufList,
-            (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
+            (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, context);
 }
 
 inline static NTSTATUS fort_packet_clone(
@@ -367,7 +367,8 @@ inline static NTSTATUS fort_packet_clone(
     return status;
 }
 
-static NTSTATUS fort_packet_inject(PFORT_PACKET_IO pkt, PNET_BUFFER_LIST *clonedNetBufList)
+static NTSTATUS fort_packet_inject(
+        PFORT_PACKET_IO pkt, PNET_BUFFER_LIST *clonedNetBufList, PVOID context)
 {
     NTSTATUS status;
 
@@ -384,8 +385,9 @@ static NTSTATUS fort_packet_inject(PFORT_PACKET_IO pkt, PNET_BUFFER_LIST *cloned
     const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
     const HANDLE injection_id = fort_packet_injection_id(isIPv6);
 
-    status = inbound ? fort_packet_inject_in(pkt, *clonedNetBufList, injection_id, addressFamily)
-                     : fort_packet_inject_out(pkt, *clonedNetBufList, injection_id, addressFamily);
+    status = inbound
+            ? fort_packet_inject_in(pkt, *clonedNetBufList, context, injection_id, addressFamily)
+            : fort_packet_inject_out(pkt, *clonedNetBufList, context, injection_id, addressFamily);
     if (!NT_SUCCESS(status)) {
         LOG("Shaper: Packet injection call error: %x\n", status);
         TRACE(FORT_SHAPER_PACKET_INJECTION_CALL_ERROR, status, 0, 0);
@@ -402,7 +404,7 @@ static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt
 
     PNET_BUFFER_LIST clonedNetBufList = NULL;
 
-    status = fort_packet_inject(&pkt->io, &clonedNetBufList);
+    status = fort_packet_inject(&pkt->io, &clonedNetBufList, pkt);
 
     if (!NT_SUCCESS(status)) {
         fort_shaper_packet_free(shaper, pkt, clonedNetBufList);
