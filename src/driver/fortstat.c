@@ -46,9 +46,9 @@ static void fort_stat_proc_dec(PFORT_STAT stat, UINT16 proc_index)
     }
 }
 
-static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, tommy_key_t proc_hash)
+static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, tommy_key_t pid_hash)
 {
-    PFORT_STAT_PROC proc = (PFORT_STAT_PROC) tommy_hashdyn_bucket(&stat->procs_map, proc_hash);
+    PFORT_STAT_PROC proc = (PFORT_STAT_PROC) tommy_hashdyn_bucket(&stat->procs_map, pid_hash);
 
     while (proc != NULL) {
         if (proc->process_id == process_id)
@@ -78,7 +78,7 @@ static void fort_stat_proc_del(PFORT_STAT stat, PFORT_STAT_PROC proc)
 
 static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
 {
-    const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
+    const tommy_key_t pid_hash = fort_stat_proc_hash(process_id);
     PFORT_STAT_PROC proc;
 
     if (stat->proc_free != NULL) {
@@ -99,7 +99,7 @@ static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
         proc->proc_index = (UINT16) size;
     }
 
-    tommy_hashdyn_insert(&stat->procs_map, (tommy_hashdyn_node *) proc, 0, proc_hash);
+    tommy_hashdyn_insert(&stat->procs_map, (tommy_hashdyn_node *) proc, 0, pid_hash);
 
     proc->active = FALSE;
     proc->refcount = 0;
@@ -515,9 +515,9 @@ static NTSTATUS fort_flow_associate_proc(
     if ((fort_stat_flags(stat) & FORT_STAT_LOG) == 0)
         return STATUS_DEVICE_DATA_ERROR;
 
-    const tommy_key_t proc_hash = fort_stat_proc_hash(process_id);
+    const tommy_key_t pid_hash = fort_stat_proc_hash(process_id);
 
-    *proc = fort_stat_proc_get(stat, process_id, proc_hash);
+    *proc = fort_stat_proc_get(stat, process_id, pid_hash);
 
     if (*proc == NULL) {
         *proc = fort_stat_proc_add(stat, process_id);
