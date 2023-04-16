@@ -89,6 +89,29 @@ typedef struct fort_flow
 #define FORT_STAT_SYSTEM_TIME_CHANGED 0x02
 #define FORT_STAT_CLOSED              0x10 /* used on driver unloading */
 
+#define FORT_STAT_ALE_CALLOUT_IDS_COUNT    4
+#define FORT_STAT_PACKET_CALLOUT_IDS_COUNT 8
+#define FORT_STAT_CALLOUT_IDS_COUNT                                                                \
+    (FORT_STAT_ALE_CALLOUT_IDS_COUNT + FORT_STAT_PACKET_CALLOUT_IDS_COUNT)
+
+#define FORT_STAT_ALE_CALLOUT_IDS_INDEX    0
+#define FORT_STAT_PACKET_CALLOUT_IDS_INDEX FORT_STAT_ALE_CALLOUT_IDS_COUNT
+
+enum FORT_STAT_CALLOUT_ID_TYPE {
+    FORT_STAT_CONNECT4_ID = 0,
+    FORT_STAT_CONNECT6_ID,
+    FORT_STAT_ACCEPT4_ID,
+    FORT_STAT_ACCEPT6_ID,
+    FORT_STAT_STREAM4_ID,
+    FORT_STAT_STREAM6_ID,
+    FORT_STAT_DATAGRAM4_ID,
+    FORT_STAT_DATAGRAM6_ID,
+    FORT_STAT_IN_TRANSPORT4_ID,
+    FORT_STAT_IN_TRANSPORT6_ID,
+    FORT_STAT_OUT_TRANSPORT4_ID,
+    FORT_STAT_OUT_TRANSPORT6_ID,
+};
+
 typedef struct fort_stat
 {
     UCHAR volatile flags;
@@ -97,20 +120,7 @@ typedef struct fort_stat
 
     LONG volatile flow_closing_count;
 
-    UINT32 connect4_id;
-    UINT32 connect6_id;
-    UINT32 accept4_id;
-    UINT32 accept6_id;
-
-    UINT32 stream4_id;
-    UINT32 stream6_id;
-    UINT32 datagram4_id;
-    UINT32 datagram6_id;
-
-    UINT32 in_transport4_id;
-    UINT32 in_transport6_id;
-    UINT32 out_transport4_id;
-    UINT32 out_transport6_id;
+    UINT32 callout_ids[FORT_STAT_CALLOUT_IDS_COUNT];
 
     PFORT_STAT_PROC proc_free;
     PFORT_STAT_PROC proc_active;

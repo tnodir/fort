@@ -12,6 +12,12 @@
 #include "forttrace.h"
 #include "fortutl.h"
 
+static struct
+{
+    FWPS_CALLOUT0 ale_callouts[FORT_STAT_ALE_CALLOUT_IDS_COUNT];
+    FWPS_CALLOUT0 packet_callouts[FORT_STAT_PACKET_CALLOUT_IDS_COUNT];
+} g_calloutGlobal;
+
 static void fort_callout_classify_block(FWPS_CLASSIFY_OUT0 *classifyOut)
 {
     classifyOut->actionType = FWP_ACTION_BLOCK;
@@ -644,13 +650,88 @@ static void NTAPI fort_callout_transport_delete(
     UNUSED(flowContext);
 }
 
-inline static NTSTATUS fort_callout_register(
-        PDEVICE_OBJECT device, const FWPS_CALLOUT0 *callouts, const PUINT32 *calloutIds, int count)
+static void fort_callout_init_callout(FWPS_CALLOUT0 *cout, GUID calloutKey,
+        FWPS_CALLOUT_CLASSIFY_FN0 classifyFn, FWPS_CALLOUT_FLOW_DELETE_NOTIFY_FN0 flowDeleteFn,
+        UINT32 flags)
 {
-    FORT_CHECK_STACK();
+    cout->calloutKey = calloutKey;
+    cout->flags = flags;
+    cout->classifyFn = classifyFn;
+    cout->notifyFn = &fort_callout_notify;
+    cout->flowDeleteFn = flowDeleteFn;
+}
 
+inline static void fort_callout_init_ale_callout(
+        FWPS_CALLOUT0 *cout, GUID calloutKey, FWPS_CALLOUT_CLASSIFY_FN0 classifyFn)
+{
+    fort_callout_init_callout(cout, calloutKey, classifyFn,
+            /*flowDeleteFn=*/NULL, /*flags=*/0);
+}
+
+static void fort_callout_init_ale_callouts(void)
+{
+    FWPS_CALLOUT0 *cout = g_calloutGlobal.ale_callouts;
+
+    /* IPv4 connect callout */
+    fort_callout_init_ale_callout(cout++, FORT_GUID_CALLOUT_CONNECT_V4, &fort_callout_connect_v4);
+    /* IPv6 connect callout */
+    fort_callout_init_ale_callout(cout++, FORT_GUID_CALLOUT_CONNECT_V6, &fort_callout_connect_v6);
+    /* IPv4 accept callout */
+    fort_callout_init_ale_callout(cout++, FORT_GUID_CALLOUT_ACCEPT_V4, &fort_callout_accept_v4);
+    /* IPv6 accept callout */
+    fort_callout_init_ale_callout(cout++, FORT_GUID_CALLOUT_ACCEPT_V6, &fort_callout_accept_v6);
+}
+
+inline static void fort_callout_init_packet_callout(FWPS_CALLOUT0 *cout, GUID calloutKey,
+        FWPS_CALLOUT_CLASSIFY_FN0 classifyFn, FWPS_CALLOUT_FLOW_DELETE_NOTIFY_FN0 flowDeleteFn)
+{
+    fort_callout_init_callout(
+            cout, calloutKey, classifyFn, flowDeleteFn, FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW);
+}
+
+static void fort_callout_init_packet_callouts(void)
+{
+    FWPS_CALLOUT0 *cout = g_calloutGlobal.packet_callouts;
+
+    /* IPv4 stream callout */
+    fort_callout_init_packet_callout(cout++, FORT_GUID_CALLOUT_STREAM_V4,
+            &fort_callout_stream_classify, &fort_callout_flow_delete);
+    /* IPv6 stream callout */
+    fort_callout_init_packet_callout(cout++, FORT_GUID_CALLOUT_STREAM_V6,
+            &fort_callout_stream_classify, &fort_callout_flow_delete);
+    /* IPv4 datagram callout */
+    fort_callout_init_packet_callout(cout++, FORT_GUID_CALLOUT_DATAGRAM_V4,
+            &fort_callout_datagram_classify_v4, &fort_callout_flow_delete);
+    /* IPv6 datagram callout */
+    fort_callout_init_packet_callout(cout++, FORT_GUID_CALLOUT_DATAGRAM_V6,
+            &fort_callout_datagram_classify_v6, &fort_callout_flow_delete);
+    /* IPv4 inbound transport callout */
+    fort_callout_init_packet_callout(cout++, FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
+            &fort_callout_transport_classify_in, &fort_callout_transport_delete);
+    /* IPv6 inbound transport callout */
+    fort_callout_init_packet_callout(cout++, FORT_GUID_CALLOUT_IN_TRANSPORT_V6,
+            &fort_callout_transport_classify_in, &fort_callout_transport_delete);
+    /* IPv4 outbound transport callout */
+    fort_callout_init_packet_callout(cout++, FORT_GUID_CALLOUT_OUT_TRANSPORT_V4,
+            &fort_callout_transport_classify_out, &fort_callout_transport_delete);
+    /* IPv6 outbound transport callout */
+    fort_callout_init_packet_callout(cout++, FORT_GUID_CALLOUT_OUT_TRANSPORT_V6,
+            &fort_callout_transport_classify_out, &fort_callout_transport_delete);
+}
+
+static void fort_callout_init(void)
+{
+    RtlZeroMemory(&g_calloutGlobal, sizeof(g_calloutGlobal));
+
+    fort_callout_init_ale_callouts();
+    fort_callout_init_packet_callouts();
+}
+
+static NTSTATUS fort_callout_register(
+        PDEVICE_OBJECT device, const FWPS_CALLOUT0 *callouts, const PUINT32 calloutIds, int count)
+{
     for (int i = 0; i < count; ++i) {
-        const NTSTATUS status = FwpsCalloutRegister0(device, &callouts[i], calloutIds[i]);
+        const NTSTATUS status = FwpsCalloutRegister0(device, &callouts[i], &calloutIds[i]);
         if (!NT_SUCCESS(status)) {
             LOG("Callout Register: Error: %x\n", status);
             TRACE(FORT_CALLOUT_REGISTER_ERROR, status, i, 0);
@@ -663,102 +744,25 @@ inline static NTSTATUS fort_callout_register(
 
 static NTSTATUS fort_callout_install_ale(PDEVICE_OBJECT device, PFORT_STAT stat)
 {
-    const FWPS_CALLOUT0 callouts[] = {
-        /* IPv4 connect callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_CONNECT_V4,
-                .classifyFn = &fort_callout_connect_v4,
-                .notifyFn = &fort_callout_notify,
-        },
-        /* IPv6 connect callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_CONNECT_V6,
-                .classifyFn = &fort_callout_connect_v6,
-                .notifyFn = &fort_callout_notify,
-        },
-        /* IPv4 accept callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_ACCEPT_V4,
-                .classifyFn = &fort_callout_accept_v4,
-                .notifyFn = &fort_callout_notify,
-        },
-        /* IPv6 accept callout */
-        {
-                .calloutKey = FORT_GUID_CALLOUT_ACCEPT_V6,
-                .classifyFn = &fort_callout_accept_v6,
-                .notifyFn = &fort_callout_notify,
-        },
-    };
+    const PUINT32 calloutIds = &stat->callout_ids[FORT_STAT_ALE_CALLOUT_IDS_INDEX];
 
-    const PUINT32 calloutIds[] = {
-        &stat->connect4_id,
-        &stat->connect6_id,
-        &stat->accept4_id,
-        &stat->accept6_id,
-    };
-
-    return fort_callout_register(device, callouts, calloutIds, /*count=*/FORT_ARRAY_SIZE(callouts));
-}
-
-inline static FWPS_CALLOUT0 fort_callout_init_callout(GUID key,
-        FWPS_CALLOUT_CLASSIFY_FN0 classifyFn, FWPS_CALLOUT_FLOW_DELETE_NOTIFY_FN0 flowDeleteFn)
-{
-    const FWPS_CALLOUT0 cout = {
-        .calloutKey = key,
-        .flags = FWP_CALLOUT_FLAG_CONDITIONAL_ON_FLOW,
-        .classifyFn = classifyFn,
-        .notifyFn = &fort_callout_notify,
-        .flowDeleteFn = flowDeleteFn,
-    };
-    return cout;
+    return fort_callout_register(
+            device, g_calloutGlobal.ale_callouts, calloutIds, FORT_STAT_ALE_CALLOUT_IDS_COUNT);
 }
 
 static NTSTATUS fort_callout_install_packet(PDEVICE_OBJECT device, PFORT_STAT stat)
 {
-    const FWPS_CALLOUT0 callouts[] = {
-        /* IPv4 stream callout */
-        fort_callout_init_callout(FORT_GUID_CALLOUT_STREAM_V4, &fort_callout_stream_classify,
-                &fort_callout_flow_delete),
-        /* IPv6 stream callout */
-        fort_callout_init_callout(FORT_GUID_CALLOUT_STREAM_V6, &fort_callout_stream_classify,
-                &fort_callout_flow_delete),
-        /* IPv4 datagram callout */
-        fort_callout_init_callout(FORT_GUID_CALLOUT_DATAGRAM_V4, &fort_callout_datagram_classify_v4,
-                &fort_callout_flow_delete),
-        /* IPv6 datagram callout */
-        fort_callout_init_callout(FORT_GUID_CALLOUT_DATAGRAM_V6, &fort_callout_datagram_classify_v6,
-                &fort_callout_flow_delete),
-        /* IPv4 inbound transport callout */
-        fort_callout_init_callout(FORT_GUID_CALLOUT_IN_TRANSPORT_V4,
-                &fort_callout_transport_classify_in, &fort_callout_transport_delete),
-        /* IPv6 inbound transport callout */
-        fort_callout_init_callout(FORT_GUID_CALLOUT_IN_TRANSPORT_V6,
-                &fort_callout_transport_classify_in, &fort_callout_transport_delete),
-        /* IPv4 outbound transport callout */
-        fort_callout_init_callout(FORT_GUID_CALLOUT_OUT_TRANSPORT_V4,
-                &fort_callout_transport_classify_out, &fort_callout_transport_delete),
-        /* IPv6 outbound transport callout */
-        fort_callout_init_callout(FORT_GUID_CALLOUT_OUT_TRANSPORT_V6,
-                &fort_callout_transport_classify_out, &fort_callout_transport_delete),
-    };
+    const PUINT32 calloutIds = &stat->callout_ids[FORT_STAT_PACKET_CALLOUT_IDS_INDEX];
 
-    const PUINT32 calloutIds[] = {
-        &stat->stream4_id,
-        &stat->stream6_id,
-        &stat->datagram4_id,
-        &stat->datagram6_id,
-        &stat->in_transport4_id,
-        &stat->in_transport6_id,
-        &stat->out_transport4_id,
-        &stat->out_transport6_id,
-    };
-
-    return fort_callout_register(device, callouts, calloutIds, /*count=*/FORT_ARRAY_SIZE(callouts));
+    return fort_callout_register(device, g_calloutGlobal.packet_callouts, calloutIds,
+            FORT_STAT_PACKET_CALLOUT_IDS_COUNT);
 }
 
 FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 {
     PFORT_STAT stat = &fort_device()->stat;
+
+    fort_callout_init();
 
     NTSTATUS status;
     if (!NT_SUCCESS(status = fort_callout_install_ale(device, stat))
@@ -773,23 +777,10 @@ FORT_API void fort_callout_remove(void)
 {
     PFORT_STAT stat = &fort_device()->stat;
 
-    UINT32 *const calloutIds[] = {
-        &stat->connect4_id,
-        &stat->connect6_id,
-        &stat->accept4_id,
-        &stat->accept6_id,
-        &stat->stream4_id,
-        &stat->stream6_id,
-        &stat->datagram4_id,
-        &stat->datagram6_id,
-        &stat->in_transport4_id,
-        &stat->in_transport6_id,
-        &stat->out_transport4_id,
-        &stat->out_transport6_id,
-    };
+    const PUINT32 calloutIds = stat->callout_ids;
 
-    for (int i = 0; i < FORT_ARRAY_SIZE(calloutIds); ++i) {
-        UINT32 *calloutId = calloutIds[i];
+    for (int i = 0; i < FORT_STAT_CALLOUT_IDS_COUNT; ++i) {
+        PUINT32 calloutId = &calloutIds[i];
         FwpsCalloutUnregisterById0(*calloutId);
         *calloutId = 0;
     }

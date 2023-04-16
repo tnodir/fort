@@ -59,8 +59,11 @@ static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, to
     return NULL;
 }
 
-static void fort_stat_proc_free(PFORT_STAT stat, PFORT_STAT_PROC proc)
+static void fort_stat_proc_free(PVOID arg, PVOID node)
 {
+    PFORT_STAT stat = arg;
+    PFORT_STAT_PROC proc = node;
+
     /* Add to free chain */
     proc->next = stat->proc_free;
     stat->proc_free = proc;
@@ -116,6 +119,12 @@ FORT_API UCHAR fort_stat_flags(PFORT_STAT stat)
     return fort_stat_flags_set(stat, 0, TRUE);
 }
 
+inline static UINT32 fort_stat_callout_id(
+        PFORT_STAT stat, enum FORT_STAT_CALLOUT_ID_TYPE calloutIdType)
+{
+    return stat->callout_ids[calloutIdType];
+}
+
 FORT_API UCHAR fort_flow_flags_set(PFORT_FLOW flow, UCHAR flags, BOOL on)
 {
     return on ? InterlockedOr8(&flow->opt.flags, flags) : InterlockedAnd8(&flow->opt.flags, ~flags);
@@ -131,10 +140,10 @@ inline static void fort_flow_context_stream_init_stream(
 {
     if (isIPv6) {
         *layerId = FWPS_LAYER_STREAM_V6;
-        *calloutId = stat->stream6_id;
+        *calloutId = fort_stat_callout_id(stat, FORT_STAT_STREAM6_ID);
     } else {
         *layerId = FWPS_LAYER_STREAM_V4;
-        *calloutId = stat->stream4_id;
+        *calloutId = fort_stat_callout_id(stat, FORT_STAT_STREAM4_ID);
     }
 }
 
@@ -143,10 +152,10 @@ inline static void fort_flow_context_stream_init_datagram(
 {
     if (isIPv6) {
         *layerId = FWPS_LAYER_DATAGRAM_DATA_V6;
-        *calloutId = stat->datagram6_id;
+        *calloutId = fort_stat_callout_id(stat, FORT_STAT_DATAGRAM6_ID);
     } else {
         *layerId = FWPS_LAYER_DATAGRAM_DATA_V4;
-        *calloutId = stat->datagram4_id;
+        *calloutId = fort_stat_callout_id(stat, FORT_STAT_DATAGRAM4_ID);
     }
 }
 
@@ -175,15 +184,15 @@ inline static void fort_flow_context_transport_set(
         PFORT_STAT stat, UINT64 flow_id, UINT64 flowContext, BOOL isIPv6, BOOL inbound)
 {
     if (isIPv6) {
-        FwpsFlowAssociateContext0(
-                flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6, stat->in_transport6_id, flowContext);
-        FwpsFlowAssociateContext0(
-                flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6, stat->out_transport6_id, flowContext);
+        FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6,
+                fort_stat_callout_id(stat, FORT_STAT_IN_TRANSPORT6_ID), flowContext);
+        FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6,
+                fort_stat_callout_id(stat, FORT_STAT_OUT_TRANSPORT6_ID), flowContext);
     } else {
-        FwpsFlowAssociateContext0(
-                flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id, flowContext);
-        FwpsFlowAssociateContext0(
-                flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id, flowContext);
+        FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4,
+                fort_stat_callout_id(stat, FORT_STAT_IN_TRANSPORT4_ID), flowContext);
+        FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
+                fort_stat_callout_id(stat, FORT_STAT_OUT_TRANSPORT4_ID), flowContext);
     }
 }
 
@@ -212,15 +221,15 @@ inline static void fort_flow_context_transport_remove(
         PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, NTSTATUS *in_status, NTSTATUS *out_status)
 {
     if (isIPv6) {
-        *in_status = FwpsFlowRemoveContext0(
-                flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6, stat->in_transport6_id);
-        *out_status = FwpsFlowRemoveContext0(
-                flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6, stat->out_transport6_id);
+        *in_status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6,
+                fort_stat_callout_id(stat, FORT_STAT_IN_TRANSPORT6_ID));
+        *out_status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6,
+                fort_stat_callout_id(stat, FORT_STAT_OUT_TRANSPORT6_ID));
     } else {
-        *in_status = FwpsFlowRemoveContext0(
-                flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4, stat->in_transport4_id);
-        *out_status = FwpsFlowRemoveContext0(
-                flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4, stat->out_transport4_id);
+        *in_status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4,
+                fort_stat_callout_id(stat, FORT_STAT_IN_TRANSPORT4_ID));
+        *out_status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
+                fort_stat_callout_id(stat, FORT_STAT_OUT_TRANSPORT4_ID));
     }
 }
 
@@ -245,8 +254,11 @@ static BOOL fort_flow_context_remove_id(
             && NT_SUCCESS(transport_out_status);
 }
 
-static void fort_flow_context_remove(PFORT_STAT stat, PFORT_FLOW flow)
+static void fort_flow_context_remove(PVOID arg, PVOID node)
 {
+    PFORT_STAT stat = arg;
+    PFORT_FLOW flow = node;
+
     const UINT64 flow_id = flow->flow_id;
 
     const UCHAR flow_flags = fort_flow_flags(flow);
@@ -271,8 +283,10 @@ static BOOL fort_flow_is_closed(PFORT_FLOW flow)
     return (flow->opt.proc_index == FORT_PROC_BAD_INDEX);
 }
 
-static void fort_flow_close(PFORT_FLOW flow)
+static void fort_flow_close(PVOID node)
 {
+    PFORT_FLOW flow = node;
+
     flow->opt.proc_index = FORT_PROC_BAD_INDEX;
 }
 
