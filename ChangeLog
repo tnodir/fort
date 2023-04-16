@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.9, 2023-04-16:
+- Driver: Fix stability issues.
+
 v3.8.8, 2023-04-15:
 - Driver: Fix potential memory corruption on unload.
 
