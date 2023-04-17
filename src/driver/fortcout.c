@@ -801,6 +801,7 @@ inline static NTSTATUS fort_callout_force_reauth_prov_check_flow_filter(HANDLE e
 
     if (force || old_conf_flags.log_stat != conf_flags.log_stat
             || old_filter_packets != filter_packets) {
+
         fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS, filter_packets);
 
         fort_prov_flow_unregister(engine);
@@ -831,7 +832,7 @@ static NTSTATUS fort_callout_force_reauth_prov(
         fort_prov_unregister(engine);
 
         status = fort_prov_register(engine, boot_conf);
-        if (status)
+        if (status != 0)
             return status;
 
         prov_recreated = TRUE;
@@ -840,7 +841,7 @@ static NTSTATUS fort_callout_force_reauth_prov(
     /* Check flow filter */
     status = fort_callout_force_reauth_prov_check_flow_filter(engine, old_conf_flags, conf_flags,
             /*force=*/prov_recreated);
-    if (status)
+    if (status != 0)
         return status;
 
     /* Force reauth filter */
@@ -870,10 +871,8 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
 
     /* Open provider */
     HANDLE engine;
-    status = fort_prov_open(&engine);
+    status = fort_prov_trans_open(&engine);
     if (NT_SUCCESS(status)) {
-        fort_prov_trans_begin(engine);
-
         status = fort_callout_force_reauth_prov(engine, old_conf_flags, conf_flags);
 
         status = fort_prov_trans_close(engine, status);
