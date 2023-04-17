@@ -326,14 +326,12 @@ static NTSTATUS fort_device_register_provider(void)
 {
     NTSTATUS status;
 
-    HANDLE engine;
-    status = fort_prov_open(&engine);
-    if (!NT_SUCCESS(status))
-        return status;
-
     fort_prov_init();
 
-    fort_prov_trans_begin(engine);
+    HANDLE engine;
+    status = fort_prov_trans_open(&engine);
+    if (!NT_SUCCESS(status))
+        return status;
 
     const FORT_PROV_BOOT_CONF boot_conf = fort_prov_get_boot_conf(engine);
 
@@ -427,6 +425,6 @@ FORT_API void fort_device_unload(void)
 
     /* Unregister filters provider */
     if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER) == 0) {
-        fort_prov_unregister(NULL);
+        fort_prov_trans_unregister();
     }
 }

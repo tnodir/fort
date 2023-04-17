@@ -28,11 +28,15 @@ extern "C" {
 
 FORT_API void fort_prov_init(void);
 
-FORT_API DWORD fort_prov_trans_close(HANDLE transEngine, DWORD status);
+FORT_API DWORD fort_prov_trans_open(HANDLE *engine);
+
+FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status);
 
 FORT_API void fort_prov_flow_unregister(HANDLE engine);
 
-FORT_API void fort_prov_unregister(HANDLE transEngine);
+FORT_API void fort_prov_unregister(HANDLE engine);
+
+FORT_API void fort_prov_trans_unregister(void);
 
 FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf);
 

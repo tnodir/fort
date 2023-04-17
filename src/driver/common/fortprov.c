@@ -347,41 +347,30 @@ FORT_API void fort_prov_init()
     fort_prov_init_reauth_filters();
 }
 
-FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
+FORT_API DWORD fort_prov_trans_open(HANDLE *engine)
 {
-    if (NT_SUCCESS(status)) {
-        status = fort_prov_trans_commit(engine);
-    } else {
-        fort_prov_trans_abort(engine);
-    }
+    DWORD status = fort_prov_open(engine);
 
-    fort_prov_close(engine);
+    if (status == 0) {
+        status = fort_prov_trans_begin(*engine);
 
-    return status;
-}
-
-static DWORD fort_prov_trans_open_engine(HANDLE transEngine, HANDLE *engine)
-{
-    DWORD status = 0;
-
-    if (transEngine) {
-        *engine = transEngine;
-    } else {
-        status = fort_prov_open(engine);
-
-        if (status == 0) {
-            status = fort_prov_trans_begin(*engine);
+        if (status != 0) {
+            fort_prov_close(*engine);
         }
     }
 
     return status;
 }
 
-static DWORD fort_prov_trans_close_engine(HANDLE transEngine, HANDLE engine, DWORD status)
+FORT_API DWORD fort_prov_trans_close(HANDLE engine, DWORD status)
 {
-    if (!transEngine) {
-        status = fort_prov_trans_close(engine, status);
+    if (status == 0) {
+        status = fort_prov_trans_commit(engine);
+    } else {
+        fort_prov_trans_abort(engine);
     }
+
+    fort_prov_close(engine);
 
     return status;
 }
@@ -481,16 +470,21 @@ FORT_API void fort_prov_flow_unregister(HANDLE engine)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V6);
 }
 
-FORT_API void fort_prov_unregister(HANDLE transEngine)
+FORT_API void fort_prov_unregister(HANDLE engine)
 {
-    HANDLE engine;
-    if (fort_prov_trans_open_engine(transEngine, &engine))
-        return;
-
     fort_prov_flow_unregister(engine);
     fort_prov_unregister_provider(engine);
+}
 
-    fort_prov_trans_close_engine(transEngine, engine, /*status=*/0);
+FORT_API void fort_prov_trans_unregister(void)
+{
+    HANDLE engine;
+    if (NT_SUCCESS(fort_prov_trans_open(&engine))) {
+
+        fort_prov_unregister(engine);
+
+        fort_prov_trans_close(engine, /*status=*/0);
+    }
 }
 
 static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
@@ -580,7 +574,7 @@ FORT_API DWORD fort_prov_reauth(HANDLE engine)
     DWORD status;
 
     status = fort_prov_unregister_reauth_filters(engine, /*force=*/FALSE);
-    if (status) {
+    if (status != 0) {
         status = fort_prov_add_filters(
                 engine, g_provGlobal.reauth_filters, FORT_PROV_REAUTH_FILTERS_COUNT);
     }

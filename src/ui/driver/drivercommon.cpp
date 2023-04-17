@@ -280,7 +280,7 @@ int bitScanForward(quint32 mask)
 
 void provUnregister()
 {
-    fort_prov_unregister(nullptr);
+    fort_prov_trans_unregister();
 }
 
 }
