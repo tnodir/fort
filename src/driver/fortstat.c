@@ -24,22 +24,6 @@ static void fort_stat_proc_active_add(PFORT_STAT stat, PFORT_STAT_PROC proc)
     stat->proc_active_count++;
 }
 
-static void fort_stat_proc_inc(PFORT_STAT stat, UINT16 proc_index)
-{
-    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, proc_index);
-
-    ++proc->refcount;
-}
-
-static void fort_stat_proc_dec(PFORT_STAT stat, UINT16 proc_index)
-{
-    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, proc_index);
-
-    if (--proc->refcount == 0) {
-        fort_stat_proc_active_add(stat, proc);
-    }
-}
-
 static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, tommy_key_t pid_hash)
 {
     PFORT_STAT_PROC proc = (PFORT_STAT_PROC) tommy_hashdyn_bucket(&stat->procs_map, pid_hash);
@@ -93,6 +77,28 @@ static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
     proc->traf.v = 0;
 
     return proc;
+}
+
+static void fort_stat_proc_inc(PFORT_STAT stat, UINT16 proc_index)
+{
+    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, proc_index);
+
+    ++proc->refcount;
+}
+
+static void fort_stat_proc_dec(PFORT_STAT stat, UINT16 proc_index)
+{
+    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, proc_index);
+
+    if (--proc->refcount > 0 || proc->active)
+        return;
+
+    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0) {
+        fort_stat_proc_active_add(stat, proc);
+    } else {
+        /* The process is terminated */
+        fort_stat_proc_free(stat, proc);
+    }
 }
 
 FORT_API UCHAR fort_stat_flags_set(PFORT_STAT stat, UCHAR flags, BOOL on)
@@ -380,9 +386,9 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
     {
-        const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_LOG, FALSE);
+        const UCHAR flags = fort_stat_flags_set(stat, FORT_STAT_LOG, FALSE);
 
-        if ((old_stat_flags & FORT_STAT_CLOSED) == 0) {
+        if ((flags & FORT_STAT_CLOSED) == 0) {
             fort_stat_flags_set(stat, FORT_STAT_CLOSED, TRUE);
 
             InterlockedAdd(&stat->flow_closing_count, (LONG) tommy_hashdyn_count(&stat->flows_map));
@@ -421,24 +427,19 @@ FORT_API void fort_stat_close(PFORT_STAT stat)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static void fort_stat_clear(PFORT_STAT stat)
+FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    /* Clear processes active list */
-    fort_stat_traf_flush(stat, /*proc_count=*/FORT_PROC_COUNT_MAX, /*out=*/NULL);
-
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-}
-
-FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
-{
     const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_LOG, log_stat);
 
     if (!log_stat && (old_stat_flags & FORT_STAT_LOG) != 0) {
-        fort_stat_clear(stat);
+        /* Clear processes active list */
+        fort_stat_traf_flush(stat, /*proc_count=*/FORT_PROC_COUNT_MAX, /*out=*/NULL);
     }
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 FORT_API void fort_stat_conf_update(PFORT_STAT stat, const PFORT_CONF_IO conf_io)
@@ -580,7 +581,7 @@ static void fort_stat_traf_flush_proc(PFORT_STAT stat, PFORT_STAT_PROC proc, PCH
     /* Write process_id */
     *out_proc = proc->process_id
             /* The process is terminated */
-            | (proc->refcount == 0 ? 1 : 0);
+            | (proc->refcount > 0 ? 0 : 1);
 }
 
 FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out)
@@ -594,14 +595,14 @@ FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out
             fort_stat_traf_flush_proc(stat, proc, &out);
         }
 
-        if (proc->refcount == 0) {
-            /* The process is terminated */
-            fort_stat_proc_free(stat, proc);
-        } else {
+        if (proc->refcount > 0) {
             proc->active = FALSE;
 
             /* Clear process's bytes */
             proc->traf.v = 0;
+        } else {
+            /* The process is terminated */
+            fort_stat_proc_free(stat, proc);
         }
 
         proc = proc_next;

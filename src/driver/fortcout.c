@@ -865,6 +865,9 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
     /* Handle log_stat */
     fort_stat_log_update(&fort_device()->stat, conf_flags.log_stat);
 
+    /* Run the log_timer */
+    fort_timer_set_running(&fort_device()->log_timer, /*run=*/conf_flags.log_stat);
+
     /* Open provider */
     HANDLE engine;
     status = fort_prov_open(&engine);
