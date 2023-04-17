@@ -935,7 +935,7 @@ inline static void fort_callout_timer_flush_stat_traf(
         fort_log_stat_traf_header_write(out, proc_count);
         out += FORT_LOG_STAT_HEADER_SIZE;
 
-        fort_stat_dpc_traf_flush(stat, proc_count, out);
+        fort_stat_traf_flush(stat, proc_count, out);
     }
 }
 

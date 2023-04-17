@@ -24,12 +24,6 @@ static void fort_stat_proc_active_add(PFORT_STAT stat, PFORT_STAT_PROC proc)
     stat->proc_active_count++;
 }
 
-static void fort_stat_proc_active_clear(PFORT_STAT stat)
-{
-    stat->proc_active = NULL;
-    stat->proc_active_count = 0;
-}
-
 static void fort_stat_proc_inc(PFORT_STAT stat, UINT16 proc_index)
 {
     PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, proc_index);
@@ -270,18 +264,6 @@ static void fort_flow_context_remove(PVOID stat_arg, PVOID flow_node)
     }
 }
 
-static BOOL fort_flow_is_active(PFORT_FLOW flow)
-{
-    return (fort_flow_flags(flow) & FORT_FLOW_ACTIVE) != 0;
-}
-
-static void fort_flow_deactivate(PVOID flow_node)
-{
-    PFORT_FLOW flow = flow_node;
-
-    fort_flow_flags_set(flow, FORT_FLOW_ACTIVE, FALSE);
-}
-
 static PFORT_FLOW fort_flow_get(PFORT_STAT stat, UINT64 flow_id, tommy_key_t flow_hash)
 {
     PFORT_FLOW flow = (PFORT_FLOW) tommy_hashdyn_bucket(&stat->flows_map, flow_hash);
@@ -375,7 +357,7 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
     const UCHAR speed_limit = fort_stat_group_speed_limit(&stat->conf_group, group_index);
 
     flow->opt.flags = speed_limit | (is_tcp ? FORT_FLOW_TCP : 0) | (isIPv6 ? FORT_FLOW_IP6 : 0)
-            | (inbound ? FORT_FLOW_INBOUND : 0) | FORT_FLOW_ACTIVE;
+            | (inbound ? FORT_FLOW_INBOUND : 0);
     flow->opt.group_index = group_index;
     flow->opt.proc_index = proc_index;
 
@@ -445,10 +427,7 @@ static void fort_stat_clear(PFORT_STAT stat)
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
     /* Clear processes active list */
-    fort_stat_proc_active_clear(stat);
-
-    /* Close flows */
-    tommy_hashdyn_foreach_node(&stat->flows_map, &fort_flow_deactivate);
+    fort_stat_traf_flush(stat, /*proc_count=*/FORT_PROC_COUNT_MAX, /*out=*/NULL);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
@@ -565,11 +544,11 @@ FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 dat
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0 && fort_flow_is_active(flow)) {
+    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0) {
         PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
         UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes : &proc->traf.out_bytes;
 
-        /* Add traffic to process */
+        /* Add traffic to process's bytes */
         *proc_bytes += data_len;
 
         fort_stat_proc_active_add(stat, proc);
@@ -588,27 +567,35 @@ FORT_API void fort_stat_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue)
     KeReleaseInStackQueuedSpinLockFromDpcLevel(lock_queue);
 }
 
-FORT_API void fort_stat_dpc_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out)
+static void fort_stat_traf_flush_proc(PFORT_STAT stat, PFORT_STAT_PROC proc, PCHAR *out)
+{
+    PUINT32 out_proc = (PUINT32) *out;
+    PFORT_TRAF out_traf = (PFORT_TRAF) (out_proc + 1);
+
+    *out = (PCHAR) (out_traf + 1);
+
+    /* Write bytes */
+    *out_traf = proc->traf;
+
+    /* Write process_id */
+    *out_proc = proc->process_id
+            /* The process is terminated */
+            | (proc->refcount == 0 ? 1 : 0);
+}
+
+FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out)
 {
     PFORT_STAT_PROC proc = stat->proc_active;
 
     while (proc != NULL && proc_count-- != 0) {
         PFORT_STAT_PROC proc_next = proc->next_active;
-        UINT32 *out_proc = (UINT32 *) out;
-        PFORT_TRAF out_traf = (PFORT_TRAF) (out_proc + 1);
 
-        out = (PCHAR) (out_traf + 1);
-
-        /* Write bytes */
-        *out_traf = proc->traf;
-
-        /* Write process_id */
-        *out_proc = proc->process_id;
+        if (out != NULL) {
+            fort_stat_traf_flush_proc(stat, proc, &out);
+        }
 
         if (proc->refcount == 0) {
-            /* The process is inactive */
-            *out_proc |= 1;
-
+            /* The process is terminated */
             fort_stat_proc_free(stat, proc);
         } else {
             proc->active = FALSE;

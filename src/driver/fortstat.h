@@ -178,7 +178,7 @@ FORT_API void fort_stat_dpc_begin(PFORT_STAT stat, PKLOCK_QUEUE_HANDLE lock_queu
 
 FORT_API void fort_stat_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue);
 
-FORT_API void fort_stat_dpc_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out);
+FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out);
 
 #ifdef __cplusplus
 } // extern "C"
