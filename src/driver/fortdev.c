@@ -144,8 +144,8 @@ static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG l
             const FORT_CONF_FLAGS old_conf_flags =
                     fort_conf_ref_set(&fort_device()->conf, conf_ref);
 
-            fort_shaper_conf_update(&fort_device()->shaper, conf_io);
             fort_stat_conf_update(&fort_device()->stat, conf_io);
+            fort_shaper_conf_update(&fort_device()->shaper, conf_io);
 
             return fort_callout_force_reauth(old_conf_flags);
         }
@@ -160,8 +160,8 @@ static NTSTATUS fort_device_control_setflags(const PFORT_CONF_FLAGS conf_flags, 
         const FORT_CONF_FLAGS old_conf_flags =
                 fort_conf_ref_flags_set(&fort_device()->conf, conf_flags);
 
-        fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
         fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
+        fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
 
         return fort_callout_force_reauth(old_conf_flags);
     }
