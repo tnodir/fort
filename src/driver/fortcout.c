@@ -851,8 +851,6 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
 {
     NTSTATUS status;
 
-    fort_timer_set_running(&fort_device()->log_timer, /*run=*/FALSE);
-
     /* Check app group periods & update group_bits */
     {
         int periods_n = 0;
@@ -878,12 +876,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
         status = fort_prov_trans_close(engine, status);
     }
 
-    if (NT_SUCCESS(status)) {
-        const BOOL log_enabled = (conf_flags.allow_all_new || conf_flags.ask_to_connect
-                || conf_flags.log_blocked || conf_flags.log_stat || conf_flags.log_blocked_ip);
-
-        fort_timer_set_running(&fort_device()->log_timer, /*run=*/log_enabled);
-    } else {
+    if (!NT_SUCCESS(status)) {
         LOG("Callout Reauth: Error: %x\n", status);
         TRACE(FORT_CALLOUT_CALLOUT_REAUTH_ERROR, status, 0, 0);
     }
@@ -891,7 +884,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
     return status;
 }
 
-inline static void fort_callout_timer_update_system_time(
+inline static void fort_callout_update_system_time(
         PFORT_STAT stat, PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
 {
     LARGE_INTEGER system_time;
@@ -914,7 +907,7 @@ inline static void fort_callout_timer_update_system_time(
     }
 }
 
-inline static void fort_callout_timer_flush_stat_traf(
+inline static void fort_callout_flush_stat_traf(
         PFORT_STAT stat, PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
 {
     while (stat->proc_active_count != 0) {
@@ -923,9 +916,8 @@ inline static void fort_callout_timer_flush_stat_traf(
                 : FORT_LOG_STAT_BUFFER_PROC_COUNT;
         const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
         PCHAR out;
-        NTSTATUS status;
 
-        status = fort_buffer_prepare(buf, len, &out, irp, info);
+        const NTSTATUS status = fort_buffer_prepare(buf, len, &out, irp, info);
         if (!NT_SUCCESS(status)) {
             LOG("Callout Timer: Error: %x\n", status);
             TRACE(FORT_CALLOUT_CALLOUT_TIMER_ERROR, status, 0, 0);
@@ -956,17 +948,17 @@ FORT_API void NTAPI fort_callout_timer(void)
     fort_stat_dpc_begin(stat, &stat_lock_queue);
 
     /* Get current Unix time */
-    fort_callout_timer_update_system_time(stat, buf, &irp, &info);
+    fort_callout_update_system_time(stat, buf, &irp, &info);
 
     /* Flush traffic statistics */
-    fort_callout_timer_flush_stat_traf(stat, buf, &irp, &info);
+    fort_callout_flush_stat_traf(stat, buf, &irp, &info);
 
     /* Unlock stat */
     fort_stat_dpc_end(&stat_lock_queue);
 
     /* Flush pending buffer */
     if (irp == NULL) {
-        fort_buffer_dpc_flush_pending(buf, &irp, &info);
+        fort_buffer_flush_pending(buf, &irp, &info);
     }
 
     /* Unlock buffer */

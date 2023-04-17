@@ -316,7 +316,7 @@ FORT_API void fort_buffer_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue)
     KeReleaseInStackQueuedSpinLockFromDpcLevel(lock_queue);
 }
 
-FORT_API void fort_buffer_dpc_flush_pending(PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
+FORT_API void fort_buffer_flush_pending(PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
 {
     UINT32 out_top = buf->out_top;
 

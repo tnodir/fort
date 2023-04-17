@@ -60,7 +60,7 @@ FORT_API void fort_buffer_dpc_begin(PFORT_BUFFER buf, PKLOCK_QUEUE_HANDLE lock_q
 
 FORT_API void fort_buffer_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue);
 
-FORT_API void fort_buffer_dpc_flush_pending(PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info);
+FORT_API void fort_buffer_flush_pending(PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info);
 
 #ifdef __cplusplus
 } // extern "C"
