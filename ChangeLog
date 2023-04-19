@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.10, 2023-04-19:
+- Driver: Expand kernel stack for driver entry.
+
 v3.8.9, 2023-04-16:
 - Driver: Fix stability issues.
 
