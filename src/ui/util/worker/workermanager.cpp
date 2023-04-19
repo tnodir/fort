@@ -36,8 +36,8 @@ void WorkerManager::workerFinished(WorkerObject *worker)
 
     m_workers.removeOne(worker);
 
-    if (m_workers.isEmpty()) {
-        m_waitCondition.wakeOne();
+    if (m_workers.isEmpty() && aborted()) {
+        m_abortWaitCondition.wakeOne();
     }
 }
 
@@ -59,10 +59,10 @@ void WorkerManager::abortWorkers()
 
     m_aborted = true;
 
-    m_waitCondition.wakeAll();
+    m_jobWaitCondition.wakeAll();
 
     while (!m_workers.isEmpty()) {
-        m_waitCondition.wait(&m_mutex);
+        m_abortWaitCondition.wait(&m_mutex);
     }
 }
 
@@ -77,19 +77,19 @@ void WorkerManager::enqueueJob(WorkerJobPtr job)
 
     m_jobQueue.enqueue(job);
 
-    m_waitCondition.wakeOne();
+    m_jobWaitCondition.wakeOne();
 }
 
 WorkerJobPtr WorkerManager::dequeueJob()
 {
     QMutexLocker locker(&m_mutex);
 
-    while (!m_aborted && m_jobQueue.isEmpty()) {
-        if (!m_waitCondition.wait(&m_mutex, WORKER_TIMEOUT_MSEC))
+    while (!aborted() && m_jobQueue.isEmpty()) {
+        if (!m_jobWaitCondition.wait(&m_mutex, WORKER_TIMEOUT_MSEC))
             break; // timed out
     }
 
-    if (m_aborted || m_jobQueue.isEmpty())
+    if (aborted() || m_jobQueue.isEmpty())
         return nullptr;
 
     return m_jobQueue.dequeue();

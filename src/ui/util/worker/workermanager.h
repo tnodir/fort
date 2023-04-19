@@ -52,7 +52,8 @@ private:
     QQueue<WorkerJobPtr> m_jobQueue;
 
     QMutex m_mutex;
-    QWaitCondition m_waitCondition;
+    QWaitCondition m_jobWaitCondition;
+    QWaitCondition m_abortWaitCondition;
 };
 
 #endif // WORKERMANAGER_H
