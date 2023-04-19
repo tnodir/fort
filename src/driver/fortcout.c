@@ -73,10 +73,10 @@ inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
 
     const UCHAR group_index = (UCHAR) app_flags.group_index;
 
-    BOOL is_new_proc = FALSE;
+    BOOL log_stat = FALSE;
 
     const NTSTATUS status = fort_flow_associate(&fort_device()->stat, flow_id, cx->process_id,
-            group_index, ca->isIPv6, is_tcp, ca->inbound, cx->is_reauth, &is_new_proc);
+            group_index, ca->isIPv6, is_tcp, ca->inbound, cx->is_reauth, &log_stat);
 
     if (!NT_SUCCESS(status)) {
         if (status == FORT_STATUS_FLOW_BLOCK) {
@@ -87,7 +87,7 @@ inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
 
         LOG("Classify v4: Flow assoc. error: %x\n", status);
         TRACE(FORT_CALLOUT_FLOW_ASSOC_ERROR, status, 0, 0);
-    } else if (is_new_proc) {
+    } else if (!log_stat) {
         fort_buffer_proc_new_write(&fort_device()->buffer, cx->process_id, cx->real_path->Length,
                 cx->real_path->Buffer, &cx->irp, &cx->info);
     }

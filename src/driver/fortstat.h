@@ -31,10 +31,12 @@ typedef struct fort_stat_proc
     FORT_TRAF traf;
 #endif
 
-    UINT16 proc_index : 15; /* Synchronize with FORT_PROC_COUNT_MAX! */
+    UINT16 proc_index;
+
+    UINT16 log_stat : 1;
     UINT16 active : 1;
 
-    UINT16 refcount;
+    UINT32 refcount;
 
     struct fort_stat_proc *next_active;
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
@@ -166,8 +168,7 @@ FORT_API void fort_stat_conf_update(PFORT_STAT stat, const PFORT_CONF_IO conf_io
 FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const PFORT_CONF_FLAGS conf_flags);
 
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
-        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth,
-        BOOL *is_new_proc);
+        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth, BOOL *log_stat);
 
 FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext);
 

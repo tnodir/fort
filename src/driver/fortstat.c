@@ -5,7 +5,7 @@
 #define FORT_STAT_POOL_TAG 'SwfF'
 
 #define FORT_PROC_BAD_INDEX ((UINT16) -1)
-#define FORT_PROC_COUNT_MAX 0x7FFF
+#define FORT_PROC_COUNT_MAX 0xFFFF
 
 #define fort_stat_proc_hash(process_id) tommy_inthash_u32((UINT32) (process_id))
 #define fort_flow_hash(flow_id)         tommy_inthash_u32((UINT32) (flow_id))
@@ -71,12 +71,20 @@ static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
 
     tommy_hashdyn_insert(&stat->procs_map, (tommy_hashdyn_node *) proc, 0, pid_hash);
 
-    proc->active = FALSE;
-    proc->refcount = 0;
     proc->process_id = process_id;
     proc->traf.v = 0;
+    proc->log_stat = FALSE;
+    proc->active = FALSE;
+    proc->refcount = 0;
 
     return proc;
+}
+
+static void fort_stat_proc_unlog(PVOID proc_node)
+{
+    PFORT_STAT_PROC proc = proc_node;
+
+    proc->log_stat = FALSE;
 }
 
 static void fort_stat_proc_inc(PFORT_STAT stat, UINT16 proc_index)
@@ -93,7 +101,7 @@ static void fort_stat_proc_dec(PFORT_STAT stat, UINT16 proc_index)
     if (--proc->refcount > 0 || proc->active)
         return;
 
-    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0) {
+    if (proc->log_stat) {
         fort_stat_proc_active_add(stat, proc);
     } else {
         /* The process is terminated */
@@ -435,8 +443,11 @@ FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
     const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_LOG, log_stat);
 
     if (!log_stat && (old_stat_flags & FORT_STAT_LOG) != 0) {
-        /* Clear processes active list */
+        /* Clear the processes' active list */
         fort_stat_traf_flush(stat, /*proc_count=*/FORT_PROC_COUNT_MAX, /*out=*/NULL);
+
+        /* Clear the processes' logged flag */
+        tommy_hashdyn_foreach_node(&stat->procs_map, &fort_stat_proc_unlog);
     }
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -485,23 +496,26 @@ static NTSTATUS fort_flow_associate_proc(
 }
 
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
-        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth,
-        BOOL *is_new_proc)
+        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth, BOOL *log_stat)
 {
     NTSTATUS status;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
+    BOOL is_new_proc = FALSE;
     PFORT_STAT_PROC proc = NULL;
-    status = fort_flow_associate_proc(stat, process_id, is_new_proc, &proc);
+    status = fort_flow_associate_proc(stat, process_id, &is_new_proc, &proc);
 
     /* Add flow */
     if (NT_SUCCESS(status)) {
         status = fort_flow_add(
                 stat, flow_id, group_index, proc->proc_index, isIPv6, is_tcp, inbound, is_reauth);
 
-        if (!NT_SUCCESS(status) && *is_new_proc) {
+        if (NT_SUCCESS(status)) {
+            *log_stat = proc->log_stat;
+            proc->log_stat = TRUE;
+        } else if (is_new_proc) {
             fort_stat_proc_free(stat, proc);
         }
     }
@@ -545,8 +559,9 @@ FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 dat
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    if ((fort_stat_flags(stat) & FORT_STAT_LOG) != 0) {
-        PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
+    PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
+
+    if (proc->log_stat) {
         UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes : &proc->traf.out_bytes;
 
         /* Add traffic to process's bytes */
