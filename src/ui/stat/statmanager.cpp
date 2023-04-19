@@ -231,7 +231,7 @@ void StatManager::clearAppIdCache()
 bool StatManager::logProcNew(const LogEntryProcNew &entry, qint64 unixTime)
 {
     const quint32 pid = entry.pid();
-    const QString &appPath = entry.path();
+    const QString appPath = entry.path();
 
     Q_ASSERT(!m_appPidPathMap.contains(pid));
     m_appPidPathMap.insert(pid, appPath);
