@@ -70,6 +70,9 @@ void WorkerManager::enqueueJob(WorkerJobPtr job)
 {
     QMutexLocker locker(&m_mutex);
 
+    if (aborted())
+        return;
+
     setupWorker();
 
     if (canMergeJobs() && !m_jobQueue.isEmpty() && m_jobQueue.last()->mergeJob(*job))
