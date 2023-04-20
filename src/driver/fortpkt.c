@@ -247,7 +247,7 @@ inline static NTSTATUS fort_packet_fill_out(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_
     return STATUS_SUCCESS;
 }
 
-inline static NTSTATUS fort_packet_fill(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO pkt)
+inline static NTSTATUS fort_packet_fill(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO pkt, UCHAR pkt_flags)
 {
     const NTSTATUS status =
             ca->inbound ? fort_packet_fill_in(ca, &pkt->in) : fort_packet_fill_out(ca, &pkt->out);
@@ -255,7 +255,8 @@ inline static NTSTATUS fort_packet_fill(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO p
     if (!NT_SUCCESS(status))
         return status;
 
-    pkt->flags = (ca->inbound ? FORT_PACKET_INBOUND : 0) | (ca->isIPv6 ? FORT_PACKET_IP6 : 0);
+    pkt->flags = (ca->inbound ? FORT_PACKET_INBOUND : 0) | (ca->isIPv6 ? FORT_PACKET_IP6 : 0)
+            | pkt_flags;
 
     pkt->compartmentId = ca->inMetaValues->compartmentId;
     pkt->netBufList = ca->netBufList;
@@ -267,7 +268,7 @@ inline static NTSTATUS fort_packet_fill(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO p
     return STATUS_SUCCESS;
 }
 
-inline static void fort_shaper_packet_free_cloned(PNET_BUFFER_LIST clonedNetBufList)
+static void fort_packet_free_cloned(PNET_BUFFER_LIST clonedNetBufList)
 {
     if (clonedNetBufList == NULL)
         return;
@@ -282,7 +283,7 @@ inline static void fort_shaper_packet_free_cloned(PNET_BUFFER_LIST clonedNetBufL
     FwpsFreeCloneNetBufferList0(clonedNetBufList, 0);
 }
 
-inline static void fort_shaper_packet_free_io(PFORT_PACKET_IO pkt)
+static void fort_packet_free(PFORT_PACKET_IO pkt)
 {
     if ((pkt->flags & FORT_PACKET_INBOUND) == 0) {
         if (pkt->out.controlData != NULL) {
@@ -298,8 +299,8 @@ inline static void fort_shaper_packet_free_io(PFORT_PACKET_IO pkt)
 static void fort_shaper_packet_free(
         PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList)
 {
-    fort_shaper_packet_free_cloned(clonedNetBufList);
-    fort_shaper_packet_free_io(&pkt->io);
+    fort_packet_free_cloned(clonedNetBufList);
+    fort_packet_free(&pkt->io);
 
     fort_shaper_packet_put(shaper, pkt);
 }
@@ -309,26 +310,91 @@ static void fort_shaper_packet_drop(PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt)
     fort_shaper_packet_free(shaper, pkt, /*clonedNetBufList=*/NULL);
 }
 
+static PFORT_PENDING_PACKET fort_pending_packet_get_locked(PFORT_PENDING pending)
+{
+    PFORT_PENDING_PACKET pkt = NULL;
+
+    if (pending->packet_free != NULL) {
+        pkt = pending->packet_free;
+        pending->packet_free = pkt->next;
+    } else {
+        const tommy_size_t size = tommy_arrayof_size(&pending->packets);
+
+        /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
+        if (tommy_arrayof_grow(&pending->packets, size + 1), 0)
+            return NULL;
+
+        pkt = tommy_arrayof_ref(&pending->packets, size);
+    }
+
+    return pkt;
+}
+
+static PFORT_PENDING_PACKET fort_pending_packet_get(PFORT_PENDING pending)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
+
+    PFORT_PENDING_PACKET pkt = fort_pending_packet_get_locked(pending);
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return pkt;
+}
+
+static void fort_pending_packet_put_locked(PFORT_PENDING pending, PFORT_PENDING_PACKET pkt)
+{
+    pkt->next = pending->packet_free;
+    pending->packet_free = pkt;
+}
+
+static void fort_pending_packet_put(PFORT_PENDING pending, PFORT_PENDING_PACKET pkt)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
+
+    fort_pending_packet_put_locked(pending, pkt);
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
+static void fort_pending_packet_free(
+        PFORT_PENDING pending, PFORT_PENDING_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList)
+{
+    fort_packet_free_cloned(clonedNetBufList);
+    fort_packet_free(&pkt->io);
+
+    fort_pending_packet_put(pending, pkt);
+}
+
 static void NTAPI fort_packet_inject_complete(
-        PFORT_FLOW_PACKET pkt, PNET_BUFFER_LIST clonedNetBufList, BOOLEAN dispatchLevel)
+        PFORT_PACKET_IO pkt, PNET_BUFFER_LIST clonedNetBufList, BOOLEAN dispatchLevel)
 {
     UNUSED(dispatchLevel);
 
-    fort_shaper_packet_free(&fort_device()->shaper, pkt, clonedNetBufList);
+    switch (pkt->flags & FORT_PACKET_TYPE_MASK) {
+    case FORT_PACKET_TYPE_FLOW: {
+        fort_shaper_packet_free(&fort_device()->shaper, (PFORT_FLOW_PACKET) pkt, clonedNetBufList);
+    } break;
+    case FORT_PACKET_TYPE_PENDING: {
+        fort_pending_packet_free(
+                &fort_device()->pending, (PFORT_PENDING_PACKET) pkt, clonedNetBufList);
+    } break;
+    }
 }
 
 static NTSTATUS fort_packet_inject_in(const PFORT_PACKET_IO pkt, PNET_BUFFER_LIST clonedNetBufList,
-        PVOID context, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
+        HANDLE injection_id, ADDRESS_FAMILY addressFamily)
 {
     const PFORT_PACKET_IN pkt_in = &pkt->in;
 
     return FwpsInjectTransportReceiveAsync0(injection_id, NULL, NULL, 0, addressFamily,
             pkt->compartmentId, pkt_in->interfaceIndex, pkt_in->subInterfaceIndex, clonedNetBufList,
-            (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, context);
+            (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
 }
 
 static NTSTATUS fort_packet_inject_out(const PFORT_PACKET_IO pkt, PNET_BUFFER_LIST clonedNetBufList,
-        PVOID context, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
+        HANDLE injection_id, ADDRESS_FAMILY addressFamily)
 {
     PFORT_PACKET_OUT pkt_out = &pkt->out;
 
@@ -340,7 +406,7 @@ static NTSTATUS fort_packet_inject_out(const PFORT_PACKET_IO pkt, PNET_BUFFER_LI
 
     return FwpsInjectTransportSendAsync0(injection_id, NULL, pkt_out->endpointHandle, 0, &sendArgs,
             addressFamily, pkt->compartmentId, clonedNetBufList,
-            (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, context);
+            (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
 }
 
 inline static NTSTATUS fort_packet_clone(
@@ -367,8 +433,7 @@ inline static NTSTATUS fort_packet_clone(
     return status;
 }
 
-static NTSTATUS fort_packet_inject(
-        PFORT_PACKET_IO pkt, PNET_BUFFER_LIST *clonedNetBufList, PVOID context)
+static NTSTATUS fort_packet_inject(PFORT_PACKET_IO pkt, PNET_BUFFER_LIST *clonedNetBufList)
 {
     NTSTATUS status;
 
@@ -385,9 +450,8 @@ static NTSTATUS fort_packet_inject(
     const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
     const HANDLE injection_id = fort_packet_injection_id(isIPv6);
 
-    status = inbound
-            ? fort_packet_inject_in(pkt, *clonedNetBufList, context, injection_id, addressFamily)
-            : fort_packet_inject_out(pkt, *clonedNetBufList, context, injection_id, addressFamily);
+    status = inbound ? fort_packet_inject_in(pkt, *clonedNetBufList, injection_id, addressFamily)
+                     : fort_packet_inject_out(pkt, *clonedNetBufList, injection_id, addressFamily);
     if (!NT_SUCCESS(status)) {
         LOG("Shaper: Packet injection call error: %x\n", status);
         TRACE(FORT_SHAPER_PACKET_INJECTION_CALL_ERROR, status, 0, 0);
@@ -404,7 +468,7 @@ static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt
 
     PNET_BUFFER_LIST clonedNetBufList = NULL;
 
-    status = fort_packet_inject(&pkt->io, &clonedNetBufList, pkt);
+    status = fort_packet_inject(&pkt->io, &clonedNetBufList);
 
     if (!NT_SUCCESS(status)) {
         fort_shaper_packet_free(shaper, pkt, clonedNetBufList);
@@ -964,7 +1028,7 @@ inline static NTSTATUS fort_shaper_packet_queue(
 
     RtlZeroMemory(pkt, sizeof(FORT_FLOW_PACKET));
 
-    const NTSTATUS status = fort_packet_fill(ca, &pkt->io);
+    const NTSTATUS status = fort_packet_fill(ca, &pkt->io, FORT_PACKET_TYPE_FLOW);
     if (!NT_SUCCESS(status)) {
         fort_shaper_packet_put(shaper, pkt);
         return status;
@@ -1052,54 +1116,6 @@ FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowCont
 FORT_API void fort_shaper_drop_packets(PFORT_SHAPER shaper)
 {
     fort_shaper_flush(shaper, FORT_PACKET_FLUSH_ALL, /*drop=*/TRUE);
-}
-
-static PFORT_PENDING_PACKET fort_pending_packet_get_locked(PFORT_PENDING pending)
-{
-    PFORT_PENDING_PACKET pkt = NULL;
-
-    if (pending->packet_free != NULL) {
-        pkt = pending->packet_free;
-        pending->packet_free = pkt->next;
-    } else {
-        const tommy_size_t size = tommy_arrayof_size(&pending->packets);
-
-        /* TODO: tommy_arrayof_grow(): check calloc()'s result for NULL */
-        if (tommy_arrayof_grow(&pending->packets, size + 1), 0)
-            return NULL;
-
-        pkt = tommy_arrayof_ref(&pending->packets, size);
-    }
-
-    return pkt;
-}
-
-static PFORT_PENDING_PACKET fort_pending_packet_get(PFORT_PENDING pending)
-{
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
-
-    PFORT_PENDING_PACKET pkt = fort_pending_packet_get_locked(pending);
-
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    return pkt;
-}
-
-static void fort_pending_packet_put_locked(PFORT_PENDING pending, PFORT_PENDING_PACKET pkt)
-{
-    pkt->next = pending->packet_free;
-    pending->packet_free = pkt;
-}
-
-static void fort_pending_packet_put(PFORT_PENDING pending, PFORT_PENDING_PACKET pkt)
-{
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
-
-    fort_pending_packet_put_locked(pending, pkt);
-
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static PFORT_PENDING_PROC fort_pending_proc_find_locked(PFORT_PENDING pending, UINT32 process_id)
@@ -1261,12 +1277,10 @@ FORT_API BOOL fort_pending_add_packet(
 
     RtlZeroMemory(pkt, sizeof(FORT_PENDING_PACKET));
 
-    status = fort_packet_fill(ca, &pkt->io);
-    if (NT_SUCCESS(status)) {
-        if (fort_packet_is_ipsec_protected(ca)) {
-            pkt->io.flags |= FORT_PACKET_IPSEC_PROTECTED;
-        }
+    const UCHAR ipsec_flag = fort_packet_is_ipsec_protected(ca) ? FORT_PACKET_IPSEC_PROTECTED : 0;
 
+    status = fort_packet_fill(ca, &pkt->io, ipsec_flag | FORT_PACKET_TYPE_PENDING);
+    if (NT_SUCCESS(status)) {
         /* Add the Packet to Pending Process */
         status = fort_pending_proc_add_packet(pending, ca, cx, pkt);
     }

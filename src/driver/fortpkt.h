@@ -32,6 +32,9 @@ typedef struct fort_packet_out
 #define FORT_PACKET_INBOUND         0x01
 #define FORT_PACKET_IP6             0x02
 #define FORT_PACKET_IPSEC_PROTECTED 0x08
+#define FORT_PACKET_TYPE_FLOW       0x10
+#define FORT_PACKET_TYPE_PENDING    0x20
+#define FORT_PACKET_TYPE_MASK       0x30
 
 typedef struct fort_packet_io
 {
@@ -48,14 +51,14 @@ typedef struct fort_packet_io
 
 typedef struct fort_flow_packet
 {
+    FORT_PACKET_IO io; /* must be first! */
+
     struct fort_flow_packet *next;
 
     PVOID flow; /* to drop on flow deletion */
 
     LARGE_INTEGER latency_start; /* Time it was placed in the latency queue */
     UINT32 data_length; /* Size of the packet (in bytes) */
-
-    FORT_PACKET_IO io;
 } FORT_FLOW_PACKET, *PFORT_FLOW_PACKET;
 
 typedef struct fort_packet_list
@@ -87,11 +90,11 @@ typedef struct fort_packet_queue
 
 typedef struct fort_pending_packet
 {
+    FORT_PACKET_IO io; /* must be first! */
+
     struct fort_pending_packet *next;
 
     HANDLE completion_context;
-
-    FORT_PACKET_IO io;
 } FORT_PENDING_PACKET, *PFORT_PENDING_PACKET;
 
 #define FORT_PENDING_PROC_PACKET_COUNT_MAX 8
