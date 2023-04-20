@@ -39,6 +39,7 @@
 #define FACILITY_DRIVER                  0x4
 #define FACILITY_SHAPER                  0x5
 #define FACILITY_PROCESS_TREE            0x6
+#define FACILITY_WORKER                  0x7
 
 
 //
@@ -171,5 +172,15 @@
 // Enum Processes Error.
 //
 #define FORT_PSTREE_ENUM_PROCESSES_ERROR ((NTSTATUS)0xC0060002L)
+
+/* Worker */
+//
+// MessageId: FORT_WORKER_CALLBACK_ERROR
+//
+// MessageText:
+//
+// Worker: Callback Error.
+//
+#define FORT_WORKER_CALLBACK_ERROR       ((NTSTATUS)0xC0070001L)
 
 #endif // FORTEVT_H

@@ -92,7 +92,7 @@ static void NTAPI fort_driver_load_device_expand(PVOID param)
 inline static void fort_driver_load_device(NTSTATUS *status)
 {
     const NTSTATUS status_expand = KeExpandKernelStackAndCallout(
-            &fort_driver_load_device_expand, status, KERNEL_STACK_SIZE);
+            &fort_driver_load_device_expand, status, FORT_KERNEL_STACK_SIZE);
 
     if (!NT_SUCCESS(status_expand)) {
         *status = status_expand;

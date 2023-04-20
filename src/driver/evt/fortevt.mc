@@ -21,6 +21,7 @@ FacilityNames = (
     Driver = 4:FACILITY_DRIVER
     Shaper = 5:FACILITY_SHAPER
     ProcessTree = 6:FACILITY_PROCESS_TREE
+    Worker = 7:FACILITY_WORKER
 )
 
 
@@ -98,6 +99,13 @@ PsTree: Update Error.
 MessageId=2 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_ENUM_PROCESSES_ERROR
 Language=English
 Enum Processes Error.
+.
+
+
+;/* Worker */
+MessageId=1 Facility=Worker Severity=Error SymbolicName=FORT_WORKER_CALLBACK_ERROR
+Language=English
+Worker: Callback Error.
 .
 
 ;#endif // FORTEVT_H

@@ -38,6 +38,8 @@
 
 #define fort_request_complete(irp, status) fort_request_complete_info((irp), (status), 0)
 
+#define FORT_KERNEL_STACK_SIZE (8 * 1024)
+
 #if defined(FORT_DEBUG_STACK)
 #    define FORT_CHECK_STACK() fort_check_stack_usage(__func__)
 #else
