@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.12, 2023-04-21:
+- Driver: Expand kernel stack for workers.
+
 v3.8.11, 2023-04-19:
 - UI: WorkerManager: Fix workers waiting on exit.
 
