@@ -9,6 +9,17 @@
 #include "forttrace.h"
 #include "fortutl.h"
 
+#define FORT_STACK_USAGE_FREE_MIN (1 * 1024)
+
+FORT_API void fort_check_stack_usage(const char *func_name)
+{
+    const UINT32 free_size = (UINT32) IoGetRemainingStackSize();
+
+    if (free_size < FORT_STACK_USAGE_FREE_MIN) {
+        LOG("Stack Overflow: %s: remaining=%d\n", func_name, free_size);
+    }
+}
+
 static void fort_driver_delete_device(PDRIVER_OBJECT driver)
 {
     PDEVICE_OBJECT device_obj = driver->DeviceObject;
@@ -149,15 +160,4 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
     }
 
     return status;
-}
-
-#define FORT_STACK_USAGE_FREE_MIN (1 * 1024)
-
-FORT_API void fort_check_stack_usage(const char *func_name)
-{
-    const UINT32 free_size = (UINT32) IoGetRemainingStackSize();
-
-    if (free_size < FORT_STACK_USAGE_FREE_MIN) {
-        LOG("Stack Overflow: %s: remaining=%d\n", func_name, free_size);
-    }
 }
