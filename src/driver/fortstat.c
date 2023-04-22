@@ -98,7 +98,7 @@ static void fort_stat_proc_dec(PFORT_STAT stat, UINT16 proc_index)
 {
     PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, proc_index);
 
-    if (--proc->refcount > 0 || proc->active)
+    if (--proc->refcount != 0 || proc->active)
         return;
 
     if (proc->log_stat) {
@@ -596,7 +596,7 @@ static void fort_stat_traf_flush_proc(PFORT_STAT stat, PFORT_STAT_PROC proc, PCH
     /* Write process_id */
     *out_proc = proc->process_id
             /* The process is terminated */
-            | (proc->refcount > 0 ? 0 : 1);
+            | (proc->refcount == 0 ? 1 : 0);
 }
 
 FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out)
@@ -610,14 +610,14 @@ FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out
             fort_stat_traf_flush_proc(stat, proc, &out);
         }
 
-        if (proc->refcount > 0) {
+        if (proc->refcount == 0) {
+            /* The process is terminated */
+            fort_stat_proc_free(stat, proc);
+        } else {
             proc->active = FALSE;
 
             /* Clear process's bytes */
             proc->traf.v = 0;
-        } else {
-            /* The process is terminated */
-            fort_stat_proc_free(stat, proc);
         }
 
         proc = proc_next;
