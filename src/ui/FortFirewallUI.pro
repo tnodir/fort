@@ -38,6 +38,7 @@ SOURCES += \
     form/controls/checkspincombo.cpp \
     form/controls/checktimeperiod.cpp \
     form/controls/clickablemenu.cpp \
+    form/controls/combobox.cpp \
     form/controls/controlutil.cpp \
     form/controls/labelcolor.cpp \
     form/controls/labeldoublespin.cpp \
@@ -46,6 +47,7 @@ SOURCES += \
     form/controls/listview.cpp \
     form/controls/mainwindow.cpp \
     form/controls/plaintextedit.cpp \
+    form/controls/spinbox.cpp \
     form/controls/spincombo.cpp \
     form/controls/tabbar.cpp \
     form/controls/tableview.cpp \
@@ -214,6 +216,7 @@ HEADERS += \
     form/controls/checkspincombo.h \
     form/controls/checktimeperiod.h \
     form/controls/clickablemenu.h \
+    form/controls/combobox.h \
     form/controls/controlutil.h \
     form/controls/labelcolor.h \
     form/controls/labeldoublespin.h \
@@ -222,6 +225,7 @@ HEADERS += \
     form/controls/listview.h \
     form/controls/mainwindow.h \
     form/controls/plaintextedit.h \
+    form/controls/spinbox.h \
     form/controls/spincombo.h \
     form/controls/tabbar.h \
     form/controls/tableview.h \

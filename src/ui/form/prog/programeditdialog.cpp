@@ -300,7 +300,7 @@ QLayout *ProgramEditDialog::setupAppNameLayout()
 
 void ProgramEditDialog::setupComboAppGroups()
 {
-    m_comboAppGroup = new QComboBox();
+    m_comboAppGroup = ControlUtil::createComboBox();
 
     const auto refreshComboAppGroups = [&](bool onlyFlags = false) {
         if (onlyFlags)

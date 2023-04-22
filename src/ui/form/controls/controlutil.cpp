@@ -2,22 +2,22 @@
 
 #include <QBoxLayout>
 #include <QCheckBox>
-#include <QComboBox>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
 #include <QScrollArea>
-#include <QSpinBox>
 #include <QToolButton>
 #include <QWidgetAction>
 
 #include <util/iconcache.h>
 
+#include "combobox.h"
 #include "labelcolor.h"
 #include "labeldoublespin.h"
 #include "labelspin.h"
 #include "labelspincombo.h"
+#include "spinbox.h"
 
 QCheckBox *ControlUtil::createCheckBox(
         bool checked, const std::function<void(bool checked)> &onToggled)
@@ -30,11 +30,23 @@ QCheckBox *ControlUtil::createCheckBox(
     return c;
 }
 
+QSpinBox *ControlUtil::createSpinBox()
+{
+    auto c = new SpinBox();
+    return c;
+}
+
+QComboBox *ControlUtil::createComboBox(const QStringList &texts)
+{
+    auto c = new ComboBox();
+    c->addItems(texts);
+    return c;
+}
+
 QComboBox *ControlUtil::createComboBox(
         const QStringList &texts, const std::function<void(int index)> &onActivated)
 {
-    auto c = new QComboBox();
-    c->addItems(texts);
+    auto c = createComboBox(texts);
 
     c->connect(c, QOverload<int>::of(&QComboBox::activated), onActivated);
 

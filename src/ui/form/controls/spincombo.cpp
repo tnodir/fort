@@ -53,7 +53,7 @@ void SpinCombo::setupUi()
 
 void SpinCombo::setupSpin()
 {
-    m_spinBox = new QSpinBox();
+    m_spinBox = ControlUtil::createSpinBox();
     m_spinBox->setMinimumWidth(110);
     m_spinBox->setRange(0, 9999);
 
@@ -63,7 +63,7 @@ void SpinCombo::setupSpin()
 
 void SpinCombo::setupCombo()
 {
-    m_comboBox = new QComboBox();
+    m_comboBox = ControlUtil::createComboBox();
     m_comboBox->setMinimumWidth(120);
 
     connect(m_comboBox, QOverload<int>::of(&QComboBox::activated), this,

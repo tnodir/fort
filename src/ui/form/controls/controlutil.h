@@ -15,6 +15,7 @@ QT_FORWARD_DECLARE_CLASS(QLayout)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QSpinBox)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class LabelColor;
@@ -27,27 +28,38 @@ class ControlUtil
 public:
     static QCheckBox *createCheckBox(
             bool checked, const std::function<void(bool checked)> &onToggled);
+
+    static QSpinBox *createSpinBox();
+
+    static QComboBox *createComboBox(const QStringList &texts = {});
     static QComboBox *createComboBox(
             const QStringList &texts, const std::function<void(int index)> &onActivated);
+
     static QPushButton *createButton(const QString &iconPath, const QString &text = QString());
     static QPushButton *createButton(
             const QString &iconPath, const std::function<void()> &onClicked);
+
     static QToolButton *createToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
     static QToolButton *createFlatToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
     static QPushButton *createLinkButton(const QString &iconPath,
             const QString &linkPath = QString(), const QString &toolTip = QString());
+
     static QToolButton *createSplitterButton(
             const QString &iconPath, const std::function<void()> &onClicked);
+
     static QLabel *createLabel(const QString &text = QString());
     static QLineEdit *createLineLabel();
     static QLineEdit *createLineEdit(
             const QString &text, const std::function<void(const QString &text)> &onChanged);
+
     static QMenu *createMenu(QWidget *parent = nullptr);
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);
+
     static QBoxLayout *createLayoutByWidgets(
             const QList<QWidget *> &widgets, Qt::Orientation o = Qt::Vertical);
+
     static QFrame *createSeparator(Qt::Orientation o = Qt::Horizontal);
 
     static QLayout *createRowLayout(QWidget *w1, QWidget *w2, int stretch1 = 1);

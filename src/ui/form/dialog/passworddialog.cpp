@@ -90,7 +90,7 @@ QLayout *PasswordDialog::setupUnlockLayout()
 
     m_labelUnlock = ControlUtil::createLabel();
 
-    m_comboUnlock = new QComboBox();
+    m_comboUnlock = ControlUtil::createComboBox();
     m_comboUnlock->setMinimumWidth(150);
 
     layout->addWidget(m_labelUnlock);
