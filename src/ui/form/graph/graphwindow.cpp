@@ -181,7 +181,10 @@ void GraphWindow::setupTimer()
     connect(&m_hoverTimer, &QTimer::timeout, this, &GraphWindow::checkHoverLeave);
     connect(&m_updateTimer, &QTimer::timeout, this, &GraphWindow::addEmptyTraffic);
 
-    m_updateTimer.start(1000); // 1 second
+    m_hoverTimer.setInterval(300);
+    m_updateTimer.setInterval(1000); // 1 second
+
+    m_updateTimer.start();
 }
 
 void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
@@ -252,7 +255,7 @@ void GraphWindow::enterEvent(QEnterEvent *event)
 
     if (ini()->graphWindowHideOnHover()) {
         hide();
-        m_hoverTimer.start(200);
+        m_hoverTimer.start();
         return;
     }
 
