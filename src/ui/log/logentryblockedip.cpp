@@ -83,3 +83,8 @@ void LogEntryBlockedIp::setRemoteIp6(const QByteArray &ip)
 {
     m_remoteIp.v6 = NetUtil::rawArrayToIp6(ip);
 }
+
+bool LogEntryBlockedIp::isAskPending() const
+{
+    return blockReason() == FORT_BLOCK_REASON_ASK_PENDING;
+}

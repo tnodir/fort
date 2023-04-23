@@ -1,10 +1,7 @@
 #ifndef STATBLOCKMANAGER_H
 #define STATBLOCKMANAGER_H
 
-#include <QHash>
 #include <QObject>
-#include <QStringList>
-#include <QVector>
 
 #include <sqlite/sqlitetypes.h>
 

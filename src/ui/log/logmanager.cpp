@@ -6,6 +6,7 @@
 #include <driver/drivercommon.h>
 #include <driver/drivermanager.h>
 #include <driver/driverworker.h>
+#include <stat/askpendingmanager.h>
 #include <stat/statblockmanager.h>
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
@@ -148,7 +149,11 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
         LogEntryBlockedIp blockedIpEntry;
         logBuffer->readEntryBlockedIp(&blockedIpEntry);
         blockedIpEntry.setConnTime(currentUnixTime());
-        IoC<StatBlockManager>()->logBlockedIp(blockedIpEntry);
+        if (blockedIpEntry.isAskPending()) {
+            IoC<AskPendingManager>()->logBlockedIp(blockedIpEntry);
+        } else {
+            IoC<StatBlockManager>()->logBlockedIp(blockedIpEntry);
+        }
     } break;
     case FORT_LOG_TYPE_PROC_NEW: {
         LogEntryProcNew procNewEntry;

@@ -24,6 +24,7 @@
 #include <rpc/confmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
+#include <rpc/askpendingmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/rpcmanager.h>
 #include <rpc/serviceinfomanagerrpc.h>
@@ -130,6 +131,7 @@ void FortManager::createManagers()
     QuotaManager *quotaManager;
     StatManager *statManager;
     StatBlockManager *statBlockManager;
+    AskPendingManager *pendingManager;
     DriverManager *driverManager;
     AppInfoManager *appInfoManager;
     LogManager *logManager;
@@ -145,6 +147,7 @@ void FortManager::createManagers()
         quotaManager = new QuotaManager();
         statManager = new StatManager(settings->statFilePath());
         statBlockManager = new StatBlockManager(settings->statBlockFilePath());
+        pendingManager = new AskPendingManager();
         driverManager = new DriverManager();
         appInfoManager = new AppInfoManager(settings->cacheFilePath());
         logManager = new LogManager();
@@ -155,6 +158,7 @@ void FortManager::createManagers()
         quotaManager = new QuotaManagerRpc();
         statManager = new StatManagerRpc(settings->statFilePath());
         statBlockManager = new StatBlockManagerRpc(settings->statBlockFilePath());
+        pendingManager = new AskPendingManagerRpc();
         driverManager = new DriverManagerRpc();
         appInfoManager = new AppInfoManagerRpc(settings->cacheFilePath());
         logManager = new LogManagerRpc();
@@ -180,6 +184,7 @@ void FortManager::createManagers()
     ioc->setService(quotaManager);
     ioc->setService(statManager);
     ioc->setService(statBlockManager);
+    ioc->setService(pendingManager);
     ioc->setService(driverManager);
     ioc->setService(appInfoManager);
     ioc->setService(logManager);

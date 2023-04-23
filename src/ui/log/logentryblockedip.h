@@ -56,6 +56,8 @@ public:
     QByteArray remoteIp6() const;
     void setRemoteIp6(const QByteArray &ip);
 
+    bool isAskPending() const;
+
 private:
     bool m_isIPv6 : 1;
     bool m_inbound : 1;

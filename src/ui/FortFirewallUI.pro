@@ -119,6 +119,7 @@ SOURCES += \
     model/zonesourcewrapper.cpp \
     model/zonetypewrapper.cpp \
     rpc/appinfomanagerrpc.cpp \
+    rpc/askpendingmanagerrpc.cpp \
     rpc/confmanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
     rpc/logmanagerrpc.cpp \
@@ -131,6 +132,7 @@ SOURCES += \
     rpc/windowmanagerfake.cpp \
     serviceinfo/serviceinfo.cpp \
     serviceinfo/serviceinfomanager.cpp \
+    stat/askpendingmanager.cpp \
     stat/deleteconnblockjob.cpp \
     stat/logblockedipjob.cpp \
     stat/quotamanager.cpp \
@@ -298,6 +300,7 @@ HEADERS += \
     model/zonesourcewrapper.h \
     model/zonetypewrapper.h \
     rpc/appinfomanagerrpc.h \
+    rpc/askpendingmanagerrpc.h \
     rpc/confmanagerrpc.h \
     rpc/drivermanagerrpc.h \
     rpc/logmanagerrpc.h \
@@ -310,6 +313,7 @@ HEADERS += \
     rpc/windowmanagerfake.h \
     serviceinfo/serviceinfo.h \
     serviceinfo/serviceinfomanager.h \
+    stat/askpendingmanager.h \
     stat/deleteconnblockjob.h \
     stat/logblockedipjob.h \
     stat/quotamanager.h \
