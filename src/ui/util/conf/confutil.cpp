@@ -19,7 +19,7 @@
 
 #define APP_GROUP_MAX      FORT_CONF_GROUP_MAX
 #define APP_GROUP_NAME_MAX 128
-#define APP_PATH_MAX       (FORT_CONF_APP_PATH_MAX / sizeof(wchar_t))
+#define APP_PATH_MAX       FORT_CONF_APP_PATH_MAX
 
 namespace {
 
@@ -415,7 +415,7 @@ bool ConfUtil::addApp(
             return true;
     }
 
-    if (kernelPath.size() > int(APP_PATH_MAX)) {
+    if (kernelPath.size() > APP_PATH_MAX) {
         setErrorMessage(tr("Length of Application's Path must be < %1").arg(APP_PATH_MAX));
         return false;
     }

@@ -11,7 +11,8 @@
 #define FORT_CONF_ZONE_MAX           32
 #define FORT_CONF_GROUP_MAX          16
 #define FORT_CONF_APPS_LEN_MAX       (64 * 1024 * 1024)
-#define FORT_CONF_APP_PATH_MAX       (2 * 1024)
+#define FORT_CONF_APP_PATH_MAX       1024
+#define FORT_CONF_APP_PATH_MAX_SIZE  (FORT_CONF_APP_PATH_MAX * sizeof(WCHAR))
 #define FORT_CONF_STR_ALIGN          4
 #define FORT_CONF_STR_HEADER_SIZE(n) (((n) + 1) * sizeof(UINT32))
 #define FORT_CONF_STR_DATA_SIZE(size)                                                              \
