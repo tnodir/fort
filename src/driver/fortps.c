@@ -128,8 +128,19 @@ typedef struct fort_path_buffer
     WCHAR buffer[FORT_CONF_APP_PATH_MAX];
 } FORT_PATH_BUFFER, *PFORT_PATH_BUFFER;
 
+typedef struct fort_psinfo_hash
+{
+    tommy_key_t pid_hash;
+    DWORD processId;
+    DWORD parentProcessId;
+} FORT_PSINFO_HASH, *PFORT_PSINFO_HASH;
+
+typedef const FORT_PSINFO_HASH *PCFORT_PSINFO_HASH;
+
 typedef struct fort_psenum_process_arg
 {
+    FORT_PSINFO_HASH psi;
+
     FORT_PATH_BUFFER pb;
 
     UNICODE_STRING commandLine;
@@ -597,20 +608,20 @@ inline static void fort_pstree_check_proc_inheritance(PFORT_PSTREE ps_tree, PFOR
 }
 
 static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING path,
-        PCUNICODE_STRING commandLine, tommy_key_t pid_hash, DWORD processId, DWORD parentProcessId)
+        PCUNICODE_STRING commandLine, PCFORT_PSINFO_HASH psi)
 {
     FORT_CHECK_STACK();
 
     PFORT_PSNAME ps_name = fort_pstree_add_service_name(ps_tree, path, commandLine);
 
-    PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, ps_name, pid_hash);
+    PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, ps_name, psi->pid_hash);
     if (proc == NULL) {
         fort_pstree_name_del(ps_tree, ps_name);
         return NULL;
     }
 
-    proc->process_id = processId;
-    proc->parent_process_id = parentProcessId;
+    proc->process_id = psi->processId;
+    proc->parent_process_id = psi->parentProcessId;
 
     /* Service can't inherit parent's name */
     proc->flags = (ps_name != NULL) ? FORT_PSNODE_NAME_CUSTOM : 0;
@@ -639,8 +650,13 @@ inline static PFORT_PSNODE fort_pstree_notify_process_created(PFORT_PSTREE ps_tr
     UNICODE_STRING path = *createInfo->ImageFileName;
     fort_path_prefix_adjust(&path);
 
-    return fort_pstree_handle_new_proc(
-            ps_tree, &path, createInfo->CommandLine, pid_hash, processId, parentProcessId);
+    const FORT_PSINFO_HASH psi = {
+        .pid_hash = pid_hash,
+        .processId = processId,
+        .parentProcessId = parentProcessId,
+    };
+
+    return fort_pstree_handle_new_proc(ps_tree, &path, createInfo->CommandLine, &psi);
 }
 
 inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPROCESS process,
@@ -744,8 +760,8 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static NTSTATUS fort_pstree_enum_process(PFORT_PSTREE ps_tree, PFORT_PSENUM_PROCESS_ARG epa,
-        HANDLE processHandle, DWORD processId, DWORD parentProcessId)
+static NTSTATUS fort_pstree_enum_process(
+        PFORT_PSTREE ps_tree, PFORT_PSENUM_PROCESS_ARG epa, HANDLE processHandle)
 {
     NTSTATUS status;
 
@@ -756,23 +772,22 @@ static NTSTATUS fort_pstree_enum_process(PFORT_PSTREE ps_tree, PFORT_PSENUM_PROC
     if (fort_pstree_svchost_path_check(&epa->pb.path)) {
         status = GetProcessPathArgs(epa, processHandle);
         if (!NT_SUCCESS(status)) {
-            LOG("PsTree: Process Args Error: pid=%d %x\n", processId, status);
+            LOG("PsTree: Process Args Error: pid=%d %x\n", epa->psi.processId, status);
             return status;
         }
     } else {
         epa->pb.path.Length = 0;
     }
 
-    const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
+    epa->psi.pid_hash = fort_pstree_proc_hash(epa->psi.processId);
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
 
-    PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
+    PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, epa->psi.processId, epa->psi.pid_hash);
 
     if (proc == NULL) {
-        fort_pstree_handle_new_proc(
-                ps_tree, &epa->pb.path, &epa->commandLine, pid_hash, processId, parentProcessId);
+        fort_pstree_handle_new_proc(ps_tree, &epa->pb.path, &epa->commandLine, &epa->psi);
     }
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -783,20 +798,26 @@ static NTSTATUS fort_pstree_enum_process(PFORT_PSTREE ps_tree, PFORT_PSENUM_PROC
 static void fort_pstree_enum_process_check(
         PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry, PFORT_PSENUM_PROCESS_ARG epa)
 {
-    const DWORD processId = (DWORD) processEntry->ProcessId;
-    const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
+    HANDLE processHandle;
+    {
+        const DWORD processId = (DWORD) processEntry->ProcessId;
+        const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
 
-    if (processId == 0 || processId == 4 || parentProcessId == 4)
-        return; /* skip System (sub)processes */
+        if (processId == 0 || processId == 4 || parentProcessId == 4)
+            return; /* skip System (sub)processes */
 
-    const HANDLE processHandle = OpenProcessById(processId);
-    if (processHandle == NULL)
-        return;
+        processHandle = OpenProcessById(processId);
+        if (processHandle == NULL)
+            return;
+
+        epa->psi.processId = processId;
+        epa->psi.parentProcessId = parentProcessId;
+    }
 
     epa->pb.path.Length = 0;
     epa->commandLine.Length = 0;
 
-    fort_pstree_enum_process(ps_tree, epa, processHandle, processId, parentProcessId);
+    fort_pstree_enum_process(ps_tree, epa, processHandle);
 
     ZwClose(processHandle);
 }
