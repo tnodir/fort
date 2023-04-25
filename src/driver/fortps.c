@@ -618,6 +618,31 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_
     return proc;
 }
 
+inline static PFORT_PSNODE fort_pstree_notify_process_closed(
+        PFORT_PSTREE ps_tree, PFORT_PSNODE proc)
+{
+    if (proc != NULL) {
+        fort_pstree_proc_del(ps_tree, proc);
+    }
+
+    return NULL;
+}
+
+inline static PFORT_PSNODE fort_pstree_notify_process_created(PFORT_PSTREE ps_tree,
+        PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSNODE proc, tommy_key_t pid_hash, DWORD processId)
+{
+    if (proc != NULL)
+        return NULL;
+
+    const DWORD parentProcessId = (DWORD) (ptrdiff_t) createInfo->ParentProcessId;
+
+    UNICODE_STRING path = *createInfo->ImageFileName;
+    fort_path_prefix_adjust(&path);
+
+    return fort_pstree_handle_new_proc(
+            ps_tree, &path, createInfo->CommandLine, pid_hash, processId, parentProcessId);
+}
+
 inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPROCESS process,
         HANDLE processHandle, PPS_CREATE_NOTIFY_INFO createInfo)
 {
@@ -641,27 +666,13 @@ inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPR
 
     PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
 
+    /* Process Closed */
     if (createInfo == NULL) {
-        /* Process Closed */
-        if (proc != NULL) {
-            fort_pstree_proc_del(ps_tree, proc);
-
-            proc = NULL;
-        }
+        proc = fort_pstree_notify_process_closed(ps_tree, proc);
     }
     /* Process Created */
     else if (createInfo->ImageFileName != NULL && createInfo->CommandLine != NULL) {
-        if (proc == NULL) {
-            const DWORD parentProcessId = (DWORD) (ptrdiff_t) createInfo->ParentProcessId;
-
-            UNICODE_STRING path = *createInfo->ImageFileName;
-            fort_path_prefix_adjust(&path);
-
-            proc = fort_pstree_handle_new_proc(
-                    ps_tree, &path, createInfo->CommandLine, pid_hash, processId, parentProcessId);
-        } else {
-            proc = NULL;
-        }
+        proc = fort_pstree_notify_process_created(ps_tree, createInfo, proc, pid_hash, processId);
     }
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
