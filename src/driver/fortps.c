@@ -780,6 +780,27 @@ static NTSTATUS fort_pstree_enum_process(PFORT_PSTREE ps_tree, PFORT_PSENUM_PROC
     return STATUS_SUCCESS;
 }
 
+static void fort_pstree_enum_process_check(
+        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry, PFORT_PSENUM_PROCESS_ARG epa)
+{
+    const DWORD processId = (DWORD) processEntry->ProcessId;
+    const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
+
+    if (processId == 0 || processId == 4 || parentProcessId == 4)
+        return; /* skip System (sub)processes */
+
+    const HANDLE processHandle = OpenProcessById(processId);
+    if (processHandle == NULL)
+        return;
+
+    epa->pb.path.Length = 0;
+    epa->commandLine.Length = 0;
+
+    fort_pstree_enum_process(ps_tree, epa, processHandle, processId, parentProcessId);
+
+    ZwClose(processHandle);
+}
+
 static void fort_pstree_enum_processes_loop(
         PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry, PFORT_PSENUM_PROCESS_ARG epa)
 {
@@ -790,23 +811,7 @@ static void fort_pstree_enum_processes_loop(
     epa->commandLine.Buffer = epa->commandLineBuffer;
 
     for (;;) {
-        const DWORD processId = (DWORD) processEntry->ProcessId;
-        const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
-
-        if (processId == 0 || processId == 4 || parentProcessId == 4) {
-            /* skip System (sub)processes */
-        } else {
-            const HANDLE processHandle = OpenProcessById(processId);
-            if (processHandle != NULL) {
-
-                epa->pb.path.Length = 0;
-                epa->commandLine.Length = 0;
-
-                fort_pstree_enum_process(ps_tree, epa, processHandle, processId, parentProcessId);
-
-                ZwClose(processHandle);
-            }
-        }
+        fort_pstree_enum_process_check(ps_tree, processEntry, epa);
 
         const ULONG nextEntryOffset = processEntry->NextEntryOffset;
         if (nextEntryOffset == 0)
