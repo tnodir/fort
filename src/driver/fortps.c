@@ -231,14 +231,6 @@ static NTSTATUS GetCurrentProcessPathArgs(PFORT_PSENUM_PROCESS_ARG epa)
 {
     NTSTATUS status;
 
-    status = ZwQueryInformationProcess(ZwCurrentProcess(), ProcessBasicInformation,
-            &epa->procBasicInfo, sizeof(PROCESS_BASIC_INFORMATION), NULL);
-    if (!NT_SUCCESS(status))
-        return status;
-
-    if (epa->procBasicInfo.PebBaseAddress == NULL)
-        return STATUS_INVALID_ADDRESS;
-
     status = ReadProcessMemoryBuffer(
             epa->process, epa->procBasicInfo.PebBaseAddress, &epa->peb, sizeof(PEB));
     if (!NT_SUCCESS(status))
@@ -272,6 +264,14 @@ static NTSTATUS GetProcessPathArgs(PFORT_PSENUM_PROCESS_ARG epa, HANDLE processH
             processHandle, 0, *PsProcessType, KernelMode, (PVOID *) &epa->process, NULL);
     if (!NT_SUCCESS(status))
         return status;
+
+    status = ZwQueryInformationProcess(processHandle, ProcessBasicInformation, &epa->procBasicInfo,
+            sizeof(PROCESS_BASIC_INFORMATION), NULL);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    if (epa->procBasicInfo.PebBaseAddress == NULL)
+        return STATUS_INVALID_ADDRESS;
 
     /* Copy info from user-mode process */
     KeStackAttachProcess(epa->process, &epa->apcState);
