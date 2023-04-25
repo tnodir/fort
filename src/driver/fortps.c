@@ -246,18 +246,18 @@ static NTSTATUS GetCurrentProcessPathArgs(PFORT_PSENUM_PROCESS_ARG epa)
 
     PRTL_USER_PROCESS_PARAMETERS params = epa->peb.ProcessParameters;
     if (params == NULL)
-        return STATUS_INVALID_ADDRESS;
+        return STATUS_INVALID_ADDRESS_COMPONENT;
 
     const USHORT pathLength = params->ImagePathName.Length;
     if (pathLength != 0 && pathLength <= epa->pb.path.MaximumLength - sizeof(WCHAR)) {
-        PVOID userBuffer = (PVOID) GetUnicodeStringBuffer(&params->ImagePathName, params);
+        PVOID userBuffer = GetUnicodeStringBuffer(&params->ImagePathName, params);
         ReadProcessStringBuffer(epa->process, userBuffer, &epa->pb.path, pathLength);
     }
 
     const USHORT commandLineLength = params->CommandLine.Length;
     if (commandLineLength != 0
             && commandLineLength <= epa->commandLine.MaximumLength - sizeof(WCHAR)) {
-        PVOID userBuffer = (PVOID) GetUnicodeStringBuffer(&params->CommandLine, params);
+        PVOID userBuffer = GetUnicodeStringBuffer(&params->CommandLine, params);
         ReadProcessStringBuffer(epa->process, userBuffer, &epa->commandLine, commandLineLength);
     }
 
