@@ -67,55 +67,11 @@ typedef struct _SYSTEM_PROCESSES
 
 #if defined(FORT_DRIVER)
 
-typedef struct _PEB_LDR_DATA
-{
-    BYTE Reserved1[8];
-    PVOID Reserved2[3];
-    LIST_ENTRY InMemoryOrderModuleList;
-} PEB_LDR_DATA, *PPEB_LDR_DATA;
-
-typedef struct _RTL_USER_PROCESS_PARAMETERS
-{
-    BYTE Reserved1[16];
-    PVOID Reserved2[10];
-    UNICODE_STRING ImagePathName;
-    UNICODE_STRING CommandLine;
-} RTL_USER_PROCESS_PARAMETERS, *PRTL_USER_PROCESS_PARAMETERS;
-
-typedef VOID(NTAPI *PPS_POST_PROCESS_INIT_ROUTINE)(VOID);
-
-typedef struct _PEB
-{
-    BYTE Reserved1[2];
-    BYTE BeingDebugged;
-    BYTE Reserved2[1];
-    PVOID Reserved3[2];
-    PPEB_LDR_DATA Ldr;
-    PRTL_USER_PROCESS_PARAMETERS ProcessParameters;
-    PVOID Reserved4[3];
-    PVOID AtlThunkSListPtr;
-    PVOID Reserved5;
-    ULONG Reserved6;
-    PVOID Reserved7;
-    ULONG Reserved8;
-    ULONG AtlThunkSListPtr32;
-    PVOID Reserved9[45];
-    BYTE Reserved10[96];
-    PPS_POST_PROCESS_INIT_ROUTINE PostProcessInitRoutine;
-    BYTE Reserved11[128];
-    PVOID Reserved12[1];
-    ULONG SessionId;
-} PEB, *PPEB;
-
 NTSTATUS NTAPI ZwQuerySystemInformation(ULONG systemInformationClass, PVOID systemInformation,
         ULONG systemInformationLength, PULONG returnLength);
 
 NTSTATUS NTAPI ZwQueryInformationProcess(HANDLE processHandle, ULONG processInformationClass,
         PVOID processInformation, ULONG processInformationLength, PULONG returnLength);
-
-NTSTATUS NTAPI MmCopyVirtualMemory(PEPROCESS sourceProcess, PVOID sourceAddress,
-        PEPROCESS targetProcess, PVOID targetAddress, SIZE_T bufferSize,
-        KPROCESSOR_MODE previousMode, PSIZE_T returnSize);
 
 #endif
 
@@ -133,24 +89,12 @@ typedef struct fort_psinfo_hash
     tommy_key_t pid_hash;
     DWORD processId;
     DWORD parentProcessId;
+
+    PCUNICODE_STRING path;
+    PCUNICODE_STRING commandLine;
 } FORT_PSINFO_HASH, *PFORT_PSINFO_HASH;
 
 typedef const FORT_PSINFO_HASH *PCFORT_PSINFO_HASH;
-
-typedef struct fort_psenum_process_arg
-{
-    FORT_PSINFO_HASH psi;
-
-    FORT_PATH_BUFFER pb;
-
-    UNICODE_STRING commandLine;
-    WCHAR commandLineBuffer[FORT_COMMAND_LINE_LEN];
-
-    PEPROCESS process;
-    KAPC_STATE apcState;
-    PROCESS_BASIC_INFORMATION procBasicInfo;
-    PEB peb;
-} FORT_PSENUM_PROCESS_ARG, *PFORT_PSENUM_PROCESS_ARG;
 
 #define fort_pstree_proc_hash(process_id) tommy_inthash_u32((UINT32) (process_id))
 
@@ -200,100 +144,6 @@ static HANDLE OpenProcessById(DWORD processId)
     }
 
     return processHandle;
-}
-
-static PWCHAR GetUnicodeStringBuffer(PCUNICODE_STRING string, PRTL_USER_PROCESS_PARAMETERS params)
-{
-#ifdef _X86_
-    if ((PCHAR) string->Buffer < (PCHAR) params) {
-        return (PWCHAR) ((PCHAR) params + (DWORD) (ptrdiff_t) string->Buffer);
-    }
-#else
-    UNUSED(params);
-#endif
-
-    return string->Buffer;
-}
-
-static NTSTATUS ReadProcessMemoryBuffer(
-        PEPROCESS process, PVOID processData, PVOID out, USHORT size)
-{
-    SIZE_T outLength = 0;
-    const NTSTATUS status = MmCopyVirtualMemory(
-            process, processData, IoGetCurrentProcess(), out, size, KernelMode, &outLength);
-    if (!NT_SUCCESS(status))
-        return status;
-
-    return (size == outLength) ? STATUS_SUCCESS : STATUS_INVALID_BUFFER_SIZE;
-}
-
-static NTSTATUS ReadProcessStringBuffer(
-        PEPROCESS process, PVOID processData, PUNICODE_STRING out, USHORT size)
-{
-    const NTSTATUS status = ReadProcessMemoryBuffer(process, processData, out->Buffer, size);
-    if (NT_SUCCESS(status)) {
-        out->Buffer[size / sizeof(WCHAR)] = L'\0';
-        out->Length = (USHORT) size;
-    }
-    return status;
-}
-
-static NTSTATUS GetCurrentProcessPathArgs(PFORT_PSENUM_PROCESS_ARG epa)
-{
-    NTSTATUS status;
-
-    status = ReadProcessMemoryBuffer(
-            epa->process, epa->procBasicInfo.PebBaseAddress, &epa->peb, sizeof(PEB));
-    if (!NT_SUCCESS(status))
-        return status;
-
-    PRTL_USER_PROCESS_PARAMETERS params = epa->peb.ProcessParameters;
-    if (params == NULL)
-        return STATUS_INVALID_ADDRESS_COMPONENT;
-
-    const USHORT pathLength = params->ImagePathName.Length;
-    if (pathLength != 0 && pathLength <= epa->pb.path.MaximumLength - sizeof(WCHAR)) {
-        PVOID userBuffer = GetUnicodeStringBuffer(&params->ImagePathName, params);
-        ReadProcessStringBuffer(epa->process, userBuffer, &epa->pb.path, pathLength);
-    }
-
-    const USHORT commandLineLength = params->CommandLine.Length;
-    if (commandLineLength != 0
-            && commandLineLength <= epa->commandLine.MaximumLength - sizeof(WCHAR)) {
-        PVOID userBuffer = GetUnicodeStringBuffer(&params->CommandLine, params);
-        ReadProcessStringBuffer(epa->process, userBuffer, &epa->commandLine, commandLineLength);
-    }
-
-    return STATUS_SUCCESS;
-}
-
-static NTSTATUS GetProcessPathArgs(PFORT_PSENUM_PROCESS_ARG epa, HANDLE processHandle)
-{
-    NTSTATUS status;
-
-    status = ObReferenceObjectByHandle(
-            processHandle, 0, *PsProcessType, KernelMode, (PVOID *) &epa->process, NULL);
-    if (!NT_SUCCESS(status))
-        return status;
-
-    status = ZwQueryInformationProcess(processHandle, ProcessBasicInformation, &epa->procBasicInfo,
-            sizeof(PROCESS_BASIC_INFORMATION), NULL);
-    if (!NT_SUCCESS(status))
-        return status;
-
-    if (epa->procBasicInfo.PebBaseAddress == NULL)
-        return STATUS_INVALID_ADDRESS;
-
-    /* Copy info from user-mode process */
-    KeStackAttachProcess(epa->process, &epa->apcState);
-    {
-        status = GetCurrentProcessPathArgs(epa);
-    }
-    KeUnstackDetachProcess(&epa->apcState);
-
-    ObDereferenceObject(epa->process);
-
-    return status;
 }
 
 UCHAR fort_pstree_flags_set(PFORT_PSTREE ps_tree, UCHAR flags, BOOL on)
@@ -403,11 +253,13 @@ static BOOL fort_pstree_svchost_check(
     return TRUE;
 }
 
-static PFORT_PSNAME fort_pstree_add_service_name(
-        PFORT_PSTREE ps_tree, PCUNICODE_STRING path, PCUNICODE_STRING commandLine)
+static PFORT_PSNAME fort_pstree_add_service_name(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi)
 {
+    if (psi->path == NULL || psi->commandLine == NULL)
+        return NULL;
+
     UNICODE_STRING serviceName;
-    if (!fort_pstree_svchost_check(path, commandLine, &serviceName))
+    if (!fort_pstree_svchost_check(psi->path, psi->commandLine, &serviceName))
         return NULL;
 
     UNICODE_STRING svchostPrefix;
@@ -607,12 +459,11 @@ inline static void fort_pstree_check_proc_inheritance(PFORT_PSTREE ps_tree, PFOR
     fort_conf_ref_put(device_conf, conf_ref);
 }
 
-static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_STRING path,
-        PCUNICODE_STRING commandLine, PCFORT_PSINFO_HASH psi)
+static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi)
 {
     FORT_CHECK_STACK();
 
-    PFORT_PSNAME ps_name = fort_pstree_add_service_name(ps_tree, path, commandLine);
+    PFORT_PSNAME ps_name = fort_pstree_add_service_name(ps_tree, psi);
 
     PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, ps_name, psi->pid_hash);
     if (proc == NULL) {
@@ -629,22 +480,9 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCUNICODE_
     return proc;
 }
 
-inline static PFORT_PSNODE fort_pstree_notify_process_closed(
-        PFORT_PSTREE ps_tree, PFORT_PSNODE proc)
-{
-    if (proc != NULL) {
-        fort_pstree_proc_del(ps_tree, proc);
-    }
-
-    return NULL;
-}
-
 inline static PFORT_PSNODE fort_pstree_notify_process_created(PFORT_PSTREE ps_tree,
-        PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSNODE proc, tommy_key_t pid_hash, DWORD processId)
+        PPS_CREATE_NOTIFY_INFO createInfo, tommy_key_t pid_hash, DWORD processId)
 {
-    if (proc != NULL)
-        return NULL;
-
     const DWORD parentProcessId = (DWORD) (ptrdiff_t) createInfo->ParentProcessId;
 
     UNICODE_STRING path = *createInfo->ImageFileName;
@@ -654,9 +492,12 @@ inline static PFORT_PSNODE fort_pstree_notify_process_created(PFORT_PSTREE ps_tr
         .pid_hash = pid_hash,
         .processId = processId,
         .parentProcessId = parentProcessId,
+
+        .path = &path,
+        .commandLine = createInfo->CommandLine,
     };
 
-    return fort_pstree_handle_new_proc(ps_tree, &path, createInfo->CommandLine, &psi);
+    return fort_pstree_handle_new_proc(ps_tree, &psi);
 }
 
 inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPROCESS process,
@@ -682,13 +523,14 @@ inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPR
 
     PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
 
-    /* Process Closed */
-    if (createInfo == NULL) {
-        proc = fort_pstree_notify_process_closed(ps_tree, proc);
+    if (proc != NULL) {
+        fort_pstree_proc_del(ps_tree, proc);
+        proc = NULL;
     }
-    /* Process Created */
-    else if (createInfo->ImageFileName != NULL && createInfo->CommandLine != NULL) {
-        proc = fort_pstree_notify_process_created(ps_tree, createInfo, proc, pid_hash, processId);
+
+    if (createInfo != NULL && createInfo->ImageFileName != NULL
+            && createInfo->CommandLine != NULL) {
+        proc = fort_pstree_notify_process_created(ps_tree, createInfo, pid_hash, processId);
     }
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -760,79 +602,43 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static NTSTATUS fort_pstree_enum_process(
-        PFORT_PSTREE ps_tree, PFORT_PSENUM_PROCESS_ARG epa, HANDLE processHandle)
+static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
 {
-    NTSTATUS status;
+    const DWORD processId = (DWORD) processEntry->ProcessId;
+    const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
 
-    status = GetProcessImageName(processHandle, &epa->pb);
-    if (!NT_SUCCESS(status))
-        return status;
+    if (processId == 0 || processId == 4 || parentProcessId == 4)
+        return; /* skip System (sub)processes */
 
-    if (fort_pstree_svchost_path_check(&epa->pb.path)) {
-        status = GetProcessPathArgs(epa, processHandle);
-        if (!NT_SUCCESS(status)) {
-            LOG("PsTree: Process Args Error: pid=%d %x\n", epa->psi.processId, status);
-            return status;
-        }
-    } else {
-        epa->pb.path.Length = 0;
-    }
+    const HANDLE processHandle = OpenProcessById(processId);
+    if (processHandle == NULL)
+        return;
 
-    epa->psi.pid_hash = fort_pstree_proc_hash(epa->psi.processId);
+    const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
+
+    const FORT_PSINFO_HASH psi = {
+        .pid_hash = pid_hash,
+        .processId = processId,
+        .parentProcessId = parentProcessId,
+    };
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
-
-    PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, epa->psi.processId, epa->psi.pid_hash);
-
-    if (proc == NULL) {
-        fort_pstree_handle_new_proc(ps_tree, &epa->pb.path, &epa->commandLine, &epa->psi);
-    }
-
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    return STATUS_SUCCESS;
-}
-
-static void fort_pstree_enum_process_check(
-        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry, PFORT_PSENUM_PROCESS_ARG epa)
-{
-    HANDLE processHandle;
     {
-        const DWORD processId = (DWORD) processEntry->ProcessId;
-        const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
-
-        if (processId == 0 || processId == 4 || parentProcessId == 4)
-            return; /* skip System (sub)processes */
-
-        processHandle = OpenProcessById(processId);
-        if (processHandle == NULL)
-            return;
-
-        epa->psi.processId = processId;
-        epa->psi.parentProcessId = parentProcessId;
+        PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
+        if (proc == NULL) {
+            fort_pstree_handle_new_proc(ps_tree, &psi);
+        }
     }
-
-    epa->pb.path.Length = 0;
-    epa->commandLine.Length = 0;
-
-    fort_pstree_enum_process(ps_tree, epa, processHandle);
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     ZwClose(processHandle);
 }
 
-static void fort_pstree_enum_processes_loop(
-        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry, PFORT_PSENUM_PROCESS_ARG epa)
+static void fort_pstree_enum_processes_loop(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
 {
-    epa->pb.path.MaximumLength = FORT_CONF_APP_PATH_MAX_SIZE;
-    epa->pb.path.Buffer = epa->pb.buffer;
-
-    epa->commandLine.MaximumLength = FORT_COMMAND_LINE_SIZE;
-    epa->commandLine.Buffer = epa->commandLineBuffer;
-
     for (;;) {
-        fort_pstree_enum_process_check(ps_tree, processEntry, epa);
+        fort_pstree_enum_process(ps_tree, processEntry);
 
         const ULONG nextEntryOffset = processEntry->NextEntryOffset;
         if (nextEntryOffset == 0)
@@ -854,16 +660,13 @@ FORT_API void NTAPI fort_pstree_enum_processes(void)
     bufferSize *= 3; /* for possibly new created processes/threads */
     bufferSize = FORT_ALIGN_SIZE(bufferSize, sizeof(PVOID));
 
-    PVOID buffer =
-            fort_mem_alloc(bufferSize + sizeof(FORT_PSENUM_PROCESS_ARG), FORT_PSTREE_POOL_TAG);
+    PVOID buffer = fort_mem_alloc(bufferSize, FORT_PSTREE_POOL_TAG);
     if (buffer == NULL)
         return;
 
     status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, NULL);
     if (NT_SUCCESS(status)) {
-        PFORT_PSENUM_PROCESS_ARG epa = (PFORT_PSENUM_PROCESS_ARG) ((PCHAR) buffer + bufferSize);
-
-        fort_pstree_enum_processes_loop(&fort_device()->ps_tree, buffer, epa);
+        fort_pstree_enum_processes_loop(&fort_device()->ps_tree, buffer);
     } else {
         LOG("PsTree: Enum Processes Error: %x\n", status);
         TRACE(FORT_PSTREE_ENUM_PROCESSES_ERROR, status, 0, 0);
