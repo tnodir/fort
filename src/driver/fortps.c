@@ -852,13 +852,14 @@ FORT_API void NTAPI fort_pstree_enum_processes(void)
         return;
 
     bufferSize *= 3; /* for possibly new created processes/threads */
+    bufferSize = FORT_ALIGN_SIZE(bufferSize, sizeof(PVOID));
 
     PVOID buffer =
             fort_mem_alloc(bufferSize + sizeof(FORT_PSENUM_PROCESS_ARG), FORT_PSTREE_POOL_TAG);
     if (buffer == NULL)
         return;
 
-    status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, &bufferSize);
+    status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, NULL);
     if (NT_SUCCESS(status)) {
         PFORT_PSENUM_PROCESS_ARG epa = (PFORT_PSENUM_PROCESS_ARG) ((PCHAR) buffer + bufferSize);
 

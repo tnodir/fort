@@ -25,7 +25,7 @@
 #define FORT_LOG_BLOCKED_HEADER_SIZE (2 * sizeof(UINT32))
 
 #define FORT_LOG_BLOCKED_SIZE(path_len)                                                            \
-    ((FORT_LOG_BLOCKED_HEADER_SIZE + (path_len) + (FORT_LOG_ALIGN - 1)) & ~(FORT_LOG_ALIGN - 1))
+    FORT_ALIGN_SIZE(FORT_LOG_BLOCKED_HEADER_SIZE + (path_len), FORT_LOG_ALIGN)
 
 #define FORT_LOG_BLOCKED_SIZE_MAX FORT_LOG_BLOCKED_SIZE(FORT_LOG_PATH_MAX)
 
@@ -34,15 +34,14 @@
 #define FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6) (4 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
 
 #define FORT_LOG_BLOCKED_IP_SIZE(path_len, isIPv6)                                                 \
-    ((FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6) + (path_len) + (FORT_LOG_ALIGN - 1))                 \
-            & ~(FORT_LOG_ALIGN - 1))
+    FORT_ALIGN_SIZE(FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6) + (path_len), FORT_LOG_ALIGN)
 
 #define FORT_LOG_BLOCKED_IP_SIZE_MAX FORT_LOG_BLOCKED_IP_SIZE(FORT_LOG_PATH_MAX, /*isIPv6=*/TRUE)
 
 #define FORT_LOG_PROC_NEW_HEADER_SIZE (2 * sizeof(UINT32))
 
 #define FORT_LOG_PROC_NEW_SIZE(path_len)                                                           \
-    ((FORT_LOG_PROC_NEW_HEADER_SIZE + (path_len) + (FORT_LOG_ALIGN - 1)) & ~(FORT_LOG_ALIGN - 1))
+    FORT_ALIGN_SIZE(FORT_LOG_PROC_NEW_HEADER_SIZE + (path_len), FORT_LOG_ALIGN)
 
 #define FORT_LOG_STAT_HEADER_SIZE (sizeof(UINT32))
 
