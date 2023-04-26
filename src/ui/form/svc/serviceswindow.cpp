@@ -12,9 +12,9 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/opt/optionscontroller.h>
+#include <manager/serviceinfomanager.h>
 #include <manager/windowmanager.h>
 #include <model/servicelistmodel.h>
-#include <serviceinfo/serviceinfomanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>

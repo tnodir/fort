@@ -3,8 +3,8 @@
 
 #include <QVector>
 
-#include <serviceinfo/serviceinfo.h>
 #include <util/model/tableitemmodel.h>
+#include <util/service/serviceinfo.h>
 
 class ConfManager;
 class FirewallConf;

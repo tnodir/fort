@@ -2,8 +2,7 @@
 #define SERVICEINFOMANAGER_H
 
 #include <util/ioc/iocservice.h>
-
-#include "serviceinfo.h"
+#include <util/service/serviceinfo.h>
 
 class ServiceInfoManager : public QObject, public IocService
 {

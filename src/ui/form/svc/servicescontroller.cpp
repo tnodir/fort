@@ -1,7 +1,7 @@
 #include "servicescontroller.h"
 
+#include <manager/serviceinfomanager.h>
 #include <model/servicelistmodel.h>
-#include <serviceinfo/serviceinfomanager.h>
 #include <util/ioc/ioccontainer.h>
 
 ServicesController::ServicesController(QObject *parent) :

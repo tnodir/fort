@@ -106,6 +106,7 @@ SOURCES += \
     manager/hotkeymanager.cpp \
     manager/logger.cpp \
     manager/nativeeventfilter.cpp \
+    manager/serviceinfomanager.cpp \
     manager/servicemanager.cpp \
     manager/translationmanager.cpp \
     manager/windowmanager.cpp \
@@ -130,8 +131,6 @@ SOURCES += \
     rpc/statmanagerrpc.cpp \
     rpc/taskmanagerrpc.cpp \
     rpc/windowmanagerfake.cpp \
-    serviceinfo/serviceinfo.cpp \
-    serviceinfo/serviceinfomanager.cpp \
     stat/askpendingmanager.cpp \
     stat/deleteconnblockjob.cpp \
     stat/logblockedipjob.cpp \
@@ -174,6 +173,7 @@ SOURCES += \
     util/osutil.cpp \
     util/processinfo.cpp \
     util/regkey.cpp \
+    util/service/serviceinfo.cpp \
     util/service/servicemanageriface.cpp \
     util/service/serviceworker.cpp \
     util/startuputil.cpp \
@@ -287,6 +287,7 @@ HEADERS += \
     manager/hotkeymanager.h \
     manager/logger.h \
     manager/nativeeventfilter.h \
+    manager/serviceinfomanager.h \
     manager/servicemanager.h \
     manager/translationmanager.h \
     manager/windowmanager.h \
@@ -311,8 +312,6 @@ HEADERS += \
     rpc/statmanagerrpc.h \
     rpc/taskmanagerrpc.h \
     rpc/windowmanagerfake.h \
-    serviceinfo/serviceinfo.h \
-    serviceinfo/serviceinfomanager.h \
     stat/askpendingmanager.h \
     stat/deleteconnblockjob.h \
     stat/logblockedipjob.h \
@@ -358,6 +357,7 @@ HEADERS += \
     util/osutil.h \
     util/processinfo.h \
     util/regkey.h \
+    util/service/serviceinfo.h \
     util/service/servicemanageriface.h \
     util/service/serviceworker.h \
     util/startuputil.h \

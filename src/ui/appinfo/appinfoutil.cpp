@@ -9,7 +9,7 @@
 #include <objbase.h>
 #include <shellapi.h>
 
-#include <serviceinfo/serviceinfomanager.h>
+#include <manager/serviceinfomanager.h>
 #include <util/fileutil.h>
 #include <util/osutil.h>
 

@@ -1,7 +1,7 @@
 #ifndef SERVICEINFOMANAGERRPC_H
 #define SERVICEINFOMANAGERRPC_H
 
-#include <serviceinfo/serviceinfomanager.h>
+#include <manager/serviceinfomanager.h>
 
 class ServiceInfoManagerRpc : public ServiceInfoManager
 {

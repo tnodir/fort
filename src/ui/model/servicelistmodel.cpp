@@ -5,7 +5,7 @@
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <serviceinfo/serviceinfomanager.h>
+#include <manager/serviceinfomanager.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 
