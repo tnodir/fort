@@ -96,6 +96,11 @@ bool DriverManager::validate(QByteArray &buf, int size)
     return writeData(DriverCommon::ioctlValidate(), buf, size);
 }
 
+bool DriverManager::writeServices(QByteArray &buf, int size)
+{
+    return writeData(DriverCommon::ioctlSetServices(), buf, size);
+}
+
 bool DriverManager::writeConf(QByteArray &buf, int size, bool onlyFlags)
 {
     return writeData(

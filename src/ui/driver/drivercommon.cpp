@@ -17,6 +17,11 @@ quint32 ioctlValidate()
     return FORT_IOCTL_VALIDATE;
 }
 
+quint32 ioctlSetServices()
+{
+    return FORT_IOCTL_SETSERVICES;
+}
+
 quint32 ioctlSetConf()
 {
     return FORT_IOCTL_SETCONF;

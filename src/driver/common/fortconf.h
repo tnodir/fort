@@ -41,6 +41,29 @@ typedef struct fort_conf_flags
     UINT32 group_bits : 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
+typedef struct fort_service_info
+{
+    UINT32 process_id;
+
+    UCHAR name_len;
+    WCHAR name[2];
+} FORT_SERVICE_INFO, *PFORT_SERVICE_INFO;
+
+typedef struct fort_service_info_list
+{
+    UINT16 services_n;
+
+    FORT_SERVICE_INFO data[1];
+} FORT_SERVICE_INFO_LIST, *PFORT_SERVICE_INFO_LIST;
+
+#define FORT_SERVICE_INFO_NAME_OFF      offsetof(FORT_SERVICE_INFO, name)
+#define FORT_SERVICE_INFO_LIST_DATA_OFF offsetof(FORT_SERVICE_INFO_LIST, data)
+#define FORT_SERVICE_INFO_NAME_MAX      256
+#define FORT_SERVICE_INFO_NAME_MAX_SIZE (FORT_SERVICE_INFO_NAME_MAX * sizeof(WCHAR))
+#define FORT_SERVICE_INFO_MAX_SIZE      (FORT_SERVICE_INFO_NAME_OFF + FORT_SERVICE_INFO_NAME_MAX_SIZE)
+#define FORT_SERVICE_INFO_LIST_MIN_SIZE                                                            \
+    (FORT_SERVICE_INFO_LIST_DATA_OFF + FORT_SERVICE_INFO_MAX_SIZE)
+
 typedef struct fort_conf_addr4_list
 {
     UINT32 ip_n;

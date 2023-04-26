@@ -12,8 +12,9 @@
 #define FORT_SVCHOST_PREFIX L"\\svchost\\"
 #define FORT_SVCHOST_EXE    L"svchost.exe"
 
-#define FORT_PSTREE_NAME_LEN_MAX    (120 * sizeof(WCHAR))
-#define FORT_PSTREE_NAMES_POOL_SIZE (4 * 1024)
+#define FORT_PSTREE_NAME_LEN_MAX      120
+#define FORT_PSTREE_NAME_LEN_MAX_SIZE (FORT_PSTREE_NAME_LEN_MAX * sizeof(WCHAR))
+#define FORT_PSTREE_NAMES_POOL_SIZE   (4 * 1024)
 
 #define FORT_PSNAME_DATA_OFF offsetof(FORT_PSNAME, data)
 
@@ -243,7 +244,7 @@ static BOOL fort_pstree_svchost_check(
     }
 
     const USHORT nameLen = (USHORT) ((PCHAR) endp - (PCHAR) argp);
-    if (nameLen >= FORT_PSTREE_NAME_LEN_MAX)
+    if (nameLen >= FORT_PSTREE_NAME_LEN_MAX_SIZE)
         return FALSE;
 
     serviceName->Length = nameLen;
@@ -713,4 +714,9 @@ FORT_API BOOL fort_pstree_get_proc_name(
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     return res;
+}
+
+FORT_API void fort_pstree_update_services(
+        PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO_LIST services)
+{
 }

@@ -7,6 +7,8 @@
 #include <QObject>
 #include <QVector>
 
+#include <util/service/serviceinfo.h>
+
 #include "addressrange.h"
 
 class AddressGroup;
@@ -41,11 +43,12 @@ signals:
     void errorMessageChanged();
 
 public slots:
+    int writeVersion(QByteArray &buf);
+    int writeServices(const QVector<ServiceInfo> &services, QByteArray &buf);
     int write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager,
             QByteArray &buf);
     int writeFlags(const FirewallConf &conf, QByteArray &buf);
     int writeAppEntry(const App &app, bool isNew, QByteArray &buf);
-    int writeVersion(QByteArray &buf);
     int writeZone(const IpRange &ipRange, QByteArray &buf);
     int writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData, QByteArray &buf);

@@ -6,6 +6,7 @@
 #include "common/fortprov.h"
 
 #include "fortcout.h"
+#include "fortps.h"
 #include "fortscb.h"
 #include "forttrace.h"
 
@@ -144,6 +145,17 @@ static NTSTATUS fort_device_control_validate(const PFORT_CONF_VERSION conf_ver, 
     return STATUS_UNSUCCESSFUL;
 }
 
+static NTSTATUS fort_device_control_setservices(const PFORT_SERVICE_INFO_LIST services, ULONG len)
+{
+    if (len > sizeof(FORT_SERVICE_INFO_LIST)) {
+        fort_pstree_update_services(&fort_device()->ps_tree, services);
+
+        return STATUS_SUCCESS;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
 static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG len)
 {
     if (len > sizeof(FORT_CONF_IO)) {
@@ -267,6 +279,8 @@ static NTSTATUS fort_device_control_process(
     switch (control_code) {
     case FORT_IOCTL_VALIDATE:
         return fort_device_control_validate(buffer, in_len);
+    case FORT_IOCTL_SETSERVICES:
+        return fort_device_control_setservices(buffer, in_len);
     case FORT_IOCTL_SETCONF:
         return fort_device_control_setconf(buffer, in_len);
     case FORT_IOCTL_SETFLAGS:

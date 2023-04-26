@@ -23,6 +23,30 @@
 
 namespace {
 
+int writeServicesHeader(char *data, int servicesCount)
+{
+    PFORT_SERVICE_INFO_LIST infoList = (PFORT_SERVICE_INFO_LIST) data;
+
+    infoList->services_n = servicesCount;
+
+    return FORT_SERVICE_INFO_LIST_DATA_OFF;
+}
+
+int writeServiceInfo(char *data, const ServiceInfo &serviceInfo)
+{
+    PFORT_SERVICE_INFO info = (PFORT_SERVICE_INFO) data;
+
+    info->process_id = serviceInfo.processId;
+
+    const int nameLen = serviceInfo.serviceName.size();
+    info->name_len = nameLen;
+
+    const QString name = serviceInfo.serviceName.toLower();
+    memcpy(info->name, name.utf16(), nameLen * sizeof(char16_t));
+
+    return FORT_SERVICE_INFO_NAME_OFF + nameLen;
+}
+
 void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 {
     confFlags->boot_filter = conf.bootFilter();
@@ -62,6 +86,35 @@ void ConfUtil::setErrorMessage(const QString &errorMessage)
         m_errorMessage = errorMessage;
         emit errorMessageChanged();
     }
+}
+
+int ConfUtil::writeVersion(QByteArray &buf)
+{
+    const int verSize = sizeof(FORT_CONF_VERSION);
+
+    buf.reserve(verSize);
+
+    // Fill the buffer
+    PFORT_CONF_VERSION confVer = (PFORT_CONF_VERSION) buf.data();
+
+    confVer->driver_version = DRIVER_VERSION;
+
+    return verSize;
+}
+
+int ConfUtil::writeServices(const QVector<ServiceInfo> &services, QByteArray &buf)
+{
+    buf.reserve(FORT_SERVICE_INFO_LIST_MIN_SIZE);
+
+    int outSize = writeServicesHeader(buf.data(), services.size());
+
+    for (const ServiceInfo &info : services) {
+        buf.reserve(outSize + FORT_SERVICE_INFO_MAX_SIZE);
+
+        outSize += writeServiceInfo(buf.data() + outSize, info);
+    }
+
+    return outSize;
 }
 
 int ConfUtil::write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker,
@@ -142,20 +195,6 @@ int ConfUtil::writeAppEntry(const App &app, bool isNew, QByteArray &buf)
     writeApps(&data, exeAppsMap);
 
     return int(exeAppsSize);
-}
-
-int ConfUtil::writeVersion(QByteArray &buf)
-{
-    const int verSize = sizeof(FORT_CONF_VERSION);
-
-    buf.reserve(verSize);
-
-    // Fill the buffer
-    PFORT_CONF_VERSION confVer = (PFORT_CONF_VERSION) buf.data();
-
-    confVer->driver_version = DRIVER_VERSION;
-
-    return verSize;
 }
 
 int ConfUtil::writeZone(const IpRange &ipRange, QByteArray &buf)

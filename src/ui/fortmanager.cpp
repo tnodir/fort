@@ -21,10 +21,10 @@
 #include <manager/translationmanager.h>
 #include <model/zonelistmodel.h>
 #include <rpc/appinfomanagerrpc.h>
+#include <rpc/askpendingmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
-#include <rpc/askpendingmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/rpcmanager.h>
 #include <rpc/serviceinfomanagerrpc.h>
@@ -240,12 +240,17 @@ bool FortManager::removeDriver()
 bool FortManager::setupDriver()
 {
     auto driverManager = IoC<DriverManager>();
+    auto confManager = IoC<ConfManager>();
 
     bool ok = driverManager->openDevice();
 
-    if (ok && !IoC<ConfManager>()->validateDriver()) {
+    if (ok && !confManager->validateDriver()) {
         driverManager->closeDevice();
         ok = false;
+    }
+
+    if (ok) {
+        confManager->updateDriverServices();
     }
 
     return ok;

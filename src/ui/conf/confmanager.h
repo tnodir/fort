@@ -85,6 +85,7 @@ public:
     virtual bool checkPassword(const QString &password);
 
     bool validateDriver();
+    void updateDriverServices();
     virtual bool updateDriverConf(bool onlyFlags = false);
     void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData);

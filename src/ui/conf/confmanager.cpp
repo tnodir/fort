@@ -15,6 +15,7 @@
 #include <log/logentryblocked.h>
 #include <log/logmanager.h>
 #include <manager/envmanager.h>
+#include <manager/serviceinfomanager.h>
 #include <manager/windowmanager.h>
 #include <task/taskinfo.h>
 #include <task/taskmanager.h>
@@ -1132,6 +1133,21 @@ bool ConfManager::validateDriver()
 
     auto driverManager = IoC<DriverManager>();
     return driverManager->validate(buf, verSize);
+}
+
+void ConfManager::updateDriverServices()
+{
+    ConfUtil confUtil;
+    QByteArray buf;
+
+    auto serviceInfoManager = IoC<ServiceInfoManager>();
+    const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
+            ServiceInfo::StateActive, /*displayName=*/false);
+
+    const int outSize = confUtil.writeServices(services, buf);
+
+    auto driverManager = IoC<DriverManager>();
+    driverManager->writeServices(buf, outSize);
 }
 
 bool ConfManager::updateDriverConf(bool onlyFlags)
