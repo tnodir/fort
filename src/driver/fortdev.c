@@ -120,6 +120,18 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
     fort_request_complete_info(irp, status, info);
 }
 
+static void fort_device_mark_pending(PIRP irp)
+{
+    IoMarkIrpPending(irp);
+
+    KIRQL cirq;
+    IoAcquireCancelSpinLock(&cirq);
+    {
+        IoSetCancelRoutine(irp, &fort_device_cancel_pending);
+    }
+    IoReleaseCancelSpinLock(cirq);
+}
+
 static NTSTATUS fort_device_control_validate(const PFORT_CONF_VERSION conf_ver, ULONG len)
 {
     if (len == sizeof(FORT_CONF_VERSION)) {
@@ -171,25 +183,10 @@ static NTSTATUS fort_device_control_setflags(const PFORT_CONF_FLAGS conf_flags, 
 
 static NTSTATUS fort_device_control_getlog(PVOID out, ULONG out_len, PIRP irp, ULONG_PTR *info)
 {
-    if (out_len < FORT_BUFFER_SIZE) {
+    if (out_len < FORT_BUFFER_SIZE)
         return STATUS_BUFFER_TOO_SMALL;
-    } else {
-        const NTSTATUS status = fort_buffer_xmove(&fort_device()->buffer, irp, out, out_len, info);
 
-        if (status == STATUS_PENDING) {
-            IoMarkIrpPending(irp);
-
-            KIRQL cirq;
-            IoAcquireCancelSpinLock(&cirq);
-            {
-                IoSetCancelRoutine(irp, fort_device_cancel_pending);
-            }
-            IoReleaseCancelSpinLock(cirq);
-        }
-        return status;
-    }
-
-    return STATUS_UNSUCCESSFUL;
+    return fort_buffer_xmove(&fort_device()->buffer, irp, out, out_len, info);
 }
 
 static NTSTATUS fort_device_control_app(const PFORT_APP_ENTRY app_entry, ULONG len, BOOL is_adding)
@@ -302,7 +299,9 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
         TRACE(FORT_DEVICE_DEVICE_CONTROL_ERROR, status, 0, 0);
     }
 
-    if (status != STATUS_PENDING) {
+    if (status == STATUS_PENDING) {
+        fort_device_mark_pending(irp);
+    } else {
         fort_request_complete_info(irp, status, info);
     }
 
