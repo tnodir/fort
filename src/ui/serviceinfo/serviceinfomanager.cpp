@@ -30,7 +30,8 @@ QString getServiceDll(const RegKey &svcReg, bool *expand = nullptr)
     return dllPathVar.toString();
 }
 
-QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_STATE_ALL)
+QVector<ServiceInfo> getServiceInfoList(
+        SC_HANDLE mngr, DWORD state = SERVICE_STATE_ALL, bool displayName = true)
 {
     QVector<ServiceInfo> infoList;
 
@@ -71,7 +72,10 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
             info.trackFlags = trackFlags;
             info.processId = service->ServiceStatusProcess.dwProcessId;
             info.serviceName = serviceName;
-            info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);
+
+            if (displayName) {
+                info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);
+            }
 
             infoList.append(info);
         }
@@ -87,13 +91,14 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD state = SERVICE_ST
 
 ServiceInfoManager::ServiceInfoManager(QObject *parent) : QObject(parent) { }
 
-QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(ServiceInfo::State state)
+QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(
+        ServiceInfo::State state, bool displayName)
 {
     QVector<ServiceInfo> list;
     const SC_HANDLE mngr =
             OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT | SC_MANAGER_ENUMERATE_SERVICE);
     if (mngr) {
-        list = getServiceInfoList(mngr, state);
+        list = getServiceInfoList(mngr, state, displayName);
         CloseServiceHandle(mngr);
     }
     return list;
