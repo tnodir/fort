@@ -93,23 +93,6 @@ static void fort_driver_unload(PDRIVER_OBJECT driver)
     fort_device_set(NULL);
 }
 
-static void NTAPI fort_driver_load_device_expand(PVOID param)
-{
-    NTSTATUS *status = param;
-
-    *status = fort_device_load();
-}
-
-inline static void fort_driver_load_device(NTSTATUS *status)
-{
-    const NTSTATUS status_expand = KeExpandKernelStackAndCallout(
-            &fort_driver_load_device_expand, status, FORT_KERNEL_STACK_SIZE);
-
-    if (!NT_SUCCESS(status_expand)) {
-        *status = status_expand;
-    }
-}
-
 static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
 {
     NTSTATUS status;
@@ -134,9 +117,7 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = &fort_device_control;
     driver->MajorFunction[IRP_MJ_SHUTDOWN] = &fort_device_shutdown;
 
-    fort_driver_load_device(&status);
-
-    return status;
+    return fort_device_load();
 }
 
 NTSTATUS DriverCallbacksSetup(PFORT_PROXYCB_INFO cb_info)
