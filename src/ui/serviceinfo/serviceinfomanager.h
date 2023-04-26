@@ -13,7 +13,7 @@ public:
     explicit ServiceInfoManager(QObject *parent = nullptr);
 
     static QVector<ServiceInfo> loadServiceInfoList(
-            ServiceInfo::State state = ServiceInfo::StateAlive, bool displayName = true);
+            ServiceInfo::State state = ServiceInfo::StateAll, bool displayName = true);
 
     static QString getSvcHostServiceDll(const QString &serviceName);
 
