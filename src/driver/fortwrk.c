@@ -7,21 +7,11 @@
 #include "fortcb.h"
 #include "forttrace.h"
 
-static void fort_worker_callback_run_expand(PFORT_WORKER worker, PEXPAND_STACK_CALLOUT callout)
-{
-    const NTSTATUS status = KeExpandKernelStackAndCallout(callout, worker, FORT_KERNEL_STACK_SIZE);
-
-    if (!NT_SUCCESS(status)) {
-        LOG("Worker Callback: Error: %x\n", status);
-        TRACE(FORT_WORKER_CALLBACK_ERROR, status, 0, 0);
-    }
-}
-
 static void fort_worker_callback_run(
         PFORT_WORKER worker, enum FORT_WORKER_TYPE worker_type, UCHAR id_bits)
 {
     if ((id_bits & (1 << worker_type)) != 0) {
-        fort_worker_callback_run_expand(worker, worker->funcs[worker_type]);
+        worker->funcs[worker_type]();
     }
 }
 

@@ -21,10 +21,8 @@ FORT_API void fort_device_set(PFORT_DEVICE device)
     g_device = device;
 }
 
-static void NTAPI fort_worker_reauth(PVOID worker)
+static void NTAPI fort_worker_reauth(void)
 {
-    UNUSED(worker);
-
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
     const NTSTATUS status = fort_callout_force_reauth(conf_flags);
@@ -214,7 +212,7 @@ static NTSTATUS fort_device_control_app(const PFORT_APP_ENTRY app_entry, ULONG l
             fort_conf_ref_put(&fort_device()->conf, conf_ref);
 
             if (NT_SUCCESS(status)) {
-                fort_worker_reauth(NULL);
+                fort_worker_reauth();
             }
 
             return status;
@@ -234,7 +232,7 @@ static NTSTATUS fort_device_control_setzones(const PFORT_CONF_ZONES zones, ULONG
         } else {
             fort_conf_zones_set(&fort_device()->conf, conf_zones);
 
-            fort_worker_reauth(NULL);
+            fort_worker_reauth();
 
             return STATUS_SUCCESS;
         }
@@ -248,7 +246,7 @@ static NTSTATUS fort_device_control_setzoneflag(const PFORT_CONF_ZONE_FLAG zone_
     if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
         fort_conf_zone_flag_set(&fort_device()->conf, zone_flag);
 
-        fort_worker_reauth(NULL);
+        fort_worker_reauth();
 
         return STATUS_SUCCESS;
     }
