@@ -30,6 +30,24 @@ QString getServiceDll(const RegKey &svcReg, bool *expand = nullptr)
     return dllPathVar.toString();
 }
 
+bool checkIsSvcHostService(const RegKey &svcReg, bool extendedCheck)
+{
+    const auto imagePath = svcReg.value(serviceImagePathKey).toString();
+    if (!imagePath.contains(R"(\system32\svchost.exe)", Qt::CaseInsensitive))
+        return false;
+
+    if (extendedCheck) {
+        if (!svcReg.contains("ServiceSidType") || svcReg.value("SvcHostSplitDisable").toInt() != 0)
+            return false;
+
+        const QString dllPath = getServiceDll(svcReg);
+        if (dllPath.isEmpty())
+            return false;
+    }
+
+    return true;
+}
+
 QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERVICE_WIN32,
         DWORD state = SERVICE_STATE_ALL, bool displayName = true)
 {
@@ -52,18 +70,9 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERV
         for (int infoIndex = infoList.size(); serviceCount > 0;
                 --serviceCount, ++service, ++infoIndex) {
             const auto serviceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
-
             const RegKey svcReg(servicesReg, serviceName);
-            if (!svcReg.contains("ServiceSidType")
-                    || svcReg.value("SvcHostSplitDisable").toInt() != 0)
-                continue;
 
-            const auto imagePath = svcReg.value(serviceImagePathKey).toString();
-            if (!imagePath.contains(R"(\system32\svchost.exe)", Qt::CaseInsensitive))
-                continue;
-
-            const QString dllPath = getServiceDll(svcReg);
-            if (dllPath.isEmpty())
+            if (!checkIsSvcHostService(svcReg, /*extendedCheck=*/displayName))
                 continue;
 
             const quint32 trackFlags = svcReg.value(serviceTrackFlagsKey).toUInt();
