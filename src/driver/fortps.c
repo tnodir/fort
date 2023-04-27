@@ -739,12 +739,19 @@ FORT_API BOOL fort_pstree_get_proc_name(
     return res;
 }
 
-static int fort_pstree_update_service(PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO service)
+static int fort_pstree_update_service(
+        PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO service, const PCHAR end_data)
 {
+    if ((PCHAR) service + FORT_SERVICE_INFO_NAME_OFF >= end_data)
+        return 0;
+
     UNICODE_STRING serviceName;
     serviceName.Length = service->name_len * sizeof(WCHAR);
     serviceName.MaximumLength = serviceName.Length;
     serviceName.Buffer = service->name;
+
+    if ((PCHAR) service + FORT_SERVICE_INFO_NAME_OFF + serviceName.Length >= end_data)
+        return 0;
 
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, service->process_id);
 
@@ -768,8 +775,13 @@ FORT_API void fort_pstree_update_services(
         const PCHAR end_data = data + data_len;
 
         UINT16 n = services->services_n;
-        while (n-- > 0 && data < end_data) {
-            data += fort_pstree_update_service(ps_tree, (PFORT_SERVICE_INFO) data);
+        while (n-- > 0) {
+            const int size =
+                    fort_pstree_update_service(ps_tree, (PFORT_SERVICE_INFO) data, end_data);
+            if (size == 0)
+                break;
+
+            data += size;
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
