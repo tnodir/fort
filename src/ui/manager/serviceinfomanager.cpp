@@ -30,8 +30,8 @@ QString getServiceDll(const RegKey &svcReg, bool *expand = nullptr)
     return dllPathVar.toString();
 }
 
-QVector<ServiceInfo> getServiceInfoList(
-        SC_HANDLE mngr, DWORD state = SERVICE_STATE_ALL, bool displayName = true)
+QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERVICE_WIN32,
+        DWORD state = SERVICE_STATE_ALL, bool displayName = true)
 {
     QVector<ServiceInfo> infoList;
 
@@ -43,7 +43,7 @@ QVector<ServiceInfo> getServiceInfoList(
     DWORD serviceCount = 0;
     DWORD resumePoint = 0;
 
-    while (EnumServicesStatusExW(mngr, SC_ENUM_PROCESS_INFO, SERVICE_WIN32, state, (LPBYTE) buffer,
+    while (EnumServicesStatusExW(mngr, SC_ENUM_PROCESS_INFO, serviceType, state, (LPBYTE) buffer,
                    sizeof(buffer), &bytesRemaining, &serviceCount, &resumePoint, nullptr)
             || GetLastError() == ERROR_MORE_DATA) {
 
@@ -92,13 +92,13 @@ QVector<ServiceInfo> getServiceInfoList(
 ServiceInfoManager::ServiceInfoManager(QObject *parent) : QObject(parent) { }
 
 QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(
-        ServiceInfo::State state, bool displayName)
+        ServiceInfo::Type serviceType, ServiceInfo::State state, bool displayName)
 {
     QVector<ServiceInfo> list;
     const SC_HANDLE mngr =
             OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT | SC_MANAGER_ENUMERATE_SERVICE);
     if (mngr) {
-        list = getServiceInfoList(mngr, state, displayName);
+        list = getServiceInfoList(mngr, serviceType, state, displayName);
         CloseServiceHandle(mngr);
     }
     return list;

@@ -1142,7 +1142,7 @@ void ConfManager::updateDriverServices()
 
     auto serviceInfoManager = IoC<ServiceInfoManager>();
     const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
-            ServiceInfo::StateActive, /*displayName=*/false);
+            ServiceInfo::TypeWin32OwnProcess, ServiceInfo::StateActive, /*displayName=*/false);
 
     if (services.isEmpty())
         return;

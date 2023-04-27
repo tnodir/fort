@@ -12,6 +12,7 @@ public:
     explicit ServiceInfoManager(QObject *parent = nullptr);
 
     static QVector<ServiceInfo> loadServiceInfoList(
+            ServiceInfo::Type serviceType = ServiceInfo::TypeWin32,
             ServiceInfo::State state = ServiceInfo::StateAll, bool displayName = true);
 
     static QString getSvcHostServiceDll(const QString &serviceName);
