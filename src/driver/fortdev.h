@@ -52,7 +52,7 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp);
 
 FORT_API NTSTATUS fort_device_shutdown(PDEVICE_OBJECT device, PIRP irp);
 
-FORT_API NTSTATUS fort_device_load(void);
+FORT_API NTSTATUS fort_device_load(PVOID device_param);
 
 FORT_API void fort_device_unload(void);
 

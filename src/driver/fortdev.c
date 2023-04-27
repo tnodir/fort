@@ -22,7 +22,7 @@ FORT_API void fort_device_set(PFORT_DEVICE device)
     g_device = device;
 }
 
-static void NTAPI fort_worker_reauth(void)
+static void fort_worker_reauth(void)
 {
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
@@ -360,11 +360,11 @@ static NTSTATUS fort_device_register_provider(void)
     return fort_prov_trans_close(engine, status);
 }
 
-FORT_API NTSTATUS fort_device_load(void)
+FORT_API NTSTATUS fort_device_load(PVOID device_param)
 {
     NTSTATUS status;
 
-    PDEVICE_OBJECT device = fort_device()->device;
+    PDEVICE_OBJECT device = device_param;
 
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_worker_reauth);
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_PSTREE, &fort_pstree_enum_processes);

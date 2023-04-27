@@ -117,7 +117,7 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
     driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = &fort_device_control;
     driver->MajorFunction[IRP_MJ_SHUTDOWN] = &fort_device_shutdown;
 
-    return fort_device_load();
+    return fort_expand_stack(&fort_device_load, driver->DeviceObject);
 }
 
 NTSTATUS DriverCallbacksSetup(PFORT_PROXYCB_INFO cb_info)

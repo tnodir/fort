@@ -5,7 +5,6 @@
 #include <assert.h>
 
 #include "fortcb.h"
-#include "forttrace.h"
 
 static void fort_worker_callback_run(
         PFORT_WORKER worker, enum FORT_WORKER_TYPE worker_type, UCHAR id_bits)

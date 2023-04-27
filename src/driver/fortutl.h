@@ -3,6 +3,8 @@
 
 #include "fortdrv.h"
 
+typedef NTSTATUS (*FORT_EXPAND_STACK_FUNC)(PVOID param);
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -29,6 +31,8 @@ FORT_API void fort_ascii_downcase(PUNICODE_STRING dst, PCUNICODE_STRING src);
 FORT_API BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6);
 
 FORT_API UINT32 fort_bits_duplicate16(UINT16 num);
+
+FORT_API NTSTATUS fort_expand_stack(FORT_EXPAND_STACK_FUNC func, PVOID param);
 
 #ifdef __cplusplus
 } // extern "C"

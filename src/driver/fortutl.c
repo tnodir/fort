@@ -9,6 +9,13 @@
 #define FORT_KEY_INFO_PATH_SIZE                                                                    \
     (2 * sizeof(KEY_VALUE_FULL_INFORMATION) + (MAX_PATH * sizeof(WCHAR)))
 
+typedef struct fort_expand_stack_arg
+{
+    FORT_EXPAND_STACK_FUNC func;
+    PVOID param;
+    NTSTATUS status;
+} FORT_EXPAND_STACK_ARG, *PFORT_EXPAND_STACK_ARG;
+
 static WCHAR g_system32PathBuffer[64];
 static UNICODE_STRING g_system32Path;
 
@@ -400,4 +407,21 @@ inline static UINT32 fort_bits_duplicate8(UINT32 v)
 FORT_API UINT32 fort_bits_duplicate16(UINT16 num)
 {
     return fort_bits_duplicate8(num & 0xFF) | (fort_bits_duplicate8(num >> 8) << 16);
+}
+
+static void NTAPI fort_expand_stack_call(PVOID context)
+{
+    PFORT_EXPAND_STACK_ARG arg = context;
+
+    arg->status = arg->func(arg->param);
+}
+
+FORT_API NTSTATUS fort_expand_stack(FORT_EXPAND_STACK_FUNC func, PVOID param)
+{
+    FORT_EXPAND_STACK_ARG arg = { .func = func, .param = param };
+
+    const NTSTATUS status =
+            KeExpandKernelStackAndCallout(&fort_expand_stack_call, &arg, FORT_KERNEL_STACK_SIZE);
+
+    return !NT_SUCCESS(status) ? status : arg.status;
 }
