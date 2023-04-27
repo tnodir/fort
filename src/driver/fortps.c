@@ -9,8 +9,9 @@
 
 #define FORT_PSTREE_POOL_TAG 'PwfF'
 
-#define FORT_SVCHOST_PREFIX L"\\svchost\\"
-#define FORT_SVCHOST_EXE    L"svchost.exe"
+#define FORT_SVCHOST_PREFIX      L"\\svchost\\"
+#define FORT_SVCHOST_PREFIX_SIZE (sizeof(FORT_SVCHOST_PREFIX) - sizeof(WCHAR))
+#define FORT_SVCHOST_EXE         L"svchost.exe"
 
 #define FORT_PSTREE_NAME_LEN_MAX      120
 #define FORT_PSTREE_NAME_LEN_MAX_SIZE (FORT_PSTREE_NAME_LEN_MAX * sizeof(WCHAR))
@@ -254,6 +255,32 @@ static BOOL fort_pstree_svchost_check(
     return TRUE;
 }
 
+static PFORT_PSNAME fort_pstree_create_service_name(
+        PFORT_PSTREE ps_tree, PCUNICODE_STRING serviceName, BOOL toLower)
+{
+    const USHORT serviceNameLength = serviceName->Length;
+
+    PFORT_PSNAME ps_name =
+            fort_pstree_name_new(ps_tree, FORT_SVCHOST_PREFIX_SIZE + serviceNameLength);
+
+    if (ps_name != NULL) {
+        PCHAR data = (PCHAR) &ps_name->data;
+        RtlCopyMemory(data, FORT_SVCHOST_PREFIX, FORT_SVCHOST_PREFIX_SIZE);
+
+        UNICODE_STRING nameString;
+        nameString.Length = serviceNameLength;
+        nameString.MaximumLength = serviceNameLength;
+        nameString.Buffer = (PWSTR) (data + FORT_SVCHOST_PREFIX_SIZE);
+
+        if (toLower) {
+            /* RtlDowncaseUnicodeString() must be called in <DISPATCH level only! */
+            fort_ascii_downcase(&nameString, serviceName);
+        }
+    }
+
+    return ps_name;
+}
+
 static PFORT_PSNAME fort_pstree_add_service_name(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi)
 {
     if (psi->path == NULL || psi->commandLine == NULL)
@@ -263,23 +290,7 @@ static PFORT_PSNAME fort_pstree_add_service_name(PFORT_PSTREE ps_tree, PCFORT_PS
     if (!fort_pstree_svchost_check(psi->path, psi->commandLine, &serviceName))
         return NULL;
 
-    UNICODE_STRING svchostPrefix;
-    RtlInitUnicodeString(&svchostPrefix, FORT_SVCHOST_PREFIX);
-
-    PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, svchostPrefix.Length + serviceName.Length);
-    if (ps_name != NULL) {
-        PCHAR data = (PCHAR) &ps_name->data;
-        RtlCopyMemory(data, svchostPrefix.Buffer, svchostPrefix.Length);
-
-        UNICODE_STRING nameString;
-        nameString.Length = serviceName.Length;
-        nameString.MaximumLength = serviceName.Length;
-        nameString.Buffer = (PWSTR) (data + svchostPrefix.Length);
-        /* RtlDowncaseUnicodeString() must be called in <DISPATCH level only! */
-        fort_ascii_downcase(&nameString, &serviceName);
-    }
-
-    return ps_name;
+    return fort_pstree_create_service_name(ps_tree, &serviceName, /*toLower=*/TRUE);
 }
 
 static PFORT_PSNODE fort_pstree_proc_new(
@@ -716,7 +727,35 @@ FORT_API BOOL fort_pstree_get_proc_name(
     return res;
 }
 
-FORT_API void fort_pstree_update_services(
-        PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO_LIST services)
+static int fort_pstree_update_service(PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO service)
 {
+    UNICODE_STRING serviceName;
+    serviceName.Length = service->name_len * sizeof(WCHAR);
+    serviceName.MaximumLength = serviceName.Length;
+    serviceName.Buffer = service->name;
+
+    PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, service->process_id);
+
+    if (proc != NULL && proc->ps_name == NULL) {
+        proc->ps_name = fort_pstree_create_service_name(ps_tree, &serviceName, /*toLower=*/FALSE);
+    }
+
+    return FORT_SERVICE_INFO_NAME_OFF + FORT_CONF_STR_DATA_SIZE(serviceName.Length);
+}
+
+FORT_API void fort_pstree_update_services(
+        PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO_LIST services, ULONG data_len)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        PCHAR data = (PCHAR) services->data;
+        const PCHAR end_data = data + data_len;
+
+        UINT16 n = services->services_n;
+        while (n-- > 0 && data < end_data) {
+            data += fort_pstree_update_service(ps_tree, (PFORT_SERVICE_INFO) data);
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }

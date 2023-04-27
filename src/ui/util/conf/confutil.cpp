@@ -44,7 +44,7 @@ int writeServiceInfo(char *data, const ServiceInfo &serviceInfo)
     const QString name = serviceInfo.serviceName.toLower();
     memcpy(info->name, name.utf16(), nameLen * sizeof(char16_t));
 
-    return FORT_SERVICE_INFO_NAME_OFF + nameLen;
+    return FORT_SERVICE_INFO_NAME_OFF + FORT_CONF_STR_DATA_SIZE(nameLen);
 }
 
 void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)

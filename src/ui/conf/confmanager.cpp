@@ -1144,6 +1144,9 @@ void ConfManager::updateDriverServices()
     const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
             ServiceInfo::StateActive, /*displayName=*/false);
 
+    if (services.isEmpty())
+        return;
+
     const int outSize = confUtil.writeServices(services, buf);
 
     auto driverManager = IoC<DriverManager>();

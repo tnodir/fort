@@ -148,7 +148,8 @@ static NTSTATUS fort_device_control_validate(const PFORT_CONF_VERSION conf_ver, 
 static NTSTATUS fort_device_control_setservices(const PFORT_SERVICE_INFO_LIST services, ULONG len)
 {
     if (len > sizeof(FORT_SERVICE_INFO_LIST)) {
-        fort_pstree_update_services(&fort_device()->ps_tree, services);
+        fort_pstree_update_services(&fort_device()->ps_tree, services,
+                /*data_len=*/len - FORT_SERVICE_INFO_LIST_DATA_OFF);
 
         return STATUS_SUCCESS;
     }
