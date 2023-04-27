@@ -204,8 +204,10 @@ QLayout *ProgramsWindow::setupHeader()
 
     m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/bin_closed.png"), QString());
 
-    connect(m_actAllowApp, &QAction::triggered, this, [&] { updateSelectedApps(false); });
-    connect(m_actBlockApp, &QAction::triggered, this, [&] { updateSelectedApps(true); });
+    connect(m_actAllowApp, &QAction::triggered, this,
+            [&] { updateSelectedApps(/*blocked=*/false); });
+    connect(m_actBlockApp, &QAction::triggered, this,
+            [&] { updateSelectedApps(/*blocked=*/true); });
     connect(m_actAddApp, &QAction::triggered, this, &ProgramsWindow::addNewProgram);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {

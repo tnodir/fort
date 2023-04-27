@@ -121,10 +121,12 @@ const char *const sqlSelectAppById = "SELECT"
                                      "    t.lan_only,"
                                      "    t.log_blocked,"
                                      "    t.log_conn,"
-                                     "    t.blocked"
+                                     "    t.blocked,"
+                                     "    (alert.app_id IS NOT NULL) as alerted"
                                      "  FROM app t"
                                      "    JOIN app_group g ON g.app_group_id = t.app_group_id"
-                                     "    WHERE app_id = ?1;";
+                                     "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
+                                     "    WHERE t.app_id = ?1;";
 
 const char *const sqlSelectApps = "SELECT"
                                   "    g.order_index as group_index,"
@@ -1229,8 +1231,9 @@ bool ConfManager::updateDriverAppBlocked(qint64 appId, bool blocked, bool &chang
     app.logBlocked = stmt.columnBool(5);
     app.logConn = stmt.columnBool(6);
     app.blocked = stmt.columnBool(7);
+    const bool wasAlerted = stmt.columnBool(8);
 
-    if (blocked != app.blocked) {
+    if (blocked != app.blocked || wasAlerted) {
         app.blocked = blocked;
 
         if (!updateDriverUpdateApp(app))
