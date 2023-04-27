@@ -293,8 +293,19 @@ static PFORT_PSNAME fort_pstree_add_service_name(PFORT_PSTREE ps_tree, PCFORT_PS
     return fort_pstree_create_service_name(ps_tree, &serviceName, /*toLower=*/TRUE);
 }
 
-static PFORT_PSNODE fort_pstree_proc_new(
-        PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name, tommy_key_t pid_hash)
+static void fort_pstree_proc_set_name(PFORT_PSNODE proc, PFORT_PSNAME ps_name)
+{
+    NT_ASSERT(proc->ps_name == NULL);
+
+    proc->ps_name = ps_name;
+
+    if (ps_name != NULL) {
+        /* Service can't inherit parent's name */
+        proc->flags |= FORT_PSNODE_NAME_CUSTOM;
+    }
+}
+
+static PFORT_PSNODE fort_pstree_proc_new(PFORT_PSTREE ps_tree, tommy_key_t pid_hash)
 {
     tommy_hashdyn_node *proc_node = tommy_list_tail(&ps_tree->free_procs);
 
@@ -309,7 +320,7 @@ static PFORT_PSNODE fort_pstree_proc_new(
         proc_node = tommy_arrayof_ref(procs, index);
     }
 
-    tommy_hashdyn_insert(&ps_tree->procs_map, proc_node, ps_name, pid_hash);
+    tommy_hashdyn_insert(&ps_tree->procs_map, proc_node, NULL, pid_hash);
 
     ++ps_tree->procs_n;
 
@@ -477,7 +488,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
 
     PFORT_PSNAME ps_name = fort_pstree_add_service_name(ps_tree, psi);
 
-    PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, ps_name, psi->pid_hash);
+    PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, psi->pid_hash);
     if (proc == NULL) {
         fort_pstree_name_del(ps_tree, ps_name);
         return NULL;
@@ -485,9 +496,9 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
 
     proc->process_id = psi->processId;
     proc->parent_process_id = psi->parentProcessId;
+    proc->flags = 0;
 
-    /* Service can't inherit parent's name */
-    proc->flags = (ps_name != NULL) ? FORT_PSNODE_NAME_CUSTOM : 0;
+    fort_pstree_proc_set_name(proc, ps_name);
 
     return proc;
 }
@@ -614,7 +625,7 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
+inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
 {
     const DWORD processId = (DWORD) processEntry->ProcessId;
     const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
@@ -647,7 +658,8 @@ static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES pro
     ZwClose(processHandle);
 }
 
-static void fort_pstree_enum_processes_loop(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
+inline static void fort_pstree_enum_processes_loop(
+        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
 {
     for (;;) {
         fort_pstree_enum_process(ps_tree, processEntry);
@@ -737,7 +749,10 @@ static int fort_pstree_update_service(PFORT_PSTREE ps_tree, const PFORT_SERVICE_
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, service->process_id);
 
     if (proc != NULL && proc->ps_name == NULL) {
-        proc->ps_name = fort_pstree_create_service_name(ps_tree, &serviceName, /*toLower=*/FALSE);
+        PFORT_PSNAME ps_name =
+                fort_pstree_create_service_name(ps_tree, &serviceName, /*toLower=*/FALSE);
+
+        fort_pstree_proc_set_name(proc, ps_name);
     }
 
     return FORT_SERVICE_INFO_NAME_OFF + FORT_CONF_STR_DATA_SIZE(serviceName.Length);
