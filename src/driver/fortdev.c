@@ -202,34 +202,40 @@ static NTSTATUS fort_device_control_getlog(PVOID out, ULONG out_len, PIRP irp, U
     return fort_buffer_xmove(&fort_device()->buffer, irp, out, out_len, info);
 }
 
-static NTSTATUS fort_device_control_app(const PFORT_APP_ENTRY app_entry, ULONG len, BOOL is_adding)
+inline static NTSTATUS fort_device_control_app_conf(
+        const PFORT_APP_ENTRY app_entry, PFORT_CONF_REF conf_ref, BOOL is_adding)
 {
-    if (len > sizeof(FORT_APP_ENTRY) && len >= (sizeof(FORT_APP_ENTRY) + app_entry->path_len)) {
-        PFORT_CONF_REF conf_ref = fort_conf_ref_take(&fort_device()->conf);
+    NTSTATUS status;
 
-        if (conf_ref == NULL) {
-            return STATUS_INSUFFICIENT_RESOURCES;
-        } else {
-            NTSTATUS status;
-
-            if (is_adding) {
-                status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, FALSE);
-            } else {
-                fort_conf_ref_exe_del_entry(conf_ref, app_entry);
-                status = STATUS_SUCCESS;
-            }
-
-            fort_conf_ref_put(&fort_device()->conf, conf_ref);
-
-            if (NT_SUCCESS(status)) {
-                fort_worker_reauth();
-            }
-
-            return status;
-        }
+    if (is_adding) {
+        status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, FALSE);
+    } else {
+        fort_conf_ref_exe_del_entry(conf_ref, app_entry);
+        status = STATUS_SUCCESS;
     }
 
-    return STATUS_UNSUCCESSFUL;
+    return status;
+}
+
+static NTSTATUS fort_device_control_app(const PFORT_APP_ENTRY app_entry, ULONG len, BOOL is_adding)
+{
+    if (len < sizeof(FORT_APP_ENTRY) || len < (sizeof(FORT_APP_ENTRY) + app_entry->path_len))
+        return STATUS_UNSUCCESSFUL;
+
+    PFORT_CONF_REF conf_ref = fort_conf_ref_take(&fort_device()->conf);
+
+    if (conf_ref == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    const NTSTATUS status = fort_device_control_app_conf(app_entry, conf_ref, is_adding);
+
+    fort_conf_ref_put(&fort_device()->conf, conf_ref);
+
+    if (NT_SUCCESS(status)) {
+        fort_worker_reauth();
+    }
+
+    return status;
 }
 
 static NTSTATUS fort_device_control_setzones(const PFORT_CONF_ZONES zones, ULONG len)
