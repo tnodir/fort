@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "fortcb.h"
+#include "fortutl.h"
 
 static void fort_worker_callback_run(
         PFORT_WORKER worker, enum FORT_WORKER_TYPE worker_type, UCHAR id_bits)
@@ -14,10 +15,8 @@ static void fort_worker_callback_run(
     }
 }
 
-static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
+static NTSTATUS fort_worker_callback_expand(PVOID context)
 {
-    UNUSED(device);
-
     PFORT_WORKER worker = (PFORT_WORKER) context;
 
     InterlockedDecrement16(&worker->queue_size);
@@ -25,6 +24,16 @@ static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
     const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
     fort_worker_callback_run(worker, FORT_WORKER_REAUTH, id_bits);
+
+    return STATUS_SUCCESS;
+}
+
+static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
+{
+    UNUSED(device);
+
+    const NTSTATUS status = fort_expand_stack(&fort_worker_callback_expand, context);
+    UNUSED(status);
 }
 
 static void fort_worker_wait(PFORT_WORKER worker)
