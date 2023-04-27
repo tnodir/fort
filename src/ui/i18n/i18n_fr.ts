@@ -1324,6 +1324,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <source>Stop Internet traffic when quota exceeds</source>
         <translation>Arrêter le trafic Internet quand le quota excède</translation>
     </message>
+    <message>
+        <source>Alerted only</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

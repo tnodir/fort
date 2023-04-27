@@ -1323,6 +1323,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Alerted only</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

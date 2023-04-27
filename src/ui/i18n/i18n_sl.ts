@@ -1324,6 +1324,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation>Ustavi internetni promet, ko je kvota presežena</translation>
     </message>
+    <message>
+        <source>Alerted only</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

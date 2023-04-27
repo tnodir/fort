@@ -364,7 +364,7 @@
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Лимит режима Спрашивать для соединения</translation>
     </message>
 </context>
 <context>
@@ -1323,6 +1323,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation>Остановить Интернет трафик при превышении квоты</translation>
+    </message>
+    <message>
+        <source>Alerted only</source>
+        <translation>Только оповещения</translation>
     </message>
 </context>
 <context>

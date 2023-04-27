@@ -1324,6 +1324,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation>할당량 초과 시 인터넷 트래픽 중지</translation>
     </message>
+    <message>
+        <source>Alerted only</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>
