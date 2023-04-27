@@ -25,7 +25,6 @@ static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
     const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
     fort_worker_callback_run(worker, FORT_WORKER_REAUTH, id_bits);
-    fort_worker_callback_run(worker, FORT_WORKER_PSTREE, id_bits);
 }
 
 static void fort_worker_wait(PFORT_WORKER worker)

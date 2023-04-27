@@ -367,7 +367,6 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     PDEVICE_OBJECT device = device_param;
 
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_worker_reauth);
-    fort_worker_func_set(&fort_device()->worker, FORT_WORKER_PSTREE, &fort_pstree_enum_processes);
 
     fort_device_conf_open(&fort_device()->conf);
     fort_buffer_open(&fort_device()->buffer);
@@ -404,8 +403,8 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     if (!NT_SUCCESS(status))
         return status;
 
-    /* Enumerate processes in background */
-    fort_worker_queue(&fort_device()->worker, FORT_WORKER_PSTREE);
+    /* Enumerate processes */
+    fort_pstree_enum_processes();
 
     return STATUS_SUCCESS;
 }
