@@ -21,6 +21,7 @@ FirewallConf::FirewallConf(Settings *settings, QObject *parent) :
     m_logStatNoFilter(false),
     m_logAllowedIp(false),
     m_logBlockedIp(false),
+    m_logAlertedBlockedIp(false),
     m_appBlockAll(true),
     m_appAllowAll(false),
     m_activePeriodEnabled(false),
@@ -95,6 +96,11 @@ void FirewallConf::setLogAllowedIp(bool logAllowedIp)
 void FirewallConf::setLogBlockedIp(bool logBlockedIp)
 {
     m_logBlockedIp = logBlockedIp;
+}
+
+void FirewallConf::setLogAlertedBlockedIp(bool logAlertedBlockedIp)
+{
+    m_logAlertedBlockedIp = logAlertedBlockedIp;
 }
 
 void FirewallConf::setAppBlockAll(bool appBlockAll)
@@ -335,6 +341,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 
     m_logAllowedIp = o.logAllowedIp();
     m_logBlockedIp = o.logBlockedIp();
+    m_logAlertedBlockedIp = o.logAlertedBlockedIp();
 
     m_appBlockAll = o.appBlockAll();
     m_appAllowAll = o.appAllowAll();
@@ -382,6 +389,7 @@ QVariant FirewallConf::flagsToVariant() const
 
     map["logAllowedIp"] = logAllowedIp();
     map["logBlockedIp"] = logBlockedIp();
+    map["logAlertedBlockedIp"] = logAlertedBlockedIp();
 
     map["appBlockAll"] = appBlockAll();
     map["appAllowAll"] = appAllowAll();
@@ -413,6 +421,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
 
     m_logAllowedIp = map["logAllowedIp"].toBool();
     m_logBlockedIp = map["logBlockedIp"].toBool();
+    m_logAlertedBlockedIp = map["logAlertedBlockedIp"].toBool();
 
     m_appBlockAll = map["appBlockAll"].toBool();
     m_appAllowAll = map["appAllowAll"].toBool();

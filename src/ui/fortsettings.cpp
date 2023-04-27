@@ -312,12 +312,13 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setStopTraffic(iniBool("stopTraffic"));
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
     conf.setAllowAllNew(iniBool("allowAllNew", true));
-    conf.setAskToConnect(iniBool("askToConnect", false));
+    conf.setAskToConnect(iniBool("askToConnect"));
     conf.setLogBlocked(iniBool("logBlocked", true));
     conf.setLogStat(iniBool("logStat", true));
     conf.setLogStatNoFilter(iniBool("logStatNoFilter", true));
     conf.setLogAllowedIp(iniBool("logAllowedIp", true));
     conf.setLogBlockedIp(iniBool("logBlockedIp", true));
+    conf.setLogAlertedBlockedIp(iniBool("logAlertedBlockedIp"));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
     conf.setAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
@@ -359,6 +360,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("logStatNoFilter", conf.logStatNoFilter());
         setIniValue("logAllowedIp", conf.logAllowedIp());
         setIniValue("logBlockedIp", conf.logBlockedIp());
+        setIniValue("logAlertedBlockedIp", conf.logAlertedBlockedIp());
         setIniValue("appBlockAll", conf.appBlockAll());
         setIniValue("appAllowAll", conf.appAllowAll());
         setIniValue("appGroupBits", conf.appGroupBits(), DEFAULT_APP_GROUP_BITS);

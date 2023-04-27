@@ -79,6 +79,9 @@ public:
     bool logBlockedIp() const { return m_logBlockedIp; }
     void setLogBlockedIp(bool logBlockedIp);
 
+    bool logAlertedBlockedIp() const { return m_logAlertedBlockedIp; }
+    void setLogAlertedBlockedIp(bool logAlertedBlockedIp);
+
     bool appBlockAll() const { return m_appBlockAll; }
     void setAppBlockAll(bool appBlockAll);
 
@@ -184,6 +187,7 @@ private:
 
     uint m_logAllowedIp : 1;
     uint m_logBlockedIp : 1;
+    uint m_logAlertedBlockedIp : 1;
 
     uint m_appBlockAll : 1;
     uint m_appAllowAll : 1;

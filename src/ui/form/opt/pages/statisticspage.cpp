@@ -67,6 +67,7 @@ void StatisticsPage::onRetranslateUi()
     m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
     m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
+    m_cbLogAlertedBlockedIp->setText(tr("Collect only alerted blocked connections"));
     m_lscBlockedIpKeepCount->label()->setText(tr("Keep count for 'Blocked connections':"));
     m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
 
@@ -328,7 +329,7 @@ void StatisticsPage::setupConnBox()
     // Layout
     auto layout = ControlUtil::createLayoutByWidgets({ // TODO: Collect allowed connections
             // m_cbLogAllowedIp, m_lscAllowedIpKeepCount, ControlUtil::createSeparator(),
-            m_cbLogBlockedIp, m_lscBlockedIpKeepCount });
+            m_cbLogBlockedIp, m_cbLogAlertedBlockedIp, m_lscBlockedIpKeepCount });
 
     m_gbConn = new QGroupBox();
     m_gbConn->setLayout(layout);
@@ -365,6 +366,14 @@ void StatisticsPage::setupLogBlockedIp()
     });
 
     m_cbLogBlockedIp->setFont(ControlUtil::fontDemiBold());
+
+    m_cbLogAlertedBlockedIp =
+            ControlUtil::createCheckBox(conf()->logAlertedBlockedIp(), [&](bool checked) {
+                if (conf()->logAlertedBlockedIp() != checked) {
+                    conf()->setLogAlertedBlockedIp(checked);
+                    ctrl()->setFlagsEdited();
+                }
+            });
 
     const auto logIpKeepCountList = m_lscAllowedIpKeepCount->values();
     m_lscBlockedIpKeepCount = ControlUtil::createSpinCombo(

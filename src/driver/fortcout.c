@@ -130,6 +130,9 @@ inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
     if (app_flags.v != 0 && !app_flags.log_blocked)
         return;
 
+    if (conf_flags.log_alerted_blocked_ip && !app_flags.alerted)
+        return;
+
     const UINT32 *local_ip = ca->isIPv6
             ? (const UINT32 *) ca->inFixedValues->incomingValue[ci->localIp].value.byteArray16
             : &ca->inFixedValues->incomingValue[ci->localIp].value.uint32;

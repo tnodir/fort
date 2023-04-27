@@ -65,6 +65,7 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 
     confFlags->log_allowed_ip = conf.logAllowedIp();
     confFlags->log_blocked_ip = conf.logBlockedIp();
+    confFlags->log_alerted_blocked_ip = conf.logAlertedBlockedIp();
 
     confFlags->group_apply_child = conf.appGroupApplyChild();
     confFlags->group_bits = conf.appGroupBits();

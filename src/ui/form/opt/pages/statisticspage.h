@@ -62,6 +62,7 @@ private:
     QCheckBox *m_cbLogAllowedIp = nullptr;
     LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;
+    QCheckBox *m_cbLogAlertedBlockedIp = nullptr;
     LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
