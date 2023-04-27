@@ -9,9 +9,10 @@
 
 #define FORT_PSTREE_POOL_TAG 'PwfF'
 
-#define FORT_SVCHOST_PREFIX      L"\\svchost\\"
-#define FORT_SVCHOST_PREFIX_SIZE (sizeof(FORT_SVCHOST_PREFIX) - sizeof(WCHAR))
-#define FORT_SVCHOST_EXE         L"svchost.exe"
+#define FORT_SVCHOST_PREFIX L"\\svchost\\"
+#define FORT_SVCHOST_PREFIX_SIZE                                                                   \
+    (sizeof(FORT_SVCHOST_PREFIX) - sizeof(WCHAR)) /* exclude terminating zero */
+#define FORT_SVCHOST_EXE L"svchost.exe"
 
 #define FORT_PSTREE_NAME_LEN_MAX      120
 #define FORT_PSTREE_NAME_LEN_MAX_SIZE (FORT_PSTREE_NAME_LEN_MAX * sizeof(WCHAR))
@@ -256,26 +257,23 @@ static BOOL fort_pstree_svchost_check(
 }
 
 static PFORT_PSNAME fort_pstree_create_service_name(
-        PFORT_PSTREE ps_tree, PCUNICODE_STRING serviceName, BOOL toLower)
+        PFORT_PSTREE ps_tree, PCUNICODE_STRING serviceName)
 {
-    const USHORT serviceNameLength = serviceName->Length;
+    const USHORT nameLen = serviceName->Length;
 
-    PFORT_PSNAME ps_name =
-            fort_pstree_name_new(ps_tree, FORT_SVCHOST_PREFIX_SIZE + serviceNameLength);
+    PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, FORT_SVCHOST_PREFIX_SIZE + nameLen);
 
     if (ps_name != NULL) {
         PCHAR data = (PCHAR) &ps_name->data;
         RtlCopyMemory(data, FORT_SVCHOST_PREFIX, FORT_SVCHOST_PREFIX_SIZE);
 
         UNICODE_STRING nameString;
-        nameString.Length = serviceNameLength;
-        nameString.MaximumLength = serviceNameLength;
+        nameString.Length = nameLen;
+        nameString.MaximumLength = nameLen;
         nameString.Buffer = (PWSTR) (data + FORT_SVCHOST_PREFIX_SIZE);
 
-        if (toLower) {
-            /* RtlDowncaseUnicodeString() must be called in <DISPATCH level only! */
-            fort_ascii_downcase(&nameString, serviceName);
-        }
+        /* RtlDowncaseUnicodeString() must be called in <DISPATCH level only! */
+        fort_ascii_downcase(&nameString, serviceName);
     }
 
     return ps_name;
@@ -290,7 +288,7 @@ static PFORT_PSNAME fort_pstree_add_service_name(PFORT_PSTREE ps_tree, PCFORT_PS
     if (!fort_pstree_svchost_check(psi->path, psi->commandLine, &serviceName))
         return NULL;
 
-    return fort_pstree_create_service_name(ps_tree, &serviceName, /*toLower=*/TRUE);
+    return fort_pstree_create_service_name(ps_tree, &serviceName);
 }
 
 static void fort_pstree_proc_set_name(PFORT_PSNODE proc, PFORT_PSNAME ps_name)
@@ -756,8 +754,7 @@ static int fort_pstree_update_service(
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, service->process_id);
 
     if (proc != NULL && proc->ps_name == NULL) {
-        PFORT_PSNAME ps_name =
-                fort_pstree_create_service_name(ps_tree, &serviceName, /*toLower=*/FALSE);
+        PFORT_PSNAME ps_name = fort_pstree_create_service_name(ps_tree, &serviceName);
 
         fort_pstree_proc_set_name(proc, ps_name);
     }

@@ -41,8 +41,7 @@ int writeServiceInfo(char *data, const ServiceInfo &serviceInfo)
     const quint16 nameLen = quint16(serviceInfo.serviceName.size() * sizeof(char16_t));
     info->name_len = nameLen;
 
-    const QString name = serviceInfo.serviceName.toLower();
-    memcpy(info->name, name.utf16(), nameLen);
+    memcpy(info->name, serviceInfo.serviceName.utf16(), nameLen);
 
     return FORT_SERVICE_INFO_NAME_OFF + FORT_CONF_STR_DATA_SIZE(nameLen);
 }
