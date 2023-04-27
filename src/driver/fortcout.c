@@ -126,21 +126,26 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
             cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
 }
 
+inline static BOOL fort_callout_ale_log_blocked_ip_check(
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+{
+    if (cx->block_reason == FORT_BLOCK_REASON_UNKNOWN
+            || !(conf_flags.ask_to_connect || conf_flags.log_blocked_ip))
+        return FALSE;
+
+    const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
+    if ((app_flags.v != 0 && !app_flags.log_blocked)
+            || (!app_flags.alerted && conf_flags.log_alerted_blocked_ip))
+        return FALSE;
+
+    return TRUE;
+}
+
 inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
         PCFORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
         FORT_CONF_FLAGS conf_flags)
 {
-    FORT_CHECK_STACK();
-
-    if (cx->block_reason == FORT_BLOCK_REASON_UNKNOWN
-            || !(conf_flags.ask_to_connect || conf_flags.log_blocked_ip))
-        return;
-
-    const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
-    if (app_flags.v != 0 && !app_flags.log_blocked)
-        return;
-
-    if (!app_flags.alerted && conf_flags.log_alerted_blocked_ip)
+    if (!fort_callout_ale_log_blocked_ip_check(cx, conf_ref, conf_flags))
         return;
 
     const UINT32 *local_ip = ca->isIPv6
