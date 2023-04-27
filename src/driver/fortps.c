@@ -740,7 +740,7 @@ FORT_API BOOL fort_pstree_get_proc_name(
 static int fort_pstree_update_service(
         PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO service, const PCHAR end_data)
 {
-    if ((PCHAR) service + FORT_SERVICE_INFO_NAME_OFF >= end_data)
+    if ((PCHAR) service + FORT_SERVICE_INFO_NAME_OFF > end_data)
         return 0;
 
     UNICODE_STRING serviceName;
@@ -748,7 +748,7 @@ static int fort_pstree_update_service(
     serviceName.MaximumLength = serviceName.Length;
     serviceName.Buffer = service->name;
 
-    if ((PCHAR) service + FORT_SERVICE_INFO_NAME_OFF + serviceName.Length >= end_data)
+    if ((PCHAR) service + FORT_SERVICE_INFO_NAME_OFF + serviceName.Length > end_data)
         return 0;
 
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, service->process_id);
