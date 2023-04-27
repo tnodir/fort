@@ -45,6 +45,13 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
     classifyOut->actionType = FWP_ACTION_CONTINUE;
 }
 
+inline static void fort_callout_ale_set_app_flags(
+        PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_FLAGS app_flags)
+{
+    cx->app_flags_found = TRUE;
+    cx->app_flags = app_flags;
+}
+
 static FORT_APP_FLAGS fort_callout_ale_conf_app_flags(
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
@@ -54,8 +61,7 @@ static FORT_APP_FLAGS fort_callout_ale_conf_app_flags(
     const FORT_APP_FLAGS app_flags = fort_conf_app_find(
             &conf_ref->conf, cx->path->Buffer, cx->path->Length, fort_conf_exe_find);
 
-    cx->app_flags_found = TRUE;
-    cx->app_flags = app_flags;
+    fort_callout_ale_set_app_flags(cx, app_flags);
 
     return app_flags;
 }
@@ -104,13 +110,17 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
             || !(conf_flags.allow_all_new || conf_flags.log_blocked))
         return;
 
+    app_flags.log_blocked = TRUE;
+    app_flags.log_conn = TRUE;
     app_flags.blocked = (UCHAR) cx->blocked;
-    app_flags.alerted = 1;
-    app_flags.is_new = 1;
+    app_flags.alerted = TRUE;
+    app_flags.is_new = TRUE;
 
     if (!NT_SUCCESS(fort_conf_ref_exe_add_path(
                 conf_ref, cx->path->Buffer, cx->path->Length, app_flags)))
         return;
+
+    fort_callout_ale_set_app_flags(cx, app_flags);
 
     fort_buffer_blocked_write(&fort_device()->buffer, cx->blocked, cx->process_id,
             cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
@@ -130,7 +140,7 @@ inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
     if (app_flags.v != 0 && !app_flags.log_blocked)
         return;
 
-    if (conf_flags.log_alerted_blocked_ip && !app_flags.alerted)
+    if (!app_flags.alerted && conf_flags.log_alerted_blocked_ip)
         return;
 
     const UINT32 *local_ip = ca->isIPv6

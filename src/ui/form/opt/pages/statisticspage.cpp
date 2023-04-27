@@ -67,7 +67,7 @@ void StatisticsPage::onRetranslateUi()
     m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
     m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
-    m_cbLogAlertedBlockedIp->setText(tr("Collect only alerted blocked connections"));
+    m_cbLogAlertedBlockedIp->setText(tr("Alerted only"));
     m_lscBlockedIpKeepCount->label()->setText(tr("Keep count for 'Blocked connections':"));
     m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
 
