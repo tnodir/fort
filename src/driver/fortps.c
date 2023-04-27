@@ -746,7 +746,7 @@ static int fort_pstree_update_service(
         return 0;
 
     UNICODE_STRING serviceName;
-    serviceName.Length = service->name_len * sizeof(WCHAR);
+    serviceName.Length = service->name_len;
     serviceName.MaximumLength = serviceName.Length;
     serviceName.Buffer = service->name;
 

@@ -45,7 +45,7 @@ typedef struct fort_service_info
 {
     UINT32 process_id;
 
-    UCHAR name_len;
+    UINT16 name_len;
     WCHAR name[2];
 } FORT_SERVICE_INFO, *PFORT_SERVICE_INFO;
 
