@@ -1326,7 +1326,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Alerted only</source>
-        <translation type="unfinished"></translation>
+        <translation>경고만</translation>
     </message>
 </context>
 <context>
