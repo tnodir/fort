@@ -1326,7 +1326,7 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Alerted only</source>
-        <translation type="unfinished"></translation>
+        <translation>Alerté seulement</translation>
     </message>
 </context>
 <context>
