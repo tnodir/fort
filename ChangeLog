@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.13, 2023-04-27:
+- Driver: Refactor service name handling.
+
 v3.8.12, 2023-04-21:
 - Driver: Expand kernel stack for workers.
 
