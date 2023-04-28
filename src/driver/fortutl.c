@@ -409,6 +409,19 @@ FORT_API UINT32 fort_bits_duplicate16(UINT16 num)
     return fort_bits_duplicate8(num & 0xFF) | (fort_bits_duplicate8(num >> 8) << 16);
 }
 
+FORT_API void fort_irp_set_cancel_routine(PIRP irp, PDRIVER_CANCEL routine)
+{
+    if (irp == NULL)
+        return;
+
+    KIRQL cirq;
+    IoAcquireCancelSpinLock(&cirq);
+    {
+        IoSetCancelRoutine(irp, routine);
+    }
+    IoReleaseCancelSpinLock(cirq);
+}
+
 static void NTAPI fort_expand_stack_call(PVOID context)
 {
     PFORT_EXPAND_STACK_ARG arg = context;

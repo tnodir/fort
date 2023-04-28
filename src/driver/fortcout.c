@@ -350,6 +350,7 @@ inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOU
     fort_conf_ref_put(device_conf, conf_ref);
 
     if (cx->irp != NULL) {
+        fort_buffer_irp_clear_pending(cx->irp);
         fort_request_complete_info(cx->irp, STATUS_SUCCESS, cx->info);
     }
 }
@@ -985,6 +986,7 @@ FORT_API void NTAPI fort_callout_timer(void)
     fort_buffer_dpc_end(&buf_lock_queue);
 
     if (irp != NULL) {
+        fort_buffer_irp_clear_pending(irp);
         fort_request_complete_info(irp, STATUS_SUCCESS, info);
     }
 }

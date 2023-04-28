@@ -2,7 +2,9 @@
 
 #include "fortbuf.h"
 
+#include "fortdev.h"
 #include "forttrace.h"
+#include "fortutl.h"
 
 #define FORT_BUFFER_POOL_TAG 'BwfF'
 
@@ -282,7 +284,7 @@ FORT_API NTSTATUS fort_buffer_xmove(
     return status;
 }
 
-FORT_API NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
+inline static NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
 {
     NTSTATUS status = STATUS_CANCELLED;
 
@@ -306,6 +308,32 @@ FORT_API NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, ULONG_P
     KeReleaseInStackQueuedSpinLockFromDpcLevel(&lock_queue);
 
     return status;
+}
+
+static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
+{
+    UNUSED(device);
+
+    ULONG_PTR info;
+
+    const NTSTATUS status = fort_buffer_cancel_pending(&fort_device()->buffer, irp, &info);
+
+    IoSetCancelRoutine(irp, NULL);
+    IoReleaseCancelSpinLock(irp->CancelIrql); /* before IoCompleteRequest()! */
+
+    fort_request_complete_info(irp, status, info);
+}
+
+FORT_API void fort_buffer_irp_mark_pending(PIRP irp)
+{
+    IoMarkIrpPending(irp);
+
+    fort_irp_set_cancel_routine(irp, &fort_device_cancel_pending);
+}
+
+FORT_API void fort_buffer_irp_clear_pending(PIRP irp)
+{
+    fort_irp_set_cancel_routine(irp, NULL);
 }
 
 FORT_API void fort_buffer_dpc_begin(PFORT_BUFFER buf, PKLOCK_QUEUE_HANDLE lock_queue)

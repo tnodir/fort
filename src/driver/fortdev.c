@@ -9,6 +9,7 @@
 #include "fortps.h"
 #include "fortscb.h"
 #include "forttrace.h"
+#include "fortutl.h"
 
 static PFORT_DEVICE g_device = NULL;
 
@@ -107,32 +108,6 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
     return STATUS_SUCCESS;
 }
 
-static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
-{
-    UNUSED(device);
-
-    ULONG_PTR info;
-
-    const NTSTATUS status = fort_buffer_cancel_pending(&fort_device()->buffer, irp, &info);
-
-    IoSetCancelRoutine(irp, NULL);
-    IoReleaseCancelSpinLock(irp->CancelIrql); /* before IoCompleteRequest()! */
-
-    fort_request_complete_info(irp, status, info);
-}
-
-static void fort_device_mark_pending(PIRP irp)
-{
-    IoMarkIrpPending(irp);
-
-    KIRQL cirq;
-    IoAcquireCancelSpinLock(&cirq);
-    {
-        IoSetCancelRoutine(irp, &fort_device_cancel_pending);
-    }
-    IoReleaseCancelSpinLock(cirq);
-}
-
 static NTSTATUS fort_device_control_validate(const PFORT_CONF_VERSION conf_ver, ULONG len)
 {
     if (len == sizeof(FORT_CONF_VERSION)) {
@@ -199,7 +174,13 @@ static NTSTATUS fort_device_control_getlog(PVOID out, ULONG out_len, PIRP irp, U
     if (out_len < FORT_BUFFER_SIZE)
         return STATUS_BUFFER_TOO_SMALL;
 
-    return fort_buffer_xmove(&fort_device()->buffer, irp, out, out_len, info);
+    const NTSTATUS status = fort_buffer_xmove(&fort_device()->buffer, irp, out, out_len, info);
+
+    if (status == STATUS_PENDING) {
+        fort_buffer_irp_mark_pending(irp);
+    }
+
+    return status;
 }
 
 inline static NTSTATUS fort_device_control_app_conf(
@@ -320,9 +301,7 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
         TRACE(FORT_DEVICE_DEVICE_CONTROL_ERROR, status, 0, 0);
     }
 
-    if (status == STATUS_PENDING) {
-        fort_device_mark_pending(irp);
-    } else {
+    if (status != STATUS_PENDING) {
         fort_request_complete_info(irp, status, info);
     }
 

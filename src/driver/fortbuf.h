@@ -54,7 +54,9 @@ FORT_API NTSTATUS fort_buffer_proc_new_write(PFORT_BUFFER buf, UINT32 pid, UINT3
 FORT_API NTSTATUS fort_buffer_xmove(
         PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len, ULONG_PTR *info);
 
-FORT_API NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info);
+FORT_API void fort_buffer_irp_mark_pending(PIRP irp);
+
+FORT_API void fort_buffer_irp_clear_pending(PIRP irp);
 
 FORT_API void fort_buffer_dpc_begin(PFORT_BUFFER buf, PKLOCK_QUEUE_HANDLE lock_queue);
 
