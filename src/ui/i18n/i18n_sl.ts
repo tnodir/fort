@@ -1326,7 +1326,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Alerted only</source>
-        <translation type="unfinished"></translation>
+        <translation>Samo opozorjeno</translation>
     </message>
 </context>
 <context>
