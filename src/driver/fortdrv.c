@@ -9,7 +9,7 @@
 #include "forttrace.h"
 #include "fortutl.h"
 
-#define FORT_STACK_USAGE_FREE_MIN (1 * 1024)
+#define FORT_STACK_USAGE_FREE_MIN 400
 
 FORT_API void fort_check_stack_usage(const char *func_name)
 {
@@ -83,6 +83,8 @@ static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver, PUNICODE_STRING
 
 static void fort_driver_unload(PDRIVER_OBJECT driver)
 {
+    FORT_CHECK_STACK();
+
     if (fort_device() == NULL)
         return;
 

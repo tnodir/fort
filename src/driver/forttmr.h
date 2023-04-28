@@ -3,7 +3,7 @@
 
 #include "fortdrv.h"
 
-typedef void(NTAPI *FORT_TIMER_FUNC)(void);
+typedef void (*FORT_TIMER_FUNC)(void);
 
 #define FORT_TIMER_RUNNING     0x01
 #define FORT_TIMER_ONESHOT     0x02

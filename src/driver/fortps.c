@@ -564,6 +564,8 @@ static void NTAPI fort_pstree_notify(
 {
     UNUSED(process);
 
+    FORT_CHECK_STACK();
+
     PFORT_PSTREE ps_tree = &fort_device()->ps_tree;
 
     PFORT_PSNODE proc = fort_pstree_notify_process(ps_tree, process, processHandle, createInfo);

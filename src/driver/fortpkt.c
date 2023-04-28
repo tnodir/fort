@@ -372,6 +372,8 @@ static void NTAPI fort_packet_inject_complete(
 {
     UNUSED(dispatchLevel);
 
+    FORT_CHECK_STACK();
+
     switch (pkt->flags & FORT_PACKET_TYPE_MASK) {
     case FORT_PACKET_TYPE_FLOW: {
         fort_shaper_packet_free(&fort_device()->shaper, (PFORT_FLOW_PACKET) pkt, clonedNetBufList);
@@ -818,8 +820,10 @@ inline static ULONG fort_shaper_timer_process_queues(PFORT_SHAPER shaper, ULONG 
     return new_active_io_bits;
 }
 
-static void NTAPI fort_shaper_timer_process(void)
+static void fort_shaper_timer_process(void)
 {
+    FORT_CHECK_STACK();
+
     PFORT_SHAPER shaper = &fort_device()->shaper;
 
     ULONG active_io_bits =

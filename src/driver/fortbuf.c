@@ -314,6 +314,8 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
+    FORT_CHECK_STACK();
+
     ULONG_PTR info;
 
     const NTSTATUS status = fort_buffer_cancel_pending(&fort_device()->buffer, irp, &info);

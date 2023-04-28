@@ -17,7 +17,7 @@ static void fort_worker_callback_run(
 
 static NTSTATUS fort_worker_callback_expand(PVOID context)
 {
-    PFORT_WORKER worker = (PFORT_WORKER) context;
+    PFORT_WORKER worker = context;
 
     InterlockedDecrement16(&worker->queue_size);
 
@@ -31,6 +31,8 @@ static NTSTATUS fort_worker_callback_expand(PVOID context)
 static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
 {
     UNUSED(device);
+
+    FORT_CHECK_STACK();
 
     const NTSTATUS status = fort_expand_stack(&fort_worker_callback_expand, context);
     UNUSED(status);

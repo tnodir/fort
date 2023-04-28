@@ -41,6 +41,8 @@ static void NTAPI fort_syscb_power(PVOID context, PVOID event, PVOID specifics)
 {
     UNUSED(context);
 
+    FORT_CHECK_STACK();
+
     if (event != (PVOID) PO_CB_SYSTEM_STATE_LOCK)
         return;
 
@@ -70,6 +72,8 @@ static void NTAPI fort_syscb_time(PVOID context, PVOID event, PVOID specifics)
     UNUSED(context);
     UNUSED(event);
     UNUSED(specifics);
+
+    FORT_CHECK_STACK();
 
     fort_stat_flags_set(&fort_device()->stat, FORT_STAT_SYSTEM_TIME_CHANGED, TRUE);
 

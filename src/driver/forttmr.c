@@ -25,6 +25,8 @@ static void NTAPI fort_timer_callback(PKDPC dpc, PFORT_TIMER timer, PVOID arg1, 
     UNUSED(arg1);
     UNUSED(arg2);
 
+    FORT_CHECK_STACK();
+
     const UCHAR flags = fort_timer_flags(timer);
     if ((flags & FORT_TIMER_ONESHOT) != 0) {
         fort_timer_flags_set(timer, FORT_TIMER_RUNNING, FALSE);

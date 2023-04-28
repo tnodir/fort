@@ -25,6 +25,8 @@ FORT_API void fort_device_set(PFORT_DEVICE device)
 
 static void fort_worker_reauth(void)
 {
+    FORT_CHECK_STACK();
+
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
     const NTSTATUS status = fort_callout_force_reauth(conf_flags);
@@ -35,8 +37,10 @@ static void fort_worker_reauth(void)
     }
 }
 
-static void NTAPI fort_app_period_timer(void)
+static void fort_app_period_timer(void)
 {
+    FORT_CHECK_STACK();
+
     if (fort_conf_ref_period_update(&fort_device()->conf, /*force=*/FALSE, /*periods_n=*/NULL)) {
         fort_worker_queue(&fort_device()->worker, FORT_WORKER_REAUTH);
     }
@@ -52,6 +56,8 @@ FORT_API void fort_device_on_system_time(void)
 FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
+
+    FORT_CHECK_STACK();
 
     NTSTATUS status = STATUS_SUCCESS;
 
@@ -75,6 +81,8 @@ FORT_API NTSTATUS fort_device_close(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
+    FORT_CHECK_STACK();
+
     fort_request_complete(irp, STATUS_SUCCESS);
 
     return STATUS_SUCCESS;
@@ -83,6 +91,8 @@ FORT_API NTSTATUS fort_device_close(PDEVICE_OBJECT device, PIRP irp)
 FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
+
+    FORT_CHECK_STACK();
 
     /* Device closed */
     fort_device_flag_set(
@@ -291,6 +301,8 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
+    FORT_CHECK_STACK();
+
     ULONG_PTR info = 0;
 
     const PIO_STACK_LOCATION irp_stack = IoGetCurrentIrpStackLocation(irp);
@@ -311,6 +323,8 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
 FORT_API NTSTATUS fort_device_shutdown(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
+
+    FORT_CHECK_STACK();
 
     if (fort_device() != NULL) {
         fort_stat_close_flows(&fort_device()->stat);
