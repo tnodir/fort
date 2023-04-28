@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.8.14, 2023-04-28:
+- UI: Options: Statistics: Add "Alerted only" flag (to collect only alerted blocked connections).
+- Driver: Clear IRP's cancel routine before completion.
+
 v3.8.13, 2023-04-27:
 - Driver: Refactor service name handling.
 
