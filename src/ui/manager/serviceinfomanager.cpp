@@ -30,20 +30,35 @@ QString getServiceDll(const RegKey &svcReg, bool *expand = nullptr)
     return dllPathVar.toString();
 }
 
-bool checkIsSvcHostService(const RegKey &svcReg, bool extendedCheck)
+QString resolveSvcHostServiceName(const RegKey &servicesReg, const QString &serviceName)
+{
+    const RegKey svcReg(servicesReg, serviceName);
+
+    const quint32 serviceType = svcReg.value(serviceTypeKey).toUInt();
+
+    // Check a per-user service
+    if (serviceType == 224) {
+        const int pos = serviceName.lastIndexOf('_');
+        if (pos > 0) {
+            return serviceName.left(pos);
+        }
+    }
+
+    return serviceName;
+}
+
+bool checkIsSvcHostService(const RegKey &svcReg)
 {
     const auto imagePath = svcReg.value(serviceImagePathKey).toString();
     if (!imagePath.contains(R"(\system32\svchost.exe)", Qt::CaseInsensitive))
         return false;
 
-    if (extendedCheck) {
-        if (!svcReg.contains("ServiceSidType") || svcReg.value("SvcHostSplitDisable").toInt() != 0)
-            return false;
+    if (!svcReg.contains("ServiceSidType") || svcReg.value("SvcHostSplitDisable").toInt() != 0)
+        return false;
 
-        const QString dllPath = getServiceDll(svcReg);
-        if (dllPath.isEmpty())
-            return false;
-    }
+    const QString dllPath = getServiceDll(svcReg);
+    if (dllPath.isEmpty())
+        return false;
 
     return true;
 }
@@ -69,10 +84,14 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERV
 
         for (int infoIndex = infoList.size(); serviceCount > 0;
                 --serviceCount, ++service, ++infoIndex) {
-            const auto serviceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
+
+            const auto originalServiceName =
+                    QString::fromUtf16((const char16_t *) service->lpServiceName);
+            const auto serviceName = resolveSvcHostServiceName(servicesReg, originalServiceName);
+
             const RegKey svcReg(servicesReg, serviceName);
 
-            if (!checkIsSvcHostService(svcReg, /*extendedCheck=*/displayName))
+            if (!checkIsSvcHostService(svcReg))
                 continue;
 
             const quint32 trackFlags = svcReg.value(serviceTrackFlagsKey).toUInt();
