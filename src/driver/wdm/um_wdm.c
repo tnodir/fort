@@ -517,3 +517,8 @@ ULONG_PTR IoGetRemainingStackSize(void)
 {
     return 0;
 }
+
+void KeBugCheckEx(ULONG bugCheckCode, ULONG_PTR bugCheckParameter1, ULONG_PTR bugCheckParameter2,
+        ULONG_PTR bugCheckParameter3, ULONG_PTR bugCheckParameter4)
+{
+}

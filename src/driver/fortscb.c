@@ -3,6 +3,7 @@
 #include "fortscb.h"
 
 #include "fortcb.h"
+#include "fortdbg.h"
 #include "fortdev.h"
 #include "fortpkt.h"
 
@@ -41,7 +42,7 @@ static void NTAPI fort_syscb_power(PVOID context, PVOID event, PVOID specifics)
 {
     UNUSED(context);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_SYSCB_POWER);
 
     if (event != (PVOID) PO_CB_SYSTEM_STATE_LOCK)
         return;
@@ -59,7 +60,7 @@ FORT_API NTSTATUS fort_syscb_power_register(void)
 {
     return fort_syscb_register(L"\\Callback\\PowerState", &fort_device()->power_cb_obj,
             &fort_device()->power_cb_reg,
-            FORT_CALLBACK(FORT_SYSCB_POWER, PCALLBACK_FUNCTION, &fort_syscb_power));
+            FORT_CALLBACK(FORT_CALLBACK_SYSCB_POWER, PCALLBACK_FUNCTION, &fort_syscb_power));
 }
 
 FORT_API void fort_syscb_power_unregister(void)
@@ -73,7 +74,7 @@ static void NTAPI fort_syscb_time(PVOID context, PVOID event, PVOID specifics)
     UNUSED(event);
     UNUSED(specifics);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_SYSCB_TIME);
 
     fort_stat_flags_set(&fort_device()->stat, FORT_STAT_SYSTEM_TIME_CHANGED, TRUE);
 
@@ -84,7 +85,7 @@ FORT_API NTSTATUS fort_syscb_time_register(void)
 {
     return fort_syscb_register(L"\\Callback\\SetSystemTime", &fort_device()->systime_cb_obj,
             &fort_device()->systime_cb_reg,
-            FORT_CALLBACK(FORT_SYSCB_TIME, PCALLBACK_FUNCTION, &fort_syscb_time));
+            FORT_CALLBACK(FORT_CALLBACK_SYSCB_TIME, PCALLBACK_FUNCTION, &fort_syscb_time));
 }
 
 FORT_API void fort_syscb_time_unregister(void)

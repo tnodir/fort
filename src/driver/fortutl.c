@@ -9,6 +9,8 @@
 #define FORT_KEY_INFO_PATH_SIZE                                                                    \
     (2 * sizeof(KEY_VALUE_FULL_INFORMATION) + (MAX_PATH * sizeof(WCHAR)))
 
+#define FORT_KERNEL_STACK_SIZE (8 * 1024)
+
 typedef struct fort_expand_stack_arg
 {
     FORT_EXPAND_STACK_FUNC func;

@@ -6,6 +6,7 @@
 #include "common/fortprov.h"
 
 #include "fortcout.h"
+#include "fortdbg.h"
 #include "fortps.h"
 #include "fortscb.h"
 #include "forttrace.h"
@@ -25,8 +26,6 @@ FORT_API void fort_device_set(PFORT_DEVICE device)
 
 static void fort_worker_reauth(void)
 {
-    FORT_CHECK_STACK();
-
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
     const NTSTATUS status = fort_callout_force_reauth(conf_flags);
@@ -57,7 +56,7 @@ FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_DEVICE_CREATE);
 
     NTSTATUS status = STATUS_SUCCESS;
 
@@ -81,7 +80,7 @@ FORT_API NTSTATUS fort_device_close(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_DEVICE_CLOSE);
 
     fort_request_complete(irp, STATUS_SUCCESS);
 
@@ -92,7 +91,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_DEVICE_CLEANUP);
 
     /* Device closed */
     fort_device_flag_set(
@@ -301,7 +300,7 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_DEVICE_CONTROL);
 
     ULONG_PTR info = 0;
 
@@ -324,7 +323,7 @@ FORT_API NTSTATUS fort_device_shutdown(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_DEVICE_SHUTDOWN);
 
     if (fort_device() != NULL) {
         fort_stat_close_flows(&fort_device()->stat);
@@ -361,6 +360,8 @@ static NTSTATUS fort_device_register_provider(void)
 
 FORT_API NTSTATUS fort_device_load(PVOID device_param)
 {
+    FORT_CHECK_STACK(FORT_DEVICE_LOAD);
+
     NTSTATUS status;
 
     PDEVICE_OBJECT device = device_param;
@@ -410,6 +411,8 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
 
 FORT_API void fort_device_unload(void)
 {
+    FORT_CHECK_STACK(FORT_DEVICE_UNLOAD);
+
     /* Stop system notifiers */
     fort_syscb_power_unregister();
     fort_syscb_time_unregister();

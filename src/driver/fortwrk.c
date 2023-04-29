@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "fortcb.h"
+#include "fortdbg.h"
 #include "fortutl.h"
 
 static void fort_worker_callback_run(
@@ -32,7 +33,7 @@ static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
 {
     UNUSED(device);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_WORKER_CALLBACK);
 
     const NTSTATUS status = fort_expand_stack(&fort_worker_callback_expand, context);
     UNUSED(status);
@@ -70,7 +71,8 @@ FORT_API void fort_worker_queue(PFORT_WORKER worker, UCHAR work_id)
         InterlockedIncrement16(&worker->queue_size);
 
         IoQueueWorkItem(worker->item,
-                FORT_CALLBACK(FORT_WORKER_CALLBACK, PIO_WORKITEM_ROUTINE, &fort_worker_callback),
+                FORT_CALLBACK(
+                        FORT_CALLBACK_WORKER_CALLBACK, PIO_WORKITEM_ROUTINE, &fort_worker_callback),
                 DelayedWorkQueue, worker);
     }
 }

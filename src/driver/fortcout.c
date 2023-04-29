@@ -7,6 +7,7 @@
 #include "common/fortprov.h"
 
 #include "fortcoutarg.h"
+#include "fortdbg.h"
 #include "fortdev.h"
 #include "fortps.h"
 #include "forttrace.h"
@@ -70,8 +71,6 @@ inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
         PCFORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
         FORT_APP_FLAGS app_flags)
 {
-    FORT_CHECK_STACK();
-
     const UINT64 flow_id = ca->inMetaValues->flowHandle;
 
     const IPPROTO ip_proto = (IPPROTO) ca->inFixedValues->incomingValue[ci->ipProto].value.uint8;
@@ -104,8 +103,6 @@ inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
 inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
 {
-    FORT_CHECK_STACK();
-
     if (app_flags.v != 0 || !conf_flags.filter_enabled
             || !(conf_flags.allow_all_new || conf_flags.log_blocked))
         return;
@@ -213,8 +210,6 @@ inline static void fort_callout_ale_log(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_AL
 inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
-    FORT_CHECK_STACK();
-
     if (conf_flags.stop_traffic) {
         cx->blocked = TRUE; /* block all */
         return TRUE;
@@ -290,8 +285,6 @@ inline static void fort_callout_ale_classify_allowed(PCFORT_CALLOUT_ARG ca,
 inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
-    FORT_CHECK_STACK();
-
     const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
     const UINT32 process_id = (UINT32) ca->inMetaValues->processId;
@@ -357,8 +350,6 @@ inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOU
 
 static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_ALE_INDEX ci)
 {
-    FORT_CHECK_STACK();
-
     const UINT32 classify_flags = ca->inFixedValues->incomingValue[ci->flags].value.uint32;
 
     const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0;
@@ -391,7 +382,7 @@ static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedVa
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_CONNECT_V4);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -420,7 +411,7 @@ static void NTAPI fort_callout_connect_v6(const FWPS_INCOMING_VALUES0 *inFixedVa
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_CONNECT_V6);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -449,7 +440,7 @@ static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedVal
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_ACCEPT_V4);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -478,7 +469,7 @@ static void NTAPI fort_callout_accept_v6(const FWPS_INCOMING_VALUES0 *inFixedVal
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_ACCEPT_V6);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -515,8 +506,6 @@ static NTSTATUS NTAPI fort_callout_notify(
 
 inline static void fort_callout_flow_classify(PCFORT_CALLOUT_ARG ca, UINT32 dataSize)
 {
-    FORT_CHECK_STACK();
-
     const UINT32 headerSize = ca->inbound ? ca->inMetaValues->transportHeaderSize : 0;
 
     fort_flow_classify(&fort_device()->stat, ca->flowContext, headerSize + dataSize, ca->inbound);
@@ -526,7 +515,7 @@ static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFi
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_STREAM_CLASSIFY);
 
     FWPS_STREAM_CALLOUT_IO_PACKET0 *packet = layerData;
 
@@ -553,8 +542,6 @@ static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFi
 
 static void fort_callout_datagram_classify(PFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_DATAGRAM_INDEX ci)
 {
-    FORT_CHECK_STACK();
-
     const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(ca->netBufList);
     const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
 
@@ -571,7 +558,7 @@ static void NTAPI fort_callout_datagram_classify_v4(const FWPS_INCOMING_VALUES0 
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_DATAGRAM_CLASSIFY_V4);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -593,7 +580,7 @@ static void NTAPI fort_callout_datagram_classify_v6(const FWPS_INCOMING_VALUES0 
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_DATAGRAM_CLASSIFY_V6);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -616,6 +603,8 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     UNUSED(layerId);
     UNUSED(calloutId);
 
+    FORT_CHECK_STACK(FORT_CALLOUT_FLOW_DELETE);
+
     fort_shaper_drop_flow_packets(&fort_device()->shaper, flowContext);
 
     fort_flow_delete(&fort_device()->stat, flowContext);
@@ -623,8 +612,6 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
 
 static void fort_callout_transport_classify(PFORT_CALLOUT_ARG ca)
 {
-    FORT_CHECK_STACK();
-
     if ((ca->classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0
             || ca->classifyOut->actionType == FWP_ACTION_BLOCK)
         return; /* Can't act on the packet */
@@ -645,7 +632,7 @@ static void NTAPI fort_callout_transport_classify_in(const FWPS_INCOMING_VALUES0
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_TRANSPORT_CLASSIFY_IN);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -664,7 +651,7 @@ static void NTAPI fort_callout_transport_classify_out(const FWPS_INCOMING_VALUES
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_TRANSPORT_CLASSIFY_OUT);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -797,6 +784,8 @@ static NTSTATUS fort_callout_install_packet(PDEVICE_OBJECT device, PFORT_STAT st
 
 FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 {
+    FORT_CHECK_STACK(FORT_CALLOUT_INSTALL);
+
     PFORT_STAT stat = &fort_device()->stat;
 
     fort_callout_init();
@@ -812,6 +801,8 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
 FORT_API void fort_callout_remove(void)
 {
+    FORT_CHECK_STACK(FORT_CALLOUT_REMOVE);
+
     PFORT_STAT stat = &fort_device()->stat;
 
     const PUINT32 calloutIds = stat->callout_ids;
@@ -887,7 +878,7 @@ static NTSTATUS fort_callout_force_reauth_prov(
 
 FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_FORCE_REAUTH);
 
     NTSTATUS status;
 
@@ -974,7 +965,7 @@ inline static void fort_callout_flush_stat_traf(
 
 FORT_API void fort_callout_timer(void)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_CALLOUT_TIMER);
 
     PFORT_BUFFER buf = &fort_device()->buffer;
     PFORT_STAT stat = &fort_device()->stat;

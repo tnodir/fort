@@ -467,6 +467,9 @@ FORT_API PVOID IoGetInitialStack(void);
 FORT_API void IoGetStackLimits(PULONG_PTR lowLimit, PULONG_PTR highLimit);
 FORT_API ULONG_PTR IoGetRemainingStackSize(void);
 
+FORT_API void KeBugCheckEx(ULONG bugCheckCode, ULONG_PTR bugCheckParameter1,
+        ULONG_PTR bugCheckParameter2, ULONG_PTR bugCheckParameter3, ULONG_PTR bugCheckParameter4);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

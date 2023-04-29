@@ -2,6 +2,7 @@
 
 #include "fortbuf.h"
 
+#include "fortdbg.h"
 #include "fortdev.h"
 #include "forttrace.h"
 #include "fortutl.h"
@@ -184,7 +185,7 @@ NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL isIPv6, BOOL inboun
         const UINT32 *local_ip, const UINT32 *remote_ip, UINT32 pid, UINT32 path_len,
         const PVOID path, PIRP *irp, ULONG_PTR *info)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_BUFFER_BLOCKED_IP_WRITE);
 
     NTSTATUS status;
 
@@ -314,7 +315,7 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_DEVICE_CANCEL_PENDING);
 
     ULONG_PTR info;
 

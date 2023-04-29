@@ -5,8 +5,8 @@
 
 /*
 #define FORT_DEBUG
-#define FORT_DEBUG_STACK
 */
+#define FORT_DEBUG_STACK
 
 #include "common/fortconf.c"
 #include "common/fortlog.c"
@@ -18,9 +18,11 @@
 
 #include "forttlsf.c"
 #include "forttds.c"
+
+#include "fortbuf.c"
 #include "fortcb.c"
 #include "fortcnf.c"
-#include "fortbuf.c"
+#include "fortdbg.c"
 #include "fortmod.c"
 #include "fortpkt.c"
 #include "fortpool.c"

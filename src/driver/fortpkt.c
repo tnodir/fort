@@ -2,6 +2,7 @@
 
 #include "fortpkt.h"
 
+#include "fortdbg.h"
 #include "fortdev.h"
 #include "forttrace.h"
 #include "fortutl.h"
@@ -372,7 +373,7 @@ static void NTAPI fort_packet_inject_complete(
 {
     UNUSED(dispatchLevel);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_PACKET_INJECT_COMPLETE);
 
     switch (pkt->flags & FORT_PACKET_TYPE_MASK) {
     case FORT_PACKET_TYPE_FLOW: {
@@ -822,7 +823,7 @@ inline static ULONG fort_shaper_timer_process_queues(PFORT_SHAPER shaper, ULONG 
 
 static void fort_shaper_timer_process(void)
 {
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_SHAPER_TIMER_PROCESS);
 
     PFORT_SHAPER shaper = &fort_device()->shaper;
 

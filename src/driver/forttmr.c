@@ -3,6 +3,7 @@
 #include "forttmr.h"
 
 #include "fortcb.h"
+#include "fortdbg.h"
 
 static UCHAR fort_timer_flags_exchange(PFORT_TIMER timer, UCHAR flags)
 {
@@ -25,7 +26,7 @@ static void NTAPI fort_timer_callback(PKDPC dpc, PFORT_TIMER timer, PVOID arg1, 
     UNUSED(arg1);
     UNUSED(arg2);
 
-    FORT_CHECK_STACK();
+    FORT_CHECK_STACK(FORT_TIMER_CALLBACK);
 
     const UCHAR flags = fort_timer_flags(timer);
     if ((flags & FORT_TIMER_ONESHOT) != 0) {
@@ -45,7 +46,8 @@ FORT_API void fort_timer_open(
     timer->flags = flags;
 
     KeInitializeDpc(&timer->dpc,
-            FORT_CALLBACK(FORT_TIMER_CALLBACK, PKDEFERRED_ROUTINE, &fort_timer_callback), timer);
+            FORT_CALLBACK(FORT_CALLBACK_TIMER_CALLBACK, PKDEFERRED_ROUTINE, &fort_timer_callback),
+            timer);
     KeInitializeTimer(&timer->id);
 }
 

@@ -3,6 +3,7 @@
 #include "fortps.h"
 
 #include "fortcb.h"
+#include "fortdbg.h"
 #include "fortdev.h"
 #include "forttrace.h"
 #include "fortutl.h"
@@ -161,8 +162,6 @@ UCHAR fort_pstree_flags(PFORT_PSTREE ps_tree)
 
 static PFORT_PSNAME fort_pstree_name_new(PFORT_PSTREE ps_tree, UINT16 name_size)
 {
-    FORT_CHECK_STACK();
-
     PFORT_PSNAME ps_name = fort_pool_malloc(&ps_tree->pool_list,
             FORT_PSNAME_DATA_OFF + name_size + sizeof(WCHAR)); /* include terminating zero */
     if (ps_name != NULL) {
@@ -482,8 +481,6 @@ inline static void fort_pstree_check_proc_inheritance(PFORT_PSTREE ps_tree, PFOR
 
 static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi)
 {
-    FORT_CHECK_STACK();
-
     PFORT_PSNAME ps_name = fort_pstree_add_service_name(ps_tree, psi);
 
     PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, psi->pid_hash);
@@ -564,8 +561,6 @@ static void NTAPI fort_pstree_notify(
 {
     UNUSED(process);
 
-    FORT_CHECK_STACK();
-
     PFORT_PSTREE ps_tree = &fort_device()->ps_tree;
 
     PFORT_PSNODE proc = fort_pstree_notify_process(ps_tree, process, processHandle, createInfo);
@@ -585,8 +580,8 @@ static void fort_pstree_update(PFORT_PSTREE ps_tree, BOOL active)
         return;
 
     const NTSTATUS status = PsSetCreateProcessNotifyRoutineEx(
-            FORT_CALLBACK(
-                    FORT_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, &fort_pstree_notify),
+            FORT_CALLBACK(FORT_CALLBACK_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX,
+                    &fort_pstree_notify),
             /*remove=*/!active);
 
     if (!NT_SUCCESS(status)) {
