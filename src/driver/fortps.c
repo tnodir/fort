@@ -100,6 +100,15 @@ typedef struct fort_psinfo_hash
 
 typedef const FORT_PSINFO_HASH *PCFORT_PSINFO_HASH;
 
+typedef struct fort_pstree_notify_arg
+{
+    PEPROCESS process;
+    HANDLE processHandle;
+    PPS_CREATE_NOTIFY_INFO createInfo;
+} FORT_PSTREE_NOTIFY_ARG, *PFORT_PSTREE_NOTIFY_ARG;
+
+typedef const FORT_PSTREE_NOTIFY_ARG *PCFORT_PSTREE_NOTIFY_ARG;
+
 #define fort_pstree_proc_hash(process_id) tommy_inthash_u32((UINT32) (process_id))
 
 #define fort_pstree_get_proc(ps_tree, index)                                                       \
@@ -518,10 +527,10 @@ inline static PFORT_PSNODE fort_pstree_notify_process_created(PFORT_PSTREE ps_tr
     return fort_pstree_handle_new_proc(ps_tree, &psi);
 }
 
-inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPROCESS process,
-        HANDLE processHandle, PPS_CREATE_NOTIFY_INFO createInfo)
+inline static PFORT_PSNODE fort_pstree_notify_process(
+        PFORT_PSTREE ps_tree, PCFORT_PSTREE_NOTIFY_ARG pna)
 {
-    const DWORD processId = (DWORD) (ptrdiff_t) processHandle;
+    const DWORD processId = (DWORD) (ptrdiff_t) pna->processHandle;
 
     const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
 
@@ -529,10 +538,10 @@ inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPR
     if (createInfo == NULL) {
         LOG("PsTree: CLOSED pid=%d\n", processId);
     } else {
-        const DWORD parentProcessId = (DWORD) (ptrdiff_t) createInfo->ParentProcessId;
+        const DWORD parentProcessId = (DWORD) (ptrdiff_t) pna->createInfo->ParentProcessId;
 
         LOG("PsTree: NEW pid=%d ppid=%d IMG=[%wZ] CMD=[%wZ]\n", processId, parentProcessId,
-                createInfo->ImageFileName, createInfo->CommandLine);
+                pna->createInfo->ImageFileName, pna->createInfo->CommandLine);
     }
 #endif
 
@@ -546,9 +555,9 @@ inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPR
         proc = NULL;
     }
 
-    if (createInfo != NULL && createInfo->ImageFileName != NULL
-            && createInfo->CommandLine != NULL) {
-        proc = fort_pstree_notify_process_created(ps_tree, createInfo, pid_hash, processId);
+    if (pna->createInfo != NULL && pna->createInfo->ImageFileName != NULL
+            && pna->createInfo->CommandLine != NULL) {
+        proc = fort_pstree_notify_process_created(ps_tree, pna->createInfo, pid_hash, processId);
     }
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -556,19 +565,32 @@ inline static PFORT_PSNODE fort_pstree_notify_process(PFORT_PSTREE ps_tree, PEPR
     return proc;
 }
 
-static void NTAPI fort_pstree_notify(
-        PEPROCESS process, HANDLE processHandle, PPS_CREATE_NOTIFY_INFO createInfo)
+static NTSTATUS fort_pstree_notify_expand(PVOID param)
 {
-    UNUSED(process);
+    PCFORT_PSTREE_NOTIFY_ARG pna = param;
 
     PFORT_PSTREE ps_tree = &fort_device()->ps_tree;
 
-    PFORT_PSNODE proc = fort_pstree_notify_process(ps_tree, process, processHandle, createInfo);
+    PFORT_PSNODE proc = fort_pstree_notify_process(ps_tree, pna);
 
     /* Check the inheritance */
     if (proc != NULL) {
         fort_pstree_check_proc_inheritance(ps_tree, proc);
     }
+
+    return STATUS_SUCCESS;
+}
+
+static void NTAPI fort_pstree_notify(
+        PEPROCESS process, HANDLE processHandle, PPS_CREATE_NOTIFY_INFO createInfo)
+{
+    FORT_PSTREE_NOTIFY_ARG pna = {
+        .process = process,
+        .processHandle = processHandle,
+        .createInfo = createInfo,
+    };
+
+    fort_expand_stack(&fort_pstree_notify_expand, &pna);
 }
 
 static void fort_pstree_update(PFORT_PSTREE ps_tree, BOOL active)
