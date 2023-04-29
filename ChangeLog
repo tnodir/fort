@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.15, 2023-04-29:
+- Driver: Fix BSOD when processes' inheritance handling.
+
 v3.8.14, 2023-04-28:
 - UI: Options: Statistics: Add "Alerted only" flag (to collect only alerted blocked connections).
 - Driver: Clear IRP's cancel routine before completion.
