@@ -1,4 +1,4 @@
-/* Fort Firewall Debug */
+/* Fort Firewall Debugging */
 
 #include "fortdbg.h"
 
@@ -10,9 +10,10 @@ FORT_API void fort_check_stack(const char *func_name, FORT_FUNC_ID func_id)
 {
     const UINT32 free_size = (UINT32) IoGetRemainingStackSize();
 
-    if (free_size < FORT_KERNEL_STACK_MIN_SIZE) {
-        LOG("Stack Overflow: %s: id=%d remaining=%d\n", func_name, func_id, free_size);
+    if (free_size > FORT_KERNEL_STACK_MIN_SIZE)
+        return;
 
-        KeBugCheckEx(FORT_STATUS_INVALID_STACK, 0, 0, 0, 0);
-    }
+    LOG("Stack Overflow: %s: id=%d remaining=%d\n", func_name, func_id, free_size);
+
+    KeBugCheckEx(FORT_STATUS_INVALID_STACK, (FORT_DEBUG_VERSION << 16) | func_id, free_size, 0, 0);
 }
