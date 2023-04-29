@@ -58,7 +58,7 @@ static void fort_worker_wait(PFORT_WORKER worker)
 
 FORT_API void fort_worker_func_set(PFORT_WORKER worker, UCHAR work_id, FORT_WORKER_FUNC worker_func)
 {
-    NT_ASSERT(work_id >= 0 && work_id < FORT_WORKER_FUNC_COUNT);
+    assert(work_id >= 0 && work_id < FORT_WORKER_FUNC_COUNT);
 
     worker->funcs[work_id] = worker_func;
 }

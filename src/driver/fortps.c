@@ -307,7 +307,7 @@ static PFORT_PSNAME fort_pstree_add_service_name(PFORT_PSTREE ps_tree, PCFORT_PS
 
 static void fort_pstree_proc_set_name(PFORT_PSNODE proc, PFORT_PSNAME ps_name)
 {
-    NT_ASSERT(proc->ps_name == NULL);
+    assert(proc->ps_name == NULL);
 
     proc->ps_name = ps_name;
 

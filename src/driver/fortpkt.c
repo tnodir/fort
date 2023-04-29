@@ -173,7 +173,7 @@ inline static void fort_packet_fill_in_interface_indexes(
         *subInterfaceField = FWPS_FIELD_INBOUND_TRANSPORT_V6_SUB_INTERFACE_INDEX;
         break;
     default:
-        NT_ASSERT(0);
+        assert(0);
     }
 }
 
