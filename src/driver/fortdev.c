@@ -24,24 +24,27 @@ FORT_API void fort_device_set(PFORT_DEVICE device)
     g_device = device;
 }
 
-static void fort_worker_reauth(void)
+static void fort_device_reauth(void)
 {
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
     const NTSTATUS status = fort_callout_force_reauth(conf_flags);
 
     if (!NT_SUCCESS(status)) {
-        LOG("Worker Reauth: Error: %x\n", status);
+        LOG("Device Reauth: Error: %x\n", status);
         TRACE(FORT_DEVICE_WORKER_REAUTH_ERROR, status, 0, 0);
     }
 }
 
+static void fort_device_reauth_queue(void)
+{
+    fort_worker_queue(&fort_device()->worker, FORT_WORKER_REAUTH);
+}
+
 static void fort_app_period_timer(void)
 {
-    FORT_CHECK_STACK();
-
     if (fort_conf_ref_period_update(&fort_device()->conf, /*force=*/FALSE, /*periods_n=*/NULL)) {
-        fort_worker_queue(&fort_device()->worker, FORT_WORKER_REAUTH);
+        fort_device_reauth_queue();
     }
 }
 
@@ -222,7 +225,7 @@ static NTSTATUS fort_device_control_app(const PFORT_APP_ENTRY app_entry, ULONG l
     fort_conf_ref_put(&fort_device()->conf, conf_ref);
 
     if (NT_SUCCESS(status)) {
-        fort_worker_reauth();
+        fort_device_reauth_queue();
     }
 
     return status;
@@ -238,7 +241,7 @@ static NTSTATUS fort_device_control_setzones(const PFORT_CONF_ZONES zones, ULONG
         } else {
             fort_conf_zones_set(&fort_device()->conf, conf_zones);
 
-            fort_worker_reauth();
+            fort_device_reauth_queue();
 
             return STATUS_SUCCESS;
         }
@@ -252,7 +255,7 @@ static NTSTATUS fort_device_control_setzoneflag(const PFORT_CONF_ZONE_FLAG zone_
     if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
         fort_conf_zone_flag_set(&fort_device()->conf, zone_flag);
 
-        fort_worker_reauth();
+        fort_device_reauth_queue();
 
         return STATUS_SUCCESS;
     }
@@ -366,7 +369,7 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
 
     PDEVICE_OBJECT device = device_param;
 
-    fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_worker_reauth);
+    fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_device_reauth);
 
     fort_device_conf_open(&fort_device()->conf);
     fort_buffer_open(&fort_device()->buffer);
