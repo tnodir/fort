@@ -454,11 +454,13 @@ static void fort_pstree_check_proc_inheritance(PFORT_PSTREE ps_tree, PFORT_CONF_
 
     KLOCK_QUEUE_HANDLE lock_queue;
 
+    /* Get a parent process */
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     PFORT_PSNODE parent = fort_pstree_find_proc(ps_tree, parent_process_id);
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     if (parent != NULL) {
+        /* Recursively check the parent process */
         if ((parent->flags & FORT_PSNODE_NAME_INHERIT_CHECKED) == 0 && proc->ps_name == NULL) {
             fort_pstree_check_proc_inheritance(
                     ps_tree, conf_ref, parent, parent_process_id, parent->parent_process_id);
