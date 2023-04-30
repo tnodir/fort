@@ -65,6 +65,8 @@ void ConnectionsPage::onRetranslateUi()
     m_actRemoveConn->setText(tr("Remove"));
     m_actClearAll->setText(tr("Clear All"));
 
+    m_btClearAll->setText(tr("Clear All"));
+
     m_btOptions->setText(tr("Options"));
     m_cbAutoScroll->setText(tr("Auto scroll"));
     m_cbShowHostNames->setText(tr("Show host names"));
@@ -136,10 +138,17 @@ QLayout *ConnectionsPage::setupHeader()
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
 
+    // Toolbar buttons
+    m_btClearAll = ControlUtil::createLinkButton(":/icons/bin_closed.png");
+
+    connect(m_btClearAll, &QAbstractButton::clicked, m_actClearAll, &QAction::trigger);
+
     // Options
     setupOptions();
 
     layout->addWidget(m_btEdit);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btClearAll);
     layout->addStretch();
     layout->addWidget(m_btOptions);
 
