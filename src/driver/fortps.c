@@ -28,10 +28,9 @@ typedef struct fort_psname
     WCHAR data[1];
 } FORT_PSNAME, *PFORT_PSNAME;
 
-#define FORT_PSNODE_NAME_INHERIT_CHECKED 0x0001
-#define FORT_PSNODE_NAME_INHERIT         0x0002
-#define FORT_PSNODE_NAME_INHERITED       0x0004
-#define FORT_PSNODE_NAME_CUSTOM          0x0008
+#define FORT_PSNODE_NAME_INHERIT   0x0001
+#define FORT_PSNODE_NAME_INHERITED 0x0002
+#define FORT_PSNODE_NAME_CUSTOM    0x0004
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
@@ -304,7 +303,7 @@ static PFORT_PSNAME fort_pstree_add_service_name(PFORT_PSTREE ps_tree, PCFORT_PS
     return fort_pstree_create_service_name(ps_tree, &serviceName);
 }
 
-static void fort_pstree_proc_set_name(PFORT_PSNODE proc, PFORT_PSNAME ps_name)
+static void fort_pstree_proc_set_service_name(PFORT_PSNODE proc, PFORT_PSNAME ps_name)
 {
     assert(proc->ps_name == NULL);
 
@@ -382,25 +381,20 @@ static PFORT_PSNODE fort_pstree_find_proc(PFORT_PSTREE ps_tree, DWORD processId)
 inline static void fort_pstree_check_proc_conf(
         PFORT_PSTREE ps_tree, PFORT_CONF_REF conf_ref, PFORT_PSNODE proc, PCUNICODE_STRING path)
 {
-    if ((proc->flags & FORT_PSNODE_NAME_INHERIT_CHECKED) != 0)
-        return;
-
-    proc->flags |= FORT_PSNODE_NAME_INHERIT_CHECKED;
-
-    const BOOL is_ps_name = (proc->ps_name != NULL);
-    const PVOID path_buf = is_ps_name ? proc->ps_name->data : path->Buffer;
-    const UINT16 path_len = is_ps_name ? proc->ps_name->size : path->Length;
+    const BOOL has_ps_name = (proc->ps_name != NULL);
+    const PVOID path_buf = has_ps_name ? proc->ps_name->data : path->Buffer;
+    const UINT16 path_len = has_ps_name ? proc->ps_name->size : path->Length;
 
     const PFORT_CONF conf = &conf_ref->conf;
 
     const FORT_APP_FLAGS app_flags = conf->flags.group_apply_child
-            ? fort_conf_app_find(conf, path_buf, path_len, fort_conf_exe_find)
-            : fort_conf_exe_find(conf, path_buf, path_len);
+            ? fort_conf_app_find(conf, path_buf, path_len, fort_conf_exe_find, conf_ref)
+            : fort_conf_exe_find(conf, conf_ref, path_buf, path_len);
 
     if (!app_flags.apply_child)
         return;
 
-    if (!is_ps_name) {
+    if (!has_ps_name) {
         PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, path_len);
         if (ps_name == NULL)
             return;
@@ -413,10 +407,18 @@ inline static void fort_pstree_check_proc_conf(
     proc->flags |= FORT_PSNODE_NAME_INHERIT;
 }
 
-inline static void fort_pstree_check_proc_inherited(PFORT_PSNODE proc, PFORT_PSNODE parent)
+inline static BOOL fort_pstree_check_proc_inherited(
+        PFORT_PSTREE ps_tree, PFORT_PSNODE proc, DWORD parentProcessId)
 {
+    if (proc->ps_name != NULL)
+        return FALSE;
+
+    PFORT_PSNODE parent = fort_pstree_find_proc(ps_tree, parentProcessId);
+    if (parent == NULL)
+        return FALSE;
+
     if ((parent->flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
-        return;
+        return FALSE;
 
     PFORT_PSNAME ps_name = parent->ps_name;
     assert(ps_name != NULL);
@@ -424,7 +426,9 @@ inline static void fort_pstree_check_proc_inherited(PFORT_PSNODE proc, PFORT_PSN
     ++ps_name->refcount;
     proc->ps_name = ps_name;
 
-    proc->flags |= FORT_PSNODE_NAME_INHERIT_CHECKED | FORT_PSNODE_NAME_INHERITED;
+    proc->flags |= FORT_PSNODE_NAME_INHERITED;
+
+    return TRUE;
 }
 
 static void fort_pstree_check_proc_inheritance(
@@ -439,12 +443,9 @@ static void fort_pstree_check_proc_inheritance(
     if (conf_ref == NULL)
         return;
 
-    PFORT_PSNODE parent = fort_pstree_find_proc(ps_tree, psi->parentProcessId);
-    if (parent != NULL) {
-        fort_pstree_check_proc_inherited(proc, parent);
+    if (!fort_pstree_check_proc_inherited(ps_tree, proc, psi->parentProcessId)) {
+        fort_pstree_check_proc_conf(ps_tree, conf_ref, proc, psi->path);
     }
-
-    fort_pstree_check_proc_conf(ps_tree, conf_ref, proc, psi->path);
 
     fort_conf_ref_put(device_conf, conf_ref);
 }
@@ -462,7 +463,7 @@ static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH
     proc->process_id = psi->processId;
     proc->flags = 0;
 
-    fort_pstree_proc_set_name(proc, ps_name);
+    fort_pstree_proc_set_service_name(proc, ps_name);
 
     fort_pstree_check_proc_inheritance(ps_tree, psi, proc);
 }
@@ -614,6 +615,9 @@ inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCES
         .pid_hash = pid_hash,
         .processId = processId,
         .parentProcessId = parentProcessId,
+
+        .path = NULL,
+        .commandLine = NULL,
     };
 
     KLOCK_QUEUE_HANDLE lock_queue;
@@ -729,7 +733,7 @@ static int fort_pstree_update_service(
     if (proc != NULL && proc->ps_name == NULL) {
         PFORT_PSNAME ps_name = fort_pstree_create_service_name(ps_tree, &serviceName);
 
-        fort_pstree_proc_set_name(proc, ps_name);
+        fort_pstree_proc_set_service_name(proc, ps_name);
     }
 
     return FORT_SERVICE_INFO_NAME_OFF + FORT_CONF_STR_DATA_SIZE(serviceName.Length);
