@@ -60,7 +60,7 @@ static FORT_APP_FLAGS fort_callout_ale_conf_app_flags(
         return cx->app_flags;
 
     const FORT_APP_FLAGS app_flags = fort_conf_app_find(
-            &conf_ref->conf, cx->path->Buffer, cx->path->Length, fort_conf_exe_find);
+            &conf_ref->conf, cx->path->Buffer, cx->path->Length, fort_conf_exe_find, conf_ref);
 
     fort_callout_ale_set_app_flags(cx, app_flags);
 

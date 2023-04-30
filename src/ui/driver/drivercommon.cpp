@@ -224,8 +224,8 @@ quint16 confAppFind(const void *drvConf, const QString &kernelPath)
     const quint32 len = quint32(kernelPathLower.size()) * sizeof(WCHAR);
     const WCHAR *p = (PCWCHAR) kernelPathLower.utf16();
 
-    const FORT_APP_FLAGS app_flags =
-            fort_conf_app_find(conf, (const PVOID) p, len, fort_conf_app_exe_find);
+    const FORT_APP_FLAGS app_flags = fort_conf_app_find(
+            conf, (const PVOID) p, len, fort_conf_app_exe_find, /*exe_context=*/nullptr);
 
     return app_flags.v;
 }

@@ -261,7 +261,7 @@ typedef struct fort_conf_io
     (FORT_CONF_ADDR4_LIST_SIZE(ip4_n, pair4_n) + FORT_CONF_ADDR6_LIST_SIZE(ip6_n, pair6_n))
 
 typedef FORT_APP_FLAGS fort_conf_app_exe_find_func(
-        const PFORT_CONF conf, const PVOID path, UINT32 path_len);
+        const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len);
 
 typedef BOOL fort_conf_zones_ip_included_func(
         void *ctx, UINT32 zones_mask, const UINT32 *remote_ip, BOOL isIPv6);
@@ -300,10 +300,10 @@ FORT_API BOOL fort_conf_app_exe_equal(
         const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len);
 
 FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
-        const PFORT_CONF conf, const PVOID path, UINT32 path_len);
+        const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len);
 
 FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
-        fort_conf_app_exe_find_func *exe_find_func);
+        fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
 FORT_API BOOL fort_conf_app_blocked(
         const PFORT_CONF conf, FORT_APP_FLAGS app_flags, INT8 *block_reason);

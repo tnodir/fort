@@ -233,8 +233,10 @@ static FORT_APP_FLAGS fort_conf_app_find_loop(const PFORT_CONF conf, const PVOID
 }
 
 FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
-        const PFORT_CONF conf, const PVOID path, UINT32 path_len)
+        const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len)
 {
+    UNUSED(context);
+
     return fort_conf_app_find_loop(
             conf, path, path_len, conf->exe_apps_off, conf->exe_apps_n, fort_conf_app_exe_equal);
 }
@@ -295,11 +297,11 @@ static FORT_APP_FLAGS fort_conf_app_prefix_find(
 }
 
 FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
-        fort_conf_app_exe_find_func *exe_find_func)
+        fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context)
 {
     FORT_APP_FLAGS app_flags;
 
-    app_flags = exe_find_func(conf, path, path_len);
+    app_flags = exe_find_func(conf, exe_context, path, path_len);
     if (app_flags.v != 0)
         return app_flags;
 
