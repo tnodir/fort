@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.16, 2023-04-30:
+- Driver: Refactor processes inheritance handling.
+
 v3.8.15, 2023-04-29:
 - Driver: Fix BSOD when processes' inheritance handling.
 
