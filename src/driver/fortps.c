@@ -468,6 +468,24 @@ static void fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH
     fort_pstree_check_proc_inheritance(ps_tree, psi, proc);
 }
 
+inline static void fort_pstree_handle_created_proc(
+        PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb, HANDLE processHandle)
+{
+    /* GetProcessImageName() must be called in PASSIVE level only! */
+    const NTSTATUS status = GetProcessImageName(processHandle, pb);
+    if (!NT_SUCCESS(status)) {
+        LOG("PsTree: Image Name Error: %x\n", status);
+        return;
+    }
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        fort_pstree_handle_new_proc(ps_tree, psi);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
 inline static void fort_pstree_notify_process_created(PFORT_PSTREE ps_tree,
         PPS_CREATE_NOTIFY_INFO createInfo, tommy_key_t pid_hash, DWORD processId)
 {
@@ -476,19 +494,31 @@ inline static void fort_pstree_notify_process_created(PFORT_PSTREE ps_tree,
     if (fort_is_system_process(processId, parentProcessId))
         return; /* skip System (sub)processes */
 
-    UNICODE_STRING path = *createInfo->ImageFileName;
-    fort_path_prefix_adjust(&path);
+    PFORT_PATH_BUFFER pb = fort_mem_alloc(sizeof(FORT_PATH_BUFFER), FORT_PSTREE_POOL_TAG);
+    if (pb == NULL)
+        return;
+
+    pb->path.Length = 0;
+    pb->path.MaximumLength = FORT_CONF_APP_PATH_MAX_SIZE;
+    pb->path.Buffer = pb->buffer;
 
     const FORT_PSINFO_HASH psi = {
         .pid_hash = pid_hash,
         .processId = processId,
         .parentProcessId = parentProcessId,
 
-        .path = &path,
+        .path = &pb->path,
         .commandLine = createInfo->CommandLine,
     };
 
-    fort_pstree_handle_new_proc(ps_tree, &psi);
+    const HANDLE processHandle = OpenProcessById(processId);
+    if (processHandle != NULL) {
+        fort_pstree_handle_created_proc(ps_tree, &psi, pb, processHandle);
+
+        ZwClose(processHandle);
+    }
+
+    fort_mem_free(pb, FORT_PSTREE_POOL_TAG);
 }
 
 inline static void fort_pstree_notify_process(PFORT_PSTREE ps_tree, PCFORT_PSTREE_NOTIFY_ARG pna)
@@ -512,17 +542,16 @@ inline static void fort_pstree_notify_process(PFORT_PSTREE ps_tree, PCFORT_PSTRE
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
 
     PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
-
     if (proc != NULL) {
         fort_pstree_proc_del(ps_tree, proc);
     }
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     if (pna->createInfo != NULL && pna->createInfo->ImageFileName != NULL
             && pna->createInfo->CommandLine != NULL) {
         fort_pstree_notify_process_created(ps_tree, pna->createInfo, pid_hash, processId);
     }
-
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 static NTSTATUS fort_pstree_notify_expand(PVOID param)
