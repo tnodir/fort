@@ -12,7 +12,8 @@
 
 #define FORT_SVCHOST_PREFIX L"\\svchost\\"
 #define FORT_SVCHOST_PREFIX_SIZE                                                                   \
-    (sizeof(FORT_SVCHOST_PREFIX) - sizeof(WCHAR)) /* exclude terminating zero */
+    (sizeof(FORT_SVCHOST_PREFIX) - sizeof(WCHAR)) /* skip terminating zero */
+
 #define FORT_SVCHOST_EXE L"svchost.exe"
 
 #define FORT_PSTREE_NAME_LEN_MAX      120
@@ -202,7 +203,7 @@ static BOOL fort_pstree_svchost_path_check(PCUNICODE_STRING path)
     PCUNICODE_STRING sysDrivePath = fort_system_drive_path();
     PCUNICODE_STRING sys32Path = fort_system32_path();
 
-    const USHORT sys32DrivePrefixSize = 2 * sizeof(WCHAR);
+    const USHORT sys32DrivePrefixSize = 2 * sizeof(WCHAR); /* C: */
     const USHORT sys32PathSize = sys32Path->Length - sys32DrivePrefixSize;
 
     /* Check the total path length */
@@ -231,19 +232,7 @@ static BOOL fort_pstree_svchost_path_check(PCUNICODE_STRING path)
 static BOOL fort_pstree_svchost_check(
         PCUNICODE_STRING path, PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
-    const USHORT svchostSize = sizeof(FORT_SVCHOST_EXE) - sizeof(WCHAR); /* skip terminating zero */
-    const USHORT svchostCount = svchostSize / sizeof(WCHAR);
-    const USHORT sys32Size = path->Length - svchostSize;
-    const USHORT sys32Count = sys32Size / sizeof(WCHAR);
-
-    PCUNICODE_STRING sys32Path = fort_system32_path();
-    if (sys32Size != sys32Path->Length)
-        return FALSE;
-
-    if (_wcsnicmp(path->Buffer + sys32Count, FORT_SVCHOST_EXE, svchostCount) != 0)
-        return FALSE;
-
-    if (_wcsnicmp(path->Buffer, sys32Path->Buffer, sys32Count) != 0)
+    if (!fort_pstree_svchost_path_check(path))
         return FALSE;
 
     PWCHAR argp = wcsstr(commandLine->Buffer, L"-s ");
