@@ -112,6 +112,10 @@
         <source>File Path</source>
         <translation>Pot do datoteke</translation>
     </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -971,6 +975,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Collect connection statistics</source>
         <translation>Zberi statistiko povezave</translation>
+    </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -112,6 +112,10 @@
         <source>File Path</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -970,6 +974,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Collect connection statistics</source>
         <translation>Coletar estatísticas de conexão</translation>
+    </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
