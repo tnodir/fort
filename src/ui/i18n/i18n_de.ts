@@ -114,7 +114,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Prozess beenden</translation>
     </message>
 </context>
 <context>
@@ -978,7 +978,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Prozess beenden</translation>
     </message>
 </context>
 <context>
