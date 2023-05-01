@@ -91,6 +91,7 @@ typedef struct fort_path_buffer
 typedef struct fort_psinfo_hash
 {
     tommy_key_t pid_hash;
+    HANDLE processHandle;
     DWORD processId;
     DWORD parentProcessId;
 
@@ -466,11 +467,10 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
 }
 
 inline static void fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree,
-        PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb,
-        HANDLE processHandle)
+        PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb)
 {
     /* GetProcessImageName() must be called in PASSIVE level only! */
-    const NTSTATUS status = GetProcessImageName(processHandle, pb);
+    const NTSTATUS status = GetProcessImageName(psi->processHandle, pb);
     if (!NT_SUCCESS(status)) {
         LOG("PsTree: Image Name Error: %x\n", status);
         return;
@@ -508,7 +508,9 @@ inline static void fort_pstree_notify_process_created(
 
     const HANDLE processHandle = OpenProcessById(psi->processId);
     if (processHandle != NULL) {
-        fort_pstree_handle_created_proc(ps_tree, createInfo, psi, pb, processHandle);
+        psi->processHandle = processHandle;
+
+        fort_pstree_handle_created_proc(ps_tree, createInfo, psi, pb);
 
         ZwClose(processHandle);
     }
@@ -647,6 +649,7 @@ inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCES
 
     const FORT_PSINFO_HASH psi = {
         .pid_hash = pid_hash,
+        .processHandle = processHandle,
         .processId = processId,
         .parentProcessId = parentProcessId,
 
