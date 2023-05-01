@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.8.17, 2023-05-01:
+- Driver: Fix SvcHost path checking (v3.8.16 regression).
+
 v3.8.16, 2023-04-30:
 - Driver: Refactor processes inheritance handling.
 
