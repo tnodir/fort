@@ -72,10 +72,11 @@ bool processConfManager_addApp(
     app.logBlocked = p.args.value(3).toBool();
     app.logConn = p.args.value(4).toBool();
     app.blocked = p.args.value(5).toBool();
-    app.groupIndex = p.args.value(6).toInt();
-    app.appPath = p.args.value(7).toString();
-    app.appName = p.args.value(8).toString();
-    app.endTime = p.args.value(9).toDateTime();
+    app.killProcess = p.args.value(6).toBool();
+    app.groupIndex = p.args.value(7).toInt();
+    app.appPath = p.args.value(8).toString();
+    app.appName = p.args.value(9).toString();
+    app.endTime = p.args.value(10).toDateTime();
 
     return confManager->addApp(app);
 }
@@ -102,11 +103,12 @@ bool processConfManager_updateApp(
     app.logBlocked = p.args.value(3).toBool();
     app.logConn = p.args.value(4).toBool();
     app.blocked = p.args.value(5).toBool();
-    app.groupIndex = p.args.value(6).toInt();
-    app.appId = p.args.value(7).toLongLong();
-    app.appPath = p.args.value(8).toString();
-    app.appName = p.args.value(9).toString();
-    app.endTime = p.args.value(10).toDateTime();
+    app.killProcess = p.args.value(6).toBool();
+    app.groupIndex = p.args.value(7).toInt();
+    app.appId = p.args.value(8).toLongLong();
+    app.appPath = p.args.value(9).toString();
+    app.appName = p.args.value(10).toString();
+    app.endTime = p.args.value(11).toDateTime();
 
     return confManager->updateApp(app);
 }
@@ -114,7 +116,8 @@ bool processConfManager_updateApp(
 bool processConfManager_updateAppBlocked(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->updateAppBlocked(p.args.value(0).toLongLong(), p.args.value(1).toBool());
+    return confManager->updateAppBlocked(
+            p.args.value(0).toLongLong(), p.args.value(1).toBool(), p.args.value(2).toBool());
 }
 
 bool processConfManager_updateAppName(

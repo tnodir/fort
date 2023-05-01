@@ -474,6 +474,7 @@ bool ConfUtil::addApp(
     appEntry.flags.log_blocked = app.logBlocked;
     appEntry.flags.log_conn = app.logConn;
     appEntry.flags.blocked = app.blocked;
+    appEntry.flags.kill_process = app.killProcess;
     appEntry.flags.alerted = app.alerted;
     appEntry.flags.is_new = isNew;
     appEntry.flags.found = 1;

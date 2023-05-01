@@ -83,6 +83,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_cbLogConn->setChecked(appRow.logConn);
     m_rbAllowApp->setChecked(!appRow.blocked);
     m_rbBlockApp->setChecked(appRow.blocked);
+    m_rbKillProcess->setChecked(appRow.killProcess);
     m_cscBlockAppIn->checkBox()->setChecked(false);
     m_cscBlockAppIn->spinBox()->setValue(1);
     m_cbBlockAppAt->setChecked(!appRow.endTime.isNull());
@@ -129,6 +130,7 @@ void ProgramEditDialog::retranslateUi()
 
     m_rbAllowApp->setText(tr("Allow"));
     m_rbBlockApp->setText(tr("Block"));
+    m_rbKillProcess->setText(tr("Kill Process"));
 
     m_cscBlockAppIn->checkBox()->setText(tr("Block In:"));
     retranslateAppBlockInHours();
@@ -347,8 +349,12 @@ QLayout *ProgramEditDialog::setupAllowLayout()
     m_rbBlockApp = new QRadioButton();
     m_rbBlockApp->setIcon(IconCache::icon(":/icons/deny.png"));
 
+    m_rbKillProcess = new QRadioButton();
+    m_rbKillProcess->setIcon(IconCache::icon(":/icons/cancel.png"));
+
     allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
-    allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignLeft);
+    allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignHCenter);
+    allowLayout->addWidget(m_rbKillProcess, 1, Qt::AlignLeft);
 
     // Block after N hours
     m_cscBlockAppIn = new CheckSpinCombo();
@@ -466,7 +472,8 @@ void ProgramEditDialog::fillApp(App &app) const
     app.lanOnly = m_cbLanOnly->isChecked();
     app.logBlocked = m_cbLogBlocked->isChecked();
     app.logConn = m_cbLogConn->isChecked();
-    app.blocked = m_rbBlockApp->isChecked();
+    app.blocked = !m_rbAllowApp->isChecked();
+    app.killProcess = m_rbKillProcess->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
     app.appPath = m_editPath->text();
     app.appName = m_editName->text();

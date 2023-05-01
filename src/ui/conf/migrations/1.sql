@@ -130,6 +130,7 @@ CREATE TABLE app(
   log_blocked BOOLEAN NOT NULL DEFAULT 1,
   log_conn BOOLEAN NOT NULL DEFAULT 1,
   blocked BOOLEAN NOT NULL,
+  kill_process BOOLEAN NOT NULL DEFAULT 0,
   creat_time INTEGER NOT NULL,
   end_time INTEGER,
   policy_id INTEGER

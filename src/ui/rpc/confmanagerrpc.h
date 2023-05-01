@@ -17,7 +17,7 @@ public:
     bool deleteApp(qint64 appId) override;
     bool purgeApps() override;
     bool updateApp(const App &app) override;
-    bool updateAppBlocked(qint64 appId, bool blocked) override;
+    bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess = false) override;
     bool updateAppName(qint64 appId, const QString &appName) override;
 
     bool addZone(Zone &zone) override;

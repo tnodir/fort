@@ -158,7 +158,7 @@ typedef struct fort_app_flags
         struct
         {
             UINT16 group_index : 5;
-            /* UINT16 reserved : 2; */
+            /* UINT16 reserved : 1; */
             UINT16 use_group_perm : 1;
 
             UINT16 apply_child : 1;
@@ -167,6 +167,7 @@ typedef struct fort_app_flags
             UINT16 log_conn : 1;
 
             UINT16 blocked : 1;
+            UINT16 kill_process : 1;
             UINT16 alerted : 1;
             UINT16 is_new : 1;
             UINT16 found : 1;

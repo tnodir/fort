@@ -16,6 +16,7 @@ public:
     bool logBlocked = true;
     bool logConn = true;
     bool blocked = false;
+    bool killProcess = false;
     bool alerted = false;
 
     int groupIndex = 0;

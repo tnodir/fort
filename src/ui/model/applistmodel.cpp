@@ -22,7 +22,28 @@ namespace {
 const auto alertColor = QColor("orange");
 const auto allowColor = QColor("green");
 const auto blockColor = QColor("red");
+const auto killProcessColor = QColor("magenta");
 const auto inactiveColor = QColor("slategray");
+
+QString appStateIconPath(const AppRow &appRow)
+{
+    if (appRow.alerted)
+        return ":/icons/error.png";
+
+    if (appRow.killProcess)
+        return ":/icons/cancel.png";
+
+    if (appRow.blocked)
+        return ":/icons/deny.png";
+
+    if (!appRow.endTime.isNull())
+        return ":/icons/time.png";
+
+    if (appRow.lanOnly)
+        return ":/icons/hostname.png";
+
+    return ":/icons/accept.png";
+}
 
 }
 
@@ -231,6 +252,9 @@ QVariant AppListModel::appGroupColor(const AppRow &appRow) const
 
 QString AppListModel::appStateText(const AppRow &appRow)
 {
+    if (appRow.killProcess)
+        return tr("Kill Process");
+
     if (appRow.blocked)
         return tr("Block");
 
@@ -239,6 +263,9 @@ QString AppListModel::appStateText(const AppRow &appRow)
 
 QColor AppListModel::appStateColor(const AppRow &appRow)
 {
+    if (appRow.killProcess)
+        return killProcessColor;
+
     if (appRow.blocked)
         return blockColor;
 
@@ -247,13 +274,7 @@ QColor AppListModel::appStateColor(const AppRow &appRow)
 
 QIcon AppListModel::appStateIcon(const AppRow &appRow)
 {
-    return IconCache::icon(appRow.alerted
-                    ? ":/icons/error.png"
-                    : (appRow.blocked ? ":/icons/deny.png"
-                                      : (appRow.endTime.isNull()
-                                                      ? (appRow.lanOnly ? ":/icons/hostname.png"
-                                                                        : ":/icons/accept.png")
-                                                      : ":/icons/time.png")));
+    return IconCache::icon(appStateIconPath(appRow));
 }
 
 bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
@@ -274,9 +295,10 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     appRow.logBlocked = stmt.columnBool(7);
     appRow.logConn = stmt.columnBool(8);
     appRow.blocked = stmt.columnBool(9);
-    appRow.alerted = stmt.columnBool(10);
-    appRow.endTime = stmt.columnDateTime(11);
-    appRow.creatTime = stmt.columnDateTime(12);
+    appRow.killProcess = stmt.columnBool(10);
+    appRow.alerted = stmt.columnBool(11);
+    appRow.endTime = stmt.columnDateTime(12);
+    appRow.creatTime = stmt.columnDateTime(13);
 
     return true;
 }
@@ -322,6 +344,7 @@ QString AppListModel::sqlBase() const
            "    t.log_blocked,"
            "    t.log_conn,"
            "    t.blocked,"
+           "    t.kill_process,"
            "    (alert.app_id IS NOT NULL) as alerted,"
            "    t.end_time,"
            "    t.creat_time"
@@ -338,7 +361,7 @@ QString AppListModel::sqlOrderColumn() const
         columnsStr = "4 " + sqlOrderAsc() + ", 3";
         break;
     case 1: // State
-        columnsStr = "11 DESC, 10 " + sqlOrderAsc() + ", 1";
+        columnsStr = "12 DESC, 11, 10 " + sqlOrderAsc() + ", 1";
         break;
     case 2: // Group
         columnsStr = "2";

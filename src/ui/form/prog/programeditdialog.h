@@ -78,6 +78,7 @@ private:
     QCheckBox *m_cbLogConn = nullptr;
     QRadioButton *m_rbAllowApp = nullptr;
     QRadioButton *m_rbBlockApp = nullptr;
+    QRadioButton *m_rbKillProcess = nullptr;
     CheckSpinCombo *m_cscBlockAppIn = nullptr;
     QCheckBox *m_cbBlockAppAt = nullptr;
     QDateTimeEdit *m_dteBlockAppAt = nullptr;

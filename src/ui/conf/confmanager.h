@@ -67,7 +67,7 @@ public:
     virtual bool deleteApp(qint64 appId);
     virtual bool purgeApps();
     virtual bool updateApp(const App &app);
-    virtual bool updateAppBlocked(qint64 appId, bool blocked);
+    virtual bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess = false);
     virtual bool updateAppName(qint64 appId, const QString &appName);
 
     bool walkApps(const std::function<walkAppsCallback> &func) override;
@@ -118,7 +118,7 @@ private:
     void emitAppUpdated();
 
     bool addOrUpdateApp(const App &app);
-    bool updateDriverAppBlocked(qint64 appId, bool blocked, bool &changed);
+    bool updateDriverAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &changed);
 
     bool validateConf(const FirewallConf &newConf);
 
