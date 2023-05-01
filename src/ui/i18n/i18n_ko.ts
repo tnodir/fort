@@ -114,7 +114,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>프로세스 종료</translation>
     </message>
 </context>
 <context>
@@ -978,7 +978,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>프로세스 종료</translation>
     </message>
 </context>
 <context>

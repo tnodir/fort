@@ -114,7 +114,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Tuer le processus</translation>
     </message>
 </context>
 <context>
@@ -978,7 +978,7 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Tuer le processus</translation>
     </message>
 </context>
 <context>
