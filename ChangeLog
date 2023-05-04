@@ -1,10 +1,8 @@
 Fort Firewall ChangeLog
 
-v3.9.0-test01, 2023-05-01:
+v3.9.0, 2023-05-04:
 - UI: Programs: Add "Kill Process" option.
-
-Attention: The "Kill Process" option is very dangerous!
-Do not use it for system and other important programs.
+- UI: Fix "Collect Blocked Connections" functioning when "Collect Traffic Statistics" is turned off.
 
 v3.8.17, 2023-05-01:
 - Driver: Fix SvcHost path checking (v3.8.16 regression).
