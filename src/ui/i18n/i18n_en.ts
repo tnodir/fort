@@ -139,10 +139,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Download speed limit:</source>
         <translation></translation>
     </message>
@@ -240,6 +236,10 @@
     </message>
     <message>
         <source>Collect blocked connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
         <translation></translation>
     </message>
 </context>
@@ -394,10 +394,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation></translation>
     </message>
@@ -411,6 +407,10 @@
     </message>
     <message>
         <source>Are you sure to remove all connections?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
         <translation></translation>
     </message>
 </context>
@@ -977,6 +977,13 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Kill Process</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
 </context>

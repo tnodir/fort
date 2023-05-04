@@ -179,10 +179,6 @@
         <translation>Aggiungi gruppo</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opzioni</translation>
-    </message>
-    <message>
         <source># Examples:</source>
         <translation># Esempi:</translation>
     </message>
@@ -241,6 +237,10 @@
     <message>
         <source>Collect blocked connections</source>
         <translation>Raccogli le connessioni bloccate</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -390,10 +390,6 @@
         <translation>Rimuovi</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opzioni</translation>
-    </message>
-    <message>
         <source>Add Program</source>
         <translation>Aggiungi programma</translation>
     </message>
@@ -412,6 +408,10 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Sei sicuro di rimuovere tutte le connessioni?</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -978,6 +978,13 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Kill Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

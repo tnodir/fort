@@ -92,7 +92,7 @@ void ApplicationsPage::onRetranslateUi()
     m_btAddGroup->setText(tr("Add Group"));
     m_btRenameGroup->setText(tr("Rename Group"));
 
-    m_btGroupOptions->setText(tr("Options"));
+    m_btGroupOptions->setText(tr("Tweaks"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
     m_cbLanOnly->setText(tr("Restrict access to LAN only"));
 

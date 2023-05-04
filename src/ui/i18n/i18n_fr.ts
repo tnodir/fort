@@ -139,10 +139,6 @@
         <translation>Renommer le groupe</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Options</translation>
-    </message>
-    <message>
         <source>Download speed limit:</source>
         <translation>Vitesse de téléchargement limitée:</translation>
     </message>
@@ -241,6 +237,10 @@
     <message>
         <source>Collect blocked connections</source>
         <translation>Collecter les connexions bloquées</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -394,10 +394,6 @@
         <translation>Effacer tout</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Options</translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation>Défilement auto</translation>
     </message>
@@ -412,6 +408,10 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Êtes-vous sûr de retirerr toutes les connexions?</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -979,6 +979,13 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Kill Process</source>
         <translation>Tuer le processus</translation>
+    </message>
+    <message>
+        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

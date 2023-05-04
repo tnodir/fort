@@ -139,10 +139,6 @@
         <translation>重命名分组</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>选项</translation>
-    </message>
-    <message>
         <source>Download speed limit:</source>
         <translation>下载速度限制</translation>
     </message>
@@ -241,6 +237,10 @@
     <message>
         <source>Collect blocked connections</source>
         <translation>收集已屏蔽的连接</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation>选项</translation>
     </message>
 </context>
 <context>
@@ -394,10 +394,6 @@
         <translation>清除所有</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>选项</translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation>自动滚动</translation>
     </message>
@@ -412,6 +408,10 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>您确定要移除所有连接吗？</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation>选项</translation>
     </message>
 </context>
 <context>
@@ -978,6 +978,13 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Kill Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

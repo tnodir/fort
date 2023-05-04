@@ -139,10 +139,6 @@
         <translation>Переименовать</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Опции</translation>
-    </message>
-    <message>
         <source>Download speed limit:</source>
         <translation>Ограничение скорости загрузки</translation>
     </message>
@@ -241,6 +237,10 @@
     <message>
         <source>Collect blocked connections</source>
         <translation>Собирать заблокированные соединения</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation>Настройки</translation>
     </message>
 </context>
 <context>
@@ -394,10 +394,6 @@
         <translation>Очистить всё</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Опции</translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation>Авто промотка</translation>
     </message>
@@ -412,6 +408,10 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Удалить все соединения?</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation>Настройки</translation>
     </message>
 </context>
 <context>
@@ -979,6 +979,16 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Kill Process</source>
         <translation>Убить процесс</translation>
+    </message>
+    <message>
+        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>Внимание: Опция &apos;Убить процесс&apos; очень опасна!!!
+
+Будьте осторожны, прекращая работу системных служб или других важных программ!
+Это может привести к сбоям в работе Windows или полной неработоспособности.</translation>
     </message>
 </context>
 <context>

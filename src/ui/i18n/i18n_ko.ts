@@ -139,10 +139,6 @@
         <translation>그룹 이름 변경</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>옵션</translation>
-    </message>
-    <message>
         <source>Download speed limit:</source>
         <translation>다운로드 속도 제한:</translation>
     </message>
@@ -241,6 +237,10 @@
     <message>
         <source>Collect blocked connections</source>
         <translation>차단된 연결 집계</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -394,10 +394,6 @@
         <translation>모두 지우기</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>옵션</translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation>자동 스크롤</translation>
     </message>
@@ -412,6 +408,10 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>모든 연결을 제거하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -979,6 +979,13 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Kill Process</source>
         <translation>프로세스 종료</translation>
+    </message>
+    <message>
+        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

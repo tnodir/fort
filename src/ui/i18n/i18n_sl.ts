@@ -139,10 +139,6 @@
         <translation>Preimenuj skupino</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
-    </message>
-    <message>
         <source>Download speed limit:</source>
         <translation>Omejitev hitrosti prejenosa:</translation>
     </message>
@@ -241,6 +237,10 @@
     <message>
         <source>Collect blocked connections</source>
         <translation>Zberi blokirane povezave</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -394,10 +394,6 @@
         <translation>Počisti vse</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
-    </message>
-    <message>
         <source>Auto scroll</source>
         <translation>Samodejni pomik</translation>
     </message>
@@ -412,6 +408,10 @@
     <message>
         <source>Are you sure to remove all connections?</source>
         <translation>Ali ste prepričani, da želite odstraniti vse povezave?</translation>
+    </message>
+    <message>
+        <source>Tweaks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -979,6 +979,13 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Kill Process</source>
         <translation>Uniči proces</translation>
+    </message>
+    <message>
+        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
