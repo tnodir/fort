@@ -114,7 +114,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Uniči proces</translation>
     </message>
 </context>
 <context>
@@ -978,7 +978,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Uniči proces</translation>
     </message>
 </context>
 <context>
