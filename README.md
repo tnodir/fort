@@ -49,7 +49,8 @@ Please support the project:
 
 ### Donation
 
-[<img src="https://github.com/edent/SuperTinyIcons/blob/master/images/svg/patreon.svg" width="18" height="18"> Become a Patron!](https://www.patreon.com/bePatron?u=9349286)
+  - [Become a Sponsor!](https://github.com/sponsors/tnodir)
+  - [<img src="https://github.com/edent/SuperTinyIcons/blob/master/images/svg/patreon.svg" width="18" height="18"> Become a Patron!](https://www.patreon.com/bePatron?u=9349286)
 
 ## SAST Tools
 
