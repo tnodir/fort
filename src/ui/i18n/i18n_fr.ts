@@ -240,7 +240,7 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajustements</translation>
     </message>
 </context>
 <context>
@@ -411,7 +411,7 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajustements</translation>
     </message>
 </context>
 <context>
@@ -985,7 +985,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Attention&#xa0;: Le &apos;Kil Process &apos; l&apos;option est très dangereuse!!!
+
+Soyez prudent lorsque vous tuez un service système ou d&apos;autres programmes importants !
+Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</translation>
     </message>
 </context>
 <context>
