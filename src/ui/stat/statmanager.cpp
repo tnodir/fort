@@ -242,10 +242,10 @@ bool StatManager::logProcNew(const LogEntryProcNew &entry, qint64 unixTime)
 
 bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 {
-    const bool logStat = conf() && conf()->logStat();
-
     // Active period
     updateActivePeriod();
+
+    const bool logStat = conf() && conf()->logStat() && m_isActivePeriod;
 
     const bool isNewDay = updateTrafDay(unixTime);
 
@@ -284,10 +284,8 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
             const bool inactive = (pidFlag & 1) != 0;
             const quint32 pid = pidFlag & ~quint32(1);
 
-            if (logStat) {
-                logTrafBytes(insertTrafAppStmts, updateTrafAppStmts, sumInBytes, sumOutBytes, pid,
-                        inBytes, outBytes, unixTime);
-            }
+            logTrafBytes(insertTrafAppStmts, updateTrafAppStmts, sumInBytes, sumOutBytes, pid,
+                    inBytes, outBytes, unixTime, logStat);
 
             if (inactive) {
                 logClearApp(pid);
@@ -295,7 +293,7 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
         }
     }
 
-    if (m_isActivePeriod && logStat) {
+    if (logStat) {
         const SqliteStmtList insertTrafStmts = SqliteStmtList()
                 << getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour)
                 << getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay)
@@ -474,7 +472,7 @@ void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
 
 void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
         const SqliteStmtList &updateStmtList, quint32 &sumInBytes, quint32 &sumOutBytes,
-        quint32 pid, quint32 inBytes, quint32 outBytes, qint64 unixTime)
+        quint32 pid, quint32 inBytes, quint32 outBytes, qint64 unixTime, bool logStat)
 {
     const QString appPath = m_appPidPathMap.value(pid);
 
@@ -490,7 +488,7 @@ void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
     const qint64 appId = getOrCreateAppId(appPath, unixTime);
     Q_ASSERT(appId != INVALID_APP_ID);
 
-    if (m_isActivePeriod) {
+    if (logStat) {
         if (!hasAppTraf(appId)) {
             emit appCreated(appId, appPath);
         }

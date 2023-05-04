@@ -92,7 +92,7 @@ private:
 
     void logTrafBytes(const SqliteStmtList &insertStmtList, const SqliteStmtList &updateStmtList,
             quint32 &sumInBytes, quint32 &sumOutBytes, quint32 pid, quint32 inBytes,
-            quint32 outBytes, qint64 unixTime);
+            quint32 outBytes, qint64 unixTime, bool logStat);
 
     void updateTrafficList(const SqliteStmtList &insertStmtList,
             const SqliteStmtList &updateStmtList, quint32 inBytes, quint32 outBytes,
