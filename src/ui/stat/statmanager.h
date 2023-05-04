@@ -91,7 +91,7 @@ private:
     void deleteOldTraffic(qint32 trafHour);
 
     void logTrafBytes(const SqliteStmtList &insertStmtList, const SqliteStmtList &updateStmtList,
-            quint32 &sumInBytes, quint32 &sumOutBytes, quint32 pidFlag, quint32 inBytes,
+            quint32 &sumInBytes, quint32 &sumOutBytes, quint32 pid, quint32 inBytes,
             quint32 outBytes, qint64 unixTime);
 
     void updateTrafficList(const SqliteStmtList &insertStmtList,

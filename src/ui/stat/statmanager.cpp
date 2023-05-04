@@ -99,7 +99,7 @@ void StatManager::setupTrafDate()
 
 void StatManager::setupByConf()
 {
-    if (!conf() || !conf()->logStat()) {
+    if (!conf()) {
         logClear();
     }
 
@@ -114,6 +114,7 @@ void StatManager::setupActivePeriod()
 {
     DateUtil::parseTime(
             conf()->activePeriodFrom(), m_activePeriodFromHour, m_activePeriodFromMinute);
+
     DateUtil::parseTime(conf()->activePeriodTo(), m_activePeriodToHour, m_activePeriodToMinute);
 }
 
@@ -241,8 +242,7 @@ bool StatManager::logProcNew(const LogEntryProcNew &entry, qint64 unixTime)
 
 bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 {
-    if (!conf() || !conf()->logStat())
-        return false;
+    const bool logStat = conf() && conf()->logStat();
 
     // Active period
     updateActivePeriod();
@@ -281,12 +281,21 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
             const quint32 inBytes = *procTrafBytes++;
             const quint32 outBytes = *procTrafBytes++;
 
-            logTrafBytes(insertTrafAppStmts, updateTrafAppStmts, sumInBytes, sumOutBytes, pidFlag,
-                    inBytes, outBytes, unixTime);
+            const bool inactive = (pidFlag & 1) != 0;
+            const quint32 pid = pidFlag & ~quint32(1);
+
+            if (logStat) {
+                logTrafBytes(insertTrafAppStmts, updateTrafAppStmts, sumInBytes, sumOutBytes, pid,
+                        inBytes, outBytes, unixTime);
+            }
+
+            if (inactive) {
+                logClearApp(pid);
+            }
         }
     }
 
-    if (m_isActivePeriod) {
+    if (m_isActivePeriod && logStat) {
         const SqliteStmtList insertTrafStmts = SqliteStmtList()
                 << getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour)
                 << getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay)
@@ -465,21 +474,14 @@ void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
 
 void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
         const SqliteStmtList &updateStmtList, quint32 &sumInBytes, quint32 &sumOutBytes,
-        quint32 pidFlag, quint32 inBytes, quint32 outBytes, qint64 unixTime)
+        quint32 pid, quint32 inBytes, quint32 outBytes, qint64 unixTime)
 {
-    const bool inactive = (pidFlag & 1) != 0;
-    const quint32 pid = pidFlag & ~quint32(1);
-
     const QString appPath = m_appPidPathMap.value(pid);
 
     if (Q_UNLIKELY(appPath.isEmpty())) {
         qCCritical(LC) << "UI & Driver's states mismatch! Expected processes:"
-                       << m_appPidPathMap.keys() << "Got:" << pid << inactive;
+                       << m_appPidPathMap.keys() << "Got:" << pid;
         return;
-    }
-
-    if (inactive) {
-        logClearApp(pid);
     }
 
     if (inBytes == 0 && outBytes == 0)
