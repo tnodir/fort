@@ -437,18 +437,19 @@ FORT_API void fort_stat_close(PFORT_STAT stat)
 
 FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
 {
+    const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_LOG, log_stat);
+
+    if (log_stat || (old_stat_flags & FORT_STAT_LOG) == 0)
+        return;
+
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
-    const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_LOG, log_stat);
+    /* Clear the processes' active list */
+    fort_stat_traf_flush(stat, /*proc_count=*/FORT_PROC_COUNT_MAX, /*out=*/NULL);
 
-    if (!log_stat && (old_stat_flags & FORT_STAT_LOG) != 0) {
-        /* Clear the processes' active list */
-        fort_stat_traf_flush(stat, /*proc_count=*/FORT_PROC_COUNT_MAX, /*out=*/NULL);
-
-        /* Clear the processes' logged flag */
-        tommy_hashdyn_foreach_node(&stat->procs_map, &fort_stat_proc_unlog);
-    }
+    /* Clear the processes' logged flag */
+    tommy_hashdyn_foreach_node(&stat->procs_map, &fort_stat_proc_unlog);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }

@@ -313,9 +313,9 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setStopInetTraffic(iniBool("stopInetTraffic"));
     conf.setAllowAllNew(iniBool("allowAllNew", true));
     conf.setAskToConnect(iniBool("askToConnect"));
-    conf.setLogBlocked(iniBool("logBlocked", true));
     conf.setLogStat(iniBool("logStat", true));
     conf.setLogStatNoFilter(iniBool("logStatNoFilter", true));
+    conf.setLogBlocked(iniBool("logBlocked", true));
     conf.setLogAllowedIp(iniBool("logAllowedIp", true));
     conf.setLogBlockedIp(iniBool("logBlockedIp", true));
     conf.setLogAlertedBlockedIp(iniBool("logAlertedBlockedIp"));
@@ -355,9 +355,9 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("stopInetTraffic", conf.stopInetTraffic());
         setIniValue("allowAllNew", conf.allowAllNew());
         setIniValue("askToConnect", conf.askToConnect());
-        setIniValue("logBlocked", conf.logBlocked());
         setIniValue("logStat", conf.logStat());
         setIniValue("logStatNoFilter", conf.logStatNoFilter());
+        setIniValue("logBlocked", conf.logBlocked());
         setIniValue("logAllowedIp", conf.logAllowedIp());
         setIniValue("logBlockedIp", conf.logBlockedIp());
         setIniValue("logAlertedBlockedIp", conf.logAlertedBlockedIp());

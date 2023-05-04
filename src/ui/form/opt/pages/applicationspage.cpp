@@ -560,23 +560,6 @@ void ApplicationsPage::setupGroupLimitBufferSize()
     });
 }
 
-void ApplicationsPage::setupGroupOptionsEnabled()
-{
-    const auto refreshOptionsEnabled = [&] {
-        const bool logStat = conf()->logStat();
-
-        m_cbLogBlocked->setEnabled(logStat);
-        m_cbLogConn->setEnabled(logStat);
-
-        m_cscLimitIn->setEnabled(logStat);
-        m_cscLimitOut->setEnabled(logStat);
-    };
-
-    refreshOptionsEnabled();
-
-    connect(conf(), &FirewallConf::logStatChanged, this, refreshOptionsEnabled);
-}
-
 void ApplicationsPage::setupBlockApps()
 {
     m_blockApps = new AppsColumn();

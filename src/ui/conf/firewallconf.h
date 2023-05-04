@@ -64,14 +64,14 @@ public:
     bool askToConnect() const { return m_askToConnect; }
     void setAskToConnect(bool askToConnect);
 
-    bool logBlocked() const { return m_logBlocked; }
-    void setLogBlocked(bool logBlocked);
-
     bool logStat() const { return m_logStat; }
     void setLogStat(bool logStat);
 
     bool logStatNoFilter() const { return m_logStatNoFilter; }
     void setLogStatNoFilter(bool logStatNoFilter);
+
+    bool logBlocked() const { return m_logBlocked; }
+    void setLogBlocked(bool logBlocked);
 
     bool logAllowedIp() const { return m_logAllowedIp; }
     void setLogAllowedIp(bool logAllowedIp);
@@ -137,7 +137,6 @@ public:
     static uint editedFlagsFromVariant(const QVariant &v);
 
 signals:
-    void logStatChanged();
     void appGroupsChanged();
 
 public slots:
@@ -181,9 +180,9 @@ private:
     uint m_allowAllNew : 1;
     uint m_askToConnect : 1;
 
-    uint m_logBlocked : 1;
     uint m_logStat : 1;
     uint m_logStatNoFilter : 1;
+    uint m_logBlocked : 1;
 
     uint m_logAllowedIp : 1;
     uint m_logBlockedIp : 1;

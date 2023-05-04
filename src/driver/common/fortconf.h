@@ -24,18 +24,23 @@ typedef struct fort_conf_flags
     UINT32 boot_filter : 1;
     UINT32 filter_enabled : 1;
     UINT32 filter_locals : 1;
+
     UINT32 stop_traffic : 1;
     UINT32 stop_inet_traffic : 1;
+
     UINT32 allow_all_new : 1;
     UINT32 ask_to_connect : 1;
     UINT32 app_block_all : 1;
     UINT32 app_allow_all : 1;
-    UINT32 log_blocked : 1;
+
     UINT32 log_stat : 1;
     UINT32 log_stat_no_filter : 1;
+    UINT32 log_blocked : 1;
+
     UINT32 log_allowed_ip : 1;
     UINT32 log_blocked_ip : 1;
     UINT32 log_alerted_blocked_ip : 1;
+
     UINT32 group_apply_child : 1;
 
     UINT32 group_bits : 16;

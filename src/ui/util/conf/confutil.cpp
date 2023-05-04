@@ -59,9 +59,9 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
 
-    confFlags->log_blocked = conf.logBlocked();
-    confFlags->log_stat = conf.logStat();
+    confFlags->log_stat = true; // always enabled for driver
     confFlags->log_stat_no_filter = conf.logStatNoFilter();
+    confFlags->log_blocked = conf.logBlocked();
 
     confFlags->log_allowed_ip = conf.logAllowedIp();
     confFlags->log_blocked_ip = conf.logBlockedIp();

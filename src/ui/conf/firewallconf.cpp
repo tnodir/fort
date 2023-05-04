@@ -16,9 +16,9 @@ FirewallConf::FirewallConf(Settings *settings, QObject *parent) :
     m_stopInetTraffic(false),
     m_allowAllNew(false),
     m_askToConnect(false),
-    m_logBlocked(false),
     m_logStat(false),
     m_logStatNoFilter(false),
+    m_logBlocked(false),
     m_logAllowedIp(false),
     m_logBlockedIp(false),
     m_logAlertedBlockedIp(false),
@@ -70,22 +70,19 @@ void FirewallConf::setAskToConnect(bool askToConnect)
     m_askToConnect = askToConnect;
 }
 
-void FirewallConf::setLogBlocked(bool logBlocked)
-{
-    m_logBlocked = logBlocked;
-}
-
 void FirewallConf::setLogStat(bool logStat)
 {
-    if (m_logStat != logStat) {
-        m_logStat = logStat;
-        emit logStatChanged();
-    }
+    m_logStat = logStat;
 }
 
 void FirewallConf::setLogStatNoFilter(bool logStatNoFilter)
 {
     m_logStatNoFilter = logStatNoFilter;
+}
+
+void FirewallConf::setLogBlocked(bool logBlocked)
+{
+    m_logBlocked = logBlocked;
 }
 
 void FirewallConf::setLogAllowedIp(bool logAllowedIp)
@@ -335,9 +332,9 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_allowAllNew = o.allowAllNew();
     m_askToConnect = o.askToConnect();
 
-    m_logBlocked = o.logBlocked();
     m_logStat = o.logStat();
     m_logStatNoFilter = o.logStatNoFilter();
+    m_logBlocked = o.logBlocked();
 
     m_logAllowedIp = o.logAllowedIp();
     m_logBlockedIp = o.logBlockedIp();
@@ -383,9 +380,9 @@ QVariant FirewallConf::flagsToVariant() const
     map["allowAllNew"] = allowAllNew();
     map["askToConnect"] = askToConnect();
 
-    map["logBlocked"] = logBlocked();
     map["logStat"] = logStat();
     map["logStatNoFilter"] = logStatNoFilter();
+    map["logBlocked"] = logBlocked();
 
     map["logAllowedIp"] = logAllowedIp();
     map["logBlockedIp"] = logBlockedIp();

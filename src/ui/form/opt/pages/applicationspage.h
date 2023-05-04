@@ -55,7 +55,6 @@ private:
     void setupGroupLimitLatency();
     void setupGroupLimitPacketLoss();
     void setupGroupLimitBufferSize();
-    void setupGroupOptionsEnabled();
     void setupBlockApps();
     void setupAllowApps();
     void setupSplitter();
