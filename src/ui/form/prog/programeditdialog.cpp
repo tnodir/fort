@@ -372,6 +372,13 @@ QLayout *ProgramEditDialog::setupAllowLayout()
         m_dteBlockAppAt->setEnabled(checked);
     });
 
+    connect(m_rbKillProcess, &QRadioButton::clicked, this, [&] {
+        IoC<WindowManager>()->showInfoBox(
+                tr("Attention: The 'Kill Process' option is very dangerous!!!\n\n"
+                   "Be careful when killing a system services or other important programs!\n"
+                   "It can cause a Windows malfunction or totally unusable."));
+    });
+
     return allowLayout;
 }
 
