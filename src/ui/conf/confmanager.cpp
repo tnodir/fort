@@ -166,7 +166,7 @@ const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, path, name,"
                                  "    use_group_perm = ?4, apply_child = ?5,"
                                  "    lan_only = ?6, log_blocked = ?7, log_conn = ?8,"
                                  "    blocked = ?9, kill_process = ?10,"
-                                 "    creat_time = ?10, end_time = ?11"
+                                 "    creat_time = ?11, end_time = ?12"
                                  "  RETURNING app_id;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
