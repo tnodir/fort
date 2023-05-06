@@ -13,6 +13,7 @@
 #include <form/controls/mainwindow.h>
 #include <form/dialog/passworddialog.h>
 #include <form/graph/graphwindow.h>
+#include <form/home/homewindow.h>
 #include <form/opt/optionswindow.h>
 #include <form/policy/policieswindow.h>
 #include <form/prog/programswindow.h>
@@ -157,6 +158,14 @@ void WindowManager::setupTrayIcon()
             [&] { m_trayIcon->updateTrayIcon(/*alerted=*/true); });
 }
 
+void WindowManager::setupHomeWindow()
+{
+    m_homeWindow = new HomeWindow();
+    m_homeWindow->restoreWindowState();
+
+    connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::closeHomeWindow);
+}
+
 void WindowManager::setupProgramsWindow()
 {
     m_progWindow = new ProgramsWindow();
@@ -257,6 +266,30 @@ void WindowManager::showTrayMessage(const QString &message, WindowManager::TrayM
 
     m_lastMessageType = type;
     m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
+}
+
+void WindowManager::showHomeWindow()
+{
+    if (!widgetVisibleByCheckPassword(m_homeWindow))
+        return;
+
+    if (!m_homeWindow) {
+        setupHomeWindow();
+    }
+
+    showWidget(m_homeWindow);
+}
+
+void WindowManager::closeHomeWindow()
+{
+    if (!m_homeWindow)
+        return;
+
+    m_homeWindow->saveWindowState();
+    m_homeWindow->hide();
+
+    m_homeWindow->deleteLater();
+    m_homeWindow = nullptr;
 }
 
 void WindowManager::showProgramsWindow()

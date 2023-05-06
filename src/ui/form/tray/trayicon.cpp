@@ -31,6 +31,7 @@ const QString eventDoubleClick = QStringLiteral("doubleClick");
 const QString eventMiddleClick = QStringLiteral("middleClick");
 const QString eventRightClick = QStringLiteral("rightClick");
 
+const QString actionShowHome = QStringLiteral("Home");
 const QString actionShowPrograms = QStringLiteral("Programs");
 const QString actionShowOptions = QStringLiteral("Options");
 const QString actionShowStatistics = QStringLiteral("Statistics");
@@ -65,6 +66,7 @@ QString clickNameByType(TrayIcon::ClickType clickType)
 QString actionNameByType(TrayIcon::ActionType actionType)
 {
     static const QString actionNames[] = {
+        actionShowHome,
         actionShowPrograms,
         actionShowOptions,
         actionShowStatistics,
@@ -87,6 +89,7 @@ QString actionNameByType(TrayIcon::ActionType actionType)
 TrayIcon::ActionType actionTypeByName(const QString &name)
 {
     static const QHash<QString, TrayIcon::ActionType> actionTypeNamesMap = {
+        { actionShowHome, TrayIcon::ActionShowHome },
         { actionShowPrograms, TrayIcon::ActionShowPrograms },
         { actionShowOptions, TrayIcon::ActionShowOptions },
         { actionShowStatistics, TrayIcon::ActionShowStatistics },
@@ -289,6 +292,7 @@ void TrayIcon::setupController()
 
 void TrayIcon::retranslateUi()
 {
+    m_homeAction->setText(tr("My Fort"));
     m_programsAction->setText(tr("Programs"));
     m_optionsMenu->setTitle(tr("Options"));
     m_optionsAction->setText(tr("Options"));
@@ -327,6 +331,10 @@ void TrayIcon::setupUi()
 void TrayIcon::setupTrayMenu()
 {
     m_menu = ControlUtil::createMenu(windowManager()->mainWindow());
+
+    m_homeAction = addAction(m_menu, IconCache::icon(":/icons/sheild-96.png"), QString(),
+            windowManager(), SLOT(showHomeWindow()));
+    addHotKey(m_homeAction, iniUser()->hotKeyHome());
 
     m_programsAction = addAction(m_menu, IconCache::icon(":/icons/application.png"), QString(),
             windowManager(), SLOT(showProgramsWindow()));
@@ -675,6 +683,7 @@ QAction *TrayIcon::clickActionFromIni(TrayIcon::ClickType clickType) const
 QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
 {
     QAction *actions[] = {
+        m_homeAction,
         m_programsAction,
         m_optionsAction,
         m_statisticsAction,

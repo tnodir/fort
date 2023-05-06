@@ -17,6 +17,7 @@ public:
     bool hotKeyEnabled() const { return valueBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool v) { setValue("hotKey/enabled", v); }
 
+    QString hotKeyHome() const { return valueText("hotKey/home"); }
     QString hotKeyPrograms() const { return valueText("hotKey/programs"); }
     QString hotKeyOptions() const { return valueText("hotKey/options"); }
     QString hotKeyPolicies() const { return valueText("hotKey/policies"); }
@@ -51,6 +52,12 @@ public:
 
     bool confirmQuit() const { return valueBool("confirm/quit"); }
     void setConfirmQuit(bool v) { setValue("confirm/quit", v); }
+
+    QRect homeWindowGeometry() const { return value("homeWindow/geometry").toRect(); }
+    void setHomeWindowGeometry(const QRect &v) { setValue("homeWindow/geometry", v); }
+
+    bool homeWindowMaximized() const { return valueBool("homeWindow/maximized"); }
+    void setHomeWindowMaximized(bool on) { setValue("homeWindow/maximized", on); }
 
     QRect progWindowGeometry() const { return value("progWindow/geometry").toRect(); }
     void setProgWindowGeometry(const QRect &v) { setValue("progWindow/geometry", v); }

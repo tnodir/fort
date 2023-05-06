@@ -6,6 +6,7 @@
 #include <util/ioc/iocservice.h>
 
 class GraphWindow;
+class HomeWindow;
 class MainWindow;
 class OptionsWindow;
 class PoliciesWindow;
@@ -26,6 +27,7 @@ public:
     explicit WindowManager(QObject *parent = nullptr);
 
     MainWindow *mainWindow() const { return m_mainWindow; }
+    HomeWindow *homeWindow() const { return m_homeWindow; }
     ProgramsWindow *progWindow() const { return m_progWindow; }
     PoliciesWindow *policiesWindow() const { return m_policiesWindow; }
     OptionsWindow *optWindow() const { return m_optWindow; }
@@ -53,6 +55,9 @@ public slots:
     void closeTrayIcon();
     void showTrayMessage(
             const QString &message, WindowManager::TrayMessageType type = MessageOptions);
+
+    void showHomeWindow();
+    void closeHomeWindow();
 
     void showProgramsWindow();
     void closeProgramsWindow();
@@ -103,6 +108,7 @@ private:
 
     void setupTrayIcon();
 
+    void setupHomeWindow();
     void setupProgramsWindow();
     void setupOptionsWindow();
     void setupPoliciesWindow();
@@ -119,6 +125,7 @@ private:
     TrayIcon *m_trayIcon = nullptr;
 
     MainWindow *m_mainWindow = nullptr;
+    HomeWindow *m_homeWindow = nullptr;
     ProgramsWindow *m_progWindow = nullptr;
     OptionsWindow *m_optWindow = nullptr;
     PoliciesWindow *m_policiesWindow = nullptr;

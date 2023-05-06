@@ -288,11 +288,14 @@ void OptionsPage::retranslateComboTrayEvent()
 
 void OptionsPage::retranslateComboTrayAction()
 {
+    const TrayIcon::ActionType type = TrayIcon::ActionNone; // to find the enum usages
+    Q_UNUSED(type);
+
     // Sync with TrayIcon::ActionType
-    const QStringList list = { tr("Show Programs"), tr("Show Options"), tr("Show Statistics"),
-        tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Stop Traffic"),
-        tr("Switch Stop Internet Traffic"), tr("Show Filter Mode Menu"), tr("Show Tray Menu"),
-        tr("Ignore") };
+    const QStringList list = { tr("Show My Fort"), tr("Show Programs"), tr("Show Options"),
+        tr("Show Statistics"), tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"),
+        tr("Switch Stop Traffic"), tr("Switch Stop Internet Traffic"), tr("Show Filter Mode Menu"),
+        tr("Show Tray Menu"), tr("Ignore") };
 
     m_comboTrayAction->clear();
     m_comboTrayAction->addItems(list);

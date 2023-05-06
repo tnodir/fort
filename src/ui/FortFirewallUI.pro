@@ -58,6 +58,8 @@ SOURCES += \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
+    form/home/homecontroller.cpp \
+    form/home/homewindow.cpp \
     form/opt/optionscontroller.cpp \
     form/opt/optionswindow.cpp \
     form/opt/pages/addresses/addressescolumn.cpp \
@@ -238,6 +240,8 @@ HEADERS += \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
+    form/home/homecontroller.h \
+    form/home/homewindow.h \
     form/opt/optionscontroller.h \
     form/opt/optionswindow.h \
     form/opt/pages/addresses/addressescolumn.h \

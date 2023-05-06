@@ -34,7 +34,8 @@ public:
     };
     enum ActionType : qint8 {
         ActionNone = -1,
-        ActionShowPrograms = 0,
+        ActionShowHome = 0,
+        ActionShowPrograms,
         ActionShowOptions,
         ActionShowStatistics,
         ActionShowTrafficGraph,
@@ -120,6 +121,7 @@ private:
     TrayController *m_ctrl = nullptr;
 
     QMenu *m_menu = nullptr;
+    QAction *m_homeAction = nullptr;
     QAction *m_programsAction = nullptr;
     ClickableMenu *m_optionsMenu = nullptr;
     QAction *m_optionsAction = nullptr;
