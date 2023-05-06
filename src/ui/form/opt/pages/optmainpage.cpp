@@ -76,7 +76,8 @@ void OptMainPage::setupTabBar()
     m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/ip.png"), QString());
     m_tabBar->addTab(
             applicationsPage, IconCache::icon(":/icons/application_double.png"), QString());
-    m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
+    m_tabBar->addTab(ControlUtil::wrapToScrollArea(statisticsPage),
+            IconCache::icon(":/icons/chart_bar.png"), QString());
     m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
     connect(m_tabBar, &QTabWidget::currentChanged, this,
