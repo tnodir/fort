@@ -41,6 +41,9 @@ public:
             "filterModeAllow", "filterModeIgnore" };
     }
 
+    bool trayShowIcon() const { return valueBool("tray/showIcon", true); }
+    void setTrayShowIcon(bool v) { setValue("tray/showIcon", v, true); }
+
     bool trayAnimateAlert() const { return valueBool("tray/animateAlert"); }
     void setTrayAnimateAlert(bool v) { setValue("tray/animateAlert", v); }
 

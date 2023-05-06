@@ -33,10 +33,13 @@ private:
     void retranslateUi();
 
     void setupUi();
+    QLayout *setupHeader();
 
 private:
     HomeController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
+
+    QPushButton *m_btMenu = nullptr;
 };
 
 #endif // HOMEWINDOW_H

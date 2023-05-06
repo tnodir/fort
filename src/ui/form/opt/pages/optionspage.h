@@ -94,6 +94,7 @@ private:
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
+    QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
     QLabel *m_labelTrayEvent = nullptr;
     QComboBox *m_comboTrayEvent = nullptr;

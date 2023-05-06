@@ -189,6 +189,7 @@ void OptionsPage::onRetranslateUi()
             tr("Lock the password (unlocked till \"%1\")")
                     .arg(PasswordDialog::unlockTypeStrings().at(settings()->passwordUnlockType())));
 
+    m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
     m_labelTrayEvent->setText(tr("Event:"));
     m_labelTrayAction->setText(tr("Action:"));
@@ -611,6 +612,11 @@ void OptionsPage::setupPasswordLock()
 
 void OptionsPage::setupTrayBox()
 {
+    m_cbTrayShowIcon = ControlUtil::createCheckBox(iniUser()->trayShowIcon(), [&](bool checked) {
+        iniUser()->setTrayShowIcon(checked);
+        ctrl()->setIniUserEdited();
+    });
+
     m_cbTrayAnimateAlert =
             ControlUtil::createCheckBox(iniUser()->trayAnimateAlert(), [&](bool checked) {
                 iniUser()->setTrayAnimateAlert(checked);
@@ -622,6 +628,7 @@ void OptionsPage::setupTrayBox()
     auto actionLayout = setupTrayActionLayout();
 
     auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbTrayShowIcon);
     layout->addWidget(m_cbTrayAnimateAlert);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(eventLayout);

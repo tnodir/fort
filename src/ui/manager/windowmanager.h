@@ -51,6 +51,7 @@ signals:
 public slots:
     void setupAppPalette();
 
+    void setupTrayIcon();
     void showTrayIcon();
     void closeTrayIcon();
     void showTrayMessage(
@@ -105,8 +106,6 @@ public slots:
 private:
     void setupMainWindow();
     void closeMainWindow();
-
-    void setupTrayIcon();
 
     void setupHomeWindow();
     void setupProgramsWindow();

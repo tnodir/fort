@@ -146,18 +146,6 @@ void WindowManager::closeMainWindow()
     m_mainWindow = nullptr;
 }
 
-void WindowManager::setupTrayIcon()
-{
-    m_trayIcon = new TrayIcon(this);
-
-    connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this,
-            &WindowManager::onTrayMessageClicked);
-
-    auto confManager = IoC<ConfManager>();
-    connect(confManager, &ConfManager::appAlerted, m_trayIcon,
-            [&] { m_trayIcon->updateTrayIcon(/*alerted=*/true); });
-}
-
 void WindowManager::setupHomeWindow()
 {
     m_homeWindow = new HomeWindow();
@@ -245,11 +233,24 @@ void WindowManager::closeAll()
     closeMainWindow();
 }
 
+void WindowManager::setupTrayIcon()
+{
+    if (m_trayIcon)
+        return;
+
+    m_trayIcon = new TrayIcon(this);
+
+    connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this,
+            &WindowManager::onTrayMessageClicked);
+
+    auto confManager = IoC<ConfManager>();
+    connect(confManager, &ConfManager::appAlerted, m_trayIcon,
+            [&] { m_trayIcon->updateTrayIcon(/*alerted=*/true); });
+}
+
 void WindowManager::showTrayIcon()
 {
-    if (!m_trayIcon) {
-        setupTrayIcon();
-    }
+    setupTrayIcon();
 
     m_trayIcon->show();
 }
@@ -290,6 +291,10 @@ void WindowManager::closeHomeWindow()
 
     m_homeWindow->deleteLater();
     m_homeWindow = nullptr;
+
+    if (!trayIcon()->isVisible()) {
+        trayIcon()->quitProgram();
+    }
 }
 
 void WindowManager::showProgramsWindow()

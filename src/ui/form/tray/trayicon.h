@@ -60,6 +60,8 @@ public:
     DriverManager *driverManager() const;
     WindowManager *windowManager() const;
 
+    QMenu *menu() const { return m_menu; }
+
     static ActionType clickEventActionType(IniUser *iniUser, ClickType clickType);
     static void setClickEventActionType(
             IniUser *iniUser, ClickType clickType, ActionType actionType);
@@ -69,6 +71,8 @@ public slots:
 
     void showTrayMenu(const QPoint &pos);
     void updateTrayMenu(bool onlyFlags = false);
+
+    void quitProgram();
 
 protected slots:
     void switchTrayMenu(bool checked);
@@ -80,7 +84,6 @@ protected slots:
 
     void switchTrayFlag(bool checked);
     void switchFilterMode(QAction *action);
-    void quitProgram();
 
 private:
     void setupController();

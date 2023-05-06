@@ -265,6 +265,16 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
     updateClickActions();
 }
 
+void TrayIcon::quitProgram()
+{
+    if (iniUser()->confirmQuit()) {
+        windowManager()->showConfirmBox(
+                [&] { windowManager()->quit(); }, tr("Are you sure you want to quit the program?"));
+    } else {
+        windowManager()->quit();
+    }
+}
+
 void TrayIcon::switchTrayMenu(bool /*checked*/)
 {
     showTrayMenu(QCursor::pos());
@@ -612,16 +622,6 @@ void TrayIcon::switchFilterMode(QAction *action)
                 tr("Are you sure to select the \"%1\"?").arg(action->text()));
     } else {
         saveTrayFlags();
-    }
-}
-
-void TrayIcon::quitProgram()
-{
-    if (iniUser()->confirmQuit()) {
-        windowManager()->showConfirmBox(
-                [&] { windowManager()->quit(); }, tr("Are you sure you want to quit the program?"));
-    } else {
-        windowManager()->quit();
     }
 }
 

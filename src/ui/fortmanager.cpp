@@ -318,12 +318,19 @@ void FortManager::setupTranslationManager()
 void FortManager::show()
 {
     auto windowManager = IoC<WindowManager>();
+    const IniUser &iniUser = IoC<UserSettings>()->iniUser();
 
     setupTranslationManager();
 
-    windowManager->showTrayIcon();
+    windowManager->setupTrayIcon();
 
-    if (IoC<UserSettings>()->iniUser().graphWindowVisible()) {
+    if (iniUser.trayShowIcon()) {
+        windowManager->showTrayIcon();
+    } else {
+        windowManager->showHomeWindow();
+    }
+
+    if (iniUser.graphWindowVisible()) {
         windowManager->showGraphWindow();
     }
 }

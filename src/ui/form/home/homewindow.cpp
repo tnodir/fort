@@ -1,9 +1,11 @@
 #include "homewindow.h"
 
+#include <QPushButton>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/tray/trayicon.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
@@ -56,6 +58,8 @@ void HomeWindow::retranslateUi()
 {
     this->unsetLocale();
 
+    m_btMenu->setText(tr("Menu"));
+
     this->setWindowTitle(tr("My Fort"));
 }
 
@@ -76,6 +80,14 @@ void HomeWindow::setupUi()
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(6, 6, 6, 6);
 
+    // Header
+    auto header = setupHeader();
+    layout->addLayout(header);
+
+    // Frame
+    auto frame = new QHBoxLayout();
+    layout->addLayout(frame, 1);
+
     this->setLayout(layout);
 
     // Font
@@ -83,4 +95,17 @@ void HomeWindow::setupUi()
 
     // Size
     this->setMinimumSize(500, 400);
+}
+
+QLayout *HomeWindow::setupHeader()
+{
+    auto layout = new QHBoxLayout();
+
+    m_btMenu = ControlUtil::createButton(":/icons/sheild-96.png");
+    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
+
+    layout->addWidget(m_btMenu);
+    layout->addStretch();
+
+    return layout;
 }
