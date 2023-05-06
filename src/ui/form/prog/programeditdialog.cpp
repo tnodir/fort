@@ -350,7 +350,7 @@ QLayout *ProgramEditDialog::setupAllowLayout()
     m_rbBlockApp->setIcon(IconCache::icon(":/icons/deny.png"));
 
     m_rbKillProcess = new QRadioButton();
-    m_rbKillProcess->setIcon(IconCache::icon(":/icons/cancel.png"));
+    m_rbKillProcess->setIcon(IconCache::icon(":/icons/scull.png"));
 
     allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
     allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignHCenter);

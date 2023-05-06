@@ -31,7 +31,7 @@ QString appStateIconPath(const AppRow &appRow)
         return ":/icons/error.png";
 
     if (appRow.killProcess)
-        return ":/icons/cancel.png";
+        return ":/icons/scull.png";
 
     if (appRow.blocked)
         return ":/icons/deny.png";
