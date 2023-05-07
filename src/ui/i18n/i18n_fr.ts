@@ -1037,10 +1037,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Retirer</translation>
     </message>
     <message>
-        <source>Purge All</source>
-        <translation>Purger tout</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>Options</translation>
     </message>
@@ -1059,6 +1055,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Services</source>
         <translation>Services</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

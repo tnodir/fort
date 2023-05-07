@@ -1033,10 +1033,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Remover</translation>
     </message>
     <message>
-        <source>Purge All</source>
-        <translation>Remover Tudo</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>Opções</translation>
     </message>
@@ -1054,6 +1050,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Purge Obsolete</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -1037,10 +1037,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <source>Purge All</source>
-        <translation>Прочистить всё</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
@@ -1059,6 +1055,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Services</source>
         <translation>Сервисы</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete</source>
+        <translation>Очистить устаревшее</translation>
     </message>
 </context>
 <context>

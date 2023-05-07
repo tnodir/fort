@@ -1046,15 +1046,15 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Opzioni</translation>
     </message>
     <message>
-        <source>Purge All</source>
-        <translation>Elimina tutto</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programmi</translation>
     </message>
     <message>
         <source>Services</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Purge Obsolete</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

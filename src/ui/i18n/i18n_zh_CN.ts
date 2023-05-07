@@ -1037,10 +1037,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>移除</translation>
     </message>
     <message>
-        <source>Purge All</source>
-        <translation>全部清除</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>选项</translation>
     </message>
@@ -1059,6 +1055,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Services</source>
         <translation>服务</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

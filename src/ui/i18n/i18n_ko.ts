@@ -1037,10 +1037,6 @@ It can cause a Windows malfunction or totally unusable.</translation>
         <translation>제거</translation>
     </message>
     <message>
-        <source>Purge All</source>
-        <translation>모두 제거</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>옵션</translation>
     </message>
@@ -1059,6 +1055,10 @@ It can cause a Windows malfunction or totally unusable.</translation>
     <message>
         <source>Services</source>
         <translation>서비스</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

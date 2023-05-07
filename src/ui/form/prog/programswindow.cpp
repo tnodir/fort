@@ -127,7 +127,7 @@ void ProgramsWindow::retranslateUi()
     m_actAddApp->setText(tr("Add"));
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
-    m_actPurgeApps->setText(tr("Purge All"));
+    m_actPurgeApps->setText(tr("Purge Obsolete"));
 
     m_btAllowApp->setText(tr("Allow"));
     m_btBlockApp->setText(tr("Block"));

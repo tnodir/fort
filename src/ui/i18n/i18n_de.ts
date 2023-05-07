@@ -1037,10 +1037,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Entfernen</translation>
     </message>
     <message>
-        <source>Purge All</source>
-        <translation>Alle löschen</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>Optionen</translation>
     </message>
@@ -1059,6 +1055,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Services</source>
         <translation>Dienste</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

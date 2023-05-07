@@ -1037,10 +1037,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Odstrani</translation>
     </message>
     <message>
-        <source>Purge All</source>
-        <translation>Očisti vse</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>Možnosti</translation>
     </message>
@@ -1059,6 +1055,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Services</source>
         <translation>Storitve</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
