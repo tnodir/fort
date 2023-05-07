@@ -1,4 +1,4 @@
-﻿; *** Inno Setup version 6.1.0+ Chinese Simplified messages ***
+; *** Inno Setup version 6.1.0+ Chinese Simplified messages ***
 ;
 ; To download user-contributed translations of this file, go to:
 ;   https://jrsoftware.org/files/istrans/
@@ -17,7 +17,7 @@
 [LangOptions]
 ; The following three entries are very important. Be sure to read and 
 ; understand the '[LangOptions] section' topic in the help file.
-LanguageName=简体中文
+LanguageName=<7B80><4F53><4E2D><6587>
 ; If Language Name display incorrect, uncomment next line
 ; LanguageName=<7B80><4F53><4E2D><6587>
 ; About LanguageID, to reference link:
@@ -52,7 +52,7 @@ ErrorTitle=错误
 SetupLdrStartupMessage=现在将安装 %1。您想要继续吗？
 LdrCannotCreateTemp=不能创建临时文件。安装中断。
 LdrCannotExecTemp=不能执行临时目录中的文件。安装中断。
-HelpTextNote=
+;HelpTextNote=
 
 ; *** 启动错误消息
 LastErrorMessage=%1.%n%n错误 %2: %3
@@ -66,6 +66,7 @@ WindowsServicePackRequired=这个程序需要 %1 服务包 %2 或更高。
 NotOnThisPlatform=这个程序将不能运行于 %1。
 OnlyOnThisPlatform=这个程序必须运行于 %1。
 OnlyOnTheseArchitectures=这个程序只能在为下列处理器结构设计的Windows版本中进行安装：%n%n%1
+MissingWOW64APIs=The version of Windows you are running does not include functionality required by Setup to perform a 64-bit installation. To correct this problem, please install Service Pack %1.
 WinVersionTooLowError=这个程序需要 %1 版本 %2 或更高。
 WinVersionTooHighError=这个程序不能安装于 %1 版本 %2 或更高。
 AdminPrivilegesRequired=在安装这个程序时您必须以管理员身份登录。
@@ -74,14 +75,14 @@ SetupAppRunningError=安装程序发现 %1 当前正在运行。%n%n请先关闭
 UninstallAppRunningError=卸载程序发现 %1 当前正在运行。%n%n请先关闭所有运行的窗口，然后点击“确定”继续，或按“取消”退出。
 
 ; *** 启动问题
-PrivilegesRequiredOverrideTitle=选择安装程序模式
-PrivilegesRequiredOverrideInstruction=选择安装模式
-PrivilegesRequiredOverrideText1=%1 可以为所有用户安装(需要管理员权限)，或仅为您安装。
-PrivilegesRequiredOverrideText2=%1 只能为您安装，或为所有用户安装(需要管理员权限)。
-PrivilegesRequiredOverrideAllUsers=为所有用户安装(&A)
-PrivilegesRequiredOverrideAllUsersRecommended=为所有用户安装(&A) (建议选项)
-PrivilegesRequiredOverrideCurrentUser=只为我安装(&M)
-PrivilegesRequiredOverrideCurrentUserRecommended=只为我安装(&M) (建议选项)
+;PrivilegesRequiredOverrideTitle=选择安装程序模式
+;PrivilegesRequiredOverrideInstruction=选择安装模式
+;PrivilegesRequiredOverrideText1=%1 可以为所有用户安装(需要管理员权限)，或仅为您安装。
+;PrivilegesRequiredOverrideText2=%1 只能为您安装，或为所有用户安装(需要管理员权限)。
+;PrivilegesRequiredOverrideAllUsers=为所有用户安装(&A)
+;PrivilegesRequiredOverrideAllUsersRecommended=为所有用户安装(&A) (建议选项)
+;PrivilegesRequiredOverrideCurrentUser=只为我安装(&M)
+;PrivilegesRequiredOverrideCurrentUserRecommended=只为我安装(&M) (建议选项)
 
 ; *** 其它错误
 ErrorCreatingDir=安装程序不能创建目录“%1”。
@@ -161,7 +162,7 @@ WizardSelectDir=选择目标位置
 SelectDirDesc=您想将 [name] 安装在哪里？
 SelectDirLabel3=安装程序将安装 [name] 到下列文件夹中。
 SelectDirBrowseLabel=点击“下一步”继续。如果您想选择其它文件夹，点击“浏览”。
-DiskSpaceGBLabel=至少需要有 [gb] GB 的可用磁盘空间。
+;DiskSpaceGBLabel=至少需要有 [gb] GB 的可用磁盘空间。
 DiskSpaceMBLabel=至少需要有 [mb] MB 的可用磁盘空间。
 CannotInstallToNetworkDrive=安装程序无法安装到一个网络驱动器。
 CannotInstallToUNCPath=安装程序无法安装到一个UNC路径。
@@ -189,7 +190,7 @@ NoUninstallWarningTitle=组件已存在
 NoUninstallWarning=安装程序检测到下列组件已在您的电脑中安装：%n%n%1%n%n取消选定这些组件将不能卸载它们。%n%n您一定要继续吗？
 ComponentSize1=%1 KB
 ComponentSize2=%1 MB
-ComponentsDiskSpaceGBLabel=当前选择的组件至少需要 [gb] GB 的磁盘空间。
+;ComponentsDiskSpaceGBLabel=当前选择的组件至少需要 [gb] GB 的磁盘空间。
 ComponentsDiskSpaceMBLabel=当前选择的组件至少需要 [mb] MB 的磁盘空间。
 
 ; *** “选择附加任务”向导页
@@ -221,16 +222,16 @@ ReadyMemoGroup=开始菜单文件夹：
 ReadyMemoTasks=附加任务：
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=正在下载附加文件...
-ButtonStopDownload=停止下载(&S)
-StopDownload=您确定要停止下载吗？
-ErrorDownloadAborted=下载已中止
-ErrorDownloadFailed=下载失败：%1 %2
-ErrorDownloadSizeFailed=获取下载大小失败：%1 %2
-ErrorFileHash1=校验文件哈希失败：%1
-ErrorFileHash2=无效的文件哈希：预期 %1，实际 %2
-ErrorProgress=无效的进度：%1，总共%2
-ErrorFileSize=文件大小错误：预期 %1，实际 %2
+;DownloadingLabel=正在下载附加文件...
+;ButtonStopDownload=停止下载(&S)
+;StopDownload=您确定要停止下载吗？
+;ErrorDownloadAborted=下载已中止
+;ErrorDownloadFailed=下载失败：%1 %2
+;ErrorDownloadSizeFailed=获取下载大小失败：%1 %2
+;ErrorFileHash1=校验文件哈希失败：%1
+;ErrorFileHash2=无效的文件哈希：预期 %1，实际 %2
+;ErrorProgress=无效的进度：%1，总共%2
+;ErrorFileSize=文件大小错误：预期 %1，实际 %2
 
 ; *** “正在准备安装”向导页
 WizardPreparing=正在准备安装
@@ -242,7 +243,7 @@ ApplicationsFound2=下列应用程序正在使用的文件需要更新设置。�
 CloseApplications=自动关闭该应用程序(&A)
 DontCloseApplications=不要关闭该应用程序(&D)
 ErrorCloseApplications=安装程序无法自动关闭所有应用程序。在继续之前，我们建议您关闭所有使用需要更新的安装程序文件。
-PrepareToInstallNeedsRestart=安装程序必须重新启动计算机。重新启动计算机后，请再次运行安装程序以完成 [name] 的安装。%n%n是否立即重新启动？
+;PrepareToInstallNeedsRestart=安装程序必须重新启动计算机。重新启动计算机后，请再次运行安装程序以完成 [name] 的安装。%n%n是否立即重新启动？
 
 ; *** “正在安装”向导页
 WizardInstalling=正在安装
@@ -272,10 +273,11 @@ SelectDirectoryLabel=请指定下一张磁盘的位置。
 
 ; *** 安装状态消息
 SetupAborted=安装程序未完成安装。%n%n请修正这个问题并重新运行安装程序。
-AbortRetryIgnoreSelectAction=选择操作
-AbortRetryIgnoreRetry=重试(&T)
-AbortRetryIgnoreIgnore=忽略错误并继续(&I)
-AbortRetryIgnoreCancel=关闭安装程序
+;AbortRetryIgnoreSelectAction=选择操作
+;AbortRetryIgnoreRetry=重试(&T)
+;AbortRetryIgnoreIgnore=忽略错误并继续(&I)
+;AbortRetryIgnoreCancel=关闭安装程序
+EntryAbortRetryIgnore=Click Retry to try again, Ignore to proceed anyway, or Abort to cancel installation.
 
 ; *** 安装状态消息
 StatusClosingApplications=正在关闭应用程序...
@@ -306,24 +308,29 @@ ErrorRegWriteKey=写入注册表项时出错：%n%1\%2
 ErrorIniEntry=在文件“%1”中创建INI条目时出错。
 
 ; *** 文件复制错误
-FileAbortRetryIgnoreSkipNotRecommended=跳过这个文件(&S) (不推荐)
-FileAbortRetryIgnoreIgnoreNotRecommended=忽略错误并继续(&I) (不推荐)
+;FileAbortRetryIgnoreSkipNotRecommended=跳过这个文件(&S) (不推荐)
+;FileAbortRetryIgnoreIgnoreNotRecommended=忽略错误并继续(&I) (不推荐)
 SourceIsCorrupted=源文件已损坏
 SourceDoesntExist=源文件“%1”不存在
-ExistingFileReadOnly2=无法替换现有文件，因为它是只读的。
-ExistingFileReadOnlyRetry=移除只读属性并重试(&R)
-ExistingFileReadOnlyKeepExisting=保留现有文件(&K)
+;ExistingFileReadOnly2=无法替换现有文件，因为它是只读的。
+;ExistingFileReadOnlyRetry=移除只读属性并重试(&R)
+;ExistingFileReadOnlyKeepExisting=保留现有文件(&K)
 ErrorReadingExistingDest=尝试读取现有文件时出错：
-FileExistsSelectAction=选择操作
-FileExists2=文件已经存在。
-FileExistsOverwriteExisting=覆盖已经存在的文件(&O)
-FileExistsKeepExisting=保留现有的文件(&K)
-FileExistsOverwriteOrKeepAll=为所有的冲突文件执行此操作(&D)
-ExistingFileNewerSelectAction=选择操作
-ExistingFileNewer2=现有的文件比安装程序将要安装的文件更新。
-ExistingFileNewerOverwriteExisting=覆盖已经存在的文件(&O)
-ExistingFileNewerKeepExisting=保留现有的文件(&K) (推荐)
-ExistingFileNewerOverwriteOrKeepAll=为所有的冲突文件执行此操作(&D)
+;FileExistsSelectAction=选择操作
+;FileExists2=文件已经存在。
+;FileExistsOverwriteExisting=覆盖已经存在的文件(&O)
+;FileExistsKeepExisting=保留现有的文件(&K)
+;FileExistsOverwriteOrKeepAll=为所有的冲突文件执行此操作(&D)
+;ExistingFileNewerSelectAction=选择操作
+;ExistingFileNewer2=现有的文件比安装程序将要安装的文件更新。
+;ExistingFileNewerOverwriteExisting=覆盖已经存在的文件(&O)
+;ExistingFileNewerKeepExisting=保留现有的文件(&K) (推荐)
+;ExistingFileNewerOverwriteOrKeepAll=为所有的冲突文件执行此操作(&D)
+FileAbortRetryIgnore=Click Retry to try again, Ignore to skip this file (not recommended), or Abort to cancel installation.
+FileAbortRetryIgnore2=Click Retry to try again, Ignore to proceed anyway (not recommended), or Abort to cancel installation.
+ExistingFileReadOnly=The existing file is marked as read-only.%n%nClick Retry to remove the read-only attribute and try again, Ignore to skip this file, or Abort to cancel installation.
+ExistingFileNewer=The existing file is newer than the one Setup is trying to install. It is recommended that you keep the existing file.%n%nDo you want to keep the existing file?
+FileExists=The file already exists.%n%nWould you like Setup to overwrite it?
 ErrorChangingAttr=尝试改变下列现有的文件的属性时出错：
 ErrorCreatingTemp=尝试在目标目录创建文件时出错：
 ErrorReadingSource=尝试读取下列源文件时出错：
@@ -337,13 +344,13 @@ ErrorRegisterTypeLib=无法注册类型库：%1
 
 ; *** 卸载显示名字标记
 ; used for example as 'My Program (32-bit)'
-UninstallDisplayNameMark=%1 (%2)
+;UninstallDisplayNameMark=%1 (%2)
 ; used for example as 'My Program (32-bit, All users)'
-UninstallDisplayNameMarks=%1 (%2, %3)
-UninstallDisplayNameMark32Bit=32位
-UninstallDisplayNameMark64Bit=64位
-UninstallDisplayNameMarkAllUsers=所有用户
-UninstallDisplayNameMarkCurrentUser=当前用户
+;UninstallDisplayNameMarks=%1 (%2, %3)
+;UninstallDisplayNameMark32Bit=32位
+;UninstallDisplayNameMark64Bit=64位
+;UninstallDisplayNameMarkAllUsers=所有用户
+;UninstallDisplayNameMarkCurrentUser=当前用户
 
 ; *** 安装后错误
 ErrorOpeningReadme=尝试打开自述文件时出错。
@@ -392,3 +399,6 @@ AssocingFileExtension=正在将 %2 文件扩展名与 %1 建立关联...
 AutoStartProgramGroupDescription=启动组：
 AutoStartProgram=自动启动 %1
 AddonHostProgramNotFound=%1无法找到您所选择的文件夹。%n%n您想要继续吗？
+
+; *** Fort Firewall messages
+WindowsExplorerIntegration=Windows Explorer integration

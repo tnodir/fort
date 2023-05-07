@@ -9,7 +9,7 @@
 
 #define APP_EXE		StringChange("{app}\%exe%", "%exe%", APP_EXE_NAME)
 
-#define LANG_PATH AddBackslash(SourcePath) + "Languages"
+#define LANG_PATH	AddBackslash(SourcePath) + "languages"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -43,20 +43,20 @@ Compression=lzma2/ultra
 SolidCompression=yes
 
 [Languages]
-Name: en; MessagesFile: "{#LANG_PATH}\Default.isl"
-Name: de; MessagesFile: "{#LANG_PATH}\German.isl"
-Name: fr; MessagesFile: "{#LANG_PATH}\French.isl"
-Name: it; MessagesFile: "{#LANG_PATH}\Italian.isl"
-Name: ko; MessagesFile: "{#LANG_PATH}\Korean.isl"
-Name: pt; MessagesFile: "{#LANG_PATH}\Portuguese.isl"
-Name: pt_BR; MessagesFile: "{#LANG_PATH}\BrazilianPortuguese.isl"
-Name: ru; MessagesFile: "{#LANG_PATH}\Russian.isl"
-Name: sl; MessagesFile: "{#LANG_PATH}\Slovenian.isl"
-Name: zh_CN; MessagesFile: "{#LANG_PATH}\ChineseSimplified.isl"
+Name: "en"; MessagesFile: "compiler:Default.isl,{#LANG_PATH}\Default.isl"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl,{#LANG_PATH}\German.isl"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl,{#LANG_PATH}\French.isl"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl,{#LANG_PATH}\Italian.isl"
+Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl,{#LANG_PATH}\Korean.isl"
+Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl,{#LANG_PATH}\Portuguese.isl"
+Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,{#LANG_PATH}\BrazilianPortuguese.isl"
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,{#LANG_PATH}\Russian.isl"
+Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl,{#LANG_PATH}\Slovenian.isl"
+Name: "zh_CN"; MessagesFile: "{#LANG_PATH}\ChineseSimplified.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"
-Name: "explorer"; Description: "Windows Explorer"
+Name: "explorer"; Description: "{cm:WindowsExplorerIntegration}"
 Name: "service"; Description: "Windows Service"
 Name: "portable"; Description: "Portable"; Flags: unchecked
 
