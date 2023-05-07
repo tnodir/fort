@@ -464,11 +464,11 @@
     <name>HomeWindow</name>
     <message>
         <source>Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menü</translation>
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Mein Fort</translation>
     </message>
 </context>
 <context>
@@ -802,11 +802,11 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Show Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Symbol anzeigen</translation>
     </message>
     <message>
         <source>Show My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Mein Fort anzeigen</translation>
     </message>
 </context>
 <context>
@@ -1563,7 +1563,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Mein Fort</translation>
     </message>
 </context>
 <context>
