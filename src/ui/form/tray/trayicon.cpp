@@ -636,7 +636,7 @@ void TrayIcon::addHotKey(QAction *action, const QString &shortcutText)
 
 void TrayIcon::updateHotKeys()
 {
-    hotKeyManager()->setEnabled(iniUser()->hotKeyEnabled());
+    hotKeyManager()->initialize(iniUser()->hotKeyEnabled(), iniUser()->hotKeyGlobal());
 }
 
 void TrayIcon::removeHotKeys()

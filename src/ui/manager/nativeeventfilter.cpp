@@ -107,14 +107,16 @@ NativeEventFilter::~NativeEventFilter()
 }
 
 bool NativeEventFilter::registerHotKey(
-        int hotKeyId, Qt::Key keyCode, Qt::KeyboardModifiers modifiers, bool autoRepeat)
+        int hotKeyId, Qt::Key keyCode, Qt::KeyboardModifiers modifiers)
 {
     Q_ASSERT(uint(hotKeyId) <= 0xBFFF);
 
-    const quint32 nativeMod = nativeModifiers(modifiers, autoRepeat);
+    const quint32 nativeMod = nativeModifiers(modifiers);
     const quint32 nativeKey = nativeKeyCode(keyCode);
 
-    if (!RegisterHotKey(nullptr, 0, nativeMod, nativeKey))
+    const quint32 nativeModifiers = nativeMod | autoRepeatModifier(/*autoRepeat=*/true);
+
+    if (!RegisterHotKey(nullptr, 0, nativeModifiers, nativeKey))
         return false;
 
     setKeyId(hotKeyId, nativeMod, nativeKey);
@@ -122,17 +124,10 @@ bool NativeEventFilter::registerHotKey(
     return true;
 }
 
-bool NativeEventFilter::registerHotKey(int hotKeyId, int key, bool autoRepeat)
+bool NativeEventFilter::registerHotKey(int hotKeyId, int key)
 {
     return registerHotKey(hotKeyId, Qt::Key(key & ~Qt::KeyboardModifierMask),
-            Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask), autoRepeat);
-}
-
-void NativeEventFilter::unregisterHotKey(int hotKeyId)
-{
-    UnregisterHotKey(nullptr, hotKeyId);
-
-    removeKeyId(hotKeyId);
+            Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask));
 }
 
 void NativeEventFilter::unregisterHotKeys()
@@ -164,11 +159,11 @@ void NativeEventFilter::setKeyId(int hotKeyId, quint32 nativeMod, quint32 native
     m_keyIdMap.insert(nativeKeyMod, hotKeyId);
 }
 
-void NativeEventFilter::removeKeyId(int hotKeyId)
+bool NativeEventFilter::removeKeyId(int hotKeyId)
 {
     const quint32 nativeKeyMod = m_keyIdMap.key(hotKeyId);
 
-    m_keyIdMap.remove(nativeKeyMod);
+    return m_keyIdMap.remove(nativeKeyMod);
 }
 
 int NativeEventFilter::getKeyId(quint32 nativeMod, quint32 nativeKey) const
@@ -221,10 +216,15 @@ quint32 NativeEventFilter::nativeKeyCode(Qt::Key keyCode)
     return g_keyTbl.value(keyCode, 0);
 }
 
-quint32 NativeEventFilter::nativeModifiers(Qt::KeyboardModifiers modifiers, bool autoRepeat)
+quint32 NativeEventFilter::nativeModifiers(Qt::KeyboardModifiers modifiers)
 {
-    return (autoRepeat ? MOD_NOREPEAT : 0) | ((modifiers & Qt::ShiftModifier) ? MOD_SHIFT : 0)
+    return ((modifiers & Qt::ShiftModifier) ? MOD_SHIFT : 0)
             | ((modifiers & Qt::ControlModifier) ? MOD_CONTROL : 0)
             | ((modifiers & Qt::AltModifier) ? MOD_ALT : 0)
             | ((modifiers & Qt::MetaModifier) ? MOD_WIN : 0);
+}
+
+quint32 NativeEventFilter::autoRepeatModifier(bool autoRepeat)
+{
+    return (autoRepeat ? 0 : MOD_NOREPEAT);
 }

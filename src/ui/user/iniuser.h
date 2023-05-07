@@ -17,6 +17,9 @@ public:
     bool hotKeyEnabled() const { return valueBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool v) { setValue("hotKey/enabled", v); }
 
+    bool hotKeyGlobal() const { return valueBool("hotKey/global", true); }
+    void setHotKeyGlobal(bool v) { setValue("hotKey/global", v, true); }
+
     QString hotKeyHome() const { return valueText("hotKey/home"); }
     QString hotKeyPrograms() const { return valueText("hotKey/programs"); }
     QString hotKeyOptions() const { return valueText("hotKey/options"); }

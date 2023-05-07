@@ -16,7 +16,9 @@ public:
     explicit HotKeyManager(QObject *parent = nullptr);
 
     bool enabled() const { return m_enabled; }
-    void setEnabled(bool v);
+    bool global() const { return m_global; }
+
+    void initialize(bool enabled, bool global);
 
     void setUp() override;
     void tearDown() override;
@@ -31,10 +33,11 @@ private slots:
 private:
     void updateActions();
 
-    void registerHotKey(QAction *action) const;
+    void registerHotKey(NativeEventFilter *eventFilter, QAction *action) const;
 
 private:
     bool m_enabled = false;
+    bool m_global = false;
 
     QList<QAction *> m_actions;
 };

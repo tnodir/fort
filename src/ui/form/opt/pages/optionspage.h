@@ -42,6 +42,7 @@ private:
     void setupTrafficBox();
     QLayout *setupFilterModeLayout();
     void setupGlobalBox();
+    void setupHotKeysBox();
     QLayout *setupLangLayout();
     void setupComboLanguage();
     void setupProtectionBox();
@@ -69,6 +70,7 @@ private:
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
+    QGroupBox *m_gbHotKeys = nullptr;
     QGroupBox *m_gbProtection = nullptr;
     QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbConfirmations = nullptr;
@@ -84,7 +86,8 @@ private:
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
     QCheckBox *m_cbExplorerMenu = nullptr;
-    QCheckBox *m_cbHotKeys = nullptr;
+    QCheckBox *m_cbHotKeysEnabled = nullptr;
+    QCheckBox *m_cbHotKeysGlobal = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
     QCheckBox *m_cbBootFilter = nullptr;

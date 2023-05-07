@@ -19,11 +19,9 @@ public:
 
     bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
 
-    bool registerHotKey(int hotKeyId, Qt::Key keyCode, Qt::KeyboardModifiers modifiers,
-            bool autoRepeat = false);
-    bool registerHotKey(int hotKeyId, int key, bool autoRepeat = false);
+    bool registerHotKey(int hotKeyId, Qt::Key keyCode, Qt::KeyboardModifiers modifiers);
+    bool registerHotKey(int hotKeyId, int key);
 
-    void unregisterHotKey(int hotKeyId);
     void unregisterHotKeys();
 
     bool registerSessionNotification(quintptr winId);
@@ -36,11 +34,12 @@ signals:
 
 private:
     void setKeyId(int hotKeyId, quint32 nativeMod, quint32 nativeKey);
-    void removeKeyId(int hotKeyId);
+    bool removeKeyId(int hotKeyId);
     int getKeyId(quint32 nativeMod, quint32 nativeKey) const;
 
     static quint32 nativeKeyCode(Qt::Key keyCode);
-    static quint32 nativeModifiers(Qt::KeyboardModifiers modifiers, bool autoRepeat = false);
+    static quint32 nativeModifiers(Qt::KeyboardModifiers modifiers);
+    static quint32 autoRepeatModifier(bool autoRepeat = false);
 
 private:
     QHash<quint32, int> m_keyIdMap;

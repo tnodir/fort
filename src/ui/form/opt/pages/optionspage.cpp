@@ -152,6 +152,7 @@ void OptionsPage::onRetranslateUi()
     m_gbStartup->setTitle(tr("Startup"));
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbGlobal->setTitle(tr("Global"));
+    m_gbHotKeys->setTitle(tr("Hot Keys"));
     m_gbProtection->setTitle(tr("Self Protection"));
     m_gbTray->setTitle(tr("Tray"));
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
@@ -172,9 +173,10 @@ void OptionsPage::onRetranslateUi()
     retranslateComboFilterMode();
 
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
-    m_cbHotKeys->setText(tr("Hot Keys"));
-
     m_labelLanguage->setText(tr("Language:"));
+
+    m_cbHotKeysEnabled->setText(tr("Enabled"));
+    m_cbHotKeysGlobal->setText(tr("Global"));
 
     m_cbBootFilter->setText(tr("Stop traffic when Fort Firewall is not running"));
     m_cbFilterLocals->setText(tr("Filter Local Addresses"));
@@ -358,6 +360,10 @@ QLayout *OptionsPage::setupColumn1()
     setupGlobalBox();
     layout->addWidget(m_gbGlobal);
 
+    // Hot Keys Group Box
+    setupHotKeysBox();
+    layout->addWidget(m_gbHotKeys);
+
     // Protection Group Box
     setupProtectionBox();
     layout->addWidget(m_gbProtection);
@@ -464,21 +470,35 @@ void OptionsPage::setupGlobalBox()
     });
     m_cbExplorerMenu->setEnabled(settings()->hasMasterAdmin());
 
-    m_cbHotKeys = ControlUtil::createCheckBox(iniUser()->hotKeyEnabled(), [&](bool checked) {
-        iniUser()->setHotKeyEnabled(checked);
-        ctrl()->setIniUserEdited(/*flagsChanged=*/true);
-    });
-
     // Language Row
     auto langLayout = setupLangLayout();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbExplorerMenu);
-    layout->addWidget(m_cbHotKeys);
     layout->addLayout(langLayout);
 
     m_gbGlobal = new QGroupBox();
     m_gbGlobal->setLayout(layout);
+}
+
+void OptionsPage::setupHotKeysBox()
+{
+    m_cbHotKeysEnabled = ControlUtil::createCheckBox(iniUser()->hotKeyEnabled(), [&](bool checked) {
+        iniUser()->setHotKeyEnabled(checked);
+        ctrl()->setIniUserEdited(true);
+    });
+
+    m_cbHotKeysGlobal = ControlUtil::createCheckBox(iniUser()->hotKeyGlobal(), [&](bool checked) {
+        iniUser()->setHotKeyGlobal(checked);
+        ctrl()->setIniUserEdited(true);
+    });
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbHotKeysEnabled);
+    layout->addWidget(m_cbHotKeysGlobal);
+
+    m_gbHotKeys = new QGroupBox();
+    m_gbHotKeys->setLayout(layout);
 }
 
 QLayout *OptionsPage::setupLangLayout()
@@ -669,7 +689,7 @@ QLayout *OptionsPage::setupTrayActionLayout()
         const TrayIcon::ActionType actionType = static_cast<TrayIcon::ActionType>(index);
 
         TrayIcon::setClickEventActionType(iniUser(), clickType, actionType);
-        ctrl()->setIniUserEdited(/*flagsChanged=*/true);
+        ctrl()->setIniUserEdited(true);
     });
     m_comboTrayAction->setFixedWidth(200);
 
