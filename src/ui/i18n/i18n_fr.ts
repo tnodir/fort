@@ -461,6 +461,17 @@
     </message>
 </context>
 <context>
+    <name>HomeWindow</name>
+    <message>
+        <source>Menu</source>
+        <translation>Menu</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Mon Fort</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -784,6 +795,18 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Show Filter Mode Menu</source>
         <translation>Afficher le menu Mode Filtre</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Activé</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation>Afficher l&apos;icône</translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation>Afficher mon Fort</translation>
     </message>
 </context>
 <context>
@@ -1537,6 +1560,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Policies</source>
         <translation>Politiques</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Mon Fort</translation>
     </message>
 </context>
 <context>

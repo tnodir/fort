@@ -461,6 +461,17 @@
     </message>
 </context>
 <context>
+    <name>HomeWindow</name>
+    <message>
+        <source>Menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -782,6 +793,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Show Filter Mode Menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
         <translation></translation>
     </message>
 </context>
@@ -1532,6 +1555,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Policies</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>My Fort</source>
         <translation></translation>
     </message>
 </context>

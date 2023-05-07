@@ -461,6 +461,17 @@
     </message>
 </context>
 <context>
+    <name>HomeWindow</name>
+    <message>
+        <source>Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -785,6 +796,18 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Show Filter Mode Menu</source>
         <translation>Prikaži meni Način filtra</translation>
     </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Omogočeno</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -985,7 +1008,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pozor: Možnost &apos;Uniči proces&apos; je zelo nevarna!!!
+
+Bodite previdni pri uničevanju sistemskih storitev ali drugih pomembnih programov!
+To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</translation>
     </message>
 </context>
 <context>
@@ -1534,6 +1560,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Policies</source>
         <translation>Politike</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

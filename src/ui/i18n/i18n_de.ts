@@ -240,7 +240,7 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Optimierungen</translation>
     </message>
 </context>
 <context>
@@ -411,7 +411,7 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Optimierungen</translation>
     </message>
 </context>
 <context>
@@ -458,6 +458,17 @@
     <message>
         <source>Restart Now?</source>
         <translation>Jetzt neustarten?</translation>
+    </message>
+</context>
+<context>
+    <name>HomeWindow</name>
+    <message>
+        <source>Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -785,6 +796,18 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <source>Show Filter Mode Menu</source>
         <translation>Filtermodus-Menü anzeigen</translation>
     </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Aktiviert</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -985,7 +1008,10 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Achtung: Die Option &apos;Prozess beenden&apos; ist sehr gefährlich!!!
+
+Seien Sie vorsichtig, wenn Sie Systemdienste oder andere wichtige Programme beenden!
+Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</translation>
     </message>
 </context>
 <context>
@@ -1534,6 +1560,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Policies</source>
         <translation>Richtlinien</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

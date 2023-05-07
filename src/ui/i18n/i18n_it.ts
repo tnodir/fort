@@ -461,6 +461,17 @@
     </message>
 </context>
 <context>
+    <name>HomeWindow</name>
+    <message>
+        <source>Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Bad IP address</source>
@@ -783,6 +794,18 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Show Filter Mode Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation type="unfinished">Abilitato</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1533,6 +1556,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Policies</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>My Fort</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

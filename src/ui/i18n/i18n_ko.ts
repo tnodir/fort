@@ -240,7 +240,7 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>트윅</translation>
     </message>
 </context>
 <context>
@@ -411,7 +411,7 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>트윅</translation>
     </message>
 </context>
 <context>
@@ -458,6 +458,17 @@
     <message>
         <source>Restart Now?</source>
         <translation>지금 재시작?</translation>
+    </message>
+</context>
+<context>
+    <name>HomeWindow</name>
+    <message>
+        <source>Menu</source>
+        <translation>메뉴</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>내 Fort</translation>
     </message>
 </context>
 <context>
@@ -785,6 +796,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Show Filter Mode Menu</source>
         <translation>필터 모드 메뉴 표시</translation>
     </message>
+    <message>
+        <source>Enabled</source>
+        <translation>활성화</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation>아이콘 표시</translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation>내 Fort 표시</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -985,7 +1008,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Attention: The &apos;Kill Process&apos; option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</translation>
     </message>
 </context>
 <context>
@@ -1534,6 +1560,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Policies</source>
         <translation>정책</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>내 Fort</translation>
     </message>
 </context>
 <context>

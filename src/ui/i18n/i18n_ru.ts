@@ -260,6 +260,10 @@
 <context>
     <name>ConfUtil</name>
     <message>
+        <source>Too many application paths</source>
+        <translation>Слишком много путей приложений</translation>
+    </message>
+    <message>
         <source>Bad Include IP address: #%1 %2</source>
         <translation>Некорректный IP адрес для включения: #%1 %2</translation>
     </message>
@@ -274,10 +278,6 @@
     <message>
         <source>Number of Application Groups must be between 1 and %1</source>
         <translation>Количество групп приложений должно быть от 1 до %1</translation>
-    </message>
-    <message>
-        <source>Too many application paths</source>
-        <translation>Слишком много путей приложений</translation>
     </message>
     <message>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
@@ -440,24 +440,35 @@
 <context>
     <name>FortManager</name>
     <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
-    </message>
-    <message>
         <source>Application is already running!</source>
         <translation>Приложение уже запущено!</translation>
-    </message>
-    <message>
-        <source>Restart Required</source>
-        <translation>Требуется перезапуск</translation>
     </message>
     <message>
         <source>Quota Alert</source>
         <translation>Предупреждение о квоте трафика</translation>
     </message>
     <message>
+        <source>Restart Required</source>
+        <translation>Требуется перезапуск</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
+    </message>
+    <message>
         <source>Restart Now?</source>
         <translation>Перезапустить сейчас?</translation>
+    </message>
+</context>
+<context>
+    <name>HomeWindow</name>
+    <message>
+        <source>Menu</source>
+        <translation>Меню</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Мой Форт</translation>
     </message>
 </context>
 <context>
@@ -471,6 +482,10 @@
         <translation>Некорректный формат</translation>
     </message>
     <message>
+        <source>Bad mask</source>
+        <translation>Некорректная маска</translation>
+    </message>
+    <message>
         <source>Bad IP address</source>
         <translation>Некорректный IP адрес</translation>
     </message>
@@ -481,10 +496,6 @@
     <message>
         <source>Bad range</source>
         <translation>Некорректный диапазон</translation>
-    </message>
-    <message>
-        <source>Bad mask</source>
-        <translation>Некорректная маска</translation>
     </message>
 </context>
 <context>
@@ -596,6 +607,10 @@
         <translation>Пароль:</translation>
     </message>
     <message>
+        <source>Lock the password (unlocked till &quot;%1&quot;)</source>
+        <translation>Заблокировать пароль (разблокировано до &quot;%1&quot;)</translation>
+    </message>
+    <message>
         <source>Language:</source>
         <translation>Язык:</translation>
     </message>
@@ -606,18 +621,6 @@
     <message>
         <source>Download</source>
         <translation>Загрузка</translation>
-    </message>
-    <message>
-        <source>Installed</source>
-        <translation>Установлен</translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation>Не установлен</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Удалить драйвер?</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -632,8 +635,16 @@
         <translation>Для всех пользователей</translation>
     </message>
     <message>
-        <source>Lock the password (unlocked till &quot;%1&quot;)</source>
-        <translation>Заблокировать пароль (разблокировано до &quot;%1&quot;)</translation>
+        <source>Installed</source>
+        <translation>Установлен</translation>
+    </message>
+    <message>
+        <source>Not Installed</source>
+        <translation>Не установлен</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Удалить драйвер?</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -784,6 +795,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Show Filter Mode Menu</source>
         <translation>Показать меню Режима фильтра</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Включено</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation>Показать Иконку</translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation>Показать Мой Форт</translation>
     </message>
 </context>
 <context>
@@ -994,16 +1017,8 @@ It can cause a Windows malfunction or totally unusable.</source>
 <context>
     <name>ProgramsWindow</name>
     <message>
-        <source>Add</source>
-        <translation>Добавить</translation>
-    </message>
-    <message>
         <source>Edit</source>
         <translation>Изменить</translation>
-    </message>
-    <message>
-        <source>Purge All</source>
-        <translation>Прочистить всё</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1014,20 +1029,28 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Опции</translation>
+        <source>Add</source>
+        <translation>Добавить</translation>
     </message>
     <message>
-        <source>Are you sure to remove selected program(s)?</source>
-        <translation>Удалить выбранные программы?</translation>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Purge All</source>
+        <translation>Прочистить всё</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Опции</translation>
     </message>
     <message>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Удалить</translation>
+        <source>Are you sure to remove selected program(s)?</source>
+        <translation>Удалить выбранные программы?</translation>
     </message>
     <message>
         <source>Are you sure to remove all non-existent programs?</source>
@@ -1167,6 +1190,14 @@ It can cause a Windows malfunction or totally unusable.</source>
 <context>
     <name>StatisticsPage</name>
     <message>
+        <source>Collect Traffic Statistics</source>
+        <translation>Собирать статистику трафика</translation>
+    </message>
+    <message>
+        <source>Collect Traffic, when Filter Disabled</source>
+        <translation>Собирать трафик, когда Фильтр Отключен</translation>
+    </message>
+    <message>
         <source>Active time period:</source>
         <translation>Активный период:</translation>
     </message>
@@ -1195,20 +1226,20 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation> месяц(ев)</translation>
     </message>
     <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>Хранить количество для &apos;Разрешённые соединения&apos;:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>Хранить количество для &apos;Блокированные соединения&apos;:</translation>
-    </message>
-    <message>
         <source>Day&apos;s Quota:</source>
         <translation>Квота на день</translation>
     </message>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Квота на месяц</translation>
+    </message>
+    <message>
+        <source>Keep count for &apos;Allowed connections&apos;:</source>
+        <translation>Хранить количество для &apos;Разрешённые соединения&apos;:</translation>
+    </message>
+    <message>
+        <source>Keep count for &apos;Blocked connections&apos;:</source>
+        <translation>Хранить количество для &apos;Блокированные соединения&apos;:</translation>
     </message>
     <message>
         <source>Graph</source>
@@ -1269,14 +1300,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Grid:</source>
         <translation>Сетка:</translation>
-    </message>
-    <message>
-        <source>Collect Traffic Statistics</source>
-        <translation>Собирать статистику трафика</translation>
-    </message>
-    <message>
-        <source>Collect Traffic, when Filter Disabled</source>
-        <translation>Собирать трафик, когда Фильтр Отключен</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1538,6 +1561,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Policies</source>
         <translation>Политики</translation>
     </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Мой Форт</translation>
+    </message>
 </context>
 <context>
     <name>WindowManager</name>
@@ -1588,6 +1615,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Сохранить как текст</translation>
     </message>
     <message>
+        <source>Edit Zone</source>
+        <translation>Редактирование зоны</translation>
+    </message>
+    <message>
         <source>Zone Name:</source>
         <translation>Наименование зоны:</translation>
     </message>
@@ -1598,14 +1629,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Enabled</source>
         <translation>Включено</translation>
-    </message>
-    <message>
-        <source>Text files (*.txt);;All files (*.*)</source>
-        <translation>Текстовые файлы (*.txt);;Все файлы (*.*)</translation>
-    </message>
-    <message>
-        <source>Cannot save Zone addresses as text file</source>
-        <translation>Не удалось сохранить адреса Зоны в текстовый файл</translation>
     </message>
     <message>
         <source>Custom URL</source>
@@ -1628,16 +1651,20 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Отмена</translation>
     </message>
     <message>
-        <source>Edit Zone</source>
-        <translation>Редактирование зоны</translation>
-    </message>
-    <message>
         <source>Zones</source>
         <translation>Зоны</translation>
     </message>
     <message>
         <source>Are you sure to remove selected zone?</source>
         <translation>Удалить выбранную зону?</translation>
+    </message>
+    <message>
+        <source>Text files (*.txt);;All files (*.*)</source>
+        <translation>Текстовые файлы (*.txt);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <source>Cannot save Zone addresses as text file</source>
+        <translation>Не удалось сохранить адреса Зоны в текстовый файл</translation>
     </message>
 </context>
 </TS>
