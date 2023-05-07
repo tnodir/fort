@@ -5,7 +5,7 @@
     <name>AddressesColumn</name>
     <message>
         <source>Zones</source>
-        <translation>Zones</translation>
+        <translation>区域</translation>
     </message>
     <message>
         <source>Select Zones</source>
@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>Show Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>显示区域</translation>
     </message>
 </context>
 <context>
@@ -68,7 +68,7 @@
     </message>
     <message>
         <source># Examples:</source>
-        <translation>示例：</translation>
+        <translation># 示例：</translation>
     </message>
 </context>
 <context>
@@ -110,11 +110,11 @@
     </message>
     <message>
         <source>File Path</source>
-        <translation type="unfinished"></translation>
+        <translation>文件路径</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>结束进程</translation>
     </message>
 </context>
 <context>
@@ -200,7 +200,7 @@
     </message>
     <message>
         <source># Examples:</source>
-        <translation>示例：</translation>
+        <translation># 示例：</translation>
     </message>
     <message>
         <source># All programs in the sub-path:</source>
@@ -216,23 +216,23 @@
     </message>
     <message>
         <source>Latency:</source>
-        <translation type="unfinished"></translation>
+        <translation>延迟：</translation>
     </message>
     <message>
         <source>Packet Loss:</source>
-        <translation type="unfinished"></translation>
+        <translation>数据包丢失：</translation>
     </message>
     <message>
         <source>Download Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>下载缓冲区大小：</translation>
     </message>
     <message>
         <source>Upload Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>上传缓冲区大小：</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>仅限制局域网的访问</translation>
     </message>
     <message>
         <source>Collect blocked connections</source>
@@ -356,11 +356,11 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤模式逻辑</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>仅限制局域网的访问</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -368,7 +368,7 @@
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>请求连接的限制</translation>
     </message>
 </context>
 <context>
@@ -418,23 +418,23 @@
     <name>FirewallConf</name>
     <message>
         <source>Auto-Learn</source>
-        <translation type="unfinished"></translation>
+        <translation>自动学习</translation>
     </message>
     <message>
         <source>Block, if not allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>如果不允许，则屏蔽</translation>
     </message>
     <message>
         <source>Allow, if not blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>如果未被阻止，则允许</translation>
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>如果未被屏蔽或允许，则忽略</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>请求连接</translation>
     </message>
 </context>
 <context>
@@ -464,18 +464,18 @@
     <name>HomeWindow</name>
     <message>
         <source>Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>菜单</translation>
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>我的堡垒</translation>
     </message>
 </context>
 <context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
-        <translation>分析 %1 出错：%2 (%3)</translation>
+        <translation>第 %1 行错误: %2 (%3)</translation>
     </message>
     <message>
         <source>Bad format</source>
@@ -576,7 +576,7 @@
     </message>
     <message>
         <source>Stop traffic when Fort Firewall is not running</source>
-        <translation>当Longwind防火墙未运行时停止流量</translation>
+        <translation>当堡垒防火墙未运行时停止流量</translation>
     </message>
     <message>
         <source>Filter Enabled</source>
@@ -668,7 +668,7 @@
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
-        <translation>在后台运行Longwind防火墙</translation>
+        <translation>在后台运行堡垒防火墙</translation>
     </message>
     <message>
         <source>Move Profile</source>
@@ -702,7 +702,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Single Click</source>
-        <translation>单击一次</translation>
+        <translation>单击</translation>
     </message>
     <message>
         <source>Double Click</source>
@@ -754,59 +754,59 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Filter Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤模式：</translation>
     </message>
     <message>
         <source>Right Click</source>
-        <translation type="unfinished"></translation>
+        <translation>右键点击</translation>
     </message>
     <message>
         <source>Show Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>显示托盘菜单</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>忽略</translation>
     </message>
     <message>
         <source>Animate Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>动画提示图标</translation>
     </message>
     <message>
         <source>Self Protection</source>
-        <translation type="unfinished"></translation>
+        <translation>自主防护</translation>
     </message>
     <message>
         <source>Disable Service controls</source>
-        <translation type="unfinished"></translation>
+        <translation>禁用服务控制</translation>
     </message>
     <message>
         <source>Check password on Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>卸载时检查密码</translation>
     </message>
     <message>
         <source>Ctrl + Single Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl + 单击</translation>
     </message>
     <message>
         <source>Alt + Single Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt + 单击</translation>
     </message>
     <message>
         <source>Show Filter Mode Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>显示过滤模式菜单</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished">已启用</translation>
+        <translation>已启用</translation>
     </message>
     <message>
         <source>Show Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>显示图标</translation>
     </message>
     <message>
         <source>Show My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>显示我的堡垒</translation>
     </message>
 </context>
 <context>
@@ -855,38 +855,38 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <name>PoliciesWindow</name>
     <message>
         <source>Library of preset rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>预设规则库：</translation>
     </message>
     <message>
         <source>Preset rules for applications:</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序预设规则：</translation>
     </message>
     <message>
         <source>Global rules, applied before application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>全局规则（在应用规则之前应用）：</translation>
     </message>
     <message>
         <source>Global rules, applied after application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>全局规则（在应用规则之后应用）：</translation>
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>策略</translation>
     </message>
 </context>
 <context>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>添加策略</translation>
     </message>
     <message>
         <source>Remove Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>移除策略</translation>
     </message>
     <message>
         <source>Edit Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑策略</translation>
     </message>
 </context>
 <context>
@@ -905,7 +905,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Use Application Group&apos;s Enabled State</source>
-        <translation>使用应用程序组&apos;s 启用状态</translation>
+        <translation>使用应用程序组的启用状态</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -917,11 +917,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Block In:</source>
-        <translation>阻止加入：</translation>
+        <translation>阻止时长：</translation>
     </message>
     <message>
         <source>Block At:</source>
-        <translation>阻止在：</translation>
+        <translation>阻止时间：</translation>
     </message>
     <message>
         <source>Forever</source>
@@ -981,15 +981,15 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>File Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>文件路径：</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>名称：</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>仅限制局域网的访问</translation>
     </message>
     <message>
         <source>Collect blocked connections</source>
@@ -1001,14 +1001,17 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>结束进程</translation>
     </message>
     <message>
         <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished"></translation>
+        <translation>注意：&apos;结束进程&apos; 选项是非常危险的！!
+
+在杀死系统服务或其他重要程序时要小心!
+它可能导致 Windows 故障或完全无法使用。</translation>
     </message>
 </context>
 <context>
@@ -1228,7 +1231,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Month&apos;s Quota:</source>
-        <translation>月&apos;s 配额：</translation>
+        <translation>一个月的配额：</translation>
     </message>
     <message>
         <source>Keep count for &apos;Allowed connections&apos;:</source>
@@ -1360,11 +1363,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Stop Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>当超过配额时，停止互联网流量</translation>
     </message>
     <message>
         <source>Alerted only</source>
-        <translation type="unfinished"></translation>
+        <translation>仅警报</translation>
     </message>
 </context>
 <context>
@@ -1548,19 +1551,19 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Filter Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤模式</translation>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要删除 &quot;%1&quot; 吗？</translation>
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>策略</translation>
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>我的堡垒</translation>
     </message>
 </context>
 <context>
