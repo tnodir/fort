@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.9.1, 2023-05-07:
+- UI: Add "My Fort" window.
+- UI: Options: Tray: Add "Show Icon" flag.
+- UI: Options: Hot Keys: Add "Global" flag.
+- UI: Show Traffic Graph when "Collect Traffic Statistics" is turned off.
+
 v3.9.0, 2023-05-04:
 - UI: Programs: Add "Kill Process" option.
 - UI: Fix "Collect Blocked Connections" functioning when "Collect Traffic Statistics" is turned off.
