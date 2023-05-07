@@ -57,8 +57,8 @@ Name: "zh_CN"; MessagesFile: "{#LANG_PATH}\ChineseSimplified.isl"
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"
 Name: "explorer"; Description: "{cm:WindowsExplorerIntegration}"
-Name: "service"; Description: "Windows Service"
-Name: "portable"; Description: "Portable"; Flags: unchecked
+Name: "service"; Description: "{cm:WindowsService}"
+Name: "portable"; Description: "{cm:Portable}"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
