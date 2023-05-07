@@ -401,4 +401,6 @@ AutoStartProgram=自动启动 %1
 AddonHostProgramNotFound=%1无法找到您所选择的文件夹。%n%n您想要继续吗？
 
 ; *** Fort Firewall messages
-WindowsExplorerIntegration=Windows Explorer integration
+WindowsExplorerIntegration=集成到 Windows 资源管理器
+WindowsService=添加Windows服务
+Portable=便携
