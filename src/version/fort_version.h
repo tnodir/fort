@@ -3,9 +3,9 @@
 
 #define APP_VERSION_MAJOR	3
 #define APP_VERSION_MINOR	9
-#define APP_VERSION_PATCH	1
-#define APP_VERSION_STR		"3.9.1"
-#define APP_VERSION		0x030901
+#define APP_VERSION_PATCH	2
+#define APP_VERSION_STR		"3.9.2"
+#define APP_VERSION		0x030902
 
 #define APP_NAME		"Fort Firewall"
 #define APP_BASE		"FortFirewall"
