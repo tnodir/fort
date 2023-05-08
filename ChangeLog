@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.9.2, 2023-05-08:
+- UI: Activate already running instance, don't show a warning.
+- UI: My Fort: Show menu on activation.
+- UI: Update main icon.
+- UI: Add ability to use custom `icons/` folder from current working dir.
+- UI: Programs: Rename "Purge All" to "Purge Obsolete".
+
 v3.9.1, 2023-05-07:
 - UI: Add "My Fort" window.
 - UI: Options: Tray: Add "Show Icon" flag.
