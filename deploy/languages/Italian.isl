@@ -7,3 +7,5 @@ LanguageCodePage=1252
 
 ; *** Fort Firewall messages
 WindowsExplorerIntegration=Windows Explorer integration
+WindowsService=Windows Service
+Portable=Portable
