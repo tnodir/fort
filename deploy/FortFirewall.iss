@@ -147,7 +147,7 @@ begin
   try
     Form.ClientWidth := ScaleX(256);
     Form.ClientHeight := ScaleY(100);
-    Form.Caption := 'Uninstall Password';
+    Form.Caption := ExpandConstant('{cm:UninstallPassword}');
     Form.BorderIcons := [biSystemMenu];
     Form.BorderStyle := bsDialog;
     Form.Center;
@@ -158,7 +158,7 @@ begin
     OKButton.Height := ScaleY(23);
     OKButton.Left := Form.ClientWidth - ScaleX(75 + 6 + 75 + 50);
     OKButton.Top := Form.ClientHeight - ScaleY(23 + 10);
-    OKButton.Caption := 'OK';
+    OKButton.Caption := ExpandConstant('{cm:UninstallPasswordOK}');
     OKButton.ModalResult := mrOk;
     OKButton.Default := true;
 
@@ -168,7 +168,7 @@ begin
     CancelButton.Height := ScaleY(23);
     CancelButton.Left := Form.ClientWidth - ScaleX(75 + 50);
     CancelButton.Top := Form.ClientHeight - ScaleY(23 + 10);
-    CancelButton.Caption := 'Cancel';
+    CancelButton.Caption := ExpandConstant('{cm:UninstallPasswordCancel}');
     CancelButton.ModalResult := mrCancel;
     CancelButton.Cancel := True;
 
@@ -205,7 +205,7 @@ begin
 
   if GetSHA1OfString(AskPassword()) <> passwordHash then
   begin
-    SuppressibleMsgBox('Wrong password', mbError, MB_OK, IDOK);
+    SuppressibleMsgBox(ExpandConstant('{cm:WrongPassword}'), mbError, MB_OK, IDOK);
 
     Result := False;
     Exit;
@@ -218,7 +218,7 @@ function InitializeSetup: Boolean;
 begin
   if HVCIEnabled() then
   begin
-    SuppressibleMsgBox('This program is not compatible with HVCI (Core Isolation).', mbCriticalError, MB_OK, IDOK);
+    SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithHVCI}'), mbCriticalError, MB_OK, IDOK);
 
     Result := False;
     Exit;
@@ -247,7 +247,7 @@ begin
   case CurUninstallStep of
     usPostUninstall:
       begin
-        if MsgBox(ExpandConstant('Delete config & data files?'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
+        if MsgBox(ExpandConstant('{cm:IsDeleteData}'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then
           begin
             DelTree(ExpandConstant('{%ProgramData}\{#APP_NAME}'), True, True, True);
             DelTree(ExpandConstant('{localappdata}\{#APP_NAME}'), True, True, True);
