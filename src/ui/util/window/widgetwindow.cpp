@@ -34,6 +34,8 @@ void WidgetWindow::hideEvent(QHideEvent *event)
 
 void WidgetWindow::closeEvent(QCloseEvent *event)
 {
+    m_isClosing = true;
+
     emit aboutToClose();
 
     QWidget::closeEvent(event);

@@ -25,7 +25,7 @@ HomeWindow::HomeWindow(QWidget *parent) :
     setupStateWatcher();
 
     connect(this, &HomeWindow::activationChanged, this, [&] {
-        if (isActiveWindow()) {
+        if (isActiveWindow() && !isClosing()) {
             m_btMenu->showMenu();
         }
     });
