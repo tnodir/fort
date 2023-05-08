@@ -5,6 +5,8 @@
 #include <QPixmapCache>
 #include <QThread>
 
+#include "fileutil.h"
+
 namespace {
 
 const QLoggingCategory LC("util.iconCache");
@@ -49,10 +51,21 @@ QPixmap IconCache::file(const QString &filePath)
 {
     checkThread();
 
+    QString adjustedFilePath = filePath;
+
+    // Try to use "./icons/" folder from current working dir.
+    if (filePath.startsWith(':')) {
+        adjustedFilePath[0] = '.';
+
+        if (!FileUtil::fileExists(adjustedFilePath)) {
+            adjustedFilePath = filePath;
+        }
+    }
+
     QPixmap pixmap;
-    if (!find(filePath, &pixmap)) {
-        pixmap.load(filePath);
-        insert(filePath, pixmap);
+    if (!find(adjustedFilePath, &pixmap)) {
+        pixmap.load(adjustedFilePath);
+        insert(adjustedFilePath, pixmap);
     }
     return pixmap;
 }
