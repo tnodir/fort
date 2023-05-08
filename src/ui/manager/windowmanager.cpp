@@ -146,14 +146,6 @@ void WindowManager::closeMainWindow()
     m_mainWindow = nullptr;
 }
 
-void WindowManager::setupHomeWindow()
-{
-    m_homeWindow = new HomeWindow();
-    m_homeWindow->restoreWindowState();
-
-    connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::closeHomeWindow);
-}
-
 void WindowManager::setupProgramsWindow()
 {
     m_progWindow = new ProgramsWindow();
@@ -269,14 +261,27 @@ void WindowManager::showTrayMessage(const QString &message, WindowManager::TrayM
     m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
 }
 
+void WindowManager::setupHomeWindow(bool quitOnClose)
+{
+    if (m_homeWindow)
+        return;
+
+    m_homeWindow = new HomeWindow();
+    m_homeWindow->restoreWindowState();
+
+    if (quitOnClose) {
+        connect(m_homeWindow, &HomeWindow::aboutToClose, trayIcon(), &TrayIcon::quitProgram);
+    } else {
+        connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::closeHomeWindow);
+    }
+}
+
 void WindowManager::showHomeWindow()
 {
     if (!widgetVisibleByCheckPassword(m_homeWindow))
         return;
 
-    if (!m_homeWindow) {
-        setupHomeWindow();
-    }
+    setupHomeWindow();
 
     showWidget(m_homeWindow);
 }
@@ -291,10 +296,6 @@ void WindowManager::closeHomeWindow()
 
     m_homeWindow->deleteLater();
     m_homeWindow = nullptr;
-
-    if (!trayIcon()->isVisible()) {
-        trayIcon()->quitProgram();
-    }
 }
 
 void WindowManager::showProgramsWindow()

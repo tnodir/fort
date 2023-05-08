@@ -57,6 +57,7 @@ public slots:
     void showTrayMessage(
             const QString &message, WindowManager::TrayMessageType type = MessageOptions);
 
+    void setupHomeWindow(bool quitOnClose = false);
     void showHomeWindow();
     void closeHomeWindow();
 
@@ -107,7 +108,6 @@ private:
     void setupMainWindow();
     void closeMainWindow();
 
-    void setupHomeWindow();
     void setupProgramsWindow();
     void setupOptionsWindow();
     void setupPoliciesWindow();

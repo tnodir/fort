@@ -23,6 +23,12 @@ HomeWindow::HomeWindow(QWidget *parent) :
     setupUi();
     setupController();
     setupStateWatcher();
+
+    connect(this, &HomeWindow::activationChanged, this, [&] {
+        if (isActiveWindow()) {
+            m_btMenu->showMenu();
+        }
+    });
 }
 
 ConfManager *HomeWindow::confManager() const

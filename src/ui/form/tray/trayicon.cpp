@@ -240,6 +240,9 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 
 void TrayIcon::updateTrayIcon(bool alerted)
 {
+    if (m_alerted == alerted)
+        return;
+
     m_alerted = alerted;
     m_animatedAlert = false;
 
