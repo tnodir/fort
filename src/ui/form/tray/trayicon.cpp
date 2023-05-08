@@ -342,7 +342,7 @@ void TrayIcon::setupTrayMenu()
 {
     m_menu = ControlUtil::createMenu(windowManager()->mainWindow());
 
-    m_homeAction = addAction(m_menu, IconCache::icon(":/icons/sheild-96.png"), QString(),
+    m_homeAction = addAction(m_menu, IconCache::icon(":/icons/fort-96.png"), QString(),
             windowManager(), SLOT(showHomeWindow()));
     addHotKey(m_homeAction, iniUser()->hotKeyHome());
 
@@ -542,11 +542,11 @@ void TrayIcon::updateTrayIconShape()
     QString mainIconPath;
 
     if (!conf()->filterEnabled() || !driverManager()->isDeviceOpened()) {
-        mainIconPath = ":/icons/sheild-96_gray.png";
+        mainIconPath = ":/icons/fort-96_gray.png";
     } else if (conf()->stopTraffic() || conf()->stopInetTraffic()) {
-        mainIconPath = ":/icons/sheild-96_red.png";
+        mainIconPath = ":/icons/fort-96_red.png";
     } else {
-        mainIconPath = ":/icons/sheild-96.png";
+        mainIconPath = ":/icons/fort-96.png";
     }
 
     const auto icon = m_alerted

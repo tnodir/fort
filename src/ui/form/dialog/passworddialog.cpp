@@ -62,7 +62,7 @@ void PasswordDialog::setupUi()
     this->setFont(WindowManager::defaultFont());
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/sheild-96.png", ":/icons/key.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort-96.png", ":/icons/key.png"));
 }
 
 QLayout *PasswordDialog::setupPasswordLayout()

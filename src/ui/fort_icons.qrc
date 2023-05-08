@@ -25,6 +25,9 @@
     <file>icons/error.png</file>
     <file>icons/filter.png</file>
     <file>icons/folder.png</file>
+    <file>icons/fort-96.png</file>
+    <file>icons/fort-96_gray.png</file>
+    <file>icons/fort-96_red.png</file>
     <file>icons/github.png</file>
     <file>icons/global_telecom.png</file>
     <file>icons/help.png</file>
@@ -36,9 +39,6 @@
     <file>icons/page_copy.png</file>
     <file>icons/pencil.png</file>
     <file>icons/play.png</file>
-    <file>icons/sheild-96.png</file>
-    <file>icons/sheild-96_gray.png</file>
-    <file>icons/sheild-96_red.png</file>
     <file>icons/save_as.png</file>
     <file>icons/scull.png</file>
     <file>icons/server_components.png</file>
