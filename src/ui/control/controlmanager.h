@@ -43,7 +43,8 @@ public:
 
     void closeAllClients();
 
-    bool postCommand();
+    bool processCommandClient();
+    bool postCommand(Control::Command command, const QVariantList &args);
 
 private slots:
     void onNewConnection();

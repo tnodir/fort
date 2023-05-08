@@ -117,7 +117,7 @@ int main(int argc, char *argv[])
     ioc.setService<ControlManager>(controlManager);
 
     if (controlManager.isCommandClient()) // Send control command to running instance
-        return controlManager.postCommand() ? 0 : FORT_ERROR_CONTROL;
+        return controlManager.processCommandClient() ? 0 : FORT_ERROR_CONTROL;
 
     // Setup Fort Manager
     FortManager::setupResources();

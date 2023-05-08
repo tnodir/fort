@@ -96,7 +96,7 @@ void ControlManager::closeAllClients()
     }
 }
 
-bool ControlManager::postCommand()
+bool ControlManager::processCommandClient()
 {
     const auto settings = IoC<FortSettings>();
 
@@ -108,6 +108,15 @@ bool ControlManager::postCommand()
         return false;
     }
 
+    const QVariantList args = ControlWorker::buildArgs(settings->args());
+    if (args.isEmpty())
+        return false;
+
+    return postCommand(command, args);
+}
+
+bool ControlManager::postCommand(Control::Command command, const QVariantList &args)
+{
     QLocalSocket socket;
     ControlWorker w(&socket);
 
@@ -117,10 +126,6 @@ bool ControlManager::postCommand()
         return false;
 
     // Send data
-    const QVariantList args = ControlWorker::buildArgs(settings->args());
-    if (args.isEmpty())
-        return false;
-
     return w.sendCommand(command, args) && w.waitForSent();
 }
 
@@ -208,6 +213,7 @@ bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
 
     const QString progCommand = p.args.at(0).toString();
 
+    // Add command
     if (progCommand == "add") {
         if (argsSize < 2) {
             p.errorMessage = "prog add <app-path>";
@@ -219,6 +225,11 @@ bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
             return false;
         }
 
+        return true;
+    }
+    // Show command
+    else if (progCommand == "show") {
+        IoC<WindowManager>()->showHomeWindow();
         return true;
     }
 
