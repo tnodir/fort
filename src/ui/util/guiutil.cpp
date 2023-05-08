@@ -33,8 +33,11 @@ QIcon GuiUtil::overlayIcon(
     if (IconCache::find(key, &pixmap))
         return pixmap;
 
+    constexpr int xOffset = 2;
+    constexpr int yOffset = 3;
+
     constexpr int baseWidth = 32;
-    constexpr int overlayWidth = 16;
+    constexpr int overlayWidth = 23;
     constexpr int deltaWidth = baseWidth - overlayWidth;
 
     pixmap = IconCache::file(basePath);
@@ -42,8 +45,8 @@ QIcon GuiUtil::overlayIcon(
         pixmap = pixmap.scaled(baseWidth, baseWidth);
     }
 
-    const int dx = (alignment & Qt::AlignRight) ? deltaWidth : 0;
-    const int dy = (alignment & Qt::AlignBottom) ? deltaWidth : 0;
+    const int dx = (alignment & Qt::AlignRight) ? deltaWidth + xOffset : -xOffset;
+    const int dy = (alignment & Qt::AlignBottom) ? deltaWidth + yOffset : -yOffset;
 
     const QRect rect = QRect(dx, dy, overlayWidth, overlayWidth);
 
