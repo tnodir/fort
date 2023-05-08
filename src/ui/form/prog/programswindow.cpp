@@ -170,7 +170,7 @@ void ProgramsWindow::setupUi()
     this->setFont(WindowManager::defaultFont());
 
     // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort-96.png", ":/icons/application.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/application.png"));
 
     // Size
     this->setMinimumSize(500, 400);

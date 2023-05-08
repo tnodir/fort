@@ -142,7 +142,7 @@ void PoliciesWindow::setupUi()
 
     // Icon
     this->setWindowIcon(
-            GuiUtil::overlayIcon(":/icons/fort-96.png", ":/icons/traffic_lights.png"));
+            GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/traffic_lights.png"));
 
     // Size
     this->setMinimumSize(500, 400);
