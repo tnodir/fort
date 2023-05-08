@@ -56,5 +56,10 @@ Please support the project:
 
 [PVS-Studio](https://pvs-studio.com/en/pvs-studio/?utm_source=github&utm_medium=organic&utm_campaign=open_source) - static analyzer for C, C++, C#, and Java code.
 
+## Attribution
+
+  - [FatCow Free Icons](http://www.fatcow.com/free-icons)
+  - [Fortress icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/fortress)
+
 --
 Nodir Temirkhodjaev, <nodir.temir@gmail.com>
