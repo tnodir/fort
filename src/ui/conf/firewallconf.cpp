@@ -148,8 +148,8 @@ QStringList FirewallConf::filterModeNames()
 
 QStringList FirewallConf::filterModeIconPaths()
 {
-    return { ":/icons/error.png", ":/icons/help.png", ":/icons/deny.png", ":/icons/accept.png",
-        QString() };
+    return { ":/icons/lightbulb.png", ":/icons/help.png", ":/icons/deny.png", ":/icons/accept.png",
+        ":/icons/road_sign.png" };
 }
 
 void FirewallConf::setActivePeriodEnabled(bool activePeriodEnabled)
