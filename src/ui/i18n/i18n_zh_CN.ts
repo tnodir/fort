@@ -1058,7 +1058,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>清理过时的</translation>
     </message>
 </context>
 <context>

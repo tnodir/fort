@@ -1058,7 +1058,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Purge obsolète</translation>
     </message>
 </context>
 <context>
