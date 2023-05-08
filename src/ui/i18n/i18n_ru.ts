@@ -89,10 +89,6 @@
         <translation>Группа</translation>
     </message>
     <message>
-        <source>State</source>
-        <translation>Состояние</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Время создания</translation>
     </message>
@@ -115,6 +111,10 @@
     <message>
         <source>Kill Process</source>
         <translation>Убить процесс</translation>
+    </message>
+    <message>
+        <source>Action</source>
+        <translation>Действие</translation>
     </message>
 </context>
 <context>

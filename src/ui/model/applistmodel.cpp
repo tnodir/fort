@@ -104,7 +104,7 @@ QVariant AppListModel::headerDataDisplay(int section) const
     case 0:
         return tr("Name");
     case 1:
-        return tr("State");
+        return tr("Action");
     case 2:
         return tr("Group");
     case 3:

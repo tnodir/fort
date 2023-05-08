@@ -89,10 +89,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>State</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation></translation>
     </message>
@@ -114,6 +110,10 @@
     </message>
     <message>
         <source>Kill Process</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Action</source>
         <translation></translation>
     </message>
 </context>

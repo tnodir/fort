@@ -89,10 +89,6 @@
         <translation>Groupe</translation>
     </message>
     <message>
-        <source>State</source>
-        <translation>État</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Heure de création</translation>
     </message>
@@ -115,6 +111,10 @@
     <message>
         <source>Kill Process</source>
         <translation>Tuer le processus</translation>
+    </message>
+    <message>
+        <source>Action</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

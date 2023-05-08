@@ -97,10 +97,6 @@
         <translation>Gruppo</translation>
     </message>
     <message>
-        <source>State</source>
-        <translation>Stato</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Data creazione</translation>
     </message>
@@ -114,6 +110,10 @@
     </message>
     <message>
         <source>Kill Process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

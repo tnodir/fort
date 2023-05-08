@@ -89,10 +89,6 @@
         <translation>群组</translation>
     </message>
     <message>
-        <source>State</source>
-        <translation>状态</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>创建时间</translation>
     </message>
@@ -115,6 +111,10 @@
     <message>
         <source>Kill Process</source>
         <translation>结束进程</translation>
+    </message>
+    <message>
+        <source>Action</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

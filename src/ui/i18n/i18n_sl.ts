@@ -89,10 +89,6 @@
         <translation>Skupina</translation>
     </message>
     <message>
-        <source>State</source>
-        <translation>Stanje</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Čas nastanka</translation>
     </message>
@@ -115,6 +111,10 @@
     <message>
         <source>Kill Process</source>
         <translation>Uniči proces</translation>
+    </message>
+    <message>
+        <source>Action</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

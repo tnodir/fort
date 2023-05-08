@@ -89,10 +89,6 @@
         <translation>그룹</translation>
     </message>
     <message>
-        <source>State</source>
-        <translation>상태</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>생성 시간</translation>
     </message>
@@ -115,6 +111,10 @@
     <message>
         <source>Kill Process</source>
         <translation>프로세스 종료</translation>
+    </message>
+    <message>
+        <source>Action</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -89,10 +89,6 @@
         <translation>Gruppe</translation>
     </message>
     <message>
-        <source>State</source>
-        <translation>Status</translation>
-    </message>
-    <message>
         <source>Creation Time</source>
         <translation>Zeitpunkt der Erstellung</translation>
     </message>
@@ -115,6 +111,10 @@
     <message>
         <source>Kill Process</source>
         <translation>Prozess beenden</translation>
+    </message>
+    <message>
+        <source>Action</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
