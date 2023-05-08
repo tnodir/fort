@@ -12,6 +12,7 @@
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
+#include <form/tray/trayicon.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <model/applistmodel.h>
@@ -134,7 +135,7 @@ void ProgramsWindow::retranslateUi()
     m_btRemoveApp->setText(tr("Remove"));
 
     m_btServices->setText(tr("Services"));
-    m_btOptions->setText(tr("Options"));
+    m_btMenu->setText(tr("Menu"));
 
     appListModel()->refresh();
 
@@ -239,10 +240,8 @@ QLayout *ProgramsWindow::setupHeader()
             &WindowManager::showServicesWindow);
 
     // Options button
-    m_btOptions = ControlUtil::createLinkButton(":/icons/cog.png");
-
-    connect(m_btOptions, &QAbstractButton::clicked, windowManager(),
-            &WindowManager::showOptionsWindow);
+    m_btMenu = ControlUtil::createLinkButton(":/icons/node-tree.png");
+    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
 
     layout->addWidget(m_btEdit);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
@@ -253,7 +252,7 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addStretch();
     layout->addWidget(m_btServices);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addWidget(m_btOptions);
+    layout->addWidget(m_btMenu);
 
     return layout;
 }

@@ -90,7 +90,7 @@ private:
     QPushButton *m_btRemoveApp = nullptr;
     QPushButton *m_btEdit = nullptr;
     QPushButton *m_btServices = nullptr;
-    QPushButton *m_btOptions = nullptr;
+    QPushButton *m_btMenu = nullptr;
     ProgramEditDialog *m_formAppEdit = nullptr;
     TableView *m_appListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;

@@ -107,7 +107,7 @@ QLayout *HomeWindow::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    m_btMenu = ControlUtil::createButton(":/icons/application_double.png");
+    m_btMenu = ControlUtil::createButton(":/icons/node-tree.png");
     m_btMenu->setMenu(windowManager()->trayIcon()->menu());
 
     layout->addWidget(m_btMenu);
