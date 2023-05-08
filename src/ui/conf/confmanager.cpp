@@ -159,14 +159,13 @@ const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1
 const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, path, name,"
                                  "    use_group_perm, apply_child, lan_only,"
                                  "    log_blocked, log_conn, blocked, kill_process,"
-                                 "    creat_time, end_time)"
+                                 "    end_time, creat_time)"
                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12)"
                                  "  ON CONFLICT(path) DO UPDATE"
                                  "  SET app_group_id = ?1, name = ?3,"
                                  "    use_group_perm = ?4, apply_child = ?5,"
                                  "    lan_only = ?6, log_blocked = ?7, log_conn = ?8,"
-                                 "    blocked = ?9, kill_process = ?10,"
-                                 "    creat_time = ?11, end_time = ?12"
+                                 "    blocked = ?9, kill_process = ?10, end_time = ?11"
                                  "  RETURNING app_id;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
@@ -1195,7 +1194,7 @@ bool ConfManager::addOrUpdateApp(const App &app)
     const auto vars = QVariantList()
             << appGroup->id() << app.appPath << app.appName << app.useGroupPerm << app.applyChild
             << app.lanOnly << app.logBlocked << app.logConn << app.blocked << app.killProcess
-            << QDateTime::currentDateTime() << (!app.endTime.isNull() ? app.endTime : QVariant());
+            << (!app.endTime.isNull() ? app.endTime : QVariant()) << QDateTime::currentDateTime();
 
     const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
 
