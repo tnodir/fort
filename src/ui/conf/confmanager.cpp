@@ -1240,17 +1240,23 @@ bool ConfManager::updateDriverAppBlocked(
     app.killProcess = stmt.columnBool(8);
     const bool wasAlerted = stmt.columnBool(9);
 
-    if (blocked != app.blocked || killProcess != app.killProcess || wasAlerted) {
-        app.blocked = blocked;
-        app.killProcess = killProcess;
+    if (!updateDriverCheckUpdateApp(app, blocked, killProcess, /*force=*/wasAlerted))
+        return false;
 
-        if (!updateDriverUpdateApp(app))
-            return false;
-
-        changed = true;
-    }
+    changed = true;
 
     return true;
+}
+
+bool ConfManager::updateDriverCheckUpdateApp(App &app, bool blocked, bool killProcess, bool force)
+{
+    if (!force && blocked == app.blocked && killProcess == app.killProcess)
+        return true;
+
+    app.blocked = blocked;
+    app.killProcess = killProcess;
+
+    return updateDriverUpdateApp(app);
 }
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)

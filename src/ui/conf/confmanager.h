@@ -119,6 +119,7 @@ private:
 
     bool addOrUpdateApp(const App &app);
     bool updateDriverAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &changed);
+    bool updateDriverCheckUpdateApp(App &app, bool blocked, bool killProcess, bool force);
 
     bool validateConf(const FirewallConf &newConf);
 
