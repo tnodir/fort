@@ -100,11 +100,17 @@ inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
     return FALSE;
 }
 
+inline static BOOL fort_callout_ale_log_app_path_check(
+        FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
+{
+    return app_flags.v == 0 && conf_flags.filter_enabled
+            && (conf_flags.allow_all_new || conf_flags.log_blocked);
+}
+
 inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
 {
-    if (app_flags.v != 0 || !conf_flags.filter_enabled
-            || !(conf_flags.allow_all_new || conf_flags.log_blocked))
+    if (!fort_callout_ale_log_app_path_check(conf_flags, app_flags))
         return;
 
     app_flags.log_blocked = TRUE;
