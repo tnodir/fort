@@ -610,22 +610,29 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     fort_flow_delete(&fort_device()->stat, flowContext);
 }
 
+inline static BOOL fort_callout_transport_shape(PFORT_CALLOUT_ARG ca)
+{
+    if (FWPS_IS_METADATA_FIELD_PRESENT(ca->inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED))
+        return FALSE;
+
+    if (ca->netBufList == NULL)
+        return FALSE;
+
+    /* Process the Packet by Shaper */
+    return fort_shaper_packet_process(&fort_device()->shaper, ca);
+}
+
 static void fort_callout_transport_classify(PFORT_CALLOUT_ARG ca)
 {
     if ((ca->classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0
             || ca->classifyOut->actionType == FWP_ACTION_BLOCK)
         return; /* Can't act on the packet */
 
-    if (!FWPS_IS_METADATA_FIELD_PRESENT(ca->inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)
-            && ca->netBufList != NULL
-            /* Process the Packet by Shaper */
-            && fort_shaper_packet_process(&fort_device()->shaper, ca)) {
-
+    if (fort_callout_transport_shape(ca)) {
         fort_callout_classify_drop(ca->classifyOut); /* drop */
-        return;
+    } else {
+        fort_callout_classify_permit(ca->filter, ca->classifyOut); /* permit */
     }
-
-    fort_callout_classify_permit(ca->filter, ca->classifyOut); /* permit */
 }
 
 static void NTAPI fort_callout_transport_classify_in(const FWPS_INCOMING_VALUES0 *inFixedValues,
