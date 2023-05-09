@@ -173,9 +173,9 @@ inline static BOOL fort_callout_ale_add_pending(
     return TRUE;
 }
 
-inline static BOOL fort_callout_ale_check_blocked(PCFORT_CALLOUT_ARG ca,
-        PCFORT_CALLOUT_ALE_INDEX ci, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
-        FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
+inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_ALE_INDEX ci,
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags,
+        FORT_APP_FLAGS app_flags)
 {
     if (app_flags.v == 0 && conf_flags.ask_to_connect) {
         return fort_callout_ale_add_pending(ca, cx, conf_flags);
@@ -187,18 +187,24 @@ inline static BOOL fort_callout_ale_check_blocked(PCFORT_CALLOUT_ARG ca,
     return fort_callout_ale_associate_flow(ca, ci, cx, conf_ref, app_flags);
 }
 
+inline static BOOL fort_callout_ale_is_allowed(PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
+        FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
+{
+    return !cx->blocked /* collect traffic, when Filter Disabled */
+            /* "Allow, if not blocked" or "Ask to Connect" */
+            || (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.ask_to_connect))
+            /* check the conf for a blocked app */
+            || !fort_conf_app_blocked(&conf_ref->conf, app_flags, &cx->block_reason);
+}
+
 inline static void fort_callout_ale_log(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_ALE_INDEX ci,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
 
-    if (!cx->blocked /* collect traffic, when Filter Disabled */
-            /* collect new Blocked Programs or Ask to Connect */
-            || (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.ask_to_connect))
-            /* check the conf for a blocked app */
-            || !fort_conf_app_blocked(&conf_ref->conf, app_flags, &cx->block_reason)) {
+    if (fort_callout_ale_is_allowed(cx, conf_ref, conf_flags, app_flags)) {
 
-        if (fort_callout_ale_check_blocked(ca, ci, cx, conf_ref, conf_flags, app_flags))
+        if (fort_callout_ale_process_flow(ca, ci, cx, conf_ref, conf_flags, app_flags))
             return;
 
         cx->blocked = FALSE; /* allow */
