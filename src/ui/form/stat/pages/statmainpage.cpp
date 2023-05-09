@@ -7,7 +7,9 @@
 
 #include <form/controls/controlutil.h>
 #include <form/stat/statisticscontroller.h>
+#include <form/tray/trayicon.h>
 #include <fortsettings.h>
+#include <manager/windowmanager.h>
 #include <util/iconcache.h>
 
 #include "connectionspage.h"
@@ -44,4 +46,10 @@ void StatMainPage::setupTabBar()
     m_tabBar = new QTabWidget();
     m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
     m_tabBar->addTab(connectionsPage, IconCache::icon(":/icons/connect.png"), QString());
+
+    // Menu button
+    m_btMenu = ControlUtil::createLinkButton(":/icons/node-tree.png");
+    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
+
+    m_tabBar->setCornerWidget(m_btMenu);
 }

@@ -12,7 +12,9 @@
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/opt/optionscontroller.h>
+#include <form/tray/trayicon.h>
 #include <fortsettings.h>
+#include <manager/windowmanager.h>
 #include <util/iconcache.h>
 
 #include "addressespage.h"
@@ -79,6 +81,12 @@ void OptMainPage::setupTabBar()
     m_tabBar->addTab(ControlUtil::wrapToScrollArea(statisticsPage),
             IconCache::icon(":/icons/chart_bar.png"), QString());
     m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
+
+    // Menu button
+    m_btMenu = ControlUtil::createLinkButton(":/icons/node-tree.png");
+    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
+
+    m_tabBar->setCornerWidget(m_btMenu);
 
     connect(m_tabBar, &QTabWidget::currentChanged, this,
             [&](int tabIndex) { m_pages[tabIndex]->onPageActivated(); });

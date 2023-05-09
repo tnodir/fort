@@ -21,6 +21,8 @@ private:
 
 private:
     QTabWidget *m_tabBar = nullptr;
+
+    QPushButton *m_btMenu = nullptr;
 };
 
 #endif // STATMAINPAGE_H

@@ -135,7 +135,6 @@ void ProgramsWindow::retranslateUi()
     m_btRemoveApp->setText(tr("Remove"));
 
     m_btServices->setText(tr("Services"));
-    m_btMenu->setText(tr("Menu"));
 
     appListModel()->refresh();
 
@@ -239,7 +238,7 @@ QLayout *ProgramsWindow::setupHeader()
     connect(m_btServices, &QAbstractButton::clicked, windowManager(),
             &WindowManager::showServicesWindow);
 
-    // Options button
+    // Menu button
     m_btMenu = ControlUtil::createLinkButton(":/icons/node-tree.png");
     m_btMenu->setMenu(windowManager()->trayIcon()->menu());
 

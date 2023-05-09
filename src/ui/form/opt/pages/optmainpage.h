@@ -24,6 +24,8 @@ private:
 private:
     QTabWidget *m_tabBar = nullptr;
 
+    QPushButton *m_btMenu = nullptr;
+
     QPushButton *m_btLogs = nullptr;
     QPushButton *m_btProfile = nullptr;
     QPushButton *m_btStat = nullptr;
