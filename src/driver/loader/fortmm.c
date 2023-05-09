@@ -293,40 +293,57 @@ static BOOL CheckPEHeaderSections(const PIMAGE_NT_HEADERS pNtHeaders)
     return TRUE;
 }
 
+inline static BOOL CheckPEHeaderOptionalValid(const PIMAGE_NT_HEADERS pNtHeaders, DWORD dwSize)
+{
+    /* Check NT header for valid signature */
+    if (pNtHeaders->Signature != IMAGE_NT_SIGNATURE)
+        return FALSE;
+
+    /* Check size of optional headerss */
+    if (dwSize < pNtHeaders->OptionalHeader.SizeOfHeaders)
+        return FALSE;
+
+    /* Check for the correct architecture */
+    if (pNtHeaders->FileHeader.Machine !=
+#if defined(_M_ARM64)
+            IMAGE_FILE_MACHINE_ARM64
+#elif defined(_WIN64)
+            IMAGE_FILE_MACHINE_AMD64
+#else
+            IMAGE_FILE_MACHINE_I386
+#endif
+    )
+        return FALSE;
+
+    /* Check to see if the image is really an executable file */
+    if ((pNtHeaders->FileHeader.Characteristics & (IMAGE_FILE_EXECUTABLE_IMAGE | IMAGE_FILE_DLL))
+            == 0)
+        return FALSE;
+
+    /* Check sections */
+    return CheckPEHeaderSections(pNtHeaders);
+}
+
 static BOOL IsPEHeaderValid(PVOID lpData, DWORD dwSize)
 {
     const PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER) lpData;
 
-    if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE /* Check DOS header for valid signature */
-            /* Make sure size is at least size of headers */
-            || dwSize < (sizeof(IMAGE_DOS_HEADER) + sizeof(IMAGE_OPTIONAL_HEADER))
-            || dwSize < (pDosHeader->e_lfanew + sizeof(IMAGE_NT_HEADERS)))
+    /* Check DOS header for valid signature */
+    if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE)
+        return FALSE;
+
+    /* Make sure size is at least size of headers */
+    if (dwSize < (sizeof(IMAGE_DOS_HEADER) + sizeof(IMAGE_OPTIONAL_HEADER)))
+        return FALSE;
+
+    if (dwSize < (pDosHeader->e_lfanew + sizeof(IMAGE_NT_HEADERS)))
         return FALSE;
 
     /* Check for optional headers */
     const PIMAGE_NT_HEADERS pNtHeaders =
             (PIMAGE_NT_HEADERS) & ((PUCHAR) lpData)[pDosHeader->e_lfanew];
 
-    if (pNtHeaders->Signature != IMAGE_NT_SIGNATURE /* Check NT header for valid signature */
-            /* Check size of optional headerss */
-            || dwSize < pNtHeaders->OptionalHeader.SizeOfHeaders
-            /* Check for the correct architecture */
-            || pNtHeaders->FileHeader.Machine !=
-#if defined(_M_ARM64)
-                    IMAGE_FILE_MACHINE_ARM64
-#elif defined(_WIN64)
-                    IMAGE_FILE_MACHINE_AMD64
-#else
-                    IMAGE_FILE_MACHINE_I386
-#endif
-            /* Check to see if the image is really an executable file */
-            || (pNtHeaders->FileHeader.Characteristics
-                       & (IMAGE_FILE_EXECUTABLE_IMAGE | IMAGE_FILE_DLL))
-                    == 0)
-        return FALSE;
-
-    /* Check sections */
-    return CheckPEHeaderSections(pNtHeaders);
+    return CheckPEHeaderOptionalValid(pNtHeaders, dwSize);
 }
 
 static NTSTATUS InitializeModuleImage(PLOADEDMODULE pModule, const PIMAGE_NT_HEADERS lpNtHeaders,
