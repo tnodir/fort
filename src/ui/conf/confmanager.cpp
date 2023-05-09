@@ -456,6 +456,10 @@ void ConfManager::setUp()
         return;
     }
 
+    if (conf()->ini().progPurgeOnStart()) {
+        purgeApps();
+    }
+
     setupAppEndTimer();
 }
 

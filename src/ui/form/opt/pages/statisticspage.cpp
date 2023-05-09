@@ -70,6 +70,7 @@ void StatisticsPage::onRetranslateUi()
     m_cbLogAlertedBlockedIp->setText(tr("Alerted only"));
     m_lscBlockedIpKeepCount->label()->setText(tr("Keep count for 'Blocked connections':"));
     m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
+    m_cbPurgeOnStart->setText(tr("Purge Obsolete on startup"));
 
     retranslateTrafKeepDayNames();
     retranslateTrafKeepMonthNames();
@@ -388,9 +389,10 @@ void StatisticsPage::setupLogBlockedIp()
 void StatisticsPage::setupProgBox()
 {
     setupLogBlocked();
+    setupPurgeOnStart();
 
     // Layout
-    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogBlocked });
+    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogBlocked, m_cbPurgeOnStart });
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);
@@ -406,6 +408,16 @@ void StatisticsPage::setupLogBlocked()
     });
 
     m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());
+}
+
+void StatisticsPage::setupPurgeOnStart()
+{
+    m_cbPurgeOnStart = ControlUtil::createCheckBox(ini()->progPurgeOnStart(), [&](bool checked) {
+        if (ini()->progPurgeOnStart() != checked) {
+            ini()->setProgPurgeOnStart(checked);
+            ctrl()->setIniEdited();
+        }
+    });
 }
 
 QLayout *StatisticsPage::setupColumn2()

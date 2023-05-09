@@ -38,6 +38,7 @@ private:
     void setupLogBlockedIp();
     void setupProgBox();
     void setupLogBlocked();
+    void setupPurgeOnStart();
     QLayout *setupColumn2();
     void setupGraphBox();
     void setupGraphCheckboxes();
@@ -65,6 +66,7 @@ private:
     QCheckBox *m_cbLogAlertedBlockedIp = nullptr;
     LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
+    QCheckBox *m_cbPurgeOnStart = nullptr;
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
     QCheckBox *m_cbGraphFrameless = nullptr;
     QCheckBox *m_cbGraphClickThrough = nullptr;

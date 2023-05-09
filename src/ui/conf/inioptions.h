@@ -99,6 +99,9 @@ public:
     }
     void setBlockedIpKeepCount(int v) { setValue("stat/blockedIpKeepCount", v); }
 
+    bool progPurgeOnStart() const { return valueBool("prog/purgeOnStart"); }
+    void setProgPurgeOnStart(bool v) { setValue("prog/purgeOnStart", v); }
+
     bool graphWindowAlwaysOnTop() const { return valueBool("graphWindow/alwaysOnTop", true); }
     void setGraphWindowAlwaysOnTop(bool on) { setValue("graphWindow/alwaysOnTop", on); }
 
