@@ -114,7 +114,7 @@
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktion</translation>
     </message>
 </context>
 <context>
@@ -1058,7 +1058,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Veraltete löschen</translation>
     </message>
 </context>
 <context>

@@ -110,11 +110,11 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation>结束进程</translation>
+        <translation>杀死进程</translation>
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>行为</translation>
     </message>
 </context>
 <context>
@@ -285,7 +285,7 @@
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
-        <translation>应用程序的长度&apos;s 路径必须是 &lt; %1</translation>
+        <translation>应用程序路径的长度必须小于 %1</translation>
     </message>
 </context>
 <context>
@@ -961,11 +961,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Week</source>
-        <translation>周</translation>
+        <translation>1 周</translation>
     </message>
     <message>
         <source>Month</source>
-        <translation>月</translation>
+        <translation>1 个月</translation>
     </message>
     <message>
         <source> hour(s)</source>
@@ -1001,14 +1001,14 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation>结束进程</translation>
+        <translation>杀死进程</translation>
     </message>
     <message>
         <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation>注意：&apos;结束进程&apos; 选项是非常危险的！!
+        <translation>注意：&apos;杀死进程&apos; 选项是非常危险的！!
 
 在杀死系统服务或其他重要程序时要小心!
 它可能导致 Windows 故障或完全无法使用。</translation>
@@ -1076,11 +1076,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>RpcManager</name>
     <message>
         <source>Service isn&apos;t available.</source>
-        <translation>服务isn&apos;t可用。</translation>
+        <translation>服务不可用。</translation>
     </message>
     <message>
         <source>Service isn&apos;t responding.</source>
-        <translation>服务isn&apos;t 响应中。</translation>
+        <translation>服务未响应。</translation>
     </message>
     <message>
         <source>Service error.</source>
@@ -1227,7 +1227,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Day&apos;s Quota:</source>
-        <translation>日&apos;s 配额：</translation>
+        <translation>一天的配额：</translation>
     </message>
     <message>
         <source>Month&apos;s Quota:</source>
@@ -1235,11 +1235,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>保留 &apos;允许连接的数量&apos;：</translation>
+        <translation>记录 &apos;已允许的连接&apos; 数：</translation>
     </message>
     <message>
         <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>保留 &apos;允许连接的数量&apos;：</translation>
+        <translation>记录 &apos;已阻止的连接&apos; 数：</translation>
     </message>
     <message>
         <source>Graph</source>
@@ -1255,7 +1255,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Click through</source>
-        <translation>点击通过</translation>
+        <translation>鼠标穿透</translation>
     </message>
     <message>
         <source>Hide on hover</source>
