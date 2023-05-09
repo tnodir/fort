@@ -155,7 +155,7 @@ DiskSpaceMBLabel=至少需要有 [mb] MB 的可用磁盘空间。
 CannotInstallToNetworkDrive=安装程序无法安装到一个网络驱动器。
 CannotInstallToUNCPath=安装程序无法安装到一个UNC路径。
 InvalidPath=您必须输入一个带驱动器卷标的完整路径，例如：%n%nC:\APP%n%n或下列形式的UNC路径：%n%n\\server\share
-InvalidDrive=您选定的驱动器或 UNC 共享不存在或不能访问。请选择其它位置。
+InvalidDrive=您选定的驱动器或 UNC 共匣存在或不能访问。请选择其它位置。
 DiskSpaceWarningTitle=磁盘空间不足
 DiskSpaceWarning=安装程序至少需要 %1 KB 的可用空间才能安装，但选定驱动器只有 %2 KB 的可用空间。%n%n您一定要继续吗？
 DirNameTooLong=文件夹名称或路径太长。
@@ -344,14 +344,3 @@ AssocingFileExtension=正在将 %2 文件扩展名与 %1 建立关联...
 AutoStartProgramGroupDescription=启动组：
 AutoStartProgram=自动启动 %1
 AddonHostProgramNotFound=%1无法找到您所选择的文件夹。%n%n您想要继续吗？
-
-; *** Fort Firewall messages
-WindowsExplorerIntegration=集成到 Windows 资源管理器
-WindowsService=添加Windows服务
-Portable=便携
-UninstallPassword=请输入卸载密码
-UninstallPasswordOK=确定
-UninstallPasswordCancel=取消
-WrongPassword=密码错误
-NotCompatibleWithHVCI=这个程序与HVCI（核心隔离）不兼容。
-IsDeleteData=您希望删除配置文件和数据文件吗？

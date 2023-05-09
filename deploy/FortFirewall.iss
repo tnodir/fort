@@ -10,6 +10,7 @@
 #define APP_EXE		StringChange("{app}\%exe%", "%exe%", APP_EXE_NAME)
 
 #define LANG_PATH	AddBackslash(SourcePath) + "languages"
+#define LANG_CUSTOM	LANG_PATH + "\custom"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -43,16 +44,16 @@ Compression=lzma2/ultra
 SolidCompression=yes
 
 [Languages]
-Name: "en"; MessagesFile: "compiler:Default.isl,{#LANG_PATH}\Default.isl"
-Name: "de"; MessagesFile: "compiler:Languages\German.isl,{#LANG_PATH}\German.isl"
-Name: "fr"; MessagesFile: "compiler:Languages\French.isl,{#LANG_PATH}\French.isl"
-Name: "it"; MessagesFile: "compiler:Languages\Italian.isl,{#LANG_PATH}\Italian.isl"
-Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl,{#LANG_PATH}\Korean.isl"
-Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl,{#LANG_PATH}\Portuguese.isl"
-Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,{#LANG_PATH}\BrazilianPortuguese.isl"
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,{#LANG_PATH}\Russian.isl"
-Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl,{#LANG_PATH}\Slovenian.isl"
-Name: "zh_CN"; MessagesFile: "{#LANG_PATH}\ChineseSimplified.isl"
+Name: "en"; MessagesFile: "compiler:Default.isl,{#LANG_CUSTOM}\Default.isl"
+Name: "de"; MessagesFile: "compiler:Languages\German.isl,{#LANG_CUSTOM}\German.isl"
+Name: "fr"; MessagesFile: "compiler:Languages\French.isl,{#LANG_CUSTOM}\French.isl"
+Name: "it"; MessagesFile: "compiler:Languages\Italian.isl,{#LANG_CUSTOM}\Italian.isl"
+Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl,{#LANG_CUSTOM}\Korean.isl"
+Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl,{#LANG_CUSTOM}\Portuguese.isl"
+Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,{#LANG_CUSTOM}\BrazilianPortuguese.isl"
+Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,{#LANG_CUSTOM}\Russian.isl"
+Name: "sl"; MessagesFile: "compiler:Languages\Slovenian.isl,{#LANG_CUSTOM}\Slovenian.isl"
+Name: "zh_CN"; MessagesFile: "{#LANG_PATH}\ChineseSimplified.isl,{#LANG_CUSTOM}\ChineseSimplified.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"
