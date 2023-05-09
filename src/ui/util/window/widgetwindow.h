@@ -10,10 +10,8 @@ class WidgetWindow : public QWidget
 public:
     explicit WidgetWindow(QWidget *parent = nullptr);
 
-    bool isClosing() const { return m_isClosing; }
-
 signals:
-    void activationChanged();
+    void activationChanged(bool isActive);
 
     void positionChanged();
     void sizeChanged();
@@ -33,9 +31,7 @@ protected:
     void keyPressEvent(QKeyEvent *event) override;
 
     void changeEvent(QEvent *event) override;
-
-private:
-    bool m_isClosing = false;
+    bool event(QEvent *event) override;
 };
 
 #endif // WIDGETWINDOW_H

@@ -24,8 +24,8 @@ HomeWindow::HomeWindow(QWidget *parent) :
     setupController();
     setupStateWatcher();
 
-    connect(this, &HomeWindow::activationChanged, this, [&] {
-        if (isActiveWindow() && !isClosing()) {
+    connect(this, &HomeWindow::activationChanged, this, [&](bool isActive) {
+        if (isActive) {
             m_btMenu->showMenu();
         }
     });
@@ -113,8 +113,8 @@ QLayout *HomeWindow::setupHeader()
     m_btMenu = ControlUtil::createButton(":/icons/node-tree.png");
     m_btMenu->setMenu(windowManager()->trayIcon()->menu());
 
-    layout->addWidget(m_btMenu);
     layout->addStretch();
+    layout->addWidget(m_btMenu);
 
     return layout;
 }

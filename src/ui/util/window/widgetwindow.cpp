@@ -34,8 +34,6 @@ void WidgetWindow::hideEvent(QHideEvent *event)
 
 void WidgetWindow::closeEvent(QCloseEvent *event)
 {
-    m_isClosing = true;
-
     emit aboutToClose();
 
     QWidget::closeEvent(event);
@@ -62,9 +60,6 @@ void WidgetWindow::changeEvent(QEvent *event)
     QWidget::changeEvent(event);
 
     switch (event->type()) {
-    case QEvent::ActivationChange:
-        emit activationChanged();
-        break;
     case QEvent::WindowStateChange: {
         auto e = static_cast<QWindowStateChangeEvent *>(event);
 
@@ -75,4 +70,20 @@ void WidgetWindow::changeEvent(QEvent *event)
     default:
         break;
     }
+}
+
+bool WidgetWindow::event(QEvent *event)
+{
+    switch (event->type()) {
+    case QEvent::WindowActivate: {
+        emit activationChanged(/*isActive=*/true);
+    } break;
+    case QEvent::WindowDeactivate: {
+        emit activationChanged(/*isActive=*/false);
+    } break;
+    default:
+        break;
+    }
+
+    return QWidget::event(event);
 }
