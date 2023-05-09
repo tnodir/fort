@@ -1,6 +1,7 @@
 #include "taskinfoupdatechecker.h"
 
 #include <QDataStream>
+#include <QVersionNumber>
 
 #include <fort_version.h>
 
@@ -18,7 +19,9 @@ TaskInfoUpdateChecker::TaskInfoUpdateChecker(TaskManager &taskManager) :
 
 bool TaskInfoUpdateChecker::isNewVersion() const
 {
-    return !version().isEmpty() && version() != APP_VERSION_STR;
+    return !version().isEmpty() && version() != APP_VERSION_STR
+            && QVersionNumber::fromString(version())
+            > QVersionNumber(APP_VERSION_MAJOR, APP_VERSION_MINOR, APP_VERSION_PATCH);
 }
 
 QByteArray TaskInfoUpdateChecker::data() const
