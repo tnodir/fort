@@ -850,7 +850,8 @@ FORT_API void fort_callout_remove(void)
 inline static NTSTATUS fort_callout_force_reauth_prov_check_flow_filter(HANDLE engine,
         const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags, BOOL force)
 {
-    NTSTATUS status = STATUS_SUCCESS;
+    if (!force && old_conf_flags.log_stat == conf_flags.log_stat)
+        return STATUS_SUCCESS;
 
     const PFORT_CONF_GROUP conf_group = &fort_device()->stat.conf_group;
     const UINT16 limit_bits = conf_group->limit_bits;
@@ -860,16 +861,37 @@ inline static NTSTATUS fort_callout_force_reauth_prov_check_flow_filter(HANDLE e
     const BOOL filter_packets =
             conf_flags.filter_enabled && (conf_flags.group_bits & limit_bits) != 0;
 
-    if (force || old_conf_flags.log_stat != conf_flags.log_stat
-            || old_filter_packets != filter_packets) {
+    if (!force && old_filter_packets == filter_packets)
+        return STATUS_SUCCESS;
 
-        fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS, filter_packets);
+    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS, filter_packets);
 
-        fort_prov_flow_unregister(engine);
+    fort_prov_flow_unregister(engine);
 
-        if (conf_flags.log_stat) {
-            status = fort_prov_flow_register(engine, filter_packets);
-        }
+    if (!conf_flags.log_stat)
+        return STATUS_SUCCESS;
+
+    return fort_prov_flow_register(engine, filter_packets);
+}
+
+inline static NTSTATUS fort_callout_force_reauth_prov_filters(HANDLE engine,
+        const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags,
+        BOOL *prov_recreated)
+{
+    if (old_conf_flags.boot_filter == conf_flags.boot_filter
+            && old_conf_flags.filter_locals == conf_flags.filter_locals)
+        return STATUS_SUCCESS;
+
+    const FORT_PROV_BOOT_CONF boot_conf = {
+        .boot_filter = conf_flags.boot_filter,
+        .filter_locals = conf_flags.filter_locals,
+    };
+
+    fort_prov_unregister(engine);
+
+    const NTSTATUS status = fort_prov_register(engine, boot_conf);
+    if (status == 0) {
+        *prov_recreated = TRUE;
     }
 
     return status;
@@ -882,22 +904,10 @@ static NTSTATUS fort_callout_force_reauth_prov(
 
     /* Check provider filters */
     BOOL prov_recreated = FALSE;
-    if (old_conf_flags.boot_filter != conf_flags.boot_filter
-            || old_conf_flags.filter_locals != conf_flags.filter_locals) {
-
-        const FORT_PROV_BOOT_CONF boot_conf = {
-            .boot_filter = conf_flags.boot_filter,
-            .filter_locals = conf_flags.filter_locals,
-        };
-
-        fort_prov_unregister(engine);
-
-        status = fort_prov_register(engine, boot_conf);
-        if (status != 0)
-            return status;
-
-        prov_recreated = TRUE;
-    }
+    status = fort_callout_force_reauth_prov_filters(
+            engine, old_conf_flags, conf_flags, &prov_recreated);
+    if (status != 0)
+        return status;
 
     /* Check flow filter */
     status = fort_callout_force_reauth_prov_check_flow_filter(engine, old_conf_flags, conf_flags,
