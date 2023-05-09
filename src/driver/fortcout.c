@@ -348,6 +348,16 @@ inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PCFORT_CALLOU
     }
 }
 
+inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
+        PCFORT_CALLOUT_ALE_EXTRA cx, PFORT_DEVICE_CONF device_conf, const UINT32 classify_flags)
+{
+    if (fort_device_flag(device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS) != 0)
+        return FALSE;
+
+    return ((classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0
+            || fort_addr_is_local_broadcast(cx->remote_ip, ca->isIPv6));
+}
+
 static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_ALE_INDEX ci)
 {
     const UINT32 classify_flags = ca->inFixedValues->incomingValue[ci->flags].value.uint32;
@@ -361,19 +371,17 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca, PCFORT_CALLOUT_ALE_I
             ? (const UINT32 *) ca->inFixedValues->incomingValue[ci->remoteIp].value.byteArray16
             : &ca->inFixedValues->incomingValue[ci->remoteIp].value.uint32;
 
-    PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
-
-    if (fort_device_flag(device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS) == 0
-            && ((classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0
-                    || fort_addr_is_local_broadcast(remote_ip, ca->isIPv6))) {
-        fort_callout_classify_permit(ca->filter, ca->classifyOut);
-        return;
-    }
-
     FORT_CALLOUT_ALE_EXTRA cx = {
         .is_reauth = is_reauth,
         .remote_ip = remote_ip,
     };
+
+    PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+
+    if (fort_callout_ale_is_local_address(ca, &cx, device_conf, classify_flags)) {
+        fort_callout_classify_permit(ca->filter, ca->classifyOut);
+        return;
+    }
 
     fort_callout_ale_by_conf(ca, ci, &cx, device_conf);
 }
