@@ -517,7 +517,10 @@ void ConfUtil::parseAppPeriod(
         DateUtil::parseTime(appGroup->periodFrom(), fromHour, fromMinute);
         DateUtil::parseTime(appGroup->periodTo(), toHour, toMinute);
 
-        if (fromHour != 0 || fromMinute != 0 || toHour != 0 || toMinute != 0) {
+        const bool fromIsEmpty = (fromHour == 0 && fromMinute == 0);
+        const bool toIsEmpty = (toHour == 0 && toMinute == 0);
+
+        if (!fromIsEmpty || !toIsEmpty) {
             ++appPeriodsCount;
         }
     }
