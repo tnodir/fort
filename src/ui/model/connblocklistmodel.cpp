@@ -70,7 +70,9 @@ int ConnBlockListModel::columnCount(const QModelIndex &parent) const
 
 QVariant ConnBlockListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
+    const bool isDisplayRole = (role == Qt::DisplayRole || role == Qt::ToolTipRole);
+
+    if (orientation == Qt::Horizontal && isDisplayRole) {
         return headerDataDisplay(section, role);
     }
     return QVariant();
@@ -254,28 +256,7 @@ void ConnBlockListModel::updateConnIdRange()
     if (idMin == oldIdMin && idMax == oldIdMax)
         return;
 
-    if (idMin < oldIdMin || idMin >= oldIdMax || idMax < oldIdMax || oldIdMax == 0) {
-        m_connIdMin = idMin, m_connIdMax = idMax;
-        reset();
-        return;
-    }
-
-    if (idMin > oldIdMin) {
-        const int removedCount = idMin - oldIdMin;
-        beginRemoveRows({}, 0, removedCount - 1);
-        m_connIdMin = idMin;
-        invalidateRowCache();
-        endRemoveRows();
-    }
-
-    if (idMax > oldIdMax) {
-        const int addedCount = idMax - oldIdMax;
-        const int endRow = oldIdMax - idMin + 1;
-        beginInsertRows({}, endRow, endRow + addedCount - 1);
-        m_connIdMax = idMax;
-        invalidateRowCache();
-        endInsertRows();
-    }
+    updateConnRows(oldIdMin, oldIdMax, idMin, idMax);
 }
 
 bool ConnBlockListModel::updateTableRow(int row) const
@@ -362,4 +343,50 @@ QString ConnBlockListModel::formatIpPort(const ip_addr_t &ip, quint16 port, bool
         address = '[' + address + ']';
     }
     return address + ':' + QString::number(port);
+}
+
+void ConnBlockListModel::updateConnRows(
+        qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax)
+{
+    const bool isIdMinOut = (idMin < oldIdMin || idMin >= oldIdMax);
+    const bool isIdMaxOut = (idMax < oldIdMax || oldIdMax == 0);
+
+    if (isIdMinOut || isIdMaxOut) {
+        resetConnRows(idMin, idMax);
+        return;
+    }
+
+    const int removedCount = idMin - oldIdMin;
+    if (removedCount > 0) {
+        removeConnRows(idMin, removedCount);
+    }
+
+    const int addedCount = idMax - oldIdMax;
+    if (addedCount > 0) {
+        const int endRow = oldIdMax - idMin + 1;
+        insertConnRows(idMin, endRow, addedCount);
+    }
+}
+
+void ConnBlockListModel::resetConnRows(qint64 idMin, qint64 idMax)
+{
+    m_connIdMin = idMin;
+    m_connIdMax = idMax;
+    reset();
+}
+
+void ConnBlockListModel::removeConnRows(qint64 idMin, int count)
+{
+    beginRemoveRows({}, 0, count - 1);
+    m_connIdMin = idMin;
+    invalidateRowCache();
+    endRemoveRows();
+}
+
+void ConnBlockListModel::insertConnRows(qint64 idMax, int endRow, int count)
+{
+    beginInsertRows({}, endRow, endRow + count - 1);
+    m_connIdMax = idMax;
+    invalidateRowCache();
+    endInsertRows();
 }

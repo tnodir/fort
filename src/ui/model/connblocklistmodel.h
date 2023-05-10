@@ -93,6 +93,11 @@ private:
 
     QString formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6) const;
 
+    void updateConnRows(qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax);
+    void resetConnRows(qint64 idMin, qint64 idMax);
+    void removeConnRows(qint64 idMin, int count);
+    void insertConnRows(qint64 idMax, int endRow, int count);
+
 private:
     uint m_resolveAddress : 1;
 
