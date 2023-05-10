@@ -23,6 +23,12 @@
 
 namespace {
 
+bool checkIpRangeSize(const IpRange &range)
+{
+    return (range.ip4Size() + range.pair4Size()) < FORT_CONF_IP_MAX
+            && (range.ip6Size() + range.pair6Size()) < FORT_CONF_IP_MAX;
+}
+
 int writeServicesHeader(char *data, int servicesCount)
 {
     PFORT_SERVICE_INFO_LIST infoList = (PFORT_SERVICE_INFO_LIST) data;
@@ -312,22 +318,10 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
             return false;
         }
 
-        const int incIp4Size = addressRange.includeRange().ip4Size();
-        const int incPair4Size = addressRange.includeRange().pair4Size();
+        const IpRange &incRange = addressRange.includeRange();
+        const IpRange &excRange = addressRange.excludeRange();
 
-        const int incIp6Size = addressRange.includeRange().ip6Size();
-        const int incPair6Size = addressRange.includeRange().pair6Size();
-
-        const int excIp4Size = addressRange.excludeRange().ip4Size();
-        const int excPair4Size = addressRange.excludeRange().pair4Size();
-
-        const int excIp6Size = addressRange.excludeRange().ip6Size();
-        const int excPair6Size = addressRange.excludeRange().pair6Size();
-
-        if ((incIp4Size + incPair4Size) > FORT_CONF_IP_MAX
-                || (incIp6Size + incPair6Size) > FORT_CONF_IP_MAX
-                || (excIp4Size + excPair4Size) > FORT_CONF_IP_MAX
-                || (excIp6Size + excPair6Size) > FORT_CONF_IP_MAX) {
+        if (!(checkIpRangeSize(incRange) && checkIpRangeSize(excRange))) {
             setErrorMessage(tr("Too many IP addresses"));
             return false;
         }
@@ -335,8 +329,10 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         addressGroupOffsets.append(addressGroupsSize);
 
         addressGroupsSize += FORT_CONF_ADDR_GROUP_OFF
-                + FORT_CONF_ADDR_LIST_SIZE(incIp4Size, incPair4Size, incIp6Size, incPair6Size)
-                + FORT_CONF_ADDR_LIST_SIZE(excIp4Size, excPair4Size, excIp6Size, excPair6Size);
+                + FORT_CONF_ADDR_LIST_SIZE(incRange.ip4Size(), incRange.pair4Size(),
+                        incRange.ip6Size(), incRange.pair6Size())
+                + FORT_CONF_ADDR_LIST_SIZE(excRange.ip4Size(), excRange.pair4Size(),
+                        excRange.ip6Size(), excRange.pair6Size());
     }
 
     return true;
