@@ -21,6 +21,8 @@
 #define APP_GROUP_NAME_MAX 128
 #define APP_PATH_MAX       FORT_CONF_APP_PATH_MAX
 
+using namespace Qt::StringLiterals;
+
 namespace {
 
 bool checkIpRangeSize(const IpRange &range)
@@ -494,8 +496,7 @@ QString ConfUtil::parseAppPath(const StringView line, bool &isWild, bool &isPref
 
     const auto wildMatch = wildMatcher.match(path);
     if (wildMatch.hasMatch()) {
-        if (wildMatch.capturedStart() == path.size() - 2 && wildMatch.capturedView().at(0) == '*'
-                && path.endsWith('*')) {
+        if (wildMatch.capturedStart() == path.size() - 2 && path.endsWith("**"_L1)) {
             path.chop(2);
             isPrefix = true;
         } else {
