@@ -74,7 +74,8 @@ bool getCoffHeaderOffset(const QByteArray &data, int &outCoffHeaderOffset)
     const char *cp = data.data();
 
     // Check the input DOS header: "MZ"
-    if (cp[0] != 'M' || cp[1] != 'Z') {
+    const bool isDosHeaderValid = (cp[0] == 'M' && cp[1] == 'Z');
+    if (!isDosHeaderValid) {
         qCritical() << "DOS Header error: Invalid signature";
         return false;
     }
@@ -87,13 +88,15 @@ bool getCoffHeaderOffset(const QByteArray &data, int &outCoffHeaderOffset)
     }
 
     // Check the input PE header: "PE\0\0"
+    constexpr int peHeaderSize = 4;
     const char *pe = cp + peOffset;
-    if (*pe++ != 'P' || *pe++ != 'E' || *pe++ != '\0' || *pe++ != '\0') {
+    const bool isPeHeaderValid = (pe[0] == 'P' && pe[1] == 'E' && pe[2] == '\0' && pe[3] == '\0');
+    if (!isPeHeaderValid) {
         qCritical() << "PE Header error: Invalid signature at offset:" << peOffset;
         return false;
     }
 
-    outCoffHeaderOffset = pe - cp;
+    outCoffHeaderOffset = pe + peHeaderSize - cp;
 
     qDebug() << "PE Header offset:" << peOffset << "COFF Header offset" << outCoffHeaderOffset;
 
