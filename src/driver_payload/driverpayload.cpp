@@ -317,12 +317,6 @@ void DriverPayload::processArguments(const QStringList &args)
 
     parser.process(args);
 
-    if (!parser.isSet(inputOption) || !parser.isSet(outputOption) || !parser.isSet(payloadOption)
-            || !parser.isSet(secretOption)) {
-        parser.showHelp(1);
-        return;
-    }
-
     m_inputFilePath = parser.value(inputOption);
     m_outputFilePath = parser.value(outputOption);
     m_payloadFilePath = parser.value(payloadOption);
