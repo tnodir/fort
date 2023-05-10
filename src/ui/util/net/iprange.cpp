@@ -9,6 +9,16 @@
 
 namespace {
 
+inline bool checkIp4MaskBitsCount(const int nbits)
+{
+    return (nbits >= 0 && nbits <= 32);
+}
+
+inline bool checkIp6MaskBitsCount(const int nbits)
+{
+    return (nbits >= 0 && nbits <= 128);
+}
+
 bool compareLessIp6(const ip6_addr_t &l, const ip6_addr_t &r)
 {
     return memcmp(&l, &r, sizeof(ip6_addr_t)) < 0;
@@ -256,7 +266,7 @@ IpRange::ParseError IpRange::parseIp4AddressMaskPrefix(
     bool ok = true;
     const int nbits = mask.isEmpty() ? emptyNetMask : mask.toInt(&ok);
 
-    if (!ok || nbits < 0 || nbits > 32) {
+    if (!ok || !checkIp4MaskBitsCount(nbits)) {
         setErrorMessage(tr("Bad mask"));
         setErrorDetails(QString("IPv4 mask='%1' nbits='%2'").arg(mask, QString::number(nbits)));
         return ErrorBadMask;
@@ -331,7 +341,7 @@ IpRange::ParseError IpRange::parseIp6AddressMaskPrefix(
     bool ok;
     const int nbits = mask.toInt(&ok);
 
-    if (!ok || nbits < 0 || nbits > 128) {
+    if (!ok || !checkIp6MaskBitsCount(nbits)) {
         setErrorMessage(tr("Bad mask"));
         setErrorDetails(QString("IPv6 mask='%1' nbits='%2'").arg(mask, QString::number(nbits)));
         return ErrorBadMask;

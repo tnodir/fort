@@ -25,7 +25,7 @@ using namespace Qt::StringLiterals;
 
 namespace {
 
-bool checkIpRangeSize(const IpRange &range)
+inline bool checkIpRangeSize(const IpRange &range)
 {
     return (range.ip4Size() + range.pair4Size()) < FORT_CONF_IP_MAX
             && (range.ip6Size() + range.pair6Size()) < FORT_CONF_IP_MAX;
