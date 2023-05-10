@@ -110,6 +110,8 @@ public:
     SqliteStmt *stmt(const char *sql);
 
 private:
+    bool canMigrate(const MigrateOptions &opt, int userVersion) const;
+    bool migrateDb(const MigrateOptions &opt, int userVersion, bool isNewDb);
     bool migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb);
 
     bool clearWithBackup(const char *sqlPragmas);

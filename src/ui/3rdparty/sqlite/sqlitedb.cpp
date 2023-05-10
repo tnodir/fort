@@ -309,6 +309,21 @@ bool SqliteDb::migrate(MigrateOptions &opt)
     if (userVersion == opt.version)
         return true;
 
+    // Check migration options
+    if (!canMigrate(opt, userVersion))
+        return false;
+
+    // Migrate the DB
+    bool isNewDb = (userVersion == 0);
+    if (isNewDb) {
+        opt.recreate = false;
+    }
+
+    return migrateDb(opt, userVersion, isNewDb);
+}
+
+bool SqliteDb::canMigrate(const MigrateOptions &opt, int userVersion) const
+{
     if (userVersion > opt.version) {
         qCWarning(LC) << "Cannot open new DB" << userVersion << "from old application"
                       << opt.version;
@@ -320,11 +335,11 @@ bool SqliteDb::migrate(MigrateOptions &opt)
         return false;
     }
 
-    bool isNewDb = (userVersion == 0);
-    if (isNewDb) {
-        opt.recreate = false;
-    }
+    return true;
+}
 
+bool SqliteDb::migrateDb(const MigrateOptions &opt, int userVersion, bool isNewDb)
+{
     // Re-create the DB
     if (opt.recreate) {
         if (!clearWithBackup(opt.sqlPragmas))
