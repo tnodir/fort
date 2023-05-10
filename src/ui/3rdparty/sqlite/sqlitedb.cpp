@@ -23,11 +23,14 @@ QAtomicInt g_sqliteInitCount;
 
 bool removeDbFile(const QString &filePath)
 {
-    if (!filePath.startsWith(QLatin1Char(':')) && QFile::exists(filePath)
-            && !QFile::remove(filePath)) {
+    if (filePath.startsWith(QLatin1Char(':')))
+        return true; // can't remove from qrc
+
+    if (QFile::exists(filePath) && !QFile::remove(filePath)) {
         qCCritical(LC) << "Cannot remove file:" << filePath;
         return false;
     }
+
     return true;
 }
 
