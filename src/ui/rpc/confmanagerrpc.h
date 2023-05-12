@@ -33,6 +33,8 @@ public:
     void onConfChanged(const QVariant &confVar);
 
 protected:
+    void purgeAppsOnStart() override { }
+
     void setupAppEndTimer() override { }
 
     bool saveConf(FirewallConf &newConf) override;

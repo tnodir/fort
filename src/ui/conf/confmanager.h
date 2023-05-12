@@ -104,6 +104,8 @@ signals:
     void zoneUpdated();
 
 protected:
+    virtual void purgeAppsOnStart();
+
     virtual void setupAppEndTimer();
     void updateAppEndTimer();
 
