@@ -850,9 +850,6 @@ FORT_API void fort_callout_remove(void)
 inline static NTSTATUS fort_callout_force_reauth_prov_check_flow_filter(HANDLE engine,
         const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags, BOOL force)
 {
-    if (!force && old_conf_flags.log_stat == conf_flags.log_stat)
-        return STATUS_SUCCESS;
-
     const PFORT_CONF_GROUP conf_group = &fort_device()->stat.conf_group;
     const UINT16 limit_bits = conf_group->limit_bits;
 
@@ -861,7 +858,10 @@ inline static NTSTATUS fort_callout_force_reauth_prov_check_flow_filter(HANDLE e
     const BOOL filter_packets =
             conf_flags.filter_enabled && (conf_flags.group_bits & limit_bits) != 0;
 
-    if (!force && old_filter_packets == filter_packets)
+    const BOOL conf_changed = (old_conf_flags.log_stat != conf_flags.log_stat
+            || old_filter_packets != filter_packets);
+
+    if (!force && !conf_changed)
         return STATUS_SUCCESS;
 
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_PACKETS, filter_packets);
@@ -878,8 +878,10 @@ inline static NTSTATUS fort_callout_force_reauth_prov_filters(HANDLE engine,
         const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags,
         BOOL *prov_recreated)
 {
-    if (old_conf_flags.boot_filter == conf_flags.boot_filter
-            && old_conf_flags.filter_locals == conf_flags.filter_locals)
+    const BOOL conf_changed = (old_conf_flags.boot_filter != conf_flags.boot_filter
+            || old_conf_flags.filter_locals != conf_flags.filter_locals);
+
+    if (!conf_changed)
         return STATUS_SUCCESS;
 
     const FORT_PROV_BOOT_CONF boot_conf = {
