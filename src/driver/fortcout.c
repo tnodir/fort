@@ -916,7 +916,9 @@ static NTSTATUS fort_callout_force_reauth_prov(
         return status;
 
     /* Force reauth filter */
-    return fort_prov_reauth(engine);
+    fort_prov_reauth(engine);
+
+    return STATUS_SUCCESS;
 }
 
 FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags)

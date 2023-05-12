@@ -415,15 +415,13 @@ static void fort_prov_unregister_filters(HANDLE engine)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V6);
 }
 
-static DWORD fort_prov_unregister_reauth_filters(HANDLE engine, BOOL force)
+static DWORD fort_prov_unregister_reauth_filters(HANDLE engine)
 {
     const DWORD status = FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN_V4);
 
-    if (status == 0 || force) {
-        FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN_V6);
-        FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT_V4);
-        FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT_V6);
-    }
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_IN_V6);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_REAUTH_OUT_V6);
 
     return status;
 }
@@ -449,7 +447,7 @@ static void fort_prov_unregister_callouts(HANDLE engine)
 static void fort_prov_unregister_provider(HANDLE engine)
 {
     fort_prov_unregister_filters(engine);
-    fort_prov_unregister_reauth_filters(engine, /*force=*/TRUE);
+    fort_prov_unregister_reauth_filters(engine);
 
     fort_prov_unregister_callouts(engine);
 
@@ -569,15 +567,9 @@ FORT_API DWORD fort_prov_flow_register(HANDLE engine, BOOL filter_packets)
     return status;
 }
 
-FORT_API DWORD fort_prov_reauth(HANDLE engine)
+FORT_API void fort_prov_reauth(HANDLE engine)
 {
-    DWORD status;
-
-    status = fort_prov_unregister_reauth_filters(engine, /*force=*/FALSE);
-    if (status != 0) {
-        status = fort_prov_add_filters(
-                engine, g_provGlobal.reauth_filters, FORT_PROV_REAUTH_FILTERS_COUNT);
+    if (fort_prov_unregister_reauth_filters(engine) != 0) {
+        fort_prov_add_filters(engine, g_provGlobal.reauth_filters, FORT_PROV_REAUTH_FILTERS_COUNT);
     }
-
-    return status;
 }
