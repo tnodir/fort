@@ -239,6 +239,22 @@ BOOLEAN KeSetCoalescableTimer(
     return FALSE;
 }
 
+void ExInitializeRundownProtection(PEX_RUNDOWN_REF runRef)
+{
+    UNUSED(runRef);
+}
+
+BOOLEAN ExAcquireRundownProtection(PEX_RUNDOWN_REF runRef)
+{
+    UNUSED(runRef);
+    return FALSE;
+}
+
+void ExReleaseRundownProtection(PEX_RUNDOWN_REF runRef)
+{
+    UNUSED(runRef);
+}
+
 void KeInitializeEvent(PRKEVENT event, EVENT_TYPE type, BOOLEAN state)
 {
     UNUSED(event);

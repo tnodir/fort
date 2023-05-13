@@ -219,6 +219,14 @@ typedef CALLBACK_FUNCTION *PCALLBACK_FUNCTION;
 typedef LONG KLOCK_QUEUE_HANDLE, *PKLOCK_QUEUE_HANDLE;
 typedef volatile LONG EX_SPIN_LOCK, *PEX_SPIN_LOCK;
 
+typedef struct _EX_RUNDOWN_REF
+{
+    union {
+        __volatile ULONG_PTR Count;
+        __volatile PVOID Ptr;
+    };
+} EX_RUNDOWN_REF, *PEX_RUNDOWN_REF;
+
 typedef LONG KEVENT, *PKEVENT, *PRKEVENT;
 
 typedef enum _EVENT_TYPE {
@@ -367,6 +375,10 @@ FORT_API void KeInitializeTimer(PKTIMER timer);
 FORT_API BOOLEAN KeCancelTimer(PKTIMER timer);
 FORT_API BOOLEAN KeSetCoalescableTimer(
         PKTIMER timer, LARGE_INTEGER dueTime, ULONG period, ULONG tolerableDelay, PKDPC dpc);
+
+FORT_API void ExInitializeRundownProtection(PEX_RUNDOWN_REF runRef);
+FORT_API BOOLEAN ExAcquireRundownProtection(PEX_RUNDOWN_REF runRef);
+FORT_API void ExReleaseRundownProtection(PEX_RUNDOWN_REF runRef);
 
 FORT_API void KeInitializeEvent(PRKEVENT event, EVENT_TYPE type, BOOLEAN state);
 FORT_API void KeClearEvent(PRKEVENT event);

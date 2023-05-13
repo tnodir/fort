@@ -10,7 +10,6 @@
 #include "fortps.h"
 #include "fortscb.h"
 #include "forttrace.h"
-#include "fortutl.h"
 
 static PFORT_DEVICE g_device = NULL;
 
@@ -24,16 +23,23 @@ FORT_API void fort_device_set(PFORT_DEVICE device)
     g_device = device;
 }
 
+static NTSTATUS fort_device_reauth_force(const FORT_CONF_FLAGS old_conf_flags)
+{
+    PEX_RUNDOWN_REF reauth_rundown = &fort_device()->reauth_rundown;
+    ExAcquireRundownProtection(reauth_rundown);
+
+    const NTSTATUS status = fort_callout_force_reauth(old_conf_flags);
+
+    ExReleaseRundownProtection(reauth_rundown);
+
+    return status;
+}
+
 static void fort_device_reauth(void)
 {
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
-    const NTSTATUS status = fort_callout_force_reauth(conf_flags);
-
-    if (!NT_SUCCESS(status)) {
-        LOG("Device Reauth: Error: %x\n", status);
-        TRACE(FORT_DEVICE_WORKER_REAUTH_ERROR, status, 0, 0);
-    }
+    fort_device_reauth_force(conf_flags);
 }
 
 static void fort_device_reauth_queue(void)
@@ -109,7 +115,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 
         fort_stat_conf_flags_update(&fort_device()->stat, &conf_flags);
 
-        fort_callout_force_reauth(old_conf_flags);
+        fort_device_reauth_force(old_conf_flags);
     }
 
     /* Clear buffer */
@@ -159,7 +165,7 @@ static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG l
             fort_stat_conf_update(&fort_device()->stat, conf_io);
             fort_shaper_conf_update(&fort_device()->shaper, conf_io);
 
-            return fort_callout_force_reauth(old_conf_flags);
+            return fort_device_reauth_force(old_conf_flags);
         }
     }
 
@@ -175,7 +181,7 @@ static NTSTATUS fort_device_control_setflags(const PFORT_CONF_FLAGS conf_flags, 
         fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
         fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
 
-        return fort_callout_force_reauth(old_conf_flags);
+        return fort_device_reauth_force(old_conf_flags);
     }
 
     return STATUS_UNSUCCESSFUL;
@@ -368,6 +374,8 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     NTSTATUS status;
 
     PDEVICE_OBJECT device = device_param;
+
+    ExInitializeRundownProtection(&fort_device()->reauth_rundown);
 
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_device_reauth);
 

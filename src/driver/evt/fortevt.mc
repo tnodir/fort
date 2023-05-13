@@ -54,12 +54,7 @@ Callout Timer: Error.
 
 
 ;/* Device */
-MessageId=1 Facility=Device Severity=Error SymbolicName=FORT_DEVICE_WORKER_REAUTH_ERROR
-Language=English
-Worker Reauth: Error.
-.
-
-MessageId=2 Facility=Device Severity=Error SymbolicName=FORT_DEVICE_DEVICE_CONTROL_ERROR
+MessageId=1 Facility=Device Severity=Error SymbolicName=FORT_DEVICE_DEVICE_CONTROL_ERROR
 Language=English
 Device Control: Error.
 .

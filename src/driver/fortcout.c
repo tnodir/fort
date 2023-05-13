@@ -847,7 +847,7 @@ FORT_API void fort_callout_remove(void)
     }
 }
 
-inline static NTSTATUS fort_callout_force_reauth_prov_check_flow_filter(HANDLE engine,
+inline static NTSTATUS fort_callout_force_reauth_prov_flow_filters(HANDLE engine,
         const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags, BOOL force)
 {
     const PFORT_CONF_GROUP conf_group = &fort_device()->stat.conf_group;
@@ -874,7 +874,7 @@ inline static NTSTATUS fort_callout_force_reauth_prov_check_flow_filter(HANDLE e
     return fort_prov_flow_register(engine, filter_packets);
 }
 
-inline static NTSTATUS fort_callout_force_reauth_prov_filters(HANDLE engine,
+inline static NTSTATUS fort_callout_force_reauth_prov_recreate(HANDLE engine,
         const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags,
         BOOL *prov_recreated)
 {
@@ -899,20 +899,20 @@ inline static NTSTATUS fort_callout_force_reauth_prov_filters(HANDLE engine,
     return status;
 }
 
-static NTSTATUS fort_callout_force_reauth_prov(
+inline static NTSTATUS fort_callout_force_reauth_prov_filters(
         HANDLE engine, const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags)
 {
     NTSTATUS status;
 
     /* Check provider filters */
     BOOL prov_recreated = FALSE;
-    status = fort_callout_force_reauth_prov_filters(
+    status = fort_callout_force_reauth_prov_recreate(
             engine, old_conf_flags, conf_flags, &prov_recreated);
     if (status != 0)
         return status;
 
     /* Check flow filter */
-    status = fort_callout_force_reauth_prov_check_flow_filter(engine, old_conf_flags, conf_flags,
+    status = fort_callout_force_reauth_prov_flow_filters(engine, old_conf_flags, conf_flags,
             /*force=*/prov_recreated);
     if (status != 0)
         return status;
@@ -921,6 +921,21 @@ static NTSTATUS fort_callout_force_reauth_prov(
     fort_prov_reauth(engine);
 
     return STATUS_SUCCESS;
+}
+
+inline static NTSTATUS fort_callout_force_reauth_prov(
+        const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags)
+{
+    NTSTATUS status;
+
+    HANDLE engine;
+    status = fort_prov_trans_open(&engine);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    status = fort_callout_force_reauth_prov_filters(engine, old_conf_flags, conf_flags);
+
+    return fort_prov_trans_close(engine, status);
 }
 
 FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags)
@@ -946,14 +961,8 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
     /* Run the log_timer */
     fort_timer_set_running(&fort_device()->log_timer, /*run=*/conf_flags.log_stat);
 
-    /* Open provider */
-    HANDLE engine;
-    status = fort_prov_trans_open(&engine);
-    if (NT_SUCCESS(status)) {
-        status = fort_callout_force_reauth_prov(engine, old_conf_flags, conf_flags);
-
-        status = fort_prov_trans_close(engine, status);
-    }
+    /* Reauth provider filters */
+    status = fort_callout_force_reauth_prov(old_conf_flags, conf_flags);
 
     if (!NT_SUCCESS(status)) {
         LOG("Callout Reauth: Error: %x\n", status);

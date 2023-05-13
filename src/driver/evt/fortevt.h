@@ -98,22 +98,13 @@
 
 /* Device */
 //
-// MessageId: FORT_DEVICE_WORKER_REAUTH_ERROR
-//
-// MessageText:
-//
-// Worker Reauth: Error.
-//
-#define FORT_DEVICE_WORKER_REAUTH_ERROR  ((NTSTATUS)0xC0030001L)
-
-//
 // MessageId: FORT_DEVICE_DEVICE_CONTROL_ERROR
 //
 // MessageText:
 //
 // Device Control: Error.
 //
-#define FORT_DEVICE_DEVICE_CONTROL_ERROR ((NTSTATUS)0xC0030002L)
+#define FORT_DEVICE_DEVICE_CONTROL_ERROR ((NTSTATUS)0xC0030001L)
 
 /* Driver */
 //
