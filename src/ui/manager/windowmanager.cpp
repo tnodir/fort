@@ -215,6 +215,7 @@ void WindowManager::setupStatisticsWindow()
 void WindowManager::closeAll()
 {
     closeGraphWindow(true);
+    closeHomeWindow();
     closeProgramsWindow();
     closeOptionsWindow();
     closePoliciesWindow();
