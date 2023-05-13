@@ -119,6 +119,8 @@ private:
     void onTrayMessageClicked();
 
 private:
+    bool m_quitting = false;
+
     TrayMessageType m_lastMessageType = MessageOptions;
 
     TrayIcon *m_trayIcon = nullptr;

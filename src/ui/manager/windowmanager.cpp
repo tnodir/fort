@@ -508,6 +508,11 @@ void WindowManager::switchGraphWindow()
 
 void WindowManager::quit()
 {
+    if (m_quitting)
+        return;
+
+    m_quitting = true;
+
     closeAll();
 
     qCDebug(LC) << "Quit due user request";
