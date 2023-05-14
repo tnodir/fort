@@ -1,5 +1,7 @@
 #include "homewindow.h"
 
+#include <QGuiApplication>
+#include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
 
@@ -14,6 +16,7 @@
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "homecontroller.h"
+#include "pages/homemainpage.h"
 
 HomeWindow::HomeWindow(QWidget *parent) :
     WidgetWindow(parent),
@@ -51,6 +54,8 @@ void HomeWindow::saveWindowState()
     iniUser()->setServiceWindowGeometry(m_stateWatcher->geometry());
     iniUser()->setServiceWindowMaximized(m_stateWatcher->maximized());
 
+    emit ctrl()->afterSaveWindowState(iniUser());
+
     confManager()->saveIniUser();
 }
 
@@ -58,6 +63,8 @@ void HomeWindow::restoreWindowState()
 {
     m_stateWatcher->restore(this, QSize(600, 400), iniUser()->homeWindowGeometry(),
             iniUser()->homeWindowMaximized());
+
+    emit ctrl()->afterRestoreWindowState(iniUser());
 }
 
 void HomeWindow::retranslateUi()
@@ -73,7 +80,7 @@ void HomeWindow::setupController()
 {
     connect(ctrl(), &HomeController::retranslateUi, this, &HomeWindow::retranslateUi);
 
-    retranslateUi();
+    emit ctrl()->retranslateUi();
 }
 
 void HomeWindow::setupStateWatcher()
@@ -84,15 +91,16 @@ void HomeWindow::setupStateWatcher()
 void HomeWindow::setupUi()
 {
     auto layout = new QVBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
 
     // Header
     auto header = setupHeader();
-    layout->addLayout(header);
+    layout->addWidget(header);
 
-    // Frame
-    auto frame = new QHBoxLayout();
-    layout->addLayout(frame, 1);
+    // Main page
+    auto mainPage = new HomeMainPage(ctrl());
+    layout->addWidget(mainPage, 1);
 
     this->setLayout(layout);
 
@@ -106,15 +114,68 @@ void HomeWindow::setupUi()
     this->setMinimumSize(500, 400);
 }
 
-QLayout *HomeWindow::setupHeader()
+QWidget *HomeWindow::setupHeader()
 {
-    auto layout = new QHBoxLayout();
+    QPalette palette;
+    palette.setColor(QPalette::Window, QColor(0x26, 0x26, 0x26));
 
+    auto frame = new QWidget();
+    frame->setAutoFillBackground(true);
+    frame->setPalette(palette);
+
+    auto layout = new QHBoxLayout();
+    layout->setContentsMargins(16, 6, 16, 6);
+    layout->setSpacing(10);
+
+    // Logo image
+    auto iconLogo = ControlUtil::createLabel();
+    iconLogo->setScaledContents(true);
+    iconLogo->setMaximumSize(48, 48);
+    iconLogo->setPixmap(IconCache::file(":/icons/fort-96.png"));
+
+    // Logo text
+    auto textLogo = setupLogoText();
+
+    // Menu button
     m_btMenu = ControlUtil::createButton(":/icons/node-tree.png");
     m_btMenu->setMenu(windowManager()->trayIcon()->menu());
 
+    layout->addWidget(iconLogo);
+    layout->addLayout(textLogo);
     layout->addStretch();
     layout->addWidget(m_btMenu);
+
+    frame->setLayout(layout);
+
+    return frame;
+}
+
+QLayout *HomeWindow::setupLogoText()
+{
+    auto layout = new QVBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+
+    QPalette palette;
+    palette.setColor(QPalette::WindowText, Qt::white);
+
+    QFont font("Franklin Gothic", 22, QFont::Bold);
+
+    // Label
+    auto label = ControlUtil::createLabel(QGuiApplication::applicationName());
+    label->setPalette(palette);
+    label->setFont(font);
+
+    // Sub-label
+    font.setPointSize(10);
+    font.setWeight(QFont::DemiBold);
+
+    auto subLabel = ControlUtil::createLabel("- keeping you secure -");
+    subLabel->setPalette(palette);
+    subLabel->setFont(font);
+
+    layout->addWidget(label, 2, Qt::AlignHCenter | Qt::AlignBottom);
+    layout->addWidget(subLabel, 1, Qt::AlignHCenter | Qt::AlignTop);
 
     return layout;
 }

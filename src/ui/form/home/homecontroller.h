@@ -9,6 +9,10 @@ class HomeController : public BaseController
 
 public:
     explicit HomeController(QObject *parent = nullptr);
+
+signals:
+    void afterSaveWindowState(IniUser *ini);
+    void afterRestoreWindowState(IniUser *ini);
 };
 
 #endif // HOMECONTROLLER_H

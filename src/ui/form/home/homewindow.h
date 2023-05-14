@@ -33,7 +33,8 @@ private:
     void retranslateUi();
 
     void setupUi();
-    QLayout *setupHeader();
+    QWidget *setupHeader();
+    QLayout *setupLogoText();
 
 private:
     HomeController *m_ctrl = nullptr;

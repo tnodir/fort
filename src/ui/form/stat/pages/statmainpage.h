@@ -20,8 +20,7 @@ private:
     void setupTabBar();
 
 private:
-    QTabWidget *m_tabBar = nullptr;
-
+    QTabWidget *m_tabWidget = nullptr;
     QPushButton *m_btMenu = nullptr;
 };
 

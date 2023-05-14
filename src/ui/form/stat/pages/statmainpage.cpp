@@ -22,8 +22,8 @@ StatMainPage::StatMainPage(StatisticsController *ctrl, QWidget *parent) : StatBa
 
 void StatMainPage::onRetranslateUi()
 {
-    m_tabBar->setTabText(0, tr("Traffic"));
-    m_tabBar->setTabText(1, tr("Blocked Connections"));
+    m_tabWidget->setTabText(0, tr("Traffic"));
+    m_tabWidget->setTabText(1, tr("Blocked Connections"));
 }
 
 void StatMainPage::setupUi()
@@ -33,7 +33,7 @@ void StatMainPage::setupUi()
 
     // Main Tab Bar
     setupTabBar();
-    layout->addWidget(m_tabBar);
+    layout->addWidget(m_tabWidget);
 
     this->setLayout(layout);
 }
@@ -43,13 +43,13 @@ void StatMainPage::setupTabBar()
     auto statisticsPage = new TrafficPage(ctrl());
     auto connectionsPage = new ConnectionsPage(ctrl());
 
-    m_tabBar = new QTabWidget();
-    m_tabBar->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
-    m_tabBar->addTab(connectionsPage, IconCache::icon(":/icons/connect.png"), QString());
+    m_tabWidget = new QTabWidget();
+    m_tabWidget->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
+    m_tabWidget->addTab(connectionsPage, IconCache::icon(":/icons/connect.png"), QString());
 
     // Menu button
     m_btMenu = ControlUtil::createLinkButton(":/icons/node-tree.png");
     m_btMenu->setMenu(windowManager()->trayIcon()->menu());
 
-    m_tabBar->setCornerWidget(m_btMenu);
+    m_tabWidget->setCornerWidget(m_btMenu);
 }

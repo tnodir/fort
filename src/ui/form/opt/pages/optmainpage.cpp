@@ -30,11 +30,11 @@ OptMainPage::OptMainPage(OptionsController *ctrl, QWidget *parent) : OptBasePage
 
 void OptMainPage::onRetranslateUi()
 {
-    m_tabBar->setTabText(0, tr("Options"));
-    m_tabBar->setTabText(1, tr("IP Addresses"));
-    m_tabBar->setTabText(2, tr("Application Groups"));
-    m_tabBar->setTabText(3, tr("Statistics"));
-    m_tabBar->setTabText(4, tr("Schedule"));
+    m_tabWidget->setTabText(0, tr("Options"));
+    m_tabWidget->setTabText(1, tr("IP Addresses"));
+    m_tabWidget->setTabText(2, tr("Application Groups"));
+    m_tabWidget->setTabText(3, tr("Statistics"));
+    m_tabWidget->setTabText(4, tr("Schedule"));
 
     m_btLogs->setText(tr("Logs"));
     m_btProfile->setText(tr("Profile"));
@@ -53,7 +53,7 @@ void OptMainPage::setupUi()
 
     // Main Tab Bar
     setupTabBar();
-    layout->addWidget(m_tabBar);
+    layout->addWidget(m_tabWidget);
 
     // Dialog butons
     auto buttonsLayout = setupDialogButtons();
@@ -72,23 +72,23 @@ void OptMainPage::setupTabBar()
 
     m_pages = { optionsPage, addressesPage, applicationsPage, statisticsPage, schedulePage };
 
-    m_tabBar = new QTabWidget();
-    m_tabBar->addTab(ControlUtil::wrapToScrollArea(optionsPage), IconCache::icon(":/icons/cog.png"),
-            QString());
-    m_tabBar->addTab(addressesPage, IconCache::icon(":/icons/ip.png"), QString());
-    m_tabBar->addTab(
+    m_tabWidget = new QTabWidget();
+    m_tabWidget->addTab(ControlUtil::wrapToScrollArea(optionsPage),
+            IconCache::icon(":/icons/cog.png"), QString());
+    m_tabWidget->addTab(addressesPage, IconCache::icon(":/icons/ip.png"), QString());
+    m_tabWidget->addTab(
             applicationsPage, IconCache::icon(":/icons/application_double.png"), QString());
-    m_tabBar->addTab(ControlUtil::wrapToScrollArea(statisticsPage),
+    m_tabWidget->addTab(ControlUtil::wrapToScrollArea(statisticsPage),
             IconCache::icon(":/icons/chart_bar.png"), QString());
-    m_tabBar->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
+    m_tabWidget->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
     // Menu button
     m_btMenu = ControlUtil::createLinkButton(":/icons/node-tree.png");
     m_btMenu->setMenu(windowManager()->trayIcon()->menu());
 
-    m_tabBar->setCornerWidget(m_btMenu);
+    m_tabWidget->setCornerWidget(m_btMenu);
 
-    connect(m_tabBar, &QTabWidget::currentChanged, this,
+    connect(m_tabWidget, &QTabWidget::currentChanged, this,
             [&](int tabIndex) { m_pages[tabIndex]->onPageActivated(); });
 }
 

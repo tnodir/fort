@@ -73,8 +73,8 @@ void StatisticsWindow::setupUi()
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_mainPage = new StatMainPage(ctrl());
-    layout->addWidget(m_mainPage);
+    auto mainPage = new StatMainPage(ctrl());
+    layout->addWidget(mainPage);
 
     this->setLayout(layout);
 

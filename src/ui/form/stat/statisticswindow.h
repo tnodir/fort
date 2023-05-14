@@ -5,7 +5,6 @@
 
 class ConfManager;
 class IniUser;
-class StatMainPage;
 class StatisticsController;
 class WidgetWindowStateWatcher;
 
@@ -34,8 +33,6 @@ private:
 private:
     StatisticsController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
-
-    StatMainPage *m_mainPage = nullptr;
 };
 
 #endif // STATISTICSWINDOW_H

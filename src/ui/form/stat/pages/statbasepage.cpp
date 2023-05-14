@@ -1,7 +1,5 @@
 #include "statbasepage.h"
 
-#include <QAbstractButton>
-
 #include <conf/firewallconf.h>
 #include <form/stat/statisticscontroller.h>
 #include <fortmanager.h>
