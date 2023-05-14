@@ -17,7 +17,6 @@ QT_FORWARD_DECLARE_CLASS(QTabBar)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class ConfManager;
-class DriverManager;
 class FirewallConf;
 class FortManager;
 class FortSettings;
@@ -47,7 +46,6 @@ protected:
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
-    DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
     WindowManager *windowManager() const;
     TaskManager *taskManager() const;
@@ -61,8 +59,6 @@ protected slots:
     virtual void onRestoreWindowState(IniUser * /*ini*/) { }
 
     virtual void onRetranslateUi() { }
-
-    void onLinkClicked();
 
 private:
     void setupController();

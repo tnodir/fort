@@ -15,7 +15,6 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <driver/drivermanager.h>
 #include <form/controls/controlutil.h>
 #include <form/dialog/passworddialog.h>
 #include <form/opt/optionscontroller.h>
@@ -24,8 +23,6 @@
 #include <fortsettings.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
-#include <task/taskinfoupdatechecker.h>
-#include <task/taskmanager.h>
 #include <user/iniuser.h>
 #include <util/iconcache.h>
 #include <util/osutil.h>
@@ -157,8 +154,6 @@ void OptionsPage::onRetranslateUi()
     m_gbTray->setTitle(tr("Tray"));
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
     m_gbLogs->setTitle(tr("Logs"));
-    m_gbDriver->setTitle(tr("Driver"));
-    m_gbNewVersion->setTitle(tr("New Version"));
 
     m_labelStartMode->setText(tr("Auto-run:"));
     retranslateComboStartMode();
@@ -204,12 +199,6 @@ void OptionsPage::onRetranslateUi()
 
     m_cbLogDebug->setText(tr("Log debug messages"));
     m_cbLogConsole->setText(tr("Show log messages in console"));
-
-    retranslateDriverMessage();
-    m_btInstallDriver->setText(tr("Reinstall"));
-    m_btRemoveDriver->setText(tr("Remove"));
-
-    m_btNewVersion->setText(tr("Download"));
 }
 
 void OptionsPage::retranslateComboStartMode()
@@ -303,15 +292,6 @@ void OptionsPage::retranslateComboTrayAction()
     m_comboTrayAction->clear();
     m_comboTrayAction->addItems(list);
     m_comboTrayAction->setCurrentIndex(-1);
-}
-
-void OptionsPage::retranslateDriverMessage()
-{
-    const auto text = driverManager()->isDeviceError()
-            ? driverManager()->errorMessage()
-            : (driverManager()->isDeviceOpened() ? tr("Installed") : tr("Not Installed"));
-
-    m_labelDriverMessage->setText(text);
 }
 
 void OptionsPage::setupStartup()
@@ -740,125 +720,7 @@ QLayout *OptionsPage::setupColumn2()
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
 
-    // Driver Group Box
-    setupDriverBox();
-    layout->addWidget(m_gbDriver);
-
-    // New Version Group Box
-    setupNewVersionBox();
-    setupNewVersionUpdate();
-    layout->addWidget(m_gbNewVersion);
-
     layout->addStretch();
 
     return layout;
-}
-
-void OptionsPage::setupDriverBox()
-{
-    auto colLayout = new QVBoxLayout();
-    colLayout->setSpacing(10);
-
-    // Label Row
-    auto labelLayout = new QHBoxLayout();
-    labelLayout->setSpacing(4);
-    colLayout->addLayout(labelLayout);
-
-    m_labelDriverMessage = ControlUtil::createLabel();
-    m_labelDriverMessage->setWordWrap(true);
-    m_labelDriverMessage->setFont(ControlUtil::fontDemiBold());
-
-    setupDriverIcon();
-
-    labelLayout->addStretch();
-    labelLayout->addWidget(m_iconDriver, 0, Qt::AlignTop);
-    labelLayout->addWidget(m_labelDriverMessage);
-    labelLayout->addStretch();
-
-    // Buttons Row
-    auto buttonsLayout = new QHBoxLayout();
-    buttonsLayout->setSpacing(10);
-    colLayout->addLayout(buttonsLayout);
-
-    m_btInstallDriver = ControlUtil::createButton(QString(), [&] {
-        windowManager()->showConfirmBox([&] { fortManager()->installDriver(); },
-                tr("Are you sure to reinstall the Driver?"));
-    });
-    m_btRemoveDriver = ControlUtil::createButton(QString(), [&] {
-        windowManager()->showConfirmBox(
-                [&] { fortManager()->removeDriver(); }, tr("Are you sure to remove the Driver?"));
-    });
-
-    if (!settings()->isUserAdmin()) {
-        m_btInstallDriver->setEnabled(false);
-        m_btRemoveDriver->setEnabled(false);
-    }
-    m_btRemoveDriver->setVisible(!settings()->hasService());
-
-    buttonsLayout->addStretch();
-    buttonsLayout->addWidget(m_btInstallDriver);
-    buttonsLayout->addWidget(m_btRemoveDriver);
-    buttonsLayout->addStretch();
-
-    m_gbDriver = new QGroupBox();
-    m_gbDriver->setLayout(colLayout);
-}
-
-void OptionsPage::setupDriverIcon()
-{
-    m_iconDriver = ControlUtil::createLabel();
-    m_iconDriver->setScaledContents(true);
-    m_iconDriver->setMaximumSize(16, 16);
-    m_iconDriver->setPixmap(IconCache::file(":/icons/server_components.png"));
-
-    const auto refreshDriverInfo = [&] {
-        m_iconDriver->setEnabled(driverManager()->isDeviceOpened());
-        retranslateDriverMessage();
-    };
-
-    refreshDriverInfo();
-
-    connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverInfo);
-    connect(driverManager(), &DriverManager::errorCodeChanged, this,
-            &OptionsPage::retranslateDriverMessage);
-}
-
-void OptionsPage::setupNewVersionBox()
-{
-    auto colLayout = new QVBoxLayout();
-    colLayout->setSpacing(10);
-
-    // Label
-    m_labelNewVersion = ControlUtil::createLabel();
-    m_labelNewVersion->setTextFormat(Qt::MarkdownText);
-    m_labelNewVersion->setWordWrap(true);
-    m_labelNewVersion->setOpenExternalLinks(true);
-    colLayout->addWidget(m_labelNewVersion);
-
-    // Button
-    m_btNewVersion = ControlUtil::createLinkButton(":/icons/download_for_windows.png");
-
-    connect(m_btNewVersion, &QAbstractButton::clicked, this, &OptionsPage::onLinkClicked);
-
-    colLayout->addWidget(m_btNewVersion, 0, Qt::AlignHCenter);
-
-    m_gbNewVersion = new QGroupBox();
-    m_gbNewVersion->setMinimumWidth(380);
-    m_gbNewVersion->setLayout(colLayout);
-}
-
-void OptionsPage::setupNewVersionUpdate()
-{
-    const auto refreshNewVersion = [&] {
-        auto updateChecker = taskManager()->taskInfoUpdateChecker();
-        m_gbNewVersion->setVisible(updateChecker->isNewVersion());
-        m_labelNewVersion->setText(updateChecker->releaseText());
-        m_btNewVersion->setWindowFilePath(updateChecker->downloadUrl());
-        m_btNewVersion->setToolTip(updateChecker->downloadUrl());
-    };
-
-    refreshNewVersion();
-
-    connect(taskManager()->taskInfoUpdateChecker(), &TaskInfoUpdateChecker::versionChanged, this,
-            refreshNewVersion);
 }

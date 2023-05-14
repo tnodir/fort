@@ -1,5 +1,7 @@
 #include "basecontroller.h"
 
+#include <QAbstractButton>
+
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <driver/drivermanager.h>
@@ -10,6 +12,7 @@
 #include <manager/windowmanager.h>
 #include <task/taskmanager.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
 
 BaseController::BaseController(QObject *parent) : QObject(parent)
 {
@@ -70,4 +73,12 @@ WindowManager *BaseController::windowManager() const
 TaskManager *BaseController::taskManager() const
 {
     return IoC<TaskManager>();
+}
+
+void BaseController::onLinkClicked()
+{
+    auto button = qobject_cast<QAbstractButton *>(sender());
+    if (button) {
+        OsUtil::openUrlOrFolder(button->windowFilePath());
+    }
 }

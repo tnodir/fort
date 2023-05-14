@@ -36,6 +36,9 @@ public:
 
 signals:
     void retranslateUi();
+
+public slots:
+    void onLinkClicked();
 };
 
 #endif // BASECONTROLLER_H

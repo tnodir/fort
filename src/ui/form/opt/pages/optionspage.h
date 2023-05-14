@@ -31,7 +31,6 @@ private:
     void retranslateEditPassword();
     void retranslateComboTrayEvent();
     void retranslateComboTrayAction();
-    void retranslateDriverMessage();
 
     void setupStartup();
 
@@ -56,10 +55,6 @@ private:
     void setupConfirmationsBox();
     void setupLogsBox();
     QLayout *setupColumn2();
-    void setupDriverBox();
-    void setupDriverIcon();
-    void setupNewVersionBox();
-    void setupNewVersionUpdate();
 
 private:
     bool m_passwordEdited : 1;
@@ -75,8 +70,6 @@ private:
     QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbConfirmations = nullptr;
     QGroupBox *m_gbLogs = nullptr;
-    QGroupBox *m_gbDriver = nullptr;
-    QGroupBox *m_gbNewVersion = nullptr;
     QLabel *m_labelStartMode = nullptr;
     QComboBox *m_comboAutoRun = nullptr;
     QCheckBox *m_cbService = nullptr;
@@ -107,12 +100,6 @@ private:
     QCheckBox *m_cbConfirmQuit = nullptr;
     QCheckBox *m_cbLogDebug = nullptr;
     QCheckBox *m_cbLogConsole = nullptr;
-    QLabel *m_iconDriver = nullptr;
-    QLabel *m_labelDriverMessage = nullptr;
-    QPushButton *m_btInstallDriver = nullptr;
-    QPushButton *m_btRemoveDriver = nullptr;
-    QLabel *m_labelNewVersion = nullptr;
-    QPushButton *m_btNewVersion = nullptr;
 };
 
 #endif // OPTIONSPAGE_H

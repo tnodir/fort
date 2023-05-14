@@ -14,7 +14,18 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
+    void retranslateDriverMessage();
+
     void setupUi();
+    void setupDriverBox();
+    void setupDriverIcon();
+
+private:
+    QGroupBox *m_gbDriver = nullptr;
+    QLabel *m_iconDriver = nullptr;
+    QLabel *m_labelDriverMessage = nullptr;
+    QPushButton *m_btInstallDriver = nullptr;
+    QPushButton *m_btRemoveDriver = nullptr;
 };
 
 #endif // HOMEPAGE_H

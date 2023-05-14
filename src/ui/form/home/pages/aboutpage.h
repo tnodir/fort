@@ -15,6 +15,13 @@ protected slots:
 
 private:
     void setupUi();
+    void setupNewVersionBox();
+    void setupNewVersionUpdate();
+
+private:
+    QGroupBox *m_gbNewVersion = nullptr;
+    QLabel *m_labelNewVersion = nullptr;
+    QPushButton *m_btNewVersion = nullptr;
 };
 
 #endif // ABOUTPAGE_H

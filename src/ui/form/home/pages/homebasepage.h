@@ -14,10 +14,13 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QTabBar)
 
 class ConfManager;
+class DriverManager;
 class FirewallConf;
 class FortManager;
+class FortSettings ;
 class IniUser;
 class HomeController;
+class TaskManager;
 class TranslationManager;
 class WindowManager;
 
@@ -31,9 +34,12 @@ public:
 protected:
     HomeController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
+    FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniUser *iniUser() const;
+    DriverManager *driverManager() const;
+    TaskManager *taskManager() const;
     TranslationManager *translationManager() const;
     WindowManager *windowManager() const;
 

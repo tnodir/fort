@@ -15,6 +15,11 @@ FortManager *HomeBasePage::fortManager() const
     return ctrl()->fortManager();
 }
 
+FortSettings *HomeBasePage::settings() const
+{
+    return ctrl()->settings();
+}
+
 ConfManager *HomeBasePage::confManager() const
 {
     return ctrl()->confManager();
@@ -28,6 +33,16 @@ FirewallConf *HomeBasePage::conf() const
 IniUser *HomeBasePage::iniUser() const
 {
     return ctrl()->iniUser();
+}
+
+DriverManager *HomeBasePage::driverManager() const
+{
+    return ctrl()->driverManager();
+}
+
+TaskManager *HomeBasePage::taskManager() const
+{
+    return ctrl()->taskManager();
 }
 
 TranslationManager *HomeBasePage::translationManager() const

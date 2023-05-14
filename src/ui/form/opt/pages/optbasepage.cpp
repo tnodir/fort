@@ -1,12 +1,9 @@
 #include "optbasepage.h"
 
-#include <QAbstractButton>
-
 #include <conf/firewallconf.h>
 #include <form/opt/optionscontroller.h>
 #include <fortmanager.h>
 #include <user/iniuser.h>
-#include <util/osutil.h>
 
 OptBasePage::OptBasePage(OptionsController *ctrl, QWidget *parent) : QFrame(parent), m_ctrl(ctrl)
 {
@@ -43,11 +40,6 @@ IniUser *OptBasePage::iniUser() const
     return ctrl()->iniUserToEdit();
 }
 
-DriverManager *OptBasePage::driverManager() const
-{
-    return ctrl()->driverManager();
-}
-
 TranslationManager *OptBasePage::translationManager() const
 {
     return ctrl()->translationManager();
@@ -81,12 +73,4 @@ void OptBasePage::setupController()
             &OptBasePage::onRestoreWindowState);
 
     connect(ctrl(), &OptionsController::retranslateUi, this, &OptBasePage::onRetranslateUi);
-}
-
-void OptBasePage::onLinkClicked()
-{
-    auto button = qobject_cast<QAbstractButton *>(sender());
-    if (button) {
-        OsUtil::openUrlOrFolder(button->windowFilePath());
-    }
 }

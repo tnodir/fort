@@ -101,10 +101,10 @@ QLayout *OptMainPage::setupDialogButtons()
     m_btStat = ControlUtil::createLinkButton(":/icons/folder.png", settings()->statPath());
     m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", APP_UPDATES_URL);
 
-    connect(m_btLogs, &QAbstractButton::clicked, this, &OptMainPage::onLinkClicked);
-    connect(m_btProfile, &QAbstractButton::clicked, this, &OptMainPage::onLinkClicked);
-    connect(m_btStat, &QAbstractButton::clicked, this, &OptMainPage::onLinkClicked);
-    connect(m_btReleases, &QAbstractButton::clicked, this, &OptMainPage::onLinkClicked);
+    connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btProfile, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btStat, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btReleases, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
 
     buttonsLayout->addWidget(m_btLogs);
     buttonsLayout->addWidget(m_btProfile);
