@@ -24,7 +24,7 @@ private:
     void setCurrentIndex(int tabIndex);
 
 private:
-    QToolButton *m_btUpdates = nullptr;
+    QToolButton *m_btHome = nullptr;
     QToolButton *m_btAbout = nullptr;
     QStackedLayout *m_stackedLayout = nullptr;
 };

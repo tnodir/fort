@@ -1,4 +1,4 @@
-#include "updatespage.h"
+#include "homepage.h"
 
 #include <QVBoxLayout>
 
@@ -6,16 +6,16 @@
 #include <form/home/homecontroller.h>
 #include <util/iconcache.h>
 
-UpdatesPage::UpdatesPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
+HomePage::HomePage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
 {
     setupUi();
 }
 
-void UpdatesPage::onRetranslateUi()
+void HomePage::onRetranslateUi()
 {
 }
 
-void UpdatesPage::setupUi()
+void HomePage::setupUi()
 {
     auto layout = new QVBoxLayout();
 

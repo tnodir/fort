@@ -239,7 +239,7 @@ QLayout *ProgramsWindow::setupHeader()
             &WindowManager::showServicesWindow);
 
     // Menu button
-    m_btMenu = ControlUtil::createLinkButton(":/icons/node-tree.png");
+    m_btMenu = ControlUtil::createLinkButton(":/icons/large_tiles.png");
     m_btMenu->setMenu(windowManager()->trayIcon()->menu());
 
     layout->addWidget(m_btEdit);

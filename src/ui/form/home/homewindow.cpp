@@ -137,7 +137,7 @@ QWidget *HomeWindow::setupHeader()
     auto textLogo = setupLogoText();
 
     // Menu button
-    m_btMenu = ControlUtil::createButton(":/icons/node-tree.png");
+    m_btMenu = ControlUtil::createButton(":/icons/large_tiles.png");
     m_btMenu->setMenu(windowManager()->trayIcon()->menu());
 
     layout->addWidget(iconLogo);

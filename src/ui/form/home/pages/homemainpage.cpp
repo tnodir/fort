@@ -13,7 +13,7 @@
 #include <util/iconcache.h>
 
 #include "aboutpage.h"
-#include "updatespage.h"
+#include "homepage.h"
 
 HomeMainPage::HomeMainPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
 {
@@ -22,7 +22,7 @@ HomeMainPage::HomeMainPage(HomeController *ctrl, QWidget *parent) : HomeBasePage
 
 void HomeMainPage::onRetranslateUi()
 {
-    m_btUpdates->setText(tr("Updates"));
+    m_btHome->setText(tr("My Fort"));
     m_btAbout->setText(tr("About"));
 }
 
@@ -52,7 +52,7 @@ QLayout *HomeMainPage::setupSideBar()
 
     setupSideBarButtons();
 
-    layout->addWidget(m_btUpdates);
+    layout->addWidget(m_btHome);
     layout->addWidget(m_btAbout);
     layout->addStretch();
 
@@ -61,9 +61,8 @@ QLayout *HomeMainPage::setupSideBar()
 
 void HomeMainPage::setupSideBarButtons()
 {
-    m_btUpdates = ControlUtil::createSideButton(
-            ":/icons/arrow_refresh_small.png", [&] { setCurrentIndex(0); });
-    m_btUpdates->setChecked(true);
+    m_btHome = ControlUtil::createSideButton(":/icons/tower.png", [&] { setCurrentIndex(0); });
+    m_btHome->setChecked(true);
 
     m_btAbout =
             ControlUtil::createSideButton(":/icons/information.png", [&] { setCurrentIndex(1); });
@@ -73,7 +72,7 @@ void HomeMainPage::setupStackedLayout()
 {
     m_stackedLayout = new QStackedLayout();
 
-    m_stackedLayout->addWidget(new UpdatesPage(ctrl()));
+    m_stackedLayout->addWidget(new HomePage(ctrl()));
     m_stackedLayout->addWidget(new AboutPage(ctrl()));
 }
 

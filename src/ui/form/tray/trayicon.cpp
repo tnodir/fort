@@ -347,7 +347,7 @@ void TrayIcon::setupTrayMenu()
 {
     m_menu = ControlUtil::createMenu(windowManager()->mainWindow());
 
-    m_homeAction = addAction(m_menu, ":/icons/fort.png", windowManager(), SLOT(showHomeWindow()));
+    m_homeAction = addAction(m_menu, ":/icons/tower.png", windowManager(), SLOT(showHomeWindow()));
     addHotKey(m_homeAction, iniUser()->hotKeyHome());
 
     m_programsAction = addAction(

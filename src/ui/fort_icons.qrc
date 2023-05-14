@@ -37,9 +37,9 @@
     <file>icons/ip.png</file>
     <file>icons/ip_class.png</file>
     <file>icons/key.png</file>
+    <file>icons/large_tiles.png</file>
     <file>icons/lightbulb.png</file>
     <file>icons/lock_open.png</file>
-    <file>icons/node-tree.png</file>
     <file>icons/page_copy.png</file>
     <file>icons/pencil.png</file>
     <file>icons/play.png</file>
@@ -48,6 +48,7 @@
     <file>icons/scull.png</file>
     <file>icons/server_components.png</file>
     <file>icons/time.png</file>
+    <file>icons/tower.png</file>
     <file>icons/traffic_lights.png</file>
     <file>icons/windows-48.png</file>
     <file>icons/wrench.png</file>
