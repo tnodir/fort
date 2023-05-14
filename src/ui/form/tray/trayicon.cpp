@@ -137,12 +137,14 @@ void setActionCheckable(QAction *action, bool checked = false, const QObject *re
     }
 }
 
-QAction *addAction(QWidget *widget, const QIcon &icon, const QString &text,
-        const QObject *receiver = nullptr, const char *member = nullptr, bool checkable = false,
-        bool checked = false)
+QAction *addAction(QWidget *widget, const QString &iconPath, const QObject *receiver = nullptr,
+        const char *member = nullptr, bool checkable = false, bool checked = false)
 {
-    auto action = new QAction(icon, text, widget);
+    auto action = new QAction(widget);
 
+    if (!iconPath.isEmpty()) {
+        action->setIcon(IconCache::icon(iconPath));
+    }
     if (receiver) {
         QObject::connect(action, SIGNAL(triggered(bool)), receiver, member);
     }
@@ -345,41 +347,36 @@ void TrayIcon::setupTrayMenu()
 {
     m_menu = ControlUtil::createMenu(windowManager()->mainWindow());
 
-    m_homeAction = addAction(m_menu, IconCache::icon(":/icons/fort.png"), QString(),
-            windowManager(), SLOT(showHomeWindow()));
+    m_homeAction = addAction(m_menu, ":/icons/fort.png", windowManager(), SLOT(showHomeWindow()));
     addHotKey(m_homeAction, iniUser()->hotKeyHome());
 
-    m_programsAction = addAction(m_menu, IconCache::icon(":/icons/application.png"), QString(),
-            windowManager(), SLOT(showProgramsWindow()));
+    m_programsAction = addAction(
+            m_menu, ":/icons/application.png", windowManager(), SLOT(showProgramsWindow()));
     addHotKey(m_programsAction, iniUser()->hotKeyPrograms());
 
     setupTrayMenuOptions();
     m_menu->addMenu(m_optionsMenu);
 
-    m_statisticsAction = addAction(m_menu, IconCache::icon(":/icons/chart_bar.png"), QString(),
-            windowManager(), SLOT(showStatisticsWindow()));
+    m_statisticsAction = addAction(
+            m_menu, ":/icons/chart_bar.png", windowManager(), SLOT(showStatisticsWindow()));
     addHotKey(m_statisticsAction, iniUser()->hotKeyStatistics());
 
-    m_graphAction = addAction(m_menu, IconCache::icon(":/icons/action_log.png"), QString(),
-            windowManager(), SLOT(switchGraphWindow()), true, !!windowManager()->graphWindow());
+    m_graphAction = addAction(m_menu, ":/icons/action_log.png", windowManager(),
+            SLOT(switchGraphWindow()), true, !!windowManager()->graphWindow());
     addHotKey(m_graphAction, iniUser()->hotKeyGraph());
 
     m_menu->addSeparator();
 
-    m_filterEnabledAction =
-            addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
+    m_filterEnabledAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_filterEnabledAction, iniUser()->hotKeyFilter());
 
-    m_stopTrafficAction =
-            addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
+    m_stopTrafficAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_stopTrafficAction, iniUser()->hotKeyStopTraffic());
 
-    m_stopInetTrafficAction =
-            addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), true);
+    m_stopInetTrafficAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)), true);
     addHotKey(m_stopInetTrafficAction, iniUser()->hotKeyStopInetTraffic());
 
-    m_filterModeMenuAction =
-            addAction(m_menu, QIcon(), QString(), this, SLOT(switchFilterModeMenu(bool)));
+    m_filterModeMenuAction = addAction(m_menu, QString(), this, SLOT(switchFilterModeMenu(bool)));
     m_filterModeMenuAction->setVisible(false);
 
     setupTrayMenuFilterMode();
@@ -388,8 +385,8 @@ void TrayIcon::setupTrayMenu()
     m_menu->addSeparator();
 
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
-        QAction *a = addAction(
-                m_menu, QIcon(), QString(), this, SLOT(switchTrayFlag(bool)), /*checkable=*/true);
+        QAction *a =
+                addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)), /*checkable=*/true);
 
         if (i < 12) {
             const QString shortcutText =
@@ -403,10 +400,10 @@ void TrayIcon::setupTrayMenu()
 
     m_menu->addSeparator();
 
-    m_quitAction = addAction(m_menu, QIcon(), tr("Quit"), this, SLOT(quitProgram()));
+    m_quitAction = addAction(m_menu, QString(), this, SLOT(quitProgram()));
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
 
-    m_trayMenuAction = addAction(m_menu, QIcon(), QString(), this, SLOT(switchTrayMenu(bool)));
+    m_trayMenuAction = addAction(m_menu, QString(), this, SLOT(switchTrayMenu(bool)));
     m_trayMenuAction->setVisible(false);
 }
 
@@ -415,21 +412,21 @@ void TrayIcon::setupTrayMenuOptions()
     m_optionsMenu = new ClickableMenu(m_menu);
     m_optionsMenu->setIcon(IconCache::icon(":/icons/cog.png"));
 
-    m_optionsAction = addAction(m_optionsMenu, IconCache::icon(":/icons/cog.png"), QString(),
-            windowManager(), SLOT(showOptionsWindow()));
+    m_optionsAction =
+            addAction(m_optionsMenu, ":/icons/cog.png", windowManager(), SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, iniUser()->hotKeyOptions());
 
     connect(m_optionsMenu, &ClickableMenu::clicked, m_optionsAction, &QAction::trigger);
 
-    m_policiesAction = addAction(m_optionsMenu, IconCache::icon(":/icons/traffic_lights.png"),
-            QString(), windowManager(), SLOT(showPoliciesWindow()));
+    m_policiesAction = addAction(m_optionsMenu, ":/icons/traffic_lights.png", windowManager(),
+            SLOT(showPoliciesWindow()));
     addHotKey(m_policiesAction, iniUser()->hotKeyPolicies());
 
     // TODO: Implement Policies
     m_policiesAction->setEnabled(false);
 
-    m_zonesAction = addAction(m_optionsMenu, IconCache::icon(":/icons/ip_class.png"), QString(),
-            windowManager(), SLOT(showZonesWindow()));
+    m_zonesAction = addAction(
+            m_optionsMenu, ":/icons/ip_class.png", windowManager(), SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, iniUser()->hotKeyZones());
 }
 
@@ -446,9 +443,10 @@ void TrayIcon::setupTrayMenuFilterMode()
         const QString iconPath = iconPaths.at(index);
         const QString hotKey = hotKeys.at(index);
 
-        QAction *a = addAction(m_filterModeMenu, IconCache::icon(iconPath), name,
-                /*receiver=*/nullptr,
-                /*member=*/nullptr, /*checkable=*/true);
+        QAction *a = addAction(m_filterModeMenu, iconPath, /*receiver=*/nullptr, /*member=*/nullptr,
+                /*checkable=*/true);
+        a->setText(name);
+
         addHotKey(a, iniUser()->hotKeyValue(hotKey));
 
         // TODO: Implement Ask to Connect
