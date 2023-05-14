@@ -15,23 +15,6 @@
 #include "aboutpage.h"
 #include "updatespage.h"
 
-namespace {
-
-QToolButton *createToolButton(const QString &iconPath, const std::function<void()> &onClicked)
-{
-    auto c = ControlUtil::createFlatToolButton(iconPath, onClicked);
-    c->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
-    c->setAutoExclusive(true);
-    c->setCheckable(true);
-
-    c->setIconSize(QSize(24, 24));
-    c->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-
-    return c;
-}
-
-}
-
 HomeMainPage::HomeMainPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
 {
     setupUi();
@@ -47,6 +30,7 @@ void HomeMainPage::setupUi()
 {
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(6, 6, 6, 6);
+    layout->setSpacing(0);
 
     // Side Bar
     auto sideBar = setupSideBar();
@@ -55,7 +39,6 @@ void HomeMainPage::setupUi()
     setupStackedLayout();
 
     layout->addLayout(sideBar);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addLayout(m_stackedLayout, 1);
 
     this->setLayout(layout);
@@ -78,15 +61,12 @@ QLayout *HomeMainPage::setupSideBar()
 
 void HomeMainPage::setupSideBarButtons()
 {
-    QPalette palette;
-    palette.setColor(QPalette::Highlight, QColor(0x26, 0x26, 0x26));
-
-    m_btUpdates = createToolButton(":/icons/arrow_refresh_small.png", [&] { setCurrentIndex(0); });
-    m_btUpdates->setPalette(palette);
+    m_btUpdates = ControlUtil::createSideButton(
+            ":/icons/arrow_refresh_small.png", [&] { setCurrentIndex(0); });
     m_btUpdates->setChecked(true);
 
-    m_btAbout = createToolButton(":/icons/information.png", [&] { setCurrentIndex(1); });
-    m_btAbout->setPalette(palette);
+    m_btAbout =
+            ControlUtil::createSideButton(":/icons/information.png", [&] { setCurrentIndex(1); });
 }
 
 void HomeMainPage::setupStackedLayout()

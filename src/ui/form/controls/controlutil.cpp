@@ -17,6 +17,7 @@
 #include "labeldoublespin.h"
 #include "labelspin.h"
 #include "labelspincombo.h"
+#include "sidebutton.h"
 #include "spinbox.h"
 
 QCheckBox *ControlUtil::createCheckBox(
@@ -66,6 +67,25 @@ QPushButton *ControlUtil::createButton(
     auto c = new QPushButton(IconCache::icon(iconPath), QString());
 
     c->connect(c, &QPushButton::clicked, onClicked);
+
+    return c;
+}
+
+QToolButton *ControlUtil::createSideButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
+{
+    auto c = new SideButton();
+    c->setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
+    c->setAutoRaise(true);
+    c->setAutoExclusive(true);
+    c->setCheckable(true);
+
+    c->setIcon(IconCache::icon(iconPath));
+
+    c->setIconSize(QSize(24, 24));
+    c->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+
+    c->connect(c, &QToolButton::clicked, onClicked);
 
     return c;
 }

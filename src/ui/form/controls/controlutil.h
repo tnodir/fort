@@ -39,6 +39,8 @@ public:
     static QPushButton *createButton(
             const QString &iconPath, const std::function<void()> &onClicked);
 
+    static QToolButton *createSideButton(
+            const QString &iconPath, const std::function<void()> &onClicked);
     static QToolButton *createToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
     static QToolButton *createFlatToolButton(
