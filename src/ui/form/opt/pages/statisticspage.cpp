@@ -374,7 +374,7 @@ void StatisticsPage::setupAllowedConnBox()
     m_gbAllowedConn = new QGroupBox();
     m_gbAllowedConn->setLayout(layout);
 
-    // m_gbAllowedConn->setVisible(false); // TODO: Impl. allowed connections
+    m_gbAllowedConn->setVisible(false); // TODO: Implement allowed connections
 }
 
 void StatisticsPage::setupLogAllowedIp()
