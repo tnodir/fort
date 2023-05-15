@@ -303,13 +303,30 @@ void FortManager::setupTaskManager()
 {
     auto taskManager = IoC<TaskManager>();
 
+    connect(taskManager, &TaskManager::appVersionDownloaded, this, [&](const QString &version) {
+        IoC<WindowManager>()->showTrayMessage(
+                tr("New version v%1 available!").arg(version), WindowManager::MessageNewVersion);
+    });
+
+    connect(taskManager, &TaskManager::zonesDownloaded, this, [&](const QStringList &zoneNames) {
+        IoC<WindowManager>()->showTrayMessage(
+                tr("Zone Addresses Updated: %1.").arg(zoneNames.join(", ")),
+                WindowManager::MessageZones);
+    });
+
+    connect(taskManager, &TaskManager::zonesUpdated, IoC<ConfManager>(),
+            &ConfManager::updateDriverZones);
+
     connect(taskManager, &TaskManager::taskDoubleClicked, this, [&](qint8 taskType) {
-        if (taskType == TaskInfo::ZoneDownloader) {
+        switch (taskType) {
+        case TaskInfo::UpdateChecker: {
+            IoC<WindowManager>()->showHomeWindowAbout();
+        } break;
+        case TaskInfo::ZoneDownloader: {
             IoC<WindowManager>()->showZonesWindow();
+        } break;
         }
     });
-    connect(taskManager->taskInfoZoneDownloader(), &TaskInfoZoneDownloader::zonesUpdated,
-            IoC<ConfManager>(), &ConfManager::updateDriverZones);
 }
 
 void FortManager::setupTranslationManager()

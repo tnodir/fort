@@ -4,13 +4,13 @@
 
 #include <conf/confmanager.h>
 #include <fortsettings.h>
-#include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
 #include <model/zonesourcewrapper.h>
 #include <model/zonetypewrapper.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
+#include "taskmanager.h"
 #include "taskzonedownloader.h"
 
 TaskInfoZoneDownloader::TaskInfoZoneDownloader(TaskManager &taskManager) :
@@ -33,9 +33,8 @@ bool TaskInfoZoneDownloader::processResult(bool success)
     if (!success)
         return false;
 
-    IoC<WindowManager>()->showTrayMessage(
-            tr("Zone Addresses Updated: %1.").arg(m_zoneNames.join(", ")),
-            WindowManager::MessageZones);
+    emit taskManager()->zonesDownloaded(m_zoneNames);
+
     return true;
 }
 
@@ -192,7 +191,7 @@ void TaskInfoZoneDownloader::addSubResult(TaskZoneDownloader *worker, bool succe
 
 void TaskInfoZoneDownloader::emitZonesUpdated()
 {
-    emit zonesUpdated(m_dataZonesMask, m_enabledMask, m_dataSize, m_zonesData);
+    emit taskManager()->zonesUpdated(m_dataZonesMask, m_enabledMask, m_dataSize, m_zonesData);
 
     removeOrphanCacheFiles();
 

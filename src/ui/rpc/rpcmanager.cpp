@@ -487,6 +487,12 @@ bool processTaskManagerRpc(const ProcessCommandArgs &p, QVariantList & /*resArgs
         return processTaskManager_taskStarted(taskManager, p);
     case Control::Rpc_TaskManager_taskFinished:
         return processTaskManager_taskFinished(taskManager, p);
+    case Control::Rpc_TaskManager_appVersionDownloaded:
+        emit taskManager->appVersionDownloaded(p.args[0].toString());
+        return true;
+    case Control::Rpc_TaskManager_zonesDownloaded:
+        emit taskManager->zonesDownloaded(p.args[0].toStringList());
+        return true;
     default:
         return false;
     }
@@ -613,6 +619,13 @@ void RpcManager::setupTaskManagerSignals()
     });
     connect(taskManager, &TaskManager::taskFinished, this, [&](qint8 taskType) {
         invokeOnClients(Control::Rpc_TaskManager_taskFinished, { taskType });
+    });
+
+    connect(taskManager, &TaskManager::appVersionDownloaded, this, [&](const QString &version) {
+        invokeOnClients(Control::Rpc_TaskManager_appVersionDownloaded, { version });
+    });
+    connect(taskManager, &TaskManager::zonesDownloaded, this, [&](const QStringList &zoneNames) {
+        invokeOnClients(Control::Rpc_TaskManager_zonesDownloaded, { zoneNames });
     });
 }
 

@@ -290,6 +290,12 @@ void WindowManager::closeHomeWindow()
     m_homeWindow = nullptr;
 }
 
+void WindowManager::showHomeWindowAbout()
+{
+    showHomeWindow();
+    homeWindow()->selectAboutTab();
+}
+
 void WindowManager::showProgramsWindow()
 {
     if (!widgetVisibleByCheckPassword(m_progWindow))
@@ -620,8 +626,7 @@ void WindowManager::onTrayMessageClicked()
 {
     switch (m_lastMessageType) {
     case MessageNewVersion: {
-        showHomeWindow();
-        homeWindow()->selectAboutTab();
+        showHomeWindowAbout();
     } break;
     case MessageZones: {
         showZonesWindow();

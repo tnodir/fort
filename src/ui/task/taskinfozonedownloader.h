@@ -18,10 +18,6 @@ public:
     TaskZoneDownloader *zoneDownloader() const;
     ZoneListModel *zoneListModel() const;
 
-signals:
-    void zonesUpdated(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
-            const QList<QByteArray> &zonesData);
-
 public slots:
     bool processResult(bool success) override;
 

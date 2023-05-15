@@ -32,6 +32,13 @@ signals:
 
     void taskDoubleClicked(qint8 taskType);
 
+    void appVersionUpdated(const QString &version);
+    void appVersionDownloaded(const QString &version);
+
+    void zonesUpdated(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
+            const QList<QByteArray> &zonesData);
+    void zonesDownloaded(const QStringList &zoneNames);
+
 public slots:
     void loadSettings();
     bool saveSettings();

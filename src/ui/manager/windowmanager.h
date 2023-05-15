@@ -59,6 +59,8 @@ public slots:
     void showHomeWindow();
     void closeHomeWindow();
 
+    void showHomeWindowAbout();
+
     void showProgramsWindow();
     void closeProgramsWindow();
 

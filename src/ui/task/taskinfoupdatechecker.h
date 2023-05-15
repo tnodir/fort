@@ -8,9 +8,6 @@ class TaskUpdateChecker;
 class TaskInfoUpdateChecker : public TaskInfo
 {
     Q_OBJECT
-    Q_PROPERTY(QString version READ version NOTIFY versionChanged)
-    Q_PROPERTY(QString downloadUrl READ downloadUrl NOTIFY versionChanged)
-    Q_PROPERTY(QString releaseText READ releaseText NOTIFY versionChanged)
 
 public:
     explicit TaskInfoUpdateChecker(TaskManager &taskManager);
@@ -25,11 +22,11 @@ public:
 
     TaskUpdateChecker *updateChecker() const;
 
-signals:
-    void versionChanged();
-
 public slots:
     bool processResult(bool success) override;
+
+private:
+    void emitAppVersionUpdated();
 
 private:
     QString m_version;

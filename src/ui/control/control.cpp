@@ -64,6 +64,8 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_TaskManager_abortTask)
         CASE_STRING(Rpc_TaskManager_taskStarted)
         CASE_STRING(Rpc_TaskManager_taskFinished)
+        CASE_STRING(Rpc_TaskManager_appVersionDownloaded)
+        CASE_STRING(Rpc_TaskManager_zonesDownloaded)
 
     default:
         return nullptr;
@@ -147,6 +149,8 @@ RpcManager managerByCommand(Command cmd)
         Rpc_TaskManager, // Rpc_TaskManager_abortTask,
         Rpc_TaskManager, // Rpc_TaskManager_taskStarted,
         Rpc_TaskManager, // Rpc_TaskManager_taskFinished,
+        Rpc_TaskManager, // Rpc_TaskManager_appVersionDownloaded,
+        Rpc_TaskManager, // Rpc_TaskManager_zonesDownloaded,
     };
 
     return g_commandManagers[cmd];
@@ -209,6 +213,8 @@ bool commandRequiresValidation(Command cmd)
         true, // Rpc_TaskManager_abortTask,
         0, // Rpc_TaskManager_taskStarted,
         0, // Rpc_TaskManager_taskFinished,
+        0, // Rpc_TaskManager_appVersionDownloaded,
+        0, // Rpc_TaskManager_zonesDownloaded,
     };
 
     return g_commandValidations[cmd];

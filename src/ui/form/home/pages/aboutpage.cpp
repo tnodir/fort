@@ -73,6 +73,5 @@ void AboutPage::setupNewVersionUpdate()
 
     refreshNewVersion();
 
-    connect(taskManager()->taskInfoUpdateChecker(), &TaskInfoUpdateChecker::versionChanged, this,
-            refreshNewVersion);
+    connect(taskManager(), &TaskManager::appVersionUpdated, this, refreshNewVersion);
 }

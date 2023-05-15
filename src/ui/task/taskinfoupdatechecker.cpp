@@ -5,9 +5,7 @@
 
 #include <fort_version.h>
 
-#include <manager/windowmanager.h>
-#include <util/ioc/ioccontainer.h>
-
+#include "taskmanager.h"
 #include "taskupdatechecker.h"
 
 #define TASK_INFO_VERSION 2
@@ -63,7 +61,7 @@ void TaskInfoUpdateChecker::setData(const QByteArray &data)
 
     stream >> m_version >> m_downloadUrl >> m_releaseText;
 
-    emit versionChanged();
+    emitAppVersionUpdated();
 }
 
 TaskUpdateChecker *TaskInfoUpdateChecker::updateChecker() const
@@ -85,12 +83,16 @@ bool TaskInfoUpdateChecker::processResult(bool success)
     m_downloadUrl = worker->downloadUrl();
     m_releaseText = worker->releaseText();
 
-    emit versionChanged();
+    emitAppVersionUpdated();
 
     if (isNewVersion()) {
-        IoC<WindowManager>()->showTrayMessage(
-                tr("New version v%1 available!").arg(m_version), WindowManager::MessageNewVersion);
+        emit taskManager()->appVersionDownloaded(m_version);
     }
 
     return true;
+}
+
+void TaskInfoUpdateChecker::emitAppVersionUpdated()
+{
+    emit taskManager()->appVersionUpdated(m_version);
 }
