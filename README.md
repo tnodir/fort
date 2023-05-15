@@ -1,4 +1,4 @@
-# Fort Firewall
+# <img src="https://github.com/dashke/fort/assets/77551811/bbc84688-c3f1-411f-8cf0-42329691cd64" alt="Icon" style="width: 30px; height: 30px;"> Fort Firewall
 
 [![Release](https://img.shields.io/github/release/tnodir/fort.svg)](https://github.com/tnodir/fort/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/tnodir/fort/total.svg?maxAge=86400)](https://github.com/tnodir/fort/releases)
@@ -33,7 +33,7 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 ## Requirements
 
   - Disabled [HVCI (Core Isolation)](https://github.com/tnodir/fort/discussions/40)
-  - [Visual C++ x86 (32-bit!) redistributable](https://aka.ms/vs/17/release/vc_redist.x86.exe)
+  - [Visual C++ x86 (32-bit!) redistributable package](https://aka.ms/vs/17/release/vc_redist.x86.exe)
 
 ## Wiki
 
