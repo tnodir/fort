@@ -7,6 +7,7 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 
 class ConfManager;
 class HomeController;
+class HomeMainPage;
 class IniUser;
 class WidgetWindowStateWatcher;
 class WindowManager;
@@ -28,6 +29,7 @@ public:
 
 public slots:
     void showMenu();
+    void selectAboutTab();
 
 private:
     void setupController();
@@ -43,6 +45,7 @@ private:
     HomeController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
+    HomeMainPage *m_mainPage = nullptr;
     QPushButton *m_btMenu = nullptr;
 };
 

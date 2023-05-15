@@ -10,7 +10,12 @@ class HomeMainPage : public HomeBasePage
     Q_OBJECT
 
 public:
+    enum TabIndex : qint8 { TabHome = 0, TabAbout };
+    Q_ENUM(TabIndex)
+
     explicit HomeMainPage(HomeController *ctrl = nullptr, QWidget *parent = nullptr);
+
+    void setCurrentTab(TabIndex tabIndex);
 
 protected slots:
     void onRetranslateUi() override;
@@ -21,11 +26,10 @@ private:
     void setupSideBarButtons();
     void setupStackedLayout();
 
-    void setCurrentIndex(int tabIndex);
+    QToolButton *buttonAt(TabIndex tabIndex) const { return m_buttons[tabIndex]; }
 
 private:
-    QToolButton *m_btHome = nullptr;
-    QToolButton *m_btAbout = nullptr;
+    QVector<QToolButton *> m_buttons;
     QStackedLayout *m_stackedLayout = nullptr;
 };
 

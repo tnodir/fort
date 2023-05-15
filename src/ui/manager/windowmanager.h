@@ -21,7 +21,7 @@ class WindowManager : public QObject, public IocService
     Q_OBJECT
 
 public:
-    enum TrayMessageType { MessageOptions, MessageZones };
+    enum TrayMessageType : qint8 { MessageOptions, MessageNewVersion, MessageZones };
     Q_ENUM(TrayMessageType)
 
     explicit WindowManager(QObject *parent = nullptr);

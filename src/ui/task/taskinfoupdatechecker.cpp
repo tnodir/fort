@@ -88,7 +88,8 @@ bool TaskInfoUpdateChecker::processResult(bool success)
     emit versionChanged();
 
     if (isNewVersion()) {
-        IoC<WindowManager>()->showTrayMessage(tr("New version v%1 available!").arg(m_version));
+        IoC<WindowManager>()->showTrayMessage(
+                tr("New version v%1 available!").arg(m_version), WindowManager::MessageNewVersion);
     }
 
     return true;

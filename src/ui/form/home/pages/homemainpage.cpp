@@ -22,8 +22,8 @@ HomeMainPage::HomeMainPage(HomeController *ctrl, QWidget *parent) : HomeBasePage
 
 void HomeMainPage::onRetranslateUi()
 {
-    m_btHome->setText(tr("My Fort"));
-    m_btAbout->setText(tr("About"));
+    buttonAt(TabHome)->setText(tr("My Fort"));
+    buttonAt(TabAbout)->setText(tr("About"));
 }
 
 void HomeMainPage::setupUi()
@@ -52,8 +52,9 @@ QLayout *HomeMainPage::setupSideBar()
 
     setupSideBarButtons();
 
-    layout->addWidget(m_btHome);
-    layout->addWidget(m_btAbout);
+    for (QToolButton *bt : m_buttons) {
+        layout->addWidget(bt);
+    }
     layout->addStretch();
 
     return layout;
@@ -61,11 +62,14 @@ QLayout *HomeMainPage::setupSideBar()
 
 void HomeMainPage::setupSideBarButtons()
 {
-    m_btHome = ControlUtil::createSideButton(":/icons/tower.png", [&] { setCurrentIndex(0); });
-    m_btHome->setChecked(true);
+    auto btHome =
+            ControlUtil::createSideButton(":/icons/tower.png", [&] { setCurrentTab(TabHome); });
+    btHome->setChecked(true);
 
-    m_btAbout =
-            ControlUtil::createSideButton(":/icons/information.png", [&] { setCurrentIndex(1); });
+    auto btAbout = ControlUtil::createSideButton(
+            ":/icons/information.png", [&] { setCurrentTab(TabAbout); });
+
+    m_buttons = { btHome, btAbout };
 }
 
 void HomeMainPage::setupStackedLayout()
@@ -76,7 +80,12 @@ void HomeMainPage::setupStackedLayout()
     m_stackedLayout->addWidget(new AboutPage(ctrl()));
 }
 
-void HomeMainPage::setCurrentIndex(int tabIndex)
+void HomeMainPage::setCurrentTab(TabIndex tabIndex)
 {
+    if (m_stackedLayout->currentIndex() == tabIndex)
+        return;
+
     m_stackedLayout->setCurrentIndex(tabIndex);
+
+    buttonAt(tabIndex)->animateClick();
 }

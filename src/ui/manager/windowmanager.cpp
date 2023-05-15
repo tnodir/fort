@@ -619,9 +619,13 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
 void WindowManager::onTrayMessageClicked()
 {
     switch (m_lastMessageType) {
-    case MessageZones:
+    case MessageNewVersion: {
+        showHomeWindow();
+        homeWindow()->selectAboutTab();
+    } break;
+    case MessageZones: {
         showZonesWindow();
-        break;
+    } break;
     default:
         showOptionsWindow();
     }

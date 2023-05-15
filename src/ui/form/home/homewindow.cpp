@@ -66,6 +66,11 @@ void HomeWindow::showMenu()
     m_btMenu->showMenu();
 }
 
+void HomeWindow::selectAboutTab()
+{
+    m_mainPage->setCurrentTab(HomeMainPage::TabAbout);
+}
+
 void HomeWindow::retranslateUi()
 {
     this->unsetLocale();
@@ -98,8 +103,8 @@ void HomeWindow::setupUi()
     layout->addWidget(header);
 
     // Main page
-    auto mainPage = new HomeMainPage(ctrl());
-    layout->addWidget(mainPage, 1);
+    m_mainPage = new HomeMainPage(ctrl());
+    layout->addWidget(m_mainPage, 1);
 
     this->setLayout(layout);
 
