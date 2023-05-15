@@ -42,13 +42,14 @@ private:
     void setupUi();
     QWidget *setupHeader();
     QLayout *setupLogoText();
-    void setupPasswordUnlock();
+    void setupPasswordButtons();
 
 private:
     HomeController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     HomeMainPage *m_mainPage = nullptr;
+    QToolButton *m_btPasswordLock = nullptr;
     QToolButton *m_btPasswordUnlock = nullptr;
     QPushButton *m_btMenu = nullptr;
 };

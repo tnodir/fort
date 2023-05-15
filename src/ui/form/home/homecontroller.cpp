@@ -6,6 +6,8 @@
 
 HomeController::HomeController(QObject *parent) : BaseController(parent)
 {
+    connect(IoC<ConfManager>(), &ConfManager::iniChanged, this,
+            &HomeController::updatePasswordLocked);
     connect(IoC<FortSettings>(), &FortSettings::passwordCheckedChanged, this,
             &HomeController::updatePasswordLocked);
 
@@ -25,7 +27,8 @@ void HomeController::updatePasswordLocked()
 {
     auto settings = IoC<FortSettings>();
 
-    setPasswordLocked(settings->isPasswordRequired()
-            && (!settings->passwordChecked()
-                    || settings->passwordUnlockType() == FortSettings::UnlockDisabled));
+    const bool passwordChecked = (settings->passwordChecked()
+            && settings->passwordUnlockType() != FortSettings::UnlockDisabled);
+
+    setPasswordLocked(!passwordChecked && settings->isPasswordRequired());
 }

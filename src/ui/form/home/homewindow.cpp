@@ -82,6 +82,7 @@ void HomeWindow::retranslateUi()
 {
     this->unsetLocale();
 
+    m_btPasswordLock->setText(tr("Lock"));
     m_btPasswordUnlock->setText(tr("Unlock"));
     m_btMenu->setText(tr("Menu"));
 
@@ -149,7 +150,7 @@ QWidget *HomeWindow::setupHeader()
     auto textLogo = setupLogoText();
 
     // Password Unlock button
-    setupPasswordUnlock();
+    setupPasswordButtons();
 
     // Menu button
     m_btMenu = ControlUtil::createButton(":/icons/large_tiles.png");
@@ -158,6 +159,7 @@ QWidget *HomeWindow::setupHeader()
     layout->addWidget(iconLogo);
     layout->addLayout(textLogo);
     layout->addStretch();
+    layout->addWidget(m_btPasswordLock);
     layout->addWidget(m_btPasswordUnlock);
     layout->addWidget(m_btMenu);
 
@@ -196,16 +198,20 @@ QLayout *HomeWindow::setupLogoText()
     return layout;
 }
 
-void HomeWindow::setupPasswordUnlock()
+void HomeWindow::setupPasswordButtons()
 {
+    m_btPasswordLock = ControlUtil::createToolButton(
+            ":/icons/lock.png", [&] { ctrl()->setPasswordLocked(true); });
+
     m_btPasswordUnlock = ControlUtil::createToolButton(":/icons/lock_open.png",
             [&] { ctrl()->setPasswordLocked(!windowManager()->checkPassword()); });
 
-    const auto refreshPasswordUnlock = [&] {
+    const auto refreshPasswordButtons = [&] {
+        m_btPasswordLock->setVisible(settings()->hasPassword() && !ctrl()->passwordLocked());
         m_btPasswordUnlock->setVisible(ctrl()->passwordLocked());
     };
 
-    refreshPasswordUnlock();
+    refreshPasswordButtons();
 
-    connect(ctrl(), &HomeController::passwordLockedChanged, this, refreshPasswordUnlock);
+    connect(ctrl(), &HomeController::passwordLockedChanged, this, refreshPasswordButtons);
 }
