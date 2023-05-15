@@ -7,18 +7,18 @@
 [![Crowdin](https://badges.crowdin.net/fort-firewall/localized.svg)](https://crowdin.com/project/fort-firewall)
 [![CodeScene Code Health](https://codescene.io/projects/5344/status-badges/code-health)](https://codescene.io/projects/5344)
 
-Fort is a simple firewall for Windows 7+.
+Fort is an effective firewall designed for Windows 7 and later versions, offering both simplicity and robustness.
 
 ## Features
 
-  - Filter by network addresses, application groups
+  - Filter by network addresses, application groups and more
   - Filter by `SvcHost.exe` service names
-  - Support wildcards in program path names
-  - Application group speed limits
+  - Support for wildcards in application path names
+  - Speed limit application groups
   - Blocklists via "Zones"
-  - Stores traffic statistics
-  - Graphical display of bandwidth
-  - Has own kernel driver, based on Windows Filtering Platform (WFP)
+  - Saves traffic statistics
+  - Graphical display of the bandwidth
+  - Has its own kernel driver based on the Windows Filtering Platform (WFP)
 
 ## Supported OS versions
 
