@@ -6,6 +6,7 @@
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
 class ConfManager;
+class FortSettings;
 class HomeController;
 class HomeMainPage;
 class IniUser;
@@ -20,6 +21,7 @@ public:
     explicit HomeWindow(QWidget *parent = nullptr);
 
     HomeController *ctrl() const { return m_ctrl; }
+    FortSettings *settings() const;
     ConfManager *confManager() const;
     IniUser *iniUser() const;
     WindowManager *windowManager() const;
@@ -40,12 +42,14 @@ private:
     void setupUi();
     QWidget *setupHeader();
     QLayout *setupLogoText();
+    void setupPasswordUnlock();
 
 private:
     HomeController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     HomeMainPage *m_mainPage = nullptr;
+    QToolButton *m_btPasswordUnlock = nullptr;
     QPushButton *m_btMenu = nullptr;
 };
 

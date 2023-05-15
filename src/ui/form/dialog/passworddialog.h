@@ -13,15 +13,9 @@ class PasswordDialog : public QDialog
     Q_OBJECT
 
 public:
-    enum UnlockType {
-        UnlockDisabled = 0,
-        UnlockTillSessionLock,
-        UnlockTillAppExit,
-    };
-
     explicit PasswordDialog(QWidget *parent = nullptr);
 
-    static bool getPassword(QString &password, UnlockType &unlockType, QWidget *parent = nullptr);
+    static bool getPassword(QString &password, int &unlockType, QWidget *parent = nullptr);
 
     static QStringList unlockTypeStrings();
 

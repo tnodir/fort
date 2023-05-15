@@ -37,8 +37,8 @@ FortSettings::FortSettings(QObject *parent) :
     m_isService(false),
     m_hasService(false),
     m_isUserAdmin(false),
-    m_passwordChecked(false),
-    m_passwordUnlockType(0)
+    m_passwordChecked(true),
+    m_passwordUnlockType(UnlockDisabled)
 {
 }
 
@@ -74,7 +74,7 @@ bool FortSettings::checkPassword(const QString &password) const
 
 bool FortSettings::isPasswordRequired()
 {
-    return hasPassword() && !(m_passwordUnlockType != 0 && m_passwordChecked);
+    return hasPassword() && !(m_passwordUnlockType != UnlockDisabled && m_passwordChecked);
 }
 
 void FortSettings::setPasswordChecked(bool checked, int unlockType)
@@ -83,14 +83,14 @@ void FortSettings::setPasswordChecked(bool checked, int unlockType)
         return;
 
     m_passwordChecked = checked;
-    m_passwordUnlockType = checked ? unlockType : 0;
+    m_passwordUnlockType = checked ? unlockType : UnlockDisabled;
 
     emit passwordCheckedChanged();
 }
 
 void FortSettings::resetCheckedPassword(int unlockType)
 {
-    if (unlockType != 0 && unlockType != m_passwordUnlockType)
+    if (unlockType != UnlockDisabled && unlockType != m_passwordUnlockType)
         return;
 
     setPasswordChecked(false);

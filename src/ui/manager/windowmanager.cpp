@@ -116,7 +116,7 @@ void WindowManager::setupMainWindow()
     nativeEventFilter->registerSessionNotification(mainWindow()->winId());
 
     connect(nativeEventFilter, &NativeEventFilter::sessionLocked, this, [&] {
-        IoC<FortSettings>()->resetCheckedPassword(PasswordDialog::UnlockTillSessionLock);
+        IoC<FortSettings>()->resetCheckedPassword(FortSettings::UnlockTillSessionLock);
     });
 }
 
@@ -270,9 +270,6 @@ void WindowManager::setupHomeWindow(bool quitOnClose)
 
 void WindowManager::showHomeWindow()
 {
-    if (!widgetVisibleByCheckPassword(m_homeWindow))
-        return;
-
     setupHomeWindow();
 
     m_homeWindow->showWindow();
@@ -552,7 +549,7 @@ bool WindowManager::checkPassword()
     g_passwordDialogOpened = true;
 
     QString password;
-    PasswordDialog::UnlockType unlockType = PasswordDialog::UnlockDisabled;
+    int unlockType = FortSettings::UnlockDisabled;
     const bool ok = PasswordDialog::getPassword(password, unlockType, mainWindow());
 
     g_passwordDialogOpened = false;

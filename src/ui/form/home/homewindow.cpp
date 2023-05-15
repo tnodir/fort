@@ -3,11 +3,13 @@
 #include <QGuiApplication>
 #include <QLabel>
 #include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/tray/trayicon.h>
+#include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
@@ -26,6 +28,11 @@ HomeWindow::HomeWindow(QWidget *parent) :
     setupUi();
     setupController();
     setupStateWatcher();
+}
+
+FortSettings *HomeWindow::settings() const
+{
+    return ctrl()->settings();
 }
 
 ConfManager *HomeWindow::confManager() const
@@ -75,6 +82,7 @@ void HomeWindow::retranslateUi()
 {
     this->unsetLocale();
 
+    m_btPasswordUnlock->setText(tr("Unlock"));
     m_btMenu->setText(tr("Menu"));
 
     this->setWindowTitle(tr("My Fort"));
@@ -140,6 +148,9 @@ QWidget *HomeWindow::setupHeader()
     // Logo text
     auto textLogo = setupLogoText();
 
+    // Password Unlock button
+    setupPasswordUnlock();
+
     // Menu button
     m_btMenu = ControlUtil::createButton(":/icons/large_tiles.png");
     m_btMenu->setMenu(windowManager()->trayIcon()->menu());
@@ -147,6 +158,7 @@ QWidget *HomeWindow::setupHeader()
     layout->addWidget(iconLogo);
     layout->addLayout(textLogo);
     layout->addStretch();
+    layout->addWidget(m_btPasswordUnlock);
     layout->addWidget(m_btMenu);
 
     frame->setLayout(layout);
@@ -182,4 +194,18 @@ QLayout *HomeWindow::setupLogoText()
     layout->addWidget(subLabel, 1, Qt::AlignHCenter | Qt::AlignTop);
 
     return layout;
+}
+
+void HomeWindow::setupPasswordUnlock()
+{
+    m_btPasswordUnlock = ControlUtil::createToolButton(":/icons/lock_open.png",
+            [&] { ctrl()->setPasswordLocked(!windowManager()->checkPassword()); });
+
+    const auto refreshPasswordUnlock = [&] {
+        m_btPasswordUnlock->setVisible(ctrl()->passwordLocked());
+    };
+
+    refreshPasswordUnlock();
+
+    connect(ctrl(), &HomeController::passwordLockedChanged, this, refreshPasswordUnlock);
 }

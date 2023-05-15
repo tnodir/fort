@@ -12,6 +12,12 @@ class FortSettings : public Settings
     Q_OBJECT
 
 public:
+    enum UnlockType : qint8 {
+        UnlockDisabled = 0,
+        UnlockTillSessionLock,
+        UnlockTillAppExit,
+    };
+
     explicit FortSettings(QObject *parent = nullptr);
 
     static QString passwordHashKey() { return "base/passwordHash"; }
@@ -61,8 +67,8 @@ public:
     bool checkPassword(const QString &password) const;
 
     bool isPasswordRequired();
-    void setPasswordChecked(bool checked, int unlockType = 0);
-    void resetCheckedPassword(int unlockType = 0);
+    void setPasswordChecked(bool checked, int unlockType = UnlockDisabled);
+    void resetCheckedPassword(int unlockType = UnlockDisabled);
 
     void setupGlobal();
     void initialize(const QStringList &args, EnvManager *envManager);

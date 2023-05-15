@@ -64,4 +64,13 @@ void HomeBasePage::setupController()
             &HomeBasePage::onRestoreWindowState);
 
     connect(ctrl(), &HomeController::retranslateUi, this, &HomeBasePage::onRetranslateUi);
+    connect(ctrl(), &HomeController::passwordLockedChanged, this,
+            &HomeBasePage::onPasswordLockedChanged);
+
+    onPasswordLockedChanged();
+}
+
+void HomeBasePage::onPasswordLockedChanged()
+{
+    setEnabled(!ctrl()->passwordLocked());
 }

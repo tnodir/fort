@@ -52,6 +52,8 @@ protected slots:
 private:
     void setupController();
 
+    void onPasswordLockedChanged();
+
 private:
     HomeController *m_ctrl = nullptr;
 };
