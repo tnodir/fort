@@ -85,16 +85,6 @@ void WindowManager::tearDown()
     closeAll();
 }
 
-void WindowManager::showWidget(QWidget *w)
-{
-    if (w->isMinimized()) {
-        w->setWindowState(w->windowState() ^ Qt::WindowMinimized);
-    }
-    w->show();
-    w->raise();
-    w->activateWindow();
-}
-
 QFont WindowManager::defaultFont()
 {
     static QFont g_font(
@@ -285,7 +275,7 @@ void WindowManager::showHomeWindow()
 
     setupHomeWindow();
 
-    showWidget(m_homeWindow);
+    m_homeWindow->showWindow();
 }
 
 void WindowManager::closeHomeWindow()
@@ -309,7 +299,7 @@ void WindowManager::showProgramsWindow()
         setupProgramsWindow();
     }
 
-    showWidget(m_progWindow);
+    m_progWindow->showWindow();
 }
 
 void WindowManager::closeProgramsWindow()
@@ -348,7 +338,7 @@ void WindowManager::showOptionsWindow()
         emit optWindowChanged(true);
     }
 
-    showWidget(m_optWindow);
+    m_optWindow->showWindow();
 }
 
 void WindowManager::closeOptionsWindow()
@@ -387,7 +377,7 @@ void WindowManager::showPoliciesWindow()
         setupPoliciesWindow();
     }
 
-    showWidget(m_policiesWindow);
+    m_policiesWindow->showWindow();
 }
 
 void WindowManager::closePoliciesWindow()
@@ -411,7 +401,7 @@ void WindowManager::showStatisticsWindow()
         setupStatisticsWindow();
     }
 
-    showWidget(m_statWindow);
+    m_statWindow->showWindow();
 }
 
 void WindowManager::closeStatisticsWindow()
@@ -435,7 +425,7 @@ void WindowManager::showServicesWindow()
         setupServicesWindow();
     }
 
-    showWidget(m_serviceWindow);
+    m_serviceWindow->showWindow();
 }
 
 void WindowManager::closeServicesWindow()
@@ -459,7 +449,7 @@ void WindowManager::showZonesWindow()
         setupZonesWindow();
     }
 
-    showWidget(m_zoneWindow);
+    m_zoneWindow->showWindow();
 }
 
 void WindowManager::closeZonesWindow()

@@ -22,6 +22,7 @@
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/window/widgetwindow.h>
 
 #include "programscontroller.h"
 
@@ -98,7 +99,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
 
 void ProgramEditDialog::activate()
 {
-    WindowManager::showWidget(this);
+    WidgetWindow::showWidget(this);
 
     m_editPath->selectAll();
     m_editPath->setFocus();

@@ -10,6 +10,10 @@ class WidgetWindow : public QWidget
 public:
     explicit WidgetWindow(QWidget *parent = nullptr);
 
+    void showWindow() { showWidget(this); }
+
+    static void showWidget(QWidget *w);
+
 signals:
     void activationChanged(bool isActive);
     void activated();

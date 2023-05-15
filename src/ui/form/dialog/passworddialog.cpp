@@ -10,6 +10,7 @@
 #include <form/controls/controlutil.h>
 #include <manager/windowmanager.h>
 #include <util/guiutil.h>
+#include <util/window/widgetwindow.h>
 
 PasswordDialog::PasswordDialog(QWidget *parent) : QDialog(parent)
 {
@@ -111,7 +112,7 @@ bool PasswordDialog::getPassword(QString &password, UnlockType &unlockType, QWid
 {
     PasswordDialog dialog(parent);
 
-    WindowManager::showWidget(&dialog);
+    WidgetWindow::showWidget(&dialog);
 
     if (dialog.exec() == 0)
         return false;

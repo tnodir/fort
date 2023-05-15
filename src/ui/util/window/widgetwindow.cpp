@@ -4,6 +4,16 @@
 
 WidgetWindow::WidgetWindow(QWidget *parent) : QWidget(parent) { }
 
+void WidgetWindow::showWidget(QWidget *w)
+{
+    if (w->isMinimized()) {
+        w->setWindowState(w->windowState() ^ Qt::WindowMinimized);
+    }
+    w->show();
+    w->raise();
+    w->activateWindow();
+}
+
 void WidgetWindow::moveEvent(QMoveEvent *event)
 {
     QWidget::moveEvent(event);
