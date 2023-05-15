@@ -151,7 +151,6 @@ WizardSelectDir=Ñ¡ÔñÄ¿±êÎ»ÖÃ
 SelectDirDesc=ÄúÏë½« [name] °²×°ÔÚÄÄÀï£¿
 SelectDirLabel3=°²×°³ÌÐò½«°²×° [name] µ½ÏÂÃæµÄÎÄ¼þ¼ÐÖÐ¡£
 SelectDirBrowseLabel=µã»÷¡°ÏÂÒ»²½¡±¼ÌÐø¡£Èç¹ûÄúÏëÑ¡ÔñÆäËüÎÄ¼þ¼Ð£¬µã»÷¡°ä¯ÀÀ¡±¡£
-DiskSpaceGBLabel=ÖÁÉÙÐèÒªÓÐ [gb] GB µÄ¿ÉÓÃ´ÅÅÌ¿Õ¼ä¡£
 DiskSpaceMBLabel=ÖÁÉÙÐèÒªÓÐ [mb] MB µÄ¿ÉÓÃ´ÅÅÌ¿Õ¼ä¡£
 CannotInstallToNetworkDrive=°²×°³ÌÐòÎÞ·¨°²×°µ½Ò»¸öÍøÂçÇý¶¯Æ÷¡£
 CannotInstallToUNCPath=°²×°³ÌÐòÎÞ·¨°²×°µ½Ò»¸ö UNC Â·¾¶¡£
@@ -179,7 +178,6 @@ NoUninstallWarningTitle=×é¼þÒÑ´æÔÚ
 NoUninstallWarning=°²×°³ÌÐò¼ì²âµ½ÏÂÁÐ×é¼þÒÑ°²×°ÔÚÄúµÄµçÄÔÖÐ£º%n%n%1%n%nÈ¡ÏûÑ¡ÖÐÕâÐ©×é¼þ²»»áÐ¶ÔØËüÃÇ¡£%n%nÈ·¶¨Òª¼ÌÐøÂð£¿
 ComponentSize1=%1 KB
 ComponentSize2=%1 MB
-ComponentsDiskSpaceGBLabel=µ±Ç°Ñ¡ÔñµÄ×é¼þÐèÒªÖÁÉÙ [gb] GB µÄ´ÅÅÌ¿Õ¼ä¡£
 ComponentsDiskSpaceMBLabel=µ±Ç°Ñ¡ÔñµÄ×é¼þÐèÒªÖÁÉÙ [mb] MB µÄ´ÅÅÌ¿Õ¼ä¡£
 
 ; *** ¡°Ñ¡Ôñ¸½¼ÓÈÎÎñ¡±Ïòµ¼Ò³
@@ -220,7 +218,6 @@ ApplicationsFound2=ÒÔÏÂÓ¦ÓÃ³ÌÐòÕýÔÚÊ¹ÓÃ½«ÓÉ°²×°³ÌÐò¸üÐÂµÄÎÄ¼þ¡£½¨ÒéÄúÔÊÐí°²×°³ÌÐ
 CloseApplications=×Ô¶¯¹Ø±ÕÓ¦ÓÃ³ÌÐò(&A)
 DontCloseApplications=²»Òª¹Ø±ÕÓ¦ÓÃ³ÌÐò(&D)
 ErrorCloseApplications=°²×°³ÌÐòÎÞ·¨×Ô¶¯¹Ø±ÕËùÓÐÓ¦ÓÃ³ÌÐò¡£½¨ÒéÄúÔÚ¼ÌÐøÖ®Ç°£¬¹Ø±ÕËùÓÐÔÚÊ¹ÓÃÐèÒªÓÉ°²×°³ÌÐò¸üÐÂµÄÎÄ¼þµÄÓ¦ÓÃ³ÌÐò¡£
-PrepareToInstallNeedsRestart=°²×°³ÌÐò±ØÐëÖØÆôÄúµÄ¼ÆËã»ú¡£¼ÆËã»úÖØÆôºó£¬ÇëÔÙ´ÎÔËÐÐ°²×°³ÌÐòÒÔÍê³É [name] µÄ°²×°¡£%n%nÊÇ·ñÁ¢¼´ÖØÐÂÆô¶¯£¿
 
 ; *** ¡°ÕýÔÚ°²×°¡±Ïòµ¼Ò³
 WizardInstalling=ÕýÔÚ°²×°
