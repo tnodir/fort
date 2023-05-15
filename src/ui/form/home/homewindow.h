@@ -26,6 +26,9 @@ public:
     void saveWindowState();
     void restoreWindowState();
 
+public slots:
+    void showMenu();
+
 private:
     void setupController();
     void setupStateWatcher();

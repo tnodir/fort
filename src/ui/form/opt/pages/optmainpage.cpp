@@ -19,6 +19,7 @@
 
 #include "addressespage.h"
 #include "applicationspage.h"
+#include "graphpage.h"
 #include "optionspage.h"
 #include "schedulepage.h"
 #include "statisticspage.h"
@@ -34,7 +35,8 @@ void OptMainPage::onRetranslateUi()
     m_tabWidget->setTabText(1, tr("IP Addresses"));
     m_tabWidget->setTabText(2, tr("Application Groups"));
     m_tabWidget->setTabText(3, tr("Statistics"));
-    m_tabWidget->setTabText(4, tr("Schedule"));
+    m_tabWidget->setTabText(4, tr("Traffic Graph"));
+    m_tabWidget->setTabText(5, tr("Schedule"));
 
     m_btLogs->setText(tr("Logs"));
     m_btProfile->setText(tr("Profile"));
@@ -68,9 +70,11 @@ void OptMainPage::setupTabBar()
     auto addressesPage = new AddressesPage(ctrl());
     auto applicationsPage = new ApplicationsPage(ctrl());
     auto statisticsPage = new StatisticsPage(ctrl());
+    auto graphPage = new GraphPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
 
-    m_pages = { optionsPage, addressesPage, applicationsPage, statisticsPage, schedulePage };
+    m_pages = { optionsPage, addressesPage, applicationsPage, statisticsPage, graphPage,
+        schedulePage };
 
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(optionsPage),
@@ -80,6 +84,7 @@ void OptMainPage::setupTabBar()
             applicationsPage, IconCache::icon(":/icons/application_double.png"), QString());
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(statisticsPage),
             IconCache::icon(":/icons/chart_bar.png"), QString());
+    m_tabWidget->addTab(graphPage, IconCache::icon(":/icons/action_log.png"), QString());
     m_tabWidget->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
     // Menu button

@@ -4,8 +4,6 @@
 #include "optbasepage.h"
 
 class CheckTimePeriod;
-class LabelColor;
-class LabelSpin;
 class LabelSpinCombo;
 
 class StatisticsPage : public OptBasePage
@@ -33,23 +31,20 @@ private:
     void setupMonthStart();
     void setupTrafKeep();
     void setupQuota();
-    void setupConnBox();
-    void setupLogAllowedIp();
+    QLayout *setupColumn2();
+    void setupBlockedConnBox();
     void setupLogBlockedIp();
+    void setupAllowedConnBox();
+    void setupLogAllowedIp();
     void setupProgBox();
     void setupLogBlocked();
     void setupPurgeOnStart();
-    QLayout *setupColumn2();
-    void setupGraphBox();
-    void setupGraphCheckboxes();
-    void setupGraphOptions();
-    void setupGraphColors();
 
 private:
     QGroupBox *m_gbTraffic = nullptr;
-    QGroupBox *m_gbConn = nullptr;
+    QGroupBox *m_gbBlockedConn = nullptr;
+    QGroupBox *m_gbAllowedConn = nullptr;
     QGroupBox *m_gbProg = nullptr;
-    QGroupBox *m_gbGraph = nullptr;
     QCheckBox *m_cbLogStat = nullptr;
     QCheckBox *m_cbLogStatNoFilter = nullptr;
     CheckTimePeriod *m_ctpActivePeriod = nullptr;
@@ -60,27 +55,13 @@ private:
     LabelSpinCombo *m_lscQuotaDayMb = nullptr;
     LabelSpinCombo *m_lscQuotaMonthMb = nullptr;
     QCheckBox *m_cbQuotaStopInternet = nullptr;
-    QCheckBox *m_cbLogAllowedIp = nullptr;
-    LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;
     QCheckBox *m_cbLogAlertedBlockedIp = nullptr;
     LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
+    QCheckBox *m_cbLogAllowedIp = nullptr;
+    LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbPurgeOnStart = nullptr;
-    QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
-    QCheckBox *m_cbGraphFrameless = nullptr;
-    QCheckBox *m_cbGraphClickThrough = nullptr;
-    QCheckBox *m_cbGraphHideOnHover = nullptr;
-    LabelSpin *m_graphOpacity = nullptr;
-    LabelSpin *m_graphHoverOpacity = nullptr;
-    LabelSpin *m_graphMaxSeconds = nullptr;
-    LabelColor *m_graphColor = nullptr;
-    LabelColor *m_graphColorIn = nullptr;
-    LabelColor *m_graphColorOut = nullptr;
-    LabelColor *m_graphAxisColor = nullptr;
-    LabelColor *m_graphTickLabelColor = nullptr;
-    LabelColor *m_graphLabelColor = nullptr;
-    LabelColor *m_graphGridColor = nullptr;
 };
 
 #endif // STATISTICSPAGE_H

@@ -40,21 +40,21 @@ private:
     QLayout *setupStartModeLayout();
     void setupTrafficBox();
     QLayout *setupFilterModeLayout();
-    void setupGlobalBox();
-    void setupHotKeysBox();
-    QLayout *setupLangLayout();
-    void setupComboLanguage();
     void setupProtectionBox();
     QLayout *setupPasswordLayout();
     void setupEditPassword();
     void setupPasswordLock();
+    QLayout *setupColumn2();
+    void setupGlobalBox();
+    QLayout *setupLangLayout();
+    void setupComboLanguage();
+    void setupHotKeysBox();
     void setupTrayBox();
     void refreshComboTrayAction();
     QLayout *setupTrayEventLayout();
     QLayout *setupTrayActionLayout();
     void setupConfirmationsBox();
     void setupLogsBox();
-    QLayout *setupColumn2();
 
 private:
     bool m_passwordEdited : 1;
@@ -64,9 +64,9 @@ private:
 
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
+    QGroupBox *m_gbProtection = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
-    QGroupBox *m_gbProtection = nullptr;
     QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbConfirmations = nullptr;
     QGroupBox *m_gbLogs = nullptr;
@@ -78,11 +78,6 @@ private:
     QCheckBox *m_cbStopInetTraffic = nullptr;
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
-    QCheckBox *m_cbExplorerMenu = nullptr;
-    QCheckBox *m_cbHotKeysEnabled = nullptr;
-    QCheckBox *m_cbHotKeysGlobal = nullptr;
-    QLabel *m_labelLanguage = nullptr;
-    QComboBox *m_comboLanguage = nullptr;
     QCheckBox *m_cbBootFilter = nullptr;
     QCheckBox *m_cbFilterLocals = nullptr;
     QCheckBox *m_cbNoServiceControl = nullptr;
@@ -90,6 +85,11 @@ private:
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
+    QCheckBox *m_cbExplorerMenu = nullptr;
+    QLabel *m_labelLanguage = nullptr;
+    QComboBox *m_comboLanguage = nullptr;
+    QCheckBox *m_cbHotKeysEnabled = nullptr;
+    QCheckBox *m_cbHotKeysGlobal = nullptr;
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
     QLabel *m_labelTrayEvent = nullptr;

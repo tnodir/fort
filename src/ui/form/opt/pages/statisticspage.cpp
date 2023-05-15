@@ -44,9 +44,9 @@ StatisticsPage::StatisticsPage(OptionsController *ctrl, QWidget *parent) : OptBa
 void StatisticsPage::onRetranslateUi()
 {
     m_gbTraffic->setTitle(tr("Traffic"));
-    m_gbConn->setTitle(tr("Connections"));
+    m_gbBlockedConn->setTitle(tr("Blocked Connections"));
+    m_gbAllowedConn->setTitle(tr("Allowed Connections"));
     m_gbProg->setTitle(tr("Programs"));
-    m_gbGraph->setTitle(tr("Graph"));
 
     m_cbLogStat->setText(tr("Collect Traffic Statistics"));
     m_cbLogStatNoFilter->setText(tr("Collect Traffic, when Filter Disabled"));
@@ -64,11 +64,13 @@ void StatisticsPage::onRetranslateUi()
     m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
     m_cbQuotaStopInternet->setText(tr("Stop Internet traffic when quota exceeds"));
 
-    m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
-    m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
     m_cbLogAlertedBlockedIp->setText(tr("Alerted only"));
     m_lscBlockedIpKeepCount->label()->setText(tr("Keep count for 'Blocked connections':"));
+
+    m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
+    m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
+
     m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
     m_cbPurgeOnStart->setText(tr("Purge Obsolete on startup"));
 
@@ -76,21 +78,6 @@ void StatisticsPage::onRetranslateUi()
     retranslateTrafKeepMonthNames();
     retranslateQuotaNames();
     retranslateIpKeepCountNames();
-
-    m_cbGraphAlwaysOnTop->setText(tr("Always on top"));
-    m_cbGraphFrameless->setText(tr("Frameless"));
-    m_cbGraphClickThrough->setText(tr("Click through"));
-    m_cbGraphHideOnHover->setText(tr("Hide on hover"));
-    m_graphOpacity->label()->setText(tr("Opacity:"));
-    m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
-    m_graphMaxSeconds->label()->setText(tr("Max seconds:"));
-    m_graphColor->label()->setText(tr("Background:"));
-    m_graphColorIn->label()->setText(tr("Download:"));
-    m_graphColorOut->label()->setText(tr("Upload:"));
-    m_graphAxisColor->label()->setText(tr("Axis:"));
-    m_graphTickLabelColor->label()->setText(tr("Tick label:"));
-    m_graphLabelColor->label()->setText(tr("Label:"));
-    m_graphGridColor->label()->setText(tr("Grid:"));
 }
 
 void StatisticsPage::retranslateTrafKeepDayNames()
@@ -163,14 +150,6 @@ QLayout *StatisticsPage::setupColumn1()
     // Traffic Group Box
     setupTrafficBox();
     layout->addWidget(m_gbTraffic);
-
-    // Connections Group Box
-    setupConnBox();
-    layout->addWidget(m_gbConn);
-
-    // Programs Group Box
-    setupProgBox();
-    layout->addWidget(m_gbProg);
 
     layout->addStretch();
 
@@ -322,39 +301,38 @@ void StatisticsPage::setupQuota()
             });
 }
 
-void StatisticsPage::setupConnBox()
+QLayout *StatisticsPage::setupColumn2()
 {
-    setupLogAllowedIp();
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
+
+    // Blocked Connections Group Box
+    setupBlockedConnBox();
+    layout->addWidget(m_gbBlockedConn);
+
+    // Allowed Connections Group Box
+    setupAllowedConnBox();
+    layout->addWidget(m_gbAllowedConn);
+
+    // Programs Group Box
+    setupProgBox();
+    layout->addWidget(m_gbProg);
+
+    layout->addStretch();
+
+    return layout;
+}
+
+void StatisticsPage::setupBlockedConnBox()
+{
     setupLogBlockedIp();
 
     // Layout
-    auto layout = ControlUtil::createLayoutByWidgets({ // TODO: Collect allowed connections
-            // m_cbLogAllowedIp, m_lscAllowedIpKeepCount, ControlUtil::createSeparator(),
-            m_cbLogBlockedIp, m_cbLogAlertedBlockedIp, m_lscBlockedIpKeepCount });
+    auto layout = ControlUtil::createLayoutByWidgets(
+            { m_cbLogBlockedIp, m_cbLogAlertedBlockedIp, m_lscBlockedIpKeepCount });
 
-    m_gbConn = new QGroupBox();
-    m_gbConn->setLayout(layout);
-}
-
-void StatisticsPage::setupLogAllowedIp()
-{
-    m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
-        if (conf()->logAllowedIp() != checked) {
-            conf()->setLogAllowedIp(checked);
-            ctrl()->setFlagsEdited();
-        }
-    });
-
-    m_cbLogAllowedIp->setFont(ControlUtil::fontDemiBold());
-
-    const auto logIpKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
-    m_lscAllowedIpKeepCount = ControlUtil::createSpinCombo(
-            ini()->allowedIpKeepCount(), 0, 999999999, logIpKeepCountList, {}, [&](int value) {
-                if (ini()->allowedIpKeepCount() != value) {
-                    ini()->setAllowedIpKeepCount(value);
-                    ctrl()->setIniEdited();
-                }
-            });
+    m_gbBlockedConn = new QGroupBox();
+    m_gbBlockedConn->setLayout(layout);
 }
 
 void StatisticsPage::setupLogBlockedIp()
@@ -376,11 +354,45 @@ void StatisticsPage::setupLogBlockedIp()
                 }
             });
 
-    const auto logIpKeepCountList = m_lscAllowedIpKeepCount->values();
+    const auto logIpKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
     m_lscBlockedIpKeepCount = ControlUtil::createSpinCombo(
             ini()->blockedIpKeepCount(), 0, 999999999, logIpKeepCountList, {}, [&](int value) {
                 if (ini()->blockedIpKeepCount() != value) {
                     ini()->setBlockedIpKeepCount(value);
+                    ctrl()->setIniEdited();
+                }
+            });
+}
+
+void StatisticsPage::setupAllowedConnBox()
+{
+    setupLogAllowedIp();
+
+    // Layout
+    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogAllowedIp, m_lscAllowedIpKeepCount });
+
+    m_gbAllowedConn = new QGroupBox();
+    m_gbAllowedConn->setLayout(layout);
+
+    // m_gbAllowedConn->setVisible(false); // TODO: Impl. allowed connections
+}
+
+void StatisticsPage::setupLogAllowedIp()
+{
+    m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
+        if (conf()->logAllowedIp() != checked) {
+            conf()->setLogAllowedIp(checked);
+            ctrl()->setFlagsEdited();
+        }
+    });
+
+    m_cbLogAllowedIp->setFont(ControlUtil::fontDemiBold());
+
+    const auto logIpKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
+    m_lscAllowedIpKeepCount = ControlUtil::createSpinCombo(
+            ini()->allowedIpKeepCount(), 0, 999999999, logIpKeepCountList, {}, [&](int value) {
+                if (ini()->allowedIpKeepCount() != value) {
+                    ini()->setAllowedIpKeepCount(value);
                     ctrl()->setIniEdited();
                 }
             });
@@ -418,152 +430,4 @@ void StatisticsPage::setupPurgeOnStart()
             ctrl()->setIniEdited();
         }
     });
-}
-
-QLayout *StatisticsPage::setupColumn2()
-{
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
-
-    // Graph Group Box
-    setupGraphBox();
-    layout->addWidget(m_gbGraph);
-
-    layout->addStretch();
-
-    return layout;
-}
-
-void StatisticsPage::setupGraphBox()
-{
-    setupGraphCheckboxes();
-    setupGraphOptions();
-    setupGraphColors();
-
-    // Layout
-    auto colLayout1 = ControlUtil::createLayoutByWidgets({ m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
-            m_cbGraphClickThrough, m_cbGraphHideOnHover, ControlUtil::createSeparator(),
-            m_graphOpacity, m_graphHoverOpacity, m_graphMaxSeconds, nullptr });
-
-    auto colLayout2 =
-            ControlUtil::createLayoutByWidgets({ m_graphColor, m_graphColorIn, m_graphColorOut,
-                    m_graphAxisColor, m_graphTickLabelColor, m_graphLabelColor, m_graphGridColor });
-
-    auto layout = new QHBoxLayout();
-    layout->addLayout(colLayout1);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addLayout(colLayout2);
-
-    m_gbGraph = new QGroupBox();
-    m_gbGraph->setLayout(layout);
-}
-
-void StatisticsPage::setupGraphCheckboxes()
-{
-    m_cbGraphAlwaysOnTop =
-            ControlUtil::createCheckBox(ini()->graphWindowAlwaysOnTop(), [&](bool checked) {
-                if (ini()->graphWindowAlwaysOnTop() != checked) {
-                    ini()->setGraphWindowAlwaysOnTop(checked);
-                    ctrl()->setIniEdited();
-                }
-            });
-    m_cbGraphFrameless =
-            ControlUtil::createCheckBox(ini()->graphWindowFrameless(), [&](bool checked) {
-                if (ini()->graphWindowFrameless() != checked) {
-                    ini()->setGraphWindowFrameless(checked);
-                    ctrl()->setIniEdited();
-                }
-            });
-    m_cbGraphClickThrough =
-            ControlUtil::createCheckBox(ini()->graphWindowClickThrough(), [&](bool checked) {
-                if (ini()->graphWindowClickThrough() != checked) {
-                    ini()->setGraphWindowClickThrough(checked);
-                    ctrl()->setIniEdited();
-                }
-            });
-    m_cbGraphHideOnHover =
-            ControlUtil::createCheckBox(ini()->graphWindowHideOnHover(), [&](bool checked) {
-                if (ini()->graphWindowHideOnHover() != checked) {
-                    ini()->setGraphWindowHideOnHover(checked);
-                    ctrl()->setIniEdited();
-                }
-            });
-}
-
-void StatisticsPage::setupGraphOptions()
-{
-    m_graphOpacity = ControlUtil::createSpin(ini()->graphWindowOpacity(), 0, 100, " %", [&](int v) {
-        if (ini()->graphWindowOpacity() != v) {
-            ini()->setGraphWindowOpacity(v);
-            ctrl()->setIniEdited();
-        }
-    });
-
-    m_graphHoverOpacity =
-            ControlUtil::createSpin(ini()->graphWindowHoverOpacity(), 0, 100, " %", [&](int v) {
-                if (ini()->graphWindowHoverOpacity() != v) {
-                    ini()->setGraphWindowHoverOpacity(v);
-                    ctrl()->setIniEdited();
-                }
-            });
-
-    m_graphMaxSeconds =
-            ControlUtil::createSpin(ini()->graphWindowMaxSeconds(), 0, 9999, {}, [&](int v) {
-                if (ini()->graphWindowMaxSeconds() != v) {
-                    ini()->setGraphWindowMaxSeconds(v);
-                    ctrl()->setIniEdited();
-                }
-            });
-}
-
-void StatisticsPage::setupGraphColors()
-{
-    m_graphColor = ControlUtil::createLabelColor(ini()->graphWindowColor(), [&](const QColor &v) {
-        if (ini()->graphWindowColor() != v) {
-            ini()->setGraphWindowColor(v);
-            ctrl()->setIniEdited();
-        }
-    });
-    m_graphColorIn =
-            ControlUtil::createLabelColor(ini()->graphWindowColorIn(), [&](const QColor &v) {
-                if (ini()->graphWindowColorIn() != v) {
-                    ini()->setGraphWindowColorIn(v);
-                    ctrl()->setIniEdited();
-                }
-            });
-    m_graphColorOut =
-            ControlUtil::createLabelColor(ini()->graphWindowColorOut(), [&](const QColor &v) {
-                if (ini()->graphWindowColorOut() != v) {
-                    ini()->setGraphWindowColorOut(v);
-                    ctrl()->setIniEdited();
-                }
-            });
-    m_graphAxisColor =
-            ControlUtil::createLabelColor(ini()->graphWindowAxisColor(), [&](const QColor &v) {
-                if (ini()->graphWindowAxisColor() != v) {
-                    ini()->setGraphWindowAxisColor(v);
-                    ctrl()->setIniEdited();
-                }
-            });
-    m_graphTickLabelColor =
-            ControlUtil::createLabelColor(ini()->graphWindowTickLabelColor(), [&](const QColor &v) {
-                if (ini()->graphWindowTickLabelColor() != v) {
-                    ini()->setGraphWindowTickLabelColor(v);
-                    ctrl()->setIniEdited();
-                }
-            });
-    m_graphLabelColor =
-            ControlUtil::createLabelColor(ini()->graphWindowLabelColor(), [&](const QColor &v) {
-                if (ini()->graphWindowLabelColor() != v) {
-                    ini()->setGraphWindowLabelColor(v);
-                    ctrl()->setIniEdited();
-                }
-            });
-    m_graphGridColor =
-            ControlUtil::createLabelColor(ini()->graphWindowGridColor(), [&](const QColor &v) {
-                if (ini()->graphWindowGridColor() != v) {
-                    ini()->setGraphWindowGridColor(v);
-                    ctrl()->setIniEdited();
-                }
-            });
 }

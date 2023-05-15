@@ -271,6 +271,7 @@ void WindowManager::setupHomeWindow(bool quitOnClose)
     m_homeWindow->restoreWindowState();
 
     if (quitOnClose) {
+        connect(m_homeWindow, &HomeWindow::activated, m_homeWindow, &HomeWindow::showMenu);
         connect(m_homeWindow, &HomeWindow::aboutToClose, trayIcon(), &TrayIcon::quitProgram);
     } else {
         connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::closeHomeWindow);

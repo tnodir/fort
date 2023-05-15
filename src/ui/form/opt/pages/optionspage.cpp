@@ -336,29 +336,9 @@ QLayout *OptionsPage::setupColumn1()
     setupTrafficBox();
     layout->addWidget(m_gbTraffic);
 
-    // Global Group Box
-    setupGlobalBox();
-    layout->addWidget(m_gbGlobal);
-
-    // Hot Keys Group Box
-    setupHotKeysBox();
-    layout->addWidget(m_gbHotKeys);
-
     // Protection Group Box
     setupProtectionBox();
     layout->addWidget(m_gbProtection);
-
-    // Tray Group Box
-    setupTrayBox();
-    layout->addWidget(m_gbTray);
-
-    // Confirmations Group Box
-    setupConfirmationsBox();
-    layout->addWidget(m_gbConfirmations);
-
-    // Logs Group Box
-    setupLogsBox();
-    layout->addWidget(m_gbLogs);
 
     layout->addStretch();
 
@@ -440,75 +420,6 @@ QLayout *OptionsPage::setupFilterModeLayout()
     item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
 
     return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
-}
-
-void OptionsPage::setupGlobalBox()
-{
-    m_cbExplorerMenu = ControlUtil::createCheckBox(ini()->explorerIntegrated(), [&](bool checked) {
-        ini()->setExplorerIntegrated(checked);
-        ctrl()->setIniEdited();
-    });
-    m_cbExplorerMenu->setEnabled(settings()->hasMasterAdmin());
-
-    // Language Row
-    auto langLayout = setupLangLayout();
-
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbExplorerMenu);
-    layout->addLayout(langLayout);
-
-    m_gbGlobal = new QGroupBox();
-    m_gbGlobal->setLayout(layout);
-}
-
-void OptionsPage::setupHotKeysBox()
-{
-    m_cbHotKeysEnabled = ControlUtil::createCheckBox(iniUser()->hotKeyEnabled(), [&](bool checked) {
-        iniUser()->setHotKeyEnabled(checked);
-        ctrl()->setIniUserEdited(true);
-    });
-
-    m_cbHotKeysGlobal = ControlUtil::createCheckBox(iniUser()->hotKeyGlobal(), [&](bool checked) {
-        iniUser()->setHotKeyGlobal(checked);
-        ctrl()->setIniUserEdited(true);
-    });
-
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbHotKeysEnabled);
-    layout->addWidget(m_cbHotKeysGlobal);
-
-    m_gbHotKeys = new QGroupBox();
-    m_gbHotKeys->setLayout(layout);
-}
-
-QLayout *OptionsPage::setupLangLayout()
-{
-    m_labelLanguage = ControlUtil::createLabel();
-
-    setupComboLanguage();
-
-    return ControlUtil::createRowLayout(m_labelLanguage, m_comboLanguage);
-}
-
-void OptionsPage::setupComboLanguage()
-{
-    m_comboLanguage =
-            ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
-                if (translationManager()->switchLanguage(index)) {
-                    setLanguageEdited(true);
-                    iniUser()->setLanguage(translationManager()->localeName());
-                    ctrl()->setIniUserEdited();
-                }
-            });
-    m_comboLanguage->setFixedWidth(200);
-
-    const auto refreshComboLanguage = [&] {
-        m_comboLanguage->setCurrentIndex(translationManager()->language());
-    };
-
-    refreshComboLanguage();
-
-    connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
 }
 
 void OptionsPage::setupProtectionBox()
@@ -608,6 +519,105 @@ void OptionsPage::setupPasswordLock()
     refreshPasswordLock();
 
     connect(settings(), &FortSettings::passwordCheckedChanged, this, refreshPasswordLock);
+}
+
+QLayout *OptionsPage::setupColumn2()
+{
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
+
+    // Global Group Box
+    setupGlobalBox();
+    layout->addWidget(m_gbGlobal);
+
+    // Hot Keys Group Box
+    setupHotKeysBox();
+    layout->addWidget(m_gbHotKeys);
+
+    // Tray Group Box
+    setupTrayBox();
+    layout->addWidget(m_gbTray);
+
+    // Confirmations Group Box
+    setupConfirmationsBox();
+    layout->addWidget(m_gbConfirmations);
+
+    // Logs Group Box
+    setupLogsBox();
+    layout->addWidget(m_gbLogs);
+
+    layout->addStretch();
+
+    return layout;
+}
+
+void OptionsPage::setupGlobalBox()
+{
+    m_cbExplorerMenu = ControlUtil::createCheckBox(ini()->explorerIntegrated(), [&](bool checked) {
+        ini()->setExplorerIntegrated(checked);
+        ctrl()->setIniEdited();
+    });
+    m_cbExplorerMenu->setEnabled(settings()->hasMasterAdmin());
+
+    // Language Row
+    auto langLayout = setupLangLayout();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbExplorerMenu);
+    layout->addLayout(langLayout);
+
+    m_gbGlobal = new QGroupBox();
+    m_gbGlobal->setLayout(layout);
+}
+
+QLayout *OptionsPage::setupLangLayout()
+{
+    m_labelLanguage = ControlUtil::createLabel();
+
+    setupComboLanguage();
+
+    return ControlUtil::createRowLayout(m_labelLanguage, m_comboLanguage);
+}
+
+void OptionsPage::setupComboLanguage()
+{
+    m_comboLanguage =
+        ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
+            if (translationManager()->switchLanguage(index)) {
+                setLanguageEdited(true);
+                iniUser()->setLanguage(translationManager()->localeName());
+                ctrl()->setIniUserEdited();
+            }
+        });
+    m_comboLanguage->setFixedWidth(200);
+
+    const auto refreshComboLanguage = [&] {
+        m_comboLanguage->setCurrentIndex(translationManager()->language());
+    };
+
+    refreshComboLanguage();
+
+    connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
+}
+
+void OptionsPage::setupHotKeysBox()
+{
+    m_cbHotKeysEnabled = ControlUtil::createCheckBox(iniUser()->hotKeyEnabled(), [&](bool checked) {
+        iniUser()->setHotKeyEnabled(checked);
+        ctrl()->setIniUserEdited(true);
+    });
+
+    m_cbHotKeysGlobal = ControlUtil::createCheckBox(iniUser()->hotKeyGlobal(), [&](bool checked) {
+        iniUser()->setHotKeyGlobal(checked);
+        ctrl()->setIniUserEdited(true);
+    });
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbHotKeysEnabled);
+    layout->addWidget(m_cbHotKeysGlobal);
+
+    m_gbHotKeys = new QGroupBox();
+    m_gbHotKeys->setLayout(layout);
 }
 
 void OptionsPage::setupTrayBox()
@@ -713,14 +723,4 @@ void OptionsPage::setupLogsBox()
 
     m_gbLogs = new QGroupBox();
     m_gbLogs->setLayout(layout);
-}
-
-QLayout *OptionsPage::setupColumn2()
-{
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
-
-    layout->addStretch();
-
-    return layout;
 }

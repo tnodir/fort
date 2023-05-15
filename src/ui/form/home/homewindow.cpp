@@ -26,12 +26,6 @@ HomeWindow::HomeWindow(QWidget *parent) :
     setupUi();
     setupController();
     setupStateWatcher();
-
-    connect(this, &HomeWindow::activationChanged, this, [&](bool isActive) {
-        if (isActive) {
-            m_btMenu->showMenu();
-        }
-    });
 }
 
 ConfManager *HomeWindow::confManager() const
@@ -65,6 +59,11 @@ void HomeWindow::restoreWindowState()
             iniUser()->homeWindowMaximized());
 
     emit ctrl()->afterRestoreWindowState(iniUser());
+}
+
+void HomeWindow::showMenu()
+{
+    m_btMenu->showMenu();
 }
 
 void HomeWindow::retranslateUi()

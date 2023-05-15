@@ -77,9 +77,11 @@ bool WidgetWindow::event(QEvent *event)
     switch (event->type()) {
     case QEvent::WindowActivate: {
         emit activationChanged(/*isActive=*/true);
+        emit activated();
     } break;
     case QEvent::WindowDeactivate: {
         emit activationChanged(/*isActive=*/false);
+        emit deactivated();
     } break;
     default:
         break;
