@@ -550,7 +550,7 @@
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>À propos de</translation>
     </message>
 </context>
 <context>
@@ -596,11 +596,11 @@
     </message>
     <message>
         <source>Lock</source>
-        <translation type="unfinished"></translation>
+        <translation>Verrouillé</translation>
     </message>
     <message>
         <source>Unlock</source>
-        <translation type="unfinished"></translation>
+        <translation>Déverrouiller</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -1419,11 +1419,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connexions autorisées</translation>
     </message>
     <message>
         <source>Purge Obsolete on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Purger obsolètes au démarrage</translation>
     </message>
 </context>
 <context>
