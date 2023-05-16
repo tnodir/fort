@@ -125,7 +125,7 @@
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished">Action</translation>
+        <translation>행동</translation>
     </message>
 </context>
 <context>
@@ -1120,7 +1120,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished"></translation>
+        <translation>주의: &apos;프로세스 종료&apos; 옵션은 매우 위험합니다!!!
+
+시스템 서비스 또는 기타 중요한 프로그램을 종료할 때 주의하십시오!
+Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니다.</translation>
     </message>
 </context>
 <context>
