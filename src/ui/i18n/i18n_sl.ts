@@ -9,7 +9,7 @@
     </message>
     <message>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Prenesi</translation>
     </message>
 </context>
 <context>
@@ -125,7 +125,7 @@
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Akcija</translation>
     </message>
 </context>
 <context>
@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Prilagoditve</translation>
     </message>
 </context>
 <context>
@@ -422,7 +422,7 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Prilagoditve</translation>
     </message>
 </context>
 <context>
@@ -546,11 +546,11 @@
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Moja trdnjava</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Vizitka</translation>
     </message>
 </context>
 <context>
@@ -588,19 +588,19 @@
     <name>HomeWindow</name>
     <message>
         <source>Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Meni</translation>
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Moja trdnjava</translation>
     </message>
     <message>
         <source>Lock</source>
-        <translation type="unfinished"></translation>
+        <translation>Zakleni</translation>
     </message>
     <message>
         <source>Unlock</source>
-        <translation type="unfinished"></translation>
+        <translation>Odkleni</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -914,11 +914,11 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Show Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži ikono</translation>
     </message>
     <message>
         <source>Show My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži Mojo trdnjavo</translation>
     </message>
 </context>
 <context>
@@ -1166,7 +1166,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Počistiti zastarelo</translation>
     </message>
 </context>
 <context>
@@ -1419,11 +1419,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Dovoljene povezave</translation>
     </message>
     <message>
         <source>Purge Obsolete on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Počisti zastarelo ob zagonu</translation>
     </message>
 </context>
 <context>
@@ -1605,7 +1605,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Moja trdnjava</translation>
     </message>
 </context>
 <context>
