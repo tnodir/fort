@@ -472,7 +472,7 @@
     </message>
     <message>
         <source>New version v%1 available!</source>
-        <translation>有新版本可用！</translation>
+        <translation>发现新版本 v%1 ！</translation>
     </message>
     <message>
         <source>Zone Addresses Updated: %1.</source>
@@ -499,7 +499,7 @@
     </message>
     <message>
         <source>Hide on hover</source>
-        <translation>悬停</translation>
+        <translation>悬停时隐藏</translation>
     </message>
     <message>
         <source>Opacity:</source>
@@ -531,7 +531,7 @@
     </message>
     <message>
         <source>Tick label:</source>
-        <translation>贴标签：</translation>
+        <translation>已勾选的标签：</translation>
     </message>
     <message>
         <source>Label:</source>
@@ -550,7 +550,7 @@
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>关于</translation>
     </message>
 </context>
 <context>
@@ -577,7 +577,7 @@
     </message>
     <message>
         <source>Are you sure to reinstall the Driver?</source>
-        <translation>您确定要删除驱动程序吗？</translation>
+        <translation>您确定要重装驱动程序吗？</translation>
     </message>
     <message>
         <source>Are you sure to remove the Driver?</source>
@@ -596,11 +596,11 @@
     </message>
     <message>
         <source>Lock</source>
-        <translation type="unfinished"></translation>
+        <translation>锁定</translation>
     </message>
     <message>
         <source>Unlock</source>
-        <translation type="unfinished"></translation>
+        <translation>解锁​​​​</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -1166,7 +1166,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation>清理过时的</translation>
+        <translation>清理过时数据</translation>
     </message>
 </context>
 <context>
@@ -1419,11 +1419,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>允许连接量</translation>
     </message>
     <message>
         <source>Purge Obsolete on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>启动时清理过时的数据</translation>
     </message>
 </context>
 <context>
