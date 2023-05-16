@@ -125,7 +125,7 @@
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Action</translation>
     </message>
 </context>
 <context>
@@ -550,7 +550,7 @@
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>정보</translation>
     </message>
 </context>
 <context>
@@ -596,11 +596,11 @@
     </message>
     <message>
         <source>Lock</source>
-        <translation type="unfinished"></translation>
+        <translation>잠금</translation>
     </message>
     <message>
         <source>Unlock</source>
-        <translation type="unfinished"></translation>
+        <translation>잠금해제</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -1163,7 +1163,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>사용되지 않는 제거</translation>
     </message>
 </context>
 <context>
@@ -1416,11 +1416,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>허용된 연결</translation>
     </message>
     <message>
         <source>Purge Obsolete on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>시작 시 사용되지 않는 제거</translation>
     </message>
 </context>
 <context>
