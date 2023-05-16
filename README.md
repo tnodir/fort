@@ -1,4 +1,4 @@
-# <img src="https://github.com/dashke/fort/assets/77551811/bbc84688-c3f1-411f-8cf0-42329691cd64" alt="Icon" style="width: 30px; height: 30px;"> Fort Firewall
+# <img src="https://github.com/tnodir/fort/blob/master/src/ui/icons/fort.png" alt="Icon" width="32" height="32"> Fort Firewall
 
 [![Release](https://img.shields.io/github/release/tnodir/fort.svg)](https://github.com/tnodir/fort/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/tnodir/fort/total.svg?maxAge=86400)](https://github.com/tnodir/fort/releases)
