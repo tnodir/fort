@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="pt_BR" sourcelanguage="en_US">
 <context>
+    <name>AboutPage</name>
+    <message>
+        <source>New Version</source>
+        <translation>Nova Versão</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Download</translation>
+    </message>
+</context>
+<context>
     <name>AddressesColumn</name>
     <message>
         <source>Zones</source>
@@ -459,6 +470,119 @@
         <source>Restart Now?</source>
         <translation>Reinicia Agora?</translation>
     </message>
+    <message>
+        <source>New version v%1 available!</source>
+        <translation>Atualização v%1 disponível!</translation>
+    </message>
+    <message>
+        <source>Zone Addresses Updated: %1.</source>
+        <translation>Endereços de Zona Atualizados: %1.</translation>
+    </message>
+</context>
+<context>
+    <name>GraphPage</name>
+    <message>
+        <source>Graph</source>
+        <translation>Gráfico</translation>
+    </message>
+    <message>
+        <source>Always on top</source>
+        <translation>Sempre no topo</translation>
+    </message>
+    <message>
+        <source>Frameless</source>
+        <translation>Sem bordas</translation>
+    </message>
+    <message>
+        <source>Click through</source>
+        <translation>Permitir clicar</translation>
+    </message>
+    <message>
+        <source>Hide on hover</source>
+        <translation>Esconder ao sobrepor o cursor</translation>
+    </message>
+    <message>
+        <source>Opacity:</source>
+        <translation>Opacidade:</translation>
+    </message>
+    <message>
+        <source>Hover opacity:</source>
+        <translation>Opacidade ao passar o mouse:</translation>
+    </message>
+    <message>
+        <source>Max seconds:</source>
+        <translation>Máximo de segundos:</translation>
+    </message>
+    <message>
+        <source>Background:</source>
+        <translation>Segundo plano:</translation>
+    </message>
+    <message>
+        <source>Download:</source>
+        <translation>Download:</translation>
+    </message>
+    <message>
+        <source>Upload:</source>
+        <translation>Upload:</translation>
+    </message>
+    <message>
+        <source>Axis:</source>
+        <translation>Eixo:</translation>
+    </message>
+    <message>
+        <source>Tick label:</source>
+        <translation>Etiqueta de marcação:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation>Etiqueta:</translation>
+    </message>
+    <message>
+        <source>Grid:</source>
+        <translation>Grade:</translation>
+    </message>
+</context>
+<context>
+    <name>HomeMainPage</name>
+    <message>
+        <source>My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HomePage</name>
+    <message>
+        <source>Driver</source>
+        <translation>Driver</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Reinstale</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Remover</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation>Instalado</translation>
+    </message>
+    <message>
+        <source>Not Installed</source>
+        <translation>Não instalado</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Tem certeza que deseja reinstalar o Driver?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Tem certeza que deseja desinstalar o Driver?</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -469,6 +593,30 @@
     <message>
         <source>My Fort</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Registros</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation>Perfil</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>Estatísticas</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Lançamentos</translation>
     </message>
 </context>
 <context>
@@ -528,18 +676,6 @@
         <translation>Intervalo de Tempo</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>Registros</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Perfil</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Lançamentos</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -550,6 +686,10 @@
     <message>
         <source>Cancel</source>
         <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Traffic Graph</source>
+        <translation>Gráfico de Tráfico</translation>
     </message>
 </context>
 <context>
@@ -565,14 +705,6 @@
     <message>
         <source>Global</source>
         <translation>Global</translation>
-    </message>
-    <message>
-        <source>Driver</source>
-        <translation>Driver</translation>
-    </message>
-    <message>
-        <source>New Version</source>
-        <translation>Nova Versão</translation>
     </message>
     <message>
         <source>Stop traffic when Fort Firewall is not running</source>
@@ -615,14 +747,6 @@
         <translation>Idioma:</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Remover</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>Download</translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation>Desativado</translation>
     </message>
@@ -641,10 +765,6 @@
     <message>
         <source>Not Installed</source>
         <translation>Não instalado</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Tem certeza que deseja desinstalar o Driver?</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -678,14 +798,6 @@
         <source>New profile path is &quot;%1&quot;.
 Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Reinstale</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Tem certeza que deseja reinstalar o Driver?</translation>
     </message>
     <message>
         <source>Tray</source>
@@ -797,7 +909,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished">Ativado</translation>
+        <translation>Ativado</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -1033,10 +1145,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Remover</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opções</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programas</translation>
     </message>
@@ -1238,66 +1346,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Manter a contagem para &apos;Conexões bloqueadas&apos;:</translation>
     </message>
     <message>
-        <source>Graph</source>
-        <translation>Gráfico</translation>
-    </message>
-    <message>
-        <source>Always on top</source>
-        <translation>Sempre no topo</translation>
-    </message>
-    <message>
-        <source>Frameless</source>
-        <translation>Sem bordas</translation>
-    </message>
-    <message>
-        <source>Click through</source>
-        <translation>Permitir clicar</translation>
-    </message>
-    <message>
-        <source>Hide on hover</source>
-        <translation>Esconder ao sobrepor o cursor</translation>
-    </message>
-    <message>
-        <source>Opacity:</source>
-        <translation>Opacidade:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Opacidade ao passar o mouse:</translation>
-    </message>
-    <message>
-        <source>Max seconds:</source>
-        <translation>Máximo de segundos:</translation>
-    </message>
-    <message>
-        <source>Background:</source>
-        <translation>Segundo plano:</translation>
-    </message>
-    <message>
-        <source>Download:</source>
-        <translation>Download:</translation>
-    </message>
-    <message>
-        <source>Upload:</source>
-        <translation>Upload:</translation>
-    </message>
-    <message>
-        <source>Axis:</source>
-        <translation>Eixo:</translation>
-    </message>
-    <message>
-        <source>Tick label:</source>
-        <translation>Etiqueta de marcação:</translation>
-    </message>
-    <message>
-        <source>Label:</source>
-        <translation>Etiqueta:</translation>
-    </message>
-    <message>
-        <source>Grid:</source>
-        <translation>Grade:</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>Personalizar</translation>
     </message>
@@ -1338,10 +1386,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Tráfego</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>Conexões</translation>
-    </message>
-    <message>
         <source>Collect allowed connections</source>
         <translation>Coletar conexões permitidas</translation>
     </message>
@@ -1365,6 +1409,18 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Alerted only</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Blocked Connections</source>
+        <translation>Conexões bloqueadas</translation>
+    </message>
+    <message>
+        <source>Allowed Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>
@@ -1382,20 +1438,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Zones Downloader</source>
         <translation>Downloader de Zonas</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoUpdateChecker</name>
-    <message>
-        <source>New version v%1 available!</source>
-        <translation>Atualização v%1 disponível!</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoZoneDownloader</name>
-    <message>
-        <source>Zone Addresses Updated: %1.</source>
-        <translation>Endereços de Zona Atualizados: %1.</translation>
     </message>
 </context>
 <context>

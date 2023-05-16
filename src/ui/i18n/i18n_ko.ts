@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ko_KR" sourcelanguage="en_US">
 <context>
+    <name>AboutPage</name>
+    <message>
+        <source>New Version</source>
+        <translation>새 버전</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>다운로드</translation>
+    </message>
+</context>
+<context>
     <name>AddressesColumn</name>
     <message>
         <source>Zones</source>
@@ -459,6 +470,119 @@
         <source>Restart Now?</source>
         <translation>지금 재시작?</translation>
     </message>
+    <message>
+        <source>New version v%1 available!</source>
+        <translation>새 버전(v%1) 사용 가능!</translation>
+    </message>
+    <message>
+        <source>Zone Addresses Updated: %1.</source>
+        <translation>업데이트된 대역 주소: %1.</translation>
+    </message>
+</context>
+<context>
+    <name>GraphPage</name>
+    <message>
+        <source>Graph</source>
+        <translation>그래프</translation>
+    </message>
+    <message>
+        <source>Always on top</source>
+        <translation>항상 위에 표시</translation>
+    </message>
+    <message>
+        <source>Frameless</source>
+        <translation>프레임리스</translation>
+    </message>
+    <message>
+        <source>Click through</source>
+        <translation>클릭으로</translation>
+    </message>
+    <message>
+        <source>Hide on hover</source>
+        <translation>호버 시 숨기기</translation>
+    </message>
+    <message>
+        <source>Opacity:</source>
+        <translation>불투명도:</translation>
+    </message>
+    <message>
+        <source>Hover opacity:</source>
+        <translation>호버 불투명도:</translation>
+    </message>
+    <message>
+        <source>Max seconds:</source>
+        <translation>최대 초:</translation>
+    </message>
+    <message>
+        <source>Background:</source>
+        <translation>백그라운드:</translation>
+    </message>
+    <message>
+        <source>Download:</source>
+        <translation>다운로드:</translation>
+    </message>
+    <message>
+        <source>Upload:</source>
+        <translation>업로드:</translation>
+    </message>
+    <message>
+        <source>Axis:</source>
+        <translation>축:</translation>
+    </message>
+    <message>
+        <source>Tick label:</source>
+        <translation>눈금 레이블:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation>레이블:</translation>
+    </message>
+    <message>
+        <source>Grid:</source>
+        <translation>격자:</translation>
+    </message>
+</context>
+<context>
+    <name>HomeMainPage</name>
+    <message>
+        <source>My Fort</source>
+        <translation>내 Fort</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HomePage</name>
+    <message>
+        <source>Driver</source>
+        <translation>드라이버</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>재설치</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>제거</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation>설치됨</translation>
+    </message>
+    <message>
+        <source>Not Installed</source>
+        <translation>설치 안됨</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>드라이버를 다시 설치하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>드라이버를 제거하시겠습니까?</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -469,6 +593,30 @@
     <message>
         <source>My Fort</source>
         <translation>내 Fort</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>로그</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation>프로필</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>통계</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>출시</translation>
     </message>
 </context>
 <context>
@@ -528,18 +676,6 @@
         <translation>예약</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>로그</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>프로필</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>출시</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>확인</translation>
     </message>
@@ -550,6 +686,10 @@
     <message>
         <source>Cancel</source>
         <translation>취소</translation>
+    </message>
+    <message>
+        <source>Traffic Graph</source>
+        <translation>트래픽 그래프</translation>
     </message>
 </context>
 <context>
@@ -565,14 +705,6 @@
     <message>
         <source>Global</source>
         <translation>전역</translation>
-    </message>
-    <message>
-        <source>Driver</source>
-        <translation>드라이버</translation>
-    </message>
-    <message>
-        <source>New Version</source>
-        <translation>새 버전</translation>
     </message>
     <message>
         <source>Stop traffic when Fort Firewall is not running</source>
@@ -615,14 +747,6 @@
         <translation>언어:</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>제거</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>다운로드</translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation>비활성화됨</translation>
     </message>
@@ -641,10 +765,6 @@
     <message>
         <source>Not Installed</source>
         <translation>설치 안됨</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>드라이버를 제거하시겠습니까?</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -679,14 +799,6 @@
 Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>새 프로필 경로는 &quot;%1&quot; 입니다.
 프로필을 &quot;%2&quot;에서 새 위치로 이동하시겠습니까?</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>재설치</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>드라이버를 다시 설치하시겠습니까?</translation>
     </message>
     <message>
         <source>Tray</source>
@@ -1008,10 +1120,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished">Attention: The &apos;Kill Process&apos; option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1035,10 +1144,6 @@ It can cause a Windows malfunction or totally unusable.</translation>
     <message>
         <source>Remove</source>
         <translation>제거</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>옵션</translation>
     </message>
     <message>
         <source>Programs</source>
@@ -1242,66 +1347,6 @@ It can cause a Windows malfunction or totally unusable.</translation>
         <translation>&apos;차단된 연결&apos; 수 보관:</translation>
     </message>
     <message>
-        <source>Graph</source>
-        <translation>그래프</translation>
-    </message>
-    <message>
-        <source>Always on top</source>
-        <translation>항상 위에 표시</translation>
-    </message>
-    <message>
-        <source>Frameless</source>
-        <translation>프레임리스</translation>
-    </message>
-    <message>
-        <source>Click through</source>
-        <translation>클릭으로</translation>
-    </message>
-    <message>
-        <source>Hide on hover</source>
-        <translation>호버 시 숨기기</translation>
-    </message>
-    <message>
-        <source>Opacity:</source>
-        <translation>불투명도:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>호버 불투명도:</translation>
-    </message>
-    <message>
-        <source>Max seconds:</source>
-        <translation>최대 초:</translation>
-    </message>
-    <message>
-        <source>Background:</source>
-        <translation>백그라운드:</translation>
-    </message>
-    <message>
-        <source>Download:</source>
-        <translation>다운로드:</translation>
-    </message>
-    <message>
-        <source>Upload:</source>
-        <translation>업로드:</translation>
-    </message>
-    <message>
-        <source>Axis:</source>
-        <translation>축:</translation>
-    </message>
-    <message>
-        <source>Tick label:</source>
-        <translation>눈금 레이블:</translation>
-    </message>
-    <message>
-        <source>Label:</source>
-        <translation>레이블:</translation>
-    </message>
-    <message>
-        <source>Grid:</source>
-        <translation>격자:</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>사용자 지정</translation>
     </message>
@@ -1342,10 +1387,6 @@ It can cause a Windows malfunction or totally unusable.</translation>
         <translation>트래픽</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>연결</translation>
-    </message>
-    <message>
         <source>Collect allowed connections</source>
         <translation>허용된 연결 집계</translation>
     </message>
@@ -1369,6 +1410,18 @@ It can cause a Windows malfunction or totally unusable.</translation>
         <source>Alerted only</source>
         <translation>경고만</translation>
     </message>
+    <message>
+        <source>Blocked Connections</source>
+        <translation>차단 된 연결</translation>
+    </message>
+    <message>
+        <source>Allowed Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>
@@ -1386,20 +1439,6 @@ It can cause a Windows malfunction or totally unusable.</translation>
     <message>
         <source>Zones Downloader</source>
         <translation>대역 다운로더</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoUpdateChecker</name>
-    <message>
-        <source>New version v%1 available!</source>
-        <translation>새 버전(v%1) 사용 가능!</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoZoneDownloader</name>
-    <message>
-        <source>Zone Addresses Updated: %1.</source>
-        <translation>업데이트된 대역 주소: %1.</translation>
     </message>
 </context>
 <context>

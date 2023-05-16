@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ru_RU" sourcelanguage="en_US">
 <context>
+    <name>AboutPage</name>
+    <message>
+        <source>New Version</source>
+        <translation>Новая версия</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Загрузка</translation>
+    </message>
+</context>
+<context>
     <name>AddressesColumn</name>
     <message>
         <source>Zones</source>
@@ -459,6 +470,119 @@
         <source>Restart Now?</source>
         <translation>Перезапустить сейчас?</translation>
     </message>
+    <message>
+        <source>New version v%1 available!</source>
+        <translation>Новая версия v% доступна!</translation>
+    </message>
+    <message>
+        <source>Zone Addresses Updated: %1.</source>
+        <translation>Адреса Зон обновлены: %1.</translation>
+    </message>
+</context>
+<context>
+    <name>GraphPage</name>
+    <message>
+        <source>Graph</source>
+        <translation>График</translation>
+    </message>
+    <message>
+        <source>Always on top</source>
+        <translation>Всегда сверху</translation>
+    </message>
+    <message>
+        <source>Frameless</source>
+        <translation>Без рамок</translation>
+    </message>
+    <message>
+        <source>Click through</source>
+        <translation>Сквозной режим</translation>
+    </message>
+    <message>
+        <source>Hide on hover</source>
+        <translation>Скрыть при наведении</translation>
+    </message>
+    <message>
+        <source>Opacity:</source>
+        <translation>Непрозрачность:</translation>
+    </message>
+    <message>
+        <source>Hover opacity:</source>
+        <translation>Непрозрачность при наведении:</translation>
+    </message>
+    <message>
+        <source>Max seconds:</source>
+        <translation>Количество секунд:</translation>
+    </message>
+    <message>
+        <source>Background:</source>
+        <translation>Фон:</translation>
+    </message>
+    <message>
+        <source>Download:</source>
+        <translation>Загрузка:</translation>
+    </message>
+    <message>
+        <source>Upload:</source>
+        <translation>Отдача:</translation>
+    </message>
+    <message>
+        <source>Axis:</source>
+        <translation>Ось:</translation>
+    </message>
+    <message>
+        <source>Tick label:</source>
+        <translation>Метка:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation>Маркировка:</translation>
+    </message>
+    <message>
+        <source>Grid:</source>
+        <translation>Сетка:</translation>
+    </message>
+</context>
+<context>
+    <name>HomeMainPage</name>
+    <message>
+        <source>My Fort</source>
+        <translation>Мой Форт</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation>О программе</translation>
+    </message>
+</context>
+<context>
+    <name>HomePage</name>
+    <message>
+        <source>Driver</source>
+        <translation>Драйвер</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Переустановить</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation>Установлен</translation>
+    </message>
+    <message>
+        <source>Not Installed</source>
+        <translation>Не установлен</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Переустановить драйвер?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Удалить драйвер?</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -469,6 +593,30 @@
     <message>
         <source>My Fort</source>
         <translation>Мой Форт</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation>Заблокировать</translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation>Разблокировать</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Логи</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation>Профиль</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>Статистика</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Релизы</translation>
     </message>
 </context>
 <context>
@@ -528,18 +676,6 @@
         <translation>Расписание</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>Логи</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Профиль</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Релизы</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -550,6 +686,10 @@
     <message>
         <source>Cancel</source>
         <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Traffic Graph</source>
+        <translation>График трафика</translation>
     </message>
 </context>
 <context>
@@ -565,14 +705,6 @@
     <message>
         <source>Global</source>
         <translation>Глобально</translation>
-    </message>
-    <message>
-        <source>Driver</source>
-        <translation>Драйвер</translation>
-    </message>
-    <message>
-        <source>New Version</source>
-        <translation>Новая версия</translation>
     </message>
     <message>
         <source>Stop traffic when Fort Firewall is not running</source>
@@ -615,14 +747,6 @@
         <translation>Язык:</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Удалить</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>Загрузка</translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation>Отключен</translation>
     </message>
@@ -641,10 +765,6 @@
     <message>
         <source>Not Installed</source>
         <translation>Не установлен</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Удалить драйвер?</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -679,14 +799,6 @@
 Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Новый путь профиль: &quot;%1&quot;.
 Переместить профиль из &quot;%2&quot; в новое место?</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Переустановить</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Переустановить драйвер?</translation>
     </message>
     <message>
         <source>Tray</source>
@@ -1037,10 +1149,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Опции</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
@@ -1242,66 +1350,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Хранить количество для &apos;Блокированные соединения&apos;:</translation>
     </message>
     <message>
-        <source>Graph</source>
-        <translation>График</translation>
-    </message>
-    <message>
-        <source>Always on top</source>
-        <translation>Всегда сверху</translation>
-    </message>
-    <message>
-        <source>Frameless</source>
-        <translation>Без рамок</translation>
-    </message>
-    <message>
-        <source>Click through</source>
-        <translation>Сквозной режим</translation>
-    </message>
-    <message>
-        <source>Hide on hover</source>
-        <translation>Скрыть при наведении</translation>
-    </message>
-    <message>
-        <source>Opacity:</source>
-        <translation>Непрозрачность:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Непрозрачность при наведении:</translation>
-    </message>
-    <message>
-        <source>Max seconds:</source>
-        <translation>Количество секунд:</translation>
-    </message>
-    <message>
-        <source>Background:</source>
-        <translation>Фон:</translation>
-    </message>
-    <message>
-        <source>Download:</source>
-        <translation>Загрузка:</translation>
-    </message>
-    <message>
-        <source>Upload:</source>
-        <translation>Отдача:</translation>
-    </message>
-    <message>
-        <source>Axis:</source>
-        <translation>Ось:</translation>
-    </message>
-    <message>
-        <source>Tick label:</source>
-        <translation>Метка:</translation>
-    </message>
-    <message>
-        <source>Label:</source>
-        <translation>Маркировка:</translation>
-    </message>
-    <message>
-        <source>Grid:</source>
-        <translation>Сетка:</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>Нестандартный</translation>
     </message>
@@ -1342,10 +1390,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Трафик</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>Соединения</translation>
-    </message>
-    <message>
         <source>Collect allowed connections</source>
         <translation>Собирать разрешённые соединения</translation>
     </message>
@@ -1369,6 +1413,18 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Alerted only</source>
         <translation>Только оповещения</translation>
     </message>
+    <message>
+        <source>Blocked Connections</source>
+        <translation>Блокированные соединения</translation>
+    </message>
+    <message>
+        <source>Allowed Connections</source>
+        <translation>Разрешённые соединения</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation>Очистить устаревшее при старте</translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>
@@ -1386,20 +1442,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Zones Downloader</source>
         <translation>Загрузка Зон</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoUpdateChecker</name>
-    <message>
-        <source>New version v%1 available!</source>
-        <translation>Новая версия v% доступна!</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoZoneDownloader</name>
-    <message>
-        <source>Zone Addresses Updated: %1.</source>
-        <translation>Адреса Зон обновлены: %1.</translation>
     </message>
 </context>
 <context>

@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en_US">
 <context>
+    <name>AboutPage</name>
+    <message>
+        <source>New Version</source>
+        <translation>新版本</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>下载</translation>
+    </message>
+</context>
+<context>
     <name>AddressesColumn</name>
     <message>
         <source>Zones</source>
@@ -459,6 +470,119 @@
         <source>Restart Now?</source>
         <translation>立即重启?</translation>
     </message>
+    <message>
+        <source>New version v%1 available!</source>
+        <translation>有新版本可用！</translation>
+    </message>
+    <message>
+        <source>Zone Addresses Updated: %1.</source>
+        <translation>区域地址更新: %1</translation>
+    </message>
+</context>
+<context>
+    <name>GraphPage</name>
+    <message>
+        <source>Graph</source>
+        <translation>图表</translation>
+    </message>
+    <message>
+        <source>Always on top</source>
+        <translation>始终置顶</translation>
+    </message>
+    <message>
+        <source>Frameless</source>
+        <translation>无边框模式</translation>
+    </message>
+    <message>
+        <source>Click through</source>
+        <translation>鼠标穿透</translation>
+    </message>
+    <message>
+        <source>Hide on hover</source>
+        <translation>悬停</translation>
+    </message>
+    <message>
+        <source>Opacity:</source>
+        <translation>不透明度：</translation>
+    </message>
+    <message>
+        <source>Hover opacity:</source>
+        <translation>悬停不透明度：</translation>
+    </message>
+    <message>
+        <source>Max seconds:</source>
+        <translation>最大秒数：</translation>
+    </message>
+    <message>
+        <source>Background:</source>
+        <translation>背景：</translation>
+    </message>
+    <message>
+        <source>Download:</source>
+        <translation>下载:</translation>
+    </message>
+    <message>
+        <source>Upload:</source>
+        <translation>上传:</translation>
+    </message>
+    <message>
+        <source>Axis:</source>
+        <translation>轴：</translation>
+    </message>
+    <message>
+        <source>Tick label:</source>
+        <translation>贴标签：</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation>标签：</translation>
+    </message>
+    <message>
+        <source>Grid:</source>
+        <translation>网格：</translation>
+    </message>
+</context>
+<context>
+    <name>HomeMainPage</name>
+    <message>
+        <source>My Fort</source>
+        <translation>我的堡垒</translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HomePage</name>
+    <message>
+        <source>Driver</source>
+        <translation>驱动</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>重新安装</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>移除</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation>已安装</translation>
+    </message>
+    <message>
+        <source>Not Installed</source>
+        <translation>未安装</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>您确定要删除驱动程序吗？</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>您确定要删除驱动程序吗？</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -469,6 +593,30 @@
     <message>
         <source>My Fort</source>
         <translation>我的堡垒</translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>日志</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation>资料</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>统计数据</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>版本发布</translation>
     </message>
 </context>
 <context>
@@ -528,18 +676,6 @@
         <translation>计划</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>日志</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>资料</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>版本发布</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -550,6 +686,10 @@
     <message>
         <source>Cancel</source>
         <translation>取消</translation>
+    </message>
+    <message>
+        <source>Traffic Graph</source>
+        <translation>流量图</translation>
     </message>
 </context>
 <context>
@@ -565,14 +705,6 @@
     <message>
         <source>Global</source>
         <translation>全局配置</translation>
-    </message>
-    <message>
-        <source>Driver</source>
-        <translation>驱动</translation>
-    </message>
-    <message>
-        <source>New Version</source>
-        <translation>新版本</translation>
     </message>
     <message>
         <source>Stop traffic when Fort Firewall is not running</source>
@@ -615,14 +747,6 @@
         <translation>语言</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>移除</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>下载</translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation>停用</translation>
     </message>
@@ -641,10 +765,6 @@
     <message>
         <source>Not Installed</source>
         <translation>未安装</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>您确定要删除驱动程序吗？</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -679,14 +799,6 @@
 Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>新的配置文件路径是 &quot;%1&quot;。
 您想移动配置文件从 &quot;%2&quot; 到新位置吗？</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>重新安装</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>您确定要删除驱动程序吗？</translation>
     </message>
     <message>
         <source>Tray</source>
@@ -1037,10 +1149,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>移除</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>选项</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>程序</translation>
     </message>
@@ -1242,66 +1350,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>记录 &apos;已阻止的连接&apos; 数：</translation>
     </message>
     <message>
-        <source>Graph</source>
-        <translation>图表</translation>
-    </message>
-    <message>
-        <source>Always on top</source>
-        <translation>始终置顶</translation>
-    </message>
-    <message>
-        <source>Frameless</source>
-        <translation>无边框模式</translation>
-    </message>
-    <message>
-        <source>Click through</source>
-        <translation>鼠标穿透</translation>
-    </message>
-    <message>
-        <source>Hide on hover</source>
-        <translation>悬停</translation>
-    </message>
-    <message>
-        <source>Opacity:</source>
-        <translation>不透明度：</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>悬停不透明度：</translation>
-    </message>
-    <message>
-        <source>Max seconds:</source>
-        <translation>最大秒数：</translation>
-    </message>
-    <message>
-        <source>Background:</source>
-        <translation>背景：</translation>
-    </message>
-    <message>
-        <source>Download:</source>
-        <translation>下载:</translation>
-    </message>
-    <message>
-        <source>Upload:</source>
-        <translation>上传:</translation>
-    </message>
-    <message>
-        <source>Axis:</source>
-        <translation>轴：</translation>
-    </message>
-    <message>
-        <source>Tick label:</source>
-        <translation>贴标签：</translation>
-    </message>
-    <message>
-        <source>Label:</source>
-        <translation>标签：</translation>
-    </message>
-    <message>
-        <source>Grid:</source>
-        <translation>网格：</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>自定义</translation>
     </message>
@@ -1342,10 +1390,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>数据流量</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>连接数</translation>
-    </message>
-    <message>
         <source>Collect allowed connections</source>
         <translation>收集允许的连接</translation>
     </message>
@@ -1369,6 +1413,18 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Alerted only</source>
         <translation>仅警报</translation>
     </message>
+    <message>
+        <source>Blocked Connections</source>
+        <translation>已屏蔽的连接</translation>
+    </message>
+    <message>
+        <source>Allowed Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>
@@ -1386,20 +1442,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Zones Downloader</source>
         <translation>区域下载器</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoUpdateChecker</name>
-    <message>
-        <source>New version v%1 available!</source>
-        <translation>有新版本可用！</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoZoneDownloader</name>
-    <message>
-        <source>Zone Addresses Updated: %1.</source>
-        <translation>区域地址更新: %1</translation>
     </message>
 </context>
 <context>

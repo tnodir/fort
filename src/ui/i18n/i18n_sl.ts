@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="sl_SI" sourcelanguage="en_US">
 <context>
+    <name>AboutPage</name>
+    <message>
+        <source>New Version</source>
+        <translation>Nova različica</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>AddressesColumn</name>
     <message>
         <source>Zones</source>
@@ -459,6 +470,119 @@
         <source>Restart Now?</source>
         <translation>Želite zdaj znova zagnati?</translation>
     </message>
+    <message>
+        <source>New version v%1 available!</source>
+        <translation>Na voljo je nova različica v%1!</translation>
+    </message>
+    <message>
+        <source>Zone Addresses Updated: %1.</source>
+        <translation>Posodobljeni naslovi področij: %1.</translation>
+    </message>
+</context>
+<context>
+    <name>GraphPage</name>
+    <message>
+        <source>Graph</source>
+        <translation>Graf</translation>
+    </message>
+    <message>
+        <source>Always on top</source>
+        <translation>Vedno na zaslonu</translation>
+    </message>
+    <message>
+        <source>Frameless</source>
+        <translation>Brez okvirjev</translation>
+    </message>
+    <message>
+        <source>Click through</source>
+        <translation>Klik skozi</translation>
+    </message>
+    <message>
+        <source>Hide on hover</source>
+        <translation>Skrij ob prehodu</translation>
+    </message>
+    <message>
+        <source>Opacity:</source>
+        <translation>Motnost:</translation>
+    </message>
+    <message>
+        <source>Hover opacity:</source>
+        <translation>Motnost prehoda:</translation>
+    </message>
+    <message>
+        <source>Max seconds:</source>
+        <translation>Največ sekund:</translation>
+    </message>
+    <message>
+        <source>Background:</source>
+        <translation>Ozadje:</translation>
+    </message>
+    <message>
+        <source>Download:</source>
+        <translation>Prenos:</translation>
+    </message>
+    <message>
+        <source>Upload:</source>
+        <translation>Nalaganje:</translation>
+    </message>
+    <message>
+        <source>Axis:</source>
+        <translation>Os:</translation>
+    </message>
+    <message>
+        <source>Tick label:</source>
+        <translation>Oznaka kljukice:</translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation>Oznaka:</translation>
+    </message>
+    <message>
+        <source>Grid:</source>
+        <translation>Mreža:</translation>
+    </message>
+</context>
+<context>
+    <name>HomeMainPage</name>
+    <message>
+        <source>My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>HomePage</name>
+    <message>
+        <source>Driver</source>
+        <translation>Gonilnik</translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation>Znova namesti</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation>Nameščen</translation>
+    </message>
+    <message>
+        <source>Not Installed</source>
+        <translation>Ni nameščeno</translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation>Ali ste prepričani, da želite znova namestiti gonilnik?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation>Ali ste prepričani, da želite izbrisati gonilnik?</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -469,6 +593,30 @@
     <message>
         <source>My Fort</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Dnevniki</translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation>Profil</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistika</translation>
+    </message>
+    <message>
+        <source>Releases</source>
+        <translation>Izdaje</translation>
     </message>
 </context>
 <context>
@@ -528,18 +676,6 @@
         <translation>Načrtuj</translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation>Dnevniki</translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation>Izdaje</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>Vredu</translation>
     </message>
@@ -550,6 +686,10 @@
     <message>
         <source>Cancel</source>
         <translation>Prekliči</translation>
+    </message>
+    <message>
+        <source>Traffic Graph</source>
+        <translation>Graf prometa</translation>
     </message>
 </context>
 <context>
@@ -565,14 +705,6 @@
     <message>
         <source>Global</source>
         <translation>Splošno</translation>
-    </message>
-    <message>
-        <source>Driver</source>
-        <translation>Gonilnik</translation>
-    </message>
-    <message>
-        <source>New Version</source>
-        <translation>Nova različica</translation>
     </message>
     <message>
         <source>Stop traffic when Fort Firewall is not running</source>
@@ -615,14 +747,6 @@
         <translation>Jezik:</translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation>Odstrani</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation>Prenesi</translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation>Onemogočeno</translation>
     </message>
@@ -641,10 +765,6 @@
     <message>
         <source>Not Installed</source>
         <translation>Ni nameščeno</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
-        <translation>Ali ste prepričani, da želite izbrisati gonilnik?</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -679,14 +799,6 @@
 Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Nova pot profila je &quot;%1&quot;.
 Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation>Znova namesti</translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
-        <translation>Ali ste prepričani, da želite znova namestiti gonilnik?</translation>
     </message>
     <message>
         <source>Tray</source>
@@ -1037,10 +1149,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Odstrani</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programi</translation>
     </message>
@@ -1242,66 +1350,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Ohrani število za &apos;Blokirane povezave&apos;:</translation>
     </message>
     <message>
-        <source>Graph</source>
-        <translation>Graf</translation>
-    </message>
-    <message>
-        <source>Always on top</source>
-        <translation>Vedno na zaslonu</translation>
-    </message>
-    <message>
-        <source>Frameless</source>
-        <translation>Brez okvirjev</translation>
-    </message>
-    <message>
-        <source>Click through</source>
-        <translation>Klik skozi</translation>
-    </message>
-    <message>
-        <source>Hide on hover</source>
-        <translation>Skrij ob prehodu</translation>
-    </message>
-    <message>
-        <source>Opacity:</source>
-        <translation>Motnost:</translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation>Motnost prehoda:</translation>
-    </message>
-    <message>
-        <source>Max seconds:</source>
-        <translation>Največ sekund:</translation>
-    </message>
-    <message>
-        <source>Background:</source>
-        <translation>Ozadje:</translation>
-    </message>
-    <message>
-        <source>Download:</source>
-        <translation>Prenos:</translation>
-    </message>
-    <message>
-        <source>Upload:</source>
-        <translation>Nalaganje:</translation>
-    </message>
-    <message>
-        <source>Axis:</source>
-        <translation>Os:</translation>
-    </message>
-    <message>
-        <source>Tick label:</source>
-        <translation>Oznaka kljukice:</translation>
-    </message>
-    <message>
-        <source>Label:</source>
-        <translation>Oznaka:</translation>
-    </message>
-    <message>
-        <source>Grid:</source>
-        <translation>Mreža:</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>Po meri</translation>
     </message>
@@ -1342,10 +1390,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Promet</translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation>Povezave</translation>
-    </message>
-    <message>
         <source>Collect allowed connections</source>
         <translation>Zberi dovoljene povezave</translation>
     </message>
@@ -1369,6 +1413,18 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Alerted only</source>
         <translation>Samo opozorjeno</translation>
     </message>
+    <message>
+        <source>Blocked Connections</source>
+        <translation>Blokirane povezave</translation>
+    </message>
+    <message>
+        <source>Allowed Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>
@@ -1386,20 +1442,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Zones Downloader</source>
         <translation>Prenašalnik področij</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoUpdateChecker</name>
-    <message>
-        <source>New version v%1 available!</source>
-        <translation>Na voljo je nova različica v%1!</translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoZoneDownloader</name>
-    <message>
-        <source>Zone Addresses Updated: %1.</source>
-        <translation>Posodobljeni naslovi področij: %1.</translation>
     </message>
 </context>
 <context>

@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="en_US">
 <context>
+    <name>AboutPage</name>
+    <message>
+        <source>New Version</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>AddressesColumn</name>
     <message>
         <source>Zones</source>
@@ -459,6 +470,119 @@
         <source>Restart Now?</source>
         <translation></translation>
     </message>
+    <message>
+        <source>New version v%1 available!</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Zone Addresses Updated: %1.</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GraphPage</name>
+    <message>
+        <source>Graph</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Always on top</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Frameless</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Click through</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hide on hover</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Opacity:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hover opacity:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Max seconds:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Background:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Download:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Upload:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Axis:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tick label:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Label:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Grid:</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>HomeMainPage</name>
+    <message>
+        <source>My Fort</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>About</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>HomePage</name>
+    <message>
+        <source>Driver</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reinstall</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Not Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to reinstall the Driver?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Driver?</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -468,6 +592,30 @@
     </message>
     <message>
         <source>My Fort</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Lock</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unlock</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Profile</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Releases</source>
         <translation></translation>
     </message>
 </context>
@@ -528,18 +676,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Logs</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Profile</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Releases</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation></translation>
     </message>
@@ -549,6 +685,10 @@
     </message>
     <message>
         <source>Cancel</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Traffic Graph</source>
         <translation></translation>
     </message>
 </context>
@@ -564,14 +704,6 @@
     </message>
     <message>
         <source>Global</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Driver</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>New Version</source>
         <translation></translation>
     </message>
     <message>
@@ -615,14 +747,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Remove</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Disabled</source>
         <translation></translation>
     </message>
@@ -640,10 +764,6 @@
     </message>
     <message>
         <source>Not Installed</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to remove the Driver?</source>
         <translation></translation>
     </message>
     <message>
@@ -677,14 +797,6 @@
     <message>
         <source>New profile path is &quot;%1&quot;.
 Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Reinstall</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to reinstall the Driver?</source>
         <translation></translation>
     </message>
     <message>
@@ -1033,10 +1145,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation></translation>
     </message>
@@ -1238,66 +1346,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Graph</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Always on top</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Frameless</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Click through</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Hide on hover</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Opacity:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Hover opacity:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Max seconds:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Background:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Download:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Upload:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Axis:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Tick label:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Label:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Grid:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation></translation>
     </message>
@@ -1338,10 +1386,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Connections</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Collect allowed connections</source>
         <translation></translation>
     </message>
@@ -1365,6 +1409,18 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Alerted only</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Blocked Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allowed Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>
@@ -1381,20 +1437,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Zones Downloader</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoUpdateChecker</name>
-    <message>
-        <source>New version v%1 available!</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>TaskInfoZoneDownloader</name>
-    <message>
-        <source>Zone Addresses Updated: %1.</source>
         <translation></translation>
     </message>
 </context>
