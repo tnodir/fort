@@ -26,11 +26,6 @@ private:
 
     QPushButton *m_btMenu = nullptr;
 
-    QPushButton *m_btLogs = nullptr;
-    QPushButton *m_btProfile = nullptr;
-    QPushButton *m_btStat = nullptr;
-    QPushButton *m_btReleases = nullptr;
-
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btApply = nullptr;
     QPushButton *m_btCancel = nullptr;

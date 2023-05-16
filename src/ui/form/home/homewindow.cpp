@@ -6,6 +6,8 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
+#include <fort_version.h>
+
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/tray/trayicon.h>
@@ -86,6 +88,11 @@ void HomeWindow::retranslateUi()
     m_btPasswordUnlock->setText(tr("Unlock"));
     m_btMenu->setText(tr("Menu"));
 
+    m_btLogs->setText(tr("Logs"));
+    m_btProfile->setText(tr("Profile"));
+    m_btStat->setText(tr("Statistics"));
+    m_btReleases->setText(tr("Releases"));
+
     this->setWindowTitle(tr("My Fort"));
 }
 
@@ -114,6 +121,10 @@ void HomeWindow::setupUi()
     // Main page
     m_mainPage = new HomeMainPage(ctrl());
     layout->addWidget(m_mainPage, 1);
+
+    // Dialog buttons
+    auto buttonsLayout = setupDialogButtons();
+    layout->addLayout(buttonsLayout);
 
     this->setLayout(layout);
 
@@ -214,4 +225,28 @@ void HomeWindow::setupPasswordButtons()
     refreshPasswordButtons();
 
     connect(ctrl(), &HomeController::passwordLockedChanged, this, refreshPasswordButtons);
+}
+
+QLayout *HomeWindow::setupDialogButtons()
+{
+    auto layout = new QHBoxLayout();
+
+    m_btLogs = ControlUtil::createLinkButton(":/icons/folder.png", settings()->logsPath());
+    m_btProfile = ControlUtil::createLinkButton(":/icons/folder.png", settings()->profilePath());
+    m_btStat = ControlUtil::createLinkButton(":/icons/folder.png", settings()->statPath());
+    m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", APP_UPDATES_URL);
+
+    connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btProfile, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btStat, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btReleases, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+
+    layout->addWidget(m_btLogs);
+    layout->addWidget(m_btProfile);
+    layout->addWidget(m_btStat);
+    layout->addWidget(m_btReleases);
+
+    layout->addStretch();
+
+    return layout;
 }

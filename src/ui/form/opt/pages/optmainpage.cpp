@@ -7,8 +7,6 @@
 #include <QUrl>
 #include <QVBoxLayout>
 
-#include <fort_version.h>
-
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/opt/optionscontroller.h>
@@ -38,11 +36,6 @@ void OptMainPage::onRetranslateUi()
     m_tabWidget->setTabText(4, tr("Traffic Graph"));
     m_tabWidget->setTabText(5, tr("Schedule"));
 
-    m_btLogs->setText(tr("Logs"));
-    m_btProfile->setText(tr("Profile"));
-    m_btStat->setText(tr("Statistics"));
-    m_btReleases->setText(tr("Releases"));
-
     m_btOk->setText(tr("OK"));
     m_btApply->setText(tr("Apply"));
     m_btCancel->setText(tr("Cancel"));
@@ -57,7 +50,7 @@ void OptMainPage::setupUi()
     setupTabBar();
     layout->addWidget(m_tabWidget);
 
-    // Dialog butons
+    // Dialog buttons
     auto buttonsLayout = setupDialogButtons();
     layout->addLayout(buttonsLayout);
 
@@ -98,24 +91,9 @@ void OptMainPage::setupTabBar()
 
 QLayout *OptMainPage::setupDialogButtons()
 {
-    auto buttonsLayout = new QHBoxLayout();
+    auto layout = new QHBoxLayout();
 
-    m_btLogs = ControlUtil::createLinkButton(":/icons/folder.png", settings()->logsPath());
-    m_btProfile = ControlUtil::createLinkButton(":/icons/folder.png", settings()->profilePath());
-    m_btStat = ControlUtil::createLinkButton(":/icons/folder.png", settings()->statPath());
-    m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", APP_UPDATES_URL);
-
-    connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
-    connect(m_btProfile, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
-    connect(m_btStat, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
-    connect(m_btReleases, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
-
-    buttonsLayout->addWidget(m_btLogs);
-    buttonsLayout->addWidget(m_btProfile);
-    buttonsLayout->addWidget(m_btStat);
-    buttonsLayout->addWidget(m_btReleases);
-
-    buttonsLayout->addStretch();
+    layout->addStretch();
 
     m_btOk = new QPushButton();
     m_btApply = new QPushButton();
@@ -127,11 +105,11 @@ QLayout *OptMainPage::setupDialogButtons()
 
     setupApplyCancelButtons();
 
-    buttonsLayout->addWidget(m_btOk);
-    buttonsLayout->addWidget(m_btApply);
-    buttonsLayout->addWidget(m_btCancel);
+    layout->addWidget(m_btOk);
+    layout->addWidget(m_btApply);
+    layout->addWidget(m_btCancel);
 
-    return buttonsLayout;
+    return layout;
 }
 
 void OptMainPage::setupApplyCancelButtons()
