@@ -74,7 +74,7 @@ bool FortSettings::checkPassword(const QString &password) const
 
 bool FortSettings::isPasswordRequired()
 {
-    return hasPassword() && !(m_passwordUnlockType != UnlockDisabled && m_passwordChecked);
+    return hasPassword() && !(passwordUnlockType() != UnlockDisabled && passwordChecked());
 }
 
 void FortSettings::setPasswordChecked(bool checked, int unlockType)
@@ -489,4 +489,9 @@ bool FortSettings::canMigrate(QString &viaVersion) const
     }
 
     return true;
+}
+
+QStringList FortSettings::unlockTypeStrings()
+{
+    return { tr("Disabled"), tr("Session lockout"), tr("Program exit") };
 }

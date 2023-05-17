@@ -48,14 +48,25 @@ struct MessageBoxArg
     const QString title;
 };
 
-QMessageBox *createMessageBox(const MessageBoxArg &ba, QWidget *parent)
+void setupModalDialog(QDialog *box)
 {
-    auto box = new QMessageBox(ba.icon, ba.title, ba.text, ba.buttons, parent);
     box->setAttribute(Qt::WA_DeleteOnClose);
 
-    box->setWindowModality(parent ? Qt::WindowModal : Qt::ApplicationModal);
+    box->setWindowModality(box->parent() ? Qt::WindowModal : Qt::ApplicationModal);
     box->setModal(true);
+}
 
+QMessageBox *createMessageBox(const MessageBoxArg &ba, QWidget *parent = nullptr)
+{
+    auto box = new QMessageBox(ba.icon, ba.title, ba.text, ba.buttons, parent);
+    setupModalDialog(box);
+    return box;
+}
+
+PasswordDialog *createPasswordDialog(QWidget *parent = nullptr)
+{
+    auto box = new PasswordDialog(parent);
+    setupModalDialog(box);
     return box;
 }
 
@@ -498,31 +509,36 @@ bool WindowManager::widgetVisibleByCheckPassword(QWidget *w)
 
 bool WindowManager::checkPassword()
 {
-    static bool g_passwordDialogOpened = false;
-
     const auto settings = IoC<FortSettings>();
 
     if (!settings->isPasswordRequired())
         return true;
 
-    if (g_passwordDialogOpened) {
+    if (isAnyWindowOpen(WindowPasswordDialog)) {
         activateModalWidget();
         return false;
     }
 
-    g_passwordDialogOpened = true;
+    auto box = createPasswordDialog();
 
-    QString password;
-    int unlockType = FortSettings::UnlockDisabled;
-    const bool ok = PasswordDialog::getPassword(password, unlockType, mainWindow());
+    connect(box, &QMessageBox::accepted, [=] {
+        const QString password = box->password();
+        const int unlockType = box->unlockType();
 
-    g_passwordDialogOpened = false;
+        const bool checked = !password.isEmpty() && IoC<ConfManager>()->checkPassword(password);
 
-    const bool checked = ok && !password.isEmpty() && IoC<ConfManager>()->checkPassword(password);
+        settings->setPasswordChecked(checked, unlockType);
+    });
 
-    settings->setPasswordChecked(checked, unlockType);
+    windowOpened(WindowPasswordDialog);
 
-    return checked;
+    WidgetWindow::showWidget(box);
+
+    box->exec();
+
+    windowClosed(WindowPasswordDialog);
+
+    return settings->passwordChecked();
 }
 
 void WindowManager::showErrorBox(const QString &text, const QString &title, QWidget *parent)

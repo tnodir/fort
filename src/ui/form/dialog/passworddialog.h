@@ -15,9 +15,8 @@ class PasswordDialog : public QDialog
 public:
     explicit PasswordDialog(QWidget *parent = nullptr);
 
-    static bool getPassword(QString &password, int &unlockType, QWidget *parent = nullptr);
-
-    static QStringList unlockTypeStrings();
+    QString password() const;
+    int unlockType() const;
 
 private:
     void retranslateUi();

@@ -79,6 +79,8 @@ public:
     static bool isPortable();
     static QString defaultProfilePath(bool isService);
 
+    static QStringList unlockTypeStrings();
+
 signals:
     void passwordCheckedChanged();
 

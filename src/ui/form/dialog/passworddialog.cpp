@@ -8,6 +8,7 @@
 #include <QPushButton>
 
 #include <form/controls/controlutil.h>
+#include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <util/guiutil.h>
 #include <util/window/widgetwindow.h>
@@ -16,6 +17,16 @@ PasswordDialog::PasswordDialog(QWidget *parent) : QDialog(parent)
 {
     setupUi();
     retranslateUi();
+}
+
+QString PasswordDialog::password() const
+{
+    return m_editPassword->text();
+}
+
+int PasswordDialog::unlockType() const
+{
+    return m_comboUnlock->currentIndex();
 }
 
 void PasswordDialog::retranslateUi()
@@ -34,8 +45,8 @@ void PasswordDialog::retranslateUi()
 void PasswordDialog::retranslateComboUnlock()
 {
     m_comboUnlock->clear();
-    m_comboUnlock->addItems(unlockTypeStrings());
-    m_comboUnlock->setCurrentIndex(0);
+    m_comboUnlock->addItems(FortSettings::unlockTypeStrings());
+    m_comboUnlock->setCurrentIndex(FortSettings::UnlockDisabled);
 }
 
 void PasswordDialog::setupUi()
@@ -106,24 +117,4 @@ void PasswordDialog::setupButtonBox()
             new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal);
     QObject::connect(m_buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
     QObject::connect(m_buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
-}
-
-bool PasswordDialog::getPassword(QString &password, int &unlockType, QWidget *parent)
-{
-    PasswordDialog dialog(parent);
-
-    WidgetWindow::showWidget(&dialog);
-
-    if (dialog.exec() == 0)
-        return false;
-
-    password = dialog.m_editPassword->text();
-    unlockType = dialog.m_comboUnlock->currentIndex();
-
-    return true;
-}
-
-QStringList PasswordDialog::unlockTypeStrings()
-{
-    return { tr("Disabled"), tr("Session lockout"), tr("Program exit") };
 }
