@@ -480,6 +480,21 @@
     </message>
 </context>
 <context>
+    <name>FortSettings</name>
+    <message>
+        <source>Window closed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation>Sitzungssperre</translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation>Programm beenden</translation>
+    </message>
+</context>
+<context>
     <name>GraphPage</name>
     <message>
         <source>Graph</source>
@@ -920,6 +935,18 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <source>Show My Fort</source>
         <translation>Mein Fort anzeigen</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programme</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Neue blockierte Programme sammeln</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation>Beim Start veraltete löschen</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -949,18 +976,6 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     <message>
         <source>Password input</source>
         <translation>Passworteingabe</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Deaktiviert</translation>
-    </message>
-    <message>
-        <source>Session lockout</source>
-        <translation>Sitzungssperre</translation>
-    </message>
-    <message>
-        <source>Program exit</source>
-        <translation>Programm beenden</translation>
     </message>
 </context>
 <context>
@@ -1398,14 +1413,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Sammle blockierte Verbindungen</translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation>Programme</translation>
-    </message>
-    <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Neue blockierte Programme sammeln</translation>
-    </message>
-    <message>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation>Internetverkehr bei Überschreitung des Kontingents anhalten</translation>
     </message>
@@ -1420,10 +1427,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Allowed Connections</source>
         <translation>Zugelassene Verbindungen</translation>
-    </message>
-    <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>Beim Start veraltete löschen</translation>
     </message>
 </context>
 <context>

@@ -480,6 +480,21 @@
     </message>
 </context>
 <context>
+    <name>FortSettings</name>
+    <message>
+        <source>Window closed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation>Blocco sessione</translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation>Uscita dal programma</translation>
+    </message>
+</context>
+<context>
     <name>GraphPage</name>
     <message>
         <source>Graph</source>
@@ -604,7 +619,7 @@
     </message>
     <message>
         <source>Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>Registri</translation>
     </message>
     <message>
         <source>Profile</source>
@@ -920,6 +935,18 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <source>Show My Fort</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programmi</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Raccogli nuovi programmi bloccati</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -935,24 +962,12 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation>OK</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Disabilitato</translation>
-    </message>
-    <message>
-        <source>Program exit</source>
-        <translation>Uscita dal programma</translation>
-    </message>
-    <message>
         <source>Cancel</source>
         <translation>Annulla</translation>
     </message>
     <message>
         <source>Unlock till:</source>
         <translation>Sblocca fino a:</translation>
-    </message>
-    <message>
-        <source>Session lockout</source>
-        <translation>Blocco sessione</translation>
     </message>
     <message>
         <source>Please enter the password:</source>
@@ -1395,14 +1410,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Conserva i dati per &apos;Giornaliero&apos;:</translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation>Programmi</translation>
-    </message>
-    <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Raccogli nuovi programmi bloccati</translation>
-    </message>
-    <message>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1416,10 +1423,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Purge Obsolete on startup</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

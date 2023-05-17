@@ -480,6 +480,21 @@
     </message>
 </context>
 <context>
+    <name>FortSettings</name>
+    <message>
+        <source>Window closed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>GraphPage</name>
     <message>
         <source>Graph</source>
@@ -919,6 +934,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Show My Fort</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -947,18 +974,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Password input</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Session lockout</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Program exit</source>
         <translation></translation>
     </message>
 </context>
@@ -1394,14 +1409,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Collect New Blocked Programs</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation></translation>
     </message>
@@ -1415,10 +1422,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Purge Obsolete on startup</source>
         <translation></translation>
     </message>
 </context>

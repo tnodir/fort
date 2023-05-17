@@ -480,6 +480,21 @@
     </message>
 </context>
 <context>
+    <name>FortSettings</name>
+    <message>
+        <source>Window closed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation>Sessão bloqueada</translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation>Sair do programa</translation>
+    </message>
+</context>
+<context>
     <name>GraphPage</name>
     <message>
         <source>Graph</source>
@@ -919,6 +934,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Show My Fort</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programas</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Colete Novos Programas Bloqueados</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -948,18 +975,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Password input</source>
         <translation>Campo de senha</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Desativado</translation>
-    </message>
-    <message>
-        <source>Session lockout</source>
-        <translation>Sessão bloqueada</translation>
-    </message>
-    <message>
-        <source>Program exit</source>
-        <translation>Sair do programa</translation>
     </message>
 </context>
 <context>
@@ -1394,14 +1409,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Coletar conexões bloqueadas</translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation>Programas</translation>
-    </message>
-    <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Colete Novos Programas Bloqueados</translation>
-    </message>
-    <message>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1415,10 +1422,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Purge Obsolete on startup</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

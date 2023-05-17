@@ -480,6 +480,21 @@
     </message>
 </context>
 <context>
+    <name>FortSettings</name>
+    <message>
+        <source>Window closed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation>Zaklepanje seje</translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation>Izhod iz programa</translation>
+    </message>
+</context>
+<context>
     <name>GraphPage</name>
     <message>
         <source>Graph</source>
@@ -920,6 +935,18 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Show My Fort</source>
         <translation>Prikaži Mojo trdnjavo</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programi</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Zberi nove blokirane programe</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation>Počisti zastarelo ob zagonu</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -949,18 +976,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Password input</source>
         <translation>Vnos gesla</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Onemogočeno</translation>
-    </message>
-    <message>
-        <source>Session lockout</source>
-        <translation>Zaklepanje seje</translation>
-    </message>
-    <message>
-        <source>Program exit</source>
-        <translation>Izhod iz programa</translation>
     </message>
 </context>
 <context>
@@ -1398,14 +1413,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Zberi blokirane povezave</translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation>Programi</translation>
-    </message>
-    <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Zberi nove blokirane programe</translation>
-    </message>
-    <message>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation>Ustavi internetni promet, ko je kvota presežena</translation>
     </message>
@@ -1420,10 +1427,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Allowed Connections</source>
         <translation>Dovoljene povezave</translation>
-    </message>
-    <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>Počisti zastarelo ob zagonu</translation>
     </message>
 </context>
 <context>

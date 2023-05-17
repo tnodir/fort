@@ -480,6 +480,21 @@
     </message>
 </context>
 <context>
+    <name>FortSettings</name>
+    <message>
+        <source>Window closed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation>会话锁定</translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation>程序退出</translation>
+    </message>
+</context>
+<context>
     <name>GraphPage</name>
     <message>
         <source>Graph</source>
@@ -920,6 +935,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Show My Fort</source>
         <translation>显示我的堡垒</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>程序</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>收集新的屏蔽程序</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation>启动时清理过时的数据</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -949,18 +976,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Password input</source>
         <translation>密码输入</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>停用</translation>
-    </message>
-    <message>
-        <source>Session lockout</source>
-        <translation>会话锁定</translation>
-    </message>
-    <message>
-        <source>Program exit</source>
-        <translation>程序退出</translation>
     </message>
 </context>
 <context>
@@ -1398,14 +1413,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>收集已屏蔽的连接</translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation>程序</translation>
-    </message>
-    <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>收集新的屏蔽程序</translation>
-    </message>
-    <message>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation>当超过配额时，停止互联网流量</translation>
     </message>
@@ -1420,10 +1427,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Allowed Connections</source>
         <translation>允许连接量</translation>
-    </message>
-    <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>启动时清理过时的数据</translation>
     </message>
 </context>
 <context>

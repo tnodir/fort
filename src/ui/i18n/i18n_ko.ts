@@ -480,6 +480,21 @@
     </message>
 </context>
 <context>
+    <name>FortSettings</name>
+    <message>
+        <source>Window closed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation>세션 잠금</translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation>프로그램 종료</translation>
+    </message>
+</context>
+<context>
     <name>GraphPage</name>
     <message>
         <source>Graph</source>
@@ -920,6 +935,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Show My Fort</source>
         <translation>내 Fort 표시</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>프로그램</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>새로 차단된 프로그램 집계</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation>시작 시 사용되지 않는 제거</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -949,18 +976,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Password input</source>
         <translation>암호 입력</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>비활성화됨</translation>
-    </message>
-    <message>
-        <source>Session lockout</source>
-        <translation>세션 잠금</translation>
-    </message>
-    <message>
-        <source>Program exit</source>
-        <translation>프로그램 종료</translation>
     </message>
 </context>
 <context>
@@ -1398,14 +1413,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>차단된 연결 집계</translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation>프로그램</translation>
-    </message>
-    <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>새로 차단된 프로그램 집계</translation>
-    </message>
-    <message>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation>할당량 초과 시 인터넷 트래픽 중지</translation>
     </message>
@@ -1420,10 +1427,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Allowed Connections</source>
         <translation>허용된 연결</translation>
-    </message>
-    <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>시작 시 사용되지 않는 제거</translation>
     </message>
 </context>
 <context>

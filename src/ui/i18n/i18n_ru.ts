@@ -480,6 +480,21 @@
     </message>
 </context>
 <context>
+    <name>FortSettings</name>
+    <message>
+        <source>Window closed</source>
+        <translation>Закрытие окна</translation>
+    </message>
+    <message>
+        <source>Session lockout</source>
+        <translation>Блокировка сессии</translation>
+    </message>
+    <message>
+        <source>Program exit</source>
+        <translation>Выход из приложения</translation>
+    </message>
+</context>
+<context>
     <name>GraphPage</name>
     <message>
         <source>Graph</source>
@@ -920,6 +935,18 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Show My Fort</source>
         <translation>Показать Мой Форт</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Программы</translation>
+    </message>
+    <message>
+        <source>Collect New Blocked Programs</source>
+        <translation>Собирать новые блокированные программы</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete on startup</source>
+        <translation>Очистить устаревшее при старте</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -949,18 +976,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Отключено</translation>
-    </message>
-    <message>
-        <source>Session lockout</source>
-        <translation>Блокировка сессии</translation>
-    </message>
-    <message>
-        <source>Program exit</source>
-        <translation>Выход из приложения</translation>
     </message>
 </context>
 <context>
@@ -1398,14 +1413,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Собирать заблокированные соединения</translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation>Программы</translation>
-    </message>
-    <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Собирать новые блокированные программы</translation>
-    </message>
-    <message>
         <source>Stop Internet traffic when quota exceeds</source>
         <translation>Остановить Интернет трафик при превышении квоты</translation>
     </message>
@@ -1420,10 +1427,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Allowed Connections</source>
         <translation>Разрешённые соединения</translation>
-    </message>
-    <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>Очистить устаревшее при старте</translation>
     </message>
 </context>
 <context>
