@@ -44,6 +44,10 @@ private:
     QLayout *setupPasswordLayout();
     void setupEditPassword();
     void setupPasswordLock();
+    void setupProgBox();
+    void setupLogBlocked();
+    void setupPurgeOnStart();
+
     QLayout *setupColumn2();
     void setupGlobalBox();
     QLayout *setupLangLayout();
@@ -65,11 +69,13 @@ private:
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbProtection = nullptr;
+    QGroupBox *m_gbProg = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
     QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbConfirmations = nullptr;
     QGroupBox *m_gbLogs = nullptr;
+
     QLabel *m_labelStartMode = nullptr;
     QComboBox *m_comboAutoRun = nullptr;
     QCheckBox *m_cbService = nullptr;
@@ -85,6 +91,9 @@ private:
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
+    QCheckBox *m_cbLogBlocked = nullptr;
+    QCheckBox *m_cbPurgeOnStart = nullptr;
+
     QCheckBox *m_cbExplorerMenu = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;

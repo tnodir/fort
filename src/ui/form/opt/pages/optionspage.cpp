@@ -16,7 +16,6 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
-#include <form/dialog/passworddialog.h>
 #include <form/opt/optionscontroller.h>
 #include <form/tray/trayicon.h>
 #include <fortmanager.h>
@@ -148,9 +147,10 @@ void OptionsPage::onRetranslateUi()
 {
     m_gbStartup->setTitle(tr("Startup"));
     m_gbTraffic->setTitle(tr("Traffic"));
+    m_gbProtection->setTitle(tr("Self Protection"));
+    m_gbProg->setTitle(tr("Programs"));
     m_gbGlobal->setTitle(tr("Global"));
     m_gbHotKeys->setTitle(tr("Hot Keys"));
-    m_gbProtection->setTitle(tr("Self Protection"));
     m_gbTray->setTitle(tr("Tray"));
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
     m_gbLogs->setTitle(tr("Logs"));
@@ -167,12 +167,6 @@ void OptionsPage::onRetranslateUi()
     m_labelFilterMode->setText(tr("Filter Mode:"));
     retranslateComboFilterMode();
 
-    m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
-    m_labelLanguage->setText(tr("Language:"));
-
-    m_cbHotKeysEnabled->setText(tr("Enabled"));
-    m_cbHotKeysGlobal->setText(tr("Global"));
-
     m_cbBootFilter->setText(tr("Stop traffic when Fort Firewall is not running"));
     m_cbFilterLocals->setText(tr("Filter Local Addresses"));
     m_cbFilterLocals->setToolTip(
@@ -184,7 +178,16 @@ void OptionsPage::onRetranslateUi()
     retranslateEditPassword();
     m_btPasswordLock->setText(
             tr("Lock the password (unlocked till \"%1\")")
-                    .arg(PasswordDialog::unlockTypeStrings().at(settings()->passwordUnlockType())));
+                    .arg(FortSettings::unlockTypeStrings().at(settings()->passwordUnlockType())));
+
+    m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
+    m_cbPurgeOnStart->setText(tr("Purge Obsolete on startup"));
+
+    m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
+    m_labelLanguage->setText(tr("Language:"));
+
+    m_cbHotKeysEnabled->setText(tr("Enabled"));
+    m_cbHotKeysGlobal->setText(tr("Global"));
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
@@ -339,6 +342,10 @@ QLayout *OptionsPage::setupColumn1()
     // Protection Group Box
     setupProtectionBox();
     layout->addWidget(m_gbProtection);
+
+    // Programs Group Box
+    setupProgBox();
+    layout->addWidget(m_gbProg);
 
     layout->addStretch();
 
@@ -521,6 +528,40 @@ void OptionsPage::setupPasswordLock()
     connect(settings(), &FortSettings::passwordCheckedChanged, this, refreshPasswordLock);
 }
 
+void OptionsPage::setupProgBox()
+{
+    setupLogBlocked();
+    setupPurgeOnStart();
+
+    // Layout
+    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogBlocked, m_cbPurgeOnStart });
+
+    m_gbProg = new QGroupBox();
+    m_gbProg->setLayout(layout);
+}
+
+void OptionsPage::setupLogBlocked()
+{
+    m_cbLogBlocked = ControlUtil::createCheckBox(conf()->logBlocked(), [&](bool checked) {
+        if (conf()->logBlocked() != checked) {
+            conf()->setLogBlocked(checked);
+            ctrl()->setFlagsEdited();
+        }
+    });
+
+    m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());
+}
+
+void OptionsPage::setupPurgeOnStart()
+{
+    m_cbPurgeOnStart = ControlUtil::createCheckBox(ini()->progPurgeOnStart(), [&](bool checked) {
+        if (ini()->progPurgeOnStart() != checked) {
+            ini()->setProgPurgeOnStart(checked);
+            ctrl()->setIniEdited();
+        }
+    });
+}
+
 QLayout *OptionsPage::setupColumn2()
 {
     auto layout = new QVBoxLayout();
@@ -582,13 +623,13 @@ QLayout *OptionsPage::setupLangLayout()
 void OptionsPage::setupComboLanguage()
 {
     m_comboLanguage =
-        ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
-            if (translationManager()->switchLanguage(index)) {
-                setLanguageEdited(true);
-                iniUser()->setLanguage(translationManager()->localeName());
-                ctrl()->setIniUserEdited();
-            }
-        });
+            ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
+                if (translationManager()->switchLanguage(index)) {
+                    setLanguageEdited(true);
+                    iniUser()->setLanguage(translationManager()->localeName());
+                    ctrl()->setIniUserEdited();
+                }
+            });
     m_comboLanguage->setFixedWidth(200);
 
     const auto refreshComboLanguage = [&] {

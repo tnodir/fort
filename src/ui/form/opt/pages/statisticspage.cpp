@@ -46,7 +46,6 @@ void StatisticsPage::onRetranslateUi()
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbBlockedConn->setTitle(tr("Blocked Connections"));
     m_gbAllowedConn->setTitle(tr("Allowed Connections"));
-    m_gbProg->setTitle(tr("Programs"));
 
     m_cbLogStat->setText(tr("Collect Traffic Statistics"));
     m_cbLogStatNoFilter->setText(tr("Collect Traffic, when Filter Disabled"));
@@ -70,9 +69,6 @@ void StatisticsPage::onRetranslateUi()
 
     m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
     m_lscAllowedIpKeepCount->label()->setText(tr("Keep count for 'Allowed connections':"));
-
-    m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
-    m_cbPurgeOnStart->setText(tr("Purge Obsolete on startup"));
 
     retranslateTrafKeepDayNames();
     retranslateTrafKeepMonthNames();
@@ -314,10 +310,6 @@ QLayout *StatisticsPage::setupColumn2()
     setupAllowedConnBox();
     layout->addWidget(m_gbAllowedConn);
 
-    // Programs Group Box
-    setupProgBox();
-    layout->addWidget(m_gbProg);
-
     layout->addStretch();
 
     return layout;
@@ -396,38 +388,4 @@ void StatisticsPage::setupLogAllowedIp()
                     ctrl()->setIniEdited();
                 }
             });
-}
-
-void StatisticsPage::setupProgBox()
-{
-    setupLogBlocked();
-    setupPurgeOnStart();
-
-    // Layout
-    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogBlocked, m_cbPurgeOnStart });
-
-    m_gbProg = new QGroupBox();
-    m_gbProg->setLayout(layout);
-}
-
-void StatisticsPage::setupLogBlocked()
-{
-    m_cbLogBlocked = ControlUtil::createCheckBox(conf()->logBlocked(), [&](bool checked) {
-        if (conf()->logBlocked() != checked) {
-            conf()->setLogBlocked(checked);
-            ctrl()->setFlagsEdited();
-        }
-    });
-
-    m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());
-}
-
-void StatisticsPage::setupPurgeOnStart()
-{
-    m_cbPurgeOnStart = ControlUtil::createCheckBox(ini()->progPurgeOnStart(), [&](bool checked) {
-        if (ini()->progPurgeOnStart() != checked) {
-            ini()->setProgPurgeOnStart(checked);
-            ctrl()->setIniEdited();
-        }
-    });
 }

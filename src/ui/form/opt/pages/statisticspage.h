@@ -36,15 +36,11 @@ private:
     void setupLogBlockedIp();
     void setupAllowedConnBox();
     void setupLogAllowedIp();
-    void setupProgBox();
-    void setupLogBlocked();
-    void setupPurgeOnStart();
 
 private:
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbBlockedConn = nullptr;
     QGroupBox *m_gbAllowedConn = nullptr;
-    QGroupBox *m_gbProg = nullptr;
     QCheckBox *m_cbLogStat = nullptr;
     QCheckBox *m_cbLogStatNoFilter = nullptr;
     CheckTimePeriod *m_ctpActivePeriod = nullptr;
@@ -60,8 +56,6 @@ private:
     LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
     QCheckBox *m_cbLogAllowedIp = nullptr;
     LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;
-    QCheckBox *m_cbLogBlocked = nullptr;
-    QCheckBox *m_cbPurgeOnStart = nullptr;
 };
 
 #endif // STATISTICSPAGE_H
