@@ -31,7 +31,7 @@ IniUser *StatisticsWindow::iniUser() const
     return ctrl()->iniUser();
 }
 
-void StatisticsWindow::saveWindowState()
+void StatisticsWindow::saveWindowState(bool /*wasVisible*/)
 {
     iniUser()->setStatWindowGeometry(m_stateWatcher->geometry());
     iniUser()->setStatWindowMaximized(m_stateWatcher->maximized());

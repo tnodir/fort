@@ -13,12 +13,15 @@
 #include <form/controls/clickablemenu.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
+#include <form/graph/graphwindow.h>
+#include <form/opt/optionswindow.h>
 #include <fortsettings.h>
 #include <manager/hotkeymanager.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/window/widgetwindow.h>
 
 #include "traycontroller.h"
 
@@ -292,9 +295,9 @@ void TrayIcon::switchFilterModeMenu(bool /*checked*/)
 
 void TrayIcon::setupController()
 {
-    connect(windowManager(), &WindowManager::optWindowChanged, this,
+    connect(windowManager()->optWindow(), &WidgetWindow::visibilityChanged, this,
             &TrayIcon::updateTrayMenuFlags);
-    connect(windowManager(), &WindowManager::graphWindowChanged, m_graphAction,
+    connect(windowManager()->graphWindow(), &WidgetWindow::visibilityChanged, m_graphAction,
             &QAction::setChecked);
 
     connect(settings(), &FortSettings::passwordCheckedChanged, this,

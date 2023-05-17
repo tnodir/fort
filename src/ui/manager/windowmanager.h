@@ -14,6 +14,7 @@ class ProgramsWindow;
 class ServicesWindow;
 class StatisticsWindow;
 class TrayIcon;
+class WidgetWindow;
 class ZonesWindow;
 
 class WindowManager : public QObject, public IocService
@@ -32,8 +33,8 @@ public:
     PoliciesWindow *policiesWindow() const { return m_policiesWindow; }
     OptionsWindow *optWindow() const { return m_optWindow; }
     StatisticsWindow *connWindow() const { return m_statWindow; }
-    ServicesWindow *serviceWindow() const { return m_serviceWindow; }
-    ZonesWindow *zoneWindow() const { return m_zoneWindow; }
+    ServicesWindow *servicesWindow() const { return m_servicesWindow; }
+    ZonesWindow *zonesWindow() const { return m_zonesWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
     TrayIcon *trayIcon() const { return m_trayIcon; }
 
@@ -41,10 +42,6 @@ public:
     void tearDown() override;
 
     static QFont defaultFont();
-
-signals:
-    void optWindowChanged(bool visible);
-    void graphWindowChanged(bool visible);
 
 public slots:
     void setupAppPalette();
@@ -83,7 +80,7 @@ public slots:
     void closeZonesWindow();
 
     void showGraphWindow();
-    void closeGraphWindow(bool wasVisible = false);
+    void closeGraphWindow();
     void switchGraphWindow();
 
     void closeAll();
@@ -118,8 +115,17 @@ private:
 
     void onTrayMessageClicked();
 
+    void showWindow(WidgetWindow *w);
+    void closeWindow(WidgetWindow *w);
+
+    void windowOpened(quint32 code);
+    void windowClosed(quint32 code);
+    bool isAnyWindowOpen(quint32 code) const;
+
 private:
-    bool m_quitting = false;
+    bool m_isAppQuitting = false;
+
+    quint32 m_openedWindows = 0;
 
     TrayMessageType m_lastMessageType = MessageOptions;
 
@@ -131,8 +137,8 @@ private:
     OptionsWindow *m_optWindow = nullptr;
     PoliciesWindow *m_policiesWindow = nullptr;
     StatisticsWindow *m_statWindow = nullptr;
-    ServicesWindow *m_serviceWindow = nullptr;
-    ZonesWindow *m_zoneWindow = nullptr;
+    ServicesWindow *m_servicesWindow = nullptr;
+    ZonesWindow *m_zonesWindow = nullptr;
     GraphWindow *m_graphWindow = nullptr;
 };
 

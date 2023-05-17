@@ -60,7 +60,7 @@ WindowManager *PoliciesWindow::windowManager() const
     return ctrl()->windowManager();
 }
 
-void PoliciesWindow::saveWindowState()
+void PoliciesWindow::saveWindowState(bool /*wasVisible*/)
 {
     iniUser()->setPolicyWindowGeometry(m_stateWatcher->geometry());
     iniUser()->setPolicyWindowMaximized(m_stateWatcher->maximized());

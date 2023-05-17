@@ -1,6 +1,7 @@
 #ifndef SERVICESWINDOW_H
 #define SERVICESWINDOW_H
 
+#include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QPushButton)
@@ -21,6 +22,8 @@ class ServicesWindow : public WidgetWindow
 public:
     explicit ServicesWindow(QWidget *parent = nullptr);
 
+    quint32 windowCode() const override { return WindowServices; }
+
     ServicesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
     IniUser *iniUser() const;
@@ -28,8 +31,8 @@ public:
     ServiceInfoManager *serviceInfoManager() const;
     ServiceListModel *serviceListModel() const;
 
-    void saveWindowState();
-    void restoreWindowState();
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
 private:
     void setupController();

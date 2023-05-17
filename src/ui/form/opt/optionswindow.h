@@ -1,6 +1,7 @@
 #ifndef OPTIONSWINDOW_H
 #define OPTIONSWINDOW_H
 
+#include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
 class ConfManager;
@@ -17,14 +18,16 @@ class OptionsWindow : public WidgetWindow
 public:
     explicit OptionsWindow(QWidget *parent = nullptr);
 
+    quint32 windowCode() const override { return WindowOptions; }
+
     OptionsController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
     IniUser *iniUser() const;
 
     void cancelChanges();
 
-    void saveWindowState();
-    void restoreWindowState();
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;

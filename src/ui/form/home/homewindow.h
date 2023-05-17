@@ -1,6 +1,7 @@
 #ifndef HOMEWINDOW_H
 #define HOMEWINDOW_H
 
+#include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QPushButton)
@@ -20,14 +21,16 @@ class HomeWindow : public WidgetWindow
 public:
     explicit HomeWindow(QWidget *parent = nullptr);
 
+    quint32 windowCode() const override { return WindowHome; }
+
     HomeController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
     ConfManager *confManager() const;
     IniUser *iniUser() const;
     WindowManager *windowManager() const;
 
-    void saveWindowState();
-    void restoreWindowState();
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
 public slots:
     void showMenu();

@@ -76,7 +76,7 @@ ZoneListModel *ZonesWindow::zoneListModel() const
     return ctrl()->zoneListModel();
 }
 
-void ZonesWindow::saveWindowState()
+void ZonesWindow::saveWindowState(bool /*wasVisible*/)
 {
     iniUser()->setZoneWindowGeometry(m_stateWatcher->geometry());
     iniUser()->setZoneWindowMaximized(m_stateWatcher->maximized());

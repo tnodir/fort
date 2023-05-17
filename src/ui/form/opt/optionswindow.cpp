@@ -40,7 +40,7 @@ void OptionsWindow::cancelChanges()
     }
 }
 
-void OptionsWindow::saveWindowState()
+void OptionsWindow::saveWindowState(bool /*wasVisible*/)
 {
     iniUser()->setOptWindowGeometry(m_stateWatcher->geometry());
     iniUser()->setOptWindowMaximized(m_stateWatcher->maximized());

@@ -1,6 +1,7 @@
 #ifndef STATISTICSWINDOW_H
 #define STATISTICSWINDOW_H
 
+#include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
 class ConfManager;
@@ -15,12 +16,14 @@ class StatisticsWindow : public WidgetWindow
 public:
     explicit StatisticsWindow(QWidget *parent = nullptr);
 
+    quint32 windowCode() const override { return WindowStatistics; }
+
     StatisticsController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
     IniUser *iniUser() const;
 
-    void saveWindowState();
-    void restoreWindowState();
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
 private:
     void setupController();

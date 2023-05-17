@@ -1,6 +1,7 @@
 #ifndef PROGRAMSWINDOW_H
 #define PROGRAMSWINDOW_H
 
+#include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
@@ -30,6 +31,8 @@ class ProgramsWindow : public WidgetWindow
 public:
     explicit ProgramsWindow(QWidget *parent = nullptr);
 
+    quint32 windowCode() const override { return WindowPrograms; }
+
     ProgramsController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
     ConfManager *confManager() const;
@@ -40,8 +43,8 @@ public:
     AppInfoCache *appInfoCache() const;
     AppListModel *appListModel() const;
 
-    void saveWindowState();
-    void restoreWindowState();
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
     bool editProgramByPath(const QString &appPath);
 

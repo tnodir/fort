@@ -20,6 +20,7 @@
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
 #include <form/tray/trayicon.h>
+#include <form/windowtypes.h>
 #include <form/zone/zoneswindow.h>
 #include <fortcompat.h>
 #include <fortsettings.h>
@@ -165,19 +166,19 @@ void WindowManager::setupPoliciesWindow()
 
 void WindowManager::setupServicesWindow()
 {
-    m_serviceWindow = new ServicesWindow();
-    m_serviceWindow->restoreWindowState();
+    m_servicesWindow = new ServicesWindow();
+    m_servicesWindow->restoreWindowState();
 
-    connect(m_serviceWindow, &ServicesWindow::aboutToClose, this,
+    connect(m_servicesWindow, &ServicesWindow::aboutToClose, this,
             &WindowManager::closeServicesWindow);
 }
 
 void WindowManager::setupZonesWindow()
 {
-    m_zoneWindow = new ZonesWindow();
-    m_zoneWindow->restoreWindowState();
+    m_zonesWindow = new ZonesWindow();
+    m_zonesWindow->restoreWindowState();
 
-    connect(m_zoneWindow, &ZonesWindow::aboutToClose, this, &WindowManager::closeZonesWindow);
+    connect(m_zonesWindow, &ZonesWindow::aboutToClose, this, &WindowManager::closeZonesWindow);
 }
 
 void WindowManager::setupGraphWindow()
@@ -204,7 +205,7 @@ void WindowManager::setupStatisticsWindow()
 
 void WindowManager::closeAll()
 {
-    closeGraphWindow(true);
+    closeGraphWindow();
     closeHomeWindow();
     closeProgramsWindow();
     closeOptionsWindow();
@@ -272,19 +273,15 @@ void WindowManager::showHomeWindow()
 {
     setupHomeWindow();
 
-    m_homeWindow->showWindow();
+    showWindow(m_homeWindow);
 }
 
 void WindowManager::closeHomeWindow()
 {
-    if (!m_homeWindow)
-        return;
-
-    m_homeWindow->saveWindowState();
-    m_homeWindow->hide();
-
-    m_homeWindow->deleteLater();
-    m_homeWindow = nullptr;
+    if (m_homeWindow) {
+        closeWindow(m_homeWindow);
+        m_homeWindow = nullptr;
+    }
 }
 
 void WindowManager::showHomeWindowAbout()
@@ -302,24 +299,21 @@ void WindowManager::showProgramsWindow()
         setupProgramsWindow();
     }
 
-    m_progWindow->showWindow();
+    showWindow(m_progWindow);
 }
 
 void WindowManager::closeProgramsWindow()
 {
-    if (!m_progWindow)
-        return;
-
-    m_progWindow->saveWindowState();
-    m_progWindow->hide();
-
-    m_progWindow->deleteLater();
-    m_progWindow = nullptr;
+    if (m_progWindow) {
+        closeWindow(m_progWindow);
+        m_progWindow = nullptr;
+    }
 }
 
 bool WindowManager::showProgramEditForm(const QString &appPath)
 {
     showProgramsWindow();
+
     if (!(m_progWindow && m_progWindow->isVisible()))
         return false; // May be not opened due to password checking
 
@@ -327,6 +321,7 @@ bool WindowManager::showProgramEditForm(const QString &appPath)
         showErrorBox(tr("Please close already opened Edit Program window and try again."));
         return false;
     }
+
     return true;
 }
 
@@ -337,26 +332,19 @@ void WindowManager::showOptionsWindow()
 
     if (!m_optWindow) {
         setupOptionsWindow();
-
-        emit optWindowChanged(true);
     }
 
-    m_optWindow->showWindow();
+    showWindow(m_optWindow);
 }
 
 void WindowManager::closeOptionsWindow()
 {
-    if (!m_optWindow)
-        return;
+    if (m_optWindow) {
+        m_optWindow->cancelChanges();
 
-    m_optWindow->cancelChanges();
-    m_optWindow->saveWindowState();
-    m_optWindow->hide();
-
-    m_optWindow->deleteLater();
-    m_optWindow = nullptr;
-
-    emit optWindowChanged(false);
+        closeWindow(m_optWindow);
+        m_optWindow = nullptr;
+    }
 }
 
 void WindowManager::reloadOptionsWindow(const QString &reason)
@@ -380,19 +368,15 @@ void WindowManager::showPoliciesWindow()
         setupPoliciesWindow();
     }
 
-    m_policiesWindow->showWindow();
+    showWindow(m_policiesWindow);
 }
 
 void WindowManager::closePoliciesWindow()
 {
-    if (!m_policiesWindow)
-        return;
-
-    m_policiesWindow->saveWindowState();
-    m_policiesWindow->hide();
-
-    m_policiesWindow->deleteLater();
-    m_policiesWindow = nullptr;
+    if (m_policiesWindow) {
+        closeWindow(m_policiesWindow);
+        m_policiesWindow = nullptr;
+    }
 }
 
 void WindowManager::showStatisticsWindow()
@@ -404,92 +388,72 @@ void WindowManager::showStatisticsWindow()
         setupStatisticsWindow();
     }
 
-    m_statWindow->showWindow();
+    showWindow(m_statWindow);
 }
 
 void WindowManager::closeStatisticsWindow()
 {
-    if (!m_statWindow)
-        return;
-
-    m_statWindow->saveWindowState();
-    m_statWindow->hide();
-
-    m_statWindow->deleteLater();
-    m_statWindow = nullptr;
+    if (m_statWindow) {
+        closeWindow(m_statWindow);
+        m_statWindow = nullptr;
+    }
 }
 
 void WindowManager::showServicesWindow()
 {
-    if (!widgetVisibleByCheckPassword(m_serviceWindow))
+    if (!widgetVisibleByCheckPassword(m_servicesWindow))
         return;
 
-    if (!m_serviceWindow) {
+    if (!m_servicesWindow) {
         setupServicesWindow();
     }
 
-    m_serviceWindow->showWindow();
+    showWindow(m_servicesWindow);
 }
 
 void WindowManager::closeServicesWindow()
 {
-    if (!m_serviceWindow)
-        return;
-
-    m_serviceWindow->saveWindowState();
-    m_serviceWindow->hide();
-
-    m_serviceWindow->deleteLater();
-    m_serviceWindow = nullptr;
+    if (m_servicesWindow) {
+        closeWindow(m_servicesWindow);
+        m_servicesWindow = nullptr;
+    }
 }
 
 void WindowManager::showZonesWindow()
 {
-    if (!widgetVisibleByCheckPassword(m_zoneWindow))
+    if (!widgetVisibleByCheckPassword(m_zonesWindow))
         return;
 
-    if (!m_zoneWindow) {
+    if (!m_zonesWindow) {
         setupZonesWindow();
     }
 
-    m_zoneWindow->showWindow();
+    showWindow(m_zonesWindow);
 }
 
 void WindowManager::closeZonesWindow()
 {
-    if (!m_zoneWindow)
-        return;
-
-    m_zoneWindow->saveWindowState();
-    m_zoneWindow->hide();
-
-    m_zoneWindow->deleteLater();
-    m_zoneWindow = nullptr;
+    if (m_zonesWindow) {
+        closeWindow(m_zonesWindow);
+        m_zonesWindow = nullptr;
+    }
 }
 
 void WindowManager::showGraphWindow()
 {
     if (!m_graphWindow) {
         setupGraphWindow();
-
-        emit graphWindowChanged(true);
     }
 
     m_graphWindow->show();
 }
 
-void WindowManager::closeGraphWindow(bool wasVisible)
+void WindowManager::closeGraphWindow()
 {
-    if (!m_graphWindow)
-        return;
-
-    m_graphWindow->saveWindowState(wasVisible);
-    m_graphWindow->hide();
-
-    m_graphWindow->deleteLater();
-    m_graphWindow = nullptr;
-
-    emit graphWindowChanged(false);
+    if (m_graphWindow) {
+        closeWindow(m_graphWindow);
+        m_graphWindow = nullptr;
+    }
 }
 
 void WindowManager::switchGraphWindow()
@@ -503,10 +467,10 @@ void WindowManager::switchGraphWindow()
 
 void WindowManager::quit()
 {
-    if (m_quitting)
+    if (m_isAppQuitting)
         return;
 
-    m_quitting = true;
+    m_isAppQuitting = true;
 
     closeAll();
 
@@ -631,6 +595,41 @@ void WindowManager::onTrayMessageClicked()
     default:
         showOptionsWindow();
     }
+}
+
+void WindowManager::showWindow(WidgetWindow *w)
+{
+    windowOpened(WindowCode(w->windowCode()));
+
+    w->showWindow();
+}
+
+void WindowManager::closeWindow(WidgetWindow *w)
+{
+    if (!w)
+        return;
+
+    w->saveWindowState(m_isAppQuitting);
+    w->hide();
+
+    w->deleteLater();
+
+    windowClosed(WindowCode(w->windowCode()));
+}
+
+void WindowManager::windowOpened(quint32 code)
+{
+    m_openedWindows |= code;
+}
+
+void WindowManager::windowClosed(quint32 code)
+{
+    m_openedWindows &= ~code;
+}
+
+bool WindowManager::isAnyWindowOpen(quint32 code) const
+{
+    return (m_openedWindows & code) != 0;
 }
 
 bool WindowManager::activateModalWidget()

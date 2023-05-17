@@ -81,7 +81,7 @@ AppListModel *ProgramsWindow::appListModel() const
     return ctrl()->appListModel();
 }
 
-void ProgramsWindow::saveWindowState()
+void ProgramsWindow::saveWindowState(bool /*wasVisible*/)
 {
     iniUser()->setProgWindowGeometry(m_stateWatcher->geometry());
     iniUser()->setProgWindowMaximized(m_stateWatcher->maximized());

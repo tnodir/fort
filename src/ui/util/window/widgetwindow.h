@@ -10,6 +10,11 @@ class WidgetWindow : public QWidget
 public:
     explicit WidgetWindow(QWidget *parent = nullptr);
 
+    virtual quint32 windowCode() const { return 0; }
+
+    virtual void saveWindowState(bool wasVisible) { Q_UNUSED(wasVisible); }
+    virtual void restoreWindowState() { }
+
     void showWindow() { showWidget(this); }
 
     static void showWidget(QWidget *w);
@@ -22,7 +27,7 @@ signals:
     void positionChanged();
     void sizeChanged();
 
-    void visibilityChanged();
+    void visibilityChanged(bool isVisible);
 
     void aboutToClose();
 

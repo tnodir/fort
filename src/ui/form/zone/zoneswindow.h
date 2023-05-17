@@ -1,6 +1,7 @@
 #ifndef ZONESWINDOW_H
 #define ZONESWINDOW_H
 
+#include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
@@ -26,6 +27,8 @@ class ZonesWindow : public WidgetWindow
 public:
     explicit ZonesWindow(QWidget *parent = nullptr);
 
+    quint32 windowCode() const override { return WindowZones; }
+
     ZonesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
     IniOptions *ini() const;
@@ -34,8 +37,8 @@ public:
     TaskManager *taskManager() const;
     ZoneListModel *zoneListModel() const;
 
-    void saveWindowState();
-    void restoreWindowState();
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
 protected slots:
     void onRetranslateUi();

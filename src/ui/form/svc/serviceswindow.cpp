@@ -64,7 +64,7 @@ ServiceListModel *ServicesWindow::serviceListModel() const
     return ctrl()->serviceListModel();
 }
 
-void ServicesWindow::saveWindowState()
+void ServicesWindow::saveWindowState(bool /*wasVisible*/)
 {
     iniUser()->setServiceWindowGeometry(m_stateWatcher->geometry());
     iniUser()->setServiceWindowMaximized(m_stateWatcher->maximized());

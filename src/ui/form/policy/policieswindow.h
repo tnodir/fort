@@ -1,6 +1,7 @@
 #ifndef POLICIESWINDOW_H
 #define POLICIESWINDOW_H
 
+#include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QSplitter)
@@ -22,6 +23,8 @@ class PoliciesWindow : public WidgetWindow
 public:
     explicit PoliciesWindow(QWidget *parent = nullptr);
 
+    quint32 windowCode() const override { return WindowPolicies; }
+
     PoliciesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
     FirewallConf *conf() const;
@@ -29,8 +32,8 @@ public:
     IniUser *iniUser() const;
     WindowManager *windowManager() const;
 
-    void saveWindowState();
-    void restoreWindowState();
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
 private:
     void setupController();

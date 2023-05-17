@@ -32,14 +32,14 @@ void WidgetWindow::showEvent(QShowEvent *event)
 {
     QWidget::showEvent(event);
 
-    emit visibilityChanged();
+    emit visibilityChanged(/*isVisible=*/true);
 }
 
 void WidgetWindow::hideEvent(QHideEvent *event)
 {
     QWidget::hideEvent(event);
 
-    emit visibilityChanged();
+    emit visibilityChanged(/*isVisible=*/false);
 }
 
 void WidgetWindow::closeEvent(QCloseEvent *event)
@@ -73,8 +73,9 @@ void WidgetWindow::changeEvent(QEvent *event)
     case QEvent::WindowStateChange: {
         auto e = static_cast<QWindowStateChangeEvent *>(event);
 
-        if (e->oldState() != this->windowState()) {
-            emit visibilityChanged();
+        const Qt::WindowStates newState = windowState();
+        if (newState != e->oldState()) {
+            emit visibilityChanged(/*isVisible=*/(newState != Qt::WindowNoState));
         }
     } break;
     default:

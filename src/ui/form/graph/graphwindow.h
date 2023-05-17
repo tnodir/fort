@@ -3,6 +3,7 @@
 
 #include <QTimer>
 
+#include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
 class ConfManager;
@@ -20,13 +21,15 @@ class GraphWindow : public WidgetWindow
 public:
     explicit GraphWindow(QWidget *parent = nullptr);
 
+    quint32 windowCode() const override { return WindowGraph; }
+
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
 
-    void saveWindowState(bool wasVisible);
-    void restoreWindowState();
+    void saveWindowState(bool wasVisible) override;
+    void restoreWindowState() override;
 
 signals:
     void mouseRightClick(QMouseEvent *event);
