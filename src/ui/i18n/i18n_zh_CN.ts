@@ -483,7 +483,7 @@
     <name>FortSettings</name>
     <message>
         <source>Window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭的窗口</translation>
     </message>
     <message>
         <source>Session lockout</source>
