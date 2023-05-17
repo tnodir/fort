@@ -362,7 +362,7 @@ void TrayIcon::setupTrayMenu()
     addHotKey(m_statisticsAction, iniUser()->hotKeyStatistics());
 
     m_graphAction = addAction(m_menu, ":/icons/action_log.png", windowManager(),
-            SLOT(switchGraphWindow()), true, !!windowManager()->graphWindow());
+            SLOT(switchGraphWindow()), true, windowManager()->isWindowOpen(WindowGraph));
     addHotKey(m_graphAction, iniUser()->hotKeyGraph());
 
     m_menu->addSeparator();
@@ -461,7 +461,8 @@ void TrayIcon::setupTrayMenuFilterMode()
 
 void TrayIcon::updateTrayMenuFlags()
 {
-    const bool editEnabled = (!settings()->isPasswordRequired() && !windowManager()->optWindow());
+    const bool editEnabled =
+            (!settings()->isPasswordRequired() && !windowManager()->isWindowOpen(WindowOptions));
 
     m_filterEnabledAction->setEnabled(editEnabled);
     m_filterEnabledAction->setChecked(conf()->filterEnabled());

@@ -42,6 +42,8 @@ public:
     void setUp() override;
     void tearDown() override;
 
+    bool isWindowOpen(WindowCode code) const { return isAnyWindowOpen(code); }
+
     static QFont defaultFont();
 
 signals:
