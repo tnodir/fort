@@ -116,6 +116,8 @@ private:
     void onTrayActivatedByTrigger();
     void onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkTriggered = false);
 
+    void onWindowVisibilityChanged(quint32 code, bool isVisible);
+
 private:
     bool m_trayTriggered : 1;
     bool m_alerted : 1;

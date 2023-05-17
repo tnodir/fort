@@ -13,8 +13,7 @@
 #include <form/controls/clickablemenu.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
-#include <form/graph/graphwindow.h>
-#include <form/opt/optionswindow.h>
+#include <form/windowtypes.h>
 #include <fortsettings.h>
 #include <manager/hotkeymanager.h>
 #include <manager/windowmanager.h>
@@ -295,10 +294,8 @@ void TrayIcon::switchFilterModeMenu(bool /*checked*/)
 
 void TrayIcon::setupController()
 {
-    connect(windowManager()->optWindow(), &WidgetWindow::visibilityChanged, this,
-            &TrayIcon::updateTrayMenuFlags);
-    connect(windowManager()->graphWindow(), &WidgetWindow::visibilityChanged, m_graphAction,
-            &QAction::setChecked);
+    connect(windowManager(), &WindowManager::windowVisibilityChanged, this,
+            &TrayIcon::onWindowVisibilityChanged);
 
     connect(settings(), &FortSettings::passwordCheckedChanged, this,
             &TrayIcon::updateTrayMenuFlags);
@@ -737,4 +734,16 @@ void TrayIcon::onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkT
 
     m_trayTriggered = false;
     onMouseClicked(clickType);
+}
+
+void TrayIcon::onWindowVisibilityChanged(quint32 code, bool isVisible)
+{
+    switch (code) {
+    case WindowOptions: {
+        updateTrayMenuFlags();
+    } break;
+    case WindowGraph: {
+        m_graphAction->setChecked(isVisible);
+    } break;
+    }
 }
