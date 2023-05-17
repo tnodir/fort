@@ -1,6 +1,8 @@
 #ifndef WINDOWTYPES_H
 #define WINDOWTYPES_H
 
+#include <QtGlobal>
+
 enum WindowCode {
     WindowHome = (1 << 0),
     WindowPrograms = (1 << 1),
@@ -12,5 +14,8 @@ enum WindowCode {
     WindowGraph = (1 << 7),
     WindowPasswordDialog = (1 << 8),
 };
+
+constexpr quint32 WindowPasswordProtected = (WindowPrograms | WindowServices | WindowOptions
+        | WindowPolicies | WindowStatistics | WindowZones);
 
 #endif // WINDOWTYPES_H

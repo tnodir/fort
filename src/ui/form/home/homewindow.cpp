@@ -212,10 +212,10 @@ QLayout *HomeWindow::setupLogoText()
 void HomeWindow::setupPasswordButtons()
 {
     m_btPasswordLock = ControlUtil::createToolButton(
-            ":/icons/lock.png", [&] { ctrl()->setPasswordLocked(true); });
+            ":/icons/lock.png", [&] { settings()->resetCheckedPassword(); });
 
-    m_btPasswordUnlock = ControlUtil::createToolButton(":/icons/lock_open.png",
-            [&] { ctrl()->setPasswordLocked(!windowManager()->checkPassword()); });
+    m_btPasswordUnlock = ControlUtil::createToolButton(
+            ":/icons/lock_open.png", [&] { windowManager()->checkPassword(); });
 
     const auto refreshPasswordButtons = [&] {
         m_btPasswordLock->setVisible(settings()->hasPassword() && !ctrl()->passwordLocked());

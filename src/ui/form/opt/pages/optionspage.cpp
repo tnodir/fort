@@ -176,9 +176,9 @@ void OptionsPage::onRetranslateUi()
 
     m_cbPassword->setText(tr("Password:"));
     retranslateEditPassword();
-    m_btPasswordLock->setText(
-            tr("Lock the password (unlocked till \"%1\")")
-                    .arg(FortSettings::unlockTypeStrings().at(settings()->passwordUnlockType())));
+
+    m_btPasswordLock->setText(tr("Lock the password (unlocked till \"%1\")")
+                                      .arg(settings()->passwordUnlockedTillText()));
 
     m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
     m_cbPurgeOnStart->setText(tr("Purge Obsolete on startup"));
@@ -519,8 +519,8 @@ void OptionsPage::setupPasswordLock()
     });
 
     const auto refreshPasswordLock = [&] {
-        m_btPasswordLock->setVisible(
-                settings()->hasPassword() && !settings()->isPasswordRequired());
+        m_btPasswordLock->setVisible(settings()->hasPassword()
+                && settings()->passwordUnlockType() > FortSettings::UnlockWindow);
     };
 
     refreshPasswordLock();

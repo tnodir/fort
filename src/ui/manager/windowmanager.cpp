@@ -20,7 +20,6 @@
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
 #include <form/tray/trayicon.h>
-#include <form/windowtypes.h>
 #include <form/zone/zoneswindow.h>
 #include <fortcompat.h>
 #include <fortsettings.h>
@@ -59,13 +58,6 @@ void setupModalDialog(QDialog *box)
 QMessageBox *createMessageBox(const MessageBoxArg &ba, QWidget *parent = nullptr)
 {
     auto box = new QMessageBox(ba.icon, ba.title, ba.text, ba.buttons, parent);
-    setupModalDialog(box);
-    return box;
-}
-
-PasswordDialog *createPasswordDialog(QWidget *parent = nullptr)
-{
-    auto box = new PasswordDialog(parent);
     setupModalDialog(box);
     return box;
 }
@@ -127,9 +119,8 @@ void WindowManager::setupMainWindow()
 
     nativeEventFilter->registerSessionNotification(mainWindow()->winId());
 
-    connect(nativeEventFilter, &NativeEventFilter::sessionLocked, this, [&] {
-        IoC<FortSettings>()->resetCheckedPassword(FortSettings::UnlockTillSessionLock);
-    });
+    connect(nativeEventFilter, &NativeEventFilter::sessionLocked, this,
+            [&] { IoC<FortSettings>()->resetCheckedPassword(FortSettings::UnlockSession); });
 }
 
 void WindowManager::closeMainWindow()
@@ -303,7 +294,7 @@ void WindowManager::showHomeWindowAbout()
 
 void WindowManager::showProgramsWindow()
 {
-    if (!widgetVisibleByCheckPassword(m_progWindow))
+    if (!checkWindowPassword(WindowPrograms))
         return;
 
     if (!m_progWindow) {
@@ -338,7 +329,7 @@ bool WindowManager::showProgramEditForm(const QString &appPath)
 
 void WindowManager::showOptionsWindow()
 {
-    if (!widgetVisibleByCheckPassword(m_optWindow))
+    if (!checkWindowPassword(WindowOptions))
         return;
 
     if (!m_optWindow) {
@@ -372,7 +363,7 @@ void WindowManager::reloadOptionsWindow(const QString &reason)
 
 void WindowManager::showPoliciesWindow()
 {
-    if (!widgetVisibleByCheckPassword(m_policiesWindow))
+    if (!checkWindowPassword(WindowPolicies))
         return;
 
     if (!m_policiesWindow) {
@@ -392,7 +383,7 @@ void WindowManager::closePoliciesWindow()
 
 void WindowManager::showStatisticsWindow()
 {
-    if (!widgetVisibleByCheckPassword(m_statWindow))
+    if (!checkWindowPassword(WindowStatistics))
         return;
 
     if (!m_statWindow) {
@@ -412,7 +403,7 @@ void WindowManager::closeStatisticsWindow()
 
 void WindowManager::showServicesWindow()
 {
-    if (!widgetVisibleByCheckPassword(m_servicesWindow))
+    if (!checkWindowPassword(WindowServices))
         return;
 
     if (!m_servicesWindow) {
@@ -432,7 +423,7 @@ void WindowManager::closeServicesWindow()
 
 void WindowManager::showZonesWindow()
 {
-    if (!widgetVisibleByCheckPassword(m_zonesWindow))
+    if (!checkWindowPassword(WindowZones))
         return;
 
     if (!m_zonesWindow) {
@@ -502,32 +493,35 @@ void WindowManager::restart()
     QCoreApplication::quit();
 }
 
-bool WindowManager::widgetVisibleByCheckPassword(QWidget *w)
+bool WindowManager::checkWindowPassword(WindowCode code)
 {
-    return (w && w->isVisible()) || checkPassword();
+    return (WindowPasswordProtected & code) == 0 || checkPassword();
 }
 
 bool WindowManager::checkPassword()
 {
-    const auto settings = IoC<FortSettings>();
-
-    if (!settings->isPasswordRequired())
-        return true;
-
     if (isAnyWindowOpen(WindowPasswordDialog)) {
         activateModalWidget();
         return false;
     }
 
-    auto box = createPasswordDialog();
+    if (isAnyWindowOpen(WindowPasswordProtected))
+        return true;
+
+    const auto settings = IoC<FortSettings>();
+
+    if (!settings->isPasswordRequired())
+        return true;
+
+    auto box = new PasswordDialog();
+    setupModalDialog(box);
 
     connect(box, &QMessageBox::accepted, [=] {
         const QString password = box->password();
-        const int unlockType = box->unlockType();
-
-        const bool checked = !password.isEmpty() && IoC<ConfManager>()->checkPassword(password);
-
-        settings->setPasswordChecked(checked, unlockType);
+        if (!password.isEmpty() && IoC<ConfManager>()->checkPassword(password)) {
+            const auto unlockType = static_cast<FortSettings::UnlockType>(box->unlockType());
+            settings->setPasswordChecked(/*checked=*/true, unlockType);
+        }
     });
 
     windowOpened(WindowPasswordDialog);
@@ -615,44 +609,53 @@ void WindowManager::onTrayMessageClicked()
 
 void WindowManager::showWindow(WidgetWindow *w)
 {
-    windowOpened(WindowCode(w->windowCode()));
-
     w->showWindow();
+
+    windowOpened(w->windowCode());
 }
 
 void WindowManager::closeWindow(WidgetWindow *w)
 {
-    if (!w)
-        return;
+    Q_ASSERT(w);
 
-    w->saveWindowState(m_isAppQuitting);
-    w->hide();
+    if (w->isVisible()) {
+        w->saveWindowState(m_isAppQuitting);
+        w->hide();
+
+        windowClosed(w->windowCode());
+
+        if (!isAnyWindowOpen(WindowPasswordProtected)) {
+            IoC<FortSettings>()->resetCheckedPassword(FortSettings::UnlockWindow);
+        }
+    }
 
     w->deleteLater();
-
-    windowClosed(WindowCode(w->windowCode()));
 }
 
 void WindowManager::windowOpened(quint32 code)
 {
     m_openedWindows |= code;
+
+    emit windowVisibilityChanged(code, /*isVisible=*/true);
 }
 
 void WindowManager::windowClosed(quint32 code)
 {
     m_openedWindows &= ~code;
+
+    emit windowVisibilityChanged(code, /*isVisible=*/false);
 }
 
-bool WindowManager::isAnyWindowOpen(quint32 code) const
+bool WindowManager::isAnyWindowOpen(quint32 codes) const
 {
-    return (m_openedWindows & code) != 0;
+    return (m_openedWindows & codes) != 0;
 }
 
 bool WindowManager::activateModalWidget()
 {
     auto w = QApplication::activeModalWidget();
     if (w) {
-        w->activateWindow();
+        WidgetWindow::showWidget(w);
         return true;
     }
     return false;

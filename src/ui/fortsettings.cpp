@@ -37,8 +37,7 @@ FortSettings::FortSettings(QObject *parent) :
     m_isService(false),
     m_hasService(false),
     m_isUserAdmin(false),
-    m_passwordChecked(true),
-    m_passwordUnlockType(UnlockDisabled)
+    m_passwordChecked(false)
 {
 }
 
@@ -62,6 +61,14 @@ QString FortSettings::cacheFilePath() const
     return noCache() ? ":memory:" : cachePath() + "appinfo.db";
 }
 
+QString FortSettings::passwordUnlockedTillText() const
+{
+    if (passwordUnlockType() == UnlockDisabled)
+        return QString();
+
+    return unlockTypeStrings().at(passwordUnlockType());
+}
+
 void FortSettings::setPassword(const QString &password)
 {
     setPasswordHash(StringUtil::cryptoHash(password));
@@ -72,12 +79,12 @@ bool FortSettings::checkPassword(const QString &password) const
     return StringUtil::cryptoHash(password) == passwordHash();
 }
 
-bool FortSettings::isPasswordRequired()
+bool FortSettings::isPasswordRequired() const
 {
-    return hasPassword() && !(passwordUnlockType() != UnlockDisabled && passwordChecked());
+    return hasPassword() && !passwordChecked();
 }
 
-void FortSettings::setPasswordChecked(bool checked, int unlockType)
+void FortSettings::setPasswordChecked(bool checked, UnlockType unlockType)
 {
     if (m_passwordChecked == checked && m_passwordUnlockType == unlockType)
         return;
@@ -88,7 +95,7 @@ void FortSettings::setPasswordChecked(bool checked, int unlockType)
     emit passwordCheckedChanged();
 }
 
-void FortSettings::resetCheckedPassword(int unlockType)
+void FortSettings::resetCheckedPassword(UnlockType unlockType)
 {
     if (unlockType != UnlockDisabled && unlockType != m_passwordUnlockType)
         return;
@@ -493,5 +500,5 @@ bool FortSettings::canMigrate(QString &viaVersion) const
 
 QStringList FortSettings::unlockTypeStrings()
 {
-    return { tr("Disabled"), tr("Session lockout"), tr("Program exit") };
+    return { tr("Window closed"), tr("Session lockout"), tr("Program exit") };
 }

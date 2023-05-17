@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+#include <form/windowtypes.h>
 #include <util/ioc/iocservice.h>
 
 class GraphWindow;
@@ -42,6 +43,9 @@ public:
     void tearDown() override;
 
     static QFont defaultFont();
+
+signals:
+    void windowVisibilityChanged(quint32 code, bool isVisible);
 
 public slots:
     void setupAppPalette();
@@ -87,7 +91,7 @@ public slots:
     void quit();
     void restart();
 
-    bool widgetVisibleByCheckPassword(QWidget *w);
+    bool checkWindowPassword(WindowCode code);
     bool checkPassword();
 
     virtual void showErrorBox(
@@ -120,7 +124,7 @@ private:
 
     void windowOpened(quint32 code);
     void windowClosed(quint32 code);
-    bool isAnyWindowOpen(quint32 code) const;
+    bool isAnyWindowOpen(quint32 codes) const;
 
 private:
     bool m_isAppQuitting = false;

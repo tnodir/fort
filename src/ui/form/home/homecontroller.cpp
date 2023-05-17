@@ -27,8 +27,5 @@ void HomeController::updatePasswordLocked()
 {
     auto settings = IoC<FortSettings>();
 
-    const bool passwordChecked = (settings->passwordChecked()
-            && settings->passwordUnlockType() != FortSettings::UnlockDisabled);
-
-    setPasswordLocked(!passwordChecked && settings->isPasswordRequired());
+    setPasswordLocked(settings->isPasswordRequired());
 }

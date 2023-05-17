@@ -13,9 +13,10 @@ class FortSettings : public Settings
 
 public:
     enum UnlockType : qint8 {
-        UnlockDisabled = 0,
-        UnlockTillSessionLock,
-        UnlockTillAppExit,
+        UnlockDisabled = -1,
+        UnlockWindow = 0,
+        UnlockSession,
+        UnlockApp,
     };
 
     explicit FortSettings(QObject *parent = nullptr);
@@ -62,13 +63,16 @@ public:
     bool passwordChecked() const { return m_passwordChecked; }
     int passwordUnlockType() const { return m_passwordUnlockType; }
 
+    QString passwordUnlockedTillText() const;
+
     bool hasPassword() const { return !passwordHash().isEmpty(); }
     void setPassword(const QString &password);
     bool checkPassword(const QString &password) const;
 
-    bool isPasswordRequired();
-    void setPasswordChecked(bool checked, int unlockType = UnlockDisabled);
-    void resetCheckedPassword(int unlockType = UnlockDisabled);
+    bool isPasswordRequired() const;
+
+    void setPasswordChecked(bool checked, UnlockType unlockType = UnlockDisabled);
+    void resetCheckedPassword(UnlockType unlockType = UnlockDisabled);
 
     void setupGlobal();
     void initialize(const QStringList &args, EnvManager *envManager);
@@ -107,9 +111,9 @@ private:
     uint m_isService : 1;
     uint m_hasService : 1;
     uint m_isUserAdmin : 1;
-
     uint m_passwordChecked : 1;
-    uint m_passwordUnlockType : 3;
+
+    UnlockType m_passwordUnlockType = UnlockDisabled;
 
     QString m_defaultLanguage;
     QString m_profilePath;
