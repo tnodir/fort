@@ -128,6 +128,14 @@ begin
   Result := FileExists(ExpandConstant('{syswow64}\vcruntime140.dll'));
 end;
 
+function IsWindows10OrNewer(): Boolean;
+var
+  Version: TWindowsVersion;
+begin
+  GetWindowsVersionEx(Version);
+  Result := (Version.Major > 10) or ((Version.Major = 10) and (Version.Build > 19040));
+end;
+
 function HVCIEnabled(): Boolean;
 var
   EnabledValue: Cardinal;
@@ -217,6 +225,14 @@ end;
 
 function InitializeSetup: Boolean;
 begin
+  if (ExpandConstant('{#CHECK_WIN10}') = 'Y') and not IsWindows10OrNewer() then
+  begin
+    SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithWindows}'), mbCriticalError, MB_OK, IDOK);
+
+    Result := False;
+    Exit;
+  end;
+
   if HVCIEnabled() then
   begin
     SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithHVCI}'), mbCriticalError, MB_OK, IDOK);
