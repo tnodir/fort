@@ -332,31 +332,34 @@ void GraphWindow::addEmptyTraffic()
 
 void GraphWindow::addData(QCPBars *graph, qint64 rangeLower, qint64 unixTime, quint32 bytes)
 {
+    const double rangeLowerKey = double(rangeLower);
+    const double unixTimeKey = double(unixTime);
+
     auto data = graph->data();
 
     if (!data->isEmpty()) {
         // Remove old keys
-        auto lo = data->constBegin();
-        if (lo->mainKey() < rangeLower) {
-            data->removeBefore(rangeLower);
+        const auto lo = data->constBegin();
+        if (lo->mainKey() < rangeLowerKey) {
+            data->removeBefore(rangeLowerKey);
         }
 
         // Check existing key
-        auto hi = data->constEnd() - 1;
-        if (qFuzzyCompare(unixTime, hi->mainKey())) {
+        const auto hi = data->constEnd() - 1;
+        if (qFuzzyCompare(unixTimeKey, hi->mainKey())) {
             if (bytes == 0)
                 return;
 
             bytes += quint32(hi->mainValue());
 
-            data->removeAfter(unixTime);
-        } else if (unixTime < hi->mainKey()) {
+            data->removeAfter(unixTimeKey);
+        } else if (unixTimeKey < hi->mainKey()) {
             data->clear();
         }
     }
 
     // Add data
-    data->add(QCPBarsData(unixTime, bytes));
+    data->add(QCPBarsData(unixTimeKey, bytes));
 }
 
 void GraphWindow::updateWindowTitleSpeed()
