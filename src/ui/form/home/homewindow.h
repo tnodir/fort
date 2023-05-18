@@ -5,6 +5,7 @@
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class ConfManager;
 class FortSettings;
