@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v3.9.3, 2023-05-18:
+- UI: "My Fort": Some controls moved from "Options".
+- UI: Reorganization of "Options" window.
+- UI: Added "Menu" button to all windows.
+- UI: "Options": Added "Purge Obsolete on startup" flag.
+- UI: Don't ask for a password if an open window exists.
+- UI: Updated SQLite to v3.42.0
+
 v3.9.2, 2023-05-08:
 - UI: Activate already running instance, don't show a warning.
 - UI: My Fort: Show menu on activation.
