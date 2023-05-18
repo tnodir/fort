@@ -183,7 +183,7 @@
     </message>
     <message>
         <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>移动所有行到 &apos;块&apos;</translation>
+        <translation>移动所有行到 &apos;阻止&apos;</translation>
     </message>
     <message>
         <source>Interchange All Lines</source>
@@ -195,7 +195,7 @@
     </message>
     <message>
         <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>移动选中的行到 &apos;块&apos;</translation>
+        <translation>移动选中的行到 &apos;阻止&apos;</translation>
     </message>
     <message>
         <source>Select File</source>
