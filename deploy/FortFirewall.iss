@@ -225,13 +225,15 @@ end;
 
 function InitializeSetup: Boolean;
 begin
-  if (ExpandConstant('{#CHECK_WIN10}') = 'Y') and not IsWindows10OrNewer() then
+#if CHECK_WIN10 == "Y"
+  if not IsWindows10OrNewer() then
   begin
     SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithWindows}'), mbCriticalError, MB_OK, IDOK);
 
     Result := False;
     Exit;
   end;
+#endif
 
   if HVCIEnabled() then
   begin
