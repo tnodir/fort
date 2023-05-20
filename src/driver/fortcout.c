@@ -84,15 +84,17 @@ inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
             group_index, ca->isIPv6, is_tcp, ca->inbound, cx->is_reauth, &log_stat);
 
     if (!NT_SUCCESS(status)) {
-        if (status == FORT_STATUS_FLOW_BLOCK) {
-            cx->blocked = TRUE; /* block (Reauth) */
-            cx->block_reason = FORT_BLOCK_REASON_REAUTH;
-            return TRUE;
+        if (status != FORT_STATUS_FLOW_BLOCK) {
+            LOG("Classify v4: Flow assoc. error: %x\n", status);
+            TRACE(FORT_CALLOUT_FLOW_ASSOC_ERROR, status, 0, 0);
         }
 
-        LOG("Classify v4: Flow assoc. error: %x\n", status);
-        TRACE(FORT_CALLOUT_FLOW_ASSOC_ERROR, status, 0, 0);
-    } else if (!log_stat) {
+        cx->blocked = TRUE; /* block (Error) */
+        cx->block_reason = FORT_BLOCK_REASON_REAUTH;
+        return TRUE;
+    }
+
+    if (!log_stat) {
         fort_buffer_proc_new_write(&fort_device()->buffer, cx->process_id, cx->real_path->Length,
                 cx->real_path->Buffer, &cx->irp, &cx->info);
     }

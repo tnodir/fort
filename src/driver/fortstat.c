@@ -169,7 +169,7 @@ static void fort_flow_context_stream_init(
     }
 }
 
-inline static void fort_flow_context_stream_set(
+inline static NTSTATUS fort_flow_context_stream_set(
         PFORT_STAT stat, UINT64 flow_id, UINT64 flowContext, BOOL isIPv6, BOOL is_tcp)
 {
     UINT16 layerId;
@@ -177,7 +177,7 @@ inline static void fort_flow_context_stream_set(
 
     fort_flow_context_stream_init(stat, isIPv6, is_tcp, &layerId, &calloutId);
 
-    FwpsFlowAssociateContext0(flow_id, layerId, calloutId, flowContext);
+    return FwpsFlowAssociateContext0(flow_id, layerId, calloutId, flowContext);
 }
 
 inline static void fort_flow_context_transport_set(
@@ -196,14 +196,20 @@ inline static void fort_flow_context_transport_set(
     }
 }
 
-static void fort_flow_context_set(
+static NTSTATUS fort_flow_context_set(
         PFORT_STAT stat, PFORT_FLOW flow, BOOL isIPv6, BOOL is_tcp, BOOL inbound)
 {
     const UINT64 flow_id = flow->flow_id;
     const UINT64 flowContext = (UINT64) flow;
 
-    fort_flow_context_stream_set(stat, flow_id, flowContext, isIPv6, is_tcp);
+    const NTSTATUS status =
+            fort_flow_context_stream_set(stat, flow_id, flowContext, isIPv6, is_tcp);
+    if (!NT_SUCCESS(status))
+        return status;
+
     fort_flow_context_transport_set(stat, flow_id, flowContext, isIPv6, inbound);
+
+    return STATUS_SUCCESS;
 }
 
 inline static void fort_flow_context_stream_remove(
@@ -324,8 +330,6 @@ static PFORT_FLOW fort_flow_new(PFORT_STAT stat, UINT64 flow_id, const tommy_key
 
     flow->flow_id = flow_id;
 
-    fort_flow_context_set(stat, flow, isIPv6, is_tcp, inbound);
-
     return flow;
 }
 
@@ -340,16 +344,19 @@ inline static UCHAR fort_stat_group_speed_limit(PFORT_CONF_GROUP conf_group, UCH
 inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW *flow, UINT64 flow_id,
         tommy_key_t flow_hash, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth)
 {
-    if (is_reauth) {
-        /* Can't remove existing context, because of possible deadlock */
-        return FORT_STATUS_FLOW_BLOCK;
-    }
-
     *flow = fort_flow_new(stat, flow_id, flow_hash, isIPv6, is_tcp, inbound);
     if (*flow == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
-    return STATUS_SUCCESS;
+    NTSTATUS status = fort_flow_context_set(stat, *flow, isIPv6, is_tcp, inbound);
+    if (!NT_SUCCESS(status)) {
+        fort_flow_free(stat, *flow);
+
+        /* Can't remove existing context, because of possible deadlock */
+        status = is_reauth ? FORT_STATUS_FLOW_BLOCK : status;
+    }
+
+    return status;
 }
 
 static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index, UINT16 proc_index,
