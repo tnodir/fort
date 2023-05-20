@@ -127,8 +127,8 @@ void SchedulePage::setupTaskDetails()
 
     setupTaskInterval();
 
-    m_btTaskRun = ControlUtil::createButton(":/icons/play.png",
-            [&] { taskManager()->runTask(currentTaskInfo()->type()); });
+    m_btTaskRun = ControlUtil::createButton(
+            ":/icons/play.png", [&] { taskManager()->runTask(currentTaskInfo()->type()); });
     m_btTaskAbort = ControlUtil::createButton(
             ":/icons/cancel.png", [&] { taskManager()->abortTask(currentTaskInfo()->type()); });
 
@@ -146,16 +146,18 @@ void SchedulePage::setupTaskInterval()
 
     connect(m_cscTaskInterval->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         const int taskIndex = currentTaskIndex();
-        const auto index = taskListModel()->index(taskIndex, 0);
-
-        taskListModel()->setData(index, checked, TaskListModel::RoleEnabled);
+        if (taskIndex >= 0) {
+            const auto index = taskListModel()->index(taskIndex, 0);
+            taskListModel()->setData(index, checked, TaskListModel::RoleEnabled);
+        }
     });
     connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
                 const int taskIndex = currentTaskIndex();
-                const auto index = taskListModel()->index(taskIndex, 1);
-
-                taskListModel()->setData(index, value, TaskListModel::RoleIntervalHours);
+                if (taskIndex >= 0) {
+                    const auto index = taskListModel()->index(taskIndex, 1);
+                    taskListModel()->setData(index, value, TaskListModel::RoleIntervalHours);
+                }
             });
 }
 
@@ -163,7 +165,7 @@ void SchedulePage::setupTableTasksChanged()
 {
     const auto refreshTableTasksChanged = [&] {
         const int taskIndex = currentTaskIndex();
-        const bool taskSelected = taskIndex >= 0;
+        const bool taskSelected = (taskIndex >= 0);
 
         setCurrentTaskInfo(taskSelected ? taskListModel()->taskInfoAt(taskIndex) : nullptr);
         m_taskDetailsRow->setEnabled(taskSelected);

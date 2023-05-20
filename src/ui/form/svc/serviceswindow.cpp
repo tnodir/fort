@@ -160,7 +160,10 @@ QLayout *ServicesWindow::setupHeader()
     m_actAddProgram->setShortcut(Qt::Key_Insert);
 
     connect(m_actTrack, &QAction::triggered, this, [&] {
-        const auto serviceIndex = serviceListCurrentIndex();
+        const int serviceIndex = serviceListCurrentIndex();
+        if (serviceIndex < 0)
+            return;
+
         const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
 
         serviceInfoManager()->trackService(serviceInfo.serviceName);
@@ -169,14 +172,20 @@ QLayout *ServicesWindow::setupHeader()
         windowManager()->showInfoBox(tr("Please restart the computer to reload changed services!"));
     });
     connect(m_actRevert, &QAction::triggered, this, [&] {
-        const auto serviceIndex = serviceListCurrentIndex();
+        const int serviceIndex = serviceListCurrentIndex();
+        if (serviceIndex < 0)
+            return;
+
         const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
 
         serviceInfoManager()->revertService(serviceInfo.serviceName);
         updateServiceListModel();
     });
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
-        const auto serviceIndex = serviceListCurrentIndex();
+        const int serviceIndex = serviceListCurrentIndex();
+        if (serviceIndex < 0)
+            return;
+
         const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
 
         const QString appPath = QStringLiteral(R"(\SvcHost\)") + serviceInfo.serviceName;

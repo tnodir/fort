@@ -299,13 +299,13 @@ QLayout *ZonesWindow::setupHeader()
     m_btSaveAsText = ControlUtil::createButton(":/icons/save_as.png", [&] {
         const auto filePath = DialogUtil::getSaveFileName(
                 m_btSaveAsText->text(), tr("Text files (*.txt);;All files (*.*)"));
+        if (filePath.isEmpty())
+            return;
 
-        if (!filePath.isEmpty()) {
-            const int zoneIndex = zoneListCurrentIndex();
-
-            if (!taskManager()->taskInfoZoneDownloader()->saveZoneAsText(filePath, zoneIndex)) {
-                windowManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
-            }
+        const int zoneIndex = zoneListCurrentIndex();
+        if (zoneIndex >= 0
+                && !taskManager()->taskInfoZoneDownloader()->saveZoneAsText(filePath, zoneIndex)) {
+            windowManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
         }
     });
 
@@ -376,7 +376,7 @@ void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
 {
     ZoneRow zoneRow;
     if (editCurrentZone) {
-        const auto zoneIndex = zoneListCurrentIndex();
+        const int zoneIndex = zoneListCurrentIndex();
         if (zoneIndex < 0)
             return;
 
@@ -440,8 +440,9 @@ bool ZonesWindow::saveZoneEditForm()
     }
 
     // Edit selected zone
-    const int zoneIndex = zoneListCurrentIndex();
-    const auto zoneRow = zoneListModel()->zoneRowAt(zoneIndex);
+    const auto zoneRow = zoneListModel()->zoneRowAt(zoneListCurrentIndex());
+    if (zoneRow.isNull())
+        return false;
 
     const bool zoneNameEdited = (zone.zoneName != zoneRow.zoneName);
     const bool zoneEdited = (zone.enabled != zoneRow.enabled || zone.customUrl != zoneRow.customUrl
@@ -463,6 +464,8 @@ bool ZonesWindow::saveZoneEditForm()
 void ZonesWindow::updateZone(int row, bool enabled)
 {
     const auto zoneRow = zoneListModel()->zoneRowAt(row);
+    if (zoneRow.isNull())
+        return;
 
     Zone zone = zoneRow;
     zone.enabled = enabled;
@@ -473,6 +476,9 @@ void ZonesWindow::updateZone(int row, bool enabled)
 void ZonesWindow::deleteZone(int row)
 {
     const auto zoneRow = zoneListModel()->zoneRowAt(row);
+    if (zoneRow.isNull())
+        return;
+
     confManager()->deleteZone(zoneRow.zoneId);
 }
 

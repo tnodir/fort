@@ -67,8 +67,6 @@ private:
     void editSelectedPrograms();
     void openAppEditForm(const AppRow &appRow, const QVector<qint64> &appIdList = {});
 
-    void deleteApp(int row);
-
     void updateSelectedApps(bool blocked);
     void deleteSelectedApps();
 

@@ -67,7 +67,9 @@ void TableItemModel::updateRowCache(int row) const
     if (tableRow().isValid(row))
         return;
 
-    if (updateTableRow(row)) {
-        tableRow().row = row;
+    if (row >= 0 && !updateTableRow(row)) {
+        row = -1;
     }
+
+    tableRow().row = row;
 }

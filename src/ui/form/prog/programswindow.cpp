@@ -355,6 +355,8 @@ void ProgramsWindow::editSelectedPrograms()
         return;
 
     const auto appRow = appListCurrentRow();
+    if (appRow.isNull())
+        return;
 
     openAppEditForm(appRow, appIdList);
 }
@@ -365,12 +367,6 @@ void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64>
 
     m_formAppEdit->show();
     m_formAppEdit->activate();
-}
-
-void ProgramsWindow::deleteApp(int row)
-{
-    const auto appRow = appListModel()->appRowAt(row);
-    confManager()->deleteApp(appRow.appId);
 }
 
 void ProgramsWindow::updateSelectedApps(bool blocked)

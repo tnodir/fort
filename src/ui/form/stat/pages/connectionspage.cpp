@@ -121,14 +121,17 @@ QLayout *ConnectionsPage::setupHeader()
     connect(m_actCopy, &QAction::triggered, this,
             [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
-        const auto connIndex = connListCurrentIndex();
-        const auto connRow = connBlockListModel()->connRowAt(connIndex);
-
-        windowManager()->showProgramEditForm(connRow.appPath);
+        const auto appPath = connListCurrentPath();
+        if (!appPath.isEmpty()) {
+            windowManager()->showProgramEditForm(appPath);
+        }
     });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox([&] { deleteConn(m_connListView->currentRow()); },
-                tr("Are you sure to remove connections till this row?"));
+        const int connIndex = connListCurrentIndex();
+        if (connIndex >= 0) {
+            windowManager()->showConfirmBox([&] { deleteConn(connIndex); },
+                    tr("Are you sure to remove connections till this row?"));
+        }
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox([&] { connBlockListModel()->clear(); },
@@ -283,6 +286,9 @@ void ConnectionsPage::updateShowHostNames()
 void ConnectionsPage::deleteConn(int row)
 {
     const auto connRow = connBlockListModel()->connRowAt(row);
+    if (connRow.isNull())
+        return;
+
     connBlockListModel()->deleteConn(connRow.connId);
 }
 
