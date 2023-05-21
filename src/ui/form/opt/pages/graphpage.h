@@ -18,15 +18,22 @@ protected slots:
 
 private:
     void setupUi();
+    QLayout *setupHeader();
+    QLayout *setupColumns();
     QLayout *setupColumn1();
     void setupGraphBox();
     void setupGraphCheckboxes();
     void setupGraphOptions();
-    void setupGraphColors();
     QLayout *setupColumn2();
+    void setupColorsBox();
+    void setupGraphColors();
 
 private:
     QGroupBox *m_gbGraph = nullptr;
+    QGroupBox *m_gbColors = nullptr;
+
+    QPushButton *m_btResetToDefaults = nullptr;
+
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
     QCheckBox *m_cbGraphFrameless = nullptr;
     QCheckBox *m_cbGraphClickThrough = nullptr;
@@ -34,6 +41,7 @@ private:
     LabelSpin *m_graphOpacity = nullptr;
     LabelSpin *m_graphHoverOpacity = nullptr;
     LabelSpin *m_graphMaxSeconds = nullptr;
+
     LabelColor *m_graphColor = nullptr;
     LabelColor *m_graphColorIn = nullptr;
     LabelColor *m_graphColorOut = nullptr;

@@ -4,6 +4,7 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QPushButton>
 #include <QSpinBox>
 #include <QVBoxLayout>
 
@@ -21,7 +22,10 @@ GraphPage::GraphPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctr
 
 void GraphPage::onRetranslateUi()
 {
-    m_gbGraph->setTitle(tr("Graph"));
+    m_btResetToDefaults->setText(tr("Reset to defaults"));
+
+    m_gbGraph->setTitle(tr("Window"));
+    m_gbColors->setTitle(tr("Colors"));
 
     m_cbGraphAlwaysOnTop->setText(tr("Always on top"));
     m_cbGraphFrameless->setText(tr("Frameless"));
@@ -30,6 +34,7 @@ void GraphPage::onRetranslateUi()
     m_graphOpacity->label()->setText(tr("Opacity:"));
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
     m_graphMaxSeconds->label()->setText(tr("Max seconds:"));
+
     m_graphColor->label()->setText(tr("Background:"));
     m_graphColorIn->label()->setText(tr("Download:"));
     m_graphColorOut->label()->setText(tr("Upload:"));
@@ -40,6 +45,49 @@ void GraphPage::onRetranslateUi()
 }
 
 void GraphPage::setupUi()
+{
+    auto layout = new QVBoxLayout();
+
+    // Header
+    auto header = setupHeader();
+    layout->addLayout(header);
+
+    // Columns
+    auto colLayout = setupColumns();
+    layout->addLayout(colLayout, 1);
+
+    this->setLayout(layout);
+}
+
+QLayout *GraphPage::setupHeader()
+{
+    auto layout = new QHBoxLayout();
+
+    m_btResetToDefaults = ControlUtil::createButton(":/icons/arrow_refresh_small.png", [&] {
+        m_cbGraphAlwaysOnTop->setChecked(ini()->graphWindowAlwaysOnTopDefault());
+        m_cbGraphFrameless->setChecked(ini()->graphWindowFramelessDefault());
+        m_cbGraphClickThrough->setChecked(ini()->graphWindowClickThroughDefault());
+        m_cbGraphHideOnHover->setChecked(ini()->graphWindowHideOnHoverDefault());
+        m_graphOpacity->spinBox()->setValue(ini()->graphWindowOpacityDefault());
+        m_graphHoverOpacity->spinBox()->setValue(ini()->graphWindowHoverOpacityDefault());
+        m_graphMaxSeconds->spinBox()->setValue(ini()->graphWindowMaxSecondsDefault());
+
+        m_graphColor->setColor(ini()->graphWindowColorDefault());
+        m_graphColorIn->setColor(ini()->graphWindowColorInDefault());
+        m_graphColorOut->setColor(ini()->graphWindowColorOutDefault());
+        m_graphAxisColor->setColor(ini()->graphWindowAxisColorDefault());
+        m_graphTickLabelColor->setColor(ini()->graphWindowTickLabelColorDefault());
+        m_graphLabelColor->setColor(ini()->graphWindowLabelColorDefault());
+        m_graphGridColor->setColor(ini()->graphWindowGridColorDefault());
+    });
+
+    layout->addStretch();
+    layout->addWidget(m_btResetToDefaults);
+
+    return layout;
+}
+
+QLayout *GraphPage::setupColumns()
 {
     // Column #1
     auto colLayout1 = setupColumn1();
@@ -54,7 +102,7 @@ void GraphPage::setupUi()
     layout->addLayout(colLayout2);
     layout->addStretch();
 
-    this->setLayout(layout);
+    return layout;
 }
 
 QLayout *GraphPage::setupColumn1()
@@ -71,35 +119,14 @@ QLayout *GraphPage::setupColumn1()
     return layout;
 }
 
-QLayout *GraphPage::setupColumn2()
-{
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
-
-    layout->addStretch();
-
-    return layout;
-}
-
 void GraphPage::setupGraphBox()
 {
     setupGraphCheckboxes();
     setupGraphOptions();
-    setupGraphColors();
 
-    // Layout
-    auto colLayout1 = ControlUtil::createLayoutByWidgets({ m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
+    auto layout = ControlUtil::createLayoutByWidgets({ m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
             m_cbGraphClickThrough, m_cbGraphHideOnHover, ControlUtil::createSeparator(),
-            m_graphOpacity, m_graphHoverOpacity, m_graphMaxSeconds, nullptr });
-
-    auto colLayout2 =
-            ControlUtil::createLayoutByWidgets({ m_graphColor, m_graphColorIn, m_graphColorOut,
-                    m_graphAxisColor, m_graphTickLabelColor, m_graphLabelColor, m_graphGridColor });
-
-    auto layout = new QHBoxLayout();
-    layout->addLayout(colLayout1);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addLayout(colLayout2);
+            m_graphOpacity, m_graphHoverOpacity, m_graphMaxSeconds });
 
     m_gbGraph = new QGroupBox();
     m_gbGraph->setLayout(layout);
@@ -161,6 +188,32 @@ void GraphPage::setupGraphOptions()
                     ctrl()->setIniEdited();
                 }
             });
+}
+
+QLayout *GraphPage::setupColumn2()
+{
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
+
+    // Graph Colors Group Box
+    setupColorsBox();
+    layout->addWidget(m_gbColors);
+
+    layout->addStretch();
+
+    return layout;
+}
+
+void GraphPage::setupColorsBox()
+{
+    setupGraphColors();
+
+    auto layout =
+            ControlUtil::createLayoutByWidgets({ m_graphColor, m_graphColorIn, m_graphColorOut,
+                    m_graphAxisColor, m_graphTickLabelColor, m_graphLabelColor, m_graphGridColor });
+
+    m_gbColors = new QGroupBox();
+    m_gbColors->setLayout(layout);
 }
 
 void GraphPage::setupGraphColors()
