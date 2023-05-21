@@ -231,6 +231,11 @@ QString expandPath(const QString &path)
     return (n > 0 && n < maxPathSize) ? QString::fromUtf16((const char16_t *) buf) : QString();
 }
 
+bool setCurrentDirectory(const QString &path)
+{
+    return QDir::setCurrent(path);
+}
+
 QString nativeAppFilePath()
 {
     constexpr int maxPathSize = 4096;

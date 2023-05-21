@@ -52,6 +52,8 @@ QDateTime fileModTime(const QString &filePath);
 
 QString expandPath(const QString &path);
 
+bool setCurrentDirectory(const QString &path);
+
 QString nativeAppFilePath();
 QString nativeAppBinLocation();
 QString appBinLocation();

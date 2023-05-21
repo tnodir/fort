@@ -2,6 +2,7 @@
 
 #include <QCommandLineParser>
 #include <QCoreApplication>
+#include <QFileInfo>
 
 #include <fort_version.h>
 
@@ -105,11 +106,16 @@ void FortSettings::resetCheckedPassword(UnlockType unlockType)
 
 void FortSettings::setupGlobal()
 {
+    const QFileInfo appFileInfo(FileUtil::nativeAppFilePath());
+
+    // Set working directory
+    FileUtil::setCurrentDirectory(appFileInfo.path());
+
     // Is portable?
-    g_isPortable = FileUtil::fileExists(FileUtil::nativeAppBinLocation() + "/README.portable");
+    g_isPortable = FileUtil::fileExists(appFileInfo.path() + "/README.portable");
 
     // Use global settings from program's binary directory
-    const QSettings settings(FileUtil::nativeAppFilePath() + ".ini", QSettings::IniFormat);
+    const QSettings settings(appFileInfo.filePath() + ".ini", QSettings::IniFormat);
 
     // High-DPI scale factor rounding policy
     const auto dpiPolicy = settings.value("global/dpiPolicy").toString();
