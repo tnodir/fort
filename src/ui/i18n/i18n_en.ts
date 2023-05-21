@@ -497,10 +497,6 @@
 <context>
     <name>GraphPage</name>
     <message>
-        <source>Graph</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Always on top</source>
         <translation></translation>
     </message>
@@ -554,6 +550,18 @@
     </message>
     <message>
         <source>Grid:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reset to defaults</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Colors</source>
         <translation></translation>
     </message>
 </context>

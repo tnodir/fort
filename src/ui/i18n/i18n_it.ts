@@ -497,10 +497,6 @@
 <context>
     <name>GraphPage</name>
     <message>
-        <source>Graph</source>
-        <translation>Grafico</translation>
-    </message>
-    <message>
         <source>Always on top</source>
         <translation>Sempre in primo piano</translation>
     </message>
@@ -555,6 +551,18 @@
     <message>
         <source>Grid:</source>
         <translation>Griglia:</translation>
+    </message>
+    <message>
+        <source>Reset to defaults</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Colors</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

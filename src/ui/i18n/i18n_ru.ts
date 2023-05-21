@@ -497,10 +497,6 @@
 <context>
     <name>GraphPage</name>
     <message>
-        <source>Graph</source>
-        <translation>График</translation>
-    </message>
-    <message>
         <source>Always on top</source>
         <translation>Всегда сверху</translation>
     </message>
@@ -555,6 +551,18 @@
     <message>
         <source>Grid:</source>
         <translation>Сетка:</translation>
+    </message>
+    <message>
+        <source>Reset to defaults</source>
+        <translation>Сброс значений</translation>
+    </message>
+    <message>
+        <source>Window</source>
+        <translation>Окно</translation>
+    </message>
+    <message>
+        <source>Colors</source>
+        <translation>Цвета</translation>
     </message>
 </context>
 <context>
