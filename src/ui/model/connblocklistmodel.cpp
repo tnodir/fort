@@ -364,7 +364,7 @@ void ConnBlockListModel::updateConnRows(
     const int addedCount = idMax - oldIdMax;
     if (addedCount > 0) {
         const int endRow = oldIdMax - idMin + 1;
-        insertConnRows(idMin, endRow, addedCount);
+        insertConnRows(idMax, endRow, addedCount);
     }
 }
 
