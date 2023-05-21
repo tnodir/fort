@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.9.4, 2023-05-21:
+- UI: Options: Traffic Graph: "Reset to defaults" button added.
+- Driver: Existing connections are not closed during installation.
+- Installer: Check whether Windows version is 10 2004 or newer.
+
 v3.9.3, 2023-05-18:
 - UI: "My Fort": Some controls moved from "Options".
 - UI: Reorganization of "Options" window.
