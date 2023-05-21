@@ -17,7 +17,9 @@ class TableView;
 class TaskManager;
 class WidgetWindowStateWatcher;
 class WindowManager;
+class Zone;
 class ZoneListModel;
+class ZoneSourceWrapper;
 class ZonesController;
 
 class ZonesWindow : public WidgetWindow
@@ -58,6 +60,9 @@ private:
 
     void updateZoneEditForm(bool editCurrentZone);
     bool saveZoneEditForm();
+    bool saveZoneEditFormCustom(const ZoneSourceWrapper &zoneSource);
+    bool saveZoneEditFormNew(Zone &zone);
+    bool saveZoneEditFormEdit(Zone &zone);
 
     void updateZone(int row, bool enabled);
     void deleteZone(int row);

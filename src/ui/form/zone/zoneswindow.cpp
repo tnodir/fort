@@ -423,23 +423,38 @@ bool ZonesWindow::saveZoneEditForm()
 
     // Check custom url
     if (zone.customUrl && zone.url.isEmpty()) {
-        m_editUrl->setText(zoneSource.url());
-        m_editUrl->selectAll();
-        m_editUrl->setFocus();
-        m_editFormData->setText(zoneSource.formData());
-        return false;
+        return saveZoneEditFormCustom(zoneSource);
     }
 
     // Add new zone
     if (m_formZoneIsNew) {
-        if (confManager()->addZone(zone)) {
-            m_zoneListView->selectCell(zone.zoneId - 1);
-            return true;
-        }
-        return false;
+        return saveZoneEditFormNew(zone);
     }
 
     // Edit selected zone
+    return saveZoneEditFormEdit(zone);
+}
+
+bool ZonesWindow::saveZoneEditFormCustom(const ZoneSourceWrapper &zoneSource)
+{
+    m_editUrl->setText(zoneSource.url());
+    m_editUrl->selectAll();
+    m_editUrl->setFocus();
+    m_editFormData->setText(zoneSource.formData());
+    return false;
+}
+
+bool ZonesWindow::saveZoneEditFormNew(Zone &zone)
+{
+    if (confManager()->addZone(zone)) {
+        m_zoneListView->selectCell(zone.zoneId - 1);
+        return true;
+    }
+    return false;
+}
+
+bool ZonesWindow::saveZoneEditFormEdit(Zone &zone)
+{
     const auto zoneRow = zoneListModel()->zoneRowAt(zoneListCurrentIndex());
     if (zoneRow.isNull())
         return false;
