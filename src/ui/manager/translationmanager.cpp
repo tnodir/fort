@@ -52,16 +52,19 @@ QStringList TranslationManager::displayLabels() const
 
     int localeBit = 1;
     for (const QLocale &locale : m_locales) {
-        QString label = QLocale::languageToString(locale.language());
-        QString nativeLabel = StringUtil::capitalize(locale.nativeLanguageName());
-
-        if ((m_localesWithCountry & localeBit) != 0) {
-            label += " (" + QLocale::countryToString(locale.country()) + ")";
-            nativeLabel += " (" + StringUtil::capitalize(locale.nativeCountryName()) + ")";
-        }
+        const bool isWithCountry = (m_localesWithCountry & localeBit) != 0;
         localeBit <<= 1;
 
-        list.append(label + ", " + nativeLabel);
+        QString label = QLocale::languageToString(locale.language());
+        QString nativeLabel = StringUtil::capitalize(locale.nativeLanguageName());
+        if (isWithCountry) {
+            label += " (" + QLocale::territoryToString(locale.territory()) + ")";
+            nativeLabel += " (" + StringUtil::capitalize(locale.nativeTerritoryName()) + ")";
+        }
+
+        const QString langName = isWithCountry ? locale.name() : locale.bcp47Name();
+
+        list.append(label + ", " + nativeLabel + " - " + langName);
     }
     return list;
 }
