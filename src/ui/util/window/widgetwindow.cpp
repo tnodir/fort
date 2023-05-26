@@ -53,11 +53,8 @@ void WidgetWindow::keyPressEvent(QKeyEvent *event)
 {
     QWidget::keyPressEvent(event);
 
-    if (event->isAutoRepeat())
-        return;
-
     switch (event->key()) {
-    case Qt::Key_Escape: // Esc
+    case Qt::Key_Escape:
         if (event->modifiers() == Qt::NoModifier) {
             close();
         }
