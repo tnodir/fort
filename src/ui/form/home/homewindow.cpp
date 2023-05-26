@@ -154,7 +154,9 @@ QWidget *HomeWindow::setupHeader()
     // Logo image
     auto iconLogo = ControlUtil::createLabel();
     iconLogo->setScaledContents(true);
-    iconLogo->setMaximumSize(48, 48);
+    const QSize logoSize(48, 48);
+    iconLogo->setMinimumSize(logoSize);
+    iconLogo->setMaximumSize(logoSize);
     iconLogo->setPixmap(IconCache::file(":/icons/fort-96.png"));
 
     // Logo text
