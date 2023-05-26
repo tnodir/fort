@@ -56,8 +56,8 @@ public:
     bool confirmTrayFlags() const { return valueBool("confirm/trayFlags"); }
     void setConfirmTrayFlags(bool v) { setValue("confirm/trayFlags", v); }
 
-    bool confirmQuit() const { return valueBool("confirm/quit"); }
-    void setConfirmQuit(bool v) { setValue("confirm/quit", v); }
+    bool confirmQuit() const { return valueBool("confirm/quit", true); }
+    void setConfirmQuit(bool v) { setValue("confirm/quit", v, true); }
 
     QRect homeWindowGeometry() const { return value("homeWindow/geometry").toRect(); }
     void setHomeWindowGeometry(const QRect &v) { setValue("homeWindow/geometry", v); }
