@@ -44,9 +44,9 @@ void WidgetWindow::hideEvent(QHideEvent *event)
 
 void WidgetWindow::closeEvent(QCloseEvent *event)
 {
-    emit aboutToClose();
+    event->accept();
 
-    QWidget::closeEvent(event);
+    emit aboutToClose(event);
 }
 
 void WidgetWindow::keyPressEvent(QKeyEvent *event)

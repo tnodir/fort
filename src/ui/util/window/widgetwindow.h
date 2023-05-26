@@ -29,7 +29,7 @@ signals:
 
     void visibilityChanged(bool isVisible);
 
-    void aboutToClose();
+    void aboutToClose(QEvent *event);
 
 protected:
     void moveEvent(QMoveEvent *event) override;

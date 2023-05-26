@@ -265,7 +265,7 @@ void WindowManager::setupHomeWindow(bool quitOnClose)
 
     if (quitOnClose) {
         connect(m_homeWindow, &HomeWindow::activated, m_homeWindow, &HomeWindow::showMenu);
-        connect(m_homeWindow, &HomeWindow::aboutToClose, trayIcon(), &TrayIcon::quitProgram);
+        connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::quitHomeWindow);
     } else {
         connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::closeHomeWindow);
     }
@@ -284,6 +284,16 @@ void WindowManager::closeHomeWindow()
         closeWindow(m_homeWindow);
         m_homeWindow = nullptr;
     }
+}
+
+void WindowManager::quitHomeWindow(QEvent *event)
+{
+    if (m_isAppQuitting)
+        return;
+
+    event->ignore();
+
+    trayIcon()->quitProgram();
 }
 
 void WindowManager::showHomeWindowAbout()

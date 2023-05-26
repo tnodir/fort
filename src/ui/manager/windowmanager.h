@@ -61,6 +61,7 @@ public slots:
     void setupHomeWindow(bool quitOnClose = false);
     void showHomeWindow();
     void closeHomeWindow();
+    void quitHomeWindow(QEvent *event);
 
     void showHomeWindowAbout();
 
