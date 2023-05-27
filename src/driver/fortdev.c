@@ -414,9 +414,6 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     if (!NT_SUCCESS(status))
         return status;
 
-    /* Enumerate processes */
-    fort_pstree_enum_processes();
-
     return STATUS_SUCCESS;
 }
 
