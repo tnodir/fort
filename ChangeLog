@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v3.9.5, 2023-05-28:
+- UI: Options: Add tag to language list.
+- UI: Options: Confirm Quit by default.
+- UI: Options: Tray: Animate alert by default.
+- UI: Programs: Refresh on app group's enabled flag change.
+- UI: Close windows by Escape key immediately.
+- Driver: Remove processes enumeration on startup.
+
 v3.9.4, 2023-05-21:
 - UI: Options: Traffic Graph: "Reset to defaults" button added.
 - Driver: Existing connections are not closed during installation.
