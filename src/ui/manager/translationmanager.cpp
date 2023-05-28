@@ -58,8 +58,13 @@ QStringList TranslationManager::displayLabels() const
         QString label = QLocale::languageToString(locale.language());
         QString nativeLabel = StringUtil::capitalize(locale.nativeLanguageName());
         if (isWithCountry) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
             label += " (" + QLocale::territoryToString(locale.territory()) + ")";
             nativeLabel += " (" + StringUtil::capitalize(locale.nativeTerritoryName()) + ")";
+#else
+            label += " (" + QLocale::countryToString(locale.country()) + ")";
+            nativeLabel += " (" + StringUtil::capitalize(locale.nativeCountryName()) + ")";
+#endif
         }
 
         const QString langName = isWithCountry ? locale.name() : locale.bcp47Name();
