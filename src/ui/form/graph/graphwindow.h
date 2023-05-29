@@ -61,7 +61,7 @@ private:
 
     void setupTimer();
 
-    void addData(QCPBars *graph, qint64 rangeLower, qint64 unixTime, quint32 bytes);
+    void addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint32 bytes);
 
     void updateWindowTitleSpeed();
     void setWindowOpacityPercent(int percent);

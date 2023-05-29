@@ -16,6 +16,43 @@
 #include "axistickerspeed.h"
 #include "graphplot.h"
 
+namespace {
+
+bool clearGraphData(
+        const QSharedPointer<QCPBarsDataContainer> &data, double rangeLowerKey, double unixTimeKey)
+{
+    if (data->isEmpty())
+        return true;
+
+    const auto hi = data->constEnd() - 1;
+    if (rangeLowerKey > hi->mainKey() || unixTimeKey < hi->mainKey()) {
+        data->clear();
+        return true;
+    }
+
+    const auto lo = data->constBegin();
+    if (lo->mainKey() < rangeLowerKey) {
+        data->removeBefore(rangeLowerKey);
+    }
+
+    return data->isEmpty();
+}
+
+void adjustGraphData(
+        const QSharedPointer<QCPBarsDataContainer> &data, double unixTimeKey, quint32 &bytes)
+{
+    const auto hi = data->constEnd() - 1;
+
+    // Check existing key
+    if (qFuzzyCompare(unixTimeKey, hi->mainKey())) {
+        bytes += quint32(hi->mainValue());
+    }
+
+    data->removeAfter(unixTimeKey);
+}
+
+}
+
 GraphWindow::GraphWindow(QWidget *parent) :
     WidgetWindow(parent), m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
@@ -305,10 +342,13 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
 
     const qint64 rangeLower = unixTime - ini()->graphWindowMaxSeconds();
 
-    addData(m_graphIn, rangeLower, unixTime, inBytes);
-    addData(m_graphOut, rangeLower, unixTime, outBytes);
+    const double rangeLowerKey = double(rangeLower);
+    const double unixTimeKey = double(unixTime);
 
-    m_plot->xAxis->setRange(unixTime, qFloor(m_plot->axisRect()->width() / 4), Qt::AlignRight);
+    addData(m_graphIn, rangeLowerKey, unixTimeKey, inBytes);
+    addData(m_graphOut, rangeLowerKey, unixTimeKey, outBytes);
+
+    m_plot->xAxis->setRange(unixTimeKey, qFloor(m_plot->axisRect()->width() / 4), Qt::AlignRight);
 
     m_graphIn->rescaleValueAxis(false, true);
     m_graphOut->rescaleValueAxis(true, true);
@@ -330,32 +370,12 @@ void GraphWindow::addEmptyTraffic()
     addTraffic(DateUtil::getUnixTime(), 0, 0);
 }
 
-void GraphWindow::addData(QCPBars *graph, qint64 rangeLower, qint64 unixTime, quint32 bytes)
+void GraphWindow::addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint32 bytes)
 {
-    const double rangeLowerKey = double(rangeLower);
-    const double unixTimeKey = double(unixTime);
-
     auto data = graph->data();
 
-    if (!data->isEmpty()) {
-        // Remove old keys
-        const auto lo = data->constBegin();
-        if (lo->mainKey() < rangeLowerKey) {
-            data->removeBefore(rangeLowerKey);
-        }
-
-        // Check existing key
-        const auto hi = data->constEnd() - 1;
-        if (qFuzzyCompare(unixTimeKey, hi->mainKey())) {
-            if (bytes == 0)
-                return;
-
-            bytes += quint32(hi->mainValue());
-
-            data->removeAfter(unixTimeKey);
-        } else if (unixTimeKey < hi->mainKey()) {
-            data->clear();
-        }
+    if (!clearGraphData(data, rangeLowerKey, unixTimeKey)) {
+        adjustGraphData(data, unixTimeKey, bytes);
     }
 
     // Add data
