@@ -250,7 +250,7 @@ bool ControlWorker::sendCommand(Control::Command command, const QVariantList &ar
 
 bool ControlWorker::waitForSent(int msecs) const
 {
-    return socket()->waitForBytesWritten(msecs);
+    return socket()->bytesToWrite() <= 0 || socket()->waitForBytesWritten(msecs);
 }
 
 bool ControlWorker::waitForRead(int msecs) const
