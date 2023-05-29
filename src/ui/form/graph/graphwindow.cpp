@@ -18,6 +18,34 @@
 
 namespace {
 
+constexpr int stickyDistance = 30;
+
+inline void checkWindowHorizontalEdges(const QRect &screenRect, const QRect &winRect, QPoint &diff)
+{
+    const int leftDiff = screenRect.x() - winRect.x();
+    if (qAbs(leftDiff) < stickyDistance) {
+        diff.setX(leftDiff);
+    } else {
+        const int rightDiff = screenRect.width() - winRect.right();
+        if (qAbs(rightDiff) < stickyDistance) {
+            diff.setX(rightDiff);
+        }
+    }
+}
+
+inline void checkWindowVerticalEdges(const QRect &screenRect, const QRect &winRect, QPoint &diff)
+{
+    const int topDiff = screenRect.y() - winRect.y();
+    if (qAbs(topDiff) < stickyDistance) {
+        diff.setY(topDiff);
+    } else {
+        const int bottomDiff = screenRect.height() - winRect.bottom();
+        if (qAbs(bottomDiff) < stickyDistance) {
+            diff.setY(bottomDiff);
+        }
+    }
+}
+
 bool clearGraphData(
         const QSharedPointer<QCPBarsDataContainer> &data, double rangeLowerKey, double unixTimeKey)
 {
@@ -404,38 +432,19 @@ void GraphWindow::setWindowOpacityPercent(int percent)
 
 void GraphWindow::checkWindowEdges()
 {
-    constexpr int stickyDistance = 30;
-
     const auto screen = this->screen();
     if (!screen)
         return;
 
-    const QRect sg = screen->geometry();
-    const QRect wg = this->frameGeometry();
+    const QRect screenRect = screen->geometry();
+    const QRect winRect = this->frameGeometry();
     QPoint diff(0, 0);
 
-    const int leftDiff = sg.x() - wg.x();
-    if (qAbs(leftDiff) < stickyDistance) {
-        diff.setX(leftDiff);
-    } else {
-        const int rightDiff = sg.width() - wg.right();
-        if (qAbs(rightDiff) < stickyDistance) {
-            diff.setX(rightDiff);
-        }
-    }
-
-    const int topDiff = sg.y() - wg.y();
-    if (qAbs(topDiff) < stickyDistance) {
-        diff.setY(topDiff);
-    } else {
-        const int bottomDiff = sg.height() - wg.bottom();
-        if (qAbs(bottomDiff) < stickyDistance) {
-            diff.setY(bottomDiff);
-        }
-    }
+    checkWindowHorizontalEdges(screenRect, winRect, diff);
+    checkWindowVerticalEdges(screenRect, winRect, diff);
 
     if (diff.x() != 0 || diff.y() != 0) {
-        this->move(wg.x() + diff.x(), wg.y() + diff.y());
+        this->move(winRect.x() + diff.x(), winRect.y() + diff.y());
     }
 }
 
