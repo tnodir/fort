@@ -15,9 +15,9 @@ public:
     virtual void saveWindowState(bool wasVisible) { Q_UNUSED(wasVisible); }
     virtual void restoreWindowState() { }
 
-    void showWindow() { showWidget(this); }
+    void showWindow(bool activate = true) { showWidget(this, activate); }
 
-    static void showWidget(QWidget *w);
+    static void showWidget(QWidget *w, bool activate = true);
 
 signals:
     void activationChanged(bool isActive);

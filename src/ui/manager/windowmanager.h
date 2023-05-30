@@ -122,7 +122,7 @@ private:
 
     void onTrayMessageClicked();
 
-    void showWindow(WidgetWindow *w);
+    void showWindow(WidgetWindow *w, bool activate = true);
     void closeWindow(WidgetWindow *w);
 
     void windowOpened(quint32 code);

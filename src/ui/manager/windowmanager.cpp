@@ -457,7 +457,7 @@ void WindowManager::showGraphWindow()
         setupGraphWindow();
     }
 
-    m_graphWindow->show();
+    showWindow(m_graphWindow, /*activate=*/false);
 }
 
 void WindowManager::closeGraphWindow()
@@ -617,9 +617,9 @@ void WindowManager::onTrayMessageClicked()
     }
 }
 
-void WindowManager::showWindow(WidgetWindow *w)
+void WindowManager::showWindow(WidgetWindow *w, bool activate)
 {
-    w->showWindow();
+    w->showWindow(activate);
 
     windowOpened(w->windowCode());
 }
