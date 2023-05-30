@@ -5,8 +5,23 @@
 
 #include "common/fortconf.h"
 
+typedef struct fort_callout_field_index
+{
+    UCHAR flags;
+    UCHAR localIp;
+    UCHAR remoteIp;
+    UCHAR localPort;
+    UCHAR remotePort;
+    UCHAR ipProto;
+    UCHAR direction; /* used by DATAGRAM only */
+} FORT_CALLOUT_FIELD_INDEX, *PFORT_CALLOUT_FIELD_INDEX;
+
+typedef const FORT_CALLOUT_FIELD_INDEX *PCFORT_CALLOUT_FIELD_INDEX;
+
 typedef struct fort_callout_arg
 {
+    PCFORT_CALLOUT_FIELD_INDEX fi;
+
     const FWPS_INCOMING_VALUES0 *inFixedValues;
     const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues;
     union {
@@ -22,18 +37,6 @@ typedef struct fort_callout_arg
 } FORT_CALLOUT_ARG, *PFORT_CALLOUT_ARG;
 
 typedef const FORT_CALLOUT_ARG *PCFORT_CALLOUT_ARG;
-
-typedef struct fort_callout_ale_index
-{
-    UCHAR flags;
-    UCHAR localIp;
-    UCHAR remoteIp;
-    UCHAR localPort;
-    UCHAR remotePort;
-    UCHAR ipProto;
-} FORT_CALLOUT_ALE_INDEX, *PFORT_CALLOUT_ALE_INDEX;
-
-typedef const FORT_CALLOUT_ALE_INDEX *PCFORT_CALLOUT_ALE_INDEX;
 
 typedef struct fort_callout_ale_extra
 {
@@ -58,12 +61,5 @@ typedef struct fort_callout_ale_extra
 } FORT_CALLOUT_ALE_EXTRA, *PFORT_CALLOUT_ALE_EXTRA;
 
 typedef const FORT_CALLOUT_ALE_EXTRA *PCFORT_CALLOUT_ALE_EXTRA;
-
-typedef struct fort_callout_datagram_index
-{
-    UCHAR direction;
-} FORT_CALLOUT_DATAGRAM_INDEX, *PFORT_CALLOUT_DATAGRAM_INDEX;
-
-typedef const FORT_CALLOUT_DATAGRAM_INDEX *PCFORT_CALLOUT_DATAGRAM_INDEX;
 
 #endif // FORTCOUTARG_H
