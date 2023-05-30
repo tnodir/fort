@@ -63,7 +63,7 @@ QLayout *HomeMainPage::setupSideBar()
 void HomeMainPage::setupSideBarButtons()
 {
     auto btHome =
-            ControlUtil::createSideButton(":/icons/tower.png", [&] { setCurrentTab(TabHome); });
+            ControlUtil::createSideButton(":/icons/fort.png", [&] { setCurrentTab(TabHome); });
     btHome->setChecked(true);
 
     auto btAbout = ControlUtil::createSideButton(
