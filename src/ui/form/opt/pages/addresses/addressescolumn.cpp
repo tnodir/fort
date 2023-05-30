@@ -76,8 +76,10 @@ QLayout *AddressesColumn::setupZonesRow()
     layout->setContentsMargins(0, 0, 0, 0);
 
     // Open Zones
-    m_btOpenZones = ControlUtil::createFlatToolButton(
-            ":/icons/ip_class.png", [&] { IoC<WindowManager>()->showZonesWindow(); });
+    m_btOpenZones = ControlUtil::createLinkButton(":/icons/ip_class.png");
+
+    connect(m_btOpenZones, &QPushButton::clicked, IoC<WindowManager>(),
+            &WindowManager::showZonesWindow);
 
     // Select Zones
     m_btSelectZones = ControlUtil::createButton(QString());

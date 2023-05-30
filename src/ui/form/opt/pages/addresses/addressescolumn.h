@@ -6,7 +6,6 @@
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
-QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class PlainTextEdit;
 
@@ -39,7 +38,7 @@ private:
 
     QLabel *m_labelTitle = nullptr;
     QCheckBox *m_cbUseAll = nullptr;
-    QToolButton *m_btOpenZones = nullptr;
+    QPushButton *m_btOpenZones = nullptr;
     QPushButton *m_btSelectZones = nullptr;
     PlainTextEdit *m_editIpText = nullptr;
 };
