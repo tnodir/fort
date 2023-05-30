@@ -377,6 +377,8 @@ inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
 
 static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
 {
+    FORT_CHECK_STACK(FORT_CALLOUT_ACCEPT_V4);
+
     const UINT32 classify_flags = ca->inFixedValues->incomingValue[ca->fi->flags].value.uint32;
 
     const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0;
@@ -403,12 +405,30 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
     fort_callout_ale_by_conf(ca, &cx, device_conf);
 }
 
+inline static void fort_callout_ale_classify_v(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
+        PCFORT_CALLOUT_FIELD_INDEX fi, BOOL inbound, BOOL isIPv6)
+{
+    FORT_CALLOUT_ARG ca = {
+        .fi = fi,
+        .inFixedValues = inFixedValues,
+        .inMetaValues = inMetaValues,
+        .netBufList = layerData,
+        .filter = filter,
+        .flowContext = flowContext,
+        .classifyOut = classifyOut,
+        .inbound = inbound,
+        .isIPv6 = isIPv6,
+    };
+
+    fort_callout_ale_classify(&ca);
+}
+
 static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_CONNECT_V4);
-
     static const FORT_CALLOUT_FIELD_INDEX fi = {
         .flags = FWPS_FIELD_ALE_AUTH_CONNECT_V4_FLAGS,
         .localIp = FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_ADDRESS,
@@ -418,27 +438,14 @@ static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedVa
         .ipProto = FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL,
     };
 
-    FORT_CALLOUT_ARG ca = {
-        .fi = &fi,
-        .inFixedValues = inFixedValues,
-        .inMetaValues = inMetaValues,
-        .netBufList = layerData,
-        .filter = filter,
-        .flowContext = flowContext,
-        .classifyOut = classifyOut,
-        .inbound = FALSE,
-        .isIPv6 = FALSE,
-    };
-
-    fort_callout_ale_classify(&ca);
+    fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, &fi, /*inbound=*/FALSE, /*isIPv6=*/FALSE);
 }
 
 static void NTAPI fort_callout_connect_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_CONNECT_V6);
-
     static const FORT_CALLOUT_FIELD_INDEX fi = {
         .flags = FWPS_FIELD_ALE_AUTH_CONNECT_V6_FLAGS,
         .localIp = FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_LOCAL_ADDRESS,
@@ -448,27 +455,14 @@ static void NTAPI fort_callout_connect_v6(const FWPS_INCOMING_VALUES0 *inFixedVa
         .ipProto = FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_PROTOCOL,
     };
 
-    FORT_CALLOUT_ARG ca = {
-        .fi = &fi,
-        .inFixedValues = inFixedValues,
-        .inMetaValues = inMetaValues,
-        .netBufList = layerData,
-        .filter = filter,
-        .flowContext = flowContext,
-        .classifyOut = classifyOut,
-        .inbound = FALSE,
-        .isIPv6 = TRUE,
-    };
-
-    fort_callout_ale_classify(&ca);
+    fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, &fi, /*inbound=*/FALSE, /*isIPv6=*/TRUE);
 }
 
 static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_ACCEPT_V4);
-
     static const FORT_CALLOUT_FIELD_INDEX fi = {
         .flags = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_FLAGS,
         .localIp = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_LOCAL_ADDRESS,
@@ -478,27 +472,14 @@ static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedVal
         .ipProto = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL,
     };
 
-    FORT_CALLOUT_ARG ca = {
-        .fi = &fi,
-        .inFixedValues = inFixedValues,
-        .inMetaValues = inMetaValues,
-        .netBufList = layerData,
-        .filter = filter,
-        .flowContext = flowContext,
-        .classifyOut = classifyOut,
-        .inbound = TRUE,
-        .isIPv6 = FALSE,
-    };
-
-    fort_callout_ale_classify(&ca);
+    fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, &fi, /*inbound=*/TRUE, /*isIPv6=*/FALSE);
 }
 
 static void NTAPI fort_callout_accept_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_ACCEPT_V6);
-
     static const FORT_CALLOUT_FIELD_INDEX fi = {
         .flags = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_FLAGS,
         .localIp = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_LOCAL_ADDRESS,
@@ -508,19 +489,8 @@ static void NTAPI fort_callout_accept_v6(const FWPS_INCOMING_VALUES0 *inFixedVal
         .ipProto = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_PROTOCOL,
     };
 
-    FORT_CALLOUT_ARG ca = {
-        .fi = &fi,
-        .inFixedValues = inFixedValues,
-        .inMetaValues = inMetaValues,
-        .netBufList = layerData,
-        .filter = filter,
-        .flowContext = flowContext,
-        .classifyOut = classifyOut,
-        .inbound = TRUE,
-        .isIPv6 = TRUE,
-    };
-
-    fort_callout_ale_classify(&ca);
+    fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, &fi, /*inbound=*/TRUE, /*isIPv6=*/TRUE);
 }
 
 static NTSTATUS NTAPI fort_callout_notify(
@@ -571,6 +541,8 @@ static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFi
 
 static void fort_callout_datagram_classify(PFORT_CALLOUT_ARG ca)
 {
+    FORT_CHECK_STACK(FORT_CALLOUT_DATAGRAM_CLASSIFY_V4);
+
     const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(ca->netBufList);
     const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
 
@@ -583,50 +555,47 @@ static void fort_callout_datagram_classify(PFORT_CALLOUT_ARG ca)
     fort_callout_classify_permit(ca->filter, ca->classifyOut);
 }
 
-static void NTAPI fort_callout_datagram_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+inline static void fort_callout_datagram_classify_v(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
-        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
+        PCFORT_CALLOUT_FIELD_INDEX fi, BOOL isIPv6)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_DATAGRAM_CLASSIFY_V4);
-
-    static const FORT_CALLOUT_FIELD_INDEX fi = {
-        .direction = FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION,
-    };
-
     FORT_CALLOUT_ARG ca = {
-        .fi = &fi,
+        .fi = fi,
         .inFixedValues = inFixedValues,
         .inMetaValues = inMetaValues,
         .netBufList = layerData,
         .filter = filter,
         .flowContext = flowContext,
         .classifyOut = classifyOut,
+        .isIPv6 = isIPv6,
     };
 
     fort_callout_datagram_classify(&ca);
+}
+
+static void NTAPI fort_callout_datagram_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+    static const FORT_CALLOUT_FIELD_INDEX fi = {
+        .direction = FWPS_FIELD_DATAGRAM_DATA_V4_DIRECTION,
+    };
+
+    fort_callout_datagram_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, &fi, /*isIPv6=*/FALSE);
 }
 
 static void NTAPI fort_callout_datagram_classify_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_DATAGRAM_CLASSIFY_V6);
-
     static const FORT_CALLOUT_FIELD_INDEX fi = {
         .direction = FWPS_FIELD_DATAGRAM_DATA_V6_DIRECTION,
     };
 
-    FORT_CALLOUT_ARG ca = {
-        .fi = &fi,
-        .inFixedValues = inFixedValues,
-        .inMetaValues = inMetaValues,
-        .netBufList = layerData,
-        .filter = filter,
-        .flowContext = flowContext,
-        .classifyOut = classifyOut,
-    };
-
-    fort_callout_datagram_classify(&ca);
+    fort_callout_datagram_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, &fi, /*isIPv6=*/TRUE);
 }
 
 static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
