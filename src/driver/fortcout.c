@@ -377,7 +377,7 @@ inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
 
 static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_ACCEPT_V4);
+    FORT_CHECK_STACK(FORT_CALLOUT_ALE_CLASSIFY);
 
     const UINT32 classify_flags = ca->inFixedValues->incomingValue[ca->fi->flags].value.uint32;
 
@@ -541,7 +541,7 @@ static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFi
 
 static void fort_callout_datagram_classify(PFORT_CALLOUT_ARG ca)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_DATAGRAM_CLASSIFY_V4);
+    FORT_CHECK_STACK(FORT_CALLOUT_DATAGRAM_CLASSIFY);
 
     const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(ca->netBufList);
     const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
@@ -624,6 +624,8 @@ inline static BOOL fort_callout_transport_shape(PFORT_CALLOUT_ARG ca)
 
 static void fort_callout_transport_classify(PFORT_CALLOUT_ARG ca)
 {
+    FORT_CHECK_STACK(FORT_CALLOUT_TRANSPORT_CLASSIFY);
+
     if ((ca->classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0
             || ca->classifyOut->actionType == FWP_ACTION_BLOCK)
         return; /* Can't act on the packet */
@@ -639,8 +641,6 @@ static void NTAPI fort_callout_transport_classify_in(const FWPS_INCOMING_VALUES0
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_TRANSPORT_CLASSIFY_IN);
-
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
         .inMetaValues = inMetaValues,
@@ -658,8 +658,6 @@ static void NTAPI fort_callout_transport_classify_out(const FWPS_INCOMING_VALUES
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FORT_CHECK_STACK(FORT_CALLOUT_TRANSPORT_CLASSIFY_OUT);
-
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
         .inMetaValues = inMetaValues,
