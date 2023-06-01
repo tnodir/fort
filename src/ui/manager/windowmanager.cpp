@@ -81,7 +81,7 @@ void WindowManager::setUp()
             &WindowManager::setupAppPalette);
 #endif
 
-    connect(qApp, &QCoreApplication::aboutToQuit, this, &WindowManager::closeAll);
+    connect(qApp, &QCoreApplication::aboutToQuit, this, &WindowManager::quitApp);
 }
 
 void WindowManager::tearDown()
@@ -217,6 +217,18 @@ void WindowManager::closeAll()
     closeStatisticsWindow();
     closeTrayIcon();
     closeMainWindow();
+}
+
+void WindowManager::quitApp()
+{
+    if (m_isAppQuitting)
+        return;
+
+    m_isAppQuitting = true;
+
+    closeAll();
+
+    qCDebug(LC) << "Quit due user request";
 }
 
 void WindowManager::setupTrayIcon()
@@ -479,14 +491,7 @@ void WindowManager::switchGraphWindow()
 
 void WindowManager::quit()
 {
-    if (m_isAppQuitting)
-        return;
-
-    m_isAppQuitting = true;
-
-    closeAll();
-
-    qCDebug(LC) << "Quit due user request";
+    quitApp();
 
     QCoreApplication::quit();
 }

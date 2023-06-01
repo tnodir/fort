@@ -90,7 +90,6 @@ public slots:
     void closeGraphWindow();
     void switchGraphWindow();
 
-    void closeAll();
     void quit();
     void restart();
 
@@ -119,6 +118,9 @@ private:
     void setupZonesWindow();
     void setupGraphWindow();
     void setupStatisticsWindow();
+
+    void closeAll();
+    void quitApp();
 
     void onTrayMessageClicked();
 
