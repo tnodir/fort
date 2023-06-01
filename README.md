@@ -60,7 +60,6 @@ Please support the project:
 ## Credits
 
   - [FatCow Free Icons](http://www.fatcow.com/free-icons)
-  - [Fortress icons created by Freepik - Flaticon](https://www.flaticon.com/free-icons/fortress)
 
 --
 Nodir Temirkhodjaev, <nodir.temir@gmail.com>
