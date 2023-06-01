@@ -123,18 +123,18 @@ void FirewallConf::setFilterModeIndex(int index)
     m_appAllowAll = false;
 
     switch (index) {
-    case 0: {
+    case 0: { // Auto-Learn
         m_allowAllNew = true;
         m_appBlockAll = true;
     } break;
-    case 1: {
+    case 1: { // Ask
         m_askToConnect = true;
         m_appBlockAll = true;
     } break;
-    case 2: {
+    case 2: { // Block
         m_appBlockAll = true;
     } break;
-    case 3: {
+    case 3: { // Allow
         m_appAllowAll = true;
     } break;
     }
