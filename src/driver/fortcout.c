@@ -235,7 +235,7 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
     }
 
     if (!fort_conf_ip_is_inet(&conf_ref->conf,
-                (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
                 &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
         cx->blocked = FALSE; /* allow LocalNetwork */
         return TRUE;
@@ -247,7 +247,7 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
     }
 
     if (!fort_conf_ip_inet_included(&conf_ref->conf,
-                (fort_conf_zones_ip_included_func *) fort_conf_zones_ip_included,
+                (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
                 &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
         cx->blocked = TRUE; /* block address */
         cx->block_reason = FORT_BLOCK_REASON_IP_INET;
