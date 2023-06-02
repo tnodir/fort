@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.9.6, 2023-06-02:
+- UI: Traffic Graph: Fix crash after sleep.
+- UI: Options: Apply "Tray: Show Icon" changes immediately.
+- UI: Options: Add "My Fort: Auto-Show Menu" flag.
+- UI: Tray Menu: Fix Traffic Graph's checked state.
+- UI: Update main icon.
+
 v3.9.5, 2023-05-28:
 - UI: Options: Add tag to language list.
 - UI: Options: Confirm Quit by default.
