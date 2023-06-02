@@ -53,6 +53,7 @@ private:
     QLayout *setupLangLayout();
     void setupComboLanguage();
     void setupHotKeysBox();
+    void setupHomeBox();
     void setupTrayBox();
     void refreshComboTrayAction();
     QLayout *setupTrayEventLayout();
@@ -72,6 +73,7 @@ private:
     QGroupBox *m_gbProg = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
+    QGroupBox *m_gbHome = nullptr;
     QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbConfirmations = nullptr;
     QGroupBox *m_gbLogs = nullptr;
@@ -99,6 +101,7 @@ private:
     QComboBox *m_comboLanguage = nullptr;
     QCheckBox *m_cbHotKeysEnabled = nullptr;
     QCheckBox *m_cbHotKeysGlobal = nullptr;
+    QCheckBox *m_cbHomeAutoShowMenu = nullptr;
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
     QLabel *m_labelTrayEvent = nullptr;

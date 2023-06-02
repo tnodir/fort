@@ -44,6 +44,9 @@ public:
             "filterModeAllow", "filterModeIgnore" };
     }
 
+    bool homeAutoShowMenu() const { return valueBool("home/autoShowMenu"); }
+    void setHomeAutoShowMenu(bool v) { setValue("home/autoShowMenu", v); }
+
     bool trayShowIcon() const { return valueBool("tray/showIcon", true); }
     void setTrayShowIcon(bool v) { setValue("tray/showIcon", v, true); }
 

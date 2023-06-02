@@ -34,8 +34,10 @@ public:
     void restoreWindowState() override;
 
 public slots:
-    void showMenu();
     void selectAboutTab();
+
+private slots:
+    void onActivated();
 
 private:
     void setupController();

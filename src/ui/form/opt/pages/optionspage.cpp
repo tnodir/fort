@@ -151,6 +151,7 @@ void OptionsPage::onRetranslateUi()
     m_gbProg->setTitle(tr("Programs"));
     m_gbGlobal->setTitle(tr("Global"));
     m_gbHotKeys->setTitle(tr("Hot Keys"));
+    m_gbHome->setTitle(tr("My Fort"));
     m_gbTray->setTitle(tr("Tray"));
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
     m_gbLogs->setTitle(tr("Logs"));
@@ -188,6 +189,8 @@ void OptionsPage::onRetranslateUi()
 
     m_cbHotKeysEnabled->setText(tr("Enabled"));
     m_cbHotKeysGlobal->setText(tr("Global"));
+
+    m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
@@ -575,6 +578,10 @@ QLayout *OptionsPage::setupColumn2()
     setupHotKeysBox();
     layout->addWidget(m_gbHotKeys);
 
+    // Home Group Box
+    setupHomeBox();
+    layout->addWidget(m_gbHome);
+
     // Tray Group Box
     setupTrayBox();
     layout->addWidget(m_gbTray);
@@ -659,6 +666,21 @@ void OptionsPage::setupHotKeysBox()
 
     m_gbHotKeys = new QGroupBox();
     m_gbHotKeys->setLayout(layout);
+}
+
+void OptionsPage::setupHomeBox()
+{
+    m_cbHomeAutoShowMenu =
+            ControlUtil::createCheckBox(iniUser()->homeAutoShowMenu(), [&](bool checked) {
+                iniUser()->setHomeAutoShowMenu(checked);
+                ctrl()->setIniUserEdited();
+            });
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbHomeAutoShowMenu);
+
+    m_gbHome = new QGroupBox();
+    m_gbHome->setLayout(layout);
 }
 
 void OptionsPage::setupTrayBox()
