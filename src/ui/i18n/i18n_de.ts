@@ -955,6 +955,14 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <source>Purge Obsolete on startup</source>
         <translation>Beim Start veraltete löschen</translation>
     </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Mein Fort</translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

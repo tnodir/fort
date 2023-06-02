@@ -955,6 +955,14 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Purge Obsolete on startup</source>
         <translation>Počisti zastarelo ob zagonu</translation>
     </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Moja trdnjava</translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
