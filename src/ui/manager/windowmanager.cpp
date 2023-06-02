@@ -139,6 +139,14 @@ void WindowManager::closeMainWindow()
     m_mainWindow = nullptr;
 }
 
+void WindowManager::setupHomeWindow()
+{
+    m_homeWindow = new HomeWindow();
+    m_homeWindow->restoreWindowState();
+
+    connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::quitHomeWindow);
+}
+
 void WindowManager::setupProgramsWindow()
 {
     m_progWindow = new ProgramsWindow();
@@ -233,23 +241,16 @@ void WindowManager::quitApp()
 
 void WindowManager::setupTrayIcon()
 {
-    if (m_trayIcon)
-        return;
+    Q_ASSERT(!m_trayIcon);
 
     m_trayIcon = new TrayIcon(this);
 
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this,
             &WindowManager::onTrayMessageClicked);
-
-    auto confManager = IoC<ConfManager>();
-    connect(confManager, &ConfManager::appAlerted, m_trayIcon,
-            [&] { m_trayIcon->updateTrayIcon(/*alerted=*/true); });
 }
 
 void WindowManager::showTrayIcon()
 {
-    setupTrayIcon();
-
     m_trayIcon->show();
 }
 
@@ -267,25 +268,11 @@ void WindowManager::showTrayMessage(const QString &message, WindowManager::TrayM
     m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
 }
 
-void WindowManager::setupHomeWindow(bool quitOnClose)
-{
-    if (m_homeWindow)
-        return;
-
-    m_homeWindow = new HomeWindow();
-    m_homeWindow->restoreWindowState();
-
-    if (quitOnClose) {
-        connect(m_homeWindow, &HomeWindow::activated, m_homeWindow, &HomeWindow::showMenu);
-        connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::quitHomeWindow);
-    } else {
-        connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::closeHomeWindow);
-    }
-}
-
 void WindowManager::showHomeWindow()
 {
-    setupHomeWindow();
+    if (!m_homeWindow) {
+        setupHomeWindow();
+    }
 
     showWindow(m_homeWindow);
 }
@@ -300,6 +287,11 @@ void WindowManager::closeHomeWindow()
 
 void WindowManager::quitHomeWindow(QEvent *event)
 {
+    if (trayIcon()->isVisible()) {
+        closeHomeWindow();
+        return;
+    }
+
     if (m_isAppQuitting)
         return;
 

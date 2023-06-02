@@ -665,7 +665,7 @@ void OptionsPage::setupTrayBox()
 {
     m_cbTrayShowIcon = ControlUtil::createCheckBox(iniUser()->trayShowIcon(), [&](bool checked) {
         iniUser()->setTrayShowIcon(checked);
-        ctrl()->setIniUserEdited();
+        ctrl()->setIniUserEdited(true);
     });
 
     m_cbTrayAnimateAlert =

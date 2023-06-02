@@ -108,12 +108,14 @@ void OptionsController::save(bool closeOnSuccess)
     emit aboutToSave();
 
     const bool isAnyEdited = this->anyEdited();
+    const bool isConfEdited = confToEdit()->anyEdited();
 
     if (!confManager()->save(confToEdit()))
         return;
 
     if (m_iniUserEdited) {
-        saveIniUser();
+        const bool flagsChanged = (m_iniUserFlagsChanged && !isConfEdited);
+        saveIniUser(flagsChanged);
     }
 
     if (closeOnSuccess) {
@@ -124,12 +126,12 @@ void OptionsController::save(bool closeOnSuccess)
     }
 }
 
-void OptionsController::saveIniUser()
+void OptionsController::saveIniUser(bool flagsChanged)
 {
     iniUserToEdit()->save();
     iniUserToEdit()->clear();
 
-    confManager()->saveIniUser(m_iniUserFlagsChanged);
+    confManager()->saveIniUser(flagsChanged);
 }
 
 void OptionsController::initConfManagerToEdit()

@@ -50,7 +50,7 @@ public slots:
 
 private:
     void save(bool closeOnSuccess);
-    void saveIniUser();
+    void saveIniUser(bool flagsChanged);
 
     void initConfManagerToEdit();
 

@@ -346,7 +346,6 @@ void FortManager::show()
     if (iniUser.trayShowIcon()) {
         windowManager->showTrayIcon();
     } else {
-        windowManager->setupHomeWindow(/*quitOnClose=*/true);
         windowManager->showHomeWindow();
     }
 

@@ -175,6 +175,10 @@ TrayIcon::TrayIcon(QObject *parent) :
 
     connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::updateTrayMenu);
+
+    connect(confManager(), &ConfManager::appAlerted, this,
+            [&] { updateTrayIcon(/*alerted=*/true); });
+
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this,
             &TrayIcon::updateTrayIconShape);
 }
@@ -270,6 +274,7 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
     updateTrayIconShape();
     updateHotKeys();
     updateClickActions();
+    updateTrayIconVisibility();
 }
 
 void TrayIcon::quitProgram()
@@ -667,6 +672,21 @@ void TrayIcon::updateClickActions()
 {
     for (int i = 0; i < ClickTypeCount; ++i) {
         m_clickActions[i] = clickActionFromIni(ClickType(i));
+    }
+}
+
+void TrayIcon::updateTrayIconVisibility()
+{
+    const bool trayShowIcon = iniUser()->trayShowIcon();
+    if (trayShowIcon == isVisible())
+        return;
+
+    if (trayShowIcon) {
+        show();
+    } else {
+        hide();
+
+        windowManager()->showHomeWindow();
     }
 }
 
