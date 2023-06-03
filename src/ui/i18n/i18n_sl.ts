@@ -961,7 +961,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Auto-Show Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Meni &apos;Samodejno prikaži&apos;</translation>
     </message>
 </context>
 <context>

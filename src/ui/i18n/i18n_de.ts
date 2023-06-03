@@ -961,7 +961,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Auto-Show Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menü automatisch anzeigen</translation>
     </message>
 </context>
 <context>
