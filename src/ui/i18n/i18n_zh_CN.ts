@@ -35,15 +35,15 @@
     </message>
     <message>
         <source>Allowed Internet Addresses</source>
-        <translation>允许的网络地址</translation>
+        <translation>允许的互联网网络地址</translation>
     </message>
     <message>
         <source>Include</source>
-        <translation>包括</translation>
+        <translation>包含</translation>
     </message>
     <message>
         <source>Include All</source>
-        <translation>全部可用</translation>
+        <translation>包含全部</translation>
     </message>
     <message>
         <source>Exclude</source>
@@ -51,7 +51,7 @@
     </message>
     <message>
         <source>Exclude All</source>
-        <translation>全部禁用</translation>
+        <translation>排除全部</translation>
     </message>
     <message>
         <source>Move All Lines to &apos;Exclude&apos;</source>
@@ -961,7 +961,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Auto-Show Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>自动显示菜单</translation>
     </message>
 </context>
 <context>
