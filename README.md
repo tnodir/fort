@@ -22,24 +22,11 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
   - Graphical display of the bandwidth
   - Has its own kernel driver based on the Windows Filtering Platform (WFP)
 
-## Supported OS versions
-
- Asset                  | OS      | Version           | Architectures | Description
-------------------------|---------|-------------------|---------------|---------------------------------------
- \*-windows-x86.\*      | Windows | 7 SP1 and later   | x86, x64      | 32/64-bit Windows 7, 8, 8.1, 10, 11
- \*-windows10-arm64.\*  | Windows | 10 2004 and later | ARM64         | ARM64 Windows 10 2004+, 11
- \*-windows10-x86_64.\* | Windows | 10 2004 and later | x64           | 64-bit Windows 10 2004+, 11
-
 -----
 
-## Requirements
-
-  - Disabled [HVCI (Core Isolation)](https://github.com/tnodir/fort/discussions/40)
-  - [Visual C++ x86 (32-bit!) redistributable package](https://aka.ms/vs/17/release/vc_redist.x86.exe)
-
 ## Wiki
-
-  - ['First Start' guide](https://github.com/tnodir/fort/wiki/'First-Start'-guide)
+  - [First Start guide](https://github.com/tnodir/fort/wiki/First-Start-guide)
+  - [Requirements and Supported OS versions](https://github.com/tnodir/fort/wiki/First-Start-guide#system-requirements)
   - [Functionality overview](https://github.com/tnodir/fort/wiki/Functionality-overview)
   - [Frequently Asked Questions (FAQ)](https://github.com/tnodir/fort/wiki/FAQ)
   - [Building](https://github.com/tnodir/fort/wiki/Building)
