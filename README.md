@@ -39,6 +39,7 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 
 ## Wiki
 
+  - ['First Start' guide](https://github.com/tnodir/fort/wiki/'First-Start'-guide)
   - [Functionality overview](https://github.com/tnodir/fort/wiki/Functionality-overview)
   - [Frequently Asked Questions (FAQ)](https://github.com/tnodir/fort/wiki/FAQ)
   - [Building](https://github.com/tnodir/fort/wiki/Building)
