@@ -89,6 +89,9 @@ Filename: "{#APP_EXE}"; Parameters: "-i explorer"; Tasks: explorer
 Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; \
   Flags: nowait; Tasks: service
 
+Filename: "{#APP_EXE}"; Description: {cm:LaunchProgram,{#APP_NAME}}; \
+  Flags: nowait postinstall skipifsilent
+
 Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \
   Description: "Install the latest Visual C++ x86 redistributable!"; Flags: shellexec postinstall; \
   Check: not VCRedist86Exists()
