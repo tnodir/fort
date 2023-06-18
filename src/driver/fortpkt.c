@@ -1135,12 +1135,15 @@ static PFORT_PENDING_PROC fort_pending_proc_find_locked(PFORT_PENDING pending, U
     return NULL;
 }
 
-static BOOL fort_pending_proc_check_packet_count(PFORT_PENDING pending, UINT32 process_id)
+static BOOL fort_pending_proc_check_limits(PFORT_PENDING pending, UINT32 process_id)
 {
+    UINT16 proc_count = 0;
     UINT16 packet_count = 0;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
+
+    proc_count = pending->proc_count;
 
     PFORT_PENDING_PROC proc = fort_pending_proc_find_locked(pending, process_id);
     if (proc != NULL) {
@@ -1149,7 +1152,8 @@ static BOOL fort_pending_proc_check_packet_count(PFORT_PENDING pending, UINT32 p
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    return packet_count < FORT_PENDING_PROC_PACKET_COUNT_MAX;
+    return proc_count < FORT_PENDING_PROC_COUNT_MAX
+            && packet_count < FORT_PENDING_PROC_PACKET_COUNT_MAX;
 }
 
 static PFORT_PENDING_PROC fort_pending_proc_get_locked(PFORT_PENDING pending, UINT32 process_id)
@@ -1176,6 +1180,8 @@ static PFORT_PENDING_PROC fort_pending_proc_get_locked(PFORT_PENDING pending, UI
     proc->next = pending->procs_head;
     pending->procs_head = proc;
 
+    pending->proc_count++;
+
     return proc;
 }
 
@@ -1195,6 +1201,8 @@ static PFORT_PENDING_PROC fort_pending_proc_get_check(PFORT_PENDING pending, UIN
 
 static void fort_pending_proc_put_locked(PFORT_PENDING pending, PFORT_PENDING_PROC proc)
 {
+    pending->proc_count--;
+
     proc->next = pending->proc_free;
     pending->proc_free = proc;
 }
@@ -1271,8 +1279,8 @@ FORT_API BOOL fort_pending_add_packet(
     if (fort_packet_injected_by_self(ca))
         return FALSE;
 
-    /* Check the Process's Packet Count */
-    if (!fort_pending_proc_check_packet_count(pending, cx->process_id))
+    /* Check the Process's Limits */
+    if (!fort_pending_proc_check_limits(pending, cx->process_id))
         return FALSE;
 
     /* Create the Packet */

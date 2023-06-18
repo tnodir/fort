@@ -97,7 +97,8 @@ typedef struct fort_pending_packet
     HANDLE completion_context;
 } FORT_PENDING_PACKET, *PFORT_PENDING_PACKET;
 
-#define FORT_PENDING_PROC_PACKET_COUNT_MAX 8
+#define FORT_PENDING_PROC_COUNT_MAX 1024
+#define FORT_PENDING_PROC_PACKET_COUNT_MAX 3
 
 typedef struct fort_pending_proc
 {
@@ -114,6 +115,8 @@ typedef struct fort_pending
 {
     HANDLE injection_transport4_id;
     HANDLE injection_transport6_id;
+
+    UINT16 proc_count;
 
     PFORT_PENDING_PROC proc_free;
     tommy_arrayof procs;
