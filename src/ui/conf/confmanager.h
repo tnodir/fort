@@ -9,6 +9,7 @@
 #include <util/classhelpers.h>
 #include <util/conf/confappswalker.h>
 #include <util/ioc/iocservice.h>
+#include <util/service/serviceinfo.h>
 #include <util/triggertimer.h>
 
 class App;
@@ -85,8 +86,12 @@ public:
     virtual bool checkPassword(const QString &password);
 
     bool validateDriver();
-    void updateDriverServices();
+
+    void updateServices();
+    void updateDriverServices(const QVector<ServiceInfo> &services, int runningServicesCount);
+
     virtual bool updateDriverConf(bool onlyFlags = false);
+
     void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData);
 

@@ -88,6 +88,7 @@ void FortManager::initialize()
     setupConfManager();
     setupQuotaManager();
     setupTaskManager();
+    setupServiceInfoManager();
 
     setupDriver();
     loadConf();
@@ -252,7 +253,7 @@ bool FortManager::setupDriver()
     }
 
     if (ok) {
-        confManager->updateDriverServices();
+        confManager->updateServices();
     }
 
     return ok;
@@ -327,6 +328,14 @@ void FortManager::setupTaskManager()
         } break;
         }
     });
+}
+
+void FortManager::setupServiceInfoManager()
+{
+    auto serviceInfoManager = IoC<ServiceInfoManager>();
+
+    connect(serviceInfoManager, &ServiceInfoManager::servicesStarted, IoC<ConfManager>(),
+            &ConfManager::updateDriverServices);
 }
 
 void FortManager::setupTranslationManager()

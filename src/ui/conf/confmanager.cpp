@@ -1151,7 +1151,7 @@ bool ConfManager::validateDriver()
     return driverManager->validate(buf, verSize);
 }
 
-void ConfManager::updateDriverServices()
+void ConfManager::updateServices()
 {
     auto serviceInfoManager = IoC<ServiceInfoManager>();
 
@@ -1162,9 +1162,14 @@ void ConfManager::updateDriverServices()
 
     serviceInfoManager->monitorServices(services);
 
-    if (runningServicesCount == 0)
-        return;
+    if (runningServicesCount > 0) {
+        updateDriverServices(services, runningServicesCount);
+    }
+}
 
+void ConfManager::updateDriverServices(
+        const QVector<ServiceInfo> &services, int runningServicesCount)
+{
     ConfUtil confUtil;
     QByteArray buf;
 

@@ -90,9 +90,8 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERV
         for (int infoIndex = infoList.size(); serviceCount > 0;
                 --serviceCount, ++service, ++infoIndex) {
 
-            const auto originalServiceName =
-                    QString::fromUtf16((const char16_t *) service->lpServiceName);
-            const auto serviceName = resolveSvcHostServiceName(servicesReg, originalServiceName);
+            auto serviceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
+            serviceName = resolveSvcHostServiceName(servicesReg, serviceName);
 
             const RegKey svcReg(servicesReg, serviceName);
 
@@ -251,7 +250,16 @@ void ServiceInfoManager::stopServiceMonitor(ServiceMonitor *serviceMonitor)
 
 void ServiceInfoManager::onServicesCreated(const QStringList &serviceNames)
 {
-    for (const QString &serviceName : serviceNames) {
+    const RegKey servicesReg(RegKey::HKLM, servicesSubKey);
+
+    for (const QString &name : serviceNames) {
+        const QString serviceName = resolveSvcHostServiceName(servicesReg, name);
+
+        const RegKey svcReg(servicesReg, serviceName);
+
+        if (!checkIsSvcHostService(svcReg))
+            continue;
+
         setupServiceMonitor(serviceName);
     }
 }
@@ -262,10 +270,24 @@ void ServiceInfoManager::onServiceStateChanged(ServiceMonitor *serviceMonitor)
     case ServiceMonitor::ServiceStateUnknown: {
     } break;
     case ServiceMonitor::ServiceRunning: {
-        emit serviceStarted(serviceMonitor->serviceName(), serviceMonitor->processId());
+        onServiceStarted(serviceMonitor);
     } break;
     case ServiceMonitor::ServiceDeleting: {
         stopServiceMonitor(serviceMonitor);
     } break;
     }
+}
+
+void ServiceInfoManager::onServiceStarted(ServiceMonitor *serviceMonitor)
+{
+    constexpr int servicesCount = 1;
+
+    QVector<ServiceInfo> services(servicesCount);
+
+    ServiceInfo &info = services[0];
+    info.isRunning = true;
+    info.processId = serviceMonitor->processId();
+    info.serviceName = serviceMonitor->serviceName();
+
+    emit servicesStarted(services, servicesCount);
 }

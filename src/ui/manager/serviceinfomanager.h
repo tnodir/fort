@@ -26,7 +26,7 @@ public:
     static QString getSvcHostServiceDll(const QString &serviceName);
 
 signals:
-    void serviceStarted(const QString &serviceName, qint32 processId);
+    void servicesStarted(const QVector<ServiceInfo> &services, int runningServicesCount);
 
 public slots:
     virtual void trackService(const QString &serviceName);
@@ -45,6 +45,7 @@ protected:
 private:
     void onServicesCreated(const QStringList &serviceNames);
     void onServiceStateChanged(ServiceMonitor *serviceMonitor);
+    void onServiceStarted(ServiceMonitor *serviceMonitor);
 
 private:
     ServiceListMonitor *m_serviceListMonitor = nullptr;
