@@ -65,6 +65,41 @@ bool checkIsSvcHostService(const RegKey &svcReg)
     return true;
 }
 
+void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesReg,
+        const ENUM_SERVICE_STATUS_PROCESSW *service, DWORD serviceCount, bool displayName,
+        int &runningCount)
+{
+    for (int infoIndex = infoList.size(); serviceCount > 0;
+            --serviceCount, ++service, ++infoIndex) {
+
+        auto serviceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
+        serviceName = resolveSvcHostServiceName(servicesReg, serviceName);
+
+        const RegKey svcReg(servicesReg, serviceName);
+
+        if (!checkIsSvcHostService(svcReg))
+            continue;
+
+        const quint32 trackFlags = svcReg.value(serviceTrackFlagsKey).toUInt();
+
+        ServiceInfo info;
+        info.isRunning = (service->ServiceStatusProcess.dwCurrentState == SERVICE_RUNNING);
+        info.trackFlags = trackFlags;
+        info.processId = service->ServiceStatusProcess.dwProcessId;
+        info.serviceName = serviceName;
+
+        if (displayName) {
+            info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);
+        }
+
+        if (info.isRunning) {
+            ++runningCount;
+        }
+
+        infoList.append(info);
+    }
+}
+
 QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERVICE_WIN32,
         DWORD state = SERVICE_STATE_ALL, bool displayName = true,
         int *runningServicesCount = nullptr)
@@ -79,50 +114,22 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERV
     DWORD serviceCount = 0;
     DWORD resumePoint = 0;
 
-    int runningCount = 0;
-
     while (EnumServicesStatusExW(mngr, SC_ENUM_PROCESS_INFO, serviceType, state, (LPBYTE) buffer,
                    sizeof(buffer), &bytesRemaining, &serviceCount, &resumePoint, nullptr)
             || GetLastError() == ERROR_MORE_DATA) {
 
         const ENUM_SERVICE_STATUS_PROCESSW *service = &buffer[0];
 
-        for (int infoIndex = infoList.size(); serviceCount > 0;
-                --serviceCount, ++service, ++infoIndex) {
+        int runningCount = 0;
+        fillServiceInfoList(
+                infoList, servicesReg, service, serviceCount, displayName, runningCount);
 
-            auto serviceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
-            serviceName = resolveSvcHostServiceName(servicesReg, serviceName);
-
-            const RegKey svcReg(servicesReg, serviceName);
-
-            if (!checkIsSvcHostService(svcReg))
-                continue;
-
-            const quint32 trackFlags = svcReg.value(serviceTrackFlagsKey).toUInt();
-
-            ServiceInfo info;
-            info.isRunning = (service->ServiceStatusProcess.dwCurrentState == SERVICE_RUNNING);
-            info.trackFlags = trackFlags;
-            info.processId = service->ServiceStatusProcess.dwProcessId;
-            info.serviceName = serviceName;
-
-            if (displayName) {
-                info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);
-            }
-
-            if (info.isRunning) {
-                ++runningCount;
-            }
-
-            infoList.append(info);
+        if (runningServicesCount) {
+            *runningServicesCount += runningCount;
         }
 
         if (bytesRemaining == 0)
             break;
-    }
-
-    if (runningServicesCount) {
-        *runningServicesCount = runningCount;
     }
 
     return infoList;
