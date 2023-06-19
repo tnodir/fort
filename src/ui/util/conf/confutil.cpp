@@ -108,13 +108,17 @@ int ConfUtil::writeVersion(QByteArray &buf)
     return verSize;
 }
 
-int ConfUtil::writeServices(const QVector<ServiceInfo> &services, QByteArray &buf)
+int ConfUtil::writeServices(
+        const QVector<ServiceInfo> &services, int runningServicesCount, QByteArray &buf)
 {
     buf.reserve(FORT_SERVICE_INFO_LIST_MIN_SIZE);
 
-    int outSize = writeServicesHeader(buf.data(), services.size());
+    int outSize = writeServicesHeader(buf.data(), runningServicesCount);
 
     for (const ServiceInfo &info : services) {
+        if (!info.isRunning)
+            continue;
+
         buf.reserve(outSize + FORT_SERVICE_INFO_MAX_SIZE);
 
         outSize += writeServiceInfo(buf.data() + outSize, info);

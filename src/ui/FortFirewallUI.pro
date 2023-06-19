@@ -182,7 +182,9 @@ SOURCES += \
     util/processinfo.cpp \
     util/regkey.cpp \
     util/service/serviceinfo.cpp \
+    util/service/servicelistmonitor.cpp \
     util/service/servicemanageriface.cpp \
+    util/service/servicemonitor.cpp \
     util/service/serviceworker.cpp \
     util/startuputil.cpp \
     util/stringutil.cpp \
@@ -375,7 +377,9 @@ HEADERS += \
     util/processinfo.h \
     util/regkey.h \
     util/service/serviceinfo.h \
+    util/service/servicelistmonitor.h \
     util/service/servicemanageriface.h \
+    util/service/servicemonitor.h \
     util/service/serviceworker.h \
     util/startuputil.h \
     util/stringutil.h \

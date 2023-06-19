@@ -1153,17 +1153,22 @@ bool ConfManager::validateDriver()
 
 void ConfManager::updateDriverServices()
 {
+    auto serviceInfoManager = IoC<ServiceInfoManager>();
+
+    int runningServicesCount;
+    const QVector<ServiceInfo> services =
+            serviceInfoManager->loadServiceInfoList(ServiceInfo::TypeWin32, ServiceInfo::StateAll,
+                    /*displayName=*/false, &runningServicesCount);
+
+    serviceInfoManager->monitorServices(services);
+
+    if (runningServicesCount == 0)
+        return;
+
     ConfUtil confUtil;
     QByteArray buf;
 
-    auto serviceInfoManager = IoC<ServiceInfoManager>();
-    const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
-            ServiceInfo::TypeWin32, ServiceInfo::StateActive, /*displayName=*/false);
-
-    if (services.isEmpty())
-        return;
-
-    const int outSize = confUtil.writeServices(services, buf);
+    const int outSize = confUtil.writeServices(services, runningServicesCount, buf);
 
     auto driverManager = IoC<DriverManager>();
     driverManager->writeServices(buf, outSize);

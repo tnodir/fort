@@ -22,6 +22,7 @@ public:
 
     bool isTracked() const { return trackFlags != 0; }
 
+    bool isRunning = 0;
     quint32 trackFlags = 0;
     quint32 processId = 0;
     QString serviceName;

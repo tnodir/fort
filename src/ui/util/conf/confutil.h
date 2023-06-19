@@ -44,7 +44,8 @@ signals:
 
 public slots:
     int writeVersion(QByteArray &buf);
-    int writeServices(const QVector<ServiceInfo> &services, QByteArray &buf);
+    int writeServices(
+            const QVector<ServiceInfo> &services, int runningServicesCount, QByteArray &buf);
     int write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager,
             QByteArray &buf);
     int writeFlags(const FirewallConf &conf, QByteArray &buf);

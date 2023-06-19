@@ -7,6 +7,8 @@
 
 #include <util/fileutil.h>
 #include <util/regkey.h>
+#include <util/service/servicelistmonitor.h>
+#include <util/service/servicemonitor.h>
 
 namespace {
 
@@ -64,7 +66,8 @@ bool checkIsSvcHostService(const RegKey &svcReg)
 }
 
 QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERVICE_WIN32,
-        DWORD state = SERVICE_STATE_ALL, bool displayName = true)
+        DWORD state = SERVICE_STATE_ALL, bool displayName = true,
+        int *runningServicesCount = nullptr)
 {
     QVector<ServiceInfo> infoList;
 
@@ -75,6 +78,8 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERV
     DWORD bytesRemaining = 0;
     DWORD serviceCount = 0;
     DWORD resumePoint = 0;
+
+    int runningCount = 0;
 
     while (EnumServicesStatusExW(mngr, SC_ENUM_PROCESS_INFO, serviceType, state, (LPBYTE) buffer,
                    sizeof(buffer), &bytesRemaining, &serviceCount, &resumePoint, nullptr)
@@ -97,12 +102,17 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERV
             const quint32 trackFlags = svcReg.value(serviceTrackFlagsKey).toUInt();
 
             ServiceInfo info;
+            info.isRunning = (service->ServiceStatusProcess.dwCurrentState == SERVICE_RUNNING);
             info.trackFlags = trackFlags;
             info.processId = service->ServiceStatusProcess.dwProcessId;
             info.serviceName = serviceName;
 
             if (displayName) {
                 info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);
+            }
+
+            if (info.isRunning) {
+                ++runningCount;
             }
 
             infoList.append(info);
@@ -112,6 +122,10 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERV
             break;
     }
 
+    if (runningServicesCount) {
+        *runningServicesCount = runningCount;
+    }
+
     return infoList;
 }
 
@@ -119,14 +133,19 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERV
 
 ServiceInfoManager::ServiceInfoManager(QObject *parent) : QObject(parent) { }
 
-QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(
-        ServiceInfo::Type serviceType, ServiceInfo::State state, bool displayName)
+void ServiceInfoManager::setUp()
+{
+    setupServiceListMonitor();
+}
+
+QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(ServiceInfo::Type serviceType,
+        ServiceInfo::State state, bool displayName, int *runningServicesCount)
 {
     QVector<ServiceInfo> list;
     const SC_HANDLE mngr =
             OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT | SC_MANAGER_ENUMERATE_SERVICE);
     if (mngr) {
-        list = getServiceInfoList(mngr, serviceType, state, displayName);
+        list = getServiceInfoList(mngr, serviceType, state, displayName, runningServicesCount);
         CloseServiceHandle(mngr);
     }
     return list;
@@ -179,4 +198,74 @@ void ServiceInfoManager::revertService(const QString &serviceName)
     svcReg.removeValue(serviceTypeOldKey);
 
     svcReg.removeValue(serviceTrackFlagsKey);
+}
+
+void ServiceInfoManager::monitorServices(const QVector<ServiceInfo> &serviceInfoList)
+{
+    for (const ServiceInfo &serviceInfo : serviceInfoList) {
+        setupServiceMonitor(serviceInfo.serviceName);
+    }
+}
+
+void ServiceInfoManager::setupServiceListMonitor()
+{
+    m_serviceListMonitor = new ServiceListMonitor(this);
+
+    connect(m_serviceListMonitor, &ServiceListMonitor::servicesCreated, this,
+            &ServiceInfoManager::onServicesCreated);
+
+    m_serviceListMonitor->startMonitor();
+}
+
+void ServiceInfoManager::setupServiceMonitor(const QString &serviceName)
+{
+    if (isServiceMonitoring(serviceName))
+        return;
+
+    auto serviceMonitor = new ServiceMonitor(serviceName, m_serviceListMonitor);
+
+    connect(serviceMonitor, &ServiceMonitor::stateChanged, this,
+            [=] { onServiceStateChanged(serviceMonitor); });
+
+    startServiceMonitor(serviceMonitor);
+}
+
+bool ServiceInfoManager::isServiceMonitoring(const QString &serviceName) const
+{
+    return m_serviceMonitors.contains(serviceName);
+}
+
+void ServiceInfoManager::startServiceMonitor(ServiceMonitor *serviceMonitor)
+{
+    m_serviceMonitors.insert(serviceMonitor->serviceName(), serviceMonitor);
+
+    serviceMonitor->startMonitor(m_serviceListMonitor->managerHandle());
+}
+
+void ServiceInfoManager::stopServiceMonitor(ServiceMonitor *serviceMonitor)
+{
+    m_serviceMonitors.remove(serviceMonitor->serviceName());
+
+    delete serviceMonitor;
+}
+
+void ServiceInfoManager::onServicesCreated(const QStringList &serviceNames)
+{
+    for (const QString &serviceName : serviceNames) {
+        setupServiceMonitor(serviceName);
+    }
+}
+
+void ServiceInfoManager::onServiceStateChanged(ServiceMonitor *serviceMonitor)
+{
+    switch (serviceMonitor->state()) {
+    case ServiceMonitor::ServiceStateUnknown: {
+    } break;
+    case ServiceMonitor::ServiceRunning: {
+        emit serviceStarted(serviceMonitor->serviceName(), serviceMonitor->processId());
+    } break;
+    case ServiceMonitor::ServiceDeleting: {
+        stopServiceMonitor(serviceMonitor);
+    } break;
+    }
 }
