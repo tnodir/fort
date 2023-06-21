@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.9.7-test1, 2023-06-21:
+- UI: Monitor services for driver.
+- Installer: Start program automatically after installation.
+
 v3.9.6, 2023-06-02:
 - UI: Traffic Graph: Fix crash after sleep.
 - UI: Options: Apply "Tray: Show Icon" changes immediately.
