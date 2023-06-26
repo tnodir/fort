@@ -175,7 +175,13 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
     OsUtil::setThreadIsBusy(true);
 
     QString errorMessage;
-    const bool success = processCommand({ w, command, args, errorMessage });
+    const bool success = processCommand({
+            .worker = w,
+            .command = command,
+            .args = args,
+            .errorMessage = errorMessage,
+    });
+
     if (!success) {
         qCWarning(LC) << "Bad command" << errorMessage << ':' << command << args;
     }

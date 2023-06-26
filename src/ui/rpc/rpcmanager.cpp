@@ -17,6 +17,7 @@
 #include <rpc/statmanagerrpc.h>
 #include <rpc/taskmanagerrpc.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
 
 namespace {
 
@@ -35,6 +36,8 @@ inline bool sendCommandDataToClients(
 {
     bool ok = true;
 
+    OsUtil::setThreadIsBusy(true);
+
     for (ControlWorker *w : clients) {
         if (!w->isServiceClient())
             continue;
@@ -44,6 +47,8 @@ inline bool sendCommandDataToClients(
             ok = false;
         }
     }
+
+    OsUtil::setThreadIsBusy(false);
 
     return ok;
 }
