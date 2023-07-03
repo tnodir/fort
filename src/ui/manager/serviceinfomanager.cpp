@@ -80,10 +80,11 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
         if (!checkIsSvcHostService(svcReg))
             continue;
 
-        const quint32 trackFlags = svcReg.value(serviceTrackFlagsKey).toUInt();
+        const quint16 trackFlags = svcReg.value(serviceTrackFlagsKey).toUInt();
 
         ServiceInfo info;
         info.isRunning = (service->ServiceStatusProcess.dwCurrentState == SERVICE_RUNNING);
+        info.serviceType = ServiceInfo::Type(service->ServiceStatusProcess.dwServiceType);
         info.trackFlags = trackFlags;
         info.processId = service->ServiceStatusProcess.dwProcessId;
         info.serviceName = serviceName;
