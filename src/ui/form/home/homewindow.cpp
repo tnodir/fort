@@ -56,8 +56,8 @@ WindowManager *HomeWindow::windowManager() const
 
 void HomeWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setServiceWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setServiceWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setHomeWindowGeometry(m_stateWatcher->geometry());
+    iniUser()->setHomeWindowMaximized(m_stateWatcher->maximized());
 
     emit ctrl()->afterSaveWindowState(iniUser());
 
