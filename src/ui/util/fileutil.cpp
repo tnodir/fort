@@ -92,7 +92,36 @@ QString kernelPathToPath(const QString &kernelPath)
             }
         }
     }
+
     return kernelPath;
+}
+
+inline QString convertDrivePathToKernelPath(const QString &path)
+{
+    if (path.at(1) == ':') {
+        const QString drive = path.left(2);
+        return driveToKernelName(drive) + path.mid(2);
+    } else if (isSystemApp(path)) {
+        return systemApp();
+    }
+
+    return path;
+}
+
+inline bool isWildDrive(const QString &path)
+{
+    const QChar char1 = path.at(0);
+    return ((char1 == '?' || char1 == '*') && path.at(1) == ':');
+}
+
+inline QString convertWildPathToKernelPath(const QString &path)
+{
+    if (isWildDrive(path)) {
+        // Replace "?:\\" with "\\Device\\*\\"
+        return "\\Device\\*" + path.mid(2);
+    }
+
+    return path;
 }
 
 // Convert "C:\\path" to "\\Device\\HarddiskVolume1\\path"
@@ -102,20 +131,11 @@ QString pathToKernelPath(const QString &path, bool lower)
 
     if (path.size() > 1) {
         const QChar char1 = path.at(0);
-        if (char1.isLetter()) {
-            if (path.at(1) == ':') {
-                const QString drive = path.left(2);
-                kernelPath = driveToKernelName(drive) + path.mid(2);
-            } else if (isSystemApp(path)) {
-                return systemApp();
-            }
-        } else if ((char1 == '?' || char1 == '*') && path.at(1) == ':') {
-            // Replace "?:\\" with "\\Device\\*\\"
-            kernelPath = "\\Device\\*" + path.mid(2);
-        }
-    }
+        kernelPath = char1.isLetter() ? convertDrivePathToKernelPath(path)
+                                      : convertWildPathToKernelPath(path);
 
-    kernelPath = kernelPath.replace(QLatin1Char('/'), QLatin1Char('\\'));
+        kernelPath.replace(QLatin1Char('/'), QLatin1Char('\\'));
+    }
 
     return lower ? kernelPath.toLower() : kernelPath;
 }
