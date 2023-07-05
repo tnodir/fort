@@ -19,15 +19,23 @@ WorkerManager::~WorkerManager()
 
 void WorkerManager::setupWorker()
 {
-    const int workersCount = m_workers.size();
-
-    if (workersCount != 0 && (workersCount >= maxWorkersCount() || m_jobQueue.isEmpty()))
+    if (!checkNewWorkerNeeded())
         return;
 
     WorkerObject *worker = createWorker(); // autoDelete = true
     m_workers.append(worker);
 
     QThreadPool::globalInstance()->start(worker);
+}
+
+bool WorkerManager::checkNewWorkerNeeded() const
+{
+    const int workersCount = m_workers.size();
+
+    if (workersCount == 0)
+        return true;
+
+    return workersCount < maxWorkersCount() && !m_jobQueue.isEmpty();
 }
 
 void WorkerManager::workerFinished(WorkerObject *worker)
@@ -44,6 +52,14 @@ void WorkerManager::workerFinished(WorkerObject *worker)
 WorkerObject *WorkerManager::createWorker()
 {
     return new WorkerObject(this);
+}
+
+bool WorkerManager::mergeJob(WorkerJobPtr job)
+{
+    if (!canMergeJobs() || m_jobQueue.isEmpty())
+        return false;
+
+    return m_jobQueue.last()->mergeJob(*job);
 }
 
 void WorkerManager::clear()
@@ -75,7 +91,7 @@ void WorkerManager::enqueueJob(WorkerJobPtr job)
 
     setupWorker();
 
-    if (canMergeJobs() && !m_jobQueue.isEmpty() && m_jobQueue.last()->mergeJob(*job))
+    if (mergeJob(job))
         return;
 
     m_jobQueue.enqueue(job);

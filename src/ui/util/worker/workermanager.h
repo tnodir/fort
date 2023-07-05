@@ -39,8 +39,12 @@ protected:
     virtual WorkerObject *createWorker();
     virtual bool canMergeJobs() const { return false; }
 
+    bool mergeJob(WorkerJobPtr job);
+
 private:
     void setupWorker();
+
+    bool checkNewWorkerNeeded() const;
 
 private:
     volatile bool m_aborted = false;
