@@ -51,7 +51,21 @@ protected:
     virtual void updateAppAccessTime(const QString &appPath);
 
 private:
+    void saveAppIcon(const QImage &appIcon, QVariant &iconId, bool &ok);
+    void saveAppInfo(
+            const QString &appPath, const AppInfo &appInfo, const QVariant &iconId, bool &ok);
+
+    void deleteExcessAppInfos();
+
+    void getOldAppsAndIcons(
+            QStringList &appPaths, QHash<qint64, int> &iconIds, int limitCount) const;
     bool deleteAppsAndIcons(const QStringList &appPaths, const QHash<qint64, int> &iconIds);
+
+    void deleteIcons(const QHash<qint64, int> &iconIds, bool &ok);
+    void deleteIcon(qint64 iconId, int deleteCount, bool &ok);
+
+    void deleteApps(const QStringList &appPaths, bool &ok);
+    void deleteApp(const QString &appPath, bool &ok);
 
 private:
     SqliteDbPtr m_sqliteDb;
