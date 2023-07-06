@@ -212,8 +212,12 @@ inline static NTSTATUS fort_resolve_link_handle(HANDLE linkHandle, PUNICODE_STRI
     ULONG outLength = 0;
     status = ZwQuerySymbolicLinkObject(linkHandle, outPath, &outLength);
 
-    if (outLength != 0 && (outLength < 7 || outLength >= outPath->MaximumLength)) {
-        status = STATUS_BUFFER_TOO_SMALL;
+    if (outLength != 0) {
+        if (outLength < 7)
+            return STATUS_SYMLINK_CLASS_DISABLED;
+
+        if (outLength >= outPath->MaximumLength)
+            return STATUS_BUFFER_TOO_SMALL;
     }
 
     if (NT_SUCCESS(status)) {
@@ -273,9 +277,14 @@ inline static NTSTATUS fort_file_size(HANDLE fileHandle, DWORD *fileSize)
     if (!NT_SUCCESS(status))
         return status;
 
-    if (fileInfo.EndOfFile.HighPart != 0 || fileInfo.EndOfFile.LowPart <= 0
-            || fileInfo.EndOfFile.LowPart > FORT_MAX_FILE_SIZE)
+    if (fileInfo.EndOfFile.HighPart != 0)
         return STATUS_FILE_NOT_SUPPORTED;
+
+    if (fileInfo.EndOfFile.LowPart <= 0)
+        return STATUS_FILE_IS_OFFLINE;
+
+    if (fileInfo.EndOfFile.LowPart > FORT_MAX_FILE_SIZE)
+        return STATUS_FILE_TOO_LARGE;
 
     *fileSize = fileInfo.EndOfFile.LowPart;
 
