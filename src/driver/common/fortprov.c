@@ -523,13 +523,18 @@ static DWORD fort_prov_register_sublayer(HANDLE engine, const FORT_PROV_BOOT_CON
 FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     DWORD status;
-    if ((status = fort_prov_register_provider(engine, boot_conf))
-            || (status = fort_prov_register_sublayer(engine, boot_conf))
-            || (status = fort_prov_add_callouts(
-                        engine, g_provGlobal.callouts, FORT_PROV_CALLOUTS_COUNT))
-            || (status = fort_prov_register_filters(engine, boot_conf))) {
+
+    if ((status = fort_prov_register_provider(engine, boot_conf)))
         return status;
-    }
+
+    if ((status = fort_prov_register_sublayer(engine, boot_conf)))
+        return status;
+
+    if ((status = fort_prov_add_callouts(engine, g_provGlobal.callouts, FORT_PROV_CALLOUTS_COUNT)))
+        return status;
+
+    if ((status = fort_prov_register_filters(engine, boot_conf)))
+        return status;
 
     return 0;
 }
