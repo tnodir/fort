@@ -1269,8 +1269,10 @@ bool ConfManager::updateDriverAppBlocked(
 
 bool ConfManager::updateDriverCheckUpdateApp(App &app, bool blocked, bool killProcess, bool force)
 {
-    if (!force && blocked == app.blocked && killProcess == app.killProcess)
-        return true;
+    if (!force) {
+        if (blocked == app.blocked && killProcess == app.killProcess)
+            return true;
+    }
 
     app.blocked = blocked;
     app.killProcess = killProcess;
