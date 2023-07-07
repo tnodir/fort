@@ -11,7 +11,7 @@
 #include "common/fortconf.c"
 #include "common/fortlog.c"
 #include "common/fortprov.c"
-#include "common/wildmatch.c"
+#include "common/fort_wildmatch.c"
 
 #include "loader/fortmm_imp.c"
 #include "proxycb/fortpcb_dst.c"

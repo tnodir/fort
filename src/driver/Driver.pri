@@ -4,7 +4,7 @@ SOURCES += \
     $$PWD/common/fortconf.c \
     $$PWD/common/fortlog.c \
     $$PWD/common/fortprov.c \
-    $$PWD/common/wildmatch.c
+    $$PWD/common/fort_wildmatch.c
 
 HEADERS += \
     $$PWD/common/common.h \
@@ -14,4 +14,4 @@ HEADERS += \
     $$PWD/common/fortioctl.h \
     $$PWD/common/fortlog.h \
     $$PWD/common/fortprov.h \
-    $$PWD/common/wildmatch.h
+    $$PWD/common/fort_wildmatch.h

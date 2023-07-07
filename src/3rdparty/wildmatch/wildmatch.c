@@ -63,7 +63,7 @@ const uchar sane_ctype[256] = {
 #define is_glob_special(x)   (ISASCII(x) && sane_istest(x, GIT_GLOB_SPECIAL))
 
 /* Match the "pattern" against the "text" string. */
-FORT_API int wildmatch(const wm_char *pattern, const wm_char *text)
+WILDMATCH_API int wildmatch(const wm_char *pattern, const wm_char *text)
 {
     const wm_char *p = pattern;
     wm_char p_ch;
