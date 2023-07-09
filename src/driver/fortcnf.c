@@ -87,6 +87,55 @@ FORT_API FORT_APP_FLAGS fort_conf_exe_find(
     return app_flags;
 }
 
+static void fort_conf_ref_exe_new_path(
+        PFORT_CONF_REF conf_ref, PFORT_APP_ENTRY entry, tommy_key_t path_hash)
+{
+    PFORT_CONF conf = &conf_ref->conf;
+
+    tommy_arrayof *exe_nodes = &conf_ref->exe_nodes;
+    tommy_hashdyn *exe_map = &conf_ref->exe_map;
+
+    tommy_hashdyn_node *exe_node = tommy_list_tail(&conf_ref->free_nodes);
+
+    if (exe_node != NULL) {
+        tommy_list_remove_existing(&conf_ref->free_nodes, exe_node);
+    } else {
+        const UINT16 index = conf->exe_apps_n;
+
+        tommy_arrayof_grow(exe_nodes, index + 1);
+
+        exe_node = tommy_arrayof_ref(exe_nodes, index);
+    }
+
+    tommy_hashdyn_insert(exe_map, exe_node, entry, path_hash);
+
+    ++conf->exe_apps_n;
+}
+
+static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, const PVOID path,
+        UINT32 path_len, tommy_key_t path_hash, FORT_APP_FLAGS flags)
+{
+    const UINT16 entry_size = (UINT16) FORT_CONF_APP_ENTRY_SIZE(path_len);
+    PFORT_APP_ENTRY entry = fort_pool_malloc(&conf_ref->pool_list, entry_size);
+
+    if (entry == NULL)
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    entry->flags = flags;
+    entry->path_len = (UINT16) path_len;
+
+    /* Copy path */
+    {
+        char *new_path = (char *) (entry + 1);
+        RtlCopyMemory(new_path, path, path_len);
+    }
+
+    /* Add exe node */
+    fort_conf_ref_exe_new_path(conf_ref, entry, path_hash);
+
+    return STATUS_SUCCESS;
+}
+
 static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const PVOID path,
         UINT32 path_len, tommy_key_t path_hash, FORT_APP_FLAGS flags)
 {
@@ -94,53 +143,16 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const
             fort_conf_ref_exe_find_node(conf_ref, path, path_len, path_hash);
 
     if (node == NULL) {
-        const UINT16 entry_size = (UINT16) FORT_CONF_APP_ENTRY_SIZE(path_len);
-        PFORT_APP_ENTRY entry = fort_pool_malloc(&conf_ref->pool_list, entry_size);
+        return fort_conf_ref_exe_new_entry(conf_ref, path, path_len, path_hash, flags);
+    }
 
-        if (entry == NULL)
-            return STATUS_INSUFFICIENT_RESOURCES;
+    if (flags.is_new)
+        return FORT_STATUS_USER_ERROR;
 
+    /* Replace flags */
+    {
+        PFORT_APP_ENTRY entry = node->app_entry;
         entry->flags = flags;
-        entry->path_len = (UINT16) path_len;
-
-        /* Copy path */
-        {
-            char *new_path = (char *) (entry + 1);
-            RtlCopyMemory(new_path, path, path_len);
-        }
-
-        /* Add exe node */
-        {
-            PFORT_CONF conf = &conf_ref->conf;
-
-            tommy_arrayof *exe_nodes = &conf_ref->exe_nodes;
-            tommy_hashdyn *exe_map = &conf_ref->exe_map;
-
-            tommy_hashdyn_node *exe_node = tommy_list_tail(&conf_ref->free_nodes);
-
-            if (exe_node != NULL) {
-                tommy_list_remove_existing(&conf_ref->free_nodes, exe_node);
-            } else {
-                const UINT16 index = conf->exe_apps_n;
-
-                tommy_arrayof_grow(exe_nodes, index + 1);
-
-                exe_node = tommy_arrayof_ref(exe_nodes, index);
-            }
-
-            tommy_hashdyn_insert(exe_map, exe_node, entry, path_hash);
-
-            ++conf->exe_apps_n;
-        }
-    } else {
-        if (flags.is_new)
-            return FORT_STATUS_USER_ERROR;
-
-        /* Replace flags */
-        {
-            PFORT_APP_ENTRY entry = node->app_entry;
-            entry->flags = flags;
-        }
     }
 
     return STATUS_SUCCESS;
