@@ -250,14 +250,10 @@ static BOOL fort_flow_context_remove_id(
     fort_flow_context_transport_remove(
             stat, flow_id, isIPv6, &transport_in_status, &transport_out_status);
 
-    if (stream_status == STATUS_PENDING || transport_in_status == STATUS_PENDING
-            || transport_out_status == STATUS_PENDING) {
-        *pending = TRUE;
-        return FALSE;
-    }
+    *pending = (stream_status == STATUS_PENDING || transport_in_status == STATUS_PENDING
+            || transport_out_status == STATUS_PENDING);
 
-    return NT_SUCCESS(stream_status) && NT_SUCCESS(transport_in_status)
-            && NT_SUCCESS(transport_out_status);
+    return stream_status == 0 && transport_in_status == 0 && transport_out_status == 0;
 }
 
 static void fort_flow_context_remove(PVOID stat_arg, PVOID flow_node)
