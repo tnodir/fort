@@ -494,6 +494,9 @@ inline static void fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree,
 inline static void fort_pstree_notify_process_created(
         PFORT_PSTREE ps_tree, PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSINFO_HASH psi)
 {
+    if (createInfo->ImageFileName == NULL || createInfo->CommandLine == NULL)
+        return;
+
     if (fort_is_system_process(psi->processId, psi->parentProcessId))
         return; /* skip System (sub)processes */
 
@@ -547,8 +550,7 @@ inline static void fort_pstree_notify_process(PFORT_PSTREE ps_tree, PCFORT_PSTRE
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    if (createInfo != NULL && createInfo->ImageFileName != NULL
-            && createInfo->CommandLine != NULL) {
+    if (createInfo != NULL) {
 
         FORT_PSINFO_HASH psi = {
             .pid_hash = pid_hash,
