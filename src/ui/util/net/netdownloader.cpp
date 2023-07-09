@@ -2,7 +2,6 @@
 
 #include <QLoggingCategory>
 #include <QNetworkAccessManager>
-#include <QNetworkReply>
 
 #define DOWNLOAD_TIMEOUT (30 * 1000) // 30 milliseconds timeout
 #define DOWNLOAD_MAXSIZE (8 * 1024 * 1024)
@@ -50,42 +49,10 @@ void NetDownloader::start()
         m_reply = m_manager->get(request);
     }
 
-    connect(m_reply, &QNetworkReply::downloadProgress, this,
-            [&](qint64 bytesReceived, qint64 /*bytesTotal*/) {
-                if (m_aborted || bytesReceived == 0)
-                    return;
-
-                const QByteArray data = m_reply->read(DOWNLOAD_MAXSIZE - m_buffer.size());
-
-                m_buffer.append(data);
-                if (m_buffer.size() >= DOWNLOAD_MAXSIZE) {
-                    qCWarning(LC) << "NetDownloader: Error: Too big file";
-                    finish();
-                }
-            });
-    connect(m_reply, &QNetworkReply::finished, this, [&] {
-        const bool success = (m_reply->error() == QNetworkReply::NoError);
-
-        finish(success && !m_buffer.isEmpty());
-    });
-    connect(m_reply, &QNetworkReply::errorOccurred, this, [&](QNetworkReply::NetworkError error) {
-        if (m_aborted)
-            return;
-
-        qCWarning(LC) << "NetDownloader: Error:" << error << m_reply->errorString();
-
-        finish();
-    });
-    connect(m_reply, &QNetworkReply::sslErrors, this, [&](const QList<QSslError> &errors) {
-        if (m_aborted)
-            return;
-
-        for (const QSslError &error : errors) {
-            qCWarning(LC) << "NetDownloader: SSL Error:" << error.errorString();
-        }
-
-        finish();
-    });
+    connect(m_reply, &QNetworkReply::downloadProgress, this, &NetDownloader::onDownloadProgress);
+    connect(m_reply, &QNetworkReply::finished, this, &NetDownloader::onFinished);
+    connect(m_reply, &QNetworkReply::errorOccurred, this, &NetDownloader::onErrorOccurred);
+    connect(m_reply, &QNetworkReply::sslErrors, this, &NetDownloader::onSslErrors);
 }
 
 void NetDownloader::finish(bool success)
@@ -107,4 +74,47 @@ void NetDownloader::finish(bool success)
     }
 
     emit finished(success);
+}
+
+void NetDownloader::onDownloadProgress(qint64 bytesReceived, qint64 /*bytesTotal*/)
+{
+    if (m_aborted || bytesReceived == 0)
+        return;
+
+    const QByteArray data = m_reply->read(DOWNLOAD_MAXSIZE - m_buffer.size());
+
+    m_buffer.append(data);
+    if (m_buffer.size() >= DOWNLOAD_MAXSIZE) {
+        qCWarning(LC) << "NetDownloader: Error: Too big file";
+        finish();
+    }
+}
+
+void NetDownloader::onFinished()
+{
+    const bool success = (m_reply->error() == QNetworkReply::NoError);
+
+    finish(success && !m_buffer.isEmpty());
+}
+
+void NetDownloader::onErrorOccurred(QNetworkReply::NetworkError error)
+{
+    if (m_aborted)
+        return;
+
+    qCWarning(LC) << "NetDownloader: Error:" << error << m_reply->errorString();
+
+    finish();
+}
+
+void NetDownloader::onSslErrors(const QList<QSslError> &errors)
+{
+    if (m_aborted)
+        return;
+
+    for (const QSslError &error : errors) {
+        qCWarning(LC) << "NetDownloader: SSL Error:" << error.errorString();
+    }
+
+    finish();
 }

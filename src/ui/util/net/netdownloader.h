@@ -1,6 +1,7 @@
 #ifndef NETDOWNLOADER_H
 #define NETDOWNLOADER_H
 
+#include <QNetworkReply>
 #include <QObject>
 #include <QTimer>
 
@@ -31,6 +32,12 @@ signals:
 public slots:
     void start();
     void finish(bool success = false);
+
+private slots:
+    void onDownloadProgress(qint64 bytesReceived, qint64 bytesTotal);
+    void onFinished();
+    void onErrorOccurred(QNetworkReply::NetworkError error);
+    void onSslErrors(const QList<QSslError> &errors);
 
 private:
     bool m_started : 1;
