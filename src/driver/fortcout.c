@@ -312,11 +312,19 @@ inline static void fort_callout_ale_check_conf(
     real_path.MaximumLength = real_path.Length;
     real_path.Buffer = (PWSTR) ca->inMetaValues->processPath->data;
 
+    BOOL isSvcHost = FALSE;
     BOOL inherited = FALSE;
     UNICODE_STRING path;
-    if (!fort_pstree_get_proc_name(&fort_device()->ps_tree, process_id, &path, &inherited)) {
+    if (!fort_pstree_get_proc_name(
+                &fort_device()->ps_tree, process_id, &path, &isSvcHost, &inherited)) {
         path = real_path;
     } else if (!inherited) {
+        /* TODO: Check "ServiceTag" on Windows 10+ */
+#if 0 // !defined(FORT_WIN7_COMPAT)
+        PVOID subProcessTag = ca->inMetaValues->subProcessTag;
+        if (subProcessTag && isSvcHost) { }
+#endif
+
         real_path = path;
     }
 

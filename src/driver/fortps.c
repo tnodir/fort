@@ -33,6 +33,7 @@ typedef struct fort_psname
 #define FORT_PSNODE_NAME_INHERITED 0x0002
 #define FORT_PSNODE_NAME_CUSTOM    0x0004
 #define FORT_PSNODE_KILL_PROCESS   0x0008
+#define FORT_PSNODE_IS_SVCHOST     0x0010
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
@@ -231,12 +232,8 @@ static BOOL fort_pstree_svchost_path_check(PCUNICODE_STRING path)
     return TRUE;
 }
 
-static BOOL fort_pstree_svchost_check(
-        PCUNICODE_STRING path, PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
+static BOOL fort_pstree_svchost_check(PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
-    if (!fort_pstree_svchost_path_check(path))
-        return FALSE;
-
     PWCHAR argp = wcsstr(commandLine->Buffer, L"-s ");
     if (argp == NULL)
         return FALSE;
@@ -282,18 +279,6 @@ static PFORT_PSNAME fort_pstree_create_service_name(
     return ps_name;
 }
 
-static PFORT_PSNAME fort_pstree_add_service_name(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi)
-{
-    if (psi->path == NULL || psi->commandLine == NULL)
-        return NULL;
-
-    UNICODE_STRING serviceName;
-    if (!fort_pstree_svchost_check(psi->path, psi->commandLine, &serviceName))
-        return NULL;
-
-    return fort_pstree_create_service_name(ps_tree, &serviceName);
-}
-
 static void fort_pstree_proc_set_service_name(PFORT_PSNODE proc, PFORT_PSNAME ps_name)
 {
     assert(proc->ps_name == NULL);
@@ -304,6 +289,26 @@ static void fort_pstree_proc_set_service_name(PFORT_PSNODE proc, PFORT_PSNAME ps
         /* Service can't inherit parent's name */
         proc->flags |= FORT_PSNODE_NAME_CUSTOM;
     }
+}
+
+static void fort_pstree_proc_check_svchost(
+        PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi, PFORT_PSNODE proc)
+{
+    if (psi->path == NULL || psi->commandLine == NULL)
+        return;
+
+    if (!fort_pstree_svchost_path_check(psi->path))
+        return;
+
+    proc->flags |= FORT_PSNODE_IS_SVCHOST;
+
+    UNICODE_STRING serviceName;
+    if (!fort_pstree_svchost_check(psi->commandLine, &serviceName))
+        return;
+
+    PFORT_PSNAME ps_name = fort_pstree_create_service_name(ps_tree, &serviceName);
+
+    fort_pstree_proc_set_service_name(proc, ps_name);
 }
 
 static PFORT_PSNODE fort_pstree_proc_new(PFORT_PSTREE ps_tree, tommy_key_t pid_hash)
@@ -448,18 +453,14 @@ static void fort_pstree_check_proc_inheritance(
 
 static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi)
 {
-    PFORT_PSNAME ps_name = fort_pstree_add_service_name(ps_tree, psi);
-
     PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, psi->pid_hash);
-    if (proc == NULL) {
-        fort_pstree_name_del(ps_tree, ps_name);
+    if (proc == NULL)
         return NULL;
-    }
 
     proc->process_id = psi->processId;
     proc->flags = 0;
 
-    fort_pstree_proc_set_service_name(proc, ps_name);
+    fort_pstree_proc_check_svchost(ps_tree, psi, proc);
 
     fort_pstree_check_proc_inheritance(ps_tree, psi, proc);
 
@@ -633,18 +634,20 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-static BOOL fort_pstree_get_proc_name_locked(
-        PFORT_PSTREE ps_tree, DWORD processId, PUNICODE_STRING path, BOOL *inherited)
+static BOOL fort_pstree_get_proc_name_locked(PFORT_PSTREE ps_tree, DWORD processId,
+        PUNICODE_STRING path, BOOL *isSvcHost, BOOL *inherited)
 {
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
     if (proc == NULL)
         return FALSE;
 
+    const UINT16 procFlags = proc->flags;
+    *isSvcHost = (procFlags & FORT_PSNODE_IS_SVCHOST) != 0;
+
     PFORT_PSNAME ps_name = proc->ps_name;
     if (ps_name == NULL)
         return FALSE;
 
-    const UINT16 procFlags = proc->flags;
     if ((procFlags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
             == FORT_PSNODE_NAME_INHERIT)
         return FALSE;
@@ -658,15 +661,15 @@ static BOOL fort_pstree_get_proc_name_locked(
     return TRUE;
 }
 
-FORT_API BOOL fort_pstree_get_proc_name(
-        PFORT_PSTREE ps_tree, DWORD processId, PUNICODE_STRING path, BOOL *inherited)
+FORT_API BOOL fort_pstree_get_proc_name(PFORT_PSTREE ps_tree, DWORD processId, PUNICODE_STRING path,
+        BOOL *isSvcHost, BOOL *inherited)
 {
     BOOL res;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        res = fort_pstree_get_proc_name_locked(ps_tree, processId, path, inherited);
+        res = fort_pstree_get_proc_name_locked(ps_tree, processId, path, isSvcHost, inherited);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
