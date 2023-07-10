@@ -59,7 +59,7 @@ QString FortSettings::statBlockFilePath() const
 
 QString FortSettings::cacheFilePath() const
 {
-    return noCache() ? ":memory:" : cachePath() + "appinfo.db";
+    return noCache() && !hasService() ? ":memory:" : cachePath() + "appinfo.db";
 }
 
 QString FortSettings::passwordUnlockedTillText() const
