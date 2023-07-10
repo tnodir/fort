@@ -58,11 +58,6 @@ bool RegKey::removeValue(const QString &name)
 
 bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
 {
-    QString text;
-    union {
-        qint64 i64;
-        qint32 i32;
-    } num;
     const unsigned char *data = nullptr;
     DWORD size;
     DWORD type;
@@ -70,30 +65,31 @@ bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
     switch (value.userType()) {
     case QMetaType::UnknownType:
     case QMetaType::Void:
-    case QMetaType::Nullptr:
+    case QMetaType::Nullptr: {
         size = 0;
         type = REG_SZ;
-        break;
+    } break;
     case QMetaType::Bool:
     case QMetaType::Int:
-    case QMetaType::UInt:
-        num.i32 = value.toInt();
-        data = (const unsigned char *) &num.i32;
+    case QMetaType::UInt: {
+        const qint32 i32 = value.toInt();
+        data = (const unsigned char *) &i32;
         size = sizeof(qint32);
         type = REG_DWORD;
-        break;
+    } break;
     case QMetaType::LongLong:
-    case QMetaType::ULongLong:
-        num.i64 = value.toLongLong();
-        data = (const unsigned char *) &num.i64;
+    case QMetaType::ULongLong: {
+        const qint64 i64 = value.toLongLong();
+        data = (const unsigned char *) &i64;
         size = sizeof(qint64);
         type = REG_QWORD;
-        break;
-    default:
-        text = value.toString();
+    } break;
+    default: {
+        const QString text = value.toString();
         data = (const unsigned char *) text.utf16();
         size = DWORD(sizeof(wchar_t) * (text.size() + 1)); /* + terminating null character */
         type = expand ? REG_EXPAND_SZ : REG_SZ;
+    } break;
     }
 
     return !RegSetValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, type, data, size);
