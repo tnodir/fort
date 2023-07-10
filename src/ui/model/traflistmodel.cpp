@@ -10,82 +10,57 @@
 
 namespace {
 
-const char *getSqlMinTrafApp(TrafListModel::TrafType type)
+bool checkTrafType(TrafListModel::TrafType type)
 {
-    switch (type) {
-    case TrafListModel::TrafHourly:
-        return StatSql::sqlSelectMinTrafAppHour;
-    case TrafListModel::TrafDaily:
-        return StatSql::sqlSelectMinTrafAppDay;
-    case TrafListModel::TrafMonthly:
-        return StatSql::sqlSelectMinTrafAppMonth;
-    case TrafListModel::TrafTotal:
-        return StatSql::sqlSelectMinTrafAppTotal;
-    }
+    if (type >= TrafListModel::TrafHourly && type <= TrafListModel::TrafTotal)
+        return true;
 
     Q_UNREACHABLE();
-    return nullptr;
+    return false;
 }
 
-const char *getSqlMinTraf(TrafListModel::TrafType type)
-{
-    switch (type) {
-    case TrafListModel::TrafHourly:
-        return StatSql::sqlSelectMinTrafHour;
-    case TrafListModel::TrafDaily:
-        return StatSql::sqlSelectMinTrafDay;
-    case TrafListModel::TrafMonthly:
-        return StatSql::sqlSelectMinTrafMonth;
-    case TrafListModel::TrafTotal:
-        return StatSql::sqlSelectMinTrafTotal;
-    }
+static const char *const sqlSelectMinTrafApps[] = {
+    StatSql::sqlSelectMinTrafAppHour,
+    StatSql::sqlSelectMinTrafAppDay,
+    StatSql::sqlSelectMinTrafAppMonth,
+    StatSql::sqlSelectMinTrafAppTotal,
+};
 
-    Q_UNREACHABLE();
-    return nullptr;
-}
+static const char *const sqlSelectMinTrafs[] = {
+    StatSql::sqlSelectMinTrafHour,
+    StatSql::sqlSelectMinTrafDay,
+    StatSql::sqlSelectMinTrafMonth,
+    StatSql::sqlSelectMinTrafTotal,
+};
 
 const char *getSqlMinTrafTime(TrafListModel::TrafType type, qint64 appId)
 {
-    return appId != 0 ? getSqlMinTrafApp(type) : getSqlMinTraf(type);
+    if (!checkTrafType(type))
+        return nullptr;
+
+    return (appId != 0 ? sqlSelectMinTrafApps : sqlSelectMinTrafs)[type];
 }
 
-const char *getSqlSelectTrafApp(TrafListModel::TrafType type)
-{
-    switch (type) {
-    case TrafListModel::TrafHourly:
-        return StatSql::sqlSelectTrafAppHour;
-    case TrafListModel::TrafDaily:
-        return StatSql::sqlSelectTrafAppDay;
-    case TrafListModel::TrafMonthly:
-        return StatSql::sqlSelectTrafAppMonth;
-    case TrafListModel::TrafTotal:
-        return StatSql::sqlSelectTrafAppTotal;
-    }
+static const char *const sqlSelectTrafApps[] = {
+    StatSql::sqlSelectTrafAppHour,
+    StatSql::sqlSelectTrafAppDay,
+    StatSql::sqlSelectTrafAppMonth,
+    StatSql::sqlSelectTrafAppTotal,
+};
 
-    Q_UNREACHABLE();
-    return nullptr;
-}
-
-const char *getSqlSelectTraf(TrafListModel::TrafType type)
-{
-    switch (type) {
-    case TrafListModel::TrafHourly:
-        return StatSql::sqlSelectTrafHour;
-    case TrafListModel::TrafDaily:
-        return StatSql::sqlSelectTrafDay;
-    case TrafListModel::TrafMonthly:
-        return StatSql::sqlSelectTrafMonth;
-    case TrafListModel::TrafTotal:
-        return StatSql::sqlSelectTrafTotal;
-    }
-
-    Q_UNREACHABLE();
-    return nullptr;
-}
+static const char *const sqlSelectTrafs[] = {
+    StatSql::sqlSelectTrafHour,
+    StatSql::sqlSelectTrafDay,
+    StatSql::sqlSelectTrafMonth,
+    StatSql::sqlSelectTrafTotal,
+};
 
 const char *getSqlSelectTraffic(TrafListModel::TrafType type, qint64 appId)
 {
-    return appId != 0 ? getSqlSelectTrafApp(type) : getSqlSelectTraf(type);
+    if (!checkTrafType(type))
+        return nullptr;
+
+    return (appId != 0 ? sqlSelectTrafApps : sqlSelectTrafs)[type];
 }
 
 }
