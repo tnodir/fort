@@ -283,6 +283,15 @@ int bitScanForward(quint32 mask)
     return bit_scan_forward(mask);
 }
 
+bool provRegister(bool bootFilter)
+{
+    const FORT_PROV_BOOT_CONF boot_conf = {
+        .boot_filter = bootFilter,
+    };
+
+    return fort_prov_trans_register(boot_conf) == 0;
+}
+
 void provUnregister()
 {
     fort_prov_trans_unregister();

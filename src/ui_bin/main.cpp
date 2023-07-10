@@ -33,14 +33,21 @@ void uninstall()
 
 void install(const char *arg)
 {
-    if (arg[0] == 'p') { // "portable"
+    switch (arg[0]) {
+    case 'b': { // "boot_filter"
+        DriverCommon::provRegister(/*bootFilter=*/true); // Register booted provider
+    } break;
+    case 'p': { // "portable"
         FortManager::setupPortableResource();
         StartupUtil::setPortable(true);
-    } else if (arg[0] == 's') { // "service"
+    } break;
+    case 's': { // "service"
         StartupUtil::setAutoRunMode(StartupUtil::StartupAllUsers);
         StartupUtil::setServiceInstalled(true);
-    } else if (arg[0] == 'e') { // "explorer"
+    } break;
+    case 'e': { // "explorer"
         StartupUtil::setExplorerIntegrated(true);
+    } break;
     }
 }
 

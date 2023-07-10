@@ -539,6 +539,21 @@ FORT_API DWORD fort_prov_register(HANDLE engine, const FORT_PROV_BOOT_CONF boot_
     return 0;
 }
 
+FORT_API DWORD fort_prov_trans_register(const FORT_PROV_BOOT_CONF boot_conf)
+{
+    HANDLE engine;
+    DWORD status = fort_prov_trans_open(&engine);
+
+    if (NT_SUCCESS(status)) {
+
+        status = fort_prov_register(engine, boot_conf);
+
+        status = fort_prov_trans_close(engine, status);
+    }
+
+    return status;
+}
+
 FORT_API FORT_PROV_BOOT_CONF fort_prov_get_boot_conf(HANDLE engine)
 {
     FORT_PROV_BOOT_CONF boot_conf = { .v = 0 };

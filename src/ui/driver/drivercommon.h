@@ -81,6 +81,7 @@ bool isTimeInPeriod(quint8 hour, quint8 minute, quint8 fromHour, quint8 fromMinu
 int bitCount(quint32 v);
 int bitScanForward(quint32 mask);
 
+bool provRegister(bool bootFilter);
 void provUnregister();
 
 }
