@@ -1,8 +1,11 @@
 #include "programswindow.h"
 
 #include <QCheckBox>
+#include <QDragEnterEvent>
+#include <QDropEvent>
 #include <QHeaderView>
 #include <QMenu>
+#include <QMimeData>
 #include <QPushButton>
 #include <QVBoxLayout>
 
@@ -165,6 +168,9 @@ void ProgramsWindow::setupUi()
     setupTableAppsChanged();
 
     this->setLayout(layout);
+
+    // Accept File Drops
+    setAcceptDrops(true);
 
     // Font
     this->setFont(WindowManager::defaultFont());
@@ -341,6 +347,28 @@ bool ProgramsWindow::editProgramByPath(const QString &appPath)
 
     openAppEditForm(appRow);
     return true;
+}
+
+void ProgramsWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasFormat("text/uri-list")) {
+        event->acceptProposedAction();
+    }
+}
+
+void ProgramsWindow::dropEvent(QDropEvent *event)
+{
+    const auto urls = event->mimeData()->urls();
+    if (urls.isEmpty())
+        return;
+
+    const QString appPath = urls.first().toLocalFile();
+    if (appPath.isEmpty())
+        return;
+
+    if (editProgramByPath(appPath)) {
+        event->acceptProposedAction();
+    }
 }
 
 void ProgramsWindow::addNewProgram()

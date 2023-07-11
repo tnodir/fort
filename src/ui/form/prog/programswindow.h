@@ -48,6 +48,10 @@ public:
 
     bool editProgramByPath(const QString &appPath);
 
+protected:
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+
 private:
     void setupController();
     void setupStateWatcher();
