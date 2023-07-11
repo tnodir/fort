@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.9.8-test1, 2023-07-11:
+- UI: Auto-install driver in portable mode.
+- UI: Add "-i boot_filter" argument.
+- UI: "no-cache" can't be used with service.
+
 v3.9.7, 2023-07-03:
 - UI: Monitor services for driver.
 - Installer: Start program automatically after installation.
