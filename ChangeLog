@@ -1,6 +1,7 @@
 Fort Firewall ChangeLog
 
-v3.9.8-test1, 2023-07-11:
+v3.9.8-test2, 2023-07-11:
+- UI: Programs: Accept File Drops.
 - UI: Auto-install driver in portable mode.
 - UI: Add "-i boot_filter" argument.
 - UI: "no-cache" can't be used with service.
