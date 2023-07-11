@@ -43,6 +43,8 @@ private:
     bool setupDriver();
     void closeDriver();
 
+    void setupPortableDriver();
+
     void setupEnvManager();
     void setupConfManager();
     void setupQuotaManager();
