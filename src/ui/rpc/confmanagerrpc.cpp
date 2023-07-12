@@ -19,8 +19,8 @@ bool ConfManagerRpc::addApp(const App &app)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addApp,
             { app.useGroupPerm, app.applyChild, app.lanOnly, app.logBlocked, app.logConn,
-                    app.blocked, app.killProcess, app.groupIndex, app.appPath, app.appName,
-                    app.endTime });
+                    app.blocked, app.killProcess, app.groupIndex, app.appOriginPath, app.appPath,
+                    app.appName, app.endTime });
 }
 
 bool ConfManagerRpc::deleteApp(qint64 appId)
@@ -37,8 +37,8 @@ bool ConfManagerRpc::updateApp(const App &app)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateApp,
             { app.useGroupPerm, app.applyChild, app.lanOnly, app.logBlocked, app.logConn,
-                    app.blocked, app.killProcess, app.groupIndex, app.appId, app.appPath,
-                    app.appName, app.endTime });
+                    app.blocked, app.killProcess, app.groupIndex, app.appId, app.appOriginPath,
+                    app.appPath, app.appName, app.endTime });
 }
 
 bool ConfManagerRpc::updateAppBlocked(qint64 appId, bool blocked, bool killProcess)

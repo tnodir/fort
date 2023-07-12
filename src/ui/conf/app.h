@@ -23,6 +23,7 @@ public:
 
     qint64 appId = 0;
 
+    QString appOriginPath;
     QString appPath;
     QString appName;
 

@@ -79,9 +79,10 @@ bool processConfManager_addApp(
     app.blocked = p.args.value(5).toBool();
     app.killProcess = p.args.value(6).toBool();
     app.groupIndex = p.args.value(7).toInt();
-    app.appPath = p.args.value(8).toString();
-    app.appName = p.args.value(9).toString();
-    app.endTime = p.args.value(10).toDateTime();
+    app.appOriginPath = p.args.value(8).toString();
+    app.appPath = p.args.value(9).toString();
+    app.appName = p.args.value(10).toString();
+    app.endTime = p.args.value(11).toDateTime();
 
     return confManager->addApp(app);
 }
@@ -111,9 +112,10 @@ bool processConfManager_updateApp(
     app.killProcess = p.args.value(6).toBool();
     app.groupIndex = p.args.value(7).toInt();
     app.appId = p.args.value(8).toLongLong();
-    app.appPath = p.args.value(9).toString();
-    app.appName = p.args.value(10).toString();
-    app.endTime = p.args.value(11).toDateTime();
+    app.appOriginPath = p.args.value(9).toString();
+    app.appPath = p.args.value(10).toString();
+    app.appName = p.args.value(11).toString();
+    app.endTime = p.args.value(12).toDateTime();
 
     return confManager->updateApp(app);
 }

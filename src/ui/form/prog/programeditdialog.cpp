@@ -20,6 +20,7 @@
 #include <form/dialog/dialogutil.h>
 #include <fortmanager.h>
 #include <manager/windowmanager.h>
+#include <util/conf/confutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/window/widgetwindow.h>
@@ -67,7 +68,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     const bool isSingleSelection = (appIdList.size() <= 1);
     const bool isPathEditable = isSingleSelection && appRow.appId == 0;
 
-    m_editPath->setText(isSingleSelection ? appRow.appPath : "*");
+    m_editPath->setText(isSingleSelection ? appRow.appOriginPath : QString());
     m_editPath->setReadOnly(!isPathEditable);
     m_editPath->setClearButtonEnabled(isPathEditable);
     m_editPath->setEnabled(isSingleSelection);
@@ -448,6 +449,7 @@ bool ProgramEditDialog::saveMulti(App &app)
         const auto appRow = appListModel()->appRowById(appId);
 
         app.appId = appId;
+        app.appOriginPath = appRow.appOriginPath;
         app.appPath = appRow.appPath;
         app.appName = appRow.appName;
 
@@ -483,8 +485,11 @@ void ProgramEditDialog::fillApp(App &app) const
     app.blocked = !m_rbAllowApp->isChecked();
     app.killProcess = m_rbKillProcess->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
-    app.appPath = m_editPath->text();
     app.appName = m_editName->text();
+
+    const QString appPath = m_editPath->text();
+    app.appOriginPath = appPath;
+    app.appPath = ConfUtil::adjustAppPath(appPath);
 
     if (!app.blocked) {
         if (m_cscBlockAppIn->checkBox()->isChecked()) {

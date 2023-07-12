@@ -10,6 +10,7 @@
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/guiutil.h>
@@ -157,7 +158,7 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index) const
     case 2:
         return appGroupName(appRow);
     case 3:
-        return appRow.appPath;
+        return appRow.appOriginPath;
     case 4:
         return appRow.creatTime;
     }
@@ -283,18 +284,19 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
 
     appRow.appId = stmt.columnInt64(0);
     appRow.groupIndex = stmt.columnInt(1);
-    appRow.appPath = stmt.columnText(2);
-    appRow.appName = stmt.columnText(3);
-    appRow.useGroupPerm = stmt.columnBool(4);
-    appRow.applyChild = stmt.columnBool(5);
-    appRow.lanOnly = stmt.columnBool(6);
-    appRow.logBlocked = stmt.columnBool(7);
-    appRow.logConn = stmt.columnBool(8);
-    appRow.blocked = stmt.columnBool(9);
-    appRow.killProcess = stmt.columnBool(10);
-    appRow.alerted = stmt.columnBool(11);
-    appRow.endTime = stmt.columnDateTime(12);
-    appRow.creatTime = stmt.columnDateTime(13);
+    appRow.appOriginPath = stmt.columnText(2);
+    appRow.appPath = stmt.columnText(3);
+    appRow.appName = stmt.columnText(4);
+    appRow.useGroupPerm = stmt.columnBool(5);
+    appRow.applyChild = stmt.columnBool(6);
+    appRow.lanOnly = stmt.columnBool(7);
+    appRow.logBlocked = stmt.columnBool(8);
+    appRow.logConn = stmt.columnBool(9);
+    appRow.blocked = stmt.columnBool(10);
+    appRow.killProcess = stmt.columnBool(11);
+    appRow.alerted = stmt.columnBool(12);
+    appRow.endTime = stmt.columnDateTime(13);
+    appRow.creatTime = stmt.columnDateTime(14);
 
     return true;
 }
@@ -315,9 +317,12 @@ AppRow AppListModel::appRowById(qint64 appId) const
 
 AppRow AppListModel::appRowByPath(const QString &appPath) const
 {
+    const QString adjustedPath = ConfUtil::adjustAppPath(appPath);
+
     AppRow appRow;
-    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { appPath }, appRow)) {
-        appRow.appPath = appPath;
+    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { adjustedPath }, appRow)) {
+        appRow.appOriginPath = appPath;
+        appRow.appPath = adjustedPath;
     }
     return appRow;
 }
@@ -332,6 +337,7 @@ QString AppListModel::sqlBase() const
     return "SELECT"
            "    t.app_id,"
            "    g.order_index as group_index,"
+           "    t.origin_path,"
            "    t.path,"
            "    t.name,"
            "    t.use_group_perm,"
@@ -354,16 +360,16 @@ QString AppListModel::sqlOrderColumn() const
     QString columnsStr;
     switch (sortColumn()) {
     case 0: // Name
-        columnsStr = "4 " + sqlOrderAsc() + ", 3";
+        columnsStr = "5 " + sqlOrderAsc() + ", 4";
         break;
     case 1: // State
-        columnsStr = "12 DESC, 11, 10 " + sqlOrderAsc() + ", 1";
+        columnsStr = "13 DESC, 12, 11 " + sqlOrderAsc() + ", 1";
         break;
     case 2: // Group
         columnsStr = "2";
         break;
     case 3: // File Path
-        columnsStr = "3";
+        columnsStr = "4";
         break;
     default: // Creation Time
         columnsStr = "1"; // App ID

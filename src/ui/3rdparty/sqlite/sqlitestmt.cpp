@@ -15,7 +15,7 @@ SqliteStmt::~SqliteStmt()
 
 bool SqliteStmt::prepare(sqlite3 *db, const char *sql, SqliteStmt::PrepareFlags flags)
 {
-    return sqlite3_prepare_v3(db, sql, -1, flags, &m_stmt, nullptr) == SQLITE_OK;
+    return sqlite3_prepare_v3(db, sql, /*nByte=*/-1, flags, &m_stmt, nullptr) == SQLITE_OK;
 }
 
 void SqliteStmt::finalize()

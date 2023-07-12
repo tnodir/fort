@@ -145,7 +145,7 @@ private:
     bool loadTask(TaskInfo *taskInfo);
     bool saveTask(TaskInfo *taskInfo);
 
-    bool checkResult(bool ok, bool commit = false);
+    bool checkEndTransaction(bool ok, bool commit = false);
 
 private:
     SqliteDbPtr m_sqliteDb;

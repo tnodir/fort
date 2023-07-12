@@ -81,17 +81,24 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 
 ConfUtil::ConfUtil(QObject *parent) : QObject(parent) { }
 
-int ConfUtil::zoneMaxCount()
-{
-    return FORT_CONF_ZONE_MAX;
-}
-
 void ConfUtil::setErrorMessage(const QString &errorMessage)
 {
     if (m_errorMessage != errorMessage) {
         m_errorMessage = errorMessage;
         emit errorMessageChanged();
     }
+}
+
+int ConfUtil::zoneMaxCount()
+{
+    return FORT_CONF_ZONE_MAX;
+}
+
+QString ConfUtil::adjustAppPath(const QString &appPath)
+{
+    QString adjustedPath = appPath.trimmed().toLower();
+
+    return adjustedPath.replace('/', '\\');
 }
 
 int ConfUtil::writeVersion(QByteArray &buf)

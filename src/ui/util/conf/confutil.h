@@ -35,9 +35,11 @@ class ConfUtil : public QObject
 public:
     explicit ConfUtil(QObject *parent = nullptr);
 
+    QString errorMessage() const { return m_errorMessage; }
+
     static int zoneMaxCount();
 
-    QString errorMessage() const { return m_errorMessage; }
+    static QString adjustAppPath(const QString &appPath);
 
 signals:
     void errorMessageChanged();
