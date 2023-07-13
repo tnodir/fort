@@ -72,7 +72,8 @@ void OptionsPage::onAboutToSave()
 
     // Password
     if (passwordEdited()) {
-        if (!settings()->hasPassword() && ini()->hasPassword() && ini()->password().isEmpty()) {
+        const bool isPasswordCleared = (ini()->hasPassword() && ini()->password().isEmpty());
+        if (isPasswordCleared && !settings()->hasPassword()) {
             m_cbPassword->setChecked(false);
         }
 
