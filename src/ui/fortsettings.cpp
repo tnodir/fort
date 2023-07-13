@@ -406,7 +406,8 @@ void FortSettings::writeConfIniOptions(const IniOptions &ini)
     ini.save();
 
     // Password
-    if ((ini.hasPasswordSet() && ini.hasPassword() != hasPassword()) || !ini.password().isEmpty()) {
+    const bool isPasswordSet = (ini.hasPasswordSet() && ini.hasPassword() != hasPassword());
+    if (isPasswordSet || !ini.password().isEmpty()) {
         setPassword(ini.password());
     }
 
