@@ -53,6 +53,62 @@ QString formatSpeed(int kbytes)
     return NetUtil::formatSpeed(quint32(kbytes * 1024));
 }
 
+void pageAppGroupCheckEdited(ApplicationsPage *page, AppGroup *appGroup, bool isFlag = false)
+{
+    if (!appGroup->edited())
+        return;
+
+    if (isFlag) {
+        page->ctrl()->setFlagsEdited();
+    } else {
+        page->ctrl()->setOptEdited();
+    }
+}
+
+void pageAppGroupSetChecked(ApplicationsPage *page,
+        const std::function<void(AppGroup &appGroup, bool v)> &setBoolFunc,
+        bool v, bool isFlag = false)
+{
+    AppGroup *appGroup = page->appGroup();
+
+    setBoolFunc(*appGroup, v);
+
+    pageAppGroupCheckEdited(page, appGroup, isFlag);
+}
+
+void pageAppGroupSetUInt16(ApplicationsPage *page,
+        const std::function<void(AppGroup &appGroup, quint16 v)> &setUInt16Func,
+        quint16 v)
+{
+    AppGroup *appGroup = page->appGroup();
+
+    setUInt16Func(*appGroup, v);
+
+    pageAppGroupCheckEdited(page, appGroup);
+}
+
+void pageAppGroupSetUInt32(ApplicationsPage *page,
+        const std::function<void(AppGroup &appGroup, quint32 v)> &setUInt32Func,
+        quint32 v)
+{
+    AppGroup *appGroup = page->appGroup();
+
+    setUInt32Func(*appGroup, v);
+
+    pageAppGroupCheckEdited(page, appGroup);
+}
+
+void pageAppGroupSetText(ApplicationsPage *page,
+        const std::function<void(AppGroup &appGroup, const QString &v)> &setTextFunc,
+        const QString &v)
+{
+    AppGroup *appGroup = page->appGroup();
+
+    setTextFunc(*appGroup, v);
+
+    pageAppGroupCheckEdited(page, appGroup);
+}
+
 }
 
 ApplicationsPage::ApplicationsPage(OptionsController *ctrl, QWidget *parent) :
@@ -313,13 +369,7 @@ QLayout *ApplicationsPage::setupGroupHeader()
 void ApplicationsPage::setupGroupEnabled()
 {
     m_cbGroupEnabled = ControlUtil::createCheckBox(false, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->enabled() == checked)
-            return;
-
-        appGroup->setEnabled(checked);
-
-        ctrl()->setFlagsEdited();
+        pageAppGroupSetChecked(this, &AppGroup::setEnabled, checked, /*isFlag=*/true);
     });
 
     m_cbGroupEnabled->setFont(ControlUtil::fontDemiBold());
@@ -330,37 +380,19 @@ void ApplicationsPage::setupGroupPeriod()
     m_ctpGroupPeriod = new CheckTimePeriod();
 
     connect(m_ctpGroupPeriod->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->periodEnabled() == checked)
-            return;
-
-        appGroup->setPeriodEnabled(checked);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetChecked(this, &AppGroup::setPeriodEnabled, checked);
     });
     connect(m_ctpGroupPeriod->timeEdit1(), &QTimeEdit::userTimeChanged, this,
             [&](const QTime &time) {
                 const auto timeStr = CheckTimePeriod::fromTime(time);
 
-                AppGroup *appGroup = this->appGroup();
-                if (appGroup->periodFrom() == timeStr)
-                    return;
-
-                appGroup->setPeriodFrom(timeStr);
-
-                ctrl()->setOptEdited();
+                pageAppGroupSetText(this, &AppGroup::setPeriodFrom, timeStr);
             });
     connect(m_ctpGroupPeriod->timeEdit2(), &QTimeEdit::userTimeChanged, this,
             [&](const QTime &time) {
                 const auto timeStr = CheckTimePeriod::fromTime(time);
 
-                AppGroup *appGroup = this->appGroup();
-                if (appGroup->periodTo() == timeStr)
-                    return;
-
-                appGroup->setPeriodTo(timeStr);
-
-                ctrl()->setOptEdited();
+                pageAppGroupSetText(this, &AppGroup::setPeriodTo, timeStr);
             });
 }
 
@@ -401,46 +433,22 @@ void ApplicationsPage::setupGroupOptions()
 void ApplicationsPage::setupGroupOptionFlags()
 {
     m_cbApplyChild = ControlUtil::createCheckBox(false, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->applyChild() == checked)
-            return;
-
-        appGroup->setApplyChild(checked);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetChecked(this, &AppGroup::setApplyChild, checked);
     });
 
     m_cbLanOnly = ControlUtil::createCheckBox(false, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->lanOnly() == checked)
-            return;
-
-        appGroup->setLanOnly(checked);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetChecked(this, &AppGroup::setLanOnly, checked);
     });
 }
 
 void ApplicationsPage::setupGroupLog()
 {
     m_cbLogBlocked = ControlUtil::createCheckBox(false, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->logBlocked() == checked)
-            return;
-
-        appGroup->setLogBlocked(checked);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetChecked(this, &AppGroup::setLogBlocked, checked);
     });
 
     m_cbLogConn = ControlUtil::createCheckBox(false, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->logConn() == checked)
-            return;
-
-        appGroup->setLogConn(checked);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetChecked(this, &AppGroup::setLogConn, checked);
     });
 
     m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
@@ -451,25 +459,13 @@ void ApplicationsPage::setupGroupLimitIn()
     m_cscLimitIn = createGroupLimit();
 
     connect(m_cscLimitIn->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->limitInEnabled() == checked)
-            return;
-
-        appGroup->setLimitInEnabled(checked);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetChecked(this, &AppGroup::setLimitInEnabled, checked);
     });
     connect(m_cscLimitIn->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
                 const auto kbytes = quint32(value);
 
-                AppGroup *appGroup = this->appGroup();
-                if (appGroup->speedLimitIn() == kbytes)
-                    return;
-
-                appGroup->setSpeedLimitIn(kbytes);
-
-                ctrl()->setOptEdited();
+                pageAppGroupSetUInt32(this, &AppGroup::setSpeedLimitIn, kbytes);
             });
 }
 
@@ -478,25 +474,13 @@ void ApplicationsPage::setupGroupLimitOut()
     m_cscLimitOut = createGroupLimit();
 
     connect(m_cscLimitOut->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->limitOutEnabled() == checked)
-            return;
-
-        appGroup->setLimitOutEnabled(checked);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetChecked(this, &AppGroup::setLimitOutEnabled, checked);
     });
     connect(m_cscLimitOut->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
                 const auto kbytes = quint32(value);
 
-                AppGroup *appGroup = this->appGroup();
-                if (appGroup->speedLimitOut() == kbytes)
-                    return;
-
-                appGroup->setSpeedLimitOut(kbytes);
-
-                ctrl()->setOptEdited();
+                pageAppGroupSetUInt32(this, &AppGroup::setSpeedLimitOut, kbytes);
             });
 }
 
@@ -505,13 +489,7 @@ void ApplicationsPage::setupGroupLimitLatency()
     m_limitLatency = ControlUtil::createSpin(0, 0, 30000, " ms", [&](int value) {
         const auto limitLatency = quint32(value);
 
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->limitLatency() == limitLatency)
-            return;
-
-        appGroup->setLimitLatency(limitLatency);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetUInt32(this, &AppGroup::setLimitLatency, limitLatency);
     });
 }
 
@@ -520,13 +498,7 @@ void ApplicationsPage::setupGroupLimitPacketLoss()
     m_limitPacketLoss = ControlUtil::createDoubleSpin(0, 0, 100.0, " %", [&](double value) {
         const auto limitPacketLoss = quint16(qFloor(value * 100.0));
 
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->limitPacketLoss() == limitPacketLoss)
-            return;
-
-        appGroup->setLimitPacketLoss(limitPacketLoss);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetUInt16(this, &AppGroup::setLimitPacketLoss, limitPacketLoss);
     });
 }
 
@@ -538,25 +510,13 @@ void ApplicationsPage::setupGroupLimitBufferSize()
     m_limitBufferSizeIn = ControlUtil::createSpin(0, 0, maxBufferSize, suffix, [&](int value) {
         const auto bufferSize = quint32(value);
 
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->limitBufferSizeIn() == bufferSize)
-            return;
-
-        appGroup->setLimitBufferSizeIn(bufferSize);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetUInt32(this, &AppGroup::setLimitBufferSizeIn, bufferSize);
     });
 
     m_limitBufferSizeOut = ControlUtil::createSpin(0, 0, maxBufferSize, suffix, [&](int value) {
         const auto bufferSize = quint32(value);
 
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->limitBufferSizeOut() == bufferSize)
-            return;
-
-        appGroup->setLimitBufferSizeOut(bufferSize);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetUInt32(this, &AppGroup::setLimitBufferSizeOut, bufferSize);
     });
 }
 
@@ -568,13 +528,7 @@ void ApplicationsPage::setupBlockApps()
     connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_blockApps->editText()->toPlainText();
 
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->blockText() == text)
-            return;
-
-        appGroup->setBlockText(text);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetText(this, &AppGroup::setBlockText, text);
     });
 }
 
@@ -586,13 +540,7 @@ void ApplicationsPage::setupAllowApps()
     connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_allowApps->editText()->toPlainText();
 
-        AppGroup *appGroup = this->appGroup();
-        if (appGroup->allowText() == text)
-            return;
-
-        appGroup->setAllowText(text);
-
-        ctrl()->setOptEdited();
+        pageAppGroupSetText(this, &AppGroup::setAllowText, text);
     });
 }
 
