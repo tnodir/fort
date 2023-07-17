@@ -481,7 +481,7 @@ bool SqliteDb::importDb(const MigrateOptions &opt, const QString &sourceFilePath
 
     // Migrate
     if (success && opt.migrateFunc) {
-        success = opt.migrateFunc(this, userVersion(), false, opt.migrateContext);
+        success = opt.migrateFunc(this, userVersion(), /*isNewDb=*/false, opt.migrateContext);
     }
 
     endTransaction(success);

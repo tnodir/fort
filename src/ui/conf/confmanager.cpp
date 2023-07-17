@@ -224,17 +224,20 @@ const char *const sqlUpdateZoneResult =
 using AppsMap = QHash<qint64, QString>;
 using AppIdsArray = QVector<qint64>;
 
-bool fillAppPathsMap(SqliteDb *db, AppsMap &appsMap, const char *sql = sqlSelectAppPaths)
+bool fillAppPathsMap(SqliteDb *db, AppsMap &appsMap)
 {
+    const char *const sql = "SELECT app_id, origin_path, path FROM app;";
+
     SqliteStmt stmt;
     if (!db->prepare(stmt, sql))
         return false;
 
     while (stmt.step() == SqliteStmt::StepRow) {
         const qint64 appId = stmt.columnInt64(0);
-        const QString appPath = stmt.columnText(1);
+        const QString appOriginPath = stmt.columnText(1);
+        const QString appPath = stmt.columnText(2);
 
-        appsMap.insert(appId, appPath);
+        appsMap.insert(appId, !appOriginPath.isEmpty() ? appOriginPath : appPath);
     }
 
     return true;
@@ -285,7 +288,7 @@ void deleteDupApps(SqliteDb *db, const AppIdsArray &dupAppIds)
         return;
 
     for (qint64 appId : dupAppIds) {
-        qCDebug(LC) << "Remove dup app-id:" << appId;
+        qCDebug(LC) << "Migrate: Remove dup app-id:" << appId;
         db->executeEx(sqlDeleteApp, { appId });
     }
 
@@ -294,16 +297,12 @@ void deleteDupApps(SqliteDb *db, const AppIdsArray &dupAppIds)
                 "  SELECT 1 FROM app WHERE app.app_id = app_alert.app_id);");
 }
 
-bool migrateAppPaths(SqliteDb *db, int version)
+bool migrateAppPaths(SqliteDb *db)
 {
     AppsMap appsMap;
     AppIdsArray dupAppIds;
 
-    const char *const sqlSelectAppOriginPaths = "SELECT app_id, origin_path FROM app;";
-
-    const char *sql = (version == 20) ? sqlSelectAppPaths : sqlSelectAppOriginPaths;
-
-    if (!(fillAppPathsMap(db, appsMap, sql) && updateAppPathsByMap(db, appsMap, dupAppIds)))
+    if (!(fillAppPathsMap(db, appsMap) && updateAppPathsByMap(db, appsMap, dupAppIds)))
         return false;
 
     deleteDupApps(db, dupAppIds);
@@ -319,14 +318,8 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
         return true;
 
     switch (version) {
-    case 6: {
-        // COMPAT: Zones
-        db->execute("UPDATE task SET name = 'ZoneDownloader' WHERE name = 'Tasix';");
-    } break;
-    case 20:
-    case 21: {
-        return migrateAppPaths(db, version);
-    } break;
+    case 21:
+        return migrateAppPaths(db);
     }
 
     return true;
