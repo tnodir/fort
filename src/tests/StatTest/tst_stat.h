@@ -18,6 +18,7 @@
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
+#include <util/ioc/ioccontainer.h>
 
 #include <mocks/mockquotamanager.h>
 
@@ -99,9 +100,13 @@ void debugStatTraf(SqliteDb *sqliteDb)
 
 TEST_F(StatTest, dbWriteRead)
 {
-    NiceMock<MockQuotaManager> quotaManager;
+    IocContainer ioc;
+    ioc.pinToThread();
 
-    StatManager statManager(":memory:", &quotaManager);
+    NiceMock<MockQuotaManager> quotaManager;
+    ioc.set<QuotaManager>(quotaManager);
+
+    StatManager statManager(":memory:");
 
     statManager.setUp();
 

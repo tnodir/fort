@@ -92,7 +92,7 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     ASSERT_TRUE(DriverCommon::confAppBlocked(
             data, DriverCommon::confAppFind(data, "System"), &blockReason));
-    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_FILTER_MODE);
+    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_APP_GROUP_FOUND);
 
     ASSERT_FALSE(DriverCommon::confAppBlocked(data,
             DriverCommon::confAppFind(

@@ -128,7 +128,7 @@ void StatManager::updateActivePeriod()
         m_isActivePeriodSet = true;
         m_isActivePeriod = true;
 
-        if (conf()->activePeriodEnabled()) {
+        if (conf() && conf()->activePeriodEnabled()) {
             const QTime now = QTime::currentTime();
 
             m_isActivePeriod = DriverCommon::isTimeInPeriod(quint8(now.hour()),
