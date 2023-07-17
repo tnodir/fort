@@ -36,7 +36,12 @@ TEST_F(FileUtilTest, paths)
     const QString path = driveC + subPath;
 
     ASSERT_EQ(FileUtil::kernelPathToPath(kernelPath), pathBack);
-    ASSERT_EQ(FileUtil::pathToKernelPath(path, false), kernelPath);
+    ASSERT_EQ(FileUtil::pathToKernelPath(path, /*lower=*/false), kernelPath);
+}
+
+TEST_F(FileUtilTest, systemPath)
+{
+    ASSERT_EQ(FileUtil::pathToKernelPath("System", /*lower=*/true), FileUtil::systemApp());
 }
 
 TEST_F(FileUtilTest, process)

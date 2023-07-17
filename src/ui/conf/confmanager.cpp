@@ -856,20 +856,20 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
 
 void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)
 {
-    const QString appPath = logEntry.path();
-    const QString adjustedPath = FileUtil::normalizePath(appPath);
+    const QString appOriginPath = logEntry.path();
+    const QString appPath = FileUtil::normalizePath(appOriginPath);
 
-    if (appIdByPath(adjustedPath) > 0)
+    if (appIdByPath(appPath) > 0)
         return; // already added by user
 
-    const QString appName = IoC<AppInfoCache>()->appName(appPath);
+    const QString appName = IoC<AppInfoCache>()->appName(appOriginPath);
 
     App app;
     app.blocked = logEntry.blocked();
     app.alerted = true;
     app.groupIndex = 0; // "Main" app. group
-    app.appOriginPath = appPath;
-    app.appPath = adjustedPath;
+    app.appOriginPath = appOriginPath;
+    app.appPath = appPath;
     app.appName = appName;
 
     const bool ok = addOrUpdateApp(app);

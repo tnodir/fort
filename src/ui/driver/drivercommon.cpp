@@ -220,7 +220,7 @@ bool confIp6InRange(const void *drvConf, const ip6_addr_t &ip, bool included, in
 quint16 confAppFind(const void *drvConf, const QString &kernelPath)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
-    const QString kernelPathLower = kernelPath.toLower();
+    const QString kernelPathLower = kernelPath.startsWith('\\') ? kernelPath.toLower() : kernelPath;
     const quint32 len = quint32(kernelPathLower.size()) * sizeof(WCHAR);
     const WCHAR *p = (PCWCHAR) kernelPathLower.utf16();
 
