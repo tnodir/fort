@@ -10,7 +10,6 @@
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/guiutil.h>
@@ -317,12 +316,12 @@ AppRow AppListModel::appRowById(qint64 appId) const
 
 AppRow AppListModel::appRowByPath(const QString &appPath) const
 {
-    const QString adjustedPath = ConfUtil::adjustAppPath(appPath);
+    const QString normPath = FileUtil::normalizePath(appPath);
 
     AppRow appRow;
-    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { adjustedPath }, appRow)) {
+    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { normPath }, appRow)) {
         appRow.appOriginPath = appPath;
-        appRow.appPath = adjustedPath;
+        appRow.appPath = normPath;
     }
     return appRow;
 }

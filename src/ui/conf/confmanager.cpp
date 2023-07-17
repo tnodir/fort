@@ -37,7 +37,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-constexpr int DATABASE_USER_VERSION = 20;
+constexpr int DATABASE_USER_VERSION = 21;
 
 constexpr int APP_END_TIMER_INTERVAL_MIN = 100;
 constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
@@ -222,11 +222,12 @@ const char *const sqlUpdateZoneResult =
         "  WHERE zone_id = ?1;";
 
 using AppsMap = QHash<qint64, QString>;
+using AppIdsArray = QVector<qint64>;
 
-bool fillAppPathsMap(SqliteDb *db, AppsMap &appsMap)
+bool fillAppPathsMap(SqliteDb *db, AppsMap &appsMap, const char *sql = sqlSelectAppPaths)
 {
     SqliteStmt stmt;
-    if (!db->prepare(stmt, sqlSelectAppPaths))
+    if (!db->prepare(stmt, sql))
         return false;
 
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -239,7 +240,7 @@ bool fillAppPathsMap(SqliteDb *db, AppsMap &appsMap)
     return true;
 }
 
-bool updateAppPathsByMap(SqliteDb *db, const AppsMap &appsMap)
+bool updateAppPathsByMap(SqliteDb *db, const AppsMap &appsMap, AppIdsArray &dupAppIds)
 {
     const char *const sqlUpdateAppPaths = "UPDATE app"
                                           "  SET path = ?2, origin_path = ?3"
@@ -249,11 +250,21 @@ bool updateAppPathsByMap(SqliteDb *db, const AppsMap &appsMap)
     if (!db->prepare(stmt, sqlUpdateAppPaths))
         return false;
 
+    QSet<QString> appPaths;
+
     auto it = appsMap.begin();
     for (; it != appsMap.end(); ++it) {
         const qint64 appId = it.key();
         const QString appOriginPath = it.value();
-        const QString appPath = ConfUtil::adjustAppPath(appOriginPath);
+        const QString appPath = FileUtil::normalizePath(appOriginPath);
+
+        if (Q_LIKELY(!appPaths.contains(appPath))) {
+            appPaths.insert(appPath);
+        } else {
+            // Duplicate path found
+            dupAppIds.append(appId);
+            continue;
+        }
 
         stmt.bindInt64(1, appId);
         stmt.bindText(2, appPath);
@@ -268,11 +279,36 @@ bool updateAppPathsByMap(SqliteDb *db, const AppsMap &appsMap)
     return true;
 }
 
-bool migrateAppPaths(SqliteDb *db)
+void deleteDupApps(SqliteDb *db, const AppIdsArray &dupAppIds)
+{
+    if (dupAppIds.isEmpty())
+        return;
+
+    for (qint64 appId : dupAppIds) {
+        qCDebug(LC) << "Remove dup app-id:" << appId;
+        db->executeEx(sqlDeleteApp, { appId });
+    }
+
+    // Remove alerts for deleted apps
+    db->execute("DELETE FROM app_alert WHERE NOT EXISTS ("
+                "  SELECT 1 FROM app WHERE app.app_id = app_alert.app_id);");
+}
+
+bool migrateAppPaths(SqliteDb *db, int version)
 {
     AppsMap appsMap;
+    AppIdsArray dupAppIds;
 
-    return fillAppPathsMap(db, appsMap) && updateAppPathsByMap(db, appsMap);
+    const char *const sqlSelectAppOriginPaths = "SELECT app_id, origin_path FROM app;";
+
+    const char *sql = (version == 20) ? sqlSelectAppPaths : sqlSelectAppOriginPaths;
+
+    if (!(fillAppPathsMap(db, appsMap, sql) && updateAppPathsByMap(db, appsMap, dupAppIds)))
+        return false;
+
+    deleteDupApps(db, dupAppIds);
+
+    return true;
 }
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
@@ -287,8 +323,9 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
         // COMPAT: Zones
         db->execute("UPDATE task SET name = 'ZoneDownloader' WHERE name = 'Tasix';");
     } break;
-    case 20: {
-        return migrateAppPaths(db);
+    case 20:
+    case 21: {
+        return migrateAppPaths(db, version);
     } break;
     }
 
@@ -472,7 +509,7 @@ bool driverWriteZones(ConfUtil &confUtil, QByteArray &buf, int entrySize, bool o
     }
 
     auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeZones(buf, entrySize)) {
+    if (!driverManager->writeZones(buf, entrySize, onlyFlags)) {
         showErrorMessage(driverManager->errorMessage());
         return false;
     }
@@ -820,7 +857,7 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
 void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)
 {
     const QString appPath = logEntry.path();
-    const QString adjustedPath = ConfUtil::adjustAppPath(appPath);
+    const QString adjustedPath = FileUtil::normalizePath(appPath);
 
     if (appIdByPath(adjustedPath) > 0)
         return; // already added by user

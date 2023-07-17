@@ -161,6 +161,22 @@ QString toNativeSeparators(const QString &path)
     return QDir::toNativeSeparators(path);
 }
 
+QString normalizePath(const QString &path)
+{
+    const QString trimPath = path.trimmed();
+
+    if (isSystemApp(trimPath))
+        return systemApp();
+
+    QString lowerPath = trimPath.toLower();
+
+    if (isDriveFilePath(lowerPath)) {
+        lowerPath[0] = lowerPath[0].toUpper();
+    }
+
+    return toNativeSeparators(lowerPath);
+}
+
 bool makePath(const QString &path)
 {
     return QDir().mkpath(path);

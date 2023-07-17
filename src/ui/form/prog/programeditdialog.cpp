@@ -20,7 +20,7 @@
 #include <form/dialog/dialogutil.h>
 #include <fortmanager.h>
 #include <manager/windowmanager.h>
-#include <util/conf/confutil.h>
+#include <util/fileutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/window/widgetwindow.h>
@@ -489,7 +489,7 @@ void ProgramEditDialog::fillApp(App &app) const
 
     const QString appPath = m_editPath->text();
     app.appOriginPath = appPath;
-    app.appPath = ConfUtil::adjustAppPath(appPath);
+    app.appPath = FileUtil::normalizePath(appPath);
 
     if (!app.blocked) {
         if (m_cscBlockAppIn->checkBox()->isChecked()) {

@@ -39,8 +39,6 @@ public:
 
     static int zoneMaxCount();
 
-    static QString adjustAppPath(const QString &appPath);
-
 signals:
     void errorMessageChanged();
 

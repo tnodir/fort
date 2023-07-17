@@ -94,13 +94,6 @@ int ConfUtil::zoneMaxCount()
     return FORT_CONF_ZONE_MAX;
 }
 
-QString ConfUtil::adjustAppPath(const QString &appPath)
-{
-    QString adjustedPath = appPath.trimmed().toLower();
-
-    return adjustedPath.replace('/', '\\');
-}
-
 int ConfUtil::writeVersion(QByteArray &buf)
 {
     const int verSize = sizeof(FORT_CONF_VERSION);
