@@ -122,25 +122,25 @@ inline QString convertWildPathToKernelPath(const QString &path)
     return path;
 }
 
+inline QString convertPathToKernelPath(const QString &path)
+{
+    if (path.size() <= 1)
+        return path;
+
+    const QChar char1 = path.at(0);
+    const QString kernelPath = char1.isLetter() ? convertDrivePathToKernelPath(path)
+                                                : convertWildPathToKernelPath(path);
+
+    return toNativeSeparators(kernelPath);
+}
+
 // Convert "C:\\path" to "\\Device\\HarddiskVolume1\\path"
 QString pathToKernelPath(const QString &path, bool lower)
 {
-    QString kernelPath = path;
+    if (isSystemApp(path))
+        return systemApp();
 
-    if (path.size() > 1) {
-        const QChar char1 = path.at(0);
-
-        if (char1.isLetter()) {
-            if (isSystemApp(path))
-                return systemApp();
-
-            kernelPath = convertDrivePathToKernelPath(path);
-        } else {
-            kernelPath = convertWildPathToKernelPath(path);
-        }
-
-        kernelPath.replace(QLatin1Char('/'), QLatin1Char('\\'));
-    }
+    const QString kernelPath = convertPathToKernelPath(path);
 
     return lower ? kernelPath.toLower() : kernelPath;
 }
