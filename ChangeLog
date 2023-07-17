@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.9.9, 2023-07-17:
+- UI: Fix "System" path handling (v3.9.8 regression).
+
 v3.9.8, 2023-07-12:
 - UI: Programs: Accept File Drops.
 - UI: Auto-install driver in portable mode.
