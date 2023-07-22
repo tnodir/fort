@@ -292,7 +292,7 @@
     </message>
     <message>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
-        <translation>应用程序组的长度&apos;s 名称必须是 &lt; %1</translation>
+        <translation>应用程序组的长度名称必须小于 %1</translation>
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
@@ -979,7 +979,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Unlock till:</source>
-        <translation>解锁</translation>
+        <translation>解锁直到：</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1346,7 +1346,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Keep data for &apos;Hourly&apos;:</source>
-        <translation>保留 &apos;小时数据&apos;</translation>
+        <translation>保留 &quot;每小时数据&quot;</translation>
     </message>
     <message>
         <source> day(s)</source>
@@ -1354,11 +1354,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Keep data for &apos;Daily&apos;:</source>
-        <translation>保留 &apos;小时数据&apos;</translation>
+        <translation>保留 &quot;每天数据&quot;</translation>
     </message>
     <message>
         <source>Keep data for &apos;Monthly&apos;:</source>
-        <translation>保留 &apos;小时数据&apos;</translation>
+        <translation>保留 &quot;每月数据&quot;</translation>
     </message>
     <message>
         <source> month(s)</source>
