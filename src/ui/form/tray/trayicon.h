@@ -40,8 +40,8 @@ public:
         ActionShowStatistics,
         ActionShowTrafficGraph,
         ActionSwitchFilterEnabled,
-        ActionSwitchStopTraffic,
-        ActionSwitchStopInetTraffic,
+        ActionSwitchBlockTraffic,
+        ActionSwitchBlockInetTraffic,
         ActionShowFilterModeMenu,
         ActionShowTrayMenu,
         ActionIgnore,
@@ -139,8 +139,8 @@ private:
     QAction *m_graphAction = nullptr;
     QAction *m_zonesAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
-    QAction *m_stopTrafficAction = nullptr;
-    QAction *m_stopInetTrafficAction = nullptr;
+    QAction *m_blockTrafficAction = nullptr;
+    QAction *m_blockInetTrafficAction = nullptr;
     QAction *m_filterModeMenuAction = nullptr;
     QMenu *m_filterModeMenu = nullptr;
     QActionGroup *m_filterModeActions = nullptr;

@@ -322,8 +322,8 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setBootFilter(iniBool("bootFilter"));
     conf.setFilterEnabled(iniBool("filterEnabled", true));
     conf.setFilterLocals(iniBool("filterLocals"));
-    conf.setStopTraffic(iniBool("stopTraffic"));
-    conf.setStopInetTraffic(iniBool("stopInetTraffic"));
+    conf.setBlockTraffic(iniBool("blockTraffic"));
+    conf.setBlockInetTraffic(iniBool("blockInetTraffic"));
     conf.setAllowAllNew(iniBool("allowAllNew", true));
     conf.setAskToConnect(iniBool("askToConnect"));
     conf.setLogStat(iniBool("logStat", true));
@@ -364,8 +364,8 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("bootFilter", conf.bootFilter());
         setIniValue("filterEnabled", conf.filterEnabled());
         setIniValue("filterLocals", conf.filterLocals());
-        setIniValue("stopTraffic", conf.stopTraffic());
-        setIniValue("stopInetTraffic", conf.stopInetTraffic());
+        setIniValue("blockTraffic", conf.blockTraffic());
+        setIniValue("blockInetTraffic", conf.blockInetTraffic());
         setIniValue("allowAllNew", conf.allowAllNew());
         setIniValue("askToConnect", conf.askToConnect());
         setIniValue("logStat", conf.logStat());

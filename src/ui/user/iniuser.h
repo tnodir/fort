@@ -31,8 +31,8 @@ public:
     QString hotKeyGraph() const { return valueText("hotKey/graph"); }
     QString hotKeyZones() const { return valueText("hotKey/zones"); }
     QString hotKeyFilter() const { return valueText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
-    QString hotKeyStopTraffic() const { return valueText("hotKey/stopTraffic"); }
-    QString hotKeyStopInetTraffic() const { return valueText("hotKey/stopInetTraffic"); }
+    QString hotKeyBlockTraffic() const { return valueText("hotKey/blockTraffic"); }
+    QString hotKeyBlockInetTraffic() const { return valueText("hotKey/blockInetTraffic"); }
     QString hotKeyAppGroupModifiers() const
     {
         return valueText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift");

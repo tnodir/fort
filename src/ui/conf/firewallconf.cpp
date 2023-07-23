@@ -13,8 +13,8 @@ FirewallConf::FirewallConf(Settings *settings, QObject *parent) :
     m_bootFilter(false),
     m_filterEnabled(true),
     m_filterLocals(false),
-    m_stopTraffic(false),
-    m_stopInetTraffic(false),
+    m_blockTraffic(false),
+    m_blockInetTraffic(false),
     m_allowAllNew(false),
     m_askToConnect(false),
     m_logStat(false),
@@ -51,14 +51,14 @@ void FirewallConf::setFilterLocals(bool filterLocals)
     m_filterLocals = filterLocals;
 }
 
-void FirewallConf::setStopTraffic(bool stopTraffic)
+void FirewallConf::setBlockTraffic(bool blockTraffic)
 {
-    m_stopTraffic = stopTraffic;
+    m_blockTraffic = blockTraffic;
 }
 
-void FirewallConf::setStopInetTraffic(bool stopInetTraffic)
+void FirewallConf::setBlockInetTraffic(bool blockInetTraffic)
 {
-    m_stopInetTraffic = stopInetTraffic;
+    m_blockInetTraffic = blockInetTraffic;
 }
 
 void FirewallConf::setAllowAllNew(bool allowAllNew)
@@ -328,8 +328,8 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_bootFilter = o.bootFilter();
     m_filterEnabled = o.filterEnabled();
     m_filterLocals = o.filterLocals();
-    m_stopTraffic = o.stopTraffic();
-    m_stopInetTraffic = o.stopInetTraffic();
+    m_blockTraffic = o.blockTraffic();
+    m_blockInetTraffic = o.blockInetTraffic();
     m_allowAllNew = o.allowAllNew();
     m_askToConnect = o.askToConnect();
 
@@ -376,8 +376,8 @@ QVariant FirewallConf::flagsToVariant() const
     map["bootFilter"] = bootFilter();
     map["filterEnabled"] = filterEnabled();
     map["filterLocals"] = filterLocals();
-    map["stopTraffic"] = stopTraffic();
-    map["stopInetTraffic"] = stopInetTraffic();
+    map["blockTraffic"] = blockTraffic();
+    map["blockInetTraffic"] = blockInetTraffic();
     map["allowAllNew"] = allowAllNew();
     map["askToConnect"] = askToConnect();
 
@@ -408,8 +408,8 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_bootFilter = map["bootFilter"].toBool();
     m_filterEnabled = map["filterEnabled"].toBool();
     m_filterLocals = map["filterLocals"].toBool();
-    m_stopTraffic = map["stopTraffic"].toBool();
-    m_stopInetTraffic = map["stopInetTraffic"].toBool();
+    m_blockTraffic = map["blockTraffic"].toBool();
+    m_blockInetTraffic = map["blockInetTraffic"].toBool();
     m_allowAllNew = map["allowAllNew"].toBool();
     m_askToConnect = map["askToConnect"].toBool();
 

@@ -57,8 +57,8 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
     confFlags->boot_filter = conf.bootFilter();
     confFlags->filter_enabled = conf.filterEnabled();
     confFlags->filter_locals = conf.filterLocals();
-    confFlags->stop_traffic = conf.stopTraffic();
-    confFlags->stop_inet_traffic = conf.stopInetTraffic();
+    confFlags->block_traffic = conf.blockTraffic();
+    confFlags->block_inet_traffic = conf.blockInetTraffic();
     confFlags->allow_all_new = conf.allowAllNew();
     confFlags->ask_to_connect = conf.askToConnect();
 

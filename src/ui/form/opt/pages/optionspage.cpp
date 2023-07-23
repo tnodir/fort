@@ -163,13 +163,13 @@ void OptionsPage::onRetranslateUi()
     m_cbService->setText(tr("Run Fort Firewall as a Service in background"));
 
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
-    m_cbStopTraffic->setText(tr("Stop Traffic"));
-    m_cbStopInetTraffic->setText(tr("Stop Internet Traffic"));
+    m_cbBlockTraffic->setText(tr("Block All Traffic"));
+    m_cbBlockInetTraffic->setText(tr("Block Internet Traffic"));
 
     m_labelFilterMode->setText(tr("Filter Mode:"));
     retranslateComboFilterMode();
 
-    m_cbBootFilter->setText(tr("Stop traffic when Fort Firewall is not running"));
+    m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
     m_cbFilterLocals->setText(tr("Filter Local Addresses"));
     m_cbFilterLocals->setToolTip(
             tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
@@ -294,8 +294,8 @@ void OptionsPage::retranslateComboTrayAction()
     // Sync with TrayIcon::ActionType
     const QStringList list = { tr("Show My Fort"), tr("Show Programs"), tr("Show Options"),
         tr("Show Statistics"), tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"),
-        tr("Switch Stop Traffic"), tr("Switch Stop Internet Traffic"), tr("Show Filter Mode Menu"),
-        tr("Show Tray Menu"), tr("Ignore") };
+        tr("Switch Block All Traffic"), tr("Switch Block Internet Traffic"),
+        tr("Show Filter Mode Menu"), tr("Show Tray Menu"), tr("Ignore") };
 
     m_comboTrayAction->clear();
     m_comboTrayAction->addItems(list);
@@ -392,21 +392,22 @@ void OptionsPage::setupTrafficBox()
         conf()->setFilterEnabled(checked);
         ctrl()->setFlagsEdited();
     });
-    m_cbStopTraffic = ControlUtil::createCheckBox(conf()->stopTraffic(), [&](bool checked) {
-        conf()->setStopTraffic(checked);
+    m_cbBlockTraffic = ControlUtil::createCheckBox(conf()->blockTraffic(), [&](bool checked) {
+        conf()->setBlockTraffic(checked);
         ctrl()->setFlagsEdited();
     });
-    m_cbStopInetTraffic = ControlUtil::createCheckBox(conf()->stopInetTraffic(), [&](bool checked) {
-        conf()->setStopInetTraffic(checked);
-        ctrl()->setFlagsEdited();
-    });
+    m_cbBlockInetTraffic =
+            ControlUtil::createCheckBox(conf()->blockInetTraffic(), [&](bool checked) {
+                conf()->setBlockInetTraffic(checked);
+                ctrl()->setFlagsEdited();
+            });
 
     auto filterModeLayout = setupFilterModeLayout();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
-    layout->addWidget(m_cbStopTraffic);
-    layout->addWidget(m_cbStopInetTraffic);
+    layout->addWidget(m_cbBlockTraffic);
+    layout->addWidget(m_cbBlockInetTraffic);
     layout->addLayout(filterModeLayout);
 
     m_gbTraffic = new QGroupBox();

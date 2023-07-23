@@ -173,8 +173,8 @@ void QuotaManager::processQuotaExceed(AlertType alertType)
     auto confManager = IoC<ConfManager>();
     FirewallConf *conf = confManager->conf();
 
-    if (conf->ini().quotaStopInetTraffic() && !conf->stopInetTraffic()) {
-        conf->setStopInetTraffic(true);
+    if (conf->ini().quotaBlockInetTraffic() && !conf->blockInetTraffic()) {
+        conf->setBlockInetTraffic(true);
         confManager->saveFlags();
     }
 

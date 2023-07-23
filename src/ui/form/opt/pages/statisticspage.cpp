@@ -61,7 +61,7 @@ void StatisticsPage::onRetranslateUi()
 
     m_lscQuotaDayMb->label()->setText(tr("Day's Quota:"));
     m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
-    m_cbQuotaStopInternet->setText(tr("Stop Internet traffic when quota exceeds"));
+    m_cbQuotaBlockInternet->setText(tr("Block Internet traffic when quota exceeds"));
 
     m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
     m_cbLogAlertedBlockedIp->setText(tr("Alerted only"));
@@ -166,7 +166,7 @@ void StatisticsPage::setupTrafficBox()
             { m_cbLogStat, m_cbLogStatNoFilter, m_ctpActivePeriod, m_lscMonthStart,
                     ControlUtil::createSeparator(), m_lscTrafHourKeepDays, m_lscTrafDayKeepDays,
                     m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_lscQuotaDayMb,
-                    m_lscQuotaMonthMb, m_cbQuotaStopInternet });
+                    m_lscQuotaMonthMb, m_cbQuotaBlockInternet });
 
     m_gbTraffic = new QGroupBox();
     m_gbTraffic->setLayout(layout);
@@ -288,10 +288,10 @@ void StatisticsPage::setupQuota()
                 }
             });
 
-    m_cbQuotaStopInternet =
-            ControlUtil::createCheckBox(ini()->quotaStopInetTraffic(), [&](bool checked) {
-                if (ini()->quotaStopInetTraffic() != checked) {
-                    ini()->setQuotaStopInternet(checked);
+    m_cbQuotaBlockInternet =
+            ControlUtil::createCheckBox(ini()->quotaBlockInetTraffic(), [&](bool checked) {
+                if (ini()->quotaBlockInetTraffic() != checked) {
+                    ini()->setQuotaBlockInternet(checked);
                     ctrl()->setIniEdited();
                 }
             });

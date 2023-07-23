@@ -229,7 +229,7 @@ inline static void fort_callout_ale_log(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE
 inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
-    if (conf_flags.stop_traffic) {
+    if (conf_flags.block_traffic) {
         cx->blocked = TRUE; /* block all */
         return TRUE;
     }
@@ -241,7 +241,7 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
         return TRUE;
     }
 
-    if (conf_flags.stop_inet_traffic) {
+    if (conf_flags.block_inet_traffic) {
         cx->blocked = TRUE; /* block Internet */
         return TRUE;
     }

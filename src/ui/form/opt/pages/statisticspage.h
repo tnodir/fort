@@ -50,7 +50,7 @@ private:
     LabelSpinCombo *m_lscTrafMonthKeepMonths = nullptr;
     LabelSpinCombo *m_lscQuotaDayMb = nullptr;
     LabelSpinCombo *m_lscQuotaMonthMb = nullptr;
-    QCheckBox *m_cbQuotaStopInternet = nullptr;
+    QCheckBox *m_cbQuotaBlockInternet = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;
     QCheckBox *m_cbLogAlertedBlockedIp = nullptr;
     LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;

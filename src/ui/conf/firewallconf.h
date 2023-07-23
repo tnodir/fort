@@ -52,11 +52,11 @@ public:
     bool filterLocals() const { return m_filterLocals; }
     void setFilterLocals(bool filterLocals);
 
-    bool stopTraffic() const { return m_stopTraffic; }
-    void setStopTraffic(bool stopTraffic);
+    bool blockTraffic() const { return m_blockTraffic; }
+    void setBlockTraffic(bool blockTraffic);
 
-    bool stopInetTraffic() const { return m_stopInetTraffic; }
-    void setStopInetTraffic(bool stopInetTraffic);
+    bool blockInetTraffic() const { return m_blockInetTraffic; }
+    void setBlockInetTraffic(bool blockInetTraffic);
 
     bool allowAllNew() const { return m_allowAllNew; }
     void setAllowAllNew(bool allowAllNew);
@@ -175,8 +175,8 @@ private:
     uint m_bootFilter : 1;
     uint m_filterEnabled : 1;
     uint m_filterLocals : 1;
-    uint m_stopTraffic : 1;
-    uint m_stopInetTraffic : 1;
+    uint m_blockTraffic : 1;
+    uint m_blockInetTraffic : 1;
     uint m_allowAllNew : 1;
     uint m_askToConnect : 1;
 
