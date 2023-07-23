@@ -97,6 +97,7 @@ private:
     QCheckBox *m_cbPurgeOnStart = nullptr;
 
     QCheckBox *m_cbExplorerMenu = nullptr;
+    QCheckBox *m_cbUseSystemLocale = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
     QCheckBox *m_cbHotKeysEnabled = nullptr;

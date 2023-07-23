@@ -75,6 +75,8 @@ public slots:
     void quitProgram();
 
 protected slots:
+    void setupByIniUser(const IniUser &ini, bool onlyFlags);
+
     void switchTrayMenu(bool checked);
     void switchFilterModeMenu(bool checked);
 

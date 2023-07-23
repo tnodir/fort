@@ -174,7 +174,7 @@ TrayIcon::TrayIcon(QObject *parent) :
     connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated);
 
     connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
-    connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::updateTrayMenu);
+    connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::setupByIniUser);
 
     connect(confManager(), &ConfManager::appAlerted, this,
             [&] { updateTrayIcon(/*alerted=*/true); });
@@ -285,6 +285,11 @@ void TrayIcon::quitProgram()
     } else {
         windowManager()->quit();
     }
+}
+
+void TrayIcon::setupByIniUser(const IniUser & /*ini*/, bool onlyFlags)
+{
+    updateTrayMenu(onlyFlags);
 }
 
 void TrayIcon::switchTrayMenu(bool /*checked*/)

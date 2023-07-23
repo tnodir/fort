@@ -782,7 +782,7 @@ void ConfManager::saveIniUser(bool flagsChanged)
     iniUser()->clear();
 
     if (flagsChanged) {
-        emit iniUserChanged(/*onlyFlags=*/true);
+        emit iniUserChanged(*iniUser(), /*onlyFlags=*/true);
     }
 }
 

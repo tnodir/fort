@@ -98,7 +98,7 @@ public:
 signals:
     void confChanged(bool onlyFlags);
     void iniChanged(const IniOptions &ini);
-    void iniUserChanged(bool onlyFlags);
+    void iniUserChanged(const IniUser &ini, bool onlyFlags);
 
     void appAlerted();
     void appChanged();

@@ -4,7 +4,10 @@
 #include <QDir>
 #include <QTranslator>
 
+#include <conf/confmanager.h>
+#include <user/iniuser.h>
 #include <util/fileutil.h>
+#include <util/ioc/ioccontainer.h>
 #include <util/stringutil.h>
 
 #define TRANSLATION_FILE_PREFIX "i18n_"
@@ -18,6 +21,13 @@ TranslationManager::TranslationManager(QObject *parent) : QObject(parent)
 TranslationManager::~TranslationManager()
 {
     uninstallAllTranslators();
+}
+
+void TranslationManager::setUp()
+{
+    auto confManager = IoC()->setUpDependency<ConfManager>();
+
+    connect(confManager, &ConfManager::iniUserChanged, this, &TranslationManager::setupByIniUser);
 }
 
 void TranslationManager::setupTranslation()
@@ -86,6 +96,18 @@ int TranslationManager::getLanguageByName(const QString &langName) const
     return 0;
 }
 
+void TranslationManager::setLanguage(int language)
+{
+    if (m_language == language)
+        return;
+
+    uninstallTranslator(m_language);
+    installTranslator(language, m_locale);
+
+    m_language = language;
+    emit languageChanged();
+}
+
 bool TranslationManager::switchLanguage(int language)
 {
     if (language < 0 || language >= m_locales.size())
@@ -93,13 +115,9 @@ bool TranslationManager::switchLanguage(int language)
 
     m_locale = m_locales.at(language);
 
-    QLocale::setDefault(m_locale);
+    setupDefaultLocale();
 
-    uninstallTranslator(m_language);
-    installTranslator(language, m_locale);
-
-    m_language = language;
-    emit languageChanged();
+    setLanguage(language);
 
     return true;
 }
@@ -119,6 +137,9 @@ void TranslationManager::uninstallAllTranslators()
 
 void TranslationManager::uninstallTranslator(int language)
 {
+    if (language < 0 || language >= m_translators.size())
+        return;
+
     QTranslator *translator = m_translators.at(language);
     if (translator) {
         QCoreApplication::removeTranslator(translator);
@@ -150,6 +171,18 @@ QTranslator *TranslationManager::loadTranslator(int language, const QLocale &loc
     }
 
     return translator;
+}
+
+void TranslationManager::setupDefaultLocale()
+{
+    QLocale::setDefault(m_useSystemLocale ? QLocale::system() : m_locale);
+}
+
+void TranslationManager::setupByIniUser(const IniUser &ini)
+{
+    m_useSystemLocale = ini.useSystemLocale();
+
+    switchLanguageByName(ini.language());
 }
 
 QString TranslationManager::i18nDir()

@@ -186,6 +186,7 @@ void OptionsPage::onRetranslateUi()
     m_cbPurgeOnStart->setText(tr("Purge Obsolete on startup"));
 
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
+    m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_labelLanguage->setText(tr("Language:"));
 
     m_cbHotKeysEnabled->setText(tr("Enabled"));
@@ -608,11 +609,18 @@ void OptionsPage::setupGlobalBox()
     });
     m_cbExplorerMenu->setEnabled(settings()->hasMasterAdmin());
 
+    m_cbUseSystemLocale =
+            ControlUtil::createCheckBox(iniUser()->useSystemLocale(), [&](bool checked) {
+                iniUser()->setUseSystemLocale(checked);
+                ctrl()->setIniUserEdited(true);
+            });
+
     // Language Row
     auto langLayout = setupLangLayout();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbExplorerMenu);
+    layout->addWidget(m_cbUseSystemLocale);
     layout->addLayout(langLayout);
 
     m_gbGlobal = new QGroupBox();
