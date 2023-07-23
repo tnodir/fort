@@ -945,27 +945,27 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止所有流量</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止互联网流量</translation>
     </message>
     <message>
         <source>Block traffic when Fort Firewall is not running</source>
-        <translation type="unfinished"></translation>
+        <translation>当堡垒防火墙未运行时阻止流量</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>使用系统地区设置</translation>
     </message>
     <message>
         <source>Switch Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>切换阻止所有流量</translation>
     </message>
     <message>
         <source>Switch Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>切换阻止互联网流量</translation>
     </message>
 </context>
 <context>
@@ -1446,7 +1446,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Block Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>超过配额时阻止互联网流量</translation>
     </message>
 </context>
 <context>
@@ -1624,11 +1624,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止所有流量</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止互联网流量</translation>
     </message>
 </context>
 <context>
