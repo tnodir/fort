@@ -736,14 +736,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
-        <source>Stop traffic when Fort Firewall is not running</source>
-        <translation>Interrompi il traffico quando Fort Firewall non è in esecuzione</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Interrompi traffico Internet</translation>
-    </message>
-    <message>
         <source>Log debug messages</source>
         <translation>Registra i messaggi di debug</translation>
     </message>
@@ -812,10 +804,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation>Filtro abilitato</translation>
     </message>
     <message>
-        <source>Stop Traffic</source>
-        <translation>Interrompi traffico</translation>
-    </message>
-    <message>
         <source>Windows Explorer integration</source>
         <translation>Integrazione con Windows Explorer</translation>
     </message>
@@ -877,14 +865,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Switch Filter Enabled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch Stop Traffic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch Stop Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -961,6 +941,30 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Auto-Show Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block traffic when Fort Firewall is not running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1426,10 +1430,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Conserva i dati per &apos;Giornaliero&apos;:</translation>
     </message>
     <message>
-        <source>Stop Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Alerted only</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1439,6 +1439,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet traffic when quota exceeds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1572,10 +1576,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Zone</translation>
     </message>
     <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Interrompi traffico Internet</translation>
-    </message>
-    <message>
         <source>Options</source>
         <translation>Opzioni</translation>
     </message>
@@ -1590,10 +1590,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Filter Enabled</source>
         <translation>Filtro abilitato</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>Interrompi traffico</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
@@ -1621,6 +1617,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

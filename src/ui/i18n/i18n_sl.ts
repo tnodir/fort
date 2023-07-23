@@ -730,10 +730,6 @@
         <translation>Splošno</translation>
     </message>
     <message>
-        <source>Stop traffic when Fort Firewall is not running</source>
-        <translation>Ustavi promet, ko &apos;Fort Firewall&apos; ne deluje</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>Filter je omogočen</translation>
     </message>
@@ -744,14 +740,6 @@
     <message>
         <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
         <translation>Filtriraj naslove lokalne povratne zanke (127.0.0.0/8) in oddajne (255.255.255.255) naslove</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>Ustavi promet</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Ustavi internetni promet</translation>
     </message>
     <message>
         <source>Hot Keys</source>
@@ -868,14 +856,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <translation>Preklop filtra omogočen</translation>
     </message>
     <message>
-        <source>Switch Stop Traffic</source>
-        <translation>Preklop ustavitve prometa</translation>
-    </message>
-    <message>
-        <source>Switch Stop Internet Traffic</source>
-        <translation>Preklop ustavitve internetnega prometa</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>Zastavice menija programske vrstice</translation>
     </message>
@@ -962,6 +942,30 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     <message>
         <source>Auto-Show Menu</source>
         <translation>Meni &apos;Samodejno prikaži&apos;</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block traffic when Fort Firewall is not running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1429,10 +1433,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Zberi blokirane povezave</translation>
     </message>
     <message>
-        <source>Stop Internet traffic when quota exceeds</source>
-        <translation>Ustavi internetni promet, ko je kvota presežena</translation>
-    </message>
-    <message>
         <source>Alerted only</source>
         <translation>Samo opozorjeno</translation>
     </message>
@@ -1443,6 +1443,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Allowed Connections</source>
         <translation>Dovoljene povezave</translation>
+    </message>
+    <message>
+        <source>Block Internet traffic when quota exceeds</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1587,14 +1591,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Filter je omogočen</translation>
     </message>
     <message>
-        <source>Stop Traffic</source>
-        <translation>Ustavi promet</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Ustavi internetni promet</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Končaj</translation>
     </message>
@@ -1625,6 +1621,14 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>My Fort</source>
         <translation>Moja trdnjava</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

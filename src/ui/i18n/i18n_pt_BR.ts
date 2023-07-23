@@ -730,10 +730,6 @@
         <translation>Global</translation>
     </message>
     <message>
-        <source>Stop traffic when Fort Firewall is not running</source>
-        <translation>Parar o tráfego quando o Fort Firewall não estiver funcionando</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>Filtro Ativado</translation>
     </message>
@@ -744,14 +740,6 @@
     <message>
         <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
         <translation>Filtrar Endereços de Loopback Local (127.0.0.0/8) e Transmissão (255.255.255.255)</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>Parar Tráfego</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Parar Tráfego na Internet</translation>
     </message>
     <message>
         <source>Hot Keys</source>
@@ -879,14 +867,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Switch Stop Traffic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch Stop Internet Traffic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -960,6 +940,30 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Auto-Show Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block traffic when Fort Firewall is not running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1425,10 +1429,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Coletar conexões bloqueadas</translation>
     </message>
     <message>
-        <source>Stop Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Alerted only</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1438,6 +1438,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet traffic when quota exceeds</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1583,14 +1587,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Filtro Ativado</translation>
     </message>
     <message>
-        <source>Stop Traffic</source>
-        <translation>Parar Tráfego</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Parar Tráfego de Internet</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Sair</translation>
     </message>
@@ -1620,6 +1616,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

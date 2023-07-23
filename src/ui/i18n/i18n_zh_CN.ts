@@ -730,10 +730,6 @@
         <translation>全局配置</translation>
     </message>
     <message>
-        <source>Stop traffic when Fort Firewall is not running</source>
-        <translation>当堡垒防火墙未运行时停止流量</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>过滤器已启用</translation>
     </message>
@@ -744,14 +740,6 @@
     <message>
         <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
         <translation>过滤本地回路(127.0.0.0/8)和广播(255.255.255)地址</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>停止流量</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>停止网络流量</translation>
     </message>
     <message>
         <source>Hot Keys</source>
@@ -868,14 +856,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>开关过滤器启用</translation>
     </message>
     <message>
-        <source>Switch Stop Traffic</source>
-        <translation>切换停止流量</translation>
-    </message>
-    <message>
-        <source>Switch Stop Internet Traffic</source>
-        <translation>切换停止互联网流量</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>托盘菜单标记</translation>
     </message>
@@ -962,6 +942,30 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Auto-Show Menu</source>
         <translation>自动显示菜单</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block traffic when Fort Firewall is not running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1429,10 +1433,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>收集已屏蔽的连接</translation>
     </message>
     <message>
-        <source>Stop Internet traffic when quota exceeds</source>
-        <translation>当超过配额时，停止互联网流量</translation>
-    </message>
-    <message>
         <source>Alerted only</source>
         <translation>仅警报</translation>
     </message>
@@ -1443,6 +1443,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Allowed Connections</source>
         <translation>允许连接量</translation>
+    </message>
+    <message>
+        <source>Block Internet traffic when quota exceeds</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1587,14 +1591,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>过滤器已启用</translation>
     </message>
     <message>
-        <source>Stop Traffic</source>
-        <translation>停止流量</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>停止网络流量</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -1625,6 +1621,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>My Fort</source>
         <translation>我的堡垒</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

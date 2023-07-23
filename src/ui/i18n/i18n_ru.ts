@@ -730,10 +730,6 @@
         <translation>Глобально</translation>
     </message>
     <message>
-        <source>Stop traffic when Fort Firewall is not running</source>
-        <translation>Остановить трафик, когда Fort Firewall не запущен</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
@@ -744,14 +740,6 @@
     <message>
         <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
         <translation>Фильтр локальных Loopback (127.0.0.0/8) и Broadcast (255.255.255.255) адресов</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>Остановить трафик</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Остановить Интернет трафик</translation>
     </message>
     <message>
         <source>Hot Keys</source>
@@ -868,14 +856,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Переключить &quot;Фильтр включен&quot;</translation>
     </message>
     <message>
-        <source>Switch Stop Traffic</source>
-        <translation>Переключить &quot;Остановить трафик&quot;</translation>
-    </message>
-    <message>
-        <source>Switch Stop Internet Traffic</source>
-        <translation>Переключить &quot;Остановить Интернет трафик&quot;</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>Флаги из меню трея</translation>
     </message>
@@ -962,6 +942,30 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Auto-Show Menu</source>
         <translation>Авто-показ Меню</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation>Блокировать трафик</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Блокировать Интернет трафик</translation>
+    </message>
+    <message>
+        <source>Block traffic when Fort Firewall is not running</source>
+        <translation>Блокировать трафик, когда Fort Firewall не запущен</translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation>Использовать системные региональные настройки</translation>
+    </message>
+    <message>
+        <source>Switch Block All Traffic</source>
+        <translation>Переключить &quot;Блокировать трафик&quot;</translation>
+    </message>
+    <message>
+        <source>Switch Block Internet Traffic</source>
+        <translation>Переключить &quot;Блокировать Интернет трафик&quot;</translation>
     </message>
 </context>
 <context>
@@ -1429,10 +1433,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Собирать заблокированные соединения</translation>
     </message>
     <message>
-        <source>Stop Internet traffic when quota exceeds</source>
-        <translation>Остановить Интернет трафик при превышении квоты</translation>
-    </message>
-    <message>
         <source>Alerted only</source>
         <translation>Только оповещения</translation>
     </message>
@@ -1443,6 +1443,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Allowed Connections</source>
         <translation>Разрешённые соединения</translation>
+    </message>
+    <message>
+        <source>Block Internet traffic when quota exceeds</source>
+        <translation>Блокировать Интернет трафик при превышении квоты</translation>
     </message>
 </context>
 <context>
@@ -1587,14 +1591,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <source>Stop Traffic</source>
-        <translation>Остановить трафик</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Остановить Интернет трафик</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
@@ -1625,6 +1621,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>My Fort</source>
         <translation>Мой Форт</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation>Блокировать трафик</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Блокировать Интернет трафик</translation>
     </message>
 </context>
 <context>

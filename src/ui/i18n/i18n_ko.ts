@@ -730,10 +730,6 @@
         <translation>전역</translation>
     </message>
     <message>
-        <source>Stop traffic when Fort Firewall is not running</source>
-        <translation>Fort Firewall이 실행 중이 아닐 때 트래픽 중지</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>필터링 활성화됨</translation>
     </message>
@@ -744,14 +740,6 @@
     <message>
         <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
         <translation>로컬 루프백 필터링 (127.0.0.0/8) 및 브로드캐스트 (255.255.255.255) 주소</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>트래픽 중지</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>인터넷 트래픽 중지</translation>
     </message>
     <message>
         <source>Hot Keys</source>
@@ -868,14 +856,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>필터 활성화 전환</translation>
     </message>
     <message>
-        <source>Switch Stop Traffic</source>
-        <translation>트래픽 중지 전환</translation>
-    </message>
-    <message>
-        <source>Switch Stop Internet Traffic</source>
-        <translation>인터넷 트래픽 중지 전환</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>체크 가능한 트레이 메뉴</translation>
     </message>
@@ -962,6 +942,30 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     <message>
         <source>Auto-Show Menu</source>
         <translation>자동 표시 메뉴</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block traffic when Fort Firewall is not running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1429,10 +1433,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>차단된 연결 집계</translation>
     </message>
     <message>
-        <source>Stop Internet traffic when quota exceeds</source>
-        <translation>할당량 초과 시 인터넷 트래픽 중지</translation>
-    </message>
-    <message>
         <source>Alerted only</source>
         <translation>경고만</translation>
     </message>
@@ -1443,6 +1443,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Allowed Connections</source>
         <translation>허용된 연결</translation>
+    </message>
+    <message>
+        <source>Block Internet traffic when quota exceeds</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1587,14 +1591,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>필터링 활성화됨</translation>
     </message>
     <message>
-        <source>Stop Traffic</source>
-        <translation>트래픽 중지</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>인터넷 트래픽 중지</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>프로그램 종료</translation>
     </message>
@@ -1625,6 +1621,14 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>My Fort</source>
         <translation>내 Fort</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

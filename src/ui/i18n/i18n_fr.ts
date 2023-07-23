@@ -730,10 +730,6 @@
         <translation>Global</translation>
     </message>
     <message>
-        <source>Stop traffic when Fort Firewall is not running</source>
-        <translation>Arrêtez le trafic lorsque Fort Firewall ne fonctionne pas</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>Filtre activé</translation>
     </message>
@@ -744,14 +740,6 @@
     <message>
         <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
         <translation>Filtrer les adresses de bouclage local (127.0.0.0/8) et de diffusion (255.255.255.255)</translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation>Arrêter le trafic</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Arrêter le trafic Internet</translation>
     </message>
     <message>
         <source>Hot Keys</source>
@@ -868,14 +856,6 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Commutateur Filtre activé</translation>
     </message>
     <message>
-        <source>Switch Stop Traffic</source>
-        <translation>Commutateur Stop Trafic</translation>
-    </message>
-    <message>
-        <source>Switch Stop Internet Traffic</source>
-        <translation>Commutateur d&apos;arrêt du trafic Internet</translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation>Drapeaux du menu de la barre d&apos;outils</translation>
     </message>
@@ -962,6 +942,30 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     <message>
         <source>Auto-Show Menu</source>
         <translation>Affichage automatique du menu</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block traffic when Fort Firewall is not running</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1429,10 +1433,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Collecter les connexions bloquées</translation>
     </message>
     <message>
-        <source>Stop Internet traffic when quota exceeds</source>
-        <translation>Arrêter le trafic Internet quand le quota excède</translation>
-    </message>
-    <message>
         <source>Alerted only</source>
         <translation>Alerté seulement</translation>
     </message>
@@ -1443,6 +1443,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Allowed Connections</source>
         <translation>Connexions autorisées</translation>
+    </message>
+    <message>
+        <source>Block Internet traffic when quota exceeds</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1587,14 +1591,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Filtre activé</translation>
     </message>
     <message>
-        <source>Stop Traffic</source>
-        <translation>Arrêter le trafic</translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation>Arrêter le trafic Internet</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
@@ -1625,6 +1621,14 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>My Fort</source>
         <translation>Mon Fort</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

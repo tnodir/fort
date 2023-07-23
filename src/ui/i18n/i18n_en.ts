@@ -730,10 +730,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Stop traffic when Fort Firewall is not running</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation></translation>
     </message>
@@ -743,14 +739,6 @@
     </message>
     <message>
         <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Stop Traffic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
         <translation></translation>
     </message>
     <message>
@@ -867,14 +855,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Switch Stop Traffic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Switch Stop Internet Traffic</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Tray Menu Flags</source>
         <translation></translation>
     </message>
@@ -960,6 +940,30 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Auto-Show Menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block traffic when Fort Firewall is not running</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Switch Block All Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Switch Block Internet Traffic</source>
         <translation></translation>
     </message>
 </context>
@@ -1425,10 +1429,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Stop Internet traffic when quota exceeds</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Alerted only</source>
         <translation></translation>
     </message>
@@ -1438,6 +1438,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Internet traffic when quota exceeds</source>
         <translation></translation>
     </message>
 </context>
@@ -1583,14 +1587,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Stop Traffic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Stop Internet Traffic</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation></translation>
     </message>
@@ -1620,6 +1616,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>My Fort</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
         <translation></translation>
     </message>
 </context>
