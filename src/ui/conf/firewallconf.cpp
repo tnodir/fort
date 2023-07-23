@@ -199,7 +199,7 @@ const AppGroup *FirewallConf::appGroupAt(int index) const
 QStringList FirewallConf::appGroupNames() const
 {
     QStringList list;
-    for (const auto &appGroup : qAsConst(appGroups())) {
+    for (const auto &appGroup : asConst(appGroups())) {
         list.append(appGroup->name());
     }
     return list;

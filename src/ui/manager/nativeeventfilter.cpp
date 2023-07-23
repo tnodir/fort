@@ -137,7 +137,7 @@ void NativeEventFilter::unregisterHotKeys()
     if (m_keyIdMap.isEmpty())
         return;
 
-    for (const int hotKeyId : qAsConst(m_keyIdMap)) {
+    for (const int hotKeyId : asConst(m_keyIdMap)) {
         UnregisterHotKey(nullptr, hotKeyId);
     }
 

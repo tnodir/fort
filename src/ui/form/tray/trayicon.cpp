@@ -494,7 +494,7 @@ void TrayIcon::updateTrayMenuFlags()
     }
 
     int appGroupIndex = 0;
-    for (QAction *action : qAsConst(m_appGroupActions)) {
+    for (QAction *action : asConst(m_appGroupActions)) {
         if (!action->isVisible())
             break;
 

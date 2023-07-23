@@ -62,7 +62,7 @@ void HotKeyManager::updateActions()
 
     eventFilter->unregisterHotKeys();
 
-    for (QAction *action : qAsConst(m_actions)) {
+    for (QAction *action : asConst(m_actions)) {
         action->setShortcutVisibleInContextMenu(enabled());
         if (enabled() && global()) {
             registerHotKey(eventFilter, action);
