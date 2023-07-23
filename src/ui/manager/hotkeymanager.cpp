@@ -3,6 +3,7 @@
 #include <QAction>
 #include <QKeySequence>
 
+#include <fortcompat.h>
 #include <manager/windowmanager.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>

@@ -1,5 +1,6 @@
 #include "firewallconf.h"
 
+#include <fortcompat.h>
 #include <util/fileutil.h>
 #include <util/net/netutil.h>
 

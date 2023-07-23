@@ -1,5 +1,7 @@
 #include "tasklistmodel.h"
 
+#include <fortcompat.h>
+
 #include "taskinfo.h"
 #include "taskmanager.h"
 

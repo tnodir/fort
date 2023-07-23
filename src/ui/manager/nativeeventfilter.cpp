@@ -6,6 +6,8 @@
 #include <qt_windows.h>
 #include <wtsapi32.h>
 
+#include <fortcompat.h>
+
 namespace {
 
 const QHash<Qt::Key, quint8> g_keyTbl = {
