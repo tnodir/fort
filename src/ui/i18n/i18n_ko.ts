@@ -945,27 +945,27 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>모든 트래픽 차단</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>인터넷 트래픽 차단</translation>
     </message>
     <message>
         <source>Block traffic when Fort Firewall is not running</source>
-        <translation type="unfinished"></translation>
+        <translation>Fort Firewall이 실행되지 않을 때 트래픽 차단</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>시스템 국가별 설정 사용</translation>
     </message>
     <message>
         <source>Switch Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>모든 트래픽 차단 전환</translation>
     </message>
     <message>
         <source>Switch Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>인터넷 트래픽 차단 전환</translation>
     </message>
 </context>
 <context>
@@ -1446,7 +1446,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Block Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>할당량 초과 시 인터넷 트래픽 차단</translation>
     </message>
 </context>
 <context>
@@ -1624,11 +1624,11 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>모든 트래픽 차단</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>인터넷 트래픽 차단</translation>
     </message>
 </context>
 <context>

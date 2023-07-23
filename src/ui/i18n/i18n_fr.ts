@@ -945,27 +945,27 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer tout le trafic</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer le trafic Internet</translation>
     </message>
     <message>
         <source>Block traffic when Fort Firewall is not running</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer le trafic lorsque Fort Firewall ne fonctionne pas</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Utiliser les paramètres régionaux du système</translation>
     </message>
     <message>
         <source>Switch Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Commutateur Bloquer tout le trafic</translation>
     </message>
     <message>
         <source>Switch Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Commutateur Bloquer le trafic Internet</translation>
     </message>
 </context>
 <context>
@@ -1446,7 +1446,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Block Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer le trafic Internet lorsque le quota est dépassé</translation>
     </message>
 </context>
 <context>
@@ -1624,11 +1624,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer tout le trafic</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer le trafic Internet</translation>
     </message>
 </context>
 <context>
