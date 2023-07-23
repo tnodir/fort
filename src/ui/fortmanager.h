@@ -51,8 +51,6 @@ private:
     void setupTaskManager();
     void setupServiceInfoManager();
 
-    void setupTranslationManager();
-
     void loadConf();
 
     bool updateDriverConf(bool onlyFlags = false);

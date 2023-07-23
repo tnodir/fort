@@ -28,6 +28,8 @@ void TranslationManager::setUp()
     auto confManager = IoC()->setUpDependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniUserChanged, this, &TranslationManager::setupByIniUser);
+
+    setupByIniUser(confManager->iniUser());
 }
 
 void TranslationManager::setupTranslation()

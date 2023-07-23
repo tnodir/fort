@@ -47,7 +47,7 @@ IniOptions *BaseController::ini() const
 
 IniUser *BaseController::iniUser() const
 {
-    return confManager()->iniUser();
+    return &confManager()->iniUser();
 }
 
 HotKeyManager *BaseController::hotKeyManager() const

@@ -523,9 +523,9 @@ ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openF
     connect(&m_appEndTimer, &QTimer::timeout, this, &ConfManager::updateAppEndTimes);
 }
 
-IniUser *ConfManager::iniUser() const
+IniUser &ConfManager::iniUser() const
 {
-    return &IoC<UserSettings>()->iniUser();
+    return IoC<UserSettings>()->iniUser();
 }
 
 void ConfManager::setUp()
@@ -614,7 +614,7 @@ void ConfManager::initIniUserToEdit()
     if (iniUserToEdit())
         return;
 
-    auto newIniUser = new IniUser(iniUser()->settings());
+    auto newIniUser = new IniUser(iniUser().settings());
 
     setIniUserToEdit(newIniUser);
 }
@@ -624,7 +624,7 @@ void ConfManager::setIniUserToEdit(IniUser *iniUser)
     if (iniUserToEdit() == iniUser)
         return;
 
-    if (iniUserToEdit() && iniUserToEdit() != this->iniUser()) {
+    if (iniUserToEdit() && iniUserToEdit() != &this->iniUser()) {
         delete m_iniUserToEdit;
     }
 
@@ -778,11 +778,11 @@ void ConfManager::saveIni()
 
 void ConfManager::saveIniUser(bool flagsChanged)
 {
-    iniUser()->save();
-    iniUser()->clear();
+    iniUser().save();
+    iniUser().clear();
 
     if (flagsChanged) {
-        emit iniUserChanged(*iniUser(), /*onlyFlags=*/true);
+        emit iniUserChanged(iniUser(), /*onlyFlags=*/true);
     }
 }
 

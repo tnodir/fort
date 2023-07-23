@@ -358,17 +358,10 @@ void FortManager::setupServiceInfoManager()
             &ConfManager::updateDriverServices);
 }
 
-void FortManager::setupTranslationManager()
-{
-    IoC<TranslationManager>()->switchLanguageByName(IoC<UserSettings>()->iniUser().language());
-}
-
 void FortManager::show()
 {
     auto windowManager = IoC<WindowManager>();
     const IniUser &iniUser = IoC<UserSettings>()->iniUser();
-
-    setupTranslationManager();
 
     windowManager->setupTrayIcon();
 

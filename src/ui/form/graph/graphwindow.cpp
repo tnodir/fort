@@ -109,7 +109,7 @@ IniOptions *GraphWindow::ini() const
 
 IniUser *GraphWindow::iniUser() const
 {
-    return confManager()->iniUser();
+    return &confManager()->iniUser();
 }
 
 void GraphWindow::saveWindowState(bool wasVisible)

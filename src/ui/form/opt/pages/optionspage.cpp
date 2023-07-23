@@ -94,7 +94,7 @@ void OptionsPage::onEditResetted()
     // Language
     if (languageEdited()) {
         setLanguageEdited(false);
-        translationManager()->switchLanguageByName(confManager()->iniUser()->language());
+        translationManager()->switchLanguageByName(confManager()->iniUser().language());
     }
 }
 
