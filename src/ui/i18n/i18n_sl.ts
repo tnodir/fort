@@ -945,27 +945,27 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Onemogoči ves promet</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Onemogoči internetni promet</translation>
     </message>
     <message>
         <source>Block traffic when Fort Firewall is not running</source>
-        <translation type="unfinished"></translation>
+        <translation>Onemogoči promet, ko Fort Firewall ne deluje</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Uporabi sistemske področne nastavitve</translation>
     </message>
     <message>
         <source>Switch Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Preklopi &apos;Onemogoči ves promet&apos;</translation>
     </message>
     <message>
         <source>Switch Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Preklopi &apos;Onemogoči internetni promet&apos;</translation>
     </message>
 </context>
 <context>
@@ -1446,7 +1446,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Block Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>Onemogoči internetni promet, ko je kvota presežena</translation>
     </message>
 </context>
 <context>
@@ -1624,11 +1624,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Onemogoči ves promet</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Onemogoči internetni promet</translation>
     </message>
 </context>
 <context>
