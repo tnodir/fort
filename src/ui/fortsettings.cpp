@@ -444,6 +444,13 @@ void FortSettings::migrateIniOnStartup()
     if (version < 0x030804) {
         setCacheValue("confFlags/askToConnect", false);
     }
+
+    // COMPAT: v3.9.10
+    if (version < 0x030910) {
+        setCacheValue("confFlags/blockTraffic", ini()->value("confFlags/stopTraffic"));
+        setCacheValue("confFlags/blockInetTraffic", ini()->value("confFlags/stopInetTraffic"));
+        setCacheValue("quota/blockInetTraffic", ini()->value("quota/stopInetTraffic"));
+    }
 }
 
 void FortSettings::migrateIniOnWrite()
@@ -472,6 +479,16 @@ void FortSettings::migrateIniOnWrite()
     if (version < 0x030801) {
         removeIniKey("confFlags/provBoot");
         ini()->setValue("confFlags/bootFilter", cacheValue("confFlags/bootFilter"));
+    }
+
+    // COMPAT: v3.9.10
+    if (version < 0x030910) {
+        removeIniKey("confFlags/stopTraffic");
+        removeIniKey("confFlags/stopInetTraffic");
+        removeIniKey("quota/stopInetTraffic");
+        ini()->setValue("confFlags/blockTraffic", cacheValue("confFlags/blockTraffic"));
+        ini()->setValue("confFlags/blockInetTraffic", cacheValue("confFlags/blockInetTraffic"));
+        ini()->setValue("quota/blockInetTraffic", cacheValue("quota/blockInetTraffic"));
     }
 }
 
