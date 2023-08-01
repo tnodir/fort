@@ -359,19 +359,19 @@ QString AppListModel::sqlOrderColumn() const
     QString columnsStr;
     switch (sortColumn()) {
     case 0: // Name
-        columnsStr = "5 " + sqlOrderAsc() + ", 4";
+        columnsStr = "t.name " + sqlOrderAsc() + ", t.path";
         break;
     case 1: // State
-        columnsStr = "13 DESC, 12, 11 " + sqlOrderAsc() + ", 1";
+        columnsStr = "alerted DESC, t.kill_process, t.blocked " + sqlOrderAsc() + ", t.app_id";
         break;
     case 2: // Group
-        columnsStr = "2";
+        columnsStr = "group_index";
         break;
     case 3: // File Path
-        columnsStr = "4";
+        columnsStr = "t.path";
         break;
     default: // Creation Time
-        columnsStr = "1"; // App ID
+        columnsStr = "t.app_id"; // App ID
         break;
     }
 
