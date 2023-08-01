@@ -41,7 +41,7 @@ public:
     Q_INVOKABLE static quint8 parseTimeHour(const QString &period);
     Q_INVOKABLE static quint8 parseTimeMinute(const QString &period);
 
-    static QString localeDateTime(const QDateTime &dateTime, const QLocale::FormatType &format);
+    static QString localeDateTime(const QDateTime &dateTime, QLocale::FormatType format);
 };
 
 #endif // DATEUTIL_H
