@@ -255,6 +255,7 @@ void TrayIcon::updateTrayIcon(bool alerted)
     m_alerted = alerted;
     m_animatedAlert = false;
 
+    sendAlertMessage();
     updateAlertTimer();
 
     updateTrayIconShape();
@@ -524,6 +525,14 @@ void TrayIcon::updateAppGroupActions()
         action->setVisible(visible);
         action->setEnabled(visible);
     }
+}
+
+void TrayIcon::sendAlertMessage()
+{
+    if (!(m_alerted && iniUser()->trayAlertMessage()))
+        return;
+
+    windowManager()->showTrayMessage(tr("New program alerted!"), WindowManager::MessageAlert);
 }
 
 void TrayIcon::updateAlertTimer()

@@ -101,6 +101,7 @@ private:
     void updateTrayMenuFlags();
     void updateAppGroupActions();
 
+    void sendAlertMessage();
     void updateAlertTimer();
     void updateTrayIconShape();
 

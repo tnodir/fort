@@ -609,6 +609,9 @@ void WindowManager::onTrayMessageClicked()
     case MessageZones: {
         showZonesWindow();
     } break;
+    case MessageAlert: {
+        showProgramsWindow();
+    } break;
     default:
         showOptionsWindow();
     }

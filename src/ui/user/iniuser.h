@@ -56,6 +56,9 @@ public:
     bool trayAnimateAlert() const { return valueBool("tray/animateAlert", true); }
     void setTrayAnimateAlert(bool v) { setValue("tray/animateAlert", v, true); }
 
+    bool trayAlertMessage() const { return valueBool("tray/alertMessage", true); }
+    void setTrayAlertMessage(bool v) { setValue("tray/alertMessage", v, true); }
+
     QString trayAction(const QString &event) const { return valueText("tray/" + event); }
     void setTrayAction(const QString &event, const QString &v) { setValue("tray/" + event, v); }
 

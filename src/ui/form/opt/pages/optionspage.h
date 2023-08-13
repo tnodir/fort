@@ -105,6 +105,7 @@ private:
     QCheckBox *m_cbHomeAutoShowMenu = nullptr;
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
+    QCheckBox *m_cbTrayAlertMessage = nullptr;
     QLabel *m_labelTrayEvent = nullptr;
     QComboBox *m_comboTrayEvent = nullptr;
     QLabel *m_labelTrayAction = nullptr;

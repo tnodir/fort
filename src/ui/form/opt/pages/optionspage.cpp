@@ -196,6 +196,7 @@ void OptionsPage::onRetranslateUi()
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
+    m_cbTrayAlertMessage->setText(tr("Alert Message"));
     m_labelTrayEvent->setText(tr("Event:"));
     m_labelTrayAction->setText(tr("Action:"));
     retranslateComboTrayEvent();
@@ -706,6 +707,12 @@ void OptionsPage::setupTrayBox()
                 ctrl()->setIniUserEdited();
             });
 
+    m_cbTrayAlertMessage =
+            ControlUtil::createCheckBox(iniUser()->trayAlertMessage(), [&](bool checked) {
+                iniUser()->setTrayAlertMessage(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     // Tray Event & Action Rows
     auto eventLayout = setupTrayEventLayout();
     auto actionLayout = setupTrayActionLayout();
@@ -713,6 +720,7 @@ void OptionsPage::setupTrayBox()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbTrayShowIcon);
     layout->addWidget(m_cbTrayAnimateAlert);
+    layout->addWidget(m_cbTrayAlertMessage);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(eventLayout);
     layout->addLayout(actionLayout);
