@@ -969,7 +969,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Alert Message</source>
-        <translation type="unfinished"></translation>
+        <translation>Opozorilno sporočilo</translation>
     </message>
 </context>
 <context>
@@ -1636,7 +1636,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>New program alerted!</source>
-        <translation type="unfinished"></translation>
+        <translation>Opozorilo o novem programu!</translation>
     </message>
 </context>
 <context>
