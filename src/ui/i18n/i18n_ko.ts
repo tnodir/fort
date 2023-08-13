@@ -969,7 +969,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Alert Message</source>
-        <translation type="unfinished"></translation>
+        <translation>경고 메시지</translation>
     </message>
 </context>
 <context>
@@ -1636,7 +1636,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>New program alerted!</source>
-        <translation type="unfinished"></translation>
+        <translation>새 프로그램 경고!</translation>
     </message>
 </context>
 <context>
