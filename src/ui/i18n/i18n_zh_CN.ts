@@ -969,7 +969,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Alert Message</source>
-        <translation type="unfinished"></translation>
+        <translation>告警信息</translation>
     </message>
 </context>
 <context>
@@ -1636,7 +1636,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>New program alerted!</source>
-        <translation type="unfinished"></translation>
+        <translation>新程序提醒！</translation>
     </message>
 </context>
 <context>
