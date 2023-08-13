@@ -966,6 +966,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Switch Block Internet Traffic</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Alert Message</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1624,6 +1628,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Block Internet Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>New program alerted!</source>
         <translation></translation>
     </message>
 </context>

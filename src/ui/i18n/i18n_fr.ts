@@ -967,6 +967,10 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <source>Switch Block Internet Traffic</source>
         <translation>Commutateur Bloquer le trafic Internet</translation>
     </message>
+    <message>
+        <source>Alert Message</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1629,6 +1633,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Block Internet Traffic</source>
         <translation>Bloquer le trafic Internet</translation>
+    </message>
+    <message>
+        <source>New program alerted!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

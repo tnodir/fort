@@ -967,6 +967,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Switch Block Internet Traffic</source>
         <translation>Preklopi &apos;Onemogoči internetni promet&apos;</translation>
     </message>
+    <message>
+        <source>Alert Message</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1629,6 +1633,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Block Internet Traffic</source>
         <translation>Onemogoči internetni promet</translation>
+    </message>
+    <message>
+        <source>New program alerted!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

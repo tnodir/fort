@@ -967,6 +967,10 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <source>Switch Block Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Alert Message</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1625,6 +1629,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>New program alerted!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

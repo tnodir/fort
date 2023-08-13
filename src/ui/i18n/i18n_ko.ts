@@ -967,6 +967,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Switch Block Internet Traffic</source>
         <translation>인터넷 트래픽 차단 전환</translation>
     </message>
+    <message>
+        <source>Alert Message</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1629,6 +1633,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Block Internet Traffic</source>
         <translation>인터넷 트래픽 차단</translation>
+    </message>
+    <message>
+        <source>New program alerted!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
