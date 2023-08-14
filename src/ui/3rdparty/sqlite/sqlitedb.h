@@ -128,6 +128,9 @@ private:
     bool migrateDb(const MigrateOptions &opt, int userVersion, bool isNewDb);
     bool migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb);
 
+    bool migrateDbBegin(const MigrateOptions &opt, int &userVersion, bool &isNewDb);
+    bool migrateDbEnd(const MigrateOptions &opt);
+
     bool createFtsTables(const MigrateOptions &opt);
     bool createFtsTable(const FtsTable &ftsTable);
 

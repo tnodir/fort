@@ -375,24 +375,14 @@ bool SqliteDb::canMigrate(const MigrateOptions &opt, int userVersion) const
 
 bool SqliteDb::migrateDb(const MigrateOptions &opt, int userVersion, bool isNewDb)
 {
-    // Re-create the DB
-    if (opt.recreate) {
-        if (!clearWithBackup(opt.sqlPragmas))
-            return false;
-
-        userVersion = 0;
-        isNewDb = true;
-    }
+    if (!migrateDbBegin(opt, userVersion, isNewDb))
+        return false;
 
     // Run migration SQL scripts
     if (!migrateSqlScripts(opt, userVersion, isNewDb))
         return false;
 
-    // Re-create the DB: End
-    if (opt.recreate && !(createFtsTables(opt) && importBackup(opt)))
-        return false;
-
-    return true;
+    return migrateDbEnd(opt);
 }
 
 bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb)
@@ -445,6 +435,27 @@ bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, boo
     commitTransaction();
 
     return success;
+}
+
+bool SqliteDb::migrateDbBegin(const MigrateOptions &opt, int &userVersion, bool &isNewDb)
+{
+    // Re-create the DB
+    if (!opt.recreate)
+        return true;
+
+    userVersion = 0;
+    isNewDb = true;
+
+    return clearWithBackup(opt.sqlPragmas);
+}
+
+bool SqliteDb::migrateDbEnd(const MigrateOptions &opt)
+{
+    // Re-create the DB: End
+    if (!opt.recreate)
+        return true;
+
+    return createFtsTables(opt) && importBackup(opt);
 }
 
 bool SqliteDb::createFtsTables(const MigrateOptions &opt)
