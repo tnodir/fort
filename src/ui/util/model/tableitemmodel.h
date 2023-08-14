@@ -3,6 +3,8 @@
 
 #include <QAbstractItemModel>
 
+class TriggerTimer;
+
 struct TableRow
 {
     bool isValid(int row) const { return row == this->row; }
@@ -29,6 +31,7 @@ public:
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
 public slots:
+    void resetLater();
     void reset();
     void refresh();
 
@@ -40,6 +43,9 @@ protected:
 
     virtual bool updateTableRow(int row) const = 0;
     virtual TableRow &tableRow() const = 0;
+
+private:
+    TriggerTimer *m_resetTimer = nullptr;
 };
 
 #endif // TABLEITEMMODEL_H

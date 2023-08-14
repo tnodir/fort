@@ -70,7 +70,7 @@ void AppListModel::setFtsFilter(const QString &filter)
 
     m_ftsFilterMatch = makeFtsFilterMatch(m_ftsFilter);
 
-    reset();
+    resetLater();
 }
 
 ConfManager *AppListModel::confManager() const

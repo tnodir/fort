@@ -1,5 +1,7 @@
 #include "tableitemmodel.h"
 
+#include <util/triggertimer.h>
+
 TableItemModel::TableItemModel(QObject *parent) : QAbstractItemModel(parent) { }
 
 QModelIndex TableItemModel::index(int row, int column, const QModelIndex &parent) const
@@ -33,6 +35,17 @@ Qt::ItemFlags TableItemModel::flags(const QModelIndex &index) const
 
     return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren
             | flagIsUserCheckable(index);
+}
+
+void TableItemModel::resetLater()
+{
+    if (!m_resetTimer) {
+        m_resetTimer = new TriggerTimer(this);
+
+        connect(m_resetTimer, &QTimer::timeout, this, &TableItemModel::reset);
+    }
+
+    m_resetTimer->startTrigger();
 }
 
 Qt::ItemFlags TableItemModel::flagIsUserCheckable(const QModelIndex & /*index*/) const
