@@ -1207,6 +1207,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Purge Obsolete</source>
         <translation>Počistiti zastarelo</translation>
     </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

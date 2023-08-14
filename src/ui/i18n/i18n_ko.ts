@@ -1207,6 +1207,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Purge Obsolete</source>
         <translation>사용되지 않는 제거</translation>
     </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

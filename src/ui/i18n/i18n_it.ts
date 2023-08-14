@@ -1204,6 +1204,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Purge Obsolete</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

@@ -1207,6 +1207,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Purge Obsolete</source>
         <translation>Очистить устаревшее</translation>
     </message>
+    <message>
+        <source>Search</source>
+        <translation>Поиск</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>
