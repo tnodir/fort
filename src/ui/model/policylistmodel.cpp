@@ -129,12 +129,12 @@ QString PolicyListModel::sqlBase() const
            "  FROM policy t";
 }
 
-QString PolicyListModel::sqlOrder() const
-{
-    return " t.name";
-}
-
 QString PolicyListModel::sqlWhere() const
 {
     return QString::fromLatin1(" WHERE t.type = %1").arg(policyType());
+}
+
+QString PolicyListModel::sqlOrder() const
+{
+    return " t.name";
 }

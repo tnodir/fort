@@ -24,15 +24,17 @@ signals:
 protected:
     void invalidateRowCache() override;
 
-    virtual int doSqlCount() const;
+    virtual void fillSqlVars(QVariantMap &varsMap) const;
 
+    virtual int doSqlCount() const;
     virtual QString sqlCount() const;
+
     virtual QString sql() const;
     virtual QString sqlBase() const = 0;
+    virtual QString sqlWhere() const;
     virtual QString sqlOrder() const;
     virtual QString sqlOrderAsc() const;
     virtual QString sqlOrderColumn() const;
-    virtual QString sqlWhere() const;
     virtual QString sqlLimitOffset() const;
 
     int sortColumn() const { return m_sortColumn; }

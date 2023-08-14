@@ -34,6 +34,11 @@ QString SqliteStmt::expandedSql()
     return sqlStr;
 }
 
+int SqliteStmt::bindParameterIndex(const QString &name) const
+{
+    return sqlite3_bind_parameter_index(m_stmt, name.toUtf8());
+}
+
 bool SqliteStmt::bindInt(int index, qint32 number)
 {
     return sqlite3_bind_int(m_stmt, index, number) == SQLITE_OK;
@@ -145,6 +150,23 @@ bool SqliteStmt::bindVars(const QVariantList &vars, int index)
 {
     for (const QVariant &v : vars) {
         if (!bindVar(index++, v))
+            return false;
+    }
+    return true;
+}
+
+bool SqliteStmt::bindVarsMap(const QVariantMap &varsMap)
+{
+    auto it = varsMap.constBegin();
+    for (; it != varsMap.constEnd(); ++it) {
+        const QString k = it.key();
+        const QVariant v = it.value();
+
+        const int index = bindParameterIndex(k);
+        if (index == 0)
+            return false;
+
+        if (!bindVar(index, v))
             return false;
     }
     return true;

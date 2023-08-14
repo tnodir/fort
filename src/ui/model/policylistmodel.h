@@ -43,8 +43,8 @@ protected:
     TableRow &tableRow() const override { return m_policyRow; }
 
     QString sqlBase() const override;
-    QString sqlOrder() const override;
     QString sqlWhere() const override;
+    QString sqlOrder() const override;
 
 private:
     QVariant dataDisplay(const QModelIndex &index) const;

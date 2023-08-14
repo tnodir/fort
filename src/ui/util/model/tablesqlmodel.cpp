@@ -33,9 +33,19 @@ void TableSqlModel::invalidateRowCache()
     emit modelChanged();
 }
 
+void TableSqlModel::fillSqlVars(QVariantMap &varsMap) const
+{
+    Q_UNUSED(varsMap);
+}
+
 int TableSqlModel::doSqlCount() const
 {
-    return sqliteDb()->executeEx(sqlCount().toLatin1()).toInt();
+    QVariantMap varsMap;
+    fillSqlVars(varsMap);
+
+    const auto sqlUtf8 = sqlCount().toUtf8();
+
+    return sqliteDb()->executeEx(sqlUtf8, {}, varsMap).toInt();
 }
 
 QString TableSqlModel::sqlCount() const
@@ -46,6 +56,11 @@ QString TableSqlModel::sqlCount() const
 QString TableSqlModel::sql() const
 {
     return sqlBase() + sqlWhere() + sqlOrder() + sqlLimitOffset() + ';';
+}
+
+QString TableSqlModel::sqlWhere() const
+{
+    return QString();
 }
 
 QString TableSqlModel::sqlOrder() const
@@ -66,12 +81,7 @@ QString TableSqlModel::sqlOrderColumn() const
     return QString::number(sortColumn());
 }
 
-QString TableSqlModel::sqlWhere() const
-{
-    return QString();
-}
-
 QString TableSqlModel::sqlLimitOffset() const
 {
-    return " LIMIT 1 OFFSET ?1";
+    return " LIMIT 1 OFFSET :row";
 }

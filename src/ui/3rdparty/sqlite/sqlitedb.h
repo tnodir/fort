@@ -68,7 +68,7 @@ public:
     bool open();
     void close();
 
-    bool attach(const QString &schemaName, const QString &filePath = QString());
+    bool attach(const QString &schemaName, const QString &filePath = {});
     bool detach(const QString &schemaName);
 
     bool vacuum();
@@ -76,11 +76,15 @@ public:
     bool execute(const char *sql);
     bool executeStr(const QString &sql);
 
-    QVariant executeEx(const char *sql, const QVariantList &vars = QVariantList(),
+    QVariant executeEx(const char *sql, const QVariantList &vars, const QVariantMap &varsMap,
             int resultCount = 1, bool *ok = nullptr);
+    QVariant executeEx(const char *sql, const QVariantList &vars = {}, int resultCount = 1,
+            bool *ok = nullptr);
 
-    bool prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars = QVariantList());
-    bool prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars = QVariantList());
+    bool prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars = {},
+            const QVariantMap &varsMap = {});
+    bool prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars = {},
+            const QVariantMap &varsMap = {});
     bool done(SqliteStmt *stmt);
 
     qint64 lastInsertRowid() const;
@@ -112,8 +116,8 @@ public:
     static QString migrationOldSchemaName();
     static QString migrationNewSchemaName();
     static QString entityName(const QString &schemaName, const QString &objectName);
-    QStringList tableNames(const QString &schemaName = QString());
-    QStringList columnNames(const QString &tableName, const QString &schemaName = QString());
+    QStringList tableNames(const QString &schemaName = {});
+    QStringList columnNames(const QString &tableName, const QString &schemaName = {});
 
     bool migrate(SqliteDb::MigrateOptions &opt);
 

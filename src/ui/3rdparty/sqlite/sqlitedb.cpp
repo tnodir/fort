@@ -120,14 +120,15 @@ bool SqliteDb::executeStr(const QString &sql)
     return execute(sqlUtf8.data());
 }
 
-QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resultCount, bool *ok)
+QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, const QVariantMap &varsMap,
+        int resultCount, bool *ok)
 {
     QVariantList list;
 
     SqliteStmt stmt;
     bool success = false;
 
-    if (prepare(stmt, sql, vars)) {
+    if (prepare(stmt, sql, vars, varsMap)) {
         const auto stepRes = stmt.step();
         success = (stepRes != SqliteStmt::StepError);
 
@@ -148,15 +149,31 @@ QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resu
     return (listSize == 0) ? QVariant() : (listSize == 1 ? list.at(0) : list);
 }
 
-bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars)
+QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resultCount, bool *ok)
 {
-    return stmt.prepare(db(), sql) && (vars.isEmpty() || stmt.bindVars(vars));
+    return executeEx(sql, vars, {}, resultCount, ok);
 }
 
-bool SqliteDb::prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars)
+bool SqliteDb::prepare(
+        SqliteStmt &stmt, const char *sql, const QVariantList &vars, const QVariantMap &varsMap)
 {
-    const auto sqlData = sql.toUtf8();
-    return prepare(stmt, sqlData.constData(), vars);
+    if (!stmt.prepare(db(), sql))
+        return false;
+
+    if (!(vars.isEmpty() || stmt.bindVars(vars)))
+        return false;
+
+    if (!(varsMap.isEmpty() || stmt.bindVarsMap(varsMap)))
+        return false;
+
+    return true;
+}
+
+bool SqliteDb::prepare(
+        SqliteStmt &stmt, const QString &sql, const QVariantList &vars, const QVariantMap &varsMap)
+{
+    const auto sqlUtf8 = sql.toUtf8();
+    return prepare(stmt, sqlUtf8.constData(), vars, varsMap);
 }
 
 bool SqliteDb::done(SqliteStmt *stmt)

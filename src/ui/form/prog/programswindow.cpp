@@ -4,6 +4,7 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QHeaderView>
+#include <QLineEdit>
 #include <QMenu>
 #include <QMimeData>
 #include <QPushButton>
@@ -136,6 +137,7 @@ void ProgramsWindow::retranslateUi()
     m_btAllowApp->setText(tr("Allow"));
     m_btBlockApp->setText(tr("Block"));
     m_btRemoveApp->setText(tr("Remove"));
+    m_editSearch->setPlaceholderText(tr("Search"));
 
     m_btServices->setText(tr("Services"));
 
@@ -187,6 +189,49 @@ QLayout *ProgramsWindow::setupHeader()
     auto layout = new QHBoxLayout();
 
     // Edit Menu
+    setupEditMenu();
+
+    // Toolbar buttons
+    m_btAllowApp = ControlUtil::createLinkButton(":/icons/accept.png");
+    m_btBlockApp = ControlUtil::createLinkButton(":/icons/deny.png");
+    m_btRemoveApp = ControlUtil::createLinkButton(":/icons/delete.png");
+
+    connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
+    connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
+    connect(m_btRemoveApp, &QAbstractButton::clicked, m_actRemoveApp, &QAction::trigger);
+
+    // Search edit line
+    setupEditSearch();
+
+    // Services button
+    m_btServices = ControlUtil::createLinkButton(":/icons/windows-48.png");
+    m_btServices->setEnabled(settings()->hasMasterAdmin());
+
+    connect(m_btServices, &QAbstractButton::clicked, windowManager(),
+            &WindowManager::showServicesWindow);
+
+    // Menu button
+    m_btMenu = ControlUtil::createLinkButton(":/icons/large_tiles.png");
+    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
+
+    layout->addWidget(m_btEdit);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btAllowApp);
+    layout->addWidget(m_btBlockApp);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btRemoveApp);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_editSearch);
+    layout->addStretch();
+    layout->addWidget(m_btServices);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btMenu);
+
+    return layout;
+}
+
+void ProgramsWindow::setupEditMenu()
+{
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actAllowApp = editMenu->addAction(IconCache::icon(":/icons/accept.png"), QString());
@@ -227,39 +272,15 @@ QLayout *ProgramsWindow::setupHeader()
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
+}
 
-    // Toolbar buttons
-    m_btAllowApp = ControlUtil::createLinkButton(":/icons/accept.png");
-    m_btBlockApp = ControlUtil::createLinkButton(":/icons/deny.png");
-    m_btRemoveApp = ControlUtil::createLinkButton(":/icons/delete.png");
-
-    connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
-    connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
-    connect(m_btRemoveApp, &QAbstractButton::clicked, m_actRemoveApp, &QAction::trigger);
-
-    // Services button
-    m_btServices = ControlUtil::createLinkButton(":/icons/windows-48.png");
-    m_btServices->setEnabled(settings()->hasMasterAdmin());
-
-    connect(m_btServices, &QAbstractButton::clicked, windowManager(),
-            &WindowManager::showServicesWindow);
-
-    // Menu button
-    m_btMenu = ControlUtil::createLinkButton(":/icons/large_tiles.png");
-    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
-
-    layout->addWidget(m_btEdit);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addWidget(m_btAllowApp);
-    layout->addWidget(m_btBlockApp);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addWidget(m_btRemoveApp);
-    layout->addStretch();
-    layout->addWidget(m_btServices);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
-    layout->addWidget(m_btMenu);
-
-    return layout;
+void ProgramsWindow::setupEditSearch()
+{
+    m_editSearch = ControlUtil::createLineEdit(
+            QString(), [&](const QString &text) { appListModel()->setFtsFilter(text); });
+    m_editSearch->setClearButtonEnabled(true);
+    m_editSearch->setMaxLength(200);
+    m_editSearch->setFixedWidth(200);
 }
 
 void ProgramsWindow::setupTableApps()

@@ -24,6 +24,10 @@ class AppListModel : public TableSqlModel
 public:
     explicit AppListModel(QObject *parent = nullptr);
 
+    QString ftsFilterMatch() const { return m_ftsFilterMatch; }
+    QString ftsFilter() const { return m_ftsFilter; }
+    void setFtsFilter(const QString &filter);
+
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     AppInfoCache *appInfoCache() const;
@@ -45,7 +49,10 @@ protected:
     bool updateTableRow(int row) const override;
     TableRow &tableRow() const override { return m_appRow; }
 
+    void fillSqlVars(QVariantMap &varsMap) const override;
+
     QString sqlBase() const override;
+    QString sqlWhere() const override;
     QString sqlOrderColumn() const override;
 
 private:
@@ -64,9 +71,13 @@ private:
     static QColor appStateColor(const AppRow &appRow);
     static QIcon appStateIcon(const AppRow &appRow);
 
-    bool updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const;
+    bool updateAppRow(const QString &sql, const QVariantList &vars, const QVariantMap &varsMap,
+            AppRow &appRow) const;
 
 private:
+    QString m_ftsFilter;
+    QString m_ftsFilterMatch;
+
     mutable AppRow m_appRow;
 };
 

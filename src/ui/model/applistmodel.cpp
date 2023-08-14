@@ -45,9 +45,33 @@ QString appStateIconPath(const AppRow &appRow)
     return ":/icons/accept.png";
 }
 
+QString makeFtsFilterMatch(const QString &filter)
+{
+    if (filter.isEmpty())
+        return {};
+
+    const QStringList words = filter.trimmed().split(' ', Qt::SkipEmptyParts);
+    if (words.isEmpty())
+        return {};
+
+    return words.join("* ") + '*';
+}
+
 }
 
 AppListModel::AppListModel(QObject *parent) : TableSqlModel(parent) { }
+
+void AppListModel::setFtsFilter(const QString &filter)
+{
+    if (m_ftsFilter == filter)
+        return;
+
+    m_ftsFilter = filter;
+
+    m_ftsFilterMatch = makeFtsFilterMatch(m_ftsFilter);
+
+    reset();
+}
 
 ConfManager *AppListModel::confManager() const
 {
@@ -273,10 +297,11 @@ QIcon AppListModel::appStateIcon(const AppRow &appRow)
     return IconCache::icon(appStateIconPath(appRow));
 }
 
-bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
+bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars,
+        const QVariantMap &varsMap, AppRow &appRow) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql, vars) && stmt.step() == SqliteStmt::StepRow)) {
+    if (!(sqliteDb()->prepare(stmt, sql, vars, varsMap) && stmt.step() == SqliteStmt::StepRow)) {
         appRow.invalidate();
         return false;
     }
@@ -310,7 +335,7 @@ const AppRow &AppListModel::appRowAt(int row) const
 AppRow AppListModel::appRowById(qint64 appId) const
 {
     AppRow appRow;
-    updateAppRow(sqlBase() + " WHERE t.app_id = ?1;", { appId }, appRow);
+    updateAppRow(sqlBase() + " WHERE t.app_id = ?1;", { appId }, {}, appRow);
     return appRow;
 }
 
@@ -319,7 +344,7 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
     const QString normPath = FileUtil::normalizePath(appPath);
 
     AppRow appRow;
-    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { normPath }, appRow)) {
+    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { normPath }, {}, appRow)) {
         appRow.appOriginPath = appPath;
         appRow.appPath = normPath;
     }
@@ -328,7 +353,18 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
 
 bool AppListModel::updateTableRow(int row) const
 {
-    return updateAppRow(sql(), { row }, m_appRow);
+    QVariantMap varsMap;
+    varsMap.insert(":row", row);
+    fillSqlVars(varsMap);
+
+    return updateAppRow(sql(), {}, varsMap, m_appRow);
+}
+
+void AppListModel::fillSqlVars(QVariantMap &varsMap) const
+{
+    if (!ftsFilterMatch().isEmpty()) {
+        varsMap.insert(":match", ftsFilterMatch());
+    }
 }
 
 QString AppListModel::sqlBase() const
@@ -352,6 +388,14 @@ QString AppListModel::sqlBase() const
            "  FROM app t"
            "    JOIN app_group g ON g.app_group_id = t.app_group_id"
            "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id";
+}
+
+QString AppListModel::sqlWhere() const
+{
+    if (ftsFilterMatch().isEmpty())
+        return {};
+
+    return " WHERE t.app_id IN ( SELECT rowid FROM app_fts(:match) )";
 }
 
 QString AppListModel::sqlOrderColumn() const

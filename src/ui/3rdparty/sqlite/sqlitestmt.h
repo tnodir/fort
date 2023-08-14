@@ -34,6 +34,8 @@ public:
 
     QString expandedSql();
 
+    int bindParameterIndex(const QString &name) const;
+
     bool bindInt(int index, qint32 number);
     bool bindInt64(int index, qint64 number);
     bool bindDouble(int index, double number);
@@ -44,6 +46,7 @@ public:
     bool bindVarBlob(int index, const QVariant &v);
     bool bindVar(int index, const QVariant &v);
     bool bindVars(const QVariantList &vars, int index = 1);
+    bool bindVarsMap(const QVariantMap &varsMap);
 
     bool clearBindings();
     bool reset();

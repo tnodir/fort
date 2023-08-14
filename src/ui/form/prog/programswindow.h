@@ -5,6 +5,7 @@
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
+QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
 class AppInfoCache;
@@ -60,6 +61,8 @@ private:
 
     void setupUi();
     QLayout *setupHeader();
+    void setupEditMenu();
+    void setupEditSearch();
     void setupTableApps();
     void setupTableAppsHeader();
     void setupAppInfoRow();
@@ -90,10 +93,11 @@ private:
     QAction *m_actEditApp = nullptr;
     QAction *m_actRemoveApp = nullptr;
     QAction *m_actPurgeApps = nullptr;
+    QPushButton *m_btEdit = nullptr;
     QPushButton *m_btAllowApp = nullptr;
     QPushButton *m_btBlockApp = nullptr;
     QPushButton *m_btRemoveApp = nullptr;
-    QPushButton *m_btEdit = nullptr;
+    QLineEdit *m_editSearch = nullptr;
     QPushButton *m_btServices = nullptr;
     QPushButton *m_btMenu = nullptr;
     ProgramEditDialog *m_formAppEdit = nullptr;
