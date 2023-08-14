@@ -1209,7 +1209,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechercher</translation>
     </message>
 </context>
 <context>

@@ -1209,7 +1209,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Poišči</translation>
     </message>
 </context>
 <context>
