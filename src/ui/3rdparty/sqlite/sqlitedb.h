@@ -33,6 +33,13 @@ public:
         OpenDefaultReadWrite = (OpenReadWrite | OpenCreate | OpenNoMutex)
     };
 
+    struct FtsTable
+    {
+        const QString contentTable;
+        const QString contentRowid;
+        const QStringList columns;
+    };
+
     struct MigrateOptions
     {
         const QString sqlDir;
@@ -43,6 +50,7 @@ public:
         bool autoCopyTables = true;
         SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr;
         void *migrateContext = nullptr;
+        QVector<FtsTable> ftsTables;
     };
 
     explicit SqliteDb(
@@ -99,6 +107,8 @@ public:
 
     bool setBusyTimeoutMs(int v);
 
+    static QString getFtsTableName(const QString &tableName);
+
     static QString migrationOldSchemaName();
     static QString migrationNewSchemaName();
     static QString entityName(const QString &schemaName, const QString &objectName);
@@ -113,6 +123,9 @@ private:
     bool canMigrate(const MigrateOptions &opt, int userVersion) const;
     bool migrateDb(const MigrateOptions &opt, int userVersion, bool isNewDb);
     bool migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb);
+
+    bool createFtsTables(const MigrateOptions &opt);
+    bool createFtsTable(const FtsTable &ftsTable);
 
     bool clearWithBackup(const char *sqlPragmas);
     bool importBackup(const MigrateOptions &opt);

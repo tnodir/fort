@@ -19,6 +19,8 @@ const char *const defaultSqlPragmas = "PRAGMA journal_mode = WAL;"
                                       "PRAGMA synchronous = NORMAL;"
                                       "PRAGMA encoding = 'UTF-8';";
 
+const QString ftsTableSuffix = "_fts";
+
 QAtomicInt g_sqliteInitCount;
 
 bool removeDbFile(const QString &filePath)
@@ -43,6 +45,12 @@ bool renameDbFile(const QString &filePath, const QString &newFilePath)
         return false;
     }
     return true;
+}
+
+QString makeTriggerColumnNames(
+        const QString &rowIdName, const QStringList &columnNames, const QString &prefix)
+{
+    return (prefix + rowIdName) + (',' + prefix) + columnNames.join(',' + prefix);
 }
 
 }
@@ -248,6 +256,11 @@ bool SqliteDb::setBusyTimeoutMs(int v)
     return sqlite3_busy_timeout(m_db, v) == SQLITE_OK;
 }
 
+QString SqliteDb::getFtsTableName(const QString &tableName)
+{
+    return tableName + ftsTableSuffix;
+}
+
 QString SqliteDb::migrationOldSchemaName()
 {
     return QLatin1String("old");
@@ -269,8 +282,10 @@ QStringList SqliteDb::tableNames(const QString &schemaName)
 
     const auto masterTable = entityName(schemaName, "sqlite_master");
     const auto sql = QString("SELECT name FROM %1"
-                             "  WHERE type = 'table' AND name NOT LIKE 'sqlite_%';")
-                             .arg(masterTable);
+                             "  WHERE type = 'table'"
+                             "    AND name NOT LIKE 'sqlite_%'"
+                             "    AND name NOT LIKE '%%2_%';")
+                             .arg(masterTable, ftsTableSuffix);
 
     SqliteStmt stmt;
     if (stmt.prepare(db(), sql.toLatin1())) {
@@ -353,14 +368,14 @@ bool SqliteDb::migrateDb(const MigrateOptions &opt, int userVersion, bool isNewD
     }
 
     // Run migration SQL scripts
-    bool success = migrateSqlScripts(opt, userVersion, isNewDb);
+    if (!migrateSqlScripts(opt, userVersion, isNewDb))
+        return false;
 
     // Re-create the DB: End
-    if (success && opt.recreate) {
-        success = importBackup(opt);
-    }
+    if (opt.recreate && !(createFtsTables(opt) && importBackup(opt)))
+        return false;
 
-    return success;
+    return true;
 }
 
 bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb)
@@ -413,6 +428,74 @@ bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, boo
     commitTransaction();
 
     return success;
+}
+
+bool SqliteDb::createFtsTables(const MigrateOptions &opt)
+{
+    if (opt.ftsTables.isEmpty())
+        return true;
+
+    bool success = true;
+
+    beginTransaction();
+
+    for (const FtsTable &ftsTable : opt.ftsTables) {
+        beginSavepoint();
+
+        success = createFtsTable(ftsTable);
+
+        if (success) {
+            releaseSavepoint();
+        } else {
+            qCCritical(LC) << "FTS error:" << ftsTable.contentTable << errorMessage();
+            rollbackSavepoint();
+            break;
+        }
+    }
+
+    commitTransaction();
+
+    return success;
+}
+
+bool SqliteDb::createFtsTable(const FtsTable &ftsTable)
+{
+    /*
+     * %1: content table name
+     * %2: fts table name
+     * %3: content rowid column name
+     * %4: content column names list
+     * %5: triggered new column names list (new.*)
+     * %6: triggered old column names list (old.*)
+     */
+    static const char *const ftsCreateSql =
+            "CREATE VIRTUAL TABLE %2 USING fts5(%4, content='%1', content_rowid='%3');"
+            "CREATE TRIGGER %2_ai AFTER INSERT ON %1 BEGIN"
+            "  INSERT INTO %2(rowid, %4) VALUES (%5);"
+            "END;"
+            "CREATE TRIGGER %2_ad AFTER DELETE ON %1 BEGIN"
+            "  INSERT INTO %2(%2, rowid, %4) VALUES('delete', %6);"
+            "END;"
+            "CREATE TRIGGER %2_au AFTER UPDATE ON %1 BEGIN"
+            "  INSERT INTO %2(%2, rowid, %4) VALUES('delete', %6);"
+            "  INSERT INTO %2(rowid, %4) VALUES (%5);"
+            "END;";
+
+    const auto contentTableName = ftsTable.contentTable;
+    const auto ftsTableName = getFtsTableName(contentTableName);
+    const auto contentRowidName = ftsTable.contentRowid;
+    const auto contentColumnNames = ftsTable.columns.join(',');
+    const auto newTriggerColumnNames =
+            makeTriggerColumnNames(contentRowidName, ftsTable.columns, "new.");
+    const auto oldTriggerColumnNames =
+            makeTriggerColumnNames(contentRowidName, ftsTable.columns, "old.");
+
+    const auto sql =
+            QString(ftsCreateSql)
+                    .arg(contentTableName, ftsTableName, contentRowidName, contentColumnNames,
+                            newTriggerColumnNames, oldTriggerColumnNames);
+
+    return executeStr(sql);
 }
 
 bool SqliteDb::clearWithBackup(const char *sqlPragmas)

@@ -81,10 +81,12 @@ void StatManager::setUp()
         return;
     }
 
-    SqliteDb::MigrateOptions opt = { .sqlDir = ":/stat/migrations/traf",
+    SqliteDb::MigrateOptions opt = {
+        .sqlDir = ":/stat/migrations/traf",
         .version = DATABASE_USER_VERSION,
         .recreate = true,
-        .migrateFunc = &migrateFunc };
+        .migrateFunc = &migrateFunc,
+    };
 
     if (!sqliteDb()->migrate(opt)) {
         qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
