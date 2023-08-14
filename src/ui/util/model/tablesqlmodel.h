@@ -24,7 +24,7 @@ signals:
 protected:
     void invalidateRowCache() override;
 
-    virtual void fillSqlVars(QVariantMap &varsMap) const;
+    virtual void fillSqlVars(QVariantList &vars) const;
 
     virtual int doSqlCount() const;
     virtual QString sqlCount() const;

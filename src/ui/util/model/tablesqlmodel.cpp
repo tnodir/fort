@@ -33,19 +33,19 @@ void TableSqlModel::invalidateRowCache()
     emit modelChanged();
 }
 
-void TableSqlModel::fillSqlVars(QVariantMap &varsMap) const
+void TableSqlModel::fillSqlVars(QVariantList &vars) const
 {
-    Q_UNUSED(varsMap);
+    Q_UNUSED(vars);
 }
 
 int TableSqlModel::doSqlCount() const
 {
-    QVariantMap varsMap;
-    fillSqlVars(varsMap);
+    QVariantList vars;
+    fillSqlVars(vars);
 
     const auto sqlUtf8 = sqlCount().toUtf8();
 
-    return sqliteDb()->executeEx(sqlUtf8, {}, varsMap).toInt();
+    return sqliteDb()->executeEx(sqlUtf8, vars).toInt();
 }
 
 QString TableSqlModel::sqlCount() const

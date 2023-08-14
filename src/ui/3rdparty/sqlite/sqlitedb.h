@@ -76,15 +76,11 @@ public:
     bool execute(const char *sql);
     bool executeStr(const QString &sql);
 
-    QVariant executeEx(const char *sql, const QVariantList &vars, const QVariantMap &varsMap,
-            int resultCount = 1, bool *ok = nullptr);
     QVariant executeEx(const char *sql, const QVariantList &vars = {}, int resultCount = 1,
             bool *ok = nullptr);
 
-    bool prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars = {},
-            const QVariantMap &varsMap = {});
-    bool prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars = {},
-            const QVariantMap &varsMap = {});
+    bool prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars = {});
+    bool prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars = {});
     bool done(SqliteStmt *stmt);
 
     qint64 lastInsertRowid() const;

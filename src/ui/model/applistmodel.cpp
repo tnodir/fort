@@ -297,11 +297,10 @@ QIcon AppListModel::appStateIcon(const AppRow &appRow)
     return IconCache::icon(appStateIconPath(appRow));
 }
 
-bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars,
-        const QVariantMap &varsMap, AppRow &appRow) const
+bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql, vars, varsMap) && stmt.step() == SqliteStmt::StepRow)) {
+    if (!(sqliteDb()->prepare(stmt, sql, vars) && stmt.step() == SqliteStmt::StepRow)) {
         appRow.invalidate();
         return false;
     }
@@ -335,7 +334,7 @@ const AppRow &AppListModel::appRowAt(int row) const
 AppRow AppListModel::appRowById(qint64 appId) const
 {
     AppRow appRow;
-    updateAppRow(sqlBase() + " WHERE t.app_id = ?1;", { appId }, {}, appRow);
+    updateAppRow(sqlBase() + " WHERE t.app_id = ?1;", { appId }, appRow);
     return appRow;
 }
 
@@ -344,7 +343,7 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
     const QString normPath = FileUtil::normalizePath(appPath);
 
     AppRow appRow;
-    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { normPath }, {}, appRow)) {
+    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { normPath }, appRow)) {
         appRow.appOriginPath = appPath;
         appRow.appPath = normPath;
     }
@@ -353,17 +352,17 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
 
 bool AppListModel::updateTableRow(int row) const
 {
-    QVariantMap varsMap;
-    varsMap.insert(":row", row);
-    fillSqlVars(varsMap);
+    QVariantList vars;
+    fillSqlVars(vars);
+    vars.append(row); // must be a last one!
 
-    return updateAppRow(sql(), {}, varsMap, m_appRow);
+    return updateAppRow(sql(), vars, m_appRow);
 }
 
-void AppListModel::fillSqlVars(QVariantMap &varsMap) const
+void AppListModel::fillSqlVars(QVariantList &vars) const
 {
     if (!ftsFilterMatch().isEmpty()) {
-        varsMap.insert(":match", ftsFilterMatch());
+        vars.append(ftsFilterMatch());
     }
 }
 

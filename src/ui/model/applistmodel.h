@@ -49,7 +49,7 @@ protected:
     bool updateTableRow(int row) const override;
     TableRow &tableRow() const override { return m_appRow; }
 
-    void fillSqlVars(QVariantMap &varsMap) const override;
+    void fillSqlVars(QVariantList &vars) const override;
 
     QString sqlBase() const override;
     QString sqlWhere() const override;
@@ -71,8 +71,7 @@ private:
     static QColor appStateColor(const AppRow &appRow);
     static QIcon appStateIcon(const AppRow &appRow);
 
-    bool updateAppRow(const QString &sql, const QVariantList &vars, const QVariantMap &varsMap,
-            AppRow &appRow) const;
+    bool updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const;
 
 private:
     QString m_ftsFilter;
