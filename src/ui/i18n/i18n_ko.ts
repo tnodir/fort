@@ -1209,7 +1209,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>검색</translation>
     </message>
 </context>
 <context>
