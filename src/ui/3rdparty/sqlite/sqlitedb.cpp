@@ -290,7 +290,7 @@ QStringList SqliteDb::tableNames(const QString &schemaName)
     const auto sql = QString("SELECT name FROM %1"
                              "  WHERE type = 'table'"
                              "    AND name NOT LIKE 'sqlite_%'"
-                             "    AND name NOT LIKE '%%2_%';")
+                             "    AND name NOT LIKE '%%2%';")
                              .arg(masterTable, ftsTableSuffix);
 
     SqliteStmt stmt;

@@ -933,6 +933,8 @@ bool ConfManager::purgeApps()
             if (FileUtil::isDriveFilePath(appPath) && !AppInfoUtil::fileExists(appPath)) {
                 const qint64 appId = stmt.columnInt64(0);
                 appIdList.append(appId);
+
+                qCDebug(LC) << "Purge obsolete app:" << appId << appPath;
             }
         }
     }
