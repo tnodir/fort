@@ -317,9 +317,9 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     if (isNewDb)
         return true;
 
-    switch (version) {
-    case 21:
-        return migrateAppPaths(db);
+    // COMPAT
+    if (version <= 21) {
+        migrateAppPaths(db);
     }
 
     return true;

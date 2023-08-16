@@ -45,6 +45,7 @@ public:
         const QString sqlDir;
         const char *sqlPragmas = nullptr;
         int version = 0;
+        int userVersion = 0;
         bool recreate = true;
         bool importOldData = true;
         bool autoCopyTables = true;
@@ -120,7 +121,7 @@ public:
     SqliteStmt *stmt(const char *sql);
 
 private:
-    bool canMigrate(const MigrateOptions &opt, int userVersion) const;
+    bool canMigrate(const MigrateOptions &opt) const;
     bool migrateDb(const MigrateOptions &opt, int userVersion, bool isNewDb);
     bool migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb);
 

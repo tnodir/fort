@@ -329,16 +329,18 @@ bool SqliteDb::migrate(MigrateOptions &opt)
     execute(opt.sqlPragmas);
 
     // Check version
-    int userVersion = this->userVersion();
+    const int userVersion = this->userVersion();
     if (userVersion == opt.version)
         return true;
 
+    opt.userVersion = userVersion;
+
     // Check migration options
-    if (!canMigrate(opt, userVersion))
+    if (!canMigrate(opt))
         return false;
 
     // Migrate the DB
-    bool isNewDb = (userVersion == 0);
+    const bool isNewDb = (userVersion == 0);
     if (isNewDb) {
         opt.recreate = false;
     }
@@ -346,10 +348,10 @@ bool SqliteDb::migrate(MigrateOptions &opt)
     return migrateDb(opt, userVersion, isNewDb);
 }
 
-bool SqliteDb::canMigrate(const MigrateOptions &opt, int userVersion) const
+bool SqliteDb::canMigrate(const MigrateOptions &opt) const
 {
-    if (userVersion > opt.version) {
-        qCWarning(LC) << "Cannot open new DB" << userVersion << "from old application"
+    if (opt.userVersion > opt.version) {
+        qCWarning(LC) << "Cannot open new DB" << opt.userVersion << "from old application"
                       << opt.version;
         return false;
     }
@@ -581,7 +583,7 @@ bool SqliteDb::importDb(const MigrateOptions &opt, const QString &sourceFilePath
 
     // Migrate
     if (success && opt.migrateFunc) {
-        success = opt.migrateFunc(this, userVersion(), /*isNewDb=*/false, opt.migrateContext);
+        success = opt.migrateFunc(this, opt.userVersion, /*isNewDb=*/false, opt.migrateContext);
     }
 
     endTransaction(success);

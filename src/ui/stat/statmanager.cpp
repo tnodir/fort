@@ -34,8 +34,8 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     if (isNewDb)
         return true;
 
-    switch (version) {
-    case 3: {
+    // COMPAT
+    if (version <= 3) {
         // Move apps' total traffic to separate table
         const QString srcSchema = SqliteDb::migrationOldSchemaName();
         const QString dstSchema = SqliteDb::migrationNewSchemaName();
@@ -45,7 +45,6 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
                                          SqliteDb::entityName(srcSchema, "app"),
                                          "app_id, traf_time, in_bytes, out_bytes");
         db->executeStr(sql);
-    } break;
     }
 
     return true;

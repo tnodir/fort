@@ -29,8 +29,8 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     if (isNewDb)
         return true;
 
-    switch (version) {
-    case 7: {
+    // COMPAT
+    if (version <= 7) {
         const QString srcSchema = SqliteDb::migrationOldSchemaName();
         const QString dstSchema = SqliteDb::migrationNewSchemaName();
 
@@ -48,7 +48,6 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
                                        " inherited, ip_proto, local_port, remote_port,"
                                        " local_ip, remote_ip, local_ip6, remote_ip6,"
                                        " block_reason"));
-    } break;
     }
 
     return true;
