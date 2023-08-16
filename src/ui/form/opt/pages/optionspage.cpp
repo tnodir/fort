@@ -182,7 +182,7 @@ void OptionsPage::onRetranslateUi()
     m_btPasswordLock->setText(tr("Lock the password (unlocked till \"%1\")")
                                       .arg(settings()->passwordUnlockedTillText()));
 
-    m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
+    m_cbLogBlocked->setText(tr("Collect New Programs"));
     m_cbPurgeOnStart->setText(tr("Purge Obsolete on startup"));
     m_cbAppAlertMessage->setText(tr("Use System Notifications for New Programs"));
 
@@ -554,7 +554,7 @@ void OptionsPage::setupProgBox()
 
     // Layout
     auto layout = ControlUtil::createLayoutByWidgets(
-            { m_cbLogBlocked, m_cbAppAlertMessage, m_cbPurgeOnStart });
+            { m_cbLogBlocked, m_cbPurgeOnStart, m_cbAppAlertMessage });
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);

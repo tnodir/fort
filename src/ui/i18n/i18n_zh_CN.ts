@@ -928,10 +928,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>程序</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>收集新的屏蔽程序</translation>
-    </message>
-    <message>
         <source>Purge Obsolete on startup</source>
         <translation>启动时清理过时的数据</translation>
     </message>
@@ -968,8 +964,12 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>切换阻止互联网流量</translation>
     </message>
     <message>
-        <source>Alert Message</source>
-        <translation>告警信息</translation>
+        <source>Use System Notifications for New Programs</source>
+        <translation>使用系统通知新程序</translation>
+    </message>
+    <message>
+        <source>Collect New Programs</source>
+        <translation>收集新程序</translation>
     </message>
 </context>
 <context>
@@ -1639,8 +1639,8 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>阻止互联网流量</translation>
     </message>
     <message>
-        <source>New program alerted!</source>
-        <translation>新程序提醒！</translation>
+        <source>New program detected!</source>
+        <translation>检测到新程序！</translation>
     </message>
 </context>
 <context>

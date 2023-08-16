@@ -928,10 +928,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <translation>Programi</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Zberi nove blokirane programe</translation>
-    </message>
-    <message>
         <source>Purge Obsolete on startup</source>
         <translation>Počisti zastarelo ob zagonu</translation>
     </message>
@@ -968,8 +964,12 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <translation>Preklopi &apos;Onemogoči internetni promet&apos;</translation>
     </message>
     <message>
-        <source>Alert Message</source>
-        <translation>Opozorilno sporočilo</translation>
+        <source>Use System Notifications for New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect New Programs</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1639,8 +1639,8 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Onemogoči internetni promet</translation>
     </message>
     <message>
-        <source>New program alerted!</source>
-        <translation>Opozorilo o novem programu!</translation>
+        <source>New program detected!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

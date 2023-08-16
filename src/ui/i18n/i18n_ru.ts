@@ -928,10 +928,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Собирать новые блокированные программы</translation>
-    </message>
-    <message>
         <source>Purge Obsolete on startup</source>
         <translation>Очистить устаревшее при старте</translation>
     </message>
@@ -968,8 +964,12 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Переключить &quot;Блокировать Интернет трафик&quot;</translation>
     </message>
     <message>
-        <source>Alert Message</source>
-        <translation>Сообщать об оповещении</translation>
+        <source>Use System Notifications for New Programs</source>
+        <translation>Оповещение о новых программах через Системные сообщения</translation>
+    </message>
+    <message>
+        <source>Collect New Programs</source>
+        <translation>Собирать новые программы</translation>
     </message>
 </context>
 <context>
@@ -1639,8 +1639,8 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Блокировать Интернет трафик</translation>
     </message>
     <message>
-        <source>New program alerted!</source>
-        <translation>Оповещение о новой программе!</translation>
+        <source>New program detected!</source>
+        <translation>Обнаружена новая программа!</translation>
     </message>
 </context>
 <context>

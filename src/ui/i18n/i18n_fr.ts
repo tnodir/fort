@@ -928,10 +928,6 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Programmes</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Collecte de nouveaux programmes bloqués</translation>
-    </message>
-    <message>
         <source>Purge Obsolete on startup</source>
         <translation>Purger obsolètes au démarrage</translation>
     </message>
@@ -968,8 +964,12 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Commutateur Bloquer le trafic Internet</translation>
     </message>
     <message>
-        <source>Alert Message</source>
-        <translation>Message d&apos;alerte</translation>
+        <source>Use System Notifications for New Programs</source>
+        <translation>Utiliser les notifications système pour les nouveaux programmes</translation>
+    </message>
+    <message>
+        <source>Collect New Programs</source>
+        <translation>Collecter de nouveaux programmes</translation>
     </message>
 </context>
 <context>
@@ -1639,8 +1639,8 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Bloquer le trafic Internet</translation>
     </message>
     <message>
-        <source>New program alerted!</source>
-        <translation>Nouveau programme alerté !</translation>
+        <source>New program detected!</source>
+        <translation>Nouveau programme détecté !</translation>
     </message>
 </context>
 <context>

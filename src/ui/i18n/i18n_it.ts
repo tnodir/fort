@@ -928,10 +928,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation>Programmi</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Raccogli nuovi programmi bloccati</translation>
-    </message>
-    <message>
         <source>Purge Obsolete on startup</source>
         <translation type="unfinished"></translation>
     </message>
@@ -968,8 +964,12 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Alert Message</source>
+        <source>Use System Notifications for New Programs</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect New Programs</source>
+        <translation>Raccogli nuovi programmi</translation>
     </message>
 </context>
 <context>
@@ -1636,7 +1636,7 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>New program alerted!</source>
+        <source>New program detected!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

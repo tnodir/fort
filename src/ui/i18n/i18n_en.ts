@@ -927,10 +927,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Purge Obsolete on startup</source>
         <translation></translation>
     </message>
@@ -967,7 +963,11 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Alert Message</source>
+        <source>Use System Notifications for New Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect New Programs</source>
         <translation></translation>
     </message>
 </context>
@@ -1635,7 +1635,7 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>New program alerted!</source>
+        <source>New program detected!</source>
         <translation></translation>
     </message>
 </context>

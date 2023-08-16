@@ -928,10 +928,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>프로그램</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>새로 차단된 프로그램 집계</translation>
-    </message>
-    <message>
         <source>Purge Obsolete on startup</source>
         <translation>시작 시 사용되지 않는 제거</translation>
     </message>
@@ -968,8 +964,12 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>인터넷 트래픽 차단 전환</translation>
     </message>
     <message>
-        <source>Alert Message</source>
-        <translation>경고 메시지</translation>
+        <source>Use System Notifications for New Programs</source>
+        <translation>새 프로그램에 대한 시스템 알림 사용</translation>
+    </message>
+    <message>
+        <source>Collect New Programs</source>
+        <translation>새 프로그램 집계</translation>
     </message>
 </context>
 <context>
@@ -1639,8 +1639,8 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>인터넷 트래픽 차단</translation>
     </message>
     <message>
-        <source>New program alerted!</source>
-        <translation>새 프로그램 경고!</translation>
+        <source>New program detected!</source>
+        <translation>새로운 프로그램이 감지되었습니다!</translation>
     </message>
 </context>
 <context>

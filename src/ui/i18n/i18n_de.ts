@@ -928,10 +928,6 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <translation>Programme</translation>
     </message>
     <message>
-        <source>Collect New Blocked Programs</source>
-        <translation>Neue blockierte Programme sammeln</translation>
-    </message>
-    <message>
         <source>Purge Obsolete on startup</source>
         <translation>Beim Start veraltete löschen</translation>
     </message>
@@ -968,8 +964,12 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <translation>Internetdatenverkehr blockieren</translation>
     </message>
     <message>
-        <source>Alert Message</source>
-        <translation>Warnmeldung</translation>
+        <source>Use System Notifications for New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect New Programs</source>
+        <translation>Neue Programme sammeln</translation>
     </message>
 </context>
 <context>
@@ -1639,8 +1639,8 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Internetdatenverkehr blockieren</translation>
     </message>
     <message>
-        <source>New program alerted!</source>
-        <translation>Neues Programm gemeldet!</translation>
+        <source>New program detected!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
