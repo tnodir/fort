@@ -46,7 +46,6 @@ private:
     void setupPasswordLock();
     void setupProgBox();
     void setupLogBlocked();
-    void setupPurgeOnStart();
 
     QLayout *setupColumn2();
     void setupGlobalBox();
@@ -95,6 +94,7 @@ private:
     QToolButton *m_btPasswordLock = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbPurgeOnStart = nullptr;
+    QCheckBox *m_cbAppAlertMessage = nullptr;
 
     QCheckBox *m_cbExplorerMenu = nullptr;
     QCheckBox *m_cbUseSystemLocale = nullptr;
@@ -105,7 +105,6 @@ private:
     QCheckBox *m_cbHomeAutoShowMenu = nullptr;
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
-    QCheckBox *m_cbTrayAlertMessage = nullptr;
     QLabel *m_labelTrayEvent = nullptr;
     QComboBox *m_comboTrayEvent = nullptr;
     QLabel *m_labelTrayAction = nullptr;

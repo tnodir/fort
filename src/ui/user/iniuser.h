@@ -50,14 +50,14 @@ public:
     bool homeAutoShowMenu() const { return valueBool("home/autoShowMenu"); }
     void setHomeAutoShowMenu(bool v) { setValue("home/autoShowMenu", v); }
 
+    bool progNotifyMessage() const { return valueBool("prog/notifyMessage", true); }
+    void setProgNotifyMessage(bool v) { setValue("prog/notifyMessage", v, true); }
+
     bool trayShowIcon() const { return valueBool("tray/showIcon", true); }
     void setTrayShowIcon(bool v) { setValue("tray/showIcon", v, true); }
 
     bool trayAnimateAlert() const { return valueBool("tray/animateAlert", true); }
     void setTrayAnimateAlert(bool v) { setValue("tray/animateAlert", v, true); }
-
-    bool trayAlertMessage() const { return valueBool("tray/alertMessage", true); }
-    void setTrayAlertMessage(bool v) { setValue("tray/alertMessage", v, true); }
 
     QString trayAction(const QString &event) const { return valueText("tray/" + event); }
     void setTrayAction(const QString &event, const QString &v) { setValue("tray/" + event, v); }

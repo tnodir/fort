@@ -34,6 +34,11 @@ void UserSettings::migrateIniOnStartup()
         setCacheValue("statWindow/showHostNames", ini()->value("connWindow/showHostNames"));
         setCacheValue("statWindow/maximized", ini()->value("connWindow/maximized"));
     }
+
+    // COMPAT: v3.9.11
+    if (version < 0x030911) {
+        setCacheValue("prog/notifyMessage", ini()->value("tray/alertMessage"));
+    }
 }
 
 void UserSettings::migrateIniOnWrite()
@@ -90,5 +95,10 @@ void UserSettings::migrateIniOnWrite()
         removeIniKey("optWindow/rulesGlobalSplit");
         removeIniKey("optWindow/rulesSplit");
         removeIniKey("optWindow/rulesSplitVersion");
+    }
+
+    // COMPAT: v3.9.11
+    if (version < 0x030911) {
+        removeIniKey("tray/alertMessage");
     }
 }

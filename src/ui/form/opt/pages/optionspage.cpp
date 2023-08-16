@@ -184,6 +184,7 @@ void OptionsPage::onRetranslateUi()
 
     m_cbLogBlocked->setText(tr("Collect New Blocked Programs"));
     m_cbPurgeOnStart->setText(tr("Purge Obsolete on startup"));
+    m_cbAppAlertMessage->setText(tr("Use System Notifications for New Programs"));
 
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
@@ -196,7 +197,6 @@ void OptionsPage::onRetranslateUi()
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
-    m_cbTrayAlertMessage->setText(tr("Alert Message"));
     m_labelTrayEvent->setText(tr("Event:"));
     m_labelTrayAction->setText(tr("Action:"));
     retranslateComboTrayEvent();
@@ -538,10 +538,23 @@ void OptionsPage::setupPasswordLock()
 void OptionsPage::setupProgBox()
 {
     setupLogBlocked();
-    setupPurgeOnStart();
+
+    m_cbPurgeOnStart = ControlUtil::createCheckBox(ini()->progPurgeOnStart(), [&](bool checked) {
+        if (ini()->progPurgeOnStart() != checked) {
+            ini()->setProgPurgeOnStart(checked);
+            ctrl()->setIniEdited();
+        }
+    });
+
+    m_cbAppAlertMessage =
+            ControlUtil::createCheckBox(iniUser()->progNotifyMessage(), [&](bool checked) {
+                iniUser()->setProgNotifyMessage(checked);
+                ctrl()->setIniUserEdited();
+            });
 
     // Layout
-    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogBlocked, m_cbPurgeOnStart });
+    auto layout = ControlUtil::createLayoutByWidgets(
+            { m_cbLogBlocked, m_cbAppAlertMessage, m_cbPurgeOnStart });
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);
@@ -557,16 +570,6 @@ void OptionsPage::setupLogBlocked()
     });
 
     m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());
-}
-
-void OptionsPage::setupPurgeOnStart()
-{
-    m_cbPurgeOnStart = ControlUtil::createCheckBox(ini()->progPurgeOnStart(), [&](bool checked) {
-        if (ini()->progPurgeOnStart() != checked) {
-            ini()->setProgPurgeOnStart(checked);
-            ctrl()->setIniEdited();
-        }
-    });
 }
 
 QLayout *OptionsPage::setupColumn2()
@@ -707,12 +710,6 @@ void OptionsPage::setupTrayBox()
                 ctrl()->setIniUserEdited();
             });
 
-    m_cbTrayAlertMessage =
-            ControlUtil::createCheckBox(iniUser()->trayAlertMessage(), [&](bool checked) {
-                iniUser()->setTrayAlertMessage(checked);
-                ctrl()->setIniUserEdited();
-            });
-
     // Tray Event & Action Rows
     auto eventLayout = setupTrayEventLayout();
     auto actionLayout = setupTrayActionLayout();
@@ -720,7 +717,6 @@ void OptionsPage::setupTrayBox()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbTrayShowIcon);
     layout->addWidget(m_cbTrayAnimateAlert);
-    layout->addWidget(m_cbTrayAlertMessage);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(eventLayout);
     layout->addLayout(actionLayout);

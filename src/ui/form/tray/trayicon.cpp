@@ -529,10 +529,10 @@ void TrayIcon::updateAppGroupActions()
 
 void TrayIcon::sendAlertMessage()
 {
-    if (!(m_alerted && iniUser()->trayAlertMessage()))
+    if (!(m_alerted && iniUser()->progNotifyMessage()))
         return;
 
-    windowManager()->showTrayMessage(tr("New program alerted!"), WindowManager::MessageAlert);
+    windowManager()->showTrayMessage(tr("New program detected!"), WindowManager::MessageAlert);
 }
 
 void TrayIcon::updateAlertTimer()
