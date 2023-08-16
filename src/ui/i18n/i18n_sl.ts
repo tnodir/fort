@@ -965,11 +965,11 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Uporabi sistemska obvestila za nove programe</translation>
     </message>
     <message>
         <source>Collect New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Zberi nove programe</translation>
     </message>
 </context>
 <context>
@@ -1640,7 +1640,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>New program detected!</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaznan je nov program!</translation>
     </message>
 </context>
 <context>
