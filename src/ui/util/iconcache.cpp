@@ -51,21 +51,22 @@ QPixmap IconCache::file(const QString &filePath)
 {
     checkThread();
 
-    QString adjustedFilePath = filePath;
-
-    // Try to use "./icons/" folder from current working dir.
-    if (filePath.startsWith(':')) {
-        adjustedFilePath[0] = '.';
-
-        if (!FileUtil::fileExists(adjustedFilePath)) {
-            adjustedFilePath = filePath;
-        }
-    }
-
     QPixmap pixmap;
-    if (!find(adjustedFilePath, &pixmap)) {
+    if (!find(filePath, &pixmap)) {
+        QString adjustedFilePath = filePath;
+
+        // Try to use "./icons/" folder from current working dir.
+        if (filePath.startsWith(':')) {
+            adjustedFilePath[0] = '.';
+
+            if (!FileUtil::fileExists(adjustedFilePath)) {
+                adjustedFilePath = filePath;
+            }
+        }
+
         pixmap.load(adjustedFilePath);
-        insert(adjustedFilePath, pixmap);
+
+        insert(filePath, pixmap);
     }
     return pixmap;
 }
