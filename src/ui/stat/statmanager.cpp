@@ -31,11 +31,13 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
 
-    if (isNewDb)
+    if (isNewDb) {
+        // COMPAT: DB schema
         return true;
+    }
 
-    // COMPAT
-    if (version <= 3) {
+    // COMPAT: DB content
+    if (version < 3) {
         // Move apps' total traffic to separate table
         const QString srcSchema = SqliteDb::migrationOldSchemaName();
         const QString dstSchema = SqliteDb::migrationNewSchemaName();

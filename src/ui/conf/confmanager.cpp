@@ -314,11 +314,13 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
 
-    if (isNewDb)
+    if (isNewDb) {
+        // COMPAT: DB schema
         return true;
+    }
 
-    // COMPAT
-    if (version <= 21) {
+    // COMPAT: DB content
+    if (version < 21) {
         migrateAppPaths(db);
     }
 
