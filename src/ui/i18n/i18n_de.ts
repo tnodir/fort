@@ -965,7 +965,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Systembenachrichtigungen für neue Programme verwenden</translation>
     </message>
     <message>
         <source>Collect New Programs</source>
@@ -1640,7 +1640,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>New program detected!</source>
-        <translation type="unfinished"></translation>
+        <translation>Neues Programm erkannt!</translation>
     </message>
 </context>
 <context>
