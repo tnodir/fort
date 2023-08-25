@@ -24,9 +24,9 @@ const char *const regAllUsersRun = R"(SOFTWARE\Microsoft\Windows\CurrentVersion\
 constexpr RegKey::Root regShellRoot = RegKey::HKLM;
 const char *const regShellMenu = R"(SOFTWARE\Classes\SystemFileAssociations\.exe\Shell)";
 
-const wchar_t *const serviceNameStr = L"" APP_BASE "Svc";
-const wchar_t *const serviceDisplayStr = L"" APP_NAME " Service";
-const wchar_t *const serviceDescriptionStr = L"Manages " APP_NAME " logic as background server.";
+const wchar_t *const serviceNameStr = L"" APP_BASE_L L"Svc";
+const wchar_t *const serviceDisplayStr = L"" APP_NAME_L L" Service";
+const wchar_t *const serviceDescriptionStr = L"Manages " APP_NAME_L L" logic as background server.";
 // Service Dependencies: Double null-terminated array of null-separated names of services
 const wchar_t *const serviceDependenciesStr = L"fortfw\0\0";
 
