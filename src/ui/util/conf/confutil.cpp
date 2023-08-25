@@ -464,20 +464,22 @@ bool ConfUtil::addApp(
 
     appsSize += appSize;
 
-    FORT_APP_ENTRY appEntry;
-    appEntry.v = 0;
-    appEntry.path_len = appPathLen;
-    appEntry.flags.group_index = quint8(app.groupIndex);
-    appEntry.flags.use_group_perm = app.useGroupPerm;
-    appEntry.flags.apply_child = app.applyChild;
-    appEntry.flags.lan_only = app.lanOnly;
-    appEntry.flags.log_blocked = app.logBlocked;
-    appEntry.flags.log_conn = app.logConn;
-    appEntry.flags.blocked = app.blocked;
-    appEntry.flags.kill_process = app.killProcess;
-    appEntry.flags.alerted = app.alerted;
-    appEntry.flags.is_new = isNew;
-    appEntry.flags.found = 1;
+    const FORT_APP_ENTRY appEntry = {
+        .path_len = appPathLen,
+        .flags = {
+                .group_index = quint8(app.groupIndex),
+                .use_group_perm = app.useGroupPerm,
+                .apply_child = app.applyChild,
+                .lan_only = app.lanOnly,
+                .log_blocked = app.logBlocked,
+                .log_conn = app.logConn,
+                .blocked = app.blocked,
+                .kill_process = app.killProcess,
+                .alerted = app.alerted,
+                .is_new = isNew,
+                .found = 1,
+        },
+    };
 
     appsMap.insert(kernelPath, appEntry.v);
 
