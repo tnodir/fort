@@ -673,6 +673,8 @@ bool RpcManager::waitResult()
 
 void RpcManager::sendResult(ControlWorker *w, bool ok, const QVariantList &args)
 {
+    // DBG: qCDebug(LC) << "Send Result to Client: id:" << w->id() << ok << args.size();
+
     w->sendCommand(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error, args);
 }
 
@@ -719,6 +721,8 @@ void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
         qCWarning(LC) << "Bad RPC command to invoke:" << cmd << args;
         return;
     }
+
+    // DBG: qCDebug(LC) << "Invoke On Clients:" << cmd << args.size() << clients.size();
 
     if (!sendCommandDataToClients(buffer, clients)) {
         qCWarning(LC) << "Invoke on clients error:" << cmd << args;

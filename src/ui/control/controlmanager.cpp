@@ -172,6 +172,8 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
     if (Q_UNLIKELY(!w))
         return false;
 
+    // DBG: qCDebug(LC) << "Client requested: id:" << w->id() << command << args.size();
+
     OsUtil::setThreadIsBusy(true);
 
     QString errorMessage;

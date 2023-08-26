@@ -239,6 +239,8 @@ bool ControlWorker::sendCommandData(const QByteArray &commandData)
 
 bool ControlWorker::sendCommand(Control::Command command, const QVariantList &args)
 {
+    // DBG: qCDebug(LC) << "Send Command: id:" << id() << command << args.size();
+
     const QByteArray buffer = buildCommandData(command, args);
     if (buffer.isEmpty()) {
         qCWarning(LC) << "Bad RPC command to send:" << command << args;

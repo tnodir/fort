@@ -2,6 +2,7 @@
 
 #include <QFont>
 #include <QIcon>
+#include <QLoggingCategory>
 
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
@@ -14,6 +15,12 @@
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netutil.h>
+
+namespace {
+
+const QLoggingCategory LC("connBlockListModel");
+
+}
 
 ConnBlockListModel::ConnBlockListModel(QObject *parent) :
     TableSqlModel(parent), m_resolveAddress(false)
