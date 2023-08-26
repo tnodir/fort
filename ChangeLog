@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.9.11, 2023-08-26:
+- UI: Drop excessive blocked log packets on slow machines.
+- UI: Optimize icons by FileOptimizer.
+- UI: Update SQLite to 3.43.0
+
 v3.9.10, 2023-08-15:
 - UI: Programs: Add ability to search by path and name.
 - UI: Options: Add "Alert Message" flag to show system message notification about new program(s).
