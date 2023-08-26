@@ -7,6 +7,8 @@
 #include "fortdef.h"
 #include "fort_wildmatch.h"
 
+static_assert(sizeof(ip6_addr_t) == 16, "ip6_addr_t size mismatch");
+
 static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT32), "FORT_CONF_FLAGS size mismatch");
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_TIME) == sizeof(UINT16), "FORT_TIME size mismatch");
