@@ -191,7 +191,10 @@ static PFORT_PSNAME fort_pstree_name_new(PFORT_PSTREE ps_tree, UINT16 name_size)
 
 static void fort_pstree_name_del(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
 {
-    if (ps_name != NULL && --ps_name->refcount == 0) {
+    if (ps_name == NULL)
+        return;
+
+    if (--ps_name->refcount == 0) {
         fort_pool_free(&ps_tree->pool_list, ps_name);
     }
 }

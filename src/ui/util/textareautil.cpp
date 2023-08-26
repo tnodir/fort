@@ -102,8 +102,10 @@ void TextAreaUtil::moveSelectedLines(QPlainTextEdit *srcArea, QPlainTextEdit *ds
     const int srcSelEnd = srcCursor.selectionEnd();
     const int srcEnd = StringUtil::lineEnd(srcText, srcSelEnd, srcTextEnd) + 1;
 
-    if (srcStart >= srcEnd && --srcStart < 0) // try to select empty line
-        return;
+    if (srcStart >= srcEnd) {
+        if (--srcStart < 0) // try to select empty line
+            return;
+    }
 
     // Cut the text from srcArea
     selectText(srcArea, srcStart, srcEnd);

@@ -607,7 +607,7 @@ FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out
 {
     PFORT_STAT_PROC proc = stat->proc_active;
 
-    while (proc != NULL && proc_count-- != 0) {
+    for (; proc != NULL && proc_count != 0; --proc_count) {
         PFORT_STAT_PROC proc_next = proc->next_active;
 
         if (out != NULL) {

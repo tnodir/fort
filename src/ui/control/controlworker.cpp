@@ -146,7 +146,9 @@ bool ControlWorker::reconnectToServer()
     int reconnectCount = 3;
     do {
         connectedToServer = connectToServer();
-    } while (!connectedToServer && --reconnectCount > 0);
+        if (connectedToServer)
+            break;
+    } while (--reconnectCount > 0);
 
     m_isReconnecting = false;
 

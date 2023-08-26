@@ -489,10 +489,13 @@ static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF
 {
     if (boot_conf.boot_filter) {
         DWORD status;
+
         if ((status = fort_prov_add_filters(
-                     engine, g_provGlobal.boot_filters, FORT_PROV_BOOT_FILTERS_COUNT))
-                || (status = fort_prov_add_filters(
-                            engine, g_provGlobal.persist_filters, FORT_PROV_PERSIST_FILTERS_COUNT)))
+                     engine, g_provGlobal.boot_filters, FORT_PROV_BOOT_FILTERS_COUNT)))
+            return status;
+
+        if ((status = fort_prov_add_filters(
+                     engine, g_provGlobal.persist_filters, FORT_PROV_PERSIST_FILTERS_COUNT)))
             return status;
     }
 
