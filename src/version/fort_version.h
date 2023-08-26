@@ -8,9 +8,7 @@
 #define APP_VERSION		0x030911
 
 #define APP_NAME		"Fort Firewall"
-#define APP_NAME_L		L"Fort Firewall"
 #define APP_BASE		"FortFirewall"
-#define APP_BASE_L		L"FortFirewall"
 #define APP_PUBLISHER		"Nodir Temirkhodjaev"
 #define APP_LEGALCOPYRIGHT	"Copyright (C) Nodir Temirkhodjaev. All Rights Reserved."
 #define APP_URL			"https://github.com/tnodir/fort"

@@ -7,7 +7,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
-#include <fort_version.h>
+#include <fort_version_l.h>
 
 #include "fileutil.h"
 #include "regkey.h"
