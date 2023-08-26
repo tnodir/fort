@@ -13,6 +13,7 @@
 namespace {
 
 constexpr qint64 INVALID_APP_ID = Q_INT64_C(-1);
+constexpr int MAX_LOG_BLOCKED_IP_MERGE_COUNT = 1000;
 
 }
 
@@ -24,6 +25,9 @@ LogBlockedIpJob::LogBlockedIpJob(const LogEntryBlockedIp &entry)
 bool LogBlockedIpJob::processMerge(const StatBlockBaseJob &statJob)
 {
     const auto &job = static_cast<const LogBlockedIpJob &>(statJob);
+
+    if (m_entries.size() >= MAX_LOG_BLOCKED_IP_MERGE_COUNT)
+        return false;
 
     m_entries.append(job.entries());
 

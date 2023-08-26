@@ -39,12 +39,16 @@ protected:
     virtual WorkerObject *createWorker();
     virtual bool canMergeJobs() const { return false; }
 
+    int jobCount() const;
+
     bool mergeJob(WorkerJobPtr job);
 
 private:
     void setupWorker();
 
     bool checkNewWorkerNeeded() const;
+
+    void clearJobQueue();
 
 private:
     volatile bool m_aborted = false;
@@ -55,7 +59,7 @@ private:
 
     QQueue<WorkerJobPtr> m_jobQueue;
 
-    QMutex m_mutex;
+    mutable QMutex m_mutex;
     QWaitCondition m_jobWaitCondition;
     QWaitCondition m_abortWaitCondition;
 };

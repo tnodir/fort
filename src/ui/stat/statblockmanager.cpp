@@ -111,13 +111,26 @@ void StatBlockManager::setUp()
     sqliteDb()->setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
 }
 
+void StatBlockManager::tearDown()
+{
+    abortWorkers();
+}
+
 void StatBlockManager::logBlockedIp(const LogEntryBlockedIp &entry)
 {
+    constexpr int maxJobCount = 16;
+    if (jobCount() >= maxJobCount)
+        return; // drop excessive data
+
     enqueueJob(WorkerJobPtr(new LogBlockedIpJob(entry)));
 }
 
 void StatBlockManager::deleteConn(qint64 connIdTo)
 {
+    if (connIdTo <= 0) {
+        clear(); // delete all
+    }
+
     enqueueJob(WorkerJobPtr(new DeleteConnBlockJob(connIdTo)));
 }
 

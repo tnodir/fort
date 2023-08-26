@@ -10,7 +10,7 @@ class StatBlockWorker : public WorkerObject
 public:
     explicit StatBlockWorker(StatBlockManager *manager);
 
-    QThread::Priority priority() const override { return QThread::LowPriority; }
+    QThread::Priority priority() const override { return QThread::HighPriority; }
 };
 
 #endif // STATBLOCKWORKER_H

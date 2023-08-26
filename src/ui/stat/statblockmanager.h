@@ -26,6 +26,7 @@ public:
     SqliteDb *roSqliteDb() const { return m_roSqliteDb.data(); }
 
     void setUp() override;
+    void tearDown() override;
 
     void logBlockedIp(const LogEntryBlockedIp &entry);
 

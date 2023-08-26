@@ -13,7 +13,6 @@ WorkerManager::WorkerManager(QObject *parent) : QObject(parent) { }
 
 WorkerManager::~WorkerManager()
 {
-    clear();
     abortWorkers();
 }
 
@@ -38,6 +37,11 @@ bool WorkerManager::checkNewWorkerNeeded() const
     return workersCount < maxWorkersCount() && !m_jobQueue.isEmpty();
 }
 
+void WorkerManager::clearJobQueue()
+{
+    m_jobQueue.clear();
+}
+
 void WorkerManager::workerFinished(WorkerObject *worker)
 {
     QMutexLocker locker(&m_mutex);
@@ -54,6 +58,13 @@ WorkerObject *WorkerManager::createWorker()
     return new WorkerObject(this);
 }
 
+int WorkerManager::jobCount() const
+{
+    QMutexLocker locker(&m_mutex);
+
+    return m_jobQueue.size();
+}
+
 bool WorkerManager::mergeJob(WorkerJobPtr job)
 {
     if (!canMergeJobs() || m_jobQueue.isEmpty())
@@ -66,12 +77,14 @@ void WorkerManager::clear()
 {
     QMutexLocker locker(&m_mutex);
 
-    m_jobQueue.clear();
+    clearJobQueue();
 }
 
 void WorkerManager::abortWorkers()
 {
     QMutexLocker locker(&m_mutex);
+
+    clearJobQueue();
 
     m_aborted = true;
 
