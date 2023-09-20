@@ -13,7 +13,7 @@ cd %TARGET_PATH%
 
 %QT_PATH%/configure -release -force-debug-info -optimize-size -c++std c++20 ^
 	-static -prefix "%TARGET_PATH%\static" ^
-	-opensource -confirm-license -mp -no-opengl ^
+	-opensource -confirm-license ^
 	%* ^
 	-nomake examples -nomake tests ^
 	^
@@ -38,11 +38,12 @@ cd %TARGET_PATH%
 	-no-feature-mimetype-database -no-feature-sql ^
 	^
 	-no-feature-getifaddrs -no-feature-ipv6ifname -no-feature-libproxy ^
-	-no-feature-openssl -schannel -ssl -no-feature-sctp -no-feature-udpsocket ^
+	-no-feature-openssl -no-feature-openssl-hash ^
+	-schannel -ssl -no-feature-sctp -no-feature-udpsocket ^
 	-no-feature-networkproxy -no-feature-socks5 -no-feature-networkdiskcache ^
 	-no-feature-dnslookup -no-feature-sspi -no-feature-networklistmanager ^
 	^
-	-no-feature-directfb ^
+	-no-opengl -no-feature-opengl -no-feature-directfb ^
 	^
 	-no-feature-gif -no-feature-jpeg ^
 	^
