@@ -24,50 +24,22 @@
     </message>
     <message>
         <source>Show Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra Zone</translation>
     </message>
 </context>
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Include</source>
-        <translation>Includi</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Interscambio tutte le linee</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation>Sposta tutte le righe in &apos;Escludi&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation>Sposta le righe selezionate in &apos;Includi&apos;</translation>
-    </message>
-    <message>
-        <source># Examples:</source>
-        <translation># Esempi:</translation>
+        <source>Internet Addresses</source>
+        <translation>Indirizzi Internet</translation>
     </message>
     <message>
         <source>Allowed Internet Addresses</source>
         <translation>Indirizzi Internet consentiti</translation>
     </message>
     <message>
-        <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation>Sposta le righe selezionate in &apos;Escludi&apos;</translation>
-    </message>
-    <message>
-        <source>Internet Addresses</source>
-        <translation>Indirizzi Internet</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>Sposta tutte le righe in &apos;Includi&apos;</translation>
-    </message>
-    <message>
-        <source>Exclude All</source>
-        <translation>Escludi tutto</translation>
+        <source>Include</source>
+        <translation>Includi</translation>
     </message>
     <message>
         <source>Include All</source>
@@ -78,31 +50,51 @@
         <translation>Escludi</translation>
     </message>
     <message>
+        <source>Exclude All</source>
+        <translation>Escludi tutto</translation>
+    </message>
+    <message>
+        <source>Move All Lines to &apos;Exclude&apos;</source>
+        <translation>Sposta tutte le righe in &apos;Escludi&apos;</translation>
+    </message>
+    <message>
+        <source>Move All Lines to &apos;Include&apos;</source>
+        <translation>Sposta tutte le righe in &apos;Includi&apos;</translation>
+    </message>
+    <message>
+        <source>Interchange All Lines</source>
+        <translation>Interscambio tutte le linee</translation>
+    </message>
+    <message>
+        <source>Move Selected Lines to &apos;Exclude&apos;</source>
+        <translation>Sposta le righe selezionate in &apos;Escludi&apos;</translation>
+    </message>
+    <message>
+        <source>Move Selected Lines to &apos;Include&apos;</source>
+        <translation>Sposta le righe selezionate in &apos;Includi&apos;</translation>
+    </message>
+    <message>
         <source>Add Local Networks</source>
         <translation>Aggiungi reti locali</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Esempi:</translation>
     </message>
 </context>
 <context>
     <name>AppInfoRow</name>
     <message>
-        <source>Open Folder</source>
-        <translation>Apri cartella</translation>
-    </message>
-    <message>
         <source>Copy Path</source>
         <translation>Copia percorso</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Apri cartella</translation>
     </message>
 </context>
 <context>
     <name>AppListModel</name>
-    <message>
-        <source>Allow</source>
-        <translation>Consenti</translation>
-    </message>
-    <message>
-        <source>Block</source>
-        <translation>Blocca</translation>
-    </message>
     <message>
         <source>Group</source>
         <translation>Gruppo</translation>
@@ -112,20 +104,28 @@
         <translation>Data creazione</translation>
     </message>
     <message>
+        <source>Block</source>
+        <translation>Blocca</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Consenti</translation>
+    </message>
+    <message>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
         <source>File Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Percorso file</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Termina processo</translation>
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Azione</translation>
     </message>
 </context>
 <context>
@@ -138,56 +138,76 @@
 <context>
     <name>ApplicationsPage</name>
     <message>
-        <source>Allow</source>
-        <translation>Consenti</translation>
+        <source>Group Name</source>
+        <translation>Nome gruppo</translation>
     </message>
     <message>
-        <source>Block</source>
-        <translation>Blocca</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Interscambio tutte le linee</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Disabilitato</translation>
-    </message>
-    <message>
-        <source>Download speed limit:</source>
-        <translation>Limite di velocità di download:</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>Sposta le righe selezionate in &apos;Consenti&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>Sposta tutte le righe in &apos;Blocca&apos;</translation>
-    </message>
-    <message>
-        <source>time period:</source>
-        <translation>periodo di tempo:</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>Sposta tutte le righe in &apos;Consenti&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>Sposta le righe selezionate in &apos;Blocca&apos;</translation>
+        <source>Add Group</source>
+        <translation>Aggiungi gruppo</translation>
     </message>
     <message>
         <source>Rename Group</source>
         <translation>Rinomina gruppo</translation>
     </message>
     <message>
+        <source>Download speed limit:</source>
+        <translation>Limite di velocità di download:</translation>
+    </message>
+    <message>
+        <source>Upload speed limit:</source>
+        <translation>Limite di velocità di caricamento:</translation>
+    </message>
+    <message>
+        <source>Collect connection statistics</source>
+        <translation>Raccogli statistiche di connessione</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Abilitato</translation>
+    </message>
+    <message>
+        <source>time period:</source>
+        <translation>periodo di tempo:</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Blocca</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Consenti</translation>
+    </message>
+    <message>
+        <source>Move All Lines to &apos;Allow&apos;</source>
+        <translation>Sposta tutte le righe in &apos;Consenti&apos;</translation>
+    </message>
+    <message>
+        <source>Move All Lines to &apos;Block&apos;</source>
+        <translation>Sposta tutte le righe in &apos;Blocca&apos;</translation>
+    </message>
+    <message>
+        <source>Interchange All Lines</source>
+        <translation>Interscambio tutte le linee</translation>
+    </message>
+    <message>
+        <source>Move Selected Lines to &apos;Allow&apos;</source>
+        <translation>Sposta le righe selezionate in &apos;Consenti&apos;</translation>
+    </message>
+    <message>
+        <source>Move Selected Lines to &apos;Block&apos;</source>
+        <translation>Sposta le righe selezionate in &apos;Blocca&apos;</translation>
+    </message>
+    <message>
+        <source>Select File</source>
+        <translation>Seleziona file</translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>Personalizza</translation>
     </message>
     <message>
-        <source>Add Group</source>
-        <translation>Aggiungi gruppo</translation>
+        <source>Disabled</source>
+        <translation>Disabilitato</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -198,52 +218,32 @@
         <translation># Tutti i programmi nel sottopercorso:</translation>
     </message>
     <message>
-        <source>Select File</source>
-        <translation>Seleziona file</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programmi (*.exe);;Tutti i file (*.*)</translation>
     </message>
     <message>
-        <source>Group Name</source>
-        <translation>Nome gruppo</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Abilitato</translation>
-    </message>
-    <message>
-        <source>Collect connection statistics</source>
-        <translation>Raccogli statistiche di connessione</translation>
-    </message>
-    <message>
-        <source>Upload speed limit:</source>
-        <translation>Limite di velocità di caricamento:</translation>
-    </message>
-    <message>
         <source>Apply same rules to child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Applica le stesse regole ai sotto-processi</translation>
     </message>
     <message>
         <source>Latency:</source>
-        <translation type="unfinished"></translation>
+        <translation>Latenza:</translation>
     </message>
     <message>
         <source>Packet Loss:</source>
-        <translation type="unfinished"></translation>
+        <translation>Perdita pacchetti:</translation>
     </message>
     <message>
         <source>Download Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimensione buffer scaricamento:</translation>
     </message>
     <message>
         <source>Upload Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dimensione Buffer caricamento:</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Limita l&apos;accesso solo alla LAN</translation>
     </message>
     <message>
         <source>Collect blocked connections</source>
@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Trucchetti</translation>
     </message>
 </context>
 <context>
@@ -271,16 +271,8 @@
 <context>
     <name>ConfUtil</name>
     <message>
-        <source>Length of Application&apos;s Path must be &lt; %1</source>
-        <translation>La lunghezza del percorso dell&apos;applicazione deve essere &lt; %1</translation>
-    </message>
-    <message>
         <source>Too many application paths</source>
         <translation>Troppi percorsi di applicazione</translation>
-    </message>
-    <message>
-        <source>Number of Application Groups must be between 1 and %1</source>
-        <translation>Il numero di gruppi di applicazioni deve essere compreso tra 1 e %1</translation>
     </message>
     <message>
         <source>Bad Include IP address: #%1 %2</source>
@@ -291,12 +283,20 @@
         <translation>Indirizzo IP di esclusione errato: #%1 %2</translation>
     </message>
     <message>
+        <source>Too many IP addresses</source>
+        <translation>Troppi indirizzi IP</translation>
+    </message>
+    <message>
+        <source>Number of Application Groups must be between 1 and %1</source>
+        <translation>Il numero di gruppi di applicazioni deve essere compreso tra 1 e %1</translation>
+    </message>
+    <message>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
         <translation>La lunghezza del nome del gruppo di applicazioni deve essere &lt; %1</translation>
     </message>
     <message>
-        <source>Too many IP addresses</source>
-        <translation>Troppi indirizzi IP</translation>
+        <source>Length of Application&apos;s Path must be &lt; %1</source>
+        <translation>La lunghezza del percorso dell&apos;applicazione deve essere &lt; %1</translation>
     </message>
 </context>
 <context>
@@ -339,7 +339,7 @@
     </message>
     <message>
         <source>Inherited</source>
-        <translation type="unfinished"></translation>
+        <translation>Ereditata</translation>
     </message>
     <message>
         <source>In</source>
@@ -367,11 +367,11 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
-        <translation type="unfinished"></translation>
+        <translation>Logica modalità filtro</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Limita l&apos;accesso solo alla LAN</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -379,42 +379,42 @@
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Limite a richieste connessione</translation>
     </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
     <message>
-        <source>Copy</source>
-        <translation>Copia</translation>
-    </message>
-    <message>
         <source>Edit</source>
         <translation>Modifica</translation>
     </message>
     <message>
-        <source>Show host names</source>
-        <translation>Mostra i nomi degli host</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Rimuovi</translation>
+        <source>Copy</source>
+        <translation>Copia</translation>
     </message>
     <message>
         <source>Add Program</source>
         <translation>Aggiungi programma</translation>
     </message>
     <message>
-        <source>Auto scroll</source>
-        <translation>Scorrimento automatico</translation>
-    </message>
-    <message>
-        <source>Are you sure to remove connections till this row?</source>
-        <translation>Sei sicuro di rimuovere le connessioni fino a questa riga?</translation>
+        <source>Remove</source>
+        <translation>Rimuovi</translation>
     </message>
     <message>
         <source>Clear All</source>
         <translation>Cancella tutto</translation>
+    </message>
+    <message>
+        <source>Auto scroll</source>
+        <translation>Scorrimento automatico</translation>
+    </message>
+    <message>
+        <source>Show host names</source>
+        <translation>Mostra i nomi degli host</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove connections till this row?</source>
+        <translation>Sei sicuro di rimuovere le connessioni fino a questa riga?</translation>
     </message>
     <message>
         <source>Are you sure to remove all connections?</source>
@@ -422,30 +422,30 @@
     </message>
     <message>
         <source>Tweaks</source>
-        <translation type="unfinished"></translation>
+        <translation>Trucchetti</translation>
     </message>
 </context>
 <context>
     <name>FirewallConf</name>
     <message>
         <source>Auto-Learn</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-apprendimento</translation>
     </message>
     <message>
         <source>Block, if not allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca se non consentito</translation>
     </message>
     <message>
         <source>Allow, if not blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Permetti se non bloccato</translation>
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignora se non bloccata o permessa</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiedi di connetterti</translation>
     </message>
 </context>
 <context>
@@ -483,7 +483,7 @@
     <name>FortSettings</name>
     <message>
         <source>Window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>Finestra chiusa</translation>
     </message>
     <message>
         <source>Session lockout</source>
@@ -554,26 +554,26 @@
     </message>
     <message>
         <source>Reset to defaults</source>
-        <translation type="unfinished"></translation>
+        <translation>Ripristina predefinite</translation>
     </message>
     <message>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Finestra</translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Colori</translation>
     </message>
 </context>
 <context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Il mio forte</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Info</translation>
     </message>
 </context>
 <context>
@@ -611,19 +611,19 @@
     <name>HomeWindow</name>
     <message>
         <source>Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menu&apos;</translation>
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Il mio forte</translation>
     </message>
     <message>
         <source>Lock</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca</translation>
     </message>
     <message>
         <source>Unlock</source>
-        <translation type="unfinished"></translation>
+        <translation>Sblocca</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -645,20 +645,8 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Bad IP address</source>
-        <translation>Indirizzo IP errato</translation>
-    </message>
-    <message>
         <source>Error at line %1: %2 (%3)</source>
         <translation>Errore alla riga %1: %2 (%3)</translation>
-    </message>
-    <message>
-        <source>Bad second IP address</source>
-        <translation>Secondo indirizzo IP errato</translation>
-    </message>
-    <message>
-        <source>Bad range</source>
-        <translation>Intervallo errato</translation>
     </message>
     <message>
         <source>Bad format</source>
@@ -667,6 +655,18 @@
     <message>
         <source>Bad mask</source>
         <translation>Maschera pessima</translation>
+    </message>
+    <message>
+        <source>Bad IP address</source>
+        <translation>Indirizzo IP errato</translation>
+    </message>
+    <message>
+        <source>Bad second IP address</source>
+        <translation>Secondo indirizzo IP errato</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>Intervallo errato</translation>
     </message>
 </context>
 <context>
@@ -679,8 +679,28 @@
 <context>
     <name>OptMainPage</name>
     <message>
+        <source>Options</source>
+        <translation>Opzioni</translation>
+    </message>
+    <message>
+        <source>IP Addresses</source>
+        <translation>Indirizzi IP</translation>
+    </message>
+    <message>
+        <source>Application Groups</source>
+        <translation>Gruppi di applicazioni</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistiche</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <translation>Programma</translation>
+    </message>
+    <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Apply</source>
@@ -691,26 +711,6 @@
         <translation>Annulla</translation>
     </message>
     <message>
-        <source>Options</source>
-        <translation>Opzioni</translation>
-    </message>
-    <message>
-        <source>Application Groups</source>
-        <translation>Gruppi di applicazioni</translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation>Programma</translation>
-    </message>
-    <message>
-        <source>Statistics</source>
-        <translation>Statistiche</translation>
-    </message>
-    <message>
-        <source>IP Addresses</source>
-        <translation>Indirizzi IP</translation>
-    </message>
-    <message>
         <source>Traffic Graph</source>
         <translation>Grafico del traffico</translation>
     </message>
@@ -718,16 +718,92 @@
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Logs</source>
-        <translation>Registri</translation>
+        <source>Startup</source>
+        <translation>Avvio</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Traffico</translation>
+    </message>
+    <message>
+        <source>Global</source>
+        <translation>Globale</translation>
+    </message>
+    <message>
+        <source>Filter Enabled</source>
+        <translation>Filtro abilitato</translation>
+    </message>
+    <message>
+        <source>Filter Local Addresses</source>
+        <translation>Filtra indirizzi locali</translation>
+    </message>
+    <message>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation>Filtra gli indirizzi locali di loopback (127.0.0.0/8) e di trasmissione (255.255.255.255)</translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation>Tasti di scelta rapida</translation>
+    </message>
+    <message>
+        <source>Password:</source>
+        <translation>Password:</translation>
+    </message>
+    <message>
+        <source>Lock the password (unlocked till &quot;%1&quot;)</source>
+        <translation>Blocca la password (sbloccata fino a &quot;%1&quot;)</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>Lingua:</translation>
     </message>
     <message>
         <source>Disabled</source>
         <translation>Disabilitato</translation>
     </message>
     <message>
+        <source>For current user</source>
+        <translation>Per l&apos;utente corrente</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Per tutti gli utenti</translation>
+    </message>
+    <message>
+        <source>Installed</source>
+        <translation>Installato</translation>
+    </message>
+    <message>
+        <source>Not Installed</source>
+        <translation>Non installato</translation>
+    </message>
+    <message>
+        <source>Logs</source>
+        <translation>Registri</translation>
+    </message>
+    <message>
+        <source>Log debug messages</source>
+        <translation>Registra i messaggi di debug</translation>
+    </message>
+    <message>
         <source>Show log messages in console</source>
         <translation>Mostra i messaggi di registro nella console</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Integrazione con Windows Explorer</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Esecuzione automatica:</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Esegui Fort Firewall come servizio in background</translation>
+    </message>
+    <message>
+        <source>Move Profile</source>
+        <translation>Sposta profilo</translation>
     </message>
     <message>
         <source>New profile path is &quot;%1&quot;.
@@ -736,180 +812,104 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
-        <source>Log debug messages</source>
-        <translation>Registra i messaggi di debug</translation>
-    </message>
-    <message>
-        <source>Move Profile</source>
-        <translation>Sposta profilo</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Per tutti gli utenti</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Per l&apos;utente corrente</translation>
-    </message>
-    <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Esegui Fort Firewall come servizio in background</translation>
-    </message>
-    <message>
-        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>Filtra gli indirizzi locali di loopback (127.0.0.0/8) e di trasmissione (255.255.255.255)</translation>
-    </message>
-    <message>
-        <source>Global</source>
-        <translation>Globale</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation>Lingua:</translation>
-    </message>
-    <message>
-        <source>Hot Keys</source>
-        <translation>Tasti di scelta rapida</translation>
-    </message>
-    <message>
-        <source>Filter Local Addresses</source>
-        <translation>Filtra indirizzi locali</translation>
-    </message>
-    <message>
-        <source>Lock the password (unlocked till &quot;%1&quot;)</source>
-        <translation>Blocca la password (sbloccata fino a &quot;%1&quot;)</translation>
-    </message>
-    <message>
-        <source>Installed</source>
-        <translation>Installato</translation>
-    </message>
-    <message>
-        <source>Startup</source>
-        <translation>Avvio</translation>
-    </message>
-    <message>
-        <source>Password:</source>
-        <translation>Password:</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Esecuzione automatica:</translation>
-    </message>
-    <message>
-        <source>Traffic</source>
-        <translation>Traffico</translation>
-    </message>
-    <message>
-        <source>Filter Enabled</source>
-        <translation>Filtro abilitato</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Integrazione con Windows Explorer</translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation>Non installato</translation>
-    </message>
-    <message>
         <source>Tray</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Action Confirmations</source>
-        <translation type="unfinished"></translation>
+        <translation>Tray</translation>
     </message>
     <message>
         <source>Event:</source>
-        <translation type="unfinished"></translation>
+        <translation>Evento:</translation>
     </message>
     <message>
         <source>Action:</source>
-        <translation type="unfinished"></translation>
+        <translation>Azione:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>Clic singolo</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>Doppio clic</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>Clic centrale</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>Mostra programmi</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>Mostra opzioni</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>Mostra statistiche</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>Mostra/nascondi Grafico traffico</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>Filtro commutazione abilitato</translation>
     </message>
     <message>
         <source>Tray Menu Flags</source>
-        <translation type="unfinished"></translation>
+        <translation>Flag menu&apos; tray</translation>
     </message>
     <message>
         <source>Quit</source>
         <translation>Esci</translation>
     </message>
     <message>
-        <source>Single Click</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Double Click</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Middle Click</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Programs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show/Hide Traffic Graph</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch Filter Enabled</source>
-        <translation type="unfinished"></translation>
+        <source>Action Confirmations</source>
+        <translation>Conferme azioni</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modalità filtro:</translation>
     </message>
     <message>
         <source>Right Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Clic destro</translation>
     </message>
     <message>
         <source>Show Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra menu&apos; tray</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignora</translation>
     </message>
     <message>
         <source>Animate Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Anima icona allerte</translation>
     </message>
     <message>
         <source>Self Protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-protezione</translation>
     </message>
     <message>
         <source>Disable Service controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Disabilita controlli servizio</translation>
     </message>
     <message>
         <source>Check password on Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>Controlla password quando disinstalli</translation>
     </message>
     <message>
         <source>Ctrl + Single Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl + Clic singolo</translation>
     </message>
     <message>
         <source>Alt + Single Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt + Clic singolo</translation>
     </message>
     <message>
         <source>Show Filter Mode Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra menu Modalità filtro</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -917,11 +917,11 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Show Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra icona</translation>
     </message>
     <message>
         <source>Show My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra Il mio forte</translation>
     </message>
     <message>
         <source>Programs</source>
@@ -929,43 +929,43 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Purge Obsolete on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina obsoleti all&apos;avvio</translation>
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Il mio forte</translation>
     </message>
     <message>
         <source>Auto-Show Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-mostra menu&apos;</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca tutto il traffico</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca traffico internet</translation>
     </message>
     <message>
         <source>Block traffic when Fort Firewall is not running</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca il traffico quando Fort Firewall non è in esecuzione</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Usa impostazioni regionali di sistema</translation>
     </message>
     <message>
         <source>Switch Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Aziona Blocca tutto il traffico</translation>
     </message>
     <message>
         <source>Switch Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Aziona Blocca traffico internet</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Usa notifiche di sistema per nuovi programmi</translation>
     </message>
     <message>
         <source>Collect New Programs</source>
@@ -982,20 +982,20 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
 <context>
     <name>PasswordDialog</name>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
+        <source>Please enter the password:</source>
+        <translation>Per favore inserisci la password:</translation>
     </message>
     <message>
         <source>Unlock till:</source>
         <translation>Sblocca fino a:</translation>
     </message>
     <message>
-        <source>Please enter the password:</source>
-        <translation>Per favore inserisci la password:</translation>
+        <source>OK</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
     </message>
     <message>
         <source>Password input</source>
@@ -1006,53 +1006,57 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     <name>PoliciesWindow</name>
     <message>
         <source>Library of preset rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Libreria regole preimpostate:</translation>
     </message>
     <message>
         <source>Preset rules for applications:</source>
-        <translation type="unfinished"></translation>
+        <translation>Regole preimpostate per applicazioni:</translation>
     </message>
     <message>
         <source>Global rules, applied before application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Regole globali applicate prima di quelle per applicazioni:</translation>
     </message>
     <message>
         <source>Global rules, applied after application rules:</source>
-        <translation type="unfinished"></translation>
+        <translation>Regole globali applicate dopo quelle per applicazioni:</translation>
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>Politiche</translation>
     </message>
 </context>
 <context>
     <name>PolicyListBox</name>
     <message>
         <source>Add Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi politica</translation>
     </message>
     <message>
         <source>Remove Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Rimuovi politica</translation>
     </message>
     <message>
         <source>Edit Policy</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifica politica</translation>
     </message>
 </context>
 <context>
     <name>ProgramEditDialog</name>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
+        <source>Select File</source>
+        <translation>Seleziona file</translation>
     </message>
     <message>
-        <source>Day</source>
-        <translation>Giorno</translation>
+        <source>Get Program Name</source>
+        <translation>Ottieni il nome del programma</translation>
     </message>
     <message>
-        <source>Week</source>
-        <translation>Settimana</translation>
+        <source>Application Group:</source>
+        <translation>Gruppo applicazione:</translation>
+    </message>
+    <message>
+        <source>Use Application Group&apos;s Enabled State</source>
+        <translation>Usa stato abilitato del gruppo di applicazioni</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1063,84 +1067,80 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation>Blocca</translation>
     </message>
     <message>
-        <source>Month</source>
-        <translation>Mese</translation>
-    </message>
-    <message>
-        <source>Get Program Name</source>
-        <translation>Ottieni il nome del programma</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 ora</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>Modifica programma</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 ore</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Personalizzato</translation>
+        <source>Block In:</source>
+        <translation>Blocca ingresso:</translation>
     </message>
     <message>
         <source>Block At:</source>
         <translation>Blocca a:</translation>
     </message>
     <message>
-        <source>Block In:</source>
-        <translation>Blocca ingresso:</translation>
+        <source>Forever</source>
+        <translation>Per sempre</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>Modifica programma</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personalizzato</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 ora</translation>
     </message>
     <message>
         <source>6 hours</source>
         <translation>6 ore</translation>
     </message>
     <message>
-        <source>Application Group:</source>
-        <translation>Gruppo applicazione:</translation>
+        <source>12 hours</source>
+        <translation>12 ore</translation>
     </message>
     <message>
-        <source>Select File</source>
-        <translation>Seleziona file</translation>
+        <source>Day</source>
+        <translation>Giorno</translation>
     </message>
     <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Programmi (*.exe);;Tutti i file (*.*)</translation>
+        <source>Week</source>
+        <translation>Settimana</translation>
     </message>
     <message>
-        <source>Forever</source>
-        <translation>Per sempre</translation>
-    </message>
-    <message>
-        <source>Use Application Group&apos;s Enabled State</source>
-        <translation>Usa stato abilitato del gruppo di applicazioni</translation>
+        <source>Month</source>
+        <translation>Mese</translation>
     </message>
     <message>
         <source> hour(s)</source>
         <translation> ora/e</translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Programmi (*.exe);;Tutti i file (*.*)</translation>
+    </message>
+    <message>
         <source>Apply same rules to child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Applica le stesse regole ai sotto-processi</translation>
     </message>
     <message>
         <source>File Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Percorso file:</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome:</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Limita l&apos;accesso solo alla LAN</translation>
     </message>
     <message>
         <source>Collect blocked connections</source>
@@ -1152,22 +1152,21 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Termina processo</translation>
     </message>
     <message>
         <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Attenzione: L&apos;opzione &apos;Termina processo&apos; è molto pericolosa!!!
+
+Fai attenzione quando termini un servizio di sistema o altri programmi importanti!
+Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</translation>
     </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
-    <message>
-        <source>Add</source>
-        <translation>Aggiungi</translation>
-    </message>
     <message>
         <source>Edit</source>
         <translation>Modifica</translation>
@@ -1181,32 +1180,36 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Blocca</translation>
     </message>
     <message>
-        <source>Are you sure to remove all non-existent programs?</source>
-        <translation>Sei sicuro di rimuovere tutti i programmi inesistenti?</translation>
+        <source>Add</source>
+        <translation>Aggiungi</translation>
     </message>
     <message>
         <source>Remove</source>
         <translation>Rimuovi</translation>
     </message>
     <message>
-        <source>Are you sure to remove selected program(s)?</source>
-        <translation>Sei sicuro di rimuovere i programmi selezionati?</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programmi</translation>
     </message>
     <message>
+        <source>Are you sure to remove selected program(s)?</source>
+        <translation>Sei sicuro di rimuovere i programmi selezionati?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove all non-existent programs?</source>
+        <translation>Sei sicuro di rimuovere tutti i programmi inesistenti?</translation>
+    </message>
+    <message>
         <source>Services</source>
-        <translation type="unfinished"></translation>
+        <translation>Servizi</translation>
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina obsoleti</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Cerca</translation>
     </message>
 </context>
 <context>
@@ -1223,16 +1226,16 @@ It can cause a Windows malfunction or totally unusable.</source>
 <context>
     <name>RpcManager</name>
     <message>
-        <source>Service error.</source>
-        <translation>Errore di servizio.</translation>
+        <source>Service isn&apos;t available.</source>
+        <translation>Il servizio non è disponibile.</translation>
     </message>
     <message>
         <source>Service isn&apos;t responding.</source>
         <translation>Il servizio non risponde.</translation>
     </message>
     <message>
-        <source>Service isn&apos;t available.</source>
-        <translation>Il servizio non è disponibile.</translation>
+        <source>Service error.</source>
+        <translation>Errore di servizio.</translation>
     </message>
 </context>
 <context>
@@ -1246,24 +1249,12 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Interrompi</translation>
     </message>
     <message>
-        <source>Daily</source>
-        <translation>Tutti i giorni</translation>
-    </message>
-    <message>
-        <source>Monthly</source>
-        <translation>Mensile</translation>
-    </message>
-    <message>
         <source>Custom</source>
         <translation>Personalizzato</translation>
     </message>
     <message>
         <source>Hourly</source>
         <translation>Ogni ora</translation>
-    </message>
-    <message>
-        <source>Weekly</source>
-        <translation>Settimanale</translation>
     </message>
     <message>
         <source>Each 6 hours</source>
@@ -1274,6 +1265,18 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Ogni 12 ore</translation>
     </message>
     <message>
+        <source>Daily</source>
+        <translation>Tutti i giorni</translation>
+    </message>
+    <message>
+        <source>Weekly</source>
+        <translation>Settimanale</translation>
+    </message>
+    <message>
+        <source>Monthly</source>
+        <translation>Mensile</translation>
+    </message>
+    <message>
         <source> hour(s)</source>
         <translation> ora/e</translation>
     </message>
@@ -1282,11 +1285,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>ServiceListModel</name>
     <message>
         <source>Service Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome servizio</translation>
     </message>
     <message>
         <source>Display Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome visualizzato</translation>
     </message>
     <message>
         <source>Process ID</source>
@@ -1301,11 +1304,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Make Trackable</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendi tracciabile</translation>
     </message>
     <message>
         <source>Revert Changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Annulla modifiche</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -1317,129 +1320,129 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Services</source>
-        <translation type="unfinished"></translation>
+        <translation>Servizi</translation>
     </message>
     <message>
         <source>Please restart the computer to reload changed services!</source>
-        <translation type="unfinished"></translation>
+        <translation>Riavviare il computer per ricaricare i servizi modificati.</translation>
     </message>
 </context>
 <context>
     <name>StatMainPage</name>
     <message>
-        <source>Blocked Connections</source>
-        <translation>Connessioni bloccate</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>Traffico</translation>
+    </message>
+    <message>
+        <source>Blocked Connections</source>
+        <translation>Connessioni bloccate</translation>
     </message>
 </context>
 <context>
     <name>StatisticsPage</name>
     <message>
-        <source>Disabled</source>
-        <translation>Disabilitato</translation>
-    </message>
-    <message>
-        <source>Day&apos;s Quota:</source>
-        <translation>Quota giornaliera:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Raccogli le connessioni bloccate</translation>
-    </message>
-    <message>
-        <source>10 years</source>
-        <translation>10 anni</translation>
-    </message>
-    <message>
-        <source>Month starts on:</source>
-        <translation>Il mese inizia il:</translation>
-    </message>
-    <message>
-        <source>1 year</source>
-        <translation>1 anno</translation>
-    </message>
-    <message>
-        <source>Month&apos;s Quota:</source>
-        <translation>Quota mensile:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>Conta le &apos;connessioni bloccate&apos;:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>Conta per &apos;Connessioni consentite&apos;:</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Personalizza</translation>
-    </message>
-    <message>
-        <source>3 years</source>
-        <translation>3 anni</translation>
-    </message>
-    <message>
-        <source> month(s)</source>
-        <translation> mese(i)</translation>
-    </message>
-    <message>
-        <source> day(s)</source>
-        <translation> giorno/i</translation>
-    </message>
-    <message>
-        <source>Active time period:</source>
-        <translation>Periodo di tempo attivo:</translation>
-    </message>
-    <message>
-        <source>6 months</source>
-        <translation>6 mesi</translation>
-    </message>
-    <message>
-        <source>3 months</source>
-        <translation>3 mesi</translation>
-    </message>
-    <message>
-        <source>5 years</source>
-        <translation>5 anni</translation>
-    </message>
-    <message>
         <source>Collect Traffic Statistics</source>
         <translation>Raccogli statistiche sul traffico</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>Raccogli le connessioni consentite</translation>
-    </message>
-    <message>
-        <source>Traffic</source>
-        <translation>Traffico</translation>
-    </message>
-    <message>
-        <source>Keep data for &apos;Monthly&apos;:</source>
-        <translation>Conserva i dati per &apos;Mensile&apos;:</translation>
-    </message>
-    <message>
-        <source>Keep data for &apos;Hourly&apos;:</source>
-        <translation>Conserva i dati per &apos;Ora&apos;:</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>Per sempre</translation>
     </message>
     <message>
         <source>Collect Traffic, when Filter Disabled</source>
         <translation>Raccogli traffico, quando il filtro è disattivato</translation>
     </message>
     <message>
+        <source>Active time period:</source>
+        <translation>Periodo di tempo attivo:</translation>
+    </message>
+    <message>
+        <source>Month starts on:</source>
+        <translation>Il mese inizia il:</translation>
+    </message>
+    <message>
+        <source>Keep data for &apos;Hourly&apos;:</source>
+        <translation>Conserva i dati per &apos;Ora&apos;:</translation>
+    </message>
+    <message>
+        <source> day(s)</source>
+        <translation> giorno/i</translation>
+    </message>
+    <message>
         <source>Keep data for &apos;Daily&apos;:</source>
         <translation>Conserva i dati per &apos;Giornaliero&apos;:</translation>
     </message>
     <message>
+        <source>Keep data for &apos;Monthly&apos;:</source>
+        <translation>Conserva i dati per &apos;Mensile&apos;:</translation>
+    </message>
+    <message>
+        <source> month(s)</source>
+        <translation> mese(i)</translation>
+    </message>
+    <message>
+        <source>Day&apos;s Quota:</source>
+        <translation>Quota giornaliera:</translation>
+    </message>
+    <message>
+        <source>Month&apos;s Quota:</source>
+        <translation>Quota mensile:</translation>
+    </message>
+    <message>
+        <source>Keep count for &apos;Allowed connections&apos;:</source>
+        <translation>Conta per &apos;Connessioni consentite&apos;:</translation>
+    </message>
+    <message>
+        <source>Keep count for &apos;Blocked connections&apos;:</source>
+        <translation>Conta le &apos;connessioni bloccate&apos;:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personalizza</translation>
+    </message>
+    <message>
+        <source>Forever</source>
+        <translation>Per sempre</translation>
+    </message>
+    <message>
+        <source>3 months</source>
+        <translation>3 mesi</translation>
+    </message>
+    <message>
+        <source>6 months</source>
+        <translation>6 mesi</translation>
+    </message>
+    <message>
+        <source>1 year</source>
+        <translation>1 anno</translation>
+    </message>
+    <message>
+        <source>3 years</source>
+        <translation>3 anni</translation>
+    </message>
+    <message>
+        <source>5 years</source>
+        <translation>5 anni</translation>
+    </message>
+    <message>
+        <source>10 years</source>
+        <translation>10 anni</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Disabilitato</translation>
+    </message>
+    <message>
+        <source>Traffic</source>
+        <translation>Traffico</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Raccogli le connessioni consentite</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Raccogli le connessioni bloccate</translation>
+    </message>
+    <message>
         <source>Alerted only</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo in allerta</translation>
     </message>
     <message>
         <source>Blocked Connections</source>
@@ -1447,11 +1450,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connessioni consentite</translation>
     </message>
     <message>
         <source>Block Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca il traffico Internet quando la quota supera</translation>
     </message>
 </context>
 <context>
@@ -1464,12 +1467,12 @@ It can cause a Windows malfunction or totally unusable.</source>
 <context>
     <name>TaskInfo</name>
     <message>
-        <source>Zones Downloader</source>
-        <translation>Downloader zone</translation>
-    </message>
-    <message>
         <source>Update Checker</source>
         <translation>Controllo aggiornamenti</translation>
+    </message>
+    <message>
+        <source>Zones Downloader</source>
+        <translation>Downloader zone</translation>
     </message>
 </context>
 <context>
@@ -1494,150 +1497,150 @@ It can cause a Windows malfunction or totally unusable.</source>
 <context>
     <name>TrafListModel</name>
     <message>
-        <source>Sum</source>
-        <translation>Somma</translation>
-    </message>
-    <message>
         <source>Date</source>
         <translation>Data</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Scarica</translation>
     </message>
     <message>
         <source>Upload</source>
         <translation>Carica</translation>
     </message>
     <message>
-        <source>Download</source>
-        <translation>Scarica</translation>
+        <source>Sum</source>
+        <translation>Somma</translation>
     </message>
 </context>
 <context>
     <name>TrafficPage</name>
     <message>
-        <source>Bytes</source>
-        <translation>Bytes</translation>
+        <source>Refresh</source>
+        <translation>Aggiorna</translation>
     </message>
     <message>
         <source>Clear</source>
         <translation>Cancella</translation>
     </message>
     <message>
-        <source>Daily</source>
-        <translation>Tutti i giorni</translation>
-    </message>
-    <message>
-        <source>Total</source>
-        <translation>Totale</translation>
-    </message>
-    <message>
-        <source>Monthly</source>
-        <translation>Mensile</translation>
-    </message>
-    <message>
-        <source>Are you sure to reset total statistics?</source>
-        <translation>Sei sicuro di voler resettare le statistiche totali?</translation>
-    </message>
-    <message>
-        <source>Hourly</source>
-        <translation>Ogni ora</translation>
-    </message>
-    <message>
-        <source>Units:</source>
-        <translation>Unità:</translation>
+        <source>Remove Application</source>
+        <translation>Rimuovi applicazione</translation>
     </message>
     <message>
         <source>Reset Total</source>
         <translation>Resetta tutto</translation>
     </message>
     <message>
-        <source>Refresh</source>
-        <translation>Aggiorna</translation>
+        <source>Clear All</source>
+        <translation>Cancella tutto</translation>
+    </message>
+    <message>
+        <source>Units:</source>
+        <translation>Unità:</translation>
     </message>
     <message>
         <source>Adaptive</source>
         <translation>Adattivo</translation>
     </message>
     <message>
-        <source>Clear All</source>
-        <translation>Cancella tutto</translation>
+        <source>Bytes</source>
+        <translation>Byte</translation>
     </message>
     <message>
-        <source>Are you sure to clear all statistics?</source>
-        <translation>Sei sicuro di cancellare tutte le statistiche?</translation>
+        <source>Hourly</source>
+        <translation>Ogni ora</translation>
     </message>
     <message>
-        <source>Remove Application</source>
-        <translation>Rimuovi applicazione</translation>
+        <source>Daily</source>
+        <translation>Tutti i giorni</translation>
+    </message>
+    <message>
+        <source>Monthly</source>
+        <translation>Mensile</translation>
+    </message>
+    <message>
+        <source>Total</source>
+        <translation>Totale</translation>
     </message>
     <message>
         <source>Are you sure to remove statistics for selected application?</source>
         <translation>Sei sicuro di rimuovere le statistiche per l&apos;applicazione selezionata?</translation>
     </message>
+    <message>
+        <source>Are you sure to reset total statistics?</source>
+        <translation>Sei sicuro di voler resettare le statistiche totali?</translation>
+    </message>
+    <message>
+        <source>Are you sure to clear all statistics?</source>
+        <translation>Sei sicuro di cancellare tutte le statistiche?</translation>
+    </message>
 </context>
 <context>
     <name>TrayIcon</name>
     <message>
-        <source>Quit</source>
-        <translation>Esci</translation>
-    </message>
-    <message>
-        <source>Zones</source>
-        <translation>Zone</translation>
+        <source>Programs</source>
+        <translation>Programmi</translation>
     </message>
     <message>
         <source>Options</source>
         <translation>Opzioni</translation>
     </message>
     <message>
-        <source>Programs</source>
-        <translation>Programmi</translation>
-    </message>
-    <message>
-        <source>Statistics</source>
-        <translation>Statistiche</translation>
-    </message>
-    <message>
-        <source>Filter Enabled</source>
-        <translation>Filtro abilitato</translation>
+        <source>Zones</source>
+        <translation>Zone</translation>
     </message>
     <message>
         <source>Traffic Graph</source>
         <translation>Grafico del traffico</translation>
     </message>
     <message>
+        <source>Filter Enabled</source>
+        <translation>Filtro abilitato</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Esci</translation>
+    </message>
+    <message>
+        <source>Statistics</source>
+        <translation>Statistiche</translation>
+    </message>
+    <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler cambiare &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler uscire dal programma?</translation>
     </message>
     <message>
         <source>Filter Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modalità filtro</translation>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler selezionare &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>Policies</source>
-        <translation type="unfinished"></translation>
+        <translation>Politiche</translation>
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Il mio forte</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca tutto il traffico</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca traffico internet</translation>
     </message>
     <message>
         <source>New program detected!</source>
-        <translation type="unfinished"></translation>
+        <translation>Nuovo programma rilevato.</translation>
     </message>
 </context>
 <context>
@@ -1662,83 +1665,83 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Ultimo lancio</translation>
     </message>
     <message>
-        <source>Addresses</source>
-        <translation>Indirizzi</translation>
-    </message>
-    <message>
         <source>Last Success</source>
         <translation>Ultimo successo</translation>
+    </message>
+    <message>
+        <source>Addresses</source>
+        <translation>Indirizzi</translation>
     </message>
 </context>
 <context>
     <name>ZonesWindow</name>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
+        <source>Edit</source>
+        <translation>Modifica</translation>
     </message>
     <message>
         <source>Add</source>
         <translation>Aggiungi</translation>
     </message>
     <message>
-        <source>Edit</source>
-        <translation>Modifica</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL:</translation>
-    </message>
-    <message>
-        <source>Zones</source>
-        <translation>Zone</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>Modifica zona</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
-    </message>
-    <message>
         <source>Remove</source>
         <translation>Rimuovi</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>Nome zona:</translation>
-    </message>
-    <message>
-        <source>Cannot save Zone addresses as text file</source>
-        <translation>Impossibile salvare gli indirizzi delle zone come file di testo</translation>
-    </message>
-    <message>
-        <source>Text files (*.txt);;All files (*.*)</source>
-        <translation>File di testo (*.txt);;Tutti i file (*.*)</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>Fonte:</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>URL personalizzato</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Abilitato</translation>
     </message>
     <message>
         <source>Save As Text</source>
         <translation>Salva come testo</translation>
     </message>
     <message>
-        <source>Are you sure to remove selected zone?</source>
-        <translation>Sei sicuro di rimuovere la zona selezionata?</translation>
+        <source>Edit Zone</source>
+        <translation>Modifica zona</translation>
+    </message>
+    <message>
+        <source>Zone Name:</source>
+        <translation>Nome zona:</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>Fonte:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Abilitato</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>URL personalizzato</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL:</translation>
     </message>
     <message>
         <source>Form Data:</source>
         <translation>Dati modulo:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation>Zone</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected zone?</source>
+        <translation>Sei sicuro di rimuovere la zona selezionata?</translation>
+    </message>
+    <message>
+        <source>Text files (*.txt);;All files (*.*)</source>
+        <translation>File di testo (*.txt);;Tutti i file (*.*)</translation>
+    </message>
+    <message>
+        <source>Cannot save Zone addresses as text file</source>
+        <translation>Impossibile salvare gli indirizzi delle zone come file di testo</translation>
     </message>
 </context>
 </TS>
