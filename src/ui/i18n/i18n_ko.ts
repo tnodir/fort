@@ -608,15 +608,15 @@
     </message>
     <message>
         <source>Portable</source>
-        <translation type="unfinished"></translation>
+        <translation>휴대용</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>설치 제거</translation>
     </message>
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation type="unfinished"></translation>
+        <translation>Fort Firewall을 제거하시겠습니까?</translation>
     </message>
 </context>
 <context>

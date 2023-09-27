@@ -608,15 +608,15 @@
     </message>
     <message>
         <source>Portable</source>
-        <translation type="unfinished"></translation>
+        <translation>Portable</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>Deinstallieren</translation>
     </message>
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sind Sie sicher, dass Sie Fort Firewall deinstallieren möchten?</translation>
     </message>
 </context>
 <context>

@@ -608,15 +608,15 @@
     </message>
     <message>
         <source>Portable</source>
-        <translation type="unfinished"></translation>
+        <translation>便携版</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>卸载</translation>
     </message>
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation type="unfinished"></translation>
+        <translation>你确定要卸载堡垒防火墙？</translation>
     </message>
 </context>
 <context>
