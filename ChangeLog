@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.9.12, 2023-09-27:
+- UI: MyFort: Add "Uninstall" Portable button.
+- UI: Update SQLite to 3.43.1
+
 v3.9.11, 2023-08-26:
 - UI: Drop excessive blocked log packets on slow machines.
 - UI: Optimize icons by FileOptimizer.
