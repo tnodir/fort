@@ -20,6 +20,9 @@ public:
 
     void initialize();
 
+    static void install(const char *arg);
+    static void uninstall();
+
 public slots:
     bool installDriver();
     bool removeDriver();

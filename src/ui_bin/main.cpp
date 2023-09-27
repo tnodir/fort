@@ -8,7 +8,6 @@
 #include <fort_version.h>
 
 #include <control/controlmanager.h>
-#include <driver/drivercommon.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
 #include <manager/envmanager.h>
@@ -16,52 +15,23 @@
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/service/serviceworker.h>
-#include <util/startuputil.h>
 
 namespace {
 
 #define FORT_ERROR_INSTANCE 1
 #define FORT_ERROR_CONTROL  2
 
-void uninstall()
-{
-    StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
-    StartupUtil::setServiceInstalled(false); // Uninstall service
-    StartupUtil::setExplorerIntegrated(false); // Remove Windows Explorer integration
-    DriverCommon::provUnregister(); // Unregister booted provider
-}
-
-void install(const char *arg)
-{
-    switch (arg[0]) {
-    case 'b': { // "boot_filter"
-        DriverCommon::provRegister(/*bootFilter=*/true); // Register booted provider
-    } break;
-    case 'p': { // "portable"
-        FortManager::setupPortableResource();
-        StartupUtil::setPortable(true);
-    } break;
-    case 's': { // "service"
-        StartupUtil::setAutoRunMode(StartupUtil::StartupAllUsers);
-        StartupUtil::setServiceInstalled(true);
-    } break;
-    case 'e': { // "explorer"
-        StartupUtil::setExplorerIntegrated(true);
-    } break;
-    }
-}
-
 bool processArgs(int argc, char *argv[])
 {
     // Uninstall
     if (argc > 1 && !strcmp(argv[1], "-u")) {
-        uninstall();
+        FortManager::uninstall();
         return true;
     }
 
     // Install
     if (argc > 2 && !strcmp(argv[1], "-i")) {
-        install(argv[2]);
+        FortManager::install(argv[2]);
         return true;
     }
 

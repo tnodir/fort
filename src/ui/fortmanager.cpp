@@ -10,6 +10,7 @@
 #include <appinfo/appinfocache.h>
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
+#include <driver/drivercommon.h>
 #include <form/dialog/passworddialog.h>
 #include <fortsettings.h>
 #include <hostinfo/hostinfocache.h>
@@ -211,6 +212,34 @@ void FortManager::deleteManagers()
 
     ioc->tearDownAll();
     ioc->autoDeleteAll();
+}
+
+void FortManager::install(const char *arg)
+{
+    switch (arg[0]) {
+    case 'b': { // "boot_filter"
+        DriverCommon::provRegister(/*bootFilter=*/true); // Register booted provider
+    } break;
+    case 'p': { // "portable"
+        FortManager::setupPortableResource();
+        StartupUtil::setPortable(true);
+    } break;
+    case 's': { // "service"
+        StartupUtil::setAutoRunMode(StartupUtil::StartupAllUsers);
+        StartupUtil::setServiceInstalled(true);
+    } break;
+    case 'e': { // "explorer"
+        StartupUtil::setExplorerIntegrated(true);
+    } break;
+    }
+}
+
+void FortManager::uninstall()
+{
+    StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
+    StartupUtil::setServiceInstalled(false); // Uninstall service
+    StartupUtil::setExplorerIntegrated(false); // Remove Windows Explorer integration
+    DriverCommon::provUnregister(); // Unregister booted provider
 }
 
 bool FortManager::installDriver()

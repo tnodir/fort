@@ -21,10 +21,13 @@ HomePage::HomePage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, p
 void HomePage::onRetranslateUi()
 {
     m_gbDriver->setTitle(tr("Driver"));
+    m_gbPortable->setTitle(tr("Portable"));
 
     retranslateDriverMessage();
     m_btInstallDriver->setText(tr("Reinstall"));
     m_btRemoveDriver->setText(tr("Remove"));
+
+    m_btUninstallPortable->setText(tr("Uninstall"));
 }
 
 void HomePage::retranslateDriverMessage()
@@ -43,6 +46,10 @@ void HomePage::setupUi()
     // Driver Group Box
     setupDriverBox();
     layout->addWidget(m_gbDriver, 0, Qt::AlignHCenter);
+
+    // Portable Group Box
+    setupPortableBox();
+    layout->addWidget(m_gbPortable, 0, Qt::AlignHCenter);
 
     layout->addStretch();
 
@@ -118,4 +125,39 @@ void HomePage::setupDriverIcon()
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this, refreshDriverInfo);
     connect(driverManager(), &DriverManager::errorCodeChanged, this,
             &HomePage::retranslateDriverMessage);
+}
+
+void HomePage::setupPortableBox()
+{
+    auto colLayout = new QVBoxLayout();
+    colLayout->setSpacing(10);
+
+    // Buttons Row
+    auto buttonsLayout = new QHBoxLayout();
+    buttonsLayout->setSpacing(10);
+    colLayout->addLayout(buttonsLayout);
+
+    m_btUninstallPortable = ControlUtil::createButton(QString(), [&] {
+        windowManager()->showConfirmBox(
+                [&] {
+                    FortManager::uninstall();
+                    fortManager()->removeDriver();
+                },
+                tr("Are you sure to uninstall the Fort Firewall?"));
+    });
+
+    if (!settings()->isUserAdmin()) {
+        m_btUninstallPortable->setEnabled(false);
+    }
+
+    buttonsLayout->addStretch();
+    buttonsLayout->addWidget(m_btUninstallPortable);
+    buttonsLayout->addStretch();
+
+    m_gbPortable = new QGroupBox();
+    m_gbPortable->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    m_gbPortable->setMinimumWidth(200);
+    m_gbPortable->setLayout(colLayout);
+
+    m_gbPortable->setVisible(settings()->isPortable());
 }
