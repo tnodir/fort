@@ -606,6 +606,18 @@
         <source>Are you sure to remove the Driver?</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Portable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>

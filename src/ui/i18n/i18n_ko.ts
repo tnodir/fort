@@ -606,6 +606,18 @@
         <source>Are you sure to remove the Driver?</source>
         <translation>드라이버를 제거하시겠습니까?</translation>
     </message>
+    <message>
+        <source>Portable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>

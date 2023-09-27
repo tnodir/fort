@@ -606,6 +606,18 @@
         <source>Are you sure to remove the Driver?</source>
         <translation>Удалить драйвер?</translation>
     </message>
+    <message>
+        <source>Portable</source>
+        <translation>Портативный</translation>
+    </message>
+    <message>
+        <source>Uninstall</source>
+        <translation>Деинсталлировать</translation>
+    </message>
+    <message>
+        <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation>Деинсталлировать Fort Firewall?</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
