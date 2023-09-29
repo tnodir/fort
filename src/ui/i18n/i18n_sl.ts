@@ -608,15 +608,15 @@
     </message>
     <message>
         <source>Portable</source>
-        <translation type="unfinished"></translation>
+        <translation>Prenosljiv</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>Odstrani</translation>
     </message>
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ali ste prepričani, da želite odstraniti Fort Firewall?</translation>
     </message>
 </context>
 <context>
