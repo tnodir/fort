@@ -226,8 +226,47 @@ begin
   Result := True;
 end;
 
+function Unpack(): Boolean;
+var
+  path: String;
+  params: String;
+  ResultCode: Integer;
+begin
+  path := ExpandConstant('{param:UNPACK}');
+
+  if path = '' then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  path := path + ExpandConstant('\{#APP_BASE}');
+
+  if DirExists(path) then
+  begin
+    SuppressibleMsgBox('UNPACK Error: Path already exists: ' + path, mbCriticalError, MB_OK, IDOK);
+
+    Result := True;
+    Exit;
+  end;
+
+  ExtractTemporaryFiles('*.*');
+
+  params := ExpandConstant('"{tmp}') + '\{app}\" "' + path + '\" /Q /Y /E /H';
+
+  Exec('xcopy.exe', params, GetCurrentDir(), SW_HIDE, ewWaitUntilTerminated, ResultCode)
+
+  Result := True;
+end;
+
 function InitializeSetup: Boolean;
 begin
+  if Unpack() then
+  begin
+    Result := False;
+    Exit;
+  end;
+
 #if CHECK_WIN10 == "Y"
   if not IsWindows10OrNewer() then
   begin
