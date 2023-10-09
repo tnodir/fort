@@ -142,18 +142,14 @@ void OsUtil::showConsole(bool visible)
     }
 }
 
-void OsUtil::writeToConsole(const char *category, const QString &message)
+void OsUtil::writeToConsole(const QString &line)
 {
     const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     if (!stdoutHandle || stdoutHandle == INVALID_HANDLE_VALUE)
         return;
 
     QByteArray data;
-    if (category) {
-        data.append(category);
-        data.append(": ");
-    }
-    data.append(message.toLocal8Bit());
+    data.append(line.toLocal8Bit());
     data.append('\n');
 
     DWORD nw;

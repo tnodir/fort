@@ -17,37 +17,52 @@ constexpr int LOGGER_KEEP_FILES = 9;
 
 QtMessageHandler g_oldMessageHandler = nullptr;
 
-void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
+Logger::LogLevel levelByMsgType(QtMsgType type)
 {
-    Logger::LogLevel level = Logger::Info;
-
     switch (type) {
     case QtWarningMsg:
-        level = Logger::Warning;
-        break;
+        return Logger::Warning;
     case QtCriticalMsg:
     case QtFatalMsg:
-        level = Logger::Error;
-        break;
+        return Logger::Error;
     default:
-        break;
+        return Logger::Info;
     }
+}
+
+void processMessage(QtMsgType type, const QMessageLogContext &context, const QString &message)
+{
+    const Logger::LogLevel level = levelByMsgType(type);
 
     Logger *logger = Logger::instance();
 
-    // Write only errors to log file
-    if (logger->debug() || level != Logger::Info) {
-        const bool isDefaultCategory = !context.category || !strcmp(context.category, "default");
-        const QString text =
-                isDefaultCategory ? message : QLatin1String(context.category) + ": " + message;
+    const bool isLogToFile = (level != Logger::Info || logger->debug());
+    const bool isLogConsole = logger->console();
 
-        logger->writeLog(text, level);
+    if (!(isLogToFile || isLogConsole))
+        return;
+
+    const bool isDefaultCategory = !context.category || !strcmp(context.category, "default");
+    const QString text =
+            isDefaultCategory ? message : QLatin1String(context.category) + ": " + message;
+
+    const auto dateString = Logger::getDateString();
+    const auto logLine = Logger::makeLogLine(level, dateString, text);
+
+    // Write only errors to log file
+    if (isLogToFile) {
+        logger->writeLog(dateString, logLine);
     }
 
     // Additionally write to console if needed
-    if (logger->console()) {
-        OsUtil::writeToConsole(context.category, message);
+    if (isLogConsole) {
+        OsUtil::writeToConsole(logLine);
     }
+}
+
+void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
+{
+    processMessage(type, context, message);
 
     if (g_oldMessageHandler) {
         g_oldMessageHandler(type, context, message);
@@ -102,6 +117,18 @@ Logger *Logger::instance()
     return g_instanceLogger;
 }
 
+QString Logger::getDateString()
+{
+    return DateUtil::now().toString("yyyy-MM-dd HH:mm:ss.zzz");
+}
+
+QString Logger::makeLogLine(LogLevel level, const QString &dateString, const QString &message)
+{
+    static const char *const g_levelChars = "IWE";
+
+    return dateString + ' ' + g_levelChars[int(level)] + ' ' + message + '\n';
+}
+
 QString Logger::fileNamePrefix() const
 {
     return QLatin1String("log_fort_") + (isService() ? "svc_" : QString());
@@ -146,24 +173,18 @@ void Logger::closeLogFile()
     m_file.close();
 }
 
-void Logger::writeLogLine(Logger::LogLevel level, const QString &dateString, const QString &message)
+void Logger::writeLogLine(const QString &logLine)
 {
-    static const char *const g_levelChars = "IWE";
-
-    const QString line = dateString + ' ' + g_levelChars[int(level)] + ' ' + message + '\n';
-
-    m_file.write(line.toUtf8());
+    m_file.write(logLine.toUtf8());
     m_file.flush();
 }
 
-void Logger::writeLog(const QString &message, Logger::LogLevel level)
+void Logger::writeLog(const QString &dateString, const QString &logLine)
 {
     if (m_writing)
         return; // avoid recursive calls
 
     m_writing = true;
-
-    const QString dateString = DateUtil::now().toString("yyyy-MM-dd HH:mm:ss.zzz");
 
     // Create file when required to avoid empty files
     if (!m_file.isOpen()) {
@@ -176,19 +197,14 @@ void Logger::writeLog(const QString &message, Logger::LogLevel level)
         }
 
         // Write file header
-        writeLogLine(Info, dateString, APP_NAME " v" APP_VERSION_STR);
+        writeLogLine(makeLogLine(Info, dateString, APP_NAME " v" APP_VERSION_STR));
     }
 
-    writeLogLine(level, dateString, message);
+    writeLogLine(logLine);
 
     if (m_file.size() > LOGGER_FILE_MAX_SIZE) {
         closeLogFile(); // Too big file
     }
 
     m_writing = false;
-}
-
-void Logger::writeLogList(const QString &message, const QStringList &list, Logger::LogLevel level)
-{
-    writeLog(message + '{' + list.join(',') + '}', level);
 }

@@ -28,10 +28,13 @@ public:
 
     static Logger *instance();
 
+    static QString getDateString();
+
+    static QString makeLogLine(
+            Logger::LogLevel level, const QString &dateString, const QString &message);
+
 public slots:
-    void writeLog(const QString &message, Logger::LogLevel level = Info);
-    void writeLogList(
-            const QString &message, const QStringList &list, Logger::LogLevel level = Info);
+    void writeLog(const QString &dateString, const QString &logLine);
 
 private:
     QString fileNamePrefix() const;
@@ -41,7 +44,7 @@ private:
     bool tryOpenLogFile(const QDir &dir, const QString &fileName);
     void closeLogFile();
 
-    void writeLogLine(Logger::LogLevel level, const QString &dateString, const QString &message);
+    void writeLogLine(const QString &logLine);
 
 private:
     bool m_isService : 1;

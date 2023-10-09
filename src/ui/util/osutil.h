@@ -35,7 +35,7 @@ public:
     static bool beep(BeepType type = BeepSimple);
 
     static void showConsole(bool visible);
-    static void writeToConsole(const char *category, const QString &message);
+    static void writeToConsole(const QString &line);
 
     static void setThreadIsBusy(bool on);
 };
