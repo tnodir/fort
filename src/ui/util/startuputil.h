@@ -14,6 +14,7 @@ public:
     static void setServiceInstalled(bool install);
 
     static bool startService();
+    static bool stopService();
 
     static AutoRunMode autoRunMode();
     static void setAutoRunMode(int mode, const QString &defaultLanguage = QString());

@@ -258,7 +258,7 @@ QDateTime fileModTime(const QString &filePath)
 {
     const QFileInfo fi(filePath);
     return fi.lastModified(
-#if QT_VERSION > QT_VERSION_CHECK(6, 5, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
             QTimeZone::UTC
 #endif
     );

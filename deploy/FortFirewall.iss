@@ -226,6 +226,25 @@ begin
   Result := True;
 end;
 
+function StopFortService(var ResultCode: Integer): Boolean;
+var
+  path: String;
+begin
+  ResultCode := -1;
+
+  path := ExpandConstant('{#APP_EXE}');
+
+  if not FileExists(path) then
+  begin
+    Result := True;
+    Exit;
+  end;
+
+  Exec(path, '-s', '', SW_SHOW, ewWaitUntilTerminated, ResultCode)
+
+  Result := (ResultCode = 0);
+end;
+
 function Unpack(): Boolean;
 var
   path: String;
@@ -298,7 +317,11 @@ var
   ResultCode: Integer;
 begin
   if Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+  begin
+    if ResultCode <> 0 then StopFortService(ResultCode);
+
     if ResultCode = 0 then Sleep(100); // Let the service to stop
+  end;
 
   Result := '';
 end;

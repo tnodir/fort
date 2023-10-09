@@ -15,22 +15,41 @@
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/service/serviceworker.h>
+#include <util/startuputil.h>
 
 namespace {
 
-#define FORT_ERROR_INSTANCE 1
-#define FORT_ERROR_CONTROL  2
+enum FortError {
+    FortErrorInstance = 1,
+    FortErrorControl,
+    FortErrorService,
+};
 
-bool processArgs(int argc, char *argv[])
+bool processArgs(int argc, char *argv[], int &rc)
 {
+    if (argc <= 1)
+        return false;
+
+    const char *arg = argv[1];
+    if (arg[0] != '-')
+        return false;
+
+    const char param = arg[1];
+
+    // Stop
+    if (param == 's') {
+        rc = StartupUtil::stopService() ? 0 : FortErrorService;
+        return true;
+    }
+
     // Uninstall
-    if (argc > 1 && !strcmp(argv[1], "-u")) {
+    if (param == 'u') {
         FortManager::uninstall();
         return true;
     }
 
     // Install
-    if (argc > 2 && !strcmp(argv[1], "-i")) {
+    if (param == 'i' && argc > 2) {
         FortManager::install(argv[2]);
         return true;
     }
@@ -56,11 +75,6 @@ void setupCrashHandler(CrashHandler &crashHandler, const FortSettings &settings)
 
 int main(int argc, char *argv[])
 {
-    if (processArgs(argc, argv))
-        return 0;
-
-    CrashHandler crashHandler;
-
     // Process global settings required before QApplication costruction
     FortSettings settings;
     settings.setupGlobal();
@@ -73,6 +87,13 @@ int main(int argc, char *argv[])
     QApplication::setApplicationDisplayName(QLatin1String(APP_NAME) + " v" + APP_VERSION_STR
             + (settings.isPortable() ? QLatin1String(" Portable") : QString()));
 
+    // Process (un)install arguments
+    {
+        int rc = 0;
+        if (processArgs(argc, argv, rc))
+            return rc;
+    }
+
     EnvManager envManager;
 
     // Initialize settings from command line arguments
@@ -80,6 +101,7 @@ int main(int argc, char *argv[])
 
     // Setup Crash Handler
 #ifndef QT_DEBUG
+    CrashHandler crashHandler;
     setupCrashHandler(crashHandler, settings);
 #endif
 
@@ -94,7 +116,7 @@ int main(int argc, char *argv[])
     ioc.setService<ControlManager>(controlManager);
 
     if (controlManager.isCommandClient()) // Send control command to running instance
-        return controlManager.processCommandClient() ? 0 : FORT_ERROR_CONTROL;
+        return controlManager.processCommandClient() ? 0 : FortErrorControl;
 
     // Setup Fort Manager
     FortManager::setupResources();
@@ -104,7 +126,7 @@ int main(int argc, char *argv[])
 
     // Check running instance
     if (!fortManager.checkRunningInstance(settings.isService()))
-        return FORT_ERROR_INSTANCE;
+        return FortErrorInstance;
 
     fortManager.initialize();
 

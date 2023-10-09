@@ -116,7 +116,7 @@ bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
         const wchar_t *serviceDescription, const wchar_t *dependencies, const QString &command)
 {
     bool res = false;
-    const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
+    const SC_HANDLE mngr = OpenSCManagerW(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
     if (mngr) {
         const SC_HANDLE svc = CreateServiceW(mngr, serviceName, serviceDisplay, SERVICE_ALL_ACCESS,
                 SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
@@ -135,13 +135,13 @@ bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
     return res;
 }
 
-void stopService(SC_HANDLE svc)
+bool stopServiceControl(SC_HANDLE svc)
 {
     int n = 3; /* count of attempts to stop the service */
     do {
         SERVICE_STATUS status;
         if (QueryServiceStatus(svc, &status) && status.dwCurrentState == SERVICE_STOPPED)
-            break;
+            return true;
 
         const DWORD controlCode = (status.dwControlsAccepted & SERVICE_ACCEPT_STOP) != 0
                 ? SERVICE_CONTROL_STOP
@@ -151,16 +151,18 @@ void stopService(SC_HANDLE svc)
 
         QThread::msleep(n * 100);
     } while (--n > 0);
+
+    return false;
 }
 
 bool uninstallService(const wchar_t *serviceName)
 {
     bool res = false;
-    const SC_HANDLE mngr = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+    const SC_HANDLE mngr = OpenSCManagerW(NULL, NULL, SC_MANAGER_ALL_ACCESS);
     if (mngr) {
         const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_ALL_ACCESS | DELETE);
         if (svc) {
-            stopService(svc);
+            stopServiceControl(svc);
 
             res = DeleteService(svc);
             CloseServiceHandle(svc);
@@ -217,6 +219,20 @@ bool StartupUtil::startService()
         if (svc) {
             res = StartServiceW(svc, 0, nullptr);
             CloseServiceHandle(svc);
+        }
+        CloseServiceHandle(mngr);
+    }
+    return res;
+}
+
+bool StartupUtil::stopService()
+{
+    bool res = false;
+    const SC_HANDLE mngr = OpenSCManagerW(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+    if (mngr) {
+        const SC_HANDLE svc = OpenServiceW(mngr, serviceNameStr, SERVICE_ALL_ACCESS);
+        if (svc) {
+            res = stopServiceControl(svc);
         }
         CloseServiceHandle(mngr);
     }

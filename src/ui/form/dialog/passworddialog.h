@@ -30,9 +30,9 @@ private:
 private:
     QLabel *m_labelPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
-    QDialogButtonBox *m_buttonBox = nullptr;
     QLabel *m_labelUnlock = nullptr;
     QComboBox *m_comboUnlock = nullptr;
+    QDialogButtonBox *m_buttonBox = nullptr;
 };
 
 #endif // PASSWORDDIALOG_H

@@ -49,8 +49,6 @@ struct MessageBoxArg
 
 void setupModalDialog(QDialog *box)
 {
-    box->setAttribute(Qt::WA_DeleteOnClose);
-
     box->setWindowModality(box->parent() ? Qt::WindowModal : Qt::ApplicationModal);
     box->setModal(true);
 }
@@ -58,6 +56,7 @@ void setupModalDialog(QDialog *box)
 QMessageBox *createMessageBox(const MessageBoxArg &ba, QWidget *parent = nullptr)
 {
     auto box = new QMessageBox(ba.icon, ba.title, ba.text, ba.buttons, parent);
+    box->setAttribute(Qt::WA_DeleteOnClose);
     setupModalDialog(box);
     return box;
 }
@@ -520,22 +519,14 @@ bool WindowManager::checkPassword()
     if (!settings->isPasswordRequired())
         return true;
 
-    auto box = new PasswordDialog();
-    setupModalDialog(box);
-
-    connect(box, &QMessageBox::accepted, [=] {
-        const QString password = box->password();
-        if (!password.isEmpty() && IoC<ConfManager>()->checkPassword(password)) {
-            const auto unlockType = static_cast<FortSettings::UnlockType>(box->unlockType());
-            settings->setPasswordChecked(/*checked=*/true, unlockType);
-        }
-    });
-
     windowOpened(WindowPasswordDialog);
 
-    WidgetWindow::showWidget(box);
-
-    box->exec();
+    QString password;
+    int unlockType = FortSettings::UnlockDisabled;
+    if (showPasswordDialog(password, &unlockType) && IoC<ConfManager>()->checkPassword(password)) {
+        settings->setPasswordChecked(
+                /*checked=*/true, static_cast<FortSettings::UnlockType>(unlockType));
+    }
 
     windowClosed(WindowPasswordDialog);
 
@@ -544,28 +535,12 @@ bool WindowManager::checkPassword()
 
 void WindowManager::showErrorBox(const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(
-            {
-                    .icon = QMessageBox::Warning,
-                    .buttons = QMessageBox::Ok,
-                    .text = text,
-                    .title = title,
-            },
-            parent);
-    box->show();
+    showErrorDialog(text, title, parent);
 }
 
 void WindowManager::showInfoBox(const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(
-            {
-                    .icon = QMessageBox::Information,
-                    .buttons = QMessageBox::Ok,
-                    .text = text,
-                    .title = title,
-            },
-            parent);
-    box->show();
+    showInfoDialog(text, title, parent);
 }
 
 void WindowManager::showConfirmBox(const std::function<void()> &onConfirmed, const QString &text,
@@ -598,6 +573,55 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
     });
 
     box->show();
+}
+
+void WindowManager::showErrorDialog(const QString &text, const QString &title, QWidget *parent)
+{
+    auto box = createMessageBox(
+            {
+                    .icon = QMessageBox::Warning,
+                    .buttons = QMessageBox::Ok,
+                    .text = text,
+                    .title = title,
+            },
+            parent);
+    box->show();
+}
+
+void WindowManager::showInfoDialog(const QString &text, const QString &title, QWidget *parent)
+{
+    auto box = createMessageBox(
+            {
+                    .icon = QMessageBox::Information,
+                    .buttons = QMessageBox::Ok,
+                    .text = text,
+                    .title = title,
+            },
+            parent);
+    box->show();
+}
+
+bool WindowManager::showPasswordDialog(QString &password, int *unlockType)
+{
+    auto box = new PasswordDialog();
+    QScopedPointer<PasswordDialog> deferBox(box);
+
+    setupModalDialog(box);
+
+    WidgetWindow::showWidget(box);
+
+    if (box->exec() != QDialog::Accepted)
+        return false;
+
+    password = box->password();
+    if (password.isEmpty())
+        return false;
+
+    if (unlockType) {
+        *unlockType = box->unlockType();
+    }
+
+    return true;
 }
 
 void WindowManager::onTrayMessageClicked()

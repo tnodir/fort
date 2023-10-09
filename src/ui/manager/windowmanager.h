@@ -109,6 +109,13 @@ public slots:
     void showQuestionBox(const std::function<void(bool confirmed)> &onFinished, const QString &text,
             const QString &title = QString(), QWidget *parent = nullptr);
 
+    static void showErrorDialog(
+            const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
+    static void showInfoDialog(
+            const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
+
+    static bool showPasswordDialog(QString &password, int *unlockType = nullptr);
+
     static bool activateModalWidget();
 
 private:
