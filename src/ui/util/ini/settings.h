@@ -61,6 +61,8 @@ protected:
     void iniFlush();
     void iniSync();
 
+    void checkStatus() const;
+
     static int appVersion();
 
 private:

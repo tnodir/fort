@@ -1,8 +1,16 @@
 #include "settings.h"
 
+#include <QLoggingCategory>
+
 #include <fort_version.h>
 
 #include <util/fileutil.h>
+
+namespace {
+
+const QLoggingCategory LC("settings");
+
+}
 
 Settings::Settings(QObject *parent) : QObject(parent), m_iniExists(false) { }
 
@@ -182,11 +190,19 @@ void Settings::iniFlush()
     migrateIniOnWrite();
 
     iniSync();
+    checkStatus();
 }
 
 void Settings::iniSync()
 {
     m_ini->sync();
+}
+
+void Settings::checkStatus() const
+{
+    if (m_ini->status() != QSettings::NoError) {
+        qCCritical(LC) << "Save error:" << m_ini->status() << "file:" << m_ini->fileName();
+    }
 }
 
 int Settings::appVersion()
