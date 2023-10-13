@@ -442,11 +442,14 @@ bool SqliteDb::migrateDbBegin(const MigrateOptions &opt, int &userVersion, bool 
 
 bool SqliteDb::migrateDbEnd(const MigrateOptions &opt)
 {
+    if (!createFtsTables(opt))
+        return false;
+
     // Re-create the DB: End
     if (!opt.recreate)
         return true;
 
-    return createFtsTables(opt) && importBackup(opt);
+    return importBackup(opt);
 }
 
 bool SqliteDb::createFtsTables(const MigrateOptions &opt)
@@ -488,14 +491,15 @@ bool SqliteDb::createFtsTable(const FtsTable &ftsTable)
      * %6: triggered old column names list (old.*)
      */
     static const char *const ftsCreateSql =
-            "CREATE VIRTUAL TABLE %2 USING fts5(%4, content='%1', content_rowid='%3');"
-            "CREATE TRIGGER %2_ai AFTER INSERT ON %1 BEGIN"
+            "CREATE VIRTUAL TABLE IF NOT EXISTS %2"
+            "  USING fts5(%4, content='%1', content_rowid='%3');"
+            "CREATE TRIGGER IF NOT EXISTS %2_ai AFTER INSERT ON %1 BEGIN"
             "  INSERT INTO %2(rowid, %4) VALUES (%5);"
             "END;"
-            "CREATE TRIGGER %2_ad AFTER DELETE ON %1 BEGIN"
+            "CREATE TRIGGER IF NOT EXISTS %2_ad AFTER DELETE ON %1 BEGIN"
             "  INSERT INTO %2(%2, rowid, %4) VALUES('delete', %6);"
             "END;"
-            "CREATE TRIGGER %2_au AFTER UPDATE ON %1 BEGIN"
+            "CREATE TRIGGER IF NOT EXISTS %2_au AFTER UPDATE ON %1 BEGIN"
             "  INSERT INTO %2(%2, rowid, %4) VALUES('delete', %6);"
             "  INSERT INTO %2(rowid, %4) VALUES (%5);"
             "END;";
