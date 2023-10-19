@@ -889,7 +889,7 @@ qint64 ConfManager::appIdByPath(const QString &appPath)
 
 bool ConfManager::addApp(const App &app)
 {
-    if (!updateDriverUpdateApp(app, /*remove=*/false))
+    if (!updateDriverUpdateApp(app))
         return false;
 
     return addOrUpdateApp(app);
@@ -1304,11 +1304,17 @@ bool ConfManager::updateDriverConf(bool onlyFlags)
         return false;
     }
 
+    m_driveMask = confUtil.driveMask();
+
     return true;
 }
 
 void ConfManager::updateDriverConfByDriveMask(quint32 driveMask)
 {
+    if ((m_driveMask & driveMask) == 0)
+        return;
+
+    updateDriverConf();
 }
 
 bool ConfManager::addOrUpdateApp(const App &app)
@@ -1418,6 +1424,8 @@ bool ConfManager::updateDriverUpdateApp(const App &app, bool remove)
         showErrorMessage(driverManager->errorMessage());
         return false;
     }
+
+    m_driveMask |= remove ? 0 : confUtil.driveMask();
 
     return true;
 }

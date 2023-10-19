@@ -35,6 +35,8 @@ class ConfUtil : public QObject
 public:
     explicit ConfUtil(QObject *parent = nullptr);
 
+    quint32 driveMask() const { return m_driveMask; }
+
     QString errorMessage() const { return m_errorMessage; }
 
     static int zoneMaxCount();
@@ -129,6 +131,8 @@ private:
     static void loadData(const char **data, void *dst, int elemCount, uint elemSize);
 
 private:
+    quint32 m_driveMask = 0;
+
     QString m_errorMessage;
 };
 

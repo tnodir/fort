@@ -53,6 +53,18 @@ quint32 driveMask()
     return GetLogicalDrives();
 }
 
+quint32 driveMaskByPath(const QString &path)
+{
+    if (!isDriveFilePath(path))
+        return 0;
+
+    const char16_t c = path.at(0).toUpper().unicode();
+    if (Q_UNLIKELY(c < 'A' || c > 'Z'))
+        return 0;
+
+    return 1U << (c - 'A');
+}
+
 // Convert "\\Device\\HarddiskVolume1" to "C:"
 QString kernelNameToDrive(const QString &kernelName)
 {

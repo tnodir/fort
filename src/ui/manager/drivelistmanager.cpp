@@ -12,14 +12,21 @@ DriveListManager::DriveListManager(QObject *parent) : QObject(parent) { }
 
 void DriveListManager::initialize()
 {
-    qCDebug(LC) << "TEST> INIT";
+    m_driveMask = FileUtil::driveMask();
 }
 
 void DriveListManager::onDriveListChanged()
 {
-    m_driveMask = FileUtil::driveMask();
+    const quint32 driveMask = FileUtil::driveMask();
 
-    qCDebug(LC) << "TEST>" << m_driveMask;
+    if (m_driveMask == driveMask)
+        return;
 
-    emit driveMaskChanged(m_driveMask);
+    const quint32 addedMask = (driveMask & (driveMask ^ m_driveMask));
+
+    m_driveMask = driveMask;
+
+    if (addedMask != 0) {
+        emit driveMaskAdded(addedMask);
+    }
 }

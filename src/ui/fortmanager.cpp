@@ -408,7 +408,7 @@ void FortManager::setupDriveListManager()
                 &DriveListManager::onDriveListChanged);
     }
 
-    connect(driveListManager, &DriveListManager::driveMaskChanged, IoC<ConfManager>(),
+    connect(driveListManager, &DriveListManager::driveMaskAdded, IoC<ConfManager>(),
             &ConfManager::updateDriverConfByDriveMask);
 
     driveListManager->initialize();

@@ -483,6 +483,8 @@ bool ConfUtil::addApp(
 
     appsMap.insert(kernelPath, appEntry.v);
 
+    m_driveMask |= FileUtil::driveMaskByPath(app.appPath);
+
     return true;
 }
 
