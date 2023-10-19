@@ -38,6 +38,11 @@ private:
     bool removeKeyId(int hotKeyId);
     int getKeyId(quint32 nativeMod, quint32 nativeKey) const;
 
+    inline void processWmHotKey(void *message);
+    inline void processWmSettingChange(void *message);
+    inline void processWmWtsSessionChange(void *message);
+    inline void processWmDeviceChange(void *message);
+
     static quint32 nativeKeyCode(Qt::Key keyCode);
     static quint32 nativeModifiers(Qt::KeyboardModifiers modifiers);
     static quint32 autoRepeatModifier(bool autoRepeat = false);

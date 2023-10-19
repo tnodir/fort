@@ -177,6 +177,48 @@ int NativeEventFilter::getKeyId(quint32 nativeMod, quint32 nativeKey) const
     return m_keyIdMap.value(nativeKeyMod, -1);
 }
 
+void NativeEventFilter::processWmHotKey(void *message)
+{
+    const MSG *msg = static_cast<MSG *>(message);
+
+    const int hotKeyId = getKeyId(LOWORD(msg->lParam), HIWORD(msg->lParam));
+
+    if (hotKeyId >= 0) {
+        emit hotKeyPressed(hotKeyId);
+    }
+}
+
+void NativeEventFilter::processWmSettingChange(void *message)
+{
+    const MSG *msg = static_cast<MSG *>(message);
+
+    const auto src = reinterpret_cast<const wchar_t *>(msg->lParam);
+
+    if (src && wcscmp(src, L"Environment") == 0) {
+        emit environmentChanged();
+    }
+}
+
+void NativeEventFilter::processWmWtsSessionChange(void *message)
+{
+    const MSG *msg = static_cast<MSG *>(message);
+
+    if (msg->wParam == WTS_SESSION_LOCK) {
+        emit sessionLocked();
+    }
+}
+
+void NativeEventFilter::processWmDeviceChange(void *message)
+{
+    const MSG *msg = static_cast<MSG *>(message);
+
+    switch (msg->wParam) {
+    case DBT_DEVICEARRIVAL:
+    case DBT_DEVICEREMOVECOMPLETE:
+        emit driveListChanged();
+    }
+}
+
 bool NativeEventFilter::nativeEventFilter(
         const QByteArray &eventType, void *message, qintptr *result)
 {
@@ -187,29 +229,16 @@ bool NativeEventFilter::nativeEventFilter(
 
     switch (msg->message) {
     case WM_HOTKEY: {
-        const int hotKeyId = getKeyId(LOWORD(msg->lParam), HIWORD(msg->lParam));
-
-        if (hotKeyId >= 0) {
-            emit hotKeyPressed(hotKeyId);
-        }
+        processWmHotKey(message);
     } break;
     case WM_SETTINGCHANGE: {
-        const auto src = reinterpret_cast<const wchar_t *>(msg->lParam);
-        if (src && wcscmp(src, L"Environment") == 0) {
-            emit environmentChanged();
-        }
+        processWmSettingChange(message);
     } break;
     case WM_WTSSESSION_CHANGE: {
-        if (msg->wParam == WTS_SESSION_LOCK) {
-            emit sessionLocked();
-        }
+        processWmWtsSessionChange(message);
     } break;
     case WM_DEVICECHANGE: {
-        switch (msg->wParam) {
-        case DBT_DEVICEARRIVAL:
-        case DBT_DEVICEREMOVECOMPLETE:
-            emit driveListChanged();
-        }
+        processWmDeviceChange(message);
     } break;
     }
 
