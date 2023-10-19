@@ -81,7 +81,7 @@ const wchar_t *ServiceManager::serviceName() const
 
 void ServiceManager::processControl(quint32 code, quint32 eventType)
 {
-    DWORD state = SERVICE_RUNNING;
+    DWORD state = 0;
 
     switch (code) {
     case SERVICE_CONTROL_PAUSE: {

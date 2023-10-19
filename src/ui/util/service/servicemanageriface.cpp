@@ -67,7 +67,7 @@ void ServiceManagerIface::reportStatus(quint32 code)
         g_service.status.dwCurrentState = code;
     }
 
-    if (g_service.hstatus != nullptr) {
+    if (g_service.hstatus) {
         SetServiceStatus(g_service.hstatus, &g_service.status);
     }
 }
