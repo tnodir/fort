@@ -14,6 +14,7 @@
 #include <form/dialog/passworddialog.h>
 #include <fortsettings.h>
 #include <hostinfo/hostinfocache.h>
+#include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <manager/hotkeymanager.h>
 #include <manager/logger.h>
@@ -90,6 +91,7 @@ void FortManager::initialize()
     setupQuotaManager();
     setupTaskManager();
     setupServiceInfoManager();
+    setupDriveListManager();
 
     setupDriver();
     loadConf();
@@ -159,6 +161,9 @@ void FortManager::createManagers()
         logManager = new LogManager();
         serviceInfoManager = new ServiceInfoManager();
         taskManager = new TaskManager();
+
+        // For Master only
+        ioc->setService(new DriveListManager());
     } else {
         confManager = new ConfManagerRpc(settings->confFilePath());
         quotaManager = new QuotaManagerRpc();
@@ -385,6 +390,28 @@ void FortManager::setupServiceInfoManager()
 
     connect(serviceInfoManager, &ServiceInfoManager::servicesStarted, IoC<ConfManager>(),
             &ConfManager::updateDriverServices);
+}
+
+void FortManager::setupDriveListManager()
+{
+    const auto settings = IoC<FortSettings>();
+    if (!settings->isMaster())
+        return;
+
+    auto driveListManager = IoC<DriveListManager>();
+
+    if (settings->isService()) {
+        connect(IoC<ServiceManager>(), &ServiceManager::driveListChanged, driveListManager,
+                &DriveListManager::onDriveListChanged);
+    } else {
+        connect(IoC<NativeEventFilter>(), &NativeEventFilter::driveListChanged, driveListManager,
+                &DriveListManager::onDriveListChanged);
+    }
+
+    connect(driveListManager, &DriveListManager::driveMaskChanged, IoC<ConfManager>(),
+            &ConfManager::updateDriverConfByDriveMask);
+
+    driveListManager->initialize();
 }
 
 void FortManager::show()

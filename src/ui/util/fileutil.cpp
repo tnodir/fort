@@ -48,6 +48,11 @@ bool isDriveFilePath(const QString &path)
     return path.size() > 1 && path[0].isLetter() && path[1] == ':';
 }
 
+quint32 driveMask()
+{
+    return GetLogicalDrives();
+}
+
 // Convert "\\Device\\HarddiskVolume1" to "C:"
 QString kernelNameToDrive(const QString &kernelName)
 {

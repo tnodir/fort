@@ -31,6 +31,7 @@ signals:
     void hotKeyPressed(int hotKeyId);
     void environmentChanged();
     void sessionLocked();
+    void driveListChanged();
 
 private:
     void setKeyId(int hotKeyId, quint32 nativeMod, quint32 nativeKey);

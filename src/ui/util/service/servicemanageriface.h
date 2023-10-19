@@ -11,11 +11,14 @@ public:
     ServiceManagerIface() = default;
     virtual ~ServiceManagerIface() = default;
 
-    void initialize(qintptr hstatus);
+    virtual void initialize(qintptr hstatus);
+
+    void registerDeviceNotification();
+    void unregisterDeviceNotification();
 
     virtual const wchar_t *serviceName() const = 0;
 
-    virtual void processControl(quint32 code) = 0;
+    virtual void processControl(quint32 code, quint32 eventType) = 0;
 
 protected:
     virtual bool acceptStop() const { return true; }
@@ -24,6 +27,8 @@ protected:
     void setupAcceptedControls();
 
     static void reportStatus(quint32 code = 0);
+
+    static bool isDeviceEvent(quint32 eventType);
 };
 
 #endif // SERVICEMANAGERIFACE_H

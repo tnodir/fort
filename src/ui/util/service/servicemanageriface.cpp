@@ -1,11 +1,16 @@
 #include "servicemanageriface.h"
 
+#include <QLoggingCategory>
+
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
+
+#include <dbt.h>
 
 /* Service global structure */
 static struct
 {
+    HDEVNOTIFY hdevnotify;
     SERVICE_STATUS_HANDLE hstatus;
     SERVICE_STATUS status;
 } g_service;
@@ -25,6 +30,30 @@ void ServiceManagerIface::initialize(qintptr hstatus)
     reportStatus(SERVICE_RUNNING);
 }
 
+void ServiceManagerIface::registerDeviceNotification()
+{
+    if (g_service.hdevnotify)
+        return;
+
+    DEV_BROADCAST_DEVICEINTERFACE filter;
+    ZeroMemory(&filter, sizeof(DEV_BROADCAST_DEVICEINTERFACE));
+    filter.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
+    filter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+
+    g_service.hdevnotify = RegisterDeviceNotification(g_service.hstatus, &filter,
+            DEVICE_NOTIFY_SERVICE_HANDLE | DEVICE_NOTIFY_ALL_INTERFACE_CLASSES);
+}
+
+void ServiceManagerIface::unregisterDeviceNotification()
+{
+    if (!g_service.hdevnotify)
+        return;
+
+    UnregisterDeviceNotification(g_service.hdevnotify);
+
+    g_service.hdevnotify = nullptr;
+}
+
 void ServiceManagerIface::setupAcceptedControls()
 {
     g_service.status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN
@@ -40,5 +69,16 @@ void ServiceManagerIface::reportStatus(quint32 code)
 
     if (g_service.hstatus != nullptr) {
         SetServiceStatus(g_service.hstatus, &g_service.status);
+    }
+}
+
+bool ServiceManagerIface::isDeviceEvent(quint32 eventType)
+{
+    switch (eventType) {
+    case DBT_DEVICEARRIVAL:
+    case DBT_DEVICEREMOVECOMPLETE:
+        return true;
+    default:
+        return false;
     }
 }

@@ -110,6 +110,7 @@ SOURCES += \
     log/logentrystattraf.cpp \
     log/logentrytime.cpp \
     log/logmanager.cpp \
+    manager/drivelistmanager.cpp \
     manager/envmanager.cpp \
     manager/hotkeymanager.cpp \
     manager/logger.cpp \
@@ -302,6 +303,7 @@ HEADERS += \
     log/logentrystattraf.h \
     log/logentrytime.h \
     log/logmanager.h \
+    manager/drivelistmanager.h \
     manager/envmanager.h \
     manager/hotkeymanager.h \
     manager/logger.h \

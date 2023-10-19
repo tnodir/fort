@@ -28,6 +28,11 @@ void ServiceManager::setUp()
     setupConfManager();
 }
 
+void ServiceManager::tearDown()
+{
+    unregisterDeviceNotification();
+}
+
 void ServiceManager::setControlEnabled(bool v)
 {
     if (m_controlEnabled == v)
@@ -37,6 +42,13 @@ void ServiceManager::setControlEnabled(bool v)
 
     setupAcceptedControls();
     reportStatus();
+}
+
+void ServiceManager::initialize(qintptr hstatus)
+{
+    ServiceManagerIface::initialize(hstatus);
+
+    registerDeviceNotification();
 }
 
 void ServiceManager::setupControlManager()
@@ -67,7 +79,7 @@ const wchar_t *ServiceManager::serviceName() const
     return StartupUtil::serviceName();
 }
 
-void ServiceManager::processControl(quint32 code)
+void ServiceManager::processControl(quint32 code, quint32 eventType)
 {
     DWORD state = SERVICE_RUNNING;
 
@@ -105,6 +117,11 @@ void ServiceManager::processControl(quint32 code)
         QCoreApplication::quit(); // it's threadsafe
 
         state = SERVICE_STOP_PENDING;
+    } break;
+    case SERVICE_CONTROL_DEVICEEVENT: {
+        if (isDeviceEvent(eventType)) {
+            emit driveListChanged();
+        }
     } break;
     }
 

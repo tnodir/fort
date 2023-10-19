@@ -1307,6 +1307,10 @@ bool ConfManager::updateDriverConf(bool onlyFlags)
     return true;
 }
 
+void ConfManager::updateDriverConfByDriveMask(quint32 driveMask)
+{
+}
+
 bool ConfManager::addOrUpdateApp(const App &app)
 {
     const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);

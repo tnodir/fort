@@ -4,6 +4,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
+
+#include <dbt.h>
 #include <wtsapi32.h>
 
 #include <fortcompat.h>
@@ -200,6 +202,13 @@ bool NativeEventFilter::nativeEventFilter(
     case WM_WTSSESSION_CHANGE: {
         if (msg->wParam == WTS_SESSION_LOCK) {
             emit sessionLocked();
+        }
+    } break;
+    case WM_DEVICECHANGE: {
+        switch (msg->wParam) {
+        case DBT_DEVICEARRIVAL:
+        case DBT_DEVICEREMOVECOMPLETE:
+            emit driveListChanged();
         }
     } break;
     }

@@ -19,17 +19,21 @@ public:
     CLASS_DELETE_COPY_MOVE(ServiceManager)
 
     void setUp() override;
+    void tearDown() override;
 
     bool controlEnabled() const { return m_controlEnabled; }
     void setControlEnabled(bool v);
 
+    void initialize(qintptr hstatus) override;
+
     const wchar_t *serviceName() const override;
 
-    void processControl(quint32 code) override;
+    void processControl(quint32 code, quint32 eventType) override;
 
 signals:
     void pauseRequested();
     void continueRequested();
+    void driveListChanged();
 
 protected:
     void setupControlManager();

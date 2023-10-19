@@ -53,6 +53,7 @@ private:
     void setupQuotaManager();
     void setupTaskManager();
     void setupServiceInfoManager();
+    void setupDriveListManager();
 
     void loadConf();
 

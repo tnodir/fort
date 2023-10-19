@@ -15,6 +15,8 @@ bool isSvcHostService(const QString &path, QString &serviceName);
 
 bool isDriveFilePath(const QString &path);
 
+quint32 driveMask();
+
 // Convert DOS device name to drive letter (A: .. Z:)
 QString kernelNameToDrive(const QString &kernelName);
 

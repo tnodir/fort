@@ -9,9 +9,12 @@ namespace {
 
 ServiceManagerIface *g_manager = nullptr;
 
-void WINAPI serviceCtrlHandler(DWORD code)
+DWORD WINAPI serviceCtrlHandler(
+        DWORD code, DWORD eventType, LPVOID /*eventData*/, LPVOID /*context*/)
 {
-    g_manager->processControl(code);
+    g_manager->processControl(code, eventType);
+
+    return NO_ERROR;
 }
 
 void WINAPI serviceMain(DWORD argc, wchar_t *argv[])
@@ -19,8 +22,8 @@ void WINAPI serviceMain(DWORD argc, wchar_t *argv[])
     Q_UNUSED(argc);
     Q_UNUSED(argv);
 
-    const SERVICE_STATUS_HANDLE hstatus =
-            RegisterServiceCtrlHandler(g_manager->serviceName(), serviceCtrlHandler);
+    const SERVICE_STATUS_HANDLE hstatus = RegisterServiceCtrlHandlerEx(
+            g_manager->serviceName(), serviceCtrlHandler, /*context=*/nullptr);
 
     if (hstatus) {
         g_manager->initialize(qintptr(hstatus));

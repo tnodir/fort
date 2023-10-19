@@ -92,6 +92,8 @@ public:
 
     virtual bool updateDriverConf(bool onlyFlags = false);
 
+    void updateDriverConfByDriveMask(quint32 driveMask);
+
     void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData);
 
