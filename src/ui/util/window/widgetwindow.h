@@ -21,8 +21,6 @@ public:
 
 signals:
     void activationChanged(bool isActive);
-    void activated();
-    void deactivated();
 
     void positionChanged();
     void sizeChanged();

@@ -37,7 +37,7 @@ public slots:
     void selectAboutTab();
 
 private slots:
-    void onActivated();
+    void onActivationChanged(bool isActive);
 
 private:
     void setupController();

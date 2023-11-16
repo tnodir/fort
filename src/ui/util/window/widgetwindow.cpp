@@ -85,18 +85,18 @@ void WidgetWindow::changeEvent(QEvent *event)
 
 bool WidgetWindow::event(QEvent *event)
 {
-    switch (event->type()) {
-    case QEvent::WindowActivate: {
-        emit activationChanged(/*isActive=*/true);
-        emit activated();
-    } break;
+    const QEvent::Type type = event->type();
+    const bool res = QWidget::event(event);
+
+    switch (type) {
+    case QEvent::WindowActivate:
     case QEvent::WindowDeactivate: {
-        emit activationChanged(/*isActive=*/false);
-        emit deactivated();
+        const bool isActive = (type == QEvent::WindowActivate);
+        emit activationChanged(isActive);
     } break;
     default:
         break;
     }
 
-    return QWidget::event(event);
+    return res;
 }

@@ -31,7 +31,7 @@ HomeWindow::HomeWindow(QWidget *parent) :
     setupController();
     setupStateWatcher();
 
-    connect(this, &HomeWindow::activated, this, &HomeWindow::onActivated);
+    connect(this, &HomeWindow::activationChanged, this, &HomeWindow::onActivationChanged);
 }
 
 FortSettings *HomeWindow::settings() const
@@ -77,9 +77,9 @@ void HomeWindow::selectAboutTab()
     m_mainPage->setCurrentTab(HomeMainPage::TabAbout);
 }
 
-void HomeWindow::onActivated()
+void HomeWindow::onActivationChanged(bool isActive)
 {
-    if (iniUser()->homeAutoShowMenu()) {
+    if (isActive && iniUser()->homeAutoShowMenu()) {
         m_btMenu->showMenu();
     }
 }
