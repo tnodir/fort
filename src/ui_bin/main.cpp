@@ -66,7 +66,7 @@ void setupCrashHandler(CrashHandler &crashHandler, const FortSettings &settings)
 
     FileUtil::removeOldFiles(dumpPath, fileNamePrefix, fileNameSuffix, CRASH_KEEP_FILES);
 
-    crashHandler.setFileNamePrefix(fileNamePrefix);
+    crashHandler.setFileNamePrefix(fileNamePrefix + APP_VERSION_STR + '_');
     crashHandler.setFileNameSuffix(fileNameSuffix);
     crashHandler.install(dumpPath);
 }
