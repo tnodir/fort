@@ -245,7 +245,7 @@ void WindowManager::setupTrayIcon()
     m_trayIcon = new TrayIcon(this);
 
     connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this,
-            &WindowManager::onTrayMessageClicked);
+            &WindowManager::onTrayMessageClicked, Qt::QueuedConnection);
 }
 
 void WindowManager::showTrayIcon()
