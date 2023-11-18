@@ -21,14 +21,18 @@ QString HostInfoCache::hostName(const QString &address)
 {
     HostInfo *hostInfo = m_cache.object(address);
 
-    if (!hostInfo) {
-        hostInfo = new HostInfo();
-
-        m_cache.insert(address, hostInfo, 1);
-        m_manager->lookupHost(address);
+    if (hostInfo) {
+        return hostInfo->hostName;
     }
 
-    return hostInfo->hostName;
+    hostInfo = new HostInfo();
+
+    m_cache.insert(address, hostInfo, 1);
+    /* hostInfo may be deleted */
+
+    m_manager->lookupHost(address);
+
+    return {};
 }
 
 void HostInfoCache::clear()

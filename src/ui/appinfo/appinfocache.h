@@ -32,6 +32,8 @@ private slots:
     void handleFinishedIconLookup(const QString &appPath, const QImage &image);
 
 private:
+    void appInfoCached(const QString &appPath, AppInfo &info, bool &lookupRequired);
+
     void emitCacheChanged();
 
 private:

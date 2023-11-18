@@ -56,30 +56,22 @@ QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
 AppInfo AppInfoCache::appInfo(const QString &appPath)
 {
     if (appPath.isEmpty())
-        return AppInfo();
+        return {};
 
-    AppInfo *appInfo = m_cache.object(appPath);
-    bool lookupRequired = false;
+    AppInfo appInfo;
+    bool lookupRequired;
 
-    auto appInfoManager = IoC<AppInfoManager>();
-
-    if (!appInfo) {
-        appInfo = new AppInfo();
-
-        m_cache.insert(appPath, appInfo, 1);
-
-        lookupRequired = !appInfoManager->loadInfoFromDb(appPath, *appInfo);
-    }
+    appInfoCached(appPath, appInfo, lookupRequired);
 
     if (!lookupRequired) {
-        lookupRequired = appInfo->isValid() && appInfo->isFileModified(appPath);
+        lookupRequired = appInfo.isValid() && appInfo.isFileModified(appPath);
     }
 
     if (lookupRequired) {
-        appInfoManager->lookupAppInfo(appPath);
+        IoC<AppInfoManager>()->lookupAppInfo(appPath);
     }
 
-    return *appInfo;
+    return appInfo;
 }
 
 void AppInfoCache::handleFinishedInfoLookup(const QString &appPath, const AppInfo &info)
@@ -103,6 +95,28 @@ void AppInfoCache::handleFinishedIconLookup(const QString &appPath, const QImage
     IconCache::insert(appPath, QPixmap::fromImage(image)); // update cached icon
 
     emitCacheChanged();
+}
+
+void AppInfoCache::appInfoCached(const QString &appPath, AppInfo &info, bool &lookupRequired)
+{
+    AppInfo *cachedInfo = m_cache.object(appPath);
+
+    if (cachedInfo) {
+        lookupRequired = false;
+
+        info = *cachedInfo;
+    } else {
+        lookupRequired = !IoC<AppInfoManager>()->loadInfoFromDb(appPath, info);
+
+        cachedInfo = new AppInfo();
+
+        if (!lookupRequired) {
+            *cachedInfo = info;
+        }
+
+        m_cache.insert(appPath, cachedInfo, /*cost=*/1);
+        /* cachedInfo may be deleted */
+    }
 }
 
 void AppInfoCache::emitCacheChanged()
