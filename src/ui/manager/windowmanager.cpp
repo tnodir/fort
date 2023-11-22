@@ -5,11 +5,13 @@
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QProcess>
+#include <QPushButton>
 #include <QStyle>
 #include <QStyleFactory>
 #include <QStyleHints>
 
 #include <conf/confmanager.h>
+#include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
 #include <form/dialog/passworddialog.h>
 #include <form/graph/graphwindow.h>
@@ -86,6 +88,13 @@ void WindowManager::setUp()
 void WindowManager::tearDown()
 {
     closeAll();
+}
+
+QPushButton *WindowManager::createMenuButton() const
+{
+    auto c = ControlUtil::createLinkButton(":/icons/large_tiles.png");
+    c->setMenu(trayIcon()->menu());
+    return c;
 }
 
 QFont WindowManager::defaultFont()

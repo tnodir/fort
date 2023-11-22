@@ -90,7 +90,6 @@ void HomeWindow::retranslateUi()
 
     m_btPasswordLock->setText(tr("Lock"));
     m_btPasswordUnlock->setText(tr("Unlock"));
-    m_btMenu->setText(tr("Menu"));
 
     m_btLogs->setText(tr("Logs"));
     m_btProfile->setText(tr("Profile"));
@@ -152,7 +151,7 @@ QWidget *HomeWindow::setupHeader()
     frame->setPalette(palette);
 
     auto layout = new QHBoxLayout();
-    layout->setContentsMargins(16, 6, 16, 6);
+    layout->setContentsMargins(16, 6, 6, 6);
     layout->setSpacing(10);
 
     // Logo image
@@ -170,8 +169,7 @@ QWidget *HomeWindow::setupHeader()
     setupPasswordButtons();
 
     // Menu button
-    m_btMenu = ControlUtil::createButton(":/icons/large_tiles.png");
-    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
+    m_btMenu = windowManager()->createMenuButton();
 
     layout->addWidget(iconLogo);
     layout->addLayout(textLogo);

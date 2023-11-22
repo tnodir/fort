@@ -6,6 +6,8 @@
 #include <form/windowtypes.h>
 #include <util/ioc/iocservice.h>
 
+QT_FORWARD_DECLARE_CLASS(QPushButton)
+
 class GraphWindow;
 class HomeWindow;
 class MainWindow;
@@ -48,6 +50,8 @@ public:
     void tearDown() override;
 
     bool isWindowOpen(WindowCode code) const { return isAnyWindowOpen(code); }
+
+    QPushButton *createMenuButton() const;
 
     static QFont defaultFont();
 

@@ -211,8 +211,7 @@ QLayout *ProgramsWindow::setupHeader()
             &WindowManager::showServicesWindow);
 
     // Menu button
-    m_btMenu = ControlUtil::createLinkButton(":/icons/large_tiles.png");
-    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
+    m_btMenu = windowManager()->createMenuButton();
 
     layout->addWidget(m_btEdit);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));

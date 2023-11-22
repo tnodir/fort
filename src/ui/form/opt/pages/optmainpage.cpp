@@ -80,8 +80,7 @@ void OptMainPage::setupTabBar()
     m_tabWidget->addTab(schedulePage, IconCache::icon(":/icons/clock.png"), QString());
 
     // Menu button
-    m_btMenu = ControlUtil::createLinkButton(":/icons/large_tiles.png");
-    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
+    m_btMenu = windowManager()->createMenuButton();
 
     m_tabWidget->setCornerWidget(m_btMenu);
 

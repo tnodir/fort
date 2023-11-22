@@ -48,8 +48,7 @@ void StatMainPage::setupTabBar()
     m_tabWidget->addTab(connectionsPage, IconCache::icon(":/icons/connect.png"), QString());
 
     // Menu button
-    m_btMenu = ControlUtil::createLinkButton(":/icons/large_tiles.png");
-    m_btMenu->setMenu(windowManager()->trayIcon()->menu());
+    m_btMenu = windowManager()->createMenuButton();
 
     m_tabWidget->setCornerWidget(m_btMenu);
 }
