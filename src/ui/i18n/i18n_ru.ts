@@ -242,16 +242,16 @@
         <translation>Размер буфера отдачи:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Ограничить доступ только к локальной сети</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Собирать заблокированные соединения</translation>
     </message>
     <message>
         <source>Tweaks</source>
         <translation>Настройки</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Блокировать Интернет трафик</translation>
     </message>
 </context>
 <context>
@@ -621,10 +621,6 @@
 </context>
 <context>
     <name>HomeWindow</name>
-    <message>
-        <source>Menu</source>
-        <translation>Меню</translation>
-    </message>
     <message>
         <source>My Fort</source>
         <translation>Мой Форт</translation>
@@ -1151,10 +1147,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Наименование:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Ограничить доступ только к локальной сети</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Собирать заблокированные соединения</translation>
     </message>
@@ -1175,6 +1167,10 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 Будьте осторожны, прекращая работу системных служб или других важных программ!
 Это может привести к сбоям в работе Windows или полной неработоспособности.</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Блокировать Интернет трафик</translation>
     </message>
 </context>
 <context>
@@ -1221,6 +1217,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Search</source>
+        <translation>Поиск</translation>
+    </message>
+    <message>
+        <source>Find</source>
         <translation>Поиск</translation>
     </message>
 </context>

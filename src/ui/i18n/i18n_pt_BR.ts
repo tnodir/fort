@@ -242,16 +242,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Coletar conexões bloqueadas</translation>
     </message>
     <message>
         <source>Tweaks</source>
         <translation>Opções</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -621,10 +621,6 @@
 </context>
 <context>
     <name>HomeWindow</name>
-    <message>
-        <source>Menu</source>
-        <translation type="unfinished"></translation>
-    </message>
     <message>
         <source>My Fort</source>
         <translation type="unfinished"></translation>
@@ -1150,10 +1146,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Coletar conexões bloqueadas</translation>
     </message>
@@ -1170,6 +1162,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1217,6 +1213,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Search</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Find</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

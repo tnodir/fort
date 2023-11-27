@@ -242,16 +242,16 @@
         <translation>Upload-Puffergröße:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Zugriff auf LAN beschränken</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Sammle blockierte Verbindungen</translation>
     </message>
     <message>
         <source>Tweaks</source>
         <translation>Optimierungen</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Internetdatenverkehr blockieren</translation>
     </message>
 </context>
 <context>
@@ -621,10 +621,6 @@
 </context>
 <context>
     <name>HomeWindow</name>
-    <message>
-        <source>Menu</source>
-        <translation>Menü</translation>
-    </message>
     <message>
         <source>My Fort</source>
         <translation>Mein Fort</translation>
@@ -1151,10 +1147,6 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <translation>Name:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Zugriff auf LAN beschränken</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Sammle blockierte Verbindungen</translation>
     </message>
@@ -1175,6 +1167,10 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 Seien Sie vorsichtig, wenn Sie Systemdienste oder andere wichtige Programme beenden!
 Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Internetdatenverkehr blockieren</translation>
     </message>
 </context>
 <context>
@@ -1222,6 +1218,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Search</source>
         <translation>Suche</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

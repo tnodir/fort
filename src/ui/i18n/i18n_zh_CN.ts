@@ -242,16 +242,16 @@
         <translation>上传缓冲区大小：</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>仅限制局域网的访问</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>收集已屏蔽的连接</translation>
     </message>
     <message>
         <source>Tweaks</source>
         <translation>选项</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">阻止互联网流量</translation>
     </message>
 </context>
 <context>
@@ -621,10 +621,6 @@
 </context>
 <context>
     <name>HomeWindow</name>
-    <message>
-        <source>Menu</source>
-        <translation>菜单</translation>
-    </message>
     <message>
         <source>My Fort</source>
         <translation>我的堡垒</translation>
@@ -1151,10 +1147,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>名称：</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>仅限制局域网的访问</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>收集已屏蔽的连接</translation>
     </message>
@@ -1175,6 +1167,10 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 在杀死系统服务或其他重要程序时要小心!
 它可能导致 Windows 故障或完全无法使用。</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">阻止互联网流量</translation>
     </message>
 </context>
 <context>
@@ -1222,6 +1218,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Search</source>
         <translation>搜索</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

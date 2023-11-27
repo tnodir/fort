@@ -242,16 +242,16 @@
         <translation>Taille du tampon de chargement :</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Restreindre l&apos;accès au LAN uniquement</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Collecter les connexions bloquées</translation>
     </message>
     <message>
         <source>Tweaks</source>
         <translation>Ajustements</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Bloquer le trafic Internet</translation>
     </message>
 </context>
 <context>
@@ -621,10 +621,6 @@
 </context>
 <context>
     <name>HomeWindow</name>
-    <message>
-        <source>Menu</source>
-        <translation>Menu</translation>
-    </message>
     <message>
         <source>My Fort</source>
         <translation>Mon Fort</translation>
@@ -1151,10 +1147,6 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Nom:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Restreindre l&apos;accès au LAN uniquement</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Collecter les connexions bloquées</translation>
     </message>
@@ -1175,6 +1167,10 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 Soyez prudent lorsque vous tuez un service système ou d&apos;autres programmes importants !
 Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Bloquer le trafic Internet</translation>
     </message>
 </context>
 <context>
@@ -1222,6 +1218,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Search</source>
         <translation>Rechercher</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

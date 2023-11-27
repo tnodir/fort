@@ -1,5 +1,5 @@
 @echo off
-@rem set QT_HOME=D:\Qt\Qt6.5.2\6.5.2\msvc2019_64
+@rem set QT_HOME=D:\Qt\Qt6.6.0\6.6.0\msvc2019_64
 
 cd ..\..\ui
 

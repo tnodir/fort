@@ -242,16 +242,16 @@
         <translation>Velikost medpomnilnika za nalaganje:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Omeji dostop samo do LAN</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Zberi blokirane povezave</translation>
     </message>
     <message>
         <source>Tweaks</source>
         <translation>Prilagoditve</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Onemogoči internetni promet</translation>
     </message>
 </context>
 <context>
@@ -621,10 +621,6 @@
 </context>
 <context>
     <name>HomeWindow</name>
-    <message>
-        <source>Menu</source>
-        <translation>Meni</translation>
-    </message>
     <message>
         <source>My Fort</source>
         <translation>Moja trdnjava</translation>
@@ -1151,10 +1147,6 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <translation>Ime:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Omeji dostop samo do LAN</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Zberi blokirane povezave</translation>
     </message>
@@ -1175,6 +1167,10 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 Bodite previdni pri uničevanju sistemskih storitev ali drugih pomembnih programov!
 To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Onemogoči internetni promet</translation>
     </message>
 </context>
 <context>
@@ -1222,6 +1218,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Search</source>
         <translation>Poišči</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

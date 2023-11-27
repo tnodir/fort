@@ -242,16 +242,16 @@
         <translation>업로드 버퍼 크기:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>LAN으로만 액세스 제한</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>차단된 연결 집계</translation>
     </message>
     <message>
         <source>Tweaks</source>
         <translation>트윅</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">인터넷 트래픽 차단</translation>
     </message>
 </context>
 <context>
@@ -621,10 +621,6 @@
 </context>
 <context>
     <name>HomeWindow</name>
-    <message>
-        <source>Menu</source>
-        <translation>메뉴</translation>
-    </message>
     <message>
         <source>My Fort</source>
         <translation>내 Fort</translation>
@@ -1151,10 +1147,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>이름:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>LAN으로만 액세스 제한</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>차단된 연결 집계</translation>
     </message>
@@ -1175,6 +1167,10 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 시스템 서비스 또는 기타 중요한 프로그램을 종료할 때 주의하십시오!
 Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">인터넷 트래픽 차단</translation>
     </message>
 </context>
 <context>
@@ -1222,6 +1218,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Search</source>
         <translation>검색</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

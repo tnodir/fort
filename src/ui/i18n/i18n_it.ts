@@ -242,16 +242,16 @@
         <translation>Dimensione Buffer caricamento:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Limita l&apos;accesso solo alla LAN</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Raccogli le connessioni bloccate</translation>
     </message>
     <message>
         <source>Tweaks</source>
         <translation>Trucchetti</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Blocca traffico internet</translation>
     </message>
 </context>
 <context>
@@ -621,10 +621,6 @@
 </context>
 <context>
     <name>HomeWindow</name>
-    <message>
-        <source>Menu</source>
-        <translation>Menu&apos;</translation>
-    </message>
     <message>
         <source>My Fort</source>
         <translation>Il mio forte</translation>
@@ -1151,10 +1147,6 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation>Nome:</translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Limita l&apos;accesso solo alla LAN</translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation>Raccogli le connessioni bloccate</translation>
     </message>
@@ -1175,6 +1167,10 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 Fai attenzione quando termini un servizio di sistema o altri programmi importanti!
 Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Blocca traffico internet</translation>
     </message>
 </context>
 <context>
@@ -1222,6 +1218,10 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Search</source>
         <translation>Cerca</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

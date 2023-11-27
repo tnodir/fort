@@ -242,15 +242,15 @@
         <translation></translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation></translation>
     </message>
     <message>
         <source>Tweaks</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
         <translation></translation>
     </message>
 </context>
@@ -621,10 +621,6 @@
 </context>
 <context>
     <name>HomeWindow</name>
-    <message>
-        <source>Menu</source>
-        <translation></translation>
-    </message>
     <message>
         <source>My Fort</source>
         <translation></translation>
@@ -1150,10 +1146,6 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Restrict access to LAN only</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Collect blocked connections</source>
         <translation></translation>
     </message>
@@ -1170,6 +1162,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
         <translation></translation>
     </message>
 </context>
@@ -1217,6 +1213,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Search</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Find</source>
         <translation></translation>
     </message>
 </context>
