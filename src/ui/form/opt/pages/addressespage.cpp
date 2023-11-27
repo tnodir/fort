@@ -130,7 +130,7 @@ void AddressesPage::setupIncludeAddresses()
 
         addressGroup()->setIncludeAll(checked);
 
-        ctrl()->setFlagsEdited();
+        ctrl()->setOptEdited();
     });
     connect(m_includeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto ipText = m_includeAddresses->editIpText()->toPlainText();
@@ -154,7 +154,7 @@ void AddressesPage::setupExcludeAddresses()
 
         addressGroup()->setExcludeAll(checked);
 
-        ctrl()->setFlagsEdited();
+        ctrl()->setOptEdited();
     });
     connect(m_excludeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto ipText = m_excludeAddresses->editIpText()->toPlainText();
