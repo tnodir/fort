@@ -133,6 +133,7 @@ void ProgramsWindow::retranslateUi()
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
     m_actPurgeApps->setText(tr("Purge Obsolete"));
+    m_actFindApps->setText(tr("Find"));
 
     m_btAllowApp->setText(tr("Allow"));
     m_btBlockApp->setText(tr("Block"));
@@ -254,6 +255,9 @@ void ProgramsWindow::setupEditMenu()
 
     m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/bin_closed.png"), QString());
 
+    m_actFindApps = editMenu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFindApps->setShortcut(QKeySequence::Find);
+
     connect(m_actAllowApp, &QAction::triggered, this,
             [&] { updateSelectedApps(/*blocked=*/false); });
     connect(m_actBlockApp, &QAction::triggered, this,
@@ -268,6 +272,7 @@ void ProgramsWindow::setupEditMenu()
         windowManager()->showConfirmBox([&] { confManager()->purgeApps(); },
                 tr("Are you sure to remove all non-existent programs?"));
     });
+    connect(m_actFindApps, &QAction::triggered, this, [&] { m_editSearch->setFocus(); });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
