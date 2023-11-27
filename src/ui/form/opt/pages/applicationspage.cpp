@@ -150,7 +150,7 @@ void ApplicationsPage::onRetranslateUi()
 
     m_btGroupOptions->setText(tr("Tweaks"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
-    m_cbLanOnly->setText(tr("Restrict access to LAN only"));
+    m_cbLanOnly->setText(tr("Block Internet Traffic"));
 
     m_cbLogBlocked->setText(tr("Collect blocked connections"));
     m_cbLogConn->setText(tr("Collect connection statistics"));

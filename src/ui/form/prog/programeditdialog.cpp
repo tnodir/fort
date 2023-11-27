@@ -125,7 +125,7 @@ void ProgramEditDialog::retranslateUi()
     m_labelAppGroup->setText(tr("Application Group:"));
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
-    m_cbLanOnly->setText(tr("Restrict access to LAN only"));
+    m_cbLanOnly->setText(tr("Block Internet Traffic"));
 
     m_cbLogBlocked->setText(tr("Collect blocked connections"));
     m_cbLogConn->setText(tr("Collect connection statistics"));
