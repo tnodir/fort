@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">인터넷 트래픽 차단</translation>
+        <translation>인터넷 트래픽 차단</translation>
     </message>
 </context>
 <context>
@@ -1170,7 +1170,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">인터넷 트래픽 차단</translation>
+        <translation>인터넷 트래픽 차단</translation>
     </message>
 </context>
 <context>
@@ -1221,7 +1221,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Find</source>
-        <translation type="unfinished"></translation>
+        <translation>찾기</translation>
     </message>
 </context>
 <context>
