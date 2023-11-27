@@ -280,6 +280,8 @@ void ProgramsWindow::setupEditSearch()
     m_editSearch->setClearButtonEnabled(true);
     m_editSearch->setMaxLength(200);
     m_editSearch->setFixedWidth(200);
+
+    connect(this, &ProgramsWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
 }
 
 void ProgramsWindow::setupTableApps()

@@ -4,6 +4,15 @@
 
 WidgetWindow::WidgetWindow(QWidget *parent) : QWidget(parent) { }
 
+void WidgetWindow::showWindow(bool activate)
+{
+    if (isHidden()) {
+        emit aboutToShow();
+    }
+
+    showWidget(this, activate);
+}
+
 void WidgetWindow::showWidget(QWidget *w, bool activate)
 {
     if (w->isMinimized()) {
