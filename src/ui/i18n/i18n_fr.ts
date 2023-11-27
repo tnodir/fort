@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Bloquer le trafic Internet</translation>
+        <translation>Bloquer le trafic Internet</translation>
     </message>
 </context>
 <context>
@@ -1170,7 +1170,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Bloquer le trafic Internet</translation>
+        <translation>Bloquer le trafic Internet</translation>
     </message>
 </context>
 <context>
@@ -1221,7 +1221,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Find</source>
-        <translation type="unfinished"></translation>
+        <translation>Chercher</translation>
     </message>
 </context>
 <context>

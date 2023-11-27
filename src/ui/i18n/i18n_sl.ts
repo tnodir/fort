@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Onemogoči internetni promet</translation>
+        <translation>Onemogoči internetni promet</translation>
     </message>
 </context>
 <context>
@@ -1170,7 +1170,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Onemogoči internetni promet</translation>
+        <translation>Onemogoči internetni promet</translation>
     </message>
 </context>
 <context>
@@ -1221,7 +1221,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Find</source>
-        <translation type="unfinished"></translation>
+        <translation>Poišči</translation>
     </message>
 </context>
 <context>
