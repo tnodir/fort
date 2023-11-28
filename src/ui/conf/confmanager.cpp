@@ -37,7 +37,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-constexpr int DATABASE_USER_VERSION = 23;
+constexpr int DATABASE_USER_VERSION = 24;
 
 constexpr int APP_END_TIMER_INTERVAL_MIN = 100;
 constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
@@ -54,7 +54,7 @@ const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled, apply_chil
                                        "    speed_limit_in, speed_limit_out,"
                                        "    limit_packet_loss, limit_latency,"
                                        "    limit_bufsize_in, limit_bufsize_out,"
-                                       "    name, block_text, allow_text,"
+                                       "    name, kill_text, block_text, allow_text,"
                                        "    period_from, period_to"
                                        "  FROM app_group"
                                        "  ORDER BY order_index;";
@@ -78,10 +78,10 @@ const char *const sqlInsertAppGroup = "INSERT INTO app_group(app_group_id, order
                                       "    speed_limit_in, speed_limit_out,"
                                       "    limit_packet_loss, limit_latency,"
                                       "    limit_bufsize_in, limit_bufsize_out,"
-                                      "    name, block_text, allow_text,"
+                                      "    name, kill_text, block_text, allow_text,"
                                       "    period_from, period_to)"
                                       "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12,"
-                                      "    ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21);";
+                                      "    ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22);";
 
 const char *const sqlUpdateAppGroup = "UPDATE app_group"
                                       "  SET order_index = ?2, enabled = ?3,"
@@ -91,8 +91,8 @@ const char *const sqlUpdateAppGroup = "UPDATE app_group"
                                       "    speed_limit_in = ?11, speed_limit_out = ?12,"
                                       "    limit_packet_loss = ?13, limit_latency = ?14,"
                                       "    limit_bufsize_in = ?15, limit_bufsize_out = ?16,"
-                                      "    name = ?17, block_text = ?18, allow_text = ?19,"
-                                      "    period_from = ?20, period_to = ?21"
+                                      "    name = ?17, kill_text = ?18, block_text = ?19,"
+                                      "    allow_text = ?20, period_from = ?21, period_to = ?22"
                                       "  WHERE app_group_id = ?1;";
 
 const char *const sqlDeleteAppGroup = "DELETE FROM app_group"
@@ -423,10 +423,11 @@ bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
         appGroup->setLimitBufferSizeIn(quint32(stmt.columnInt(13)));
         appGroup->setLimitBufferSizeOut(quint32(stmt.columnInt(14)));
         appGroup->setName(stmt.columnText(15));
-        appGroup->setBlockText(stmt.columnText(16));
-        appGroup->setAllowText(stmt.columnText(17));
-        appGroup->setPeriodFrom(stmt.columnText(18));
-        appGroup->setPeriodTo(stmt.columnText(19));
+        appGroup->setKillText(stmt.columnText(16));
+        appGroup->setBlockText(stmt.columnText(17));
+        appGroup->setAllowText(stmt.columnText(18));
+        appGroup->setPeriodFrom(stmt.columnText(19));
+        appGroup->setPeriodTo(stmt.columnText(20));
         appGroup->setEdited(false);
 
         conf.addAppGroup(appGroup);
@@ -448,8 +449,8 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
             << appGroup->limitOutEnabled() << appGroup->speedLimitIn() << appGroup->speedLimitOut()
             << appGroup->limitPacketLoss() << appGroup->limitLatency()
             << appGroup->limitBufferSizeIn() << appGroup->limitBufferSizeOut() << appGroup->name()
-            << appGroup->blockText() << appGroup->allowText() << appGroup->periodFrom()
-            << appGroup->periodTo();
+            << appGroup->killText() << appGroup->blockText() << appGroup->allowText()
+            << appGroup->periodFrom() << appGroup->periodTo();
 
     const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
 

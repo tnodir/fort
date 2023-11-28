@@ -137,6 +137,14 @@ void AppGroup::setName(const QString &name)
     }
 }
 
+void AppGroup::setKillText(const QString &killText)
+{
+    if (m_killText != killText) {
+        m_killText = killText;
+        setEdited(true);
+    }
+}
+
 void AppGroup::setBlockText(const QString &blockText)
 {
     if (m_blockText != blockText) {
@@ -217,6 +225,7 @@ void AppGroup::copy(const AppGroup &o)
     m_id = o.id();
     m_name = o.name();
 
+    m_killText = o.killText();
     m_blockText = o.blockText();
     m_allowText = o.allowText();
 }
@@ -250,6 +259,7 @@ QVariant AppGroup::toVariant() const
     map["id"] = id();
     map["name"] = name();
 
+    map["killText"] = killText();
     map["blockText"] = blockText();
     map["allowText"] = allowText();
 
@@ -285,6 +295,7 @@ void AppGroup::fromVariant(const QVariant &v)
     m_id = map["id"].toLongLong();
     m_name = map["name"].toString();
 
+    m_killText = map["killText"].toString();
     m_blockText = map["blockText"].toString();
     m_allowText = map["allowText"].toString();
 }

@@ -373,10 +373,18 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
         app.logConn = appGroup->logConn();
         app.groupIndex = i;
 
+        const auto killText = envManager.expandString(appGroup->killText());
         const auto blockText = envManager.expandString(appGroup->blockText());
         const auto allowText = envManager.expandString(appGroup->allowText());
 
         app.blocked = true;
+        app.killProcess = true;
+        if (!parseAppsText(app, killText, wildAppsMap, prefixAppsMap, exeAppsMap, wildAppsSize,
+                    prefixAppsSize, exeAppsSize))
+            return false;
+
+        app.blocked = true;
+        app.killProcess = false;
         if (!parseAppsText(app, blockText, wildAppsMap, prefixAppsMap, exeAppsMap, wildAppsSize,
                     prefixAppsSize, exeAppsSize))
             return false;

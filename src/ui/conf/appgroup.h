@@ -70,6 +70,9 @@ public:
     QString name() const { return m_name; }
     void setName(const QString &name);
 
+    QString killText() const { return m_killText; }
+    void setKillText(const QString &killText);
+
     QString blockText() const { return m_blockText; }
     void setBlockText(const QString &blockText);
 
@@ -117,6 +120,7 @@ private:
 
     QString m_name;
 
+    QString m_killText;
     QString m_blockText;
     QString m_allowText;
 

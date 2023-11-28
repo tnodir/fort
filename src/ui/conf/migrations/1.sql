@@ -112,6 +112,7 @@ CREATE TABLE app_group(
   limit_bufsize_in INTEGER NOT NULL DEFAULT 150000,
   limit_bufsize_out INTEGER NOT NULL DEFAULT 150000,
   name TEXT NOT NULL,
+  kill_text TEXT,
   block_text TEXT NOT NULL,
   allow_text TEXT NOT NULL,
   period_from TEXT NOT NULL,

@@ -55,6 +55,7 @@ private:
     void setupGroupLimitLatency();
     void setupGroupLimitPacketLoss();
     void setupGroupLimitBufferSize();
+    void setupKillApps();
     void setupBlockApps();
     void setupAllowApps();
     void setupSplitter();
@@ -87,9 +88,11 @@ private:
     LabelSpin *m_limitBufferSizeOut = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbLogConn = nullptr;
+    AppsColumn *m_killApps = nullptr;
     AppsColumn *m_blockApps = nullptr;
     AppsColumn *m_allowApps = nullptr;
-    TextArea2Splitter *m_splitter = nullptr;
+    QSplitter *m_killSplitter = nullptr;
+    TextArea2Splitter *m_allowSplitter = nullptr;
     QToolButton *m_btSelectFile = nullptr;
 };
 

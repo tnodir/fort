@@ -132,12 +132,12 @@ void ApplicationsPage::setAppGroupIndex(int v)
 
 void ApplicationsPage::onSaveWindowState(IniUser *ini)
 {
-    ini->setOptWindowAppsSplit(m_splitter->saveState());
+    ini->setOptWindowAppsSplit(m_allowSplitter->saveState());
 }
 
 void ApplicationsPage::onRestoreWindowState(IniUser *ini)
 {
-    m_splitter->restoreState(ini->optWindowAppsSplit());
+    m_allowSplitter->restoreState(ini->optWindowAppsSplit());
 }
 
 void ApplicationsPage::onRetranslateUi()
@@ -165,10 +165,11 @@ void ApplicationsPage::onRetranslateUi()
     m_cbGroupEnabled->setText(tr("Enabled"));
     m_ctpGroupPeriod->checkBox()->setText(tr("time period:"));
 
+    m_killApps->labelTitle()->setText(tr("Kill Process"));
     m_blockApps->labelTitle()->setText(tr("Block"));
     m_allowApps->labelTitle()->setText(tr("Allow"));
 
-    auto splitterHandle = m_splitter->handle();
+    auto splitterHandle = m_allowSplitter->handle();
     splitterHandle->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Allow'"));
     splitterHandle->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Block'"));
     splitterHandle->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
@@ -225,12 +226,13 @@ void ApplicationsPage::setupUi()
     layout->addLayout(groupHeader);
 
     // App Columns
+    setupKillApps();
     setupBlockApps();
     setupAllowApps();
 
     // Splitter
     setupSplitter();
-    layout->addWidget(m_splitter, 1);
+    layout->addWidget(m_killSplitter, 1);
 
     // Splitter Buttons
     setupSplitterButtons();
@@ -513,6 +515,18 @@ void ApplicationsPage::setupGroupLimitBufferSize()
     });
 }
 
+void ApplicationsPage::setupKillApps()
+{
+    m_killApps = new AppsColumn();
+    m_killApps->icon()->setPixmap(IconCache::file(":/icons/scull.png"));
+
+    connect(m_killApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
+        const auto text = m_killApps->editText()->toPlainText();
+
+        pageAppGroupSetText(this, &AppGroup::setKillText, text);
+    });
+}
+
 void ApplicationsPage::setupBlockApps()
 {
     m_blockApps = new AppsColumn();
@@ -541,18 +555,23 @@ void ApplicationsPage::setupAllowApps()
 
 void ApplicationsPage::setupSplitter()
 {
-    m_splitter = new TextArea2Splitter();
+    m_allowSplitter = new TextArea2Splitter();
+    Q_ASSERT(!m_allowSplitter->handle());
 
-    Q_ASSERT(!m_splitter->handle());
+    m_allowSplitter->addWidget(m_blockApps);
+    m_allowSplitter->addWidget(m_allowApps);
 
-    m_splitter->addWidget(m_blockApps);
-    m_splitter->addWidget(m_allowApps);
-
-    auto splitterHandle = m_splitter->handle();
+    auto splitterHandle = m_allowSplitter->handle();
     Q_ASSERT(splitterHandle);
 
     splitterHandle->setTextArea1(m_blockApps->editText());
     splitterHandle->setTextArea2(m_allowApps->editText());
+
+    m_killSplitter = new QSplitter();
+    m_killSplitter->addWidget(m_killApps);
+    m_killSplitter->addWidget(m_allowSplitter);
+
+    m_killSplitter->setSizes({ 0, 1 }); // "Kill Processes" area is always collapsed
 }
 
 void ApplicationsPage::setupSplitterButtons()
@@ -562,12 +581,12 @@ void ApplicationsPage::setupSplitterButtons()
                 m_btSelectFile->text(), tr("Programs (*.exe);;All files (*.*)"));
 
         if (!filePaths.isEmpty()) {
-            auto area = m_splitter->handle()->currentTextArea();
+            auto area = m_allowSplitter->handle()->currentTextArea();
             TextAreaUtil::appendText(area, filePaths.join('\n'));
         }
     });
 
-    const auto layout = m_splitter->handle()->buttonsLayout();
+    const auto layout = m_allowSplitter->handle()->buttonsLayout();
     layout->addWidget(m_btSelectFile, 0, Qt::AlignHCenter);
 }
 
@@ -598,6 +617,7 @@ void ApplicationsPage::updateGroup()
     m_ctpGroupPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(appGroup->periodFrom()));
     m_ctpGroupPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(appGroup->periodTo()));
 
+    m_killApps->editText()->setText(appGroup->killText());
     m_blockApps->editText()->setText(appGroup->blockText());
     m_allowApps->editText()->setText(appGroup->allowText());
 }
