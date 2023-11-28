@@ -508,7 +508,8 @@ void TrayIcon::updateTrayMenuFlags()
 
 void TrayIcon::updateAppGroupActions()
 {
-    const int appGroupsCount = conf()->appGroups().count();
+    const int trayMaxGroups = iniUser()->trayMaxGroups(MAX_APP_GROUP_COUNT);
+    const int appGroupsCount = qMin(conf()->appGroups().count(), trayMaxGroups);
 
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
         QAction *action = m_appGroupActions.at(i);

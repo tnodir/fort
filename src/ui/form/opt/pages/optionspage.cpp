@@ -9,6 +9,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QSpinBox>
 #include <QStandardItemModel>
 #include <QToolButton>
 #include <QVBoxLayout>
@@ -28,6 +29,8 @@
 #include <util/startuputil.h>
 
 namespace {
+
+constexpr int trayMaxGroups = 16;
 
 struct Startup
 {
@@ -197,6 +200,7 @@ void OptionsPage::onRetranslateUi()
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
+    m_labelTrayMaxGroups->setText(tr("Maximum count of Groups in menu:"));
     m_labelTrayEvent->setText(tr("Event:"));
     m_labelTrayAction->setText(tr("Action:"));
     retranslateComboTrayEvent();
@@ -710,6 +714,9 @@ void OptionsPage::setupTrayBox()
                 ctrl()->setIniUserEdited();
             });
 
+    // Tray Max. Groups Row
+    auto maxGroupsLayout = setupTrayMaxGroupsLayout();
+
     // Tray Event & Action Rows
     auto eventLayout = setupTrayEventLayout();
     auto actionLayout = setupTrayActionLayout();
@@ -717,12 +724,31 @@ void OptionsPage::setupTrayBox()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbTrayShowIcon);
     layout->addWidget(m_cbTrayAnimateAlert);
+    layout->addLayout(maxGroupsLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(eventLayout);
     layout->addLayout(actionLayout);
 
     m_gbTray = new QGroupBox();
     m_gbTray->setLayout(layout);
+}
+
+QLayout *OptionsPage::setupTrayMaxGroupsLayout()
+{
+    m_labelTrayMaxGroups = ControlUtil::createLabel();
+
+    m_spinTrayMaxGroups = ControlUtil::createSpinBox();
+    m_spinTrayMaxGroups->setFixedWidth(50);
+
+    m_spinTrayMaxGroups->setRange(0, trayMaxGroups);
+    m_spinTrayMaxGroups->setValue(iniUser()->trayMaxGroups(trayMaxGroups));
+
+    connect(m_spinTrayMaxGroups, QOverload<int>::of(&QSpinBox::valueChanged), [&](int v) {
+        iniUser()->setTrayMaxGroups(v);
+        ctrl()->setIniUserEdited();
+    });
+
+    return ControlUtil::createRowLayout(m_labelTrayMaxGroups, m_spinTrayMaxGroups);
 }
 
 void OptionsPage::refreshComboTrayAction()

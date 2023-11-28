@@ -59,6 +59,9 @@ public:
     bool trayAnimateAlert() const { return valueBool("tray/animateAlert", true); }
     void setTrayAnimateAlert(bool v) { setValue("tray/animateAlert", v, true); }
 
+    int trayMaxGroups(int v = 0) const { return valueInt("tray/maxGroups", v); }
+    void setTrayMaxGroups(int v) { setValue("tray/maxGroups", v); }
+
     QString trayAction(const QString &event) const { return valueText("tray/" + event); }
     void setTrayAction(const QString &event, const QString &v) { setValue("tray/" + event, v); }
 

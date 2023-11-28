@@ -50,12 +50,13 @@ public slots:
 
 private:
     void save(bool closeOnSuccess);
-    void saveIniUser(bool flagsChanged);
+    void saveIniUser(bool onlyFlags);
 
     void initConfManagerToEdit();
 
 private:
     bool m_iniUserEdited : 1;
+    bool m_iniUserDataChanged : 1;
     bool m_iniUserFlagsChanged : 1;
 };
 

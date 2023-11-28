@@ -788,13 +788,13 @@ void ConfManager::saveIni()
     conf()->resetEdited();
 }
 
-void ConfManager::saveIniUser(bool flagsChanged)
+void ConfManager::saveIniUser(bool edited, bool onlyFlags)
 {
     iniUser().save();
     iniUser().clear();
 
-    if (flagsChanged) {
-        emit iniUserChanged(iniUser(), /*onlyFlags=*/true);
+    if (edited) {
+        emit iniUserChanged(iniUser(), onlyFlags);
     }
 }
 

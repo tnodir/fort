@@ -54,6 +54,7 @@ private:
     void setupHotKeysBox();
     void setupHomeBox();
     void setupTrayBox();
+    QLayout *setupTrayMaxGroupsLayout();
     void refreshComboTrayAction();
     QLayout *setupTrayEventLayout();
     QLayout *setupTrayActionLayout();
@@ -105,6 +106,8 @@ private:
     QCheckBox *m_cbHomeAutoShowMenu = nullptr;
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
+    QLabel *m_labelTrayMaxGroups = nullptr;
+    QSpinBox *m_spinTrayMaxGroups = nullptr;
     QLabel *m_labelTrayEvent = nullptr;
     QComboBox *m_comboTrayEvent = nullptr;
     QLabel *m_labelTrayAction = nullptr;

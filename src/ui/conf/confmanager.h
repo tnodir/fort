@@ -53,7 +53,7 @@ public:
 
     bool saveFlags();
     void saveIni();
-    void saveIniUser(bool flagsChanged = false);
+    void saveIniUser(bool edited = false, bool onlyFlags = false);
 
     QVariant toPatchVariant(bool onlyFlags) const;
     bool saveVariant(const QVariant &confVar);

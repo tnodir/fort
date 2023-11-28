@@ -9,7 +9,10 @@
 #include <util/ioc/ioccontainer.h>
 
 OptionsController::OptionsController(QObject *parent) :
-    BaseController(parent), m_iniUserEdited(false), m_iniUserFlagsChanged(false)
+    BaseController(parent),
+    m_iniUserEdited(false),
+    m_iniUserDataChanged(false),
+    m_iniUserFlagsChanged(false)
 {
     initConfManagerToEdit();
 }
@@ -74,6 +77,7 @@ void OptionsController::setTaskEdited()
 
 void OptionsController::setIniUserEdited(bool flagsChanged)
 {
+    m_iniUserDataChanged |= !flagsChanged;
     m_iniUserFlagsChanged |= flagsChanged;
 
     if (!m_iniUserEdited) {
@@ -89,7 +93,7 @@ void OptionsController::emitEdited(bool edited)
 
 void OptionsController::resetEdited()
 {
-    m_iniUserEdited = m_iniUserFlagsChanged = false;
+    m_iniUserEdited = m_iniUserDataChanged = m_iniUserFlagsChanged = false;
 
     emitEdited(false);
     emit editResetted();
@@ -114,8 +118,8 @@ void OptionsController::save(bool closeOnSuccess)
         return;
 
     if (m_iniUserEdited) {
-        const bool flagsChanged = (m_iniUserFlagsChanged && !isConfEdited);
-        saveIniUser(flagsChanged);
+        const bool onlyFlags = (m_iniUserFlagsChanged && !m_iniUserDataChanged && !isConfEdited);
+        saveIniUser(onlyFlags);
     }
 
     if (closeOnSuccess) {
@@ -126,12 +130,12 @@ void OptionsController::save(bool closeOnSuccess)
     }
 }
 
-void OptionsController::saveIniUser(bool flagsChanged)
+void OptionsController::saveIniUser(bool onlyFlags)
 {
     iniUserToEdit()->save();
     iniUserToEdit()->clear();
 
-    confManager()->saveIniUser(flagsChanged);
+    confManager()->saveIniUser(/*edited=*/true, onlyFlags);
 }
 
 void OptionsController::initConfManagerToEdit()
