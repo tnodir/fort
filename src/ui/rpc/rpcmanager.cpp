@@ -36,7 +36,7 @@ inline bool sendCommandDataToClients(
 {
     bool ok = true;
 
-    OsUtil::setThreadIsBusy(true);
+    // XXX: OsUtil::setThreadIsBusy(true);
 
     for (ControlWorker *w : clients) {
         if (!w->isServiceClient())
@@ -48,7 +48,7 @@ inline bool sendCommandDataToClients(
         }
     }
 
-    OsUtil::setThreadIsBusy(false);
+    // XXX: OsUtil::setThreadIsBusy(false);
 
     return ok;
 }

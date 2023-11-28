@@ -124,7 +124,7 @@ void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success, quint32 er
 
 void LogManager::processLogEntries(LogBuffer *logBuffer)
 {
-    OsUtil::setThreadIsBusy(true);
+    // XXX: OsUtil::setThreadIsBusy(true);
 
     for (;;) {
         const FortLogType logType = logBuffer->peekEntryType();
@@ -133,7 +133,7 @@ void LogManager::processLogEntries(LogBuffer *logBuffer)
             break;
     }
 
-    OsUtil::setThreadIsBusy(false);
+    // XXX: OsUtil::setThreadIsBusy(false);
 }
 
 bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)

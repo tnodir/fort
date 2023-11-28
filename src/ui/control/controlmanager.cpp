@@ -174,7 +174,7 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
 
     // DBG: qCDebug(LC) << "Client requested: id:" << w->id() << command << args.size();
 
-    OsUtil::setThreadIsBusy(true);
+    // XXX: OsUtil::setThreadIsBusy(true);
 
     QString errorMessage;
     const bool success = processCommand({
@@ -188,7 +188,7 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
         qCWarning(LC) << "Bad command" << errorMessage << ':' << command << args;
     }
 
-    OsUtil::setThreadIsBusy(false);
+    // XXX: OsUtil::setThreadIsBusy(false);
 
     return success;
 }
