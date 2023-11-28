@@ -129,6 +129,7 @@ void ProgramsWindow::retranslateUi()
     m_btEdit->setText(tr("Edit"));
     m_actAllowApp->setText(tr("Allow"));
     m_actBlockApp->setText(tr("Block"));
+    m_actKillApp->setText(tr("Kill Process"));
     m_actAddApp->setText(tr("Add"));
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
@@ -240,6 +241,9 @@ void ProgramsWindow::setupEditMenu()
     m_actBlockApp = editMenu->addAction(IconCache::icon(":/icons/deny.png"), QString());
     m_actBlockApp->setShortcut(Qt::Key_B);
 
+    m_actKillApp = editMenu->addAction(IconCache::icon(":/icons/scull.png"), QString());
+    m_actKillApp->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_K));
+
     editMenu->addSeparator();
 
     m_actAddApp = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
@@ -262,6 +266,8 @@ void ProgramsWindow::setupEditMenu()
             [&] { updateSelectedApps(/*blocked=*/false); });
     connect(m_actBlockApp, &QAction::triggered, this,
             [&] { updateSelectedApps(/*blocked=*/true); });
+    connect(m_actKillApp, &QAction::triggered, this,
+            [&] { updateSelectedApps(/*blocked=*/true, /*killProcess=*/true); });
     connect(m_actAddApp, &QAction::triggered, this, &ProgramsWindow::addNewProgram);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
@@ -345,6 +351,7 @@ void ProgramsWindow::setupTableAppsChanged()
         const bool appSelected = (appIndex >= 0);
         m_actAllowApp->setEnabled(appSelected);
         m_actBlockApp->setEnabled(appSelected);
+        m_actKillApp->setEnabled(appSelected);
         m_actEditApp->setEnabled(appSelected);
         m_actRemoveApp->setEnabled(appSelected);
         m_btAllowApp->setEnabled(appSelected);
@@ -424,11 +431,11 @@ void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64>
     m_formAppEdit->activate();
 }
 
-void ProgramsWindow::updateSelectedApps(bool blocked)
+void ProgramsWindow::updateSelectedApps(bool blocked, bool killProcess)
 {
     const QVector<qint64> appIdList = selectedAppIdList();
     for (const qint64 appId : appIdList) {
-        confManager()->updateAppBlocked(appId, blocked);
+        confManager()->updateAppBlocked(appId, blocked, killProcess);
     }
 }
 
