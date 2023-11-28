@@ -50,8 +50,10 @@ private:
     void setupComboAppGroups();
     QLayout *setupLogLayout();
     QLayout *setupAllowLayout();
+    QLayout *setupExtraLayout();
     QLayout *setupCheckDateTimeEdit();
     void setupAllowEclusiveGroup();
+    void setupAllowConnections();
 
     bool save();
     bool saveApp(App &app);

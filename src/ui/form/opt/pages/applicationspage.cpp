@@ -66,8 +66,8 @@ void pageAppGroupCheckEdited(ApplicationsPage *page, AppGroup *appGroup, bool is
 }
 
 void pageAppGroupSetChecked(ApplicationsPage *page,
-        const std::function<void(AppGroup &appGroup, bool v)> &setBoolFunc,
-        bool v, bool isFlag = false)
+        const std::function<void(AppGroup &appGroup, bool v)> &setBoolFunc, bool v,
+        bool isFlag = false)
 {
     AppGroup *appGroup = page->appGroup();
 
@@ -77,8 +77,7 @@ void pageAppGroupSetChecked(ApplicationsPage *page,
 }
 
 void pageAppGroupSetUInt16(ApplicationsPage *page,
-        const std::function<void(AppGroup &appGroup, quint16 v)> &setUInt16Func,
-        quint16 v)
+        const std::function<void(AppGroup &appGroup, quint16 v)> &setUInt16Func, quint16 v)
 {
     AppGroup *appGroup = page->appGroup();
 
@@ -88,8 +87,7 @@ void pageAppGroupSetUInt16(ApplicationsPage *page,
 }
 
 void pageAppGroupSetUInt32(ApplicationsPage *page,
-        const std::function<void(AppGroup &appGroup, quint32 v)> &setUInt32Func,
-        quint32 v)
+        const std::function<void(AppGroup &appGroup, quint32 v)> &setUInt32Func, quint32 v)
 {
     AppGroup *appGroup = page->appGroup();
 
@@ -418,10 +416,9 @@ void ApplicationsPage::setupGroupOptions()
     setupGroupLimitBufferSize();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cbApplyChild, m_cbLanOnly,
-        ControlUtil::createSeparator(), m_cbLogBlocked, m_cbLogConn, ControlUtil::createSeparator(),
-        m_cscLimitIn, m_cscLimitOut, m_limitLatency, m_limitPacketLoss, m_limitBufferSizeIn,
-        m_limitBufferSizeOut };
+    const QList<QWidget *> menuWidgets = { m_cbApplyChild, ControlUtil::createSeparator(),
+        m_cbLogBlocked, m_cbLogConn, ControlUtil::createSeparator(), m_cscLimitIn, m_cscLimitOut,
+        m_limitLatency, m_limitPacketLoss, m_limitBufferSizeIn, m_limitBufferSizeOut };
     auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
@@ -432,24 +429,20 @@ void ApplicationsPage::setupGroupOptions()
 
 void ApplicationsPage::setupGroupOptionFlags()
 {
-    m_cbApplyChild = ControlUtil::createCheckBox(false, [&](bool checked) {
-        pageAppGroupSetChecked(this, &AppGroup::setApplyChild, checked);
-    });
+    m_cbApplyChild = ControlUtil::createCheckBox(false,
+            [&](bool checked) { pageAppGroupSetChecked(this, &AppGroup::setApplyChild, checked); });
 
-    m_cbLanOnly = ControlUtil::createCheckBox(false, [&](bool checked) {
-        pageAppGroupSetChecked(this, &AppGroup::setLanOnly, checked);
-    });
+    m_cbLanOnly = ControlUtil::createCheckBox(false,
+            [&](bool checked) { pageAppGroupSetChecked(this, &AppGroup::setLanOnly, checked); });
 }
 
 void ApplicationsPage::setupGroupLog()
 {
-    m_cbLogBlocked = ControlUtil::createCheckBox(false, [&](bool checked) {
-        pageAppGroupSetChecked(this, &AppGroup::setLogBlocked, checked);
-    });
+    m_cbLogBlocked = ControlUtil::createCheckBox(false,
+            [&](bool checked) { pageAppGroupSetChecked(this, &AppGroup::setLogBlocked, checked); });
 
-    m_cbLogConn = ControlUtil::createCheckBox(false, [&](bool checked) {
-        pageAppGroupSetChecked(this, &AppGroup::setLogConn, checked);
-    });
+    m_cbLogConn = ControlUtil::createCheckBox(false,
+            [&](bool checked) { pageAppGroupSetChecked(this, &AppGroup::setLogConn, checked); });
 
     m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
 }
@@ -536,6 +529,8 @@ void ApplicationsPage::setupAllowApps()
 {
     m_allowApps = new AppsColumn();
     m_allowApps->icon()->setPixmap(IconCache::file(":/icons/accept.png"));
+
+    m_allowApps->headerLayout()->addWidget(m_cbLanOnly);
 
     connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_allowApps->editText()->toPlainText();

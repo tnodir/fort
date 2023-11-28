@@ -166,11 +166,11 @@ void ProgramEditDialog::setupUi()
     // Allow/Block
     auto allowLayout = setupAllowLayout();
 
-    // Block at specified date & time
-    auto blockAtLayout = setupCheckDateTimeEdit();
+    // Extra Allow/Block Options
+    auto extraLayout = setupExtraLayout();
 
-    // Eclusive End Time CheckBoxes Group
-    setupAllowEclusiveGroup();
+    // Allow/Block Connections
+    setupAllowConnections();
 
     // OK/Cancel
     auto buttonsLayout = new QHBoxLayout();
@@ -195,9 +195,8 @@ void ProgramEditDialog::setupUi()
     layout->addLayout(logLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(allowLayout);
-    layout->addWidget(m_cscBlockAppIn);
-    layout->addLayout(blockAtLayout);
-    layout->addWidget(m_cbBlockAppNone);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addLayout(extraLayout);
     layout->addStretch();
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
@@ -246,11 +245,6 @@ QLayout *ProgramEditDialog::setupAppLayout()
     m_cbApplyChild = new QCheckBox();
 
     layout->addRow(QString(), m_cbApplyChild);
-
-    // LAN Only
-    m_cbLanOnly = new QCheckBox();
-
-    layout->addRow(QString(), m_cbLanOnly);
 
     return layout;
 }
@@ -322,19 +316,16 @@ void ProgramEditDialog::setupComboAppGroups()
 
 QLayout *ProgramEditDialog::setupLogLayout()
 {
-    auto layout = new QFormLayout();
-
     // Log Blocked
     m_cbLogBlocked = new QCheckBox();
 
-    layout->addRow(QString(), m_cbLogBlocked);
-
     // Log Conn
     m_cbLogConn = new QCheckBox();
-
     m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
 
-    layout->addRow(QString(), m_cbLogConn);
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbLogBlocked);
+    layout->addWidget(m_cbLogConn);
 
     return layout;
 }
@@ -358,30 +349,36 @@ QLayout *ProgramEditDialog::setupAllowLayout()
     allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignHCenter);
     allowLayout->addWidget(m_rbKillProcess, 1, Qt::AlignLeft);
 
+    return allowLayout;
+}
+
+QLayout *ProgramEditDialog::setupExtraLayout()
+{
+    // LAN Only
+    m_cbLanOnly = new QCheckBox();
+
     // Block after N hours
     m_cscBlockAppIn = new CheckSpinCombo();
     m_cscBlockAppIn->spinBox()->setRange(1, 24 * 30 * 12); // ~Year
     m_cscBlockAppIn->setValues(appBlockInHourValues);
     m_cscBlockAppIn->setNamesByValues();
 
+    // Block at specified date & time
+    auto blockAtLayout = setupCheckDateTimeEdit();
+
     // Allow Forever
     m_cbBlockAppNone = new QCheckBox();
 
-    connect(m_rbAllowApp, &QRadioButton::toggled, this, [&](bool checked) {
-        m_cbBlockAppNone->setEnabled(checked);
-        m_cscBlockAppIn->setEnabled(checked);
-        m_cbBlockAppAt->setEnabled(checked);
-        m_dteBlockAppAt->setEnabled(checked);
-    });
+    // Eclusive End Time CheckBoxes Group
+    setupAllowEclusiveGroup();
 
-    connect(m_rbKillProcess, &QRadioButton::clicked, this, [&] {
-        IoC<WindowManager>()->showInfoBox(
-                tr("Attention: The 'Kill Process' option is very dangerous!!!\n\n"
-                   "Be careful when killing a system services or other important programs!\n"
-                   "It can cause a Windows malfunction or totally unusable."));
-    });
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbLanOnly);
+    layout->addWidget(m_cscBlockAppIn);
+    layout->addLayout(blockAtLayout);
+    layout->addWidget(m_cbBlockAppNone);
 
-    return allowLayout;
+    return layout;
 }
 
 QLayout *ProgramEditDialog::setupCheckDateTimeEdit()
@@ -401,6 +398,24 @@ void ProgramEditDialog::setupAllowEclusiveGroup()
     group->addButton(m_cscBlockAppIn->checkBox());
     group->addButton(m_cbBlockAppAt);
     group->addButton(m_cbBlockAppNone);
+}
+
+void ProgramEditDialog::setupAllowConnections()
+{
+    connect(m_rbAllowApp, &QRadioButton::toggled, this, [&](bool checked) {
+        m_cbLanOnly->setEnabled(checked);
+        m_cbBlockAppNone->setEnabled(checked);
+        m_cscBlockAppIn->setEnabled(checked);
+        m_cbBlockAppAt->setEnabled(checked);
+        m_dteBlockAppAt->setEnabled(checked);
+    });
+
+    connect(m_rbKillProcess, &QRadioButton::clicked, this, [&] {
+        IoC<WindowManager>()->showInfoBox(
+                tr("Attention: The 'Kill Process' option is very dangerous!!!\n\n"
+                   "Be careful when killing a system services or other important programs!\n"
+                   "It can cause a Windows malfunction or totally unusable."));
+    });
 }
 
 bool ProgramEditDialog::save()

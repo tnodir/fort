@@ -17,9 +17,9 @@ void AppsColumn::setupUi()
     layout->setContentsMargins(0, 0, 0, 0);
 
     // Header
-    auto headerLayout = new QHBoxLayout();
-    headerLayout->setSpacing(2);
-    layout->addLayout(headerLayout);
+    m_headerLayout = new QHBoxLayout();
+    m_headerLayout->setSpacing(2);
+    layout->addLayout(m_headerLayout);
 
     m_icon = ControlUtil::createLabel();
     m_icon->setScaledContents(true);
@@ -28,8 +28,8 @@ void AppsColumn::setupUi()
     m_labelTitle = ControlUtil::createLabel();
     m_labelTitle->setFont(ControlUtil::fontDemiBold());
 
-    headerLayout->addWidget(m_icon);
-    headerLayout->addWidget(m_labelTitle, 1);
+    m_headerLayout->addWidget(m_icon);
+    m_headerLayout->addWidget(m_labelTitle, 1);
 
     // Text Area
     m_editText = new PlainTextEdit();
