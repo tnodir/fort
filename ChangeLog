@@ -1,5 +1,14 @@
 Fort Firewall ChangeLog
 
+v3.10.2, 2023-11-28:
+- UI: Options: IP Addresses: Fix saving the "Include/Exclude All" flags.
+- UI: Options: Tray: Add "Maximum count of Groups in menu" option.
+- UI: Options: AppGroup: Add "Kill Process" option (always collapsed).
+- UI: Programs: Focus search-field on open.
+- UI: Programs: Add "Kill Process" & "Find" menu items.
+- UI: Rename "Restrict access to LAN only" flag to "Block Internet Traffic".
+- UI: Fix Windows 10 sleeping.
+
 v3.10.1, 2023-11-26:
 - UI: Improve main icon.
 - UI: TrayIcon: Process system message's click asynchronously.
