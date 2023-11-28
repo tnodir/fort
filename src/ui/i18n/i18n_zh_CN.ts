@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">阻止互联网流量</translation>
+        <translation>阻止互联网流量</translation>
     </message>
 </context>
 <context>
@@ -1170,7 +1170,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">阻止互联网流量</translation>
+        <translation>阻止互联网流量</translation>
     </message>
 </context>
 <context>
@@ -1221,7 +1221,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Find</source>
-        <translation type="unfinished"></translation>
+        <translation>查找</translation>
     </message>
 </context>
 <context>
