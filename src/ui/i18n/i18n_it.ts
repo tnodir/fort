@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">Termina processo</translation>
+        <translation>Termina processo</translation>
     </message>
 </context>
 <context>
@@ -985,7 +985,7 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Maximum count of Groups in menu:</source>
-        <translation type="unfinished"></translation>
+        <translation>Numero massimo gruppi nel menu&apos;:</translation>
     </message>
 </context>
 <context>
@@ -1233,7 +1233,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">Termina processo</translation>
+        <translation>Termina processo</translation>
     </message>
 </context>
 <context>
