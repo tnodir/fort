@@ -106,7 +106,7 @@ public:
     quint32 appGroupBits() const { return m_appGroupBits; }
     void setAppGroupBits(quint32 groupBits);
 
-    bool appGroupApplyChild() const;
+    bool appGroupWildcard() const;
 
     bool appGroupEnabled(int groupIndex) const;
 

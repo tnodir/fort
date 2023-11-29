@@ -386,7 +386,7 @@ inline static void fort_pstree_check_proc_conf(
 
     const PFORT_CONF conf = &conf_ref->conf;
 
-    const FORT_APP_FLAGS app_flags = conf->flags.group_apply_child
+    const FORT_APP_FLAGS app_flags = conf->flags.group_wildcard
             ? fort_conf_app_find(conf, path_buf, path_len, fort_conf_exe_find, conf_ref)
             : fort_conf_exe_find(conf, conf_ref, path_buf, path_len);
 

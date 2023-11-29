@@ -173,10 +173,13 @@ void FirewallConf::setAppGroupBits(quint32 groupBits)
     m_appGroupBits = groupBits;
 }
 
-bool FirewallConf::appGroupApplyChild() const
+bool FirewallConf::appGroupWildcard() const
 {
     for (const AppGroup *appGroup : appGroups()) {
-        if (appGroup->enabled() && appGroup->applyChild())
+        if (!appGroup->enabled())
+            continue;
+
+        if (appGroup->applyChild() || !appGroup->killText().isEmpty())
             return true;
     }
     return false;
