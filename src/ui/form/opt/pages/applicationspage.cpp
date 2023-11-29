@@ -564,11 +564,12 @@ void ApplicationsPage::setupSplitter()
 void ApplicationsPage::setupSplitterButtons()
 {
     m_btSelectFile = ControlUtil::createSplitterButton(":/icons/folder.png", [&] {
+        auto area = m_allowSplitter->handle()->currentTextArea();
+
         const auto filePaths = DialogUtil::getOpenFileNames(
                 m_btSelectFile->text(), tr("Programs (*.exe);;All files (*.*)"));
 
         if (!filePaths.isEmpty()) {
-            auto area = m_allowSplitter->handle()->currentTextArea();
             TextAreaUtil::appendText(area, filePaths.join('\n'));
         }
     });
