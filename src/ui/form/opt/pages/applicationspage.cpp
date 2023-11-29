@@ -27,7 +27,6 @@
 #include <form/opt/optionscontroller.h>
 #include <fortsettings.h>
 #include <user/iniuser.h>
-#include <util/iconcache.h>
 #include <util/net/netutil.h>
 #include <util/textareautil.h>
 
@@ -517,40 +516,28 @@ void ApplicationsPage::setupGroupLimitBufferSize()
 
 void ApplicationsPage::setupKillApps()
 {
-    m_killApps = new AppsColumn();
-    m_killApps->icon()->setPixmap(IconCache::file(":/icons/scull.png"));
+    m_killApps = new AppsColumn(":/icons/scull.png");
 
-    connect(m_killApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
-        const auto text = m_killApps->editText()->toPlainText();
-
-        pageAppGroupSetText(this, &AppGroup::setKillText, text);
-    });
+    connect(m_killApps, &AppsColumn::textEdited, this,
+            [&](const QString &text) { pageAppGroupSetText(this, &AppGroup::setKillText, text); });
 }
 
 void ApplicationsPage::setupBlockApps()
 {
-    m_blockApps = new AppsColumn();
-    m_blockApps->icon()->setPixmap(IconCache::file(":/icons/deny.png"));
+    m_blockApps = new AppsColumn(":/icons/deny.png");
 
-    connect(m_blockApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
-        const auto text = m_blockApps->editText()->toPlainText();
-
-        pageAppGroupSetText(this, &AppGroup::setBlockText, text);
-    });
+    connect(m_blockApps, &AppsColumn::textEdited, this,
+            [&](const QString &text) { pageAppGroupSetText(this, &AppGroup::setBlockText, text); });
 }
 
 void ApplicationsPage::setupAllowApps()
 {
-    m_allowApps = new AppsColumn();
-    m_allowApps->icon()->setPixmap(IconCache::file(":/icons/accept.png"));
+    m_allowApps = new AppsColumn(":/icons/accept.png");
 
     m_allowApps->headerLayout()->addWidget(m_cbLanOnly);
 
-    connect(m_allowApps->editText(), &QPlainTextEdit::textChanged, this, [&] {
-        const auto text = m_allowApps->editText()->toPlainText();
-
-        pageAppGroupSetText(this, &AppGroup::setAllowText, text);
-    });
+    connect(m_allowApps, &AppsColumn::textEdited, this,
+            [&](const QString &text) { pageAppGroupSetText(this, &AppGroup::setAllowText, text); });
 }
 
 void ApplicationsPage::setupSplitter()

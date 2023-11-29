@@ -13,15 +13,22 @@ class AppsColumn : public QWidget
     Q_OBJECT
 
 public:
-    explicit AppsColumn(QWidget *parent = nullptr);
+    explicit AppsColumn(const QString &iconPath, QWidget *parent = nullptr);
 
     QHBoxLayout *headerLayout() const { return m_headerLayout; }
     QLabel *icon() const { return m_icon; }
     QLabel *labelTitle() const { return m_labelTitle; }
     PlainTextEdit *editText() const { return m_editText; }
 
+signals:
+    void textEdited(const QString &text);
+
 private:
     void setupUi();
+    void setupTextEdit();
+    void setupIcon(const QString &iconPath);
+
+    void onTextChanged();
 
 private:
     QHBoxLayout *m_headerLayout = nullptr;

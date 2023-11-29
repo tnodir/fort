@@ -5,10 +5,12 @@
 
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
+#include <util/iconcache.h>
 
-AppsColumn::AppsColumn(QWidget *parent) : QWidget(parent)
+AppsColumn::AppsColumn(const QString &iconPath, QWidget *parent) : QWidget(parent)
 {
     setupUi();
+    setupIcon(iconPath);
 }
 
 void AppsColumn::setupUi()
@@ -32,9 +34,29 @@ void AppsColumn::setupUi()
     m_headerLayout->addWidget(m_labelTitle, 1);
 
     // Text Area
-    m_editText = new PlainTextEdit();
-    m_editText->setTabChangesFocus(true);
+    setupTextEdit();
+
     layout->addWidget(m_editText);
 
     this->setLayout(layout);
+}
+
+void AppsColumn::setupTextEdit()
+{
+    m_editText = new PlainTextEdit();
+    m_editText->setTabChangesFocus(true);
+
+    connect(m_editText, &QPlainTextEdit::textChanged, this, &AppsColumn::onTextChanged);
+}
+
+void AppsColumn::setupIcon(const QString &iconPath)
+{
+    icon()->setPixmap(IconCache::file(iconPath));
+}
+
+void AppsColumn::onTextChanged()
+{
+    const auto text = m_editText->toPlainText();
+
+    emit textEdited(text);
 }
