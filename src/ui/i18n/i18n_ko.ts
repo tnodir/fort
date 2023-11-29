@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">프로세스 종료</translation>
+        <translation>프로세스 종료</translation>
     </message>
 </context>
 <context>
@@ -985,7 +985,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Maximum count of Groups in menu:</source>
-        <translation type="unfinished"></translation>
+        <translation>메뉴에서 그룹의 최대 수:</translation>
     </message>
 </context>
 <context>
@@ -1233,7 +1233,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">프로세스 종료</translation>
+        <translation>프로세스 종료</translation>
     </message>
 </context>
 <context>
