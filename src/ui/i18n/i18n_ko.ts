@@ -253,6 +253,10 @@
         <source>Block Internet Traffic</source>
         <translation>인터넷 트래픽 차단</translation>
     </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished">프로세스 종료</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -979,6 +983,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Collect New Programs</source>
         <translation>새 프로그램 집계</translation>
     </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1222,6 +1230,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Find</source>
         <translation>찾기</translation>
+    </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished">프로세스 종료</translation>
     </message>
 </context>
 <context>

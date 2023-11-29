@@ -253,6 +253,10 @@
         <source>Block Internet Traffic</source>
         <translation>Onemogoči internetni promet</translation>
     </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished">Uniči proces</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -979,6 +983,10 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <source>Collect New Programs</source>
         <translation>Zberi nove programe</translation>
     </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1222,6 +1230,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Find</source>
         <translation>Poišči</translation>
+    </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished">Uniči proces</translation>
     </message>
 </context>
 <context>

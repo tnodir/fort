@@ -253,6 +253,10 @@
         <source>Block Internet Traffic</source>
         <translation>Internetdatenverkehr blockieren</translation>
     </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished">Prozess beenden</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -979,6 +983,10 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
         <source>Collect New Programs</source>
         <translation>Neue Programme sammeln</translation>
     </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1222,6 +1230,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Find</source>
         <translation>Suchen</translation>
+    </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished">Prozess beenden</translation>
     </message>
 </context>
 <context>

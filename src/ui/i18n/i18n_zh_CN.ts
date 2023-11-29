@@ -253,6 +253,10 @@
         <source>Block Internet Traffic</source>
         <translation>阻止互联网流量</translation>
     </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished">杀死进程</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -979,6 +983,10 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <source>Collect New Programs</source>
         <translation>收集新程序</translation>
     </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1222,6 +1230,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Find</source>
         <translation>查找</translation>
+    </message>
+    <message>
+        <source>Kill Process</source>
+        <translation type="unfinished">杀死进程</translation>
     </message>
 </context>
 <context>
