@@ -40,6 +40,7 @@ SOURCES += \
     form/controls/clickablemenu.cpp \
     form/controls/combobox.cpp \
     form/controls/controlutil.cpp \
+    form/controls/doublespinbox.cpp \
     form/controls/labelcolor.cpp \
     form/controls/labeldoublespin.cpp \
     form/controls/labelspin.cpp \
@@ -231,6 +232,7 @@ HEADERS += \
     form/controls/clickablemenu.h \
     form/controls/combobox.h \
     form/controls/controlutil.h \
+    form/controls/doublespinbox.h \
     form/controls/labelcolor.h \
     form/controls/labeldoublespin.h \
     form/controls/labelspin.h \

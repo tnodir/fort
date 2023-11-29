@@ -1,10 +1,10 @@
 #include "labeldoublespin.h"
 
-#include <QDoubleSpinBox>
 #include <QHBoxLayout>
 #include <QLabel>
 
 #include "controlutil.h"
+#include "doublespinbox.h"
 
 LabelDoubleSpin::LabelDoubleSpin(QWidget *parent) : QWidget(parent)
 {
@@ -29,7 +29,7 @@ void LabelDoubleSpin::setupUi()
 
 void LabelDoubleSpin::setupSpin()
 {
-    m_spinBox = new QDoubleSpinBox();
+    m_spinBox = new DoubleSpinBox();
     m_spinBox->setMinimumWidth(110);
     m_spinBox->setRange(0, 9999);
 }
