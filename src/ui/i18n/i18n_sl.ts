@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">Uniči proces</translation>
+        <translation>Uniči proces</translation>
     </message>
 </context>
 <context>
@@ -985,7 +985,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Maximum count of Groups in menu:</source>
-        <translation type="unfinished"></translation>
+        <translation>Največje število skupin v meniju:</translation>
     </message>
 </context>
 <context>
@@ -1233,7 +1233,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">Uniči proces</translation>
+        <translation>Uniči proces</translation>
     </message>
 </context>
 <context>

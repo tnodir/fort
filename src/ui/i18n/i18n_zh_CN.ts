@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">杀死进程</translation>
+        <translation>杀死进程</translation>
     </message>
 </context>
 <context>
@@ -985,7 +985,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>Maximum count of Groups in menu:</source>
-        <translation type="unfinished"></translation>
+        <translation>菜单中最大组的数量：</translation>
     </message>
 </context>
 <context>
@@ -1233,7 +1233,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">杀死进程</translation>
+        <translation>杀死进程</translation>
     </message>
 </context>
 <context>
