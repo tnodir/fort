@@ -715,6 +715,8 @@ bool ConfManager::load()
 
 bool ConfManager::saveConf(FirewallConf &conf)
 {
+    qCDebug(LC) << "Conf save";
+
     conf.prepareToSave();
 
     if (conf.optEdited() && !saveToDb(conf))

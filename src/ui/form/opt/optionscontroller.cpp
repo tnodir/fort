@@ -1,5 +1,7 @@
 #include "optionscontroller.h"
 
+#include <QLoggingCategory>
+
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <fortsettings.h>
@@ -7,6 +9,12 @@
 #include <model/zonelistmodel.h>
 #include <user/iniuser.h>
 #include <util/ioc/ioccontainer.h>
+
+namespace {
+
+const QLoggingCategory LC("optionsCtrl");
+
+}
 
 OptionsController::OptionsController(QObject *parent) :
     BaseController(parent),
@@ -109,13 +117,17 @@ void OptionsController::initialize()
 
 void OptionsController::save(bool closeOnSuccess)
 {
+    qCDebug(LC) << "Conf save";
+
     emit aboutToSave();
 
     const bool isAnyEdited = this->anyEdited();
     const bool isConfEdited = confToEdit()->anyEdited();
 
-    if (!confManager()->save(confToEdit()))
+    if (!confManager()->save(confToEdit())) {
+        qCCritical(LC) << "Conf save error";
         return;
+    }
 
     if (m_iniUserEdited) {
         const bool onlyFlags = (m_iniUserFlagsChanged && !m_iniUserDataChanged && !isConfEdited);
@@ -132,6 +144,8 @@ void OptionsController::save(bool closeOnSuccess)
 
 void OptionsController::saveIniUser(bool onlyFlags)
 {
+    qCDebug(LC) << "IniUser save";
+
     iniUserToEdit()->save();
     iniUserToEdit()->clear();
 
