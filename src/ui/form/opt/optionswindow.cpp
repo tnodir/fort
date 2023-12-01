@@ -33,6 +33,11 @@ IniUser *OptionsWindow::iniUser() const
     return ctrl()->iniUser();
 }
 
+void OptionsWindow::selectTab(int index)
+{
+    m_mainPage->selectTab(index);
+}
+
 void OptionsWindow::cancelChanges()
 {
     if (ctrl()->confToEdit() && ctrl()->anyEdited()) {

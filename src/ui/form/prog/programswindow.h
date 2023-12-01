@@ -100,6 +100,7 @@ private:
     QPushButton *m_btBlockApp = nullptr;
     QPushButton *m_btRemoveApp = nullptr;
     QLineEdit *m_editSearch = nullptr;
+    QPushButton *m_btGroups = nullptr;
     QPushButton *m_btServices = nullptr;
     QPushButton *m_btMenu = nullptr;
     ProgramEditDialog *m_formAppEdit = nullptr;

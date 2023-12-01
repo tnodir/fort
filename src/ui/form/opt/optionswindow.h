@@ -24,6 +24,8 @@ public:
     ConfManager *confManager() const;
     IniUser *iniUser() const;
 
+    void selectTab(int index);
+
     void cancelChanges();
 
     void saveWindowState(bool wasVisible) override;

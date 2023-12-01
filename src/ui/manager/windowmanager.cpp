@@ -423,6 +423,15 @@ void WindowManager::closeStatisticsWindow()
     }
 }
 
+void WindowManager::showAppGroupsWindow()
+{
+    showOptionsWindow();
+
+    if (m_optWindow) {
+        m_optWindow->selectTab(2);
+    }
+}
+
 void WindowManager::showServicesWindow()
 {
     if (!checkWindowPassword(WindowServices))

@@ -27,6 +27,11 @@ OptMainPage::OptMainPage(OptionsController *ctrl, QWidget *parent) : OptBasePage
     setupUi();
 }
 
+void OptMainPage::selectTab(int index)
+{
+    m_tabWidget->setCurrentIndex(index);
+}
+
 void OptMainPage::onRetranslateUi()
 {
     m_tabWidget->setTabText(0, tr("Options"));

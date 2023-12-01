@@ -88,6 +88,8 @@ public slots:
     void showStatisticsWindow();
     void closeStatisticsWindow();
 
+    void showAppGroupsWindow();
+
     void showServicesWindow();
     void closeServicesWindow();
 

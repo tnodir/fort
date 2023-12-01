@@ -12,6 +12,8 @@ class OptMainPage : public OptBasePage
 public:
     explicit OptMainPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    void selectTab(int index);
+
 protected slots:
     void onRetranslateUi() override;
 

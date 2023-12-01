@@ -141,6 +141,7 @@ void ProgramsWindow::retranslateUi()
     m_btRemoveApp->setText(tr("Remove"));
     m_editSearch->setPlaceholderText(tr("Search"));
 
+    m_btGroups->setText(tr("Groups"));
     m_btServices->setText(tr("Services"));
 
     appListModel()->refresh();
@@ -183,7 +184,7 @@ void ProgramsWindow::setupUi()
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/application.png"));
 
     // Size
-    this->setMinimumSize(500, 400);
+    this->setMinimumSize(800, 400);
 }
 
 QLayout *ProgramsWindow::setupHeader()
@@ -205,6 +206,12 @@ QLayout *ProgramsWindow::setupHeader()
     // Search edit line
     setupEditSearch();
 
+    // Groups button
+    m_btGroups = ControlUtil::createLinkButton(":/icons/application_double.png");
+
+    connect(m_btGroups, &QAbstractButton::clicked, windowManager(),
+            &WindowManager::showAppGroupsWindow);
+
     // Services button
     m_btServices = ControlUtil::createLinkButton(":/icons/windows-48.png");
     m_btServices->setEnabled(settings()->hasMasterAdmin());
@@ -224,6 +231,7 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addWidget(m_editSearch);
     layout->addStretch();
+    layout->addWidget(m_btGroups);
     layout->addWidget(m_btServices);
     layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
     layout->addWidget(m_btMenu);
@@ -290,7 +298,8 @@ void ProgramsWindow::setupEditSearch()
             QString(), [&](const QString &text) { appListModel()->setFtsFilter(text); });
     m_editSearch->setClearButtonEnabled(true);
     m_editSearch->setMaxLength(200);
-    m_editSearch->setFixedWidth(200);
+    m_editSearch->setMinimumWidth(100);
+    m_editSearch->setMaximumWidth(200);
 
     connect(this, &ProgramsWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
 }
