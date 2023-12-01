@@ -1235,6 +1235,14 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Kill Process</source>
         <translation>Tuer le processus</translation>
     </message>
+    <message>
+        <source>Add Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

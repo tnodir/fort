@@ -1235,6 +1235,14 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Kill Process</source>
         <translation>프로세스 종료</translation>
     </message>
+    <message>
+        <source>Add Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

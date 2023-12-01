@@ -1235,6 +1235,14 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <source>Kill Process</source>
         <translation>Termina processo</translation>
     </message>
+    <message>
+        <source>Add Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

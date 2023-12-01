@@ -1231,6 +1231,14 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Kill Process</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Add Wildcard</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

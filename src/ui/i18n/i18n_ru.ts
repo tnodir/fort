@@ -1233,7 +1233,15 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">Убить процесс</translation>
+        <translation>Убить процесс</translation>
+    </message>
+    <message>
+        <source>Add Wildcard</source>
+        <translation>Добавить подстановку</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Группы</translation>
     </message>
 </context>
 <context>
