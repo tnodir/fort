@@ -400,7 +400,8 @@ void TrayIcon::setupTrayMenu()
         QAction *a =
                 addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)), /*checkable=*/true);
 
-        if (i < 12) {
+        constexpr int maxFKeyCount = 12;
+        if (i < maxFKeyCount) {
             const QString shortcutText =
                     iniUser()->hotKeyAppGroupModifiers() + "+F" + QString::number(i + 1);
 
@@ -600,6 +601,9 @@ void TrayIcon::saveTrayFlags()
     int i = 0;
     for (AppGroup *appGroup : conf()->appGroups()) {
         const QAction *action = m_appGroupActions.at(i++);
+        if (!action->isVisible())
+            break;
+
         appGroup->setEnabled(action->isChecked());
     }
 
@@ -613,7 +617,7 @@ void TrayIcon::switchTrayFlag(bool checked)
         Q_ASSERT(action);
 
         windowManager()->showQuestionBox(
-                [=](bool confirmed) {
+                [=, this](bool confirmed) {
                     if (confirmed) {
                         saveTrayFlags();
                     } else {
@@ -634,7 +638,7 @@ void TrayIcon::switchFilterMode(QAction *action)
 
     if (iniUser()->confirmTrayFlags()) {
         windowManager()->showQuestionBox(
-                [=](bool confirmed) {
+                [=, this](bool confirmed) {
                     if (confirmed) {
                         saveTrayFlags();
                     } else {
