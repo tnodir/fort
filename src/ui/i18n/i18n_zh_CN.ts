@@ -1237,11 +1237,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Add Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>添加通配符</translation>
     </message>
     <message>
         <source>Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>分组</translation>
     </message>
 </context>
 <context>

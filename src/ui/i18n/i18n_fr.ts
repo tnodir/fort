@@ -1237,11 +1237,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Add Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajouter un caractère joker</translation>
     </message>
     <message>
         <source>Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Groupes</translation>
     </message>
 </context>
 <context>
