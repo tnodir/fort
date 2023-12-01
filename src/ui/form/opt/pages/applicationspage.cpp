@@ -145,7 +145,7 @@ void ApplicationsPage::onRetranslateUi()
     m_btAddGroup->setText(tr("Add Group"));
     m_btRenameGroup->setText(tr("Rename Group"));
 
-    m_btGroupOptions->setText(tr("Tweaks"));
+    m_btGroupOptions->setText(tr("Options"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
     m_cbLanOnly->setText(tr("Block Internet Traffic"));
 
@@ -424,7 +424,7 @@ void ApplicationsPage::setupGroupOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGroupOptions = ControlUtil::createButton(":/icons/wrench.png");
+    m_btGroupOptions = ControlUtil::createButton(":/icons/gear_in.png");
     m_btGroupOptions->setMenu(menu);
 }
 

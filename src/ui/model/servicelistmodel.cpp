@@ -108,7 +108,7 @@ QVariant ServiceListModel::dataDecoration(const QModelIndex &index) const
         const auto info = serviceInfoAt(row);
 
         if (info.isTracked())
-            return IconCache::icon(":/icons/wrench.png");
+            return IconCache::icon(":/icons/gear_in.png");
     }
 
     return QVariant();

@@ -102,7 +102,7 @@ void AddressesPage::setupUi()
     layout->addWidget(m_tabBar);
 
     m_tabBar->addTab(IconCache::icon(":/icons/global_telecom.png"), QString());
-    m_tabBar->addTab(IconCache::icon(":/icons/filter.png"), QString());
+    m_tabBar->addTab(IconCache::icon(":/icons/ip_block.png"), QString());
 
     // Address Columns
     setupIncludeAddresses();

@@ -23,18 +23,19 @@
     <file>icons/deny.png</file>
     <file>icons/download_for_windows.png</file>
     <file>icons/error.png</file>
-    <file>icons/filter.png</file>
     <file>icons/folder.png</file>
     <file>icons/fort-96.png</file>
     <file>icons/fort.png</file>
     <file>icons/fort_gray.png</file>
     <file>icons/fort_red.png</file>
+    <file>icons/gear_in.png</file>
     <file>icons/github.png</file>
     <file>icons/global_telecom.png</file>
     <file>icons/help.png</file>
     <file>icons/hostname.png</file>
     <file>icons/information.png</file>
     <file>icons/ip.png</file>
+    <file>icons/ip_block.png</file>
     <file>icons/ip_class.png</file>
     <file>icons/key.png</file>
     <file>icons/large_tiles.png</file>
@@ -52,6 +53,5 @@
     <file>icons/time.png</file>
     <file>icons/traffic_lights.png</file>
     <file>icons/windows-48.png</file>
-    <file>icons/wrench.png</file>
 </qresource>
 </RCC>
