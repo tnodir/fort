@@ -98,7 +98,7 @@ void AddressesPage::setupUi()
 
     // Tab Bar
     m_tabBar = new QTabBar();
-    m_tabBar->setShape(QTabBar::TriangularNorth);
+    m_tabBar->setShape(QTabBar::RoundedNorth);
     layout->addWidget(m_tabBar);
 
     m_tabBar->addTab(IconCache::icon(":/icons/global_telecom.png"), QString());

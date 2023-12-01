@@ -313,7 +313,7 @@ void ApplicationsPage::setupTabBar()
 {
     m_tabBar = new TabBar();
     m_tabBar->setTabMinimumWidth(100);
-    m_tabBar->setShape(QTabBar::TriangularNorth);
+    m_tabBar->setShape(QTabBar::RoundedNorth);
     m_tabBar->setExpanding(false);
     m_tabBar->setTabsClosable(true);
     m_tabBar->setMovable(true);

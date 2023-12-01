@@ -213,7 +213,7 @@ void TrafficPage::setupAppListView()
 void TrafficPage::setupTabBar()
 {
     m_tabBar = new QTabBar();
-    m_tabBar->setShape(QTabBar::TriangularNorth);
+    m_tabBar->setShape(QTabBar::RoundedNorth);
 
     for (int n = 4; --n >= 0;) {
         m_tabBar->addTab(QString());
