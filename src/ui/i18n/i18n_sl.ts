@@ -246,16 +246,16 @@
         <translation>Zberi blokirane povezave</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Prilagoditve</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>Onemogoči internetni promet</translation>
     </message>
     <message>
         <source>Kill Process</source>
         <translation>Uniči proces</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Možnosti</translation>
     </message>
 </context>
 <context>
@@ -425,8 +425,8 @@
         <translation>Ali ste prepričani, da želite odstraniti vse povezave?</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Prilagoditve</translation>
+        <source>Options</source>
+        <translation>Možnosti</translation>
     </message>
 </context>
 <context>
@@ -1237,11 +1237,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Add Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodaj nadomestni znak</translation>
     </message>
     <message>
         <source>Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupine</translation>
     </message>
 </context>
 <context>

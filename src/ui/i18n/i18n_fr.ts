@@ -246,16 +246,16 @@
         <translation>Collecter les connexions bloquées</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Ajustements</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>Bloquer le trafic Internet</translation>
     </message>
     <message>
         <source>Kill Process</source>
         <translation>Tuer le processus</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Options</translation>
     </message>
 </context>
 <context>
@@ -425,8 +425,8 @@
         <translation>Êtes-vous sûr de retirerr toutes les connexions?</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Ajustements</translation>
+        <source>Options</source>
+        <translation>Options</translation>
     </message>
 </context>
 <context>

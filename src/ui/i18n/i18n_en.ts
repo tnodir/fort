@@ -246,15 +246,15 @@
         <translation></translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation></translation>
     </message>
     <message>
         <source>Kill Process</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Options</source>
         <translation></translation>
     </message>
 </context>
@@ -425,7 +425,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>Tweaks</source>
+        <source>Options</source>
         <translation></translation>
     </message>
 </context>

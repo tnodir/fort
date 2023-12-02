@@ -246,16 +246,16 @@
         <translation>Raccogli le connessioni bloccate</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Trucchetti</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>Blocca traffico internet</translation>
     </message>
     <message>
         <source>Kill Process</source>
         <translation>Termina processo</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Opzioni</translation>
     </message>
 </context>
 <context>
@@ -425,8 +425,8 @@
         <translation>Sei sicuro di rimuovere tutte le connessioni?</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Trucchetti</translation>
+        <source>Options</source>
+        <translation>Opzioni</translation>
     </message>
 </context>
 <context>
@@ -1237,11 +1237,11 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Add Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi Wildcard</translation>
     </message>
     <message>
         <source>Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Gruppi</translation>
     </message>
 </context>
 <context>

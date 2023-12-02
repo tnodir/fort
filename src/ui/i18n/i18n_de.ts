@@ -246,16 +246,16 @@
         <translation>Sammle blockierte Verbindungen</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Optimierungen</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>Internetdatenverkehr blockieren</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">Prozess beenden</translation>
+        <translation>Prozess beenden</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Optionen</translation>
     </message>
 </context>
 <context>
@@ -425,8 +425,8 @@
         <translation>Sind Sie sicher, alle Verbindungen zu entfernen?</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Optimierungen</translation>
+        <source>Options</source>
+        <translation>Optionen</translation>
     </message>
 </context>
 <context>
@@ -985,7 +985,7 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Maximum count of Groups in menu:</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximale Anzahl an Gruppen im Menü:</translation>
     </message>
 </context>
 <context>
@@ -1233,15 +1233,15 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished">Prozess beenden</translation>
+        <translation>Prozess beenden</translation>
     </message>
     <message>
         <source>Add Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Platzhalter hinzufügen</translation>
     </message>
     <message>
         <source>Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Gruppen</translation>
     </message>
 </context>
 <context>

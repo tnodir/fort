@@ -67,7 +67,7 @@ void ConnectionsPage::onRetranslateUi()
 
     m_btClearAll->setText(tr("Clear All"));
 
-    m_btOptions->setText(tr("Tweaks"));
+    m_btOptions->setText(tr("Options"));
     m_cbAutoScroll->setText(tr("Auto scroll"));
     m_cbShowHostNames->setText(tr("Show host names"));
 

@@ -246,16 +246,16 @@
         <translation>Coletar conexões bloqueadas</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Opções</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Kill Process</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Opções</translation>
     </message>
 </context>
 <context>
@@ -425,8 +425,8 @@
         <translation>Você tem certeza que deseja remover todas as conexões?</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Opções</translation>
+        <source>Options</source>
+        <translation type="unfinished">Opções</translation>
     </message>
 </context>
 <context>

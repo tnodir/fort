@@ -246,16 +246,16 @@
         <translation>收集已屏蔽的连接</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>选项</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>阻止互联网流量</translation>
     </message>
     <message>
         <source>Kill Process</source>
         <translation>杀死进程</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">选项</translation>
     </message>
 </context>
 <context>
@@ -425,8 +425,8 @@
         <translation>您确定要移除所有连接吗？</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>选项</translation>
+        <source>Options</source>
+        <translation type="unfinished">选项</translation>
     </message>
 </context>
 <context>

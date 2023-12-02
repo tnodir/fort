@@ -246,16 +246,16 @@
         <translation>Собирать заблокированные соединения</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Настройки</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>Блокировать Интернет трафик</translation>
     </message>
     <message>
         <source>Kill Process</source>
         <translation>Убить процесс</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Опции</translation>
     </message>
 </context>
 <context>
@@ -425,8 +425,8 @@
         <translation>Удалить все соединения?</translation>
     </message>
     <message>
-        <source>Tweaks</source>
-        <translation>Настройки</translation>
+        <source>Options</source>
+        <translation>Опции</translation>
     </message>
 </context>
 <context>
