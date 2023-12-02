@@ -424,7 +424,7 @@ void ApplicationsPage::setupGroupOptions()
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
-    m_btGroupOptions = ControlUtil::createButton(":/icons/gear_in.png");
+    m_btGroupOptions = ControlUtil::createButton(":/icons/widgets.png");
     m_btGroupOptions->setMenu(menu);
 }
 

@@ -28,7 +28,6 @@
     <file>icons/fort.png</file>
     <file>icons/fort_gray.png</file>
     <file>icons/fort_red.png</file>
-    <file>icons/gear_in.png</file>
     <file>icons/github.png</file>
     <file>icons/global_telecom.png</file>
     <file>icons/help.png</file>
@@ -52,6 +51,7 @@
     <file>icons/server_components.png</file>
     <file>icons/time.png</file>
     <file>icons/traffic_lights.png</file>
+    <file>icons/widgets.png</file>
     <file>icons/windows-48.png</file>
 </qresource>
 </RCC>
