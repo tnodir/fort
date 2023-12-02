@@ -147,7 +147,8 @@ private:
     bool loadTask(TaskInfo *taskInfo);
     bool saveTask(TaskInfo *taskInfo);
 
-    bool checkEndTransaction(bool ok, bool commit = false);
+    bool commitTransaction(bool ok);
+    bool checkEndTransaction(bool ok);
 
 private:
     quint32 m_driveMask = 0;

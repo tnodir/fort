@@ -858,7 +858,7 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
         }
     }
 
-    return checkEndTransaction(ok, true);
+    return commitTransaction(ok);
 }
 
 void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)
@@ -911,7 +911,7 @@ bool ConfManager::deleteApp(qint64 appId)
         sqliteDb()->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
     }
 
-    checkEndTransaction(ok, true);
+    commitTransaction(ok);
 
     if (ok) {
         updateDriverDeleteApp(appPath);
@@ -975,7 +975,7 @@ bool ConfManager::updateApp(const App &app)
         sqliteDb()->executeEx(sqlDeleteAppAlert, { app.appId }, 0, &ok);
     }
 
-    checkEndTransaction(ok, true);
+    commitTransaction(ok);
 
     if (ok) {
         if (!app.endTime.isNull()) {
@@ -1007,7 +1007,7 @@ bool ConfManager::updateAppBlocked(qint64 appId, bool blocked, bool killProcess)
         sqliteDb()->executeEx(sqlDeleteAppAlert, { appId }, 0, &ok);
     }
 
-    checkEndTransaction(ok, true);
+    commitTransaction(ok);
 
     if (ok) {
         emitAppUpdated();
@@ -1141,7 +1141,7 @@ bool ConfManager::deleteZone(int zoneId)
         sqliteDb()->executeEx(sqlDeleteAddressGroupZone, { qint64(zoneUnMask) }, 0, &ok);
     }
 
-    checkEndTransaction(ok, true);
+    commitTransaction(ok);
 
     if (ok) {
         emit zoneRemoved(zoneId);
@@ -1344,7 +1344,7 @@ bool ConfManager::addOrUpdateApp(const App &app)
         sqliteDb()->executeEx(app.alerted ? sqlInsertAppAlert : sqlDeleteAppAlert, { appId });
     }
 
-    checkEndTransaction(ok, true);
+    commitTransaction(ok);
 
     if (ok) {
         if (!app.endTime.isNull()) {
@@ -1484,7 +1484,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
             && saveAppGroups(sqliteDb(), conf) // Save App Groups
             && removeAppGroupsInDb(sqliteDb(), conf); // Remove App Groups
 
-    return checkEndTransaction(ok, /*commit=*/true);
+    return commitTransaction(ok);
 }
 
 void ConfManager::loadExtFlags(IniOptions &ini)
@@ -1551,13 +1551,16 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
     return true;
 }
 
-bool ConfManager::checkEndTransaction(bool ok, bool commit)
+bool ConfManager::commitTransaction(bool ok)
+{
+    const bool success = sqliteDb()->endTransaction(ok);
+
+    return checkEndTransaction(ok && success);
+}
+
+bool ConfManager::checkEndTransaction(bool ok)
 {
     const auto errorMessage = ok ? QString() : sqliteDb()->errorMessage();
-
-    if (commit) {
-        sqliteDb()->endTransaction(ok);
-    }
 
     if (!ok) {
         showErrorMessage(errorMessage);
