@@ -10,14 +10,15 @@ public:
     bool isEqual(const App &o) const;
 
 public:
-    bool useGroupPerm = true;
-    bool applyChild = false;
-    bool lanOnly = false;
-    bool logBlocked = true;
-    bool logConn = true;
-    bool blocked = false;
-    bool killProcess = false;
-    bool alerted = false;
+    bool isWildcard : 1 = false;
+    bool useGroupPerm : 1 = true;
+    bool applyChild : 1 = false;
+    bool lanOnly : 1 = false;
+    bool logBlocked : 1 = true;
+    bool logConn : 1 = true;
+    bool blocked : 1 = false;
+    bool killProcess : 1 = false;
+    bool alerted : 1 = false;
 
     int groupIndex = 0;
 

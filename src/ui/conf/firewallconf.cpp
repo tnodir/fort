@@ -196,7 +196,9 @@ const AppGroup *FirewallConf::appGroupAt(int index) const
         static const AppGroup g_nullAppGroup;
         return &g_nullAppGroup;
     }
-    return appGroups().at(index);
+
+    const AppGroup *appGroup = appGroups().at(index);
+    return appGroup;
 }
 
 QStringList FirewallConf::appGroupNames() const

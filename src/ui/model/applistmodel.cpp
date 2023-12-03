@@ -212,7 +212,7 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
 
         switch (column) {
         case 0:
-            return appInfoCache()->appIcon(appRow.appPath);
+            return appIcon(appRow);
         case 1:
             return appStateIcon(appRow);
         }
@@ -270,6 +270,15 @@ QVariant AppListModel::appGroupColor(const AppRow &appRow) const
     return {};
 }
 
+QIcon AppListModel::appIcon(const AppRow &appRow) const
+{
+    if (appRow.isWildcard) {
+        return IconCache::icon(":/icons/asterisk_orange.png");
+    }
+
+    return appInfoCache()->appIcon(appRow.appPath);
+}
+
 QString AppListModel::appStateText(const AppRow &appRow)
 {
     if (appRow.killProcess)
@@ -310,16 +319,17 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     appRow.appOriginPath = stmt.columnText(2);
     appRow.appPath = stmt.columnText(3);
     appRow.appName = stmt.columnText(4);
-    appRow.useGroupPerm = stmt.columnBool(5);
-    appRow.applyChild = stmt.columnBool(6);
-    appRow.lanOnly = stmt.columnBool(7);
-    appRow.logBlocked = stmt.columnBool(8);
-    appRow.logConn = stmt.columnBool(9);
-    appRow.blocked = stmt.columnBool(10);
-    appRow.killProcess = stmt.columnBool(11);
-    appRow.alerted = stmt.columnBool(12);
-    appRow.endTime = stmt.columnDateTime(13);
-    appRow.creatTime = stmt.columnDateTime(14);
+    appRow.isWildcard = stmt.columnBool(5);
+    appRow.useGroupPerm = stmt.columnBool(6);
+    appRow.applyChild = stmt.columnBool(7);
+    appRow.lanOnly = stmt.columnBool(8);
+    appRow.logBlocked = stmt.columnBool(9);
+    appRow.logConn = stmt.columnBool(10);
+    appRow.blocked = stmt.columnBool(11);
+    appRow.killProcess = stmt.columnBool(12);
+    appRow.alerted = stmt.columnBool(13);
+    appRow.endTime = stmt.columnDateTime(14);
+    appRow.creatTime = stmt.columnDateTime(15);
 
     return true;
 }
@@ -374,6 +384,7 @@ QString AppListModel::sqlBase() const
            "    t.origin_path,"
            "    t.path,"
            "    t.name,"
+           "    t.is_wildcard,"
            "    t.use_group_perm,"
            "    t.apply_child,"
            "    t.lan_only,"
@@ -404,7 +415,7 @@ QString AppListModel::sqlOrderColumn() const
     case 0: // Name
         columnsStr = "t.name " + sqlOrderAsc() + ", t.path";
         break;
-    case 1: // State
+    case 1: // Action
         columnsStr = "alerted DESC, t.kill_process, t.blocked " + sqlOrderAsc() + ", t.app_id";
         break;
     case 2: // Group
@@ -413,8 +424,8 @@ QString AppListModel::sqlOrderColumn() const
     case 3: // File Path
         columnsStr = "t.path";
         break;
-    default: // Creation Time
-        columnsStr = "t.app_id"; // App ID
+    default: // Creation Time ~ App ID
+        columnsStr = "t.app_id";
         break;
     }
 

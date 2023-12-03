@@ -131,6 +131,7 @@ void ProgramsWindow::retranslateUi()
     m_actBlockApp->setText(tr("Block"));
     m_actKillApp->setText(tr("Kill Process"));
     m_actAddApp->setText(tr("Add"));
+    m_actAddWildcard->setText(tr("Add Wildcard"));
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
     m_actPurgeApps->setText(tr("Purge Obsolete"));
@@ -257,6 +258,9 @@ void ProgramsWindow::setupEditMenu()
     m_actAddApp = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
     m_actAddApp->setShortcut(Qt::Key_Plus);
 
+    m_actAddWildcard = editMenu->addAction(QString());
+    m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
+
     m_actEditApp = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditApp->setShortcut(Qt::Key_Enter);
 
@@ -277,6 +281,7 @@ void ProgramsWindow::setupEditMenu()
     connect(m_actKillApp, &QAction::triggered, this,
             [&] { updateSelectedApps(/*blocked=*/true, /*killProcess=*/true); });
     connect(m_actAddApp, &QAction::triggered, this, &ProgramsWindow::addNewProgram);
+    connect(m_actAddWildcard, &QAction::triggered, this, &ProgramsWindow::addNewWildcard);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
@@ -417,6 +422,14 @@ void ProgramsWindow::dropEvent(QDropEvent *event)
 void ProgramsWindow::addNewProgram()
 {
     openAppEditForm({});
+}
+
+void ProgramsWindow::addNewWildcard()
+{
+    AppRow appRow;
+    appRow.isWildcard = true;
+
+    openAppEditForm(appRow);
 }
 
 void ProgramsWindow::editSelectedPrograms()

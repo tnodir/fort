@@ -71,6 +71,7 @@ private:
     void setupAppEditForm();
 
     void addNewProgram();
+    void addNewWildcard();
     void editSelectedPrograms();
     void openAppEditForm(const AppRow &appRow, const QVector<qint64> &appIdList = {});
 
@@ -91,6 +92,7 @@ private:
     QAction *m_actBlockApp = nullptr;
     QAction *m_actKillApp = nullptr;
     QAction *m_actAddApp = nullptr;
+    QAction *m_actAddWildcard = nullptr;
     QAction *m_actEditApp = nullptr;
     QAction *m_actRemoveApp = nullptr;
     QAction *m_actPurgeApps = nullptr;

@@ -71,18 +71,19 @@ bool processConfManager_addApp(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
     App app;
-    app.useGroupPerm = p.args.value(0).toBool();
-    app.applyChild = p.args.value(1).toBool();
-    app.lanOnly = p.args.value(2).toBool();
-    app.logBlocked = p.args.value(3).toBool();
-    app.logConn = p.args.value(4).toBool();
-    app.blocked = p.args.value(5).toBool();
-    app.killProcess = p.args.value(6).toBool();
-    app.groupIndex = p.args.value(7).toInt();
-    app.appOriginPath = p.args.value(8).toString();
-    app.appPath = p.args.value(9).toString();
-    app.appName = p.args.value(10).toString();
-    app.endTime = p.args.value(11).toDateTime();
+    app.isWildcard = p.args.value(0).toBool();
+    app.useGroupPerm = p.args.value(1).toBool();
+    app.applyChild = p.args.value(2).toBool();
+    app.lanOnly = p.args.value(3).toBool();
+    app.logBlocked = p.args.value(4).toBool();
+    app.logConn = p.args.value(5).toBool();
+    app.blocked = p.args.value(6).toBool();
+    app.killProcess = p.args.value(7).toBool();
+    app.groupIndex = p.args.value(8).toInt();
+    app.appOriginPath = p.args.value(9).toString();
+    app.appPath = p.args.value(10).toString();
+    app.appName = p.args.value(11).toString();
+    app.endTime = p.args.value(12).toDateTime();
 
     return confManager->addApp(app);
 }
@@ -103,19 +104,20 @@ bool processConfManager_updateApp(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
     App app;
-    app.useGroupPerm = p.args.value(0).toBool();
-    app.applyChild = p.args.value(1).toBool();
-    app.lanOnly = p.args.value(2).toBool();
-    app.logBlocked = p.args.value(3).toBool();
-    app.logConn = p.args.value(4).toBool();
-    app.blocked = p.args.value(5).toBool();
-    app.killProcess = p.args.value(6).toBool();
-    app.groupIndex = p.args.value(7).toInt();
-    app.appId = p.args.value(8).toLongLong();
-    app.appOriginPath = p.args.value(9).toString();
-    app.appPath = p.args.value(10).toString();
-    app.appName = p.args.value(11).toString();
-    app.endTime = p.args.value(12).toDateTime();
+    app.isWildcard = p.args.value(0).toBool();
+    app.useGroupPerm = p.args.value(1).toBool();
+    app.applyChild = p.args.value(2).toBool();
+    app.lanOnly = p.args.value(3).toBool();
+    app.logBlocked = p.args.value(4).toBool();
+    app.logConn = p.args.value(5).toBool();
+    app.blocked = p.args.value(6).toBool();
+    app.killProcess = p.args.value(7).toBool();
+    app.groupIndex = p.args.value(8).toInt();
+    app.appId = p.args.value(9).toLongLong();
+    app.appOriginPath = p.args.value(10).toString();
+    app.appPath = p.args.value(11).toString();
+    app.appName = p.args.value(12).toString();
+    app.endTime = p.args.value(13).toDateTime();
 
     return confManager->updateApp(app);
 }

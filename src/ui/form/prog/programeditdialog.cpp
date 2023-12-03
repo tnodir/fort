@@ -66,7 +66,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_appIdList = appIdList;
 
     const bool isSingleSelection = (appIdList.size() <= 1);
-    const bool isPathEditable = isSingleSelection && appRow.appId == 0;
+    const bool isPathEditable = isSingleSelection && (appRow.appId == 0 || appRow.isWildcard);
 
     m_editPath->setText(isSingleSelection ? appRow.appOriginPath : QString());
     m_editPath->setReadOnly(!isPathEditable);

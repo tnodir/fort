@@ -67,6 +67,8 @@ private:
     QVariant appGroupName(const AppRow &appRow) const;
     QVariant appGroupColor(const AppRow &appRow) const;
 
+    QIcon appIcon(const AppRow &appRow) const;
+
     static QString appStateText(const AppRow &appRow);
     static QColor appStateColor(const AppRow &appRow);
     static QIcon appStateIcon(const AppRow &appRow);

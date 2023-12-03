@@ -126,6 +126,7 @@ CREATE TABLE app(
   origin_path TEXT,
   path TEXT NOT NULL,
   name TEXT,
+  is_wildcard BOOLEAN NOT NULL DEFAULT 0,
   use_group_perm BOOLEAN NOT NULL DEFAULT 1,
   apply_child BOOLEAN NOT NULL DEFAULT 0,
   lan_only BOOLEAN NOT NULL DEFAULT 0,
