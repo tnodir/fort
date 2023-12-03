@@ -42,6 +42,7 @@ private:
 
     void retranslateUi();
     void retranslateAppBlockInHours();
+    void retranslateWindowTitle();
 
     void setupUi();
     QLayout *setupAppLayout();
@@ -55,12 +56,16 @@ private:
     void setupAllowEclusiveGroup();
     void setupAllowConnections();
 
+    void fillEditName();
+
     bool save();
     bool saveApp(App &app);
     bool saveMulti(App &app);
 
     bool validateFields() const;
     void fillApp(App &app) const;
+
+    bool isWildcard() const;
 
 private:
     ProgramsController *m_ctrl = nullptr;

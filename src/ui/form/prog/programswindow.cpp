@@ -258,7 +258,7 @@ void ProgramsWindow::setupEditMenu()
     m_actAddApp = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
     m_actAddApp->setShortcut(Qt::Key_Plus);
 
-    m_actAddWildcard = editMenu->addAction(QString());
+    m_actAddWildcard = editMenu->addAction(IconCache::icon(":/icons/asterisk_orange.png"), QString());
     m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditApp = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());

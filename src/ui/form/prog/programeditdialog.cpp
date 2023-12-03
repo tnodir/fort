@@ -94,8 +94,10 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_cbBlockAppNone->setChecked(appRow.endTime.isNull());
 
     if (isSingleSelection && appRow.appName.isEmpty()) {
-        m_btGetName->click(); // Auto-fill the name
+        fillEditName(); // Auto-fill the name
     }
+
+    retranslateWindowTitle();
 }
 
 void ProgramEditDialog::activate()
@@ -143,7 +145,7 @@ void ProgramEditDialog::retranslateUi()
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
-    this->setWindowTitle(tr("Edit Program"));
+    retranslateWindowTitle();
 }
 
 void ProgramEditDialog::retranslateAppBlockInHours()
@@ -153,6 +155,11 @@ void ProgramEditDialog::retranslateAppBlockInHours()
 
     m_cscBlockAppIn->setNames(list);
     m_cscBlockAppIn->spinBox()->setSuffix(tr(" hour(s)"));
+}
+
+void ProgramEditDialog::retranslateWindowTitle()
+{
+    this->setWindowTitle(isWildcard() ? tr("Edit Wildcard") : tr("Edit Program"));
 }
 
 void ProgramEditDialog::setupUi()
@@ -262,7 +269,7 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
 
         if (!filePath.isEmpty()) {
             m_editPath->setText(filePath);
-            m_btGetName->click(); // Auto-fill the name
+            fillEditName(); // Auto-fill the name
         }
     });
 
@@ -278,17 +285,8 @@ QLayout *ProgramEditDialog::setupAppNameLayout()
 
     m_editName = new QLineEdit();
 
-    const auto updateAppName = [&] {
-        const auto appPath = m_editPath->text();
-        if (appPath.isEmpty())
-            return;
-
-        const QString appName = IoC<AppInfoCache>()->appName(appPath);
-        m_editName->setText(appName);
-    };
-
-    m_btGetName =
-            ControlUtil::createFlatToolButton(":/icons/arrow_refresh_small.png", updateAppName);
+    m_btGetName = ControlUtil::createFlatToolButton(
+            ":/icons/arrow_refresh_small.png", [&] { fillEditName(); });
 
     layout->addWidget(m_editName);
     layout->addWidget(m_btGetName);
@@ -418,6 +416,16 @@ void ProgramEditDialog::setupAllowConnections()
     });
 }
 
+void ProgramEditDialog::fillEditName()
+{
+    const auto appPath = m_editPath->text();
+    if (appPath.isEmpty())
+        return;
+
+    const QString appName = IoC<AppInfoCache>()->appName(appPath);
+    m_editName->setText(appName);
+}
+
 bool ProgramEditDialog::save()
 {
     const int appIdsCount = m_appIdList.size();
@@ -515,4 +523,9 @@ void ProgramEditDialog::fillApp(App &app) const
             app.endTime = m_dteBlockAppAt->dateTime();
         }
     }
+}
+
+bool ProgramEditDialog::isWildcard() const
+{
+    return m_appRow.isWildcard;
 }
