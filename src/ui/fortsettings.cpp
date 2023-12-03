@@ -334,7 +334,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setLogAlertedBlockedIp(iniBool("logAlertedBlockedIp"));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
-    conf.setAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
+    conf.setupAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
     ini()->endGroup();
 
     ini()->beginGroup("stat");

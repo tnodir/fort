@@ -173,6 +173,12 @@ void FirewallConf::setAppGroupBits(quint32 groupBits)
     m_appGroupBits = groupBits;
 }
 
+void FirewallConf::setupAppGroupBits(quint32 groupBits)
+{
+    setAppGroupBits(groupBits);
+    applyAppGroupBits();
+}
+
 bool FirewallConf::appGroupWildcard() const
 {
     for (const AppGroup *appGroup : appGroups()) {
@@ -353,8 +359,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_activePeriodFrom = o.activePeriodFrom();
     m_activePeriodTo = o.activePeriodTo();
 
-    m_appGroupBits = o.appGroupBits();
-    applyAppGroupBits();
+    setupAppGroupBits(o.appGroupBits());
 }
 
 void FirewallConf::copy(const FirewallConf &o)
@@ -433,7 +438,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_activePeriodFrom = map["activePeriodFrom"].toString();
     m_activePeriodTo = map["activePeriodTo"].toString();
 
-    m_appGroupBits = map["appGroupBits"].toUInt();
+    setupAppGroupBits(map["appGroupBits"].toUInt());
 }
 
 QVariant FirewallConf::addressesToVariant() const
@@ -541,7 +546,6 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
 
     if (flagsEdited()) {
         flagsFromVariant(map["flags"]);
-        applyAppGroupBits();
     }
 
     if (iniEdited() || taskEdited()) {
