@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.10.3, 2023-12-04:
+- UI: Programs: Add ability to add Wildcard paths.
+- UI: Programs: Add "Groups" button to open Options: "App Groups" tab.
+- UI: AppGroup: Use "wildcard search" for "Kill Process" option.
+- Driver: fortconf: Search by wildcard first, then by prefix.
+
 v3.10.2, 2023-11-28:
 - UI: Options: IP Addresses: Fix saving the "Include/Exclude All" flags.
 - UI: Options: Tray: Add "Maximum count of Groups in menu" option.
