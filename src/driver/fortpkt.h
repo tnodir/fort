@@ -171,6 +171,8 @@ FORT_API void fort_pending_open(PFORT_PENDING pending);
 
 FORT_API void fort_pending_close(PFORT_PENDING pending);
 
+FORT_API void fort_pending_clear(PFORT_PENDING pending);
+
 FORT_API BOOL fort_pending_add_packet(
         PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx);
 

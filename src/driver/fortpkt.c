@@ -1248,6 +1248,12 @@ static NTSTATUS fort_pending_proc_add_packet(PFORT_PENDING pending, PCFORT_CALLO
     return status;
 }
 
+static void fort_pending_init(PFORT_PENDING pending)
+{
+    tommy_arrayof_init(&pending->procs, sizeof(FORT_PENDING_PROC));
+    tommy_arrayof_init(&pending->packets, sizeof(FORT_PENDING_PACKET));
+}
+
 FORT_API void fort_pending_open(PFORT_PENDING pending)
 {
     FwpsInjectionHandleCreate0(
@@ -1255,19 +1261,47 @@ FORT_API void fort_pending_open(PFORT_PENDING pending)
     FwpsInjectionHandleCreate0(
             AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &pending->injection_transport6_id);
 
-    tommy_arrayof_init(&pending->procs, sizeof(FORT_PENDING_PROC));
-    tommy_arrayof_init(&pending->packets, sizeof(FORT_PENDING_PACKET));
+    fort_pending_init(pending);
 
     KeInitializeSpinLock(&pending->lock);
 }
 
-FORT_API void fort_pending_close(PFORT_PENDING pending)
+static void fort_pending_done(PFORT_PENDING pending)
 {
     tommy_arrayof_done(&pending->procs);
     tommy_arrayof_done(&pending->packets);
+}
+
+FORT_API void fort_pending_close(PFORT_PENDING pending)
+{
+    fort_pending_done(pending);
 
     FwpsInjectionHandleDestroy0(pending->injection_transport4_id);
     FwpsInjectionHandleDestroy0(pending->injection_transport6_id);
+}
+
+static void fort_pending_clear_locked(PFORT_PENDING pending)
+{
+    if (pending->proc_count == 0)
+        return;
+
+    pending->proc_count = 0;
+    pending->proc_free = NULL;
+    pending->procs_head = NULL;
+    pending->packet_free = NULL;
+
+    fort_pending_done(pending);
+    fort_pending_init(pending);
+}
+
+FORT_API void fort_pending_clear(PFORT_PENDING pending)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
+
+    fort_pending_clear_locked(pending);
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 FORT_API BOOL fort_pending_add_packet(

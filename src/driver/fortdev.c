@@ -7,6 +7,7 @@
 
 #include "fortcout.h"
 #include "fortdbg.h"
+#include "fortpkt.h"
 #include "fortps.h"
 #include "fortscb.h"
 #include "forttrace.h"
@@ -117,6 +118,9 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 
         fort_device_reauth_force(old_conf_flags);
     }
+
+    /* Clear pending packets */
+    fort_pending_clear(&fort_device()->pending);
 
     /* Clear buffer */
     fort_buffer_clear(&fort_device()->buffer);
