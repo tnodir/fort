@@ -307,11 +307,12 @@ FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const PVOID pa
     if (app_flags.v != 0)
         return app_flags;
 
-    app_flags = fort_conf_app_prefix_find(conf, path, path_len);
+    app_flags = fort_conf_app_wild_find(conf, path, path_len);
     if (app_flags.v != 0)
         return app_flags;
 
-    return fort_conf_app_wild_find(conf, path, path_len);
+    app_flags = fort_conf_app_prefix_find(conf, path, path_len);
+    return app_flags;
 }
 
 static BOOL fort_conf_app_blocked_check(const PFORT_CONF conf, INT8 *block_reason, BOOL app_found,
