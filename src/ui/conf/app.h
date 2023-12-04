@@ -8,6 +8,7 @@ class App
 {
 public:
     bool isEqual(const App &o) const;
+    bool isFlagsEqual(const App &o) const;
 
 public:
     bool isWildcard : 1 = false;
