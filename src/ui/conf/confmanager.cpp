@@ -168,11 +168,11 @@ const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1 RETURNING pa
 const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
 
 const char *const sqlUpdateApp = "UPDATE app"
-                                 "  SET app_group_id = ?2, origin_path = ?3, name = ?4,"
-                                 "    is_wildcard = ?5, use_group_perm = ?6,"
-                                 "    apply_child = ?7, lan_only = ?8,"
-                                 "    log_blocked = ?9, log_conn = ?10,"
-                                 "    blocked = ?11, kill_process = ?12, end_time = ?13"
+                                 "  SET app_group_id = ?2, origin_path = ?3, path = ?4,"
+                                 "    name = ?5, is_wildcard = ?6, use_group_perm = ?7,"
+                                 "    apply_child = ?8, lan_only = ?9,"
+                                 "    log_blocked = ?10, log_conn = ?11,"
+                                 "    blocked = ?12, kill_process = ?13, end_time = ?14"
                                  "  WHERE app_id = ?1;";
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
@@ -974,9 +974,10 @@ bool ConfManager::updateApp(const App &app)
     sqliteDb()->beginTransaction();
 
     const auto vars = QVariantList()
-            << app.appId << appGroup->id() << app.appOriginPath << app.appName << app.isWildcard
-            << app.useGroupPerm << app.applyChild << app.lanOnly << app.logBlocked << app.logConn
-            << app.blocked << app.killProcess << (!app.endTime.isNull() ? app.endTime : QVariant());
+            << app.appId << appGroup->id() << app.appOriginPath << app.appPath << app.appName
+            << app.isWildcard << app.useGroupPerm << app.applyChild << app.lanOnly << app.logBlocked
+            << app.logConn << app.blocked << app.killProcess
+            << (!app.endTime.isNull() ? app.endTime : QVariant());
 
     sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
 

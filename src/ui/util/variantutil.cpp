@@ -23,3 +23,8 @@ QVector<qint64> VariantUtil::listToVector(const QVariantList &list)
 
     return array;
 }
+
+void VariantUtil::addToList(QVariantList &list, const QVariant &v)
+{
+    list.push_back(v); // append() merges the list, does not insert
+}

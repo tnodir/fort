@@ -11,6 +11,8 @@ public:
     static QVariantList vectorToList(const QVector<qint64> &array);
 
     static QVector<qint64> listToVector(const QVariantList &list);
+
+    static void addToList(QVariantList &list, const QVariant &v);
 };
 
 #endif // VARIANTUTIL_H
