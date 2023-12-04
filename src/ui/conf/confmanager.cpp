@@ -114,50 +114,36 @@ const char *const sqlUpdateTask = "UPDATE task"
 
 const char *const sqlSelectAppPaths = "SELECT app_id, path FROM app;";
 
-const char *const sqlSelectAppById = "SELECT"
-                                     "    g.order_index as group_index,"
-                                     "    t.origin_path,"
-                                     "    t.path,"
-                                     "    t.is_wildcard,"
-                                     "    t.use_group_perm,"
-                                     "    t.apply_child,"
-                                     "    t.lan_only,"
-                                     "    t.log_blocked,"
-                                     "    t.log_conn,"
-                                     "    t.blocked,"
-                                     "    t.kill_process,"
-                                     "    (alert.app_id IS NOT NULL) as alerted"
-                                     "  FROM app t"
+#define SELECT_APP_FIELDS                                                                          \
+    "    t.app_id,"                                                                                \
+    "    t.origin_path,"                                                                           \
+    "    t.path,"                                                                                  \
+    "    t.is_wildcard,"                                                                           \
+    "    t.use_group_perm,"                                                                        \
+    "    t.apply_child,"                                                                           \
+    "    t.lan_only,"                                                                              \
+    "    t.log_blocked,"                                                                           \
+    "    t.log_conn,"                                                                              \
+    "    t.blocked,"                                                                               \
+    "    t.kill_process,"                                                                          \
+    "    g.order_index as group_index,"                                                            \
+    "    (alert.app_id IS NOT NULL) as alerted"
+
+const char *const sqlSelectAppById = "SELECT" SELECT_APP_FIELDS "  FROM app t"
                                      "    JOIN app_group g ON g.app_group_id = t.app_group_id"
                                      "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
                                      "    WHERE t.app_id = ?1;";
 
-const char *const sqlSelectApps = "SELECT"
-                                  "    g.order_index as group_index,"
-                                  "    t.origin_path,"
-                                  "    t.path,"
-                                  "    t.is_wildcard,"
-                                  "    t.use_group_perm,"
-                                  "    t.apply_child,"
-                                  "    t.lan_only,"
-                                  "    t.log_blocked,"
-                                  "    t.log_conn,"
-                                  "    t.blocked,"
-                                  "    t.kill_process,"
-                                  "    (alert.app_id IS NOT NULL) as alerted"
-                                  "  FROM app t"
+const char *const sqlSelectApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
                                   "    JOIN app_group g ON g.app_group_id = t.app_group_id"
                                   "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id;";
 
 const char *const sqlSelectMinEndApp = "SELECT MIN(end_time) FROM app"
                                        "  WHERE end_time != 0 AND blocked = 0;";
 
-const char *const sqlSelectEndedApps = "SELECT t.app_id, g.order_index as group_index,"
-                                       "    t.origin_path, t.path, t.name,"
-                                       "    t.is_wildcard, t.use_group_perm,"
-                                       "    t.apply_child, t.lan_only, t.log_blocked, t.log_conn"
-                                       "  FROM app t"
+const char *const sqlSelectEndedApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
                                        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
+                                       "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
                                        "  WHERE end_time <= ?1 AND blocked = 0;";
 
 const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1;";
@@ -177,7 +163,7 @@ const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, pat
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
 
-const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1 RETURNING path;";
+const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1 RETURNING path, is_wildcard;";
 
 const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
 
@@ -897,13 +883,28 @@ qint64 ConfManager::appIdByPath(const QString &appPath)
 
 bool ConfManager::addApp(const App &app)
 {
-    if (!updateDriverUpdateApp(app))
+    if (!addOrUpdateApp(app))
         return false;
 
-    return addOrUpdateApp(app);
+    updateDriverUpdateAppConf(app);
+
+    return true;
 }
 
-bool ConfManager::deleteApp(qint64 appId)
+void ConfManager::deleteApps(const QVector<qint64> &appIdList)
+{
+    bool isWildcard = false;
+
+    for (const qint64 appId : appIdList) {
+        deleteApp(appId, isWildcard);
+    }
+
+    if (isWildcard) {
+        updateDriverConf();
+    }
+}
+
+bool ConfManager::deleteApp(qint64 appId, bool &isWildcard)
 {
     bool ok = false;
 
@@ -911,7 +912,8 @@ bool ConfManager::deleteApp(qint64 appId)
 
     const auto vars = QVariantList() << appId;
 
-    const QString appPath = sqliteDb()->executeEx(sqlDeleteApp, vars, 1, &ok).toString();
+    const auto resList = sqliteDb()->executeEx(sqlDeleteApp, vars, 2, &ok).toList();
+
     if (ok) {
         sqliteDb()->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
     }
@@ -919,7 +921,13 @@ bool ConfManager::deleteApp(qint64 appId)
     commitTransaction(ok);
 
     if (ok) {
-        updateDriverDeleteApp(appPath);
+        const QString appPath = resList.at(0).toString();
+
+        if (resList.at(1).toBool()) {
+            isWildcard = true;
+        } else {
+            updateDriverDeleteApp(appPath);
+        }
 
         emitAppChanged();
     }
@@ -950,9 +958,7 @@ bool ConfManager::purgeApps()
     }
 
     // Delete apps
-    for (const qint64 appId : appIdList) {
-        deleteApp(appId);
-    }
+    deleteApps(appIdList);
 
     return true;
 }
@@ -961,9 +967,6 @@ bool ConfManager::updateApp(const App &app)
 {
     const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
     if (appGroup->isNull())
-        return false;
-
-    if (!updateDriverUpdateApp(app))
         return false;
 
     bool ok = false;
@@ -976,6 +979,7 @@ bool ConfManager::updateApp(const App &app)
             << app.blocked << app.killProcess << (!app.endTime.isNull() ? app.endTime : QVariant());
 
     sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
+
     if (ok) {
         sqliteDb()->executeEx(sqlDeleteAppAlert, { app.appId }, 0, &ok);
     }
@@ -988,37 +992,53 @@ bool ConfManager::updateApp(const App &app)
         }
 
         emitAppUpdated();
+
+        updateDriverUpdateAppConf(app);
     }
 
     return ok;
 }
 
-bool ConfManager::updateAppBlocked(qint64 appId, bool blocked, bool killProcess)
+void ConfManager::updateAppsBlocked(
+        const QVector<qint64> &appIdList, bool blocked, bool killProcess)
 {
-    bool changed = false;
-    if (!updateDriverAppBlocked(appId, blocked, killProcess, changed))
+    bool isWildcard = (appIdList.size() > 7);
+
+    for (const qint64 appId : appIdList) {
+        updateAppBlocked(appId, blocked, killProcess, isWildcard);
+    }
+
+    if (isWildcard) {
+        updateDriverConf();
+    }
+}
+
+bool ConfManager::updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard)
+{
+    App app;
+    app.appId = appId;
+    if (!loadAppById(app))
         return false;
 
-    bool ok = true;
+    const bool wasAlerted = app.alerted;
+    app.alerted = false;
 
-    sqliteDb()->beginTransaction();
+    if (!wasAlerted && app.blocked == blocked && app.killProcess == killProcess)
+        return true;
 
-    const auto vars = QVariantList() << appId << blocked << killProcess;
+    app.blocked = blocked;
+    app.killProcess = killProcess;
 
-    if (changed) {
-        sqliteDb()->executeEx(sqlUpdateAppBlocked, vars, 0, &ok);
+    if (!saveAppBlocked(app))
+        return false;
+
+    if (app.isWildcard) {
+        isWildcard = true;
+    } else {
+        updateDriverUpdateApp(app);
     }
-    if (ok) {
-        sqliteDb()->executeEx(sqlDeleteAppAlert, { appId }, 0, &ok);
-    }
 
-    commitTransaction(ok);
-
-    if (ok) {
-        emitAppUpdated();
-    }
-
-    return ok;
+    return true;
 }
 
 bool ConfManager::updateAppName(qint64 appId, const QString &appName)
@@ -1046,24 +1066,36 @@ bool ConfManager::walkApps(const std::function<walkAppsCallback> &func)
 
     while (stmt.step() == SqliteStmt::StepRow) {
         App app;
-        app.groupIndex = stmt.columnInt(0);
-        app.appOriginPath = stmt.columnText(1);
-        app.appPath = stmt.columnText(2);
-        app.isWildcard = stmt.columnBool(3);
-        app.useGroupPerm = stmt.columnBool(4);
-        app.applyChild = stmt.columnBool(5);
-        app.lanOnly = stmt.columnBool(6);
-        app.logBlocked = stmt.columnBool(7);
-        app.logConn = stmt.columnBool(8);
-        app.blocked = stmt.columnBool(9);
-        app.killProcess = stmt.columnBool(10);
-        app.alerted = stmt.columnBool(11);
+        fillApp(app, stmt);
 
         if (!func(app))
             return false;
     }
 
     return true;
+}
+
+bool ConfManager::saveAppBlocked(const App &app)
+{
+    bool ok = true;
+
+    sqliteDb()->beginTransaction();
+
+    const auto vars = QVariantList() << app.appId << app.blocked << app.killProcess;
+
+    sqliteDb()->executeEx(sqlUpdateAppBlocked, vars, 0, &ok);
+
+    if (ok) {
+        sqliteDb()->executeEx(sqlDeleteAppAlert, { app.appId }, 0, &ok);
+    }
+
+    commitTransaction(ok);
+
+    if (ok) {
+        emitAppUpdated();
+    }
+
+    return ok;
 }
 
 void ConfManager::updateAppEndTimes()
@@ -1076,17 +1108,8 @@ void ConfManager::updateAppEndTimes()
 
     while (stmt.step() == SqliteStmt::StepRow) {
         App app;
-        app.appId = stmt.columnInt64(0);
-        app.groupIndex = stmt.columnInt(1);
-        app.appOriginPath = stmt.columnText(2);
-        app.appPath = stmt.columnText(3);
-        app.appName = stmt.columnText(4);
-        app.isWildcard = stmt.columnBool(5);
-        app.useGroupPerm = stmt.columnBool(6);
-        app.applyChild = stmt.columnBool(7);
-        app.lanOnly = stmt.columnBool(8);
-        app.logBlocked = stmt.columnBool(9);
-        app.logConn = stmt.columnBool(10);
+        fillApp(app, stmt);
+
         app.blocked = true;
         app.killProcess = false;
 
@@ -1364,19 +1387,24 @@ bool ConfManager::addOrUpdateApp(const App &app)
     return ok;
 }
 
-bool ConfManager::updateDriverAppBlocked(
-        qint64 appId, bool blocked, bool killProcess, bool &changed)
+bool ConfManager::loadAppById(App &app)
 {
     SqliteStmt stmt;
     if (!sqliteDb()->prepare(stmt, sqlSelectAppById))
         return false;
 
-    stmt.bindInt64(1, appId);
+    stmt.bindInt64(1, app.appId);
     if (stmt.step() != SqliteStmt::StepRow)
         return false;
 
-    App app;
-    app.groupIndex = stmt.columnInt(0);
+    fillApp(app, stmt);
+
+    return true;
+}
+
+void ConfManager::fillApp(App &app, const SqliteStmt &stmt)
+{
+    app.appId = stmt.columnInt64(0);
     app.appOriginPath = stmt.columnText(1);
     app.appPath = stmt.columnText(2);
     app.isWildcard = stmt.columnBool(3);
@@ -1387,27 +1415,8 @@ bool ConfManager::updateDriverAppBlocked(
     app.logConn = stmt.columnBool(8);
     app.blocked = stmt.columnBool(9);
     app.killProcess = stmt.columnBool(10);
-    const bool wasAlerted = stmt.columnBool(11);
-
-    if (!updateDriverCheckUpdateApp(app, blocked, killProcess, /*force=*/wasAlerted))
-        return false;
-
-    changed = true;
-
-    return true;
-}
-
-bool ConfManager::updateDriverCheckUpdateApp(App &app, bool blocked, bool killProcess, bool force)
-{
-    if (!force) {
-        if (blocked == app.blocked && killProcess == app.killProcess)
-            return true;
-    }
-
-    app.blocked = blocked;
-    app.killProcess = killProcess;
-
-    return updateDriverUpdateApp(app);
+    app.groupIndex = stmt.columnInt(11);
+    app.alerted = stmt.columnBool(12);
 }
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)
@@ -1439,6 +1448,11 @@ bool ConfManager::updateDriverUpdateApp(const App &app, bool remove)
     m_driveMask |= remove ? 0 : confUtil.driveMask();
 
     return true;
+}
+
+bool ConfManager::updateDriverUpdateAppConf(const App &app)
+{
+    return app.isWildcard ? updateDriverConf() : updateDriverUpdateApp(app);
 }
 
 void ConfManager::updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,

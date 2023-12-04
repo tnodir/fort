@@ -258,7 +258,8 @@ void ProgramsWindow::setupEditMenu()
     m_actAddApp = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
     m_actAddApp->setShortcut(Qt::Key_Plus);
 
-    m_actAddWildcard = editMenu->addAction(IconCache::icon(":/icons/asterisk_orange.png"), QString());
+    m_actAddWildcard =
+            editMenu->addAction(IconCache::icon(":/icons/asterisk_orange.png"), QString());
     m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
     m_actEditApp = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
@@ -455,18 +456,12 @@ void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64>
 
 void ProgramsWindow::updateSelectedApps(bool blocked, bool killProcess)
 {
-    const QVector<qint64> appIdList = selectedAppIdList();
-    for (const qint64 appId : appIdList) {
-        confManager()->updateAppBlocked(appId, blocked, killProcess);
-    }
+    confManager()->updateAppsBlocked(selectedAppIdList(), blocked, killProcess);
 }
 
 void ProgramsWindow::deleteSelectedApps()
 {
-    const QVector<qint64> appIdList = selectedAppIdList();
-    for (const qint64 appId : appIdList) {
-        confManager()->deleteApp(appId);
-    }
+    confManager()->deleteApps(selectedAppIdList());
 }
 
 int ProgramsWindow::appListCurrentIndex() const

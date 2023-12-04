@@ -26,7 +26,7 @@ void SqliteStmt::finalize()
     }
 }
 
-QString SqliteStmt::expandedSql()
+QString SqliteStmt::expandedSql() const
 {
     char *sql = sqlite3_expanded_sql(m_stmt);
     const auto sqlStr = QString::fromUtf8(sql);
@@ -184,7 +184,7 @@ bool SqliteStmt::reset()
     return sqlite3_reset(m_stmt) == SQLITE_OK;
 }
 
-bool SqliteStmt::isBusy()
+bool SqliteStmt::isBusy() const
 {
     return sqlite3_stmt_busy(m_stmt) != 0;
 }
@@ -203,43 +203,43 @@ SqliteStmt::StepResult SqliteStmt::step()
     }
 }
 
-int SqliteStmt::dataCount()
+int SqliteStmt::dataCount() const
 {
     return sqlite3_data_count(m_stmt);
 }
 
-int SqliteStmt::columnCount()
+int SqliteStmt::columnCount() const
 {
     return sqlite3_column_count(m_stmt);
 }
 
-QString SqliteStmt::columnName(int column)
+QString SqliteStmt::columnName(int column) const
 {
     const char *name = sqlite3_column_name(m_stmt, column);
     return QString::fromUtf8(name);
 }
 
-qint32 SqliteStmt::columnInt(int column)
+qint32 SqliteStmt::columnInt(int column) const
 {
     return sqlite3_column_int(m_stmt, column);
 }
 
-qint64 SqliteStmt::columnInt64(int column)
+qint64 SqliteStmt::columnInt64(int column) const
 {
     return sqlite3_column_int64(m_stmt, column);
 }
 
-double SqliteStmt::columnDouble(int column)
+double SqliteStmt::columnDouble(int column) const
 {
     return sqlite3_column_double(m_stmt, column);
 }
 
-bool SqliteStmt::columnBool(int column)
+bool SqliteStmt::columnBool(int column) const
 {
     return columnInt(column) != 0;
 }
 
-QString SqliteStmt::columnText(int column)
+QString SqliteStmt::columnText(int column) const
 {
     const char *p = reinterpret_cast<const char *>(sqlite3_column_text(m_stmt, column));
     if (!p || *p == '\0')
@@ -252,19 +252,19 @@ QString SqliteStmt::columnText(int column)
     return QString::fromUtf8(p, bytesCount);
 }
 
-QDateTime SqliteStmt::columnDateTime(int column)
+QDateTime SqliteStmt::columnDateTime(int column) const
 {
     const auto msecs = columnInt64(column);
     return (msecs == 0) ? QDateTime() : QDateTime::fromMSecsSinceEpoch(msecs);
 }
 
-QDateTime SqliteStmt::columnUnixTime(int column)
+QDateTime SqliteStmt::columnUnixTime(int column) const
 {
     const auto secs = columnInt64(column);
     return (secs == 0) ? QDateTime() : QDateTime::fromSecsSinceEpoch(secs);
 }
 
-QByteArray SqliteStmt::columnBlob(int column, bool isRaw)
+QByteArray SqliteStmt::columnBlob(int column, bool isRaw) const
 {
     const char *p = static_cast<const char *>(sqlite3_column_blob(m_stmt, column));
     if (!p)
@@ -277,7 +277,7 @@ QByteArray SqliteStmt::columnBlob(int column, bool isRaw)
     return isRaw ? QByteArray::fromRawData(p, bytesCount) : QByteArray(p, bytesCount);
 }
 
-QVariant SqliteStmt::columnVarBlob(int column)
+QVariant SqliteStmt::columnVarBlob(int column) const
 {
     const QByteArray data = columnBlob(column);
     QDataStream stream(data);
@@ -302,7 +302,7 @@ QVariant SqliteStmt::columnVarBlob(int column)
     }
 }
 
-QVariant SqliteStmt::columnVar(int column)
+QVariant SqliteStmt::columnVar(int column) const
 {
     switch (sqlite3_column_type(m_stmt, column)) {
     case SQLITE_INTEGER:
@@ -322,7 +322,7 @@ QVariant SqliteStmt::columnVar(int column)
     return QVariant();
 }
 
-bool SqliteStmt::columnIsNull(int column)
+bool SqliteStmt::columnIsNull(int column) const
 {
     return sqlite3_column_type(m_stmt, column) == SQLITE_NULL;
 }

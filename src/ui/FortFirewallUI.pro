@@ -192,6 +192,7 @@ SOURCES += \
     util/stringutil.cpp \
     util/textareautil.cpp \
     util/triggertimer.cpp \
+    util/variantutil.cpp \
     util/window/basewindowstatewatcher.cpp \
     util/window/widgetwindow.cpp \
     util/window/widgetwindowstatewatcher.cpp \
@@ -389,6 +390,7 @@ HEADERS += \
     util/stringutil.h \
     util/textareautil.h \
     util/triggertimer.h \
+    util/variantutil.h \
     util/window/basewindowstatewatcher.h \
     util/window/widgetwindow.h \
     util/window/widgetwindowstatewatcher.h \

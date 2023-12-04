@@ -9,6 +9,7 @@
 #include <rpc/rpcmanager.h>
 #include <task/taskmanager.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/variantutil.h>
 
 ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
     ConfManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)
@@ -23,9 +24,10 @@ bool ConfManagerRpc::addApp(const App &app)
                     app.appPath, app.appName, app.endTime });
 }
 
-bool ConfManagerRpc::deleteApp(qint64 appId)
+void ConfManagerRpc::deleteApps(const QVector<qint64> &appIdList)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_deleteApp, { appId });
+    IoC<RpcManager>()->doOnServer(
+            Control::Rpc_ConfManager_deleteApps, { VariantUtil::vectorToList(appIdList) });
 }
 
 bool ConfManagerRpc::purgeApps()
@@ -41,10 +43,11 @@ bool ConfManagerRpc::updateApp(const App &app)
                     app.appOriginPath, app.appPath, app.appName, app.endTime });
 }
 
-bool ConfManagerRpc::updateAppBlocked(qint64 appId, bool blocked, bool killProcess)
+void ConfManagerRpc::updateAppsBlocked(
+        const QVector<qint64> &appIdList, bool blocked, bool killProcess)
 {
-    return IoC<RpcManager>()->doOnServer(
-            Control::Rpc_ConfManager_updateAppBlocked, { appId, blocked, killProcess });
+    IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateAppsBlocked,
+            { VariantUtil::vectorToList(appIdList), blocked, killProcess });
 }
 
 bool ConfManagerRpc::updateAppName(qint64 appId, const QString &appName)

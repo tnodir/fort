@@ -422,7 +422,8 @@ void ProgramEditDialog::fillEditName()
     if (appPath.isEmpty())
         return;
 
-    const QString appName = IoC<AppInfoCache>()->appName(appPath);
+    const QString appName = isWildcard() ? appPath : IoC<AppInfoCache>()->appName(appPath);
+
     m_editName->setText(appName);
 }
 
@@ -500,6 +501,7 @@ bool ProgramEditDialog::validateFields() const
 
 void ProgramEditDialog::fillApp(App &app) const
 {
+    app.isWildcard = isWildcard();
     app.useGroupPerm = m_cbUseGroupPerm->isChecked();
     app.applyChild = m_cbApplyChild->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();

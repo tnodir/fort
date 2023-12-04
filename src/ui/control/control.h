@@ -21,10 +21,10 @@ enum Command : qint8 {
 
     Rpc_ConfManager_saveVariant,
     Rpc_ConfManager_addApp,
-    Rpc_ConfManager_deleteApp,
+    Rpc_ConfManager_deleteApps,
     Rpc_ConfManager_purgeApps,
     Rpc_ConfManager_updateApp,
-    Rpc_ConfManager_updateAppBlocked,
+    Rpc_ConfManager_updateAppsBlocked,
     Rpc_ConfManager_updateAppName,
     Rpc_ConfManager_addZone,
     Rpc_ConfManager_deleteZone,

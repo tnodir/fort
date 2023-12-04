@@ -64,15 +64,24 @@ public:
     void logBlockedApp(const LogEntryBlocked &logEntry);
 
     qint64 appIdByPath(const QString &appPath);
+
     virtual bool addApp(const App &app);
-    virtual bool deleteApp(qint64 appId);
+
+    virtual void deleteApps(const QVector<qint64> &appIdList);
+    bool deleteApp(qint64 appId, bool &isWildcard);
+
     virtual bool purgeApps();
+
     virtual bool updateApp(const App &app);
-    virtual bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess = false);
+
+    virtual void updateAppsBlocked(const QVector<qint64> &appIdList, bool blocked, bool killProcess);
+    bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
+
     virtual bool updateAppName(qint64 appId, const QString &appName);
 
     bool walkApps(const std::function<walkAppsCallback> &func) override;
 
+    bool saveAppBlocked(const App &app);
     void updateAppEndTimes();
 
     virtual bool addZone(Zone &zone);
@@ -127,13 +136,15 @@ private:
     void emitAppUpdated();
 
     bool addOrUpdateApp(const App &app);
-    bool updateDriverAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &changed);
-    bool updateDriverCheckUpdateApp(App &app, bool blocked, bool killProcess, bool force);
+
+    bool loadAppById(App &app);
+    static void fillApp(App &app, const SqliteStmt &stmt);
 
     bool validateConf(const FirewallConf &newConf);
 
     bool updateDriverDeleteApp(const QString &appPath);
     bool updateDriverUpdateApp(const App &app, bool remove = false);
+    bool updateDriverUpdateAppConf(const App &app);
     bool updateDriverZoneFlag(int zoneId, bool enabled);
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);

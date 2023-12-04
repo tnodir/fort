@@ -14,10 +14,11 @@ public:
     explicit ConfManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
     bool addApp(const App &app) override;
-    bool deleteApp(qint64 appId) override;
+    void deleteApps(const QVector<qint64> &appIdList) override;
     bool purgeApps() override;
     bool updateApp(const App &app) override;
-    bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess = false) override;
+    void updateAppsBlocked(
+            const QVector<qint64> &appIdList, bool blocked, bool killProcess) override;
     bool updateAppName(qint64 appId, const QString &appName) override;
 
     bool addZone(Zone &zone) override;

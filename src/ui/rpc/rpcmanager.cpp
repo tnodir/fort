@@ -18,6 +18,7 @@
 #include <rpc/taskmanagerrpc.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
+#include <util/variantutil.h>
 
 namespace {
 
@@ -88,10 +89,11 @@ bool processConfManager_addApp(
     return confManager->addApp(app);
 }
 
-bool processConfManager_deleteApp(
+bool processConfManager_deleteApps(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->deleteApp(p.args.value(0).toLongLong());
+    confManager->deleteApps(VariantUtil::listToVector(p.args.value(0).toList()));
+    return true;
 }
 
 bool processConfManager_purgeApps(
@@ -122,11 +124,12 @@ bool processConfManager_updateApp(
     return confManager->updateApp(app);
 }
 
-bool processConfManager_updateAppBlocked(
+bool processConfManager_updateAppsBlocked(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->updateAppBlocked(
-            p.args.value(0).toLongLong(), p.args.value(1).toBool(), p.args.value(2).toBool());
+    confManager->updateAppsBlocked(VariantUtil::listToVector(p.args.value(0).toList()),
+            p.args.value(1).toBool(), p.args.value(2).toBool());
+    return true;
 }
 
 bool processConfManager_updateAppName(
@@ -201,10 +204,10 @@ using processConfManager_func = bool (*)(
 static processConfManager_func processConfManager_funcList[] = {
     &processConfManager_saveVariant, // Rpc_ConfManager_saveVariant,
     &processConfManager_addApp, // Rpc_ConfManager_addApp,
-    &processConfManager_deleteApp, // Rpc_ConfManager_deleteApp,
+    &processConfManager_deleteApps, // Rpc_ConfManager_deleteApps,
     &processConfManager_purgeApps, // Rpc_ConfManager_purgeApps,
     &processConfManager_updateApp, // Rpc_ConfManager_updateApp,
-    &processConfManager_updateAppBlocked, // Rpc_ConfManager_updateAppBlocked,
+    &processConfManager_updateAppsBlocked, // Rpc_ConfManager_updateAppsBlocked,
     &processConfManager_updateAppName, // Rpc_ConfManager_updateAppName,
     &processConfManager_addZone, // Rpc_ConfManager_addZone,
     &processConfManager_deleteZone, // Rpc_ConfManager_deleteZone,

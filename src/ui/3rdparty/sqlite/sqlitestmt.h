@@ -32,7 +32,7 @@ public:
     bool prepare(struct sqlite3 *db, const char *sql, PrepareFlags flags = PrepareDefault);
     void finalize();
 
-    QString expandedSql();
+    QString expandedSql() const;
 
     int bindParameterIndex(const QString &name) const;
 
@@ -51,25 +51,25 @@ public:
     bool clearBindings();
     bool reset();
 
-    bool isBusy();
+    bool isBusy() const;
 
     SqliteStmt::StepResult step();
 
-    int dataCount();
-    int columnCount();
+    int dataCount() const;
+    int columnCount() const;
 
-    QString columnName(int column = 0);
-    qint32 columnInt(int column = 0);
-    qint64 columnInt64(int column = 0);
-    double columnDouble(int column = 0);
-    bool columnBool(int column = 0);
-    QString columnText(int column = 0);
-    QDateTime columnDateTime(int column = 0);
-    QDateTime columnUnixTime(int column = 0);
-    QByteArray columnBlob(int column = 0, bool isRaw = false);
-    QVariant columnVarBlob(int column = 0);
-    QVariant columnVar(int column = 0);
-    bool columnIsNull(int column = 0);
+    QString columnName(int column = 0) const;
+    qint32 columnInt(int column = 0) const;
+    qint64 columnInt64(int column = 0) const;
+    double columnDouble(int column = 0) const;
+    bool columnBool(int column = 0) const;
+    QString columnText(int column = 0) const;
+    QDateTime columnDateTime(int column = 0) const;
+    QDateTime columnUnixTime(int column = 0) const;
+    QByteArray columnBlob(int column = 0, bool isRaw = false) const;
+    QVariant columnVarBlob(int column = 0) const;
+    QVariant columnVar(int column = 0) const;
+    bool columnIsNull(int column = 0) const;
 
     static void doList(const SqliteStmtList &stmtList);
 
