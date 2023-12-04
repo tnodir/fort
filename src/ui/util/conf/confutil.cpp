@@ -159,7 +159,7 @@ int ConfUtil::write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker,
     const int confIoSize = int(FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF + addressGroupsSize
             + FORT_CONF_STR_DATA_SIZE(conf.appGroups().size() * sizeof(FORT_PERIOD)) // appPeriods
             + FORT_CONF_STR_DATA_SIZE(opt.wildAppsSize)
-            + FORT_CONF_STR_HEADER_SIZE(opt.prefixAppsSize)
+            + FORT_CONF_STR_HEADER_SIZE(opt.prefixAppsMap.size())
             + FORT_CONF_STR_DATA_SIZE(opt.prefixAppsSize)
             + FORT_CONF_STR_DATA_SIZE(opt.exeAppsSize));
 
@@ -571,9 +571,9 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
 
     drvConf->app_periods_n = appPeriodsCount;
 
-    drvConf->wild_apps_n = quint16(opt.wildAppsSize);
-    drvConf->prefix_apps_n = quint16(opt.prefixAppsSize);
-    drvConf->exe_apps_n = quint16(opt.exeAppsSize);
+    drvConf->wild_apps_n = quint16(opt.wildAppsMap.size());
+    drvConf->prefix_apps_n = quint16(opt.prefixAppsMap.size());
+    drvConf->exe_apps_n = quint16(opt.exeAppsMap.size());
 
     drvConf->addr_groups_off = addrGroupsOff;
 
