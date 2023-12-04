@@ -7,7 +7,7 @@
 
 #include <conf/app.h>
 
-using walkAppsCallback = bool(const App &app);
+using walkAppsCallback = bool(App &app);
 
 class ConfAppsWalker
 {

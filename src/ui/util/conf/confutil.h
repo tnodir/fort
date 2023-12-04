@@ -27,6 +27,17 @@ using chars_arr_t = QVector<qint8>;
 using addrranges_arr_t = QVarLengthArray<AddressRange, 2>;
 using appentry_map_t = QMap<QString, quint32>;
 
+struct AppParseOptions
+{
+    quint32 wildAppsSize = 0;
+    quint32 prefixAppsSize = 0;
+    quint32 exeAppsSize = 0;
+
+    appentry_map_t wildAppsMap;
+    appentry_map_t prefixAppsMap;
+    appentry_map_t exeAppsMap;
+};
+
 class ConfUtil : public QObject
 {
     Q_OBJECT
@@ -69,23 +80,15 @@ private:
 
     // Convert app. groups to plain lists
     bool parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &appGroups,
-            chars_arr_t &appPeriods, quint8 &appPeriodsCount, appentry_map_t &wildAppsMap,
-            appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap, quint32 &wildAppsSize,
-            quint32 &prefixAppsSize, quint32 &exeAppsSize);
+            chars_arr_t &appPeriods, quint8 &appPeriodsCount, AppParseOptions &opt);
 
-    bool parseExeApps(
-            ConfAppsWalker *confAppsWalker, appentry_map_t &exeAppsMap, quint32 &exeAppsSize);
+    bool parseExeApps(ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
 
-    bool parseAppsText(App &app, const QString &text, appentry_map_t &wildAppsMap,
-            appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap, quint32 &wildAppsSize,
-            quint32 &prefixAppsSize, quint32 &exeAppsSize);
+    bool parseAppsText(App &app, const QString &text, AppParseOptions &opt);
 
-    bool addParsedApp(App &app, bool isWild, bool isPrefix, appentry_map_t &wildAppsMap,
-            appentry_map_t &prefixAppsMap, appentry_map_t &exeAppsMap, quint32 &wildAppsSize,
-            quint32 &prefixAppsSize, quint32 &exeAppsSize);
+    bool parseAppLine(App &app, const StringView &line, AppParseOptions &opt);
 
-    bool addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint32 &appsSize,
-            bool canOverwrite = true);
+    bool addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint32 &appsSize);
 
     static QString parseAppPath(const StringView line, bool &isWild, bool &isPrefix);
 
@@ -94,9 +97,7 @@ private:
 
     static void writeConf(char *output, const FirewallConf &conf,
             const addrranges_arr_t &addressRanges, const longs_arr_t &addressGroupOffsets,
-            const chars_arr_t &appPeriods, quint8 appPeriodsCount,
-            const appentry_map_t &wildAppsMap, const appentry_map_t &prefixAppsMap,
-            const appentry_map_t &exeAppsMap);
+            const chars_arr_t &appPeriods, quint8 appPeriodsCount, AppParseOptions &opt);
 
     static void writeAppGroupFlags(quint16 *groupBits, quint16 *logBlockedBits,
             quint16 *logConnBits, const FirewallConf &conf);
@@ -117,7 +118,7 @@ private:
     static bool loadAddress4List(const char **data, IpRange &ipRange, uint &bufSize);
     static bool loadAddress6List(const char **data, IpRange &ipRange, uint &bufSize);
 
-    static void writeApps(char **data, const appentry_map_t &apps, bool useHeader = false);
+    static void writeApps(char **data, const appentry_map_t &appsMap, bool useHeader = false);
 
     static void writeShorts(char **data, const shorts_arr_t &array);
     static void writeLongs(char **data, const longs_arr_t &array);
