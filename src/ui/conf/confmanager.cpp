@@ -1021,16 +1021,7 @@ bool ConfManager::updateAppBlocked(qint64 appId, bool blocked, bool killProcess,
     if (!loadAppById(app))
         return false;
 
-    const bool wasAlerted = app.alerted;
-    app.alerted = false;
-
-    if (!wasAlerted && app.blocked == blocked && app.killProcess == killProcess)
-        return true;
-
-    app.blocked = blocked;
-    app.killProcess = killProcess;
-
-    if (!saveAppBlocked(app))
+    if (!prepareAppBlocked(app, blocked, killProcess) || !saveAppBlocked(app))
         return false;
 
     if (app.isWildcard) {
@@ -1038,6 +1029,22 @@ bool ConfManager::updateAppBlocked(qint64 appId, bool blocked, bool killProcess,
     } else {
         updateDriverUpdateApp(app);
     }
+
+    return true;
+}
+
+bool ConfManager::prepareAppBlocked(App &app, bool blocked, bool killProcess)
+{
+    const bool wasAlerted = app.alerted;
+    app.alerted = false;
+
+    if (!wasAlerted) {
+        if (app.blocked == blocked && app.killProcess == killProcess)
+            return false;
+    }
+
+    app.blocked = blocked;
+    app.killProcess = killProcess;
 
     return true;
 }

@@ -66,17 +66,10 @@ public:
     qint64 appIdByPath(const QString &appPath);
 
     virtual bool addApp(const App &app);
-
     virtual void deleteApps(const QVector<qint64> &appIdList);
-    bool deleteApp(qint64 appId, bool &isWildcard);
-
     virtual bool purgeApps();
-
     virtual bool updateApp(const App &app);
-
     virtual void updateAppsBlocked(const QVector<qint64> &appIdList, bool blocked, bool killProcess);
-    bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
-
     virtual bool updateAppName(qint64 appId, const QString &appName);
 
     bool walkApps(const std::function<walkAppsCallback> &func) override;
@@ -127,6 +120,12 @@ protected:
 
     void setConf(FirewallConf *newConf);
     FirewallConf *createConf();
+
+private:
+    bool deleteApp(qint64 appId, bool &isWildcard);
+
+    bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
+    bool prepareAppBlocked(App &app, bool blocked, bool killProcess);
 
 private:
     void setupDefault(FirewallConf &conf) const;
