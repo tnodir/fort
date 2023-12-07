@@ -14,8 +14,8 @@ public:
     QString language() const { return valueText("base/language", defaultLanguage()); }
     void setLanguage(const QString &v) { setValue("base/language", v); }
 
-    bool useSystemLocale() const { return valueBool("base/useSystemLocale"); }
-    void setUseSystemLocale(bool v) { setValue("base/useSystemLocale", v); }
+    bool useSystemLocale() const { return valueBool("base/useSystemLocale", true); }
+    void setUseSystemLocale(bool v) { setValue("base/useSystemLocale", v, true); }
 
     bool hotKeyEnabled() const { return valueBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool v) { setValue("hotKey/enabled", v); }
