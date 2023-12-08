@@ -1180,6 +1180,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <source>Block Internet Traffic</source>
         <translation>Internetdatenverkehr blockieren</translation>
     </message>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1693,16 +1697,16 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Quelle</translation>
     </message>
     <message>
-        <source>Last Run</source>
-        <translation>Zuletzt ausgeführt</translation>
-    </message>
-    <message>
         <source>Last Success</source>
         <translation>Zuletzt erfolgreich</translation>
     </message>
     <message>
         <source>Addresses</source>
         <translation>Adressen</translation>
+    </message>
+    <message>
+        <source>Last Download</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

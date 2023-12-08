@@ -1180,6 +1180,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Block Internet Traffic</source>
         <translation>Блокировать Интернет трафик</translation>
     </message>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation>Редактирование подстановки</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1693,16 +1697,16 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Источник</translation>
     </message>
     <message>
-        <source>Last Run</source>
-        <translation>Последний запуск</translation>
-    </message>
-    <message>
         <source>Last Success</source>
         <translation>Успешный запуск</translation>
     </message>
     <message>
         <source>Addresses</source>
         <translation>Адреса</translation>
+    </message>
+    <message>
+        <source>Last Download</source>
+        <translation>Скачивание</translation>
     </message>
 </context>
 <context>

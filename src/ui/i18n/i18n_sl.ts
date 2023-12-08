@@ -1180,6 +1180,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Block Internet Traffic</source>
         <translation>Onemogoči internetni promet</translation>
     </message>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1693,16 +1697,16 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Vir</translation>
     </message>
     <message>
-        <source>Last Run</source>
-        <translation>Zadnji zagon</translation>
-    </message>
-    <message>
         <source>Last Success</source>
         <translation>Zadnji uspeh</translation>
     </message>
     <message>
         <source>Addresses</source>
         <translation>Naslovi</translation>
+    </message>
+    <message>
+        <source>Last Download</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1180,6 +1180,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Block Internet Traffic</source>
         <translation>Bloquer le trafic Internet</translation>
     </message>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1693,16 +1697,16 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Source</translation>
     </message>
     <message>
-        <source>Last Run</source>
-        <translation>Dernière exécution</translation>
-    </message>
-    <message>
         <source>Last Success</source>
         <translation>Dernier succès</translation>
     </message>
     <message>
         <source>Addresses</source>
         <translation>Adresses</translation>
+    </message>
+    <message>
+        <source>Last Download</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

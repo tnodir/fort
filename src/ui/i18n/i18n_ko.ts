@@ -1180,6 +1180,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Block Internet Traffic</source>
         <translation>인터넷 트래픽 차단</translation>
     </message>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1693,16 +1697,16 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>소스</translation>
     </message>
     <message>
-        <source>Last Run</source>
-        <translation>마지막 실행</translation>
-    </message>
-    <message>
         <source>Last Success</source>
         <translation>마지막 성공</translation>
     </message>
     <message>
         <source>Addresses</source>
         <translation>주소</translation>
+    </message>
+    <message>
+        <source>Last Download</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

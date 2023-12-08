@@ -1176,6 +1176,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Block Internet Traffic</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1689,15 +1693,15 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Last Run</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Last Success</source>
         <translation></translation>
     </message>
     <message>
         <source>Addresses</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Last Download</source>
         <translation></translation>
     </message>
 </context>
