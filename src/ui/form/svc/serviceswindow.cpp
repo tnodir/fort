@@ -154,7 +154,7 @@ QLayout *ServicesWindow::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actTrack = editMenu->addAction(IconCache::icon(":/icons/widgets.png"), QString());
-    m_actRevert = editMenu->addAction(IconCache::icon(":/icons/bin_closed.png"), QString());
+    m_actRevert = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
 
     m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
     m_actAddProgram->setShortcut(Qt::Key_Insert);
@@ -198,7 +198,7 @@ QLayout *ServicesWindow::setupHeader()
 
     // Toolbar buttons
     m_btTrack = ControlUtil::createLinkButton(":/icons/widgets.png");
-    m_btRevert = ControlUtil::createLinkButton(":/icons/bin_closed.png");
+    m_btRevert = ControlUtil::createLinkButton(":/icons/delete.png");
     m_btRefresh = ControlUtil::createButton(":/icons/arrow_refresh_small.png");
 
     connect(m_btTrack, &QAbstractButton::clicked, m_actTrack, &QAction::trigger);

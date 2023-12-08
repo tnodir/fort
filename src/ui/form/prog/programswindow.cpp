@@ -270,7 +270,7 @@ void ProgramsWindow::setupEditMenu()
 
     editMenu->addSeparator();
 
-    m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/bin_closed.png"), QString());
+    m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/recycle.png"), QString());
 
     m_actFindApps = editMenu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
     m_actFindApps->setShortcut(QKeySequence::Find);

@@ -8,7 +8,6 @@
     <file>icons/application_double.png</file>
     <file>icons/arrow_refresh_small.png</file>
     <file>icons/asterisk_orange.png</file>
-    <file>icons/bin_closed.png</file>
     <file>icons/cancel.png</file>
     <file>icons/chart_bar.png</file>
     <file>icons/clock.png</file>
@@ -20,6 +19,7 @@
     <file>icons/control_repeat.png</file>
     <file>icons/control_rewind.png</file>
     <file>icons/control_start.png</file>
+    <file>icons/cross.png</file>
     <file>icons/delete.png</file>
     <file>icons/deny.png</file>
     <file>icons/download_for_windows.png</file>
@@ -46,10 +46,12 @@
     <file>icons/page_copy.png</file>
     <file>icons/pencil.png</file>
     <file>icons/play.png</file>
+    <file>icons/recycle.png</file>
     <file>icons/road_sign.png</file>
     <file>icons/save_as.png</file>
     <file>icons/scull.png</file>
     <file>icons/server_components.png</file>
+    <file>icons/tick.png</file>
     <file>icons/time.png</file>
     <file>icons/traffic_lights.png</file>
     <file>icons/widgets.png</file>

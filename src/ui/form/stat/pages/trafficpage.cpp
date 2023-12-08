@@ -179,7 +179,7 @@ void TrafficPage::setupClearMenu()
                 tr("Are you sure to clear all statistics?"));
     });
 
-    m_btClear = ControlUtil::createButton(":/icons/bin_closed.png");
+    m_btClear = ControlUtil::createButton(":/icons/recycle.png");
     m_btClear->setMenu(menu);
 }
 
