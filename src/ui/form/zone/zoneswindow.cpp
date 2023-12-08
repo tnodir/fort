@@ -4,6 +4,7 @@
 #include <QComboBox>
 #include <QDialog>
 #include <QFormLayout>
+#include <QFrame>
 #include <QHeaderView>
 #include <QLabel>
 #include <QLineEdit>
@@ -14,6 +15,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/plaintextedit.h>
 #include <form/controls/tableview.h>
 #include <form/dialog/dialogutil.h>
 #include <manager/windowmanager.h>
@@ -26,6 +28,7 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/net/netutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "zonescontroller.h"
@@ -33,6 +36,16 @@
 namespace {
 
 constexpr int ZONES_HEADER_VERSION = 3;
+
+QLabel *formLabelForField(QFormLayout *formLayout, QWidget *field)
+{
+    auto label = qobject_cast<QLabel *>(formLayout->labelForField(field));
+    Q_ASSERT(label);
+
+    label->setMinimumWidth(100);
+
+    return label;
+}
 
 }
 
@@ -175,6 +188,36 @@ void ZonesWindow::setupUi()
 
 void ZonesWindow::setupZoneEditForm()
 {
+    m_formZoneEdit = new QDialog(this);
+    m_formZoneEdit->setWindowModality(Qt::WindowModal);
+    m_formZoneEdit->setSizeGripEnabled(true);
+    m_formZoneEdit->setMinimumWidth(500);
+
+    // Name & Sources
+    auto nameLayout = setupZoneEditNameLayout();
+
+    // URL
+    setupZoneEditUrlFrame();
+
+    // Text Inline
+    setupZoneEditTextFrame();
+
+    // OK/Cancel
+    auto buttonsLayout = setupZoneEditButtons();
+
+    auto layout = new QVBoxLayout();
+    layout->addLayout(nameLayout);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addWidget(m_frameUrl, 1);
+    layout->addWidget(m_frameText);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addLayout(buttonsLayout);
+
+    m_formZoneEdit->setLayout(layout);
+}
+
+QLayout *ZonesWindow::setupZoneEditNameLayout()
+{
     auto formLayout = new QFormLayout();
 
     // Zone Name
@@ -182,18 +225,51 @@ void ZonesWindow::setupZoneEditForm()
     m_editZoneName->setMaxLength(256);
 
     formLayout->addRow("Zone Name:", m_editZoneName);
-    m_labelZoneName = qobject_cast<QLabel *>(formLayout->labelForField(m_editZoneName));
+    m_labelZoneName = formLabelForField(formLayout, m_editZoneName);
 
     // Sources
-    setupComboSources();
+    setupZoneEditSources();
 
     formLayout->addRow("Source:", m_comboSources);
-    m_labelSource = qobject_cast<QLabel *>(formLayout->labelForField(m_comboSources));
+    m_labelSource = formLabelForField(formLayout, m_comboSources);
 
     // Enabled
     m_cbEnabled = new QCheckBox();
 
     formLayout->addRow(QString(), m_cbEnabled);
+
+    return formLayout;
+}
+
+void ZonesWindow::setupZoneEditSources()
+{
+    m_comboSources = ControlUtil::createComboBox(QStringList(), [&](int /*index*/) {
+        const auto zoneSource = ZoneSourceWrapper(m_comboSources->currentData());
+
+        updateZoneEditFormBySource(zoneSource);
+    });
+
+    m_comboSources->clear();
+    for (const auto &sourceVar : zoneListModel()->zoneSources()) {
+        const ZoneSourceWrapper zoneSource(sourceVar);
+        m_comboSources->addItem(zoneSource.title(), sourceVar);
+    }
+    m_comboSources->setCurrentIndex(0);
+}
+
+void ZonesWindow::setupZoneEditUrlFrame()
+{
+    m_frameUrl = new QFrame();
+
+    auto layout = setupZoneEditUrlLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    m_frameUrl->setLayout(layout);
+}
+
+QLayout *ZonesWindow::setupZoneEditUrlLayout()
+{
+    auto formLayout = new QFormLayout();
 
     // Custom URL
     m_cbCustomUrl = new QCheckBox();
@@ -206,42 +282,50 @@ void ZonesWindow::setupZoneEditForm()
     m_editUrl->setMaxLength(1024);
 
     formLayout->addRow("URL:", m_editUrl);
-    m_labelUrl = qobject_cast<QLabel *>(formLayout->labelForField(m_editUrl));
+    m_labelUrl = formLabelForField(formLayout, m_editUrl);
 
     // Form Data
     m_editFormData = new QLineEdit();
     m_editFormData->setEnabled(false);
 
     formLayout->addRow("Form Data:", m_editFormData);
-    m_labelFormData = qobject_cast<QLabel *>(formLayout->labelForField(m_editFormData));
-
-    // OK/Cancel
-    auto buttonsLayout = new QHBoxLayout();
-
-    m_btEditOk = new QPushButton();
-    m_btEditOk->setDefault(true);
-
-    m_btEditCancel = new QPushButton();
-
-    buttonsLayout->addWidget(m_btEditOk, 1, Qt::AlignRight);
-    buttonsLayout->addWidget(m_btEditCancel);
-
-    // Form
-    auto layout = new QVBoxLayout();
-    layout->addLayout(formLayout);
-    layout->addWidget(ControlUtil::createSeparator());
-    layout->addLayout(buttonsLayout);
-
-    m_formZoneEdit = new QDialog(this);
-    m_formZoneEdit->setWindowModality(Qt::WindowModal);
-    m_formZoneEdit->setSizeGripEnabled(true);
-    m_formZoneEdit->setLayout(layout);
-    m_formZoneEdit->setMinimumWidth(500);
+    m_labelFormData = formLabelForField(formLayout, m_editFormData);
 
     connect(m_cbCustomUrl, &QCheckBox::toggled, this, [&](bool checked) {
         m_editUrl->setEnabled(checked);
         m_editFormData->setEnabled(checked);
     });
+
+    return formLayout;
+}
+
+void ZonesWindow::setupZoneEditTextFrame()
+{
+    m_frameText = new QFrame();
+
+    auto layout = setupZoneEditTextLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    m_frameText->setLayout(layout);
+}
+
+QLayout *ZonesWindow::setupZoneEditTextLayout()
+{
+    m_editText = new PlainTextEdit();
+    m_editText->setPlaceholderText(NetUtil::localIpNetworksText());
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_editText);
+
+    return layout;
+}
+
+QLayout *ZonesWindow::setupZoneEditButtons()
+{
+    m_btEditOk = new QPushButton();
+    m_btEditOk->setDefault(true);
+
+    m_btEditCancel = new QPushButton();
 
     connect(m_btEditOk, &QAbstractButton::clicked, this, [&] {
         if (saveZoneEditForm()) {
@@ -249,24 +333,12 @@ void ZonesWindow::setupZoneEditForm()
         }
     });
     connect(m_btEditCancel, &QAbstractButton::clicked, m_formZoneEdit, &QWidget::close);
-}
 
-void ZonesWindow::setupComboSources()
-{
-    m_comboSources = ControlUtil::createComboBox(QStringList(), [&](int /*index*/) {
-        if (!m_cbCustomUrl->isChecked()) {
-            const auto zoneSource = ZoneSourceWrapper(m_comboSources->currentData());
-            m_editUrl->setText(zoneSource.url());
-            m_editFormData->setText(zoneSource.formData());
-        }
-    });
+    auto layout = new QHBoxLayout();
+    layout->addWidget(m_btEditOk, 1, Qt::AlignRight);
+    layout->addWidget(m_btEditCancel);
 
-    m_comboSources->clear();
-    for (const auto &sourceVar : zoneListModel()->zoneSources()) {
-        const ZoneSourceWrapper zoneSource(sourceVar);
-        m_comboSources->addItem(zoneSource.title(), sourceVar);
-    }
-    m_comboSources->setCurrentIndex(0);
+    return layout;
 }
 
 QLayout *ZonesWindow::setupHeader()
@@ -285,8 +357,8 @@ QLayout *ZonesWindow::setupHeader()
     m_actRemoveZone = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveZone->setShortcut(Qt::Key_Delete);
 
-    connect(m_actAddZone, &QAction::triggered, this, [&] { updateZoneEditForm(false); });
-    connect(m_actEditZone, &QAction::triggered, this, [&] { updateZoneEditForm(true); });
+    connect(m_actAddZone, &QAction::triggered, this, [&] { updateZoneEditForm(/*isNew=*/true); });
+    connect(m_actEditZone, &QAction::triggered, this, [&] { updateZoneEditForm(); });
     connect(m_actRemoveZone, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
                 [&] { deleteSelectedZone(); }, tr("Are you sure to remove selected zone?"));
@@ -372,10 +444,12 @@ void ZonesWindow::setupZoneListModelChanged()
     connect(zoneListModel(), &ZoneListModel::rowsRemoved, this, refreshAddZone);
 }
 
-void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
+void ZonesWindow::updateZoneEditForm(bool isNew)
 {
     ZoneRow zoneRow;
-    if (editCurrentZone) {
+    if (isNew) {
+        zoneRow.sourceCode = ZoneSourceWrapper::textSourceCode();
+    } else {
         const int zoneIndex = zoneListCurrentIndex();
         if (zoneIndex < 0)
             return;
@@ -385,18 +459,34 @@ void ZonesWindow::updateZoneEditForm(bool editCurrentZone)
 
     const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
 
-    m_formZoneIsNew = !editCurrentZone;
+    m_formZoneIsNew = isNew;
 
     m_editZoneName->setText(zoneRow.zoneName);
     m_editZoneName->selectAll();
     m_editZoneName->setFocus();
     m_comboSources->setCurrentIndex(zoneSource.index());
     m_cbEnabled->setChecked(zoneRow.enabled);
+
     m_cbCustomUrl->setChecked(zoneRow.customUrl);
     m_editUrl->setText(zoneRow.url);
     m_editFormData->setText(zoneRow.formData);
+    m_editText->setText(zoneRow.textInline);
+
+    updateZoneEditFormBySource(zoneSource);
 
     m_formZoneEdit->show();
+}
+
+void ZonesWindow::updateZoneEditFormBySource(const ZoneSourceWrapper &zoneSource)
+{
+    if (!m_cbCustomUrl->isChecked()) {
+        m_editUrl->setText(zoneSource.url());
+        m_editFormData->setText(zoneSource.formData());
+    }
+
+    const bool isTextInline = zoneSource.isTextInline();
+    m_frameUrl->setVisible(!isTextInline);
+    m_frameText->setVisible(isTextInline);
 }
 
 bool ZonesWindow::saveZoneEditForm()
@@ -404,7 +494,7 @@ bool ZonesWindow::saveZoneEditForm()
     const auto zoneSource = ZoneSourceWrapper(m_comboSources->currentData());
 
     if (zoneSource.url().isEmpty()) {
-        m_cbCustomUrl->setChecked(true);
+        m_cbCustomUrl->setChecked(!zoneSource.isTextInline());
     }
 
     Zone zone;
@@ -414,17 +504,11 @@ bool ZonesWindow::saveZoneEditForm()
     zone.customUrl = m_cbCustomUrl->isChecked();
     zone.url = m_editUrl->text();
     zone.formData = m_editFormData->text();
+    zone.textInline = m_editText->toPlainText();
 
-    // Check zone name
-    if (zone.zoneName.isEmpty()) {
-        m_editZoneName->setFocus();
+    // Validate
+    if (!saveZoneEditFormValidate(zone, zoneSource))
         return false;
-    }
-
-    // Check custom url
-    if (zone.customUrl && zone.url.isEmpty()) {
-        return saveZoneEditFormCustom(zoneSource);
-    }
 
     // Add new zone
     if (m_formZoneIsNew) {
@@ -435,13 +519,24 @@ bool ZonesWindow::saveZoneEditForm()
     return saveZoneEditFormEdit(zone);
 }
 
-bool ZonesWindow::saveZoneEditFormCustom(const ZoneSourceWrapper &zoneSource)
+bool ZonesWindow::saveZoneEditFormValidate(const Zone &zone, const ZoneSourceWrapper &zoneSource)
 {
-    m_editUrl->setText(zoneSource.url());
-    m_editUrl->selectAll();
-    m_editUrl->setFocus();
-    m_editFormData->setText(zoneSource.formData());
-    return false;
+    // Check zone name
+    if (zone.zoneName.isEmpty()) {
+        m_editZoneName->setFocus();
+        return false;
+    }
+
+    // Check custom url
+    if (zone.customUrl && zone.url.isEmpty()) {
+        m_editUrl->setText(zoneSource.url());
+        m_editUrl->selectAll();
+        m_editUrl->setFocus();
+        m_editFormData->setText(zoneSource.formData());
+        return false;
+    }
+
+    return true;
 }
 
 bool ZonesWindow::saveZoneEditFormNew(Zone &zone)
@@ -462,7 +557,7 @@ bool ZonesWindow::saveZoneEditFormEdit(Zone &zone)
     const bool zoneNameEdited = (zone.zoneName != zoneRow.zoneName);
     const bool zoneEdited = (zone.enabled != zoneRow.enabled || zone.customUrl != zoneRow.customUrl
             || zone.sourceCode != zoneRow.sourceCode || zone.url != zoneRow.url
-            || zone.formData != zoneRow.formData);
+            || zone.formData != zoneRow.formData || zone.textInline != zoneRow.textInline);
 
     if (!zoneEdited) {
         if (zoneNameEdited) {

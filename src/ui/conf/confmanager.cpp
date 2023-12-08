@@ -186,8 +186,8 @@ const char *const sqlUpdateAppResetGroup = "UPDATE app"
                                            "  WHERE app_group_id = ?1;";
 
 const char *const sqlInsertZone = "INSERT INTO zone(zone_id, name, enabled, custom_url,"
-                                  "    source_code, url, form_data)"
-                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);";
+                                  "    source_code, url, form_data, text_inline)"
+                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);";
 
 const char *const sqlSelectZoneIds = "SELECT zone_id FROM zone ORDER BY zone_id;";
 
@@ -199,7 +199,8 @@ const char *const sqlDeleteAddressGroupZone = "UPDATE address_group"
 
 const char *const sqlUpdateZone = "UPDATE zone"
                                   "  SET name = ?2, enabled = ?3, custom_url = ?4,"
-                                  "    source_code = ?5, url = ?6, form_data = ?7"
+                                  "    source_code = ?5, url = ?6,"
+                                  "    form_data = ?7, text_inline = ?8"
                                   "  WHERE zone_id = ?1;";
 
 const char *const sqlUpdateZoneName = "UPDATE zone SET name = ?2 WHERE zone_id = ?1;";
@@ -1135,7 +1136,7 @@ bool ConfManager::addZone(Zone &zone)
 
     const auto vars = QVariantList()
             << zone.zoneId << zone.zoneName << zone.enabled << zone.customUrl << zone.sourceCode
-            << zone.url << zone.formData;
+            << zone.url << zone.formData << zone.textInline;
 
     sqliteDb()->executeEx(sqlInsertZone, vars, 0, &ok);
 
@@ -1197,7 +1198,7 @@ bool ConfManager::updateZone(const Zone &zone)
 
     const auto vars = QVariantList()
             << zone.zoneId << zone.zoneName << zone.enabled << zone.customUrl << zone.sourceCode
-            << zone.url << zone.formData;
+            << zone.url << zone.formData << zone.textInline;
 
     sqliteDb()->executeEx(sqlUpdateZone, vars, 0, &ok);
 

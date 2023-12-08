@@ -20,6 +20,8 @@ public:
     QString url;
     QString formData;
 
+    QString textInline;
+
     QString textChecksum;
     QString binChecksum;
 

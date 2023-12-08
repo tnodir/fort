@@ -38,6 +38,9 @@ public:
     QString formData() const { return m_formData; }
     void setFormData(const QString &v) { m_formData = v; }
 
+    QString textInline() const { return m_textInline; }
+    void setTextInline(const QString &v) { m_textInline = v; }
+
     QString pattern() const { return m_pattern; }
     void setPattern(const QString &v) { m_pattern = v; }
 
@@ -75,6 +78,7 @@ protected slots:
     void downloadFinished(bool success) override;
 
 private:
+    void loadTextInline();
     void loadLocalFile();
 
 private:
@@ -91,6 +95,8 @@ private:
 
     QString m_url;
     QString m_formData;
+
+    QString m_textInline;
 
     QString m_pattern;
 

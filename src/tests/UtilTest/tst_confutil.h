@@ -38,7 +38,7 @@ TEST_F(ConfUtilTest, confWriteRead)
     inetGroup->setExcludeAll(false);
 
     inetGroup->setIncludeText(QString());
-    inetGroup->setExcludeText(NetUtil::localIpNetworks().join('\n'));
+    inetGroup->setExcludeText(NetUtil::localIpNetworksText());
 
     conf.setAppBlockAll(true);
     conf.setAppAllowAll(false);

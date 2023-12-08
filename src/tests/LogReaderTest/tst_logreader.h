@@ -61,7 +61,7 @@ void setConf(Device &device)
     inetGroup->setIncludeAll(true);
     inetGroup->setExcludeAll(false);
 
-    inetGroup->setExcludeText(NetUtil::localIpNetworks().join('\n'));
+    inetGroup->setExcludeText(NetUtil::localIpNetworksText());
 
     // Application Groups
     conf.addDefaultAppGroup();

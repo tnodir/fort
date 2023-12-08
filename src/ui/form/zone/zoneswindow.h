@@ -6,13 +6,16 @@
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
+QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QStackedLayout)
 
 class ConfManager;
 class IniOptions;
 class IniUser;
+class PlainTextEdit;
 class TableView;
 class TaskManager;
 class WidgetWindowStateWatcher;
@@ -51,16 +54,24 @@ private:
 
     void setupUi();
     void setupZoneEditForm();
-    void setupComboSources();
+    QLayout *setupZoneEditNameLayout();
+    void setupZoneEditSources();
+    void setupZoneEditUrlFrame();
+    QLayout *setupZoneEditUrlLayout();
+    void setupZoneEditTextFrame();
+    QLayout *setupZoneEditTextLayout();
+    QLayout *setupZoneEditButtons();
     QLayout *setupHeader();
     void setupTableZones();
     void setupTableZonesHeader();
     void setupTableZonesChanged();
     void setupZoneListModelChanged();
 
-    void updateZoneEditForm(bool editCurrentZone);
+    void updateZoneEditForm(bool isNew = false);
+    void updateZoneEditFormBySource(const ZoneSourceWrapper &zoneSource);
+
     bool saveZoneEditForm();
-    bool saveZoneEditFormCustom(const ZoneSourceWrapper &zoneSource);
+    bool saveZoneEditFormValidate(const Zone &zone, const ZoneSourceWrapper &zoneSource);
     bool saveZoneEditFormNew(Zone &zone);
     bool saveZoneEditFormEdit(Zone &zone);
 
@@ -87,12 +98,15 @@ private:
     QLineEdit *m_editZoneName = nullptr;
     QLabel *m_labelSource = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
+    QFrame *m_frameUrl = nullptr;
     QCheckBox *m_cbCustomUrl = nullptr;
     QComboBox *m_comboSources = nullptr;
     QLabel *m_labelUrl = nullptr;
     QLineEdit *m_editUrl = nullptr;
     QLabel *m_labelFormData = nullptr;
     QLineEdit *m_editFormData = nullptr;
+    QFrame *m_frameText = nullptr;
+    PlainTextEdit *m_editText = nullptr;
     QPushButton *m_btEditOk = nullptr;
     QPushButton *m_btEditCancel = nullptr;
     QDialog *m_formZoneEdit = nullptr;

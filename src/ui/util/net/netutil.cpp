@@ -192,6 +192,11 @@ QStringList NetUtil::localIpNetworks()
     return list;
 }
 
+QString NetUtil::localIpNetworksText()
+{
+    return NetUtil::localIpNetworks().join('\n') + '\n';
+}
+
 QString NetUtil::protocolName(quint8 ipProto)
 {
     switch (ipProto) {

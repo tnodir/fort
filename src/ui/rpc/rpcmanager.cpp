@@ -148,6 +148,7 @@ bool processConfManager_addZone(
     zone.sourceCode = p.args.value(3).toString();
     zone.url = p.args.value(4).toString();
     zone.formData = p.args.value(5).toString();
+    zone.textInline = p.args.value(6).toString();
 
     const bool ok = confManager->addZone(zone);
     resArgs = { zone.zoneId };
@@ -171,6 +172,7 @@ bool processConfManager_updateZone(
     zone.sourceCode = p.args.value(4).toString();
     zone.url = p.args.value(5).toString();
     zone.formData = p.args.value(6).toString();
+    zone.textInline = p.args.value(7).toString();
 
     return confManager->updateZone(zone);
 }

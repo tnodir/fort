@@ -54,8 +54,6 @@ private:
 
     qint8 zonesCount(bool include) const;
 
-    static QString localNetworks();
-
 private:
     int m_addressGroupIndex = -1;
 

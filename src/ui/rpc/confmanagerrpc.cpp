@@ -71,7 +71,7 @@ bool ConfManagerRpc::addZone(Zone &zone)
 
     if (!IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addZone,
                 { zone.enabled, zone.customUrl, zone.zoneName, zone.sourceCode, zone.url,
-                        zone.formData },
+                        zone.formData, zone.textInline },
                 &resArgs))
         return false;
 
@@ -89,7 +89,7 @@ bool ConfManagerRpc::updateZone(const Zone &zone)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateZone,
             { zone.enabled, zone.customUrl, zone.zoneId, zone.zoneName, zone.sourceCode, zone.url,
-                    zone.formData });
+                    zone.formData, zone.textInline });
 }
 
 bool ConfManagerRpc::updateZoneName(int zoneId, const QString &zoneName)

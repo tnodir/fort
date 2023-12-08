@@ -106,6 +106,7 @@ void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker)
     worker->setZoneName(zoneRow.zoneName);
     worker->setUrl(zoneRow.customUrl ? zoneRow.url : zoneSource.url());
     worker->setFormData(zoneRow.customUrl ? zoneRow.formData : zoneSource.formData());
+    worker->setTextInline(zoneRow.textInline);
     worker->setPattern(zoneType.pattern());
     worker->setAddressCount(zoneRow.addressCount);
     worker->setTextChecksum(zoneRow.textChecksum);

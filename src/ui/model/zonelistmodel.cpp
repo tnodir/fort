@@ -83,7 +83,7 @@ QVariant ZoneListModel::headerDataDisplay(int section) const
     case 2:
         return tr("Addresses");
     case 3:
-        return tr("Last Run");
+        return tr("Last Download");
     case 4:
         return tr("Last Success");
     }
@@ -188,11 +188,12 @@ bool ZoneListModel::updateTableRow(int row) const
     m_zoneRow.url = stmt.columnText(5);
     m_zoneRow.formData = stmt.columnText(6);
     m_zoneRow.addressCount = stmt.columnInt(7);
-    m_zoneRow.textChecksum = stmt.columnText(8);
-    m_zoneRow.binChecksum = stmt.columnText(9);
-    m_zoneRow.sourceModTime = stmt.columnDateTime(10);
-    m_zoneRow.lastRun = stmt.columnDateTime(11);
-    m_zoneRow.lastSuccess = stmt.columnDateTime(12);
+    m_zoneRow.textInline = stmt.columnText(8);
+    m_zoneRow.textChecksum = stmt.columnText(9);
+    m_zoneRow.binChecksum = stmt.columnText(10);
+    m_zoneRow.sourceModTime = stmt.columnDateTime(11);
+    m_zoneRow.lastRun = stmt.columnDateTime(12);
+    m_zoneRow.lastSuccess = stmt.columnDateTime(13);
 
     return true;
 }
@@ -208,6 +209,7 @@ QString ZoneListModel::sqlBase() const
            "    url,"
            "    form_data,"
            "    address_count,"
+           "    text_inline,"
            "    text_checksum,"
            "    bin_checksum,"
            "    source_modtime,"

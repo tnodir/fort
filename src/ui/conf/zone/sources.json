@@ -1,10 +1,14 @@
 [
     {
+        "code": "text",
+        "title": "Addresses from Inline Text",
+        "zoneType": "gen"
+    },
+    {
         "code": "file",
         "title": "Addresses from Local File",
         "zoneType": "gen",
-        "url": "",
-        "formData": ""
+        "url": ""
     },
     {
         "code": "winspyblock",

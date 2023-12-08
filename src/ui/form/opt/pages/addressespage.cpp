@@ -87,7 +87,7 @@ void AddressesPage::onRetranslateUi()
 
 void AddressesPage::retranslateAddressesPlaceholderText()
 {
-    const auto placeholderText = tr("# Examples:") + '\n' + localNetworks();
+    const auto placeholderText = tr("# Examples:") + '\n' + NetUtil::localIpNetworksText();
 
     m_excludeAddresses->editIpText()->setPlaceholderText(placeholderText);
 }
@@ -207,7 +207,7 @@ void AddressesPage::setupSplitterButtons()
 {
     m_btAddLocals = ControlUtil::createSplitterButton(":/icons/hostname.png", [&] {
         auto area = m_splitter->handle()->currentTextArea();
-        TextAreaUtil::appendText(area, localNetworks());
+        TextAreaUtil::appendText(area, NetUtil::localIpNetworksText());
     });
 
     const auto layout = m_splitter->handle()->buttonsLayout();
@@ -380,9 +380,4 @@ qint8 AddressesPage::zonesCount(bool include) const
     const quint32 zonesMask = addressGroupZones(include);
 
     return DriverCommon::bitCount(zonesMask);
-}
-
-QString AddressesPage::localNetworks()
-{
-    return NetUtil::localIpNetworks().join('\n') + '\n';
 }

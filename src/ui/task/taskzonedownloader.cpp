@@ -22,8 +22,14 @@ TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
 
 void TaskZoneDownloader::setupDownloader()
 {
+    // Load addresses from text inline
+    if (url().isEmpty()) {
+        loadTextInline();
+        return;
+    }
+
+    // Load addresses from local file
     if (QUrl::fromUserInput(url()).isLocalFile()) {
-        // Load addresses from local file
         loadLocalFile();
         return;
     }
@@ -51,6 +57,13 @@ void TaskZoneDownloader::downloadFinished(bool success)
     }
 
     finish(success);
+}
+
+void TaskZoneDownloader::loadTextInline()
+{
+    downloader()->setBuffer(textInline().toUtf8());
+
+    downloadFinished(/*success=*/true);
 }
 
 void TaskZoneDownloader::loadLocalFile()

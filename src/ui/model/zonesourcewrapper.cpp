@@ -36,3 +36,13 @@ QString ZoneSourceWrapper::formData() const
 {
     return valueText("formData");
 }
+
+bool ZoneSourceWrapper::isTextInline() const
+{
+    return code() == textSourceCode();
+}
+
+QString ZoneSourceWrapper::textSourceCode()
+{
+    return "text";
+}

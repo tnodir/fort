@@ -16,6 +16,10 @@ public:
     QString zoneType() const;
     QString url() const;
     QString formData() const;
+
+    bool isTextInline() const;
+
+    static QString textSourceCode();
 };
 
 #endif // ZONESOURCEWRAPPER_H

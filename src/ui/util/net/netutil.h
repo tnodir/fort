@@ -39,6 +39,7 @@ public:
     static QString getHostName(const QString &address);
 
     static QStringList localIpNetworks();
+    static QString localIpNetworksText();
 
     static QString protocolName(quint8 ipProto);
 

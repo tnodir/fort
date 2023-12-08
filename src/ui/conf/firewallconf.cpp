@@ -311,7 +311,7 @@ void FirewallConf::applyAppGroupBits()
 void FirewallConf::setupDefaultAddressGroups()
 {
     AddressGroup *inetGroup = inetAddressGroup();
-    inetGroup->setExcludeText(NetUtil::localIpNetworks().join('\n'));
+    inetGroup->setExcludeText(NetUtil::localIpNetworksText());
 }
 
 void FirewallConf::setupAddressGroups()
