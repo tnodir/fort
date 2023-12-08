@@ -29,8 +29,6 @@ void AddressesColumn::setZonesCount(qint8 v)
 
 void AddressesColumn::retranslateUi()
 {
-    m_btOpenZones->setToolTip(tr("Show Zones"));
-
     retranslateZonesText();
     m_btSelectZones->setToolTip(tr("Select Zones"));
 }
@@ -46,21 +44,8 @@ void AddressesColumn::setupUi()
     layout->setContentsMargins(0, 0, 0, 0);
 
     // Header
-    auto headerLayout = new QHBoxLayout();
+    auto headerLayout = setupHeaderLayout();
     layout->addLayout(headerLayout);
-
-    m_labelTitle = ControlUtil::createLabel();
-    m_labelTitle->setFont(ControlUtil::fontDemiBold());
-
-    m_cbUseAll = new QCheckBox();
-
-    headerLayout->addWidget(m_labelTitle);
-    headerLayout->addStretch();
-    headerLayout->addWidget(m_cbUseAll);
-
-    // Zones Row
-    auto zonesLayout = setupZonesRow();
-    layout->addLayout(zonesLayout);
 
     // Text Area
     m_editIpText = new PlainTextEdit();
@@ -70,23 +55,23 @@ void AddressesColumn::setupUi()
     this->setLayout(layout);
 }
 
-QLayout *AddressesColumn::setupZonesRow()
+QLayout *AddressesColumn::setupHeaderLayout()
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    m_labelTitle = ControlUtil::createLabel();
+    m_labelTitle->setFont(ControlUtil::fontDemiBold());
 
-    // Open Zones
-    m_btOpenZones = ControlUtil::createLinkButton(":/icons/ip_class.png");
-
-    connect(m_btOpenZones, &QPushButton::clicked, IoC<WindowManager>(),
-            &WindowManager::showZonesWindow);
+    // Use All
+    m_cbUseAll = new QCheckBox();
 
     // Select Zones
-    m_btSelectZones = ControlUtil::createButton(QString());
+    m_btSelectZones = ControlUtil::createButton(":/icons/ip_class.png");
 
-    layout->addWidget(m_btOpenZones);
-    layout->addWidget(m_btSelectZones);
+    auto layout = new QHBoxLayout();
+    layout->addWidget(m_labelTitle);
     layout->addStretch();
+    layout->addWidget(m_cbUseAll);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btSelectZones);
 
     return layout;
 }

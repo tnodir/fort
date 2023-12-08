@@ -31,14 +31,13 @@ private:
     void retranslateZonesText();
 
     void setupUi();
-    QLayout *setupZonesRow();
+    QLayout *setupHeaderLayout();
 
 private:
     qint8 m_zonesCount = 0;
 
     QLabel *m_labelTitle = nullptr;
     QCheckBox *m_cbUseAll = nullptr;
-    QPushButton *m_btOpenZones = nullptr;
     QPushButton *m_btSelectZones = nullptr;
     PlainTextEdit *m_editIpText = nullptr;
 };
