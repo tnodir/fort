@@ -255,7 +255,7 @@
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">选项</translation>
+        <translation>选项</translation>
     </message>
 </context>
 <context>
@@ -426,7 +426,7 @@
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">选项</translation>
+        <translation>选项</translation>
     </message>
 </context>
 <context>
@@ -1182,7 +1182,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Edit Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑通配符</translation>
     </message>
 </context>
 <context>
@@ -1706,7 +1706,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Last Download</source>
-        <translation type="unfinished"></translation>
+        <translation>最后下载</translation>
     </message>
 </context>
 <context>
