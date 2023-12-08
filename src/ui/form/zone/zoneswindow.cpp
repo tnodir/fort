@@ -554,13 +554,8 @@ bool ZonesWindow::saveZoneEditFormEdit(Zone &zone)
     if (zoneRow.isNull())
         return false;
 
-    const bool zoneNameEdited = (zone.zoneName != zoneRow.zoneName);
-    const bool zoneEdited = (zone.enabled != zoneRow.enabled || zone.customUrl != zoneRow.customUrl
-            || zone.sourceCode != zoneRow.sourceCode || zone.url != zoneRow.url
-            || zone.formData != zoneRow.formData || zone.textInline != zoneRow.textInline);
-
-    if (!zoneEdited) {
-        if (zoneNameEdited) {
+    if (zone.isOptionsEqual(zoneRow)) {
+        if (!zone.isNameEqual(zoneRow)) {
             return confManager()->updateZoneName(zoneRow.zoneId, zone.zoneName);
         }
         return true;

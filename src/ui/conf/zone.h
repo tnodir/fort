@@ -7,6 +7,10 @@
 class Zone
 {
 public:
+    bool isNameEqual(const Zone &o) const;
+    bool isOptionsEqual(const Zone &o) const;
+
+public:
     bool enabled = true;
     bool customUrl = false;
 
