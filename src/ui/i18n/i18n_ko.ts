@@ -1182,7 +1182,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Edit Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>와일드카드 편집</translation>
     </message>
 </context>
 <context>
@@ -1706,7 +1706,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Last Download</source>
-        <translation type="unfinished"></translation>
+        <translation>마지막 다운로드</translation>
     </message>
 </context>
 <context>
