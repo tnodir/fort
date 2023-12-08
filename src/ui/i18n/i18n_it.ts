@@ -1182,7 +1182,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Edit Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifica Wildcard</translation>
     </message>
 </context>
 <context>
@@ -1706,7 +1706,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Last Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Ultimo scaricamento</translation>
     </message>
 </context>
 <context>
