@@ -80,6 +80,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     m_cbApplyChild->setChecked(appRow.applyChild);
+    m_cbKillChild->setChecked(appRow.killChild);
     m_cbLanOnly->setChecked(appRow.lanOnly);
     m_cbLogBlocked->setChecked(appRow.logBlocked);
     m_cbLogConn->setChecked(appRow.logConn);
@@ -127,6 +128,7 @@ void ProgramEditDialog::retranslateUi()
     m_labelAppGroup->setText(tr("Application Group:"));
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
+    m_cbKillChild->setText(tr("Kill child processes"));
     m_cbLanOnly->setText(tr("Block Internet Traffic"));
 
     m_cbLogBlocked->setText(tr("Collect blocked connections"));
@@ -252,6 +254,13 @@ QLayout *ProgramEditDialog::setupAppLayout()
     m_cbApplyChild = new QCheckBox();
 
     layout->addRow(QString(), m_cbApplyChild);
+
+    // Kill Child
+    m_cbKillChild = new QCheckBox();
+
+    connect(m_cbKillChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnDangerousOption);
+
+    layout->addRow(QString(), m_cbKillChild);
 
     return layout;
 }
@@ -408,12 +417,7 @@ void ProgramEditDialog::setupAllowConnections()
         m_dteBlockAppAt->setEnabled(checked);
     });
 
-    connect(m_rbKillProcess, &QRadioButton::clicked, this, [&] {
-        IoC<WindowManager>()->showInfoBox(
-                tr("Attention: The 'Kill Process' option is very dangerous!!!\n\n"
-                   "Be careful when killing a system services or other important programs!\n"
-                   "It can cause a Windows malfunction or totally unusable."));
-    });
+    connect(m_rbKillProcess, &QRadioButton::clicked, this, &ProgramEditDialog::warnDangerousOption);
 }
 
 void ProgramEditDialog::fillEditName()
@@ -504,6 +508,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.isWildcard = isWildcard();
     app.useGroupPerm = m_cbUseGroupPerm->isChecked();
     app.applyChild = m_cbApplyChild->isChecked();
+    app.killChild = m_cbKillChild->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();
     app.logBlocked = m_cbLogBlocked->isChecked();
     app.logConn = m_cbLogConn->isChecked();
@@ -530,4 +535,12 @@ void ProgramEditDialog::fillApp(App &app) const
 bool ProgramEditDialog::isWildcard() const
 {
     return m_appRow.isWildcard;
+}
+
+void ProgramEditDialog::warnDangerousOption() const
+{
+    IoC<WindowManager>()->showErrorBox(
+            tr("Attention: This option is very dangerous!!!\n\n"
+               "Be careful when killing a system services or other important programs!\n"
+               "It can cause a Windows malfunction or totally unusable."));
 }

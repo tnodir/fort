@@ -9,6 +9,7 @@ bool App::isEqual(const App &o) const
 bool App::isFlagsEqual(const App &o) const
 {
     return isWildcard == o.isWildcard && useGroupPerm == o.useGroupPerm
-            && applyChild == o.applyChild && lanOnly == o.lanOnly && logBlocked == o.logBlocked
-            && logConn == o.logConn && blocked == o.blocked && killProcess == o.killProcess;
+            && applyChild == o.applyChild && killChild == o.killChild && lanOnly == o.lanOnly
+            && logBlocked == o.logBlocked && logConn == o.logConn && blocked == o.blocked
+            && killProcess == o.killProcess;
 }

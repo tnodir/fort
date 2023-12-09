@@ -67,6 +67,8 @@ private:
 
     bool isWildcard() const;
 
+    void warnDangerousOption() const;
+
 private:
     ProgramsController *m_ctrl = nullptr;
 
@@ -80,6 +82,7 @@ private:
     QComboBox *m_comboAppGroup = nullptr;
     QCheckBox *m_cbUseGroupPerm = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
+    QCheckBox *m_cbKillChild = nullptr;
     QCheckBox *m_cbLanOnly = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbLogConn = nullptr;

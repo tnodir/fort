@@ -33,7 +33,8 @@ typedef struct fort_psname
 #define FORT_PSNODE_NAME_INHERITED 0x0002
 #define FORT_PSNODE_NAME_CUSTOM    0x0004
 #define FORT_PSNODE_KILL_PROCESS   0x0008
-#define FORT_PSNODE_IS_SVCHOST     0x0010
+#define FORT_PSNODE_KILL_CHILD     0x0010
+#define FORT_PSNODE_IS_SVCHOST     0x0020
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
@@ -390,12 +391,11 @@ inline static void fort_pstree_check_proc_conf(
             ? fort_conf_app_find(conf, path_buf, path_len, fort_conf_exe_find, conf_ref)
             : fort_conf_exe_find(conf, conf_ref, path_buf, path_len);
 
-    if (app_flags.kill_process) {
-        proc->flags |= FORT_PSNODE_KILL_PROCESS;
-        return;
-    }
+    const UINT16 kill_flags = (app_flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0)
+            | (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
+    proc->flags |= kill_flags;
 
-    if (!app_flags.apply_child)
+    if (kill_flags != 0 || !app_flags.apply_child)
         return;
 
     if (!has_ps_name) {
@@ -470,6 +470,17 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
     return proc;
 }
 
+inline static BOOL fort_pstree_check_kill_proc(
+        PFORT_PSNODE proc, PPS_CREATE_NOTIFY_INFO createInfo, UINT16 flags)
+{
+    if (proc != NULL && (proc->flags & flags) != 0) {
+        createInfo->CreationStatus = STATUS_ACCESS_DENIED;
+        /* later arrives notification about the process's close event */
+        return TRUE;
+    }
+    return FALSE;
+}
+
 inline static void fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree,
         PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb)
 {
@@ -480,18 +491,14 @@ inline static void fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree,
         return;
     }
 
-    PFORT_PSNODE proc;
-
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        proc = fort_pstree_handle_new_proc(ps_tree, psi);
+        PFORT_PSNODE proc = fort_pstree_handle_new_proc(ps_tree, psi);
+
+        fort_pstree_check_kill_proc(proc, createInfo, FORT_PSNODE_KILL_PROCESS);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    if (proc != NULL && (proc->flags & FORT_PSNODE_KILL_PROCESS) != 0) {
-        createInfo->CreationStatus = STATUS_ACCESS_DENIED;
-    }
 }
 
 inline static void fort_pstree_notify_process_created(
@@ -525,44 +532,60 @@ inline static void fort_pstree_notify_process_created(
     fort_mem_free(pb, FORT_PSTREE_POOL_TAG);
 }
 
+inline static BOOL fort_pstree_notify_process_prepare(
+        PFORT_PSTREE ps_tree, PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSINFO_HASH psi)
+{
+    BOOL res = TRUE;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+
+    PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, psi->processId, psi->pid_hash);
+    if (proc != NULL) {
+        fort_pstree_proc_del(ps_tree, proc);
+    }
+    /* Check parent process */
+    else if (createInfo != NULL && !fort_is_system_process(psi->parentProcessId, -1)) {
+        const tommy_key_t ppid_hash = fort_pstree_proc_hash(psi->parentProcessId);
+        PFORT_PSNODE parentProc =
+                fort_pstree_find_proc_hash(ps_tree, psi->parentProcessId, ppid_hash);
+
+        res = !fort_pstree_check_kill_proc(parentProc, createInfo, FORT_PSNODE_KILL_CHILD);
+    }
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return res;
+}
+
 inline static void fort_pstree_notify_process(PFORT_PSTREE ps_tree, PCFORT_PSTREE_NOTIFY_ARG pna)
 {
-    const DWORD processId = (DWORD) (ptrdiff_t) pna->processId;
     PPS_CREATE_NOTIFY_INFO createInfo = pna->createInfo;
+    const DWORD parentProcessId =
+            (DWORD) (ptrdiff_t) (createInfo != NULL ? createInfo->ParentProcessId : 0);
+    const DWORD processId = (DWORD) (ptrdiff_t) pna->processId;
 
-    const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
+    FORT_PSINFO_HASH psi = {
+        .pid_hash = fort_pstree_proc_hash(processId),
+        .processId = processId,
+        .parentProcessId = parentProcessId,
+
+        .commandLine = (createInfo != NULL ? createInfo->CommandLine : NULL),
+    };
 
 #ifdef FORT_DEBUG
     if (createInfo == NULL) {
         LOG("PsTree: CLOSED pid=%d\n", processId);
     } else {
-        const DWORD parentProcessId = (DWORD) (ptrdiff_t) createInfo->ParentProcessId;
-
         LOG("PsTree: NEW pid=%d ppid=%d IMG=[%wZ] CMD=[%wZ]\n", processId, parentProcessId,
                 createInfo->ImageFileName, createInfo->CommandLine);
     }
 #endif
 
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
-
-    PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
-    if (proc != NULL) {
-        fort_pstree_proc_del(ps_tree, proc);
-    }
-
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
+    if (!fort_pstree_notify_process_prepare(ps_tree, createInfo, &psi))
+        return;
 
     if (createInfo != NULL) {
-
-        FORT_PSINFO_HASH psi = {
-            .pid_hash = pid_hash,
-            .processId = processId,
-            .parentProcessId = (DWORD) (ptrdiff_t) createInfo->ParentProcessId,
-
-            .commandLine = createInfo->CommandLine,
-        };
-
         fort_pstree_notify_process_created(ps_tree, createInfo, &psi);
     }
 }

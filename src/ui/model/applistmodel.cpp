@@ -322,14 +322,15 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     appRow.isWildcard = stmt.columnBool(5);
     appRow.useGroupPerm = stmt.columnBool(6);
     appRow.applyChild = stmt.columnBool(7);
-    appRow.lanOnly = stmt.columnBool(8);
-    appRow.logBlocked = stmt.columnBool(9);
-    appRow.logConn = stmt.columnBool(10);
-    appRow.blocked = stmt.columnBool(11);
-    appRow.killProcess = stmt.columnBool(12);
-    appRow.alerted = stmt.columnBool(13);
-    appRow.endTime = stmt.columnDateTime(14);
-    appRow.creatTime = stmt.columnDateTime(15);
+    appRow.killChild = stmt.columnBool(8);
+    appRow.lanOnly = stmt.columnBool(9);
+    appRow.logBlocked = stmt.columnBool(10);
+    appRow.logConn = stmt.columnBool(11);
+    appRow.blocked = stmt.columnBool(12);
+    appRow.killProcess = stmt.columnBool(13);
+    appRow.alerted = stmt.columnBool(14);
+    appRow.endTime = stmt.columnDateTime(15);
+    appRow.creatTime = stmt.columnDateTime(16);
 
     return true;
 }
@@ -387,6 +388,7 @@ QString AppListModel::sqlBase() const
            "    t.is_wildcard,"
            "    t.use_group_perm,"
            "    t.apply_child,"
+           "    t.kill_child,"
            "    t.lan_only,"
            "    t.log_blocked,"
            "    t.log_conn,"

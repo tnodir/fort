@@ -463,6 +463,7 @@ bool ConfUtil::addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint
                 .group_index = quint8(app.groupIndex),
                 .use_group_perm = app.useGroupPerm,
                 .apply_child = app.applyChild,
+                .kill_child = app.killChild,
                 .lan_only = app.lanOnly,
                 .log_blocked = app.logBlocked,
                 .log_conn = app.logConn,

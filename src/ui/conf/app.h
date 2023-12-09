@@ -14,6 +14,7 @@ public:
     bool isWildcard : 1 = false;
     bool useGroupPerm : 1 = true;
     bool applyChild : 1 = false;
+    bool killChild : 1 = false;
     bool lanOnly : 1 = false;
     bool logBlocked : 1 = true;
     bool logConn : 1 = true;

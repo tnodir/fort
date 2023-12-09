@@ -19,9 +19,9 @@ ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
 bool ConfManagerRpc::addApp(const App &app)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addApp,
-            { app.isWildcard, app.useGroupPerm, app.applyChild, app.lanOnly, app.logBlocked,
-                    app.logConn, app.blocked, app.killProcess, app.groupIndex, app.appOriginPath,
-                    app.appPath, app.appName, app.endTime });
+            { app.isWildcard, app.useGroupPerm, app.applyChild, app.killChild, app.lanOnly,
+                    app.logBlocked, app.logConn, app.blocked, app.killProcess, app.groupIndex,
+                    app.appOriginPath, app.appPath, app.appName, app.endTime });
 }
 
 void ConfManagerRpc::deleteApps(const QVector<qint64> &appIdList)
@@ -42,9 +42,9 @@ bool ConfManagerRpc::purgeApps()
 bool ConfManagerRpc::updateApp(const App &app)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateApp,
-            { app.isWildcard, app.useGroupPerm, app.applyChild, app.lanOnly, app.logBlocked,
-                    app.logConn, app.blocked, app.killProcess, app.groupIndex, app.appId,
-                    app.appOriginPath, app.appPath, app.appName, app.endTime });
+            { app.isWildcard, app.useGroupPerm, app.applyChild, app.killChild, app.lanOnly,
+                    app.logBlocked, app.logConn, app.blocked, app.killProcess, app.groupIndex,
+                    app.appId, app.appOriginPath, app.appPath, app.appName, app.endTime });
 }
 
 void ConfManagerRpc::updateAppsBlocked(

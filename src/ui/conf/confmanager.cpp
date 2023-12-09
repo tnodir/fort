@@ -37,7 +37,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-constexpr int DATABASE_USER_VERSION = 25;
+constexpr int DATABASE_USER_VERSION = 26;
 
 constexpr int APP_END_TIMER_INTERVAL_MIN = 100;
 constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
@@ -121,6 +121,7 @@ const char *const sqlSelectAppPaths = "SELECT app_id, path FROM app;";
     "    t.is_wildcard,"                                                                           \
     "    t.use_group_perm,"                                                                        \
     "    t.apply_child,"                                                                           \
+    "    t.kill_child,"                                                                            \
     "    t.lan_only,"                                                                              \
     "    t.log_blocked,"                                                                           \
     "    t.log_conn,"                                                                              \
@@ -149,16 +150,17 @@ const char *const sqlSelectEndedApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
 const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1;";
 
 const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, path, name,"
-                                 "    is_wildcard, use_group_perm, apply_child, lan_only,"
-                                 "    log_blocked, log_conn, blocked, kill_process,"
+                                 "    is_wildcard, use_group_perm, apply_child, kill_child,"
+                                 "    lan_only, log_blocked, log_conn, blocked, kill_process,"
                                  "    end_time, creat_time)"
                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9,"
-                                 "    ?10, ?11, ?12, ?13, ?14)"
+                                 "    ?10, ?11, ?12, ?13, ?14, ?15)"
                                  "  ON CONFLICT(path) DO UPDATE"
                                  "  SET app_group_id = ?1, origin_path = ?2, name = ?4,"
-                                 "    is_wildcard = ?5, use_group_perm = ?6, apply_child = ?7,"
-                                 "    lan_only = ?8, log_blocked = ?9, log_conn = ?10,"
-                                 "    blocked = ?11, kill_process = ?12, end_time = ?13"
+                                 "    is_wildcard = ?5, use_group_perm = ?6,"
+                                 "    apply_child = ?7, kill_child = ?8,"
+                                 "    lan_only = ?9, log_blocked = ?10, log_conn = ?11,"
+                                 "    blocked = ?12, kill_process = ?13, end_time = ?14"
                                  "  RETURNING app_id;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
@@ -170,9 +172,9 @@ const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;"
 const char *const sqlUpdateApp = "UPDATE app"
                                  "  SET app_group_id = ?2, origin_path = ?3, path = ?4,"
                                  "    name = ?5, is_wildcard = ?6, use_group_perm = ?7,"
-                                 "    apply_child = ?8, lan_only = ?9,"
-                                 "    log_blocked = ?10, log_conn = ?11,"
-                                 "    blocked = ?12, kill_process = ?13, end_time = ?14"
+                                 "    apply_child = ?8, kill_child = ?9, lan_only = ?10,"
+                                 "    log_blocked = ?11, log_conn = ?12,"
+                                 "    blocked = ?13, kill_process = ?14, end_time = ?15"
                                  "  WHERE app_id = ?1;";
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
@@ -976,8 +978,8 @@ bool ConfManager::updateApp(const App &app)
 
     const auto vars = QVariantList()
             << app.appId << appGroup->id() << app.appOriginPath << app.appPath << app.appName
-            << app.isWildcard << app.useGroupPerm << app.applyChild << app.lanOnly << app.logBlocked
-            << app.logConn << app.blocked << app.killProcess
+            << app.isWildcard << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly
+            << app.logBlocked << app.logConn << app.blocked << app.killProcess
             << (!app.endTime.isNull() ? app.endTime : QVariant());
 
     sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
@@ -1371,9 +1373,9 @@ bool ConfManager::addOrUpdateApp(const App &app)
 
     const auto vars = QVariantList()
             << appGroup->id() << app.appOriginPath << app.appPath << app.appName << app.isWildcard
-            << app.useGroupPerm << app.applyChild << app.lanOnly << app.logBlocked << app.logConn
-            << app.blocked << app.killProcess << (!app.endTime.isNull() ? app.endTime : QVariant())
-            << QDateTime::currentDateTime();
+            << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly << app.logBlocked
+            << app.logConn << app.blocked << app.killProcess
+            << (!app.endTime.isNull() ? app.endTime : QVariant()) << QDateTime::currentDateTime();
 
     const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
 
@@ -1419,13 +1421,14 @@ void ConfManager::fillApp(App &app, const SqliteStmt &stmt)
     app.isWildcard = stmt.columnBool(3);
     app.useGroupPerm = stmt.columnBool(4);
     app.applyChild = stmt.columnBool(5);
-    app.lanOnly = stmt.columnBool(6);
-    app.logBlocked = stmt.columnBool(7);
-    app.logConn = stmt.columnBool(8);
-    app.blocked = stmt.columnBool(9);
-    app.killProcess = stmt.columnBool(10);
-    app.groupIndex = stmt.columnInt(11);
-    app.alerted = stmt.columnBool(12);
+    app.killChild = stmt.columnBool(6);
+    app.lanOnly = stmt.columnBool(7);
+    app.logBlocked = stmt.columnBool(8);
+    app.logConn = stmt.columnBool(9);
+    app.blocked = stmt.columnBool(10);
+    app.killProcess = stmt.columnBool(11);
+    app.groupIndex = stmt.columnInt(12);
+    app.alerted = stmt.columnBool(13);
 }
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)
