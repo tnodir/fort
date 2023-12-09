@@ -1182,7 +1182,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Edit Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Uredi nadomestni znak</translation>
     </message>
 </context>
 <context>
@@ -1706,7 +1706,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Last Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Zadnji prenos</translation>
     </message>
 </context>
 <context>
