@@ -1172,7 +1172,7 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
     </message>
     <message>
         <source>Kill child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Tuer les processus enfants</translation>
     </message>
     <message>
         <source>Attention: This option is very dangerous!!!
