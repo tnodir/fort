@@ -13,6 +13,8 @@ public:
     bool isOptionsEqual(const App &o) const;
     bool isNameEqual(const App &o) const;
 
+    bool isProcWild() const;
+
 public:
     bool isWildcard : 1 = false;
     bool useGroupPerm : 1 = true;

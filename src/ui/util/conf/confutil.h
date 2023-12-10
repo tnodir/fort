@@ -3,13 +3,12 @@
 
 #include <QByteArray>
 #include <QList>
-#include <QMap>
 #include <QObject>
 #include <QVector>
 
 #include <util/service/serviceinfo.h>
 
-#include "addressrange.h"
+#include "appparseoptions.h"
 
 class AddressGroup;
 class App;
@@ -23,27 +22,6 @@ struct fort_traf;
 using longs_arr_t = QVector<quint32>;
 using shorts_arr_t = QVector<quint16>;
 using chars_arr_t = QVector<qint8>;
-
-using addrranges_arr_t = QVarLengthArray<AddressRange, 2>;
-using appentry_map_t = QMap<QString, quint32>;
-
-struct AppParseOptions
-{
-    void updateProcWild(const App &app);
-
-    appentry_map_t &appsMap(bool isWild, bool isPrefix);
-    quint32 &appsSize(bool isWild, bool isPrefix);
-
-    bool procWild = false;
-
-    quint32 wildAppsSize = 0;
-    quint32 prefixAppsSize = 0;
-    quint32 exeAppsSize = 0;
-
-    appentry_map_t wildAppsMap;
-    appentry_map_t prefixAppsMap;
-    appentry_map_t exeAppsMap;
-};
 
 class ConfUtil : public QObject
 {

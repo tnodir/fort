@@ -27,3 +27,8 @@ bool App::isNameEqual(const App &o) const
 {
     return appName == o.appName;
 }
+
+bool App::isProcWild() const
+{
+    return applyChild || killChild || killProcess;
+}

@@ -163,6 +163,7 @@ SOURCES += \
     user/iniuser.cpp \
     user/usersettings.cpp \
     util/conf/addressrange.cpp \
+    util/conf/appparseoptions.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
     util/device.cpp \
@@ -359,6 +360,7 @@ HEADERS += \
     user/usersettings.h \
     util/classhelpers.h \
     util/conf/addressrange.h \
+    util/conf/appparseoptions.h \
     util/conf/confappswalker.h \
     util/conf/confutil.h \
     util/dateutil.h \
