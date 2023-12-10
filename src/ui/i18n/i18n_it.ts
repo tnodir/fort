@@ -1172,7 +1172,7 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
     </message>
     <message>
         <source>Kill child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Termina processi derivati</translation>
     </message>
     <message>
         <source>Attention: This option is very dangerous!!!
@@ -1181,7 +1181,7 @@ Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
         <translation>Attenzione: Questa opzione è molto pericolosa!!!
 
-Fai attenzione quando termini un servizio di sistema o altri programmi importanti!
+Stai attento quando termini servizi di sistema o altri programmi importanti!
 Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</translation>
     </message>
 </context>
