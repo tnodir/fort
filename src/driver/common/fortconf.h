@@ -41,7 +41,7 @@ typedef struct fort_conf_flags
     UINT32 log_blocked_ip : 1;
     UINT32 log_alerted_blocked_ip : 1;
 
-    UINT32 group_wildcard : 1;
+    UINT32 reserved : 1; /* DUMMY */
 
     UINT32 group_bits : 16;
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
@@ -219,6 +219,8 @@ typedef struct fort_conf
     FORT_CONF_FLAGS flags;
 
     UCHAR app_periods_n;
+
+    UCHAR proc_wild : 1;
 
     UINT16 wild_apps_n;
     UINT16 prefix_apps_n;

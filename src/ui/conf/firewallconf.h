@@ -108,8 +108,6 @@ public:
 
     void setupAppGroupBits(quint32 groupBits);
 
-    bool appGroupWildcard() const;
-
     bool appGroupEnabled(int groupIndex) const;
 
     AddressGroup *inetAddressGroup() const { return m_addressGroups.at(0); }

@@ -179,18 +179,6 @@ void FirewallConf::setupAppGroupBits(quint32 groupBits)
     applyAppGroupBits();
 }
 
-bool FirewallConf::appGroupWildcard() const
-{
-    for (const AppGroup *appGroup : appGroups()) {
-        if (!appGroup->enabled())
-            continue;
-
-        if (appGroup->applyChild() || !appGroup->killText().isEmpty())
-            return true;
-    }
-    return false;
-}
-
 bool FirewallConf::appGroupEnabled(int groupIndex) const
 {
     return (appGroupBits() & (1 << groupIndex)) != 0;

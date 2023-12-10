@@ -387,7 +387,7 @@ inline static void fort_pstree_check_proc_conf(
 
     const PFORT_CONF conf = &conf_ref->conf;
 
-    const FORT_APP_FLAGS app_flags = conf->flags.group_wildcard
+    const FORT_APP_FLAGS app_flags = conf->proc_wild
             ? fort_conf_app_find(conf, path_buf, path_len, fort_conf_exe_find, conf_ref)
             : fort_conf_exe_find(conf, conf_ref, path_buf, path_len);
 
@@ -544,8 +544,9 @@ inline static BOOL fort_pstree_notify_process_prepare(
     if (proc != NULL) {
         fort_pstree_proc_del(ps_tree, proc);
     }
+
     /* Check parent process */
-    else if (createInfo != NULL && !fort_is_system_process(psi->parentProcessId, -1)) {
+    if (createInfo != NULL && !fort_is_system_process(psi->parentProcessId, -1)) {
         const tommy_key_t ppid_hash = fort_pstree_proc_hash(psi->parentProcessId);
         PFORT_PSNODE parentProc =
                 fort_pstree_find_proc_hash(ps_tree, psi->parentProcessId, ppid_hash);

@@ -73,7 +73,6 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
     confFlags->log_blocked_ip = conf.logBlockedIp();
     confFlags->log_alerted_blocked_ip = conf.logAlertedBlockedIp();
 
-    confFlags->group_wildcard = conf.appGroupWildcard();
     confFlags->group_bits = conf.appGroupBits();
 }
 
@@ -432,6 +431,10 @@ bool ConfUtil::parseAppLine(App &app, const StringView &line, AppParseOptions &o
     app.useGroupPerm = true;
     app.alerted = false;
 
+    if ((isWild || isPrefix) && (app.applyChild || app.killChild || app.killProcess)) {
+        opt.procWild = true;
+    }
+
     appentry_map_t &appsMap =
             isWild ? opt.wildAppsMap : (isPrefix ? opt.prefixAppsMap : opt.exeAppsMap);
     quint32 &appsSize =
@@ -571,6 +574,8 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
     DriverCommon::confAppPermsMaskInit(drvConf);
 
     drvConf->app_periods_n = appPeriodsCount;
+
+    drvConf->proc_wild = opt.procWild;
 
     drvConf->wild_apps_n = quint16(opt.wildAppsMap.size());
     drvConf->prefix_apps_n = quint16(opt.prefixAppsMap.size());
