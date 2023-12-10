@@ -7,8 +7,11 @@
 class App
 {
 public:
-    bool isEqual(const App &o) const;
     bool isFlagsEqual(const App &o) const;
+    bool isBaseFlagsEqual(const App &o) const;
+    bool isExtraFlagsEqual(const App &o) const;
+    bool isOptionsEqual(const App &o) const;
+    bool isNameEqual(const App &o) const;
 
 public:
     bool isWildcard : 1 = false;

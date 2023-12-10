@@ -458,13 +458,13 @@ bool ProgramEditDialog::save()
 
 bool ProgramEditDialog::saveApp(App &app)
 {
-    if (!app.isEqual(m_appRow)) {
+    if (!app.isOptionsEqual(m_appRow)) {
         app.appId = m_appRow.appId;
 
         return confManager()->updateApp(app);
     }
 
-    if (app.appName != m_appRow.appName) {
+    if (!app.isNameEqual(m_appRow)) {
         return confManager()->updateAppName(m_appRow.appId, app.appName);
     }
 
