@@ -431,8 +431,10 @@ bool ConfUtil::parseAppLine(App &app, const StringView &line, AppParseOptions &o
     app.useGroupPerm = true;
     app.alerted = false;
 
-    if ((isWild || isPrefix) && app.isProcWild()) {
-        opt.procWild = true;
+    if (isWild || isPrefix) {
+        if (app.isProcWild()) {
+            opt.procWild = true;
+        }
     }
 
     appentry_map_t &appsMap = opt.appsMap(isWild, isPrefix);
