@@ -22,10 +22,6 @@
         <source>Select Zones</source>
         <translation>대역 선택</translation>
     </message>
-    <message>
-        <source>Show Zones</source>
-        <translation>IP 대역 표시</translation>
-    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1167,22 +1163,26 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>프로세스 종료</translation>
     </message>
     <message>
-        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>주의: &apos;프로세스 종료&apos; 옵션은 매우 위험합니다!!!
-
-시스템 서비스 또는 기타 중요한 프로그램을 종료할 때 주의하십시오!
-Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니다.</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>인터넷 트래픽 차단</translation>
     </message>
     <message>
         <source>Edit Wildcard</source>
         <translation>와일드카드 편집</translation>
+    </message>
+    <message>
+        <source>Kill child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>주의: 이 옵션은 매우 위험합니다!!!
+
+시스템 서비스 또는 기타 중요한 프로그램을 종료할 때 주의하십시오!
+Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니다.</translation>
     </message>
 </context>
 <context>

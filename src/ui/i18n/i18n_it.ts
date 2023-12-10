@@ -22,10 +22,6 @@
         <source>Select Zones</source>
         <translation>Seleziona zone</translation>
     </message>
-    <message>
-        <source>Show Zones</source>
-        <translation>Mostra Zone</translation>
-    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1167,22 +1163,26 @@ Vuoi spostare il profilo da &quot;%2&quot; nella nuova posizione?</translation>
         <translation>Termina processo</translation>
     </message>
     <message>
-        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>Attenzione: L&apos;opzione &apos;Termina processo&apos; è molto pericolosa!!!
-
-Fai attenzione quando termini un servizio di sistema o altri programmi importanti!
-Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>Blocca traffico internet</translation>
     </message>
     <message>
         <source>Edit Wildcard</source>
         <translation>Modifica Wildcard</translation>
+    </message>
+    <message>
+        <source>Kill child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>Attenzione: Questa opzione è molto pericolosa!!!
+
+Fai attenzione quando termini un servizio di sistema o altri programmi importanti!
+Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</translation>
     </message>
 </context>
 <context>

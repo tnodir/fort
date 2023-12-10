@@ -22,10 +22,6 @@
         <source>Select Zones</source>
         <translation>Izberi področja</translation>
     </message>
-    <message>
-        <source>Show Zones</source>
-        <translation>Prikaži področja</translation>
-    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1167,22 +1163,26 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
         <translation>Uniči proces</translation>
     </message>
     <message>
-        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>Pozor: Možnost &apos;Uniči proces&apos; je zelo nevarna!!!
-
-Bodite previdni pri uničevanju sistemskih storitev ali drugih pomembnih programov!
-To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>Onemogoči internetni promet</translation>
     </message>
     <message>
         <source>Edit Wildcard</source>
         <translation>Uredi nadomestni znak</translation>
+    </message>
+    <message>
+        <source>Kill child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>Pozor: Ta možnost je zelo nevarna!!!
+
+Bodite previdni pri uničevanju sistemskih storitev ali drugih pomembnih programov!
+To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</translation>
     </message>
 </context>
 <context>

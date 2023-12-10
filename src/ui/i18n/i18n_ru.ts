@@ -22,10 +22,6 @@
         <source>Select Zones</source>
         <translation>Выбрать Зоны</translation>
     </message>
-    <message>
-        <source>Show Zones</source>
-        <translation>Показать Зоны</translation>
-    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1167,22 +1163,26 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>Убить процесс</translation>
     </message>
     <message>
-        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>Внимание: Опция &apos;Убить процесс&apos; очень опасна!!!
-
-Будьте осторожны, прекращая работу системных служб или других важных программ!
-Это может привести к сбоям в работе Windows или полной неработоспособности.</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>Блокировать Интернет трафик</translation>
     </message>
     <message>
         <source>Edit Wildcard</source>
         <translation>Редактирование подстановки</translation>
+    </message>
+    <message>
+        <source>Kill child processes</source>
+        <translation>Убить дочерние процессы</translation>
+    </message>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>Внимание: Эта опция очень опасна!!!
+
+Будьте осторожны, прекращая работу системных служб или других важных программ!
+Это может привести к сбоям в работе Windows или полной неработоспособности.</translation>
     </message>
 </context>
 <context>

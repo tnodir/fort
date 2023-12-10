@@ -22,10 +22,6 @@
         <source>Select Zones</source>
         <translation>选择区域</translation>
     </message>
-    <message>
-        <source>Show Zones</source>
-        <translation>显示区域</translation>
-    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1167,22 +1163,26 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation>杀死进程</translation>
     </message>
     <message>
-        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>注意：&apos;杀死进程&apos; 选项是非常危险的！!
-
-在杀死系统服务或其他重要程序时要小心!
-它可能导致 Windows 故障或完全无法使用。</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>阻止互联网流量</translation>
     </message>
     <message>
         <source>Edit Wildcard</source>
         <translation>编辑通配符</translation>
+    </message>
+    <message>
+        <source>Kill child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>注意：这个选项非常危险！
+
+在杀死系统服务或其他重要程序时要小心!
+它可能导致 Windows 故障或完全无法使用。</translation>
     </message>
 </context>
 <context>

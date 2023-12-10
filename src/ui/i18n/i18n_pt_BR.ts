@@ -22,10 +22,6 @@
         <source>Select Zones</source>
         <translation>Selecionar Zonas</translation>
     </message>
-    <message>
-        <source>Show Zones</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1166,18 +1162,22 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Edit Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Kill child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

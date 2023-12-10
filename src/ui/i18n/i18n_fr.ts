@@ -22,10 +22,6 @@
         <source>Select Zones</source>
         <translation>Sélectionner zones</translation>
     </message>
-    <message>
-        <source>Show Zones</source>
-        <translation>Afficher les zones</translation>
-    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1167,22 +1163,26 @@ Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</t
         <translation>Tuer le processus</translation>
     </message>
     <message>
-        <source>Attention: The &apos;Kill Process&apos; option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>Attention&#xa0;: Le &apos;Kil Process &apos; l&apos;option est très dangereuse!!!
-
-Soyez prudent lorsque vous tuez un service système ou d&apos;autres programmes importants !
-Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</translation>
-    </message>
-    <message>
         <source>Block Internet Traffic</source>
         <translation>Bloquer le trafic Internet</translation>
     </message>
     <message>
         <source>Edit Wildcard</source>
         <translation>Editer le caractère générique</translation>
+    </message>
+    <message>
+        <source>Kill child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>Attention&#xa0;: Cette option est très dangereuse!!!
+
+Soyez prudent lorsque vous tuez un service système ou d&apos;autres programmes importants !
+Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</translation>
     </message>
 </context>
 <context>
