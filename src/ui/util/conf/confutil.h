@@ -29,6 +29,11 @@ using appentry_map_t = QMap<QString, quint32>;
 
 struct AppParseOptions
 {
+    void updateProcWild(const App &app);
+
+    appentry_map_t &appsMap(bool isWild, bool isPrefix);
+    quint32 &appsSize(bool isWild, bool isPrefix);
+
     bool procWild = false;
 
     quint32 wildAppsSize = 0;

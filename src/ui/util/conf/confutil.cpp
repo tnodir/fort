@@ -78,6 +78,23 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 
 }
 
+void AppParseOptions::updateProcWild(const App &app)
+{
+    if (app.applyChild || app.killChild || app.killProcess) {
+        procWild = true;
+    }
+}
+
+appentry_map_t &AppParseOptions::appsMap(bool isWild, bool isPrefix)
+{
+    return isWild ? wildAppsMap : (isPrefix ? prefixAppsMap : exeAppsMap);
+}
+
+quint32 &AppParseOptions::appsSize(bool isWild, bool isPrefix)
+{
+    return isWild ? wildAppsSize : (isPrefix ? prefixAppsSize : exeAppsSize);
+}
+
 ConfUtil::ConfUtil(QObject *parent) : QObject(parent) { }
 
 void ConfUtil::setErrorMessage(const QString &errorMessage)
@@ -431,14 +448,12 @@ bool ConfUtil::parseAppLine(App &app, const StringView &line, AppParseOptions &o
     app.useGroupPerm = true;
     app.alerted = false;
 
-    if ((isWild || isPrefix) && (app.applyChild || app.killChild || app.killProcess)) {
-        opt.procWild = true;
+    if (isWild || isPrefix) {
+        opt.updateProcWild(app);
     }
 
-    appentry_map_t &appsMap =
-            isWild ? opt.wildAppsMap : (isPrefix ? opt.prefixAppsMap : opt.exeAppsMap);
-    quint32 &appsSize =
-            isWild ? opt.wildAppsSize : (isPrefix ? opt.prefixAppsSize : opt.exeAppsSize);
+    appentry_map_t &appsMap = opt.appsMap(isWild, isPrefix);
+    quint32 &appsSize = opt.appsSize(isWild, isPrefix);
 
     return addApp(app, /*isNew=*/true, appsMap, appsSize);
 }
