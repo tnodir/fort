@@ -1168,11 +1168,11 @@ Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</tran
     </message>
     <message>
         <source>Edit Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Platzhalter bearbeiten</translation>
     </message>
     <message>
         <source>Kill child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Unterprozesse beenden</translation>
     </message>
     <message>
         <source>Attention: This option is very dangerous!!!
@@ -1706,7 +1706,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Last Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Letzter Download</translation>
     </message>
 </context>
 <context>
