@@ -82,10 +82,12 @@ bool processConfManager_addApp(
     app.blocked = p.args.value(7).toBool();
     app.killProcess = p.args.value(8).toBool();
     app.groupIndex = p.args.value(9).toInt();
-    app.appOriginPath = p.args.value(10).toString();
-    app.appPath = p.args.value(11).toString();
-    app.appName = p.args.value(12).toString();
-    app.endTime = p.args.value(13).toDateTime();
+    app.acceptZones = p.args.value(10).toUInt();
+    app.rejectZones = p.args.value(11).toUInt();
+    app.appOriginPath = p.args.value(12).toString();
+    app.appPath = p.args.value(13).toString();
+    app.appName = p.args.value(14).toString();
+    app.endTime = p.args.value(15).toDateTime();
 
     return confManager->addApp(app);
 }
@@ -117,11 +119,13 @@ bool processConfManager_updateApp(
     app.blocked = p.args.value(7).toBool();
     app.killProcess = p.args.value(8).toBool();
     app.groupIndex = p.args.value(9).toInt();
-    app.appId = p.args.value(10).toLongLong();
-    app.appOriginPath = p.args.value(11).toString();
-    app.appPath = p.args.value(12).toString();
-    app.appName = p.args.value(13).toString();
-    app.endTime = p.args.value(14).toDateTime();
+    app.acceptZones = p.args.value(10).toUInt();
+    app.rejectZones = p.args.value(11).toUInt();
+    app.appId = p.args.value(12).toLongLong();
+    app.appOriginPath = p.args.value(13).toString();
+    app.appPath = p.args.value(14).toString();
+    app.appName = p.args.value(15).toString();
+    app.endTime = p.args.value(16).toDateTime();
 
     return confManager->updateApp(app);
 }

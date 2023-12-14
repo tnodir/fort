@@ -10,6 +10,7 @@ public:
     bool isFlagsEqual(const App &o) const;
     bool isBaseFlagsEqual(const App &o) const;
     bool isExtraFlagsEqual(const App &o) const;
+    bool isZonesEqual(const App &o) const;
     bool isOptionsEqual(const App &o) const;
     bool isNameEqual(const App &o) const;
 
@@ -28,6 +29,9 @@ public:
     bool alerted : 1 = false;
 
     int groupIndex = 0;
+
+    quint32 acceptZones = 0;
+    quint32 rejectZones = 0;
 
     qint64 appId = 0;
 

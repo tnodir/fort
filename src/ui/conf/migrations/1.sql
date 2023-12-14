@@ -135,6 +135,8 @@ CREATE TABLE app(
   log_conn BOOLEAN NOT NULL DEFAULT 1,
   blocked BOOLEAN NOT NULL,
   kill_process BOOLEAN NOT NULL DEFAULT 0,
+  accept_zones BOOLEAN NOT NULL DEFAULT 0,  -- zone indexes bit mask
+  reject_zones BOOLEAN NOT NULL DEFAULT 0,  -- zone indexes bit mask
   creat_time INTEGER NOT NULL,
   end_time INTEGER,
   policy_id INTEGER

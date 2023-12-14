@@ -328,9 +328,11 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     appRow.logConn = stmt.columnBool(11);
     appRow.blocked = stmt.columnBool(12);
     appRow.killProcess = stmt.columnBool(13);
-    appRow.alerted = stmt.columnBool(14);
-    appRow.endTime = stmt.columnDateTime(15);
-    appRow.creatTime = stmt.columnDateTime(16);
+    appRow.acceptZones = stmt.columnBool(14);
+    appRow.rejectZones = stmt.columnBool(15);
+    appRow.alerted = stmt.columnBool(16);
+    appRow.endTime = stmt.columnDateTime(17);
+    appRow.creatTime = stmt.columnDateTime(18);
 
     return true;
 }
@@ -394,6 +396,8 @@ QString AppListModel::sqlBase() const
            "    t.log_conn,"
            "    t.blocked,"
            "    t.kill_process,"
+           "    t.accept_zones,"
+           "    t.reject_zones,"
            "    (alert.app_id IS NOT NULL) as alerted,"
            "    t.end_time,"
            "    t.creat_time"

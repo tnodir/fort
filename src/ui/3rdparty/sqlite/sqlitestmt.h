@@ -60,6 +60,7 @@ public:
 
     QString columnName(int column = 0) const;
     qint32 columnInt(int column = 0) const;
+    quint32 columnUInt(int column = 0) const;
     qint64 columnInt64(int column = 0) const;
     double columnDouble(int column = 0) const;
     bool columnBool(int column = 0) const;

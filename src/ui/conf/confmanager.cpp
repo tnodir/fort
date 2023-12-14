@@ -37,7 +37,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-constexpr int DATABASE_USER_VERSION = 26;
+constexpr int DATABASE_USER_VERSION = 27;
 
 constexpr int APP_END_TIMER_INTERVAL_MIN = 100;
 constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
@@ -127,6 +127,8 @@ const char *const sqlSelectAppPaths = "SELECT app_id, path FROM app;";
     "    t.log_conn,"                                                                              \
     "    t.blocked,"                                                                               \
     "    t.kill_process,"                                                                          \
+    "    t.accept_zones,"                                                                          \
+    "    t.reject_zones,"                                                                          \
     "    g.order_index as group_index,"                                                            \
     "    (alert.app_id IS NOT NULL) as alerted"
 
@@ -152,15 +154,16 @@ const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1
 const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, path, name,"
                                  "    is_wildcard, use_group_perm, apply_child, kill_child,"
                                  "    lan_only, log_blocked, log_conn, blocked, kill_process,"
-                                 "    end_time, creat_time)"
+                                 "    accept_zones, reject_zones, end_time, creat_time)"
                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9,"
-                                 "    ?10, ?11, ?12, ?13, ?14, ?15)"
+                                 "    ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17)"
                                  "  ON CONFLICT(path) DO UPDATE"
                                  "  SET app_group_id = ?1, origin_path = ?2, name = ?4,"
                                  "    is_wildcard = ?5, use_group_perm = ?6,"
                                  "    apply_child = ?7, kill_child = ?8,"
                                  "    lan_only = ?9, log_blocked = ?10, log_conn = ?11,"
-                                 "    blocked = ?12, kill_process = ?13, end_time = ?14"
+                                 "    blocked = ?12, kill_process = ?13,"
+                                 "    accept_zones = ?14, reject_zones = ?15, end_time = ?16"
                                  "  RETURNING app_id;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
@@ -174,7 +177,8 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    name = ?5, is_wildcard = ?6, use_group_perm = ?7,"
                                  "    apply_child = ?8, kill_child = ?9, lan_only = ?10,"
                                  "    log_blocked = ?11, log_conn = ?12,"
-                                 "    blocked = ?13, kill_process = ?14, end_time = ?15"
+                                 "    blocked = ?13, kill_process = ?14,"
+                                 "    accept_zones = ?15, reject_zones = ?16, end_time = ?17"
                                  "  WHERE app_id = ?1;";
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
@@ -198,6 +202,10 @@ const char *const sqlDeleteZone = "DELETE FROM zone WHERE zone_id = ?1;";
 const char *const sqlDeleteAddressGroupZone = "UPDATE address_group"
                                               "  SET include_zones = include_zones & ?1,"
                                               "    exclude_zones = exclude_zones & ?1;";
+
+const char *const sqlDeleteAppZone = "UPDATE app"
+                                     "  SET accept_zones = accept_zones & ?1,"
+                                     "    reject_zones = reject_zones & ?1;";
 
 const char *const sqlUpdateZone = "UPDATE zone"
                                   "  SET name = ?2, enabled = ?3, custom_url = ?4,"
@@ -340,8 +348,8 @@ bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups,
         addrGroup->setId(stmt.columnInt64(0));
         addrGroup->setIncludeAll(stmt.columnBool(1));
         addrGroup->setExcludeAll(stmt.columnBool(2));
-        addrGroup->setIncludeZones(quint32(stmt.columnInt64(3)));
-        addrGroup->setExcludeZones(quint32(stmt.columnInt64(4)));
+        addrGroup->setIncludeZones(stmt.columnUInt(3));
+        addrGroup->setExcludeZones(stmt.columnUInt(4));
         addrGroup->setIncludeText(stmt.columnText(5));
         addrGroup->setExcludeText(stmt.columnText(6));
 
@@ -979,8 +987,8 @@ bool ConfManager::updateApp(const App &app)
     const auto vars = QVariantList()
             << app.appId << appGroup->id() << app.appOriginPath << app.appPath << app.appName
             << app.isWildcard << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly
-            << app.logBlocked << app.logConn << app.blocked << app.killProcess
-            << (!app.endTime.isNull() ? app.endTime : QVariant());
+            << app.logBlocked << app.logConn << app.blocked << app.killProcess << app.acceptZones
+            << app.rejectZones << (!app.endTime.isNull() ? app.endTime : QVariant());
 
     sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
 
@@ -1177,9 +1185,13 @@ bool ConfManager::deleteZone(int zoneId)
 
     sqliteDb()->executeEx(sqlDeleteZone, { zoneId }, 0, &ok);
     if (ok) {
-        // Delete the Zone from Address Groups
         const quint32 zoneUnMask = ~(quint32(1) << (zoneId - 1));
+
+        // Delete the Zone from Address Groups
         sqliteDb()->executeEx(sqlDeleteAddressGroupZone, { qint64(zoneUnMask) }, 0, &ok);
+
+        // Delete the Zone from Programs
+        sqliteDb()->executeEx(sqlDeleteAppZone, { qint64(zoneUnMask) }, 0, &ok);
     }
 
     commitTransaction(ok);
@@ -1374,7 +1386,7 @@ bool ConfManager::addOrUpdateApp(const App &app)
     const auto vars = QVariantList()
             << appGroup->id() << app.appOriginPath << app.appPath << app.appName << app.isWildcard
             << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly << app.logBlocked
-            << app.logConn << app.blocked << app.killProcess
+            << app.logConn << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
             << (!app.endTime.isNull() ? app.endTime : QVariant()) << QDateTime::currentDateTime();
 
     const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
@@ -1427,8 +1439,10 @@ void ConfManager::fillApp(App &app, const SqliteStmt &stmt)
     app.logConn = stmt.columnBool(9);
     app.blocked = stmt.columnBool(10);
     app.killProcess = stmt.columnBool(11);
-    app.groupIndex = stmt.columnInt(12);
-    app.alerted = stmt.columnBool(13);
+    app.acceptZones = stmt.columnUInt(12);
+    app.rejectZones = stmt.columnUInt(13);
+    app.groupIndex = stmt.columnInt(14);
+    app.alerted = stmt.columnBool(15);
 }
 
 bool ConfManager::updateDriverDeleteApp(const QString &appPath)

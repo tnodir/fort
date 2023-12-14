@@ -224,6 +224,11 @@ qint32 SqliteStmt::columnInt(int column) const
     return sqlite3_column_int(m_stmt, column);
 }
 
+quint32 SqliteStmt::columnUInt(int column) const
+{
+    return quint32(columnInt(column));
+}
+
 qint64 SqliteStmt::columnInt64(int column) const
 {
     return sqlite3_column_int64(m_stmt, column);
