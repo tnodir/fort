@@ -1172,7 +1172,7 @@ Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
     </message>
     <message>
         <source>Kill child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Uniči podrejene procese</translation>
     </message>
     <message>
         <source>Attention: This option is very dangerous!!!
