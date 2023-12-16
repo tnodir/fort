@@ -32,8 +32,8 @@ AddressesPage::AddressesPage(OptionsController *ctrl, QWidget *parent) : OptBase
 {
     setupUi();
 
-    setupAddressGroup();
     setupZones();
+    setupAddressGroup();
 }
 
 AddressGroup *AddressesPage::addressGroup() const
@@ -103,8 +103,7 @@ void AddressesPage::setupUi()
     m_tabBar->addTab(IconCache::icon(":/icons/ip_block.png"), QString());
 
     // Address Columns
-    setupIncludeAddresses();
-    setupExcludeAddresses();
+    setupAddressColumns();
 
     setupAddressesUseAllEnabled();
 
@@ -118,40 +117,38 @@ void AddressesPage::setupUi()
     this->setLayout(layout);
 }
 
-void AddressesPage::setupIncludeAddresses()
+void AddressesPage::setupAddressColumns()
 {
-    m_includeAddresses = new AddressesColumn();
-
-    connect(m_includeAddresses->cbUseAll(), &QCheckBox::toggled, this, [&](bool checked) {
-        addressGroup()->setIncludeAll(checked);
-
-        checkAddressGroupEdited();
-    });
-    connect(m_includeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
-        const auto ipText = m_includeAddresses->editIpText()->toPlainText();
-
-        addressGroup()->setIncludeText(ipText);
-
-        checkAddressGroupEdited();
-    });
+    m_includeAddresses = setupAddressColumn(/*include=*/true);
+    m_excludeAddresses = setupAddressColumn(/*include=*/false);
 }
 
-void AddressesPage::setupExcludeAddresses()
+AddressesColumn *AddressesPage::setupAddressColumn(bool include)
 {
-    m_excludeAddresses = new AddressesColumn();
+    auto addressesColumn = new AddressesColumn();
 
-    connect(m_excludeAddresses->cbUseAll(), &QCheckBox::toggled, this, [&](bool checked) {
-        addressGroup()->setExcludeAll(checked);
-
-        checkAddressGroupEdited();
-    });
-    connect(m_excludeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
-        const auto ipText = m_excludeAddresses->editIpText()->toPlainText();
-
-        addressGroup()->setExcludeText(ipText);
+    connect(addressesColumn->cbUseAll(), &QCheckBox::toggled, this, [=, this](bool checked) {
+        if (include) {
+            addressGroup()->setIncludeAll(checked);
+        } else {
+            addressGroup()->setExcludeAll(checked);
+        }
 
         checkAddressGroupEdited();
     });
+    connect(addressesColumn->editIpText(), &QPlainTextEdit::textChanged, this, [=, this] {
+        const auto ipText = addressesColumn->editIpText()->toPlainText();
+
+        if (include) {
+            addressGroup()->setIncludeText(ipText);
+        } else {
+            addressGroup()->setExcludeText(ipText);
+        }
+
+        checkAddressGroupEdited();
+    });
+
+    return addressesColumn;
 }
 
 void AddressesPage::setupAddressesUseAllEnabled()
@@ -200,20 +197,6 @@ void AddressesPage::setupSplitterButtons()
     layout->addWidget(m_btAddLocals, 0, Qt::AlignHCenter);
 }
 
-void AddressesPage::setupAddressGroup()
-{
-    connect(this, &AddressesPage::addressGroupChanged, this, &AddressesPage::updateGroup);
-
-    const auto refreshAddressGroup = [&] {
-        const int tabIndex = m_tabBar->currentIndex();
-        setAddressGroupIndex(tabIndex);
-    };
-
-    refreshAddressGroup();
-
-    connect(m_tabBar, &QTabBar::currentChanged, this, refreshAddressGroup);
-}
-
 void AddressesPage::setupZones()
 {
     connect(m_includeAddresses->btSelectZones(), &ZonesSelector::zonesChanged, this, [&] {
@@ -231,6 +214,20 @@ void AddressesPage::setupZones()
 
         checkAddressGroupEdited();
     });
+}
+
+void AddressesPage::setupAddressGroup()
+{
+    connect(this, &AddressesPage::addressGroupChanged, this, &AddressesPage::updateGroup);
+
+    const auto refreshAddressGroup = [&] {
+        const int tabIndex = m_tabBar->currentIndex();
+        setAddressGroupIndex(tabIndex);
+    };
+
+    refreshAddressGroup();
+
+    connect(m_tabBar, &QTabBar::currentChanged, this, refreshAddressGroup);
 }
 
 void AddressesPage::updateGroup()

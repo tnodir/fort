@@ -33,14 +33,14 @@ private:
     void retranslateAddressesPlaceholderText();
 
     void setupUi();
-    void setupIncludeAddresses();
-    void setupExcludeAddresses();
+    void setupAddressColumns();
+    AddressesColumn *setupAddressColumn(bool include);
     void setupAddressesUseAllEnabled();
     void setupSplitter();
     void setupSplitterButtons();
 
-    void setupAddressGroup();
     void setupZones();
+    void setupAddressGroup();
 
     void updateGroup();
 
