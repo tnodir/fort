@@ -1,9 +1,6 @@
 #include "graphplot.h"
 
-GraphPlot::GraphPlot(QWidget *parent) :
-    QCustomPlot(parent), m_mousePressed(false), m_mouseDragging(false)
-{
-}
+GraphPlot::GraphPlot(QWidget *parent) : QCustomPlot(parent) { }
 
 void GraphPlot::cancelMousePressAndDragging()
 {

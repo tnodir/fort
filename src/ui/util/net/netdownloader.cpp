@@ -11,7 +11,7 @@ const QLoggingCategory LC("util.net.netDownloader");
 }
 
 NetDownloader::NetDownloader(QObject *parent) :
-    QObject(parent), m_started(false), m_aborted(false), m_manager(new QNetworkAccessManager(this))
+    QObject(parent), m_manager(new QNetworkAccessManager(this))
 {
     m_downloadTimer.setInterval(DOWNLOAD_TIMEOUT);
 

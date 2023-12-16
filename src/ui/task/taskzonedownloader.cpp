@@ -15,10 +15,7 @@ namespace {
 const QLoggingCategory LC("task.taskZoneDownloader");
 }
 
-TaskZoneDownloader::TaskZoneDownloader(QObject *parent) :
-    TaskDownloader(parent), m_zoneEnabled(false), m_sort(false)
-{
-}
+TaskZoneDownloader::TaskZoneDownloader(QObject *parent) : TaskDownloader(parent) { }
 
 void TaskZoneDownloader::setupDownloader()
 {

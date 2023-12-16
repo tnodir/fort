@@ -46,7 +46,7 @@ namespace {
 const QLoggingCategory LC("fortManager");
 }
 
-FortManager::FortManager(QObject *parent) : QObject(parent), m_initialized(false) { }
+FortManager::FortManager(QObject *parent) : QObject(parent) { }
 
 FortManager::~FortManager()
 {

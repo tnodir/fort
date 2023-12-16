@@ -1,9 +1,6 @@
 #include "basewindowstatewatcher.h"
 
-BaseWindowStateWatcher::BaseWindowStateWatcher(QObject *parent) :
-    QObject(parent), m_visible(false), m_maximized(false)
-{
-}
+BaseWindowStateWatcher::BaseWindowStateWatcher(QObject *parent) : QObject(parent) { }
 
 QRect BaseWindowStateWatcher::geometry() const
 {

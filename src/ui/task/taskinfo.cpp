@@ -10,9 +10,7 @@
 #include "taskzonedownloader.h"
 
 TaskInfo::TaskInfo(TaskType type, TaskManager &taskManager) :
-    QObject(&taskManager), m_enabled(false), m_running(false), m_aborted(false), m_type(type)
-{
-}
+    QObject(&taskManager), m_type(type) { }
 
 TaskInfo::~TaskInfo()
 {

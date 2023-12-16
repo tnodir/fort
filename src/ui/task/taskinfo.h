@@ -100,9 +100,9 @@ private:
     TaskWorker *createWorker();
 
 private:
-    bool m_enabled : 1;
-    bool m_running : 1;
-    bool m_aborted : 1; // transient
+    bool m_enabled : 1 = false;
+    bool m_running : 1 = false;
+    bool m_aborted : 1 = false; // transient
 
     quint16 m_intervalHours = 24;
 

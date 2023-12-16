@@ -7,26 +7,7 @@
 #include "addressgroup.h"
 #include "appgroup.h"
 
-FirewallConf::FirewallConf(Settings *settings, QObject *parent) :
-    QObject(parent),
-    m_editedFlags(AllEdited), // update all on load()!
-    m_bootFilter(false),
-    m_filterEnabled(true),
-    m_filterLocals(false),
-    m_blockTraffic(false),
-    m_blockInetTraffic(false),
-    m_allowAllNew(false),
-    m_askToConnect(false),
-    m_logStat(false),
-    m_logStatNoFilter(false),
-    m_logBlocked(false),
-    m_logAllowedIp(false),
-    m_logBlockedIp(false),
-    m_logAlertedBlockedIp(false),
-    m_appBlockAll(true),
-    m_appAllowAll(false),
-    m_activePeriodEnabled(false),
-    m_ini(settings)
+FirewallConf::FirewallConf(Settings *settings, QObject *parent) : QObject(parent), m_ini(settings)
 {
     setupAddressGroups();
 }

@@ -13,9 +13,9 @@ class StatBlockManager;
 
 struct ConnRow : TableRow
 {
-    bool isIPv6 = false;
-    bool inbound = false;
-    bool inherited = false;
+    bool isIPv6 : 1 = false;
+    bool inbound : 1 = false;
+    bool inherited : 1 = false;
 
     quint8 blockReason = 0;
 
@@ -99,7 +99,7 @@ private:
     void insertConnRows(qint64 idMax, int endRow, int count);
 
 private:
-    uint m_resolveAddress : 1;
+    uint m_resolveAddress : 1 = false;
 
     qint64 m_connIdMin = 0;
     qint64 m_connIdMax = 0;

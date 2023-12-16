@@ -22,7 +22,7 @@ public:
     QString path() const;
 
 private:
-    bool m_blocked : 1;
+    bool m_blocked : 1 = true;
     quint32 m_pid = 0;
     QString m_kernelPath;
 };

@@ -47,10 +47,10 @@ private:
     void writeLogLine(const QString &logLine);
 
 private:
-    bool m_isService : 1;
-    bool m_debug : 1;
-    bool m_console : 1;
-    bool m_writing : 1;
+    bool m_isService : 1 = false;
+    bool m_debug : 1 = false;
+    bool m_console : 1 = false;
+    bool m_writing : 1 = false;
 
     QDir m_dir;
     QFile m_file;

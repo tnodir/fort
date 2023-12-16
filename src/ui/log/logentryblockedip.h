@@ -59,9 +59,9 @@ public:
     bool isAskPending() const;
 
 private:
-    bool m_isIPv6 : 1;
-    bool m_inbound : 1;
-    bool m_inherited : 1;
+    bool m_isIPv6 : 1 = false;
+    bool m_inbound : 1 = false;
+    bool m_inherited : 1 = false;
     quint8 m_blockReason = 0;
     quint8 m_ipProto = 0;
     quint16 m_localPort = 0;

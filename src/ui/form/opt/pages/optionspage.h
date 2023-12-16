@@ -62,8 +62,8 @@ private:
     void setupLogsBox();
 
 private:
-    bool m_passwordEdited : 1;
-    bool m_languageEdited : 1;
+    bool m_passwordEdited : 1 = false;
+    bool m_languageEdited : 1 = false;
 
     qint8 m_currentAutoRunMode = 0;
 

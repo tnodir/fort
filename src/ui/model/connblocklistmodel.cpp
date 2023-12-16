@@ -22,10 +22,7 @@ const QLoggingCategory LC("connBlockListModel");
 
 }
 
-ConnBlockListModel::ConnBlockListModel(QObject *parent) :
-    TableSqlModel(parent), m_resolveAddress(false)
-{
-}
+ConnBlockListModel::ConnBlockListModel(QObject *parent) : TableSqlModel(parent) { }
 
 void ConnBlockListModel::setResolveAddress(bool v)
 {

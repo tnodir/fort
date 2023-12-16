@@ -100,10 +100,10 @@ protected:
     };
 
 private:
-    bool m_isServiceClient : 1;
-    bool m_isClientValidated : 1;
-    bool m_isTryReconnect : 1;
-    bool m_isReconnecting : 1;
+    bool m_isServiceClient : 1 = false;
+    bool m_isClientValidated : 1 = false;
+    bool m_isTryReconnect : 1 = false;
+    bool m_isReconnecting : 1 = false;
 
     const quint32 m_id = 0;
 

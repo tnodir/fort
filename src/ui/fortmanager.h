@@ -63,7 +63,7 @@ private:
     void updateStatManager(FirewallConf *conf);
 
 private:
-    bool m_initialized : 1;
+    bool m_initialized : 1 = false;
 
     void *m_instanceMutex = nullptr;
 };

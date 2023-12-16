@@ -29,8 +29,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
-    bool m_mousePressed : 1;
-    bool m_mouseDragging : 1;
+    bool m_mousePressed : 1 = false;
+    bool m_mouseDragging : 1 = false;
 };
 
 #endif // GRAPHPLOT_H

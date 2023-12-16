@@ -1,7 +1,6 @@
 #include "logentryblocked.h"
 
 LogEntryBlocked::LogEntryBlocked(quint32 pid, const QString &kernelPath) :
-    m_blocked(true),
     m_pid(pid),
     m_kernelPath(kernelPath)
 {

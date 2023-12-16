@@ -40,8 +40,8 @@ private slots:
     void onSslErrors(const QList<QSslError> &errors);
 
 private:
-    bool m_started : 1;
-    bool m_aborted : 1;
+    bool m_started : 1 = false;
+    bool m_aborted : 1 = false;
 
     QString m_url;
     QByteArray m_data;

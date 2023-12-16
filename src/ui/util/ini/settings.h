@@ -66,7 +66,7 @@ protected:
     static int appVersion();
 
 private:
-    uint m_iniExists : 1;
+    uint m_iniExists : 1 = false;
 
     QSettings *m_ini = nullptr;
 

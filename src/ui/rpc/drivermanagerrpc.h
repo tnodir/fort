@@ -22,7 +22,7 @@ public slots:
     bool closeDevice() override;
 
 private:
-    bool m_isDeviceOpened : 1;
+    bool m_isDeviceOpened : 1 = false;
 };
 
 #endif // DRIVERMANAGERRPC_H

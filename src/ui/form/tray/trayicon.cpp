@@ -162,12 +162,7 @@ QAction *addAction(QWidget *widget, const QString &iconPath, const QObject *rece
 
 }
 
-TrayIcon::TrayIcon(QObject *parent) :
-    QSystemTrayIcon(parent),
-    m_trayTriggered(false),
-    m_alerted(false),
-    m_animatedAlert(false),
-    m_ctrl(new TrayController(this))
+TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayController(this))
 {
     setupUi();
     setupController();

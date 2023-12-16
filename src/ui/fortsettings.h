@@ -106,12 +106,12 @@ private:
     void createPaths();
 
 private:
-    uint m_isDefaultProfilePath : 1;
-    uint m_noCache : 1;
-    uint m_isService : 1;
-    uint m_hasService : 1;
-    uint m_isUserAdmin : 1;
-    uint m_passwordChecked : 1;
+    uint m_isDefaultProfilePath : 1 = false;
+    uint m_noCache : 1 = false;
+    uint m_isService : 1 = false;
+    uint m_hasService : 1 = false;
+    uint m_isUserAdmin : 1 = false;
+    uint m_passwordChecked : 1 = false;
 
     UnlockType m_passwordUnlockType = UnlockDisabled;
 

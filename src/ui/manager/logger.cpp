@@ -71,8 +71,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 
 }
 
-Logger::Logger(QObject *parent) :
-    QObject(parent), m_isService(false), m_debug(false), m_console(false), m_writing(false)
+Logger::Logger(QObject *parent) : QObject(parent)
 {
     g_oldMessageHandler = qInstallMessageHandler(messageHandler);
 }

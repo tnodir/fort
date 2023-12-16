@@ -34,12 +34,10 @@ constexpr int trayMaxGroups = 16;
 
 struct Startup
 {
-    Startup() : initialized(false), isServiceChanged(false), wasService(false), isService(false) { }
-
-    quint8 initialized : 1;
-    quint8 isServiceChanged : 1;
-    quint8 wasService : 1;
-    quint8 isService : 1;
+    quint8 initialized : 1 = false;
+    quint8 isServiceChanged : 1 = false;
+    quint8 wasService : 1 = false;
+    quint8 isService : 1 = false;
 } g_startup;
 
 void moveProfile(const QString &profilePath, const QString &newProfilePath)
@@ -60,8 +58,7 @@ void moveProfile(const QString &profilePath, const QString &newProfilePath)
 
 }
 
-OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) :
-    OptBasePage(ctrl, parent), m_passwordEdited(false), m_languageEdited(false)
+OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
     setupStartup();
     setupUi();

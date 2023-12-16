@@ -105,8 +105,8 @@ private:
     SqliteStmt *getIdStmt(const char *sql, qint64 id);
 
 private:
-    bool m_isActivePeriodSet : 1;
-    bool m_isActivePeriod : 1;
+    bool m_isActivePeriodSet : 1 = false;
+    bool m_isActivePeriod : 1 = false;
 
     quint8 m_activePeriodFromHour = 0;
     quint8 m_activePeriodFromMinute = 0;

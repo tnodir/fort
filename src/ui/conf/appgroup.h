@@ -93,18 +93,18 @@ public:
     void fromVariant(const QVariant &v);
 
 private:
-    bool m_edited : 1;
-    bool m_enabled : 1;
+    bool m_edited : 1 = false;
+    bool m_enabled : 1 = true;
 
-    bool m_applyChild : 1;
-    bool m_lanOnly : 1;
-    bool m_logBlocked : 1;
-    bool m_logConn : 1;
+    bool m_applyChild : 1 = false;
+    bool m_lanOnly : 1 = false;
+    bool m_logBlocked : 1 = true;
+    bool m_logConn : 1 = true;
 
-    bool m_periodEnabled : 1;
+    bool m_periodEnabled : 1 = false;
 
-    bool m_limitInEnabled : 1;
-    bool m_limitOutEnabled : 1;
+    bool m_limitInEnabled : 1 = false;
+    bool m_limitOutEnabled : 1 = false;
 
     quint16 m_limitPacketLoss = 0; // Percent
     quint32 m_limitLatency = 0; // Milliseconds

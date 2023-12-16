@@ -55,9 +55,9 @@ private:
     void initConfManagerToEdit();
 
 private:
-    bool m_iniUserEdited : 1;
-    bool m_iniUserDataChanged : 1;
-    bool m_iniUserFlagsChanged : 1;
+    bool m_iniUserEdited : 1 = false;
+    bool m_iniUserDataChanged : 1 = false;
+    bool m_iniUserFlagsChanged : 1 = false;
 };
 
 #endif // OPTIONSCONTROLLER_H

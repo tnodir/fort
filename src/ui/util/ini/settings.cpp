@@ -12,7 +12,7 @@ const QLoggingCategory LC("settings");
 
 }
 
-Settings::Settings(QObject *parent) : QObject(parent), m_iniExists(false) { }
+Settings::Settings(QObject *parent) : QObject(parent) { }
 
 bool Settings::checkIniVersion(int &oldVersion) const
 {

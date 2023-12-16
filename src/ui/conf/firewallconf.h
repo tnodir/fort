@@ -170,28 +170,28 @@ private:
     void removedAppGroupIdListFromVariant(const QVariant &v);
 
 private:
-    uint m_editedFlags : 8;
+    uint m_editedFlags : 8 = AllEdited; // update all on load()!
 
-    uint m_bootFilter : 1;
-    uint m_filterEnabled : 1;
-    uint m_filterLocals : 1;
-    uint m_blockTraffic : 1;
-    uint m_blockInetTraffic : 1;
-    uint m_allowAllNew : 1;
-    uint m_askToConnect : 1;
+    uint m_bootFilter : 1 = false;
+    uint m_filterEnabled : 1 = true;
+    uint m_filterLocals : 1 = false;
+    uint m_blockTraffic : 1 = false;
+    uint m_blockInetTraffic : 1 = false;
+    uint m_allowAllNew : 1 = false;
+    uint m_askToConnect : 1 = false;
 
-    uint m_logStat : 1;
-    uint m_logStatNoFilter : 1;
-    uint m_logBlocked : 1;
+    uint m_logStat : 1 = false;
+    uint m_logStatNoFilter : 1 = false;
+    uint m_logBlocked : 1 = false;
 
-    uint m_logAllowedIp : 1;
-    uint m_logBlockedIp : 1;
-    uint m_logAlertedBlockedIp : 1;
+    uint m_logAllowedIp : 1 = false;
+    uint m_logBlockedIp : 1 = false;
+    uint m_logAlertedBlockedIp : 1 = false;
 
-    uint m_appBlockAll : 1;
-    uint m_appAllowAll : 1;
+    uint m_appBlockAll : 1 = true;
+    uint m_appAllowAll : 1 = false;
 
-    uint m_activePeriodEnabled : 1;
+    uint m_activePeriodEnabled : 1 = false;
 
     quint32 m_appGroupBits = 0;
 

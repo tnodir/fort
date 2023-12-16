@@ -4,10 +4,7 @@
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
 
-DriverManagerRpc::DriverManagerRpc(QObject *parent) :
-    DriverManager(parent, /*useDevice=*/false), m_isDeviceOpened(false)
-{
-}
+DriverManagerRpc::DriverManagerRpc(QObject *parent) : DriverManager(parent, /*useDevice=*/false) { }
 
 void DriverManagerRpc::setIsDeviceOpened(bool v)
 {

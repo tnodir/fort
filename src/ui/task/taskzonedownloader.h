@@ -82,8 +82,8 @@ private:
     void loadLocalFile();
 
 private:
-    bool m_zoneEnabled : 1;
-    bool m_sort : 1;
+    bool m_zoneEnabled : 1 = false;
+    bool m_sort : 1 = false;
 
     int m_emptyNetMask = 32;
 

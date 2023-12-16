@@ -31,16 +31,7 @@ QString expandPath(const QString &path, EnvManager *envManager = nullptr)
 
 }
 
-FortSettings::FortSettings(QObject *parent) :
-    Settings(parent),
-    m_isDefaultProfilePath(false),
-    m_noCache(false),
-    m_isService(false),
-    m_hasService(false),
-    m_isUserAdmin(false),
-    m_passwordChecked(false)
-{
-}
+FortSettings::FortSettings(QObject *parent) : Settings(parent) { }
 
 QString FortSettings::confFilePath() const
 {

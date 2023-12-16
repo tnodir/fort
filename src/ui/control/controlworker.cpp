@@ -77,13 +77,7 @@ bool parseArgsData(const QByteArray &buffer, QVariantList &args, bool compressed
 }
 
 ControlWorker::ControlWorker(QLocalSocket *socket, QObject *parent) :
-    QObject(parent),
-    m_isServiceClient(false),
-    m_isClientValidated(false),
-    m_isTryReconnect(false),
-    m_isReconnecting(false),
-    m_id(nextWorkerId()),
-    m_socket(socket)
+    QObject(parent), m_id(nextWorkerId()), m_socket(socket)
 {
 }
 

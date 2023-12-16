@@ -124,9 +124,9 @@ private:
     void onWindowVisibilityChanged(quint32 code, bool isVisible);
 
 private:
-    bool m_trayTriggered : 1;
-    bool m_alerted : 1;
-    bool m_animatedAlert : 1;
+    bool m_trayTriggered : 1 = false;
+    bool m_alerted : 1 = false;
+    bool m_animatedAlert : 1 = false;
 
     TrayController *m_ctrl = nullptr;
 

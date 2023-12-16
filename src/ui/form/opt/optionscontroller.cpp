@@ -16,11 +16,7 @@ const QLoggingCategory LC("optionsCtrl");
 
 }
 
-OptionsController::OptionsController(QObject *parent) :
-    BaseController(parent),
-    m_iniUserEdited(false),
-    m_iniUserDataChanged(false),
-    m_iniUserFlagsChanged(false)
+OptionsController::OptionsController(QObject *parent) : BaseController(parent)
 {
     initConfManagerToEdit();
 }

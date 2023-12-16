@@ -3,19 +3,7 @@
 #include <util/dateutil.h>
 #include <util/net/netutil.h>
 
-AppGroup::AppGroup(QObject *parent) :
-    QObject(parent),
-    m_edited(false),
-    m_enabled(true),
-    m_applyChild(false),
-    m_lanOnly(false),
-    m_logBlocked(true),
-    m_logConn(true),
-    m_periodEnabled(false),
-    m_limitInEnabled(false),
-    m_limitOutEnabled(false)
-{
-}
+AppGroup::AppGroup(QObject *parent) : QObject(parent) { }
 
 void AppGroup::setEnabled(bool enabled)
 {

@@ -55,10 +55,7 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 }
 
 StatManager::StatManager(const QString &filePath, QObject *parent, quint32 openFlags) :
-    QObject(parent),
-    m_isActivePeriodSet(false),
-    m_isActivePeriod(false),
-    m_sqliteDb(new SqliteDb(filePath, openFlags))
+    QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags))
 {
 }
 

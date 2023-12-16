@@ -2,7 +2,7 @@
 
 #include <util/net/netutil.h>
 
-LogEntryBlockedIp::LogEntryBlockedIp() : m_isIPv6(false), m_inbound(false), m_inherited(false) { }
+LogEntryBlockedIp::LogEntryBlockedIp() { }
 
 void LogEntryBlockedIp::setIsIPv6(bool isIPv6)
 {

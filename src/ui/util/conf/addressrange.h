@@ -33,8 +33,8 @@ public:
     const IpRange &excludeRange() const { return m_excludeRange; }
 
 private:
-    bool m_includeAll : 1;
-    bool m_excludeAll : 1;
+    bool m_includeAll : 1 = false;
+    bool m_excludeAll : 1 = false;
 
     quint32 m_includeZones = 0;
     quint32 m_excludeZones = 0;
