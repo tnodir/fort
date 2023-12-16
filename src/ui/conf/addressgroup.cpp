@@ -5,40 +5,6 @@ AddressGroup::AddressGroup(QObject *parent) :
 {
 }
 
-void AddressGroup::addIncludeZone(int zoneId)
-{
-    addZone(m_includeZones, zoneId);
-}
-
-void AddressGroup::removeIncludeZone(int zoneId)
-{
-    removeZone(m_includeZones, zoneId);
-}
-
-void AddressGroup::addExcludeZone(int zoneId)
-{
-    addZone(m_excludeZones, zoneId);
-}
-
-void AddressGroup::removeExcludeZone(int zoneId)
-{
-    removeZone(m_excludeZones, zoneId);
-}
-
-void AddressGroup::addZone(quint32 &zones, int zoneId)
-{
-    zones |= (quint32(1) << (zoneId - 1));
-
-    setEdited(true);
-}
-
-void AddressGroup::removeZone(quint32 &zones, int zoneId)
-{
-    zones &= ~(quint32(1) << (zoneId - 1));
-
-    setEdited(true);
-}
-
 void AddressGroup::setIncludeAll(bool includeAll)
 {
     if (m_includeAll != includeAll) {
@@ -51,6 +17,22 @@ void AddressGroup::setExcludeAll(bool excludeAll)
 {
     if (m_excludeAll != excludeAll) {
         m_excludeAll = excludeAll;
+        setEdited(true);
+    }
+}
+
+void AddressGroup::setIncludeZones(quint32 v)
+{
+    if (m_includeZones != v) {
+        m_includeZones = v;
+        setEdited(true);
+    }
+}
+
+void AddressGroup::setExcludeZones(quint32 v)
+{
+    if (m_excludeZones != v) {
+        m_excludeZones = v;
         setEdited(true);
     }
 }

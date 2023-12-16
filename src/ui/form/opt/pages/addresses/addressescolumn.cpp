@@ -3,12 +3,12 @@
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QPushButton>
 #include <QToolButton>
 #include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/zonesselector.h>
 #include <manager/windowmanager.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -17,25 +17,9 @@ AddressesColumn::AddressesColumn(QWidget *parent) : QWidget(parent)
     setupUi();
 }
 
-void AddressesColumn::setZonesCount(qint8 v)
-{
-    if (m_zonesCount == v)
-        return;
-
-    m_zonesCount = v;
-
-    retranslateZonesText();
-}
-
 void AddressesColumn::retranslateUi()
 {
-    retranslateZonesText();
-    m_btSelectZones->setToolTip(tr("Select Zones"));
-}
-
-void AddressesColumn::retranslateZonesText()
-{
-    m_btSelectZones->setText(tr("Zones") + QString(" (%1)").arg(zonesCount()));
+    m_btSelectZones->retranslateUi();
 }
 
 void AddressesColumn::setupUi()
@@ -64,7 +48,7 @@ QLayout *AddressesColumn::setupHeaderLayout()
     m_cbUseAll = new QCheckBox();
 
     // Select Zones
-    m_btSelectZones = ControlUtil::createButton(":/icons/ip_class.png");
+    m_btSelectZones = new ZonesSelector();
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_labelTitle);

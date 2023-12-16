@@ -6,6 +6,7 @@
 class AddressGroup;
 class AddressesColumn;
 class TextArea2Splitter;
+class ZonesSelector;
 
 class AddressesPage : public OptBasePage
 {
@@ -37,22 +38,14 @@ private:
     void setupAddressesUseAllEnabled();
     void setupSplitter();
     void setupSplitterButtons();
-    void updateGroup();
+
     void setupAddressGroup();
-    void clearZonesMenu();
-    void createZonesMenu();
-    void updateZonesMenu(bool include);
-    void updateZonesMenuEnabled();
-    void updateZonesText(bool include);
-    void updateZonesTextAll();
     void setupZones();
+
+    void updateGroup();
 
     const QList<AddressGroup *> &addressGroups() const;
     AddressGroup *addressGroupByIndex(int index) const;
-
-    quint32 addressGroupZones(bool include) const;
-
-    qint8 zonesCount(bool include) const;
 
 private:
     int m_addressGroupIndex = -1;
@@ -62,7 +55,6 @@ private:
     AddressesColumn *m_excludeAddresses = nullptr;
     TextArea2Splitter *m_splitter = nullptr;
     QToolButton *m_btAddLocals = nullptr;
-    QMenu *m_menuZones = nullptr;
 };
 
 #endif // ADDRESSESPAGE_H

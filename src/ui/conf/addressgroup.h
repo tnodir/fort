@@ -25,16 +25,10 @@ public:
     void setId(qint64 id) { m_id = id; }
 
     quint32 includeZones() const { return m_includeZones; }
-    void setIncludeZones(quint32 v) { m_includeZones = v; }
+    void setIncludeZones(quint32 v);
 
     quint32 excludeZones() const { return m_excludeZones; }
-    void setExcludeZones(quint32 v) { m_excludeZones = v; }
-
-    void addIncludeZone(int zoneId);
-    void removeIncludeZone(int zoneId);
-
-    void addExcludeZone(int zoneId);
-    void removeExcludeZone(int zoneId);
+    void setExcludeZones(quint32 v);
 
     QString includeText() const { return m_includeText; }
     void setIncludeText(const QString &includeText);
@@ -46,10 +40,6 @@ public:
 
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
-
-private:
-    void addZone(quint32 &zones, int zoneId);
-    void removeZone(quint32 &zones, int zoneId);
 
 private:
     bool m_edited : 1;

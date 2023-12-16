@@ -4,7 +4,6 @@
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QLabel>
-#include <QMenu>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QTabBar>
@@ -14,15 +13,14 @@
 #include <conf/addressgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <driver/drivercommon.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/textarea2splitter.h>
 #include <form/controls/textarea2splitterhandle.h>
+#include <form/controls/zonesselector.h>
 #include <form/opt/optionscontroller.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
-#include <model/zonelistmodel.h>
 #include <user/iniuser.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
@@ -214,17 +212,6 @@ void AddressesPage::setupSplitterButtons()
     layout->addWidget(m_btAddLocals, 0, Qt::AlignHCenter);
 }
 
-void AddressesPage::updateGroup()
-{
-    m_includeAddresses->cbUseAll()->setChecked(addressGroup()->includeAll());
-    m_includeAddresses->editIpText()->setText(addressGroup()->includeText());
-
-    m_excludeAddresses->cbUseAll()->setChecked(addressGroup()->excludeAll());
-    m_excludeAddresses->editIpText()->setText(addressGroup()->excludeText());
-
-    updateZonesTextAll();
-}
-
 void AddressesPage::setupAddressGroup()
 {
     connect(this, &AddressesPage::addressGroupChanged, this, &AddressesPage::updateGroup);
@@ -239,125 +226,41 @@ void AddressesPage::setupAddressGroup()
     connect(m_tabBar, &QTabBar::currentChanged, this, refreshAddressGroup);
 }
 
-void AddressesPage::clearZonesMenu()
-{
-    m_menuZones->close();
-    m_menuZones->clear();
-}
-
-void AddressesPage::createZonesMenu()
-{
-    const auto onZoneActionTriggered = [&](bool checked) {
-        auto action = qobject_cast<QAction *>(sender());
-        const int zoneId = action->data().toInt();
-
-        const bool include = m_includeAddresses->btSelectZones()->isDown();
-        auto addrGroup = this->addressGroup();
-
-        if (checked) {
-            if (include) {
-                addrGroup->addIncludeZone(zoneId);
-            } else {
-                addrGroup->addExcludeZone(zoneId);
-            }
-        } else {
-            if (include) {
-                addrGroup->removeIncludeZone(zoneId);
-            } else {
-                addrGroup->removeExcludeZone(zoneId);
-            }
-        }
-
-        ctrl()->setOptEdited();
-
-        updateZonesText(include);
-    };
-
-    const int zoneCount = zoneListModel()->rowCount();
-    for (int row = 0; row < zoneCount; ++row) {
-        const auto zoneRow = zoneListModel()->zoneRowAt(row);
-
-        auto action = new QAction(zoneRow.zoneName, m_menuZones);
-        action->setCheckable(true);
-        action->setData(zoneRow.zoneId);
-
-        connect(action, &QAction::triggered, this, onZoneActionTriggered);
-
-        m_menuZones->addAction(action);
-    }
-}
-
-void AddressesPage::updateZonesMenu(bool include)
-{
-    if (m_menuZones->isEmpty()) {
-        createZonesMenu();
-    }
-
-    const auto actions = m_menuZones->actions();
-    if (actions.isEmpty())
-        return;
-
-    const quint32 zonesMask = addressGroupZones(include);
-
-    for (auto action : actions) {
-        const int zoneId = action->data().toInt();
-        const quint32 zoneMask = (quint32(1) << (zoneId - 1));
-        const bool checked = (zonesMask & zoneMask) != 0;
-
-        action->setChecked(checked);
-    }
-}
-
-void AddressesPage::updateZonesMenuEnabled()
-{
-    const bool isZoneExist = (zoneListModel()->rowCount() != 0);
-
-    m_includeAddresses->btSelectZones()->setEnabled(isZoneExist);
-    m_excludeAddresses->btSelectZones()->setEnabled(isZoneExist);
-}
-
-void AddressesPage::updateZonesText(bool include)
-{
-    AddressesColumn *addressesColumn = include ? m_includeAddresses : m_excludeAddresses;
-
-    addressesColumn->setZonesCount(zonesCount(include));
-}
-
-void AddressesPage::updateZonesTextAll()
-{
-    updateZonesText(/*include=*/true);
-    updateZonesText(/*include=*/false);
-}
-
 void AddressesPage::setupZones()
 {
-    m_menuZones = ControlUtil::createMenu(this);
+    connect(m_includeAddresses->btSelectZones(), &ZonesSelector::zonesChanged, this, [&] {
+        const quint32 zones = m_includeAddresses->btSelectZones()->zones();
 
-    const auto refreshZonesMenu = [&] {
-        const bool include = (sender() == m_includeAddresses->btSelectZones());
+        if (addressGroup()->includeZones() == zones)
+            return;
 
-        updateZonesMenu(include);
-    };
+        addressGroup()->setIncludeZones(zones);
 
-    connect(m_includeAddresses->btSelectZones(), &QPushButton::pressed, this, refreshZonesMenu);
-    connect(m_excludeAddresses->btSelectZones(), &QPushButton::pressed, this, refreshZonesMenu);
-
-    m_includeAddresses->btSelectZones()->setMenu(m_menuZones);
-    m_excludeAddresses->btSelectZones()->setMenu(m_menuZones);
-    updateZonesMenuEnabled();
-
-    connect(confManager(), &ConfManager::zoneRemoved, this, [&](int zoneId) {
-        for (auto addrGroup : addressGroups()) {
-            addrGroup->removeIncludeZone(zoneId);
-            addrGroup->removeExcludeZone(zoneId);
-        }
-        updateZonesTextAll();
+        ctrl()->setOptEdited();
     });
-    connect(zoneListModel(), &ZoneListModel::modelChanged, this, [&] {
-        clearZonesMenu();
-        updateZonesMenuEnabled();
-        updateZonesTextAll();
+
+    connect(m_excludeAddresses->btSelectZones(), &ZonesSelector::zonesChanged, this, [&] {
+        const quint32 zones = m_excludeAddresses->btSelectZones()->zones();
+
+        if (addressGroup()->excludeZones() == zones)
+            return;
+
+        addressGroup()->setExcludeZones(zones);
+
+        ctrl()->setOptEdited();
     });
+}
+
+void AddressesPage::updateGroup()
+{
+    m_includeAddresses->cbUseAll()->setChecked(addressGroup()->includeAll());
+    m_includeAddresses->editIpText()->setText(addressGroup()->includeText());
+
+    m_excludeAddresses->cbUseAll()->setChecked(addressGroup()->excludeAll());
+    m_excludeAddresses->editIpText()->setText(addressGroup()->excludeText());
+
+    m_includeAddresses->btSelectZones()->setZones(addressGroup()->includeZones());
+    m_excludeAddresses->btSelectZones()->setZones(addressGroup()->excludeZones());
 }
 
 const QList<AddressGroup *> &AddressesPage::addressGroups() const
@@ -368,16 +271,4 @@ const QList<AddressGroup *> &AddressesPage::addressGroups() const
 AddressGroup *AddressesPage::addressGroupByIndex(int index) const
 {
     return addressGroups().at(index);
-}
-
-quint32 AddressesPage::addressGroupZones(bool include) const
-{
-    return include ? addressGroup()->includeZones() : addressGroup()->excludeZones();
-}
-
-qint8 AddressesPage::zonesCount(bool include) const
-{
-    const quint32 zonesMask = addressGroupZones(include);
-
-    return DriverCommon::bitCount(zonesMask);
 }
