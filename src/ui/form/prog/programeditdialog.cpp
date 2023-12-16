@@ -17,6 +17,7 @@
 #include <conf/firewallconf.h>
 #include <form/controls/checkspincombo.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/zonesselector.h>
 #include <form/dialog/dialogutil.h>
 #include <fortmanager.h>
 #include <manager/windowmanager.h>
@@ -77,16 +78,22 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_editName->setEnabled(isSingleSelection);
     m_editName->setClearButtonEnabled(isSingleSelection);
     m_btGetName->setEnabled(isSingleSelection);
+
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     m_cbApplyChild->setChecked(appRow.applyChild);
     m_cbKillChild->setChecked(appRow.killChild);
+
     m_cbLanOnly->setChecked(appRow.lanOnly);
     m_cbLogBlocked->setChecked(appRow.logBlocked);
     m_cbLogConn->setChecked(appRow.logConn);
     m_rbAllowApp->setChecked(!appRow.blocked);
     m_rbBlockApp->setChecked(appRow.blocked);
     m_rbKillProcess->setChecked(appRow.killProcess);
+
+    m_btZones->setZones(appRow.acceptZones);
+    m_btZones->setUncheckedZones(appRow.rejectZones);
+
     m_cscBlockAppIn->checkBox()->setChecked(false);
     m_cscBlockAppIn->spinBox()->setValue(1);
     m_cbBlockAppAt->setChecked(!appRow.endTime.isNull());
@@ -137,6 +144,8 @@ void ProgramEditDialog::retranslateUi()
     m_rbAllowApp->setText(tr("Allow"));
     m_rbBlockApp->setText(tr("Block"));
     m_rbKillProcess->setText(tr("Kill Process"));
+
+    m_btZones->retranslateUi();
 
     m_cscBlockAppIn->checkBox()->setText(tr("Block In:"));
     retranslateAppBlockInHours();
@@ -361,8 +370,8 @@ QLayout *ProgramEditDialog::setupAllowLayout()
 
 QLayout *ProgramEditDialog::setupExtraLayout()
 {
-    // LAN Only
-    m_cbLanOnly = new QCheckBox();
+    // Zones
+    auto zonesLayout = setupZonesLayout();
 
     // Block after N hours
     m_cscBlockAppIn = new CheckSpinCombo();
@@ -380,10 +389,28 @@ QLayout *ProgramEditDialog::setupExtraLayout()
     setupAllowEclusiveGroup();
 
     auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbLanOnly);
+    layout->addLayout(zonesLayout);
     layout->addWidget(m_cscBlockAppIn);
     layout->addLayout(blockAtLayout);
     layout->addWidget(m_cbBlockAppNone);
+
+    return layout;
+}
+
+QLayout *ProgramEditDialog::setupZonesLayout()
+{
+    // LAN Only
+    m_cbLanOnly = new QCheckBox();
+
+    // Zones
+    m_btZones = new ZonesSelector();
+    m_btZones->setIsTristate(true);
+
+    auto layout = new QHBoxLayout();
+    layout->addWidget(m_cbLanOnly);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btZones);
+    layout->addStretch();
 
     return layout;
 }
@@ -411,6 +438,7 @@ void ProgramEditDialog::setupAllowConnections()
 {
     connect(m_rbAllowApp, &QRadioButton::toggled, this, [&](bool checked) {
         m_cbLanOnly->setEnabled(checked);
+        m_btZones->setEnabled(checked);
         m_cbBlockAppNone->setEnabled(checked);
         m_cscBlockAppIn->setEnabled(checked);
         m_cbBlockAppAt->setEnabled(checked);
@@ -516,6 +544,9 @@ void ProgramEditDialog::fillApp(App &app) const
     app.killProcess = m_rbKillProcess->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
     app.appName = m_editName->text();
+
+    app.acceptZones = m_btZones->zones();
+    app.rejectZones = m_btZones->uncheckedZones();
 
     const QString appPath = m_editPath->text();
     app.appOriginPath = appPath;

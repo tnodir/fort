@@ -9,7 +9,7 @@ namespace {
 
 const QLoggingCategory LC("controlWorker");
 
-constexpr int commandMaxArgs = 16;
+constexpr int commandMaxArgs = 32;
 constexpr int commandArgMaxSize = 4 * 1024;
 constexpr quint32 dataMaxSize = 1 * 1024 * 1024;
 

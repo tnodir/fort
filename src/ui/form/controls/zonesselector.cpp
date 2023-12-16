@@ -30,12 +30,27 @@ void ZonesSelector::setZones(quint32 zones)
 
     m_zones = zones;
 
-    retranslateZonesText();
+    resetZonesMenu();
+}
+
+void ZonesSelector::setUncheckedZones(quint32 uncheckedZones)
+{
+    if (m_uncheckedZones == uncheckedZones)
+        return;
+
+    m_uncheckedZones = uncheckedZones;
+
+    resetZonesMenu();
 }
 
 int ZonesSelector::zonesCount() const
 {
     return DriverCommon::bitCount(m_zones);
+}
+
+int ZonesSelector::uncheckedZonesCount() const
+{
+    return DriverCommon::bitCount(m_uncheckedZones);
 }
 
 void ZonesSelector::retranslateUi()
@@ -47,7 +62,10 @@ void ZonesSelector::retranslateUi()
 
 void ZonesSelector::retranslateZonesText()
 {
-    this->setText(tr("Zones") + QString(" (%1)").arg(zonesCount()));
+    const auto countText = QString::number(zonesCount())
+            + (isTristate() ? '/' + QString::number(uncheckedZonesCount()) : QString());
+
+    this->setText(tr("Zones") + " (" + countText + ')');
 }
 
 void ZonesSelector::setupUi()
@@ -79,6 +97,12 @@ void ZonesSelector::setupZones()
     });
 
     updateZonesMenuEnabled();
+}
+
+void ZonesSelector::resetZonesMenu()
+{
+    clearZonesMenu();
+    retranslateZonesText();
 }
 
 void ZonesSelector::clearZonesMenu()

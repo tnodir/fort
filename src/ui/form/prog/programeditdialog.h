@@ -19,6 +19,7 @@ class ConfManager;
 class FirewallConf;
 class FortManager;
 class ProgramsController;
+class ZonesSelector;
 
 class ProgramEditDialog : public QDialog
 {
@@ -52,6 +53,7 @@ private:
     QLayout *setupLogLayout();
     QLayout *setupAllowLayout();
     QLayout *setupExtraLayout();
+    QLayout *setupZonesLayout();
     QLayout *setupCheckDateTimeEdit();
     void setupAllowEclusiveGroup();
     void setupAllowConnections();
@@ -89,6 +91,7 @@ private:
     QRadioButton *m_rbAllowApp = nullptr;
     QRadioButton *m_rbBlockApp = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
+    ZonesSelector *m_btZones = nullptr;
     CheckSpinCombo *m_cscBlockAppIn = nullptr;
     QCheckBox *m_cbBlockAppAt = nullptr;
     QDateTimeEdit *m_dteBlockAppAt = nullptr;
