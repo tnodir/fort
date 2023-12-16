@@ -42,10 +42,10 @@ public:
     void fromVariant(const QVariant &v);
 
 private:
-    bool m_edited : 1;
+    bool m_edited : 1 = false;
 
-    bool m_includeAll : 1;
-    bool m_excludeAll : 1;
+    bool m_includeAll : 1 = true;
+    bool m_excludeAll : 1 = false;
 
     qint64 m_id = 0;
 

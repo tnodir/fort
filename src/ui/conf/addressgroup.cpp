@@ -1,9 +1,6 @@
 #include "addressgroup.h"
 
-AddressGroup::AddressGroup(QObject *parent) :
-    QObject(parent), m_edited(false), m_includeAll(true), m_excludeAll(false)
-{
-}
+AddressGroup::AddressGroup(QObject *parent) : QObject(parent) { }
 
 void AddressGroup::setIncludeAll(bool includeAll)
 {

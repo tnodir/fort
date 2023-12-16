@@ -123,22 +123,16 @@ void AddressesPage::setupIncludeAddresses()
     m_includeAddresses = new AddressesColumn();
 
     connect(m_includeAddresses->cbUseAll(), &QCheckBox::toggled, this, [&](bool checked) {
-        if (addressGroup()->includeAll() == checked)
-            return;
-
         addressGroup()->setIncludeAll(checked);
 
-        ctrl()->setOptEdited();
+        checkAddressGroupEdited();
     });
     connect(m_includeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto ipText = m_includeAddresses->editIpText()->toPlainText();
 
-        if (addressGroup()->includeText() == ipText)
-            return;
-
         addressGroup()->setIncludeText(ipText);
 
-        ctrl()->setOptEdited();
+        checkAddressGroupEdited();
     });
 }
 
@@ -147,22 +141,16 @@ void AddressesPage::setupExcludeAddresses()
     m_excludeAddresses = new AddressesColumn();
 
     connect(m_excludeAddresses->cbUseAll(), &QCheckBox::toggled, this, [&](bool checked) {
-        if (addressGroup()->excludeAll() == checked)
-            return;
-
         addressGroup()->setExcludeAll(checked);
 
-        ctrl()->setOptEdited();
+        checkAddressGroupEdited();
     });
     connect(m_excludeAddresses->editIpText(), &QPlainTextEdit::textChanged, this, [&] {
         const auto ipText = m_excludeAddresses->editIpText()->toPlainText();
 
-        if (addressGroup()->excludeText() == ipText)
-            return;
-
         addressGroup()->setExcludeText(ipText);
 
-        ctrl()->setOptEdited();
+        checkAddressGroupEdited();
     });
 }
 
@@ -231,23 +219,17 @@ void AddressesPage::setupZones()
     connect(m_includeAddresses->btSelectZones(), &ZonesSelector::zonesChanged, this, [&] {
         const quint32 zones = m_includeAddresses->btSelectZones()->zones();
 
-        if (addressGroup()->includeZones() == zones)
-            return;
-
         addressGroup()->setIncludeZones(zones);
 
-        ctrl()->setOptEdited();
+        checkAddressGroupEdited();
     });
 
     connect(m_excludeAddresses->btSelectZones(), &ZonesSelector::zonesChanged, this, [&] {
         const quint32 zones = m_excludeAddresses->btSelectZones()->zones();
 
-        if (addressGroup()->excludeZones() == zones)
-            return;
-
         addressGroup()->setExcludeZones(zones);
 
-        ctrl()->setOptEdited();
+        checkAddressGroupEdited();
     });
 }
 
@@ -261,6 +243,13 @@ void AddressesPage::updateGroup()
 
     m_includeAddresses->btSelectZones()->setZones(addressGroup()->includeZones());
     m_excludeAddresses->btSelectZones()->setZones(addressGroup()->excludeZones());
+}
+
+void AddressesPage::checkAddressGroupEdited()
+{
+    if (addressGroup()->edited()) {
+        ctrl()->setOptEdited();
+    }
 }
 
 const QList<AddressGroup *> &AddressesPage::addressGroups() const

@@ -44,6 +44,8 @@ private:
 
     void updateGroup();
 
+    void checkAddressGroupEdited();
+
     const QList<AddressGroup *> &addressGroups() const;
     AddressGroup *addressGroupByIndex(int index) const;
 
