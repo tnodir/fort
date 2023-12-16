@@ -33,6 +33,9 @@ public:
 
     void onConfChanged(const QVariant &confVar);
 
+    static QVariantList appToVarList(const App &app);
+    static App varListToApp(const QVariantList &v);
+
 protected:
     void purgeAppsOnStart() override { }
 

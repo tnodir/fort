@@ -71,25 +71,7 @@ bool processConfManager_saveVariant(
 bool processConfManager_addApp(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    App app;
-    app.isWildcard = p.args.value(0).toBool();
-    app.useGroupPerm = p.args.value(1).toBool();
-    app.applyChild = p.args.value(2).toBool();
-    app.killChild = p.args.value(3).toBool();
-    app.lanOnly = p.args.value(4).toBool();
-    app.logBlocked = p.args.value(5).toBool();
-    app.logConn = p.args.value(6).toBool();
-    app.blocked = p.args.value(7).toBool();
-    app.killProcess = p.args.value(8).toBool();
-    app.groupIndex = p.args.value(9).toInt();
-    app.acceptZones = p.args.value(10).toUInt();
-    app.rejectZones = p.args.value(11).toUInt();
-    app.appOriginPath = p.args.value(12).toString();
-    app.appPath = p.args.value(13).toString();
-    app.appName = p.args.value(14).toString();
-    app.endTime = p.args.value(15).toDateTime();
-
-    return confManager->addApp(app);
+    return confManager->addApp(ConfManagerRpc::varListToApp(p.args));
 }
 
 bool processConfManager_deleteApps(
@@ -108,26 +90,7 @@ bool processConfManager_purgeApps(
 bool processConfManager_updateApp(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    App app;
-    app.isWildcard = p.args.value(0).toBool();
-    app.useGroupPerm = p.args.value(1).toBool();
-    app.applyChild = p.args.value(2).toBool();
-    app.killChild = p.args.value(3).toBool();
-    app.lanOnly = p.args.value(4).toBool();
-    app.logBlocked = p.args.value(5).toBool();
-    app.logConn = p.args.value(6).toBool();
-    app.blocked = p.args.value(7).toBool();
-    app.killProcess = p.args.value(8).toBool();
-    app.groupIndex = p.args.value(9).toInt();
-    app.acceptZones = p.args.value(10).toUInt();
-    app.rejectZones = p.args.value(11).toUInt();
-    app.appId = p.args.value(12).toLongLong();
-    app.appOriginPath = p.args.value(13).toString();
-    app.appPath = p.args.value(14).toString();
-    app.appName = p.args.value(15).toString();
-    app.endTime = p.args.value(16).toDateTime();
-
-    return confManager->updateApp(app);
+    return confManager->updateApp(ConfManagerRpc::varListToApp(p.args));
 }
 
 bool processConfManager_updateAppsBlocked(
