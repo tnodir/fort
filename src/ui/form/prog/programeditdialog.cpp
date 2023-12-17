@@ -550,7 +550,7 @@ void ProgramEditDialog::fillApp(App &app) const
 
     const QString appPath = m_editPath->text();
     app.appOriginPath = appPath;
-    app.appPath = FileUtil::normalizePath(appPath);
+    app.appPath = FileUtil::normalizePath(appPath, app.isWildcard);
 
     if (!app.blocked) {
         if (m_cscBlockAppIn->checkBox()->isChecked()) {

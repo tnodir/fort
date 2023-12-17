@@ -67,7 +67,7 @@ private:
     bool parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &appGroups,
             chars_arr_t &appPeriods, quint8 &appPeriodsCount, AppParseOptions &opt);
 
-    bool parseExeApps(ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
+    bool parseExeApps(EnvManager &envManager, ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
 
     bool parseAppsText(App &app, const QString &text, AppParseOptions &opt);
 

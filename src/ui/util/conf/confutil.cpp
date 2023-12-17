@@ -142,7 +142,7 @@ int ConfUtil::write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker,
 
     AppParseOptions opt;
 
-    if (!parseExeApps(confAppsWalker, opt))
+    if (!parseExeApps(envManager, confAppsWalker, opt))
         return 0;
 
     if (!parseAppGroups(envManager, conf.appGroups(), appPeriods, appPeriodsCount, opt))
@@ -392,14 +392,19 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
     return true;
 }
 
-bool ConfUtil::parseExeApps(ConfAppsWalker *confAppsWalker, AppParseOptions &opt)
+bool ConfUtil::parseExeApps(
+        EnvManager &envManager, ConfAppsWalker *confAppsWalker, AppParseOptions &opt)
 {
     if (Q_UNLIKELY(!confAppsWalker))
         return true;
 
     return confAppsWalker->walkApps([&](App &app) -> bool {
-        return app.isWildcard ? parseAppLine(app, app.appPath, opt)
-                              : addApp(app, /*isNew=*/true, opt.exeAppsMap, opt.exeAppsSize);
+        if (app.isWildcard) {
+            const auto appPath = envManager.expandString(app.appPath);
+            return parseAppLine(app, appPath, opt);
+        } else {
+            return addApp(app, /*isNew=*/true, opt.exeAppsMap, opt.exeAppsSize);
+        }
     });
 }
 
