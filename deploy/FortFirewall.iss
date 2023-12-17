@@ -90,7 +90,8 @@ Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start ser
   Flags: nowait; Tasks: service
 
 Filename: "{#APP_EXE}"; Description: {cm:LaunchProgram,{#APP_NAME}}; \
-  Flags: nowait postinstall skipifsilent
+  Flags: nowait postinstall skipifsilent; \
+  Check: VCRedist86Exists()
 
 Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \
   Description: "Install the latest Visual C++ x86 redistributable!"; Flags: shellexec postinstall; \
