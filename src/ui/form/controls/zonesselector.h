@@ -3,6 +3,8 @@
 
 #include <QPushButton>
 
+QT_FORWARD_DECLARE_CLASS(QVBoxLayout)
+
 class ZonesSelector : public QPushButton
 {
     Q_OBJECT
@@ -43,6 +45,9 @@ private:
     void addZone(int zoneId);
     void removeZone(int zoneId);
 
+    void addUncheckedZone(int zoneId);
+    void removeUncheckedZone(int zoneId);
+
     void onZoneClicked(bool checked);
 
 private:
@@ -51,6 +56,7 @@ private:
     quint32 m_zones = 0;
     quint32 m_uncheckedZones = 0;
 
+    QVBoxLayout *m_menuLayout = nullptr;
     QMenu *m_menuZones = nullptr;
 };
 

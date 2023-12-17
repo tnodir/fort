@@ -1,6 +1,8 @@
 #include "zonesselector.h"
 
+#include <QCheckBox>
 #include <QMenu>
+#include <QVBoxLayout>
 
 #include <conf/confmanager.h>
 #include <driver/drivercommon.h>
@@ -11,9 +13,21 @@
 
 namespace {
 
+const char *const zoneIdPropertyName = "zoneId";
+
 constexpr quint32 getZoneMask(int zoneId)
 {
     return quint32(1) << (zoneId - 1);
+}
+
+constexpr void setZonesMask(quint32 &zones, int zoneId)
+{
+    zones |= getZoneMask(zoneId);
+}
+
+constexpr void clearZonesMask(quint32 &zones, int zoneId)
+{
+    zones &= ~getZoneMask(zoneId);
 }
 
 }
@@ -62,10 +76,19 @@ void ZonesSelector::retranslateUi()
 
 void ZonesSelector::retranslateZonesText()
 {
-    const auto countText = QString::number(zonesCount())
-            + (isTristate() ? '/' + QString::number(uncheckedZonesCount()) : QString());
+    QString countText;
+    if (zonesCount() != 0 || uncheckedZonesCount() != 0) {
+        countText = " (";
+        if (zonesCount() != 0) {
+            countText += QString::number(zonesCount());
+        }
+        if (uncheckedZonesCount() != 0) {
+            countText += '^' + QString::number(uncheckedZonesCount());
+        }
+        countText += ')';
+    }
 
-    this->setText(tr("Zones") + " (" + countText + ')');
+    this->setText(tr("Zones") + countText);
 }
 
 void ZonesSelector::setupUi()
@@ -77,7 +100,9 @@ void ZonesSelector::setupUi()
 
 void ZonesSelector::setupZones()
 {
-    m_menuZones = ControlUtil::createMenu(this);
+    m_menuLayout = new QVBoxLayout();
+
+    m_menuZones = ControlUtil::createMenuByLayout(m_menuLayout, this);
     this->setMenu(m_menuZones);
 
     connect(m_menuZones, &QMenu::aboutToShow, this, &ZonesSelector::updateZonesMenu);
@@ -108,7 +133,13 @@ void ZonesSelector::resetZonesMenu()
 void ZonesSelector::clearZonesMenu()
 {
     m_menuZones->close();
-    m_menuZones->clear();
+
+    int i = m_menuLayout->count();
+    while (--i >= 0) {
+        auto item = m_menuLayout->takeAt(i);
+        item->widget()->deleteLater();
+        delete item;
+    }
 }
 
 void ZonesSelector::createZonesMenu()
@@ -119,30 +150,35 @@ void ZonesSelector::createZonesMenu()
     for (int row = 0; row < zoneCount; ++row) {
         const auto zoneRow = zoneListModel->zoneRowAt(row);
 
-        auto action = new QAction(zoneRow.zoneName, m_menuZones);
-        action->setCheckable(true);
-        action->setData(zoneRow.zoneId);
+        auto cb = new QCheckBox(zoneRow.zoneName, m_menuZones);
+        cb->setTristate(isTristate());
+        cb->setProperty(zoneIdPropertyName, zoneRow.zoneId);
 
-        connect(action, &QAction::triggered, this, &ZonesSelector::onZoneClicked);
+        connect(cb, &QCheckBox::clicked, this, &ZonesSelector::onZoneClicked);
 
-        m_menuZones->addAction(action);
+        m_menuLayout->addWidget(cb);
     }
 }
 
 void ZonesSelector::updateZonesMenu()
 {
-    if (m_menuZones->isEmpty()) {
+    if (m_menuLayout->isEmpty()) {
         createZonesMenu();
     }
 
-    const auto actions = m_menuZones->actions();
+    int i = m_menuLayout->count();
+    while (--i >= 0) {
+        auto item = m_menuLayout->itemAt(i);
+        auto cb = static_cast<QCheckBox *>(item->widget());
 
-    for (auto action : actions) {
-        const int zoneId = action->data().toInt();
+        const int zoneId = cb->property(zoneIdPropertyName).toInt();
         const quint32 zoneMask = getZoneMask(zoneId);
         const bool checked = (m_zones & zoneMask) != 0;
+        const bool unchecked = (m_uncheckedZones & zoneMask) != 0;
 
-        action->setChecked(checked);
+        cb->setCheckState(checked
+                        ? Qt::Checked
+                        : (!unchecked && isTristate() ? Qt::PartiallyChecked : Qt::Unchecked));
     }
 }
 
@@ -157,23 +193,44 @@ void ZonesSelector::updateZonesMenuEnabled()
 
 void ZonesSelector::addZone(int zoneId)
 {
-    m_zones |= getZoneMask(zoneId);
+    setZonesMask(m_zones, zoneId);
 }
 
 void ZonesSelector::removeZone(int zoneId)
 {
-    m_zones &= ~getZoneMask(zoneId);
+    clearZonesMask(m_zones, zoneId);
+}
+
+void ZonesSelector::addUncheckedZone(int zoneId)
+{
+    setZonesMask(m_uncheckedZones, zoneId);
+}
+
+void ZonesSelector::removeUncheckedZone(int zoneId)
+{
+    clearZonesMask(m_uncheckedZones, zoneId);
 }
 
 void ZonesSelector::onZoneClicked(bool checked)
 {
-    auto action = qobject_cast<QAction *>(sender());
-    const int zoneId = action->data().toInt();
+    auto cb = qobject_cast<QCheckBox *>(sender());
+    const int zoneId = cb->property(zoneIdPropertyName).toInt();
+
+    const bool isPartiallyChecked = (cb->checkState() == Qt::PartiallyChecked);
+
+    if (isPartiallyChecked) {
+        removeUncheckedZone(zoneId);
+        checked = false;
+    }
 
     if (checked) {
         addZone(zoneId);
     } else {
         removeZone(zoneId);
+
+        if (isTristate() && !isPartiallyChecked) {
+            addUncheckedZone(zoneId);
+        }
     }
 
     emit zonesChanged();
