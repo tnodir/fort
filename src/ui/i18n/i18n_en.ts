@@ -13,17 +13,6 @@
     </message>
 </context>
 <context>
-    <name>AddressesColumn</name>
-    <message>
-        <source>Zones</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Select Zones</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
     <name>AddressesPage</name>
     <message>
         <source>Internet Addresses</source>
@@ -379,6 +368,10 @@
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Restrict access by Zone</source>
         <translation></translation>
     </message>
 </context>
@@ -1681,6 +1674,14 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Yes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ZoneListModel</name>
@@ -1702,6 +1703,17 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Last Download</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ZonesSelector</name>
+    <message>
+        <source>Select Zones</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Zones</source>
         <translation></translation>
     </message>
 </context>

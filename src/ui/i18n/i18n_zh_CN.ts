@@ -13,17 +13,6 @@
     </message>
 </context>
 <context>
-    <name>AddressesColumn</name>
-    <message>
-        <source>Zones</source>
-        <translation>区域</translation>
-    </message>
-    <message>
-        <source>Select Zones</source>
-        <translation>选择区域</translation>
-    </message>
-</context>
-<context>
     <name>AddressesPage</name>
     <message>
         <source>Internet Addresses</source>
@@ -380,6 +369,10 @@
     <message>
         <source>Limit of Ask to Connect</source>
         <translation>请求连接的限制</translation>
+    </message>
+    <message>
+        <source>Restrict access by Zone</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1685,6 +1678,14 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>请关闭已打开的编辑程序窗口，然后重试。</translation>
     </message>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZoneListModel</name>
@@ -1707,6 +1708,17 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Last Download</source>
         <translation>最后下载</translation>
+    </message>
+</context>
+<context>
+    <name>ZonesSelector</name>
+    <message>
+        <source>Select Zones</source>
+        <translation type="unfinished">选择区域</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation type="unfinished">区域</translation>
     </message>
 </context>
 <context>

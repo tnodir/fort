@@ -13,17 +13,6 @@
     </message>
 </context>
 <context>
-    <name>AddressesColumn</name>
-    <message>
-        <source>Zones</source>
-        <translation>Področja</translation>
-    </message>
-    <message>
-        <source>Select Zones</source>
-        <translation>Izberi področja</translation>
-    </message>
-</context>
-<context>
     <name>AddressesPage</name>
     <message>
         <source>Internet Addresses</source>
@@ -380,6 +369,10 @@
     <message>
         <source>Limit of Ask to Connect</source>
         <translation>Omejitev &apos;Vprašaj za povezavo&apos;</translation>
+    </message>
+    <message>
+        <source>Restrict access by Zone</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1685,6 +1678,14 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Zaprite že odprto okno za urejanje programa in poskusite znova.</translation>
     </message>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZoneListModel</name>
@@ -1707,6 +1708,17 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Last Download</source>
         <translation>Zadnji prenos</translation>
+    </message>
+</context>
+<context>
+    <name>ZonesSelector</name>
+    <message>
+        <source>Select Zones</source>
+        <translation type="unfinished">Izberi področja</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation type="unfinished">Področja</translation>
     </message>
 </context>
 <context>

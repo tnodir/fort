@@ -13,17 +13,6 @@
     </message>
 </context>
 <context>
-    <name>AddressesColumn</name>
-    <message>
-        <source>Zones</source>
-        <translation>대역</translation>
-    </message>
-    <message>
-        <source>Select Zones</source>
-        <translation>대역 선택</translation>
-    </message>
-</context>
-<context>
     <name>AddressesPage</name>
     <message>
         <source>Internet Addresses</source>
@@ -380,6 +369,10 @@
     <message>
         <source>Limit of Ask to Connect</source>
         <translation>연결 요청 횟수 제한</translation>
+    </message>
+    <message>
+        <source>Restrict access by Zone</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1685,6 +1678,14 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>이미 열려 있는 편집 프로그램 창을 닫고 다시 시도하세요.</translation>
     </message>
+    <message>
+        <source>Yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZoneListModel</name>
@@ -1707,6 +1708,17 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Last Download</source>
         <translation>마지막 다운로드</translation>
+    </message>
+</context>
+<context>
+    <name>ZonesSelector</name>
+    <message>
+        <source>Select Zones</source>
+        <translation type="unfinished">대역 선택</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
