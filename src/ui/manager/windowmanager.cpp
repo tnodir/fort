@@ -579,11 +579,14 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
     auto box = createMessageBox(
             {
                     .icon = QMessageBox::Question,
-                    .buttons = QMessageBox::Yes | QMessageBox::Cancel,
+                    .buttons = QMessageBox::NoButton,
                     .text = text,
                     .title = title,
             },
             parent);
+
+    box->addButton(tr("Yes"), QMessageBox::YesRole);
+    box->addButton(tr("No"), QMessageBox::NoRole);
 
     connect(box, &QMessageBox::finished, [=](int result) {
         const bool confirmed = (result == QMessageBox::Yes);
