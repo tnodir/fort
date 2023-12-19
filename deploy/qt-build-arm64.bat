@@ -12,7 +12,7 @@ md %TARGET_PATH%
 cd %TARGET_PATH%
 
 %QT_PATH%/configure -release -force-debug-info -optimize-size -c++std c++20 ^
-	-static -prefix "%TARGET_PATH%\static" ^
+	-static -unity-build -feature-relocatable -prefix "%~dp0static" ^
 	-opensource -confirm-license ^
 	%* ^
 	-platform win32-arm64-msvc TARGET_CONFIGURE_ARGS=-release ^
