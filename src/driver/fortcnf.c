@@ -132,7 +132,7 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, const PVOID
 
     /* Copy path */
     {
-        char *new_path = (char *) (entry + 1);
+        PVOID new_path = entry + 1;
         RtlCopyMemory(new_path, path, path_len);
     }
 
@@ -180,7 +180,7 @@ FORT_API NTSTATUS fort_conf_ref_exe_add_path(
 FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
         PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry, BOOL locked)
 {
-    const PVOID path = (const PVOID)(entry + 1);
+    const PVOID path = entry + 1;
     const UINT32 path_len = entry->path_len;
     const FORT_APP_FLAGS flags = entry->flags;
 

@@ -16,8 +16,8 @@
 #define FORT_CONF_STR_ALIGN           4
 #define FORT_CONF_STR_HEADER_SIZE(n)  (((n) + 1) * sizeof(UINT32))
 #define FORT_CONF_STR_DATA_SIZE(size) FORT_ALIGN_SIZE((size), FORT_CONF_STR_ALIGN)
-#define FORT_CONF_APP_ENTRY_SIZE(len)                                                              \
-    (sizeof(FORT_APP_ENTRY) + (len) + sizeof(WCHAR)) /* include terminating zero */
+#define FORT_CONF_APP_ENTRY_SIZE(path_len)                                                         \
+    (sizeof(FORT_APP_ENTRY) + (path_len) + sizeof(WCHAR)) /* include terminating zero */
 
 typedef struct fort_conf_flags
 {

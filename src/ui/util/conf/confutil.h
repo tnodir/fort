@@ -17,8 +17,6 @@ class ConfAppsWalker;
 class EnvManager;
 class FirewallConf;
 
-struct fort_traf;
-
 using longs_arr_t = QVector<quint32>;
 using shorts_arr_t = QVector<quint16>;
 using chars_arr_t = QVector<qint8>;

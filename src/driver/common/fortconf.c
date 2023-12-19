@@ -187,7 +187,7 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
 FORT_API BOOL fort_conf_app_exe_equal(
         const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
 {
-    const char *app_path = (const char *) (app_entry + 1);
+    const PVOID app_path = app_entry + 1;
     const UINT32 app_path_len = app_entry->path_len;
 
     if (path_len != app_path_len)
@@ -250,7 +250,7 @@ static FORT_APP_ENTRY fort_conf_app_wild_find(
 
 static int fort_conf_app_prefix_cmp(PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
 {
-    const char *app_path = (const char *) (app_entry + 1);
+    const PVOID app_path = app_entry + 1;
     const UINT32 app_path_len = app_entry->path_len;
 
     if (path_len > app_path_len)

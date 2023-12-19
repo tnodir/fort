@@ -244,10 +244,11 @@ inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALL
     return !cx->blocked /* collect traffic, when Filter Disabled */
             /* "Allow, if not blocked" or "Ask to Connect" */
             || fort_callout_ale_is_new(conf_flags, app_data)
-            /* "Allow, if not blocked" or "Ask to Connect" */
-            || !fort_callout_ale_is_zone_blocked(ca, cx, conf_ref, app_data)
-            /* check the conf for a blocked app */
-            || !fort_conf_app_blocked(&conf_ref->conf, app_data.flags, &cx->block_reason);
+            || !(
+                    /* check LAN Only and Zones */
+                    fort_callout_ale_is_zone_blocked(ca, cx, conf_ref, app_data)
+                    /* check the conf for a blocked app */
+                    || fort_conf_app_blocked(&conf_ref->conf, app_data.flags, &cx->block_reason));
 }
 
 inline static void fort_callout_ale_log(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
