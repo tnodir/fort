@@ -197,6 +197,7 @@ QString ConnBlockListModel::blockReasonText(const ConnRow &connRow)
         QT_TR_NOOP("App. Group logic"),
         QT_TR_NOOP("Filter Mode logic"),
         QT_TR_NOOP("Restrict access to LAN only"),
+        QT_TR_NOOP("Restrict access by Zone"),
         QT_TR_NOOP("Limit of Ask to Connect"),
     };
 
@@ -218,6 +219,7 @@ QString ConnBlockListModel::connIconPath(const ConnRow &connRow)
         ":/icons/application_double.png",
         ":/icons/deny.png",
         ":/icons/hostname.png",
+        ":/icons/ip_class.png",
         ":/icons/help.png",
     };
 

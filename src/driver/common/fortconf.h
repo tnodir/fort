@@ -182,15 +182,10 @@ typedef struct fort_app_flags
 
 typedef struct fort_app_entry
 {
-    union {
-        UINT32 v;
-
-        struct
-        {
-            UINT16 path_len;
-            FORT_APP_FLAGS flags;
-        };
-    };
+    FORT_APP_FLAGS flags;
+    UINT16 path_len;
+    UINT16 accept_zones;
+    UINT16 reject_zones;
 } FORT_APP_ENTRY, *PFORT_APP_ENTRY;
 
 typedef struct fort_speed_limit
@@ -268,7 +263,7 @@ typedef struct fort_conf_io
 #define FORT_CONF_ADDR_LIST_SIZE(ip4_n, pair4_n, ip6_n, pair6_n)                                   \
     (FORT_CONF_ADDR4_LIST_SIZE(ip4_n, pair4_n) + FORT_CONF_ADDR6_LIST_SIZE(ip6_n, pair6_n))
 
-typedef FORT_APP_FLAGS fort_conf_app_exe_find_func(
+typedef FORT_APP_ENTRY fort_conf_app_exe_find_func(
         const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len);
 
 typedef BOOL fort_conf_zones_ip_included_func(
@@ -307,10 +302,10 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
 FORT_API BOOL fort_conf_app_exe_equal(
         const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len);
 
-FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
+FORT_API FORT_APP_ENTRY fort_conf_app_exe_find(
         const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len);
 
-FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
+FORT_API FORT_APP_ENTRY fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
 FORT_API BOOL fort_conf_app_blocked(

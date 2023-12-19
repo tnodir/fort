@@ -4,8 +4,8 @@
 
 #include <assert.h>
 
-#include "fortdef.h"
 #include "fort_wildmatch.h"
+#include "fortdef.h"
 
 static_assert(sizeof(ip6_addr_t) == 16, "ip6_addr_t size mismatch");
 
@@ -14,7 +14,7 @@ static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_TIME) == sizeof(UINT16), "FORT_TIME size mismatch");
 static_assert(sizeof(FORT_PERIOD) == sizeof(UINT32), "FORT_PERIOD size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
-static_assert(sizeof(FORT_APP_ENTRY) == sizeof(UINT32), "FORT_APP_ENTRY size mismatch");
+static_assert(sizeof(FORT_APP_ENTRY) == 2 * sizeof(UINT32), "FORT_APP_ENTRY size mismatch");
 
 #ifndef FORT_DRIVER
 #    define fort_memcmp memcmp
@@ -209,32 +209,30 @@ static BOOL fort_conf_app_wild_equal(
 typedef BOOL fort_conf_app_equal_func(
         const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len);
 
-static FORT_APP_FLAGS fort_conf_app_find_loop(const PFORT_CONF conf, const PVOID path,
+static FORT_APP_ENTRY fort_conf_app_find_loop(const PFORT_CONF conf, const PVOID path,
         UINT32 path_len, UINT32 apps_off, UINT16 apps_n, fort_conf_app_equal_func *app_equal_func)
 {
-    FORT_APP_FLAGS app_flags;
-    app_flags.v = 0;
+    FORT_APP_ENTRY app_data;
+    app_data.flags.v = 0;
 
     if (apps_n == 0)
-        return app_flags;
+        return app_data;
 
     const char *app_entries = (const char *) (conf->data + apps_off);
 
     do {
         const PFORT_APP_ENTRY app_entry = (const PFORT_APP_ENTRY) app_entries;
 
-        if (app_equal_func(app_entry, path, path_len)) {
-            app_flags = app_entry->flags;
-            break;
-        }
+        if (app_equal_func(app_entry, path, path_len))
+            return *app_entry;
 
         app_entries += FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
     } while (--apps_n != 0);
 
-    return app_flags;
+    return app_data;
 }
 
-FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
+FORT_API FORT_APP_ENTRY fort_conf_app_exe_find(
         const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len)
 {
     UNUSED(context);
@@ -243,7 +241,7 @@ FORT_API FORT_APP_FLAGS fort_conf_app_exe_find(
             conf, path, path_len, conf->exe_apps_off, conf->exe_apps_n, fort_conf_app_exe_equal);
 }
 
-static FORT_APP_FLAGS fort_conf_app_wild_find(
+static FORT_APP_ENTRY fort_conf_app_wild_find(
         const PFORT_CONF conf, const PVOID path, UINT32 path_len)
 {
     return fort_conf_app_find_loop(
@@ -261,15 +259,15 @@ static int fort_conf_app_prefix_cmp(PFORT_APP_ENTRY app_entry, const PVOID path,
     return fort_memcmp(path, app_path, path_len);
 }
 
-static FORT_APP_FLAGS fort_conf_app_prefix_find(
+static FORT_APP_ENTRY fort_conf_app_prefix_find(
         const PFORT_CONF conf, const PVOID path, UINT32 path_len)
 {
-    FORT_APP_FLAGS app_flags;
-    app_flags.v = 0;
+    FORT_APP_ENTRY app_data;
+    app_data.flags.v = 0;
 
     const UINT16 count = conf->prefix_apps_n;
     if (count == 0)
-        return app_flags;
+        return app_data;
 
     const char *data = conf->data;
     const UINT32 *app_offsets = (const UINT32 *) (data + conf->prefix_apps_off);
@@ -285,34 +283,34 @@ static FORT_APP_FLAGS fort_conf_app_prefix_find(
 
         const int res = fort_conf_app_prefix_cmp(app_entry, path, path_len);
 
-        if (res < 0)
+        if (res < 0) {
             high = mid - 1;
-        else if (res > 0)
+        } else if (res > 0) {
             low = mid + 1;
-        else {
-            app_flags = app_entry->flags;
-            break;
+        } else {
+            return *app_entry;
         }
     } while (low <= high);
 
-    return app_flags;
+    return app_data;
 }
 
-FORT_API FORT_APP_FLAGS fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
+FORT_API FORT_APP_ENTRY fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context)
 {
-    FORT_APP_FLAGS app_flags;
+    FORT_APP_ENTRY app_entry;
 
-    app_flags = exe_find_func(conf, exe_context, path, path_len);
-    if (app_flags.v != 0)
-        return app_flags;
+    app_entry = exe_find_func(conf, exe_context, path, path_len);
+    if (app_entry.flags.v != 0)
+        return app_entry;
 
-    app_flags = fort_conf_app_wild_find(conf, path, path_len);
-    if (app_flags.v != 0)
-        return app_flags;
+    app_entry = fort_conf_app_wild_find(conf, path, path_len);
+    if (app_entry.flags.v != 0)
+        return app_entry;
 
-    app_flags = fort_conf_app_prefix_find(conf, path, path_len);
-    return app_flags;
+    app_entry = fort_conf_app_prefix_find(conf, path, path_len);
+
+    return app_entry;
 }
 
 static BOOL fort_conf_app_blocked_check(const PFORT_CONF conf, INT8 *block_reason, BOOL app_found,
@@ -344,11 +342,6 @@ FORT_API BOOL fort_conf_app_blocked(
     const BOOL app_found = (app_flags.v != 0);
 
     if (app_found) {
-        if (app_flags.lan_only) {
-            *block_reason = FORT_BLOCK_REASON_LAN_ONLY;
-            return TRUE;
-        }
-
         if (!app_flags.use_group_perm) {
             *block_reason = FORT_BLOCK_REASON_PROGRAM;
             return app_flags.blocked;

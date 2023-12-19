@@ -15,6 +15,9 @@ public:
     bool isTristate() const { return m_isTristate; }
     void setIsTristate(bool isTristate) { m_isTristate = isTristate; }
 
+    int maxZoneCount() const { return m_maxZoneCount; }
+    void setMaxZoneCount(int maxZoneCount) { m_maxZoneCount = maxZoneCount; }
+
     quint32 zones() const { return m_zones; }
     void setZones(quint32 zones);
 
@@ -52,6 +55,8 @@ private:
 
 private:
     bool m_isTristate = false;
+
+    int m_maxZoneCount = INT_MAX;
 
     quint32 m_zones = 0;
     quint32 m_uncheckedZones = 0;

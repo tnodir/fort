@@ -416,11 +416,13 @@ inline static void fort_pstree_check_proc_conf(
 
     const PFORT_CONF conf = &conf_ref->conf;
 
-    const FORT_APP_FLAGS app_flags = conf->proc_wild
+    const FORT_APP_ENTRY app_data = conf->proc_wild
             ? fort_conf_app_find(conf, path_buf, path_len, fort_conf_exe_find, conf_ref)
             : fort_conf_exe_find(conf, conf_ref, path_buf, path_len);
 
-    fort_pstree_check_proc_app_flags(ps_tree, proc, path_buf, path_len, app_flags);
+    if (app_data.flags.v != 0) {
+        fort_pstree_check_proc_app_flags(ps_tree, proc, path_buf, path_len, app_data.flags);
+    }
 }
 
 inline static BOOL fort_pstree_check_proc_inherited(

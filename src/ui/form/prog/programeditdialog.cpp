@@ -405,6 +405,7 @@ QLayout *ProgramEditDialog::setupZonesLayout()
     // Zones
     m_btZones = new ZonesSelector();
     m_btZones->setIsTristate(true);
+    m_btZones->setMaxZoneCount(16); // sync with driver's FORT_APP_ENTRY
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_cbLanOnly);

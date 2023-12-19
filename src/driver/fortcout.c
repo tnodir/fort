@@ -47,24 +47,24 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
 }
 
 inline static void fort_callout_ale_set_app_flags(
-        PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_FLAGS app_flags)
+        PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_ENTRY app_data)
 {
-    cx->app_flags_found = TRUE;
-    cx->app_flags = app_flags;
+    cx->app_data_found = TRUE;
+    cx->app_data = app_data;
 }
 
-static FORT_APP_FLAGS fort_callout_ale_conf_app_flags(
+static FORT_APP_ENTRY fort_callout_ale_conf_app_data(
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
-    if (cx->app_flags_found)
-        return cx->app_flags;
+    if (cx->app_data_found)
+        return cx->app_data;
 
-    const FORT_APP_FLAGS app_flags = fort_conf_app_find(
+    const FORT_APP_ENTRY app_data = fort_conf_app_find(
             &conf_ref->conf, cx->path->Buffer, cx->path->Length, fort_conf_exe_find, conf_ref);
 
-    fort_callout_ale_set_app_flags(cx, app_flags);
+    fort_callout_ale_set_app_flags(cx, app_data);
 
-    return app_flags;
+    return app_data;
 }
 
 inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
@@ -110,22 +110,22 @@ inline static BOOL fort_callout_ale_log_app_path_check(
 }
 
 inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
-        PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
+        PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_ENTRY app_data)
 {
-    if (!fort_callout_ale_log_app_path_check(conf_flags, app_flags))
+    if (!fort_callout_ale_log_app_path_check(conf_flags, app_data.flags))
         return;
 
-    app_flags.log_blocked = TRUE;
-    app_flags.log_conn = TRUE;
-    app_flags.blocked = (UCHAR) cx->blocked;
-    app_flags.alerted = TRUE;
-    app_flags.is_new = TRUE;
+    app_data.flags.log_blocked = TRUE;
+    app_data.flags.log_conn = TRUE;
+    app_data.flags.blocked = (UCHAR) cx->blocked;
+    app_data.flags.alerted = TRUE;
+    app_data.flags.is_new = TRUE;
 
     if (!NT_SUCCESS(fort_conf_ref_exe_add_path(
-                conf_ref, cx->path->Buffer, cx->path->Length, app_flags)))
+                conf_ref, cx->path->Buffer, cx->path->Length, app_data.flags)))
         return;
 
-    fort_callout_ale_set_app_flags(cx, app_flags);
+    fort_callout_ale_set_app_flags(cx, app_data);
 
     fort_buffer_blocked_write(&fort_device()->buffer, cx->blocked, cx->process_id,
             cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
@@ -147,9 +147,9 @@ inline static BOOL fort_callout_ale_log_blocked_ip_check(
     if (!(conf_flags.ask_to_connect || conf_flags.log_blocked_ip))
         return FALSE;
 
-    const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
+    const FORT_APP_ENTRY app_data = fort_callout_ale_conf_app_data(cx, conf_ref);
 
-    return fort_callout_ale_log_blocked_ip_check_app(conf_flags, app_flags);
+    return fort_callout_ale_log_blocked_ip_check_app(conf_flags, app_data.flags);
 }
 
 inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
@@ -200,30 +200,70 @@ inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CA
     return fort_callout_ale_associate_flow(ca, cx, conf_ref, app_flags);
 }
 
-inline static BOOL fort_callout_ale_is_allowed(PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref,
-        FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
+static BOOL fort_callout_ale_is_zone_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
+        PFORT_CONF_REF conf_ref, FORT_APP_ENTRY app_data)
+{
+    const BOOL app_found = (app_data.flags.v != 0);
+    if (!app_found)
+        return FALSE;
+
+    if (app_data.flags.lan_only) {
+        cx->block_reason = FORT_BLOCK_REASON_LAN_ONLY;
+        return TRUE;
+    }
+
+    if (app_data.reject_zones != 0
+            && fort_conf_zones_ip_included(
+                    &fort_device()->conf, app_data.reject_zones, cx->remote_ip, ca->isIPv6)) {
+        cx->blocked = TRUE; /* block Rejected Zone */
+        cx->block_reason = FORT_BLOCK_REASON_ZONE;
+        return TRUE;
+    }
+
+    if (app_data.accept_zones != 0
+            && !fort_conf_zones_ip_included(
+                    &fort_device()->conf, app_data.accept_zones, cx->remote_ip, ca->isIPv6)) {
+        cx->blocked = TRUE; /* block Not Accepted Zone */
+        cx->block_reason = FORT_BLOCK_REASON_ZONE;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+inline static BOOL fort_callout_ale_is_new(FORT_CONF_FLAGS conf_flags, FORT_APP_ENTRY app_data)
+{
+    const BOOL app_found = (app_data.flags.v != 0);
+
+    return !app_found && (conf_flags.allow_all_new || conf_flags.ask_to_connect);
+}
+
+inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
+        PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_ENTRY app_data)
 {
     return !cx->blocked /* collect traffic, when Filter Disabled */
             /* "Allow, if not blocked" or "Ask to Connect" */
-            || (app_flags.v == 0 && (conf_flags.allow_all_new || conf_flags.ask_to_connect))
+            || fort_callout_ale_is_new(conf_flags, app_data)
+            /* "Allow, if not blocked" or "Ask to Connect" */
+            || !fort_callout_ale_is_zone_blocked(ca, cx, conf_ref, app_data)
             /* check the conf for a blocked app */
-            || !fort_conf_app_blocked(&conf_ref->conf, app_flags, &cx->block_reason);
+            || !fort_conf_app_blocked(&conf_ref->conf, app_data.flags, &cx->block_reason);
 }
 
 inline static void fort_callout_ale_log(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
-    const FORT_APP_FLAGS app_flags = fort_callout_ale_conf_app_flags(cx, conf_ref);
+    const FORT_APP_ENTRY app_data = fort_callout_ale_conf_app_data(cx, conf_ref);
 
-    if (fort_callout_ale_is_allowed(cx, conf_ref, conf_flags, app_flags)) {
+    if (fort_callout_ale_is_allowed(ca, cx, conf_ref, conf_flags, app_data)) {
 
-        if (fort_callout_ale_process_flow(ca, cx, conf_ref, conf_flags, app_flags))
+        if (fort_callout_ale_process_flow(ca, cx, conf_ref, conf_flags, app_data.flags))
             return;
 
         cx->blocked = FALSE; /* allow */
     }
 
-    fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_flags);
+    fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_data);
 }
 
 inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,

@@ -146,7 +146,7 @@ void ZonesSelector::createZonesMenu()
 {
     auto zoneListModel = IoC<ZoneListModel>();
 
-    const int zoneCount = zoneListModel->rowCount();
+    const int zoneCount = qMin(zoneListModel->rowCount(), maxZoneCount());
     for (int row = 0; row < zoneCount; ++row) {
         const auto zoneRow = zoneListModel->zoneRowAt(row);
 

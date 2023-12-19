@@ -466,7 +466,6 @@ bool ConfUtil::addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint
     appsSize += appSize;
 
     const FORT_APP_ENTRY appEntry = {
-        .path_len = appPathLen,
         .flags = {
                 .group_index = quint8(app.groupIndex),
                 .use_group_perm = app.useGroupPerm,
@@ -481,9 +480,12 @@ bool ConfUtil::addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint
                 .is_new = isNew,
                 .found = 1,
         },
+        .path_len = appPathLen,
+        .accept_zones = quint16(app.acceptZones),
+        .reject_zones = quint16(app.rejectZones),
     };
 
-    appsMap.insert(kernelPath, appEntry.v);
+    appsMap.insert(kernelPath, appEntry);
 
     m_driveMask |= FileUtil::driveMaskByPath(app.appPath);
 
@@ -797,8 +799,7 @@ void ConfUtil::writeApps(char **data, const appentry_map_t &appsMap, bool useHea
     for (; it != end; ++it) {
         const QString &appPath = it.key();
 
-        FORT_APP_ENTRY appEntry;
-        appEntry.v = it.value();
+        const FORT_APP_ENTRY &appEntry = it.value();
 
         PFORT_APP_ENTRY entry = (PFORT_APP_ENTRY) p;
         *entry++ = appEntry;

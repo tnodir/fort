@@ -68,23 +68,27 @@ static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
     return NULL;
 }
 
-FORT_API FORT_APP_FLAGS fort_conf_exe_find(
+FORT_API FORT_APP_ENTRY fort_conf_exe_find(
         const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len)
 {
     PFORT_CONF_REF conf_ref = context;
     const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
-    FORT_APP_FLAGS app_flags;
+
+    FORT_APP_ENTRY app_data;
+    app_data.flags.v = 0;
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&conf_ref->conf_lock);
     {
         const PFORT_CONF_EXE_NODE node =
                 fort_conf_ref_exe_find_node(conf_ref, path, path_len, path_hash);
 
-        app_flags.v = node ? node->app_entry->flags.v : 0;
+        if (node != NULL) {
+            app_data = *node->app_entry;
+        }
     }
     ExReleaseSpinLockShared(&conf_ref->conf_lock, oldIrql);
 
-    return app_flags;
+    return app_data;
 }
 
 static void fort_conf_ref_exe_new_path(
@@ -123,6 +127,8 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, const PVOID
 
     entry->flags = flags;
     entry->path_len = (UINT16) path_len;
+    entry->accept_zones = 0;
+    entry->reject_zones = 0;
 
     /* Copy path */
     {

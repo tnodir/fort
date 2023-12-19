@@ -5,10 +5,12 @@
 #include <QObject>
 #include <QVarLengthArray>
 
+#include <common/fortconf.h>
+
 #include "addressrange.h"
 
 using addrranges_arr_t = QVarLengthArray<AddressRange, 2>;
-using appentry_map_t = QMap<QString, quint32>;
+using appentry_map_t = QMap<QString, FORT_APP_ENTRY>;
 
 class AppParseOptions
 {

@@ -41,13 +41,13 @@ typedef const FORT_CALLOUT_ARG *PCFORT_CALLOUT_ARG;
 typedef struct fort_callout_ale_extra
 {
     UCHAR is_reauth : 1;
-    UCHAR app_flags_found : 1;
+    UCHAR app_data_found : 1;
     UCHAR inherited : 1;
     UCHAR drop_blocked : 1;
     UCHAR blocked : 1;
     INT8 block_reason;
 
-    FORT_APP_FLAGS app_flags;
+    FORT_APP_ENTRY app_data;
 
     UINT32 process_id;
 
