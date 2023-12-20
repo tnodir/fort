@@ -1793,7 +1793,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Update Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>更新区域</translation>
     </message>
 </context>
 </TS>
