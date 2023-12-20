@@ -106,6 +106,12 @@ void Logger::setPath(const QString &path)
     m_dir.setPath(path);
 }
 
+QString Logger::getFileTitle() const
+{
+    return QLatin1String(APP_NAME) + " v" + APP_VERSION_STR
+            + (isService() ? " Service" : QString());
+}
+
 Logger *Logger::instance()
 {
     static Logger *g_instanceLogger = nullptr;
@@ -196,7 +202,7 @@ void Logger::writeLog(const QString &dateString, const QString &logLine)
         }
 
         // Write file header
-        writeLogLine(makeLogLine(Info, dateString, APP_NAME " v" APP_VERSION_STR));
+        writeLogLine(makeLogLine(Info, dateString, getFileTitle()));
     }
 
     writeLogLine(logLine);

@@ -26,6 +26,8 @@ public:
 
     void setPath(const QString &path);
 
+    QString getFileTitle() const;
+
     static Logger *instance();
 
     static QString getDateString();
