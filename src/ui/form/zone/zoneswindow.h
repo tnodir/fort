@@ -62,6 +62,8 @@ private:
     QLayout *setupZoneEditTextLayout();
     QLayout *setupZoneEditButtons();
     QLayout *setupHeader();
+    void setupSaveAsText();
+    void setupTaskRun();
     void setupTableZones();
     void setupTableZonesHeader();
     void setupTableZonesChanged();
@@ -94,6 +96,7 @@ private:
     QAction *m_actEditZone = nullptr;
     QAction *m_actRemoveZone = nullptr;
     QPushButton *m_btSaveAsText = nullptr;
+    QPushButton *m_btUpdateZones = nullptr;
     QPushButton *m_btMenu = nullptr;
     QLabel *m_labelZoneName = nullptr;
     QLineEdit *m_editZoneName = nullptr;

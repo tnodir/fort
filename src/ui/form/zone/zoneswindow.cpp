@@ -133,6 +133,7 @@ void ZonesWindow::onRetranslateUi()
     m_actEditZone->setText(tr("Edit"));
     m_actRemoveZone->setText(tr("Remove"));
     m_btSaveAsText->setText(tr("Save As Text"));
+    m_btUpdateZones->setText(tr("Update Zones"));
 
     m_formZoneEdit->unsetLocale();
     m_formZoneEdit->setWindowTitle(tr("Edit Zone"));
@@ -368,6 +369,26 @@ QLayout *ZonesWindow::setupHeader()
     m_btEdit->setMenu(editMenu);
 
     // Save As Text
+    setupSaveAsText();
+
+    // Run Task
+    setupTaskRun();
+
+    // Menu button
+    m_btMenu = windowManager()->createMenuButton();
+
+    layout->addWidget(m_btEdit);
+    layout->addWidget(m_btSaveAsText);
+    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(m_btUpdateZones);
+    layout->addStretch();
+    layout->addWidget(m_btMenu);
+
+    return layout;
+}
+
+void ZonesWindow::setupSaveAsText()
+{
     m_btSaveAsText = ControlUtil::createButton(":/icons/save_as.png", [&] {
         const auto filePath = DialogUtil::getSaveFileName(
                 m_btSaveAsText->text(), tr("Text files (*.txt);;All files (*.*)"));
@@ -380,16 +401,12 @@ QLayout *ZonesWindow::setupHeader()
             windowManager()->showErrorBox(tr("Cannot save Zone addresses as text file"));
         }
     });
+}
 
-    // Menu button
-    m_btMenu = windowManager()->createMenuButton();
-
-    layout->addWidget(m_btEdit);
-    layout->addWidget(m_btSaveAsText);
-    layout->addStretch();
-    layout->addWidget(m_btMenu);
-
-    return layout;
+void ZonesWindow::setupTaskRun()
+{
+    m_btUpdateZones = ControlUtil::createButton(
+            ":/icons/play.png", [&] { taskManager()->runTask(TaskInfo::ZoneDownloader); });
 }
 
 void ZonesWindow::setupTableZones()
