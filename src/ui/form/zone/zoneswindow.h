@@ -94,6 +94,7 @@ private:
     QAction *m_actEditZone = nullptr;
     QAction *m_actRemoveZone = nullptr;
     QPushButton *m_btSaveAsText = nullptr;
+    QPushButton *m_btMenu = nullptr;
     QLabel *m_labelZoneName = nullptr;
     QLineEdit *m_editZoneName = nullptr;
     QLabel *m_labelSource = nullptr;

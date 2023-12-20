@@ -381,9 +381,13 @@ QLayout *ZonesWindow::setupHeader()
         }
     });
 
+    // Menu button
+    m_btMenu = windowManager()->createMenuButton();
+
     layout->addWidget(m_btEdit);
     layout->addWidget(m_btSaveAsText);
     layout->addStretch();
+    layout->addWidget(m_btMenu);
 
     return layout;
 }
