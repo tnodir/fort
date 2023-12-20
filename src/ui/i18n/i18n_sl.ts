@@ -1791,5 +1791,9 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Cannot save Zone addresses as text file</source>
         <translation>Naslovov področij ni mogoče shraniti kot besedilno datoteko</translation>
     </message>
+    <message>
+        <source>Update Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

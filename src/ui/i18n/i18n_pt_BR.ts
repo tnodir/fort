@@ -1787,5 +1787,9 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Cannot save Zone addresses as text file</source>
         <translation>Não pode salvar endereços da Zona como arquivo de texto</translation>
     </message>
+    <message>
+        <source>Update Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

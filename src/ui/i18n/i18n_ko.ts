@@ -1791,5 +1791,9 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Cannot save Zone addresses as text file</source>
         <translation>대역 주소를 텍스트 파일로 저장할 수 없습니다.</translation>
     </message>
+    <message>
+        <source>Update Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

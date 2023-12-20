@@ -1791,5 +1791,9 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Cannot save Zone addresses as text file</source>
         <translation>Impossible d&apos;enregistrer les adresses de zone sous forme de fichier texte</translation>
     </message>
+    <message>
+        <source>Update Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
