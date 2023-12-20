@@ -5,6 +5,7 @@
 #include <QRegularExpression>
 #include <QUrl>
 
+#include <fortcompat.h>
 #include <util/conf/confutil.h>
 #include <util/fileutil.h>
 #include <util/net/iprange.h>
@@ -93,7 +94,7 @@ StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &
         if (line.startsWith('#') || line.startsWith(';')) // commented line
             continue;
 
-        const auto match = re.match(line);
+        const auto match = matchRegExp(re, line);
         if (!match.hasMatch())
             continue;
 

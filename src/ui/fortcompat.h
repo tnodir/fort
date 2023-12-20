@@ -13,4 +13,10 @@ using TokenizeViewResult = QStringTokenizer<QStringView, QChar>;
 
 #define asConst(t) std::as_const(t)
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+#    define matchRegExp(re, s) (re).matchView(s)
+#else
+#    define matchRegExp(re, s) (re).match(s)
+#endif
+
 #endif // FORTCOMPAT_H

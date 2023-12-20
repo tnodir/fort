@@ -178,7 +178,7 @@ IpRange::ParseError IpRange::parseIpLine(
     const bool isIPv6 = !line.contains('.');
     const QRegularExpression &re = isIPv6 ? ip6Re : ip4Re;
 
-    const auto match = re.match(line);
+    const auto match = matchRegExp(re, line);
     if (!match.hasMatch()) {
         setErrorMessage(tr("Bad format"));
         return ErrorBadFormat;
