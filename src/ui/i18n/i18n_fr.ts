@@ -1793,7 +1793,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Update Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>Mettre à jour les Zones</translation>
     </message>
 </context>
 </TS>

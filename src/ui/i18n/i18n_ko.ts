@@ -1793,7 +1793,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Update Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>영역 업데이트</translation>
     </message>
 </context>
 </TS>

@@ -1793,7 +1793,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Update Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>Posodobi področja</translation>
     </message>
 </context>
 </TS>
