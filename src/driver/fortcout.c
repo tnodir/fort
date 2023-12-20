@@ -210,20 +210,18 @@ static BOOL fort_callout_ale_is_zone_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOU
         return TRUE; /* block LAN Only */
     }
 
-    if (app_data.reject_zones != 0) {
-        if (fort_conf_zones_ip_included(
+    if (app_data.reject_zones != 0
+            && fort_conf_zones_ip_included(
                     &fort_device()->conf, app_data.reject_zones, cx->remote_ip, ca->isIPv6)) {
-            cx->block_reason = FORT_BLOCK_REASON_ZONE;
-            return TRUE; /* block Rejected Zone */
-        }
+        cx->block_reason = FORT_BLOCK_REASON_ZONE;
+        return TRUE; /* block Rejected Zone */
     }
 
-    if (app_data.accept_zones != 0) {
-        if (!fort_conf_zones_ip_included(
+    if (app_data.accept_zones != 0
+            && !fort_conf_zones_ip_included(
                     &fort_device()->conf, app_data.accept_zones, cx->remote_ip, ca->isIPv6)) {
-            cx->block_reason = FORT_BLOCK_REASON_ZONE;
-            return TRUE; /* block Not Accepted Zone */
-        }
+        cx->block_reason = FORT_BLOCK_REASON_ZONE;
+        return TRUE; /* block Not Accepted Zone */
     }
 
     return FALSE;
