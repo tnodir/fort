@@ -372,7 +372,7 @@
     </message>
     <message>
         <source>Restrict access by Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Omeji dostop glede na območje</translation>
     </message>
 </context>
 <context>
@@ -1680,11 +1680,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Yes</source>
-        <translation type="unfinished"></translation>
+        <translation>Da</translation>
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne</translation>
     </message>
 </context>
 <context>
@@ -1714,11 +1714,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <name>ZonesSelector</name>
     <message>
         <source>Select Zones</source>
-        <translation type="unfinished">Izberi področja</translation>
+        <translation>Izberi področja</translation>
     </message>
     <message>
         <source>Zones</source>
-        <translation type="unfinished">Področja</translation>
+        <translation>Področja</translation>
     </message>
 </context>
 <context>

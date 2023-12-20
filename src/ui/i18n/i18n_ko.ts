@@ -372,7 +372,7 @@
     </message>
     <message>
         <source>Restrict access by Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>영역별 접근 제한</translation>
     </message>
 </context>
 <context>
@@ -1680,11 +1680,11 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Yes</source>
-        <translation type="unfinished"></translation>
+        <translation>예</translation>
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished"></translation>
+        <translation>아니오</translation>
     </message>
 </context>
 <context>
@@ -1714,11 +1714,11 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <name>ZonesSelector</name>
     <message>
         <source>Select Zones</source>
-        <translation type="unfinished">대역 선택</translation>
+        <translation>대역 선택</translation>
     </message>
     <message>
         <source>Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>대역</translation>
     </message>
 </context>
 <context>

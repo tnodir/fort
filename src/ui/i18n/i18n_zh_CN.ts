@@ -372,7 +372,7 @@
     </message>
     <message>
         <source>Restrict access by Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>按区域限制访问</translation>
     </message>
 </context>
 <context>
@@ -1680,11 +1680,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Yes</source>
-        <translation type="unfinished"></translation>
+        <translation>是</translation>
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished"></translation>
+        <translation>否</translation>
     </message>
 </context>
 <context>
@@ -1714,11 +1714,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>ZonesSelector</name>
     <message>
         <source>Select Zones</source>
-        <translation type="unfinished">选择区域</translation>
+        <translation>选择区域</translation>
     </message>
     <message>
         <source>Zones</source>
-        <translation type="unfinished">区域</translation>
+        <translation>区域</translation>
     </message>
 </context>
 <context>

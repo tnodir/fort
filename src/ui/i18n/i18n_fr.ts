@@ -372,7 +372,7 @@
     </message>
     <message>
         <source>Restrict access by Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Restreindre l’accès par Zone</translation>
     </message>
 </context>
 <context>
@@ -1680,11 +1680,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Yes</source>
-        <translation type="unfinished"></translation>
+        <translation>Oui</translation>
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished"></translation>
+        <translation>Non</translation>
     </message>
 </context>
 <context>
@@ -1714,11 +1714,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <name>ZonesSelector</name>
     <message>
         <source>Select Zones</source>
-        <translation type="unfinished">Sélectionner zones</translation>
+        <translation>Sélectionner zones</translation>
     </message>
     <message>
         <source>Zones</source>
-        <translation type="unfinished">Zones</translation>
+        <translation>Zones</translation>
     </message>
 </context>
 <context>
