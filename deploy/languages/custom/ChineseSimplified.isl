@@ -14,5 +14,6 @@ UninstallPasswordOK=确定
 UninstallPasswordCancel=取消
 WrongPassword=密码错误
 NotCompatibleWithWindows=This program is not compatible with Windows version (Windows 10 2004 or newer required).
+NotCompatibleWithWindows7=This program is not compatible with Windows 7 version (KB4474419 required).
 NotCompatibleWithHVCI=这个程序与HVCI（核心隔离）不兼容。
 IsDeleteData=您希望删除配置文件和数据文件吗？

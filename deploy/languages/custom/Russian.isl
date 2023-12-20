@@ -14,5 +14,6 @@ UninstallPasswordOK=OK
 UninstallPasswordCancel=Отмена
 WrongPassword=Wrong password
 NotCompatibleWithWindows=Эта программа несовместима с версией Windows (требуется Windows 10 2004 или новее).
+NotCompatibleWithWindows7=Эта программа несовместима с версией Windows 7 (требуется KB4474419).
 NotCompatibleWithHVCI=Эта программа несовместима с HVCI (Core Isolation).
 IsDeleteData=Удалить настройки и файлы данных?

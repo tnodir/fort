@@ -140,6 +140,35 @@ begin
   Result := (Version.Major > 10) or ((Version.Major = 10) and (Version.Build > 19040));
 end;
 
+function IsWindows7(): Boolean;
+var
+  Version: TWindowsVersion;
+begin
+  GetWindowsVersionEx(Version);
+  Result := (Version.Major = 6) and (Version.Minor = 1);
+end;
+
+function IsUpdateInstalled(KB: String): Boolean;
+var
+  UpdateSession: Variant;
+  UpdateSearcher: Variant;
+  SearchResult: Variant;
+  I: Integer;
+begin
+  UpdateSession := CreateOleObject('Microsoft.Update.Session');
+  UpdateSearcher := UpdateSession.CreateUpdateSearcher();
+  SearchResult := UpdateSearcher.Search('IsInstalled=1');
+  for I := 0 to SearchResult.Updates.Count - 1 do
+  begin
+    if SearchResult.Updates.Item(I).KBArticleIDs.Item(0) = KB then
+    begin
+      Result := true;
+      Exit;
+    end;
+  end;
+  Result := false;
+end;
+
 function HVCIEnabled(): Boolean;
 var
   EnabledValue: Cardinal;
@@ -291,6 +320,14 @@ begin
   if not IsWindows10OrNewer() then
   begin
     SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithWindows}'), mbCriticalError, MB_OK, IDOK);
+
+    Result := False;
+    Exit;
+  end;
+#else
+  if IsWindows7() and not IsUpdateInstalled('4474419') then
+  begin
+    SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithWindows7}'), mbCriticalError, MB_OK, IDOK);
 
     Result := False;
     Exit;
