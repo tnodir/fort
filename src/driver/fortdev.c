@@ -211,7 +211,7 @@ inline static NTSTATUS fort_device_control_app_conf(
     NTSTATUS status;
 
     if (is_adding) {
-        status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, FALSE);
+        status = fort_conf_ref_exe_add_entry(conf_ref, app_entry, /*locked=*/FALSE);
     } else {
         fort_conf_ref_exe_del_entry(conf_ref, app_entry);
         status = STATUS_SUCCESS;

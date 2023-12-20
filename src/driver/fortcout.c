@@ -89,9 +89,8 @@ inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
             TRACE(FORT_CALLOUT_FLOW_ASSOC_ERROR, status, 0, 0);
         }
 
-        cx->blocked = TRUE; /* block (Error) */
         cx->block_reason = FORT_BLOCK_REASON_REAUTH;
-        return TRUE;
+        return TRUE; /* block (Error) */
     }
 
     if (!log_stat) {
@@ -121,8 +120,9 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     app_data.flags.alerted = TRUE;
     app_data.flags.is_new = TRUE;
 
-    if (!NT_SUCCESS(fort_conf_ref_exe_add_path(
-                conf_ref, cx->path->Buffer, cx->path->Length, app_data.flags)))
+    app_data.path_len = cx->path->Length;
+
+    if (!NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, &app_data, cx->path->Buffer)))
         return;
 
     fort_callout_ale_set_app_flags(cx, app_data);
@@ -176,15 +176,13 @@ inline static BOOL fort_callout_ale_add_pending(
         PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags)
 {
     if (!fort_pending_add_packet(&fort_device()->pending, ca, cx)) {
-        cx->blocked = TRUE; /* block (error) */
         cx->block_reason = FORT_BLOCK_REASON_ASK_LIMIT;
-        return TRUE;
+        return TRUE; /* block (error) */
     }
 
-    cx->drop_blocked = TRUE; /* drop (pending) */
-    cx->blocked = TRUE;
+    cx->drop_blocked = TRUE;
     cx->block_reason = FORT_BLOCK_REASON_ASK_PENDING;
-    return TRUE;
+    return TRUE; /* drop (pending) */
 }
 
 inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
@@ -209,23 +207,23 @@ static BOOL fort_callout_ale_is_zone_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOU
 
     if (app_data.flags.lan_only) {
         cx->block_reason = FORT_BLOCK_REASON_LAN_ONLY;
-        return TRUE;
+        return TRUE; /* block LAN Only */
     }
 
-    if (app_data.reject_zones != 0
-            && fort_conf_zones_ip_included(
+    if (app_data.reject_zones != 0) {
+        if (fort_conf_zones_ip_included(
                     &fort_device()->conf, app_data.reject_zones, cx->remote_ip, ca->isIPv6)) {
-        cx->blocked = TRUE; /* block Rejected Zone */
-        cx->block_reason = FORT_BLOCK_REASON_ZONE;
-        return TRUE;
+            cx->block_reason = FORT_BLOCK_REASON_ZONE;
+            return TRUE; /* block Rejected Zone */
+        }
     }
 
-    if (app_data.accept_zones != 0
-            && !fort_conf_zones_ip_included(
+    if (app_data.accept_zones != 0) {
+        if (!fort_conf_zones_ip_included(
                     &fort_device()->conf, app_data.accept_zones, cx->remote_ip, ca->isIPv6)) {
-        cx->blocked = TRUE; /* block Not Accepted Zone */
-        cx->block_reason = FORT_BLOCK_REASON_ZONE;
-        return TRUE;
+            cx->block_reason = FORT_BLOCK_REASON_ZONE;
+            return TRUE; /* block Not Accepted Zone */
+        }
     }
 
     return FALSE;
@@ -271,28 +269,25 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     if (conf_flags.block_traffic) {
-        cx->blocked = TRUE; /* block all */
-        return TRUE;
+        return TRUE; /* block all */
     }
 
     if (!fort_conf_ip_is_inet(&conf_ref->conf,
                 (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
                 &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
-        cx->blocked = FALSE; /* allow LocalNetwork */
-        return TRUE;
+        cx->blocked = FALSE;
+        return TRUE; /* allow LocalNetwork */
     }
 
     if (conf_flags.block_inet_traffic) {
-        cx->blocked = TRUE; /* block Internet */
-        return TRUE;
+        return TRUE; /* block Internet */
     }
 
     if (!fort_conf_ip_inet_included(&conf_ref->conf,
                 (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
                 &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
-        cx->blocked = TRUE; /* block address */
         cx->block_reason = FORT_BLOCK_REASON_IP_INET;
-        return TRUE;
+        return TRUE; /* block address */
     }
 
     return FALSE;

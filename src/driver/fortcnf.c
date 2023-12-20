@@ -116,19 +116,18 @@ static void fort_conf_ref_exe_new_path(
     ++conf->exe_apps_n;
 }
 
-static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, const PVOID path,
-        UINT32 path_len, tommy_key_t path_hash, FORT_APP_FLAGS flags)
+static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref,
+        const PFORT_APP_ENTRY app_entry, const PVOID path, tommy_key_t path_hash)
 {
+    const UINT32 path_len = app_entry->path_len;
+
     const UINT16 entry_size = (UINT16) FORT_CONF_APP_ENTRY_SIZE(path_len);
     PFORT_APP_ENTRY entry = fort_pool_malloc(&conf_ref->pool_list, entry_size);
 
     if (entry == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
-    entry->flags = flags;
-    entry->path_len = (UINT16) path_len;
-    entry->accept_zones = 0;
-    entry->reject_zones = 0;
+    *entry = *app_entry;
 
     /* Copy path */
     {
@@ -142,54 +141,52 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, const PVOID
     return STATUS_SUCCESS;
 }
 
-static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref, const PVOID path,
-        UINT32 path_len, tommy_key_t path_hash, FORT_APP_FLAGS flags)
+static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
+        const PFORT_APP_ENTRY app_entry, const PVOID path, tommy_key_t path_hash)
 {
     const PFORT_CONF_EXE_NODE node =
-            fort_conf_ref_exe_find_node(conf_ref, path, path_len, path_hash);
+            fort_conf_ref_exe_find_node(conf_ref, path, app_entry->path_len, path_hash);
 
     if (node == NULL) {
-        return fort_conf_ref_exe_new_entry(conf_ref, path, path_len, path_hash, flags);
+        return fort_conf_ref_exe_new_entry(conf_ref, app_entry, path, path_hash);
     }
 
-    if (flags.is_new)
+    if (app_entry->flags.is_new)
         return FORT_STATUS_USER_ERROR;
 
-    /* Replace flags */
+    /* Replace the data */
     {
         PFORT_APP_ENTRY entry = node->app_entry;
-        entry->flags = flags;
+        *entry = *app_entry;
     }
 
     return STATUS_SUCCESS;
 }
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_path(
-        PFORT_CONF_REF conf_ref, const PVOID path, UINT32 path_len, FORT_APP_FLAGS flags)
+        PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY app_entry, const PVOID path)
 {
-    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
+    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, app_entry->path_len);
     NTSTATUS status;
 
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&conf_ref->conf_lock);
-    status = fort_conf_ref_exe_add_path_locked(conf_ref, path, path_len, path_hash, flags);
+    status = fort_conf_ref_exe_add_path_locked(conf_ref, app_entry, path, path_hash);
     ExReleaseSpinLockExclusive(&conf_ref->conf_lock, oldIrql);
 
     return status;
 }
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
-        PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry, BOOL locked)
+        PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY app_entry, BOOL locked)
 {
-    const PVOID path = entry + 1;
-    const UINT32 path_len = entry->path_len;
-    const FORT_APP_FLAGS flags = entry->flags;
+    const PVOID path = app_entry + 1;
 
     if (locked) {
-        const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
+        const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, app_entry->path_len);
 
-        return fort_conf_ref_exe_add_path_locked(conf_ref, path, path_len, path_hash, flags);
+        return fort_conf_ref_exe_add_path_locked(conf_ref, app_entry, path, path_hash);
     } else {
-        return fort_conf_ref_exe_add_path(conf_ref, path, path_len, flags);
+        return fort_conf_ref_exe_add_path(conf_ref, app_entry, path);
     }
 }
 

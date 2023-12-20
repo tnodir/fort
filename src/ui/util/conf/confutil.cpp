@@ -504,7 +504,7 @@ QString ConfUtil::parseAppPath(const StringView line, bool &isWild, bool &isPref
     if (path.isEmpty())
         return QString();
 
-    const auto wildMatch = wildMatcher.match(path);
+    const auto wildMatch = wildMatcher.matchView(path);
     if (wildMatch.hasMatch()) {
         if (wildMatch.capturedStart() == path.size() - 2 && path.endsWith(QLatin1String("**"))) {
             path.chop(2);

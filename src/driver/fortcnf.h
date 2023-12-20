@@ -57,7 +57,7 @@ FORT_API FORT_APP_ENTRY fort_conf_exe_find(
         const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len);
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_path(
-        PFORT_CONF_REF conf_ref, const PVOID path, UINT32 path_len, FORT_APP_FLAGS flags);
+        PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY app_entry, const PVOID path);
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
         PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry, BOOL locked);
