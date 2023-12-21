@@ -150,23 +150,10 @@ end;
 
 function IsUpdateInstalled(KB: String): Boolean;
 var
-  UpdateSession: Variant;
-  UpdateSearcher: Variant;
-  SearchResult: Variant;
-  I: Integer;
+  ResultCode: Integer;
 begin
-  UpdateSession := CreateOleObject('Microsoft.Update.Session');
-  UpdateSearcher := UpdateSession.CreateUpdateSearcher();
-  SearchResult := UpdateSearcher.Search('IsInstalled=1');
-  for I := 0 to SearchResult.Updates.Count - 1 do
-  begin
-    if SearchResult.Updates.Item(I).KBArticleIDs.Item(0) = KB then
-    begin
-      Result := true;
-      Exit;
-    end;
-  end;
-  Result := false;
+  Exec('cmd.exe', '/c "systeminfo | findstr ' + KB + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode)
+  Result := ResultCode = 0;
 end;
 
 function HVCIEnabled(): Boolean;
@@ -325,7 +312,7 @@ begin
     Exit;
   end;
 #else
-  if IsWindows7() and not IsUpdateInstalled('4474419') then
+  if IsWindows7() and not IsUpdateInstalled('KB4474419') then
   begin
     SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithWindows7}'), mbCriticalError, MB_OK, IDOK);
 
