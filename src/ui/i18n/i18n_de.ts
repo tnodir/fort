@@ -372,7 +372,7 @@
     </message>
     <message>
         <source>Restrict access by Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Zugriff nach Zone einschränken</translation>
     </message>
 </context>
 <context>
@@ -1680,11 +1680,11 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Yes</source>
-        <translation type="unfinished"></translation>
+        <translation>Ja</translation>
     </message>
     <message>
         <source>No</source>
-        <translation type="unfinished"></translation>
+        <translation>Nein</translation>
     </message>
 </context>
 <context>
@@ -1714,11 +1714,11 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <name>ZonesSelector</name>
     <message>
         <source>Select Zones</source>
-        <translation type="unfinished">Zonen auswählen</translation>
+        <translation>Zonen auswählen</translation>
     </message>
     <message>
         <source>Zones</source>
-        <translation type="unfinished">Zonen</translation>
+        <translation>Zonen</translation>
     </message>
 </context>
 <context>
@@ -1793,7 +1793,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Update Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonen aktualisieren</translation>
     </message>
 </context>
 </TS>
