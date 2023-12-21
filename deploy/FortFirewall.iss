@@ -127,6 +127,20 @@ begin
   Result := ActiveLanguage;
 end;
 
+function GetUninstallString(): string;
+var
+  UninstallKey: string;
+begin
+  UninstallKey := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppName")}_is1');
+  if not RegQueryStringValue(HKLM, UninstallKey, 'UninstallString', Result) then
+    RegQueryStringValue(HKCU, UninstallKey, 'UninstallString', Result);
+end;
+
+function IsUpgrade(): Boolean;
+begin
+  Result := GetUninstallString() <> '';
+end;
+
 function VCRedist86Exists(): Boolean;
 begin
   Result := FileExists(ExpandConstant('{syswow64}\vcruntime140.dll'));
@@ -303,6 +317,18 @@ begin
     Exit;
   end;
 
+  if not CheckPasswordHash() then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  if IsUpgrade() then
+  begin
+    Result := True;
+    Exit;
+  end;
+
 #if CHECK_WIN10 == "Y"
   if not IsWindows10OrNewer() then
   begin
@@ -329,7 +355,7 @@ begin
     Exit;
   end;
 
-  Result := CheckPasswordHash();
+  Result := True;
 end;
 
 function InitializeUninstall(): Boolean;
