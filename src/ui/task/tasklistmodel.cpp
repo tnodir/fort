@@ -103,7 +103,7 @@ QVariant TaskListModel::dataDisplay(const QModelIndex &index) const
 QVariant TaskListModel::dataCheckState(const QModelIndex &index) const
 {
     if (index.column() == 0) {
-        return taskEnabled(index.row());
+        return taskEnabled(index.row()) ? Qt::Checked : Qt::Unchecked;
     }
 
     return QVariant();

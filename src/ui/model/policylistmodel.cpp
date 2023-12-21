@@ -63,7 +63,7 @@ QVariant PolicyListModel::dataCheckState(const QModelIndex &index) const
 {
     if (index.column() == 0) {
         const auto policyRow = policyRowAt(index.row());
-        return policyRow.enabled;
+        return policyRow.enabled ? Qt::Checked : Qt::Unchecked;
     }
 
     return QVariant();

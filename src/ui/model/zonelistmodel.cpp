@@ -119,7 +119,7 @@ QVariant ZoneListModel::dataCheckState(const QModelIndex &index) const
 {
     if (index.column() == 0) {
         const auto zoneRow = zoneRowAt(index.row());
-        return zoneRow.enabled;
+        return zoneRow.enabled ? Qt::Checked : Qt::Unchecked;
     }
 
     return QVariant();
