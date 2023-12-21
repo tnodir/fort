@@ -3,6 +3,7 @@
 #include <QActionEvent>
 #include <QBoxLayout>
 #include <QCheckBox>
+#include <QCoreApplication>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -192,7 +193,7 @@ void ControlUtil::relayoutMenu(QMenu *menu, QAction *action)
     }
 
     QActionEvent e(QEvent::ActionChanged, action);
-    qApp->sendEvent(menu, &e);
+    QCoreApplication::sendEvent(menu, &e);
 }
 
 QBoxLayout *ControlUtil::createLayoutByWidgets(const QList<QWidget *> &widgets, Qt::Orientation o)
