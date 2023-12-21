@@ -6,6 +6,7 @@
 
 #include <functional>
 
+QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
@@ -58,6 +59,7 @@ public:
 
     static QMenu *createMenu(QWidget *parent = nullptr);
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);
+    static void relayoutMenu(QMenu *menu, QAction *action = nullptr);
 
     static QBoxLayout *createLayoutByWidgets(
             const QList<QWidget *> &widgets, Qt::Orientation o = Qt::Vertical);

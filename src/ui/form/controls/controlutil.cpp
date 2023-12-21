@@ -1,5 +1,6 @@
 #include "controlutil.h"
 
+#include <QActionEvent>
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QLabel>
@@ -182,6 +183,16 @@ QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
     menu->addAction(wa);
 
     return menu;
+}
+
+void ControlUtil::relayoutMenu(QMenu *menu, QAction *action)
+{
+    if (!action) {
+        action = menu->actions().first();
+    }
+
+    QActionEvent e(QEvent::ActionChanged, action);
+    qApp->sendEvent(menu, &e);
 }
 
 QBoxLayout *ControlUtil::createLayoutByWidgets(const QList<QWidget *> &widgets, Qt::Orientation o)
