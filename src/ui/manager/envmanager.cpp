@@ -7,7 +7,7 @@
 
 EnvManager::EnvManager(QObject *parent) : QObject(parent)
 {
-    setCachedEnvVar("FORTHOME", FileUtil::appBinLocation());
+    setCachedEnvVar(envFortHome(), FileUtil::appBinLocation());
 }
 
 QString EnvManager::expandString(const QString &text)
@@ -79,6 +79,11 @@ QString EnvManager::envVar(const QString &key)
 void EnvManager::setCachedEnvVar(const QString &key, const QVariant &value)
 {
     m_cache.insert(key, value);
+}
+
+QString EnvManager::envFortHome()
+{
+    return "FORTHOME";
 }
 
 QVariant EnvManager::readEnvVar(const QString &key)

@@ -9,9 +9,9 @@ public:
     explicit IniUser(Settings *settings = nullptr);
 
     QString defaultLanguage() const { return m_defaultLanguage; }
-    void setDefaultLanguage(const QString &v) { m_defaultLanguage = v; }
+    void setDefaultLanguage(const QString &v);
 
-    QString language() const { return valueText("base/language", defaultLanguage()); }
+    QString language() const { return valueText("base/language"); }
     void setLanguage(const QString &v) { setValue("base/language", v); }
 
     bool useSystemLocale() const { return valueBool("base/useSystemLocale", true); }

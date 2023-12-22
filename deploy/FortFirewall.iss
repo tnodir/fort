@@ -89,8 +89,8 @@ Filename: "{#APP_EXE}"; Parameters: "-i explorer"; Tasks: explorer
 Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; \
   Flags: nowait; Tasks: service
 
-Filename: "{#APP_EXE}"; Description: {cm:LaunchProgram,{#APP_NAME}}; \
-  Flags: nowait postinstall skipifsilent; \
+Filename: "{#APP_EXE}"; Parameters: "--lang {code:LanguageName}"; \
+  Description: {cm:LaunchProgram,{#APP_NAME}}; Flags: nowait postinstall skipifsilent; \
   Check: VCRedist86Exists()
 
 Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \

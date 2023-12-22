@@ -1,7 +1,7 @@
 #include "firewallconf.h"
 
 #include <fortcompat.h>
-#include <util/fileutil.h>
+#include <manager/envmanager.h>
 #include <util/net/netutil.h>
 
 #include "addressgroup.h"
@@ -249,7 +249,7 @@ void FirewallConf::removeAppGroup(int from, int to)
 void FirewallConf::addDefaultAppGroup()
 {
     auto appGroup = addAppGroupByName("Main");
-    appGroup->setAllowText(FileUtil::appBinLocation() + "/**");
+    appGroup->setAllowText('%' + EnvManager::envFortHome() + "%/**");
 }
 
 void FirewallConf::clearRemovedAppGroupIdList() const

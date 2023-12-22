@@ -17,6 +17,8 @@ public:
     QString envVar(const QString &key);
     void setCachedEnvVar(const QString &key, const QVariant &value);
 
+    static QString envFortHome();
+
 signals:
     void environmentUpdated();
 
