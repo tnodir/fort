@@ -6,14 +6,14 @@ LanguageCodePage=1252
 [CustomMessages]
 
 ; *** Fort Firewall messages
-WindowsExplorerIntegration=Windows Explorer integration
-WindowsService=Windows Service
-Portable=Portable
-UninstallPassword=Uninstall Password
-UninstallPasswordOK=OK
-UninstallPasswordCancel=Cancel
-WrongPassword=Wrong password
-NotCompatibleWithWindows=This program is not compatible with Windows version (Windows 10 2004 or newer required).
-NotCompatibleWithWindows7=This program is not compatible with Windows 7 version (KB4474419 required).
-NotCompatibleWithHVCI=This program is not compatible with HVCI (Core Isolation).
-IsDeleteData=Delete config & data files?
+WindowsExplorerIntegration=Integrazione con Windows Explorer
+WindowsService=Servizio Windows
+Portable=Portatile
+UninstallPassword=Password disinstallazione
+UninstallPasswordOK=Ok
+UninstallPasswordCancel=Annulla
+WrongPassword=Password errata
+NotCompatibleWithWindows=Questo programma non è compatibile con la versione di Windows (è richiesto Windows 10 2004 o successivo).
+NotCompatibleWithWindows7=Questo programma non è compatibile con la versione di Windows 7 (richiesto KB4474419).
+NotCompatibleWithHVCI=Questo programma non è compatibile con HVCI (Core Isolation).
+IsDeleteData=Eliminare i file di configurazione e dati?

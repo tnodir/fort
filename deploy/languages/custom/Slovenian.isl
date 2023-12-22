@@ -6,14 +6,14 @@ LanguageCodePage=1250
 [CustomMessages]
 
 ; *** Fort Firewall messages
-WindowsExplorerIntegration=Windows Explorer integration
-WindowsService=Windows Service
-Portable=Portable
-UninstallPassword=Uninstall Password
-UninstallPasswordOK=OK
-UninstallPasswordCancel=Cancel
-WrongPassword=Wrong password
-NotCompatibleWithWindows=This program is not compatible with Windows version (Windows 10 2004 or newer required).
-NotCompatibleWithWindows7=This program is not compatible with Windows 7 version (KB4474419 required).
-NotCompatibleWithHVCI=This program is not compatible with HVCI (Core Isolation).
-IsDeleteData=Delete config & data files?
+WindowsExplorerIntegration=Vklju—itev Windows Raziskovalca
+WindowsService=Windows storitev
+Portable=Prenosni
+UninstallPassword=Odstrani geslo
+UninstallPasswordOK=Vredu
+UninstallPasswordCancel=Prekli—i
+WrongPassword=Napa—no geslo
+NotCompatibleWithWindows=Ta program ni zdruÿljiv z razli—ico sistema Windows (potreben je Windows 10 2004 ali novej’i).
+NotCompatibleWithWindows7=Ta program ni zdruÿljiv z razli—ico sistema Windows 7 (potrebna je KB4474419).
+NotCompatibleWithHVCI=Ta program ni zdruÿljiv s HVCI (izolacija jedra).
+IsDeleteData=œelite izbrisati nastavitvene in podatkovne datoteke?
