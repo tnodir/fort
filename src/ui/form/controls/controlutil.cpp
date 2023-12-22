@@ -19,6 +19,7 @@
 #include "labeldoublespin.h"
 #include "labelspin.h"
 #include "labelspincombo.h"
+#include "menuwidget.h"
 #include "sidebutton.h"
 #include "spinbox.h"
 
@@ -176,12 +177,14 @@ QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
 {
     auto menu = createMenu(parent);
 
-    auto menuWidget = new QWidget();
+    auto menuWidget = new MenuWidget();
     menuWidget->setLayout(layout);
 
     auto wa = new QWidgetAction(menu);
     wa->setDefaultWidget(menuWidget);
     menu->addAction(wa);
+
+    menu->connect(menuWidget, &MenuWidget::layoutRequested, [=] { relayoutMenu(menu, wa); });
 
     return menu;
 }

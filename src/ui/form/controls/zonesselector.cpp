@@ -158,8 +158,6 @@ void ZonesSelector::createZonesMenu()
 
         m_menuLayout->addWidget(cb);
     }
-
-    ControlUtil::relayoutMenu(m_menuZones);
 }
 
 void ZonesSelector::updateZonesMenu()

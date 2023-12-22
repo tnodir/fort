@@ -47,6 +47,7 @@ SOURCES += \
     form/controls/labelspincombo.cpp \
     form/controls/listview.cpp \
     form/controls/mainwindow.cpp \
+    form/controls/menuwidget.cpp \
     form/controls/plaintextedit.cpp \
     form/controls/sidebutton.cpp \
     form/controls/spinbox.cpp \
@@ -242,6 +243,7 @@ HEADERS += \
     form/controls/labelspincombo.h \
     form/controls/listview.h \
     form/controls/mainwindow.h \
+    form/controls/menuwidget.h \
     form/controls/plaintextedit.h \
     form/controls/sidebutton.h \
     form/controls/spinbox.h \
