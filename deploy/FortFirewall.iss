@@ -93,12 +93,7 @@ Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start ser
   Flags: nowait; Tasks: service
 
 Filename: "{#APP_EXE}"; Parameters: "--lang {code:LanguageName}"; \
-  Description: {cm:LaunchProgram,{#APP_NAME}}; Flags: nowait postinstall skipifsilent; \
-  Check: VCRedist86Exists()
-
-Filename: "https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads"; \
-  Description: "Install the latest Visual C++ x86 redistributable!"; Flags: shellexec postinstall; \
-  Check: not VCRedist86Exists()
+  Description: {cm:LaunchProgram,{#APP_NAME}}; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
 Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "Uninstall"
@@ -341,6 +336,14 @@ begin
     Exit;
   end;
 #else
+  if not VCRedist86Exists() then
+  begin
+    SuppressibleMsgBox('Install the latest Visual C++ x86 redistributable!', mbCriticalError, MB_OK, IDOK);
+
+    Result := False;
+    Exit;
+  end;
+
   if IsWindows7() and not IsUpdateInstalled('KB4474419') then
   begin
     SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithWindows7}'), mbCriticalError, MB_OK, IDOK);
