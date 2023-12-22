@@ -65,6 +65,9 @@ Name: "portable"; Description: "{cm:Portable}"; Flags: unchecked
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"; Flags: ignoreversion
 
+[Dirs]
+Name: "{app}\Data"; Flags: uninsneveruninstall; Permissions: users-modify; Tasks: portable
+
 [Icons]
 ; Start menu shortcut
 Name: "{group}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"; \
