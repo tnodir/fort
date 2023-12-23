@@ -60,8 +60,8 @@ private:
     QToolButton *m_btPasswordUnlock = nullptr;
     QPushButton *m_btMenu = nullptr;
 
-    QPushButton *m_btLogs = nullptr;
     QPushButton *m_btProfile = nullptr;
+    QPushButton *m_btLogs = nullptr;
     QPushButton *m_btStat = nullptr;
     QPushButton *m_btReleases = nullptr;
 };

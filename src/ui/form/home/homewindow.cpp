@@ -91,8 +91,8 @@ void HomeWindow::retranslateUi()
     m_btPasswordLock->setText(tr("Lock"));
     m_btPasswordUnlock->setText(tr("Unlock"));
 
-    m_btLogs->setText(tr("Logs"));
     m_btProfile->setText(tr("Profile"));
+    m_btLogs->setText(tr("Logs"));
     m_btStat->setText(tr("Statistics"));
     m_btReleases->setText(tr("Releases"));
 
@@ -235,18 +235,18 @@ QLayout *HomeWindow::setupDialogButtons()
 {
     auto layout = new QHBoxLayout();
 
-    m_btLogs = ControlUtil::createLinkButton(":/icons/folder.png", settings()->logsPath());
     m_btProfile = ControlUtil::createLinkButton(":/icons/folder.png", settings()->profilePath());
+    m_btLogs = ControlUtil::createLinkButton(":/icons/folder.png", settings()->logsPath());
     m_btStat = ControlUtil::createLinkButton(":/icons/folder.png", settings()->statPath());
     m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", APP_UPDATES_URL);
 
-    connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btProfile, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btStat, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btReleases, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
 
-    layout->addWidget(m_btLogs);
     layout->addWidget(m_btProfile);
+    layout->addWidget(m_btLogs);
     layout->addWidget(m_btStat);
     layout->addWidget(m_btReleases);
 
