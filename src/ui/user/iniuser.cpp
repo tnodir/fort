@@ -2,12 +2,9 @@
 
 IniUser::IniUser(Settings *settings) : MapSettings(settings) { }
 
-void IniUser::setDefaultLanguage(const QString &v)
+void IniUser::saveDefaultIni()
 {
-    m_defaultLanguage = v;
+    setLanguage(defaultLanguage());
 
-    if (language().isEmpty()) {
-        setLanguage(defaultLanguage());
-        save();
-    }
+    save();
 }

@@ -18,9 +18,16 @@ void UserSettings::setUp()
 
 void UserSettings::migrateIniOnStartup()
 {
+    if (!iniExists()) {
+        iniUser().saveDefaultIni();
+        return;
+    }
+
     int version;
     if (checkIniVersion(version))
         return;
+
+    Settings::migrateIniOnStartup();
 
     // COMPAT: v3.4.0: .ini ~> .user.ini
     if (version < 0x030400) {

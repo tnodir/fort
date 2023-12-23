@@ -9,7 +9,7 @@ public:
     explicit IniUser(Settings *settings = nullptr);
 
     QString defaultLanguage() const { return m_defaultLanguage; }
-    void setDefaultLanguage(const QString &v);
+    void setDefaultLanguage(const QString &v) { m_defaultLanguage = v; }
 
     QString language() const { return valueText("base/language"); }
     void setLanguage(const QString &v) { setValue("base/language", v); }
@@ -193,6 +193,9 @@ public:
 
     bool statShowHostNames() const { return valueBool("statWindow/showHostNames"); }
     void setStatShowHostNames(bool on) { setValue("statWindow/showHostNames", on); }
+
+public:
+    void saveDefaultIni();
 
 private:
     QString m_defaultLanguage;

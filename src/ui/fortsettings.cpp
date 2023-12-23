@@ -105,7 +105,7 @@ void FortSettings::setupGlobal()
     // Is portable?
     g_isPortable = FileUtil::fileExists(appFileInfo.path() + "/README.portable");
 
-    // Use global settings from program's binary directory
+    // Global settings from program's binary directory
     const QSettings settings(appFileInfo.filePath() + ".ini", QSettings::IniFormat);
 
     // High-DPI scale factor rounding policy
