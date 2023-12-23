@@ -449,7 +449,7 @@ void FortManager::loadConf()
         QMessageBox::warning(nullptr, QString(),
                 tr("Please first install Fort Firewall v%1 and save Options from it.")
                         .arg(viaVersion));
-        abort(); // Abort the program
+        exit(-1); // Exit the program
     }
 
     IoC<ConfManager>()->load();
