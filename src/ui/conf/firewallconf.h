@@ -130,8 +130,8 @@ public:
     void copyFlags(const FirewallConf &o);
     void copy(const FirewallConf &o);
 
-    QVariant toVariant(bool onlyFlags = false) const;
-    void fromVariant(const QVariant &v, bool onlyFlags = false);
+    QVariant toVariant(bool onlyEdited = false) const;
+    void fromVariant(const QVariant &v, bool onlyEdited = false);
 
     static QVariant editedFlagsToVariant(uint editedFlags);
     static uint editedFlagsFromVariant(const QVariant &v);

@@ -115,7 +115,7 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 
     newConf.prepareToSave();
 
-    const QVariant confVar = newConf.toVariant(true);
+    const QVariant confVar = newConf.toVariant(/*onlyEdited=*/true);
 
     setSaving(true);
     const bool ok =
@@ -147,7 +147,7 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
         loadConf(*conf());
     } else {
         // Apply only flags
-        conf()->fromVariant(confVar, true);
+        conf()->fromVariant(confVar, /*onlyEdited=*/true);
     }
 
     if ((editedFlags & FirewallConf::TaskEdited) != 0) {

@@ -465,13 +465,13 @@ void FirewallConf::removedAppGroupIdListFromVariant(const QVariant &v)
     }
 }
 
-QVariant FirewallConf::toVariant(bool onlyFlags) const
+QVariant FirewallConf::toVariant(bool onlyEdited) const
 {
     QVariantMap map;
 
-    const EditedFlags flags = onlyFlags ? editedFlags() : AllEdited;
+    const EditedFlags flags = onlyEdited ? editedFlags() : AllEdited;
 
-    if (onlyFlags) {
+    if (onlyEdited) {
         map = editedFlagsToVariant(flags).toMap();
     }
 
@@ -496,11 +496,11 @@ QVariant FirewallConf::toVariant(bool onlyFlags) const
     return map;
 }
 
-void FirewallConf::fromVariant(const QVariant &v, bool onlyFlags)
+void FirewallConf::fromVariant(const QVariant &v, bool onlyEdited)
 {
     const QVariantMap map = v.toMap();
 
-    if (onlyFlags) {
+    if (onlyEdited) {
         m_editedFlags = editedFlagsFromVariant(v);
     } else {
         resetEdited(true);

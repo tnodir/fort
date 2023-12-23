@@ -804,7 +804,7 @@ void ConfManager::saveIniUser(bool edited, bool onlyFlags)
 
 QVariant ConfManager::toPatchVariant(bool onlyFlags) const
 {
-    return onlyFlags ? conf()->toVariant(true) // send only flags to clients
+    return onlyFlags ? conf()->toVariant(/*onlyEdited=*/true) // send only flags to clients
                      : FirewallConf::editedFlagsToVariant(
                              FirewallConf::AllEdited); // clients have to reload all from storage
 }
@@ -824,7 +824,7 @@ bool ConfManager::saveVariant(const QVariant &confVar)
         conf = this->conf();
     }
 
-    conf->fromVariant(confVar, true);
+    conf->fromVariant(confVar, /*onlyEdited=*/true);
 
     if (!saveConf(*conf)) {
         if (isNewConf) {
