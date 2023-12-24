@@ -16,4 +16,5 @@ WrongPassword=Falsches Passwort
 NotCompatibleWithWindows=Das Programm ist nicht kompatibel zu dieser Version von Windows (Windows 10 2004 oder neuer erforderlich).
 NotCompatibleWithWindows7=Das Programm ist nicht kompatibel zu dieser Version von Windows 7 (KB4474419 erforderlich).
 NotCompatibleWithHVCI=Dieses Programm ist nicht kompatibel mit HVCI (Kernisolierung).
+InstallVCRedist=Install the latest Visual C++ redistributable!
 IsDeleteData=Konfiguration & Dateien löschen?

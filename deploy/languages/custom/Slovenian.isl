@@ -16,4 +16,5 @@ WrongPassword=Napa—no geslo
 NotCompatibleWithWindows=Ta program ni zdruÿljiv z razli—ico sistema Windows (potreben je Windows 10 2004 ali novej’i).
 NotCompatibleWithWindows7=Ta program ni zdruÿljiv z razli—ico sistema Windows 7 (potrebna je KB4474419).
 NotCompatibleWithHVCI=Ta program ni zdruÿljiv s HVCI (izolacija jedra).
+InstallVCRedist=Install the latest Visual C++ redistributable!
 IsDeleteData=œelite izbrisati nastavitvene in podatkovne datoteke?
