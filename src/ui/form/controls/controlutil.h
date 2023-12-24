@@ -59,7 +59,6 @@ public:
 
     static QMenu *createMenu(QWidget *parent = nullptr);
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);
-    static void relayoutMenu(QMenu *menu, QAction *action = nullptr);
 
     static QBoxLayout *createLayoutByWidgets(
             const QList<QWidget *> &widgets, Qt::Orientation o = Qt::Vertical);

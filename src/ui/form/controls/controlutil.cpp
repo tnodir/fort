@@ -1,9 +1,7 @@
 #include "controlutil.h"
 
-#include <QActionEvent>
 #include <QBoxLayout>
 #include <QCheckBox>
-#include <QCoreApplication>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -176,27 +174,15 @@ QMenu *ControlUtil::createMenu(QWidget *parent)
 QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
 {
     auto menu = createMenu(parent);
+    auto wa = new QWidgetAction(menu);
 
-    auto menuWidget = new MenuWidget();
+    auto menuWidget = new MenuWidget(menu, wa);
     menuWidget->setLayout(layout);
 
-    auto wa = new QWidgetAction(menu);
     wa->setDefaultWidget(menuWidget);
     menu->addAction(wa);
 
-    menu->connect(menuWidget, &MenuWidget::layoutRequested, [=] { relayoutMenu(menu, wa); });
-
     return menu;
-}
-
-void ControlUtil::relayoutMenu(QMenu *menu, QAction *action)
-{
-    if (!action) {
-        action = menu->actions().first();
-    }
-
-    QActionEvent e(QEvent::ActionChanged, action);
-    QCoreApplication::sendEvent(menu, &e);
 }
 
 QBoxLayout *ControlUtil::createLayoutByWidgets(const QList<QWidget *> &widgets, Qt::Orientation o)

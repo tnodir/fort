@@ -8,13 +8,20 @@ class MenuWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit MenuWidget(QWidget *parent = nullptr);
+    explicit MenuWidget(QMenu *menu, QAction *action, QWidget *parent = nullptr);
 
 signals:
-    void layoutRequested();
+    void layoutChanged();
 
 protected:
     bool event(QEvent *event) override;
+
+private:
+    void relayoutMenu();
+
+private:
+    QMenu *m_menu = nullptr;
+    QAction *m_action = nullptr;
 };
 
 #endif // MENUWIDGET_H
