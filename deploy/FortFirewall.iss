@@ -350,8 +350,12 @@ begin
   end;
 #else
   if not VCRedist86Exists() then
+  var
+    ErrorCode: Integer;
   begin
-    SuppressibleMsgBox('Install the latest Visual C++ x86 redistributable!', mbCriticalError, MB_OK, IDOK);
+    if SuppressibleMsgBox('{cm:InstallVCRedist}', mbCriticalError, MB_OKCANCEL, IDCANCEL) = IDOK then
+      ShellExec('open', 'https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads',
+          '', '', SW_SHOW, ewNoWait, ErrCode);
 
     Result := False;
     Exit;
