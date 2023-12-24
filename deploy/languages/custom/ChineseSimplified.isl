@@ -16,5 +16,5 @@ WrongPassword=密码错误
 NotCompatibleWithWindows=此程序与 Windows 版本不兼容 (Windows 10 2004 或需要更新)。
 NotCompatibleWithWindows7=此程序与 Windows 版本不兼容 (Windows 7 或需要 KB4474419 更新)。
 NotCompatibleWithHVCI=这个程序与HVCI（核心隔离）不兼容。
-InstallVCRedist=Install the latest Visual C++ redistributable!
+InstallVCRedist=安装最新的 Visual C++ 可再分发版本！
 IsDeleteData=您希望删除配置文件和数据文件吗？

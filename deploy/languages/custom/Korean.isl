@@ -16,5 +16,5 @@ WrongPassword=잘못된 암호
 NotCompatibleWithWindows=이 프로그램은 Windows 버전 (Windows 10 2004 이상 필요)과 호환되지 않습니다.
 NotCompatibleWithWindows7=이 프로그램은 Windows 7 버전과 호환되지 않습니다 (KB4474419 필요).
 NotCompatibleWithHVCI=이 프로그램은 HVCI (코어 격리)와 호환되지 않습니다.
-InstallVCRedist=Install the latest Visual C++ redistributable!
+InstallVCRedist=최신 Visual C++ 재배포판을 설치하세요!
 IsDeleteData=구성 및 데이터 파일을 삭제하시겠습니까?
