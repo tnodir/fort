@@ -13,6 +13,7 @@ public:
     explicit TriggerTimer(QObject *parent = nullptr);
     explicit TriggerTimer(int interval, QObject *parent = nullptr);
 
+public slots:
     void startTrigger();
 };
 

@@ -8,8 +8,7 @@
 MenuWidget::MenuWidget(QMenu *menu, QAction *action, QWidget *parent) :
     QWidget(parent), m_menu(menu), m_action(action)
 {
-    connect(this, &MenuWidget::layoutChanged, this, &MenuWidget::relayoutMenu,
-            Qt::ConnectionType(Qt::QueuedConnection | Qt::UniqueConnection));
+    connect(this, &MenuWidget::layoutChanged, this, &MenuWidget::relayoutMenu);
 }
 
 bool MenuWidget::event(QEvent *event)

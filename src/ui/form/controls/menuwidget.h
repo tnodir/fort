@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+QT_FORWARD_DECLARE_CLASS(QMenu)
+
 class MenuWidget : public QWidget
 {
     Q_OBJECT
