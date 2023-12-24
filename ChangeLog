@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.10.5-test0, 2023-12-24:
+- Installer: Portable: Create "Data/" directory with user permissions.
+- Installer: Windows 7: Check for installed KB4474419.
+- Installer: Check for VC Redist x86 only in 32-bit version.
+- Installer: Skip OS compatibility checks on upgrade.
+
 v3.10.4, 2023-12-20:
 - UI: Programs: Add ability to Accept/Reject Zones.
 - UI: Programs: Add "Kill child processes" option.
