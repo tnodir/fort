@@ -160,11 +160,24 @@ begin
   Result := (Version.Major = 6) and (Version.Minor = 1);
 end;
 
-function IsUpdateInstalled(KB: String): Boolean;
+function IsDriverSignatureValid(): Boolean;
 var
+  DriverPath: String;
+  DriverName: String;
+  WorkingDir: String;
+  Command: String;
   ResultCode: Integer;
 begin
-  Exec('cmd.exe', '/c "systeminfo | findstr ' + KB + '"', '', SW_HIDE, ewWaitUntilTerminated, ResultCode)
+  DriverPath := '{app}\driver\x86';
+  DriverName := 'fortfw.sys';
+  WorkingDir := ExpandConstant('{tmp}\') + DriverPath;
+
+  ExtractTemporaryFiles(DriverPath + '\' + DriverName);
+
+  Command := '-Command "if ((Get-AuthenticodeSignature ' + DriverName
+      + ').status -eq ''UnknownError'') {exit 2} else {exit 0}"';
+
+  Exec('powershell.exe', Command, WorkingDir, SW_HIDE, ewWaitUntilTerminated, ResultCode)
   Result := ResultCode = 0;
 end;
 
@@ -344,7 +357,7 @@ begin
     Exit;
   end;
 
-  if IsWindows7() and not IsUpdateInstalled('KB4474419') then
+  if IsWindows7() and not IsDriverSignatureValid() then
   begin
     SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithWindows7}'), mbCriticalError, MB_OK, IDOK);
 
