@@ -11,9 +11,9 @@ void UserSettings::setUp()
 {
     auto settings = IoC<FortSettings>();
 
-    setupIni(settings->userPath() + APP_BASE + ".user.ini");
-
     iniUser().setDefaultLanguage(settings->defaultLanguage());
+
+    setupIni(settings->userPath() + APP_BASE + ".user.ini");
 }
 
 void UserSettings::migrateIniOnStartup()
