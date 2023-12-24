@@ -709,7 +709,7 @@ bool WindowManager::isAnyWindowOpen(quint32 codes) const
 bool WindowManager::activateModalWidget()
 {
     auto w = QApplication::activeModalWidget();
-    if (w) {
+    if (w && w->windowModality() == Qt::ApplicationModal) {
         WidgetWindow::showWidget(w);
         return true;
     }

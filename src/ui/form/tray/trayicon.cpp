@@ -757,7 +757,7 @@ void TrayIcon::onTrayActivatedByTrigger()
     if (clickAction(DoubleClick)) {
         m_trayTriggered = true;
         QTimer::singleShot(QApplication::doubleClickInterval(), this,
-                [=] { onTrayActivatedByClick(clickType, /*checkTriggered=*/true); });
+                [=, this] { onTrayActivatedByClick(clickType, /*checkTriggered=*/true); });
     } else {
         onTrayActivatedByClick(clickType);
     }
