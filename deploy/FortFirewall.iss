@@ -125,9 +125,9 @@ begin
   Result := ActiveLanguage;
 end;
 
-function GetUninstallString(): string;
+function GetUninstallString(): String;
 var
-  UninstallKey: string;
+  UninstallKey: String;
 begin
   UninstallKey := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppName")}_is1');
   if not RegQueryStringValue(HKLM, UninstallKey, 'UninstallString', Result) then
@@ -320,6 +320,13 @@ begin
   Result := True;
 end;
 
+function OpenUrl(Url: String): Boolean;
+var
+  ErrCode: Integer;
+begin
+  Result := ShellExec('open', Url, '', '', SW_SHOW, ewNoWait, ErrCode);
+end;
+
 function InitializeSetup: Boolean;
 begin
   if Unpack() then
@@ -350,12 +357,9 @@ begin
   end;
 #else
   if not VCRedist86Exists() then
-  var
-    ErrorCode: Integer;
   begin
-    if SuppressibleMsgBox('{cm:InstallVCRedist}', mbCriticalError, MB_OKCANCEL, IDCANCEL) = IDOK then
-      ShellExec('open', 'https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads',
-          '', '', SW_SHOW, ewNoWait, ErrCode);
+    if SuppressibleMsgBox(ExpandConstant('{cm:InstallVCRedist}'), mbCriticalError, MB_OKCANCEL, IDCANCEL) = IDOK then
+      OpenUrl('https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads');
 
     Result := False;
     Exit;
