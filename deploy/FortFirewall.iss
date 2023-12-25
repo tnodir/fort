@@ -369,6 +369,8 @@ begin
   begin
     SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithWindows7}'), mbCriticalError, MB_OK, IDOK);
 
+    OpenUrl('https://www.catalog.update.microsoft.com/Search.aspx?q=KB4474419');
+
     Result := False;
     Exit;
   end;
