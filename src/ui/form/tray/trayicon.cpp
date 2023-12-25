@@ -291,7 +291,7 @@ void TrayIcon::setupByIniUser(const IniUser & /*ini*/, bool onlyFlags)
 
 void TrayIcon::switchTrayMenu(bool /*checked*/)
 {
-    showTrayMenu(QCursor::pos());
+    showTrayMenu(geometry().center());
 }
 
 void TrayIcon::switchFilterModeMenu(bool /*checked*/)
