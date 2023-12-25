@@ -1,6 +1,7 @@
 #include "optmainpage.h"
 
 #include <QIcon>
+#include <QMenu>
 #include <QPushButton>
 #include <QScrollArea>
 #include <QTabWidget>
@@ -40,6 +41,10 @@ void OptMainPage::onRetranslateUi()
     m_tabWidget->setTabText(3, tr("Statistics"));
     m_tabWidget->setTabText(4, tr("Traffic Graph"));
     m_tabWidget->setTabText(5, tr("Schedule"));
+
+    m_btBackup->setText(tr("Backup"));
+    m_actExport->setText(tr("Export"));
+    m_actImport->setText(tr("Import"));
 
     m_btOk->setText(tr("OK"));
     m_btApply->setText(tr("Apply"));
@@ -95,9 +100,7 @@ void OptMainPage::setupTabBar()
 
 QLayout *OptMainPage::setupDialogButtons()
 {
-    auto layout = new QHBoxLayout();
-
-    layout->addStretch();
+    setupBackup();
 
     m_btOk = new QPushButton();
     m_btApply = new QPushButton();
@@ -109,11 +112,28 @@ QLayout *OptMainPage::setupDialogButtons()
 
     setupApplyCancelButtons();
 
+    auto layout = new QHBoxLayout();
+    layout->addWidget(m_btBackup);
+    layout->addStretch();
     layout->addWidget(m_btOk);
     layout->addWidget(m_btApply);
     layout->addWidget(m_btCancel);
 
     return layout;
+}
+
+void OptMainPage::setupBackup()
+{
+    auto backupMenu = ControlUtil::createMenu(this);
+
+    m_actExport = backupMenu->addAction(IconCache::icon(":/icons/disk.png"), QString());
+    m_actImport = backupMenu->addAction(IconCache::icon(":/icons/folder.png"), QString());
+
+    connect(m_actExport, &QAction::triggered, ctrl(), &OptionsController::exportBackup);
+    connect(m_actImport, &QAction::triggered, ctrl(), &OptionsController::importBackup);
+
+    m_btBackup = new QPushButton();
+    m_btBackup->setMenu(backupMenu);
 }
 
 void OptMainPage::setupApplyCancelButtons()

@@ -73,12 +73,15 @@ public:
     bool detach(const QString &schemaName);
 
     bool vacuum();
+    bool vacuumInto(const QString &filePath);
 
     bool execute(const char *sql);
     bool executeStr(const QString &sql);
 
     QVariant executeEx(const char *sql, const QVariantList &vars = {}, int resultCount = 1,
             bool *ok = nullptr);
+
+    bool executeExOk(const char *sql, const QVariantList &vars = {});
 
     bool prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars = {});
     bool prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars = {});

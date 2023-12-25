@@ -91,21 +91,22 @@ void SqliteDb::close()
 
 bool SqliteDb::attach(const QString &schemaName, const QString &filePath)
 {
-    bool ok = false;
-    executeEx("ATTACH DATABASE ?1 AS ?2;", { filePath, schemaName }, 0, &ok);
-    return ok;
+    return executeExOk("ATTACH DATABASE ?1 AS ?2;", { filePath, schemaName });
 }
 
 bool SqliteDb::detach(const QString &schemaName)
 {
-    bool ok = false;
-    executeEx("DETACH DATABASE ?1;", { schemaName }, 0, &ok);
-    return ok;
+    return executeExOk("DETACH DATABASE ?1;", { schemaName });
 }
 
 bool SqliteDb::vacuum()
 {
     return execute("VACUUM;");
+}
+
+bool SqliteDb::vacuumInto(const QString &filePath)
+{
+    return executeExOk("VACUUM INTO ?1;", { filePath });
 }
 
 bool SqliteDb::execute(const char *sql)
@@ -146,6 +147,13 @@ QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resu
 
     const int listSize = list.size();
     return (listSize == 0) ? QVariant() : (listSize == 1 ? list.at(0) : list);
+}
+
+bool SqliteDb::executeExOk(const char *sql, const QVariantList &vars)
+{
+    bool ok = false;
+    executeEx(sql, vars, 0, &ok);
+    return ok;
 }
 
 bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars)

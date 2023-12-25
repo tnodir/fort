@@ -21,6 +21,7 @@ private:
     void setupUi();
     void setupTabBar();
     QLayout *setupDialogButtons();
+    void setupBackup();
     void setupApplyCancelButtons();
 
 private:
@@ -28,6 +29,9 @@ private:
 
     QPushButton *m_btMenu = nullptr;
 
+    QPushButton *m_btBackup = nullptr;
+    QAction *m_actExport = nullptr;
+    QAction *m_actImport = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btApply = nullptr;
     QPushButton *m_btCancel = nullptr;

@@ -16,6 +16,8 @@ public:
     bool hasError() const;
     QString errorMessage() const;
 
+    QString filePath() const { return ini()->fileName(); }
+
     void clearCache();
 
 protected:

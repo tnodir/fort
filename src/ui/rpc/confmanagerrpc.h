@@ -13,6 +13,9 @@ class ConfManagerRpc : public ConfManager
 public:
     explicit ConfManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
+    bool exportBackup(const QString &path) override;
+    bool importBackup(const QString &path) override;
+
     bool addApp(const App &app) override;
     void deleteApps(const QVector<qint64> &appIdList) override;
     bool purgeApps() override;

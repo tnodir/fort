@@ -376,9 +376,7 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 
     const char *sql = rowExists ? sqlUpdateAddressGroup : sqlInsertAddressGroup;
 
-    bool ok;
-    db->executeEx(sql, vars, 0, &ok);
-    if (!ok)
+    if (!db->executeExOk(sql, vars))
         return false;
 
     if (!rowExists) {
@@ -456,9 +454,7 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
 
     const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
 
-    bool ok;
-    db->executeEx(sql, vars, 0, &ok);
-    if (!ok)
+    if (!db->executeExOk(sql, vars))
         return false;
 
     if (!rowExists) {
@@ -485,12 +481,9 @@ bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
     const auto defaultAppGroupId = conf.appGroups().at(0)->id();
 
     for (const qint64 appGroupId : conf.removedAppGroupIdList()) {
-        bool ok;
-
         db->executeEx(sqlUpdateAppResetGroup, { appGroupId, defaultAppGroupId }, 0);
 
-        db->executeEx(sqlDeleteAppGroup, { appGroupId }, 0, &ok);
-        if (!ok)
+        if (!db->executeExOk(sqlDeleteAppGroup, { appGroupId }))
             return false;
     }
 
@@ -861,6 +854,58 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
     }
 
     return commitTransaction(ok);
+}
+
+bool ConfManager::exportBackup(const QString &path)
+{
+    FileUtil::makePath(path);
+
+    const QString outPath = FileUtil::pathSlash(path);
+
+    // Export Db
+    {
+        const QString fileName = FileUtil::fileName(sqliteDb()->filePath());
+        const QString destPath = outPath + fileName;
+
+        FileUtil::removeFile(destPath);
+        if (!sqliteDb()->vacuumInto(destPath)) {
+            qCWarning(LC) << "Export Db error:" << sqliteDb()->errorMessage() << "to:" << destPath;
+            return false;
+        }
+    }
+
+    // Export Ini
+    {
+        const QString iniPath = conf()->ini().settings()->filePath();
+        const QString fileName = FileUtil::fileName(iniPath);
+        const QString destPath = outPath + fileName;
+
+        FileUtil::removeFile(destPath);
+        if (!FileUtil::copyFile(iniPath, outPath + fileName)) {
+            qCWarning(LC) << "Copy Ini error from:" << iniPath << "to:" << destPath;
+            return false;
+        }
+    }
+
+    // Export User Ini
+    {
+        const QString iniPath = iniUser().settings()->filePath();
+        const QString fileName = FileUtil::fileName(iniPath);
+        const QString destPath = outPath + fileName;
+
+        FileUtil::removeFile(destPath);
+        if (!FileUtil::copyFile(iniPath, outPath + fileName)) {
+            qCWarning(LC) << "Copy User Ini error from:" << iniPath << "to:" << destPath;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ConfManager::importBackup(const QString &path)
+{
+    return true;
 }
 
 void ConfManager::logBlockedApp(const LogEntryBlocked &logEntry)

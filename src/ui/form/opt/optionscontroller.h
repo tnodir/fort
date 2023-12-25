@@ -46,6 +46,9 @@ public slots:
     void saveChanges() { save(/*closeOnSuccess=*/true); }
     void applyChanges() { save(/*closeOnSuccess=*/false); }
 
+    void exportBackup();
+    void importBackup();
+
     void closeWindow();
 
 private:

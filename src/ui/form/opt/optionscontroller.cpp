@@ -4,10 +4,12 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <form/dialog/dialogutil.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
 #include <user/iniuser.h>
+#include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
 namespace {
@@ -152,6 +154,32 @@ void OptionsController::initConfManagerToEdit()
 {
     confManager()->initConfToEdit();
     confManager()->initIniUserToEdit();
+}
+
+void OptionsController::exportBackup()
+{
+    const auto path = DialogUtil::getExistingDir(tr("Export Options"));
+    if (path.isEmpty())
+        return;
+
+    if (confManager()->exportBackup(path)) {
+        windowManager()->showInfoDialog(tr("Options Exported Successfully"));
+    } else {
+        windowManager()->showErrorBox(tr("Cannot Export Options"));
+    }
+}
+
+void OptionsController::importBackup()
+{
+    const auto path = DialogUtil::getExistingDir(tr("Import Options"));
+    if (path.isEmpty())
+        return;
+
+    if (confManager()->importBackup(path)) {
+        windowManager()->showInfoDialog(tr("Options Imported Successfully"));
+    } else {
+        windowManager()->showErrorBox(tr("Cannot Import Options"));
+    }
 }
 
 void OptionsController::closeWindow()

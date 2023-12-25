@@ -16,6 +16,16 @@ ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
 {
 }
 
+bool ConfManagerRpc::exportBackup(const QString &path)
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_exportBackup, { path });
+}
+
+bool ConfManagerRpc::importBackup(const QString &path)
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_importBackup, { path });
+}
+
 bool ConfManagerRpc::addApp(const App &app)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addApp, appToVarList(app));

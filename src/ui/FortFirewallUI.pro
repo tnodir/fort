@@ -20,6 +20,7 @@ SOURCES += \
     conf/addressgroup.cpp \
     conf/app.cpp \
     conf/appgroup.cpp \
+    conf/confappmanager.cpp \
     conf/confmanager.cpp \
     conf/firewallconf.cpp \
     conf/inioptions.cpp \
@@ -216,6 +217,7 @@ HEADERS += \
     conf/addressgroup.h \
     conf/app.h \
     conf/appgroup.h \
+    conf/confappmanager.h \
     conf/confmanager.h \
     conf/firewallconf.h \
     conf/inioptions.h \

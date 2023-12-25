@@ -74,6 +74,18 @@ bool processConfManager_addApp(
     return confManager->addApp(ConfManagerRpc::varListToApp(p.args));
 }
 
+bool processConfManager_exportBackup(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confManager->exportBackup(p.args.value(0).toString());
+}
+
+bool processConfManager_importBackup(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confManager->importBackup(p.args.value(0).toString());
+}
+
 bool processConfManager_deleteApps(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
@@ -174,6 +186,8 @@ using processConfManager_func = bool (*)(
 
 static processConfManager_func processConfManager_funcList[] = {
     &processConfManager_saveVariant, // Rpc_ConfManager_saveVariant,
+    &processConfManager_exportBackup, // Rpc_ConfManager_exportBackup,
+    &processConfManager_importBackup, // Rpc_ConfManager_importBackup,
     &processConfManager_addApp, // Rpc_ConfManager_addApp,
     &processConfManager_deleteApps, // Rpc_ConfManager_deleteApps,
     &processConfManager_purgeApps, // Rpc_ConfManager_purgeApps,

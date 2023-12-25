@@ -61,6 +61,9 @@ public:
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
+    virtual bool exportBackup(const QString &path);
+    virtual bool importBackup(const QString &path);
+
     void logBlockedApp(const LogEntryBlocked &logEntry);
 
     qint64 appIdByPath(const QString &appPath);
