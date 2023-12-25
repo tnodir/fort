@@ -158,27 +158,27 @@ void OptionsController::initConfManagerToEdit()
 
 void OptionsController::exportBackup()
 {
-    const auto path = DialogUtil::getExistingDir(tr("Export Options"));
+    const auto path = DialogUtil::getExistingDir(tr("Export Backup"));
     if (path.isEmpty())
         return;
 
     if (confManager()->exportBackup(path)) {
-        windowManager()->showInfoDialog(tr("Options Exported Successfully"));
+        windowManager()->showInfoDialog(tr("Backup Exported Successfully"));
     } else {
-        windowManager()->showErrorBox(tr("Cannot Export Options"));
+        windowManager()->showErrorBox(tr("Cannot Export Backup"));
     }
 }
 
 void OptionsController::importBackup()
 {
-    const auto path = DialogUtil::getExistingDir(tr("Import Options"));
+    const auto path = DialogUtil::getExistingDir(tr("Import Backup"));
     if (path.isEmpty())
         return;
 
     if (confManager()->importBackup(path)) {
-        windowManager()->showInfoDialog(tr("Options Imported Successfully"));
+        windowManager()->showInfoDialog(tr("Backup Imported Successfully"));
     } else {
-        windowManager()->showErrorBox(tr("Cannot Import Options"));
+        windowManager()->showErrorBox(tr("Cannot Import Backup"));
     }
 }
 

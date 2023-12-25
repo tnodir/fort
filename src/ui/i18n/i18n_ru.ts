@@ -715,6 +715,45 @@
         <source>Traffic Graph</source>
         <translation>График трафика</translation>
     </message>
+    <message>
+        <source>Backup</source>
+        <translation>Резервная копия</translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation>Экспорт</translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation>Импорт</translation>
+    </message>
+</context>
+<context>
+    <name>OptionsController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation>Экспорт резервной копии</translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation>Резервная копия успешно экспортирована</translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation>Невозможно экспортировать резервную копию</translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation>Импорт резервной копии</translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation>Резервная копия успешно импортирована</translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation>Невозможно импортировать резервную копию</translation>
+    </message>
 </context>
 <context>
     <name>OptionsPage</name>

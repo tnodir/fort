@@ -715,6 +715,45 @@
         <source>Traffic Graph</source>
         <translation>트래픽 그래프</translation>
     </message>
+    <message>
+        <source>Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Export</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>OptionsController</name>
+    <message>
+        <source>Export Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backup Exported Successfully</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot Export Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Import Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Backup Imported Successfully</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot Import Backup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsPage</name>
