@@ -177,9 +177,18 @@ void OptionsController::importBackup()
 
     if (confManager()->importBackup(path)) {
         windowManager()->showInfoDialog(tr("Backup Imported Successfully"));
+        windowManager()->restart();
     } else {
         windowManager()->showErrorBox(tr("Cannot Import Backup"));
     }
+}
+
+void OptionsController::confirmImportBackup()
+{
+    windowManager()->showConfirmBox([&] { importBackup(); },
+            tr("Program will be restarted after successful import. Continue?\n\n"
+               "Make sure that you have a fresh backup."),
+            tr("Import Backup"));
 }
 
 void OptionsController::closeWindow()

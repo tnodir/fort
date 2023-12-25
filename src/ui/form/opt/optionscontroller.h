@@ -48,6 +48,7 @@ public slots:
 
     void exportBackup();
     void importBackup();
+    void confirmImportBackup();
 
     void closeWindow();
 

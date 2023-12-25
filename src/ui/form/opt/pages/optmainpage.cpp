@@ -130,7 +130,7 @@ void OptMainPage::setupBackup()
     m_actImport = backupMenu->addAction(IconCache::icon(":/icons/folder.png"), QString());
 
     connect(m_actExport, &QAction::triggered, ctrl(), &OptionsController::exportBackup);
-    connect(m_actImport, &QAction::triggered, ctrl(), &OptionsController::importBackup);
+    connect(m_actImport, &QAction::triggered, ctrl(), &OptionsController::confirmImportBackup);
 
     m_btBackup = new QPushButton();
     m_btBackup->setMenu(backupMenu);
