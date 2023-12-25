@@ -717,42 +717,42 @@
     </message>
     <message>
         <source>Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>备份</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>导出</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>导入</translation>
     </message>
 </context>
 <context>
     <name>OptionsController</name>
     <message>
         <source>Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>导出备份</translation>
     </message>
     <message>
         <source>Backup Exported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>已成功导出备份</translation>
     </message>
     <message>
         <source>Cannot Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>无法导出备份</translation>
     </message>
     <message>
         <source>Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>导入备份</translation>
     </message>
     <message>
         <source>Backup Imported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>备份导入成功</translation>
     </message>
     <message>
         <source>Cannot Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>无法导入备份</translation>
     </message>
 </context>
 <context>

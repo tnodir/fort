@@ -717,42 +717,42 @@
     </message>
     <message>
         <source>Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>백업</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>내보내기</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>가져오기</translation>
     </message>
 </context>
 <context>
     <name>OptionsController</name>
     <message>
         <source>Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>백업 내보내기</translation>
     </message>
     <message>
         <source>Backup Exported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>백업 내보내기 성공</translation>
     </message>
     <message>
         <source>Cannot Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>백업을 내보낼 수 없음</translation>
     </message>
     <message>
         <source>Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>백업 가져오기</translation>
     </message>
     <message>
         <source>Backup Imported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>백업 가져오기 성공</translation>
     </message>
     <message>
         <source>Cannot Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>백업을 가져올 수 없음</translation>
     </message>
 </context>
 <context>

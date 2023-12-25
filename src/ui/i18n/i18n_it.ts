@@ -717,42 +717,42 @@
     </message>
     <message>
         <source>Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Backup</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Esporta</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Importa</translation>
     </message>
 </context>
 <context>
     <name>OptionsController</name>
     <message>
         <source>Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Esporta backup</translation>
     </message>
     <message>
         <source>Backup Exported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>Backup esportato correttamente</translation>
     </message>
     <message>
         <source>Cannot Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile esportare backup</translation>
     </message>
     <message>
         <source>Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Importa backup</translation>
     </message>
     <message>
         <source>Backup Imported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>Backup importato correttamente</translation>
     </message>
     <message>
         <source>Cannot Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile importare backup</translation>
     </message>
 </context>
 <context>
