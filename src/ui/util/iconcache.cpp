@@ -1,5 +1,6 @@
 #include "iconcache.h"
 
+#include <QDir>
 #include <QIcon>
 #include <QLoggingCategory>
 #include <QPixmapCache>
@@ -22,6 +23,34 @@ void checkThread()
                       << "; main:" << g_mainThreadId;
     }
 #endif
+}
+
+QString adjustFilePath(const QString &filePath)
+{
+    static struct
+    {
+        bool checked : 1 = false;
+        bool exists : 1 = false;
+    } g_iconsDir;
+
+    if (!g_iconsDir.checked) {
+        g_iconsDir.checked = true;
+        g_iconsDir.exists = QDir().exists("icons");
+    }
+
+    if (!g_iconsDir.exists)
+        return filePath;
+
+    // Try to use "./icons/" folder from current working dir.
+    if (filePath.startsWith(':')) {
+        QString adjustedFilePath = filePath;
+        adjustedFilePath[0] = '.';
+
+        if (FileUtil::fileExists(adjustedFilePath))
+            return adjustedFilePath;
+    }
+
+    return filePath;
 }
 
 }
@@ -53,18 +82,7 @@ QPixmap IconCache::file(const QString &filePath)
 
     QPixmap pixmap;
     if (!find(filePath, &pixmap)) {
-        QString adjustedFilePath = filePath;
-
-        // Try to use "./icons/" folder from current working dir.
-        if (filePath.startsWith(':')) {
-            adjustedFilePath[0] = '.';
-
-            if (!FileUtil::fileExists(adjustedFilePath)) {
-                adjustedFilePath = filePath;
-            }
-        }
-
-        pixmap.load(adjustedFilePath);
+        pixmap.load(adjustFilePath(filePath));
 
         insert(filePath, pixmap);
     }
