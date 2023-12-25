@@ -359,7 +359,7 @@ begin
   if not VCRedist86Exists() then
   begin
     if SuppressibleMsgBox(ExpandConstant('{cm:InstallVCRedist}'), mbCriticalError, MB_OKCANCEL, IDCANCEL) = IDOK then
-      OpenUrl('https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads');
+      OpenUrl('https://aka.ms/vs/17/release/vc_redist.x86.exe');
 
     Result := False;
     Exit;
