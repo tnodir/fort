@@ -32,5 +32,5 @@ Del "%DSTPATH%"
 @goto EXIT
 
 :EXIT
-@echo End execution... Error Code = %RCODE%
+@echo End execution... Result Code = %RCODE%
 @exit /b %RCODE%

@@ -49,7 +49,7 @@ sc start %DRIVERSVC%
 @goto EXIT
 
 :EXIT
-@echo End execution... Error Code = %RCODE%
+@echo End execution... Result Code = %RCODE%
 @if %RCODE% neq 0 (
     @pause
 )
