@@ -249,6 +249,10 @@
         <source>Configuration Error</source>
         <translation>Konfigurationsfehler</translation>
     </message>
+    <message>
+        <source>App Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -286,6 +290,13 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Länge des Anwendungspfads muss &lt; %1 sein</translation>
+    </message>
+</context>
+<context>
+    <name>ConfZoneManager</name>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -850,16 +861,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Fort Firewall im Hintergrund als Dienst ausführen</translation>
     </message>
     <message>
-        <source>Move Profile</source>
-        <translation>Profil verschieben</translation>
-    </message>
-    <message>
-        <source>New profile path is &quot;%1&quot;.
-Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation>Neuer Profilpfad lautet &quot;%1&quot;.
-Möchten Sie das Profil von &quot;%2&quot; an einen neuen Ort verschieben?</translation>
-    </message>
-    <message>
         <source>Tray</source>
         <translation>Tray</translation>
     </message>
@@ -1309,10 +1310,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <source>Service isn&apos;t responding.</source>
         <translation>Dienst antwortet nicht.</translation>
     </message>
-    <message>
-        <source>Service error.</source>
-        <translation>Dienstfehler.</translation>
-    </message>
 </context>
 <context>
     <name>SchedulePage</name>
@@ -1650,6 +1647,13 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Sind Sie sicher, alle Statistiken zu löschen?</translation>
+    </message>
+</context>
+<context>
+    <name>TranslationManager</name>
+    <message>
+        <source>System Language</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

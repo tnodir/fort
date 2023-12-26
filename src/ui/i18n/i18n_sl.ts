@@ -249,6 +249,10 @@
         <source>Configuration Error</source>
         <translation>Napaka nastavitev</translation>
     </message>
+    <message>
+        <source>App Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -286,6 +290,13 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Dolžina poti aplikacij mora biti &lt; %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfZoneManager</name>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -850,16 +861,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Zaženi &apos;Fort Firewall&apos; kot storitev v ozadju</translation>
     </message>
     <message>
-        <source>Move Profile</source>
-        <translation>Premakni profil</translation>
-    </message>
-    <message>
-        <source>New profile path is &quot;%1&quot;.
-Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation>Nova pot profila je &quot;%1&quot;.
-Ali želite premakniti profil iz &quot;%2&quot; na novo mesto?</translation>
-    </message>
-    <message>
         <source>Tray</source>
         <translation>Programska vrstica</translation>
     </message>
@@ -1309,10 +1310,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Service isn&apos;t responding.</source>
         <translation>Storitev se ne odziva.</translation>
     </message>
-    <message>
-        <source>Service error.</source>
-        <translation>Napaka storitve.</translation>
-    </message>
 </context>
 <context>
     <name>SchedulePage</name>
@@ -1650,6 +1647,13 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Ali ste prepričani, da želite počistiti vso statistiko?</translation>
+    </message>
+</context>
+<context>
+    <name>TranslationManager</name>
+    <message>
+        <source>System Language</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

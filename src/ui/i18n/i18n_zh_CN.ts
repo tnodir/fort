@@ -249,6 +249,10 @@
         <source>Configuration Error</source>
         <translation>配置错误</translation>
     </message>
+    <message>
+        <source>App Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -286,6 +290,13 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>应用程序路径的长度必须小于 %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfZoneManager</name>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -848,16 +859,6 @@ Make sure that you have a fresh backup.</source>
         <translation>在后台运行堡垒防火墙</translation>
     </message>
     <message>
-        <source>Move Profile</source>
-        <translation>移动配置文件</translation>
-    </message>
-    <message>
-        <source>New profile path is &quot;%1&quot;.
-Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation>新的配置文件路径是 &quot;%1&quot;。
-您想移动配置文件从 &quot;%2&quot; 到新位置吗？</translation>
-    </message>
-    <message>
         <source>Tray</source>
         <translation>系统托盘</translation>
     </message>
@@ -1307,10 +1308,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Service isn&apos;t responding.</source>
         <translation>服务未响应。</translation>
     </message>
-    <message>
-        <source>Service error.</source>
-        <translation>服务错误。</translation>
-    </message>
 </context>
 <context>
     <name>SchedulePage</name>
@@ -1648,6 +1645,13 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>确认要清空所有信息么?</translation>
+    </message>
+</context>
+<context>
+    <name>TranslationManager</name>
+    <message>
+        <source>System Language</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -249,6 +249,10 @@
         <source>Configuration Error</source>
         <translation>Ошибка конфигурации</translation>
     </message>
+    <message>
+        <source>App Configuration Error</source>
+        <translation>Ошибка конфигурации Программы</translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -286,6 +290,13 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfZoneManager</name>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation>Ошибка конфигурации Зоны</translation>
     </message>
 </context>
 <context>
@@ -701,7 +712,7 @@
     </message>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>ОК</translation>
     </message>
     <message>
         <source>Apply</source>
@@ -755,10 +766,12 @@
         <translation>Невозможно импортировать резервную копию</translation>
     </message>
     <message>
-        <source>Программа будет перезапущена после успешного импорта. Продолжить?
+        <source>Program will be restarted after successful import. Continue?
 
-Убедитесь, что у вас есть свежая резервная копия.</source>
-        <translation></translation>
+Make sure that you have a fresh backup.</source>
+        <translation>Программа будет перезапущена после успешного импорта. Продолжить?
+
+Убедитесь, что у вас есть новая резервная копия.</translation>
     </message>
 </context>
 <context>
@@ -846,16 +859,6 @@
     <message>
         <source>Run Fort Firewall as a Service in background</source>
         <translation>Запускать Fort Firewall как Сервис в фоне</translation>
-    </message>
-    <message>
-        <source>Move Profile</source>
-        <translation>Переместить профиль</translation>
-    </message>
-    <message>
-        <source>New profile path is &quot;%1&quot;.
-Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation>Новый путь профиль: &quot;%1&quot;.
-Переместить профиль из &quot;%2&quot; в новое место?</translation>
     </message>
     <message>
         <source>Tray</source>
@@ -1041,7 +1044,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>ОК</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -1130,7 +1133,7 @@ Would you like to move profile from &quot;%2&quot; to new location?</source>
     </message>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>ОК</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -1306,10 +1309,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Service isn&apos;t responding.</source>
         <translation>Сервис не отвечает.</translation>
-    </message>
-    <message>
-        <source>Service error.</source>
-        <translation>Ошибка сервиса.</translation>
     </message>
 </context>
 <context>
@@ -1651,6 +1650,13 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
 </context>
 <context>
+    <name>TranslationManager</name>
+    <message>
+        <source>System Language</source>
+        <translation>Системный язык</translation>
+    </message>
+</context>
+<context>
     <name>TrayIcon</name>
     <message>
         <source>Programs</source>
@@ -1814,7 +1820,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>ОК</translation>
     </message>
     <message>
         <source>Cancel</source>

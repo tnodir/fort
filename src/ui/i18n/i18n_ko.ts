@@ -249,6 +249,10 @@
         <source>Configuration Error</source>
         <translation>설정 오류</translation>
     </message>
+    <message>
+        <source>App Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -286,6 +290,13 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>응용 프로그램의 경로 길이는 %1보다 작아야 합니다.</translation>
+    </message>
+</context>
+<context>
+    <name>ConfZoneManager</name>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -850,16 +861,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Fort Firewall을 백그라운드에서 서비스로 실행</translation>
     </message>
     <message>
-        <source>Move Profile</source>
-        <translation>프로필 이동</translation>
-    </message>
-    <message>
-        <source>New profile path is &quot;%1&quot;.
-Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation>새 프로필 경로는 &quot;%1&quot; 입니다.
-프로필을 &quot;%2&quot;에서 새 위치로 이동하시겠습니까?</translation>
-    </message>
-    <message>
         <source>Tray</source>
         <translation>트레이</translation>
     </message>
@@ -1309,10 +1310,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Service isn&apos;t responding.</source>
         <translation>서비스가 응답하지 않습니다.</translation>
     </message>
-    <message>
-        <source>Service error.</source>
-        <translation>서비스 오류.</translation>
-    </message>
 </context>
 <context>
     <name>SchedulePage</name>
@@ -1650,6 +1647,13 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>모든 통계를 삭제하시겠습니까?</translation>
+    </message>
+</context>
+<context>
+    <name>TranslationManager</name>
+    <message>
+        <source>System Language</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

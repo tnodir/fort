@@ -249,6 +249,10 @@
         <source>Configuration Error</source>
         <translation></translation>
     </message>
+    <message>
+        <source>App Configuration Error</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -285,6 +289,13 @@
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ConfZoneManager</name>
+    <message>
+        <source>Zone Configuration Error</source>
         <translation></translation>
     </message>
 </context>
@@ -848,15 +859,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Move Profile</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>New profile path is &quot;%1&quot;.
-Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Tray</source>
         <translation></translation>
     </message>
@@ -1303,10 +1305,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Service isn&apos;t responding.</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Service error.</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>SchedulePage</name>
@@ -1643,6 +1641,13 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Are you sure to clear all statistics?</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>TranslationManager</name>
+    <message>
+        <source>System Language</source>
         <translation></translation>
     </message>
 </context>

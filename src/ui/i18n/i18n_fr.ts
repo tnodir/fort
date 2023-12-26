@@ -249,6 +249,10 @@
         <source>Configuration Error</source>
         <translation>Erreur de configuration</translation>
     </message>
+    <message>
+        <source>App Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -286,6 +290,13 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Longueur du chemin d&apos;application doit être &lt; %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfZoneManager</name>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -850,16 +861,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Exécutez Fort Firewall en tant que service en arrière-plan</translation>
     </message>
     <message>
-        <source>Move Profile</source>
-        <translation>Déplacer le profil</translation>
-    </message>
-    <message>
-        <source>New profile path is &quot;%1&quot;.
-Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation>Nouveau chemin du profil est &quot;%1&quot;.
-Voulez-vous déplacer le profil de &quot;%2&quot; vers un nouvel emplacement?</translation>
-    </message>
-    <message>
         <source>Tray</source>
         <translation>Barre de programme</translation>
     </message>
@@ -1309,10 +1310,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Service isn&apos;t responding.</source>
         <translation>Le service ne répond pas.</translation>
     </message>
-    <message>
-        <source>Service error.</source>
-        <translation>Erreur de service.</translation>
-    </message>
 </context>
 <context>
     <name>SchedulePage</name>
@@ -1650,6 +1647,13 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Êtes-vous sûr de vouloir effacer toutes les statistiques?</translation>
+    </message>
+</context>
+<context>
+    <name>TranslationManager</name>
+    <message>
+        <source>System Language</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

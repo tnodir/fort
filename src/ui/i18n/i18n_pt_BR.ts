@@ -249,6 +249,10 @@
         <source>Configuration Error</source>
         <translation>Erro de configuração</translation>
     </message>
+    <message>
+        <source>App Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -286,6 +290,13 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>O comprimento da Aplicação&apos;s O caminho deve ser &lt; %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfZoneManager</name>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -848,15 +859,6 @@ Make sure that you have a fresh backup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Move Profile</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>New profile path is &quot;%1&quot;.
-Would you like to move profile from &quot;%2&quot; to new location?</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Tray</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1303,10 +1305,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Service isn&apos;t responding.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Service error.</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>SchedulePage</name>
@@ -1644,6 +1642,13 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Tem certeza que quer limpar todas as estatísticas?</translation>
+    </message>
+</context>
+<context>
+    <name>TranslationManager</name>
+    <message>
+        <source>System Language</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
