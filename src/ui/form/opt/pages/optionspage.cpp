@@ -40,22 +40,6 @@ struct Startup
     quint8 isService : 1 = false;
 } g_startup;
 
-void moveProfile(const QString &profilePath, const QString &newProfilePath)
-{
-    if (profilePath.isEmpty() || newProfilePath.isEmpty())
-        return;
-
-    if (QMessageBox::question(nullptr, OptionsPage::tr("Move Profile"),
-                OptionsPage::tr("New profile path is \"%1\".\n"
-                                "Would you like to move profile from \"%2\" to new location?")
-                        .arg(newProfilePath, profilePath))
-            != QMessageBox::Yes)
-        return;
-
-    QDir(newProfilePath).removeRecursively();
-    QDir().rename(profilePath, newProfilePath);
-}
-
 }
 
 OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
@@ -118,21 +102,11 @@ void OptionsPage::saveService(bool isService)
     if (!g_startup.isServiceChanged) {
         g_startup.isServiceChanged = true;
 
-        const bool isDefaultProfilePath = settings()->isDefaultProfilePath();
-        const QString profilePath = isDefaultProfilePath ? settings()->profilePath() : QString();
-        const QString newProfilePath = isDefaultProfilePath
-                ? FortSettings::defaultProfilePath(g_startup.isService)
-                : QString();
-
         connect(fortManager(), &QObject::destroyed, [=] {
             if (g_startup.wasService == g_startup.isService)
                 return;
 
             StartupUtil::setServiceInstalled(false);
-
-            if (profilePath != newProfilePath) {
-                moveProfile(profilePath, newProfilePath);
-            }
 
             if (g_startup.isService) {
                 StartupUtil::setServiceInstalled(true);
