@@ -754,6 +754,12 @@
         <source>Cannot Import Backup</source>
         <translation>Невозможно импортировать резервную копию</translation>
     </message>
+    <message>
+        <source>Программа будет перезапущена после успешного импорта. Продолжить?
+
+Убедитесь, что у вас есть свежая резервная копия.</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsPage</name>

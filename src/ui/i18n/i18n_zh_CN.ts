@@ -754,6 +754,12 @@
         <source>Cannot Import Backup</source>
         <translation>无法导入备份</translation>
     </message>
+    <message>
+        <source>Program will be restarted after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>导入成功后，程序将重新启动。是否继续？</translation>
+    </message>
 </context>
 <context>
     <name>OptionsPage</name>

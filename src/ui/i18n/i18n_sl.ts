@@ -717,42 +717,50 @@
     </message>
     <message>
         <source>Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Varnostna kopija</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Izvozi</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Uvozi</translation>
     </message>
 </context>
 <context>
     <name>OptionsController</name>
     <message>
         <source>Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Izvozi varnostno kopijo</translation>
     </message>
     <message>
         <source>Backup Exported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>Varnostna kopija je uspešno izvožena</translation>
     </message>
     <message>
         <source>Cannot Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Ni mogoče zvoziti varnostno kopijo</translation>
     </message>
     <message>
         <source>Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Uvozi varnostno kopijo</translation>
     </message>
     <message>
         <source>Backup Imported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>Varnostna kopija je uspešno uvožena</translation>
     </message>
     <message>
         <source>Cannot Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Ni mogoče uvoziti varnostno kopijo</translation>
+    </message>
+    <message>
+        <source>Program will be restarted after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Po uspešnem uvozu se bo program znova zagnal. Želite nadaljevati?
+
+Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
 </context>
 <context>

@@ -754,6 +754,12 @@
         <source>Cannot Import Backup</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Program will be restarted after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsPage</name>

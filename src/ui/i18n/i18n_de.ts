@@ -754,6 +754,14 @@
         <source>Cannot Import Backup</source>
         <translation>Sicherung konnte nicht importiert werden</translation>
     </message>
+    <message>
+        <source>Program will be restarted after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Programm wird nach erfolgreichem Import neu gestartet. Fortfahren?
+
+Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
+    </message>
 </context>
 <context>
     <name>OptionsPage</name>

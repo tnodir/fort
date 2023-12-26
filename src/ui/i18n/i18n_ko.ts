@@ -754,6 +754,14 @@
         <source>Cannot Import Backup</source>
         <translation>백업을 가져올 수 없음</translation>
     </message>
+    <message>
+        <source>Program will be restarted after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>가져오기를 완료한 후 프로그램이 다시 시작됩니다. 계속하시겠습니까?
+
+새로운 백업이 있는지 확인하십시오.</translation>
+    </message>
 </context>
 <context>
     <name>OptionsPage</name>
