@@ -23,16 +23,17 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_saveVariant)
         CASE_STRING(Rpc_ConfManager_exportBackup)
         CASE_STRING(Rpc_ConfManager_importBackup)
-        CASE_STRING(Rpc_ConfManager_addZone)
-        CASE_STRING(Rpc_ConfManager_deleteZone)
-        CASE_STRING(Rpc_ConfManager_updateZone)
-        CASE_STRING(Rpc_ConfManager_updateZoneName)
-        CASE_STRING(Rpc_ConfManager_updateZoneEnabled)
         CASE_STRING(Rpc_ConfManager_checkPassword)
         CASE_STRING(Rpc_ConfManager_confChanged)
-        CASE_STRING(Rpc_ConfManager_zoneAdded)
-        CASE_STRING(Rpc_ConfManager_zoneRemoved)
-        CASE_STRING(Rpc_ConfManager_zoneUpdated)
+
+        CASE_STRING(Rpc_ConfZoneManager_addZone)
+        CASE_STRING(Rpc_ConfZoneManager_deleteZone)
+        CASE_STRING(Rpc_ConfZoneManager_updateZone)
+        CASE_STRING(Rpc_ConfZoneManager_updateZoneName)
+        CASE_STRING(Rpc_ConfZoneManager_updateZoneEnabled)
+        CASE_STRING(Rpc_ConfZoneManager_zoneAdded)
+        CASE_STRING(Rpc_ConfZoneManager_zoneRemoved)
+        CASE_STRING(Rpc_ConfZoneManager_zoneUpdated)
 
         CASE_STRING(Rpc_ConfAppManager_addApp)
         CASE_STRING(Rpc_ConfAppManager_deleteApps)
@@ -82,6 +83,7 @@ const char *const rpcManagerString(RpcManager rpcManager)
         CASE_STRING(Rpc_AppInfoManager)
         CASE_STRING(Rpc_ConfManager)
         CASE_STRING(Rpc_ConfAppManager)
+        CASE_STRING(Rpc_ConfZoneManager)
         CASE_STRING(Rpc_DriverManager)
         CASE_STRING(Rpc_QuotaManager)
         CASE_STRING(Rpc_StatManager)
@@ -111,16 +113,17 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfManager, // Rpc_ConfManager_saveVariant,
         Rpc_ConfManager, // Rpc_ConfManager_exportBackup,
         Rpc_ConfManager, // Rpc_ConfManager_importBackup,
-        Rpc_ConfManager, // Rpc_ConfManager_addZone,
-        Rpc_ConfManager, // Rpc_ConfManager_deleteZone,
-        Rpc_ConfManager, // Rpc_ConfManager_updateZone,
-        Rpc_ConfManager, // Rpc_ConfManager_updateZoneName,
-        Rpc_ConfManager, // Rpc_ConfManager_updateZoneEnabled,
         Rpc_ConfManager, // Rpc_ConfManager_checkPassword,
         Rpc_ConfManager, // Rpc_ConfManager_confChanged,
-        Rpc_ConfManager, // Rpc_ConfManager_zoneAdded,
-        Rpc_ConfManager, // Rpc_ConfManager_zoneRemoved,
-        Rpc_ConfManager, // Rpc_ConfManager_zoneUpdated,
+
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_addZone,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_deleteZone,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZone,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZoneName,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZoneEnabled,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneAdded,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneRemoved,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneUpdated,
 
         Rpc_ConfAppManager, // Rpc_ConfAppManager_addApp,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_deleteApps,
@@ -181,16 +184,17 @@ bool commandRequiresValidation(Command cmd)
         true, // Rpc_ConfManager_saveVariant,
         true, // Rpc_ConfManager_exportBackup,
         true, // Rpc_ConfManager_importBackup,
-        true, // Rpc_ConfManager_addZone,
-        true, // Rpc_ConfManager_deleteZone,
-        true, // Rpc_ConfManager_updateZone,
-        true, // Rpc_ConfManager_updateZoneName,
-        true, // Rpc_ConfManager_updateZoneEnabled,
         0, // Rpc_ConfManager_checkPassword,
         0, // Rpc_ConfManager_confChanged,
-        0, // Rpc_ConfManager_zoneAdded,
-        0, // Rpc_ConfManager_zoneRemoved,
-        0, // Rpc_ConfManager_zoneUpdated,
+
+        true, // Rpc_ConfZoneManager_addZone,
+        true, // Rpc_ConfZoneManager_deleteZone,
+        true, // Rpc_ConfZoneManager_updateZone,
+        true, // Rpc_ConfZoneManager_updateZoneName,
+        true, // Rpc_ConfZoneManager_updateZoneEnabled,
+        0, // Rpc_ConfZoneManager_zoneAdded,
+        0, // Rpc_ConfZoneManager_zoneRemoved,
+        0, // Rpc_ConfZoneManager_zoneUpdated,
 
         true, // Rpc_ConfAppManager_addApp,
         true, // Rpc_ConfAppManager_deleteApps,

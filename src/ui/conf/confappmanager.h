@@ -13,8 +13,6 @@
 class App;
 class ConfManager;
 class FirewallConf;
-class IniOptions;
-class IniUser;
 class LogEntryBlocked;
 
 class ConfAppManager : public QObject, public ConfAppsWalker, public IocService

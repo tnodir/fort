@@ -39,6 +39,7 @@ private:
     void setupAppInfoManagerSignals();
     void setupConfManagerSignals();
     void setupConfAppManagerSignals();
+    void setupConfZoneManagerSignals();
     void setupDriverManagerSignals();
     void setupQuotaManagerSignals();
     void setupStatManagerSignals();

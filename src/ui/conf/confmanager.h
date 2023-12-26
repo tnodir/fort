@@ -13,7 +13,6 @@ class FirewallConf;
 class IniOptions;
 class IniUser;
 class TaskInfo;
-class Zone;
 
 class ConfManager : public QObject, public IocService
 {
@@ -59,14 +58,6 @@ public:
     virtual bool exportBackup(const QString &path);
     virtual bool importBackup(const QString &path);
 
-    virtual bool addZone(Zone &zone);
-    int getFreeZoneId();
-    virtual bool deleteZone(int zoneId);
-    virtual bool updateZone(const Zone &zone);
-    virtual bool updateZoneName(int zoneId, const QString &zoneName);
-    virtual bool updateZoneEnabled(int zoneId, bool enabled);
-    bool updateZoneResult(const Zone &zone);
-
     virtual bool checkPassword(const QString &password);
 
     bool validateDriver();
@@ -74,17 +65,10 @@ public:
     void updateServices();
     void updateDriverServices(const QVector<ServiceInfo> &services, int runningServicesCount);
 
-    void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
-            const QList<QByteArray> &zonesData);
-
 signals:
     void confChanged(bool onlyFlags);
     void iniChanged(const IniOptions &ini);
     void iniUserChanged(const IniUser &ini, bool onlyFlags);
-
-    void zoneAdded();
-    void zoneRemoved(int zoneId);
-    void zoneUpdated();
 
 protected:
     void setConf(FirewallConf *newConf);
@@ -94,8 +78,6 @@ private:
     void setupDefault(FirewallConf &conf) const;
 
     bool validateConf(const FirewallConf &newConf);
-
-    bool updateDriverZoneFlag(int zoneId, bool enabled);
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);

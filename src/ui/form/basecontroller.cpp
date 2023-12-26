@@ -4,6 +4,7 @@
 
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
+#include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
 #include <driver/drivermanager.h>
 #include <fortmanager.h>
@@ -39,6 +40,11 @@ ConfManager *BaseController::confManager() const
 ConfAppManager *BaseController::confAppManager() const
 {
     return IoC<ConfAppManager>();
+}
+
+ConfZoneManager *BaseController::confZoneManager() const
+{
+    return IoC<ConfZoneManager>();
 }
 
 FirewallConf *BaseController::conf() const

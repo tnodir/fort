@@ -16,12 +16,6 @@ public:
     bool exportBackup(const QString &path) override;
     bool importBackup(const QString &path) override;
 
-    bool addZone(Zone &zone) override;
-    bool deleteZone(int zoneId) override;
-    bool updateZone(const Zone &zone) override;
-    bool updateZoneName(int zoneId, const QString &zoneName) override;
-    bool updateZoneEnabled(int zoneId, bool enabled) override;
-
     bool checkPassword(const QString &password) override;
 
     void onConfChanged(const QVariant &confVar);

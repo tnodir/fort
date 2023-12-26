@@ -3,7 +3,6 @@
 #include <sqlite/sqlitedb.h>
 
 #include <conf/firewallconf.h>
-#include <conf/zone.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <rpc/rpcmanager.h>
@@ -24,45 +23,6 @@ bool ConfManagerRpc::exportBackup(const QString &path)
 bool ConfManagerRpc::importBackup(const QString &path)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_importBackup, { path });
-}
-
-bool ConfManagerRpc::addZone(Zone &zone)
-{
-    QVariantList resArgs;
-
-    if (!IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_addZone,
-                { zone.enabled, zone.customUrl, zone.zoneName, zone.sourceCode, zone.url,
-                        zone.formData, zone.textInline },
-                &resArgs))
-        return false;
-
-    zone.zoneId = resArgs.value(0).toInt();
-
-    return true;
-}
-
-bool ConfManagerRpc::deleteZone(int zoneId)
-{
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_deleteZone, { zoneId });
-}
-
-bool ConfManagerRpc::updateZone(const Zone &zone)
-{
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_updateZone,
-            { zone.enabled, zone.customUrl, zone.zoneId, zone.zoneName, zone.sourceCode, zone.url,
-                    zone.formData, zone.textInline });
-}
-
-bool ConfManagerRpc::updateZoneName(int zoneId, const QString &zoneName)
-{
-    return IoC<RpcManager>()->doOnServer(
-            Control::Rpc_ConfManager_updateZoneName, { zoneId, zoneName });
-}
-
-bool ConfManagerRpc::updateZoneEnabled(int zoneId, bool enabled)
-{
-    return IoC<RpcManager>()->doOnServer(
-            Control::Rpc_ConfManager_updateZoneEnabled, { zoneId, enabled });
 }
 
 bool ConfManagerRpc::checkPassword(const QString &password)

@@ -7,6 +7,7 @@
 #include <sqlite/sqlitestmt.h>
 
 #include <conf/confmanager.h>
+#include <conf/confzonemanager.h>
 #include <util/conf/confutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
@@ -26,6 +27,11 @@ ConfManager *ZoneListModel::confManager() const
     return IoC<ConfManager>();
 }
 
+ConfZoneManager *ZoneListModel::confZoneManager() const
+{
+    return IoC<ConfZoneManager>();
+}
+
 SqliteDb *ZoneListModel::sqliteDb() const
 {
     return confManager()->sqliteDb();
@@ -36,9 +42,9 @@ void ZoneListModel::setUp()
     setupZoneTypes();
     setupZoneSources();
 
-    connect(confManager(), &ConfManager::zoneAdded, this, &TableSqlModel::reset);
-    connect(confManager(), &ConfManager::zoneRemoved, this, &ZoneListModel::reset);
-    connect(confManager(), &ConfManager::zoneUpdated, this, &TableSqlModel::refresh);
+    connect(confZoneManager(), &ConfZoneManager::zoneAdded, this, &TableSqlModel::reset);
+    connect(confZoneManager(), &ConfZoneManager::zoneRemoved, this, &ZoneListModel::reset);
+    connect(confZoneManager(), &ConfZoneManager::zoneUpdated, this, &TableSqlModel::refresh);
 }
 
 int ZoneListModel::columnCount(const QModelIndex &parent) const
@@ -135,7 +141,7 @@ bool ZoneListModel::setData(const QModelIndex &index, const QVariant &value, int
     switch (role) {
     case Qt::CheckStateRole:
         const auto zoneRow = zoneRowAt(index.row());
-        return confManager()->updateZoneEnabled(zoneRow.zoneId, !zoneRow.enabled);
+        return confZoneManager()->updateZoneEnabled(zoneRow.zoneId, !zoneRow.enabled);
     }
 
     return false;

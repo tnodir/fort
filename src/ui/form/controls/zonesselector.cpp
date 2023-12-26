@@ -4,7 +4,7 @@
 #include <QMenu>
 #include <QVBoxLayout>
 
-#include <conf/confmanager.h>
+#include <conf/confzonemanager.h>
 #include <driver/drivercommon.h>
 #include <form/controls/controlutil.h>
 #include <model/zonelistmodel.h>
@@ -107,9 +107,9 @@ void ZonesSelector::setupZones()
 
     connect(m_menuZones, &QMenu::aboutToShow, this, &ZonesSelector::updateZonesMenu);
 
-    auto confManager = IoC<ConfManager>();
+    auto confZoneManager = IoC<ConfZoneManager>();
 
-    connect(confManager, &ConfManager::zoneRemoved, this, [&](int zoneId) {
+    connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, [&](int zoneId) {
         removeZone(zoneId);
         retranslateZonesText();
     });

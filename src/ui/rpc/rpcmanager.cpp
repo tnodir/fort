@@ -11,6 +11,7 @@
 #include <rpc/appinfomanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
+#include <rpc/confzonemanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/serviceinfomanagerrpc.h>
@@ -81,57 +82,6 @@ bool processConfManager_importBackup(
     return confManager->importBackup(p.args.value(0).toString());
 }
 
-bool processConfManager_addZone(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
-{
-    Zone zone;
-    zone.enabled = p.args.value(0).toBool();
-    zone.customUrl = p.args.value(1).toBool();
-    zone.zoneName = p.args.value(2).toString();
-    zone.sourceCode = p.args.value(3).toString();
-    zone.url = p.args.value(4).toString();
-    zone.formData = p.args.value(5).toString();
-    zone.textInline = p.args.value(6).toString();
-
-    const bool ok = confManager->addZone(zone);
-    resArgs = { zone.zoneId };
-    return ok;
-}
-
-bool processConfManager_deleteZone(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    return confManager->deleteZone(p.args.value(0).toLongLong());
-}
-
-bool processConfManager_updateZone(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    Zone zone;
-    zone.enabled = p.args.value(0).toBool();
-    zone.customUrl = p.args.value(1).toBool();
-    zone.zoneId = p.args.value(2).toInt();
-    zone.zoneName = p.args.value(3).toString();
-    zone.sourceCode = p.args.value(4).toString();
-    zone.url = p.args.value(5).toString();
-    zone.formData = p.args.value(6).toString();
-    zone.textInline = p.args.value(7).toString();
-
-    return confManager->updateZone(zone);
-}
-
-bool processConfManager_updateZoneName(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    return confManager->updateZoneName(p.args.value(0).toLongLong(), p.args.value(1).toString());
-}
-
-bool processConfManager_updateZoneEnabled(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    return confManager->updateZoneEnabled(p.args.value(0).toLongLong(), p.args.value(1).toBool());
-}
-
 bool processConfManager_checkPassword(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
@@ -149,11 +99,6 @@ static processConfManager_func processConfManager_funcList[] = {
     &processConfManager_saveVariant, // Rpc_ConfManager_saveVariant,
     &processConfManager_exportBackup, // Rpc_ConfManager_exportBackup,
     &processConfManager_importBackup, // Rpc_ConfManager_importBackup,
-    &processConfManager_addZone, // Rpc_ConfManager_addZone,
-    &processConfManager_deleteZone, // Rpc_ConfManager_deleteZone,
-    &processConfManager_updateZone, // Rpc_ConfManager_updateZone,
-    &processConfManager_updateZoneName, // Rpc_ConfManager_updateZoneName,
-    &processConfManager_updateZoneEnabled, // Rpc_ConfManager_updateZoneEnabled,
     &processConfManager_checkPassword, // Rpc_ConfManager_checkPassword,
 };
 
@@ -233,6 +178,85 @@ inline bool processConfAppManagerRpcResult(
         const processConfAppManager_func func = processConfAppManager_funcList[funcIndex];
 
         return func(confAppManager, p, resArgs);
+    }
+
+    return false;
+}
+
+bool processConfZoneManager_addZone(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    Zone zone;
+    zone.enabled = p.args.value(0).toBool();
+    zone.customUrl = p.args.value(1).toBool();
+    zone.zoneName = p.args.value(2).toString();
+    zone.sourceCode = p.args.value(3).toString();
+    zone.url = p.args.value(4).toString();
+    zone.formData = p.args.value(5).toString();
+    zone.textInline = p.args.value(6).toString();
+
+    const bool ok = confZoneManager->addZone(zone);
+    resArgs = { zone.zoneId };
+    return ok;
+}
+
+bool processConfZoneManager_deleteZone(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confZoneManager->deleteZone(p.args.value(0).toLongLong());
+}
+
+bool processConfZoneManager_updateZone(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    Zone zone;
+    zone.enabled = p.args.value(0).toBool();
+    zone.customUrl = p.args.value(1).toBool();
+    zone.zoneId = p.args.value(2).toInt();
+    zone.zoneName = p.args.value(3).toString();
+    zone.sourceCode = p.args.value(4).toString();
+    zone.url = p.args.value(5).toString();
+    zone.formData = p.args.value(6).toString();
+    zone.textInline = p.args.value(7).toString();
+
+    return confZoneManager->updateZone(zone);
+}
+
+bool processConfZoneManager_updateZoneName(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confZoneManager->updateZoneName(
+            p.args.value(0).toLongLong(), p.args.value(1).toString());
+}
+
+bool processConfZoneManager_updateZoneEnabled(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confZoneManager->updateZoneEnabled(
+            p.args.value(0).toLongLong(), p.args.value(1).toBool());
+}
+
+using processConfZoneManager_func = bool (*)(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+
+static processConfZoneManager_func processConfZoneManager_funcList[] = {
+    &processConfZoneManager_addZone, // Rpc_ConfZoneManager_addZone,
+    &processConfZoneManager_deleteZone, // Rpc_ConfZoneManager_deleteZone,
+    &processConfZoneManager_updateZone, // Rpc_ConfZoneManager_updateZone,
+    &processConfZoneManager_updateZoneName, // Rpc_ConfZoneManager_updateZoneName,
+    &processConfZoneManager_updateZoneEnabled, // Rpc_ConfZoneManager_updateZoneEnabled,
+};
+
+inline bool processConfZoneManagerRpcResult(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    if (p.command >= Control::Rpc_ConfZoneManager_addZone
+            && p.command <= Control::Rpc_ConfZoneManager_updateZoneEnabled) {
+
+        const int funcIndex = p.command - Control::Rpc_ConfZoneManager_addZone;
+        const processConfZoneManager_func func = processConfZoneManager_funcList[funcIndex];
+
+        return func(confZoneManager, p, resArgs);
     }
 
     return false;
@@ -382,15 +406,6 @@ bool processConfManagerRpc(
     switch (p.command) {
     case Control::Rpc_ConfManager_confChanged:
         return processConfManager_confChanged(confManager, p);
-    case Control::Rpc_ConfManager_zoneAdded:
-        emit confManager->zoneAdded();
-        return true;
-    case Control::Rpc_ConfManager_zoneRemoved:
-        emit confManager->zoneRemoved(p.args.value(0).toInt());
-        return true;
-    case Control::Rpc_ConfManager_zoneUpdated:
-        emit confManager->zoneUpdated();
-        return true;
     default: {
         ok = processConfManagerRpcResult(confManager, p, resArgs);
         isSendResult = true;
@@ -416,6 +431,29 @@ bool processConfAppManagerRpc(
         return true;
     default: {
         ok = processConfAppManagerRpcResult(confAppManager, p, resArgs);
+        isSendResult = true;
+        return true;
+    }
+    }
+}
+
+bool processConfZoneManagerRpc(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+{
+    auto confZoneManager = IoC<ConfZoneManager>();
+
+    switch (p.command) {
+    case Control::Rpc_ConfZoneManager_zoneAdded:
+        emit confZoneManager->zoneAdded();
+        return true;
+    case Control::Rpc_ConfZoneManager_zoneRemoved:
+        emit confZoneManager->zoneRemoved(p.args.value(0).toInt());
+        return true;
+    case Control::Rpc_ConfZoneManager_zoneUpdated:
+        emit confZoneManager->zoneUpdated();
+        return true;
+    default: {
+        ok = processConfZoneManagerRpcResult(confZoneManager, p, resArgs);
         isSendResult = true;
         return true;
     }
@@ -553,6 +591,7 @@ void RpcManager::setupServerSignals()
     setupAppInfoManagerSignals();
     setupConfManagerSignals();
     setupConfAppManagerSignals();
+    setupConfZoneManagerSignals();
     setupDriverManagerSignals();
     setupQuotaManagerSignals();
     setupStatManagerSignals();
@@ -578,13 +617,6 @@ void RpcManager::setupConfManagerSignals()
         const QVariant confVar = IoC<ConfManager>()->toPatchVariant(onlyFlags);
         invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
     });
-
-    connect(confManager, &ConfManager::zoneAdded, this,
-            [&] { invokeOnClients(Control::Rpc_ConfManager_zoneAdded); });
-    connect(confManager, &ConfManager::zoneRemoved, this,
-            [&](int zoneId) { invokeOnClients(Control::Rpc_ConfManager_zoneRemoved, { zoneId }); });
-    connect(confManager, &ConfManager::zoneUpdated, this,
-            [&] { invokeOnClients(Control::Rpc_ConfManager_zoneUpdated); });
 }
 
 void RpcManager::setupConfAppManagerSignals()
@@ -597,6 +629,19 @@ void RpcManager::setupConfAppManagerSignals()
             [&] { invokeOnClients(Control::Rpc_ConfAppManager_appChanged); });
     connect(confAppManager, &ConfAppManager::appUpdated, this,
             [&] { invokeOnClients(Control::Rpc_ConfAppManager_appUpdated); });
+}
+
+void RpcManager::setupConfZoneManagerSignals()
+{
+    auto confZoneManager = IoC<ConfZoneManager>();
+
+    connect(confZoneManager, &ConfZoneManager::zoneAdded, this,
+            [&] { invokeOnClients(Control::Rpc_ConfZoneManager_zoneAdded); });
+    connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, [&](int zoneId) {
+        invokeOnClients(Control::Rpc_ConfZoneManager_zoneRemoved, { zoneId });
+    });
+    connect(confZoneManager, &ConfZoneManager::zoneUpdated, this,
+            [&] { invokeOnClients(Control::Rpc_ConfZoneManager_zoneUpdated); });
 }
 
 void RpcManager::setupDriverManagerSignals()
@@ -804,6 +849,7 @@ static processManager_func processManager_funcList[] = {
     &processAppInfoManagerRpc, // Control::Rpc_AppInfoManager,
     &processConfManagerRpc, // Control::Rpc_ConfManager,
     &processConfAppManagerRpc, // Control::Rpc_ConfAppManager,
+    &processConfZoneManagerRpc, // Control::Rpc_ConfZoneManager,
     &processDriverManagerRpc, // Control::Rpc_DriverManager,
     &processQuotaManagerRpc, // Control::Rpc_QuotaManager,
     &processStatManagerRpc, // Control::Rpc_StatManager,

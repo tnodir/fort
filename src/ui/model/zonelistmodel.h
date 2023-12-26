@@ -10,6 +10,7 @@
 #include <util/model/tablesqlmodel.h>
 
 class ConfManager;
+class ConfZoneManager;
 class ZoneSourceWrapper;
 
 struct ZoneRow : TableRow, public Zone
@@ -24,6 +25,7 @@ public:
     explicit ZoneListModel(QObject *parent = nullptr);
 
     ConfManager *confManager() const;
+    ConfZoneManager *confZoneManager() const;
     SqliteDb *sqliteDb() const override;
 
     void setUp() override;

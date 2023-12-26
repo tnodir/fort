@@ -26,6 +26,7 @@
 #include <rpc/askpendingmanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
+#include <rpc/confzonemanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
@@ -138,6 +139,7 @@ void FortManager::createManagers()
 
     ConfManager *confManager;
     ConfAppManager *confAppManager;
+    ConfZoneManager *confZoneManager;
     QuotaManager *quotaManager;
     StatManager *statManager;
     StatBlockManager *statBlockManager;
@@ -155,6 +157,7 @@ void FortManager::createManagers()
 
         confManager = new ConfManager(settings->confFilePath());
         confAppManager = new ConfAppManager();
+        confZoneManager = new ConfZoneManager();
         quotaManager = new QuotaManager();
         statManager = new StatManager(settings->statFilePath());
         statBlockManager = new StatBlockManager(settings->statBlockFilePath());
@@ -170,6 +173,7 @@ void FortManager::createManagers()
     } else {
         confManager = new ConfManagerRpc(settings->confFilePath());
         confAppManager = new ConfAppManagerRpc();
+        confZoneManager = new ConfZoneManagerRpc();
         quotaManager = new QuotaManagerRpc();
         statManager = new StatManagerRpc(settings->statFilePath());
         statBlockManager = new StatBlockManagerRpc(settings->statBlockFilePath());
@@ -197,6 +201,7 @@ void FortManager::createManagers()
 
     ioc->setService(confManager);
     ioc->setService(confAppManager);
+    ioc->setService(confZoneManager);
     ioc->setService(quotaManager);
     ioc->setService(statManager);
     ioc->setService(statBlockManager);
@@ -374,8 +379,8 @@ void FortManager::setupTaskManager()
                 WindowManager::MessageZones);
     });
 
-    connect(taskManager, &TaskManager::zonesUpdated, IoC<ConfManager>(),
-            &ConfManager::updateDriverZones);
+    connect(taskManager, &TaskManager::zonesUpdated, IoC<ConfZoneManager>(),
+            &ConfZoneManager::updateDriverZones);
 
     connect(taskManager, &TaskManager::taskDoubleClicked, this, [&](qint8 taskType) {
         switch (taskType) {

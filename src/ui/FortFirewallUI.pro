@@ -22,6 +22,7 @@ SOURCES += \
     conf/appgroup.cpp \
     conf/confappmanager.cpp \
     conf/confmanager.cpp \
+    conf/confzonemanager.cpp \
     conf/firewallconf.cpp \
     conf/inioptions.cpp \
     conf/rules/policy.cpp \
@@ -136,6 +137,7 @@ SOURCES += \
     rpc/askpendingmanagerrpc.cpp \
     rpc/confappmanagerrpc.cpp \
     rpc/confmanagerrpc.cpp \
+    rpc/confzonemanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
     rpc/logmanagerrpc.cpp \
     rpc/quotamanagerrpc.cpp \
@@ -220,6 +222,7 @@ HEADERS += \
     conf/appgroup.h \
     conf/confappmanager.h \
     conf/confmanager.h \
+    conf/confzonemanager.h \
     conf/firewallconf.h \
     conf/inioptions.h \
     conf/rules/policy.h \
@@ -336,6 +339,7 @@ HEADERS += \
     rpc/askpendingmanagerrpc.h \
     rpc/confappmanagerrpc.h \
     rpc/confmanagerrpc.h \
+    rpc/confzonemanagerrpc.h \
     rpc/drivermanagerrpc.h \
     rpc/logmanagerrpc.h \
     rpc/quotamanagerrpc.h \

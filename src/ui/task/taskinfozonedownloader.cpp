@@ -2,7 +2,7 @@
 
 #include <QDir>
 
-#include <conf/confmanager.h>
+#include <conf/confzonemanager.h>
 #include <fortsettings.h>
 #include <model/zonelistmodel.h>
 #include <model/zonesourcewrapper.h>
@@ -153,7 +153,7 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     zone.lastRun = QDateTime::currentDateTime();
     zone.lastSuccess = success ? zone.lastRun : worker->lastSuccess();
 
-    IoC<ConfManager>()->updateZoneResult(zone);
+    IoC<ConfZoneManager>()->updateZoneResult(zone);
 
     addSubResult(worker, success);
 }
