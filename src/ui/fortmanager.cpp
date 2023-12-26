@@ -69,18 +69,18 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
 
 inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
 {
-    ioc->setService(new ConfManagerRpc(settings->confFilePath()));
-    ioc->setService(new ConfAppManagerRpc());
-    ioc->setService(new ConfZoneManagerRpc());
-    ioc->setService(new QuotaManagerRpc());
-    ioc->setService(new StatManagerRpc(settings->statFilePath()));
-    ioc->setService(new StatBlockManagerRpc(settings->statBlockFilePath()));
-    ioc->setService(new AskPendingManagerRpc());
-    ioc->setService(new DriverManagerRpc());
-    ioc->setService(new AppInfoManagerRpc(settings->cacheFilePath()));
-    ioc->setService(new LogManagerRpc());
-    ioc->setService(new ServiceInfoManagerRpc());
-    ioc->setService(new TaskManagerRpc());
+    ioc->setService<ConfManager>(new ConfManagerRpc(settings->confFilePath()));
+    ioc->setService<ConfAppManager>(new ConfAppManagerRpc());
+    ioc->setService<ConfZoneManager>(new ConfZoneManagerRpc());
+    ioc->setService<QuotaManager>(new QuotaManagerRpc());
+    ioc->setService<StatManager>(new StatManagerRpc(settings->statFilePath()));
+    ioc->setService<StatBlockManager>(new StatBlockManagerRpc(settings->statBlockFilePath()));
+    ioc->setService<AskPendingManager>(new AskPendingManagerRpc());
+    ioc->setService<DriverManager>(new DriverManagerRpc());
+    ioc->setService<AppInfoManager>(new AppInfoManagerRpc(settings->cacheFilePath()));
+    ioc->setService<LogManager>(new LogManagerRpc());
+    ioc->setService<ServiceInfoManager>(new ServiceInfoManagerRpc());
+    ioc->setService<TaskManager>(new TaskManagerRpc());
 }
 
 inline void setupServices(IocContainer *ioc, const FortSettings *settings)
@@ -96,7 +96,7 @@ inline void setupServices(IocContainer *ioc, const FortSettings *settings)
     }
 
     if (settings->isService()) {
-        ioc->setService(new WindowManagerFake());
+        ioc->setService<WindowManager>(new WindowManagerFake());
 
         // For Service only
         ioc->setService(new ServiceManager());
