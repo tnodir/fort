@@ -9,7 +9,6 @@
 #include <QPushButton>
 #include <QSplitter>
 #include <QTabBar>
-#include <QTableView>
 #include <QTimeEdit>
 #include <QVBoxLayout>
 
@@ -18,6 +17,7 @@
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/listview.h>
+#include <form/controls/tableview.h>
 #include <form/stat/statisticscontroller.h>
 #include <manager/windowmanager.h>
 #include <model/appstatmodel.h>
@@ -222,7 +222,7 @@ void TrafficPage::setupTabBar()
 
 void TrafficPage::setupTableTraf()
 {
-    m_tableTraf = new QTableView();
+    m_tableTraf = new TableView();
     m_tableTraf->setSelectionMode(QAbstractItemView::SingleSelection);
     m_tableTraf->setSelectionBehavior(QAbstractItemView::SelectItems);
 
