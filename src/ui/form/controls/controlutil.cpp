@@ -91,36 +91,41 @@ QToolButton *ControlUtil::createSideButton(
     return c;
 }
 
-QToolButton *ControlUtil::createToolButton(
-        const QString &iconPath, const std::function<void()> &onClicked)
+QToolButton *ControlUtil::createToolButton(const QString &iconPath)
 {
     auto c = new QToolButton();
     c->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     c->setIcon(IconCache::icon(iconPath));
+    return c;
+}
+
+QToolButton *ControlUtil::createToolButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
+{
+    auto c = createToolButton(iconPath);
 
     c->connect(c, &QToolButton::clicked, onClicked);
 
     return c;
 }
 
-QToolButton *ControlUtil::createFlatToolButton(
-        const QString &iconPath, const std::function<void()> &onClicked)
+QToolButton *ControlUtil::createFlatToolButton(const QString &iconPath, Qt::ToolButtonStyle style)
 {
-    auto c = createToolButton(iconPath, onClicked);
-    c->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    auto c = createToolButton(iconPath);
+    c->setToolButtonStyle(style);
+    c->setCursor(Qt::PointingHandCursor);
     c->setAutoRaise(true);
-    c->setFocusPolicy(Qt::NoFocus);
+    c->setFocusPolicy(Qt::TabFocus);
     return c;
 }
 
-QPushButton *ControlUtil::createLinkButton(
-        const QString &iconPath, const QString &linkPath, const QString &toolTip)
+QToolButton *ControlUtil::createFlatToolButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
 {
-    auto c = new QPushButton(IconCache::icon(iconPath), QString());
-    c->setFlat(true);
-    c->setCursor(Qt::PointingHandCursor);
-    c->setWindowFilePath(linkPath);
-    c->setToolTip(!toolTip.isEmpty() ? toolTip : linkPath);
+    auto c = createFlatToolButton(iconPath);
+
+    c->connect(c, &QToolButton::clicked, onClicked);
+
     return c;
 }
 

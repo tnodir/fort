@@ -5,6 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class AppInfoCache;
 class AppInfoRow;
@@ -61,7 +62,7 @@ private:
     QAction *m_actAddProgram = nullptr;
     QAction *m_actRemoveConn = nullptr;
     QAction *m_actClearAll = nullptr;
-    QPushButton *m_btClearAll = nullptr;
+    QToolButton *m_btClearAll = nullptr;
     QPushButton *m_btOptions = nullptr;
     QCheckBox *m_cbAutoScroll = nullptr;
     QCheckBox *m_cbShowHostNames = nullptr;

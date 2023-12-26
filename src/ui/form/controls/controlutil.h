@@ -42,12 +42,15 @@ public:
 
     static QToolButton *createSideButton(
             const QString &iconPath, const std::function<void()> &onClicked);
+
+    static QToolButton *createToolButton(const QString &iconPath);
     static QToolButton *createToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
+
+    static QToolButton *createFlatToolButton(
+            const QString &iconPath, Qt::ToolButtonStyle style = Qt::ToolButtonTextBesideIcon);
     static QToolButton *createFlatToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
-    static QPushButton *createLinkButton(const QString &iconPath,
-            const QString &linkPath = QString(), const QString &toolTip = QString());
 
     static QToolButton *createSplitterButton(
             const QString &iconPath, const std::function<void()> &onClicked);

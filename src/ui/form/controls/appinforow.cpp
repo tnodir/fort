@@ -3,7 +3,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
-#include <QPushButton>
+#include <QToolButton>
 
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
@@ -27,8 +27,10 @@ void AppInfoRow::setupUi()
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
 
-    m_btAppCopyPath = ControlUtil::createLinkButton(":/icons/page_copy.png");
-    m_btAppOpenFolder = ControlUtil::createLinkButton(":/icons/folder.png");
+    m_btAppCopyPath =
+            ControlUtil::createFlatToolButton(":/icons/page_copy.png", Qt::ToolButtonIconOnly);
+    m_btAppOpenFolder =
+            ControlUtil::createFlatToolButton(":/icons/folder.png", Qt::ToolButtonIconOnly);
 
     m_lineAppPath = ControlUtil::createLineLabel();
 

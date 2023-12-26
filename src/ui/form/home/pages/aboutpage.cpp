@@ -2,7 +2,7 @@
 
 #include <QGroupBox>
 #include <QLabel>
-#include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
@@ -49,7 +49,7 @@ void AboutPage::setupNewVersionBox()
     colLayout->addWidget(m_labelNewVersion);
 
     // Button
-    m_btNewVersion = ControlUtil::createLinkButton(":/icons/download_for_windows.png");
+    m_btNewVersion = ControlUtil::createFlatToolButton(":/icons/download_for_windows.png");
 
     connect(m_btNewVersion, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
 

@@ -8,6 +8,7 @@
 #include <QMenu>
 #include <QMimeData>
 #include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <appinfo/appinfocache.h>
@@ -202,9 +203,9 @@ QLayout *ProgramsWindow::setupHeader()
     setupEditMenu();
 
     // Toolbar buttons
-    m_btAllowApp = ControlUtil::createLinkButton(":/icons/accept.png");
-    m_btBlockApp = ControlUtil::createLinkButton(":/icons/deny.png");
-    m_btRemoveApp = ControlUtil::createLinkButton(":/icons/delete.png");
+    m_btAllowApp = ControlUtil::createFlatToolButton(":/icons/accept.png");
+    m_btBlockApp = ControlUtil::createFlatToolButton(":/icons/deny.png");
+    m_btRemoveApp = ControlUtil::createFlatToolButton(":/icons/delete.png");
 
     connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
     connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
@@ -214,13 +215,13 @@ QLayout *ProgramsWindow::setupHeader()
     setupEditSearch();
 
     // Groups button
-    m_btGroups = ControlUtil::createLinkButton(":/icons/application_double.png");
+    m_btGroups = ControlUtil::createFlatToolButton(":/icons/application_double.png");
 
     connect(m_btGroups, &QAbstractButton::clicked, windowManager(),
             &WindowManager::showAppGroupsWindow);
 
     // Services button
-    m_btServices = ControlUtil::createLinkButton(":/icons/windows-48.png");
+    m_btServices = ControlUtil::createFlatToolButton(":/icons/windows-48.png");
     m_btServices->setEnabled(settings()->hasMasterAdmin());
 
     connect(m_btServices, &QAbstractButton::clicked, windowManager(),

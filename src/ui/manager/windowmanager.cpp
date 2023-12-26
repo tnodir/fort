@@ -88,7 +88,7 @@ void WindowManager::tearDown()
 
 QPushButton *WindowManager::createMenuButton() const
 {
-    auto c = ControlUtil::createLinkButton(":/icons/large_tiles.png");
+    auto c = ControlUtil::createButton(":/icons/large_tiles.png");
     c->setMenu(trayIcon()->menu());
     return c;
 }

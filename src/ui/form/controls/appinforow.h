@@ -5,7 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
-QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class AppInfoCache;
 
@@ -26,8 +26,8 @@ private:
 private:
     QString m_filePath;
 
-    QPushButton *m_btAppCopyPath = nullptr;
-    QPushButton *m_btAppOpenFolder = nullptr;
+    QToolButton *m_btAppCopyPath = nullptr;
+    QToolButton *m_btAppOpenFolder = nullptr;
     QLineEdit *m_lineAppPath = nullptr;
     QLabel *m_labelAppProductName = nullptr;
     QLabel *m_labelAppCompanyName = nullptr;

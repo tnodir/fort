@@ -22,6 +22,18 @@
 #include "homecontroller.h"
 #include "pages/homemainpage.h"
 
+namespace {
+
+QToolButton *createFlatToolButton(const QString &iconPath, const QString &linkPath)
+{
+    auto c = ControlUtil::createFlatToolButton(iconPath);
+    c->setWindowFilePath(linkPath);
+    c->setToolTip(linkPath);
+    return c;
+}
+
+}
+
 HomeWindow::HomeWindow(QWidget *parent) :
     WidgetWindow(parent),
     m_ctrl(new HomeController(this)),
@@ -234,11 +246,12 @@ void HomeWindow::setupPasswordButtons()
 QLayout *HomeWindow::setupDialogButtons()
 {
     auto layout = new QHBoxLayout();
+    layout->setContentsMargins(6, 4, 6, 4);
 
-    m_btProfile = ControlUtil::createLinkButton(":/icons/folder.png", settings()->profilePath());
-    m_btLogs = ControlUtil::createLinkButton(":/icons/folder.png", settings()->logsPath());
-    m_btStat = ControlUtil::createLinkButton(":/icons/folder.png", settings()->statPath());
-    m_btReleases = ControlUtil::createLinkButton(":/icons/github.png", APP_UPDATES_URL);
+    m_btProfile = createFlatToolButton(":/icons/folder.png", settings()->profilePath());
+    m_btLogs = createFlatToolButton(":/icons/folder.png", settings()->logsPath());
+    m_btStat = createFlatToolButton(":/icons/folder.png", settings()->statPath());
+    m_btReleases = createFlatToolButton(":/icons/github.png", APP_UPDATES_URL);
 
     connect(m_btProfile, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);

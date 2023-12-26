@@ -21,7 +21,7 @@ private:
 private:
     QGroupBox *m_gbNewVersion = nullptr;
     QLabel *m_labelNewVersion = nullptr;
-    QPushButton *m_btNewVersion = nullptr;
+    QToolButton *m_btNewVersion = nullptr;
 };
 
 #endif // ABOUTPAGE_H

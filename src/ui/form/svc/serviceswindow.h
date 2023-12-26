@@ -5,6 +5,7 @@
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class ConfManager;
 class IniUser;
@@ -57,10 +58,10 @@ private:
     QAction *m_actTrack = nullptr;
     QAction *m_actRevert = nullptr;
     QAction *m_actAddProgram = nullptr;
-    QPushButton *m_btTrack = nullptr;
-    QPushButton *m_btRevert = nullptr;
     QPushButton *m_btEdit = nullptr;
-    QPushButton *m_btRefresh = nullptr;
+    QToolButton *m_btTrack = nullptr;
+    QToolButton *m_btRevert = nullptr;
+    QToolButton *m_btRefresh = nullptr;
     TableView *m_serviceListView = nullptr;
 };
 

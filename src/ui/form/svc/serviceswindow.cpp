@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QMenu>
 #include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
@@ -197,9 +198,9 @@ QLayout *ServicesWindow::setupHeader()
     m_btEdit->setMenu(editMenu);
 
     // Toolbar buttons
-    m_btTrack = ControlUtil::createLinkButton(":/icons/widgets.png");
-    m_btRevert = ControlUtil::createLinkButton(":/icons/delete.png");
-    m_btRefresh = ControlUtil::createButton(":/icons/arrow_refresh_small.png");
+    m_btTrack = ControlUtil::createFlatToolButton(":/icons/widgets.png");
+    m_btRevert = ControlUtil::createFlatToolButton(":/icons/delete.png");
+    m_btRefresh = ControlUtil::createToolButton(":/icons/arrow_refresh_small.png");
 
     connect(m_btTrack, &QAbstractButton::clicked, m_actTrack, &QAction::trigger);
     connect(m_btRevert, &QAbstractButton::clicked, m_actRevert, &QAction::trigger);

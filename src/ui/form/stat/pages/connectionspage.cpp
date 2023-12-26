@@ -4,6 +4,7 @@
 #include <QHeaderView>
 #include <QMenu>
 #include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <appinfo/appinfocache.h>
@@ -142,7 +143,7 @@ QLayout *ConnectionsPage::setupHeader()
     m_btEdit->setMenu(editMenu);
 
     // Toolbar buttons
-    m_btClearAll = ControlUtil::createLinkButton(":/icons/recycle.png");
+    m_btClearAll = ControlUtil::createFlatToolButton(":/icons/recycle.png");
 
     connect(m_btClearAll, &QAbstractButton::clicked, m_actClearAll, &QAction::trigger);
 
