@@ -45,7 +45,76 @@
 #include <util/startuputil.h>
 
 namespace {
+
 const QLoggingCategory LC("fortManager");
+
+inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
+{
+    ioc->setService(new ConfManager(settings->confFilePath()));
+    ioc->setService(new ConfAppManager());
+    ioc->setService(new ConfZoneManager());
+    ioc->setService(new QuotaManager());
+    ioc->setService(new StatManager(settings->statFilePath()));
+    ioc->setService(new StatBlockManager(settings->statBlockFilePath()));
+    ioc->setService(new AskPendingManager());
+    ioc->setService(new DriverManager());
+    ioc->setService(new AppInfoManager(settings->cacheFilePath()));
+    ioc->setService(new LogManager());
+    ioc->setService(new ServiceInfoManager());
+    ioc->setService(new TaskManager());
+
+    // For Master only
+    ioc->setService(new DriveListManager());
+}
+
+inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
+{
+    ioc->setService(new ConfManagerRpc(settings->confFilePath()));
+    ioc->setService(new ConfAppManagerRpc());
+    ioc->setService(new ConfZoneManagerRpc());
+    ioc->setService(new QuotaManagerRpc());
+    ioc->setService(new StatManagerRpc(settings->statFilePath()));
+    ioc->setService(new StatBlockManagerRpc(settings->statBlockFilePath()));
+    ioc->setService(new AskPendingManagerRpc());
+    ioc->setService(new DriverManagerRpc());
+    ioc->setService(new AppInfoManagerRpc(settings->cacheFilePath()));
+    ioc->setService(new LogManagerRpc());
+    ioc->setService(new ServiceInfoManagerRpc());
+    ioc->setService(new TaskManagerRpc());
+}
+
+inline void setupServices(IocContainer *ioc, const FortSettings *settings)
+{
+    if (settings->isMaster()) {
+        setupMasterServices(ioc, settings);
+    } else {
+        setupClientServices(ioc, settings);
+    }
+
+    if (settings->hasService()) {
+        ioc->setService(new RpcManager());
+    }
+
+    if (settings->isService()) {
+        ioc->setService(new WindowManagerFake());
+
+        // For Service only
+        ioc->setService(new ServiceManager());
+    } else {
+        ioc->setService(new WindowManager());
+
+        // For UI only
+        ioc->setService(new HotKeyManager());
+        ioc->setService(new UserSettings());
+        ioc->setService(new TranslationManager());
+    }
+
+    ioc->setService(new NativeEventFilter());
+    ioc->setService(new AppInfoCache());
+    ioc->setService(new HostInfoCache());
+    ioc->setService(new ZoneListModel());
+}
+
 }
 
 FortManager::FortManager(QObject *parent) : QObject(parent) { }
@@ -133,90 +202,12 @@ void FortManager::createManagers()
 
     const auto settings = IoC<FortSettings>();
 
-    if (settings->hasService()) {
-        ioc->setService(new RpcManager());
-    }
-
-    ConfManager *confManager;
-    ConfAppManager *confAppManager;
-    ConfZoneManager *confZoneManager;
-    QuotaManager *quotaManager;
-    StatManager *statManager;
-    StatBlockManager *statBlockManager;
-    AskPendingManager *pendingManager;
-    DriverManager *driverManager;
-    AppInfoManager *appInfoManager;
-    LogManager *logManager;
-    ServiceInfoManager *serviceInfoManager;
-    TaskManager *taskManager;
-    WindowManager *windowManager;
+    setupServices(ioc, settings);
 
     if (settings->isMaster()) {
         // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
         FileUtil::copyFile(settings->statFilePath(), settings->statBlockFilePath());
-
-        confManager = new ConfManager(settings->confFilePath());
-        confAppManager = new ConfAppManager();
-        confZoneManager = new ConfZoneManager();
-        quotaManager = new QuotaManager();
-        statManager = new StatManager(settings->statFilePath());
-        statBlockManager = new StatBlockManager(settings->statBlockFilePath());
-        pendingManager = new AskPendingManager();
-        driverManager = new DriverManager();
-        appInfoManager = new AppInfoManager(settings->cacheFilePath());
-        logManager = new LogManager();
-        serviceInfoManager = new ServiceInfoManager();
-        taskManager = new TaskManager();
-
-        // For Master only
-        ioc->setService(new DriveListManager());
-    } else {
-        confManager = new ConfManagerRpc(settings->confFilePath());
-        confAppManager = new ConfAppManagerRpc();
-        confZoneManager = new ConfZoneManagerRpc();
-        quotaManager = new QuotaManagerRpc();
-        statManager = new StatManagerRpc(settings->statFilePath());
-        statBlockManager = new StatBlockManagerRpc(settings->statBlockFilePath());
-        pendingManager = new AskPendingManagerRpc();
-        driverManager = new DriverManagerRpc();
-        appInfoManager = new AppInfoManagerRpc(settings->cacheFilePath());
-        logManager = new LogManagerRpc();
-        serviceInfoManager = new ServiceInfoManagerRpc();
-        taskManager = new TaskManagerRpc();
     }
-
-    if (settings->isService()) {
-        windowManager = new WindowManagerFake();
-
-        // For Service only
-        ioc->setService(new ServiceManager());
-    } else {
-        windowManager = new WindowManager();
-
-        // For UI only
-        ioc->setService(new HotKeyManager());
-        ioc->setService(new UserSettings());
-        ioc->setService(new TranslationManager());
-    }
-
-    ioc->setService(confManager);
-    ioc->setService(confAppManager);
-    ioc->setService(confZoneManager);
-    ioc->setService(quotaManager);
-    ioc->setService(statManager);
-    ioc->setService(statBlockManager);
-    ioc->setService(pendingManager);
-    ioc->setService(driverManager);
-    ioc->setService(appInfoManager);
-    ioc->setService(logManager);
-    ioc->setService(serviceInfoManager);
-    ioc->setService(taskManager);
-    ioc->setService(windowManager);
-
-    ioc->setService(new NativeEventFilter());
-    ioc->setService(new AppInfoCache());
-    ioc->setService(new HostInfoCache());
-    ioc->setService(new ZoneListModel());
 
     ioc->setUpAll();
 }
