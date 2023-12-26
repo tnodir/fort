@@ -15,9 +15,11 @@ AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
 
 void AppInfoCache::setUp()
 {
-    connect(IoC<AppInfoManager>(), &AppInfoManager::lookupInfoFinished, this,
+    auto appInfoManager = IoC()->setUpDependency<AppInfoManager>();
+
+    connect(appInfoManager, &AppInfoManager::lookupInfoFinished, this,
             &AppInfoCache::handleFinishedInfoLookup);
-    connect(IoC<AppInfoManager>(), &AppInfoManager::lookupIconFinished, this,
+    connect(appInfoManager, &AppInfoManager::lookupIconFinished, this,
             &AppInfoCache::handleFinishedIconLookup);
 }
 

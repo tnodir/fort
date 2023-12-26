@@ -1,7 +1,6 @@
 #include "taskmanager.h"
 
 #include <conf/confmanager.h>
-#include <model/zonelistmodel.h>
 #include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -33,9 +32,6 @@ TaskInfo *TaskManager::taskInfoAt(int row) const
 
 void TaskManager::setUp()
 {
-    IoC()->setUpDependency<ConfManager>();
-    IoC()->setUpDependency<ZoneListModel>();
-
     loadSettings();
 
     setupScheduler();
@@ -64,7 +60,9 @@ void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
 
 void TaskManager::loadSettings()
 {
-    IoC<ConfManager>()->loadTasks(taskInfoList());
+    auto confManager = IoC()->setUpDependency<ConfManager>();
+
+    confManager->loadTasks(taskInfoList());
 }
 
 bool TaskManager::saveSettings()

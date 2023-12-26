@@ -26,7 +26,6 @@
 #include <fortcompat.h>
 #include <fortsettings.h>
 #include <stat/statmanager.h>
-#include <user/usersettings.h>
 #include <util/ioc/ioccontainer.h>
 
 #include "nativeeventfilter.h"
@@ -69,9 +68,6 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 
 void WindowManager::setUp()
 {
-    IoC()->setUpDependency<UserSettings>();
-    IoC()->setUpDependency<NativeEventFilter>();
-
     setupAppStyle();
     setupAppPalette();
 
@@ -123,7 +119,7 @@ void WindowManager::setupMainWindow()
     m_mainWindow->setFont(defaultFont());
 
     // Register Native events
-    auto nativeEventFilter = IoC<NativeEventFilter>();
+    auto nativeEventFilter = IoC()->setUpDependency<NativeEventFilter>();
 
     nativeEventFilter->registerSessionNotification(mainWindow()->winId());
 

@@ -39,12 +39,14 @@ SqliteDb *ZoneListModel::sqliteDb() const
 
 void ZoneListModel::setUp()
 {
+    auto confZoneManager = IoC()->setUpDependency<ConfZoneManager>();
+
     setupZoneTypes();
     setupZoneSources();
 
-    connect(confZoneManager(), &ConfZoneManager::zoneAdded, this, &TableSqlModel::reset);
-    connect(confZoneManager(), &ConfZoneManager::zoneRemoved, this, &ZoneListModel::reset);
-    connect(confZoneManager(), &ConfZoneManager::zoneUpdated, this, &TableSqlModel::refresh);
+    connect(confZoneManager, &ConfZoneManager::zoneAdded, this, &TableSqlModel::reset);
+    connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, &ZoneListModel::reset);
+    connect(confZoneManager, &ConfZoneManager::zoneUpdated, this, &TableSqlModel::refresh);
 }
 
 int ZoneListModel::columnCount(const QModelIndex &parent) const
