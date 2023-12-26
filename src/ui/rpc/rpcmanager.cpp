@@ -56,6 +56,16 @@ inline bool sendCommandDataToClients(
     return ok;
 }
 
+template<typename F>
+F *getProcessFunc(const ProcessCommandArgs &p, F *funcList[], int minIndex, int maxIndex)
+{
+    if (p.command < minIndex || p.command > maxIndex)
+        return nullptr;
+
+    const int funcIndex = p.command - minIndex;
+    return funcList[funcIndex];
+}
+
 inline bool processConfManager_confChanged(ConfManager *confManager, const ProcessCommandArgs &p)
 {
     if (auto cm = qobject_cast<ConfManagerRpc *>(confManager)) {
@@ -105,16 +115,10 @@ static processConfManager_func processConfManager_funcList[] = {
 inline bool processConfManagerRpcResult(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
-    if (p.command >= Control::Rpc_ConfManager_saveVariant
-            && p.command <= Control::Rpc_ConfManager_checkPassword) {
+    const processConfManager_func func = getProcessFunc(p, processConfManager_funcList,
+            Control::Rpc_ConfManager_saveVariant, Control::Rpc_ConfManager_checkPassword);
 
-        const int funcIndex = p.command - Control::Rpc_ConfManager_saveVariant;
-        const processConfManager_func func = processConfManager_funcList[funcIndex];
-
-        return func(confManager, p, resArgs);
-    }
-
-    return false;
+    return func ? func(confManager, p, resArgs) : false;
 }
 
 bool processConfAppManager_addApp(
@@ -171,16 +175,10 @@ static processConfAppManager_func processConfAppManager_funcList[] = {
 inline bool processConfAppManagerRpcResult(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
-    if (p.command >= Control::Rpc_ConfAppManager_addApp
-            && p.command <= Control::Rpc_ConfAppManager_updateAppName) {
+    const processConfAppManager_func func = getProcessFunc(p, processConfAppManager_funcList,
+            Control::Rpc_ConfAppManager_addApp, Control::Rpc_ConfAppManager_updateAppName);
 
-        const int funcIndex = p.command - Control::Rpc_ConfAppManager_addApp;
-        const processConfAppManager_func func = processConfAppManager_funcList[funcIndex];
-
-        return func(confAppManager, p, resArgs);
-    }
-
-    return false;
+    return func ? func(confAppManager, p, resArgs) : false;
 }
 
 bool processConfZoneManager_addOrUpdateZone(
@@ -226,16 +224,11 @@ static processConfZoneManager_func processConfZoneManager_funcList[] = {
 inline bool processConfZoneManagerRpcResult(
         ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
-    if (p.command >= Control::Rpc_ConfZoneManager_addOrUpdateZone
-            && p.command <= Control::Rpc_ConfZoneManager_updateZoneEnabled) {
+    const processConfZoneManager_func func = getProcessFunc(p, processConfZoneManager_funcList,
+            Control::Rpc_ConfZoneManager_addOrUpdateZone,
+            Control::Rpc_ConfZoneManager_updateZoneEnabled);
 
-        const int funcIndex = p.command - Control::Rpc_ConfZoneManager_addOrUpdateZone;
-        const processConfZoneManager_func func = processConfZoneManager_funcList[funcIndex];
-
-        return func(confZoneManager, p, resArgs);
-    }
-
-    return false;
+    return func ? func(confZoneManager, p, resArgs) : false;
 }
 
 bool processStatManager_trafficCleared(StatManager *statManager, const ProcessCommandArgs & /*p*/)
@@ -283,10 +276,11 @@ static processStatManagerSignal_func processStatManagerSignal_funcList[] = {
 
 inline bool processStatManagerRpcSignal(StatManager *statManager, const ProcessCommandArgs &p)
 {
-    const int funcIndex = p.command - Control::Rpc_StatManager_trafficCleared;
-    const processStatManagerSignal_func func = processStatManagerSignal_funcList[funcIndex];
+    const processStatManagerSignal_func func = getProcessFunc(p, processStatManagerSignal_funcList,
+            Control::Rpc_StatManager_trafficCleared,
+            Control::Rpc_StatManager_appTrafTotalsResetted);
 
-    return func(statManager, p);
+    return func ? func(statManager, p) : false;
 }
 
 inline bool processStatManagerRpcResult(StatManager *statManager, const ProcessCommandArgs &p)
