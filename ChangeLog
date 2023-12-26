@@ -1,6 +1,10 @@
 Fort Firewall ChangeLog
 
-v3.10.5-test0, 2023-12-24:
+v3.10.5-test1, 2023-12-26:
+- UI: Options: Add Backup Export/Import.
+- UI: Options: Add "System Language" option.
+- UI: Highlight focused tool buttons.
+- UI: IconCache: Check "./icons/" existence once on startup.
 - Installer: Portable: Create "Data/" directory with user permissions.
 - Installer: Windows 7: Check for installed KB4474419.
 - Installer: Check for VC Redist x86 only in 32-bit version.
