@@ -25,9 +25,8 @@ enum Command : qint8 {
     Rpc_ConfManager_checkPassword,
     Rpc_ConfManager_confChanged,
 
-    Rpc_ConfZoneManager_addZone,
+    Rpc_ConfZoneManager_addOrUpdateZone,
     Rpc_ConfZoneManager_deleteZone,
-    Rpc_ConfZoneManager_updateZone,
     Rpc_ConfZoneManager_updateZoneName,
     Rpc_ConfZoneManager_updateZoneEnabled,
     Rpc_ConfZoneManager_zoneAdded,

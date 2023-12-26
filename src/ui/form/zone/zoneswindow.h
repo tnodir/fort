@@ -79,16 +79,13 @@ private:
     bool saveZoneEditFormNew(Zone &zone);
     bool saveZoneEditFormEdit(Zone &zone);
 
-    void updateZone(int row, bool enabled);
     void deleteZone(int row);
-
-    void updateSelectedZone(bool enabled);
     void deleteSelectedZone();
 
     int zoneListCurrentIndex() const;
 
 private:
-    bool m_formZoneIsNew = false;
+    int m_zoneId = 0;
 
     ZonesController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;

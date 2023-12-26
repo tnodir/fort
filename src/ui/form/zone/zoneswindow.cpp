@@ -486,7 +486,7 @@ void ZonesWindow::updateZoneEditForm(bool isNew)
 
     const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
 
-    m_formZoneIsNew = isNew;
+    m_zoneId = zoneRow.zoneId;
 
     m_editZoneName->setText(zoneRow.zoneName);
     m_editZoneName->selectAll();
@@ -525,6 +525,7 @@ bool ZonesWindow::saveZoneEditForm()
     }
 
     Zone zone;
+    zone.zoneId = m_zoneId;
     zone.zoneName = m_editZoneName->text();
     zone.sourceCode = zoneSource.code();
     zone.enabled = m_cbEnabled->isChecked();
@@ -538,11 +539,11 @@ bool ZonesWindow::saveZoneEditForm()
         return false;
 
     // Add new zone
-    if (m_formZoneIsNew) {
+    if (zone.zoneId == 0) {
         return saveZoneEditFormNew(zone);
     }
 
-    // Edit selected zone
+    // Update the zone
     return saveZoneEditFormEdit(zone);
 }
 
@@ -568,7 +569,7 @@ bool ZonesWindow::saveZoneEditFormValidate(const Zone &zone, const ZoneSourceWra
 
 bool ZonesWindow::saveZoneEditFormNew(Zone &zone)
 {
-    if (confZoneManager()->addZone(zone)) {
+    if (confZoneManager()->addOrUpdateZone(zone)) {
         m_zoneListView->selectCell(zone.zoneId - 1);
         return true;
     }
@@ -590,19 +591,7 @@ bool ZonesWindow::saveZoneEditFormEdit(Zone &zone)
 
     zone.zoneId = zoneRow.zoneId;
 
-    return confZoneManager()->updateZone(zone);
-}
-
-void ZonesWindow::updateZone(int row, bool enabled)
-{
-    const auto zoneRow = zoneListModel()->zoneRowAt(row);
-    if (zoneRow.isNull())
-        return;
-
-    Zone zone = zoneRow;
-    zone.enabled = enabled;
-
-    confZoneManager()->updateZone(zone);
+    return confZoneManager()->addOrUpdateZone(zone);
 }
 
 void ZonesWindow::deleteZone(int row)
@@ -612,11 +601,6 @@ void ZonesWindow::deleteZone(int row)
         return;
 
     confZoneManager()->deleteZone(zoneRow.zoneId);
-}
-
-void ZonesWindow::updateSelectedZone(bool enabled)
-{
-    updateZone(zoneListCurrentIndex(), enabled);
 }
 
 void ZonesWindow::deleteSelectedZone()

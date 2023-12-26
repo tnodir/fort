@@ -12,11 +12,13 @@ class ConfZoneManagerRpc : public ConfZoneManager
 public:
     explicit ConfZoneManagerRpc(QObject *parent = nullptr);
 
-    bool addZone(Zone &zone) override;
+    bool addOrUpdateZone(Zone &zone) override;
     bool deleteZone(int zoneId) override;
-    bool updateZone(const Zone &zone) override;
     bool updateZoneName(int zoneId, const QString &zoneName) override;
     bool updateZoneEnabled(int zoneId, bool enabled) override;
+
+    static QVariantList zoneToVarList(const Zone &zone);
+    static Zone varListToZone(const QVariantList &v);
 };
 
 #endif // CONFZONEMANAGERRPC_H

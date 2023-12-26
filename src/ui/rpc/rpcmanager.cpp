@@ -183,19 +183,12 @@ inline bool processConfAppManagerRpcResult(
     return false;
 }
 
-bool processConfZoneManager_addZone(
+bool processConfZoneManager_addOrUpdateZone(
         ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
-    Zone zone;
-    zone.enabled = p.args.value(0).toBool();
-    zone.customUrl = p.args.value(1).toBool();
-    zone.zoneName = p.args.value(2).toString();
-    zone.sourceCode = p.args.value(3).toString();
-    zone.url = p.args.value(4).toString();
-    zone.formData = p.args.value(5).toString();
-    zone.textInline = p.args.value(6).toString();
+    Zone zone = ConfZoneManagerRpc::varListToZone(p.args);
 
-    const bool ok = confZoneManager->addZone(zone);
+    const bool ok = confZoneManager->addOrUpdateZone(zone);
     resArgs = { zone.zoneId };
     return ok;
 }
@@ -204,22 +197,6 @@ bool processConfZoneManager_deleteZone(
         ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
     return confZoneManager->deleteZone(p.args.value(0).toLongLong());
-}
-
-bool processConfZoneManager_updateZone(
-        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    Zone zone;
-    zone.enabled = p.args.value(0).toBool();
-    zone.customUrl = p.args.value(1).toBool();
-    zone.zoneId = p.args.value(2).toInt();
-    zone.zoneName = p.args.value(3).toString();
-    zone.sourceCode = p.args.value(4).toString();
-    zone.url = p.args.value(5).toString();
-    zone.formData = p.args.value(6).toString();
-    zone.textInline = p.args.value(7).toString();
-
-    return confZoneManager->updateZone(zone);
 }
 
 bool processConfZoneManager_updateZoneName(
@@ -240,9 +217,8 @@ using processConfZoneManager_func = bool (*)(
         ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs);
 
 static processConfZoneManager_func processConfZoneManager_funcList[] = {
-    &processConfZoneManager_addZone, // Rpc_ConfZoneManager_addZone,
+    &processConfZoneManager_addOrUpdateZone, // Rpc_ConfZoneManager_addOrUpdateZone,
     &processConfZoneManager_deleteZone, // Rpc_ConfZoneManager_deleteZone,
-    &processConfZoneManager_updateZone, // Rpc_ConfZoneManager_updateZone,
     &processConfZoneManager_updateZoneName, // Rpc_ConfZoneManager_updateZoneName,
     &processConfZoneManager_updateZoneEnabled, // Rpc_ConfZoneManager_updateZoneEnabled,
 };
@@ -250,10 +226,10 @@ static processConfZoneManager_func processConfZoneManager_funcList[] = {
 inline bool processConfZoneManagerRpcResult(
         ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
-    if (p.command >= Control::Rpc_ConfZoneManager_addZone
+    if (p.command >= Control::Rpc_ConfZoneManager_addOrUpdateZone
             && p.command <= Control::Rpc_ConfZoneManager_updateZoneEnabled) {
 
-        const int funcIndex = p.command - Control::Rpc_ConfZoneManager_addZone;
+        const int funcIndex = p.command - Control::Rpc_ConfZoneManager_addOrUpdateZone;
         const processConfZoneManager_func func = processConfZoneManager_funcList[funcIndex];
 
         return func(confZoneManager, p, resArgs);

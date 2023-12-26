@@ -25,10 +25,8 @@ public:
 
     void setUp() override;
 
-    virtual bool addZone(Zone &zone);
-    int getFreeZoneId();
+    virtual bool addOrUpdateZone(Zone &zone);
     virtual bool deleteZone(int zoneId);
-    virtual bool updateZone(const Zone &zone);
     virtual bool updateZoneName(int zoneId, const QString &zoneName);
     virtual bool updateZoneEnabled(int zoneId, bool enabled);
     bool updateZoneResult(const Zone &zone);

@@ -26,9 +26,8 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_checkPassword)
         CASE_STRING(Rpc_ConfManager_confChanged)
 
-        CASE_STRING(Rpc_ConfZoneManager_addZone)
+        CASE_STRING(Rpc_ConfZoneManager_addOrUpdateZone)
         CASE_STRING(Rpc_ConfZoneManager_deleteZone)
-        CASE_STRING(Rpc_ConfZoneManager_updateZone)
         CASE_STRING(Rpc_ConfZoneManager_updateZoneName)
         CASE_STRING(Rpc_ConfZoneManager_updateZoneEnabled)
         CASE_STRING(Rpc_ConfZoneManager_zoneAdded)
@@ -116,9 +115,8 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfManager, // Rpc_ConfManager_checkPassword,
         Rpc_ConfManager, // Rpc_ConfManager_confChanged,
 
-        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_addZone,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_addOrUpdateZone,
         Rpc_ConfZoneManager, // Rpc_ConfZoneManager_deleteZone,
-        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZone,
         Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZoneName,
         Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZoneEnabled,
         Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneAdded,
@@ -187,9 +185,8 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_ConfManager_checkPassword,
         0, // Rpc_ConfManager_confChanged,
 
-        true, // Rpc_ConfZoneManager_addZone,
+        true, // Rpc_ConfZoneManager_addOrUpdateZone,
         true, // Rpc_ConfZoneManager_deleteZone,
-        true, // Rpc_ConfZoneManager_updateZone,
         true, // Rpc_ConfZoneManager_updateZoneName,
         true, // Rpc_ConfZoneManager_updateZoneEnabled,
         0, // Rpc_ConfZoneManager_zoneAdded,
