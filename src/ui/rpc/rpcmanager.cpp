@@ -9,6 +9,7 @@
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <rpc/appinfomanagerrpc.h>
+#include <rpc/confappmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
@@ -68,12 +69,6 @@ bool processConfManager_saveVariant(
     return confManager->saveVariant(p.args.value(0));
 }
 
-bool processConfManager_addApp(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    return confManager->addApp(ConfManagerRpc::varListToApp(p.args));
-}
-
 bool processConfManager_exportBackup(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
@@ -84,39 +79,6 @@ bool processConfManager_importBackup(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
     return confManager->importBackup(p.args.value(0).toString());
-}
-
-bool processConfManager_deleteApps(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    confManager->deleteApps(VariantUtil::listToVector(p.args.value(0).toList()));
-    return true;
-}
-
-bool processConfManager_purgeApps(
-        ConfManager *confManager, const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
-{
-    return confManager->purgeApps();
-}
-
-bool processConfManager_updateApp(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    return confManager->updateApp(ConfManagerRpc::varListToApp(p.args));
-}
-
-bool processConfManager_updateAppsBlocked(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    confManager->updateAppsBlocked(VariantUtil::listToVector(p.args.value(0).toList()),
-            p.args.value(1).toBool(), p.args.value(2).toBool());
-    return true;
-}
-
-bool processConfManager_updateAppName(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    return confManager->updateAppName(p.args.value(0).toLongLong(), p.args.value(1).toString());
 }
 
 bool processConfManager_addZone(
@@ -171,14 +133,13 @@ bool processConfManager_updateZoneEnabled(
 }
 
 bool processConfManager_checkPassword(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
     const bool ok = confManager->checkPassword(p.args.value(0).toString());
     if (ok && !p.worker->isClientValidated()) {
         p.worker->setIsClientValidated(true);
     }
-    resArgs = { ok };
-    return true;
+    return ok;
 }
 
 using processConfManager_func = bool (*)(
@@ -188,12 +149,6 @@ static processConfManager_func processConfManager_funcList[] = {
     &processConfManager_saveVariant, // Rpc_ConfManager_saveVariant,
     &processConfManager_exportBackup, // Rpc_ConfManager_exportBackup,
     &processConfManager_importBackup, // Rpc_ConfManager_importBackup,
-    &processConfManager_addApp, // Rpc_ConfManager_addApp,
-    &processConfManager_deleteApps, // Rpc_ConfManager_deleteApps,
-    &processConfManager_purgeApps, // Rpc_ConfManager_purgeApps,
-    &processConfManager_updateApp, // Rpc_ConfManager_updateApp,
-    &processConfManager_updateAppsBlocked, // Rpc_ConfManager_updateAppsBlocked,
-    &processConfManager_updateAppName, // Rpc_ConfManager_updateAppName,
     &processConfManager_addZone, // Rpc_ConfManager_addZone,
     &processConfManager_deleteZone, // Rpc_ConfManager_deleteZone,
     &processConfManager_updateZone, // Rpc_ConfManager_updateZone,
@@ -212,6 +167,72 @@ inline bool processConfManagerRpcResult(
         const processConfManager_func func = processConfManager_funcList[funcIndex];
 
         return func(confManager, p, resArgs);
+    }
+
+    return false;
+}
+
+bool processConfAppManager_addApp(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->addApp(ConfAppManagerRpc::varListToApp(p.args));
+}
+
+bool processConfAppManager_deleteApps(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    confAppManager->deleteApps(VariantUtil::listToVector(p.args.value(0).toList()));
+    return true;
+}
+
+bool processConfAppManager_purgeApps(ConfAppManager *confAppManager,
+        const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+{
+    return confAppManager->purgeApps();
+}
+
+bool processConfAppManager_updateApp(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->updateApp(ConfAppManagerRpc::varListToApp(p.args));
+}
+
+bool processConfAppManager_updateAppsBlocked(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    confAppManager->updateAppsBlocked(VariantUtil::listToVector(p.args.value(0).toList()),
+            p.args.value(1).toBool(), p.args.value(2).toBool());
+    return true;
+}
+
+bool processConfAppManager_updateAppName(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->updateAppName(p.args.value(0).toLongLong(), p.args.value(1).toString());
+}
+
+using processConfAppManager_func = bool (*)(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+
+static processConfAppManager_func processConfAppManager_funcList[] = {
+    &processConfAppManager_addApp, // Rpc_ConfAppManager_addApp,
+    &processConfAppManager_deleteApps, // Rpc_ConfAppManager_deleteApps,
+    &processConfAppManager_purgeApps, // Rpc_ConfAppManager_purgeApps,
+    &processConfAppManager_updateApp, // Rpc_ConfAppManager_updateApp,
+    &processConfAppManager_updateAppsBlocked, // Rpc_ConfAppManager_updateAppsBlocked,
+    &processConfAppManager_updateAppName, // Rpc_ConfAppManager_updateAppName,
+};
+
+inline bool processConfAppManagerRpcResult(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    if (p.command >= Control::Rpc_ConfAppManager_addApp
+            && p.command <= Control::Rpc_ConfAppManager_updateAppName) {
+
+        const int funcIndex = p.command - Control::Rpc_ConfAppManager_addApp;
+        const processConfAppManager_func func = processConfAppManager_funcList[funcIndex];
+
+        return func(confAppManager, p, resArgs);
     }
 
     return false;
@@ -361,15 +382,6 @@ bool processConfManagerRpc(
     switch (p.command) {
     case Control::Rpc_ConfManager_confChanged:
         return processConfManager_confChanged(confManager, p);
-    case Control::Rpc_ConfManager_appAlerted:
-        emit confManager->appAlerted();
-        return true;
-    case Control::Rpc_ConfManager_appChanged:
-        emit confManager->appChanged();
-        return true;
-    case Control::Rpc_ConfManager_appUpdated:
-        emit confManager->appUpdated();
-        return true;
     case Control::Rpc_ConfManager_zoneAdded:
         emit confManager->zoneAdded();
         return true;
@@ -381,6 +393,29 @@ bool processConfManagerRpc(
         return true;
     default: {
         ok = processConfManagerRpcResult(confManager, p, resArgs);
+        isSendResult = true;
+        return true;
+    }
+    }
+}
+
+bool processConfAppManagerRpc(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+{
+    auto confAppManager = IoC<ConfAppManager>();
+
+    switch (p.command) {
+    case Control::Rpc_ConfAppManager_appAlerted:
+        emit confAppManager->appAlerted();
+        return true;
+    case Control::Rpc_ConfAppManager_appChanged:
+        emit confAppManager->appChanged();
+        return true;
+    case Control::Rpc_ConfAppManager_appUpdated:
+        emit confAppManager->appUpdated();
+        return true;
+    default: {
+        ok = processConfAppManagerRpcResult(confAppManager, p, resArgs);
         isSendResult = true;
         return true;
     }
@@ -517,6 +552,7 @@ void RpcManager::setupServerSignals()
 {
     setupAppInfoManagerSignals();
     setupConfManagerSignals();
+    setupConfAppManagerSignals();
     setupDriverManagerSignals();
     setupQuotaManagerSignals();
     setupStatManagerSignals();
@@ -543,19 +579,24 @@ void RpcManager::setupConfManagerSignals()
         invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
     });
 
-    connect(confManager, &ConfManager::appAlerted, this,
-            [&] { invokeOnClients(Control::Rpc_ConfManager_appAlerted); });
-    connect(confManager, &ConfManager::appChanged, this,
-            [&] { invokeOnClients(Control::Rpc_ConfManager_appChanged); });
-    connect(confManager, &ConfManager::appUpdated, this,
-            [&] { invokeOnClients(Control::Rpc_ConfManager_appUpdated); });
-
     connect(confManager, &ConfManager::zoneAdded, this,
             [&] { invokeOnClients(Control::Rpc_ConfManager_zoneAdded); });
     connect(confManager, &ConfManager::zoneRemoved, this,
             [&](int zoneId) { invokeOnClients(Control::Rpc_ConfManager_zoneRemoved, { zoneId }); });
     connect(confManager, &ConfManager::zoneUpdated, this,
             [&] { invokeOnClients(Control::Rpc_ConfManager_zoneUpdated); });
+}
+
+void RpcManager::setupConfAppManagerSignals()
+{
+    auto confAppManager = IoC<ConfAppManager>();
+
+    connect(confAppManager, &ConfAppManager::appAlerted, this,
+            [&] { invokeOnClients(Control::Rpc_ConfAppManager_appAlerted); });
+    connect(confAppManager, &ConfAppManager::appChanged, this,
+            [&] { invokeOnClients(Control::Rpc_ConfAppManager_appChanged); });
+    connect(confAppManager, &ConfAppManager::appUpdated, this,
+            [&] { invokeOnClients(Control::Rpc_ConfAppManager_appUpdated); });
 }
 
 void RpcManager::setupDriverManagerSignals()
@@ -690,10 +731,8 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args, QVar
         return false;
     }
 
-    if (resultCommand() != Control::Rpc_Result_Ok) {
-        showErrorBox(tr("Service error."));
+    if (resultCommand() != Control::Rpc_Result_Ok)
         return false;
-    }
 
     if (resArgs) {
         *resArgs = resultArgs();
@@ -764,6 +803,7 @@ using processManager_func = bool (*)(
 static processManager_func processManager_funcList[] = {
     &processAppInfoManagerRpc, // Control::Rpc_AppInfoManager,
     &processConfManagerRpc, // Control::Rpc_ConfManager,
+    &processConfAppManagerRpc, // Control::Rpc_ConfAppManager,
     &processDriverManagerRpc, // Control::Rpc_DriverManager,
     &processQuotaManagerRpc, // Control::Rpc_QuotaManager,
     &processStatManagerRpc, // Control::Rpc_StatManager,

@@ -8,6 +8,7 @@ QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QTimer)
 
 class ClickableMenu;
+class ConfAppManager;
 class ConfManager;
 class DriverManager;
 class FirewallConf;
@@ -53,6 +54,7 @@ public:
     TrayController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
     ConfManager *confManager() const;
+    ConfAppManager *confAppManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;

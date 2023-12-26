@@ -16,14 +16,6 @@ public:
     bool exportBackup(const QString &path) override;
     bool importBackup(const QString &path) override;
 
-    bool addApp(const App &app) override;
-    void deleteApps(const QVector<qint64> &appIdList) override;
-    bool purgeApps() override;
-    bool updateApp(const App &app) override;
-    void updateAppsBlocked(
-            const QVector<qint64> &appIdList, bool blocked, bool killProcess) override;
-    bool updateAppName(qint64 appId, const QString &appName) override;
-
     bool addZone(Zone &zone) override;
     bool deleteZone(int zoneId) override;
     bool updateZone(const Zone &zone) override;
@@ -32,18 +24,9 @@ public:
 
     bool checkPassword(const QString &password) override;
 
-    bool updateDriverConf(bool /*onlyFlags*/ = false) override { return false; }
-
     void onConfChanged(const QVariant &confVar);
 
-    static QVariantList appToVarList(const App &app);
-    static App varListToApp(const QVariantList &v);
-
 protected:
-    void purgeAppsOnStart() override { }
-
-    void setupAppEndTimer() override { }
-
     bool saveConf(FirewallConf &newConf) override;
 
 private:

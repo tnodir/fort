@@ -15,6 +15,7 @@ QT_FORWARD_DECLARE_CLASS(QRadioButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class CheckSpinCombo;
+class ConfAppManager;
 class ConfManager;
 class FirewallConf;
 class FortManager;
@@ -31,6 +32,7 @@ public:
     ProgramsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     ConfManager *confManager() const;
+    ConfAppManager *confAppManager() const;
     FirewallConf *conf() const;
     AppListModel *appListModel() const;
 

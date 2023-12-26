@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+class ConfAppManager;
 class ConfManager;
 class DriverManager;
 class FirewallConf;
@@ -25,6 +26,7 @@ public:
     FortManager *fortManager() const;
     FortSettings *settings() const;
     ConfManager *confManager() const;
+    ConfAppManager *confAppManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;

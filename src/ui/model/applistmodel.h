@@ -10,6 +10,7 @@
 
 class AppGroup;
 class AppInfoCache;
+class ConfAppManager;
 class ConfManager;
 class FirewallConf;
 
@@ -29,6 +30,7 @@ public:
     void setFtsFilter(const QString &filter);
 
     ConfManager *confManager() const;
+    ConfAppManager *confAppManager() const;
     FirewallConf *conf() const;
     AppInfoCache *appInfoCache() const;
     SqliteDb *sqliteDb() const override;

@@ -8,6 +8,7 @@
 
 #include <appinfo/appinfocache.h>
 #include <conf/appgroup.h>
+#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <util/dateutil.h>
@@ -78,6 +79,11 @@ ConfManager *AppListModel::confManager() const
     return IoC<ConfManager>();
 }
 
+ConfAppManager *AppListModel::confAppManager() const
+{
+    return IoC<ConfAppManager>();
+}
+
 FirewallConf *AppListModel::conf() const
 {
     return confManager()->conf();
@@ -99,8 +105,9 @@ void AppListModel::initialize()
     setSortOrder(Qt::DescendingOrder);
 
     connect(confManager(), &ConfManager::confChanged, this, &AppListModel::refresh);
-    connect(confManager(), &ConfManager::appChanged, this, &TableSqlModel::reset);
-    connect(confManager(), &ConfManager::appUpdated, this, &TableSqlModel::refresh);
+
+    connect(confAppManager(), &ConfAppManager::appChanged, this, &TableSqlModel::reset);
+    connect(confAppManager(), &ConfAppManager::appUpdated, this, &TableSqlModel::refresh);
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);
 }

@@ -2,6 +2,7 @@
 
 #include <QAbstractButton>
 
+#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <driver/drivermanager.h>
@@ -33,6 +34,11 @@ FortSettings *BaseController::settings() const
 ConfManager *BaseController::confManager() const
 {
     return IoC<ConfManager>();
+}
+
+ConfAppManager *BaseController::confAppManager() const
+{
+    return IoC<ConfAppManager>();
 }
 
 FirewallConf *BaseController::conf() const

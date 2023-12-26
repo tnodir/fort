@@ -2,25 +2,20 @@
 #define CONFMANAGER_H
 
 #include <QObject>
-#include <QTimer>
 
 #include <sqlite/sqlitetypes.h>
 
 #include <util/classhelpers.h>
-#include <util/conf/confappswalker.h>
 #include <util/ioc/iocservice.h>
 #include <util/service/serviceinfo.h>
-#include <util/triggertimer.h>
 
-class App;
 class FirewallConf;
 class IniOptions;
 class IniUser;
-class LogEntryBlocked;
 class TaskInfo;
 class Zone;
 
-class ConfManager : public QObject, public ConfAppsWalker, public IocService
+class ConfManager : public QObject, public IocService
 {
     Q_OBJECT
 
@@ -64,22 +59,6 @@ public:
     virtual bool exportBackup(const QString &path);
     virtual bool importBackup(const QString &path);
 
-    void logBlockedApp(const LogEntryBlocked &logEntry);
-
-    qint64 appIdByPath(const QString &appPath);
-
-    virtual bool addApp(const App &app);
-    virtual void deleteApps(const QVector<qint64> &appIdList);
-    virtual bool purgeApps();
-    virtual bool updateApp(const App &app);
-    virtual void updateAppsBlocked(const QVector<qint64> &appIdList, bool blocked, bool killProcess);
-    virtual bool updateAppName(qint64 appId, const QString &appName);
-
-    bool walkApps(const std::function<walkAppsCallback> &func) override;
-
-    bool saveAppBlocked(const App &app);
-    void updateAppEndTimes();
-
     virtual bool addZone(Zone &zone);
     int getFreeZoneId();
     virtual bool deleteZone(int zoneId);
@@ -95,10 +74,6 @@ public:
     void updateServices();
     void updateDriverServices(const QVector<ServiceInfo> &services, int runningServicesCount);
 
-    virtual bool updateDriverConf(bool onlyFlags = false);
-
-    void updateDriverConfByDriveMask(quint32 driveMask);
-
     void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData);
 
@@ -107,46 +82,19 @@ signals:
     void iniChanged(const IniOptions &ini);
     void iniUserChanged(const IniUser &ini, bool onlyFlags);
 
-    void appAlerted();
-    void appChanged();
-    void appUpdated();
-
     void zoneAdded();
     void zoneRemoved(int zoneId);
     void zoneUpdated();
 
 protected:
-    virtual void purgeAppsOnStart();
-
-    virtual void setupAppEndTimer();
-    void updateAppEndTimer();
-
     void setConf(FirewallConf *newConf);
     FirewallConf *createConf();
 
 private:
-    bool deleteApp(qint64 appId, bool &isWildcard);
-
-    bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
-    bool prepareAppBlocked(App &app, bool blocked, bool killProcess);
-
-private:
     void setupDefault(FirewallConf &conf) const;
-
-    void emitAppAlerted();
-    void emitAppChanged();
-    void emitAppUpdated();
-
-    bool addOrUpdateApp(const App &app);
-
-    bool loadAppById(App &app);
-    static void fillApp(App &app, const SqliteStmt &stmt);
 
     bool validateConf(const FirewallConf &newConf);
 
-    bool updateDriverDeleteApp(const QString &appPath);
-    bool updateDriverUpdateApp(const App &app, bool remove = false);
-    bool updateDriverUpdateAppConf(const App &app);
     bool updateDriverZoneFlag(int zoneId, bool enabled);
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);
@@ -160,24 +108,17 @@ private:
     bool loadTask(TaskInfo *taskInfo);
     bool saveTask(TaskInfo *taskInfo);
 
+    bool beginTransaction();
     bool commitTransaction(bool ok);
     bool checkEndTransaction(bool ok);
 
 private:
-    quint32 m_driveMask = 0;
-
     SqliteDbPtr m_sqliteDb;
 
     FirewallConf *m_conf = nullptr;
     FirewallConf *m_confToEdit = nullptr;
 
     IniUser *m_iniUserToEdit = nullptr;
-
-    TriggerTimer m_appAlertedTimer;
-    TriggerTimer m_appChangedTimer;
-    TriggerTimer m_appUpdatedTimer;
-
-    QTimer m_appEndTimer;
 };
 
 #endif // CONFMANAGER_H

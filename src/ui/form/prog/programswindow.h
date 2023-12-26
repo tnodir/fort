@@ -12,6 +12,7 @@ class AppInfoCache;
 class AppInfoRow;
 class AppListModel;
 class AppListModel;
+class ConfAppManager;
 class ConfManager;
 class FirewallConf;
 class FortSettings;
@@ -37,6 +38,7 @@ public:
     ProgramsController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
     ConfManager *confManager() const;
+    ConfAppManager *confAppManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;

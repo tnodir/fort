@@ -24,6 +24,7 @@
 #include <model/zonelistmodel.h>
 #include <rpc/appinfomanagerrpc.h>
 #include <rpc/askpendingmanagerrpc.h>
+#include <rpc/confappmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
@@ -136,6 +137,7 @@ void FortManager::createManagers()
     }
 
     ConfManager *confManager;
+    ConfAppManager *confAppManager;
     QuotaManager *quotaManager;
     StatManager *statManager;
     StatBlockManager *statBlockManager;
@@ -152,6 +154,7 @@ void FortManager::createManagers()
         FileUtil::copyFile(settings->statFilePath(), settings->statBlockFilePath());
 
         confManager = new ConfManager(settings->confFilePath());
+        confAppManager = new ConfAppManager();
         quotaManager = new QuotaManager();
         statManager = new StatManager(settings->statFilePath());
         statBlockManager = new StatBlockManager(settings->statBlockFilePath());
@@ -166,6 +169,7 @@ void FortManager::createManagers()
         ioc->setService(new DriveListManager());
     } else {
         confManager = new ConfManagerRpc(settings->confFilePath());
+        confAppManager = new ConfAppManagerRpc();
         quotaManager = new QuotaManagerRpc();
         statManager = new StatManagerRpc(settings->statFilePath());
         statBlockManager = new StatBlockManagerRpc(settings->statBlockFilePath());
@@ -192,6 +196,7 @@ void FortManager::createManagers()
     }
 
     ioc->setService(confManager);
+    ioc->setService(confAppManager);
     ioc->setService(quotaManager);
     ioc->setService(statManager);
     ioc->setService(statBlockManager);
@@ -408,8 +413,8 @@ void FortManager::setupDriveListManager()
                 &DriveListManager::onDriveListChanged);
     }
 
-    connect(driveListManager, &DriveListManager::driveMaskAdded, IoC<ConfManager>(),
-            &ConfManager::updateDriverConfByDriveMask);
+    connect(driveListManager, &DriveListManager::driveMaskAdded, IoC<ConfAppManager>(),
+            &ConfAppManager::updateDriverConfByDriveMask);
 
     driveListManager->initialize();
 }
@@ -463,10 +468,11 @@ void FortManager::loadConf()
 bool FortManager::updateDriverConf(bool onlyFlags)
 {
     auto confManager = IoC<ConfManager>();
+    auto confAppManager = IoC<ConfAppManager>();
 
     updateLogManager(false);
 
-    const bool res = confManager->updateDriverConf(onlyFlags);
+    const bool res = confAppManager->updateDriverConf(onlyFlags);
     if (res) {
         updateStatManager(confManager->conf());
     }

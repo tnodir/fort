@@ -2,6 +2,7 @@
 
 #include <QLoggingCategory>
 
+#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <driver/drivercommon.h>
 #include <driver/drivermanager.h>
@@ -160,7 +161,7 @@ bool LogManager::processLogEntryBlocked(LogBuffer *logBuffer)
     LogEntryBlocked blockedEntry;
     logBuffer->readEntryBlocked(&blockedEntry);
 
-    IoC<ConfManager>()->logBlockedApp(blockedEntry);
+    IoC<ConfAppManager>()->logBlockedApp(blockedEntry);
 
     return true;
 }

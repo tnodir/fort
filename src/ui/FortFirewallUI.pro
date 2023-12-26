@@ -134,6 +134,7 @@ SOURCES += \
     model/zonetypewrapper.cpp \
     rpc/appinfomanagerrpc.cpp \
     rpc/askpendingmanagerrpc.cpp \
+    rpc/confappmanagerrpc.cpp \
     rpc/confmanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
     rpc/logmanagerrpc.cpp \
@@ -333,6 +334,7 @@ HEADERS += \
     model/zonetypewrapper.h \
     rpc/appinfomanagerrpc.h \
     rpc/askpendingmanagerrpc.h \
+    rpc/confappmanagerrpc.h \
     rpc/confmanagerrpc.h \
     rpc/drivermanagerrpc.h \
     rpc/logmanagerrpc.h \

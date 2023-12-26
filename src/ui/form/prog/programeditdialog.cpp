@@ -13,6 +13,7 @@
 #include <QToolButton>
 
 #include <appinfo/appinfocache.h>
+#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/checkspincombo.h>
@@ -49,6 +50,11 @@ FortManager *ProgramEditDialog::fortManager() const
 ConfManager *ProgramEditDialog::confManager() const
 {
     return ctrl()->confManager();
+}
+
+ConfAppManager *ProgramEditDialog::confAppManager() const
+{
+    return ctrl()->confAppManager();
 }
 
 FirewallConf *ProgramEditDialog::conf() const
@@ -473,7 +479,7 @@ bool ProgramEditDialog::save()
 
     // Add new app or edit non-selected app
     if (appIdsCount == 0) {
-        return confManager()->addApp(app);
+        return confAppManager()->addApp(app);
     }
 
     // Edit selected app
@@ -490,11 +496,11 @@ bool ProgramEditDialog::saveApp(App &app)
     if (!app.isOptionsEqual(m_appRow)) {
         app.appId = m_appRow.appId;
 
-        return confManager()->updateApp(app);
+        return confAppManager()->updateApp(app);
     }
 
     if (!app.isNameEqual(m_appRow)) {
-        return confManager()->updateAppName(m_appRow.appId, app.appName);
+        return confAppManager()->updateAppName(m_appRow.appId, app.appName);
     }
 
     return true;
@@ -510,7 +516,7 @@ bool ProgramEditDialog::saveMulti(App &app)
         app.appPath = appRow.appPath;
         app.appName = appRow.appName;
 
-        if (!confManager()->updateApp(app))
+        if (!confAppManager()->updateApp(app))
             return false;
     }
 

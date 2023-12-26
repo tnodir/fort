@@ -203,7 +203,12 @@ bool SqliteDb::beginWriteTransaction()
 
 bool SqliteDb::endTransaction(bool ok)
 {
-    return ok ? commitTransaction() : rollbackTransaction();
+    if (ok) {
+        ok = commitTransaction();
+    } else {
+        rollbackTransaction();
+    }
+    return ok;
 }
 
 bool SqliteDb::commitTransaction()

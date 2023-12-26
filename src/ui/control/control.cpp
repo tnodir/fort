@@ -23,12 +23,6 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_saveVariant)
         CASE_STRING(Rpc_ConfManager_exportBackup)
         CASE_STRING(Rpc_ConfManager_importBackup)
-        CASE_STRING(Rpc_ConfManager_addApp)
-        CASE_STRING(Rpc_ConfManager_deleteApps)
-        CASE_STRING(Rpc_ConfManager_purgeApps)
-        CASE_STRING(Rpc_ConfManager_updateApp)
-        CASE_STRING(Rpc_ConfManager_updateAppsBlocked)
-        CASE_STRING(Rpc_ConfManager_updateAppName)
         CASE_STRING(Rpc_ConfManager_addZone)
         CASE_STRING(Rpc_ConfManager_deleteZone)
         CASE_STRING(Rpc_ConfManager_updateZone)
@@ -36,12 +30,19 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_updateZoneEnabled)
         CASE_STRING(Rpc_ConfManager_checkPassword)
         CASE_STRING(Rpc_ConfManager_confChanged)
-        CASE_STRING(Rpc_ConfManager_appAlerted)
-        CASE_STRING(Rpc_ConfManager_appChanged)
-        CASE_STRING(Rpc_ConfManager_appUpdated)
         CASE_STRING(Rpc_ConfManager_zoneAdded)
         CASE_STRING(Rpc_ConfManager_zoneRemoved)
         CASE_STRING(Rpc_ConfManager_zoneUpdated)
+
+        CASE_STRING(Rpc_ConfAppManager_addApp)
+        CASE_STRING(Rpc_ConfAppManager_deleteApps)
+        CASE_STRING(Rpc_ConfAppManager_purgeApps)
+        CASE_STRING(Rpc_ConfAppManager_updateApp)
+        CASE_STRING(Rpc_ConfAppManager_updateAppsBlocked)
+        CASE_STRING(Rpc_ConfAppManager_updateAppName)
+        CASE_STRING(Rpc_ConfAppManager_appAlerted)
+        CASE_STRING(Rpc_ConfAppManager_appChanged)
+        CASE_STRING(Rpc_ConfAppManager_appUpdated)
 
         CASE_STRING(Rpc_DriverManager_updateState)
 
@@ -80,6 +81,7 @@ const char *const rpcManagerString(RpcManager rpcManager)
         CASE_STRING(Rpc_NoneManager)
         CASE_STRING(Rpc_AppInfoManager)
         CASE_STRING(Rpc_ConfManager)
+        CASE_STRING(Rpc_ConfAppManager)
         CASE_STRING(Rpc_DriverManager)
         CASE_STRING(Rpc_QuotaManager)
         CASE_STRING(Rpc_StatManager)
@@ -109,12 +111,6 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfManager, // Rpc_ConfManager_saveVariant,
         Rpc_ConfManager, // Rpc_ConfManager_exportBackup,
         Rpc_ConfManager, // Rpc_ConfManager_importBackup,
-        Rpc_ConfManager, // Rpc_ConfManager_addApp,
-        Rpc_ConfManager, // Rpc_ConfManager_deleteApps,
-        Rpc_ConfManager, // Rpc_ConfManager_purgeApps,
-        Rpc_ConfManager, // Rpc_ConfManager_updateApp,
-        Rpc_ConfManager, // Rpc_ConfManager_updateAppsBlocked,
-        Rpc_ConfManager, // Rpc_ConfManager_updateAppName,
         Rpc_ConfManager, // Rpc_ConfManager_addZone,
         Rpc_ConfManager, // Rpc_ConfManager_deleteZone,
         Rpc_ConfManager, // Rpc_ConfManager_updateZone,
@@ -122,13 +118,20 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfManager, // Rpc_ConfManager_updateZoneEnabled,
         Rpc_ConfManager, // Rpc_ConfManager_checkPassword,
         Rpc_ConfManager, // Rpc_ConfManager_confChanged,
-        Rpc_ConfManager, // Rpc_ConfManager_appEndTimesUpdated,
-        Rpc_ConfManager, // Rpc_ConfManager_appAlerted,
-        Rpc_ConfManager, // Rpc_ConfManager_appChanged,
-        Rpc_ConfManager, // Rpc_ConfManager_appUpdated,
         Rpc_ConfManager, // Rpc_ConfManager_zoneAdded,
         Rpc_ConfManager, // Rpc_ConfManager_zoneRemoved,
         Rpc_ConfManager, // Rpc_ConfManager_zoneUpdated,
+
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_addApp,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_deleteApps,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_purgeApps,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_updateApp,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_updateAppsBlocked,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_updateAppName,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_appEndTimesUpdated,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_appAlerted,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_appChanged,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_appUpdated,
 
         Rpc_DriverManager, // Rpc_DriverManager_updateState,
 
@@ -178,12 +181,6 @@ bool commandRequiresValidation(Command cmd)
         true, // Rpc_ConfManager_saveVariant,
         true, // Rpc_ConfManager_exportBackup,
         true, // Rpc_ConfManager_importBackup,
-        true, // Rpc_ConfManager_addApp,
-        true, // Rpc_ConfManager_deleteApps,
-        true, // Rpc_ConfManager_purgeApps,
-        true, // Rpc_ConfManager_updateApp,
-        true, // Rpc_ConfManager_updateAppsBlocked,
-        true, // Rpc_ConfManager_updateAppName,
         true, // Rpc_ConfManager_addZone,
         true, // Rpc_ConfManager_deleteZone,
         true, // Rpc_ConfManager_updateZone,
@@ -191,13 +188,20 @@ bool commandRequiresValidation(Command cmd)
         true, // Rpc_ConfManager_updateZoneEnabled,
         0, // Rpc_ConfManager_checkPassword,
         0, // Rpc_ConfManager_confChanged,
-        0, // Rpc_ConfManager_appEndTimesUpdated,
-        0, // Rpc_ConfManager_appAlerted,
-        0, // Rpc_ConfManager_appChanged,
-        0, // Rpc_ConfManager_appUpdated,
         0, // Rpc_ConfManager_zoneAdded,
         0, // Rpc_ConfManager_zoneRemoved,
         0, // Rpc_ConfManager_zoneUpdated,
+
+        true, // Rpc_ConfAppManager_addApp,
+        true, // Rpc_ConfAppManager_deleteApps,
+        true, // Rpc_ConfAppManager_purgeApps,
+        true, // Rpc_ConfAppManager_updateApp,
+        true, // Rpc_ConfAppManager_updateAppsBlocked,
+        true, // Rpc_ConfAppManager_updateAppName,
+        0, // Rpc_ConfAppManager_appEndTimesUpdated,
+        0, // Rpc_ConfAppManager_appAlerted,
+        0, // Rpc_ConfAppManager_appChanged,
+        0, // Rpc_ConfAppManager_appUpdated,
 
         0, // Rpc_DriverManager_updateState,
 

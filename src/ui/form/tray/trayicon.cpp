@@ -7,6 +7,7 @@
 
 #include <conf/addressgroup.h>
 #include <conf/appgroup.h>
+#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <driver/drivermanager.h>
@@ -172,7 +173,7 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::setupByIniUser);
 
-    connect(confManager(), &ConfManager::appAlerted, this,
+    connect(confAppManager(), &ConfAppManager::appAlerted, this,
             [&] { updateTrayIcon(/*alerted=*/true); });
 
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this,
@@ -187,6 +188,11 @@ FortSettings *TrayIcon::settings() const
 ConfManager *TrayIcon::confManager() const
 {
     return ctrl()->confManager();
+}
+
+ConfAppManager *TrayIcon::confAppManager() const
+{
+    return ctrl()->confAppManager();
 }
 
 FirewallConf *TrayIcon::conf() const

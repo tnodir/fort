@@ -38,6 +38,7 @@ private:
     void setupServerSignals();
     void setupAppInfoManagerSignals();
     void setupConfManagerSignals();
+    void setupConfAppManagerSignals();
     void setupDriverManagerSignals();
     void setupQuotaManagerSignals();
     void setupStatManagerSignals();
