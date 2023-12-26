@@ -26,14 +26,6 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_checkPassword)
         CASE_STRING(Rpc_ConfManager_confChanged)
 
-        CASE_STRING(Rpc_ConfZoneManager_addOrUpdateZone)
-        CASE_STRING(Rpc_ConfZoneManager_deleteZone)
-        CASE_STRING(Rpc_ConfZoneManager_updateZoneName)
-        CASE_STRING(Rpc_ConfZoneManager_updateZoneEnabled)
-        CASE_STRING(Rpc_ConfZoneManager_zoneAdded)
-        CASE_STRING(Rpc_ConfZoneManager_zoneRemoved)
-        CASE_STRING(Rpc_ConfZoneManager_zoneUpdated)
-
         CASE_STRING(Rpc_ConfAppManager_addApp)
         CASE_STRING(Rpc_ConfAppManager_deleteApps)
         CASE_STRING(Rpc_ConfAppManager_purgeApps)
@@ -43,6 +35,14 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfAppManager_appAlerted)
         CASE_STRING(Rpc_ConfAppManager_appChanged)
         CASE_STRING(Rpc_ConfAppManager_appUpdated)
+
+        CASE_STRING(Rpc_ConfZoneManager_addOrUpdateZone)
+        CASE_STRING(Rpc_ConfZoneManager_deleteZone)
+        CASE_STRING(Rpc_ConfZoneManager_updateZoneName)
+        CASE_STRING(Rpc_ConfZoneManager_updateZoneEnabled)
+        CASE_STRING(Rpc_ConfZoneManager_zoneAdded)
+        CASE_STRING(Rpc_ConfZoneManager_zoneRemoved)
+        CASE_STRING(Rpc_ConfZoneManager_zoneUpdated)
 
         CASE_STRING(Rpc_DriverManager_updateState)
 
@@ -115,14 +115,6 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfManager, // Rpc_ConfManager_checkPassword,
         Rpc_ConfManager, // Rpc_ConfManager_confChanged,
 
-        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_addOrUpdateZone,
-        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_deleteZone,
-        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZoneName,
-        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZoneEnabled,
-        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneAdded,
-        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneRemoved,
-        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneUpdated,
-
         Rpc_ConfAppManager, // Rpc_ConfAppManager_addApp,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_deleteApps,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_purgeApps,
@@ -133,6 +125,14 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appAlerted,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appChanged,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appUpdated,
+
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_addOrUpdateZone,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_deleteZone,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZoneName,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_updateZoneEnabled,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneAdded,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneRemoved,
+        Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneUpdated,
 
         Rpc_DriverManager, // Rpc_DriverManager_updateState,
 
@@ -185,14 +185,6 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_ConfManager_checkPassword,
         0, // Rpc_ConfManager_confChanged,
 
-        true, // Rpc_ConfZoneManager_addOrUpdateZone,
-        true, // Rpc_ConfZoneManager_deleteZone,
-        true, // Rpc_ConfZoneManager_updateZoneName,
-        true, // Rpc_ConfZoneManager_updateZoneEnabled,
-        0, // Rpc_ConfZoneManager_zoneAdded,
-        0, // Rpc_ConfZoneManager_zoneRemoved,
-        0, // Rpc_ConfZoneManager_zoneUpdated,
-
         true, // Rpc_ConfAppManager_addApp,
         true, // Rpc_ConfAppManager_deleteApps,
         true, // Rpc_ConfAppManager_purgeApps,
@@ -203,6 +195,14 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_ConfAppManager_appAlerted,
         0, // Rpc_ConfAppManager_appChanged,
         0, // Rpc_ConfAppManager_appUpdated,
+
+        true, // Rpc_ConfZoneManager_addOrUpdateZone,
+        true, // Rpc_ConfZoneManager_deleteZone,
+        true, // Rpc_ConfZoneManager_updateZoneName,
+        true, // Rpc_ConfZoneManager_updateZoneEnabled,
+        0, // Rpc_ConfZoneManager_zoneAdded,
+        0, // Rpc_ConfZoneManager_zoneRemoved,
+        0, // Rpc_ConfZoneManager_zoneUpdated,
 
         0, // Rpc_DriverManager_updateState,
 

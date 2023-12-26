@@ -25,14 +25,6 @@ enum Command : qint8 {
     Rpc_ConfManager_checkPassword,
     Rpc_ConfManager_confChanged,
 
-    Rpc_ConfZoneManager_addOrUpdateZone,
-    Rpc_ConfZoneManager_deleteZone,
-    Rpc_ConfZoneManager_updateZoneName,
-    Rpc_ConfZoneManager_updateZoneEnabled,
-    Rpc_ConfZoneManager_zoneAdded,
-    Rpc_ConfZoneManager_zoneRemoved,
-    Rpc_ConfZoneManager_zoneUpdated,
-
     Rpc_ConfAppManager_addApp,
     Rpc_ConfAppManager_deleteApps,
     Rpc_ConfAppManager_purgeApps,
@@ -43,6 +35,14 @@ enum Command : qint8 {
     Rpc_ConfAppManager_appAlerted,
     Rpc_ConfAppManager_appChanged,
     Rpc_ConfAppManager_appUpdated,
+
+    Rpc_ConfZoneManager_addOrUpdateZone,
+    Rpc_ConfZoneManager_deleteZone,
+    Rpc_ConfZoneManager_updateZoneName,
+    Rpc_ConfZoneManager_updateZoneEnabled,
+    Rpc_ConfZoneManager_zoneAdded,
+    Rpc_ConfZoneManager_zoneRemoved,
+    Rpc_ConfZoneManager_zoneUpdated,
 
     Rpc_DriverManager_updateState,
 
