@@ -622,7 +622,7 @@ void OptionsPage::setupComboLanguage()
             ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
                 if (translationManager()->switchLanguage(index)) {
                     setLanguageEdited(true);
-                    iniUser()->setLanguage(translationManager()->localeName());
+                    iniUser()->setLanguage(translationManager()->languageName());
                     ctrl()->setIniUserEdited();
                 }
             });

@@ -23,6 +23,11 @@ TranslationManager::~TranslationManager()
     uninstallAllTranslators();
 }
 
+QString TranslationManager::languageName() const
+{
+    return isSystemLanguage() ? QString() : m_locale.name();
+}
+
 void TranslationManager::setUp()
 {
     auto confManager = IoC()->setUpDependency<ConfManager>();
@@ -37,12 +42,14 @@ void TranslationManager::setupTranslation()
     // Collect locales from i18n files
     const int prefixLen = QLatin1String(TRANSLATION_FILE_PREFIX).size();
 
-    m_locales.append(QLocale(QLocale::English, QLocale::UnitedStates));
-
     const auto i18nFileInfos =
             QDir(i18nDir()).entryInfoList(QStringList() << ("*" TRANSLATION_FILE_SUFFIX));
 
-    int localeBit = 2;
+    m_locales.append(QLocale::system());
+    m_locales.append(QLocale(QLocale::English, QLocale::UnitedStates));
+    constexpr int preLocalesCount = 2;
+
+    int localeBit = (1 << preLocalesCount);
     for (const QFileInfo &fileInfo : i18nFileInfos) {
         const QString localeName = fileInfo.completeBaseName().mid(prefixLen);
         const QLocale locale(localeName);
@@ -62,38 +69,36 @@ QStringList TranslationManager::displayLabels() const
     QStringList list;
     list.reserve(m_locales.size());
 
-    int localeBit = 1;
-    for (const QLocale &locale : m_locales) {
+    list.append(systemLocaleDisplay());
+
+    int localeBit = (1 << 1);
+    int index = 1; // skip System locale
+    const int localesSize = m_locales.size();
+    for (; index < localesSize; ++index) {
+        const QLocale &locale = m_locales[index];
         const bool isWithCountry = (m_localesWithCountry & localeBit) != 0;
         localeBit <<= 1;
 
-        QString label = QLocale::languageToString(locale.language());
-        QString nativeLabel = StringUtil::capitalize(locale.nativeLanguageName());
-        if (isWithCountry) {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
-            label += " (" + QLocale::territoryToString(locale.territory()) + ")";
-            nativeLabel += " (" + StringUtil::capitalize(locale.nativeTerritoryName()) + ")";
-#else
-            label += " (" + QLocale::countryToString(locale.country()) + ")";
-            nativeLabel += " (" + StringUtil::capitalize(locale.nativeCountryName()) + ")";
-#endif
-        }
+        const QString label = localeDisplay(locale, isWithCountry);
 
-        const QString langName = isWithCountry ? locale.name() : locale.bcp47Name();
-
-        list.append(label + ", " + nativeLabel + " - " + langName);
+        list.append(label);
     }
+
     return list;
 }
 
 int TranslationManager::getLanguageByName(const QString &langName) const
 {
-    int index = 0;
-    for (const QLocale &locale : m_locales) {
+    if (langName.isEmpty())
+        return 0;
+
+    int index = 1; // skip System locale
+    const int localesSize = m_locales.size();
+    for (; index < localesSize; ++index) {
+        const QLocale &locale = m_locales[index];
         if (langName == locale.name() || langName == locale.bcp47Name()) {
             return index;
         }
-        ++index;
     }
     return 0;
 }
@@ -124,9 +129,9 @@ bool TranslationManager::switchLanguage(int language)
     return true;
 }
 
-bool TranslationManager::switchLanguageByName(const QString &langName)
+bool TranslationManager::switchLanguageByName(const QString &languageName)
 {
-    return switchLanguage(getLanguageByName(langName));
+    return switchLanguage(getLanguageByName(languageName));
 }
 
 void TranslationManager::uninstallAllTranslators()
@@ -162,8 +167,8 @@ void TranslationManager::installTranslator(int language, const QLocale &locale)
 
 QTranslator *TranslationManager::loadTranslator(int language, const QLocale &locale)
 {
-    if (language == 0)
-        return nullptr;
+    if (language == 1)
+        return nullptr; // English
 
     // Load .qm file
     auto translator = new QTranslator(this);
@@ -185,6 +190,31 @@ void TranslationManager::setupByIniUser(const IniUser &ini)
     m_useSystemLocale = ini.useSystemLocale();
 
     switchLanguageByName(ini.language());
+}
+
+QString TranslationManager::systemLocaleDisplay()
+{
+    return "System, " + tr("System Language");
+}
+
+QString TranslationManager::localeDisplay(const QLocale &locale, bool isWithCountry)
+{
+    QString label = QLocale::languageToString(locale.language());
+    QString nativeLabel = StringUtil::capitalize(locale.nativeLanguageName());
+
+    if (isWithCountry) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+        label += " (" + QLocale::territoryToString(locale.territory()) + ")";
+        nativeLabel += " (" + StringUtil::capitalize(locale.nativeTerritoryName()) + ")";
+#else
+        label += " (" + QLocale::countryToString(locale.country()) + ")";
+        nativeLabel += " (" + StringUtil::capitalize(locale.nativeCountryName()) + ")";
+#endif
+    }
+
+    const QString langName = isWithCountry ? locale.name() : locale.bcp47Name();
+
+    return label + ", " + nativeLabel + " - " + langName;
 }
 
 QString TranslationManager::i18nDir()

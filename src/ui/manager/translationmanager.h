@@ -24,7 +24,9 @@ public:
     CLASS_DELETE_COPY_MOVE(TranslationManager)
 
     int language() const { return m_language; }
-    QString localeName() const { return m_locale.name(); }
+    bool isSystemLanguage() const { return m_language == 0; }
+
+    QString languageName() const;
 
     void setUp() override;
 
@@ -37,7 +39,7 @@ signals:
 
 public slots:
     bool switchLanguage(int language = 0);
-    bool switchLanguageByName(const QString &langName);
+    bool switchLanguageByName(const QString &languageName);
 
 private:
     void setupTranslation();
@@ -55,10 +57,14 @@ private:
 
     void setupByIniUser(const IniUser &ini);
 
+    static QString systemLocaleDisplay();
+    static QString localeDisplay(const QLocale &locale, bool isWithCountry);
+
     static QString i18nDir();
 
 private:
     bool m_useSystemLocale = false;
+
     int m_language = -1;
 
     QLocale m_locale;
