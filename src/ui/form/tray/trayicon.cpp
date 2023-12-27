@@ -297,7 +297,7 @@ void TrayIcon::setupByIniUser(const IniUser & /*ini*/, bool onlyFlags)
 
 void TrayIcon::switchTrayMenu(bool /*checked*/)
 {
-    showTrayMenu(geometry().center());
+    showTrayMenu(geometry().bottomLeft());
 }
 
 void TrayIcon::switchFilterModeMenu(bool /*checked*/)
