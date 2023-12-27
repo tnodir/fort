@@ -326,9 +326,7 @@ void ProgramEditDialog::setupComboAppGroups()
         if (onlyFlags)
             return;
 
-        m_comboAppGroup->clear();
-        m_comboAppGroup->addItems(conf()->appGroupNames());
-        m_comboAppGroup->setCurrentIndex(0);
+        ControlUtil::setComboBoxTexts(m_comboAppGroup, conf()->appGroupNames(), /*currentIndex=*/0);
     };
 
     refreshComboAppGroups();

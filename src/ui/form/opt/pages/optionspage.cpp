@@ -194,10 +194,7 @@ void OptionsPage::retranslateComboStartMode()
         currentIndex = m_currentAutoRunMode;
     }
 
-    m_comboAutoRun->clear();
-    m_comboAutoRun->addItems(list);
-
-    m_comboAutoRun->setCurrentIndex(currentIndex);
+    ControlUtil::setComboBoxTexts(m_comboAutoRun, list, currentIndex);
 
     // Disable some items if user is not an administrator
     if (settings()->isUserAdmin())
@@ -256,10 +253,7 @@ void OptionsPage::retranslateComboTrayEvent()
         currentIndex = 0;
     }
 
-    m_comboTrayEvent->clear();
-    m_comboTrayEvent->addItems(list);
-
-    m_comboTrayEvent->setCurrentIndex(currentIndex);
+    ControlUtil::setComboBoxTexts(m_comboTrayEvent, list, currentIndex);
 }
 
 void OptionsPage::retranslateComboTrayAction()
@@ -273,9 +267,7 @@ void OptionsPage::retranslateComboTrayAction()
         tr("Switch Block All Traffic"), tr("Switch Block Internet Traffic"),
         tr("Show Filter Mode Menu"), tr("Show Tray Menu"), tr("Ignore") };
 
-    m_comboTrayAction->clear();
-    m_comboTrayAction->addItems(list);
-    m_comboTrayAction->setCurrentIndex(-1);
+    ControlUtil::setComboBoxTexts(m_comboTrayAction, list, /*currentIndex=*/-1);
 }
 
 void OptionsPage::setupStartup()
@@ -618,18 +610,18 @@ QLayout *OptionsPage::setupLangLayout()
 
 void OptionsPage::setupComboLanguage()
 {
-    m_comboLanguage =
-            ControlUtil::createComboBox(translationManager()->displayLabels(), [&](int index) {
-                if (translationManager()->switchLanguage(index)) {
-                    setLanguageEdited(true);
-                    iniUser()->setLanguage(translationManager()->languageName());
-                    ctrl()->setIniUserEdited();
-                }
-            });
+    m_comboLanguage = ControlUtil::createComboBox({}, [&](int index) {
+        if (translationManager()->switchLanguage(index)) {
+            setLanguageEdited(true);
+            iniUser()->setLanguage(translationManager()->languageName());
+            ctrl()->setIniUserEdited();
+        }
+    });
     m_comboLanguage->setFixedWidth(200);
 
     const auto refreshComboLanguage = [&] {
-        m_comboLanguage->setCurrentIndex(translationManager()->language());
+        ControlUtil::setComboBoxTexts(m_comboLanguage, translationManager()->displayLabels(),
+                translationManager()->language());
     };
 
     refreshComboLanguage();

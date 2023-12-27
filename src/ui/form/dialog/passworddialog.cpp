@@ -44,9 +44,8 @@ void PasswordDialog::retranslateUi()
 
 void PasswordDialog::retranslateComboUnlock()
 {
-    m_comboUnlock->clear();
-    m_comboUnlock->addItems(FortSettings::unlockTypeStrings());
-    m_comboUnlock->setCurrentIndex(FortSettings::UnlockWindow);
+    ControlUtil::setComboBoxTexts(
+            m_comboUnlock, FortSettings::unlockTypeStrings(), FortSettings::UnlockWindow);
 }
 
 void PasswordDialog::setupUi()

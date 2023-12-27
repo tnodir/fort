@@ -55,6 +55,20 @@ QComboBox *ControlUtil::createComboBox(
     return c;
 }
 
+void ControlUtil::setComboBoxTexts(QComboBox *c, const QStringList &texts, int currentIndex)
+{
+    if (currentIndex < -1) {
+        currentIndex = c->currentIndex();
+    }
+
+    currentIndex = qBound(-1, currentIndex, texts.size() - 1);
+
+    c->clear();
+    c->addItems(texts);
+
+    c->setCurrentIndex(currentIndex);
+}
+
 QPushButton *ControlUtil::createButton(const QString &iconPath, const QString &text)
 {
     auto c = new QPushButton(IconCache::icon(iconPath), text);

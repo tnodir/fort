@@ -72,8 +72,7 @@ void TrafficPage::retranslateTrafUnitNames()
 {
     const QStringList list = { tr("Adaptive"), tr("Bytes"), "KiB", "MiB", "GiB", "TiB" };
 
-    m_comboTrafUnit->clear();
-    m_comboTrafUnit->addItems(list);
+    ControlUtil::setComboBoxTexts(m_comboTrafUnit, list);
 
     updateTrafUnit();
     updateTableTrafUnit();

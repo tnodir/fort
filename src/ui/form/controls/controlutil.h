@@ -36,6 +36,9 @@ public:
     static QComboBox *createComboBox(
             const QStringList &texts, const std::function<void(int index)> &onActivated);
 
+    static void setComboBoxTexts(
+            QComboBox *c, const QStringList &texts = {}, int currentIndex = -2);
+
     static QPushButton *createButton(const QString &iconPath, const QString &text = QString());
     static QPushButton *createButton(
             const QString &iconPath, const std::function<void()> &onClicked);

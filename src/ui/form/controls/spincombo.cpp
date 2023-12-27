@@ -70,8 +70,7 @@ void SpinCombo::setupCombo()
             &SpinCombo::updateSpinBoxValue);
 
     connect(this, &SpinCombo::namesChanged, [&] {
-        m_comboBox->clear();
-        m_comboBox->addItems(names());
+        ControlUtil::setComboBoxTexts(m_comboBox, names());
 
         updateComboBoxIndex(m_spinBox->value());
     });
