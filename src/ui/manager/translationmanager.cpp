@@ -11,8 +11,12 @@
 #include <util/osutil.h>
 #include <util/stringutil.h>
 
-#define TRANSLATION_FILE_PREFIX "i18n_"
-#define TRANSLATION_FILE_SUFFIX ".qm"
+namespace {
+
+constexpr const QLatin1String translationFilePrefix("i18n_");
+constexpr const QLatin1String translationFileSuffix(".qm");
+
+}
 
 TranslationManager::TranslationManager(QObject *parent) : QObject(parent)
 {
@@ -50,12 +54,11 @@ void TranslationManager::setupTranslation()
 void TranslationManager::setupLocales()
 {
     // Collect locales from i18n files
-    const auto i18nFileInfos =
-            QDir(i18nDir()).entryInfoList(QStringList() << ("*" TRANSLATION_FILE_SUFFIX));
+    const auto i18nFileInfos = QDir(i18nDir()).entryInfoList({ ('*' + translationFileSuffix) });
 
     const QString systemLanguageName = OsUtil::systemLanguageName();
 
-    const int prefixLen = QLatin1String(TRANSLATION_FILE_PREFIX).size();
+    const int prefixLen = translationFilePrefix.size();
 
     m_locales.append(QLocale::system());
     m_locales.append(QLocale(QLocale::English, QLocale::UnitedStates));
@@ -186,7 +189,7 @@ QTranslator *TranslationManager::loadTranslator(int language, const QLocale &loc
 
     // Load .qm file
     auto translator = new QTranslator(this);
-    if (!translator->load(TRANSLATION_FILE_PREFIX + locale.name(), i18nDir())) {
+    if (!translator->load(translationFilePrefix + locale.name(), i18nDir())) {
         delete translator;
         return nullptr;
     }
