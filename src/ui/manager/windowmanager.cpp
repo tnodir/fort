@@ -584,10 +584,13 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
     box->button(QMessageBox::Yes)->setText(tr("Yes"));
     box->button(QMessageBox::No)->setText(tr("No"));
 
-    connect(box, &QMessageBox::finished, [=](int result) {
-        const bool confirmed = (result == QMessageBox::Yes);
-        onFinished(confirmed);
-    });
+    connect(
+            box, &QMessageBox::finished, this,
+            [=](int result) {
+                const bool confirmed = (result == QMessageBox::Yes);
+                onFinished(confirmed);
+            },
+            Qt::QueuedConnection);
 
     box->show();
 }

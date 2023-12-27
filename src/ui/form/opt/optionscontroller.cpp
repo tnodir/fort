@@ -185,12 +185,7 @@ void OptionsController::importBackup()
 
 void OptionsController::confirmImportBackup()
 {
-    windowManager()->showConfirmBox(
-            [&] {
-                // Workaround for crash on FileDialog close
-                QMetaObject::invokeMethod(
-                        this, &OptionsController::importBackup, Qt::QueuedConnection);
-            },
+    windowManager()->showConfirmBox([&] { importBackup(); },
             tr("Program will be restarted after successful import. Continue?\n\n"
                "Make sure that you have a fresh backup."),
             tr("Import Backup"));
