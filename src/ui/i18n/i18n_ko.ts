@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>앱 구성 오류</translation>
     </message>
 </context>
 <context>
@@ -296,7 +296,7 @@
     <name>ConfZoneManager</name>
     <message>
         <source>Zone Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>영역 구성 오류</translation>
     </message>
 </context>
 <context>
@@ -1653,7 +1653,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <name>TranslationManager</name>
     <message>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>시스템 언어</translation>
     </message>
 </context>
 <context>

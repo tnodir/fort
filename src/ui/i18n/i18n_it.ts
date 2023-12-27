@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore configurazione app</translation>
     </message>
 </context>
 <context>
@@ -296,7 +296,7 @@
     <name>ConfZoneManager</name>
     <message>
         <source>Zone Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore configurazione zona</translation>
     </message>
 </context>
 <context>
@@ -1653,7 +1653,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <name>TranslationManager</name>
     <message>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Lingua del sistema</translation>
     </message>
 </context>
 <context>

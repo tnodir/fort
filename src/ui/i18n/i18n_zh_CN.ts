@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>应用配置错误</translation>
     </message>
 </context>
 <context>
@@ -296,7 +296,7 @@
     <name>ConfZoneManager</name>
     <message>
         <source>Zone Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>区域配置错误</translation>
     </message>
 </context>
 <context>
@@ -1651,7 +1651,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>TranslationManager</name>
     <message>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>系统语言</translation>
     </message>
 </context>
 <context>

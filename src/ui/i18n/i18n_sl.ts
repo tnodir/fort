@@ -251,7 +251,7 @@
     </message>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Napaka nastavitev aplikacije</translation>
     </message>
 </context>
 <context>
@@ -296,7 +296,7 @@
     <name>ConfZoneManager</name>
     <message>
         <source>Zone Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Napaka nastavitev območja</translation>
     </message>
 </context>
 <context>
@@ -1653,7 +1653,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <name>TranslationManager</name>
     <message>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Sistemski jezik</translation>
     </message>
 </context>
 <context>
