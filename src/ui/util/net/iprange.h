@@ -31,6 +31,9 @@ class IpRange : public QObject
 public:
     explicit IpRange(QObject *parent = nullptr);
 
+    qint8 emptyNetMask() const { return m_emptyNetMask; }
+    void setEmptyNetMask(qint8 v) { m_emptyNetMask = v; }
+
     int errorLineNo() const { return m_errorLineNo; }
 
     QString errorMessage() const { return m_errorMessage; }
@@ -79,7 +82,7 @@ public:
 
     // Parse IP ranges
     bool fromText(const QString &text);
-    bool fromList(const StringViewList &list, int emptyNetMask = 32, bool sort = true);
+    bool fromList(const StringViewList &list, bool sort = true);
 
 public slots:
     void clear();
@@ -100,16 +103,15 @@ private:
     void setErrorDetails(const QString &errorDetails);
 
     IpRange::ParseError parseIpLine(
-            const StringView line, ip4range_map_t &ip4RangeMap, int &pair4Size, int emptyNetMask);
+            const StringView line, ip4range_map_t &ip4RangeMap, int &pair4Size);
 
     IpRange::ParseError parseIp4Address(const QString &ip, const QString &mask,
-            ip4range_map_t &ip4RangeMap, int &pair4Size, int emptyNetMask, char maskSep);
+            ip4range_map_t &ip4RangeMap, int &pair4Size, char maskSep);
 
     IpRange::ParseError parseIp4AddressMask(
-            const QString &mask, quint32 &from, quint32 &to, int emptyNetMask, char maskSep);
+            const QString &mask, quint32 &from, quint32 &to, char maskSep);
     IpRange::ParseError parseIp4AddressMaskFull(const QString &mask, quint32 &from, quint32 &to);
-    IpRange::ParseError parseIp4AddressMaskPrefix(
-            const QString &mask, quint32 &from, quint32 &to, int emptyNetMask);
+    IpRange::ParseError parseIp4AddressMaskPrefix(const QString &mask, quint32 &from, quint32 &to);
 
     IpRange::ParseError parseIp6Address(const QString &ip, const QString &mask, char maskSep);
 
@@ -122,6 +124,8 @@ private:
     void fillIp4Range(const ip4range_map_t &ipRangeMap, int pairSize);
 
 private:
+    qint8 m_emptyNetMask = 32;
+
     int m_errorLineNo = 0;
     QString m_errorMessage;
     QString m_errorDetails;

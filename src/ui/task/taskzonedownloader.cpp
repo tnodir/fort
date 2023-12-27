@@ -113,7 +113,9 @@ StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &
 bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 {
     IpRange ipRange;
-    if (!ipRange.fromList(list, emptyNetMask(), sort())) {
+    ipRange.setEmptyNetMask(emptyNetMask());
+
+    if (!ipRange.fromList(list, sort())) {
         qCWarning(LC) << "TaskZoneDownloader:" << zoneName() << ":"
                       << ipRange.errorLineAndMessageDetails();
         return false;

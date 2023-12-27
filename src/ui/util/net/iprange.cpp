@@ -134,7 +134,7 @@ bool IpRange::fromText(const QString &text)
     return fromList(list);
 }
 
-bool IpRange::fromList(const StringViewList &list, int emptyNetMask, bool sort)
+bool IpRange::fromList(const StringViewList &list, bool sort)
 {
     clear();
 
@@ -149,7 +149,7 @@ bool IpRange::fromList(const StringViewList &list, int emptyNetMask, bool sort)
         if (lineTrimmed.isEmpty() || lineTrimmed.startsWith('#')) // commented line
             continue;
 
-        if (parseIpLine(line, ip4RangeMap, pair4Size, emptyNetMask) != ErrorOk) {
+        if (parseIpLine(line, ip4RangeMap, pair4Size) != ErrorOk) {
             setErrorDetails(errorDetails() + (errorDetails().isEmpty() ? QString() : QString(' '))
                     + QString("line='%1'").arg(line));
             setErrorLineNo(lineNo);
@@ -170,7 +170,7 @@ bool IpRange::fromList(const StringViewList &list, int emptyNetMask, bool sort)
 }
 
 IpRange::ParseError IpRange::parseIpLine(
-        const StringView line, ip4range_map_t &ip4RangeMap, int &pair4Size, int emptyNetMask)
+        const StringView line, ip4range_map_t &ip4RangeMap, int &pair4Size)
 {
     static const QRegularExpression ip4Re(R"(^([\d.]+)\s*([\/-]?)\s*(\S*))");
     static const QRegularExpression ip6Re(R"(^([A-Fa-f\d:]+)\s*([\/-]?)\s*(\S*))");
@@ -197,11 +197,11 @@ IpRange::ParseError IpRange::parseIpLine(
     const char maskSep = sepStr.isEmpty() ? '\0' : sepStr.at(0).toLatin1();
 
     return isIPv6 ? parseIp6Address(ip, mask, maskSep)
-                  : parseIp4Address(ip, mask, ip4RangeMap, pair4Size, emptyNetMask, maskSep);
+                  : parseIp4Address(ip, mask, ip4RangeMap, pair4Size, maskSep);
 }
 
 IpRange::ParseError IpRange::parseIp4Address(const QString &ip, const QString &mask,
-        ip4range_map_t &ip4RangeMap, int &pair4Size, int emptyNetMask, char maskSep)
+        ip4range_map_t &ip4RangeMap, int &pair4Size, char maskSep)
 {
     quint32 from, to = 0;
 
@@ -213,7 +213,7 @@ IpRange::ParseError IpRange::parseIp4Address(const QString &ip, const QString &m
         return ErrorBadAddress;
     }
 
-    const ParseError err = parseIp4AddressMask(mask, from, to, emptyNetMask, maskSep);
+    const ParseError err = parseIp4AddressMask(mask, from, to, maskSep);
     if (err != ErrorOk)
         return err;
 
@@ -227,14 +227,14 @@ IpRange::ParseError IpRange::parseIp4Address(const QString &ip, const QString &m
 }
 
 IpRange::ParseError IpRange::parseIp4AddressMask(
-        const QString &mask, quint32 &from, quint32 &to, int emptyNetMask, char maskSep)
+        const QString &mask, quint32 &from, quint32 &to, char maskSep)
 {
     switch (maskSep) {
     case '-': // e.g. "127.0.0.0-127.255.255.255"
         return parseIp4AddressMaskFull(mask, from, to);
     case '/':
     case '\0': // e.g. "127.0.0.0/24", "127.0.0.0"
-        return parseIp4AddressMaskPrefix(mask, from, to, emptyNetMask);
+        return parseIp4AddressMaskPrefix(mask, from, to);
     default:
         return ErrorOk;
     }
@@ -261,10 +261,10 @@ IpRange::ParseError IpRange::parseIp4AddressMaskFull(
 }
 
 IpRange::ParseError IpRange::parseIp4AddressMaskPrefix(
-        const QString &mask, quint32 &from, quint32 &to, int emptyNetMask)
+        const QString &mask, quint32 &from, quint32 &to)
 {
     bool ok = true;
-    const int nbits = mask.isEmpty() ? emptyNetMask : mask.toInt(&ok);
+    const int nbits = mask.isEmpty() ? emptyNetMask() : mask.toInt(&ok);
 
     if (!ok || !checkIp4MaskBitsCount(nbits)) {
         setErrorMessage(tr("Bad mask"));
