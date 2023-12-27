@@ -43,6 +43,7 @@ public slots:
 
 private:
     void setupTranslation();
+    void setupLocales();
 
     void setLanguage(int language);
 

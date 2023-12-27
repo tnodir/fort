@@ -32,6 +32,8 @@ public:
     static QString userName();
     static bool isUserAdmin();
 
+    static QString systemLanguageName();
+
     static bool beep(BeepType type = BeepSimple);
 
     static void showConsole(bool visible);

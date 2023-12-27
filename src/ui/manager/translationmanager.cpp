@@ -8,6 +8,7 @@
 #include <user/iniuser.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
 #include <util/stringutil.h>
 
 #define TRANSLATION_FILE_PREFIX "i18n_"
@@ -39,11 +40,22 @@ void TranslationManager::setUp()
 
 void TranslationManager::setupTranslation()
 {
-    // Collect locales from i18n files
-    const int prefixLen = QLatin1String(TRANSLATION_FILE_PREFIX).size();
+    setupLocales();
 
+    // Translators will be loaded later when needed
+    m_translators.resize(m_locales.size());
+    m_translators.fill(nullptr);
+}
+
+void TranslationManager::setupLocales()
+{
+    // Collect locales from i18n files
     const auto i18nFileInfos =
             QDir(i18nDir()).entryInfoList(QStringList() << ("*" TRANSLATION_FILE_SUFFIX));
+
+    const QString systemLanguageName = OsUtil::systemLanguageName();
+
+    const int prefixLen = QLatin1String(TRANSLATION_FILE_PREFIX).size();
 
     m_locales.append(QLocale::system());
     m_locales.append(QLocale(QLocale::English, QLocale::UnitedStates));
@@ -57,11 +69,13 @@ void TranslationManager::setupTranslation()
         m_locales.append(locale);
         m_localesWithCountry |= localeName.size() > 2 ? localeBit : 0;
         localeBit <<= 1;
-    }
 
-    // Translators will be loaded later when needed
-    m_translators.resize(m_locales.size());
-    m_translators.fill(nullptr);
+        // Check for System locale
+        const QString label = QLocale::languageToString(locale.language());
+        if (systemLanguageName == label) {
+            m_locales[0] = locale; // replace System locale
+        }
+    }
 }
 
 QStringList TranslationManager::displayLabels() const

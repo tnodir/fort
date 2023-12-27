@@ -122,6 +122,21 @@ bool OsUtil::isUserAdmin()
     return res;
 }
 
+QString OsUtil::systemLanguageName()
+{
+    const LANGID langId = GetUserDefaultUILanguage();
+    const LCID locale = MAKELCID(langId, SORT_DEFAULT);
+
+    constexpr int nameLen = 256;
+    WCHAR name[nameLen];
+
+    if (GetLocaleInfoW(locale, LOCALE_SENGLISHLANGUAGENAME, name, nameLen - 1) != 0) {
+        return QString::fromWCharArray(name);
+    }
+
+    return {};
+}
+
 bool OsUtil::beep(BeepType type)
 {
     return MessageBeep(type);
