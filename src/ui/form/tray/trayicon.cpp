@@ -414,7 +414,7 @@ void TrayIcon::setupTrayMenu()
 
     m_menu->addSeparator();
 
-    m_quitAction = addAction(m_menu, QString(), this, SLOT(quitProgram()));
+    m_quitAction = addAction(m_menu, ":/icons/power_off.png", this, SLOT(quitProgram()));
     addHotKey(m_quitAction, iniUser()->hotKeyQuit());
 
     m_trayMenuAction = addAction(m_menu, QString(), this, SLOT(switchTrayMenu(bool)));
