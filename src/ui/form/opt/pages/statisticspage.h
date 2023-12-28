@@ -31,11 +31,11 @@ private:
     void setupMonthStart();
     void setupTrafKeep();
     void setupQuota();
-    QLayout *setupColumn2();
     void setupBlockedConnBox();
     void setupLogBlockedIp();
     void setupAllowedConnBox();
     void setupLogAllowedIp();
+    QLayout *setupColumn2();
 
 private:
     QGroupBox *m_gbTraffic = nullptr;

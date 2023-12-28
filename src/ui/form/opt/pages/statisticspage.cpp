@@ -147,6 +147,14 @@ QLayout *StatisticsPage::setupColumn1()
     setupTrafficBox();
     layout->addWidget(m_gbTraffic);
 
+    // Blocked Connections Group Box
+    setupBlockedConnBox();
+    layout->addWidget(m_gbBlockedConn);
+
+    // Allowed Connections Group Box
+    setupAllowedConnBox();
+    layout->addWidget(m_gbAllowedConn);
+
     layout->addStretch();
 
     return layout;
@@ -301,14 +309,6 @@ QLayout *StatisticsPage::setupColumn2()
 {
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
-
-    // Blocked Connections Group Box
-    setupBlockedConnBox();
-    layout->addWidget(m_gbBlockedConn);
-
-    // Allowed Connections Group Box
-    setupAllowedConnBox();
-    layout->addWidget(m_gbAllowedConn);
 
     layout->addStretch();
 
