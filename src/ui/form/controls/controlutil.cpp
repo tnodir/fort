@@ -123,10 +123,10 @@ QToolButton *ControlUtil::createToolButton(
     return c;
 }
 
-QToolButton *ControlUtil::createFlatToolButton(const QString &iconPath, Qt::ToolButtonStyle style)
+QToolButton *ControlUtil::createFlatToolButton(const QString &iconPath)
 {
     auto c = createToolButton(iconPath);
-    c->setToolButtonStyle(style);
+    c->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     c->setCursor(Qt::PointingHandCursor);
     c->setAutoRaise(true);
     c->setFocusPolicy(Qt::TabFocus);
@@ -143,11 +143,18 @@ QToolButton *ControlUtil::createFlatToolButton(
     return c;
 }
 
+QToolButton *ControlUtil::createIconToolButton(const QString &iconPath)
+{
+    auto c = createFlatToolButton(iconPath);
+    c->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    return c;
+}
+
 QToolButton *ControlUtil::createSplitterButton(
         const QString &iconPath, const std::function<void()> &onClicked)
 {
     auto c = createFlatToolButton(iconPath, onClicked);
-    c->setCursor(Qt::ArrowCursor);
+    c->setToolButtonStyle(Qt::ToolButtonIconOnly);
     c->setFixedSize(32, 32);
     return c;
 }

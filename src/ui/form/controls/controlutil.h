@@ -50,10 +50,11 @@ public:
     static QToolButton *createToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
 
-    static QToolButton *createFlatToolButton(
-            const QString &iconPath, Qt::ToolButtonStyle style = Qt::ToolButtonTextBesideIcon);
+    static QToolButton *createFlatToolButton(const QString &iconPath);
     static QToolButton *createFlatToolButton(
             const QString &iconPath, const std::function<void()> &onClicked);
+
+    static QToolButton *createIconToolButton(const QString &iconPath);
 
     static QToolButton *createSplitterButton(
             const QString &iconPath, const std::function<void()> &onClicked);
