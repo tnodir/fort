@@ -29,13 +29,11 @@ TextArea2Splitter *TextArea2SplitterHandle::splitter() const
 
 void TextArea2SplitterHandle::paintEvent(QPaintEvent *)
 {
-    const int handlePaintedWidth = 4;
-    auto rect = contentsRect();
-    const int margin = (rect.width() - handlePaintedWidth) / 2;
-    rect.adjust(margin, 0, -margin, 0);
+    QRect rect = contentsRect();
+    rect.adjust(0, 0, -2, -4);
 
     QPainter p(this);
-    QStyleOption opt(0);
+    QStyleOption opt;
     opt.rect = rect;
     opt.palette = palette();
     opt.state = (orientation() == Qt::Horizontal ? QStyle::State_Horizontal : QStyle::State_None)
