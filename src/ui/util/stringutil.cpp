@@ -44,3 +44,43 @@ TokenizeViewResult StringUtil::tokenizeView(
     const auto behavior = skipEmptyParts ? Qt::SkipEmptyParts : Qt::KeepEmptyParts;
     return toStringView(text).tokenize(sep, behavior);
 }
+
+void StringUtil::addStringToBuffer(QByteArray &buffer, const QString &s)
+{
+    const int bufferSize = buffer.size();
+    buffer.resize(bufferSize + (s.size() + 1) * sizeof(wchar_t)); // + terminating null character
+
+    wchar_t *cp = (wchar_t *) (buffer.data() + bufferSize);
+    s.toWCharArray(cp);
+    cp[s.size()] = L'\0';
+}
+
+bool StringUtil::buildMultiString(QByteArray &buffer, const QStringList &list)
+{
+    for (const QString &s : list) {
+        if (s.isEmpty())
+            return false; // Multi-String value cannot contain an empty string
+
+        addStringToBuffer(buffer, s);
+    }
+
+    addStringToBuffer(buffer, {});
+
+    return true;
+}
+
+QStringList StringUtil::parseMultiString(const char *data)
+{
+    QStringList list;
+    const wchar_t *cp = (const wchar_t *) data;
+    for (;;) {
+        const QString s = QString::fromWCharArray(cp);
+        if (s.isEmpty())
+            break; // Multi-String value cannot contain an empty string
+
+        list.append(s);
+
+        cp += s.size() + 1; // + terminating null character
+    }
+    return list;
+}

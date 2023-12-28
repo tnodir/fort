@@ -3,6 +3,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include "stringutil.h"
+
 RegKey::RegKey(RegHandle parentHandle, const QString &subKey, quint32 flags)
 {
     LPCWSTR subKeyStr = (LPCWSTR) subKey.utf16();
@@ -58,6 +60,7 @@ bool RegKey::removeValue(const QString &name)
 
 bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
 {
+    QByteArray dataBuffer;
     QString dataText;
     union {
         qint64 i64;
@@ -91,10 +94,18 @@ bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
         size = sizeof(qint64);
         type = REG_QWORD;
     } break;
+    case QMetaType::QStringList: {
+        if (!StringUtil::buildMultiString(dataBuffer, value.toStringList()))
+            return false;
+
+        dataPtr = (const unsigned char *) dataBuffer.data();
+        size = dataBuffer.size();
+        type = REG_MULTI_SZ;
+    }
     default: {
         dataText = value.toString();
         dataPtr = (const unsigned char *) dataText.utf16();
-        size = DWORD(sizeof(wchar_t) * (dataText.size() + 1)); /* + terminating null character */
+        size = DWORD(sizeof(wchar_t) * (dataText.size() + 1)); // + terminating null character
         type = expand ? REG_EXPAND_SZ : REG_SZ;
     } break;
     }
@@ -117,6 +128,8 @@ QVariant RegKey::value(const QString &name, bool *expand) const
             Q_FALLTHROUGH();
         case REG_SZ:
             return QString::fromWCharArray((LPCWSTR) data);
+        case REG_MULTI_SZ:
+            return StringUtil::parseMultiString(data);
         case REG_DWORD:
             return *((qint32 *) data);
         case REG_QWORD:

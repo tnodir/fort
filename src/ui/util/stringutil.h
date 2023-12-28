@@ -19,6 +19,10 @@ public:
             const QString &text, QLatin1Char sep, bool skipEmptyParts = false);
     static TokenizeViewResult tokenizeView(
             const QString &text, QLatin1Char sep, bool skipEmptyParts = false);
+
+    static void addStringToBuffer(QByteArray &buffer, const QString &s);
+    static bool buildMultiString(QByteArray &buffer, const QStringList &list);
+    static QStringList parseMultiString(const char *data);
 };
 
 #endif // STRINGUTIL_H

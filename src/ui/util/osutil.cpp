@@ -13,6 +13,7 @@
 #include <lmcons.h>
 
 #include "processinfo.h"
+#include "regkey.h"
 
 namespace {
 
@@ -120,6 +121,20 @@ bool OsUtil::isUserAdmin()
     }
 
     return res;
+}
+
+QString OsUtil::systemLangName()
+{
+    const RegKey reg(RegKey::HKCU, R"(Control Panel\Desktop)");
+
+    const QVariantList list = reg.value("PreferredUILanguages").toList();
+
+    if (list.isEmpty())
+        return QString();
+
+    const QString name = list.first().toString();
+
+    return name;
 }
 
 QString OsUtil::systemLanguageName()

@@ -4,7 +4,8 @@ HEADERS += \
     tst_confutil.h \
     tst_fileutil.h \
     tst_ioccontainer.h \
-    tst_netutil.h
+    tst_netutil.h \
+    tst_stringutil.h
 
 SOURCES += \
     tst_main.cpp

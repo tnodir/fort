@@ -13,8 +13,8 @@
 
 namespace {
 
-constexpr const QLatin1String translationFilePrefix("i18n_");
-constexpr const QLatin1String translationFileSuffix(".qm");
+const QLatin1String translationFilePrefix("i18n_");
+const QLatin1String translationFileSuffix(".qm");
 
 }
 
@@ -56,11 +56,11 @@ void TranslationManager::setupLocales()
     // Collect locales from i18n files
     const auto i18nFileInfos = QDir(i18nDir()).entryInfoList({ ('*' + translationFileSuffix) });
 
-    const QString systemLanguageName = OsUtil::systemLanguageName();
-
     const int prefixLen = translationFilePrefix.size();
 
-    m_locales.append(QLocale::system());
+    const auto sysLangName = OsUtil::systemLangName();
+    m_locales.append(!sysLangName.isEmpty() ? QLocale(sysLangName) : QLocale::system());
+
     m_locales.append(QLocale(QLocale::English, QLocale::UnitedStates));
     constexpr int preLocalesCount = 2;
 
@@ -72,12 +72,6 @@ void TranslationManager::setupLocales()
         m_locales.append(locale);
         m_localesWithCountry |= localeName.size() > 2 ? localeBit : 0;
         localeBit <<= 1;
-
-        // Check for System locale
-        const QString label = QLocale::languageToString(locale.language());
-        if (systemLanguageName == label) {
-            m_locales[0] = locale; // replace System locale
-        }
     }
 }
 
