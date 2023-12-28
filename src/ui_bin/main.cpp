@@ -66,7 +66,7 @@ void setupCrashHandler(CrashHandler &crashHandler, const FortSettings &settings)
 
     FileUtil::removeOldFiles(dumpPath, fileNamePrefix, fileNameSuffix, CRASH_KEEP_FILES);
 
-    crashHandler.setFileNamePrefix(fileNamePrefix + APP_VERSION_STR + '_');
+    crashHandler.setFileNamePrefix(fileNamePrefix + APP_VERSION_STR + APP_VERSION_BUILD_STR + '_');
     crashHandler.setFileNameSuffix(fileNameSuffix);
     crashHandler.install(dumpPath);
 }
@@ -85,6 +85,7 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName(APP_NAME);
     QApplication::setApplicationVersion(APP_VERSION_STR);
     QApplication::setApplicationDisplayName(QLatin1String(APP_NAME) + " v" + APP_VERSION_STR
+            + APP_VERSION_BUILD_STR
             + (settings.isPortable() ? QLatin1String(" Portable") : QString()));
 
     // Process (un)install arguments
