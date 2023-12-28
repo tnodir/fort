@@ -10,6 +10,7 @@
 #include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
@@ -395,7 +396,7 @@ QLayout *ZonesWindow::setupHeader()
 
 void ZonesWindow::setupSaveAsText()
 {
-    m_btSaveAsText = ControlUtil::createButton(":/icons/save_as.png", [&] {
+    m_btSaveAsText = ControlUtil::createFlatToolButton(":/icons/save_as.png", [&] {
         const auto filePath = DialogUtil::getSaveFileName(
                 m_btSaveAsText->text(), tr("Text files (*.txt);;All files (*.*)"));
         if (filePath.isEmpty())
@@ -411,7 +412,7 @@ void ZonesWindow::setupSaveAsText()
 
 void ZonesWindow::setupTaskRun()
 {
-    m_btUpdateZones = ControlUtil::createButton(
+    m_btUpdateZones = ControlUtil::createFlatToolButton(
             ":/icons/play.png", [&] { taskManager()->runTask(TaskInfo::ZoneDownloader); });
 }
 

@@ -54,7 +54,7 @@ private:
     AppStatModel *m_appStatModel = nullptr;
     TrafListModel *m_trafListModel = nullptr;
 
-    QPushButton *m_btRefresh = nullptr;
+    QToolButton *m_btRefresh = nullptr;
     QPushButton *m_btClear = nullptr;
     QAction *m_actRemoveApp = nullptr;
     QAction *m_actResetTotal = nullptr;

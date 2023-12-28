@@ -10,6 +10,7 @@
 #include <QSplitter>
 #include <QTabBar>
 #include <QTimeEdit>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <appinfo/appinfocache.h>
@@ -134,7 +135,7 @@ QLayout *TrafficPage::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    m_btRefresh = ControlUtil::createButton(
+    m_btRefresh = ControlUtil::createFlatToolButton(
             ":/icons/arrow_refresh_small.png", [&] { trafListModel()->reset(); });
 
     setupClearMenu();

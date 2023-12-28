@@ -32,7 +32,7 @@ private:
     QGroupBox *m_gbGraph = nullptr;
     QGroupBox *m_gbColors = nullptr;
 
-    QPushButton *m_btResetToDefaults = nullptr;
+    QToolButton *m_btResetToDefaults = nullptr;
 
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
     QCheckBox *m_cbGraphFrameless = nullptr;

@@ -72,8 +72,8 @@ private:
     int m_appGroupIndex = -1;
 
     QLineEdit *m_editGroupName = nullptr;
-    QPushButton *m_btAddGroup = nullptr;
-    QPushButton *m_btRenameGroup = nullptr;
+    QToolButton *m_btAddGroup = nullptr;
+    QToolButton *m_btRenameGroup = nullptr;
     TabBar *m_tabBar = nullptr;
     QCheckBox *m_cbGroupEnabled = nullptr;
     CheckTimePeriod *m_ctpGroupPeriod = nullptr;

@@ -261,7 +261,7 @@ QLayout *ApplicationsPage::setupHeader()
 
 void ApplicationsPage::setupAddGroup()
 {
-    m_btAddGroup = ControlUtil::createButton(":/icons/add.png", [&] {
+    m_btAddGroup = ControlUtil::createFlatToolButton(":/icons/add.png", [&] {
         const auto text = m_editGroupName->text();
         if (text.isEmpty()) {
             m_editGroupName->setFocus();
@@ -290,7 +290,7 @@ void ApplicationsPage::setupAddGroup()
 
 void ApplicationsPage::setupRenameGroup()
 {
-    m_btRenameGroup = ControlUtil::createButton(":/icons/pencil.png", [&] {
+    m_btRenameGroup = ControlUtil::createFlatToolButton(":/icons/pencil.png", [&] {
         const auto text = m_editGroupName->text();
         if (text.isEmpty()) {
             m_editGroupName->setFocus();

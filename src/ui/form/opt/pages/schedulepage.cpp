@@ -4,9 +4,9 @@
 #include <QDate>
 #include <QHBoxLayout>
 #include <QHeaderView>
-#include <QPushButton>
 #include <QSpinBox>
 #include <QTableView>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/firewallconf.h>
@@ -127,9 +127,9 @@ void SchedulePage::setupTaskDetails()
 
     setupTaskInterval();
 
-    m_btTaskRun = ControlUtil::createButton(
+    m_btTaskRun = ControlUtil::createFlatToolButton(
             ":/icons/play.png", [&] { taskManager()->runTask(currentTaskInfo()->type()); });
-    m_btTaskAbort = ControlUtil::createButton(
+    m_btTaskAbort = ControlUtil::createFlatToolButton(
             ":/icons/cancel.png", [&] { taskManager()->abortTask(currentTaskInfo()->type()); });
 
     layout->addWidget(m_cscTaskInterval, 1);

@@ -48,8 +48,8 @@ private:
     TableView *m_tableTasks = nullptr;
     QWidget *m_taskDetailsRow = nullptr;
     CheckSpinCombo *m_cscTaskInterval = nullptr;
-    QPushButton *m_btTaskRun = nullptr;
-    QPushButton *m_btTaskAbort = nullptr;
+    QToolButton *m_btTaskRun = nullptr;
+    QToolButton *m_btTaskAbort = nullptr;
 };
 
 #endif // SCHEDULEPAGE_H

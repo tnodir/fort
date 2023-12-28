@@ -10,6 +10,7 @@ QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
 QT_FORWARD_DECLARE_CLASS(QStackedLayout)
 
 class ConfManager;
@@ -94,8 +95,8 @@ private:
     QAction *m_actAddZone = nullptr;
     QAction *m_actEditZone = nullptr;
     QAction *m_actRemoveZone = nullptr;
-    QPushButton *m_btSaveAsText = nullptr;
-    QPushButton *m_btUpdateZones = nullptr;
+    QToolButton *m_btSaveAsText = nullptr;
+    QToolButton *m_btUpdateZones = nullptr;
     QPushButton *m_btMenu = nullptr;
     QLabel *m_labelZoneName = nullptr;
     QLineEdit *m_editZoneName = nullptr;

@@ -4,8 +4,8 @@
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QPushButton>
 #include <QSpinBox>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/firewallconf.h>
@@ -63,7 +63,7 @@ QLayout *GraphPage::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    m_btResetToDefaults = ControlUtil::createButton(":/icons/arrow_refresh_small.png", [&] {
+    m_btResetToDefaults = ControlUtil::createFlatToolButton(":/icons/arrow_refresh_small.png", [&] {
         m_cbGraphAlwaysOnTop->setChecked(ini()->graphWindowAlwaysOnTopDefault());
         m_cbGraphFrameless->setChecked(ini()->graphWindowFramelessDefault());
         m_cbGraphClickThrough->setChecked(ini()->graphWindowClickThroughDefault());
