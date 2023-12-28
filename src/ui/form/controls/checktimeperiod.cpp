@@ -29,7 +29,7 @@ void CheckTimePeriod::setupUi()
 QTimeEdit *CheckTimePeriod::createTimeEdit()
 {
     auto c = new QTimeEdit();
-    c->setMinimumWidth(70);
+    c->setFixedWidth(70);
     c->setDisplayFormat(timeFormat());
     c->setWrapping(true);
     return c;

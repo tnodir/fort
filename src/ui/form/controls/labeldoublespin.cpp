@@ -30,6 +30,6 @@ void LabelDoubleSpin::setupUi()
 void LabelDoubleSpin::setupSpin()
 {
     m_spinBox = new DoubleSpinBox();
-    m_spinBox->setMinimumWidth(110);
+    m_spinBox->setFixedWidth(110);
     m_spinBox->setRange(0, 9999);
 }
