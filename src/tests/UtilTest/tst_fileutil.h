@@ -39,6 +39,13 @@ TEST_F(FileUtilTest, paths)
     ASSERT_EQ(FileUtil::pathToKernelPath(path, /*lower=*/false), kernelPath);
 }
 
+TEST_F(FileUtilTest, mupPath)
+{
+    const QString path(R"(\device\mup\vmware-host\shared folders\d\test.exe)");
+
+    ASSERT_EQ(FileUtil::kernelPathToPath(path), path);
+}
+
 TEST_F(FileUtilTest, systemPath)
 {
     ASSERT_EQ(FileUtil::pathToKernelPath("System", /*lower=*/true), FileUtil::systemApp());

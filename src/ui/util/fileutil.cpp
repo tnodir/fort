@@ -105,7 +105,11 @@ QString kernelPathToPath(const QString &kernelPath)
             const int sepPos2 = kernelPath.indexOf(sep, sepPos1 + 1);
             if (sepPos2 > 0) {
                 const QString kernelName = kernelPath.left(sepPos2);
-                return kernelNameToDrive(kernelName) + kernelPath.mid(sepPos2);
+                const QString driveName = kernelNameToDrive(kernelName);
+
+                if (!driveName.isEmpty()) {
+                    return driveName + kernelPath.mid(sepPos2);
+                }
             }
         }
     }
