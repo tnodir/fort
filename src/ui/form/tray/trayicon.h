@@ -105,6 +105,10 @@ private:
 
     void sendAlertMessage();
     void updateAlertTimer();
+
+    void setupAlertTimer();
+    void removeAlertTimer();
+
     void updateTrayIconShape();
 
     void addHotKey(QAction *action, const QString &shortcutText);

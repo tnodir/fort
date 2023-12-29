@@ -541,18 +541,12 @@ void TrayIcon::sendAlertMessage()
 
 void TrayIcon::updateAlertTimer()
 {
-    if (!iniUser()->trayAnimateAlert())
+    if (!iniUser()->trayAnimateAlert()) {
+        removeAlertTimer();
         return;
-
-    if (!m_alertTimer) {
-        m_alertTimer = new QTimer(this);
-        m_alertTimer->setInterval(1000);
-
-        connect(m_alertTimer, &QTimer::timeout, this, [&] {
-            m_animatedAlert = !m_animatedAlert;
-            updateTrayIconShape();
-        });
     }
+
+    setupAlertTimer();
 
     m_animatedAlert = m_alerted;
 
@@ -561,6 +555,29 @@ void TrayIcon::updateAlertTimer()
     } else {
         m_alertTimer->stop();
     }
+}
+
+void TrayIcon::setupAlertTimer()
+{
+    if (m_alertTimer)
+        return;
+
+    m_alertTimer = new QTimer(this);
+    m_alertTimer->setInterval(1000);
+
+    connect(m_alertTimer, &QTimer::timeout, this, [&] {
+        m_animatedAlert = !m_animatedAlert;
+        updateTrayIconShape();
+    });
+}
+
+void TrayIcon::removeAlertTimer()
+{
+    if (!m_alertTimer)
+        return;
+
+    delete m_alertTimer;
+    m_alertTimer = nullptr;
 }
 
 void TrayIcon::updateTrayIconShape()
