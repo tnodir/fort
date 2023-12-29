@@ -68,6 +68,9 @@ quint32 driveMaskByPath(const QString &path)
 // Convert "\\Device\\HarddiskVolume1" to "C:"
 QString kernelNameToDrive(const QString &kernelName)
 {
+    if (kernelName.isEmpty())
+        return QString();
+
     const QString kernelNameLower = kernelName.toLower();
 
     const auto drives = QDir::drives();
@@ -94,8 +97,7 @@ QString driveToKernelName(const QString &drive)
     return (len > 0) ? QString::fromLatin1(buf) : QString();
 }
 
-// Convert "\\Device\\HarddiskVolume1\\path" to "C:\\path"
-QString kernelPathToPath(const QString &kernelPath)
+inline QString getKernelName(const QString &kernelPath)
 {
     const QLatin1Char sep('\\');
 
@@ -104,14 +106,22 @@ QString kernelPathToPath(const QString &kernelPath)
         if (sepPos1 > 0) {
             const int sepPos2 = kernelPath.indexOf(sep, sepPos1 + 1);
             if (sepPos2 > 0) {
-                const QString kernelName = kernelPath.left(sepPos2);
-                const QString driveName = kernelNameToDrive(kernelName);
-
-                if (!driveName.isEmpty()) {
-                    return driveName + kernelPath.mid(sepPos2);
-                }
+                return kernelPath.left(sepPos2);
             }
         }
+    }
+
+    return QString();
+}
+
+// Convert "\\Device\\HarddiskVolume1\\path" to "C:\\path"
+QString kernelPathToPath(const QString &kernelPath)
+{
+    const QString kernelName = getKernelName(kernelPath);
+    const QString driveName = kernelNameToDrive(kernelName);
+
+    if (!driveName.isEmpty()) {
+        return driveName + kernelPath.mid(kernelName.size());
     }
 
     return kernelPath;
