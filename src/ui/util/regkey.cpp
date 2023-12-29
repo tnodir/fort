@@ -66,7 +66,7 @@ bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
         qint64 i64;
         qint32 i32;
     } dataNum;
-    const unsigned char *dataPtr;
+    const void *dataPtr;
 
     DWORD size;
     DWORD type;
@@ -83,14 +83,14 @@ bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
     case QMetaType::Int:
     case QMetaType::UInt: {
         dataNum.i32 = value.toInt();
-        dataPtr = (const unsigned char *) &dataNum.i32;
+        dataPtr = &dataNum.i32;
         size = sizeof(qint32);
         type = REG_DWORD;
     } break;
     case QMetaType::LongLong:
     case QMetaType::ULongLong: {
         dataNum.i64 = value.toLongLong();
-        dataPtr = (const unsigned char *) &dataNum.i64;
+        dataPtr = &dataNum.i64;
         size = sizeof(qint64);
         type = REG_QWORD;
     } break;
@@ -98,19 +98,20 @@ bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
         if (!StringUtil::buildMultiString(dataBuffer, value.toStringList()))
             return false;
 
-        dataPtr = (const unsigned char *) dataBuffer.data();
+        dataPtr = dataBuffer.data();
         size = dataBuffer.size();
         type = REG_MULTI_SZ;
-    }
+    } break;
     default: {
         dataText = value.toString();
-        dataPtr = (const unsigned char *) dataText.utf16();
+        dataPtr = dataText.utf16();
         size = DWORD(sizeof(wchar_t) * (dataText.size() + 1)); // + terminating null character
         type = expand ? REG_EXPAND_SZ : REG_SZ;
     } break;
     }
 
-    return !RegSetValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, type, dataPtr, size);
+    return !RegSetValueEx(
+            (HKEY) handle(), (LPCWSTR) name.utf16(), 0, type, (const BYTE *) dataPtr, size);
 }
 
 QVariant RegKey::value(const QString &name, bool *expand) const
