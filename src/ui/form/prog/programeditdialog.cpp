@@ -287,7 +287,7 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
     m_editPath = new QLineEdit();
     m_editPath->setMaxLength(1024);
 
-    m_btSelectFile = ControlUtil::createFlatToolButton(":/icons/folder.png", [&] {
+    m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
         const auto filePath = DialogUtil::getOpenFileName(
                 m_labelEditPath->text(), tr("Programs (*.exe);;All files (*.*)"));
 
@@ -309,7 +309,7 @@ QLayout *ProgramEditDialog::setupAppNameLayout()
 
     m_editName = new QLineEdit();
 
-    m_btGetName = ControlUtil::createFlatToolButton(
+    m_btGetName = ControlUtil::createIconToolButton(
             ":/icons/arrow_refresh_small.png", [&] { fillEditName(); });
 
     layout->addWidget(m_editName);

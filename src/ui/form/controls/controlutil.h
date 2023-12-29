@@ -55,6 +55,8 @@ public:
             const QString &iconPath, const std::function<void()> &onClicked);
 
     static QToolButton *createIconToolButton(const QString &iconPath);
+    static QToolButton *createIconToolButton(
+            const QString &iconPath, const std::function<void()> &onClicked);
 
     static QToolButton *createSplitterButton(
             const QString &iconPath, const std::function<void()> &onClicked);

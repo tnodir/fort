@@ -150,6 +150,14 @@ QToolButton *ControlUtil::createIconToolButton(const QString &iconPath)
     return c;
 }
 
+QToolButton *ControlUtil::createIconToolButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
+{
+    auto c = createFlatToolButton(iconPath, onClicked);
+    c->setToolButtonStyle(Qt::ToolButtonIconOnly);
+    return c;
+}
+
 QToolButton *ControlUtil::createSplitterButton(
         const QString &iconPath, const std::function<void()> &onClicked)
 {
