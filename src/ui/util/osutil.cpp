@@ -13,7 +13,6 @@
 #include <lmcons.h>
 
 #include "processinfo.h"
-#include "regkey.h"
 
 namespace {
 
@@ -121,35 +120,6 @@ bool OsUtil::isUserAdmin()
     }
 
     return res;
-}
-
-QString OsUtil::systemLangName()
-{
-    const RegKey reg(RegKey::HKCU, R"(Control Panel\Desktop)");
-
-    const QVariantList list = reg.value("PreferredUILanguages").toList();
-
-    if (list.isEmpty())
-        return QString();
-
-    const QString name = list.first().toString();
-
-    return name;
-}
-
-QString OsUtil::systemLanguageName()
-{
-    const LANGID langId = GetUserDefaultUILanguage();
-    const LCID locale = MAKELCID(langId, SORT_DEFAULT);
-
-    constexpr int nameLen = 256;
-    WCHAR name[nameLen];
-
-    if (GetLocaleInfoW(locale, LOCALE_SENGLISHLANGUAGENAME, name, nameLen - 1) != 0) {
-        return QString::fromWCharArray(name);
-    }
-
-    return {};
 }
 
 bool OsUtil::beep(BeepType type)

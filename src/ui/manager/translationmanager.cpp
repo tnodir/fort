@@ -8,7 +8,6 @@
 #include <user/iniuser.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
-#include <util/osutil.h>
 #include <util/stringutil.h>
 
 namespace {
@@ -58,8 +57,10 @@ void TranslationManager::setupLocales()
 
     const int prefixLen = translationFilePrefix.size();
 
-    const auto sysLangName = OsUtil::systemLangName();
-    m_locales.append(!sysLangName.isEmpty() ? QLocale(sysLangName) : QLocale::system());
+    const QLocale systemLocale = QLocale::system();
+    const QStringList uiLanguages = systemLocale.uiLanguages();
+
+    m_locales.append(!uiLanguages.isEmpty() ? QLocale(uiLanguages.first()) : systemLocale);
 
     m_locales.append(QLocale(QLocale::English, QLocale::UnitedStates));
     constexpr int preLocalesCount = 2;
