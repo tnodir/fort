@@ -168,7 +168,8 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     setupUi();
     setupController();
 
-    connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated);
+    connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated,
+            Qt::QueuedConnection);
 
     connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::setupByIniUser);
