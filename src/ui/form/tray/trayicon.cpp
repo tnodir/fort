@@ -535,7 +535,7 @@ void TrayIcon::sendAlertMessage()
     if (!(m_alerted && iniUser()->progNotifyMessage()))
         return;
 
-    windowManager()->showTrayMessage(tr("New program detected!"), WindowManager::MessageAlert);
+    windowManager()->showTrayMessage(tr("New program detected!"), WindowManager::TrayMessageAlert);
 }
 
 void TrayIcon::updateAlertTimer()

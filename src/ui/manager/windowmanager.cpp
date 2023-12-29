@@ -268,7 +268,7 @@ void WindowManager::showTrayMessage(const QString &message, WindowManager::TrayM
     if (!m_trayIcon)
         return;
 
-    m_lastMessageType = type;
+    m_lastTrayMessageType = type;
     m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
 }
 
@@ -646,14 +646,14 @@ bool WindowManager::showPasswordDialog(QString &password, int *unlockType)
 
 void WindowManager::onTrayMessageClicked()
 {
-    switch (m_lastMessageType) {
-    case MessageNewVersion: {
+    switch (m_lastTrayMessageType) {
+    case TrayMessageNewVersion: {
         showHomeWindowAbout();
     } break;
-    case MessageZones: {
+    case TrayMessageZones: {
         showZonesWindow();
     } break;
-    case MessageAlert: {
+    case TrayMessageAlert: {
         showProgramsWindow();
     } break;
     default:

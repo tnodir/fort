@@ -26,10 +26,10 @@ class WindowManager : public QObject, public IocService
 
 public:
     enum TrayMessageType : qint8 {
-        MessageOptions,
-        MessageNewVersion,
-        MessageZones,
-        MessageAlert,
+        TrayMessageOptions,
+        TrayMessageNewVersion,
+        TrayMessageZones,
+        TrayMessageAlert,
     };
     Q_ENUM(TrayMessageType)
 
@@ -65,7 +65,7 @@ public slots:
     void showTrayIcon();
     void closeTrayIcon();
     void showTrayMessage(
-            const QString &message, WindowManager::TrayMessageType type = MessageOptions);
+            const QString &message, WindowManager::TrayMessageType type = TrayMessageOptions);
 
     void showHomeWindow();
     void closeHomeWindow();
@@ -154,7 +154,7 @@ private:
 
     quint32 m_openedWindows = 0;
 
-    TrayMessageType m_lastMessageType = MessageOptions;
+    TrayMessageType m_lastTrayMessageType = TrayMessageOptions;
 
     TrayIcon *m_trayIcon = nullptr;
 
