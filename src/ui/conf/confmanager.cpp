@@ -443,8 +443,6 @@ void ConfManager::initConfToEdit()
     auto newConf = createConf();
     newConf->copy(*conf());
 
-    loadExtFlags(newConf->ini());
-
     setConfToEdit(newConf);
 }
 
@@ -547,10 +545,6 @@ bool ConfManager::saveConf(FirewallConf &conf)
         return false;
 
     IoC<FortSettings>()->writeConfIni(conf);
-
-    if (conf.iniEdited()) {
-        saveExtFlags(conf.ini());
-    }
 
     if (conf.taskEdited()) {
         saveTasksByIni(conf.ini());
@@ -829,19 +823,6 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
             && removeAppGroupsInDb(sqliteDb(), conf); // Remove App Groups
 
     return commitTransaction(ok);
-}
-
-void ConfManager::loadExtFlags(IniOptions &ini)
-{
-    ini.cacheExplorerIntegrated(StartupUtil::isExplorerIntegrated());
-}
-
-void ConfManager::saveExtFlags(const IniOptions &ini)
-{
-    // Windows Explorer integration
-    if (ini.explorerIntegratedSet()) {
-        StartupUtil::setExplorerIntegrated(ini.explorerIntegrated());
-    }
 }
 
 void ConfManager::saveTasksByIni(const IniOptions &ini)

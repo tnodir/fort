@@ -29,12 +29,6 @@ public:
     QString password() const { return valueText("base/password_"); }
     void setPassword(const QString &v) { setValue("base/password_", v); }
 
-    bool explorerIntegratedSet() const { return contains("ext/explorerIntegrated_"); }
-    void cacheExplorerIntegrated(bool v) { setCacheValue("ext/explorerIntegrated_", v); }
-
-    bool explorerIntegrated() const { return valueBool("ext/explorerIntegrated_"); }
-    void setExplorerIntegrated(bool v) { setValue("ext/explorerIntegrated_", v); }
-
     bool taskInfoListSet() const { return contains("task/infoList_"); }
 
     QVariant taskInfoList() const { return value("task/infoList_"); }

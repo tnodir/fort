@@ -67,6 +67,11 @@ void OptionsPage::onAboutToSave()
     } else if (conf()->iniEdited()) {
         ini()->setHasPassword(settings()->hasPassword());
     }
+
+    // Explorer
+    if (explorerEdited()) {
+        StartupUtil::setExplorerIntegrated(m_cbExplorerMenu->isChecked());
+    }
 }
 
 void OptionsPage::onEditResetted()
@@ -79,6 +84,12 @@ void OptionsPage::onEditResetted()
     if (languageEdited()) {
         setLanguageEdited(false);
         translationManager()->switchLanguageByName(confManager()->iniUser().language());
+    }
+
+    // Explorer
+    if (explorerEdited()) {
+        setExplorerEdited(false);
+        m_cbExplorerMenu->setChecked(StartupUtil::isExplorerIntegrated());
     }
 }
 
@@ -575,11 +586,11 @@ QLayout *OptionsPage::setupColumn2()
 
 void OptionsPage::setupGlobalBox()
 {
-    m_cbExplorerMenu = ControlUtil::createCheckBox(ini()->explorerIntegrated(), [&](bool checked) {
-        ini()->setExplorerIntegrated(checked);
-        ctrl()->setIniEdited();
-    });
-    m_cbExplorerMenu->setEnabled(settings()->hasMasterAdmin());
+    m_cbExplorerMenu =
+            ControlUtil::createCheckBox(StartupUtil::isExplorerIntegrated(), [&](bool /*checked*/) {
+                setExplorerEdited(true);
+                ctrl()->setIniUserEdited();
+            });
 
     m_cbUseSystemLocale =
             ControlUtil::createCheckBox(iniUser()->useSystemLocale(), [&](bool checked) {

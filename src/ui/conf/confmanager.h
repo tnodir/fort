@@ -82,9 +82,6 @@ private:
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);
 
-    void loadExtFlags(IniOptions &ini);
-    void saveExtFlags(const IniOptions &ini);
-
     void saveTasksByIni(const IniOptions &ini);
 
     bool loadTask(TaskInfo *taskInfo);

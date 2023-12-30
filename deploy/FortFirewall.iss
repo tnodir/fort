@@ -88,7 +88,7 @@ Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"
 
 Filename: "{#APP_EXE}"; Parameters: "-i portable"; Tasks: portable
 Filename: "{#APP_EXE}"; Parameters: "-i service"; Tasks: service
-Filename: "{#APP_EXE}"; Parameters: "-i explorer"; Tasks: explorer
+Filename: "{#APP_EXE}"; Parameters: "-i explorer"; Flags: runasoriginaluser; Tasks: explorer
 
 Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; \
   Flags: nowait; Tasks: service
