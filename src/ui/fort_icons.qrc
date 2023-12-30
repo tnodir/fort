@@ -47,12 +47,12 @@
     <file>icons/page_copy.png</file>
     <file>icons/pencil.png</file>
     <file>icons/play.png</file>
-    <file>icons/power_off.png</file>
     <file>icons/recycle.png</file>
     <file>icons/road_sign.png</file>
     <file>icons/save_as.png</file>
     <file>icons/scull.png</file>
     <file>icons/server_components.png</file>
+    <file>icons/standby.png</file>
     <file>icons/tick.png</file>
     <file>icons/time.png</file>
     <file>icons/traffic_lights.png</file>
