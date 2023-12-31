@@ -33,7 +33,8 @@ cd %TARGET_PATH%
 	-no-feature-undocommand -no-feature-undogroup -no-feature-undostack -no-feature-undoview ^
 	-no-feature-whatsthis -no-feature-wizard ^
 	^
-	-no-feature-style-android -no-feature-style-mac -no-feature-style-windowsvista ^
+	-no-feature-style-android -no-feature-style-mac ^
+	-no-feature-style-windows -no-feature-style-windowsvista ^
 	^
 	-no-feature-mimetype-database -no-feature-sql ^
 	^
