@@ -245,6 +245,8 @@ void FortManager::uninstall()
     StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
     StartupUtil::setServiceInstalled(false); // Uninstall service
     StartupUtil::setExplorerIntegrated(false); // Remove Windows Explorer integration
+    StartupUtil::clearGlobalExplorerIntegrated(); // COMPAT: Remove Global Windows Explorer
+                                                  // integration
     DriverCommon::provUnregister(); // Unregister booted provider
 }
 

@@ -298,6 +298,13 @@ void StartupUtil::setExplorerIntegrated(bool integrate)
     }
 }
 
+void StartupUtil::clearGlobalExplorerIntegrated()
+{
+    RegKey regShell(RegKey::HKLM, regShellMenu, RegKey::DefaultReadWrite);
+
+    regShell.removeRecursively(APP_NAME);
+}
+
 QString StartupUtil::registryPasswordHash()
 {
     const RegKey regApp(RegKey::HKLM, R"(SOFTWARE)");
