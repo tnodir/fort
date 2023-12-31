@@ -37,7 +37,9 @@ void TextArea2SplitterHandle::paintEvent(QPaintEvent *)
     opt.rect = rect;
     opt.palette = palette();
     opt.state = (orientation() == Qt::Horizontal ? QStyle::State_Horizontal : QStyle::State_None)
-            | (isEnabled() ? QStyle::State_Enabled : QStyle::State_None);
+            | (isEnabled() ? QStyle::State_Enabled : QStyle::State_None)
+            | (hasFocus() ? QStyle::State_Sunken : QStyle::State_None);
+
     parentWidget()->style()->drawControl(QStyle::CE_Splitter, &opt, &p, splitter());
 }
 
