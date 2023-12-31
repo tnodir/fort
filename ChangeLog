@@ -1,10 +1,13 @@
 Fort Firewall ChangeLog
 
-v3.10.5-test1, 2023-12-26:
+v3.10.5, 2023-12-31:
 - UI: Options: Add Backup Export/Import.
+- UI: Options: Make "Explorer Integration" for user, not system.
 - UI: Options: Add "System Language" option.
-- UI: Highlight focused tool buttons.
+- UI: Speed Limits: Use bits-per-second, not bytes.
 - UI: IconCache: Check "./icons/" existence once on startup.
+- UI: Tray Menu: Set icon to "Quit" item.
+- UI: Fix unrecognized kernel paths handling (eg. `\device\mup\vmware-host\shared folders\`).
 - Installer: Portable: Create "Data/" directory with user permissions.
 - Installer: Windows 7: Check for installed KB4474419.
 - Installer: Check for VC Redist x86 only in 32-bit version.
