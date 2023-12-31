@@ -41,15 +41,15 @@ const std::array speedLimitValues = { 10, 0, 20, 30, 50, 75, 100, 150, 200, 300,
 CheckSpinCombo *createGroupLimit()
 {
     auto c = new CheckSpinCombo();
-    c->spinBox()->setRange(0, 99999);
-    c->spinBox()->setSuffix(" KiB/s");
+    c->spinBox()->setRange(0, 999999);
+    c->spinBox()->setSuffix(" kb/s");
     c->setValues(speedLimitValues);
     return c;
 }
 
-QString formatSpeed(int kbytes)
+QString formatSpeed(int kbits)
 {
-    return NetUtil::formatSpeed(quint32(kbytes * 1024));
+    return NetUtil::formatSpeed(quint32(kbits * 1024));
 }
 
 void pageAppGroupCheckEdited(ApplicationsPage *page, AppGroup *appGroup, bool isFlag = false)
@@ -457,9 +457,7 @@ void ApplicationsPage::setupGroupLimitIn()
     });
     connect(m_cscLimitIn->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                const auto kbytes = quint32(value);
-
-                pageAppGroupSetUInt32(this, &AppGroup::setSpeedLimitIn, kbytes);
+                pageAppGroupSetUInt32(this, &AppGroup::setSpeedLimitIn, quint32(value));
             });
 }
 
@@ -472,9 +470,7 @@ void ApplicationsPage::setupGroupLimitOut()
     });
     connect(m_cscLimitOut->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                const auto kbytes = quint32(value);
-
-                pageAppGroupSetUInt32(this, &AppGroup::setSpeedLimitOut, kbytes);
+                pageAppGroupSetUInt32(this, &AppGroup::setSpeedLimitOut, quint32(value));
             });
 }
 

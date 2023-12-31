@@ -34,7 +34,7 @@ public:
 
     static QString formatDataSize(qint64 bytes, int precision = 2);
     static QString formatDataSize1(qint64 bytes);
-    static QString formatSpeed(quint32 bytes);
+    static QString formatSpeed(quint32 bitsPerSecond);
 
     static QString getHostName(const QString &address);
 

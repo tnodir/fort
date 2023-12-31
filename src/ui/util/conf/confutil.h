@@ -87,7 +87,7 @@ private:
 
     static void writeLimits(struct fort_speed_limit *limits, quint16 *limitBits,
             quint32 *limitIoBits, const QList<AppGroup *> &appGroups);
-    static void writeLimit(struct fort_speed_limit *limit, quint32 kiBytes, quint32 bufferSize,
+    static void writeLimit(struct fort_speed_limit *limit, quint32 kBits, quint32 bufferSize,
             quint32 latencyMsec, quint16 packetLoss);
 
     static void writeAddressRanges(char **data, const addrranges_arr_t &addressRanges);

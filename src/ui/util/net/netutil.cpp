@@ -130,7 +130,7 @@ const ip6_addr_t &NetUtil::rawArrayToIp6(const QByteArray &buf)
 
 QString NetUtil::formatDataSize(qint64 bytes, int precision)
 {
-    return QLocale::c().formattedDataSize(bytes, precision);
+    return QLocale::c().formattedDataSize(bytes, precision, QLocale::DataSizeTraditionalFormat);
 }
 
 QString NetUtil::formatDataSize1(qint64 bytes)
@@ -140,9 +140,11 @@ QString NetUtil::formatDataSize1(qint64 bytes)
     return text;
 }
 
-QString NetUtil::formatSpeed(quint32 bytes)
+QString NetUtil::formatSpeed(quint32 bitsPerSecond)
 {
-    return formatDataSize1(bytes) + QLatin1String("/s");
+    QString text = formatDataSize1(bitsPerSecond);
+    text.replace('B', 'b');
+    return text + QLatin1String("/s");
 }
 
 QString NetUtil::getHostName(const QString &address)
