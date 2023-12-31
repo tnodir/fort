@@ -55,10 +55,15 @@ public:
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
     bool saveTasks(const QList<TaskInfo *> &taskInfos);
 
-    virtual bool exportBackup(const QString &path);
-    virtual bool importBackup(const QString &path);
+    bool exportBackup(const QString &path);
+    virtual bool exportMasterBackup(const QString &path);
+
+    bool importBackup(const QString &path);
+    virtual bool importMasterBackup(const QString &path);
 
     virtual bool checkPassword(const QString &password);
+
+    void validateMigration();
 
     bool validateDriver();
 
@@ -75,6 +80,8 @@ protected:
     FirewallConf *createConf();
 
 private:
+    bool setupDb();
+
     void setupDefault(FirewallConf &conf) const;
 
     bool validateConf(const FirewallConf &newConf);

@@ -446,16 +446,10 @@ void FortManager::processRestartRequired()
 void FortManager::loadConf()
 {
     const auto settings = IoC<FortSettings>();
+    const auto confManager = IoC<ConfManager>();
 
-    QString viaVersion;
-    if (!settings->canMigrate(viaVersion)) {
-        QMessageBox::warning(nullptr, QString(),
-                tr("Please first install Fort Firewall v%1 and save Options from it.")
-                        .arg(viaVersion));
-        exit(-1); // Exit the program
-    }
-
-    IoC<ConfManager>()->load();
+    confManager->validateMigration();
+    confManager->load();
 
     qCDebug(LC) << "Started as"
                 << (settings->isService()                   ? "Service"

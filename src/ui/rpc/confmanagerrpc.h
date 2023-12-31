@@ -13,8 +13,8 @@ class ConfManagerRpc : public ConfManager
 public:
     explicit ConfManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
-    bool exportBackup(const QString &path) override;
-    bool importBackup(const QString &path) override;
+    bool exportMasterBackup(const QString &path) override;
+    bool importMasterBackup(const QString &path) override;
 
     bool checkPassword(const QString &password) override;
 

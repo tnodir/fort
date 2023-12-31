@@ -15,14 +15,14 @@ ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
 {
 }
 
-bool ConfManagerRpc::exportBackup(const QString &path)
+bool ConfManagerRpc::exportMasterBackup(const QString &path)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_exportBackup, { path });
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_exportMasterBackup, { path });
 }
 
-bool ConfManagerRpc::importBackup(const QString &path)
+bool ConfManagerRpc::importMasterBackup(const QString &path)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_importBackup, { path });
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_importMasterBackup, { path });
 }
 
 bool ConfManagerRpc::checkPassword(const QString &password)

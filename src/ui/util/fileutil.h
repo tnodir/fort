@@ -47,6 +47,7 @@ bool fileExists(const QString &filePath);
 bool removeFile(const QString &filePath);
 bool renameFile(const QString &oldFilePath, const QString &newFilePath);
 bool copyFile(const QString &filePath, const QString &newFilePath);
+bool replaceFile(const QString &filePath, const QString &newFilePath);
 bool linkFile(const QString &filePath, const QString &linkPath);
 
 QString readFile(const QString &filePath);

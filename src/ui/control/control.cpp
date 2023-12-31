@@ -21,8 +21,8 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_AppInfoManager_checkLookupInfoFinished)
 
         CASE_STRING(Rpc_ConfManager_saveVariant)
-        CASE_STRING(Rpc_ConfManager_exportBackup)
-        CASE_STRING(Rpc_ConfManager_importBackup)
+        CASE_STRING(Rpc_ConfManager_exportMasterBackup)
+        CASE_STRING(Rpc_ConfManager_importMasterBackup)
         CASE_STRING(Rpc_ConfManager_checkPassword)
         CASE_STRING(Rpc_ConfManager_confChanged)
 
@@ -110,8 +110,8 @@ RpcManager managerByCommand(Command cmd)
         Rpc_AppInfoManager, // Rpc_AppInfoManager_checkLookupFinished,
 
         Rpc_ConfManager, // Rpc_ConfManager_saveVariant,
-        Rpc_ConfManager, // Rpc_ConfManager_exportBackup,
-        Rpc_ConfManager, // Rpc_ConfManager_importBackup,
+        Rpc_ConfManager, // Rpc_ConfManager_exportMasterBackup,
+        Rpc_ConfManager, // Rpc_ConfManager_importMasterBackup,
         Rpc_ConfManager, // Rpc_ConfManager_checkPassword,
         Rpc_ConfManager, // Rpc_ConfManager_confChanged,
 
@@ -180,8 +180,8 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_AppInfoManager_checkLookupFinished,
 
         true, // Rpc_ConfManager_saveVariant,
-        true, // Rpc_ConfManager_exportBackup,
-        true, // Rpc_ConfManager_importBackup,
+        true, // Rpc_ConfManager_exportMasterBackup,
+        true, // Rpc_ConfManager_importMasterBackup,
         0, // Rpc_ConfManager_checkPassword,
         0, // Rpc_ConfManager_confChanged,
 

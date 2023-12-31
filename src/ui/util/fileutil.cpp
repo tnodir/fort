@@ -250,6 +250,13 @@ bool copyFile(const QString &filePath, const QString &newFilePath)
     return QFile::copy(filePath, newFilePath);
 }
 
+bool replaceFile(const QString &filePath, const QString &newFilePath)
+{
+    FileUtil::removeFile(newFilePath);
+
+    return FileUtil::copyFile(filePath, newFilePath);
+}
+
 bool linkFile(const QString &filePath, const QString &linkPath)
 {
     return QFile::link(filePath, linkPath);

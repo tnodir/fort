@@ -20,8 +20,8 @@ enum Command : qint8 {
     Rpc_AppInfoManager_checkLookupInfoFinished,
 
     Rpc_ConfManager_saveVariant,
-    Rpc_ConfManager_exportBackup,
-    Rpc_ConfManager_importBackup,
+    Rpc_ConfManager_exportMasterBackup,
+    Rpc_ConfManager_importMasterBackup,
     Rpc_ConfManager_checkPassword,
     Rpc_ConfManager_confChanged,
 

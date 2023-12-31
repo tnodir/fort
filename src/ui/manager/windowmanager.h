@@ -100,6 +100,8 @@ public slots:
     void closeGraphWindow();
     void switchGraphWindow();
 
+    void closeAllWindows();
+
     void quit();
     void restart();
 

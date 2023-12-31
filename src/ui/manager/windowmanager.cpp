@@ -217,32 +217,6 @@ void WindowManager::setupStatisticsWindow()
             &WindowManager::closeStatisticsWindow);
 }
 
-void WindowManager::closeAll()
-{
-    closeGraphWindow();
-    closeHomeWindow();
-    closeProgramsWindow();
-    closeOptionsWindow();
-    closePoliciesWindow();
-    closeServicesWindow();
-    closeZonesWindow();
-    closeStatisticsWindow();
-    closeTrayIcon();
-    closeMainWindow();
-}
-
-void WindowManager::quitApp()
-{
-    if (m_isAppQuitting)
-        return;
-
-    m_isAppQuitting = true;
-
-    closeAll();
-
-    qCDebug(LC) << "Quit due user request";
-}
-
 void WindowManager::setupTrayIcon()
 {
     Q_ASSERT(!m_trayIcon);
@@ -492,6 +466,38 @@ void WindowManager::switchGraphWindow()
     } else {
         closeGraphWindow();
     }
+}
+
+void WindowManager::closeAllWindows()
+{
+    closeGraphWindow();
+    closeHomeWindow();
+    closeProgramsWindow();
+    closeOptionsWindow();
+    closePoliciesWindow();
+    closeServicesWindow();
+    closeZonesWindow();
+    closeStatisticsWindow();
+}
+
+void WindowManager::closeAll()
+{
+    closeAllWindows();
+
+    closeTrayIcon();
+    closeMainWindow();
+}
+
+void WindowManager::quitApp()
+{
+    if (m_isAppQuitting)
+        return;
+
+    m_isAppQuitting = true;
+
+    closeAll();
+
+    qCDebug(LC) << "Quit due user request";
 }
 
 void WindowManager::quit()

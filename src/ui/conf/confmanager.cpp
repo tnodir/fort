@@ -379,16 +379,26 @@ bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
     return true;
 }
 
-bool driverWriteZones(ConfUtil &confUtil, QByteArray &buf, int entrySize, bool onlyFlags = false)
+bool exportFile(const QString &filePath, const QString &path)
 {
-    if (entrySize == 0) {
-        showErrorMessage(confUtil.errorMessage());
+    const QString fileName = FileUtil::fileName(filePath);
+    const QString destFilePath = path + fileName;
+
+    if (!FileUtil::replaceFile(filePath, destFilePath)) {
+        qCWarning(LC) << "Export file error from:" << filePath << "to:" << destFilePath;
         return false;
     }
 
-    auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeZones(buf, entrySize, onlyFlags)) {
-        showErrorMessage(driverManager->errorMessage());
+    return true;
+}
+
+bool importFile(const QString &filePath, const QString &path)
+{
+    const QString fileName = FileUtil::fileName(filePath);
+    const QString srcFilePath = path + fileName;
+
+    if (!FileUtil::replaceFile(srcFilePath, filePath)) {
+        qCWarning(LC) << "Import file error from:" << srcFilePath << "to:" << filePath;
         return false;
     }
 
@@ -409,30 +419,7 @@ IniUser &ConfManager::iniUser() const
 
 void ConfManager::setUp()
 {
-    if (!sqliteDb()->open()) {
-        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
-                       << sqliteDb()->errorMessage();
-        return;
-    }
-
-    SqliteDb::MigrateOptions opt = {
-        .sqlDir = ":/conf/migrations",
-        .version = DATABASE_USER_VERSION,
-        .recreate = true,
-        .migrateFunc = &migrateFunc,
-        .ftsTables = {
-            {
-                .contentTable = "app",
-                .contentRowid = "app_id",
-                .columns = { "path", "name" }
-            },
-        },
-    };
-
-    if (!sqliteDb()->migrate(opt)) {
-        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
-        return;
-    }
+    setupDb();
 }
 
 void ConfManager::initConfToEdit()
@@ -494,6 +481,36 @@ FirewallConf *ConfManager::createConf()
 {
     FirewallConf *conf = new FirewallConf(IoC<FortSettings>(), this);
     return conf;
+}
+
+bool ConfManager::setupDb()
+{
+    if (!sqliteDb()->open()) {
+        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
+                       << sqliteDb()->errorMessage();
+        return false;
+    }
+
+    SqliteDb::MigrateOptions opt = {
+        .sqlDir = ":/conf/migrations",
+        .version = DATABASE_USER_VERSION,
+        .recreate = true,
+        .migrateFunc = &migrateFunc,
+        .ftsTables = {
+                {
+                        .contentTable = "app",
+                        .contentRowid = "app_id",
+                        .columns = { "path", "name" }
+                },
+                },
+        };
+
+    if (!sqliteDb()->migrate(opt)) {
+        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
+        return false;
+    }
+
+    return true;
 }
 
 void ConfManager::setupDefault(FirewallConf &conf) const
@@ -681,44 +698,31 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
 
 bool ConfManager::exportBackup(const QString &path)
 {
-    FileUtil::makePath(path);
+    // Export User Ini
+    {
+        if (!exportFile(iniUser().settings()->filePath(), path))
+            return false;
+    }
 
-    const QString outPath = FileUtil::pathSlash(path);
+    return exportMasterBackup(path);
+}
+
+bool ConfManager::exportMasterBackup(const QString &path)
+{
+    // Export Ini
+    {
+        if (!exportFile(conf()->ini().settings()->filePath(), path))
+            return false;
+    }
 
     // Export Db
     {
         const QString fileName = FileUtil::fileName(sqliteDb()->filePath());
-        const QString destPath = outPath + fileName;
+        const QString destFilePath = path + fileName;
 
-        FileUtil::removeFile(destPath);
-        if (!sqliteDb()->vacuumInto(destPath)) {
-            qCWarning(LC) << "Export Db error:" << sqliteDb()->errorMessage() << "to:" << destPath;
-            return false;
-        }
-    }
-
-    // Export Ini
-    {
-        const QString iniPath = conf()->ini().settings()->filePath();
-        const QString fileName = FileUtil::fileName(iniPath);
-        const QString destPath = outPath + fileName;
-
-        FileUtil::removeFile(destPath);
-        if (!FileUtil::copyFile(iniPath, outPath + fileName)) {
-            qCWarning(LC) << "Copy Ini error from:" << iniPath << "to:" << destPath;
-            return false;
-        }
-    }
-
-    // Export User Ini
-    {
-        const QString iniPath = iniUser().settings()->filePath();
-        const QString fileName = FileUtil::fileName(iniPath);
-        const QString destPath = outPath + fileName;
-
-        FileUtil::removeFile(destPath);
-        if (!FileUtil::copyFile(iniPath, outPath + fileName)) {
-            qCWarning(LC) << "Copy User Ini error from:" << iniPath << "to:" << destPath;
+        FileUtil::removeFile(destFilePath);
+        if (!sqliteDb()->vacuumInto(destFilePath)) {
+            qCWarning(LC) << "Export Db error:" << sqliteDb()->errorMessage() << "to:" << path;
             return false;
         }
     }
@@ -728,12 +732,65 @@ bool ConfManager::exportBackup(const QString &path)
 
 bool ConfManager::importBackup(const QString &path)
 {
-    return false;
+    // Import User Ini
+    {
+        if (!importFile(iniUser().settings()->filePath(), path))
+            return false;
+
+        iniUser().settings()->clearCache();
+    }
+
+    // Import Db: Close DB from UI side
+    {
+        sqliteDb()->close();
+    }
+
+    return importMasterBackup(path);
+}
+
+bool ConfManager::importMasterBackup(const QString &path)
+{
+    // Import Ini
+    if (!importFile(conf()->ini().settings()->filePath(), path))
+        return false;
+
+    conf()->ini().settings()->clearCache();
+
+    // Import Db
+    {
+        sqliteDb()->close();
+
+        const bool imported = importFile(sqliteDb()->filePath(), path);
+        if (imported) {
+            validateMigration(); // Check after file copy and before its loading
+        }
+
+        const bool ok = setupDb();
+
+        if (!imported || !ok) {
+            qCWarning(LC) << "Import Db error:" << sqliteDb()->errorMessage() << "from:" << path;
+            return false;
+        }
+
+        load();
+    }
+
+    return true;
 }
 
 bool ConfManager::checkPassword(const QString &password)
 {
     return IoC<FortSettings>()->checkPassword(password);
+}
+
+void ConfManager::validateMigration()
+{
+    QString viaVersion;
+    if (!IoC<FortSettings>()->canMigrate(viaVersion)) {
+        showErrorMessage(tr("Please first install Fort Firewall v%1 and save Options from it.")
+                                 .arg(viaVersion));
+        exit(-1); // Exit the program
+    }
 }
 
 bool ConfManager::validateConf(const FirewallConf &newConf)

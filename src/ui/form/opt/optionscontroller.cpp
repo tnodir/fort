@@ -162,7 +162,11 @@ void OptionsController::exportBackup()
     if (path.isEmpty())
         return;
 
-    if (confManager()->exportBackup(path)) {
+    FileUtil::makePath(path);
+
+    const QString outPath = FileUtil::pathSlash(path);
+
+    if (confManager()->exportBackup(outPath)) {
         windowManager()->showInfoDialog(tr("Backup Exported Successfully"));
     } else {
         windowManager()->showErrorBox(tr("Cannot Export Backup"));
@@ -175,12 +179,15 @@ void OptionsController::importBackup()
     if (path.isEmpty())
         return;
 
-    if (confManager()->importBackup(path)) {
+    const QString inPath = FileUtil::pathSlash(path);
+
+    if (confManager()->importBackup(inPath)) {
         windowManager()->showInfoDialog(tr("Backup Imported Successfully"));
-        windowManager()->restart();
     } else {
         windowManager()->showErrorBox(tr("Cannot Import Backup"));
     }
+
+    windowManager()->restart();
 }
 
 void OptionsController::confirmImportBackup()

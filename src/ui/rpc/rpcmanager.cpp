@@ -80,16 +80,16 @@ bool processConfManager_saveVariant(
     return confManager->saveVariant(p.args.value(0));
 }
 
-bool processConfManager_exportBackup(
+bool processConfManager_exportMasterBackup(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->exportBackup(p.args.value(0).toString());
+    return confManager->exportMasterBackup(p.args.value(0).toString());
 }
 
-bool processConfManager_importBackup(
+bool processConfManager_importMasterBackup(
         ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confManager->importBackup(p.args.value(0).toString());
+    return confManager->importMasterBackup(p.args.value(0).toString());
 }
 
 bool processConfManager_checkPassword(
@@ -107,8 +107,8 @@ using processConfManager_func = bool (*)(
 
 static processConfManager_func processConfManager_funcList[] = {
     &processConfManager_saveVariant, // Rpc_ConfManager_saveVariant,
-    &processConfManager_exportBackup, // Rpc_ConfManager_exportBackup,
-    &processConfManager_importBackup, // Rpc_ConfManager_importBackup,
+    &processConfManager_exportMasterBackup, // Rpc_ConfManager_exportMasterBackup,
+    &processConfManager_importMasterBackup, // Rpc_ConfManager_importMasterBackup,
     &processConfManager_checkPassword, // Rpc_ConfManager_checkPassword,
 };
 
