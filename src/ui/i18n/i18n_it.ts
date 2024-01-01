@@ -253,6 +253,10 @@
         <source>App Configuration Error</source>
         <translation>Errore configurazione app</translation>
     </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Per prima cosa installa Fort Firewall v%1 e salva le Opzioni da esso.</translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -465,10 +469,6 @@
     <message>
         <source>Restart Required</source>
         <translation>Riavvio richiesto</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Per prima cosa installa Fort Firewall v%1 e salva le Opzioni da esso.</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -1224,6 +1224,18 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 Stai attento quando termini servizi di sistema o altri programmi importanti!
 Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</translation>
+    </message>
+    <message>
+        <source>Wildcard Paths:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Esempi:</translation>
+    </message>
+    <message>
+        <source># All programs in the sub-path:</source>
+        <translation># Tutti i programmi nel sottopercorso:</translation>
     </message>
 </context>
 <context>

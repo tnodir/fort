@@ -253,6 +253,10 @@
         <source>App Configuration Error</source>
         <translation>应用配置错误</translation>
     </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>请先安装防火墙 v%1 并保存选项。</translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -465,10 +469,6 @@
     <message>
         <source>Restart Required</source>
         <translation>需要重启</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>请先安装防火墙 v%1 并保存选项。</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -1222,6 +1222,18 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 在杀死系统服务或其他重要程序时要小心!
 它可能导致 Windows 故障或完全无法使用。</translation>
+    </message>
+    <message>
+        <source>Wildcard Paths:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># 示例：</translation>
+    </message>
+    <message>
+        <source># All programs in the sub-path:</source>
+        <translation># 子路径中的所有程序：</translation>
     </message>
 </context>
 <context>

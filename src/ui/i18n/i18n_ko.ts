@@ -253,6 +253,10 @@
         <source>App Configuration Error</source>
         <translation>앱 구성 오류</translation>
     </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>먼저 Fort Firewall %1 버전을 설치한 다음 옵션을 저장해 주세요.</translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -465,10 +469,6 @@
     <message>
         <source>Restart Required</source>
         <translation>재시작 필요</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>먼저 Fort Firewall %1 버전을 설치한 다음 옵션을 저장해 주세요.</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -1224,6 +1224,18 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 시스템 서비스 또는 기타 중요한 프로그램을 종료할 때 주의하십시오!
 Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>Wildcard Paths:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># 예제:</translation>
+    </message>
+    <message>
+        <source># All programs in the sub-path:</source>
+        <translation># 하위 경로의 모든 프로그램:</translation>
     </message>
 </context>
 <context>

@@ -253,6 +253,10 @@
         <source>App Configuration Error</source>
         <translation>Napaka nastavitev aplikacije</translation>
     </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -465,10 +469,6 @@
     <message>
         <source>Restart Required</source>
         <translation>Potreben je ponovni zagon</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
     </message>
     <message>
         <source>Restart Now?</source>
@@ -1224,6 +1224,18 @@ It can cause a Windows malfunction or totally unusable.</source>
 
 Bodite previdni pri uničevanju sistemskih storitev ali drugih pomembnih programov!
 To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</translation>
+    </message>
+    <message>
+        <source>Wildcard Paths:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation>#Primeri:</translation>
+    </message>
+    <message>
+        <source># All programs in the sub-path:</source>
+        <translation># Vsi programi v podpoti:</translation>
     </message>
 </context>
 <context>
