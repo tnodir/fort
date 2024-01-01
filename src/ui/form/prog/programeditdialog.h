@@ -42,6 +42,10 @@ public:
     void activate();
 
 private:
+    void initializePathNameFields();
+    void initializePathField(bool isSingleSelection, bool isPathEditable);
+    void initializeNameField(bool isSingleSelection, bool isPathEditable);
+
     void setupController();
 
     void retranslateUi();

@@ -74,25 +74,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_appRow = appRow;
     m_appIdList = appIdList;
 
-    const bool isSingleSelection = (appIdList.size() <= 1);
-    const bool isPathEditable = isSingleSelection && (appRow.appId == 0 || appRow.isWildcard);
-
-    m_editPath->setText(isSingleSelection && !isWildcard() ? appRow.appOriginPath : QString());
-    m_editPath->setReadOnly(!isPathEditable);
-    m_editPath->setClearButtonEnabled(isPathEditable);
-    m_editPath->setEnabled(isSingleSelection);
-    m_editPath->setVisible(!isWildcard());
-
-    m_editWildcard->setText(isSingleSelection && isWildcard() ? appRow.appOriginPath : QString());
-    m_editWildcard->setReadOnly(!isPathEditable);
-    m_editWildcard->setEnabled(isSingleSelection);
-    m_editWildcard->setVisible(isWildcard());
-
-    m_btSelectFile->setEnabled(isPathEditable);
-    m_editName->setText(isSingleSelection ? appRow.appName : QString());
-    m_editName->setEnabled(isSingleSelection);
-    m_editName->setClearButtonEnabled(isSingleSelection);
-    m_btGetName->setEnabled(isSingleSelection);
+    initializePathNameFields();
 
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
@@ -116,11 +98,43 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_dteBlockAppAt->setMinimumDateTime(QDateTime::currentDateTime());
     m_cbBlockAppNone->setChecked(appRow.endTime.isNull());
 
-    if (isSingleSelection && appRow.appName.isEmpty()) {
+    retranslateUi();
+}
+
+void ProgramEditDialog::initializePathNameFields()
+{
+    const bool isSingleSelection = (m_appIdList.size() <= 1);
+    const bool isPathEditable = isSingleSelection && (m_appRow.appId == 0 || isWildcard());
+
+    initializePathField(isSingleSelection, isPathEditable);
+    initializeNameField(isSingleSelection, isPathEditable);
+
+    if (isSingleSelection && m_appRow.appName.isEmpty()) {
         fillEditName(); // Auto-fill the name
     }
+}
 
-    retranslateUi();
+void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathEditable)
+{
+    m_editPath->setText(isSingleSelection && !isWildcard() ? m_appRow.appOriginPath : QString());
+    m_editPath->setReadOnly(!isPathEditable);
+    m_editPath->setClearButtonEnabled(isPathEditable);
+    m_editPath->setEnabled(isSingleSelection);
+    m_editPath->setVisible(!isWildcard());
+
+    m_editWildcard->setText(isSingleSelection && isWildcard() ? m_appRow.appOriginPath : QString());
+    m_editWildcard->setReadOnly(!isPathEditable);
+    m_editWildcard->setEnabled(isSingleSelection);
+    m_editWildcard->setVisible(isWildcard());
+}
+
+void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathEditable)
+{
+    m_btSelectFile->setEnabled(isPathEditable);
+    m_editName->setText(isSingleSelection ? m_appRow.appName : QString());
+    m_editName->setEnabled(isSingleSelection);
+    m_editName->setClearButtonEnabled(isSingleSelection);
+    m_btGetName->setEnabled(isSingleSelection);
 }
 
 void ProgramEditDialog::activate()
@@ -180,7 +194,7 @@ void ProgramEditDialog::retranslateUi()
 
 void ProgramEditDialog::retranslatePathPlaceholderText()
 {
-    if (!isWildcard())
+    if (!(isWildcard() && m_editWildcard->isEnabled()))
         return;
 
     const auto placeholderText = tr("# Examples:") + '\n'
