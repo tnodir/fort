@@ -561,16 +561,13 @@ bool ProgramEditDialog::saveMulti(App &app)
 
 bool ProgramEditDialog::validateFields() const
 {
-    if (isWildcard()) {
-        if (m_editWildcard->isEmpty()) {
-            m_editWildcard->setFocus();
-            return false;
-        }
-    } else {
-        if (m_editPath->text().isEmpty()) {
-            m_editPath->setFocus();
-            return false;
-        }
+    const bool isPathEmpty =
+            isWildcard() ? m_editWildcard->isEmpty() : m_editPath->text().isEmpty();
+    if (isPathEmpty) {
+        QWidget *c = isWildcard() ? static_cast<QWidget *>(m_editWildcard)
+                                  : static_cast<QWidget *>(m_editPath);
+        c->setFocus();
+        return false;
     }
 
     if (m_editName->text().isEmpty()) {
