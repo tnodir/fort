@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.10.6, 2024-01-01:
+- UI: Programs: Add ability to enter multiple wildcard paths as one entry.
+
 v3.10.5, 2023-12-31:
 - UI: Options: Add Backup Export/Import.
 - UI: Options: Make "Explorer Integration" for user, not system.
