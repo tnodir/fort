@@ -10,6 +10,8 @@ class PlainTextEdit : public QPlainTextEdit
 public:
     explicit PlainTextEdit(QWidget *parent = nullptr);
 
+    bool isEmpty() const;
+
 public slots:
     void setText(const QString &text);
 };

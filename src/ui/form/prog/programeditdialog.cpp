@@ -18,6 +18,7 @@
 #include <conf/firewallconf.h>
 #include <form/controls/checkspincombo.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/plaintextedit.h>
 #include <form/controls/zonesselector.h>
 #include <form/dialog/dialogutil.h>
 #include <fortmanager.h>
@@ -25,6 +26,7 @@
 #include <util/fileutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/textareautil.h>
 #include <util/window/widgetwindow.h>
 
 #include "programscontroller.h"
@@ -75,10 +77,17 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     const bool isSingleSelection = (appIdList.size() <= 1);
     const bool isPathEditable = isSingleSelection && (appRow.appId == 0 || appRow.isWildcard);
 
-    m_editPath->setText(isSingleSelection ? appRow.appOriginPath : QString());
+    m_editPath->setText(isSingleSelection && !isWildcard() ? appRow.appOriginPath : QString());
     m_editPath->setReadOnly(!isPathEditable);
     m_editPath->setClearButtonEnabled(isPathEditable);
     m_editPath->setEnabled(isSingleSelection);
+    m_editPath->setVisible(!isWildcard());
+
+    m_editWildcard->setText(isSingleSelection && isWildcard() ? appRow.appOriginPath : QString());
+    m_editWildcard->setReadOnly(!isPathEditable);
+    m_editWildcard->setEnabled(isSingleSelection);
+    m_editWildcard->setVisible(isWildcard());
+
     m_btSelectFile->setEnabled(isPathEditable);
     m_editName->setText(isSingleSelection ? appRow.appName : QString());
     m_editName->setEnabled(isSingleSelection);
@@ -111,29 +120,33 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
         fillEditName(); // Auto-fill the name
     }
 
-    retranslateWindowTitle();
+    retranslateUi();
 }
 
 void ProgramEditDialog::activate()
 {
     WidgetWindow::showWidget(this);
 
-    m_editPath->selectAll();
-    m_editPath->setFocus();
+    if (isWildcard()) {
+        m_editWildcard->setFocus();
+    } else {
+        m_editPath->selectAll();
+        m_editPath->setFocus();
+    }
 }
 
 void ProgramEditDialog::setupController()
 {
     connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramEditDialog::retranslateUi);
-
-    retranslateUi();
 }
 
 void ProgramEditDialog::retranslateUi()
 {
     this->unsetLocale();
 
-    m_labelEditPath->setText(tr("File Path:"));
+    m_labelEditPath->setText(isWildcard() ? tr("Wildcard Paths:") : tr("File Path:"));
+    retranslatePathPlaceholderText();
+
     m_btSelectFile->setToolTip(tr("Select File"));
     m_labelEditName->setText(tr("Name:"));
     m_btGetName->setToolTip(tr("Get Program Name"));
@@ -163,6 +176,20 @@ void ProgramEditDialog::retranslateUi()
     m_btCancel->setText(tr("Cancel"));
 
     retranslateWindowTitle();
+}
+
+void ProgramEditDialog::retranslatePathPlaceholderText()
+{
+    if (!isWildcard())
+        return;
+
+    const auto placeholderText = tr("# Examples:") + '\n'
+            + QLatin1String("System\n"
+                            "C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe\n"
+                            "%SystemRoot%\\System32\\telnet.exe\n")
+            + '\n' + tr("# All programs in the sub-path:") + QLatin1String("\nC:\\Git\\**");
+
+    m_editWildcard->setPlaceholderText(placeholderText);
 }
 
 void ProgramEditDialog::retranslateAppBlockInHours()
@@ -287,18 +314,27 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
     m_editPath = new QLineEdit();
     m_editPath->setMaxLength(1024);
 
+    m_editWildcard = new PlainTextEdit();
+
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
         const auto filePath = DialogUtil::getOpenFileName(
                 m_labelEditPath->text(), tr("Programs (*.exe);;All files (*.*)"));
 
-        if (!filePath.isEmpty()) {
+        if (filePath.isEmpty())
+            return;
+
+        if (isWildcard()) {
+            TextAreaUtil::appendText(m_editWildcard, filePath);
+        } else {
             m_editPath->setText(filePath);
-            fillEditName(); // Auto-fill the name
         }
+
+        fillEditName(); // Auto-fill the name
     });
 
     layout->addWidget(m_editPath);
-    layout->addWidget(m_btSelectFile);
+    layout->addWidget(m_editWildcard);
+    layout->addWidget(m_btSelectFile, 0, Qt::AlignTop);
 
     return layout;
 }
@@ -308,6 +344,7 @@ QLayout *ProgramEditDialog::setupAppNameLayout()
     auto layout = new QHBoxLayout();
 
     m_editName = new QLineEdit();
+    m_editName->setMaxLength(1024);
 
     m_btGetName = ControlUtil::createIconToolButton(
             ":/icons/arrow_refresh_small.png", [&] { fillEditName(); });
@@ -455,11 +492,12 @@ void ProgramEditDialog::setupAllowConnections()
 
 void ProgramEditDialog::fillEditName()
 {
-    const auto appPath = m_editPath->text();
+    auto appPath = isWildcard() ? m_editWildcard->toPlainText() : m_editPath->text();
     if (appPath.isEmpty())
         return;
 
-    const QString appName = isWildcard() ? appPath : IoC<AppInfoCache>()->appName(appPath);
+    const QString appName =
+            isWildcard() ? appPath.replace('\n', ' ') : IoC<AppInfoCache>()->appName(appPath);
 
     m_editName->setText(appName);
 }
@@ -523,9 +561,16 @@ bool ProgramEditDialog::saveMulti(App &app)
 
 bool ProgramEditDialog::validateFields() const
 {
-    if (m_editPath->text().isEmpty()) {
-        m_editPath->setFocus();
-        return false;
+    if (isWildcard()) {
+        if (m_editWildcard->isEmpty()) {
+            m_editWildcard->setFocus();
+            return false;
+        }
+    } else {
+        if (m_editPath->text().isEmpty()) {
+            m_editPath->setFocus();
+            return false;
+        }
     }
 
     if (m_editName->text().isEmpty()) {
@@ -553,9 +598,12 @@ void ProgramEditDialog::fillApp(App &app) const
     app.acceptZones = m_btZones->zones();
     app.rejectZones = m_btZones->uncheckedZones();
 
-    const QString appPath = m_editPath->text();
-    app.appOriginPath = appPath;
-    app.appPath = FileUtil::normalizePath(appPath, app.isWildcard);
+    // App Path
+    {
+        const QString appPath = m_editPath->text();
+        app.appOriginPath = isWildcard() ? m_editWildcard->toPlainText() : appPath;
+        app.appPath = FileUtil::normalizePath(appPath);
+    }
 
     if (!app.blocked) {
         if (m_cscBlockAppIn->checkBox()->isChecked()) {

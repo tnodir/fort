@@ -45,7 +45,6 @@ void AppsColumn::setupUi()
 void AppsColumn::setupTextEdit()
 {
     m_editText = new PlainTextEdit();
-    m_editText->setTabChangesFocus(true);
 
     connect(m_editText, &QPlainTextEdit::textChanged, this, &AppsColumn::onTextChanged);
 }

@@ -38,7 +38,7 @@ QString pathSlash(const QString &path);
 QString toNativeSeparators(const QString &path);
 
 // Normalize the Win32 path
-QString normalizePath(const QString &path, bool isWildcard = false);
+QString normalizePath(const QString &path);
 
 bool makePath(const QString &path);
 bool makePathForFile(const QString &filePath);

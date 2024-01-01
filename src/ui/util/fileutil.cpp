@@ -197,14 +197,17 @@ QString toNativeSeparators(const QString &path)
     return QDir::toNativeSeparators(path);
 }
 
-QString normalizePath(const QString &path, bool isWildcard)
+QString normalizePath(const QString &path)
 {
+    if (path.isEmpty())
+        return {};
+
     const QString pathTrimmed = path.trimmed();
 
     if (isSystemApp(pathTrimmed))
         return systemApp();
 
-    QString pathLower = isWildcard ? pathTrimmed : pathTrimmed.toLower();
+    QString pathLower = pathTrimmed.toLower();
 
     if (isDriveFilePath(pathLower)) {
         pathLower[0] = pathLower[0].toUpper();

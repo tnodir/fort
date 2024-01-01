@@ -124,7 +124,7 @@ CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
   app_group_id INTEGER NOT NULL DEFAULT 0,
   origin_path TEXT,
-  path TEXT NOT NULL,
+  path TEXT,
   name TEXT,
   is_wildcard BOOLEAN NOT NULL DEFAULT 0,
   use_group_perm BOOLEAN NOT NULL DEFAULT 1,

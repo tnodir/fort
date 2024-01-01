@@ -317,10 +317,11 @@ bool ConfAppManager::updateApp(const App &app)
     beginTransaction();
 
     const auto vars = QVariantList()
-            << app.appId << appGroup->id() << app.appOriginPath << app.appPath << app.appName
-            << app.isWildcard << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly
-            << app.logBlocked << app.logConn << app.blocked << app.killProcess << app.acceptZones
-            << app.rejectZones << (!app.endTime.isNull() ? app.endTime : QVariant());
+            << app.appId << appGroup->id() << app.appOriginPath
+            << (!app.appPath.isEmpty() ? app.appPath : QVariant()) << app.appName << app.isWildcard
+            << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly << app.logBlocked
+            << app.logConn << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
+            << (!app.endTime.isNull() ? app.endTime : QVariant());
 
     sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
 
@@ -513,7 +514,8 @@ bool ConfAppManager::addOrUpdateApp(const App &app)
     beginTransaction();
 
     const auto vars = QVariantList()
-            << appGroup->id() << app.appOriginPath << app.appPath << app.appName << app.isWildcard
+            << appGroup->id() << app.appOriginPath
+            << (!app.appPath.isEmpty() ? app.appPath : QVariant()) << app.appName << app.isWildcard
             << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly << app.logBlocked
             << app.logConn << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
             << (!app.endTime.isNull() ? app.endTime : QVariant()) << QDateTime::currentDateTime();

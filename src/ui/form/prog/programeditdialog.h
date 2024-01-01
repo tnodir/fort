@@ -19,6 +19,7 @@ class ConfAppManager;
 class ConfManager;
 class FirewallConf;
 class FortManager;
+class PlainTextEdit;
 class ProgramsController;
 class ZonesSelector;
 
@@ -44,6 +45,7 @@ private:
     void setupController();
 
     void retranslateUi();
+    void retranslatePathPlaceholderText();
     void retranslateAppBlockInHours();
     void retranslateWindowTitle();
 
@@ -78,6 +80,7 @@ private:
 
     QLabel *m_labelEditPath = nullptr;
     QLineEdit *m_editPath = nullptr;
+    PlainTextEdit *m_editWildcard = nullptr;
     QToolButton *m_btSelectFile = nullptr;
     QLabel *m_labelEditName = nullptr;
     QLineEdit *m_editName = nullptr;

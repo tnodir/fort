@@ -401,8 +401,8 @@ bool ConfUtil::parseExeApps(
 
     return confAppsWalker->walkApps([&](App &app) -> bool {
         if (app.isWildcard) {
-            const auto appPath = envManager.expandString(app.appPath);
-            return parseAppLine(app, appPath, opt);
+            const auto wildcardPaths = envManager.expandString(app.appOriginPath);
+            return parseAppsText(app, wildcardPaths, opt);
         } else {
             return addApp(app, /*isNew=*/true, opt.exeAppsMap, opt.exeAppsSize);
         }
