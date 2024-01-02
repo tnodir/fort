@@ -2,6 +2,7 @@
 *.dll
 *.exe
 *.pdb
+*.qm
 *.sys
 
 build*/
