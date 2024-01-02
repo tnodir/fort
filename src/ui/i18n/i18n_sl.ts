@@ -1227,7 +1227,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Wildcard Paths:</source>
-        <translation type="unfinished"></translation>
+        <translation>Poti z nadomestnimi znaki:</translation>
     </message>
     <message>
         <source># Examples:</source>

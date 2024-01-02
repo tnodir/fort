@@ -1227,7 +1227,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Wildcard Paths:</source>
-        <translation type="unfinished"></translation>
+        <translation>와일드카드 경로:</translation>
     </message>
     <message>
         <source># Examples:</source>

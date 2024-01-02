@@ -1227,7 +1227,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Wildcard Paths:</source>
-        <translation></translation>
+        <translation>Chemins de caractères génériques :</translation>
     </message>
     <message>
         <source># Examples:</source>

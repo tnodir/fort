@@ -1227,7 +1227,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Wildcard Paths:</source>
-        <translation></translation>
+        <translation>Platzhalter-Pfade:</translation>
     </message>
     <message>
         <source># Examples:</source>

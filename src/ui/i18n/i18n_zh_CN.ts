@@ -1225,7 +1225,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Wildcard Paths:</source>
-        <translation type="unfinished"></translation>
+        <translation>通配符路径:</translation>
     </message>
     <message>
         <source># Examples:</source>
