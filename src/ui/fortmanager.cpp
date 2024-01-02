@@ -182,6 +182,7 @@ void FortManager::setupLogger()
     const auto settings = IoC<FortSettings>();
 
     logger->setIsService(settings->isService());
+    logger->setHasService(settings->hasService());
     logger->setPath(settings->logsPath());
 }
 
@@ -453,7 +454,7 @@ void FortManager::loadConf()
 
     qCDebug(LC) << "Started as"
                 << (settings->isService()                   ? "Service"
-                                   : settings->hasService() ? "Service Client"
+                                   : settings->hasService() ? "Client"
                                                             : "Program");
 }
 

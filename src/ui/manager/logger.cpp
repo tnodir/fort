@@ -76,11 +76,6 @@ Logger::Logger(QObject *parent) : QObject(parent)
     g_oldMessageHandler = qInstallMessageHandler(messageHandler);
 }
 
-void Logger::setIsService(bool v)
-{
-    m_isService = v;
-}
-
 void Logger::setDebug(bool v)
 {
     if (m_debug != v) {
@@ -109,7 +104,7 @@ void Logger::setPath(const QString &path)
 QString Logger::getFileTitle() const
 {
     return QLatin1String(APP_NAME) + " v" + APP_VERSION_STR + APP_VERSION_BUILD_STR
-            + (isService() ? " Service" : QString());
+            + (isService() ? " Service" : (hasService() ? " Client" : QString()));
 }
 
 Logger *Logger::instance()
@@ -136,7 +131,8 @@ QString Logger::makeLogLine(LogLevel level, const QString &dateString, const QSt
 
 QString Logger::fileNamePrefix() const
 {
-    return QLatin1String("log_fort_") + (isService() ? "svc_" : QString());
+    return QLatin1String("log_fort_")
+            + (isService() ? "svc_" : (hasService() ? "clt_" : QString()));
 }
 
 QString Logger::fileNameSuffix() const

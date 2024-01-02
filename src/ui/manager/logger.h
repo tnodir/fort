@@ -16,7 +16,10 @@ public:
     Q_ENUM(LogLevel)
 
     bool isService() const { return m_isService; }
-    void setIsService(bool v);
+    void setIsService(bool v) { m_isService = v; }
+
+    bool hasService() const { return m_hasService; }
+    void setHasService(bool v) { m_hasService = v; }
 
     bool debug() const { return m_debug; }
     void setDebug(bool v);
@@ -50,6 +53,7 @@ private:
 
 private:
     bool m_isService : 1 = false;
+    bool m_hasService : 1 = false;
     bool m_debug : 1 = false;
     bool m_console : 1 = false;
     bool m_writing : 1 = false;
