@@ -314,7 +314,7 @@ begin
 
   ExtractTemporaryFiles('*.*');
 
-  params := ExpandConstant('"{tmp}') + '\{app}\" "' + path + '\" /Q /Y /E /H';
+  params := ExpandConstant('"{tmp}') + '\{app}\*" "' + path + '\" /Q /Y /E /H';
 
   Exec('xcopy.exe', params, GetCurrentDir(), SW_HIDE, ewWaitUntilTerminated, ResultCode)
 
