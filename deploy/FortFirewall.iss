@@ -41,7 +41,7 @@ UninstallFilesDir={app}\uninst
 UninstallDisplayIcon={uninstallexe}
 SetupIconFile={#SRC_PATH}\ui_bin\{#APP_ICO_NAME}
 ArchitecturesInstallIn64BitMode=x64
-Compression=lzma2/ultra
+Compression=lzma/normal
 SolidCompression=yes
 
 [Languages]
