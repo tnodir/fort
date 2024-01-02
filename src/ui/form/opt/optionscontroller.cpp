@@ -115,12 +115,14 @@ void OptionsController::initialize()
 
 void OptionsController::save(bool closeOnSuccess)
 {
-    qCDebug(LC) << "Conf save";
-
     emit aboutToSave();
 
     const bool isAnyEdited = this->anyEdited();
     const bool isConfEdited = confToEdit()->anyEdited();
+
+    if (isAnyEdited) {
+        qCDebug(LC) << "Conf save";
+    }
 
     if (!confManager()->save(confToEdit())) {
         qCCritical(LC) << "Conf save error";
