@@ -337,10 +337,12 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
         if (filePath.isEmpty())
             return;
 
+        const auto appPath = FileUtil::toNativeSeparators(filePath);
+
         if (isWildcard()) {
-            TextAreaUtil::appendText(m_editWildcard, filePath);
+            TextAreaUtil::appendText(m_editWildcard, appPath);
         } else {
-            m_editPath->setText(filePath);
+            m_editPath->setText(appPath);
         }
 
         fillEditName(); // Auto-fill the name
