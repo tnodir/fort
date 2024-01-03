@@ -29,7 +29,8 @@ copy "%SRCPATH%" "%DSTPATH%"
 
 
 @rem Create the driver service
-sc create %DRIVERSVC% binPath= "%DSTPATH%" type= kernel start= auto depend= BFE DisplayName= "%DISPNAME%"
+sc create %DRIVERSVC% binPath= "%DSTPATH%" type= kernel start= auto ^
+	group= "NetworkProvider" depend= BFE DisplayName= "%DISPNAME%"
 @if ERRORLEVEL 1 (
     @echo Error: Cannot create a service
     @set RCODE=%ERRORLEVEL%

@@ -26,7 +26,8 @@ const char *const regShellMenu = R"(SOFTWARE\Classes\SystemFileAssociations\.exe
 
 const wchar_t *const serviceNameStr = L"" APP_BASE_L L"Svc";
 const wchar_t *const serviceDisplayStr = L"" APP_NAME_L L" Service";
-const wchar_t *const serviceDescriptionStr = L"Manages " APP_NAME_L L" logic as background server.";
+const wchar_t *const serviceDescriptionStr = L"Manages " APP_NAME_L L" logic as background server";
+const wchar_t *const serviceGroupStr = L"NetworkProvider"; // Group of "BFE" service
 // Service Dependencies: Double null-terminated array of null-separated names of services
 const wchar_t *const serviceDependenciesStr = L"fortfw\0\0";
 
@@ -113,14 +114,15 @@ static void setupServiceRestartConfig(SC_HANDLE svc)
 }
 
 bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
-        const wchar_t *serviceDescription, const wchar_t *dependencies, const QString &command)
+        const wchar_t *serviceDescription, const wchar_t *serviceGroup, const wchar_t *dependencies,
+        const QString &command)
 {
     bool res = false;
     const SC_HANDLE mngr = OpenSCManagerW(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
     if (mngr) {
         const SC_HANDLE svc = CreateServiceW(mngr, serviceName, serviceDisplay, SERVICE_ALL_ACCESS,
                 SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
-                (LPCWSTR) command.utf16(), nullptr, 0, dependencies, nullptr, nullptr);
+                (LPCWSTR) command.utf16(), serviceGroup, 0, dependencies, nullptr, nullptr);
         if (svc) {
             SERVICE_DESCRIPTION sd = { (LPWSTR) serviceDescription };
             ChangeServiceConfig2(svc, SERVICE_CONFIG_DESCRIPTION, &sd);
@@ -203,8 +205,8 @@ void StartupUtil::setServiceInstalled(bool install)
 
     const QString command = wrappedAppFilePath() + " --service";
 
-    installService(serviceNameStr, serviceDisplayStr, serviceDescriptionStr, serviceDependenciesStr,
-            command);
+    installService(serviceNameStr, serviceDisplayStr, serviceDescriptionStr, serviceGroupStr,
+            serviceDependenciesStr, command);
 
     startService();
     QThread::msleep(100); // Let the service to start
