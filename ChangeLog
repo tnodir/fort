@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.10.7-test0, 2024-01-03:
+- UI: Add QtBase translations.
+- UI: Programs: Native separators for FileDialog paths.
+- Set "NetworkProvider" group to services.
+
 v3.10.6, 2024-01-01:
 - UI: Programs: Add ability to enter multiple wildcard paths as one entry.
 
