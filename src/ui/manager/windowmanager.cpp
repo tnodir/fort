@@ -51,7 +51,6 @@ struct MessageBoxArg
 void setupModalDialog(QDialog *box)
 {
     box->setWindowModality(box->parent() ? Qt::WindowModal : Qt::ApplicationModal);
-    box->setModal(true);
 }
 
 QMessageBox *createMessageBox(const MessageBoxArg &ba, QWidget *parent = nullptr)
@@ -598,7 +597,7 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
             },
             Qt::QueuedConnection);
 
-    box->show();
+    WidgetWindow::showWidget(box);
 }
 
 void WindowManager::showErrorDialog(const QString &text, const QString &title, QWidget *parent)
@@ -611,7 +610,8 @@ void WindowManager::showErrorDialog(const QString &text, const QString &title, Q
                     .title = title,
             },
             parent);
-    box->show();
+
+    WidgetWindow::showWidget(box);
 }
 
 void WindowManager::showInfoDialog(const QString &text, const QString &title, QWidget *parent)
@@ -624,7 +624,8 @@ void WindowManager::showInfoDialog(const QString &text, const QString &title, QW
                     .title = title,
             },
             parent);
-    box->show();
+
+    WidgetWindow::showWidget(box);
 }
 
 bool WindowManager::showPasswordDialog(QString &password, int *unlockType)
