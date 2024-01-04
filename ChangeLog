@@ -1,8 +1,9 @@
 Fort Firewall ChangeLog
 
-v3.10.7-test0, 2024-01-03:
+v3.10.7-test1, 2024-01-04:
 - UI: Add QtBase translations.
 - UI: Programs: Native separators for FileDialog paths.
+- UI: Activate message boxes on show.
 - Set "NetworkProvider" group to services.
 
 v3.10.6, 2024-01-01:
