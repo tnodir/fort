@@ -10,6 +10,8 @@ class HostInfoManager : public WorkerManager
 public:
     explicit HostInfoManager(QObject *parent = nullptr);
 
+    QString workerName() const override { return "HostInfoWorker"; }
+
 signals:
     void lookupFinished(const QString &address, const QString &hostName);
 

@@ -11,6 +11,8 @@ public:
     explicit StatBlockWorker(StatBlockManager *manager);
 
     QThread::Priority priority() const override { return QThread::HighPriority; }
+
+    QString workerName() const override { return "StatBlockWorker"; }
 };
 
 #endif // STATBLOCKWORKER_H

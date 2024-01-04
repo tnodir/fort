@@ -9,6 +9,8 @@ DriverWorker::DriverWorker(Device *device, QObject *parent) : QObject(parent), m
 
 void DriverWorker::run()
 {
+    OsUtil::setCurrentThreadName("DriverWorker");
+
     do {
         readLog();
     } while (!m_aborted);

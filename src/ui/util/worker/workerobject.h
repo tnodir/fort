@@ -16,6 +16,8 @@ public:
 
     virtual QThread::Priority priority() const { return QThread::NormalPriority; }
 
+    virtual QString workerName() const;
+
     void run() override;
 
 protected:

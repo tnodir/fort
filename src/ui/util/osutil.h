@@ -37,6 +37,8 @@ public:
     static void showConsole(bool visible);
     static void writeToConsole(const QString &line);
 
+    static bool setCurrentThreadName(const QString &name);
+
     static void setThreadIsBusy(bool on);
 };
 

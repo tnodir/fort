@@ -156,6 +156,17 @@ void OsUtil::writeToConsole(const QString &line)
     WriteFile(stdoutHandle, data.constData(), DWORD(data.size()), &nw, nullptr);
 }
 
+bool OsUtil::setCurrentThreadName(const QString &name)
+{
+    if (name.isEmpty())
+        return true;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+    const HRESULT hr = SetThreadDescription(GetCurrentThread(), (PCWSTR) name.utf16());
+    return SUCCEEDED(hr);
+#endif
+}
+
 void OsUtil::setThreadIsBusy(bool on)
 {
     // Works correct only on Windows 11+

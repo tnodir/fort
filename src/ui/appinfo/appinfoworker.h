@@ -12,6 +12,8 @@ public:
 
     QThread::Priority priority() const override { return QThread::LowPriority; }
 
+    QString workerName() const override { return "AppInfoWorker"; }
+
     void run() override;
 };
 

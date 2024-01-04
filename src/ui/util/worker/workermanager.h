@@ -26,6 +26,8 @@ public:
     int maxWorkersCount() const { return m_maxWorkersCount; }
     void setMaxWorkersCount(int v) { m_maxWorkersCount = v; }
 
+    virtual QString workerName() const { return QString(); }
+
 public slots:
     void clear();
     void abortWorkers();
