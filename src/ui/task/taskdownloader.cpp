@@ -6,15 +6,11 @@ TaskDownloader::TaskDownloader(QObject *parent) : TaskWorker(parent) { }
 
 void TaskDownloader::run()
 {
-    m_downloader = new NetDownloader(this);
-
-    connect(m_downloader, &NetDownloader::finished, this, &TaskDownloader::downloadFinished);
+    createDownloader();
 
     setupDownloader();
 
-    if (m_downloader) {
-        m_downloader->start();
-    }
+    startDownloader();
 }
 
 void TaskDownloader::finish(bool success)
@@ -22,11 +18,37 @@ void TaskDownloader::finish(bool success)
     if (!m_downloader)
         return;
 
+    deleteDownloader();
+
+    emit finished(success);
+}
+
+void TaskDownloader::createDownloader()
+{
+    if (m_downloader)
+        return;
+
+    m_downloader = new NetDownloader(this);
+
+    connect(m_downloader, &NetDownloader::finished, this, &TaskDownloader::downloadFinished);
+}
+
+void TaskDownloader::deleteDownloader()
+{
+    if (!m_downloader)
+        return;
+
     m_downloader->disconnect(this); // to avoid recursive call on abort()
 
     m_downloader->finish();
+
     m_downloader->deleteLater();
     m_downloader = nullptr;
+}
 
-    emit finished(success);
+void TaskDownloader::startDownloader()
+{
+    if (m_downloader) {
+        m_downloader->start();
+    }
 }

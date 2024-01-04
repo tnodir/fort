@@ -41,6 +41,15 @@ QVariantMap findDownloadableAsset(const QVariantList &assets)
 
 TaskUpdateChecker::TaskUpdateChecker(QObject *parent) : TaskDownloader(parent) { }
 
+QString TaskUpdateChecker::releaseText() const
+{
+    const QDateTime publishedTime = QDateTime::fromString(m_publishedAt, Qt::ISODate);
+
+    return "[" + m_releaseName + "](" + APP_UPDATES_URL + "/tag/v" + m_version + ") (*"
+            + publishedTime.toString("dd-MMM-yyyy hh:mm") + "*, "
+            + NetUtil::formatDataSize(m_downloadSize) + ")\n\n*Release Notes:*\n" + m_releaseNotes;
+}
+
 void TaskUpdateChecker::setupDownloader()
 {
     downloader()->setUrl(APP_UPDATES_API_URL);
@@ -100,13 +109,4 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     m_downloadSize = assetMap["size"].toInt();
 
     return !m_downloadUrl.isEmpty() && m_downloadSize != 0;
-}
-
-QString TaskUpdateChecker::releaseText() const
-{
-    const QDateTime publishedTime = QDateTime::fromString(m_publishedAt, Qt::ISODate);
-
-    return "[" + m_releaseName + "](" + APP_UPDATES_URL + "/tag/v" + m_version + ") (*"
-            + publishedTime.toString("dd-MMM-yyyy hh:mm") + "*, "
-            + NetUtil::formatDataSize(m_downloadSize) + ")\n\n*Release Notes:*\n" + m_releaseNotes;
 }

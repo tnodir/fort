@@ -17,14 +17,18 @@ public:
 protected:
     virtual void setupDownloader() = 0;
 
-signals:
-
 public slots:
     void run() override;
     void finish(bool success = false) override;
 
 protected slots:
     virtual void downloadFinished(bool success) = 0;
+
+private:
+    void createDownloader();
+    void deleteDownloader();
+
+    void startDownloader();
 
 private:
     NetDownloader *m_downloader = nullptr;
