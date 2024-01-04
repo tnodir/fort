@@ -5,6 +5,8 @@
 
 #include "servicemanageriface.h"
 
+#include <util/osutil.h>
+
 namespace {
 
 ServiceManagerIface *g_manager = nullptr;
@@ -33,6 +35,8 @@ void WINAPI serviceMain(DWORD argc, wchar_t *argv[])
 DWORD WINAPI serviceStart(void *arg)
 {
     Q_UNUSED(arg);
+
+    OsUtil::setCurrentThreadName("ServiceWorker");
 
     wchar_t name[2] = { 0 }; // ignored for SERVICE_WIN32_OWN_PROCESS
     SERVICE_TABLE_ENTRY table[] = { { name, serviceMain }, { nullptr, nullptr } };

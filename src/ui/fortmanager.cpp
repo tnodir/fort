@@ -152,6 +152,8 @@ void FortManager::initialize()
 {
     m_initialized = true;
 
+    OsUtil::setCurrentThreadName("Main");
+
     setupThreadPool();
     setupLogger();
 
