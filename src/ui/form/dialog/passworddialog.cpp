@@ -69,6 +69,9 @@ void PasswordDialog::setupUi()
 
     this->setLayout(layout);
 
+    // Focus
+    m_editPassword->setFocus();
+
     // Font
     this->setFont(WindowManager::defaultFont());
 
