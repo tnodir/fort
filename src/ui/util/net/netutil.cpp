@@ -143,8 +143,14 @@ QString NetUtil::formatDataSize1(qint64 bytes)
 QString NetUtil::formatSpeed(quint32 bitsPerSecond)
 {
     QString text = formatDataSize1(bitsPerSecond);
-    text.replace('B', 'b');
-    return text + QLatin1String("/s");
+
+    if (bitsPerSecond < 1024) {
+        text.replace("bytes", "b");
+    } else {
+        text.replace('B', 'b');
+    }
+
+    return text + QLatin1String("ps");
 }
 
 QString NetUtil::getHostName(const QString &address)

@@ -67,13 +67,13 @@ bool clearGraphData(
 }
 
 void adjustGraphData(
-        const QSharedPointer<QCPBarsDataContainer> &data, double unixTimeKey, quint32 &bytes)
+        const QSharedPointer<QCPBarsDataContainer> &data, double unixTimeKey, quint32 &bits)
 {
     const auto hi = data->constEnd() - 1;
 
     // Check existing key
     if (qFuzzyCompare(unixTimeKey, hi->mainKey())) {
-        bytes += quint32(hi->mainValue());
+        bits += quint32(hi->mainValue());
     }
 
     data->removeAfter(unixTimeKey);
@@ -401,13 +401,14 @@ void GraphWindow::addEmptyTraffic()
 void GraphWindow::addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint32 bytes)
 {
     auto data = graph->data();
+    quint32 bits = bytes * 8;
 
     if (!clearGraphData(data, rangeLowerKey, unixTimeKey)) {
-        adjustGraphData(data, unixTimeKey, bytes);
+        adjustGraphData(data, unixTimeKey, bits);
     }
 
     // Add data
-    data->add(QCPBarsData(unixTimeKey, bytes));
+    data->add(QCPBarsData(unixTimeKey, bits));
 }
 
 void GraphWindow::updateWindowTitleSpeed()
@@ -415,14 +416,14 @@ void GraphWindow::updateWindowTitleSpeed()
     if (windowFlags() & Qt::FramelessWindowHint)
         return;
 
-    const auto inBytes =
+    const auto inBits =
             m_graphIn->data()->isEmpty() ? 0 : (m_graphIn->data()->constEnd() - 1)->mainValue();
-    const auto outBytes =
+    const auto outBits =
             m_graphOut->data()->isEmpty() ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
-    setWindowTitle(QChar(0x2193) // ↓
-            + NetUtil::formatSpeed(quint32(inBytes)) + QLatin1Char(' ') + QChar(0x2191) // ↑
-            + NetUtil::formatSpeed(quint32(outBytes)));
+    setWindowTitle(QChar(0x02C5) // ˅
+            + NetUtil::formatSpeed(quint32(inBits)) + ' ' + QChar(0x02C4) // ˄
+            + NetUtil::formatSpeed(quint32(outBits)));
 }
 
 void GraphWindow::setWindowOpacityPercent(int percent)

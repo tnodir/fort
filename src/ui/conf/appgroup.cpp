@@ -170,12 +170,12 @@ QString AppGroup::menuLabel() const
     QString text = name();
 
     if (enabledSpeedLimitIn() != 0) {
-        text += QLatin1Char(' ') + QChar(0x2193) // ↓
+        text += QLatin1Char(' ') + QChar(0x02C5) // ˅
                 + NetUtil::formatSpeed(speedLimitIn() * 1024);
     }
 
     if (enabledSpeedLimitOut() != 0) {
-        text += QLatin1Char(' ') + QChar(0x2191) // ↑
+        text += QLatin1Char(' ') + QChar(0x02C4) // ˄
                 + NetUtil::formatSpeed(speedLimitOut() * 1024);
     }
 
