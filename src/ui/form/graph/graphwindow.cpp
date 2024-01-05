@@ -421,8 +421,8 @@ void GraphWindow::updateWindowTitleSpeed()
     const auto outBits =
             m_graphOut->data()->isEmpty() ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
-    setWindowTitle(QChar(0x02C5) // ˅
-            + NetUtil::formatSpeed(quint32(inBits)) + ' ' + QChar(0x02C4) // ˄
+    setWindowTitle(QChar(0x2193) // ↓
+            + NetUtil::formatSpeed(quint32(inBits)) + ' ' + QChar(0x2191) // ↑
             + NetUtil::formatSpeed(quint32(outBits)));
 }
 
