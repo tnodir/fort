@@ -149,16 +149,16 @@ void GraphWindow::setupUi()
     connect(m_plot, &GraphPlot::mouseDragEnd, this, &GraphWindow::onMouseDragEnd);
 
     // Axis
-    m_plot->xAxis->setVisible(false);
+    auto xAxis = m_plot->xAxis;
+    xAxis->setVisible(false);
 
     auto yAxis = m_plot->yAxis;
     yAxis->setVisible(true);
-    yAxis->setPadding(1);
     yAxis->setTickLabelPadding(2);
 
     // Axis Rect
     auto axisRect = m_plot->axisRect();
-    axisRect->setMinimumMargins(QMargins(1, 1, 1, 1));
+    axisRect->setMinimumMargins(QMargins(1, 2, 1, 1));
 
     // Axis Ticker
     QSharedPointer<AxisTickerSpeed> ticker(new AxisTickerSpeed());
