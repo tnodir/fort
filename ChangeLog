@@ -3,8 +3,8 @@ Fort Firewall ChangeLog
 v3.10.7-test2, 2024-01-05:
 - UI: Add QtBase translations.
 - UI: Programs: Native separators for FileDialog paths.
-- UI: Workaround to show initial dialog on WinPE
-- Driver: Use "BootFilter" initial flag from service's registry key.
+- UI: Workaround to show initial dialog on WinPE.
+- Driver: Use "HKLM\Software\Fort Firewall\BootFilter" initial flag from registry.
 - Set "NetworkProvider" group to services.
 
 v3.10.6, 2024-01-01:
