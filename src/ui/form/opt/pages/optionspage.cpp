@@ -547,7 +547,7 @@ void OptionsPage::setupLogBlocked()
         }
     });
 
-    m_cbLogBlocked->setFont(ControlUtil::fontDemiBold());
+    m_cbLogBlocked->setFont(ControlUtil::fontBold());
 }
 
 QLayout *OptionsPage::setupColumn2()

@@ -41,7 +41,7 @@ void AddressesColumn::setupUi()
 QLayout *AddressesColumn::setupHeaderLayout()
 {
     m_labelTitle = ControlUtil::createLabel();
-    m_labelTitle->setFont(ControlUtil::fontDemiBold());
+    m_labelTitle->setFont(ControlUtil::fontBold());
 
     // Use All
     m_cbUseAll = new QCheckBox();

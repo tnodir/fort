@@ -28,7 +28,7 @@ void AppsColumn::setupUi()
     m_icon->setMaximumSize(16, 16);
 
     m_labelTitle = ControlUtil::createLabel();
-    m_labelTitle->setFont(ControlUtil::fontDemiBold());
+    m_labelTitle->setFont(ControlUtil::fontBold());
     m_labelTitle->setFixedHeight(24);
 
     m_headerLayout->addWidget(m_icon);

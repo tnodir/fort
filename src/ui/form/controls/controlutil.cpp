@@ -282,10 +282,10 @@ QWidget *ControlUtil::wrapToScrollArea(QWidget *content, bool isBgTransparent)
     return c;
 }
 
-QFont ControlUtil::fontDemiBold()
+QFont ControlUtil::fontBold()
 {
     QFont font;
-    font.setWeight(QFont::DemiBold);
+    font.setBold(true);
     return font;
 }
 

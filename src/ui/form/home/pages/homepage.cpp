@@ -68,7 +68,7 @@ void HomePage::setupDriverBox()
 
     m_labelDriverMessage = ControlUtil::createLabel();
     m_labelDriverMessage->setWordWrap(true);
-    m_labelDriverMessage->setFont(ControlUtil::fontDemiBold());
+    m_labelDriverMessage->setFont(ControlUtil::fontBold());
 
     setupDriverIcon();
 

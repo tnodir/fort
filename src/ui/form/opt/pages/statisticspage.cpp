@@ -189,7 +189,7 @@ void StatisticsPage::setupLogStat()
         }
     });
 
-    m_cbLogStat->setFont(ControlUtil::fontDemiBold());
+    m_cbLogStat->setFont(ControlUtil::fontBold());
 }
 
 void StatisticsPage::setupLogStatNoFilter()
@@ -336,7 +336,7 @@ void StatisticsPage::setupLogBlockedIp()
         }
     });
 
-    m_cbLogBlockedIp->setFont(ControlUtil::fontDemiBold());
+    m_cbLogBlockedIp->setFont(ControlUtil::fontBold());
 
     m_cbLogAlertedBlockedIp =
             ControlUtil::createCheckBox(conf()->logAlertedBlockedIp(), [&](bool checked) {
@@ -378,7 +378,7 @@ void StatisticsPage::setupLogAllowedIp()
         }
     });
 
-    m_cbLogAllowedIp->setFont(ControlUtil::fontDemiBold());
+    m_cbLogAllowedIp->setFont(ControlUtil::fontBold());
 
     const auto logIpKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
     m_lscAllowedIpKeepCount = ControlUtil::createSpinCombo(

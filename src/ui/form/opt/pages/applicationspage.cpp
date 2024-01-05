@@ -371,7 +371,7 @@ void ApplicationsPage::setupGroupEnabled()
         pageAppGroupSetChecked(this, &AppGroup::setEnabled, checked, /*isFlag=*/true);
     });
 
-    m_cbGroupEnabled->setFont(ControlUtil::fontDemiBold());
+    m_cbGroupEnabled->setFont(ControlUtil::fontBold());
 }
 
 void ApplicationsPage::setupGroupPeriod()
