@@ -2,7 +2,16 @@
 #define DIALOGUTIL_H
 
 #include <QColor>
+#include <QMessageBox>
 #include <QObject>
+
+struct MessageBoxArg
+{
+    QMessageBox::Icon icon;
+    QMessageBox::StandardButtons buttons;
+    const QString text;
+    const QString title;
+};
 
 class DialogUtil
 {
@@ -16,6 +25,12 @@ public:
     static QString getExistingDir(const QString &title = QString());
 
     static QColor getColor(const QColor &initial = Qt::white, const QString &title = QString());
+
+    static void setupModalDialog(QWidget *box);
+
+    static QMessageBox *createMessageBox(const MessageBoxArg &ba, QWidget *parent = nullptr);
+
+    static void showDialog(QWidget *box);
 };
 
 #endif // DIALOGUTIL_H

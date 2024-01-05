@@ -2,7 +2,6 @@
 
 #include <QApplication>
 #include <QLoggingCategory>
-#include <QMessageBox>
 #include <QMouseEvent>
 #include <QProcess>
 #include <QPushButton>
@@ -13,6 +12,7 @@
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
+#include <form/dialog/dialogutil.h>
 #include <form/dialog/passworddialog.h>
 #include <form/graph/graphwindow.h>
 #include <form/home/homewindow.h>
@@ -38,27 +38,6 @@ void setupAppStyle()
 {
     QStyle *style = QStyleFactory::create("Fusion");
     QApplication::setStyle(style);
-}
-
-struct MessageBoxArg
-{
-    QMessageBox::Icon icon;
-    QMessageBox::StandardButtons buttons;
-    const QString text;
-    const QString title;
-};
-
-void setupModalDialog(QDialog *box)
-{
-    box->setWindowModality(box->parent() ? Qt::WindowModal : Qt::ApplicationModal);
-}
-
-QMessageBox *createMessageBox(const MessageBoxArg &ba, QWidget *parent = nullptr)
-{
-    auto box = new QMessageBox(ba.icon, ba.title, ba.text, ba.buttons, parent);
-    box->setAttribute(Qt::WA_DeleteOnClose);
-    setupModalDialog(box);
-    return box;
 }
 
 }
@@ -577,7 +556,7 @@ void WindowManager::showConfirmBox(const std::function<void()> &onConfirmed, con
 void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &onFinished,
         const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(
+    auto box = DialogUtil::createMessageBox(
             {
                     .icon = QMessageBox::Question,
                     .buttons = QMessageBox::Yes | QMessageBox::No,
@@ -594,12 +573,12 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
             },
             Qt::QueuedConnection);
 
-    WidgetWindow::showWidget(box);
+    DialogUtil::showDialog(box);
 }
 
 void WindowManager::showErrorDialog(const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(
+    auto box = DialogUtil::createMessageBox(
             {
                     .icon = QMessageBox::Warning,
                     .buttons = QMessageBox::Ok,
@@ -608,12 +587,12 @@ void WindowManager::showErrorDialog(const QString &text, const QString &title, Q
             },
             parent);
 
-    WidgetWindow::showWidget(box);
+    DialogUtil::showDialog(box);
 }
 
 void WindowManager::showInfoDialog(const QString &text, const QString &title, QWidget *parent)
 {
-    auto box = createMessageBox(
+    auto box = DialogUtil::createMessageBox(
             {
                     .icon = QMessageBox::Information,
                     .buttons = QMessageBox::Ok,
@@ -622,7 +601,7 @@ void WindowManager::showInfoDialog(const QString &text, const QString &title, QW
             },
             parent);
 
-    WidgetWindow::showWidget(box);
+    DialogUtil::showDialog(box);
 }
 
 bool WindowManager::showPasswordDialog(QString &password, int *unlockType)
@@ -630,9 +609,9 @@ bool WindowManager::showPasswordDialog(QString &password, int *unlockType)
     auto box = new PasswordDialog();
     QScopedPointer<PasswordDialog> deferBox(box);
 
-    setupModalDialog(box);
+    DialogUtil::setupModalDialog(box);
 
-    WidgetWindow::showWidget(box);
+    DialogUtil::showDialog(box);
 
     if (box->exec() != QDialog::Accepted)
         return false;
