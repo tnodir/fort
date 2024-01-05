@@ -586,9 +586,6 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
             },
             parent);
 
-    box->button(QMessageBox::Yes)->setText(tr("Yes"));
-    box->button(QMessageBox::No)->setText(tr("No"));
-
     connect(
             box, &QMessageBox::finished, this,
             [=](int result) {

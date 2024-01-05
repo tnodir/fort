@@ -1227,7 +1227,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Wildcard Paths:</source>
-        <translation type="unfinished"></translation>
+        <translation>Percorsi Wildcard:</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1740,14 +1740,6 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Chiudi la finestra Modifica programma già aperta e riprova.</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Sì</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>No</translation>
     </message>
 </context>
 <context>

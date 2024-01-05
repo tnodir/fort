@@ -1736,14 +1736,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Por favor, feche a janela Editar Programa já aberta e tente novamente.</translation>
     </message>
-    <message>
-        <source>Yes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation type="unfinished"></translation>
-    </message>
 </context>
 <context>
     <name>ZoneListModel</name>

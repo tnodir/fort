@@ -1741,14 +1741,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Bitte schließen Sie das bereits geöffnete Fenster zum Bearbeiten und versuchen Sie es erneut.</translation>
     </message>
-    <message>
-        <source>Yes</source>
-        <translation>Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Nein</translation>
-    </message>
 </context>
 <context>
     <name>ZoneListModel</name>

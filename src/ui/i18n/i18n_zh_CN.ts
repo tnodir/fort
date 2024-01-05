@@ -1739,14 +1739,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>请关闭已打开的编辑程序窗口，然后重试。</translation>
     </message>
-    <message>
-        <source>Yes</source>
-        <translation>是</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>否</translation>
-    </message>
 </context>
 <context>
     <name>ZoneListModel</name>

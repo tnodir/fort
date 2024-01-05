@@ -1741,14 +1741,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>이미 열려 있는 편집 프로그램 창을 닫고 다시 시도하세요.</translation>
     </message>
-    <message>
-        <source>Yes</source>
-        <translation>예</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>아니오</translation>
-    </message>
 </context>
 <context>
     <name>ZoneListModel</name>

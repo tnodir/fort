@@ -1741,14 +1741,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Zaprite že odprto okno za urejanje programa in poskusite znova.</translation>
     </message>
-    <message>
-        <source>Yes</source>
-        <translation>Da</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ne</translation>
-    </message>
 </context>
 <context>
     <name>ZoneListModel</name>
