@@ -2,12 +2,14 @@
 
 #include "fortutl.h"
 
+#include "../version/fort_version_l.h"
+
 #define FORT_UTL_POOL_TAG 'UwfF'
 
 #define FORT_MAX_FILE_SIZE (4 * 1024 * 1024)
 
 #define FORT_KEY_INFO_PATH_SIZE                                                                    \
-    (2 * sizeof(KEY_VALUE_FULL_INFORMATION) + (MAX_PATH * sizeof(WCHAR)))
+    (2 * sizeof(KEY_VALUE_PARTIAL_INFORMATION) + (MAX_PATH * sizeof(WCHAR)))
 
 #define FORT_KERNEL_STACK_SIZE (8 * 1024)
 
@@ -38,28 +40,50 @@ static NTSTATUS fort_string_new(ULONG len, PCWSTR src, PUNICODE_STRING outData)
     return STATUS_SUCCESS;
 }
 
-static NTSTATUS fort_reg_value(HANDLE regKey, PUNICODE_STRING valueName, PUNICODE_STRING outData)
+static NTSTATUS fort_reg_value_path(
+        HANDLE regKey, PUNICODE_STRING valueName, PUNICODE_STRING outData)
 {
     NTSTATUS status;
 
-    PKEY_VALUE_FULL_INFORMATION keyInfo =
+    PKEY_VALUE_PARTIAL_INFORMATION keyInfo =
             fort_mem_alloc(FORT_KEY_INFO_PATH_SIZE, FORT_UTL_POOL_TAG);
     if (keyInfo == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
     ULONG keyInfoSize = 0;
 
-    status = ZwQueryValueKey(regKey, valueName, KeyValueFullInformation, keyInfo,
+    status = ZwQueryValueKey(regKey, valueName, KeyValuePartialInformation, keyInfo,
             FORT_KEY_INFO_PATH_SIZE, &keyInfoSize);
 
     if (NT_SUCCESS(status)) {
-        const PUCHAR src = ((const PUCHAR) keyInfo + keyInfo->DataOffset);
+        const PUCHAR src = keyInfo->Data;
         const ULONG len = keyInfo->DataLength + sizeof(WCHAR); /* with terminating '\0' */
 
         status = fort_string_new(len, (PCWSTR) src, outData);
     }
 
     fort_mem_free(keyInfo, FORT_UTL_POOL_TAG);
+
+    return status;
+}
+
+static NTSTATUS fort_reg_value_dword(HANDLE regKey, PUNICODE_STRING valueName, PDWORD outData)
+{
+    NTSTATUS status;
+
+    UCHAR buf[sizeof(KEY_VALUE_PARTIAL_INFORMATION) + sizeof(DWORD)];
+    PKEY_VALUE_PARTIAL_INFORMATION keyInfo = (PVOID) buf;
+
+    ULONG keyInfoSize = 0;
+
+    status = ZwQueryValueKey(
+            regKey, valueName, KeyValuePartialInformation, keyInfo, sizeof(buf), &keyInfoSize);
+
+    if (NT_SUCCESS(status)) {
+        const PUCHAR src = keyInfo->Data;
+
+        *outData = *((PDWORD) src);
+    }
 
     return status;
 }
@@ -78,14 +102,14 @@ FORT_API NTSTATUS fort_driver_path(
     InitializeObjectAttributes(
             &objectAttr, regPath, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 
-    status = ZwOpenKey(&regKey, KEY_QUERY_VALUE, &objectAttr);
+    status = ZwOpenKey(&regKey, KEY_READ, &objectAttr);
     if (!NT_SUCCESS(status))
         return status;
 
     UNICODE_STRING valueName;
     RtlInitUnicodeString(&valueName, L"ImagePath");
 
-    status = fort_reg_value(regKey, &valueName, outPath);
+    status = fort_reg_value_path(regKey, &valueName, outPath);
 
     ZwClose(regKey);
 #else
@@ -95,6 +119,35 @@ FORT_API NTSTATUS fort_driver_path(
 #endif
 
     return status;
+}
+
+FORT_API DWORD fort_reg_flag(PCWSTR name)
+{
+    NTSTATUS status;
+
+    UNICODE_STRING regPath;
+    RtlInitUnicodeString(&regPath, L"\\Registry\\Machine\\Software\\" APP_NAME_L);
+
+    HANDLE regKey;
+    OBJECT_ATTRIBUTES objectAttr;
+
+    InitializeObjectAttributes(
+            &objectAttr, &regPath, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
+
+    status = ZwOpenKey(&regKey, KEY_READ, &objectAttr);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    UNICODE_STRING valueName;
+    RtlInitUnicodeString(&valueName, name);
+
+    DWORD flagValue = 0;
+
+    status = fort_reg_value_dword(regKey, &valueName, &flagValue);
+
+    ZwClose(regKey);
+
+    return flagValue;
 }
 
 static void fort_system_drive_init(PCUNICODE_STRING path)

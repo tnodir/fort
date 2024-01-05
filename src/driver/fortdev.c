@@ -11,6 +11,7 @@
 #include "fortps.h"
 #include "fortscb.h"
 #include "forttrace.h"
+#include "fortutl.h"
 
 static PFORT_DEVICE g_device = NULL;
 
@@ -358,7 +359,12 @@ static NTSTATUS fort_device_register_provider(void)
     if (!NT_SUCCESS(status))
         return status;
 
-    const FORT_PROV_BOOT_CONF boot_conf = fort_prov_get_boot_conf(engine);
+    FORT_PROV_BOOT_CONF boot_conf = { .v = 0 };
+
+    if (!fort_prov_get_boot_conf(engine, &boot_conf)) {
+        // Default flags from Registry
+        boot_conf.boot_filter = fort_reg_flag(L"BootFilter");
+    }
 
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER, boot_conf.boot_filter);
     fort_device_flag_set(

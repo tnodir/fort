@@ -12,6 +12,8 @@ extern "C" {
 FORT_API NTSTATUS fort_driver_path(
         PDRIVER_OBJECT driver, PUNICODE_STRING regPath, PUNICODE_STRING outPath);
 
+FORT_API DWORD fort_reg_flag(PCWSTR name);
+
 FORT_API void fort_path_prefix_adjust(PUNICODE_STRING path);
 
 FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING regPath);

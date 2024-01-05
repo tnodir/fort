@@ -258,16 +258,13 @@ typedef struct
     short Weekday; // range [0..6] == [Sunday..Saturday]
 } TIME_FIELDS, *PTIME_FIELDS;
 
-typedef struct _KEY_VALUE_FULL_INFORMATION
+typedef struct _KEY_VALUE_PARTIAL_INFORMATION
 {
     ULONG TitleIndex;
     ULONG Type;
-    ULONG DataOffset;
     ULONG DataLength;
-    ULONG NameLength;
-    WCHAR Name[1]; // Variable size
-    // Data[1]; // Variable size data not declared
-} KEY_VALUE_FULL_INFORMATION, *PKEY_VALUE_FULL_INFORMATION;
+    _Field_size_bytes_(DataLength) UCHAR Data[1]; // Variable size
+} KEY_VALUE_PARTIAL_INFORMATION, *PKEY_VALUE_PARTIAL_INFORMATION;
 
 typedef enum _KEY_VALUE_INFORMATION_CLASS {
     KeyValueBasicInformation,

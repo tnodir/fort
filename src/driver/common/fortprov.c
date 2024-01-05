@@ -557,23 +557,23 @@ FORT_API DWORD fort_prov_trans_register(const FORT_PROV_BOOT_CONF boot_conf)
     return status;
 }
 
-FORT_API FORT_PROV_BOOT_CONF fort_prov_get_boot_conf(HANDLE engine)
+FORT_API BOOL fort_prov_get_boot_conf(HANDLE engine, PFORT_PROV_BOOT_CONF boot_conf)
 {
-    FORT_PROV_BOOT_CONF boot_conf = { .v = 0 };
-
     FWPM_PROVIDER0 *provider;
 
     if (!FwpmProviderGetByKey0(engine, (GUID *) &FORT_GUID_PROVIDER, &provider)) {
-        boot_conf.boot_filter = (provider->flags & FWPM_PROVIDER_FLAG_PERSISTENT);
+        boot_conf->boot_filter = (provider->flags & FWPM_PROVIDER_FLAG_PERSISTENT);
 
         if (provider->providerData.size == sizeof(FORT_PROV_BOOT_CONF)) {
-            RtlCopyMemory(&boot_conf, provider->providerData.data, sizeof(FORT_PROV_BOOT_CONF));
+            RtlCopyMemory(boot_conf, provider->providerData.data, sizeof(FORT_PROV_BOOT_CONF));
         }
 
         FwpmFreeMemory0((void **) &provider);
+
+        return TRUE;
     }
 
-    return boot_conf;
+    return FALSE;
 }
 
 FORT_API DWORD fort_prov_flow_register(HANDLE engine, BOOL filter_packets)
