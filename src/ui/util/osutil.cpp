@@ -164,6 +164,8 @@ bool OsUtil::setCurrentThreadName(const QString &name)
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
     const HRESULT hr = SetThreadDescription(GetCurrentThread(), (PCWSTR) name.utf16());
     return SUCCEEDED(hr);
+#else
+    return false;
 #endif
 }
 
