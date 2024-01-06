@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.1" language="zh_CN" sourcelanguage="en_US">
 <context>
     <name>CloseButton</name>
     <message>
@@ -16,12 +16,10 @@
     </message>
     <message>
         <source>&amp;Step up</source>
-        <translatorcomment>这是数值框的加减按钮</translatorcomment>
         <translation>升高(&amp;S)</translation>
     </message>
     <message>
         <source>Step &amp;down</source>
-        <translatorcomment>这是数值框的加减按钮</translatorcomment>
         <translation>降低(&amp;D)</translation>
     </message>
 </context>
@@ -29,7 +27,6 @@
     <name>QColorDialog</name>
     <message>
         <source>Hu&amp;e:</source>
-        <translatorcomment>HSV 模型中的 Hue 一般按照 PS 习惯翻译为“色相”。虽然 Hue 也有翻译成色调的，但那更倾向于传统绘画，不应该用在 HSV 这种显然是数字色彩的语境中。“色相”是数码美术界对 Hue 的通用翻译，此翻译已经过色彩管理的多本大学教材核对。</translatorcomment>
         <translation>色相(&amp;E)：</translation>
     </message>
     <message>
@@ -38,22 +35,18 @@
     </message>
     <message>
         <source>&amp;Val:</source>
-        <translatorcomment>HSV 模型中的 Value 一般按照 PS 习惯翻译为明度</translatorcomment>
         <translation>明度(&amp;V)：</translation>
     </message>
     <message>
         <source>&amp;Red:</source>
-        <translatorcomment>通道名称</translatorcomment>
         <translation>红(&amp;R)：</translation>
     </message>
     <message>
         <source>&amp;Green:</source>
-        <translatorcomment>通道名称</translatorcomment>
         <translation>绿(&amp;G)：</translation>
     </message>
     <message>
         <source>Bl&amp;ue:</source>
-        <translatorcomment>通道名称</translatorcomment>
         <translation>蓝(&amp;U)：</translation>
     </message>
     <message>
@@ -71,8 +64,22 @@ Press ESC to cancel</source>
 按 ESC 键取消</translation>
     </message>
     <message>
+        <source>&amp;Pick Screen Color</source>
+        <translation>拾取屏幕颜色(&amp;P)</translation>
+    </message>
+    <message>
+        <source>Cursor at %1, %2, color: %3
+Press ESC to cancel</source>
+        <translation>光标位于 %1, %2，颜色：%3
+按 ESC 键取消</translation>
+    </message>
+    <message>
         <source>Select Color</source>
         <translation>选择颜色</translation>
+    </message>
+    <message>
+        <source>Pick Screen Color</source>
+        <translation>拾取屏幕颜色</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>
@@ -85,10 +92,6 @@ Press ESC to cancel</source>
     <message>
         <source>&amp;Add to Custom Colors</source>
         <translation>添加到自定义颜色(&amp;A)</translation>
-    </message>
-    <message>
-        <source>&amp;Pick Screen Color</source>
-        <translation>拾取屏幕颜色(&amp;P)</translation>
     </message>
 </context>
 <context>

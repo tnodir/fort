@@ -94,6 +94,18 @@ Press ESC to cancel</source>
     </message>
 </context>
 <context>
+    <name>QKeySequenceEdit</name>
+    <message>
+        <source>Press shortcut</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1, ...</source>
+        <extracomment>This text is an &quot;unfinished&quot; shortcut, expands like &quot;Ctrl+A, ...&quot;</extracomment>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>QLineEdit</name>
     <message>
         <source>&amp;Undo</source>

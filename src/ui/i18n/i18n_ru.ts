@@ -568,6 +568,10 @@
         <source>Colors</source>
         <translation>Цвета</translation>
     </message>
+    <message>
+        <source>Hide on close</source>
+        <translation>Скрыть при закрытии</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -858,7 +862,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
-        <translation>Запускать Fort Firewall как Сервис в фоне</translation>
+        <translation>Запускать Fort Firewall как Службу в фоне</translation>
     </message>
     <message>
         <source>Tray</source>
@@ -942,7 +946,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Disable Service controls</source>
-        <translation>Отключить управление Сервисом</translation>
+        <translation>Отключить управление Службой</translation>
     </message>
     <message>
         <source>Check password on Uninstall</source>
@@ -1023,6 +1027,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Maximum count of Groups in menu:</source>
         <translation>Макс. количество групп в меню:</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Служба Windows</translation>
     </message>
 </context>
 <context>
@@ -1274,7 +1282,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Services</source>
-        <translation>Сервисы</translation>
+        <translation>Службы</translation>
     </message>
     <message>
         <source>Purge Obsolete</source>
@@ -1316,11 +1324,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>RpcManager</name>
     <message>
         <source>Service isn&apos;t available.</source>
-        <translation>Сервис недоступен.</translation>
+        <translation>Служба недоступна.</translation>
     </message>
     <message>
         <source>Service isn&apos;t responding.</source>
-        <translation>Сервис не отвечает.</translation>
+        <translation>Служба не отвечает.</translation>
     </message>
 </context>
 <context>
@@ -1370,7 +1378,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>ServiceListModel</name>
     <message>
         <source>Service Name</source>
-        <translation>Имя сервиса</translation>
+        <translation>Имя службы</translation>
     </message>
     <message>
         <source>Display Name</source>
@@ -1405,11 +1413,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Services</source>
-        <translation>Сервисы</translation>
+        <translation>Службы</translation>
     </message>
     <message>
         <source>Please restart the computer to reload changed services!</source>
-        <translation>Перезагрузите компьютер, чтобы обновить изменённые сервисы!</translation>
+        <translation>Перезагрузите компьютер, чтобы обновить изменённые службы!</translation>
     </message>
 </context>
 <context>

@@ -568,6 +568,10 @@
         <source>Colors</source>
         <translation>颜色</translation>
     </message>
+    <message>
+        <source>Hide on close</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1021,6 +1025,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Maximum count of Groups in menu:</source>
         <translation>菜单中最大组的数量：</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>添加Windows服务</translation>
     </message>
 </context>
 <context>

@@ -568,6 +568,10 @@
         <source>Colors</source>
         <translation>색상</translation>
     </message>
+    <message>
+        <source>Hide on close</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1023,6 +1027,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Maximum count of Groups in menu:</source>
         <translation>메뉴에서 그룹의 최대 수:</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Windows 서비스</translation>
     </message>
 </context>
 <context>

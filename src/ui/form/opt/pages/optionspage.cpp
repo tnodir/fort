@@ -145,7 +145,8 @@ void OptionsPage::onRetranslateUi()
     m_labelStartMode->setText(tr("Auto-run:"));
     retranslateComboStartMode();
 
-    m_cbService->setText(tr("Run Fort Firewall as a Service in background"));
+    m_cbService->setText(tr("Windows Service"));
+    m_cbService->setToolTip(tr("Run Fort Firewall as a Service in background"));
 
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
     m_cbBlockTraffic->setText(tr("Block All Traffic"));

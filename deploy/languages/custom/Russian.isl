@@ -7,7 +7,7 @@ LanguageCodePage=1251
 
 ; *** Fort Firewall messages
 WindowsExplorerIntegration=Интеграция с Windows Explorer
-WindowsService=Windows Service
+WindowsService=Служба Windows
 Portable=Portable
 UninstallPassword=Деинсталляция пароля
 UninstallPasswordOK=OK

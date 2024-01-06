@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="fr_FR">
+<TS version="2.1" language="fr_FR" sourcelanguage="en_US">
 <context>
     <name>CloseButton</name>
     <message>
@@ -64,8 +64,22 @@ Press ESC to cancel</source>
 Appuyer sur Échap pour annuler</translation>
     </message>
     <message>
+        <source>&amp;Pick Screen Color</source>
+        <translation>&amp;Sélectionner une couleur à l&apos;écran</translation>
+    </message>
+    <message>
+        <source>Cursor at %1, %2, color: %3
+Press ESC to cancel</source>
+        <translation>Curseur à %1, %2, couleur : %3
+Appuyez sur ESC pour annuler</translation>
+    </message>
+    <message>
         <source>Select Color</source>
         <translation>Sélectionner une couleur</translation>
+    </message>
+    <message>
+        <source>Pick Screen Color</source>
+        <translation>Choisir la couleur de l&apos;écran</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>
@@ -78,10 +92,6 @@ Appuyer sur Échap pour annuler</translation>
     <message>
         <source>&amp;Add to Custom Colors</source>
         <translation>&amp;Ajouter aux couleurs personnalisées</translation>
-    </message>
-    <message>
-        <source>&amp;Pick Screen Color</source>
-        <translation>&amp;Sélectionner une couleur à l&apos;écran</translation>
     </message>
 </context>
 <context>

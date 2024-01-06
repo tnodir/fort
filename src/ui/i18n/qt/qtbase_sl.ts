@@ -1,237 +1,250 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="sl_SI">
+<TS version="2.1" language="sl_SI" sourcelanguage="en_US">
 <context>
     <name>CloseButton</name>
     <message>
         <source>Close Tab</source>
-        <translation></translation>
+        <translation>Zapri zavihek</translation>
     </message>
 </context>
 <context>
     <name>QAbstractSpinBox</name>
     <message>
         <source>&amp;Select All</source>
-        <translation></translation>
+        <translation>Izberi &amp;vse</translation>
     </message>
     <message>
         <source>&amp;Step up</source>
-        <translation></translation>
+        <translation>Us&amp;tavi vse</translation>
     </message>
     <message>
         <source>Step &amp;down</source>
-        <translation></translation>
+        <translation>Korak nav&amp;zdol</translation>
     </message>
 </context>
 <context>
     <name>QColorDialog</name>
     <message>
         <source>Hu&amp;e:</source>
-        <translation></translation>
+        <translation>O&amp;dtenek:</translation>
     </message>
     <message>
         <source>&amp;Sat:</source>
-        <translation></translation>
+        <translation>Na&amp;s:</translation>
     </message>
     <message>
         <source>&amp;Val:</source>
-        <translation></translation>
+        <translation>&amp;Vred:</translation>
     </message>
     <message>
         <source>&amp;Red:</source>
-        <translation></translation>
+        <translation>&amp;Rdeči:</translation>
     </message>
     <message>
         <source>&amp;Green:</source>
-        <translation></translation>
+        <translation>&amp;Zeleni:</translation>
     </message>
     <message>
         <source>Bl&amp;ue:</source>
-        <translation></translation>
+        <translation>&amp;Moder:</translation>
     </message>
     <message>
         <source>A&amp;lpha channel:</source>
-        <translation></translation>
+        <translation>A&amp;lfa kanal:</translation>
     </message>
     <message>
         <source>&amp;HTML:</source>
-        <translation></translation>
+        <translation>&amp;HTML:</translation>
     </message>
     <message>
         <source>Cursor at %1, %2
 Press ESC to cancel</source>
-        <translation>Cursore su %1, %2
-Premi ESC per annullare</translation>
+        <translation>Kazalec na %1, %2
+Pritisnite ESC za preklic</translation>
     </message>
     <message>
         <source>&amp;Pick Screen Color</source>
-        <translation></translation>
+        <translation>Iz&amp;beri barvo zaslona</translation>
     </message>
     <message>
         <source>Cursor at %1, %2, color: %3
 Press ESC to cancel</source>
-        <translation></translation>
+        <translation>Kazalec na %1, %2, barva: %3
+Pritisnite ESC za preklic</translation>
     </message>
     <message>
         <source>Select Color</source>
-        <translation></translation>
+        <translation>Izberi barvo</translation>
     </message>
     <message>
         <source>Pick Screen Color</source>
-        <translation></translation>
+        <translation>Izberi barvo zaslona</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>
-        <translation></translation>
+        <translation>Os&amp;novne barve</translation>
     </message>
     <message>
         <source>&amp;Custom colors</source>
-        <translation></translation>
+        <translation>Barve po &amp;meri</translation>
     </message>
     <message>
         <source>&amp;Add to Custom Colors</source>
+        <translation>&amp;Dodaj v Barve po meri</translation>
+    </message>
+</context>
+<context>
+    <name>QKeySequenceEdit</name>
+    <message>
+        <source>Press shortcut</source>
         <translation></translation>
+    </message>
+    <message>
+        <source>%1, ...</source>
+        <extracomment>This text is an &quot;unfinished&quot; shortcut, expands like &quot;Ctrl+A, ...&quot;</extracomment>
+        <translation>%1, …</translation>
     </message>
 </context>
 <context>
     <name>QLineEdit</name>
     <message>
         <source>&amp;Undo</source>
-        <translation></translation>
+        <translation>Razve&amp;ljavi</translation>
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation></translation>
+        <translation>&amp;Povrni</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
-        <translation></translation>
+        <translation>Iz&amp;reži</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation></translation>
+        <translation>&amp;Kopiraj</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
-        <translation></translation>
+        <translation>&amp;Prilepi</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation></translation>
+        <translation>Izbriši</translation>
     </message>
     <message>
         <source>Select All</source>
-        <translation></translation>
+        <translation>Izberi vse</translation>
     </message>
 </context>
 <context>
     <name>QPlatformTheme</name>
     <message>
         <source>OK</source>
-        <translation></translation>
+        <translation>Vredu</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation></translation>
+        <translation>Shrani</translation>
     </message>
     <message>
         <source>Save All</source>
-        <translation></translation>
+        <translation>Shrani vse</translation>
     </message>
     <message>
         <source>Open</source>
-        <translation></translation>
+        <translation>Odpri</translation>
     </message>
     <message>
         <source>&amp;Yes</source>
-        <translation></translation>
+        <translation>&amp;Da</translation>
     </message>
     <message>
         <source>Yes to &amp;All</source>
-        <translation></translation>
+        <translation>Da za &amp;vse</translation>
     </message>
     <message>
         <source>&amp;No</source>
-        <translation></translation>
+        <translation>&amp;Ne</translation>
     </message>
     <message>
         <source>N&amp;o to All</source>
-        <translation></translation>
+        <translation>N&amp;e za vse</translation>
     </message>
     <message>
         <source>Abort</source>
-        <translation></translation>
+        <translation>Prekini</translation>
     </message>
     <message>
         <source>Retry</source>
-        <translation></translation>
+        <translation>Ponovi</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation></translation>
+        <translation>Prezri</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation></translation>
+        <translation>Zapri</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation></translation>
+        <translation>Prekliči</translation>
     </message>
     <message>
         <source>Discard</source>
-        <translation></translation>
+        <translation>Zavrzi</translation>
     </message>
     <message>
         <source>Help</source>
-        <translation></translation>
+        <translation>Pomoč</translation>
     </message>
     <message>
         <source>Apply</source>
-        <translation></translation>
+        <translation>Uporabi</translation>
     </message>
     <message>
         <source>Reset</source>
-        <translation></translation>
+        <translation>Ponastavi</translation>
     </message>
     <message>
         <source>Restore Defaults</source>
-        <translation></translation>
+        <translation>Obnovi na privzeto</translation>
     </message>
 </context>
 <context>
     <name>QWidgetTextControl</name>
     <message>
         <source>&amp;Undo</source>
-        <translation></translation>
+        <translation>Razve&amp;ljavi</translation>
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation></translation>
+        <translation>&amp;Povrni</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
-        <translation></translation>
+        <translation>Iz&amp;reži</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation></translation>
+        <translation>&amp;Kopiraj</translation>
     </message>
     <message>
         <source>Copy &amp;Link Location</source>
-        <translation></translation>
+        <translation>Kopiraj m&amp;esto povezave</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
-        <translation></translation>
+        <translation type="unfinished">&amp;Paste</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation></translation>
+        <translation type="unfinished">Delete</translation>
     </message>
     <message>
         <source>Select All</source>
-        <translation></translation>
+        <translation type="unfinished">Select All</translation>
     </message>
 </context>
 </TS>

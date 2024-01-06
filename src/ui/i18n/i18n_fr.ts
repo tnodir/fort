@@ -568,6 +568,10 @@
         <source>Colors</source>
         <translation>Couleurs</translation>
     </message>
+    <message>
+        <source>Hide on close</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1023,6 +1027,10 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <message>
         <source>Maximum count of Groups in menu:</source>
         <translation>Nombre maximum de groupes dans le menu :</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Service Windows</translation>
     </message>
 </context>
 <context>

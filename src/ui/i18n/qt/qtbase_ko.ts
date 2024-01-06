@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ko">
+<TS version="2.1" language="ko_KR" sourcelanguage="en_US">
 <context>
     <name>CloseButton</name>
     <message>
@@ -68,8 +68,17 @@ ESC 키를 누르면 취소합니다</translation>
         <translation>화면 색상 선택(&amp;P)</translation>
     </message>
     <message>
+        <source>Cursor at %1, %2, color: %3
+Press ESC to cancel</source>
+        <translation>%1, %2, 색상: %3의 커서</translation>
+    </message>
+    <message>
         <source>Select Color</source>
         <translation>색 선택</translation>
+    </message>
+    <message>
+        <source>Pick Screen Color</source>
+        <translation>화면 색상 선택</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>

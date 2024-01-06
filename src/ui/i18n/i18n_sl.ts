@@ -568,6 +568,10 @@
         <source>Colors</source>
         <translation>Barve</translation>
     </message>
+    <message>
+        <source>Hide on close</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1023,6 +1027,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Maximum count of Groups in menu:</source>
         <translation>Največje število skupin v meniju:</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Windows storitev</translation>
     </message>
 </context>
 <context>
