@@ -126,7 +126,12 @@ bool ControlManager::postCommand(Control::Command command, const QVariantList &a
         return false;
 
     // Send data
-    return w.sendCommand(command, args) && w.waitForSent();
+    if (!w.sendCommand(command, args))
+        return false;
+
+    w.waitForSent();
+
+    return true;
 }
 
 void ControlManager::onNewConnection()
