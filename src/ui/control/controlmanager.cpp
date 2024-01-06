@@ -112,6 +112,8 @@ bool ControlManager::processCommandClient()
     if (args.isEmpty())
         return false;
 
+    OsUtil::allowOtherForegroundWindows(); // let the running instance to activate a window
+
     return postCommand(command, args);
 }
 

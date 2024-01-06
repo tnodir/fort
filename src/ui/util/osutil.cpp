@@ -174,3 +174,8 @@ void OsUtil::setThreadIsBusy(bool on)
     // Works correct only on Windows 11+
     SetThreadExecutionState(ES_CONTINUOUS | (on ? ES_SYSTEM_REQUIRED : 0));
 }
+
+bool OsUtil::allowOtherForegroundWindows()
+{
+    return AllowSetForegroundWindow(ASFW_ANY);
+}

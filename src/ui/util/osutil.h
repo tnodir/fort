@@ -38,8 +38,9 @@ public:
     static void writeToConsole(const QString &line);
 
     static bool setCurrentThreadName(const QString &name);
-
     static void setThreadIsBusy(bool on);
+
+    static bool allowOtherForegroundWindows();
 };
 
 #endif // OSUTIL_H

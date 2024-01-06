@@ -18,6 +18,7 @@ void WidgetWindow::showWidget(QWidget *w, bool activate)
     if (w->isMinimized()) {
         w->setWindowState(w->windowState() ^ Qt::WindowMinimized);
     }
+
     w->show();
     w->raise();
 
