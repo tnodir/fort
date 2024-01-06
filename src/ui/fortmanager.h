@@ -46,7 +46,7 @@ private:
     bool setupDriver();
     void closeDriver();
 
-    void setupPortableDriver();
+    void checkInstallDriver();
 
     void setupEnvManager();
     void setupConfManager();

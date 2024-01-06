@@ -169,7 +169,7 @@ void FortManager::initialize()
     setupDriver();
     loadConf();
 
-    setupPortableDriver();
+    checkInstallDriver();
 }
 
 void FortManager::setupThreadPool()
@@ -311,7 +311,7 @@ void FortManager::closeDriver()
     QCoreApplication::sendPostedEvents(this);
 }
 
-void FortManager::setupPortableDriver()
+void FortManager::checkInstallDriver()
 {
     auto driverManager = IoC<DriverManager>();
 
@@ -320,8 +320,8 @@ void FortManager::setupPortableDriver()
 
     const auto settings = IoC<FortSettings>();
 
-    const bool canInstallDriver =
-            settings->isPortable() && settings->isMaster() && settings->isUserAdmin();
+    const bool canInstallDriver = (settings->canInstallDriver() || settings->isPortable())
+            && settings->isMaster() && settings->isUserAdmin();
 
     if (!canInstallDriver)
         return;

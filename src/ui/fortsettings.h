@@ -28,6 +28,7 @@ public:
 
     bool isDefaultProfilePath() const { return m_isDefaultProfilePath; }
     bool noCache() const { return m_noCache; }
+    bool canInstallDriver() const { return m_canInstallDriver; }
 
     bool isService() const { return m_isService; }
     bool hasService() const { return m_hasService; }
@@ -108,6 +109,7 @@ private:
 private:
     uint m_isDefaultProfilePath : 1 = false;
     uint m_noCache : 1 = false;
+    uint m_canInstallDriver : 1 = false;
     uint m_isService : 1 = false;
     uint m_hasService : 1 = false;
     uint m_isUserAdmin : 1 = false;
