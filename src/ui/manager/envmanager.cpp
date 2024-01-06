@@ -3,11 +3,12 @@
 #include <QRegularExpression>
 #include <QSettings>
 
+#include <fortcompat.h>
 #include <util/fileutil.h>
 
 EnvManager::EnvManager(QObject *parent) : QObject(parent)
 {
-    setCachedEnvVar(envFortHome(), FileUtil::appBinLocation());
+    setupDefaultKeys();
 }
 
 QString EnvManager::expandString(const QString &text)
@@ -18,22 +19,42 @@ QString EnvManager::expandString(const QString &text)
 void EnvManager::clearCache()
 {
     m_cache.clear();
+
+    setupDefaultKeys();
 }
 
 void EnvManager::onEnvironmentChanged()
 {
+    if (checkEnvironmentChanged()) {
+        clearCache();
+
+        emit environmentUpdated();
+    }
+}
+
+bool EnvManager::checkEnvironmentChanged() const
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+    for (const auto &[key, value] : asConst(m_cache).asKeyValueRange()) {
+#else
     auto it = m_cache.constBegin();
     for (; it != m_cache.constEnd(); ++it) {
         const auto key = it.key();
         const auto value = it.value();
+#endif
 
         const auto newValue = readEnvVar(key);
 
-        if (value != newValue) {
-            emit environmentUpdated();
-            break;
-        }
+        if (value != newValue)
+            return true;
     }
+
+    return false;
+}
+
+void EnvManager::setupDefaultKeys()
+{
+    setCachedEnvVar(envFortHome(), FileUtil::appBinLocation());
 }
 
 QString EnvManager::expandStringRecursive(const QString &text, quint16 callLevel)
@@ -79,11 +100,6 @@ QString EnvManager::envVar(const QString &key)
 void EnvManager::setCachedEnvVar(const QString &key, const QVariant &value)
 {
     m_cache.insert(key, value);
-}
-
-QString EnvManager::envFortHome()
-{
-    return "FORTHOME";
 }
 
 QVariant EnvManager::readEnvVar(const QString &key)
