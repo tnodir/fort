@@ -92,6 +92,11 @@ GraphWindow::GraphWindow(QWidget *parent) :
     setMinimumSize(QSize(30, 10));
 }
 
+bool GraphWindow::deleteOnClose() const
+{
+    return !iniUser()->graphWindowHideOnClose();
+}
+
 ConfManager *GraphWindow::confManager() const
 {
     return IoC<ConfManager>();

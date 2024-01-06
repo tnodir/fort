@@ -34,6 +34,7 @@ private:
 
     QToolButton *m_btResetToDefaults = nullptr;
 
+    QCheckBox *m_cbGraphHideOnClose = nullptr;
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;
     QCheckBox *m_cbGraphFrameless = nullptr;
     QCheckBox *m_cbGraphClickThrough = nullptr;

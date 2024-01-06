@@ -40,6 +40,11 @@ void setupAppStyle()
     QApplication::setStyle(style);
 }
 
+inline bool isWindowVisible(WidgetWindow *w)
+{
+    return w && w->isVisible();
+}
+
 }
 
 WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
@@ -235,8 +240,7 @@ void WindowManager::showHomeWindow()
 
 void WindowManager::closeHomeWindow()
 {
-    if (m_homeWindow) {
-        closeWindow(m_homeWindow);
+    if (closeWindow(m_homeWindow)) {
         m_homeWindow = nullptr;
     }
 }
@@ -276,8 +280,7 @@ void WindowManager::showProgramsWindow()
 
 void WindowManager::closeProgramsWindow()
 {
-    if (m_progWindow) {
-        closeWindow(m_progWindow);
+    if (closeWindow(m_progWindow)) {
         m_progWindow = nullptr;
     }
 }
@@ -311,10 +314,8 @@ void WindowManager::showOptionsWindow()
 
 void WindowManager::closeOptionsWindow()
 {
-    if (m_optWindow) {
+    if (closeWindow(m_optWindow)) {
         m_optWindow->cancelChanges();
-
-        closeWindow(m_optWindow);
         m_optWindow = nullptr;
     }
 }
@@ -345,8 +346,7 @@ void WindowManager::showPoliciesWindow()
 
 void WindowManager::closePoliciesWindow()
 {
-    if (m_policiesWindow) {
-        closeWindow(m_policiesWindow);
+    if (closeWindow(m_policiesWindow)) {
         m_policiesWindow = nullptr;
     }
 }
@@ -365,8 +365,7 @@ void WindowManager::showStatisticsWindow()
 
 void WindowManager::closeStatisticsWindow()
 {
-    if (m_statWindow) {
-        closeWindow(m_statWindow);
+    if (closeWindow(m_statWindow)) {
         m_statWindow = nullptr;
     }
 }
@@ -394,8 +393,7 @@ void WindowManager::showServicesWindow()
 
 void WindowManager::closeServicesWindow()
 {
-    if (m_servicesWindow) {
-        closeWindow(m_servicesWindow);
+    if (closeWindow(m_servicesWindow)) {
         m_servicesWindow = nullptr;
     }
 }
@@ -414,8 +412,7 @@ void WindowManager::showZonesWindow()
 
 void WindowManager::closeZonesWindow()
 {
-    if (m_zonesWindow) {
-        closeWindow(m_zonesWindow);
+    if (closeWindow(m_zonesWindow)) {
         m_zonesWindow = nullptr;
     }
 }
@@ -431,18 +428,17 @@ void WindowManager::showGraphWindow()
 
 void WindowManager::closeGraphWindow()
 {
-    if (m_graphWindow) {
-        closeWindow(m_graphWindow);
+    if (closeWindow(m_graphWindow)) {
         m_graphWindow = nullptr;
     }
 }
 
 void WindowManager::switchGraphWindow()
 {
-    if (!m_graphWindow) {
-        showGraphWindow();
-    } else {
+    if (isWindowVisible(m_graphWindow)) {
         closeGraphWindow();
+    } else {
+        showGraphWindow();
     }
 }
 
@@ -651,9 +647,11 @@ void WindowManager::showWindow(WidgetWindow *w, bool activate)
     windowOpened(w->windowCode());
 }
 
-void WindowManager::closeWindow(WidgetWindow *w)
+bool WindowManager::closeWindow(WidgetWindow *w)
 {
-    Q_ASSERT(w);
+    if (!w) {
+        return false;
+    }
 
     if (w->isVisible()) {
         w->saveWindowState(m_isAppQuitting);
@@ -666,7 +664,12 @@ void WindowManager::closeWindow(WidgetWindow *w)
         }
     }
 
-    w->deleteLater();
+    if (w->deleteOnClose()) {
+        w->deleteLater();
+        return true;
+    }
+
+    return false;
 }
 
 void WindowManager::windowOpened(quint32 code)

@@ -22,6 +22,7 @@ public:
     explicit GraphWindow(QWidget *parent = nullptr);
 
     quint32 windowCode() const override { return WindowGraph; }
+    bool deleteOnClose() const override;
 
     ConfManager *confManager() const;
     FirewallConf *conf() const;

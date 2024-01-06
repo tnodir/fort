@@ -13,6 +13,7 @@
 #include <form/controls/labelcolor.h>
 #include <form/controls/labelspin.h>
 #include <form/opt/optionscontroller.h>
+#include <user/iniuser.h>
 #include <util/iconcache.h>
 
 GraphPage::GraphPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
@@ -26,6 +27,8 @@ void GraphPage::onRetranslateUi()
 
     m_gbGraph->setTitle(tr("Window"));
     m_gbColors->setTitle(tr("Colors"));
+
+    m_cbGraphHideOnClose->setText(tr("Hide on close"));
 
     m_cbGraphAlwaysOnTop->setText(tr("Always on top"));
     m_cbGraphFrameless->setText(tr("Frameless"));
@@ -64,6 +67,8 @@ QLayout *GraphPage::setupHeader()
     auto layout = new QHBoxLayout();
 
     m_btResetToDefaults = ControlUtil::createFlatToolButton(":/icons/arrow_refresh_small.png", [&] {
+        m_cbGraphHideOnClose->setChecked(iniUser()->graphWindowHideOnClose());
+
         m_cbGraphAlwaysOnTop->setChecked(ini()->graphWindowAlwaysOnTopDefault());
         m_cbGraphFrameless->setChecked(ini()->graphWindowFramelessDefault());
         m_cbGraphClickThrough->setChecked(ini()->graphWindowClickThroughDefault());
@@ -124,7 +129,8 @@ void GraphPage::setupGraphBox()
     setupGraphCheckboxes();
     setupGraphOptions();
 
-    auto layout = ControlUtil::createLayoutByWidgets({ m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
+    auto layout = ControlUtil::createLayoutByWidgets({ m_cbGraphHideOnClose,
+            ControlUtil::createSeparator(), m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
             m_cbGraphClickThrough, m_cbGraphHideOnHover, ControlUtil::createSeparator(),
             m_graphOpacity, m_graphHoverOpacity, m_graphMaxSeconds });
 
@@ -134,6 +140,13 @@ void GraphPage::setupGraphBox()
 
 void GraphPage::setupGraphCheckboxes()
 {
+    m_cbGraphHideOnClose =
+            ControlUtil::createCheckBox(iniUser()->graphWindowHideOnClose(), [&](bool checked) {
+                if (iniUser()->graphWindowHideOnClose() != checked) {
+                    iniUser()->setGraphWindowHideOnClose(checked);
+                    ctrl()->setIniUserEdited();
+                }
+            });
     m_cbGraphAlwaysOnTop =
             ControlUtil::createCheckBox(ini()->graphWindowAlwaysOnTop(), [&](bool checked) {
                 if (ini()->graphWindowAlwaysOnTop() != checked) {

@@ -145,7 +145,7 @@ private:
     void onTrayMessageClicked();
 
     void showWindow(WidgetWindow *w, bool activate = true);
-    void closeWindow(WidgetWindow *w);
+    bool closeWindow(WidgetWindow *w);
 
     void windowOpened(quint32 code);
     void windowClosed(quint32 code);

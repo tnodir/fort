@@ -11,6 +11,7 @@ public:
     explicit WidgetWindow(QWidget *parent = nullptr);
 
     virtual quint32 windowCode() const { return 0; }
+    virtual bool deleteOnClose() const { return true; }
 
     virtual void saveWindowState(bool wasVisible) { Q_UNUSED(wasVisible); }
     virtual void restoreWindowState() { }
