@@ -349,8 +349,6 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
         return false;
     }
 
-    envManager.clearCache(); // evaluate env vars on each save to GC
-
     for (int i = 0; i < groupsCount; ++i) {
         const AppGroup *appGroup = appGroups.at(i);
 
@@ -368,22 +366,21 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
         app.logConn = appGroup->logConn();
         app.groupIndex = i;
 
-        const auto killText = envManager.expandString(appGroup->killText());
-        const auto blockText = envManager.expandString(appGroup->blockText());
-        const auto allowText = envManager.expandString(appGroup->allowText());
-
+        app.appOriginPath = appGroup->killText();
         app.blocked = true;
         app.killProcess = true;
-        if (!parseAppsText(app, killText, opt))
+        if (!parseAppsText(envManager, app, opt))
             return false;
 
+        app.appOriginPath = appGroup->blockText();
         app.blocked = true;
         app.killProcess = false;
-        if (!parseAppsText(app, blockText, opt))
+        if (!parseAppsText(envManager, app, opt))
             return false;
 
+        app.appOriginPath = appGroup->allowText();
         app.blocked = false;
-        if (!parseAppsText(app, allowText, opt))
+        if (!parseAppsText(envManager, app, opt))
             return false;
 
         // Enabled Period
@@ -401,16 +398,16 @@ bool ConfUtil::parseExeApps(
 
     return confAppsWalker->walkApps([&](App &app) -> bool {
         if (app.isWildcard) {
-            const auto wildcardPaths = envManager.expandString(app.appOriginPath);
-            return parseAppsText(app, wildcardPaths, opt);
+            return parseAppsText(envManager, app, opt);
         } else {
             return addApp(app, /*isNew=*/true, opt.exeAppsMap, opt.exeAppsSize);
         }
     });
 }
 
-bool ConfUtil::parseAppsText(App &app, const QString &text, AppParseOptions &opt)
+bool ConfUtil::parseAppsText(EnvManager &envManager, App &app, AppParseOptions &opt)
 {
+    const auto text = envManager.expandString(app.appOriginPath);
     const auto lines = StringUtil::tokenizeView(text, QLatin1Char('\n'));
 
     for (const auto &line : lines) {

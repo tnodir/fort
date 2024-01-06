@@ -67,7 +67,7 @@ private:
 
     bool parseExeApps(EnvManager &envManager, ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
 
-    bool parseAppsText(App &app, const QString &text, AppParseOptions &opt);
+    bool parseAppsText(EnvManager &envManager, App &app, AppParseOptions &opt);
 
     bool parseAppLine(App &app, const StringView &line, AppParseOptions &opt);
 
