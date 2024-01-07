@@ -43,7 +43,8 @@ HomeWindow::HomeWindow(QWidget *parent) :
     setupController();
     setupStateWatcher();
 
-    connect(this, &HomeWindow::activationChanged, this, &HomeWindow::onActivationChanged);
+    connect(this, &HomeWindow::activationChanged, this, &HomeWindow::onActivationChanged,
+            Qt::QueuedConnection); // queued to properly show the menu after window opening
 }
 
 FortSettings *HomeWindow::settings() const

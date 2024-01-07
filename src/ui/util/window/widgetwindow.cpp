@@ -2,6 +2,23 @@
 
 #include <QWindowStateChangeEvent>
 
+namespace {
+
+void bringWindowToTop(QWidget *w)
+{
+    const auto flags = w->windowFlags();
+    if ((flags & Qt::WindowStaysOnTopHint) != 0)
+        return;
+
+    w->setWindowFlags(flags | Qt::WindowStaysOnTopHint);
+    w->show();
+
+    w->setWindowFlags(flags);
+    w->show();
+}
+
+}
+
 WidgetWindow::WidgetWindow(QWidget *parent) : QWidget(parent) { }
 
 void WidgetWindow::showWindow(bool activate)
@@ -23,6 +40,8 @@ void WidgetWindow::showWidget(QWidget *w, bool activate)
     w->raise();
 
     if (activate) {
+        bringWindowToTop(w);
+
         w->activateWindow();
     }
 }
