@@ -1,9 +1,10 @@
 Fort Firewall ChangeLog
 
-v3.10.7-test3, 2024-01-06:
+v3.10.7-test4, 2024-01-07:
 - UI: Add QtBase translations.
 - UI: Programs: Native separators for FileDialog paths.
 - UI: Traffic Graph: Add "Hide on close" flag.
+- UI: Bring window to top on activation.
 - UI: Workaround to show initial dialog on WinPE.
 - Driver: Use "HKLM\Software\Fort Firewall\BootFilter" initial flag from registry.
 - Set "NetworkProvider" group to services.
