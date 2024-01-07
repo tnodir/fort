@@ -6,6 +6,7 @@ v3.10.7-test4, 2024-01-07:
 - UI: Traffic Graph: Add "Hide on close" flag.
 - UI: Bring window to top on activation.
 - UI: Workaround to show initial dialog on WinPE.
+- UI: Restart on profile drive's reattach.
 - Driver: Use "HKLM\Software\Fort Firewall\BootFilter" initial flag from registry.
 - Set "NetworkProvider" group to services.
 
