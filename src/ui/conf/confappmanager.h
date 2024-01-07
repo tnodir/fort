@@ -61,6 +61,8 @@ protected:
     virtual void setupAppEndTimer();
     void updateAppEndTimer();
 
+    void setupDbDriveMask();
+
 private:
     bool deleteApp(qint64 appId, bool &isWildcard);
 
@@ -86,6 +88,7 @@ private:
     bool checkEndTransaction(bool ok);
 
 private:
+    quint32 m_dbDriveMask = 0;
     quint32 m_driveMask = 0;
 
     ConfManager *m_confManager = nullptr;

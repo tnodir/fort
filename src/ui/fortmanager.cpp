@@ -323,10 +323,9 @@ void FortManager::checkInstallDriver()
     const bool canInstallDriver = (settings->canInstallDriver() || settings->isPortable())
             && settings->isMaster() && settings->isUserAdmin();
 
-    if (!canInstallDriver)
-        return;
-
-    installDriver();
+    if (canInstallDriver) {
+        installDriver();
+    }
 }
 
 void FortManager::setupEnvManager()

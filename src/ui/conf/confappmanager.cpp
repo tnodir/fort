@@ -145,6 +145,8 @@ void ConfAppManager::setUp()
     purgeAppsOnStart();
 
     setupAppEndTimer();
+
+    setupDbDriveMask();
 }
 
 void ConfAppManager::purgeAppsOnStart()
@@ -178,6 +180,13 @@ void ConfAppManager::updateAppEndTimer()
     } else {
         m_appEndTimer.stop();
     }
+}
+
+void ConfAppManager::setupDbDriveMask()
+{
+    const QString filePath = sqliteDb()->filePath();
+
+    m_dbDriveMask = FileUtil::driveMaskByPath(filePath);
 }
 
 void ConfAppManager::emitAppAlerted()
@@ -497,10 +506,14 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
 
 void ConfAppManager::updateDriverConfByDriveMask(quint32 driveMask)
 {
-    if ((m_driveMask & driveMask) == 0)
+    if ((m_dbDriveMask & driveMask) != 0) {
+        IoC<WindowManager>()->restart();
         return;
+    }
 
-    updateDriverConf();
+    if ((m_driveMask & driveMask) != 0) {
+        updateDriverConf();
+    }
 }
 
 bool ConfAppManager::addOrUpdateApp(const App &app)
