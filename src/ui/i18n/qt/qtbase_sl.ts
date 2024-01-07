@@ -98,7 +98,7 @@ Pritisnite ESC za preklic</translation>
     <name>QKeySequenceEdit</name>
     <message>
         <source>Press shortcut</source>
-        <translation></translation>
+        <translation>Pritisnite bližnjico</translation>
     </message>
     <message>
         <source>%1, ...</source>
@@ -236,15 +236,15 @@ Pritisnite ESC za preklic</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
-        <translation type="unfinished">&amp;Paste</translation>
+        <translation>&amp;Prilepi</translation>
     </message>
     <message>
         <source>Delete</source>
-        <translation type="unfinished">Delete</translation>
+        <translation>Izbriši</translation>
     </message>
     <message>
         <source>Select All</source>
-        <translation type="unfinished">Select All</translation>
+        <translation>Izberi vse</translation>
     </message>
 </context>
 </TS>

@@ -570,7 +570,7 @@
     </message>
     <message>
         <source>Hide on close</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭时隐藏</translation>
     </message>
 </context>
 <context>

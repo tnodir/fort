@@ -570,7 +570,7 @@
     </message>
     <message>
         <source>Hide on close</source>
-        <translation type="unfinished"></translation>
+        <translation>Masquer à la fermeture</translation>
     </message>
 </context>
 <context>

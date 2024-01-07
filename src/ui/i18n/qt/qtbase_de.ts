@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="de_DE">
+<TS version="2.1" language="de_DE" sourcelanguage="en_US">
 <context>
     <name>CloseButton</name>
     <message>
@@ -68,8 +68,18 @@ Drücken Sie ESC, um abzubrechen</translation>
         <translation>&amp;Farbe vom Bildschirm wählen</translation>
     </message>
     <message>
+        <source>Cursor at %1, %2, color: %3
+Press ESC to cancel</source>
+        <translation>Zeiger bei %1,%2, Farbe: %3
+Zum Abbrechen ESC drücken</translation>
+    </message>
+    <message>
         <source>Select Color</source>
         <translation>Farbauswahl</translation>
+    </message>
+    <message>
+        <source>Pick Screen Color</source>
+        <translation>Bildschirmfarbe auswählen</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>

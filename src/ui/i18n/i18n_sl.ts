@@ -570,7 +570,7 @@
     </message>
     <message>
         <source>Hide on close</source>
-        <translation type="unfinished"></translation>
+        <translation>Skrij ob zapiranju</translation>
     </message>
 </context>
 <context>

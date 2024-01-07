@@ -570,7 +570,7 @@
     </message>
     <message>
         <source>Hide on close</source>
-        <translation type="unfinished"></translation>
+        <translation>닫기 시 숨기기</translation>
     </message>
 </context>
 <context>
