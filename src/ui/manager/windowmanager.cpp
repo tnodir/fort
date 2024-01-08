@@ -664,7 +664,7 @@ bool WindowManager::closeWindow(WidgetWindow *w)
         }
     }
 
-    if (w->deleteOnClose()) {
+    if (m_isAppQuitting || w->deleteOnClose()) {
         w->deleteLater();
         return true;
     }
