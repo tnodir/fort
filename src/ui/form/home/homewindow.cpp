@@ -1,5 +1,6 @@
 #include "homewindow.h"
 
+#include <QApplication>
 #include <QGuiApplication>
 #include <QLabel>
 #include <QPushButton>
@@ -92,7 +93,7 @@ void HomeWindow::selectAboutTab()
 
 void HomeWindow::onActivationChanged(bool isActive)
 {
-    if (isActive && iniUser()->homeAutoShowMenu()) {
+    if (isActive && iniUser()->homeAutoShowMenu() && this == QApplication::activeWindow()) {
         m_btMenu->showMenu();
     }
 }
