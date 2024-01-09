@@ -109,7 +109,7 @@ private:
     quint16 m_limitPacketLoss = 0; // Percent
     quint32 m_limitLatency = 0; // Milliseconds
 
-    // KiBytes per sec.
+    // kbits per sec.
     quint32 m_speedLimitIn = 0;
     quint32 m_speedLimitOut = 0;
 
