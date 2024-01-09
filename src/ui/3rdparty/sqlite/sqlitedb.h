@@ -13,6 +13,7 @@ struct sqlite3;
 class SqliteDb;
 class SqliteStmt;
 
+using SQLITEDB_ERRORLOG_FUNC = void (*)(void *context, int errCode, const char *message);
 using SQLITEDB_MIGRATE_FUNC = bool (*)(SqliteDb *db, int version, bool isNewDb, void *context);
 
 class SqliteDb
@@ -122,6 +123,8 @@ public:
     bool migrate(SqliteDb::MigrateOptions &opt);
 
     SqliteStmt *stmt(const char *sql);
+
+    static bool setErrorLogCallback(SQLITEDB_ERRORLOG_FUNC errorLogFunc, void *context = nullptr);
 
 private:
     bool canMigrate(const MigrateOptions &opt) const;

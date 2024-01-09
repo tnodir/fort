@@ -670,3 +670,8 @@ void SqliteDb::clearStmts()
     qDeleteAll(m_stmts);
     m_stmts.clear();
 }
+
+bool SqliteDb::setErrorLogCallback(SQLITEDB_ERRORLOG_FUNC errorLogFunc, void *context)
+{
+    return sqlite3_config(SQLITE_CONFIG_LOG, errorLogFunc, context) == SQLITE_OK;
+}

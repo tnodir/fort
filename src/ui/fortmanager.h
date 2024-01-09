@@ -40,6 +40,8 @@ private:
     void setupLogger();
     void updateLogger(const FirewallConf *conf);
 
+    void setupDbLogger();
+
     void createManagers();
     void deleteManagers();
 

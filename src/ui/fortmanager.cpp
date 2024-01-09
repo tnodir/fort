@@ -5,6 +5,8 @@
 #include <QMessageBox>
 #include <QThreadPool>
 
+#include <sqlite/sqlitedb.h>
+
 #include <fort_version.h>
 
 #include <appinfo/appinfocache.h>
@@ -47,6 +49,11 @@
 namespace {
 
 const QLoggingCategory LC("fortManager");
+
+void dbErrorHandler(void * /*context*/, int errCode, const char *message)
+{
+    qCWarning(LC) << "DB Error:" << errCode << message;
+}
 
 inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
 {
@@ -154,6 +161,7 @@ void FortManager::initialize()
 
     setupThreadPool();
     setupLogger();
+    setupDbLogger();
 
     createManagers();
 
@@ -195,6 +203,11 @@ void FortManager::updateLogger(const FirewallConf *conf)
 
     logger->setDebug(conf->ini().logDebug());
     logger->setConsole(conf->ini().logConsole());
+}
+
+void FortManager::setupDbLogger()
+{
+    SqliteDb::setErrorLogCallback(dbErrorHandler);
 }
 
 void FortManager::createManagers()
