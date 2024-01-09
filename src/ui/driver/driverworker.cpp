@@ -110,7 +110,7 @@ void DriverWorker::readLog()
         return;
 
     QByteArray &array = m_logBuffer->array();
-    qsizetype nr;
+    qsizetype nr = 0;
 
     const bool success = m_device->ioctl(
             DriverCommon::ioctlGetLog(), nullptr, 0, array.data(), array.size(), &nr);
