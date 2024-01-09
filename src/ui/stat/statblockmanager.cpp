@@ -78,37 +78,7 @@ void StatBlockManager::setUp()
     setupWorker();
     setupConfManager();
 
-    if (!sqliteDb()->open()) {
-        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
-                       << sqliteDb()->errorMessage();
-        return;
-    }
-
-    SqliteDb::MigrateOptions opt = {
-        .sqlDir = ":/stat/migrations/block",
-        .version = DATABASE_USER_VERSION,
-        .recreate = true,
-        // COMPAT: Union the "conn" & "conn_block" tables
-        .autoCopyTables = (DATABASE_USER_VERSION != 7),
-        .migrateFunc = &migrateFunc,
-    };
-
-    if (!sqliteDb()->migrate(opt)) {
-        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
-        return;
-    }
-
-    if (roSqliteDb() != sqliteDb()) {
-        if (!roSqliteDb()->open()) {
-            qCCritical(LC) << "File open error:" << roSqliteDb()->filePath()
-                           << roSqliteDb()->errorMessage();
-            return;
-        }
-
-        roSqliteDb()->setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
-    }
-
-    sqliteDb()->setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
+    setupDb();
 }
 
 void StatBlockManager::tearDown()
@@ -191,6 +161,43 @@ void StatBlockManager::setupConfManager()
     auto confManager = IoC()->setUpDependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniChanged, this, &StatBlockManager::setupByConf);
+}
+
+bool StatBlockManager::setupDb()
+{
+    if (!sqliteDb()->open()) {
+        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
+                       << sqliteDb()->errorMessage();
+        return false;
+    }
+
+    SqliteDb::MigrateOptions opt = {
+        .sqlDir = ":/stat/migrations/block",
+        .version = DATABASE_USER_VERSION,
+        .recreate = true,
+        // COMPAT: Union the "conn" & "conn_block" tables
+        .autoCopyTables = (DATABASE_USER_VERSION != 7),
+        .migrateFunc = &migrateFunc,
+    };
+
+    if (!sqliteDb()->migrate(opt)) {
+        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
+        return false;
+    }
+
+    if (roSqliteDb() != sqliteDb()) {
+        if (!roSqliteDb()->open()) {
+            qCCritical(LC) << "File open error:" << roSqliteDb()->filePath()
+                           << roSqliteDb()->errorMessage();
+            return false;
+        }
+
+        roSqliteDb()->setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
+    }
+
+    sqliteDb()->setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
+
+    return true;
 }
 
 void StatBlockManager::setupByConf(const IniOptions &ini)

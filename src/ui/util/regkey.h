@@ -15,11 +15,20 @@ public:
         ReadOnly = 0x01,
         ReadWrite = 0x02,
         Create = 0x04,
+        Notify = 0x08,
         Native64Key = 0x10,
         Native32Key = 0x20,
         DefaultReadOnly = (ReadOnly | Native64Key),
         DefaultReadWrite = (ReadWrite | Native64Key),
         DefaultCreate = (ReadWrite | Create | Native64Key)
+    };
+
+    // Sync with REG_NOTIFY_CHANGE_*
+    enum NotifyFlag : qint8 {
+        NotifyChangeName = 0x01,
+        NotifyChangeAttributes = 0x02,
+        NotifyChangeLastSet = 0x04,
+        NotifyChangeSecurity = 0x08,
     };
 
 protected:
@@ -43,6 +52,9 @@ public:
     bool setDefaultValue(const QVariant &value) { return setValue(QString(), value); }
     QVariant value(const QString &name, bool *expand = nullptr) const;
     bool contains(const QString &name) const;
+
+    bool notify(bool watchSubtree, quint32 filterFlags, qintptr eventHandle = 0,
+            bool isAsynchronous = true);
 
 private:
     RegHandle handle() const { return m_handle; }

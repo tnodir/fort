@@ -24,7 +24,8 @@ public:
 
     void logBlockedIp(const LogEntryBlockedIp &entry);
 
-signals:
+private:
+    bool setupDb();
 
 private:
     SqliteDbPtr m_sqliteDb;

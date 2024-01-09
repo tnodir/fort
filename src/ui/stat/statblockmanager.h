@@ -54,6 +54,8 @@ protected:
     virtual void setupConfManager();
 
 private:
+    bool setupDb();
+
     void setupByConf(const IniOptions &ini);
 
 private:

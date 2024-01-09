@@ -62,9 +62,6 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new LogManager());
     ioc->setService(new ServiceInfoManager());
     ioc->setService(new TaskManager());
-
-    // For Master only
-    ioc->setService(new DriveListManager());
 }
 
 inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
@@ -109,6 +106,7 @@ inline void setupServices(IocContainer *ioc, const FortSettings *settings)
         ioc->setService(new TranslationManager());
     }
 
+    ioc->setService(new DriveListManager());
     ioc->setService(new NativeEventFilter());
     ioc->setService(new AppInfoCache());
     ioc->setService(new HostInfoCache());
@@ -399,10 +397,7 @@ void FortManager::setupServiceInfoManager()
 
 void FortManager::setupDriveListManager()
 {
-    const auto settings = IoC<FortSettings>();
-    if (!settings->isMaster())
-        return;
-
+    auto settings = IoC<FortSettings>();
     auto driveListManager = IoC<DriveListManager>();
 
     if (settings->isService()) {
@@ -412,9 +407,6 @@ void FortManager::setupDriveListManager()
         connect(IoC<NativeEventFilter>(), &NativeEventFilter::driveListChanged, driveListManager,
                 &DriveListManager::onDriveListChanged);
     }
-
-    connect(driveListManager, &DriveListManager::driveMaskAdded, IoC<ConfAppManager>(),
-            &ConfAppManager::updateDriverConfByDriveMask);
 
     driveListManager->initialize();
 }

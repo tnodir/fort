@@ -23,10 +23,15 @@ AskPendingManager::AskPendingManager(QObject *parent) :
 
 void AskPendingManager::setUp()
 {
+    setupDb();
+}
+
+bool AskPendingManager::setupDb()
+{
     if (!sqliteDb()->open()) {
         qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
                        << sqliteDb()->errorMessage();
-        return;
+        return false;
     }
 
     SqliteDb::MigrateOptions opt = {
@@ -36,8 +41,14 @@ void AskPendingManager::setUp()
 
     if (!sqliteDb()->migrate(opt)) {
         qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
-        return;
+        return false;
     }
+
+    return true;
 }
 
-void AskPendingManager::logBlockedIp(const LogEntryBlockedIp &entry) { }
+void AskPendingManager::logBlockedIp(const LogEntryBlockedIp &entry)
+{
+    // TODO
+    Q_UNUSED(entry);
+}

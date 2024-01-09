@@ -23,10 +23,11 @@ void DriveListManager::onDriveListChanged()
         return;
 
     const quint32 addedMask = (driveMask & (driveMask ^ m_driveMask));
+    const quint32 removedMask = (m_driveMask ^ (m_driveMask & m_driveMask));
 
     m_driveMask = driveMask;
 
-    if (addedMask != 0) {
-        emit driveMaskAdded(addedMask);
+    if (addedMask != 0 || removedMask != 0) {
+        emit driveMaskChanged(addedMask, removedMask);
     }
 }

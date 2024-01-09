@@ -73,23 +73,7 @@ const IniOptions *StatManager::ini() const
 
 void StatManager::setUp()
 {
-    if (!sqliteDb()->open()) {
-        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
-                       << sqliteDb()->errorMessage();
-        return;
-    }
-
-    SqliteDb::MigrateOptions opt = {
-        .sqlDir = ":/stat/migrations/traf",
-        .version = DATABASE_USER_VERSION,
-        .recreate = true,
-        .migrateFunc = &migrateFunc,
-    };
-
-    if (!sqliteDb()->migrate(opt)) {
-        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
-        return;
-    }
+    setupDb();
 }
 
 void StatManager::setupTrafDate()
@@ -195,6 +179,29 @@ bool StatManager::clearTraffic()
     IoC<QuotaManager>()->clear();
 
     emit trafficCleared();
+
+    return true;
+}
+
+bool StatManager::setupDb()
+{
+    if (!sqliteDb()->open()) {
+        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
+                       << sqliteDb()->errorMessage();
+        return false;
+    }
+
+    SqliteDb::MigrateOptions opt = {
+        .sqlDir = ":/stat/migrations/traf",
+        .version = DATABASE_USER_VERSION,
+        .recreate = true,
+        .migrateFunc = &migrateFunc,
+    };
+
+    if (!sqliteDb()->migrate(opt)) {
+        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
+        return false;
+    }
 
     return true;
 }

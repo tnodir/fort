@@ -65,23 +65,7 @@ AppInfoManager::AppInfoManager(const QString &filePath, QObject *parent, quint32
 
 void AppInfoManager::setUp()
 {
-    if (!sqliteDb()->open()) {
-        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
-                       << sqliteDb()->errorMessage();
-        return;
-    }
-
-    SqliteDb::MigrateOptions opt = {
-        .sqlDir = ":/appinfo/migrations",
-        .version = DATABASE_USER_VERSION,
-        .recreate = true,
-        .importOldData = false,
-    };
-
-    if (!sqliteDb()->migrate(opt)) {
-        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
-        return;
-    }
+    setupDb();
 }
 
 WorkerObject *AppInfoManager::createWorker()
@@ -151,6 +135,29 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
 void AppInfoManager::updateAppAccessTime(const QString &appPath)
 {
     sqliteDb()->executeEx(sqlUpdateAppAccessTime, QVariantList() << appPath);
+}
+
+bool AppInfoManager::setupDb()
+{
+    if (!sqliteDb()->open()) {
+        qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
+                       << sqliteDb()->errorMessage();
+        return false;
+    }
+
+    SqliteDb::MigrateOptions opt = {
+        .sqlDir = ":/appinfo/migrations",
+        .version = DATABASE_USER_VERSION,
+        .recreate = true,
+        .importOldData = false,
+    };
+
+    if (!sqliteDb()->migrate(opt)) {
+        qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
+        return false;
+    }
+
+    return true;
 }
 
 void AppInfoManager::saveAppIcon(const QImage &appIcon, QVariant &iconId, bool &ok)

@@ -38,7 +38,8 @@ public:
     virtual void deleteApps(const QVector<qint64> &appIdList);
     virtual bool purgeApps();
     virtual bool updateApp(const App &app);
-    virtual void updateAppsBlocked(const QVector<qint64> &appIdList, bool blocked, bool killProcess);
+    virtual void updateAppsBlocked(
+            const QVector<qint64> &appIdList, bool blocked, bool killProcess);
     virtual bool updateAppName(qint64 appId, const QString &appName);
 
     bool walkApps(const std::function<walkAppsCallback> &func) override;
@@ -47,8 +48,6 @@ public:
     void updateAppEndTimes();
 
     virtual bool updateDriverConf(bool onlyFlags = false);
-
-    void updateDriverConfByDriveMask(quint32 driveMask);
 
 signals:
     void appAlerted();
@@ -61,9 +60,9 @@ protected:
     virtual void setupAppEndTimer();
     void updateAppEndTimer();
 
-    void setupDbDriveMask();
-
 private:
+    void setupDriveListManager();
+
     bool deleteApp(qint64 appId, bool &isWildcard);
 
     bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
@@ -88,7 +87,6 @@ private:
     bool checkEndTransaction(bool ok);
 
 private:
-    quint32 m_dbDriveMask = 0;
     quint32 m_driveMask = 0;
 
     ConfManager *m_confManager = nullptr;

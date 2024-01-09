@@ -9,6 +9,7 @@ RegKey::RegKey(RegHandle parentHandle, const QString &subKey, quint32 flags)
 {
     LPCWSTR subKeyStr = (LPCWSTR) subKey.utf16();
     const REGSAM samDesired = ((flags & ReadOnly) != 0 ? KEY_READ : KEY_ALL_ACCESS)
+            | ((flags & Notify) != 0 ? KEY_NOTIFY : 0)
             | ((flags & Native64Key) != 0 ? KEY_WOW64_64KEY : 0)
             | ((flags & Native32Key) != 0 ? KEY_WOW64_32KEY : 0);
 
@@ -144,6 +145,13 @@ QVariant RegKey::value(const QString &name, bool *expand) const
 bool RegKey::contains(const QString &name) const
 {
     return !RegQueryValueEx((HKEY) handle(), (LPCWSTR) name.utf16(), 0, nullptr, nullptr, nullptr);
+}
+
+bool RegKey::notify(
+        bool watchSubtree, quint32 filterFlags, qintptr eventHandle, bool isAsynchronous)
+{
+    return !RegNotifyChangeKeyValue(
+            (HKEY) handle(), watchSubtree, filterFlags, (HANDLE) eventHandle, isAsynchronous);
 }
 
 RegKey::RegHandle RegKey::predefinedRootHandle(Root root)

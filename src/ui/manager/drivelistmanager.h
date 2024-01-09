@@ -15,7 +15,7 @@ public:
     void initialize();
 
 signals:
-    void driveMaskAdded(quint32 driveMask);
+    void driveMaskChanged(quint32 addedMask, quint32 removedMask);
 
 public slots:
     void onDriveListChanged();

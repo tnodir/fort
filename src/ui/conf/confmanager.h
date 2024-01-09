@@ -81,6 +81,7 @@ protected:
 
 private:
     bool setupDb();
+    void setupDriveListManager();
 
     void setupDefault(FirewallConf &conf) const;
 
@@ -99,6 +100,8 @@ private:
     bool checkEndTransaction(bool ok);
 
 private:
+    quint32 m_driveMask = 0;
+
     SqliteDbPtr m_sqliteDb;
 
     FirewallConf *m_conf = nullptr;

@@ -11,6 +11,7 @@
 #include <driver/drivermanager.h>
 #include <log/logentryblocked.h>
 #include <log/logmanager.h>
+#include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <manager/windowmanager.h>
 #include <util/conf/confutil.h>
@@ -146,7 +147,17 @@ void ConfAppManager::setUp()
 
     setupAppEndTimer();
 
-    setupDbDriveMask();
+    setupDriveListManager();
+}
+
+void ConfAppManager::setupDriveListManager()
+{
+    connect(IoC<DriveListManager>(), &DriveListManager::driveMaskChanged, this,
+            [&](quint32 addedMask, quint32 /*removedMask*/) {
+                if ((m_driveMask & addedMask) != 0) {
+                    updateDriverConf();
+                }
+            });
 }
 
 void ConfAppManager::purgeAppsOnStart()
@@ -180,13 +191,6 @@ void ConfAppManager::updateAppEndTimer()
     } else {
         m_appEndTimer.stop();
     }
-}
-
-void ConfAppManager::setupDbDriveMask()
-{
-    const QString filePath = sqliteDb()->filePath();
-
-    m_dbDriveMask = FileUtil::driveMaskByPath(filePath);
 }
 
 void ConfAppManager::emitAppAlerted()
@@ -502,18 +506,6 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     m_driveMask = confUtil.driveMask();
 
     return true;
-}
-
-void ConfAppManager::updateDriverConfByDriveMask(quint32 driveMask)
-{
-    if ((m_dbDriveMask & driveMask) != 0) {
-        IoC<WindowManager>()->restart();
-        return;
-    }
-
-    if ((m_driveMask & driveMask) != 0) {
-        updateDriverConf();
-    }
 }
 
 bool ConfAppManager::addOrUpdateApp(const App &app)

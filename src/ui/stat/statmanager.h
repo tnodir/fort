@@ -63,6 +63,8 @@ public slots:
     virtual bool clearTraffic();
 
 private:
+    bool setupDb();
+
     void setupTrafDate();
 
     void setupByConf();

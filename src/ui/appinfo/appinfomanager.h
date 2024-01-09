@@ -51,6 +51,8 @@ protected:
     virtual void updateAppAccessTime(const QString &appPath);
 
 private:
+    bool setupDb();
+
     void saveAppIcon(const QImage &appIcon, QVariant &iconId, bool &ok);
     void saveAppInfo(
             const QString &appPath, const AppInfo &appInfo, const QVariant &iconId, bool &ok);
