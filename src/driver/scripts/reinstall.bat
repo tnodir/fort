@@ -1,8 +1,8 @@
 @rem Re-install driver
 
-@cd %~dp0
+@cd "%~dp0"
 @echo off
 
-%COMSPEC% /C uninstall.bat
+%COMSPEC% /C "%~dp0uninstall.bat"
 
-install.bat
+"%~dp0install.bat"
