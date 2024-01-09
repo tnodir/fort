@@ -9,7 +9,7 @@
 
 Fort is an effective firewall designed for Windows 7 and later versions, offering both simplicity and robustness.
 
-![image](https://github.com/tnodir/fort/assets/77551811/9906513e-5e58-4e40-bb69-29be40715dc8)
+![295280593-6c121bdf-3531-49ea-8f70-2d75bfba8255](https://github.com/tnodir/fort/assets/77551811/53e25cb0-a296-46d9-8321-3fb0aae77b7f)
 
 ## Features
 
