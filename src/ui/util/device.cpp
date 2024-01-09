@@ -49,7 +49,7 @@ bool Device::cancelIo()
     return CancelIoEx(m_handle, nullptr);
 }
 
-bool Device::ioctl(quint32 code, char *in, int inSize, char *out, int outSize, int *retSize)
+bool Device::ioctl(quint32 code, char *in, int inSize, char *out, int outSize, qsizetype *retSize)
 {
     LPOVERLAPPED overlapped = isOverlapped() ? (LPOVERLAPPED) m_buffer.data() : nullptr;
 

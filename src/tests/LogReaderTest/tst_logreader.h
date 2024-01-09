@@ -114,7 +114,7 @@ TEST_F(LogReaderTest, logRead)
     LogBuffer buf(DriverCommon::bufferSize());
 
     for (;;) {
-        int nr;
+        qsizetype nr;
         QByteArray &array = buf.array();
         ASSERT_TRUE(device.ioctl(
                 DriverCommon::ioctlGetLog(), nullptr, 0, array.data(), array.size(), &nr));

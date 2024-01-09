@@ -28,6 +28,8 @@ private:
     void setupPollingTimer();
 
 private:
+    bool m_checkMounted = false;
+
     quint32 m_driveMask = 0;
 
     QTimer *m_pollingTimer = nullptr;

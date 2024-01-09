@@ -8,6 +8,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
+#include <winioctl.h>
 
 namespace FileUtil {
 
@@ -51,6 +52,46 @@ bool isDriveFilePath(const QString &path)
 quint32 driveMask()
 {
     return GetLogicalDrives();
+}
+
+static bool isDriveMounted(WCHAR drive)
+{
+    const WCHAR volume[] = { L'\\', L'\\', L'.', L'\\', drive, L':', L'\0' };
+
+    const DWORD shareMode = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
+    const HANDLE volumeHandle =
+            CreateFileW(volume, GENERIC_READ, shareMode, nullptr, OPEN_EXISTING, 0, nullptr);
+
+    if (volumeHandle == INVALID_HANDLE_VALUE)
+        return false;
+
+    DWORD nr;
+    const bool ok = DeviceIoControl(
+            volumeHandle, FSCTL_IS_VOLUME_MOUNTED, nullptr, 0, nullptr, 0, &nr, nullptr);
+
+    CloseHandle(volumeHandle);
+
+    return ok;
+}
+
+quint32 mountedDriveMask(quint32 driveMask)
+{
+    quint32 mask = driveMask;
+    while (mask != 0) {
+        unsigned long index;
+        if (!_BitScanForward(&index, mask))
+            break;
+
+        const quint32 bit = (1u << index);
+
+        if (!isDriveMounted(L'A' + index)) {
+            driveMask ^= bit;
+        }
+
+        mask ^= bit;
+    }
+
+    return driveMask;
 }
 
 quint32 driveMaskByPath(const QString &path)

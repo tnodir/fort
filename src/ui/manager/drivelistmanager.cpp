@@ -18,7 +18,10 @@ void DriveListManager::initialize()
 
 void DriveListManager::onDriveListChanged()
 {
-    const quint32 driveMask = FileUtil::driveMask();
+    quint32 driveMask = FileUtil::driveMask();
+    if (m_checkMounted) {
+        driveMask = FileUtil::mountedDriveMask(driveMask);
+    }
 
     if (m_driveMask == driveMask)
         return;
@@ -35,6 +38,11 @@ void DriveListManager::onDriveListChanged()
 
 void DriveListManager::startPolling()
 {
+    if (m_checkMounted)
+        return;
+
+    m_checkMounted = true;
+
     setupPollingTimer();
 
     m_pollingTimer->start();

@@ -17,6 +17,8 @@ bool isDriveFilePath(const QString &path);
 
 quint32 driveMask();
 
+quint32 mountedDriveMask(quint32 driveMask);
+
 quint32 driveMaskByPath(const QString &path);
 
 // Convert DOS device name to drive letter (A: .. Z:)

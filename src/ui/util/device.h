@@ -33,7 +33,7 @@ public slots:
     bool cancelIo();
 
     bool ioctl(quint32 code, char *in = nullptr, int inSize = 0, char *out = nullptr,
-            int outSize = 0, int *retSize = nullptr);
+            int outSize = 0, qsizetype *retSize = nullptr);
 
     void initOverlapped(void *eventHandle = nullptr);
 
