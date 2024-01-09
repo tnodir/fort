@@ -124,6 +124,8 @@ public:
 
     SqliteStmt *stmt(const char *sql);
 
+    static bool isIoError(int errCode);
+
     static bool setErrorLogCallback(SQLITEDB_ERRORLOG_FUNC errorLogFunc, void *context = nullptr);
 
 private:

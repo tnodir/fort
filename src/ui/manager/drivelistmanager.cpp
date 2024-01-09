@@ -1,6 +1,7 @@
 #include "drivelistmanager.h"
 
 #include <QLoggingCategory>
+#include <QTimer>
 
 #include <util/fileutil.h>
 
@@ -30,4 +31,22 @@ void DriveListManager::onDriveListChanged()
     if (addedMask != 0 || removedMask != 0) {
         emit driveMaskChanged(addedMask, removedMask);
     }
+}
+
+void DriveListManager::startPolling()
+{
+    setupPollingTimer();
+
+    m_pollingTimer->start();
+}
+
+void DriveListManager::setupPollingTimer()
+{
+    if (m_pollingTimer)
+        return;
+
+    m_pollingTimer = new QTimer(this);
+    m_pollingTimer->setInterval(1000);
+
+    connect(m_pollingTimer, &QTimer::timeout, this, &DriveListManager::onDriveListChanged);
 }

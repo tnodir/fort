@@ -50,9 +50,15 @@ namespace {
 
 const QLoggingCategory LC("fortManager");
 
-void dbErrorHandler(void * /*context*/, int errCode, const char *message)
+void dbErrorHandler(void *context, int errCode, const char *message)
 {
     qCWarning(LC) << "DB Error:" << errCode << message;
+
+    if (SqliteDb::isIoError(errCode)) {
+        auto fortManager = static_cast<FortManager *>(context);
+
+        QMetaObject::invokeMethod(fortManager, &FortManager::onDbIoError, Qt::QueuedConnection);
+    }
 }
 
 inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
@@ -207,7 +213,7 @@ void FortManager::updateLogger(const FirewallConf *conf)
 
 void FortManager::setupDbLogger()
 {
-    SqliteDb::setErrorLogCallback(dbErrorHandler);
+    SqliteDb::setErrorLogCallback(dbErrorHandler, /*context=*/this);
 }
 
 void FortManager::createManagers()
@@ -489,6 +495,12 @@ void FortManager::updateLogManager(bool active)
 void FortManager::updateStatManager(FirewallConf *conf)
 {
     IoC<StatManager>()->setConf(conf);
+}
+
+void FortManager::onDbIoError()
+{
+    // Force drive list checks
+    IoC<DriveListManager>()->startPolling();
 }
 
 void FortManager::setupPortableResource()

@@ -671,6 +671,11 @@ void SqliteDb::clearStmts()
     m_stmts.clear();
 }
 
+bool SqliteDb::isIoError(int errCode)
+{
+    return qint8(errCode) == SQLITE_IOERR;
+}
+
 bool SqliteDb::setErrorLogCallback(SQLITEDB_ERRORLOG_FUNC errorLogFunc, void *context)
 {
     return sqlite3_config(SQLITE_CONFIG_LOG, errorLogFunc, context) == SQLITE_OK;

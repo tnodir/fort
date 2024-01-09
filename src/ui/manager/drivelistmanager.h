@@ -5,6 +5,8 @@
 
 #include <util/ioc/iocservice.h>
 
+QT_FORWARD_DECLARE_CLASS(QTimer)
+
 class DriveListManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -20,8 +22,15 @@ signals:
 public slots:
     void onDriveListChanged();
 
+    void startPolling();
+
+private:
+    void setupPollingTimer();
+
 private:
     quint32 m_driveMask = 0;
+
+    QTimer *m_pollingTimer = nullptr;
 };
 
 #endif // DRIVELISTMANAGER_H

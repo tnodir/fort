@@ -31,6 +31,8 @@ public slots:
 
     void processRestartRequired();
 
+    void onDbIoError();
+
     static void setupPortableResource();
     static void setupResources();
 
