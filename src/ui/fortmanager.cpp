@@ -443,8 +443,12 @@ void FortManager::show()
         windowManager->showHomeWindow();
     }
 
-    if (iniUser.graphWindowVisible()) {
+    if (iniUser.graphWindowVisible() || iniUser.graphWindowHideOnClose()) {
         windowManager->showGraphWindow();
+
+        if (!iniUser.graphWindowVisible()) {
+            windowManager->closeGraphWindow();
+        }
     }
 }
 
