@@ -52,7 +52,7 @@ const QLoggingCategory LC("fortManager");
 
 void dbErrorHandler(void *context, int errCode, const char *message)
 {
-    qCWarning(LC) << "DB Error:" << errCode << message;
+    qCWarning(LC) << "DB Error:" << errCode << qUtf8Printable(message);
 
     if (SqliteDb::isIoError(errCode)) {
         auto fortManager = static_cast<FortManager *>(context);

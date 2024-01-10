@@ -145,15 +145,9 @@ void OsUtil::showConsole(bool visible)
 void OsUtil::writeToConsole(const QString &line)
 {
     const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (!stdoutHandle || stdoutHandle == INVALID_HANDLE_VALUE)
-        return;
-
-    QByteArray data;
-    data.append(line.toLocal8Bit());
-    data.append('\n');
 
     DWORD nw;
-    WriteFile(stdoutHandle, data.constData(), DWORD(data.size()), &nw, nullptr);
+    WriteConsoleW(stdoutHandle, line.utf16(), line.size(), &nw, nullptr);
 }
 
 bool OsUtil::setCurrentThreadName(const QString &name)
