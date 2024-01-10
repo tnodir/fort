@@ -16,12 +16,12 @@ void ClickableMenu::mousePressEvent(QMouseEvent *event)
 
 void ClickableMenu::mouseReleaseEvent(QMouseEvent *event)
 {
-    QMenu::mouseReleaseEvent(event);
-
     if (!m_pressed)
         return;
 
     m_pressed = false;
+
+    QMenu::mouseReleaseEvent(event);
 
     if (isVisible()) {
         emit clicked();

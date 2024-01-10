@@ -362,7 +362,7 @@ void TrayIcon::setupUi()
 
 void TrayIcon::setupTrayMenu()
 {
-    m_menu = ControlUtil::createMenu(windowManager()->mainWindow());
+    m_menu = new ClickableMenu(windowManager()->mainWindow());
 
     m_homeAction = addAction(
             m_menu, ":/icons/fort.png", windowManager(), SLOT(showHomeWindow()), ActionShowHome);
