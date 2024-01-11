@@ -252,8 +252,10 @@ void ConfAppManager::deleteApps(const QVector<qint64> &appIdList)
     bool isWildcard = false;
 
     for (const qint64 appId : appIdList) {
-        if (!deleteApp(appId, isWildcard))
+        if (!deleteApp(appId, isWildcard)) {
+            showErrorMessage(tr("Cannot delete program"));
             break;
+        }
     }
 
     if (isWildcard) {
@@ -364,8 +366,10 @@ void ConfAppManager::updateAppsBlocked(
     bool isWildcard = (appIdList.size() > 7);
 
     for (const qint64 appId : appIdList) {
-        if (!updateAppBlocked(appId, blocked, killProcess, isWildcard))
+        if (!updateAppBlocked(appId, blocked, killProcess, isWildcard)) {
+            showErrorMessage(tr("Cannot update program's state"));
             break;
+        }
     }
 
     if (isWildcard) {
@@ -379,7 +383,7 @@ bool ConfAppManager::updateAppBlocked(
     App app;
     app.appId = appId;
     if (!loadAppById(app))
-        return true;
+        return false;
 
     if (!prepareAppBlocked(app, blocked, killProcess) || !saveAppBlocked(app))
         return false;
@@ -494,14 +498,15 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
 
     const int confSize = onlyFlags ? confUtil.writeFlags(*conf(), buf)
                                    : confUtil.write(*conf(), this, *IoC<EnvManager>(), buf);
+
     if (confSize == 0) {
-        showErrorMessage(confUtil.errorMessage());
+        qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
         return false;
     }
 
     auto driverManager = IoC<DriverManager>();
     if (!driverManager->writeConf(buf, confSize, onlyFlags)) {
-        showErrorMessage(driverManager->errorMessage());
+        qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
 
@@ -599,13 +604,13 @@ bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
     const int entrySize = confUtil.writeAppEntry(app, /*isNew=*/false, buf);
 
     if (entrySize == 0) {
-        showErrorMessage(confUtil.errorMessage());
+        qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
         return false;
     }
 
     auto driverManager = IoC<DriverManager>();
     if (!driverManager->writeApp(buf, entrySize, remove)) {
-        showErrorMessage(driverManager->errorMessage());
+        qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
 
