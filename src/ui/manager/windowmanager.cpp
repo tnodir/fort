@@ -478,13 +478,13 @@ void WindowManager::quitApp()
     m_isAppQuitting = true;
 
     closeAll();
-
-    qCDebug(LC) << "Quit due user request";
 }
 
 void WindowManager::quit()
 {
     quitApp();
+
+    qCDebug(LC) << "Quit due user request";
 
     QCoreApplication::quit();
 }
