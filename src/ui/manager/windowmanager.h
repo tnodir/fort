@@ -105,6 +105,7 @@ public slots:
 
     void quit();
     void restart();
+    void processRestartRequired();
 
     bool checkWindowPassword(WindowCode code);
     bool checkPassword();

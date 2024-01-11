@@ -425,12 +425,9 @@ void FortManager::processRestartRequired()
     auto settings = IoC<FortSettings>();
 
     if (settings->isService()) {
-        IoC<ServiceManager>()->restart();
+        IoC<ServiceManager>()->processRestartRequired();
     } else {
-        auto windowManager = IoC<WindowManager>();
-
-        windowManager->showConfirmBox(
-                [=] { windowManager->restart(); }, tr("Restart Now?"), tr("Restart Required"));
+        IoC<WindowManager>()->processRestartRequired();
     }
 }
 

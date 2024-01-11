@@ -129,9 +129,11 @@ void ServiceManager::processControl(quint32 code, quint32 eventType)
     reportStatus(state);
 }
 
-void ServiceManager::restart()
+void ServiceManager::processRestartRequired()
 {
     qCDebug(LC) << "Quit due required restart";
 
     QCoreApplication::quit();
+
+    reportStatus(SERVICE_STOP_PENDING);
 }

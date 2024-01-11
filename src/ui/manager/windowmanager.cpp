@@ -501,6 +501,11 @@ void WindowManager::restart()
     QCoreApplication::quit();
 }
 
+void WindowManager::processRestartRequired()
+{
+    showConfirmBox([&] { restart(); }, tr("Restart Now?"), tr("Restart Required"));
+}
+
 bool WindowManager::checkWindowPassword(WindowCode code)
 {
     return (WindowPasswordProtected & code) == 0 || checkPassword();

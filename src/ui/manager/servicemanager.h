@@ -30,7 +30,7 @@ public:
 
     void processControl(quint32 code, quint32 eventType) override;
 
-    void restart();
+    void processRestartRequired();
 
 signals:
     void pauseRequested();
