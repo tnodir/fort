@@ -21,7 +21,7 @@ void sqliteLogHandler(void *context, int errCode, const char *message)
     if (SqliteDb::isIoError(errCode)) {
         auto manager = static_cast<DbErrorManager *>(context);
 
-        QMetaObject::invokeMethod(manager, &DbErrorManager::startPolling, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(manager, &DbErrorManager::onDbIoError, Qt::QueuedConnection);
     }
 }
 
@@ -36,18 +36,6 @@ void DbErrorManager::setUp()
     SqliteDb::setErrorLogCallback(sqliteLogHandler, /*context=*/this);
 }
 
-void DbErrorManager::checkDriveList()
-{
-    const quint32 driveMask = FileUtil::mountedDriveMask(m_driveMask);
-
-    qCDebug(LC) << "Drive mounted state:" << Qt::hex << driveMask << "Expected:" << m_driveMask;
-
-    if (m_driveMask == driveMask) {
-        // Restart on profile drive mounted
-        IoC<WindowManager>()->restart();
-    }
-}
-
 void DbErrorManager::setupDriveMask()
 {
     auto settings = IoC<FortSettings>();
@@ -55,27 +43,27 @@ void DbErrorManager::setupDriveMask()
     m_driveMask |= FileUtil::driveMaskByPath(settings->confFilePath());
 }
 
-void DbErrorManager::startPolling()
+void DbErrorManager::onDbIoError()
 {
     if (m_polling)
         return;
 
     m_polling = true;
 
-    setupPollingTimer();
-
-    m_pollingTimer->start();
-
-    qCDebug(LC) << "Start polling drive mounted state";
+    checkDriveList();
 }
 
-void DbErrorManager::setupPollingTimer()
+void DbErrorManager::checkDriveList()
 {
-    if (m_pollingTimer)
+    const quint32 driveMask = FileUtil::mountedDriveMask(m_driveMask);
+
+    if (m_driveMask == driveMask) {
+        // Restart on profile drive mounted
+        IoC<WindowManager>()->restart();
         return;
+    }
 
-    m_pollingTimer = new QTimer(this);
-    m_pollingTimer->setInterval(1000);
+    qCDebug(LC) << "Drive mounted state:" << Qt::hex << driveMask << "Expected:" << m_driveMask;
 
-    connect(m_pollingTimer, &QTimer::timeout, this, &DbErrorManager::checkDriveList);
+    QTimer::singleShot(1000, this, &DbErrorManager::checkDriveList);
 }

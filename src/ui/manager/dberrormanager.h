@@ -5,8 +5,6 @@
 
 #include <util/ioc/iocservice.h>
 
-QT_FORWARD_DECLARE_CLASS(QTimer)
-
 class DbErrorManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -17,7 +15,7 @@ public:
     void setUp() override;
 
 public slots:
-    void startPolling();
+    void onDbIoError();
 
 private slots:
     void checkDriveList();
@@ -25,14 +23,10 @@ private slots:
 private:
     void setupDriveMask();
 
-    void setupPollingTimer();
-
 private:
     bool m_polling = false;
 
     quint32 m_driveMask = 0;
-
-    QTimer *m_pollingTimer = nullptr;
 };
 
 #endif // DBERRORMANAGER_H
