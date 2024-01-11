@@ -467,14 +467,6 @@
         <translation>Предупреждение о квоте трафика</translation>
     </message>
     <message>
-        <source>Restart Required</source>
-        <translation>Требуется перезапуск</translation>
-    </message>
-    <message>
-        <source>Restart Now?</source>
-        <translation>Перезапустить сейчас?</translation>
-    </message>
-    <message>
         <source>New version v%1 available!</source>
         <translation>Новая версия v% доступна!</translation>
     </message>
@@ -1748,6 +1740,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Закройте уже открытое окно Редактирования Программы и пробуйте снова.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation type="unfinished">Перезапустить сейчас?</translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
+        <translation type="unfinished">Требуется перезапуск</translation>
     </message>
 </context>
 <context>

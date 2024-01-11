@@ -467,14 +467,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Restart Required</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Restart Now?</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>New version v%1 available!</source>
         <translation></translation>
     </message>
@@ -1742,6 +1734,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>WindowManager</name>
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
         <translation></translation>
     </message>
 </context>

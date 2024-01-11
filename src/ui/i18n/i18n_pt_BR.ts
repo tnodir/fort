@@ -467,14 +467,6 @@
         <translation>Alerta de Cota</translation>
     </message>
     <message>
-        <source>Restart Required</source>
-        <translation>É Necessário Reiniciar</translation>
-    </message>
-    <message>
-        <source>Restart Now?</source>
-        <translation>Reinicia Agora?</translation>
-    </message>
-    <message>
         <source>New version v%1 available!</source>
         <translation>Atualização v%1 disponível!</translation>
     </message>
@@ -1743,6 +1735,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Por favor, feche a janela Editar Programa já aberta e tente novamente.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation type="unfinished">Reinicia Agora?</translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
+        <translation type="unfinished">É Necessário Reiniciar</translation>
     </message>
 </context>
 <context>

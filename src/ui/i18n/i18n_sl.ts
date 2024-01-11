@@ -467,14 +467,6 @@
         <translation>Opozorilo o kvoti</translation>
     </message>
     <message>
-        <source>Restart Required</source>
-        <translation>Potreben je ponovni zagon</translation>
-    </message>
-    <message>
-        <source>Restart Now?</source>
-        <translation>Želite zdaj znova zagnati?</translation>
-    </message>
-    <message>
         <source>New version v%1 available!</source>
         <translation>Na voljo je nova različica v%1!</translation>
     </message>
@@ -1748,6 +1740,14 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Zaprite že odprto okno za urejanje programa in poskusite znova.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation type="unfinished">Želite zdaj znova zagnati?</translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
+        <translation type="unfinished">Potreben je ponovni zagon</translation>
     </message>
 </context>
 <context>

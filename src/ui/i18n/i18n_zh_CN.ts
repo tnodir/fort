@@ -467,14 +467,6 @@
         <translation>配额提醒</translation>
     </message>
     <message>
-        <source>Restart Required</source>
-        <translation>需要重启</translation>
-    </message>
-    <message>
-        <source>Restart Now?</source>
-        <translation>立即重启?</translation>
-    </message>
-    <message>
         <source>New version v%1 available!</source>
         <translation>发现新版本 v%1 ！</translation>
     </message>
@@ -1746,6 +1738,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>请关闭已打开的编辑程序窗口，然后重试。</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation type="unfinished">立即重启?</translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
+        <translation type="unfinished">需要重启</translation>
     </message>
 </context>
 <context>

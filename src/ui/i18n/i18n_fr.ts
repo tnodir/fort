@@ -467,14 +467,6 @@
         <translation>Alerte de quota</translation>
     </message>
     <message>
-        <source>Restart Required</source>
-        <translation>Redémarrage requis</translation>
-    </message>
-    <message>
-        <source>Restart Now?</source>
-        <translation>Redémarrer maintenant?</translation>
-    </message>
-    <message>
         <source>New version v%1 available!</source>
         <translation>Nouvelle version v%1 disponible!</translation>
     </message>
@@ -1748,6 +1740,14 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Veuillez fermer la fenêtre d&apos;édition du programme déjà ouverte et réessayer.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation type="unfinished">Redémarrer maintenant?</translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
+        <translation type="unfinished">Redémarrage requis</translation>
     </message>
 </context>
 <context>

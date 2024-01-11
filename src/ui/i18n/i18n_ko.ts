@@ -467,14 +467,6 @@
         <translation>할당량 경보</translation>
     </message>
     <message>
-        <source>Restart Required</source>
-        <translation>재시작 필요</translation>
-    </message>
-    <message>
-        <source>Restart Now?</source>
-        <translation>지금 재시작?</translation>
-    </message>
-    <message>
         <source>New version v%1 available!</source>
         <translation>새 버전(v%1) 사용 가능!</translation>
     </message>
@@ -1748,6 +1740,14 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>이미 열려 있는 편집 프로그램 창을 닫고 다시 시도하세요.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation type="unfinished">지금 재시작?</translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
+        <translation type="unfinished">재시작 필요</translation>
     </message>
 </context>
 <context>

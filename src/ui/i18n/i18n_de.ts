@@ -467,14 +467,6 @@
         <translation>Kontingentalarm</translation>
     </message>
     <message>
-        <source>Restart Required</source>
-        <translation>Neustart erforderlich</translation>
-    </message>
-    <message>
-        <source>Restart Now?</source>
-        <translation>Jetzt neustarten?</translation>
-    </message>
-    <message>
         <source>New version v%1 available!</source>
         <translation>Neue Version v%1 verfügbar!</translation>
     </message>
@@ -1748,6 +1740,14 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Bitte schließen Sie das bereits geöffnete Fenster zum Bearbeiten und versuchen Sie es erneut.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation type="unfinished">Jetzt neustarten?</translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
+        <translation type="unfinished">Neustart erforderlich</translation>
     </message>
 </context>
 <context>

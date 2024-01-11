@@ -467,14 +467,6 @@
         <translation>Avviso quota</translation>
     </message>
     <message>
-        <source>Restart Required</source>
-        <translation>Riavvio richiesto</translation>
-    </message>
-    <message>
-        <source>Restart Now?</source>
-        <translation>Riavvia ora?</translation>
-    </message>
-    <message>
         <source>New version v%1 available!</source>
         <translation>Nuova versione v%1 disponibile!</translation>
     </message>
@@ -1748,6 +1740,14 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
         <translation>Chiudi la finestra Modifica programma già aperta e riprova.</translation>
+    </message>
+    <message>
+        <source>Restart Now?</source>
+        <translation type="unfinished">Riavvia ora?</translation>
+    </message>
+    <message>
+        <source>Restart Required</source>
+        <translation type="unfinished">Riavvio richiesto</translation>
     </message>
 </context>
 <context>
