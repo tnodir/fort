@@ -55,14 +55,14 @@ signals:
     void appUpdated();
 
 protected:
+    virtual void setupDriveListManager();
+
     virtual void purgeAppsOnStart();
 
     virtual void setupAppEndTimer();
     void updateAppEndTimer();
 
 private:
-    void setupDriveListManager();
-
     bool deleteApp(qint64 appId, bool &isWildcard);
 
     bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);

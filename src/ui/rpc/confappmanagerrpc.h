@@ -26,6 +26,8 @@ public:
     static App varListToApp(const QVariantList &v);
 
 protected:
+    void setupDriveListManager() override { }
+
     void purgeAppsOnStart() override { }
 
     void setupAppEndTimer() override { }

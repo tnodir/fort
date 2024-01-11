@@ -31,8 +31,6 @@ public slots:
 
     void processRestartRequired();
 
-    void onDbIoError();
-
     static void setupPortableResource();
     static void setupResources();
 
@@ -41,8 +39,6 @@ private:
 
     void setupLogger();
     void updateLogger(const FirewallConf *conf);
-
-    void setupDbLogger();
 
     void createManagers();
     void deleteManagers();
@@ -57,7 +53,6 @@ private:
     void setupQuotaManager();
     void setupTaskManager();
     void setupServiceInfoManager();
-    void setupDriveListManager();
 
     void loadConf();
 

@@ -11,7 +11,6 @@
 #include <driver/drivermanager.h>
 #include <fortsettings.h>
 #include <log/logmanager.h>
-#include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <manager/serviceinfomanager.h>
 #include <manager/windowmanager.h>
@@ -421,7 +420,6 @@ IniUser &ConfManager::iniUser() const
 void ConfManager::setUp()
 {
     setupDb();
-    setupDriveListManager();
 }
 
 void ConfManager::initConfToEdit()
@@ -513,23 +511,6 @@ bool ConfManager::setupDb()
     }
 
     return true;
-}
-
-void ConfManager::setupDriveListManager()
-{
-    m_driveMask = FileUtil::driveMaskByPath(sqliteDb()->filePath());
-
-    connect(IoC<DriveListManager>(), &DriveListManager::driveMaskChanged, this,
-            [&](quint32 addedMask, quint32 removedMask) {
-                // Restart on profile drive attached
-                if ((m_driveMask & addedMask) != 0) {
-                    IoC<WindowManager>()->restart();
-                }
-                // Close DB on drive detached
-                else if ((m_driveMask & removedMask) != 0) {
-                    sqliteDb()->close();
-                }
-            });
 }
 
 void ConfManager::setupDefault(FirewallConf &conf) const

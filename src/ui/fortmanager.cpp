@@ -5,8 +5,6 @@
 #include <QMessageBox>
 #include <QThreadPool>
 
-#include <sqlite/sqlitedb.h>
-
 #include <fort_version.h>
 
 #include <appinfo/appinfocache.h>
@@ -16,6 +14,7 @@
 #include <form/dialog/passworddialog.h>
 #include <fortsettings.h>
 #include <hostinfo/hostinfocache.h>
+#include <manager/dberrormanager.h>
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <manager/hotkeymanager.h>
@@ -50,17 +49,6 @@ namespace {
 
 const QLoggingCategory LC("fortManager");
 
-void dbErrorHandler(void *context, int errCode, const char *message)
-{
-    qCWarning(LC) << "DB Error:" << errCode << qUtf8Printable(message);
-
-    if (SqliteDb::isIoError(errCode)) {
-        auto fortManager = static_cast<FortManager *>(context);
-
-        QMetaObject::invokeMethod(fortManager, &FortManager::onDbIoError, Qt::QueuedConnection);
-    }
-}
-
 inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
 {
     ioc->setService(new ConfManager(settings->confFilePath()));
@@ -75,6 +63,9 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new LogManager());
     ioc->setService(new ServiceInfoManager());
     ioc->setService(new TaskManager());
+
+    // For Master only
+    ioc->setService(new DriveListManager());
 }
 
 inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
@@ -119,9 +110,9 @@ inline void setupServices(IocContainer *ioc, const FortSettings *settings)
         ioc->setService(new TranslationManager());
     }
 
-    ioc->setService(new DriveListManager());
     ioc->setService(new NativeEventFilter());
     ioc->setService(new AppInfoCache());
+    ioc->setService(new DbErrorManager());
     ioc->setService(new HostInfoCache());
     ioc->setService(new ZoneListModel());
 }
@@ -167,7 +158,6 @@ void FortManager::initialize()
 
     setupThreadPool();
     setupLogger();
-    setupDbLogger();
 
     createManagers();
 
@@ -176,7 +166,6 @@ void FortManager::initialize()
     setupQuotaManager();
     setupTaskManager();
     setupServiceInfoManager();
-    setupDriveListManager();
 
     setupDriver();
     loadConf();
@@ -209,11 +198,6 @@ void FortManager::updateLogger(const FirewallConf *conf)
 
     logger->setDebug(conf->ini().logDebug());
     logger->setConsole(conf->ini().logConsole());
-}
-
-void FortManager::setupDbLogger()
-{
-    SqliteDb::setErrorLogCallback(dbErrorHandler, /*context=*/this);
 }
 
 void FortManager::createManagers()
@@ -414,22 +398,6 @@ void FortManager::setupServiceInfoManager()
             &ConfManager::updateDriverServices);
 }
 
-void FortManager::setupDriveListManager()
-{
-    auto settings = IoC<FortSettings>();
-    auto driveListManager = IoC<DriveListManager>();
-
-    if (settings->isService()) {
-        connect(IoC<ServiceManager>(), &ServiceManager::driveListChanged, driveListManager,
-                &DriveListManager::onDriveListChanged);
-    } else {
-        connect(IoC<NativeEventFilter>(), &NativeEventFilter::driveListChanged, driveListManager,
-                &DriveListManager::onDriveListChanged);
-    }
-
-    driveListManager->initialize();
-}
-
 void FortManager::show()
 {
     auto windowManager = IoC<WindowManager>();
@@ -499,12 +467,6 @@ void FortManager::updateLogManager(bool active)
 void FortManager::updateStatManager(FirewallConf *conf)
 {
     IoC<StatManager>()->setConf(conf);
-}
-
-void FortManager::onDbIoError()
-{
-    // Force drive list checks
-    IoC<DriveListManager>()->startPolling();
 }
 
 void FortManager::setupPortableResource()

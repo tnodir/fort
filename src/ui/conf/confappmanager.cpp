@@ -143,11 +143,11 @@ void ConfAppManager::setUp()
 {
     m_confManager = IoC()->setUpDependency<ConfManager>();
 
+    setupDriveListManager();
+
     purgeAppsOnStart();
 
     setupAppEndTimer();
-
-    setupDriveListManager();
 }
 
 void ConfAppManager::setupDriveListManager()
