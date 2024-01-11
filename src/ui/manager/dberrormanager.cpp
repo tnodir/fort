@@ -5,8 +5,8 @@
 
 #include <sqlite/sqlitedb.h>
 
+#include <fortmanager.h>
 #include <fortsettings.h>
-#include <manager/windowmanager.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -31,16 +31,13 @@ DbErrorManager::DbErrorManager(QObject *parent) : QObject(parent) { }
 
 void DbErrorManager::setUp()
 {
-    setupDriveMask();
-
-    SqliteDb::setErrorLogCallback(sqliteLogHandler, /*context=*/this);
-}
-
-void DbErrorManager::setupDriveMask()
-{
     auto settings = IoC<FortSettings>();
 
+    // Drive Mask
     m_driveMask |= FileUtil::driveMaskByPath(settings->confFilePath());
+
+    // SQLite Log Callback
+    SqliteDb::setErrorLogCallback(sqliteLogHandler, /*context=*/this);
 }
 
 void DbErrorManager::onDbIoError()
@@ -59,7 +56,7 @@ void DbErrorManager::checkDriveList()
 
     if (m_driveMask == driveMask) {
         // Restart on profile drive mounted
-        IoC<WindowManager>()->restart();
+        IoC<FortManager>()->processRestartRequired();
         return;
     }
 

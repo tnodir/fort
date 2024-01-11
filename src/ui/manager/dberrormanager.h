@@ -21,10 +21,7 @@ private slots:
     void checkDriveList();
 
 private:
-    void setupDriveMask();
-
-private:
-    bool m_polling = false;
+    bool m_polling : 1 = false;
 
     quint32 m_driveMask = 0;
 };
