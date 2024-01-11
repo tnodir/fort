@@ -9,7 +9,7 @@
 #include <util/ioc/ioccontainer.h>
 
 namespace {
-const QLoggingCategory LC("driveListManager");
+const QLoggingCategory LC("manager.driveList");
 }
 
 DriveListManager::DriveListManager(QObject *parent) : QObject(parent) { }

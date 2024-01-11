@@ -12,11 +12,11 @@
 
 namespace {
 
-const QLoggingCategory LC("dbErrorManager");
+const QLoggingCategory LC("manager.dbError");
 
 void sqliteLogHandler(void *context, int errCode, const char *message)
 {
-    qCWarning(LC) << "DB Error:" << errCode << qUtf8Printable(message);
+    qCWarning(LC) << "Code:" << errCode << "Message:" << qUtf8Printable(message);
 
     if (SqliteDb::isIoError(errCode)) {
         auto manager = static_cast<DbErrorManager *>(context);

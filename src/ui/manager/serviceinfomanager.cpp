@@ -12,7 +12,7 @@
 
 namespace {
 
-const QLoggingCategory LC("serviceInfo");
+const QLoggingCategory LC("manager.serviceInfo");
 
 const char *const servicesSubKey = R"(SYSTEM\CurrentControlSet\Services)";
 const char *const serviceImagePathKey = "ImagePath";
