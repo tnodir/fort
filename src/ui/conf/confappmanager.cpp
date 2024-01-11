@@ -252,7 +252,8 @@ void ConfAppManager::deleteApps(const QVector<qint64> &appIdList)
     bool isWildcard = false;
 
     for (const qint64 appId : appIdList) {
-        deleteApp(appId, isWildcard);
+        if (!deleteApp(appId, isWildcard))
+            break;
     }
 
     if (isWildcard) {
@@ -363,7 +364,8 @@ void ConfAppManager::updateAppsBlocked(
     bool isWildcard = (appIdList.size() > 7);
 
     for (const qint64 appId : appIdList) {
-        updateAppBlocked(appId, blocked, killProcess, isWildcard);
+        if (!updateAppBlocked(appId, blocked, killProcess, isWildcard))
+            break;
     }
 
     if (isWildcard) {
@@ -377,7 +379,7 @@ bool ConfAppManager::updateAppBlocked(
     App app;
     app.appId = appId;
     if (!loadAppById(app))
-        return false;
+        return true;
 
     if (!prepareAppBlocked(app, blocked, killProcess) || !saveAppBlocked(app))
         return false;
