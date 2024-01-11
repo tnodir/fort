@@ -17,8 +17,10 @@ public:
     virtual void restoreWindowState() { }
 
     void showWindow(bool activate = true);
+    void exposeWindow();
 
     static void showWidget(QWidget *w, bool activate = true);
+    static void exposeWidget(QWidget *w);
 
 signals:
     void activationChanged(bool isActive);

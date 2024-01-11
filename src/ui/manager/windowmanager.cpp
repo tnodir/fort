@@ -91,7 +91,9 @@ QFont WindowManager::defaultFont()
 
 void WindowManager::setupAppPalette()
 {
-    QApplication::setPalette(QApplication::style()->standardPalette());
+    const QPalette palette = QApplication::style()->standardPalette();
+
+    QApplication::setPalette(palette);
 }
 
 void WindowManager::setupMainWindow()
@@ -258,6 +260,12 @@ void WindowManager::quitHomeWindow(QEvent *event)
     event->ignore();
 
     trayIcon()->quitProgram();
+}
+
+void WindowManager::exposeHomeWindow()
+{
+    showHomeWindow();
+    homeWindow()->exposeWindow();
 }
 
 void WindowManager::showHomeWindowAbout()

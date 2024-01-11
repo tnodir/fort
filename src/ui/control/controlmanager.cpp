@@ -244,7 +244,7 @@ bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
     }
     // Show command
     else if (progCommand == "show") {
-        IoC<WindowManager>()->showHomeWindow();
+        IoC<WindowManager>()->exposeHomeWindow();
         return true;
     }
 

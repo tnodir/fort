@@ -71,6 +71,7 @@ public slots:
     void closeHomeWindow();
     void quitHomeWindow(QEvent *event);
 
+    void exposeHomeWindow();
     void showHomeWindowAbout();
 
     void showProgramsWindow();
