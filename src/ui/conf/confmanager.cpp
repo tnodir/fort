@@ -13,7 +13,6 @@
 #include <log/logmanager.h>
 #include <manager/envmanager.h>
 #include <manager/serviceinfomanager.h>
-#include <manager/servicemanager.h>
 #include <task/taskinfo.h>
 #include <task/taskmanager.h>
 #include <user/iniuser.h>
@@ -21,6 +20,7 @@
 #include <util/conf/confutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
 #include <util/startuputil.h>
 
 #include "addressgroup.h"
@@ -768,7 +768,7 @@ bool ConfManager::importMasterBackup(const QString &path)
     }
 
     if (IoC<FortSettings>()->isService()) {
-        IoC<ServiceManager>()->processRestartRequired();
+        OsUtil::restart();
     }
 
     return ok;

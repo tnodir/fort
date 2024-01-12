@@ -221,8 +221,6 @@ void FortSettings::processArguments(const QStringList &args)
 
     // Other Arguments
     m_args = parser.positionalArguments();
-
-    m_appArguments = args.mid(1);
 }
 
 void FortSettings::setupPaths(EnvManager *envManager)

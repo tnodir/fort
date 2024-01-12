@@ -20,9 +20,8 @@ const QLoggingCategory LC("util.osUtil");
 
 BOOL WINAPI consoleCtrlHandler(DWORD /*ctrlType*/)
 {
-    qCDebug(LC) << "Quit due console control";
+    OsUtil::quit("console control");
 
-    QCoreApplication::quit();
     Sleep(100); // Let the process exit gracefully
     return TRUE;
 }
@@ -172,4 +171,21 @@ void OsUtil::setThreadIsBusy(bool on)
 bool OsUtil::allowOtherForegroundWindows()
 {
     return AllowSetForegroundWindow(ASFW_ANY);
+}
+
+void OsUtil::restart()
+{
+    const QString appFilePath = QCoreApplication::applicationFilePath();
+    const QStringList args = QCoreApplication::arguments();
+
+    qApp->connect(qApp, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
+
+    quit("required restart");
+}
+
+void OsUtil::quit(const QString &reason)
+{
+    qCDebug(LC) << "Quit due" << reason;
+
+    QCoreApplication::quit();
 }

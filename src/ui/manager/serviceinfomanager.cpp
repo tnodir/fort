@@ -232,7 +232,7 @@ void ServiceInfoManager::setupServiceMonitor(const QString &serviceName)
     auto serviceMonitor = new ServiceMonitor(serviceName, m_serviceListMonitor);
 
     connect(serviceMonitor, &ServiceMonitor::stateChanged, this,
-            [=] { onServiceStateChanged(serviceMonitor); });
+            [=, this] { onServiceStateChanged(serviceMonitor); });
 
     startServiceMonitor(serviceMonitor);
 }

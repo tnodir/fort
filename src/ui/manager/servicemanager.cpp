@@ -10,6 +10,7 @@
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
 #include <util/startuputil.h>
 
 namespace {
@@ -113,9 +114,7 @@ void ServiceManager::processControl(quint32 code, quint32 eventType)
         Q_FALLTHROUGH();
     case FORT_SERVICE_CONTROL_UNINSTALL:
     case SERVICE_CONTROL_SHUTDOWN: {
-        qCDebug(LC) << "Quit due service control";
-
-        QCoreApplication::quit(); // it's threadsafe
+        OsUtil::quit("service control"); // it's threadsafe
 
         state = SERVICE_STOP_PENDING;
     } break;
@@ -127,13 +126,4 @@ void ServiceManager::processControl(quint32 code, quint32 eventType)
     }
 
     reportStatus(state);
-}
-
-void ServiceManager::processRestartRequired()
-{
-    qCDebug(LC) << "Quit due required restart";
-
-    QCoreApplication::quit();
-
-    reportStatus(SERVICE_STOP_PENDING);
 }

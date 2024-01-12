@@ -59,8 +59,6 @@ public:
 
     const QStringList &args() const { return m_args; }
 
-    const QStringList &appArguments() const { return m_appArguments; }
-
     bool passwordChecked() const { return m_passwordChecked; }
     int passwordUnlockType() const { return m_passwordUnlockType; }
 
@@ -125,8 +123,6 @@ private:
     QString m_logsPath;
     QString m_controlCommand;
     QStringList m_args;
-
-    QStringList m_appArguments;
 };
 
 #endif // FORTSETTINGS_H

@@ -27,6 +27,7 @@
 #include <fortsettings.h>
 #include <stat/statmanager.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
 
 #include "nativeeventfilter.h"
 
@@ -484,26 +485,12 @@ void WindowManager::quit()
 {
     quitApp();
 
-    qCDebug(LC) << "Quit due user request";
-
-    QCoreApplication::quit();
-}
-
-void WindowManager::restart()
-{
-    const QString appFilePath = QCoreApplication::applicationFilePath();
-    const QStringList args = IoC<FortSettings>()->appArguments();
-
-    connect(qApp, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
-
-    qCDebug(LC) << "Quit due required restart";
-
-    QCoreApplication::quit();
+    OsUtil::quit("user request");
 }
 
 void WindowManager::processRestartRequired(const QString &info)
 {
-    showConfirmBox([&] { restart(); }, tr("Restart Now?"), tr("Restart Required"), info);
+    showConfirmBox([&] { OsUtil::restart(); }, tr("Restart Now?"), tr("Restart Required"), info);
 }
 
 bool WindowManager::checkWindowPassword(WindowCode code)

@@ -104,7 +104,7 @@ public slots:
     void closeAllWindows();
 
     void quit();
-    void restart();
+
     void processRestartRequired(const QString &info = {});
 
     bool checkWindowPassword(WindowCode code);

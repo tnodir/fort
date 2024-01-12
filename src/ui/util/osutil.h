@@ -41,6 +41,9 @@ public:
     static void setThreadIsBusy(bool on);
 
     static bool allowOtherForegroundWindows();
+
+    static void restart();
+    static void quit(const QString &reason);
 };
 
 #endif // OSUTIL_H

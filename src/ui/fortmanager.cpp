@@ -428,7 +428,7 @@ void FortManager::show()
 void FortManager::processRestartRequired()
 {
     if (IoC<FortSettings>()->isService()) {
-        IoC<ServiceManager>()->processRestartRequired();
+        OsUtil::restart();
     } else {
         IoC<WindowManager>()->processRestartRequired();
     }
