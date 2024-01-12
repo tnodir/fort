@@ -92,7 +92,41 @@ QString extractInfoText(LPVOID infoData, const WORD *langInfo, const WCHAR *name
     return QString();
 }
 
-bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
+QString extractInfoVersion(LPVOID infoData)
+{
+    UINT dummy;
+    VS_FIXEDFILEINFO *ffi;
+    if (!VerQueryValueA(infoData, "\\", (LPVOID *) &ffi, &dummy))
+        return {};
+
+    DWORD versionMS;
+    DWORD versionLS;
+
+    if (ffi->dwFileVersionMS != 0 || ffi->dwFileVersionLS != 0) {
+        versionMS = ffi->dwFileVersionMS;
+        versionLS = ffi->dwFileVersionLS;
+    } else {
+        versionMS = ffi->dwProductVersionMS;
+        versionLS = ffi->dwProductVersionLS;
+    }
+
+    const WORD leftMost = HIWORD(versionMS);
+    const WORD secondLeft = LOWORD(versionMS);
+    const WORD secondRight = HIWORD(versionLS);
+    const WORD rightMost = LOWORD(versionLS);
+
+    QString version = QString("%1.%2.%3.%4")
+                              .arg(QString::number(leftMost), QString::number(secondLeft),
+                                      QString::number(secondRight), QString::number(rightMost));
+
+    if (rightMost == 0) {
+        version.chop(2);
+    }
+
+    return version;
+}
+
+bool extractProductInfo(const QString &appPath, AppInfo &appInfo)
 {
     const wchar_t *appPathW = (LPCWSTR) appPath.utf16();
 
@@ -110,25 +144,7 @@ bool extractVersionInfo(const QString &appPath, AppInfo &appInfo)
         return false;
 
     // Product Version
-    {
-        VS_FIXEDFILEINFO *ffi;
-        if (!VerQueryValueA(infoData, "\\", (LPVOID *) &ffi, (PUINT) &dummy))
-            return false;
-
-        const DWORD leftMost = HIWORD(ffi->dwProductVersionMS);
-        const DWORD secondLeft = LOWORD(ffi->dwProductVersionMS);
-        const DWORD secondRight = HIWORD(ffi->dwProductVersionLS);
-        const DWORD rightMost = LOWORD(ffi->dwProductVersionLS);
-
-        appInfo.productVersion =
-                QString("%1.%2.%3.%4")
-                        .arg(QString::number(leftMost), QString::number(secondLeft),
-                                QString::number(secondRight), QString::number(rightMost));
-
-        if (rightMost == 0) {
-            appInfo.productVersion.chop(2);
-        }
-    }
+    appInfo.productVersion = extractInfoVersion(infoData);
 
     // Language info
     WORD *langInfo;
@@ -174,7 +190,7 @@ bool getInfo(const QString &appPath, AppInfo &appInfo)
 
     const bool ok = appInfo.fileModTime.isValid();
     if (ok) {
-        extractVersionInfo(path, appInfo);
+        extractProductInfo(path, appInfo);
     }
 
     revertWow64FsRedirection(wow64FsRedir);
