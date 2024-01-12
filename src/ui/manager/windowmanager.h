@@ -115,11 +115,9 @@ public slots:
     virtual void showInfoBox(
             const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
     void showConfirmBox(const std::function<void()> &onConfirmed, const QString &text,
-            const QString &title = QString(), const QString &info = QString(),
-            QWidget *parent = nullptr);
+            const QString &title = QString(), QWidget *parent = nullptr);
     void showQuestionBox(const std::function<void(bool confirmed)> &onFinished, const QString &text,
-            const QString &title = QString(), const QString &info = QString(),
-            QWidget *parent = nullptr);
+            const QString &title = QString(), QWidget *parent = nullptr);
 
     static void showErrorDialog(
             const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
