@@ -188,6 +188,21 @@ void ConfAppManager::updateAppEndTimer()
     }
 }
 
+void ConfAppManager::onAddOrUpdateApp(const App &app, bool onlyUpdate)
+{
+    if (!app.endTime.isNull()) {
+        updateAppEndTimer();
+    }
+
+    if (onlyUpdate) {
+        emitAppUpdated();
+    } else {
+        emitAppsChanged();
+    }
+
+    updateDriverUpdateAppConf(app);
+}
+
 void ConfAppManager::emitAppAlerted()
 {
     m_appAlertedTimer.startTrigger();
@@ -255,24 +270,14 @@ bool ConfAppManager::addOrUpdateApp(const App &app, bool onlyUpdate)
 
     if (ok) {
         // Alert
-        const char *alertSql = app.alerted && !onlyUpdate ? sqlInsertAppAlert : sqlDeleteAppAlert;
+        const char *alertSql = (app.alerted && !onlyUpdate) ? sqlInsertAppAlert : sqlDeleteAppAlert;
         sqliteDb()->executeEx(alertSql, { appIdVar });
     }
 
     commitTransaction(ok);
 
     if (ok) {
-        if (!app.endTime.isNull()) {
-            updateAppEndTimer();
-        }
-
-        if (onlyUpdate) {
-            emitAppUpdated();
-        } else {
-            emitAppsChanged();
-        }
-
-        updateDriverUpdateAppConf(app);
+        onAddOrUpdateApp(app, onlyUpdate);
     }
 
     return ok;

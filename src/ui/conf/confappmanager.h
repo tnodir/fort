@@ -63,6 +63,8 @@ protected:
     void updateAppEndTimer();
 
 private:
+    void onAddOrUpdateApp(const App &app, bool onlyUpdate);
+
     bool deleteApp(qint64 appId, bool &isWildcard);
 
     bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
