@@ -34,13 +34,13 @@ public:
 
     qint64 appIdByPath(const QString &appPath);
 
-    virtual bool addApp(const App &app);
+    virtual bool addOrUpdateApp(const App &app, bool onlyUpdate = false);
+    virtual bool updateApp(const App &app);
+    virtual bool updateAppName(qint64 appId, const QString &appName);
     virtual bool deleteApps(const QVector<qint64> &appIdList);
     virtual bool purgeApps();
-    virtual bool updateApp(const App &app);
     virtual bool updateAppsBlocked(
             const QVector<qint64> &appIdList, bool blocked, bool killProcess);
-    virtual bool updateAppName(qint64 appId, const QString &appName);
 
     bool walkApps(const std::function<walkAppsCallback> &func) override;
 
@@ -74,8 +74,6 @@ private:
     void emitAppAlerted();
     void emitAppsChanged();
     void emitAppUpdated();
-
-    bool addOrUpdateApp(const App &app);
 
     bool loadAppById(App &app);
     static void fillApp(App &app, const SqliteStmt &stmt);

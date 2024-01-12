@@ -121,10 +121,23 @@ inline bool processConfManagerRpcResult(
     return func ? func(confManager, p, resArgs) : false;
 }
 
-bool processConfAppManager_addApp(
+bool processConfAppManager_addOrUpdateApp(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confAppManager->addApp(ConfAppManagerRpc::varListToApp(p.args));
+    return confAppManager->addOrUpdateApp(
+            ConfAppManagerRpc::varListToApp(p.args.value(0).toList()), p.args.value(1).toBool());
+}
+
+bool processConfAppManager_updateApp(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->updateApp(ConfAppManagerRpc::varListToApp(p.args));
+}
+
+bool processConfAppManager_updateAppName(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->updateAppName(p.args.value(0).toLongLong(), p.args.value(1).toString());
 }
 
 bool processConfAppManager_deleteApps(
@@ -139,12 +152,6 @@ bool processConfAppManager_purgeApps(ConfAppManager *confAppManager,
     return confAppManager->purgeApps();
 }
 
-bool processConfAppManager_updateApp(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    return confAppManager->updateApp(ConfAppManagerRpc::varListToApp(p.args));
-}
-
 bool processConfAppManager_updateAppsBlocked(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
@@ -152,29 +159,24 @@ bool processConfAppManager_updateAppsBlocked(
             p.args.value(1).toBool(), p.args.value(2).toBool());
 }
 
-bool processConfAppManager_updateAppName(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
-{
-    return confAppManager->updateAppName(p.args.value(0).toLongLong(), p.args.value(1).toString());
-}
-
 using processConfAppManager_func = bool (*)(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs);
 
 static processConfAppManager_func processConfAppManager_funcList[] = {
-    &processConfAppManager_addApp, // Rpc_ConfAppManager_addApp,
+    &processConfAppManager_addOrUpdateApp, // Rpc_ConfAppManager_addOrUpdateApp,
+    &processConfAppManager_updateApp, // Rpc_ConfAppManager_updateApp,
+    &processConfAppManager_updateAppName, // Rpc_ConfAppManager_updateAppName,
     &processConfAppManager_deleteApps, // Rpc_ConfAppManager_deleteApps,
     &processConfAppManager_purgeApps, // Rpc_ConfAppManager_purgeApps,
-    &processConfAppManager_updateApp, // Rpc_ConfAppManager_updateApp,
     &processConfAppManager_updateAppsBlocked, // Rpc_ConfAppManager_updateAppsBlocked,
-    &processConfAppManager_updateAppName, // Rpc_ConfAppManager_updateAppName,
 };
 
 inline bool processConfAppManagerRpcResult(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
     const processConfAppManager_func func = getProcessFunc(p, processConfAppManager_funcList,
-            Control::Rpc_ConfAppManager_addApp, Control::Rpc_ConfAppManager_updateAppName);
+            Control::Rpc_ConfAppManager_addOrUpdateApp,
+            Control::Rpc_ConfAppManager_updateAppsBlocked);
 
     return func ? func(confAppManager, p, resArgs) : false;
 }

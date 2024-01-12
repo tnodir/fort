@@ -26,12 +26,12 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_checkPassword)
         CASE_STRING(Rpc_ConfManager_confChanged)
 
-        CASE_STRING(Rpc_ConfAppManager_addApp)
+        CASE_STRING(Rpc_ConfAppManager_addOrUpdateApp)
+        CASE_STRING(Rpc_ConfAppManager_updateApp)
+        CASE_STRING(Rpc_ConfAppManager_updateAppName)
         CASE_STRING(Rpc_ConfAppManager_deleteApps)
         CASE_STRING(Rpc_ConfAppManager_purgeApps)
-        CASE_STRING(Rpc_ConfAppManager_updateApp)
         CASE_STRING(Rpc_ConfAppManager_updateAppsBlocked)
-        CASE_STRING(Rpc_ConfAppManager_updateAppName)
         CASE_STRING(Rpc_ConfAppManager_appAlerted)
         CASE_STRING(Rpc_ConfAppManager_appsChanged)
         CASE_STRING(Rpc_ConfAppManager_appUpdated)
@@ -115,12 +115,12 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfManager, // Rpc_ConfManager_checkPassword,
         Rpc_ConfManager, // Rpc_ConfManager_confChanged,
 
-        Rpc_ConfAppManager, // Rpc_ConfAppManager_addApp,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_addOrUpdateApp,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_updateApp,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_updateAppName,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_deleteApps,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_purgeApps,
-        Rpc_ConfAppManager, // Rpc_ConfAppManager_updateApp,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_updateAppsBlocked,
-        Rpc_ConfAppManager, // Rpc_ConfAppManager_updateAppName,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appEndTimesUpdated,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appAlerted,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appsChanged,
@@ -185,12 +185,12 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_ConfManager_checkPassword,
         0, // Rpc_ConfManager_confChanged,
 
-        true, // Rpc_ConfAppManager_addApp,
+        true, // Rpc_ConfAppManager_addOrUpdateApp,
+        true, // Rpc_ConfAppManager_updateApp,
+        true, // Rpc_ConfAppManager_updateAppName,
         true, // Rpc_ConfAppManager_deleteApps,
         true, // Rpc_ConfAppManager_purgeApps,
-        true, // Rpc_ConfAppManager_updateApp,
         true, // Rpc_ConfAppManager_updateAppsBlocked,
-        true, // Rpc_ConfAppManager_updateAppName,
         0, // Rpc_ConfAppManager_appEndTimesUpdated,
         0, // Rpc_ConfAppManager_appAlerted,
         0, // Rpc_ConfAppManager_appsChanged,

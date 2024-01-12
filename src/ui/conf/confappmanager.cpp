@@ -71,22 +71,16 @@ const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, pat
                                  "    is_wildcard, use_group_perm, apply_child, kill_child,"
                                  "    lan_only, log_blocked, log_conn, blocked, kill_process,"
                                  "    accept_zones, reject_zones, end_time, creat_time)"
-                                 "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9,"
-                                 "    ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17)"
+                                 "  VALUES(?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9,"
+                                 "    ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18)"
                                  "  ON CONFLICT(path) DO UPDATE"
-                                 "  SET app_group_id = ?1, origin_path = ?2, name = ?4,"
-                                 "    is_wildcard = ?5, use_group_perm = ?6,"
-                                 "    apply_child = ?7, kill_child = ?8,"
-                                 "    lan_only = ?9, log_blocked = ?10, log_conn = ?11,"
-                                 "    blocked = ?12, kill_process = ?13,"
-                                 "    accept_zones = ?14, reject_zones = ?15, end_time = ?16"
-                                 "  RETURNING app_id;";
-
-const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
-
-const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1 RETURNING path, is_wildcard;";
-
-const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
+                                 "  SET app_group_id = ?2, origin_path = ?3, name = ?5,"
+                                 "    is_wildcard = ?6, use_group_perm = ?7,"
+                                 "    apply_child = ?8, kill_child = ?9,"
+                                 "    lan_only = ?10, log_blocked = ?11, log_conn = ?12,"
+                                 "    blocked = ?13, kill_process = ?14,"
+                                 "    accept_zones = ?15, reject_zones = ?16, end_time = ?17"
+                                 "  RETURNING app_id, ?1;";
 
 const char *const sqlUpdateApp = "UPDATE app"
                                  "  SET app_group_id = ?2, origin_path = ?3, path = ?4,"
@@ -95,9 +89,16 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    log_blocked = ?11, log_conn = ?12,"
                                  "    blocked = ?13, kill_process = ?14,"
                                  "    accept_zones = ?15, reject_zones = ?16, end_time = ?17"
-                                 "  WHERE app_id = ?1;";
+                                 "  WHERE app_id = ?1"
+                                 "  RETURNING app_id, ?18;";
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
+
+const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1 RETURNING path, is_wildcard;";
+
+const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
+
+const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
 
 const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2, kill_process = ?3,"
                                         "    end_time = NULL"
@@ -231,14 +232,72 @@ qint64 ConfAppManager::appIdByPath(const QString &appPath)
     return sqliteDb()->executeEx(sqlSelectAppIdByPath, { appPath }).toLongLong();
 }
 
-bool ConfAppManager::addApp(const App &app)
+bool ConfAppManager::addOrUpdateApp(const App &app, bool onlyUpdate)
 {
-    if (!addOrUpdateApp(app))
+    const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
+    if (appGroup->isNull())
         return false;
 
-    updateDriverUpdateAppConf(app);
+    bool ok = false;
 
-    return true;
+    beginTransaction();
+
+    const auto vars = QVariantList()
+            << app.appId << appGroup->id() << app.appOriginPath
+            << (!app.appPath.isEmpty() ? app.appPath : QVariant()) << app.appName << app.isWildcard
+            << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly << app.logBlocked
+            << app.logConn << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
+            << (!app.endTime.isNull() ? app.endTime : QVariant())
+            << (onlyUpdate ? QVariant() : QDateTime::currentDateTime());
+
+    const char *sql = onlyUpdate ? sqlUpdateApp : sqlUpsertApp;
+    const auto appIdVar = sqliteDb()->executeEx(sql, vars, 1, &ok);
+
+    if (ok) {
+        // Alert
+        const char *alertSql = app.alerted && !onlyUpdate ? sqlInsertAppAlert : sqlDeleteAppAlert;
+        sqliteDb()->executeEx(alertSql, { appIdVar });
+    }
+
+    commitTransaction(ok);
+
+    if (ok) {
+        if (!app.endTime.isNull()) {
+            updateAppEndTimer();
+        }
+
+        if (onlyUpdate) {
+            emitAppUpdated();
+        } else {
+            emitAppsChanged();
+        }
+
+        updateDriverUpdateAppConf(app);
+    }
+
+    return ok;
+}
+
+bool ConfAppManager::updateApp(const App &app)
+{
+    return addOrUpdateApp(app, /*onlyUpdate=*/true);
+}
+
+bool ConfAppManager::updateAppName(qint64 appId, const QString &appName)
+{
+    bool ok = false;
+
+    const auto vars = QVariantList() << appId << appName;
+
+    sqliteDb()->executeEx(sqlUpdateAppName, vars, 0, &ok);
+
+    commitTransaction(ok);
+
+    if (ok) {
+        emitAppUpdated();
+    }
+
+    return ok;
 }
 
 bool ConfAppManager::deleteApps(const QVector<qint64> &appIdList)
@@ -295,44 +354,6 @@ bool ConfAppManager::purgeApps()
 {
     // Delete obsolete apps
     return deleteApps(collectObsoleteApps());
-}
-
-bool ConfAppManager::updateApp(const App &app)
-{
-    const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
-    if (appGroup->isNull())
-        return false;
-
-    bool ok = false;
-
-    beginTransaction();
-
-    const auto vars = QVariantList()
-            << app.appId << appGroup->id() << app.appOriginPath
-            << (!app.appPath.isEmpty() ? app.appPath : QVariant()) << app.appName << app.isWildcard
-            << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly << app.logBlocked
-            << app.logConn << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
-            << (!app.endTime.isNull() ? app.endTime : QVariant());
-
-    sqliteDb()->executeEx(sqlUpdateApp, vars, 0, &ok);
-
-    if (ok) {
-        sqliteDb()->executeEx(sqlDeleteAppAlert, { app.appId }, 0, &ok);
-    }
-
-    commitTransaction(ok);
-
-    if (ok) {
-        if (!app.endTime.isNull()) {
-            updateAppEndTimer();
-        }
-
-        emitAppUpdated();
-
-        updateDriverUpdateAppConf(app);
-    }
-
-    return ok;
 }
 
 bool ConfAppManager::updateAppsBlocked(
@@ -414,23 +435,6 @@ QVector<qint64> ConfAppManager::collectObsoleteApps()
     }
 
     return appIdList;
-}
-
-bool ConfAppManager::updateAppName(qint64 appId, const QString &appName)
-{
-    bool ok = false;
-
-    const auto vars = QVariantList() << appId << appName;
-
-    sqliteDb()->executeEx(sqlUpdateAppName, vars, 0, &ok);
-
-    commitTransaction(ok);
-
-    if (ok) {
-        emitAppUpdated();
-    }
-
-    return ok;
 }
 
 bool ConfAppManager::walkApps(const std::function<walkAppsCallback> &func)
@@ -516,44 +520,6 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     m_driveMask = confUtil.driveMask();
 
     return true;
-}
-
-bool ConfAppManager::addOrUpdateApp(const App &app)
-{
-    const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
-    if (appGroup->isNull())
-        return false;
-
-    bool ok = false;
-
-    beginTransaction();
-
-    const auto vars = QVariantList()
-            << appGroup->id() << app.appOriginPath
-            << (!app.appPath.isEmpty() ? app.appPath : QVariant()) << app.appName << app.isWildcard
-            << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly << app.logBlocked
-            << app.logConn << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
-            << (!app.endTime.isNull() ? app.endTime : QVariant()) << QDateTime::currentDateTime();
-
-    const auto appIdVar = sqliteDb()->executeEx(sqlUpsertApp, vars, 1, &ok);
-
-    if (ok) {
-        // Alert
-        const qint64 appId = appIdVar.toLongLong();
-        sqliteDb()->executeEx(app.alerted ? sqlInsertAppAlert : sqlDeleteAppAlert, { appId });
-    }
-
-    commitTransaction(ok);
-
-    if (ok) {
-        if (!app.endTime.isNull()) {
-            updateAppEndTimer();
-        }
-
-        emitAppsChanged();
-    }
-
-    return ok;
 }
 
 bool ConfAppManager::loadAppById(App &app)

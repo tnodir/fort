@@ -31,6 +31,21 @@ void ProgramsController::initialize()
     appListModel()->initialize();
 }
 
+bool ProgramsController::addOrUpdateApp(const App &app, bool onlyUpdate)
+{
+    return confAppManager()->addOrUpdateApp(app, onlyUpdate);
+}
+
+bool ProgramsController::updateApp(const App &app)
+{
+    return confAppManager()->updateApp(app);
+}
+
+bool ProgramsController::updateAppName(qint64 appId, const QString &appName)
+{
+    return confAppManager()->updateAppName(appId, appName);
+}
+
 void ProgramsController::updateAppsBlocked(
         const QVector<qint64> &appIdList, bool blocked, bool killProcess)
 {
