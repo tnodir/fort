@@ -188,7 +188,7 @@ void OptionsController::importBackup()
 
     const QString inPath = FileUtil::pathSlash(path);
 
-    if (!confManager()->importBackup(inPath)) {
+    if (confManager()->importBackup(inPath)) {
         windowManager()->showInfoDialog(tr("Backup Imported Successfully"));
     } else {
         windowManager()->showErrorBox(tr("Cannot Import Backup"));
