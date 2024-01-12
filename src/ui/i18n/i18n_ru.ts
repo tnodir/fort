@@ -249,14 +249,6 @@
         <source>Configuration Error</source>
         <translation>Ошибка конфигурации</translation>
     </message>
-    <message>
-        <source>App Configuration Error</source>
-        <translation>Ошибка конфигурации Программы</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
-    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -473,6 +465,14 @@
     <message>
         <source>Zone Addresses Updated: %1.</source>
         <translation>Адреса Зон обновлены: %1.</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Невозможно загрузить Найстройки</translation>
     </message>
 </context>
 <context>
@@ -768,6 +768,10 @@ Make sure that you have a fresh backup.</source>
         <translation>Программа будет перезапущена после успешного импорта. Продолжить?
 
 Убедитесь, что у вас есть новая резервная копия.</translation>
+    </message>
+    <message>
+        <source>Cannot save the options</source>
+        <translation>Невозможно сохранить настройки</translation>
     </message>
 </context>
 <context>
@@ -1239,6 +1243,25 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
 </context>
 <context>
+    <name>ProgramsController</name>
+    <message>
+        <source>App Configuration Error</source>
+        <translation>Ошибка конфигурации Программы</translation>
+    </message>
+    <message>
+        <source>Cannot update program&apos;s state</source>
+        <translation>Невозможно обновить состояние программы</translation>
+    </message>
+    <message>
+        <source>Cannot delete program</source>
+        <translation>Невозможно удалить программу</translation>
+    </message>
+    <message>
+        <source>Cannot purge obsolete programs</source>
+        <translation>Невозможно удалить устаревшие программы</translation>
+    </message>
+</context>
+<context>
     <name>ProgramsWindow</name>
     <message>
         <source>Edit</source>
@@ -1552,8 +1575,8 @@ It can cause a Windows malfunction or totally unusable.</source>
 <context>
     <name>TaskInfo</name>
     <message>
-        <source>Update Checker</source>
-        <translation>Проверка обновлений</translation>
+        <source>Fort Firewall Update Checker</source>
+        <translation>Проверка обновлений Fort Firewall</translation>
     </message>
     <message>
         <source>Zones Downloader</source>
@@ -1743,11 +1766,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation type="unfinished">Перезапустить сейчас?</translation>
+        <translation>Перезапустить сейчас?</translation>
     </message>
     <message>
         <source>Restart Required</source>
-        <translation type="unfinished">Требуется перезапуск</translation>
+        <translation>Требуется перезапуск</translation>
     </message>
 </context>
 <context>
@@ -1771,6 +1794,21 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Last Download</source>
         <translation>Скачивание</translation>
+    </message>
+</context>
+<context>
+    <name>ZonesController</name>
+    <message>
+        <source>Cannot edit Zone</source>
+        <translation>Невозможно обновить Зону</translation>
+    </message>
+    <message>
+        <source>Cannot delete Zone</source>
+        <translation>Невозможно удалить Зону</translation>
+    </message>
+    <message>
+        <source>Cannot update Zone&apos;s name</source>
+        <translation>Невозможно обновить наименование Зоны</translation>
     </message>
 </context>
 <context>

@@ -13,7 +13,7 @@
 #include <util/stringutil.h>
 
 namespace {
-const QLoggingCategory LC("task.taskZoneDownloader");
+const QLoggingCategory LC("task.zoneDownloader");
 }
 
 TaskZoneDownloader::TaskZoneDownloader(QObject *parent) : TaskDownloader(parent) { }
@@ -116,8 +116,7 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
     ipRange.setEmptyNetMask(emptyNetMask());
 
     if (!ipRange.fromList(list, sort())) {
-        qCWarning(LC) << "TaskZoneDownloader:" << zoneName() << ":"
-                      << ipRange.errorLineAndMessageDetails();
+        qCWarning(LC) << zoneName() << ":" << ipRange.errorLineAndMessageDetails();
         return false;
     }
 

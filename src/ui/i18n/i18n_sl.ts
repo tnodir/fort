@@ -249,14 +249,6 @@
         <source>Configuration Error</source>
         <translation>Napaka nastavitev</translation>
     </message>
-    <message>
-        <source>App Configuration Error</source>
-        <translation>Napaka nastavitev aplikacije</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
-    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -473,6 +465,14 @@
     <message>
         <source>Zone Addresses Updated: %1.</source>
         <translation>Posodobljeni naslovi področij: %1.</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation type="unfinished">Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -768,6 +768,10 @@ Make sure that you have a fresh backup.</source>
         <translation>Po uspešnem uvozu se bo program znova zagnal. Želite nadaljevati?
 
 Prepričajte se, da imate svežo varnostno kopijo.</translation>
+    </message>
+    <message>
+        <source>Cannot save the options</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1239,6 +1243,25 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
 </context>
 <context>
+    <name>ProgramsController</name>
+    <message>
+        <source>App Configuration Error</source>
+        <translation type="unfinished">Napaka nastavitev aplikacije</translation>
+    </message>
+    <message>
+        <source>Cannot update program&apos;s state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete program</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot purge obsolete programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramsWindow</name>
     <message>
         <source>Edit</source>
@@ -1552,12 +1575,12 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
 <context>
     <name>TaskInfo</name>
     <message>
-        <source>Update Checker</source>
-        <translation>Preverjevalnik posodobitev</translation>
-    </message>
-    <message>
         <source>Zones Downloader</source>
         <translation>Prenašalnik področij</translation>
+    </message>
+    <message>
+        <source>Fort Firewall Update Checker</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1771,6 +1794,21 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Last Download</source>
         <translation>Zadnji prenos</translation>
+    </message>
+</context>
+<context>
+    <name>ZonesController</name>
+    <message>
+        <source>Cannot edit Zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Zone&apos;s name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

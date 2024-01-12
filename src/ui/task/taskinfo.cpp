@@ -50,7 +50,7 @@ QString TaskInfo::title() const
 {
     switch (m_type) {
     case UpdateChecker:
-        return tr("Update Checker");
+        return tr("Fort Firewall Update Checker");
     case ZoneDownloader:
         return tr("Zones Downloader");
     default:

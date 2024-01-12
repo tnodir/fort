@@ -12,7 +12,7 @@
 
 namespace {
 
-const QLoggingCategory LC("task.taskUpdateChecker");
+const QLoggingCategory LC("task.updateChecker");
 
 const QString downloadUrlSuffix =
 #if defined(Q_PROCESSOR_ARM)
@@ -69,7 +69,7 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     QString errorString;
     const auto map = JsonUtil::jsonToVariant(buffer, errorString).toMap();
     if (!errorString.isEmpty()) {
-        qCWarning(LC) << "Update Checker: JSON error:" << errorString;
+        qCWarning(LC) << "JSON error:" << errorString;
         return false;
     }
 

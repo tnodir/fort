@@ -249,14 +249,6 @@
         <source>Configuration Error</source>
         <translation>Erreur de configuration</translation>
     </message>
-    <message>
-        <source>App Configuration Error</source>
-        <translation>App Erreur de configuration</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
-    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -473,6 +465,14 @@
     <message>
         <source>Zone Addresses Updated: %1.</source>
         <translation>Adresses de zone mises à jour: %1.</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation type="unfinished">Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -768,6 +768,10 @@ Make sure that you have a fresh backup.</source>
         <translation>Le programme sera redémarré une fois l&apos;importation réussie. Continuer&#x202f;?
 
 Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
+    </message>
+    <message>
+        <source>Cannot save the options</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1239,6 +1243,25 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
 </context>
 <context>
+    <name>ProgramsController</name>
+    <message>
+        <source>App Configuration Error</source>
+        <translation type="unfinished">App Erreur de configuration</translation>
+    </message>
+    <message>
+        <source>Cannot update program&apos;s state</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete program</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot purge obsolete programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramsWindow</name>
     <message>
         <source>Edit</source>
@@ -1552,8 +1575,8 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
 <context>
     <name>TaskInfo</name>
     <message>
-        <source>Update Checker</source>
-        <translation>Vérificateur de mise à jour</translation>
+        <source>Fort Firewall Update Checker</source>
+        <translation>Vérificateur de mise à jour du Fort Firewall</translation>
     </message>
     <message>
         <source>Zones Downloader</source>
@@ -1771,6 +1794,21 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Last Download</source>
         <translation>Dernier Téléchargement</translation>
+    </message>
+</context>
+<context>
+    <name>ZonesController</name>
+    <message>
+        <source>Cannot edit Zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Zone&apos;s name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
