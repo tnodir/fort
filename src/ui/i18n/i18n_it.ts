@@ -468,11 +468,11 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation type="unfinished">Per prima cosa installa Fort Firewall v%1 e salva le Opzioni da esso.</translation>
+        <translation>Per prima cosa installa Fort Firewall v%1 e salva le Opzioni da esso.</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile caricare impostazioni</translation>
     </message>
 </context>
 <context>
@@ -562,7 +562,7 @@
     </message>
     <message>
         <source>Hide on close</source>
-        <translation type="unfinished"></translation>
+        <translation>Nascondi alla chiusura</translation>
     </message>
 </context>
 <context>
@@ -771,7 +771,7 @@ Assicurati di avere un backup recente.</translation>
     </message>
     <message>
         <source>Cannot save the options</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile salvare opzioni</translation>
     </message>
 </context>
 <context>
@@ -1246,19 +1246,19 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <name>ProgramsController</name>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished">Errore configurazione app</translation>
+        <translation>Errore configurazione app</translation>
     </message>
     <message>
         <source>Cannot update program&apos;s state</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aggiornare stato programma</translation>
     </message>
     <message>
         <source>Cannot delete program</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile eliminare programma</translation>
     </message>
     <message>
         <source>Cannot purge obsolete programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile eliminare programmi obsoleti</translation>
     </message>
 </context>
 <context>
@@ -1766,11 +1766,11 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation type="unfinished">Riavvia ora?</translation>
+        <translation>Riavvia ora?</translation>
     </message>
     <message>
         <source>Restart Required</source>
-        <translation type="unfinished">Riavvio richiesto</translation>
+        <translation>Riavvio richiesto</translation>
     </message>
 </context>
 <context>
@@ -1800,15 +1800,15 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <name>ZonesController</name>
     <message>
         <source>Cannot edit Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile modificare zona</translation>
     </message>
     <message>
         <source>Cannot delete Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile eliminare zona</translation>
     </message>
     <message>
         <source>Cannot update Zone&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aggiornare nome zona</translation>
     </message>
 </context>
 <context>

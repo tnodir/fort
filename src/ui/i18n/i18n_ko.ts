@@ -468,11 +468,11 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation type="unfinished">먼저 Fort Firewall %1 버전을 설치한 다음 옵션을 저장해 주세요.</translation>
+        <translation>먼저 Fort Firewall %1 버전을 설치한 다음 옵션을 저장해 주세요.</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>설정을 로드할 수 없음</translation>
     </message>
 </context>
 <context>
@@ -771,7 +771,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Cannot save the options</source>
-        <translation type="unfinished"></translation>
+        <translation>옵션을 저장할 수 없습니다</translation>
     </message>
 </context>
 <context>
@@ -1246,19 +1246,19 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <name>ProgramsController</name>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished">앱 구성 오류</translation>
+        <translation>앱 구성 오류</translation>
     </message>
     <message>
         <source>Cannot update program&apos;s state</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램 상태를 업데이트할 수 없습니다</translation>
     </message>
     <message>
         <source>Cannot delete program</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램을 삭제할 수 없습니다</translation>
     </message>
     <message>
         <source>Cannot purge obsolete programs</source>
-        <translation type="unfinished"></translation>
+        <translation>오래된 프로그램을 제거할 수 없습니다</translation>
     </message>
 </context>
 <context>
@@ -1575,12 +1575,12 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
 <context>
     <name>TaskInfo</name>
     <message>
-        <source>Zones Downloader</source>
-        <translation>대역 다운로더</translation>
+        <source>Fort Firewall Update Checker</source>
+        <translation>Fort Firewall 업데이트 검사기</translation>
     </message>
     <message>
-        <source>Fort Firewall Update Checker</source>
-        <translation type="unfinished"></translation>
+        <source>Zones Downloader</source>
+        <translation>대역 다운로더</translation>
     </message>
 </context>
 <context>
@@ -1766,11 +1766,11 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation type="unfinished">지금 재시작?</translation>
+        <translation>지금 재시작?</translation>
     </message>
     <message>
         <source>Restart Required</source>
-        <translation type="unfinished">재시작 필요</translation>
+        <translation>재시작 필요</translation>
     </message>
 </context>
 <context>
@@ -1800,15 +1800,15 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <name>ZonesController</name>
     <message>
         <source>Cannot edit Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>영역을 편집할 수 없음</translation>
     </message>
     <message>
         <source>Cannot delete Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>영역을 편집할 수 없음</translation>
     </message>
     <message>
         <source>Cannot update Zone&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>영역 이름을 업데이트할 수 없음</translation>
     </message>
 </context>
 <context>

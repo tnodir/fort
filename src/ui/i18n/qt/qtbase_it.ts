@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="it_IT">
+<TS version="2.1" language="it_IT" sourcelanguage="en_US">
 <context>
     <name>CloseButton</name>
     <message>
@@ -70,7 +70,7 @@ Premi ESC per annullare</translation>
     <message>
         <source>Cursor at %1, %2, color: %3
 Press ESC to cancel</source>
-        <translation type="vanished">Cursore su %1, %2, colore: %3
+        <translation>Cursore su %1, %2, colore: %3
 Premi ESC per annullare</translation>
     </message>
     <message>
@@ -79,7 +79,7 @@ Premi ESC per annullare</translation>
     </message>
     <message>
         <source>Pick Screen Color</source>
-        <translation type="vanished">Scegli il colore dello schermo</translation>
+        <translation>Scegli il colore dello schermo</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>
@@ -92,6 +92,18 @@ Premi ESC per annullare</translation>
     <message>
         <source>&amp;Add to Custom Colors</source>
         <translation>&amp;Aggiungi ai colori personalizzati</translation>
+    </message>
+</context>
+<context>
+    <name>QKeySequenceEdit</name>
+    <message>
+        <source>Press shortcut</source>
+        <translation>Scorciatoia da usare</translation>
+    </message>
+    <message>
+        <source>%1, ...</source>
+        <extracomment>This text is an &quot;unfinished&quot; shortcut, expands like &quot;Ctrl+A, ...&quot;</extracomment>
+        <translation>%1, …</translation>
     </message>
 </context>
 <context>
@@ -129,7 +141,7 @@ Premi ESC per annullare</translation>
     <name>QPlatformTheme</name>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Save</source>

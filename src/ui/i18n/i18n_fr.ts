@@ -468,11 +468,11 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation type="unfinished">Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
+        <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de charger les paramètres</translation>
     </message>
 </context>
 <context>
@@ -771,7 +771,7 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Cannot save the options</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;enregistrer les options</translation>
     </message>
 </context>
 <context>
@@ -1246,19 +1246,19 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <name>ProgramsController</name>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished">App Erreur de configuration</translation>
+        <translation>App Erreur de configuration</translation>
     </message>
     <message>
         <source>Cannot update program&apos;s state</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de mettre à jour l&apos;état du programme&apos;s</translation>
     </message>
     <message>
         <source>Cannot delete program</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de supprimer le programme</translation>
     </message>
     <message>
         <source>Cannot purge obsolete programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de purger les programmes obsolètes</translation>
     </message>
 </context>
 <context>
@@ -1766,11 +1766,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation type="unfinished">Redémarrer maintenant?</translation>
+        <translation>Redémarrer maintenant?</translation>
     </message>
     <message>
         <source>Restart Required</source>
-        <translation type="unfinished">Redémarrage requis</translation>
+        <translation>Redémarrage requis</translation>
     </message>
 </context>
 <context>
@@ -1800,15 +1800,15 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <name>ZonesController</name>
     <message>
         <source>Cannot edit Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;éditer la zone</translation>
     </message>
     <message>
         <source>Cannot delete Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de supprimer la Zone</translation>
     </message>
     <message>
         <source>Cannot update Zone&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de mettre à jour le nom de la Zone&apos;s</translation>
     </message>
 </context>
 <context>
