@@ -1030,7 +1030,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation type="unfinished"></translation>
+        <translation>마운트된 드라이브에서만 사용되지 않음 정리</translation>
     </message>
 </context>
 <context>
