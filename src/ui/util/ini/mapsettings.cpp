@@ -10,7 +10,17 @@ void MapSettings::save() const
 {
     Q_ASSERT(settings());
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
     for (const auto &[key, v] : map().asKeyValueRange()) {
+#else
+    auto it = map().constBegin();
+    const auto end = map().constEnd();
+
+    for (; it != end; ++it) {
+        const QString &key = it.key();
+        const QVariant &v = it.value();
+#endif
+
         if (!isTransientKey(key)) {
             settings()->setIniValue(key, v);
         }
