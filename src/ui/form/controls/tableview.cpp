@@ -88,6 +88,18 @@ void TableView::selectCell(int row, int column)
     this->scrollTo(index);
 }
 
+void TableView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+{
+    QTableView::selectionChanged(selected, deselected);
+
+    if (selected.isEmpty())
+        return;
+
+    if (!currentIndex().isValid()) {
+        setCurrentIndex(selected.indexes().first());
+    }
+}
+
 void TableView::currentChanged(const QModelIndex &current, const QModelIndex &previous)
 {
     QTableView::currentChanged(current, previous);
