@@ -1030,7 +1030,7 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation type="unfinished"></translation>
+        <translation>Purge obsolète seulement sur les disques montés</translation>
     </message>
 </context>
 <context>
