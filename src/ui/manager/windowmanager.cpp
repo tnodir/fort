@@ -490,9 +490,10 @@ void WindowManager::quit()
 
 void WindowManager::processRestartRequired(const QString &info)
 {
-    const QString text = tr("Restart Required") + "\n\n" + info;
+    const QString title = tr("Restart Required");
+    const QString text = tr("Restart Now?") + "\n\n" + info;
 
-    showConfirmBox([&] { OsUtil::restart(); }, tr("Restart Now?"), text);
+    showConfirmBox([&] { OsUtil::restart(); }, text, title);
 }
 
 bool WindowManager::checkWindowPassword(WindowCode code)
