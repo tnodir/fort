@@ -50,8 +50,6 @@ void ServiceManager::initialize(qintptr hstatus)
     ServiceManagerIface::initialize(hstatus);
 
     registerDeviceNotification();
-
-    qApp->connect(qApp, &QObject::destroyed, [] { reportStatus(SERVICE_STOPPED); });
 }
 
 void ServiceManager::setupControlManager()
@@ -114,6 +112,8 @@ void ServiceManager::processControl(quint32 code, quint32 eventType)
         Q_FALLTHROUGH();
     case FORT_SERVICE_CONTROL_UNINSTALL:
     case SERVICE_CONTROL_SHUTDOWN: {
+        qApp->connect(qApp, &QObject::destroyed, [] { reportStatus(SERVICE_STOPPED); });
+
         OsUtil::quit("service control"); // it's threadsafe
 
         state = SERVICE_STOP_PENDING;
@@ -126,4 +126,9 @@ void ServiceManager::processControl(quint32 code, quint32 eventType)
     }
 
     reportStatus(state);
+}
+
+void ServiceManager::restart()
+{
+    OsUtil::quit("service required restart");
 }
