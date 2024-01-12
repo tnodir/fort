@@ -14,7 +14,6 @@
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
-#include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
@@ -64,11 +63,6 @@ ZonesWindow::ZonesWindow(QWidget *parent) :
 ConfManager *ZonesWindow::confManager() const
 {
     return ctrl()->confManager();
-}
-
-ConfZoneManager *ZonesWindow::confZoneManager() const
-{
-    return ctrl()->confZoneManager();
 }
 
 IniOptions *ZonesWindow::ini() const
@@ -570,7 +564,7 @@ bool ZonesWindow::saveZoneEditFormValidate(const Zone &zone, const ZoneSourceWra
 
 bool ZonesWindow::saveZoneEditFormNew(Zone &zone)
 {
-    if (confZoneManager()->addOrUpdateZone(zone)) {
+    if (ctrl()->addOrUpdateZone(zone)) {
         m_zoneListView->selectCell(zone.zoneId - 1);
         return true;
     }
@@ -585,14 +579,14 @@ bool ZonesWindow::saveZoneEditFormEdit(Zone &zone)
 
     if (zone.isOptionsEqual(zoneRow)) {
         if (!zone.isNameEqual(zoneRow)) {
-            return confZoneManager()->updateZoneName(zoneRow.zoneId, zone.zoneName);
+            return ctrl()->updateZoneName(zoneRow.zoneId, zone.zoneName);
         }
         return true;
     }
 
     zone.zoneId = zoneRow.zoneId;
 
-    return confZoneManager()->addOrUpdateZone(zone);
+    return ctrl()->addOrUpdateZone(zone);
 }
 
 void ZonesWindow::deleteZone(int row)
@@ -601,7 +595,7 @@ void ZonesWindow::deleteZone(int row)
     if (zoneRow.isNull())
         return;
 
-    confZoneManager()->deleteZone(zoneRow.zoneId);
+    ctrl()->deleteZone(zoneRow.zoneId);
 }
 
 void ZonesWindow::deleteSelectedZone()

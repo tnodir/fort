@@ -15,14 +15,14 @@ bool ConfAppManagerRpc::addApp(const App &app)
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_addApp, appToVarList(app));
 }
 
-void ConfAppManagerRpc::deleteApps(const QVector<qint64> &appIdList)
+bool ConfAppManagerRpc::deleteApps(const QVector<qint64> &appIdList)
 {
     const QVariantList appIdVarList = VariantUtil::vectorToList(appIdList);
 
     QVariantList args;
     VariantUtil::addToList(args, appIdVarList);
 
-    IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_deleteApps, args);
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_deleteApps, args);
 }
 
 bool ConfAppManagerRpc::purgeApps()
@@ -35,7 +35,7 @@ bool ConfAppManagerRpc::updateApp(const App &app)
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_updateApp, appToVarList(app));
 }
 
-void ConfAppManagerRpc::updateAppsBlocked(
+bool ConfAppManagerRpc::updateAppsBlocked(
         const QVector<qint64> &appIdList, bool blocked, bool killProcess)
 {
     const QVariantList appIdVarList = VariantUtil::vectorToList(appIdList);
@@ -44,7 +44,7 @@ void ConfAppManagerRpc::updateAppsBlocked(
     VariantUtil::addToList(args, appIdVarList);
     args << blocked << killProcess;
 
-    IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_updateAppsBlocked, args);
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_updateAppsBlocked, args);
 }
 
 bool ConfAppManagerRpc::updateAppName(qint64 appId, const QString &appName)

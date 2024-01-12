@@ -13,10 +13,10 @@ public:
     explicit ConfAppManagerRpc(QObject *parent = nullptr);
 
     bool addApp(const App &app) override;
-    void deleteApps(const QVector<qint64> &appIdList) override;
+    bool deleteApps(const QVector<qint64> &appIdList) override;
     bool purgeApps() override;
     bool updateApp(const App &app) override;
-    void updateAppsBlocked(
+    bool updateAppsBlocked(
             const QVector<qint64> &appIdList, bool blocked, bool killProcess) override;
     bool updateAppName(qint64 appId, const QString &appName) override;
 

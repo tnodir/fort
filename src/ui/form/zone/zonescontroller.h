@@ -3,6 +3,7 @@
 
 #include <form/basecontroller.h>
 
+class Zone;
 class ZoneListModel;
 
 class ZonesController : public BaseController
@@ -13,6 +14,11 @@ public:
     explicit ZonesController(QObject *parent = nullptr);
 
     ZoneListModel *zoneListModel() const;
+
+public slots:
+    bool addOrUpdateZone(Zone &zone);
+    void deleteZone(int zoneId);
+    bool updateZoneName(int zoneId, const QString &zoneName);
 
 signals:
     void retranslateUi();

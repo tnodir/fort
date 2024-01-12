@@ -43,8 +43,7 @@ private:
     bool updateDriverZoneFlag(int zoneId, bool enabled);
 
     bool beginTransaction();
-    bool commitTransaction(bool ok);
-    bool checkEndTransaction(bool ok);
+    void commitTransaction(bool &ok);
 
 private:
     ConfManager *m_confManager = nullptr;

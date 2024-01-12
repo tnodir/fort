@@ -7,7 +7,6 @@
 
 #include <conf/zone.h>
 #include <driver/drivermanager.h>
-#include <manager/windowmanager.h>
 #include <util/conf/confutil.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -67,22 +66,16 @@ int getFreeZoneId(SqliteDb *sqliteDb)
     return zoneId;
 }
 
-void showErrorMessage(const QString &errorMessage)
-{
-    IoC<WindowManager>()->showErrorBox(
-            errorMessage, ConfZoneManager::tr("Zone Configuration Error"));
-}
-
 bool driverWriteZones(ConfUtil &confUtil, QByteArray &buf, int entrySize, bool onlyFlags = false)
 {
     if (entrySize == 0) {
-        showErrorMessage(confUtil.errorMessage());
+        qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
         return false;
     }
 
     auto driverManager = IoC<DriverManager>();
     if (!driverManager->writeZones(buf, entrySize, onlyFlags)) {
-        showErrorMessage(driverManager->errorMessage());
+        qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
 
@@ -125,7 +118,7 @@ bool ConfZoneManager::addOrUpdateZone(Zone &zone)
 
     sqliteDb()->executeEx(isNew ? sqlInsertZone : sqlUpdateZone, vars, 0, &ok);
 
-    checkEndTransaction(ok);
+    commitTransaction(ok);
 
     if (!ok)
         return false;
@@ -173,7 +166,7 @@ bool ConfZoneManager::updateZoneName(int zoneId, const QString &zoneName)
 
     sqliteDb()->executeEx(sqlUpdateZoneName, vars, 0, &ok);
 
-    checkEndTransaction(ok);
+    commitTransaction(ok);
 
     if (ok) {
         emit zoneUpdated();
@@ -193,7 +186,7 @@ bool ConfZoneManager::updateZoneEnabled(int zoneId, bool enabled)
 
     sqliteDb()->executeEx(sqlUpdateZoneEnabled, vars, 0, &ok);
 
-    checkEndTransaction(ok);
+    commitTransaction(ok);
 
     if (ok) {
         emit zoneUpdated();
@@ -212,7 +205,7 @@ bool ConfZoneManager::updateZoneResult(const Zone &zone)
 
     sqliteDb()->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
 
-    checkEndTransaction(ok);
+    commitTransaction(ok);
 
     if (ok) {
         emit zoneUpdated();
@@ -247,18 +240,7 @@ bool ConfZoneManager::beginTransaction()
     return sqliteDb()->beginTransaction();
 }
 
-bool ConfZoneManager::commitTransaction(bool ok)
+void ConfZoneManager::commitTransaction(bool &ok)
 {
     ok = sqliteDb()->endTransaction(ok);
-
-    return checkEndTransaction(ok);
-}
-
-bool ConfZoneManager::checkEndTransaction(bool ok)
-{
-    if (!ok) {
-        showErrorMessage(sqliteDb()->errorMessage());
-    }
-
-    return ok;
 }

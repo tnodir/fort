@@ -63,8 +63,6 @@ public:
 
     virtual bool checkPassword(const QString &password);
 
-    void validateMigration();
-
     bool validateDriver();
 
     void updateServices();
@@ -95,8 +93,7 @@ private:
     bool saveTask(TaskInfo *taskInfo);
 
     bool beginTransaction();
-    bool commitTransaction(bool ok);
-    bool checkEndTransaction(bool ok);
+    void commitTransaction(bool &ok);
 
 private:
     SqliteDbPtr m_sqliteDb;

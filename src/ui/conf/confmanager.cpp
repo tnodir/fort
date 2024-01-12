@@ -13,7 +13,7 @@
 #include <log/logmanager.h>
 #include <manager/envmanager.h>
 #include <manager/serviceinfomanager.h>
-#include <manager/windowmanager.h>
+#include <manager/servicemanager.h>
 #include <task/taskinfo.h>
 #include <task/taskmanager.h>
 #include <user/iniuser.h>
@@ -214,11 +214,6 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     }
 
     return true;
-}
-
-void showErrorMessage(const QString &errorMessage)
-{
-    IoC<WindowManager>()->showErrorBox(errorMessage, ConfManager::tr("Configuration Error"));
 }
 
 bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups, int &index)
@@ -524,10 +519,8 @@ bool ConfManager::loadConf(FirewallConf &conf)
     if (conf.optEdited()) {
         bool isNewConf = false;
 
-        if (!loadFromDb(conf, isNewConf)) {
-            showErrorMessage("Load Settings: " + sqliteDb()->errorMessage());
+        if (!loadFromDb(conf, isNewConf))
             return false;
-        }
 
         if (isNewConf) {
             setupDefault(conf);
@@ -693,7 +686,9 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
         }
     }
 
-    return commitTransaction(ok);
+    commitTransaction(ok);
+
+    return ok;
 }
 
 bool ConfManager::exportBackup(const QString &path)
@@ -750,47 +745,38 @@ bool ConfManager::importBackup(const QString &path)
 
 bool ConfManager::importMasterBackup(const QString &path)
 {
+    bool ok;
+
     // Import Ini
-    if (!importFile(conf()->ini().settings()->filePath(), path))
-        return false;
-
-    conf()->ini().settings()->clearCache();
-
-    // Import Db
     {
-        sqliteDb()->close();
+        Settings *settings = conf()->ini().settings();
 
-        const bool imported = importFile(sqliteDb()->filePath(), path);
-        if (imported) {
-            validateMigration(); // Check after file copy and before its loading
-        }
+        ok = importFile(settings->filePath(), path);
 
-        const bool ok = setupDb();
-
-        if (!imported || !ok) {
-            qCWarning(LC) << "Import Db error:" << sqliteDb()->errorMessage() << "from:" << path;
-            return false;
-        }
-
-        load();
+        settings->clearCache();
     }
 
-    return true;
+    // Import Db
+    if (ok) {
+        sqliteDb()->close();
+
+        ok = importFile(sqliteDb()->filePath(), path);
+    }
+
+    if (!ok) {
+        qCWarning(LC) << "Import error from:" << path;
+    }
+
+    if (IoC<FortSettings>()->isService()) {
+        IoC<ServiceManager>()->processRestartRequired();
+    }
+
+    return ok;
 }
 
 bool ConfManager::checkPassword(const QString &password)
 {
     return IoC<FortSettings>()->checkPassword(password);
-}
-
-void ConfManager::validateMigration()
-{
-    QString viaVersion;
-    if (!IoC<FortSettings>()->canMigrate(viaVersion)) {
-        showErrorMessage(tr("Please first install Fort Firewall v%1 and save Options from it.")
-                                 .arg(viaVersion));
-        exit(-1); // Exit the program
-    }
 }
 
 bool ConfManager::validateConf(const FirewallConf &newConf)
@@ -803,7 +789,7 @@ bool ConfManager::validateConf(const FirewallConf &newConf)
 
     const int confSize = confUtil.write(newConf, IoC<ConfAppManager>(), *IoC<EnvManager>(), buf);
     if (confSize == 0) {
-        showErrorMessage(confUtil.errorMessage());
+        qCCritical(LC) << "Conf save error:" << confUtil.errorMessage();
         return false;
     }
 
@@ -875,11 +861,13 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 {
     beginTransaction();
 
-    const bool ok = saveAddressGroups(sqliteDb(), conf) // Save Address Groups
+    bool ok = saveAddressGroups(sqliteDb(), conf) // Save Address Groups
             && saveAppGroups(sqliteDb(), conf) // Save App Groups
             && removeAppGroupsInDb(sqliteDb(), conf); // Remove App Groups
 
-    return commitTransaction(ok);
+    commitTransaction(ok);
+
+    return ok;
 }
 
 void ConfManager::saveTasksByIni(const IniOptions &ini)
@@ -938,18 +926,7 @@ bool ConfManager::beginTransaction()
     return sqliteDb()->beginTransaction();
 }
 
-bool ConfManager::commitTransaction(bool ok)
+void ConfManager::commitTransaction(bool &ok)
 {
     ok = sqliteDb()->endTransaction(ok);
-
-    return checkEndTransaction(ok);
-}
-
-bool ConfManager::checkEndTransaction(bool ok)
-{
-    if (!ok) {
-        showErrorMessage(sqliteDb()->errorMessage());
-    }
-
-    return ok;
 }

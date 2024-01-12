@@ -16,6 +16,11 @@ namespace {
 
 const QLoggingCategory LC("optionsCtrl");
 
+void showErrorMessage(const QString &errorMessage)
+{
+    IoC<WindowManager>()->showErrorBox(errorMessage, ConfManager::tr("Configuration Error"));
+}
+
 }
 
 OptionsController::OptionsController(QObject *parent) : BaseController(parent)
@@ -125,7 +130,7 @@ void OptionsController::save(bool closeOnSuccess)
     }
 
     if (!confManager()->save(confToEdit())) {
-        qCCritical(LC) << "Conf save error";
+        showErrorMessage(tr("Cannot save the options"));
         return;
     }
 
@@ -183,7 +188,7 @@ void OptionsController::importBackup()
 
     const QString inPath = FileUtil::pathSlash(path);
 
-    if (confManager()->importBackup(inPath)) {
+    if (!confManager()->importBackup(inPath)) {
         windowManager()->showInfoDialog(tr("Backup Imported Successfully"));
     } else {
         windowManager()->showErrorBox(tr("Cannot Import Backup"));

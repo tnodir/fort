@@ -35,10 +35,10 @@ public:
     qint64 appIdByPath(const QString &appPath);
 
     virtual bool addApp(const App &app);
-    virtual void deleteApps(const QVector<qint64> &appIdList);
+    virtual bool deleteApps(const QVector<qint64> &appIdList);
     virtual bool purgeApps();
     virtual bool updateApp(const App &app);
-    virtual void updateAppsBlocked(
+    virtual bool updateAppsBlocked(
             const QVector<qint64> &appIdList, bool blocked, bool killProcess);
     virtual bool updateAppName(qint64 appId, const QString &appName);
 
@@ -68,6 +68,8 @@ private:
     bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
     bool prepareAppBlocked(App &app, bool blocked, bool killProcess);
 
+    QVector<qint64> collectObsoleteApps();
+
 private:
     void emitAppAlerted();
     void emitAppChanged();
@@ -83,8 +85,7 @@ private:
     bool updateDriverUpdateAppConf(const App &app);
 
     bool beginTransaction();
-    bool commitTransaction(bool ok);
-    bool checkEndTransaction(bool ok);
+    void commitTransaction(bool &ok);
 
 private:
     quint32 m_driveMask = 0;

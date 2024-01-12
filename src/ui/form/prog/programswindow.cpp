@@ -12,7 +12,6 @@
 #include <QVBoxLayout>
 
 #include <appinfo/appinfocache.h>
-#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/appinforow.h>
@@ -55,11 +54,6 @@ FortSettings *ProgramsWindow::settings() const
 ConfManager *ProgramsWindow::confManager() const
 {
     return ctrl()->confManager();
-}
-
-ConfAppManager *ProgramsWindow::confAppManager() const
-{
-    return ctrl()->confAppManager();
 }
 
 FirewallConf *ProgramsWindow::conf() const
@@ -296,7 +290,7 @@ void ProgramsWindow::setupEditMenu()
                 [&] { deleteSelectedApps(); }, tr("Are you sure to remove selected program(s)?"));
     });
     connect(m_actPurgeApps, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox([&] { confAppManager()->purgeApps(); },
+        windowManager()->showConfirmBox([&] { ctrl()->purgeApps(); },
                 tr("Are you sure to remove all non-existent programs?"));
     });
     connect(m_actFindApps, &QAction::triggered, this, [&] { m_editSearch->setFocus(); });
@@ -463,12 +457,12 @@ void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64>
 
 void ProgramsWindow::updateSelectedApps(bool blocked, bool killProcess)
 {
-    confAppManager()->updateAppsBlocked(selectedAppIdList(), blocked, killProcess);
+    ctrl()->updateAppsBlocked(selectedAppIdList(), blocked, killProcess);
 }
 
 void ProgramsWindow::deleteSelectedApps()
 {
-    confAppManager()->deleteApps(selectedAppIdList());
+    ctrl()->deleteApps(selectedAppIdList());
 }
 
 int ProgramsWindow::appListCurrentIndex() const

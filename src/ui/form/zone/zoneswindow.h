@@ -14,7 +14,6 @@ QT_FORWARD_DECLARE_CLASS(QToolButton)
 QT_FORWARD_DECLARE_CLASS(QStackedLayout)
 
 class ConfManager;
-class ConfZoneManager;
 class IniOptions;
 class IniUser;
 class PlainTextEdit;
@@ -38,7 +37,6 @@ public:
 
     ZonesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
-    ConfZoneManager *confZoneManager() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
     WindowManager *windowManager() const;

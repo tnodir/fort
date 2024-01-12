@@ -18,6 +18,11 @@ public:
 
     void initialize();
 
+public slots:
+    void updateAppsBlocked(const QVector<qint64> &appIdList, bool blocked, bool killProcess);
+    void deleteApps(const QVector<qint64> &appIdList);
+    void purgeApps();
+
 private:
     AppListModel *m_appListModel = nullptr;
 };

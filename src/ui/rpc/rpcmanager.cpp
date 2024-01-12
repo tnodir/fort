@@ -130,8 +130,7 @@ bool processConfAppManager_addApp(
 bool processConfAppManager_deleteApps(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    confAppManager->deleteApps(VariantUtil::listToVector(p.args.value(0).toList()));
-    return true;
+    return confAppManager->deleteApps(VariantUtil::listToVector(p.args.value(0).toList()));
 }
 
 bool processConfAppManager_purgeApps(ConfAppManager *confAppManager,
@@ -149,9 +148,8 @@ bool processConfAppManager_updateApp(
 bool processConfAppManager_updateAppsBlocked(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    confAppManager->updateAppsBlocked(VariantUtil::listToVector(p.args.value(0).toList()),
+    return confAppManager->updateAppsBlocked(VariantUtil::listToVector(p.args.value(0).toList()),
             p.args.value(1).toBool(), p.args.value(2).toBool());
-    return true;
 }
 
 bool processConfAppManager_updateAppName(

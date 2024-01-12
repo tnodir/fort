@@ -13,7 +13,6 @@
 #include <log/logmanager.h>
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
-#include <manager/windowmanager.h>
 #include <util/conf/confutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
@@ -28,8 +27,6 @@ const QLoggingCategory LC("confApp");
 
 constexpr int APP_END_TIMER_INTERVAL_MIN = 100;
 constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
-
-const char *const sqlSelectAppPaths = "SELECT app_id, path FROM app;";
 
 #define SELECT_APP_FIELDS                                                                          \
     "    t.app_id,"                                                                                \
@@ -57,6 +54,8 @@ const char *const sqlSelectAppById = "SELECT" SELECT_APP_FIELDS "  FROM app t"
 const char *const sqlSelectApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
                                   "    JOIN app_group g ON g.app_group_id = t.app_group_id"
                                   "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id;";
+
+const char *const sqlSelectAppsToPurge = "SELECT app_id, path FROM app WHERE is_wildcard = 0;";
 
 const char *const sqlSelectMinEndApp = "SELECT MIN(end_time) FROM app"
                                        "  WHERE end_time != 0 AND blocked = 0;";
@@ -106,11 +105,6 @@ const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2, kill_proce
 
 using AppsMap = QHash<qint64, QString>;
 using AppIdsArray = QVector<qint64>;
-
-void showErrorMessage(const QString &errorMessage)
-{
-    IoC<WindowManager>()->showErrorBox(errorMessage, ConfManager::tr("App Configuration Error"));
-}
 
 }
 
@@ -247,13 +241,14 @@ bool ConfAppManager::addApp(const App &app)
     return true;
 }
 
-void ConfAppManager::deleteApps(const QVector<qint64> &appIdList)
+bool ConfAppManager::deleteApps(const QVector<qint64> &appIdList)
 {
+    bool ok = true;
     bool isWildcard = false;
 
     for (const qint64 appId : appIdList) {
         if (!deleteApp(appId, isWildcard)) {
-            showErrorMessage(tr("Cannot delete program"));
+            ok = false;
             break;
         }
     }
@@ -261,6 +256,8 @@ void ConfAppManager::deleteApps(const QVector<qint64> &appIdList)
     if (isWildcard) {
         updateDriverConf();
     }
+
+    return ok;
 }
 
 bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
@@ -296,30 +293,8 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 
 bool ConfAppManager::purgeApps()
 {
-    QVector<qint64> appIdList;
-
-    // Collect non-existent apps
-    {
-        SqliteStmt stmt;
-        if (!sqliteDb()->prepare(stmt, sqlSelectAppPaths))
-            return false;
-
-        while (stmt.step() == SqliteStmt::StepRow) {
-            const QString appPath = stmt.columnText(1);
-
-            if (FileUtil::isDriveFilePath(appPath) && !AppInfoUtil::fileExists(appPath)) {
-                const qint64 appId = stmt.columnInt64(0);
-                appIdList.append(appId);
-
-                qCDebug(LC) << "Purge obsolete app:" << appId << appPath;
-            }
-        }
-    }
-
-    // Delete apps
-    deleteApps(appIdList);
-
-    return true;
+    // Delete obsolete apps
+    return deleteApps(collectObsoleteApps());
 }
 
 bool ConfAppManager::updateApp(const App &app)
@@ -360,14 +335,15 @@ bool ConfAppManager::updateApp(const App &app)
     return ok;
 }
 
-void ConfAppManager::updateAppsBlocked(
+bool ConfAppManager::updateAppsBlocked(
         const QVector<qint64> &appIdList, bool blocked, bool killProcess)
 {
+    bool ok = true;
     bool isWildcard = (appIdList.size() > 7);
 
     for (const qint64 appId : appIdList) {
         if (!updateAppBlocked(appId, blocked, killProcess, isWildcard)) {
-            showErrorMessage(tr("Cannot update program's state"));
+            ok = false;
             break;
         }
     }
@@ -375,6 +351,8 @@ void ConfAppManager::updateAppsBlocked(
     if (isWildcard) {
         updateDriverConf();
     }
+
+    return ok;
 }
 
 bool ConfAppManager::updateAppBlocked(
@@ -413,6 +391,28 @@ bool ConfAppManager::prepareAppBlocked(App &app, bool blocked, bool killProcess)
     return true;
 }
 
+QVector<qint64> ConfAppManager::collectObsoleteApps()
+{
+    QVector<qint64> appIdList;
+
+    SqliteStmt stmt;
+    if (!sqliteDb()->prepare(stmt, sqlSelectAppsToPurge))
+        return {};
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const QString appPath = stmt.columnText(1);
+
+        if (FileUtil::isDriveFilePath(appPath) && !AppInfoUtil::fileExists(appPath)) {
+            const qint64 appId = stmt.columnInt64(0);
+            appIdList.append(appId);
+
+            qCDebug(LC) << "Obsolete app:" << appId << appPath;
+        }
+    }
+
+    return appIdList;
+}
+
 bool ConfAppManager::updateAppName(qint64 appId, const QString &appName)
 {
     bool ok = false;
@@ -421,7 +421,7 @@ bool ConfAppManager::updateAppName(qint64 appId, const QString &appName)
 
     sqliteDb()->executeEx(sqlUpdateAppName, vars, 0, &ok);
 
-    checkEndTransaction(ok);
+    commitTransaction(ok);
 
     if (ok) {
         emitAppUpdated();
@@ -629,18 +629,7 @@ bool ConfAppManager::beginTransaction()
     return sqliteDb()->beginTransaction();
 }
 
-bool ConfAppManager::commitTransaction(bool ok)
+void ConfAppManager::commitTransaction(bool &ok)
 {
     ok = sqliteDb()->endTransaction(ok);
-
-    return checkEndTransaction(ok);
-}
-
-bool ConfAppManager::checkEndTransaction(bool ok)
-{
-    if (!ok) {
-        showErrorMessage(sqliteDb()->errorMessage());
-    }
-
-    return ok;
 }

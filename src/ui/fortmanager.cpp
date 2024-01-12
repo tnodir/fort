@@ -49,6 +49,11 @@ namespace {
 
 const QLoggingCategory LC("fortManager");
 
+void showErrorMessage(const QString &errorMessage)
+{
+    IoC<WindowManager>()->showErrorBox(errorMessage);
+}
+
 inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
 {
     ioc->setService(new ConfManager(settings->confFilePath()));
@@ -422,9 +427,7 @@ void FortManager::show()
 
 void FortManager::processRestartRequired()
 {
-    auto settings = IoC<FortSettings>();
-
-    if (settings->isService()) {
+    if (IoC<FortSettings>()->isService()) {
         IoC<ServiceManager>()->processRestartRequired();
     } else {
         IoC<WindowManager>()->processRestartRequired();
@@ -436,8 +439,17 @@ void FortManager::loadConf()
     const auto settings = IoC<FortSettings>();
     const auto confManager = IoC<ConfManager>();
 
-    confManager->validateMigration();
-    confManager->load();
+    // Validate migration
+    QString viaVersion;
+    if (!settings->canMigrate(viaVersion)) {
+        showErrorMessage(tr("Please first install Fort Firewall v%1 and save Options from it.")
+                                 .arg(viaVersion));
+        exit(-1); // Exit the program
+    }
+
+    if (!confManager->load()) {
+        showErrorMessage(tr("Cannot load Settings"));
+    }
 
     qCDebug(LC) << "Started as"
                 << (settings->isService()                   ? "Service"
