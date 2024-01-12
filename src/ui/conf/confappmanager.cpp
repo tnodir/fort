@@ -367,8 +367,17 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 
 bool ConfAppManager::purgeApps()
 {
+    quint32 driveMask = -1;
+    if (conf()->ini().progPurgeOnMounted()) {
+        driveMask = FileUtil::mountedDriveMask(FileUtil::driveMask());
+    }
+
+    const auto appIdList = collectObsoleteApps(driveMask);
+    if (appIdList.isEmpty())
+        return true;
+
     // Delete obsolete apps
-    return deleteApps(collectObsoleteApps());
+    return deleteApps(appIdList);
 }
 
 bool ConfAppManager::updateAppsBlocked(
@@ -430,7 +439,7 @@ bool ConfAppManager::checkAppBlockedChanged(App &app, bool blocked, bool killPro
     return true;
 }
 
-QVector<qint64> ConfAppManager::collectObsoleteApps()
+QVector<qint64> ConfAppManager::collectObsoleteApps(quint32 driveMask)
 {
     QVector<qint64> appIdList;
 
@@ -441,7 +450,11 @@ QVector<qint64> ConfAppManager::collectObsoleteApps()
     while (stmt.step() == SqliteStmt::StepRow) {
         const QString appPath = stmt.columnText(1);
 
-        if (FileUtil::isDriveFilePath(appPath) && !AppInfoUtil::fileExists(appPath)) {
+        const quint32 mask = FileUtil::driveMaskByPath(appPath);
+        if ((mask & driveMask) == 0)
+            continue; // skip non-path or not-mounted
+
+        if (!AppInfoUtil::fileExists(appPath)) {
             const qint64 appId = stmt.columnInt64(0);
             appIdList.append(appId);
 

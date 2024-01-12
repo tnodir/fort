@@ -96,6 +96,9 @@ public:
     bool progPurgeOnStart() const { return valueBool("prog/purgeOnStart"); }
     void setProgPurgeOnStart(bool v) { setValue("prog/purgeOnStart", v); }
 
+    bool progPurgeOnMounted() const { return valueBool("prog/purgeOnMounted"); }
+    void setProgPurgeOnMounted(bool v) { setValue("prog/purgeOnMounted", v); }
+
     constexpr bool graphWindowAlwaysOnTopDefault() const { return true; }
     bool graphWindowAlwaysOnTop() const { return valueBool("graphWindow/alwaysOnTop", true); }
     void setGraphWindowAlwaysOnTop(bool on) { setValue("graphWindow/alwaysOnTop", on); }

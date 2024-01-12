@@ -72,7 +72,7 @@ private:
     bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
     bool checkAppBlockedChanged(App &app, bool blocked, bool killProcess);
 
-    QVector<qint64> collectObsoleteApps();
+    QVector<qint64> collectObsoleteApps(quint32 driveMask);
 
 private:
     void emitAppAlerted();

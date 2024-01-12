@@ -169,8 +169,9 @@ void OptionsPage::onRetranslateUi()
                                       .arg(settings()->passwordUnlockedTillText()));
 
     m_cbLogBlocked->setText(tr("Collect New Programs"));
+    m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
     m_cbPurgeOnStart->setText(tr("Purge Obsolete on startup"));
-    m_cbAppAlertMessage->setText(tr("Use System Notifications for New Programs"));
+    m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
 
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
@@ -518,6 +519,12 @@ void OptionsPage::setupProgBox()
 {
     setupLogBlocked();
 
+    m_cbAppNotifyMessage =
+            ControlUtil::createCheckBox(iniUser()->progNotifyMessage(), [&](bool checked) {
+                iniUser()->setProgNotifyMessage(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     m_cbPurgeOnStart = ControlUtil::createCheckBox(ini()->progPurgeOnStart(), [&](bool checked) {
         if (ini()->progPurgeOnStart() != checked) {
             ini()->setProgPurgeOnStart(checked);
@@ -525,15 +532,17 @@ void OptionsPage::setupProgBox()
         }
     });
 
-    m_cbAppAlertMessage =
-            ControlUtil::createCheckBox(iniUser()->progNotifyMessage(), [&](bool checked) {
-                iniUser()->setProgNotifyMessage(checked);
-                ctrl()->setIniUserEdited();
+    m_cbPurgeOnMounted =
+            ControlUtil::createCheckBox(ini()->progPurgeOnMounted(), [&](bool checked) {
+                if (ini()->progPurgeOnMounted() != checked) {
+                    ini()->setProgPurgeOnMounted(checked);
+                    ctrl()->setIniEdited();
+                }
             });
 
     // Layout
-    auto layout = ControlUtil::createLayoutByWidgets(
-            { m_cbLogBlocked, m_cbPurgeOnStart, m_cbAppAlertMessage });
+    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogBlocked, m_cbAppNotifyMessage,
+            ControlUtil::createSeparator(), m_cbPurgeOnStart, m_cbPurgeOnMounted });
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);

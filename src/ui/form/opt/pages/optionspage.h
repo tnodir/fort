@@ -98,8 +98,9 @@ private:
     QLineEdit *m_editPassword = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
+    QCheckBox *m_cbAppNotifyMessage = nullptr;
     QCheckBox *m_cbPurgeOnStart = nullptr;
-    QCheckBox *m_cbAppAlertMessage = nullptr;
+    QCheckBox *m_cbPurgeOnMounted = nullptr;
 
     QCheckBox *m_cbExplorerMenu = nullptr;
     QCheckBox *m_cbUseSystemLocale = nullptr;
