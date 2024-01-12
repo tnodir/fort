@@ -42,6 +42,7 @@ QMessageBox *DialogUtil::createMessageBox(const MessageBoxArg &ba, QWidget *pare
 {
     auto box = new QMessageBox(ba.icon, ba.title, ba.text, ba.buttons, parent);
     box->setAttribute(Qt::WA_DeleteOnClose);
+    box->setInformativeText(ba.info);
     setupModalDialog(box);
     return box;
 }

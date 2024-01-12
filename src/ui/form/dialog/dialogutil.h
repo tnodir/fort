@@ -11,6 +11,7 @@ struct MessageBoxArg
     QMessageBox::StandardButtons buttons;
     const QString text;
     const QString title;
+    const QString info;
 };
 
 class DialogUtil

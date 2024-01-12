@@ -188,13 +188,10 @@ void OptionsController::importBackup()
 
     const QString inPath = FileUtil::pathSlash(path);
 
-    if (confManager()->importBackup(inPath)) {
-        windowManager()->showInfoDialog(tr("Backup Imported Successfully"));
-    } else {
-        windowManager()->showErrorBox(tr("Cannot Import Backup"));
-    }
+    const bool ok = confManager()->importBackup(inPath);
 
-    windowManager()->restart();
+    windowManager()->processRestartRequired(
+            ok ? tr("Backup Imported Successfully") : tr("Cannot Import Backup"));
 }
 
 void OptionsController::confirmImportBackup()

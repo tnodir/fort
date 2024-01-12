@@ -501,9 +501,9 @@ void WindowManager::restart()
     QCoreApplication::quit();
 }
 
-void WindowManager::processRestartRequired()
+void WindowManager::processRestartRequired(const QString &info)
 {
-    showConfirmBox([&] { restart(); }, tr("Restart Now?"), tr("Restart Required"));
+    showConfirmBox([&] { restart(); }, tr("Restart Now?"), tr("Restart Required"), info);
 }
 
 bool WindowManager::checkWindowPassword(WindowCode code)
@@ -551,7 +551,7 @@ void WindowManager::showInfoBox(const QString &text, const QString &title, QWidg
 }
 
 void WindowManager::showConfirmBox(const std::function<void()> &onConfirmed, const QString &text,
-        const QString &title, QWidget *parent)
+        const QString &title, const QString &info, QWidget *parent)
 {
     showQuestionBox(
             [=](bool confirmed) {
@@ -559,11 +559,11 @@ void WindowManager::showConfirmBox(const std::function<void()> &onConfirmed, con
                     onConfirmed();
                 }
             },
-            text, title, parent);
+            text, title, info, parent);
 }
 
 void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &onFinished,
-        const QString &text, const QString &title, QWidget *parent)
+        const QString &text, const QString &title, const QString &info, QWidget *parent)
 {
     auto box = DialogUtil::createMessageBox(
             {
@@ -571,6 +571,7 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
                     .buttons = QMessageBox::Yes | QMessageBox::No,
                     .text = text,
                     .title = title,
+                    .info = info,
             },
             parent);
 
