@@ -391,8 +391,8 @@ bool processConfAppManagerRpc(
     case Control::Rpc_ConfAppManager_appAlerted:
         emit confAppManager->appAlerted();
         return true;
-    case Control::Rpc_ConfAppManager_appChanged:
-        emit confAppManager->appChanged();
+    case Control::Rpc_ConfAppManager_appsChanged:
+        emit confAppManager->appsChanged();
         return true;
     case Control::Rpc_ConfAppManager_appUpdated:
         emit confAppManager->appUpdated();
@@ -593,8 +593,8 @@ void RpcManager::setupConfAppManagerSignals()
 
     connect(confAppManager, &ConfAppManager::appAlerted, this,
             [&] { invokeOnClients(Control::Rpc_ConfAppManager_appAlerted); });
-    connect(confAppManager, &ConfAppManager::appChanged, this,
-            [&] { invokeOnClients(Control::Rpc_ConfAppManager_appChanged); });
+    connect(confAppManager, &ConfAppManager::appsChanged, this,
+            [&] { invokeOnClients(Control::Rpc_ConfAppManager_appsChanged); });
     connect(confAppManager, &ConfAppManager::appUpdated, this,
             [&] { invokeOnClients(Control::Rpc_ConfAppManager_appUpdated); });
 }

@@ -51,7 +51,7 @@ public:
 
 signals:
     void appAlerted();
-    void appChanged();
+    void appsChanged();
     void appUpdated();
 
 protected:
@@ -72,7 +72,7 @@ private:
 
 private:
     void emitAppAlerted();
-    void emitAppChanged();
+    void emitAppsChanged();
     void emitAppUpdated();
 
     bool addOrUpdateApp(const App &app);
@@ -93,7 +93,7 @@ private:
     ConfManager *m_confManager = nullptr;
 
     TriggerTimer m_appAlertedTimer;
-    TriggerTimer m_appChangedTimer;
+    TriggerTimer m_appsChangedTimer;
     TriggerTimer m_appUpdatedTimer;
 
     QTimer m_appEndTimer;

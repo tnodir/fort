@@ -33,7 +33,7 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfAppManager_updateAppsBlocked)
         CASE_STRING(Rpc_ConfAppManager_updateAppName)
         CASE_STRING(Rpc_ConfAppManager_appAlerted)
-        CASE_STRING(Rpc_ConfAppManager_appChanged)
+        CASE_STRING(Rpc_ConfAppManager_appsChanged)
         CASE_STRING(Rpc_ConfAppManager_appUpdated)
 
         CASE_STRING(Rpc_ConfZoneManager_addOrUpdateZone)
@@ -123,7 +123,7 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfAppManager, // Rpc_ConfAppManager_updateAppName,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appEndTimesUpdated,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appAlerted,
-        Rpc_ConfAppManager, // Rpc_ConfAppManager_appChanged,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_appsChanged,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appUpdated,
 
         Rpc_ConfZoneManager, // Rpc_ConfZoneManager_addOrUpdateZone,
@@ -193,7 +193,7 @@ bool commandRequiresValidation(Command cmd)
         true, // Rpc_ConfAppManager_updateAppName,
         0, // Rpc_ConfAppManager_appEndTimesUpdated,
         0, // Rpc_ConfAppManager_appAlerted,
-        0, // Rpc_ConfAppManager_appChanged,
+        0, // Rpc_ConfAppManager_appsChanged,
         0, // Rpc_ConfAppManager_appUpdated,
 
         true, // Rpc_ConfZoneManager_addOrUpdateZone,

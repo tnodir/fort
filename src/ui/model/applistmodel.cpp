@@ -106,7 +106,7 @@ void AppListModel::initialize()
 
     connect(confManager(), &ConfManager::confChanged, this, &AppListModel::refresh);
 
-    connect(confAppManager(), &ConfAppManager::appChanged, this, &TableSqlModel::reset);
+    connect(confAppManager(), &ConfAppManager::appsChanged, this, &TableSqlModel::reset);
     connect(confAppManager(), &ConfAppManager::appUpdated, this, &TableSqlModel::refresh);
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);

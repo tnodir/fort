@@ -33,7 +33,7 @@ enum Command : qint8 {
     Rpc_ConfAppManager_updateAppName,
     Rpc_ConfAppManager_appEndTimesUpdated,
     Rpc_ConfAppManager_appAlerted,
-    Rpc_ConfAppManager_appChanged,
+    Rpc_ConfAppManager_appsChanged,
     Rpc_ConfAppManager_appUpdated,
 
     Rpc_ConfZoneManager_addOrUpdateZone,
