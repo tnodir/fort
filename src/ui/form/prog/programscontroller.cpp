@@ -31,12 +31,12 @@ void ProgramsController::initialize()
     appListModel()->initialize();
 }
 
-bool ProgramsController::addOrUpdateApp(const App &app, bool onlyUpdate)
+bool ProgramsController::addOrUpdateApp(App &app, bool onlyUpdate)
 {
     return confAppManager()->addOrUpdateApp(app, onlyUpdate);
 }
 
-bool ProgramsController::updateApp(const App &app)
+bool ProgramsController::updateApp(App &app)
 {
     return confAppManager()->updateApp(app);
 }

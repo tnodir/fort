@@ -124,14 +124,17 @@ inline bool processConfManagerRpcResult(
 bool processConfAppManager_addOrUpdateApp(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confAppManager->addOrUpdateApp(
-            ConfAppManagerRpc::varListToApp(p.args.value(0).toList()), p.args.value(1).toBool());
+    App app = ConfAppManagerRpc::varListToApp(p.args.value(0).toList());
+
+    return confAppManager->addOrUpdateApp(app, p.args.value(1).toBool());
 }
 
 bool processConfAppManager_updateApp(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confAppManager->updateApp(ConfAppManagerRpc::varListToApp(p.args));
+    App app = ConfAppManagerRpc::varListToApp(p.args);
+
+    return confAppManager->updateApp(app);
 }
 
 bool processConfAppManager_updateAppName(

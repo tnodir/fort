@@ -188,7 +188,26 @@ void ConfAppManager::updateAppEndTimer()
     }
 }
 
-void ConfAppManager::onAddOrUpdateApp(const App &app, bool onlyUpdate)
+void ConfAppManager::beginAddOrUpdateApp(
+        App &app, const AppGroup &appGroup, bool onlyUpdate, bool &ok)
+{
+    const auto vars = QVariantList()
+            << app.appId << appGroup.id() << app.appOriginPath
+            << (!app.appPath.isEmpty() ? app.appPath : QVariant()) << app.appName << app.isWildcard
+            << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly << app.logBlocked
+            << app.logConn << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
+            << (!app.endTime.isNull() ? app.endTime : QVariant())
+            << (onlyUpdate ? QVariant() : QDateTime::currentDateTime());
+
+    const char *sql = onlyUpdate ? sqlUpdateApp : sqlUpsertApp;
+    const auto appIdVar = sqliteDb()->executeEx(sql, vars, 1, &ok);
+
+    if (!onlyUpdate) {
+        app.appId = appIdVar.toLongLong();
+    }
+}
+
+void ConfAppManager::endAddOrUpdateApp(const App &app, bool onlyUpdate)
 {
     if (!app.endTime.isNull()) {
         updateAppEndTimer();
@@ -247,7 +266,7 @@ qint64 ConfAppManager::appIdByPath(const QString &appPath)
     return sqliteDb()->executeEx(sqlSelectAppIdByPath, { appPath }).toLongLong();
 }
 
-bool ConfAppManager::addOrUpdateApp(const App &app, bool onlyUpdate)
+bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
 {
     const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
     if (appGroup->isNull())
@@ -257,33 +276,24 @@ bool ConfAppManager::addOrUpdateApp(const App &app, bool onlyUpdate)
 
     beginTransaction();
 
-    const auto vars = QVariantList()
-            << app.appId << appGroup->id() << app.appOriginPath
-            << (!app.appPath.isEmpty() ? app.appPath : QVariant()) << app.appName << app.isWildcard
-            << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly << app.logBlocked
-            << app.logConn << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
-            << (!app.endTime.isNull() ? app.endTime : QVariant())
-            << (onlyUpdate ? QVariant() : QDateTime::currentDateTime());
-
-    const char *sql = onlyUpdate ? sqlUpdateApp : sqlUpsertApp;
-    const auto appIdVar = sqliteDb()->executeEx(sql, vars, 1, &ok);
+    beginAddOrUpdateApp(app, *appGroup, onlyUpdate, ok);
 
     if (ok) {
         // Alert
-        const char *alertSql = (app.alerted && !onlyUpdate) ? sqlInsertAppAlert : sqlDeleteAppAlert;
-        sqliteDb()->executeEx(alertSql, { appIdVar });
+        const char *sql = (app.alerted && !onlyUpdate) ? sqlInsertAppAlert : sqlDeleteAppAlert;
+        sqliteDb()->executeEx(sql, { app.appId });
     }
 
     commitTransaction(ok);
 
     if (ok) {
-        onAddOrUpdateApp(app, onlyUpdate);
+        endAddOrUpdateApp(app, onlyUpdate);
     }
 
     return ok;
 }
 
-bool ConfAppManager::updateApp(const App &app)
+bool ConfAppManager::updateApp(App &app)
 {
     return addOrUpdateApp(app, /*onlyUpdate=*/true);
 }

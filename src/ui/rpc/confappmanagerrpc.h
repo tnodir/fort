@@ -12,8 +12,8 @@ class ConfAppManagerRpc : public ConfAppManager
 public:
     explicit ConfAppManagerRpc(QObject *parent = nullptr);
 
-    bool addOrUpdateApp(const App &app, bool onlyUpdate = false) override;
-    bool updateApp(const App &app) override;
+    bool addOrUpdateApp(App &app, bool onlyUpdate = false) override;
+    bool updateApp(App &app) override;
     bool updateAppName(qint64 appId, const QString &appName) override;
     bool deleteApps(const QVector<qint64> &appIdList) override;
     bool purgeApps() override;

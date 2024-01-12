@@ -11,6 +11,7 @@
 #include <util/triggertimer.h>
 
 class App;
+class AppGroup;
 class ConfManager;
 class FirewallConf;
 class LogEntryBlocked;
@@ -34,8 +35,8 @@ public:
 
     qint64 appIdByPath(const QString &appPath);
 
-    virtual bool addOrUpdateApp(const App &app, bool onlyUpdate = false);
-    virtual bool updateApp(const App &app);
+    virtual bool addOrUpdateApp(App &app, bool onlyUpdate = false);
+    virtual bool updateApp(App &app);
     virtual bool updateAppName(qint64 appId, const QString &appName);
     virtual bool deleteApps(const QVector<qint64> &appIdList);
     virtual bool purgeApps();
@@ -63,7 +64,8 @@ protected:
     void updateAppEndTimer();
 
 private:
-    void onAddOrUpdateApp(const App &app, bool onlyUpdate);
+    void beginAddOrUpdateApp(App &app, const AppGroup &appGroup, bool onlyUpdate, bool &ok);
+    void endAddOrUpdateApp(const App &app, bool onlyUpdate);
 
     bool deleteApp(qint64 appId, bool &isWildcard);
 

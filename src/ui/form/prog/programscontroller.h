@@ -20,8 +20,8 @@ public:
     void initialize();
 
 public slots:
-    bool addOrUpdateApp(const App &app, bool onlyUpdate = false);
-    bool updateApp(const App &app);
+    bool addOrUpdateApp(App &app, bool onlyUpdate = false);
+    bool updateApp(App &app);
     bool updateAppName(qint64 appId, const QString &appName);
     void updateAppsBlocked(const QVector<qint64> &appIdList, bool blocked, bool killProcess);
     void deleteApps(const QVector<qint64> &appIdList);

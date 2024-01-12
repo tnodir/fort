@@ -10,13 +10,13 @@
 
 ConfAppManagerRpc::ConfAppManagerRpc(QObject *parent) : ConfAppManager(parent) { }
 
-bool ConfAppManagerRpc::addOrUpdateApp(const App &app, bool onlyUpdate)
+bool ConfAppManagerRpc::addOrUpdateApp(App &app, bool onlyUpdate)
 {
     return IoC<RpcManager>()->doOnServer(
             Control::Rpc_ConfAppManager_addOrUpdateApp, { appToVarList(app), onlyUpdate });
 }
 
-bool ConfAppManagerRpc::updateApp(const App &app)
+bool ConfAppManagerRpc::updateApp(App &app)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_updateApp, appToVarList(app));
 }
