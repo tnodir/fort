@@ -10,17 +10,19 @@ void MapSettings::save() const
 {
     Q_ASSERT(settings());
 
-    auto it = map().constBegin();
-    const auto end = map().constEnd();
-
-    for (; it != end; ++it) {
-        const QString &key = it.key();
+    for (const auto &[key, v] : map().asKeyValueRange()) {
         if (!isTransientKey(key)) {
-            settings()->setIniValue(key, it.value());
+            settings()->setIniValue(key, v);
         }
     }
 
     settings()->iniFlush();
+}
+
+void MapSettings::saveAndClear()
+{
+    save();
+    clear();
 }
 
 QVariant MapSettings::value(const QString &key, const QVariant &defaultValue) const

@@ -6,5 +6,5 @@ void IniUser::saveDefaultIni()
 {
     setLanguage(defaultLanguage());
 
-    save();
+    saveAndClear();
 }

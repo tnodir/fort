@@ -17,6 +17,7 @@ public:
 
 public slots:
     void save() const;
+    void saveAndClear();
 
 protected:
     QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const override;

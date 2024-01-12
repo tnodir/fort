@@ -73,7 +73,7 @@ QVariant MapWrapper::value(const QString &key, const QVariant &defaultValue) con
 
 void MapWrapper::setValue(const QString &key, const QVariant &v, const QVariant & /*defaultValue*/)
 {
-    m_map[key] = v;
+    m_map.insert(key, v);
 }
 
 bool MapWrapper::contains(const QString &key) const

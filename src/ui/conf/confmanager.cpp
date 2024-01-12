@@ -620,8 +620,7 @@ void ConfManager::saveIni()
 
 void ConfManager::saveIniUser(bool edited, bool onlyFlags)
 {
-    iniUser().save();
-    iniUser().clear();
+    iniUser().saveAndClear();
 
     if (edited) {
         emit iniUserChanged(iniUser(), onlyFlags);

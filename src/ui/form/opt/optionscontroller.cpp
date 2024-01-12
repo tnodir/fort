@@ -151,8 +151,7 @@ void OptionsController::saveIniUser(bool onlyFlags)
 {
     qCDebug(LC) << "IniUser save";
 
-    iniUserToEdit()->save();
-    iniUserToEdit()->clear();
+    iniUserToEdit()->saveAndClear();
 
     confManager()->saveIniUser(/*edited=*/true, onlyFlags);
 }
