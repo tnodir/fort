@@ -363,7 +363,10 @@ bool ConfAppManager::updateAppBlocked(
     if (!loadAppById(app))
         return false;
 
-    if (!prepareAppBlocked(app, blocked, killProcess) || !saveAppBlocked(app))
+    if (!checkAppBlockedChanged(app, blocked, killProcess))
+        return true;
+
+    if (!saveAppBlocked(app))
         return false;
 
     if (app.isWildcard) {
@@ -375,7 +378,7 @@ bool ConfAppManager::updateAppBlocked(
     return true;
 }
 
-bool ConfAppManager::prepareAppBlocked(App &app, bool blocked, bool killProcess)
+bool ConfAppManager::checkAppBlockedChanged(App &app, bool blocked, bool killProcess)
 {
     const bool wasAlerted = app.alerted;
     app.alerted = false;

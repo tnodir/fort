@@ -66,7 +66,7 @@ private:
     bool deleteApp(qint64 appId, bool &isWildcard);
 
     bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
-    bool prepareAppBlocked(App &app, bool blocked, bool killProcess);
+    bool checkAppBlockedChanged(App &app, bool blocked, bool killProcess);
 
     QVector<qint64> collectObsoleteApps();
 
