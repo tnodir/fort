@@ -1028,6 +1028,10 @@ Make sure that you have a fresh backup.</source>
         <source>Windows Service</source>
         <translation>Служба Windows</translation>
     </message>
+    <message>
+        <source>Purge Obsolete only on mounted drives</source>
+        <translation>Очистить устаревшее только на монтированных дисках</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

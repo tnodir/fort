@@ -468,11 +468,11 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation type="unfinished">Bitte installieren Sie zuerst Fort Firewall v%1 und speichern Sie die Optionen darin.</translation>
+        <translation>Bitte installieren Sie zuerst Fort Firewall v%1 und speichern Sie die Optionen darin.</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Einstellungen können nicht geladen werden</translation>
     </message>
 </context>
 <context>
@@ -771,7 +771,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Cannot save the options</source>
-        <translation type="unfinished"></translation>
+        <translation>Optionen können nicht gespeichert werden</translation>
     </message>
 </context>
 <context>
@@ -1028,6 +1028,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Windows Service</source>
         <translation>Windows-Dienst</translation>
     </message>
+    <message>
+        <source>Purge Obsolete only on mounted drives</source>
+        <translation type="unfinished">Purge Obsolete only on mounted drives</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1246,19 +1250,19 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <name>ProgramsController</name>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished">Konfigurationsfehler</translation>
+        <translation>Konfigurationsfehler</translation>
     </message>
     <message>
         <source>Cannot update program&apos;s state</source>
-        <translation type="unfinished"></translation>
+        <translation>Programmstatus kann nicht aktualisiert werden</translation>
     </message>
     <message>
         <source>Cannot delete program</source>
-        <translation type="unfinished"></translation>
+        <translation>Programm kann nicht gelöscht werden</translation>
     </message>
     <message>
         <source>Cannot purge obsolete programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Veraltete Programme können nicht gelöscht werden</translation>
     </message>
 </context>
 <context>
@@ -1766,11 +1770,11 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation type="unfinished">Jetzt neustarten?</translation>
+        <translation>Jetzt neustarten?</translation>
     </message>
     <message>
         <source>Restart Required</source>
-        <translation type="unfinished">Neustart erforderlich</translation>
+        <translation>Neustart erforderlich</translation>
     </message>
 </context>
 <context>
@@ -1800,15 +1804,15 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <name>ZonesController</name>
     <message>
         <source>Cannot edit Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Zone kann nicht bearbeitet werden</translation>
     </message>
     <message>
         <source>Cannot delete Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Zone kann nicht gelöscht werden</translation>
     </message>
     <message>
         <source>Cannot update Zone&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonenname kann nicht aktualisiert werden</translation>
     </message>
 </context>
 <context>

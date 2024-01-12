@@ -1026,6 +1026,10 @@ Make sure that you have a fresh backup.</source>
         <source>Windows Service</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Purge Obsolete only on mounted drives</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

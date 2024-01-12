@@ -468,11 +468,11 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation type="unfinished">请先安装防火墙 v%1 并保存选项。</translation>
+        <translation>请先安装防火墙 v%1 并保存选项。</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>无法载入设置</translation>
     </message>
 </context>
 <context>
@@ -769,7 +769,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Cannot save the options</source>
-        <translation type="unfinished"></translation>
+        <translation>无法保存选项</translation>
     </message>
 </context>
 <context>
@@ -1244,19 +1244,19 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>ProgramsController</name>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished">应用配置错误</translation>
+        <translation>应用配置错误</translation>
     </message>
     <message>
         <source>Cannot update program&apos;s state</source>
-        <translation type="unfinished"></translation>
+        <translation>无法更新程序状态</translation>
     </message>
     <message>
         <source>Cannot delete program</source>
-        <translation type="unfinished"></translation>
+        <translation>无法删除程序</translation>
     </message>
     <message>
         <source>Cannot purge obsolete programs</source>
-        <translation type="unfinished"></translation>
+        <translation>无法清除过时的程序</translation>
     </message>
 </context>
 <context>
@@ -1573,12 +1573,12 @@ It can cause a Windows malfunction or totally unusable.</source>
 <context>
     <name>TaskInfo</name>
     <message>
-        <source>Zones Downloader</source>
-        <translation>区域下载器</translation>
+        <source>Fort Firewall Update Checker</source>
+        <translation>堡垒防火墙更新检查器</translation>
     </message>
     <message>
-        <source>Fort Firewall Update Checker</source>
-        <translation type="unfinished"></translation>
+        <source>Zones Downloader</source>
+        <translation>区域下载器</translation>
     </message>
 </context>
 <context>
@@ -1764,11 +1764,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation type="unfinished">立即重启?</translation>
+        <translation>立即重启?</translation>
     </message>
     <message>
         <source>Restart Required</source>
-        <translation type="unfinished">需要重启</translation>
+        <translation>需要重启</translation>
     </message>
 </context>
 <context>
@@ -1798,15 +1798,15 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>ZonesController</name>
     <message>
         <source>Cannot edit Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>无法编辑区域</translation>
     </message>
     <message>
         <source>Cannot delete Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>无法删除区域</translation>
     </message>
     <message>
         <source>Cannot update Zone&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>无法更新区域的名称</translation>
     </message>
 </context>
 <context>

@@ -1028,6 +1028,10 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <source>Windows Service</source>
         <translation>Service Windows</translation>
     </message>
+    <message>
+        <source>Purge Obsolete only on mounted drives</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

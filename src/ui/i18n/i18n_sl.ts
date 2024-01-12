@@ -1028,6 +1028,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Windows Service</source>
         <translation>Windows storitev</translation>
     </message>
+    <message>
+        <source>Purge Obsolete only on mounted drives</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
