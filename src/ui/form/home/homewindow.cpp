@@ -110,6 +110,7 @@ void HomeWindow::retranslateUi()
     m_btLogs->setText(tr("Logs"));
     m_btStat->setText(tr("Statistics"));
     m_btReleases->setText(tr("Releases"));
+    m_btHelp->setText(tr("Help"));
 
     this->setWindowTitle(tr("My Fort"));
 }
@@ -248,23 +249,22 @@ void HomeWindow::setupPasswordButtons()
 
 QLayout *HomeWindow::setupDialogButtons()
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(6, 4, 6, 4);
-
     m_btProfile = createFlatToolButton(":/icons/folder.png", settings()->profilePath());
     m_btLogs = createFlatToolButton(":/icons/folder.png", settings()->logsPath());
     m_btStat = createFlatToolButton(":/icons/folder.png", settings()->statPath());
     m_btReleases = createFlatToolButton(":/icons/github.png", APP_UPDATES_URL);
+    m_btHelp = createFlatToolButton(
+            ":/icons/help.png", "https://github.com/tnodir/fort/wiki/User-Guide");
 
     connect(m_btProfile, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btStat, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btReleases, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btHelp, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
 
-    layout->addWidget(m_btProfile);
-    layout->addWidget(m_btLogs);
-    layout->addWidget(m_btStat);
-    layout->addWidget(m_btReleases);
+    auto layout = ControlUtil::createLayoutByWidgets(
+            { m_btProfile, m_btLogs, m_btStat, m_btReleases, m_btHelp }, Qt::Horizontal);
+    layout->setContentsMargins(6, 4, 6, 4);
 
     layout->addStretch();
 
