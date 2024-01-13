@@ -292,7 +292,7 @@
     <name>ConfZoneManager</name>
     <message>
         <source>Zone Configuration Error</source>
-        <translation>Napaka nastavitev območja</translation>
+        <translation>Napaka nastavitev področja</translation>
     </message>
 </context>
 <context>
@@ -379,7 +379,7 @@
     </message>
     <message>
         <source>Restrict access by Zone</source>
-        <translation>Omeji dostop glede na območje</translation>
+        <translation>Omeji dostop glede na področje</translation>
     </message>
 </context>
 <context>
@@ -468,11 +468,11 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation type="unfinished">Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
+        <translation>Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Nastavitev ni mogoče naložiti</translation>
     </message>
 </context>
 <context>
@@ -771,7 +771,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Cannot save the options</source>
-        <translation type="unfinished"></translation>
+        <translation>Možnosti ni mogoče shraniti</translation>
     </message>
 </context>
 <context>
@@ -1030,7 +1030,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation type="unfinished"></translation>
+        <translation>Počisti Zastarelo samo na nameščenih pogonih</translation>
     </message>
 </context>
 <context>
@@ -1250,19 +1250,19 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <name>ProgramsController</name>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished">Napaka nastavitev aplikacije</translation>
+        <translation>Napaka nastavitev aplikacije</translation>
     </message>
     <message>
         <source>Cannot update program&apos;s state</source>
-        <translation type="unfinished"></translation>
+        <translation>Ni mogoče posodobiti stanja programa</translation>
     </message>
     <message>
         <source>Cannot delete program</source>
-        <translation type="unfinished"></translation>
+        <translation>Programa ni mogoče izbrisati</translation>
     </message>
     <message>
         <source>Cannot purge obsolete programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Zastarelih programov ni mogoče očistiti</translation>
     </message>
 </context>
 <context>
@@ -1579,12 +1579,12 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
 <context>
     <name>TaskInfo</name>
     <message>
-        <source>Zones Downloader</source>
-        <translation>Prenašalnik področij</translation>
+        <source>Fort Firewall Update Checker</source>
+        <translation>Preverjevalnik posodobitev Fort Firewalla</translation>
     </message>
     <message>
-        <source>Fort Firewall Update Checker</source>
-        <translation type="unfinished"></translation>
+        <source>Zones Downloader</source>
+        <translation>Prenašalnik področij</translation>
     </message>
 </context>
 <context>
@@ -1770,11 +1770,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation type="unfinished">Želite zdaj znova zagnati?</translation>
+        <translation>Želite zdaj znova zagnati?</translation>
     </message>
     <message>
         <source>Restart Required</source>
-        <translation type="unfinished">Potreben je ponovni zagon</translation>
+        <translation>Potreben je ponovni zagon</translation>
     </message>
 </context>
 <context>
@@ -1804,15 +1804,15 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <name>ZonesController</name>
     <message>
         <source>Cannot edit Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Področja ni mogoče urejati</translation>
     </message>
     <message>
         <source>Cannot delete Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Področja ni mogoče izbrisati</translation>
     </message>
     <message>
         <source>Cannot update Zone&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Imena področja ni mogoče posodobiti</translation>
     </message>
 </context>
 <context>

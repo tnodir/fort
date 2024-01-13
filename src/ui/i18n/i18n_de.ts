@@ -152,7 +152,7 @@
     </message>
     <message>
         <source>time period:</source>
-        <translation>zeitspanne:</translation>
+        <translation>Zeitspanne:</translation>
     </message>
     <message>
         <source>Block</source>
@@ -1030,7 +1030,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation type="unfinished">Purge Obsolete only on mounted drives</translation>
+        <translation>Veraltete nur auf eingebundenen Laufwerken löschen</translation>
     </message>
 </context>
 <context>
@@ -1133,7 +1133,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Block At:</source>
-        <translation>Blockieren unter:</translation>
+        <translation>Blockieren ab:</translation>
     </message>
     <message>
         <source>Forever</source>
@@ -1181,7 +1181,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source> hour(s)</source>
-        <translation> stunde(n)</translation>
+        <translation>Stunde(n)</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
@@ -1370,11 +1370,11 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Each 6 hours</source>
-        <translation>Alle 12 Stunden</translation>
+        <translation>Alle 6 Stunden</translation>
     </message>
     <message>
         <source>Each 12 hours</source>
-        <translation>Alle 6 Stunden</translation>
+        <translation>Alle 12 Stunden</translation>
     </message>
     <message>
         <source>Daily</source>
@@ -1390,7 +1390,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source> hour(s)</source>
-        <translation> stunde(n)</translation>
+        <translation> Stunde(n)</translation>
     </message>
 </context>
 <context>
