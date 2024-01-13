@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v3.10.8, 2024-01-13:
+- UI: Options: Add "Purge Obsolete only on mounted drives" flag.
+- UI: Options: Fix App Groups ordering after remove from middle.
+- UI: Programs: 1-st cell is active on `Select All`.
+- UI: Programs: Improve errors showing.
+- UI: AppInfo: Extract File Version, not Product.
+- UI: Service: Fix for Windows 7 (Regression from v3.10.7).
+
 v3.10.7, 2024-01-11:
 - UI: Add QtBase translations.
 - UI: Programs: Native separators for FileDialog paths.
