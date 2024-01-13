@@ -92,9 +92,9 @@ QVariant TaskListModel::dataDisplay(const QModelIndex &index) const
     case 1:
         return taskIntervalHours(row);
     case 2:
-        return formatDateTime(taskInfo->lastRun());
+        return taskInfo->lastRun();
     case 3:
-        return formatDateTime(taskInfo->lastSuccess());
+        return taskInfo->lastSuccess();
     }
 
     return QVariant();
@@ -199,9 +199,4 @@ void TaskListModel::setTaskIntervalHours(const QModelIndex &index, int v)
 
     emit dataChanged(index, index, { Qt::DisplayRole });
     emit dataEdited();
-}
-
-QString TaskListModel::formatDateTime(const QDateTime &dateTime)
-{
-    return dateTime.toString("yyyy-MM-dd HH:mm:ss");
 }

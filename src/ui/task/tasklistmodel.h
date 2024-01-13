@@ -59,8 +59,6 @@ private:
     TaskEditInfo &taskRowAt(int row) { return m_taskRows[row]; }
     const TaskEditInfo &taskRowAt(int row) const { return m_taskRows[row]; }
 
-    static QString formatDateTime(const QDateTime &dateTime);
-
 private:
     TaskManager *m_taskManager = nullptr;
 
