@@ -651,7 +651,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Aide</translation>
     </message>
 </context>
 <context>
@@ -1251,11 +1251,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source># Name wildcard:</source>
-        <translation type="unfinished"></translation>
+        <translation>#Caractère générique de nom :</translation>
     </message>
     <message>
         <source># Environment Variable:</source>
-        <translation type="unfinished"></translation>
+        <translation># Variable d&apos;environnement :</translation>
     </message>
 </context>
 <context>

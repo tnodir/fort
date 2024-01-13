@@ -651,7 +651,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Hilfe</translation>
     </message>
 </context>
 <context>
@@ -1251,11 +1251,11 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source># Name wildcard:</source>
-        <translation type="unfinished"></translation>
+        <translation># Platzhaltername:</translation>
     </message>
     <message>
         <source># Environment Variable:</source>
-        <translation type="unfinished"></translation>
+        <translation># Umgebungsvariable:</translation>
     </message>
 </context>
 <context>
