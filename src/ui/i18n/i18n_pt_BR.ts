@@ -1240,6 +1240,14 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source># All programs in the sub-path:</source>
         <translation type="unfinished"># Todos os programas no sub-caminho:</translation>
     </message>
+    <message>
+        <source># Name wildcard:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Environment Variable:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

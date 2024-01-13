@@ -1243,6 +1243,14 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source># All programs in the sub-path:</source>
         <translation># 子路径中的所有程序：</translation>
     </message>
+    <message>
+        <source># Name wildcard:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Environment Variable:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

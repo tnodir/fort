@@ -1245,6 +1245,14 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source># All programs in the sub-path:</source>
         <translation># 하위 경로의 모든 프로그램:</translation>
     </message>
+    <message>
+        <source># Name wildcard:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Environment Variable:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

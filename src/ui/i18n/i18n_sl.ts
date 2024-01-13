@@ -1245,6 +1245,14 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source># All programs in the sub-path:</source>
         <translation># Vsi programi v podpoti:</translation>
     </message>
+    <message>
+        <source># Name wildcard:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Environment Variable:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ru_RU">
+<TS version="2.1" language="ru_RU" sourcelanguage="en_US">
 <context>
     <name>CloseButton</name>
     <message>
@@ -68,8 +68,18 @@ Press ESC to cancel</source>
         <translation>&amp;Взять цвет с экрана</translation>
     </message>
     <message>
+        <source>Cursor at %1, %2, color: %3
+Press ESC to cancel</source>
+        <translation>Курсор %1, %2, цвет: %3
+Нажмите ESC для отмены</translation>
+    </message>
+    <message>
         <source>Select Color</source>
         <translation>Выбор цвета</translation>
+    </message>
+    <message>
+        <source>Pick Screen Color</source>
+        <translation>Взять цвет с экрана</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>

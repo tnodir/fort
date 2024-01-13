@@ -1245,6 +1245,14 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source># All programs in the sub-path:</source>
         <translation># Все программы по пути:</translation>
     </message>
+    <message>
+        <source># Name wildcard:</source>
+        <translation># Подстановка в имени:</translation>
+    </message>
+    <message>
+        <source># Environment Variable:</source>
+        <translation># Переменная окружения:</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
