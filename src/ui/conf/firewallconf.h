@@ -140,11 +140,11 @@ signals:
     void appGroupsChanged();
 
 public slots:
-    void addAppGroup(AppGroup *appGroup, int to = -1);
+    void addAppGroup(AppGroup *appGroup);
     AppGroup *addAppGroupByName(const QString &name);
+    void addDefaultAppGroup();
     void moveAppGroup(int from, int to);
     void removeAppGroup(int from, int to);
-    void addDefaultAppGroup();
 
     void setupDefaultAddressGroups();
 
@@ -153,6 +153,8 @@ public slots:
 
 private:
     void setupAddressGroups();
+
+    void setAppGroupsEdited(int from, int to);
 
     void loadAppGroupBits();
     void applyAppGroupBits();

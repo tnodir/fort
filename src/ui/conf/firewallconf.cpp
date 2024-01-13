@@ -194,39 +194,38 @@ AppGroup *FirewallConf::appGroupByName(const QString &name) const
     return nullptr;
 }
 
-void FirewallConf::addAppGroup(AppGroup *appGroup, int to)
+void FirewallConf::addAppGroup(AppGroup *appGroup)
 {
     appGroup->setParent(this);
 
-    if (to < 0) {
-        m_appGroups.append(appGroup);
-    } else {
-        m_appGroups.insert(to, appGroup);
-    }
+    m_appGroups.append(appGroup);
+
     emit appGroupsChanged();
 }
 
 AppGroup *FirewallConf::addAppGroupByName(const QString &name)
 {
     AppGroup *appGroup = new AppGroup();
-    appGroup->setEdited(true);
     appGroup->setId(m_removedAppGroupIdList.isEmpty() ? 0 : m_removedAppGroupIdList.takeLast());
     appGroup->setName(name);
+    appGroup->setEdited(true);
+
     addAppGroup(appGroup);
+
     return appGroup;
+}
+
+void FirewallConf::addDefaultAppGroup()
+{
+    auto appGroup = addAppGroupByName("Main");
+    appGroup->setAllowText('%' + EnvManager::envFortHome() + "%/**");
 }
 
 void FirewallConf::moveAppGroup(int from, int to)
 {
-    const int lo = qMin(from, to);
-    const int hi = qMax(from, to);
-    for (int i = lo; i <= hi; ++i) {
-        AppGroup *appGroup = m_appGroups.at(i);
-        appGroup->setEdited(true);
-    }
-
     m_appGroups.move(from, to);
-    emit appGroupsChanged();
+
+    setAppGroupsEdited(from, to);
 }
 
 void FirewallConf::removeAppGroup(int from, int to)
@@ -243,13 +242,7 @@ void FirewallConf::removeAppGroup(int from, int to)
         m_appGroups.removeAt(i);
     }
 
-    emit appGroupsChanged();
-}
-
-void FirewallConf::addDefaultAppGroup()
-{
-    auto appGroup = addAppGroupByName("Main");
-    appGroup->setAllowText('%' + EnvManager::envFortHome() + "%/**");
+    setAppGroupsEdited(lo, m_appGroups.size() - 1);
 }
 
 void FirewallConf::clearRemovedAppGroupIdList() const
@@ -287,6 +280,19 @@ void FirewallConf::setupAddressGroups()
 {
     m_addressGroups.append(new AddressGroup(this));
     m_addressGroups.append(new AddressGroup(this));
+}
+
+void FirewallConf::setAppGroupsEdited(int from, int to)
+{
+    const int lo = qMin(from, to);
+    const int hi = qMax(from, to);
+
+    for (int i = lo; i <= hi; ++i) {
+        AppGroup *appGroup = m_appGroups.at(i);
+        appGroup->setEdited(true);
+    }
+
+    emit appGroupsChanged();
 }
 
 void FirewallConf::prepareToSave()
