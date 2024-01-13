@@ -35,7 +35,13 @@ QColor DialogUtil::getColor(const QColor &initial, const QString &title)
 
 void DialogUtil::setupModalDialog(QWidget *box)
 {
-    box->setWindowModality(box->parent() ? Qt::WindowModal : Qt::ApplicationModal);
+    const bool isAppModal = !box->parent();
+
+    box->setWindowModality(isAppModal ? Qt::ApplicationModal : Qt::WindowModal);
+
+    if (isAppModal) {
+        box->setWindowFlag(Qt::WindowStaysOnTopHint);
+    }
 }
 
 QMessageBox *DialogUtil::createMessageBox(const MessageBoxArg &ba, QWidget *parent)
