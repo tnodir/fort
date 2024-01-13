@@ -363,6 +363,12 @@ void TrayIcon::setupTrayMenu()
 {
     m_menu = new ClickableMenu(windowManager()->mainWindow());
 
+    connect(m_menu, &QMenu::aboutToShow, this, [&] {
+        if (WindowManager::activateModalWidget()) {
+            QMetaObject::invokeMethod(m_menu, &QMenu::hide, Qt::QueuedConnection);
+        }
+    });
+
     m_homeAction = addAction(
             m_menu, ":/icons/fort.png", windowManager(), SLOT(showHomeWindow()), ActionShowHome);
     addHotKey(m_homeAction, iniUser()->hotKeyHome());
