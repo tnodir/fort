@@ -649,6 +649,10 @@
         <source>Releases</source>
         <translation>版本发布</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

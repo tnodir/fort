@@ -649,6 +649,10 @@
         <source>Releases</source>
         <translation>Versionen</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

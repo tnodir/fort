@@ -649,6 +649,10 @@
         <source>Releases</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

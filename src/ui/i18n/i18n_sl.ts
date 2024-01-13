@@ -1247,11 +1247,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source># Name wildcard:</source>
-        <translation type="unfinished"></translation>
+        <translation># Nadomestni znak imena:</translation>
     </message>
     <message>
         <source># Environment Variable:</source>
-        <translation type="unfinished"></translation>
+        <translation># Spremenljivka okolja:</translation>
     </message>
 </context>
 <context>
