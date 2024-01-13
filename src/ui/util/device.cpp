@@ -53,7 +53,14 @@ bool Device::ioctl(quint32 code, char *in, int inSize, char *out, int outSize, q
 {
     LPOVERLAPPED overlapped = isOverlapped() ? (LPOVERLAPPED) m_buffer.data() : nullptr;
 
-    return DeviceIoControl(m_handle, code, in, inSize, out, outSize, (LPDWORD) retSize, overlapped);
+    DWORD size = 0; // lpBytesReturned cannot be nullptr on Win7
+    const bool ok = DeviceIoControl(m_handle, code, in, inSize, out, outSize, &size, overlapped);
+
+    if (retSize) {
+        *retSize = size;
+    }
+
+    return ok;
 }
 
 void Device::initOverlapped(void *eventHandle)
