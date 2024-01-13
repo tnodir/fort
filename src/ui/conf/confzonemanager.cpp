@@ -104,8 +104,10 @@ void ConfZoneManager::setUp()
 bool ConfZoneManager::addOrUpdateZone(Zone &zone)
 {
     bool ok = false;
-    const bool isNew = (zone.zoneId == 0);
 
+    beginTransaction();
+
+    const bool isNew = (zone.zoneId == 0);
     if (isNew) {
         zone.zoneId = getFreeZoneId(sqliteDb());
     } else {
@@ -162,6 +164,8 @@ bool ConfZoneManager::updateZoneName(int zoneId, const QString &zoneName)
 {
     bool ok = false;
 
+    beginTransaction();
+
     const auto vars = QVariantList() << zoneId << zoneName;
 
     sqliteDb()->executeEx(sqlUpdateZoneName, vars, 0, &ok);
@@ -177,10 +181,9 @@ bool ConfZoneManager::updateZoneName(int zoneId, const QString &zoneName)
 
 bool ConfZoneManager::updateZoneEnabled(int zoneId, bool enabled)
 {
-    if (!updateDriverZoneFlag(zoneId, enabled))
-        return false;
-
     bool ok = false;
+
+    beginTransaction();
 
     const auto vars = QVariantList() << zoneId << enabled;
 
@@ -190,6 +193,8 @@ bool ConfZoneManager::updateZoneEnabled(int zoneId, bool enabled)
 
     if (ok) {
         emit zoneUpdated();
+
+        updateDriverZoneFlag(zoneId, enabled);
     }
 
     return ok;
@@ -198,6 +203,8 @@ bool ConfZoneManager::updateZoneEnabled(int zoneId, bool enabled)
 bool ConfZoneManager::updateZoneResult(const Zone &zone)
 {
     bool ok = false;
+
+    beginTransaction();
 
     const auto vars = QVariantList()
             << zone.zoneId << zone.addressCount << zone.textChecksum << zone.binChecksum
