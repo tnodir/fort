@@ -233,11 +233,7 @@ void WindowManager::setupByIniUser(const IniUser &ini)
 
 void WindowManager::updateTrayIconVisibility(const IniUser &ini)
 {
-    const bool trayShowIcon = ini.trayShowIcon();
-    if ((trayShowIcon == trayIcon()->isVisible()) && (trayShowIcon || homeWindow()))
-        return;
-
-    if (trayShowIcon) {
+    if (ini.trayShowIcon()) {
         showTrayIcon();
     } else {
         closeTrayIcon();
