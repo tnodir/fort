@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.10.9, 2024-01-13:
+- UI: MyFort: Add "Help" link to User Guide.
+- UI: Zones: Fix new Zone saving.
+- UI: Tray Menu: Hide on active app modal dialog.
+- UI: Show app modal dialogs on top of Graph Window.
+
 v3.10.8, 2024-01-13:
 - UI: Options: Add "Purge Obsolete only on mounted drives" flag.
 - UI: Options: Fix App Groups ordering after remove from middle.
