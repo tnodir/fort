@@ -403,28 +403,6 @@ void FortManager::setupServiceInfoManager()
             &ConfManager::updateDriverServices);
 }
 
-void FortManager::show()
-{
-    auto windowManager = IoC<WindowManager>();
-    const IniUser &iniUser = IoC<UserSettings>()->iniUser();
-
-    windowManager->setupTrayIcon();
-
-    if (iniUser.trayShowIcon()) {
-        windowManager->showTrayIcon();
-    } else {
-        windowManager->showHomeWindow();
-    }
-
-    if (iniUser.graphWindowVisible() || iniUser.graphWindowHideOnClose()) {
-        windowManager->showGraphWindow();
-
-        if (!iniUser.graphWindowVisible()) {
-            windowManager->closeGraphWindow();
-        }
-    }
-}
-
 void FortManager::processRestartRequired()
 {
     if (IoC<FortSettings>()->isService()) {

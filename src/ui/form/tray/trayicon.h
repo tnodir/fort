@@ -117,8 +117,6 @@ private:
 
     void updateClickActions();
 
-    void updateTrayIconVisibility();
-
     QAction *clickAction(TrayIcon::ClickType clickType) const;
     QAction *clickActionFromIni(TrayIcon::ClickType clickType) const;
     QAction *clickActionByType(TrayIcon::ActionType actionType) const;

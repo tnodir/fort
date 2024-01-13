@@ -27,8 +27,6 @@ public slots:
     bool installDriver();
     bool removeDriver();
 
-    void show();
-
     void processRestartRequired();
 
     static void setupPortableResource();

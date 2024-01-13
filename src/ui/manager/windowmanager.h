@@ -10,6 +10,7 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 
 class GraphWindow;
 class HomeWindow;
+class IniUser;
 class MainWindow;
 class OptionsWindow;
 class PoliciesWindow;
@@ -48,6 +49,8 @@ public:
 
     void setUp() override;
     void tearDown() override;
+
+    void initialize();
 
     bool isWindowOpen(WindowCode code) const { return isAnyWindowOpen(code); }
 
@@ -140,6 +143,12 @@ private:
     void setupZonesWindow();
     void setupGraphWindow();
     void setupStatisticsWindow();
+
+    void setupConfManager();
+    void setupByIniUser(const IniUser &ini);
+
+    void updateTrayIconVisibility(const IniUser &ini);
+    void updateGraphWindowVisibility(const IniUser &ini);
 
     void closeAll();
     void quitApp();

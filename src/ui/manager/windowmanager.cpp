@@ -26,6 +26,7 @@
 #include <fortcompat.h>
 #include <fortsettings.h>
 #include <stat/statmanager.h>
+#include <user/usersettings.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 
@@ -56,6 +57,7 @@ void WindowManager::setUp()
     setupAppPalette();
 
     setupMainWindow();
+    setupConfManager();
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this,
@@ -68,6 +70,19 @@ void WindowManager::setUp()
 void WindowManager::tearDown()
 {
     closeAll();
+}
+
+void WindowManager::initialize()
+{
+    const IniUser &ini = IoC<UserSettings>()->iniUser();
+
+    setupTrayIcon();
+
+    if (ini.graphWindowVisible()) {
+        showGraphWindow();
+    }
+
+    setupByIniUser(ini);
 }
 
 QPushButton *WindowManager::createMenuButton() const
@@ -201,6 +216,50 @@ void WindowManager::setupStatisticsWindow()
 
     connect(m_statWindow, &StatisticsWindow::aboutToClose, this,
             &WindowManager::closeStatisticsWindow);
+}
+
+void WindowManager::setupConfManager()
+{
+    auto confManager = IoC()->setUpDependency<ConfManager>();
+
+    connect(confManager, &ConfManager::iniUserChanged, this, &WindowManager::setupByIniUser);
+}
+
+void WindowManager::setupByIniUser(const IniUser &ini)
+{
+    updateTrayIconVisibility(ini);
+    updateGraphWindowVisibility(ini);
+}
+
+void WindowManager::updateTrayIconVisibility(const IniUser &ini)
+{
+    const bool trayShowIcon = ini.trayShowIcon();
+    if ((trayShowIcon == trayIcon()->isVisible()) && (trayShowIcon || homeWindow()))
+        return;
+
+    if (trayShowIcon) {
+        showTrayIcon();
+    } else {
+        closeTrayIcon();
+
+        if (!homeWindow()) {
+            showHomeWindow();
+        }
+    }
+}
+
+void WindowManager::updateGraphWindowVisibility(const IniUser &ini)
+{
+    if (graphWindow() && graphWindow()->isVisible())
+        return;
+
+    if (ini.graphWindowHideOnClose()) {
+        if (!graphWindow()) {
+            setupGraphWindow();
+        }
+    } else {
+        closeGraphWindow();
+    }
 }
 
 void WindowManager::setupTrayIcon()

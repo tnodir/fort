@@ -12,6 +12,7 @@
 #include <fortsettings.h>
 #include <manager/envmanager.h>
 #include <manager/servicemanager.h>
+#include <manager/windowmanager.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/service/serviceworker.h>
@@ -136,7 +137,7 @@ int main(int argc, char *argv[])
     if (settings.isService()) {
         ServiceWorker::run(IoC<ServiceManager>());
     } else {
-        fortManager.show();
+        IoC<WindowManager>()->initialize();
     }
 
     return QApplication::exec();
