@@ -69,7 +69,7 @@ void AboutPage::setupNewVersionBox()
 QLayout *AboutPage::setupButtonsLayout()
 {
     // Download
-    m_btDownload = ControlUtil::createFlatToolButton(":/icons/download_for_windows.png");
+    m_btDownload = ControlUtil::createFlatToolButton(":/icons/download.png");
 
     connect(m_btDownload, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
 
