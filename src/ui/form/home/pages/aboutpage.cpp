@@ -18,8 +18,15 @@ AboutPage::AboutPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl,
 
 void AboutPage::onRetranslateUi()
 {
-    m_gbNewVersion->setTitle(tr("New Version"));
-    m_btNewVersion->setText(tr("Download"));
+    m_btDownload->setText(tr("Download"));
+    m_btCheckUpdate->setText(tr("Check Update"));
+
+    retranslateNewVersionBox();
+}
+
+void AboutPage::retranslateNewVersionBox()
+{
+    m_gbNewVersion->setTitle(m_isNewVersion ? tr("New Version") : tr("No Update"));
 }
 
 void AboutPage::setupUi()
@@ -38,37 +45,63 @@ void AboutPage::setupUi()
 
 void AboutPage::setupNewVersionBox()
 {
-    auto colLayout = new QVBoxLayout();
-    colLayout->setSpacing(10);
-
     // Label
-    m_labelNewVersion = ControlUtil::createLabel();
-    m_labelNewVersion->setTextFormat(Qt::MarkdownText);
-    m_labelNewVersion->setWordWrap(true);
-    m_labelNewVersion->setOpenExternalLinks(true);
-    colLayout->addWidget(m_labelNewVersion);
+    m_labelRelease = ControlUtil::createLabel();
+    m_labelRelease->setTextFormat(Qt::MarkdownText);
+    m_labelRelease->setWordWrap(true);
+    m_labelRelease->setOpenExternalLinks(true);
 
-    // Button
-    m_btNewVersion = ControlUtil::createFlatToolButton(":/icons/download_for_windows.png");
+    // Buttons
+    auto buttonsLayout = setupButtonsLayout();
 
-    connect(m_btNewVersion, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
 
-    colLayout->addWidget(m_btNewVersion, 0, Qt::AlignHCenter);
+    layout->addWidget(m_labelRelease);
+    layout->addLayout(buttonsLayout);
 
     m_gbNewVersion = new QGroupBox();
     m_gbNewVersion->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     m_gbNewVersion->setMinimumWidth(380);
-    m_gbNewVersion->setLayout(colLayout);
+    m_gbNewVersion->setLayout(layout);
+}
+
+QLayout *AboutPage::setupButtonsLayout()
+{
+    // Download
+    m_btDownload = ControlUtil::createFlatToolButton(":/icons/download_for_windows.png");
+
+    connect(m_btDownload, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+
+    // Check Update
+    m_btCheckUpdate = ControlUtil::createFlatToolButton(
+            ":/icons/play.png", [&] { taskManager()->runTask(TaskInfo::UpdateChecker); });
+
+    auto layout = new QHBoxLayout();
+    layout->setSpacing(10);
+
+    layout->addStretch();
+    layout->addWidget(m_btDownload);
+    layout->addWidget(m_btCheckUpdate);
+    layout->addStretch();
+
+    return layout;
 }
 
 void AboutPage::setupNewVersionUpdate()
 {
     const auto refreshNewVersion = [&] {
         auto updateChecker = taskManager()->taskInfoUpdateChecker();
-        m_gbNewVersion->setVisible(updateChecker->isNewVersion());
-        m_labelNewVersion->setText(updateChecker->releaseText());
-        m_btNewVersion->setWindowFilePath(updateChecker->downloadUrl());
-        m_btNewVersion->setToolTip(updateChecker->downloadUrl());
+        m_isNewVersion = updateChecker->isNewVersion();
+
+        m_labelRelease->setVisible(m_isNewVersion);
+        m_labelRelease->setText(updateChecker->releaseText());
+
+        m_btDownload->setVisible(m_isNewVersion);
+        m_btDownload->setWindowFilePath(updateChecker->downloadUrl());
+        m_btDownload->setToolTip(updateChecker->downloadUrl());
+
+        retranslateNewVersionBox();
     };
 
     refreshNewVersion();
