@@ -11,6 +11,14 @@
         <source>Download</source>
         <translation>Prenesi</translation>
     </message>
+    <message>
+        <source>Check Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -648,6 +656,10 @@
     <message>
         <source>Releases</source>
         <translation>Izdaje</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

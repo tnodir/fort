@@ -11,6 +11,14 @@
         <source>Download</source>
         <translation>Загрузка</translation>
     </message>
+    <message>
+        <source>Check Update</source>
+        <translation>Проверить обновление</translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation>Нет обновления</translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -460,7 +468,7 @@
     </message>
     <message>
         <source>New version v%1 available!</source>
-        <translation>Новая версия v% доступна!</translation>
+        <translation>Новая версия v%1 доступна!</translation>
     </message>
     <message>
         <source>Zone Addresses Updated: %1.</source>
@@ -651,7 +659,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation>Помощь</translation>
+        <translation>Справка</translation>
     </message>
 </context>
 <context>

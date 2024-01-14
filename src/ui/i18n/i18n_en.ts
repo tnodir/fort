@@ -11,6 +11,14 @@
         <source>Download</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Check Update</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>

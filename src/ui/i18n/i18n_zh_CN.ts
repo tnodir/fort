@@ -11,6 +11,14 @@
         <source>Download</source>
         <translation>下载</translation>
     </message>
+    <message>
+        <source>Check Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No Update</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
