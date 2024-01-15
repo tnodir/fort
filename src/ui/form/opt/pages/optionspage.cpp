@@ -125,8 +125,7 @@ void OptionsPage::saveService(bool isService)
         });
     }
 
-    QMetaObject::invokeMethod(
-            fortManager(), &FortManager::processRestartRequired, Qt::QueuedConnection);
+    fortManager()->processRestartRequired(tr("Windows Service installation changed"));
 }
 
 void OptionsPage::onRetranslateUi()

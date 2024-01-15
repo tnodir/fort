@@ -56,7 +56,7 @@ void DbErrorManager::checkDriveList()
 
     if (m_driveMask == driveMask) {
         // Restart on profile drive mounted
-        IoC<FortManager>()->processRestartRequired();
+        IoC<FortManager>()->processRestartRequired(tr("Profile's drive mounted"));
         return;
     }
 

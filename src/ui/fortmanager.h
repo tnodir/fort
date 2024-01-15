@@ -27,7 +27,7 @@ public slots:
     bool installDriver();
     bool removeDriver();
 
-    void processRestartRequired();
+    void processRestartRequired(const QString &info = {});
 
     static void setupPortableResource();
     static void setupResources();
