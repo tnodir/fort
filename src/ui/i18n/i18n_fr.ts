@@ -437,7 +437,7 @@
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
-        <translation type="unfinished"></translation>
+        <translation>Lecteur de profil&apos;s monté</translation>
     </message>
 </context>
 <context>
@@ -491,7 +491,7 @@
     </message>
     <message>
         <source>Driver reinstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>Pilote réinstallé</translation>
     </message>
 </context>
 <context>
@@ -1057,7 +1057,7 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Windows Service installation changed</source>
-        <translation type="unfinished"></translation>
+        <translation>Installation du service Windows changée</translation>
     </message>
 </context>
 <context>

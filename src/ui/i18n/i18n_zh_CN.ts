@@ -437,7 +437,7 @@
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
-        <translation type="unfinished">Profile&apos;s drive mounted</translation>
+        <translation>配置的驱动器已安装</translation>
     </message>
 </context>
 <context>
@@ -491,7 +491,7 @@
     </message>
     <message>
         <source>Driver reinstalled</source>
-        <translation type="unfinished">Driver reinstalled</translation>
+        <translation>驱动程序已重新安装</translation>
     </message>
 </context>
 <context>
@@ -1055,7 +1055,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Windows Service installation changed</source>
-        <translation type="unfinished">Windows Service installation changed</translation>
+        <translation>Windows 服务安装已更改</translation>
     </message>
 </context>
 <context>
