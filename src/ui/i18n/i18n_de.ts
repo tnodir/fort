@@ -434,6 +434,13 @@
     </message>
 </context>
 <context>
+    <name>DbErrorManager</name>
+    <message>
+        <source>Profile&apos;s drive mounted</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FirewallConf</name>
     <message>
         <source>Auto-Learn</source>
@@ -481,6 +488,10 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>Einstellungen können nicht geladen werden</translation>
+    </message>
+    <message>
+        <source>Driver reinstalled</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1043,6 +1054,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>Veraltete nur auf eingebundenen Laufwerken löschen</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

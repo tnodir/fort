@@ -434,6 +434,13 @@
     </message>
 </context>
 <context>
+    <name>DbErrorManager</name>
+    <message>
+        <source>Profile&apos;s drive mounted</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FirewallConf</name>
     <message>
         <source>Auto-Learn</source>
@@ -481,6 +488,10 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>설정을 로드할 수 없음</translation>
+    </message>
+    <message>
+        <source>Driver reinstalled</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1043,6 +1054,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>마운트된 드라이브에서만 사용되지 않음 정리</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

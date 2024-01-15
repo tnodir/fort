@@ -13,11 +13,11 @@
     </message>
     <message>
         <source>Check Update</source>
-        <translation type="unfinished"></translation>
+        <translation>检查更新</translation>
     </message>
     <message>
         <source>No Update</source>
-        <translation type="unfinished"></translation>
+        <translation>无更新</translation>
     </message>
 </context>
 <context>
@@ -434,6 +434,13 @@
     </message>
 </context>
 <context>
+    <name>DbErrorManager</name>
+    <message>
+        <source>Profile&apos;s drive mounted</source>
+        <translation type="unfinished">Profile&apos;s drive mounted</translation>
+    </message>
+</context>
+<context>
     <name>FirewallConf</name>
     <message>
         <source>Auto-Learn</source>
@@ -481,6 +488,10 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>无法载入设置</translation>
+    </message>
+    <message>
+        <source>Driver reinstalled</source>
+        <translation type="unfinished">Driver reinstalled</translation>
     </message>
 </context>
 <context>
@@ -659,7 +670,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Help</translation>
     </message>
 </context>
 <context>
@@ -1042,6 +1053,10 @@ Make sure that you have a fresh backup.</source>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>仅清除已挂载驱动器上的过时数据</translation>
     </message>
+    <message>
+        <source>Windows Service installation changed</source>
+        <translation type="unfinished">Windows Service installation changed</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1257,11 +1272,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source># Name wildcard:</source>
-        <translation type="unfinished"></translation>
+        <translation># 名称通配符：</translation>
     </message>
     <message>
         <source># Environment Variable:</source>
-        <translation type="unfinished"></translation>
+        <translation># 环境变量：</translation>
     </message>
 </context>
 <context>

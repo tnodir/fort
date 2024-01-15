@@ -434,6 +434,13 @@
     </message>
 </context>
 <context>
+    <name>DbErrorManager</name>
+    <message>
+        <source>Profile&apos;s drive mounted</source>
+        <translation>Том профиля был демонтирован</translation>
+    </message>
+</context>
+<context>
     <name>FirewallConf</name>
     <message>
         <source>Auto-Learn</source>
@@ -481,6 +488,10 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>Невозможно загрузить Найстройки</translation>
+    </message>
+    <message>
+        <source>Driver reinstalled</source>
+        <translation>Драйвер переустановлен</translation>
     </message>
 </context>
 <context>
@@ -1043,6 +1054,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>Очистить устаревшее только на монтированных дисках</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed</source>
+        <translation>Установка Службы Windows изменена</translation>
     </message>
 </context>
 <context>

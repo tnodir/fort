@@ -13,11 +13,11 @@
     </message>
     <message>
         <source>Check Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifier les mises à jour</translation>
     </message>
     <message>
         <source>No Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucune mise à jour</translation>
     </message>
 </context>
 <context>
@@ -434,6 +434,13 @@
     </message>
 </context>
 <context>
+    <name>DbErrorManager</name>
+    <message>
+        <source>Profile&apos;s drive mounted</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>FirewallConf</name>
     <message>
         <source>Auto-Learn</source>
@@ -481,6 +488,10 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>Impossible de charger les paramètres</translation>
+    </message>
+    <message>
+        <source>Driver reinstalled</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1043,6 +1054,10 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>Purge obsolète seulement sur les disques montés</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
