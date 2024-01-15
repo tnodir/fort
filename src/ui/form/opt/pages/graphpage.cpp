@@ -129,7 +129,7 @@ void GraphPage::setupGraphBox()
     setupGraphCheckboxes();
     setupGraphOptions();
 
-    auto layout = ControlUtil::createLayoutByWidgets({ m_cbGraphHideOnClose,
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphHideOnClose,
             ControlUtil::createSeparator(), m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
             m_cbGraphClickThrough, m_cbGraphHideOnHover, ControlUtil::createSeparator(),
             m_graphOpacity, m_graphHoverOpacity, m_graphMaxSeconds });
@@ -222,7 +222,7 @@ void GraphPage::setupColorsBox()
     setupGraphColors();
 
     auto layout =
-            ControlUtil::createLayoutByWidgets({ m_graphColor, m_graphColorIn, m_graphColorOut,
+            ControlUtil::createVLayoutByWidgets({ m_graphColor, m_graphColorIn, m_graphColorOut,
                     m_graphAxisColor, m_graphTickLabelColor, m_graphLabelColor, m_graphGridColor });
 
     m_gbColors = new QGroupBox();

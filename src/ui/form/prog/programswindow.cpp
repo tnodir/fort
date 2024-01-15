@@ -225,17 +225,17 @@ QLayout *ProgramsWindow::setupHeader()
     m_btMenu = windowManager()->createMenuButton();
 
     layout->addWidget(m_btEdit);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btAllowApp);
     layout->addWidget(m_btBlockApp);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btRemoveApp);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_editSearch);
     layout->addStretch();
     layout->addWidget(m_btGroups);
     layout->addWidget(m_btServices);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btMenu);
 
     return layout;

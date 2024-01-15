@@ -540,7 +540,7 @@ void OptionsPage::setupProgBox()
             });
 
     // Layout
-    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogBlocked, m_cbAppNotifyMessage,
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbLogBlocked, m_cbAppNotifyMessage,
             ControlUtil::createSeparator(), m_cbPurgeOnStart, m_cbPurgeOnMounted });
 
     m_gbProg = new QGroupBox();

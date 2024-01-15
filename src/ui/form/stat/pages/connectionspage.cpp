@@ -151,7 +151,7 @@ QLayout *ConnectionsPage::setupHeader()
     setupOptions();
 
     layout->addWidget(m_btEdit);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btClearAll);
     layout->addStretch();
     layout->addWidget(m_btOptions);
@@ -165,8 +165,7 @@ void ConnectionsPage::setupOptions()
     setupShowHostNames();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cbAutoScroll, m_cbShowHostNames };
-    auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbAutoScroll, m_cbShowHostNames });
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 

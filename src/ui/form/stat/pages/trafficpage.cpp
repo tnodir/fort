@@ -143,7 +143,7 @@ QLayout *TrafficPage::setupHeader()
 
     layout->addWidget(m_btRefresh);
     layout->addWidget(m_btClear);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_traphUnits);
     layout->addWidget(m_comboTrafUnit);
     layout->addStretch();

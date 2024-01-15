@@ -72,7 +72,19 @@ public:
     static QBoxLayout *createLayoutByWidgets(
             const QList<QWidget *> &widgets, Qt::Orientation o = Qt::Vertical);
 
+    inline static QBoxLayout *createHLayoutByWidgets(const QList<QWidget *> &widgets)
+    {
+        return createLayoutByWidgets(widgets, Qt::Horizontal);
+    }
+    inline static QBoxLayout *createVLayoutByWidgets(const QList<QWidget *> &widgets)
+    {
+        return createLayoutByWidgets(widgets, Qt::Vertical);
+    }
+
     static QFrame *createSeparator(Qt::Orientation o = Qt::Horizontal);
+
+    inline static QFrame *createHSeparator() { return createSeparator(Qt::Horizontal); }
+    inline static QFrame *createVSeparator() { return createSeparator(Qt::Vertical); }
 
     static QLayout *createRowLayout(QWidget *w1, QWidget *w2, int stretch1 = 1);
 

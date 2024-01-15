@@ -380,7 +380,7 @@ QLayout *ZonesWindow::setupHeader()
 
     layout->addWidget(m_btEdit);
     layout->addWidget(m_btSaveAsText);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btUpdateZones);
     layout->addStretch();
     layout->addWidget(m_btMenu);

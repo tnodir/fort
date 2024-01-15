@@ -262,8 +262,8 @@ QLayout *HomeWindow::setupDialogButtons()
     connect(m_btReleases, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btHelp, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
 
-    auto layout = ControlUtil::createLayoutByWidgets(
-            { m_btProfile, m_btLogs, m_btStat, m_btReleases, m_btHelp }, Qt::Horizontal);
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_btProfile, m_btLogs, m_btStat, m_btReleases, m_btHelp });
     layout->setContentsMargins(6, 4, 6, 4);
 
     layout->addStretch();

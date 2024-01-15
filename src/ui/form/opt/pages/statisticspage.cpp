@@ -170,7 +170,7 @@ void StatisticsPage::setupTrafficBox()
     setupQuota();
 
     // Layout
-    auto layout = ControlUtil::createLayoutByWidgets(
+    auto layout = ControlUtil::createVLayoutByWidgets(
             { m_cbLogStat, m_cbLogStatNoFilter, m_ctpActivePeriod, m_lscMonthStart,
                     ControlUtil::createSeparator(), m_lscTrafHourKeepDays, m_lscTrafDayKeepDays,
                     m_lscTrafMonthKeepMonths, ControlUtil::createSeparator(), m_lscQuotaDayMb,
@@ -320,7 +320,7 @@ void StatisticsPage::setupBlockedConnBox()
     setupLogBlockedIp();
 
     // Layout
-    auto layout = ControlUtil::createLayoutByWidgets(
+    auto layout = ControlUtil::createVLayoutByWidgets(
             { m_cbLogBlockedIp, m_cbLogAlertedBlockedIp, m_lscBlockedIpKeepCount });
 
     m_gbBlockedConn = new QGroupBox();
@@ -361,7 +361,8 @@ void StatisticsPage::setupAllowedConnBox()
     setupLogAllowedIp();
 
     // Layout
-    auto layout = ControlUtil::createLayoutByWidgets({ m_cbLogAllowedIp, m_lscAllowedIpKeepCount });
+    auto layout =
+            ControlUtil::createVLayoutByWidgets({ m_cbLogAllowedIp, m_lscAllowedIpKeepCount });
 
     m_gbAllowedConn = new QGroupBox();
     m_gbAllowedConn->setLayout(layout);

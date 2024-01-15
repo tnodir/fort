@@ -465,7 +465,7 @@ QLayout *ProgramEditDialog::setupZonesLayout()
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_cbLanOnly);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btZones);
     layout->addStretch();
 

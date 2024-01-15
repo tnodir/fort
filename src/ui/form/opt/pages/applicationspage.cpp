@@ -417,10 +417,10 @@ void ApplicationsPage::setupGroupOptions()
     setupGroupLimitBufferSize();
 
     // Menu
-    const QList<QWidget *> menuWidgets = { m_cbApplyChild, ControlUtil::createSeparator(),
-        m_cbLogBlocked, m_cbLogConn, ControlUtil::createSeparator(), m_cscLimitIn, m_cscLimitOut,
-        m_limitLatency, m_limitPacketLoss, m_limitBufferSizeIn, m_limitBufferSizeOut };
-    auto layout = ControlUtil::createLayoutByWidgets(menuWidgets);
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_cbApplyChild, ControlUtil::createSeparator(), m_cbLogBlocked, m_cbLogConn,
+                    ControlUtil::createSeparator(), m_cscLimitIn, m_cscLimitOut, m_limitLatency,
+                    m_limitPacketLoss, m_limitBufferSizeIn, m_limitBufferSizeOut });
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 

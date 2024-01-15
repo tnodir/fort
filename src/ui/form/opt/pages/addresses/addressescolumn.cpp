@@ -53,7 +53,7 @@ QLayout *AddressesColumn::setupHeaderLayout()
     layout->addWidget(m_labelTitle);
     layout->addStretch();
     layout->addWidget(m_cbUseAll);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btSelectZones);
 
     return layout;

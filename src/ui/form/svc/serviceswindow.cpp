@@ -207,10 +207,10 @@ QLayout *ServicesWindow::setupHeader()
     connect(m_btRefresh, &QAbstractButton::clicked, this, &ServicesWindow::updateServiceListModel);
 
     layout->addWidget(m_btEdit);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btTrack);
     layout->addWidget(m_btRevert);
-    layout->addWidget(ControlUtil::createSeparator(Qt::Vertical));
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btRefresh);
     layout->addStretch();
 
