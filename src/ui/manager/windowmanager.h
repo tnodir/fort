@@ -92,7 +92,9 @@ public slots:
     void showStatisticsWindow();
     void closeStatisticsWindow();
 
+    void showOptionsWindowTab(int index);
     void showAppGroupsWindow();
+    void showStatOptionsWindow();
 
     void showServicesWindow();
     void closeServicesWindow();

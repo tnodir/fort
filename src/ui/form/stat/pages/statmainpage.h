@@ -18,9 +18,12 @@ protected slots:
 private:
     void setupUi();
     void setupTabBar();
+    void setupCornerWidget();
+    QLayout *setupCornerLayout();
 
 private:
     QTabWidget *m_tabWidget = nullptr;
+    QToolButton *m_btOptions = nullptr;
     QPushButton *m_btMenu = nullptr;
 };
 

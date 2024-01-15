@@ -3,6 +3,7 @@
 #include <QIcon>
 #include <QPushButton>
 #include <QTabWidget>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
@@ -24,6 +25,8 @@ void StatMainPage::onRetranslateUi()
 {
     m_tabWidget->setTabText(0, tr("Traffic"));
     m_tabWidget->setTabText(1, tr("Blocked Connections"));
+
+    m_btOptions->setText(tr("Options"));
 }
 
 void StatMainPage::setupUi()
@@ -47,8 +50,33 @@ void StatMainPage::setupTabBar()
     m_tabWidget->addTab(statisticsPage, IconCache::icon(":/icons/chart_bar.png"), QString());
     m_tabWidget->addTab(connectionsPage, IconCache::icon(":/icons/connect.png"), QString());
 
+    setupCornerWidget();
+}
+
+void StatMainPage::setupCornerWidget()
+{
+    auto layout = setupCornerLayout();
+
+    auto w = new QWidget();
+    w->setLayout(layout);
+
+    m_tabWidget->setCornerWidget(w);
+}
+
+QLayout *StatMainPage::setupCornerLayout()
+{
+    // Options button
+    m_btOptions = ControlUtil::createFlatToolButton(":/icons/cog.png");
+
+    connect(m_btOptions, &QAbstractButton::clicked, windowManager(),
+            &WindowManager::showStatOptionsWindow);
+
     // Menu button
     m_btMenu = windowManager()->createMenuButton();
 
-    m_tabWidget->setCornerWidget(m_btMenu);
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_btOptions, ControlUtil::createVSeparator(), m_btMenu });
+    layout->setContentsMargins(0, 0, 0, 0);
+
+    return layout;
 }

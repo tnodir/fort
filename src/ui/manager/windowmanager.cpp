@@ -434,13 +434,23 @@ void WindowManager::closeStatisticsWindow()
     }
 }
 
-void WindowManager::showAppGroupsWindow()
+void WindowManager::showOptionsWindowTab(int index)
 {
     showOptionsWindow();
 
     if (m_optWindow) {
-        m_optWindow->selectTab(2);
+        m_optWindow->selectTab(index);
     }
+}
+
+void WindowManager::showAppGroupsWindow()
+{
+    showOptionsWindowTab(2);
+}
+
+void WindowManager::showStatOptionsWindow()
+{
+    showOptionsWindowTab(3);
 }
 
 void WindowManager::showServicesWindow()
