@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.10.10, 2024-01-15:
+- UI: MyFort: About: Add "Check Update" button.
+- UI: Options: Scheduler: Use regional date format.
+- UI: Add reason info to "Restart Required" dialog.
+- Installer: Check allowed processor architectures.
+
 v3.10.9, 2024-01-13:
 - UI: MyFort: Add "Help" link to User Guide.
 - UI: Zones: Fix new Zone saving.
