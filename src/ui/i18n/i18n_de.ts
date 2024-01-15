@@ -13,11 +13,11 @@
     </message>
     <message>
         <source>Check Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach Update suchen</translation>
     </message>
     <message>
         <source>No Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Kein Update verfügbar</translation>
     </message>
 </context>
 <context>
@@ -437,7 +437,7 @@
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
-        <translation type="unfinished"></translation>
+        <translation>Laufwerk des Profils eingebunden</translation>
     </message>
 </context>
 <context>
@@ -491,7 +491,7 @@
     </message>
     <message>
         <source>Driver reinstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>Treiber neu installiert</translation>
     </message>
 </context>
 <context>
@@ -1057,7 +1057,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Windows Service installation changed</source>
-        <translation type="unfinished"></translation>
+        <translation>Installation des Windows-Dienst geändert</translation>
     </message>
 </context>
 <context>

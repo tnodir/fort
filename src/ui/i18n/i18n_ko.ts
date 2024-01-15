@@ -13,11 +13,11 @@
     </message>
     <message>
         <source>Check Update</source>
-        <translation type="unfinished"></translation>
+        <translation>업데이트 확인</translation>
     </message>
     <message>
         <source>No Update</source>
-        <translation type="unfinished"></translation>
+        <translation>업데이트 없음</translation>
     </message>
 </context>
 <context>
@@ -437,7 +437,7 @@
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
-        <translation type="unfinished"></translation>
+        <translation>프로필 드라이브 장착</translation>
     </message>
 </context>
 <context>
@@ -491,7 +491,7 @@
     </message>
     <message>
         <source>Driver reinstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>드라이버 재설치</translation>
     </message>
 </context>
 <context>
@@ -1057,7 +1057,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Windows Service installation changed</source>
-        <translation type="unfinished"></translation>
+        <translation>Windows Service 설치가 변경됨</translation>
     </message>
 </context>
 <context>

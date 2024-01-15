@@ -13,11 +13,11 @@
     </message>
     <message>
         <source>Check Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Preveri obstoj posodobitev</translation>
     </message>
     <message>
         <source>No Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Ni posodobitev</translation>
     </message>
 </context>
 <context>
@@ -437,7 +437,7 @@
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
-        <translation type="unfinished"></translation>
+        <translation>Profilov pogon je nameščen</translation>
     </message>
 </context>
 <context>
@@ -491,7 +491,7 @@
     </message>
     <message>
         <source>Driver reinstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>Gonilnik je znova nameščen</translation>
     </message>
 </context>
 <context>
@@ -670,7 +670,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Pomoč</translation>
     </message>
 </context>
 <context>
@@ -1057,7 +1057,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Windows Service installation changed</source>
-        <translation type="unfinished"></translation>
+        <translation>Namestitev storitve Windows je spremenjena</translation>
     </message>
 </context>
 <context>
