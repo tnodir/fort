@@ -302,6 +302,8 @@ bool ConfAppManager::updateAppName(qint64 appId, const QString &appName)
 {
     bool ok = false;
 
+    beginTransaction();
+
     const auto vars = QVariantList() << appId << appName;
 
     sqliteDb()->executeEx(sqlUpdateAppName, vars, 0, &ok);
