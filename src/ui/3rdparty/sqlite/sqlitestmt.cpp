@@ -6,6 +6,15 @@
 
 #include <sqlite.h>
 
+namespace {
+
+bool checkBindResult(int res)
+{
+    return res == SQLITE_OK || res == SQLITE_RANGE;
+}
+
+}
+
 SqliteStmt::SqliteStmt() = default;
 
 SqliteStmt::~SqliteStmt()
@@ -41,22 +50,22 @@ int SqliteStmt::bindParameterIndex(const QString &name) const
 
 bool SqliteStmt::bindInt(int index, qint32 number)
 {
-    return sqlite3_bind_int(m_stmt, index, number) == SQLITE_OK;
+    return checkBindResult(sqlite3_bind_int(m_stmt, index, number));
 }
 
 bool SqliteStmt::bindInt64(int index, qint64 number)
 {
-    return sqlite3_bind_int64(m_stmt, index, number) == SQLITE_OK;
+    return checkBindResult(sqlite3_bind_int64(m_stmt, index, number));
 }
 
 bool SqliteStmt::bindDouble(int index, double number)
 {
-    return sqlite3_bind_double(m_stmt, index, number) == SQLITE_OK;
+    return checkBindResult(sqlite3_bind_double(m_stmt, index, number));
 }
 
 bool SqliteStmt::bindNull(int index)
 {
-    return sqlite3_bind_null(m_stmt, index) == SQLITE_OK;
+    return checkBindResult(sqlite3_bind_null(m_stmt, index));
 }
 
 bool SqliteStmt::bindText(int index, const QString &text)
@@ -66,8 +75,8 @@ bool SqliteStmt::bindText(int index, const QString &text)
 
     m_bindObjects.insert(index, textUtf8);
 
-    return sqlite3_bind_text(m_stmt, index, textUtf8.data(), bytesCount, SQLITE_STATIC)
-            == SQLITE_OK;
+    return checkBindResult(
+            sqlite3_bind_text(m_stmt, index, textUtf8.data(), bytesCount, SQLITE_STATIC));
 }
 
 bool SqliteStmt::bindDateTime(int index, const QDateTime &dateTime)
@@ -82,8 +91,8 @@ bool SqliteStmt::bindBlob(int index, const QByteArray &data)
 
     m_bindObjects.insert(index, data);
 
-    return sqlite3_bind_blob(m_stmt, index, data.constData(), bytesCount, SQLITE_STATIC)
-            == SQLITE_OK;
+    return checkBindResult(
+            sqlite3_bind_blob(m_stmt, index, data.constData(), bytesCount, SQLITE_STATIC));
 }
 
 bool SqliteStmt::bindVarBlob(int index, const QVariant &v)

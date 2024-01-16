@@ -161,10 +161,7 @@ bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql, const QVariantList &va
     if (!stmt.prepare(db(), sql))
         return false;
 
-    if (!(vars.isEmpty() || stmt.bindVars(vars)))
-        return false;
-
-    return true;
+    return stmt.bindVars(vars);
 }
 
 bool SqliteDb::prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars)

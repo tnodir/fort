@@ -83,7 +83,7 @@ const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, pat
                                  "    parked = ?11, log_blocked = ?12, log_conn = ?13,"
                                  "    blocked = ?14, kill_process = ?15,"
                                  "    accept_zones = ?16, reject_zones = ?17, end_time = ?18"
-                                 "  RETURNING app_id, ?1;";
+                                 "  RETURNING app_id;";
 
 const char *const sqlUpdateApp = "UPDATE app"
                                  "  SET app_group_id = ?2, origin_path = ?3, path = ?4,"
@@ -93,7 +93,7 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    blocked = ?14, kill_process = ?15,"
                                  "    accept_zones = ?16, reject_zones = ?17, end_time = ?18"
                                  "  WHERE app_id = ?1"
-                                 "  RETURNING app_id, ?19;";
+                                 "  RETURNING app_id;";
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
 
