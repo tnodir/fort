@@ -1280,6 +1280,14 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source># Environment Variable:</source>
         <translation># 환경 변수:</translation>
     </message>
+    <message>
+        <source>Parked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1483,6 +1491,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Blocked Connections</source>
         <translation>차단 된 연결</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">옵션</translation>
     </message>
 </context>
 <context>

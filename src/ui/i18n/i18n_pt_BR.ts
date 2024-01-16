@@ -1275,6 +1275,14 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source># Environment Variable:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Parked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1478,6 +1486,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Blocked Connections</source>
         <translation>Conexões bloqueadas</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Opções</translation>
     </message>
 </context>
 <context>

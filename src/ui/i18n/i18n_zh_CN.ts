@@ -1278,6 +1278,14 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source># Environment Variable:</source>
         <translation># 环境变量：</translation>
     </message>
+    <message>
+        <source>Parked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1481,6 +1489,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Blocked Connections</source>
         <translation>已屏蔽的连接</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">选项</translation>
     </message>
 </context>
 <context>

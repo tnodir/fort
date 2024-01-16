@@ -1280,6 +1280,14 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source># Environment Variable:</source>
         <translation># Spremenljivka okolja:</translation>
     </message>
+    <message>
+        <source>Parked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1483,6 +1491,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Blocked Connections</source>
         <translation>Blokirane povezave</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation type="unfinished">Možnosti</translation>
     </message>
 </context>
 <context>
