@@ -13,11 +13,11 @@
     </message>
     <message>
         <source>Check Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Controlla aggiornamenti</translation>
     </message>
     <message>
         <source>No Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Niente aggiornamenti</translation>
     </message>
 </context>
 <context>
@@ -437,7 +437,7 @@
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
-        <translation type="unfinished"></translation>
+        <translation>Drive di profilo montato</translation>
     </message>
 </context>
 <context>
@@ -491,7 +491,7 @@
     </message>
     <message>
         <source>Driver reinstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>Driver reinstallato</translation>
     </message>
 </context>
 <context>
@@ -670,7 +670,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Aiuto</translation>
     </message>
 </context>
 <context>
@@ -1053,11 +1053,11 @@ Assicurati di avere un backup recente.</translation>
     </message>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina obsolescenze solo in unità montate</translation>
     </message>
     <message>
         <source>Windows Service installation changed</source>
-        <translation type="unfinished"></translation>
+        <translation>Installazione di Windows Service modificata</translation>
     </message>
 </context>
 <context>
@@ -1274,11 +1274,11 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source># Name wildcard:</source>
-        <translation type="unfinished"></translation>
+        <translation># Nome wildcard:</translation>
     </message>
     <message>
         <source># Environment Variable:</source>
-        <translation type="unfinished"></translation>
+        <translation># Variabile d&apos;ambiente:</translation>
     </message>
 </context>
 <context>
