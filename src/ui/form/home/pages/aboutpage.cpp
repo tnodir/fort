@@ -51,17 +51,19 @@ void AboutPage::setupNewVersionBox()
     m_labelRelease->setWordWrap(true);
     m_labelRelease->setOpenExternalLinks(true);
 
+    m_labelArea = ControlUtil::wrapToScrollArea(m_labelRelease);
+    m_labelArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+
     // Buttons
     auto buttonsLayout = setupButtonsLayout();
 
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
 
-    layout->addWidget(m_labelRelease);
+    layout->addWidget(m_labelArea);
     layout->addLayout(buttonsLayout);
 
     m_gbNewVersion = new QGroupBox();
-    m_gbNewVersion->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     m_gbNewVersion->setMinimumWidth(380);
     m_gbNewVersion->setLayout(layout);
 }
@@ -94,7 +96,7 @@ void AboutPage::setupNewVersionUpdate()
         auto updateChecker = taskManager()->taskInfoUpdateChecker();
         m_isNewVersion = updateChecker->isNewVersion();
 
-        m_labelRelease->setVisible(m_isNewVersion);
+        m_labelArea->setVisible(m_isNewVersion);
         m_labelRelease->setText(updateChecker->releaseText());
 
         m_btDownload->setVisible(m_isNewVersion);

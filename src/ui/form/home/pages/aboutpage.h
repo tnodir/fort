@@ -26,6 +26,7 @@ private:
 
     QGroupBox *m_gbNewVersion = nullptr;
     QLabel *m_labelRelease = nullptr;
+    QWidget *m_labelArea = nullptr;
     QToolButton *m_btDownload = nullptr;
     QToolButton *m_btCheckUpdate = nullptr;
 };
