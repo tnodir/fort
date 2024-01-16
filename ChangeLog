@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.10.11, 2024-01-16:
+- UI: Programs: Add "Parked" flag to not purge as obsolete.
+- UI: Statistics: Add "Options" button.
+
 v3.10.10, 2024-01-15:
 - UI: MyFort: About: Add "Check Update" button.
 - UI: Options: Scheduler: Use regional date format.
