@@ -57,8 +57,9 @@ bool ConfAppManagerRpc::updateAppsBlocked(
 QVariantList ConfAppManagerRpc::appToVarList(const App &app)
 {
     return { app.isWildcard, app.useGroupPerm, app.applyChild, app.killChild, app.lanOnly,
-        app.logBlocked, app.logConn, app.blocked, app.killProcess, app.groupIndex, app.acceptZones,
-        app.rejectZones, app.appId, app.appOriginPath, app.appPath, app.appName, app.endTime };
+        app.parked, app.logBlocked, app.logConn, app.blocked, app.killProcess, app.groupIndex,
+        app.acceptZones, app.rejectZones, app.appId, app.appOriginPath, app.appPath, app.appName,
+        app.endTime };
 }
 
 App ConfAppManagerRpc::varListToApp(const QVariantList &v)
@@ -69,17 +70,18 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.applyChild = v.value(2).toBool();
     app.killChild = v.value(3).toBool();
     app.lanOnly = v.value(4).toBool();
-    app.logBlocked = v.value(5).toBool();
-    app.logConn = v.value(6).toBool();
-    app.blocked = v.value(7).toBool();
-    app.killProcess = v.value(8).toBool();
-    app.groupIndex = v.value(9).toInt();
-    app.acceptZones = v.value(10).toUInt();
-    app.rejectZones = v.value(11).toUInt();
-    app.appId = v.value(12).toLongLong();
-    app.appOriginPath = v.value(13).toString();
-    app.appPath = v.value(14).toString();
-    app.appName = v.value(15).toString();
-    app.endTime = v.value(16).toDateTime();
+    app.parked = v.value(5).toBool();
+    app.logBlocked = v.value(6).toBool();
+    app.logConn = v.value(7).toBool();
+    app.blocked = v.value(8).toBool();
+    app.killProcess = v.value(9).toBool();
+    app.groupIndex = v.value(10).toInt();
+    app.acceptZones = v.value(11).toUInt();
+    app.rejectZones = v.value(12).toUInt();
+    app.appId = v.value(13).toLongLong();
+    app.appOriginPath = v.value(14).toString();
+    app.appPath = v.value(15).toString();
+    app.appName = v.value(16).toString();
+    app.endTime = v.value(17).toDateTime();
     return app;
 }

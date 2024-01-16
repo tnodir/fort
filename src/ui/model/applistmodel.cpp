@@ -331,15 +331,16 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     appRow.applyChild = stmt.columnBool(7);
     appRow.killChild = stmt.columnBool(8);
     appRow.lanOnly = stmt.columnBool(9);
-    appRow.logBlocked = stmt.columnBool(10);
-    appRow.logConn = stmt.columnBool(11);
-    appRow.blocked = stmt.columnBool(12);
-    appRow.killProcess = stmt.columnBool(13);
-    appRow.acceptZones = stmt.columnUInt(14);
-    appRow.rejectZones = stmt.columnUInt(15);
-    appRow.alerted = stmt.columnBool(16);
-    appRow.endTime = stmt.columnDateTime(17);
-    appRow.creatTime = stmt.columnDateTime(18);
+    appRow.parked = stmt.columnBool(10);
+    appRow.logBlocked = stmt.columnBool(11);
+    appRow.logConn = stmt.columnBool(12);
+    appRow.blocked = stmt.columnBool(13);
+    appRow.killProcess = stmt.columnBool(14);
+    appRow.acceptZones = stmt.columnUInt(15);
+    appRow.rejectZones = stmt.columnUInt(16);
+    appRow.alerted = stmt.columnBool(17);
+    appRow.endTime = stmt.columnDateTime(18);
+    appRow.creatTime = stmt.columnDateTime(19);
 
     return true;
 }
@@ -399,6 +400,7 @@ QString AppListModel::sqlBase() const
            "    t.apply_child,"
            "    t.kill_child,"
            "    t.lan_only,"
+           "    t.parked,"
            "    t.log_blocked,"
            "    t.log_conn,"
            "    t.blocked,"

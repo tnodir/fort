@@ -8,7 +8,8 @@ bool App::isFlagsEqual(const App &o) const
 bool App::isBaseFlagsEqual(const App &o) const
 {
     return isWildcard == o.isWildcard && useGroupPerm == o.useGroupPerm
-            && applyChild == o.applyChild && killChild == o.killChild && lanOnly == o.lanOnly;
+            && applyChild == o.applyChild && killChild == o.killChild && lanOnly == o.lanOnly
+            && parked == o.parked;
 }
 
 bool App::isZonesEqual(const App &o) const

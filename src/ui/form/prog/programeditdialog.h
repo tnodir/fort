@@ -92,6 +92,7 @@ private:
     QCheckBox *m_cbUseGroupPerm = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
     QCheckBox *m_cbKillChild = nullptr;
+    QCheckBox *m_cbParked = nullptr;
     QCheckBox *m_cbLanOnly = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbLogConn = nullptr;

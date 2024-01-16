@@ -76,6 +76,8 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_cbKillChild->setChecked(appRow.killChild);
 
     m_cbLanOnly->setChecked(appRow.lanOnly);
+    m_cbParked->setChecked(appRow.parked);
+    m_cbParked->setEnabled(!isWildcard());
     m_cbLogBlocked->setChecked(appRow.logBlocked);
     m_cbLogConn->setChecked(appRow.logConn);
     m_rbAllowApp->setChecked(!appRow.blocked);
@@ -163,8 +165,10 @@ void ProgramEditDialog::retranslateUi()
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
     m_cbKillChild->setText(tr("Kill child processes"));
-    m_cbLanOnly->setText(tr("Block Internet Traffic"));
 
+    m_cbParked->setText(tr("Parked"));
+    m_cbParked->setToolTip(tr("Don't purge as obsolete"));
+    m_cbLanOnly->setText(tr("Block Internet Traffic"));
     m_cbLogBlocked->setText(tr("Collect blocked connections"));
     m_cbLogConn->setText(tr("Collect connection statistics"));
 
@@ -388,6 +392,9 @@ void ProgramEditDialog::setupComboAppGroups()
 
 QLayout *ProgramEditDialog::setupLogLayout()
 {
+    // Parked
+    m_cbParked = new QCheckBox();
+
     // Log Blocked
     m_cbLogBlocked = new QCheckBox();
 
@@ -395,9 +402,8 @@ QLayout *ProgramEditDialog::setupLogLayout()
     m_cbLogConn = new QCheckBox();
     m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
 
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbLogBlocked);
-    layout->addWidget(m_cbLogConn);
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbParked, ControlUtil::createVSeparator(),
+            m_cbLogBlocked, m_cbLogConn, /*stretch*/ nullptr });
 
     return layout;
 }
@@ -463,11 +469,8 @@ QLayout *ProgramEditDialog::setupZonesLayout()
     m_btZones->setIsTristate(true);
     m_btZones->setMaxZoneCount(16); // sync with driver's FORT_APP_ENTRY
 
-    auto layout = new QHBoxLayout();
-    layout->addWidget(m_cbLanOnly);
-    layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_btZones);
-    layout->addStretch();
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_cbLanOnly, ControlUtil::createVSeparator(), m_btZones, /*stretch*/ nullptr });
 
     return layout;
 }
@@ -600,6 +603,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.applyChild = m_cbApplyChild->isChecked();
     app.killChild = m_cbKillChild->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();
+    app.parked = m_cbParked->isChecked();
     app.logBlocked = m_cbLogBlocked->isChecked();
     app.logConn = m_cbLogConn->isChecked();
     app.blocked = !m_rbAllowApp->isChecked();
