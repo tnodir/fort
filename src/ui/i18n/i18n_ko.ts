@@ -1282,11 +1282,11 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>압축됨</translation>
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>쓸모없는 것으로 정리하지 않음</translation>
     </message>
 </context>
 <context>
@@ -1494,7 +1494,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">옵션</translation>
+        <translation>옵션</translation>
     </message>
 </context>
 <context>

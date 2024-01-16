@@ -1244,7 +1244,7 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Edit Wildcard</source>
-        <translation>Editer le caractère générique</translation>
+        <translation>Éditer le caractère générique</translation>
     </message>
     <message>
         <source>Kill child processes</source>
@@ -1282,11 +1282,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>Parqué</translation>
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne pas purger car obsolète</translation>
     </message>
 </context>
 <context>
@@ -1364,7 +1364,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Add Wildcard</source>
-        <translation>Ajouter un caractère joker</translation>
+        <translation>Ajouter un caractère générique</translation>
     </message>
     <message>
         <source>Groups</source>
@@ -1494,7 +1494,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Options</translation>
+        <translation>Options</translation>
     </message>
 </context>
 <context>
