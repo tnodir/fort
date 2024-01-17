@@ -1282,11 +1282,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>Parkirano</translation>
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Ne počisti kot zastarelo</translation>
     </message>
 </context>
 <context>
@@ -1494,7 +1494,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Možnosti</translation>
+        <translation>Možnosti</translation>
     </message>
 </context>
 <context>

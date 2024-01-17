@@ -1282,11 +1282,11 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>Geparkt</translation>
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht löschen wenn veraltet</translation>
     </message>
 </context>
 <context>
@@ -1494,7 +1494,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Optionen</translation>
+        <translation>Optionen</translation>
     </message>
 </context>
 <context>
