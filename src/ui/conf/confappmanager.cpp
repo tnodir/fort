@@ -33,7 +33,7 @@ constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
     "    t.origin_path,"                                                                           \
     "    t.path,"                                                                                  \
     "    t.name,"                                                                                  \
-    "    t.notes,"                                                                                  \
+    "    t.notes,"                                                                                 \
     "    t.is_wildcard,"                                                                           \
     "    t.use_group_perm,"                                                                        \
     "    t.apply_child,"                                                                           \
@@ -46,7 +46,7 @@ constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
     "    t.kill_process,"                                                                          \
     "    t.accept_zones,"                                                                          \
     "    t.reject_zones,"                                                                          \
-    "    t.end_time,"                                                                          \
+    "    t.end_time,"                                                                              \
     "    g.order_index as group_index,"                                                            \
     "    (alert.app_id IS NOT NULL) as alerted"
 
@@ -528,6 +528,7 @@ void ConfAppManager::updateAppEndTimes()
 
         app.blocked = true;
         app.killProcess = false;
+        app.endTime = {};
 
         updateApp(app);
     }
