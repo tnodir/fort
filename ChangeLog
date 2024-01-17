@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.10.12, 2024-01-17:
+- UI: Programs: Add "Notes" field.
+- UI: MyFort: About: Show release text in scroll area.
+
 v3.10.11, 2024-01-16:
 - UI: Programs: Add "Parked" flag to not purge as obsolete.
 - UI: Statistics: Add "Options" button.
