@@ -1288,6 +1288,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Don&apos;t purge as obsolete</source>
         <translation>Не удалять как устаревшее</translation>
     </message>
+    <message>
+        <source>Notes:</source>
+        <translation>Заметки:</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

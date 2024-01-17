@@ -1283,6 +1283,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Don&apos;t purge as obsolete</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Notes:</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

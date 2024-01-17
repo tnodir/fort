@@ -1288,6 +1288,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <source>Don&apos;t purge as obsolete</source>
         <translation>Nicht löschen wenn veraltet</translation>
     </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

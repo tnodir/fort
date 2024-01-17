@@ -1288,6 +1288,10 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <source>Don&apos;t purge as obsolete</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

@@ -1288,6 +1288,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Don&apos;t purge as obsolete</source>
         <translation>Ne pas purger car obsolète</translation>
     </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

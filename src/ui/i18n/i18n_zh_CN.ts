@@ -1286,6 +1286,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Don&apos;t purge as obsolete</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Notes:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
