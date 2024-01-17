@@ -428,15 +428,20 @@ QString AppListModel::sqlWhere() const
 QString AppListModel::sqlOrderColumn() const
 {
     QString columnsStr;
+    bool orderApplied = false;
+
     switch (sortColumn()) {
     case 0: // Name
-        columnsStr = "t.name " + sqlOrderAsc() + ", t.path";
+        columnsStr = "t.name" + sqlOrderAsc() + ", t.path";
+        orderApplied = true;
         break;
     case 1: // Action
-        columnsStr = "alerted DESC, t.kill_process, t.blocked " + sqlOrderAsc() + ", t.app_id";
+        columnsStr = "alerted DESC, t.kill_process, t.blocked" + sqlOrderAsc() + ", t.name";
+        orderApplied = true;
         break;
     case 2: // Group
-        columnsStr = "group_index";
+        columnsStr = "group_index" + sqlOrderAsc() + ", t.name";
+        orderApplied = true;
         break;
     case 3: // File Path
         columnsStr = "t.path";
@@ -444,6 +449,10 @@ QString AppListModel::sqlOrderColumn() const
     default: // Creation Time ~ App ID
         columnsStr = "t.app_id";
         break;
+    }
+
+    if (!orderApplied) {
+        columnsStr += sqlOrderAsc();
     }
 
     return columnsStr;

@@ -68,17 +68,17 @@ QString TableSqlModel::sqlOrder() const
     if (sortColumn() == -1)
         return QString();
 
-    return QString(" ORDER BY %1 %2").arg(sqlOrderColumn(), sqlOrderAsc());
+    return " ORDER BY " + sqlOrderColumn();
 }
 
 QString TableSqlModel::sqlOrderAsc() const
 {
-    return (sortOrder() == Qt::AscendingOrder) ? "ASC" : "DESC";
+    return (sortOrder() == Qt::AscendingOrder) ? " ASC" : " DESC";
 }
 
 QString TableSqlModel::sqlOrderColumn() const
 {
-    return QString::number(sortColumn());
+    return QString::number(sortColumn()) + sqlOrderAsc();
 }
 
 QString TableSqlModel::sqlLimitOffset() const
