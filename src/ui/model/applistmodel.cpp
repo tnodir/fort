@@ -37,13 +37,47 @@ QString appStateIconPath(const AppRow &appRow)
     if (appRow.blocked)
         return ":/icons/deny.png";
 
-    if (!appRow.endTime.isNull())
-        return ":/icons/time.png";
-
     if (appRow.lanOnly)
         return ":/icons/hostname.png";
 
     return ":/icons/accept.png";
+}
+
+QString appStateText(const AppRow &appRow)
+{
+    if (appRow.killProcess)
+        return AppListModel::tr("Kill Process");
+
+    if (appRow.blocked)
+        return AppListModel::tr("Block");
+
+    return AppListModel::tr("Allow");
+}
+
+QColor appStateColor(const AppRow &appRow)
+{
+    if (appRow.killProcess)
+        return killProcessColor;
+
+    if (appRow.blocked)
+        return blockColor;
+
+    return allowColor;
+}
+
+QIcon appStateIcon(const AppRow &appRow)
+{
+    return IconCache::icon(appStateIconPath(appRow));
+}
+
+QIcon appParkedIcon(const AppRow &appRow)
+{
+    return appRow.parked ? IconCache::icon(":/icons/flag_1.png") : QIcon();
+}
+
+QIcon appScheduledIcon(const AppRow &appRow)
+{
+    return !appRow.endTime.isNull() ? IconCache::icon(":/icons/time.png") : QIcon();
 }
 
 QString makeFtsFilterMatch(const QString &filter)
@@ -101,7 +135,7 @@ SqliteDb *AppListModel::sqliteDb() const
 
 void AppListModel::initialize()
 {
-    setSortColumn(5);
+    setSortColumn(7);
     setSortOrder(Qt::DescendingOrder);
 
     connect(confManager(), &ConfManager::confChanged, this, &AppListModel::refresh);
@@ -114,18 +148,27 @@ void AppListModel::initialize()
 
 int AppListModel::columnCount(const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : 5;
+    return parent.isValid() ? 0 : 7;
 }
 
 QVariant AppListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
-        return headerDataDisplay(section);
+    if (orientation == Qt::Horizontal) {
+        switch (role) {
+        // Label
+        case Qt::DisplayRole:
+        case Qt::ToolTipRole:
+            return headerDataDisplay(section, role);
+
+        // Icon
+        case Qt::DecorationRole:
+            return headerDataDecoration(section);
+        }
     }
     return QVariant();
 }
 
-QVariant AppListModel::headerDataDisplay(int section) const
+QVariant AppListModel::headerDataDisplay(int section, int role) const
 {
     switch (section) {
     case 0:
@@ -135,11 +178,36 @@ QVariant AppListModel::headerDataDisplay(int section) const
     case 2:
         return tr("Group");
     case 3:
-        return tr("File Path");
+        return headerDataDisplayParked(role);
     case 4:
+        return headerDataDisplayScheduled(role);
+    case 5:
+        return tr("File Path");
+    case 6:
         return tr("Creation Time");
     default:
-        Q_UNREACHABLE();
+        return QVariant();
+    }
+}
+
+QVariant AppListModel::headerDataDisplayParked(int role) const
+{
+    return (role == Qt::ToolTipRole) ? tr("Parked") : QString();
+}
+
+QVariant AppListModel::headerDataDisplayScheduled(int role) const
+{
+    return (role == Qt::ToolTipRole) ? tr("Scheduled") : QString();
+}
+
+QVariant AppListModel::headerDataDecoration(int section) const
+{
+    switch (section) {
+    case 3:
+        return IconCache::icon(":/icons/flag_1.png");
+    case 4:
+        return IconCache::icon(":/icons/time.png");
+    default:
         return QVariant();
     }
 }
@@ -184,12 +252,16 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
     case 0:
         return dataDisplayAppName(appRow, role);
     case 1:
-        return dataDisplayState(appRow);
+        return appStateText(appRow);
     case 2:
         return appGroupName(appRow);
     case 3:
-        return appRow.appOriginPath;
+        break;
     case 4:
+        return dataDisplayScheduled(appRow, role);
+    case 5:
+        return appRow.appOriginPath;
+    case 6:
         return appRow.creatTime;
     }
 
@@ -199,25 +271,23 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
 QVariant AppListModel::dataDisplayAppName(const AppRow &appRow, int role) const
 {
     return appRow.appName
-            + (role != Qt::ToolTipRole || appRow.notes.isEmpty() ? QString()
-                                                                 : "\n\n" + appRow.notes);
+            + (role == Qt::ToolTipRole && !appRow.notes.isEmpty() ? "\n\n" + appRow.notes
+                                                                  : QString());
 }
 
-QVariant AppListModel::dataDisplayState(const AppRow &appRow) const
+QVariant AppListModel::dataDisplayScheduled(const AppRow &appRow, int role) const
 {
-    QString text = appStateText(appRow);
-    if (!appRow.endTime.isNull()) {
-        text += QStringLiteral(" (%1)").arg(
-                DateUtil::localeDateTime(appRow.endTime, QLocale::ShortFormat));
-    }
-    return text;
+    if (role != Qt::ToolTipRole || appRow.endTime.isNull())
+        return QString();
+
+    return DateUtil::localeDateTime(appRow.endTime, QLocale::ShortFormat);
 }
 
 QVariant AppListModel::dataDecoration(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 0 || column == 1) {
+    if (column == 0 || column == 1 || column == 3 || column == 4) {
         const int row = index.row();
 
         const auto appRow = appRowAt(row);
@@ -229,6 +299,10 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
             return appIcon(appRow);
         case 1:
             return appStateIcon(appRow);
+        case 3:
+            return appParkedIcon(appRow);
+        case 4:
+            return appScheduledIcon(appRow);
         }
     }
 
@@ -291,33 +365,6 @@ QIcon AppListModel::appIcon(const AppRow &appRow) const
     }
 
     return appInfoCache()->appIcon(appRow.appPath);
-}
-
-QString AppListModel::appStateText(const AppRow &appRow)
-{
-    if (appRow.killProcess)
-        return tr("Kill Process");
-
-    if (appRow.blocked)
-        return tr("Block");
-
-    return tr("Allow");
-}
-
-QColor AppListModel::appStateColor(const AppRow &appRow)
-{
-    if (appRow.killProcess)
-        return killProcessColor;
-
-    if (appRow.blocked)
-        return blockColor;
-
-    return allowColor;
-}
-
-QIcon AppListModel::appStateIcon(const AppRow &appRow)
-{
-    return IconCache::icon(appStateIconPath(appRow));
 }
 
 bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
@@ -443,14 +490,18 @@ QString AppListModel::sqlOrderColumn() const
         orderApplied = true;
         break;
     case 1: // Action
-        columnsStr = "alerted DESC, t.kill_process, t.blocked" + sqlOrderAsc() + ", t.name";
-        orderApplied = true;
+        columnsStr = "alerted DESC, t.kill_process, t.blocked";
         break;
     case 2: // Group
-        columnsStr = "group_index" + sqlOrderAsc() + ", t.name";
-        orderApplied = true;
+        columnsStr = "group_index";
         break;
-    case 3: // File Path
+    case 3: // Parked
+        columnsStr = "t.parked";
+        break;
+    case 4: // Scheduled
+        columnsStr = "t.end_time";
+        break;
+    case 5: // File Path
         columnsStr = "t.path";
         break;
     default: // Creation Time ~ App ID
@@ -459,7 +510,7 @@ QString AppListModel::sqlOrderColumn() const
     }
 
     if (!orderApplied) {
-        columnsStr += sqlOrderAsc();
+        columnsStr += sqlOrderAsc() + ", t.name";
     }
 
     return columnsStr;

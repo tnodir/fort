@@ -31,7 +31,7 @@
 
 namespace {
 
-constexpr int APPS_HEADER_VERSION = 7;
+constexpr int APPS_HEADER_VERSION = 8;
 
 }
 
@@ -333,17 +333,21 @@ void ProgramsWindow::setupTableAppsHeader()
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Interactive);
     header->setSectionResizeMode(2, QHeaderView::Interactive);
-    header->setSectionResizeMode(3, QHeaderView::Interactive);
-    header->setSectionResizeMode(4, QHeaderView::Stretch);
+    header->setSectionResizeMode(3, QHeaderView::Fixed);
+    header->setSectionResizeMode(4, QHeaderView::Fixed);
+    header->setSectionResizeMode(5, QHeaderView::Interactive);
+    header->setSectionResizeMode(6, QHeaderView::Stretch);
 
     header->resizeSection(0, 320);
     header->resizeSection(1, 100);
-    header->resizeSection(2, 130);
-    header->resizeSection(3, 300);
+    header->resizeSection(2, 100);
+    header->resizeSection(3, 30);
+    header->resizeSection(4, 30);
+    header->resizeSection(5, 280);
 
     header->setSectionsClickable(true);
     header->setSortIndicatorShown(true);
-    header->setSortIndicator(4, Qt::DescendingOrder);
+    header->setSortIndicator(6, Qt::DescendingOrder);
 }
 
 void ProgramsWindow::setupAppInfoRow()

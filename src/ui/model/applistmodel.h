@@ -58,11 +58,15 @@ protected:
     QString sqlOrderColumn() const override;
 
 private:
-    QVariant headerDataDisplay(int section) const;
+    QVariant headerDataDisplay(int section, int role) const;
+    QVariant headerDataDisplayParked(int role) const;
+    QVariant headerDataDisplayScheduled(int role) const;
+    QVariant headerDataDecoration(int section) const;
 
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDisplayAppName(const AppRow &appRow, int role) const;
-    QVariant dataDisplayState(const AppRow &appRow) const;
+    QVariant dataDisplayScheduled(const AppRow &appRow, int role) const;
+    QVariant dataDisplay(const AppRow &appRow, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataForeground(const QModelIndex &index) const;
     QVariant dataTextAlignment(const QModelIndex &index) const;
@@ -71,10 +75,6 @@ private:
     QVariant appGroupColor(const AppRow &appRow) const;
 
     QIcon appIcon(const AppRow &appRow) const;
-
-    static QString appStateText(const AppRow &appRow);
-    static QColor appStateColor(const AppRow &appRow);
-    static QIcon appStateIcon(const AppRow &appRow);
 
     bool updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const;
 
