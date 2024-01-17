@@ -39,6 +39,7 @@ public:
     QString appOriginPath;
     QString appPath;
     QString appName;
+    QString notes;
 
     QDateTime endTime;
     QDateTime creatTime;

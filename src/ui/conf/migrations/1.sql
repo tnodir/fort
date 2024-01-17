@@ -126,6 +126,7 @@ CREATE TABLE app(
   origin_path TEXT,
   path TEXT,
   name TEXT,
+  notes TEXT,
   is_wildcard BOOLEAN NOT NULL DEFAULT 0,
   use_group_perm BOOLEAN NOT NULL DEFAULT 1,
   apply_child BOOLEAN NOT NULL DEFAULT 0,

@@ -451,7 +451,6 @@ void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64>
 {
     m_formAppEdit->initialize(appRow, appIdList);
 
-    m_formAppEdit->show();
     m_formAppEdit->activate();
 }
 

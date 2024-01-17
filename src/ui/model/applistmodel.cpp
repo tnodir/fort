@@ -322,10 +322,10 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     }
 
     appRow.appId = stmt.columnInt64(0);
-    appRow.groupIndex = stmt.columnInt(1);
-    appRow.appOriginPath = stmt.columnText(2);
-    appRow.appPath = stmt.columnText(3);
-    appRow.appName = stmt.columnText(4);
+    appRow.appOriginPath = stmt.columnText(1);
+    appRow.appPath = stmt.columnText(2);
+    appRow.appName = stmt.columnText(3);
+    appRow.notes = stmt.columnText(4);
     appRow.isWildcard = stmt.columnBool(5);
     appRow.useGroupPerm = stmt.columnBool(6);
     appRow.applyChild = stmt.columnBool(7);
@@ -338,9 +338,10 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     appRow.killProcess = stmt.columnBool(14);
     appRow.acceptZones = stmt.columnUInt(15);
     appRow.rejectZones = stmt.columnUInt(16);
-    appRow.alerted = stmt.columnBool(17);
-    appRow.endTime = stmt.columnDateTime(18);
-    appRow.creatTime = stmt.columnDateTime(19);
+    appRow.endTime = stmt.columnDateTime(17);
+    appRow.creatTime = stmt.columnDateTime(18);
+    appRow.groupIndex = stmt.columnInt(19);
+    appRow.alerted = stmt.columnBool(20);
 
     return true;
 }
@@ -391,10 +392,10 @@ QString AppListModel::sqlBase() const
 {
     return "SELECT"
            "    t.app_id,"
-           "    g.order_index as group_index,"
            "    t.origin_path,"
            "    t.path,"
            "    t.name,"
+           "    t.notes,"
            "    t.is_wildcard,"
            "    t.use_group_perm,"
            "    t.apply_child,"
@@ -407,9 +408,10 @@ QString AppListModel::sqlBase() const
            "    t.kill_process,"
            "    t.accept_zones,"
            "    t.reject_zones,"
-           "    (alert.app_id IS NOT NULL) as alerted,"
            "    t.end_time,"
-           "    t.creat_time"
+           "    t.creat_time,"
+           "    g.order_index as group_index,"
+           "    (alert.app_id IS NOT NULL) as alerted"
            "  FROM app t"
            "    JOIN app_group g ON g.app_group_id = t.app_group_id"
            "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id";

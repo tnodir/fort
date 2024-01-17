@@ -26,7 +26,8 @@ bool App::isExtraFlagsEqual(const App &o) const
 bool App::isOptionsEqual(const App &o) const
 {
     return isFlagsEqual(o) && isZonesEqual(o) && groupIndex == o.groupIndex
-            && appOriginPath == o.appOriginPath && appPath == o.appPath && endTime == o.endTime;
+            && appOriginPath == o.appOriginPath && appPath == o.appPath && notes == o.notes
+            && endTime == o.endTime;
 }
 
 bool App::isNameEqual(const App &o) const

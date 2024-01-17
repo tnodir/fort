@@ -131,6 +131,8 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathE
     m_editName->setEnabled(isSingleSelection);
     m_editName->setClearButtonEnabled(isSingleSelection);
     m_btGetName->setEnabled(isSingleSelection);
+    m_editNotes->setText(m_appRow.notes);
+    m_editNotes->setEnabled(isSingleSelection);
 }
 
 void ProgramEditDialog::activate()
@@ -156,10 +158,12 @@ void ProgramEditDialog::retranslateUi()
 
     m_labelEditPath->setText(isWildcard() ? tr("Wildcard Paths:") : tr("File Path:"));
     retranslatePathPlaceholderText();
-
     m_btSelectFile->setToolTip(tr("Select File"));
+
     m_labelEditName->setText(tr("Name:"));
     m_btGetName->setToolTip(tr("Get Program Name"));
+
+    m_labelEditNotes->setText(tr("Notes:"));
 
     m_labelAppGroup->setText(tr("Application Group:"));
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
@@ -289,14 +293,20 @@ QLayout *ProgramEditDialog::setupAppLayout()
     // App Path
     auto pathLayout = setupAppPathLayout();
 
-    layout->addRow("Program Path:", pathLayout);
+    layout->addRow("File Path:", pathLayout);
     m_labelEditPath = qobject_cast<QLabel *>(layout->labelForField(pathLayout));
 
     // App Name
     auto nameLayout = setupAppNameLayout();
 
-    layout->addRow("Program Name:", nameLayout);
+    layout->addRow("Name:", nameLayout);
     m_labelEditName = qobject_cast<QLabel *>(layout->labelForField(nameLayout));
+
+    // Notes
+    auto notesLayout = setupNotesLayout();
+
+    layout->addRow("Notes:", notesLayout);
+    m_labelEditNotes = qobject_cast<QLabel *>(layout->labelForField(notesLayout));
 
     // App Group
     setupComboAppGroups();
@@ -360,16 +370,23 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
 
 QLayout *ProgramEditDialog::setupAppNameLayout()
 {
-    auto layout = new QHBoxLayout();
-
     m_editName = new QLineEdit();
     m_editName->setMaxLength(1024);
 
     m_btGetName = ControlUtil::createIconToolButton(
             ":/icons/arrow_refresh_small.png", [&] { fillEditName(); });
 
-    layout->addWidget(m_editName);
-    layout->addWidget(m_btGetName);
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_editName, m_btGetName });
+
+    return layout;
+}
+
+QLayout *ProgramEditDialog::setupNotesLayout()
+{
+    m_editNotes = new PlainTextEdit();
+    m_editNotes->setFixedHeight(40);
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_editNotes });
 
     return layout;
 }
@@ -610,6 +627,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.killProcess = m_rbKillProcess->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
     app.appName = m_editName->text();
+    app.notes = m_editNotes->toPlainText();
 
     app.acceptZones = m_btZones->zones();
     app.rejectZones = m_btZones->uncheckedZones();

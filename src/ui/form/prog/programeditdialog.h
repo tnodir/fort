@@ -55,6 +55,7 @@ private:
     QLayout *setupAppLayout();
     QLayout *setupAppPathLayout();
     QLayout *setupAppNameLayout();
+    QLayout *setupNotesLayout();
     void setupComboAppGroups();
     QLayout *setupLogLayout();
     QLayout *setupAllowLayout();
@@ -87,6 +88,8 @@ private:
     QLabel *m_labelEditName = nullptr;
     QLineEdit *m_editName = nullptr;
     QToolButton *m_btGetName = nullptr;
+    QLabel *m_labelEditNotes = nullptr;
+    PlainTextEdit *m_editNotes = nullptr;
     QLabel *m_labelAppGroup = nullptr;
     QComboBox *m_comboAppGroup = nullptr;
     QCheckBox *m_cbUseGroupPerm = nullptr;
