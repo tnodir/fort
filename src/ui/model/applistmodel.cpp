@@ -153,7 +153,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     // Label
     case Qt::DisplayRole:
     case Qt::ToolTipRole:
-        return dataDisplay(index);
+        return dataDisplay(index, role);
 
     // Icon
     case Qt::DecorationRole:
@@ -171,7 +171,7 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant AppListModel::dataDisplay(const QModelIndex &index) const
+QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
 {
     const int row = index.row();
     const int column = index.column();
@@ -182,7 +182,7 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index) const
 
     switch (column) {
     case 0:
-        return appRow.appName;
+        return dataDisplayAppName(appRow, role);
     case 1:
         return dataDisplayState(appRow);
     case 2:
@@ -194,6 +194,13 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index) const
     }
 
     return QVariant();
+}
+
+QVariant AppListModel::dataDisplayAppName(const AppRow &appRow, int role) const
+{
+    return appRow.appName
+            + (role != Qt::ToolTipRole || appRow.notes.isEmpty() ? QString()
+                                                                 : "\n\n" + appRow.notes);
 }
 
 QVariant AppListModel::dataDisplayState(const AppRow &appRow) const
