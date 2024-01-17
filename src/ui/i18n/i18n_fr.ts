@@ -1290,7 +1290,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Notes :</translation>
     </message>
 </context>
 <context>
