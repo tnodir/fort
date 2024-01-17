@@ -670,7 +670,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished">Help</translation>
+        <translation>帮助</translation>
     </message>
 </context>
 <context>
@@ -1280,15 +1280,15 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>停靠的</translation>
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>不清理过时数据</translation>
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>注意：</translation>
     </message>
 </context>
 <context>
@@ -1496,7 +1496,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">选项</translation>
+        <translation>选项</translation>
     </message>
 </context>
 <context>
