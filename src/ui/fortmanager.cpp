@@ -207,7 +207,7 @@ void FortManager::updateLogger(const FirewallConf *conf)
 
 void FortManager::createManagers()
 {
-    IocContainer *ioc = IoC();
+    IocContainer *ioc = IoCPinned();
 
     const auto settings = IoC<FortSettings>();
 
@@ -223,7 +223,7 @@ void FortManager::createManagers()
 
 void FortManager::deleteManagers()
 {
-    IocContainer *ioc = IoC();
+    IocContainer *ioc = IoCPinned();
 
     ioc->tearDownAll();
     ioc->autoDeleteAll();

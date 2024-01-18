@@ -119,14 +119,14 @@ private:
     IocObject *m_objects[IOC_MAX_SIZE] = {};
 };
 
+constexpr auto IoCPinned = IocContainer::getPinned;
+
 template<class T>
 inline static T *IoC()
 {
-    const IocContainer *container = IocContainer::getPinned();
+    const IocContainer *container = IoCPinned();
     Q_ASSERT(container);
     return container->resolve<T>();
 }
-
-#define IoC() IocContainer::getPinned()
 
 #endif // IOCCONTAINER_H

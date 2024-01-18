@@ -62,7 +62,7 @@ void LogManager::setCurrentUnixTime(qint64 unixTime)
 
 void LogManager::setUp()
 {
-    const auto driverManager = IoC()->setUpDependency<DriverManager>();
+    const auto driverManager = IoCPinned()->setUpDependency<DriverManager>();
 
     connect(driverManager->driverWorker(), &DriverWorker::readLogResult, this,
             &LogManager::processLogBuffer, Qt::QueuedConnection);

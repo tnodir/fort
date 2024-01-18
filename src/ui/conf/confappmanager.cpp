@@ -142,7 +142,7 @@ FirewallConf *ConfAppManager::conf() const
 
 void ConfAppManager::setUp()
 {
-    m_confManager = IoC()->setUpDependency<ConfManager>();
+    m_confManager = IoCPinned()->setUpDependency<ConfManager>();
 
     setupDriveListManager();
 

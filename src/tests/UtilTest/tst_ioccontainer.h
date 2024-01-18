@@ -43,7 +43,7 @@ public:
     void setUp() override
     {
         IocService::setUp();
-        IoC()->setUpDependency<A>();
+        IoCPinned()->setUpDependency<A>();
     }
 };
 

@@ -39,7 +39,7 @@ SqliteDb *ZoneListModel::sqliteDb() const
 
 void ZoneListModel::setUp()
 {
-    auto confZoneManager = IoC()->setUpDependency<ConfZoneManager>();
+    auto confZoneManager = IoCPinned()->setUpDependency<ConfZoneManager>();
 
     setupZoneTypes();
     setupZoneSources();

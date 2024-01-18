@@ -121,7 +121,7 @@ QString QuotaManager::alertTypeText(qint8 alertType)
 
 void QuotaManager::setupConfManager()
 {
-    auto confManager = IoC()->setUpDependency<ConfManager>();
+    auto confManager = IoCPinned()->setUpDependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniChanged, this, &QuotaManager::setupByConf);
 }

@@ -54,7 +54,7 @@ void ServiceManager::initialize(qintptr hstatus)
 
 void ServiceManager::setupControlManager()
 {
-    auto controlManager = IoC()->setUpDependency<ControlManager>();
+    auto controlManager = IoCPinned()->setUpDependency<ControlManager>();
 
     connect(this, &ServiceManager::pauseRequested, controlManager, [controlManager] {
         controlManager->close();
@@ -65,7 +65,7 @@ void ServiceManager::setupControlManager()
 
 void ServiceManager::setupConfManager()
 {
-    auto confManager = IoC()->setUpDependency<ConfManager>();
+    auto confManager = IoCPinned()->setUpDependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniChanged, this, &ServiceManager::setupByConf);
 }

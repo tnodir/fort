@@ -687,7 +687,7 @@ void RpcManager::setupTaskManagerSignals()
 
 void RpcManager::setupClient()
 {
-    auto controlManager = IoC()->setUpDependency<ControlManager>();
+    auto controlManager = IoCPinned()->setUpDependency<ControlManager>();
 
     m_client = controlManager->newServiceClient(this);
 

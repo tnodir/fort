@@ -25,7 +25,7 @@ void HotKeyManager::initialize(bool enabled, bool global)
 
 void HotKeyManager::setUp()
 {
-    auto nativeEventFilter = IoC()->setUpDependency<NativeEventFilter>();
+    auto nativeEventFilter = IoCPinned()->setUpDependency<NativeEventFilter>();
 
     connect(nativeEventFilter, &NativeEventFilter::hotKeyPressed, this,
             &HotKeyManager::onHotKeyPressed);
