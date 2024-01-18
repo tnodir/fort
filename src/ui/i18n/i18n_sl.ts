@@ -122,11 +122,11 @@
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished">Parkirano</translation>
+        <translation>Parkirano</translation>
     </message>
     <message>
         <source>Scheduled</source>
-        <translation type="unfinished"></translation>
+        <translation>Načrtovano</translation>
     </message>
 </context>
 <context>
@@ -1298,7 +1298,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Opombe:</translation>
     </message>
 </context>
 <context>
