@@ -120,6 +120,14 @@
         <source>Action</source>
         <translation>Действие</translation>
     </message>
+    <message>
+        <source>Parked</source>
+        <translation>Припаркован</translation>
+    </message>
+    <message>
+        <source>Scheduled</source>
+        <translation>Запланирован</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>

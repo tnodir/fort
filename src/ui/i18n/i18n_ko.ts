@@ -120,6 +120,14 @@
         <source>Action</source>
         <translation>행동</translation>
     </message>
+    <message>
+        <source>Parked</source>
+        <translation>압축됨</translation>
+    </message>
+    <message>
+        <source>Scheduled</source>
+        <translation>예약됨</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>

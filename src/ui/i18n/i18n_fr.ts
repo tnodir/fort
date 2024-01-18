@@ -120,6 +120,14 @@
         <source>Action</source>
         <translation>Action</translation>
     </message>
+    <message>
+        <source>Parked</source>
+        <translation>Parqué</translation>
+    </message>
+    <message>
+        <source>Scheduled</source>
+        <translation>Planifié</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>

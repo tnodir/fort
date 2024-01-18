@@ -120,6 +120,14 @@
         <source>Action</source>
         <translation>Aktion</translation>
     </message>
+    <message>
+        <source>Parked</source>
+        <translation>Geparkt</translation>
+    </message>
+    <message>
+        <source>Scheduled</source>
+        <translation>Geplant</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1290,7 +1298,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <translation>Hinweise:</translation>
     </message>
 </context>
 <context>

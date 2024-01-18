@@ -120,6 +120,14 @@
         <source>Action</source>
         <translation>行为</translation>
     </message>
+    <message>
+        <source>Parked</source>
+        <translation>停靠的</translation>
+    </message>
+    <message>
+        <source>Scheduled</source>
+        <translation>计划</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
