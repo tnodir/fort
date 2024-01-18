@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.10.13, 2024-01-18:
+- UI: Programs: Add "Parked", "Scheduled" columns.
+- UI: Programs: Show Notes in Name's tooltip.
+- UI: Programs: Clear app's end-time on timeout.
+- UI: Update SQLite to v3.45.0
+
 v3.10.12, 2024-01-17:
 - UI: Programs: Add "Notes" field.
 - UI: MyFort: About: Show release text in scroll area.
