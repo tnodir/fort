@@ -348,3 +348,13 @@ void SqliteStmt::doList(const SqliteStmtList &stmtList)
         stmt->reset();
     }
 }
+
+QVariant SqliteStmt::nullable(const QString &v)
+{
+    return nullable(v, v.isEmpty());
+}
+
+QVariant SqliteStmt::nullable(const QDateTime &v)
+{
+    return nullable(v, v.isNull());
+}

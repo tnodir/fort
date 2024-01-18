@@ -251,10 +251,10 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
         return true;
 
     const auto vars = QVariantList()
-            << (rowExists ? addrGroup->id() : QVariant()) << orderIndex << addrGroup->includeAll()
-            << addrGroup->excludeAll() << qint64(addrGroup->includeZones())
-            << qint64(addrGroup->excludeZones()) << addrGroup->includeText()
-            << addrGroup->excludeText();
+            << SqliteStmt::nullable(addrGroup->id(), !rowExists) << orderIndex
+            << addrGroup->includeAll() << addrGroup->excludeAll()
+            << qint64(addrGroup->includeZones()) << qint64(addrGroup->excludeZones())
+            << addrGroup->includeText() << addrGroup->excludeText();
 
     const char *sql = rowExists ? sqlUpdateAddressGroup : sqlInsertAddressGroup;
 
@@ -325,7 +325,7 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
         return true;
 
     const auto vars = QVariantList()
-            << (rowExists ? appGroup->id() : QVariant()) << orderIndex << appGroup->enabled()
+            << SqliteStmt::nullable(appGroup->id(), !rowExists) << orderIndex << appGroup->enabled()
             << appGroup->applyChild() << appGroup->lanOnly() << appGroup->logBlocked()
             << appGroup->logConn() << appGroup->periodEnabled() << appGroup->limitInEnabled()
             << appGroup->limitOutEnabled() << appGroup->speedLimitIn() << appGroup->speedLimitOut()
@@ -903,9 +903,9 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
     const bool rowExists = (taskInfo->id() != 0);
 
     const auto vars = QVariantList()
-            << (rowExists ? taskInfo->id() : QVariant()) << taskInfo->name() << taskInfo->enabled()
-            << taskInfo->intervalHours() << taskInfo->lastRun() << taskInfo->lastSuccess()
-            << taskInfo->data();
+            << SqliteStmt::nullable(taskInfo->id(), !rowExists) << taskInfo->name()
+            << taskInfo->enabled() << taskInfo->intervalHours() << taskInfo->lastRun()
+            << taskInfo->lastSuccess() << taskInfo->data();
 
     const char *sql = rowExists ? sqlUpdateTask : sqlInsertTask;
 

@@ -198,13 +198,12 @@ void ConfAppManager::beginAddOrUpdateApp(
         App &app, const AppGroup &appGroup, bool onlyUpdate, bool &ok)
 {
     const auto vars = QVariantList()
-            << app.appId << appGroup.id() << app.appOriginPath
-            << (!app.appPath.isEmpty() ? app.appPath : QVariant()) << app.appName << app.notes
-            << app.isWildcard << app.useGroupPerm << app.applyChild << app.killChild << app.lanOnly
-            << app.parked << app.logBlocked << app.logConn << app.blocked << app.killProcess
-            << app.acceptZones << app.rejectZones
-            << (!app.endTime.isNull() ? app.endTime : QVariant())
-            << (onlyUpdate ? QVariant() : QDateTime::currentDateTime());
+            << app.appId << appGroup.id() << app.appOriginPath << SqliteStmt::nullable(app.appPath)
+            << app.appName << app.notes << app.isWildcard << app.useGroupPerm << app.applyChild
+            << app.killChild << app.lanOnly << app.parked << app.logBlocked << app.logConn
+            << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
+            << SqliteStmt::nullable(app.endTime)
+            << SqliteStmt::nullable(QDateTime::currentDateTime(), onlyUpdate);
 
     const char *sql = onlyUpdate ? sqlUpdateApp : sqlUpsertApp;
     const auto appIdVar = sqliteDb()->executeEx(sql, vars, 1, &ok);
