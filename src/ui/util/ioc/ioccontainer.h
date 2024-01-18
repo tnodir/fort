@@ -66,16 +66,15 @@ public:
         return static_cast<T *>(resolveService(getTypeId<T>()));
     }
 
-    void setUpAll();
-    void tearDownAll();
-    void autoDeleteAll();
-
     template<class T>
     inline constexpr T *setUpDependency()
     {
-        setUp(getTypeId<T>());
-        return resolve<T>();
+        return static_cast<T *>(setUp(getTypeId<T>()));
     }
+
+    void setUpAll();
+    void tearDownAll();
+    void autoDeleteAll();
 
     bool pinToThread();
 
@@ -101,7 +100,7 @@ private:
         return static_cast<IocService *>(resolveObject(typeId));
     }
 
-    void setUp(int typeId);
+    IocService *setUp(int typeId);
     void tearDown(int typeId);
     void autoDelete(int typeId);
 
@@ -124,9 +123,7 @@ constexpr auto IoCPinned = IocContainer::getPinned;
 template<class T>
 inline static T *IoC()
 {
-    const IocContainer *container = IoCPinned();
-    Q_ASSERT(container);
-    return container->resolve<T>();
+    return IoCPinned()->resolve<T>();
 }
 
 #endif // IOCCONTAINER_H

@@ -56,16 +56,18 @@ void IocContainer::autoDeleteAll()
     }
 }
 
-void IocContainer::setUp(int typeId)
+IocService *IocContainer::setUp(int typeId)
 {
-    const quint8 flags = m_objectFlags[typeId];
-    if ((flags & (IsService | WasSetUp)) != IsService)
-        return;
-
-    m_objectFlags[typeId] = (flags | WasSetUp);
-
     IocService *obj = resolveService(typeId);
-    obj->setUp();
+
+    const quint8 flags = m_objectFlags[typeId];
+    if ((flags & (IsService | WasSetUp)) == IsService) {
+        m_objectFlags[typeId] = (flags | WasSetUp);
+
+        obj->setUp();
+    }
+
+    return obj;
 }
 
 void IocContainer::tearDown(int typeId)
