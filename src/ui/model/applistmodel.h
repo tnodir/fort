@@ -12,7 +12,6 @@ class AppGroup;
 class AppInfoCache;
 class ConfAppManager;
 class ConfManager;
-class FirewallConf;
 
 struct AppRow : TableRow, public App
 {
@@ -31,7 +30,6 @@ public:
 
     ConfManager *confManager() const;
     ConfAppManager *confAppManager() const;
-    FirewallConf *conf() const;
     AppInfoCache *appInfoCache() const;
     SqliteDb *sqliteDb() const override;
 
@@ -58,21 +56,10 @@ protected:
     QString sqlOrderColumn() const override;
 
 private:
-    QVariant headerDataDisplay(int section, int role) const;
-    QVariant headerDataDisplayParked(int role) const;
-    QVariant headerDataDisplayScheduled(int role) const;
-    QVariant headerDataDecoration(int section) const;
-
     QVariant dataDisplay(const QModelIndex &index, int role) const;
-    QVariant dataDisplayAppName(const AppRow &appRow, int role) const;
-    QVariant dataDisplayScheduled(const AppRow &appRow, int role) const;
-    QVariant dataDisplay(const AppRow &appRow, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataForeground(const QModelIndex &index) const;
     QVariant dataTextAlignment(const QModelIndex &index) const;
-
-    QVariant appGroupName(const AppRow &appRow) const;
-    QVariant appGroupColor(const AppRow &appRow) const;
 
     QIcon appIcon(const AppRow &appRow) const;
 
