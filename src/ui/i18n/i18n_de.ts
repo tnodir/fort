@@ -1297,8 +1297,8 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Nicht löschen wenn veraltet</translation>
     </message>
     <message>
-        <source>Notes:</source>
-        <translation>Hinweise:</translation>
+        <source>Notes</source>
+        <translation>Hinweise</translation>
     </message>
 </context>
 <context>

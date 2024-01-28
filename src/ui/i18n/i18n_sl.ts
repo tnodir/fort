@@ -1297,8 +1297,8 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Ne počisti kot zastarelo</translation>
     </message>
     <message>
-        <source>Notes:</source>
-        <translation>Opombe:</translation>
+        <source>Notes</source>
+        <translation>Opombe</translation>
     </message>
 </context>
 <context>

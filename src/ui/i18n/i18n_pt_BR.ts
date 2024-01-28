@@ -1292,7 +1292,7 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Notes:</source>
+        <source>Notes</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

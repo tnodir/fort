@@ -1295,8 +1295,8 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>不清理过时数据</translation>
     </message>
     <message>
-        <source>Notes:</source>
-        <translation>注意：</translation>
+        <source>Notes</source>
+        <translation>注意</translation>
     </message>
 </context>
 <context>

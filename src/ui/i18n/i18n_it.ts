@@ -122,11 +122,11 @@
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>Parcheggiata</translation>
     </message>
     <message>
         <source>Scheduled</source>
-        <translation type="unfinished"></translation>
+        <translation>Programmato</translation>
     </message>
 </context>
 <context>
@@ -1290,15 +1290,15 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>Parcheggiata</translation>
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Don&apos;t purge as obsolete</translation>
     </message>
     <message>
-        <source>Notes:</source>
-        <translation type="unfinished"></translation>
+        <source>Notes</source>
+        <translation type="unfinished">Notes</translation>
     </message>
 </context>
 <context>
@@ -1506,7 +1506,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Opzioni</translation>
+        <translation>Opzioni</translation>
     </message>
 </context>
 <context>

@@ -1297,8 +1297,8 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Не удалять как устаревшее</translation>
     </message>
     <message>
-        <source>Notes:</source>
-        <translation>Заметки:</translation>
+        <source>Notes</source>
+        <translation>Заметки</translation>
     </message>
 </context>
 <context>

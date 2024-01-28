@@ -1297,8 +1297,8 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Ne pas purger car obsolète</translation>
     </message>
     <message>
-        <source>Notes:</source>
-        <translation>Notes :</translation>
+        <source>Notes</source>
+        <translation>Notes</translation>
     </message>
 </context>
 <context>
