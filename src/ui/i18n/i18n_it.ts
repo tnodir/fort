@@ -1294,11 +1294,11 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation type="unfinished">Don&apos;t purge as obsolete</translation>
+        <translation>Non considerare obsoleto</translation>
     </message>
     <message>
         <source>Notes</source>
-        <translation type="unfinished">Notes</translation>
+        <translation>Note</translation>
     </message>
 </context>
 <context>
