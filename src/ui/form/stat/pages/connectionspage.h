@@ -14,7 +14,6 @@ class ConnBlockListModel;
 class FirewallConf;
 class FortManager;
 class FortSettings;
-class IniOptions;
 class IniUser;
 class StatisticsController;
 class TableView;

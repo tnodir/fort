@@ -412,6 +412,11 @@ void FortSettings::writeConfIniOptions(const IniOptions &ini)
 
 void FortSettings::migrateIniOnStartup()
 {
+    if (!iniExists()) {
+        iniFlush();
+        return;
+    }
+
     int version;
     if (checkIniVersion(version))
         return;
