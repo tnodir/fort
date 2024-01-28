@@ -131,10 +131,8 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathE
     m_editNotes->setText(m_appRow.notes);
     m_editNotes->setEnabled(isSingleSelection);
 
-    constexpr QLatin1String nullIconPath(":/icons/application.png");
-    m_labelEditNotes->setPixmap(isSingleSelection
-                    ? IoC<AppInfoCache>()->appIcon(m_appRow.appPath, nullIconPath)
-                    : IconCache::file(nullIconPath));
+    m_labelEditNotes->setPixmap(
+            isSingleSelection ? IoC<AppInfoCache>()->appIcon(m_appRow.appPath) : QPixmap());
 
     if (isSingleSelection) {
         if (m_appRow.appName.isEmpty()) {
