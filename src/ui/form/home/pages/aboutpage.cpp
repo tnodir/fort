@@ -9,6 +9,7 @@
 #include <form/home/homecontroller.h>
 #include <task/taskinfoupdatechecker.h>
 #include <task/taskmanager.h>
+#include <util/dateutil.h>
 #include <util/iconcache.h>
 
 AboutPage::AboutPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
@@ -102,6 +103,8 @@ void AboutPage::setupNewVersionUpdate()
         m_btDownload->setVisible(m_isNewVersion);
         m_btDownload->setWindowFilePath(updateChecker->downloadUrl());
         m_btDownload->setToolTip(updateChecker->downloadUrl());
+
+        m_btCheckUpdate->setToolTip(DateUtil::localeDateTime(updateChecker->lastSuccess()));
 
         retranslateNewVersionBox();
     };

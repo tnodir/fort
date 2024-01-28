@@ -198,7 +198,7 @@ QVariant dataDisplayScheduled(const AppRow &appRow, int role)
     if (role != Qt::ToolTipRole || appRow.endTime.isNull())
         return QString();
 
-    return DateUtil::localeDateTime(appRow.endTime, QLocale::ShortFormat);
+    return DateUtil::localeDateTime(appRow.endTime);
 }
 
 QVariant dataDisplayFilePath(const AppRow &appRow, int /*role*/)
