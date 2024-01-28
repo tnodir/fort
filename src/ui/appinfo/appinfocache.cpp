@@ -37,7 +37,7 @@ QString AppInfoCache::appName(const QString &appPath)
     return appInfo.fileDescription;
 }
 
-QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
+QPixmap AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
 {
     QPixmap pixmap;
     if (IconCache::find(appPath, &pixmap))

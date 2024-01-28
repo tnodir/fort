@@ -104,10 +104,6 @@ void ProgramEditDialog::initializePathNameFields()
 
     initializePathField(isSingleSelection, isPathEditable);
     initializeNameField(isSingleSelection, isPathEditable);
-
-    if (isSingleSelection && m_appRow.appName.isEmpty()) {
-        fillEditName(); // Auto-fill the name
-    }
 }
 
 void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathEditable)
@@ -131,8 +127,20 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathE
     m_editName->setEnabled(isSingleSelection);
     m_editName->setClearButtonEnabled(isSingleSelection);
     m_btGetName->setEnabled(isSingleSelection);
+
     m_editNotes->setText(m_appRow.notes);
     m_editNotes->setEnabled(isSingleSelection);
+
+    constexpr QLatin1String nullIconPath(":/icons/application.png");
+    m_labelEditNotes->setPixmap(isSingleSelection
+                    ? IoC<AppInfoCache>()->appIcon(m_appRow.appPath, nullIconPath)
+                    : IconCache::file(nullIconPath));
+
+    if (isSingleSelection) {
+        if (m_appRow.appName.isEmpty()) {
+            fillEditName(); // Auto-fill the name
+        }
+    }
 }
 
 void ProgramEditDialog::activate()
@@ -163,7 +171,7 @@ void ProgramEditDialog::retranslateUi()
     m_labelEditName->setText(tr("Name:"));
     m_btGetName->setToolTip(tr("Get Program Name"));
 
-    m_labelEditNotes->setText(tr("Notes:"));
+    m_editNotes->setPlaceholderText(tr("Notes"));
 
     m_labelAppGroup->setText(tr("Application Group:"));
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
@@ -307,6 +315,8 @@ QLayout *ProgramEditDialog::setupAppLayout()
 
     layout->addRow("Notes:", notesLayout);
     m_labelEditNotes = qobject_cast<QLabel *>(layout->labelForField(notesLayout));
+    m_labelEditNotes->setScaledContents(true);
+    m_labelEditNotes->setFixedSize(32, 32);
 
     // App Group
     setupComboAppGroups();
