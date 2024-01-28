@@ -287,23 +287,21 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 0 || column == 1 || column == 3 || column == 4) {
-        const int row = index.row();
+    const int row = index.row();
 
-        const auto appRow = appRowAt(row);
-        if (appRow.isNull())
-            return QVariant();
+    const auto appRow = appRowAt(row);
+    if (appRow.isNull())
+        return QVariant();
 
-        switch (column) {
-        case 0:
-            return appIcon(appRow);
-        case 1:
-            return appStateIcon(appRow);
-        case 3:
-            return appParkedIcon(appRow);
-        case 4:
-            return appScheduledIcon(appRow);
-        }
+    switch (column) {
+    case 0:
+        return appIcon(appRow);
+    case 1:
+        return appStateIcon(appRow);
+    case 3:
+        return appParkedIcon(appRow);
+    case 4:
+        return appScheduledIcon(appRow);
     }
 
     return QVariant();
@@ -482,13 +480,10 @@ QString AppListModel::sqlWhere() const
 QString AppListModel::sqlOrderColumn() const
 {
     QString columnsStr;
-    bool orderApplied = false;
 
     switch (sortColumn()) {
     case 0: // Name
-        columnsStr = "t.name" + sqlOrderAsc() + ", t.path";
-        orderApplied = true;
-        break;
+        return "t.name" + sqlOrderAsc() + ", t.path";
     case 1: // Action
         columnsStr = "alerted DESC, t.kill_process, t.blocked";
         break;
@@ -509,9 +504,5 @@ QString AppListModel::sqlOrderColumn() const
         break;
     }
 
-    if (!orderApplied) {
-        columnsStr += sqlOrderAsc() + ", t.name";
-    }
-
-    return columnsStr;
+    return columnsStr + sqlOrderAsc() + ", t.name";
 }
