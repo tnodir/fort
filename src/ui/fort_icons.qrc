@@ -25,7 +25,6 @@
     <file>icons/disk.png</file>
     <file>icons/download.png</file>
     <file>icons/error.png</file>
-    <file>icons/flag_1.png</file>
     <file>icons/folder.png</file>
     <file>icons/fort-96.png</file>
     <file>icons/fort.png</file>
@@ -46,6 +45,7 @@
     <file>icons/lock_open.png</file>
     <file>icons/magnifier.png</file>
     <file>icons/page_copy.png</file>
+    <file>icons/parking.png</file>
     <file>icons/pencil.png</file>
     <file>icons/play.png</file>
     <file>icons/recycle.png</file>

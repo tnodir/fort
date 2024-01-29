@@ -75,7 +75,7 @@ QIcon appStateIcon(const AppRow &appRow)
 
 QIcon appParkedIcon(const AppRow &appRow)
 {
-    return appRow.parked ? IconCache::icon(":/icons/flag_1.png") : QIcon();
+    return appRow.parked ? IconCache::icon(":/icons/parking.png") : QIcon();
 }
 
 QIcon appScheduledIcon(const AppRow &appRow)
@@ -153,7 +153,7 @@ inline QVariant headerDataDecoration(int section)
 {
     switch (section) {
     case 3:
-        return IconCache::icon(":/icons/flag_1.png");
+        return IconCache::icon(":/icons/parking.png");
     case 4:
         return IconCache::icon(":/icons/time.png");
     default:
