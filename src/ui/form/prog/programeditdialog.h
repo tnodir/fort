@@ -48,7 +48,7 @@ private:
 
     void retranslateUi();
     void retranslatePathPlaceholderText();
-    void retranslateAppBlockInHours();
+    void retranslateAppBlockInMinutes();
     void retranslateWindowTitle();
 
     void setupUi();

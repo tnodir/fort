@@ -32,7 +32,7 @@
 
 namespace {
 
-const std::array appBlockInHourValues = { 15, 1, 5, 10, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
+const std::array appBlockInMinuteValues = { 15, 1, 5, 10, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
     60 * 24 * 7, 60 * 24 * 30 };
 
 }
@@ -191,7 +191,7 @@ void ProgramEditDialog::retranslateUi()
     m_btZones->retranslateUi();
 
     m_cscBlockAppIn->checkBox()->setText(tr("Block In:"));
-    retranslateAppBlockInHours();
+    retranslateAppBlockInMinutes();
     m_cbBlockAppAt->setText(tr("Block At:"));
     m_dteBlockAppAt->unsetLocale();
     m_cbBlockAppNone->setText(tr("Forever"));
@@ -221,9 +221,9 @@ void ProgramEditDialog::retranslatePathPlaceholderText()
     m_editWildcard->setPlaceholderText(placeholderText);
 }
 
-void ProgramEditDialog::retranslateAppBlockInHours()
+void ProgramEditDialog::retranslateAppBlockInMinutes()
 {
-    const QStringList list = { tr("Custom"), tr("1 minute"), tr("5 minute"), tr("10 minutes"),
+    const QStringList list = { tr("Custom"), tr("1 minute"), tr("5 minutes"), tr("10 minutes"),
         tr("30 minutes"), tr("1 hour"), tr("6 hours"), tr("12 hours"), tr("Day"), tr("Week"),
         tr("Month") };
 
@@ -463,10 +463,10 @@ QLayout *ProgramEditDialog::setupExtraLayout()
     // Zones
     auto zonesLayout = setupZonesLayout();
 
-    // Block after N hours
+    // Block after N minutes
     m_cscBlockAppIn = new CheckSpinCombo();
     m_cscBlockAppIn->spinBox()->setRange(1, 60 * 24 * 30 * 12); // ~Year
-    m_cscBlockAppIn->setValues(appBlockInHourValues);
+    m_cscBlockAppIn->setValues(appBlockInMinuteValues);
 
     // Block at specified date & time
     auto blockAtLayout = setupCheckDateTimeEdit();
