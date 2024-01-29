@@ -25,7 +25,15 @@ typedef struct
     const PUCHAR lpData;
     DWORD dwSize;
     DWORD imageSize;
-} FORT_MODULE;
+} FORT_MODULE_IMAGE;
+
+typedef struct
+{
+    PUCHAR codeBase;
+    PIMAGE_IMPORT_DESCRIPTOR importDesc;
+    LPCSTR libName;
+    PLOADEDMODULE libModule;
+} FORT_MODULE_IMAGE_LIB;
 
 static VOID ZeroDataSectionTable(
         PUCHAR pImage, const PIMAGE_NT_HEADERS pNtHeaders, PIMAGE_SECTION_HEADER section)
@@ -46,26 +54,26 @@ static VOID ZeroDataSectionTable(
 #endif
 }
 
-static NTSTATUS CopySectionTable(PUCHAR pImage, const FORT_MODULE m)
+static NTSTATUS CopySectionTable(PUCHAR pImage, const FORT_MODULE_IMAGE mi)
 {
-    PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(m.pNtHeaders);
+    PIMAGE_SECTION_HEADER section = IMAGE_FIRST_SECTION(mi.pNtHeaders);
 
-    const int numberOfSections = m.pNtHeaders->FileHeader.NumberOfSections;
+    const int numberOfSections = mi.pNtHeaders->FileHeader.NumberOfSections;
 
     for (int i = 0; i < numberOfSections; ++i, ++section) {
         const DWORD sectionSize = section->SizeOfRawData;
         if (sectionSize == 0) {
-            ZeroDataSectionTable(pImage, m.pNtHeaders, section);
+            ZeroDataSectionTable(pImage, mi.pNtHeaders, section);
             continue;
         }
 
-        if (section->VirtualAddress + sectionSize > m.imageSize
-                || section->PointerToRawData + sectionSize > m.dwSize)
+        if (section->VirtualAddress + sectionSize > mi.imageSize
+                || section->PointerToRawData + sectionSize > mi.dwSize)
             return STATUS_INVALID_IMAGE_FORMAT;
 
         /* Always use position from file to support alignments smaller than page size. */
         PUCHAR dest = pImage + section->VirtualAddress;
-        RtlCopyMemory(dest, m.lpData + section->PointerToRawData, sectionSize);
+        RtlCopyMemory(dest, mi.lpData + section->PointerToRawData, sectionSize);
 
         /* NOTE: On 64bit systems we truncate to 32bit here but expand
          * again later when "PhysicalAddress" is used.
@@ -152,19 +160,18 @@ static NTSTATUS PerformBaseRelocation(
 }
 
 /* Build the import address table: Library functions. */
-static NTSTATUS BuildImportTableLibrary(PFORT_MODULE_IMP moduleImp, PUCHAR codeBase,
-        const PIMAGE_IMPORT_DESCRIPTOR importDesc, PLOADEDMODULE libModule, LPCSTR libName)
+static NTSTATUS BuildImportTableLibrary(PFORT_MODULE_IMP moduleImp, const FORT_MODULE_IMAGE_LIB mil)
 {
     NTSTATUS status = STATUS_SUCCESS;
 
     ModuleGetProcAddressFallbackProc moduleGetProcAddressFallback =
             moduleImp->moduleGetProcAddressFallback;
 
-    const DWORD originalFirstThunk = (importDesc->OriginalFirstThunk != 0)
-            ? importDesc->OriginalFirstThunk
-            : importDesc->FirstThunk;
-    uintptr_t *thunkRef = (uintptr_t *) (codeBase + originalFirstThunk);
-    FARPROC *funcRef = (FARPROC *) (codeBase + importDesc->FirstThunk);
+    const DWORD originalFirstThunk = (mil.importDesc->OriginalFirstThunk != 0)
+            ? mil.importDesc->OriginalFirstThunk
+            : mil.importDesc->FirstThunk;
+    uintptr_t *thunkRef = (uintptr_t *) (mil.codeBase + originalFirstThunk);
+    FARPROC *funcRef = (FARPROC *) (mil.codeBase + mil.importDesc->FirstThunk);
 
     for (; *thunkRef; ++thunkRef, ++funcRef) {
         LPCSTR funcName;
@@ -172,17 +179,17 @@ static NTSTATUS BuildImportTableLibrary(PFORT_MODULE_IMP moduleImp, PUCHAR codeB
             funcName = (LPCSTR) IMAGE_ORDINAL(*thunkRef);
         } else {
             const PIMAGE_IMPORT_BY_NAME thunkData =
-                    (PIMAGE_IMPORT_BY_NAME) (codeBase + (*thunkRef));
+                    (PIMAGE_IMPORT_BY_NAME) (mil.codeBase + (*thunkRef));
             funcName = (LPCSTR) &thunkData->Name;
         }
 
-        *funcRef = moduleGetProcAddressFallback(moduleImp, libModule, funcName);
+        *funcRef = moduleGetProcAddressFallback(moduleImp, mil.libModule, funcName);
         if (*funcRef == NULL) {
-            LOG("Loader Module: Error: Procedure Not Found: %s: %s\n", libName, funcName);
+            LOG("Loader Module: Error: Procedure Not Found: %s: %s\n", mil.libName, funcName);
             status = STATUS_PROCEDURE_NOT_FOUND;
         } else {
 #ifdef FORT_DEBUG
-            LOG("Loader Module: Import: %s: %s: %p\n", libName, funcName, *funcRef);
+            LOG("Loader Module: Import: %s: %s: %p\n", mil.libName, funcName, *funcRef);
 #endif
         }
     }
@@ -202,6 +209,10 @@ static NTSTATUS BuildImportTableEntries(
     PIMAGE_IMPORT_DESCRIPTOR importDesc =
             (PIMAGE_IMPORT_DESCRIPTOR) (codeBase + directory->VirtualAddress);
 
+    FORT_MODULE_IMAGE_LIB moduleLib = {
+        .codeBase = codeBase,
+    };
+
     for (; importDesc != NULL && importDesc->Name != 0; ++importDesc) {
         LPCSTR libName = (LPCSTR) (codeBase + importDesc->Name);
 
@@ -214,7 +225,11 @@ static NTSTATUS BuildImportTableEntries(
 
         buildImportTableLibraryBegin(moduleImp, libName);
 
-        status = BuildImportTableLibrary(moduleImp, codeBase, importDesc, &libModule, libName);
+        moduleLib.importDesc = importDesc;
+        moduleLib.libName = libName;
+        moduleLib.libModule = &libModule;
+
+        status = BuildImportTableLibrary(moduleImp, moduleLib);
         if (!NT_SUCCESS(status)) {
             LOG("Loader Module: Library Import Error: %s\n", libName);
             break;
@@ -225,17 +240,17 @@ static NTSTATUS BuildImportTableEntries(
 }
 
 /* Build the import address table. */
-static NTSTATUS BuildImportTable(PLOADEDMODULE pModule, PIMAGE_NT_HEADERS pHeaders)
+static NTSTATUS BuildImportTable(const FORT_MODULE_IMAGE mi)
 {
     NTSTATUS status;
 
     PIMAGE_DATA_DIRECTORY directory =
-            &(pHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT]);
+            &(mi.pNtHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT]);
     if (directory->Size == 0)
         return STATUS_SUCCESS;
 
     DriverImportsSetupProc driverImportsSetup =
-            (DriverImportsSetupProc) ModuleGetProcAddress(pModule, "DriverImportsSetup");
+            (DriverImportsSetupProc) ModuleGetProcAddress(mi.pModule, "DriverImportsSetup");
     if (driverImportsSetup == NULL)
         return STATUS_DRIVER_ORDINAL_NOT_FOUND;
 
@@ -250,14 +265,14 @@ static NTSTATUS BuildImportTable(PLOADEDMODULE pModule, PIMAGE_NT_HEADERS pHeade
 
     driverImportsSetup(&moduleImp);
 
-    status = moduleImp.buildImportTableEntriesBegin(&moduleImp, pModule, pHeaders);
+    status = moduleImp.buildImportTableEntriesBegin(&moduleImp, mi.pModule, mi.pNtHeaders);
     if (!NT_SUCCESS(status))
         return status;
 
     if (status == STATUS_ALREADY_COMPLETE) {
         status = STATUS_SUCCESS;
     } else {
-        status = BuildImportTableEntries(&moduleImp, pModule->codeBase, directory);
+        status = BuildImportTableEntries(&moduleImp, mi.pModule->codeBase, directory);
     }
 
     moduleImp.buildImportTableEntriesEnd(&moduleImp, status);
@@ -332,50 +347,50 @@ inline static BOOL CheckPEHeaderOptionalValid(const PIMAGE_NT_HEADERS pNtHeaders
     return CheckPEHeaderSections(pNtHeaders);
 }
 
-static BOOL IsPEHeaderValid(const FORT_MODULE m)
+static BOOL IsPEHeaderValid(const FORT_MODULE_IMAGE mi)
 {
-    const PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER) m.lpData;
+    const PIMAGE_DOS_HEADER pDosHeader = (PIMAGE_DOS_HEADER) mi.lpData;
 
     /* Check DOS header for valid signature */
     if (pDosHeader->e_magic != IMAGE_DOS_SIGNATURE)
         return FALSE;
 
     /* Make sure size is at least size of headers */
-    if (m.dwSize < (sizeof(IMAGE_DOS_HEADER) + sizeof(IMAGE_OPTIONAL_HEADER)))
+    if (mi.dwSize < (sizeof(IMAGE_DOS_HEADER) + sizeof(IMAGE_OPTIONAL_HEADER)))
         return FALSE;
 
-    if (m.dwSize < (pDosHeader->e_lfanew + sizeof(IMAGE_NT_HEADERS)))
+    if (mi.dwSize < (pDosHeader->e_lfanew + sizeof(IMAGE_NT_HEADERS)))
         return FALSE;
 
     /* Check for optional headers */
     const PIMAGE_NT_HEADERS pNtHeaders =
-            (PIMAGE_NT_HEADERS) & ((PUCHAR) m.lpData)[pDosHeader->e_lfanew];
+            (PIMAGE_NT_HEADERS) & ((PUCHAR) mi.lpData)[pDosHeader->e_lfanew];
 
-    return CheckPEHeaderOptionalValid(pNtHeaders, m.dwSize);
+    return CheckPEHeaderOptionalValid(pNtHeaders, mi.dwSize);
 }
 
-static NTSTATUS InitializeModuleImage(const FORT_MODULE m)
+static NTSTATUS InitializeModuleImage(const FORT_MODULE_IMAGE mi)
 {
     NTSTATUS status;
 
 #ifdef FORT_DEBUG
     LOG("Loader Module: Init Image: SizeOfHeaders=%d EntryPoint=%d ImageBase=%x\n",
-            m.pNtHeaders->OptionalHeader.SizeOfHeaders,
-            m.pNtHeaders->OptionalHeader.AddressOfEntryPoint,
-            m.pNtHeaders->OptionalHeader.ImageBase);
+            mi.pNtHeaders->OptionalHeader.SizeOfHeaders,
+            mi.pNtHeaders->OptionalHeader.AddressOfEntryPoint,
+            mi.pNtHeaders->OptionalHeader.ImageBase);
 #endif
 
-    PUCHAR pImage = m.pModule->codeBase;
+    PUCHAR pImage = mi.pModule->codeBase;
 
     /* Copy PE header */
-    RtlCopyMemory(pImage, m.lpData, m.pNtHeaders->OptionalHeader.SizeOfHeaders);
+    RtlCopyMemory(pImage, mi.lpData, mi.pNtHeaders->OptionalHeader.SizeOfHeaders);
 
     /* Update position of the image base */
     PIMAGE_NT_HEADERS pNtHeaders = GetModuleNtHeaders(pImage);
     pNtHeaders->OptionalHeader.ImageBase = (uintptr_t) pImage;
 
     /* Copy section table */
-    FORT_MODULE newModule = m;
+    FORT_MODULE_IMAGE newModule = mi;
     newModule.pNtHeaders = pNtHeaders;
 
     status = CopySectionTable(pImage, newModule);
@@ -383,14 +398,14 @@ static NTSTATUS InitializeModuleImage(const FORT_MODULE m)
         return status;
 
     /* Adjust base address of imported data */
-    const ptrdiff_t locationDelta = pImage - (PUCHAR) m.pNtHeaders->OptionalHeader.ImageBase;
+    const ptrdiff_t locationDelta = pImage - (PUCHAR) mi.pNtHeaders->OptionalHeader.ImageBase;
 
     if (locationDelta != 0) {
         PerformBaseRelocation(pImage, pNtHeaders, locationDelta);
     }
 
     /* Adjust function table of imports */
-    status = BuildImportTable(m.pModule, pNtHeaders);
+    status = BuildImportTable(newModule);
     if (!NT_SUCCESS(status))
         return status;
 
@@ -401,7 +416,7 @@ FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, const PUCHAR lpDat
 {
     NTSTATUS status;
 
-    FORT_MODULE module = {
+    FORT_MODULE_IMAGE module = {
         .pModule = pModule,
         .lpData = lpData,
         .dwSize = dwSize,
