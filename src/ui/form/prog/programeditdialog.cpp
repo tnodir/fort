@@ -208,13 +208,13 @@ void ProgramEditDialog::retranslatePathPlaceholderText()
 
     const auto placeholderText = tr("# Examples:")
             // Prefix wildcard
-            + "\n\n" + tr("# All programs in the sub-path:")
+            + '\n' + tr("# All programs in the sub-path:")
             + QLatin1String("\nC:\\Git\\**")
             // Name wildcard
-            + "\n\n" + tr("# Name wildcard:")
+            + '\n' + tr("# Name wildcard:")
             + QLatin1String("\nC:\\Store\\app.v*.exe")
             // Env var
-            + "\n\n" + tr("# Environment Variable:")
+            + '\n' + tr("# Environment Variable:")
             + QLatin1String("\n%SystemRoot%\\System32\\telnet.exe");
 
     m_editWildcard->setPlaceholderText(placeholderText);
