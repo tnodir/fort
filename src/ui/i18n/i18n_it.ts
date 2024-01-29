@@ -1215,10 +1215,6 @@ Assicurati di avere un backup recente.</translation>
         <translation>Mese</translation>
     </message>
     <message>
-        <source> hour(s)</source>
-        <translation> ora/e</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programmi (*.exe);;Tutti i file (*.*)</translation>
     </message>
@@ -1299,6 +1295,26 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Notes</source>
         <translation>Note</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5 minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

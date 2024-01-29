@@ -1215,10 +1215,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Месяц</translation>
     </message>
     <message>
-        <source> hour(s)</source>
-        <translation> час(ов)</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
     </message>
@@ -1299,6 +1295,26 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Notes</source>
         <translation>Заметки</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 минуту</translation>
+    </message>
+    <message>
+        <source>5 minute</source>
+        <translation>5 минут</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 минут</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 минут</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation>минут(ы)</translation>
     </message>
 </context>
 <context>

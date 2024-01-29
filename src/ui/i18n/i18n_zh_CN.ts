@@ -1213,10 +1213,6 @@ Make sure that you have a fresh backup.</source>
         <translation>1 个月</translation>
     </message>
     <message>
-        <source> hour(s)</source>
-        <translation>小时</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>程序 (*.exe);;所有文件 (*.*)</translation>
     </message>
@@ -1297,6 +1293,26 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Notes</source>
         <translation>注意</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5 minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

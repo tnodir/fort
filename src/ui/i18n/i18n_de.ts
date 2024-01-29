@@ -1215,10 +1215,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Monat</translation>
     </message>
     <message>
-        <source> hour(s)</source>
-        <translation>Stunde(n)</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programme (*.exe);;Alle Dateien (*.*)</translation>
     </message>
@@ -1299,6 +1295,26 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Notes</source>
         <translation>Hinweise</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5 minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

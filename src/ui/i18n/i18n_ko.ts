@@ -1215,10 +1215,6 @@ Make sure that you have a fresh backup.</source>
         <translation>달</translation>
     </message>
     <message>
-        <source> hour(s)</source>
-        <translation> 시간</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
     </message>
@@ -1299,6 +1295,26 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Notes</source>
         <translation>참고</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5 minute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

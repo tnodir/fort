@@ -1213,10 +1213,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source> hour(s)</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation></translation>
     </message>
@@ -1293,6 +1289,26 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Notes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>5 minute</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
         <translation></translation>
     </message>
 </context>
