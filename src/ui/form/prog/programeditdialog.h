@@ -73,6 +73,8 @@ private:
 
     bool validateFields() const;
     void fillApp(App &app) const;
+    void fillAppPath(App &app) const;
+    void fillAppEndTime(App &app) const;
 
     bool isWildcard() const;
 

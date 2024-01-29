@@ -642,21 +642,29 @@ void ProgramEditDialog::fillApp(App &app) const
     app.acceptZones = m_btZones->zones();
     app.rejectZones = m_btZones->uncheckedZones();
 
-    // App Path
-    {
-        const QString appPath = m_editPath->text();
-        app.appOriginPath = isWildcard() ? m_editWildcard->toPlainText() : appPath;
-        app.appPath = FileUtil::normalizePath(appPath);
-    }
+    fillAppPath(app);
+    fillAppEndTime(app);
+}
 
-    if (!app.blocked) {
-        if (m_cscBlockAppIn->checkBox()->isChecked()) {
-            const int minutes = m_cscBlockAppIn->spinBox()->value();
+void ProgramEditDialog::fillAppPath(App &app) const
+{
+    const QString appPath = m_editPath->text();
 
-            app.endTime = QDateTime::currentDateTime().addSecs(minutes * 60);
-        } else if (m_cbBlockAppAt->isChecked()) {
-            app.endTime = m_dteBlockAppAt->dateTime();
-        }
+    app.appOriginPath = isWildcard() ? m_editWildcard->toPlainText() : appPath;
+    app.appPath = FileUtil::normalizePath(appPath);
+}
+
+void ProgramEditDialog::fillAppEndTime(App &app) const
+{
+    if (app.blocked)
+        return;
+
+    if (m_cscBlockAppIn->checkBox()->isChecked()) {
+        const int minutes = m_cscBlockAppIn->spinBox()->value();
+
+        app.endTime = QDateTime::currentDateTime().addSecs(minutes * 60);
+    } else if (m_cbBlockAppAt->isChecked()) {
+        app.endTime = m_dteBlockAppAt->dateTime();
     }
 }
 
