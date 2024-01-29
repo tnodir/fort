@@ -32,7 +32,8 @@
 
 namespace {
 
-const std::array appBlockInHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
+const std::array appBlockInHourValues = { 15, 1, 5, 10, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
+    60 * 24 * 7, 60 * 24 * 30 };
 
 }
 
@@ -88,7 +89,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_btZones->setUncheckedZones(appRow.rejectZones);
 
     m_cscBlockAppIn->checkBox()->setChecked(false);
-    m_cscBlockAppIn->spinBox()->setValue(1);
+    m_cscBlockAppIn->spinBox()->setValue(30);
     m_cbBlockAppAt->setChecked(!appRow.endTime.isNull());
     m_dteBlockAppAt->setDateTime(appRow.endTime);
     m_dteBlockAppAt->setMinimumDateTime(QDateTime::currentDateTime());
@@ -222,11 +223,12 @@ void ProgramEditDialog::retranslatePathPlaceholderText()
 
 void ProgramEditDialog::retranslateAppBlockInHours()
 {
-    const QStringList list = { tr("Custom"), tr("1 hour"), tr("6 hours"), tr("12 hours"), tr("Day"),
-        tr("Week"), tr("Month") };
+    const QStringList list = { tr("Custom"), tr("1 minute"), tr("5 minute"), tr("10 minutes"),
+        tr("30 minutes"), tr("1 hour"), tr("6 hours"), tr("12 hours"), tr("Day"), tr("Week"),
+        tr("Month") };
 
     m_cscBlockAppIn->setNames(list);
-    m_cscBlockAppIn->spinBox()->setSuffix(tr(" hour(s)"));
+    m_cscBlockAppIn->spinBox()->setSuffix(tr(" minute(s)"));
 }
 
 void ProgramEditDialog::retranslateWindowTitle()
@@ -463,9 +465,8 @@ QLayout *ProgramEditDialog::setupExtraLayout()
 
     // Block after N hours
     m_cscBlockAppIn = new CheckSpinCombo();
-    m_cscBlockAppIn->spinBox()->setRange(1, 24 * 30 * 12); // ~Year
+    m_cscBlockAppIn->spinBox()->setRange(1, 60 * 24 * 30 * 12); // ~Year
     m_cscBlockAppIn->setValues(appBlockInHourValues);
-    m_cscBlockAppIn->setNamesByValues();
 
     // Block at specified date & time
     auto blockAtLayout = setupCheckDateTimeEdit();
@@ -650,9 +651,9 @@ void ProgramEditDialog::fillApp(App &app) const
 
     if (!app.blocked) {
         if (m_cscBlockAppIn->checkBox()->isChecked()) {
-            const int hours = m_cscBlockAppIn->spinBox()->value();
+            const int minutes = m_cscBlockAppIn->spinBox()->value();
 
-            app.endTime = QDateTime::currentDateTime().addSecs(hours * 60 * 60);
+            app.endTime = QDateTime::currentDateTime().addSecs(minutes * 60);
         } else if (m_cbBlockAppAt->isChecked()) {
             app.endTime = m_dteBlockAppAt->dateTime();
         }
