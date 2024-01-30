@@ -285,10 +285,7 @@ void ProgramsWindow::setupEditMenu()
     connect(m_actAddApp, &QAction::triggered, this, &ProgramsWindow::addNewProgram);
     connect(m_actAddWildcard, &QAction::triggered, this, &ProgramsWindow::addNewWildcard);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
-    connect(m_actRemoveApp, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox(
-                [&] { deleteSelectedApps(); }, tr("Are you sure to remove selected program(s)?"));
-    });
+    connect(m_actRemoveApp, &QAction::triggered, this, &ProgramsWindow::deleteSelectedApps);
     connect(m_actPurgeApps, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox([&] { ctrl()->purgeApps(); },
                 tr("Are you sure to remove all non-existent programs?"));
@@ -465,7 +462,13 @@ void ProgramsWindow::updateSelectedApps(bool blocked, bool killProcess)
 
 void ProgramsWindow::deleteSelectedApps()
 {
-    ctrl()->deleteApps(selectedAppIdList());
+    const auto appIdList = selectedAppIdList();
+    const QStringList appNames = getAppListNames(appIdList);
+
+    windowManager()->showConfirmBox([=, this] { ctrl()->deleteApps(appIdList); },
+            tr("Are you sure to remove selected program(s)?")
+                    // App names
+                    + "\n\n" + appNames.join('\n'));
 }
 
 int ProgramsWindow::appListCurrentIndex() const
@@ -482,6 +485,27 @@ QString ProgramsWindow::appListCurrentPath() const
 {
     const auto appRow = appListCurrentRow();
     return appRow.isNull() ? QString() : appRow.appPath;
+}
+
+QStringList ProgramsWindow::getAppListNames(const QVector<qint64> &appIdList, int maxCount) const
+{
+    QStringList list;
+
+    const int n = appIdList.size();
+    for (int i = 0; i < n;) {
+        const qint64 appId = appIdList[i];
+        const auto appRow = appListModel()->appRowById(appId);
+
+        ++i;
+        list.append(QString("%1) ").arg(i) + appRow.appName);
+
+        if (i >= maxCount && i < n) {
+            list.append("...");
+            i = n - 1;
+        }
+    }
+
+    return list;
 }
 
 QVector<qint64> ProgramsWindow::selectedAppIdList() const

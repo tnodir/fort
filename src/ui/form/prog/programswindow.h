@@ -83,6 +83,8 @@ private:
     AppRow appListCurrentRow() const;
     QString appListCurrentPath() const;
 
+    QStringList getAppListNames(const QVector<qint64> &appIdList, int maxCount = 4) const;
+
     QVector<qint64> selectedAppIdList() const;
 
 private:
