@@ -10,7 +10,7 @@
   @set CHECK_WIN10="Y"
 )
 @if exist ".\build\driver\ARM64\" (
-  @set PROC_ARCHS="arm64"
+  @set PROC_ARCHS="x64 arm64"
 )
 
 @set INNO_PATH=D:\Utils\Dev\InnoSetup5\ISCC.exe
