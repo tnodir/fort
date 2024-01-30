@@ -1167,14 +1167,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Bloquer dans:</translation>
     </message>
     <message>
-        <source>Block At:</source>
-        <translation>Bloquer à une heure spécifiée:</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>Pour toujours</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -1298,23 +1290,27 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>1 minute</source>
-        <translation type="unfinished"></translation>
+        <translation>1 minute</translation>
     </message>
     <message>
-        <source>5 minute</source>
-        <translation type="unfinished"></translation>
+        <source>5 minutes</source>
+        <translation>5 minutes</translation>
     </message>
     <message>
         <source>10 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>10 minutes</translation>
     </message>
     <message>
         <source>30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>30 minutes</translation>
     </message>
     <message>
         <source> minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>minute(s)</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <translation>Planifier</translation>
     </message>
 </context>
 <context>

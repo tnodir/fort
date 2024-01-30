@@ -1167,14 +1167,6 @@ Assicurati di avere un backup recente.</translation>
         <translation>Blocca ingresso:</translation>
     </message>
     <message>
-        <source>Block At:</source>
-        <translation>Blocca a:</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>Per sempre</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -1298,23 +1290,27 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>1 minute</source>
-        <translation type="unfinished"></translation>
+        <translation>1 minuto</translation>
     </message>
     <message>
-        <source>5 minute</source>
-        <translation type="unfinished"></translation>
+        <source>5 minutes</source>
+        <translation>5 minuti</translation>
     </message>
     <message>
         <source>10 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>10 minuti</translation>
     </message>
     <message>
         <source>30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>30 minuti</translation>
     </message>
     <message>
         <source> minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation> minuto/i</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <translation>Pianifica</translation>
     </message>
 </context>
 <context>

@@ -1167,14 +1167,6 @@ Make sure that you have a fresh backup.</source>
         <translation>다음 시간 후 차단:</translation>
     </message>
     <message>
-        <source>Block At:</source>
-        <translation>다음 시각에 차단:</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>영구</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>확인</translation>
     </message>
@@ -1298,23 +1290,27 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>1 minute</source>
-        <translation type="unfinished"></translation>
+        <translation>1분</translation>
     </message>
     <message>
-        <source>5 minute</source>
-        <translation type="unfinished"></translation>
+        <source>5 minutes</source>
+        <translation>5분</translation>
     </message>
     <message>
         <source>10 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>10분</translation>
     </message>
     <message>
         <source>30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>30분</translation>
     </message>
     <message>
         <source> minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>분</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <translation>예약</translation>
     </message>
 </context>
 <context>

@@ -1165,14 +1165,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Block At:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation></translation>
     </message>
@@ -1296,7 +1288,7 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>5 minute</source>
+        <source>5 minutes</source>
         <translation></translation>
     </message>
     <message>
@@ -1309,6 +1301,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source> minute(s)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Schedule</source>
         <translation></translation>
     </message>
 </context>

@@ -1165,14 +1165,6 @@ Make sure that you have a fresh backup.</source>
         <translation>阻止时长：</translation>
     </message>
     <message>
-        <source>Block At:</source>
-        <translation>阻止时间：</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>永久</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -1296,23 +1288,27 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>1 minute</source>
-        <translation type="unfinished"></translation>
+        <translation>1 分钟</translation>
     </message>
     <message>
-        <source>5 minute</source>
-        <translation type="unfinished"></translation>
+        <source>5 minutes</source>
+        <translation>5 分钟</translation>
     </message>
     <message>
         <source>10 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>10 分钟</translation>
     </message>
     <message>
         <source>30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>30 分钟</translation>
     </message>
     <message>
         <source> minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation> 分钟</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <translation>计划</translation>
     </message>
 </context>
 <context>

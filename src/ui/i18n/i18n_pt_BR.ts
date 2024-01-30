@@ -1165,14 +1165,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Bloquear em:</translation>
     </message>
     <message>
-        <source>Block At:</source>
-        <translation>Bloquear no:</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>Para sempre</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -1296,10 +1288,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>5 minute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>10 minutes</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1309,6 +1297,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source> minute(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <translation type="unfinished">Intervalo de Tempo</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

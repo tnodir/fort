@@ -1167,14 +1167,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Блокировать через:</translation>
     </message>
     <message>
-        <source>Block At:</source>
-        <translation>Блокировать в заданное время:</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>Навсегда</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
@@ -1301,7 +1293,7 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>1 минуту</translation>
     </message>
     <message>
-        <source>5 minute</source>
+        <source>5 minutes</source>
         <translation>5 минут</translation>
     </message>
     <message>
@@ -1315,6 +1307,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source> minute(s)</source>
         <translation>минут(ы)</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <translation>Запланировать</translation>
     </message>
 </context>
 <context>

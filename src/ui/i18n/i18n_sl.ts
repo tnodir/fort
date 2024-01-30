@@ -1167,14 +1167,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Blokiraj v:</translation>
     </message>
     <message>
-        <source>Block At:</source>
-        <translation>Blokiraj na:</translation>
-    </message>
-    <message>
-        <source>Forever</source>
-        <translation>Za vedno</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>Vredu</translation>
     </message>
@@ -1298,23 +1290,27 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>1 minute</source>
-        <translation type="unfinished"></translation>
+        <translation>1 minuta</translation>
     </message>
     <message>
-        <source>5 minute</source>
-        <translation type="unfinished"></translation>
+        <source>5 minutes</source>
+        <translation>5 minut</translation>
     </message>
     <message>
         <source>10 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>10 minut</translation>
     </message>
     <message>
         <source>30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>30 minut</translation>
     </message>
     <message>
         <source> minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation> minut</translation>
+    </message>
+    <message>
+        <source>Schedule</source>
+        <translation>Načrtuj</translation>
     </message>
 </context>
 <context>
