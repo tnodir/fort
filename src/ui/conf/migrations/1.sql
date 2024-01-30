@@ -140,6 +140,7 @@ CREATE TABLE app(
   accept_zones BOOLEAN NOT NULL DEFAULT 0,  -- zone indexes bit mask
   reject_zones BOOLEAN NOT NULL DEFAULT 0,  -- zone indexes bit mask
   creat_time INTEGER NOT NULL,
+  end_action INTEGER NOT NULL DEFAULT 0,
   end_time INTEGER,
   policy_id INTEGER
 );

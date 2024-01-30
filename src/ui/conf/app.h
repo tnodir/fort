@@ -7,6 +7,12 @@
 class App
 {
 public:
+    enum ScheduleAction : qint8 {
+        ScheduleBlock = 0,
+        ScheduleAllow,
+        ScheduleRemove,
+    };
+
     bool isFlagsEqual(const App &o) const;
     bool isBaseFlagsEqual(const App &o) const;
     bool isExtraFlagsEqual(const App &o) const;
@@ -29,6 +35,8 @@ public:
     bool killProcess : 1 = false;
     bool alerted : 1 = false;
 
+    qint8 scheduleAction = ScheduleBlock;
+
     int groupIndex = 0;
 
     quint32 acceptZones = 0;
@@ -41,7 +49,7 @@ public:
     QString appName;
     QString notes;
 
-    QDateTime endTime;
+    QDateTime scheduleTime;
     QDateTime creatTime;
 };
 

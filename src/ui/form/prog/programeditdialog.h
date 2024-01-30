@@ -14,12 +14,12 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
-class CheckSpinCombo;
 class ConfManager;
 class FirewallConf;
 class FortManager;
 class PlainTextEdit;
 class ProgramsController;
+class SpinCombo;
 class ZonesSelector;
 
 class ProgramEditDialog : public QDialog
@@ -48,7 +48,9 @@ private:
 
     void retranslateUi();
     void retranslatePathPlaceholderText();
-    void retranslateAppBlockInMinutes();
+    void retranslateScheduleAction();
+    void retranslateScheduleType();
+    void retranslateScheduleIn();
     void retranslateWindowTitle();
 
     void setupUi();
@@ -59,11 +61,11 @@ private:
     void setupComboAppGroups();
     QLayout *setupLogLayout();
     QLayout *setupAllowLayout();
-    QLayout *setupExtraLayout();
+    QLayout *setupOptionsLayout();
     QLayout *setupZonesLayout();
-    QLayout *setupCheckDateTimeEdit();
-    void setupAllowEclusiveGroup();
-    void setupAllowConnections();
+    QLayout *setupScheduleLayout();
+    void setupCbSchedule();
+    void setupComboScheduleType();
 
     void fillEditName();
 
@@ -105,10 +107,11 @@ private:
     QRadioButton *m_rbBlockApp = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
     ZonesSelector *m_btZones = nullptr;
-    CheckSpinCombo *m_cscBlockAppIn = nullptr;
-    QCheckBox *m_cbBlockAppAt = nullptr;
-    QDateTimeEdit *m_dteBlockAppAt = nullptr;
-    QCheckBox *m_cbBlockAppNone = nullptr;
+    QCheckBox *m_cbSchedule = nullptr;
+    QComboBox *m_comboScheduleAction = nullptr;
+    QComboBox *m_comboScheduleType = nullptr;
+    SpinCombo *m_scScheduleIn = nullptr;
+    QDateTimeEdit *m_dteScheduleAt = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 

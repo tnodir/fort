@@ -69,6 +69,16 @@ void ControlUtil::setComboBoxTexts(QComboBox *c, const QStringList &texts, int c
     c->setCurrentIndex(currentIndex);
 }
 
+void ControlUtil::setComboBoxIcons(QComboBox *c, const QStringList &iconPaths)
+{
+    int index = 0;
+    for (const QString &iconPath : iconPaths) {
+        c->setItemIcon(index, IconCache::icon(iconPath));
+
+        ++index;
+    }
+}
+
 QPushButton *ControlUtil::createButton(const QString &iconPath, const QString &text)
 {
     auto c = new QPushButton(IconCache::icon(iconPath), text);

@@ -38,6 +38,7 @@ public:
 
     static void setComboBoxTexts(
             QComboBox *c, const QStringList &texts = {}, int currentIndex = -2);
+    static void setComboBoxIcons(QComboBox *c, const QStringList &iconPaths);
 
     static QPushButton *createButton(const QString &iconPath, const QString &text = QString());
     static QPushButton *createButton(

@@ -15,9 +15,9 @@
 #include <appinfo/appinfocache.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <form/controls/checkspincombo.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/spincombo.h>
 #include <form/controls/zonesselector.h>
 #include <form/dialog/dialogutil.h>
 #include <fortmanager.h>
@@ -36,6 +36,11 @@ const std::array appBlockInMinuteValues = { 15, 1, 5, 10, 30, 60 * 1, 60 * 6, 60
     60 * 24 * 7, 60 * 24 * 30 };
 
 }
+
+enum ScheduleTimeType : qint8 {
+    ScheduleTimeIn = 0,
+    ScheduleTimeAt,
+};
 
 ProgramEditDialog::ProgramEditDialog(ProgramsController *ctrl, QWidget *parent) :
     QDialog(parent), m_ctrl(ctrl)
@@ -69,6 +74,8 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_appRow = appRow;
     m_appIdList = appIdList;
 
+    retranslateUi();
+
     initializePathNameFields();
 
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
@@ -88,14 +95,13 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_btZones->setZones(appRow.acceptZones);
     m_btZones->setUncheckedZones(appRow.rejectZones);
 
-    m_cscBlockAppIn->checkBox()->setChecked(false);
-    m_cscBlockAppIn->spinBox()->setValue(30);
-    m_cbBlockAppAt->setChecked(!appRow.endTime.isNull());
-    m_dteBlockAppAt->setDateTime(appRow.endTime);
-    m_dteBlockAppAt->setMinimumDateTime(QDateTime::currentDateTime());
-    m_cbBlockAppNone->setChecked(appRow.endTime.isNull());
-
-    retranslateUi();
+    m_cbSchedule->setChecked(!appRow.scheduleTime.isNull());
+    m_comboScheduleAction->setCurrentIndex(appRow.scheduleAction);
+    m_comboScheduleType->setCurrentIndex(
+            appRow.scheduleTime.isNull() ? ScheduleTimeIn : ScheduleTimeAt);
+    m_scScheduleIn->spinBox()->setValue(30);
+    m_dteScheduleAt->setDateTime(appRow.scheduleTime);
+    m_dteScheduleAt->setMinimumDateTime(QDateTime::currentDateTime());
 }
 
 void ProgramEditDialog::initializePathNameFields()
@@ -190,11 +196,11 @@ void ProgramEditDialog::retranslateUi()
 
     m_btZones->retranslateUi();
 
-    m_cscBlockAppIn->checkBox()->setText(tr("Block In:"));
-    retranslateAppBlockInMinutes();
-    m_cbBlockAppAt->setText(tr("Block At:"));
-    m_dteBlockAppAt->unsetLocale();
-    m_cbBlockAppNone->setText(tr("Forever"));
+    m_cbSchedule->setText(tr("Schedule"));
+    retranslateScheduleAction();
+    retranslateScheduleType();
+    retranslateScheduleIn();
+    m_dteScheduleAt->unsetLocale();
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -221,14 +227,31 @@ void ProgramEditDialog::retranslatePathPlaceholderText()
     m_editWildcard->setPlaceholderText(placeholderText);
 }
 
-void ProgramEditDialog::retranslateAppBlockInMinutes()
+void ProgramEditDialog::retranslateScheduleAction()
+{
+    const QStringList list = { tr("Block"), tr("Allow"), tr("Remove") };
+
+    ControlUtil::setComboBoxTexts(m_comboScheduleAction, list);
+
+    ControlUtil::setComboBoxIcons(m_comboScheduleAction,
+            { ":/icons/deny.png", ":/icons/accept.png", ":/icons/delete.png" });
+}
+
+void ProgramEditDialog::retranslateScheduleType()
+{
+    const QStringList list = { tr("In:"), tr("At:") };
+
+    ControlUtil::setComboBoxTexts(m_comboScheduleType, list);
+}
+
+void ProgramEditDialog::retranslateScheduleIn()
 {
     const QStringList list = { tr("Custom"), tr("1 minute"), tr("5 minutes"), tr("10 minutes"),
         tr("30 minutes"), tr("1 hour"), tr("6 hours"), tr("12 hours"), tr("Day"), tr("Week"),
         tr("Month") };
 
-    m_cscBlockAppIn->setNames(list);
-    m_cscBlockAppIn->spinBox()->setSuffix(tr(" minute(s)"));
+    m_scScheduleIn->setNames(list);
+    m_scScheduleIn->spinBox()->setSuffix(tr(" minute(s)"));
 }
 
 void ProgramEditDialog::retranslateWindowTitle()
@@ -247,11 +270,8 @@ void ProgramEditDialog::setupUi()
     // Allow/Block
     auto allowLayout = setupAllowLayout();
 
-    // Extra Allow/Block Options
-    auto extraLayout = setupExtraLayout();
-
-    // Allow/Block Connections
-    setupAllowConnections();
+    // Options
+    auto optionsLayout = setupOptionsLayout();
 
     // OK/Cancel
     auto buttonsLayout = new QHBoxLayout();
@@ -264,7 +284,7 @@ void ProgramEditDialog::setupUi()
     m_btOk->setDefault(true);
 
     m_btCancel = new QPushButton();
-    connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
+    connect(m_btCancel, &QAbstractButton::clicked, this, &QDialog::reject);
 
     buttonsLayout->addWidget(m_btOk, 1, Qt::AlignRight);
     buttonsLayout->addWidget(m_btCancel);
@@ -277,7 +297,7 @@ void ProgramEditDialog::setupUi()
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(allowLayout);
     layout->addWidget(ControlUtil::createSeparator());
-    layout->addLayout(extraLayout);
+    layout->addLayout(optionsLayout);
     layout->addStretch();
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
@@ -337,7 +357,6 @@ QLayout *ProgramEditDialog::setupAppLayout()
 
     // Kill Child
     m_cbKillChild = new QCheckBox();
-
     connect(m_cbKillChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnDangerousOption);
 
     layout->addRow(QString(), m_cbKillChild);
@@ -451,6 +470,8 @@ QLayout *ProgramEditDialog::setupAllowLayout()
     m_rbKillProcess = new QRadioButton();
     m_rbKillProcess->setIcon(IconCache::icon(":/icons/scull.png"));
 
+    connect(m_rbKillProcess, &QRadioButton::clicked, this, &ProgramEditDialog::warnDangerousOption);
+
     allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
     allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignHCenter);
     allowLayout->addWidget(m_rbKillProcess, 1, Qt::AlignLeft);
@@ -458,30 +479,17 @@ QLayout *ProgramEditDialog::setupAllowLayout()
     return allowLayout;
 }
 
-QLayout *ProgramEditDialog::setupExtraLayout()
+QLayout *ProgramEditDialog::setupOptionsLayout()
 {
     // Zones
     auto zonesLayout = setupZonesLayout();
 
-    // Block after N minutes
-    m_cscBlockAppIn = new CheckSpinCombo();
-    m_cscBlockAppIn->spinBox()->setRange(1, 60 * 24 * 30 * 12); // ~Year
-    m_cscBlockAppIn->setValues(appBlockInMinuteValues);
-
-    // Block at specified date & time
-    auto blockAtLayout = setupCheckDateTimeEdit();
-
-    // Allow Forever
-    m_cbBlockAppNone = new QCheckBox();
-
-    // Eclusive End Time CheckBoxes Group
-    setupAllowEclusiveGroup();
+    // Schedule
+    auto scheduleLayout = setupScheduleLayout();
 
     auto layout = new QVBoxLayout();
     layout->addLayout(zonesLayout);
-    layout->addWidget(m_cscBlockAppIn);
-    layout->addLayout(blockAtLayout);
-    layout->addWidget(m_cbBlockAppNone);
+    layout->addLayout(scheduleLayout);
 
     return layout;
 }
@@ -502,37 +510,58 @@ QLayout *ProgramEditDialog::setupZonesLayout()
     return layout;
 }
 
-QLayout *ProgramEditDialog::setupCheckDateTimeEdit()
+QLayout *ProgramEditDialog::setupScheduleLayout()
 {
-    m_cbBlockAppAt = new QCheckBox();
+    // Schedule Action
+    m_comboScheduleAction = ControlUtil::createComboBox();
+    m_comboScheduleAction->setMinimumWidth(100);
 
-    m_dteBlockAppAt = new QDateTimeEdit();
-    m_dteBlockAppAt->setCalendarPopup(true);
+    // Schedule Type
+    setupComboScheduleType();
 
-    return ControlUtil::createRowLayout(m_cbBlockAppAt, m_dteBlockAppAt);
+    // Schedule after N minutes
+    m_scScheduleIn = new SpinCombo();
+    m_scScheduleIn->spinBox()->setRange(1, 60 * 24 * 30 * 12); // ~Year
+    m_scScheduleIn->setValues(appBlockInMinuteValues);
+
+    // Schedule to a specified date & time
+    m_dteScheduleAt = new QDateTimeEdit();
+    m_dteScheduleAt->setCalendarPopup(true);
+
+    // Schedule Check Box
+    setupCbSchedule();
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbSchedule, m_comboScheduleAction,
+            m_comboScheduleType, /*stretch*/ nullptr, m_scScheduleIn, m_dteScheduleAt });
+
+    return layout;
 }
 
-void ProgramEditDialog::setupAllowEclusiveGroup()
+void ProgramEditDialog::setupCbSchedule()
 {
-    auto group = new QButtonGroup(this);
-    group->setExclusive(true);
-    group->addButton(m_cscBlockAppIn->checkBox());
-    group->addButton(m_cbBlockAppAt);
-    group->addButton(m_cbBlockAppNone);
+    m_cbSchedule = new QCheckBox();
+
+    const auto refreshScheduleEnabled = [&](bool checked) {
+        m_comboScheduleAction->setEnabled(checked);
+        m_comboScheduleType->setEnabled(checked);
+        m_scScheduleIn->setEnabled(checked);
+        m_dteScheduleAt->setEnabled(checked);
+    };
+
+    refreshScheduleEnabled(false);
+
+    connect(m_cbSchedule, &QCheckBox::toggled, this, refreshScheduleEnabled);
 }
 
-void ProgramEditDialog::setupAllowConnections()
+void ProgramEditDialog::setupComboScheduleType()
 {
-    connect(m_rbAllowApp, &QRadioButton::toggled, this, [&](bool checked) {
-        m_cbLanOnly->setEnabled(checked);
-        m_btZones->setEnabled(checked);
-        m_cbBlockAppNone->setEnabled(checked);
-        m_cscBlockAppIn->setEnabled(checked);
-        m_cbBlockAppAt->setEnabled(checked);
-        m_dteBlockAppAt->setEnabled(checked);
+    m_comboScheduleType = ControlUtil::createComboBox();
+
+    connect(m_comboScheduleType, &QComboBox::currentIndexChanged, this, [&](int index) {
+        const bool isTimeIn = (index == ScheduleTimeIn);
+        m_scScheduleIn->setVisible(isTimeIn);
+        m_dteScheduleAt->setVisible(!isTimeIn);
     });
-
-    connect(m_rbKillProcess, &QRadioButton::clicked, this, &ProgramEditDialog::warnDangerousOption);
 }
 
 void ProgramEditDialog::fillEditName()
@@ -656,15 +685,20 @@ void ProgramEditDialog::fillAppPath(App &app) const
 
 void ProgramEditDialog::fillAppEndTime(App &app) const
 {
-    if (app.blocked)
+    if (!m_cbSchedule->isChecked()) {
+        app.scheduleAction = App::ScheduleBlock;
+        app.scheduleTime = {};
         return;
+    }
 
-    if (m_cscBlockAppIn->checkBox()->isChecked()) {
-        const int minutes = m_cscBlockAppIn->spinBox()->value();
+    app.scheduleAction = m_comboScheduleAction->currentIndex();
 
-        app.endTime = QDateTime::currentDateTime().addSecs(minutes * 60);
-    } else if (m_cbBlockAppAt->isChecked()) {
-        app.endTime = m_dteBlockAppAt->dateTime();
+    if (m_comboScheduleType->currentIndex() == ScheduleTimeIn) {
+        const int minutes = m_scScheduleIn->spinBox()->value();
+
+        app.scheduleTime = QDateTime::currentDateTime().addSecs(minutes * 60);
+    } else {
+        app.scheduleTime = m_dteScheduleAt->dateTime();
     }
 }
 

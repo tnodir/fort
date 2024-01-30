@@ -46,6 +46,7 @@ constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
     "    t.kill_process,"                                                                          \
     "    t.accept_zones,"                                                                          \
     "    t.reject_zones,"                                                                          \
+    "    t.end_action,"                                                                            \
     "    t.end_time,"                                                                              \
     "    g.order_index as group_index,"                                                            \
     "    (alert.app_id IS NOT NULL) as alerted"
@@ -63,12 +64,12 @@ const char *const sqlSelectAppsToPurge = "SELECT app_id, path FROM app"
                                          "  WHERE is_wildcard = 0 AND parked = 0;";
 
 const char *const sqlSelectMinEndApp = "SELECT MIN(end_time) FROM app"
-                                       "  WHERE end_time != 0 AND blocked = 0;";
+                                       "  WHERE end_time != 0;";
 
 const char *const sqlSelectEndedApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
                                        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
                                        "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
-                                       "  WHERE end_time <= ?1 AND blocked = 0;";
+                                       "  WHERE end_time <= ?1;";
 
 const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1;";
 
@@ -76,16 +77,17 @@ const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, pat
                                  "    is_wildcard, use_group_perm, apply_child, kill_child,"
                                  "    lan_only, parked, log_blocked, log_conn,"
                                  "    blocked, kill_process, accept_zones, reject_zones,"
-                                 "    end_time, creat_time)"
-                                 "  VALUES(?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9,"
-                                 "    ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20)"
+                                 "    end_action, end_time, creat_time)"
+                                 "  VALUES(?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
+                                 "    ?15, ?16, ?17, ?18, ?19, ?20, ?21)"
                                  "  ON CONFLICT(path) DO UPDATE"
                                  "  SET app_group_id = ?2, origin_path = ?3, name = ?5,"
                                  "    notes = ?6, is_wildcard = ?7, use_group_perm = ?8,"
                                  "    apply_child = ?9, kill_child = ?10, lan_only = ?11,"
                                  "    parked = ?12, log_blocked = ?13, log_conn = ?14,"
                                  "    blocked = ?15, kill_process = ?16,"
-                                 "    accept_zones = ?17, reject_zones = ?18, end_time = ?19"
+                                 "    accept_zones = ?17, reject_zones = ?18,"
+                                 "    end_action = ?19, end_time = ?20"
                                  "  RETURNING app_id;";
 
 const char *const sqlUpdateApp = "UPDATE app"
@@ -94,7 +96,8 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    apply_child = ?9, kill_child = ?10, lan_only = ?11,"
                                  "    parked = ?12, log_blocked = ?13, log_conn = ?14,"
                                  "    blocked = ?15, kill_process = ?16,"
-                                 "    accept_zones = ?17, reject_zones = ?18, end_time = ?19"
+                                 "    accept_zones = ?17, reject_zones = ?18,"
+                                 "    end_action = ?19, end_time = ?20"
                                  "  WHERE app_id = ?1"
                                  "  RETURNING app_id;";
 
@@ -106,8 +109,7 @@ const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);
 
 const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
 
-const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2, kill_process = ?3,"
-                                        "    end_time = NULL"
+const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2, kill_process = ?3"
                                         "  WHERE app_id = ?1;";
 
 using AppsMap = QHash<qint64, QString>;
@@ -202,7 +204,7 @@ void ConfAppManager::beginAddOrUpdateApp(
             << app.appName << app.notes << app.isWildcard << app.useGroupPerm << app.applyChild
             << app.killChild << app.lanOnly << app.parked << app.logBlocked << app.logConn
             << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
-            << SqliteStmt::nullable(app.endTime)
+            << app.scheduleAction << SqliteStmt::nullable(app.scheduleTime)
             << SqliteStmt::nullable(QDateTime::currentDateTime(), onlyUpdate);
 
     const char *sql = onlyUpdate ? sqlUpdateApp : sqlUpsertApp;
@@ -215,7 +217,7 @@ void ConfAppManager::beginAddOrUpdateApp(
 
 void ConfAppManager::endAddOrUpdateApp(const App &app, bool onlyUpdate)
 {
-    if (!app.endTime.isNull()) {
+    if (!app.scheduleTime.isNull()) {
         updateAppEndTimer();
     }
 
@@ -515,6 +517,8 @@ bool ConfAppManager::saveAppBlocked(const App &app)
 
 void ConfAppManager::updateAppEndTimes()
 {
+    QVector<qint64> appIdListToRemove;
+
     SqliteStmt stmt;
     if (!stmt.prepare(sqliteDb()->db(), sqlSelectEndedApps))
         return;
@@ -525,11 +529,19 @@ void ConfAppManager::updateAppEndTimes()
         App app;
         fillApp(app, stmt);
 
-        app.blocked = true;
-        app.killProcess = false;
-        app.endTime = {};
+        if (app.scheduleAction == App::ScheduleRemove) {
+            appIdListToRemove.append(app.appId);
+        } else {
+            app.blocked = (app.scheduleAction == App::ScheduleBlock);
+            app.killProcess = false;
+            app.scheduleTime = {};
 
-        updateApp(app);
+            updateApp(app);
+        }
+    }
+
+    if (!appIdListToRemove.isEmpty()) {
+        deleteApps(appIdListToRemove);
     }
 
     updateAppEndTimer();
@@ -593,9 +605,10 @@ void ConfAppManager::fillApp(App &app, const SqliteStmt &stmt)
     app.killProcess = stmt.columnBool(14);
     app.acceptZones = stmt.columnUInt(15);
     app.rejectZones = stmt.columnUInt(16);
-    app.endTime = stmt.columnDateTime(17);
-    app.groupIndex = stmt.columnInt(18);
-    app.alerted = stmt.columnBool(19);
+    app.scheduleAction = stmt.columnInt(17);
+    app.scheduleTime = stmt.columnDateTime(18);
+    app.groupIndex = stmt.columnInt(19);
+    app.alerted = stmt.columnBool(20);
 }
 
 bool ConfAppManager::updateDriverDeleteApp(const QString &appPath)

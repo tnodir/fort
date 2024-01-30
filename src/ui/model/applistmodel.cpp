@@ -43,6 +43,20 @@ QString appStateIconPath(const AppRow &appRow)
     return ":/icons/accept.png";
 }
 
+QString appScheduleIconPath(const AppRow &appRow)
+{
+    switch (appRow.scheduleAction) {
+    case App::ScheduleBlock:
+        return ":/icons/deny.png";
+    case App::ScheduleAllow:
+        return ":/icons/accept.png";
+    case App::ScheduleRemove:
+        return ":/icons/delete.png";
+    }
+
+    return {};
+}
+
 QColor appStateColor(const AppRow &appRow)
 {
     if (appRow.killProcess)
@@ -80,7 +94,10 @@ QIcon appParkedIcon(const AppRow &appRow)
 
 QIcon appScheduledIcon(const AppRow &appRow)
 {
-    return !appRow.endTime.isNull() ? IconCache::icon(":/icons/time.png") : QIcon();
+    if (appRow.scheduleTime.isNull())
+        return QIcon();
+
+    return IconCache::icon(appScheduleIconPath(appRow));
 }
 
 QString makeFtsFilterMatch(const QString &filter)
@@ -195,10 +212,10 @@ QVariant dataDisplayParked(const AppRow & /*appRow*/, int /*role*/)
 
 QVariant dataDisplayScheduled(const AppRow &appRow, int role)
 {
-    if (role != Qt::ToolTipRole || appRow.endTime.isNull())
+    if (role != Qt::ToolTipRole || appRow.scheduleTime.isNull())
         return QString();
 
-    return DateUtil::localeDateTime(appRow.endTime);
+    return DateUtil::localeDateTime(appRow.scheduleTime);
 }
 
 QVariant dataDisplayFilePath(const AppRow &appRow, int /*role*/)
@@ -426,10 +443,11 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, Ap
     appRow.killProcess = stmt.columnBool(14);
     appRow.acceptZones = stmt.columnUInt(15);
     appRow.rejectZones = stmt.columnUInt(16);
-    appRow.endTime = stmt.columnDateTime(17);
-    appRow.creatTime = stmt.columnDateTime(18);
-    appRow.groupIndex = stmt.columnInt(19);
-    appRow.alerted = stmt.columnBool(20);
+    appRow.scheduleAction = stmt.columnInt(17);
+    appRow.scheduleTime = stmt.columnDateTime(18);
+    appRow.creatTime = stmt.columnDateTime(19);
+    appRow.groupIndex = stmt.columnInt(20);
+    appRow.alerted = stmt.columnBool(21);
 
     return true;
 }
@@ -496,6 +514,7 @@ QString AppListModel::sqlBase() const
            "    t.kill_process,"
            "    t.accept_zones,"
            "    t.reject_zones,"
+           "    t.end_action,"
            "    t.end_time,"
            "    t.creat_time,"
            "    g.order_index as group_index,"
