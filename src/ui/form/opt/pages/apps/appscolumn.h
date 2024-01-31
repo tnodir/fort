@@ -3,7 +3,6 @@
 
 #include <QWidget>
 
-QT_FORWARD_DECLARE_CLASS(QHBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 
 class PlainTextEdit;
@@ -15,24 +14,31 @@ class AppsColumn : public QWidget
 public:
     explicit AppsColumn(const QString &iconPath, QWidget *parent = nullptr);
 
-    QHBoxLayout *headerLayout() const { return m_headerLayout; }
+    QLayout *headerLayout() const { return m_headerLayout; }
     QLabel *icon() const { return m_icon; }
+    QToolButton *btClear() const { return m_btClear; }
     QLabel *labelTitle() const { return m_labelTitle; }
     PlainTextEdit *editText() const { return m_editText; }
+
+    void setText(const QString &text);
 
 signals:
     void textEdited(const QString &text);
 
 private:
     void setupUi();
+    QLayout *setupHeaderLayout();
     void setupTextEdit();
     void setupIcon(const QString &iconPath);
+
+    void updateBtClear();
 
     void onTextChanged();
 
 private:
-    QHBoxLayout *m_headerLayout = nullptr;
+    QLayout *m_headerLayout = nullptr;
     QLabel *m_icon = nullptr;
+    QToolButton *m_btClear = nullptr;
     QLabel *m_labelTitle = nullptr;
     PlainTextEdit *m_editText = nullptr;
 };

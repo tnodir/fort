@@ -165,8 +165,11 @@ void ApplicationsPage::onRetranslateUi()
     m_ctpGroupPeriod->checkBox()->setText(tr("time period:"));
 
     m_killApps->labelTitle()->setText(tr("Kill Process"));
+    m_killApps->btClear()->setText(tr("Clear"));
     m_blockApps->labelTitle()->setText(tr("Block"));
+    m_blockApps->btClear()->setText(tr("Clear"));
     m_allowApps->labelTitle()->setText(tr("Allow"));
+    m_allowApps->btClear()->setText(tr("Clear"));
 
     auto splitterHandle = m_allowSplitter->handle();
     splitterHandle->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Allow'"));
@@ -601,9 +604,9 @@ void ApplicationsPage::updateGroup()
     m_ctpGroupPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(appGroup->periodFrom()));
     m_ctpGroupPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(appGroup->periodTo()));
 
-    m_killApps->editText()->setText(appGroup->killText());
-    m_blockApps->editText()->setText(appGroup->blockText());
-    m_allowApps->editText()->setText(appGroup->allowText());
+    m_killApps->setText(appGroup->killText());
+    m_blockApps->setText(appGroup->blockText());
+    m_allowApps->setText(appGroup->allowText());
 }
 
 void ApplicationsPage::setupAppGroup()
