@@ -381,7 +381,12 @@ void WindowManager::showProgramAlertWindow()
         setupProgramAlertWindow();
     }
 
-    showWindow(m_progAlertWindow);
+    if (m_progAlertWindow->isEmpty()) {
+        closeProgramAlertWindow();
+        showProgramsWindow();
+    } else {
+        showWindow(m_progAlertWindow);
+    }
 }
 
 void WindowManager::closeProgramAlertWindow()

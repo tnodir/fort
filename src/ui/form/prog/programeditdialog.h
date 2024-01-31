@@ -39,6 +39,8 @@ public:
     IniUser *iniUser() const;
     AppListModel *appListModel() const;
 
+    bool isEmpty() const { return m_appRow.appId == 0; }
+
     void initialize(const AppRow &appRow, const QVector<qint64> &appIdList = {});
 
     void activate();
