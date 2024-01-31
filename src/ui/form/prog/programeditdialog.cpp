@@ -43,7 +43,7 @@ enum ScheduleTimeType : qint8 {
 };
 
 ProgramEditDialog::ProgramEditDialog(ProgramsController *ctrl, QWidget *parent) :
-    QDialog(parent), m_ctrl(ctrl)
+    WidgetWindow(parent), m_ctrl(ctrl)
 {
     setupUi();
     setupController();
@@ -284,7 +284,7 @@ void ProgramEditDialog::setupUi()
     m_btOk->setDefault(true);
 
     m_btCancel = new QPushButton();
-    connect(m_btCancel, &QAbstractButton::clicked, this, &QDialog::reject);
+    connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     buttonsLayout->addWidget(m_btOk, 1, Qt::AlignRight);
     buttonsLayout->addWidget(m_btCancel);
@@ -307,9 +307,8 @@ void ProgramEditDialog::setupUi()
     // Font
     this->setFont(WindowManager::defaultFont());
 
-    // Modality & Size Grip
+    // Modality
     this->setWindowModality(Qt::WindowModal);
-    this->setSizeGripEnabled(true);
 
     // Size
     this->setMinimumWidth(500);

@@ -1,9 +1,8 @@
 #ifndef PROGRAMEDITDIALOG_H
 #define PROGRAMEDITDIALOG_H
 
-#include <QDialog>
-
 #include <model/applistmodel.h>
+#include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
@@ -22,7 +21,7 @@ class ProgramsController;
 class SpinCombo;
 class ZonesSelector;
 
-class ProgramEditDialog : public QDialog
+class ProgramEditDialog : public WidgetWindow
 {
     Q_OBJECT
 

@@ -86,6 +86,7 @@ SOURCES += \
     form/policy/policieswindow.cpp \
     form/policy/policyeditdialog.cpp \
     form/policy/policylistbox.cpp \
+    form/prog/programalertwindow.cpp \
     form/prog/programeditdialog.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
@@ -287,6 +288,7 @@ HEADERS += \
     form/policy/policieswindow.h \
     form/policy/policyeditdialog.h \
     form/policy/policylistbox.h \
+    form/prog/programalertwindow.h \
     form/prog/programeditdialog.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \

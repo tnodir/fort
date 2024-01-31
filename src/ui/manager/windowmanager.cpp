@@ -18,6 +18,7 @@
 #include <form/home/homewindow.h>
 #include <form/opt/optionswindow.h>
 #include <form/policy/policieswindow.h>
+#include <form/prog/programalertwindow.h>
 #include <form/prog/programswindow.h>
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
@@ -160,6 +161,15 @@ void WindowManager::setupProgramsWindow()
     connect(m_progWindow, &ProgramsWindow::aboutToClose, this, &WindowManager::closeProgramsWindow);
     connect(m_progWindow, &ProgramsWindow::activationChanged, m_trayIcon,
             [&] { m_trayIcon->updateTrayIcon(/*alerted=*/false); });
+}
+
+void WindowManager::setupProgramAlertWindow()
+{
+    m_progAlertWindow = new ProgramAlertWindow();
+    m_progAlertWindow->restoreWindowState();
+
+    connect(m_progAlertWindow, &ProgramAlertWindow::aboutToClose, this,
+            &WindowManager::closeProgramAlertWindow);
 }
 
 void WindowManager::setupOptionsWindow()
@@ -330,16 +340,18 @@ void WindowManager::showHomeWindowAbout()
     homeWindow()->selectAboutTab();
 }
 
-void WindowManager::showProgramsWindow()
+bool WindowManager::showProgramsWindow()
 {
     if (!checkWindowPassword(WindowPrograms))
-        return;
+        return false;
 
     if (!m_progWindow) {
         setupProgramsWindow();
     }
 
     showWindow(m_progWindow);
+
+    return true;
 }
 
 void WindowManager::closeProgramsWindow()
@@ -351,10 +363,8 @@ void WindowManager::closeProgramsWindow()
 
 bool WindowManager::showProgramEditForm(const QString &appPath)
 {
-    showProgramsWindow();
-
-    if (!(m_progWindow && m_progWindow->isVisible()))
-        return false; // May be not opened due to password checking
+    if (!showProgramsWindow())
+        return false;
 
     if (!m_progWindow->editProgramByPath(appPath)) {
         showErrorBox(tr("Please close already opened Edit Program window and try again."));
@@ -362,6 +372,25 @@ bool WindowManager::showProgramEditForm(const QString &appPath)
     }
 
     return true;
+}
+
+void WindowManager::showProgramAlertWindow()
+{
+    if (!checkWindowPassword(WindowProgramAlert))
+        return;
+
+    if (!m_progAlertWindow) {
+        setupProgramAlertWindow();
+    }
+
+    showWindow(m_progAlertWindow);
+}
+
+void WindowManager::closeProgramAlertWindow()
+{
+    if (closeWindow(m_progAlertWindow)) {
+        m_progAlertWindow = nullptr;
+    }
 }
 
 void WindowManager::showOptionsWindow()
@@ -698,7 +727,7 @@ void WindowManager::onTrayMessageClicked()
         showZonesWindow();
     } break;
     case TrayMessageAlert: {
-        showProgramsWindow();
+        showProgramAlertWindow();
     } break;
     default:
         showOptionsWindow();

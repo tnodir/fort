@@ -14,6 +14,7 @@ class IniUser;
 class MainWindow;
 class OptionsWindow;
 class PoliciesWindow;
+class ProgramAlertWindow;
 class ProgramsWindow;
 class ServicesWindow;
 class StatisticsWindow;
@@ -39,6 +40,7 @@ public:
     MainWindow *mainWindow() const { return m_mainWindow; }
     HomeWindow *homeWindow() const { return m_homeWindow; }
     ProgramsWindow *progWindow() const { return m_progWindow; }
+    ProgramAlertWindow *progAlertWindow() const { return m_progAlertWindow; }
     PoliciesWindow *policiesWindow() const { return m_policiesWindow; }
     OptionsWindow *optWindow() const { return m_optWindow; }
     StatisticsWindow *connWindow() const { return m_statWindow; }
@@ -77,10 +79,13 @@ public slots:
     void exposeHomeWindow();
     void showHomeWindowAbout();
 
-    void showProgramsWindow();
+    bool showProgramsWindow();
     void closeProgramsWindow();
 
     bool showProgramEditForm(const QString &appPath);
+
+    void showProgramAlertWindow();
+    void closeProgramAlertWindow();
 
     void showOptionsWindow();
     void closeOptionsWindow();
@@ -139,6 +144,7 @@ private:
 
     void setupHomeWindow();
     void setupProgramsWindow();
+    void setupProgramAlertWindow();
     void setupOptionsWindow();
     void setupPoliciesWindow();
     void setupServicesWindow();
@@ -176,6 +182,7 @@ private:
     MainWindow *m_mainWindow = nullptr;
     HomeWindow *m_homeWindow = nullptr;
     ProgramsWindow *m_progWindow = nullptr;
+    ProgramAlertWindow *m_progAlertWindow = nullptr;
     OptionsWindow *m_optWindow = nullptr;
     PoliciesWindow *m_policiesWindow = nullptr;
     StatisticsWindow *m_statWindow = nullptr;

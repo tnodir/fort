@@ -6,16 +6,17 @@
 enum WindowCode {
     WindowHome = (1 << 0),
     WindowPrograms = (1 << 1),
-    WindowServices = (1 << 2),
-    WindowOptions = (1 << 3),
-    WindowPolicies = (1 << 4),
-    WindowStatistics = (1 << 5),
-    WindowZones = (1 << 6),
-    WindowGraph = (1 << 7),
-    WindowPasswordDialog = (1 << 8),
+    WindowProgramAlert = (1 << 2),
+    WindowServices = (1 << 3),
+    WindowOptions = (1 << 4),
+    WindowPolicies = (1 << 5),
+    WindowStatistics = (1 << 6),
+    WindowZones = (1 << 7),
+    WindowGraph = (1 << 8),
+    WindowPasswordDialog = (1 << 9),
 };
 
-constexpr quint32 WindowPasswordProtected = (WindowPrograms | WindowServices | WindowOptions
-        | WindowPolicies | WindowStatistics | WindowZones);
+constexpr quint32 WindowPasswordProtected = (WindowPrograms | WindowProgramAlert | WindowServices
+        | WindowOptions | WindowPolicies | WindowStatistics | WindowZones);
 
 #endif // WINDOWTYPES_H
