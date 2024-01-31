@@ -13,9 +13,11 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
+class ConfAppManager;
 class ConfManager;
 class FirewallConf;
 class FortManager;
+class IniUser;
 class PlainTextEdit;
 class ProgramsController;
 class SpinCombo;
@@ -31,11 +33,13 @@ public:
 
     ProgramsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
+    ConfAppManager *confAppManager() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
+    IniUser *iniUser() const;
     AppListModel *appListModel() const;
 
-    void initialize(const AppRow &appRow, const QVector<qint64> &appIdList);
+    void initialize(const AppRow &appRow, const QVector<qint64> &appIdList = {});
 
     void activate();
 

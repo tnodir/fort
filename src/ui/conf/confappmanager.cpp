@@ -66,6 +66,8 @@ const char *const sqlSelectAppsToPurge = "SELECT app_id, path FROM app"
 const char *const sqlSelectMinEndApp = "SELECT MIN(end_time) FROM app"
                                        "  WHERE end_time != 0;";
 
+const char *const sqlSelectMinAlertAppId = "SELECT MIN(app_id) FROM app_alert;";
+
 const char *const sqlSelectEndedApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
                                        "    JOIN app_group g ON g.app_group_id = t.app_group_id"
                                        "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
@@ -545,6 +547,11 @@ void ConfAppManager::updateAppEndTimes()
     }
 
     updateAppEndTimer();
+}
+
+qint64 ConfAppManager::getAlertAppId()
+{
+    return sqliteDb()->executeEx(sqlSelectMinAlertAppId).toLongLong();
 }
 
 bool ConfAppManager::updateDriverConf(bool onlyFlags)

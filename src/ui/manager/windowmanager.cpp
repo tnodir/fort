@@ -159,8 +159,6 @@ void WindowManager::setupProgramsWindow()
     m_progWindow->restoreWindowState();
 
     connect(m_progWindow, &ProgramsWindow::aboutToClose, this, &WindowManager::closeProgramsWindow);
-    connect(m_progWindow, &ProgramsWindow::activationChanged, m_trayIcon,
-            [&] { m_trayIcon->updateTrayIcon(/*alerted=*/false); });
 }
 
 void WindowManager::setupProgramAlertWindow()

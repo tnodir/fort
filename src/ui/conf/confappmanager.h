@@ -48,6 +48,8 @@ public:
     bool saveAppBlocked(const App &app);
     void updateAppEndTimes();
 
+    qint64 getAlertAppId();
+
     virtual bool updateDriverConf(bool onlyFlags = false);
 
 signals:

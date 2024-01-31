@@ -807,6 +807,10 @@ void TrayIcon::onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkT
 void TrayIcon::onWindowVisibilityChanged(quint32 code, bool isVisible)
 {
     switch (code) {
+    case WindowPrograms:
+    case WindowProgramAlert: {
+        updateTrayIcon(/*alerted=*/false);
+    } break;
     case WindowOptions: {
         updateTrayMenuFlags();
     } break;

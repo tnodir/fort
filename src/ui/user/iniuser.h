@@ -95,6 +95,12 @@ public:
     QByteArray progAppsHeader() const { return valueByteArray("progWindow/appsHeader"); }
     void setProgAppsHeader(const QByteArray &v) { setValue("progWindow/appsHeader", v); }
 
+    QRect progAlertWindowGeometry() const { return value("progAlertWindow/geometry").toRect(); }
+    void setProgAlertWindowGeometry(const QRect &v) { setValue("progAlertWindow/geometry", v); }
+
+    bool progAlertWindowMaximized() const { return valueBool("progAlertWindow/maximized"); }
+    void setProgAlertWindowMaximized(bool on) { setValue("progAlertWindow/maximized", on); }
+
     QRect optWindowGeometry() const { return value("optWindow/geometry").toRect(); }
     void setOptWindowGeometry(const QRect &v) { setValue("optWindow/geometry", v); }
 

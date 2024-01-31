@@ -54,6 +54,11 @@ FortManager *ProgramEditDialog::fortManager() const
     return ctrl()->fortManager();
 }
 
+ConfAppManager *ProgramEditDialog::confAppManager() const
+{
+    return ctrl()->confAppManager();
+}
+
 ConfManager *ProgramEditDialog::confManager() const
 {
     return ctrl()->confManager();
@@ -62,6 +67,11 @@ ConfManager *ProgramEditDialog::confManager() const
 FirewallConf *ProgramEditDialog::conf() const
 {
     return ctrl()->conf();
+}
+
+IniUser *ProgramEditDialog::iniUser() const
+{
+    return ctrl()->iniUser();
 }
 
 AppListModel *ProgramEditDialog::appListModel() const
