@@ -61,6 +61,11 @@ void ProgramAlertWindow::setupStateWatcher()
     m_stateWatcher->install(this);
 }
 
+void ProgramAlertWindow::retranslateWindowTitle()
+{
+    this->setWindowTitle(tr("Alert Program"));
+}
+
 void ProgramAlertWindow::setupUi()
 {
     // Modality

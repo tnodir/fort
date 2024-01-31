@@ -28,6 +28,8 @@ private:
     void setupController();
     void setupStateWatcher();
 
+    void retranslateWindowTitle() override;
+
     void setupUi();
 
 private:

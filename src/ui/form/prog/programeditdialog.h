@@ -60,7 +60,7 @@ private:
     void retranslateScheduleAction();
     void retranslateScheduleType();
     void retranslateScheduleIn();
-    void retranslateWindowTitle();
+    virtual void retranslateWindowTitle();
 
     void setupUi();
     QLayout *setupAppLayout();
