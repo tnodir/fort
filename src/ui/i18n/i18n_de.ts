@@ -1145,6 +1145,13 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
 </context>
 <context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramEditDialog</name>
     <message>
         <source>Select File</source>

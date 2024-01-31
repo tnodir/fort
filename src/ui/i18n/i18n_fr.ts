@@ -1073,7 +1073,7 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher la fenêtre Programmes ou Alertes</translation>
     </message>
 </context>
 <context>
@@ -1142,6 +1142,13 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <message>
         <source>Edit Policy</source>
         <translation>Éditer la politique</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1322,11 +1329,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>In:</source>
-        <translation type="unfinished"></translation>
+        <translation>Dans:</translation>
     </message>
     <message>
         <source>At:</source>
-        <translation type="unfinished"></translation>
+        <translation>À&#xa0;:</translation>
     </message>
 </context>
 <context>

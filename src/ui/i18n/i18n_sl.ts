@@ -1145,6 +1145,13 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
 </context>
 <context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramEditDialog</name>
     <message>
         <source>Select File</source>

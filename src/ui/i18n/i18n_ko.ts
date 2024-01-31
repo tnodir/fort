@@ -1073,7 +1073,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램 또는 알림 창 표시</translation>
     </message>
 </context>
 <context>
@@ -1142,6 +1142,13 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Edit Policy</source>
         <translation>정책 편집</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1322,11 +1329,11 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>In:</source>
-        <translation type="unfinished"></translation>
+        <translation>수신인:</translation>
     </message>
     <message>
         <source>At:</source>
-        <translation type="unfinished"></translation>
+        <translation>위치:</translation>
     </message>
 </context>
 <context>

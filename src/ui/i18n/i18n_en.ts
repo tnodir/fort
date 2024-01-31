@@ -1143,6 +1143,13 @@ Make sure that you have a fresh backup.</source>
     </message>
 </context>
 <context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>ProgramEditDialog</name>
     <message>
         <source>Select File</source>
