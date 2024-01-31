@@ -176,8 +176,10 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::setupByIniUser);
 
-    connect(confAppManager(), &ConfAppManager::appAlerted, this,
-            [&] { updateTrayIcon(/*alerted=*/true); });
+    connect(confAppManager(), &ConfAppManager::appAlerted, this, [&] {
+        updateTrayIcon(/*alerted=*/true);
+        sendAlertMessage();
+    });
 
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this,
             &TrayIcon::updateTrayIconShape);
@@ -259,9 +261,7 @@ void TrayIcon::updateTrayIcon(bool alerted)
     m_alerted = alerted;
     m_animatedAlert = false;
 
-    sendAlertMessage();
     updateAlertTimer();
-
     updateTrayIconShape();
 }
 
@@ -548,7 +548,7 @@ void TrayIcon::updateAppGroupActions()
 
 void TrayIcon::sendAlertMessage()
 {
-    if (!(m_alerted && iniUser()->progNotifyMessage()))
+    if (!iniUser()->progNotifyMessage())
         return;
 
     windowManager()->showTrayMessage(tr("New program detected!"), WindowManager::TrayMessageAlert);
