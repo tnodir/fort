@@ -469,9 +469,10 @@ AppRow AppListModel::appRowById(qint64 appId) const
 AppRow AppListModel::appRowByPath(const QString &appPath) const
 {
     const QString normPath = FileUtil::normalizePath(appPath);
+    const qint64 appId = confAppManager()->appIdByPath(normPath);
 
-    AppRow appRow;
-    if (!updateAppRow(sqlBase() + " WHERE t.path = ?1;", { normPath }, appRow)) {
+    AppRow appRow = appRowById(appId);
+    if (appRow.appId == 0) {
         appRow.appOriginPath = appPath;
         appRow.appPath = normPath;
     }
