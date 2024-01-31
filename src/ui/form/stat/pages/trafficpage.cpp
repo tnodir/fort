@@ -133,20 +133,15 @@ void TrafficPage::setupUi()
 
 QLayout *TrafficPage::setupHeader()
 {
-    auto layout = new QHBoxLayout();
-
     m_btRefresh = ControlUtil::createFlatToolButton(
             ":/icons/arrow_refresh_small.png", [&] { trafListModel()->reset(); });
 
     setupClearMenu();
     setupTrafUnits();
 
-    layout->addWidget(m_btRefresh);
-    layout->addWidget(m_btClear);
-    layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_traphUnits);
-    layout->addWidget(m_comboTrafUnit);
-    layout->addStretch();
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btRefresh, m_btClear,
+            ControlUtil::createVSeparator(), m_traphUnits, m_comboTrafUnit,
+            /*stretch*/ nullptr });
 
     return layout;
 }
@@ -196,6 +191,7 @@ void TrafficPage::setupTrafUnits()
 
         confManager()->saveIniUser();
     });
+    m_comboTrafUnit->setMinimumWidth(100);
 }
 
 void TrafficPage::setupAppListView()
