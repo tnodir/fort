@@ -258,6 +258,10 @@
         <source>Options</source>
         <translation>Opzioni</translation>
     </message>
+    <message>
+        <source>Clear</source>
+        <translation>Cancella</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -1066,6 +1070,10 @@ Assicurati di avere un backup recente.</translation>
     <message>
         <source>Windows Service installation changed</source>
         <translation>Installazione di Windows Service modificata</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

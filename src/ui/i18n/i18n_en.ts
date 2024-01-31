@@ -258,6 +258,10 @@
         <source>Options</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Clear</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -1063,6 +1067,10 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Windows Service installation changed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
         <translation></translation>
     </message>
 </context>

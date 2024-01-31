@@ -258,6 +258,10 @@
         <source>Options</source>
         <translation>Optionen</translation>
     </message>
+    <message>
+        <source>Clear</source>
+        <translation>Leeren</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -1066,6 +1070,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Windows Service installation changed</source>
         <translation>Installation des Windows-Dienst geändert</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

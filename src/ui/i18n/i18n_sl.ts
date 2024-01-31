@@ -258,6 +258,10 @@
         <source>Options</source>
         <translation>Možnosti</translation>
     </message>
+    <message>
+        <source>Clear</source>
+        <translation>Počisti</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -1066,6 +1070,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Windows Service installation changed</source>
         <translation>Namestitev storitve Windows je spremenjena</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

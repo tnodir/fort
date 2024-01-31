@@ -258,6 +258,10 @@
         <source>Options</source>
         <translation>옵션</translation>
     </message>
+    <message>
+        <source>Clear</source>
+        <translation>지우기</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
@@ -1066,6 +1070,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Windows Service installation changed</source>
         <translation>Windows Service 설치가 변경됨</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
