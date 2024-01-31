@@ -41,7 +41,6 @@ ProgramsWindow::ProgramsWindow(QWidget *parent) :
     m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
-    setupAppEditForm();
     setupController();
     setupStateWatcher();
 }
@@ -382,17 +381,10 @@ void ProgramsWindow::setupTableAppsChanged()
     connect(m_appListView, &TableView::currentIndexChanged, this, refreshTableAppsChanged);
 }
 
-void ProgramsWindow::setupAppEditForm()
-{
-    m_formAppEdit = new ProgramEditDialog(ctrl(), this);
-}
-
 bool ProgramsWindow::editProgramByPath(const QString &appPath)
 {
-    if (m_formAppEdit->isVisible()) {
-        m_formAppEdit->activate();
+    if (checkAppEditFormOpened())
         return false;
-    }
 
     const auto appRow = appListModel()->appRowByPath(appPath);
 
@@ -450,9 +442,23 @@ void ProgramsWindow::editSelectedPrograms()
 
 void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64> &appIdList)
 {
+    if (!m_formAppEdit) {
+        m_formAppEdit = new ProgramEditDialog(ctrl(), this);
+    }
+
     m_formAppEdit->initialize(appRow, appIdList);
 
     m_formAppEdit->activate();
+    m_formAppEdit->centerTo(this);
+}
+
+bool ProgramsWindow::checkAppEditFormOpened() const
+{
+    if (m_formAppEdit && m_formAppEdit->isVisible()) {
+        m_formAppEdit->activate();
+        return true;
+    }
+    return false;
 }
 
 void ProgramsWindow::updateSelectedApps(bool blocked, bool killProcess)

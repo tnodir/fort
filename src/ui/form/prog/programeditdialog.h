@@ -26,7 +26,8 @@ class ProgramEditDialog : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit ProgramEditDialog(ProgramsController *ctrl, QWidget *parent = nullptr);
+    explicit ProgramEditDialog(
+            ProgramsController *ctrl, QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
     ProgramsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;

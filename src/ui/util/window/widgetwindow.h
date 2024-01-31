@@ -8,7 +8,7 @@ class WidgetWindow : public QWidget
     Q_OBJECT
 
 public:
-    explicit WidgetWindow(QWidget *parent = nullptr);
+    explicit WidgetWindow(QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
     virtual quint32 windowCode() const { return 0; }
     virtual bool deleteOnClose() const { return true; }
@@ -18,6 +18,8 @@ public:
 
     void showWindow(bool activate = true);
     void exposeWindow();
+
+    void centerTo(QWidget *w);
 
     static void showWidget(QWidget *w, bool activate = true);
     static void exposeWidget(QWidget *w);

@@ -69,12 +69,12 @@ private:
     void setupAppInfoRow();
     void setupTableAppsChanged();
 
-    void setupAppEditForm();
-
     void addNewProgram();
     void addNewWildcard();
     void editSelectedPrograms();
+
     void openAppEditForm(const AppRow &appRow, const QVector<qint64> &appIdList = {});
+    bool checkAppEditFormOpened() const;
 
     void updateSelectedApps(bool blocked, bool killProcess = false);
     void deleteSelectedApps();

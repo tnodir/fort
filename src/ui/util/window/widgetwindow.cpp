@@ -2,7 +2,7 @@
 
 #include <QWindowStateChangeEvent>
 
-WidgetWindow::WidgetWindow(QWidget *parent) : QWidget(parent) { }
+WidgetWindow::WidgetWindow(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f) { }
 
 void WidgetWindow::showWindow(bool activate)
 {
@@ -16,6 +16,11 @@ void WidgetWindow::showWindow(bool activate)
 void WidgetWindow::exposeWindow()
 {
     exposeWidget(this);
+}
+
+void WidgetWindow::centerTo(QWidget *w)
+{
+    this->move(w->frameGeometry().topLeft() + w->rect().center() - this->rect().center());
 }
 
 void WidgetWindow::showWidget(QWidget *w, bool activate)
