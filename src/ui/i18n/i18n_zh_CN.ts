@@ -1161,10 +1161,6 @@ Make sure that you have a fresh backup.</source>
         <translation>阻止</translation>
     </message>
     <message>
-        <source>Block In:</source>
-        <translation>阻止时长：</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>确定</translation>
     </message>
@@ -1309,6 +1305,18 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Schedule</source>
         <translation>计划</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>移除</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

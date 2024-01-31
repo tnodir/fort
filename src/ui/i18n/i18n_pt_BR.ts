@@ -1161,10 +1161,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Bloquear</translation>
     </message>
     <message>
-        <source>Block In:</source>
-        <translation>Bloquear em:</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -1305,6 +1301,18 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>5 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">Remover</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

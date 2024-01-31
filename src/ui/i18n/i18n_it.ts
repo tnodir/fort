@@ -1163,10 +1163,6 @@ Assicurati di avere un backup recente.</translation>
         <translation>Blocca</translation>
     </message>
     <message>
-        <source>Block In:</source>
-        <translation>Blocca ingresso:</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -1311,6 +1307,18 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Schedule</source>
         <translation>Pianifica</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Rimuovi</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

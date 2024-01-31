@@ -1163,10 +1163,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <source>Block In:</source>
-        <translation>Блокировать через:</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
@@ -1311,6 +1307,18 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Schedule</source>
         <translation>Запланировать</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Через:</translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation>В:</translation>
     </message>
 </context>
 <context>

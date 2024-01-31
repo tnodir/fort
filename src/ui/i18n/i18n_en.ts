@@ -1161,10 +1161,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Block In:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation></translation>
     </message>
@@ -1305,6 +1301,18 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Schedule</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>At:</source>
         <translation></translation>
     </message>
 </context>

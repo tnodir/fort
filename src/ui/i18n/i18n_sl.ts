@@ -1163,10 +1163,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Blokiraj</translation>
     </message>
     <message>
-        <source>Block In:</source>
-        <translation>Blokiraj v:</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>Vredu</translation>
     </message>
@@ -1311,6 +1307,18 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Schedule</source>
         <translation>Načrtuj</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

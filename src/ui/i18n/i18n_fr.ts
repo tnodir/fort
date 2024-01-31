@@ -1163,10 +1163,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Bloquer</translation>
     </message>
     <message>
-        <source>Block In:</source>
-        <translation>Bloquer dans:</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -1311,6 +1307,18 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Schedule</source>
         <translation>Planifier</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
