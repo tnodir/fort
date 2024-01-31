@@ -14,6 +14,8 @@ namespace {
 
 const QLoggingCategory LC("db");
 
+constexpr int DATABASE_BUSY_TIMEOUT = 2000; // 2 seconds
+
 const char *const defaultSqlPragmas = "PRAGMA journal_mode = WAL;"
                                       "PRAGMA locking_mode = NORMAL;"
                                       "PRAGMA synchronous = NORMAL;"
@@ -333,6 +335,8 @@ QStringList SqliteDb::columnNames(const QString &tableName, const QString &schem
 
 bool SqliteDb::migrate(MigrateOptions &opt)
 {
+    setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
+
     if (!opt.sqlPragmas) {
         opt.sqlPragmas = defaultSqlPragmas;
     }

@@ -20,8 +20,6 @@ const QLoggingCategory LC("statBlock");
 
 constexpr int DATABASE_USER_VERSION = 7;
 
-constexpr int DATABASE_BUSY_TIMEOUT = 3000; // 3 seconds
-
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
@@ -191,11 +189,7 @@ bool StatBlockManager::setupDb()
                            << roSqliteDb()->errorMessage();
             return false;
         }
-
-        roSqliteDb()->setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
     }
-
-    sqliteDb()->setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
 
     return true;
 }
