@@ -260,7 +260,7 @@
     </message>
     <message>
         <source>Clear</source>
-        <translation>Cancella</translation>
+        <translation>Ripulisci</translation>
     </message>
 </context>
 <context>
@@ -1073,7 +1073,7 @@ Assicurati di avere un backup recente.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra programmi o finestra di allerta</translation>
     </message>
 </context>
 <context>
@@ -1148,7 +1148,7 @@ Assicurati di avere un backup recente.</translation>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
-        <translation type="unfinished"></translation>
+        <translation>Allerta il programma</translation>
     </message>
 </context>
 <context>
@@ -1329,11 +1329,11 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>In:</source>
-        <translation type="unfinished"></translation>
+        <translation>In:</translation>
     </message>
     <message>
         <source>At:</source>
-        <translation type="unfinished"></translation>
+        <translation>A:</translation>
     </message>
 </context>
 <context>
