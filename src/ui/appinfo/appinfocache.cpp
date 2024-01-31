@@ -37,7 +37,7 @@ QString AppInfoCache::appName(const QString &appPath)
     return appInfo.fileDescription;
 }
 
-QPixmap AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
+QPixmap AppInfoCache::appPixmap(const QString &appPath, const QString &nullIconPath)
 {
     QPixmap pixmap;
     if (IconCache::find(appPath, &pixmap))
@@ -54,6 +54,11 @@ QPixmap AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPat
     IconCache::insert(appPath, pixmap);
 
     return pixmap;
+}
+
+QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
+{
+    return appPixmap(appPath, nullIconPath);
 }
 
 AppInfo AppInfoCache::appInfo(const QString &appPath)

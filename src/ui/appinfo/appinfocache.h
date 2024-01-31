@@ -20,7 +20,9 @@ public:
     void tearDown() override;
 
     QString appName(const QString &appPath);
-    QPixmap appIcon(const QString &appPath, const QString &nullIconPath = QString());
+
+    QPixmap appPixmap(const QString &appPath, const QString &nullIconPath = QString());
+    QIcon appIcon(const QString &appPath, const QString &nullIconPath = QString());
 
     AppInfo appInfo(const QString &appPath);
 

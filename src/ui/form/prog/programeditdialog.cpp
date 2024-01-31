@@ -139,7 +139,7 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathE
     m_editNotes->setEnabled(isSingleSelection);
 
     m_labelEditNotes->setPixmap(isSingleSelection && !isPathEditable
-                    ? IoC<AppInfoCache>()->appIcon(m_appRow.appPath)
+                    ? IoC<AppInfoCache>()->appPixmap(m_appRow.appPath)
                     : QPixmap());
 
     if (isSingleSelection) {
