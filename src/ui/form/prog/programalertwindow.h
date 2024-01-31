@@ -21,6 +21,9 @@ public:
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 
+protected:
+    void closeOnSave() override;
+
 private:
     void setupController();
     void setupStateWatcher();

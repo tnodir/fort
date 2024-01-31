@@ -45,6 +45,9 @@ public:
 
     void activate();
 
+protected:
+    virtual void closeOnSave();
+
 private:
     void initializePathNameFields();
     void initializePathField(bool isSingleSelection, bool isPathEditable);

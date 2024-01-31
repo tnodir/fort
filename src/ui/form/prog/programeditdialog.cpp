@@ -171,6 +171,11 @@ void ProgramEditDialog::activate()
     }
 }
 
+void ProgramEditDialog::closeOnSave()
+{
+    this->close();
+}
+
 void ProgramEditDialog::setupController()
 {
     connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramEditDialog::retranslateUi);
@@ -288,7 +293,7 @@ void ProgramEditDialog::setupUi()
 
     m_btOk = ControlUtil::createButton(QString(), [&] {
         if (save()) {
-            this->close();
+            closeOnSave();
         }
     });
     m_btOk->setDefault(true);

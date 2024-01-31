@@ -41,6 +41,15 @@ void ProgramAlertWindow::restoreWindowState()
             iniUser()->progAlertWindowMaximized());
 }
 
+void ProgramAlertWindow::closeOnSave()
+{
+    initialize();
+
+    if (isEmpty()) {
+        ProgramEditDialog::closeOnSave();
+    }
+}
+
 void ProgramAlertWindow::setupController()
 {
     ctrl()->setParent(this); // can't set in ctor, because the widget isn't yet fully constructed
