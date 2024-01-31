@@ -37,6 +37,7 @@ public:
         ActionNone = -1,
         ActionShowHome = 0,
         ActionShowPrograms,
+        ActionShowProgramsOrAlert,
         ActionShowOptions,
         ActionShowStatistics,
         ActionShowTrafficGraph,
@@ -83,6 +84,8 @@ protected slots:
     void switchFilterModeMenu(bool checked);
 
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
+
+    void showProgramsOrAlertWindow();
 
     void saveTrayFlags();
 
@@ -137,6 +140,7 @@ private:
     QMenu *m_menu = nullptr;
     QAction *m_homeAction = nullptr;
     QAction *m_programsAction = nullptr;
+    QAction *m_programsOrAlertAction = nullptr;
     ClickableMenu *m_optionsMenu = nullptr;
     QAction *m_optionsAction = nullptr;
     QAction *m_policiesAction = nullptr;

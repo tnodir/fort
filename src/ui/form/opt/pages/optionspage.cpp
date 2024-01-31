@@ -274,10 +274,11 @@ void OptionsPage::retranslateComboTrayAction()
     Q_UNUSED(type);
 
     // Sync with TrayIcon::ActionType
-    const QStringList list = { tr("Show My Fort"), tr("Show Programs"), tr("Show Options"),
-        tr("Show Statistics"), tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"),
-        tr("Switch Block All Traffic"), tr("Switch Block Internet Traffic"),
-        tr("Show Filter Mode Menu"), tr("Show Tray Menu"), tr("Ignore") };
+    const QStringList list = { tr("Show My Fort"), tr("Show Programs"),
+        tr("Show Programs Or Alert Window"), tr("Show Options"), tr("Show Statistics"),
+        tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Block All Traffic"),
+        tr("Switch Block Internet Traffic"), tr("Show Filter Mode Menu"), tr("Show Tray Menu"),
+        tr("Ignore") };
 
     ControlUtil::setComboBoxTexts(m_comboTrayAction, list, /*currentIndex=*/-1);
 }

@@ -37,6 +37,7 @@ const QString eventRightClick = QStringLiteral("rightClick");
 
 const QString actionShowHome = QStringLiteral("Home");
 const QString actionShowPrograms = QStringLiteral("Programs");
+const QString actionShowProgramsOrAlert = QStringLiteral("ProgramsOrAlert");
 const QString actionShowOptions = QStringLiteral("Options");
 const QString actionShowStatistics = QStringLiteral("Statistics");
 const QString actionShowTrafficGraph = QStringLiteral("TrafficGraph");
@@ -72,6 +73,7 @@ QString actionNameByType(TrayIcon::ActionType actionType)
     static const QString actionNames[] = {
         actionShowHome,
         actionShowPrograms,
+        actionShowProgramsOrAlert,
         actionShowOptions,
         actionShowStatistics,
         actionShowTrafficGraph,
@@ -95,6 +97,7 @@ TrayIcon::ActionType actionTypeByName(const QString &name)
     static const QHash<QString, TrayIcon::ActionType> actionTypeNamesMap = {
         { actionShowHome, TrayIcon::ActionShowHome },
         { actionShowPrograms, TrayIcon::ActionShowPrograms },
+        { actionShowProgramsOrAlert, TrayIcon::ActionShowProgramsOrAlert },
         { actionShowOptions, TrayIcon::ActionShowOptions },
         { actionShowStatistics, TrayIcon::ActionShowStatistics },
         { actionShowTrafficGraph, TrayIcon::ActionShowTrafficGraph },
@@ -114,7 +117,7 @@ TrayIcon::ActionType defaultActionTypeByClick(TrayIcon::ClickType clickType)
 {
     switch (clickType) {
     case TrayIcon::SingleClick:
-        return TrayIcon::ActionShowPrograms;
+        return TrayIcon::ActionShowProgramsOrAlert;
     case TrayIcon::CtrlSingleClick:
         return TrayIcon::ActionShowOptions;
     case TrayIcon::AltSingleClick:
@@ -376,6 +379,10 @@ void TrayIcon::setupTrayMenu()
     m_programsAction = addAction(m_menu, ":/icons/application.png", windowManager(),
             SLOT(showProgramsWindow()), ActionShowPrograms);
     addHotKey(m_programsAction, iniUser()->hotKeyPrograms());
+
+    m_programsOrAlertAction = addAction(
+            m_menu, QString(), this, SLOT(showProgramsOrAlertWindow()), ActionShowProgramsOrAlert);
+    m_programsOrAlertAction->setVisible(false);
 
     setupTrayMenuOptions();
     m_menu->addMenu(m_optionsMenu);
@@ -743,9 +750,10 @@ QAction *TrayIcon::clickActionFromIni(TrayIcon::ClickType clickType) const
 
 QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
 {
-    QAction *actions[] = {
+    QAction *const actions[] = {
         m_homeAction,
         m_programsAction,
+        m_programsOrAlertAction,
         m_optionsAction,
         m_statisticsAction,
         m_graphAction,
@@ -802,6 +810,15 @@ void TrayIcon::onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkT
 
     m_trayTriggered = false;
     onMouseClicked(clickType);
+}
+
+void TrayIcon::showProgramsOrAlertWindow()
+{
+    if (m_alerted) {
+        windowManager()->showProgramAlertWindow();
+    } else {
+        windowManager()->showProgramsWindow();
+    }
 }
 
 void TrayIcon::onWindowVisibilityChanged(quint32 code, bool isVisible)
