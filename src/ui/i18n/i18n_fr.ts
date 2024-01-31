@@ -1148,7 +1148,7 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
-        <translation type="unfinished"></translation>
+        <translation>Programme d&apos;alerte</translation>
     </message>
 </context>
 <context>

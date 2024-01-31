@@ -1148,7 +1148,7 @@ Make sure that you have a fresh backup.</source>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
-        <translation type="unfinished"></translation>
+        <translation>경고 프로그램</translation>
     </message>
 </context>
 <context>
