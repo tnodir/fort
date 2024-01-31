@@ -146,5 +146,5 @@ QVariant AppStatModel::dataDecoration(const QModelIndex &index) const
     }
 
     const auto appPath = list().at(row);
-    return appInfoCache()->appIcon(appPath);
+    return QIcon(appInfoCache()->appIcon(appPath));
 }

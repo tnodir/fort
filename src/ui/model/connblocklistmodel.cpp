@@ -179,7 +179,7 @@ QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
 
         switch (column) {
         case 0:
-            return appInfoCache()->appIcon(connRow.appPath);
+            return QIcon(appInfoCache()->appIcon(connRow.appPath));
         case 5:
             return IconCache::icon(connIconPath(connRow));
         }
