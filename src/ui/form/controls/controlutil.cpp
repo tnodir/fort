@@ -41,7 +41,7 @@ QSpinBox *ControlUtil::createSpinBox()
 QComboBox *ControlUtil::createComboBox(const QStringList &texts)
 {
     auto c = new ComboBox();
-    c->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+    c->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     c->addItems(texts);
     return c;
 }
