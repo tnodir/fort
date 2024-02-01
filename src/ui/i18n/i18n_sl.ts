@@ -1417,6 +1417,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Groups</source>
         <translation>Skupine</translation>
     </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

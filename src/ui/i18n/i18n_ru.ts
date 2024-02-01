@@ -1417,6 +1417,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Groups</source>
         <translation>Группы</translation>
     </message>
+    <message>
+        <source>Review Alerts</source>
+        <translation>Обзор оповещений</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>
