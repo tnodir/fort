@@ -117,9 +117,9 @@ Logger *Logger::instance()
     return g_instanceLogger;
 }
 
-QString Logger::getDateString()
+QString Logger::getDateString(const QString &format)
 {
-    return DateUtil::now().toString("yyyy-MM-dd HH:mm:ss.zzz");
+    return DateUtil::now().toString(format);
 }
 
 QString Logger::makeLogLine(LogLevel level, const QString &dateString, const QString &message)
@@ -142,8 +142,8 @@ QString Logger::fileNameSuffix() const
 
 bool Logger::openLogFile()
 {
-    const QString fileName = fileNamePrefix() + DateUtil::now().toString("yyyy-MM-dd_HH-mm-ss_zzz")
-            + fileNameSuffix();
+    const QString fileName =
+            fileNamePrefix() + getDateString("yyyy-MM-dd_HH-mm-ss_zzz") + fileNameSuffix();
 
     if (tryOpenLogFile(m_dir, fileName))
         return true;

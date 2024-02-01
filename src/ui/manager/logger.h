@@ -33,7 +33,7 @@ public:
 
     static Logger *instance();
 
-    static QString getDateString();
+    static QString getDateString(const QString &format = "yyyy-MM-dd HH:mm:ss.zzz");
 
     static QString makeLogLine(
             Logger::LogLevel level, const QString &dateString, const QString &message);
