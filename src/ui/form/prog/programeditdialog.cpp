@@ -176,6 +176,11 @@ void ProgramEditDialog::closeOnSave()
     this->close();
 }
 
+void ProgramEditDialog::setAdvancedMode(bool on)
+{
+    m_btAdvancedMode->setChecked(on);
+}
+
 void ProgramEditDialog::setupController()
 {
     connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramEditDialog::retranslateUi);
@@ -217,6 +222,7 @@ void ProgramEditDialog::retranslateUi()
     retranslateScheduleIn();
     m_dteScheduleAt->unsetLocale();
 
+    m_btAdvancedMode->setToolTip(tr("Advanced Mode"));
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
@@ -277,7 +283,7 @@ void ProgramEditDialog::retranslateWindowTitle()
 void ProgramEditDialog::setupUi()
 {
     // Form Layout
-    auto formLayout = setupAppLayout();
+    auto appLayout = setupAppLayout();
 
     // Log
     auto logLayout = setupLogLayout();
@@ -293,7 +299,7 @@ void ProgramEditDialog::setupUi()
 
     // Form
     auto layout = new QVBoxLayout();
-    layout->addLayout(formLayout);
+    layout->addLayout(appLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(logLayout);
     layout->addWidget(ControlUtil::createSeparator());
@@ -458,9 +464,6 @@ QLayout *ProgramEditDialog::setupLogLayout()
 
 QLayout *ProgramEditDialog::setupActionsLayout()
 {
-    auto allowLayout = new QHBoxLayout();
-    allowLayout->setSpacing(20);
-
     m_rbAllowApp = new QRadioButton();
     m_rbAllowApp->setIcon(IconCache::icon(":/icons/accept.png"));
     m_rbAllowApp->setChecked(true);
@@ -473,11 +476,11 @@ QLayout *ProgramEditDialog::setupActionsLayout()
 
     connect(m_rbKillProcess, &QRadioButton::clicked, this, &ProgramEditDialog::warnDangerousOption);
 
-    allowLayout->addWidget(m_rbAllowApp, 1, Qt::AlignRight);
-    allowLayout->addWidget(m_rbBlockApp, 1, Qt::AlignHCenter);
-    allowLayout->addWidget(m_rbKillProcess, 1, Qt::AlignLeft);
+    auto layout = ControlUtil::createHLayoutByWidgets({ /*stretch*/ nullptr, m_rbAllowApp,
+            m_rbBlockApp, m_rbKillProcess, /*stretch*/ nullptr });
+    layout->setSpacing(20);
 
-    return allowLayout;
+    return layout;
 }
 
 QLayout *ProgramEditDialog::setupOptionsLayout()
@@ -567,6 +570,8 @@ void ProgramEditDialog::setupComboScheduleType()
 
 QLayout *ProgramEditDialog::setupButtonsLayout()
 {
+    setupAdvancedMode();
+
     m_btOk = ControlUtil::createButton(QString(), [&] {
         if (save()) {
             closeOnSave();
@@ -578,10 +583,21 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();
+    layout->addWidget(m_btAdvancedMode);
     layout->addWidget(m_btOk, 1, Qt::AlignRight);
     layout->addWidget(m_btCancel);
 
     return layout;
+}
+
+void ProgramEditDialog::setupAdvancedMode()
+{
+    m_btAdvancedMode = ControlUtil::createIconToolButton(":/icons/widgets.png");
+    m_btAdvancedMode->setCheckable(true);
+    m_btAdvancedMode->setChecked(true);
+
+    connect(m_btAdvancedMode, &QToolButton::toggled, this,
+            [&](bool checked) { m_rbKillProcess->setVisible(checked); });
 }
 
 void ProgramEditDialog::fillEditName()

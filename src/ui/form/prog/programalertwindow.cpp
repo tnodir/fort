@@ -68,6 +68,9 @@ void ProgramAlertWindow::retranslateWindowTitle()
 
 void ProgramAlertWindow::setupUi()
 {
+    // Advanced Mode
+    setAdvancedMode(false);
+
     // Modality
     this->setWindowModality(Qt::NonModal);
 

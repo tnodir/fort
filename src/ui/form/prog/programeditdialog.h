@@ -48,6 +48,8 @@ public:
 protected:
     virtual void closeOnSave();
 
+    void setAdvancedMode(bool on);
+
 private:
     void initializePathNameFields();
     void initializePathField(bool isSingleSelection, bool isPathEditable);
@@ -76,6 +78,7 @@ private:
     void setupCbSchedule();
     void setupComboScheduleType();
     QLayout *setupButtonsLayout();
+    void setupAdvancedMode();
 
     void fillEditName();
 
@@ -122,6 +125,7 @@ private:
     QComboBox *m_comboScheduleType = nullptr;
     SpinCombo *m_scScheduleIn = nullptr;
     QDateTimeEdit *m_dteScheduleAt = nullptr;
+    QToolButton *m_btAdvancedMode = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 
