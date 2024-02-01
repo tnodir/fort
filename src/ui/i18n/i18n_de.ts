@@ -1075,6 +1075,14 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Show Programs Or Alert Window</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

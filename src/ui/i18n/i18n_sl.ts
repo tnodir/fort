@@ -1075,6 +1075,14 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Show Programs Or Alert Window</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1148,7 +1156,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
-        <translation type="unfinished"></translation>
+        <translation>Opozorilni program</translation>
     </message>
 </context>
 <context>

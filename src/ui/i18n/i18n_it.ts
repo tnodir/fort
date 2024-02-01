@@ -1075,6 +1075,14 @@ Assicurati di avere un backup recente.</translation>
         <source>Show Programs Or Alert Window</source>
         <translation>Mostra programmi o finestra di allerta</translation>
     </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

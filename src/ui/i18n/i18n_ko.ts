@@ -1075,6 +1075,14 @@ Make sure that you have a fresh backup.</source>
         <source>Show Programs Or Alert Window</source>
         <translation>프로그램 또는 알림 창 표시</translation>
     </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

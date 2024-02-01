@@ -1075,6 +1075,14 @@ Make sure that you have a fresh backup.</source>
         <source>Show Programs Or Alert Window</source>
         <translation>Показать Программы или Окно Оповещения</translation>
     </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation>Авто-показ Окна Оповещения для новых программ</translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation>Окна Оповещения всегда сверху</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

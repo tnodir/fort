@@ -1073,6 +1073,14 @@ Make sure that you have a fresh backup.</source>
         <source>Show Programs Or Alert Window</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
