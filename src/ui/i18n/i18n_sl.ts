@@ -1073,15 +1073,15 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Show Programs Or Alert Window</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Samodejno prikaži opozorilno okno za nove programe</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation type="unfinished"></translation>
+        <translation>Opozorilno okno je vedno na zaslonu</translation>
     </message>
 </context>
 <context>
@@ -1427,7 +1427,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Review Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Pregled opozoril</translation>
     </message>
 </context>
 <context>
