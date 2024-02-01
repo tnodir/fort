@@ -7,6 +7,7 @@
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QDateTimeEdit)
+QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
@@ -43,8 +44,6 @@ public:
 
     void initialize(const AppRow &appRow, const QVector<qint64> &appIdList = {});
 
-    void activate();
-
 protected:
     virtual void closeOnSave();
 
@@ -54,6 +53,8 @@ private:
     void initializePathNameFields();
     void initializePathField(bool isSingleSelection, bool isPathEditable);
     void initializeNameField(bool isSingleSelection, bool isPathEditable);
+
+    void initializeFocus();
 
     void setupController();
 
@@ -70,9 +71,10 @@ private:
     QLayout *setupAppNameLayout();
     QLayout *setupNotesLayout();
     void setupComboAppGroups();
-    QLayout *setupLogLayout();
     QLayout *setupActionsLayout();
-    QLayout *setupOptionsLayout();
+    void setupFrameAdvanced();
+    QLayout *setupChildLayout();
+    QLayout *setupLogLayout();
     QLayout *setupZonesLayout();
     QLayout *setupScheduleLayout();
     void setupCbSchedule();
@@ -109,16 +111,17 @@ private:
     PlainTextEdit *m_editNotes = nullptr;
     QLabel *m_labelAppGroup = nullptr;
     QComboBox *m_comboAppGroup = nullptr;
+    QRadioButton *m_rbAllowApp = nullptr;
+    QRadioButton *m_rbBlockApp = nullptr;
+    QRadioButton *m_rbKillProcess = nullptr;
+    QFrame *m_frameAdvanced = nullptr;
     QCheckBox *m_cbUseGroupPerm = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
     QCheckBox *m_cbKillChild = nullptr;
     QCheckBox *m_cbParked = nullptr;
-    QCheckBox *m_cbLanOnly = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbLogConn = nullptr;
-    QRadioButton *m_rbAllowApp = nullptr;
-    QRadioButton *m_rbBlockApp = nullptr;
-    QRadioButton *m_rbKillProcess = nullptr;
+    QCheckBox *m_cbLanOnly = nullptr;
     ZonesSelector *m_btZones = nullptr;
     QCheckBox *m_cbSchedule = nullptr;
     QComboBox *m_comboScheduleAction = nullptr;

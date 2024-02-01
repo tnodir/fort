@@ -452,14 +452,15 @@ void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64>
 
     m_formAppEdit->initialize(appRow, appIdList);
 
-    m_formAppEdit->activate();
+    WidgetWindow::showWidget(m_formAppEdit);
+
     m_formAppEdit->centerTo(this);
 }
 
 bool ProgramsWindow::checkAppEditFormOpened() const
 {
     if (m_formAppEdit && m_formAppEdit->isVisible()) {
-        m_formAppEdit->activate();
+        WidgetWindow::showWidget(m_formAppEdit);
         return true;
     }
     return false;

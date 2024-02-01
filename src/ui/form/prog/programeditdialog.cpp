@@ -90,19 +90,21 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     initializePathNameFields();
 
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
-    m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
-    m_cbApplyChild->setChecked(appRow.applyChild);
-    m_cbKillChild->setChecked(appRow.killChild);
 
-    m_cbLanOnly->setChecked(appRow.lanOnly);
-    m_cbParked->setChecked(appRow.parked);
-    m_cbParked->setEnabled(!isWildcard());
-    m_cbLogBlocked->setChecked(appRow.logBlocked);
-    m_cbLogConn->setChecked(appRow.logConn);
     m_rbAllowApp->setChecked(!appRow.blocked);
     m_rbBlockApp->setChecked(appRow.blocked);
     m_rbKillProcess->setChecked(appRow.killProcess);
 
+    m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
+    m_cbApplyChild->setChecked(appRow.applyChild);
+    m_cbKillChild->setChecked(appRow.killChild);
+
+    m_cbParked->setChecked(appRow.parked);
+    m_cbParked->setEnabled(!isWildcard());
+    m_cbLogBlocked->setChecked(appRow.logBlocked);
+    m_cbLogConn->setChecked(appRow.logConn);
+
+    m_cbLanOnly->setChecked(appRow.lanOnly);
     m_btZones->setZones(appRow.acceptZones);
     m_btZones->setUncheckedZones(appRow.rejectZones);
 
@@ -122,6 +124,8 @@ void ProgramEditDialog::initializePathNameFields()
 
     initializePathField(isSingleSelection, isPathEditable);
     initializeNameField(isSingleSelection, isPathEditable);
+
+    initializeFocus();
 }
 
 void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathEditable)
@@ -160,11 +164,11 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathE
     }
 }
 
-void ProgramEditDialog::activate()
+void ProgramEditDialog::initializeFocus()
 {
-    WidgetWindow::showWidget(this);
-
-    if (isWildcard()) {
+    if (!isEmpty()) {
+        m_rbAllowApp->setFocus();
+    } else if (isWildcard()) {
         m_editWildcard->setFocus();
     } else {
         m_editPath->selectAll();
@@ -199,22 +203,22 @@ void ProgramEditDialog::retranslateUi()
     m_btGetName->setToolTip(tr("Get Program Name"));
 
     m_editNotes->setPlaceholderText(tr("Notes"));
-
     m_labelAppGroup->setText(tr("Application Group:"));
+
+    m_rbAllowApp->setText(tr("Allow"));
+    m_rbBlockApp->setText(tr("Block"));
+    m_rbKillProcess->setText(tr("Kill Process"));
+
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
     m_cbKillChild->setText(tr("Kill child processes"));
 
     m_cbParked->setText(tr("Parked"));
     m_cbParked->setToolTip(tr("Don't purge as obsolete"));
-    m_cbLanOnly->setText(tr("Block Internet Traffic"));
     m_cbLogBlocked->setText(tr("Collect blocked connections"));
     m_cbLogConn->setText(tr("Collect connection statistics"));
 
-    m_rbAllowApp->setText(tr("Allow"));
-    m_rbBlockApp->setText(tr("Block"));
-    m_rbKillProcess->setText(tr("Kill Process"));
-
+    m_cbLanOnly->setText(tr("Block Internet Traffic"));
     m_btZones->retranslateUi();
 
     m_cbSchedule->setText(tr("Schedule"));
@@ -286,14 +290,14 @@ void ProgramEditDialog::setupUi()
     // Form Layout
     auto appLayout = setupAppLayout();
 
-    // Log
-    auto logLayout = setupLogLayout();
-
     // Allow/Block/etc Actions Layout
     auto actionsLayout = setupActionsLayout();
 
-    // Options
-    auto optionsLayout = setupOptionsLayout();
+    // Advanced Options
+    setupFrameAdvanced();
+
+    // Schedule
+    auto scheduleLayout = setupScheduleLayout();
 
     // OK/Cancel
     auto buttonsLayout = setupButtonsLayout();
@@ -302,12 +306,12 @@ void ProgramEditDialog::setupUi()
     auto layout = new QVBoxLayout();
     layout->addLayout(appLayout);
     layout->addWidget(ControlUtil::createSeparator());
-    layout->addLayout(logLayout);
-    layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(actionsLayout);
-    layout->addWidget(ControlUtil::createSeparator());
-    layout->addLayout(optionsLayout);
     layout->addStretch();
+    layout->addWidget(m_frameAdvanced);
+    layout->addStretch();
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addLayout(scheduleLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
 
@@ -352,22 +356,6 @@ QLayout *ProgramEditDialog::setupAppLayout()
 
     layout->addRow("Application Group:", m_comboAppGroup);
     m_labelAppGroup = qobject_cast<QLabel *>(layout->labelForField(m_comboAppGroup));
-
-    // Use Group Perm.
-    m_cbUseGroupPerm = new QCheckBox();
-
-    layout->addRow(QString(), m_cbUseGroupPerm);
-
-    // Apply Child
-    m_cbApplyChild = new QCheckBox();
-
-    layout->addRow(QString(), m_cbApplyChild);
-
-    // Kill Child
-    m_cbKillChild = new QCheckBox();
-    connect(m_cbKillChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnDangerousOption);
-
-    layout->addRow(QString(), m_cbKillChild);
 
     return layout;
 }
@@ -445,24 +433,6 @@ void ProgramEditDialog::setupComboAppGroups()
     connect(confManager(), &ConfManager::confChanged, this, refreshComboAppGroups);
 }
 
-QLayout *ProgramEditDialog::setupLogLayout()
-{
-    // Parked
-    m_cbParked = new QCheckBox();
-
-    // Log Blocked
-    m_cbLogBlocked = new QCheckBox();
-
-    // Log Conn
-    m_cbLogConn = new QCheckBox();
-    m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
-
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbParked, ControlUtil::createVSeparator(),
-            m_cbLogBlocked, m_cbLogConn, /*stretch*/ nullptr });
-
-    return layout;
-}
-
 QLayout *ProgramEditDialog::setupActionsLayout()
 {
     m_rbAllowApp = new QRadioButton();
@@ -484,17 +454,63 @@ QLayout *ProgramEditDialog::setupActionsLayout()
     return layout;
 }
 
-QLayout *ProgramEditDialog::setupOptionsLayout()
+void ProgramEditDialog::setupFrameAdvanced()
 {
+    // Use Group Perm.
+    m_cbUseGroupPerm = new QCheckBox();
+
+    // Child Options
+    auto childLayout = setupChildLayout();
+
+    // Log
+    auto logLayout = setupLogLayout();
+
     // Zones
     auto zonesLayout = setupZonesLayout();
 
-    // Schedule
-    auto scheduleLayout = setupScheduleLayout();
-
     auto layout = new QVBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_cbUseGroupPerm);
+    layout->addLayout(childLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(logLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(zonesLayout);
-    layout->addLayout(scheduleLayout);
+
+    m_frameAdvanced = new QFrame();
+    m_frameAdvanced->setLayout(layout);
+}
+
+QLayout *ProgramEditDialog::setupChildLayout()
+{
+    // Apply Child
+    m_cbApplyChild = new QCheckBox();
+
+    // Kill Child
+    m_cbKillChild = new QCheckBox();
+    connect(m_cbKillChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnDangerousOption);
+
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_cbApplyChild, ControlUtil::createVSeparator(), m_cbKillChild });
+
+    return layout;
+}
+
+QLayout *ProgramEditDialog::setupLogLayout()
+{
+    // Parked
+    m_cbParked = new QCheckBox();
+
+    // Log Blocked
+    m_cbLogBlocked = new QCheckBox();
+
+    // Log Conn
+    m_cbLogConn = new QCheckBox();
+    m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbParked, ControlUtil::createVSeparator(),
+            m_cbLogBlocked, m_cbLogConn, /*stretch*/ nullptr });
 
     return layout;
 }
@@ -597,8 +613,10 @@ void ProgramEditDialog::setupAdvancedMode()
     m_btAdvancedMode->setCheckable(true);
     m_btAdvancedMode->setChecked(true);
 
-    connect(m_btAdvancedMode, &QToolButton::toggled, this,
-            [&](bool checked) { m_rbKillProcess->setVisible(checked); });
+    connect(m_btAdvancedMode, &QToolButton::toggled, this, [&](bool checked) {
+        m_rbKillProcess->setVisible(checked);
+        m_frameAdvanced->setVisible(checked);
+    });
 }
 
 void ProgramEditDialog::fillEditName()
