@@ -9,7 +9,7 @@
 #include "programscontroller.h"
 
 ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) :
-    ProgramEditDialog(new ProgramsController(/*this*/), parent, Qt::Window),
+    ProgramEditDialog(new ProgramsController(/*this*/), parent),
     m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
@@ -70,6 +70,9 @@ void ProgramAlertWindow::setupUi()
 {
     // Modality
     this->setWindowModality(Qt::NonModal);
+
+    // Top Window
+    this->setWindowFlag(Qt::WindowStaysOnTopHint, iniUser()->progAlertWindowAlwaysOnTop());
 
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/error.png"));

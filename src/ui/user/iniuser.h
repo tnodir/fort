@@ -101,6 +101,15 @@ public:
     bool progAlertWindowMaximized() const { return valueBool("progAlertWindow/maximized"); }
     void setProgAlertWindowMaximized(bool on) { setValue("progAlertWindow/maximized", on); }
 
+    bool progAlertWindowAutoShow() const { return valueBool("progAlertWindow/autoShow", true); }
+    void setProgAlertWindowAutoShow(bool on) { setValue("progAlertWindow/autoShow", on); }
+
+    bool progAlertWindowAlwaysOnTop() const
+    {
+        return valueBool("progAlertWindow/alwaysOnTop", true);
+    }
+    void setProgAlertWindowAlwaysOnTop(bool on) { setValue("progAlertWindow/alwaysOnTop", on); }
+
     QRect optWindowGeometry() const { return value("optWindow/geometry").toRect(); }
     void setOptWindowGeometry(const QRect &v) { setValue("optWindow/geometry", v); }
 

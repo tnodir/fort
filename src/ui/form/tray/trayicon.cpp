@@ -555,10 +555,14 @@ void TrayIcon::updateAppGroupActions()
 
 void TrayIcon::sendAlertMessage()
 {
-    if (!iniUser()->progNotifyMessage())
-        return;
+    if (iniUser()->progNotifyMessage()) {
+        windowManager()->showTrayMessage(
+                tr("New program detected!"), WindowManager::TrayMessageAlert);
+    }
 
-    windowManager()->showTrayMessage(tr("New program detected!"), WindowManager::TrayMessageAlert);
+    if (iniUser()->progAlertWindowAutoShow()) {
+        windowManager()->showProgramAlertWindow();
+    }
 }
 
 void TrayIcon::updateAlertTimer()
