@@ -1081,7 +1081,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation>Окна Оповещения всегда сверху</translation>
+        <translation>Окно Оповещения всегда сверху</translation>
     </message>
 </context>
 <context>

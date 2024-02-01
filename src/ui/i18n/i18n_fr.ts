@@ -1077,11 +1077,11 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Affichage auto de la fenêtre d&apos;alerte pour les nouveaux programmes</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation type="unfinished"></translation>
+        <translation>La fenêtre d&apos;alerte est toujours visible</translation>
     </message>
 </context>
 <context>
@@ -1427,7 +1427,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Review Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Revoir les alertes</translation>
     </message>
 </context>
 <context>
