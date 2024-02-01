@@ -264,6 +264,7 @@ void ConfAppManager::logBlockedApp(const LogEntryBlocked &logEntry)
     app.appOriginPath = appOriginPath;
     app.appPath = appPath;
     app.appName = appName;
+    app.scheduleAction = App::ScheduleRemove; // default action for alert
 
     const bool ok = addOrUpdateApp(app);
     if (ok) {
