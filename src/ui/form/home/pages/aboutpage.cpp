@@ -104,7 +104,9 @@ void AboutPage::setupNewVersionUpdate()
         m_btDownload->setWindowFilePath(updateChecker->downloadUrl());
         m_btDownload->setToolTip(updateChecker->downloadUrl());
 
-        m_btCheckUpdate->setToolTip(DateUtil::localeDateTime(updateChecker->lastSuccess()));
+        m_btCheckUpdate->setToolTip(
+                QString("%1 (%2)").arg(DateUtil::localeDateTime(updateChecker->lastRun()),
+                        DateUtil::localeDateTime(updateChecker->lastSuccess())));
 
         retranslateNewVersionBox();
     };
