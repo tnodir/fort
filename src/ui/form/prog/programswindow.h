@@ -98,6 +98,7 @@ private:
     QAction *m_actAddWildcard = nullptr;
     QAction *m_actEditApp = nullptr;
     QAction *m_actRemoveApp = nullptr;
+    QAction *m_actReviewAlerts = nullptr;
     QAction *m_actPurgeApps = nullptr;
     QAction *m_actFindApps = nullptr;
     QPushButton *m_btEdit = nullptr;

@@ -134,6 +134,7 @@ void ProgramsWindow::retranslateUi()
     m_actAddWildcard->setText(tr("Add Wildcard"));
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
+    m_actReviewAlerts->setText(tr("Review Alerts"));
     m_actPurgeApps->setText(tr("Purge Obsolete"));
     m_actFindApps->setText(tr("Find"));
 
@@ -270,6 +271,7 @@ void ProgramsWindow::setupEditMenu()
 
     editMenu->addSeparator();
 
+    m_actReviewAlerts = editMenu->addAction(IconCache::icon(":/icons/error.png"), QString());
     m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/recycle.png"), QString());
 
     m_actFindApps = editMenu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
@@ -285,6 +287,8 @@ void ProgramsWindow::setupEditMenu()
     connect(m_actAddWildcard, &QAction::triggered, this, &ProgramsWindow::addNewWildcard);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
     connect(m_actRemoveApp, &QAction::triggered, this, &ProgramsWindow::deleteSelectedApps);
+    connect(m_actReviewAlerts, &QAction::triggered, this,
+            [&] { windowManager()->showProgramAlertWindow(); });
     connect(m_actPurgeApps, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox([&] { ctrl()->purgeApps(); },
                 tr("Are you sure to remove all non-existent programs?"));
