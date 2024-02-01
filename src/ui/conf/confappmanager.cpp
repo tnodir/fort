@@ -14,6 +14,7 @@
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <util/conf/confutil.h>
+#include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -207,7 +208,7 @@ void ConfAppManager::beginAddOrUpdateApp(
             << app.killChild << app.lanOnly << app.parked << app.logBlocked << app.logConn
             << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
             << app.scheduleAction << SqliteStmt::nullable(app.scheduleTime)
-            << SqliteStmt::nullable(QDateTime::currentDateTime(), onlyUpdate);
+            << SqliteStmt::nullable(DateUtil::now(), onlyUpdate);
 
     const char *sql = onlyUpdate ? sqlUpdateApp : sqlUpsertApp;
     const auto appIdVar = sqliteDb()->executeEx(sql, vars, 1, &ok);
@@ -526,7 +527,7 @@ void ConfAppManager::updateAppEndTimes()
     if (!stmt.prepare(sqliteDb()->db(), sqlSelectEndedApps))
         return;
 
-    stmt.bindDateTime(1, QDateTime::currentDateTime());
+    stmt.bindDateTime(1, DateUtil::now());
 
     while (stmt.step() == SqliteStmt::StepRow) {
         App app;

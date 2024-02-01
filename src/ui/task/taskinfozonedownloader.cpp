@@ -7,6 +7,7 @@
 #include <model/zonelistmodel.h>
 #include <model/zonesourcewrapper.h>
 #include <model/zonetypewrapper.h>
+#include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -150,7 +151,7 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     zone.binChecksum = worker->binChecksum();
 
     zone.sourceModTime = worker->sourceModTime();
-    zone.lastRun = QDateTime::currentDateTime();
+    zone.lastRun = DateUtil::now();
     zone.lastSuccess = success ? zone.lastRun : worker->lastSuccess();
 
     IoC<ConfZoneManager>()->updateZoneResult(zone);

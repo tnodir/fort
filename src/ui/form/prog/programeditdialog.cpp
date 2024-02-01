@@ -22,6 +22,7 @@
 #include <form/dialog/dialogutil.h>
 #include <fortmanager.h>
 #include <manager/windowmanager.h>
+#include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
@@ -111,7 +112,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
             appRow.scheduleTime.isNull() ? ScheduleTimeIn : ScheduleTimeAt);
     m_scScheduleIn->spinBox()->setValue(30);
     m_dteScheduleAt->setDateTime(appRow.scheduleTime);
-    m_dteScheduleAt->setMinimumDateTime(QDateTime::currentDateTime());
+    m_dteScheduleAt->setMinimumDateTime(DateUtil::now());
 }
 
 void ProgramEditDialog::initializePathNameFields()
@@ -732,7 +733,7 @@ void ProgramEditDialog::fillAppEndTime(App &app) const
     if (m_comboScheduleType->currentIndex() == ScheduleTimeIn) {
         const int minutes = m_scScheduleIn->spinBox()->value();
 
-        app.scheduleTime = QDateTime::currentDateTime().addSecs(minutes * 60);
+        app.scheduleTime = DateUtil::now().addSecs(minutes * 60);
     } else {
         app.scheduleTime = m_dteScheduleAt->dateTime();
     }
