@@ -50,6 +50,15 @@ void ProgramAlertWindow::closeOnSave()
     }
 }
 
+void ProgramAlertWindow::updateAdvancedMode(bool on)
+{
+    ProgramEditDialog::updateAdvancedMode(on);
+
+    iniUser()->setProgAlertWindowAdvancedMode(on);
+
+    confManager()->saveIniUser();
+}
+
 void ProgramAlertWindow::setupController()
 {
     ctrl()->setParent(this); // can't set in ctor, because the widget isn't yet fully constructed
@@ -69,7 +78,7 @@ void ProgramAlertWindow::retranslateWindowTitle()
 void ProgramAlertWindow::setupUi()
 {
     // Advanced Mode
-    setAdvancedMode(false);
+    setAdvancedMode(iniUser()->progAlertWindowAdvancedMode());
 
     // Modality
     this->setWindowModality(Qt::NonModal);

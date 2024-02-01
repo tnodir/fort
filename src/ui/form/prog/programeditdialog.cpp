@@ -186,6 +186,12 @@ void ProgramEditDialog::setAdvancedMode(bool on)
     m_btAdvancedMode->setChecked(on);
 }
 
+void ProgramEditDialog::updateAdvancedMode(bool on)
+{
+    m_rbKillProcess->setVisible(on);
+    m_frameAdvanced->setVisible(on);
+}
+
 void ProgramEditDialog::setupController()
 {
     connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramEditDialog::retranslateUi);
@@ -617,10 +623,7 @@ void ProgramEditDialog::setupAdvancedMode()
     m_btAdvancedMode->setCheckable(true);
     m_btAdvancedMode->setChecked(true);
 
-    connect(m_btAdvancedMode, &QToolButton::toggled, this, [&](bool checked) {
-        m_rbKillProcess->setVisible(checked);
-        m_frameAdvanced->setVisible(checked);
-    });
+    connect(m_btAdvancedMode, &QToolButton::toggled, this, &ProgramEditDialog::updateAdvancedMode);
 }
 
 void ProgramEditDialog::fillEditName()

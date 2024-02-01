@@ -110,6 +110,9 @@ public:
     }
     void setProgAlertWindowAlwaysOnTop(bool on) { setValue("progAlertWindow/alwaysOnTop", on); }
 
+    bool progAlertWindowAdvancedMode() const { return valueBool("progAlertWindow/advancedMode"); }
+    void setProgAlertWindowAdvancedMode(bool on) { setValue("progAlertWindow/advancedMode", on); }
+
     QRect optWindowGeometry() const { return value("optWindow/geometry").toRect(); }
     void setOptWindowGeometry(const QRect &v) { setValue("optWindow/geometry", v); }
 

@@ -24,6 +24,8 @@ public:
 protected:
     void closeOnSave() override;
 
+    void updateAdvancedMode(bool on) override;
+
 private:
     void setupController();
     void setupStateWatcher();

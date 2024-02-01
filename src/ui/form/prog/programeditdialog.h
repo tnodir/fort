@@ -48,6 +48,7 @@ protected:
     virtual void closeOnSave();
 
     void setAdvancedMode(bool on);
+    virtual void updateAdvancedMode(bool on);
 
 private:
     void initializePathNameFields();
