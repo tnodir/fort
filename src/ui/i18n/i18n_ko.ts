@@ -1077,11 +1077,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>새 프로그램 자동 표시 알림 창</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation type="unfinished"></translation>
+        <translation>경고 창이 항상 맨 위에 있음</translation>
     </message>
 </context>
 <context>
@@ -1343,6 +1343,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>At:</source>
         <translation>위치:</translation>
     </message>
+    <message>
+        <source>Advanced Mode</source>
+        <translation>고급 모드</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1427,7 +1431,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Review Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>경고 검토</translation>
     </message>
 </context>
 <context>

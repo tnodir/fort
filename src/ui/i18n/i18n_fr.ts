@@ -1343,6 +1343,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>At:</source>
         <translation>À&#xa0;:</translation>
     </message>
+    <message>
+        <source>Advanced Mode</source>
+        <translation>Mode avancé</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

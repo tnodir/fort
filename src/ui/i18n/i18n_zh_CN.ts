@@ -1341,6 +1341,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>At:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Advanced Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

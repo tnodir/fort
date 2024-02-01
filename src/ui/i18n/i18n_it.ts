@@ -1077,11 +1077,11 @@ Assicurati di avere un backup recente.</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-mostra finestra di allerta per nuovi programmi</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation type="unfinished"></translation>
+        <translation>La finestra di allerta è sempre in vista</translation>
     </message>
 </context>
 <context>
@@ -1343,6 +1343,10 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <source>At:</source>
         <translation>A:</translation>
     </message>
+    <message>
+        <source>Advanced Mode</source>
+        <translation>Modalità avanzata</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1427,7 +1431,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Review Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Rivedi allerte</translation>
     </message>
 </context>
 <context>

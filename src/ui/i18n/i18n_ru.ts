@@ -1343,6 +1343,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>At:</source>
         <translation>В:</translation>
     </message>
+    <message>
+        <source>Advanced Mode</source>
+        <translation>Расширенный режим</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

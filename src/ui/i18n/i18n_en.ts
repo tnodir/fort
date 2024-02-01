@@ -1338,6 +1338,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>At:</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Advanced Mode</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
