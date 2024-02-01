@@ -69,12 +69,13 @@ private:
     QLayout *setupNotesLayout();
     void setupComboAppGroups();
     QLayout *setupLogLayout();
-    QLayout *setupAllowLayout();
+    QLayout *setupActionsLayout();
     QLayout *setupOptionsLayout();
     QLayout *setupZonesLayout();
     QLayout *setupScheduleLayout();
     void setupCbSchedule();
     void setupComboScheduleType();
+    QLayout *setupButtonsLayout();
 
     void fillEditName();
 

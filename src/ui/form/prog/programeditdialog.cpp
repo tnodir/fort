@@ -282,27 +282,14 @@ void ProgramEditDialog::setupUi()
     // Log
     auto logLayout = setupLogLayout();
 
-    // Allow/Block
-    auto allowLayout = setupAllowLayout();
+    // Allow/Block/etc Actions Layout
+    auto actionsLayout = setupActionsLayout();
 
     // Options
     auto optionsLayout = setupOptionsLayout();
 
     // OK/Cancel
-    auto buttonsLayout = new QHBoxLayout();
-
-    m_btOk = ControlUtil::createButton(QString(), [&] {
-        if (save()) {
-            closeOnSave();
-        }
-    });
-    m_btOk->setDefault(true);
-
-    m_btCancel = new QPushButton();
-    connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
-
-    buttonsLayout->addWidget(m_btOk, 1, Qt::AlignRight);
-    buttonsLayout->addWidget(m_btCancel);
+    auto buttonsLayout = setupButtonsLayout();
 
     // Form
     auto layout = new QVBoxLayout();
@@ -310,7 +297,7 @@ void ProgramEditDialog::setupUi()
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(logLayout);
     layout->addWidget(ControlUtil::createSeparator());
-    layout->addLayout(allowLayout);
+    layout->addLayout(actionsLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(optionsLayout);
     layout->addStretch();
@@ -469,7 +456,7 @@ QLayout *ProgramEditDialog::setupLogLayout()
     return layout;
 }
 
-QLayout *ProgramEditDialog::setupAllowLayout()
+QLayout *ProgramEditDialog::setupActionsLayout()
 {
     auto allowLayout = new QHBoxLayout();
     allowLayout->setSpacing(20);
@@ -576,6 +563,25 @@ void ProgramEditDialog::setupComboScheduleType()
         m_scScheduleIn->setVisible(isTimeIn);
         m_dteScheduleAt->setVisible(!isTimeIn);
     });
+}
+
+QLayout *ProgramEditDialog::setupButtonsLayout()
+{
+    m_btOk = ControlUtil::createButton(QString(), [&] {
+        if (save()) {
+            closeOnSave();
+        }
+    });
+    m_btOk->setDefault(true);
+
+    m_btCancel = new QPushButton();
+    connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
+
+    auto layout = new QHBoxLayout();
+    layout->addWidget(m_btOk, 1, Qt::AlignRight);
+    layout->addWidget(m_btCancel);
+
+    return layout;
 }
 
 void ProgramEditDialog::fillEditName()
