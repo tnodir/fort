@@ -589,6 +589,7 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
 {
     setupAdvancedMode();
 
+    // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
         if (save()) {
             closeOnSave();
@@ -596,6 +597,9 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     });
     m_btOk->setDefault(true);
 
+    connect(this, &WidgetWindow::defaultButtonPressed, m_btOk, &QAbstractButton::click);
+
+    // Cancel
     m_btCancel = new QPushButton();
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 

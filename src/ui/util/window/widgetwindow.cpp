@@ -91,12 +91,17 @@ void WidgetWindow::keyPressEvent(QKeyEvent *event)
 {
     QWidget::keyPressEvent(event);
 
+    if (event->modifiers() != Qt::NoModifier)
+        return;
+
     switch (event->key()) {
-    case Qt::Key_Escape:
-        if (event->modifiers() == Qt::NoModifier) {
-            close();
-        }
-        break;
+    case Qt::Key_Return:
+    case Qt::Key_Enter: {
+        emit defaultButtonPressed();
+    } break;
+    case Qt::Key_Escape: {
+        close();
+    } break;
     }
 }
 
