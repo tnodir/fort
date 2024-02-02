@@ -33,7 +33,7 @@
 
 namespace {
 
-const std::array appBlockInMinuteValues = { 15, 1, 5, 10, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
+const std::array appBlockInMinuteValues = { 15, 0, 1, 5, 10, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
     60 * 24 * 7, 60 * 24 * 30 };
 
 }
@@ -273,9 +273,9 @@ void ProgramEditDialog::retranslateScheduleType()
 
 void ProgramEditDialog::retranslateScheduleIn()
 {
-    const QStringList list = { tr("Custom"), tr("1 minute"), tr("5 minutes"), tr("10 minutes"),
-        tr("30 minutes"), tr("1 hour"), tr("6 hours"), tr("12 hours"), tr("Day"), tr("Week"),
-        tr("Month") };
+    const QStringList list = { tr("Custom"), tr("1 second"), tr("1 minute"), tr("5 minutes"),
+        tr("10 minutes"), tr("30 minutes"), tr("1 hour"), tr("6 hours"), tr("12 hours"), tr("Day"),
+        tr("Week"), tr("Month") };
 
     m_scScheduleIn->setNames(list);
     m_scScheduleIn->spinBox()->setSuffix(tr(" minute(s)"));
@@ -542,7 +542,7 @@ QLayout *ProgramEditDialog::setupScheduleLayout()
 
     // Schedule after N minutes
     m_scScheduleIn = new SpinCombo();
-    m_scScheduleIn->spinBox()->setRange(1, 60 * 24 * 30 * 12); // ~Year
+    m_scScheduleIn->spinBox()->setRange(0, 60 * 24 * 30 * 12); // ~Year
     m_scScheduleIn->setValues(appBlockInMinuteValues);
 
     // Schedule to a specified date & time
