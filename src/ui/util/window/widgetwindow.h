@@ -35,7 +35,7 @@ signals:
     void aboutToShow();
     void aboutToClose(QEvent *event);
 
-    void defaultButtonPressed();
+    void defaultKeyPressed();
 
 protected:
     void moveEvent(QMoveEvent *event) override;

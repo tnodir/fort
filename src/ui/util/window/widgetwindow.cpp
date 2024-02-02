@@ -97,7 +97,7 @@ void WidgetWindow::keyPressEvent(QKeyEvent *event)
     switch (event->key()) {
     case Qt::Key_Return:
     case Qt::Key_Enter: {
-        emit defaultButtonPressed();
+        emit defaultKeyPressed();
     } break;
     case Qt::Key_Escape: {
         close();

@@ -594,7 +594,7 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     });
     m_btOk->setDefault(true);
 
-    connect(this, &WidgetWindow::defaultButtonPressed, m_btOk, &QAbstractButton::click);
+    connect(this, &WidgetWindow::defaultKeyPressed, m_btOk, &QAbstractButton::click);
 
     // Cancel
     m_btCancel = new QPushButton();
