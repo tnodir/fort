@@ -183,13 +183,7 @@ void ProgramEditDialog::closeOnSave()
 
 void ProgramEditDialog::setAdvancedMode(bool on)
 {
-    m_btAdvancedMode->setChecked(on);
-}
-
-void ProgramEditDialog::updateAdvancedMode(bool on)
-{
     m_rbKillProcess->setVisible(on);
-    m_frameAdvanced->setVisible(on);
 }
 
 void ProgramEditDialog::setupController()
@@ -233,7 +227,7 @@ void ProgramEditDialog::retranslateUi()
     retranslateScheduleIn();
     m_dteScheduleAt->unsetLocale();
 
-    m_btAdvancedMode->setToolTip(tr("Advanced Mode"));
+    m_btOptions->setToolTip(tr("Advanced Options"));
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
@@ -300,7 +294,7 @@ void ProgramEditDialog::setupUi()
     auto actionsLayout = setupActionsLayout();
 
     // Advanced Options
-    setupFrameAdvanced();
+    setupAdvancedOptions();
 
     // Schedule
     auto scheduleLayout = setupScheduleLayout();
@@ -312,12 +306,11 @@ void ProgramEditDialog::setupUi()
     auto layout = new QVBoxLayout();
     layout->addLayout(appLayout);
     layout->addWidget(ControlUtil::createSeparator());
+    layout->addStretch();
     layout->addLayout(actionsLayout);
-    layout->addStretch();
-    layout->addWidget(m_frameAdvanced);
-    layout->addStretch();
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(scheduleLayout);
+    layout->addStretch();
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
 
@@ -460,7 +453,7 @@ QLayout *ProgramEditDialog::setupActionsLayout()
     return layout;
 }
 
-void ProgramEditDialog::setupFrameAdvanced()
+void ProgramEditDialog::setupAdvancedOptions()
 {
     // Use Group Perm.
     m_cbUseGroupPerm = new QCheckBox();
@@ -475,8 +468,6 @@ void ProgramEditDialog::setupFrameAdvanced()
     auto zonesLayout = setupZonesLayout();
 
     auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_cbUseGroupPerm);
     layout->addLayout(childLayout);
     layout->addWidget(ControlUtil::createHSeparator());
@@ -484,8 +475,10 @@ void ProgramEditDialog::setupFrameAdvanced()
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(zonesLayout);
 
-    m_frameAdvanced = new QFrame();
-    m_frameAdvanced->setLayout(layout);
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
+
+    m_btOptions = ControlUtil::createButton(":/icons/widgets.png");
+    m_btOptions->setMenu(menu);
 }
 
 QLayout *ProgramEditDialog::setupChildLayout()
@@ -593,8 +586,6 @@ void ProgramEditDialog::setupComboScheduleType()
 
 QLayout *ProgramEditDialog::setupButtonsLayout()
 {
-    setupAdvancedMode();
-
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
         if (save()) {
@@ -610,20 +601,11 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();
-    layout->addWidget(m_btAdvancedMode);
+    layout->addWidget(m_btOptions);
     layout->addWidget(m_btOk, 1, Qt::AlignRight);
     layout->addWidget(m_btCancel);
 
     return layout;
-}
-
-void ProgramEditDialog::setupAdvancedMode()
-{
-    m_btAdvancedMode = ControlUtil::createIconToolButton(":/icons/widgets.png");
-    m_btAdvancedMode->setCheckable(true);
-    m_btAdvancedMode->setChecked(true);
-
-    connect(m_btAdvancedMode, &QToolButton::toggled, this, &ProgramEditDialog::updateAdvancedMode);
 }
 
 void ProgramEditDialog::fillEditName()

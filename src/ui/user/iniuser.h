@@ -104,14 +104,8 @@ public:
     bool progAlertWindowAutoShow() const { return valueBool("progAlertWindow/autoShow", true); }
     void setProgAlertWindowAutoShow(bool on) { setValue("progAlertWindow/autoShow", on); }
 
-    bool progAlertWindowAlwaysOnTop() const
-    {
-        return valueBool("progAlertWindow/alwaysOnTop", true);
-    }
+    bool progAlertWindowAlwaysOnTop() const { return valueBool("progAlertWindow/alwaysOnTop"); }
     void setProgAlertWindowAlwaysOnTop(bool on) { setValue("progAlertWindow/alwaysOnTop", on); }
-
-    bool progAlertWindowAdvancedMode() const { return valueBool("progAlertWindow/advancedMode"); }
-    void setProgAlertWindowAdvancedMode(bool on) { setValue("progAlertWindow/advancedMode", on); }
 
     QRect optWindowGeometry() const { return value("optWindow/geometry").toRect(); }
     void setOptWindowGeometry(const QRect &v) { setValue("optWindow/geometry", v); }

@@ -48,7 +48,6 @@ protected:
     virtual void closeOnSave();
 
     void setAdvancedMode(bool on);
-    virtual void updateAdvancedMode(bool on);
 
 private:
     void initializePathNameFields();
@@ -73,7 +72,7 @@ private:
     QLayout *setupNotesLayout();
     void setupComboAppGroups();
     QLayout *setupActionsLayout();
-    void setupFrameAdvanced();
+    void setupAdvancedOptions();
     QLayout *setupChildLayout();
     QLayout *setupLogLayout();
     QLayout *setupZonesLayout();
@@ -81,7 +80,6 @@ private:
     void setupCbSchedule();
     void setupComboScheduleType();
     QLayout *setupButtonsLayout();
-    void setupAdvancedMode();
 
     void fillEditName();
 
@@ -115,7 +113,6 @@ private:
     QRadioButton *m_rbAllowApp = nullptr;
     QRadioButton *m_rbBlockApp = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
-    QFrame *m_frameAdvanced = nullptr;
     QCheckBox *m_cbUseGroupPerm = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
     QCheckBox *m_cbKillChild = nullptr;
@@ -129,7 +126,7 @@ private:
     QComboBox *m_comboScheduleType = nullptr;
     SpinCombo *m_scScheduleIn = nullptr;
     QDateTimeEdit *m_dteScheduleAt = nullptr;
-    QToolButton *m_btAdvancedMode = nullptr;
+    QPushButton *m_btOptions = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 
