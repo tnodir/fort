@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.11.2-test0, 2024-02-02:
+- UI: Programs: Fix list header.
+
 v3.11.1, 2024-02-02:
 - UI: ProgramAlert: Show newest alerts, not oldest.
 - UI: ProgramEdit: Add "Advanced Options" menu.
