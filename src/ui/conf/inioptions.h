@@ -93,9 +93,6 @@ public:
     }
     void setBlockedIpKeepCount(int v) { setValue("stat/blockedIpKeepCount", v); }
 
-    bool progPurgeOnStart() const { return valueBool("prog/purgeOnStart"); }
-    void setProgPurgeOnStart(bool v) { setValue("prog/purgeOnStart", v); }
-
     bool progPurgeOnMounted() const { return valueBool("prog/purgeOnMounted"); }
     void setProgPurgeOnMounted(bool v) { setValue("prog/purgeOnMounted", v); }
 

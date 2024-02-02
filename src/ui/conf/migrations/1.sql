@@ -158,6 +158,7 @@ CREATE TABLE task(
   task_id INTEGER PRIMARY KEY,
   name TEXT NOT NULL,
   enabled BOOLEAN NOT NULL,
+  run_on_startup BOOLEAN NOT NULL DEFAULT 0,
   interval_hours INTEGER NOT NULL,
   last_run INTEGER NOT NULL,
   last_success INTEGER NOT NULL,

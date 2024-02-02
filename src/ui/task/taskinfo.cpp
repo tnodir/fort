@@ -30,6 +30,14 @@ void TaskInfo::setEnabled(bool enabled)
     }
 }
 
+void TaskInfo::setRunOnStatup(bool runOnStatup)
+{
+    if (m_runOnStatup != runOnStatup) {
+        m_runOnStatup = runOnStatup;
+        emit runOnStatupChanged();
+    }
+}
+
 void TaskInfo::setRunning(bool running)
 {
     if (m_running != running) {
@@ -53,6 +61,8 @@ QString TaskInfo::title() const
         return tr("Fort Firewall Update Checker");
     case ZoneDownloader:
         return tr("Zones Downloader");
+    case AppPurger:
+        return tr("Purge Obsolete Programs");
     default:
         Q_UNREACHABLE();
         return QString();
@@ -101,6 +111,7 @@ void TaskInfo::editFromVariant(const QVariant &v)
     const TaskEditInfo info(v.toUInt());
 
     setEnabled(info.enabled());
+    setRunOnStatup(info.runOnStartup());
     setIntervalHours(info.intervalHours());
 }
 

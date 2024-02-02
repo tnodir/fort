@@ -26,13 +26,14 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    void retranslateTaskDetails();
+    void retranslateTaskInterval();
 
     void setupUi();
     void setupTableTasks();
     void setupTableTasksHeader();
     void setupTaskDetails();
     void setupTaskInterval();
+    void setupTaskRunOnStartup();
     void setupTableTasksChanged();
 
     int currentTaskIndex() const;
@@ -48,6 +49,7 @@ private:
     TableView *m_tableTasks = nullptr;
     QWidget *m_taskDetailsRow = nullptr;
     CheckSpinCombo *m_cscTaskInterval = nullptr;
+    QCheckBox *m_cbTaskRunOnStartup = nullptr;
     QToolButton *m_btTaskRun = nullptr;
     QToolButton *m_btTaskAbort = nullptr;
 };

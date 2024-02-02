@@ -4,6 +4,8 @@
 #include <conf/confappmanager.h>
 #include <manager/windowmanager.h>
 #include <model/applistmodel.h>
+#include <task/taskinfoapppurger.h>
+#include <task/taskmanager.h>
 #include <util/ioc/ioccontainer.h>
 
 namespace {
@@ -63,7 +65,5 @@ void ProgramsController::deleteApps(const QVector<qint64> &appIdList)
 
 void ProgramsController::purgeApps()
 {
-    if (!confAppManager()->purgeApps()) {
-        showErrorMessage(tr("Cannot purge obsolete programs"));
-    }
+    taskManager()->runTask(TaskInfo::AppPurger);
 }

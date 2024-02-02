@@ -151,8 +151,6 @@ void ConfAppManager::setUp()
 
     setupDriveListManager();
 
-    purgeAppsOnStart();
-
     setupAppEndTimer();
 }
 
@@ -164,13 +162,6 @@ void ConfAppManager::setupDriveListManager()
                     updateDriverConf();
                 }
             });
-}
-
-void ConfAppManager::purgeAppsOnStart()
-{
-    if (conf()->ini().progPurgeOnStart()) {
-        purgeApps();
-    }
 }
 
 void ConfAppManager::setupAppEndTimer()

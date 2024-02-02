@@ -60,8 +60,6 @@ signals:
 protected:
     virtual void setupDriveListManager();
 
-    virtual void purgeAppsOnStart();
-
     virtual void setupAppEndTimer();
     void updateAppEndTimer();
 

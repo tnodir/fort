@@ -8,6 +8,7 @@
 #include <util/ioc/iocservice.h>
 
 class TaskInfo;
+class TaskInfoAppPurger;
 class TaskInfoUpdateChecker;
 class TaskInfoZoneDownloader;
 
@@ -20,6 +21,7 @@ public:
 
     TaskInfoUpdateChecker *taskInfoUpdateChecker() const;
     TaskInfoZoneDownloader *taskInfoZoneDownloader() const;
+    TaskInfoAppPurger *taskInfoAppPurger() const;
 
     const QList<TaskInfo *> &taskInfoList() const { return m_taskInfoList; }
     TaskInfo *taskInfoAt(int row) const;
@@ -65,6 +67,8 @@ private:
     void appendTaskInfo(TaskInfo *taskInfo);
 
 private:
+    bool m_isFirstRun = true;
+
     QList<TaskInfo *> m_taskInfoList;
 
     QTimer m_timer;

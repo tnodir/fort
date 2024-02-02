@@ -39,19 +39,6 @@ bool TaskInfoZoneDownloader::processResult(bool success)
     return true;
 }
 
-void TaskInfoZoneDownloader::loadZones()
-{
-    TaskZoneDownloader worker;
-
-    const int rowCount = zoneListModel()->rowCount();
-    for (m_zoneIndex = 0; m_zoneIndex < rowCount; ++m_zoneIndex) {
-        setupTaskWorkerByZone(&worker);
-        addSubResult(&worker, false);
-    }
-
-    emitZonesUpdated();
-}
-
 bool TaskInfoZoneDownloader::saveZoneAsText(const QString &filePath, int zoneIndex)
 {
     TaskZoneDownloader worker;

@@ -12,18 +12,14 @@ class TaskWorker;
 class TaskInfo : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(
-            int intervalHours READ intervalHours WRITE setIntervalHours NOTIFY intervalHoursChanged)
-    Q_PROPERTY(QString title READ title CONSTANT)
-    Q_PROPERTY(TaskInfo::TaskType type READ type WRITE setType NOTIFY typeChanged)
-    Q_PROPERTY(QDateTime lastRun READ lastRun WRITE setLastRun NOTIFY lastRunChanged)
-    Q_PROPERTY(
-            QDateTime lastSuccess READ lastSuccess WRITE setLastSuccess NOTIFY lastSuccessChanged)
-    Q_PROPERTY(bool running READ running NOTIFY taskWorkerChanged)
 
 public:
-    enum TaskType : qint8 { TypeNone = -1, UpdateChecker = 0, ZoneDownloader };
+    enum TaskType : qint8 {
+        TypeNone = -1,
+        UpdateChecker = 0,
+        ZoneDownloader,
+        AppPurger,
+    };
     Q_ENUM(TaskType)
 
     explicit TaskInfo(TaskInfo::TaskType type, TaskManager &taskManager);
@@ -36,6 +32,9 @@ public:
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool enabled);
+
+    bool runOnStatup() const { return m_runOnStatup; }
+    void setRunOnStatup(bool runOnStatup);
 
     bool aborted() const { return m_aborted; }
 
@@ -74,6 +73,7 @@ public:
 
 signals:
     void enabledChanged();
+    void runOnStatupChanged();
     void runningChanged();
     void intervalHoursChanged();
     void typeChanged();
@@ -101,6 +101,7 @@ private:
 
 private:
     bool m_enabled : 1 = false;
+    bool m_runOnStatup : 1 = false;
     bool m_running : 1 = false;
     bool m_aborted : 1 = false; // transient
 

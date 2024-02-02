@@ -46,13 +46,15 @@ void SchedulePage::onRetranslateUi()
 {
     taskListModel()->refresh();
 
+    retranslateTaskInterval();
+
+    m_cbTaskRunOnStartup->setText(tr("Run On Startup"));
+
     m_btTaskRun->setText(tr("Run"));
     m_btTaskAbort->setText(tr("Abort"));
-
-    retranslateTaskDetails();
 }
 
-void SchedulePage::retranslateTaskDetails()
+void SchedulePage::retranslateTaskInterval()
 {
     const QStringList list = { tr("Custom"), tr("Hourly"), tr("Each 6 hours"), tr("Each 12 hours"),
         tr("Daily"), tr("Weekly"), tr("Monthly") };
@@ -119,22 +121,25 @@ void SchedulePage::setupTableTasksHeader()
 
 void SchedulePage::setupTaskDetails()
 {
-    m_taskDetailsRow = new QWidget();
-
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    m_taskDetailsRow->setLayout(layout);
-
     setupTaskInterval();
+    setupTaskRunOnStartup();
 
     m_btTaskRun = ControlUtil::createFlatToolButton(
             ":/icons/play.png", [&] { taskManager()->runTask(currentTaskInfo()->type()); });
     m_btTaskAbort = ControlUtil::createFlatToolButton(
             ":/icons/cancel.png", [&] { taskManager()->abortTask(currentTaskInfo()->type()); });
 
+    auto layout = new QHBoxLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->addWidget(m_cscTaskInterval, 1);
+    layout->addWidget(ControlUtil::createVSeparator());
+    layout->addWidget(m_cbTaskRunOnStartup);
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btTaskRun);
     layout->addWidget(m_btTaskAbort);
+
+    m_taskDetailsRow = new QWidget();
+    m_taskDetailsRow->setLayout(layout);
 }
 
 void SchedulePage::setupTaskInterval()
@@ -161,6 +166,17 @@ void SchedulePage::setupTaskInterval()
             });
 }
 
+void SchedulePage::setupTaskRunOnStartup()
+{
+    m_cbTaskRunOnStartup = ControlUtil::createCheckBox(false, [&](bool checked) {
+        const int taskIndex = currentTaskIndex();
+        if (taskIndex >= 0) {
+            const auto index = taskListModel()->index(taskIndex, 2);
+            taskListModel()->setData(index, checked, TaskListModel::RoleRunOnStartup);
+        }
+    });
+}
+
 void SchedulePage::setupTableTasksChanged()
 {
     const auto refreshTableTasksChanged = [&] {
@@ -178,6 +194,9 @@ void SchedulePage::setupTableTasksChanged()
             m_cscTaskInterval->checkBox()->setText(taskListModel()->data(index).toString());
             m_cscTaskInterval->spinBox()->setValue(
                     taskListModel()->data(index, TaskListModel::RoleIntervalHours).toInt());
+
+            m_cbTaskRunOnStartup->setChecked(
+                    taskListModel()->data(index, TaskListModel::RoleRunOnStartup).toBool());
 
             const bool running = currentTaskInfo()->running();
             m_btTaskRun->setEnabled(!running);

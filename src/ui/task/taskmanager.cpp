@@ -4,6 +4,7 @@
 #include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
 
+#include "taskinfoapppurger.h"
 #include "taskinfoupdatechecker.h"
 #include "taskinfozonedownloader.h"
 
@@ -17,12 +18,17 @@ TaskManager::TaskManager(QObject *parent) : QObject(parent)
 
 TaskInfoUpdateChecker *TaskManager::taskInfoUpdateChecker() const
 {
-    return static_cast<TaskInfoUpdateChecker *>(taskInfoAt(0));
+    return static_cast<TaskInfoUpdateChecker *>(taskInfoAt(TaskInfo::UpdateChecker));
 }
 
 TaskInfoZoneDownloader *TaskManager::taskInfoZoneDownloader() const
 {
-    return static_cast<TaskInfoZoneDownloader *>(taskInfoAt(1));
+    return static_cast<TaskInfoZoneDownloader *>(taskInfoAt(TaskInfo::ZoneDownloader));
+}
+
+TaskInfoAppPurger *TaskManager::taskInfoAppPurger() const
+{
+    return static_cast<TaskInfoAppPurger *>(taskInfoAt(TaskInfo::AppPurger));
 }
 
 TaskInfo *TaskManager::taskInfoAt(int row) const
@@ -39,15 +45,14 @@ void TaskManager::setUp()
 
 void TaskManager::setupScheduler()
 {
-    taskInfoZoneDownloader()->loadZones();
-
-    m_timer.start(3 * 1000); // 3 seconds
+    m_timer.start(1000); // 1 second
 }
 
 void TaskManager::setupTasks()
 {
     appendTaskInfo(new TaskInfoUpdateChecker(*this));
     appendTaskInfo(new TaskInfoZoneDownloader(*this));
+    appendTaskInfo(new TaskInfoAppPurger(*this));
 }
 
 void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
@@ -128,10 +133,12 @@ void TaskManager::runExpiredTasks()
 
         enabledTaskExists = true;
 
-        if (now >= taskInfo->plannedRun()) {
+        if ((m_isFirstRun && taskInfo->runOnStatup()) || now >= taskInfo->plannedRun()) {
             taskInfo->run();
         }
     }
+
+    m_isFirstRun = false;
 
     if (enabledTaskExists) {
         m_timer.start(5 * 60 * 1000); // 5 minutes
@@ -147,6 +154,8 @@ TaskInfo *TaskManager::taskInfoByType(qint8 taskType) const
         return taskInfoUpdateChecker();
     case TaskInfo::ZoneDownloader:
         return taskInfoZoneDownloader();
+    case TaskInfo::AppPurger:
+        return taskInfoAppPurger();
     default:
         Q_UNREACHABLE();
         return nullptr;

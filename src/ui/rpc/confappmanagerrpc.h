@@ -28,8 +28,6 @@ public:
 protected:
     void setupDriveListManager() override { }
 
-    void purgeAppsOnStart() override { }
-
     void setupAppEndTimer() override { }
 };
 

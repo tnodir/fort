@@ -161,6 +161,7 @@ SOURCES += \
     task/taskdownloader.cpp \
     task/taskeditinfo.cpp \
     task/taskinfo.cpp \
+    task/taskinfoapppurger.cpp \
     task/taskinfoupdatechecker.cpp \
     task/taskinfozonedownloader.cpp \
     task/tasklistmodel.cpp \
@@ -365,6 +366,7 @@ HEADERS += \
     task/taskdownloader.h \
     task/taskeditinfo.h \
     task/taskinfo.h \
+    task/taskinfoapppurger.h \
     task/taskinfoupdatechecker.h \
     task/taskinfozonedownloader.h \
     task/tasklistmodel.h \
