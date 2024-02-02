@@ -13,6 +13,7 @@
 #include <QToolButton>
 
 #include <appinfo/appinfocache.h>
+#include <appinfo/appinfoutil.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
@@ -144,7 +145,7 @@ void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathE
 
 void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathEditable)
 {
-    m_btSelectFile->setEnabled(isPathEditable);
+    m_btSelectFile->setEnabled(isSingleSelection);
     m_editName->setText(isSingleSelection ? m_appRow.appName : QString());
     m_editName->setEnabled(isSingleSelection);
     m_editName->setClearButtonEnabled(isSingleSelection);
@@ -372,6 +373,11 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
     m_editWildcard = new PlainTextEdit();
 
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
+        if (!isEmpty()) {
+            AppInfoUtil::openFolder(m_editPath->text());
+            return;
+        }
+
         const auto filePath = DialogUtil::getOpenFileName(
                 m_labelEditPath->text(), tr("Programs (*.exe);;All files (*.*)"));
 
