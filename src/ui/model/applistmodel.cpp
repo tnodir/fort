@@ -153,10 +153,10 @@ using headerDataDisplay_func = QVariant (*)(int role);
 
 static headerDataDisplay_func headerDataDisplay_funcList[] = {
     &headerDataDisplayName,
-    &headerDataDisplayAction,
-    &headerDataDisplayGroup,
     &headerDataDisplayParked,
     &headerDataDisplayScheduled,
+    &headerDataDisplayAction,
+    &headerDataDisplayGroup,
     &headerDataDisplayFilePath,
     &headerDataDisplayCreationTime,
 };
