@@ -119,16 +119,6 @@ QVariant headerDataDisplayName(int /*role*/)
     return AppListModel::tr("Name");
 }
 
-QVariant headerDataDisplayAction(int /*role*/)
-{
-    return AppListModel::tr("Action");
-}
-
-QVariant headerDataDisplayGroup(int /*role*/)
-{
-    return AppListModel::tr("Group");
-}
-
 QVariant headerDataDisplayParked(int role)
 {
     return (role == Qt::ToolTipRole) ? AppListModel::tr("Parked") : QString();
@@ -137,6 +127,16 @@ QVariant headerDataDisplayParked(int role)
 QVariant headerDataDisplayScheduled(int role)
 {
     return (role == Qt::ToolTipRole) ? AppListModel::tr("Scheduled") : QString();
+}
+
+QVariant headerDataDisplayAction(int /*role*/)
+{
+    return AppListModel::tr("Action");
+}
+
+QVariant headerDataDisplayGroup(int /*role*/)
+{
+    return AppListModel::tr("Group");
 }
 
 QVariant headerDataDisplayFilePath(int /*role*/)
@@ -198,15 +198,6 @@ QVariant dataDisplayAction(const AppRow &appRow, int /*role*/)
     return AppListModel::tr("Allow");
 }
 
-QVariant dataDisplayGroup(const AppRow &appRow, int /*role*/)
-{
-    const FirewallConf *conf = IoC<ConfAppManager>()->conf();
-
-    const AppGroup *appGroup = conf->appGroupAt(appRow.groupIndex);
-
-    return appGroup->name();
-}
-
 QVariant dataDisplayParked(const AppRow & /*appRow*/, int /*role*/)
 {
     return {};
@@ -218,6 +209,15 @@ QVariant dataDisplayScheduled(const AppRow &appRow, int role)
         return QString();
 
     return DateUtil::localeDateTime(appRow.scheduleTime);
+}
+
+QVariant dataDisplayGroup(const AppRow &appRow, int /*role*/)
+{
+    const FirewallConf *conf = IoC<ConfAppManager>()->conf();
+
+    const AppGroup *appGroup = conf->appGroupAt(appRow.groupIndex);
+
+    return appGroup->name();
 }
 
 QVariant dataDisplayFilePath(const AppRow &appRow, int /*role*/)
