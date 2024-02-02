@@ -171,9 +171,9 @@ inline QVariant headerDataDisplay(int column, int role)
 inline QVariant headerDataDecoration(int section)
 {
     switch (section) {
-    case 3:
+    case 1:
         return IconCache::icon(":/icons/parking.png");
-    case 4:
+    case 2:
         return IconCache::icon(":/icons/time.png");
     default:
         return QVariant();
@@ -234,10 +234,10 @@ using dataDisplay_func = QVariant (*)(const AppRow &appRow, int role);
 
 static dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayName,
-    &dataDisplayAction,
-    &dataDisplayGroup,
     &dataDisplayParked,
     &dataDisplayScheduled,
+    &dataDisplayAction,
+    &dataDisplayGroup,
     &dataDisplayFilePath,
     &dataDisplayCreationTime,
 };
@@ -373,11 +373,11 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
     case 0:
         return appIcon(appRow);
     case 1:
-        return appStateIcon(appRow);
-    case 3:
         return appParkedIcon(appRow);
-    case 4:
+    case 2:
         return appScheduledIcon(appRow);
+    case 3:
+        return appStateIcon(appRow);
     }
 
     return QVariant();
@@ -391,9 +391,9 @@ QVariant AppListModel::dataForeground(const QModelIndex &index) const
     const auto appRow = appRowAt(row);
 
     switch (column) {
-    case 1:
+    case 3:
         return appStateColor(appRow);
-    case 2:
+    case 4:
         return appGroupColor(appRow);
     }
 
@@ -404,7 +404,7 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 2) {
+    if (column == 4) {
         return int(Qt::AlignHCenter | Qt::AlignVCenter);
     }
 
@@ -542,17 +542,17 @@ QString AppListModel::sqlOrderColumn() const
     switch (sortColumn()) {
     case 0: // Name
         return "t.name" + sqlOrderAsc() + ", t.path";
-    case 1: // Action
-        columnsStr = "alerted DESC, t.kill_process, t.blocked";
-        break;
-    case 2: // Group
-        columnsStr = "group_index";
-        break;
-    case 3: // Parked
+    case 1: // Parked
         columnsStr = "t.parked";
         break;
-    case 4: // Scheduled
+    case 2: // Scheduled
         columnsStr = "t.end_time";
+        break;
+    case 3: // Action
+        columnsStr = "alerted DESC, t.kill_process, t.blocked";
+        break;
+    case 4: // Group
+        columnsStr = "group_index";
         break;
     case 5: // File Path
         columnsStr = "t.path";

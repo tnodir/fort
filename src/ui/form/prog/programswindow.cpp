@@ -31,7 +31,7 @@
 
 namespace {
 
-constexpr int APPS_HEADER_VERSION = 8;
+constexpr int APPS_HEADER_VERSION = 9;
 
 }
 
@@ -331,18 +331,18 @@ void ProgramsWindow::setupTableAppsHeader()
     auto header = m_appListView->horizontalHeader();
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
-    header->setSectionResizeMode(1, QHeaderView::Interactive);
-    header->setSectionResizeMode(2, QHeaderView::Interactive);
-    header->setSectionResizeMode(3, QHeaderView::Fixed);
-    header->setSectionResizeMode(4, QHeaderView::Fixed);
+    header->setSectionResizeMode(1, QHeaderView::Fixed);
+    header->setSectionResizeMode(2, QHeaderView::Fixed);
+    header->setSectionResizeMode(3, QHeaderView::Interactive);
+    header->setSectionResizeMode(4, QHeaderView::Interactive);
     header->setSectionResizeMode(5, QHeaderView::Interactive);
     header->setSectionResizeMode(6, QHeaderView::Stretch);
 
     header->resizeSection(0, 320);
-    header->resizeSection(1, 100);
-    header->resizeSection(2, 100);
-    header->resizeSection(3, 30);
-    header->resizeSection(4, 30);
+    header->resizeSection(1, 30);
+    header->resizeSection(2, 30);
+    header->resizeSection(3, 100);
+    header->resizeSection(4, 100);
     header->resizeSection(5, 280);
 
     header->setSectionsClickable(true);
