@@ -1,7 +1,7 @@
 Fort Firewall ChangeLog
 
-v3.11.2-test0, 2024-02-02:
-- UI: Programs: Fix list header.
+v3.11.2, 2024-02-02:
+- UI: Programs: Fix column descriptions (Regression from v3.11.1).
 
 v3.11.1, 2024-02-02:
 - UI: ProgramAlert: Show newest alerts, not oldest.
