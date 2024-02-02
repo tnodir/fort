@@ -1305,7 +1305,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>1 second</source>
-        <translation type="unfinished"></translation>
+        <translation>1&#xa0;seconde</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1345,11 +1345,11 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>Groupe:</translation>
     </message>
     <message>
         <source>Advanced Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Options avancées</translation>
     </message>
 </context>
 <context>
