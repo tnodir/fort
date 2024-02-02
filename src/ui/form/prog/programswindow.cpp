@@ -31,7 +31,7 @@
 
 namespace {
 
-constexpr int APPS_HEADER_VERSION = 9;
+constexpr int APPS_HEADER_VERSION = 10;
 
 }
 
