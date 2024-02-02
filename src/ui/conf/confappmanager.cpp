@@ -536,8 +536,8 @@ void ConfAppManager::updateAppEndTimes()
         if (app.scheduleAction == App::ScheduleRemove) {
             appIdListToRemove.append(app.appId);
         } else {
-            app.blocked = (app.scheduleAction == App::ScheduleBlock);
-            app.killProcess = false;
+            app.blocked = (app.scheduleAction != App::ScheduleAllow);
+            app.killProcess = (app.scheduleAction == App::ScheduleKillProcess);
             app.scheduleTime = {};
 
             updateApp(app);

@@ -52,6 +52,8 @@ QString appScheduleIconPath(const AppRow &appRow)
         return ":/icons/accept.png";
     case App::ScheduleRemove:
         return ":/icons/delete.png";
+    case App::ScheduleKillProcess:
+        return ":/icons/scull.png";
     }
 
     return {};
