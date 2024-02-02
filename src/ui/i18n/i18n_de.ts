@@ -1073,7 +1073,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Programme oder Alarmfenster anzeigen</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
@@ -1156,7 +1156,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarmprogramm</translation>
     </message>
 </context>
 <context>
@@ -1168,10 +1168,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Get Program Name</source>
         <translation>Programmnamen abrufen</translation>
-    </message>
-    <message>
-        <source>Application Group:</source>
-        <translation>Anwendungsgruppe:</translation>
     </message>
     <message>
         <source>Use Application Group&apos;s Enabled State</source>
@@ -1308,6 +1304,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Hinweise</translation>
     </message>
     <message>
+        <source>1 second</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>1 minute</source>
         <translation>1 Minute</translation>
     </message>
@@ -1337,14 +1337,18 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>In:</source>
-        <translation type="unfinished"></translation>
+        <translation>In:</translation>
     </message>
     <message>
         <source>At:</source>
+        <translation>An:</translation>
+    </message>
+    <message>
+        <source>Group:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Advanced Mode</source>
+        <source>Advanced Options</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

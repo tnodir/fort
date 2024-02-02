@@ -1170,10 +1170,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Получить наименование программы</translation>
     </message>
     <message>
-        <source>Application Group:</source>
-        <translation>Группа приложений:</translation>
-    </message>
-    <message>
         <source>Use Application Group&apos;s Enabled State</source>
         <translation>Использовать вкл. состояние Группы приложения</translation>
     </message>
@@ -1308,6 +1304,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Заметки</translation>
     </message>
     <message>
+        <source>1 second</source>
+        <translation>1 секунду</translation>
+    </message>
+    <message>
         <source>1 minute</source>
         <translation>1 минуту</translation>
     </message>
@@ -1344,8 +1344,12 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>В:</translation>
     </message>
     <message>
-        <source>Advanced Mode</source>
-        <translation>Расширенный режим</translation>
+        <source>Group:</source>
+        <translation>Группа:</translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
+        <translation>Расширенные опции</translation>
     </message>
 </context>
 <context>

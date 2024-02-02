@@ -1170,10 +1170,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Obtenir nom du programme</translation>
     </message>
     <message>
-        <source>Application Group:</source>
-        <translation>Groupe d&apos;applications:</translation>
-    </message>
-    <message>
         <source>Use Application Group&apos;s Enabled State</source>
         <translation>Utiliser l&apos;état activé du groupe d&apos;applications</translation>
     </message>
@@ -1308,6 +1304,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Notes</translation>
     </message>
     <message>
+        <source>1 second</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>1 minute</source>
         <translation>1 minute</translation>
     </message>
@@ -1344,8 +1344,12 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>À&#xa0;:</translation>
     </message>
     <message>
-        <source>Advanced Mode</source>
-        <translation>Mode avancé</translation>
+        <source>Group:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

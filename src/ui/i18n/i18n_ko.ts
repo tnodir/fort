@@ -1170,10 +1170,6 @@ Make sure that you have a fresh backup.</source>
         <translation>프로그램 이름 가져오기</translation>
     </message>
     <message>
-        <source>Application Group:</source>
-        <translation>응용 프로그램 그룹:</translation>
-    </message>
-    <message>
         <source>Use Application Group&apos;s Enabled State</source>
         <translation>응용 프로그램 그룹의 활성화 상태 사용</translation>
     </message>
@@ -1308,6 +1304,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>참고</translation>
     </message>
     <message>
+        <source>1 second</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>1 minute</source>
         <translation>1분</translation>
     </message>
@@ -1344,8 +1344,12 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>위치:</translation>
     </message>
     <message>
-        <source>Advanced Mode</source>
-        <translation>고급 모드</translation>
+        <source>Group:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

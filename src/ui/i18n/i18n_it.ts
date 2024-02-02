@@ -1170,10 +1170,6 @@ Assicurati di avere un backup recente.</translation>
         <translation>Ottieni il nome del programma</translation>
     </message>
     <message>
-        <source>Application Group:</source>
-        <translation>Gruppo applicazione:</translation>
-    </message>
-    <message>
         <source>Use Application Group&apos;s Enabled State</source>
         <translation>Usa stato abilitato del gruppo di applicazioni</translation>
     </message>
@@ -1308,6 +1304,10 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <translation>Note</translation>
     </message>
     <message>
+        <source>1 second</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>1 minute</source>
         <translation>1 minuto</translation>
     </message>
@@ -1344,8 +1344,12 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <translation>A:</translation>
     </message>
     <message>
-        <source>Advanced Mode</source>
-        <translation>Modalità avanzata</translation>
+        <source>Group:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

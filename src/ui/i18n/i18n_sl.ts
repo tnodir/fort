@@ -1170,10 +1170,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Dobi ime programa</translation>
     </message>
     <message>
-        <source>Application Group:</source>
-        <translation>Skupina aplikacij:</translation>
-    </message>
-    <message>
         <source>Use Application Group&apos;s Enabled State</source>
         <translation>Uporabi omogočeno stanje skupine aplikacij</translation>
     </message>
@@ -1308,6 +1304,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Opombe</translation>
     </message>
     <message>
+        <source>1 second</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>1 minute</source>
         <translation>1 minuta</translation>
     </message>
@@ -1344,7 +1344,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Advanced Mode</source>
+        <source>Group:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

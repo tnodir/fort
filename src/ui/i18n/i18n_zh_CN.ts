@@ -1071,15 +1071,15 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation type="unfinished"></translation>
+        <translation>显示程序或提醒窗口</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>自动显示新程序的提醒窗口</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation type="unfinished"></translation>
+        <translation>提醒窗口始终置顶</translation>
     </message>
 </context>
 <context>
@@ -1154,7 +1154,7 @@ Make sure that you have a fresh backup.</source>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
-        <translation type="unfinished"></translation>
+        <translation>提醒程序</translation>
     </message>
 </context>
 <context>
@@ -1166,10 +1166,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Get Program Name</source>
         <translation>获取程序名称</translation>
-    </message>
-    <message>
-        <source>Application Group:</source>
-        <translation>应用程序组:</translation>
     </message>
     <message>
         <source>Use Application Group&apos;s Enabled State</source>
@@ -1306,6 +1302,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>注意</translation>
     </message>
     <message>
+        <source>1 second</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>1 minute</source>
         <translation>1 分钟</translation>
     </message>
@@ -1335,14 +1335,18 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>In:</source>
-        <translation type="unfinished"></translation>
+        <translation>在：</translation>
     </message>
     <message>
         <source>At:</source>
+        <translation>于：</translation>
+    </message>
+    <message>
+        <source>Group:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Advanced Mode</source>
+        <source>Advanced Options</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1429,7 +1433,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Review Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>查看提醒</translation>
     </message>
 </context>
 <context>

@@ -1168,10 +1168,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Obter Nome do Programa</translation>
     </message>
     <message>
-        <source>Application Group:</source>
-        <translation>Grupo do Aplicativo:</translation>
-    </message>
-    <message>
         <source>Use Application Group&apos;s Enabled State</source>
         <translation>Usar o Grupo de Aplicativos&apos;Estados Ativados</translation>
     </message>
@@ -1303,6 +1299,10 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>1 second</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>1 minute</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1339,7 +1339,11 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Advanced Mode</source>
+        <source>Group:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
