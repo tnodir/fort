@@ -494,6 +494,7 @@ void ProgramEditDialog::setupAdvancedOptions()
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
     m_btOptions = ControlUtil::createButton(":/icons/widgets.png");
+    m_btOptions->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_O));
     m_btOptions->setMenu(menu);
 }
 
