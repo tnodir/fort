@@ -255,12 +255,13 @@ void ProgramEditDialog::retranslatePathPlaceholderText()
 
 void ProgramEditDialog::retranslateScheduleAction()
 {
-    const QStringList list = { tr("Block"), tr("Allow"), tr("Remove") };
+    const QStringList list = { tr("Block"), tr("Allow"), tr("Remove"), tr("Kill Process") };
 
     ControlUtil::setComboBoxTexts(m_comboScheduleAction, list);
 
     ControlUtil::setComboBoxIcons(m_comboScheduleAction,
-            { ":/icons/deny.png", ":/icons/accept.png", ":/icons/delete.png" });
+            { ":/icons/deny.png", ":/icons/accept.png", ":/icons/delete.png",
+                    ":/icons/scull.png" });
 }
 
 void ProgramEditDialog::retranslateScheduleType()

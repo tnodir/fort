@@ -11,6 +11,7 @@ public:
         ScheduleBlock = 0,
         ScheduleAllow,
         ScheduleRemove,
+        ScheduleKillProcess,
     };
 
     bool isFlagsEqual(const App &o) const;
