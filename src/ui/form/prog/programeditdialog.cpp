@@ -115,6 +115,8 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_scScheduleIn->spinBox()->setValue(30);
     m_dteScheduleAt->setDateTime(appRow.scheduleTime);
     m_dteScheduleAt->setMinimumDateTime(DateUtil::now());
+
+    initializeFocus();
 }
 
 void ProgramEditDialog::initializePathNameFields()
@@ -124,8 +126,6 @@ void ProgramEditDialog::initializePathNameFields()
 
     initializePathField(isSingleSelection, isPathEditable);
     initializeNameField(isSingleSelection, isPathEditable);
-
-    initializeFocus();
 }
 
 void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathEditable)
@@ -167,7 +167,7 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathE
 void ProgramEditDialog::initializeFocus()
 {
     if (!isEmpty()) {
-        m_rbAllowApp->setFocus();
+        m_btgActions->checkedButton()->setFocus();
     } else if (isWildcard()) {
         m_editWildcard->setFocus();
     } else {
@@ -293,6 +293,8 @@ void ProgramEditDialog::setupUi()
 
     // Allow/Block/etc Actions Layout
     auto actionsLayout = setupActionsLayout();
+
+    setupActionsGroup();
 
     // Advanced Options
     setupAdvancedOptions();
@@ -435,13 +437,16 @@ void ProgramEditDialog::setupComboAppGroups()
 
 QLayout *ProgramEditDialog::setupActionsLayout()
 {
+    // Allow
     m_rbAllowApp = new QRadioButton();
     m_rbAllowApp->setIcon(IconCache::icon(":/icons/accept.png"));
     m_rbAllowApp->setChecked(true);
 
+    // Block
     m_rbBlockApp = new QRadioButton();
     m_rbBlockApp->setIcon(IconCache::icon(":/icons/deny.png"));
 
+    // Kill Process
     m_rbKillProcess = new QRadioButton();
     m_rbKillProcess->setIcon(IconCache::icon(":/icons/scull.png"));
 
@@ -452,6 +457,16 @@ QLayout *ProgramEditDialog::setupActionsLayout()
     layout->setSpacing(20);
 
     return layout;
+}
+
+void ProgramEditDialog::setupActionsGroup()
+{
+    m_btgActions = new QButtonGroup(this);
+    m_btgActions->setExclusive(true);
+
+    m_btgActions->addButton(m_rbAllowApp);
+    m_btgActions->addButton(m_rbBlockApp);
+    m_btgActions->addButton(m_rbKillProcess);
 }
 
 void ProgramEditDialog::setupAdvancedOptions()

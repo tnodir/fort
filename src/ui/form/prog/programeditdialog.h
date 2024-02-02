@@ -4,6 +4,7 @@
 #include <model/applistmodel.h>
 #include <util/window/widgetwindow.h>
 
+QT_FORWARD_DECLARE_CLASS(QButtonGroup)
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QDateTimeEdit)
@@ -72,6 +73,7 @@ private:
     QLayout *setupNotesLayout();
     void setupComboAppGroups();
     QLayout *setupActionsLayout();
+    void setupActionsGroup();
     void setupAdvancedOptions();
     QLayout *setupChildLayout();
     QLayout *setupLogLayout();
@@ -113,6 +115,7 @@ private:
     QRadioButton *m_rbAllowApp = nullptr;
     QRadioButton *m_rbBlockApp = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
+    QButtonGroup *m_btgActions = nullptr;
     QCheckBox *m_cbUseGroupPerm = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
     QCheckBox *m_cbKillChild = nullptr;
