@@ -204,7 +204,7 @@ void ProgramEditDialog::retranslateUi()
     m_btGetName->setToolTip(tr("Get Program Name"));
 
     m_editNotes->setPlaceholderText(tr("Notes"));
-    m_labelAppGroup->setText(tr("Application Group:"));
+    m_labelAppGroup->setText(tr("Group:"));
 
     m_rbAllowApp->setText(tr("Allow"));
     m_rbBlockApp->setText(tr("Block"));
@@ -333,6 +333,7 @@ void ProgramEditDialog::setupUi()
 QLayout *ProgramEditDialog::setupAppLayout()
 {
     auto layout = new QFormLayout();
+    layout->setHorizontalSpacing(10);
 
     // App Path
     auto pathLayout = setupAppPathLayout();
