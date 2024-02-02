@@ -126,7 +126,7 @@ void ProgramEditDialog::initializePathNameFields()
     const bool isPathEditable = isSingleSelection && (m_appRow.appId == 0 || isWildcard());
 
     initializePathField(isSingleSelection, isPathEditable);
-    initializeNameField(isSingleSelection, isPathEditable);
+    initializeNameField(isSingleSelection);
 }
 
 void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathEditable)
@@ -143,7 +143,7 @@ void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathE
     m_editWildcard->setVisible(isWildcard());
 }
 
-void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathEditable)
+void ProgramEditDialog::initializeNameField(bool isSingleSelection)
 {
     m_btSelectFile->setEnabled(isSingleSelection);
     m_editName->setText(isSingleSelection ? m_appRow.appName : QString());
@@ -154,15 +154,24 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection, bool isPathE
     m_editNotes->setText(m_appRow.notes);
     m_editNotes->setEnabled(isSingleSelection);
 
-    m_labelEditNotes->setPixmap(isSingleSelection && !isPathEditable
-                    ? IoC<AppInfoCache>()->appPixmap(m_appRow.appPath)
-                    : QPixmap());
+    m_labelEditNotes->setPixmap(appIcon(isSingleSelection));
 
     if (isSingleSelection) {
         if (m_appRow.appName.isEmpty()) {
             fillEditName(); // Auto-fill the name
         }
     }
+}
+
+QPixmap ProgramEditDialog::appIcon(bool isSingleSelection) const
+{
+    if (!isSingleSelection)
+        return {};
+
+    if (isWildcard())
+        return IconCache::file(":/icons/asterisk_orange.png");
+
+    return IoC<AppInfoCache>()->appPixmap(m_appRow.appPath);
 }
 
 void ProgramEditDialog::initializeFocus()

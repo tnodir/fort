@@ -53,7 +53,9 @@ protected:
 private:
     void initializePathNameFields();
     void initializePathField(bool isSingleSelection, bool isPathEditable);
-    void initializeNameField(bool isSingleSelection, bool isPathEditable);
+    void initializeNameField(bool isSingleSelection);
+
+    QPixmap appIcon(bool isSingleSelection) const;
 
     void initializeFocus();
 
