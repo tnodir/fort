@@ -1012,10 +1012,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Programmes</translation>
     </message>
     <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>Purger obsolètes au démarrage</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>Mon Fort</translation>
     </message>
@@ -1366,10 +1362,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Cannot delete program</source>
         <translation>Impossible de supprimer le programme</translation>
     </message>
-    <message>
-        <source>Cannot purge obsolete programs</source>
-        <translation>Impossible de purger les programmes obsolètes</translation>
-    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1501,6 +1493,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source> hour(s)</source>
         <translation> Heure(s)</translation>
+    </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>Lancer au démarrage</translation>
     </message>
 </context>
 <context>
@@ -1699,6 +1695,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Zones Downloader</source>
         <translation>Téléchargeur de zones</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete Programs</source>
+        <translation>Purger les programmes obsolètes</translation>
     </message>
 </context>
 <context>

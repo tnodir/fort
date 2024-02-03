@@ -1010,10 +1010,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Purge Obsolete on startup</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation></translation>
     </message>
@@ -1361,10 +1357,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Cannot delete program</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Cannot purge obsolete programs</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1495,6 +1487,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source> hour(s)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Run On Startup</source>
         <translation></translation>
     </message>
 </context>
@@ -1693,6 +1689,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Zones Downloader</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Purge Obsolete Programs</source>
         <translation></translation>
     </message>
 </context>

@@ -1012,10 +1012,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Programme</translation>
     </message>
     <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>Beim Start veraltete löschen</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>Mein Fort</translation>
     </message>
@@ -1366,10 +1362,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <source>Cannot delete program</source>
         <translation>Programm kann nicht gelöscht werden</translation>
     </message>
-    <message>
-        <source>Cannot purge obsolete programs</source>
-        <translation>Veraltete Programme können nicht gelöscht werden</translation>
-    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1501,6 +1493,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source> hour(s)</source>
         <translation> Stunde(n)</translation>
+    </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1699,6 +1695,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Zones Downloader</source>
         <translation>Zonen-Downloader</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete Programs</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

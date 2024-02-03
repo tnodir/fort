@@ -1012,10 +1012,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Programi</translation>
     </message>
     <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>Počisti zastarelo ob zagonu</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>Moja trdnjava</translation>
     </message>
@@ -1305,7 +1301,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>1 second</source>
-        <translation type="unfinished"></translation>
+        <translation>1 sekunda</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1345,11 +1341,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>Skupina:</translation>
     </message>
     <message>
         <source>Advanced Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Napredne možnosti</translation>
     </message>
 </context>
 <context>
@@ -1365,10 +1361,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Cannot delete program</source>
         <translation>Programa ni mogoče izbrisati</translation>
-    </message>
-    <message>
-        <source>Cannot purge obsolete programs</source>
-        <translation>Zastarelih programov ni mogoče očistiti</translation>
     </message>
 </context>
 <context>
@@ -1501,6 +1493,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source> hour(s)</source>
         <translation> ur</translation>
+    </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1699,6 +1695,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Zones Downloader</source>
         <translation>Prenašalnik področij</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete Programs</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

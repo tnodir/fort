@@ -1012,10 +1012,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>Очистить устаревшее при старте</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>Мой Форт</translation>
     </message>
@@ -1366,10 +1362,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Cannot delete program</source>
         <translation>Невозможно удалить программу</translation>
     </message>
-    <message>
-        <source>Cannot purge obsolete programs</source>
-        <translation>Невозможно удалить устаревшие программы</translation>
-    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1501,6 +1493,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source> hour(s)</source>
         <translation> час(ов)</translation>
+    </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>Запуск при старте</translation>
     </message>
 </context>
 <context>
@@ -1699,6 +1695,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Zones Downloader</source>
         <translation>Загрузка Зон</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete Programs</source>
+        <translation>Удалить устаревшие программы</translation>
     </message>
 </context>
 <context>

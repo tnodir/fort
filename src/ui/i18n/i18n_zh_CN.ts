@@ -1010,10 +1010,6 @@ Make sure that you have a fresh backup.</source>
         <translation>程序</translation>
     </message>
     <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>启动时清理过时的数据</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>我的堡垒</translation>
     </message>
@@ -1303,7 +1299,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>1 second</source>
-        <translation type="unfinished"></translation>
+        <translation>1 秒</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1343,11 +1339,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>组：</translation>
     </message>
     <message>
         <source>Advanced Options</source>
-        <translation type="unfinished"></translation>
+        <translation>高级选项</translation>
     </message>
 </context>
 <context>
@@ -1363,10 +1359,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Cannot delete program</source>
         <translation>无法删除程序</translation>
-    </message>
-    <message>
-        <source>Cannot purge obsolete programs</source>
-        <translation>无法清除过时的程序</translation>
     </message>
 </context>
 <context>
@@ -1499,6 +1491,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source> hour(s)</source>
         <translation>小时</translation>
+    </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>开机自启</translation>
     </message>
 </context>
 <context>
@@ -1697,6 +1693,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Zones Downloader</source>
         <translation>区域下载器</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete Programs</source>
+        <translation>清除过时程序</translation>
     </message>
 </context>
 <context>

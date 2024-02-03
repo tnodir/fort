@@ -1012,10 +1012,6 @@ Assicurati di avere un backup recente.</translation>
         <translation>Programmi</translation>
     </message>
     <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>Elimina obsoleti all&apos;avvio</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>Il mio forte</translation>
     </message>
@@ -1366,10 +1362,6 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <source>Cannot delete program</source>
         <translation>Impossibile eliminare programma</translation>
     </message>
-    <message>
-        <source>Cannot purge obsolete programs</source>
-        <translation>Impossibile eliminare programmi obsoleti</translation>
-    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1501,6 +1493,10 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source> hour(s)</source>
         <translation> ora/e</translation>
+    </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>Esegui all&apos;avvio</translation>
     </message>
 </context>
 <context>
@@ -1699,6 +1695,10 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Zones Downloader</source>
         <translation>Downloader zone</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete Programs</source>
+        <translation>Elimina programmi obsoleti</translation>
     </message>
 </context>
 <context>

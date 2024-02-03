@@ -1012,10 +1012,6 @@ Make sure that you have a fresh backup.</source>
         <translation>프로그램</translation>
     </message>
     <message>
-        <source>Purge Obsolete on startup</source>
-        <translation>시작 시 사용되지 않는 제거</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>내 Fort</translation>
     </message>
@@ -1366,10 +1362,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Cannot delete program</source>
         <translation>프로그램을 삭제할 수 없습니다</translation>
     </message>
-    <message>
-        <source>Cannot purge obsolete programs</source>
-        <translation>오래된 프로그램을 제거할 수 없습니다</translation>
-    </message>
 </context>
 <context>
     <name>ProgramsWindow</name>
@@ -1501,6 +1493,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source> hour(s)</source>
         <translation> 시간</translation>
+    </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>시작 시 실행</translation>
     </message>
 </context>
 <context>
@@ -1699,6 +1695,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Zones Downloader</source>
         <translation>대역 다운로더</translation>
+    </message>
+    <message>
+        <source>Purge Obsolete Programs</source>
+        <translation>오래된 프로그램 정리</translation>
     </message>
 </context>
 <context>
