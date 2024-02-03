@@ -169,7 +169,7 @@ QPixmap ProgramEditDialog::appIcon(bool isSingleSelection) const
         return {};
 
     if (isWildcard())
-        return IconCache::file(":/icons/asterisk_orange.png");
+        return IconCache::file(":/icons/coding.png");
 
     return IoC<AppInfoCache>()->appPixmap(m_appRow.appPath);
 }

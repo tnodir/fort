@@ -413,7 +413,7 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
 QIcon AppListModel::appIcon(const AppRow &appRow) const
 {
     if (appRow.isWildcard) {
-        return IconCache::icon(":/icons/asterisk_orange.png");
+        return IconCache::icon(":/icons/coding.png");
     }
 
     return appInfoCache()->appIcon(appRow.appPath);
