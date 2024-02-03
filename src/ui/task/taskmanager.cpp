@@ -40,12 +40,18 @@ void TaskManager::setUp()
 {
     loadSettings();
 
-    setupScheduler();
+    setupTimer();
 }
 
-void TaskManager::setupScheduler()
+void TaskManager::setupTimer(bool enabled)
 {
-    m_timer.start(1000); // 1 second
+    if (enabled) {
+        const int msecs = m_isFirstRun ? 1000 // 1 second
+                                       : 5 * 60 * 1000; // 5 minutes
+        m_timer.start(msecs);
+    } else {
+        m_timer.stop();
+    }
 }
 
 void TaskManager::setupTasks()
@@ -128,23 +134,26 @@ void TaskManager::runExpiredTasks()
     bool enabledTaskExists = false;
 
     for (TaskInfo *taskInfo : taskInfoList()) {
-        if (!taskInfo->enabled())
-            continue;
-
-        enabledTaskExists = true;
-
-        if ((m_isFirstRun && taskInfo->runOnStatup()) || now >= taskInfo->plannedRun()) {
-            taskInfo->run();
+        if (runExpiredTask(taskInfo, now)) {
+            enabledTaskExists = true;
         }
     }
 
     m_isFirstRun = false;
 
-    if (enabledTaskExists) {
-        m_timer.start(5 * 60 * 1000); // 5 minutes
-    } else {
-        m_timer.stop();
+    setupTimer(enabledTaskExists);
+}
+
+bool TaskManager::runExpiredTask(TaskInfo *taskInfo, const QDateTime &now)
+{
+    if (!taskInfo->enabled())
+        return false;
+
+    if ((m_isFirstRun && taskInfo->runOnStatup()) || now >= taskInfo->plannedRun()) {
+        taskInfo->run();
     }
+
+    return true;
 }
 
 TaskInfo *TaskManager::taskInfoByType(qint8 taskType) const

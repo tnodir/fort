@@ -57,7 +57,7 @@ private slots:
     void runExpiredTasks();
 
 protected:
-    virtual void setupScheduler();
+    virtual void setupTimer(bool enabled = true);
 
     TaskInfo *taskInfoByType(qint8 taskType) const;
 
@@ -65,6 +65,8 @@ private:
     void setupTasks();
 
     void appendTaskInfo(TaskInfo *taskInfo);
+
+    bool runExpiredTask(TaskInfo *taskInfo, const QDateTime &now);
 
 private:
     bool m_isFirstRun = true;

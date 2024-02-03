@@ -18,7 +18,7 @@ public slots:
     void abortTask(qint8 taskType) override;
 
 protected:
-    void setupScheduler() override { }
+    void setupTimer(bool /*enabled*/ = true) override { }
 };
 
 #endif // TASKMANAGERRPC_H
