@@ -168,16 +168,15 @@ inline QVariant headerDataDisplay(int column, int role)
     return func(role);
 }
 
-inline QVariant headerDataDecoration(int section)
+inline QVariant headerDataDecoration(int column)
 {
-    switch (section) {
+    switch (column) {
     case 1:
         return IconCache::icon(":/icons/parking.png");
     case 2:
         return IconCache::icon(":/icons/time.png");
-    default:
-        return QVariant();
     }
+    return QVariant();
 }
 
 QVariant dataDisplayName(const AppRow &appRow, int role)

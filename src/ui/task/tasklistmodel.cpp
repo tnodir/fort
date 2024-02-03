@@ -5,6 +5,25 @@
 #include "taskinfo.h"
 #include "taskmanager.h"
 
+namespace {
+
+inline QVariant headerDataDisplay(int column)
+{
+    switch (column) {
+    case 0:
+        return TaskListModel::tr("Name");
+    case 1:
+        return TaskListModel::tr("Interval, hours");
+    case 2:
+        return TaskListModel::tr("Last Run");
+    case 3:
+        return TaskListModel::tr("Last Success");
+    }
+    return QVariant();
+}
+
+}
+
 TaskListModel::TaskListModel(TaskManager *taskManager, QObject *parent) :
     TableItemModel(parent), m_taskManager(taskManager)
 {
@@ -38,16 +57,12 @@ int TaskListModel::columnCount(const QModelIndex &parent) const
 
 QVariant TaskListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
-        switch (section) {
-        case 0:
-            return tr("Name");
-        case 1:
-            return tr("Interval, hours");
-        case 2:
-            return tr("Last Run");
-        case 3:
-            return tr("Last Success");
+    if (orientation == Qt::Horizontal) {
+        switch (role) {
+        // Label
+        case Qt::DisplayRole:
+        case Qt::ToolTipRole:
+            return headerDataDisplay(section);
         }
     }
     return QVariant();
@@ -73,10 +88,8 @@ QVariant TaskListModel::data(const QModelIndex &index, int role) const
     case RoleIntervalHours:
         return taskIntervalHours(index.row());
 
-    case RoleRunning: {
-        const auto taskInfo = taskInfoAt(index.row());
-        return taskInfo->running();
-    }
+    case RoleRunning:
+        return taskRunning(index.row());
     }
 
     return QVariant();
@@ -218,6 +231,12 @@ void TaskListModel::setTaskIntervalHours(const QModelIndex &index, int v)
     taskRow.setIntervalHours(v);
 
     emitDataEdited(index, Qt::DisplayRole);
+}
+
+bool TaskListModel::taskRunning(int row) const
+{
+    const auto taskInfo = taskInfoAt(row);
+    return taskInfo->running();
 }
 
 void TaskListModel::emitDataEdited(const QModelIndex &index, int role)

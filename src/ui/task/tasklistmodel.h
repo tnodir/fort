@@ -64,6 +64,8 @@ private:
     int taskIntervalHours(int row) const;
     void setTaskIntervalHours(const QModelIndex &index, int v);
 
+    bool taskRunning(int row) const;
+
     TaskEditInfo &taskRowAt(int row) { return m_taskRows[row]; }
     const TaskEditInfo &taskRowAt(int row) const { return m_taskRows[row]; }
 
