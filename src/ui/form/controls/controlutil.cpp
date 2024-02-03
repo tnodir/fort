@@ -13,6 +13,7 @@
 #include <util/iconcache.h>
 
 #include "combobox.h"
+#include "focusablemenu.h"
 #include "labelcolor.h"
 #include "labeldoublespin.h"
 #include "labelspin.h"
@@ -218,7 +219,7 @@ QMenu *ControlUtil::createMenu(QWidget *parent)
 
 QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
 {
-    auto menu = createMenu(parent);
+    auto menu = new FocusableMenu(parent);
     auto wa = new QWidgetAction(menu);
 
     auto menuWidget = new MenuWidget(menu, wa);

@@ -18,7 +18,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
-    bool m_pressed = false;
+    bool m_pressed : 1 = false;
 };
 
 #endif // CLICKABLEMENU_H
