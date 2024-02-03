@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.11.3, 2024-02-03:
+- UI: Scheduler: Add "Purge Obsolete Programs" task.
+- UI: Scheduler: Add "Run On Startup" flag to tasks.
+- UI: Options: Remove "Purge Obsolete on startup" flag.
+- UI: ProgramEdit: Show icon for wildcard too.
+- UI: Focus in menu widgets.
+
 v3.11.2, 2024-02-02:
 - UI: Programs: Fix column descriptions (Regression from v3.11.1).
 
