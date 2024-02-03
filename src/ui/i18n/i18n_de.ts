@@ -1073,11 +1073,11 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarmfenster für neue Programme automatisch anzeigen</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarmfenster ist immer im Vordergrund</translation>
     </message>
 </context>
 <context>
@@ -1301,7 +1301,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>1 second</source>
-        <translation type="unfinished"></translation>
+        <translation>1 Sekunde</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1341,11 +1341,11 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gruppe:</translation>
     </message>
     <message>
         <source>Advanced Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Erweiterte Einstellungen</translation>
     </message>
 </context>
 <context>
@@ -1427,7 +1427,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Review Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarmmeldungen überprüfen</translation>
     </message>
 </context>
 <context>
@@ -1496,7 +1496,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Run On Startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Beim Start ausführen</translation>
     </message>
 </context>
 <context>
@@ -1698,7 +1698,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Purge Obsolete Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Veraltete Programme löschen</translation>
     </message>
 </context>
 <context>

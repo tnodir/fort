@@ -1069,7 +1069,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation type="unfinished">Show Programs Or Alert Window</translation>
+        <translation>Prikaži programe ali opozorilno okno</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
@@ -1333,11 +1333,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>In:</source>
-        <translation type="unfinished"></translation>
+        <translation>V:</translation>
     </message>
     <message>
         <source>At:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ob:</translation>
     </message>
     <message>
         <source>Group:</source>
@@ -1496,7 +1496,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Run On Startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaženi ob zagonu</translation>
     </message>
 </context>
 <context>
@@ -1698,7 +1698,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Purge Obsolete Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Očistite zastarele programe</translation>
     </message>
 </context>
 <context>
