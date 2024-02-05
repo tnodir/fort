@@ -16,7 +16,14 @@ const QLoggingCategory LC("manager.dbError");
 
 void sqliteLogHandler(void *context, int errCode, const char *message)
 {
-    qCWarning(LC) << "Code:" << errCode << "Message:" << qUtf8Printable(message);
+    const auto messageLine =
+            QString("%1: %2").arg(QString::number(errCode), qUtf8Printable(message));
+
+    if (SqliteDb::isDebugError(errCode)) {
+        qCDebug(LC) << messageLine;
+    } else {
+        qCWarning(LC) << messageLine;
+    }
 
     if (SqliteDb::isIoError(errCode)) {
         auto manager = static_cast<DbErrorManager *>(context);
