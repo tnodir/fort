@@ -36,6 +36,7 @@ private:
     void setupUi();
     QLayout *setupHeader();
     void setupClearMenu();
+    void setupRefresh();
     void setupTrafUnits();
     void setupAppListView();
     void setupTabBar();
@@ -54,11 +55,11 @@ private:
     AppStatModel *m_appStatModel = nullptr;
     TrafListModel *m_trafListModel = nullptr;
 
-    QToolButton *m_btRefresh = nullptr;
     QPushButton *m_btClear = nullptr;
     QAction *m_actRemoveApp = nullptr;
     QAction *m_actResetTotal = nullptr;
     QAction *m_actClearAll = nullptr;
+    QToolButton *m_btRefresh = nullptr;
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
     QSplitter *m_splitter = nullptr;

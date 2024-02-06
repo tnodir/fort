@@ -54,12 +54,12 @@ void TrafficPage::onRestoreWindowState(IniUser *ini)
 
 void TrafficPage::onRetranslateUi()
 {
-    m_btRefresh->setText(tr("Refresh"));
     m_btClear->setText(tr("Clear"));
-
     m_actRemoveApp->setText(tr("Remove Application"));
     m_actResetTotal->setText(tr("Reset Total"));
     m_actClearAll->setText(tr("Clear All"));
+
+    m_btRefresh->setText(tr("Refresh"));
 
     m_traphUnits->setText(tr("Units:"));
     retranslateTrafUnitNames();
@@ -133,15 +133,13 @@ void TrafficPage::setupUi()
 
 QLayout *TrafficPage::setupHeader()
 {
-    m_btRefresh = ControlUtil::createFlatToolButton(
-            ":/icons/arrow_refresh_small.png", [&] { trafListModel()->reset(); });
-
     setupClearMenu();
+    setupRefresh();
     setupTrafUnits();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_btRefresh, m_btClear,
-            ControlUtil::createVSeparator(), m_traphUnits, m_comboTrafUnit,
-            /*stretch*/ nullptr });
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_btClear, ControlUtil::createVSeparator(), m_btRefresh,
+                    /*stretch*/ nullptr, m_traphUnits, m_comboTrafUnit });
 
     return layout;
 }
@@ -176,6 +174,12 @@ void TrafficPage::setupClearMenu()
 
     m_btClear = ControlUtil::createButton(":/icons/recycle.png");
     m_btClear->setMenu(menu);
+}
+
+void TrafficPage::setupRefresh()
+{
+    m_btRefresh = ControlUtil::createFlatToolButton(
+            ":/icons/arrow_refresh_small.png", [&] { trafListModel()->reset(); });
 }
 
 void TrafficPage::setupTrafUnits()
