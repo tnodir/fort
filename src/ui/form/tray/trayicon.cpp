@@ -455,7 +455,7 @@ void TrayIcon::setupTrayMenuOptions()
 
     connect(m_optionsMenu, &ClickableMenu::clicked, m_optionsAction, &QAction::trigger);
 
-    m_rulesAction = addAction(m_optionsMenu, ":/icons/checklist.png", windowManager(),
+    m_rulesAction = addAction(m_optionsMenu, ":/icons/tree.png", windowManager(),
             SLOT(showRulesWindow()));
     addHotKey(m_rulesAction, iniUser()->hotKeyRules());
 

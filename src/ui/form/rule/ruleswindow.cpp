@@ -142,7 +142,7 @@ void RulesWindow::setupUi()
 
     // Icon
     this->setWindowIcon(
-            GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/checklist.png"));
+            GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/tree.png"));
 
     // Size
     this->setMinimumSize(500, 400);
