@@ -26,74 +26,6 @@ CREATE TABLE address_group(
   exclude_text TEXT NOT NULL
 );
 
-CREATE TABLE rule(
-  rule_id INTEGER PRIMARY KEY,
-  enabled BOOLEAN NOT NULL,
-  deleted BOOLEAN,  -- to reuse the rule_id
-  block BOOLEAN NOT NULL,
-  report BOOLEAN NOT NULL,
-  log BOOLEAN NOT NULL,
-  name TEXT NOT NULL,
-  rule_flags INTEGER NOT NULL,  -- inbound/outbound, local port is equal to remote port, etc
-  ip_proto INTEGER NOT NULL,
-  local_port TEXT NOT NULL,
-  remote_port TEXT NOT NULL,
-  local_ip TEXT NOT NULL,
-  remote_ip TEXT NOT NULL,
-  local_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
-  remote_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
-  mod_time INTEGER NOT NULL,
-  extra TEXT,  -- TCP flags, ICMP types, etc
-  description TEXT
-);
-
-CREATE INDEX rule_deleted_idx ON rule(deleted);
-
-CREATE TABLE policy(
-  policy_id INTEGER PRIMARY KEY,
-  policy_type INTEGER NOT NULL,  -- preset_lib, preset_app, global_before_app, global_after_app
-  enabled BOOLEAN NOT NULL,
-  deleted BOOLEAN,  -- to reuse the policy_id
-  mod_time INTEGER NOT NULL,
-  name TEXT,
-  description TEXT
-);
-
-CREATE INDEX policy_policy_type_idx ON policy(policy_type);
-CREATE INDEX policy_deleted_idx ON policy(deleted);
-
-CREATE TABLE policy_rule(
-  policy_rule_id INTEGER PRIMARY KEY,
-  policy_id INTEGER NOT NULL,
-  rule_id INTEGER NOT NULL,
-  order_index INTEGER NOT NULL
-);
-
-CREATE INDEX policy_rule_policy_id_order_index_idx ON policy_rule(policy_id, order_index);
-
-CREATE TABLE policy_set(
-  policy_set_id INTEGER PRIMARY KEY,
-  policy_id INTEGER NOT NULL,
-  sub_policy_id INTEGER NOT NULL,
-  order_index INTEGER NOT NULL
-);
-
-CREATE INDEX policy_set_policy_id_order_index_idx ON policy_set(policy_id, order_index);
-
-CREATE TABLE policy_menu(
-  policy_menu_id INTEGER PRIMARY KEY,
-  exclusive BOOLEAN NOT NULL,
-  name TEXT NOT NULL
-);
-
-CREATE TABLE policy_menu_set(
-  policy_menu_set_id INTEGER PRIMARY KEY,
-  policy_menu_id INTEGER NOT NULL,
-  policy_id INTEGER NOT NULL
-);
-
-CREATE INDEX policy_menu_set_policy_id_idx ON policy_menu_set(policy_id);
-
 CREATE TABLE app_group(
   app_group_id INTEGER PRIMARY KEY,
   order_index INTEGER NOT NULL,
@@ -116,8 +48,7 @@ CREATE TABLE app_group(
   block_text TEXT NOT NULL,
   allow_text TEXT NOT NULL,
   period_from TEXT NOT NULL,
-  period_to TEXT NOT NULL,
-  policy_id INTEGER
+  period_to TEXT NOT NULL
 );
 
 CREATE TABLE app(
@@ -141,8 +72,7 @@ CREATE TABLE app(
   reject_zones BOOLEAN NOT NULL DEFAULT 0,  -- zone indexes bit mask
   creat_time INTEGER NOT NULL,
   end_action INTEGER NOT NULL DEFAULT 0,
-  end_time INTEGER,
-  policy_id INTEGER
+  end_time INTEGER
 );
 
 CREATE INDEX app_app_group_id_idx ON app(app_group_id);
@@ -153,6 +83,36 @@ CREATE INDEX app_end_time_idx ON app(end_time);
 CREATE TABLE app_alert(
   app_id INTEGER PRIMARY KEY
 );
+
+CREATE TABLE rule(
+  rule_id INTEGER PRIMARY KEY,
+  enabled BOOLEAN NOT NULL,
+  block BOOLEAN NOT NULL,
+  exclusive BOOLEAN NOT NULL,
+  name TEXT NOT NULL,
+  notes TEXT,
+  rule_text TEXT NOT NULL,
+  zones INTEGER NOT NULL,  -- zone indexes bit mask
+  mod_time INTEGER NOT NULL
+);
+
+CREATE TABLE app_rule(
+  app_rule_id INTEGER PRIMARY KEY,
+  app_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL,
+  rule_id INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX app_rule_app_id_order_index_uk ON app_rule(app_id, order_index);
+
+CREATE TABLE system_rule(
+  system_rule_id INTEGER PRIMARY KEY,
+  system_type INTEGER NOT NULL, -- before/after apps
+  order_index INTEGER NOT NULL,
+  rule_id INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX system_rule_system_type_order_index_uk ON system_rule(system_type, order_index);
 
 CREATE TABLE task(
   task_id INTEGER PRIMARY KEY,
