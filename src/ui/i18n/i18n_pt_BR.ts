@@ -1084,6 +1084,14 @@ Make sure that you have a fresh backup.</source>
         <source>Options</source>
         <translation>Opções</translation>
     </message>
+    <message>
+        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PasswordDialog</name>
@@ -1106,44 +1114,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Password input</source>
         <translation>Campo de senha</translation>
-    </message>
-</context>
-<context>
-    <name>PoliciesWindow</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Policies</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>PolicyListBox</name>
-    <message>
-        <source>Add Policy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Remove Policy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Edit Policy</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1851,10 +1821,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Policies</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1868,6 +1834,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>New program detected!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rules</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

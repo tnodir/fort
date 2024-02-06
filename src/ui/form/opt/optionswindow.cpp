@@ -129,8 +129,8 @@ void OptionsWindow::checkDeprecatedAppGroups()
     if (!ctrl()->conf()->checkDeprecatedAppGroups()) {
         ctrl()->windowManager()->showConfirmBox(
                 [&] { OsUtil::openUrlOrFolder("https://github.com/tnodir/fort/discussions/210"); },
-                tr("Please move Allow/Block Texts from App Groups to Wildcard Programs!!!"
-                   "\n\n(They're read-only now and will be removed in v4.)"
+                tr("Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!"
+                   "\n\n(They are read-only now and will be removed in v4.)"
                    "\n\nDo you want to open a discussion thread in browser?"),
                 {}, this);
     }

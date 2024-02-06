@@ -1086,6 +1086,14 @@ Make sure that you have a fresh backup.</source>
         <source>Options</source>
         <translation>옵션</translation>
     </message>
+    <message>
+        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PasswordDialog</name>
@@ -1108,44 +1116,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Password input</source>
         <translation>암호 입력</translation>
-    </message>
-</context>
-<context>
-    <name>PoliciesWindow</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>사전 설정 규칙 라이브러리</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>응용 프로그램의 사전 설정 규칙</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>전역 규칙, 응용 프로그램 규칙 전에 적용됨:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>전역 규칙, 응용 프로그램 규칙 이후 적용됨:</translation>
-    </message>
-    <message>
-        <source>Policies</source>
-        <translation>정책</translation>
-    </message>
-</context>
-<context>
-    <name>PolicyListBox</name>
-    <message>
-        <source>Add Policy</source>
-        <translation>정책 추가</translation>
-    </message>
-    <message>
-        <source>Remove Policy</source>
-        <translation>정책 제거</translation>
-    </message>
-    <message>
-        <source>Edit Policy</source>
-        <translation>정책 편집</translation>
     </message>
 </context>
 <context>
@@ -1856,10 +1826,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>&quot;%1&quot;을(를) 선택하시겠습니까?</translation>
     </message>
     <message>
-        <source>Policies</source>
-        <translation>정책</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>내 Fort</translation>
     </message>
@@ -1874,6 +1840,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>New program detected!</source>
         <translation>새로운 프로그램이 감지되었습니다!</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

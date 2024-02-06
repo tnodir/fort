@@ -1084,6 +1084,14 @@ Make sure that you have a fresh backup.</source>
         <source>Options</source>
         <translation>选项</translation>
     </message>
+    <message>
+        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PasswordDialog</name>
@@ -1106,44 +1114,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Password input</source>
         <translation>密码输入</translation>
-    </message>
-</context>
-<context>
-    <name>PoliciesWindow</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>预设规则库：</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>应用程序预设规则：</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>全局规则（在应用规则之前应用）：</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>全局规则（在应用规则之后应用）：</translation>
-    </message>
-    <message>
-        <source>Policies</source>
-        <translation>策略</translation>
-    </message>
-</context>
-<context>
-    <name>PolicyListBox</name>
-    <message>
-        <source>Add Policy</source>
-        <translation>添加策略</translation>
-    </message>
-    <message>
-        <source>Remove Policy</source>
-        <translation>移除策略</translation>
-    </message>
-    <message>
-        <source>Edit Policy</source>
-        <translation>编辑策略</translation>
     </message>
 </context>
 <context>
@@ -1854,10 +1824,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>您确定要删除 &quot;%1&quot; 吗？</translation>
     </message>
     <message>
-        <source>Policies</source>
-        <translation>策略</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>我的堡垒</translation>
     </message>
@@ -1872,6 +1838,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>New program detected!</source>
         <translation>检测到新程序！</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1086,6 +1086,14 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Options</source>
         <translation>Možnosti</translation>
     </message>
+    <message>
+        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PasswordDialog</name>
@@ -1108,44 +1116,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Password input</source>
         <translation>Vnos gesla</translation>
-    </message>
-</context>
-<context>
-    <name>PoliciesWindow</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>Knjižnica prednastavljenih pravil:</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>Prednastavljena pravila za aplikacije:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>Globalna pravila, uporabljena pred pravili uporabe:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>Globalna pravila, uporabljena po pravilih uporabe:</translation>
-    </message>
-    <message>
-        <source>Policies</source>
-        <translation>Politike</translation>
-    </message>
-</context>
-<context>
-    <name>PolicyListBox</name>
-    <message>
-        <source>Add Policy</source>
-        <translation>Dodaj politiko</translation>
-    </message>
-    <message>
-        <source>Remove Policy</source>
-        <translation>Odstrani politiko</translation>
-    </message>
-    <message>
-        <source>Edit Policy</source>
-        <translation>Uredi politiko</translation>
     </message>
 </context>
 <context>
@@ -1856,10 +1826,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Ali ste prepričani, da želite izbrati &quot;%1&quot;?</translation>
     </message>
     <message>
-        <source>Policies</source>
-        <translation>Politike</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>Moja trdnjava</translation>
     </message>
@@ -1874,6 +1840,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>New program detected!</source>
         <translation>Zaznan je nov program!</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

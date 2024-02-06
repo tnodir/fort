@@ -1086,6 +1086,18 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <source>Options</source>
         <translation>Options</translation>
     </message>
+    <message>
+        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation>Veuillez déplacer les textes des champs Autoriser/Bloquer des groupes d&apos;applications vers les programmes génériques !!!
+
+(Ils sont désormais en lecture seule et seront supprimés dans la v4.)
+
+Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
+    </message>
 </context>
 <context>
     <name>PasswordDialog</name>
@@ -1108,44 +1120,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <message>
         <source>Password input</source>
         <translation>Saisie du mot de passe</translation>
-    </message>
-</context>
-<context>
-    <name>PoliciesWindow</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>Bibliothèque des règles prédéfinies :</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>Règles prédéfinies pour les applications :</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>Règles globales, appliquées avant les règles d&apos;application :</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>Règles globales, appliquées après les règles d&apos;application :</translation>
-    </message>
-    <message>
-        <source>Policies</source>
-        <translation>Politiques</translation>
-    </message>
-</context>
-<context>
-    <name>PolicyListBox</name>
-    <message>
-        <source>Add Policy</source>
-        <translation>Ajouter une politique</translation>
-    </message>
-    <message>
-        <source>Remove Policy</source>
-        <translation>Retirer Politique</translation>
-    </message>
-    <message>
-        <source>Edit Policy</source>
-        <translation>Éditer la politique</translation>
     </message>
 </context>
 <context>
@@ -1856,10 +1830,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Êtes-vous sûr de sélectionner le &quot;%1&quot;?</translation>
     </message>
     <message>
-        <source>Policies</source>
-        <translation>Politiques</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>Mon Fort</translation>
     </message>
@@ -1874,6 +1844,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>New program detected!</source>
         <translation>Nouveau programme détecté !</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation>Règles</translation>
     </message>
 </context>
 <context>

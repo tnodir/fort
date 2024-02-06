@@ -1086,6 +1086,18 @@ Make sure that you have a fresh backup.</source>
         <source>Options</source>
         <translation>Опции</translation>
     </message>
+    <message>
+        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation>Пожалуйста, переместите тексты полей Разрешить/Блокировать из Групп приложений в Программы с подстановочными знаками!!!
+
+(Сейчас они доступны только для чтения и будут удалены в версии 4.)
+
+Хотите открыть ветку обсуждения в браузере?</translation>
+    </message>
 </context>
 <context>
     <name>PasswordDialog</name>
@@ -1108,44 +1120,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Password input</source>
         <translation>Ввод пароля</translation>
-    </message>
-</context>
-<context>
-    <name>PoliciesWindow</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>Библиотека заданных правил:</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>Заданные правила для программ:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>Глобальные правила, применяемые до правил программ</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>Глобальные правила, применяемые после правил программ</translation>
-    </message>
-    <message>
-        <source>Policies</source>
-        <translation>Политики</translation>
-    </message>
-</context>
-<context>
-    <name>PolicyListBox</name>
-    <message>
-        <source>Add Policy</source>
-        <translation>Добавить политику</translation>
-    </message>
-    <message>
-        <source>Remove Policy</source>
-        <translation>Удалить политику</translation>
-    </message>
-    <message>
-        <source>Edit Policy</source>
-        <translation>Редактировать политику</translation>
     </message>
 </context>
 <context>
@@ -1856,10 +1830,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Установить &quot;%1&quot;?</translation>
     </message>
     <message>
-        <source>Policies</source>
-        <translation>Политики</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>Мой Форт</translation>
     </message>
@@ -1874,6 +1844,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>New program detected!</source>
         <translation>Обнаружена новая программа!</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation>Правила</translation>
     </message>
 </context>
 <context>

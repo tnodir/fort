@@ -1086,6 +1086,14 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Options</source>
         <translation>Optionen</translation>
     </message>
+    <message>
+        <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PasswordDialog</name>
@@ -1108,44 +1116,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Password input</source>
         <translation>Passworteingabe</translation>
-    </message>
-</context>
-<context>
-    <name>PoliciesWindow</name>
-    <message>
-        <source>Library of preset rules:</source>
-        <translation>Bibliothek der voreingestellten Regeln:</translation>
-    </message>
-    <message>
-        <source>Preset rules for applications:</source>
-        <translation>Voreingestellte Regeln für Anwendungen:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied before application rules:</source>
-        <translation>Globale Regeln, angewendet vor Anwendungsregeln:</translation>
-    </message>
-    <message>
-        <source>Global rules, applied after application rules:</source>
-        <translation>Globale Regeln, angewendet nach Anwendungsregeln:</translation>
-    </message>
-    <message>
-        <source>Policies</source>
-        <translation>Richtlinien</translation>
-    </message>
-</context>
-<context>
-    <name>PolicyListBox</name>
-    <message>
-        <source>Add Policy</source>
-        <translation>Richtlinie hinzufügen</translation>
-    </message>
-    <message>
-        <source>Remove Policy</source>
-        <translation>Richtlinie entfernen</translation>
-    </message>
-    <message>
-        <source>Edit Policy</source>
-        <translation>Richtlinie bearbeiten</translation>
     </message>
 </context>
 <context>
@@ -1856,10 +1826,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Möchten Sie &quot;%1&quot; wirklich auswählen?</translation>
     </message>
     <message>
-        <source>Policies</source>
-        <translation>Richtlinien</translation>
-    </message>
-    <message>
         <source>My Fort</source>
         <translation>Mein Fort</translation>
     </message>
@@ -1874,6 +1840,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>New program detected!</source>
         <translation>Neues Programm erkannt!</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
