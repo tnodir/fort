@@ -42,6 +42,8 @@ private:
 
     void setupUi();
 
+    void checkDeprecatedAppGroups();
+
 private:
     OptionsController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;

@@ -194,6 +194,16 @@ AppGroup *FirewallConf::appGroupByName(const QString &name) const
     return nullptr;
 }
 
+bool FirewallConf::checkDeprecatedAppGroups() const
+{
+    for (AppGroup *appGroup : appGroups()) {
+        if (!appGroup->killText().isEmpty() || !appGroup->blockText().isEmpty()
+                || !appGroup->allowText().isEmpty())
+            return false;
+    }
+    return true;
+}
+
 void FirewallConf::addAppGroup(AppGroup *appGroup)
 {
     appGroup->setParent(this);

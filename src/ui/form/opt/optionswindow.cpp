@@ -8,6 +8,7 @@
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
+#include <util/osutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "optionscontroller.h"
@@ -21,6 +22,8 @@ OptionsWindow::OptionsWindow(QWidget *parent) :
     setupUi();
     setupController();
     setupStateWatcher();
+
+    connect(this, &OptionsWindow::aboutToShow, this, &OptionsWindow::checkDeprecatedAppGroups);
 }
 
 ConfManager *OptionsWindow::confManager() const
@@ -119,4 +122,16 @@ void OptionsWindow::setupUi()
 
     // Size
     this->setMinimumSize(800, 500);
+}
+
+void OptionsWindow::checkDeprecatedAppGroups()
+{
+    if (!ctrl()->conf()->checkDeprecatedAppGroups()) {
+        ctrl()->windowManager()->showConfirmBox(
+                [&] { OsUtil::openUrlOrFolder("https://github.com/tnodir/fort/discussions/210"); },
+                tr("Please move Allow/Block Texts from App Groups to Wildcard Programs!!!"
+                   "\n\n(They're read-only now and will be removed in v4.)"
+                   "\n\nDo you want to open a discussion thread in browser?"),
+                {}, this);
+    }
 }
