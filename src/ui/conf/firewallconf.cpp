@@ -227,8 +227,7 @@ AppGroup *FirewallConf::addAppGroupByName(const QString &name)
 
 void FirewallConf::addDefaultAppGroup()
 {
-    auto appGroup = addAppGroupByName("Main");
-    appGroup->setAllowText('%' + EnvManager::envFortHome() + "%/**");
+    addAppGroupByName("Main");
 }
 
 void FirewallConf::moveAppGroup(int from, int to)
