@@ -79,6 +79,11 @@ public:
     QString allowText() const { return m_allowText; }
     void setAllowText(const QString &allowText);
 
+    bool hasAnyText() const
+    {
+        return !killText().isEmpty() || !blockText().isEmpty() || !allowText().isEmpty();
+    }
+
     QString periodFrom() const { return m_periodFrom; }
     void setPeriodFrom(const QString &periodFrom);
 

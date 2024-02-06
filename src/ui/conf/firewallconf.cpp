@@ -197,8 +197,7 @@ AppGroup *FirewallConf::appGroupByName(const QString &name) const
 bool FirewallConf::checkDeprecatedAppGroups() const
 {
     for (AppGroup *appGroup : appGroups()) {
-        if (!appGroup->killText().isEmpty() || !appGroup->blockText().isEmpty()
-                || !appGroup->allowText().isEmpty())
+        if (appGroup->hasAnyText())
             return false;
     }
     return true;
