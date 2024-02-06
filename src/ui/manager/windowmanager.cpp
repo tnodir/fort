@@ -17,9 +17,9 @@
 #include <form/graph/graphwindow.h>
 #include <form/home/homewindow.h>
 #include <form/opt/optionswindow.h>
-#include <form/policy/policieswindow.h>
 #include <form/prog/programalertwindow.h>
 #include <form/prog/programswindow.h>
+#include <form/rule/ruleswindow.h>
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
 #include <form/tray/trayicon.h>
@@ -178,13 +178,12 @@ void WindowManager::setupOptionsWindow()
     connect(m_optWindow, &OptionsWindow::aboutToClose, this, &WindowManager::closeOptionsWindow);
 }
 
-void WindowManager::setupPoliciesWindow()
+void WindowManager::setupRulesWindow()
 {
-    m_policiesWindow = new PoliciesWindow();
-    m_policiesWindow->restoreWindowState();
+    m_rulesWindow = new RulesWindow();
+    m_rulesWindow->restoreWindowState();
 
-    connect(m_policiesWindow, &PoliciesWindow::aboutToClose, this,
-            &WindowManager::closePoliciesWindow);
+    connect(m_rulesWindow, &RulesWindow::aboutToClose, this, &WindowManager::closeRulesWindow);
 }
 
 void WindowManager::setupServicesWindow()
@@ -428,22 +427,22 @@ void WindowManager::reloadOptionsWindow(const QString &reason)
     showTrayMessage(reason);
 }
 
-void WindowManager::showPoliciesWindow()
+void WindowManager::showRulesWindow()
 {
-    if (!checkWindowPassword(WindowPolicies))
+    if (!checkWindowPassword(WindowRules))
         return;
 
-    if (!m_policiesWindow) {
-        setupPoliciesWindow();
+    if (!m_rulesWindow) {
+        setupRulesWindow();
     }
 
-    showWindow(m_policiesWindow);
+    showWindow(m_rulesWindow);
 }
 
-void WindowManager::closePoliciesWindow()
+void WindowManager::closeRulesWindow()
 {
-    if (closeWindow(m_policiesWindow)) {
-        m_policiesWindow = nullptr;
+    if (closeWindow(m_rulesWindow)) {
+        m_rulesWindow = nullptr;
     }
 }
 
@@ -554,7 +553,7 @@ void WindowManager::closeAllWindows()
     closeHomeWindow();
     closeProgramsWindow();
     closeOptionsWindow();
-    closePoliciesWindow();
+    closeRulesWindow();
     closeServicesWindow();
     closeZonesWindow();
     closeStatisticsWindow();

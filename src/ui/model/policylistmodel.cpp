@@ -6,32 +6,32 @@
 #include <conf/confmanager.h>
 #include <util/ioc/ioccontainer.h>
 
-PolicyListModel::PolicyListModel(Policy::PolicyType policyType, QObject *parent) :
+RuleListModel::RuleListModel(Policy::PolicyType policyType, QObject *parent) :
     TableSqlModel(parent), m_policyType(policyType)
 {
 }
 
-ConfManager *PolicyListModel::confManager() const
+ConfManager *RuleListModel::confManager() const
 {
     return IoC<ConfManager>();
 }
 
-SqliteDb *PolicyListModel::sqliteDb() const
+SqliteDb *RuleListModel::sqliteDb() const
 {
     return confManager()->sqliteDb();
 }
 
-void PolicyListModel::initialize()
+void RuleListModel::initialize()
 {
     connect(confManager(), &ConfManager::confChanged, this, &TableItemModel::reset);
 }
 
-int PolicyListModel::columnCount(const QModelIndex &parent) const
+int RuleListModel::columnCount(const QModelIndex &parent) const
 {
     return parent.isValid() ? 0 : 1;
 }
 
-QVariant PolicyListModel::data(const QModelIndex &index, int role) const
+QVariant RuleListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
         return QVariant();
@@ -50,7 +50,7 @@ QVariant PolicyListModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QVariant PolicyListModel::dataDisplay(const QModelIndex &index) const
+QVariant RuleListModel::dataDisplay(const QModelIndex &index) const
 {
     const int row = index.row();
 
@@ -59,7 +59,7 @@ QVariant PolicyListModel::dataDisplay(const QModelIndex &index) const
     return policyRow.name;
 }
 
-QVariant PolicyListModel::dataCheckState(const QModelIndex &index) const
+QVariant RuleListModel::dataCheckState(const QModelIndex &index) const
 {
     if (index.column() == 0) {
         const auto policyRow = policyRowAt(index.row());
@@ -69,7 +69,7 @@ QVariant PolicyListModel::dataCheckState(const QModelIndex &index) const
     return QVariant();
 }
 
-bool PolicyListModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool RuleListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     Q_UNUSED(value);
 
@@ -85,24 +85,24 @@ bool PolicyListModel::setData(const QModelIndex &index, const QVariant &value, i
     return false;
 }
 
-Qt::ItemFlags PolicyListModel::flagIsUserCheckable(const QModelIndex &index) const
+Qt::ItemFlags RuleListModel::flagIsUserCheckable(const QModelIndex &index) const
 {
     return index.column() == 0 ? Qt::ItemIsUserCheckable : Qt::NoItemFlags;
 }
 
-const PolicyRow &PolicyListModel::policyRowAt(int row) const
+const PolicyRow &RuleListModel::policyRowAt(int row) const
 {
     updateRowCache(row);
 
     return m_policyRow;
 }
 
-bool PolicyListModel::updateTableRow(int row) const
+bool RuleListModel::updateTableRow(int row) const
 {
     return updatePolicyRow(sql(), { row }, m_policyRow);
 }
 
-bool PolicyListModel::updatePolicyRow(
+bool RuleListModel::updatePolicyRow(
         const QString &sql, const QVariantList &vars, PolicyRow &policyRow) const
 {
     SqliteStmt stmt;
@@ -119,7 +119,7 @@ bool PolicyListModel::updatePolicyRow(
     return true;
 }
 
-QString PolicyListModel::sqlBase() const
+QString RuleListModel::sqlBase() const
 {
     return "SELECT"
            "    policy_id,"
@@ -129,12 +129,12 @@ QString PolicyListModel::sqlBase() const
            "  FROM policy t";
 }
 
-QString PolicyListModel::sqlWhere() const
+QString RuleListModel::sqlWhere() const
 {
     return QString::fromLatin1(" WHERE t.type = %1").arg(policyType());
 }
 
-QString PolicyListModel::sqlOrder() const
+QString RuleListModel::sqlOrder() const
 {
     return " t.name";
 }

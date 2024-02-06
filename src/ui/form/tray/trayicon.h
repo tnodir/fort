@@ -143,7 +143,7 @@ private:
     QAction *m_programsOrAlertAction = nullptr;
     ClickableMenu *m_optionsMenu = nullptr;
     QAction *m_optionsAction = nullptr;
-    QAction *m_policiesAction = nullptr;
+    QAction *m_rulesAction = nullptr;
     QAction *m_statisticsAction = nullptr;
     QAction *m_graphAction = nullptr;
     QAction *m_zonesAction = nullptr;

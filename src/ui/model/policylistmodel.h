@@ -15,12 +15,12 @@ struct PolicyRow : TableRow, public Policy
 {
 };
 
-class PolicyListModel : public TableSqlModel
+class RuleListModel : public TableSqlModel
 {
     Q_OBJECT
 
 public:
-    explicit PolicyListModel(Policy::PolicyType policyType, QObject *parent = nullptr);
+    explicit RuleListModel(Policy::PolicyType policyType, QObject *parent = nullptr);
 
     Policy::PolicyType policyType() const { return m_policyType; }
 

@@ -83,14 +83,14 @@ SOURCES += \
     form/opt/pages/optmainpage.cpp \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
-    form/policy/policiescontroller.cpp \
-    form/policy/policieswindow.cpp \
-    form/policy/policyeditdialog.cpp \
-    form/policy/policylistbox.cpp \
     form/prog/programalertwindow.cpp \
     form/prog/programeditdialog.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
+    form/rule/ruleeditdialog.cpp \
+    form/rule/rulelistbox.cpp \
+    form/rule/rulescontroller.cpp \
+    form/rule/ruleswindow.cpp \
     form/stat/pages/connectionspage.cpp \
     form/stat/pages/statbasepage.cpp \
     form/stat/pages/statmainpage.cpp \
@@ -287,14 +287,14 @@ HEADERS += \
     form/opt/pages/optmainpage.h \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
-    form/policy/policiescontroller.h \
-    form/policy/policieswindow.h \
-    form/policy/policyeditdialog.h \
-    form/policy/policylistbox.h \
     form/prog/programalertwindow.h \
     form/prog/programeditdialog.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \
+    form/rule/ruleeditdialog.h \
+    form/rule/rulelistbox.h \
+    form/rule/rulescontroller.h \
+    form/rule/ruleswindow.h \
     form/stat/pages/connectionspage.h \
     form/stat/pages/statbasepage.h \
     form/stat/pages/statmainpage.h \

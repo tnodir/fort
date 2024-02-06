@@ -26,7 +26,7 @@ public:
     QString hotKeyHome() const { return valueText("hotKey/home"); }
     QString hotKeyPrograms() const { return valueText("hotKey/programs"); }
     QString hotKeyOptions() const { return valueText("hotKey/options"); }
-    QString hotKeyPolicies() const { return valueText("hotKey/policies"); }
+    QString hotKeyRules() const { return valueText("hotKey/rules"); }
     QString hotKeyStatistics() const { return valueText("hotKey/statistics"); }
     QString hotKeyGraph() const { return valueText("hotKey/graph"); }
     QString hotKeyZones() const { return valueText("hotKey/zones"); }
@@ -119,35 +119,23 @@ public:
     QByteArray optWindowAppsSplit() const { return valueByteArray("optWindow/appsSplit"); }
     void setOptWindowAppsSplit(const QByteArray &v) { setValue("optWindow/appsSplit", v); }
 
-    QRect policyWindowGeometry() const { return value("policyWindow/geometry").toRect(); }
-    void setPolicyWindowGeometry(const QRect &v) { setValue("policyWindow/geometry", v); }
+    QRect ruleWindowGeometry() const { return value("ruleWindow/geometry").toRect(); }
+    void setRuleWindowGeometry(const QRect &v) { setValue("ruleWindow/geometry", v); }
 
-    bool policyWindowMaximized() const { return valueBool("policyWindow/maximized"); }
-    void setPolicyWindowMaximized(bool on) { setValue("policyWindow/maximized", on); }
+    bool ruleWindowMaximized() const { return valueBool("ruleWindow/maximized"); }
+    void setRuleWindowMaximized(bool on) { setValue("ruleWindow/maximized", on); }
 
-    QByteArray policyWindowPresetSplit() const
-    {
-        return valueByteArray("policyWindow/presetSplit");
-    }
-    void setPolicyWindowPresetSplit(const QByteArray &v)
-    {
-        setValue("policyWindow/presetSplit", v);
-    }
+    QByteArray ruleWindowPresetSplit() const { return valueByteArray("ruleWindow/presetSplit"); }
+    void setRuleWindowPresetSplit(const QByteArray &v) { setValue("ruleWindow/presetSplit", v); }
 
-    QByteArray policyWindowGlobalSplit() const
-    {
-        return valueByteArray("policyWindow/globalSplit");
-    }
-    void setPolicyWindowGlobalSplit(const QByteArray &v)
-    {
-        setValue("policyWindow/globalSplit", v);
-    }
+    QByteArray ruleWindowGlobalSplit() const { return valueByteArray("ruleWindow/globalSplit"); }
+    void setRuleWindowGlobalSplit(const QByteArray &v) { setValue("ruleWindow/globalSplit", v); }
 
-    QByteArray policyWindowSplit() const { return valueByteArray("policyWindow/split"); }
-    void setPolicyWindowSplit(const QByteArray &v) { setValue("policyWindow/split", v); }
+    QByteArray ruleWindowSplit() const { return valueByteArray("ruleWindow/split"); }
+    void setRuleWindowSplit(const QByteArray &v) { setValue("ruleWindow/split", v); }
 
-    int policyWindowSplitVersion() const { return valueInt("policyWindow/splitVersion"); }
-    void setPolicyWindowSplitVersion(int v) { setValue("policyWindow/splitVersion", v); }
+    int ruleWindowSplitVersion() const { return valueInt("ruleWindow/splitVersion"); }
+    void setRuleWindowSplitVersion(int v) { setValue("ruleWindow/splitVersion", v); }
 
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
     void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }

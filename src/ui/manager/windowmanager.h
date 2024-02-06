@@ -13,9 +13,9 @@ class HomeWindow;
 class IniUser;
 class MainWindow;
 class OptionsWindow;
-class PoliciesWindow;
 class ProgramAlertWindow;
 class ProgramsWindow;
+class RulesWindow;
 class ServicesWindow;
 class StatisticsWindow;
 class TrayIcon;
@@ -41,7 +41,7 @@ public:
     HomeWindow *homeWindow() const { return m_homeWindow; }
     ProgramsWindow *progWindow() const { return m_progWindow; }
     ProgramAlertWindow *progAlertWindow() const { return m_progAlertWindow; }
-    PoliciesWindow *policiesWindow() const { return m_policiesWindow; }
+    RulesWindow *rulesWindow() const { return m_rulesWindow; }
     OptionsWindow *optWindow() const { return m_optWindow; }
     StatisticsWindow *connWindow() const { return m_statWindow; }
     ServicesWindow *servicesWindow() const { return m_servicesWindow; }
@@ -91,8 +91,8 @@ public slots:
     void closeOptionsWindow();
     void reloadOptionsWindow(const QString &reason);
 
-    void showPoliciesWindow();
-    void closePoliciesWindow();
+    void showRulesWindow();
+    void closeRulesWindow();
 
     void showStatisticsWindow();
     void closeStatisticsWindow();
@@ -146,7 +146,7 @@ private:
     void setupProgramsWindow();
     void setupProgramAlertWindow();
     void setupOptionsWindow();
-    void setupPoliciesWindow();
+    void setupRulesWindow();
     void setupServicesWindow();
     void setupZonesWindow();
     void setupGraphWindow();
@@ -184,7 +184,7 @@ private:
     ProgramsWindow *m_progWindow = nullptr;
     ProgramAlertWindow *m_progAlertWindow = nullptr;
     OptionsWindow *m_optWindow = nullptr;
-    PoliciesWindow *m_policiesWindow = nullptr;
+    RulesWindow *m_rulesWindow = nullptr;
     StatisticsWindow *m_statWindow = nullptr;
     ServicesWindow *m_servicesWindow = nullptr;
     ZonesWindow *m_zonesWindow = nullptr;

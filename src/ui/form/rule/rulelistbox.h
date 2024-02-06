@@ -1,5 +1,5 @@
-#ifndef POLICYLISTBOX_H
-#define POLICYLISTBOX_H
+#ifndef RULELISTBOX_H
+#define RULELISTBOX_H
 
 #include <QWidget>
 
@@ -8,17 +8,17 @@
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
-class PolicyListModel;
+class RuleListModel;
 class TableView;
 
-class PolicyListBox : public QWidget
+class RuleListBox : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit PolicyListBox(Policy::PolicyType policyType, QWidget *parent = nullptr);
+    explicit RuleListBox(Policy::PolicyType policyType, QWidget *parent = nullptr);
 
-    PolicyListModel *listModel() const { return m_listModel; }
+    RuleListModel *listModel() const { return m_listModel; }
     Policy::PolicyType policyType() const;
 
     QLabel *label() const { return m_label; }
@@ -38,7 +38,7 @@ private:
     void setupTableView();
 
 private:
-    PolicyListModel *m_listModel = nullptr;
+    RuleListModel *m_listModel = nullptr;
 
     QLabel *m_label = nullptr;
     QToolButton *m_btAddPolicy = nullptr;
@@ -47,4 +47,4 @@ private:
     TableView *m_tableView = nullptr;
 };
 
-#endif // POLICYLISTBOX_H
+#endif // RULELISTBOX_H

@@ -1,4 +1,4 @@
-#include "policieswindow.h"
+#include "ruleswindow.h"
 
 #include <QHBoxLayout>
 #include <QHeaderView>
@@ -16,8 +16,8 @@
 #include <util/iconcache.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
-#include "policiescontroller.h"
-#include "policylistbox.h"
+#include "rulescontroller.h"
+#include "rulelistbox.h"
 
 namespace {
 
@@ -25,9 +25,9 @@ constexpr int POLICIES_SPLIT_VERSION = 1;
 
 }
 
-PoliciesWindow::PoliciesWindow(QWidget *parent) :
+RulesWindow::RulesWindow(QWidget *parent) :
     WidgetWindow(parent),
-    m_ctrl(new PoliciesController(this)),
+    m_ctrl(new RulesController(this)),
     m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
     setupUi();
@@ -35,71 +35,71 @@ PoliciesWindow::PoliciesWindow(QWidget *parent) :
     setupStateWatcher();
 }
 
-ConfManager *PoliciesWindow::confManager() const
+ConfManager *RulesWindow::confManager() const
 {
     return ctrl()->confManager();
 }
 
-FirewallConf *PoliciesWindow::conf() const
+FirewallConf *RulesWindow::conf() const
 {
     return ctrl()->conf();
 }
 
-IniOptions *PoliciesWindow::ini() const
+IniOptions *RulesWindow::ini() const
 {
     return ctrl()->ini();
 }
 
-IniUser *PoliciesWindow::iniUser() const
+IniUser *RulesWindow::iniUser() const
 {
     return ctrl()->iniUser();
 }
 
-WindowManager *PoliciesWindow::windowManager() const
+WindowManager *RulesWindow::windowManager() const
 {
     return ctrl()->windowManager();
 }
 
-void PoliciesWindow::saveWindowState(bool /*wasVisible*/)
+void RulesWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setPolicyWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setPolicyWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setRuleWindowGeometry(m_stateWatcher->geometry());
+    iniUser()->setRuleWindowMaximized(m_stateWatcher->maximized());
 
-    iniUser()->setPolicyWindowSplit(m_splitter->saveState());
-    iniUser()->setPolicyWindowPresetSplit(m_presetSplitter->saveState());
-    iniUser()->setPolicyWindowGlobalSplit(m_globalSplitter->saveState());
-    iniUser()->setPolicyWindowSplitVersion(POLICIES_SPLIT_VERSION);
+    iniUser()->setRuleWindowSplit(m_splitter->saveState());
+    iniUser()->setRuleWindowPresetSplit(m_presetSplitter->saveState());
+    iniUser()->setRuleWindowGlobalSplit(m_globalSplitter->saveState());
+    iniUser()->setRuleWindowSplitVersion(POLICIES_SPLIT_VERSION);
 
     confManager()->saveIniUser();
 }
 
-void PoliciesWindow::restoreWindowState()
+void RulesWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(800, 600), iniUser()->policyWindowGeometry(),
-            iniUser()->policyWindowMaximized());
+    m_stateWatcher->restore(this, QSize(800, 600), iniUser()->ruleWindowGeometry(),
+            iniUser()->ruleWindowMaximized());
 
-    if (iniUser()->policyWindowSplitVersion() == POLICIES_SPLIT_VERSION) {
-        m_splitter->restoreState(iniUser()->policyWindowSplit());
-        m_presetSplitter->restoreState(iniUser()->policyWindowPresetSplit());
-        m_globalSplitter->restoreState(iniUser()->policyWindowGlobalSplit());
+    if (iniUser()->ruleWindowSplitVersion() == POLICIES_SPLIT_VERSION) {
+        m_splitter->restoreState(iniUser()->ruleWindowSplit());
+        m_presetSplitter->restoreState(iniUser()->ruleWindowPresetSplit());
+        m_globalSplitter->restoreState(iniUser()->ruleWindowGlobalSplit());
     }
 }
 
-void PoliciesWindow::setupController()
+void RulesWindow::setupController()
 {
     ctrl()->initialize();
 
-    connect(ctrl(), &PoliciesController::retranslateUi, this, &PoliciesWindow::retranslateUi);
+    connect(ctrl(), &RulesController::retranslateUi, this, &RulesWindow::retranslateUi);
 
     retranslateUi();
 }
 
-void PoliciesWindow::setupStateWatcher()
+void RulesWindow::setupStateWatcher()
 {
     m_stateWatcher->install(this);
 }
 
-void PoliciesWindow::retranslateUi()
+void RulesWindow::retranslateUi()
 {
     this->unsetLocale();
 
@@ -116,7 +116,7 @@ void PoliciesWindow::retranslateUi()
     this->setWindowTitle(tr("Policies"));
 }
 
-void PoliciesWindow::setupUi()
+void RulesWindow::setupUi()
 {
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(6, 6, 6, 6);
@@ -142,13 +142,13 @@ void PoliciesWindow::setupUi()
 
     // Icon
     this->setWindowIcon(
-            GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/traffic_lights.png"));
+            GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/checklist.png"));
 
     // Size
     this->setMinimumSize(500, 400);
 }
 
-void PoliciesWindow::setupPresetSplitter()
+void RulesWindow::setupPresetSplitter()
 {
     // Preset Lib Group Box
     setupPresetLibBox();
@@ -164,17 +164,17 @@ void PoliciesWindow::setupPresetSplitter()
     m_presetSplitter->addWidget(m_presetAppBox);
 }
 
-void PoliciesWindow::setupPresetLibBox()
+void RulesWindow::setupPresetLibBox()
 {
-    m_presetLibBox = new PolicyListBox(Policy::TypePresetLibrary);
+    m_presetLibBox = new RuleListBox(Policy::TypePresetLibrary);
 }
 
-void PoliciesWindow::setupPresetAppBox()
+void RulesWindow::setupPresetAppBox()
 {
-    m_presetAppBox = new PolicyListBox(Policy::TypePresetApp);
+    m_presetAppBox = new RuleListBox(Policy::TypePresetApp);
 }
 
-void PoliciesWindow::setupGlobalSplitter()
+void RulesWindow::setupGlobalSplitter()
 {
     // Global Pre Group Box
     setupGlobalPreBox();
@@ -190,12 +190,12 @@ void PoliciesWindow::setupGlobalSplitter()
     m_globalSplitter->addWidget(m_globalPostBox);
 }
 
-void PoliciesWindow::setupGlobalPreBox()
+void RulesWindow::setupGlobalPreBox()
 {
-    m_globalPreBox = new PolicyListBox(Policy::TypeGlobalBeforeApp);
+    m_globalPreBox = new RuleListBox(Policy::TypeGlobalBeforeApp);
 }
 
-void PoliciesWindow::setupGlobalPostBox()
+void RulesWindow::setupGlobalPostBox()
 {
-    m_globalPostBox = new PolicyListBox(Policy::TypeGlobalAfterApp);
+    m_globalPostBox = new RuleListBox(Policy::TypeGlobalAfterApp);
 }

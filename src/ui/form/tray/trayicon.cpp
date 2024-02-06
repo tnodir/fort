@@ -329,7 +329,7 @@ void TrayIcon::retranslateUi()
     m_programsAction->setText(tr("Programs"));
     m_optionsMenu->setTitle(tr("Options"));
     m_optionsAction->setText(tr("Options"));
-    m_policiesAction->setText(tr("Policies"));
+    m_rulesAction->setText(tr("Rules"));
     m_zonesAction->setText(tr("Zones"));
     m_statisticsAction->setText(tr("Statistics"));
     m_graphAction->setText(tr("Traffic Graph"));
@@ -455,12 +455,12 @@ void TrayIcon::setupTrayMenuOptions()
 
     connect(m_optionsMenu, &ClickableMenu::clicked, m_optionsAction, &QAction::trigger);
 
-    m_policiesAction = addAction(m_optionsMenu, ":/icons/traffic_lights.png", windowManager(),
-            SLOT(showPoliciesWindow()));
-    addHotKey(m_policiesAction, iniUser()->hotKeyPolicies());
+    m_rulesAction = addAction(m_optionsMenu, ":/icons/checklist.png", windowManager(),
+            SLOT(showRulesWindow()));
+    addHotKey(m_rulesAction, iniUser()->hotKeyRules());
 
-    // TODO: Implement Policies
-    m_policiesAction->setEnabled(false);
+    // TODO: Implement Rules
+    m_rulesAction->setEnabled(false);
 
     m_zonesAction = addAction(
             m_optionsMenu, ":/icons/ip_class.png", windowManager(), SLOT(showZonesWindow()));

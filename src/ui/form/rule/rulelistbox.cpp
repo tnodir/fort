@@ -1,4 +1,4 @@
-#include "policylistbox.h"
+#include "rulelistbox.h"
 
 #include <QHBoxLayout>
 #include <QHeaderView>
@@ -10,27 +10,27 @@
 #include <form/controls/tableview.h>
 #include <model/policylistmodel.h>
 
-PolicyListBox::PolicyListBox(Policy::PolicyType policyType, QWidget *parent) :
-    QWidget(parent), m_listModel(new PolicyListModel(policyType, this))
+RuleListBox::RuleListBox(Policy::PolicyType policyType, QWidget *parent) :
+    QWidget(parent), m_listModel(new RuleListModel(policyType, this))
 {
     setupUi();
 
     listModel()->initialize();
 }
 
-Policy::PolicyType PolicyListBox::policyType() const
+Policy::PolicyType RuleListBox::policyType() const
 {
     return listModel()->policyType();
 }
 
-void PolicyListBox::onRetranslateUi()
+void RuleListBox::onRetranslateUi()
 {
     m_btAddPolicy->setToolTip(tr("Add Policy"));
     m_btRemovePolicy->setToolTip(tr("Remove Policy"));
     m_btEditPolicy->setToolTip(tr("Edit Policy"));
 }
 
-void PolicyListBox::setupUi()
+void RuleListBox::setupUi()
 {
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
@@ -46,7 +46,7 @@ void PolicyListBox::setupUi()
     this->setLayout(layout);
 }
 
-QLayout *PolicyListBox::setupHeader()
+QLayout *RuleListBox::setupHeader()
 {
     m_label = ControlUtil::createLabel();
 
@@ -67,7 +67,7 @@ QLayout *PolicyListBox::setupHeader()
     return layout;
 }
 
-void PolicyListBox::setupTableView()
+void RuleListBox::setupTableView()
 {
     m_tableView = new TableView();
     m_tableView->setAlternatingRowColors(true);

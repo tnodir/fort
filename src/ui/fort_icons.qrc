@@ -57,7 +57,6 @@
     <file>icons/standby.png</file>
     <file>icons/tick.png</file>
     <file>icons/time.png</file>
-    <file>icons/traffic_lights.png</file>
     <file>icons/widgets.png</file>
     <file>icons/windows-48.png</file>
 </qresource>

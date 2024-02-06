@@ -1,5 +1,5 @@
-#ifndef POLICIESWINDOW_H
-#define POLICIESWINDOW_H
+#ifndef RULESWINDOW_H
+#define RULESWINDOW_H
 
 #include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
@@ -10,22 +10,22 @@ class ConfManager;
 class FirewallConf;
 class IniOptions;
 class IniUser;
-class PoliciesController;
-class PolicyListBox;
+class RulesController;
+class RuleListBox;
 class TableView;
 class WidgetWindowStateWatcher;
 class WindowManager;
 
-class PoliciesWindow : public WidgetWindow
+class RulesWindow : public WidgetWindow
 {
     Q_OBJECT
 
 public:
-    explicit PoliciesWindow(QWidget *parent = nullptr);
+    explicit RulesWindow(QWidget *parent = nullptr);
 
-    quint32 windowCode() const override { return WindowPolicies; }
+    quint32 windowCode() const override { return WindowRules; }
 
-    PoliciesController *ctrl() const { return m_ctrl; }
+    RulesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
@@ -50,16 +50,16 @@ private:
     void setupGlobalPostBox();
 
 private:
-    PoliciesController *m_ctrl = nullptr;
+    RulesController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
-    PolicyListBox *m_presetLibBox = nullptr;
-    PolicyListBox *m_presetAppBox = nullptr;
-    PolicyListBox *m_globalPreBox = nullptr;
-    PolicyListBox *m_globalPostBox = nullptr;
+    RuleListBox *m_presetLibBox = nullptr;
+    RuleListBox *m_presetAppBox = nullptr;
+    RuleListBox *m_globalPreBox = nullptr;
+    RuleListBox *m_globalPostBox = nullptr;
     QSplitter *m_splitter = nullptr;
     QSplitter *m_presetSplitter = nullptr;
     QSplitter *m_globalSplitter = nullptr;
 };
 
-#endif // POLICIESWINDOW_H
+#endif // RULESWINDOW_H
