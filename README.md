@@ -1,4 +1,9 @@
-# <img src="https://github.com/tnodir/fort/blob/master/src/ui/icons/fort.png" alt="Icon" width="32" height="32"> Fort Firewall
+<p align="center">
+  <a href="https://github.com/tnodir/fort">
+    <img src="https://github.com/tnodir/fort/blob/master/src/ui/icons/fort-96.png" alt="Icon" height="96">
+  </a>
+  <h1 align="center">Fort Firewall</h1>
+</p>
 
 [![Release](https://img.shields.io/github/release/tnodir/fort.svg)](https://github.com/tnodir/fort/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/tnodir/fort/total.svg?maxAge=86400)](https://github.com/tnodir/fort/releases)
@@ -42,12 +47,12 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 
 Please support the project:
 
-  - ⭐ Star it on GitHub, ❤ Rate on [AlternativeTo](https://alternativeto.net/software/fort-firewall/about/)
+  - ⭐ Star it on GitHub, ✨ Rate on [AlternativeTo](https://alternativeto.net/software/fort-firewall/about/)
   - 🐞 [Report bugs](https://github.com/tnodir/fort/issues), ⚡ [Discuss ideas](https://github.com/tnodir/fort/discussions)
 
 ### Donation
 
-  - [Become a Sponsor!](https://github.com/sponsors/tnodir)
+  - ❤ [Become a Sponsor!](https://github.com/sponsors/tnodir)
   - [<img src="https://github.com/edent/SuperTinyIcons/blob/master/images/svg/patreon.svg" width="18" height="18"> Become a Patron!](https://www.patreon.com/bePatron?u=9349286)
 
 ## SAST Tools
