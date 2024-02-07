@@ -496,7 +496,12 @@ bool ConfManager::setupDb()
                 {
                         .contentTable = "app",
                         .contentRowid = "app_id",
-                        .columns = { "path", "name" }
+                        .columns = { "path", "name", "notes" }
+                },
+                {
+                        .contentTable = "rule",
+                        .contentRowid = "rule_id",
+                        .columns = { "name", "notes" }
                 },
                 },
         };
