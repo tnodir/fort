@@ -384,12 +384,17 @@ void FortManager::setupTaskManager()
             &ConfZoneManager::updateDriverZones);
 
     connect(taskManager, &TaskManager::taskDoubleClicked, this, [&](qint8 taskType) {
+        auto windowManager = IoC<WindowManager>();
+
         switch (taskType) {
         case TaskInfo::UpdateChecker: {
-            IoC<WindowManager>()->showHomeWindowAbout();
+            windowManager->showHomeWindowAbout();
         } break;
         case TaskInfo::ZoneDownloader: {
-            IoC<WindowManager>()->showZonesWindow();
+            windowManager->showZonesWindow();
+        } break;
+        case TaskInfo::AppPurger: {
+            windowManager->showProgramsWindow();
         } break;
         }
     });
