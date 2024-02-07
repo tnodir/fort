@@ -109,9 +109,10 @@ private:
     QToolButton *m_btGroups = nullptr;
     QToolButton *m_btServices = nullptr;
     QPushButton *m_btMenu = nullptr;
-    ProgramEditDialog *m_formAppEdit = nullptr;
     TableView *m_appListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;
+
+    ProgramEditDialog *m_formAppEdit = nullptr;
 };
 
 #endif // PROGRAMSWINDOW_H

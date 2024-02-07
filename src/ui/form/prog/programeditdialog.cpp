@@ -28,7 +28,6 @@
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/textareautil.h>
-#include <util/window/widgetwindow.h>
 
 #include "programscontroller.h"
 
@@ -163,17 +162,6 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection)
     }
 }
 
-QPixmap ProgramEditDialog::appIcon(bool isSingleSelection) const
-{
-    if (!isSingleSelection)
-        return {};
-
-    if (isWildcard())
-        return IconCache::file(":/icons/coding.png");
-
-    return IoC<AppInfoCache>()->appPixmap(m_appRow.appPath);
-}
-
 void ProgramEditDialog::initializeFocus()
 {
     if (!isEmpty()) {
@@ -184,6 +172,17 @@ void ProgramEditDialog::initializeFocus()
         m_editPath->selectAll();
         m_editPath->setFocus();
     }
+}
+
+QPixmap ProgramEditDialog::appIcon(bool isSingleSelection) const
+{
+    if (!isSingleSelection)
+        return {};
+
+    if (isWildcard())
+        return IconCache::file(":/icons/coding.png");
+
+    return IoC<AppInfoCache>()->appPixmap(m_appRow.appPath);
 }
 
 void ProgramEditDialog::closeOnSave()

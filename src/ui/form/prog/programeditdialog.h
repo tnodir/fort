@@ -54,10 +54,9 @@ private:
     void initializePathNameFields();
     void initializePathField(bool isSingleSelection, bool isPathEditable);
     void initializeNameField(bool isSingleSelection);
+    void initializeFocus();
 
     QPixmap appIcon(bool isSingleSelection) const;
-
-    void initializeFocus();
 
     void setupController();
 

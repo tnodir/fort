@@ -101,6 +101,7 @@ SOURCES += \
     form/svc/serviceswindow.cpp \
     form/tray/traycontroller.cpp \
     form/tray/trayicon.cpp \
+    form/zone/zoneeditdialog.cpp \
     form/zone/zonescontroller.cpp \
     form/zone/zoneswindow.cpp \
     fortmanager.cpp \
@@ -306,6 +307,7 @@ HEADERS += \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
     form/windowtypes.h \
+    form/zone/zoneeditdialog.h \
     form/zone/zonescontroller.h \
     form/zone/zoneswindow.h \
     fortcompat.h \
