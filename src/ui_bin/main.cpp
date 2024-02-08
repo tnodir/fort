@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
     QApplication::setApplicationName(APP_NAME);
     QApplication::setApplicationVersion(APP_VERSION_STR);
-    QApplication::setApplicationDisplayName(QLatin1String(APP_NAME) + " v" + APP_VERSION_STR
+    QApplication::setApplicationDisplayName(QLatin1String(APP_NAME) + ' ' + APP_VERSION_STR
             + APP_VERSION_BUILD_STR
             + (settings.isPortable() ? QLatin1String(" Portable") : QString()));
 
