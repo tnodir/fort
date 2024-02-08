@@ -1092,7 +1092,11 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitte die Texte in Erlauben/Blockieren-Feldern aus App-Gruppen in Wildcard-Programme verschieben!!!
+
+(Sie sind jetzt schreibgeschützt und werden in v4 entfernt.)
+
+Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
     </message>
 </context>
 <context>
@@ -1843,7 +1847,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regeln</translation>
     </message>
 </context>
 <context>
@@ -1859,6 +1863,45 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Restart Required</source>
         <translation>Neustart erforderlich</translation>
+    </message>
+</context>
+<context>
+    <name>ZoneEditDialog</name>
+    <message>
+        <source>Zone Name:</source>
+        <translation>Zonenname:</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>Quelle:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Aktiviert</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>Benutzerdefinierte URL</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL:</translation>
+    </message>
+    <message>
+        <source>Form Data:</source>
+        <translation>Formulardaten:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <source>Edit Zone</source>
+        <translation>Zone bearbeiten</translation>
     </message>
 </context>
 <context>
@@ -1927,42 +1970,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Save As Text</source>
         <translation>Als Text Speichern</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>Zone bearbeiten</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>Zonenname:</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>Quelle:</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Aktiviert</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>Benutzerdefinierte URL</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL:</translation>
-    </message>
-    <message>
-        <source>Form Data:</source>
-        <translation>Formulardaten:</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Zones</source>

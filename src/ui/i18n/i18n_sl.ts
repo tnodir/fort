@@ -1862,6 +1862,45 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
 </context>
 <context>
+    <name>ZoneEditDialog</name>
+    <message>
+        <source>Zone Name:</source>
+        <translation>Ime področja:</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>Vir:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Omogočeno</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>URL po meri</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL naslov:</translation>
+    </message>
+    <message>
+        <source>Form Data:</source>
+        <translation>Oblika podatkov:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Vredu</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Prekliči</translation>
+    </message>
+    <message>
+        <source>Edit Zone</source>
+        <translation>Uredi področje</translation>
+    </message>
+</context>
+<context>
     <name>ZoneListModel</name>
     <message>
         <source>Zone</source>
@@ -1927,42 +1966,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Save As Text</source>
         <translation>Shrani kot besedilo</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>Uredi področje</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>Ime področja:</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>Vir:</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Omogočeno</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>URL po meri</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL naslov:</translation>
-    </message>
-    <message>
-        <source>Form Data:</source>
-        <translation>Oblika podatkov:</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>Vredu</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Prekliči</translation>
     </message>
     <message>
         <source>Zones</source>

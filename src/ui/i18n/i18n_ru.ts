@@ -1866,6 +1866,45 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
 </context>
 <context>
+    <name>ZoneEditDialog</name>
+    <message>
+        <source>Zone Name:</source>
+        <translation>Наименование зоны:</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>Источник:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Включено</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>Нестандартная ссылка</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>Ссылка:</translation>
+    </message>
+    <message>
+        <source>Form Data:</source>
+        <translation>Данные формы:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Edit Zone</source>
+        <translation>Редактирование зоны</translation>
+    </message>
+</context>
+<context>
     <name>ZoneListModel</name>
     <message>
         <source>Zone</source>
@@ -1931,42 +1970,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Save As Text</source>
         <translation>Сохранить как текст</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>Редактирование зоны</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>Наименование зоны:</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>Источник:</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Включено</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>Нестандартная ссылка</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>Ссылка:</translation>
-    </message>
-    <message>
-        <source>Form Data:</source>
-        <translation>Данные формы:</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>ОК</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Отмена</translation>
     </message>
     <message>
         <source>Zones</source>

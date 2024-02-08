@@ -1862,6 +1862,45 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
 </context>
 <context>
+    <name>ZoneEditDialog</name>
+    <message>
+        <source>Zone Name:</source>
+        <translation>Nome zona:</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>Fonte:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Abilitato</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>URL personalizzato</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL:</translation>
+    </message>
+    <message>
+        <source>Form Data:</source>
+        <translation>Dati modulo:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Edit Zone</source>
+        <translation>Modifica zona</translation>
+    </message>
+</context>
+<context>
     <name>ZoneListModel</name>
     <message>
         <source>Zone</source>
@@ -1927,42 +1966,6 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Save As Text</source>
         <translation>Salva come testo</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>Modifica zona</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>Nome zona:</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>Fonte:</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Abilitato</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>URL personalizzato</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL:</translation>
-    </message>
-    <message>
-        <source>Form Data:</source>
-        <translation>Dati modulo:</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>Ok</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annulla</translation>
     </message>
     <message>
         <source>Zones</source>

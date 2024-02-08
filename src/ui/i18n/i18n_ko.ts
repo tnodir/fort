@@ -1092,7 +1092,11 @@ Make sure that you have a fresh backup.</source>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation type="unfinished"></translation>
+        <translation>허용/차단 필드 텍스트를 앱 그룹에서 와일드카드 프로그램으로 이동하십시오!!!
+
+(현재 읽기 전용이며 v4에서 제거됩니다.)
+
+브라우저에서 토론 스레드를 열고 싶습니까?</translation>
     </message>
 </context>
 <context>
@@ -1843,7 +1847,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙</translation>
     </message>
 </context>
 <context>
@@ -1859,6 +1863,45 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Restart Required</source>
         <translation>재시작 필요</translation>
+    </message>
+</context>
+<context>
+    <name>ZoneEditDialog</name>
+    <message>
+        <source>Zone Name:</source>
+        <translation>대역 이름:</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>소스:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>사용함</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>URL 사용자 지정</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL:</translation>
+    </message>
+    <message>
+        <source>Form Data:</source>
+        <translation>양식 데이터:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>확인</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>취소</translation>
+    </message>
+    <message>
+        <source>Edit Zone</source>
+        <translation>대역 편집</translation>
     </message>
 </context>
 <context>
@@ -1927,42 +1970,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Save As Text</source>
         <translation>텍스트로 저장</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>대역 편집</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>대역 이름:</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>소스:</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>활성화됨</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>URL 사용자 지정</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL:</translation>
-    </message>
-    <message>
-        <source>Form Data:</source>
-        <translation>양식 데이터:</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>확인</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>취소</translation>
     </message>
     <message>
         <source>Zones</source>

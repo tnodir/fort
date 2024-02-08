@@ -1090,7 +1090,11 @@ Make sure that you have a fresh backup.</source>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation type="unfinished"></translation>
+        <translation>请将 &quot;允许/阻止 &quot;字段的文本从 &quot;应用程序组 &quot;移至 &quot;通配符程序&quot;！！！
+
+(它们现在是只读的，将在第 4 版中删除。)
+
+您想在浏览器中打开一个讨论主题吗？</translation>
     </message>
 </context>
 <context>
@@ -1841,7 +1845,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>规则</translation>
     </message>
 </context>
 <context>
@@ -1857,6 +1861,45 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Restart Required</source>
         <translation>需要重启</translation>
+    </message>
+</context>
+<context>
+    <name>ZoneEditDialog</name>
+    <message>
+        <source>Zone Name:</source>
+        <translation>区域名称：</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>来源:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>已启用</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>自定义URL</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL：</translation>
+    </message>
+    <message>
+        <source>Form Data:</source>
+        <translation>表单数据</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Edit Zone</source>
+        <translation>编辑区域</translation>
     </message>
 </context>
 <context>
@@ -1925,42 +1968,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Save As Text</source>
         <translation>作为文本保存</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>编辑区域</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>区域名称：</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>来源:</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>已启用</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>自定义URL</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL：</translation>
-    </message>
-    <message>
-        <source>Form Data:</source>
-        <translation>表单数据</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>确定</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>取消</translation>
     </message>
     <message>
         <source>Zones</source>

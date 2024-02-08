@@ -1849,11 +1849,50 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation type="unfinished">Reinicia Agora?</translation>
+        <translation>Reinicia Agora?</translation>
     </message>
     <message>
         <source>Restart Required</source>
-        <translation type="unfinished">É Necessário Reiniciar</translation>
+        <translation>É Necessário Reiniciar</translation>
+    </message>
+</context>
+<context>
+    <name>ZoneEditDialog</name>
+    <message>
+        <source>Zone Name:</source>
+        <translation>Nome da Zona:</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>Origem:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Ativado</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>URL personalizada</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL:</translation>
+    </message>
+    <message>
+        <source>Form Data:</source>
+        <translation>Dados do Formulário:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
+        <source>Edit Zone</source>
+        <translation>Editar Zona</translation>
     </message>
 </context>
 <context>
@@ -1922,42 +1961,6 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Save As Text</source>
         <translation>Salvar como Texto</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>Editar Zona</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>Nome da Zona:</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>Origem:</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Ativado</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>URL personalizada</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL:</translation>
-    </message>
-    <message>
-        <source>Form Data:</source>
-        <translation>Dados do Formulário:</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>Ok</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Cancelar</translation>
     </message>
     <message>
         <source>Zones</source>

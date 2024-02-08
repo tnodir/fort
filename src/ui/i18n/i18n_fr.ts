@@ -1866,6 +1866,45 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
 </context>
 <context>
+    <name>ZoneEditDialog</name>
+    <message>
+        <source>Zone Name:</source>
+        <translation>Nom de la Zone:</translation>
+    </message>
+    <message>
+        <source>Source:</source>
+        <translation>Source :</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Activé</translation>
+    </message>
+    <message>
+        <source>Custom URL</source>
+        <translation>URL personnalisée</translation>
+    </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL :</translation>
+    </message>
+    <message>
+        <source>Form Data:</source>
+        <translation>Données du formulaire:</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Edit Zone</source>
+        <translation>Éditer Zones</translation>
+    </message>
+</context>
+<context>
     <name>ZoneListModel</name>
     <message>
         <source>Zone</source>
@@ -1931,42 +1970,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Save As Text</source>
         <translation>Enregistrer comme texte</translation>
-    </message>
-    <message>
-        <source>Edit Zone</source>
-        <translation>Éditer Zones</translation>
-    </message>
-    <message>
-        <source>Zone Name:</source>
-        <translation>Nom de la Zone:</translation>
-    </message>
-    <message>
-        <source>Source:</source>
-        <translation>Source :</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Activé</translation>
-    </message>
-    <message>
-        <source>Custom URL</source>
-        <translation>URL personnalisée</translation>
-    </message>
-    <message>
-        <source>URL:</source>
-        <translation>URL :</translation>
-    </message>
-    <message>
-        <source>Form Data:</source>
-        <translation>Données du formulaire:</translation>
-    </message>
-    <message>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Annuler</translation>
     </message>
     <message>
         <source>Zones</source>
