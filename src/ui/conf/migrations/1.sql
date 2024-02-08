@@ -96,6 +96,8 @@ CREATE TABLE rule(
   mod_time INTEGER NOT NULL
 );
 
+CREATE INDEX rule_name_idx ON rule(name);
+
 CREATE TABLE app_rule(
   app_rule_id INTEGER PRIMARY KEY,
   app_id INTEGER NOT NULL,
