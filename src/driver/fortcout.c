@@ -260,7 +260,9 @@ inline static void fort_callout_ale_log(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE
         cx->blocked = FALSE; /* allow */
     }
 
-    fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_data);
+    if (cx->block_reason != FORT_BLOCK_REASON_NONE) {
+        fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_data);
+    }
 }
 
 inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
@@ -321,15 +323,17 @@ inline static void fort_callout_ale_classify_blocked(PCFORT_CALLOUT_ARG ca,
     }
 }
 
-inline static void fort_callout_ale_classify_allowed(PCFORT_CALLOUT_ARG ca,
+inline static void fort_callout_ale_classify_action(PCFORT_CALLOUT_ARG ca,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     if (cx->block_reason == FORT_BLOCK_REASON_NONE) {
         /* Continue the search */
         fort_callout_classify_continue(ca->classifyOut);
-    } else {
+    } else if (!cx->blocked) {
         /* Allow the connection */
         fort_callout_classify_permit(ca->filter, ca->classifyOut);
+    } else {
+        fort_callout_ale_classify_blocked(ca, cx, conf_ref, conf_flags);
     }
 }
 
@@ -374,11 +378,7 @@ inline static void fort_callout_ale_check_conf(
         fort_callout_ale_log(ca, cx, conf_ref, conf_flags);
     }
 
-    if (cx->blocked) {
-        fort_callout_ale_classify_blocked(ca, cx, conf_ref, conf_flags);
-    } else {
-        fort_callout_ale_classify_allowed(ca, cx, conf_ref, conf_flags);
-    }
+    fort_callout_ale_classify_action(ca, cx, conf_ref, conf_flags);
 }
 
 inline static void fort_callout_ale_by_conf(

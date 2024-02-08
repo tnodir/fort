@@ -329,7 +329,7 @@ static BOOL fort_conf_app_blocked_check(const PFORT_CONF conf, INT8 *block_reaso
     /* Block or Allow */
     if (!app_found) {
         *block_reason = FORT_BLOCK_REASON_NONE; /* Don't block or allow */
-        return FALSE; /* Implicitly allow */
+        return TRUE; /* Ignore */
     }
 
     /* Block, if it is explicitly blocked and not allowed */
