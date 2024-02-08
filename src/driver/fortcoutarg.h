@@ -45,6 +45,7 @@ typedef struct fort_callout_ale_extra
     UCHAR inherited : 1;
     UCHAR drop_blocked : 1;
     UCHAR blocked : 1;
+    UCHAR ignore : 1;
     INT8 block_reason;
 
     FORT_APP_ENTRY app_data;
