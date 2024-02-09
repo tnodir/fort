@@ -203,6 +203,7 @@ SOURCES += \
     util/startuputil.cpp \
     util/stringutil.cpp \
     util/textareautil.cpp \
+    util/threadstorage.cpp \
     util/triggertimer.cpp \
     util/variantutil.cpp \
     util/window/basewindowstatewatcher.cpp \
@@ -413,6 +414,7 @@ HEADERS += \
     util/startuputil.h \
     util/stringutil.h \
     util/textareautil.h \
+    util/threadstorage.h \
     util/triggertimer.h \
     util/variantutil.h \
     util/window/basewindowstatewatcher.h \

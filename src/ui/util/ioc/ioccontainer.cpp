@@ -8,7 +8,7 @@ namespace {
 const QLoggingCategory LC("util.ioc.iocContainer");
 }
 
-int IocContainer::g_tlsIndex = -1;
+ThreadStorage IocContainer::g_threadStorage;
 
 IocContainer::IocContainer() = default;
 
@@ -94,27 +94,7 @@ void IocContainer::autoDelete(int typeId)
 
 bool IocContainer::pinToThread()
 {
-    createTlsIndex();
-
-    return TlsSetValue(g_tlsIndex, this);
-}
-
-void IocContainer::createTlsIndex()
-{
-    if (g_tlsIndex == -1) {
-        g_tlsIndex = TlsAlloc();
-        if (g_tlsIndex == -1) {
-            qCCritical(LC) << "TlsAlloc error";
-        }
-    }
-}
-
-void IocContainer::deleteTlsIndex()
-{
-    if (g_tlsIndex != -1) {
-        TlsFree(g_tlsIndex);
-        g_tlsIndex = -1;
-    }
+    return g_threadStorage.setValue(this);
 }
 
 int IocContainer::getNextTypeId()

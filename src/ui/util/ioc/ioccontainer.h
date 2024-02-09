@@ -3,8 +3,7 @@
 
 #include <QObject>
 
-#define WIN32_LEAN_AND_MEAN
-#include <qt_windows.h>
+#include <util/threadstorage.h>
 
 #include "iocservice.h"
 
@@ -80,7 +79,7 @@ public:
 
     inline static IocContainer *getPinned()
     {
-        return static_cast<IocContainer *>(TlsGetValue(g_tlsIndex));
+        return static_cast<IocContainer *>(g_threadStorage.value());
     }
 
     template<class T>
@@ -104,13 +103,10 @@ private:
     void tearDown(int typeId);
     void autoDelete(int typeId);
 
-    static void createTlsIndex();
-    static void deleteTlsIndex();
-
     static int getNextTypeId();
 
 private:
-    static int g_tlsIndex;
+    static ThreadStorage g_threadStorage;
 
     int m_size = 0;
 
