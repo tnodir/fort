@@ -10,7 +10,7 @@ namespace {
 void showErrorMessage(const QString &errorMessage)
 {
     IoC<WindowManager>()->showErrorBox(
-            errorMessage, ConfZoneManager::tr("Zone Configuration Error"));
+            errorMessage, ZonesController::tr("Zone Configuration Error"));
 }
 
 }

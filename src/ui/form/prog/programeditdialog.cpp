@@ -91,8 +91,8 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
 
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
 
-    m_rbAllowApp->setChecked(!appRow.blocked);
-    m_rbBlockApp->setChecked(appRow.blocked);
+    m_rbAllow->setChecked(!appRow.blocked);
+    m_rbBlock->setChecked(appRow.blocked);
     m_rbKillProcess->setChecked(appRow.killProcess);
 
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
@@ -140,14 +140,16 @@ void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathE
     m_editWildcard->setReadOnly(!isPathEditable);
     m_editWildcard->setEnabled(isSingleSelection);
     m_editWildcard->setVisible(isWildcard());
+
+    m_btSelectFile->setEnabled(isSingleSelection);
 }
 
 void ProgramEditDialog::initializeNameField(bool isSingleSelection)
 {
-    m_btSelectFile->setEnabled(isSingleSelection);
     m_editName->setText(isSingleSelection ? m_appRow.appName : QString());
     m_editName->setEnabled(isSingleSelection);
     m_editName->setClearButtonEnabled(isSingleSelection);
+
     m_btGetName->setEnabled(isSingleSelection);
 
     m_editNotes->setText(m_appRow.notes);
@@ -214,8 +216,8 @@ void ProgramEditDialog::retranslateUi()
     m_editNotes->setPlaceholderText(tr("Notes"));
     m_labelAppGroup->setText(tr("Group:"));
 
-    m_rbAllowApp->setText(tr("Allow"));
-    m_rbBlockApp->setText(tr("Block"));
+    m_rbAllow->setText(tr("Allow"));
+    m_rbBlock->setText(tr("Block"));
     m_rbKillProcess->setText(tr("Kill Process"));
 
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
@@ -297,10 +299,26 @@ void ProgramEditDialog::retranslateWindowTitle()
 
 void ProgramEditDialog::setupUi()
 {
-    // Form Layout
-    auto appLayout = setupAppLayout();
+    // Main Layout
+    auto layout = setupMainLayout();
+    this->setLayout(layout);
 
-    // Allow/Block/etc Actions Layout
+    // Font
+    this->setFont(WindowManager::defaultFont());
+
+    // Modality
+    this->setWindowModality(Qt::WindowModal);
+
+    // Size
+    this->setMinimumWidth(500);
+}
+
+QLayout *ProgramEditDialog::setupMainLayout()
+{
+    // Form Layout
+    auto formLayout = setupFormLayout();
+
+    // Allow/Block/Kill Actions Layout
     auto actionsLayout = setupActionsLayout();
 
     setupActionsGroup();
@@ -316,7 +334,7 @@ void ProgramEditDialog::setupUi()
 
     // Form
     auto layout = new QVBoxLayout();
-    layout->addLayout(appLayout);
+    layout->addLayout(formLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addStretch();
     layout->addLayout(actionsLayout);
@@ -326,53 +344,45 @@ void ProgramEditDialog::setupUi()
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
 
-    this->setLayout(layout);
-
-    // Font
-    this->setFont(WindowManager::defaultFont());
-
-    // Modality
-    this->setWindowModality(Qt::WindowModal);
-
-    // Size
-    this->setMinimumWidth(500);
+    return layout;
 }
 
-QLayout *ProgramEditDialog::setupAppLayout()
+QLayout *ProgramEditDialog::setupFormLayout()
 {
     auto layout = new QFormLayout();
     layout->setHorizontalSpacing(10);
 
-    // App Path
-    auto pathLayout = setupAppPathLayout();
+    // Path
+    auto pathLayout = setupPathLayout();
 
     layout->addRow("File Path:", pathLayout);
-    m_labelEditPath = qobject_cast<QLabel *>(layout->labelForField(pathLayout));
+    m_labelEditPath = ControlUtil::formRowLabel(layout, pathLayout);
 
-    // App Name
-    auto nameLayout = setupAppNameLayout();
+    // Name
+    auto nameLayout = setupNameLayout();
 
     layout->addRow("Name:", nameLayout);
-    m_labelEditName = qobject_cast<QLabel *>(layout->labelForField(nameLayout));
+    m_labelEditName = ControlUtil::formRowLabel(layout, nameLayout);
 
     // Notes
-    auto notesLayout = setupNotesLayout();
+    m_editNotes = new PlainTextEdit();
+    m_editNotes->setFixedHeight(40);
 
-    layout->addRow("Notes:", notesLayout);
-    m_labelEditNotes = qobject_cast<QLabel *>(layout->labelForField(notesLayout));
+    layout->addRow("Notes:", m_editNotes);
+    m_labelEditNotes = ControlUtil::formRowLabel(layout, m_editNotes);
     m_labelEditNotes->setScaledContents(true);
     m_labelEditNotes->setFixedSize(32, 32);
 
-    // App Group
+    // Group
     setupComboAppGroups();
 
-    layout->addRow("Application Group:", m_comboAppGroup);
-    m_labelAppGroup = qobject_cast<QLabel *>(layout->labelForField(m_comboAppGroup));
+    layout->addRow("Group:", m_comboAppGroup);
+    m_labelAppGroup = ControlUtil::formRowLabel(layout, m_comboAppGroup);
 
     return layout;
 }
 
-QLayout *ProgramEditDialog::setupAppPathLayout()
+QLayout *ProgramEditDialog::setupPathLayout()
 {
     auto layout = new QHBoxLayout();
 
@@ -411,7 +421,7 @@ QLayout *ProgramEditDialog::setupAppPathLayout()
     return layout;
 }
 
-QLayout *ProgramEditDialog::setupAppNameLayout()
+QLayout *ProgramEditDialog::setupNameLayout()
 {
     m_editName = new QLineEdit();
     m_editName->setMaxLength(1024);
@@ -420,16 +430,6 @@ QLayout *ProgramEditDialog::setupAppNameLayout()
             ":/icons/arrow_refresh_small.png", [&] { fillEditName(); });
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_editName, m_btGetName });
-
-    return layout;
-}
-
-QLayout *ProgramEditDialog::setupNotesLayout()
-{
-    m_editNotes = new PlainTextEdit();
-    m_editNotes->setFixedHeight(40);
-
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_editNotes });
 
     return layout;
 }
@@ -453,13 +453,13 @@ void ProgramEditDialog::setupComboAppGroups()
 QLayout *ProgramEditDialog::setupActionsLayout()
 {
     // Allow
-    m_rbAllowApp = new QRadioButton();
-    m_rbAllowApp->setIcon(IconCache::icon(":/icons/accept.png"));
-    m_rbAllowApp->setChecked(true);
+    m_rbAllow = new QRadioButton();
+    m_rbAllow->setIcon(IconCache::icon(":/icons/accept.png"));
+    m_rbAllow->setChecked(true);
 
     // Block
-    m_rbBlockApp = new QRadioButton();
-    m_rbBlockApp->setIcon(IconCache::icon(":/icons/deny.png"));
+    m_rbBlock = new QRadioButton();
+    m_rbBlock->setIcon(IconCache::icon(":/icons/deny.png"));
 
     // Kill Process
     m_rbKillProcess = new QRadioButton();
@@ -467,8 +467,8 @@ QLayout *ProgramEditDialog::setupActionsLayout()
 
     connect(m_rbKillProcess, &QRadioButton::clicked, this, &ProgramEditDialog::warnDangerousOption);
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ /*stretch*/ nullptr, m_rbAllowApp,
-            m_rbBlockApp, m_rbKillProcess, /*stretch*/ nullptr });
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { /*stretch*/ nullptr, m_rbAllow, m_rbBlock, m_rbKillProcess, /*stretch*/ nullptr });
     layout->setSpacing(20);
 
     return layout;
@@ -479,8 +479,8 @@ void ProgramEditDialog::setupActionsGroup()
     m_btgActions = new QButtonGroup(this);
     m_btgActions->setExclusive(true);
 
-    m_btgActions->addButton(m_rbAllowApp);
-    m_btgActions->addButton(m_rbBlockApp);
+    m_btgActions->addButton(m_rbAllow);
+    m_btgActions->addButton(m_rbBlock);
     m_btgActions->addButton(m_rbKillProcess);
 }
 
@@ -711,6 +711,7 @@ bool ProgramEditDialog::saveMulti(App &app)
 
 bool ProgramEditDialog::validateFields() const
 {
+    // Path
     const bool isPathEmpty =
             isWildcard() ? m_editWildcard->isEmpty() : m_editPath->text().isEmpty();
     if (isPathEmpty) {
@@ -720,6 +721,7 @@ bool ProgramEditDialog::validateFields() const
         return false;
     }
 
+    // Name
     if (m_editName->text().isEmpty()) {
         m_editName->setFocus();
         return false;
@@ -738,7 +740,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.parked = m_cbParked->isChecked();
     app.logBlocked = m_cbLogBlocked->isChecked();
     app.logConn = m_cbLogConn->isChecked();
-    app.blocked = !m_rbAllowApp->isChecked();
+    app.blocked = !m_rbAllow->isChecked();
     app.killProcess = m_rbKillProcess->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
     app.appName = m_editName->text();

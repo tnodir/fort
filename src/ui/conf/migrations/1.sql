@@ -68,8 +68,8 @@ CREATE TABLE app(
   log_conn BOOLEAN NOT NULL DEFAULT 1,
   blocked BOOLEAN NOT NULL,
   kill_process BOOLEAN NOT NULL DEFAULT 0,
-  accept_zones BOOLEAN NOT NULL DEFAULT 0,  -- zone indexes bit mask
-  reject_zones BOOLEAN NOT NULL DEFAULT 0,  -- zone indexes bit mask
+  accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
+  reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
   creat_time INTEGER NOT NULL,
   end_action INTEGER NOT NULL DEFAULT 0,
   end_time INTEGER
@@ -87,12 +87,13 @@ CREATE TABLE app_alert(
 CREATE TABLE rule(
   rule_id INTEGER PRIMARY KEY,
   enabled BOOLEAN NOT NULL,
-  block BOOLEAN NOT NULL,
+  blocked BOOLEAN NOT NULL,
   exclusive BOOLEAN NOT NULL,
   name TEXT NOT NULL,
   notes TEXT,
   rule_text TEXT NOT NULL,
-  zones INTEGER NOT NULL,  -- zone indexes bit mask
+  accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
+  reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
   mod_time INTEGER NOT NULL
 );
 
@@ -106,6 +107,7 @@ CREATE TABLE app_rule(
 );
 
 CREATE UNIQUE INDEX app_rule_app_id_order_index_uk ON app_rule(app_id, order_index);
+CREATE INDEX app_rule_rule_id_idx ON app_rule(rule_id);
 
 CREATE TABLE system_rule(
   system_rule_id INTEGER PRIMARY KEY,
@@ -115,6 +117,7 @@ CREATE TABLE system_rule(
 );
 
 CREATE UNIQUE INDEX system_rule_system_type_order_index_uk ON system_rule(system_type, order_index);
+CREATE INDEX system_rule_rule_id_idx ON system_rule(rule_id);
 
 CREATE TABLE task(
   task_id INTEGER PRIMARY KEY,

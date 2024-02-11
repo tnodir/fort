@@ -10,6 +10,7 @@ QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
+QT_FORWARD_DECLARE_CLASS(QFormLayout)
 QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLayout)
@@ -102,6 +103,9 @@ public:
             const QString &suffix, const std::function<void(double value)> &onValueChanged);
     static LabelColor *createLabelColor(
             const QColor &v, const std::function<void(const QColor &color)> &onColorChanged);
+
+    static QLabel *formRowLabel(QFormLayout *formLayout, QWidget *field);
+    static QLabel *formRowLabel(QFormLayout *formLayout, QLayout *field);
 };
 
 #endif // CONTROLUTIL_H

@@ -1,7 +1,5 @@
 #include "confzonemanagerrpc.h"
 
-#include <sqlite/sqlitedb.h>
-
 #include <conf/zone.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>

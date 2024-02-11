@@ -36,6 +36,14 @@ enum Command : qint8 {
     Rpc_ConfAppManager_appsChanged,
     Rpc_ConfAppManager_appUpdated,
 
+    Rpc_ConfRuleManager_addOrUpdateRule,
+    Rpc_ConfRuleManager_deleteRule,
+    Rpc_ConfRuleManager_updateRuleName,
+    Rpc_ConfRuleManager_updateRuleEnabled,
+    Rpc_ConfRuleManager_ruleAdded,
+    Rpc_ConfRuleManager_ruleRemoved,
+    Rpc_ConfRuleManager_ruleUpdated,
+
     Rpc_ConfZoneManager_addOrUpdateZone,
     Rpc_ConfZoneManager_deleteZone,
     Rpc_ConfZoneManager_updateZoneName,
@@ -76,6 +84,7 @@ enum RpcManager : qint8 {
     Rpc_AppInfoManager,
     Rpc_ConfManager,
     Rpc_ConfAppManager,
+    Rpc_ConfRuleManager,
     Rpc_ConfZoneManager,
     Rpc_DriverManager,
     Rpc_QuotaManager,

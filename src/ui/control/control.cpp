@@ -36,6 +36,14 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfAppManager_appsChanged)
         CASE_STRING(Rpc_ConfAppManager_appUpdated)
 
+        CASE_STRING(Rpc_ConfRuleManager_addOrUpdateRule)
+        CASE_STRING(Rpc_ConfRuleManager_deleteRule)
+        CASE_STRING(Rpc_ConfRuleManager_updateRuleName)
+        CASE_STRING(Rpc_ConfRuleManager_updateRuleEnabled)
+        CASE_STRING(Rpc_ConfRuleManager_ruleAdded)
+        CASE_STRING(Rpc_ConfRuleManager_ruleRemoved)
+        CASE_STRING(Rpc_ConfRuleManager_ruleUpdated)
+
         CASE_STRING(Rpc_ConfZoneManager_addOrUpdateZone)
         CASE_STRING(Rpc_ConfZoneManager_deleteZone)
         CASE_STRING(Rpc_ConfZoneManager_updateZoneName)
@@ -82,6 +90,7 @@ const char *const rpcManagerString(RpcManager rpcManager)
         CASE_STRING(Rpc_AppInfoManager)
         CASE_STRING(Rpc_ConfManager)
         CASE_STRING(Rpc_ConfAppManager)
+        CASE_STRING(Rpc_ConfRuleManager)
         CASE_STRING(Rpc_ConfZoneManager)
         CASE_STRING(Rpc_DriverManager)
         CASE_STRING(Rpc_QuotaManager)
@@ -125,6 +134,14 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appAlerted,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appsChanged,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_appUpdated,
+
+        Rpc_ConfRuleManager, // Rpc_ConfRuleManager_addOrUpdateRule,
+        Rpc_ConfRuleManager, // Rpc_ConfRuleManager_deleteRule,
+        Rpc_ConfRuleManager, // Rpc_ConfRuleManager_updateRuleName,
+        Rpc_ConfRuleManager, // Rpc_ConfRuleManager_updateRuleEnabled,
+        Rpc_ConfRuleManager, // Rpc_ConfRuleManager_ruleAdded,
+        Rpc_ConfRuleManager, // Rpc_ConfRuleManager_ruleRemoved,
+        Rpc_ConfRuleManager, // Rpc_ConfRuleManager_ruleUpdated,
 
         Rpc_ConfZoneManager, // Rpc_ConfZoneManager_addOrUpdateZone,
         Rpc_ConfZoneManager, // Rpc_ConfZoneManager_deleteZone,
@@ -195,6 +212,14 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_ConfAppManager_appAlerted,
         0, // Rpc_ConfAppManager_appsChanged,
         0, // Rpc_ConfAppManager_appUpdated,
+
+        true, // Rpc_ConfRuleManager_addOrUpdateRule,
+        true, // Rpc_ConfRuleManager_deleteRule,
+        true, // Rpc_ConfRuleManager_updateRuleName,
+        true, // Rpc_ConfRuleManager_updateRuleEnabled,
+        0, // Rpc_ConfRuleManager_ruleAdded,
+        0, // Rpc_ConfRuleManager_ruleRemoved,
+        0, // Rpc_ConfRuleManager_ruleUpdated,
 
         true, // Rpc_ConfZoneManager_addOrUpdateZone,
         true, // Rpc_ConfZoneManager_deleteZone,

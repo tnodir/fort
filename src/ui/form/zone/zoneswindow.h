@@ -40,12 +40,11 @@ public:
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 
-protected slots:
-    void onRetranslateUi();
-
 private:
     void setupController();
     void setupStateWatcher();
+
+    void retranslateUi();
 
     void setupUi();
     QLayout *setupHeader();

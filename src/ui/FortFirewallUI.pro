@@ -22,12 +22,11 @@ SOURCES += \
     conf/appgroup.cpp \
     conf/confappmanager.cpp \
     conf/confmanager.cpp \
+    conf/confrulemanager.cpp \
     conf/confzonemanager.cpp \
     conf/firewallconf.cpp \
     conf/inioptions.cpp \
-    conf/rules/policy.cpp \
-    conf/rules/policyset.cpp \
-    conf/rules/rule.cpp \
+    conf/rule.cpp \
     conf/zone.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
@@ -88,7 +87,6 @@ SOURCES += \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
     form/rule/ruleeditdialog.cpp \
-    form/rule/rulelistbox.cpp \
     form/rule/rulescontroller.cpp \
     form/rule/ruleswindow.cpp \
     form/stat/pages/connectionspage.cpp \
@@ -131,7 +129,7 @@ SOURCES += \
     model/applistmodel.cpp \
     model/appstatmodel.cpp \
     model/connblocklistmodel.cpp \
-    model/policylistmodel.cpp \
+    model/rulelistmodel.cpp \
     model/servicelistmodel.cpp \
     model/traflistmodel.cpp \
     model/zonelistmodel.cpp \
@@ -141,6 +139,7 @@ SOURCES += \
     rpc/askpendingmanagerrpc.cpp \
     rpc/confappmanagerrpc.cpp \
     rpc/confmanagerrpc.cpp \
+    rpc/confrulemanagerrpc.cpp \
     rpc/confzonemanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
     rpc/logmanagerrpc.cpp \
@@ -177,6 +176,7 @@ SOURCES += \
     util/conf/appparseoptions.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
+    util/dbutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
     util/guiutil.cpp \
@@ -186,6 +186,7 @@ SOURCES += \
     util/ioc/ioccontainer.cpp \
     util/json/jsonutil.cpp \
     util/json/mapwrapper.cpp \
+    util/model/ftstablesqlmodel.cpp \
     util/model/stringlistmodel.cpp \
     util/model/tableitemmodel.cpp \
     util/model/tablesqlmodel.cpp \
@@ -228,12 +229,11 @@ HEADERS += \
     conf/appgroup.h \
     conf/confappmanager.h \
     conf/confmanager.h \
+    conf/confrulemanager.h \
     conf/confzonemanager.h \
     conf/firewallconf.h \
     conf/inioptions.h \
-    conf/rules/policy.h \
-    conf/rules/policyset.h \
-    conf/rules/rule.h \
+    conf/rule.h \
     conf/zone.h \
     control/control.h \
     control/controlmanager.h \
@@ -294,7 +294,6 @@ HEADERS += \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \
     form/rule/ruleeditdialog.h \
-    form/rule/rulelistbox.h \
     form/rule/rulescontroller.h \
     form/rule/ruleswindow.h \
     form/stat/pages/connectionspage.h \
@@ -339,7 +338,7 @@ HEADERS += \
     model/applistmodel.h \
     model/appstatmodel.h \
     model/connblocklistmodel.h \
-    model/policylistmodel.h \
+    model/rulelistmodel.h \
     model/servicelistmodel.h \
     model/traflistmodel.h \
     model/zonelistmodel.h \
@@ -349,6 +348,7 @@ HEADERS += \
     rpc/askpendingmanagerrpc.h \
     rpc/confappmanagerrpc.h \
     rpc/confmanagerrpc.h \
+    rpc/confrulemanagerrpc.h \
     rpc/confzonemanagerrpc.h \
     rpc/drivermanagerrpc.h \
     rpc/logmanagerrpc.h \
@@ -387,6 +387,7 @@ HEADERS += \
     util/conf/confappswalker.h \
     util/conf/confutil.h \
     util/dateutil.h \
+    util/dbutil.h \
     util/device.h \
     util/fileutil.h \
     util/guiutil.h \
@@ -397,6 +398,7 @@ HEADERS += \
     util/ioc/iocservice.h \
     util/json/jsonutil.h \
     util/json/mapwrapper.h \
+    util/model/ftstablesqlmodel.h \
     util/model/stringlistmodel.h \
     util/model/tableitemmodel.h \
     util/model/tablesqlmodel.h \

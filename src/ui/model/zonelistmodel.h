@@ -39,8 +39,6 @@ public:
 
     const ZoneRow &zoneRowAt(int row) const;
 
-    QString zoneNameById(int zoneId);
-
     QVariant zoneTypeByCode(const QString &typeCode) const;
 
     QVariant zoneSourceByCode(const QString &sourceCode) const;

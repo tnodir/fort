@@ -27,6 +27,7 @@
 #include <rpc/askpendingmanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
+#include <rpc/confrulemanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
@@ -58,6 +59,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
 {
     ioc->setService(new ConfManager(settings->confFilePath()));
     ioc->setService(new ConfAppManager());
+    ioc->setService(new ConfRuleManager());
     ioc->setService(new ConfZoneManager());
     ioc->setService(new QuotaManager());
     ioc->setService(new StatManager(settings->statFilePath()));
@@ -77,6 +79,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
 {
     ioc->setService<ConfManager>(new ConfManagerRpc(settings->confFilePath()));
     ioc->setService<ConfAppManager>(new ConfAppManagerRpc());
+    ioc->setService<ConfRuleManager>(new ConfRuleManagerRpc());
     ioc->setService<ConfZoneManager>(new ConfZoneManagerRpc());
     ioc->setService<QuotaManager>(new QuotaManagerRpc());
     ioc->setService<StatManager>(new StatManagerRpc(settings->statFilePath()));

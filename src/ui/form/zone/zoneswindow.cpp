@@ -19,7 +19,6 @@
 #include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "zoneeditdialog.h"
@@ -96,7 +95,7 @@ void ZonesWindow::restoreWindowState()
 
 void ZonesWindow::setupController()
 {
-    connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::onRetranslateUi);
+    connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::retranslateUi);
 
     emit ctrl()->retranslateUi();
 }
@@ -106,7 +105,7 @@ void ZonesWindow::setupStateWatcher()
     m_stateWatcher->install(this);
 }
 
-void ZonesWindow::onRetranslateUi()
+void ZonesWindow::retranslateUi()
 {
     this->unsetLocale();
 
@@ -156,8 +155,6 @@ void ZonesWindow::setupUi()
 
 QLayout *ZonesWindow::setupHeader()
 {
-    auto layout = new QHBoxLayout();
-
     // Edit Menu
     auto editMenu = ControlUtil::createMenu(this);
 
@@ -189,13 +186,9 @@ QLayout *ZonesWindow::setupHeader()
     // Menu button
     m_btMenu = windowManager()->createMenuButton();
 
-    layout->addWidget(m_btEdit);
-    layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_btSaveAsText);
-    layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_btUpdateZones);
-    layout->addStretch();
-    layout->addWidget(m_btMenu);
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
+            m_btSaveAsText, ControlUtil::createVSeparator(), m_btUpdateZones,
+            /*stretch*/ nullptr, m_btMenu });
 
     return layout;
 }

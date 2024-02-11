@@ -134,7 +134,7 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
 
 void AppInfoManager::updateAppAccessTime(const QString &appPath)
 {
-    sqliteDb()->executeEx(sqlUpdateAppAccessTime, QVariantList() << appPath);
+    sqliteDb()->executeEx(sqlUpdateAppAccessTime, { appPath });
 }
 
 bool AppInfoManager::setupDb()
@@ -164,23 +164,30 @@ void AppInfoManager::saveAppIcon(const QImage &appIcon, QVariant &iconId, bool &
 {
     const uint iconHash = uint(qHashBits(appIcon.constBits(), size_t(appIcon.sizeInBytes())));
 
-    iconId = sqliteDb()->executeEx(sqlSelectIconIdByHash, QVariantList() << iconHash);
+    iconId = sqliteDb()->executeEx(sqlSelectIconIdByHash, { iconHash });
     if (iconId.isNull()) {
-        sqliteDb()->executeEx(sqlInsertIcon, QVariantList() << iconHash << appIcon, 0, &ok);
+        sqliteDb()->executeEx(sqlInsertIcon, { iconHash, appIcon }, 0, &ok);
         if (ok) {
             iconId = sqliteDb()->lastInsertRowid();
         }
     } else {
-        sqliteDb()->executeEx(sqlUpdateIconRefCount, QVariantList() << iconId << +1, 0, &ok);
+        sqliteDb()->executeEx(sqlUpdateIconRefCount, { iconId, /*ref_count=*/+1 }, 0, &ok);
     }
 }
 
 void AppInfoManager::saveAppInfo(
         const QString &appPath, const AppInfo &appInfo, const QVariant &iconId, bool &ok)
 {
-    const QVariantList vars = QVariantList()
-            << appPath << appInfo.altPath << appInfo.fileDescription << appInfo.companyName
-            << appInfo.productName << appInfo.productVersion << appInfo.fileModTime << iconId;
+    const QVariantList vars = {
+        appPath,
+        appInfo.altPath,
+        appInfo.fileDescription,
+        appInfo.companyName,
+        appInfo.productName,
+        appInfo.productVersion,
+        appInfo.fileModTime,
+        iconId,
+    };
 
     sqliteDb()->executeEx(sqlInsertAppInfo, vars, 0, &ok);
 }
@@ -202,7 +209,7 @@ QImage AppInfoManager::loadIconFromDb(qint64 iconId)
 
     QMutexLocker locker(&m_mutex);
 
-    const QVariant icon = sqliteDb()->executeEx(sqlSelectIconImage, QVariantList() << iconId);
+    const QVariant icon = sqliteDb()->executeEx(sqlSelectIconImage, { iconId });
 
     return icon.value<QImage>();
 }
@@ -322,9 +329,9 @@ void AppInfoManager::deleteIcons(const QHash<qint64, int> &iconIds, bool &ok)
 
 void AppInfoManager::deleteIcon(qint64 iconId, int deleteCount, bool &ok)
 {
-    sqliteDb()->executeEx(sqlUpdateIconRefCount, QVariantList() << iconId << -deleteCount, 0, &ok);
+    sqliteDb()->executeEx(sqlUpdateIconRefCount, { iconId, /*ref_count=*/-deleteCount }, 0, &ok);
     if (ok) {
-        sqliteDb()->executeEx(sqlDeleteIconIfNotUsed, QVariantList() << iconId, 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteIconIfNotUsed, { iconId }, 0, &ok);
     }
 }
 

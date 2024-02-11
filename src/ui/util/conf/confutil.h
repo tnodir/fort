@@ -33,6 +33,7 @@ public:
 
     QString errorMessage() const { return m_errorMessage; }
 
+    static int ruleMaxCount();
     static int zoneMaxCount();
 
 signals:

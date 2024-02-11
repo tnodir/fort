@@ -1,27 +1,30 @@
 #include "ruleswindow.h"
 
-#include <QHBoxLayout>
 #include <QHeaderView>
-#include <QLabel>
-#include <QSplitter>
+#include <QMenu>
+#include <QPushButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
+#include <form/dialog/dialogutil.h>
 #include <manager/windowmanager.h>
-#include <model/policylistmodel.h>
+#include <model/rulelistmodel.h>
 #include <user/iniuser.h>
+#include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
+#include "ruleeditdialog.h"
 #include "rulescontroller.h"
-#include "rulelistbox.h"
 
 namespace {
 
-constexpr int POLICIES_SPLIT_VERSION = 1;
+constexpr int RULES_HEADER_VERSION = 1;
 
 }
 
@@ -60,35 +63,36 @@ WindowManager *RulesWindow::windowManager() const
     return ctrl()->windowManager();
 }
 
+RuleListModel *RulesWindow::ruleListModel() const
+{
+    return ctrl()->ruleListModel();
+}
+
 void RulesWindow::saveWindowState(bool /*wasVisible*/)
 {
     iniUser()->setRuleWindowGeometry(m_stateWatcher->geometry());
     iniUser()->setRuleWindowMaximized(m_stateWatcher->maximized());
 
-    iniUser()->setRuleWindowSplit(m_splitter->saveState());
-    iniUser()->setRuleWindowPresetSplit(m_presetSplitter->saveState());
-    iniUser()->setRuleWindowGlobalSplit(m_globalSplitter->saveState());
-    iniUser()->setRuleWindowSplitVersion(POLICIES_SPLIT_VERSION);
+    auto header = m_ruleListView->horizontalHeader();
+    iniUser()->setRulesHeader(header->saveState());
+    iniUser()->setRulesHeaderVersion(RULES_HEADER_VERSION);
 
     confManager()->saveIniUser();
 }
 
 void RulesWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(800, 600), iniUser()->ruleWindowGeometry(),
+    m_stateWatcher->restore(this, QSize(500, 600), iniUser()->ruleWindowGeometry(),
             iniUser()->ruleWindowMaximized());
 
-    if (iniUser()->ruleWindowSplitVersion() == POLICIES_SPLIT_VERSION) {
-        m_splitter->restoreState(iniUser()->ruleWindowSplit());
-        m_presetSplitter->restoreState(iniUser()->ruleWindowPresetSplit());
-        m_globalSplitter->restoreState(iniUser()->ruleWindowGlobalSplit());
+    if (iniUser()->rulesHeaderVersion() == RULES_HEADER_VERSION) {
+        auto header = m_ruleListView->horizontalHeader();
+        header->restoreState(iniUser()->rulesHeader());
     }
 }
 
 void RulesWindow::setupController()
 {
-    ctrl()->initialize();
-
     connect(ctrl(), &RulesController::retranslateUi, this, &RulesWindow::retranslateUi);
 
     retranslateUi();
@@ -103,37 +107,35 @@ void RulesWindow::retranslateUi()
 {
     this->unsetLocale();
 
-    m_presetLibBox->label()->setText(tr("Library of preset rules:"));
-    m_presetAppBox->label()->setText(tr("Preset rules for applications:"));
-    m_globalPreBox->label()->setText(tr("Global rules, applied before application rules:"));
-    m_globalPostBox->label()->setText(tr("Global rules, applied after application rules:"));
+    m_btEdit->setText(tr("Edit"));
+    m_actAddRule->setText(tr("Add"));
+    m_actEditRule->setText(tr("Edit"));
+    m_actRemoveRule->setText(tr("Remove"));
 
-    m_presetLibBox->onRetranslateUi();
-    m_presetAppBox->onRetranslateUi();
-    m_globalPreBox->onRetranslateUi();
-    m_globalPostBox->onRetranslateUi();
+    ruleListModel()->refresh();
 
-    this->setWindowTitle(tr("Policies"));
+    this->setWindowTitle(tr("Rules"));
 }
 
 void RulesWindow::setupUi()
 {
+    // Header
+    auto header = setupHeader();
+
+    // Table
+    setupTableRules();
+    setupTableRulesHeader();
+
+    // Actions on zones table's current changed
+    setupTableRulesChanged();
+
+    // Actions on zone list model's changed
+    setupRuleListModelChanged();
+
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(6, 6, 6, 6);
-
-    // Column #1
-    setupPresetSplitter();
-
-    // Column #2
-    setupGlobalSplitter();
-
-    // Splitter
-    m_splitter = new QSplitter();
-    m_splitter->setHandleWidth(12);
-    m_splitter->addWidget(m_presetSplitter);
-    m_splitter->addWidget(m_globalSplitter);
-
-    layout->addWidget(m_splitter);
+    layout->addLayout(header);
+    layout->addWidget(m_ruleListView, 1);
 
     this->setLayout(layout);
 
@@ -141,61 +143,136 @@ void RulesWindow::setupUi()
     this->setFont(WindowManager::defaultFont());
 
     // Icon
-    this->setWindowIcon(
-            GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/tree.png"));
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/tree.png"));
 
     // Size
     this->setMinimumSize(500, 400);
 }
 
-void RulesWindow::setupPresetSplitter()
+QLayout *RulesWindow::setupHeader()
 {
-    // Preset Lib Group Box
-    setupPresetLibBox();
+    // Edit Menu
+    auto editMenu = ControlUtil::createMenu(this);
 
-    // Preset App Group Box
-    setupPresetAppBox();
+    m_actAddRule = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
+    m_actAddRule->setShortcut(Qt::Key_Plus);
 
-    // Splitter
-    m_presetSplitter = new QSplitter();
-    m_presetSplitter->setHandleWidth(10);
-    m_presetSplitter->setOrientation(Qt::Vertical);
-    m_presetSplitter->addWidget(m_presetLibBox);
-    m_presetSplitter->addWidget(m_presetAppBox);
+    m_actEditRule = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
+    m_actEditRule->setShortcut(Qt::Key_Enter);
+
+    m_actRemoveRule = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveRule->setShortcut(Qt::Key_Delete);
+
+    connect(m_actAddRule, &QAction::triggered, this, &RulesWindow::addNewRule);
+    connect(m_actEditRule, &QAction::triggered, this, &RulesWindow::editSelectedRule);
+    connect(m_actRemoveRule, &QAction::triggered, this, [&] {
+        windowManager()->showConfirmBox(
+                [&] { deleteSelectedRule(); }, tr("Are you sure to remove selected rule?"));
+    });
+
+    m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setMenu(editMenu);
+
+    // Menu button
+    m_btMenu = windowManager()->createMenuButton();
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, /*stretch*/ nullptr, m_btMenu });
+
+    return layout;
 }
 
-void RulesWindow::setupPresetLibBox()
+void RulesWindow::setupTableRules()
 {
-    m_presetLibBox = new RuleListBox(Policy::TypePresetLibrary);
+    m_ruleListView = new TableView();
+    m_ruleListView->setAlternatingRowColors(true);
+    m_ruleListView->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_ruleListView->setSelectionBehavior(QAbstractItemView::SelectItems);
+
+    m_ruleListView->setModel(ruleListModel());
+
+    m_ruleListView->setMenu(m_btEdit->menu());
+
+    connect(m_ruleListView, &TableView::activated, m_actEditRule, &QAction::trigger);
 }
 
-void RulesWindow::setupPresetAppBox()
+void RulesWindow::setupTableRulesHeader()
 {
-    m_presetAppBox = new RuleListBox(Policy::TypePresetApp);
+    auto header = m_ruleListView->horizontalHeader();
+
+    header->setSectionResizeMode(0, QHeaderView::Interactive);
+    header->setSectionResizeMode(1, QHeaderView::Stretch);
+
+    header->resizeSection(0, 350);
 }
 
-void RulesWindow::setupGlobalSplitter()
+void RulesWindow::setupTableRulesChanged()
 {
-    // Global Pre Group Box
-    setupGlobalPreBox();
+    const auto refreshTableRulesChanged = [&] {
+        const int ruleIndex = ruleListCurrentIndex();
+        const bool ruleSelected = (ruleIndex >= 0);
+        m_actEditRule->setEnabled(ruleSelected);
+        m_actRemoveRule->setEnabled(ruleSelected);
+    };
 
-    // Global Post Group Box
-    setupGlobalPostBox();
+    refreshTableRulesChanged();
 
-    // Splitter
-    m_globalSplitter = new QSplitter();
-    m_globalSplitter->setHandleWidth(10);
-    m_globalSplitter->setOrientation(Qt::Vertical);
-    m_globalSplitter->addWidget(m_globalPreBox);
-    m_globalSplitter->addWidget(m_globalPostBox);
+    connect(m_ruleListView, &TableView::currentIndexChanged, this, refreshTableRulesChanged);
 }
 
-void RulesWindow::setupGlobalPreBox()
+void RulesWindow::setupRuleListModelChanged()
 {
-    m_globalPreBox = new RuleListBox(Policy::TypeGlobalBeforeApp);
+    const auto refreshAddRule = [&] {
+        m_actAddRule->setEnabled(ruleListModel()->rowCount() < ConfUtil::zoneMaxCount());
+    };
+
+    refreshAddRule();
+
+    connect(ruleListModel(), &RuleListModel::modelReset, this, refreshAddRule);
+    connect(ruleListModel(), &RuleListModel::rowsRemoved, this, refreshAddRule);
 }
 
-void RulesWindow::setupGlobalPostBox()
+void RulesWindow::addNewRule()
 {
-    m_globalPostBox = new RuleListBox(Policy::TypeGlobalAfterApp);
+    openRuleEditForm({});
+}
+
+void RulesWindow::editSelectedRule()
+{
+    const int ruleIndex = ruleListCurrentIndex();
+    if (ruleIndex < 0)
+        return;
+
+    const RuleRow ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
+
+    openRuleEditForm(ruleRow);
+}
+
+void RulesWindow::openRuleEditForm(const RuleRow &ruleRow)
+{
+    if (!m_formRuleEdit) {
+        m_formRuleEdit = new RuleEditDialog(ctrl(), this);
+    }
+
+    m_formRuleEdit->initialize(ruleRow);
+
+    WidgetWindow::showWidget(m_formRuleEdit);
+}
+
+void RulesWindow::deleteRule(int row)
+{
+    const auto ruleRow = ruleListModel()->ruleRowAt(row);
+    if (ruleRow.isNull())
+        return;
+
+    ctrl()->deleteRule(ruleRow.ruleId);
+}
+
+void RulesWindow::deleteSelectedRule()
+{
+    deleteRule(ruleListCurrentIndex());
+}
+
+int RulesWindow::ruleListCurrentIndex() const
+{
+    return m_ruleListView->currentRow();
 }

@@ -60,8 +60,8 @@ private:
 private:
     ZonesController *m_ctrl = nullptr;
 
-    QLabel *m_labelZoneName = nullptr;
-    QLineEdit *m_editZoneName = nullptr;
+    QLabel *m_labelName = nullptr;
+    QLineEdit *m_editName = nullptr;
     QLabel *m_labelSource = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
     QFrame *m_frameUrl = nullptr;

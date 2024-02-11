@@ -17,20 +17,6 @@
 
 #include "zonescontroller.h"
 
-namespace {
-
-QLabel *formLabelForField(QFormLayout *formLayout, QWidget *field)
-{
-    auto label = qobject_cast<QLabel *>(formLayout->labelForField(field));
-    Q_ASSERT(label);
-
-    label->setMinimumWidth(100);
-
-    return label;
-}
-
-}
-
 ZoneEditDialog::ZoneEditDialog(ZonesController *ctrl, QWidget *parent) :
     QDialog(parent), m_ctrl(ctrl)
 {
@@ -52,9 +38,7 @@ void ZoneEditDialog::initialize(const ZoneRow &zoneRow)
     const QString sourceCode = isEmpty() ? ZoneSourceWrapper::textSourceCode() : zoneRow.sourceCode;
     const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(sourceCode));
 
-    m_editZoneName->setText(zoneRow.zoneName);
-    m_editZoneName->selectAll();
-    m_editZoneName->setFocus();
+    m_editName->setText(zoneRow.zoneName);
     m_comboSources->setCurrentIndex(zoneSource.index());
     m_cbEnabled->setChecked(zoneRow.enabled);
 
@@ -82,14 +66,15 @@ void ZoneEditDialog::initializeBySource(const ZoneSourceWrapper &zoneSource)
 
 void ZoneEditDialog::initializeFocus()
 {
-    m_editZoneName->setFocus();
+    m_editName->selectAll();
+    m_editName->setFocus();
 }
 
 void ZoneEditDialog::retranslateUi()
 {
     this->unsetLocale();
 
-    m_labelZoneName->setText(tr("Zone Name:"));
+    m_labelName->setText(tr("Name:"));
     m_labelSource->setText(tr("Source:"));
     m_cbEnabled->setText(tr("Enabled"));
     m_cbCustomUrl->setText(tr("Custom URL"));
@@ -154,18 +139,18 @@ QLayout *ZoneEditDialog::setupNameLayout()
 {
     auto layout = new QFormLayout();
 
-    // Zone Name
-    m_editZoneName = new QLineEdit();
-    m_editZoneName->setMaxLength(256);
+    // Name
+    m_editName = new QLineEdit();
+    m_editName->setMaxLength(256);
 
-    layout->addRow("Zone Name:", m_editZoneName);
-    m_labelZoneName = formLabelForField(layout, m_editZoneName);
+    layout->addRow("Name:", m_editName);
+    m_labelName = ControlUtil::formRowLabel(layout, m_editName);
 
     // Sources
     setupSources();
 
     layout->addRow("Source:", m_comboSources);
-    m_labelSource = formLabelForField(layout, m_comboSources);
+    m_labelSource = ControlUtil::formRowLabel(layout, m_comboSources);
 
     // Enabled
     m_cbEnabled = new QCheckBox();
@@ -216,14 +201,14 @@ QLayout *ZoneEditDialog::setupUrlLayout()
     m_editUrl->setMaxLength(1024);
 
     formLayout->addRow("URL:", m_editUrl);
-    m_labelUrl = formLabelForField(formLayout, m_editUrl);
+    m_labelUrl = ControlUtil::formRowLabel(formLayout, m_editUrl);
 
     // Form Data
     m_editFormData = new QLineEdit();
     m_editFormData->setEnabled(false);
 
     formLayout->addRow("Form Data:", m_editFormData);
-    m_labelFormData = formLabelForField(formLayout, m_editFormData);
+    m_labelFormData = ControlUtil::formRowLabel(formLayout, m_editFormData);
 
     connect(m_cbCustomUrl, &QCheckBox::toggled, this, [&](bool checked) {
         m_editUrl->setEnabled(checked);
@@ -311,13 +296,13 @@ bool ZoneEditDialog::saveZone(Zone &zone)
 
 bool ZoneEditDialog::validateFields(const ZoneSourceWrapper &zoneSource) const
 {
-    // Check zone name
-    if (m_editZoneName->text().isEmpty()) {
-        m_editZoneName->setFocus();
+    // Name
+    if (m_editName->text().isEmpty()) {
+        m_editName->setFocus();
         return false;
     }
 
-    // Check custom url
+    // Custom URL
     if (m_cbCustomUrl->isChecked() && m_editUrl->text().isEmpty()) {
         m_editUrl->setText(zoneSource.url());
         m_editUrl->selectAll();
@@ -335,7 +320,7 @@ void ZoneEditDialog::fillZone(Zone &zone, const ZoneSourceWrapper &zoneSource) c
         m_cbCustomUrl->setChecked(!zoneSource.isTextInline());
     }
 
-    zone.zoneName = m_editZoneName->text();
+    zone.zoneName = m_editName->text();
     zone.sourceCode = zoneSource.code();
     zone.enabled = m_cbEnabled->isChecked();
     zone.customUrl = m_cbCustomUrl->isChecked();

@@ -7,7 +7,6 @@
 
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
-#include <util/service/serviceinfo.h>
 
 class ConfManager;
 class Zone;

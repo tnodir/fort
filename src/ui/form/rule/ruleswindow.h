@@ -4,17 +4,21 @@
 #include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
-QT_FORWARD_DECLARE_CLASS(QSplitter)
+QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class ConfManager;
 class FirewallConf;
 class IniOptions;
 class IniUser;
+class RuleEditDialog;
+class RuleListModel;
 class RulesController;
-class RuleListBox;
 class TableView;
 class WidgetWindowStateWatcher;
 class WindowManager;
+
+struct RuleRow;
 
 class RulesWindow : public WidgetWindow
 {
@@ -31,6 +35,7 @@ public:
     IniOptions *ini() const;
     IniUser *iniUser() const;
     WindowManager *windowManager() const;
+    RuleListModel *ruleListModel() const;
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
@@ -42,24 +47,34 @@ private:
     void retranslateUi();
 
     void setupUi();
-    void setupPresetSplitter();
-    void setupPresetLibBox();
-    void setupPresetAppBox();
-    void setupGlobalSplitter();
-    void setupGlobalPreBox();
-    void setupGlobalPostBox();
+    QLayout *setupHeader();
+    void setupTableRules();
+    void setupTableRulesHeader();
+    void setupTableRulesChanged();
+    void setupRuleListModelChanged();
+
+    void addNewRule();
+    void editSelectedRule();
+
+    void openRuleEditForm(const RuleRow &ruleRow);
+
+    void deleteRule(int row);
+    void deleteSelectedRule();
+
+    int ruleListCurrentIndex() const;
 
 private:
     RulesController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
-    RuleListBox *m_presetLibBox = nullptr;
-    RuleListBox *m_presetAppBox = nullptr;
-    RuleListBox *m_globalPreBox = nullptr;
-    RuleListBox *m_globalPostBox = nullptr;
-    QSplitter *m_splitter = nullptr;
-    QSplitter *m_presetSplitter = nullptr;
-    QSplitter *m_globalSplitter = nullptr;
+    QPushButton *m_btEdit = nullptr;
+    QAction *m_actAddRule = nullptr;
+    QAction *m_actEditRule = nullptr;
+    QAction *m_actRemoveRule = nullptr;
+    QPushButton *m_btMenu = nullptr;
+    TableView *m_ruleListView = nullptr;
+
+    RuleEditDialog *m_formRuleEdit = nullptr;
 };
 
 #endif // RULESWINDOW_H

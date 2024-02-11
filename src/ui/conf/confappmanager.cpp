@@ -193,13 +193,29 @@ void ConfAppManager::updateAppEndTimer()
 void ConfAppManager::beginAddOrUpdateApp(
         App &app, const AppGroup &appGroup, bool onlyUpdate, bool &ok)
 {
-    const auto vars = QVariantList()
-            << app.appId << appGroup.id() << app.appOriginPath << SqliteStmt::nullable(app.appPath)
-            << app.appName << app.notes << app.isWildcard << app.useGroupPerm << app.applyChild
-            << app.killChild << app.lanOnly << app.parked << app.logBlocked << app.logConn
-            << app.blocked << app.killProcess << app.acceptZones << app.rejectZones
-            << app.scheduleAction << SqliteStmt::nullable(app.scheduleTime)
-            << SqliteStmt::nullable(DateUtil::now(), onlyUpdate);
+    const QVariantList vars = {
+        app.appId,
+        appGroup.id(),
+        app.appOriginPath,
+        SqliteStmt::nullable(app.appPath),
+        app.appName,
+        app.notes,
+        app.isWildcard,
+        app.useGroupPerm,
+        app.applyChild,
+        app.killChild,
+        app.lanOnly,
+        app.parked,
+        app.logBlocked,
+        app.logConn,
+        app.blocked,
+        app.killProcess,
+        app.acceptZones,
+        app.rejectZones,
+        app.scheduleAction,
+        SqliteStmt::nullable(app.scheduleTime),
+        SqliteStmt::nullable(DateUtil::now(), onlyUpdate),
+    };
 
     const char *sql = onlyUpdate ? sqlUpdateApp : sqlUpsertApp;
     const auto appIdVar = sqliteDb()->executeEx(sql, vars, 1, &ok);
@@ -307,7 +323,7 @@ bool ConfAppManager::updateAppName(qint64 appId, const QString &appName)
 
     beginTransaction();
 
-    const auto vars = QVariantList() << appId << appName;
+    const QVariantList vars = { appId, appName };
 
     sqliteDb()->executeEx(sqlUpdateAppName, vars, 0, &ok);
 
@@ -345,7 +361,7 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 
     beginTransaction();
 
-    const auto vars = QVariantList() << appId;
+    const QVariantList vars = { appId };
 
     const auto resList = sqliteDb()->executeEx(sqlDeleteApp, vars, 2, &ok).toList();
 
@@ -493,7 +509,7 @@ bool ConfAppManager::saveAppBlocked(const App &app)
 
     beginTransaction();
 
-    const auto vars = QVariantList() << app.appId << app.blocked << app.killProcess;
+    const QVariantList vars = { app.appId, app.blocked, app.killProcess };
 
     sqliteDb()->executeEx(sqlUpdateAppBlocked, vars, 0, &ok);
 

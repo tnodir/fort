@@ -8,6 +8,7 @@
 #include <conf/zone.h>
 #include <driver/drivermanager.h>
 #include <util/conf/confutil.h>
+#include <util/dbutil.h>
 #include <util/ioc/ioccontainer.h>
 
 #include "confmanager.h"
@@ -32,11 +33,18 @@ const char *const sqlDeleteZone = "DELETE FROM zone WHERE zone_id = ?1;";
 
 const char *const sqlDeleteAddressGroupZone = "UPDATE address_group"
                                               "  SET include_zones = include_zones & ?1,"
-                                              "    exclude_zones = exclude_zones & ?1;";
+                                              "    exclude_zones = exclude_zones & ?1"
+                                              "  WHERE include_zones <> 0 || exclude_zones <> 0;";
 
 const char *const sqlDeleteAppZone = "UPDATE app"
                                      "  SET accept_zones = accept_zones & ?1,"
-                                     "    reject_zones = reject_zones & ?1;";
+                                     "    reject_zones = reject_zones & ?1"
+                                     "  WHERE accept_zones <> 0 || reject_zones <> 0;";
+
+const char *const sqlDeleteRuleZone = "UPDATE rule"
+                                      "  SET accept_zones = accept_zones & ?1,"
+                                      "    reject_zones = reject_zones & ?1"
+                                      "  WHERE accept_zones <> 0 || reject_zones <> 0;";
 
 const char *const sqlUpdateZoneName = "UPDATE zone SET name = ?2 WHERE zone_id = ?1;";
 
@@ -47,24 +55,6 @@ const char *const sqlUpdateZoneResult =
         "  SET address_count = ?2, text_checksum = ?3, bin_checksum = ?4,"
         "    source_modtime = ?5, last_run = ?6, last_success = ?7"
         "  WHERE zone_id = ?1;";
-
-int getFreeZoneId(SqliteDb *sqliteDb)
-{
-    int zoneId = 1;
-
-    SqliteStmt stmt;
-    if (stmt.prepare(sqliteDb->db(), sqlSelectZoneIds)) {
-        while (stmt.step() == SqliteStmt::StepRow) {
-            const int id = stmt.columnInt(0);
-            if (id > zoneId)
-                break;
-
-            zoneId = id + 1;
-        }
-    }
-
-    return zoneId;
-}
 
 bool driverWriteZones(ConfUtil &confUtil, QByteArray &buf, int entrySize, bool onlyFlags = false)
 {
@@ -103,22 +93,31 @@ void ConfZoneManager::setUp()
 
 bool ConfZoneManager::addOrUpdateZone(Zone &zone)
 {
-    bool ok = false;
+    bool ok = true;
 
     beginTransaction();
 
     const bool isNew = (zone.zoneId == 0);
     if (isNew) {
-        zone.zoneId = getFreeZoneId(sqliteDb());
+        zone.zoneId = DbUtil::getFreeId(sqliteDb(), sqlSelectZoneIds, ConfUtil::zoneMaxCount(), ok);
     } else {
         updateDriverZoneFlag(zone.zoneId, zone.enabled);
     }
 
-    const auto vars = QVariantList()
-            << zone.zoneId << zone.zoneName << zone.enabled << zone.customUrl << zone.sourceCode
-            << zone.url << zone.formData << zone.textInline;
+    const QVariantList vars = {
+        zone.zoneId,
+        zone.zoneName,
+        zone.enabled,
+        zone.customUrl,
+        zone.sourceCode,
+        zone.url,
+        zone.formData,
+        zone.textInline,
+    };
 
-    sqliteDb()->executeEx(isNew ? sqlInsertZone : sqlUpdateZone, vars, 0, &ok);
+    if (ok) {
+        sqliteDb()->executeEx(isNew ? sqlInsertZone : sqlUpdateZone, vars, 0, &ok);
+    }
 
     commitTransaction(ok);
 
@@ -143,12 +142,16 @@ bool ConfZoneManager::deleteZone(int zoneId)
     sqliteDb()->executeEx(sqlDeleteZone, { zoneId }, 0, &ok);
     if (ok) {
         const quint32 zoneUnMask = ~(quint32(1) << (zoneId - 1));
+        const QVariantList vars = { qint64(zoneUnMask) };
 
         // Delete the Zone from Address Groups
-        sqliteDb()->executeEx(sqlDeleteAddressGroupZone, { qint64(zoneUnMask) }, 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteAddressGroupZone, vars, 0, &ok);
 
         // Delete the Zone from Programs
-        sqliteDb()->executeEx(sqlDeleteAppZone, { qint64(zoneUnMask) }, 0, &ok);
+        sqliteDb()->executeEx(sqlDeleteAppZone, vars, 0, &ok);
+
+        // Delete the Zone from Rules
+        sqliteDb()->executeEx(sqlDeleteRuleZone, vars, 0, &ok);
     }
 
     commitTransaction(ok);
@@ -166,7 +169,7 @@ bool ConfZoneManager::updateZoneName(int zoneId, const QString &zoneName)
 
     beginTransaction();
 
-    const auto vars = QVariantList() << zoneId << zoneName;
+    const QVariantList vars = { zoneId, zoneName };
 
     sqliteDb()->executeEx(sqlUpdateZoneName, vars, 0, &ok);
 
@@ -185,7 +188,7 @@ bool ConfZoneManager::updateZoneEnabled(int zoneId, bool enabled)
 
     beginTransaction();
 
-    const auto vars = QVariantList() << zoneId << enabled;
+    const QVariantList vars = { zoneId, enabled };
 
     sqliteDb()->executeEx(sqlUpdateZoneEnabled, vars, 0, &ok);
 
@@ -206,9 +209,15 @@ bool ConfZoneManager::updateZoneResult(const Zone &zone)
 
     beginTransaction();
 
-    const auto vars = QVariantList()
-            << zone.zoneId << zone.addressCount << zone.textChecksum << zone.binChecksum
-            << zone.sourceModTime << zone.lastRun << zone.lastSuccess;
+    const QVariantList vars = {
+        zone.zoneId,
+        zone.addressCount,
+        zone.textChecksum,
+        zone.binChecksum,
+        zone.sourceModTime,
+        zone.lastRun,
+        zone.lastSuccess,
+    };
 
     sqliteDb()->executeEx(sqlUpdateZoneResult, vars, 0, &ok);
 

@@ -32,7 +32,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-constexpr int DATABASE_USER_VERSION = 33;
+constexpr int DATABASE_USER_VERSION = 34;
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
@@ -251,11 +251,16 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
     if (!addrGroup->edited() && rowExists)
         return true;
 
-    const auto vars = QVariantList()
-            << SqliteStmt::nullable(addrGroup->id(), !rowExists) << orderIndex
-            << addrGroup->includeAll() << addrGroup->excludeAll()
-            << qint64(addrGroup->includeZones()) << qint64(addrGroup->excludeZones())
-            << addrGroup->includeText() << addrGroup->excludeText();
+    const QVariantList vars = {
+        SqliteStmt::nullable(addrGroup->id(), !rowExists),
+        orderIndex,
+        addrGroup->includeAll(),
+        addrGroup->excludeAll(),
+        qint64(addrGroup->includeZones()),
+        qint64(addrGroup->excludeZones()),
+        addrGroup->includeText(),
+        addrGroup->excludeText(),
+    };
 
     const char *sql = rowExists ? sqlUpdateAddressGroup : sqlInsertAddressGroup;
 
@@ -325,15 +330,30 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
     if (!appGroup->edited() && rowExists)
         return true;
 
-    const auto vars = QVariantList()
-            << SqliteStmt::nullable(appGroup->id(), !rowExists) << orderIndex << appGroup->enabled()
-            << appGroup->applyChild() << appGroup->lanOnly() << appGroup->logBlocked()
-            << appGroup->logConn() << appGroup->periodEnabled() << appGroup->limitInEnabled()
-            << appGroup->limitOutEnabled() << appGroup->speedLimitIn() << appGroup->speedLimitOut()
-            << appGroup->limitPacketLoss() << appGroup->limitLatency()
-            << appGroup->limitBufferSizeIn() << appGroup->limitBufferSizeOut() << appGroup->name()
-            << appGroup->killText() << appGroup->blockText() << appGroup->allowText()
-            << appGroup->periodFrom() << appGroup->periodTo();
+    const QVariantList vars = {
+        SqliteStmt::nullable(appGroup->id(), !rowExists),
+        orderIndex,
+        appGroup->enabled(),
+        appGroup->applyChild(),
+        appGroup->lanOnly(),
+        appGroup->logBlocked(),
+        appGroup->logConn(),
+        appGroup->periodEnabled(),
+        appGroup->limitInEnabled(),
+        appGroup->limitOutEnabled(),
+        appGroup->speedLimitIn(),
+        appGroup->speedLimitOut(),
+        appGroup->limitPacketLoss(),
+        appGroup->limitLatency(),
+        appGroup->limitBufferSizeIn(),
+        appGroup->limitBufferSizeOut(),
+        appGroup->name(),
+        appGroup->killText(),
+        appGroup->blockText(),
+        appGroup->allowText(),
+        appGroup->periodFrom(),
+        appGroup->periodTo(),
+    };
 
     const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
 
@@ -909,10 +929,16 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
 {
     const bool rowExists = (taskInfo->id() != 0);
 
-    const auto vars = QVariantList()
-            << SqliteStmt::nullable(taskInfo->id(), !rowExists) << taskInfo->name()
-            << taskInfo->enabled() << taskInfo->runOnStatup() << taskInfo->intervalHours()
-            << taskInfo->lastRun() << taskInfo->lastSuccess() << taskInfo->data();
+    const QVariantList vars = {
+        SqliteStmt::nullable(taskInfo->id(), !rowExists),
+        taskInfo->name(),
+        taskInfo->enabled(),
+        taskInfo->runOnStatup(),
+        taskInfo->intervalHours(),
+        taskInfo->lastRun(),
+        taskInfo->lastSuccess(),
+        taskInfo->data(),
+    };
 
     const char *sql = rowExists ? sqlUpdateTask : sqlInsertTask;
 

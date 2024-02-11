@@ -19,9 +19,6 @@ public slots:
     bool addOrUpdateZone(Zone &zone);
     void deleteZone(int zoneId);
     bool updateZoneName(int zoneId, const QString &zoneName);
-
-signals:
-    void retranslateUi();
 };
 
 #endif // ZONESCONTROLLER_H

@@ -89,6 +89,11 @@ void ConfUtil::setErrorMessage(const QString &errorMessage)
     }
 }
 
+int ConfUtil::ruleMaxCount()
+{
+    return FORT_CONF_RULE_MAX;
+}
+
 int ConfUtil::zoneMaxCount()
 {
     return FORT_CONF_ZONE_MAX;

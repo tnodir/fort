@@ -125,17 +125,11 @@ public:
     bool ruleWindowMaximized() const { return valueBool("ruleWindow/maximized"); }
     void setRuleWindowMaximized(bool on) { setValue("ruleWindow/maximized", on); }
 
-    QByteArray ruleWindowPresetSplit() const { return valueByteArray("ruleWindow/presetSplit"); }
-    void setRuleWindowPresetSplit(const QByteArray &v) { setValue("ruleWindow/presetSplit", v); }
+    int rulesHeaderVersion() const { return valueInt("ruleWindow/rulesHeaderVersion"); }
+    void setRulesHeaderVersion(int v) { setValue("ruleWindow/rulesHeaderVersion", v); }
 
-    QByteArray ruleWindowGlobalSplit() const { return valueByteArray("ruleWindow/globalSplit"); }
-    void setRuleWindowGlobalSplit(const QByteArray &v) { setValue("ruleWindow/globalSplit", v); }
-
-    QByteArray ruleWindowSplit() const { return valueByteArray("ruleWindow/split"); }
-    void setRuleWindowSplit(const QByteArray &v) { setValue("ruleWindow/split", v); }
-
-    int ruleWindowSplitVersion() const { return valueInt("ruleWindow/splitVersion"); }
-    void setRuleWindowSplitVersion(int v) { setValue("ruleWindow/splitVersion", v); }
+    QByteArray rulesHeader() const { return valueByteArray("ruleWindow/rulesHeader"); }
+    void setRulesHeader(const QByteArray &v) { setValue("ruleWindow/rulesHeader", v); }
 
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
     void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }

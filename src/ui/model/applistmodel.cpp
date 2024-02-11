@@ -102,18 +102,6 @@ QIcon appScheduledIcon(const AppRow &appRow)
     return IconCache::icon(appScheduleIconPath(appRow));
 }
 
-QString makeFtsFilterMatch(const QString &filter)
-{
-    if (filter.isEmpty())
-        return {};
-
-    const QStringList words = filter.trimmed().split(' ', Qt::SkipEmptyParts);
-    if (words.isEmpty())
-        return {};
-
-    return words.join("* ") + '*';
-}
-
 QVariant headerDataDisplayName(int /*role*/)
 {
     return AppListModel::tr("Name");
@@ -250,19 +238,7 @@ inline QVariant dataDisplayRow(const AppRow &appRow, int column, int role)
 
 }
 
-AppListModel::AppListModel(QObject *parent) : TableSqlModel(parent) { }
-
-void AppListModel::setFtsFilter(const QString &filter)
-{
-    if (m_ftsFilter == filter)
-        return;
-
-    m_ftsFilter = filter;
-
-    m_ftsFilterMatch = makeFtsFilterMatch(m_ftsFilter);
-
-    resetLater();
-}
+AppListModel::AppListModel(QObject *parent) : FtsTableSqlModel(parent) { }
 
 ConfManager *AppListModel::confManager() const
 {
@@ -291,8 +267,8 @@ void AppListModel::initialize()
 
     connect(confManager(), &ConfManager::confChanged, this, &AppListModel::refresh);
 
-    connect(confAppManager(), &ConfAppManager::appsChanged, this, &TableSqlModel::reset);
-    connect(confAppManager(), &ConfAppManager::appUpdated, this, &TableSqlModel::refresh);
+    connect(confAppManager(), &ConfAppManager::appsChanged, this, &TableItemModel::reset);
+    connect(confAppManager(), &ConfAppManager::appUpdated, this, &TableItemModel::refresh);
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);
 }
@@ -360,9 +336,8 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
 
 QVariant AppListModel::dataDecoration(const QModelIndex &index) const
 {
-    const int column = index.column();
-
     const int row = index.row();
+    const int column = index.column();
 
     const auto appRow = appRowAt(row);
     if (appRow.isNull())
@@ -484,16 +459,9 @@ bool AppListModel::updateTableRow(int row) const
 {
     QVariantList vars;
     fillSqlVars(vars);
-    vars.append(row); // must be a last one!
+    vars.append(row); // must be a last one for :OFFSET
 
     return updateAppRow(sql(), vars, m_appRow);
-}
-
-void AppListModel::fillSqlVars(QVariantList &vars) const
-{
-    if (!ftsFilterMatch().isEmpty()) {
-        vars.append(ftsFilterMatch());
-    }
 }
 
 QString AppListModel::sqlBase() const
@@ -526,11 +494,8 @@ QString AppListModel::sqlBase() const
            "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id";
 }
 
-QString AppListModel::sqlWhere() const
+QString AppListModel::sqlWhereFts() const
 {
-    if (ftsFilterMatch().isEmpty())
-        return {};
-
     return " WHERE t.app_id IN ( SELECT rowid FROM app_fts(:match) )";
 }
 

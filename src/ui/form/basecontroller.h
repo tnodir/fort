@@ -5,6 +5,7 @@
 
 class ConfAppManager;
 class ConfManager;
+class ConfRuleManager;
 class ConfZoneManager;
 class DriverManager;
 class FirewallConf;
@@ -28,6 +29,7 @@ public:
     FortSettings *settings() const;
     ConfManager *confManager() const;
     ConfAppManager *confAppManager() const;
+    ConfRuleManager *confRuleManager() const;
     ConfZoneManager *confZoneManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;

@@ -68,10 +68,10 @@ private:
     virtual void retranslateWindowTitle();
 
     void setupUi();
-    QLayout *setupAppLayout();
-    QLayout *setupAppPathLayout();
-    QLayout *setupAppNameLayout();
-    QLayout *setupNotesLayout();
+    QLayout *setupMainLayout();
+    QLayout *setupFormLayout();
+    QLayout *setupPathLayout();
+    QLayout *setupNameLayout();
     void setupComboAppGroups();
     QLayout *setupActionsLayout();
     void setupActionsGroup();
@@ -113,8 +113,8 @@ private:
     PlainTextEdit *m_editNotes = nullptr;
     QLabel *m_labelAppGroup = nullptr;
     QComboBox *m_comboAppGroup = nullptr;
-    QRadioButton *m_rbAllowApp = nullptr;
-    QRadioButton *m_rbBlockApp = nullptr;
+    QRadioButton *m_rbAllow = nullptr;
+    QRadioButton *m_rbBlock = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
     QButtonGroup *m_btgActions = nullptr;
     QCheckBox *m_cbUseGroupPerm = nullptr;

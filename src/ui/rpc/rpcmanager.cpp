@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 
 #include <conf/firewallconf.h>
+#include <conf/rule.h>
 #include <conf/zone.h>
 #include <control/controlmanager.h>
 #include <control/controlworker.h>
@@ -11,6 +12,7 @@
 #include <rpc/appinfomanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
+#include <rpc/confrulemanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
@@ -182,6 +184,56 @@ inline bool processConfAppManagerRpcResult(
             Control::Rpc_ConfAppManager_updateAppsBlocked);
 
     return func ? func(confAppManager, p, resArgs) : false;
+}
+
+bool processConfRuleManager_addOrUpdateRule(
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    Rule rule = ConfRuleManagerRpc::varListToRule(p.args);
+
+    const bool ok = confRuleManager->addOrUpdateRule(rule);
+    resArgs = { rule.ruleId };
+    return ok;
+}
+
+bool processConfRuleManager_deleteRule(
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confRuleManager->deleteRule(p.args.value(0).toLongLong());
+}
+
+bool processConfRuleManager_updateRuleName(
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confRuleManager->updateRuleName(
+            p.args.value(0).toLongLong(), p.args.value(1).toString());
+}
+
+bool processConfRuleManager_updateRuleEnabled(
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confRuleManager->updateRuleEnabled(
+            p.args.value(0).toLongLong(), p.args.value(1).toBool());
+}
+
+using processConfRuleManager_func = bool (*)(
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+
+static processConfRuleManager_func processConfRuleManager_funcList[] = {
+    &processConfRuleManager_addOrUpdateRule, // Rpc_ConfRuleManager_addOrUpdateRule,
+    &processConfRuleManager_deleteRule, // Rpc_ConfRuleManager_deleteRule,
+    &processConfRuleManager_updateRuleName, // Rpc_ConfRuleManager_updateRuleName,
+    &processConfRuleManager_updateRuleEnabled, // Rpc_ConfRuleManager_updateRuleEnabled,
+};
+
+inline bool processConfRuleManagerRpcResult(
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    const processConfRuleManager_func func = getProcessFunc(p, processConfRuleManager_funcList,
+            Control::Rpc_ConfRuleManager_addOrUpdateRule,
+            Control::Rpc_ConfRuleManager_updateRuleEnabled);
+
+    return func ? func(confRuleManager, p, resArgs) : false;
 }
 
 bool processConfZoneManager_addOrUpdateZone(
@@ -410,6 +462,29 @@ bool processConfAppManagerRpc(
     }
 }
 
+bool processConfRuleManagerRpc(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+{
+    auto confRuleManager = IoC<ConfRuleManager>();
+
+    switch (p.command) {
+    case Control::Rpc_ConfRuleManager_ruleAdded:
+        emit confRuleManager->ruleAdded();
+        return true;
+    case Control::Rpc_ConfRuleManager_ruleRemoved:
+        emit confRuleManager->ruleRemoved(p.args.value(0).toInt());
+        return true;
+    case Control::Rpc_ConfRuleManager_ruleUpdated:
+        emit confRuleManager->ruleUpdated();
+        return true;
+    default: {
+        ok = processConfRuleManagerRpcResult(confRuleManager, p, resArgs);
+        isSendResult = true;
+        return true;
+    }
+    }
+}
+
 bool processConfZoneManagerRpc(
         const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
 {
@@ -564,6 +639,7 @@ void RpcManager::setupServerSignals()
     setupAppInfoManagerSignals();
     setupConfManagerSignals();
     setupConfAppManagerSignals();
+    setupConfRuleManagerSignals();
     setupConfZoneManagerSignals();
     setupDriverManagerSignals();
     setupQuotaManagerSignals();
@@ -602,6 +678,19 @@ void RpcManager::setupConfAppManagerSignals()
             [&] { invokeOnClients(Control::Rpc_ConfAppManager_appsChanged); });
     connect(confAppManager, &ConfAppManager::appUpdated, this,
             [&] { invokeOnClients(Control::Rpc_ConfAppManager_appUpdated); });
+}
+
+void RpcManager::setupConfRuleManagerSignals()
+{
+    auto confRuleManager = IoC<ConfRuleManager>();
+
+    connect(confRuleManager, &ConfRuleManager::ruleAdded, this,
+            [&] { invokeOnClients(Control::Rpc_ConfRuleManager_ruleAdded); });
+    connect(confRuleManager, &ConfRuleManager::ruleRemoved, this, [&](int ruleId) {
+        invokeOnClients(Control::Rpc_ConfRuleManager_ruleRemoved, { ruleId });
+    });
+    connect(confRuleManager, &ConfRuleManager::ruleUpdated, this,
+            [&] { invokeOnClients(Control::Rpc_ConfRuleManager_ruleUpdated); });
 }
 
 void RpcManager::setupConfZoneManagerSignals()
@@ -822,6 +911,7 @@ static processManager_func processManager_funcList[] = {
     &processAppInfoManagerRpc, // Control::Rpc_AppInfoManager,
     &processConfManagerRpc, // Control::Rpc_ConfManager,
     &processConfAppManagerRpc, // Control::Rpc_ConfAppManager,
+    &processConfRuleManagerRpc, // Control::Rpc_ConfRuleManager,
     &processConfZoneManagerRpc, // Control::Rpc_ConfZoneManager,
     &processDriverManagerRpc, // Control::Rpc_DriverManager,
     &processQuotaManagerRpc, // Control::Rpc_QuotaManager,

@@ -8,6 +8,7 @@
 #define FORT_CONF_IP6_ARR_SIZE(n)     ((n) * sizeof(ip6_addr_t))
 #define FORT_CONF_IP4_RANGE_SIZE(n)   (FORT_CONF_IP4_ARR_SIZE(n) * 2)
 #define FORT_CONF_IP6_RANGE_SIZE(n)   (FORT_CONF_IP6_ARR_SIZE(n) * 2)
+#define FORT_CONF_RULE_MAX            256
 #define FORT_CONF_ZONE_MAX            32
 #define FORT_CONF_GROUP_MAX           16
 #define FORT_CONF_APPS_LEN_MAX        (64 * 1024 * 1024)

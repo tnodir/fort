@@ -44,9 +44,9 @@ void ZoneListModel::setUp()
     setupZoneTypes();
     setupZoneSources();
 
-    connect(confZoneManager, &ConfZoneManager::zoneAdded, this, &TableSqlModel::reset);
-    connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, &ZoneListModel::reset);
-    connect(confZoneManager, &ConfZoneManager::zoneUpdated, this, &TableSqlModel::refresh);
+    connect(confZoneManager, &ConfZoneManager::zoneAdded, this, &TableItemModel::reset);
+    connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, &TableItemModel::reset);
+    connect(confZoneManager, &ConfZoneManager::zoneUpdated, this, &TableItemModel::refresh);
 }
 
 int ZoneListModel::columnCount(const QModelIndex &parent) const
@@ -159,17 +159,6 @@ const ZoneRow &ZoneListModel::zoneRowAt(int row) const
     updateRowCache(row);
 
     return m_zoneRow;
-}
-
-QString ZoneListModel::zoneNameById(int zoneId)
-{
-    static const char *const sql = "SELECT name FROM zone WHERE zone_id = ?1;";
-
-    SqliteStmt stmt;
-    if (sqliteDb()->prepare(stmt, sql, { zoneId }) && stmt.step() == SqliteStmt::StepRow) {
-        return stmt.columnText(0);
-    }
-    return QString();
 }
 
 QVariant ZoneListModel::zoneTypeByCode(const QString &typeCode) const

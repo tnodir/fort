@@ -2,6 +2,7 @@
 
 #include <QBoxLayout>
 #include <QCheckBox>
+#include <QFormLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMenu>
@@ -350,4 +351,24 @@ LabelColor *ControlUtil::createLabelColor(
     c->connect(c, &LabelColor::colorChanged, onColorChanged);
 
     return c;
+}
+
+QLabel *ControlUtil::formRowLabel(QFormLayout *formLayout, QWidget *field)
+{
+    auto label = qobject_cast<QLabel *>(formLayout->labelForField(field));
+    Q_ASSERT(label);
+
+    label->setMinimumWidth(100);
+
+    return label;
+}
+
+QLabel *ControlUtil::formRowLabel(QFormLayout *formLayout, QLayout *field)
+{
+    auto label = qobject_cast<QLabel *>(formLayout->labelForField(field));
+    Q_ASSERT(label);
+
+    label->setMinimumWidth(100);
+
+    return label;
 }
