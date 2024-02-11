@@ -109,8 +109,10 @@ private:
     static ThreadStorage g_threadStorage;
 
     int m_size = 0;
+    int m_setupIndex = 0;
 
     quint8 m_objectFlags[IOC_MAX_SIZE] = {};
+    quint16 m_objectSetupIds[IOC_MAX_SIZE] = {};
     IocObject *m_objects[IOC_MAX_SIZE] = {};
 };
 

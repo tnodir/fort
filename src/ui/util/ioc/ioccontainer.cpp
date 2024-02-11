@@ -44,8 +44,9 @@ void IocContainer::setUpAll()
 
 void IocContainer::tearDownAll()
 {
-    for (int i = 0; i < m_size; ++i) {
-        tearDown(i);
+    int i = m_setupIndex;
+    while (--i >= 0) {
+        tearDown(m_objectSetupIds[i]);
     }
 }
 
@@ -63,6 +64,7 @@ IocService *IocContainer::setUp(int typeId)
     const quint8 flags = m_objectFlags[typeId];
     if ((flags & (IsService | WasSetUp)) == IsService) {
         m_objectFlags[typeId] = (flags | WasSetUp);
+        m_objectSetupIds[m_setupIndex++] = typeId;
 
         obj->setUp();
     }
