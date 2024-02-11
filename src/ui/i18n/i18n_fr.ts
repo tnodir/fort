@@ -309,13 +309,6 @@
     </message>
 </context>
 <context>
-    <name>ConfZoneManager</name>
-    <message>
-        <source>Zone Configuration Error</source>
-        <translation>Zone Configuration Erreur</translation>
-    </message>
-</context>
-<context>
     <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
@@ -1427,6 +1420,102 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
 </context>
 <context>
+    <name>RuleEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Nom:</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>Notes</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Activé</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Autoriser</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Bloquer</translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation>Exclusif</translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
+        <translation>Options avancées</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Edit Rule</source>
+        <translation>Editer Règle</translation>
+    </message>
+</context>
+<context>
+    <name>RuleListModel</name>
+    <message>
+        <source>Rule</source>
+        <translation>Règle</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Changer Heure</translation>
+    </message>
+</context>
+<context>
+    <name>RulesController</name>
+    <message>
+        <source>Rule Configuration Error</source>
+        <translation>Erreur de configuration de règle</translation>
+    </message>
+    <message>
+        <source>Cannot edit Rule</source>
+        <translation>Impossible d&apos;éditer la règle</translation>
+    </message>
+    <message>
+        <source>Cannot delete Rule</source>
+        <translation>Impossible de supprimer la Règle</translation>
+    </message>
+    <message>
+        <source>Cannot update Rule&apos;s name</source>
+        <translation>Impossible de mettre à jour la règle&apos;s nom</translation>
+    </message>
+</context>
+<context>
+    <name>RulesWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Éditer</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Ajouter</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation>Règles</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected rule?</source>
+        <translation>Êtes-vous sûr de retirer la règle sélectionnée ?</translation>
+    </message>
+</context>
+<context>
     <name>SchedulePage</name>
     <message>
         <source>Run</source>
@@ -1868,10 +1957,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
 <context>
     <name>ZoneEditDialog</name>
     <message>
-        <source>Zone Name:</source>
-        <translation>Nom de la Zone:</translation>
-    </message>
-    <message>
         <source>Source:</source>
         <translation>Source :</translation>
     </message>
@@ -1902,6 +1987,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Edit Zone</source>
         <translation>Éditer Zones</translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation>Nom:</translation>
     </message>
 </context>
 <context>
@@ -1940,6 +2029,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Cannot update Zone&apos;s name</source>
         <translation>Impossible de mettre à jour le nom de la Zone&apos;s</translation>
+    </message>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation>Zone Configuration Erreur</translation>
     </message>
 </context>
 <context>

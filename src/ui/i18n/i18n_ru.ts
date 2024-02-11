@@ -309,13 +309,6 @@
     </message>
 </context>
 <context>
-    <name>ConfZoneManager</name>
-    <message>
-        <source>Zone Configuration Error</source>
-        <translation>Ошибка конфигурации Зоны</translation>
-    </message>
-</context>
-<context>
     <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
@@ -1427,6 +1420,102 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
 </context>
 <context>
+    <name>RuleEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>Наименование:</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>Заметки</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Включено</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>Разрешить</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>Блокировать</translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation>Эксклюзив</translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
+        <translation>Расширенные опции</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
+    </message>
+    <message>
+        <source>Edit Rule</source>
+        <translation>Редактирование Правила</translation>
+    </message>
+</context>
+<context>
+    <name>RuleListModel</name>
+    <message>
+        <source>Rule</source>
+        <translation>Правило</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>Время Изменения</translation>
+    </message>
+</context>
+<context>
+    <name>RulesController</name>
+    <message>
+        <source>Rule Configuration Error</source>
+        <translation>Ошибка конфигурации Правила</translation>
+    </message>
+    <message>
+        <source>Cannot edit Rule</source>
+        <translation>Невозможно обновить Правило</translation>
+    </message>
+    <message>
+        <source>Cannot delete Rule</source>
+        <translation>Невозможно удалить Правило</translation>
+    </message>
+    <message>
+        <source>Cannot update Rule&apos;s name</source>
+        <translation>Невозможно обновить наименование Правила</translation>
+    </message>
+</context>
+<context>
+    <name>RulesWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Добавить</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation>Правила</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected rule?</source>
+        <translation>Удалить выбранные правила?</translation>
+    </message>
+</context>
+<context>
     <name>SchedulePage</name>
     <message>
         <source>Run</source>
@@ -1868,10 +1957,6 @@ It can cause a Windows malfunction or totally unusable.</source>
 <context>
     <name>ZoneEditDialog</name>
     <message>
-        <source>Zone Name:</source>
-        <translation>Наименование зоны:</translation>
-    </message>
-    <message>
         <source>Source:</source>
         <translation>Источник:</translation>
     </message>
@@ -1902,6 +1987,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Edit Zone</source>
         <translation>Редактирование зоны</translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation>Наименование:</translation>
     </message>
 </context>
 <context>
@@ -1940,6 +2029,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Cannot update Zone&apos;s name</source>
         <translation>Невозможно обновить наименование Зоны</translation>
+    </message>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation>Ошибка конфигурации Зоны</translation>
     </message>
 </context>
 <context>

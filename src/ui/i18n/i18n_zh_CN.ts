@@ -309,13 +309,6 @@
     </message>
 </context>
 <context>
-    <name>ConfZoneManager</name>
-    <message>
-        <source>Zone Configuration Error</source>
-        <translation>区域配置错误</translation>
-    </message>
-</context>
-<context>
     <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
@@ -1425,6 +1418,102 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
 </context>
 <context>
+    <name>RuleEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>名称：</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>注意</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>已启用</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>允许</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>阻止</translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
+        <translation>高级选项</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
+    </message>
+    <message>
+        <source>Edit Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RuleListModel</name>
+    <message>
+        <source>Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RulesController</name>
+    <message>
+        <source>Rule Configuration Error</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot edit Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot delete Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot update Rule&apos;s name</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>RulesWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>编辑</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>添加</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>移除</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation>规则</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected rule?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>SchedulePage</name>
     <message>
         <source>Run</source>
@@ -1866,10 +1955,6 @@ It can cause a Windows malfunction or totally unusable.</source>
 <context>
     <name>ZoneEditDialog</name>
     <message>
-        <source>Zone Name:</source>
-        <translation>区域名称：</translation>
-    </message>
-    <message>
         <source>Source:</source>
         <translation>来源:</translation>
     </message>
@@ -1900,6 +1985,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Edit Zone</source>
         <translation>编辑区域</translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation>名称：</translation>
     </message>
 </context>
 <context>
@@ -1938,6 +2027,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Cannot update Zone&apos;s name</source>
         <translation>无法更新区域的名称</translation>
+    </message>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation>区域配置错误</translation>
     </message>
 </context>
 <context>

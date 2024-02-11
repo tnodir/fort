@@ -309,13 +309,6 @@
     </message>
 </context>
 <context>
-    <name>ConfZoneManager</name>
-    <message>
-        <source>Zone Configuration Error</source>
-        <translation>영역 구성 오류</translation>
-    </message>
-</context>
-<context>
     <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
@@ -1427,6 +1420,102 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
 </context>
 <context>
+    <name>RuleEditDialog</name>
+    <message>
+        <source>Name:</source>
+        <translation>이름:</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>참고</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>사용함</translation>
+    </message>
+    <message>
+        <source>Allow</source>
+        <translation>허용</translation>
+    </message>
+    <message>
+        <source>Block</source>
+        <translation>차단</translation>
+    </message>
+    <message>
+        <source>Exclusive</source>
+        <translation>독점</translation>
+    </message>
+    <message>
+        <source>Advanced Options</source>
+        <translation>고급 옵션</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>확인</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>취소</translation>
+    </message>
+    <message>
+        <source>Edit Rule</source>
+        <translation>규칙 편집</translation>
+    </message>
+</context>
+<context>
+    <name>RuleListModel</name>
+    <message>
+        <source>Rule</source>
+        <translation>규칙</translation>
+    </message>
+    <message>
+        <source>Change Time</source>
+        <translation>시간 변경</translation>
+    </message>
+</context>
+<context>
+    <name>RulesController</name>
+    <message>
+        <source>Rule Configuration Error</source>
+        <translation>규칙 구성 오류</translation>
+    </message>
+    <message>
+        <source>Cannot edit Rule</source>
+        <translation>규칙을 편집할 수 없음</translation>
+    </message>
+    <message>
+        <source>Cannot delete Rule</source>
+        <translation>규칙을 삭제할 수 없음</translation>
+    </message>
+    <message>
+        <source>Cannot update Rule&apos;s name</source>
+        <translation>규칙 이름을 업데이트할 수 없음(&amp;S)</translation>
+    </message>
+</context>
+<context>
+    <name>RulesWindow</name>
+    <message>
+        <source>Edit</source>
+        <translation>편집</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>추가</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>제거</translation>
+    </message>
+    <message>
+        <source>Rules</source>
+        <translation>규칙</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove selected rule?</source>
+        <translation>선택한 규칙을 제거하시겠습니까?</translation>
+    </message>
+</context>
+<context>
     <name>SchedulePage</name>
     <message>
         <source>Run</source>
@@ -1868,10 +1957,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
 <context>
     <name>ZoneEditDialog</name>
     <message>
-        <source>Zone Name:</source>
-        <translation>대역 이름:</translation>
-    </message>
-    <message>
         <source>Source:</source>
         <translation>소스:</translation>
     </message>
@@ -1902,6 +1987,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Edit Zone</source>
         <translation>대역 편집</translation>
+    </message>
+    <message>
+        <source>Name:</source>
+        <translation>이름:</translation>
     </message>
 </context>
 <context>
@@ -1940,6 +2029,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Cannot update Zone&apos;s name</source>
         <translation>영역 이름을 업데이트할 수 없음</translation>
+    </message>
+    <message>
+        <source>Zone Configuration Error</source>
+        <translation>영역 구성 오류</translation>
     </message>
 </context>
 <context>
