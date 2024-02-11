@@ -646,8 +646,13 @@ void ProgramEditDialog::fillEditName()
     if (appPath.isEmpty())
         return;
 
-    const QString appName =
-            isWildcard() ? appPath.replace('\n', ' ') : IoC<AppInfoCache>()->appName(appPath);
+    QString appName;
+    if (isWildcard()) {
+        appName = appPath.left(64).replace('\n', ' ');
+    } else {
+        appPath = FileUtil::normalizePath(appPath);
+        appName = IoC<AppInfoCache>()->appName(appPath);
+    }
 
     m_editName->setText(appName);
 }

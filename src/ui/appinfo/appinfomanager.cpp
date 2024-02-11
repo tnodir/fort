@@ -15,7 +15,7 @@ namespace {
 
 const QLoggingCategory LC("appInfo");
 
-constexpr int DATABASE_USER_VERSION = 5;
+constexpr int DATABASE_USER_VERSION = 6;
 
 constexpr int APP_CACHE_MAX_COUNT = 2000;
 

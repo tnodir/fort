@@ -263,7 +263,7 @@ void ConfAppManager::logBlockedApp(const LogEntryBlocked &logEntry)
     if (appIdByPath(appPath) > 0)
         return; // already added by user
 
-    const QString appName = IoC<AppInfoCache>()->appName(appOriginPath);
+    const QString appName = IoC<AppInfoCache>()->appName(appPath);
 
     App app;
     app.blocked = logEntry.blocked();
