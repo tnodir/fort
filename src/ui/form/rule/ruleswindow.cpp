@@ -1,6 +1,7 @@
 #include "ruleswindow.h"
 
 #include <QHeaderView>
+#include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
 #include <QToolButton>
@@ -111,6 +112,7 @@ void RulesWindow::retranslateUi()
     m_actAddRule->setText(tr("Add"));
     m_actEditRule->setText(tr("Edit"));
     m_actRemoveRule->setText(tr("Remove"));
+    m_editSearch->setPlaceholderText(tr("Search"));
 
     ruleListModel()->refresh();
 
@@ -173,12 +175,28 @@ QLayout *RulesWindow::setupHeader()
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
 
+    // Search field
+    setupEditSearch();
+
     // Menu button
     m_btMenu = windowManager()->createMenuButton();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, /*stretch*/ nullptr, m_btMenu });
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
+            m_editSearch, /*stretch*/ nullptr, m_btMenu });
 
     return layout;
+}
+
+void RulesWindow::setupEditSearch()
+{
+    m_editSearch = ControlUtil::createLineEdit(
+            QString(), [&](const QString &text) { ruleListModel()->setFtsFilter(text); });
+    m_editSearch->setClearButtonEnabled(true);
+    m_editSearch->setMaxLength(200);
+    m_editSearch->setMinimumWidth(100);
+    m_editSearch->setMaximumWidth(200);
+
+    connect(this, &RulesWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
 }
 
 void RulesWindow::setupTableRules()

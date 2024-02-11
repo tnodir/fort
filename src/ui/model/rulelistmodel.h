@@ -44,6 +44,8 @@ protected:
     bool updateTableRow(int row) const override;
     TableRow &tableRow() const override { return m_ruleRow; }
 
+    bool updateRuleRow(const QString &sql, const QVariantList &vars, RuleRow &ruleRow) const;
+
     QString sqlBase() const override;
     QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;

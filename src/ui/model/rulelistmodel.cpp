@@ -185,22 +185,32 @@ const RuleRow &RuleListModel::ruleRowAt(int row) const
 
 bool RuleListModel::updateTableRow(int row) const
 {
+    QVariantList vars;
+    fillSqlVars(vars);
+    vars.append(row); // must be a last one for :OFFSET
+
+    return updateRuleRow(sql(), vars, m_ruleRow);
+}
+
+bool RuleListModel::updateRuleRow(
+        const QString &sql, const QVariantList &vars, RuleRow &ruleRow) const
+{
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql(), { row }) && stmt.step() == SqliteStmt::StepRow)) {
-        m_ruleRow.invalidate();
+    if (!(sqliteDb()->prepare(stmt, sql, vars) && stmt.step() == SqliteStmt::StepRow)) {
+        ruleRow.invalidate();
         return false;
     }
 
-    m_ruleRow.ruleId = stmt.columnInt(0);
-    m_ruleRow.enabled = stmt.columnBool(1);
-    m_ruleRow.blocked = stmt.columnBool(2);
-    m_ruleRow.exclusive = stmt.columnBool(3);
-    m_ruleRow.ruleName = stmt.columnText(4);
-    m_ruleRow.notes = stmt.columnText(5);
-    m_ruleRow.ruleText = stmt.columnText(6);
-    m_ruleRow.acceptZones = stmt.columnUInt(7);
-    m_ruleRow.rejectZones = stmt.columnUInt(8);
-    m_ruleRow.modTime = stmt.columnDateTime(9);
+    ruleRow.ruleId = stmt.columnInt(0);
+    ruleRow.enabled = stmt.columnBool(1);
+    ruleRow.blocked = stmt.columnBool(2);
+    ruleRow.exclusive = stmt.columnBool(3);
+    ruleRow.ruleName = stmt.columnText(4);
+    ruleRow.notes = stmt.columnText(5);
+    ruleRow.ruleText = stmt.columnText(6);
+    ruleRow.acceptZones = stmt.columnUInt(7);
+    ruleRow.rejectZones = stmt.columnUInt(8);
+    ruleRow.modTime = stmt.columnDateTime(9);
 
     return true;
 }

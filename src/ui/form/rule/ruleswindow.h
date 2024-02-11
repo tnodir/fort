@@ -4,6 +4,7 @@
 #include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
+QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
@@ -48,6 +49,7 @@ private:
 
     void setupUi();
     QLayout *setupHeader();
+    void setupEditSearch();
     void setupTableRules();
     void setupTableRulesHeader();
     void setupTableRulesChanged();
@@ -71,6 +73,7 @@ private:
     QAction *m_actAddRule = nullptr;
     QAction *m_actEditRule = nullptr;
     QAction *m_actRemoveRule = nullptr;
+    QLineEdit *m_editSearch = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_ruleListView = nullptr;
 
