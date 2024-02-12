@@ -92,32 +92,22 @@ CREATE TABLE rule(
   name TEXT NOT NULL,
   notes TEXT,
   rule_text TEXT NOT NULL,
+  rule_type INTEGER NOT NULL, -- app rules (1..64), global before/after apps (65..96, 97..128), preset rules (129..255)
   accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
   mod_time INTEGER NOT NULL
 );
 
-CREATE INDEX rule_name_idx ON rule(name);
+CREATE INDEX rule_rule_type_name_idx ON rule(rule_type, name);
 
 CREATE TABLE app_rule(
   app_rule_id INTEGER PRIMARY KEY,
   app_id INTEGER NOT NULL,
-  order_index INTEGER NOT NULL,
   rule_id INTEGER NOT NULL
 );
 
-CREATE UNIQUE INDEX app_rule_app_id_order_index_uk ON app_rule(app_id, order_index);
+CREATE INDEX app_rule_app_id_idx ON app_rule(app_id);
 CREATE INDEX app_rule_rule_id_idx ON app_rule(rule_id);
-
-CREATE TABLE system_rule(
-  system_rule_id INTEGER PRIMARY KEY,
-  system_type INTEGER NOT NULL, -- before/after apps
-  order_index INTEGER NOT NULL,
-  rule_id INTEGER NOT NULL
-);
-
-CREATE UNIQUE INDEX system_rule_system_type_order_index_uk ON system_rule(system_type, order_index);
-CREATE INDEX system_rule_rule_id_idx ON system_rule(rule_id);
 
 CREATE TABLE task(
   task_id INTEGER PRIMARY KEY,

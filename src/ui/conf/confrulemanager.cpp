@@ -34,8 +34,6 @@ const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 
 const char *const sqlDeleteAppRule = "DELETE FROM app_rule WHERE rule_id = 1;";
 
-const char *const sqlDeleteSystemRule = "DELETE FROM system_rule WHERE rule_id = 1;";
-
 const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id = ?1;";
 
 const char *const sqlUpdateRuleEnabled = "UPDATE rule SET enabled = ?2 WHERE rule_id = ?1;";
@@ -133,9 +131,6 @@ bool ConfRuleManager::deleteRule(int ruleId)
     if (ok) {
         // Delete the Rule from App Rules
         sqliteDb()->executeEx(sqlDeleteAppRule, vars, 0, &ok);
-
-        // Delete the Rule from System Rules
-        sqliteDb()->executeEx(sqlDeleteSystemRule, vars, 0, &ok);
     }
 
     commitTransaction(ok);
