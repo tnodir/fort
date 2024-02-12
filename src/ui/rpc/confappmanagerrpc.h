@@ -25,6 +25,8 @@ public:
     static QVariantList appToVarList(const App &app);
     static App varListToApp(const QVariantList &v);
 
+    static void setupServerSignals(RpcManager *rpcManager);
+
 protected:
     void setupDriveListManager() override { }
 

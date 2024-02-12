@@ -32,25 +32,16 @@ public:
     bool doOnServer(
             Control::Command cmd, const QVariantList &args = {}, QVariantList *resArgs = nullptr);
 
+    void invokeOnClients(Control::Command cmd, const QVariantList &args = {});
+
     bool processCommandRpc(const ProcessCommandArgs &p);
 
 private:
     void setupServerSignals();
-    void setupAppInfoManagerSignals();
-    void setupConfManagerSignals();
-    void setupConfAppManagerSignals();
-    void setupConfRuleManagerSignals();
-    void setupConfZoneManagerSignals();
     void setupDriverManagerSignals();
-    void setupQuotaManagerSignals();
-    void setupStatManagerSignals();
-    void setupStatBlockManagerSignals();
-    void setupTaskManagerSignals();
 
     void setupClient();
     void closeClient();
-
-    void invokeOnClients(Control::Command cmd, const QVariantList &args = {});
 
     bool checkClientValidated(ControlWorker *w) const;
     void initClientOnServer(ControlWorker *w) const;

@@ -3,6 +3,8 @@
 
 #include <task/taskmanager.h>
 
+class RpcManager;
+
 class TaskManagerRpc : public TaskManager
 {
     Q_OBJECT
@@ -12,6 +14,8 @@ public:
 
     void onTaskStarted(qint8 taskType);
     void onTaskFinished(qint8 taskType);
+
+    static void setupServerSignals(RpcManager *rpcManager);
 
 public slots:
     void runTask(qint8 taskType) override;

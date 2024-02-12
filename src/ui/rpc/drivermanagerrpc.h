@@ -3,6 +3,8 @@
 
 #include <driver/drivermanager.h>
 
+class RpcManager;
+
 class DriverManagerRpc : public DriverManager
 {
     Q_OBJECT

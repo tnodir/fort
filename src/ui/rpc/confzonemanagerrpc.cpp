@@ -55,3 +55,16 @@ Zone ConfZoneManagerRpc::varListToZone(const QVariantList &v)
     zone.textInline = v.value(7).toString();
     return zone;
 }
+
+void ConfZoneManagerRpc::setupServerSignals(RpcManager *rpcManager)
+{
+    auto confZoneManager = IoC<ConfZoneManager>();
+
+    connect(confZoneManager, &ConfZoneManager::zoneAdded, rpcManager,
+            [&] { rpcManager->invokeOnClients(Control::Rpc_ConfZoneManager_zoneAdded); });
+    connect(confZoneManager, &ConfZoneManager::zoneRemoved, rpcManager, [&](int zoneId) {
+        rpcManager->invokeOnClients(Control::Rpc_ConfZoneManager_zoneRemoved, { zoneId });
+    });
+    connect(confZoneManager, &ConfZoneManager::zoneUpdated, rpcManager,
+            [&] { rpcManager->invokeOnClients(Control::Rpc_ConfZoneManager_zoneUpdated); });
+}

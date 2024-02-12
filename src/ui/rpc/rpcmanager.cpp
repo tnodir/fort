@@ -636,74 +636,17 @@ void RpcManager::tearDown()
 
 void RpcManager::setupServerSignals()
 {
-    setupAppInfoManagerSignals();
-    setupConfManagerSignals();
-    setupConfAppManagerSignals();
-    setupConfRuleManagerSignals();
-    setupConfZoneManagerSignals();
     setupDriverManagerSignals();
-    setupQuotaManagerSignals();
-    setupStatManagerSignals();
-    setupStatBlockManagerSignals();
-    setupTaskManagerSignals();
-}
 
-void RpcManager::setupAppInfoManagerSignals()
-{
-    auto appInfoManager = IoC<AppInfoManager>();
-
-    connect(appInfoManager, &AppInfoManager::lookupInfoFinished, this,
-            [&](const QString &appPath, const AppInfo & /*appInfo*/) {
-                invokeOnClients(Control::Rpc_AppInfoManager_checkLookupInfoFinished, { appPath });
-            });
-}
-
-void RpcManager::setupConfManagerSignals()
-{
-    auto confManager = IoC<ConfManager>();
-
-    connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags) {
-        const QVariant confVar = IoC<ConfManager>()->toPatchVariant(onlyFlags);
-        invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
-    });
-}
-
-void RpcManager::setupConfAppManagerSignals()
-{
-    auto confAppManager = IoC<ConfAppManager>();
-
-    connect(confAppManager, &ConfAppManager::appAlerted, this,
-            [&] { invokeOnClients(Control::Rpc_ConfAppManager_appAlerted); });
-    connect(confAppManager, &ConfAppManager::appsChanged, this,
-            [&] { invokeOnClients(Control::Rpc_ConfAppManager_appsChanged); });
-    connect(confAppManager, &ConfAppManager::appUpdated, this,
-            [&] { invokeOnClients(Control::Rpc_ConfAppManager_appUpdated); });
-}
-
-void RpcManager::setupConfRuleManagerSignals()
-{
-    auto confRuleManager = IoC<ConfRuleManager>();
-
-    connect(confRuleManager, &ConfRuleManager::ruleAdded, this,
-            [&] { invokeOnClients(Control::Rpc_ConfRuleManager_ruleAdded); });
-    connect(confRuleManager, &ConfRuleManager::ruleRemoved, this, [&](int ruleId) {
-        invokeOnClients(Control::Rpc_ConfRuleManager_ruleRemoved, { ruleId });
-    });
-    connect(confRuleManager, &ConfRuleManager::ruleUpdated, this,
-            [&] { invokeOnClients(Control::Rpc_ConfRuleManager_ruleUpdated); });
-}
-
-void RpcManager::setupConfZoneManagerSignals()
-{
-    auto confZoneManager = IoC<ConfZoneManager>();
-
-    connect(confZoneManager, &ConfZoneManager::zoneAdded, this,
-            [&] { invokeOnClients(Control::Rpc_ConfZoneManager_zoneAdded); });
-    connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, [&](int zoneId) {
-        invokeOnClients(Control::Rpc_ConfZoneManager_zoneRemoved, { zoneId });
-    });
-    connect(confZoneManager, &ConfZoneManager::zoneUpdated, this,
-            [&] { invokeOnClients(Control::Rpc_ConfZoneManager_zoneUpdated); });
+    AppInfoManagerRpc::setupServerSignals(this);
+    ConfManagerRpc::setupServerSignals(this);
+    ConfAppManagerRpc::setupServerSignals(this);
+    ConfRuleManagerRpc::setupServerSignals(this);
+    ConfZoneManagerRpc::setupServerSignals(this);
+    QuotaManagerRpc::setupServerSignals(this);
+    StatManagerRpc::setupServerSignals(this);
+    StatBlockManagerRpc::setupServerSignals(this);
+    TaskManagerRpc::setupServerSignals(this);
 }
 
 void RpcManager::setupDriverManagerSignals()
@@ -715,63 +658,6 @@ void RpcManager::setupDriverManagerSignals()
     };
     connect(driverManager, &DriverManager::errorCodeChanged, this, updateClientStates);
     connect(driverManager, &DriverManager::isDeviceOpenedChanged, this, updateClientStates);
-}
-
-void RpcManager::setupQuotaManagerSignals()
-{
-    auto quotaManager = IoC<QuotaManager>();
-
-    connect(quotaManager, &QuotaManager::alert, this, [&](qint8 alertType) {
-        invokeOnClients(Control::Rpc_QuotaManager_alert, { alertType });
-    });
-}
-
-void RpcManager::setupStatManagerSignals()
-{
-    auto statManager = IoC<StatManager>();
-
-    connect(statManager, &StatManager::trafficCleared, this,
-            [&] { invokeOnClients(Control::Rpc_StatManager_trafficCleared); });
-    connect(statManager, &StatManager::appStatRemoved, this, [&](qint64 appId) {
-        invokeOnClients(Control::Rpc_StatManager_appStatRemoved, { appId });
-    });
-    connect(statManager, &StatManager::appCreated, this, [&](qint64 appId, const QString &appPath) {
-        invokeOnClients(Control::Rpc_StatManager_appCreated, { appId, appPath });
-    });
-    connect(statManager, &StatManager::trafficAdded, this,
-            [&](qint64 unixTime, quint32 inBytes, quint32 outBytes) {
-                invokeOnClients(
-                        Control::Rpc_StatManager_trafficAdded, { unixTime, inBytes, outBytes });
-            });
-    connect(statManager, &StatManager::appTrafTotalsResetted, this,
-            [&] { invokeOnClients(Control::Rpc_StatManager_appTrafTotalsResetted); });
-}
-
-void RpcManager::setupStatBlockManagerSignals()
-{
-    auto statBlockManager = IoC<StatBlockManager>();
-
-    connect(statBlockManager, &StatBlockManager::connChanged, this,
-            [&] { invokeOnClients(Control::Rpc_StatBlockManager_connChanged); });
-}
-
-void RpcManager::setupTaskManagerSignals()
-{
-    auto taskManager = IoC<TaskManager>();
-
-    connect(taskManager, &TaskManager::taskStarted, this, [&](qint8 taskType) {
-        invokeOnClients(Control::Rpc_TaskManager_taskStarted, { taskType });
-    });
-    connect(taskManager, &TaskManager::taskFinished, this, [&](qint8 taskType) {
-        invokeOnClients(Control::Rpc_TaskManager_taskFinished, { taskType });
-    });
-
-    connect(taskManager, &TaskManager::appVersionDownloaded, this, [&](const QString &version) {
-        invokeOnClients(Control::Rpc_TaskManager_appVersionDownloaded, { version });
-    });
-    connect(taskManager, &TaskManager::zonesDownloaded, this, [&](const QStringList &zoneNames) {
-        invokeOnClients(Control::Rpc_TaskManager_zonesDownloaded, { zoneNames });
-    });
 }
 
 void RpcManager::setupClient()

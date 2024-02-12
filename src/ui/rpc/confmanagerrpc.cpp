@@ -81,3 +81,13 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
         IoC<WindowManager>()->reloadOptionsWindow(tr("Settings changed by someone else"));
     }
 }
+
+void ConfManagerRpc::setupServerSignals(RpcManager *rpcManager)
+{
+    auto confManager = IoC<ConfManager>();
+
+    connect(confManager, &ConfManager::confChanged, rpcManager, [&](bool onlyFlags) {
+        const QVariant confVar = IoC<ConfManager>()->toPatchVariant(onlyFlags);
+        rpcManager->invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
+    });
+}

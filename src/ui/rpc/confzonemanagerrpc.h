@@ -19,6 +19,8 @@ public:
 
     static QVariantList zoneToVarList(const Zone &zone);
     static Zone varListToZone(const QVariantList &v);
+
+    static void setupServerSignals(RpcManager *rpcManager);
 };
 
 #endif // CONFZONEMANAGERRPC_H

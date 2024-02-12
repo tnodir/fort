@@ -56,3 +56,16 @@ Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
     rule.ruleText = v.value(8).toString();
     return rule;
 }
+
+void ConfRuleManagerRpc::setupServerSignals(RpcManager *rpcManager)
+{
+    auto confRuleManager = IoC<ConfRuleManager>();
+
+    connect(confRuleManager, &ConfRuleManager::ruleAdded, rpcManager,
+            [&] { rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleAdded); });
+    connect(confRuleManager, &ConfRuleManager::ruleRemoved, rpcManager, [&](int ruleId) {
+        rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleRemoved, { ruleId });
+    });
+    connect(confRuleManager, &ConfRuleManager::ruleUpdated, rpcManager,
+            [&] { rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleUpdated); });
+}

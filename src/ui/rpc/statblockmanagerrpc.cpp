@@ -12,6 +12,13 @@ StatBlockManagerRpc::StatBlockManagerRpc(const QString &filePath, QObject *paren
 
 void StatBlockManagerRpc::deleteConn(qint64 connIdTo)
 {
-    IoC<RpcManager>()->doOnServer(
-            Control::Rpc_StatBlockManager_deleteConn, { connIdTo });
+    IoC<RpcManager>()->doOnServer(Control::Rpc_StatBlockManager_deleteConn, { connIdTo });
+}
+
+void StatBlockManagerRpc::setupServerSignals(RpcManager *rpcManager)
+{
+    auto statBlockManager = IoC<StatBlockManager>();
+
+    connect(statBlockManager, &StatBlockManager::connChanged, rpcManager,
+            [&] { rpcManager->invokeOnClients(Control::Rpc_StatBlockManager_connChanged); });
 }

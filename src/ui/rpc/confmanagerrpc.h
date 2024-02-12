@@ -20,6 +20,8 @@ public:
 
     void onConfChanged(const QVariant &confVar);
 
+    static void setupServerSignals(RpcManager *rpcManager);
+
 protected:
     bool saveConf(FirewallConf &newConf) override;
 

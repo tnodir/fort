@@ -3,6 +3,8 @@
 
 #include <stat/statmanager.h>
 
+class RpcManager;
+
 class StatManagerRpc : public StatManager
 {
     Q_OBJECT
@@ -15,6 +17,8 @@ public:
     bool deleteStatApp(qint64 appId) override;
 
     bool resetAppTrafTotals() override;
+
+    static void setupServerSignals(RpcManager *rpcManager);
 
 public slots:
     bool clearTraffic() override;

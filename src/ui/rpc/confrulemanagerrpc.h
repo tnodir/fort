@@ -19,6 +19,8 @@ public:
 
     static QVariantList ruleToVarList(const Rule &rule);
     static Rule varListToRule(const QVariantList &v);
+
+    static void setupServerSignals(RpcManager *rpcManager);
 };
 
 #endif // CONFRULEMANAGERRPC_H
