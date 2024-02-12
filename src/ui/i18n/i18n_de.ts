@@ -1443,7 +1443,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Exclusive</source>
-        <translation type="unfinished"></translation>
+        <translation>Exklusiv</translation>
     </message>
     <message>
         <source>Advanced Options</source>
@@ -1459,37 +1459,37 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regel bearbeiten</translation>
     </message>
 </context>
 <context>
     <name>RuleListModel</name>
     <message>
         <source>Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regel</translation>
     </message>
     <message>
         <source>Change Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeit ändern</translation>
     </message>
 </context>
 <context>
     <name>RulesController</name>
     <message>
         <source>Rule Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Konfigurationsfehler</translation>
     </message>
     <message>
         <source>Cannot edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regel kann nicht bearbeitet werden</translation>
     </message>
     <message>
         <source>Cannot delete Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regel kann nicht gelöscht werden</translation>
     </message>
     <message>
         <source>Cannot update Rule&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Name der Regel kann nicht aktualisiert werden</translation>
     </message>
 </context>
 <context>
@@ -1512,7 +1512,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Are you sure to remove selected rule?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sind Sie sicher, dass die ausgewählte Regeln entfernt werden soll?</translation>
     </message>
 </context>
 <context>

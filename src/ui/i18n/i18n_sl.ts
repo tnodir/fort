@@ -1085,7 +1085,11 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation type="unfinished"></translation>
+        <translation>Premaknite besedila polj Dovoli/Onemogoči iz skupin aplikacij v Nadomestni znaki programov!!!
+
+(Zdaj so samo za branje in bodo odstranjena v različici 4.)
+
+Ali želite odpreti nit razprave v brskalniku?</translation>
     </message>
 </context>
 <context>
@@ -1439,7 +1443,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Exclusive</source>
-        <translation type="unfinished"></translation>
+        <translation>Izključno</translation>
     </message>
     <message>
         <source>Advanced Options</source>
@@ -1455,37 +1459,37 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Uredi pravilo</translation>
     </message>
 </context>
 <context>
     <name>RuleListModel</name>
     <message>
         <source>Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravilo</translation>
     </message>
     <message>
         <source>Change Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Spremeni čas</translation>
     </message>
 </context>
 <context>
     <name>RulesController</name>
     <message>
         <source>Rule Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Napaka nastavitev pravila</translation>
     </message>
     <message>
         <source>Cannot edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravila ni mogoče urejati</translation>
     </message>
     <message>
         <source>Cannot delete Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravila ni mogoče izbrisati</translation>
     </message>
     <message>
         <source>Cannot update Rule&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Imena pravila ni mogoče posodobiti</translation>
     </message>
 </context>
 <context>
@@ -1504,11 +1508,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravila</translation>
     </message>
     <message>
         <source>Are you sure to remove selected rule?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ali ste prepričani, da želite odstraniti izbranega pravila?</translation>
     </message>
 </context>
 <context>
@@ -1932,7 +1936,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravila</translation>
     </message>
 </context>
 <context>
