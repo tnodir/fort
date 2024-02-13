@@ -3,12 +3,71 @@
 #include <sqlite/sqlitedb.h>
 
 #include <conf/firewallconf.h>
+#include <control/controlmanager.h>
+#include <control/controlworker.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <rpc/rpcmanager.h>
 #include <task/taskmanager.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/variantutil.h>
+
+namespace {
+
+inline bool processConfManager_confChanged(ConfManager *confManager, const ProcessCommandArgs &p)
+{
+    if (auto cm = qobject_cast<ConfManagerRpc *>(confManager)) {
+        cm->onConfChanged(p.args.value(0));
+    }
+    return true;
+}
+
+bool processConfManager_saveVariant(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confManager->saveVariant(p.args.value(0));
+}
+
+bool processConfManager_exportMasterBackup(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confManager->exportMasterBackup(p.args.value(0).toString());
+}
+
+bool processConfManager_importMasterBackup(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confManager->importMasterBackup(p.args.value(0).toString());
+}
+
+bool processConfManager_checkPassword(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    const bool ok = confManager->checkPassword(p.args.value(0).toString());
+    if (ok && !p.worker->isClientValidated()) {
+        p.worker->setIsClientValidated(true);
+    }
+    return ok;
+}
+
+static processConfManager_func processConfManager_funcList[] = {
+    &processConfManager_saveVariant, // Rpc_ConfManager_saveVariant,
+    &processConfManager_exportMasterBackup, // Rpc_ConfManager_exportMasterBackup,
+    &processConfManager_importMasterBackup, // Rpc_ConfManager_importMasterBackup,
+    &processConfManager_checkPassword, // Rpc_ConfManager_checkPassword,
+};
+
+inline bool processConfManagerRpcResult(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    const processConfManager_func func =
+            RpcManager::getProcessFunc(p.command, processConfManager_funcList,
+                    Control::Rpc_ConfManager_saveVariant, Control::Rpc_ConfManager_checkPassword);
+
+    return func ? func(confManager, p, resArgs) : false;
+}
+
+}
 
 ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
     ConfManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)
@@ -79,6 +138,22 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 
     if (!saving()) {
         IoC<WindowManager>()->reloadOptionsWindow(tr("Settings changed by someone else"));
+    }
+}
+
+bool ConfManagerRpc::processServerCommand(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+{
+    auto confManager = IoC<ConfManager>();
+
+    switch (p.command) {
+    case Control::Rpc_ConfManager_confChanged:
+        return processConfManager_confChanged(confManager, p);
+    default: {
+        ok = processConfManagerRpcResult(confManager, p, resArgs);
+        isSendResult = true;
+        return true;
+    }
     }
 }
 

@@ -5,6 +5,8 @@
 
 class RpcManager;
 
+struct ProcessCommandArgs;
+
 class TaskManagerRpc : public TaskManager
 {
     Q_OBJECT
@@ -14,6 +16,9 @@ public:
 
     void onTaskStarted(qint8 taskType);
     void onTaskFinished(qint8 taskType);
+
+    static bool processServerCommand(
+            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

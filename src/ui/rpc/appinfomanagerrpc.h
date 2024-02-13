@@ -5,12 +5,17 @@
 
 class RpcManager;
 
+struct ProcessCommandArgs;
+
 class AppInfoManagerRpc : public AppInfoManager
 {
     Q_OBJECT
 
 public:
     explicit AppInfoManagerRpc(const QString &filePath, QObject *parent = nullptr);
+
+    static bool processServerCommand(
+            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

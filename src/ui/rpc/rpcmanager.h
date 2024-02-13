@@ -10,6 +10,9 @@
 struct ProcessCommandArgs;
 class ControlWorker;
 
+using processManager_func = bool (*)(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+
 class RpcManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -36,17 +39,25 @@ public:
 
     bool processCommandRpc(const ProcessCommandArgs &p);
 
+    template<typename F>
+    constexpr static F *getProcessFunc(
+            Control::Command command, F *funcList[], int minIndex, int maxIndex)
+    {
+        if (command < minIndex || command > maxIndex)
+            return nullptr;
+
+        const int funcIndex = command - minIndex;
+        return funcList[funcIndex];
+    }
+
 private:
     void setupServerSignals();
-    void setupDriverManagerSignals();
 
     void setupClient();
     void closeClient();
 
     bool checkClientValidated(ControlWorker *w) const;
     void initClientOnServer(ControlWorker *w) const;
-
-    QVariantList driverManager_updateState_args() const;
 
     bool processManagerRpc(const ProcessCommandArgs &p);
 

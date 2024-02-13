@@ -2,11 +2,80 @@
 
 #include <conf/firewallconf.h>
 #include <conf/zone.h>
+#include <control/controlmanager.h>
+#include <control/controlworker.h>
 #include <fortsettings.h>
 #include <rpc/rpcmanager.h>
 #include <task/taskmanager.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/variantutil.h>
+
+namespace {
+
+bool processConfAppManager_addOrUpdateApp(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    App app = ConfAppManagerRpc::varListToApp(p.args.value(0).toList());
+
+    return confAppManager->addOrUpdateApp(app, p.args.value(1).toBool());
+}
+
+bool processConfAppManager_updateApp(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    App app = ConfAppManagerRpc::varListToApp(p.args);
+
+    return confAppManager->updateApp(app);
+}
+
+bool processConfAppManager_updateAppName(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->updateAppName(p.args.value(0).toLongLong(), p.args.value(1).toString());
+}
+
+bool processConfAppManager_deleteApps(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->deleteApps(VariantUtil::listToVector(p.args.value(0).toList()));
+}
+
+bool processConfAppManager_purgeApps(ConfAppManager *confAppManager,
+        const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+{
+    return confAppManager->purgeApps();
+}
+
+bool processConfAppManager_updateAppsBlocked(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->updateAppsBlocked(VariantUtil::listToVector(p.args.value(0).toList()),
+            p.args.value(1).toBool(), p.args.value(2).toBool());
+}
+
+using processConfAppManager_func = bool (*)(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+
+static processConfAppManager_func processConfAppManager_funcList[] = {
+    &processConfAppManager_addOrUpdateApp, // Rpc_ConfAppManager_addOrUpdateApp,
+    &processConfAppManager_updateApp, // Rpc_ConfAppManager_updateApp,
+    &processConfAppManager_updateAppName, // Rpc_ConfAppManager_updateAppName,
+    &processConfAppManager_deleteApps, // Rpc_ConfAppManager_deleteApps,
+    &processConfAppManager_purgeApps, // Rpc_ConfAppManager_purgeApps,
+    &processConfAppManager_updateAppsBlocked, // Rpc_ConfAppManager_updateAppsBlocked,
+};
+
+inline bool processConfAppManagerRpcResult(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    const processConfAppManager_func func = RpcManager::getProcessFunc(p.command,
+            processConfAppManager_funcList, Control::Rpc_ConfAppManager_addOrUpdateApp,
+            Control::Rpc_ConfAppManager_updateAppsBlocked);
+
+    return func ? func(confAppManager, p, resArgs) : false;
+}
+
+}
 
 ConfAppManagerRpc::ConfAppManagerRpc(QObject *parent) : ConfAppManager(parent) { }
 
@@ -86,6 +155,29 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.scheduleAction = v.value(18).toInt();
     app.scheduleTime = v.value(19).toDateTime();
     return app;
+}
+
+bool ConfAppManagerRpc::processServerCommand(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+{
+    auto confAppManager = IoC<ConfAppManager>();
+
+    switch (p.command) {
+    case Control::Rpc_ConfAppManager_appAlerted:
+        emit confAppManager->appAlerted();
+        return true;
+    case Control::Rpc_ConfAppManager_appsChanged:
+        emit confAppManager->appsChanged();
+        return true;
+    case Control::Rpc_ConfAppManager_appUpdated:
+        emit confAppManager->appUpdated();
+        return true;
+    default: {
+        ok = processConfAppManagerRpcResult(confAppManager, p, resArgs);
+        isSendResult = true;
+        return true;
+    }
+    }
 }
 
 void ConfAppManagerRpc::setupServerSignals(RpcManager *rpcManager)

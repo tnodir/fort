@@ -5,6 +5,8 @@
 
 class RpcManager;
 
+struct ProcessCommandArgs;
+
 class StatManagerRpc : public StatManager
 {
     Q_OBJECT
@@ -17,6 +19,9 @@ public:
     bool deleteStatApp(qint64 appId) override;
 
     bool resetAppTrafTotals() override;
+
+    static bool processServerCommand(
+            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

@@ -2,6 +2,7 @@
 
 #include <sqlite/sqlitedb.h>
 
+#include <control/controlmanager.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -13,6 +14,23 @@ AppInfoManagerRpc::AppInfoManagerRpc(const QString &filePath, QObject *parent) :
 void AppInfoManagerRpc::lookupAppInfo(const QString &appPath)
 {
     IoC<RpcManager>()->invokeOnServer(Control::Rpc_AppInfoManager_lookupAppInfo, { appPath });
+}
+
+bool AppInfoManagerRpc::processServerCommand(const ProcessCommandArgs &p,
+        QVariantList & /*resArgs*/, bool & /*ok*/, bool & /*isSendResult*/)
+{
+    auto appInfoManager = IoC<AppInfoManager>();
+
+    switch (p.command) {
+    case Control::Rpc_AppInfoManager_lookupAppInfo:
+        appInfoManager->lookupAppInfo(p.args.value(0).toString());
+        return true;
+    case Control::Rpc_AppInfoManager_checkLookupInfoFinished:
+        appInfoManager->checkLookupInfoFinished(p.args.value(0).toString());
+        return true;
+    default:
+        return false;
+    }
 }
 
 void AppInfoManagerRpc::setupServerSignals(RpcManager *rpcManager)

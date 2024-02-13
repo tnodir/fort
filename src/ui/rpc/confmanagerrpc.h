@@ -6,6 +6,11 @@
 class RpcManager;
 class TaskManager;
 
+struct ProcessCommandArgs;
+
+using processConfManager_func = bool (*)(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+
 class ConfManagerRpc : public ConfManager
 {
     Q_OBJECT
@@ -19,6 +24,9 @@ public:
     bool checkPassword(const QString &password) override;
 
     void onConfChanged(const QVariant &confVar);
+
+    static bool processServerCommand(
+            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

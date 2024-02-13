@@ -1,8 +1,64 @@
 #include "confzonemanagerrpc.h"
 
 #include <conf/zone.h>
+#include <control/controlmanager.h>
+#include <control/controlworker.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
+
+namespace {
+
+bool processConfZoneManager_addOrUpdateZone(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    Zone zone = ConfZoneManagerRpc::varListToZone(p.args);
+
+    const bool ok = confZoneManager->addOrUpdateZone(zone);
+    resArgs = { zone.zoneId };
+    return ok;
+}
+
+bool processConfZoneManager_deleteZone(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confZoneManager->deleteZone(p.args.value(0).toLongLong());
+}
+
+bool processConfZoneManager_updateZoneName(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confZoneManager->updateZoneName(
+            p.args.value(0).toLongLong(), p.args.value(1).toString());
+}
+
+bool processConfZoneManager_updateZoneEnabled(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confZoneManager->updateZoneEnabled(
+            p.args.value(0).toLongLong(), p.args.value(1).toBool());
+}
+
+using processConfZoneManager_func = bool (*)(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+
+static processConfZoneManager_func processConfZoneManager_funcList[] = {
+    &processConfZoneManager_addOrUpdateZone, // Rpc_ConfZoneManager_addOrUpdateZone,
+    &processConfZoneManager_deleteZone, // Rpc_ConfZoneManager_deleteZone,
+    &processConfZoneManager_updateZoneName, // Rpc_ConfZoneManager_updateZoneName,
+    &processConfZoneManager_updateZoneEnabled, // Rpc_ConfZoneManager_updateZoneEnabled,
+};
+
+inline bool processConfZoneManagerRpcResult(
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    const processConfZoneManager_func func = RpcManager::getProcessFunc(p.command,
+            processConfZoneManager_funcList, Control::Rpc_ConfZoneManager_addOrUpdateZone,
+            Control::Rpc_ConfZoneManager_updateZoneEnabled);
+
+    return func ? func(confZoneManager, p, resArgs) : false;
+}
+
+}
 
 ConfZoneManagerRpc::ConfZoneManagerRpc(QObject *parent) : ConfZoneManager(parent) { }
 
@@ -54,6 +110,29 @@ Zone ConfZoneManagerRpc::varListToZone(const QVariantList &v)
     zone.formData = v.value(6).toString();
     zone.textInline = v.value(7).toString();
     return zone;
+}
+
+bool ConfZoneManagerRpc::processServerCommand(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+{
+    auto confZoneManager = IoC<ConfZoneManager>();
+
+    switch (p.command) {
+    case Control::Rpc_ConfZoneManager_zoneAdded:
+        emit confZoneManager->zoneAdded();
+        return true;
+    case Control::Rpc_ConfZoneManager_zoneRemoved:
+        emit confZoneManager->zoneRemoved(p.args.value(0).toInt());
+        return true;
+    case Control::Rpc_ConfZoneManager_zoneUpdated:
+        emit confZoneManager->zoneUpdated();
+        return true;
+    default: {
+        ok = processConfZoneManagerRpcResult(confZoneManager, p, resArgs);
+        isSendResult = true;
+        return true;
+    }
+    }
 }
 
 void ConfZoneManagerRpc::setupServerSignals(RpcManager *rpcManager)

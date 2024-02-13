@@ -5,6 +5,8 @@
 
 class RpcManager;
 
+struct ProcessCommandArgs;
+
 class ConfAppManagerRpc : public ConfAppManager
 {
     Q_OBJECT
@@ -24,6 +26,9 @@ public:
 
     static QVariantList appToVarList(const App &app);
     static App varListToApp(const QVariantList &v);
+
+    static bool processServerCommand(
+            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

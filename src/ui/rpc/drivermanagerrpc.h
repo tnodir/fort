@@ -5,6 +5,8 @@
 
 class RpcManager;
 
+struct ProcessCommandArgs;
+
 class DriverManagerRpc : public DriverManager
 {
     Q_OBJECT
@@ -18,6 +20,13 @@ public:
     void setUp() override { }
 
     void updateState(quint32 errorCode, bool isDeviceOpened);
+
+    static QVariantList updateState_args();
+
+    static bool processServerCommand(
+            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+
+    static void setupServerSignals(RpcManager *rpcManager);
 
 public slots:
     bool openDevice() override;

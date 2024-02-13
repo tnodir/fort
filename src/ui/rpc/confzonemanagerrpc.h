@@ -5,6 +5,8 @@
 
 class RpcManager;
 
+struct ProcessCommandArgs;
+
 class ConfZoneManagerRpc : public ConfZoneManager
 {
     Q_OBJECT
@@ -19,6 +21,9 @@ public:
 
     static QVariantList zoneToVarList(const Zone &zone);
     static Zone varListToZone(const QVariantList &v);
+
+    static bool processServerCommand(
+            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
 
     static void setupServerSignals(RpcManager *rpcManager);
 };
