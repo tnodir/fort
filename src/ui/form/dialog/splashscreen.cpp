@@ -4,11 +4,30 @@
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QLabel>
+#include <QPropertyAnimation>
 #include <QTimer>
 
 #include <form/controls/controlutil.h>
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
+
+namespace {
+
+void startOpacityAnimation(
+        QWidget *w, const std::function<void()> &onFinished, bool backward = false)
+{
+    auto anim = new QPropertyAnimation(w, "windowOpacity", w);
+    anim->setDirection(backward ? QPropertyAnimation::Backward : QPropertyAnimation::Forward);
+    anim->setDuration(900);
+    anim->setStartValue(0.0f);
+    anim->setEndValue(1.0f);
+
+    QObject::connect(anim, &QPropertyAnimation::finished, onFinished);
+
+    anim->start(QPropertyAnimation::DeleteWhenStopped);
+}
+
+}
 
 SplashScreen::SplashScreen() : QSplashScreen()
 {
@@ -17,11 +36,23 @@ SplashScreen::SplashScreen() : QSplashScreen()
     setupUi();
 }
 
-void SplashScreen::showTemporary()
+void SplashScreen::showFading()
 {
+    setWindowOpacity(0.0f);
     show();
 
-    QTimer::singleShot(2000, this, &QWidget::close);
+    startOpacityAnimation(this, [&] { closeDelayed(); });
+}
+
+void SplashScreen::closeDelayed()
+{
+    QTimer::singleShot(1600, this, &SplashScreen::closeFading);
+}
+
+void SplashScreen::closeFading()
+{
+    startOpacityAnimation(
+            this, [&] { close(); }, /*backward=*/true);
 }
 
 void SplashScreen::setupUi()

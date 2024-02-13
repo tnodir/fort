@@ -302,7 +302,7 @@ void WindowManager::showTrayMessage(const QString &message, WindowManager::TrayM
 void WindowManager::showSplashScreen()
 {
     auto splash = new SplashScreen();
-    splash->showTemporary();
+    splash->showFading();
 }
 
 void WindowManager::showHomeWindow()

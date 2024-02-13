@@ -16,7 +16,9 @@ public:
     static QLayout *createLogoTextLayout();
 
 public slots:
-    void showTemporary();
+    void showFading();
+    void closeDelayed();
+    void closeFading();
 
 private:
     void setupUi();
