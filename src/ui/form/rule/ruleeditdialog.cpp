@@ -41,7 +41,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_editName->setClearButtonEnabled(true);
 
     m_editNotes->setText(m_ruleRow.notes);
-    m_labelEditNotes->setPixmap(IconCache::file(":/icons/tree.png"));
+    m_labelEditNotes->setPixmap(IconCache::file(":/icons/script.png"));
 
     m_cbEnabled->setChecked(ruleRow.enabled);
 
