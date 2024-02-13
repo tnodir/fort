@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.11.5, 2024-02-13:
+- UI: Show Splash screen on startup (Force Qt to populate fonts).
+- UI: Remove 'v' from version text.
+
 v3.11.4, 2024-02-08:
 - UI: Options: Warn about deprecated App Group's Texts.
 - UI: Options: Schedule: Open Programs on double-click of "Purge Obsolete" task.
