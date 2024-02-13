@@ -1,6 +1,5 @@
 #include "homewindow.h"
 
-#include <QGuiApplication>
 #include <QLabel>
 #include <QPushButton>
 #include <QToolButton>
@@ -10,6 +9,7 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/dialog/splashscreen.h>
 #include <form/tray/trayicon.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
@@ -166,20 +166,11 @@ QWidget *HomeWindow::setupHeader()
     frame->setAutoFillBackground(true);
     frame->setPalette(palette);
 
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(16, 6, 6, 6);
-    layout->setSpacing(10);
-
-    // Logo image
-    auto iconLogo = ControlUtil::createLabel();
-    iconLogo->setScaledContents(true);
-    const QSize logoSize(48, 48);
-    iconLogo->setMinimumSize(logoSize);
-    iconLogo->setMaximumSize(logoSize);
-    iconLogo->setPixmap(IconCache::file(":/icons/fort-96.png"));
+    // Logo icon
+    auto logoIcon = SplashScreen::createLogoIcon();
 
     // Logo text
-    auto textLogo = setupLogoText();
+    auto logoText = SplashScreen::createLogoTextLayout();
 
     // Password Unlock button
     setupPasswordButtons();
@@ -187,8 +178,12 @@ QWidget *HomeWindow::setupHeader()
     // Menu button
     m_btMenu = windowManager()->createMenuButton();
 
-    layout->addWidget(iconLogo);
-    layout->addLayout(textLogo);
+    auto layout = new QHBoxLayout();
+    layout->setContentsMargins(16, 6, 6, 6);
+    layout->setSpacing(10);
+
+    layout->addWidget(logoIcon);
+    layout->addLayout(logoText);
     layout->addStretch();
     layout->addWidget(m_btPasswordLock);
     layout->addWidget(m_btPasswordUnlock);
@@ -197,36 +192,6 @@ QWidget *HomeWindow::setupHeader()
     frame->setLayout(layout);
 
     return frame;
-}
-
-QLayout *HomeWindow::setupLogoText()
-{
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
-
-    QPalette palette;
-    palette.setColor(QPalette::WindowText, Qt::white);
-
-    QFont font("Franklin Gothic", 22, QFont::Bold);
-
-    // Label
-    auto label = ControlUtil::createLabel(QGuiApplication::applicationName());
-    label->setPalette(palette);
-    label->setFont(font);
-
-    // Sub-label
-    font.setPointSize(10);
-    font.setWeight(QFont::DemiBold);
-
-    auto subLabel = ControlUtil::createLabel("- keeping you secure -");
-    subLabel->setPalette(palette);
-    subLabel->setFont(font);
-
-    layout->addWidget(label, 2, Qt::AlignHCenter | Qt::AlignBottom);
-    layout->addWidget(subLabel, 1, Qt::AlignHCenter | Qt::AlignTop);
-
-    return layout;
 }
 
 void HomeWindow::setupPasswordButtons()

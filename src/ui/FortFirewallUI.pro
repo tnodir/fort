@@ -61,6 +61,7 @@ SOURCES += \
     form/controls/zonesselector.cpp \
     form/dialog/dialogutil.cpp \
     form/dialog/passworddialog.cpp \
+    form/dialog/splashscreen.cpp \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
@@ -268,6 +269,7 @@ HEADERS += \
     form/controls/zonesselector.h \
     form/dialog/dialogutil.h \
     form/dialog/passworddialog.h \
+    form/dialog/splashscreen.h \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \

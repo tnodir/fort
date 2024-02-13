@@ -72,6 +72,8 @@ public slots:
     void showTrayMessage(
             const QString &message, WindowManager::TrayMessageType type = TrayMessageOptions);
 
+    void showSplashScreen();
+
     void showHomeWindow();
     void closeHomeWindow();
     void quitHomeWindow(QEvent *event);

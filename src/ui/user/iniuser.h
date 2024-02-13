@@ -47,6 +47,9 @@ public:
             "filterModeAllow", "filterModeIgnore" };
     }
 
+    bool splashWindowVisible() const { return valueBool("splashWindow/visible", true); }
+    void setSplashWindowVisible(bool on) { setValue("splashWindow/visible", on, true); }
+
     bool homeAutoShowMenu() const { return valueBool("home/autoShowMenu"); }
     void setHomeAutoShowMenu(bool v) { setValue("home/autoShowMenu", v); }
 

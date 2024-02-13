@@ -47,7 +47,6 @@ private:
 
     void setupUi();
     QWidget *setupHeader();
-    QLayout *setupLogoText();
     void setupPasswordButtons();
     QLayout *setupDialogButtons();
 

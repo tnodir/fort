@@ -14,6 +14,7 @@
 #include <form/controls/mainwindow.h>
 #include <form/dialog/dialogutil.h>
 #include <form/dialog/passworddialog.h>
+#include <form/dialog/splashscreen.h>
 #include <form/graph/graphwindow.h>
 #include <form/home/homewindow.h>
 #include <form/opt/optionswindow.h>
@@ -78,6 +79,10 @@ void WindowManager::initialize()
     const IniUser &ini = IoC<UserSettings>()->iniUser();
 
     setupTrayIcon();
+
+    if (ini.splashWindowVisible()) {
+        showSplashScreen();
+    }
 
     if (ini.graphWindowVisible()) {
         showGraphWindow();
@@ -292,6 +297,12 @@ void WindowManager::showTrayMessage(const QString &message, WindowManager::TrayM
 
     m_lastTrayMessageType = type;
     m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
+}
+
+void WindowManager::showSplashScreen()
+{
+    auto splash = new SplashScreen();
+    splash->showTemporary();
 }
 
 void WindowManager::showHomeWindow()

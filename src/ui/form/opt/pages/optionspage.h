@@ -110,6 +110,7 @@ private:
     QCheckBox *m_cbHotKeysEnabled = nullptr;
     QCheckBox *m_cbHotKeysGlobal = nullptr;
     QCheckBox *m_cbHomeAutoShowMenu = nullptr;
+    QCheckBox *m_cbSplashVisible = nullptr;
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
     QLabel *m_labelTrayMaxGroups = nullptr;

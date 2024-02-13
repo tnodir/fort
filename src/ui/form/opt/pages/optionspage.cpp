@@ -181,6 +181,7 @@ void OptionsPage::onRetranslateUi()
     m_cbHotKeysGlobal->setText(tr("Global"));
 
     m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
+    m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
@@ -685,8 +686,15 @@ void OptionsPage::setupHomeBox()
                 ctrl()->setIniUserEdited();
             });
 
+    m_cbSplashVisible =
+            ControlUtil::createCheckBox(iniUser()->splashWindowVisible(), [&](bool checked) {
+                iniUser()->setSplashWindowVisible(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbHomeAutoShowMenu);
+    layout->addWidget(m_cbSplashVisible);
 
     m_gbHome = new QGroupBox();
     m_gbHome->setLayout(layout);
