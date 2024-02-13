@@ -7,8 +7,8 @@
 
 QuotaManagerRpc::QuotaManagerRpc(QObject *parent) : QuotaManager(parent) { }
 
-bool QuotaManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, QVariantList & /*resArgs*/, bool &ok, bool & /*isSendResult*/)
+bool QuotaManagerRpc::processServerCommand(const ProcessCommandArgs &p, QVariantList & /*resArgs*/,
+        bool & /*ok*/, bool & /*isSendResult*/)
 {
     auto quotaManager = IoC<QuotaManager>();
 

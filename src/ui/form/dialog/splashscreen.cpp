@@ -2,6 +2,7 @@
 
 #include <QGuiApplication>
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QLabel>
 #include <QTimer>
 
