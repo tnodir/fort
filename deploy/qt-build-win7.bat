@@ -15,12 +15,12 @@ cd %TARGET_PATH%
 	-static -feature-relocatable -prefix "%TARGET_PATH%\static" ^
 	-opensource -confirm-license -mp -no-opengl ^
 	%* ^
-	-nomake examples -nomake tests -nomake tools ^
+	-nomake examples -nomake tests ^
 	^
 	-skip qt3d -skip qt5compat -skip qtactiveqt -skip qtandroidextras ^
 	-skip qtcanvas3d -skip qtcharts -skip qtconnectivity -skip qtdatavis3d ^
 	-skip qtdeclarative -skip qtdoc -skip qtfeedback ^
-	-skip qtgamepad -skip qtgraphicaleffects -skip qtimageformats ^
+	-skip qtgamepad -skip qtgraphicaleffects -skip qtgrpc -skip qtimageformats ^
 	-skip qtlocation -skip qtlottie -skip qtmacextras ^
 	-skip qtmultimedia -skip qtnetworkauth -skip qtpim -skip qtpurchasing ^
 	-skip qtqa -skip qtquick3d -skip qtquickcontrols -skip qtquickcontrols2 ^
@@ -40,7 +40,7 @@ cd %TARGET_PATH%
 	-no-feature-islamiccivilcalendar -no-feature-jalalicalendar ^
 	-no-feature-itemmodeltester -no-feature-lcdnumber -no-feature-listwidget ^
 	-no-feature-mdiarea -no-feature-movie -no-feature-pdf -no-feature-picture ^
-	-no-feature-printer -no-feature-raster-64bit -no-feature-splashscreen ^
+	-no-feature-printer -no-feature-raster-64bit ^
 	-no-feature-sqlmodel -no-feature-textbrowser -no-feature-textodfwriter ^
 	-no-feature-undocommand -no-feature-undogroup -no-feature-undostack -no-feature-undoview ^
 	-no-feature-whatsthis -no-feature-wizard ^
