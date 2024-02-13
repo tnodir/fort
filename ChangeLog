@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.11.6, 2024-02-13:
+- UI: Speed Limit: Fix bandwidth value's overflow.
+- UI: Splash: Fade in/out.
+
 v3.11.5, 2024-02-13:
 - UI: Show Splash screen on startup (Force Qt to populate fonts).
 - UI: Remove 'v' from version text.
