@@ -1085,7 +1085,11 @@ Assicurati di avere un backup recente.</translation>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation type="unfinished"></translation>
+        <translation>Si prega di spostare Testi di Permesso/Blocca campi da Gruppi di App a Programmi Wildcard!!!
+
+(Sono solo di lettura ora e saranno rimossi in v4.)
+
+Vuoi aprire una discussione nel browser?</translation>
     </message>
 </context>
 <context>
@@ -1439,7 +1443,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Exclusive</source>
-        <translation type="unfinished"></translation>
+        <translation>Esclusivo</translation>
     </message>
     <message>
         <source>Advanced Options</source>
@@ -1455,37 +1459,37 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifica regola</translation>
     </message>
 </context>
 <context>
     <name>RuleListModel</name>
     <message>
         <source>Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regola</translation>
     </message>
     <message>
         <source>Change Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambia ora</translation>
     </message>
 </context>
 <context>
     <name>RulesController</name>
     <message>
         <source>Rule Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Errore configurazione regola</translation>
     </message>
     <message>
         <source>Cannot edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile modificare la regola</translation>
     </message>
     <message>
         <source>Cannot delete Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile eliminare la regola</translation>
     </message>
     <message>
         <source>Cannot update Rule&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile aggiornare nome regola</translation>
     </message>
 </context>
 <context>
@@ -1504,11 +1508,11 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regole</translation>
     </message>
     <message>
         <source>Are you sure to remove selected rule?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler rimuovere la regola selezionata?</translation>
     </message>
 </context>
 <context>
@@ -1932,7 +1936,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regole</translation>
     </message>
 </context>
 <context>
