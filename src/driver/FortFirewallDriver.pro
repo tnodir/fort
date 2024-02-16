@@ -19,6 +19,7 @@ SOURCES += \
     fortscb.c \
     fortstat.c \
     forttds.c \
+    fortthr.c \
     forttlsf.c \
     forttmr.c \
     forttrace.c \
@@ -57,6 +58,7 @@ HEADERS += \
     fortscb.h \
     fortstat.h \
     forttds.h \
+    fortthr.h \
     forttlsf.h \
     forttmr.h \
     forttrace.h \

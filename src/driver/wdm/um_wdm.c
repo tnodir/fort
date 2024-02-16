@@ -315,6 +315,20 @@ void IoQueueWorkItemEx(
     UNUSED(context);
 }
 
+NTSTATUS PsCreateSystemThread(PHANDLE threadHandle, ULONG desiredAccess,
+        POBJECT_ATTRIBUTES objectAttributes, HANDLE processHandle, PVOID clientId,
+        PKSTART_ROUTINE startRoutine, PVOID startContext)
+{
+    UNUSED(threadHandle);
+    UNUSED(desiredAccess);
+    UNUSED(objectAttributes);
+    UNUSED(processHandle);
+    UNUSED(clientId);
+    UNUSED(startRoutine);
+    UNUSED(startContext);
+    return STATUS_SUCCESS;
+}
+
 LARGE_INTEGER KeQueryPerformanceCounter(PLARGE_INTEGER performanceFrequency)
 {
     UNUSED(performanceFrequency);

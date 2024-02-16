@@ -17,6 +17,16 @@
 
 typedef void FORT_SHAPER_PACKET_FOREACH_FUNC(PFORT_SHAPER, PFORT_FLOW_PACKET);
 
+static UCHAR fort_shaper_flags_set(PFORT_SHAPER shaper, UCHAR flags, BOOL on)
+{
+    return on ? InterlockedOr8(&shaper->flags, flags) : InterlockedAnd8(&shaper->flags, ~flags);
+}
+
+static UCHAR fort_shaper_flags(PFORT_SHAPER shaper)
+{
+    return fort_shaper_flags_set(shaper, 0, TRUE);
+}
+
 static LONG fort_shaper_io_bits_exchange(volatile LONG *io_bits, LONG v)
 {
     return InterlockedExchange(io_bits, v);
@@ -83,15 +93,10 @@ inline static BOOL fort_packet_is_ipsec_tunneled(PCFORT_CALLOUT_ARG ca)
     return info.isTunnelMode && !info.isDeTunneled;
 }
 
-static ULONG fort_packet_data_length(const PNET_BUFFER_LIST netBufList)
+inline static ULONG fort_packet_data_length(PCFORT_CALLOUT_ARG ca)
 {
-    ULONG data_length = 0;
-
-    PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
-    while (netBuf != NULL) {
-        data_length += NET_BUFFER_DATA_LENGTH(netBuf);
-        netBuf = NET_BUFFER_NEXT_NB(netBuf);
-    }
+    PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(ca->netBufList);
+    const ULONG data_length = NET_BUFFER_DATA_LENGTH(netBuf);
 
     return data_length;
 }
@@ -578,14 +583,15 @@ static void fort_shaper_queue_process_bandwidth(
 {
     const UINT64 bps = queue->limit.bps;
 
-    /* Advance the available bytes */
-    const UINT64 accumulated =
-            ((now.QuadPart - queue->last_tick.QuadPart) * bps) / shaper->qpcFrequency.QuadPart;
-    queue->available_bytes += accumulated;
-
     if (fort_shaper_packet_list_is_empty(&queue->bandwidth_list)
             && queue->available_bytes > FORT_QUEUE_INITIAL_TOKEN_COUNT) {
         queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
+    } else {
+        /* Advance the available bytes */
+        const UINT64 accumulated =
+                ((now.QuadPart - queue->last_tick.QuadPart) * bps) / shaper->qpcFrequency.QuadPart;
+
+        queue->available_bytes += accumulated;
     }
 
     queue->last_tick = now;
@@ -598,11 +604,13 @@ static void fort_shaper_queue_process_bandwidth(
     PFORT_FLOW_PACKET pkt_tail = NULL;
     PFORT_FLOW_PACKET pkt = pkt_chain;
     do {
-        if (bps != 0LL && queue->available_bytes < pkt->data_length)
+        const UINT64 pkt_length = pkt->data_length;
+
+        if (bps != 0LL && queue->available_bytes < pkt_length)
             break;
 
-        queue->available_bytes -= pkt->data_length;
-        queue->queued_bytes -= pkt->data_length;
+        queue->available_bytes -= pkt_length;
+        queue->queued_bytes -= pkt_length;
 
         pkt->latency_start = now;
 
@@ -625,6 +633,12 @@ static PFORT_FLOW_PACKET fort_shaper_queue_process_latency(
         return NULL;
 
     const UINT32 latency_ms = queue->limit.latency_ms;
+
+    if (latency_ms == 0) {
+        fort_shaper_packet_list_cut_chain(&queue->latency_list, queue->latency_list.packet_tail);
+
+        return pkt_chain;
+    }
 
     const UINT64 qpcFrequency = shaper->qpcFrequency.QuadPart;
     const UINT64 qpcFrequencyHalfMs = qpcFrequency / 2000LL;
@@ -786,17 +800,12 @@ static void fort_shaper_free_queues(PFORT_SHAPER shaper)
     }
 }
 
-static void fort_shaper_timer_start(PFORT_SHAPER shaper)
+inline static void fort_shaper_thread_set_event(PFORT_SHAPER shaper)
 {
-    const ULONG active_io_bits = fort_shaper_io_bits(&shaper->active_io_bits);
-
-    if (active_io_bits == 0)
-        return;
-
-    fort_timer_set_running(&shaper->timer, /*run=*/TRUE);
+    KeSetEvent(&shaper->thread_event, IO_NO_INCREMENT, FALSE);
 }
 
-inline static ULONG fort_shaper_timer_process_queues(PFORT_SHAPER shaper, ULONG active_io_bits)
+inline static ULONG fort_shaper_thread_process_queues(PFORT_SHAPER shaper, ULONG active_io_bits)
 {
     ULONG new_active_io_bits = 0;
 
@@ -821,25 +830,50 @@ inline static ULONG fort_shaper_timer_process_queues(PFORT_SHAPER shaper, ULONG 
     return new_active_io_bits;
 }
 
-static void fort_shaper_timer_process(void)
+inline static BOOL fort_shaper_thread_process(PFORT_SHAPER shaper)
 {
-    FORT_CHECK_STACK(FORT_SHAPER_TIMER_PROCESS);
-
-    PFORT_SHAPER shaper = &fort_device()->shaper;
-
     ULONG active_io_bits =
             fort_shaper_io_bits_set(&shaper->active_io_bits, FORT_PACKET_FLUSH_ALL, FALSE);
 
     if (active_io_bits == 0)
-        return;
+        return FALSE;
 
-    active_io_bits = fort_shaper_timer_process_queues(shaper, active_io_bits);
+    active_io_bits = fort_shaper_thread_process_queues(shaper, active_io_bits);
 
     if (active_io_bits != 0) {
         fort_shaper_io_bits_set(&shaper->active_io_bits, active_io_bits, TRUE);
 
-        fort_shaper_timer_start(shaper);
+        return TRUE;
     }
+
+    return FALSE;
+}
+
+static void fort_shaper_thread_loop(PVOID context)
+{
+    PFORT_SHAPER shaper = context;
+    PKEVENT thread_event = &shaper->thread_event;
+
+    LARGE_INTEGER due;
+    due.QuadPart = 1LL * -10000LL /* ms -> us */;
+
+    PLARGE_INTEGER timeout = NULL;
+
+    do {
+        KeWaitForSingleObject(thread_event, Executive, KernelMode, FALSE, timeout);
+
+        const BOOL is_active = fort_shaper_thread_process(shaper);
+
+        timeout = is_active ? &due : NULL;
+
+    } while ((fort_shaper_flags(shaper) & FORT_SHAPER_CLOSED) == 0);
+}
+
+static void fort_shaper_thread_close(PFORT_SHAPER shaper)
+{
+    fort_shaper_thread_set_event(shaper);
+
+    fort_thread_wait(&shaper->thread);
 }
 
 inline static PFORT_FLOW_PACKET fort_shaper_flush_queues(PFORT_SHAPER shaper, UINT32 group_io_bits)
@@ -889,13 +923,16 @@ FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
 
     KeInitializeSpinLock(&shaper->lock);
 
-    fort_timer_open(
-            &shaper->timer, /*period(ms)=*/1, FORT_TIMER_ONESHOT, &fort_shaper_timer_process);
+    KeInitializeEvent(&shaper->thread_event, SynchronizationEvent, FALSE);
+
+    fort_thread_run(&shaper->thread, &fort_shaper_thread_loop, shaper);
 }
 
 FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
 {
-    fort_timer_close(&shaper->timer);
+    fort_shaper_flags_set(shaper, FORT_SHAPER_CLOSED, TRUE);
+
+    fort_shaper_thread_close(shaper);
 
     fort_shaper_drop_packets(shaper);
     fort_shaper_free_queues(shaper);
@@ -1020,11 +1057,12 @@ inline static NTSTATUS fort_shaper_packet_queue(
         return STATUS_NO_SUCH_GROUP;
 
     /* Calculate the Packets' Data Length */
-    const ULONG data_length = fort_packet_data_length(ca->netBufList);
+    const ULONG data_length = fort_packet_data_length(ca);
 
     /* Check the Queue for new Packet */
-    if (!fort_shaper_packet_queue_check_packet(queue, data_length))
+    if (!fort_shaper_packet_queue_check_packet(queue, data_length)) {
         return STATUS_SUCCESS; /* drop the packet */
+    }
 
     /* Create the Packet */
     PFORT_FLOW_PACKET pkt = fort_shaper_packet_get(shaper);
@@ -1048,8 +1086,8 @@ inline static NTSTATUS fort_shaper_packet_queue(
     /* Packets in transport layer must be re-injected in DCP due to locking */
     fort_shaper_io_bits_set(&shaper->active_io_bits, queue_bit, TRUE);
 
-    /* Start the Timer */
-    fort_shaper_timer_start(shaper);
+    /* Process the queued packets in thread */
+    fort_shaper_thread_set_event(shaper);
 
     return STATUS_SUCCESS;
 }

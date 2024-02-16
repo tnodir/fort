@@ -246,6 +246,9 @@ typedef IO_WORKITEM_ROUTINE *PIO_WORKITEM_ROUTINE;
 typedef VOID IO_WORKITEM_ROUTINE_EX(PVOID IoObject, PVOID Context, PIO_WORKITEM IoWorkItem);
 typedef IO_WORKITEM_ROUTINE_EX *PIO_WORKITEM_ROUTINE_EX;
 
+typedef VOID KSTART_ROUTINE(PVOID startContext);
+typedef KSTART_ROUTINE *PKSTART_ROUTINE;
+
 typedef struct
 {
     short Year; // range [1601...]
@@ -392,6 +395,10 @@ FORT_API void IoQueueWorkItem(
         PIO_WORKITEM workItem, PIO_WORKITEM_ROUTINE routine, int queueType, PVOID context);
 FORT_API void IoQueueWorkItemEx(
         PIO_WORKITEM workItem, PIO_WORKITEM_ROUTINE_EX routine, int queueType, PVOID context);
+
+FORT_API NTSTATUS PsCreateSystemThread(PHANDLE threadHandle, ULONG desiredAccess,
+        POBJECT_ATTRIBUTES objectAttributes, HANDLE processHandle, PVOID clientId,
+        PKSTART_ROUTINE startRoutine, PVOID startContext);
 
 FORT_API LARGE_INTEGER KeQueryPerformanceCounter(PLARGE_INTEGER performanceFrequency);
 

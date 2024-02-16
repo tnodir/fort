@@ -29,6 +29,7 @@
 #include "fortps.c"
 #include "fortstat.c"
 #include "fortscb.c"
+#include "fortthr.c"
 #include "forttmr.c"
 #include "forttrace.c"
 #include "fortutl.c"

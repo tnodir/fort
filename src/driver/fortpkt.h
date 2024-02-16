@@ -6,7 +6,7 @@
 #include "common/fortconf.h"
 #include "fortcoutarg.h"
 #include "forttds.h"
-#include "forttmr.h"
+#include "fortthr.h"
 
 #define FORT_PACKET_QUEUE_BAD_INDEX ((UINT16) -1)
 
@@ -97,7 +97,7 @@ typedef struct fort_pending_packet
     HANDLE completion_context;
 } FORT_PENDING_PACKET, *PFORT_PENDING_PACKET;
 
-#define FORT_PENDING_PROC_COUNT_MAX 1024
+#define FORT_PENDING_PROC_COUNT_MAX        1024
 #define FORT_PENDING_PROC_PACKET_COUNT_MAX 3
 
 typedef struct fort_pending_proc
@@ -129,8 +129,12 @@ typedef struct fort_pending
     KSPIN_LOCK lock;
 } FORT_PENDING, *PFORT_PENDING;
 
+#define FORT_SHAPER_CLOSED 0x01
+
 typedef struct fort_shaper
 {
+    UCHAR volatile flags;
+
     UINT32 limit_io_bits;
 
     LONG volatile group_io_bits;
@@ -139,7 +143,8 @@ typedef struct fort_shaper
     ULONG randomSeed;
     LARGE_INTEGER qpcFrequency;
 
-    FORT_TIMER timer;
+    KEVENT thread_event;
+    FORT_THREAD thread;
 
     PFORT_FLOW_PACKET packet_free;
     tommy_arrayof packets;
