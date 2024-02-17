@@ -3,6 +3,9 @@
 
 #include <util/ini/settings.h>
 
+QT_FORWARD_DECLARE_CLASS(QCommandLineOption)
+QT_FORWARD_DECLARE_CLASS(QCommandLineParser)
+
 class EnvManager;
 class FirewallConf;
 class IniOptions;
@@ -100,6 +103,22 @@ protected:
     void migrateIniOnWrite() override;
 
 private:
+    void processProfileOption(
+            const QCommandLineParser &parser, const QCommandLineOption &profileOption);
+    void processStatOption(const QCommandLineParser &parser, const QCommandLineOption &statOption);
+    void processCacheOption(
+            const QCommandLineParser &parser, const QCommandLineOption &cacheOption);
+    void processLogsOption(const QCommandLineParser &parser, const QCommandLineOption &logsOption);
+    void processNoCacheOption(
+            const QCommandLineParser &parser, const QCommandLineOption &noCacheOption);
+    void processNoSplashOption(
+            const QCommandLineParser &parser, const QCommandLineOption &noSplashOption);
+    void processLangOption(const QCommandLineParser &parser, const QCommandLineOption &langOption);
+    void processServiceOption(
+            const QCommandLineParser &parser, const QCommandLineOption &serviceOption);
+    void processControlOption(
+            const QCommandLineParser &parser, const QCommandLineOption &controlOption);
+    void processOtherOptions(const QCommandLineParser &parser);
     void processArguments(const QStringList &args);
 
     void setupPaths(EnvManager *envManager);

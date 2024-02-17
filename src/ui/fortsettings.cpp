@@ -138,6 +138,91 @@ void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
     setupIni(profilePath() + APP_BASE + ".ini");
 }
 
+void FortSettings::processProfileOption(
+        const QCommandLineParser &parser, const QCommandLineOption &profileOption)
+{
+    // Profile Path
+    if (parser.isSet(profileOption)) {
+        m_profilePath = parser.value(profileOption);
+    }
+}
+
+void FortSettings::processStatOption(
+        const QCommandLineParser &parser, const QCommandLineOption &statOption)
+{
+    // Statistics Path
+    if (parser.isSet(statOption)) {
+        m_statPath = parser.value(statOption);
+    }
+}
+
+void FortSettings::processCacheOption(
+        const QCommandLineParser &parser, const QCommandLineOption &cacheOption)
+{
+    // Cache Path
+    if (parser.isSet(cacheOption)) {
+        m_cachePath = parser.value(cacheOption);
+    }
+}
+
+void FortSettings::processLogsOption(
+        const QCommandLineParser &parser, const QCommandLineOption &logsOption)
+{
+    // Logs Path
+    if (parser.isSet(logsOption)) {
+        m_logsPath = parser.value(logsOption);
+    }
+}
+
+void FortSettings::processNoCacheOption(
+        const QCommandLineParser &parser, const QCommandLineOption &noCacheOption)
+{
+    // No Cache
+    if (parser.isSet(noCacheOption)) {
+        m_noCache = true;
+    }
+}
+
+void FortSettings::processNoSplashOption(
+        const QCommandLineParser &parser, const QCommandLineOption &noSplashOption)
+{
+    // No Splash
+    if (parser.isSet(noSplashOption)) {
+        m_noSplash = true;
+    }
+}
+
+void FortSettings::processLangOption(
+        const QCommandLineParser &parser, const QCommandLineOption &langOption)
+{
+    // Default Language
+    if (parser.isSet(langOption)) {
+        m_defaultLanguage = parser.value(langOption);
+    }
+}
+
+void FortSettings::processServiceOption(
+        const QCommandLineParser &parser, const QCommandLineOption &serviceOption)
+{
+    // Is service
+    if (parser.isSet(serviceOption)) {
+        m_isService = m_hasService = true;
+    }
+}
+
+void FortSettings::processControlOption(
+        const QCommandLineParser &parser, const QCommandLineOption &controlOption)
+{
+    // Control command
+    m_controlCommand = parser.value(controlOption);
+}
+
+void FortSettings::processOtherOptions(const QCommandLineParser &parser)
+{
+    // Other Arguments
+    m_args = parser.positionalArguments();
+}
+
 void FortSettings::processArguments(const QStringList &args)
 {
     QCommandLineParser parser;
@@ -156,7 +241,7 @@ void FortSettings::processArguments(const QStringList &args)
     const QCommandLineOption logsOption("logs", "Directory to store logs.", "logs");
     parser.addOption(logsOption);
 
-    const QCommandLineOption uninstallOption("u", "Uninstall booted provider and startup entries.");
+    const QCommandLineOption uninstallOption("u", "Uninstall boot filter and startup entries.");
     parser.addOption(uninstallOption);
 
     const QCommandLineOption installOption("i", "Install startup entries.");
@@ -184,51 +269,16 @@ void FortSettings::processArguments(const QStringList &args)
 
     parser.process(args);
 
-    // No Cache
-    if (parser.isSet(noCacheOption)) {
-        m_noCache = true;
-    }
-
-    // No Splash
-    if (parser.isSet(noSplashOption)) {
-        m_noSplash = true;
-    }
-
-    // Default Language
-    if (parser.isSet(langOption)) {
-        m_defaultLanguage = parser.value(langOption);
-    }
-
-    // Is service
-    if (parser.isSet(serviceOption)) {
-        m_isService = m_hasService = true;
-    }
-
-    // Profile Path
-    if (parser.isSet(profileOption)) {
-        m_profilePath = parser.value(profileOption);
-    }
-
-    // Statistics Path
-    if (parser.isSet(statOption)) {
-        m_statPath = parser.value(statOption);
-    }
-
-    // Cache Path
-    if (parser.isSet(cacheOption)) {
-        m_cachePath = parser.value(cacheOption);
-    }
-
-    // Logs Path
-    if (parser.isSet(logsOption)) {
-        m_logsPath = parser.value(logsOption);
-    }
-
-    // Control command
-    m_controlCommand = parser.value(controlOption);
-
-    // Other Arguments
-    m_args = parser.positionalArguments();
+    processProfileOption(parser, profileOption);
+    processStatOption(parser, statOption);
+    processCacheOption(parser, cacheOption);
+    processLogsOption(parser, logsOption);
+    processNoCacheOption(parser, noCacheOption);
+    processNoSplashOption(parser, noSplashOption);
+    processLangOption(parser, langOption);
+    processServiceOption(parser, serviceOption);
+    processControlOption(parser, controlOption);
+    processOtherOptions(parser);
 }
 
 void FortSettings::setupPaths(EnvManager *envManager)
