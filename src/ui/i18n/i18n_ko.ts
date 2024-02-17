@@ -1072,6 +1072,10 @@ Make sure that you have a fresh backup.</source>
         <source>Alert Window is Always on top</source>
         <translation>경고 창이 항상 맨 위에 있음</translation>
     </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1513,6 +1517,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Are you sure to remove selected rule?</source>
         <translation>선택한 규칙을 제거하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>검색</translation>
     </message>
 </context>
 <context>

@@ -1070,6 +1070,10 @@ Make sure that you have a fresh backup.</source>
         <source>Alert Window is Always on top</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1503,6 +1507,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Are you sure to remove selected rule?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

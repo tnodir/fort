@@ -1072,6 +1072,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Alert Window is Always on top</source>
         <translation>Opozorilno okno je vedno na zaslonu</translation>
     </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1513,6 +1517,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Are you sure to remove selected rule?</source>
         <translation>Ali ste prepričani, da želite odstraniti izbranega pravila?</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Poišči</translation>
     </message>
 </context>
 <context>

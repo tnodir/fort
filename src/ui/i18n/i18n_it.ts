@@ -1072,6 +1072,10 @@ Assicurati di avere un backup recente.</translation>
         <source>Alert Window is Always on top</source>
         <translation>La finestra di allerta è sempre in vista</translation>
     </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1513,6 +1517,10 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Are you sure to remove selected rule?</source>
         <translation>Sei sicuro di voler rimuovere la regola selezionata?</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Cerca</translation>
     </message>
 </context>
 <context>

@@ -1072,6 +1072,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Alert Window is Always on top</source>
         <translation>Alarmfenster ist immer im Vordergrund</translation>
     </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1513,6 +1517,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Are you sure to remove selected rule?</source>
         <translation>Sind Sie sicher, dass die ausgewählte Regeln entfernt werden soll?</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Suche</translation>
     </message>
 </context>
 <context>

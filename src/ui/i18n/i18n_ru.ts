@@ -1072,6 +1072,10 @@ Make sure that you have a fresh backup.</source>
         <source>Alert Window is Always on top</source>
         <translation>Окно Оповещения всегда сверху</translation>
     </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation>Показ Заставки при старте</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1513,6 +1517,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Are you sure to remove selected rule?</source>
         <translation>Удалить выбранные правила?</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Поиск</translation>
     </message>
 </context>
 <context>

@@ -1070,6 +1070,10 @@ Make sure that you have a fresh backup.</source>
         <source>Alert Window is Always on top</source>
         <translation>提醒窗口始终置顶</translation>
     </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1511,6 +1515,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Are you sure to remove selected rule?</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>搜索</translation>
     </message>
 </context>
 <context>
