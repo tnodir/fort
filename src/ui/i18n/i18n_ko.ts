@@ -1074,7 +1074,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>시작 시 스플래시 화면 표시</translation>
     </message>
 </context>
 <context>

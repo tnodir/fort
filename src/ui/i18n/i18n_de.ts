@@ -1074,7 +1074,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Begrüßungsbildschirm beim Start anzeigen</translation>
     </message>
 </context>
 <context>
@@ -1520,7 +1520,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished">Suche</translation>
+        <translation>Suche</translation>
     </message>
 </context>
 <context>

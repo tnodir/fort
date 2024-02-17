@@ -1074,7 +1074,7 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher l&apos;écran d&apos;accueil au démarrage</translation>
     </message>
 </context>
 <context>

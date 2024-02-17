@@ -1072,7 +1072,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>启动时显示启动画面</translation>
     </message>
 </context>
 <context>
