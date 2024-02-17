@@ -166,9 +166,14 @@ bool StatManager::updateTrafDay(qint64 unixTime)
 
 bool StatManager::clearTraffic()
 {
-    sqliteDb()->beginTransaction();
-    sqliteDb()->execute(StatSql::sqlDeleteAllTraffic);
-    sqliteDb()->commitTransaction();
+    bool ok = true;
+
+    beginTransaction();
+    ok = sqliteDb()->execute(StatSql::sqlDeleteAllTraffic);
+    commitTransaction(ok);
+
+    if (!ok)
+        return false;
 
     sqliteDb()->vacuum(); // Vacuum outside of transaction
 
@@ -256,7 +261,7 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 
     const bool isNewDay = updateTrafDay(unixTime);
 
-    sqliteDb()->beginTransaction();
+    sqliteDb()->beginWriteTransaction();
 
     // Delete old data
     if (isNewDay) {
@@ -328,7 +333,7 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 
 bool StatManager::deleteStatApp(qint64 appId)
 {
-    sqliteDb()->beginTransaction();
+    sqliteDb()->beginWriteTransaction();
 
     SqliteStmt::doList({ getIdStmt(StatSql::sqlDeleteAppTrafHour, appId),
             getIdStmt(StatSql::sqlDeleteAppTrafDay, appId),
@@ -598,4 +603,14 @@ SqliteStmt *StatManager::getIdStmt(const char *sql, qint64 id)
     stmt->bindInt64(1, id);
 
     return stmt;
+}
+
+bool StatManager::beginTransaction()
+{
+    return sqliteDb()->beginWriteTransaction();
+}
+
+void StatManager::commitTransaction(bool &ok)
+{
+    ok = sqliteDb()->endTransaction(ok);
 }

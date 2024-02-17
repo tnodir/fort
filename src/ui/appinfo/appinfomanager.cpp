@@ -220,7 +220,7 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo, const QI
 
     bool ok = true;
 
-    sqliteDb()->beginTransaction();
+    sqliteDb()->beginWriteTransaction();
 
     // Save icon image
     QVariant iconId;
@@ -299,7 +299,7 @@ bool AppInfoManager::deleteAppsAndIcons(
 {
     bool ok = false;
 
-    sqliteDb()->beginTransaction();
+    sqliteDb()->beginWriteTransaction();
 
     // Delete old icons
     deleteIcons(iconIds, ok);

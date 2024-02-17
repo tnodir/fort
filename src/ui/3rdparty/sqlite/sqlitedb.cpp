@@ -395,7 +395,7 @@ bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, boo
     const QDir dir(opt.sqlDir);
     bool success = true;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     while (userVersion < opt.version) {
         ++userVersion;
@@ -473,7 +473,7 @@ bool SqliteDb::createFtsTables(const MigrateOptions &opt)
 
     bool success = true;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     for (const FtsTable &ftsTable : opt.ftsTables) {
         beginSavepoint();
@@ -592,7 +592,7 @@ bool SqliteDb::importDb(const MigrateOptions &opt, const QString &sourceFilePath
     // Import Data
     bool success = true;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     // Copy tables
     if (opt.autoCopyTables) {

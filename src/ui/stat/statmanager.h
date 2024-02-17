@@ -106,6 +106,9 @@ private:
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
     SqliteStmt *getIdStmt(const char *sql, qint64 id);
 
+    bool beginTransaction();
+    void commitTransaction(bool &ok);
+
 private:
     bool m_isActivePeriodSet : 1 = false;
     bool m_isActivePeriod : 1 = false;

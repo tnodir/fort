@@ -210,7 +210,7 @@ bool ConfRuleManager::updateDriverRuleFlag(int ruleId, bool enabled)
 
 bool ConfRuleManager::beginTransaction()
 {
-    return sqliteDb()->beginTransaction();
+    return sqliteDb()->beginWriteTransaction();
 }
 
 void ConfRuleManager::commitTransaction(bool &ok)

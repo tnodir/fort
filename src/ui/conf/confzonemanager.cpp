@@ -253,7 +253,7 @@ bool ConfZoneManager::updateDriverZoneFlag(int zoneId, bool enabled)
 
 bool ConfZoneManager::beginTransaction()
 {
-    return sqliteDb()->beginTransaction();
+    return sqliteDb()->beginWriteTransaction();
 }
 
 void ConfZoneManager::commitTransaction(bool &ok)

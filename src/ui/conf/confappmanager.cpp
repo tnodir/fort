@@ -665,7 +665,7 @@ bool ConfAppManager::updateDriverUpdateAppConf(const App &app)
 
 bool ConfAppManager::beginTransaction()
 {
-    return sqliteDb()->beginTransaction();
+    return sqliteDb()->beginWriteTransaction();
 }
 
 void ConfAppManager::commitTransaction(bool &ok)

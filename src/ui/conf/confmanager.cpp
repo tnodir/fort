@@ -955,7 +955,7 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
 
 bool ConfManager::beginTransaction()
 {
-    return sqliteDb()->beginTransaction();
+    return sqliteDb()->beginWriteTransaction();
 }
 
 void ConfManager::commitTransaction(bool &ok)
