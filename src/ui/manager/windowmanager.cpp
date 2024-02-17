@@ -80,7 +80,7 @@ void WindowManager::initialize()
 
     setupTrayIcon();
 
-    if (ini.splashWindowVisible()) {
+    if (ini.splashWindowVisible() && !IoC<FortSettings>()->noSplash()) {
         showSplashScreen();
     }
 

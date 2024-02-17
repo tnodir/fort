@@ -165,6 +165,9 @@ void FortSettings::processArguments(const QStringList &args)
     const QCommandLineOption noCacheOption("no-cache", "Don't use cache on disk.");
     parser.addOption(noCacheOption);
 
+    const QCommandLineOption noSplashOption("no-splash", "Don't show Splash screen on startup.");
+    parser.addOption(noSplashOption);
+
     const QCommandLineOption langOption("lang", "Default language.", "lang", "en");
     parser.addOption(langOption);
 
@@ -184,6 +187,11 @@ void FortSettings::processArguments(const QStringList &args)
     // No Cache
     if (parser.isSet(noCacheOption)) {
         m_noCache = true;
+    }
+
+    // No Splash
+    if (parser.isSet(noSplashOption)) {
+        m_noSplash = true;
     }
 
     // Default Language
