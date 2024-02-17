@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.11.7, 2024-02-17:
+- UI: Add "--no-splash" argument.
+- Driver: Shaper: Rework packets processing.
+
 v3.11.6, 2024-02-13:
 - UI: Speed Limit: Fix bandwidth value's overflow.
 - UI: Splash: Fade in/out.
