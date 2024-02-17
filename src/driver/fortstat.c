@@ -415,8 +415,9 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
         KeReleaseInStackQueuedSpinLock(&lock_queue);
 
         /* Wait for asynchronously deleting flows */
-        LARGE_INTEGER delay;
-        delay.QuadPart = -50 * 1000 * 10; /* sleep 50000us (50ms) */
+        LARGE_INTEGER delay = {
+            .QuadPart = -50 * 1000 * 10 /* sleep 50000us (50ms) */
+        };
 
         KeDelayExecutionThread(KernelMode, FALSE, &delay);
     }

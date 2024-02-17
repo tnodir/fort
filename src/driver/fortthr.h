@@ -12,7 +12,8 @@ typedef struct fort_thread
 extern "C" {
 #endif
 
-FORT_API NTSTATUS fort_thread_run(PFORT_THREAD thread, PKSTART_ROUTINE routine, PVOID context);
+FORT_API NTSTATUS fort_thread_run(
+        PFORT_THREAD thread, PKSTART_ROUTINE routine, PVOID context, int priorityIncrement);
 
 FORT_API void fort_thread_wait(PFORT_THREAD thread);
 

@@ -45,6 +45,8 @@ typedef EXPAND_STACK_CALLOUT *PEXPAND_STACK_CALLOUT;
 FORT_API NTSTATUS KeExpandKernelStackAndCallout(
         PEXPAND_STACK_CALLOUT callout, PVOID parameter, SIZE_T size);
 
+FORT_API LONG KeSetBasePriorityThread(PVOID threadObject, LONG increment);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

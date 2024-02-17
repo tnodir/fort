@@ -5,7 +5,8 @@
 #include "fortcb.h"
 #include "fortdbg.h"
 
-FORT_API NTSTATUS fort_thread_run(PFORT_THREAD thread, PKSTART_ROUTINE routine, PVOID context)
+FORT_API NTSTATUS fort_thread_run(
+        PFORT_THREAD thread, PKSTART_ROUTINE routine, PVOID context, int priorityIncrement)
 {
     NTSTATUS status;
 
@@ -20,6 +21,10 @@ FORT_API NTSTATUS fort_thread_run(PFORT_THREAD thread, PKSTART_ROUTINE routine, 
             hThread, THREAD_ALL_ACCESS, NULL, KernelMode, &thread->thread_obj, NULL);
 
     ZwClose(hThread);
+
+    if (NT_SUCCESS(status)) {
+        KeSetBasePriorityThread(thread->thread_obj, priorityIncrement);
+    }
 
     return status;
 }

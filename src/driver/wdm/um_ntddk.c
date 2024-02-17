@@ -22,3 +22,10 @@ NTSTATUS KeExpandKernelStackAndCallout(PEXPAND_STACK_CALLOUT callout, PVOID para
     UNUSED(size);
     return STATUS_SUCCESS;
 }
+
+LONG KeSetBasePriorityThread(PVOID threadObject, LONG increment)
+{
+    UNUSED(threadObject);
+    UNUSED(increment);
+    return 0;
+}

@@ -80,8 +80,9 @@ void fort_timer_set_running(PFORT_TIMER timer, BOOL run)
         const ULONG interval = (flags & FORT_TIMER_ONESHOT) != 0 ? 0 : period;
         const ULONG delay = (flags & FORT_TIMER_COALESCABLE) != 0 ? 500 : 0;
 
-        LARGE_INTEGER due;
-        due.QuadPart = (INT64) period * -10000LL /* ms -> us */;
+        LARGE_INTEGER due = {
+            .QuadPart = (INT64) period * -10000LL /* ms -> us */
+        };
 
         KeSetCoalescableTimer(&timer->id, due, interval, delay, &timer->dpc);
     } else {

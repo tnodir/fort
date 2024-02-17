@@ -46,10 +46,11 @@ static void fort_worker_wait(PFORT_WORKER worker)
     for (;;) {
         const SHORT queue_size = InterlockedOr16(&worker->queue_size, 0);
 
-        LARGE_INTEGER timeout;
-        timeout.QuadPart = -50 * 1000 * 10; /* 50 msecs */
+        LARGE_INTEGER delay = {
+            .QuadPart = -50 * 1000 * 10 /* 50 msecs */
+        };
 
-        KeDelayExecutionThread(KernelMode, FALSE, &timeout);
+        KeDelayExecutionThread(KernelMode, FALSE, &delay);
 
         if (queue_size == 0)
             break; /* Check the extra one time to ensure thread's exit from callback function */
