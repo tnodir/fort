@@ -301,7 +301,7 @@ void WindowManager::showTrayMessage(const QString &message, WindowManager::TrayM
 
 void WindowManager::showSplashScreen()
 {
-    auto splash = new SplashScreen();
+    auto splash = new SplashScreen(); // auto-deleted on close
     splash->showFading();
 }
 

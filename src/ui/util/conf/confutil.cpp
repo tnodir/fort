@@ -193,7 +193,6 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
 int ConfUtil::writeAppEntry(const App &app, bool isNew, QByteArray &buf)
 {
     appentry_map_t appsMap;
-    QStringList appsList;
     quint32 appsSize = 0;
 
     if (!addApp(app, isNew, appsMap, appsSize))
