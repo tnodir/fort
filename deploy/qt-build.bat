@@ -33,8 +33,7 @@ cd %TARGET_PATH%
 	-no-feature-undocommand -no-feature-undogroup -no-feature-undostack -no-feature-undoview ^
 	-no-feature-whatsthis -no-feature-wizard ^
 	^
-	-no-feature-style-android -no-feature-style-mac ^
-	-no-feature-style-windows -no-feature-style-windowsvista ^
+	-no-feature-style-android -no-feature-style-mac -no-feature-style-windowsvista ^
 	^
 	-no-feature-mimetype-database -no-feature-sql ^
 	^
@@ -44,7 +43,7 @@ cd %TARGET_PATH%
 	-no-feature-networkproxy -no-feature-socks5 -no-feature-networkdiskcache ^
 	-no-feature-dnslookup -no-feature-sspi -no-feature-networklistmanager ^
 	^
-	-no-opengl -no-feature-opengl -no-feature-directfb ^
+	-no-opengl -no-feature-opengl -no-feature-dynamicgl -no-feature-directfb ^
 	^
 	-no-feature-gif -no-feature-jpeg ^
 	^
