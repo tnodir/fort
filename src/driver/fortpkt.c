@@ -594,7 +594,7 @@ inline static void fort_shaper_queue_advance_available(
 
     queue->available_bytes += accumulated;
 
-    const UINT64 max_available = bps * 8;
+    const UINT64 max_available = bps * 2;
     if (queue->available_bytes > max_available) {
         queue->available_bytes = max_available;
     }
@@ -606,8 +606,8 @@ static void fort_shaper_queue_process_bandwidth(
     fort_shaper_queue_advance_available(shaper, queue, now);
 
     /*
-    LOG("Shaper: BAND: npkt=%d queued=%d avail=%d ms=%d\n", queue->queued_packets,
-            (UINT32) queue->queued_bytes, (UINT32) queue->available_bytes,
+    LOG("Shaper: BAND: queued=%d avail=%d ms=%d\n", (UINT32) queue->queued_bytes,
+            (UINT32) queue->available_bytes,
             (UINT32) (((now.QuadPart - queue->last_tick.QuadPart) * 1000)
                     / shaper->qpcFrequency.QuadPart));
     */
