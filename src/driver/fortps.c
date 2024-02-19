@@ -178,6 +178,19 @@ UCHAR fort_pstree_flags(PFORT_PSTREE ps_tree)
     return fort_pstree_flags_set(ps_tree, 0, TRUE);
 }
 
+static PFORT_PATH_BUFFER fort_pstree_path_buffer_new(void)
+{
+    PFORT_PATH_BUFFER pb = fort_mem_alloc(sizeof(FORT_PATH_BUFFER), FORT_PSTREE_POOL_TAG);
+    if (pb == NULL)
+        return NULL;
+
+    pb->path.Length = 0;
+    pb->path.MaximumLength = FORT_CONF_APP_PATH_MAX_SIZE;
+    pb->path.Buffer = pb->buffer;
+
+    return pb;
+}
+
 static PFORT_PSNAME fort_pstree_name_new(PFORT_PSTREE ps_tree, UINT16 name_size)
 {
     PFORT_PSNAME ps_name = fort_pool_malloc(&ps_tree->pool_list,
@@ -495,24 +508,49 @@ inline static BOOL fort_pstree_check_kill_proc(
     return FALSE;
 }
 
-inline static void fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree,
-        PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb)
+inline static PFORT_PSNODE fort_pstree_handle_opened_proc(
+        PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb)
 {
     /* GetProcessImageName() must be called in PASSIVE level only! */
     const NTSTATUS status = GetProcessImageName(psi->processHandle, pb);
     if (!NT_SUCCESS(status)) {
         LOG("PsTree: Image Name Error: %x\n", status);
-        return;
+        return NULL;
     }
+
+    PFORT_PSNODE proc;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        PFORT_PSNODE proc = fort_pstree_handle_new_proc(ps_tree, psi);
-
-        fort_pstree_check_kill_proc(proc, createInfo, FORT_PSNODE_KILL_PROCESS);
+        proc = fort_pstree_handle_new_proc(ps_tree, psi);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return proc;
+}
+
+static PFORT_PSNODE fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi)
+{
+    const HANDLE processHandle = OpenProcessById(psi->processId);
+    if (processHandle == NULL)
+        return NULL;
+
+    PFORT_PSNODE proc = NULL;
+
+    PFORT_PATH_BUFFER pb = fort_pstree_path_buffer_new();
+    if (pb != NULL) {
+        psi->processHandle = processHandle;
+        psi->path = &pb->path;
+
+        proc = fort_pstree_handle_opened_proc(ps_tree, psi, pb);
+
+        fort_mem_free(pb, FORT_PSTREE_POOL_TAG);
+    }
+
+    ZwClose(processHandle);
+
+    return proc;
 }
 
 inline static void fort_pstree_notify_process_created(
@@ -524,26 +562,9 @@ inline static void fort_pstree_notify_process_created(
     if (fort_is_system_process(psi->processId, psi->parentProcessId))
         return; /* skip System (sub)processes */
 
-    PFORT_PATH_BUFFER pb = fort_mem_alloc(sizeof(FORT_PATH_BUFFER), FORT_PSTREE_POOL_TAG);
-    if (pb == NULL)
-        return;
+    PFORT_PSNODE proc = fort_pstree_handle_created_proc(ps_tree, psi);
 
-    pb->path.Length = 0;
-    pb->path.MaximumLength = FORT_CONF_APP_PATH_MAX_SIZE;
-    pb->path.Buffer = pb->buffer;
-
-    psi->path = &pb->path;
-
-    const HANDLE processHandle = OpenProcessById(psi->processId);
-    if (processHandle != NULL) {
-        psi->processHandle = processHandle;
-
-        fort_pstree_handle_created_proc(ps_tree, createInfo, psi, pb);
-
-        ZwClose(processHandle);
-    }
-
-    fort_mem_free(pb, FORT_PSTREE_POOL_TAG);
+    fort_pstree_check_kill_proc(proc, createInfo, FORT_PSNODE_KILL_PROCESS);
 }
 
 inline static BOOL fort_pstree_notify_process_prepare(
@@ -675,6 +696,84 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
         tommy_hashdyn_done(&ps_tree->procs_map);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
+inline static BOOL fort_pstree_enum_process_exists(
+        PFORT_PSTREE ps_tree, DWORD processId, tommy_key_t pid_hash)
+{
+    PFORT_PSNODE proc;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return (proc != NULL);
+}
+
+inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
+{
+    const DWORD processId = (DWORD) processEntry->ProcessId;
+    const DWORD parentProcessId = (DWORD) processEntry->ParentProcessId;
+
+    if (fort_is_system_process(processId, parentProcessId))
+        return; /* skip System (sub)processes */
+
+    const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
+
+    if (fort_pstree_enum_process_exists(ps_tree, processId, pid_hash))
+        return;
+
+    FORT_PSINFO_HASH psi = {
+        .pid_hash = pid_hash,
+        .processId = processId,
+        .parentProcessId = parentProcessId,
+    };
+
+    fort_pstree_handle_created_proc(ps_tree, &psi);
+}
+
+inline static void fort_pstree_enum_processes_loop(
+        PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
+{
+    for (;;) {
+        fort_pstree_enum_process(ps_tree, processEntry);
+
+        const ULONG nextEntryOffset = processEntry->NextEntryOffset;
+        if (nextEntryOffset == 0)
+            break;
+
+        processEntry = (PSYSTEM_PROCESSES) ((PUCHAR) processEntry + nextEntryOffset);
+    }
+}
+
+FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
+{
+    NTSTATUS status;
+
+    ULONG bufferSize;
+    status = ZwQuerySystemInformation(SystemProcessInformation, NULL, 0, &bufferSize);
+    if (status != STATUS_INFO_LENGTH_MISMATCH)
+        return;
+
+    bufferSize *= 2; /* for possibly new created processes/threads */
+    bufferSize = FORT_ALIGN_SIZE(bufferSize, sizeof(PVOID));
+
+    PVOID buffer = fort_mem_alloc(bufferSize, FORT_PSTREE_POOL_TAG);
+    if (buffer == NULL)
+        return;
+
+    status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, NULL);
+    if (NT_SUCCESS(status)) {
+        fort_pstree_enum_processes_loop(&fort_device()->ps_tree, buffer);
+    } else {
+        LOG("PsTree: Enum Processes Error: %x\n", status);
+        TRACE(FORT_PSTREE_ENUM_PROCESSES_ERROR, status, 0, 0);
+    }
+
+    fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
 }
 
 static BOOL fort_pstree_get_proc_name_locked(PFORT_PSTREE ps_tree, DWORD processId,
