@@ -573,10 +573,6 @@
         <translation>Grille:</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation>Réinitialiser aux valeurs par défaut</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation>Fenêtre</translation>
     </message>
@@ -761,6 +757,18 @@
     <message>
         <source>Import</source>
         <translation>Importer</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default all options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default current tab</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

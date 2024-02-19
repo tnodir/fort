@@ -573,10 +573,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation></translation>
     </message>
@@ -760,6 +756,18 @@
     </message>
     <message>
         <source>Import</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reset to default all options</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reset to default current tab</source>
         <translation></translation>
     </message>
 </context>

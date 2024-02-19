@@ -573,10 +573,6 @@
         <translation>격자:</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation>기본값으로 재설정</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation>창</translation>
     </message>
@@ -761,6 +757,18 @@
     <message>
         <source>Import</source>
         <translation>가져오기</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default all options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default current tab</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

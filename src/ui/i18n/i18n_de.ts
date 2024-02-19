@@ -573,10 +573,6 @@
         <translation>Raster:</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation>Auf Standard zurücksetzen</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation>Fenster</translation>
     </message>
@@ -761,6 +757,18 @@
     <message>
         <source>Import</source>
         <translation>Importieren</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default all options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default current tab</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

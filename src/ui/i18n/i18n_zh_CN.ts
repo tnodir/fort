@@ -573,10 +573,6 @@
         <translation>网格：</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation>恢复默认设置</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation>窗口</translation>
     </message>
@@ -761,6 +757,18 @@
     <message>
         <source>Import</source>
         <translation>导入</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default all options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default current tab</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -573,10 +573,6 @@
         <translation>Grade:</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation type="unfinished"></translation>
     </message>
@@ -760,6 +756,18 @@
     </message>
     <message>
         <source>Import</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default all options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default current tab</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

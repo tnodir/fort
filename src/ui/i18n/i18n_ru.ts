@@ -573,10 +573,6 @@
         <translation>Сетка:</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation>Сброс значений</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation>Окно</translation>
     </message>
@@ -761,6 +757,18 @@
     <message>
         <source>Import</source>
         <translation>Импорт</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation>По умолчанию</translation>
+    </message>
+    <message>
+        <source>Reset to default all options</source>
+        <translation>Сброс всех опций</translation>
+    </message>
+    <message>
+        <source>Reset to default current tab</source>
+        <translation>Сброс опций текущей вкладки</translation>
     </message>
 </context>
 <context>

@@ -573,10 +573,6 @@
         <translation>Mreža:</translation>
     </message>
     <message>
-        <source>Reset to defaults</source>
-        <translation>Ponastavi na privzeto</translation>
-    </message>
-    <message>
         <source>Window</source>
         <translation>Okno</translation>
     </message>
@@ -761,6 +757,18 @@
     <message>
         <source>Import</source>
         <translation>Uvozi</translation>
+    </message>
+    <message>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default all options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reset to default current tab</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
