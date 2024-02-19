@@ -760,15 +760,15 @@
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>기본값</translation>
     </message>
     <message>
         <source>Reset to default all options</source>
-        <translation type="unfinished"></translation>
+        <translation>모든 옵션을 기본값으로 재설정</translation>
     </message>
     <message>
         <source>Reset to default current tab</source>
-        <translation type="unfinished"></translation>
+        <translation>기본 현재 탭으로 재설정</translation>
     </message>
 </context>
 <context>

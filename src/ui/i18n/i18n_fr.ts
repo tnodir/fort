@@ -760,15 +760,15 @@
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Par défaut</translation>
     </message>
     <message>
         <source>Reset to default all options</source>
-        <translation type="unfinished"></translation>
+        <translation>Rétablir toutes les options par défaut</translation>
     </message>
     <message>
         <source>Reset to default current tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Rétablir l&apos;onglet actuel par défaut</translation>
     </message>
 </context>
 <context>
