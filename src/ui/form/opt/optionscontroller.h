@@ -26,6 +26,7 @@ signals:
 
     void aboutToSave();
     void editResetted();
+    void resetToDefault();
 
     void cancelChanges(IniOptions *oldIni);
 

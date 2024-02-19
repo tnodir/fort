@@ -19,6 +19,9 @@ public:
     bool explorerEdited() const { return m_explorerEdited; }
     void setExplorerEdited(bool v) { m_explorerEdited = v; }
 
+public slots:
+    void onResetToDefault() override;
+
 protected slots:
     void onAboutToSave() override;
     void onEditResetted() override;
@@ -67,7 +70,7 @@ private:
 private:
     bool m_passwordEdited : 1 = false;
     bool m_languageEdited : 1 = false;
-    bool m_explorerEdited: 1 = false;
+    bool m_explorerEdited : 1 = false;
 
     qint8 m_currentAutoRunMode = 0;
 

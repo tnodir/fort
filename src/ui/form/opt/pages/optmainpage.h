@@ -1,6 +1,8 @@
 #ifndef OPTMAINPAGE_H
 #define OPTMAINPAGE_H
 
+#include <QVarLengthArray>
+
 #include "optbasepage.h"
 
 QT_FORWARD_DECLARE_CLASS(QTabWidget)
@@ -22,7 +24,10 @@ private:
     void setupTabBar();
     QLayout *setupDialogButtons();
     void setupBackup();
+    void setupDefault();
     void setupApplyCancelButtons();
+
+    OptBasePage *currentPage() const;
 
 private:
     QTabWidget *m_tabWidget = nullptr;
@@ -32,11 +37,14 @@ private:
     QPushButton *m_btBackup = nullptr;
     QAction *m_actExport = nullptr;
     QAction *m_actImport = nullptr;
+    QPushButton *m_btDefault = nullptr;
+    QAction *m_actDefaultAll = nullptr;
+    QAction *m_actDefaultTab = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btApply = nullptr;
     QPushButton *m_btCancel = nullptr;
 
-    QVector<OptBasePage *> m_pages;
+    QVarLengthArray<OptBasePage *, 7> m_pages;
 };
 
 #endif // OPTMAINPAGE_H

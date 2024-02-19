@@ -13,6 +13,9 @@ class StatisticsPage : public OptBasePage
 public:
     explicit StatisticsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+public slots:
+    void onResetToDefault() override;
+
 protected slots:
     void onRetranslateUi() override;
 

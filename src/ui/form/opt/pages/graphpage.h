@@ -13,12 +13,14 @@ class GraphPage : public OptBasePage
 public:
     explicit GraphPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+public slots:
+    void onResetToDefault() override;
+
 protected slots:
     void onRetranslateUi() override;
 
 private:
     void setupUi();
-    QLayout *setupHeader();
     QLayout *setupColumns();
     QLayout *setupColumn1();
     void setupGraphBox();
@@ -31,8 +33,6 @@ private:
 private:
     QGroupBox *m_gbGraph = nullptr;
     QGroupBox *m_gbColors = nullptr;
-
-    QToolButton *m_btResetToDefaults = nullptr;
 
     QCheckBox *m_cbGraphHideOnClose = nullptr;
     QCheckBox *m_cbGraphAlwaysOnTop = nullptr;

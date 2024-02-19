@@ -158,6 +158,7 @@ public:
     QByteArray zonesHeader() const { return valueByteArray("zoneWindow/zonesHeader"); }
     void setZonesHeader(const QByteArray &v) { setValue("zoneWindow/zonesHeader", v); }
 
+    constexpr bool graphWindowHideOnCloseDefault() const { return false; }
     bool graphWindowHideOnClose() const { return valueBool("graphWindow/hideOnClose"); }
     void setGraphWindowHideOnClose(bool on) { setValue("graphWindow/hideOnClose", on); }
 

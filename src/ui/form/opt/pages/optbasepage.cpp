@@ -66,6 +66,7 @@ void OptBasePage::setupController()
 
     connect(ctrl(), &OptionsController::aboutToSave, this, &OptBasePage::onAboutToSave);
     connect(ctrl(), &OptionsController::editResetted, this, &OptBasePage::onEditResetted);
+    connect(ctrl(), &OptionsController::resetToDefault, this, &OptBasePage::onResetToDefault);
 
     connect(ctrl(), &OptionsController::afterSaveWindowState, this,
             &OptBasePage::onSaveWindowState);

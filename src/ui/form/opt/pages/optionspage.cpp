@@ -48,6 +48,42 @@ OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage
     setupUi();
 }
 
+void OptionsPage::onResetToDefault()
+{
+    m_cbFilterEnabled->setChecked(true);
+    m_cbBlockTraffic->setChecked(false);
+    m_cbBlockInetTraffic->setChecked(false);
+
+    m_cbLogBlocked->setChecked(true);
+    m_cbAppNotifyMessage->setChecked(true);
+    m_cbAppAlertAutoShow->setChecked(true);
+    m_cbAppAlertAlwaysOnTop->setChecked(false);
+    m_cbPurgeOnMounted->setChecked(false);
+
+    m_cbUseSystemLocale->setChecked(true);
+    m_cbHotKeysEnabled->setChecked(false);
+    m_cbHotKeysGlobal->setChecked(true);
+
+    m_cbHomeAutoShowMenu->setChecked(false);
+    m_cbSplashVisible->setChecked(true);
+    m_cbTrayShowIcon->setChecked(true);
+    m_cbTrayAnimateAlert->setChecked(true);
+
+    m_spinTrayMaxGroups->setValue(trayMaxGroups);
+
+    // Reset Tray Actions
+    for (int i = 0; i < TrayIcon::ClickTypeCount; ++i) {
+        TrayIcon::resetClickEventActionType(iniUser(), TrayIcon::ClickType(i));
+    }
+    refreshComboTrayAction();
+
+    m_cbConfirmTrayFlags->setChecked(false);
+    m_cbConfirmQuit->setChecked(true);
+
+    m_cbLogDebug->setChecked(false);
+    m_cbLogConsole->setChecked(false);
+}
+
 void OptionsPage::onAboutToSave()
 {
     // Startup

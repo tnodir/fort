@@ -50,6 +50,7 @@ public:
 
 public slots:
     virtual void onPageActivated() { }
+    virtual void onResetToDefault() { }
 
 protected slots:
     virtual void onAboutToSave() { }

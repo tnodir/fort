@@ -21,10 +21,29 @@ GraphPage::GraphPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctr
     setupUi();
 }
 
+void GraphPage::onResetToDefault()
+{
+    m_cbGraphHideOnClose->setChecked(iniUser()->graphWindowHideOnCloseDefault());
+
+    m_cbGraphAlwaysOnTop->setChecked(ini()->graphWindowAlwaysOnTopDefault());
+    m_cbGraphFrameless->setChecked(ini()->graphWindowFramelessDefault());
+    m_cbGraphClickThrough->setChecked(ini()->graphWindowClickThroughDefault());
+    m_cbGraphHideOnHover->setChecked(ini()->graphWindowHideOnHoverDefault());
+    m_graphOpacity->spinBox()->setValue(ini()->graphWindowOpacityDefault());
+    m_graphHoverOpacity->spinBox()->setValue(ini()->graphWindowHoverOpacityDefault());
+    m_graphMaxSeconds->spinBox()->setValue(ini()->graphWindowMaxSecondsDefault());
+
+    m_graphColor->setColor(ini()->graphWindowColorDefault());
+    m_graphColorIn->setColor(ini()->graphWindowColorInDefault());
+    m_graphColorOut->setColor(ini()->graphWindowColorOutDefault());
+    m_graphAxisColor->setColor(ini()->graphWindowAxisColorDefault());
+    m_graphTickLabelColor->setColor(ini()->graphWindowTickLabelColorDefault());
+    m_graphLabelColor->setColor(ini()->graphWindowLabelColorDefault());
+    m_graphGridColor->setColor(ini()->graphWindowGridColorDefault());
+}
+
 void GraphPage::onRetranslateUi()
 {
-    m_btResetToDefaults->setText(tr("Reset to defaults"));
-
     m_gbGraph->setTitle(tr("Window"));
     m_gbColors->setTitle(tr("Colors"));
 
@@ -51,45 +70,11 @@ void GraphPage::setupUi()
 {
     auto layout = new QVBoxLayout();
 
-    // Header
-    auto header = setupHeader();
-    layout->addLayout(header);
-
     // Columns
     auto colLayout = setupColumns();
     layout->addLayout(colLayout, 1);
 
     this->setLayout(layout);
-}
-
-QLayout *GraphPage::setupHeader()
-{
-    auto layout = new QHBoxLayout();
-
-    m_btResetToDefaults = ControlUtil::createFlatToolButton(":/icons/arrow_refresh_small.png", [&] {
-        m_cbGraphHideOnClose->setChecked(iniUser()->graphWindowHideOnClose());
-
-        m_cbGraphAlwaysOnTop->setChecked(ini()->graphWindowAlwaysOnTopDefault());
-        m_cbGraphFrameless->setChecked(ini()->graphWindowFramelessDefault());
-        m_cbGraphClickThrough->setChecked(ini()->graphWindowClickThroughDefault());
-        m_cbGraphHideOnHover->setChecked(ini()->graphWindowHideOnHoverDefault());
-        m_graphOpacity->spinBox()->setValue(ini()->graphWindowOpacityDefault());
-        m_graphHoverOpacity->spinBox()->setValue(ini()->graphWindowHoverOpacityDefault());
-        m_graphMaxSeconds->spinBox()->setValue(ini()->graphWindowMaxSecondsDefault());
-
-        m_graphColor->setColor(ini()->graphWindowColorDefault());
-        m_graphColorIn->setColor(ini()->graphWindowColorInDefault());
-        m_graphColorOut->setColor(ini()->graphWindowColorOutDefault());
-        m_graphAxisColor->setColor(ini()->graphWindowAxisColorDefault());
-        m_graphTickLabelColor->setColor(ini()->graphWindowTickLabelColorDefault());
-        m_graphLabelColor->setColor(ini()->graphWindowLabelColorDefault());
-        m_graphGridColor->setColor(ini()->graphWindowGridColorDefault());
-    });
-
-    layout->addStretch();
-    layout->addWidget(m_btResetToDefaults);
-
-    return layout;
 }
 
 QLayout *GraphPage::setupColumns()

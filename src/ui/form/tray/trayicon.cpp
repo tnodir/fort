@@ -733,6 +733,13 @@ void TrayIcon::setClickEventActionType(IniUser *iniUser, ClickType clickType, Ac
     iniUser->setTrayAction(eventName, actionName);
 }
 
+void TrayIcon::resetClickEventActionType(IniUser *iniUser, ClickType clickType)
+{
+    const TrayIcon::ActionType actionType = defaultActionTypeByClick(clickType);
+
+    setClickEventActionType(iniUser, clickType, actionType);
+}
+
 void TrayIcon::updateClickActions()
 {
     for (int i = 0; i < ClickTypeCount; ++i) {

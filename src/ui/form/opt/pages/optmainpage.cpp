@@ -46,6 +46,10 @@ void OptMainPage::onRetranslateUi()
     m_actExport->setText(tr("Export"));
     m_actImport->setText(tr("Import"));
 
+    m_btDefault->setText(tr("Default"));
+    m_actDefaultAll->setText(tr("Reset to default all options"));
+    m_actDefaultTab->setText(tr("Reset to default current tab"));
+
     m_btOk->setText(tr("OK"));
     m_btApply->setText(tr("Apply"));
     m_btCancel->setText(tr("Cancel"));
@@ -102,6 +106,7 @@ void OptMainPage::setupTabBar()
 QLayout *OptMainPage::setupDialogButtons()
 {
     setupBackup();
+    setupDefault();
 
     m_btOk = new QPushButton();
     m_btApply = new QPushButton();
@@ -115,6 +120,7 @@ QLayout *OptMainPage::setupDialogButtons()
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_btBackup);
+    layout->addWidget(m_btDefault);
     layout->addStretch();
     layout->addWidget(m_btOk);
     layout->addWidget(m_btApply);
@@ -125,16 +131,30 @@ QLayout *OptMainPage::setupDialogButtons()
 
 void OptMainPage::setupBackup()
 {
-    auto backupMenu = ControlUtil::createMenu(this);
+    auto menu = ControlUtil::createMenu(this);
 
-    m_actExport = backupMenu->addAction(IconCache::icon(":/icons/disk.png"), QString());
-    m_actImport = backupMenu->addAction(IconCache::icon(":/icons/folder.png"), QString());
+    m_actExport = menu->addAction(IconCache::icon(":/icons/disk.png"), QString());
+    m_actImport = menu->addAction(IconCache::icon(":/icons/folder.png"), QString());
 
     connect(m_actExport, &QAction::triggered, ctrl(), &OptionsController::exportBackup);
     connect(m_actImport, &QAction::triggered, ctrl(), &OptionsController::confirmImportBackup);
 
     m_btBackup = new QPushButton();
-    m_btBackup->setMenu(backupMenu);
+    m_btBackup->setMenu(menu);
+}
+
+void OptMainPage::setupDefault()
+{
+    auto menu = ControlUtil::createMenu(this);
+
+    m_actDefaultAll = menu->addAction(QString());
+    m_actDefaultTab = menu->addAction(QString());
+
+    connect(m_actDefaultAll, &QAction::triggered, this, [&] { emit ctrl()->resetToDefault(); });
+    connect(m_actDefaultTab, &QAction::triggered, this, [&] { currentPage()->onResetToDefault(); });
+
+    m_btDefault = new QPushButton();
+    m_btDefault->setMenu(menu);
 }
 
 void OptMainPage::setupApplyCancelButtons()
@@ -147,4 +167,9 @@ void OptMainPage::setupApplyCancelButtons()
     refreshButtons(ctrl()->anyEdited());
 
     connect(ctrl(), &OptionsController::editedChanged, this, refreshButtons);
+}
+
+OptBasePage *OptMainPage::currentPage() const
+{
+    return m_pages[m_tabWidget->currentIndex()];
 }

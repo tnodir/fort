@@ -9,6 +9,7 @@
 #include <QVBoxLayout>
 
 #include <conf/firewallconf.h>
+#include <conf/inioptions.h>
 #include <form/controls/checktimeperiod.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/labelcolor.h>
@@ -39,6 +40,29 @@ QString formatQuota(int mbytes)
 StatisticsPage::StatisticsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
     setupUi();
+}
+
+void StatisticsPage::onResetToDefault()
+{
+    m_cbLogStat->setChecked(true);
+    m_cbLogStatNoFilter->setChecked(true);
+
+    m_ctpActivePeriod->checkBox()->setChecked(false);
+
+    m_lscMonthStart->spinBox()->setValue(DEFAULT_MONTH_START);
+    m_lscTrafHourKeepDays->spinBox()->setValue(DEFAULT_TRAF_HOUR_KEEP_DAYS);
+    m_lscTrafDayKeepDays->spinBox()->setValue(DEFAULT_TRAF_DAY_KEEP_DAYS);
+    m_lscTrafMonthKeepMonths->spinBox()->setValue(DEFAULT_TRAF_MONTH_KEEP_MONTHS);
+
+    m_lscQuotaDayMb->spinBox()->setValue(0);
+    m_lscQuotaMonthMb->spinBox()->setValue(0);
+    m_cbQuotaBlockInternet->setChecked(false);
+
+    m_cbLogBlockedIp->setChecked(true);
+    m_cbLogAlertedBlockedIp->setChecked(false);
+    m_lscBlockedIpKeepCount->spinBox()->setValue(DEFAULT_LOG_IP_KEEP_COUNT);
+    m_cbLogAllowedIp->setChecked(false);
+    m_lscAllowedIpKeepCount->spinBox()->setValue(DEFAULT_LOG_IP_KEEP_COUNT);
 }
 
 void StatisticsPage::onRetranslateUi()

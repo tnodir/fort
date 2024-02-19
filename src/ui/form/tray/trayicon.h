@@ -68,6 +68,7 @@ public:
     static ActionType clickEventActionType(IniUser *iniUser, ClickType clickType);
     static void setClickEventActionType(
             IniUser *iniUser, ClickType clickType, ActionType actionType);
+    static void resetClickEventActionType(IniUser *iniUser, ClickType clickType);
 
 public slots:
     void updateTrayIcon(bool alerted = false);
