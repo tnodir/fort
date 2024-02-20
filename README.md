@@ -45,8 +45,6 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 
 ## Support
 
-Please support the project:
-
   - ⭐ Star it on GitHub, ✨ Rate on [AlternativeTo](https://alternativeto.net/software/fort-firewall/about/)
   - 🐞 [Report bugs](https://github.com/tnodir/fort/issues), ⚡ [Discuss ideas](https://github.com/tnodir/fort/discussions)
 
