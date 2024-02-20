@@ -15,6 +15,16 @@
 
 static PFORT_DEVICE g_device = NULL;
 
+typedef struct fort_device_control_arg
+{
+    PIRP irp;
+    ULONG_PTR *info;
+
+    PVOID buffer;
+    ULONG in_len;
+    ULONG out_len;
+} FORT_DEVICE_CONTROL_ARG, *PFORT_DEVICE_CONTROL_ARG;
+
 FORT_API PFORT_DEVICE fort_device(void)
 {
     return g_device;
@@ -131,8 +141,11 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
     return STATUS_SUCCESS;
 }
 
-static NTSTATUS fort_device_control_validate(const PFORT_CONF_VERSION conf_ver, ULONG len)
+static NTSTATUS fort_device_control_validate(PFORT_DEVICE_CONTROL_ARG dca)
 {
+    const PFORT_CONF_VERSION conf_ver = dca->buffer;
+    const ULONG len = dca->in_len;
+
     if (len == sizeof(FORT_CONF_VERSION)) {
         if (conf_ver->driver_version == DRIVER_VERSION) {
             fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_IS_VALIDATED, TRUE);
@@ -143,8 +156,11 @@ static NTSTATUS fort_device_control_validate(const PFORT_CONF_VERSION conf_ver, 
     return STATUS_UNSUCCESSFUL;
 }
 
-static NTSTATUS fort_device_control_setservices(const PFORT_SERVICE_INFO_LIST services, ULONG len)
+static NTSTATUS fort_device_control_setservices(PFORT_DEVICE_CONTROL_ARG dca)
 {
+    const PFORT_SERVICE_INFO_LIST services = dca->buffer;
+    const ULONG len = dca->in_len;
+
     if (len > sizeof(FORT_SERVICE_INFO_LIST)) {
         fort_pstree_update_services(&fort_device()->ps_tree, services,
                 /*data_len=*/len - FORT_SERVICE_INFO_LIST_DATA_OFF);
@@ -174,8 +190,11 @@ inline static NTSTATUS fort_device_control_setconf_ref(
     return fort_device_reauth_force(old_conf_flags);
 }
 
-static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG len)
+static NTSTATUS fort_device_control_setconf(PFORT_DEVICE_CONTROL_ARG dca)
 {
+    const PFORT_CONF_IO conf_io = dca->buffer;
+    const ULONG len = dca->in_len;
+
     if (len > sizeof(FORT_CONF_IO)) {
         const PFORT_CONF conf = &conf_io->conf;
         PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len - FORT_CONF_IO_CONF_OFF);
@@ -190,8 +209,11 @@ static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG l
     return STATUS_UNSUCCESSFUL;
 }
 
-static NTSTATUS fort_device_control_setflags(const PFORT_CONF_FLAGS conf_flags, ULONG len)
+static NTSTATUS fort_device_control_setflags(PFORT_DEVICE_CONTROL_ARG dca)
 {
+    const PFORT_CONF_FLAGS conf_flags = dca->buffer;
+    const ULONG len = dca->in_len;
+
     if (len == sizeof(FORT_CONF_FLAGS)) {
         const FORT_CONF_FLAGS old_conf_flags =
                 fort_conf_ref_flags_set(&fort_device()->conf, conf_flags);
@@ -205,10 +227,16 @@ static NTSTATUS fort_device_control_setflags(const PFORT_CONF_FLAGS conf_flags, 
     return STATUS_UNSUCCESSFUL;
 }
 
-static NTSTATUS fort_device_control_getlog(PVOID out, ULONG out_len, PIRP irp, ULONG_PTR *info)
+static NTSTATUS fort_device_control_getlog(PFORT_DEVICE_CONTROL_ARG dca)
 {
+    PVOID out = dca->buffer;
+    const ULONG out_len = dca->out_len;
+
     if (out_len < FORT_BUFFER_SIZE)
         return STATUS_BUFFER_TOO_SMALL;
+
+    PIRP irp = dca->irp;
+    ULONG_PTR *info = dca->info;
 
     const NTSTATUS status = fort_buffer_xmove(&fort_device()->buffer, irp, out, out_len, info);
 
@@ -234,8 +262,11 @@ inline static NTSTATUS fort_device_control_app_conf(
     return status;
 }
 
-static NTSTATUS fort_device_control_app(const PFORT_APP_ENTRY app_entry, ULONG len, BOOL is_adding)
+static NTSTATUS fort_device_control_app(PFORT_DEVICE_CONTROL_ARG dca, BOOL is_adding)
 {
+    const PFORT_APP_ENTRY app_entry = dca->buffer;
+    const ULONG len = dca->in_len;
+
     if (len < sizeof(FORT_APP_ENTRY) || len < (sizeof(FORT_APP_ENTRY) + app_entry->path_len))
         return STATUS_UNSUCCESSFUL;
 
@@ -255,8 +286,21 @@ static NTSTATUS fort_device_control_app(const PFORT_APP_ENTRY app_entry, ULONG l
     return status;
 }
 
-static NTSTATUS fort_device_control_setzones(const PFORT_CONF_ZONES zones, ULONG len)
+static NTSTATUS fort_device_control_addapp(PFORT_DEVICE_CONTROL_ARG dca)
 {
+    return fort_device_control_app(dca, /*is_adding=*/TRUE);
+}
+
+static NTSTATUS fort_device_control_delapp(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    return fort_device_control_app(dca, /*is_adding=*/FALSE);
+}
+
+static NTSTATUS fort_device_control_setzones(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    const PFORT_CONF_ZONES zones = dca->buffer;
+    const ULONG len = dca->in_len;
+
     if (len >= FORT_CONF_ZONES_DATA_OFF) {
         PFORT_CONF_ZONES conf_zones = fort_conf_zones_new(zones, len);
 
@@ -274,8 +318,11 @@ static NTSTATUS fort_device_control_setzones(const PFORT_CONF_ZONES zones, ULONG
     return STATUS_UNSUCCESSFUL;
 }
 
-static NTSTATUS fort_device_control_setzoneflag(const PFORT_CONF_ZONE_FLAG zone_flag, ULONG len)
+static NTSTATUS fort_device_control_setzoneflag(PFORT_DEVICE_CONTROL_ARG dca)
 {
+    const PFORT_CONF_ZONE_FLAG zone_flag = dca->buffer;
+    const ULONG len = dca->in_len;
+
     if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
         fort_conf_zone_flag_set(&fort_device()->conf, zone_flag);
 
@@ -287,40 +334,49 @@ static NTSTATUS fort_device_control_setzoneflag(const PFORT_CONF_ZONE_FLAG zone_
     return STATUS_UNSUCCESSFUL;
 }
 
+static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETZONEFLAG) == FORT_IOCTL_INDEX_SETZONEFLAG,
+        "Invalid FORT_CTL_INDEX_FROM_CODE()");
+
+typedef NTSTATUS(FORT_DEVICE_CONTROL_PROCESS_FUNC)(PFORT_DEVICE_CONTROL_ARG dca);
+typedef FORT_DEVICE_CONTROL_PROCESS_FUNC *PFORT_DEVICE_CONTROL_PROCESS_FUNC;
+
+static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
+    &fort_device_control_validate,
+    &fort_device_control_setservices,
+    &fort_device_control_setconf,
+    &fort_device_control_setflags,
+    &fort_device_control_getlog,
+    &fort_device_control_addapp,
+    &fort_device_control_delapp,
+    &fort_device_control_setzones,
+    &fort_device_control_setzoneflag,
+};
+
 static NTSTATUS fort_device_control_process(
         const PIO_STACK_LOCATION irp_stack, PIRP irp, ULONG_PTR *info)
 {
-    const int control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode;
+    const UCHAR control_index =
+            FORT_CTL_INDEX_FROM_CODE(irp_stack->Parameters.DeviceIoControl.IoControlCode);
 
-    if (control_code != FORT_IOCTL_VALIDATE
-            && fort_device_flag(&fort_device()->conf, FORT_DEVICE_IS_VALIDATED) == 0)
+    if (control_index > FORT_IOCTL_INDEX_SETZONEFLAG)
         return STATUS_INVALID_PARAMETER;
 
-    PVOID buffer = irp->AssociatedIrp.SystemBuffer;
-    const ULONG in_len = irp_stack->Parameters.DeviceIoControl.InputBufferLength;
-    const ULONG out_len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength;
-
-    switch (control_code) {
-    case FORT_IOCTL_VALIDATE:
-        return fort_device_control_validate(buffer, in_len);
-    case FORT_IOCTL_SETSERVICES:
-        return fort_device_control_setservices(buffer, in_len);
-    case FORT_IOCTL_SETCONF:
-        return fort_device_control_setconf(buffer, in_len);
-    case FORT_IOCTL_SETFLAGS:
-        return fort_device_control_setflags(buffer, in_len);
-    case FORT_IOCTL_GETLOG:
-        return fort_device_control_getlog(buffer, out_len, irp, info);
-    case FORT_IOCTL_ADDAPP:
-    case FORT_IOCTL_DELAPP:
-        return fort_device_control_app(buffer, in_len, (control_code == FORT_IOCTL_ADDAPP));
-    case FORT_IOCTL_SETZONES:
-        return fort_device_control_setzones(buffer, in_len);
-    case FORT_IOCTL_SETZONEFLAG:
-        return fort_device_control_setzoneflag(buffer, in_len);
-    default:
+    if (control_index != FORT_IOCTL_INDEX_VALIDATE
+            && fort_device_flag(&fort_device()->conf, FORT_DEVICE_IS_VALIDATED) == 0)
         return STATUS_INVALID_DEVICE_REQUEST;
-    }
+
+    FORT_DEVICE_CONTROL_ARG dca = {
+        .irp = irp,
+        .info = info,
+
+        .buffer = irp->AssociatedIrp.SystemBuffer,
+        .in_len = irp_stack->Parameters.DeviceIoControl.InputBufferLength,
+        .out_len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength,
+    };
+
+    PFORT_DEVICE_CONTROL_PROCESS_FUNC func = fortDeviceControlProcess_funcList[control_index];
+
+    return func(&dca);
 }
 
 FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
