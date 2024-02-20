@@ -155,6 +155,25 @@ static NTSTATUS fort_device_control_setservices(const PFORT_SERVICE_INFO_LIST se
     return STATUS_UNSUCCESSFUL;
 }
 
+inline static NTSTATUS fort_device_control_setconf_ref(
+        const PFORT_CONF_IO conf_io, PFORT_CONF_REF conf_ref)
+{
+    PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+    const BOOL was_null_conf = (device_conf->ref == NULL);
+
+    const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(device_conf, conf_ref);
+
+    fort_stat_conf_update(&fort_device()->stat, conf_io);
+    fort_shaper_conf_update(&fort_device()->shaper, conf_io);
+
+    /* Enumerate processes */
+    if (was_null_conf) {
+        fort_pstree_enum_processes(&fort_device()->ps_tree);
+    }
+
+    return fort_device_reauth_force(old_conf_flags);
+}
+
 static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG len)
 {
     if (len > sizeof(FORT_CONF_IO)) {
@@ -163,22 +182,9 @@ static NTSTATUS fort_device_control_setconf(const PFORT_CONF_IO conf_io, ULONG l
 
         if (conf_ref == NULL) {
             return STATUS_INSUFFICIENT_RESOURCES;
-        } else {
-            PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
-            const BOOL was_null_conf = (device_conf->ref == NULL);
-
-            const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(device_conf, conf_ref);
-
-            fort_stat_conf_update(&fort_device()->stat, conf_io);
-            fort_shaper_conf_update(&fort_device()->shaper, conf_io);
-
-            /* Enumerate processes */
-            if (was_null_conf) {
-                fort_pstree_enum_processes(&fort_device()->ps_tree);
-            }
-
-            return fort_device_reauth_force(old_conf_flags);
         }
+
+        return fort_device_control_setconf_ref(conf_io, conf_ref);
     }
 
     return STATUS_UNSUCCESSFUL;
