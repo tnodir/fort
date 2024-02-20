@@ -760,15 +760,15 @@
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Predefinito</translation>
     </message>
     <message>
         <source>Reset to default all options</source>
-        <translation type="unfinished"></translation>
+        <translation>Reimposta le opzioni predefinite</translation>
     </message>
     <message>
         <source>Reset to default current tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Reimposta la scheda corrente predefinita</translation>
     </message>
 </context>
 <context>
@@ -1082,7 +1082,7 @@ Assicurati di avere un backup recente.</translation>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra schermata introduttiva all&apos;avvio</translation>
     </message>
 </context>
 <context>
