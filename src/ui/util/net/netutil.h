@@ -42,10 +42,6 @@ public:
     static QString localIpNetworksText();
 
     static QString protocolName(quint8 ipProto);
-
-private:
-    static int first0Bit(quint32 u);
-    static int bitCount(quint32 u);
 };
 
 #endif // NETUTIL_H

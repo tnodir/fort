@@ -271,18 +271,6 @@ bool isTimeInPeriod(quint8 hour, quint8 minute, quint8 fromHour, quint8 fromMinu
     return is_time_in_period(time, period);
 }
 
-int bitCount(quint32 v)
-{
-    v = v - ((v >> 1) & 0x55555555);
-    v = (v & 0x33333333) + ((v >> 2) & 0x33333333);
-    return ((v + (v >> 4) & 0xF0F0F0F) * 0x1010101) >> 24;
-}
-
-int bitScanForward(quint32 mask)
-{
-    return bit_scan_forward(mask);
-}
-
 bool provRegister(bool bootFilter)
 {
     const FORT_PROV_BOOT_CONF boot_conf = {

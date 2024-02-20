@@ -173,6 +173,7 @@ SOURCES += \
     task/taskzonedownloader.cpp \
     user/iniuser.cpp \
     user/usersettings.cpp \
+    util/bitutil.cpp \
     util/conf/addressrange.cpp \
     util/conf/appparseoptions.cpp \
     util/conf/confutil.cpp \
@@ -383,6 +384,7 @@ HEADERS += \
     task/taskzonedownloader.h \
     user/iniuser.h \
     user/usersettings.h \
+    util/bitutil.h \
     util/classhelpers.h \
     util/conf/addressrange.h \
     util/conf/appparseoptions.h \

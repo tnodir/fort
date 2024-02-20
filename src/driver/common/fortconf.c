@@ -26,12 +26,6 @@ static int fort_memcmp(const void *p1, const void *p2, size_t len)
 }
 #endif
 
-FORT_API int bit_scan_forward(ULONG mask)
-{
-    unsigned long index;
-    return _BitScanForward(&index, mask) ? index : -1;
-}
-
 FORT_API BOOL is_time_in_period(FORT_TIME time, FORT_PERIOD period)
 {
     const int x = time.hour * 60 + time.minute;

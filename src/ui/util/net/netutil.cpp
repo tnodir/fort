@@ -5,6 +5,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <ws2tcpip.h>
 
+#include <util/bitutil.h>
+
 struct sock_addr
 {
     union {
@@ -78,7 +80,7 @@ QString NetUtil::ipToText(const ip_addr_t &ip, bool isIPv6)
 
 int NetUtil::ip4Mask(quint32 ip)
 {
-    return 32 - first0Bit(ip);
+    return 32 - BitUtil::firstZeroBit(ip);
 }
 
 quint32 NetUtil::applyIp4Mask(quint32 ip, int nbits)
@@ -101,20 +103,6 @@ ip6_addr_t NetUtil::applyIp6Mask(const ip6_addr_t &ip, int nbits)
     *masked |= nbits == 0 ? quint64(-1LL) : (nbits == 64 ? 0 : htonll((1ULL << (64 - nbits)) - 1));
 
     return ip6;
-}
-
-int NetUtil::first0Bit(quint32 u)
-{
-    const qint32 i = ~u;
-    return bitCount((i & (-i)) - 1);
-}
-
-// From http://tekpool.wordpress.com/category/bit-count/
-int NetUtil::bitCount(quint32 u)
-{
-    const quint32 uCount = u - ((u >> 1) & 033333333333) - ((u >> 2) & 011111111111);
-
-    return ((uCount + (uCount >> 3)) & 030707070707) % 63;
 }
 
 QByteArray NetUtil::ip6ToRawArray(const ip_addr_t &ip)

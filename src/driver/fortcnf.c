@@ -31,6 +31,12 @@ static FORT_TIME fort_current_time(void)
     return time;
 }
 
+static int bit_scan_forward(ULONG mask)
+{
+    unsigned long index;
+    return _BitScanForward(&index, mask) ? index : -1;
+}
+
 FORT_API void fort_device_conf_open(PFORT_DEVICE_CONF device_conf)
 {
     KeInitializeSpinLock(&device_conf->ref_lock);

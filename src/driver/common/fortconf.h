@@ -274,8 +274,6 @@ typedef BOOL fort_conf_zones_ip_included_func(
 extern "C" {
 #endif
 
-FORT_API int bit_scan_forward(ULONG mask);
-
 FORT_API BOOL is_time_in_period(FORT_TIME time, FORT_PERIOD period);
 
 FORT_API BOOL fort_conf_ip_inlist(

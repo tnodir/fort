@@ -5,9 +5,9 @@
 #include <QVBoxLayout>
 
 #include <conf/confzonemanager.h>
-#include <driver/drivercommon.h>
 #include <form/controls/controlutil.h>
 #include <model/zonelistmodel.h>
+#include <util/bitutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -59,12 +59,12 @@ void ZonesSelector::setUncheckedZones(quint32 uncheckedZones)
 
 int ZonesSelector::zonesCount() const
 {
-    return DriverCommon::bitCount(m_zones);
+    return BitUtil::bitCount(m_zones);
 }
 
 int ZonesSelector::uncheckedZonesCount() const
 {
-    return DriverCommon::bitCount(m_uncheckedZones);
+    return BitUtil::bitCount(m_uncheckedZones);
 }
 
 void ZonesSelector::retranslateUi()

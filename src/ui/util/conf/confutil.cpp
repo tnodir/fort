@@ -12,6 +12,7 @@
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
 #include <manager/envmanager.h>
+#include <util/bitutil.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/stringutil.h>
@@ -242,7 +243,7 @@ int ConfUtil::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSiz
     for (const auto &zoneData : zonesData) {
         Q_ASSERT(!zoneData.isEmpty());
 
-        const int zoneIndex = DriverCommon::bitScanForward(zonesMask);
+        const int zoneIndex = BitUtil::bitScanForward(zonesMask);
         const quint32 zoneMask = (quint32(1) << zoneIndex);
 
 #define CONF_DATA_OFFSET quint32(data - confZones->data)
