@@ -122,6 +122,17 @@ Root: HKLM; Subkey: "SOFTWARE\{#APP_NAME}"; Flags: dontcreatekey uninsdeletekeyi
 Root: HKLM; Subkey: "SOFTWARE\{#APP_NAME}"; ValueName: "passwordHash"; Flags: dontcreatekey uninsdeletevalue
 
 [Code]
+
+#if CHECK_WIN10 == "Y"
+function IsProcessorFeaturePresent(Feature: Integer): Boolean;
+external 'IsProcessorFeaturePresent@kernel32.dll stdcall';
+
+function IsSSE4Supported(): Boolean;
+begin
+  Result := IsProcessorFeaturePresent(37); // PF_SSE4_1_INSTRUCTIONS_AVAILABLE
+end;
+#endif
+
 function LanguageName(Param: String): String;
 begin
   Result := ActiveLanguage;
@@ -357,6 +368,16 @@ begin
     Result := False;
     Exit;
   end;
+
+#if 0
+  if not IsSSE4Supported() then
+  begin
+    SuppressibleMsgBox(ExpandConstant('{cm:NotCompatibleWithSSE4}'), mbCriticalError, MB_OK, IDOK);
+
+    Result := False;
+    Exit;
+  end;
+#endif
 #else
   if not VCRedist86Exists() then
   begin
