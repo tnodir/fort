@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.11.8, 2024-02-20:
+- UI: Options: Add "Default" button.
+- Driver: Enumerate processes on startup for "Apply rules to child processes".
+
 v3.11.7, 2024-02-17:
 - UI: Add "--no-splash" argument.
 - Driver: Shaper: Rework packets processing.
