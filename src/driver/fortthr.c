@@ -22,7 +22,7 @@ FORT_API NTSTATUS fort_thread_run(
 
     ZwClose(hThread);
 
-    if (NT_SUCCESS(status)) {
+    if (NT_SUCCESS(status) && priorityIncrement != 0) {
         KeSetBasePriorityThread(thread->thread_obj, priorityIncrement);
     }
 
