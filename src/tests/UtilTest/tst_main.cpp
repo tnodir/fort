@@ -1,3 +1,4 @@
+#include "tst_bitutil.h"
 #include "tst_confutil.h"
 #include "tst_fileutil.h"
 #include "tst_ioccontainer.h"

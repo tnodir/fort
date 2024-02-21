@@ -1,6 +1,7 @@
 include(../Common/Common.pri)
 
 HEADERS += \
+    tst_bitutil.h \
     tst_confutil.h \
     tst_fileutil.h \
     tst_ioccontainer.h \
