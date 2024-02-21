@@ -129,7 +129,7 @@ external 'IsProcessorFeaturePresent@kernel32.dll stdcall';
 
 function IsSSE4Supported(): Boolean;
 begin
-  Result := IsProcessorFeaturePresent(37); // PF_SSE4_1_INSTRUCTIONS_AVAILABLE
+  Result := IsProcessorFeaturePresent(38); // PF_SSE4_2_INSTRUCTIONS_AVAILABLE
 end;
 #endif
 
