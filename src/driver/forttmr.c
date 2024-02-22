@@ -5,11 +5,6 @@
 #include "fortcb.h"
 #include "fortdbg.h"
 
-static UCHAR fort_timer_flags_exchange(PFORT_TIMER timer, UCHAR flags)
-{
-    return InterlockedExchange8(&timer->flags, flags);
-}
-
 static UCHAR fort_timer_flags_set(PFORT_TIMER timer, UCHAR flags, BOOL on)
 {
     return on ? InterlockedOr8(&timer->flags, flags) : InterlockedAnd8(&timer->flags, ~flags);
