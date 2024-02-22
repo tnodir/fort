@@ -583,12 +583,6 @@ inline static void fort_shaper_queue_advance_available(
     const LARGE_INTEGER last_tick = queue->last_tick;
     queue->last_tick = now;
 
-    if (fort_shaper_packet_list_is_empty(&queue->bandwidth_list)
-            && queue->available_bytes > FORT_QUEUE_INITIAL_TOKEN_COUNT) {
-        queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
-        return;
-    }
-
     const UINT64 bps = queue->limit.bps;
 
     /* Advance the available bytes */
@@ -597,7 +591,7 @@ inline static void fort_shaper_queue_advance_available(
 
     queue->available_bytes += accumulated;
 
-    const UINT64 max_available = bps * 2;
+    const UINT64 max_available = bps;
     if (queue->available_bytes > max_available) {
         queue->available_bytes = max_available;
     }
@@ -1081,8 +1075,8 @@ inline static NTSTATUS fort_shaper_packet_queue(
     }
 
     pkt->flow = flow;
-    pkt->latency_start = KeQueryPerformanceCounter(NULL);
     pkt->data_length = data_length;
+    pkt->latency_start = KeQueryPerformanceCounter(NULL);
 
     /* Add the Packet to Queue */
     fort_shaper_packet_queue_add_packet(shaper, queue, pkt, queue_bit);
