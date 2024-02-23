@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.12.0-test0, 2024-02-23:
+- Driver: Shaper: Rework packets processing again.
+
 v3.11.9, 2024-02-22:
 - Driver: Shaper: Tweak limit processing.
 - UI: `popcnt` is not supported by old CPU (MSVC 17.9 regression).
