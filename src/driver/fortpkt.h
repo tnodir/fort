@@ -123,9 +123,6 @@ typedef struct fort_pending
 
     PFORT_PENDING_PROC procs_head;
 
-    PFORT_PENDING_PACKET packet_free;
-    tommy_arrayof packets;
-
     KSPIN_LOCK lock;
 } FORT_PENDING, *PFORT_PENDING;
 
@@ -145,9 +142,6 @@ typedef struct fort_shaper
 
     KEVENT thread_event;
     FORT_THREAD thread;
-
-    PFORT_FLOW_PACKET packet_free;
-    tommy_arrayof packets;
 
     KSPIN_LOCK lock;
 
