@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QDir>
 
 #ifdef USE_VISUAL_LEAK_DETECTOR
 #    include <vld.h>
@@ -65,7 +66,8 @@ void setupCrashHandler(CrashHandler &crashHandler, const FortSettings &settings)
     const QString fileNameSuffix = ".dmp";
     constexpr int CRASH_KEEP_FILES = 7;
 
-    FileUtil::removeOldFiles(dumpPath, fileNamePrefix, fileNameSuffix, CRASH_KEEP_FILES);
+    QDir dumpDir(dumpPath);
+    FileUtil::removeOldFiles(dumpDir, fileNamePrefix, fileNameSuffix, CRASH_KEEP_FILES);
 
     crashHandler.setFileNamePrefix(fileNamePrefix + APP_VERSION_STR + APP_VERSION_BUILD_STR + '_');
     crashHandler.setFileNameSuffix(fileNameSuffix);

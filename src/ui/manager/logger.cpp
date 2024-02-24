@@ -142,36 +142,94 @@ QString Logger::fileNameSuffix() const
 
 bool Logger::openLogFile()
 {
-    const QString fileName =
-            fileNamePrefix() + getDateString("yyyy-MM-dd_HH-mm-ss_zzz") + fileNameSuffix();
-
-    if (tryOpenLogFile(m_dir, fileName))
+    if (openDirFile())
         return true;
 
     m_dir.setPath(FileUtil::pathSlash(FileUtil::appConfigLocation()) + "logs/");
-    if (tryOpenLogFile(m_dir, fileName))
+    if (openDirFile())
         return true;
 
     m_dir.setPath(FileUtil::pathSlash(FileUtil::tempLocation()) + APP_NAME);
-    if (tryOpenLogFile(m_dir, fileName))
+    if (openDirFile())
         return true;
 
-    qCDebug(LC) << "Cannot open log file:" << m_file.fileName() << m_file.errorString();
+    qCWarning(LC) << "Cannot open log file:" << m_file.fileName() << m_file.errorString();
+
     return false;
 }
 
-bool Logger::tryOpenLogFile(const QDir &dir, const QString &fileName)
+bool Logger::openDirFile()
 {
-    dir.mkpath("./");
+    m_dir.mkpath("./");
 
-    m_file.setFileName(dir.filePath(fileName));
-
-    return m_file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+    return openLastFile() || createNewFile();
 }
 
-void Logger::closeLogFile()
+bool Logger::openLastFile()
+{
+    const auto fileNames = FileUtil::getFileNames(m_dir, fileNamePrefix(), fileNameSuffix());
+    if (fileNames.isEmpty())
+        return false;
+
+    const auto fileName = fileNames.first();
+    if (!openFile(fileName))
+        return false;
+
+    if (!checkFileSize()) {
+        closeFile();
+        return false;
+    }
+
+    writeLogLine("\n");
+
+    return true;
+}
+
+bool Logger::createNewFile()
+{
+    const QString fileName =
+            fileNamePrefix() + getDateString("yyyy-MM-dd_HH-mm-ss_zzz") + fileNameSuffix();
+
+    return openFile(fileName);
+}
+
+bool Logger::openFile(const QString &fileName)
+{
+    m_file.setFileName(m_dir.filePath(fileName));
+
+    return m_file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
+}
+
+void Logger::closeFile()
 {
     m_file.close();
+}
+
+bool Logger::checkFileOpen(const QString &dateString)
+{
+    // Create file when required to avoid empty files
+    if (m_file.isOpen())
+        return true;
+
+    FileUtil::removeOldFiles(m_dir, fileNamePrefix(), fileNameSuffix(), LOGGER_KEEP_FILES);
+
+    if (!openLogFile())
+        return false;
+
+    // Write file header
+    writeLogLine(makeLogLine(Info, dateString, getFileTitle()));
+
+    return true;
+}
+
+bool Logger::checkFileSize()
+{
+    if (m_file.size() < LOGGER_FILE_MAX_SIZE)
+        return true;
+
+    closeFile(); // too big file
+
+    return false;
 }
 
 void Logger::writeLogLine(const QString &logLine)
@@ -187,24 +245,9 @@ void Logger::writeLog(const QString &dateString, const QString &logLine)
 
     m_writing = true;
 
-    // Create file when required to avoid empty files
-    if (!m_file.isOpen()) {
-        FileUtil::removeOldFiles(
-                m_dir.path(), fileNamePrefix(), fileNameSuffix(), LOGGER_KEEP_FILES);
-
-        if (!openLogFile()) {
-            m_writing = false;
-            return;
-        }
-
-        // Write file header
-        writeLogLine(makeLogLine(Info, dateString, getFileTitle()));
-    }
-
-    writeLogLine(logLine);
-
-    if (m_file.size() > LOGGER_FILE_MAX_SIZE) {
-        closeLogFile(); // Too big file
+    if (checkFileOpen(dateString)) {
+        writeLogLine(logLine);
+        checkFileSize();
     }
 
     m_writing = false;

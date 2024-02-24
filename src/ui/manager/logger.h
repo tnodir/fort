@@ -46,8 +46,14 @@ private:
     QString fileNameSuffix() const;
 
     bool openLogFile();
-    bool tryOpenLogFile(const QDir &dir, const QString &fileName);
-    void closeLogFile();
+    bool openDirFile();
+    bool openLastFile();
+    bool createNewFile();
+    bool openFile(const QString &fileName);
+    void closeFile();
+
+    bool checkFileOpen(const QString &dateString);
+    bool checkFileSize();
 
     void writeLogLine(const QString &logLine);
 

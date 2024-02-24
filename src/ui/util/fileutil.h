@@ -4,6 +4,8 @@
 #include <QDateTime>
 #include <QObject>
 
+QT_FORWARD_DECLARE_CLASS(QDir)
+
 namespace FileUtil {
 
 QString systemAppDescription();
@@ -71,8 +73,9 @@ QString appConfigLocation();
 QString applicationsLocation();
 QString tempLocation();
 
-void removeOldFiles(const QString &path, const QString &fileNamePrefix,
-        const QString &fileNameSuffix, int keepFiles);
+QStringList getFileNames(QDir &dir, const QString &fileNamePrefix, const QString &fileNameSuffix);
+void removeOldFiles(
+        QDir &dir, const QString &fileNamePrefix, const QString &fileNameSuffix, int keepFiles);
 };
 
 #endif // FILEUTIL_H

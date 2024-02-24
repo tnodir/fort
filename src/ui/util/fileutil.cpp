@@ -393,15 +393,18 @@ QString tempLocation()
     return QStandardPaths::writableLocation(QStandardPaths::TempLocation);
 }
 
-void removeOldFiles(const QString &path, const QString &fileNamePrefix,
-        const QString &fileNameSuffix, int keepFiles)
+QStringList getFileNames(QDir &dir, const QString &fileNamePrefix, const QString &fileNameSuffix)
 {
-    QDir dir(path);
-    const auto fileNames =
-            dir.entryList({ fileNamePrefix + '*' + fileNameSuffix }, QDir::Files, QDir::Time);
+    return dir.entryList({ fileNamePrefix + '*' + fileNameSuffix }, QDir::Files, QDir::Time);
+}
+
+void removeOldFiles(
+        QDir &dir, const QString &fileNamePrefix, const QString &fileNameSuffix, int keepFiles)
+{
+    const auto fileNames = getFileNames(dir, fileNamePrefix, fileNameSuffix);
 
     for (const QString &fileName : fileNames) {
-        if (--keepFiles < 0) {
+        if (--keepFiles <= 0) {
             dir.remove(fileName);
         }
     }
