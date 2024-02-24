@@ -198,6 +198,7 @@ SOURCES += \
     util/osutil.cpp \
     util/processinfo.cpp \
     util/regkey.cpp \
+    util/service/servicehandle.cpp \
     util/service/serviceinfo.cpp \
     util/service/servicelistmonitor.cpp \
     util/service/servicemanageriface.cpp \
@@ -412,6 +413,7 @@ HEADERS += \
     util/osutil.h \
     util/processinfo.h \
     util/regkey.h \
+    util/service/servicehandle.h \
     util/service/serviceinfo.h \
     util/service/servicelistmonitor.h \
     util/service/servicemanageriface.h \

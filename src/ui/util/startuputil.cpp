@@ -9,9 +9,10 @@
 
 #include <fort_version_l.h>
 
-#include "fileutil.h"
-#include "regkey.h"
-#include "service/servicemanageriface.h"
+#include <util/fileutil.h>
+#include <util/regkey.h>
+#include <util/service/servicehandle.h>
+#include <util/service/servicemanageriface.h>
 
 namespace {
 
@@ -91,87 +92,34 @@ void removeAutorunForAllUsers()
     removeAutorunForUser(regAllUsersRoot, regAllUsersRun);
 }
 
-static void setupServiceRestartConfig(SC_HANDLE svc)
-{
-    constexpr int actionsCount = 3;
-
-    SC_ACTION actions[actionsCount];
-    actions[0].Type = SC_ACTION_RESTART;
-    actions[0].Delay = 150;
-    actions[1].Type = SC_ACTION_NONE;
-    actions[1].Delay = 0;
-    actions[2].Type = SC_ACTION_NONE;
-    actions[2].Delay = 0;
-
-    SERVICE_FAILURE_ACTIONS sfa;
-    sfa.dwResetPeriod = 0;
-    sfa.lpCommand = NULL;
-    sfa.lpRebootMsg = NULL;
-    sfa.cActions = actionsCount;
-    sfa.lpsaActions = actions;
-
-    ChangeServiceConfig2(svc, SERVICE_CONFIG_FAILURE_ACTIONS, &sfa);
-}
-
 bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
         const wchar_t *serviceDescription, const wchar_t *serviceGroup, const wchar_t *dependencies,
         const QString &command)
 {
-    bool res = false;
-    const SC_HANDLE mngr = OpenSCManagerW(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
-    if (mngr) {
-        const SC_HANDLE svc = CreateServiceW(mngr, serviceName, serviceDisplay, SERVICE_ALL_ACCESS,
-                SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START, SERVICE_ERROR_NORMAL,
-                (LPCWSTR) command.utf16(), serviceGroup, 0, dependencies, nullptr, nullptr);
-        if (svc) {
-            SERVICE_DESCRIPTION sd = { (LPWSTR) serviceDescription };
-            ChangeServiceConfig2(svc, SERVICE_CONFIG_DESCRIPTION, &sd);
+    ServiceHandle svc(serviceName, SC_MANAGER_CREATE_SERVICE);
+    if (!svc.isManagerOpened())
+        return false;
 
-            setupServiceRestartConfig(svc);
+    svc.createService(serviceName, serviceDisplay, serviceGroup, dependencies, command);
+    if (!svc.isServiceOpened())
+        return false;
 
-            res = true;
-            CloseServiceHandle(svc);
-        }
-        CloseServiceHandle(mngr);
-    }
-    return res;
-}
+    svc.setServiceDescription(serviceDescription);
+    svc.setupServiceRestartConfig();
 
-bool stopServiceControl(SC_HANDLE svc)
-{
-    int n = 3; /* count of attempts to stop the service */
-    do {
-        SERVICE_STATUS status;
-        if (QueryServiceStatus(svc, &status) && status.dwCurrentState == SERVICE_STOPPED)
-            return true;
-
-        const DWORD controlCode = (status.dwControlsAccepted & SERVICE_ACCEPT_STOP) != 0
-                ? SERVICE_CONTROL_STOP
-                : FORT_SERVICE_CONTROL_UNINSTALL;
-
-        ControlService(svc, controlCode, &status);
-
-        QThread::msleep(n * 100);
-    } while (--n > 0);
-
-    return false;
+    return true;
 }
 
 bool uninstallService(const wchar_t *serviceName)
 {
-    bool res = false;
-    const SC_HANDLE mngr = OpenSCManagerW(NULL, NULL, SC_MANAGER_ALL_ACCESS);
-    if (mngr) {
-        const SC_HANDLE svc = OpenServiceW(mngr, serviceName, SERVICE_ALL_ACCESS | DELETE);
-        if (svc) {
-            stopServiceControl(svc);
+    ServiceHandle svc(serviceName, SC_MANAGER_ALL_ACCESS, SERVICE_ALL_ACCESS | DELETE);
+    if (svc.isServiceOpened()) {
+        svc.stopService();
 
-            res = DeleteService(svc);
-            CloseServiceHandle(svc);
-        }
-        CloseServiceHandle(mngr);
+        return svc.deleteService();
     }
-    return res;
+
+    return false;
 }
 
 }
@@ -183,17 +131,9 @@ const wchar_t *StartupUtil::serviceName()
 
 bool StartupUtil::isServiceInstalled()
 {
-    bool res = false;
-    const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT);
-    if (mngr) {
-        const SC_HANDLE svc = OpenServiceW(mngr, serviceNameStr, SERVICE_INTERROGATE);
-        if (svc) {
-            res = true;
-            CloseServiceHandle(svc);
-        }
-        CloseServiceHandle(mngr);
-    }
-    return res;
+    ServiceHandle svc(serviceNameStr, SC_MANAGER_CONNECT, SERVICE_INTERROGATE);
+
+    return svc.isServiceOpened();
 }
 
 void StartupUtil::setServiceInstalled(bool install)
@@ -209,36 +149,38 @@ void StartupUtil::setServiceInstalled(bool install)
             serviceDependenciesStr, command);
 
     startService();
+
     QThread::msleep(100); // Let the service to start
+}
+
+bool StartupUtil::isServiceRunning()
+{
+    ServiceHandle svc(serviceNameStr, SC_MANAGER_CONNECT, SERVICE_INTERROGATE);
+    if (svc.isServiceOpened()) {
+        return svc.queryIsRunning();
+    }
+
+    return false;
 }
 
 bool StartupUtil::startService()
 {
-    bool res = false;
-    const SC_HANDLE mngr = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT);
-    if (mngr) {
-        const SC_HANDLE svc = OpenServiceW(mngr, serviceNameStr, SERVICE_START);
-        if (svc) {
-            res = StartServiceW(svc, 0, nullptr);
-            CloseServiceHandle(svc);
-        }
-        CloseServiceHandle(mngr);
+    ServiceHandle svc(serviceNameStr, SC_MANAGER_CONNECT, SERVICE_START);
+    if (svc.isServiceOpened()) {
+        return svc.startService();
     }
-    return res;
+
+    return false;
 }
 
 bool StartupUtil::stopService()
 {
-    bool res = false;
-    const SC_HANDLE mngr = OpenSCManagerW(NULL, NULL, SC_MANAGER_ALL_ACCESS);
-    if (mngr) {
-        const SC_HANDLE svc = OpenServiceW(mngr, serviceNameStr, SERVICE_ALL_ACCESS);
-        if (svc) {
-            res = stopServiceControl(svc);
-        }
-        CloseServiceHandle(mngr);
+    ServiceHandle svc(serviceNameStr, SC_MANAGER_ALL_ACCESS, SERVICE_ALL_ACCESS);
+    if (svc.isServiceOpened()) {
+        return svc.stopService();
     }
-    return res;
+
+    return false;
 }
 
 StartupUtil::AutoRunMode StartupUtil::autoRunMode()

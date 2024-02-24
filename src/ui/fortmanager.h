@@ -45,6 +45,7 @@ private:
     void closeDriver();
 
     void checkInstallDriver();
+    void checkStartService();
 
     void setupEnvManager();
     void setupConfManager();

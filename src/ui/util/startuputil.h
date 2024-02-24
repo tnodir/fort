@@ -13,6 +13,8 @@ public:
     static bool isServiceInstalled();
     static void setServiceInstalled(bool install);
 
+    static bool isServiceRunning();
+
     static bool startService();
     static bool stopService();
 

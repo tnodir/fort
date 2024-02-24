@@ -119,6 +119,7 @@ void FortSettings::setupGlobal()
 
     m_noCache = settings.value("global/noCache").toBool();
     m_canInstallDriver = settings.value("global/canInstallDriver").toBool();
+    m_canStartService = settings.value("global/canStartService").toBool();
     m_defaultLanguage = settings.value("global/defaultLanguage").toString();
 
     m_profilePath = settings.value("global/profileDir").toString();

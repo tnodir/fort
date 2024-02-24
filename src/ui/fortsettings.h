@@ -33,6 +33,7 @@ public:
     bool noCache() const { return m_noCache; }
     bool noSplash() const { return m_noSplash; }
     bool canInstallDriver() const { return m_canInstallDriver; }
+    bool canStartService() const { return m_canStartService; }
 
     bool isService() const { return m_isService; }
     bool hasService() const { return m_hasService; }
@@ -129,6 +130,7 @@ private:
     uint m_noCache : 1 = false;
     uint m_noSplash : 1 = false;
     uint m_canInstallDriver : 1 = false;
+    uint m_canStartService : 1 = false;
     uint m_isService : 1 = false;
     uint m_hasService : 1 = false;
     uint m_isUserAdmin : 1 = false;

@@ -179,6 +179,7 @@ void FortManager::initialize()
     loadConf();
 
     checkInstallDriver();
+    checkStartService();
 }
 
 void FortManager::setupThreadPool()
@@ -329,11 +330,26 @@ void FortManager::checkInstallDriver()
 
     const auto settings = IoC<FortSettings>();
 
-    const bool canInstallDriver = (settings->canInstallDriver() || settings->isPortable())
-            && settings->isMaster() && settings->isUserAdmin();
+    const bool canInstallDriver = (settings->canInstallDriver() || settings->isPortable());
+    const bool isMasterAdmin = (settings->isMaster() && settings->isUserAdmin());
 
-    if (canInstallDriver) {
+    if (canInstallDriver && isMasterAdmin) {
         installDriver();
+    }
+}
+
+void FortManager::checkStartService()
+{
+    const auto settings = IoC<FortSettings>();
+
+    if (settings->isMaster() || StartupUtil::isServiceRunning())
+        return;
+
+    const bool canStartService = settings->canStartService();
+    const bool isAdmin = settings->isUserAdmin();
+
+    if (canStartService && isAdmin) {
+        StartupUtil::startService();
     }
 }
 
