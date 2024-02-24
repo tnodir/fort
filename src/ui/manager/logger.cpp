@@ -124,7 +124,7 @@ QString Logger::getDateString(const QString &format)
 
 QString Logger::makeLogLine(LogLevel level, const QString &dateString, const QString &message)
 {
-    static const char *const g_levelChars = "IWE";
+    static const char *const g_levelChars = ".WE";
 
     return dateString + ' ' + g_levelChars[int(level)] + ' ' + message + '\n';
 }
