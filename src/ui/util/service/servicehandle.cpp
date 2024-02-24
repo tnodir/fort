@@ -53,13 +53,20 @@ bool ServiceHandle::stopService()
     return false;
 }
 
-void ServiceHandle::createService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
-        const wchar_t *serviceGroup, const wchar_t *dependencies, const QString &command)
+bool ServiceHandle::createService(const CreateServiceArg &csa)
 {
-    m_serviceHandle = qintptr(CreateServiceW(SC_HANDLE(m_managerHandle), serviceName,
-            serviceDisplay, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START,
-            SERVICE_ERROR_NORMAL, (LPCWSTR) command.utf16(), serviceGroup, 0, dependencies, nullptr,
+    m_serviceHandle = qintptr(CreateServiceW(SC_HANDLE(m_managerHandle), csa.serviceName,
+            csa.serviceDisplay, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START,
+            SERVICE_ERROR_NORMAL, csa.command, csa.serviceGroup, 0, csa.dependencies, nullptr,
             nullptr));
+
+    if (!isServiceOpened())
+        return false;
+
+    SERVICE_DESCRIPTION sd = { (LPWSTR) csa.serviceDescription };
+    ChangeServiceConfig2(SC_HANDLE(m_serviceHandle), SERVICE_CONFIG_DESCRIPTION, &sd);
+
+    return true;
 }
 
 bool ServiceHandle::deleteService()
@@ -67,14 +74,7 @@ bool ServiceHandle::deleteService()
     return DeleteService(SC_HANDLE(m_serviceHandle));
 }
 
-void ServiceHandle::setServiceDescription(const wchar_t *serviceDescription)
-{
-    SERVICE_DESCRIPTION sd = { (LPWSTR) serviceDescription };
-
-    ChangeServiceConfig2(SC_HANDLE(m_serviceHandle), SERVICE_CONFIG_DESCRIPTION, &sd);
-}
-
-void ServiceHandle::setupServiceRestartConfig()
+bool ServiceHandle::setupServiceRestartConfig()
 {
     constexpr int actionsCount = 3;
 
@@ -93,7 +93,7 @@ void ServiceHandle::setupServiceRestartConfig()
     sfa.cActions = actionsCount;
     sfa.lpsaActions = actions;
 
-    ChangeServiceConfig2(SC_HANDLE(m_serviceHandle), SERVICE_CONFIG_FAILURE_ACTIONS, &sfa);
+    return ChangeServiceConfig2(SC_HANDLE(m_serviceHandle), SERVICE_CONFIG_FAILURE_ACTIONS, &sfa);
 }
 
 void ServiceHandle::openService(

@@ -3,6 +3,16 @@
 
 #include <QObject>
 
+struct CreateServiceArg
+{
+    const wchar_t *serviceName;
+    const wchar_t *serviceDisplay;
+    const wchar_t *serviceDescription;
+    const wchar_t *serviceGroup;
+    const wchar_t *dependencies;
+    const wchar_t *command;
+};
+
 class ServiceHandle final
 {
 public:
@@ -18,12 +28,10 @@ public:
     bool startService();
     bool stopService();
 
-    void createService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
-            const wchar_t *serviceGroup, const wchar_t *dependencies, const QString &command);
+    bool createService(const CreateServiceArg &csa);
     bool deleteService();
 
-    void setServiceDescription(const wchar_t *serviceDescription);
-    void setupServiceRestartConfig();
+    bool setupServiceRestartConfig();
 
 private:
     void openService(const wchar_t *serviceName, quint32 managerAccess, quint32 serviceAccess);

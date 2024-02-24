@@ -92,22 +92,16 @@ void removeAutorunForAllUsers()
     removeAutorunForUser(regAllUsersRoot, regAllUsersRun);
 }
 
-bool installService(const wchar_t *serviceName, const wchar_t *serviceDisplay,
-        const wchar_t *serviceDescription, const wchar_t *serviceGroup, const wchar_t *dependencies,
-        const QString &command)
+bool installService(const CreateServiceArg &csa)
 {
-    ServiceHandle svc(serviceName, SC_MANAGER_CREATE_SERVICE);
+    ServiceHandle svc(csa.serviceName, SC_MANAGER_CREATE_SERVICE);
     if (!svc.isManagerOpened())
         return false;
 
-    svc.createService(serviceName, serviceDisplay, serviceGroup, dependencies, command);
-    if (!svc.isServiceOpened())
+    if (!svc.createService(csa))
         return false;
 
-    svc.setServiceDescription(serviceDescription);
-    svc.setupServiceRestartConfig();
-
-    return true;
+    return svc.setupServiceRestartConfig();
 }
 
 bool uninstallService(const wchar_t *serviceName)
@@ -145,8 +139,16 @@ void StartupUtil::setServiceInstalled(bool install)
 
     const QString command = wrappedAppFilePath() + " --service";
 
-    installService(serviceNameStr, serviceDisplayStr, serviceDescriptionStr, serviceGroupStr,
-            serviceDependenciesStr, command);
+    const CreateServiceArg csa = {
+        .serviceName = serviceNameStr,
+        .serviceDisplay = serviceDisplayStr,
+        .serviceDescription = serviceDescriptionStr,
+        .serviceGroup = serviceGroupStr,
+        .dependencies = serviceDependenciesStr,
+        .command = (LPCWSTR) command.utf16(),
+    };
+
+    installService(csa);
 
     startService();
 
