@@ -78,21 +78,25 @@ Logger::Logger(QObject *parent) : QObject(parent)
 
 void Logger::setDebug(bool v)
 {
-    if (m_debug != v) {
-        m_debug = v;
+    if (m_debug == v)
+        return;
 
-        QLoggingCategory::setFilterRules(debug() ? QString() : "*.debug=false");
-    }
+    m_debug = v;
+
+    QLoggingCategory::setFilterRules(debug() ? QString() : "*.debug=false");
+
+    closeFile();
 }
 
 void Logger::setConsole(bool v)
 {
-    if (m_console != v) {
-        m_console = v;
+    if (m_console == v)
+        return;
 
-        if (!isService()) {
-            OsUtil::showConsole(console());
-        }
+    m_console = v;
+
+    if (!isService()) {
+        OsUtil::showConsole(console());
     }
 }
 
