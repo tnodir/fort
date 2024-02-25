@@ -1,6 +1,7 @@
 #include "taskinfozonedownloader.h"
 
 #include <QDir>
+#include <QLoggingCategory>
 
 #include <conf/confzonemanager.h>
 #include <fortsettings.h>
@@ -13,6 +14,12 @@
 
 #include "taskmanager.h"
 #include "taskzonedownloader.h"
+
+namespace {
+
+const QLoggingCategory LC("task.zoneDownloader");
+
+}
 
 TaskInfoZoneDownloader::TaskInfoZoneDownloader(TaskManager &taskManager) :
     TaskInfo(ZoneDownloader, taskManager)
@@ -31,8 +38,12 @@ ZoneListModel *TaskInfoZoneDownloader::zoneListModel() const
 
 bool TaskInfoZoneDownloader::processResult(bool success)
 {
-    if (!success)
+    if (!success) {
+        qCDebug(LC) << "No updates";
         return false;
+    }
+
+    qCDebug(LC) << "Updated:" << m_zoneNames;
 
     emit taskManager()->zonesDownloaded(m_zoneNames);
 

@@ -152,10 +152,9 @@ void TaskInfo::setupTaskWorker()
 
 void TaskInfo::runTaskWorker()
 {
-    if (aborted() || !taskWorker())
-        return;
-
-    taskWorker()->run();
+    if (taskWorker()) {
+        taskWorker()->run();
+    }
 }
 
 void TaskInfo::abortTask()

@@ -1,6 +1,7 @@
 #include "taskinfoupdatechecker.h"
 
 #include <QDataStream>
+#include <QLoggingCategory>
 #include <QVersionNumber>
 
 #include <fort_version.h>
@@ -8,7 +9,13 @@
 #include "taskmanager.h"
 #include "taskupdatechecker.h"
 
-#define TASK_INFO_VERSION 2
+namespace {
+
+const QLoggingCategory LC("task.updateChecker");
+
+constexpr int TASK_INFO_VERSION = 2;
+
+}
 
 TaskInfoUpdateChecker::TaskInfoUpdateChecker(TaskManager &taskManager) :
     TaskInfo(UpdateChecker, taskManager)
@@ -71,13 +78,17 @@ TaskUpdateChecker *TaskInfoUpdateChecker::updateChecker() const
 
 bool TaskInfoUpdateChecker::processResult(bool success)
 {
-    if (!success)
+    if (!success) {
+        qCDebug(LC) << "Failed";
         return false;
+    }
 
     const auto worker = updateChecker();
 
-    if (m_version == worker->version())
+    if (m_version == worker->version()) {
+        qCDebug(LC) << "Same version";
         return false;
+    }
 
     m_version = worker->version();
     m_downloadUrl = worker->downloadUrl();
@@ -86,7 +97,11 @@ bool TaskInfoUpdateChecker::processResult(bool success)
     emitAppVersionUpdated();
 
     if (isNewVersion()) {
+        qCDebug(LC) << "New version found:" << m_version;
+
         emit taskManager()->appVersionDownloaded(m_version);
+    } else {
+        qCDebug(LC) << "Old version found:" << m_version;
     }
 
     return true;

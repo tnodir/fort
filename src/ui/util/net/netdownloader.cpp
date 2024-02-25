@@ -7,7 +7,7 @@
 #define DOWNLOAD_MAXSIZE (8 * 1024 * 1024)
 
 namespace {
-const QLoggingCategory LC("util.net.netDownloader");
+const QLoggingCategory LC("util.net.downloader");
 }
 
 NetDownloader::NetDownloader(QObject *parent) :
@@ -16,7 +16,7 @@ NetDownloader::NetDownloader(QObject *parent) :
     m_downloadTimer.setInterval(DOWNLOAD_TIMEOUT);
 
     connect(&m_downloadTimer, &QTimer::timeout, this, [&] {
-        qCDebug(LC) << "NetDownloader: Error: Download timed out";
+        qCDebug(LC) << "Error: Download timed out";
 
         finish();
     });
@@ -31,7 +31,7 @@ QByteArray NetDownloader::takeBuffer()
 
 void NetDownloader::start()
 {
-    qCDebug(LC) << "NetDownloader: Start:" << url() << data();
+    qCDebug(LC) << "Fetch:" << url() << data();
 
     m_started = true;
     m_aborted = false;
@@ -85,7 +85,7 @@ void NetDownloader::onDownloadProgress(qint64 bytesReceived, qint64 /*bytesTotal
 
     m_buffer.append(data);
     if (m_buffer.size() >= DOWNLOAD_MAXSIZE) {
-        qCWarning(LC) << "NetDownloader: Error: Too big file";
+        qCWarning(LC) << "Error: Too big file";
         finish();
     }
 }
@@ -102,7 +102,7 @@ void NetDownloader::onErrorOccurred(QNetworkReply::NetworkError error)
     if (m_aborted)
         return;
 
-    qCWarning(LC) << "NetDownloader: Error:" << error << m_reply->errorString();
+    qCWarning(LC) << "Error:" << error << m_reply->errorString();
 
     finish();
 }
@@ -113,7 +113,7 @@ void NetDownloader::onSslErrors(const QList<QSslError> &errors)
         return;
 
     for (const QSslError &error : errors) {
-        qCWarning(LC) << "NetDownloader: SSL Error:" << error.errorString();
+        qCWarning(LC) << "SSL Error:" << error.errorString();
     }
 
     finish();
