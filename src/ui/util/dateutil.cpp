@@ -67,12 +67,12 @@ QString DateUtil::formatHour(qint64 unixTime)
 
 QString DateUtil::formatDay(qint64 unixTime)
 {
-    return formatDateTime(unixTime, "dd MMMM yyyy");
+    return formatDateTime(unixTime, "dd-MMM-yyyy");
 }
 
 QString DateUtil::formatMonth(qint64 unixTime)
 {
-    return formatDateTime(unixTime, "MMMM yyyy");
+    return formatDateTime(unixTime, "MMM-yyyy");
 }
 
 QString DateUtil::formatDateTime(qint64 unixTime, const QString &format)

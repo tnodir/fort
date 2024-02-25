@@ -220,14 +220,14 @@ QString TrafListModel::formatTrafTime(qint32 trafTime) const
     const qint64 unixTime = DateUtil::toUnixTime(trafTime);
 
     switch (m_type) {
-    case TrafTotal:
-        Q_FALLTHROUGH();
     case TrafHourly:
         return DateUtil::formatHour(unixTime);
     case TrafDaily:
         return DateUtil::formatDay(unixTime);
     case TrafMonthly:
         return DateUtil::formatMonth(unixTime);
+    case TrafTotal:
+        return DateUtil::formatHour(unixTime);
     }
     return QString();
 }
