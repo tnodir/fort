@@ -42,6 +42,7 @@ private:
     QLayout *setupMainLayout();
     QLayout *setupFormLayout();
     QLayout *setupActionsLayout();
+    QLayout *setupZonesLayout();
     void setupAdvancedOptions();
     QLayout *setupButtons();
 
@@ -61,9 +62,9 @@ private:
     QCheckBox *m_cbEnabled = nullptr;
     QRadioButton *m_rbAllow = nullptr;
     QRadioButton *m_rbBlock = nullptr;
-    PlainTextEdit *m_editRuleText = nullptr;
     QCheckBox *m_cbExclusive = nullptr;
     ZonesSelector *m_btZones = nullptr;
+    PlainTextEdit *m_editRuleText = nullptr;
     QPushButton *m_btOptions = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;

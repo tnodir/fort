@@ -83,7 +83,6 @@ void RuleEditDialog::retranslateUi()
     m_cbExclusive->setText(tr("Exclusive"));
     m_btZones->retranslateUi();
 
-    m_btOptions->setToolTip(tr("Advanced Options"));
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
@@ -121,7 +120,7 @@ QLayout *RuleEditDialog::setupMainLayout()
     m_editRuleText = new PlainTextEdit();
 
     // Advanced Options
-    setupAdvancedOptions();
+    auto zonesLayout = setupZonesLayout();
 
     // OK/Cancel
     auto buttonsLayout = setupButtons();
@@ -132,6 +131,7 @@ QLayout *RuleEditDialog::setupMainLayout()
     layout->addStretch();
     layout->addLayout(actionsLayout);
     layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(zonesLayout);
     layout->addWidget(m_editRuleText);
     layout->addStretch();
     layout->addWidget(ControlUtil::createHSeparator());
@@ -186,7 +186,7 @@ QLayout *RuleEditDialog::setupActionsLayout()
     return layout;
 }
 
-void RuleEditDialog::setupAdvancedOptions()
+QLayout *RuleEditDialog::setupZonesLayout()
 {
     // Exclusive
     m_cbExclusive = new QCheckBox();
@@ -196,16 +196,10 @@ void RuleEditDialog::setupAdvancedOptions()
     m_btZones->setIsTristate(true);
     m_btZones->setMaxZoneCount(16); // sync with driver's FORT_APP_ENTRY
 
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbExclusive);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addWidget(m_btZones);
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_cbExclusive, ControlUtil::createVSeparator(), m_btZones, /*stretch*/ nullptr });
 
-    auto menu = ControlUtil::createMenuByLayout(layout, this);
-
-    m_btOptions = ControlUtil::createButton(":/icons/widgets.png");
-    m_btOptions->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_O));
-    m_btOptions->setMenu(menu);
+    return layout;
 }
 
 QLayout *RuleEditDialog::setupButtons()
@@ -223,7 +217,6 @@ QLayout *RuleEditDialog::setupButtons()
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = new QHBoxLayout();
-    layout->addWidget(m_btOptions);
     layout->addWidget(m_btOk, 1, Qt::AlignRight);
     layout->addWidget(m_btCancel);
 
