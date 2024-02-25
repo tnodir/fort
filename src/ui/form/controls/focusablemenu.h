@@ -12,6 +12,8 @@ public:
 
 protected:
     bool event(QEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
     bool focusNextPrevChild(bool next) override;
 };
 

@@ -2,6 +2,7 @@
 
 #include <QEvent>
 #include <QKeyEvent>
+#include <QMouseEvent>
 
 FocusableMenu::FocusableMenu(QWidget *parent) : QMenu(parent)
 {
@@ -22,6 +23,21 @@ bool FocusableMenu::event(QEvent *e)
     }
 
     return QMenu::event(e);
+}
+
+void FocusableMenu::mousePressEvent(QMouseEvent *e)
+{
+    if (rect().contains(e->position().toPoint())) {
+        e->accept();
+        return;
+    }
+
+    QMenu::mousePressEvent(e);
+}
+
+void FocusableMenu::mouseMoveEvent(QMouseEvent *e)
+{
+    e->accept();
 }
 
 bool FocusableMenu::focusNextPrevChild(bool next)
