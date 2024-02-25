@@ -43,15 +43,16 @@ QLayout *AppsColumn::setupHeaderLayout()
     m_icon->setScaledContents(true);
     m_icon->setMaximumSize(16, 16);
 
-    m_btClear =
-            ControlUtil::createFlatToolButton(":/icons/delete.png", [&] { m_editText->clear(); });
-
     m_labelTitle = ControlUtil::createLabel();
     m_labelTitle->setFont(ControlUtil::fontBold());
     m_labelTitle->setFixedHeight(24);
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_icon, m_labelTitle, m_btClear,
-            /*stretch*/ nullptr });
+    m_btClear =
+            ControlUtil::createFlatToolButton(":/icons/delete.png", [&] { m_editText->clear(); });
+
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_icon, m_labelTitle, ControlUtil::createVSeparator(), m_btClear,
+                    /*stretch*/ nullptr });
     layout->setSpacing(2);
 
     return layout;
