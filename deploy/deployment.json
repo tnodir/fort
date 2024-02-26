@@ -3,12 +3,12 @@
 		"${TARGET}": {
 			"fort": [
 				"${BUILD}-${CONFIG}/ui_bin/FortFirewall.exe",
-				"${ROOT}/src/ui/i18n			| *.qm			|"
+				"${ROOT}/src/ui/i18n | *.qm |"
 			]
 		},
 		"${TARGET}/driver": {
 			"scripts": [
-				"${ROOT}/src/driver/scripts		| *.bat *.lnk		|"
+				"${ROOT}/src/driver/scripts | *.bat *.lnk |"
 			]
 		},
 		"${TARGET}/driver/x86 | win7": {

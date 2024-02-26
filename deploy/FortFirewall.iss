@@ -66,6 +66,7 @@ Name: "portable"; Description: "{cm:Portable}"; Flags: unchecked
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"; Flags: ignoreversion
+Source: "qt.conf"; DestDir: "{app}"; Flags: ignoreversion
 
 [Dirs]
 Name: "{app}\Data"; Flags: uninsneveruninstall; Permissions: users-modify; Tasks: portable
@@ -105,10 +106,10 @@ Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "UninsDriver"
 Type: filesandordirs; Name: "{app}\driver"
 Type: filesandordirs; Name: "{app}\i18n"
 Type: files; Name: "{app}\README*.*"
+Type: files; Name: "{app}\qt*.*"
 ; TODO: COMPAT: Remove the following 4 lines after v4.1.0
 Type: filesandordirs; Name: "{app}\plugins"
 Type: files; Name: "{app}\curl*.*"
-Type: files; Name: "{app}\qt*.*"
 Type: files; Name: "{app}\ChangeLog"
 
 [Registry]
