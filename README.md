@@ -45,13 +45,12 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 
 ## Support
 
-  - ⭐ Star it on GitHub, ✨ Rate on [AlternativeTo](https://alternativeto.net/software/fort-firewall/about/)
+  - ⭐ Star it on GitHub, ❤ Rate on [AlternativeTo](https://alternativeto.net/software/fort-firewall/about/)
   - 🐞 [Report bugs](https://github.com/tnodir/fort/issues), ⚡ [Discuss ideas](https://github.com/tnodir/fort/discussions)
 
 ### Sponsoring
 
-  - ❤ [Become a Sponsor!](https://github.com/sponsors/tnodir)
-  - [<img src="https://github.com/edent/SuperTinyIcons/blob/master/images/svg/patreon.svg" width="18" height="18"> Become a Patron!](https://www.patreon.com/bePatron?u=9349286)
+[![github](https://img.shields.io/badge/GitHub%20Sponsors-blue?logo=GitHub%20Sponsors)](https://github.com/sponsors/tnodir) [![patreon](https://img.shields.io/badge/Patreon%20Patrons-blue?logo=Patreon)](https://www.patreon.com/bePatron?u=9349286)
 
 ## SAST Tools
 
