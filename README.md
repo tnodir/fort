@@ -10,7 +10,6 @@
 [![Crowdin](https://badges.crowdin.net/fort-firewall/localized.svg)](https://crowdin.com/project/fort-firewall)
 [![CodeScene Code Health](https://codescene.io/projects/5344/status-badges/code-health)](https://codescene.io/projects/5344)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tnodir_fort&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=tnodir_fort)
-[![License](https://img.shields.io/static/v1.svg?label=license&message=GPL-v3&color=orange&logo=gnu)](https://www.gnu.org/licenses/gpl-3.0)
 
 Fort is an effective firewall designed for Windows 7 and later versions, offering both simplicity and robustness.
 
