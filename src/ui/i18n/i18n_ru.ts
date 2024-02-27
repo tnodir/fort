@@ -1458,10 +1458,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Эксклюзив</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Расширенные опции</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>ОК</translation>
     </message>

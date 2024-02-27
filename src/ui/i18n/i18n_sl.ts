@@ -760,15 +760,15 @@
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Privzeto</translation>
     </message>
     <message>
         <source>Reset to default all options</source>
-        <translation type="unfinished"></translation>
+        <translation>Ponastavi vse možnosti na privzete</translation>
     </message>
     <message>
         <source>Reset to default current tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Ponastavi na privzeti trenutni zavihek</translation>
     </message>
 </context>
 <context>
@@ -1082,7 +1082,7 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Prikaži začetni zaslon ob zagonu</translation>
     </message>
 </context>
 <context>
@@ -1456,10 +1456,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Exclusive</source>
         <translation>Izključno</translation>
-    </message>
-    <message>
-        <source>Advanced Options</source>
-        <translation>Napredne možnosti</translation>
     </message>
     <message>
         <source>OK</source>

@@ -1449,10 +1449,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation type="unfinished">Ok</translation>
     </message>

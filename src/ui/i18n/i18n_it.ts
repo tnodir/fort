@@ -1458,10 +1458,6 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <translation>Esclusivo</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Opzioni avanzate</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>Ok</translation>
     </message>

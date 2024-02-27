@@ -1458,10 +1458,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Exklusiv</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Erweiterte Einstellungen</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>OK</translation>
     </message>

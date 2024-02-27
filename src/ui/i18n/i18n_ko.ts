@@ -1458,10 +1458,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>독점</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>고급 옵션</translation>
-    </message>
-    <message>
         <source>OK</source>
         <translation>확인</translation>
     </message>

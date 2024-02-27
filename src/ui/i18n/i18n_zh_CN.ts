@@ -760,15 +760,15 @@
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>默认</translation>
     </message>
     <message>
         <source>Reset to default all options</source>
-        <translation type="unfinished"></translation>
+        <translation>重置全部选项至默认值</translation>
     </message>
     <message>
         <source>Reset to default current tab</source>
-        <translation type="unfinished"></translation>
+        <translation>重置当前标签页至默认值</translation>
     </message>
 </context>
 <context>
@@ -1453,11 +1453,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Exclusive</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Advanced Options</source>
-        <translation>高级选项</translation>
+        <translation>独有的</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1469,37 +1465,37 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>编辑规则</translation>
     </message>
 </context>
 <context>
     <name>RuleListModel</name>
     <message>
         <source>Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>规则</translation>
     </message>
     <message>
         <source>Change Time</source>
-        <translation type="unfinished"></translation>
+        <translation>更改时间</translation>
     </message>
 </context>
 <context>
     <name>RulesController</name>
     <message>
         <source>Rule Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>规则配置错误</translation>
     </message>
     <message>
         <source>Cannot edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>无法编辑规则</translation>
     </message>
     <message>
         <source>Cannot delete Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>无法删除规则</translation>
     </message>
     <message>
         <source>Cannot update Rule&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>无法更新规则名称</translation>
     </message>
 </context>
 <context>
@@ -1522,7 +1518,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Are you sure to remove selected rule?</source>
-        <translation type="unfinished"></translation>
+        <translation>确定移除所选规则？</translation>
     </message>
     <message>
         <source>Search</source>
