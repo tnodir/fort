@@ -7,8 +7,6 @@
 
 #include "fortcout.h"
 #include "fortdbg.h"
-#include "fortpkt.h"
-#include "fortps.h"
 #include "fortscb.h"
 #include "forttrace.h"
 #include "fortutl.h"

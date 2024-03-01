@@ -5,7 +5,6 @@
 #include "fortcb.h"
 #include "fortdbg.h"
 #include "fortdev.h"
-#include "fortpkt.h"
 
 static NTSTATUS fort_syscb_register(
         PCWSTR sourcePath, PCALLBACK_OBJECT *cb_obj, PVOID *cb_reg, PCALLBACK_FUNCTION cb_func)
