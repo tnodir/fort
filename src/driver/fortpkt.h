@@ -14,8 +14,6 @@ typedef struct fort_packet_in
 {
     IF_INDEX interfaceIndex;
     IF_INDEX subInterfaceIndex;
-
-    ULONG bytesRetreated;
 } FORT_PACKET_IN, *PFORT_PACKET_IN;
 
 typedef struct fort_packet_out
@@ -113,8 +111,10 @@ typedef struct fort_pending_proc
 
 typedef struct fort_pending
 {
-    HANDLE injection_transport4_id;
-    HANDLE injection_transport6_id;
+    HANDLE injection_transport4_in_id;
+    HANDLE injection_transport4_out_id;
+    HANDLE injection_transport6_in_id;
+    HANDLE injection_transport6_out_id;
 
     UINT16 proc_count;
 

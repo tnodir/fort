@@ -42,11 +42,14 @@ static LONG fort_shaper_io_bits(volatile LONG *io_bits)
     return fort_shaper_io_bits_set(io_bits, 0, TRUE);
 }
 
-inline static HANDLE fort_packet_injection_id(BOOL isIPv6)
+inline static HANDLE fort_packet_injection_id(BOOL isIPv6, BOOL inbound)
 {
     PFORT_PENDING pending = &fort_device()->pending;
 
-    return isIPv6 ? pending->injection_transport6_id : pending->injection_transport4_id;
+    return isIPv6
+            ? (inbound ? pending->injection_transport6_in_id : pending->injection_transport6_out_id)
+            : (inbound ? pending->injection_transport4_in_id
+                       : pending->injection_transport4_out_id);
 }
 
 static BOOL fort_packet_injected_by_self(PCFORT_CALLOUT_ARG ca)
@@ -54,7 +57,7 @@ static BOOL fort_packet_injected_by_self(PCFORT_CALLOUT_ARG ca)
     if (ca->netBufList == NULL)
         return FALSE;
 
-    const HANDLE injection_id = fort_packet_injection_id(ca->isIPv6);
+    const HANDLE injection_id = fort_packet_injection_id(ca->isIPv6, ca->inbound);
 
     const FWPS_PACKET_INJECTION_STATE state =
             FwpsQueryPacketInjectionState0(injection_id, ca->netBufList, NULL);
@@ -223,24 +226,28 @@ static NTSTATUS fort_packet_inject_out(
             (FWPS_INJECT_COMPLETE0) &fort_packet_inject_complete, pkt);
 }
 
-static NTSTATUS fort_packet_clone(PFORT_PACKET_IO pkt, PNET_BUFFER_LIST netBufList, BOOL inbound)
+static NTSTATUS fort_packet_clone(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO pkt)
 {
     NTSTATUS status;
 
-    const ULONG bytesRetreated = inbound ? pkt->in.bytesRetreated : 0;
+    ULONG bytesRetreated = 0;
+    if (ca->inbound) {
+        bytesRetreated = ca->inMetaValues->transportHeaderSize + ca->inMetaValues->ipHeaderSize;
+    }
 
     if (bytesRetreated != 0) {
         status = NdisRetreatNetBufferDataStart(
-                NET_BUFFER_LIST_FIRST_NB(netBufList), bytesRetreated, 0, 0);
+                NET_BUFFER_LIST_FIRST_NB(ca->netBufList), bytesRetreated, 0, 0);
+
         if (!NT_SUCCESS(status))
             return status;
     }
 
-    status = FwpsAllocateCloneNetBufferList0(netBufList, NULL, NULL, 0, &pkt->netBufList);
+    status = FwpsAllocateCloneNetBufferList0(ca->netBufList, NULL, NULL, 0, &pkt->netBufList);
 
     if (bytesRetreated != 0) {
         NdisAdvanceNetBufferDataStart(
-                NET_BUFFER_LIST_FIRST_NB(netBufList), bytesRetreated, FALSE, 0);
+                NET_BUFFER_LIST_FIRST_NB(ca->netBufList), bytesRetreated, FALSE, 0);
     }
 
     return status;
@@ -253,7 +260,7 @@ static NTSTATUS fort_packet_inject(PFORT_PACKET_IO pkt)
     const BOOL inbound = (pkt->flags & FORT_PACKET_INBOUND) != 0;
     const BOOL isIPv6 = (pkt->flags & FORT_PACKET_IP6) != 0;
     const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
-    const HANDLE injection_id = fort_packet_injection_id(isIPv6);
+    const HANDLE injection_id = fort_packet_injection_id(isIPv6, inbound);
 
     status = inbound ? fort_packet_inject_in(pkt, injection_id, addressFamily)
                      : fort_packet_inject_out(pkt, injection_id, addressFamily);
@@ -307,8 +314,6 @@ inline static NTSTATUS fort_packet_fill_in(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_I
 
     pkt_in->interfaceIndex = ca->inFixedValues->incomingValue[interfaceField].value.uint32;
     pkt_in->subInterfaceIndex = ca->inFixedValues->incomingValue[subInterfaceField].value.uint32;
-
-    pkt_in->bytesRetreated = ca->inMetaValues->transportHeaderSize + ca->inMetaValues->ipHeaderSize;
 
     return STATUS_SUCCESS;
 }
@@ -398,7 +403,7 @@ static NTSTATUS fort_packet_fill(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO pkt, UCH
 
     pkt->compartmentId = ca->inMetaValues->compartmentId;
 
-    status = fort_packet_clone(pkt, ca->netBufList, ca->inbound);
+    status = fort_packet_clone(ca, pkt);
 
     if (!NT_SUCCESS(status)) {
         LOG("Shaper: Packet clone error: %x\n", status);
@@ -1212,9 +1217,13 @@ static void fort_pending_init(PFORT_PENDING pending)
 FORT_API void fort_pending_open(PFORT_PENDING pending)
 {
     FwpsInjectionHandleCreate0(
-            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &pending->injection_transport4_id);
+            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &pending->injection_transport4_in_id);
     FwpsInjectionHandleCreate0(
-            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &pending->injection_transport6_id);
+            AF_INET, FWPS_INJECTION_TYPE_TRANSPORT, &pending->injection_transport4_out_id);
+    FwpsInjectionHandleCreate0(
+            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &pending->injection_transport6_in_id);
+    FwpsInjectionHandleCreate0(
+            AF_INET6, FWPS_INJECTION_TYPE_TRANSPORT, &pending->injection_transport6_out_id);
 
     fort_pending_init(pending);
 
@@ -1230,8 +1239,10 @@ FORT_API void fort_pending_close(PFORT_PENDING pending)
 {
     fort_pending_done(pending);
 
-    FwpsInjectionHandleDestroy0(pending->injection_transport4_id);
-    FwpsInjectionHandleDestroy0(pending->injection_transport6_id);
+    FwpsInjectionHandleDestroy0(pending->injection_transport4_in_id);
+    FwpsInjectionHandleDestroy0(pending->injection_transport4_out_id);
+    FwpsInjectionHandleDestroy0(pending->injection_transport6_in_id);
+    FwpsInjectionHandleDestroy0(pending->injection_transport6_out_id);
 }
 
 static void fort_pending_clear_locked(PFORT_PENDING pending)
