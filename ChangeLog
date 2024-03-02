@@ -1,10 +1,10 @@
 Fort Firewall ChangeLog
 
-v3.12.0-test1, 2024-02-25:
+v3.12.0, 2024-03-02:
 - UI: Option to try to start a Service on startup.
-- UI: Options: AppGroups: Auto-check speed limit on value change.
 - UI: Logger: Append to last log file.
 - UI: Tasks: Add debug outputs.
+- Installer: Add "qt.conf" to use GDI font engine.
 - Driver: Shaper: Rework packets processing again.
 
 v3.11.9, 2024-02-22:
