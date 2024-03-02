@@ -30,8 +30,8 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 
 ### Which installer should I download?
 
-  - for Windows 10 2004 or newer: [FortFirewall-v?-windows10-x86_64.exe](https://github.com/tnodir/fort/releases/latest)
-  - for Windows 7 or newer (e.g. Windows 10 1809): [FortFirewall-v?-windows-x86.exe](https://github.com/tnodir/fort/releases/latest)
+  - for Windows 10 2004 or newer: [FortFirewall-x.x.x-windows10-x86_64.exe](https://github.com/tnodir/fort/releases/latest)
+  - for Windows 7 or newer (e.g. Windows 10 1809): [FortFirewall-x.x.x-windows-x86.exe](https://github.com/tnodir/fort/releases/latest)
 
 -----
 
