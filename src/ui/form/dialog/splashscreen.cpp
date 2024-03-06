@@ -76,6 +76,9 @@ void SplashScreen::setupUi()
 
     // Size
     this->resize(250, 80);
+
+    // Position
+    this->move(x() - width() / 2, y() - height() / 2);
 }
 
 QLayout *SplashScreen::setupMainLayout()
