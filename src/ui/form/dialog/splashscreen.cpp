@@ -18,6 +18,7 @@ void startOpacityAnimation(
 {
     auto anim = new QPropertyAnimation(w, "windowOpacity", w);
     anim->setDirection(backward ? QPropertyAnimation::Backward : QPropertyAnimation::Forward);
+    anim->setEasingCurve(QEasingCurve::InCubic);
     anim->setDuration(900);
     anim->setStartValue(0.0f);
     anim->setEndValue(1.0f);
