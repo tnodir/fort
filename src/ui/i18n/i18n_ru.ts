@@ -1469,6 +1469,34 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Edit Rule</source>
         <translation>Редактирование Правила</translation>
     </message>
+    <message>
+        <source>Type:</source>
+        <translation>Тип:</translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation>Правила приложений</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation>Глобальные правила, применяемые до правил приложений</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation>Глобальные правила, применяемые после правил приложений</translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation>Предопределённые правила</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Примеры:</translation>
+    </message>
+    <message>
+        <source># IP address and port:</source>
+        <translation># IP адрес и порт:</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

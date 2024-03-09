@@ -1469,6 +1469,34 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Edit Rule</source>
         <translation>Editer Règle</translation>
     </message>
+    <message>
+        <source>Type:</source>
+        <translation>Type :</translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation>Règles d&apos;application</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation>Règles globales, appliquées avant les règles d&apos;application</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation>Règles globales, appliquées après les règles d&apos;application</translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation>Règles prédéfinies</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Exemples:</translation>
+    </message>
+    <message>
+        <source># IP address and port:</source>
+        <translation># Adresse IP et port :</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

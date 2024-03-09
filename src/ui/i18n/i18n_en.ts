@@ -1460,6 +1460,34 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Edit Rule</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Type:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source># IP address and port:</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

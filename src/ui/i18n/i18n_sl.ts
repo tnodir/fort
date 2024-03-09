@@ -1469,6 +1469,34 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Edit Rule</source>
         <translation>Uredi pravilo</translation>
     </message>
+    <message>
+        <source>Type:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation type="unfinished">#Primeri:</translation>
+    </message>
+    <message>
+        <source># IP address and port:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
