@@ -39,6 +39,7 @@ private:
 
     void retranslateUi();
     void retranslateComboRuleType();
+    void retranslateRulePlaceholderText();
 
     void setupUi();
     QLayout *setupMainLayout();

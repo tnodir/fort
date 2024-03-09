@@ -90,6 +90,8 @@ void RuleEditDialog::retranslateUi()
     m_cbExclusive->setText(tr("Exclusive"));
     m_btZones->retranslateUi();
 
+    retranslateRulePlaceholderText();
+
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
@@ -103,6 +105,17 @@ void RuleEditDialog::retranslateComboRuleType()
         tr("Preset Rules") };
 
     ControlUtil::setComboBoxTexts(m_comboRuleType, list);
+}
+
+void RuleEditDialog::retranslateRulePlaceholderText()
+{
+    const auto placeholderText = tr("# Examples:")
+            // IP-Address:Port
+            + '\n' + tr("# IP address and port:")
+            + "\n1.1.1.1:udp(43)"
+              "\nip(1.1.1.1-8.8.8.8):port(43,80-8080)";
+
+    m_editRuleText->setPlaceholderText(placeholderText);
 }
 
 void RuleEditDialog::setupUi()
