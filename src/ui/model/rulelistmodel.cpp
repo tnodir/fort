@@ -240,5 +240,5 @@ QString RuleListModel::sqlWhereFts() const
 
 QString RuleListModel::sqlOrderColumn() const
 {
-    return "t.name";
+    return "rule_type, lower(name)";
 }
