@@ -3,22 +3,22 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-int DbUtil::getFreeId(SqliteDb *sqliteDb, const char *sqlSelectIds, int maxCount, bool &ok)
+int DbUtil::getFreeId(SqliteDb *sqliteDb, const char *sqlSelectIds, int minId, int maxId, bool &ok)
 {
-    int freeId = 1;
-
     SqliteStmt stmt;
     if (stmt.prepare(sqliteDb->db(), sqlSelectIds)) {
+        stmt.bindInt(1, minId);
+
         while (stmt.step() == SqliteStmt::StepRow) {
             const int id = stmt.columnInt(0);
-            if (freeId < id)
+            if (minId < id || id >= maxId)
                 break;
 
-            freeId = id + 1;
+            minId = id + 1;
         }
     }
 
-    ok = (freeId < maxCount);
+    ok = (minId <= maxId);
 
-    return freeId;
+    return minId;
 }

@@ -6,6 +6,7 @@
 #include <model/rulelistmodel.h>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
+QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
@@ -37,6 +38,7 @@ private:
     void setupController();
 
     void retranslateUi();
+    void retranslateComboRuleType();
 
     void setupUi();
     QLayout *setupMainLayout();
@@ -59,6 +61,8 @@ private:
     QLineEdit *m_editName = nullptr;
     QLabel *m_labelEditNotes = nullptr;
     PlainTextEdit *m_editNotes = nullptr;
+    QLabel *m_labelRuleType = nullptr;
+    QComboBox *m_comboRuleType = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
     QRadioButton *m_rbAllow = nullptr;
     QRadioButton *m_rbBlock = nullptr;

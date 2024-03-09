@@ -37,11 +37,15 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 
     retranslateUi();
 
-    m_editName->setText(m_ruleRow.ruleName);
+    m_editName->setText(ruleRow.ruleName);
     m_editName->setClearButtonEnabled(true);
 
-    m_editNotes->setText(m_ruleRow.notes);
     m_labelEditNotes->setPixmap(IconCache::file(":/icons/script.png"));
+    m_editNotes->setText(ruleRow.notes);
+
+    m_labelRuleType->setText(tr("Type:"));
+    m_comboRuleType->setCurrentIndex(ruleRow.ruleType);
+    m_comboRuleType->setEnabled(isEmpty());
 
     m_cbEnabled->setChecked(ruleRow.enabled);
 
@@ -75,6 +79,9 @@ void RuleEditDialog::retranslateUi()
 
     m_labelEditName->setText(tr("Name:"));
     m_editNotes->setPlaceholderText(tr("Notes"));
+
+    retranslateComboRuleType();
+
     m_cbEnabled->setText(tr("Enabled"));
 
     m_rbAllow->setText(tr("Allow"));
@@ -87,6 +94,15 @@ void RuleEditDialog::retranslateUi()
     m_btCancel->setText(tr("Cancel"));
 
     this->setWindowTitle(tr("Edit Rule"));
+}
+
+void RuleEditDialog::retranslateComboRuleType()
+{
+    const QStringList list = { tr("Application Rules"),
+        tr("Global Rules, applied before App Rules"), tr("Global Rules, applied after App Rules"),
+        tr("Preset Rules") };
+
+    ControlUtil::setComboBoxTexts(m_comboRuleType, list);
 }
 
 void RuleEditDialog::setupUi()
@@ -105,7 +121,7 @@ void RuleEditDialog::setupUi()
     this->setSizeGripEnabled(true);
 
     // Size
-    this->setMinimumSize(500, 300);
+    this->setMinimumWidth(400);
 }
 
 QLayout *RuleEditDialog::setupMainLayout()
@@ -143,6 +159,7 @@ QLayout *RuleEditDialog::setupMainLayout()
 QLayout *RuleEditDialog::setupFormLayout()
 {
     auto layout = new QFormLayout();
+    layout->setHorizontalSpacing(10);
 
     // Name
     m_editName = new QLineEdit();
@@ -159,6 +176,13 @@ QLayout *RuleEditDialog::setupFormLayout()
     m_labelEditNotes = ControlUtil::formRowLabel(layout, m_editNotes);
     m_labelEditNotes->setScaledContents(true);
     m_labelEditNotes->setFixedSize(32, 32);
+
+    // Rule Type
+    m_comboRuleType = ControlUtil::createComboBox();
+    m_comboRuleType->setMinimumWidth(100);
+
+    layout->addRow("Type:", m_comboRuleType);
+    m_labelRuleType = ControlUtil::formRowLabel(layout, m_comboRuleType);
 
     // Enabled
     m_cbEnabled = new QCheckBox();
@@ -268,6 +292,8 @@ bool RuleEditDialog::validateFields() const
 
 void RuleEditDialog::fillRule(Rule &rule) const
 {
+    rule.ruleType = Rule::RuleType(m_comboRuleType->currentIndex());
+
     rule.enabled = m_cbEnabled->isChecked();
     rule.blocked = !m_rbAllow->isChecked();
     rule.exclusive = m_cbExclusive->isChecked();

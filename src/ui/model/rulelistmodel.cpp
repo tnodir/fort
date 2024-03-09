@@ -208,9 +208,10 @@ bool RuleListModel::updateRuleRow(
     ruleRow.ruleName = stmt.columnText(4);
     ruleRow.notes = stmt.columnText(5);
     ruleRow.ruleText = stmt.columnText(6);
-    ruleRow.acceptZones = stmt.columnUInt(7);
-    ruleRow.rejectZones = stmt.columnUInt(8);
-    ruleRow.modTime = stmt.columnDateTime(9);
+    ruleRow.ruleType = Rule::RuleType(stmt.columnInt(7));
+    ruleRow.acceptZones = stmt.columnUInt(8);
+    ruleRow.rejectZones = stmt.columnUInt(9);
+    ruleRow.modTime = stmt.columnDateTime(10);
 
     return true;
 }
@@ -225,6 +226,7 @@ QString RuleListModel::sqlBase() const
            "    name,"
            "    notes,"
            "    rule_text,"
+           "    rule_type,"
            "    accept_zones,"
            "    reject_zones,"
            "    mod_time"

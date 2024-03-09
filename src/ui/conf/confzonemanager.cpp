@@ -27,7 +27,8 @@ const char *const sqlUpdateZone = "UPDATE zone"
                                   "    form_data = ?7, text_inline = ?8"
                                   "  WHERE zone_id = ?1;";
 
-const char *const sqlSelectZoneIds = "SELECT zone_id FROM zone ORDER BY zone_id;";
+const char *const sqlSelectZoneIds = "SELECT zone_id FROM zone"
+                                     "  WHERE zone_id >= ?1 ORDER BY zone_id;";
 
 const char *const sqlDeleteZone = "DELETE FROM zone WHERE zone_id = ?1;";
 
@@ -99,7 +100,8 @@ bool ConfZoneManager::addOrUpdateZone(Zone &zone)
 
     const bool isNew = (zone.zoneId == 0);
     if (isNew) {
-        zone.zoneId = DbUtil::getFreeId(sqliteDb(), sqlSelectZoneIds, ConfUtil::zoneMaxCount(), ok);
+        zone.zoneId = DbUtil::getFreeId(sqliteDb(), sqlSelectZoneIds, /*minId=*/1,
+                /*maxId=*/ConfUtil::zoneMaxCount() - 1, ok);
     } else {
         updateDriverZoneFlag(zone.zoneId, zone.enabled);
     }

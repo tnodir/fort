@@ -18,17 +18,19 @@ namespace {
 
 const QLoggingCategory LC("confRule");
 
-const char *const sqlInsertRule = "INSERT INTO rule(rule_id, enabled, blocked, exclusive, name,"
-                                  "    notes, rule_text, accept_zones, reject_zones, mod_time)"
-                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10);";
+const char *const sqlInsertRule = "INSERT INTO rule(rule_id, enabled, blocked, exclusive,"
+                                  "    name, notes, rule_text, rule_type,"
+                                  "    accept_zones, reject_zones, mod_time)"
+                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11);";
 
 const char *const sqlUpdateRule = "UPDATE rule"
                                   "  SET enabled = ?2, blocked = ?3, exclusive = ?4,"
-                                  "    name = ?5, notes = ?6, rule_text = ?7,"
-                                  "    accept_zones = ?8, reject_zones = ?9, mod_time = ?10"
+                                  "    name = ?5, notes = ?6, rule_text = ?7, rule_type = ?8,"
+                                  "    accept_zones = ?9, reject_zones = ?10, mod_time = ?11"
                                   "  WHERE rule_id = ?1;";
 
-const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule ORDER BY rule_id;";
+const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
+                                     "  WHERE rule_id >= ?1 ORDER BY rule_id;";
 
 const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 
@@ -83,7 +85,8 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 
     const bool isNew = (rule.ruleId == 0);
     if (isNew) {
-        rule.ruleId = DbUtil::getFreeId(sqliteDb(), sqlSelectRuleIds, ConfUtil::ruleMaxCount(), ok);
+        const auto range = Rule::getRuleIdRangeByType(rule.ruleType);
+        rule.ruleId = DbUtil::getFreeId(sqliteDb(), sqlSelectRuleIds, range.minId, range.maxId, ok);
     } else {
         updateDriverRuleFlag(rule.ruleId, rule.enabled);
     }
@@ -96,6 +99,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
         rule.ruleName,
         rule.notes,
         rule.ruleText,
+        rule.ruleType,
         rule.acceptZones,
         rule.rejectZones,
         DateUtil::now(),

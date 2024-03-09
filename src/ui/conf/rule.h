@@ -4,16 +4,35 @@
 #include <QDateTime>
 #include <QObject>
 
+struct RuleIdRange
+{
+    int minId;
+    int maxId;
+};
+
 class Rule
 {
 public:
+    enum RuleType : qint8 {
+        AppRule = 0, // 1..64
+        GlobalBeforeAppsRule, // 65..96
+        GlobalAfterAppsRule, // 97..128
+        PresetRule, // 129..255
+        RuleTypeCount
+    };
+
     bool isNameEqual(const Rule &o) const;
     bool isOptionsEqual(const Rule &o) const;
 
+    static RuleType getRuleTypeById(int ruleId);
+    static RuleIdRange getRuleIdRangeByType(RuleType ruleType);
+
 public:
-    bool enabled = true;
-    bool blocked = false;
-    bool exclusive = false;
+    bool enabled : 1 = true;
+    bool blocked : 1 = false;
+    bool exclusive : 1 = false;
+
+    RuleType ruleType = AppRule;
 
     int ruleId = 0;
 

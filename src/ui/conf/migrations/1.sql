@@ -92,7 +92,7 @@ CREATE TABLE rule(
   name TEXT NOT NULL,
   notes TEXT,
   rule_text TEXT NOT NULL,
-  rule_type INTEGER NOT NULL, -- app rules (1..64), global before/after apps (65..96, 97..128), preset rules (129..255)
+  rule_type INTEGER NOT NULL, -- app rules, global before/after apps, preset rules
   accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
   mod_time INTEGER NOT NULL
