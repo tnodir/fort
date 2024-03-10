@@ -114,7 +114,7 @@ QVariant ServiceListModel::dataDecoration(const QModelIndex &index) const
     return QVariant();
 }
 
-bool ServiceListModel::updateTableRow(int /*row*/) const
+bool ServiceListModel::updateTableRow(const QVariantHash & /*vars*/, int /*row*/) const
 {
     return true;
 }

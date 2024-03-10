@@ -18,13 +18,10 @@ public:
 
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
 
-signals:
-    void modelChanged();
-
 protected:
-    void invalidateRowCache() override;
+    void invalidateRowCache() const override;
 
-    virtual void fillSqlVars(QVariantList &vars) const;
+    void fillQueryVarsForRow(QVariantHash &vars, int row) const override;
 
     virtual int doSqlCount() const;
     virtual QString sqlCount() const;
@@ -43,11 +40,14 @@ protected:
     Qt::SortOrder sortOrder() const { return m_sortOrder; }
     void setSortOrder(Qt::SortOrder v) { m_sortOrder = v; }
 
+    int sqlRowCount() const { return m_sqlRowCount; }
+    void setSqlRowCount(int v) const { m_sqlRowCount = v; }
+
 private:
     int m_sortColumn = -1;
     Qt::SortOrder m_sortOrder = Qt::AscendingOrder;
 
-    mutable int m_rowCount = -1;
+    mutable int m_sqlRowCount = -1;
 };
 
 #endif // TABLESQLMODEL_H

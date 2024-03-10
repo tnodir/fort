@@ -15,7 +15,7 @@ public:
     void setFtsFilter(const QString &filter);
 
 protected:
-    void fillSqlVars(QVariantList &vars) const override;
+    void fillQueryVars(QVariantHash &vars) const override;
 
     QString sqlWhere() const override;
     virtual QString sqlWhereFts() const = 0;

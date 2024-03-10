@@ -107,6 +107,11 @@ void ZonesSelector::setupZones()
 
     connect(m_menuZones, &QMenu::aboutToShow, this, &ZonesSelector::updateZonesMenu);
 
+    setupZonesChanged();
+}
+
+void ZonesSelector::setupZonesChanged()
+{
     auto confZoneManager = IoC<ConfZoneManager>();
 
     connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, [&](int zoneId) {
@@ -114,14 +119,17 @@ void ZonesSelector::setupZones()
         retranslateZonesText();
     });
 
-    auto zoneListModel = IoC<ZoneListModel>();
-
-    connect(zoneListModel, &ZoneListModel::modelChanged, this, [&] {
+    const auto refreshZonesMenu = [&] {
         clearZonesMenu();
         updateZonesMenuEnabled();
-    });
+    };
 
-    updateZonesMenuEnabled();
+    refreshZonesMenu();
+
+    auto zoneListModel = IoC<ZoneListModel>();
+
+    connect(zoneListModel, &ZoneListModel::modelReset, this, refreshZonesMenu);
+    connect(zoneListModel, &ZoneListModel::dataChanged, this, refreshZonesMenu);
 }
 
 void ZonesSelector::resetZonesMenu()
@@ -134,12 +142,7 @@ void ZonesSelector::clearZonesMenu()
 {
     m_menuZones->close();
 
-    int i = m_menuLayout->count();
-    while (--i >= 0) {
-        auto item = m_menuLayout->takeAt(i);
-        item->widget()->deleteLater();
-        delete item;
-    }
+    ControlUtil::clearLayout(m_menuLayout);
 }
 
 void ZonesSelector::createZonesMenu()

@@ -10,7 +10,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
-#include <form/controls/tableview.h>
+#include <form/controls/treeview.h>
 #include <form/dialog/dialogutil.h>
 #include <manager/windowmanager.h>
 #include <model/rulelistmodel.h>
@@ -25,7 +25,7 @@
 
 namespace {
 
-constexpr int RULES_HEADER_VERSION = 1;
+constexpr int RULES_HEADER_VERSION = 2;
 
 }
 
@@ -74,7 +74,7 @@ void RulesWindow::saveWindowState(bool /*wasVisible*/)
     iniUser()->setRuleWindowGeometry(m_stateWatcher->geometry());
     iniUser()->setRuleWindowMaximized(m_stateWatcher->maximized());
 
-    auto header = m_ruleListView->horizontalHeader();
+    auto header = m_ruleListView->header();
     iniUser()->setRulesHeader(header->saveState());
     iniUser()->setRulesHeaderVersion(RULES_HEADER_VERSION);
 
@@ -87,7 +87,7 @@ void RulesWindow::restoreWindowState()
             iniUser()->ruleWindowMaximized());
 
     if (iniUser()->rulesHeaderVersion() == RULES_HEADER_VERSION) {
-        auto header = m_ruleListView->horizontalHeader();
+        auto header = m_ruleListView->header();
         header->restoreState(iniUser()->rulesHeader());
     }
 }
@@ -124,14 +124,14 @@ void RulesWindow::setupUi()
     // Header
     auto header = setupHeader();
 
-    // Table
-    setupTableRules();
-    setupTableRulesHeader();
+    // Tree
+    setupTreeRules();
+    setupTreeRulesHeader();
 
-    // Actions on zones table's current changed
-    setupTableRulesChanged();
+    // Actions on rules tree's current changed
+    setupTreeRulesChanged();
 
-    // Actions on zone list model's changed
+    // Actions on rule list model's changed
     setupRuleListModelChanged();
 
     auto layout = new QVBoxLayout();
@@ -199,48 +199,52 @@ void RulesWindow::setupEditSearch()
     connect(this, &RulesWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
 }
 
-void RulesWindow::setupTableRules()
+void RulesWindow::setupTreeRules()
 {
-    m_ruleListView = new TableView();
+    m_ruleListView = new TreeView();
     m_ruleListView->setAlternatingRowColors(true);
     m_ruleListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_ruleListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
     m_ruleListView->setModel(ruleListModel());
 
+    const auto appRulesIndex = ruleListModel()->index(0, 0);
+    m_ruleListView->expand(appRulesIndex);
+
     m_ruleListView->setMenu(m_btEdit->menu());
 
-    connect(m_ruleListView, &TableView::activated, m_actEditRule, &QAction::trigger);
+    connect(m_ruleListView, &TreeView::activated, m_actEditRule, &QAction::trigger);
 }
 
-void RulesWindow::setupTableRulesHeader()
+void RulesWindow::setupTreeRulesHeader()
 {
-    auto header = m_ruleListView->horizontalHeader();
+    auto header = m_ruleListView->header();
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Stretch);
+    header->setStretchLastSection(true);
 
-    header->resizeSection(0, 350);
+    header->resizeSection(0, 360);
 }
 
-void RulesWindow::setupTableRulesChanged()
+void RulesWindow::setupTreeRulesChanged()
 {
-    const auto refreshTableRulesChanged = [&] {
+    const auto refreshTreeRulesChanged = [&] {
         const int ruleIndex = ruleListCurrentIndex();
         const bool ruleSelected = (ruleIndex >= 0);
         m_actEditRule->setEnabled(ruleSelected);
         m_actRemoveRule->setEnabled(ruleSelected);
     };
 
-    refreshTableRulesChanged();
+    refreshTreeRulesChanged();
 
-    connect(m_ruleListView, &TableView::currentIndexChanged, this, refreshTableRulesChanged);
+    connect(m_ruleListView, &TreeView::currentIndexChanged, this, refreshTreeRulesChanged);
 }
 
 void RulesWindow::setupRuleListModelChanged()
 {
     const auto refreshAddRule = [&] {
-        m_actAddRule->setEnabled(ruleListModel()->rowCount() < ConfUtil::zoneMaxCount());
+        m_actAddRule->setEnabled(ruleListModel()->rowCount() < ConfUtil::ruleMaxCount());
     };
 
     refreshAddRule();

@@ -47,8 +47,10 @@ public:
 protected:
     Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
 
-    bool updateTableRow(int row) const override;
+    bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_zoneRow; }
+
+    bool updateZoneRow(const QString &sql, const QVariantHash &vars, ZoneRow &zoneRow) const;
 
     QString sqlBase() const override;
 

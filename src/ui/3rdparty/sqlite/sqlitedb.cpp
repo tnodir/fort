@@ -123,14 +123,15 @@ bool SqliteDb::executeStr(const QString &sql)
     return execute(sqlUtf8.data());
 }
 
-QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resultCount, bool *ok)
+QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, const QVariantHash &varsMap,
+        int resultCount, bool *ok)
 {
     QVariantList list;
 
     SqliteStmt stmt;
     bool success = false;
 
-    if (prepare(stmt, sql, vars)) {
+    if (prepare(stmt, sql, vars, varsMap)) {
         const auto stepRes = stmt.step();
         success = (stepRes != SqliteStmt::StepError);
 
@@ -151,25 +152,47 @@ QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resu
     return (listSize == 0) ? QVariant() : (listSize == 1 ? list.at(0) : list);
 }
 
-bool SqliteDb::executeExOk(const char *sql, const QVariantList &vars)
+QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resultCount, bool *ok)
+{
+    return executeEx(sql, vars, {}, resultCount, ok);
+}
+
+bool SqliteDb::executeExOk(const char *sql, const QVariantList &vars, const QVariantHash &varsMap)
 {
     bool ok = false;
-    executeEx(sql, vars, 0, &ok);
+    executeEx(sql, vars, varsMap, 0, &ok);
     return ok;
 }
 
-bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars)
+bool SqliteDb::executeExOk(const char *sql, const QVariantList &vars)
+{
+    return executeExOk(sql, vars, {});
+}
+
+bool SqliteDb::prepare(
+        SqliteStmt &stmt, const char *sql, const QVariantList &vars, const QVariantHash &varsMap)
 {
     if (!stmt.prepare(db(), sql))
         return false;
 
-    return stmt.bindVars(vars);
+    return stmt.bindVars(vars) && stmt.bindVarsMap(varsMap);
+}
+
+bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars)
+{
+    return prepare(stmt, sql, vars, {});
+}
+
+bool SqliteDb::prepare(
+        SqliteStmt &stmt, const QString &sql, const QVariantList &vars, const QVariantHash &varsMap)
+{
+    const auto sqlUtf8 = sql.toUtf8();
+    return prepare(stmt, sqlUtf8.constData(), vars, varsMap);
 }
 
 bool SqliteDb::prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars)
 {
-    const auto sqlUtf8 = sql.toUtf8();
-    return prepare(stmt, sqlUtf8.constData(), vars);
+    return prepare(stmt, sql, vars, {});
 }
 
 bool SqliteDb::done(SqliteStmt *stmt)

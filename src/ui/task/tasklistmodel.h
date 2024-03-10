@@ -48,8 +48,10 @@ signals:
 protected:
     Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
 
-    bool updateTableRow(int /*row*/) const override { return true; }
+    bool updateTableRow(const QVariantHash & /*vars*/, int /*row*/) const override { return true; }
     TableRow &tableRow() const override { return m_taskRow; }
+
+    void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
 private:
     QVariant dataDisplay(const QModelIndex &index) const;

@@ -177,7 +177,7 @@ void TrafListModel::reset()
     }
 }
 
-bool TrafListModel::updateTableRow(int row) const
+bool TrafListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
 {
     m_trafRow.trafTime = getTrafTime(row);
 

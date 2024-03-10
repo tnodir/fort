@@ -42,7 +42,7 @@ public:
     AppRow appRowByPath(const QString &appPath) const;
 
 protected:
-    bool updateTableRow(int row) const override;
+    bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_appRow; }
 
     QString sqlBase() const override;
@@ -57,7 +57,7 @@ private:
 
     QIcon appIcon(const AppRow &appRow) const;
 
-    bool updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const;
+    bool updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const;
 
 private:
     mutable AppRow m_appRow;

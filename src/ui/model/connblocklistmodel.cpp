@@ -265,7 +265,7 @@ void ConnBlockListModel::updateConnIdRange()
     updateConnRows(oldIdMin, oldIdMax, idMin, idMax);
 }
 
-bool ConnBlockListModel::updateTableRow(int row) const
+bool ConnBlockListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
 {
     const qint64 connId = connIdMin() + row;
 

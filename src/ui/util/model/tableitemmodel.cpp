@@ -9,23 +9,14 @@ QModelIndex TableItemModel::index(int row, int column, const QModelIndex &parent
     return hasIndex(row, column, parent) ? createIndex(row, column) : QModelIndex();
 }
 
-QModelIndex TableItemModel::parent(const QModelIndex &child) const
+QModelIndex TableItemModel::parent(const QModelIndex & /*child*/) const
 {
-    Q_UNUSED(child);
-
     return {};
-}
-
-QModelIndex TableItemModel::sibling(int row, int column, const QModelIndex &index) const
-{
-    Q_UNUSED(index);
-
-    return this->index(row, column);
 }
 
 bool TableItemModel::hasChildren(const QModelIndex &parent) const
 {
-    return !parent.isValid() && rowCount() > 0;
+    return rowCount(parent) > 0;
 }
 
 Qt::ItemFlags TableItemModel::flags(const QModelIndex &index) const
@@ -33,7 +24,7 @@ Qt::ItemFlags TableItemModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | flagHasChildren(index)
             | flagIsUserCheckable(index);
 }
 
@@ -46,6 +37,11 @@ void TableItemModel::resetLater()
     }
 
     m_resetTimer->startTrigger();
+}
+
+Qt::ItemFlags TableItemModel::flagHasChildren(const QModelIndex & /*index*/) const
+{
+    return Qt::ItemNeverHasChildren;
 }
 
 Qt::ItemFlags TableItemModel::flagIsUserCheckable(const QModelIndex & /*index*/) const
@@ -70,7 +66,7 @@ void TableItemModel::refresh()
     emit dataChanged(firstCell, lastCell);
 }
 
-void TableItemModel::invalidateRowCache()
+void TableItemModel::invalidateRowCache() const
 {
     tableRow().invalidate();
 }
@@ -80,9 +76,18 @@ void TableItemModel::updateRowCache(int row) const
     if (tableRow().isValid(row))
         return;
 
-    if (row >= 0 && !updateTableRow(row)) {
-        row = -1;
+    if (row >= 0) {
+        QVariantHash vars;
+        fillQueryVarsForRow(vars, row);
+
+        if (!updateTableRow(vars, row)) {
+            row = -1;
+        }
     }
 
     tableRow().row = row;
 }
+
+void TableItemModel::fillQueryVars(QVariantHash & /*vars*/) const { }
+
+void TableItemModel::fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const { }

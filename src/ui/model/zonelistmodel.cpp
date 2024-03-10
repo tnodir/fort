@@ -171,26 +171,32 @@ QVariant ZoneListModel::zoneSourceByCode(const QString &sourceCode) const
     return m_zoneSourcesMap.value(sourceCode);
 }
 
-bool ZoneListModel::updateTableRow(int row) const
+bool ZoneListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
+{
+    return updateZoneRow(sql(), vars, m_zoneRow);
+}
+
+bool ZoneListModel::updateZoneRow(
+        const QString &sql, const QVariantHash &vars, ZoneRow &zoneRow) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql(), { row }) && stmt.step() == SqliteStmt::StepRow))
+    if (!(sqliteDb()->prepare(stmt, sql, {}, vars) && stmt.step() == SqliteStmt::StepRow))
         return false;
 
-    m_zoneRow.zoneId = stmt.columnInt(0);
-    m_zoneRow.enabled = stmt.columnBool(1);
-    m_zoneRow.customUrl = stmt.columnBool(2);
-    m_zoneRow.zoneName = stmt.columnText(3);
-    m_zoneRow.sourceCode = stmt.columnText(4);
-    m_zoneRow.url = stmt.columnText(5);
-    m_zoneRow.formData = stmt.columnText(6);
-    m_zoneRow.addressCount = stmt.columnInt(7);
-    m_zoneRow.textInline = stmt.columnText(8);
-    m_zoneRow.textChecksum = stmt.columnText(9);
-    m_zoneRow.binChecksum = stmt.columnText(10);
-    m_zoneRow.sourceModTime = stmt.columnDateTime(11);
-    m_zoneRow.lastRun = stmt.columnDateTime(12);
-    m_zoneRow.lastSuccess = stmt.columnDateTime(13);
+    zoneRow.zoneId = stmt.columnInt(0);
+    zoneRow.enabled = stmt.columnBool(1);
+    zoneRow.customUrl = stmt.columnBool(2);
+    zoneRow.zoneName = stmt.columnText(3);
+    zoneRow.sourceCode = stmt.columnText(4);
+    zoneRow.url = stmt.columnText(5);
+    zoneRow.formData = stmt.columnText(6);
+    zoneRow.addressCount = stmt.columnInt(7);
+    zoneRow.textInline = stmt.columnText(8);
+    zoneRow.textChecksum = stmt.columnText(9);
+    zoneRow.binChecksum = stmt.columnText(10);
+    zoneRow.sourceModTime = stmt.columnDateTime(11);
+    zoneRow.lastRun = stmt.columnDateTime(12);
+    zoneRow.lastSuccess = stmt.columnDateTime(13);
 
     return true;
 }

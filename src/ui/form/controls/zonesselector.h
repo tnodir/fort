@@ -38,6 +38,7 @@ private:
 
     void setupUi();
     void setupZones();
+    void setupZonesChanged();
 
     void resetZonesMenu();
     void clearZonesMenu();

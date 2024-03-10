@@ -54,9 +54,6 @@ SqliteDb *RuleListModel::sqliteDb() const
 
 void RuleListModel::initialize()
 {
-    setSortColumn(1);
-    setSortOrder(Qt::AscendingOrder);
-
     auto confRuleManager = IoC<ConfRuleManager>();
 
     connect(confRuleManager, &ConfRuleManager::ruleAdded, this, &TableItemModel::reset);
@@ -64,9 +61,51 @@ void RuleListModel::initialize()
     connect(confRuleManager, &ConfRuleManager::ruleUpdated, this, &TableItemModel::refresh);
 }
 
-int RuleListModel::columnCount(const QModelIndex &parent) const
+QModelIndex RuleListModel::index(int row, int column, const QModelIndex &parent) const
 {
-    return parent.isValid() ? 0 : 2;
+    int id = row;
+    if (parent.isValid()) {
+        id = parent.internalId();
+        if (id < 0)
+            return QModelIndex();
+
+        id = -(id + 1);
+    }
+
+    return createIndex(row, column, id);
+}
+
+QModelIndex RuleListModel::parent(const QModelIndex &child) const
+{
+    if (!child.isValid())
+        return QModelIndex();
+
+    const int id = child.internalId();
+    if (id >= 0)
+        return QModelIndex();
+
+    const int row = -(id + 1);
+
+    return createIndex(row, 0, row);
+}
+
+int RuleListModel::rowCount(const QModelIndex &parent) const
+{
+    if (!parent.isValid())
+        return Rule::RuleTypeCount;
+
+    const int id = parent.internalId();
+    if (id < 0)
+        return 0;
+
+    setSqlRuleType(id);
+
+    return FtsTableSqlModel::rowCount(parent);
+}
+
+int RuleListModel::columnCount(const QModelIndex & /*parent*/) const
+{
+    return 2;
 }
 
 QVariant RuleListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -82,6 +121,13 @@ QVariant RuleListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
+    const QModelIndex parent = index.parent();
+    if (!parent.isValid()) {
+        return rootData(index, role);
+    }
+
+    setSqlRuleType(parent.row());
+
     switch (role) {
     // Label
     case Qt::DisplayRole:
@@ -95,6 +141,29 @@ QVariant RuleListModel::data(const QModelIndex &index, int role) const
     // Enabled
     case Qt::CheckStateRole:
         return dataCheckState(index);
+
+    // Row Height
+    case Qt::SizeHintRole:
+        return QSize(100, 24);
+    }
+
+    return QVariant();
+}
+
+QVariant RuleListModel::rootData(const QModelIndex &index, int role) const
+{
+    if (index.column() > 0)
+        return QVariant();
+
+    switch (role) {
+    // Label
+    case Qt::DisplayRole:
+    case Qt::ToolTipRole:
+        return ruleTypeNames().value(index.row());
+
+    // Row Height
+    case Qt::SizeHintRole:
+        return QSize(100, 24);
     }
 
     return QVariant();
@@ -155,12 +224,13 @@ QVariant RuleListModel::dataCheckState(const QModelIndex &index) const
     return QVariant();
 }
 
-bool RuleListModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool RuleListModel::setData(const QModelIndex &index, const QVariant & /*value*/, int role)
 {
-    Q_UNUSED(value);
-
     if (!index.isValid())
         return false;
+
+    const QModelIndex parent = index.parent();
+    setSqlRuleType(parent.row());
 
     switch (role) {
     case Qt::CheckStateRole:
@@ -171,9 +241,23 @@ bool RuleListModel::setData(const QModelIndex &index, const QVariant &value, int
     return false;
 }
 
+Qt::ItemFlags RuleListModel::flagHasChildren(const QModelIndex &index) const
+{
+    const QModelIndex parent = index.parent();
+
+    return parent.isValid() ? Qt::ItemNeverHasChildren : Qt::NoItemFlags;
+}
+
 Qt::ItemFlags RuleListModel::flagIsUserCheckable(const QModelIndex &index) const
 {
-    return index.column() == 0 ? Qt::ItemIsUserCheckable : Qt::NoItemFlags;
+    const QModelIndex parent = index.parent();
+
+    return parent.isValid() && index.column() == 0 ? Qt::ItemIsUserCheckable : Qt::NoItemFlags;
+}
+
+void RuleListModel::fillQueryVars(QVariantHash &vars) const
+{
+    vars.insert(":type", sqlRuleType());
 }
 
 const RuleRow &RuleListModel::ruleRowAt(int row) const
@@ -183,20 +267,16 @@ const RuleRow &RuleListModel::ruleRowAt(int row) const
     return m_ruleRow;
 }
 
-bool RuleListModel::updateTableRow(int row) const
+bool RuleListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
 {
-    QVariantList vars;
-    fillSqlVars(vars);
-    vars.append(row); // must be a last one for :OFFSET
-
     return updateRuleRow(sql(), vars, m_ruleRow);
 }
 
 bool RuleListModel::updateRuleRow(
-        const QString &sql, const QVariantList &vars, RuleRow &ruleRow) const
+        const QString &sql, const QVariantHash &vars, RuleRow &ruleRow) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql, vars) && stmt.step() == SqliteStmt::StepRow)) {
+    if (!(sqliteDb()->prepare(stmt, sql, {}, vars) && stmt.step() == SqliteStmt::StepRow)) {
         ruleRow.invalidate();
         return false;
     }
@@ -230,15 +310,36 @@ QString RuleListModel::sqlBase() const
            "    accept_zones,"
            "    reject_zones,"
            "    mod_time"
-           "  FROM rule t";
+           "  FROM rule t"
+           "  WHERE rule_type = :type";
 }
 
 QString RuleListModel::sqlWhereFts() const
 {
-    return " WHERE t.rule_id IN ( SELECT rowid FROM rule_fts(:match) )";
+    return " AND t.rule_id IN ( SELECT rowid FROM rule_fts(:match) )";
 }
 
 QString RuleListModel::sqlOrderColumn() const
 {
     return "rule_type, lower(name)";
+}
+
+void RuleListModel::setSqlRuleType(qint8 v) const
+{
+    if (m_sqlRuleType == v)
+        return;
+
+    m_sqlRuleType = v;
+
+    invalidateRowCache();
+}
+
+QStringList RuleListModel::ruleTypeNames()
+{
+    return {
+        RuleListModel::tr("Application Rules"),
+        RuleListModel::tr("Global Rules, applied before App Rules"),
+        RuleListModel::tr("Global Rules, applied after App Rules"),
+        RuleListModel::tr("Preset Rules"),
+    };
 }

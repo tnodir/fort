@@ -25,7 +25,6 @@ public:
             int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;
 
-    QModelIndex sibling(int row, int column, const QModelIndex &index) const override;
     bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -36,12 +35,16 @@ public slots:
     void refresh();
 
 protected:
+    virtual Qt::ItemFlags flagHasChildren(const QModelIndex &index) const;
     virtual Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const;
 
-    virtual void invalidateRowCache();
+    virtual void invalidateRowCache() const;
     void updateRowCache(int row) const;
 
-    virtual bool updateTableRow(int row) const = 0;
+    virtual void fillQueryVars(QVariantHash &vars) const;
+    virtual void fillQueryVarsForRow(QVariantHash &vars, int row) const;
+
+    virtual bool updateTableRow(const QVariantHash &vars, int row) const = 0;
     virtual TableRow &tableRow() const = 0;
 
 private:

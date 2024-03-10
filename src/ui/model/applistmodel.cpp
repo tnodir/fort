@@ -394,10 +394,10 @@ QIcon AppListModel::appIcon(const AppRow &appRow) const
     return appInfoCache()->appIcon(appRow.appPath);
 }
 
-bool AppListModel::updateAppRow(const QString &sql, const QVariantList &vars, AppRow &appRow) const
+bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql, vars) && stmt.step() == SqliteStmt::StepRow)) {
+    if (!(sqliteDb()->prepare(stmt, sql, {}, vars) && stmt.step() == SqliteStmt::StepRow)) {
         appRow.invalidate();
         return false;
     }
@@ -438,7 +438,7 @@ const AppRow &AppListModel::appRowAt(int row) const
 AppRow AppListModel::appRowById(qint64 appId) const
 {
     AppRow appRow;
-    updateAppRow(sqlBase() + " WHERE t.app_id = ?1;", { appId }, appRow);
+    updateAppRow(sqlBase() + " WHERE t.app_id = :id;", { { "id", appId } }, appRow);
     return appRow;
 }
 
@@ -455,12 +455,8 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
     return appRow;
 }
 
-bool AppListModel::updateTableRow(int row) const
+bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
 {
-    QVariantList vars;
-    fillSqlVars(vars);
-    vars.append(row); // must be a last one for :OFFSET
-
     return updateAppRow(sql(), vars, m_appRow);
 }
 

@@ -90,6 +90,8 @@ public:
 
     static QLayout *createRowLayout(QWidget *w1, QWidget *w2, int stretch1 = 1);
 
+    static void clearLayout(QLayout *layout);
+
     static QLayout *createScrollLayout(QLayout *content, bool isBgTransparent = true);
     static QWidget *wrapToScrollArea(QWidget *content, bool isBgTransparent = true);
 

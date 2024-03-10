@@ -30,10 +30,10 @@ void FtsTableSqlModel::setFtsFilter(const QString &filter)
     resetLater();
 }
 
-void FtsTableSqlModel::fillSqlVars(QVariantList &vars) const
+void FtsTableSqlModel::fillQueryVars(QVariantHash &vars) const
 {
     if (!ftsFilterMatch().isEmpty()) {
-        vars.append(ftsFilterMatch());
+        vars.insert(":match", ftsFilterMatch());
     }
 }
 

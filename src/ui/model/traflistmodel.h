@@ -54,8 +54,10 @@ public slots:
     void reset();
 
 protected:
-    bool updateTableRow(int row) const override;
+    bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_trafRow; }
+
+    void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
     QString formatTrafUnit(qint64 bytes) const;
     QString formatTrafTime(qint32 trafTime) const;

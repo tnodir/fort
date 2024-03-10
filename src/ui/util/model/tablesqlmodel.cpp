@@ -5,15 +5,13 @@
 
 TableSqlModel::TableSqlModel(QObject *parent) : TableItemModel(parent) { }
 
-int TableSqlModel::rowCount(const QModelIndex &parent) const
+int TableSqlModel::rowCount(const QModelIndex & /*parent*/) const
 {
-    Q_UNUSED(parent);
-
-    if (m_rowCount < 0) {
-        m_rowCount = doSqlCount();
+    if (m_sqlRowCount < 0) {
+        m_sqlRowCount = doSqlCount();
     }
 
-    return m_rowCount;
+    return m_sqlRowCount;
 }
 
 void TableSqlModel::sort(int column, Qt::SortOrder order)
@@ -26,26 +24,26 @@ void TableSqlModel::sort(int column, Qt::SortOrder order)
     }
 }
 
-void TableSqlModel::invalidateRowCache()
+void TableSqlModel::invalidateRowCache() const
 {
-    m_rowCount = -1;
+    setSqlRowCount(-1);
     TableItemModel::invalidateRowCache();
-    emit modelChanged();
 }
 
-void TableSqlModel::fillSqlVars(QVariantList &vars) const
+void TableSqlModel::fillQueryVarsForRow(QVariantHash &vars, int row) const
 {
-    Q_UNUSED(vars);
+    fillQueryVars(vars);
+    vars.insert(":offset", row);
 }
 
 int TableSqlModel::doSqlCount() const
 {
-    QVariantList vars;
-    fillSqlVars(vars);
+    QVariantHash vars;
+    fillQueryVars(vars);
 
     const auto sqlUtf8 = sqlCount().toUtf8();
 
-    return sqliteDb()->executeEx(sqlUtf8, vars).toInt();
+    return sqliteDb()->executeEx(sqlUtf8, {}, vars).toInt();
 }
 
 QString TableSqlModel::sqlCount() const
@@ -83,5 +81,5 @@ QString TableSqlModel::sqlOrderColumn() const
 
 QString TableSqlModel::sqlLimitOffset() const
 {
-    return " LIMIT 1 OFFSET :row";
+    return " LIMIT 1 OFFSET :offset";
 }

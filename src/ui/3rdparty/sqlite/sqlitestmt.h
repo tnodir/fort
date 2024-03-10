@@ -46,7 +46,7 @@ public:
     bool bindVarBlob(int index, const QVariant &v);
     bool bindVar(int index, const QVariant &v);
     bool bindVars(const QVariantList &vars, int index = 1);
-    bool bindVarsMap(const QVariantMap &varsMap);
+    bool bindVarsMap(const QVariantHash &varsMap);
 
     bool clearBindings();
     bool reset();

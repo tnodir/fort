@@ -164,8 +164,11 @@ bool SqliteStmt::bindVars(const QVariantList &vars, int index)
     return true;
 }
 
-bool SqliteStmt::bindVarsMap(const QVariantMap &varsMap)
+bool SqliteStmt::bindVarsMap(const QVariantHash &varsMap)
 {
+    if (varsMap.isEmpty())
+        return true;
+
     auto it = varsMap.constBegin();
     for (; it != varsMap.constEnd(); ++it) {
         const QString k = it.key();

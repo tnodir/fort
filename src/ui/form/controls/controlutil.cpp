@@ -265,6 +265,26 @@ QLayout *ControlUtil::createRowLayout(QWidget *w1, QWidget *w2, int stretch1)
     return layout;
 }
 
+void ControlUtil::clearLayout(QLayout *layout)
+{
+    if (!layout)
+        return;
+
+    int i = layout->count();
+    while (--i >= 0) {
+        auto item = layout->takeAt(i);
+
+        auto w = item->widget();
+        if (w) {
+            w->deleteLater();
+        } else {
+            clearLayout(item->layout());
+        }
+
+        delete item;
+    }
+}
+
 QLayout *ControlUtil::createScrollLayout(QLayout *content, bool isBgTransparent)
 {
     auto scrollAreaContent = new QWidget();

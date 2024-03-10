@@ -14,6 +14,7 @@
 #include <form/controls/plaintextedit.h>
 #include <form/controls/zonesselector.h>
 #include <manager/windowmanager.h>
+#include <model/rulelistmodel.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 
@@ -100,11 +101,7 @@ void RuleEditDialog::retranslateUi()
 
 void RuleEditDialog::retranslateComboRuleType()
 {
-    const QStringList list = { tr("Application Rules"),
-        tr("Global Rules, applied before App Rules"), tr("Global Rules, applied after App Rules"),
-        tr("Preset Rules") };
-
-    ControlUtil::setComboBoxTexts(m_comboRuleType, list);
+    ControlUtil::setComboBoxTexts(m_comboRuleType, RuleListModel::ruleTypeNames());
 }
 
 void RuleEditDialog::retranslateRulePlaceholderText()

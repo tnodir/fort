@@ -70,8 +70,10 @@ protected slots:
     void updateConnIdRange();
 
 protected:
-    bool updateTableRow(int row) const override;
+    bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_connRow; }
+
+    void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
     int doSqlCount() const override;
     QString sqlBase() const override;

@@ -15,7 +15,7 @@ class IniUser;
 class RuleEditDialog;
 class RuleListModel;
 class RulesController;
-class TableView;
+class TreeView;
 class WidgetWindowStateWatcher;
 class WindowManager;
 
@@ -50,9 +50,9 @@ private:
     void setupUi();
     QLayout *setupHeader();
     void setupEditSearch();
-    void setupTableRules();
-    void setupTableRulesHeader();
-    void setupTableRulesChanged();
+    void setupTreeRules();
+    void setupTreeRulesHeader();
+    void setupTreeRulesChanged();
     void setupRuleListModelChanged();
 
     void addNewRule();
@@ -75,7 +75,7 @@ private:
     QAction *m_actRemoveRule = nullptr;
     QLineEdit *m_editSearch = nullptr;
     QPushButton *m_btMenu = nullptr;
-    TableView *m_ruleListView = nullptr;
+    TreeView *m_ruleListView = nullptr;
 
     RuleEditDialog *m_formRuleEdit = nullptr;
 };

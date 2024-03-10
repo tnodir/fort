@@ -33,8 +33,10 @@ public:
     const ServiceInfo &serviceInfoAt(int index) const;
 
 protected:
-    bool updateTableRow(int row) const override;
+    bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_serviceRow; }
+
+    void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
 private:
     QVariant dataDisplay(const QModelIndex &index) const;
