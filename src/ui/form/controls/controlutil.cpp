@@ -315,13 +315,6 @@ QWidget *ControlUtil::wrapToScrollArea(QWidget *content, bool isBgTransparent)
     return c;
 }
 
-QFont ControlUtil::fontBold()
-{
-    QFont font;
-    font.setBold(true);
-    return font;
-}
-
 LabelSpinCombo *ControlUtil::createSpinCombo(int v, int min, int max, const QVector<int> &values,
         const QString &suffix, const std::function<void(int)> &onValueChanged)
 {

@@ -17,6 +17,7 @@
 #include <task/taskinfo.h>
 #include <task/tasklistmodel.h>
 #include <task/taskmanager.h>
+#include <util/guiutil.h>
 
 namespace {
 
@@ -145,7 +146,7 @@ void SchedulePage::setupTaskDetails()
 void SchedulePage::setupTaskInterval()
 {
     m_cscTaskInterval = new CheckSpinCombo();
-    m_cscTaskInterval->checkBox()->setFont(ControlUtil::fontBold());
+    m_cscTaskInterval->checkBox()->setFont(GuiUtil::fontBold());
     m_cscTaskInterval->spinBox()->setRange(1, 24 * 30 * 12); // ~Year
     m_cscTaskInterval->setValues(taskIntervalHourValues);
 

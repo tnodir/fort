@@ -61,3 +61,10 @@ QIcon GuiUtil::overlayIcon(
 
     return pixmap;
 }
+
+QFont GuiUtil::fontBold()
+{
+    QFont font;
+    font.setBold(true);
+    return font;
+}

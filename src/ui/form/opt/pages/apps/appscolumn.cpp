@@ -6,6 +6,7 @@
 
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 
 AppsColumn::AppsColumn(const QString &iconPath, QWidget *parent) : QWidget(parent)
@@ -44,7 +45,7 @@ QLayout *AppsColumn::setupHeaderLayout()
     m_icon->setMaximumSize(16, 16);
 
     m_labelTitle = ControlUtil::createLabel();
-    m_labelTitle->setFont(ControlUtil::fontBold());
+    m_labelTitle->setFont(GuiUtil::fontBold());
     m_labelTitle->setFixedHeight(24);
 
     m_btClear =

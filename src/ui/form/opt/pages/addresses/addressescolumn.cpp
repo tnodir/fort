@@ -10,6 +10,7 @@
 #include <form/controls/plaintextedit.h>
 #include <form/controls/zonesselector.h>
 #include <manager/windowmanager.h>
+#include <util/guiutil.h>
 #include <util/ioc/ioccontainer.h>
 
 AddressesColumn::AddressesColumn(QWidget *parent) : QWidget(parent)
@@ -41,7 +42,7 @@ void AddressesColumn::setupUi()
 QLayout *AddressesColumn::setupHeaderLayout()
 {
     m_labelTitle = ControlUtil::createLabel();
-    m_labelTitle->setFont(ControlUtil::fontBold());
+    m_labelTitle->setFont(GuiUtil::fontBold());
 
     // Use All
     m_cbUseAll = new QCheckBox();

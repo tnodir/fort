@@ -1,6 +1,7 @@
 #ifndef GUIUTIL_H
 #define GUIUTIL_H
 
+#include <QFont>
 #include <QIcon>
 #include <QVariant>
 
@@ -11,6 +12,8 @@ public:
 
     static QIcon overlayIcon(const QString &basePath, const QString &overlayPath,
             Qt::Alignment alignment = Qt::AlignRight | Qt::AlignBottom);
+
+    static QFont fontBold();
 };
 
 #endif // GUIUTIL_H

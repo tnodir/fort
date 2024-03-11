@@ -95,8 +95,6 @@ public:
     static QLayout *createScrollLayout(QLayout *content, bool isBgTransparent = true);
     static QWidget *wrapToScrollArea(QWidget *content, bool isBgTransparent = true);
 
-    static QFont fontBold();
-
     static LabelSpinCombo *createSpinCombo(int v, int min, int max, const QVector<int> &values,
             const QString &suffix, const std::function<void(int value)> &onValueChanged);
     static LabelSpin *createSpin(int v, int min, int max, const QString &suffix,

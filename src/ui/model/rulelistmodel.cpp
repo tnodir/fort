@@ -1,5 +1,6 @@
 #include "rulelistmodel.h"
 
+#include <QFont>
 #include <QIcon>
 #include <QLoggingCategory>
 
@@ -9,6 +10,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -142,10 +144,6 @@ QVariant RuleListModel::data(const QModelIndex &index, int role) const
     // Enabled
     case Qt::CheckStateRole:
         return dataCheckState(index);
-
-    // Row Height
-    case Qt::SizeHintRole:
-        return QSize(100, 24);
     }
 
     return QVariant();
@@ -162,9 +160,9 @@ QVariant RuleListModel::rootData(const QModelIndex &index, int role) const
     case Qt::ToolTipRole:
         return ruleTypeNames().value(index.row());
 
-    // Row Height
-    case Qt::SizeHintRole:
-        return QSize(100, 24);
+    // Font
+    case Qt::FontRole:
+        return GuiUtil::fontBold();
     }
 
     return QVariant();

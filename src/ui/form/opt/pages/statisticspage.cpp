@@ -16,6 +16,7 @@
 #include <form/controls/labelspin.h>
 #include <form/controls/labelspincombo.h>
 #include <form/opt/optionscontroller.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 
@@ -213,7 +214,7 @@ void StatisticsPage::setupLogStat()
         }
     });
 
-    m_cbLogStat->setFont(ControlUtil::fontBold());
+    m_cbLogStat->setFont(GuiUtil::fontBold());
 }
 
 void StatisticsPage::setupLogStatNoFilter()
@@ -360,7 +361,7 @@ void StatisticsPage::setupLogBlockedIp()
         }
     });
 
-    m_cbLogBlockedIp->setFont(ControlUtil::fontBold());
+    m_cbLogBlockedIp->setFont(GuiUtil::fontBold());
 
     m_cbLogAlertedBlockedIp =
             ControlUtil::createCheckBox(conf()->logAlertedBlockedIp(), [&](bool checked) {
@@ -403,7 +404,7 @@ void StatisticsPage::setupLogAllowedIp()
         }
     });
 
-    m_cbLogAllowedIp->setFont(ControlUtil::fontBold());
+    m_cbLogAllowedIp->setFont(GuiUtil::fontBold());
 
     const auto logIpKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
     m_lscAllowedIpKeepCount = ControlUtil::createSpinCombo(

@@ -27,6 +27,7 @@
 #include <form/opt/optionscontroller.h>
 #include <fortsettings.h>
 #include <user/iniuser.h>
+#include <util/guiutil.h>
 #include <util/net/netutil.h>
 #include <util/textareautil.h>
 
@@ -376,7 +377,7 @@ void ApplicationsPage::setupGroupEnabled()
         pageAppGroupSetChecked(this, &AppGroup::setEnabled, checked, /*isFlag=*/true);
     });
 
-    m_cbGroupEnabled->setFont(ControlUtil::fontBold());
+    m_cbGroupEnabled->setFont(GuiUtil::fontBold());
 }
 
 void ApplicationsPage::setupGroupPeriod()

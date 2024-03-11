@@ -33,7 +33,7 @@ void AppInfoRow::setupUi()
     m_lineAppPath = ControlUtil::createLineLabel();
 
     m_labelAppProductName = ControlUtil::createLabel();
-    m_labelAppProductName->setFont(ControlUtil::fontBold());
+    m_labelAppProductName->setFont(GuiUtil::fontBold());
 
     m_labelAppCompanyName = ControlUtil::createLabel();
 

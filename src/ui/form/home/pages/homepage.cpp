@@ -11,6 +11,7 @@
 #include <fortmanager.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 
 HomePage::HomePage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
@@ -68,7 +69,7 @@ void HomePage::setupDriverBox()
 
     m_labelDriverMessage = ControlUtil::createLabel();
     m_labelDriverMessage->setWordWrap(true);
-    m_labelDriverMessage->setFont(ControlUtil::fontBold());
+    m_labelDriverMessage->setFont(GuiUtil::fontBold());
 
     setupDriverIcon();
 

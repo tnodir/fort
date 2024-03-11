@@ -24,6 +24,7 @@
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/osutil.h>
 #include <util/startuputil.h>
@@ -601,7 +602,7 @@ void OptionsPage::setupLogBlocked()
         }
     });
 
-    m_cbLogBlocked->setFont(ControlUtil::fontBold());
+    m_cbLogBlocked->setFont(GuiUtil::fontBold());
 }
 
 QLayout *OptionsPage::setupColumn2()
