@@ -13,7 +13,7 @@ struct RuleIdRange
 class Rule
 {
 public:
-    enum RuleType : qint8 {
+    enum RuleType : quint8 {
         AppRule = 0, // 1..64
         GlobalBeforeAppsRule, // 65..96
         GlobalAfterAppsRule, // 97..128

@@ -230,8 +230,8 @@ void RulesWindow::setupTreeRulesHeader()
 void RulesWindow::setupTreeRulesChanged()
 {
     const auto refreshTreeRulesChanged = [&] {
-        const int ruleIndex = ruleListCurrentIndex();
-        const bool ruleSelected = (ruleIndex >= 0);
+        const auto ruleIndex = ruleListCurrentIndex();
+        const bool ruleSelected = ruleIndex.isValid();
         m_actEditRule->setEnabled(ruleSelected);
         m_actRemoveRule->setEnabled(ruleSelected);
     };
@@ -260,8 +260,8 @@ void RulesWindow::addNewRule()
 
 void RulesWindow::editSelectedRule()
 {
-    const int ruleIndex = ruleListCurrentIndex();
-    if (ruleIndex < 0)
+    const auto ruleIndex = ruleListCurrentIndex();
+    if (!ruleIndex.isValid())
         return;
 
     const RuleRow ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
@@ -280,21 +280,22 @@ void RulesWindow::openRuleEditForm(const RuleRow &ruleRow)
     WidgetWindow::showWidget(m_formRuleEdit);
 }
 
-void RulesWindow::deleteRule(int row)
+void RulesWindow::deleteSelectedRule()
 {
-    const auto ruleRow = ruleListModel()->ruleRowAt(row);
+    const auto ruleIndex = ruleListCurrentIndex();
+    if (!ruleIndex.isValid())
+        return;
+
+    const auto ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
     if (ruleRow.isNull())
         return;
 
     ctrl()->deleteRule(ruleRow.ruleId);
 }
 
-void RulesWindow::deleteSelectedRule()
+QModelIndex RulesWindow::ruleListCurrentIndex() const
 {
-    deleteRule(ruleListCurrentIndex());
-}
+    const auto index = m_ruleListView->currentIndex();
 
-int RulesWindow::ruleListCurrentIndex() const
-{
-    return m_ruleListView->currentRow();
+    return RuleListModel::isIndexRoot(index) ? QModelIndex() : index;
 }

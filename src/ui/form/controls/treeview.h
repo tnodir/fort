@@ -15,8 +15,6 @@ public:
 
     void setModel(QAbstractItemModel *model) override;
 
-    int currentRow() const;
-
     void setupItemDelegate();
 
 signals:

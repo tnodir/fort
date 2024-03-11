@@ -20,11 +20,6 @@ void TreeView::setModel(QAbstractItemModel *model)
             [&] { emit currentIndexChanged(currentIndex()); });
 }
 
-int TreeView::currentRow() const
-{
-    return currentIndex().row();
-}
-
 void TreeView::setupItemDelegate()
 {
     auto tid = new TreeItemDelegate(this);

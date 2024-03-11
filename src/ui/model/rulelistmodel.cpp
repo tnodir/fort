@@ -18,6 +18,11 @@ namespace {
 
 const QLoggingCategory LC("model.ruleList");
 
+bool isIndexIdRoot(const quint32 id)
+{
+    return (id & RuleListModel::InternalIdRoot) != 0;
+}
+
 QVariant dataDisplayName(const RuleRow &ruleRow, int role)
 {
     return ruleRow.ruleName
@@ -64,23 +69,35 @@ void RuleListModel::initialize()
     connect(confRuleManager, &ConfRuleManager::ruleUpdated, this, &TableItemModel::refresh);
 }
 
-QModelIndex RuleListModel::indexByRuleType(Rule::RuleType ruleType) const
+bool RuleListModel::isIndexRoot(const QModelIndex &index)
 {
-    return createIndex(ruleType, 0, ruleType);
+    const quint32 id = index.internalId();
+    return isIndexIdRoot(id);
+}
+
+QModelIndex RuleListModel::indexRoot(Rule::RuleType ruleType) const
+{
+    return createIndex(ruleType, 0, ruleType | InternalIdRoot);
 }
 
 QModelIndex RuleListModel::index(int row, int column, const QModelIndex &parent) const
 {
-    int id = row;
-    if (parent.isValid()) {
-        id = parent.internalId();
-        if (id < 0)
+    quint8 ruleType;
+    InternalIdFlag idFlag;
+
+    if (!parent.isValid()) {
+        ruleType = row;
+        idFlag = InternalIdRoot;
+    } else {
+        const quint32 id = parent.internalId();
+        if (!isIndexIdRoot(id))
             return QModelIndex();
 
-        id = -(id + 1);
+        ruleType = id;
+        idFlag = InternalIdRule;
     }
 
-    return createIndex(row, column, id);
+    return createIndex(row, column, ruleType | idFlag);
 }
 
 QModelIndex RuleListModel::parent(const QModelIndex &child) const
@@ -88,22 +105,25 @@ QModelIndex RuleListModel::parent(const QModelIndex &child) const
     if (!child.isValid())
         return QModelIndex();
 
-    const int id = child.internalId();
-    if (id >= 0)
+    const quint32 id = child.internalId();
+    if (isIndexIdRoot(id))
         return QModelIndex();
 
-    const int row = -(id + 1);
+    const quint8 ruleType = id;
 
-    return createIndex(row, 0, row);
+    return createIndex(ruleType, 0, ruleType | InternalIdRoot);
 }
 
 int RuleListModel::rowCount(const QModelIndex &parent) const
 {
+    if (parent.column() > 0)
+        return 0;
+
     if (!parent.isValid())
         return Rule::RuleTypeCount;
 
-    const int id = parent.internalId();
-    if (id < 0)
+    const quint32 id = parent.internalId();
+    if (!isIndexIdRoot(id))
         return 0;
 
     setSqlRuleType(id);
@@ -129,12 +149,12 @@ QVariant RuleListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    const QModelIndex parent = index.parent();
-    if (!parent.isValid()) {
+    const quint32 id = index.internalId();
+    if (isIndexIdRoot(id)) {
         return rootData(index, role);
     }
 
-    setSqlRuleType(parent.row());
+    setSqlRuleType(id);
 
     switch (role) {
     // Label
@@ -186,12 +206,9 @@ QVariant RuleListModel::headerDataDisplay(int section) const
 
 QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
 {
-    const int row = index.row();
-    const int column = index.column();
+    const auto ruleRow = ruleRowAt(index);
 
-    const auto ruleRow = ruleRowAt(row);
-
-    switch (column) {
+    switch (index.column()) {
     case 0:
         return dataDisplayName(ruleRow, role);
     case 1:
@@ -203,14 +220,11 @@ QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
 
 QVariant RuleListModel::dataDecoration(const QModelIndex &index) const
 {
-    const int row = index.row();
-    const int column = index.column();
-
-    const auto ruleRow = ruleRowAt(row);
+    const auto ruleRow = ruleRowAt(index);
     if (ruleRow.isNull())
         return QVariant();
 
-    switch (column) {
+    switch (index.column()) {
     case 0:
         return IconCache::icon(ruleStateIconPath(ruleRow));
     }
@@ -221,7 +235,7 @@ QVariant RuleListModel::dataDecoration(const QModelIndex &index) const
 QVariant RuleListModel::dataCheckState(const QModelIndex &index) const
 {
     if (index.column() == 0) {
-        const auto ruleRow = ruleRowAt(index.row());
+        const auto ruleRow = ruleRowAt(index);
         return ruleRow.enabled ? Qt::Checked : Qt::Unchecked;
     }
 
@@ -233,12 +247,11 @@ bool RuleListModel::setData(const QModelIndex &index, const QVariant & /*value*/
     if (!index.isValid())
         return false;
 
-    const QModelIndex parent = index.parent();
-    setSqlRuleType(parent.row());
+    setSqlRuleType(index);
 
     switch (role) {
     case Qt::CheckStateRole:
-        const auto ruleRow = ruleRowAt(index.row());
+        const auto ruleRow = ruleRowAt(index);
         return confRuleManager()->updateRuleEnabled(ruleRow.ruleId, !ruleRow.enabled);
     }
 
@@ -266,9 +279,11 @@ void RuleListModel::fillQueryVars(QVariantHash &vars) const
     vars.insert(":type", sqlRuleType());
 }
 
-const RuleRow &RuleListModel::ruleRowAt(int row) const
+const RuleRow &RuleListModel::ruleRowAt(const QModelIndex &index) const
 {
-    updateRowCache(row);
+    setSqlRuleType(index);
+
+    updateRowCache(index.row());
 
     return m_ruleRow;
 }
@@ -330,7 +345,7 @@ QString RuleListModel::sqlOrderColumn() const
     return "rule_type, lower(name)";
 }
 
-void RuleListModel::setSqlRuleType(qint8 v) const
+void RuleListModel::setSqlRuleType(quint8 v) const
 {
     if (m_sqlRuleType == v)
         return;
@@ -338,6 +353,11 @@ void RuleListModel::setSqlRuleType(qint8 v) const
     m_sqlRuleType = v;
 
     invalidateRowCache();
+}
+
+void RuleListModel::setSqlRuleType(const QModelIndex &index) const
+{
+    setSqlRuleType(index.internalId());
 }
 
 QStringList RuleListModel::ruleTypeNames()

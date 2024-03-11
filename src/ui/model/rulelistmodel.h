@@ -21,6 +21,11 @@ class RuleListModel : public FtsTableSqlModel
     Q_OBJECT
 
 public:
+    enum InternalIdFlag : quint32 {
+        InternalIdRoot = 0x01000000,
+        InternalIdRule = 0x02000000,
+    };
+
     explicit RuleListModel(QObject *parent = nullptr);
 
     ConfManager *confManager() const;
@@ -29,7 +34,9 @@ public:
 
     void initialize();
 
-    QModelIndex indexByRuleType(Rule::RuleType ruleType) const;
+    static bool isIndexRoot(const QModelIndex &index);
+
+    QModelIndex indexRoot(Rule::RuleType ruleType) const;
 
     QModelIndex index(
             int row, int column, const QModelIndex &parent = QModelIndex()) const override;
@@ -43,7 +50,7 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
-    const RuleRow &ruleRowAt(int row) const;
+    const RuleRow &ruleRowAt(const QModelIndex &index) const;
 
     static QStringList ruleTypeNames();
 
@@ -62,8 +69,9 @@ protected:
     QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;
 
-    qint8 sqlRuleType() const { return m_sqlRuleType; }
-    void setSqlRuleType(qint8 v) const;
+    quint8 sqlRuleType() const { return m_sqlRuleType; }
+    void setSqlRuleType(quint8 v) const;
+    void setSqlRuleType(const QModelIndex &index) const;
 
 private:
     QVariant rootData(const QModelIndex &index, int role) const;
@@ -74,7 +82,7 @@ private:
     QVariant dataCheckState(const QModelIndex &index) const;
 
 private:
-    mutable qint8 m_sqlRuleType = -1;
+    mutable quint8 m_sqlRuleType = 0;
 
     mutable RuleRow m_ruleRow;
 };

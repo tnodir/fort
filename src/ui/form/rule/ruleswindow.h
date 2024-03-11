@@ -60,10 +60,9 @@ private:
 
     void openRuleEditForm(const RuleRow &ruleRow);
 
-    void deleteRule(int row);
     void deleteSelectedRule();
 
-    int ruleListCurrentIndex() const;
+    QModelIndex ruleListCurrentIndex() const;
 
 private:
     RulesController *m_ctrl = nullptr;
