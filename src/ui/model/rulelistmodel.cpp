@@ -64,6 +64,11 @@ void RuleListModel::initialize()
     connect(confRuleManager, &ConfRuleManager::ruleUpdated, this, &TableItemModel::refresh);
 }
 
+QModelIndex RuleListModel::indexByRuleType(Rule::RuleType ruleType) const
+{
+    return createIndex(ruleType, 0, ruleType);
+}
+
 QModelIndex RuleListModel::index(int row, int column, const QModelIndex &parent) const
 {
     int id = row;
@@ -256,6 +261,8 @@ Qt::ItemFlags RuleListModel::flagIsUserCheckable(const QModelIndex &index) const
 
 void RuleListModel::fillQueryVars(QVariantHash &vars) const
 {
+    FtsTableSqlModel::fillQueryVars(vars);
+
     vars.insert(":type", sqlRuleType());
 }
 

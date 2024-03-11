@@ -29,6 +29,8 @@ public:
 
     void initialize();
 
+    QModelIndex indexByRuleType(Rule::RuleType ruleType) const;
+
     QModelIndex index(
             int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     QModelIndex parent(const QModelIndex &child) const override;

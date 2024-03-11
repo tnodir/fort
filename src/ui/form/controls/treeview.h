@@ -17,6 +17,8 @@ public:
 
     int currentRow() const;
 
+    void setupItemDelegate();
+
 signals:
     void currentIndexChanged(const QModelIndex &index);
 

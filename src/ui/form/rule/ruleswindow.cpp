@@ -206,10 +206,10 @@ void RulesWindow::setupTreeRules()
     m_ruleListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_ruleListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
+    m_ruleListView->setupItemDelegate();
     m_ruleListView->setModel(ruleListModel());
 
-    const auto appRulesIndex = ruleListModel()->index(0, 0);
-    m_ruleListView->expand(appRulesIndex);
+    m_ruleListView->expandAll();
 
     m_ruleListView->setMenu(m_btEdit->menu());
 

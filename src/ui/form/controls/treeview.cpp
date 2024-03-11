@@ -3,6 +3,8 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 
+#include "treeitemdelegate.h"
+
 TreeView::TreeView(QWidget *parent) : QTreeView(parent)
 {
     setTabKeyNavigation(false);
@@ -21,6 +23,13 @@ void TreeView::setModel(QAbstractItemModel *model)
 int TreeView::currentRow() const
 {
     return currentIndex().row();
+}
+
+void TreeView::setupItemDelegate()
+{
+    auto tid = new TreeItemDelegate(this);
+
+    setItemDelegateForColumn(0, tid);
 }
 
 void TreeView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
