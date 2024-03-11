@@ -2,6 +2,7 @@
 
 #include <QLoggingCategory>
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -175,7 +176,7 @@ void ConfAppManager::setupAppEndTimer()
 
 void ConfAppManager::updateAppEndTimer()
 {
-    const qint64 endTimeMsecs = sqliteDb()->executeEx(sqlSelectMinEndApp).toLongLong();
+    const qint64 endTimeMsecs = DbUtil(sqliteDb()).sql(sqlSelectMinEndApp).execute().toLongLong();
 
     if (endTimeMsecs != 0) {
         const qint64 currentMsecs = QDateTime::currentMSecsSinceEpoch();
@@ -218,7 +219,7 @@ void ConfAppManager::beginAddOrUpdateApp(
     };
 
     const char *sql = onlyUpdate ? sqlUpdateApp : sqlUpsertApp;
-    const auto appIdVar = sqliteDb()->executeEx(sql, vars, 1, &ok);
+    const auto appIdVar = DbUtil(sqliteDb(), &ok).sql(sql).vars(vars).execute();
 
     if (!onlyUpdate) {
         app.appId = appIdVar.toLongLong();
@@ -282,7 +283,7 @@ void ConfAppManager::logBlockedApp(const LogEntryBlocked &logEntry)
 
 qint64 ConfAppManager::appIdByPath(const QString &appPath)
 {
-    return sqliteDb()->executeEx(sqlSelectAppIdByPath, { appPath }).toLongLong();
+    return DbUtil(sqliteDb()).sql(sqlSelectAppIdByPath).vars({ appPath }).execute().toLongLong();
 }
 
 bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
@@ -300,7 +301,8 @@ bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
     if (ok) {
         // Alert
         const char *sql = (app.alerted && !onlyUpdate) ? sqlInsertAppAlert : sqlDeleteAppAlert;
-        sqliteDb()->executeEx(sql, { app.appId });
+
+        DbUtil(sqliteDb()).sql(sql).vars({ app.appId }).executeOk();
     }
 
     commitTransaction(ok);
@@ -325,7 +327,7 @@ bool ConfAppManager::updateAppName(qint64 appId, const QString &appName)
 
     const QVariantList vars = { appId, appName };
 
-    sqliteDb()->executeEx(sqlUpdateAppName, vars, 0, &ok);
+    DbUtil(sqliteDb(), &ok).sql(sqlUpdateAppName).vars(vars).executeOk();
 
     commitTransaction(ok);
 
@@ -363,10 +365,10 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 
     const QVariantList vars = { appId };
 
-    const auto resList = sqliteDb()->executeEx(sqlDeleteApp, vars, 2, &ok).toList();
+    const auto resList = DbUtil(sqliteDb(), &ok).sql(sqlDeleteApp).vars(vars).execute(2).toList();
 
     if (ok) {
-        sqliteDb()->executeEx(sqlDeleteAppAlert, vars, 0, &ok);
+        DbUtil(sqliteDb(), &ok).sql(sqlDeleteAppAlert).vars(vars).executeOk();
     }
 
     commitTransaction(ok);
@@ -465,7 +467,7 @@ QVector<qint64> ConfAppManager::collectObsoleteApps(quint32 driveMask)
     QVector<qint64> appIdList;
 
     SqliteStmt stmt;
-    if (!sqliteDb()->prepare(stmt, sqlSelectAppsToPurge))
+    if (!DbUtil(sqliteDb()).sql(sqlSelectAppsToPurge).prepare(stmt))
         return {};
 
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -489,7 +491,7 @@ QVector<qint64> ConfAppManager::collectObsoleteApps(quint32 driveMask)
 bool ConfAppManager::walkApps(const std::function<walkAppsCallback> &func)
 {
     SqliteStmt stmt;
-    if (!sqliteDb()->prepare(stmt, sqlSelectApps))
+    if (!DbUtil(sqliteDb()).sql(sqlSelectApps).prepare(stmt))
         return false;
 
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -511,10 +513,10 @@ bool ConfAppManager::saveAppBlocked(const App &app)
 
     const QVariantList vars = { app.appId, app.blocked, app.killProcess };
 
-    sqliteDb()->executeEx(sqlUpdateAppBlocked, vars, 0, &ok);
+    DbUtil(sqliteDb(), &ok).sql(sqlUpdateAppBlocked).vars(vars).executeOk();
 
     if (ok) {
-        sqliteDb()->executeEx(sqlDeleteAppAlert, { app.appId }, 0, &ok);
+        DbUtil(sqliteDb(), &ok).sql(sqlDeleteAppAlert).vars({ app.appId }).executeOk();
     }
 
     commitTransaction(ok);
@@ -560,7 +562,7 @@ void ConfAppManager::updateAppEndTimes()
 
 qint64 ConfAppManager::getAlertAppId()
 {
-    return sqliteDb()->executeEx(sqlSelectMaxAlertAppId).toLongLong();
+    return DbUtil(sqliteDb()).sql(sqlSelectMaxAlertAppId).execute().toLongLong();
 }
 
 bool ConfAppManager::updateDriverConf(bool onlyFlags)
@@ -590,7 +592,7 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
 bool ConfAppManager::loadAppById(App &app)
 {
     SqliteStmt stmt;
-    if (!sqliteDb()->prepare(stmt, sqlSelectAppById))
+    if (!DbUtil(sqliteDb()).sql(sqlSelectAppById).prepare(stmt))
         return false;
 
     stmt.bindInt64(1, app.appId);

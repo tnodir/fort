@@ -4,6 +4,7 @@
 #include <QIcon>
 #include <QLoggingCategory>
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -270,7 +271,7 @@ bool ConnBlockListModel::updateTableRow(const QVariantHash & /*vars*/, int row) 
     const qint64 connId = connIdMin() + row;
 
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql(), { connId }) && stmt.step() == SqliteStmt::StepRow))
+    if (!DbUtil(sqliteDb()).sql(sql()).vars({ connId }).prepareRow(stmt))
         return false;
 
     m_connRow.connId = stmt.columnInt64(0);

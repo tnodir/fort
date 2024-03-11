@@ -8,6 +8,7 @@
 
 #include <sqlite.h>
 
+#include "dbutil.h"
 #include "sqlitestmt.h"
 
 namespace {
@@ -93,12 +94,12 @@ void SqliteDb::close()
 
 bool SqliteDb::attach(const QString &schemaName, const QString &filePath)
 {
-    return executeExOk("ATTACH DATABASE ?1 AS ?2;", { filePath, schemaName });
+    return DbUtil(this).sql("ATTACH DATABASE ?1 AS ?2;").vars({ filePath, schemaName }).executeOk();
 }
 
 bool SqliteDb::detach(const QString &schemaName)
 {
-    return executeExOk("DETACH DATABASE ?1;", { schemaName });
+    return DbUtil(this).sql("DETACH DATABASE ?1;").vars({ schemaName }).executeOk();
 }
 
 bool SqliteDb::vacuum()
@@ -108,7 +109,7 @@ bool SqliteDb::vacuum()
 
 bool SqliteDb::vacuumInto(const QString &filePath)
 {
-    return executeExOk("VACUUM INTO ?1;", { filePath });
+    return DbUtil(this).sql("VACUUM INTO ?1;").vars({ filePath }).executeOk();
 }
 
 bool SqliteDb::execute(const char *sql)
@@ -121,78 +122,6 @@ bool SqliteDb::executeStr(const QString &sql)
     const auto sqlUtf8 = sql.toUtf8();
 
     return execute(sqlUtf8.data());
-}
-
-QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, const QVariantHash &varsMap,
-        int resultCount, bool *ok)
-{
-    QVariantList list;
-
-    SqliteStmt stmt;
-    bool success = false;
-
-    if (prepare(stmt, sql, vars, varsMap)) {
-        const auto stepRes = stmt.step();
-        success = (stepRes != SqliteStmt::StepError);
-
-        // Get result
-        if (stepRes == SqliteStmt::StepRow) {
-            for (int i = 0; i < resultCount; ++i) {
-                const QVariant v = stmt.columnVar(i);
-                list.append(v);
-            }
-        }
-    }
-
-    if (ok) {
-        *ok = success;
-    }
-
-    const int listSize = list.size();
-    return (listSize == 0) ? QVariant() : (listSize == 1 ? list.at(0) : list);
-}
-
-QVariant SqliteDb::executeEx(const char *sql, const QVariantList &vars, int resultCount, bool *ok)
-{
-    return executeEx(sql, vars, {}, resultCount, ok);
-}
-
-bool SqliteDb::executeExOk(const char *sql, const QVariantList &vars, const QVariantHash &varsMap)
-{
-    bool ok = false;
-    executeEx(sql, vars, varsMap, 0, &ok);
-    return ok;
-}
-
-bool SqliteDb::executeExOk(const char *sql, const QVariantList &vars)
-{
-    return executeExOk(sql, vars, {});
-}
-
-bool SqliteDb::prepare(
-        SqliteStmt &stmt, const char *sql, const QVariantList &vars, const QVariantHash &varsMap)
-{
-    if (!stmt.prepare(db(), sql))
-        return false;
-
-    return stmt.bindVars(vars) && stmt.bindVarsMap(varsMap);
-}
-
-bool SqliteDb::prepare(SqliteStmt &stmt, const char *sql, const QVariantList &vars)
-{
-    return prepare(stmt, sql, vars, {});
-}
-
-bool SqliteDb::prepare(
-        SqliteStmt &stmt, const QString &sql, const QVariantList &vars, const QVariantHash &varsMap)
-{
-    const auto sqlUtf8 = sql.toUtf8();
-    return prepare(stmt, sqlUtf8.constData(), vars, varsMap);
-}
-
-bool SqliteDb::prepare(SqliteStmt &stmt, const QString &sql, const QVariantList &vars)
-{
-    return prepare(stmt, sql, vars, {});
 }
 
 bool SqliteDb::done(SqliteStmt *stmt)
@@ -272,7 +201,7 @@ QString SqliteDb::errorMessage() const
 
 int SqliteDb::userVersion()
 {
-    return executeEx("PRAGMA user_version;").toInt();
+    return DbUtil(this).sql("PRAGMA user_version;").execute().toInt();
 }
 
 bool SqliteDb::setUserVersion(int v)
@@ -283,7 +212,7 @@ bool SqliteDb::setUserVersion(int v)
 
 QString SqliteDb::encoding()
 {
-    return executeEx("PRAGMA encoding;").toString();
+    return DbUtil(this).sql("PRAGMA encoding;").execute().toString();
 }
 
 bool SqliteDb::setEncoding(const QString &v)

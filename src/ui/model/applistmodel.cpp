@@ -3,6 +3,7 @@
 #include <QFont>
 #include <QIcon>
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -397,7 +398,7 @@ QIcon AppListModel::appIcon(const AppRow &appRow) const
 bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql, {}, vars) && stmt.step() == SqliteStmt::StepRow)) {
+    if (!DbUtil(sqliteDb()).sql(sql).vars(vars).prepareRow(stmt)) {
         appRow.invalidate();
         return false;
     }

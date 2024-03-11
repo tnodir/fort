@@ -2,6 +2,7 @@
 
 #include <QLoggingCategory>
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -9,7 +10,6 @@
 #include <driver/drivermanager.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
-#include <util/dbutil.h>
 #include <util/ioc/ioccontainer.h>
 
 #include "confmanager.h"
@@ -30,7 +30,7 @@ const char *const sqlUpdateRule = "UPDATE rule"
                                   "  WHERE rule_id = ?1;";
 
 const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
-                                     "  WHERE rule_id >= ?1 ORDER BY rule_id;";
+                                     "  WHERE rule_id BETWEEN ?1 AND ?2 ORDER BY rule_id;";
 
 const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 
@@ -86,7 +86,11 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
     const bool isNew = (rule.ruleId == 0);
     if (isNew) {
         const auto range = Rule::getRuleIdRangeByType(rule.ruleType);
-        rule.ruleId = DbUtil::getFreeId(sqliteDb(), sqlSelectRuleIds, range.minId, range.maxId, ok);
+
+        rule.ruleId = DbUtil(sqliteDb(), &ok)
+                              .sql(sqlSelectRuleIds)
+                              .vars({ range.minId, range.maxId })
+                              .getFreeId(range.minId, range.maxId);
     } else {
         updateDriverRuleFlag(rule.ruleId, rule.enabled);
     }
@@ -106,7 +110,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
     };
 
     if (ok) {
-        sqliteDb()->executeEx(isNew ? sqlInsertRule : sqlUpdateRule, vars, 0, &ok);
+        DbUtil(sqliteDb(), &ok).sql(isNew ? sqlInsertRule : sqlUpdateRule).vars(vars).executeOk();
     }
 
     commitTransaction(ok);
@@ -131,10 +135,10 @@ bool ConfRuleManager::deleteRule(int ruleId)
 
     const QVariantList vars = { ruleId };
 
-    sqliteDb()->executeEx(sqlDeleteRule, vars, 0, &ok);
+    DbUtil(sqliteDb(), &ok).sql(sqlDeleteRule).vars(vars).executeOk();
     if (ok) {
         // Delete the Rule from App Rules
-        sqliteDb()->executeEx(sqlDeleteAppRule, vars, 0, &ok);
+        DbUtil(sqliteDb(), &ok).sql(sqlDeleteAppRule).vars(vars).executeOk();
     }
 
     commitTransaction(ok);
@@ -154,7 +158,7 @@ bool ConfRuleManager::updateRuleName(int ruleId, const QString &ruleName)
 
     const QVariantList vars = { ruleId, ruleName };
 
-    sqliteDb()->executeEx(sqlUpdateRuleName, vars, 0, &ok);
+    DbUtil(sqliteDb(), &ok).sql(sqlUpdateRuleName).vars(vars).executeOk();
 
     commitTransaction(ok);
 
@@ -173,7 +177,7 @@ bool ConfRuleManager::updateRuleEnabled(int ruleId, bool enabled)
 
     const QVariantList vars = { ruleId, enabled };
 
-    sqliteDb()->executeEx(sqlUpdateRuleEnabled, vars, 0, &ok);
+    DbUtil(sqliteDb(), &ok).sql(sqlUpdateRuleEnabled).vars(vars).executeOk();
 
     commitTransaction(ok);
 

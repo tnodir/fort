@@ -2,6 +2,7 @@
 
 #include <QLoggingCategory>
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -102,9 +103,9 @@ void StatBlockManager::deleteConn(qint64 connIdTo)
     enqueueJob(WorkerJobPtr(new DeleteConnBlockJob(connIdTo)));
 }
 
-void StatBlockManager::getConnIdRange(SqliteDb *sqliteDb, qint64 &connIdMin, qint64 &connIdMax)
+void StatBlockManager::getConnIdRange(SqliteDb *db, qint64 &connIdMin, qint64 &connIdMax)
 {
-    const auto vars = sqliteDb->executeEx(StatSql::sqlSelectMinMaxConnBlockId, {}, 2).toList();
+    const auto vars = DbUtil(db).sql(StatSql::sqlSelectMinMaxConnBlockId).execute(2).toList();
 
     connIdMin = vars.value(0).toLongLong();
     connIdMax = vars.value(1).toLongLong();

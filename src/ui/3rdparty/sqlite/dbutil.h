@@ -21,6 +21,7 @@ public:
     DbUtil &vars(const QVariantHash &varsMap);
 
     bool prepare(SqliteStmt &stmt);
+    bool prepareRow(SqliteStmt &stmt);
 
     QVariant execute(int resultCount, bool &ok);
     QVariant execute(int resultCount = 1);

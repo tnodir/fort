@@ -3,6 +3,7 @@
 #include <QImage>
 #include <QLoggingCategory>
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -134,7 +135,7 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
 
 void AppInfoManager::updateAppAccessTime(const QString &appPath)
 {
-    sqliteDb()->executeEx(sqlUpdateAppAccessTime, { appPath });
+    DbUtil(sqliteDb()).sql(sqlUpdateAppAccessTime).vars({ appPath }).executeOk();
 }
 
 bool AppInfoManager::setupDb()
@@ -164,14 +165,17 @@ void AppInfoManager::saveAppIcon(const QImage &appIcon, QVariant &iconId, bool &
 {
     const uint iconHash = uint(qHashBits(appIcon.constBits(), size_t(appIcon.sizeInBytes())));
 
-    iconId = sqliteDb()->executeEx(sqlSelectIconIdByHash, { iconHash });
+    iconId = DbUtil(sqliteDb()).sql(sqlSelectIconIdByHash).vars({ iconHash }).execute();
     if (iconId.isNull()) {
-        sqliteDb()->executeEx(sqlInsertIcon, { iconHash, appIcon }, 0, &ok);
+        DbUtil(sqliteDb(), &ok).sql(sqlInsertIcon).vars({ iconHash, appIcon }).executeOk();
         if (ok) {
             iconId = sqliteDb()->lastInsertRowid();
         }
     } else {
-        sqliteDb()->executeEx(sqlUpdateIconRefCount, { iconId, /*ref_count=*/+1 }, 0, &ok);
+        DbUtil(sqliteDb(), &ok)
+                .sql(sqlUpdateIconRefCount)
+                .vars({ iconId, /*ref_count=*/+1 })
+                .executeOk();
     }
 }
 
@@ -189,12 +193,12 @@ void AppInfoManager::saveAppInfo(
         iconId,
     };
 
-    sqliteDb()->executeEx(sqlInsertAppInfo, vars, 0, &ok);
+    DbUtil(sqliteDb(), &ok).sql(sqlInsertAppInfo).vars(vars).executeOk();
 }
 
 void AppInfoManager::deleteExcessAppInfos()
 {
-    const int appCount = sqliteDb()->executeEx(sqlSelectAppCount).toInt();
+    const int appCount = DbUtil(sqliteDb()).sql(sqlSelectAppCount).execute().toInt();
     const int excessCount = appCount - APP_CACHE_MAX_COUNT;
 
     if (excessCount > 0) {
@@ -209,7 +213,7 @@ QImage AppInfoManager::loadIconFromDb(qint64 iconId)
 
     QMutexLocker locker(&m_mutex);
 
-    const QVariant icon = sqliteDb()->executeEx(sqlSelectIconImage, { iconId });
+    const QVariant icon = DbUtil(sqliteDb()).sql(sqlSelectIconImage).vars({ iconId }).execute();
 
     return icon.value<QImage>();
 }
@@ -329,9 +333,13 @@ void AppInfoManager::deleteIcons(const QHash<qint64, int> &iconIds, bool &ok)
 
 void AppInfoManager::deleteIcon(qint64 iconId, int deleteCount, bool &ok)
 {
-    sqliteDb()->executeEx(sqlUpdateIconRefCount, { iconId, /*ref_count=*/-deleteCount }, 0, &ok);
+    DbUtil(sqliteDb(), &ok)
+            .sql(sqlUpdateIconRefCount)
+            .vars({ iconId, /*ref_count=*/-deleteCount })
+            .executeOk();
+
     if (ok) {
-        sqliteDb()->executeEx(sqlDeleteIconIfNotUsed, { iconId }, 0, &ok);
+        DbUtil(sqliteDb(), &ok).sql(sqlDeleteIconIfNotUsed).vars({ iconId }).executeOk();
     }
 }
 
@@ -346,5 +354,5 @@ void AppInfoManager::deleteApps(const QStringList &appPaths, bool &ok)
 
 void AppInfoManager::deleteApp(const QString &appPath, bool &ok)
 {
-    sqliteDb()->executeEx(sqlDeleteApp, { appPath }, 0, &ok);
+    DbUtil(sqliteDb(), &ok).sql(sqlDeleteApp).vars({ appPath }).executeOk();
 }

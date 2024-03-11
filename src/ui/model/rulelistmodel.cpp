@@ -3,6 +3,7 @@
 #include <QIcon>
 #include <QLoggingCategory>
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -276,7 +277,7 @@ bool RuleListModel::updateRuleRow(
         const QString &sql, const QVariantHash &vars, RuleRow &ruleRow) const
 {
     SqliteStmt stmt;
-    if (!(sqliteDb()->prepare(stmt, sql, {}, vars) && stmt.step() == SqliteStmt::StepRow)) {
+    if (!DbUtil(sqliteDb()).sql(sql).vars(vars).prepareRow(stmt)) {
         ruleRow.invalidate();
         return false;
     }

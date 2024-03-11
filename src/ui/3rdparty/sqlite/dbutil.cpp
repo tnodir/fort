@@ -1,7 +1,7 @@
 #include "dbutil.h"
 
-#include <sqlite/sqlitedb.h>
-#include <sqlite/sqlitestmt.h>
+#include "sqlitedb.h"
+#include "sqlitestmt.h"
 
 DbUtil::DbUtil(SqliteDb *sqliteDb, bool *ok) : m_sqliteDb(sqliteDb), m_ok(ok) { }
 
@@ -39,6 +39,11 @@ bool DbUtil::prepare(SqliteStmt &stmt)
         return false;
 
     return stmt.bindVars(m_vars) && stmt.bindVarsMap(m_varsMap);
+}
+
+bool DbUtil::prepareRow(SqliteStmt &stmt)
+{
+    return prepare(stmt) && stmt.step() == SqliteStmt::StepRow;
 }
 
 QVariant DbUtil::execute(int resultCount, bool &ok)
@@ -88,10 +93,7 @@ int DbUtil::getFreeId(int minId, int maxId)
     int resId = minId;
 
     SqliteStmt stmt;
-    if (stmt.prepare(sqliteDb()->db(), m_sql)) {
-        stmt.bindInt(1, minId);
-        stmt.bindInt(2, maxId);
-
+    if (prepare(stmt)) {
         while (stmt.step() == SqliteStmt::StepRow) {
             const int id = stmt.columnInt(0);
 

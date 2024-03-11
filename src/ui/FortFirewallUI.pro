@@ -179,7 +179,6 @@ SOURCES += \
     util/conf/appparseoptions.cpp \
     util/conf/confutil.cpp \
     util/dateutil.cpp \
-    util/dbutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
     util/guiutil.cpp \
@@ -394,7 +393,6 @@ HEADERS += \
     util/conf/confappswalker.h \
     util/conf/confutil.h \
     util/dateutil.h \
-    util/dbutil.h \
     util/device.h \
     util/fileutil.h \
     util/guiutil.h \

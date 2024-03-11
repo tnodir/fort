@@ -32,7 +32,7 @@ public:
 
     virtual void deleteConn(qint64 connIdTo = 0);
 
-    static void getConnIdRange(SqliteDb *sqliteDb, qint64 &rowIdMin, qint64 &rowIdMax);
+    static void getConnIdRange(SqliteDb *db, qint64 &rowIdMin, qint64 &rowIdMax);
 
 signals:
     void connChanged();

@@ -3,6 +3,7 @@
 #include <QHash>
 #include <QLoggingCategory>
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -117,7 +118,7 @@ bool fillAppPathsMap(SqliteDb *db, AppsMap &appsMap)
     const char *const sql = "SELECT app_id, origin_path, path FROM app;";
 
     SqliteStmt stmt;
-    if (!db->prepare(stmt, sql))
+    if (!DbUtil(db).sql(sql).prepare(stmt))
         return false;
 
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -138,7 +139,7 @@ bool updateAppPathsByMap(SqliteDb *db, const AppsMap &appsMap, AppIdsArray &dupA
                                           "  WHERE app_id = ?1;";
 
     SqliteStmt stmt;
-    if (!db->prepare(stmt, sqlUpdateAppPaths))
+    if (!DbUtil(db).sql(sqlUpdateAppPaths).prepare(stmt))
         return false;
 
     QSet<QString> appPaths;
@@ -179,7 +180,7 @@ void deleteDupApps(SqliteDb *db, const AppIdsArray &dupAppIds)
 
     for (qint64 appId : dupAppIds) {
         qCDebug(LC) << "Migrate: Remove dup app-id:" << appId;
-        db->executeEx(sqlDeleteApp, { appId });
+        DbUtil(db).sql(sqlDeleteApp).vars({ appId }).executeOk();
     }
 
     // Remove alerts for deleted apps
@@ -220,7 +221,7 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups, int &index)
 {
     SqliteStmt stmt;
-    if (!db->prepare(stmt, sqlSelectAddressGroups))
+    if (!DbUtil(db).sql(sqlSelectAddressGroups).prepare(stmt))
         return false;
 
     index = 0;
@@ -264,7 +265,7 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 
     const char *sql = rowExists ? sqlUpdateAddressGroup : sqlInsertAddressGroup;
 
-    if (!db->executeExOk(sql, vars))
+    if (!DbUtil(db).sql(sql).vars(vars).executeOk())
         return false;
 
     if (!rowExists) {
@@ -289,7 +290,7 @@ bool saveAddressGroups(SqliteDb *db, const FirewallConf &conf)
 bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
 {
     SqliteStmt stmt;
-    if (!db->prepare(stmt, sqlSelectAppGroups))
+    if (!DbUtil(db).sql(sqlSelectAppGroups).prepare(stmt))
         return false;
 
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -357,7 +358,7 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
 
     const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
 
-    if (!db->executeExOk(sql, vars))
+    if (!DbUtil(db).sql(sql).vars(vars).executeOk())
         return false;
 
     if (!rowExists) {
@@ -384,9 +385,9 @@ bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
     const auto defaultAppGroupId = conf.appGroups().at(0)->id();
 
     for (const qint64 appGroupId : conf.removedAppGroupIdList()) {
-        db->executeEx(sqlUpdateAppResetGroup, { appGroupId, defaultAppGroupId }, 0);
+        DbUtil(db).sql(sqlUpdateAppResetGroup).vars({ appGroupId, defaultAppGroupId }).executeOk();
 
-        if (!db->executeExOk(sqlDeleteAppGroup, { appGroupId }))
+        if (!DbUtil(db).sql(sqlDeleteAppGroup).vars({ appGroupId }).executeOk())
             return false;
     }
 
@@ -657,7 +658,7 @@ QVariant ConfManager::toPatchVariant(bool onlyFlags) const
 {
     return onlyFlags ? conf()->toVariant(/*onlyEdited=*/true) // send only flags to clients
                      : FirewallConf::editedFlagsToVariant(
-                             FirewallConf::AllEdited); // clients have to reload all from storage
+                               FirewallConf::AllEdited); // clients have to reload all from storage
 }
 
 bool ConfManager::saveVariant(const QVariant &confVar)
@@ -942,9 +943,7 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
 
     const char *sql = rowExists ? sqlUpdateTask : sqlInsertTask;
 
-    bool ok = true;
-    sqliteDb()->executeEx(sql, vars, 0, &ok);
-    if (!ok)
+    if (!DbUtil(sqliteDb()).sql(sql).vars(vars).executeOk())
         return false;
 
     if (!rowExists) {
