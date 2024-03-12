@@ -1471,31 +1471,31 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Vrsta:</translation>
     </message>
     <message>
         <source>Application Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravila aplikacije</translation>
     </message>
     <message>
         <source>Global Rules, applied before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Globalna pravila, uporabljena pred pravili aplikacije</translation>
     </message>
     <message>
         <source>Global Rules, applied after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Globalna pravila, uporabljena po pravili aplikacije</translation>
     </message>
     <message>
         <source>Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Pravila prednastavitve</translation>
     </message>
     <message>
         <source># Examples:</source>
-        <translation type="unfinished">#Primeri:</translation>
+        <translation># Primeri:</translation>
     </message>
     <message>
         <source># IP address and port:</source>
-        <translation type="unfinished"></translation>
+        <translation># Naslov-IP in vrata:</translation>
     </message>
 </context>
 <context>

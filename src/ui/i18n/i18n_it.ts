@@ -1471,31 +1471,31 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo:</translation>
     </message>
     <message>
         <source>Application Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regole applicazione</translation>
     </message>
     <message>
         <source>Global Rules, applied before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regole globali, applicate prima delle regole dell&apos;app</translation>
     </message>
     <message>
         <source>Global Rules, applied after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regole globali, applicate dopo le regole dell&apos;app</translation>
     </message>
     <message>
         <source>Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regole preimpostate</translation>
     </message>
     <message>
         <source># Examples:</source>
-        <translation type="unfinished"># Esempi:</translation>
+        <translation># Esempi:</translation>
     </message>
     <message>
         <source># IP address and port:</source>
-        <translation type="unfinished"></translation>
+        <translation># Indirizzo IP e porta:</translation>
     </message>
 </context>
 <context>
