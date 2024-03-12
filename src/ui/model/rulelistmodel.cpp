@@ -75,6 +75,12 @@ bool RuleListModel::isIndexRoot(const QModelIndex &index)
     return isIndexIdRoot(id);
 }
 
+Rule::RuleType RuleListModel::indexRuleType(const QModelIndex &index)
+{
+    const quint32 id = index.internalId();
+    return Rule::RuleType(id);
+}
+
 QModelIndex RuleListModel::indexRoot(Rule::RuleType ruleType) const
 {
     return createIndex(ruleType, 0, ruleType | InternalIdRoot);

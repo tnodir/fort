@@ -231,7 +231,7 @@ void RulesWindow::setupTreeRulesChanged()
 {
     const auto refreshTreeRulesChanged = [&] {
         const auto ruleIndex = ruleListCurrentIndex();
-        const bool ruleSelected = ruleIndex.isValid();
+        const bool ruleSelected = !RuleListModel::isIndexRoot(ruleIndex);
         m_actEditRule->setEnabled(ruleSelected);
         m_actRemoveRule->setEnabled(ruleSelected);
     };
@@ -255,13 +255,18 @@ void RulesWindow::setupRuleListModelChanged()
 
 void RulesWindow::addNewRule()
 {
-    openRuleEditForm({});
+    const auto ruleIndex = ruleListCurrentIndex();
+
+    RuleRow ruleRow;
+    ruleRow.ruleType = RuleListModel::indexRuleType(ruleIndex);
+
+    openRuleEditForm(ruleRow);
 }
 
 void RulesWindow::editSelectedRule()
 {
     const auto ruleIndex = ruleListCurrentIndex();
-    if (!ruleIndex.isValid())
+    if (RuleListModel::isIndexRoot(ruleIndex))
         return;
 
     const RuleRow ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
@@ -283,7 +288,7 @@ void RulesWindow::openRuleEditForm(const RuleRow &ruleRow)
 void RulesWindow::deleteSelectedRule()
 {
     const auto ruleIndex = ruleListCurrentIndex();
-    if (!ruleIndex.isValid())
+    if (RuleListModel::isIndexRoot(ruleIndex))
         return;
 
     const auto ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
@@ -295,7 +300,5 @@ void RulesWindow::deleteSelectedRule()
 
 QModelIndex RulesWindow::ruleListCurrentIndex() const
 {
-    const auto index = m_ruleListView->currentIndex();
-
-    return RuleListModel::isIndexRoot(index) ? QModelIndex() : index;
+    return m_ruleListView->currentIndex();
 }
