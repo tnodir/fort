@@ -438,8 +438,11 @@ const AppRow &AppListModel::appRowAt(int row) const
 
 AppRow AppListModel::appRowById(qint64 appId) const
 {
+    QVariantHash vars;
+    vars.insert(":app_id", appId);
+
     AppRow appRow;
-    updateAppRow(sqlBase() + " WHERE t.app_id = :id;", { { "id", appId } }, appRow);
+    updateAppRow(sqlBase() + " WHERE t.app_id = :app_id;", vars, appRow);
     return appRow;
 }
 
