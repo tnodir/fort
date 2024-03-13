@@ -78,10 +78,10 @@ QImage extractShellIcon(const QString &appPath)
     return result;
 }
 
-QString extractInfoText(LPVOID infoData, const WORD *langInfo, const WCHAR *name)
+QString extractInfoText(LPVOID infoData, const DWORD langInfo, const WCHAR *name)
 {
     WCHAR verStrName[128];
-    wsprintfW(verStrName, L"\\StringFileInfo\\%04x%04x\\%s", langInfo[0], langInfo[1], name);
+    wsprintfW(verStrName, L"\\StringFileInfo\\%08hX\\%s", langInfo, name);
 
     WCHAR *content;
     UINT len;
@@ -147,17 +147,28 @@ bool extractProductInfo(const QString &appPath, AppInfo &appInfo)
     appInfo.productVersion = extractInfoVersion(infoData);
 
     // Language info
-    WORD *langInfo;
-    if (!VerQueryValueA(
-                infoData, "\\VarFileInfo\\Translation", (LPVOID *) &langInfo, (PUINT) &dummy))
-        return false;
+    DWORD langInfoList[] = { 0x040904B0, 0x040904B0, 0x040904E4, 0x04090000 };
+    constexpr int langInfoCount = sizeof(langInfoList) / sizeof(DWORD);
+
+    WORD *infoList;
+    if (VerQueryValueA(
+                infoData, "\\VarFileInfo\\Translation", (LPVOID *) &infoList, (PUINT) &dummy)) {
+        langInfoList[0] = (infoList[0] << 16) | infoList[1];
+    }
 
     // Texts
-    appInfo.companyName = extractInfoText(infoData, langInfo, L"CompanyName");
-    appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName");
-    appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
+    for (int i = 0; i < langInfoCount; ++i) {
+        const DWORD langInfo = langInfoList[i];
 
-    return true;
+        appInfo.companyName = extractInfoText(infoData, langInfo, L"CompanyName");
+        appInfo.productName = extractInfoText(infoData, langInfo, L"ProductName");
+        appInfo.fileDescription = extractInfoText(infoData, langInfo, L"FileDescription");
+
+        if (!appInfo.fileDescription.isEmpty())
+            return true;
+    }
+
+    return false;
 }
 
 }
