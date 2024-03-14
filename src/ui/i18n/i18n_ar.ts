@@ -1474,22 +1474,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>النوع:</translation>
     </message>
     <message>
-        <source>Application Rules</source>
-        <translation>قواعد التطبيقات</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied before App Rules</source>
-        <translation>جعل الأولوية للقواعد العامة قبل قواعد التطبيقات</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied after App Rules</source>
-        <translation>جعل الأولوية لقواعد التطبيقات قبل القواعد العامة</translation>
-    </message>
-    <message>
-        <source>Preset Rules</source>
-        <translation>القواعد الأساسية</translation>
-    </message>
-    <message>
         <source># Examples:</source>
         <translation># أمثلة:</translation>
     </message>
@@ -1507,6 +1491,22 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Change Time</source>
         <translation>تغيير الوقت</translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation>قواعد التطبيقات</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation>جعل الأولوية للقواعد العامة قبل قواعد التطبيقات</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation>جعل الأولوية لقواعد التطبيقات قبل القواعد العامة</translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation>القواعد الأساسية</translation>
     </message>
 </context>
 <context>
@@ -1947,7 +1947,8 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>هل تريد تبديل &quot;%1&quot;؟</translation>
     </message>
     <message>
-        <source>Are you sure you want to quit the program?</source>        <translation>هل تريد الخروج من البرنامج؟</translation>
+        <source>Are you sure you want to quit the program?</source>
+        <translation>هل تريد الخروج من البرنامج؟</translation>
     </message>
     <message>
         <source>Filter Mode</source>

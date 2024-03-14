@@ -1474,22 +1474,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>유형:</translation>
     </message>
     <message>
-        <source>Application Rules</source>
-        <translation>응용 프로그램 규칙</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied before App Rules</source>
-        <translation>앱 규칙 이전에 적용되는 전역 규칙</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied after App Rules</source>
-        <translation>앱 규칙 다음에 적용되는 전역 규칙</translation>
-    </message>
-    <message>
-        <source>Preset Rules</source>
-        <translation>사전 설정 규칙</translation>
-    </message>
-    <message>
         <source># Examples:</source>
         <translation># 예제:</translation>
     </message>
@@ -1507,6 +1491,22 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Change Time</source>
         <translation>시간 변경</translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation>응용 프로그램 규칙</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation>앱 규칙 이전에 적용되는 전역 규칙</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation>앱 규칙 다음에 적용되는 전역 규칙</translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation>사전 설정 규칙</translation>
     </message>
 </context>
 <context>

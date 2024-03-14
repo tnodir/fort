@@ -1472,22 +1472,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>类型：</translation>
     </message>
     <message>
-        <source>Application Rules</source>
-        <translation>程序规则</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied before App Rules</source>
-        <translation>全局规则（在程序规则之前生效）：</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied after App Rules</source>
-        <translation>全局规则（在程序规则之后生效）：</translation>
-    </message>
-    <message>
-        <source>Preset Rules</source>
-        <translation>预置规则</translation>
-    </message>
-    <message>
         <source># Examples:</source>
         <translation># 示例：</translation>
     </message>
@@ -1505,6 +1489,22 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Change Time</source>
         <translation>更改时间</translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation>程序规则</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation>全局规则（在程序规则之前生效）：</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation>全局规则（在程序规则之后生效）：</translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation>预置规则</translation>
     </message>
 </context>
 <context>

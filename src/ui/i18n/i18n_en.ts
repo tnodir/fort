@@ -1465,22 +1465,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Application Rules</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Global Rules, applied before App Rules</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Global Rules, applied after App Rules</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Preset Rules</source>
-        <translation></translation>
-    </message>
-    <message>
         <source># Examples:</source>
         <translation></translation>
     </message>
@@ -1497,6 +1481,22 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Change Time</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
         <translation></translation>
     </message>
 </context>

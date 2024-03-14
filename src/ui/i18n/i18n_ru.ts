@@ -1474,22 +1474,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Тип:</translation>
     </message>
     <message>
-        <source>Application Rules</source>
-        <translation>Правила приложений</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied before App Rules</source>
-        <translation>Глобальные правила, применяемые до правил приложений</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied after App Rules</source>
-        <translation>Глобальные правила, применяемые после правил приложений</translation>
-    </message>
-    <message>
-        <source>Preset Rules</source>
-        <translation>Предопределённые правила</translation>
-    </message>
-    <message>
         <source># Examples:</source>
         <translation># Примеры:</translation>
     </message>
@@ -1507,6 +1491,22 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Change Time</source>
         <translation>Время Изменения</translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation>Правила приложений</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation>Глобальные правила, применяемые до правил приложений</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation>Глобальные правила, применяемые после правил приложений</translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation>Предопределённые правила</translation>
     </message>
 </context>
 <context>

@@ -1474,22 +1474,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Vrsta:</translation>
     </message>
     <message>
-        <source>Application Rules</source>
-        <translation>Pravila aplikacije</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied before App Rules</source>
-        <translation>Globalna pravila, uporabljena pred pravili aplikacije</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied after App Rules</source>
-        <translation>Globalna pravila, uporabljena po pravili aplikacije</translation>
-    </message>
-    <message>
-        <source>Preset Rules</source>
-        <translation>Pravila prednastavitve</translation>
-    </message>
-    <message>
         <source># Examples:</source>
         <translation># Primeri:</translation>
     </message>
@@ -1507,6 +1491,22 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Change Time</source>
         <translation>Spremeni čas</translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation>Pravila aplikacije</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation>Globalna pravila, uporabljena pred pravili aplikacije</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation>Globalna pravila, uporabljena po pravili aplikacije</translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation>Pravila prednastavitve</translation>
     </message>
 </context>
 <context>

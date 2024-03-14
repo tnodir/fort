@@ -1474,22 +1474,6 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <translation>Tipo:</translation>
     </message>
     <message>
-        <source>Application Rules</source>
-        <translation>Regole applicazione</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied before App Rules</source>
-        <translation>Regole globali, applicate prima delle regole dell&apos;app</translation>
-    </message>
-    <message>
-        <source>Global Rules, applied after App Rules</source>
-        <translation>Regole globali, applicate dopo le regole dell&apos;app</translation>
-    </message>
-    <message>
-        <source>Preset Rules</source>
-        <translation>Regole preimpostate</translation>
-    </message>
-    <message>
         <source># Examples:</source>
         <translation># Esempi:</translation>
     </message>
@@ -1507,6 +1491,22 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Change Time</source>
         <translation>Cambia ora</translation>
+    </message>
+    <message>
+        <source>Application Rules</source>
+        <translation>Regole applicazione</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied before App Rules</source>
+        <translation>Regole globali, applicate prima delle regole dell&apos;app</translation>
+    </message>
+    <message>
+        <source>Global Rules, applied after App Rules</source>
+        <translation>Regole globali, applicate dopo le regole dell&apos;app</translation>
+    </message>
+    <message>
+        <source>Preset Rules</source>
+        <translation>Regole preimpostate</translation>
     </message>
 </context>
 <context>
