@@ -2,11 +2,77 @@
 
 #include <QBuffer>
 #include <QDataStream>
+#include <QHash>
 #include <QImage>
 
 #include <sqlite.h>
 
 namespace {
+
+bool stmtBindVarNull(SqliteStmt &stmt, int index, const QVariant & /*v*/)
+{
+    return stmt.bindNull(index);
+}
+
+bool stmtBindVarInt(SqliteStmt &stmt, int index, const QVariant &v)
+{
+    return stmt.bindInt(index, v.toInt());
+}
+
+bool stmtBindVarInt64(SqliteStmt &stmt, int index, const QVariant &v)
+{
+    return stmt.bindInt64(index, v.toLongLong());
+}
+
+bool stmtBindVarDouble(SqliteStmt &stmt, int index, const QVariant &v)
+{
+    return stmt.bindDouble(index, v.toDouble());
+}
+
+bool stmtBindVarText(SqliteStmt &stmt, int index, const QVariant &v)
+{
+    return stmt.bindText(index, v.toString());
+}
+
+bool stmtBindVarDateTime(SqliteStmt &stmt, int index, const QVariant &v)
+{
+    return stmt.bindDateTime(index, v.toDateTime());
+}
+
+bool stmtBindVarBlob(SqliteStmt &stmt, int index, const QVariant &v)
+{
+    return stmt.bindBlob(index, v.toByteArray());
+}
+
+bool stmtBindVarDataStream(SqliteStmt &stmt, int index, const QVariant &v)
+{
+    return stmt.bindDataStream(index, v);
+}
+
+using stmtBindVar_func = bool (*)(SqliteStmt &stmt, int index, const QVariant &v);
+
+static QHash<qint16, stmtBindVar_func> stmtBindVar_funcMap = {
+    { QMetaType::UnknownType, &stmtBindVarNull },
+    { QMetaType::Void, &stmtBindVarNull },
+    { QMetaType::Nullptr, &stmtBindVarNull },
+    { QMetaType::Bool, &stmtBindVarInt },
+    { QMetaType::Int, &stmtBindVarInt },
+    { QMetaType::UInt, &stmtBindVarInt },
+    { QMetaType::LongLong, &stmtBindVarInt64 },
+    { QMetaType::ULongLong, &stmtBindVarInt64 },
+    { QMetaType::Double, &stmtBindVarDouble },
+    { QMetaType::QString, &stmtBindVarText },
+    { QMetaType::QDateTime, &stmtBindVarDateTime },
+    { QMetaType::QByteArray, &stmtBindVarBlob },
+};
+
+bool stmtBindVar(SqliteStmt &stmt, int index, const QVariant &v)
+{
+    const qint16 vType = v.userType();
+    const stmtBindVar_func func = stmtBindVar_funcMap.value(vType, &stmtBindVarDataStream);
+
+    return func(stmt, index, v);
+}
 
 bool checkBindResult(int res)
 {
@@ -95,7 +161,7 @@ bool SqliteStmt::bindBlob(int index, const QByteArray &data)
             sqlite3_bind_blob(m_stmt, index, data.constData(), bytesCount, SQLITE_STATIC));
 }
 
-bool SqliteStmt::bindVarBlob(int index, const QVariant &v)
+bool SqliteStmt::bindDataStream(int index, const QVariant &v)
 {
     const qint16 vType = v.userType();
 
@@ -128,31 +194,7 @@ bool SqliteStmt::bindVarBlob(int index, const QVariant &v)
 
 bool SqliteStmt::bindVar(int index, const QVariant &v)
 {
-    const qint16 vType = v.userType();
-
-    switch (vType) {
-    case QMetaType::UnknownType:
-    case QMetaType::Void:
-    case QMetaType::Nullptr:
-        return bindNull(index);
-    case QMetaType::Bool:
-    case QMetaType::Int:
-    case QMetaType::UInt:
-        return bindInt(index, v.toInt());
-    case QMetaType::LongLong:
-    case QMetaType::ULongLong:
-        return bindInt64(index, v.toLongLong());
-    case QMetaType::Double:
-        return bindDouble(index, v.toDouble());
-    case QMetaType::QString:
-        return bindText(index, v.toString());
-    case QMetaType::QDateTime:
-        return bindDateTime(index, v.toDateTime());
-    case QMetaType::QByteArray:
-        return bindBlob(index, v.toByteArray());
-    default:
-        return bindVarBlob(index, v);
-    }
+    return stmtBindVar(*this, index, v);
 }
 
 bool SqliteStmt::bindVars(const QVariantList &vars, int index)
@@ -294,7 +336,7 @@ QByteArray SqliteStmt::columnBlob(int column, bool isRaw) const
     return isRaw ? QByteArray::fromRawData(p, bytesCount) : QByteArray(p, bytesCount);
 }
 
-QVariant SqliteStmt::columnVarBlob(int column) const
+QVariant SqliteStmt::columnDataStream(int column) const
 {
     const QByteArray data = columnBlob(column);
     QDataStream stream(data);
@@ -329,7 +371,7 @@ QVariant SqliteStmt::columnVar(int column) const
     case SQLITE_TEXT:
         return columnText(column);
     case SQLITE_BLOB:
-        return columnVarBlob(column);
+        return columnDataStream(column);
     case SQLITE_NULL:
         break;
     default:
