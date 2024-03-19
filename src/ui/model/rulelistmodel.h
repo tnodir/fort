@@ -35,6 +35,7 @@ public:
     void initialize();
 
     static bool isIndexRoot(const QModelIndex &index);
+    static bool isIndexRule(const QModelIndex &index);
     static Rule::RuleType indexRuleType(const QModelIndex &index);
 
     QModelIndex indexRoot(Rule::RuleType ruleType) const;

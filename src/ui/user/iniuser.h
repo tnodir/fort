@@ -134,6 +134,9 @@ public:
     QByteArray rulesHeader() const { return valueByteArray("ruleWindow/rulesHeader"); }
     void setRulesHeader(const QByteArray &v) { setValue("ruleWindow/rulesHeader", v); }
 
+    int rulesExpanded() const { return valueInt("ruleWindow/rulesExpanded", 0x01); }
+    void setRulesExpanded(int v) { setValue("ruleWindow/rulesExpanded", v); }
+
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
     void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }
 

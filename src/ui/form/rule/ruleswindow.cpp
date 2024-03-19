@@ -27,6 +27,11 @@ namespace {
 
 constexpr int RULES_HEADER_VERSION = 2;
 
+constexpr quint8 ruleTypeBit(Rule::RuleType ruleType)
+{
+    return (1 << ruleType);
+}
+
 }
 
 RulesWindow::RulesWindow(QWidget *parent) :
@@ -78,6 +83,8 @@ void RulesWindow::saveWindowState(bool /*wasVisible*/)
     iniUser()->setRulesHeader(header->saveState());
     iniUser()->setRulesHeaderVersion(RULES_HEADER_VERSION);
 
+    iniUser()->setRulesExpanded(m_expandedRuleTypes);
+
     confManager()->saveIniUser();
 }
 
@@ -90,6 +97,10 @@ void RulesWindow::restoreWindowState()
         auto header = m_ruleListView->header();
         header->restoreState(iniUser()->rulesHeader());
     }
+
+    m_expandedRuleTypes = iniUser()->rulesExpanded();
+
+    expandTreeRules();
 }
 
 void RulesWindow::setupController()
@@ -127,6 +138,9 @@ void RulesWindow::setupUi()
     // Tree
     setupTreeRules();
     setupTreeRulesHeader();
+
+    // Actions on rules tree's expanded/collapsed changed
+    setupTreeRulesExpandingChanged();
 
     // Actions on rules tree's current changed
     setupTreeRulesChanged();
@@ -209,8 +223,6 @@ void RulesWindow::setupTreeRules()
     m_ruleListView->setupItemDelegate();
     m_ruleListView->setModel(ruleListModel());
 
-    m_ruleListView->expandAll();
-
     m_ruleListView->setMenu(m_btEdit->menu());
 
     connect(m_ruleListView, &TreeView::activated, m_actEditRule, &QAction::trigger);
@@ -227,11 +239,26 @@ void RulesWindow::setupTreeRulesHeader()
     header->resizeSection(0, 360);
 }
 
+void RulesWindow::setupTreeRulesExpandingChanged()
+{
+    const auto onExpandingChanged = [&](const QModelIndex &index) {
+        const bool isExpanded = m_ruleListView->isExpanded(index);
+        const auto ruleType = RuleListModel::indexRuleType(index);
+        const auto typeBit = ruleTypeBit(ruleType);
+
+        m_expandedRuleTypes =
+                isExpanded ? (m_expandedRuleTypes | typeBit) : (m_expandedRuleTypes & ~typeBit);
+    };
+
+    connect(m_ruleListView, &TreeView::expanded, this, onExpandingChanged);
+    connect(m_ruleListView, &TreeView::collapsed, this, onExpandingChanged);
+}
+
 void RulesWindow::setupTreeRulesChanged()
 {
     const auto refreshTreeRulesChanged = [&] {
         const auto ruleIndex = ruleListCurrentIndex();
-        const bool ruleSelected = !RuleListModel::isIndexRoot(ruleIndex);
+        const bool ruleSelected = RuleListModel::isIndexRule(ruleIndex);
         m_actEditRule->setEnabled(ruleSelected);
         m_actRemoveRule->setEnabled(ruleSelected);
     };
@@ -251,6 +278,20 @@ void RulesWindow::setupRuleListModelChanged()
 
     connect(ruleListModel(), &RuleListModel::modelReset, this, refreshAddRule);
     connect(ruleListModel(), &RuleListModel::rowsRemoved, this, refreshAddRule);
+
+    connect(ruleListModel(), &RuleListModel::modelReset, this, &RulesWindow::expandTreeRules);
+}
+
+void RulesWindow::expandTreeRules()
+{
+    for (int i = 0; i < Rule::RuleTypeCount; ++i) {
+        const auto ruleType = Rule::RuleType(i);
+        const auto typeBit = ruleTypeBit(ruleType);
+        const bool isExpanded = (m_expandedRuleTypes & typeBit) != 0;
+        const auto index = ruleListModel()->indexRoot(ruleType);
+
+        m_ruleListView->setExpanded(index, isExpanded);
+    }
 }
 
 void RulesWindow::addNewRule()

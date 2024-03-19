@@ -18,9 +18,14 @@ namespace {
 
 const QLoggingCategory LC("model.ruleList");
 
-bool isIndexIdRoot(const quint32 id)
+constexpr bool isIndexIdRoot(const quint32 id)
 {
     return (id & RuleListModel::InternalIdRoot) != 0;
+}
+
+constexpr bool isIndexIdRule(const quint32 id)
+{
+    return (id & RuleListModel::InternalIdRule) != 0;
 }
 
 QVariant dataDisplayName(const RuleRow &ruleRow, int role)
@@ -73,6 +78,12 @@ bool RuleListModel::isIndexRoot(const QModelIndex &index)
 {
     const quint32 id = index.internalId();
     return isIndexIdRoot(id);
+}
+
+bool RuleListModel::isIndexRule(const QModelIndex &index)
+{
+    const quint32 id = index.internalId();
+    return isIndexIdRule(id);
 }
 
 Rule::RuleType RuleListModel::indexRuleType(const QModelIndex &index)

@@ -52,8 +52,11 @@ private:
     void setupEditSearch();
     void setupTreeRules();
     void setupTreeRulesHeader();
+    void setupTreeRulesExpandingChanged();
     void setupTreeRulesChanged();
     void setupRuleListModelChanged();
+
+    void expandTreeRules();
 
     void addNewRule();
     void editSelectedRule();
@@ -65,6 +68,8 @@ private:
     QModelIndex ruleListCurrentIndex() const;
 
 private:
+    quint8 m_expandedRuleTypes = 0;
+
     RulesController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
