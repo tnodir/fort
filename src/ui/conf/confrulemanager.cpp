@@ -34,7 +34,9 @@ const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
 
 const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 
-const char *const sqlDeleteAppRule = "DELETE FROM app_rule WHERE rule_id = 1;";
+const char *const sqlDeleteAppRule = "UPDATE app"
+                                     "  SET app_rules = app_rules & ~?1"
+                                     "  WHERE (app_rules & ?1) <> 0;";
 
 const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id = ?1;";
 
@@ -133,11 +135,12 @@ bool ConfRuleManager::deleteRule(int ruleId)
 
     beginTransaction();
 
-    const QVariantList vars = { ruleId };
-
-    DbUtil(sqliteDb(), &ok).sql(sqlDeleteRule).vars(vars).executeOk();
+    DbUtil(sqliteDb(), &ok).sql(sqlDeleteRule).vars({ ruleId }).executeOk();
     if (ok) {
-        // Delete the Rule from App Rules
+        const quint32 ruleBit = (quint32(1) << (ruleId - 1));
+        const QVariantList vars = { ruleBit };
+
+        // Delete the Rule from Programs
         DbUtil(sqliteDb(), &ok).sql(sqlDeleteAppRule).vars(vars).executeOk();
     }
 

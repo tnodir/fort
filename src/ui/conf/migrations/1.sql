@@ -20,8 +20,8 @@ CREATE TABLE address_group(
   order_index INTEGER NOT NULL,
   include_all BOOLEAN NOT NULL,
   exclude_all BOOLEAN NOT NULL,
-  include_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
-  exclude_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
+  include_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
+  exclude_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
   include_text TEXT NOT NULL,
   exclude_text TEXT NOT NULL
 );
@@ -68,8 +68,9 @@ CREATE TABLE app(
   log_conn BOOLEAN NOT NULL DEFAULT 1,
   blocked BOOLEAN NOT NULL,
   kill_process BOOLEAN NOT NULL DEFAULT 0,
-  accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
-  reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
+  accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
+  reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
+  app_rules INTEGER NOT NULL DEFAULT 0,  -- rule ids bit mask
   creat_time INTEGER NOT NULL,
   end_action INTEGER NOT NULL DEFAULT 0,
   end_time INTEGER
@@ -93,21 +94,12 @@ CREATE TABLE rule(
   notes TEXT,
   rule_text TEXT NOT NULL,
   rule_type INTEGER NOT NULL, -- app rules, global before/after apps, preset rules
-  accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
-  reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone indexes bit mask
+  accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
+  reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
   mod_time INTEGER NOT NULL
 );
 
 CREATE INDEX rule_rule_type_name_idx ON rule(rule_type, lower(name));
-
-CREATE TABLE app_rule(
-  app_rule_id INTEGER PRIMARY KEY,
-  app_id INTEGER NOT NULL,
-  rule_id INTEGER NOT NULL
-);
-
-CREATE INDEX app_rule_app_id_idx ON app_rule(app_id);
-CREATE INDEX app_rule_rule_id_idx ON app_rule(rule_id);
 
 CREATE TABLE task(
   task_id INTEGER PRIMARY KEY,

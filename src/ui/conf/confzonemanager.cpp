@@ -32,20 +32,23 @@ const char *const sqlSelectZoneIds = "SELECT zone_id FROM zone"
 
 const char *const sqlDeleteZone = "DELETE FROM zone WHERE zone_id = ?1;";
 
-const char *const sqlDeleteAddressGroupZone = "UPDATE address_group"
-                                              "  SET include_zones = include_zones & ?1,"
-                                              "    exclude_zones = exclude_zones & ?1"
-                                              "  WHERE include_zones <> 0 || exclude_zones <> 0;";
+const char *const sqlDeleteAddressGroupZone =
+        "UPDATE address_group"
+        "  SET include_zones = include_zones & ~?1,"
+        "    exclude_zones = exclude_zones & ~?1"
+        "  WHERE (include_zones & ?1) <> 0 || (exclude_zones & ?1) <> 0;";
 
-const char *const sqlDeleteAppZone = "UPDATE app"
-                                     "  SET accept_zones = accept_zones & ?1,"
-                                     "    reject_zones = reject_zones & ?1"
-                                     "  WHERE accept_zones <> 0 || reject_zones <> 0;";
+const char *const sqlDeleteAppZone =
+        "UPDATE app"
+        "  SET accept_zones = accept_zones & ~?1,"
+        "    reject_zones = reject_zones & ~?1"
+        "  WHERE (accept_zones & ?1) <> 0 || (reject_zones & ?1) <> 0;";
 
-const char *const sqlDeleteRuleZone = "UPDATE rule"
-                                      "  SET accept_zones = accept_zones & ?1,"
-                                      "    reject_zones = reject_zones & ?1"
-                                      "  WHERE accept_zones <> 0 || reject_zones <> 0;";
+const char *const sqlDeleteRuleZone =
+        "UPDATE rule"
+        "  SET accept_zones = accept_zones & ~?1,"
+        "    reject_zones = reject_zones & ~?1"
+        "  WHERE (accept_zones & ?1) <> 0 || (reject_zones & ?1) <> 0;";
 
 const char *const sqlUpdateZoneName = "UPDATE zone SET name = ?2 WHERE zone_id = ?1;";
 
@@ -144,8 +147,8 @@ bool ConfZoneManager::deleteZone(int zoneId)
     beginTransaction();
 
     if (DbUtil(sqliteDb(), &ok).sql(sqlDeleteZone).vars({ zoneId }).executeOk()) {
-        const quint32 zoneUnMask = ~(quint32(1) << (zoneId - 1));
-        const QVariantList vars = { qint64(zoneUnMask) };
+        const quint32 zoneBit = (quint32(1) << (zoneId - 1));
+        const QVariantList vars = { zoneBit };
 
         // Delete the Zone from Address Groups
         DbUtil(sqliteDb(), &ok).sql(sqlDeleteAddressGroupZone).vars(vars).executeOk();
