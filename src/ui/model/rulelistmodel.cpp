@@ -329,7 +329,8 @@ bool RuleListModel::updateRuleRow(
     ruleRow.ruleType = Rule::RuleType(stmt.columnInt(7));
     ruleRow.acceptZones = stmt.columnUInt(8);
     ruleRow.rejectZones = stmt.columnUInt(9);
-    ruleRow.modTime = stmt.columnDateTime(10);
+    ruleRow.presetRules = stmt.columnUInt(10);
+    ruleRow.modTime = stmt.columnDateTime(11);
 
     return true;
 }
@@ -347,6 +348,7 @@ QString RuleListModel::sqlBase() const
            "    rule_type,"
            "    accept_zones,"
            "    reject_zones,"
+           "    preset_rules,"
            "    mod_time"
            "  FROM rule t"
            "  WHERE rule_type = :type";

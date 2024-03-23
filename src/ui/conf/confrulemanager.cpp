@@ -20,13 +20,14 @@ const QLoggingCategory LC("confRule");
 
 const char *const sqlInsertRule = "INSERT INTO rule(rule_id, enabled, blocked, exclusive,"
                                   "    name, notes, rule_text, rule_type,"
-                                  "    accept_zones, reject_zones, mod_time)"
-                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11);";
+                                  "    accept_zones, reject_zones, preset_rules, mod_time)"
+                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12);";
 
 const char *const sqlUpdateRule = "UPDATE rule"
                                   "  SET enabled = ?2, blocked = ?3, exclusive = ?4,"
                                   "    name = ?5, notes = ?6, rule_text = ?7, rule_type = ?8,"
-                                  "    accept_zones = ?9, reject_zones = ?10, mod_time = ?11"
+                                  "    accept_zones = ?9, reject_zones = ?10,"
+                                  "    preset_rules = ?11, mod_time = ?12"
                                   "  WHERE rule_id = ?1;";
 
 const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
@@ -37,6 +38,10 @@ const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 const char *const sqlDeleteAppRule = "UPDATE app"
                                      "  SET app_rules = app_rules & ~?1"
                                      "  WHERE (app_rules & ?1) <> 0;";
+
+const char *const sqlDeletePresetRule = "UPDATE rule"
+                                        "  SET preset_rules = preset_rules & ~?1"
+                                        "  WHERE (preset_rules & ?1) <> 0;";
 
 const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id = ?1;";
 
@@ -108,6 +113,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
         rule.ruleType,
         rule.acceptZones,
         rule.rejectZones,
+        rule.presetRules,
         DateUtil::now(),
     };
 
@@ -140,8 +146,18 @@ bool ConfRuleManager::deleteRule(int ruleId)
         const quint32 ruleBit = (quint32(1) << (ruleId - 1));
         const QVariantList vars = { ruleBit };
 
-        // Delete the Rule from Programs
-        DbUtil(sqliteDb(), &ok).sql(sqlDeleteAppRule).vars(vars).executeOk();
+        const auto ruleType = Rule::getRuleTypeById(ruleId);
+
+        switch (ruleType) {
+        case Rule::AppRule: {
+            // Delete the App Rule from Programs
+            DbUtil(sqliteDb(), &ok).sql(sqlDeleteAppRule).vars(vars).executeOk();
+        } break;
+        case Rule::PresetRule: {
+            // Delete the Preset Rule from Rules
+            DbUtil(sqliteDb(), &ok).sql(sqlDeletePresetRule).vars(vars).executeOk();
+        } break;
+        }
     }
 
     commitTransaction(ok);

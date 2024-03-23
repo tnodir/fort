@@ -95,7 +95,8 @@ bool ConfRuleManagerRpc::updateRuleEnabled(int ruleId, bool enabled)
 QVariantList ConfRuleManagerRpc::ruleToVarList(const Rule &rule)
 {
     return { rule.enabled, rule.blocked, rule.exclusive, rule.ruleType, rule.ruleId,
-        rule.acceptZones, rule.rejectZones, rule.ruleName, rule.notes, rule.ruleText };
+        rule.acceptZones, rule.rejectZones, rule.presetRules, rule.ruleName, rule.notes,
+        rule.ruleText };
 }
 
 Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
@@ -108,9 +109,10 @@ Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
     rule.ruleId = v.value(4).toInt();
     rule.acceptZones = v.value(5).toUInt();
     rule.rejectZones = v.value(6).toUInt();
-    rule.ruleName = v.value(7).toString();
-    rule.notes = v.value(8).toString();
-    rule.ruleText = v.value(9).toString();
+    rule.presetRules = v.value(7).toUInt();
+    rule.ruleName = v.value(8).toString();
+    rule.notes = v.value(9).toString();
+    rule.ruleText = v.value(10).toString();
     return rule;
 }
 

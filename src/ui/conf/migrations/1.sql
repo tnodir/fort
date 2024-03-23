@@ -96,6 +96,7 @@ CREATE TABLE rule(
   rule_type INTEGER NOT NULL, -- app rules, global before/after apps, preset rules
   accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
+  preset_rules INTEGER NOT NULL DEFAULT 0,  -- rule ids bit mask
   mod_time INTEGER NOT NULL
 );
 

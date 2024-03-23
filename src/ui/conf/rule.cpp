@@ -9,7 +9,8 @@ bool Rule::isOptionsEqual(const Rule &o) const
 {
     return enabled == o.enabled && blocked == o.blocked && exclusive == o.exclusive
             && acceptZones == o.acceptZones && rejectZones == o.rejectZones
-            && ruleName == o.ruleName && notes == o.notes && ruleText == o.ruleText;
+            && presetRules == o.presetRules && ruleName == o.ruleName && notes == o.notes
+            && ruleText == o.ruleText;
 }
 
 Rule::RuleType Rule::getRuleTypeById(int ruleId)
