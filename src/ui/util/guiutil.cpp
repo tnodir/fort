@@ -3,6 +3,7 @@
 #include <QClipboard>
 #include <QGuiApplication>
 #include <QImage>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QPixmap>
 
@@ -67,4 +68,9 @@ QFont GuiUtil::fontBold()
     QFont font;
     font.setBold(true);
     return font;
+}
+
+QPoint GuiUtil::globalPos(const QMouseEvent *event)
+{
+    return event->globalPosition().toPoint();
 }

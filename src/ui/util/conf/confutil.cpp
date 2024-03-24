@@ -1,10 +1,7 @@
 #include "confutil.h"
 
-#include <QRegularExpression>
-
 #include <common/fortconf.h>
 #include <fort_version.h>
-#include <fortcompat.h>
 
 #include <conf/addressgroup.h>
 #include <conf/app.h>
@@ -427,7 +424,7 @@ bool ConfUtil::parseAppsText(EnvManager &envManager, App &app, AppParseOptions &
     return true;
 }
 
-bool ConfUtil::parseAppLine(App &app, const StringView &line, AppParseOptions &opt)
+bool ConfUtil::parseAppLine(App &app, const QStringView &line, AppParseOptions &opt)
 {
     bool isWild = false;
     bool isPrefix = false;
@@ -495,7 +492,7 @@ bool ConfUtil::addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint
     return true;
 }
 
-QString ConfUtil::parseAppPath(const StringView line, bool &isWild, bool &isPrefix)
+QString ConfUtil::parseAppPath(const QStringView line, bool &isWild, bool &isPrefix)
 {
     static const QRegularExpression wildMatcher("([*?[])");
 
@@ -507,7 +504,7 @@ QString ConfUtil::parseAppPath(const StringView line, bool &isWild, bool &isPref
     if (path.isEmpty())
         return QString();
 
-    const auto wildMatch = matchRegExp(wildMatcher, path);
+    const auto wildMatch = StringUtil::match(wildMatcher, path);
     if (wildMatch.hasMatch()) {
         if (wildMatch.capturedStart() == path.size() - 2 && path.endsWith(QLatin1String("**"))) {
             path.chop(2);

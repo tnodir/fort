@@ -3,7 +3,6 @@
 #include <QAction>
 #include <QKeySequence>
 
-#include <fortcompat.h>
 #include <manager/windowmanager.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
@@ -64,7 +63,7 @@ void HotKeyManager::updateActions()
 
     eventFilter->unregisterHotKeys();
 
-    for (QAction *action : asConst(m_actions)) {
+    for (QAction *action : std::as_const(m_actions)) {
         action->setShortcutVisibleInContextMenu(enabled());
         if (enabled() && global()) {
             registerHotKey(eventFilter, action);

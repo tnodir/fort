@@ -317,7 +317,6 @@ HEADERS += \
     form/zone/zoneeditdialog.h \
     form/zone/zonescontroller.h \
     form/zone/zoneswindow.h \
-    fortcompat.h \
     fortmanager.h \
     fortsettings.h \
     hostinfo/hostinfo.h \
@@ -426,6 +425,7 @@ HEADERS += \
     util/textareautil.h \
     util/threadstorage.h \
     util/triggertimer.h \
+    util/util_types.h \
     util/variantutil.h \
     util/window/basewindowstatewatcher.h \
     util/window/widgetwindow.h \

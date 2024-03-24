@@ -25,10 +25,10 @@
 #include <form/svc/serviceswindow.h>
 #include <form/tray/trayicon.h>
 #include <form/zone/zoneswindow.h>
-#include <fortcompat.h>
 #include <fortsettings.h>
 #include <stat/statmanager.h>
 #include <user/usersettings.h>
+#include <util/guiutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 
@@ -215,7 +215,7 @@ void WindowManager::setupGraphWindow()
 
     connect(m_graphWindow, &GraphWindow::aboutToClose, this, [&] { closeGraphWindow(); });
     connect(m_graphWindow, &GraphWindow::mouseRightClick, this,
-            [&](QMouseEvent *event) { m_trayIcon->showTrayMenu(mouseEventGlobalPos(event)); });
+            [&](QMouseEvent *event) { m_trayIcon->showTrayMenu(GuiUtil::globalPos(event)); });
 
     connect(IoC<StatManager>(), &StatManager::trafficAdded, m_graphWindow,
             &GraphWindow::addTraffic);

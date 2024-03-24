@@ -2,10 +2,8 @@
 
 #include <QCryptographicHash>
 #include <QLoggingCategory>
-#include <QRegularExpression>
 #include <QUrl>
 
-#include <fortcompat.h>
 #include <util/conf/confutil.h>
 #include <util/fileutil.h>
 #include <util/net/iprange.h>
@@ -94,7 +92,7 @@ StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &
         if (line.startsWith('#') || line.startsWith(';')) // commented line
             continue;
 
-        const auto match = matchRegExp(re, line);
+        const auto match = StringUtil::match(re, line);
         if (!match.hasMatch())
             continue;
 

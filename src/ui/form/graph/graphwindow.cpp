@@ -6,9 +6,9 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <fortcompat.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
+#include <util/guiutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
@@ -271,7 +271,7 @@ void GraphWindow::onMouseDoubleClick(QMouseEvent *event)
 
 void GraphWindow::onMouseDragBegin(QMouseEvent *event)
 {
-    m_mousePressPoint = mouseEventGlobalPos(event);
+    m_mousePressPoint = GuiUtil::globalPos(event);
     m_posOnMousePress = this->pos();
     m_sizeOnMousePress = this->size();
     m_mouseDragResize = (event->buttons() & Qt::RightButton) != 0;
@@ -284,7 +284,7 @@ void GraphWindow::onMouseDragMove(QMouseEvent *event)
     if (isMaximized() || isFullScreen())
         return;
 
-    const QPoint offset = mouseEventGlobalPos(event) - m_mousePressPoint;
+    const QPoint offset = GuiUtil::globalPos(event) - m_mousePressPoint;
 
     if (m_mouseDragResize) {
         resize(qMax(m_sizeOnMousePress.width() + offset.x(), minimumSize().width()),

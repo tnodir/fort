@@ -1,7 +1,5 @@
 #include "tasklistmodel.h"
 
-#include <fortcompat.h>
-
 #include "taskinfo.h"
 #include "taskmanager.h"
 
@@ -176,7 +174,7 @@ void TaskListModel::setupTaskRows()
 QVariant TaskListModel::toVariant() const
 {
     QVariantList list;
-    for (const TaskEditInfo &info : asConst(m_taskRows)) {
+    for (const TaskEditInfo &info : std::as_const(m_taskRows)) {
         list.append(info.value());
     }
     return list;

@@ -6,7 +6,7 @@
 #include <QVector>
 
 #include <common/common_types.h>
-#include <fortcompat.h>
+#include <util/util_types.h>
 
 using Ip4Pair = struct
 {
@@ -103,7 +103,7 @@ private:
     void setErrorDetails(const QString &errorDetails);
 
     IpRange::ParseError parseIpLine(
-            const StringView line, ip4range_map_t &ip4RangeMap, int &pair4Size);
+            const QStringView line, ip4range_map_t &ip4RangeMap, int &pair4Size);
 
     IpRange::ParseError parseIp4Address(const QString &ip, const QString &mask,
             ip4range_map_t &ip4RangeMap, int &pair4Size, char maskSep);

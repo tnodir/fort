@@ -70,11 +70,11 @@ private:
 
     bool parseAppsText(EnvManager &envManager, App &app, AppParseOptions &opt);
 
-    bool parseAppLine(App &app, const StringView &line, AppParseOptions &opt);
+    bool parseAppLine(App &app, const QStringView &line, AppParseOptions &opt);
 
     bool addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint32 &appsSize);
 
-    static QString parseAppPath(const StringView line, bool &isWild, bool &isPrefix);
+    static QString parseAppPath(const QStringView line, bool &isWild, bool &isPrefix);
 
     static void parseAppPeriod(
             const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount);

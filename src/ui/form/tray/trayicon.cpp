@@ -15,7 +15,6 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
 #include <form/windowtypes.h>
-#include <fortcompat.h>
 #include <fortsettings.h>
 #include <manager/hotkeymanager.h>
 #include <manager/windowmanager.h>
@@ -520,7 +519,7 @@ void TrayIcon::updateTrayMenuFlags()
     }
 
     int appGroupIndex = 0;
-    for (QAction *action : asConst(m_appGroupActions)) {
+    for (QAction *action : std::as_const(m_appGroupActions)) {
         if (!action->isVisible())
             break;
 

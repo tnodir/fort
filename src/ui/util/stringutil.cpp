@@ -35,14 +35,14 @@ int StringUtil::lineEnd(const QString &text, int pos, int badPos)
 StringViewList StringUtil::splitView(const QString &text, QLatin1Char sep, bool skipEmptyParts)
 {
     const auto behavior = skipEmptyParts ? Qt::SkipEmptyParts : Qt::KeepEmptyParts;
-    return toStringView(text).split(sep, behavior);
+    return QStringView(text).split(sep, behavior);
 }
 
 TokenizeViewResult StringUtil::tokenizeView(
         const QString &text, QLatin1Char sep, bool skipEmptyParts)
 {
     const auto behavior = skipEmptyParts ? Qt::SkipEmptyParts : Qt::KeepEmptyParts;
-    return toStringView(text).tokenize(sep, behavior);
+    return QStringView(text).tokenize(sep, behavior);
 }
 
 void StringUtil::addStringToBuffer(QByteArray &buffer, const QString &s)
@@ -83,4 +83,13 @@ QStringList StringUtil::parseMultiString(const char *data)
         cp += s.size() + 1; // + terminating null character
     }
     return list;
+}
+
+QRegularExpressionMatch StringUtil::match(const QRegularExpression &re, const QStringView &text)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+    return re.matchView(text);
+#else
+    return re.match(text);
+#endif
 }

@@ -5,6 +5,8 @@
 #include <QIcon>
 #include <QVariant>
 
+QT_FORWARD_DECLARE_CLASS(QMouseEvent)
+
 class GuiUtil
 {
 public:
@@ -14,6 +16,8 @@ public:
             Qt::Alignment alignment = Qt::AlignRight | Qt::AlignBottom);
 
     static QFont fontBold();
+
+    static QPoint globalPos(const QMouseEvent *event);
 };
 
 #endif // GUIUTIL_H

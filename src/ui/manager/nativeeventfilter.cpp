@@ -8,8 +8,6 @@
 #include <dbt.h>
 #include <wtsapi32.h>
 
-#include <fortcompat.h>
-
 namespace {
 
 const QHash<Qt::Key, quint8> g_keyTbl = {
@@ -139,7 +137,7 @@ void NativeEventFilter::unregisterHotKeys()
     if (m_keyIdMap.isEmpty())
         return;
 
-    for (const int hotKeyId : asConst(m_keyIdMap)) {
+    for (const int hotKeyId : std::as_const(m_keyIdMap)) {
         UnregisterHotKey(nullptr, hotKeyId);
     }
 

@@ -1,7 +1,6 @@
 #include "iprange.h"
 
 #include <QHash>
-#include <QRegularExpression>
 
 #include <util/stringutil.h>
 
@@ -170,7 +169,7 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
 }
 
 IpRange::ParseError IpRange::parseIpLine(
-        const StringView line, ip4range_map_t &ip4RangeMap, int &pair4Size)
+        const QStringView line, ip4range_map_t &ip4RangeMap, int &pair4Size)
 {
     static const QRegularExpression ip4Re(R"(^([\d.]+)\s*([\/-]?)\s*(\S*))");
     static const QRegularExpression ip6Re(R"(^([A-Fa-f\d:]+)\s*([\/-]?)\s*(\S*))");
@@ -178,7 +177,7 @@ IpRange::ParseError IpRange::parseIpLine(
     const bool isIPv6 = !line.contains('.');
     const QRegularExpression &re = isIPv6 ? ip6Re : ip4Re;
 
-    const auto match = matchRegExp(re, line);
+    const auto match = StringUtil::match(re, line);
     if (!match.hasMatch()) {
         setErrorMessage(tr("Bad format"));
         return ErrorBadFormat;

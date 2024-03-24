@@ -2,8 +2,9 @@
 #define STRINGUTIL_H
 
 #include <QObject>
+#include <QRegularExpression>
 
-#include <fortcompat.h>
+#include "util_types.h"
 
 class StringUtil
 {
@@ -23,6 +24,8 @@ public:
     static void addStringToBuffer(QByteArray &buffer, const QString &s);
     static bool buildMultiString(QByteArray &buffer, const QStringList &list);
     static QStringList parseMultiString(const char *data);
+
+    static QRegularExpressionMatch match(const QRegularExpression &re, const QStringView &text);
 };
 
 #endif // STRINGUTIL_H

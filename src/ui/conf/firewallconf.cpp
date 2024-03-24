@@ -1,6 +1,5 @@
 #include "firewallconf.h"
 
-#include <fortcompat.h>
 #include <manager/envmanager.h>
 #include <util/net/netutil.h>
 
@@ -179,7 +178,7 @@ const AppGroup *FirewallConf::appGroupAt(int index) const
 QStringList FirewallConf::appGroupNames() const
 {
     QStringList list;
-    for (const auto &appGroup : asConst(appGroups())) {
+    for (const auto &appGroup : std::as_const(appGroups())) {
         list.append(appGroup->name());
     }
     return list;

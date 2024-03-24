@@ -3,7 +3,7 @@
 
 #include <QDateTime>
 
-#include <fortcompat.h>
+#include <util/util_types.h>
 
 #include "taskdownloader.h"
 
