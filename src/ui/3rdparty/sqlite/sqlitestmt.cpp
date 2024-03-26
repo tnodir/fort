@@ -288,6 +288,11 @@ qint64 SqliteStmt::columnInt64(int column) const
     return sqlite3_column_int64(m_stmt, column);
 }
 
+quint64 SqliteStmt::columnUInt64(int column) const
+{
+    return quint64(columnInt64(column));
+}
+
 double SqliteStmt::columnDouble(int column) const
 {
     return sqlite3_column_double(m_stmt, column);
