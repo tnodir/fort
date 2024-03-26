@@ -394,7 +394,9 @@ bool SqliteStmt::columnIsNull(int column) const
 void SqliteStmt::doList(const SqliteStmtList &stmtList)
 {
     for (SqliteStmt *stmt : stmtList) {
-        stmt->step();
+        const auto stepRes = stmt->step();
+        Q_UNUSED(stepRes);
+
         stmt->reset();
     }
 }

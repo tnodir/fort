@@ -233,11 +233,11 @@ void StartupUtil::setExplorerIntegrated(bool integrate)
     if (integrate) {
         const QString wrappedPath = wrappedAppFilePath();
 
-        RegKey reg(regShell, APP_NAME, RegKey::DefaultCreate);
+        RegKey reg(std::move(regShell), APP_NAME, RegKey::DefaultCreate);
         reg.setValue("icon", wrappedPath);
         reg.setValue("MUIVerb", APP_NAME + QLatin1String(" ..."));
 
-        RegKey regCommand(reg, "command", RegKey::DefaultCreate);
+        RegKey regCommand(std::move(reg), "command", RegKey::DefaultCreate);
         regCommand.setDefaultValue(wrappedPath + " -c prog add \"%1\"");
     } else {
         regShell.removeRecursively(APP_NAME);

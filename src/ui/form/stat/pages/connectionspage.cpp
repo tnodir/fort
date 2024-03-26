@@ -285,7 +285,7 @@ void ConnectionsPage::updateShowHostNames()
 
 void ConnectionsPage::deleteConn(int row)
 {
-    const auto connRow = connBlockListModel()->connRowAt(row);
+    const auto &connRow = connBlockListModel()->connRowAt(row);
     if (connRow.isNull())
         return;
 
@@ -299,6 +299,6 @@ int ConnectionsPage::connListCurrentIndex() const
 
 QString ConnectionsPage::connListCurrentPath() const
 {
-    const auto connRow = connBlockListModel()->connRowAt(connListCurrentIndex());
+    const auto &connRow = connBlockListModel()->connRowAt(connListCurrentIndex());
     return connRow.isNull() ? QString() : connRow.appPath;
 }

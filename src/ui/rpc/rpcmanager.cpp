@@ -166,7 +166,7 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args, QVar
 
 void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 {
-    const auto clients = IoC<ControlManager>()->clients();
+    const auto &clients = IoC<ControlManager>()->clients();
     if (clients.isEmpty())
         return;
 

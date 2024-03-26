@@ -134,7 +134,7 @@ QVariant AppStatModel::dataDisplay(const QModelIndex &index) const
     if (row == 0)
         return tr("All");
 
-    const auto appPath = list().at(row);
+    const auto &appPath = list().at(row);
     return appInfoCache()->appName(appPath);
 }
 
@@ -145,6 +145,6 @@ QVariant AppStatModel::dataDecoration(const QModelIndex &index) const
         return IconCache::icon(":/icons/computer-96.png");
     }
 
-    const auto appPath = list().at(row);
+    const auto &appPath = list().at(row);
     return appInfoCache()->appIcon(appPath);
 }

@@ -33,7 +33,7 @@ void HomePage::onRetranslateUi()
 
 void HomePage::retranslateDriverMessage()
 {
-    const auto text = driverManager()->isDeviceError()
+    const auto &text = driverManager()->isDeviceError()
             ? driverManager()->errorMessage()
             : (driverManager()->isDeviceOpened() ? tr("Installed") : tr("Not Installed"));
 

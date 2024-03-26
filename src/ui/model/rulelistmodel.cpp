@@ -223,7 +223,7 @@ QVariant RuleListModel::headerDataDisplay(int section) const
 
 QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
 {
-    const auto ruleRow = ruleRowAt(index);
+    const auto &ruleRow = ruleRowAt(index);
 
     switch (index.column()) {
     case 0:
@@ -237,7 +237,7 @@ QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
 
 QVariant RuleListModel::dataDecoration(const QModelIndex &index) const
 {
-    const auto ruleRow = ruleRowAt(index);
+    const auto &ruleRow = ruleRowAt(index);
     if (ruleRow.isNull())
         return QVariant();
 
@@ -252,7 +252,7 @@ QVariant RuleListModel::dataDecoration(const QModelIndex &index) const
 QVariant RuleListModel::dataCheckState(const QModelIndex &index) const
 {
     if (index.column() == 0) {
-        const auto ruleRow = ruleRowAt(index);
+        const auto &ruleRow = ruleRowAt(index);
         return ruleRow.enabled ? Qt::Checked : Qt::Unchecked;
     }
 
@@ -268,7 +268,7 @@ bool RuleListModel::setData(const QModelIndex &index, const QVariant & /*value*/
 
     switch (role) {
     case Qt::CheckStateRole:
-        const auto ruleRow = ruleRowAt(index);
+        const auto &ruleRow = ruleRowAt(index);
         return confRuleManager()->updateRuleEnabled(ruleRow.ruleId, !ruleRow.enabled);
     }
 

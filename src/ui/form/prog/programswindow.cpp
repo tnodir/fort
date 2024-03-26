@@ -524,7 +524,7 @@ QVector<qint64> ProgramsWindow::selectedAppIdList() const
 
     const auto rows = m_appListView->selectedRows();
     for (int row : rows) {
-        const auto appRow = appListModel()->appRowAt(row);
+        const auto &appRow = appListModel()->appRowAt(row);
         list.append(appRow.appId);
     }
 

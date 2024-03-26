@@ -79,7 +79,7 @@ QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
     const int row = index.row();
     const int column = index.column();
 
-    const auto info = serviceInfoAt(row);
+    const auto &info = serviceInfoAt(row);
 
     switch (column) {
     case 0:
@@ -105,7 +105,7 @@ QVariant ServiceListModel::dataDecoration(const QModelIndex &index) const
     if (column == 0) {
         const int row = index.row();
 
-        const auto info = serviceInfoAt(row);
+        const auto &info = serviceInfoAt(row);
 
         if (info.isTracked())
             return IconCache::icon(":/icons/widgets.png");

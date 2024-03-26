@@ -175,7 +175,7 @@ bool Logger::openLastFile()
     if (fileNames.isEmpty())
         return false;
 
-    const auto fileName = fileNames.first();
+    const auto &fileName = fileNames.first();
     if (!openFile(fileName))
         return false;
 

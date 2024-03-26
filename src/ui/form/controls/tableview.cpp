@@ -27,7 +27,7 @@ QVector<int> TableView::selectedRows() const
 {
     QSet<int> rowsSet;
     const auto indexes = selectedIndexes();
-    for (const auto index : indexes) {
+    for (const auto &index : indexes) {
         rowsSet.insert(index.row());
     }
 
@@ -56,7 +56,7 @@ QString TableView::selectedText() const
     int prevColumn = -1;
 
     const auto indexes = sortedSelectedIndexes();
-    for (const auto index : indexes) {
+    for (const auto &index : indexes) {
         const int row = index.row();
         if (prevRow != row) {
             if (prevRow != -1) {

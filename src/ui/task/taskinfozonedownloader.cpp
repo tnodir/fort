@@ -93,10 +93,10 @@ void TaskInfoZoneDownloader::setupNextTaskWorker()
 
 void TaskInfoZoneDownloader::setupTaskWorkerByZone(TaskZoneDownloader *worker)
 {
-    const auto zoneRow = zoneListModel()->zoneRowAt(m_zoneIndex);
-    const auto zoneSource =
-            ZoneSourceWrapper(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
-    const auto zoneType = ZoneTypeWrapper(zoneListModel()->zoneTypeByCode(zoneSource.zoneType()));
+    const auto &zoneRow = zoneListModel()->zoneRowAt(m_zoneIndex);
+
+    const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
+    const ZoneTypeWrapper zoneType(zoneListModel()->zoneTypeByCode(zoneSource.zoneType()));
 
     worker->setZoneEnabled(zoneRow.enabled);
     worker->setSort(zoneType.sort());
@@ -173,7 +173,7 @@ void TaskInfoZoneDownloader::addSubResult(TaskZoneDownloader *worker, bool succe
         return;
     }
 
-    const auto zoneData = worker->zoneData();
+    const auto &zoneData = worker->zoneData();
     const int size = zoneData.size();
 
     if (size == 0)

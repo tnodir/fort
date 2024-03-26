@@ -151,7 +151,7 @@ void ZonesSelector::createZonesMenu()
 
     const int zoneCount = qMin(zoneListModel->rowCount(), maxZoneCount());
     for (int row = 0; row < zoneCount; ++row) {
-        const auto zoneRow = zoneListModel->zoneRowAt(row);
+        const auto &zoneRow = zoneListModel->zoneRowAt(row);
 
         auto cb = new QCheckBox(zoneRow.zoneName, m_menuZones);
         cb->setTristate(isTristate());

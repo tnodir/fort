@@ -165,7 +165,7 @@ QLayout *ServicesWindow::setupHeader()
         if (serviceIndex < 0)
             return;
 
-        const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
+        const auto &serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
 
         serviceInfoManager()->trackService(serviceInfo.serviceName);
         updateServiceListModel();
@@ -177,7 +177,7 @@ QLayout *ServicesWindow::setupHeader()
         if (serviceIndex < 0)
             return;
 
-        const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
+        const auto &serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
 
         serviceInfoManager()->revertService(serviceInfo.serviceName);
         updateServiceListModel();
@@ -187,7 +187,7 @@ QLayout *ServicesWindow::setupHeader()
         if (serviceIndex < 0)
             return;
 
-        const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
+        const auto &serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
 
         const QString appPath = QStringLiteral(R"(\SvcHost\)") + serviceInfo.serviceName;
 
@@ -247,7 +247,8 @@ void ServicesWindow::setupTableServicesChanged()
     const auto refreshTableServicesChanged = [&] {
         const int serviceIndex = serviceListCurrentIndex();
         const bool serviceSelected = (serviceIndex >= 0);
-        const auto serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
+        const auto &serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
+
         m_actTrack->setEnabled(serviceSelected && !serviceInfo.isTracked());
         m_actRevert->setEnabled(serviceSelected && serviceInfo.isTracked());
         m_actAddProgram->setEnabled(serviceSelected);

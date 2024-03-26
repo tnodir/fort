@@ -87,7 +87,7 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
         info.serviceType = ServiceInfo::Type(service->ServiceStatusProcess.dwServiceType);
         info.trackFlags = trackFlags;
         info.processId = service->ServiceStatusProcess.dwProcessId;
-        info.serviceName = serviceName;
+        info.serviceName = std::move(serviceName);
 
         if (displayName) {
             info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);

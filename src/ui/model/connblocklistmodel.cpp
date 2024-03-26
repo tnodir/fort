@@ -137,7 +137,7 @@ QVariant ConnBlockListModel::dataDisplay(const QModelIndex &index, int role) con
     const int row = index.row();
     const int column = index.column();
 
-    const auto connRow = connRowAt(row);
+    const auto &connRow = connRowAt(row);
 
     switch (column) {
     case 0:
@@ -176,7 +176,7 @@ QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
 
     if (column == 0 || column == 5) {
         const int row = index.row();
-        const auto connRow = connRowAt(row);
+        const auto &connRow = connRowAt(row);
 
         switch (column) {
         case 0:

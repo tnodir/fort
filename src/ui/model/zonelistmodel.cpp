@@ -104,7 +104,7 @@ QVariant ZoneListModel::dataDisplay(const QModelIndex &index) const
     const int row = index.row();
     const int column = index.column();
 
-    const auto zoneRow = zoneRowAt(row);
+    const auto &zoneRow = zoneRowAt(row);
 
     switch (column) {
     case 0:
@@ -127,7 +127,7 @@ QVariant ZoneListModel::dataDisplay(const QModelIndex &index) const
 QVariant ZoneListModel::dataCheckState(const QModelIndex &index) const
 {
     if (index.column() == 0) {
-        const auto zoneRow = zoneRowAt(index.row());
+        const auto &zoneRow = zoneRowAt(index.row());
         return zoneRow.enabled ? Qt::Checked : Qt::Unchecked;
     }
 
@@ -143,7 +143,7 @@ bool ZoneListModel::setData(const QModelIndex &index, const QVariant &value, int
 
     switch (role) {
     case Qt::CheckStateRole:
-        const auto zoneRow = zoneRowAt(index.row());
+        const auto &zoneRow = zoneRowAt(index.row());
         return confZoneManager()->updateZoneEnabled(zoneRow.zoneId, !zoneRow.enabled);
     }
 

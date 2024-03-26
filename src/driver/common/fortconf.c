@@ -160,15 +160,14 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
     const BOOL ip_excluded = exclude_all
             ? TRUE
             : fort_conf_ip_included_check(fort_conf_addr_group_exclude_list_ref(addr_group),
-                    zone_func, ctx, remote_ip, addr_group->exclude_zones,
-                    addr_group->exclude_is_empty, isIPv6);
+                      zone_func, ctx, remote_ip, addr_group->exclude_zones,
+                      addr_group->exclude_is_empty, isIPv6);
     if (include_all)
         return !ip_excluded;
 
     /* Exclude All */
-    const BOOL ip_included = include_all
-            ? TRUE
-            : fort_conf_ip_included_check(fort_conf_addr_group_include_list_ref(addr_group),
+    const BOOL ip_included = /* include_all ? TRUE : */
+            fort_conf_ip_included_check(fort_conf_addr_group_include_list_ref(addr_group),
                     zone_func, ctx, remote_ip, addr_group->include_zones,
                     addr_group->include_is_empty, isIPv6);
     if (exclude_all)
@@ -206,8 +205,7 @@ typedef BOOL fort_conf_app_equal_func(
 static FORT_APP_ENTRY fort_conf_app_find_loop(const PFORT_CONF conf, const PVOID path,
         UINT32 path_len, UINT32 apps_off, UINT16 apps_n, fort_conf_app_equal_func *app_equal_func)
 {
-    FORT_APP_ENTRY app_data;
-    app_data.flags.v = 0;
+    const FORT_APP_ENTRY app_data = { 0 };
 
     if (apps_n == 0)
         return app_data;
@@ -256,8 +254,7 @@ static int fort_conf_app_prefix_cmp(PFORT_APP_ENTRY app_entry, const PVOID path,
 static FORT_APP_ENTRY fort_conf_app_prefix_find(
         const PFORT_CONF conf, const PVOID path, UINT32 path_len)
 {
-    FORT_APP_ENTRY app_data;
-    app_data.flags.v = 0;
+    const FORT_APP_ENTRY app_data = { 0 };
 
     const UINT16 count = conf->prefix_apps_n;
     if (count == 0)

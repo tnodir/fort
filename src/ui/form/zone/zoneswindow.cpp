@@ -282,7 +282,7 @@ void ZonesWindow::editSelectedZone()
     if (zoneIndex < 0)
         return;
 
-    const ZoneRow zoneRow = zoneListModel()->zoneRowAt(zoneIndex);
+    const auto &zoneRow = zoneListModel()->zoneRowAt(zoneIndex);
 
     openZoneEditForm(zoneRow);
 }
@@ -300,7 +300,7 @@ void ZonesWindow::openZoneEditForm(const ZoneRow &zoneRow)
 
 void ZonesWindow::deleteZone(int row)
 {
-    const auto zoneRow = zoneListModel()->zoneRowAt(row);
+    const auto &zoneRow = zoneListModel()->zoneRowAt(row);
     if (zoneRow.isNull())
         return;
 

@@ -54,7 +54,8 @@ void CALLBACK managerNotifyCallback(PVOID param)
     }
 
     QMetaObject::invokeMethod(
-            monitor, [=] { monitor->onManagerNotify(createdServiceNames); }, Qt::QueuedConnection);
+            monitor, [=] { monitor->onManagerNotify(std::move(createdServiceNames)); },
+            Qt::QueuedConnection);
 }
 
 }

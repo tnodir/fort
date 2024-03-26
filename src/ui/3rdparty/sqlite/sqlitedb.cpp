@@ -470,9 +470,9 @@ bool SqliteDb::createFtsTable(const FtsTable &ftsTable)
             "  INSERT INTO %2(rowid, %4) VALUES (%5);"
             "END;";
 
-    const auto contentTableName = ftsTable.contentTable;
+    const auto &contentTableName = ftsTable.contentTable;
     const auto ftsTableName = getFtsTableName(contentTableName);
-    const auto contentRowidName = ftsTable.contentRowid;
+    const auto &contentRowidName = ftsTable.contentRowid;
     const auto contentColumnNames = ftsTable.columns.join(',');
     const auto newTriggerColumnNames =
             makeTriggerColumnNames(contentRowidName, ftsTable.columns, "new.");

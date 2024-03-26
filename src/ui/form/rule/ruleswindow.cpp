@@ -310,7 +310,7 @@ void RulesWindow::editSelectedRule()
     if (RuleListModel::isIndexRoot(ruleIndex))
         return;
 
-    const RuleRow ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
+    const auto &ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
 
     openRuleEditForm(ruleRow);
 }
@@ -332,7 +332,7 @@ void RulesWindow::deleteSelectedRule()
     if (RuleListModel::isIndexRoot(ruleIndex))
         return;
 
-    const auto ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
+    const auto &ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
     if (ruleRow.isNull())
         return;
 

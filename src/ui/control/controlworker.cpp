@@ -42,7 +42,7 @@ bool buildArgsData(QByteArray &buffer, const QVariantList &args, bool &compresse
     }
 
     compressed = (data.size() > 128);
-    buffer = compressed ? qCompress(data) : data;
+    buffer = compressed ? qCompress(std::move(data)) : data;
 
     return true;
 }
@@ -314,15 +314,13 @@ bool ControlWorker::readRequestHeader()
 {
     const int headerSize = socket()->read((char *) &m_requestHeader, sizeof(RequestHeader));
     if (headerSize != sizeof(RequestHeader)) {
-        qCWarning(LC) << "Bad request header:"
-                      << "size=" << headerSize;
+        qCWarning(LC) << "Bad request header:" << "size=" << headerSize;
         return false;
     }
 
     if (m_requestHeader.command() == Control::CommandNone
             || m_requestHeader.dataSize() > dataMaxSize) {
-        qCWarning(LC) << "Bad request:"
-                      << "command=" << m_requestHeader.command()
+        qCWarning(LC) << "Bad request:" << "command=" << m_requestHeader.command()
                       << "size=" << m_requestHeader.dataSize();
         return false;
     }

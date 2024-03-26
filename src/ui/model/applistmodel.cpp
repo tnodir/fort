@@ -328,7 +328,7 @@ QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
     const int row = index.row();
     const int column = index.column();
 
-    const auto appRow = appRowAt(row);
+    const auto &appRow = appRowAt(row);
     if (appRow.isNull())
         return QVariant();
 
@@ -340,7 +340,7 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
     const int row = index.row();
     const int column = index.column();
 
-    const auto appRow = appRowAt(row);
+    const auto &appRow = appRowAt(row);
     if (appRow.isNull())
         return QVariant();
 
@@ -363,7 +363,7 @@ QVariant AppListModel::dataForeground(const QModelIndex &index) const
     const int column = index.column();
 
     const int row = index.row();
-    const auto appRow = appRowAt(row);
+    const auto &appRow = appRowAt(row);
 
     switch (column) {
     case 3:
