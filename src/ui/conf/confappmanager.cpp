@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 
 #include <sqlite/dbutil.h>
+#include <sqlite/dbvar.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -199,7 +200,7 @@ void ConfAppManager::beginAddOrUpdateApp(
         app.appId,
         appGroup.id(),
         app.appOriginPath,
-        SqliteStmt::nullable(app.appPath),
+        DbVar::nullable(app.appPath),
         app.appName,
         app.notes,
         app.isWildcard,
@@ -214,10 +215,10 @@ void ConfAppManager::beginAddOrUpdateApp(
         app.killProcess,
         app.acceptZones,
         app.rejectZones,
-        SqliteStmt::nullable(app.ruleId),
+        DbVar::nullable(app.ruleId),
         app.scheduleAction,
-        SqliteStmt::nullable(app.scheduleTime),
-        SqliteStmt::nullable(DateUtil::now(), onlyUpdate),
+        DbVar::nullable(app.scheduleTime),
+        DbVar::nullable(DateUtil::now(), onlyUpdate),
     };
 
     const char *sql = onlyUpdate ? sqlUpdateApp : sqlUpsertApp;

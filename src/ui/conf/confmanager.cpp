@@ -4,6 +4,7 @@
 #include <QLoggingCategory>
 
 #include <sqlite/dbutil.h>
+#include <sqlite/dbvar.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -253,7 +254,7 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
         return true;
 
     const QVariantList vars = {
-        SqliteStmt::nullable(addrGroup->id(), !rowExists),
+        DbVar::nullable(addrGroup->id(), !rowExists),
         orderIndex,
         addrGroup->includeAll(),
         addrGroup->excludeAll(),
@@ -332,7 +333,7 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
         return true;
 
     const QVariantList vars = {
-        SqliteStmt::nullable(appGroup->id(), !rowExists),
+        DbVar::nullable(appGroup->id(), !rowExists),
         orderIndex,
         appGroup->enabled(),
         appGroup->applyChild(),
@@ -931,7 +932,7 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
     const bool rowExists = (taskInfo->id() != 0);
 
     const QVariantList vars = {
-        SqliteStmt::nullable(taskInfo->id(), !rowExists),
+        DbVar::nullable(taskInfo->id(), !rowExists),
         taskInfo->name(),
         taskInfo->enabled(),
         taskInfo->runOnStatup(),

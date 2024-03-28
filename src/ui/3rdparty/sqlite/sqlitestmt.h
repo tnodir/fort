@@ -75,15 +75,6 @@ public:
 
     static void doList(const SqliteStmtList &stmtList);
 
-    template<class T>
-    inline static QVariant nullable(const T &v, bool isNull)
-    {
-        return isNull ? QVariant() : QVariant(v);
-    }
-    static QVariant nullable(int v);
-    static QVariant nullable(const QString &v);
-    static QVariant nullable(const QDateTime &v);
-
 private:
     sqlite3_stmt *m_stmt = nullptr;
 
