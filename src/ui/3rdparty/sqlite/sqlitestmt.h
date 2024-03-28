@@ -73,8 +73,6 @@ public:
     QVariant columnVar(int column = 0) const;
     bool columnIsNull(int column = 0) const;
 
-    static void doList(const SqliteStmtList &stmtList);
-
 private:
     sqlite3_stmt *m_stmt = nullptr;
 

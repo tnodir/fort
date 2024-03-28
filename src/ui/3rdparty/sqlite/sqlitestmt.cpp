@@ -390,13 +390,3 @@ bool SqliteStmt::columnIsNull(int column) const
 {
     return sqlite3_column_type(m_stmt, column) == SQLITE_NULL;
 }
-
-void SqliteStmt::doList(const SqliteStmtList &stmtList)
-{
-    for (SqliteStmt *stmt : stmtList) {
-        const auto stepRes = stmt->step();
-        Q_UNUSED(stepRes);
-
-        stmt->reset();
-    }
-}

@@ -1,5 +1,6 @@
 #include "deleteconnblockjob.h"
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -38,7 +39,7 @@ void DeleteConnBlockJob::processJob()
             getStmt(StatSql::sqlDeleteConnBlockApps) };
     }
 
-    SqliteStmt::doList(stmtList);
+    DbUtil::doList(stmtList);
 
     sqliteDb()->commitTransaction();
 

@@ -2,6 +2,7 @@
 
 #include <QLoggingCategory>
 
+#include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -335,7 +336,7 @@ bool StatManager::deleteStatApp(qint64 appId)
 {
     sqliteDb()->beginWriteTransaction();
 
-    SqliteStmt::doList({ getIdStmt(StatSql::sqlDeleteAppTrafHour, appId),
+    DbUtil::doList({ getIdStmt(StatSql::sqlDeleteAppTrafHour, appId),
             getIdStmt(StatSql::sqlDeleteAppTrafDay, appId),
             getIdStmt(StatSql::sqlDeleteAppTrafMonth, appId),
             getIdStmt(StatSql::sqlDeleteAppTrafTotal, appId) });
@@ -468,7 +469,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
                         << getTrafficStmt(StatSql::sqlDeleteTrafMonth, oldTrafMonth);
     }
 
-    SqliteStmt::doList(deleteTrafStmts);
+    DbUtil::doList(deleteTrafStmts);
 }
 
 void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
