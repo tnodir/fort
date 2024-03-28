@@ -3,7 +3,7 @@
 #include <QHash>
 #include <QLoggingCategory>
 
-#include <sqlite/dbutil.h>
+#include <sqlite/dbquery.h>
 #include <sqlite/dbvar.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
@@ -119,7 +119,7 @@ bool fillAppPathsMap(SqliteDb *db, AppsMap &appsMap)
     const char *const sql = "SELECT app_id, origin_path, path FROM app;";
 
     SqliteStmt stmt;
-    if (!DbUtil(db).sql(sql).prepare(stmt))
+    if (!DbQuery(db).sql(sql).prepare(stmt))
         return false;
 
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -140,7 +140,7 @@ bool updateAppPathsByMap(SqliteDb *db, const AppsMap &appsMap, AppIdsArray &dupA
                                           "  WHERE app_id = ?1;";
 
     SqliteStmt stmt;
-    if (!DbUtil(db).sql(sqlUpdateAppPaths).prepare(stmt))
+    if (!DbQuery(db).sql(sqlUpdateAppPaths).prepare(stmt))
         return false;
 
     QSet<QString> appPaths;
@@ -181,7 +181,7 @@ void deleteDupApps(SqliteDb *db, const AppIdsArray &dupAppIds)
 
     for (qint64 appId : dupAppIds) {
         qCDebug(LC) << "Migrate: Remove dup app-id:" << appId;
-        DbUtil(db).sql(sqlDeleteApp).vars({ appId }).executeOk();
+        DbQuery(db).sql(sqlDeleteApp).vars({ appId }).executeOk();
     }
 
     // Remove alerts for deleted apps
@@ -222,7 +222,7 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups, int &index)
 {
     SqliteStmt stmt;
-    if (!DbUtil(db).sql(sqlSelectAddressGroups).prepare(stmt))
+    if (!DbQuery(db).sql(sqlSelectAddressGroups).prepare(stmt))
         return false;
 
     index = 0;
@@ -266,7 +266,7 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 
     const char *sql = rowExists ? sqlUpdateAddressGroup : sqlInsertAddressGroup;
 
-    if (!DbUtil(db).sql(sql).vars(vars).executeOk())
+    if (!DbQuery(db).sql(sql).vars(vars).executeOk())
         return false;
 
     if (!rowExists) {
@@ -291,7 +291,7 @@ bool saveAddressGroups(SqliteDb *db, const FirewallConf &conf)
 bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
 {
     SqliteStmt stmt;
-    if (!DbUtil(db).sql(sqlSelectAppGroups).prepare(stmt))
+    if (!DbQuery(db).sql(sqlSelectAppGroups).prepare(stmt))
         return false;
 
     while (stmt.step() == SqliteStmt::StepRow) {
@@ -359,7 +359,7 @@ bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
 
     const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
 
-    if (!DbUtil(db).sql(sql).vars(vars).executeOk())
+    if (!DbQuery(db).sql(sql).vars(vars).executeOk())
         return false;
 
     if (!rowExists) {
@@ -386,9 +386,9 @@ bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
     const auto defaultAppGroupId = conf.appGroups().at(0)->id();
 
     for (const qint64 appGroupId : conf.removedAppGroupIdList()) {
-        DbUtil(db).sql(sqlUpdateAppResetGroup).vars({ appGroupId, defaultAppGroupId }).executeOk();
+        DbQuery(db).sql(sqlUpdateAppResetGroup).vars({ appGroupId, defaultAppGroupId }).executeOk();
 
-        if (!DbUtil(db).sql(sqlDeleteAppGroup).vars({ appGroupId }).executeOk())
+        if (!DbQuery(db).sql(sqlDeleteAppGroup).vars({ appGroupId }).executeOk())
             return false;
     }
 
@@ -944,7 +944,7 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
 
     const char *sql = rowExists ? sqlUpdateTask : sqlInsertTask;
 
-    if (!DbUtil(sqliteDb()).sql(sql).vars(vars).executeOk())
+    if (!DbQuery(sqliteDb()).sql(sql).vars(vars).executeOk())
         return false;
 
     if (!rowExists) {

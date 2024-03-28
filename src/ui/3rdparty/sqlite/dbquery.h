@@ -1,5 +1,5 @@
-#ifndef DBUTIL_H
-#define DBUTIL_H
+#ifndef DBQUERY_H
+#define DBQUERY_H
 
 #include <QObject>
 #include <QVariant>
@@ -7,18 +7,18 @@
 class SqliteDb;
 class SqliteStmt;
 
-class DbUtil
+class DbQuery
 {
 public:
-    explicit DbUtil(SqliteDb *sqliteDb, bool *ok = nullptr);
+    explicit DbQuery(SqliteDb *sqliteDb, bool *ok = nullptr);
 
     SqliteDb *sqliteDb() const { return m_sqliteDb; }
 
-    DbUtil &sql(const QString &sql);
-    DbUtil &sql(const char *sql);
+    DbQuery &sql(const QString &sql);
+    DbQuery &sql(const char *sql);
 
-    DbUtil &vars(const QVariantList &vars);
-    DbUtil &vars(const QVariantHash &varsMap);
+    DbQuery &vars(const QVariantList &vars);
+    DbQuery &vars(const QVariantHash &varsMap);
 
     bool prepare(SqliteStmt &stmt);
     bool prepareRow(SqliteStmt &stmt);
@@ -43,4 +43,4 @@ private:
     bool *m_ok = nullptr;
 };
 
-#endif // DBUTIL_H
+#endif // DBQUERY_H

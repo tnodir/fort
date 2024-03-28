@@ -2,7 +2,7 @@
 
 #include <QLoggingCategory>
 
-#include <sqlite/dbutil.h>
+#include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -103,7 +103,7 @@ bool ConfZoneManager::addOrUpdateZone(Zone &zone)
 
     const bool isNew = (zone.zoneId == 0);
     if (isNew) {
-        zone.zoneId = DbUtil(sqliteDb(), &ok)
+        zone.zoneId = DbQuery(sqliteDb(), &ok)
                               .sql(sqlSelectZoneIds)
                               .vars({ ConfUtil::zoneMaxCount() })
                               .getFreeId(/*minId=*/1, /*maxId=*/ConfUtil::zoneMaxCount() - 1);
@@ -123,7 +123,7 @@ bool ConfZoneManager::addOrUpdateZone(Zone &zone)
     };
 
     if (ok) {
-        DbUtil(sqliteDb(), &ok).sql(isNew ? sqlInsertZone : sqlUpdateZone).vars(vars).executeOk();
+        DbQuery(sqliteDb(), &ok).sql(isNew ? sqlInsertZone : sqlUpdateZone).vars(vars).executeOk();
     }
 
     commitTransaction(ok);
@@ -146,18 +146,18 @@ bool ConfZoneManager::deleteZone(int zoneId)
 
     beginTransaction();
 
-    if (DbUtil(sqliteDb(), &ok).sql(sqlDeleteZone).vars({ zoneId }).executeOk()) {
+    if (DbQuery(sqliteDb(), &ok).sql(sqlDeleteZone).vars({ zoneId }).executeOk()) {
         const quint32 zoneBit = (quint32(1) << (zoneId - 1));
         const QVariantList vars = { zoneBit };
 
         // Delete the Zone from Address Groups
-        DbUtil(sqliteDb(), &ok).sql(sqlDeleteAddressGroupZone).vars(vars).executeOk();
+        DbQuery(sqliteDb(), &ok).sql(sqlDeleteAddressGroupZone).vars(vars).executeOk();
 
         // Delete the Zone from Programs
-        DbUtil(sqliteDb(), &ok).sql(sqlDeleteAppZone).vars(vars).executeOk();
+        DbQuery(sqliteDb(), &ok).sql(sqlDeleteAppZone).vars(vars).executeOk();
 
         // Delete the Zone from Rules
-        DbUtil(sqliteDb(), &ok).sql(sqlDeleteRuleZone).vars(vars).executeOk();
+        DbQuery(sqliteDb(), &ok).sql(sqlDeleteRuleZone).vars(vars).executeOk();
     }
 
     commitTransaction(ok);
@@ -177,7 +177,7 @@ bool ConfZoneManager::updateZoneName(int zoneId, const QString &zoneName)
 
     const QVariantList vars = { zoneId, zoneName };
 
-    DbUtil(sqliteDb(), &ok).sql(sqlUpdateZoneName).vars(vars).executeOk();
+    DbQuery(sqliteDb(), &ok).sql(sqlUpdateZoneName).vars(vars).executeOk();
 
     commitTransaction(ok);
 
@@ -196,7 +196,7 @@ bool ConfZoneManager::updateZoneEnabled(int zoneId, bool enabled)
 
     const QVariantList vars = { zoneId, enabled };
 
-    DbUtil(sqliteDb(), &ok).sql(sqlUpdateZoneEnabled).vars(vars).executeOk();
+    DbQuery(sqliteDb(), &ok).sql(sqlUpdateZoneEnabled).vars(vars).executeOk();
 
     commitTransaction(ok);
 
@@ -225,7 +225,7 @@ bool ConfZoneManager::updateZoneResult(const Zone &zone)
         zone.lastSuccess,
     };
 
-    DbUtil(sqliteDb(), &ok).sql(sqlUpdateZoneResult).vars(vars).executeOk();
+    DbQuery(sqliteDb(), &ok).sql(sqlUpdateZoneResult).vars(vars).executeOk();
 
     commitTransaction(ok);
 

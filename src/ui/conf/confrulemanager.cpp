@@ -2,7 +2,7 @@
 
 #include <QLoggingCategory>
 
-#include <sqlite/dbutil.h>
+#include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -92,7 +92,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
     if (isNew) {
         const auto range = Rule::getRuleIdRangeByType(rule.ruleType);
 
-        rule.ruleId = DbUtil(sqliteDb(), &ok)
+        rule.ruleId = DbQuery(sqliteDb(), &ok)
                               .sql(sqlSelectRuleIds)
                               .vars({ range.minId, range.maxId })
                               .getFreeId(range.minId, range.maxId);
@@ -116,7 +116,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
     };
 
     if (ok) {
-        DbUtil(sqliteDb(), &ok).sql(isNew ? sqlInsertRule : sqlUpdateRule).vars(vars).executeOk();
+        DbQuery(sqliteDb(), &ok).sql(isNew ? sqlInsertRule : sqlUpdateRule).vars(vars).executeOk();
     }
 
     commitTransaction(ok);
@@ -139,7 +139,7 @@ bool ConfRuleManager::deleteRule(int ruleId)
 
     beginTransaction();
 
-    DbUtil(sqliteDb(), &ok).sql(sqlDeleteRule).vars({ ruleId }).executeOk();
+    DbQuery(sqliteDb(), &ok).sql(sqlDeleteRule).vars({ ruleId }).executeOk();
     if (ok) {
         const quint32 ruleBit = (quint32(1) << (ruleId - 1));
         const QVariantList vars = { ruleBit };
@@ -149,11 +149,11 @@ bool ConfRuleManager::deleteRule(int ruleId)
         switch (ruleType) {
         case Rule::AppRule: {
             // Delete the App Rule from Programs
-            DbUtil(sqliteDb(), &ok).sql(sqlDeleteAppRule).vars(vars).executeOk();
+            DbQuery(sqliteDb(), &ok).sql(sqlDeleteAppRule).vars(vars).executeOk();
         } break;
         case Rule::PresetRule: {
             // Delete the Preset Rule from Rules
-            DbUtil(sqliteDb(), &ok).sql(sqlDeleteRuleSet).vars(vars).executeOk();
+            DbQuery(sqliteDb(), &ok).sql(sqlDeleteRuleSet).vars(vars).executeOk();
         } break;
         }
     }
@@ -175,7 +175,7 @@ bool ConfRuleManager::updateRuleName(int ruleId, const QString &ruleName)
 
     const QVariantList vars = { ruleId, ruleName };
 
-    DbUtil(sqliteDb(), &ok).sql(sqlUpdateRuleName).vars(vars).executeOk();
+    DbQuery(sqliteDb(), &ok).sql(sqlUpdateRuleName).vars(vars).executeOk();
 
     commitTransaction(ok);
 
@@ -194,7 +194,7 @@ bool ConfRuleManager::updateRuleEnabled(int ruleId, bool enabled)
 
     const QVariantList vars = { ruleId, enabled };
 
-    DbUtil(sqliteDb(), &ok).sql(sqlUpdateRuleEnabled).vars(vars).executeOk();
+    DbQuery(sqliteDb(), &ok).sql(sqlUpdateRuleEnabled).vars(vars).executeOk();
 
     commitTransaction(ok);
 

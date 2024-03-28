@@ -1,6 +1,6 @@
 #include "tablesqlmodel.h"
 
-#include <sqlite/dbutil.h>
+#include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -42,7 +42,7 @@ int TableSqlModel::doSqlCount() const
     QVariantHash vars;
     fillQueryVars(vars);
 
-    return DbUtil(sqliteDb()).sql(sqlCount()).vars(vars).execute().toInt();
+    return DbQuery(sqliteDb()).sql(sqlCount()).vars(vars).execute().toInt();
 }
 
 QString TableSqlModel::sqlCount() const

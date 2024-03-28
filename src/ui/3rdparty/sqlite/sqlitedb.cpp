@@ -8,7 +8,7 @@
 
 #include <sqlite.h>
 
-#include "dbutil.h"
+#include "dbquery.h"
 #include "sqlitestmt.h"
 
 namespace {
@@ -94,12 +94,15 @@ void SqliteDb::close()
 
 bool SqliteDb::attach(const QString &schemaName, const QString &filePath)
 {
-    return DbUtil(this).sql("ATTACH DATABASE ?1 AS ?2;").vars({ filePath, schemaName }).executeOk();
+    return DbQuery(this)
+            .sql("ATTACH DATABASE ?1 AS ?2;")
+            .vars({ filePath, schemaName })
+            .executeOk();
 }
 
 bool SqliteDb::detach(const QString &schemaName)
 {
-    return DbUtil(this).sql("DETACH DATABASE ?1;").vars({ schemaName }).executeOk();
+    return DbQuery(this).sql("DETACH DATABASE ?1;").vars({ schemaName }).executeOk();
 }
 
 bool SqliteDb::vacuum()
@@ -109,7 +112,7 @@ bool SqliteDb::vacuum()
 
 bool SqliteDb::vacuumInto(const QString &filePath)
 {
-    return DbUtil(this).sql("VACUUM INTO ?1;").vars({ filePath }).executeOk();
+    return DbQuery(this).sql("VACUUM INTO ?1;").vars({ filePath }).executeOk();
 }
 
 bool SqliteDb::execute(const char *sql)
@@ -201,7 +204,7 @@ QString SqliteDb::errorMessage() const
 
 int SqliteDb::userVersion()
 {
-    return DbUtil(this).sql("PRAGMA user_version;").execute().toInt();
+    return DbQuery(this).sql("PRAGMA user_version;").execute().toInt();
 }
 
 bool SqliteDb::setUserVersion(int v)
@@ -212,7 +215,7 @@ bool SqliteDb::setUserVersion(int v)
 
 QString SqliteDb::encoding()
 {
-    return DbUtil(this).sql("PRAGMA encoding;").execute().toString();
+    return DbQuery(this).sql("PRAGMA encoding;").execute().toString();
 }
 
 bool SqliteDb::setEncoding(const QString &v)

@@ -1,39 +1,39 @@
-#include "dbutil.h"
+#include "dbquery.h"
 
 #include "sqlitedb.h"
 #include "sqlitestmt.h"
 
-DbUtil::DbUtil(SqliteDb *sqliteDb, bool *ok) : m_sqliteDb(sqliteDb), m_ok(ok) { }
+DbQuery::DbQuery(SqliteDb *sqliteDb, bool *ok) : m_sqliteDb(sqliteDb), m_ok(ok) { }
 
-DbUtil &DbUtil::sql(const QString &sql)
+DbQuery &DbQuery::sql(const QString &sql)
 {
     m_sqlUtf8 = sql.toUtf8();
 
     return this->sql(m_sqlUtf8.constData());
 }
 
-DbUtil &DbUtil::sql(const char *sql)
+DbQuery &DbQuery::sql(const char *sql)
 {
     m_sql = sql;
 
     return *this;
 }
 
-DbUtil &DbUtil::vars(const QVariantList &vars)
+DbQuery &DbQuery::vars(const QVariantList &vars)
 {
     m_vars = vars;
 
     return *this;
 }
 
-DbUtil &DbUtil::vars(const QVariantHash &varsMap)
+DbQuery &DbQuery::vars(const QVariantHash &varsMap)
 {
     m_varsMap = varsMap;
 
     return *this;
 }
 
-bool DbUtil::prepare(SqliteStmt &stmt)
+bool DbQuery::prepare(SqliteStmt &stmt)
 {
     if (!stmt.prepare(sqliteDb()->db(), m_sql))
         return false;
@@ -41,12 +41,12 @@ bool DbUtil::prepare(SqliteStmt &stmt)
     return stmt.bindVars(m_vars) && stmt.bindVarsMap(m_varsMap);
 }
 
-bool DbUtil::prepareRow(SqliteStmt &stmt)
+bool DbQuery::prepareRow(SqliteStmt &stmt)
 {
     return prepare(stmt) && stmt.step() == SqliteStmt::StepRow;
 }
 
-QVariant DbUtil::execute(int resultCount, bool &ok)
+QVariant DbQuery::execute(int resultCount, bool &ok)
 {
     QVariantList list;
 
@@ -72,7 +72,7 @@ QVariant DbUtil::execute(int resultCount, bool &ok)
     return (listSize == 0) ? QVariant() : (listSize == 1 ? list.at(0) : list);
 }
 
-QVariant DbUtil::execute(int resultCount)
+QVariant DbQuery::execute(int resultCount)
 {
     bool ok = false;
     const auto res = execute(resultCount, ok);
@@ -80,7 +80,7 @@ QVariant DbUtil::execute(int resultCount)
     return res;
 }
 
-bool DbUtil::executeOk()
+bool DbQuery::executeOk()
 {
     bool ok = false;
     execute(/*resultCount=*/0, ok);
@@ -88,7 +88,7 @@ bool DbUtil::executeOk()
     return ok;
 }
 
-int DbUtil::getFreeId(int minId, int maxId)
+int DbQuery::getFreeId(int minId, int maxId)
 {
     int resId = minId;
 
@@ -109,7 +109,7 @@ int DbUtil::getFreeId(int minId, int maxId)
     return resId;
 }
 
-void DbUtil::setResult(bool v)
+void DbQuery::setResult(bool v)
 {
     if (m_ok) {
         *m_ok = v;
