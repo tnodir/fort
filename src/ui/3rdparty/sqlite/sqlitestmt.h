@@ -80,6 +80,7 @@ public:
     {
         return isNull ? QVariant() : QVariant(v);
     }
+    static QVariant nullable(int v);
     static QVariant nullable(const QString &v);
     static QVariant nullable(const QDateTime &v);
 

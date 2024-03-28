@@ -38,7 +38,9 @@ public:
 
     qint8 scheduleAction = ScheduleBlock;
 
-    int groupIndex = 0;
+    qint8 groupIndex = 0;
+
+    quint16 ruleId = 0;
 
     quint32 acceptZones = 0;
     quint32 rejectZones = 0;

@@ -401,6 +401,11 @@ void SqliteStmt::doList(const SqliteStmtList &stmtList)
     }
 }
 
+QVariant SqliteStmt::nullable(int v)
+{
+    return nullable(v, v == 0);
+}
+
 QVariant SqliteStmt::nullable(const QString &v)
 {
     return nullable(v, v.isEmpty());

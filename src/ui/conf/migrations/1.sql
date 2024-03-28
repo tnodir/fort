@@ -70,7 +70,7 @@ CREATE TABLE app(
   kill_process BOOLEAN NOT NULL DEFAULT 0,
   accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
-  app_rules INTEGER NOT NULL DEFAULT 0,  -- rule ids bit mask
+  rule_id INTEGER,
   creat_time INTEGER NOT NULL,
   end_action INTEGER NOT NULL DEFAULT 0,
   end_time INTEGER
@@ -79,6 +79,7 @@ CREATE TABLE app(
 CREATE INDEX app_app_group_id_idx ON app(app_group_id);
 CREATE UNIQUE INDEX app_path_uk ON app(path);
 CREATE INDEX app_name_idx ON app(name);
+CREATE INDEX app_rule_idx ON app(rule_id);
 CREATE INDEX app_end_time_idx ON app(end_time);
 
 CREATE TABLE app_alert(
@@ -96,11 +97,19 @@ CREATE TABLE rule(
   rule_type INTEGER NOT NULL, -- app rules, global before/after apps, preset rules
   accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
-  preset_rules INTEGER NOT NULL DEFAULT 0,  -- rule ids bit mask
   mod_time INTEGER NOT NULL
 );
 
 CREATE INDEX rule_rule_type_name_idx ON rule(rule_type, lower(name));
+
+CREATE TABLE rule_set(
+  rule_set_id INTEGER PRIMARY KEY,
+  rule_id INTEGER NOT NULL,
+  sub_rule_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL
+);
+
+CREATE INDEX rule_set_rule_id_idx ON rule_set(rule_id);
 
 CREATE TABLE task(
   task_id INTEGER PRIMARY KEY,

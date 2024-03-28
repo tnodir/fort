@@ -348,7 +348,6 @@ QString RuleListModel::sqlBase() const
            "    rule_type,"
            "    accept_zones,"
            "    reject_zones,"
-           "    preset_rules,"
            "    mod_time"
            "  FROM rule t"
            "  WHERE rule_type = :type";

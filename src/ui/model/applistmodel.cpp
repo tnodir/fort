@@ -420,11 +420,12 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, Ap
     appRow.killProcess = stmt.columnBool(14);
     appRow.acceptZones = stmt.columnUInt(15);
     appRow.rejectZones = stmt.columnUInt(16);
-    appRow.scheduleAction = stmt.columnInt(17);
-    appRow.scheduleTime = stmt.columnDateTime(18);
-    appRow.creatTime = stmt.columnDateTime(19);
-    appRow.groupIndex = stmt.columnInt(20);
-    appRow.alerted = stmt.columnBool(21);
+    appRow.ruleId = stmt.columnUInt(17);
+    appRow.scheduleAction = stmt.columnInt(18);
+    appRow.scheduleTime = stmt.columnDateTime(19);
+    appRow.creatTime = stmt.columnDateTime(20);
+    appRow.groupIndex = stmt.columnInt(21);
+    appRow.alerted = stmt.columnBool(22);
 
     return true;
 }
@@ -484,6 +485,7 @@ QString AppListModel::sqlBase() const
            "    t.kill_process,"
            "    t.accept_zones,"
            "    t.reject_zones,"
+           "    t.rule_id,"
            "    t.end_action,"
            "    t.end_time,"
            "    t.creat_time,"

@@ -36,12 +36,10 @@ const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
 const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 
 const char *const sqlDeleteAppRule = "UPDATE app"
-                                     "  SET app_rules = app_rules & ~?1"
-                                     "  WHERE (app_rules & ?1) <> 0;";
+                                     "  SET rule_id = NULL"
+                                     "  WHERE rule_id = ?1;";
 
-const char *const sqlDeletePresetRule = "UPDATE rule"
-                                        "  SET preset_rules = preset_rules & ~?1"
-                                        "  WHERE (preset_rules & ?1) <> 0;";
+const char *const sqlDeleteRuleSet = "DELETE rule_set WHERE rule_id = ?1;";
 
 const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id = ?1;";
 
@@ -155,7 +153,7 @@ bool ConfRuleManager::deleteRule(int ruleId)
         } break;
         case Rule::PresetRule: {
             // Delete the Preset Rule from Rules
-            DbUtil(sqliteDb(), &ok).sql(sqlDeletePresetRule).vars(vars).executeOk();
+            DbUtil(sqliteDb(), &ok).sql(sqlDeleteRuleSet).vars(vars).executeOk();
         } break;
         }
     }
