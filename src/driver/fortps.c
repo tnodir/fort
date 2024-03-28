@@ -429,7 +429,7 @@ inline static void fort_pstree_check_proc_conf(
 
     const PFORT_CONF conf = &conf_ref->conf;
 
-    const FORT_APP_ENTRY app_data = conf->proc_wild
+    const FORT_APP_DATA app_data = conf->proc_wild
             ? fort_conf_app_find(conf, path_buf, path_len, fort_conf_exe_find, conf_ref)
             : fort_conf_exe_find(conf, conf_ref, path_buf, path_len);
 

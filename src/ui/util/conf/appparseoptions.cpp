@@ -1,6 +1,6 @@
 #include "appparseoptions.h"
 
-appentry_map_t &AppParseOptions::appsMap(bool isWild, bool isPrefix)
+appdata_map_t &AppParseOptions::appsMap(bool isWild, bool isPrefix)
 {
     return isWild ? wildAppsMap : (isPrefix ? prefixAppsMap : exeAppsMap);
 }

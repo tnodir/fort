@@ -10,12 +10,12 @@
 #include "addressrange.h"
 
 using addrranges_arr_t = QVarLengthArray<AddressRange, 2>;
-using appentry_map_t = QMap<QString, FORT_APP_ENTRY>;
+using appdata_map_t = QMap<QString, FORT_APP_DATA>;
 
 class AppParseOptions
 {
 public:
-    appentry_map_t &appsMap(bool isWild, bool isPrefix);
+    appdata_map_t &appsMap(bool isWild, bool isPrefix);
     quint32 &appsSize(bool isWild, bool isPrefix);
 
 public:
@@ -25,9 +25,9 @@ public:
     quint32 prefixAppsSize = 0;
     quint32 exeAppsSize = 0;
 
-    appentry_map_t wildAppsMap;
-    appentry_map_t prefixAppsMap;
-    appentry_map_t exeAppsMap;
+    appdata_map_t wildAppsMap;
+    appdata_map_t prefixAppsMap;
+    appdata_map_t exeAppsMap;
 };
 
 #endif // APPPARSEOPTIONS_H

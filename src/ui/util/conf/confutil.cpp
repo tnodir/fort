@@ -190,7 +190,7 @@ int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
 
 int ConfUtil::writeAppEntry(const App &app, bool isNew, QByteArray &buf)
 {
-    appentry_map_t appsMap;
+    appdata_map_t appsMap;
     quint32 appsSize = 0;
 
     if (!addApp(app, isNew, appsMap, appsSize))
@@ -442,13 +442,13 @@ bool ConfUtil::parseAppLine(App &app, const QStringView &line, AppParseOptions &
         }
     }
 
-    appentry_map_t &appsMap = opt.appsMap(isWild, isPrefix);
+    appdata_map_t &appsMap = opt.appsMap(isWild, isPrefix);
     quint32 &appsSize = opt.appsSize(isWild, isPrefix);
 
     return addApp(app, /*isNew=*/true, appsMap, appsSize);
 }
 
-bool ConfUtil::addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint32 &appsSize)
+bool ConfUtil::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize)
 {
     const QString kernelPath = FileUtil::pathToKernelPath(app.appPath);
 
@@ -465,7 +465,7 @@ bool ConfUtil::addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint
 
     appsSize += appSize;
 
-    const FORT_APP_ENTRY appEntry = {
+    const FORT_APP_DATA appEntry = {
         .flags = {
                 .group_index = quint8(app.groupIndex),
                 .use_group_perm = app.useGroupPerm,
@@ -480,7 +480,7 @@ bool ConfUtil::addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint
                 .is_new = isNew,
                 .found = 1,
         },
-        .path_len = appPathLen,
+        .rule_id = app.ruleId,
         .accept_zones = quint16(app.acceptZones),
         .reject_zones = quint16(app.rejectZones),
     };
@@ -783,7 +783,7 @@ bool ConfUtil::loadAddress6List(const char **data, IpRange &ipRange, uint &bufSi
     return true;
 }
 
-void ConfUtil::writeApps(char **data, const appentry_map_t &appsMap, bool useHeader)
+void ConfUtil::writeApps(char **data, const appdata_map_t &appsMap, bool useHeader)
 {
     quint32 *offp = (quint32 *) *data;
     const quint32 offTableSize = quint32(useHeader ? FORT_CONF_STR_HEADER_SIZE(appsMap.size()) : 0);
@@ -797,18 +797,19 @@ void ConfUtil::writeApps(char **data, const appentry_map_t &appsMap, bool useHea
     auto it = appsMap.constBegin();
     const auto end = appsMap.constEnd();
     for (; it != end; ++it) {
-        const QString &appPath = it.key();
+        const QString &kernelPath = it.key();
 
-        const FORT_APP_ENTRY &appEntry = it.value();
+        const quint16 appPathLen = quint16(kernelPath.size()) * sizeof(wchar_t);
+        const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen);
+
+        const FORT_APP_DATA &appData = it.value();
 
         PFORT_APP_ENTRY entry = (PFORT_APP_ENTRY) p;
-        *entry++ = appEntry;
+        entry->app_data = appData;
+        entry->path_len = appPathLen;
 
-        wchar_t *pathArray = (wchar_t *) entry;
-        appPath.toWCharArray(pathArray);
-        pathArray[appEntry.path_len / sizeof(wchar_t)] = '\0';
-
-        const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appEntry.path_len);
+        kernelPath.toWCharArray(entry->path);
+        entry->path[kernelPath.size()] = '\0';
 
         off += appSize;
         if (useHeader) {

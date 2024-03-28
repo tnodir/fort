@@ -72,7 +72,7 @@ private:
 
     bool parseAppLine(App &app, const QStringView &line, AppParseOptions &opt);
 
-    bool addApp(const App &app, bool isNew, appentry_map_t &appsMap, quint32 &appsSize);
+    bool addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize);
 
     static QString parseAppPath(const QStringView line, bool &isWild, bool &isPrefix);
 
@@ -102,7 +102,7 @@ private:
     static bool loadAddress4List(const char **data, IpRange &ipRange, uint &bufSize);
     static bool loadAddress6List(const char **data, IpRange &ipRange, uint &bufSize);
 
-    static void writeApps(char **data, const appentry_map_t &appsMap, bool useHeader = false);
+    static void writeApps(char **data, const appdata_map_t &appsMap, bool useHeader = false);
 
     static void writeShorts(char **data, const shorts_arr_t &array);
     static void writeLongs(char **data, const longs_arr_t &array);

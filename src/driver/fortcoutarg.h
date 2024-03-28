@@ -48,7 +48,7 @@ typedef struct fort_callout_ale_extra
     UCHAR ignore : 1;
     INT8 block_reason;
 
-    FORT_APP_ENTRY app_data;
+    FORT_APP_DATA app_data;
 
     UINT32 process_id;
 
