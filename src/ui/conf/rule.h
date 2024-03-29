@@ -14,18 +14,15 @@ class Rule
 {
 public:
     enum RuleType : quint8 {
-        AppRule = 0, // 1..64
-        GlobalBeforeAppsRule, // 65..96
-        GlobalAfterAppsRule, // 97..128
-        PresetRule, // 129..255
+        AppRule = 0,
+        GlobalBeforeAppsRule,
+        GlobalAfterAppsRule,
+        PresetRule,
         RuleTypeCount
     };
 
     bool isNameEqual(const Rule &o) const;
     bool isOptionsEqual(const Rule &o) const;
-
-    static RuleType getRuleTypeById(int ruleId);
-    static RuleIdRange getRuleIdRangeByType(RuleType ruleType);
 
 public:
     bool enabled : 1 = true;

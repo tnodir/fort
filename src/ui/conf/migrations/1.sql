@@ -102,6 +102,10 @@ CREATE TABLE rule(
 
 CREATE INDEX rule_rule_type_name_idx ON rule(rule_type, lower(name));
 
+CREATE TABLE rule_free(
+  rule_id INTEGER PRIMARY KEY
+);
+
 CREATE TABLE rule_set(
   rule_set_id INTEGER PRIMARY KEY,
   rule_id INTEGER NOT NULL,
