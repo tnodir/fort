@@ -8,6 +8,8 @@
 
 #include <util/classhelpers.h>
 
+QT_FORWARD_DECLARE_CLASS(QDir)
+
 struct sqlite3;
 
 class SqliteDb;
@@ -126,6 +128,7 @@ private:
     bool canMigrate(const MigrateOptions &opt) const;
     bool migrateDb(const MigrateOptions &opt, int userVersion, bool isNewDb);
     bool migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb);
+    bool migrateSqlScript(const QDir &sqlDir, int userVersion);
 
     bool migrateDbBegin(const MigrateOptions &opt, int &userVersion, bool &isNewDb);
     bool migrateDbEnd(const MigrateOptions &opt);

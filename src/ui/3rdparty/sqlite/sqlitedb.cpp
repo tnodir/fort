@@ -347,54 +347,58 @@ bool SqliteDb::migrateDb(const MigrateOptions &opt, int userVersion, bool isNewD
 
 bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, bool isNewDb)
 {
-    const QDir dir(opt.sqlDir);
-    bool success = true;
+    const QDir sqlDir(opt.sqlDir);
+    bool ok = true;
 
     beginWriteTransaction();
 
     while (userVersion < opt.version) {
         ++userVersion;
 
-        const QString filePath = dir.filePath(QString("%1.sql").arg(userVersion));
-
         beginSavepoint();
 
-        QFile file(filePath);
-        if (file.exists()) {
-            if (!file.open(QFile::ReadOnly | QFile::Text)) {
-                qCWarning(LC) << "Cannot open migration file" << filePath << file.errorString();
-                success = false;
-                break;
-            }
+        ok = migrateSqlScript(sqlDir, userVersion);
 
-            const QByteArray data = file.readAll();
-            if (data.isEmpty()) {
-                qCWarning(LC) << "Migration file is empty" << filePath;
-                success = false;
-                break;
-            }
-
-            success = execute(data.constData());
+        if (ok && opt.migrateFunc) {
+            ok = opt.migrateFunc(this, userVersion, isNewDb, opt.migrateContext);
         }
 
-        if (success && opt.migrateFunc) {
-            success = opt.migrateFunc(this, userVersion, isNewDb, opt.migrateContext);
-        }
-
-        if (success) {
-            releaseSavepoint();
-        } else {
-            qCCritical(LC) << "Migration error:" << filePath << errorMessage();
+        if (!ok) {
+            qCCritical(LC) << "Migration error to version:" << userVersion << errorMessage();
             rollbackSavepoint();
             break;
         }
+
+        releaseSavepoint();
     }
 
     this->setUserVersion(userVersion);
 
     commitTransaction();
 
-    return success;
+    return ok;
+}
+
+bool SqliteDb::migrateSqlScript(const QDir &sqlDir, int userVersion)
+{
+    const QString filePath = sqlDir.filePath(QString("%1.sql").arg(userVersion));
+
+    QFile file(filePath);
+    if (!file.exists())
+        return true;
+
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        qCWarning(LC) << "Cannot open migration file" << filePath << file.errorString();
+        return false;
+    }
+
+    const QByteArray data = file.readAll();
+    if (data.isEmpty()) {
+        qCWarning(LC) << "Migration file is empty" << filePath;
+        return false;
+    }
+
+    return execute(data.constData());
 }
 
 bool SqliteDb::migrateDbBegin(const MigrateOptions &opt, int &userVersion, bool &isNewDb)
