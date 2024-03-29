@@ -12,22 +12,27 @@ bool App::isBaseFlagsEqual(const App &o) const
             && parked == o.parked;
 }
 
-bool App::isZonesEqual(const App &o) const
-{
-    return acceptZones == o.acceptZones && rejectZones == o.rejectZones;
-}
-
 bool App::isExtraFlagsEqual(const App &o) const
 {
     return logBlocked == o.logBlocked && logConn == o.logConn && blocked == o.blocked
             && killProcess == o.killProcess;
 }
 
+bool App::isZonesEqual(const App &o) const
+{
+    return acceptZones == o.acceptZones && rejectZones == o.rejectZones;
+}
+
+bool App::isPathsEqual(const App &o) const
+{
+    return appOriginPath == o.appOriginPath && appPath == o.appPath;
+}
+
 bool App::isOptionsEqual(const App &o) const
 {
     return isFlagsEqual(o) && isZonesEqual(o) && groupIndex == o.groupIndex && ruleId == o.ruleId
-            && appOriginPath == o.appOriginPath && appPath == o.appPath && notes == o.notes
-            && scheduleAction == o.scheduleAction && scheduleTime == o.scheduleTime;
+            && isPathsEqual(o) && notes == o.notes && scheduleAction == o.scheduleAction
+            && scheduleTime == o.scheduleTime;
 }
 
 bool App::isNameEqual(const App &o) const
