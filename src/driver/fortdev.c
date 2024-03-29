@@ -265,7 +265,7 @@ static NTSTATUS fort_device_control_app(PFORT_DEVICE_CONTROL_ARG dca, BOOL is_ad
     const PFORT_APP_ENTRY app_entry = dca->buffer;
     const ULONG len = dca->in_len;
 
-    if (len < sizeof(FORT_APP_ENTRY) || len < (sizeof(FORT_APP_ENTRY) + app_entry->path_len))
+    if (len < sizeof(FORT_APP_ENTRY) || len < FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len))
         return STATUS_UNSUCCESSFUL;
 
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(&fort_device()->conf);

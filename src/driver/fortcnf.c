@@ -136,10 +136,10 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref,
 
     *entry = *app_entry;
 
-    /* Copy path */
+    /* Copy the path */
     {
-        PVOID new_path = entry + 1;
-        RtlCopyMemory(new_path, path, path_len);
+        RtlCopyMemory(entry->path, path, path_len);
+        entry->path[path_len / sizeof(WCHAR)] = L'\0';
     }
 
     /* Add exe node */
@@ -164,7 +164,7 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
     /* Replace the data */
     {
         PFORT_APP_ENTRY entry = node->app_entry;
-        *entry = *app_entry;
+        entry->app_data = app_entry->app_data;
     }
 
     return STATUS_SUCCESS;
@@ -186,7 +186,7 @@ FORT_API NTSTATUS fort_conf_ref_exe_add_path(
 FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
         PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY app_entry, BOOL locked)
 {
-    const PVOID path = app_entry + 1;
+    const PVOID path = app_entry->path;
 
     if (locked) {
         const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, app_entry->path_len);
@@ -244,10 +244,7 @@ static void fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, const PVOID path
 
 FORT_API void fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry)
 {
-    const PVOID path = (const PVOID)(entry + 1);
-    const UINT32 path_len = entry->path_len;
-
-    fort_conf_ref_exe_del_path(conf_ref, path, path_len);
+    fort_conf_ref_exe_del_path(conf_ref, entry->path, entry->path_len);
 }
 
 static void fort_conf_ref_init(PFORT_CONF_REF conf_ref)

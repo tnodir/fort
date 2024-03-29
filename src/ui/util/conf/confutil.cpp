@@ -455,17 +455,19 @@ bool ConfUtil::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint3
     if (appsMap.contains(kernelPath))
         return true;
 
-    if (kernelPath.size() > APP_PATH_MAX) {
+    const int kernelPathSize = kernelPath.size();
+
+    if (kernelPathSize > APP_PATH_MAX) {
         setErrorMessage(tr("Length of Application's Path must be < %1").arg(APP_PATH_MAX));
         return false;
     }
 
-    const quint16 appPathLen = quint16(kernelPath.size()) * sizeof(wchar_t);
+    const quint16 appPathLen = quint16(kernelPathSize * sizeof(wchar_t));
     const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen);
 
     appsSize += appSize;
 
-    const FORT_APP_DATA appEntry = {
+    const FORT_APP_DATA appData = {
         .flags = {
                 .group_index = quint8(app.groupIndex),
                 .use_group_perm = app.useGroupPerm,
@@ -485,7 +487,7 @@ bool ConfUtil::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint3
         .reject_zones = quint16(app.rejectZones),
     };
 
-    appsMap.insert(kernelPath, appEntry);
+    appsMap.insert(kernelPath, appData);
 
     m_driveMask |= FileUtil::driveMaskByPath(app.appPath);
 
@@ -794,22 +796,18 @@ void ConfUtil::writeApps(char **data, const appdata_map_t &appsMap, bool useHead
         *offp++ = 0;
     }
 
-    auto it = appsMap.constBegin();
-    const auto end = appsMap.constEnd();
-    for (; it != end; ++it) {
-        const QString &kernelPath = it.key();
+    for (const auto &[kernelPath, appData] : appsMap.asKeyValueRange()) {
+        const int kernelPathSize = kernelPath.size();
 
-        const quint16 appPathLen = quint16(kernelPath.size()) * sizeof(wchar_t);
+        const quint16 appPathLen = quint16(kernelPathSize * sizeof(wchar_t));
         const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen);
-
-        const FORT_APP_DATA &appData = it.value();
 
         PFORT_APP_ENTRY entry = (PFORT_APP_ENTRY) p;
         entry->app_data = appData;
         entry->path_len = appPathLen;
 
         kernelPath.toWCharArray(entry->path);
-        entry->path[kernelPath.size()] = '\0';
+        entry->path[kernelPathSize] = L'\0';
 
         off += appSize;
         if (useHeader) {
