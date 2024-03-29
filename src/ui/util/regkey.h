@@ -42,7 +42,7 @@ public:
     ~RegKey();
     CLASS_DELETE_COPY_MOVE(RegKey)
 
-    bool isNull() const { return m_handle == 0; }
+    bool isNull() const { return m_handle == nullptr; }
 
     bool removeKey(const QString &subKey);
     bool clearTree(const QString &subKey = QString());
@@ -62,7 +62,7 @@ private:
     static RegKey::RegHandle predefinedRootHandle(Root root);
 
 private:
-    RegHandle m_handle = 0;
+    RegHandle m_handle = nullptr;
 };
 
 #endif // REGKEY_H

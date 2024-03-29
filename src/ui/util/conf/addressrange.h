@@ -9,8 +9,6 @@
 class AddressRange
 {
 public:
-    explicit AddressRange();
-
     bool includeAll() const { return m_includeAll; }
     void setIncludeAll(bool includeAll) { m_includeAll = includeAll; }
 

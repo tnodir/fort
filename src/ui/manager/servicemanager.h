@@ -15,7 +15,6 @@ class ServiceManager : public QObject, public ServiceManagerIface, public IocSer
 
 public:
     explicit ServiceManager(QObject *parent = nullptr);
-    ~ServiceManager() override;
     CLASS_DELETE_COPY_MOVE(ServiceManager)
 
     void setUp() override;

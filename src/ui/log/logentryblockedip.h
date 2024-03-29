@@ -8,8 +8,6 @@
 class LogEntryBlockedIp : public LogEntryBlocked
 {
 public:
-    explicit LogEntryBlockedIp();
-
     FortLogType type() const override { return FORT_LOG_TYPE_BLOCKED_IP; }
 
     bool isIPv6() const { return m_isIPv6; }

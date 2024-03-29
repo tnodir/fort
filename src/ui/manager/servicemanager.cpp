@@ -21,8 +21,6 @@ const QLoggingCategory LC("manager.service");
 
 ServiceManager::ServiceManager(QObject *parent) : QObject(parent) { }
 
-ServiceManager::~ServiceManager() { }
-
 void ServiceManager::setUp()
 {
     setupControlManager();

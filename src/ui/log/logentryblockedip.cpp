@@ -2,8 +2,6 @@
 
 #include <util/net/netutil.h>
 
-LogEntryBlockedIp::LogEntryBlockedIp() { }
-
 void LogEntryBlockedIp::setIsIPv6(bool isIPv6)
 {
     m_isIPv6 = isIPv6;

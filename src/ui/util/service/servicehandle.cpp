@@ -57,7 +57,7 @@ bool ServiceHandle::createService(const CreateServiceArg &csa)
 {
     m_serviceHandle = qintptr(CreateServiceW(SC_HANDLE(m_managerHandle), csa.serviceName,
             csa.serviceDisplay, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START,
-            SERVICE_ERROR_NORMAL, csa.command, csa.serviceGroup, 0, csa.dependencies, nullptr,
+            SERVICE_ERROR_NORMAL, csa.command, csa.serviceGroup, nullptr, csa.dependencies, nullptr,
             nullptr));
 
     if (!isServiceOpened())
@@ -88,8 +88,8 @@ bool ServiceHandle::setupServiceRestartConfig()
 
     SERVICE_FAILURE_ACTIONS sfa;
     sfa.dwResetPeriod = 0;
-    sfa.lpCommand = NULL;
-    sfa.lpRebootMsg = NULL;
+    sfa.lpCommand = nullptr;
+    sfa.lpRebootMsg = nullptr;
     sfa.cActions = actionsCount;
     sfa.lpsaActions = actions;
 

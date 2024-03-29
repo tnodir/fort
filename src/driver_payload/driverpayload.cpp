@@ -150,7 +150,7 @@ bool signHash(BCRYPT_KEY_HANDLE keyHandle, const QByteArray &digest, QByteArray 
     padInfo.pszAlgId = BCRYPT_SHA256_ALGORITHM;
 
     ULONG blobLen;
-    status = BCryptSignHash(keyHandle, &padInfo, (PUCHAR) digest.data(), digest.size(), NULL, 0,
+    status = BCryptSignHash(keyHandle, &padInfo, (PUCHAR) digest.data(), digest.size(), nullptr, 0,
             &blobLen, BCRYPT_PAD_PKCS1);
     if (status) {
         qCritical() << "Sign Hash error: Size:" << status;
@@ -176,7 +176,7 @@ bool exportKey(BCRYPT_KEY_HANDLE keyHandle, LPCWSTR blobType, const QString &fil
     NTSTATUS status;
 
     ULONG blobLen;
-    status = BCryptExportKey(keyHandle, NULL, blobType, NULL, 0, &blobLen, 0);
+    status = BCryptExportKey(keyHandle, nullptr, blobType, nullptr, 0, &blobLen, 0);
     if (status) {
         qCritical() << "Export Key error: Size:" << status << filePath;
         return false;
@@ -184,7 +184,8 @@ bool exportKey(BCRYPT_KEY_HANDLE keyHandle, LPCWSTR blobType, const QString &fil
 
     QByteArray blob(blobLen, Qt::Uninitialized);
 
-    status = BCryptExportKey(keyHandle, NULL, blobType, (PUCHAR) blob.data(), blobLen, &blobLen, 0);
+    status = BCryptExportKey(
+            keyHandle, nullptr, blobType, (PUCHAR) blob.data(), blobLen, &blobLen, 0);
     if (status) {
         qCritical() << "Export Key error:" << status << filePath;
         return false;
@@ -223,7 +224,7 @@ bool importKeyPair(
     if (blob.isEmpty())
         return false;
 
-    status = BCryptImportKeyPair(algHandle, NULL, BCRYPT_RSAPRIVATE_BLOB, &keyHandle,
+    status = BCryptImportKeyPair(algHandle, nullptr, BCRYPT_RSAPRIVATE_BLOB, &keyHandle,
             (PUCHAR) blob.data(), blob.size(), 0);
     if (status) {
         qCritical() << "Import Key error:" << status;
@@ -249,7 +250,7 @@ bool createPayloadSignature(
     NTSTATUS status;
 
     BCRYPT_ALG_HANDLE algHandle;
-    status = BCryptOpenAlgorithmProvider(&algHandle, BCRYPT_RSA_ALGORITHM, NULL, 0);
+    status = BCryptOpenAlgorithmProvider(&algHandle, BCRYPT_RSA_ALGORITHM, nullptr, 0);
     if (status) {
         qCritical() << "Payload Sign error: Open Algorithm:" << status;
         return false;
@@ -293,24 +294,20 @@ void DriverPayload::processArguments(const QStringList &args)
     parser.setApplicationDescription("Append payload to the signed executable file. "
                                      "The result is stored in the output file.");
 
-    const QCommandLineOption inputOption(QStringList() << "i"
-                                                       << "input",
-            "Input file path.", "input");
+    const QCommandLineOption inputOption(
+            QStringList() << "i" << "input", "Input file path.", "input");
     parser.addOption(inputOption);
 
-    const QCommandLineOption outputOption(QStringList() << "o"
-                                                        << "output",
-            "Output file path.", "output");
+    const QCommandLineOption outputOption(
+            QStringList() << "o" << "output", "Output file path.", "output");
     parser.addOption(outputOption);
 
-    const QCommandLineOption payloadOption(QStringList() << "p"
-                                                         << "payload",
-            "Payload file path.", "payload");
+    const QCommandLineOption payloadOption(
+            QStringList() << "p" << "payload", "Payload file path.", "payload");
     parser.addOption(payloadOption);
 
-    const QCommandLineOption secretOption(QStringList() << "s"
-                                                        << "secret",
-            "Secret file path.", "secret");
+    const QCommandLineOption secretOption(
+            QStringList() << "s" << "secret", "Secret file path.", "secret");
     parser.addOption(secretOption);
 
     parser.addHelpOption();
