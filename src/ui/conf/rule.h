@@ -39,8 +39,6 @@ public:
     quint32 acceptZones = 0;
     quint32 rejectZones = 0;
 
-    quint32 presetRules = 0;
-
     QString ruleName;
     QString notes;
     QString ruleText;

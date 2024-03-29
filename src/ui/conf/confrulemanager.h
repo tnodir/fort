@@ -25,7 +25,7 @@ public:
     void setUp() override;
 
     virtual bool addOrUpdateRule(Rule &rule);
-    virtual bool deleteRule(int rulId);
+    virtual bool deleteRule(int ruleId);
     virtual bool updateRuleName(int ruleId, const QString &ruleName);
     virtual bool updateRuleEnabled(int ruleId, bool enabled);
 

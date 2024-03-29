@@ -329,8 +329,7 @@ bool RuleListModel::updateRuleRow(
     ruleRow.ruleType = Rule::RuleType(stmt.columnInt(7));
     ruleRow.acceptZones = stmt.columnUInt(8);
     ruleRow.rejectZones = stmt.columnUInt(9);
-    ruleRow.presetRules = stmt.columnUInt(10);
-    ruleRow.modTime = stmt.columnDateTime(11);
+    ruleRow.modTime = stmt.columnDateTime(10);
 
     return true;
 }

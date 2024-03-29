@@ -20,14 +20,13 @@ const QLoggingCategory LC("confRule");
 
 const char *const sqlInsertRule = "INSERT INTO rule(rule_id, enabled, blocked, exclusive,"
                                   "    name, notes, rule_text, rule_type,"
-                                  "    accept_zones, reject_zones, preset_rules, mod_time)"
-                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12);";
+                                  "    accept_zones, reject_zones, mod_time)"
+                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11);";
 
 const char *const sqlUpdateRule = "UPDATE rule"
                                   "  SET enabled = ?2, blocked = ?3, exclusive = ?4,"
                                   "    name = ?5, notes = ?6, rule_text = ?7, rule_type = ?8,"
-                                  "    accept_zones = ?9, reject_zones = ?10,"
-                                  "    preset_rules = ?11, mod_time = ?12"
+                                  "    accept_zones = ?9, reject_zones = ?10, mod_time = ?11"
                                   "  WHERE rule_id = ?1;";
 
 const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
@@ -111,7 +110,6 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
         rule.ruleType,
         rule.acceptZones,
         rule.rejectZones,
-        rule.presetRules,
         DateUtil::now(),
     };
 
