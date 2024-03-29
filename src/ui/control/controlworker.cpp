@@ -42,7 +42,7 @@ bool buildArgsData(QByteArray &buffer, const QVariantList &args, bool &compresse
     }
 
     compressed = (data.size() > 128);
-    buffer = compressed ? qCompress(std::move(data)) : data;
+    buffer = compressed ? qCompress(data) : std::move(data);
 
     return true;
 }
