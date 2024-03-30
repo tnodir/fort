@@ -38,6 +38,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
+    Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
+
     void setupTaskRows();
 
     QVariant toVariant() const;
@@ -46,8 +48,6 @@ signals:
     void dataEdited();
 
 protected:
-    Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
-
     bool updateTableRow(const QVariantHash & /*vars*/, int /*row*/) const override { return true; }
     TableRow &tableRow() const override { return m_taskRow; }
 

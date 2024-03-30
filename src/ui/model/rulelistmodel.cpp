@@ -55,11 +55,6 @@ ConfManager *RuleListModel::confManager() const
     return IoC<ConfManager>();
 }
 
-ConfRuleManager *RuleListModel::confRuleManager() const
-{
-    return IoC<ConfRuleManager>();
-}
-
 SqliteDb *RuleListModel::sqliteDb() const
 {
     return confManager()->sqliteDb();
@@ -171,8 +166,6 @@ QVariant RuleListModel::data(const QModelIndex &index, int role) const
         return rootData(index, role);
     }
 
-    setSqlRuleType(id);
-
     switch (role) {
     // Label
     case Qt::DisplayRole:
@@ -182,10 +175,6 @@ QVariant RuleListModel::data(const QModelIndex &index, int role) const
     // Icon
     case Qt::DecorationRole:
         return dataDecoration(index);
-
-    // Enabled
-    case Qt::CheckStateRole:
-        return dataCheckState(index);
     }
 
     return QVariant();
@@ -249,51 +238,24 @@ QVariant RuleListModel::dataDecoration(const QModelIndex &index) const
     return QVariant();
 }
 
-QVariant RuleListModel::dataCheckState(const QModelIndex &index) const
-{
-    if (index.column() == 0) {
-        const auto &ruleRow = ruleRowAt(index);
-        return ruleRow.enabled ? Qt::Checked : Qt::Unchecked;
-    }
-
-    return QVariant();
-}
-
-bool RuleListModel::setData(const QModelIndex &index, const QVariant & /*value*/, int role)
-{
-    if (!index.isValid())
-        return false;
-
-    setSqlRuleType(index);
-
-    switch (role) {
-    case Qt::CheckStateRole:
-        const auto &ruleRow = ruleRowAt(index);
-        return confRuleManager()->updateRuleEnabled(ruleRow.ruleId, !ruleRow.enabled);
-    }
-
-    return false;
-}
-
-Qt::ItemFlags RuleListModel::flagHasChildren(const QModelIndex &index) const
-{
-    const QModelIndex parent = index.parent();
-
-    return parent.isValid() ? Qt::ItemNeverHasChildren : Qt::NoItemFlags;
-}
-
-Qt::ItemFlags RuleListModel::flagIsUserCheckable(const QModelIndex &index) const
-{
-    const QModelIndex parent = index.parent();
-
-    return parent.isValid() && index.column() == 0 ? Qt::ItemIsUserCheckable : Qt::NoItemFlags;
-}
-
 void RuleListModel::fillQueryVars(QVariantHash &vars) const
 {
     FtsTableSqlModel::fillQueryVars(vars);
 
     vars.insert(":type", sqlRuleType());
+}
+
+Qt::ItemFlags RuleListModel::flagIsEnabled(const QModelIndex &index) const
+{
+    setSqlRuleType(index);
+
+    const auto &ruleRow = ruleRowAt(index);
+    return ruleRow.enabled ? Qt::ItemIsEnabled : Qt::NoItemFlags;
+}
+
+Qt::ItemFlags RuleListModel::flagHasChildren(const QModelIndex &index) const
+{
+    return isIndexRule(index) ? Qt::ItemNeverHasChildren : Qt::NoItemFlags;
 }
 
 const RuleRow &RuleListModel::ruleRowAt(const QModelIndex &index) const

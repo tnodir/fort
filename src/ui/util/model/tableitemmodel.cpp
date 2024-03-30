@@ -39,6 +39,11 @@ void TableItemModel::resetLater()
     m_resetTimer->startTrigger();
 }
 
+Qt::ItemFlags TableItemModel::flagIsEnabled(const QModelIndex &index) const
+{
+    return Qt::ItemIsEnabled;
+}
+
 Qt::ItemFlags TableItemModel::flagHasChildren(const QModelIndex & /*index*/) const
 {
     return Qt::ItemNeverHasChildren;

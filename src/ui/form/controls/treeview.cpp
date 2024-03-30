@@ -3,6 +3,8 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 
+#include <util/model/tableitemmodel.h>
+
 #include "treeitemdelegate.h"
 
 TreeView::TreeView(QWidget *parent) : QTreeView(parent)
@@ -18,6 +20,8 @@ void TreeView::setModel(QAbstractItemModel *model)
 
     connect(model, &QAbstractItemModel::modelReset, this,
             [&] { emit currentIndexChanged(currentIndex()); });
+
+    setupItemDelegateModel();
 }
 
 void TreeView::setupItemDelegate()
@@ -25,6 +29,14 @@ void TreeView::setupItemDelegate()
     auto tid = new TreeItemDelegate(this);
 
     setItemDelegateForColumn(0, tid);
+}
+
+void TreeView::setupItemDelegateModel()
+{
+    auto tid = qobject_cast<TreeItemDelegate *>(itemDelegateForColumn(0));
+    Q_ASSERT(tid);
+
+    tid->setModel(qobject_cast<TableItemModel *>(model()));
 }
 
 void TreeView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)

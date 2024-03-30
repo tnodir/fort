@@ -10,7 +10,6 @@
 #include <util/model/ftstablesqlmodel.h>
 
 class ConfManager;
-class ConfRuleManager;
 
 struct RuleRow : TableRow, public Rule
 {
@@ -29,7 +28,6 @@ public:
     explicit RuleListModel(QObject *parent = nullptr);
 
     ConfManager *confManager() const;
-    ConfRuleManager *confRuleManager() const;
     SqliteDb *sqliteDb() const override;
 
     void initialize();
@@ -50,16 +48,15 @@ public:
     QVariant headerData(
             int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+
+    Qt::ItemFlags flagIsEnabled(const QModelIndex &index) const override;
+    Qt::ItemFlags flagHasChildren(const QModelIndex &index) const override;
 
     const RuleRow &ruleRowAt(const QModelIndex &index) const;
 
     static QStringList ruleTypeNames();
 
 protected:
-    Qt::ItemFlags flagHasChildren(const QModelIndex &index) const override;
-    Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
-
     void fillQueryVars(QVariantHash &vars) const override;
 
     bool updateTableRow(const QVariantHash &vars, int row) const override;
@@ -81,7 +78,7 @@ private:
     QVariant headerDataDisplay(int section) const;
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
-    QVariant dataCheckState(const QModelIndex &index) const;
+    QVariant dataEnabled(const QModelIndex &index) const;
 
 private:
     mutable quint8 m_sqlRuleType = 0;
