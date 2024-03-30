@@ -78,9 +78,9 @@ private:
     QLayout *setupActionsLayout();
     void setupActionsGroup();
     void setupAdvancedOptions();
-    QLayout *setupChildLayout();
-    QLayout *setupLogLayout();
-    QLayout *setupZonesLayout();
+    void setupChildOptions();
+    void setupLogOptions();
+    QLayout *setupZonesRulesLayout();
     QLayout *setupScheduleLayout();
     void setupCbSchedule();
     void setupComboScheduleType();

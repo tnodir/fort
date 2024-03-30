@@ -330,6 +330,9 @@ QLayout *ProgramEditDialog::setupMainLayout()
 
     setupActionsGroup();
 
+    // Zones
+    auto zonesRulesLayout = setupZonesRulesLayout();
+
     // Schedule
     auto scheduleLayout = setupScheduleLayout();
 
@@ -345,6 +348,8 @@ QLayout *ProgramEditDialog::setupMainLayout()
     layout->addWidget(ControlUtil::createSeparator());
     layout->addStretch();
     layout->addLayout(actionsLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(zonesRulesLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(scheduleLayout);
     layout->addStretch();
@@ -496,22 +501,26 @@ void ProgramEditDialog::setupAdvancedOptions()
     // Use Group Perm.
     m_cbUseGroupPerm = new QCheckBox();
 
+    // Parked
+    m_cbParked = new QCheckBox();
+    m_cbParked->setIcon(IconCache::icon(":/icons/parking.png"));
+
     // Child Options
-    auto childLayout = setupChildLayout();
+    setupChildOptions();
 
-    // Log
-    auto logLayout = setupLogLayout();
+    // Log Options
+    setupLogOptions();
 
-    // Zones
-    auto zonesLayout = setupZonesLayout();
-
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbUseGroupPerm);
-    layout->addLayout(childLayout);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addLayout(logLayout);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addLayout(zonesLayout);
+    auto layout = ControlUtil::createVLayoutByWidgets({
+            m_cbUseGroupPerm,
+            m_cbParked,
+            ControlUtil::createHSeparator(),
+            m_cbApplyChild,
+            m_cbKillChild,
+            ControlUtil::createHSeparator(),
+            m_cbLogBlocked,
+            m_cbLogConn,
+    });
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
@@ -520,43 +529,33 @@ void ProgramEditDialog::setupAdvancedOptions()
     m_btOptions->setMenu(menu);
 }
 
-QLayout *ProgramEditDialog::setupChildLayout()
+void ProgramEditDialog::setupChildOptions()
 {
     // Apply Child
     m_cbApplyChild = new QCheckBox();
 
     // Kill Child
     m_cbKillChild = new QCheckBox();
+    m_cbKillChild->setIcon(IconCache::icon(":/icons/scull.png"));
+
     connect(m_cbKillChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnDangerousOption);
-
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_cbApplyChild, ControlUtil::createVSeparator(), m_cbKillChild });
-
-    return layout;
 }
 
-QLayout *ProgramEditDialog::setupLogLayout()
+void ProgramEditDialog::setupLogOptions()
 {
-    // Parked
-    m_cbParked = new QCheckBox();
-
     // Log Blocked
     m_cbLogBlocked = new QCheckBox();
 
     // Log Conn
     m_cbLogConn = new QCheckBox();
     m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
-
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbParked, ControlUtil::createVSeparator(),
-            m_cbLogBlocked, m_cbLogConn, /*stretch*/ nullptr });
-
-    return layout;
 }
 
-QLayout *ProgramEditDialog::setupZonesLayout()
+QLayout *ProgramEditDialog::setupZonesRulesLayout()
 {
     // LAN Only
     m_cbLanOnly = new QCheckBox();
+    m_cbLanOnly->setIcon(IconCache::icon(":/icons/hostname.png"));
 
     // Zones
     m_btZones = new ZonesSelector();
@@ -599,6 +598,7 @@ QLayout *ProgramEditDialog::setupScheduleLayout()
 void ProgramEditDialog::setupCbSchedule()
 {
     m_cbSchedule = new QCheckBox();
+    m_cbSchedule->setIcon(IconCache::icon(":/icons/time.png"));
 
     const auto refreshScheduleEnabled = [&](bool checked) {
         m_comboScheduleAction->setEnabled(checked);
