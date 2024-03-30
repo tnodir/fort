@@ -24,6 +24,9 @@ public:
 
     void setUp() override;
 
+    void loadRuleSet(Rule &rule);
+    void saveRuleSet(Rule &rule);
+
     virtual bool addOrUpdateRule(Rule &rule);
     virtual bool deleteRule(int ruleId);
     virtual bool updateRuleName(int ruleId, const QString &ruleName);

@@ -5,6 +5,7 @@
 #include <control/controlworker.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/variantutil.h>
 
 namespace {
 
@@ -94,8 +95,12 @@ bool ConfRuleManagerRpc::updateRuleEnabled(int ruleId, bool enabled)
 
 QVariantList ConfRuleManagerRpc::ruleToVarList(const Rule &rule)
 {
-    return { rule.enabled, rule.blocked, rule.exclusive, rule.ruleType, rule.ruleId,
-        rule.acceptZones, rule.rejectZones, rule.ruleName, rule.notes, rule.ruleText };
+    QVariantList ruleSetList;
+    VariantUtil::vectorToList(rule.ruleSet, ruleSetList);
+
+    return { rule.enabled, rule.blocked, rule.exclusive, rule.ruleSetEdited, rule.ruleType,
+        rule.ruleId, rule.acceptZones, rule.rejectZones, rule.ruleName, rule.notes, rule.ruleText,
+        ruleSetList };
 }
 
 Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
@@ -104,13 +109,15 @@ Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
     rule.enabled = v.value(0).toBool();
     rule.blocked = v.value(1).toBool();
     rule.exclusive = v.value(2).toBool();
-    rule.ruleType = Rule::RuleType(v.value(3).toInt());
-    rule.ruleId = v.value(4).toInt();
-    rule.acceptZones = v.value(5).toUInt();
-    rule.rejectZones = v.value(6).toUInt();
-    rule.ruleName = v.value(7).toString();
-    rule.notes = v.value(8).toString();
-    rule.ruleText = v.value(9).toString();
+    rule.ruleSetEdited = v.value(3).toBool();
+    rule.ruleType = Rule::RuleType(v.value(4).toInt());
+    rule.ruleId = v.value(5).toInt();
+    rule.acceptZones = v.value(6).toUInt();
+    rule.rejectZones = v.value(7).toUInt();
+    rule.ruleName = v.value(8).toString();
+    rule.notes = v.value(9).toString();
+    rule.ruleText = v.value(10).toString();
+    VariantUtil::listToVector(v.value(11).toList(), rule.ruleSet);
     return rule;
 }
 

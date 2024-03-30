@@ -10,11 +10,11 @@
 #include <QRadioButton>
 #include <QVBoxLayout>
 
+#include <conf/confrulemanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/zonesselector.h>
 #include <manager/windowmanager.h>
-#include <model/rulelistmodel.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 
@@ -27,14 +27,16 @@ RuleEditDialog::RuleEditDialog(RulesController *ctrl, QWidget *parent) :
     setupController();
 }
 
-RuleListModel *RuleEditDialog::ruleListModel() const
+ConfRuleManager *RuleEditDialog::confRuleManager() const
 {
-    return ctrl()->ruleListModel();
+    return ctrl()->confRuleManager();
 }
 
 void RuleEditDialog::initialize(const RuleRow &ruleRow)
 {
     m_ruleRow = ruleRow;
+
+    confRuleManager()->loadRuleSet(m_ruleRow);
 
     retranslateUi();
 

@@ -8,11 +8,36 @@
 class VariantUtil
 {
 public:
-    static QVariantList vectorToList(const QVector<qint64> &array);
+    template<typename T>
+    static void vectorToList(const QVector<T> &array, QVariantList &list);
 
-    static QVector<qint64> listToVector(const QVariantList &list);
+    template<typename T>
+    static void listToVector(const QVariantList &list, QVector<T> &array);
 
-    static void addToList(QVariantList &list, const QVariant &v);
+    inline static void addToList(QVariantList &list, const QVariant &v)
+    {
+        list.push_back(v); // append() merges the list, does not insert
+    }
 };
+
+template<typename T>
+void VariantUtil::vectorToList(const QVector<T> &array, QVariantList &list)
+{
+    list.reserve(array.size());
+
+    for (const T v : array) {
+        list.append(v);
+    }
+}
+
+template<typename T>
+void VariantUtil::listToVector(const QVariantList &list, QVector<T> &array)
+{
+    array.reserve(list.size());
+
+    for (const QVariant &v : list) {
+        array.append(v.value<T>());
+    }
+}
 
 #endif // VARIANTUTIL_H

@@ -37,7 +37,10 @@ bool processConfAppManager_updateAppName(
 bool processConfAppManager_deleteApps(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confAppManager->deleteApps(VariantUtil::listToVector(p.args.value(0).toList()));
+    QVector<qint64> appIdList;
+    VariantUtil::listToVector(p.args.value(0).toList(), appIdList);
+
+    return confAppManager->deleteApps(appIdList);
 }
 
 bool processConfAppManager_purgeApps(ConfAppManager *confAppManager,
@@ -49,8 +52,11 @@ bool processConfAppManager_purgeApps(ConfAppManager *confAppManager,
 bool processConfAppManager_updateAppsBlocked(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confAppManager->updateAppsBlocked(VariantUtil::listToVector(p.args.value(0).toList()),
-            p.args.value(1).toBool(), p.args.value(2).toBool());
+    QVector<qint64> appIdList;
+    VariantUtil::listToVector(p.args.value(0).toList(), appIdList);
+
+    return confAppManager->updateAppsBlocked(
+            appIdList, p.args.value(1).toBool(), p.args.value(2).toBool());
 }
 
 using processConfAppManager_func = bool (*)(
@@ -98,7 +104,8 @@ bool ConfAppManagerRpc::updateAppName(qint64 appId, const QString &appName)
 
 bool ConfAppManagerRpc::deleteApps(const QVector<qint64> &appIdList)
 {
-    const QVariantList appIdVarList = VariantUtil::vectorToList(appIdList);
+    QVariantList appIdVarList;
+    VariantUtil::vectorToList(appIdList, appIdVarList);
 
     QVariantList args;
     VariantUtil::addToList(args, appIdVarList);
@@ -114,7 +121,8 @@ bool ConfAppManagerRpc::purgeApps()
 bool ConfAppManagerRpc::updateAppsBlocked(
         const QVector<qint64> &appIdList, bool blocked, bool killProcess)
 {
-    const QVariantList appIdVarList = VariantUtil::vectorToList(appIdList);
+    QVariantList appIdVarList;
+    VariantUtil::vectorToList(appIdList, appIdVarList);
 
     QVariantList args;
     VariantUtil::addToList(args, appIdVarList);

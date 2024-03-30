@@ -12,9 +12,9 @@ QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 
+class ConfRuleManager;
 class PlainTextEdit;
 class Rule;
-class RuleListModel;
 class RulesController;
 class ZonesSelector;
 
@@ -26,7 +26,7 @@ public:
     explicit RuleEditDialog(RulesController *ctrl, QWidget *parent = nullptr);
 
     RulesController *ctrl() const { return m_ctrl; }
-    RuleListModel *ruleListModel() const;
+    ConfRuleManager *confRuleManager() const;
 
     bool isEmpty() const { return m_ruleRow.ruleId == 0; }
 

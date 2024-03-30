@@ -47,7 +47,16 @@ const char *const sqlDeleteAppRule = "UPDATE app"
                                      "  SET rule_id = NULL"
                                      "  WHERE rule_id = ?1;";
 
-const char *const sqlDeleteRuleSet = "DELETE rule_set WHERE rule_id = ?1 OR sub_rule_id = ?1;";
+const char *const sqlInsertRuleSet = "INSERT INTO rule_set(rule_id, sub_rule_id, order_index)"
+                                     "  VALUES(?1, ?2, ?3);";
+
+const char *const sqlDeleteRuleSet = "DELETE rule_set WHERE rule_id = ?1;";
+
+const char *const sqlDeleteRuleSetSub = "DELETE rule_set WHERE sub_rule_id = ?1;";
+
+const char *const sqlSelectRuleSet = "SELECT sub_rule_id FROM rule_set"
+                                     "  WHERE rule_id = ?1"
+                                     "  ORDER BY order_index;";
 
 const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id = ?1;";
 
@@ -90,6 +99,44 @@ void ConfRuleManager::setUp()
     m_confManager = IoCPinned()->setUpDependency<ConfManager>();
 }
 
+void ConfRuleManager::loadRuleSet(Rule &rule)
+{
+    rule.ruleSetEdited = false;
+    rule.ruleSet.clear();
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectRuleSet).vars({ rule.ruleId }).prepare(stmt))
+        return;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const int subRuleId = stmt.columnInt();
+
+        rule.ruleSet.append(subRuleId);
+    }
+}
+
+void ConfRuleManager::saveRuleSet(Rule &rule)
+{
+    if (!rule.ruleSetEdited)
+        return;
+
+    DbQuery(sqliteDb()).sql(sqlDeleteRuleSet).vars({ rule.ruleId }).executeOk();
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlInsertRuleSet).prepare(stmt))
+        return;
+
+    stmt.bindInt(1, rule.ruleId);
+
+    int orderIndex = 0;
+    for (const auto subRuleId : rule.ruleSet) {
+        stmt.bindInt(2, subRuleId);
+        stmt.bindInt(3, ++orderIndex);
+
+        stmt.step();
+    }
+}
+
 bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 {
     bool ok = true;
@@ -120,6 +167,8 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 
     if (ok) {
         DbQuery(sqliteDb(), &ok).sql(isNew ? sqlInsertRule : sqlUpdateRule).vars(vars).executeOk();
+
+        saveRuleSet(rule);
     }
 
     commitTransaction(ok);
@@ -151,6 +200,7 @@ bool ConfRuleManager::deleteRule(int ruleId)
 
         // Delete the Preset Rule from Rules
         DbQuery(sqliteDb()).sql(sqlDeleteRuleSet).vars(vars).executeOk();
+        DbQuery(sqliteDb()).sql(sqlDeleteRuleSetSub).vars(vars).executeOk();
 
         // Put the Rule Id back to the free list
         putFreeRuleId(ruleId);

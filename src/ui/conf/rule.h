@@ -3,12 +3,7 @@
 
 #include <QDateTime>
 #include <QObject>
-
-struct RuleIdRange
-{
-    int minId;
-    int maxId;
-};
+#include <QVector>
 
 class Rule
 {
@@ -28,6 +23,7 @@ public:
     bool enabled : 1 = true;
     bool blocked : 1 = false;
     bool exclusive : 1 = false;
+    bool ruleSetEdited : 1 = false;
 
     RuleType ruleType = AppRule;
 
@@ -41,6 +37,8 @@ public:
     QString ruleText;
 
     QDateTime modTime;
+
+    QVector<quint16> ruleSet;
 };
 
 #endif // RULE_H
