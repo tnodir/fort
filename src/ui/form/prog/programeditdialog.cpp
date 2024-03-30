@@ -75,6 +75,11 @@ IniUser *ProgramEditDialog::iniUser() const
     return ctrl()->iniUser();
 }
 
+WindowManager *ProgramEditDialog::windowManager() const
+{
+    return ctrl()->windowManager();
+}
+
 AppListModel *ProgramEditDialog::appListModel() const
 {
     return ctrl()->appListModel();
@@ -325,13 +330,13 @@ QLayout *ProgramEditDialog::setupMainLayout()
 
     setupActionsGroup();
 
-    // Advanced Options
-    setupAdvancedOptions();
-
     // Schedule
     auto scheduleLayout = setupScheduleLayout();
 
-    // OK/Cancel
+    // Advanced Options
+    setupAdvancedOptions();
+
+    // Menu, OK/Cancel
     auto buttonsLayout = setupButtonsLayout();
 
     // Form
@@ -620,6 +625,9 @@ void ProgramEditDialog::setupComboScheduleType()
 
 QLayout *ProgramEditDialog::setupButtonsLayout()
 {
+    // Menu button
+    m_btMenu = windowManager()->createMenuButton();
+
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
         if (save()) {
@@ -636,6 +644,7 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_btOptions);
+    layout->addWidget(m_btMenu);
     layout->addWidget(m_btOk, 1, Qt::AlignRight);
     layout->addWidget(m_btCancel);
 

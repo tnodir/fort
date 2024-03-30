@@ -24,6 +24,7 @@ class PlainTextEdit;
 class ProgramsController;
 class SpinCombo;
 class ZonesSelector;
+class WindowManager;
 
 class ProgramEditDialog : public WidgetWindow
 {
@@ -39,6 +40,7 @@ public:
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniUser *iniUser() const;
+    WindowManager *windowManager() const;
     AppListModel *appListModel() const;
 
     bool isEmpty() const { return m_appRow.appId == 0; }
@@ -131,6 +133,7 @@ private:
     SpinCombo *m_scScheduleIn = nullptr;
     QDateTimeEdit *m_dteScheduleAt = nullptr;
     QPushButton *m_btOptions = nullptr;
+    QPushButton *m_btMenu = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 
