@@ -52,6 +52,7 @@ public:
     QString appPath;
     QString appName;
     QString notes;
+    QString ruleName; // transient
 
     QDateTime scheduleTime;
     QDateTime creatTime;

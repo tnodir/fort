@@ -56,6 +56,7 @@ private:
     void initializePathNameFields();
     void initializePathField(bool isSingleSelection, bool isPathEditable);
     void initializeNameField(bool isSingleSelection);
+    void initializeRuleField(bool isSingleSelection);
     void initializeFocus();
 
     QPixmap appIcon(bool isSingleSelection) const;
@@ -80,7 +81,8 @@ private:
     void setupAdvancedOptions();
     void setupChildOptions();
     void setupLogOptions();
-    QLayout *setupZonesRulesLayout();
+    QLayout *setupZonesRuleLayout();
+    QLayout *setupRuleLayout();
     QLayout *setupScheduleLayout();
     void setupCbSchedule();
     void setupComboScheduleType();
@@ -127,6 +129,8 @@ private:
     QCheckBox *m_cbLogConn = nullptr;
     QCheckBox *m_cbLanOnly = nullptr;
     ZonesSelector *m_btZones = nullptr;
+    QLineEdit *m_editRuleName = nullptr;
+    QToolButton *m_btSelectRule = nullptr;
     QCheckBox *m_cbSchedule = nullptr;
     QComboBox *m_comboScheduleAction = nullptr;
     QComboBox *m_comboScheduleType = nullptr;

@@ -117,7 +117,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_comboScheduleAction->setCurrentIndex(appRow.scheduleAction);
     m_comboScheduleType->setCurrentIndex(
             appRow.scheduleTime.isNull() ? ScheduleTimeIn : ScheduleTimeAt);
-    m_scScheduleIn->spinBox()->setValue(30);
+    m_scScheduleIn->spinBox()->setValue(5);
     m_dteScheduleAt->setDateTime(appRow.scheduleTime);
     m_dteScheduleAt->setMinimumDateTime(DateUtil::now());
 
@@ -131,6 +131,7 @@ void ProgramEditDialog::initializePathNameFields()
 
     initializePathField(isSingleSelection, isPathEditable);
     initializeNameField(isSingleSelection);
+    initializeRuleField(isSingleSelection);
 }
 
 void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathEditable)
@@ -167,6 +168,15 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection)
             fillEditName(); // Auto-fill the name
         }
     }
+}
+
+void ProgramEditDialog::initializeRuleField(bool isSingleSelection)
+{
+    m_editRuleName->setText(isSingleSelection ? m_appRow.ruleName : QString());
+    m_editRuleName->setEnabled(isSingleSelection);
+    m_editRuleName->setClearButtonEnabled(isSingleSelection);
+
+    m_btSelectRule->setEnabled(isSingleSelection);
 }
 
 void ProgramEditDialog::initializeFocus()
@@ -236,6 +246,9 @@ void ProgramEditDialog::retranslateUi()
 
     m_cbLanOnly->setText(tr("Block Internet Traffic"));
     m_btZones->retranslateUi();
+
+    m_editRuleName->setPlaceholderText(tr("Rule"));
+    m_btSelectRule->setToolTip(tr("Select Rule"));
 
     m_cbSchedule->setText(tr("Schedule"));
     retranslateScheduleAction();
@@ -331,7 +344,7 @@ QLayout *ProgramEditDialog::setupMainLayout()
     setupActionsGroup();
 
     // Zones
-    auto zonesRulesLayout = setupZonesRulesLayout();
+    auto zonesRulesLayout = setupZonesRuleLayout();
 
     // Schedule
     auto scheduleLayout = setupScheduleLayout();
@@ -396,13 +409,14 @@ QLayout *ProgramEditDialog::setupFormLayout()
 
 QLayout *ProgramEditDialog::setupPathLayout()
 {
-    auto layout = new QHBoxLayout();
-
+    // Path
     m_editPath = new QLineEdit();
     m_editPath->setMaxLength(1024);
 
+    // Wildcard
     m_editWildcard = new PlainTextEdit();
 
+    // Select File
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
         if (!isEmpty()) {
             AppInfoUtil::openFolder(m_editPath->text());
@@ -426,6 +440,7 @@ QLayout *ProgramEditDialog::setupPathLayout()
         fillEditName(); // Auto-fill the name
     });
 
+    auto layout = new QHBoxLayout();
     layout->addWidget(m_editPath);
     layout->addWidget(m_editWildcard);
     layout->addWidget(m_btSelectFile, 0, Qt::AlignTop);
@@ -551,7 +566,7 @@ void ProgramEditDialog::setupLogOptions()
     m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
 }
 
-QLayout *ProgramEditDialog::setupZonesRulesLayout()
+QLayout *ProgramEditDialog::setupZonesRuleLayout()
 {
     // LAN Only
     m_cbLanOnly = new QCheckBox();
@@ -562,8 +577,37 @@ QLayout *ProgramEditDialog::setupZonesRulesLayout()
     m_btZones->setIsTristate(true);
     m_btZones->setMaxZoneCount(16); // sync with driver's FORT_APP_ENTRY
 
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_cbLanOnly, ControlUtil::createVSeparator(), m_btZones, /*stretch*/ nullptr });
+    // Rule
+    auto ruleLayout = setupRuleLayout();
+
+    auto layout = new QHBoxLayout();
+    layout->addWidget(m_cbLanOnly);
+    layout->addWidget(ControlUtil::createVSeparator());
+    layout->addWidget(m_btZones);
+    layout->addStretch();
+    layout->addLayout(ruleLayout, 1);
+
+    return layout;
+}
+
+QLayout *ProgramEditDialog::setupRuleLayout()
+{
+    m_editRuleName = new QLineEdit();
+    m_editRuleName->setReadOnly(true);
+    m_editRuleName->setMaximumWidth(300);
+
+    // Select Rule
+    m_btSelectRule = ControlUtil::createIconToolButton(":/icons/script.png", [&] {
+        if (m_appRow.ruleId == 0) {
+            // Edit the Rule
+            return;
+        }
+
+        // Select a Rule
+    });
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_editRuleName, m_btSelectRule });
+    layout->setSpacing(0);
 
     return layout;
 }
