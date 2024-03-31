@@ -597,6 +597,12 @@ QLayout *ProgramEditDialog::setupRuleLayout()
     m_editRuleName->setContextMenuPolicy(Qt::PreventContextMenu);
     m_editRuleName->setMaximumWidth(300);
 
+    connect(m_editRuleName, &QLineEdit::textEdited, this, [&](const QString &text) {
+        if (text.isEmpty()) {
+            m_appRow.ruleId = 0;
+        }
+    });
+
     // Select Rule
     m_btSelectRule = ControlUtil::createIconToolButton(":/icons/script.png", [&] {
         if (m_appRow.ruleId == 0) {
