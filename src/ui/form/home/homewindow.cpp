@@ -154,7 +154,7 @@ void HomeWindow::setupUi()
     this->setWindowIcon(IconCache::icon(":/icons/fort.png"));
 
     // Size
-    this->setMinimumSize(500, 400);
+    this->setMinimumSize(500, 300);
 }
 
 QWidget *HomeWindow::setupHeader()
@@ -228,10 +228,8 @@ QLayout *HomeWindow::setupDialogButtons()
     connect(m_btHelp, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btProfile, m_btLogs, m_btStat, m_btReleases, m_btHelp });
+            { m_btProfile, m_btLogs, m_btStat, m_btReleases, m_btHelp, /*stretch=*/nullptr });
     layout->setContentsMargins(6, 4, 6, 4);
-
-    layout->addStretch();
 
     return layout;
 }
