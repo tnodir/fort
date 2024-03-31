@@ -612,12 +612,10 @@ QLayout *ProgramEditDialog::setupRuleLayout()
     m_btSelectRule = ControlUtil::createIconToolButton(":/icons/script.png", [&] {
         const int ruleId = VariantUtil::userData(m_editRuleName).toInt();
         if (ruleId != 0) {
-            // Edit the Rule
-            return;
+            editRuleDialog(ruleId);
+        } else {
+            selectRuleDialog();
         }
-
-        // Select a Rule
-        selectRuleDialog();
     });
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_editRuleName, m_btSelectRule });
@@ -858,12 +856,17 @@ bool ProgramEditDialog::isWildcard() const
 
 void ProgramEditDialog::selectRuleDialog()
 {
-    auto rulesDialog = RulesWindow::showRulesDialog(this);
+    auto rulesDialog = RulesWindow::showRulesDialog(Rule::AppRule, this);
 
     connect(rulesDialog, &RulesWindow::ruleSelected, this, [&](const RuleRow &ruleRow) {
         VariantUtil::setUserData(m_editRuleName, ruleRow.ruleId);
         m_editRuleName->setText(ruleRow.ruleName);
     });
+}
+
+void ProgramEditDialog::editRuleDialog(int ruleId)
+{
+    RulesWindow::showRuleEditDialog(ruleId, Rule::AppRule, this);
 }
 
 void ProgramEditDialog::warnDangerousOption() const

@@ -267,6 +267,19 @@ const RuleRow &RuleListModel::ruleRowAt(const QModelIndex &index) const
     return m_ruleRow;
 }
 
+RuleRow RuleListModel::ruleRowById(int ruleId, Rule::RuleType ruleType) const
+{
+    setSqlRuleType(ruleType);
+
+    QVariantHash vars;
+    fillQueryVars(vars);
+    vars.insert(":rule_id", ruleId);
+
+    RuleRow ruleRow;
+    updateRuleRow(sqlBase() + " AND t.rule_id = :rule_id;", vars, ruleRow);
+    return ruleRow;
+}
+
 bool RuleListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
 {
     return updateRuleRow(sql(), vars, m_ruleRow);
@@ -324,7 +337,7 @@ QString RuleListModel::sqlOrderColumn() const
     return "rule_type, lower(name)";
 }
 
-void RuleListModel::setSqlRuleType(quint8 v) const
+void RuleListModel::setSqlRuleType(qint8 v) const
 {
     if (m_sqlRuleType == v)
         return;

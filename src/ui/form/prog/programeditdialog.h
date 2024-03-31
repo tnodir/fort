@@ -102,6 +102,7 @@ private:
     bool isWildcard() const;
 
     void selectRuleDialog();
+    void editRuleDialog(int ruleId);
 
     void warnDangerousOption() const;
 

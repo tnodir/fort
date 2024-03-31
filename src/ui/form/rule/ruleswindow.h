@@ -46,7 +46,8 @@ public:
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
 
-    static RulesWindow *showRulesDialog(QWidget *parent, Rule::RuleType ruleType = Rule::AppRule);
+    static RulesWindow *showRulesDialog(Rule::RuleType ruleType, QWidget *parent);
+    static RuleEditDialog *showRuleEditDialog(int ruleId, Rule::RuleType ruleType, QWidget *parent);
 
 signals:
     void ruleSelected(const RuleRow &ruleRow);

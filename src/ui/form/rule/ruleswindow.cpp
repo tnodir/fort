@@ -390,7 +390,7 @@ void RulesWindow::openRuleEditForm(const RuleRow &ruleRow)
 
     m_formRuleEdit->initialize(ruleRow);
 
-    WidgetWindow::showWidget(m_formRuleEdit);
+    DialogUtil::showDialog(m_formRuleEdit);
 }
 
 void RulesWindow::deleteSelectedRule()
@@ -411,12 +411,33 @@ QModelIndex RulesWindow::ruleListCurrentIndex() const
     return m_ruleListView->currentIndex();
 }
 
-RulesWindow *RulesWindow::showRulesDialog(QWidget *parent, Rule::RuleType ruleType)
+RulesWindow *RulesWindow::showRulesDialog(Rule::RuleType ruleType, QWidget *parent)
 {
     auto w = new RulesWindow(ruleType, parent, Qt::Dialog);
     w->setAttribute(Qt::WA_DeleteOnClose);
 
     w->showWindow();
+
+    return w;
+}
+
+RuleEditDialog *RulesWindow::showRuleEditDialog(
+        int ruleId, Rule::RuleType ruleType, QWidget *parent)
+{
+    auto ctrl = new RulesController();
+
+    auto w = new RuleEditDialog(ctrl, parent);
+    w->setAttribute(Qt::WA_DeleteOnClose);
+
+    ctrl->setParent(w);
+
+    // Initialize the Rule edit dialog
+    {
+        const auto ruleRow = ctrl->ruleListModel()->ruleRowById(ruleId, ruleType);
+        w->initialize(ruleRow);
+    }
+
+    DialogUtil::showDialog(w);
 
     return w;
 }

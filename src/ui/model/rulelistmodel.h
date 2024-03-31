@@ -53,6 +53,7 @@ public:
     Qt::ItemFlags flagHasChildren(const QModelIndex &index) const override;
 
     const RuleRow &ruleRowAt(const QModelIndex &index) const;
+    RuleRow ruleRowById(int ruleId, Rule::RuleType ruleType) const;
 
     static QStringList ruleTypeNames();
 
@@ -69,7 +70,7 @@ protected:
     QString sqlOrderColumn() const override;
 
     quint8 sqlRuleType() const { return m_sqlRuleType; }
-    void setSqlRuleType(quint8 v) const;
+    void setSqlRuleType(qint8 v) const;
     void setSqlRuleType(const QModelIndex &index) const;
 
 private:
@@ -81,7 +82,7 @@ private:
     QVariant dataEnabled(const QModelIndex &index) const;
 
 private:
-    mutable quint8 m_sqlRuleType = 0;
+    mutable qint8 m_sqlRuleType = 0;
 
     mutable RuleRow m_ruleRow;
 };
