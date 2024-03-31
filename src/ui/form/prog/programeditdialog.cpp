@@ -593,7 +593,8 @@ QLayout *ProgramEditDialog::setupZonesRuleLayout()
 QLayout *ProgramEditDialog::setupRuleLayout()
 {
     m_editRuleName = new QLineEdit();
-    m_editRuleName->setReadOnly(true);
+    m_editRuleName->setFocusPolicy(Qt::NoFocus);
+    m_editRuleName->setContextMenuPolicy(Qt::PreventContextMenu);
     m_editRuleName->setMaximumWidth(300);
 
     // Select Rule
