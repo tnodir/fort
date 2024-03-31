@@ -689,9 +689,9 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_btOptions);
-    layout->addWidget(m_btMenu);
     layout->addWidget(m_btOk, 1, Qt::AlignRight);
     layout->addWidget(m_btCancel);
+    layout->addWidget(m_btMenu);
 
     return layout;
 }
