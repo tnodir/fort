@@ -34,8 +34,9 @@ constexpr quint8 ruleTypeBit(Rule::RuleType ruleType)
 
 }
 
-RulesWindow::RulesWindow(QWidget *parent) :
-    WidgetWindow(parent),
+RulesWindow::RulesWindow(Rule::RuleType ruleType, QWidget *parent, Qt::WindowFlags f) :
+    WidgetWindow(parent, f),
+    m_ruleType(ruleType),
     m_ctrl(new RulesController(this)),
     m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
@@ -127,7 +128,12 @@ void RulesWindow::retranslateUi()
 
     ruleListModel()->refresh();
 
-    this->setWindowTitle(tr("Rules"));
+    if (isOpenSelectRule()) {
+        m_btOk->setText(tr("OK"));
+        m_btCancel->setText(tr("Cancel"));
+    }
+
+    this->setWindowTitle(isOpenSelectRule() ? tr("Select Rule") : tr("Rules"));
 }
 
 void RulesWindow::setupUi()
@@ -145,13 +151,21 @@ void RulesWindow::setupUi()
     // Actions on rules tree's current changed
     setupTreeRulesChanged();
 
-    // Actions on rule list model's changed
+    // Actions on rule list model's changed/reset
     setupRuleListModelChanged();
+    setupRuleListModelReset();
 
     auto layout = new QVBoxLayout();
     layout->setContentsMargins(6, 6, 6, 6);
     layout->addLayout(header);
     layout->addWidget(m_ruleListView, 1);
+
+    // OK/Cancel
+    if (isOpenSelectRule()) {
+        auto buttonsLayout = setupButtons();
+        layout->addWidget(ControlUtil::createHSeparator());
+        layout->addLayout(buttonsLayout);
+    }
 
     this->setLayout(layout);
 
@@ -225,7 +239,13 @@ void RulesWindow::setupTreeRules()
 
     m_ruleListView->setMenu(m_btEdit->menu());
 
-    connect(m_ruleListView, &TreeView::activated, m_actEditRule, &QAction::trigger);
+    connect(m_ruleListView, &TreeView::activated, this, [&](const QModelIndex &index) {
+        if (isOpenSelectRule()) {
+            emitRuleSelected(index);
+        } else {
+            m_actEditRule->trigger();
+        }
+    });
 }
 
 void RulesWindow::setupTreeRulesHeader()
@@ -258,9 +278,9 @@ void RulesWindow::setupTreeRulesChanged()
 {
     const auto refreshTreeRulesChanged = [&] {
         const auto ruleIndex = ruleListCurrentIndex();
-        const bool ruleSelected = RuleListModel::isIndexRule(ruleIndex);
-        m_actEditRule->setEnabled(ruleSelected);
-        m_actRemoveRule->setEnabled(ruleSelected);
+        const bool isRuleSelected = RuleListModel::isIndexRule(ruleIndex);
+        m_actEditRule->setEnabled(isRuleSelected);
+        m_actRemoveRule->setEnabled(isRuleSelected);
     };
 
     refreshTreeRulesChanged();
@@ -278,8 +298,30 @@ void RulesWindow::setupRuleListModelChanged()
 
     connect(ruleListModel(), &RuleListModel::modelReset, this, refreshAddRule);
     connect(ruleListModel(), &RuleListModel::rowsRemoved, this, refreshAddRule);
+}
+
+void RulesWindow::setupRuleListModelReset()
+{
+    expandTreeRules();
 
     connect(ruleListModel(), &RuleListModel::modelReset, this, &RulesWindow::expandTreeRules);
+}
+
+QLayout *RulesWindow::setupButtons()
+{
+    // OK
+    m_btOk = ControlUtil::createButton(QString(), [&] { emitRuleSelected(); });
+    m_btOk->setDefault(true);
+
+    // Cancel
+    m_btCancel = new QPushButton();
+    connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
+
+    auto layout = new QHBoxLayout();
+    layout->addWidget(m_btOk, 1, Qt::AlignRight);
+    layout->addWidget(m_btCancel);
+
+    return layout;
 }
 
 void RulesWindow::expandTreeRules()
@@ -292,6 +334,31 @@ void RulesWindow::expandTreeRules()
 
         m_ruleListView->setExpanded(index, isExpanded);
     }
+
+    if (isOpenSelectRule()) {
+        m_ruleListView->setRootIndex(ruleListModel()->indexRoot(ruleType()));
+    }
+}
+
+bool RulesWindow::emitRuleSelected()
+{
+    return emitRuleSelected(ruleListCurrentIndex());
+}
+
+bool RulesWindow::emitRuleSelected(const QModelIndex &index)
+{
+    if (!RuleListModel::isIndexRule(index))
+        return false;
+
+    const auto &ruleRow = ruleListModel()->ruleRowAt(index);
+    if (ruleRow.isNull())
+        return false;
+
+    emit ruleSelected(ruleRow);
+
+    this->close();
+
+    return true;
 }
 
 void RulesWindow::addNewRule()
@@ -342,4 +409,14 @@ void RulesWindow::deleteSelectedRule()
 QModelIndex RulesWindow::ruleListCurrentIndex() const
 {
     return m_ruleListView->currentIndex();
+}
+
+RulesWindow *RulesWindow::showRulesDialog(QWidget *parent, Rule::RuleType ruleType)
+{
+    auto w = new RulesWindow(ruleType, parent, Qt::Dialog);
+    w->setAttribute(Qt::WA_DeleteOnClose);
+
+    w->showWindow();
+
+    return w;
 }

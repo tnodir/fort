@@ -53,7 +53,7 @@ protected:
     void setAdvancedMode(bool on);
 
 private:
-    void initializePathNameFields();
+    void initializePathNameRuleFields();
     void initializePathField(bool isSingleSelection, bool isPathEditable);
     void initializeNameField(bool isSingleSelection);
     void initializeRuleField(bool isSingleSelection);
@@ -100,6 +100,8 @@ private:
     void fillAppEndTime(App &app) const;
 
     bool isWildcard() const;
+
+    void selectRuleDialog();
 
     void warnDangerousOption() const;
 

@@ -18,6 +18,9 @@ public:
     {
         list.push_back(v); // append() merges the list, does not insert
     }
+
+    static QVariant userData(QObject *o);
+    static void setUserData(QObject *o, const QVariant &v = {});
 };
 
 template<typename T>

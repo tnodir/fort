@@ -244,7 +244,7 @@ using dataDisplay_func = QVariant (*)(const AppRow &appRow, int role);
 static dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayName,
     &dataDisplayParked,
-    &dataDisplayParked,
+    &dataDisplayRule,
     &dataDisplayScheduled,
     &dataDisplayAction,
     &dataDisplayGroup,

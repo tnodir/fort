@@ -8,7 +8,8 @@
 class Rule
 {
 public:
-    enum RuleType : quint8 {
+    enum RuleType : qint8 {
+        RuleNone = -1,
         AppRule = 0,
         GlobalBeforeAppsRule,
         GlobalAfterAppsRule,

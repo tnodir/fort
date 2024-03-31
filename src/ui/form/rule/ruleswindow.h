@@ -1,6 +1,7 @@
 #ifndef RULESWINDOW_H
 #define RULESWINDOW_H
 
+#include <conf/rule.h>
 #include <form/windowtypes.h>
 #include <util/window/widgetwindow.h>
 
@@ -26,9 +27,13 @@ class RulesWindow : public WidgetWindow
     Q_OBJECT
 
 public:
-    explicit RulesWindow(QWidget *parent = nullptr);
+    explicit RulesWindow(Rule::RuleType ruleType = Rule::RuleNone, QWidget *parent = nullptr,
+            Qt::WindowFlags f = {});
 
     quint32 windowCode() const override { return WindowRules; }
+
+    Rule::RuleType ruleType() const { return m_ruleType; }
+    bool isOpenSelectRule() const { return ruleType() != Rule::RuleNone; }
 
     RulesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
@@ -40,6 +45,11 @@ public:
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
+
+    static RulesWindow *showRulesDialog(QWidget *parent, Rule::RuleType ruleType = Rule::AppRule);
+
+signals:
+    void ruleSelected(const RuleRow &ruleRow);
 
 private:
     void setupController();
@@ -55,8 +65,13 @@ private:
     void setupTreeRulesExpandingChanged();
     void setupTreeRulesChanged();
     void setupRuleListModelChanged();
+    void setupRuleListModelReset();
+    QLayout *setupButtons();
 
     void expandTreeRules();
+
+    bool emitRuleSelected();
+    bool emitRuleSelected(const QModelIndex &index);
 
     void addNewRule();
     void editSelectedRule();
@@ -68,7 +83,9 @@ private:
     QModelIndex ruleListCurrentIndex() const;
 
 private:
-    quint8 m_expandedRuleTypes = 0;
+    quint8 m_expandedRuleTypes = 0xFF;
+
+    Rule::RuleType m_ruleType = Rule::RuleNone;
 
     RulesController *m_ctrl = nullptr;
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
@@ -80,6 +97,8 @@ private:
     QLineEdit *m_editSearch = nullptr;
     QPushButton *m_btMenu = nullptr;
     TreeView *m_ruleListView = nullptr;
+    QPushButton *m_btOk = nullptr;
+    QPushButton *m_btCancel = nullptr;
 
     RuleEditDialog *m_formRuleEdit = nullptr;
 };

@@ -12,5 +12,5 @@ bool LineEdit::event(QEvent *event)
     } break;
     }
 
-    return QWidget::event(event);
+    return QLineEdit::event(event);
 }

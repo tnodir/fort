@@ -21,13 +21,16 @@
 #include <form/controls/spincombo.h>
 #include <form/controls/zonesselector.h>
 #include <form/dialog/dialogutil.h>
+#include <form/rule/ruleswindow.h>
 #include <fortmanager.h>
 #include <manager/windowmanager.h>
+#include <model/rulelistmodel.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/textareautil.h>
+#include <util/variantutil.h>
 
 #include "programscontroller.h"
 
@@ -92,7 +95,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
 
     retranslateUi();
 
-    initializePathNameFields();
+    initializePathNameRuleFields();
 
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
 
@@ -124,7 +127,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     initializeFocus();
 }
 
-void ProgramEditDialog::initializePathNameFields()
+void ProgramEditDialog::initializePathNameRuleFields()
 {
     const bool isSingleSelection = (m_appIdList.size() <= 1);
     const bool isPathEditable = isSingleSelection && (m_appRow.appId == 0 || isWildcard());
@@ -172,6 +175,8 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection)
 
 void ProgramEditDialog::initializeRuleField(bool isSingleSelection)
 {
+    VariantUtil::setUserData(m_editRuleName, m_appRow.ruleId);
+
     m_editRuleName->setText(isSingleSelection ? m_appRow.ruleName : QString());
     m_editRuleName->setEnabled(isSingleSelection);
     m_editRuleName->setClearButtonEnabled(isSingleSelection);
@@ -599,18 +604,20 @@ QLayout *ProgramEditDialog::setupRuleLayout()
 
     connect(m_editRuleName, &QLineEdit::textEdited, this, [&](const QString &text) {
         if (text.isEmpty()) {
-            m_appRow.ruleId = 0;
+            VariantUtil::setUserData(m_editRuleName);
         }
     });
 
     // Select Rule
     m_btSelectRule = ControlUtil::createIconToolButton(":/icons/script.png", [&] {
-        if (m_appRow.ruleId == 0) {
+        const int ruleId = VariantUtil::userData(m_editRuleName).toInt();
+        if (ruleId != 0) {
             // Edit the Rule
             return;
         }
 
         // Select a Rule
+        selectRuleDialog();
     });
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_editRuleName, m_btSelectRule });
@@ -806,6 +813,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.blocked = !m_rbAllow->isChecked();
     app.killProcess = m_rbKillProcess->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
+    app.ruleId = VariantUtil::userData(m_editRuleName).toInt();
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();
 
@@ -846,6 +854,16 @@ void ProgramEditDialog::fillAppEndTime(App &app) const
 bool ProgramEditDialog::isWildcard() const
 {
     return m_appRow.isWildcard;
+}
+
+void ProgramEditDialog::selectRuleDialog()
+{
+    auto rulesDialog = RulesWindow::showRulesDialog(this);
+
+    connect(rulesDialog, &RulesWindow::ruleSelected, this, [&](const RuleRow &ruleRow) {
+        VariantUtil::setUserData(m_editRuleName, ruleRow.ruleId);
+        m_editRuleName->setText(ruleRow.ruleName);
+    });
 }
 
 void ProgramEditDialog::warnDangerousOption() const
