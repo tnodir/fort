@@ -128,6 +128,10 @@
         <source>Scheduled</source>
         <translation>Načrtovano</translation>
     </message>
+    <message>
+        <source>Rule</source>
+        <translation>Pravilo</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1325,6 +1329,14 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Advanced Options</source>
         <translation>Napredne možnosti</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Pravilo</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -128,6 +128,10 @@
         <source>Scheduled</source>
         <translation>Programmato</translation>
     </message>
+    <message>
+        <source>Rule</source>
+        <translation>Regola</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1325,6 +1329,14 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Advanced Options</source>
         <translation>Opzioni avanzate</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Regola</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

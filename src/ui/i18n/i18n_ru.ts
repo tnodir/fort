@@ -128,6 +128,10 @@
         <source>Scheduled</source>
         <translation>Запланирован</translation>
     </message>
+    <message>
+        <source>Rule</source>
+        <translation>Правило</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1325,6 +1329,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Advanced Options</source>
         <translation>Расширенные опции</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Правило</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Выбрать правило</translation>
     </message>
 </context>
 <context>

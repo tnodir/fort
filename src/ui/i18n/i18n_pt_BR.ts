@@ -128,6 +128,10 @@
         <source>Scheduled</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1315,6 +1319,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Advanced Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

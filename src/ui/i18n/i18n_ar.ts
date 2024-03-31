@@ -128,6 +128,10 @@
         <source>Scheduled</source>
         <translation>الجدولة</translation>
     </message>
+    <message>
+        <source>Rule</source>
+        <translation type="unfinished">قاعدة</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1325,6 +1329,14 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Advanced Options</source>
         <translation>خيارات متقدمة</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation type="unfinished">قاعدة</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

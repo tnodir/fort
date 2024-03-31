@@ -128,6 +128,10 @@
         <source>Scheduled</source>
         <translation>예약됨</translation>
     </message>
+    <message>
+        <source>Rule</source>
+        <translation>규칙</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1325,6 +1329,14 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Advanced Options</source>
         <translation>고급 옵션</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>규칙</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
