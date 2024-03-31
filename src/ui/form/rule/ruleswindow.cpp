@@ -337,6 +337,7 @@ void RulesWindow::expandTreeRules()
 
     if (isOpenSelectRule()) {
         m_ruleListView->setRootIndex(ruleListModel()->indexRoot(ruleType()));
+        m_ruleListView->setIndentation(0);
     }
 }
 

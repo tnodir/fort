@@ -14,8 +14,8 @@ void TreeItemDelegate::paint(
         QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyleOptionViewItem opt(option);
-    if (index.parent().isValid()) {
-        opt.rect.setLeft(0);
+    if (index.parent().isValid() && opt.rect.left() > 0) {
+        opt.rect.setLeft(16);
     }
 
     if (model()->flagIsEnabled(index) != Qt::ItemIsEnabled) {
