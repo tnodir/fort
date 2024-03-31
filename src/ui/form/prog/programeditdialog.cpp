@@ -676,9 +676,6 @@ void ProgramEditDialog::setupComboScheduleType()
 
 QLayout *ProgramEditDialog::setupButtonsLayout()
 {
-    // Menu button
-    m_btMenu = windowManager()->createMenuButton();
-
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
         if (save()) {
@@ -697,7 +694,6 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     layout->addWidget(m_btOptions);
     layout->addWidget(m_btOk, 1, Qt::AlignRight);
     layout->addWidget(m_btCancel);
-    layout->addWidget(m_btMenu);
 
     return layout;
 }
