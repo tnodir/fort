@@ -8,11 +8,11 @@
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
-QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 
 class ConfRuleManager;
+class LineEdit;
 class PlainTextEdit;
 class Rule;
 class RulesController;
@@ -59,7 +59,7 @@ private:
     RulesController *m_ctrl = nullptr;
 
     QLabel *m_labelEditName = nullptr;
-    QLineEdit *m_editName = nullptr;
+    LineEdit *m_editName = nullptr;
     QLabel *m_labelEditNotes = nullptr;
     PlainTextEdit *m_editNotes = nullptr;
     QLabel *m_labelRuleType = nullptr;

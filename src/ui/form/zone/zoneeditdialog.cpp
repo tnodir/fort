@@ -5,11 +5,11 @@
 #include <QFormLayout>
 #include <QFrame>
 #include <QLabel>
-#include <QLineEdit>
 #include <QPushButton>
 #include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
+#include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
 #include <manager/windowmanager.h>
 #include <model/zonesourcewrapper.h>
@@ -140,7 +140,7 @@ QLayout *ZoneEditDialog::setupNameLayout()
     auto layout = new QFormLayout();
 
     // Name
-    m_editName = new QLineEdit();
+    m_editName = new LineEdit();
     m_editName->setMaxLength(256);
 
     layout->addRow("Name:", m_editName);
@@ -196,7 +196,7 @@ QLayout *ZoneEditDialog::setupUrlLayout()
     formLayout->addRow(QString(), m_cbCustomUrl);
 
     // URL
-    m_editUrl = new QLineEdit();
+    m_editUrl = new LineEdit();
     m_editUrl->setEnabled(false);
     m_editUrl->setMaxLength(1024);
 
@@ -204,7 +204,7 @@ QLayout *ZoneEditDialog::setupUrlLayout()
     m_labelUrl = ControlUtil::formRowLabel(formLayout, m_editUrl);
 
     // Form Data
-    m_editFormData = new QLineEdit();
+    m_editFormData = new LineEdit();
     m_editFormData->setEnabled(false);
 
     formLayout->addRow("Form Data:", m_editFormData);

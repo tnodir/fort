@@ -58,7 +58,6 @@ void AppInfoRow::refreshAppInfoVersion(const QString &appPath, AppInfoCache *app
     m_filePath = appInfo.filePath(appPath);
 
     m_lineAppPath->setText(appPath);
-    m_lineAppPath->setToolTip(appPath);
 
     m_labelAppProductName->setVisible(!appInfo.productName.isEmpty());
     m_labelAppProductName->setText(appInfo.productName + ' ' + appInfo.productVersion);

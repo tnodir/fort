@@ -3,7 +3,6 @@
 #include <QCheckBox>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLineEdit>
 #include <QMenu>
 #include <QPlainTextEdit>
 #include <QPushButton>
@@ -19,6 +18,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/labeldoublespin.h>
 #include <form/controls/labelspin.h>
+#include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/tabbar.h>
 #include <form/controls/textarea2splitter.h>
@@ -249,7 +249,7 @@ QLayout *ApplicationsPage::setupHeader()
 {
     auto layout = new QHBoxLayout();
 
-    m_editGroupName = new QLineEdit();
+    m_editGroupName = new LineEdit();
     m_editGroupName->setClearButtonEnabled(true);
     m_editGroupName->setMaxLength(128);
     m_editGroupName->setFixedWidth(200);

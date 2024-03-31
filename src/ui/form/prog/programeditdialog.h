@@ -10,7 +10,6 @@ QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QDateTimeEdit)
 QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QLabel)
-QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
@@ -20,11 +19,12 @@ class ConfManager;
 class FirewallConf;
 class FortManager;
 class IniUser;
+class LineEdit;
 class PlainTextEdit;
 class ProgramsController;
 class SpinCombo;
-class ZonesSelector;
 class WindowManager;
+class ZonesSelector;
 
 class ProgramEditDialog : public WidgetWindow
 {
@@ -107,11 +107,11 @@ private:
     ProgramsController *m_ctrl = nullptr;
 
     QLabel *m_labelEditPath = nullptr;
-    QLineEdit *m_editPath = nullptr;
+    LineEdit *m_editPath = nullptr;
     PlainTextEdit *m_editWildcard = nullptr;
     QToolButton *m_btSelectFile = nullptr;
     QLabel *m_labelEditName = nullptr;
-    QLineEdit *m_editName = nullptr;
+    LineEdit *m_editName = nullptr;
     QToolButton *m_btGetName = nullptr;
     QLabel *m_labelEditNotes = nullptr;
     PlainTextEdit *m_editNotes = nullptr;
@@ -129,7 +129,7 @@ private:
     QCheckBox *m_cbLogConn = nullptr;
     QCheckBox *m_cbLanOnly = nullptr;
     ZonesSelector *m_btZones = nullptr;
-    QLineEdit *m_editRuleName = nullptr;
+    LineEdit *m_editRuleName = nullptr;
     QToolButton *m_btSelectRule = nullptr;
     QCheckBox *m_cbSchedule = nullptr;
     QComboBox *m_comboScheduleAction = nullptr;

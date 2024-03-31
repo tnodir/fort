@@ -4,7 +4,6 @@
 #include <QCheckBox>
 #include <QFormLayout>
 #include <QLabel>
-#include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
 #include <QScrollArea>
@@ -19,6 +18,7 @@
 #include "labeldoublespin.h"
 #include "labelspin.h"
 #include "labelspincombo.h"
+#include "lineedit.h"
 #include "menuwidget.h"
 #include "sidebutton.h"
 #include "spinbox.h"
@@ -188,7 +188,7 @@ QLabel *ControlUtil::createLabel(const QString &text)
 
 QLineEdit *ControlUtil::createLineLabel()
 {
-    auto c = new QLineEdit();
+    auto c = new LineEdit();
     c->setReadOnly(true);
     c->setFrame(false);
 

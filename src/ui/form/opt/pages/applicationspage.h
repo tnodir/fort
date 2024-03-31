@@ -9,6 +9,7 @@ class CheckSpinCombo;
 class CheckTimePeriod;
 class LabelDoubleSpin;
 class LabelSpin;
+class LineEdit;
 class TabBar;
 class TextArea2Splitter;
 
@@ -71,7 +72,7 @@ private:
 private:
     int m_appGroupIndex = -1;
 
-    QLineEdit *m_editGroupName = nullptr;
+    LineEdit *m_editGroupName = nullptr;
     QToolButton *m_btAddGroup = nullptr;
     QToolButton *m_btRenameGroup = nullptr;
     TabBar *m_tabBar = nullptr;

@@ -6,7 +6,6 @@
 #include <QDateTimeEdit>
 #include <QFormLayout>
 #include <QLabel>
-#include <QLineEdit>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QSpinBox>
@@ -17,6 +16,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/spincombo.h>
 #include <form/controls/zonesselector.h>
@@ -410,7 +410,7 @@ QLayout *ProgramEditDialog::setupFormLayout()
 QLayout *ProgramEditDialog::setupPathLayout()
 {
     // Path
-    m_editPath = new QLineEdit();
+    m_editPath = new LineEdit();
     m_editPath->setMaxLength(1024);
 
     // Wildcard
@@ -450,7 +450,7 @@ QLayout *ProgramEditDialog::setupPathLayout()
 
 QLayout *ProgramEditDialog::setupNameLayout()
 {
-    m_editName = new QLineEdit();
+    m_editName = new LineEdit();
     m_editName->setMaxLength(1024);
 
     m_btGetName = ControlUtil::createIconToolButton(
@@ -592,7 +592,7 @@ QLayout *ProgramEditDialog::setupZonesRuleLayout()
 
 QLayout *ProgramEditDialog::setupRuleLayout()
 {
-    m_editRuleName = new QLineEdit();
+    m_editRuleName = new LineEdit();
     m_editRuleName->setFocusPolicy(Qt::NoFocus);
     m_editRuleName->setContextMenuPolicy(Qt::PreventContextMenu);
     m_editRuleName->setMaximumWidth(300);

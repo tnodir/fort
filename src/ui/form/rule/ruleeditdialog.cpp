@@ -5,13 +5,13 @@
 #include <QFormLayout>
 #include <QFrame>
 #include <QLabel>
-#include <QLineEdit>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QVBoxLayout>
 
 #include <conf/confrulemanager.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/zonesselector.h>
 #include <manager/windowmanager.h>
@@ -174,7 +174,7 @@ QLayout *RuleEditDialog::setupFormLayout()
     layout->setHorizontalSpacing(10);
 
     // Name
-    m_editName = new QLineEdit();
+    m_editName = new LineEdit();
     m_editName->setMaxLength(1024);
 
     layout->addRow("Name:", m_editName);

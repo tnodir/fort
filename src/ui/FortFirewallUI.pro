@@ -47,6 +47,7 @@ SOURCES += \
     form/controls/labeldoublespin.cpp \
     form/controls/labelspin.cpp \
     form/controls/labelspincombo.cpp \
+    form/controls/lineedit.cpp \
     form/controls/listview.cpp \
     form/controls/mainwindow.cpp \
     form/controls/menuwidget.cpp \
@@ -258,6 +259,7 @@ HEADERS += \
     form/controls/labeldoublespin.h \
     form/controls/labelspin.h \
     form/controls/labelspincombo.h \
+    form/controls/lineedit.h \
     form/controls/listview.h \
     form/controls/mainwindow.h \
     form/controls/menuwidget.h \
