@@ -95,6 +95,11 @@ QIcon appParkedIcon(const AppRow &appRow)
     return appRow.parked ? IconCache::icon(":/icons/parking.png") : QIcon();
 }
 
+QIcon appRuleIcon(const AppRow &appRow)
+{
+    return (appRow.ruleId != 0) ? IconCache::icon(":/icons/script.png") : QIcon();
+}
+
 QIcon appScheduledIcon(const AppRow &appRow)
 {
     if (appRow.scheduleTime.isNull())
@@ -111,6 +116,11 @@ QVariant headerDataDisplayName(int /*role*/)
 QVariant headerDataDisplayParked(int role)
 {
     return (role == Qt::ToolTipRole) ? AppListModel::tr("Parked") : QString();
+}
+
+QVariant headerDataDisplayRule(int role)
+{
+    return (role == Qt::ToolTipRole) ? AppListModel::tr("Rule") : QString();
 }
 
 QVariant headerDataDisplayScheduled(int role)
@@ -143,6 +153,7 @@ using headerDataDisplay_func = QVariant (*)(int role);
 static headerDataDisplay_func headerDataDisplay_funcList[] = {
     &headerDataDisplayName,
     &headerDataDisplayParked,
+    &headerDataDisplayRule,
     &headerDataDisplayScheduled,
     &headerDataDisplayAction,
     &headerDataDisplayGroup,
@@ -163,6 +174,8 @@ inline QVariant headerDataDecoration(int column)
     case 1:
         return IconCache::icon(":/icons/parking.png");
     case 2:
+        return IconCache::icon(":/icons/script.png");
+    case 3:
         return IconCache::icon(":/icons/time.png");
     }
     return QVariant();
@@ -189,6 +202,14 @@ QVariant dataDisplayAction(const AppRow &appRow, int /*role*/)
 QVariant dataDisplayParked(const AppRow & /*appRow*/, int /*role*/)
 {
     return {};
+}
+
+QVariant dataDisplayRule(const AppRow &appRow, int role)
+{
+    if (role != Qt::ToolTipRole)
+        return QString();
+
+    return appRow.ruleName;
 }
 
 QVariant dataDisplayScheduled(const AppRow &appRow, int role)
@@ -223,6 +244,7 @@ using dataDisplay_func = QVariant (*)(const AppRow &appRow, int role);
 static dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayName,
     &dataDisplayParked,
+    &dataDisplayParked,
     &dataDisplayScheduled,
     &dataDisplayAction,
     &dataDisplayGroup,
@@ -233,6 +255,7 @@ static dataDisplay_func dataDisplay_funcList[] = {
 inline QVariant dataDisplayRow(const AppRow &appRow, int column, int role)
 {
     const dataDisplay_func func = dataDisplay_funcList[column];
+    Q_ASSERT(func);
 
     return func(appRow, role);
 }
@@ -263,7 +286,7 @@ SqliteDb *AppListModel::sqliteDb() const
 
 void AppListModel::initialize()
 {
-    setSortColumn(7);
+    setSortColumn(8);
     setSortOrder(Qt::DescendingOrder);
 
     connect(confManager(), &ConfManager::confChanged, this, &AppListModel::refresh);
@@ -274,9 +297,9 @@ void AppListModel::initialize()
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);
 }
 
-int AppListModel::columnCount(const QModelIndex &parent) const
+int AppListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return parent.isValid() ? 0 : 7;
+    return 8;
 }
 
 QVariant AppListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -350,8 +373,10 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
     case 1:
         return appParkedIcon(appRow);
     case 2:
-        return appScheduledIcon(appRow);
+        return appRuleIcon(appRow);
     case 3:
+        return appScheduledIcon(appRow);
+    case 4:
         return appStateIcon(appRow);
     }
 
@@ -366,9 +391,9 @@ QVariant AppListModel::dataForeground(const QModelIndex &index) const
     const auto &appRow = appRowAt(row);
 
     switch (column) {
-    case 3:
-        return appStateColor(appRow);
     case 4:
+        return appStateColor(appRow);
+    case 5:
         return appGroupColor(appRow);
     }
 
@@ -379,7 +404,7 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 4) {
+    if (column == 5) {
         return int(Qt::AlignHCenter | Qt::AlignVCenter);
     }
 
@@ -514,16 +539,19 @@ QString AppListModel::sqlOrderColumn() const
     case 1: // Parked
         columnsStr = "t.parked";
         break;
-    case 2: // Scheduled
+    case 2: // Rule
+        columnsStr = "t.rule_id";
+        break;
+    case 3: // Scheduled
         columnsStr = "t.end_time";
         break;
-    case 3: // Action
+    case 4: // Action
         columnsStr = "alerted DESC, t.kill_process, t.blocked";
         break;
-    case 4: // Group
+    case 5: // Group
         columnsStr = "group_index";
         break;
-    case 5: // File Path
+    case 6: // File Path
         columnsStr = "t.path";
         break;
     default: // Creation Time ~ App ID
