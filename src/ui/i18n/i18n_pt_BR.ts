@@ -1557,6 +1557,18 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Search</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>OK</source>
+        <translation type="unfinished">Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished">Cancelar</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SchedulePage</name>

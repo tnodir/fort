@@ -1566,6 +1566,18 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <source>Search</source>
         <translation>Cerca</translation>
     </message>
+    <message>
+        <source>OK</source>
+        <translation>Ok</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annulla</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SchedulePage</name>

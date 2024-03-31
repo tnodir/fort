@@ -1566,6 +1566,18 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Search</source>
         <translation>Poišči</translation>
     </message>
+    <message>
+        <source>OK</source>
+        <translation>Vredu</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Prekliči</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SchedulePage</name>

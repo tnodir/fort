@@ -130,7 +130,7 @@
     </message>
     <message>
         <source>Rule</source>
-        <translation type="unfinished">قاعدة</translation>
+        <translation>قاعدة</translation>
     </message>
 </context>
 <context>
@@ -1332,7 +1332,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Rule</source>
-        <translation type="unfinished">قاعدة</translation>
+        <translation>قاعدة</translation>
     </message>
     <message>
         <source>Select Rule</source>
@@ -1565,6 +1565,18 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Search</source>
         <translation>البحث</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>موافق</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

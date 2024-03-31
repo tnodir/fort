@@ -1336,7 +1336,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Sélectionner une règle</translation>
     </message>
 </context>
 <context>
@@ -1565,6 +1565,18 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Search</source>
         <translation>Rechercher</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Sélectionner une règle</translation>
     </message>
 </context>
 <context>
