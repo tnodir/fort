@@ -1334,7 +1334,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>选择规则</translation>
     </message>
 </context>
 <context>
@@ -1574,7 +1574,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>选择规则</translation>
     </message>
 </context>
 <context>
