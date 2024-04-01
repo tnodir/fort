@@ -134,6 +134,7 @@ SOURCES += \
     model/appstatmodel.cpp \
     model/connblocklistmodel.cpp \
     model/rulelistmodel.cpp \
+    model/rulesetmodel.cpp \
     model/servicelistmodel.cpp \
     model/traflistmodel.cpp \
     model/zonelistmodel.cpp \
@@ -347,6 +348,7 @@ HEADERS += \
     model/appstatmodel.h \
     model/connblocklistmodel.h \
     model/rulelistmodel.h \
+    model/rulesetmodel.h \
     model/servicelistmodel.h \
     model/traflistmodel.h \
     model/zonelistmodel.h \

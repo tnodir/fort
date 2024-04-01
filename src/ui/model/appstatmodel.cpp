@@ -104,14 +104,6 @@ QString AppStatModel::appPathByRow(int row) const
     return (row <= 0 || row >= list().size()) ? QString() : list().at(row);
 }
 
-Qt::ItemFlags AppStatModel::flags(const QModelIndex &index) const
-{
-    if (!index.isValid())
-        return Qt::NoItemFlags;
-
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
-}
-
 QVariant AppStatModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())

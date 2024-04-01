@@ -228,7 +228,7 @@ QLayout *HomeWindow::setupDialogButtons()
     connect(m_btHelp, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btProfile, m_btLogs, m_btStat, m_btReleases, m_btHelp, /*stretch=*/nullptr });
+            { m_btProfile, m_btLogs, m_btStat, m_btReleases, m_btHelp, /*stretch*/ nullptr });
     layout->setContentsMargins(6, 4, 6, 4);
 
     return layout;

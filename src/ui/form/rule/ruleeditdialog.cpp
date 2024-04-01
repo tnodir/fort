@@ -7,21 +7,24 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QRadioButton>
+#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/confrulemanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
+#include <form/controls/listview.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/zonesselector.h>
 #include <manager/windowmanager.h>
+#include <model/rulesetmodel.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 
 #include "rulescontroller.h"
 
 RuleEditDialog::RuleEditDialog(RulesController *ctrl, QWidget *parent) :
-    QDialog(parent), m_ctrl(ctrl)
+    QDialog(parent), m_ctrl(ctrl), m_ruleSetModel(new RuleSetModel(this))
 {
     setupUi();
     setupController();
@@ -37,6 +40,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_ruleRow = ruleRow;
 
     confRuleManager()->loadRuleSet(m_ruleRow);
+    ruleSetModel()->initialize(m_ruleRow);
 
     retranslateUi();
 
@@ -95,6 +99,11 @@ void RuleEditDialog::retranslateUi()
 
     retranslateRulePlaceholderText();
 
+    m_btAddPresetRule->setText(tr("Add Preset Rule"));
+    m_btRemovePresetRule->setText(tr("Remove"));
+    m_btUpPresetRule->setToolTip(tr("Move Up"));
+    m_btDownPresetRule->setToolTip(tr("Move Down"));
+
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
@@ -144,11 +153,17 @@ QLayout *RuleEditDialog::setupMainLayout()
     // Allow/Block Actions Layout
     auto actionsLayout = setupActionsLayout();
 
+    // Zones Layout
+    auto zonesLayout = setupZonesLayout();
+
     // Rule Text
     m_editRuleText = new PlainTextEdit();
 
-    // Advanced Options
-    auto zonesLayout = setupZonesLayout();
+    // RuleSet Header
+    auto ruleSetHeaderLayout = setupRuleSetHeaderLayout();
+
+    // RuleSet View
+    setupRuleSetView();
 
     // OK/Cancel
     auto buttonsLayout = setupButtons();
@@ -161,6 +176,9 @@ QLayout *RuleEditDialog::setupMainLayout()
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(zonesLayout);
     layout->addWidget(m_editRuleText);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(ruleSetHeaderLayout);
+    layout->addWidget(m_ruleSetView);
     layout->addStretch();
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(buttonsLayout);
@@ -236,6 +254,42 @@ QLayout *RuleEditDialog::setupZonesLayout()
             { m_cbExclusive, ControlUtil::createVSeparator(), m_btZones, /*stretch*/ nullptr });
 
     return layout;
+}
+
+QLayout *RuleEditDialog::setupRuleSetHeaderLayout()
+{
+    m_btAddPresetRule = ControlUtil::createFlatToolButton(":/icons/add.png", [&] {
+        // TODO
+    });
+    m_btRemovePresetRule = ControlUtil::createFlatToolButton(":/icons/delete.png", [&] {
+        // TODO
+    });
+
+    m_btUpPresetRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_up.png", [&] {
+        // TODO
+    });
+    m_btDownPresetRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_down.png", [&] {
+        // TODO
+    });
+
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_btAddPresetRule, m_btRemovePresetRule, ControlUtil::createVSeparator(),
+                    m_btUpPresetRule, m_btDownPresetRule, /*stretch*/ nullptr });
+
+    return layout;
+}
+
+void RuleEditDialog::setupRuleSetView()
+{
+    m_ruleSetView = new ListView();
+    m_ruleSetView->setFlow(QListView::TopToBottom);
+    m_ruleSetView->setViewMode(QListView::ListMode);
+    m_ruleSetView->setUniformItemSizes(true);
+    m_ruleSetView->setAlternatingRowColors(true);
+
+    m_ruleSetView->setModel(ruleSetModel());
+
+    m_ruleSetView->setVisible(false);
 }
 
 QLayout *RuleEditDialog::setupButtons()

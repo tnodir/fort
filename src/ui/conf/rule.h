@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QVector>
 
+using RuleSetList = QVector<quint16>;
+
 class Rule
 {
 public:
@@ -39,7 +41,7 @@ public:
 
     QDateTime modTime;
 
-    QVector<quint16> ruleSet;
+    RuleSetList ruleSet;
 };
 
 #endif // RULE_H

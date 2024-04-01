@@ -10,11 +10,14 @@ QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QRadioButton)
+QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class ConfRuleManager;
 class LineEdit;
+class ListView;
 class PlainTextEdit;
 class Rule;
+class RuleSetModel;
 class RulesController;
 class ZonesSelector;
 
@@ -26,6 +29,7 @@ public:
     explicit RuleEditDialog(RulesController *ctrl, QWidget *parent = nullptr);
 
     RulesController *ctrl() const { return m_ctrl; }
+    RuleSetModel *ruleSetModel() const { return m_ruleSetModel; }
     ConfRuleManager *confRuleManager() const;
 
     bool isEmpty() const { return m_ruleRow.ruleId == 0; }
@@ -46,7 +50,8 @@ private:
     QLayout *setupFormLayout();
     QLayout *setupActionsLayout();
     QLayout *setupZonesLayout();
-    void setupAdvancedOptions();
+    QLayout *setupRuleSetHeaderLayout();
+    void setupRuleSetView();
     QLayout *setupButtons();
 
     bool save();
@@ -57,6 +62,7 @@ private:
 
 private:
     RulesController *m_ctrl = nullptr;
+    RuleSetModel *m_ruleSetModel = nullptr;
 
     QLabel *m_labelEditName = nullptr;
     LineEdit *m_editName = nullptr;
@@ -70,7 +76,11 @@ private:
     QCheckBox *m_cbExclusive = nullptr;
     ZonesSelector *m_btZones = nullptr;
     PlainTextEdit *m_editRuleText = nullptr;
-    QPushButton *m_btOptions = nullptr;
+    QToolButton *m_btAddPresetRule = nullptr;
+    QToolButton *m_btRemovePresetRule = nullptr;
+    QToolButton *m_btUpPresetRule = nullptr;
+    QToolButton *m_btDownPresetRule = nullptr;
+    ListView *m_ruleSetView = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 

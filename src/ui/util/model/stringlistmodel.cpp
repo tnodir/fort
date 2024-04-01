@@ -11,10 +11,18 @@ int StringListModel::rowCount(const QModelIndex &parent) const
 
 QVariant StringListModel::data(const QModelIndex &index, int role) const
 {
-    if ((role == Qt::DisplayRole || role == Qt::ToolTipRole) && index.isValid()) {
+    if (index.isValid() && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
         return m_list.at(index.row());
     }
     return QVariant();
+}
+
+Qt::ItemFlags StringListModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::NoItemFlags;
+
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemNeverHasChildren;
 }
 
 void StringListModel::setList(const QStringList &list)
@@ -26,7 +34,7 @@ void StringListModel::setList(const QStringList &list)
 
 void StringListModel::clear()
 {
-    setList(QStringList());
+    setList({});
 }
 
 void StringListModel::insert(const QString &text, int row)
