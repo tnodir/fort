@@ -531,33 +531,32 @@ QString AppListModel::sqlWhereFts() const
 
 QString AppListModel::sqlOrderColumn() const
 {
-    QString columnsStr;
+    static const QString nameColumn = "t.name";
+    static const QString pathColumn = "t.path";
 
-    switch (sortColumn()) {
-    case 0: // Name
-        return "t.name" + sqlOrderAsc() + ", t.path";
-    case 1: // Parked
-        columnsStr = "t.parked";
-        break;
-    case 2: // Rule
-        columnsStr = "t.rule_id";
-        break;
-    case 3: // Scheduled
-        columnsStr = "t.end_time";
-        break;
-    case 4: // Action
-        columnsStr = "alerted DESC, t.kill_process, t.blocked";
-        break;
-    case 5: // Group
-        columnsStr = "group_index";
-        break;
-    case 6: // File Path
-        columnsStr = "t.path";
-        break;
-    default: // Creation Time ~ App ID
-        columnsStr = "t.app_id";
-        break;
-    }
+    static const QStringList orderColumns = {
+        nameColumn, // Name
+        "t.parked", // Parked
+        "t.rule_id", // Rule
+        "t.end_time", // Scheduled
+        "alerted DESC, t.kill_process, t.blocked", // Action
+        "group_index", // Group
+        pathColumn, // File Path
+        "t.app_id", // Creation Time ~ App ID
+    };
+    static const QStringList postOrderColumns = {
+        pathColumn, // Name
+        nameColumn, // Parked
+        nameColumn, // Rule
+        nameColumn, // Scheduled
+        nameColumn, // Action
+        nameColumn, // Group
+        nameColumn, // File Path
+        nameColumn, // Creation Time ~ App ID
+    };
 
-    return columnsStr + sqlOrderAsc() + ", t.name";
+    const auto &columnsStr = orderColumns.at(sortColumn());
+    const auto &postColumnsStr = postOrderColumns.at(sortColumn());
+
+    return columnsStr + sqlOrderAsc() + ", " + postColumnsStr;
 }
