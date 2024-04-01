@@ -1493,6 +1493,22 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source># IP address and port:</source>
         <translation># Adresse IP et port :</translation>
     </message>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>Ajouter une règle prédéfinie</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Retirer</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Monter</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Descendre</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

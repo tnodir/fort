@@ -1493,6 +1493,22 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source># IP address and port:</source>
         <translation># IP адрес и порт:</translation>
     </message>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation>ДОбавить заданное правило</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation>Передвинуть вверх</translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation>Передвинуть вниз</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -1518,7 +1534,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Preset Rules</source>
-        <translation>Предопределённые правила</translation>
+        <translation>Заданные правила</translation>
     </message>
 </context>
 <context>

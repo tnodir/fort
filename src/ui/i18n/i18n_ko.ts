@@ -1493,6 +1493,22 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source># IP address and port:</source>
         <translation># IP 주소 및 포트</translation>
     </message>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished">제거</translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

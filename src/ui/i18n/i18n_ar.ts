@@ -1493,6 +1493,22 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source># IP address and port:</source>
         <translation># عنوان الـ IP ورقم المنفذ:</translation>
     </message>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

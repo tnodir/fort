@@ -1484,6 +1484,22 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source># IP address and port:</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Add Preset Rule</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Move Up</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Move Down</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
