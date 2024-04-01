@@ -10,6 +10,8 @@ class LineEdit : public QLineEdit
 public:
     explicit LineEdit(QWidget *parent = nullptr);
 
+    void setStartText(const QString &v);
+
     bool event(QEvent *event) override;
 };
 

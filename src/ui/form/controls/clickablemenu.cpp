@@ -9,9 +9,9 @@ ClickableMenu::ClickableMenu(QWidget *parent) : QMenu(parent)
 
 void ClickableMenu::mousePressEvent(QMouseEvent *event)
 {
-    QMenu::mousePressEvent(event);
-
     m_pressed = true;
+
+    QMenu::mousePressEvent(event);
 }
 
 void ClickableMenu::mouseReleaseEvent(QMouseEvent *event)

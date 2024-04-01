@@ -44,7 +44,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 
     retranslateUi();
 
-    m_editName->setText(ruleRow.ruleName);
+    m_editName->setStartText(ruleRow.ruleName);
     m_editName->setClearButtonEnabled(true);
 
     m_labelEditNotes->setPixmap(IconCache::file(":/icons/script.png"));
@@ -260,6 +260,7 @@ QLayout *RuleEditDialog::setupRuleSetHeaderLayout()
 {
     m_btAddPresetRule = ControlUtil::createFlatToolButton(":/icons/add.png", [&] {
         // TODO
+        m_ruleSetView->setVisible(true);
     });
     m_btRemovePresetRule = ControlUtil::createFlatToolButton(":/icons/delete.png", [&] {
         // TODO

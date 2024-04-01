@@ -38,7 +38,7 @@ void ZoneEditDialog::initialize(const ZoneRow &zoneRow)
     const QString sourceCode = isEmpty() ? ZoneSourceWrapper::textSourceCode() : zoneRow.sourceCode;
     const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(sourceCode));
 
-    m_editName->setText(zoneRow.zoneName);
+    m_editName->setStartText(zoneRow.zoneName);
     m_comboSources->setCurrentIndex(zoneSource.index());
     m_cbEnabled->setChecked(zoneRow.enabled);
 

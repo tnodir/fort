@@ -155,7 +155,7 @@ void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathE
 
 void ProgramEditDialog::initializeNameField(bool isSingleSelection)
 {
-    m_editName->setText(isSingleSelection ? m_appRow.appName : QString());
+    m_editName->setStartText(isSingleSelection ? m_appRow.appName : QString());
     m_editName->setEnabled(isSingleSelection);
     m_editName->setClearButtonEnabled(isSingleSelection);
 
@@ -177,7 +177,7 @@ void ProgramEditDialog::initializeRuleField(bool isSingleSelection)
 {
     VariantUtil::setUserData(m_editRuleName, m_appRow.ruleId);
 
-    m_editRuleName->setText(isSingleSelection ? m_appRow.ruleName : QString());
+    m_editRuleName->setStartText(isSingleSelection ? m_appRow.ruleName : QString());
     m_editRuleName->setEnabled(isSingleSelection);
     m_editRuleName->setClearButtonEnabled(isSingleSelection);
 
@@ -717,7 +717,7 @@ void ProgramEditDialog::fillEditName()
         appName = IoC<AppInfoCache>()->appName(appPath);
     }
 
-    m_editName->setText(appName);
+    m_editName->setStartText(appName);
 }
 
 bool ProgramEditDialog::save()
@@ -860,7 +860,7 @@ void ProgramEditDialog::selectRuleDialog()
 
     connect(rulesDialog, &RulesWindow::ruleSelected, this, [&](const RuleRow &ruleRow) {
         VariantUtil::setUserData(m_editRuleName, ruleRow.ruleId);
-        m_editRuleName->setText(ruleRow.ruleName);
+        m_editRuleName->setStartText(ruleRow.ruleName);
     });
 }
 
