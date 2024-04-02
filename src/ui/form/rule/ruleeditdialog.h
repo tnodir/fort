@@ -54,6 +54,9 @@ private:
     QLayout *setupRuleSetHeaderLayout();
     void setupRuleSetView();
     QLayout *setupButtons();
+    void setupRuleSetViewChanged();
+
+    int ruleSetCurrentIndex() const;
 
     bool save();
     bool saveRule(Rule &rule);

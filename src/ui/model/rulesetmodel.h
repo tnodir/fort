@@ -27,6 +27,8 @@ public:
 public slots:
     void addRule(const RuleRow &ruleRow);
 
+    void remove(int row = -1) override;
+
 private:
     bool m_edited = false;
 

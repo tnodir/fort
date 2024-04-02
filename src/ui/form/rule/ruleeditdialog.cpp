@@ -174,6 +174,9 @@ QLayout *RuleEditDialog::setupMainLayout()
     // RuleSet View
     setupRuleSetView();
 
+    // Actions on rule set view's current changed
+    setupRuleSetViewChanged();
+
     // OK/Cancel
     auto buttonsLayout = setupButtons();
 
@@ -270,10 +273,10 @@ QLayout *RuleEditDialog::setupRuleSetHeaderLayout()
     m_btAddPresetRule = ControlUtil::createFlatToolButton(":/icons/add.png", [&] {
         selectPresetRuleDialog();
 
-        m_ruleSetView->setVisible(true);
+        // m_ruleSetView->setVisible(false);
     });
     m_btRemovePresetRule = ControlUtil::createFlatToolButton(":/icons/delete.png", [&] {
-        // TODO
+        ruleSetModel()->remove(ruleSetCurrentIndex());
     });
     m_btUpPresetRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_up.png", [&] {
         // TODO
@@ -298,8 +301,6 @@ void RuleEditDialog::setupRuleSetView()
     m_ruleSetView->setAlternatingRowColors(true);
 
     m_ruleSetView->setModel(ruleSetModel());
-
-    m_ruleSetView->setVisible(false);
 }
 
 QLayout *RuleEditDialog::setupButtons()
@@ -321,6 +322,25 @@ QLayout *RuleEditDialog::setupButtons()
     layout->addWidget(m_btCancel);
 
     return layout;
+}
+
+void RuleEditDialog::setupRuleSetViewChanged()
+{
+    const auto refreshRuleSetViewChanged = [&] {
+        const bool ruleSelected = (ruleSetCurrentIndex() >= 0);
+        m_btRemovePresetRule->setEnabled(ruleSelected);
+        m_btUpPresetRule->setEnabled(ruleSelected);
+        m_btDownPresetRule->setEnabled(ruleSelected);
+    };
+
+    refreshRuleSetViewChanged();
+
+    connect(m_ruleSetView, &ListView::currentIndexChanged, this, refreshRuleSetViewChanged);
+}
+
+int RuleEditDialog::ruleSetCurrentIndex() const
+{
+    return m_ruleSetView->currentRow();
 }
 
 bool RuleEditDialog::save()

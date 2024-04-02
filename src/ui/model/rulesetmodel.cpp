@@ -50,3 +50,12 @@ void RuleSetModel::addRule(const RuleRow &ruleRow)
 
     setEdited(true);
 }
+
+void RuleSetModel::remove(int row)
+{
+    m_ruleSet.remove(row);
+
+    StringListModel::remove(row);
+
+    setEdited(true);
+}
