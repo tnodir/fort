@@ -151,7 +151,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
     const bool isNew = (rule.ruleId == 0);
     if (isNew) {
         // Get Rule Id from the free list
-        rule.ruleId = getFreeRuleId();
+        rule.ruleId = getFreeRuleId(ok);
     } else {
         updateDriverRuleFlag(rule.ruleId, rule.enabled);
     }
@@ -286,9 +286,19 @@ bool ConfRuleManager::updateDriverRuleFlag(int ruleId, bool enabled)
     return true;
 }
 
-int ConfRuleManager::getFreeRuleId()
+int ConfRuleManager::getFreeRuleId(bool &ok)
 {
-    return DbQuery(sqliteDb()).sql(sqlDeleteFreeRuleId).execute().toInt();
+    const int ruleId = DbQuery(sqliteDb()).sql(sqlDeleteFreeRuleId).execute().toInt();
+    if (ruleId > 0) {
+        return ruleId;
+    }
+
+    const int maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
+
+    constexpr int RuleMaxId = 9999;
+    ok = (maxRuleId <= RuleMaxId);
+
+    return 0;
 }
 
 void ConfRuleManager::putFreeRuleId(int ruleId)
