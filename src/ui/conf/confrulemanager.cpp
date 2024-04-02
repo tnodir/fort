@@ -60,6 +60,25 @@ const char *const sqlSelectRuleSet = "SELECT t.sub_rule_id, r.name"
                                      "  WHERE t.rule_id = ?1"
                                      "  ORDER BY t.order_index;";
 
+const char *const sqlSelectRuleSetLoop = "WITH RECURSIVE"
+                                         "  parents(rule_id) AS ("
+                                         "    VALUES(?1)"
+                                         "    UNION ALL"
+                                         "    SELECT t.rule_id"
+                                         "      FROM rule_set t"
+                                         "      JOIN parents p ON p.rule_id = t.sub_rule_id"
+                                         "  ),"
+                                         "  children(rule_id) AS ("
+                                         "    VALUES(?2)"
+                                         "    UNION ALL"
+                                         "    SELECT t.sub_rule_id"
+                                         "      FROM rule_set t"
+                                         "      JOIN children c ON c.rule_id = t.rule_id"
+                                         "  )"
+                                         "SELECT p.rule_id"
+                                         "  FROM parents p"
+                                         "  JOIN children c ON c.rule_id = p.rule_id;";
+
 const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id = ?1;";
 
 const char *const sqlUpdateRuleEnabled = "UPDATE rule SET enabled = ?2 WHERE rule_id = ?1;";
@@ -140,6 +159,16 @@ void ConfRuleManager::saveRuleSet(Rule &rule)
         stmt.step();
         stmt.reset();
     }
+}
+
+bool ConfRuleManager::checkRuleSetLoop(int ruleId, int subRuleId)
+{
+    return DbQuery(sqliteDb())
+                   .sql(sqlSelectRuleSetLoop)
+                   .vars({ ruleId, subRuleId })
+                   .execute()
+                   .toInt()
+            > 0;
 }
 
 bool ConfRuleManager::addOrUpdateRule(Rule &rule)

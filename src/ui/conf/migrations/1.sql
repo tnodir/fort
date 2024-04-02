@@ -114,6 +114,7 @@ CREATE TABLE rule_set(
 );
 
 CREATE INDEX rule_set_rule_id_idx ON rule_set(rule_id);
+CREATE INDEX rule_set_sub_rule_id_idx ON rule_set(sub_rule_id);
 
 CREATE TABLE task(
   task_id INTEGER PRIMARY KEY,

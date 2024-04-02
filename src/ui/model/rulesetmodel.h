@@ -30,6 +30,8 @@ public slots:
 private:
     bool m_edited = false;
 
+    int m_ruleId = 0;
+
     RuleSetList m_ruleSet;
 };
 

@@ -1,9 +1,17 @@
 #include "rulesetmodel.h"
 
+#include <QLoggingCategory>
+
 #include <conf/confrulemanager.h>
 #include <util/ioc/ioccontainer.h>
 
 #include "rulelistmodel.h"
+
+namespace {
+
+const QLoggingCategory LC("model.ruleSet");
+
+}
 
 RuleSetModel::RuleSetModel(QObject *parent) : StringListModel(parent) { }
 
@@ -16,6 +24,7 @@ void RuleSetModel::initialize(const RuleRow &ruleRow, const QStringList &ruleSet
 {
     setEdited(false);
 
+    m_ruleId = ruleRow.ruleId;
     m_ruleSet = ruleRow.ruleSet;
 
     setList(ruleSetNames);
@@ -23,10 +32,19 @@ void RuleSetModel::initialize(const RuleRow &ruleRow, const QStringList &ruleSet
 
 void RuleSetModel::addRule(const RuleRow &ruleRow)
 {
-    if (m_ruleSet.contains(ruleRow.ruleId))
-        return;
+    const int subRuleId = ruleRow.ruleId;
 
-    m_ruleSet.append(ruleRow.ruleId);
+    if (m_ruleSet.contains(subRuleId)) {
+        qCDebug(LC) << "Sub-Rule already exists";
+        return;
+    }
+
+    if (confRuleManager()->checkRuleSetLoop(m_ruleId, subRuleId)) {
+        qCDebug(LC) << "Rule Set loop detected";
+        return;
+    }
+
+    m_ruleSet.append(subRuleId);
 
     insert(ruleRow.ruleName);
 
