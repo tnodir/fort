@@ -3,6 +3,8 @@
 #include <conf/confrulemanager.h>
 #include <util/ioc/ioccontainer.h>
 
+#include "rulelistmodel.h"
+
 RuleSetModel::RuleSetModel(QObject *parent) : StringListModel(parent) { }
 
 ConfRuleManager *RuleSetModel::confRuleManager() const
@@ -10,11 +12,23 @@ ConfRuleManager *RuleSetModel::confRuleManager() const
     return IoC<ConfRuleManager>();
 }
 
-void RuleSetModel::initialize(const Rule &rule)
+void RuleSetModel::initialize(const RuleRow &ruleRow, const QStringList &ruleSetNames)
 {
-    beginResetModel();
+    setEdited(false);
 
-    m_ruleSet = rule.ruleSet;
+    m_ruleSet = ruleRow.ruleSet;
 
-    endResetModel();
+    setList(ruleSetNames);
+}
+
+void RuleSetModel::addRule(const RuleRow &ruleRow)
+{
+    if (m_ruleSet.contains(ruleRow.ruleId))
+        return;
+
+    m_ruleSet.append(ruleRow.ruleId);
+
+    insert(ruleRow.ruleName);
+
+    setEdited(true);
 }

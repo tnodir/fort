@@ -50,13 +50,15 @@ const char *const sqlDeleteAppRule = "UPDATE app"
 const char *const sqlInsertRuleSet = "INSERT INTO rule_set(rule_id, sub_rule_id, order_index)"
                                      "  VALUES(?1, ?2, ?3);";
 
-const char *const sqlDeleteRuleSet = "DELETE rule_set WHERE rule_id = ?1;";
+const char *const sqlDeleteRuleSet = "DELETE FROM rule_set WHERE rule_id = ?1;";
 
-const char *const sqlDeleteRuleSetSub = "DELETE rule_set WHERE sub_rule_id = ?1;";
+const char *const sqlDeleteRuleSetSub = "DELETE FROM rule_set WHERE sub_rule_id = ?1;";
 
-const char *const sqlSelectRuleSet = "SELECT sub_rule_id FROM rule_set"
-                                     "  WHERE rule_id = ?1"
-                                     "  ORDER BY order_index;";
+const char *const sqlSelectRuleSet = "SELECT t.sub_rule_id, r.name"
+                                     "  FROM rule_set t"
+                                     "  JOIN rule r ON r.rule_id = t.sub_rule_id"
+                                     "  WHERE t.rule_id = ?1"
+                                     "  ORDER BY t.order_index;";
 
 const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id = ?1;";
 
@@ -99,7 +101,7 @@ void ConfRuleManager::setUp()
     m_confManager = IoCPinned()->setUpDependency<ConfManager>();
 }
 
-void ConfRuleManager::loadRuleSet(Rule &rule)
+void ConfRuleManager::loadRuleSet(Rule &rule, QStringList &ruleSetNames)
 {
     rule.ruleSetEdited = false;
     rule.ruleSet.clear();
@@ -109,9 +111,11 @@ void ConfRuleManager::loadRuleSet(Rule &rule)
         return;
 
     while (stmt.step() == SqliteStmt::StepRow) {
-        const int subRuleId = stmt.columnInt();
+        const int subRuleId = stmt.columnInt(0);
+        const auto subRuleName = stmt.columnText(1);
 
         rule.ruleSet.append(subRuleId);
+        ruleSetNames.append(subRuleName);
     }
 }
 
@@ -134,6 +138,7 @@ void ConfRuleManager::saveRuleSet(Rule &rule)
         stmt.bindInt(3, ++orderIndex);
 
         stmt.step();
+        stmt.reset();
     }
 }
 

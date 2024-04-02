@@ -6,6 +6,8 @@
 
 class ConfRuleManager;
 
+struct RuleRow;
+
 class RuleSetModel : public StringListModel
 {
     Q_OBJECT
@@ -13,11 +15,21 @@ class RuleSetModel : public StringListModel
 public:
     explicit RuleSetModel(QObject *parent = nullptr);
 
+    bool edited() const { return m_edited; }
+    void setEdited(bool v) { m_edited = v; }
+
+    const RuleSetList &ruleSet() const { return m_ruleSet; }
+
     ConfRuleManager *confRuleManager() const;
 
-    void initialize(const Rule &rule);
+    void initialize(const RuleRow &ruleRow, const QStringList &ruleSetNames);
+
+public slots:
+    void addRule(const RuleRow &ruleRow);
 
 private:
+    bool m_edited = false;
+
     RuleSetList m_ruleSet;
 };
 

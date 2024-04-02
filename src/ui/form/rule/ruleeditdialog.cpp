@@ -22,6 +22,7 @@
 #include <util/net/netutil.h>
 
 #include "rulescontroller.h"
+#include "ruleswindow.h"
 
 RuleEditDialog::RuleEditDialog(RulesController *ctrl, QWidget *parent) :
     QDialog(parent), m_ctrl(ctrl), m_ruleSetModel(new RuleSetModel(this))
@@ -39,8 +40,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 {
     m_ruleRow = ruleRow;
 
-    confRuleManager()->loadRuleSet(m_ruleRow);
-    ruleSetModel()->initialize(m_ruleRow);
+    initializeRuleSet();
 
     retranslateUi();
 
@@ -67,6 +67,15 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_btZones->setUncheckedZones(ruleRow.rejectZones);
 
     initializeFocus();
+}
+
+void RuleEditDialog::initializeRuleSet()
+{
+    QStringList ruleSetNames;
+
+    confRuleManager()->loadRuleSet(m_ruleRow, ruleSetNames);
+
+    ruleSetModel()->initialize(m_ruleRow, ruleSetNames);
 }
 
 void RuleEditDialog::initializeFocus()
@@ -259,13 +268,13 @@ QLayout *RuleEditDialog::setupZonesLayout()
 QLayout *RuleEditDialog::setupRuleSetHeaderLayout()
 {
     m_btAddPresetRule = ControlUtil::createFlatToolButton(":/icons/add.png", [&] {
-        // TODO
+        selectPresetRuleDialog();
+
         m_ruleSetView->setVisible(true);
     });
     m_btRemovePresetRule = ControlUtil::createFlatToolButton(":/icons/delete.png", [&] {
         // TODO
     });
-
     m_btUpPresetRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_up.png", [&] {
         // TODO
     });
@@ -333,7 +342,7 @@ bool RuleEditDialog::save()
 
 bool RuleEditDialog::saveRule(Rule &rule)
 {
-    if (!rule.isOptionsEqual(m_ruleRow)) {
+    if (rule.ruleSetEdited || !rule.isOptionsEqual(m_ruleRow)) {
         rule.ruleId = m_ruleRow.ruleId;
 
         return ctrl()->addOrUpdateRule(rule);
@@ -371,4 +380,14 @@ void RuleEditDialog::fillRule(Rule &rule) const
     rule.ruleName = m_editName->text();
     rule.notes = m_editNotes->toPlainText();
     rule.ruleText = m_editRuleText->toPlainText();
+
+    rule.ruleSetEdited = ruleSetModel()->edited();
+    rule.ruleSet = ruleSetModel()->ruleSet();
+}
+
+void RuleEditDialog::selectPresetRuleDialog()
+{
+    auto rulesDialog = RulesWindow::showRulesDialog(Rule::PresetRule, this);
+
+    connect(rulesDialog, &RulesWindow::ruleSelected, ruleSetModel(), &RuleSetModel::addRule);
 }

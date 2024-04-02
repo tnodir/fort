@@ -37,6 +37,7 @@ public:
     void initialize(const RuleRow &ruleRow);
 
 private:
+    void initializeRuleSet();
     void initializeFocus();
 
     void setupController();
@@ -59,6 +60,8 @@ private:
 
     bool validateFields() const;
     void fillRule(Rule &rule) const;
+
+    void selectPresetRuleDialog();
 
 private:
     RulesController *m_ctrl = nullptr;
