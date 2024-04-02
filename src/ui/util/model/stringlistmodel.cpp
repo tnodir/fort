@@ -66,6 +66,26 @@ void StringListModel::replace(const QString &text, int row)
     emit dataChanged(modelIndex, modelIndex);
 }
 
+bool StringListModel::canMove(int fromRow, int toRow)
+{
+    if (fromRow == toRow || fromRow < 0 || toRow < 0)
+        return false;
+
+    const int listSize = list().size();
+    if (fromRow >= listSize || toRow >= listSize)
+        return false;
+
+    return true;
+}
+
+void StringListModel::move(int fromRow, int toRow)
+{
+    beginMoveRows(
+            QModelIndex(), fromRow, fromRow, QModelIndex(), toRow + (toRow > fromRow ? 1 : 0));
+    m_list.move(fromRow, toRow);
+    endMoveRows();
+}
+
 void StringListModel::reset()
 {
     if (isChanging())

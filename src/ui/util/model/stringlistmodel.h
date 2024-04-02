@@ -26,6 +26,9 @@ public slots:
     virtual void remove(int row = -1);
     virtual void replace(const QString &text, int row = -1);
 
+    virtual bool canMove(int fromRow, int toRow);
+    virtual void move(int fromRow, int toRow);
+
     void reset();
     void refresh();
 

@@ -275,15 +275,12 @@ QLayout *RuleEditDialog::setupRuleSetHeaderLayout()
 
         // m_ruleSetView->setVisible(false);
     });
-    m_btRemovePresetRule = ControlUtil::createFlatToolButton(":/icons/delete.png", [&] {
-        ruleSetModel()->remove(ruleSetCurrentIndex());
-    });
-    m_btUpPresetRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_up.png", [&] {
-        // TODO
-    });
-    m_btDownPresetRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_down.png", [&] {
-        // TODO
-    });
+    m_btRemovePresetRule = ControlUtil::createFlatToolButton(
+            ":/icons/delete.png", [&] { ruleSetModel()->remove(ruleSetCurrentIndex()); });
+    m_btUpPresetRule = ControlUtil::createIconToolButton(
+            ":/icons/bullet_arrow_up.png", [&] { ruleSetModel()->moveUp(ruleSetCurrentIndex()); });
+    m_btDownPresetRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_down.png",
+            [&] { ruleSetModel()->moveDown(ruleSetCurrentIndex()); });
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_btAddPresetRule, m_btRemovePresetRule, ControlUtil::createVSeparator(),

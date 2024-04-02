@@ -29,6 +29,10 @@ public slots:
 
     void remove(int row = -1) override;
 
+    void move(int fromRow, int toRow);
+    inline void moveUp(int row) { move(row, row - 1); }
+    inline void moveDown(int row) { move(row, row + 1); }
+
 private:
     bool m_edited = false;
 

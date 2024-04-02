@@ -53,9 +53,23 @@ void RuleSetModel::addRule(const RuleRow &ruleRow)
 
 void RuleSetModel::remove(int row)
 {
+    row = adjustRow(row);
+
     m_ruleSet.remove(row);
 
     StringListModel::remove(row);
+
+    setEdited(true);
+}
+
+void RuleSetModel::move(int fromRow, int toRow)
+{
+    if (!StringListModel::canMove(fromRow, toRow))
+        return;
+
+    m_ruleSet.move(fromRow, toRow);
+
+    StringListModel::move(fromRow, toRow);
 
     setEdited(true);
 }
