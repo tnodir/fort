@@ -76,6 +76,8 @@ void RuleEditDialog::initializeRuleSet()
     confRuleManager()->loadRuleSet(m_ruleRow, ruleSetNames);
 
     ruleSetModel()->initialize(m_ruleRow, ruleSetNames);
+
+    updateRuleSetViewVisible();
 }
 
 void RuleEditDialog::initializeFocus()
@@ -270,11 +272,8 @@ QLayout *RuleEditDialog::setupZonesLayout()
 
 QLayout *RuleEditDialog::setupRuleSetHeaderLayout()
 {
-    m_btAddPresetRule = ControlUtil::createFlatToolButton(":/icons/add.png", [&] {
-        selectPresetRuleDialog();
-
-        // m_ruleSetView->setVisible(false);
-    });
+    m_btAddPresetRule =
+            ControlUtil::createFlatToolButton(":/icons/add.png", [&] { selectPresetRuleDialog(); });
     m_btRemovePresetRule = ControlUtil::createFlatToolButton(
             ":/icons/delete.png", [&] { ruleSetModel()->remove(ruleSetCurrentIndex()); });
     m_btUpPresetRule = ControlUtil::createIconToolButton(
@@ -298,6 +297,9 @@ void RuleEditDialog::setupRuleSetView()
     m_ruleSetView->setAlternatingRowColors(true);
 
     m_ruleSetView->setModel(ruleSetModel());
+
+    connect(ruleSetModel(), &RuleSetModel::rowCountChanged, this,
+            &RuleEditDialog::updateRuleSetViewVisible);
 }
 
 QLayout *RuleEditDialog::setupButtons()
@@ -333,6 +335,13 @@ void RuleEditDialog::setupRuleSetViewChanged()
     refreshRuleSetViewChanged();
 
     connect(m_ruleSetView, &ListView::currentIndexChanged, this, refreshRuleSetViewChanged);
+}
+
+void RuleEditDialog::updateRuleSetViewVisible()
+{
+    const int ruleSetSize = ruleSetModel()->rowCount();
+
+    m_ruleSetView->setVisible(ruleSetSize > 0);
 }
 
 int RuleEditDialog::ruleSetCurrentIndex() const

@@ -15,6 +15,15 @@ const QLoggingCategory LC("model.ruleSet");
 
 RuleSetModel::RuleSetModel(QObject *parent) : StringListModel(parent) { }
 
+void RuleSetModel::setEdited(bool v)
+{
+    m_edited = v;
+
+    if (m_edited) {
+        emit rowCountChanged();
+    }
+}
+
 ConfRuleManager *RuleSetModel::confRuleManager() const
 {
     return IoC<ConfRuleManager>();

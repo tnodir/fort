@@ -56,6 +56,8 @@ private:
     QLayout *setupButtons();
     void setupRuleSetViewChanged();
 
+    void updateRuleSetViewVisible();
+
     int ruleSetCurrentIndex() const;
 
     bool save();

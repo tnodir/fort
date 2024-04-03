@@ -16,13 +16,16 @@ public:
     explicit RuleSetModel(QObject *parent = nullptr);
 
     bool edited() const { return m_edited; }
-    void setEdited(bool v) { m_edited = v; }
+    void setEdited(bool v);
 
     const RuleSetList &ruleSet() const { return m_ruleSet; }
 
     ConfRuleManager *confRuleManager() const;
 
     void initialize(const RuleRow &ruleRow, const QStringList &ruleSetNames);
+
+signals:
+    void rowCountChanged();
 
 public slots:
     void addRule(const RuleRow &ruleRow);
