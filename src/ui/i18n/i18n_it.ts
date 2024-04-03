@@ -1336,7 +1336,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona regola</translation>
     </message>
 </context>
 <context>
@@ -1495,19 +1495,19 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiungi regola preimpostata</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished">Rimuovi</translation>
+        <translation>Rimuovi</translation>
     </message>
     <message>
         <source>Move Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Sposta su</translation>
     </message>
     <message>
         <source>Move Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Sposta giù</translation>
     </message>
 </context>
 <context>
@@ -1592,7 +1592,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona regola</translation>
     </message>
 </context>
 <context>

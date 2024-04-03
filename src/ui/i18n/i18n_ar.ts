@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="ar_SA">
+<TS version="2.1" language="ar_SA" sourcelanguage="en_US">
 <context>
     <name>AboutPage</name>
     <message>
@@ -1018,7 +1018,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>My Fort</source>
-        <translation>My Fort</translation>
+        <translation>Fort الخاص بي</translation>
     </message>
     <message>
         <source>Auto-Show Menu</source>
@@ -1336,7 +1336,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديد القاعدة</translation>
     </message>
 </context>
 <context>
@@ -1495,19 +1495,19 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>إضافة قاعدة معدة مسبقًا</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>حذف</translation>
     </message>
     <message>
         <source>Move Up</source>
-        <translation type="unfinished"></translation>
+        <translation>تحريك لأعلى</translation>
     </message>
     <message>
         <source>Move Down</source>
-        <translation type="unfinished"></translation>
+        <translation>تحريك لأسفل</translation>
     </message>
 </context>
 <context>
@@ -1592,7 +1592,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديد القواعد</translation>
     </message>
 </context>
 <context>
