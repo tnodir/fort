@@ -11,10 +11,14 @@ int StringListModel::rowCount(const QModelIndex &parent) const
 
 QVariant StringListModel::data(const QModelIndex &index, int role) const
 {
-    if (index.isValid() && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
+    if (!index.isValid())
+        return {};
+
+    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
         return m_list.at(index.row());
     }
-    return QVariant();
+
+    return {};
 }
 
 Qt::ItemFlags StringListModel::flags(const QModelIndex &index) const
@@ -66,9 +70,11 @@ void StringListModel::replace(const QString &text, int row)
     emit dataChanged(modelIndex, modelIndex);
 }
 
-bool StringListModel::canMove(int fromRow, int toRow)
+bool StringListModel::canMove(int fromRow, int toRow) const
 {
-    if (fromRow == toRow || fromRow < 0 || toRow < 0)
+    Q_ASSERT(fromRow != toRow);
+
+    if (fromRow < 0 || toRow < 0)
         return false;
 
     const int listSize = list().size();
