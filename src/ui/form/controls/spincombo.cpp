@@ -46,7 +46,7 @@ void SpinCombo::setupUi()
     setupSpin();
     setupCombo();
 
-    auto layout = ControlUtil::createRowLayout(m_spinBox, m_comboBox, 0);
+    auto layout = ControlUtil::createRowLayout(m_spinBox, m_comboBox, /*stretch1=*/0);
 
     this->setLayout(layout);
 }

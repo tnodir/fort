@@ -617,7 +617,7 @@ QLayout *ProgramEditDialog::setupRuleLayout()
         }
     });
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_editRuleName, m_btSelectRule });
+    auto layout = ControlUtil::createRowLayout(m_editRuleName, m_btSelectRule);
     layout->setSpacing(0);
 
     return layout;
