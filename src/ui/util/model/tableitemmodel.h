@@ -19,6 +19,11 @@ class TableItemModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
+    enum TableItemRole {
+        EnabledRole = Qt::UserRole,
+        EndRole,
+    };
+
     explicit TableItemModel(QObject *parent = nullptr);
 
     QModelIndex index(
@@ -29,16 +34,15 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    virtual Qt::ItemFlags flagIsEnabled(const QModelIndex &index) const;
-    virtual Qt::ItemFlags flagHasChildren(const QModelIndex &index) const;
-    virtual Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const;
-
 public slots:
     void resetLater();
     void reset();
     void refresh();
 
 protected:
+    virtual Qt::ItemFlags flagHasChildren(const QModelIndex &index) const;
+    virtual Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const;
+
     virtual void invalidateRowCache() const;
     void updateRowCache(int row) const;
 

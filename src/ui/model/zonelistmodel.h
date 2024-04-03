@@ -37,8 +37,6 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
-    Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
-
     const ZoneRow &zoneRowAt(int row) const;
 
     QVariant zoneTypeByCode(const QString &typeCode) const;
@@ -47,6 +45,8 @@ public:
     const QVariantList &zoneSources() const { return m_zoneSources; }
 
 protected:
+    Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
+
     bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_zoneRow; }
 

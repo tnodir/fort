@@ -49,15 +49,14 @@ public:
             int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    Qt::ItemFlags flagIsEnabled(const QModelIndex &index) const override;
-    Qt::ItemFlags flagHasChildren(const QModelIndex &index) const override;
-
     const RuleRow &ruleRowAt(const QModelIndex &index) const;
     RuleRow ruleRowById(int ruleId, Rule::RuleType ruleType) const;
 
     static QStringList ruleTypeNames();
 
 protected:
+    Qt::ItemFlags flagHasChildren(const QModelIndex &index) const override;
+
     void fillQueryVars(QVariantHash &vars) const override;
 
     bool updateTableRow(const QVariantHash &vars, int row) const override;

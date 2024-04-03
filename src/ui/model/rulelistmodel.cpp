@@ -175,6 +175,10 @@ QVariant RuleListModel::data(const QModelIndex &index, int role) const
     // Icon
     case Qt::DecorationRole:
         return dataDecoration(index);
+
+    // Enabled
+    case EnabledRole:
+        return dataEnabled(index);
     }
 
     return QVariant();
@@ -238,19 +242,17 @@ QVariant RuleListModel::dataDecoration(const QModelIndex &index) const
     return QVariant();
 }
 
+QVariant RuleListModel::dataEnabled(const QModelIndex &index) const
+{
+    const auto &ruleRow = ruleRowAt(index);
+    return ruleRow.enabled;
+}
+
 void RuleListModel::fillQueryVars(QVariantHash &vars) const
 {
     FtsTableSqlModel::fillQueryVars(vars);
 
     vars.insert(":type", sqlRuleType());
-}
-
-Qt::ItemFlags RuleListModel::flagIsEnabled(const QModelIndex &index) const
-{
-    setSqlRuleType(index);
-
-    const auto &ruleRow = ruleRowAt(index);
-    return ruleRow.enabled ? Qt::ItemIsEnabled : Qt::NoItemFlags;
 }
 
 Qt::ItemFlags RuleListModel::flagHasChildren(const QModelIndex &index) const

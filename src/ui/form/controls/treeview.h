@@ -28,9 +28,6 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event) override;
 
 private:
-    void setupItemDelegateModel();
-
-private:
     QMenu *m_menu = nullptr;
 };
 
