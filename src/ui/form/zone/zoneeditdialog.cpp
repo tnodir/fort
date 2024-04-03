@@ -66,7 +66,6 @@ void ZoneEditDialog::initializeBySource(const ZoneSourceWrapper &zoneSource)
 
 void ZoneEditDialog::initializeFocus()
 {
-    m_editName->selectAll();
     m_editName->setFocus();
 }
 

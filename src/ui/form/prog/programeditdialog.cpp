@@ -191,7 +191,6 @@ void ProgramEditDialog::initializeFocus()
     } else if (isWildcard()) {
         m_editWildcard->setFocus();
     } else {
-        m_editPath->selectAll();
         m_editPath->setFocus();
     }
 }

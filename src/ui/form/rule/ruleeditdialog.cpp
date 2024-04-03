@@ -82,8 +82,11 @@ void RuleEditDialog::initializeRuleSet()
 
 void RuleEditDialog::initializeFocus()
 {
-    m_editName->selectAll();
-    m_editName->setFocus();
+    if (isEmpty()) {
+        m_editName->setFocus();
+    } else {
+        m_editRuleText->setFocus();
+    }
 }
 
 void RuleEditDialog::setupController()
