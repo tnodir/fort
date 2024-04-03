@@ -25,7 +25,9 @@ void SideButton::paintEvent(QPaintEvent *event)
         return;
 
     QRect r = rect();
-    r.setX(r.width() - indicatorWidth);
+    if (isRightToLeft()) {
+        r.setX(r.width() - indicatorWidth);
+    }
     r.setWidth(indicatorWidth);
 
     QPainter p(this);
