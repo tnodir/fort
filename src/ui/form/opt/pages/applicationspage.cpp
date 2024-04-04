@@ -556,6 +556,9 @@ void ApplicationsPage::setupSplitter()
     splitterHandle->setTextArea1(m_blockApps->editText());
     splitterHandle->setTextArea2(m_allowApps->editText());
 
+    // TODO: Remove Allow/Block/Kill deprecated fields
+    splitterHandle->setEnabled(false);
+
     m_killSplitter = new QSplitter();
     m_killSplitter->addWidget(m_killApps);
     m_killSplitter->addWidget(m_allowSplitter);
