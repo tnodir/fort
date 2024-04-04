@@ -18,13 +18,13 @@ const char *const blockInetTraffic = "blockInetTraffic";
 const char *const appGroupModifier = "appGroupModifier";
 const char *const quit = "quit";
 
-const char *const filterModeHotKeys[] = {
-    "filterModeAutoLearn",
-    "filterModeAskToConnect",
-    "filterModeBlock",
-    "filterModeAllow",
-    "filterModeIgnore",
-};
+const char *const filterModeAutoLearn = "filterModeAutoLearn";
+const char *const filterModeAskToConnect = "filterModeAskToConnect";
+const char *const filterModeBlock = "filterModeBlock";
+const char *const filterModeAllow = "filterModeAllow";
+const char *const filterModeIgnore = "filterModeIgnore";
+
+extern const char *const filterModes[];
 
 namespace Default {
 const char *const filter = "Ctrl+Alt+Shift+F";

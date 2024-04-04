@@ -479,7 +479,7 @@ void TrayIcon::setupTrayMenuFilterMode()
     const QStringList iconPaths = FirewallConf::filterModeIconPaths();
     for (const QString &name : FirewallConf::filterModeNames()) {
         const QString iconPath = iconPaths.at(index);
-        const QString hotKey = HotKey::filterModeHotKeys[index];
+        const QString hotKey = HotKey::filterModes[index];
 
         QAction *a = addAction(m_filterModeMenu, iconPath, /*receiver=*/nullptr, /*member=*/nullptr,
                 ActionNone, /*checkable=*/true);
