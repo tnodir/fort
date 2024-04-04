@@ -172,8 +172,7 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     setupUi();
     setupController();
 
-    connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated,
-            Qt::QueuedConnection);
+    connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated);
 
     connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::setupByIniUser);
@@ -787,14 +786,16 @@ void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
     if (!action)
         return;
 
-    if (clickType == TrayIcon::RightClick) {
-        if (action->data().toInt() == TrayIcon::ActionShowTrayMenu)
-            return; // already handled by context-menu logic
-
-        m_menu->hide(); // revert the default action
+    if (clickType == TrayIcon::RightClick
+            && action->data().toInt() == TrayIcon::ActionShowTrayMenu) {
+        return; // already handled by context-menu logic
     }
 
     action->trigger();
+
+    if (clickType == TrayIcon::RightClick) {
+        m_menu->hide(); // revert the default action: close context-menu
+    }
 }
 
 void TrayIcon::onTrayActivatedByTrigger()
