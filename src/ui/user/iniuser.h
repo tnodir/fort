@@ -3,6 +3,36 @@
 
 #include <util/ini/mapsettings.h>
 
+namespace HotKey {
+
+const char *const home = "home";
+const char *const programs = "programs";
+const char *const options = "options";
+const char *const rules = "rules";
+const char *const zones = "zones";
+const char *const statistics = "statistics";
+const char *const graph = "graph";
+const char *const filter = "filter";
+const char *const blockTraffic = "blockTraffic";
+const char *const blockInetTraffic = "blockInetTraffic";
+const char *const appGroupModifier = "appGroupModifier";
+const char *const quit = "quit";
+
+const char *const filterModeHotKeys[] = {
+    "filterModeAutoLearn",
+    "filterModeAskToConnect",
+    "filterModeBlock",
+    "filterModeAllow",
+    "filterModeIgnore",
+};
+
+namespace Default {
+const char *const filter = "Ctrl+Alt+Shift+F";
+const char *const appGroupModifier = "Ctrl+Alt+Shift";
+}
+
+}
+
 class IniUser : public MapSettings
 {
 public:
@@ -23,28 +53,9 @@ public:
     bool hotKeyGlobal() const { return valueBool("hotKey/global", true); }
     void setHotKeyGlobal(bool v) { setValue("hotKey/global", v, true); }
 
-    QString hotKeyHome() const { return valueText("hotKey/home"); }
-    QString hotKeyPrograms() const { return valueText("hotKey/programs"); }
-    QString hotKeyOptions() const { return valueText("hotKey/options"); }
-    QString hotKeyRules() const { return valueText("hotKey/rules"); }
-    QString hotKeyStatistics() const { return valueText("hotKey/statistics"); }
-    QString hotKeyGraph() const { return valueText("hotKey/graph"); }
-    QString hotKeyZones() const { return valueText("hotKey/zones"); }
-    QString hotKeyFilter() const { return valueText("hotKey/filter", "Ctrl+Alt+Shift+F"); }
-    QString hotKeyBlockTraffic() const { return valueText("hotKey/blockTraffic"); }
-    QString hotKeyBlockInetTraffic() const { return valueText("hotKey/blockInetTraffic"); }
-    QString hotKeyAppGroupModifiers() const
+    QString hotKeyValue(const QString &key, const QString &defaultValue = {}) const
     {
-        return valueText("hotKey/appGroupModifiers", "Ctrl+Alt+Shift");
-    }
-    QString hotKeyQuit() const { return valueText("hotKey/quit"); }
-
-    QString hotKeyValue(const QString &key) const { return valueText("hotKey/" + key); }
-
-    static QStringList filterModeHotKeys()
-    {
-        return { "filterModeAutoLearn", "filterModeAskToConnect", "filterModeBlock",
-            "filterModeAllow", "filterModeIgnore" };
+        return valueText("hotKey/" + key, defaultValue);
     }
 
     bool splashWindowVisible() const { return valueBool("splashWindow/visible", true); }
