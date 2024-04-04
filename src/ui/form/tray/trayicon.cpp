@@ -471,6 +471,14 @@ void TrayIcon::setupTrayMenuOptions()
 
 void TrayIcon::setupTrayMenuFilterMode()
 {
+    static const char *const filterModeHotKeys[] = {
+        HotKey::filterModeAutoLearn,
+        HotKey::filterModeAskToConnect,
+        HotKey::filterModeBlock,
+        HotKey::filterModeAllow,
+        HotKey::filterModeIgnore,
+    };
+
     m_filterModeMenu = ControlUtil::createMenu(m_menu);
 
     m_filterModeActions = new QActionGroup(m_filterModeMenu);
@@ -479,7 +487,7 @@ void TrayIcon::setupTrayMenuFilterMode()
     const QStringList iconPaths = FirewallConf::filterModeIconPaths();
     for (const QString &name : FirewallConf::filterModeNames()) {
         const QString iconPath = iconPaths.at(index);
-        const QString hotKey = HotKey::filterModes[index];
+        const QString hotKey = filterModeHotKeys[index];
 
         QAction *a = addAction(m_filterModeMenu, iconPath, /*receiver=*/nullptr, /*member=*/nullptr,
                 ActionNone, /*checkable=*/true);

@@ -14,7 +14,8 @@ public:
     template<typename T>
     static void listToVector(const QVariantList &list, QVector<T> &array);
 
-    inline static void addToList(QVariantList &list, const QVariant &v)
+    template<typename T>
+    inline static void addToList(QList<T> &list, const T &v)
     {
         list.push_back(v); // append() merges the list, does not insert
     }

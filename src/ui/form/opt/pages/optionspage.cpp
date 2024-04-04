@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QGroupBox>
 #include <QHBoxLayout>
+#include <QKeySequenceEdit>
 #include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
@@ -64,6 +65,13 @@ void OptionsPage::onResetToDefault()
     m_cbUseSystemLocale->setChecked(true);
     m_cbHotKeysEnabled->setChecked(false);
     m_cbHotKeysGlobal->setChecked(true);
+
+    // Reset Shortcuts
+    for (int i = 0; i < HotKey::listCount; ++i) {
+        const auto &key = HotKey::list[i];
+        iniUser()->setHotKeyValue(key, HotKey::defaultValue(key));
+    }
+    refreshEditShortcut();
 
     m_cbHomeAutoShowMenu->setChecked(false);
     m_cbSplashVisible->setChecked(true);
@@ -216,6 +224,10 @@ void OptionsPage::onRetranslateUi()
 
     m_cbHotKeysEnabled->setText(tr("Enabled"));
     m_cbHotKeysGlobal->setText(tr("Global"));
+    m_labelHotKey->setText(tr("Hot Key:"));
+    m_labelShortcut->setText(tr("Shortcut:"));
+    retranslateComboHotKey();
+    refreshEditShortcut();
 
     m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
@@ -293,16 +305,33 @@ void OptionsPage::retranslateEditPassword()
             settings()->hasPassword() ? tr("Installed") : tr("Not Installed"));
 }
 
+void OptionsPage::retranslateComboHotKey()
+{
+    // Sync with TrayIcon::retranslateUi() & HotKey::list[]
+    QStringList list = { TrayIcon::tr("My Fort"), TrayIcon::tr("Programs"), TrayIcon::tr("Options"),
+        TrayIcon::tr("Rules"), TrayIcon::tr("Zones"), TrayIcon::tr("Statistics"),
+        TrayIcon::tr("Traffic Graph"), TrayIcon::tr("Filter Enabled"),
+        TrayIcon::tr("Block All Traffic"), TrayIcon::tr("Block Internet Traffic") };
+
+    const auto filterMode = tr("Filter Mode:");
+    for (const auto &filterModeName : FirewallConf::filterModeNames()) {
+        list.append(filterMode + ' ' + filterModeName);
+    }
+
+    list.append({ TrayIcon::tr("App Group Modifier"), TrayIcon::tr("Quit") });
+
+    const int currentIndex = qMax(m_comboHotKey->currentIndex(), 0);
+
+    ControlUtil::setComboBoxTexts(m_comboHotKey, list, currentIndex);
+}
+
 void OptionsPage::retranslateComboTrayEvent()
 {
     // Sync with TrayIcon::ClickType
     const QStringList list = { tr("Single Click"), tr("Ctrl + Single Click"),
         tr("Alt + Single Click"), tr("Double Click"), tr("Middle Click"), tr("Right Click") };
 
-    int currentIndex = m_comboTrayEvent->currentIndex();
-    if (currentIndex < 0) {
-        currentIndex = 0;
-    }
+    const int currentIndex = qMax(m_comboTrayEvent->currentIndex(), 0);
 
     ControlUtil::setComboBoxTexts(m_comboTrayEvent, list, currentIndex);
 }
@@ -707,12 +736,57 @@ void OptionsPage::setupHotKeysBox()
         ctrl()->setIniUserEdited(true);
     });
 
+    // Hot Keys Combo & Edit Rows
+    auto comboLayout = setupComboHotKeyLayout();
+    auto editLayout = setupEditShortcutLayout();
+
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbHotKeysEnabled);
     layout->addWidget(m_cbHotKeysGlobal);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addLayout(comboLayout);
+    layout->addLayout(editLayout);
 
     m_gbHotKeys = new QGroupBox();
     m_gbHotKeys->setLayout(layout);
+}
+
+void OptionsPage::refreshEditShortcut()
+{
+    const auto &key = HotKey::list[m_comboHotKey->currentIndex()];
+    const auto &defaultValue = HotKey::defaultValue(key);
+
+    m_editShortcut->setKeySequence(iniUser()->hotKeyValue(key, defaultValue));
+}
+
+QLayout *OptionsPage::setupComboHotKeyLayout()
+{
+    m_labelHotKey = ControlUtil::createLabel();
+
+    m_comboHotKey = ControlUtil::createComboBox(
+            QStringList(), [&](int /*index*/) { refreshEditShortcut(); });
+    m_comboHotKey->setFixedWidth(200);
+
+    return ControlUtil::createRowLayout(m_labelHotKey, m_comboHotKey);
+}
+
+QLayout *OptionsPage::setupEditShortcutLayout()
+{
+    m_labelShortcut = ControlUtil::createLabel();
+
+    m_editShortcut = new QKeySequenceEdit();
+    m_editShortcut->setClearButtonEnabled(true);
+    m_editShortcut->setFixedWidth(200);
+
+    connect(m_editShortcut, &QKeySequenceEdit::editingFinished, [&] {
+        const auto &key = HotKey::list[m_comboHotKey->currentIndex()];
+        const auto value = m_editShortcut->keySequence().toString();
+
+        iniUser()->setHotKeyValue(key, value);
+        ctrl()->setIniUserEdited();
+    });
+
+    return ControlUtil::createRowLayout(m_labelShortcut, m_editShortcut);
 }
 
 void OptionsPage::setupHomeBox()

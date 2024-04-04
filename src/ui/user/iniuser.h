@@ -12,11 +12,10 @@ const char *const rules = "rules";
 const char *const zones = "zones";
 const char *const statistics = "statistics";
 const char *const graph = "graph";
+
 const char *const filter = "filter";
 const char *const blockTraffic = "blockTraffic";
 const char *const blockInetTraffic = "blockInetTraffic";
-const char *const appGroupModifier = "appGroupModifier";
-const char *const quit = "quit";
 
 const char *const filterModeAutoLearn = "filterModeAutoLearn";
 const char *const filterModeAskToConnect = "filterModeAskToConnect";
@@ -24,7 +23,13 @@ const char *const filterModeBlock = "filterModeBlock";
 const char *const filterModeAllow = "filterModeAllow";
 const char *const filterModeIgnore = "filterModeIgnore";
 
-extern const char *const filterModes[];
+const char *const appGroupModifier = "appGroupModifier";
+const char *const quit = "quit";
+
+extern const char *const list[];
+extern const int listCount;
+
+const char *const defaultValue(const char *key);
 
 namespace Default {
 const char *const filter = "Ctrl+Alt+Shift+F";
@@ -57,6 +62,7 @@ public:
     {
         return valueText("hotKey/" + key, defaultValue);
     }
+    void setHotKeyValue(const QString &key, const QString &v) { setValue("hotKey/" + key, v); }
 
     bool splashWindowVisible() const { return valueBool("splashWindow/visible", true); }
     void setSplashWindowVisible(bool on) { setValue("splashWindow/visible", on, true); }

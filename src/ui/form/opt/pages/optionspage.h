@@ -3,6 +3,8 @@
 
 #include "optbasepage.h"
 
+QT_FORWARD_DECLARE_CLASS(QKeySequenceEdit)
+
 class OptionsPage : public OptBasePage
 {
     Q_OBJECT
@@ -35,6 +37,7 @@ private:
     void retranslateComboStartMode();
     void retranslateComboFilterMode();
     void retranslateEditPassword();
+    void retranslateComboHotKey();
     void retranslateComboTrayEvent();
     void retranslateComboTrayAction();
 
@@ -58,6 +61,9 @@ private:
     QLayout *setupLangLayout();
     void setupComboLanguage();
     void setupHotKeysBox();
+    void refreshEditShortcut();
+    QLayout *setupComboHotKeyLayout();
+    QLayout *setupEditShortcutLayout();
     void setupHomeBox();
     void setupTrayBox();
     QLayout *setupTrayMaxGroupsLayout();
@@ -112,12 +118,18 @@ private:
     QComboBox *m_comboLanguage = nullptr;
     QCheckBox *m_cbHotKeysEnabled = nullptr;
     QCheckBox *m_cbHotKeysGlobal = nullptr;
+    QLabel *m_labelHotKey = nullptr;
+    QComboBox *m_comboHotKey = nullptr;
+    QLabel *m_labelShortcut = nullptr;
+    QKeySequenceEdit *m_editShortcut = nullptr;
+
     QCheckBox *m_cbHomeAutoShowMenu = nullptr;
     QCheckBox *m_cbSplashVisible = nullptr;
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
     QLabel *m_labelTrayMaxGroups = nullptr;
     QSpinBox *m_spinTrayMaxGroups = nullptr;
+
     QLabel *m_labelTrayEvent = nullptr;
     QComboBox *m_comboTrayEvent = nullptr;
     QLabel *m_labelTrayAction = nullptr;
