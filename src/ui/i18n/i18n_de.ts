@@ -1088,6 +1088,14 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Show Splash screen on startup</source>
         <translation>Begrüßungsbildschirm beim Start anzeigen</translation>
     </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -2017,6 +2025,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Rules</source>
         <translation>Regeln</translation>
+    </message>
+    <message>
+        <source>App Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

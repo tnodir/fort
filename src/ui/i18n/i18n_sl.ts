@@ -1088,6 +1088,14 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Show Splash screen on startup</source>
         <translation>Prikaži začetni zaslon ob zagonu</translation>
     </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -2017,6 +2025,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Rules</source>
         <translation>Pravila</translation>
+    </message>
+    <message>
+        <source>App Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

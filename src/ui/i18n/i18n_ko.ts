@@ -1088,6 +1088,14 @@ Make sure that you have a fresh backup.</source>
         <source>Show Splash screen on startup</source>
         <translation>시작 시 스플래시 화면 표시</translation>
     </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -2017,6 +2025,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Rules</source>
         <translation>규칙</translation>
+    </message>
+    <message>
+        <source>App Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

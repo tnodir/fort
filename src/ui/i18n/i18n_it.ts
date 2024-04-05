@@ -1088,6 +1088,14 @@ Assicurati di avere un backup recente.</translation>
         <source>Show Splash screen on startup</source>
         <translation>Mostra schermata introduttiva all&apos;avvio</translation>
     </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -2017,6 +2025,10 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Rules</source>
         <translation>Regole</translation>
+    </message>
+    <message>
+        <source>App Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

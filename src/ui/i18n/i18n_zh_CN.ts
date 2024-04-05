@@ -1086,6 +1086,14 @@ Make sure that you have a fresh backup.</source>
         <source>Show Splash screen on startup</source>
         <translation>启动时显示启动画面</translation>
     </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -2015,6 +2023,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Rules</source>
         <translation>规则</translation>
+    </message>
+    <message>
+        <source>App Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

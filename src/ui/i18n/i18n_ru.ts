@@ -1088,6 +1088,14 @@ Make sure that you have a fresh backup.</source>
         <source>Show Splash screen on startup</source>
         <translation>Показ Заставки при старте</translation>
     </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation>Горячая клавиша:</translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation>Комбинация клавиш:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -2017,6 +2025,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Rules</source>
         <translation>Правила</translation>
+    </message>
+    <message>
+        <source>App Group Modifier</source>
+        <translation>Модификатор группы приложений</translation>
     </message>
 </context>
 <context>

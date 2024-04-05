@@ -1088,6 +1088,14 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <source>Show Splash screen on startup</source>
         <translation>Afficher l&apos;écran d&apos;accueil au démarrage</translation>
     </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -2017,6 +2025,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Rules</source>
         <translation>Règles</translation>
+    </message>
+    <message>
+        <source>App Group Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
