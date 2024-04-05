@@ -58,11 +58,8 @@ public:
     bool hotKeyGlobal() const { return valueBool("hotKey/global", true); }
     void setHotKeyGlobal(bool v) { setValue("hotKey/global", v, true); }
 
-    QString hotKeyValue(const QString &key, const QString &defaultValue = {}) const
-    {
-        return valueText("hotKey/" + key, defaultValue);
-    }
-    void setHotKeyValue(const QString &key, const QString &v) { setValue("hotKey/" + key, v); }
+    QString hotKeyValue(const QString &key) const;
+    void setHotKeyValue(const QString &key, const QString &v);
 
     bool splashWindowVisible() const { return valueBool("splashWindow/visible", true); }
     void setSplashWindowVisible(bool on) { setValue("splashWindow/visible", on, true); }

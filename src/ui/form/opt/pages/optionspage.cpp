@@ -754,9 +754,8 @@ void OptionsPage::setupHotKeysBox()
 void OptionsPage::refreshEditShortcut()
 {
     const auto &key = HotKey::list[m_comboHotKey->currentIndex()];
-    const auto &defaultValue = HotKey::defaultValue(key);
 
-    m_editShortcut->setKeySequence(iniUser()->hotKeyValue(key, defaultValue));
+    m_editShortcut->setKeySequence(iniUser()->hotKeyValue(key));
 }
 
 QLayout *OptionsPage::setupComboHotKeyLayout()

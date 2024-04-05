@@ -39,6 +39,18 @@ const char *const defaultValue(const char *key)
 
 IniUser::IniUser(Settings *settings) : MapSettings(settings) { }
 
+QString IniUser::hotKeyValue(const QString &key) const
+{
+    const auto &defaultValue = HotKey::defaultValue(key.toLatin1());
+
+    return valueText("hotKey/" + key, defaultValue);
+}
+
+void IniUser::setHotKeyValue(const QString &key, const QString &v)
+{
+    setValue("hotKey/" + key, v);
+}
+
 void IniUser::saveDefaultIni()
 {
     setLanguage(defaultLanguage());

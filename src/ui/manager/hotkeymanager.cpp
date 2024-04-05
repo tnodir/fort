@@ -9,11 +9,22 @@
 
 #include "nativeeventfilter.h"
 
+namespace {
+
+QKeyCombination getActionKey(QAction *action)
+{
+    const QKeySequence keySequence = action->shortcut();
+
+    return keySequence.isEmpty() ? QKeyCombination() : keySequence[0];
+}
+
+}
+
 HotKeyManager::HotKeyManager(QObject *parent) : QObject(parent) { }
 
 void HotKeyManager::initialize(bool enabled, bool global)
 {
-    if (m_enabled == enabled && m_global == global)
+    if (m_enabled == enabled && m_global == global && !checkShortcutsChanged())
         return;
 
     m_enabled = enabled;
@@ -33,19 +44,16 @@ void HotKeyManager::setUp()
 void HotKeyManager::tearDown()
 {
     disconnect(IoC<NativeEventFilter>());
+
+    removeActions();
 }
 
-bool HotKeyManager::addAction(QAction *action, const QKeySequence &shortcut)
+bool HotKeyManager::addAction(QAction *action)
 {
-    action->setText(action->text());
-
-    action->setShortcut(shortcut);
     action->setShortcutVisibleInContextMenu(false);
 
-    const int hotKeyId = m_actions.size();
-    action->setData(hotKeyId);
-
     m_actions.append(action);
+    m_keys.append(getActionKey(action));
 
     return true;
 }
@@ -55,6 +63,7 @@ void HotKeyManager::removeActions()
     IoC<NativeEventFilter>()->unregisterHotKeys();
 
     m_actions.clear();
+    m_keys.clear();
 }
 
 void HotKeyManager::updateActions()
@@ -63,12 +72,35 @@ void HotKeyManager::updateActions()
 
     eventFilter->unregisterHotKeys();
 
+    int hotKeyId = 0;
     for (QAction *action : std::as_const(m_actions)) {
         action->setShortcutVisibleInContextMenu(enabled());
+
+        const auto key = getActionKey(action);
+        m_keys[hotKeyId] = key;
+
         if (enabled() && global()) {
-            registerHotKey(eventFilter, action);
+            eventFilter->registerHotKey(hotKeyId, key);
         }
+
+        ++hotKeyId;
     }
+}
+
+bool HotKeyManager::checkShortcutsChanged() const
+{
+    int hotKeyId = 0;
+    for (QAction *action : std::as_const(m_actions)) {
+        const auto oldKey = getActionKey(action);
+        const auto key = m_keys[hotKeyId];
+
+        if (key != oldKey)
+            return true;
+
+        ++hotKeyId;
+    }
+
+    return false;
 }
 
 void HotKeyManager::onHotKeyPressed(int hotKeyId)
@@ -76,23 +108,9 @@ void HotKeyManager::onHotKeyPressed(int hotKeyId)
     if (WindowManager::activateModalWidget())
         return;
 
-    if (hotKeyId >= m_actions.size())
-        return;
-
-    QAction *action = m_actions.at(hotKeyId);
-    if (action->isEnabled()) {
+    QAction *action = m_actions.value(hotKeyId);
+    if (action && action->isEnabled()) {
         action->trigger();
         OsUtil::beep();
     }
-}
-
-void HotKeyManager::registerHotKey(NativeEventFilter *eventFilter, QAction *action) const
-{
-    const QKeySequence shortcut = action->shortcut();
-    const int hotKeyId = action->data().toInt();
-
-    const auto keyCombination = shortcut[0];
-    const int key = keyCombination.toCombined();
-
-    eventFilter->registerHotKey(hotKeyId, key);
 }

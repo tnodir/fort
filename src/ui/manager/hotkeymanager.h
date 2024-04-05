@@ -18,12 +18,14 @@ public:
     bool enabled() const { return m_enabled; }
     bool global() const { return m_global; }
 
+    const QList<QAction *> &actions() const { return m_actions; }
+
     void initialize(bool enabled, bool global);
 
     void setUp() override;
     void tearDown() override;
 
-    bool addAction(QAction *action, const QKeySequence &shortcut);
+    bool addAction(QAction *action);
 
     void removeActions();
 
@@ -33,13 +35,14 @@ private slots:
 private:
     void updateActions();
 
-    void registerHotKey(NativeEventFilter *eventFilter, QAction *action) const;
+    bool checkShortcutsChanged() const;
 
 private:
     bool m_enabled = false;
     bool m_global = false;
 
     QList<QAction *> m_actions;
+    QVector<QKeyCombination> m_keys;
 };
 
 #endif // HOTKEYMANAGER_H

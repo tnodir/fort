@@ -115,9 +115,10 @@ private:
 
     void updateTrayIconShape();
 
-    void addHotKey(QAction *action, const QString &shortcutText);
+    void updateActionHotKeys();
+
+    void addHotKey(QAction *action, const char *iniKey);
     void updateHotKeys();
-    void removeHotKeys();
 
     void updateClickActions();
 
@@ -145,9 +146,9 @@ private:
     ClickableMenu *m_optionsMenu = nullptr;
     QAction *m_optionsAction = nullptr;
     QAction *m_rulesAction = nullptr;
+    QAction *m_zonesAction = nullptr;
     QAction *m_statisticsAction = nullptr;
     QAction *m_graphAction = nullptr;
-    QAction *m_zonesAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
     QAction *m_blockTrafficAction = nullptr;
     QAction *m_blockInetTrafficAction = nullptr;
@@ -157,6 +158,7 @@ private:
     QAction *m_quitAction = nullptr;
     QAction *m_trayMenuAction = nullptr;
     QList<QAction *> m_appGroupActions;
+    QVector<const char *> m_actionIniKeys;
 
     QAction *m_clickActions[ClickTypeCount] = { nullptr };
 

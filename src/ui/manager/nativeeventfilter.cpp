@@ -126,7 +126,7 @@ bool NativeEventFilter::registerHotKey(
     return true;
 }
 
-bool NativeEventFilter::registerHotKey(int hotKeyId, int key)
+bool NativeEventFilter::registerHotKey(int hotKeyId, QKeyCombination key)
 {
     return registerHotKey(hotKeyId, Qt::Key(key & ~Qt::KeyboardModifierMask),
             Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask));

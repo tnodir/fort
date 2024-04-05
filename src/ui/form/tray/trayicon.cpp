@@ -27,6 +27,8 @@
 
 namespace {
 
+constexpr int MaxFKeyCount = 12;
+
 const QString eventSingleClick = QStringLiteral("singleClick");
 const QString eventCtrlSingleClick = QStringLiteral("ctrlSingleClick");
 const QString eventAltSingleClick = QStringLiteral("altSingleClick");
@@ -279,8 +281,9 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
 
     updateTrayMenuFlags();
     updateTrayIconShape();
-    updateHotKeys();
     updateClickActions();
+    updateActionHotKeys();
+    updateHotKeys();
 }
 
 void TrayIcon::quitProgram()
@@ -372,11 +375,11 @@ void TrayIcon::setupTrayMenu()
 
     m_homeAction = addAction(
             m_menu, ":/icons/fort.png", windowManager(), SLOT(showHomeWindow()), ActionShowHome);
-    addHotKey(m_homeAction, iniUser()->hotKeyValue(HotKey::home));
+    addHotKey(m_homeAction, HotKey::home);
 
     m_programsAction = addAction(m_menu, ":/icons/application.png", windowManager(),
             SLOT(showProgramsWindow()), ActionShowPrograms);
-    addHotKey(m_programsAction, iniUser()->hotKeyValue(HotKey::programs));
+    addHotKey(m_programsAction, HotKey::programs);
 
     m_programsOrAlertAction = addAction(
             m_menu, QString(), this, SLOT(showProgramsOrAlertWindow()), ActionShowProgramsOrAlert);
@@ -387,27 +390,26 @@ void TrayIcon::setupTrayMenu()
 
     m_statisticsAction = addAction(m_menu, ":/icons/chart_bar.png", windowManager(),
             SLOT(showStatisticsWindow()), ActionShowStatistics);
-    addHotKey(m_statisticsAction, iniUser()->hotKeyValue(HotKey::statistics));
+    addHotKey(m_statisticsAction, HotKey::statistics);
 
     m_graphAction = addAction(m_menu, ":/icons/action_log.png", windowManager(),
             SLOT(switchGraphWindow()), ActionShowTrafficGraph, /*checkable=*/true,
             windowManager()->isWindowOpen(WindowGraph));
-    addHotKey(m_graphAction, iniUser()->hotKeyValue(HotKey::graph));
+    addHotKey(m_graphAction, HotKey::graph);
 
     m_menu->addSeparator();
 
     m_filterEnabledAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)),
             ActionSwitchFilterEnabled, /*checkable=*/true);
-    addHotKey(
-            m_filterEnabledAction, iniUser()->hotKeyValue(HotKey::filter, HotKey::Default::filter));
+    addHotKey(m_filterEnabledAction, HotKey::filter);
 
     m_blockTrafficAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)),
             ActionSwitchBlockTraffic, /*checkable=*/true);
-    addHotKey(m_blockTrafficAction, iniUser()->hotKeyValue(HotKey::blockTraffic));
+    addHotKey(m_blockTrafficAction, HotKey::blockTraffic);
 
     m_blockInetTrafficAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)),
             ActionSwitchBlockInetTraffic, /*checkable=*/true);
-    addHotKey(m_blockInetTrafficAction, iniUser()->hotKeyValue(HotKey::blockInetTraffic));
+    addHotKey(m_blockInetTrafficAction, HotKey::blockInetTraffic);
 
     m_filterModeMenuAction = addAction(
             m_menu, QString(), this, SLOT(switchFilterModeMenu(bool)), ActionShowFilterModeMenu);
@@ -418,19 +420,12 @@ void TrayIcon::setupTrayMenu()
 
     m_menu->addSeparator();
 
-    const QString hotKeyAppGroupModifier =
-            iniUser()->hotKeyValue(HotKey::appGroupModifier, HotKey::Default::appGroupModifier)
-            + "+F";
-
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
         QAction *a = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)), ActionNone,
                 /*checkable=*/true);
 
-        constexpr int maxFKeyCount = 12;
-        if (i < maxFKeyCount) {
-            const QString shortcutText = hotKeyAppGroupModifier + QString::number(i + 1);
-
-            addHotKey(a, shortcutText);
+        if (i < MaxFKeyCount) {
+            addHotKey(a, HotKey::appGroupModifier);
         }
 
         m_appGroupActions.append(a);
@@ -439,7 +434,7 @@ void TrayIcon::setupTrayMenu()
     m_menu->addSeparator();
 
     m_quitAction = addAction(m_menu, ":/icons/standby.png", this, SLOT(quitProgram()));
-    addHotKey(m_quitAction, iniUser()->hotKeyValue(HotKey::quit));
+    addHotKey(m_quitAction, HotKey::quit);
 
     m_trayMenuAction =
             addAction(m_menu, QString(), this, SLOT(switchTrayMenu(bool)), ActionShowTrayMenu);
@@ -453,25 +448,25 @@ void TrayIcon::setupTrayMenuOptions()
 
     m_optionsAction =
             addAction(m_optionsMenu, ":/icons/cog.png", windowManager(), SLOT(showOptionsWindow()));
-    addHotKey(m_optionsAction, iniUser()->hotKeyValue(HotKey::options));
+    addHotKey(m_optionsAction, HotKey::options);
 
     connect(m_optionsMenu, &ClickableMenu::clicked, m_optionsAction, &QAction::trigger);
 
     m_rulesAction = addAction(
             m_optionsMenu, ":/icons/script.png", windowManager(), SLOT(showRulesWindow()));
-    addHotKey(m_rulesAction, iniUser()->hotKeyValue(HotKey::rules));
+    addHotKey(m_rulesAction, HotKey::rules);
 
     // TODO: Implement Rules
     m_rulesAction->setEnabled(false);
 
     m_zonesAction = addAction(
             m_optionsMenu, ":/icons/ip_class.png", windowManager(), SLOT(showZonesWindow()));
-    addHotKey(m_zonesAction, iniUser()->hotKeyValue(HotKey::zones));
+    addHotKey(m_zonesAction, HotKey::zones);
 }
 
 void TrayIcon::setupTrayMenuFilterMode()
 {
-    static const char *const filterModeHotKeys[] = {
+    static const char *const filterModeIniKeys[] = {
         HotKey::filterModeAutoLearn,
         HotKey::filterModeAskToConnect,
         HotKey::filterModeBlock,
@@ -487,13 +482,13 @@ void TrayIcon::setupTrayMenuFilterMode()
     const QStringList iconPaths = FirewallConf::filterModeIconPaths();
     for (const QString &name : FirewallConf::filterModeNames()) {
         const QString iconPath = iconPaths.at(index);
-        const QString hotKey = filterModeHotKeys[index];
+        const auto &iniKey = filterModeIniKeys[index];
 
         QAction *a = addAction(m_filterModeMenu, iconPath, /*receiver=*/nullptr, /*member=*/nullptr,
                 ActionNone, /*checkable=*/true);
         a->setText(name);
 
-        addHotKey(a, iniUser()->hotKeyValue(hotKey));
+        addHotKey(a, iniKey);
 
         // TODO: Implement Ask to Connect
         a->setEnabled(index != 1);
@@ -706,23 +701,36 @@ void TrayIcon::switchFilterMode(QAction *action)
     }
 }
 
-void TrayIcon::addHotKey(QAction *action, const QString &shortcutText)
+void TrayIcon::updateActionHotKeys()
 {
-    if (shortcutText.isEmpty())
-        return;
+    int groupIndex = 0;
+    int index = 0;
+    for (auto action : hotKeyManager()->actions()) {
+        const auto &iniKey = m_actionIniKeys[index];
 
-    const QKeySequence shortcut = QKeySequence::fromString(shortcutText);
-    hotKeyManager()->addAction(action, shortcut);
+        QString shortcutText = iniUser()->hotKeyValue(iniKey);
+
+        if (iniKey == HotKey::appGroupModifier) {
+            shortcutText += "+F" + QString::number(++groupIndex);
+        }
+
+        const QKeySequence shortcut = QKeySequence::fromString(shortcutText);
+        action->setShortcut(shortcut);
+
+        ++index;
+    }
+}
+
+void TrayIcon::addHotKey(QAction *action, const char *iniKey)
+{
+    hotKeyManager()->addAction(action);
+
+    m_actionIniKeys.append(iniKey);
 }
 
 void TrayIcon::updateHotKeys()
 {
     hotKeyManager()->initialize(iniUser()->hotKeyEnabled(), iniUser()->hotKeyGlobal());
-}
-
-void TrayIcon::removeHotKeys()
-{
-    hotKeyManager()->removeActions();
 }
 
 TrayIcon::ActionType TrayIcon::clickEventActionType(IniUser *iniUser, ClickType clickType)

@@ -20,7 +20,7 @@ public:
     bool nativeEventFilter(const QByteArray &eventType, void *message, qintptr *result) override;
 
     bool registerHotKey(int hotKeyId, Qt::Key keyCode, Qt::KeyboardModifiers modifiers);
-    bool registerHotKey(int hotKeyId, int key);
+    bool registerHotKey(int hotKeyId, QKeyCombination key);
 
     void unregisterHotKeys();
 
