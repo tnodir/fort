@@ -24,8 +24,10 @@ HotKeyManager::HotKeyManager(QObject *parent) : QObject(parent) { }
 
 void HotKeyManager::initialize(bool enabled, bool global)
 {
-    if (m_enabled == enabled && m_global == global && !checkShortcutsChanged())
-        return;
+    if (m_enabled == enabled && m_global == global) {
+        if (!checkShortcutsChanged())
+            return;
+    }
 
     m_enabled = enabled;
     m_global = global;
