@@ -777,13 +777,26 @@ QLayout *OptionsPage::setupEditShortcutLayout()
     m_editShortcut->setClearButtonEnabled(true);
     m_editShortcut->setFixedWidth(200);
 
-    connect(m_editShortcut, &QKeySequenceEdit::editingFinished, [&] {
+    const auto onEditShortcut = [&](const QKeySequence &shortcut) {
         const auto &key = HotKey::list[m_comboHotKey->currentIndex()];
-        const auto value = m_editShortcut->keySequence().toString();
+        const auto value = shortcut.toString();
+
+        if (value == iniUser()->hotKeyValue(key))
+            return;
 
         iniUser()->setHotKeyValue(key, value);
         ctrl()->setIniUserEdited();
-    });
+    };
+
+    connect(m_editShortcut, &QKeySequenceEdit::editingFinished,
+            [=, this] { onEditShortcut(m_editShortcut->keySequence()); });
+
+    connect(m_editShortcut, &QKeySequenceEdit::keySequenceChanged,
+            [=, this](const QKeySequence &shortcut) {
+                if (shortcut.isEmpty()) {
+                    onEditShortcut({});
+                }
+            });
 
     return ControlUtil::createRowLayout(m_labelShortcut, m_editShortcut);
 }
