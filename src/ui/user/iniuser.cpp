@@ -39,16 +39,16 @@ const char *const defaultValue(const char *key)
 
 IniUser::IniUser(Settings *settings) : MapSettings(settings) { }
 
-QString IniUser::hotKeyValue(const QString &key) const
+QString IniUser::hotKeyValue(const char *key) const
 {
-    const auto &defaultValue = HotKey::defaultValue(key.toLatin1());
+    const auto &defaultValue = HotKey::defaultValue(key);
 
-    return valueText("hotKey/" + key, defaultValue);
+    return valueText("hotKey/" + QLatin1String(key), defaultValue);
 }
 
-void IniUser::setHotKeyValue(const QString &key, const QString &v)
+void IniUser::setHotKeyValue(const char *key, const QString &v)
 {
-    setValue("hotKey/" + key, v);
+    setValue("hotKey/" + QLatin1String(key), v);
 }
 
 void IniUser::saveDefaultIni()
