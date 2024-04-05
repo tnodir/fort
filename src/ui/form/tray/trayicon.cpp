@@ -708,13 +708,17 @@ void TrayIcon::updateActionHotKeys()
     for (auto action : hotKeyManager()->actions()) {
         const auto &iniKey = m_actionIniKeys[index];
 
-        QString shortcutText = iniUser()->hotKeyValue(iniKey);
+        const QString shortcutText = iniUser()->hotKeyValue(iniKey);
+        QKeySequence shortcut = QKeySequence::fromString(shortcutText);
 
-        if (iniKey == HotKey::appGroupModifier) {
-            shortcutText += "+F" + QString::number(++groupIndex);
+        if (!shortcut.isEmpty() && iniKey == HotKey::appGroupModifier) {
+            const QKeyCombination key = shortcut[0];
+
+            shortcut = Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask)
+                    | (Qt::Key_F1 + groupIndex);
+            ++groupIndex;
         }
 
-        const QKeySequence shortcut = QKeySequence::fromString(shortcutText);
         action->setShortcut(shortcut);
 
         ++index;
