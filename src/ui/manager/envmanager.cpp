@@ -38,8 +38,8 @@ bool EnvManager::checkEnvironmentChanged() const
 #else
     auto it = m_cache.constBegin();
     for (; it != m_cache.constEnd(); ++it) {
-        const auto key = it.key();
-        const auto value = it.value();
+        const auto &key = it.key();
+        const auto &value = it.value();
 #endif
 
         const auto newValue = readEnvVar(key);

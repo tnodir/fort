@@ -774,7 +774,9 @@ QLayout *OptionsPage::setupEditShortcutLayout()
     m_labelShortcut = ControlUtil::createLabel();
 
     m_editShortcut = new QKeySequenceEdit();
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
     m_editShortcut->setClearButtonEnabled(true);
+#endif
     m_editShortcut->setFixedWidth(200);
 
     const auto onEditShortcut = [&](const QKeySequence &shortcut) {

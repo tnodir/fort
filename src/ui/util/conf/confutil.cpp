@@ -796,7 +796,14 @@ void ConfUtil::writeApps(char **data, const appdata_map_t &appsMap, bool useHead
         *offp++ = 0;
     }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
     for (const auto &[kernelPath, appData] : appsMap.asKeyValueRange()) {
+#else
+    auto it = appsMap.constBegin();
+    for (; it != appsMap.constEnd(); ++it) {
+        const auto &kernelPath = it.key();
+        const auto &appData = it.value();
+#endif
         const int kernelPathSize = kernelPath.size();
 
         const quint16 appPathLen = quint16(kernelPathSize * sizeof(wchar_t));
