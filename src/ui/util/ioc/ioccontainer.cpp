@@ -24,7 +24,6 @@ void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)
         if (Q_UNLIKELY(newSize >= IOC_MAX_SIZE)) {
             qCCritical(LC) << "IoC Container size error";
             Q_UNREACHABLE();
-            abort();
         }
         m_size = newSize;
     }
