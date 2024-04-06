@@ -1503,19 +1503,19 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>사전 설정 규칙 추가</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished">제거</translation>
+        <translation>제거</translation>
     </message>
     <message>
         <source>Move Up</source>
-        <translation type="unfinished"></translation>
+        <translation>위로 이동</translation>
     </message>
     <message>
         <source>Move Down</source>
-        <translation type="unfinished"></translation>
+        <translation>아래로 이동</translation>
     </message>
 </context>
 <context>
@@ -1600,7 +1600,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙 선택</translation>
     </message>
 </context>
 <context>

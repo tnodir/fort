@@ -1090,11 +1090,11 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation type="unfinished"></translation>
+        <translation>Raccourcis clavier:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
-        <translation type="unfinished"></translation>
+        <translation>Raccourci:</translation>
     </message>
 </context>
 <context>
@@ -2028,7 +2028,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>App Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Modificateur de groupe d&apos;applications</translation>
     </message>
 </context>
 <context>

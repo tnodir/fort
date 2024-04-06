@@ -1090,11 +1090,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation type="unfinished"></translation>
+        <translation>مفتاح الاختصار:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
-        <translation type="unfinished"></translation>
+        <translation>الاختصار:</translation>
     </message>
 </context>
 <context>
@@ -2028,7 +2028,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>App Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>محرّر مجموعة التطبيق</translation>
     </message>
 </context>
 <context>

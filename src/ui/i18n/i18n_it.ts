@@ -1090,11 +1090,11 @@ Assicurati di avere un backup recente.</translation>
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tasto:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
-        <translation type="unfinished"></translation>
+        <translation>Scorciatoia:</translation>
     </message>
 </context>
 <context>
@@ -2028,7 +2028,8 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>App Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Modificatore gruppo a
+App</translation>
     </message>
 </context>
 <context>
