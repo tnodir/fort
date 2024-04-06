@@ -92,7 +92,7 @@ SqliteDb *ConfZoneManager::sqliteDb() const
 
 void ConfZoneManager::setUp()
 {
-    m_confManager = IoCPinned()->setUpDependency<ConfManager>();
+    m_confManager = IoCDependency<ConfManager>();
 }
 
 bool ConfZoneManager::addOrUpdateZone(Zone &zone)

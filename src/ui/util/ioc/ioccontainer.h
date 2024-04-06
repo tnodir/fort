@@ -124,4 +124,10 @@ inline static T *IoC()
     return IoCPinned()->resolve<T>();
 }
 
+template<class T>
+inline static T *IoCDependency()
+{
+    return IoCPinned()->setUpDependency<T>();
+}
+
 #endif // IOCCONTAINER_H

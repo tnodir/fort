@@ -157,7 +157,7 @@ void StatBlockManager::setupWorker()
 
 void StatBlockManager::setupConfManager()
 {
-    auto confManager = IoCPinned()->setUpDependency<ConfManager>();
+    auto confManager = IoCDependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniChanged, this, &StatBlockManager::setupByConf);
 }

@@ -126,7 +126,7 @@ void WindowManager::setupMainWindow()
     m_mainWindow->setFont(defaultFont());
 
     // Register Native events
-    auto nativeEventFilter = IoCPinned()->setUpDependency<NativeEventFilter>();
+    auto nativeEventFilter = IoCDependency<NativeEventFilter>();
 
     nativeEventFilter->registerSessionNotification(mainWindow()->winId());
 
@@ -232,7 +232,7 @@ void WindowManager::setupStatisticsWindow()
 
 void WindowManager::setupConfManager()
 {
-    auto confManager = IoCPinned()->setUpDependency<ConfManager>();
+    auto confManager = IoCDependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniUserChanged, this, &WindowManager::setupByIniUser);
 }

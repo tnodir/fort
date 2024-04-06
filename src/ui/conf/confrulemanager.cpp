@@ -117,7 +117,7 @@ SqliteDb *ConfRuleManager::sqliteDb() const
 
 void ConfRuleManager::setUp()
 {
-    m_confManager = IoCPinned()->setUpDependency<ConfManager>();
+    m_confManager = IoCDependency<ConfManager>();
 }
 
 void ConfRuleManager::loadRuleSet(Rule &rule, QStringList &ruleSetNames)

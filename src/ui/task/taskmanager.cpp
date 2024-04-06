@@ -71,7 +71,7 @@ void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
 
 void TaskManager::loadSettings()
 {
-    auto confManager = IoCPinned()->setUpDependency<ConfManager>();
+    auto confManager = IoCDependency<ConfManager>();
 
     confManager->loadTasks(taskInfoList());
 }

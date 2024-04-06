@@ -92,7 +92,7 @@ void RpcManager::setupServerSignals()
 
 void RpcManager::setupClient()
 {
-    auto controlManager = IoCPinned()->setUpDependency<ControlManager>();
+    auto controlManager = IoCDependency<ControlManager>();
 
     m_client = controlManager->newServiceClient(this);
 

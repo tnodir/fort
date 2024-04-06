@@ -34,7 +34,7 @@ QString TranslationManager::languageName() const
 
 void TranslationManager::setUp()
 {
-    auto confManager = IoCPinned()->setUpDependency<ConfManager>();
+    auto confManager = IoCDependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniUserChanged, this, &TranslationManager::setupByIniUser);
 
