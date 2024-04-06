@@ -23,7 +23,7 @@ const char *const list[] = {
     appGroupModifier,
     quit,
 };
-const int listCount = sizeof(list) / sizeof(list[0]);
+const int listCount = int(std::size(list));
 
 const char *const defaultValue(const char *key)
 {
