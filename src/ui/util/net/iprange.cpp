@@ -1,7 +1,5 @@
 #include "iprange.h"
 
-#include <QHash>
-
 #include <util/stringutil.h>
 
 #include "netutil.h"
@@ -70,19 +68,9 @@ void IpRange::clear()
     m_pair6ToArray.clear();
 }
 
-void IpRange::setErrorLineNo(int lineNo)
+void IpRange::appendErrorDetails(const QString &errorDetails)
 {
-    m_errorLineNo = lineNo;
-}
-
-void IpRange::setErrorMessage(const QString &errorMessage)
-{
-    m_errorMessage = errorMessage;
-}
-
-void IpRange::setErrorDetails(const QString &errorDetails)
-{
-    m_errorDetails = errorDetails;
+    m_errorDetails += (m_errorDetails.isEmpty() ? QString() : QString(' ')) + errorDetails;
 }
 
 QString IpRange::errorLineAndMessageDetails() const
@@ -149,8 +137,7 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
             continue;
 
         if (parseIpLine(line, ip4RangeMap, pair4Size) != ErrorOk) {
-            setErrorDetails(errorDetails() + (errorDetails().isEmpty() ? QString() : QString(' '))
-                    + QString("line='%1'").arg(line));
+            appendErrorDetails(QString("line='%1'").arg(line));
             setErrorLineNo(lineNo);
             return false;
         }
@@ -162,8 +149,6 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
         sortIp6Array(m_ip6Array);
         sortIp6PairArray(m_pair6FromArray, m_pair6ToArray);
     }
-
-    setErrorLineNo(0);
 
     return true;
 }

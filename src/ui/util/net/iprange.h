@@ -98,9 +98,11 @@ private:
         ErrorBadRange,
     };
 
-    void setErrorLineNo(int lineNo);
-    void setErrorMessage(const QString &errorMessage);
-    void setErrorDetails(const QString &errorDetails);
+    void setErrorLineNo(int lineNo) { m_errorLineNo = lineNo; }
+    void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
+    void setErrorDetails(const QString &errorDetails) { m_errorDetails = errorDetails; }
+
+    void appendErrorDetails(const QString &errorDetails);
 
     IpRange::ParseError parseIpLine(
             const QStringView line, ip4range_map_t &ip4RangeMap, int &pair4Size);
