@@ -67,8 +67,8 @@ static FORT_APP_DATA fort_callout_ale_conf_app_data(
     return app_data;
 }
 
-inline static BOOL fort_callout_ale_associate_flow(PCFORT_CALLOUT_ARG ca,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_APP_FLAGS app_flags)
+inline static BOOL fort_callout_ale_associate_flow(
+        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_FLAGS app_flags)
 {
     const UINT64 flow_id = ca->inMetaValues->flowHandle;
 
@@ -189,7 +189,7 @@ inline static BOOL fort_callout_ale_add_pending(
 }
 
 inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
-        PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
+        FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
 {
     if (app_flags.v == 0 && conf_flags.ask_to_connect) {
         return fort_callout_ale_add_pending(ca, cx, conf_flags);
@@ -198,7 +198,7 @@ inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CA
     if (!conf_flags.log_stat)
         return FALSE;
 
-    return fort_callout_ale_associate_flow(ca, cx, conf_ref, app_flags);
+    return fort_callout_ale_associate_flow(ca, cx, app_flags);
 }
 
 static BOOL fort_callout_ale_is_zone_blocked(
@@ -270,7 +270,7 @@ inline static void fort_callout_ale_log(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE
 
     if (fort_callout_ale_is_allowed(ca, cx, conf_ref, conf_flags, app_data)) {
 
-        if (fort_callout_ale_process_flow(ca, cx, conf_ref, conf_flags, app_data.flags))
+        if (fort_callout_ale_process_flow(ca, cx, conf_flags, app_data.flags))
             return;
 
         cx->blocked = FALSE; /* allow */
