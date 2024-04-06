@@ -79,14 +79,6 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 
 ConfUtil::ConfUtil(QObject *parent) : QObject(parent) { }
 
-void ConfUtil::setErrorMessage(const QString &errorMessage)
-{
-    if (m_errorMessage != errorMessage) {
-        m_errorMessage = errorMessage;
-        emit errorMessageChanged();
-    }
-}
-
 int ConfUtil::ruleMaxCount()
 {
     return FORT_CONF_RULE_MAX;

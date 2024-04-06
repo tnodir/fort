@@ -24,7 +24,6 @@ using chars_arr_t = QVector<qint8>;
 class ConfUtil : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
     explicit ConfUtil(QObject *parent = nullptr);
@@ -35,9 +34,6 @@ public:
 
     static int ruleMaxCount();
     static int zoneMaxCount();
-
-signals:
-    void errorMessageChanged();
 
 public slots:
     int writeVersion(QByteArray &buf);
@@ -56,7 +52,7 @@ public slots:
     bool loadZone(const QByteArray &buf, IpRange &ipRange);
 
 private:
-    void setErrorMessage(const QString &errorMessage);
+    void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
 
     bool parseAddressGroups(const QList<AddressGroup *> &addressGroups,
             addrranges_arr_t &addressRanges, longs_arr_t &addressGroupOffsets,
