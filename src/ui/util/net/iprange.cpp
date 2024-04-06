@@ -184,7 +184,7 @@ IpRange::ParseError IpRange::parseIpLine(
                   : parseIp4Address(ip, mask, ip4RangeMap, pair4Size, maskSep);
 }
 
-IpRange::ParseError IpRange::parseIp4Address(const QString &ip, const QString &mask,
+IpRange::ParseError IpRange::parseIp4Address(const QStringView ip, const QStringView mask,
         ip4range_map_t &ip4RangeMap, int &pair4Size, char maskSep)
 {
     quint32 from, to = 0;
@@ -211,7 +211,7 @@ IpRange::ParseError IpRange::parseIp4Address(const QString &ip, const QString &m
 }
 
 IpRange::ParseError IpRange::parseIp4AddressMask(
-        const QString &mask, quint32 &from, quint32 &to, char maskSep)
+        const QStringView mask, quint32 &from, quint32 &to, char maskSep)
 {
     switch (maskSep) {
     case '-': // e.g. "127.0.0.0-127.255.255.255"
@@ -225,7 +225,7 @@ IpRange::ParseError IpRange::parseIp4AddressMask(
 }
 
 IpRange::ParseError IpRange::parseIp4AddressMaskFull(
-        const QString &mask, quint32 &from, quint32 &to)
+        const QStringView mask, quint32 &from, quint32 &to)
 {
     bool ok;
     to = NetUtil::textToIp4(mask, &ok);
@@ -245,7 +245,7 @@ IpRange::ParseError IpRange::parseIp4AddressMaskFull(
 }
 
 IpRange::ParseError IpRange::parseIp4AddressMaskPrefix(
-        const QString &mask, quint32 &from, quint32 &to)
+        const QStringView mask, quint32 &from, quint32 &to)
 {
     bool ok = true;
     const int nbits = mask.isEmpty() ? emptyNetMask() : mask.toInt(&ok);
@@ -261,7 +261,8 @@ IpRange::ParseError IpRange::parseIp4AddressMaskPrefix(
     return ErrorOk;
 }
 
-IpRange::ParseError IpRange::parseIp6Address(const QString &ip, const QString &mask, char maskSep)
+IpRange::ParseError IpRange::parseIp6Address(
+        const QStringView ip, const QStringView mask, char maskSep)
 {
     bool hasMask = false;
     ip6_addr_t from, to;
@@ -289,7 +290,7 @@ IpRange::ParseError IpRange::parseIp6Address(const QString &ip, const QString &m
 }
 
 IpRange::ParseError IpRange::parseIp6AddressMask(
-        const QString &mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask, char maskSep)
+        const QStringView mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask, char maskSep)
 {
     hasMask = false;
 
@@ -304,7 +305,7 @@ IpRange::ParseError IpRange::parseIp6AddressMask(
 }
 
 IpRange::ParseError IpRange::parseIp6AddressMaskFull(
-        const QString &mask, ip6_addr_t &to, bool &hasMask)
+        const QStringView mask, ip6_addr_t &to, bool &hasMask)
 {
     bool ok;
     to = NetUtil::textToIp6(mask, &ok);
@@ -320,7 +321,7 @@ IpRange::ParseError IpRange::parseIp6AddressMaskFull(
 }
 
 IpRange::ParseError IpRange::parseIp6AddressMaskPrefix(
-        const QString &mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask)
+        const QStringView mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask)
 {
     bool ok;
     const int nbits = mask.toInt(&ok);

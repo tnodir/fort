@@ -107,21 +107,23 @@ private:
     IpRange::ParseError parseIpLine(
             const QStringView line, ip4range_map_t &ip4RangeMap, int &pair4Size);
 
-    IpRange::ParseError parseIp4Address(const QString &ip, const QString &mask,
+    IpRange::ParseError parseIp4Address(const QStringView ip, const QStringView mask,
             ip4range_map_t &ip4RangeMap, int &pair4Size, char maskSep);
 
     IpRange::ParseError parseIp4AddressMask(
-            const QString &mask, quint32 &from, quint32 &to, char maskSep);
-    IpRange::ParseError parseIp4AddressMaskFull(const QString &mask, quint32 &from, quint32 &to);
-    IpRange::ParseError parseIp4AddressMaskPrefix(const QString &mask, quint32 &from, quint32 &to);
+            const QStringView mask, quint32 &from, quint32 &to, char maskSep);
+    IpRange::ParseError parseIp4AddressMaskFull(const QStringView mask, quint32 &from, quint32 &to);
+    IpRange::ParseError parseIp4AddressMaskPrefix(
+            const QStringView mask, quint32 &from, quint32 &to);
 
-    IpRange::ParseError parseIp6Address(const QString &ip, const QString &mask, char maskSep);
+    IpRange::ParseError parseIp6Address(const QStringView ip, const QStringView mask, char maskSep);
 
     IpRange::ParseError parseIp6AddressMask(
-            const QString &mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask, char maskSep);
-    IpRange::ParseError parseIp6AddressMaskFull(const QString &mask, ip6_addr_t &to, bool &hasMask);
+            const QStringView mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask, char maskSep);
+    IpRange::ParseError parseIp6AddressMaskFull(
+            const QStringView mask, ip6_addr_t &to, bool &hasMask);
     IpRange::ParseError parseIp6AddressMaskPrefix(
-            const QString &mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask);
+            const QStringView mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask);
 
     void fillIp4Range(const ip4range_map_t &ipRangeMap, int pairSize);
 
