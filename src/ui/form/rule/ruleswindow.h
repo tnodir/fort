@@ -65,7 +65,6 @@ private:
     void setupTreeRulesHeader();
     void setupTreeRulesExpandingChanged();
     void setupTreeRulesChanged();
-    void setupRuleListModelChanged();
     void setupRuleListModelReset();
     QLayout *setupButtons();
 

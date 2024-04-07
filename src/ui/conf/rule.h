@@ -26,7 +26,7 @@ public:
     bool enabled : 1 = true;
     bool blocked : 1 = false;
     bool exclusive : 1 = false;
-    bool ruleSetEdited : 1 = false;
+    bool ruleSetEdited : 1 = false; // transient
 
     RuleType ruleType = AppRule;
 

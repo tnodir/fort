@@ -8,7 +8,9 @@
 #define FORT_CONF_IP6_ARR_SIZE(n)     ((n) * sizeof(ip6_addr_t))
 #define FORT_CONF_IP4_RANGE_SIZE(n)   (FORT_CONF_IP4_ARR_SIZE(n) * 2)
 #define FORT_CONF_IP6_RANGE_SIZE(n)   (FORT_CONF_IP6_ARR_SIZE(n) * 2)
-#define FORT_CONF_RULE_MAX            256
+#define FORT_CONF_RULE_MAX            1024
+#define FORT_CONF_RULE_SET_MAX        32
+#define FORT_CONF_RULE_DEPTH_MAX      8
 #define FORT_CONF_ZONE_MAX            32
 #define FORT_CONF_GROUP_MAX           16
 #define FORT_CONF_APPS_LEN_MAX        (64 * 1024 * 1024)
@@ -68,6 +70,14 @@ typedef struct fort_service_info_list
 #define FORT_SERVICE_INFO_LIST_MIN_SIZE                                                            \
     (FORT_SERVICE_INFO_LIST_DATA_OFF + FORT_SERVICE_INFO_MAX_SIZE)
 
+typedef struct fort_conf_port_list
+{
+    UINT8 port_n;
+    UINT8 pair_n;
+
+    UINT16 port[1];
+} FORT_CONF_PORT_LIST, *PFORT_CONF_PORT_LIST;
+
 typedef struct fort_conf_addr4_list
 {
     UINT32 ip_n;
@@ -98,6 +108,55 @@ typedef struct fort_conf_addr_group
 
     char data[4];
 } FORT_CONF_ADDR_GROUP, *PFORT_CONF_ADDR_GROUP;
+
+#define FORT_RULE_FLAG_ADDRESS 0x01
+#define FORT_RULE_FLAG_PORT    0x02
+#define FORT_RULE_FLAG_PROTO   0x04
+
+typedef struct fort_conf_rule_expr
+{
+    UINT8 expr_begin : 1;
+    UINT8 expr_end : 1;
+    UINT8 expr_or : 1;
+
+    UINT8 has_ip4_list : 1;
+    UINT8 has_ip6_list : 1;
+
+    UINT8 flags;
+} FORT_CONF_RULE_EXPR, *PFORT_CONF_RULE_EXPR;
+
+typedef struct fort_conf_rule
+{
+    UINT8 enabled : 1;
+    UINT8 blocked : 1;
+    UINT8 exclusive : 1;
+
+    UINT8 has_accept_zones : 1;
+    UINT8 has_reject_zones : 1;
+    UINT8 has_expr : 1;
+
+    UINT8 set_count;
+} FORT_CONF_RULE, *PFORT_CONF_RULE;
+
+typedef struct fort_conf_rules
+{
+    UINT32 rule_off[FORT_CONF_RULE_MAX];
+
+    char data[4];
+} FORT_CONF_RULES, *PFORT_CONF_RULES;
+
+typedef struct fort_conf_rule_flag
+{
+    UINT16 rule_id;
+    UCHAR enabled;
+} FORT_CONF_RULE_FLAG, *PFORT_CONF_RULE_FLAG;
+
+#define FORT_CONF_RULE_SET_ALIGN           sizeof(UINT16)
+#define FORT_CONF_RULE_SET_SIZE(set_count) FORT_ALIGN_SIZE((set_count), FORT_CONF_RULE_SET_ALIGN)
+#define FORT_CONF_RULE_SIZE(rule)                                                                  \
+    (sizeof(FORT_CONF_RULE) + FORT_ALIGN_SIZE((rule)->set_count, FORT_CONF_RULE_SET_ALIGN)         \
+            + ((rule)->has_accept_zones ? sizeof(UINT32) : 0)                                      \
+            + ((rule)->has_reject_zones ? sizeof(UINT32) : 0))
 
 typedef struct fort_conf_zones
 {

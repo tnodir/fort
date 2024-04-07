@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 
 #include <conf/confrulemanager.h>
+#include <util/conf/confutil.h>
 #include <util/ioc/ioccontainer.h>
 
 #include "rulelistmodel.h"
@@ -41,6 +42,11 @@ void RuleSetModel::initialize(const RuleRow &ruleRow, const QStringList &ruleSet
 
 void RuleSetModel::addRule(const RuleRow &ruleRow)
 {
+    if (m_ruleSet.size() >= ConfUtil::ruleSetMaxCount()) {
+        qCDebug(LC) << "Rule Set is full";
+        return;
+    }
+
     const int subRuleId = ruleRow.ruleId;
 
     if (m_ruleSet.contains(subRuleId)) {

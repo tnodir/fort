@@ -152,7 +152,6 @@ void RulesWindow::setupUi()
     setupTreeRulesChanged();
 
     // Actions on rule list model's changed/reset
-    setupRuleListModelChanged();
     setupRuleListModelReset();
 
     auto layout = new QVBoxLayout();
@@ -286,18 +285,6 @@ void RulesWindow::setupTreeRulesChanged()
     refreshTreeRulesChanged();
 
     connect(m_ruleListView, &TreeView::currentIndexChanged, this, refreshTreeRulesChanged);
-}
-
-void RulesWindow::setupRuleListModelChanged()
-{
-    const auto refreshAddRule = [&] {
-        m_actAddRule->setEnabled(ruleListModel()->rowCount() < ConfUtil::ruleMaxCount());
-    };
-
-    refreshAddRule();
-
-    connect(ruleListModel(), &RuleListModel::modelReset, this, refreshAddRule);
-    connect(ruleListModel(), &RuleListModel::rowsRemoved, this, refreshAddRule);
 }
 
 void RulesWindow::setupRuleListModelReset()

@@ -33,6 +33,8 @@ public:
     QString errorMessage() const { return m_errorMessage; }
 
     static int ruleMaxCount();
+    static int ruleSetMaxCount();
+    static int ruleDepthMaxCount();
     static int zoneMaxCount();
 
 public slots:

@@ -324,8 +324,7 @@ int ConfRuleManager::getFreeRuleId(bool &ok)
 
     const int maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
 
-    constexpr int RuleMaxId = 9999;
-    ok = (maxRuleId <= RuleMaxId);
+    ok = (maxRuleId < ConfUtil::ruleMaxCount());
 
     return 0;
 }
