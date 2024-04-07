@@ -1090,11 +1090,11 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tastenkombination:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tastenkürzel:</translation>
     </message>
 </context>
 <context>
@@ -2028,7 +2028,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>App Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>App-Gruppen-Modifikator</translation>
     </message>
 </context>
 <context>
