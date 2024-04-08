@@ -109,21 +109,29 @@ typedef struct fort_conf_addr_group
     char data[4];
 } FORT_CONF_ADDR_GROUP, *PFORT_CONF_ADDR_GROUP;
 
-#define FORT_RULE_FLAG_ADDRESS 0x01
-#define FORT_RULE_FLAG_PORT    0x02
-#define FORT_RULE_FLAG_PROTO   0x04
+#define FORT_RULE_FLAG_ADDRESS    0x01
+#define FORT_RULE_FLAG_PORT       0x02
+#define FORT_RULE_FLAG_PROTO_TCP  0x10
+#define FORT_RULE_FLAG_PROTO_UDP  0x20
+#define FORT_RULE_FLAG_PROTO_MASK 0xF0
 
 typedef struct fort_conf_rule_expr
 {
     UINT8 expr_begin : 1;
     UINT8 expr_end : 1;
     UINT8 expr_or : 1;
+    UINT8 expr_local : 1; // Local Address/Port
 
-    UINT8 has_ip4_list : 1;
     UINT8 has_ip6_list : 1;
 
     UINT8 flags;
 } FORT_CONF_RULE_EXPR, *PFORT_CONF_RULE_EXPR;
+
+typedef struct fort_conf_rule_zones
+{
+    UINT32 accept_zones;
+    UINT32 reject_zones;
+} FORT_CONF_RULE_ZONES, *PFORT_CONF_RULE_ZONES;
 
 typedef struct fort_conf_rule
 {
@@ -131,8 +139,7 @@ typedef struct fort_conf_rule
     UINT8 blocked : 1;
     UINT8 exclusive : 1;
 
-    UINT8 has_accept_zones : 1;
-    UINT8 has_reject_zones : 1;
+    UINT8 has_zones : 1;
     UINT8 has_expr : 1;
 
     UINT8 set_count;
@@ -151,12 +158,9 @@ typedef struct fort_conf_rule_flag
     UCHAR enabled;
 } FORT_CONF_RULE_FLAG, *PFORT_CONF_RULE_FLAG;
 
-#define FORT_CONF_RULE_SET_ALIGN           sizeof(UINT16)
-#define FORT_CONF_RULE_SET_SIZE(set_count) FORT_ALIGN_SIZE((set_count), FORT_CONF_RULE_SET_ALIGN)
 #define FORT_CONF_RULE_SIZE(rule)                                                                  \
-    (sizeof(FORT_CONF_RULE) + FORT_ALIGN_SIZE((rule)->set_count, FORT_CONF_RULE_SET_ALIGN)         \
-            + ((rule)->has_accept_zones ? sizeof(UINT32) : 0)                                      \
-            + ((rule)->has_reject_zones ? sizeof(UINT32) : 0))
+    (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \
+            + (rule)->set_count * sizeof(UINT16))
 
 typedef struct fort_conf_zones
 {
