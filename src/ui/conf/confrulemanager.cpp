@@ -61,23 +61,28 @@ const char *const sqlSelectRuleSet = "SELECT t.sub_rule_id, r.name"
                                      "  ORDER BY t.order_index;";
 
 const char *const sqlSelectRuleSetLoop = "WITH RECURSIVE"
-                                         "  parents(rule_id) AS ("
-                                         "    VALUES(?1)"
+                                         "  parents(rule_id, level) AS ("
+                                         "    VALUES(?1, 0)"
                                          "    UNION ALL"
-                                         "    SELECT t.rule_id"
+                                         "    SELECT t.rule_id, p.level + 1"
                                          "      FROM rule_set t"
                                          "      JOIN parents p ON p.rule_id = t.sub_rule_id"
                                          "  ),"
-                                         "  children(rule_id) AS ("
-                                         "    VALUES(?2)"
+                                         "  children(rule_id, level) AS ("
+                                         "    VALUES(?2, 0)"
                                          "    UNION ALL"
-                                         "    SELECT t.sub_rule_id"
+                                         "    SELECT t.sub_rule_id, c.level + 1"
                                          "      FROM rule_set t"
                                          "      JOIN children c ON c.rule_id = t.rule_id"
                                          "  )"
-                                         "SELECT p.rule_id"
-                                         "  FROM parents p"
-                                         "  JOIN children c ON c.rule_id = p.rule_id;";
+                                         "SELECT * FROM (VALUES ("
+                                         "  (SELECT 1"
+                                         "    FROM parents p"
+                                         "    JOIN children c ON c.rule_id = p.rule_id"
+                                         "    LIMIT 1),"
+                                         "  ((SELECT MAX(level) FROM parents)"
+                                         "    + (SELECT MAX(level) FROM children))"
+                                         "));";
 
 const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id = ?1;";
 
@@ -161,14 +166,18 @@ void ConfRuleManager::saveRuleSet(Rule &rule)
     }
 }
 
-bool ConfRuleManager::checkRuleSetLoop(int ruleId, int subRuleId)
+bool ConfRuleManager::checkRuleSetValid(int ruleId, int subRuleId, int extraDepth)
 {
-    return DbQuery(sqliteDb())
-                   .sql(sqlSelectRuleSetLoop)
-                   .vars({ ruleId, subRuleId })
-                   .execute()
-                   .toInt()
-            > 0;
+    const auto list = DbQuery(sqliteDb())
+                              .sql(sqlSelectRuleSetLoop)
+                              .vars({ ruleId, subRuleId })
+                              .execute(2)
+                              .toList();
+
+    const int loopId = list[0].toInt();
+    const int depth = list[1].toInt();
+
+    return loopId == 0 && (depth + extraDepth) <= ConfUtil::ruleSetDepthMaxCount();
 }
 
 bool ConfRuleManager::addOrUpdateRule(Rule &rule)

@@ -27,7 +27,7 @@ public:
     void loadRuleSet(Rule &rule, QStringList &ruleSetNames);
     void saveRuleSet(Rule &rule);
 
-    bool checkRuleSetLoop(int ruleId, int subRuleId);
+    bool checkRuleSetValid(int ruleId, int subRuleId, int extraDepth = 0);
 
     virtual bool addOrUpdateRule(Rule &rule);
     virtual bool deleteRule(int ruleId);

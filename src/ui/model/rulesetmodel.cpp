@@ -34,6 +34,7 @@ void RuleSetModel::initialize(const RuleRow &ruleRow, const QStringList &ruleSet
 {
     setEdited(false);
 
+    m_ruleType = ruleRow.ruleType;
     m_ruleId = ruleRow.ruleId;
     m_ruleSet = ruleRow.ruleSet;
 
@@ -54,8 +55,9 @@ void RuleSetModel::addRule(const RuleRow &ruleRow)
         return;
     }
 
-    if (confRuleManager()->checkRuleSetLoop(m_ruleId, subRuleId)) {
-        qCDebug(LC) << "Rule Set loop detected";
+    const int extraDepth = (m_ruleType == Rule::PresetRule ? 1 : 0);
+    if (!confRuleManager()->checkRuleSetValid(m_ruleId, subRuleId, extraDepth)) {
+        qCDebug(LC) << "Rule Set is invalid: loop detected or depth exceeded";
         return;
     }
 

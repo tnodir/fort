@@ -94,6 +94,11 @@ int ConfUtil::ruleDepthMaxCount()
     return FORT_CONF_RULE_DEPTH_MAX;
 }
 
+int ConfUtil::ruleSetDepthMaxCount()
+{
+    return FORT_CONF_RULE_SET_DEPTH_MAX;
+}
+
 int ConfUtil::zoneMaxCount()
 {
     return FORT_CONF_ZONE_MAX;

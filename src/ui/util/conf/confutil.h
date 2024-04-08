@@ -35,6 +35,7 @@ public:
     static int ruleMaxCount();
     static int ruleSetMaxCount();
     static int ruleDepthMaxCount();
+    static int ruleSetDepthMaxCount();
     static int zoneMaxCount();
 
 public slots:
