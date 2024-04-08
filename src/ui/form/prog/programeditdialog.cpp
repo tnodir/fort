@@ -552,6 +552,7 @@ void ProgramEditDialog::setupChildOptions()
 {
     // Apply Child
     m_cbApplyChild = new QCheckBox();
+    m_cbApplyChild->setIcon(IconCache::icon(":/icons/processing.png"));
 
     // Kill Child
     m_cbKillChild = new QCheckBox();
