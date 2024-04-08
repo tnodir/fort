@@ -265,7 +265,7 @@ QLayout *RuleEditDialog::setupZonesLayout()
     // Zones
     m_btZones = new ZonesSelector();
     m_btZones->setIsTristate(true);
-    m_btZones->setMaxZoneCount(16); // sync with driver's FORT_APP_ENTRY
+    m_btZones->setMaxZoneCount(32); // sync with driver's FORT_CONF_RULE_ZONES
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_cbExclusive, ControlUtil::createVSeparator(), m_btZones, /*stretch*/ nullptr });
