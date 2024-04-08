@@ -129,8 +129,8 @@ TEST_F(NetUtilTest, ip6Ranges)
     ASSERT_TRUE(ipRange.fromText("2002::/16"));
     ASSERT_EQ(ipRange.toText(), QString("2002::-2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff\n"));
 
-    ASSERT_TRUE(ipRange.fromText("::2/126\n"
-                                 "::1/126\n"));
+    ASSERT_TRUE(ipRange.fromText("[::2]/126\n"
+                                 "[::1]/126\n"));
     ASSERT_EQ(ipRange.toText(),
             QString("::1-::3\n"
                     "::2-::3\n"));

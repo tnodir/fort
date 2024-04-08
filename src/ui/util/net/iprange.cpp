@@ -156,13 +156,9 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
 IpRange::ParseError IpRange::parseIpLine(
         const QStringView line, ip4range_map_t &ip4RangeMap, int &pair4Size)
 {
-    static const QRegularExpression ip4Re(R"(^([\d.]+)\s*([\/-]?)\s*(\S*))");
-    static const QRegularExpression ip6Re(R"(^([A-Fa-f\d:]+)\s*([\/-]?)\s*(\S*))");
+    static const QRegularExpression ipRe(R"(^\[?([A-Fa-f\d:.]+)\]?\s*([\/-]?)\s*(\S*))");
 
-    const bool isIPv6 = !line.contains('.');
-    const QRegularExpression &re = isIPv6 ? ip6Re : ip4Re;
-
-    const auto match = StringUtil::match(re, line);
+    const auto match = StringUtil::match(ipRe, line);
     if (!match.hasMatch()) {
         setErrorMessage(tr("Bad format"));
         return ErrorBadFormat;
@@ -179,6 +175,7 @@ IpRange::ParseError IpRange::parseIpLine(
     }
 
     const char maskSep = sepStr.isEmpty() ? '\0' : sepStr.at(0).toLatin1();
+    const bool isIPv6 = ip.contains(':');
 
     return isIPv6 ? parseIp6Address(ip, mask, maskSep)
                   : parseIp4Address(ip, mask, ip4RangeMap, pair4Size, maskSep);

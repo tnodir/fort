@@ -71,7 +71,10 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     QByteArray buf;
     const int confIoSize = confUtil.write(conf, nullptr, envManager, buf);
-    ASSERT_NE(confIoSize, 0);
+    if (confIoSize == 0) {
+        qCritical() << "Error:" << confUtil.errorMessage();
+        ASSERT_NE(confIoSize, 0);
+    }
 
     // Check the buffer
     const char *data = buf.constData() + DriverCommon::confIoConfOff();
