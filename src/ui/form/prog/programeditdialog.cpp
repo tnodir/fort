@@ -27,6 +27,7 @@
 #include <model/rulelistmodel.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/textareautil.h>
@@ -552,7 +553,8 @@ void ProgramEditDialog::setupChildOptions()
 {
     // Apply Child
     m_cbApplyChild = new QCheckBox();
-    m_cbApplyChild->setIcon(IconCache::icon(":/icons/processing.png"));
+    m_cbApplyChild->setIcon(
+            GuiUtil::overlayIcon(":/icons/application_double.png", ":/icons/tick.png"));
 
     // Kill Child
     m_cbKillChild = new QCheckBox();
