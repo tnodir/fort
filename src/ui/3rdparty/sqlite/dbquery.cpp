@@ -88,7 +88,7 @@ bool DbQuery::executeOk()
     return ok;
 }
 
-int DbQuery::getFreeId(int minId, int maxId)
+int DbQuery::getFreeId(int maxId, int minId)
 {
     int resId = minId;
 

@@ -30,16 +30,8 @@ const char *const sqlUpdateRule = "UPDATE rule"
                                   "    accept_zones = ?9, reject_zones = ?10, mod_time = ?11"
                                   "  WHERE rule_id = ?1;";
 
-const char *const sqlSelectMaxRuleId = "SELECT MAX(rule_id) FROM rule;";
-
-const char *const sqlInsertFreeRuleId = "INSERT INTO rule_free(rule_id) VALUES(?1);";
-
-const char *const sqlDeleteFreeRuleId = "DELETE FROM rule_free"
-                                        "  WHERE rule_id = ("
-                                        "    SELECT MAX(rule_id) FROM rule_free"
-                                        "  ) RETURNING rule_id;";
-
-const char *const sqlDeleteFreeRuleIds = "DELETE FROM rule_free WHERE rule_id >= ?1;";
+const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
+                                     "  WHERE rule_id < ?1 ORDER BY rule_id;";
 
 const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 
@@ -188,8 +180,10 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 
     const bool isNew = (rule.ruleId == 0);
     if (isNew) {
-        // Get Rule Id from the free list
-        rule.ruleId = getFreeRuleId(ok);
+        rule.ruleId = DbQuery(sqliteDb(), &ok)
+                              .sql(sqlSelectRuleIds)
+                              .vars({ ConfUtil::ruleMaxCount() })
+                              .getFreeId(/*maxId=*/ConfUtil::ruleMaxCount() - 1);
     } else {
         updateDriverRuleFlag(rule.ruleId, rule.enabled);
     }
@@ -244,9 +238,6 @@ bool ConfRuleManager::deleteRule(int ruleId)
         // Delete the Preset Rule from Rules
         DbQuery(sqliteDb()).sql(sqlDeleteRuleSet).vars(vars).executeOk();
         DbQuery(sqliteDb()).sql(sqlDeleteRuleSetSub).vars(vars).executeOk();
-
-        // Put the Rule Id back to the free list
-        putFreeRuleId(ruleId);
     }
 
     commitTransaction(ok);
@@ -322,35 +313,6 @@ bool ConfRuleManager::updateDriverRuleFlag(int ruleId, bool enabled)
     return driverWriteRules(confUtil, buf, entrySize, /*onlyFlags=*/true);
 #endif
     return true;
-}
-
-int ConfRuleManager::getFreeRuleId(bool &ok)
-{
-    const int ruleId = DbQuery(sqliteDb()).sql(sqlDeleteFreeRuleId).execute().toInt();
-    if (ruleId > 0) {
-        return ruleId;
-    }
-
-    const int maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
-
-    ok = (maxRuleId < ConfUtil::ruleMaxCount());
-
-    return 0;
-}
-
-void ConfRuleManager::putFreeRuleId(int ruleId)
-{
-    const QVariantList vars = { ruleId };
-
-    const int maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
-
-    if (ruleId < maxRuleId) {
-        // Add the Rule Id to free list
-        DbQuery(sqliteDb()).sql(sqlInsertFreeRuleId).vars(vars).executeOk();
-    } else {
-        // Delete outdated free Rule Ids
-        DbQuery(sqliteDb()).sql(sqlDeleteFreeRuleIds).vars(vars).executeOk();
-    }
 }
 
 bool ConfRuleManager::beginTransaction()

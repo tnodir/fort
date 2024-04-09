@@ -45,9 +45,6 @@ signals:
 private:
     bool updateDriverRuleFlag(int ruleId, bool enabled);
 
-    int getFreeRuleId(bool &ok);
-    void putFreeRuleId(int ruleId);
-
     bool beginTransaction();
     void commitTransaction(bool &ok);
 

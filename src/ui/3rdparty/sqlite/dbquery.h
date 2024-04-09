@@ -27,7 +27,7 @@ public:
     QVariant execute(int resultCount = 1);
     bool executeOk();
 
-    int getFreeId(int minId, int maxId);
+    int getFreeId(int maxId, int minId = 1);
 
 protected:
     void setResult(bool v);
