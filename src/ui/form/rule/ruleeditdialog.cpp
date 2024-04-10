@@ -18,6 +18,7 @@
 #include <form/controls/zonesselector.h>
 #include <manager/windowmanager.h>
 #include <model/rulesetmodel.h>
+#include <util/conf/confutil.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 
@@ -390,6 +391,15 @@ bool RuleEditDialog::validateFields() const
     if (m_editName->text().isEmpty()) {
         m_editName->setFocus();
         return false;
+    }
+
+    // Global Rules Count
+    const auto ruleType = Rule::RuleType(m_comboRuleType->currentIndex());
+    if (ruleType == Rule::GlobalBeforeAppsRule || ruleType == Rule::GlobalAfterAppsRule) {
+        if (confRuleManager()->rulesCountByType(ruleType) >= ConfUtil::ruleSetMaxCount()) {
+            m_comboRuleType->setFocus();
+            return false;
+        }
     }
 
     return true;

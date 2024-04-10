@@ -7,7 +7,6 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include <conf/rule.h>
 #include <driver/drivermanager.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
@@ -51,6 +50,9 @@ const char *const sqlSelectRuleSet = "SELECT t.sub_rule_id, r.name"
                                      "  JOIN rule r ON r.rule_id = t.sub_rule_id"
                                      "  WHERE t.rule_id = ?1"
                                      "  ORDER BY t.order_index;";
+
+const char *const sqlSelectRulesCountByType = "SELECT COUNT(*) FROM rule t"
+                                              "  WHERE t.rule_type = ?1;";
 
 const char *const sqlSelectRuleSetLoop = "WITH RECURSIVE"
                                          "  parents(rule_id, level) AS ("
@@ -156,6 +158,11 @@ void ConfRuleManager::saveRuleSet(Rule &rule)
         stmt.step();
         stmt.reset();
     }
+}
+
+int ConfRuleManager::rulesCountByType(Rule::RuleType ruleType)
+{
+    return DbQuery(sqliteDb()).sql(sqlSelectRulesCountByType).vars({ ruleType }).execute().toInt();
 }
 
 bool ConfRuleManager::checkRuleSetValid(int ruleId, int subRuleId, int extraDepth)

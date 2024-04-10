@@ -5,11 +5,11 @@
 
 #include <sqlite/sqlitetypes.h>
 
+#include <conf/rule.h>
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 
 class ConfManager;
-class Rule;
 
 class ConfRuleManager : public QObject, public IocService
 {
@@ -27,6 +27,7 @@ public:
     void loadRuleSet(Rule &rule, QStringList &ruleSetNames);
     void saveRuleSet(Rule &rule);
 
+    int rulesCountByType(Rule::RuleType ruleType);
     bool checkRuleSetValid(int ruleId, int subRuleId, int extraDepth = 0);
 
     virtual bool addOrUpdateRule(Rule &rule);
