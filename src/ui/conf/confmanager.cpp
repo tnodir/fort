@@ -812,9 +812,8 @@ bool ConfManager::validateConf(const FirewallConf &newConf)
         return true;
 
     ConfUtil confUtil;
-    QByteArray buf;
 
-    const int confSize = confUtil.write(newConf, IoC<ConfAppManager>(), *IoC<EnvManager>(), buf);
+    const int confSize = confUtil.write(newConf, IoC<ConfAppManager>(), *IoC<EnvManager>());
     if (confSize == 0) {
         qCCritical(LC) << "Conf save error:" << confUtil.errorMessage();
         return false;
@@ -826,12 +825,11 @@ bool ConfManager::validateConf(const FirewallConf &newConf)
 bool ConfManager::validateDriver()
 {
     ConfUtil confUtil;
-    QByteArray buf;
 
-    const int verSize = confUtil.writeVersion(buf);
+    const int verSize = confUtil.writeVersion();
 
     auto driverManager = IoC<DriverManager>();
-    return driverManager->validate(buf, verSize);
+    return driverManager->validate(confUtil.buffer(), verSize);
 }
 
 void ConfManager::updateServices()
@@ -854,12 +852,11 @@ void ConfManager::updateDriverServices(
         const QVector<ServiceInfo> &services, int runningServicesCount)
 {
     ConfUtil confUtil;
-    QByteArray buf;
 
-    const int outSize = confUtil.writeServices(services, runningServicesCount, buf);
+    const int outSize = confUtil.writeServices(services, runningServicesCount);
 
     auto driverManager = IoC<DriverManager>();
-    driverManager->writeServices(buf, outSize);
+    driverManager->writeServices(confUtil.buffer(), outSize);
 }
 
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)

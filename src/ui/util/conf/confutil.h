@@ -26,11 +26,17 @@ class ConfUtil : public QObject
     Q_OBJECT
 
 public:
-    explicit ConfUtil(QObject *parent = nullptr);
+    explicit ConfUtil(const QByteArray &buffer = {}, QObject *parent = nullptr);
 
     quint32 driveMask() const { return m_driveMask; }
 
     QString errorMessage() const { return m_errorMessage; }
+
+    const QByteArray &buffer() const { return m_buffer; }
+    QByteArray &buffer() { return m_buffer; }
+
+    const char *data() const { return buffer().constData(); }
+    char *data() { return m_buffer.data(); }
 
     static int ruleMaxCount();
     static int ruleSetMaxCount();
@@ -39,20 +45,18 @@ public:
     static int zoneMaxCount();
 
 public slots:
-    int writeVersion(QByteArray &buf);
-    int writeServices(
-            const QVector<ServiceInfo> &services, int runningServicesCount, QByteArray &buf);
-    int write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager,
-            QByteArray &buf);
-    int writeFlags(const FirewallConf &conf, QByteArray &buf);
-    int writeAppEntry(const App &app, bool isNew, QByteArray &buf);
-    int writeZone(const IpRange &ipRange, QByteArray &buf);
+    int writeVersion();
+    int writeServices(const QVector<ServiceInfo> &services, int runningServicesCount);
+    int write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager);
+    int writeFlags(const FirewallConf &conf);
+    int writeAppEntry(const App &app, bool isNew = false);
+    int writeZone(const IpRange &ipRange);
     int writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
-            const QList<QByteArray> &zonesData, QByteArray &buf);
+            const QList<QByteArray> &zonesData);
     void migrateZoneData(char **data, const QByteArray &zoneData);
-    int writeZoneFlag(int zoneId, bool enabled, QByteArray &buf);
+    int writeZoneFlag(int zoneId, bool enabled);
 
-    bool loadZone(const QByteArray &buf, IpRange &ipRange);
+    bool loadZone(IpRange &ipRange);
 
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
@@ -118,6 +122,8 @@ private:
     quint32 m_driveMask = 0;
 
     QString m_errorMessage;
+
+    QByteArray m_buffer;
 };
 
 #endif // CONFUTIL_H

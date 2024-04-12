@@ -300,24 +300,22 @@ void ConfRuleManager::updateDriverRules(quint32 rulesMask, quint32 enabledMask, 
         const QList<QByteArray> &rulesData)
 {
     ConfUtil confUtil;
-    QByteArray buf;
 
 #if 0
-    const int entrySize = confUtil.writeRules(rulesMask, enabledMask, dataSize, rulesData, buf);
+    const int entrySize = confUtil.writeRules(rulesMask, enabledMask, dataSize, rulesData);
 
-    driverWriteRules(confUtil, buf, entrySize);
+    driverWriteRules(confUtil, confUtil.buffer(), entrySize);
 #endif
 }
 
 bool ConfRuleManager::updateDriverRuleFlag(int ruleId, bool enabled)
 {
     ConfUtil confUtil;
-    QByteArray buf;
 
 #if 0
-    const int entrySize = confUtil.writeRuleFlag(ruleId, enabled, buf);
+    const int entrySize = confUtil.writeRuleFlag(ruleId, enabled);
 
-    return driverWriteRules(confUtil, buf, entrySize, /*onlyFlags=*/true);
+    return driverWriteRules(confUtil, confUtil.buffer(), entrySize, /*onlyFlags=*/true);
 #endif
     return true;
 }

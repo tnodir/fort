@@ -122,11 +122,11 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 
     // Store binary file
     ConfUtil confUtil;
-    const int bufSize = confUtil.writeZone(ipRange, m_zoneData);
+    const int bufSize = confUtil.writeZone(ipRange);
     if (bufSize == 0)
         return false;
 
-    m_zoneData.resize(bufSize);
+    m_zoneData = confUtil.buffer();
 
     const auto binData = qCompress(m_zoneData);
 
@@ -160,9 +160,10 @@ bool TaskZoneDownloader::saveAddressesAsText(const QString &filePath)
     QString text;
 
     if (loadAddresses() && !zoneData().isEmpty()) {
-        ConfUtil confUtil;
+        ConfUtil confUtil(zoneData());
+
         IpRange ipRange;
-        if (!confUtil.loadZone(zoneData(), ipRange))
+        if (!confUtil.loadZone(ipRange))
             return false;
 
         text = ipRange.toText();

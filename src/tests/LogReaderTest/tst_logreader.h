@@ -39,12 +39,11 @@ namespace {
 void validateDriver(Device &device)
 {
     ConfUtil confUtil;
-    QByteArray buf;
 
-    const int verSize = confUtil.writeVersion(buf);
+    const int verSize = confUtil.writeVersion();
     ASSERT_NE(verSize, 0);
 
-    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlValidate(), buf.data(), verSize));
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlValidate(), confUtil.data(), verSize));
 }
 
 void setConf(Device &device)
@@ -71,11 +70,10 @@ void setConf(Device &device)
 
     ConfUtil confUtil;
 
-    QByteArray buf;
-    const int confIoSize = confUtil.write(conf, nullptr, envManager, buf);
+    const int confIoSize = confUtil.write(conf, nullptr, envManager);
     ASSERT_NE(confIoSize, 0);
 
-    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), buf.data(), confIoSize));
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), confUtil.data(), confIoSize));
 }
 
 void printLogs(LogBuffer &buf)

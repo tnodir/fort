@@ -69,15 +69,14 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     ConfUtil confUtil;
 
-    QByteArray buf;
-    const int confIoSize = confUtil.write(conf, nullptr, envManager, buf);
+    const int confIoSize = confUtil.write(conf, nullptr, envManager);
     if (confIoSize == 0) {
         qCritical() << "Error:" << confUtil.errorMessage();
         ASSERT_NE(confIoSize, 0);
     }
 
     // Check the buffer
-    const char *data = buf.constData() + DriverCommon::confIoConfOff();
+    const char *data = confUtil.data() + DriverCommon::confIoConfOff();
 
     ASSERT_FALSE(DriverCommon::confIp4InRange(data, 0, true));
     ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("9.255.255.255")));

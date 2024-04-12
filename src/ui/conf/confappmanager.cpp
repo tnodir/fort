@@ -571,10 +571,9 @@ qint64 ConfAppManager::getAlertAppId()
 bool ConfAppManager::updateDriverConf(bool onlyFlags)
 {
     ConfUtil confUtil;
-    QByteArray buf;
 
-    const int confSize = onlyFlags ? confUtil.writeFlags(*conf(), buf)
-                                   : confUtil.write(*conf(), this, *IoC<EnvManager>(), buf);
+    const int confSize = onlyFlags ? confUtil.writeFlags(*conf())
+                                   : confUtil.write(*conf(), this, *IoC<EnvManager>());
 
     if (confSize == 0) {
         qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
@@ -582,7 +581,7 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     }
 
     auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeConf(buf, confSize, onlyFlags)) {
+    if (!driverManager->writeConf(confUtil.buffer(), confSize, onlyFlags)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
@@ -644,9 +643,8 @@ bool ConfAppManager::updateDriverDeleteApp(const QString &appPath)
 bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
 {
     ConfUtil confUtil;
-    QByteArray buf;
 
-    const int entrySize = confUtil.writeAppEntry(app, /*isNew=*/false, buf);
+    const int entrySize = confUtil.writeAppEntry(app);
 
     if (entrySize == 0) {
         qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
@@ -654,7 +652,7 @@ bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
     }
 
     auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeApp(buf, entrySize, remove)) {
+    if (!driverManager->writeApp(confUtil.buffer(), entrySize, remove)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }

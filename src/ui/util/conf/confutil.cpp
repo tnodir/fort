@@ -77,7 +77,8 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
 
 }
 
-ConfUtil::ConfUtil(QObject *parent) : QObject(parent) { }
+ConfUtil::ConfUtil(const QByteArray &buffer, QObject *parent) :
+    QObject(parent), m_buffer(buffer) { }
 
 int ConfUtil::ruleMaxCount()
 {
@@ -104,41 +105,40 @@ int ConfUtil::zoneMaxCount()
     return FORT_CONF_ZONE_MAX;
 }
 
-int ConfUtil::writeVersion(QByteArray &buf)
+int ConfUtil::writeVersion()
 {
     const int verSize = sizeof(FORT_CONF_VERSION);
 
-    buf.reserve(verSize);
+    buffer().reserve(verSize);
 
     // Fill the buffer
-    PFORT_CONF_VERSION confVer = (PFORT_CONF_VERSION) buf.data();
+    PFORT_CONF_VERSION confVer = (PFORT_CONF_VERSION) buffer().data();
 
     confVer->driver_version = DRIVER_VERSION;
 
     return verSize;
 }
 
-int ConfUtil::writeServices(
-        const QVector<ServiceInfo> &services, int runningServicesCount, QByteArray &buf)
+int ConfUtil::writeServices(const QVector<ServiceInfo> &services, int runningServicesCount)
 {
-    buf.reserve(FORT_SERVICE_INFO_LIST_MIN_SIZE);
+    buffer().reserve(FORT_SERVICE_INFO_LIST_MIN_SIZE);
 
-    int outSize = writeServicesHeader(buf.data(), runningServicesCount);
+    int outSize = writeServicesHeader(buffer().data(), runningServicesCount);
 
     for (const ServiceInfo &info : services) {
         if (!info.isRunning)
             continue;
 
-        buf.reserve(outSize + FORT_SERVICE_INFO_MAX_SIZE);
+        buffer().reserve(outSize + FORT_SERVICE_INFO_MAX_SIZE);
 
-        outSize += writeServiceInfo(buf.data() + outSize, info);
+        outSize += writeServiceInfo(buffer().data() + outSize, info);
     }
 
     return outSize;
 }
 
-int ConfUtil::write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker,
-        EnvManager &envManager, QByteArray &buf)
+int ConfUtil::write(
+        const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager)
 {
     quint32 addressGroupsSize = 0;
     longs_arr_t addressGroupOffsets;
@@ -173,29 +173,29 @@ int ConfUtil::write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker,
             + FORT_CONF_STR_DATA_SIZE(opt.prefixAppsSize)
             + FORT_CONF_STR_DATA_SIZE(opt.exeAppsSize));
 
-    buf.reserve(confIoSize);
+    buffer().reserve(confIoSize);
 
-    writeConf(
-            buf.data(), conf, addressRanges, addressGroupOffsets, appPeriods, appPeriodsCount, opt);
+    writeConf(buffer().data(), conf, addressRanges, addressGroupOffsets, appPeriods,
+            appPeriodsCount, opt);
 
     return confIoSize;
 }
 
-int ConfUtil::writeFlags(const FirewallConf &conf, QByteArray &buf)
+int ConfUtil::writeFlags(const FirewallConf &conf)
 {
     const int flagsSize = sizeof(FORT_CONF_FLAGS);
 
-    buf.reserve(flagsSize);
+    buffer().reserve(flagsSize);
 
     // Fill the buffer
-    PFORT_CONF_FLAGS confFlags = (PFORT_CONF_FLAGS) buf.data();
+    PFORT_CONF_FLAGS confFlags = (PFORT_CONF_FLAGS) buffer().data();
 
     writeConfFlags(conf, confFlags);
 
     return flagsSize;
 }
 
-int ConfUtil::writeAppEntry(const App &app, bool isNew, QByteArray &buf)
+int ConfUtil::writeAppEntry(const App &app, bool isNew)
 {
     appdata_map_t appsMap;
     quint32 appsSize = 0;
@@ -203,25 +203,25 @@ int ConfUtil::writeAppEntry(const App &app, bool isNew, QByteArray &buf)
     if (!addApp(app, isNew, appsMap, appsSize))
         return 0;
 
-    buf.reserve(appsSize);
+    buffer().reserve(appsSize);
 
     // Fill the buffer
-    char *data = (char *) buf.data();
+    char *data = (char *) buffer().data();
 
     writeApps(&data, appsMap);
 
     return int(appsSize);
 }
 
-int ConfUtil::writeZone(const IpRange &ipRange, QByteArray &buf)
+int ConfUtil::writeZone(const IpRange &ipRange)
 {
     const int addrSize = FORT_CONF_ADDR_LIST_SIZE(
             ipRange.ip4Size(), ipRange.pair4Size(), ipRange.ip6Size(), ipRange.pair6Size());
 
-    buf.reserve(addrSize);
+    buffer().reserve(addrSize);
 
     // Fill the buffer
-    char *data = (char *) buf.data();
+    char *data = (char *) buffer().data();
 
     writeAddressList(&data, ipRange);
 
@@ -229,14 +229,14 @@ int ConfUtil::writeZone(const IpRange &ipRange, QByteArray &buf)
 }
 
 int ConfUtil::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
-        const QList<QByteArray> &zonesData, QByteArray &buf)
+        const QList<QByteArray> &zonesData)
 {
     const int zonesSize = FORT_CONF_ZONES_DATA_OFF + dataSize;
 
-    buf.reserve(zonesSize);
+    buffer().reserve(zonesSize);
 
     // Fill the buffer
-    PFORT_CONF_ZONES confZones = (PFORT_CONF_ZONES) buf.data();
+    PFORT_CONF_ZONES confZones = (PFORT_CONF_ZONES) buffer().data();
     char *data = confZones->data;
 
     memset(confZones, 0, sizeof(FORT_CONF_ZONES_DATA_OFF));
@@ -272,14 +272,14 @@ void ConfUtil::migrateZoneData(char **data, const QByteArray &zoneData)
     }
 }
 
-int ConfUtil::writeZoneFlag(int zoneId, bool enabled, QByteArray &buf)
+int ConfUtil::writeZoneFlag(int zoneId, bool enabled)
 {
     const int flagSize = sizeof(FORT_CONF_ZONE_FLAG);
 
-    buf.reserve(flagSize);
+    buffer().reserve(flagSize);
 
     // Fill the buffer
-    PFORT_CONF_ZONE_FLAG confZoneFlag = (PFORT_CONF_ZONE_FLAG) buf.data();
+    PFORT_CONF_ZONE_FLAG confZoneFlag = (PFORT_CONF_ZONE_FLAG) buffer().data();
 
     confZoneFlag->zone_id = zoneId;
     confZoneFlag->enabled = enabled;
@@ -287,10 +287,10 @@ int ConfUtil::writeZoneFlag(int zoneId, bool enabled, QByteArray &buf)
     return flagSize;
 }
 
-bool ConfUtil::loadZone(const QByteArray &buf, IpRange &ipRange)
+bool ConfUtil::loadZone(IpRange &ipRange)
 {
-    const char *data = buf.data();
-    uint bufSize = buf.size();
+    const char *data = buffer().data();
+    uint bufSize = buffer().size();
 
     return loadAddressList(&data, ipRange, bufSize);
 }
