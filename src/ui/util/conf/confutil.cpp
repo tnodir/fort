@@ -75,6 +75,85 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
     confFlags->group_bits = conf.appGroupBits();
 }
 
+void writeAppGroupFlags(PFORT_CONF_GROUP out, const FirewallConf &conf)
+{
+    out->group_bits = 0;
+    out->log_blocked = 0;
+    out->log_conn = 0;
+
+    int i = 0;
+    for (const AppGroup *appGroup : conf.appGroups()) {
+        if (appGroup->enabled()) {
+            out->group_bits |= (1 << i);
+        }
+        if (appGroup->logBlocked()) {
+            out->log_blocked |= (1 << i);
+        }
+        if (appGroup->logConn()) {
+            out->log_conn |= (1 << i);
+        }
+        ++i;
+    }
+}
+
+void writeLimitBps(PFORT_SPEED_LIMIT limit, quint32 kBits)
+{
+    limit->bps = quint64(kBits) * (1024LL / 8); /* to bytes per second */
+}
+
+void writeLimitIn(PFORT_SPEED_LIMIT limit, const AppGroup *appGroup)
+{
+    limit->plr = appGroup->limitPacketLoss();
+    limit->latency_ms = appGroup->limitLatency();
+    limit->buffer_bytes = appGroup->limitBufferSizeIn();
+
+    writeLimitBps(limit, appGroup->speedLimitIn());
+}
+
+void writeLimitOut(PFORT_SPEED_LIMIT limit, const AppGroup *appGroup)
+{
+    limit->plr = appGroup->limitPacketLoss();
+    limit->latency_ms = appGroup->limitLatency();
+    limit->buffer_bytes = appGroup->limitBufferSizeOut();
+
+    writeLimitBps(limit, appGroup->speedLimitOut());
+}
+
+void writeLimits(PFORT_CONF_GROUP out, const QList<AppGroup *> &appGroups)
+{
+    PFORT_SPEED_LIMIT limits = out->limits;
+
+    out->limit_bits = 0;
+    out->limit_io_bits = 0;
+
+    const int groupsCount = appGroups.size();
+    for (int i = 0; i < groupsCount; ++i, limits += 2) {
+        const AppGroup *appGroup = appGroups.at(i);
+
+        const quint32 limitIn = appGroup->enabledSpeedLimitIn();
+        const quint32 limitOut = appGroup->enabledSpeedLimitOut();
+
+        const bool isLimitIn = (limitIn != 0);
+        const bool isLimitOut = (limitOut != 0);
+
+        if (isLimitIn || isLimitOut) {
+            out->limit_bits |= (1 << i);
+
+            if (isLimitIn) {
+                out->limit_io_bits |= (1 << (i * 2 + 0));
+
+                writeLimitIn(&limits[0], appGroup);
+            }
+
+            if (isLimitOut) {
+                out->limit_io_bits |= (1 << (i * 2 + 1));
+
+                writeLimitOut(&limits[1], appGroup);
+            }
+        }
+    }
+}
+
 }
 
 ConfUtil::ConfUtil(const QByteArray &buffer, QObject *parent) :
@@ -141,23 +220,20 @@ void ConfUtil::writeServices(const QVector<ServiceInfo> &services, int runningSe
 bool ConfUtil::write(
         const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager)
 {
+    WriteConfArgs wca = { .conf = conf,
+        .ad = { .addressRanges = addrranges_arr_t(conf.addressGroups().size()) } };
+
     quint32 addressGroupsSize = 0;
-    longs_arr_t addressGroupOffsets;
-    addrranges_arr_t addressRanges(conf.addressGroups().size());
 
-    if (!parseAddressGroups(
-                conf.addressGroups(), addressRanges, addressGroupOffsets, addressGroupsSize))
+    if (!parseAddressGroups(conf.addressGroups(), wca.ad, addressGroupsSize))
         return false;
-
-    quint8 appPeriodsCount = 0;
-    chars_arr_t appPeriods;
 
     AppParseOptions opt;
 
     if (!parseExeApps(envManager, confAppsWalker, opt))
         return false;
 
-    if (!parseAppGroups(envManager, conf.appGroups(), appPeriods, appPeriodsCount, opt))
+    if (!parseAppGroups(envManager, conf.appGroups(), wca.gr, opt))
         return false;
 
     const quint32 appsSize = opt.wildAppsSize + opt.prefixAppsSize + opt.exeAppsSize;
@@ -176,8 +252,7 @@ bool ConfUtil::write(
 
     buffer().resize(confIoSize);
 
-    writeConf(buffer().data(), conf, addressRanges, addressGroupOffsets, appPeriods,
-            appPeriodsCount, opt);
+    writeConf(buffer().data(), wca, opt);
 
     return true;
 }
@@ -289,8 +364,7 @@ bool ConfUtil::loadZone(IpRange &ipRange)
 }
 
 bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
-        addrranges_arr_t &addressRanges, longs_arr_t &addressGroupOffsets,
-        quint32 &addressGroupsSize)
+        ParseAddressGroupsArgs &ad, quint32 &addressGroupsSize)
 {
     const int groupsCount = addressGroups.size();
 
@@ -299,7 +373,7 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
     for (int i = 0; i < groupsCount; ++i) {
         AddressGroup *addressGroup = addressGroups.at(i);
 
-        AddressRange &addressRange = addressRanges[i];
+        AddressRange &addressRange = ad.addressRanges[i];
         addressRange.setIncludeAll(addressGroup->includeAll());
         addressRange.setExcludeAll(addressGroup->excludeAll());
         addressRange.setIncludeZones(addressGroup->includeZones());
@@ -329,7 +403,7 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
             return false;
         }
 
-        addressGroupOffsets.append(addressGroupsSize);
+        ad.addressGroupOffsets.append(addressGroupsSize);
 
         addressGroupsSize += FORT_CONF_ADDR_GROUP_OFF
                 + FORT_CONF_ADDR_LIST_SIZE(incRange.ip4Size(), incRange.pair4Size(),
@@ -342,7 +416,7 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
 }
 
 bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &appGroups,
-        chars_arr_t &appPeriods, quint8 &appPeriodsCount, AppParseOptions &opt)
+        ParseAppGroupsArgs &gr, AppParseOptions &opt)
 {
     const int groupsCount = appGroups.size();
     if (groupsCount < 1 || groupsCount > APP_GROUP_MAX) {
@@ -386,7 +460,7 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
             return false;
 
         // Enabled Period
-        parseAppPeriod(appGroup, appPeriods, appPeriodsCount);
+        parseAppPeriod(appGroup, gr);
     }
 
     return true;
@@ -519,8 +593,7 @@ QString ConfUtil::parseAppPath(const QStringView line, bool &isWild, bool &isPre
     return path.toString();
 }
 
-void ConfUtil::parseAppPeriod(
-        const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount)
+void ConfUtil::parseAppPeriod(const AppGroup *appGroup, ParseAppGroupsArgs &gr)
 {
     quint8 fromHour = 0, fromMinute = 0;
     quint8 toHour = 0, toMinute = 0;
@@ -533,19 +606,17 @@ void ConfUtil::parseAppPeriod(
         const bool toIsEmpty = (toHour == 0 && toMinute == 0);
 
         if (!fromIsEmpty || !toIsEmpty) {
-            ++appPeriodsCount;
+            ++gr.appPeriodsCount;
         }
     }
 
-    appPeriods.append(qint8(fromHour));
-    appPeriods.append(qint8(fromMinute));
-    appPeriods.append(qint8(toHour));
-    appPeriods.append(qint8(toMinute));
+    gr.appPeriods.append(qint8(fromHour));
+    gr.appPeriods.append(qint8(fromMinute));
+    gr.appPeriods.append(qint8(toHour));
+    gr.appPeriods.append(qint8(toMinute));
 }
 
-void ConfUtil::writeConf(char *output, const FirewallConf &conf,
-        const addrranges_arr_t &addressRanges, const longs_arr_t &addressGroupOffsets,
-        const chars_arr_t &appPeriods, quint8 appPeriodsCount, AppParseOptions &opt)
+void ConfUtil::writeConf(char *output, const WriteConfArgs &wca, AppParseOptions &opt)
 {
     PFORT_CONF_IO drvConfIo = (PFORT_CONF_IO) output;
     PFORT_CONF drvConf = &drvConfIo->conf;
@@ -556,11 +627,11 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
 
 #define CONF_DATA_OFFSET quint32(data - drvConf->data)
     addrGroupsOff = CONF_DATA_OFFSET;
-    writeLongs(&data, addressGroupOffsets);
-    writeAddressRanges(&data, addressRanges);
+    writeLongs(&data, wca.ad.addressGroupOffsets);
+    writeAddressRanges(&data, wca.ad.addressRanges);
 
     appPeriodsOff = CONF_DATA_OFFSET;
-    writeChars(&data, appPeriods);
+    writeChars(&data, wca.gr.appPeriods);
 
     wildAppsOff = CONF_DATA_OFFSET;
     writeApps(&data, opt.wildAppsMap);
@@ -572,17 +643,15 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
     writeApps(&data, opt.exeAppsMap);
 #undef CONF_DATA_OFFSET
 
-    writeAppGroupFlags(&drvConfIo->conf_group.group_bits, &drvConfIo->conf_group.log_blocked,
-            &drvConfIo->conf_group.log_conn, conf);
+    writeAppGroupFlags(&drvConfIo->conf_group, wca.conf);
 
-    writeLimits(drvConfIo->conf_group.limits, &drvConfIo->conf_group.limit_bits,
-            &drvConfIo->conf_group.limit_io_bits, conf.appGroups());
+    writeLimits(&drvConfIo->conf_group, wca.conf.appGroups());
 
-    writeConfFlags(conf, &drvConf->flags);
+    writeConfFlags(wca.conf, &drvConf->flags);
 
     DriverCommon::confAppPermsMaskInit(drvConf);
 
-    drvConf->app_periods_n = appPeriodsCount;
+    drvConf->app_periods_n = wca.gr.appPeriodsCount;
 
     drvConf->proc_wild = opt.procWild;
 
@@ -597,73 +666,6 @@ void ConfUtil::writeConf(char *output, const FirewallConf &conf,
     drvConf->wild_apps_off = wildAppsOff;
     drvConf->prefix_apps_off = prefixAppsOff;
     drvConf->exe_apps_off = exeAppsOff;
-}
-
-void ConfUtil::writeAppGroupFlags(
-        quint16 *groupBits, quint16 *logBlockedBits, quint16 *logConnBits, const FirewallConf &conf)
-{
-    *groupBits = 0;
-    *logBlockedBits = 0;
-    *logConnBits = 0;
-
-    int i = 0;
-    for (const AppGroup *appGroup : conf.appGroups()) {
-        if (appGroup->enabled()) {
-            *groupBits |= (1 << i);
-        }
-        if (appGroup->logBlocked()) {
-            *logBlockedBits |= (1 << i);
-        }
-        if (appGroup->logConn()) {
-            *logConnBits |= (1 << i);
-        }
-        ++i;
-    }
-}
-
-void ConfUtil::writeLimits(struct fort_speed_limit *limits, quint16 *limitBits,
-        quint32 *limitIoBits, const QList<AppGroup *> &appGroups)
-{
-    *limitBits = 0;
-    *limitIoBits = 0;
-
-    const int groupsCount = appGroups.size();
-    for (int i = 0; i < groupsCount; ++i, limits += 2) {
-        const AppGroup *appGroup = appGroups.at(i);
-
-        const quint32 limitIn = appGroup->enabledSpeedLimitIn();
-        const quint32 limitOut = appGroup->enabledSpeedLimitOut();
-
-        const bool isLimitIn = (limitIn != 0);
-        const bool isLimitOut = (limitOut != 0);
-
-        if (isLimitIn || isLimitOut) {
-            *limitBits |= (1 << i);
-
-            if (isLimitIn) {
-                *limitIoBits |= (1 << (i * 2 + 0));
-
-                writeLimit(&limits[0], limitIn, appGroup->limitBufferSizeIn(),
-                        appGroup->limitLatency(), appGroup->limitPacketLoss());
-            }
-
-            if (isLimitOut) {
-                *limitIoBits |= (1 << (i * 2 + 1));
-
-                writeLimit(&limits[1], limitOut, appGroup->limitBufferSizeOut(),
-                        appGroup->limitLatency(), appGroup->limitPacketLoss());
-            }
-        }
-    }
-}
-
-void ConfUtil::writeLimit(fort_speed_limit *limit, quint32 kBits, quint32 bufferSize,
-        quint32 latencyMsec, quint16 packetLoss)
-{
-    limit->plr = packetLoss;
-    limit->latency_ms = latencyMsec;
-    limit->buffer_bytes = bufferSize;
-    limit->bps = quint64(kBits) * (1024LL / 8); /* to bytes per second */
 }
 
 void ConfUtil::writeAddressRanges(char **data, const addrranges_arr_t &addressRanges)

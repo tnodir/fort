@@ -63,13 +63,32 @@ public slots:
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
 
-    bool parseAddressGroups(const QList<AddressGroup *> &addressGroups,
-            addrranges_arr_t &addressRanges, longs_arr_t &addressGroupOffsets,
+    struct ParseAddressGroupsArgs
+    {
+        addrranges_arr_t addressRanges;
+        longs_arr_t addressGroupOffsets;
+    };
+
+    struct ParseAppGroupsArgs
+    {
+        chars_arr_t appPeriods;
+        quint8 appPeriodsCount = 0;
+    };
+
+    struct WriteConfArgs
+    {
+        const FirewallConf &conf;
+
+        ParseAddressGroupsArgs ad;
+        ParseAppGroupsArgs gr;
+    };
+
+    bool parseAddressGroups(const QList<AddressGroup *> &addressGroups, ParseAddressGroupsArgs &ad,
             quint32 &addressGroupsSize);
 
     // Convert app. groups to plain lists
     bool parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &appGroups,
-            chars_arr_t &appPeriods, quint8 &appPeriodsCount, AppParseOptions &opt);
+            ParseAppGroupsArgs &gr, AppParseOptions &opt);
 
     bool parseExeApps(EnvManager &envManager, ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
 
@@ -81,20 +100,9 @@ private:
 
     static QString parseAppPath(const QStringView line, bool &isWild, bool &isPrefix);
 
-    static void parseAppPeriod(
-            const AppGroup *appGroup, chars_arr_t &appPeriods, quint8 &appPeriodsCount);
+    static void parseAppPeriod(const AppGroup *appGroup, ParseAppGroupsArgs &gr);
 
-    static void writeConf(char *output, const FirewallConf &conf,
-            const addrranges_arr_t &addressRanges, const longs_arr_t &addressGroupOffsets,
-            const chars_arr_t &appPeriods, quint8 appPeriodsCount, AppParseOptions &opt);
-
-    static void writeAppGroupFlags(quint16 *groupBits, quint16 *logBlockedBits,
-            quint16 *logConnBits, const FirewallConf &conf);
-
-    static void writeLimits(struct fort_speed_limit *limits, quint16 *limitBits,
-            quint32 *limitIoBits, const QList<AppGroup *> &appGroups);
-    static void writeLimit(struct fort_speed_limit *limit, quint32 kBits, quint32 bufferSize,
-            quint32 latencyMsec, quint16 packetLoss);
+    static void writeConf(char *output, const WriteConfArgs &wca, AppParseOptions &opt);
 
     static void writeAddressRanges(char **data, const addrranges_arr_t &addressRanges);
     static void writeAddressRange(char **data, const AddressRange &addressRange);
