@@ -1138,6 +1138,25 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
+    <name>PortRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>第 %1 行错误: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>格式错误</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>范围错误</translation>
+    </message>
+    <message>
+        <source>Bad Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
@@ -1505,7 +1524,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished">移除</translation>
+        <translation>移除</translation>
     </message>
     <message>
         <source>Move Up</source>
@@ -1513,6 +1532,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Move Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules count exceeded!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

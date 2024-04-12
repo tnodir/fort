@@ -1140,6 +1140,25 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
+    <name>PortRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>خطأ في الأسطر %1: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>صياغة غير صحيحة</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>نطاق غير صحيح</translation>
+    </message>
+    <message>
+        <source>Bad Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
@@ -1516,6 +1535,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Move Down</source>
         <translation>تحريك لأسفل</translation>
+    </message>
+    <message>
+        <source>Global rules count exceeded!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

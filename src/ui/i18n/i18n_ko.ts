@@ -1140,6 +1140,25 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
+    <name>PortRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>%1 라인 오류: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>잘못된 형식</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>잘못된 범위</translation>
+    </message>
+    <message>
+        <source>Bad Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
@@ -1344,7 +1363,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙 선택</translation>
     </message>
 </context>
 <context>
@@ -1516,6 +1535,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Move Down</source>
         <translation>아래로 이동</translation>
+    </message>
+    <message>
+        <source>Global rules count exceeded!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

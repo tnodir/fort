@@ -1140,6 +1140,25 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
     </message>
 </context>
 <context>
+    <name>PortRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Napaka v vrstici %1: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>Napačna oblika</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>Napačen razpon</translation>
+    </message>
+    <message>
+        <source>Bad Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
@@ -1507,7 +1526,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished">Odstrani</translation>
+        <translation>Odstrani</translation>
     </message>
     <message>
         <source>Move Up</source>
@@ -1515,6 +1534,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Move Down</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global rules count exceeded!</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

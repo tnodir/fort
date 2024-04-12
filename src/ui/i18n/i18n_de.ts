@@ -1140,6 +1140,25 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
     </message>
 </context>
 <context>
+    <name>PortRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Fehler in Zeile %1: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>Ungültiges Format</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>Ungültiger Bereich</translation>
+    </message>
+    <message>
+        <source>Bad Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
@@ -1516,6 +1535,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>Move Down</source>
         <translation>Nach unten</translation>
+    </message>
+    <message>
+        <source>Global rules count exceeded!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

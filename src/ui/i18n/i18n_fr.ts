@@ -1140,6 +1140,25 @@ Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
     </message>
 </context>
 <context>
+    <name>PortRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Erreur à la ligne %1: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>Mauvais format</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>Mauvaise portée</translation>
+    </message>
+    <message>
+        <source>Bad Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
@@ -1516,6 +1535,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Move Down</source>
         <translation>Descendre</translation>
+    </message>
+    <message>
+        <source>Global rules count exceeded!</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
