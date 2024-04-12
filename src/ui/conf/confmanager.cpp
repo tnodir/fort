@@ -826,10 +826,9 @@ bool ConfManager::validateDriver()
 {
     ConfUtil confUtil;
 
-    const int verSize = confUtil.writeVersion();
+    confUtil.writeVersion();
 
-    auto driverManager = IoC<DriverManager>();
-    return driverManager->validate(confUtil.buffer(), verSize);
+    return IoC<DriverManager>()->validate(confUtil.buffer());
 }
 
 void ConfManager::updateServices()
@@ -853,10 +852,9 @@ void ConfManager::updateDriverServices(
 {
     ConfUtil confUtil;
 
-    const int outSize = confUtil.writeServices(services, runningServicesCount);
+    confUtil.writeServices(services, runningServicesCount);
 
-    auto driverManager = IoC<DriverManager>();
-    driverManager->writeServices(confUtil.buffer(), outSize);
+    IoC<DriverManager>()->writeServices(confUtil.buffer());
 }
 
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)

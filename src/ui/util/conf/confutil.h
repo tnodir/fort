@@ -32,6 +32,8 @@ public:
 
     QString errorMessage() const { return m_errorMessage; }
 
+    bool hasError() const { return !errorMessage().isEmpty(); }
+
     const QByteArray &buffer() const { return m_buffer; }
     QByteArray &buffer() { return m_buffer; }
 
@@ -45,16 +47,16 @@ public:
     static int zoneMaxCount();
 
 public slots:
-    int writeVersion();
-    int writeServices(const QVector<ServiceInfo> &services, int runningServicesCount);
-    int write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager);
-    int writeFlags(const FirewallConf &conf);
-    int writeAppEntry(const App &app, bool isNew = false);
-    int writeZone(const IpRange &ipRange);
-    int writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
+    void writeVersion();
+    void writeServices(const QVector<ServiceInfo> &services, int runningServicesCount);
+    bool write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager);
+    void writeFlags(const FirewallConf &conf);
+    bool writeAppEntry(const App &app, bool isNew = false);
+    void writeZone(const IpRange &ipRange);
+    void writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData);
     void migrateZoneData(char **data, const QByteArray &zoneData);
-    int writeZoneFlag(int zoneId, bool enabled);
+    void writeZoneFlag(int zoneId, bool enabled);
 
     bool loadZone(IpRange &ipRange);
 

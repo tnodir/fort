@@ -572,16 +572,16 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
 {
     ConfUtil confUtil;
 
-    const int confSize = onlyFlags ? confUtil.writeFlags(*conf())
-                                   : confUtil.write(*conf(), this, *IoC<EnvManager>());
+    const bool ok = onlyFlags ? (confUtil.writeFlags(*conf()), true)
+                              : confUtil.write(*conf(), this, *IoC<EnvManager>());
 
-    if (confSize == 0) {
+    if (!ok) {
         qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
         return false;
     }
 
     auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeConf(confUtil.buffer(), confSize, onlyFlags)) {
+    if (!driverManager->writeConf(confUtil.buffer(), onlyFlags)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
@@ -644,15 +644,13 @@ bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
 {
     ConfUtil confUtil;
 
-    const int entrySize = confUtil.writeAppEntry(app);
-
-    if (entrySize == 0) {
+    if (!confUtil.writeAppEntry(app)) {
         qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
         return false;
     }
 
     auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeApp(confUtil.buffer(), entrySize, remove)) {
+    if (!driverManager->writeApp(confUtil.buffer(), remove)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }

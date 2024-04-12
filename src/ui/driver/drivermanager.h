@@ -40,12 +40,12 @@ public slots:
     virtual bool openDevice();
     virtual bool closeDevice();
 
-    bool validate(QByteArray &buf, int size);
+    bool validate(QByteArray &buf);
 
-    bool writeServices(QByteArray &buf, int size);
-    bool writeConf(QByteArray &buf, int size, bool onlyFlags = false);
-    bool writeApp(QByteArray &buf, int size, bool remove = false);
-    bool writeZones(QByteArray &buf, int size, bool onlyFlags = false);
+    bool writeServices(QByteArray &buf);
+    bool writeConf(QByteArray &buf, bool onlyFlags = false);
+    bool writeApp(QByteArray &buf, bool remove = false);
+    bool writeZones(QByteArray &buf, bool onlyFlags = false);
 
 protected:
     void setErrorCode(quint32 v);
@@ -56,7 +56,7 @@ private:
     void setupWorker();
     void closeWorker();
 
-    bool writeData(quint32 code, QByteArray &buf, int size);
+    bool writeData(quint32 code, QByteArray &buf);
 
     static bool executeCommand(const QString &fileName);
 

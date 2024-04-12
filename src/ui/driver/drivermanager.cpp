@@ -91,41 +91,41 @@ bool DriverManager::closeDevice()
     return res;
 }
 
-bool DriverManager::validate(QByteArray &buf, int size)
+bool DriverManager::validate(QByteArray &buf)
 {
-    return writeData(DriverCommon::ioctlValidate(), buf, size);
+    return writeData(DriverCommon::ioctlValidate(), buf);
 }
 
-bool DriverManager::writeServices(QByteArray &buf, int size)
+bool DriverManager::writeServices(QByteArray &buf)
 {
-    return writeData(DriverCommon::ioctlSetServices(), buf, size);
+    return writeData(DriverCommon::ioctlSetServices(), buf);
 }
 
-bool DriverManager::writeConf(QByteArray &buf, int size, bool onlyFlags)
+bool DriverManager::writeConf(QByteArray &buf, bool onlyFlags)
 {
-    return writeData(
-            onlyFlags ? DriverCommon::ioctlSetFlags() : DriverCommon::ioctlSetConf(), buf, size);
+    return writeData(onlyFlags ? DriverCommon::ioctlSetFlags() : DriverCommon::ioctlSetConf(), buf);
 }
 
-bool DriverManager::writeApp(QByteArray &buf, int size, bool remove)
+bool DriverManager::writeApp(QByteArray &buf, bool remove)
 {
-    return writeData(remove ? DriverCommon::ioctlDelApp() : DriverCommon::ioctlAddApp(), buf, size);
+    return writeData(remove ? DriverCommon::ioctlDelApp() : DriverCommon::ioctlAddApp(), buf);
 }
 
-bool DriverManager::writeZones(QByteArray &buf, int size, bool onlyFlags)
+bool DriverManager::writeZones(QByteArray &buf, bool onlyFlags)
 {
-    return writeData(onlyFlags ? DriverCommon::ioctlSetZoneFlag() : DriverCommon::ioctlSetZones(),
-            buf, size);
+    const auto code = onlyFlags ? DriverCommon::ioctlSetZoneFlag() : DriverCommon::ioctlSetZones();
+
+    return writeData(code, buf);
 }
 
-bool DriverManager::writeData(quint32 code, QByteArray &buf, int size)
+bool DriverManager::writeData(quint32 code, QByteArray &buf)
 {
     if (!isDeviceOpened())
         return true;
 
     const bool wasCancelled = driverWorker()->cancelAsyncIo();
 
-    const bool res = device()->ioctl(code, buf.data(), size);
+    const bool res = device()->ioctl(code, buf.data(), buf.size());
 
     updateErrorCode(res);
 

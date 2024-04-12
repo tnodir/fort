@@ -60,15 +60,15 @@ const char *const sqlUpdateZoneResult =
         "    source_modtime = ?5, last_run = ?6, last_success = ?7"
         "  WHERE zone_id = ?1;";
 
-bool driverWriteZones(ConfUtil &confUtil, int entrySize, bool onlyFlags = false)
+bool driverWriteZones(ConfUtil &confUtil, bool onlyFlags = false)
 {
-    if (entrySize == 0) {
+    if (confUtil.hasError()) {
         qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
         return false;
     }
 
     auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeZones(confUtil.buffer(), entrySize, onlyFlags)) {
+    if (!driverManager->writeZones(confUtil.buffer(), onlyFlags)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
@@ -241,18 +241,18 @@ void ConfZoneManager::updateDriverZones(quint32 zonesMask, quint32 enabledMask, 
 {
     ConfUtil confUtil;
 
-    const int entrySize = confUtil.writeZones(zonesMask, enabledMask, dataSize, zonesData);
+    confUtil.writeZones(zonesMask, enabledMask, dataSize, zonesData);
 
-    driverWriteZones(confUtil, entrySize);
+    driverWriteZones(confUtil);
 }
 
 bool ConfZoneManager::updateDriverZoneFlag(int zoneId, bool enabled)
 {
     ConfUtil confUtil;
 
-    const int entrySize = confUtil.writeZoneFlag(zoneId, enabled);
+    confUtil.writeZoneFlag(zoneId, enabled);
 
-    return driverWriteZones(confUtil, entrySize, /*onlyFlags=*/true);
+    return driverWriteZones(confUtil, /*onlyFlags=*/true);
 }
 
 bool ConfZoneManager::beginTransaction()

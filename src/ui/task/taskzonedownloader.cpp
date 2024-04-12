@@ -122,11 +122,12 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
 
     // Store binary file
     ConfUtil confUtil;
-    const int bufSize = confUtil.writeZone(ipRange);
-    if (bufSize == 0)
-        return false;
+
+    confUtil.writeZone(ipRange);
 
     m_zoneData = confUtil.buffer();
+    if (m_zoneData.isEmpty())
+        return false;
 
     const auto binData = qCompress(m_zoneData);
 

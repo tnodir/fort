@@ -40,10 +40,10 @@ void validateDriver(Device &device)
 {
     ConfUtil confUtil;
 
-    const int verSize = confUtil.writeVersion();
-    ASSERT_NE(verSize, 0);
+    confUtil.writeVersion();
+    ASSERT_FALSE(confUtil.buffer().isEmpty());
 
-    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlValidate(), confUtil.data(), verSize));
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlValidate(), confUtil.data()));
 }
 
 void setConf(Device &device)
