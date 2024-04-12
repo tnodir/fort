@@ -19,6 +19,7 @@ class PlainTextEdit;
 class Rule;
 class RuleSetModel;
 class RulesController;
+class WindowManager;
 class ZonesSelector;
 
 class RuleEditDialog : public QDialog
@@ -31,6 +32,7 @@ public:
     RulesController *ctrl() const { return m_ctrl; }
     RuleSetModel *ruleSetModel() const { return m_ruleSetModel; }
     ConfRuleManager *confRuleManager() const;
+    WindowManager *windowManager() const;
 
     bool isEmpty() const { return m_ruleRow.ruleId == 0; }
 

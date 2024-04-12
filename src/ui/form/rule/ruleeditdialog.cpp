@@ -37,6 +37,11 @@ ConfRuleManager *RuleEditDialog::confRuleManager() const
     return ctrl()->confRuleManager();
 }
 
+WindowManager *RuleEditDialog::windowManager() const
+{
+    return ctrl()->windowManager();
+}
+
 void RuleEditDialog::initialize(const RuleRow &ruleRow)
 {
     m_ruleRow = ruleRow;
@@ -397,6 +402,7 @@ bool RuleEditDialog::validateFields() const
     const auto ruleType = Rule::RuleType(m_comboRuleType->currentIndex());
     if (ruleType == Rule::GlobalBeforeAppsRule || ruleType == Rule::GlobalAfterAppsRule) {
         if (confRuleManager()->rulesCountByType(ruleType) >= ConfUtil::ruleSetMaxCount()) {
+            windowManager()->showErrorBox(tr("Global rules count exceeded!"));
             m_comboRuleType->setFocus();
             return false;
         }
