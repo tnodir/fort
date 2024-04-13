@@ -44,18 +44,20 @@ public:
     static int ruleSetMaxCount();
     static int ruleDepthMaxCount();
     static int ruleSetDepthMaxCount();
+
     static int zoneMaxCount();
 
 public slots:
     void writeVersion();
     void writeServices(const QVector<ServiceInfo> &services, int runningServicesCount);
+
     bool write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager);
     void writeFlags(const FirewallConf &conf);
     bool writeAppEntry(const App &app, bool isNew = false);
+
     void writeZone(const IpRange &ipRange);
     void writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData);
-    void migrateZoneData(char **data, const QByteArray &zoneData);
     void writeZoneFlag(int zoneId, bool enabled);
 
     bool loadZone(IpRange &ipRange);
@@ -116,6 +118,8 @@ private:
     static bool loadAddress6List(const char **data, IpRange &ipRange, uint &bufSize);
 
     static void writeApps(char **data, const appdata_map_t &appsMap, bool useHeader = false);
+
+    static void migrateZoneData(char **data, const QByteArray &zoneData);
 
     static void writeShorts(char **data, const shorts_arr_t &array);
     static void writeLongs(char **data, const longs_arr_t &array);
