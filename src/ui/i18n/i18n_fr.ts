@@ -1155,7 +1155,7 @@ Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
     </message>
     <message>
         <source>Bad Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Mauvais Port</translation>
     </message>
 </context>
 <context>
@@ -1538,7 +1538,7 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     </message>
     <message>
         <source>Global rules count exceeded!</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombre de règles globales dépassé!</translation>
     </message>
 </context>
 <context>
