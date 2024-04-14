@@ -397,6 +397,7 @@ HEADERS += \
     util/conf/addressrange.h \
     util/conf/appparseoptions.h \
     util/conf/confappswalker.h \
+    util/conf/confruleswalker.h \
     util/conf/confutil.h \
     util/dateutil.h \
     util/device.h \

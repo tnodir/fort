@@ -62,7 +62,8 @@ const char *const sqlSelectAppById = "SELECT" SELECT_APP_FIELDS "  FROM app t"
 
 const char *const sqlSelectApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
                                   "    JOIN app_group g ON g.app_group_id = t.app_group_id"
-                                  "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id;";
+                                  "    LEFT JOIN app_alert alert ON alert.app_id = t.app_id"
+                                  "  ORDER BY t.path;";
 
 const char *const sqlSelectAppsToPurge = "SELECT app_id, path FROM app"
                                          "  WHERE is_wildcard = 0 AND parked = 0;";
@@ -491,7 +492,7 @@ QVector<qint64> ConfAppManager::collectObsoleteApps(quint32 driveMask)
     return appIdList;
 }
 
-bool ConfAppManager::walkApps(const std::function<walkAppsCallback> &func)
+bool ConfAppManager::walkApps(const std::function<walkAppsCallback> &func) const
 {
     SqliteStmt stmt;
     if (!DbQuery(sqliteDb()).sql(sqlSelectApps).prepare(stmt))

@@ -14,6 +14,7 @@ class AddressGroup;
 class App;
 class AppGroup;
 class ConfAppsWalker;
+class ConfRulesWalker;
 class EnvManager;
 class FirewallConf;
 
@@ -51,9 +52,12 @@ public slots:
     void writeVersion();
     void writeServices(const QVector<ServiceInfo> &services, int runningServicesCount);
 
-    bool write(const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager);
+    bool write(
+            const FirewallConf &conf, const ConfAppsWalker *confAppsWalker, EnvManager &envManager);
     void writeFlags(const FirewallConf &conf);
     bool writeAppEntry(const App &app, bool isNew = false);
+
+    bool writeRules(const ConfRulesWalker &confRulesWalker);
 
     void writeZone(const IpRange &ipRange);
     void writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
@@ -92,7 +96,8 @@ private:
     bool parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &appGroups,
             ParseAppGroupsArgs &gr, AppParseOptions &opt);
 
-    bool parseExeApps(EnvManager &envManager, ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
+    bool parseExeApps(
+            EnvManager &envManager, const ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
 
     bool parseAppsText(EnvManager &envManager, App &app, AppParseOptions &opt);
 

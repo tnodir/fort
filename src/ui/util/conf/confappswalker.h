@@ -12,7 +12,7 @@ using walkAppsCallback = bool(App &app);
 class ConfAppsWalker
 {
 public:
-    virtual bool walkApps(const std::function<walkAppsCallback> &func) = 0;
+    virtual bool walkApps(const std::function<walkAppsCallback> &func) const = 0;
 };
 
 #endif // CONFAPPSWALKER_H

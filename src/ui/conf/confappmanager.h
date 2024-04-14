@@ -43,7 +43,7 @@ public:
     virtual bool updateAppsBlocked(
             const QVector<qint64> &appIdList, bool blocked, bool killProcess);
 
-    bool walkApps(const std::function<walkAppsCallback> &func) override;
+    bool walkApps(const std::function<walkAppsCallback> &func) const override;
 
     bool saveAppBlocked(const App &app);
     void updateAppEndTimes();

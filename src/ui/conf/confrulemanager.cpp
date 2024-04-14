@@ -18,6 +18,25 @@ namespace {
 
 const QLoggingCategory LC("confRule");
 
+#define SELECT_RULE_FIELDS                                                                         \
+    "    t.rule_id,"                                                                               \
+    "    t.enabled,"                                                                               \
+    "    t.blocked,"                                                                               \
+    "    t.exclusive,"                                                                             \
+    "    t.rule_text,"                                                                             \
+    "    t.rule_type,"                                                                             \
+    "    t.accept_zones,"                                                                          \
+    "    t.reject_zones"
+
+const char *const sqlSelectRules = "SELECT" SELECT_RULE_FIELDS "  FROM rule t"
+                                   "  ORDER BY t.rule_id;";
+
+const char *const sqlSelectRuleSets = "SELECT t.rule_id, t.sub_rule_id"
+                                      "  FROM rule_set t"
+                                      "  ORDER BY t.rule_id, t.order_index;";
+
+const char *const sqlSelectMaxRuleId = "SELECT MAX(rule_id) FROM rule;";
+
 const char *const sqlInsertRule = "INSERT INTO rule(rule_id, enabled, blocked, exclusive,"
                                   "    name, notes, rule_text, rule_type,"
                                   "    accept_zones, reject_zones, mod_time)"
@@ -191,8 +210,6 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
                               .sql(sqlSelectRuleIds)
                               .vars({ ConfUtil::ruleMaxCount() })
                               .getFreeId(/*maxId=*/ConfUtil::ruleMaxCount() - 1);
-    } else {
-        updateDriverRuleFlag(rule.ruleId, rule.enabled);
     }
 
     const QVariantList vars = {
@@ -219,6 +236,8 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 
     if (!ok)
         return false;
+
+    updateDriverRules();
 
     if (isNew) {
         emit ruleAdded();
@@ -251,6 +270,8 @@ bool ConfRuleManager::deleteRule(int ruleId)
 
     if (ok) {
         emit ruleRemoved(ruleId);
+
+        updateDriverRules();
     }
 
     return ok;
@@ -296,16 +317,97 @@ bool ConfRuleManager::updateRuleEnabled(int ruleId, bool enabled)
     return ok;
 }
 
-void ConfRuleManager::updateDriverRules(quint32 rulesMask, quint32 enabledMask, quint32 dataSize,
-        const QList<QByteArray> &rulesData)
+bool ConfRuleManager::walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds, int &maxRuleId,
+        const std::function<walkRulesCallback> &func) const
+{
+    bool ok = false;
+
+    sqliteDb()->beginTransaction();
+
+    maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
+
+    walkRulesMap(ruleSetMap, ruleIds);
+
+    ok = walkRulesLoop(func);
+
+    sqliteDb()->commitTransaction();
+
+    return ok;
+}
+
+void ConfRuleManager::walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds) const
+{
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectRuleSets).prepare(stmt))
+        return;
+
+    int prevRuleId = 0;
+    int prevIndex = 0;
+
+    int index = 0;
+    for (;;) {
+        const bool isStepRow = (stmt.step() == SqliteStmt::StepRow);
+
+        const int ruleId = stmt.columnInt(0);
+        const int subRuleId = stmt.columnInt(1);
+
+        if (prevRuleId != ruleId) {
+            const RuleSetIndex ruleSetIndex = {
+                .index = quint32(prevIndex),
+                .count = quint8(index - prevIndex),
+            };
+
+            ruleSetMap.insert(prevRuleId, ruleSetIndex);
+
+            prevRuleId = ruleId;
+            prevIndex = index;
+        }
+
+        ruleIds.append(subRuleId);
+
+        ++index;
+
+        if (!isStepRow)
+            break;
+    }
+}
+
+bool ConfRuleManager::walkRulesLoop(const std::function<walkRulesCallback> &func) const
+{
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectRules).prepare(stmt))
+        return false;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        Rule rule;
+        fillRule(rule, stmt);
+
+        if (!func(rule))
+            return false;
+    }
+
+    return true;
+}
+
+void ConfRuleManager::fillRule(Rule &rule, const SqliteStmt &stmt)
+{
+    rule.ruleId = stmt.columnInt(0);
+    rule.enabled = stmt.columnBool(1);
+    rule.blocked = stmt.columnBool(2);
+    rule.exclusive = stmt.columnBool(3);
+    rule.ruleText = stmt.columnText(4);
+    rule.ruleType = Rule::RuleType(stmt.columnInt(5));
+    rule.acceptZones = stmt.columnUInt64(6);
+    rule.rejectZones = stmt.columnUInt64(7);
+}
+
+void ConfRuleManager::updateDriverRules()
 {
     ConfUtil confUtil;
 
-#if 0
-    const int entrySize = confUtil.writeRules(rulesMask, enabledMask, dataSize, rulesData);
+    confUtil.writeRules(*this);
 
-    driverWriteRules(confUtil, confUtil.buffer(), entrySize);
-#endif
+    // driverWriteRules(confUtil, confUtil.buffer(), entrySize);
 }
 
 bool ConfRuleManager::updateDriverRuleFlag(int ruleId, bool enabled)
@@ -313,9 +415,9 @@ bool ConfRuleManager::updateDriverRuleFlag(int ruleId, bool enabled)
     ConfUtil confUtil;
 
 #if 0
-    const int entrySize = confUtil.writeRuleFlag(ruleId, enabled);
+    confUtil.writeRuleFlag(ruleId, enabled);
 
-    return driverWriteRules(confUtil, confUtil.buffer(), entrySize, /*onlyFlags=*/true);
+    return driverWriteRules(confUtil, confUtil.buffer(), /*onlyFlags=*/true);
 #endif
     return true;
 }

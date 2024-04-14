@@ -148,7 +148,7 @@ typedef struct fort_conf_rule
 
 typedef struct fort_conf_rules
 {
-    UINT32 rule_off[FORT_CONF_RULE_MAX];
+    UINT16 max_rule_id;
 
     char data[4];
 } FORT_CONF_RULES, *PFORT_CONF_RULES;
@@ -159,6 +159,7 @@ typedef struct fort_conf_rule_flag
     UCHAR enabled;
 } FORT_CONF_RULE_FLAG, *PFORT_CONF_RULE_FLAG;
 
+#define FORT_CONF_RULES_DATA_OFF offsetof(FORT_CONF_RULES, data)
 #define FORT_CONF_RULE_SIZE(rule)                                                                  \
     (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \
             + (rule)->set_count * sizeof(UINT16))

@@ -15,6 +15,7 @@
 #include <util/stringutil.h>
 
 #include "confappswalker.h"
+#include "confruleswalker.h"
 
 #define APP_GROUP_MAX      FORT_CONF_GROUP_MAX
 #define APP_GROUP_NAME_MAX 128
@@ -218,7 +219,7 @@ void ConfUtil::writeServices(const QVector<ServiceInfo> &services, int runningSe
 }
 
 bool ConfUtil::write(
-        const FirewallConf &conf, ConfAppsWalker *confAppsWalker, EnvManager &envManager)
+        const FirewallConf &conf, const ConfAppsWalker *confAppsWalker, EnvManager &envManager)
 {
     WriteConfArgs wca = { .conf = conf,
         .ad = { .addressRanges = addrranges_arr_t(conf.addressGroups().size()) } };
@@ -285,6 +286,22 @@ bool ConfUtil::writeAppEntry(const App &app, bool isNew)
     writeApps(&data, appsMap);
 
     return true;
+}
+
+bool ConfUtil::writeRules(const ConfRulesWalker &confRulesWalker)
+{
+    ruleset_map_t ruleSetMap;
+    ruleid_arr_t ruleIds;
+    int maxRuleId;
+
+    return confRulesWalker.walkRules(ruleSetMap, ruleIds, maxRuleId, [&](Rule &rule) -> bool {
+        if (buffer().isEmpty()) {
+        }
+
+        const auto ruleSetIndex = ruleSetMap[rule.ruleId];
+
+        return true;
+    });
 }
 
 void ConfUtil::writeZone(const IpRange &ipRange)
@@ -467,7 +484,7 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
 }
 
 bool ConfUtil::parseExeApps(
-        EnvManager &envManager, ConfAppsWalker *confAppsWalker, AppParseOptions &opt)
+        EnvManager &envManager, const ConfAppsWalker *confAppsWalker, AppParseOptions &opt)
 {
     if (Q_UNLIKELY(!confAppsWalker))
         return true;

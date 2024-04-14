@@ -7,11 +7,12 @@
 
 #include <conf/rule.h>
 #include <util/classhelpers.h>
+#include <util/conf/confruleswalker.h>
 #include <util/ioc/iocservice.h>
 
 class ConfManager;
 
-class ConfRuleManager : public QObject, public IocService
+class ConfRuleManager : public QObject, public ConfRulesWalker, public IocService
 {
     Q_OBJECT
 
@@ -35,8 +36,10 @@ public:
     virtual bool updateRuleName(int ruleId, const QString &ruleName);
     virtual bool updateRuleEnabled(int ruleId, bool enabled);
 
-    void updateDriverRules(quint32 rulesMask, quint32 enabledMask, quint32 dataSize,
-            const QList<QByteArray> &rulesData);
+    bool walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds, int &maxRuleId,
+            const std::function<walkRulesCallback> &func) const override;
+
+    void updateDriverRules();
 
 signals:
     void ruleAdded();
@@ -44,6 +47,11 @@ signals:
     void ruleUpdated();
 
 private:
+    void walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds) const;
+    bool walkRulesLoop(const std::function<walkRulesCallback> &func) const;
+
+    static void fillRule(Rule &rule, const SqliteStmt &stmt);
+
     bool updateDriverRuleFlag(int ruleId, bool enabled);
 
     bool beginTransaction();
