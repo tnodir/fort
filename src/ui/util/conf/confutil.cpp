@@ -294,11 +294,39 @@ bool ConfUtil::writeRules(const ConfRulesWalker &confRulesWalker)
     ruleid_arr_t ruleIds;
     int maxRuleId;
 
+    int outSize = 0;
+    int ruleOffset = 0;
+
     return confRulesWalker.walkRules(ruleSetMap, ruleIds, maxRuleId, [&](Rule &rule) -> bool {
-        if (buffer().isEmpty()) {
+        if (outSize == 0) {
+            outSize = FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
+            buffer().resize(outSize, '\0');
+
+            PFORT_CONF_RULES rules = (PFORT_CONF_RULES) buffer().data();
+            rules->max_rule_id = maxRuleId;
         }
 
-        const auto ruleSetIndex = ruleSetMap[rule.ruleId];
+        const int ruleId = rule.ruleId;
+        const auto ruleSetIndex = ruleSetMap[ruleId];
+
+        // Store the rule's offset
+        {
+            int *ruleOffsets = (int *) (buffer().data() + FORT_CONF_RULES_DATA_OFF);
+            ruleOffsets[ruleId] = ruleOffset;
+        }
+
+        // Store the rule
+        PFORT_CONF_RULE confRule = (PFORT_CONF_RULE) (buffer().data() + outSize);
+        confRule->enabled = rule.enabled;
+        confRule->blocked = rule.blocked;
+        confRule->exclusive = rule.exclusive;
+
+        const bool hasZones = (rule.acceptZones != 0 || rule.rejectZones != 0);
+        confRule->has_zones = hasZones;
+
+        confRule->has_expr = !rule.ruleText.isEmpty();
+
+        confRule->set_count = ruleSetIndex.count;
 
         return true;
     });

@@ -159,7 +159,8 @@ typedef struct fort_conf_rule_flag
     UCHAR enabled;
 } FORT_CONF_RULE_FLAG, *PFORT_CONF_RULE_FLAG;
 
-#define FORT_CONF_RULES_DATA_OFF offsetof(FORT_CONF_RULES, data)
+#define FORT_CONF_RULES_DATA_OFF                  offsetof(FORT_CONF_RULES, data)
+#define FORT_CONF_RULES_OFFSETS_SIZE(max_rule_id) ((max_rule_id + 1) * sizeof(UINT32))
 #define FORT_CONF_RULE_SIZE(rule)                                                                  \
     (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \
             + (rule)->set_count * sizeof(UINT16))
