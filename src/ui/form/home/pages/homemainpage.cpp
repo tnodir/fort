@@ -2,7 +2,7 @@
 
 #include <QIcon>
 #include <QLabel>
-#include <QStackedLayout>
+#include <QStackedWidget>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -39,7 +39,7 @@ void HomeMainPage::setupUi()
     setupStackedLayout();
 
     layout->addLayout(sideBar);
-    layout->addLayout(m_stackedLayout, 1);
+    layout->addWidget(m_stackedPages, 1);
 
     this->setLayout(layout);
 }
@@ -74,18 +74,18 @@ void HomeMainPage::setupSideBarButtons()
 
 void HomeMainPage::setupStackedLayout()
 {
-    m_stackedLayout = new QStackedLayout();
+    m_stackedPages = new QStackedWidget();
 
-    m_stackedLayout->addWidget(new HomePage(ctrl()));
-    m_stackedLayout->addWidget(new AboutPage(ctrl()));
+    m_stackedPages->addWidget(new HomePage(ctrl()));
+    m_stackedPages->addWidget(new AboutPage(ctrl()));
 }
 
 void HomeMainPage::setCurrentTab(TabIndex tabIndex)
 {
-    if (m_stackedLayout->currentIndex() == tabIndex)
+    if (m_stackedPages->currentIndex() == tabIndex)
         return;
 
-    m_stackedLayout->setCurrentIndex(tabIndex);
+    m_stackedPages->setCurrentIndex(tabIndex);
 
     buttonAt(tabIndex)->animateClick();
 }

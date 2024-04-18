@@ -3,7 +3,7 @@
 
 #include "homebasepage.h"
 
-QT_FORWARD_DECLARE_CLASS(QStackedLayout)
+QT_FORWARD_DECLARE_CLASS(QStackedWidget)
 
 class HomeMainPage : public HomeBasePage
 {
@@ -30,7 +30,7 @@ private:
 
 private:
     QVector<QToolButton *> m_buttons;
-    QStackedLayout *m_stackedLayout = nullptr;
+    QStackedWidget *m_stackedPages = nullptr;
 };
 
 #endif // HOMEMAINPAGE_H
