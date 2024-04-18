@@ -286,7 +286,7 @@ SqliteDb *AppListModel::sqliteDb() const
 
 void AppListModel::initialize()
 {
-    setSortColumn(8);
+    setSortColumn(7);
     setSortOrder(Qt::DescendingOrder);
 
     connect(confManager(), &ConfManager::confChanged, this, &AppListModel::refresh);
@@ -554,6 +554,9 @@ QString AppListModel::sqlOrderColumn() const
         nameColumn, // File Path
         nameColumn, // Creation Time ~ App ID
     };
+
+    Q_ASSERT(sortColumn() >= 0 && sortColumn() < orderColumns.size()
+            && orderColumns.size() == postOrderColumns.size());
 
     const auto &columnsStr = orderColumns.at(sortColumn());
     const auto &postColumnsStr = postOrderColumns.at(sortColumn());
