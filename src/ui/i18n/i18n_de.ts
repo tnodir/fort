@@ -1155,7 +1155,7 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
     </message>
     <message>
         <source>Bad Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Ungültiger Port</translation>
     </message>
 </context>
 <context>
@@ -1538,7 +1538,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Global rules count exceeded!</source>
-        <translation type="unfinished"></translation>
+        <translation>Anzahl globaler Regeln überschritten!</translation>
     </message>
 </context>
 <context>
