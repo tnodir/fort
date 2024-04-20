@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.12.2, 2024-04-20:
+- UI: Prepare Rules forms (Driver is not yet ready).
+- UI: Options: Edit Hot Key Shortcuts.
+- UI: Fix layouts for Arabic language.
+- UI: Update SQLite to v3.45.3
+
 v3.12.1, 2024-03-14:
 - UI: Add Arabic language.
 - UI: AppInfoUtil: Improve version info parsing.
