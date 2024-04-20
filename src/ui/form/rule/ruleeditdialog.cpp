@@ -141,7 +141,8 @@ void RuleEditDialog::retranslateRulePlaceholderText()
             // IP-Address:Port
             + '\n' + tr("# IP address and port:")
             + "\n1.1.1.1:udp(43)"
-              "\nip(1.1.1.1-8.8.8.8):port(43,80-8080)";
+              "\n(1.1.1.1-8.8.8.8):(43,80-8080)"
+              "\n\n!!! UNDER CONSTRUCTION !!!";
 
     m_editRuleText->setPlaceholderText(placeholderText);
 }
@@ -178,6 +179,9 @@ QLayout *RuleEditDialog::setupMainLayout()
 
     // Rule Text
     m_editRuleText = new PlainTextEdit();
+
+    // TODO: Implement Rules
+    m_editRuleText->setEnabled(false);
 
     // RuleSet Header
     auto ruleSetHeaderLayout = setupRuleSetHeaderLayout();

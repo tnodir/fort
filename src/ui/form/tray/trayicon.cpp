@@ -456,9 +456,6 @@ void TrayIcon::setupTrayMenuOptions()
             m_optionsMenu, ":/icons/script.png", windowManager(), SLOT(showRulesWindow()));
     addHotKey(m_rulesAction, HotKey::rules);
 
-    // TODO: Implement Rules
-    m_rulesAction->setEnabled(false);
-
     m_zonesAction = addAction(
             m_optionsMenu, ":/icons/ip_class.png", windowManager(), SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, HotKey::zones);
