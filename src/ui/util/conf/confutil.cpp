@@ -300,7 +300,9 @@ bool ConfUtil::writeRules(const ConfRulesWalker &confRulesWalker)
     return confRulesWalker.walkRules(ruleSetMap, ruleIds, maxRuleId, [&](Rule &rule) -> bool {
         if (outSize == 0) {
             outSize = FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
-            buffer().resize(outSize, '\0');
+
+            buffer().resize(outSize);
+            buffer().fill('\0');
 
             PFORT_CONF_RULES rules = (PFORT_CONF_RULES) buffer().data();
             rules->max_rule_id = maxRuleId;
