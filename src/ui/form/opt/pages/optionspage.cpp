@@ -24,6 +24,7 @@
 #include <fortsettings.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
+#include <task/taskinfo.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
@@ -61,6 +62,7 @@ void OptionsPage::onResetToDefault()
     m_cbAppAlertAutoShow->setChecked(true);
     m_cbAppAlertAlwaysOnTop->setChecked(false);
     m_cbPurgeOnMounted->setChecked(false);
+    m_cbAutoUpdate->setChecked(false);
 
     m_cbUseSystemLocale->setChecked(true);
     m_cbHotKeysEnabled->setChecked(false);
@@ -179,6 +181,7 @@ void OptionsPage::onRetranslateUi()
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbProtection->setTitle(tr("Self Protection"));
     m_gbProg->setTitle(tr("Programs"));
+    m_gbUpdate->setTitle(TaskInfo::title(TaskInfo::UpdateChecker));
     m_gbGlobal->setTitle(tr("Global"));
     m_gbHotKeys->setTitle(tr("Hot Keys"));
     m_gbHome->setTitle(tr("My Fort"));
@@ -217,6 +220,7 @@ void OptionsPage::onRetranslateUi()
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
     m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
+    m_cbAutoUpdate->setText(tr("Auto-update"));
 
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
@@ -400,6 +404,10 @@ QLayout *OptionsPage::setupColumn1()
     // Programs Group Box
     setupProgBox();
     layout->addWidget(m_gbProg);
+
+    // Update Checker Group Box
+    setupUpdateBox();
+    layout->addWidget(m_gbUpdate);
 
     layout->addStretch();
 
@@ -620,6 +628,22 @@ void OptionsPage::setupProgBox()
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);
+}
+
+void OptionsPage::setupUpdateBox()
+{
+    m_cbAutoUpdate = ControlUtil::createCheckBox(ini()->updaterAutoUpdate(), [&](bool checked) {
+        if (ini()->updaterAutoUpdate() != checked) {
+            ini()->setUpdaterAutoUpdate(checked);
+            ctrl()->setIniEdited();
+        }
+    });
+
+    // Layout
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbAutoUpdate });
+
+    m_gbUpdate = new QGroupBox();
+    m_gbUpdate->setLayout(layout);
 }
 
 void OptionsPage::setupLogBlocked()

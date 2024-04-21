@@ -56,7 +56,12 @@ void TaskInfo::setIntervalHours(int intervalHours)
 
 QString TaskInfo::title() const
 {
-    switch (m_type) {
+    return title(m_type);
+}
+
+QString TaskInfo::title(TaskType type)
+{
+    switch (type) {
     case UpdateChecker:
         return tr("Fort Firewall Update Checker");
     case ZoneDownloader:

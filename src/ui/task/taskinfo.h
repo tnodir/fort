@@ -45,6 +45,7 @@ public:
     void setIntervalHours(int intervalHours);
 
     QString title() const;
+    static QString title(TaskType type);
 
     TaskInfo::TaskType type() const { return m_type; }
     void setType(TaskInfo::TaskType type);
