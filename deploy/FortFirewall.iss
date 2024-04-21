@@ -96,7 +96,7 @@ Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start ser
   Flags: nowait; Tasks: service
 
 Filename: "{#APP_EXE}"; Parameters: "--lang {code:LanguageName}"; \
-  Description: {cm:LaunchProgram,{#APP_NAME}}; Flags: nowait postinstall skipifsilent
+  Description: {cm:LaunchProgram,{#APP_NAME}}; Flags: nowait postinstall; Check: IsAutoRun
 
 [UninstallRun]
 Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "Uninstall"
@@ -123,6 +123,24 @@ Root: HKLM; Subkey: "SOFTWARE\{#APP_NAME}"; Flags: dontcreatekey uninsdeletekeyi
 Root: HKLM; Subkey: "SOFTWARE\{#APP_NAME}"; ValueName: "passwordHash"; Flags: dontcreatekey uninsdeletevalue
 
 [Code]
+
+function ParamExists(const Value: string): Boolean;
+var
+  I: Integer;  
+begin
+  Result := False;
+  for I := 1 to ParamCount do
+    if CompareText(ParamStr(I), Value) = 0 then
+    begin
+      Result := True;
+      Exit;
+    end;
+end;
+
+function IsAutoRun: Boolean;
+begin
+  Result := ParamExists('/AUTORUN') or not (ParamExists('/SILENT') or ParamExists('/VERYSILENT'));
+end;
 
 #if CHECK_WIN10 == "Y"
 function IsProcessorFeaturePresent(Feature: Integer): Boolean;
