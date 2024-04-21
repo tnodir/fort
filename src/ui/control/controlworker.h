@@ -105,6 +105,8 @@ private:
     bool m_isTryReconnect : 1 = false;
     bool m_isReconnecting : 1 = false;
 
+    QAtomicInt m_processing = 0;
+
     const quint32 m_id = 0;
 
     RequestHeader m_requestHeader;

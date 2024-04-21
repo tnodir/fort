@@ -168,6 +168,9 @@ void ControlWorker::onConnected()
 
 void ControlWorker::onDisconnected()
 {
+    if (m_processing > 0)
+        return;
+
     if (isTryReconnect() && reconnectToServer())
         return;
 
@@ -258,12 +261,20 @@ bool ControlWorker::waitForRead(int msecs) const
 
 void ControlWorker::processRequest()
 {
-    while (socket()->bytesAvailable() >= sizeof(RequestHeader)) {
+    ++m_processing;
+
+    while (socket()->bytesAvailable() >= int(sizeof(RequestHeader))) {
         if (!readRequest()) {
             close();
             clearRequest();
             break;
         }
+    }
+
+    --m_processing;
+
+    if (!isConnected()) {
+        onDisconnected();
     }
 }
 
@@ -303,7 +314,7 @@ bool ControlWorker::readRequest()
 
     clearRequest();
 
-    // qCDebug(LC) << "requestReady>" << id() << command << args;
+    // DBG: qCDebug(LC) << "requestReady>" << id() << command << args;
 
     emit requestReady(command, args);
 
