@@ -1096,6 +1096,10 @@ Make sure that you have a fresh backup.</source>
         <source>Shortcut:</source>
         <translation>Комбинация клавиш:</translation>
     </message>
+    <message>
+        <source>Auto-update</source>
+        <translation>Авто-обновление</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

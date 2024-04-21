@@ -1096,6 +1096,10 @@ Assicurati di avere un backup recente.</translation>
         <source>Shortcut:</source>
         <translation>Scorciatoia:</translation>
     </message>
+    <message>
+        <source>Auto-update</source>
+        <translation>Auto-aggiorna</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

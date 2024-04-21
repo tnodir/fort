@@ -1096,6 +1096,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Shortcut:</source>
         <translation>Tastenkürzel:</translation>
     </message>
+    <message>
+        <source>Auto-update</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
