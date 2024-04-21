@@ -15,7 +15,9 @@ const char *const commandString(Command cmd)
 
         CASE_STRING(Rpc_Result_Ok)
         CASE_STRING(Rpc_Result_Error)
+
         CASE_STRING(Rpc_RpcManager_initClient)
+        CASE_STRING(Rpc_RpcManager_restartClient)
 
         CASE_STRING(Rpc_AppInfoManager_lookupAppInfo)
         CASE_STRING(Rpc_AppInfoManager_checkLookupInfoFinished)
@@ -115,6 +117,7 @@ RpcManager managerByCommand(Command cmd)
         Rpc_NoneManager, // Rpc_Result_Error,
 
         Rpc_NoneManager, // Rpc_RpcManager_initClient,
+        Rpc_NoneManager, // Rpc_RpcManager_restartClient,
 
         Rpc_AppInfoManager, // Rpc_AppInfoManager_lookupAppInfo,
         Rpc_AppInfoManager, // Rpc_AppInfoManager_checkLookupFinished,
@@ -194,6 +197,7 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_Result_Error,
 
         0, // Rpc_RpcManager_initClient,
+        0, // Rpc_RpcManager_restartClient,
 
         true, // Rpc_AppInfoManager_lookupAppInfo,
         0, // Rpc_AppInfoManager_checkLookupFinished,

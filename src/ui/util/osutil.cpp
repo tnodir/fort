@@ -12,6 +12,7 @@
 
 #include <lmcons.h>
 
+#include "fileutil.h"
 #include "processinfo.h"
 
 namespace {
@@ -171,6 +172,17 @@ void OsUtil::setThreadIsBusy(bool on)
 bool OsUtil::allowOtherForegroundWindows()
 {
     return AllowSetForegroundWindow(ASFW_ANY);
+}
+
+void OsUtil::restartClient()
+{
+    FileUtil::replaceFile(":/scripts/delay-start.bat", "delay-start.bat");
+
+    const QStringList args = QCoreApplication::arguments();
+
+    QProcess::startDetached("delay-start.bat", args);
+
+    quit("required client restart");
 }
 
 void OsUtil::restart()

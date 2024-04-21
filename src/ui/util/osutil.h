@@ -42,6 +42,7 @@ public:
 
     static bool allowOtherForegroundWindows();
 
+    static void restartClient();
     static void restart();
     static void quit(const QString &reason);
 };

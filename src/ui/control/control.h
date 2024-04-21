@@ -15,6 +15,7 @@ enum Command : qint8 {
     Rpc_Result_Error,
 
     Rpc_RpcManager_initClient,
+    Rpc_RpcManager_restartClient,
 
     Rpc_AppInfoManager_lookupAppInfo,
     Rpc_AppInfoManager_checkLookupInfoFinished,

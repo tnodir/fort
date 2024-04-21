@@ -6,6 +6,7 @@
 #include <conf/firewallconf.h>
 #include <conf/inioptions.h>
 #include <fortsettings.h>
+#include <rpc/rpcmanager.h>
 #include <task/taskinfoupdatechecker.h>
 #include <task/taskmanager.h>
 #include <util/fileutil.h>
@@ -95,5 +96,7 @@ void AutoUpdateManager::fillInstallerArgs(QStringList &args) const
 
     if (!settings->hasService()) {
         args << "/AUTORUN";
+    } else if (settings->isService()) {
+        IoC<RpcManager>()->invokeOnClients(Control::Rpc_RpcManager_restartClient);
     }
 }
