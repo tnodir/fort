@@ -12,6 +12,12 @@
 
 namespace {
 
+bool processConfAppManager_addOrUpdateAppPath(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->addOrUpdateAppPath(p.args.value(0).toString(), p.args.value(1).toBool());
+}
+
 bool processConfAppManager_addOrUpdateApp(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
@@ -63,6 +69,7 @@ using processConfAppManager_func = bool (*)(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs);
 
 static processConfAppManager_func processConfAppManager_funcList[] = {
+    &processConfAppManager_addOrUpdateAppPath, // Rpc_ConfAppManager_addOrUpdateAppPath,
     &processConfAppManager_addOrUpdateApp, // Rpc_ConfAppManager_addOrUpdateApp,
     &processConfAppManager_updateApp, // Rpc_ConfAppManager_updateApp,
     &processConfAppManager_updateAppName, // Rpc_ConfAppManager_updateAppName,
@@ -75,7 +82,7 @@ inline bool processConfAppManagerRpcResult(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs)
 {
     const processConfAppManager_func func = RpcManager::getProcessFunc(p.command,
-            processConfAppManager_funcList, Control::Rpc_ConfAppManager_addOrUpdateApp,
+            processConfAppManager_funcList, Control::Rpc_ConfAppManager_addOrUpdateAppPath,
             Control::Rpc_ConfAppManager_updateAppsBlocked);
 
     return func ? func(confAppManager, p, resArgs) : false;
@@ -84,6 +91,12 @@ inline bool processConfAppManagerRpcResult(
 }
 
 ConfAppManagerRpc::ConfAppManagerRpc(QObject *parent) : ConfAppManager(parent) { }
+
+bool ConfAppManagerRpc::addOrUpdateAppPath(const QString &appOriginPath, bool blocked)
+{
+    return IoC<RpcManager>()->doOnServer(
+            Control::Rpc_ConfAppManager_addOrUpdateAppPath, { appOriginPath, blocked });
+}
 
 bool ConfAppManagerRpc::addOrUpdateApp(App &app, bool onlyUpdate)
 {

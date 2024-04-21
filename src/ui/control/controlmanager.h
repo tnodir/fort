@@ -55,6 +55,8 @@ private slots:
 private:
     bool processCommand(const ProcessCommandArgs &p);
     bool processCommandProg(const ProcessCommandArgs &p);
+    bool processCommandProgAdd(const ProcessCommandArgs &p);
+    bool processCommandProgAction(const ProcessCommandArgs &p, bool blocked);
 
     static QString getServerName(bool isService = false);
 

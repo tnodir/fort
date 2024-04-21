@@ -7,6 +7,7 @@
 
 #include <fort_version.h>
 
+#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <fortsettings.h>
@@ -230,17 +231,12 @@ bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
 
     // Add command
     if (progCommand == "add") {
-        if (argsSize < 2) {
-            p.errorMessage = "prog add <app-path>";
-            return false;
-        }
-
-        if (!IoC<WindowManager>()->showProgramEditForm(p.args.at(1).toString())) {
-            p.errorMessage = "Edit Program is already opened";
-            return false;
-        }
-
-        return true;
+        return processCommandProgAdd(p);
+    }
+    // Allow/Block command
+    if (progCommand == "allow" || progCommand == "block") {
+        const bool blocked = (progCommand == "block");
+        return processCommandProgAction(p, blocked);
     }
     // Show command
     else if (progCommand == "show") {
@@ -249,6 +245,47 @@ bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
     }
 
     return false;
+}
+
+bool ControlManager::processCommandProgAdd(const ProcessCommandArgs &p)
+{
+    const int argsSize = p.args.size();
+    if (argsSize < 2) {
+        p.errorMessage = "prog add <app-path>";
+        return false;
+    }
+
+    const QString appPath = p.args.at(1).toString();
+
+    if (!IoC<WindowManager>()->showProgramEditForm(appPath)) {
+        p.errorMessage = "Edit Program is already opened";
+        return false;
+    }
+
+    return true;
+}
+
+bool ControlManager::processCommandProgAction(const ProcessCommandArgs &p, bool blocked)
+{
+    const int argsSize = p.args.size();
+    if (argsSize < 2) {
+        p.errorMessage = "prog allow|block <app-path>";
+        return false;
+    }
+
+    if (!IoC<WindowManager>()->checkPassword()) {
+        p.errorMessage = "Password required";
+        return false;
+    }
+
+    const QString appPath = p.args.at(1).toString();
+
+    if (!IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked)) {
+        p.errorMessage = "Cannot update Program";
+        return false;
+    }
+
+    return true;
 }
 
 QString ControlManager::getServerName(bool isService)

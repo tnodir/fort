@@ -194,6 +194,30 @@ void ConfAppManager::updateAppEndTimer()
     }
 }
 
+bool ConfAppManager::addAppPathBlocked(App &app)
+{
+    // app.blocked
+    // app.alerted
+    // app.groupIndex
+    // app.appOriginPath
+    // app.scheduleAction
+
+    app.appPath = FileUtil::normalizePath(app.appOriginPath);
+
+    app.appId = appIdByPath(app.appPath);
+    if (app.appId > 0)
+        return false; // already added by user
+
+    app.appName = IoC<AppInfoCache>()->appName(app.appPath);
+
+    const bool ok = addOrUpdateApp(app);
+    if (ok) {
+        emitAppAlerted();
+    }
+
+    return ok;
+}
+
 void ConfAppManager::beginAddOrUpdateApp(
         App &app, const AppGroup &appGroup, bool onlyUpdate, bool &ok)
 {
@@ -262,32 +286,33 @@ void ConfAppManager::emitAppUpdated()
 
 void ConfAppManager::logBlockedApp(const LogEntryBlocked &logEntry)
 {
-    const QString appOriginPath = logEntry.path();
-    const QString appPath = FileUtil::normalizePath(appOriginPath);
-
-    if (appIdByPath(appPath) > 0)
-        return; // already added by user
-
-    const QString appName = IoC<AppInfoCache>()->appName(appPath);
-
     App app;
     app.blocked = logEntry.blocked();
-    app.alerted = true;
-    app.groupIndex = 0; // "Main" app. group
-    app.appOriginPath = appOriginPath;
-    app.appPath = appPath;
-    app.appName = appName;
+    app.alerted = logEntry.alerted();
+    app.appOriginPath = logEntry.path();
     app.scheduleAction = App::ScheduleRemove; // default action for alert
 
-    const bool ok = addOrUpdateApp(app);
-    if (ok) {
-        emitAppAlerted();
-    }
+    addAppPathBlocked(app);
 }
 
 qint64 ConfAppManager::appIdByPath(const QString &appPath)
 {
     return DbQuery(sqliteDb()).sql(sqlSelectAppIdByPath).vars({ appPath }).execute().toLongLong();
+}
+
+bool ConfAppManager::addOrUpdateAppPath(const QString &appOriginPath, bool blocked)
+{
+    App app;
+    app.blocked = blocked;
+    app.appOriginPath = appOriginPath;
+
+    bool ok = addAppPathBlocked(app);
+
+    if (!ok && app.appId > 0) {
+        ok = updateAppsBlocked({ app.appId }, blocked, /*killProcess=*/false);
+    }
+
+    return ok;
 }
 
 bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
