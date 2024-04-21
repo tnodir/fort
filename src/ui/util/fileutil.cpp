@@ -257,6 +257,11 @@ QString normalizePath(const QString &path)
     return toNativeSeparators(pathLower);
 }
 
+bool removePath(const QString &path)
+{
+    return QDir(path).removeRecursively();
+}
+
 bool makePath(const QString &path)
 {
     return QDir().mkpath(path);

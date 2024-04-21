@@ -14,6 +14,7 @@
 #include <form/dialog/passworddialog.h>
 #include <fortsettings.h>
 #include <hostinfo/hostinfocache.h>
+#include <manager/autoupdatemanager.h>
 #include <manager/dberrormanager.h>
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
@@ -73,6 +74,11 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
 
     // For Master only
     ioc->setService(new DriveListManager());
+
+    // For Admin only
+    if (settings->isUserAdmin()) {
+        ioc->setService(new AutoUpdateManager(settings->cachePath()));
+    }
 }
 
 inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)

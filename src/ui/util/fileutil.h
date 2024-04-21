@@ -44,6 +44,7 @@ QString toNativeSeparators(const QString &path);
 // Normalize the Win32 path
 QString normalizePath(const QString &path);
 
+bool removePath(const QString &path);
 bool makePath(const QString &path);
 bool makePathForFile(const QString &filePath);
 bool pathExists(const QString &path);
