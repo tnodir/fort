@@ -273,7 +273,7 @@ bool ControlManager::processCommandProgAction(const ProcessCommandArgs &p, bool 
         return false;
     }
 
-    if (!IoC<WindowManager>()->checkPassword()) {
+    if (!IoC<WindowManager>()->checkPassword(/*temporary=*/true)) {
         p.errorMessage = "Password required";
         return false;
     }

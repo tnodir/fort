@@ -120,7 +120,7 @@ public slots:
     void processRestartRequired(const QString &info = {});
 
     bool checkWindowPassword(WindowCode code);
-    bool checkPassword();
+    bool checkPassword(bool temporary = false);
 
     virtual void showErrorBox(
             const QString &text, const QString &title = QString(), QWidget *parent = nullptr);

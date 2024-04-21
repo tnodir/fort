@@ -608,7 +608,7 @@ bool WindowManager::checkWindowPassword(WindowCode code)
     return (WindowPasswordProtected & code) == 0 || checkPassword();
 }
 
-bool WindowManager::checkPassword()
+bool WindowManager::checkPassword(bool temporary)
 {
     if (isAnyWindowOpen(WindowPasswordDialog)) {
         activateModalWidget();
@@ -627,14 +627,22 @@ bool WindowManager::checkPassword()
 
     QString password;
     int unlockType = FortSettings::UnlockDisabled;
-    if (showPasswordDialog(password, &unlockType) && IoC<ConfManager>()->checkPassword(password)) {
-        settings->setPasswordChecked(
-                /*checked=*/true, static_cast<FortSettings::UnlockType>(unlockType));
+    bool passwordChecked = false;
+
+    if (showPasswordDialog(password, &unlockType) // input the password
+            && IoC<ConfManager>()->checkPassword(password)) {
+
+        if (!temporary || unlockType != FortSettings::UnlockWindow) {
+            settings->setPasswordChecked(
+                    /*checked=*/true, FortSettings::UnlockType(unlockType));
+        }
+
+        passwordChecked = true;
     }
 
     windowClosed(WindowPasswordDialog);
 
-    return settings->passwordChecked();
+    return passwordChecked;
 }
 
 void WindowManager::showErrorBox(const QString &text, const QString &title, QWidget *parent)
