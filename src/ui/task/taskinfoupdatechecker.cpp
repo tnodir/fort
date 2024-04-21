@@ -13,7 +13,7 @@ namespace {
 
 const QLoggingCategory LC("task.updateChecker");
 
-constexpr int TASK_INFO_VERSION = 2;
+constexpr int TASK_INFO_VERSION = 3;
 
 }
 
@@ -37,8 +37,8 @@ QByteArray TaskInfoUpdateChecker::data() const
     // Store data
     const quint16 infoVersion = TASK_INFO_VERSION;
 
-    stream << infoVersion << QString::fromLatin1(APP_VERSION_STR) << m_version << m_downloadUrl
-           << m_releaseText;
+    stream << infoVersion << QString::fromLatin1(APP_VERSION_STR) << m_version << m_releaseText
+           << m_downloadUrl << m_downloadSize;
 
     return data;
 }
@@ -66,7 +66,7 @@ void TaskInfoUpdateChecker::setData(const QByteArray &data)
     if (appVersion != APP_VERSION_STR)
         return; // app upgraded
 
-    stream >> m_version >> m_downloadUrl >> m_releaseText;
+    stream >> m_version >> m_releaseText >> m_downloadUrl >> m_downloadSize;
 
     emitAppVersionUpdated();
 }
@@ -91,8 +91,9 @@ bool TaskInfoUpdateChecker::processResult(bool success)
     }
 
     m_version = worker->version();
-    m_downloadUrl = worker->downloadUrl();
     m_releaseText = worker->releaseText();
+    m_downloadUrl = worker->downloadUrl();
+    m_downloadSize = worker->downloadSize();
 
     emitAppVersionUpdated();
 

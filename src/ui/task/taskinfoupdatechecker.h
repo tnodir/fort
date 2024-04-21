@@ -14,8 +14,9 @@ public:
 
     bool isNewVersion() const;
     QString version() const { return m_version; }
-    QString downloadUrl() const { return m_downloadUrl; }
     QString releaseText() const { return m_releaseText; }
+    QString downloadUrl() const { return m_downloadUrl; }
+    int downloadSize() const { return m_downloadSize; }
 
     QByteArray data() const override;
     void setData(const QByteArray &data) override;
@@ -30,8 +31,10 @@ private:
 
 private:
     QString m_version;
-    QString m_downloadUrl;
     QString m_releaseText;
+
+    QString m_downloadUrl;
+    int m_downloadSize = 0;
 };
 
 #endif // TASKINFOUPDATECHECKER_H

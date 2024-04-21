@@ -12,6 +12,7 @@ public:
 
     QString version() const { return m_version; }
     QString downloadUrl() const { return m_downloadUrl; }
+    int downloadSize() const { return m_downloadSize; }
 
     QString releaseText() const;
 

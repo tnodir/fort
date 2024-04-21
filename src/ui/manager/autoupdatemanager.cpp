@@ -71,10 +71,14 @@ void AutoUpdateManager::clearUpdateDir()
 
 bool AutoUpdateManager::runInstaller()
 {
+    const QByteArray fileData = downloader()->takeBuffer();
+    if (fileData.size() != m_taskInfo->downloadSize())
+        return false;
+
     const QString fileName = QUrl(downloader()->url()).fileName();
     const QString exePath = m_updatePath + fileName;
 
-    if (!FileUtil::writeFileData(exePath, downloader()->takeBuffer()))
+    if (!FileUtil::writeFileData(exePath, fileData))
         return false;
 
     QStringList args;
