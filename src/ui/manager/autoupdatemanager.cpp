@@ -5,6 +5,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <conf/inioptions.h>
+#include <fortsettings.h>
 #include <task/taskinfoupdatechecker.h>
 #include <task/taskmanager.h>
 #include <util/fileutil.h>
@@ -75,8 +76,24 @@ bool AutoUpdateManager::runInstaller()
     if (!FileUtil::writeFileData(exePath, downloader()->takeBuffer()))
         return false;
 
-    if (!QProcess::startDetached(exePath, { "/SILENT" }))
+    QStringList args;
+    fillInstallerArgs(args);
+
+    if (!QProcess::startDetached(exePath, args))
         return false;
 
     return true;
+}
+
+void AutoUpdateManager::fillInstallerArgs(QStringList &args) const
+{
+    auto settings = IoC<FortSettings>();
+
+    if (!settings->isPortable()) {
+        args << "/SILENT";
+    }
+
+    if (!settings->hasService()) {
+        args << "/AUTORUN";
+    }
 }

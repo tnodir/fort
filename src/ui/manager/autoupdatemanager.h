@@ -29,6 +29,7 @@ protected slots:
     void clearUpdateDir();
 
     bool runInstaller();
+    void fillInstallerArgs(QStringList &args) const;
 
 private:
     static QString getDownloadUrl();
