@@ -1090,15 +1090,15 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation type="unfinished"></translation>
+        <translation>단축키:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
-        <translation type="unfinished"></translation>
+        <translation>바로가기:</translation>
     </message>
     <message>
         <source>Auto-update</source>
-        <translation type="unfinished"></translation>
+        <translation>자동 업데이터</translation>
     </message>
 </context>
 <context>
@@ -1159,7 +1159,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Bad Port</source>
-        <translation type="unfinished"></translation>
+        <translation>잘못된 포트</translation>
     </message>
 </context>
 <context>
@@ -1542,7 +1542,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Global rules count exceeded!</source>
-        <translation type="unfinished"></translation>
+        <translation>전역 규칙 수가 초과되었습니다!</translation>
     </message>
 </context>
 <context>
@@ -2055,7 +2055,7 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>App Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>앱 그룹 수정자</translation>
     </message>
 </context>
 <context>

@@ -1098,7 +1098,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-update</source>
-        <translation type="unfinished"></translation>
+        <translation>التحديث التلقائي</translation>
     </message>
 </context>
 <context>
@@ -1159,7 +1159,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Bad Port</source>
-        <translation type="unfinished"></translation>
+        <translation>منفذ خاطئ</translation>
     </message>
 </context>
 <context>
@@ -1542,7 +1542,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
-        <translation type="unfinished"></translation>
+        <translation>عدد القواعد العامة تجاوز الحد الأقصى!</translation>
     </message>
 </context>
 <context>
