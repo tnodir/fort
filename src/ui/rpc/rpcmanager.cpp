@@ -203,17 +203,17 @@ bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
         m_resultCommand = p.command;
         m_resultArgs = p.args;
         return true;
-    } break;
+    }
 
     case Control::Rpc_RpcManager_initClient: {
         initClientOnServer(p.worker);
         return true;
-    } break;
+    }
 
     case Control::Rpc_RpcManager_restartClient: {
         QMetaObject::invokeMethod(this, [] { OsUtil::restartClient(); }, Qt::QueuedConnection);
         return true;
-    } break;
+    }
 
     default:
         return processManagerRpc(p);
