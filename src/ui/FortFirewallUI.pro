@@ -143,6 +143,7 @@ SOURCES += \
     model/zonetypewrapper.cpp \
     rpc/appinfomanagerrpc.cpp \
     rpc/askpendingmanagerrpc.cpp \
+    rpc/autoupdatemanagerrpc.cpp \
     rpc/confappmanagerrpc.cpp \
     rpc/confmanagerrpc.cpp \
     rpc/confrulemanagerrpc.cpp \
@@ -245,6 +246,7 @@ HEADERS += \
     conf/rule.h \
     conf/zone.h \
     control/control.h \
+    control/control_types.h \
     control/controlmanager.h \
     control/controlworker.h \
     driver/drivercommon.h \
@@ -360,6 +362,7 @@ HEADERS += \
     model/zonetypewrapper.h \
     rpc/appinfomanagerrpc.h \
     rpc/askpendingmanagerrpc.h \
+    rpc/autoupdatemanagerrpc.h \
     rpc/confappmanagerrpc.h \
     rpc/confmanagerrpc.h \
     rpc/confrulemanagerrpc.h \

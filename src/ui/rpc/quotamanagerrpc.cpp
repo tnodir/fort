@@ -1,7 +1,5 @@
 #include "quotamanagerrpc.h"
 
-#include <control/controlmanager.h>
-#include <control/controlworker.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
 

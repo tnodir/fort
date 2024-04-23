@@ -2,8 +2,6 @@
 
 #include <conf/firewallconf.h>
 #include <conf/zone.h>
-#include <control/controlmanager.h>
-#include <control/controlworker.h>
 #include <fortsettings.h>
 #include <rpc/rpcmanager.h>
 #include <task/taskmanager.h>

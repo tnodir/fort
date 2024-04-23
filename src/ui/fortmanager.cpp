@@ -14,7 +14,6 @@
 #include <form/dialog/passworddialog.h>
 #include <fortsettings.h>
 #include <hostinfo/hostinfocache.h>
-#include <manager/autoupdatemanager.h>
 #include <manager/dberrormanager.h>
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
@@ -26,6 +25,7 @@
 #include <model/zonelistmodel.h>
 #include <rpc/appinfomanagerrpc.h>
 #include <rpc/askpendingmanagerrpc.h>
+#include <rpc/autoupdatemanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
 #include <rpc/confrulemanagerrpc.h>
@@ -66,6 +66,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new StatManager(settings->statFilePath()));
     ioc->setService(new StatBlockManager(settings->statBlockFilePath()));
     ioc->setService(new AskPendingManager());
+    ioc->setService(new AutoUpdateManager(settings->cachePath()));
     ioc->setService(new DriverManager());
     ioc->setService(new AppInfoManager(settings->cacheFilePath()));
     ioc->setService(new LogManager());
@@ -74,11 +75,6 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
 
     // For Master only
     ioc->setService(new DriveListManager());
-
-    // For Admin only
-    if (settings->isUserAdmin()) {
-        ioc->setService(new AutoUpdateManager(settings->cachePath()));
-    }
 }
 
 inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
@@ -91,6 +87,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<StatManager>(new StatManagerRpc(settings->statFilePath()));
     ioc->setService<StatBlockManager>(new StatBlockManagerRpc(settings->statBlockFilePath()));
     ioc->setService<AskPendingManager>(new AskPendingManagerRpc());
+    ioc->setService<AutoUpdateManager>(new AutoUpdateManagerRpc(settings->cachePath()));
     ioc->setService<DriverManager>(new DriverManagerRpc());
     ioc->setService<AppInfoManager>(new AppInfoManagerRpc(settings->cacheFilePath()));
     ioc->setService<LogManager>(new LogManagerRpc());

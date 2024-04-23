@@ -3,7 +3,6 @@
 #include <sqlite/sqlitedb.h>
 
 #include <conf/firewallconf.h>
-#include <control/controlmanager.h>
 #include <control/controlworker.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>

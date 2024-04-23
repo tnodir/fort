@@ -11,16 +11,6 @@
 
 QT_FORWARD_DECLARE_CLASS(QLocalServer)
 
-class ControlWorker;
-
-struct ProcessCommandArgs
-{
-    ControlWorker *worker = nullptr;
-    Control::Command command = Control::CommandNone;
-    const QVariantList &args;
-    QString &errorMessage;
-};
-
 class ControlManager : public QObject, public IocService
 {
     Q_OBJECT

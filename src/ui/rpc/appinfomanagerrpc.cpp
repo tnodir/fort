@@ -2,7 +2,6 @@
 
 #include <sqlite/sqlitedb.h>
 
-#include <control/controlmanager.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
 

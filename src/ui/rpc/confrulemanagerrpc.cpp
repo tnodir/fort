@@ -1,8 +1,6 @@
 #include "confrulemanagerrpc.h"
 
 #include <conf/rule.h>
-#include <control/controlmanager.h>
-#include <control/controlworker.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/variantutil.h>
