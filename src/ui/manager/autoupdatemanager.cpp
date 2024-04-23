@@ -50,7 +50,7 @@ void AutoUpdateManager::setupDownloader()
 void AutoUpdateManager::downloadFinished(bool success)
 {
     if (success) {
-        success = runInstaller();
+        success = saveInstaller();
     }
 
     finish(success);
@@ -65,7 +65,10 @@ void AutoUpdateManager::checkAutoUpdate()
     if (!confManager->conf()->ini().updaterAutoUpdate())
         return;
 
-    if (m_taskInfo->isNewVersion() && !m_taskInfo->downloadUrl().isEmpty()) {
+    const QString downloadUrl = m_taskInfo->downloadUrl();
+    if (!downloadUrl.isEmpty() && m_taskInfo->isNewVersion()) {
+        m_fileName = QUrl(downloadUrl).fileName();
+
         run();
     }
 }
@@ -75,29 +78,19 @@ void AutoUpdateManager::clearUpdateDir()
     FileUtil::removePath(m_updatePath);
 }
 
-bool AutoUpdateManager::runInstaller()
+bool AutoUpdateManager::saveInstaller()
 {
     const QByteArray fileData = downloader()->takeBuffer();
     if (fileData.size() != m_taskInfo->downloadSize())
         return false;
 
-    const QString fileName = QUrl(downloader()->url()).fileName();
-    const QString exePath = m_updatePath + fileName;
-
-    if (!FileUtil::writeFileData(exePath, fileData))
-        return false;
-
-    QStringList args;
-    prepareInstaller(args);
-
-    if (!QProcess::startDetached(exePath, args))
-        return false;
-
-    return true;
+    return FileUtil::writeFileData(installerPath(), fileData);
 }
 
-void AutoUpdateManager::prepareInstaller(QStringList &args) const
+bool AutoUpdateManager::runInstaller()
 {
+    QStringList args;
+
     auto settings = IoC<FortSettings>();
 
     if (!settings->isPortable()) {
@@ -106,5 +99,9 @@ void AutoUpdateManager::prepareInstaller(QStringList &args) const
 
     if (!settings->hasService()) {
         args << "/AUTORUN";
+    } else if (settings->isService()) {
+        emit restartClients();
     }
+
+    return QProcess::startDetached(installerPath(), args);
 }

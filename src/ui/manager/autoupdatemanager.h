@@ -21,6 +21,9 @@ public:
 signals:
     void restartClients();
 
+public slots:
+    bool runInstaller();
+
 protected:
     void setupTaskInfo();
 
@@ -33,8 +36,9 @@ protected slots:
 
     void clearUpdateDir();
 
-    bool runInstaller();
-    void prepareInstaller(QStringList &args) const;
+    bool saveInstaller();
+
+    QString installerPath() const { return m_updatePath + m_fileName; }
 
 private:
     static QString getDownloadUrl();
