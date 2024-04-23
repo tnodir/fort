@@ -1,5 +1,6 @@
 #include "drivermanagerrpc.h"
 
+#include <control/controlworker.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -26,7 +27,7 @@ bool DriverManagerRpc::openDevice()
 
 bool DriverManagerRpc::closeDevice()
 {
-    updateState(0, false);
+    updateState(/*errorCode=*/0, /*isDeviceOpened=*/false);
 
     return false;
 }
@@ -38,17 +39,23 @@ QVariantList DriverManagerRpc::updateState_args()
     return { driverManager->errorCode(), driverManager->isDeviceOpened() };
 }
 
+bool DriverManagerRpc::processInitClient(ControlWorker *w)
+{
+    return w->sendCommand(Control::Rpc_DriverManager_updateState, updateState_args());
+}
+
 bool DriverManagerRpc::processServerCommand(const ProcessCommandArgs &p, QVariantList & /*resArgs*/,
         bool & /*ok*/, bool & /*isSendResult*/)
 {
     auto driverManager = IoC<DriverManager>();
 
     switch (p.command) {
-    case Control::Rpc_DriverManager_updateState:
+    case Control::Rpc_DriverManager_updateState: {
         if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager)) {
             dm->updateState(p.args.value(0).toUInt(), p.args.value(1).toBool());
         }
         return true;
+    }
     default:
         return false;
     }

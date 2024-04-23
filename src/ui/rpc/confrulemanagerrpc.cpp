@@ -125,15 +125,18 @@ bool ConfRuleManagerRpc::processServerCommand(
     auto confRuleManager = IoC<ConfRuleManager>();
 
     switch (p.command) {
-    case Control::Rpc_ConfRuleManager_ruleAdded:
+    case Control::Rpc_ConfRuleManager_ruleAdded: {
         emit confRuleManager->ruleAdded();
         return true;
-    case Control::Rpc_ConfRuleManager_ruleRemoved:
+    }
+    case Control::Rpc_ConfRuleManager_ruleRemoved: {
         emit confRuleManager->ruleRemoved(p.args.value(0).toInt());
         return true;
-    case Control::Rpc_ConfRuleManager_ruleUpdated:
+    }
+    case Control::Rpc_ConfRuleManager_ruleUpdated: {
         emit confRuleManager->ruleUpdated();
         return true;
+    }
     default: {
         ok = processConfRuleManagerRpcResult(confRuleManager, p, resArgs);
         isSendResult = true;

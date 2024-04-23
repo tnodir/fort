@@ -15,6 +15,12 @@ class NetDownloader : public QObject
 public:
     explicit NetDownloader(QObject *parent = nullptr);
 
+    bool started() const { return m_started; }
+    void setStarted(bool v);
+
+    bool aborted() const { return m_aborted; }
+    void setAborted(bool v) { m_aborted = v; }
+
     QString url() const { return m_url; }
     void setUrl(const QString &url) { m_url = url; }
 
@@ -27,7 +33,8 @@ public:
     QByteArray takeBuffer();
 
 signals:
-    void progress(int bytesReceived);
+    void startedChanged();
+    void dataReceived();
     void finished(bool success);
 
 public slots:

@@ -194,7 +194,8 @@ void RpcManager::initClientOnServer(ControlWorker *w) const
 {
     w->setIsServiceClient(true);
 
-    w->sendCommand(Control::Rpc_DriverManager_updateState, DriverManagerRpc::updateState_args());
+    AutoUpdateManagerRpc::processInitClient(w);
+    DriverManagerRpc::processInitClient(w);
 }
 
 bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
@@ -206,12 +207,10 @@ bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
         m_resultArgs = p.args;
         return true;
     }
-
     case Control::Rpc_RpcManager_initClient: {
         initClientOnServer(p.worker);
         return true;
     }
-
     default:
         return processManagerRpc(p);
     }

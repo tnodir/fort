@@ -18,6 +18,16 @@ AutoUpdateManager::AutoUpdateManager(const QString &cachePath, QObject *parent) 
 {
 }
 
+bool AutoUpdateManager::isDownloading() const
+{
+    return downloader() && downloader()->started();
+}
+
+int AutoUpdateManager::bytesReceived() const
+{
+    return downloader() ? downloader()->buffer().size() : 0;
+}
+
 void AutoUpdateManager::setUp()
 {
     setupTaskInfo();
@@ -45,6 +55,11 @@ void AutoUpdateManager::setupTaskInfo()
 void AutoUpdateManager::setupDownloader()
 {
     downloader()->setUrl(m_taskInfo->downloadUrl());
+
+    connect(downloader(), &NetDownloader::startedChanged, this,
+            &AutoUpdateManager::isDownloadingChanged);
+    connect(downloader(), &NetDownloader::dataReceived, this,
+            &AutoUpdateManager::bytesReceivedChanged);
 }
 
 void AutoUpdateManager::downloadFinished(bool success)

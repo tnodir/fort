@@ -15,11 +15,16 @@ class AutoUpdateManager : public TaskDownloader, public IocService
 public:
     explicit AutoUpdateManager(const QString &cachePath, QObject *parent = nullptr);
 
+    virtual bool isDownloading() const;
+    virtual int bytesReceived() const;
+
     void setUp() override;
     void tearDown() override;
 
 signals:
-    void downloadProgress(int percent);
+    void isDownloadingChanged();
+    void bytesReceivedChanged();
+
     void restartClients();
 
 public slots:

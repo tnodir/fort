@@ -146,8 +146,9 @@ bool ConfManagerRpc::processServerCommand(
     auto confManager = IoC<ConfManager>();
 
     switch (p.command) {
-    case Control::Rpc_ConfManager_confChanged:
+    case Control::Rpc_ConfManager_confChanged: {
         return processConfManager_confChanged(confManager, p);
+    }
     default: {
         ok = processConfManagerRpcResult(confManager, p, resArgs);
         isSendResult = true;

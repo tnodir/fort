@@ -105,9 +105,9 @@ bool StatManagerRpc::processServerCommand(
     case Control::Rpc_StatManager_appStatRemoved:
     case Control::Rpc_StatManager_appCreated:
     case Control::Rpc_StatManager_trafficAdded:
-    case Control::Rpc_StatManager_appTrafTotalsResetted:
+    case Control::Rpc_StatManager_appTrafTotalsResetted: {
         return processStatManagerRpcSignal(statManager, p);
-
+    }
     default: {
         ok = processStatManagerRpcResult(statManager, p);
         isSendResult = true;

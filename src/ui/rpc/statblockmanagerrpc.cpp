@@ -37,9 +37,10 @@ bool StatBlockManagerRpc::processServerCommand(
     auto statBlockManager = IoC<StatBlockManager>();
 
     switch (p.command) {
-    case Control::Rpc_StatBlockManager_connChanged:
+    case Control::Rpc_StatBlockManager_connChanged: {
         emit statBlockManager->connChanged();
         return true;
+    }
     default: {
         ok = processStatBlockManagerRpcResult(statBlockManager, p);
         isSendResult = true;

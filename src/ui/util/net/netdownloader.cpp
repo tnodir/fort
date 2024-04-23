@@ -22,6 +22,14 @@ NetDownloader::NetDownloader(QObject *parent) :
     });
 }
 
+void NetDownloader::setStarted(bool v)
+{
+    if (m_started != v) {
+        m_started = v;
+        emit startedChanged();
+    }
+}
+
 QByteArray NetDownloader::takeBuffer()
 {
     const QByteArray buf = m_buffer;
@@ -33,8 +41,8 @@ void NetDownloader::start()
 {
     qCDebug(LC) << "Fetch:" << url() << data();
 
-    m_started = true;
-    m_aborted = false;
+    setStarted(true);
+    setAborted(false);
 
     m_buffer.clear();
 
@@ -57,11 +65,11 @@ void NetDownloader::start()
 
 void NetDownloader::finish(bool success)
 {
-    if (!m_started || m_aborted)
+    if (!started() || aborted())
         return;
 
-    m_started = false;
-    m_aborted = true;
+    setStarted(false);
+    setAborted(true);
 
     m_downloadTimer.stop();
 
@@ -86,7 +94,7 @@ void NetDownloader::onDownloadProgress(qint64 bytesReceived, qint64 /*bytesTotal
     m_buffer.append(data);
 
     if (m_buffer.size() < DOWNLOAD_MAXSIZE) {
-        emit progress(bytesReceived);
+        emit dataReceived();
     } else {
         qCWarning(LC) << "Error: Too big file";
         finish();

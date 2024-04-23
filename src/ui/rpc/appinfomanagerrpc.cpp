@@ -21,12 +21,14 @@ bool AppInfoManagerRpc::processServerCommand(const ProcessCommandArgs &p,
     auto appInfoManager = IoC<AppInfoManager>();
 
     switch (p.command) {
-    case Control::Rpc_AppInfoManager_lookupAppInfo:
+    case Control::Rpc_AppInfoManager_lookupAppInfo: {
         appInfoManager->lookupAppInfo(p.args.value(0).toString());
         return true;
-    case Control::Rpc_AppInfoManager_checkLookupInfoFinished:
+    }
+    case Control::Rpc_AppInfoManager_checkLookupInfoFinished: {
         appInfoManager->checkLookupInfoFinished(p.args.value(0).toString());
         return true;
+    }
     default:
         return false;
     }

@@ -183,15 +183,18 @@ bool ConfAppManagerRpc::processServerCommand(
     auto confAppManager = IoC<ConfAppManager>();
 
     switch (p.command) {
-    case Control::Rpc_ConfAppManager_appAlerted:
+    case Control::Rpc_ConfAppManager_appAlerted: {
         emit confAppManager->appAlerted();
         return true;
-    case Control::Rpc_ConfAppManager_appsChanged:
+    }
+    case Control::Rpc_ConfAppManager_appsChanged: {
         emit confAppManager->appsChanged();
         return true;
-    case Control::Rpc_ConfAppManager_appUpdated:
+    }
+    case Control::Rpc_ConfAppManager_appUpdated: {
         emit confAppManager->appUpdated();
         return true;
+    }
     default: {
         ok = processConfAppManagerRpcResult(confAppManager, p, resArgs);
         isSendResult = true;

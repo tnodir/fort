@@ -116,15 +116,18 @@ bool ConfZoneManagerRpc::processServerCommand(
     auto confZoneManager = IoC<ConfZoneManager>();
 
     switch (p.command) {
-    case Control::Rpc_ConfZoneManager_zoneAdded:
+    case Control::Rpc_ConfZoneManager_zoneAdded: {
         emit confZoneManager->zoneAdded();
         return true;
-    case Control::Rpc_ConfZoneManager_zoneRemoved:
+    }
+    case Control::Rpc_ConfZoneManager_zoneRemoved: {
         emit confZoneManager->zoneRemoved(p.args.value(0).toInt());
         return true;
-    case Control::Rpc_ConfZoneManager_zoneUpdated:
+    }
+    case Control::Rpc_ConfZoneManager_zoneUpdated: {
         emit confZoneManager->zoneUpdated();
         return true;
+    }
     default: {
         ok = processConfZoneManagerRpcResult(confZoneManager, p, resArgs);
         isSendResult = true;

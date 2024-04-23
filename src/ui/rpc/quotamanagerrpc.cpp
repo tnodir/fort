@@ -11,9 +11,10 @@ bool QuotaManagerRpc::processServerCommand(const ProcessCommandArgs &p, QVariant
     auto quotaManager = IoC<QuotaManager>();
 
     switch (p.command) {
-    case Control::Rpc_QuotaManager_alert:
+    case Control::Rpc_QuotaManager_alert: {
         emit quotaManager->alert(p.args.value(0).toInt());
         return true;
+    }
     default:
         return false;
     }

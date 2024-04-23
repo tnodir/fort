@@ -3,6 +3,7 @@
 
 #include <driver/drivermanager.h>
 
+class ControlWorker;
 class RpcManager;
 
 struct ProcessCommandArgs;
@@ -22,6 +23,8 @@ public:
     void updateState(quint32 errorCode, bool isDeviceOpened);
 
     static QVariantList updateState_args();
+
+    static bool processInitClient(ControlWorker *w);
 
     static bool processServerCommand(
             const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);

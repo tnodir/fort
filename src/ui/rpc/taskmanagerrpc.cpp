@@ -78,20 +78,26 @@ bool TaskManagerRpc::processServerCommand(const ProcessCommandArgs &p, QVariantL
     auto taskManager = IoC<TaskManager>();
 
     switch (p.command) {
-    case Control::Rpc_TaskManager_runTask:
+    case Control::Rpc_TaskManager_runTask: {
         return processTaskManager_runTask(taskManager, p);
-    case Control::Rpc_TaskManager_abortTask:
+    }
+    case Control::Rpc_TaskManager_abortTask: {
         return processTaskManager_abortTask(taskManager, p);
-    case Control::Rpc_TaskManager_taskStarted:
+    }
+    case Control::Rpc_TaskManager_taskStarted: {
         return processTaskManager_taskStarted(taskManager, p);
-    case Control::Rpc_TaskManager_taskFinished:
+    }
+    case Control::Rpc_TaskManager_taskFinished: {
         return processTaskManager_taskFinished(taskManager, p);
-    case Control::Rpc_TaskManager_appVersionDownloaded:
+    }
+    case Control::Rpc_TaskManager_appVersionDownloaded: {
         emit taskManager->appVersionDownloaded(p.args[0].toString());
         return true;
-    case Control::Rpc_TaskManager_zonesDownloaded:
+    }
+    case Control::Rpc_TaskManager_zonesDownloaded: {
         emit taskManager->zonesDownloaded(p.args[0].toStringList());
         return true;
+    }
     default:
         return false;
     }

@@ -41,10 +41,12 @@ bool ServiceInfoManagerRpc::processServerCommand(const ProcessCommandArgs &p,
     auto serviceInfoManager = IoC<ServiceInfoManager>();
 
     switch (p.command) {
-    case Control::Rpc_ServiceInfoManager_trackService:
+    case Control::Rpc_ServiceInfoManager_trackService: {
         return serviceInfoManager_trackService(serviceInfoManager, p);
-    case Control::Rpc_ServiceInfoManager_revertService:
+    }
+    case Control::Rpc_ServiceInfoManager_revertService: {
         return serviceInfoManager_revertService(serviceInfoManager, p);
+    }
     default:
         return false;
     }
