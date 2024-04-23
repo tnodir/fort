@@ -22,6 +22,9 @@ bool AutoUpdateManagerRpc::processServerCommand(const ProcessCommandArgs &p,
     auto autoUpdateManager = IoC<AutoUpdateManager>();
 
     switch (p.command) {
+    case Control::Rpc_AutoUpdateManager_downloadProgress:
+        emit autoUpdateManager->downloadProgress(p.args.at(0).toInt());
+        return true;
     case Control::Rpc_AutoUpdateManager_restartClients:
         QMetaObject::invokeMethod(
                 autoUpdateManager, [] { OsUtil::restartClient(); }, Qt::QueuedConnection);
@@ -35,6 +38,9 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
     auto autoUpdateManager = IoC<AutoUpdateManager>();
 
+    connect(autoUpdateManager, &AutoUpdateManager::downloadProgress, rpcManager, [=](int percent) {
+        rpcManager->invokeOnClients(Control::Rpc_AutoUpdateManager_downloadProgress, { percent });
+    });
     connect(autoUpdateManager, &AutoUpdateManager::restartClients, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_AutoUpdateManager_restartClients); });
 }

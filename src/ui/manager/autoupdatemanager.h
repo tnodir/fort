@@ -19,6 +19,7 @@ public:
     void tearDown() override;
 
 signals:
+    void downloadProgress(int percent);
     void restartClients();
 
 public slots:
@@ -34,13 +35,13 @@ protected slots:
 
     void checkAutoUpdate();
 
+private:
     void clearUpdateDir();
 
     bool saveInstaller();
 
     QString installerPath() const { return m_updatePath + m_fileName; }
 
-private:
     static QString getDownloadUrl();
 
 private:

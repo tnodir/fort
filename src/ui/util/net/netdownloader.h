@@ -27,6 +27,7 @@ public:
     QByteArray takeBuffer();
 
 signals:
+    void progress(int bytesReceived);
     void finished(bool success);
 
 public slots:
