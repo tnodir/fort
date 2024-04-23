@@ -22,6 +22,8 @@ signals:
     void restartClients();
 
 protected:
+    void setupTaskInfo();
+
     void setupDownloader() override;
 
 protected slots:
@@ -32,13 +34,14 @@ protected slots:
     void clearUpdateDir();
 
     bool runInstaller();
-    void prepareInstaller(QStringList &args);
+    void prepareInstaller(QStringList &args) const;
 
 private:
     static QString getDownloadUrl();
 
 private:
     QString m_updatePath;
+    QString m_fileName;
 
     TaskInfoUpdateChecker *m_taskInfo = nullptr;
 };

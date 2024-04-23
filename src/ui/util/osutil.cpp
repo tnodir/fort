@@ -176,8 +176,6 @@ bool OsUtil::allowOtherForegroundWindows()
 
 void OsUtil::restartClient()
 {
-    FileUtil::replaceFile(":/scripts/delay-start.bat", "delay-start.bat");
-
     const QStringList args = QCoreApplication::arguments();
 
     QProcess::startDetached("delay-start.bat", args);

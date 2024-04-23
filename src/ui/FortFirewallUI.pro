@@ -453,8 +453,7 @@ HEADERS += \
 # Icons, README.*
 RESOURCES += \
     fort_icons.qrc \
-    fort_readme.qrc \
-    fort_scripts.qrc
+    fort_readme.qrc
 
 # Database Migrations
 OTHER_FILES += \

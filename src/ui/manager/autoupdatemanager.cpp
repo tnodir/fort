@@ -16,10 +16,19 @@
 AutoUpdateManager::AutoUpdateManager(const QString &cachePath, QObject *parent) :
     TaskDownloader(parent), m_updatePath(cachePath + "update/")
 {
-    clearUpdateDir();
 }
 
 void AutoUpdateManager::setUp()
+{
+    setupTaskInfo();
+}
+
+void AutoUpdateManager::tearDown()
+{
+    finish();
+}
+
+void AutoUpdateManager::setupTaskInfo()
 {
     auto taskManager = IoCDependency<TaskManager>();
 
@@ -28,12 +37,9 @@ void AutoUpdateManager::setUp()
     connect(taskManager, &TaskManager::appVersionDownloaded, this,
             &AutoUpdateManager::checkAutoUpdate);
 
-    checkAutoUpdate();
-}
+    clearUpdateDir();
 
-void AutoUpdateManager::tearDown()
-{
-    finish();
+    checkAutoUpdate();
 }
 
 void AutoUpdateManager::setupDownloader()
@@ -90,7 +96,7 @@ bool AutoUpdateManager::runInstaller()
     return true;
 }
 
-void AutoUpdateManager::prepareInstaller(QStringList &args)
+void AutoUpdateManager::prepareInstaller(QStringList &args) const
 {
     auto settings = IoC<FortSettings>();
 
@@ -100,7 +106,5 @@ void AutoUpdateManager::prepareInstaller(QStringList &args)
 
     if (!settings->hasService()) {
         args << "/AUTORUN";
-    } else if (settings->isService()) {
-        emit restartClients();
     }
 }

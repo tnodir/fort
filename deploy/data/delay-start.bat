@@ -5,10 +5,10 @@
 
 @set SVC_NAME=FortFirewallSvc
 
-@for /l %%i in (0,1,7) do (
+@for /l %%i in (0,1,9) do (
     timeout /t 1 > NUL
     sc query %SVC_NAME% | find /I "RUNNING" > NUL && goto EXIT
 )
 
 :EXIT
-FortFirewall.exe %*
+start FortFirewall.exe %*

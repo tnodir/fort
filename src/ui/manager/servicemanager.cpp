@@ -103,10 +103,10 @@ void ServiceManager::processControl(quint32 code, quint32 eventType)
 
         state = SERVICE_RUNNING;
     } break;
-    case SERVICE_CONTROL_STOP:
+    case SERVICE_CONTROL_STOP: {
         if (!acceptStop())
             break;
-
+    }
         Q_FALLTHROUGH();
     case FORT_SERVICE_CONTROL_UNINSTALL:
     case SERVICE_CONTROL_SHUTDOWN: {

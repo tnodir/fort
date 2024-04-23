@@ -65,8 +65,9 @@ Name: "portable"; Description: "{cm:Portable}"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"; Flags: ignoreversion
-Source: "qt.conf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "data\{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"; Flags: ignoreversion
+Source: "data\qt.conf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "data\delay-start.bat"; DestDir: "{app}"; Flags: ignoreversion onlyifdoesntexist
 
 [Dirs]
 Name: "{app}\Data"; Flags: uninsneveruninstall; Permissions: users-modify; Tasks: portable
