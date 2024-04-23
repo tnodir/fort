@@ -54,7 +54,6 @@ private:
     void setupEditPassword();
     void setupPasswordLock();
     void setupProgBox();
-    void setupUpdateBox();
     void setupLogBlocked();
 
     QLayout *setupColumn2();
@@ -85,7 +84,6 @@ private:
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbProtection = nullptr;
     QGroupBox *m_gbProg = nullptr;
-    QGroupBox *m_gbUpdate = nullptr;
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
     QGroupBox *m_gbHome = nullptr;
@@ -113,7 +111,6 @@ private:
     QCheckBox *m_cbAppAlertAutoShow = nullptr;
     QCheckBox *m_cbAppAlertAlwaysOnTop = nullptr;
     QCheckBox *m_cbPurgeOnMounted = nullptr;
-    QCheckBox *m_cbAutoUpdate = nullptr;
 
     QCheckBox *m_cbExplorerMenu = nullptr;
     QCheckBox *m_cbUseSystemLocale = nullptr;

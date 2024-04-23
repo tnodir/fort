@@ -34,9 +34,6 @@ public:
     QVariant taskInfoList() const { return value("task/infoList_"); }
     void setTaskInfoList(const QVariant &v) { setValue("task/infoList_", v); }
 
-    bool updaterAutoUpdate() const { return valueBool("updater/autoUpdate"); }
-    void setUpdaterAutoUpdate(bool v) { setValue("updater/autoUpdate", v); }
-
     bool noServiceControl() const { return valueBool("protect/noServiceControl"); }
     void setNoServiceControl(bool v) { setValue("protect/noServiceControl", v); }
 

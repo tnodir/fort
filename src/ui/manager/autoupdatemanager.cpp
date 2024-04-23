@@ -2,9 +2,6 @@
 
 #include <QProcess>
 
-#include <conf/confmanager.h>
-#include <conf/firewallconf.h>
-#include <conf/inioptions.h>
 #include <fortsettings.h>
 #include <rpc/rpcmanager.h>
 #include <task/taskinfoupdatechecker.h>
@@ -74,10 +71,6 @@ void AutoUpdateManager::downloadFinished(bool success)
 void AutoUpdateManager::checkAutoUpdate()
 {
     if (downloader())
-        return;
-
-    auto confManager = IoCDependency<ConfManager>();
-    if (!confManager->conf()->ini().updaterAutoUpdate())
         return;
 
     const QString downloadUrl = m_taskInfo->downloadUrl();
