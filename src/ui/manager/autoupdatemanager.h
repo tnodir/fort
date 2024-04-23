@@ -18,6 +18,9 @@ public:
     void setUp() override;
     void tearDown() override;
 
+signals:
+    void restartClients();
+
 protected:
     void setupDownloader() override;
 
@@ -29,7 +32,7 @@ protected slots:
     void clearUpdateDir();
 
     bool runInstaller();
-    void fillInstallerArgs(QStringList &args) const;
+    void prepareInstaller(QStringList &args);
 
 private:
     static QString getDownloadUrl();

@@ -17,10 +17,11 @@ enum Command : qint8 {
     Rpc_Result_Error,
 
     Rpc_RpcManager_initClient,
-    Rpc_RpcManager_restartClient,
 
     Rpc_AppInfoManager_lookupAppInfo,
     Rpc_AppInfoManager_checkLookupInfoFinished,
+
+    Rpc_AutoUpdateManager_restartClients,
 
     Rpc_ConfManager_saveVariant,
     Rpc_ConfManager_exportMasterBackup,
@@ -86,6 +87,7 @@ enum Command : qint8 {
 enum RpcManager : qint8 {
     Rpc_NoneManager = 0,
     Rpc_AppInfoManager,
+    Rpc_AutoUpdateManager,
     Rpc_ConfManager,
     Rpc_ConfAppManager,
     Rpc_ConfRuleManager,

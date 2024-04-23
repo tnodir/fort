@@ -10,6 +10,7 @@
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <rpc/appinfomanagerrpc.h>
+#include <rpc/autoupdatemanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
 #include <rpc/confrulemanagerrpc.h>
@@ -79,6 +80,7 @@ void RpcManager::tearDown()
 void RpcManager::setupServerSignals()
 {
     AppInfoManagerRpc::setupServerSignals(this);
+    AutoUpdateManagerRpc::setupServerSignals(this);
     ConfManagerRpc::setupServerSignals(this);
     ConfAppManagerRpc::setupServerSignals(this);
     ConfRuleManagerRpc::setupServerSignals(this);
@@ -210,11 +212,6 @@ bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
         return true;
     }
 
-    case Control::Rpc_RpcManager_restartClient: {
-        QMetaObject::invokeMethod(this, [] { OsUtil::restartClient(); }, Qt::QueuedConnection);
-        return true;
-    }
-
     default:
         return processManagerRpc(p);
     }
@@ -222,6 +219,7 @@ bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
 
 static processManager_func processManager_funcList[] = {
     &AppInfoManagerRpc::processServerCommand, // Control::Rpc_AppInfoManager,
+    &AutoUpdateManagerRpc::processServerCommand, // Control::Rpc_AutoUpdateManager,
     &ConfManagerRpc::processServerCommand, // Control::Rpc_ConfManager,
     &ConfAppManagerRpc::processServerCommand, // Control::Rpc_ConfAppManager,
     &ConfRuleManagerRpc::processServerCommand, // Control::Rpc_ConfRuleManager,

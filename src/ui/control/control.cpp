@@ -17,10 +17,11 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_Result_Error)
 
         CASE_STRING(Rpc_RpcManager_initClient)
-        CASE_STRING(Rpc_RpcManager_restartClient)
 
         CASE_STRING(Rpc_AppInfoManager_lookupAppInfo)
         CASE_STRING(Rpc_AppInfoManager_checkLookupInfoFinished)
+
+        CASE_STRING(Rpc_AutoUpdateManager_restartClients)
 
         CASE_STRING(Rpc_ConfManager_saveVariant)
         CASE_STRING(Rpc_ConfManager_exportMasterBackup)
@@ -91,6 +92,7 @@ const char *const rpcManagerString(RpcManager rpcManager)
     switch (rpcManager) {
         CASE_STRING(Rpc_NoneManager)
         CASE_STRING(Rpc_AppInfoManager)
+        CASE_STRING(Rpc_AutoUpdateManager)
         CASE_STRING(Rpc_ConfManager)
         CASE_STRING(Rpc_ConfAppManager)
         CASE_STRING(Rpc_ConfRuleManager)
@@ -117,10 +119,11 @@ RpcManager managerByCommand(Command cmd)
         Rpc_NoneManager, // Rpc_Result_Error,
 
         Rpc_NoneManager, // Rpc_RpcManager_initClient,
-        Rpc_NoneManager, // Rpc_RpcManager_restartClient,
 
         Rpc_AppInfoManager, // Rpc_AppInfoManager_lookupAppInfo,
         Rpc_AppInfoManager, // Rpc_AppInfoManager_checkLookupFinished,
+
+        Rpc_AutoUpdateManager, // Rpc_AutoUpdateManager_restartClients,
 
         Rpc_ConfManager, // Rpc_ConfManager_saveVariant,
         Rpc_ConfManager, // Rpc_ConfManager_exportMasterBackup,
@@ -197,10 +200,11 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_Result_Error,
 
         0, // Rpc_RpcManager_initClient,
-        0, // Rpc_RpcManager_restartClient,
 
         true, // Rpc_AppInfoManager_lookupAppInfo,
         0, // Rpc_AppInfoManager_checkLookupFinished,
+
+        0, // Rpc_AutoUpdateManager_restartClients,
 
         true, // Rpc_ConfManager_saveVariant,
         true, // Rpc_ConfManager_exportMasterBackup,

@@ -82,7 +82,7 @@ bool AutoUpdateManager::runInstaller()
         return false;
 
     QStringList args;
-    fillInstallerArgs(args);
+    prepareInstaller(args);
 
     if (!QProcess::startDetached(exePath, args))
         return false;
@@ -90,7 +90,7 @@ bool AutoUpdateManager::runInstaller()
     return true;
 }
 
-void AutoUpdateManager::fillInstallerArgs(QStringList &args) const
+void AutoUpdateManager::prepareInstaller(QStringList &args)
 {
     auto settings = IoC<FortSettings>();
 
@@ -101,6 +101,6 @@ void AutoUpdateManager::fillInstallerArgs(QStringList &args) const
     if (!settings->hasService()) {
         args << "/AUTORUN";
     } else if (settings->isService()) {
-        IoC<RpcManager>()->invokeOnClients(Control::Rpc_RpcManager_restartClient);
+        emit restartClients();
     }
 }
