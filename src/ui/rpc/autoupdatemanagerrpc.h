@@ -23,7 +23,7 @@ public:
 
     void setUp() override;
 
-    void updateState(bool isDownloading, int bytesReceived);
+    void updateState(bool isDownloaded, bool isDownloading, int bytesReceived);
 
     static QVariantList updateState_args();
 
@@ -33,6 +33,9 @@ public:
             const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
 
     static void setupServerSignals(RpcManager *rpcManager);
+
+public slots:
+    bool startDownload() override;
 
 private:
     void setupClientSignals();

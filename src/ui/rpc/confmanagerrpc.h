@@ -8,9 +8,6 @@ class TaskManager;
 
 struct ProcessCommandArgs;
 
-using processConfManager_func = bool (*)(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs);
-
 class ConfManagerRpc : public ConfManager
 {
     Q_OBJECT

@@ -5,6 +5,51 @@
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 
+namespace {
+
+inline bool processAutoUpdateManager_updateState(
+        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p)
+{
+    if (auto aum = qobject_cast<AutoUpdateManagerRpc *>(autoUpdateManager)) {
+        aum->updateState(
+                p.args.value(0).toBool(), p.args.value(1).toBool(), p.args.value(2).toInt());
+    }
+    return true;
+}
+
+inline bool processAutoUpdateManager_restartClients(
+        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs & /*p*/)
+{
+    QMetaObject::invokeMethod(
+            autoUpdateManager, [] { OsUtil::restartClient(); }, Qt::QueuedConnection);
+    return true;
+}
+
+bool processAutoUpdateManager_startDownload(AutoUpdateManager *autoUpdateManager,
+        const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+{
+    return autoUpdateManager->startDownload();
+}
+
+using processAutoUpdateManager_func = bool (*)(
+        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+
+static processAutoUpdateManager_func processAutoUpdateManager_funcList[] = {
+    &processAutoUpdateManager_startDownload, // Rpc_AutoUpdateManager_startDownload,
+};
+
+inline bool processAutoUpdateManagerRpcResult(
+        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+{
+    const processAutoUpdateManager_func func = RpcManager::getProcessFunc(p.command,
+            processAutoUpdateManager_funcList, Control::Rpc_AutoUpdateManager_startDownload,
+            Control::Rpc_AutoUpdateManager_startDownload);
+
+    return func ? func(autoUpdateManager, p, resArgs) : false;
+}
+
+}
+
 AutoUpdateManagerRpc::AutoUpdateManagerRpc(const QString &cachePath, QObject *parent) :
     AutoUpdateManager(cachePath, parent)
 {
@@ -33,8 +78,9 @@ void AutoUpdateManagerRpc::setUp()
     setupClientSignals();
 }
 
-void AutoUpdateManagerRpc::updateState(bool isDownloading, int bytesReceived)
+void AutoUpdateManagerRpc::updateState(bool isDownloaded, bool isDownloading, int bytesReceived)
 {
+    setIsDownloaded(isDownloaded);
     setIsDownloading(isDownloading);
     setBytesReceived(bytesReceived);
 }
@@ -43,7 +89,11 @@ QVariantList AutoUpdateManagerRpc::updateState_args()
 {
     auto autoUpdateManager = IoC<AutoUpdateManager>();
 
-    return { autoUpdateManager->isDownloading(), autoUpdateManager->bytesReceived() };
+    return {
+        autoUpdateManager->isDownloaded(),
+        autoUpdateManager->isDownloading(),
+        autoUpdateManager->bytesReceived(),
+    };
 }
 
 bool AutoUpdateManagerRpc::processInitClient(ControlWorker *w)
@@ -51,25 +101,23 @@ bool AutoUpdateManagerRpc::processInitClient(ControlWorker *w)
     return w->sendCommand(Control::Rpc_AutoUpdateManager_updateState, updateState_args());
 }
 
-bool AutoUpdateManagerRpc::processServerCommand(const ProcessCommandArgs &p,
-        QVariantList & /*resArgs*/, bool & /*ok*/, bool & /*isSendResult*/)
+bool AutoUpdateManagerRpc::processServerCommand(
+        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
 {
     auto autoUpdateManager = IoC<AutoUpdateManager>();
 
     switch (p.command) {
     case Control::Rpc_AutoUpdateManager_updateState: {
-        if (auto aum = qobject_cast<AutoUpdateManagerRpc *>(autoUpdateManager)) {
-            aum->updateState(p.args.value(0).toBool(), p.args.value(1).toInt());
-        }
-        return true;
+        return processAutoUpdateManager_updateState(autoUpdateManager, p);
     }
     case Control::Rpc_AutoUpdateManager_restartClients: {
-        QMetaObject::invokeMethod(
-                autoUpdateManager, [] { OsUtil::restartClient(); }, Qt::QueuedConnection);
+        return processAutoUpdateManager_restartClients(autoUpdateManager, p);
+    }
+    default: {
+        ok = processAutoUpdateManagerRpcResult(autoUpdateManager, p, resArgs);
+        isSendResult = true;
         return true;
     }
-    default:
-        return false;
     }
 }
 
@@ -89,6 +137,11 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
 
     connect(autoUpdateManager, &AutoUpdateManager::restartClients, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_AutoUpdateManager_restartClients); });
+}
+
+bool AutoUpdateManagerRpc::startDownload()
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_AutoUpdateManager_startDownload);
 }
 
 void AutoUpdateManagerRpc::setupClientSignals()

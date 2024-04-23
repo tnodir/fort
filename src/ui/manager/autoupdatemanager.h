@@ -15,11 +15,18 @@ class AutoUpdateManager : public TaskDownloader, public IocService
 public:
     explicit AutoUpdateManager(const QString &cachePath, QObject *parent = nullptr);
 
+    bool isDownloaded() const { return m_isDownloaded; }
+
     virtual bool isDownloading() const;
     virtual int bytesReceived() const;
 
     void setUp() override;
     void tearDown() override;
+
+public slots:
+    virtual bool startDownload();
+
+    bool runInstaller();
 
 signals:
     void isDownloadingChanged();
@@ -27,20 +34,17 @@ signals:
 
     void restartClients();
 
-public slots:
-    bool runInstaller();
-
 protected:
-    void setupTaskInfo();
+    void setIsDownloaded(bool v) { m_isDownloaded = v; }
 
     void setupDownloader() override;
 
 protected slots:
     void downloadFinished(bool success) override;
 
-    void checkAutoUpdate();
-
 private:
+    void setupByTaskInfo(TaskInfoUpdateChecker *taskInfo);
+
     void clearUpdateDir();
 
     bool saveInstaller();
@@ -50,10 +54,13 @@ private:
     static QString getDownloadUrl();
 
 private:
-    QString m_updatePath;
-    QString m_fileName;
+    bool m_isDownloaded = false;
 
-    TaskInfoUpdateChecker *m_taskInfo = nullptr;
+    QString m_updatePath;
+
+    QString m_fileName;
+    QString m_downloadUrl;
+    int m_downloadSize = 0;
 };
 
 #endif // AUTOUPDATEMANAGER_H

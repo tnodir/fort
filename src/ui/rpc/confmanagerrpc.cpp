@@ -49,6 +49,9 @@ bool processConfManager_checkPassword(
     return ok;
 }
 
+using processConfManager_func = bool (*)(
+        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+
 static processConfManager_func processConfManager_funcList[] = {
     &processConfManager_saveVariant, // Rpc_ConfManager_saveVariant,
     &processConfManager_exportMasterBackup, // Rpc_ConfManager_exportMasterBackup,

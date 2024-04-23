@@ -21,6 +21,7 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_AppInfoManager_lookupAppInfo)
         CASE_STRING(Rpc_AppInfoManager_checkLookupInfoFinished)
 
+        CASE_STRING(Rpc_AutoUpdateManager_startDownload)
         CASE_STRING(Rpc_AutoUpdateManager_updateState)
         CASE_STRING(Rpc_AutoUpdateManager_restartClients)
 
@@ -124,6 +125,7 @@ RpcManager managerByCommand(Command cmd)
         Rpc_AppInfoManager, // Rpc_AppInfoManager_lookupAppInfo,
         Rpc_AppInfoManager, // Rpc_AppInfoManager_checkLookupFinished,
 
+        Rpc_AutoUpdateManager, // Rpc_AutoUpdateManager_startDownload,
         Rpc_AutoUpdateManager, // Rpc_AutoUpdateManager_updateState,
         Rpc_AutoUpdateManager, // Rpc_AutoUpdateManager_restartClients,
 
@@ -206,6 +208,7 @@ bool commandRequiresValidation(Command cmd)
         true, // Rpc_AppInfoManager_lookupAppInfo,
         0, // Rpc_AppInfoManager_checkLookupFinished,
 
+        true, // Rpc_AutoUpdateManager_startDownload,
         0, // Rpc_AutoUpdateManager_updateState,
         0, // Rpc_AutoUpdateManager_restartClients,
 
