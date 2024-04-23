@@ -9,6 +9,13 @@ AutoUpdateManagerRpc::AutoUpdateManagerRpc(const QString &cachePath, QObject *pa
 {
 }
 
+void AutoUpdateManagerRpc::setUp()
+{
+    AutoUpdateManager::setUp();
+
+    setupClientSignals();
+}
+
 bool AutoUpdateManagerRpc::processServerCommand(const ProcessCommandArgs &p,
         QVariantList & /*resArgs*/, bool & /*ok*/, bool & /*isSendResult*/)
 {
@@ -29,5 +36,13 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
     auto autoUpdateManager = IoC<AutoUpdateManager>();
 
     connect(autoUpdateManager, &AutoUpdateManager::restartClients, rpcManager,
-            [&] { rpcManager->invokeOnClients(Control::Rpc_AutoUpdateManager_restartClients); });
+            [=] { rpcManager->invokeOnClients(Control::Rpc_AutoUpdateManager_restartClients); });
+}
+
+void AutoUpdateManagerRpc::setupClientSignals()
+{
+    auto rpcManager = IoCDependency<RpcManager>();
+
+    connect(this, &AutoUpdateManager::restartClients, rpcManager,
+            [=] { rpcManager->invokeOnServer(Control::Rpc_AutoUpdateManager_restartClients); });
 }

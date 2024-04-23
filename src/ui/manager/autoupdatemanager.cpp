@@ -99,7 +99,7 @@ bool AutoUpdateManager::runInstaller()
 
     if (!settings->hasService()) {
         args << "/AUTORUN";
-    } else if (settings->isService()) {
+    } else {
         emit restartClients();
     }
 
