@@ -12,7 +12,7 @@
         <translation>Scarica</translation>
     </message>
     <message>
-        <source>Check Update</source>
+        <source>Check for update</source>
         <translation>Controlla aggiornamenti</translation>
     </message>
     <message>

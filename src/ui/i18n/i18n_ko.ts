@@ -12,7 +12,7 @@
         <translation>다운로드</translation>
     </message>
     <message>
-        <source>Check Update</source>
+        <source>Check for update</source>
         <translation>업데이트 확인</translation>
     </message>
     <message>

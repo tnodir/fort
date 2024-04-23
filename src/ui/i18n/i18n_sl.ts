@@ -12,7 +12,7 @@
         <translation>Prenesi</translation>
     </message>
     <message>
-        <source>Check Update</source>
+        <source>Check for update</source>
         <translation>Preveri obstoj posodobitev</translation>
     </message>
     <message>

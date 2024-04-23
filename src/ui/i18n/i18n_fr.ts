@@ -12,7 +12,7 @@
         <translation>Télécharger</translation>
     </message>
     <message>
-        <source>Check Update</source>
+        <source>Check for update</source>
         <translation>Vérifier les mises à jour</translation>
     </message>
     <message>

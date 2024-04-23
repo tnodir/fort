@@ -12,7 +12,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>Check Update</source>
+        <source>Check for update</source>
         <translation></translation>
     </message>
     <message>

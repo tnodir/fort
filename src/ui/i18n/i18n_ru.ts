@@ -12,7 +12,7 @@
         <translation>Загрузка</translation>
     </message>
     <message>
-        <source>Check Update</source>
+        <source>Check for update</source>
         <translation>Проверить обновление</translation>
     </message>
     <message>

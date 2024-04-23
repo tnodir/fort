@@ -12,7 +12,7 @@
         <translation>Download</translation>
     </message>
     <message>
-        <source>Check Update</source>
+        <source>Check for update</source>
         <translation>Nach Update suchen</translation>
     </message>
     <message>

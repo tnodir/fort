@@ -12,7 +12,7 @@
         <translation>下载</translation>
     </message>
     <message>
-        <source>Check Update</source>
+        <source>Check for update</source>
         <translation>检查更新</translation>
     </message>
     <message>

@@ -36,7 +36,7 @@ AboutPage::AboutPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl,
 void AboutPage::onRetranslateUi()
 {
     m_btDownload->setText(tr("Download"));
-    m_btCheckUpdate->setText(tr("Check Update"));
+    m_btCheckUpdate->setText(tr("Check for update"));
 
     retranslateNewVersionBox();
 }

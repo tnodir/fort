@@ -12,7 +12,7 @@
         <translation>تنزيل</translation>
     </message>
     <message>
-        <source>Check Update</source>
+        <source>Check for update</source>
         <translation>فحص التحديثات</translation>
     </message>
     <message>
