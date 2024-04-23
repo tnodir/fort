@@ -101,20 +101,20 @@ void TaskManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
     auto taskManager = IoC<TaskManager>();
 
-    connect(taskManager, &TaskManager::taskStarted, rpcManager, [&](qint8 taskType) {
+    connect(taskManager, &TaskManager::taskStarted, rpcManager, [=](qint8 taskType) {
         rpcManager->invokeOnClients(Control::Rpc_TaskManager_taskStarted, { taskType });
     });
-    connect(taskManager, &TaskManager::taskFinished, rpcManager, [&](qint8 taskType) {
+    connect(taskManager, &TaskManager::taskFinished, rpcManager, [=](qint8 taskType) {
         rpcManager->invokeOnClients(Control::Rpc_TaskManager_taskFinished, { taskType });
     });
 
     connect(taskManager, &TaskManager::appVersionDownloaded, rpcManager,
-            [&](const QString &version) {
+            [=](const QString &version) {
                 rpcManager->invokeOnClients(
                         Control::Rpc_TaskManager_appVersionDownloaded, { version });
             });
     connect(taskManager, &TaskManager::zonesDownloaded, rpcManager,
-            [&](const QStringList &zoneNames) {
+            [=](const QStringList &zoneNames) {
                 rpcManager->invokeOnClients(
                         Control::Rpc_TaskManager_zonesDownloaded, { zoneNames });
             });

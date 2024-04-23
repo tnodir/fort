@@ -62,6 +62,7 @@ void DriverManagerRpc::setupServerSignals(RpcManager *rpcManager)
         rpcManager->invokeOnClients(
                 Control::Rpc_DriverManager_updateState, DriverManagerRpc::updateState_args());
     };
+
     connect(driverManager, &DriverManager::errorCodeChanged, rpcManager, updateClientStates);
     connect(driverManager, &DriverManager::isDeviceOpenedChanged, rpcManager, updateClientStates);
 }

@@ -53,5 +53,5 @@ void StatBlockManagerRpc::setupServerSignals(RpcManager *rpcManager)
     auto statBlockManager = IoC<StatBlockManager>();
 
     connect(statBlockManager, &StatBlockManager::connChanged, rpcManager,
-            [&] { rpcManager->invokeOnClients(Control::Rpc_StatBlockManager_connChanged); });
+            [=] { rpcManager->invokeOnClients(Control::Rpc_StatBlockManager_connChanged); });
 }

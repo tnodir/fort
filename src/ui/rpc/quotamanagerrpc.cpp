@@ -23,7 +23,7 @@ void QuotaManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
     auto quotaManager = IoC<QuotaManager>();
 
-    connect(quotaManager, &QuotaManager::alert, rpcManager, [&](qint8 alertType) {
+    connect(quotaManager, &QuotaManager::alert, rpcManager, [=](qint8 alertType) {
         rpcManager->invokeOnClients(Control::Rpc_QuotaManager_alert, { alertType });
     });
 }

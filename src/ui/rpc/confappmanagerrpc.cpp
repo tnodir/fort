@@ -205,9 +205,9 @@ void ConfAppManagerRpc::setupServerSignals(RpcManager *rpcManager)
     auto confAppManager = IoC<ConfAppManager>();
 
     connect(confAppManager, &ConfAppManager::appAlerted, rpcManager,
-            [&] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appAlerted); });
+            [=] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appAlerted); });
     connect(confAppManager, &ConfAppManager::appsChanged, rpcManager,
-            [&] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appsChanged); });
+            [=] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appsChanged); });
     connect(confAppManager, &ConfAppManager::appUpdated, rpcManager,
-            [&] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appUpdated); });
+            [=] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appUpdated); });
 }

@@ -160,7 +160,7 @@ void ConfManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
     auto confManager = IoC<ConfManager>();
 
-    connect(confManager, &ConfManager::confChanged, rpcManager, [&](bool onlyFlags) {
+    connect(confManager, &ConfManager::confChanged, rpcManager, [=](bool onlyFlags) {
         const QVariant confVar = IoC<ConfManager>()->toPatchVariant(onlyFlags);
         rpcManager->invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
     });
