@@ -27,6 +27,8 @@ int AutoUpdateManager::bytesReceived() const
 
 void AutoUpdateManager::setUp()
 {
+    clearUpdateDir();
+
     setupTaskInfo();
 }
 
@@ -43,8 +45,6 @@ void AutoUpdateManager::setupTaskInfo()
 
     connect(taskManager, &TaskManager::appVersionDownloaded, this,
             &AutoUpdateManager::checkAutoUpdate);
-
-    clearUpdateDir();
 
     checkAutoUpdate();
 }
@@ -83,7 +83,11 @@ void AutoUpdateManager::checkAutoUpdate()
 
 void AutoUpdateManager::clearUpdateDir()
 {
-    FileUtil::removePath(m_updatePath);
+    auto settings = IoC<FortSettings>();
+
+    if (settings->isMaster()) {
+        FileUtil::removePath(m_updatePath);
+    }
 }
 
 bool AutoUpdateManager::saveInstaller()
