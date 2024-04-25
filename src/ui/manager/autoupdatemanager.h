@@ -24,6 +24,8 @@ public:
     bool isDownloading() const { return m_isDownloading; }
     void setIsDownloading(bool v);
 
+    int downloadSize() const { return m_downloadSize; }
+
     virtual int bytesReceived() const;
 
     void setUp() override;

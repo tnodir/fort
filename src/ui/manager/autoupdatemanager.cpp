@@ -98,7 +98,9 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
     m_fileName = QUrl(m_downloadUrl).fileName();
 
     const QFileInfo fi(installerPath());
-    setIsDownloaded(fi.exists() && fi.size() == m_downloadSize);
+    const bool downloaded = (fi.exists() && fi.size() == m_downloadSize);
+
+    setIsDownloaded(downloaded);
 }
 
 void AutoUpdateManager::clearUpdateDir()

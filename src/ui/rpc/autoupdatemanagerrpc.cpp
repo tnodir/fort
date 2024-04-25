@@ -86,11 +86,12 @@ QVariantList AutoUpdateManagerRpc::updateState_args()
 {
     auto autoUpdateManager = IoC<AutoUpdateManager>();
 
-    return {
-        autoUpdateManager->isDownloaded(),
-        autoUpdateManager->isDownloading(),
-        autoUpdateManager->bytesReceived(),
-    };
+    const bool isDownloaded = autoUpdateManager->isDownloaded();
+    const bool isDownloading = autoUpdateManager->isDownloading();
+    const int bytesReceived =
+            isDownloaded ? autoUpdateManager->downloadSize() : autoUpdateManager->bytesReceived();
+
+    return { isDownloaded, isDownloading, bytesReceived };
 }
 
 bool AutoUpdateManagerRpc::processInitClient(ControlWorker *w)
