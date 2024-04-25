@@ -174,9 +174,10 @@ bool OsUtil::allowOtherForegroundWindows()
     return AllowSetForegroundWindow(ASFW_ANY);
 }
 
-void OsUtil::restartClient()
+void OsUtil::restartClient(const QString &installerPath)
 {
-    const QStringList args = QCoreApplication::arguments();
+    QStringList args = QCoreApplication::arguments();
+    args.insert(0, installerPath);
 
     QProcess::startDetached("delay-start.bat", args);
 

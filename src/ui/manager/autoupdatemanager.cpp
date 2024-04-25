@@ -10,6 +10,7 @@
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netdownloader.h>
+#include <util/osutil.h>
 
 AutoUpdateManager::AutoUpdateManager(const QString &cachePath, QObject *parent) :
     TaskDownloader(parent), m_updatePath(cachePath + "update/")
@@ -119,9 +120,25 @@ bool AutoUpdateManager::saveInstaller(const QByteArray &fileData)
 
 bool AutoUpdateManager::runInstaller()
 {
-    QStringList args;
-
     auto settings = IoC<FortSettings>();
+
+    const QString installerPath = this->installerPath();
+
+    if (!QProcess::startDetached(installerPath, installerArgs(settings)))
+        return false;
+
+    if (settings->hasService()) {
+        emit restartClients(installerPath);
+    } else {
+        OsUtil::quit("new version install");
+    }
+
+    return true;
+}
+
+QStringList AutoUpdateManager::installerArgs(FortSettings *settings)
+{
+    QStringList args;
 
     if (!settings->isPortable()) {
         args << "/SILENT";
@@ -129,9 +146,7 @@ bool AutoUpdateManager::runInstaller()
 
     if (!settings->hasService()) {
         args << "/LAUNCH";
-    } else {
-        emit restartClients();
     }
 
-    return QProcess::startDetached(installerPath(), args);
+    return args;
 }

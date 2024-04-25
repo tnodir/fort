@@ -3,11 +3,13 @@
 @cd "%~dp0"
 @echo off
 
-@set SVC_NAME=FortFirewallSvc
+@set INSTALLER_PATH=%1
+@shift
 
+@rem Wait for Installer's file deletion
 @for /l %%i in (0,1,9) do (
     timeout /t 1 > NUL
-    sc query %SVC_NAME% | find /I "RUNNING" > NUL && goto EXIT
+    @if not exist "%INSTALLER_PATH%" goto EXIT
 )
 
 :EXIT

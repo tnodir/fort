@@ -6,6 +6,7 @@
 #include <task/taskdownloader.h>
 #include <util/ioc/iocservice.h>
 
+class FortSettings;
 class TaskInfoUpdateChecker;
 
 class AutoUpdateManager : public TaskDownloader, public IocService
@@ -37,7 +38,7 @@ signals:
     void isDownloadingChanged(bool downloading);
     void bytesReceivedChanged(int size);
 
-    void restartClients();
+    void restartClients(const QString &installerPath);
 
 protected:
     void setupDownloader() override;
@@ -54,7 +55,7 @@ private:
 
     QString installerPath() const { return m_updatePath + m_fileName; }
 
-    static QString getDownloadUrl();
+    static QStringList installerArgs(FortSettings *settings);
 
 private:
     bool m_isNewVersion : 1 = false;

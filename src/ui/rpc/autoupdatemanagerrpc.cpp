@@ -18,10 +18,15 @@ inline bool processAutoUpdateManager_updateState(
 }
 
 inline bool processAutoUpdateManager_restartClients(
-        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs & /*p*/)
+        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p)
 {
-    QMetaObject::invokeMethod(
-            autoUpdateManager, [] { OsUtil::restartClient(); }, Qt::QueuedConnection);
+    const QString installerPath = p.args.value(0).toString();
+
+    if (qobject_cast<AutoUpdateManagerRpc *>(autoUpdateManager)) {
+        OsUtil::restartClient(installerPath);
+    } else {
+        emit autoUpdateManager->restartClients(installerPath);
+    }
     return true;
 }
 
@@ -128,7 +133,10 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
             updateClientStates);
 
     connect(autoUpdateManager, &AutoUpdateManager::restartClients, rpcManager,
-            [=] { rpcManager->invokeOnClients(Control::Rpc_AutoUpdateManager_restartClients); });
+            [=](const QString &installerPath) {
+                rpcManager->invokeOnClients(
+                        Control::Rpc_AutoUpdateManager_restartClients, { installerPath });
+            });
 }
 
 bool AutoUpdateManagerRpc::startDownload()
@@ -141,5 +149,8 @@ void AutoUpdateManagerRpc::setupClientSignals()
     auto rpcManager = IoCDependency<RpcManager>();
 
     connect(this, &AutoUpdateManager::restartClients, rpcManager,
-            [=] { rpcManager->invokeOnServer(Control::Rpc_AutoUpdateManager_restartClients); });
+            [=](const QString &installerPath) {
+                rpcManager->invokeOnServer(
+                        Control::Rpc_AutoUpdateManager_restartClients, { installerPath });
+            });
 }
