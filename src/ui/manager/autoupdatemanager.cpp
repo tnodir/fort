@@ -2,7 +2,6 @@
 
 #include <QFileInfo>
 #include <QProcess>
-#include <QTimer>
 
 #include <fortsettings.h>
 #include <rpc/rpcmanager.h>
@@ -41,8 +40,8 @@ void AutoUpdateManager::setUp()
 
     setupByTaskInfo(taskInfo);
 
-    if (!isDownloaded()) {
-        QTimer::singleShot(5, this, &AutoUpdateManager::clearUpdateDir);
+    if (!(isDownloaded() || isDownloading())) {
+        clearUpdateDir();
     }
 }
 
@@ -106,9 +105,6 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
 
 void AutoUpdateManager::clearUpdateDir()
 {
-    if (isDownloaded() || isDownloading())
-        return;
-
     auto settings = IoC<FortSettings>();
 
     if (settings->isMaster()) {
