@@ -20,7 +20,7 @@ protected:
     void setupDownloader() override;
 
 protected slots:
-    void downloadFinished(bool success) override;
+    void downloadFinished(const QByteArray &data, bool success) override;
 
 private:
     bool parseBuffer(const QByteArray &buffer);

@@ -33,9 +33,9 @@ public:
     QByteArray takeBuffer();
 
 signals:
-    void startedChanged();
-    void dataReceived();
-    void finished(bool success);
+    void startedChanged(bool started);
+    void dataReceived(int size);
+    void finished(const QByteArray &data, bool success);
 
 public slots:
     void start();

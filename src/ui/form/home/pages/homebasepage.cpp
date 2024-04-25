@@ -40,6 +40,11 @@ DriverManager *HomeBasePage::driverManager() const
     return ctrl()->driverManager();
 }
 
+AutoUpdateManager *HomeBasePage::autoUpdateManager() const
+{
+    return ctrl()->autoUpdateManager();
+}
+
 TaskManager *HomeBasePage::taskManager() const
 {
     return ctrl()->taskManager();

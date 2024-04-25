@@ -15,9 +15,6 @@ class AutoUpdateManagerRpc : public AutoUpdateManager
 public:
     explicit AutoUpdateManagerRpc(const QString &cachePath, QObject *parent = nullptr);
 
-    bool isDownloading() const override { return m_isDownloading; }
-    void setIsDownloading(bool v);
-
     int bytesReceived() const override { return m_bytesReceived; }
     void setBytesReceived(int v);
 
@@ -41,7 +38,6 @@ private:
     void setupClientSignals();
 
 private:
-    bool m_isDownloading = false;
     int m_bytesReceived = 0;
 };
 

@@ -34,13 +34,13 @@ void TaskZoneDownloader::setupDownloader()
     downloader()->setData(formData().toUtf8());
 }
 
-void TaskZoneDownloader::downloadFinished(bool success)
+void TaskZoneDownloader::downloadFinished(const QByteArray &data, bool success)
 {
     if (success) {
         success = false;
 
         QString textChecksum;
-        const auto text = QString::fromLatin1(downloader()->takeBuffer());
+        const auto text = QString::fromLatin1(data);
         const auto list = parseAddresses(text, textChecksum);
 
         if (!list.isEmpty()
@@ -57,25 +57,25 @@ void TaskZoneDownloader::downloadFinished(bool success)
 
 void TaskZoneDownloader::loadTextInline()
 {
-    downloader()->setBuffer(textInline().toUtf8());
+    const QByteArray data = textInline().toUtf8();
 
-    downloadFinished(/*success=*/true);
+    downloadFinished(data, /*success=*/true);
 }
 
 void TaskZoneDownloader::loadLocalFile()
 {
+    QByteArray data;
     bool success = false;
 
     const auto fileModTime = FileUtil::fileModTime(url());
 
     if (sourceModTime() != fileModTime || !FileUtil::fileExists(cacheFileBinPath())) {
-        const auto buffer = FileUtil::readFileData(url());
-        downloader()->setBuffer(buffer);
+        data = FileUtil::readFileData(url());
         setSourceModTime(fileModTime);
         success = true;
     }
 
-    downloadFinished(success);
+    downloadFinished(data, success);
 }
 
 StringViewList TaskZoneDownloader::parseAddresses(const QString &text, QString &checksum) const

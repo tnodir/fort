@@ -26,14 +26,14 @@ void NetDownloader::setStarted(bool v)
 {
     if (m_started != v) {
         m_started = v;
-        emit startedChanged();
+        emit startedChanged(v);
     }
 }
 
 QByteArray NetDownloader::takeBuffer()
 {
-    const QByteArray buf = m_buffer;
-    m_buffer.clear();
+    QByteArray buf;
+    m_buffer.swap(buf);
     return buf;
 }
 
@@ -81,7 +81,7 @@ void NetDownloader::finish(bool success)
         m_reply = nullptr;
     }
 
-    emit finished(success);
+    emit finished(takeBuffer(), success);
 }
 
 void NetDownloader::onDownloadProgress(qint64 bytesReceived, qint64 /*bytesTotal*/)
@@ -93,8 +93,9 @@ void NetDownloader::onDownloadProgress(qint64 bytesReceived, qint64 /*bytesTotal
 
     m_buffer.append(data);
 
-    if (m_buffer.size() < DOWNLOAD_MAXSIZE) {
-        emit dataReceived();
+    const int bufferSize = m_buffer.size();
+    if (bufferSize < DOWNLOAD_MAXSIZE) {
+        emit dataReceived(bufferSize);
     } else {
         qCWarning(LC) << "Error: Too big file";
         finish();

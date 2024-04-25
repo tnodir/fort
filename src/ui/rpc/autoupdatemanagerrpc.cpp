@@ -55,19 +55,11 @@ AutoUpdateManagerRpc::AutoUpdateManagerRpc(const QString &cachePath, QObject *pa
 {
 }
 
-void AutoUpdateManagerRpc::setIsDownloading(bool v)
-{
-    if (m_isDownloading != v) {
-        m_isDownloading = v;
-        emit isDownloadingChanged();
-    }
-}
-
 void AutoUpdateManagerRpc::setBytesReceived(int v)
 {
     if (m_bytesReceived != v) {
         m_bytesReceived = v;
-        emit bytesReceivedChanged();
+        emit bytesReceivedChanged(v);
     }
 }
 

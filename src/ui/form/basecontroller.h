@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+class AutoUpdateManager;
 class ConfAppManager;
 class ConfManager;
 class ConfRuleManager;
@@ -38,6 +39,7 @@ public:
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
     WindowManager *windowManager() const;
+    AutoUpdateManager *autoUpdateManager() const;
     TaskManager *taskManager() const;
 
 signals:

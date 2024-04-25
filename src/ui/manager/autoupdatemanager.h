@@ -15,9 +15,14 @@ class AutoUpdateManager : public TaskDownloader, public IocService
 public:
     explicit AutoUpdateManager(const QString &cachePath, QObject *parent = nullptr);
 
-    bool isDownloaded() const { return m_isDownloaded; }
+    bool isNewVersion() const { return m_isNewVersion; }
 
-    virtual bool isDownloading() const;
+    bool isDownloaded() const { return m_isDownloaded; }
+    void setIsDownloaded(bool v) { m_isDownloaded = v; }
+
+    bool isDownloading() const { return m_isDownloading; }
+    void setIsDownloading(bool v);
+
     virtual int bytesReceived() const;
 
     void setUp() override;
@@ -29,32 +34,32 @@ public slots:
     bool runInstaller();
 
 signals:
-    void isDownloadingChanged();
-    void bytesReceivedChanged();
+    void isDownloadingChanged(bool downloading);
+    void bytesReceivedChanged(int size);
 
     void restartClients();
 
 protected:
-    void setIsDownloaded(bool v) { m_isDownloaded = v; }
-
     void setupDownloader() override;
 
 protected slots:
-    void downloadFinished(bool success) override;
+    void downloadFinished(const QByteArray &data, bool success) override;
 
 private:
     void setupByTaskInfo(TaskInfoUpdateChecker *taskInfo);
 
     void clearUpdateDir();
 
-    bool saveInstaller();
+    bool saveInstaller(const QByteArray &fileData);
 
     QString installerPath() const { return m_updatePath + m_fileName; }
 
     static QString getDownloadUrl();
 
 private:
-    bool m_isDownloaded = false;
+    bool m_isNewVersion : 1 = false;
+    bool m_isDownloaded : 1 = false;
+    bool m_isDownloading : 1 = false;
 
     QString m_updatePath;
 

@@ -2,11 +2,13 @@
 
 #include <QGroupBox>
 #include <QLabel>
+#include <QProgressBar>
 #include <QToolButton>
 #include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
 #include <form/home/homecontroller.h>
+#include <manager/autoupdatemanager.h>
 #include <task/taskinfoupdatechecker.h>
 #include <task/taskmanager.h>
 #include <util/dateutil.h>
@@ -36,6 +38,7 @@ AboutPage::AboutPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl,
 void AboutPage::onRetranslateUi()
 {
     m_btDownload->setText(tr("Download"));
+    m_btInstall->setText(tr("Install"));
     m_btCheckUpdate->setText(tr("Check for update"));
 
     retranslateNewVersionBox();
@@ -48,13 +51,14 @@ void AboutPage::retranslateNewVersionBox()
 
 void AboutPage::setupUi()
 {
-    auto layout = new QVBoxLayout();
-
     // New Version Group Box
     setupNewVersionBox();
-    setupNewVersionUpdate();
-    layout->addWidget(m_gbNewVersion, 0, Qt::AlignHCenter);
 
+    setupNewVersionUpdate();
+    setupAutoUpdate();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_gbNewVersion, 0, Qt::AlignHCenter);
     layout->addStretch();
 
     this->setLayout(layout);
@@ -71,6 +75,9 @@ void AboutPage::setupNewVersionBox()
     m_labelArea = ControlUtil::wrapToScrollArea(m_labelRelease);
     m_labelArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
 
+    // Progress Bar
+    m_progressBar = new QProgressBar();
+
     // Buttons
     auto buttonsLayout = setupButtonsLayout();
 
@@ -78,6 +85,7 @@ void AboutPage::setupNewVersionBox()
     layout->setSpacing(10);
 
     layout->addWidget(m_labelArea);
+    layout->addWidget(m_progressBar);
     layout->addLayout(buttonsLayout);
 
     m_gbNewVersion = new QGroupBox();
@@ -88,21 +96,20 @@ void AboutPage::setupNewVersionBox()
 QLayout *AboutPage::setupButtonsLayout()
 {
     // Download
-    m_btDownload = ControlUtil::createFlatToolButton(":/icons/download.png");
+    m_btDownload = ControlUtil::createFlatToolButton(
+            ":/icons/download.png", [&] { autoUpdateManager()->startDownload(); });
 
-    connect(m_btDownload, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    // Install
+    m_btInstall = ControlUtil::createFlatToolButton(
+            ":/icons/tick.png", [&] { autoUpdateManager()->runInstaller(); });
 
     // Check Update
     m_btCheckUpdate = ControlUtil::createFlatToolButton(
             ":/icons/play.png", [&] { taskManager()->runTask(TaskInfo::UpdateChecker); });
 
-    auto layout = new QHBoxLayout();
-    layout->setSpacing(10);
-
-    layout->addStretch();
-    layout->addWidget(m_btDownload);
-    layout->addWidget(m_btCheckUpdate);
-    layout->addStretch();
+    auto layout = ControlUtil::createHLayoutByWidgets({ /*stretch*/ nullptr, m_btDownload,
+            m_btInstall, m_btCheckUpdate, /*stretch*/ nullptr });
+    layout->setSpacing(6);
 
     return layout;
 }
@@ -110,17 +117,17 @@ QLayout *AboutPage::setupButtonsLayout()
 void AboutPage::setupNewVersionUpdate()
 {
     const auto refreshNewVersion = [&] {
-        auto updateChecker = taskManager()->taskInfoUpdateChecker();
-        m_isNewVersion = updateChecker->isNewVersion();
+        auto taskInfo = taskManager()->taskInfoUpdateChecker();
+
+        m_isNewVersion = taskInfo->isNewVersion();
 
         m_labelArea->setVisible(m_isNewVersion);
-        m_labelRelease->setText(updateChecker->releaseText());
+        m_labelRelease->setText(taskInfo->releaseText());
 
-        m_btDownload->setVisible(m_isNewVersion);
-        m_btDownload->setWindowFilePath(updateChecker->downloadUrl());
-        m_btDownload->setToolTip(updateChecker->downloadUrl());
+        m_progressBar->setRange(0, taskInfo->downloadSize());
+        m_btDownload->setVisible(m_isNewVersion && !m_btInstall->isVisible());
 
-        m_btCheckUpdate->setToolTip(checkUpdateToolTip(updateChecker));
+        m_btCheckUpdate->setToolTip(checkUpdateToolTip(taskInfo));
 
         retranslateNewVersionBox();
     };
@@ -128,4 +135,29 @@ void AboutPage::setupNewVersionUpdate()
     refreshNewVersion();
 
     connect(taskManager(), &TaskManager::appVersionUpdated, this, refreshNewVersion);
+}
+
+void AboutPage::setupAutoUpdate()
+{
+    const auto refreshAutoUpdate = [&] {
+        auto manager = autoUpdateManager();
+
+        const bool isNewVersion = manager->isNewVersion();
+        const bool isDownloaded = manager->isDownloaded();
+        const bool isDownloadActive = (manager->isDownloading() || isDownloaded);
+
+        if (isDownloaded) {
+            m_progressBar->setValue(m_progressBar->maximum());
+        }
+        m_progressBar->setVisible(isDownloadActive);
+
+        m_btDownload->setVisible(isNewVersion && !isDownloadActive);
+        m_btInstall->setVisible(isNewVersion && isDownloaded);
+    };
+
+    refreshAutoUpdate();
+
+    connect(autoUpdateManager(), &AutoUpdateManager::isDownloadingChanged, this, refreshAutoUpdate);
+    connect(autoUpdateManager(), &AutoUpdateManager::bytesReceivedChanged, m_progressBar,
+            &QProgressBar::setValue);
 }

@@ -20,6 +20,7 @@ private:
     void setupNewVersionBox();
     QLayout *setupButtonsLayout();
     void setupNewVersionUpdate();
+    void setupAutoUpdate();
 
 private:
     bool m_isNewVersion = false;
@@ -27,7 +28,9 @@ private:
     QGroupBox *m_gbNewVersion = nullptr;
     QLabel *m_labelRelease = nullptr;
     QWidget *m_labelArea = nullptr;
+    QProgressBar *m_progressBar = nullptr;
     QToolButton *m_btDownload = nullptr;
+    QToolButton *m_btInstall = nullptr;
     QToolButton *m_btCheckUpdate = nullptr;
 };
 

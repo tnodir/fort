@@ -55,10 +55,10 @@ void TaskUpdateChecker::setupDownloader()
     downloader()->setUrl(APP_UPDATES_API_URL);
 }
 
-void TaskUpdateChecker::downloadFinished(bool success)
+void TaskUpdateChecker::downloadFinished(const QByteArray &data, bool success)
 {
     if (success) {
-        success = parseBuffer(downloader()->takeBuffer());
+        success = parseBuffer(data);
     }
 
     finish(success);

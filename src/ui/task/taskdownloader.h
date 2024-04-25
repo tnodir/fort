@@ -22,7 +22,7 @@ public slots:
     void finish(bool success = false) override;
 
 protected slots:
-    virtual void downloadFinished(bool success) = 0;
+    virtual void downloadFinished(const QByteArray &data, bool success) = 0;
 
 private:
     void createDownloader();

@@ -10,6 +10,7 @@
 #include <driver/drivermanager.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
+#include <manager/autoupdatemanager.h>
 #include <manager/hotkeymanager.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
@@ -86,6 +87,11 @@ TranslationManager *BaseController::translationManager() const
 WindowManager *BaseController::windowManager() const
 {
     return IoC<WindowManager>();
+}
+
+AutoUpdateManager *BaseController::autoUpdateManager() const
+{
+    return IoC<AutoUpdateManager>();
 }
 
 TaskManager *BaseController::taskManager() const

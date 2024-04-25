@@ -16,9 +16,12 @@ AutoUpdateManager::AutoUpdateManager(const QString &cachePath, QObject *parent) 
 {
 }
 
-bool AutoUpdateManager::isDownloading() const
+void AutoUpdateManager::setIsDownloading(bool v)
 {
-    return downloader() && downloader()->started();
+    if (m_isDownloading != v) {
+        m_isDownloading = v;
+        emit isDownloadingChanged(v);
+    }
 }
 
 int AutoUpdateManager::bytesReceived() const
@@ -31,7 +34,7 @@ void AutoUpdateManager::setUp()
     auto taskManager = IoCDependency<TaskManager>();
     auto taskInfo = taskManager->taskInfoUpdateChecker();
 
-    connect(taskManager, &TaskManager::appVersionDownloaded, this,
+    connect(taskManager, &TaskManager::appVersionUpdated, this,
             [=, this] { setupByTaskInfo(taskInfo); });
 
     setupByTaskInfo(taskInfo);
@@ -58,37 +61,43 @@ bool AutoUpdateManager::startDownload()
 
 void AutoUpdateManager::setupDownloader()
 {
-    setIsDownloaded(false);
-
     downloader()->setUrl(m_downloadUrl);
 
-    connect(downloader(), &NetDownloader::startedChanged, this,
-            &AutoUpdateManager::isDownloadingChanged);
     connect(downloader(), &NetDownloader::dataReceived, this,
             &AutoUpdateManager::bytesReceivedChanged);
+
+    setIsDownloaded(false);
+    setIsDownloading(true);
 }
 
-void AutoUpdateManager::downloadFinished(bool success)
+void AutoUpdateManager::downloadFinished(const QByteArray &data, bool success)
 {
     if (success) {
-        success = saveInstaller();
+        success = saveInstaller(data);
+
         setIsDownloaded(success);
     }
+
+    setIsDownloading(false);
 
     finish(success);
 }
 
 void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
 {
+    m_isNewVersion = taskInfo->isNewVersion();
+    if (!m_isNewVersion)
+        return;
+
     m_downloadUrl = taskInfo->downloadUrl();
-    if (m_downloadUrl.isEmpty())
+    m_downloadSize = taskInfo->downloadSize();
+    if (m_downloadUrl.isEmpty() || m_downloadSize <= 0)
         return;
 
     m_fileName = QUrl(m_downloadUrl).fileName();
-    m_downloadSize = taskInfo->downloadSize();
 
     const QFileInfo fi(installerPath());
-    setIsDownloaded(fi.size() == m_downloadSize);
+    setIsDownloaded(fi.exists() && fi.size() == m_downloadSize);
 }
 
 void AutoUpdateManager::clearUpdateDir()
@@ -100,9 +109,8 @@ void AutoUpdateManager::clearUpdateDir()
     }
 }
 
-bool AutoUpdateManager::saveInstaller()
+bool AutoUpdateManager::saveInstaller(const QByteArray &fileData)
 {
-    const QByteArray fileData = downloader()->takeBuffer();
     if (fileData.size() != m_downloadSize)
         return false;
 
