@@ -43,6 +43,8 @@ signals:
     void restartClients(const QString &installerPath);
 
 protected:
+    virtual void setupManager();
+
     void setupDownloader() override;
 
 protected slots:

@@ -68,13 +68,6 @@ void AutoUpdateManagerRpc::setBytesReceived(int v)
     }
 }
 
-void AutoUpdateManagerRpc::setUp()
-{
-    AutoUpdateManager::setUp();
-
-    setupClientSignals();
-}
-
 void AutoUpdateManagerRpc::updateState(bool isDownloaded, bool isDownloading, int bytesReceived)
 {
     setIsDownloaded(isDownloaded);
@@ -143,6 +136,11 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
 bool AutoUpdateManagerRpc::startDownload()
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_AutoUpdateManager_startDownload);
+}
+
+void AutoUpdateManagerRpc::setupManager()
+{
+    setupClientSignals();
 }
 
 void AutoUpdateManagerRpc::setupClientSignals()

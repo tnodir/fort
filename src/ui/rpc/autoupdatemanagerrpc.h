@@ -18,8 +18,6 @@ public:
     int bytesReceived() const override { return m_bytesReceived; }
     void setBytesReceived(int v);
 
-    void setUp() override;
-
     void updateState(bool isDownloaded, bool isDownloading, int bytesReceived);
 
     static QVariantList updateState_args();
@@ -33,6 +31,9 @@ public:
 
 public slots:
     bool startDownload() override;
+
+protected:
+    void setupManager() override;
 
 private:
     void setupClientSignals();

@@ -39,6 +39,16 @@ int AutoUpdateManager::bytesReceived() const
 
 void AutoUpdateManager::setUp()
 {
+    setupManager();
+}
+
+void AutoUpdateManager::tearDown()
+{
+    finish();
+}
+
+void AutoUpdateManager::setupManager()
+{
     auto taskManager = IoCDependency<TaskManager>();
     auto taskInfo = taskManager->taskInfoUpdateChecker();
 
@@ -50,11 +60,6 @@ void AutoUpdateManager::setUp()
     if (!(isDownloaded() || isDownloading())) {
         clearUpdateDir();
     }
-}
-
-void AutoUpdateManager::tearDown()
-{
-    finish();
 }
 
 bool AutoUpdateManager::startDownload()
