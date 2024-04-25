@@ -1,6 +1,7 @@
 #include "autoupdatemanager.h"
 
 #include <QFileInfo>
+#include <QLoggingCategory>
 #include <QProcess>
 
 #include <fortsettings.h>
@@ -11,6 +12,12 @@
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netdownloader.h>
 #include <util/osutil.h>
+
+namespace {
+
+const QLoggingCategory LC("manager.autoUpdate");
+
+}
 
 AutoUpdateManager::AutoUpdateManager(const QString &cachePath, QObject *parent) :
     TaskDownloader(parent), m_updatePath(cachePath + "update/")
@@ -100,6 +107,8 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
     const QFileInfo fi(installerPath());
     const bool downloaded = (fi.exists() && fi.size() == m_downloadSize);
 
+    qCDebug(LC) << "Check download:" << downloaded << taskInfo->version() << fi.filePath();
+
     setIsDownloaded(downloaded);
 }
 
@@ -109,6 +118,8 @@ void AutoUpdateManager::clearUpdateDir()
 
     if (settings->isMaster()) {
         FileUtil::removePath(m_updatePath);
+
+        qCDebug(LC) << "Removed dir:" << m_updatePath;
     }
 }
 
@@ -117,7 +128,12 @@ bool AutoUpdateManager::saveInstaller(const QByteArray &fileData)
     if (fileData.size() != m_downloadSize)
         return false;
 
-    return FileUtil::writeFileData(installerPath(), fileData);
+    if (!FileUtil::writeFileData(installerPath(), fileData))
+        return false;
+
+    qCDebug(LC) << "Installer saved:" << installerPath();
+
+    return true;
 }
 
 bool AutoUpdateManager::runInstaller()
@@ -125,8 +141,9 @@ bool AutoUpdateManager::runInstaller()
     auto settings = IoC<FortSettings>();
 
     const QString installerPath = this->installerPath();
+    const QStringList args = installerArgs(settings);
 
-    if (!QProcess::startDetached(installerPath, installerArgs(settings)))
+    if (!QProcess::startDetached(installerPath, args))
         return false;
 
     if (settings->hasService()) {
@@ -134,6 +151,8 @@ bool AutoUpdateManager::runInstaller()
     } else {
         OsUtil::quit("new version install");
     }
+
+    qCDebug(LC) << "Run Installer:" << installerPath << args;
 
     return true;
 }
