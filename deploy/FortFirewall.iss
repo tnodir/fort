@@ -97,7 +97,7 @@ Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start ser
   Flags: nowait; Tasks: service
 
 Filename: "{#APP_EXE}"; Parameters: "--lang {code:LanguageName}"; \
-  Description: {cm:LaunchProgram,{#APP_NAME}}; Flags: nowait postinstall; Check: IsAutoRun
+  Description: {cm:LaunchProgram,{#APP_NAME}}; Flags: nowait postinstall; Check: ShouldLaunch
 
 [UninstallRun]
 Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "Uninstall"
@@ -138,9 +138,9 @@ begin
     end;
 end;
 
-function IsAutoRun: Boolean;
+function ShouldLaunch: Boolean;
 begin
-  Result := ParamExists('/AUTORUN') or not (ParamExists('/SILENT') or ParamExists('/VERYSILENT'));
+  Result := ParamExists('/LAUNCH') or not (ParamExists('/SILENT') or ParamExists('/VERYSILENT'));
 end;
 
 #if CHECK_WIN10 == "Y"
