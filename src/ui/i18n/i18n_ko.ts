@@ -19,6 +19,10 @@
         <source>No Update</source>
         <translation>업데이트 없음</translation>
     </message>
+    <message>
+        <source>Install</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1095,10 +1099,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Shortcut:</source>
         <translation>바로가기:</translation>
-    </message>
-    <message>
-        <source>Auto-update</source>
-        <translation>자동 업데이터</translation>
     </message>
 </context>
 <context>

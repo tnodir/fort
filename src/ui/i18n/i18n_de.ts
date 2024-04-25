@@ -19,6 +19,10 @@
         <source>No Update</source>
         <translation>Kein Update verfügbar</translation>
     </message>
+    <message>
+        <source>Install</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1095,10 +1099,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Shortcut:</source>
         <translation>Tastenkürzel:</translation>
-    </message>
-    <message>
-        <source>Auto-update</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

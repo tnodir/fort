@@ -19,6 +19,10 @@
         <source>No Update</source>
         <translation>ليست هناك تحديثات</translation>
     </message>
+    <message>
+        <source>Install</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1095,10 +1099,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Shortcut:</source>
         <translation>الاختصار:</translation>
-    </message>
-    <message>
-        <source>Auto-update</source>
-        <translation>التحديث التلقائي</translation>
     </message>
 </context>
 <context>

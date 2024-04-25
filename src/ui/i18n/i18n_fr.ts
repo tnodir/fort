@@ -19,6 +19,10 @@
         <source>No Update</source>
         <translation>Aucune mise à jour</translation>
     </message>
+    <message>
+        <source>Install</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1095,10 +1099,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <message>
         <source>Shortcut:</source>
         <translation>Raccourci:</translation>
-    </message>
-    <message>
-        <source>Auto-update</source>
-        <translation>Mise à jour auto</translation>
     </message>
 </context>
 <context>

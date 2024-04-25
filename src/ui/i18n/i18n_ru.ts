@@ -19,6 +19,10 @@
         <source>No Update</source>
         <translation>Нет обновления</translation>
     </message>
+    <message>
+        <source>Install</source>
+        <translation>Установить</translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1095,10 +1099,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Shortcut:</source>
         <translation>Комбинация клавиш:</translation>
-    </message>
-    <message>
-        <source>Auto-update</source>
-        <translation>Авто-обновление</translation>
     </message>
 </context>
 <context>
