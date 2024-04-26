@@ -708,16 +708,16 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
 
 void ProgramEditDialog::fillEditName()
 {
-    auto appPath = getEditText();
+    const QString appPath = getEditText();
     if (appPath.isEmpty())
         return;
 
     QString appName;
     if (isWildcard()) {
-        appName = appPath.left(64).replace('\n', ' ');
+        appName = StringUtil::firstLine(appPath);
     } else {
-        appPath = FileUtil::normalizePath(appPath);
-        appName = IoC<AppInfoCache>()->appName(appPath);
+        const QString normPath = FileUtil::normalizePath(appPath);
+        appName = IoC<AppInfoCache>()->appName(normPath);
     }
 
     m_editName->setStartText(appName);

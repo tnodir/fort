@@ -196,19 +196,13 @@ void ConfAppManager::updateAppEndTimer()
 
 bool ConfAppManager::addAppPathBlocked(App &app)
 {
-    // app.blocked
-    // app.alerted
-    // app.groupIndex
-    // app.appOriginPath
-    // app.scheduleAction
-
     app.appId = appIdByPath(app.appOriginPath, app.appPath);
 
     if (app.appId > 0)
-        return false; // already added by user
+        return false; // already exists
 
     app.isWildcard = ConfUtil::matchWildcard(app.appPath).hasMatch();
-    app.appName = IoC<AppInfoCache>()->appName(app.appPath);
+    app.appName = app.isWildcard ? app.appOriginPath : IoC<AppInfoCache>()->appName(app.appPath);
 
     const bool ok = addOrUpdateApp(app);
     if (ok) {
