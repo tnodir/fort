@@ -24,7 +24,7 @@ public:
     bool forceDebug() const { return m_forceDebug; }
     void setForceDebug(bool v);
 
-    bool debug() const { return m_debug; }
+    bool debug() const { return m_debug || m_forceDebug; }
     void setDebug(bool v);
 
     bool console() const { return m_console; }
