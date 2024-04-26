@@ -83,12 +83,14 @@ void Logger::setDebug(bool v)
 
     m_debug = v;
 
-    if (!debug() && forceDebug())
-        return;
+    if (!m_debug) {
+        if (forceDebug())
+            return;
+
+        closeFile();
+    }
 
     QLoggingCategory::setFilterRules(debug() ? QString() : "*.debug=false");
-
-    closeFile();
 }
 
 void Logger::setConsole(bool v)
