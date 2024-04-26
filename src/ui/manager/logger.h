@@ -22,7 +22,7 @@ public:
     void setHasService(bool v) { m_hasService = v; }
 
     bool forceDebug() const { return m_forceDebug; }
-    void setForceDebug(bool v);
+    void setForceDebug(bool v) { m_forceDebug = v; }
 
     bool debug() const { return m_debug || m_forceDebug; }
     void setDebug(bool v);

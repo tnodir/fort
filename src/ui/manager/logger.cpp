@@ -76,15 +76,6 @@ Logger::Logger(QObject *parent) : QObject(parent)
     g_oldMessageHandler = qInstallMessageHandler(messageHandler);
 }
 
-void Logger::setForceDebug(bool v)
-{
-    m_forceDebug = v;
-
-    if (forceDebug()) {
-        setDebug(true);
-    }
-}
-
 void Logger::setDebug(bool v)
 {
     if (m_debug == v)
