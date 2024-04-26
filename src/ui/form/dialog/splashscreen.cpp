@@ -33,6 +33,7 @@ void startOpacityAnimation(
 SplashScreen::SplashScreen() : QSplashScreen()
 {
     this->setAttribute(Qt::WA_DeleteOnClose);
+    this->setAttribute(Qt::WA_ShowWithoutActivating);
 
     setupUi();
 }
@@ -52,8 +53,7 @@ void SplashScreen::closeDelayed()
 
 void SplashScreen::closeFading()
 {
-    startOpacityAnimation(
-            this, [&] { close(); }, /*backward=*/true);
+    startOpacityAnimation(this, [&] { close(); }, /*backward=*/true);
 }
 
 void SplashScreen::setupUi()
