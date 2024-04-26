@@ -205,7 +205,8 @@ bool ConfAppManager::addAppPathBlocked(App &app)
     app.appName = app.isWildcard ? app.appOriginPath : IoC<AppInfoCache>()->appName(app.appPath);
 
     const bool ok = addOrUpdateApp(app);
-    if (ok) {
+
+    if (ok && app.alerted) {
         emitAppAlerted();
     }
 
