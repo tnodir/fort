@@ -28,7 +28,7 @@ void AutoUpdateManager::setFlags(Flags v)
 {
     if (m_flags != v) {
         m_flags = v;
-        emit flagsChanged(v);
+        emit flagsChanged();
     }
 }
 
@@ -37,6 +37,14 @@ void AutoUpdateManager::setFlag(Flag v, bool on)
     Flags flags = m_flags;
     flags.setFlag(v, on);
     setFlags(flags);
+}
+
+void AutoUpdateManager::setFileName(const QString &v)
+{
+    if (m_fileName != v) {
+        m_fileName = v;
+        emit fileNameChanged();
+    }
 }
 
 int AutoUpdateManager::bytesReceived() const
@@ -119,7 +127,7 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
     const QFileInfo fi(installerPath());
     const bool downloaded = (fi.exists() && fi.size() == m_downloadSize);
 
-    qCDebug(LC) << "Check download:" << taskInfo->version() << "downloaded:" << downloaded;
+    qCDebug(LC) << "Check:" << taskInfo->version() << "downloaded:" << downloaded;
 
     setIsDownloaded(downloaded);
 }
@@ -157,8 +165,10 @@ bool AutoUpdateManager::runInstaller()
     const QString installerPath = this->installerPath();
     const QStringList args = installerArgs(settings);
 
-    if (!QProcess::startDetached(installerPath, args))
+    if (!QProcess::startDetached(installerPath, args)) {
+        qCDebug(LC) << "Run Installer error:" << installerPath << args;
         return false;
+    }
 
     if (settings->hasService()) {
         emit restartClients(installerPath);

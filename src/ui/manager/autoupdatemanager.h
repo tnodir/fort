@@ -40,6 +40,9 @@ public:
     bool isDownloading() const { return testFlag(IsDownloading); }
     void setIsDownloading(bool on) { setFlag(IsDownloading, on); }
 
+    QString fileName() const { return m_fileName; }
+    void setFileName(const QString &v);
+
     virtual int bytesReceived() const;
 
     void setUp() override;
@@ -51,8 +54,9 @@ public slots:
     bool runInstaller();
 
 signals:
-    void flagsChanged(AutoUpdateManager::Flags flags);
+    void flagsChanged();
     void bytesReceivedChanged(int size);
+    void fileNameChanged();
 
     void restartClients(const QString &installerPath);
 
@@ -60,6 +64,8 @@ protected:
     virtual void setupManager();
 
     void setupDownloader() override;
+
+    QString installerPath() const { return m_updatePath + m_fileName; }
 
 protected slots:
     void downloadFinished(const QByteArray &data, bool success) override;
@@ -70,8 +76,6 @@ private:
     void clearUpdateDir();
 
     bool saveInstaller(const QByteArray &fileData);
-
-    QString installerPath() const { return m_updatePath + m_fileName; }
 
     static QStringList installerArgs(FortSettings *settings);
 

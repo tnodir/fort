@@ -11,8 +11,8 @@ inline bool processAutoUpdateManager_updateState(
         AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p)
 {
     if (auto aum = qobject_cast<AutoUpdateManagerRpc *>(autoUpdateManager)) {
-        aum->updateState(
-                AutoUpdateManager::Flags(p.args.value(0).toInt()), p.args.value(1).toInt());
+        aum->updateState(AutoUpdateManager::Flags(p.args.value(0).toInt()), p.args.value(1).toInt(),
+                p.args.value(2).toString());
     }
     return true;
 }
@@ -68,10 +68,12 @@ void AutoUpdateManagerRpc::setBytesReceived(int v)
     }
 }
 
-void AutoUpdateManagerRpc::updateState(AutoUpdateManager::Flags flags, int bytesReceived)
+void AutoUpdateManagerRpc::updateState(
+        AutoUpdateManager::Flags flags, int bytesReceived, const QString &fileName)
 {
     setFlags(flags);
     setBytesReceived(bytesReceived);
+    setFileName(fileName);
 }
 
 QVariantList AutoUpdateManagerRpc::updateState_args()
@@ -80,8 +82,9 @@ QVariantList AutoUpdateManagerRpc::updateState_args()
 
     const auto flags = autoUpdateManager->flags();
     const auto bytesReceived = autoUpdateManager->bytesReceived();
+    const auto fileName = autoUpdateManager->fileName();
 
-    return { int(flags), bytesReceived };
+    return { int(flags), bytesReceived, fileName };
 }
 
 bool AutoUpdateManagerRpc::processInitClient(ControlWorker *w)
