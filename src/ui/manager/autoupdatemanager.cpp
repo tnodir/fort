@@ -24,17 +24,24 @@ AutoUpdateManager::AutoUpdateManager(const QString &cachePath, QObject *parent) 
 {
 }
 
-void AutoUpdateManager::setIsDownloading(bool v)
+void AutoUpdateManager::setFlags(Flags v)
 {
-    if (m_isDownloading != v) {
-        m_isDownloading = v;
-        emit isDownloadingChanged(v);
+    if (m_flags != v) {
+        m_flags = v;
+        emit flagsChanged(v);
     }
+}
+
+void AutoUpdateManager::setFlag(Flag v, bool on)
+{
+    Flags flags = m_flags;
+    flags.setFlag(v, on);
+    setFlags(flags);
 }
 
 int AutoUpdateManager::bytesReceived() const
 {
-    return downloader() ? downloader()->buffer().size() : 0;
+    return downloader() ? downloader()->buffer().size() : m_downloadSize;
 }
 
 void AutoUpdateManager::setUp()
@@ -98,8 +105,8 @@ void AutoUpdateManager::downloadFinished(const QByteArray &data, bool success)
 
 void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
 {
-    m_isNewVersion = taskInfo->isNewVersion();
-    if (!m_isNewVersion)
+    setIsNewVersion(taskInfo->isNewVersion());
+    if (!isNewVersion())
         return;
 
     m_downloadUrl = taskInfo->downloadUrl();

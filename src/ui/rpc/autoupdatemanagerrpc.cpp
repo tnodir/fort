@@ -12,7 +12,7 @@ inline bool processAutoUpdateManager_updateState(
 {
     if (auto aum = qobject_cast<AutoUpdateManagerRpc *>(autoUpdateManager)) {
         aum->updateState(
-                p.args.value(0).toBool(), p.args.value(1).toBool(), p.args.value(2).toInt());
+                AutoUpdateManager::Flags(p.args.value(0).toInt()), p.args.value(1).toInt());
     }
     return true;
 }
@@ -68,10 +68,9 @@ void AutoUpdateManagerRpc::setBytesReceived(int v)
     }
 }
 
-void AutoUpdateManagerRpc::updateState(bool isDownloaded, bool isDownloading, int bytesReceived)
+void AutoUpdateManagerRpc::updateState(AutoUpdateManager::Flags flags, int bytesReceived)
 {
-    setIsDownloaded(isDownloaded);
-    setIsDownloading(isDownloading);
+    setFlags(flags);
     setBytesReceived(bytesReceived);
 }
 
@@ -79,12 +78,10 @@ QVariantList AutoUpdateManagerRpc::updateState_args()
 {
     auto autoUpdateManager = IoC<AutoUpdateManager>();
 
-    const bool isDownloaded = autoUpdateManager->isDownloaded();
-    const bool isDownloading = autoUpdateManager->isDownloading();
-    const int bytesReceived =
-            isDownloaded ? autoUpdateManager->downloadSize() : autoUpdateManager->bytesReceived();
+    const auto flags = autoUpdateManager->flags();
+    const auto bytesReceived = autoUpdateManager->bytesReceived();
 
-    return { isDownloaded, isDownloading, bytesReceived };
+    return { flags, bytesReceived };
 }
 
 bool AutoUpdateManagerRpc::processInitClient(ControlWorker *w)
@@ -121,8 +118,7 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
                 AutoUpdateManagerRpc::updateState_args());
     };
 
-    connect(autoUpdateManager, &AutoUpdateManager::isDownloadingChanged, rpcManager,
-            updateClientStates);
+    connect(autoUpdateManager, &AutoUpdateManager::flagsChanged, rpcManager, updateClientStates);
     connect(autoUpdateManager, &AutoUpdateManager::bytesReceivedChanged, rpcManager,
             updateClientStates);
 

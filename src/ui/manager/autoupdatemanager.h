@@ -14,17 +14,31 @@ class AutoUpdateManager : public TaskDownloader, public IocService
     Q_OBJECT
 
 public:
+    enum Flag {
+        NoFlag = 0,
+        IsNewVersion = (1 << 1),
+        IsDownloaded = (1 << 2),
+        IsDownloading = (1 << 3),
+    };
+    Q_ENUM(Flag)
+    Q_DECLARE_FLAGS(Flags, Flag)
+
     explicit AutoUpdateManager(const QString &cachePath, QObject *parent = nullptr);
 
-    bool isNewVersion() const { return m_isNewVersion; }
+    Flags flags() const { return m_flags; }
+    void setFlags(Flags v);
 
-    bool isDownloaded() const { return m_isDownloaded; }
-    void setIsDownloaded(bool v) { m_isDownloaded = v; }
+    void setFlag(Flag v, bool on = true);
+    constexpr bool testFlag(Flag v) const { return flags().testFlag(v); }
 
-    bool isDownloading() const { return m_isDownloading; }
-    void setIsDownloading(bool v);
+    bool isNewVersion() const { return testFlag(IsNewVersion); }
+    void setIsNewVersion(bool on) { setFlag(IsNewVersion, on); }
 
-    int downloadSize() const { return m_downloadSize; }
+    bool isDownloaded() const { return testFlag(IsDownloaded); }
+    void setIsDownloaded(bool on) { setFlag(IsDownloaded, on); }
+
+    bool isDownloading() const { return testFlag(IsDownloading); }
+    void setIsDownloading(bool on) { setFlag(IsDownloading, on); }
 
     virtual int bytesReceived() const;
 
@@ -37,7 +51,7 @@ public slots:
     bool runInstaller();
 
 signals:
-    void isDownloadingChanged(bool downloading);
+    void flagsChanged(AutoUpdateManager::Flags flags);
     void bytesReceivedChanged(int size);
 
     void restartClients(const QString &installerPath);
@@ -62,9 +76,7 @@ private:
     static QStringList installerArgs(FortSettings *settings);
 
 private:
-    bool m_isNewVersion : 1 = false;
-    bool m_isDownloaded : 1 = false;
-    bool m_isDownloading : 1 = false;
+    Flags m_flags = NoFlag;
 
     QString m_updatePath;
 
@@ -72,5 +84,7 @@ private:
     QString m_downloadUrl;
     int m_downloadSize = 0;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(AutoUpdateManager::Flags)
 
 #endif // AUTOUPDATEMANAGER_H

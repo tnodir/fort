@@ -157,7 +157,8 @@ void AboutPage::setupAutoUpdate()
 
     refreshAutoUpdate();
 
-    connect(autoUpdateManager(), &AutoUpdateManager::isDownloadingChanged, this, refreshAutoUpdate);
+    connect(autoUpdateManager(), &AutoUpdateManager::flagsChanged, this, refreshAutoUpdate);
+
     connect(autoUpdateManager(), &AutoUpdateManager::bytesReceivedChanged, m_progressBar,
             &QProgressBar::setValue);
 }

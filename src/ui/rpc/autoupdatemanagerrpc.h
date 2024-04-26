@@ -18,7 +18,7 @@ public:
     int bytesReceived() const override { return m_bytesReceived; }
     void setBytesReceived(int v);
 
-    void updateState(bool isDownloaded, bool isDownloading, int bytesReceived);
+    void updateState(AutoUpdateManager::Flags flags, int bytesReceived);
 
     static QVariantList updateState_args();
 
