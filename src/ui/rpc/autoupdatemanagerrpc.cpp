@@ -81,7 +81,7 @@ QVariantList AutoUpdateManagerRpc::updateState_args()
     const auto flags = autoUpdateManager->flags();
     const auto bytesReceived = autoUpdateManager->bytesReceived();
 
-    return { flags, bytesReceived };
+    return { int(flags), bytesReceived };
 }
 
 bool AutoUpdateManagerRpc::processInitClient(ControlWorker *w)

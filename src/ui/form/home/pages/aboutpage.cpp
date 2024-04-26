@@ -103,6 +103,8 @@ QLayout *AboutPage::setupButtonsLayout()
     m_btInstall = ControlUtil::createFlatToolButton(
             ":/icons/tick.png", [&] { autoUpdateManager()->runInstaller(); });
 
+    m_btInstall->setVisible(false);
+
     // Check Update
     m_btCheckUpdate = ControlUtil::createFlatToolButton(
             ":/icons/play.png", [&] { taskManager()->runTask(TaskInfo::UpdateChecker); });
@@ -144,7 +146,8 @@ void AboutPage::setupAutoUpdate()
 
         const bool isNewVersion = manager->isNewVersion();
         const bool isDownloaded = manager->isDownloaded();
-        const bool isDownloadActive = (manager->isDownloading() || isDownloaded);
+        const bool isDownloading = manager->isDownloading();
+        const bool isDownloadActive = (isDownloading || isDownloaded);
 
         if (isDownloaded) {
             m_progressBar->setValue(m_progressBar->maximum());

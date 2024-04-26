@@ -16,9 +16,9 @@ class AutoUpdateManager : public TaskDownloader, public IocService
 public:
     enum Flag {
         NoFlag = 0,
-        IsNewVersion = (1 << 1),
-        IsDownloaded = (1 << 2),
-        IsDownloading = (1 << 3),
+        IsNewVersion = (1 << 0),
+        IsDownloaded = (1 << 1),
+        IsDownloading = (1 << 2),
     };
     Q_ENUM(Flag)
     Q_DECLARE_FLAGS(Flags, Flag)

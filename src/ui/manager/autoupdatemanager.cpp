@@ -119,7 +119,7 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
     const QFileInfo fi(installerPath());
     const bool downloaded = (fi.exists() && fi.size() == m_downloadSize);
 
-    qCDebug(LC) << "Check download:" << downloaded << taskInfo->version() << fi.filePath();
+    qCDebug(LC) << "Check download:" << taskInfo->version() << "downloaded:" << downloaded;
 
     setIsDownloaded(downloaded);
 }
@@ -129,9 +129,9 @@ void AutoUpdateManager::clearUpdateDir()
     auto settings = IoC<FortSettings>();
 
     if (settings->isMaster()) {
-        FileUtil::removePath(m_updatePath);
-
-        qCDebug(LC) << "Removed dir:" << m_updatePath;
+        if (FileUtil::removePath(m_updatePath)) {
+            qCDebug(LC) << "Dir removed:" << m_updatePath;
+        }
     }
 }
 
@@ -140,8 +140,10 @@ bool AutoUpdateManager::saveInstaller(const QByteArray &fileData)
     if (fileData.size() != m_downloadSize)
         return false;
 
-    if (!FileUtil::writeFileData(installerPath(), fileData))
+    if (!FileUtil::writeFileData(installerPath(), fileData)) {
+        qCWarning(LC) << "Installer save error:" << installerPath();
         return false;
+    }
 
     qCDebug(LC) << "Installer saved:" << installerPath();
 
