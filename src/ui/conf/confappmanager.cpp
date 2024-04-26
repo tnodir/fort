@@ -202,12 +202,12 @@ bool ConfAppManager::addAppPathBlocked(App &app)
     // app.appOriginPath
     // app.scheduleAction
 
-    app.appPath = FileUtil::normalizePath(app.appOriginPath);
+    app.appId = appIdByPath(app.appOriginPath, app.appPath);
 
-    app.appId = appIdByPath(app.appPath);
     if (app.appId > 0)
         return false; // already added by user
 
+    app.isWildcard = ConfUtil::matchWildcard(app.appPath).hasMatch();
     app.appName = IoC<AppInfoCache>()->appName(app.appPath);
 
     const bool ok = addOrUpdateApp(app);
@@ -295,9 +295,11 @@ void ConfAppManager::logBlockedApp(const LogEntryBlocked &logEntry)
     addAppPathBlocked(app);
 }
 
-qint64 ConfAppManager::appIdByPath(const QString &appPath)
+qint64 ConfAppManager::appIdByPath(const QString &appOriginPath, QString &normPath)
 {
-    return DbQuery(sqliteDb()).sql(sqlSelectAppIdByPath).vars({ appPath }).execute().toLongLong();
+    normPath = FileUtil::normalizePath(appOriginPath);
+
+    return DbQuery(sqliteDb()).sql(sqlSelectAppIdByPath).vars({ normPath }).execute().toLongLong();
 }
 
 bool ConfAppManager::addOrUpdateAppPath(const QString &appOriginPath, bool blocked)

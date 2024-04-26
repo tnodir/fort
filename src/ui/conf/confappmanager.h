@@ -33,7 +33,7 @@ public:
 
     void logBlockedApp(const LogEntryBlocked &logEntry);
 
-    qint64 appIdByPath(const QString &appPath);
+    qint64 appIdByPath(const QString &appOriginPath, QString &normPath);
 
     virtual bool addOrUpdateAppPath(const QString &appOriginPath, bool blocked);
     virtual bool addOrUpdateApp(App &app, bool onlyUpdate = false);

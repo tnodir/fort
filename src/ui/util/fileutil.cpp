@@ -244,6 +244,8 @@ QString normalizePath(const QString &path)
         return {};
 
     const QString pathTrimmed = path.trimmed();
+    if (pathTrimmed.isEmpty())
+        return {};
 
     if (isSystemApp(pathTrimmed))
         return systemApp();

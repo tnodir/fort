@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QList>
 #include <QObject>
+#include <QRegularExpressionMatch>
 #include <QVector>
 
 #include <util/service/serviceinfo.h>
@@ -47,6 +48,8 @@ public:
     static int ruleSetDepthMaxCount();
 
     static int zoneMaxCount();
+
+    static QRegularExpressionMatch matchWildcard(const QStringView path);
 
 public slots:
     void writeVersion();

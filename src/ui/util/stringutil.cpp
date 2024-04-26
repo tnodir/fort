@@ -85,6 +85,12 @@ QStringList StringUtil::parseMultiString(const char *data)
     return list;
 }
 
+QString StringUtil::firstLine(const QString &text)
+{
+    const int pos = text.indexOf('\n');
+    return (pos != -1) ? text.left(pos) : text;
+}
+
 QRegularExpressionMatch StringUtil::match(const QRegularExpression &re, const QStringView &text)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)

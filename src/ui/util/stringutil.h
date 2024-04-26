@@ -25,6 +25,8 @@ public:
     static bool buildMultiString(QByteArray &buffer, const QStringList &list);
     static QStringList parseMultiString(const char *data);
 
+    static QString firstLine(const QString &text);
+
     static QRegularExpressionMatch match(const QRegularExpression &re, const QStringView &text);
 };
 

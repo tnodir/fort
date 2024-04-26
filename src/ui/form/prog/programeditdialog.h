@@ -101,6 +101,8 @@ private:
 
     bool isWildcard() const;
 
+    QString getEditText() const;
+
     void selectRuleDialog();
     void editRuleDialog(int ruleId);
 

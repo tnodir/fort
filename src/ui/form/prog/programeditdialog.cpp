@@ -30,6 +30,7 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/stringutil.h>
 #include <util/textareautil.h>
 #include <util/variantutil.h>
 
@@ -423,7 +424,7 @@ QLayout *ProgramEditDialog::setupPathLayout()
 
     // Select File
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
-        if (!isEmpty()) {
+        if (!isEmpty() && !isWildcard()) {
             AppInfoUtil::openFolder(m_editPath->text());
             return;
         }
@@ -707,7 +708,7 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
 
 void ProgramEditDialog::fillEditName()
 {
-    auto appPath = isWildcard() ? m_editWildcard->toPlainText() : m_editPath->text();
+    auto appPath = getEditText();
     if (appPath.isEmpty())
         return;
 
@@ -826,10 +827,10 @@ void ProgramEditDialog::fillApp(App &app) const
 
 void ProgramEditDialog::fillAppPath(App &app) const
 {
-    const QString appPath = m_editPath->text();
+    const QString appPath = getEditText();
 
-    app.appOriginPath = isWildcard() ? m_editWildcard->toPlainText() : appPath;
-    app.appPath = FileUtil::normalizePath(appPath);
+    app.appOriginPath = appPath;
+    app.appPath = FileUtil::normalizePath(StringUtil::firstLine(appPath));
 }
 
 void ProgramEditDialog::fillAppEndTime(App &app) const
@@ -854,6 +855,11 @@ void ProgramEditDialog::fillAppEndTime(App &app) const
 bool ProgramEditDialog::isWildcard() const
 {
     return m_appRow.isWildcard;
+}
+
+QString ProgramEditDialog::getEditText() const
+{
+    return isWildcard() ? m_editWildcard->toPlainText() : m_editPath->text();
 }
 
 void ProgramEditDialog::selectRuleDialog()

@@ -12,8 +12,8 @@
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <util/conf/confutil.h>
 #include <util/dateutil.h>
-#include <util/fileutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
@@ -475,11 +475,12 @@ AppRow AppListModel::appRowById(qint64 appId) const
 
 AppRow AppListModel::appRowByPath(const QString &appPath) const
 {
-    const QString normPath = FileUtil::normalizePath(appPath);
-    const qint64 appId = confAppManager()->appIdByPath(normPath);
+    QString normPath;
+    const qint64 appId = confAppManager()->appIdByPath(appPath, normPath);
 
     AppRow appRow = appRowById(appId);
     if (appRow.appId == 0) {
+        appRow.isWildcard = ConfUtil::matchWildcard(normPath).hasMatch();
         appRow.appOriginPath = appPath;
         appRow.appPath = normPath;
     }
