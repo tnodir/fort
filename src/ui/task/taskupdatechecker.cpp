@@ -79,9 +79,7 @@ bool TaskUpdateChecker::parseBuffer(const QByteArray &buffer)
     if (m_version.isEmpty())
         return false;
 
-    // Check draft/prerelease
-    if (map["draft"].toBool() || map["prerelease"].toBool())
-        return false;
+    // `releases/latest/` cannot contain draft/prerelease
 
     // Check Assets
     const QVariantList assets = map["assets"].toList();
