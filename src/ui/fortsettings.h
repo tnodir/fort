@@ -32,6 +32,7 @@ public:
     bool isDefaultProfilePath() const { return m_isDefaultProfilePath; }
     bool noCache() const { return m_noCache; }
     bool noSplash() const { return m_noSplash; }
+    bool forceDebug() const { return m_forceDebug; }
     bool canInstallDriver() const { return m_canInstallDriver; }
     bool canStartService() const { return m_canStartService; }
 
@@ -129,6 +130,7 @@ private:
     uint m_isDefaultProfilePath : 1 = false;
     uint m_noCache : 1 = false;
     uint m_noSplash : 1 = false;
+    uint m_forceDebug : 1 = false;
     uint m_canInstallDriver : 1 = false;
     uint m_canStartService : 1 = false;
     uint m_isService : 1 = false;

@@ -118,6 +118,7 @@ void FortSettings::setupGlobal()
     m_isUserAdmin = OsUtil::isUserAdmin();
 
     m_noCache = settings.value("global/noCache").toBool();
+    m_forceDebug = settings.value("global/forceDebug").toBool();
     m_canInstallDriver = settings.value("global/canInstallDriver").toBool();
     m_canStartService = settings.value("global/canStartService").toBool();
     m_defaultLanguage = settings.value("global/defaultLanguage").toString();
@@ -228,9 +229,8 @@ void FortSettings::processArguments(const QStringList &args)
 {
     QCommandLineParser parser;
 
-    const QCommandLineOption profileOption(QStringList() << "p"
-                                                         << "profile",
-            "Directory to store settings.", "profile");
+    const QCommandLineOption profileOption(
+            QStringList() << "p" << "profile", "Directory to store settings.", "profile");
     parser.addOption(profileOption);
 
     const QCommandLineOption statOption("stat", "Directory to store statistics.", "stat");
@@ -260,8 +260,7 @@ void FortSettings::processArguments(const QStringList &args)
     const QCommandLineOption serviceOption("service", "Is running as a service?");
     parser.addOption(serviceOption);
 
-    const QCommandLineOption controlOption(QStringList() << "c"
-                                                         << "control",
+    const QCommandLineOption controlOption(QStringList() << "c" << "control",
             "Control running instance by executing the command.", "control");
     parser.addOption(controlOption);
 

@@ -21,6 +21,9 @@ public:
     bool hasService() const { return m_hasService; }
     void setHasService(bool v) { m_hasService = v; }
 
+    bool forceDebug() const { return m_forceDebug; }
+    void setForceDebug(bool v);
+
     bool debug() const { return m_debug; }
     void setDebug(bool v);
 
@@ -60,6 +63,7 @@ private:
 private:
     bool m_isService : 1 = false;
     bool m_hasService : 1 = false;
+    bool m_forceDebug : 1 = false;
     bool m_debug : 1 = false;
     bool m_console : 1 = false;
     bool m_writing : 1 = false;

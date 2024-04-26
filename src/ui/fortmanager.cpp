@@ -199,6 +199,7 @@ void FortManager::setupLogger()
     logger->setIsService(settings->isService());
     logger->setHasService(settings->hasService());
     logger->setPath(settings->logsPath());
+    logger->setForceDebug(settings->forceDebug());
 }
 
 void FortManager::updateLogger(const FirewallConf *conf)
