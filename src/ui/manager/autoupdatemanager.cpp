@@ -137,7 +137,7 @@ void AutoUpdateManager::clearUpdateDir()
     auto settings = IoC<FortSettings>();
 
     if (settings->isMaster()) {
-        if (FileUtil::removePath(m_updatePath)) {
+        if (FileUtil::pathExists(m_updatePath) && FileUtil::removePath(m_updatePath)) {
             qCDebug(LC) << "Dir removed:" << m_updatePath;
         }
     }
@@ -145,8 +145,11 @@ void AutoUpdateManager::clearUpdateDir()
 
 bool AutoUpdateManager::saveInstaller(const QByteArray &fileData)
 {
-    if (fileData.size() != m_downloadSize)
+    if (fileData.size() != m_downloadSize) {
+        qCWarning(LC) << "Installer size mismatch error:" << fileData.size()
+                      << "Expected:" << m_downloadSize << fileName();
         return false;
+    }
 
     if (!FileUtil::writeFileData(installerPath(), fileData)) {
         qCWarning(LC) << "Installer save error:" << installerPath();
