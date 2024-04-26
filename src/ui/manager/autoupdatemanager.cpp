@@ -3,6 +3,7 @@
 #include <QFileInfo>
 #include <QLoggingCategory>
 #include <QProcess>
+#include <QTimer>
 
 #include <fortsettings.h>
 #include <rpc/rpcmanager.h>
@@ -72,9 +73,8 @@ void AutoUpdateManager::setupManager()
 
     setupByTaskInfo(taskInfo);
 
-    if (!(isDownloaded() || isDownloading())) {
-        clearUpdateDir();
-    }
+    // Wait Installer's exit
+    QTimer::singleShot(500, this, &AutoUpdateManager::clearUpdateDir);
 }
 
 bool AutoUpdateManager::startDownload()
@@ -134,12 +134,19 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
 
 void AutoUpdateManager::clearUpdateDir()
 {
-    auto settings = IoC<FortSettings>();
+    if (isDownloaded())
+        return;
 
-    if (settings->isMaster()) {
-        if (FileUtil::pathExists(m_updatePath) && FileUtil::removePath(m_updatePath)) {
-            qCDebug(LC) << "Dir removed:" << m_updatePath;
-        }
+    if (!IoC<FortSettings>()->isMaster())
+        return;
+
+    if (!FileUtil::pathExists(m_updatePath))
+        return;
+
+    if (FileUtil::removePath(m_updatePath)) {
+        qCDebug(LC) << "Dir removed:" << m_updatePath;
+    } else {
+        qCDebug(LC) << "Dir remove error:" << m_updatePath;
     }
 }
 
