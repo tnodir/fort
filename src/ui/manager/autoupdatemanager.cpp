@@ -146,7 +146,7 @@ void AutoUpdateManager::clearUpdateDir()
     if (FileUtil::removePath(m_updatePath)) {
         qCDebug(LC) << "Dir removed:" << m_updatePath;
     } else {
-        qCDebug(LC) << "Dir remove error:" << m_updatePath;
+        qCWarning(LC) << "Dir remove error:" << m_updatePath;
     }
 }
 
@@ -176,7 +176,7 @@ bool AutoUpdateManager::runInstaller()
     const QStringList args = installerArgs(settings);
 
     if (!QProcess::startDetached(installerPath, args)) {
-        qCDebug(LC) << "Run Installer error:" << installerPath << args;
+        qCWarning(LC) << "Run Installer error:" << installerPath << args;
         return false;
     }
 
