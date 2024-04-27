@@ -11,7 +11,8 @@ const char *const commandString(Command cmd)
     switch (cmd) {
         CASE_STRING(CommandNone)
 
-        CASE_STRING(Prog)
+        CASE_STRING(CommandHome)
+        CASE_STRING(CommandProg)
 
         CASE_STRING(Rpc_Result_Ok)
         CASE_STRING(Rpc_Result_Error)
@@ -116,7 +117,8 @@ RpcManager managerByCommand(Command cmd)
     static const RpcManager g_commandManagers[] = {
         Rpc_NoneManager, // CommandNone = 0,
 
-        Rpc_NoneManager, // Prog,
+        Rpc_NoneManager, // CommandHome,
+        Rpc_NoneManager, // CommandProg,
 
         Rpc_NoneManager, // Rpc_Result_Ok,
         Rpc_NoneManager, // Rpc_Result_Error,
@@ -200,7 +202,8 @@ bool commandRequiresValidation(Command cmd)
     static const qint8 g_commandValidations[] = {
         0, // CommandNone = 0,
 
-        0, // Prog,
+        0, // CommandHome,
+        0, // CommandProg,
 
         0, // Rpc_Result_Ok,
         0, // Rpc_Result_Error,

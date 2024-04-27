@@ -50,15 +50,16 @@ private:
         ProgActionAllow = (1 << 2),
         ProgActionBlock = (1 << 3),
         ProgActionKill = (1 << 4),
-        ProgActionShow = (1 << 5),
     };
 
     bool processCommand(const ProcessCommandArgs &p);
 
+    bool processCommandHome(const ProcessCommandArgs &p);
+
     bool processCommandProg(const ProcessCommandArgs &p);
     bool processCommandProgAction(ProgAction progAction, const QString &appPath);
     static bool checkProgActionPassword(ProgAction progAction);
-    static ProgAction progActionByText(const QString &text);
+    static ProgAction progActionByText(const QString &commandText);
 
     static QString getServerName(bool isService = false);
 

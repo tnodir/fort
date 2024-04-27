@@ -102,8 +102,10 @@ bool ControlManager::processCommandClient()
     const auto settings = IoC<FortSettings>();
 
     Control::Command command;
-    if (settings->controlCommand() == "prog") {
-        command = Control::Prog;
+    if (settings->controlCommand() == "home") {
+        command = Control::CommandHome;
+    } else if (settings->controlCommand() == "prog") {
+        command = Control::CommandProg;
     } else {
         qCWarning(LC) << "Unknown control command:" << settings->controlCommand();
         return false;
@@ -204,10 +206,14 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
 bool ControlManager::processCommand(const ProcessCommandArgs &p)
 {
     switch (p.command) {
-    case Control::Prog:
+    case Control::CommandHome: {
+        if (processCommandHome(p))
+            return true;
+    } break;
+    case Control::CommandProg: {
         if (processCommandProg(p))
             return true;
-        break;
+    } break;
     default:
         if (IoC<RpcManager>()->processCommandRpc(p))
             return true;
@@ -219,11 +225,24 @@ bool ControlManager::processCommand(const ProcessCommandArgs &p)
     return false;
 }
 
+bool ControlManager::processCommandHome(const ProcessCommandArgs &p)
+{
+    const auto commandText = p.args.value(0).toString();
+
+    if (commandText == "show") {
+        IoC<WindowManager>()->exposeHomeWindow();
+        return true;
+    }
+
+    p.errorMessage = "Usage: home show";
+    return false;
+}
+
 bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
 {
     const ProgAction progAction = progActionByText(p.args.value(0).toString());
     if (progAction == ProgActionNone) {
-        p.errorMessage = "prog add|del|allow|block|kill|show [<app-path>]";
+        p.errorMessage = "Usage: prog add|del|allow|block|kill|show <app-path>";
         return false;
     }
 
@@ -254,10 +273,6 @@ bool ControlManager::processCommandProgAction(ProgAction progAction, const QStri
 
         return IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked, killProcess);
     }
-    case ProgActionShow: {
-        IoC<WindowManager>()->exposeHomeWindow();
-        return true;
-    }
     default:
         return false;
     }
@@ -272,25 +287,22 @@ bool ControlManager::checkProgActionPassword(ProgAction progAction)
             || IoC<WindowManager>()->checkPassword(/*temporary=*/true);
 }
 
-ControlManager::ProgAction ControlManager::progActionByText(const QString &text)
+ControlManager::ProgAction ControlManager::progActionByText(const QString &commandText)
 {
-    if (text == "add")
+    if (commandText == "add")
         return ProgActionAdd;
 
-    if (text == "del")
+    if (commandText == "del")
         return ProgActionDel;
 
-    if (text == "allow")
+    if (commandText == "allow")
         return ProgActionAllow;
 
-    if (text == "block")
+    if (commandText == "block")
         return ProgActionBlock;
 
-    if (text == "kill")
+    if (commandText == "kill")
         return ProgActionKill;
-
-    if (text == "show")
-        return ProgActionShow;
 
     return ProgActionNone;
 }

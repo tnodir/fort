@@ -11,7 +11,8 @@ namespace Control {
 enum Command : qint8 {
     CommandNone = 0,
 
-    Prog,
+    CommandHome,
+    CommandProg,
 
     Rpc_Result_Ok,
     Rpc_Result_Error,
