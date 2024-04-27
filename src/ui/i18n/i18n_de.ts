@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Install</source>
-        <translation type="unfinished"></translation>
+        <translation>Installieren</translation>
     </message>
 </context>
 <context>
