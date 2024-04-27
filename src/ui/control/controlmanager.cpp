@@ -221,71 +221,78 @@ bool ControlManager::processCommand(const ProcessCommandArgs &p)
 
 bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
 {
-    const int argsSize = p.args.size();
-    if (argsSize < 1) {
-        p.errorMessage = "prog <command>";
+    const ProgAction progAction = progActionByText(p.args.value(0).toString());
+    if (progAction == ProgActionNone) {
+        p.errorMessage = "prog add|del|allow|block|kill|show [<app-path>]";
         return false;
     }
 
-    const QString progCommand = p.args.at(0).toString();
-
-    // Add command
-    if (progCommand == "add") {
-        return processCommandProgAdd(p);
-    }
-    // Allow/Block command
-    if (progCommand == "allow" || progCommand == "block") {
-        const bool blocked = (progCommand == "block");
-        return processCommandProgAction(p, blocked);
-    }
-    // Show command
-    else if (progCommand == "show") {
-        IoC<WindowManager>()->exposeHomeWindow();
-        return true;
-    }
-
-    return false;
-}
-
-bool ControlManager::processCommandProgAdd(const ProcessCommandArgs &p)
-{
-    const int argsSize = p.args.size();
-    if (argsSize < 2) {
-        p.errorMessage = "prog add <app-path>";
-        return false;
-    }
-
-    const QString appPath = p.args.at(1).toString();
-
-    if (!IoC<WindowManager>()->showProgramEditForm(appPath)) {
-        p.errorMessage = "Edit Program is already opened";
-        return false;
-    }
-
-    return true;
-}
-
-bool ControlManager::processCommandProgAction(const ProcessCommandArgs &p, bool blocked)
-{
-    const int argsSize = p.args.size();
-    if (argsSize < 2) {
-        p.errorMessage = "prog allow|block <app-path>";
-        return false;
-    }
-
-    if (!IoC<WindowManager>()->checkPassword(/*temporary=*/true)) {
+    if (!checkProgActionPassword(progAction)) {
         p.errorMessage = "Password required";
         return false;
     }
 
-    const QString appPath = p.args.at(1).toString();
+    const QString appPath = p.args.value(1).toString();
 
-    if (!IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked)) {
-        p.errorMessage = "Cannot update Program";
+    return processCommandProgAction(progAction, appPath);
+}
+
+bool ControlManager::processCommandProgAction(ProgAction progAction, const QString &appPath)
+{
+    switch (progAction) {
+    case ProgActionAdd: {
+        return IoC<WindowManager>()->showProgramEditForm(appPath);
+    }
+    case ProgActionDel: {
+        return IoC<ConfAppManager>()->deleteAppPath(appPath);
+    }
+    case ProgActionAllow:
+    case ProgActionBlock:
+    case ProgActionKill: {
+        const bool blocked = (progAction != ProgActionAllow);
+        const bool killProcess = (progAction == ProgActionKill);
+
+        return IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked, killProcess);
+    }
+    case ProgActionShow: {
+        IoC<WindowManager>()->exposeHomeWindow();
+        return true;
+    }
+    default:
         return false;
     }
+}
 
-    return true;
+bool ControlManager::checkProgActionPassword(ProgAction progAction)
+{
+    constexpr const quint32 passwordRequiredActions =
+            ProgActionDel | ProgActionAllow | ProgActionBlock | ProgActionKill;
+
+    return (passwordRequiredActions & progAction) == 0
+            || IoC<WindowManager>()->checkPassword(/*temporary=*/true);
+}
+
+ControlManager::ProgAction ControlManager::progActionByText(const QString &text)
+{
+    if (text == "add")
+        return ProgActionAdd;
+
+    if (text == "del")
+        return ProgActionDel;
+
+    if (text == "allow")
+        return ProgActionAllow;
+
+    if (text == "block")
+        return ProgActionBlock;
+
+    if (text == "kill")
+        return ProgActionKill;
+
+    if (text == "show")
+        return ProgActionShow;
+
+    return ProgActionNone;
 }
 
 QString ControlManager::getServerName(bool isService)

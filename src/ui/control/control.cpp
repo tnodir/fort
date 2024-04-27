@@ -32,6 +32,7 @@ const char *const commandString(Command cmd)
         CASE_STRING(Rpc_ConfManager_confChanged)
 
         CASE_STRING(Rpc_ConfAppManager_addOrUpdateAppPath)
+        CASE_STRING(Rpc_ConfAppManager_deleteAppPath)
         CASE_STRING(Rpc_ConfAppManager_addOrUpdateApp)
         CASE_STRING(Rpc_ConfAppManager_updateApp)
         CASE_STRING(Rpc_ConfAppManager_updateAppName)
@@ -136,6 +137,7 @@ RpcManager managerByCommand(Command cmd)
         Rpc_ConfManager, // Rpc_ConfManager_confChanged,
 
         Rpc_ConfAppManager, // Rpc_ConfAppManager_addOrUpdateAppPath,
+        Rpc_ConfAppManager, // Rpc_ConfAppManager_deleteAppPath,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_addOrUpdateApp,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_updateApp,
         Rpc_ConfAppManager, // Rpc_ConfAppManager_updateAppName,
@@ -219,6 +221,7 @@ bool commandRequiresValidation(Command cmd)
         0, // Rpc_ConfManager_confChanged,
 
         true, // Rpc_ConfAppManager_addOrUpdateAppPath,
+        true, // Rpc_ConfAppManager_deleteAppPath,
         true, // Rpc_ConfAppManager_addOrUpdateApp,
         true, // Rpc_ConfAppManager_updateApp,
         true, // Rpc_ConfAppManager_updateAppName,

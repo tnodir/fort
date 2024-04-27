@@ -297,7 +297,8 @@ qint64 ConfAppManager::appIdByPath(const QString &appOriginPath, QString &normPa
     return DbQuery(sqliteDb()).sql(sqlSelectAppIdByPath).vars({ normPath }).execute().toLongLong();
 }
 
-bool ConfAppManager::addOrUpdateAppPath(const QString &appOriginPath, bool blocked)
+bool ConfAppManager::addOrUpdateAppPath(
+        const QString &appOriginPath, bool blocked, bool killProcess)
 {
     App app;
     app.blocked = blocked;
@@ -306,10 +307,21 @@ bool ConfAppManager::addOrUpdateAppPath(const QString &appOriginPath, bool block
     bool ok = addAppPathBlocked(app);
 
     if (!ok && app.appId > 0) {
-        ok = updateAppsBlocked({ app.appId }, blocked, /*killProcess=*/false);
+        ok = updateAppsBlocked({ app.appId }, blocked, killProcess);
     }
 
     return ok;
+}
+
+bool ConfAppManager::deleteAppPath(const QString &appOriginPath)
+{
+    QString normPath;
+    const qint64 appId = appIdByPath(appOriginPath, normPath);
+
+    if (appId <= 0)
+        return false; // does not exist
+
+    return deleteApps({ appId });
 }
 
 bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)

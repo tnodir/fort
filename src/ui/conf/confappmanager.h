@@ -35,7 +35,9 @@ public:
 
     qint64 appIdByPath(const QString &appOriginPath, QString &normPath);
 
-    virtual bool addOrUpdateAppPath(const QString &appOriginPath, bool blocked);
+    virtual bool addOrUpdateAppPath(const QString &appOriginPath, bool blocked, bool killProcess);
+    virtual bool deleteAppPath(const QString &appOriginPath);
+
     virtual bool addOrUpdateApp(App &app, bool onlyUpdate = false);
     virtual bool updateApp(App &app);
     virtual bool updateAppName(qint64 appId, const QString &appName);

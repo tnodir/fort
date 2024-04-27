@@ -13,7 +13,14 @@ namespace {
 bool processConfAppManager_addOrUpdateAppPath(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
 {
-    return confAppManager->addOrUpdateAppPath(p.args.value(0).toString(), p.args.value(1).toBool());
+    return confAppManager->addOrUpdateAppPath(
+            p.args.value(0).toString(), p.args.value(1).toBool(), p.args.value(2).toBool());
+}
+
+bool processConfAppManager_deleteAppPath(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->deleteAppPath(p.args.value(0).toString());
 }
 
 bool processConfAppManager_addOrUpdateApp(
@@ -68,6 +75,7 @@ using processConfAppManager_func = bool (*)(
 
 static processConfAppManager_func processConfAppManager_funcList[] = {
     &processConfAppManager_addOrUpdateAppPath, // Rpc_ConfAppManager_addOrUpdateAppPath,
+    &processConfAppManager_deleteAppPath, // Rpc_ConfAppManager_deleteAppPath,
     &processConfAppManager_addOrUpdateApp, // Rpc_ConfAppManager_addOrUpdateApp,
     &processConfAppManager_updateApp, // Rpc_ConfAppManager_updateApp,
     &processConfAppManager_updateAppName, // Rpc_ConfAppManager_updateAppName,
@@ -90,10 +98,17 @@ inline bool processConfAppManagerRpcResult(
 
 ConfAppManagerRpc::ConfAppManagerRpc(QObject *parent) : ConfAppManager(parent) { }
 
-bool ConfAppManagerRpc::addOrUpdateAppPath(const QString &appOriginPath, bool blocked)
+bool ConfAppManagerRpc::addOrUpdateAppPath(
+        const QString &appOriginPath, bool blocked, bool killProcess)
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_addOrUpdateAppPath,
+            { appOriginPath, blocked, killProcess });
+}
+
+bool ConfAppManagerRpc::deleteAppPath(const QString &appOriginPath)
 {
     return IoC<RpcManager>()->doOnServer(
-            Control::Rpc_ConfAppManager_addOrUpdateAppPath, { appOriginPath, blocked });
+            Control::Rpc_ConfAppManager_deleteAppPath, { appOriginPath });
 }
 
 bool ConfAppManagerRpc::addOrUpdateApp(App &app, bool onlyUpdate)

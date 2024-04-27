@@ -32,6 +32,7 @@ enum Command : qint8 {
     Rpc_ConfManager_confChanged,
 
     Rpc_ConfAppManager_addOrUpdateAppPath,
+    Rpc_ConfAppManager_deleteAppPath,
     Rpc_ConfAppManager_addOrUpdateApp,
     Rpc_ConfAppManager_updateApp,
     Rpc_ConfAppManager_updateAppName,
