@@ -51,7 +51,7 @@ public:
 public slots:
     virtual bool startDownload();
 
-    bool runInstaller();
+    virtual bool runInstaller();
 
 signals:
     void flagsChanged();
@@ -66,6 +66,7 @@ protected:
     void setupDownloader() override;
 
     QString installerPath() const { return m_updatePath + m_fileName; }
+    QString installerLogPath() const { return m_updatePath + "log.txt"; }
 
 protected slots:
     void downloadFinished(const QByteArray &data, bool success) override;

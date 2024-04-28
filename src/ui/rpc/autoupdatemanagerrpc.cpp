@@ -36,11 +36,18 @@ bool processAutoUpdateManager_startDownload(AutoUpdateManager *autoUpdateManager
     return autoUpdateManager->startDownload();
 }
 
+bool processAutoUpdateManager_runInstaller(AutoUpdateManager *autoUpdateManager,
+        const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+{
+    return autoUpdateManager->runInstaller();
+}
+
 using processAutoUpdateManager_func = bool (*)(
         AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p, QVariantList &resArgs);
 
 static processAutoUpdateManager_func processAutoUpdateManager_funcList[] = {
     &processAutoUpdateManager_startDownload, // Rpc_AutoUpdateManager_startDownload,
+    &processAutoUpdateManager_runInstaller, // Rpc_AutoUpdateManager_runInstaller,
 };
 
 inline bool processAutoUpdateManagerRpcResult(
@@ -48,7 +55,7 @@ inline bool processAutoUpdateManagerRpcResult(
 {
     const processAutoUpdateManager_func func = RpcManager::getProcessFunc(p.command,
             processAutoUpdateManager_funcList, Control::Rpc_AutoUpdateManager_startDownload,
-            Control::Rpc_AutoUpdateManager_startDownload);
+            Control::Rpc_AutoUpdateManager_runInstaller);
 
     return func ? func(autoUpdateManager, p, resArgs) : false;
 }
@@ -135,6 +142,11 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
 bool AutoUpdateManagerRpc::startDownload()
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_AutoUpdateManager_startDownload);
+}
+
+bool AutoUpdateManagerRpc::runInstaller()
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_AutoUpdateManager_runInstaller);
 }
 
 void AutoUpdateManagerRpc::setupManager()

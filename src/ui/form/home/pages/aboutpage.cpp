@@ -8,6 +8,7 @@
 
 #include <form/controls/controlutil.h>
 #include <form/home/homecontroller.h>
+#include <fortsettings.h>
 #include <manager/autoupdatemanager.h>
 #include <task/taskinfoupdatechecker.h>
 #include <task/taskmanager.h>
@@ -98,6 +99,8 @@ QLayout *AboutPage::setupButtonsLayout()
     // Download
     m_btDownload = ControlUtil::createFlatToolButton(
             ":/icons/download.png", [&] { autoUpdateManager()->startDownload(); });
+
+    m_btDownload->setEnabled(!settings()->isPortable());
 
     // Install
     m_btInstall = ControlUtil::createFlatToolButton(

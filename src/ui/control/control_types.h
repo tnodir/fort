@@ -23,6 +23,7 @@ enum Command : qint8 {
     Rpc_AppInfoManager_checkLookupInfoFinished,
 
     Rpc_AutoUpdateManager_startDownload,
+    Rpc_AutoUpdateManager_runInstaller,
     Rpc_AutoUpdateManager_updateState,
     Rpc_AutoUpdateManager_restartClients,
 

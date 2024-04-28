@@ -51,7 +51,8 @@ sc start %DRIVERSVC%
 
 :EXIT
 @echo End execution... Result Code = %RCODE%
-@if %RCODE% neq 0 (
+@if %RCODE% neq 0 if "%1" neq "/SILENT" (
+    @echo ARGS: %*
     @pause
 )
 @exit /b %RCODE%

@@ -23,6 +23,8 @@ ServiceManager::ServiceManager(QObject *parent) : QObject(parent) { }
 
 void ServiceManager::setUp()
 {
+    qApp->connect(qApp, &QObject::destroyed, [] { reportStatus(SERVICE_STOPPED); });
+
     setupControlManager();
     setupConfManager();
 }
@@ -110,8 +112,6 @@ void ServiceManager::processControl(quint32 code, quint32 eventType)
         Q_FALLTHROUGH();
     case FORT_SERVICE_CONTROL_UNINSTALL:
     case SERVICE_CONTROL_SHUTDOWN: {
-        qApp->connect(qApp, &QObject::destroyed, [] { reportStatus(SERVICE_STOPPED); });
-
         OsUtil::quit("service control"); // it's threadsafe
 
         state = SERVICE_STOP_PENDING;

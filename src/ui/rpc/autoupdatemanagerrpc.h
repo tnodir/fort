@@ -32,6 +32,8 @@ public:
 public slots:
     bool startDownload() override;
 
+    bool runInstaller() override;
+
 protected:
     void setupManager() override;
 

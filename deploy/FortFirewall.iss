@@ -87,7 +87,8 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"
 [Run]
 ; 1. Uninstall -> 2. Install Driver -> 3. Portable -> 4. Service
 Filename: "{#APP_EXE}"; Parameters: "-u"
-Filename: "{app}\driver\scripts\reinstall.bat"; Description: "Re-install driver"
+Filename: "{app}\driver\scripts\reinstall.bat"; Parameters: {code:DriverInstallArgs}; \
+  Description: "Re-install driver"
 
 Filename: "{#APP_EXE}"; Parameters: "-i portable"; Tasks: portable
 Filename: "{#APP_EXE}"; Parameters: "-i service"; Tasks: service
@@ -136,6 +137,14 @@ begin
       Result := True;
       Exit;
     end;
+end;
+
+function DriverInstallArgs(Value: string): string;
+begin
+  if ParamExists('/VERYSILENT') then
+  begin
+    Result := '/SILENT';
+  end;
 end;
 
 function ShouldLaunch: Boolean;

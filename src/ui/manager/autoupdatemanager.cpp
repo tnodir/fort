@@ -180,23 +180,25 @@ bool AutoUpdateManager::runInstaller()
         return false;
     }
 
+    qCDebug(LC) << "Run Installer:" << installerPath << args;
+
     if (settings->hasService()) {
         emit restartClients(installerPath);
-    } else {
-        OsUtil::quit("new version install");
     }
 
-    qCDebug(LC) << "Run Installer:" << installerPath << args;
+    if (settings->isMaster()) {
+        OsUtil::quit("new version install");
+    }
 
     return true;
 }
 
 QStringList AutoUpdateManager::installerArgs(FortSettings *settings)
 {
-    QStringList args;
+    QStringList args = { "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NOCANCEL" };
 
-    if (!settings->isPortable()) {
-        args << "/SILENT";
+    if (settings->forceDebug()) {
+        args << "/LOG";
     }
 
     if (!settings->hasService()) {

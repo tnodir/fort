@@ -5,4 +5,4 @@
 
 %COMSPEC% /C "%~dp0uninstall.bat"
 
-"%~dp0install.bat"
+"%~dp0install.bat" %*
