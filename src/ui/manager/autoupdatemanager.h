@@ -48,6 +48,8 @@ public:
     void setUp() override;
     void tearDown() override;
 
+    QString installerPath() const { return m_updatePath + m_fileName; }
+
 public slots:
     virtual bool startDownload();
 
@@ -58,14 +60,12 @@ signals:
     void bytesReceivedChanged(int size);
     void fileNameChanged();
 
-    void restartClients(const QString &installerPath);
+    void restartClients();
 
 protected:
     virtual void setupManager();
 
     void setupDownloader() override;
-
-    QString installerPath() const { return m_updatePath + m_fileName; }
 
 protected slots:
     void downloadFinished(const QByteArray &data, bool success) override;

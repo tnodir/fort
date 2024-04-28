@@ -18,14 +18,12 @@ inline bool processAutoUpdateManager_updateState(
 }
 
 inline bool processAutoUpdateManager_restartClients(
-        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p)
+        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs & /*p*/)
 {
-    const QString installerPath = p.args.value(0).toString();
-
     if (qobject_cast<AutoUpdateManagerRpc *>(autoUpdateManager)) {
-        OsUtil::restartClient(installerPath);
+        OsUtil::restartClient(autoUpdateManager->installerPath());
     } else {
-        emit autoUpdateManager->restartClients(installerPath);
+        emit autoUpdateManager->restartClients();
     }
     return true;
 }
@@ -133,10 +131,7 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
             updateClientStates);
 
     connect(autoUpdateManager, &AutoUpdateManager::restartClients, rpcManager,
-            [=](const QString &installerPath) {
-                rpcManager->invokeOnClients(
-                        Control::Rpc_AutoUpdateManager_restartClients, { installerPath });
-            });
+            [=] { rpcManager->invokeOnClients(Control::Rpc_AutoUpdateManager_restartClients); });
 }
 
 bool AutoUpdateManagerRpc::startDownload()
@@ -159,8 +154,5 @@ void AutoUpdateManagerRpc::setupClientSignals()
     auto rpcManager = IoCDependency<RpcManager>();
 
     connect(this, &AutoUpdateManager::restartClients, rpcManager,
-            [=](const QString &installerPath) {
-                rpcManager->invokeOnServer(
-                        Control::Rpc_AutoUpdateManager_restartClients, { installerPath });
-            });
+            [=] { rpcManager->invokeOnServer(Control::Rpc_AutoUpdateManager_restartClients); });
 }

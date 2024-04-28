@@ -183,7 +183,7 @@ bool AutoUpdateManager::runInstaller()
     qCDebug(LC) << "Run Installer:" << installerPath << args;
 
     if (settings->hasService()) {
-        emit restartClients(installerPath);
+        emit restartClients();
     }
 
     if (settings->isMaster()) {

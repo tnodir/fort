@@ -7,7 +7,7 @@
 @shift
 
 @rem Wait for Installer's file deletion
-@for /l %%i in (0,1,9) do (
+@for /l %%i in (0,1,3) do (
     timeout /t 1 > NUL
     @if not exist "%INSTALLER_PATH%" goto EXIT
 )
