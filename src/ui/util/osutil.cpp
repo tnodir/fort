@@ -176,10 +176,14 @@ bool OsUtil::allowOtherForegroundWindows()
 
 void OsUtil::restartClient(const QString &installerPath)
 {
+    const QLatin1String scriptPath("delay-start.bat");
+
     QStringList args = QCoreApplication::arguments();
     args.replace(0, FileUtil::toNativeSeparators(installerPath)); // replace a program path
 
-    QProcess::startDetached("delay-start.bat", args);
+    qCDebug(LC) << "restartClient:" << scriptPath << args;
+
+    QProcess::startDetached(scriptPath, args);
 
     quit("required client restart");
 }
@@ -190,6 +194,8 @@ void OsUtil::restart()
 
     QStringList args = QCoreApplication::arguments();
     args.removeFirst(); // remove a program path
+
+    qCDebug(LC) << "restart:" << appFilePath << args;
 
     qApp->connect(qApp, &QObject::destroyed, [=] { QProcess::startDetached(appFilePath, args); });
 
