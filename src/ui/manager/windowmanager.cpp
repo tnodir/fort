@@ -336,10 +336,11 @@ void WindowManager::quitHomeWindow(QEvent *event)
     trayIcon()->quitProgram();
 }
 
-void WindowManager::exposeHomeWindow()
+bool WindowManager::exposeHomeWindow()
 {
     showHomeWindow();
     homeWindow()->exposeWindow();
+    return true;
 }
 
 void WindowManager::showHomeWindowAbout()

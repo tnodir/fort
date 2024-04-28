@@ -37,6 +37,8 @@ public:
     bool postCommand(Control::Command command, const QVariantList &args);
 
 private slots:
+    bool connectToAnyServer(ControlWorker &w);
+
     void onNewConnection();
     void onDisconnected();
 

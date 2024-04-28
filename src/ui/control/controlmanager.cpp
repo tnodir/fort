@@ -61,18 +61,19 @@ ControlWorker *ControlManager::newServiceClient(QObject *parent) const
 
 bool ControlManager::listen()
 {
-    const auto settings = IoC<FortSettings>();
-
     if (m_server) {
         return m_server->isListening();
     }
 
+    const bool isService = IoC<FortSettings>()->isService();
+
     m_server = new QLocalServer(this);
     m_server->setMaxPendingConnections(maxClientsCount);
-    m_server->setSocketOptions(
-            settings->isService() ? QLocalServer::WorldAccessOption : QLocalServer::NoOptions);
 
-    if (!m_server->listen(getServerName(settings->isService()))) {
+    m_server->setSocketOptions(
+            isService ? QLocalServer::WorldAccessOption : QLocalServer::NoOptions);
+
+    if (!m_server->listen(getServerName(isService))) {
         qCWarning(LC) << "Server listen error:" << m_server->errorString();
         return false;
     }
@@ -125,9 +126,8 @@ bool ControlManager::postCommand(Control::Command command, const QVariantList &a
     QLocalSocket socket;
     ControlWorker w(&socket);
 
-    // Connect to server
-    w.setServerName(getServerName(/*isService=*/false));
-    if (!w.connectToServer())
+    // Connect to UI process or Service
+    if (!connectToAnyServer(w))
         return false;
 
     // Send data
@@ -137,6 +137,21 @@ bool ControlManager::postCommand(Control::Command command, const QVariantList &a
     w.waitForSent();
 
     return true;
+}
+
+bool ControlManager::connectToAnyServer(ControlWorker &w)
+{
+    // Connect to UI process server
+    w.setServerName(getServerName(/*isService=*/false));
+    if (w.connectToServer())
+        return true;
+
+    // Connect to Service server
+    w.setServerName(getServerName(/*isService=*/true));
+    if (w.connectToServer())
+        return true;
+
+    return false;
 }
 
 void ControlManager::onNewConnection()
@@ -230,8 +245,7 @@ bool ControlManager::processCommandHome(const ProcessCommandArgs &p)
     const auto commandText = p.args.value(0).toString();
 
     if (commandText == "show") {
-        IoC<WindowManager>()->exposeHomeWindow();
-        return true;
+        return IoC<WindowManager>()->exposeHomeWindow();
     }
 
     p.errorMessage = "Usage: home show";

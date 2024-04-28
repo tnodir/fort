@@ -14,6 +14,12 @@ public:
     void tearDown() override { }
 
 public slots:
+    bool exposeHomeWindow() override;
+
+    bool showProgramEditForm(const QString &appPath) override;
+
+    bool checkPassword(bool temporary = false) override;
+
     void showErrorBox(const QString &text, const QString &title = QString(),
             QWidget *parent = nullptr) override;
     void showInfoBox(const QString &text, const QString &title = QString(),

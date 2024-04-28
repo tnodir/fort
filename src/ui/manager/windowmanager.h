@@ -78,13 +78,13 @@ public slots:
     void closeHomeWindow();
     void quitHomeWindow(QEvent *event);
 
-    void exposeHomeWindow();
+    virtual bool exposeHomeWindow();
     void showHomeWindowAbout();
 
     bool showProgramsWindow();
     void closeProgramsWindow();
 
-    bool showProgramEditForm(const QString &appPath);
+    virtual bool showProgramEditForm(const QString &appPath);
 
     void showProgramAlertWindow();
     void closeProgramAlertWindow();
@@ -120,7 +120,7 @@ public slots:
     void processRestartRequired(const QString &info = {});
 
     bool checkWindowPassword(WindowCode code);
-    bool checkPassword(bool temporary = false);
+    virtual bool checkPassword(bool temporary = false);
 
     virtual void showErrorBox(
             const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
