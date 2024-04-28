@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.12.3-test07, 2024-04-27:
+v3.12.3, 2024-04-28:
 - UI: Support "-c prog add|del|allow|block|kill PATH" command line argument.
 - UI: MyFort: About: Add Download/Install buttons.
 - Installer: Add "/LAUNCH" argument (useful with "/SILENT").
