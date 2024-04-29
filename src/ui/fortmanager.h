@@ -21,7 +21,7 @@ public:
     void initialize();
 
     static void install(const char *arg);
-    static void uninstall();
+    static void uninstall(const char *arg = nullptr);
 
 public slots:
     bool installDriver();

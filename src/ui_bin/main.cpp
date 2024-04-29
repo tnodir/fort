@@ -32,11 +32,11 @@ bool processArgs(int argc, char *argv[], int &rc)
     if (argc <= 1)
         return false;
 
-    const char *arg = argv[1];
-    if (arg[0] != '-')
+    const char *arg1 = argv[1];
+    if (arg1[0] != '-')
         return false;
 
-    const char param = arg[1];
+    const char param = arg1[1];
 
     // Stop
     if (param == 's') {
@@ -44,15 +44,17 @@ bool processArgs(int argc, char *argv[], int &rc)
         return true;
     }
 
+    const char *arg2 = (argc > 2 ? argv[2] : nullptr);
+
     // Uninstall
     if (param == 'u') {
-        FortManager::uninstall();
+        FortManager::uninstall(arg2);
         return true;
     }
 
     // Install
-    if (param == 'i' && argc > 2) {
-        FortManager::install(argv[2]);
+    if (param == 'i' && arg2) {
+        FortManager::install(arg2);
         return true;
     }
 
