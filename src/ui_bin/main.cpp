@@ -27,38 +27,39 @@ enum FortError {
     FortErrorService,
 };
 
+inline bool processArgsParam(const char param, const char *arg2, int &rc)
+{
+    switch (param) {
+    case 's': { // Stop
+        rc = StartupUtil::stopService() ? 0 : FortErrorService;
+    } break;
+    case 'i': { // Install
+        FortManager::install(arg2);
+    } break;
+    case 'u': { // Uninstall
+        FortManager::uninstall(arg2);
+    } break;
+    default:
+        return false;
+    }
+
+    return true;
+}
+
 bool processArgs(int argc, char *argv[], int &rc)
 {
     if (argc <= 1)
         return false;
 
     const char *arg1 = argv[1];
-    if (arg1[0] != '-')
+    if (arg1[0] != '-') {
+        rc = -1;
         return false;
-
-    const char param = arg1[1];
-
-    // Stop
-    if (param == 's') {
-        rc = StartupUtil::stopService() ? 0 : FortErrorService;
-        return true;
     }
 
     const char *arg2 = (argc > 2 ? argv[2] : nullptr);
 
-    // Uninstall
-    if (param == 'u') {
-        FortManager::uninstall(arg2);
-        return true;
-    }
-
-    // Install
-    if (param == 'i' && arg2) {
-        FortManager::install(arg2);
-        return true;
-    }
-
-    return false;
+    return processArgsParam(arg1[1], arg2, rc);
 }
 
 void setupCrashHandler(CrashHandler &crashHandler, const FortSettings &settings)

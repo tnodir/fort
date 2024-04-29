@@ -239,6 +239,9 @@ void FortManager::deleteManagers()
 
 void FortManager::install(const char *arg)
 {
+    if (!arg)
+        return;
+
     switch (arg[0]) {
     case 'b': { // "boot_filter"
         DriverCommon::provRegister(/*bootFilter=*/true); // Register booted provider
