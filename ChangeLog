@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.12.5, 2024-04-30:
+- UI: Portable: Istall driver on startup and uninstall on exit.
+- Installer: Portable: Don't install driver to system.
+
 v3.12.4, 2024-04-29:
 - Process "-c prog ..." command line arguments by Service directly in absence of UI process.
 - Installer: Don't uninstall "boot filter" on upgrade.
