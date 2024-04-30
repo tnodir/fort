@@ -29,6 +29,7 @@ public:
 
     void setUp() override;
 
+    bool checkReinstallDriver();
     bool reinstallDriver();
     bool uninstallDriver();
 

@@ -1,10 +1,6 @@
 @rem Uninstall driver
 
-@set BASENAME=fortfw
-@set DSTPATH=%SystemRoot%\System32\drivers\%BASENAME%.sys
-
-@set DRIVERSVC=%BASENAME%
-@set FORTSVC=FortFirewallSvc
+@call "%~dp0setup-vars.bat"
 
 
 @rem Stop and delete the FortFirewall service

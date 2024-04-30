@@ -1,16 +1,6 @@
 @rem Install driver
 
-@set ARCH=x86
-@if "%PROCESSOR_ARCHITECTURE%" == "AMD64" @set ARCH=x86_64
-@if "%PROCESSOR_ARCHITECTURE%" == "ARM64" @set ARCH=ARM64
-
-@set BASENAME=fortfw
-@set FILENAME=%BASENAME%.sys
-@set SRCPATH=%~dp0..\%ARCH%\%FILENAME%
-@set DSTPATH=%SystemRoot%\System32\drivers\%FILENAME%
-
-@set DRIVERSVC=%BASENAME%
-@set DISPNAME=Fort Firewall Driver
+@call "%~dp0setup-vars.bat"
 
 
 @rem Copy driver to system storage
@@ -20,7 +10,7 @@
     @goto EXIT
 )
 
-copy "%SRCPATH%" "%DSTPATH%"
+robocopy "%SRCPATH%" "%DSTPATH%"
 @if ERRORLEVEL 1 (
     @echo Error: Cannot copy driver to system
     @set RCODE=%ERRORLEVEL%

@@ -136,6 +136,11 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf)
     return res;
 }
 
+bool DriverManager::checkReinstallDriver()
+{
+    return executeCommand("check-reinstall.bat");
+}
+
 bool DriverManager::reinstallDriver()
 {
     return executeCommand("reinstall.bat");

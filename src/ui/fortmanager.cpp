@@ -178,10 +178,12 @@ void FortManager::initialize()
     setupTaskManager();
     setupServiceInfoManager();
 
+    checkReinstallDriver();
     setupDriver();
+
     loadConf();
 
-    checkInstallDriver();
+    checkDriverOpened();
     checkStartService();
 }
 
@@ -281,7 +283,7 @@ bool FortManager::installDriver()
     IoC<DriverManager>()->reinstallDriver();
 
     if (IoC<FortSettings>()->hasService()) {
-        // Re-install the service and app restart required to continue
+        // Install the service and app restart required to continue
         StartupUtil::setServiceInstalled(true);
         processRestartRequired(tr("Driver reinstalled"));
     } else {
@@ -332,19 +334,35 @@ void FortManager::closeDriver()
     QCoreApplication::sendPostedEvents(this);
 }
 
-void FortManager::checkInstallDriver()
+bool FortManager::canInstallDriver() const
 {
-    auto driverManager = IoC<DriverManager>();
-
-    if (driverManager->isDeviceOpened())
-        return;
-
     const auto settings = IoC<FortSettings>();
 
     const bool canInstallDriver = (settings->canInstallDriver() || settings->isPortable());
     const bool isMasterAdmin = (settings->isMaster() && settings->isUserAdmin());
 
-    if (canInstallDriver && isMasterAdmin) {
+    return (canInstallDriver && isMasterAdmin);
+}
+
+void FortManager::checkReinstallDriver()
+{
+    if (!canInstallDriver())
+        return;
+
+    IoC<DriverManager>()->checkReinstallDriver();
+
+    if (IoC<FortSettings>()->hasService()) {
+        // Install the service
+        StartupUtil::setServiceInstalled(true);
+    }
+}
+
+void FortManager::checkDriverOpened()
+{
+    if (IoC<DriverManager>()->isDeviceOpened())
+        return;
+
+    if (canInstallDriver()) {
         installDriver();
     }
 }

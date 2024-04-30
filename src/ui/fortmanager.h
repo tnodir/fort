@@ -44,7 +44,9 @@ private:
     bool setupDriver();
     void closeDriver();
 
-    void checkInstallDriver();
+    bool canInstallDriver() const;
+    void checkReinstallDriver();
+    void checkDriverOpened();
     void checkStartService();
 
     void setupEnvManager();
