@@ -21,7 +21,7 @@ inline bool processAutoUpdateManager_restartClients(
         AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs & /*p*/)
 {
     if (qobject_cast<AutoUpdateManagerRpc *>(autoUpdateManager)) {
-        OsUtil::restartClient(autoUpdateManager->installerPath());
+        OsUtil::restartClient();
     } else {
         emit autoUpdateManager->restartClients();
     }

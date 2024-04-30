@@ -174,16 +174,18 @@ bool OsUtil::allowOtherForegroundWindows()
     return AllowSetForegroundWindow(ASFW_ANY);
 }
 
-void OsUtil::restartClient(const QString &installerPath)
+void OsUtil::restartClient()
 {
-    const QLatin1String scriptPath("delay-start.bat");
+    const QFileInfo fi(QCoreApplication::applicationFilePath());
 
-    QStringList args = QCoreApplication::arguments();
-    args.replace(0, FileUtil::toNativeSeparators(installerPath)); // replace a program path
+    const auto scriptPath = QLatin1String("cmd.exe");
+    const auto command = QString("timeout /t 2 >NUL & start %1").arg(fi.fileName());
+
+    const QStringList args = { "/c", command };
 
     qCDebug(LC) << "restartClient:" << scriptPath << args;
 
-    QProcess::startDetached(scriptPath, args);
+    QProcess::startDetached(scriptPath, args, /*workingDirectory=*/fi.path());
 
     quit("required client restart");
 }
