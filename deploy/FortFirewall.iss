@@ -114,7 +114,7 @@ Type: files; Name: "{app}\qt*.*"
 Type: filesandordirs; Name: "{app}\plugins"
 Type: files; Name: "{app}\curl*.*"
 Type: files; Name: "{app}\ChangeLog"
-;Type: files; Name: "{app}\delay-start.bat"
+Type: files; Name: "{app}\delay-start.bat"
 
 [Registry]
 Root: HKLM; Subkey: "System\CurrentControlSet\Services\EventLog\System\fortfw"; Flags: uninsdeletekey
