@@ -21,7 +21,9 @@ sc delete %DRIVERSVC%
 
 
 @rem Remove driver from system storage
-Del "%DSTPATH%"
+@if exist "%DSTPATH%" (
+    Del "%DSTPATH%"
+)
 
 
 @set RCODE=0

@@ -7,8 +7,11 @@
 @set BASENAME=fortfw
 @set FILENAME=%BASENAME%.sys
 
-@set SRCPATH=%~dp0..\%ARCH%\%FILENAME%
-@set DSTPATH=%SystemRoot%\System32\drivers\%FILENAME%
+@set SRCDIR=%~dp0..\%ARCH%
+@set SRCPATH=%SRCDIR%\%FILENAME%
+
+@set DSTDIR=%SystemRoot%\System32\drivers
+@set DSTPATH=%DSTDIR%\%FILENAME%
 
 @set DRIVERSVC=%BASENAME%
 @set DISPNAME=Fort Firewall Driver

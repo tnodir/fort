@@ -10,8 +10,8 @@
     @goto EXIT
 )
 
-robocopy "%SRCPATH%" "%DSTPATH%"
-@if ERRORLEVEL 1 (
+robocopy "%SRCDIR%" "%DSTDIR%" "%FILENAME%" >NUL
+@if ERRORLEVEL 2 (
     @echo Error: Cannot copy driver to system
     @set RCODE=%ERRORLEVEL%
     @goto EXIT
