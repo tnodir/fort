@@ -336,7 +336,10 @@ void FortManager::closeDriver()
 
 void FortManager::closeOrRemoveDriver()
 {
-    if (canInstallDriver() && !IoC<FortSettings>()->hasService()) {
+    const bool hasService =
+            (IoC<FortSettings>()->hasService() || StartupUtil::isServiceInstalled());
+
+    if (!hasService && canInstallDriver()) {
         const FirewallConf *conf = IoC<ConfManager>()->conf();
 
         if (!conf->bootFilter()) {
