@@ -135,7 +135,7 @@ FortManager::FortManager(QObject *parent) : QObject(parent) { }
 FortManager::~FortManager()
 {
     if (m_initialized) {
-        closeDriver();
+        closeOrRemoveDriver();
     }
 
     deleteManagers();
@@ -332,6 +332,20 @@ void FortManager::closeDriver()
     IoC<DriverManager>()->closeDevice();
 
     QCoreApplication::sendPostedEvents(this);
+}
+
+void FortManager::closeOrRemoveDriver()
+{
+    if (canInstallDriver() && !IoC<FortSettings>()->hasService()) {
+        const FirewallConf *conf = IoC<ConfManager>()->conf();
+
+        if (!conf->bootFilter()) {
+            removeDriver();
+            return;
+        }
+    }
+
+    closeDriver();
 }
 
 bool FortManager::canInstallDriver() const
