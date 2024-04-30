@@ -78,12 +78,12 @@ private:
     void appendErrorDetails(const QString &errorDetails);
 
     PortRange::ParseError parsePortLine(
-            const QStringView line, portrange_map_t &portRangeMap, int &pairSize);
+            const QStringView &line, portrange_map_t &portRangeMap, int &pairSize);
 
-    PortRange::ParseError parsePortRange(const QStringView port, const QStringView port2,
+    PortRange::ParseError parsePortRange(const QStringView &port, const QStringView &port2,
             portrange_map_t &portRangeMap, int &pairSize);
 
-    bool parsePortNumber(const QStringView port, quint16 &v);
+    bool parsePortNumber(const QStringView &port, quint16 &v);
 
     void fillPortRange(const portrange_map_t &portRangeMap, int pairSize);
 

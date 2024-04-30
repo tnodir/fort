@@ -185,7 +185,7 @@ int ConfUtil::zoneMaxCount()
     return FORT_CONF_ZONE_MAX;
 }
 
-QRegularExpressionMatch ConfUtil::matchWildcard(const QStringView path)
+QRegularExpressionMatch ConfUtil::matchWildcard(const QStringView &path)
 {
     static const QRegularExpression wildMatcher("([*?[])");
 
@@ -622,7 +622,7 @@ bool ConfUtil::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint3
     return true;
 }
 
-QString ConfUtil::parseAppPath(const QStringView line, bool &isWild, bool &isPrefix)
+QString ConfUtil::parseAppPath(const QStringView &line, bool &isWild, bool &isPrefix)
 {
     auto path = line;
     if (path.startsWith('"') && path.endsWith('"')) {

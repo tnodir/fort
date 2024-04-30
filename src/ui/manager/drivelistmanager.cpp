@@ -36,8 +36,8 @@ void DriveListManager::onDriveListChanged()
     if (m_driveMask == driveMask)
         return;
 
-    const quint32 addedMask = (driveMask & (driveMask ^ m_driveMask));
-    const quint32 removedMask = (m_driveMask ^ (m_driveMask & m_driveMask));
+    const quint32 addedMask = (driveMask & ~m_driveMask);
+    const quint32 removedMask = (~driveMask & m_driveMask);
 
     m_driveMask = driveMask;
 

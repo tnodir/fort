@@ -49,7 +49,7 @@ public:
 
     static int zoneMaxCount();
 
-    static QRegularExpressionMatch matchWildcard(const QStringView path);
+    static QRegularExpressionMatch matchWildcard(const QStringView &path);
 
 public slots:
     void writeVersion();
@@ -108,7 +108,7 @@ private:
 
     bool addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize);
 
-    static QString parseAppPath(const QStringView line, bool &isWild, bool &isPrefix);
+    static QString parseAppPath(const QStringView &line, bool &isWild, bool &isPrefix);
 
     static void parseAppPeriod(const AppGroup *appGroup, ParseAppGroupsArgs &gr);
 
