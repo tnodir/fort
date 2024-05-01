@@ -64,6 +64,7 @@ signals:
 
 protected:
     virtual void setupManager();
+    virtual void setupRestart();
 
     void setupDownloader() override;
 

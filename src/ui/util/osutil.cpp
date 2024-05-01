@@ -174,12 +174,18 @@ bool OsUtil::allowOtherForegroundWindows()
     return AllowSetForegroundWindow(ASFW_ANY);
 }
 
+bool OsUtil::registerAppRestart()
+{
+    return SUCCEEDED(
+            RegisterApplicationRestart(L"--restarted", RESTART_NO_CRASH | RESTART_NO_REBOOT));
+}
+
 void OsUtil::restartClient()
 {
     const QFileInfo fi(QCoreApplication::applicationFilePath());
 
     const auto scriptPath = QLatin1String("cmd.exe");
-    const auto command = QString("timeout /t 2 >NUL & start %1").arg(fi.fileName());
+    const auto command = QString("timeout /t 2 >NUL & start %1 --restarted").arg(fi.fileName());
 
     const QStringList args = { "/c", command };
 

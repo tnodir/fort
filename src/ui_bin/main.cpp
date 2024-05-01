@@ -52,10 +52,8 @@ bool processArgs(int argc, char *argv[], int &rc)
         return false;
 
     const char *arg1 = argv[1];
-    if (arg1[0] != '-') {
-        rc = -1;
+    if (arg1[0] != '-')
         return false;
-    }
 
     const char *arg2 = (argc > 2 ? argv[2] : nullptr);
 

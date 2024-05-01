@@ -56,6 +56,7 @@ int AutoUpdateManager::bytesReceived() const
 void AutoUpdateManager::setUp()
 {
     setupManager();
+    setupRestart();
 }
 
 void AutoUpdateManager::tearDown()
@@ -75,6 +76,16 @@ void AutoUpdateManager::setupManager()
 
     // Wait Installer's exit
     QTimer::singleShot(500, this, &AutoUpdateManager::clearUpdateDir);
+}
+
+void AutoUpdateManager::setupRestart()
+{
+    if (IoC<FortSettings>()->isService())
+        return;
+
+    if (!OsUtil::registerAppRestart()) {
+        qCWarning(LC) << "Restart registration error";
+    }
 }
 
 bool AutoUpdateManager::startDownload()
@@ -122,7 +133,7 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
     if (m_downloadUrl.isEmpty() || m_downloadSize <= 0)
         return;
 
-    m_fileName = QUrl(m_downloadUrl).fileName();
+    setFileName(QUrl(m_downloadUrl).fileName());
 
     const QFileInfo fi(installerPath());
     const bool downloaded = (fi.exists() && fi.size() == m_downloadSize);

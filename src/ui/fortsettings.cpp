@@ -203,6 +203,15 @@ void FortSettings::processLangOption(
     }
 }
 
+void FortSettings::processRestartedOption(
+        const QCommandLineParser &parser, const QCommandLineOption &restartedOption)
+{
+    // Restarted by Installer
+    if (parser.isSet(restartedOption)) {
+        m_isRestarted = true;
+    }
+}
+
 void FortSettings::processServiceOption(
         const QCommandLineParser &parser, const QCommandLineOption &serviceOption)
 {
@@ -257,6 +266,9 @@ void FortSettings::processArguments(const QStringList &args)
     const QCommandLineOption langOption("lang", "Default language.", "lang", "en");
     parser.addOption(langOption);
 
+    const QCommandLineOption restartedOption("restarted", "Restarted by Installer?");
+    parser.addOption(restartedOption);
+
     const QCommandLineOption serviceOption("service", "Is running as a service?");
     parser.addOption(serviceOption);
 
@@ -276,6 +288,7 @@ void FortSettings::processArguments(const QStringList &args)
     processNoCacheOption(parser, noCacheOption);
     processNoSplashOption(parser, noSplashOption);
     processLangOption(parser, langOption);
+    processRestartedOption(parser, restartedOption);
     processServiceOption(parser, serviceOption);
     processControlOption(parser, controlOption);
     processOtherOptions(parser);

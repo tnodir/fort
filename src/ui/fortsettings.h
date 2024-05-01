@@ -36,6 +36,8 @@ public:
     bool canInstallDriver() const { return m_canInstallDriver; }
     bool canStartService() const { return m_canStartService; }
 
+    bool isRestarted() const { return m_isRestarted; }
+
     bool isService() const { return m_isService; }
     bool hasService() const { return m_hasService; }
 
@@ -116,6 +118,8 @@ private:
     void processNoSplashOption(
             const QCommandLineParser &parser, const QCommandLineOption &noSplashOption);
     void processLangOption(const QCommandLineParser &parser, const QCommandLineOption &langOption);
+    void processRestartedOption(
+            const QCommandLineParser &parser, const QCommandLineOption &restartedOption);
     void processServiceOption(
             const QCommandLineParser &parser, const QCommandLineOption &serviceOption);
     void processControlOption(
@@ -133,6 +137,7 @@ private:
     uint m_forceDebug : 1 = false;
     uint m_canInstallDriver : 1 = false;
     uint m_canStartService : 1 = false;
+    uint m_isRestarted : 1 = false;
     uint m_isService : 1 = false;
     uint m_hasService : 1 = false;
     uint m_isUserAdmin : 1 = false;
