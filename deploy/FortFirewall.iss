@@ -17,7 +17,8 @@
 ; Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 SetupMutex=Global\{#APP_BASE}Setup
-; Don't use AppMutex, and auto-restart the running instances
+; Don't use AppMutex
+RestartApplications=no
 AppName={#APP_NAME}
 AppVersion={#APP_VERSION_STR}
 VersionInfoVersion={#APP_VERSION_STR}
@@ -84,6 +85,7 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"
 
 [Run]
 ; 1. Uninstall -> 2. Install Driver -> 3. Portable -> 4. Service
+
 Filename: "{#APP_EXE}"; Parameters: "-u most"
 
 Filename: "{app}\driver\scripts\reinstall.bat"; Parameters: {code:DriverInstallArgs}; \
@@ -311,12 +313,11 @@ begin
   Result := True;
 end;
 
-function StopFortService(var ResultCode: Integer): Boolean;
+function StopFortService(): Boolean;
 var
   path: String;
+  ResultCode: Integer;
 begin
-  ResultCode := -1;
-
   path := ExpandConstant('{#APP_EXE}');
 
   if not FileExists(path) then
@@ -325,7 +326,7 @@ begin
     Exit;
   end;
 
-  Exec(path, '-s', '', SW_SHOW, ewWaitUntilTerminated, ResultCode)
+  Exec(path, '-s', '', SW_HIDE, ewWaitUntilTerminated, ResultCode)
 
   Result := (ResultCode = 0);
 end;
@@ -446,15 +447,8 @@ begin
 end;
 
 function PrepareToInstall(var NeedsRestart: Boolean): String;
-var
-  ResultCode: Integer;
 begin
-  if Exec('sc.exe', ExpandConstant('stop {#APP_SVC_NAME}'), '', SW_HIDE, ewWaitUntilTerminated, ResultCode) then
-  begin
-    if ResultCode <> 0 then StopFortService(ResultCode);
-
-    if ResultCode = 0 then Sleep(100); // Let the service to stop
-  end;
+  StopFortService();
 
   Result := '';
 end;

@@ -428,6 +428,7 @@ HEADERS += \
     util/osutil.h \
     util/processinfo.h \
     util/regkey.h \
+    util/service/service_types.h \
     util/service/servicehandle.h \
     util/service/serviceinfo.h \
     util/service/servicelistmonitor.h \

@@ -6,6 +6,7 @@
 #include <QTimer>
 
 #include <fortsettings.h>
+#include <manager/servicemanager.h>
 #include <rpc/rpcmanager.h>
 #include <task/taskinfoupdatechecker.h>
 #include <task/taskmanager.h>
@@ -80,11 +81,13 @@ void AutoUpdateManager::setupManager()
 
 void AutoUpdateManager::setupRestart()
 {
-    if (IoC<FortSettings>()->isService())
-        return;
-
-    if (!OsUtil::registerAppRestart()) {
-        qCWarning(LC) << "Restart registration error";
+    if (IoC<FortSettings>()->isService()) {
+        connect(IoC<ServiceManager>(), &ServiceManager::stopRestartingRequested, this,
+                &AutoUpdateManager::restartClients);
+    } else {
+        if (!OsUtil::registerAppRestart()) {
+            qCWarning(LC) << "Restart registration error";
+        }
     }
 }
 

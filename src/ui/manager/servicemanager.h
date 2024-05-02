@@ -34,6 +34,7 @@ public:
 signals:
     void pauseRequested();
     void continueRequested();
+    void stopRestartingRequested();
     void driveListChanged();
 
 protected:

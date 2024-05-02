@@ -26,7 +26,7 @@ public:
     bool queryIsRunning();
 
     bool startService();
-    bool stopService();
+    bool stopService(bool restarting = false);
 
     bool createService(const CreateServiceArg &csa);
     bool deleteService();

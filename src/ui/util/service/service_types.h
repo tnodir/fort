@@ -1,0 +1,9 @@
+#ifndef SERVICE_TYPES_H
+#define SERVICE_TYPES_H
+
+enum ServiceControlCode {
+    ServiceControlStop = 128,
+    ServiceControlStopRestarting,
+};
+
+#endif // SERVICE_TYPES_H

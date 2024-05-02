@@ -5,6 +5,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include "service_types.h"
 #include "servicemanageriface.h"
 
 ServiceHandle::ServiceHandle(
@@ -32,7 +33,7 @@ bool ServiceHandle::startService()
     return StartServiceW(SC_HANDLE(m_serviceHandle), 0, nullptr);
 }
 
-bool ServiceHandle::stopService()
+bool ServiceHandle::stopService(bool restarting)
 {
     int n = 3; /* count of attempts to stop the service */
     do {
@@ -41,9 +42,7 @@ bool ServiceHandle::stopService()
                 && status.dwCurrentState == SERVICE_STOPPED)
             return true;
 
-        const DWORD controlCode = (status.dwControlsAccepted & SERVICE_ACCEPT_STOP) != 0
-                ? SERVICE_CONTROL_STOP
-                : FORT_SERVICE_CONTROL_UNINSTALL;
+        const DWORD controlCode = restarting ? ServiceControlStopRestarting : ServiceControlStop;
 
         ControlService(SC_HANDLE(m_serviceHandle), controlCode, &status);
 
