@@ -47,6 +47,13 @@ protected:
 private:
     void setupByConf(const IniOptions &ini);
 
+    quint32 processControlState(quint32 code, quint32 eventType);
+    quint32 processControlPauseState();
+    quint32 processControlContinueState();
+    quint32 processControlStopState();
+    quint32 processControlShutdownState(quint32 code);
+    void processControlDeviceEvent(quint32 eventType);
+
 private:
     bool m_controlEnabled = false;
 };
