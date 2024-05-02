@@ -3,7 +3,7 @@ Fort Firewall ChangeLog
 v3.12.6, 2024-05-02:
 - UI: Service: Restart clients on upgrade.
 - UI: Use RegisterApplicationRestart().
-- Installer: Remove uneeded "delay-start.bat".
+- Installer: Remove unneeded "delay-start.bat".
 
 v3.12.5, 2024-04-30:
 - UI: Portable: Istall driver on startup and uninstall on exit.

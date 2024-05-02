@@ -30,7 +30,7 @@ enum FortError {
 inline bool processArgsParam(const char param, const char *arg2, int &rc)
 {
     switch (param) {
-    case 's': { // Stop
+    case 's': { // Service: Stop
         rc = StartupUtil::stopService() ? 0 : FortErrorService;
     } break;
     case 'i': { // Install
