@@ -7,7 +7,7 @@
 
 #include <util/classhelpers.h>
 
-#include "sqlitetypes.h"
+#include "sqlite_types.h"
 
 struct sqlite3_stmt;
 

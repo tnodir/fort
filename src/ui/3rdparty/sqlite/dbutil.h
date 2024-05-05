@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "sqlitetypes.h"
+#include "sqlite_types.h"
 
 class DbUtil
 {

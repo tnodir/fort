@@ -3,7 +3,7 @@
 
 #include <QDateTime>
 
-#include <sqlite/sqlitetypes.h>
+#include <sqlite/sqlite_types.h>
 
 #include <conf/app.h>
 #include <util/model/ftstablesqlmodel.h>

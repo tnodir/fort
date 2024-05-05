@@ -25,6 +25,6 @@ HEADERS += \
     $$PWD/dbquery.h \
     $$PWD/dbutil.h \
     $$PWD/dbvar.h \
+    $$PWD/sqlite_types.h \
     $$PWD/sqlitedb.h \
-    $$PWD/sqlitestmt.h \
-    $$PWD/sqlitetypes.h
+    $$PWD/sqlitestmt.h

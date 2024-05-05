@@ -1,7 +1,7 @@
 #ifndef TABLESQLMODEL_H
 #define TABLESQLMODEL_H
 
-#include <sqlite/sqlitetypes.h>
+#include <sqlite/sqlite_types.h>
 
 #include "tableitemmodel.h"
 

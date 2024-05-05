@@ -3,7 +3,7 @@
 
 #include <QMutex>
 
-#include <sqlite/sqlitetypes.h>
+#include <sqlite/sqlite_types.h>
 
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
