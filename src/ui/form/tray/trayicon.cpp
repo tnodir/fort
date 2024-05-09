@@ -14,7 +14,7 @@
 #include <form/controls/clickablemenu.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
-#include <form/windowtypes.h>
+#include <form/form_types.h>
 #include <fortsettings.h>
 #include <manager/hotkeymanager.h>
 #include <manager/windowmanager.h>

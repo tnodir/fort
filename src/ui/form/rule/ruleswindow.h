@@ -2,7 +2,7 @@
 #define RULESWINDOW_H
 
 #include <conf/rule.h>
-#include <form/windowtypes.h>
+#include <form/form_types.h>
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QLineEdit)

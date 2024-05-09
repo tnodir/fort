@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include <form/windowtypes.h>
+#include <form/form_types.h>
 #include <util/ioc/iocservice.h>
 
 QT_FORWARD_DECLARE_CLASS(QPushButton)

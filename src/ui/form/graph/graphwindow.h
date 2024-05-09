@@ -3,7 +3,7 @@
 
 #include <QTimer>
 
-#include <form/windowtypes.h>
+#include <form/form_types.h>
 #include <util/window/widgetwindow.h>
 
 class ConfManager;

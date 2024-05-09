@@ -1,7 +1,7 @@
 #ifndef STATISTICSWINDOW_H
 #define STATISTICSWINDOW_H
 
-#include <form/windowtypes.h>
+#include <form/form_types.h>
 #include <util/window/widgetwindow.h>
 
 class ConfManager;

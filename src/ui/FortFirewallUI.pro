@@ -283,6 +283,7 @@ HEADERS += \
     form/dialog/dialogutil.h \
     form/dialog/passworddialog.h \
     form/dialog/splashscreen.h \
+    form/form_types.h \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
@@ -321,7 +322,6 @@ HEADERS += \
     form/svc/serviceswindow.h \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
-    form/windowtypes.h \
     form/zone/zoneeditdialog.h \
     form/zone/zonescontroller.h \
     form/zone/zoneswindow.h \

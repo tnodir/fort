@@ -1,5 +1,5 @@
-#ifndef WINDOWTYPES_H
-#define WINDOWTYPES_H
+#ifndef FORM_TYPES_H
+#define FORM_TYPES_H
 
 #include <QtGlobal>
 
@@ -19,4 +19,4 @@ enum WindowCode {
 constexpr quint32 WindowPasswordProtected = (WindowPrograms | WindowProgramAlert | WindowServices
         | WindowOptions | WindowRules | WindowStatistics | WindowZones);
 
-#endif // WINDOWTYPES_H
+#endif // FORM_TYPES_H

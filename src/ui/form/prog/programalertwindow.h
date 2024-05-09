@@ -1,7 +1,7 @@
 #ifndef PROGRAMALERTWINDOW_H
 #define PROGRAMALERTWINDOW_H
 
-#include <form/windowtypes.h>
+#include <form/form_types.h>
 
 #include "programeditdialog.h"
 

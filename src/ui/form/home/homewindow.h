@@ -1,7 +1,7 @@
 #ifndef HOMEWINDOW_H
 #define HOMEWINDOW_H
 
-#include <form/windowtypes.h>
+#include <form/form_types.h>
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QPushButton)
