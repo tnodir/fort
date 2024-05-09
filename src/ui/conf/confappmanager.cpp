@@ -284,7 +284,7 @@ void ConfAppManager::logBlockedApp(const LogEntryBlocked &logEntry)
     App app;
     app.blocked = logEntry.blocked();
     app.alerted = logEntry.alerted();
-    app.appOriginPath = logEntry.path();
+    app.appOriginPath = FileUtil::realPath(logEntry.path());
     app.scheduleAction = App::ScheduleRemove; // default action for alert
 
     addAppPathBlocked(app);

@@ -51,6 +51,15 @@ TEST_F(FileUtilTest, systemPath)
     ASSERT_EQ(FileUtil::pathToKernelPath("System", /*lower=*/true), FileUtil::systemApp());
 }
 
+TEST_F(FileUtilTest, realPath)
+{
+    ASSERT_EQ(FileUtil::realPath(FileUtil::systemApp()), FileUtil::systemApp());
+
+    const auto taskMgrPath = qEnvironmentVariable("SystemRoot") + R"(\System32\Taskmgr.exe)";
+
+    ASSERT_EQ(FileUtil::realPath(taskMgrPath.toLower()), taskMgrPath);
+}
+
 TEST_F(FileUtilTest, process)
 {
     const ProcessInfo pi(ProcessInfo::currentPid());

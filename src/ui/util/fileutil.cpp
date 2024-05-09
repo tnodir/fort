@@ -259,6 +259,55 @@ QString normalizePath(const QString &path)
     return toNativeSeparators(pathLower);
 }
 
+inline bool isDevicePath(LPCWSTR path)
+{
+    return path[0] == L'\\' && path[1] == L'\\' && path[2] == L'?' && path[3] == L'\\';
+}
+
+inline void realPathByHandle(HANDLE fileHandle, QString &path)
+{
+    DWORD pathLen = GetFinalPathNameByHandleW(fileHandle, nullptr, 0, FILE_NAME_NORMALIZED);
+    if (pathLen == 0)
+        return;
+
+    QVarLengthArray<BYTE, 4096> pathBuf(pathLen * sizeof(wchar_t));
+    LPWSTR pathData = (LPWSTR) pathBuf.data();
+
+    if (!GetFinalPathNameByHandleW(fileHandle, pathData, pathLen, FILE_NAME_NORMALIZED))
+        return;
+
+    if (isDevicePath(pathData)) {
+        constexpr int prefixLen = 4;
+        pathData += prefixLen;
+        pathLen -= prefixLen;
+    }
+
+    path = QString::fromWCharArray(pathData, pathLen - 1);
+}
+
+QString realPath(const QString &path)
+{
+    if (path.isEmpty())
+        return path;
+
+    const QFileInfo fi(path);
+    if (!fi.exists() || fi.isSymbolicLink() || fi.isJunction())
+        return path;
+
+    QString resPath = path;
+
+    const HANDLE fileHandle = CreateFileW((LPCWSTR) resPath.utf16(), GENERIC_READ, FILE_SHARE_READ,
+            nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS /* open dir */, nullptr);
+
+    if (fileHandle != INVALID_HANDLE_VALUE) {
+        realPathByHandle(fileHandle, resPath);
+
+        CloseHandle(fileHandle);
+    }
+
+    return resPath;
+}
+
 bool removePath(const QString &path)
 {
     return QDir(path).removeRecursively();
