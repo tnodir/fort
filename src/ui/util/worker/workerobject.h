@@ -5,7 +5,7 @@
 #include <QRunnable>
 #include <QThread>
 
-#include "workertypes.h"
+#include "worker_types.h"
 
 class WorkerObject : public QRunnable
 {

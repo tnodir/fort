@@ -5,7 +5,7 @@
 
 #include <util/classhelpers.h>
 
-#include "workertypes.h"
+#include "worker_types.h"
 
 class WorkerJob
 {

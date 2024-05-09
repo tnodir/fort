@@ -1,5 +1,5 @@
-#ifndef WORKERTYPES_H
-#define WORKERTYPES_H
+#ifndef WORKER_TYPES_H
+#define WORKER_TYPES_H
 
 #include <QSharedPointer>
 
@@ -9,4 +9,4 @@ class WorkerManager;
 
 using WorkerJobPtr = QSharedPointer<WorkerJob>;
 
-#endif // WORKERTYPES_H
+#endif // WORKER_TYPES_H

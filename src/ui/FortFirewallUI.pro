@@ -446,10 +446,10 @@ HEADERS += \
     util/window/widgetwindow.h \
     util/window/widgetwindowstatewatcher.h \
     util/window/windowstatewatcher.h \
+    util/worker/worker_types.h \
     util/worker/workerjob.h \
     util/worker/workermanager.h \
-    util/worker/workerobject.h \
-    util/worker/workertypes.h
+    util/worker/workerobject.h
 
 # Icons, README.*
 RESOURCES += \
