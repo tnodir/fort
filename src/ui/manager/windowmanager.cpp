@@ -61,11 +61,6 @@ void WindowManager::setUp()
     setupMainWindow();
     setupConfManager();
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-    connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this,
-            &WindowManager::setupAppPalette);
-#endif
-
     connect(qApp, &QCoreApplication::aboutToQuit, this, &WindowManager::quitApp);
 }
 
@@ -113,9 +108,17 @@ QFont WindowManager::defaultFont()
 
 void WindowManager::setupAppPalette()
 {
-    const QPalette palette = QApplication::style()->standardPalette();
+    const auto refreshAppPalette = [] {
+        const QPalette palette = QApplication::style()->standardPalette();
 
-    QApplication::setPalette(palette);
+        QApplication::setPalette(palette);
+    };
+
+    refreshAppPalette();
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this, refreshAppPalette);
+#endif
 }
 
 void WindowManager::setupMainWindow()
@@ -239,8 +242,20 @@ void WindowManager::setupConfManager()
 
 void WindowManager::setupByIniUser(const IniUser &ini)
 {
+    updateTheme(ini);
     updateTrayIconVisibility(ini);
     updateGraphWindowVisibility(ini);
+}
+
+void WindowManager::updateTheme(const IniUser &ini)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    const auto colorScheme = Qt::ColorScheme(IniUser::colorSchemeByName(ini.theme()));
+
+    QApplication::styleHints()->setColorScheme(colorScheme);
+#else
+    Q_UNUSED(ini);
+#endif
 }
 
 void WindowManager::updateTrayIconVisibility(const IniUser &ini)

@@ -140,6 +140,8 @@ public slots:
 
     static bool activateModalWidget();
 
+    static void updateTheme(const IniUser &ini);
+
 private:
     void setupMainWindow();
     void closeMainWindow();

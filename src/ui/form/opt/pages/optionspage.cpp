@@ -63,6 +63,7 @@ void OptionsPage::onResetToDefault()
     m_cbPurgeOnMounted->setChecked(false);
 
     m_cbUseSystemLocale->setChecked(true);
+    m_comboTheme->setCurrentIndex(0);
     m_cbHotKeysEnabled->setChecked(false);
     m_cbHotKeysGlobal->setChecked(true);
 
@@ -129,6 +130,12 @@ void OptionsPage::onEditResetted()
     if (languageEdited()) {
         setLanguageEdited(false);
         translationManager()->switchLanguageByName(confManager()->iniUser().language());
+    }
+
+    // Theme
+    if (themeEdited()) {
+        setThemeEdited(false);
+        WindowManager::updateTheme(confManager()->iniUser());
     }
 
     // Explorer
@@ -221,6 +228,8 @@ void OptionsPage::onRetranslateUi()
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_labelLanguage->setText(tr("Language:"));
+    m_labelTheme->setText(tr("Theme:"));
+    retranslateComboTheme();
 
     m_cbHotKeysEnabled->setText(tr("Enabled"));
     m_cbHotKeysGlobal->setText(tr("Global"));
@@ -303,6 +312,16 @@ void OptionsPage::retranslateEditPassword()
 {
     m_editPassword->setPlaceholderText(
             settings()->hasPassword() ? tr("Installed") : tr("Not Installed"));
+}
+
+void OptionsPage::retranslateComboTheme()
+{
+    // Sync with Qt::ColorScheme
+    const QStringList list = { tr("System"), tr("Light"), tr("Dark") };
+
+    const int currentIndex = qMax(m_comboTheme->currentIndex(), 0);
+
+    ControlUtil::setComboBoxTexts(m_comboTheme, list, currentIndex);
 }
 
 void OptionsPage::retranslateComboHotKey()
@@ -685,10 +704,14 @@ void OptionsPage::setupGlobalBox()
     // Language Row
     auto langLayout = setupLangLayout();
 
+    // Theme Row
+    auto themeLayout = setupThemeLayout();
+
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbExplorerMenu);
     layout->addWidget(m_cbUseSystemLocale);
     layout->addLayout(langLayout);
+    layout->addLayout(themeLayout);
 
     m_gbGlobal = new QGroupBox();
     m_gbGlobal->setLayout(layout);
@@ -722,6 +745,33 @@ void OptionsPage::setupComboLanguage()
     refreshComboLanguage();
 
     connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
+}
+
+QLayout *OptionsPage::setupThemeLayout()
+{
+    m_labelTheme = ControlUtil::createLabel();
+
+    m_comboTheme = ControlUtil::createComboBox({}, [&](int index) {
+        const auto theme = IniUser::colorSchemeName(index);
+
+        if (iniUser()->theme() != theme) {
+            setThemeEdited(true);
+            iniUser()->setTheme(theme);
+            ctrl()->setIniUserEdited();
+
+            WindowManager::updateTheme(*iniUser());
+        }
+    });
+    m_comboTheme->setFixedWidth(200);
+
+    const auto colorScheme = IniUser::colorSchemeByName(iniUser()->theme());
+    m_comboTheme->setCurrentIndex(colorScheme);
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+    m_comboTheme->setEnabled(false);
+#endif
+
+    return ControlUtil::createRowLayout(m_labelTheme, m_comboTheme);
 }
 
 void OptionsPage::setupHotKeysBox()

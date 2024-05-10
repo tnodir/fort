@@ -18,6 +18,9 @@ public:
     bool languageEdited() const { return m_languageEdited; }
     void setLanguageEdited(bool v) { m_languageEdited = v; }
 
+    bool themeEdited() const { return m_themeEdited; }
+    void setThemeEdited(bool v) { m_themeEdited = v; }
+
     bool explorerEdited() const { return m_explorerEdited; }
     void setExplorerEdited(bool v) { m_explorerEdited = v; }
 
@@ -37,6 +40,7 @@ private:
     void retranslateComboStartMode();
     void retranslateComboFilterMode();
     void retranslateEditPassword();
+    void retranslateComboTheme();
     void retranslateComboHotKey();
     void retranslateComboTrayEvent();
     void retranslateComboTrayAction();
@@ -60,6 +64,7 @@ private:
     void setupGlobalBox();
     QLayout *setupLangLayout();
     void setupComboLanguage();
+    QLayout *setupThemeLayout();
     void setupHotKeysBox();
     void refreshEditShortcut();
     QLayout *setupComboHotKeyLayout();
@@ -76,6 +81,7 @@ private:
 private:
     bool m_passwordEdited : 1 = false;
     bool m_languageEdited : 1 = false;
+    bool m_themeEdited : 1 = false;
     bool m_explorerEdited : 1 = false;
 
     qint8 m_currentAutoRunMode = 0;
@@ -116,6 +122,8 @@ private:
     QCheckBox *m_cbUseSystemLocale = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
+    QLabel *m_labelTheme = nullptr;
+    QComboBox *m_comboTheme = nullptr;
     QCheckBox *m_cbHotKeysEnabled = nullptr;
     QCheckBox *m_cbHotKeysGlobal = nullptr;
     QLabel *m_labelHotKey = nullptr;

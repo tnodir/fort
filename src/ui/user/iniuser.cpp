@@ -57,3 +57,35 @@ void IniUser::saveDefaultIni()
 
     saveAndClear();
 }
+
+int IniUser::colorSchemeByName(const QString &theme)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    if (theme == QLatin1String("light"))
+        return int(Qt::ColorScheme::Light);
+
+    if (theme == QLatin1String("dark"))
+        return int(Qt::ColorScheme::Dark);
+#else
+    Q_UNUSED(theme);
+#endif
+
+    return 0;
+}
+
+QString IniUser::colorSchemeName(int colorScheme)
+{
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    switch (Qt::ColorScheme(colorScheme)) {
+    case Qt::ColorScheme::Light:
+        return QLatin1String("light");
+
+    case Qt::ColorScheme::Dark:
+        return QLatin1String("dark");
+    }
+#else
+    Q_UNUSED(colorScheme);
+#endif
+
+    return {};
+}

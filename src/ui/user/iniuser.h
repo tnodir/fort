@@ -52,6 +52,9 @@ public:
     bool useSystemLocale() const { return valueBool("base/useSystemLocale", true); }
     void setUseSystemLocale(bool v) { setValue("base/useSystemLocale", v, true); }
 
+    QString theme() const { return valueText("base/theme"); }
+    void setTheme(const QString &v) { setValue("base/theme", v); }
+
     bool hotKeyEnabled() const { return valueBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool v) { setValue("hotKey/enabled", v); }
 
@@ -214,6 +217,9 @@ public:
 
 public:
     void saveDefaultIni();
+
+    static int colorSchemeByName(const QString &theme);
+    static QString colorSchemeName(int colorScheme);
 
 private:
     QString m_defaultLanguage;
