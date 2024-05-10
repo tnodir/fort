@@ -1098,6 +1098,22 @@ Make sure that you have a fresh backup.</source>
         <source>Shortcut:</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Theme:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -1100,6 +1100,22 @@ Make sure that you have a fresh backup.</source>
         <source>Shortcut:</source>
         <translation>Комбинация клавиш:</translation>
     </message>
+    <message>
+        <source>Theme:</source>
+        <translation>Тема:</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Системная</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Светлая</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Тёмная</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

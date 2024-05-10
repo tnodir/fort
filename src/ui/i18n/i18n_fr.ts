@@ -1100,6 +1100,22 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <source>Shortcut:</source>
         <translation>Raccourci:</translation>
     </message>
+    <message>
+        <source>Theme:</source>
+        <translation>Thème :</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Système</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Clair</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Sombre</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
