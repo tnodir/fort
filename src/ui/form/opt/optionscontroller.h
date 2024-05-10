@@ -28,8 +28,6 @@ signals:
     void editResetted();
     void resetToDefault();
 
-    void cancelChanges(IniOptions *oldIni);
-
     void afterSaveWindowState(IniUser *ini);
     void afterRestoreWindowState(IniUser *ini);
 
