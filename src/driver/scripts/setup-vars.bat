@@ -1,8 +1,16 @@
 @rem Setup variables
 
 @set ARCH=x86
-@if "%PROCESSOR_ARCHITECTURE%" == "AMD64" @set ARCH=x86_64
-@if "%PROCESSOR_ARCHITECTURE%" == "ARM64" @set ARCH=ARM64
+@if "%PROCESSOR_ARCHITECTURE%" == "AMD64" (
+    @set ARCH=x86_64
+
+    @rem Check for Windows 10 2004
+    @for /f "tokens=4-6 delims=. " %%i in ('ver') do @(
+        @if %%i.%%j.%%k lss 10.0.19041 @set ARCH=x86_64_old
+    )
+) else (
+    @if "%PROCESSOR_ARCHITECTURE%" == "ARM64" @set ARCH=ARM64
+)
 
 @set BASENAME=fortfw
 @set FILENAME=%BASENAME%.sys

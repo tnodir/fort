@@ -194,7 +194,7 @@ var
   Version: TWindowsVersion;
 begin
   GetWindowsVersionEx(Version);
-  Result := (Version.Major > 10) or ((Version.Major = 10) and (Version.Build > 19040));
+  Result := (Version.Major > 10) or ((Version.Major = 10) and (Version.Build >= 17763));
 end;
 
 function IsWindows7(): Boolean;

@@ -25,6 +25,11 @@
 			"sys": [
 				"${BUILD}-driver-${CONFIG}/x64/fortfw.sys"
 			]
+		},
+		"${TARGET}/driver/x86_64_old | win10": {
+			"sys": [
+				"${BUILD}-driver-win7/x64/fortfw.sys"
+			]
 		}
 	}
 }
