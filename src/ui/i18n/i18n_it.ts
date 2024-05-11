@@ -1073,8 +1073,8 @@ Assicurati di avere un backup recente.</translation>
         <translation>Elimina obsolescenze solo in unità montate</translation>
     </message>
     <message>
-        <source>Windows Service installation changed</source>
-        <translation>Installazione di Windows Service modificata</translation>
+        <source>Windows Service installation changed.</source>
+        <translation>Installazione di Windows Service modificata.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
@@ -1102,18 +1102,22 @@ Assicurati di avere un backup recente.</translation>
     </message>
     <message>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema:</translation>
     </message>
     <message>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>Sistema</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>Chiaro</translation>
     </message>
     <message>
         <source>Dark</source>
+        <translation>Scuro</translation>
+    </message>
+    <message>
+        <source>The change will be applied only on program exit.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

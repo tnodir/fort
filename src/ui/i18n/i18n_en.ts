@@ -1071,7 +1071,7 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Windows Service installation changed</source>
+        <source>Windows Service installation changed.</source>
         <translation></translation>
     </message>
     <message>
@@ -1112,6 +1112,10 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Dark</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>The change will be applied only on program exit.</source>
         <translation></translation>
     </message>
 </context>

@@ -1073,8 +1073,8 @@ Make sure that you have a fresh backup.</source>
         <translation>Очистить устаревшее только на монтированных дисках</translation>
     </message>
     <message>
-        <source>Windows Service installation changed</source>
-        <translation>Установка Службы Windows изменена</translation>
+        <source>Windows Service installation changed.</source>
+        <translation>Установка Службы Windows изменена.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
@@ -1115,6 +1115,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Dark</source>
         <translation>Тёмная</translation>
+    </message>
+    <message>
+        <source>The change will be applied only on program exit.</source>
+        <translation>Изменение будет применено только при выходе из программы.</translation>
     </message>
 </context>
 <context>

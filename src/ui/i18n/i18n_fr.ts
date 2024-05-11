@@ -1073,8 +1073,8 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Purge obsolète seulement sur les disques montés</translation>
     </message>
     <message>
-        <source>Windows Service installation changed</source>
-        <translation>Installation du service Windows changée</translation>
+        <source>Windows Service installation changed.</source>
+        <translation>Installation du service Windows changée.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
@@ -1115,6 +1115,10 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <message>
         <source>Dark</source>
         <translation>Sombre</translation>
+    </message>
+    <message>
+        <source>The change will be applied only on program exit.</source>
+        <translation>Le changement ne sera appliqué qu&apos;à la sortie du programme.</translation>
     </message>
 </context>
 <context>

@@ -1073,8 +1073,8 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Veraltete nur auf eingebundenen Laufwerken löschen</translation>
     </message>
     <message>
-        <source>Windows Service installation changed</source>
-        <translation>Installation des Windows-Dienst geändert</translation>
+        <source>Windows Service installation changed.</source>
+        <translation>Installation des Windows-Dienst geändert.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
@@ -1102,19 +1102,23 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema:</translation>
     </message>
     <message>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>System</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>Hell</translation>
     </message>
     <message>
         <source>Dark</source>
-        <translation type="unfinished"></translation>
+        <translation>Dunkel</translation>
+    </message>
+    <message>
+        <source>The change will be applied only on program exit.</source>
+        <translation>Die Änderung wird nur beim Beenden des Programms angewendet.</translation>
     </message>
 </context>
 <context>

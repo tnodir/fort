@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Install</source>
-        <translation type="unfinished"></translation>
+        <translation>تثبيت</translation>
     </message>
 </context>
 <context>
@@ -1073,8 +1073,8 @@ Make sure that you have a fresh backup.</source>
         <translation>إزالة البرامج المفقودة من الأقراص المتصلة فقط</translation>
     </message>
     <message>
-        <source>Windows Service installation changed</source>
-        <translation>تم تغيير وضع تثبيت خدمة الوندوز</translation>
+        <source>Windows Service installation changed.</source>
+        <translation>تم تغيير وضع تثبيت خدمة الوندوز.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
@@ -1102,19 +1102,23 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>السمة:</translation>
     </message>
     <message>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>النظام</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>فاتح</translation>
     </message>
     <message>
         <source>Dark</source>
-        <translation type="unfinished"></translation>
+        <translation>داكن</translation>
+    </message>
+    <message>
+        <source>The change will be applied only on program exit.</source>
+        <translation>سيتم تطبيق التغيير فقط عند الخروج من البرنامج.</translation>
     </message>
 </context>
 <context>

@@ -1073,8 +1073,8 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Počisti Zastarelo samo na nameščenih pogonih</translation>
     </message>
     <message>
-        <source>Windows Service installation changed</source>
-        <translation>Namestitev storitve Windows je spremenjena</translation>
+        <source>Windows Service installation changed.</source>
+        <translation>Namestitev storitve Windows je spremenjena.</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
@@ -1114,6 +1114,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Dark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The change will be applied only on program exit.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

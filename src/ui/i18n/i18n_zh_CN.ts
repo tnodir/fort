@@ -1071,8 +1071,8 @@ Make sure that you have a fresh backup.</source>
         <translation>仅清除已挂载驱动器上的过时数据</translation>
     </message>
     <message>
-        <source>Windows Service installation changed</source>
-        <translation>Windows 服务安装已更改</translation>
+        <source>Windows Service installation changed.</source>
+        <translation>Windows 服务安装已更改。</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
@@ -1112,6 +1112,10 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Dark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>The change will be applied only on program exit.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
