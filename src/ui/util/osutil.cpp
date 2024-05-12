@@ -184,7 +184,8 @@ void OsUtil::restartClient()
 {
     const QFileInfo fi(QCoreApplication::applicationFilePath());
 
-    const auto scriptPath = QLatin1String("cmd.exe");
+    const auto scriptPath = qEnvironmentVariable("ComSpec", "cmd.exe");
+
     const auto command = QString("timeout /t 2 >NUL & start %1 --restarted").arg(fi.fileName());
 
     const QStringList args = { "/c", command };

@@ -3,6 +3,6 @@
 @cd "%~dp0"
 @echo off
 
-%COMSPEC% /C "%~dp0uninstall.bat"
+%ComSpec% /C "%~dp0uninstall.bat"
 
 "%~dp0install.bat" %*
