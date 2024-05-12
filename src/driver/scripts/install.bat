@@ -10,7 +10,7 @@
     @goto EXIT
 )
 
-robocopy "%SRCDIR%" "%DSTDIR%" "%FILENAME%" >NUL
+robocopy "%SRCDIR%" "%DSTDIR%" "%FILENAME%" /R:0 >NUL
 @if ERRORLEVEL 2 (
     @echo Error: Cannot copy driver to system
     @set RCODE=%ERRORLEVEL%
@@ -42,7 +42,6 @@ sc start %DRIVERSVC%
 :EXIT
 @echo End execution... Result Code = %RCODE%
 @if %RCODE% neq 0 if "%1" neq "/SILENT" (
-    @echo ARGS: %*
     @pause
 )
 @exit /b %RCODE%
