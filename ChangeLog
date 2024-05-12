@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.12.7, 2024-05-12:
+- UI: Options: Add ability to set Light/Dark Theme.
+- UI: Programs: Improve alerted program's path format.
+- Installer: Support 64-bit installation on Windows 10 1809+ (was 2004+).
+
 v3.12.6, 2024-05-02:
 - UI: Service: Restart clients on upgrade.
 - UI: Use RegisterApplicationRestart().
