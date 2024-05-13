@@ -166,13 +166,8 @@ void OptionsPage::saveService(bool isService)
         g_startup.isServiceChanged = true;
 
         connect(fortManager(), &QObject::destroyed, [=] {
-            if (g_startup.wasService == g_startup.isService)
-                return;
-
-            StartupUtil::setServiceInstalled(false);
-
-            if (g_startup.isService) {
-                StartupUtil::setServiceInstalled(true);
+            if (g_startup.wasService != g_startup.isService) {
+                StartupUtil::setServiceInstalled(g_startup.isService);
             }
         });
     }
