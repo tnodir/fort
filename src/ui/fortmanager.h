@@ -23,6 +23,9 @@ public:
     static void install(const char *arg);
     static void uninstall(const char *arg = nullptr);
 
+signals:
+    void aboutToDestroy();
+
 public slots:
     bool installDriver();
     bool removeDriver();
@@ -44,9 +47,7 @@ private:
     bool setupDriver();
     void closeDriver();
 
-    void closeOrRemoveDriver();
-
-    bool canInstallDriver() const;
+    void checkRemoveDriver();
 
     void checkReinstallDriver();
     void checkDriverOpened();

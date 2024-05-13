@@ -51,6 +51,14 @@ namespace {
 
 const QLoggingCategory LC("fortManager");
 
+bool canInstallDriver(FortSettings *settings)
+{
+    const bool canInstallDriver = (settings->canInstallDriver() || settings->isPortable());
+    const bool isAdmin = settings->isUserAdmin();
+
+    return (canInstallDriver && isAdmin);
+}
+
 void showErrorMessage(const QString &errorMessage)
 {
     IoC<WindowManager>()->showErrorBox(errorMessage);
@@ -135,7 +143,11 @@ FortManager::FortManager(QObject *parent) : QObject(parent) { }
 FortManager::~FortManager()
 {
     if (m_initialized) {
-        closeOrRemoveDriver();
+        closeDriver();
+
+        emit aboutToDestroy();
+
+        checkRemoveDriver();
     }
 
     deleteManagers();
@@ -334,38 +346,21 @@ void FortManager::closeDriver()
     QCoreApplication::sendPostedEvents(this);
 }
 
-void FortManager::closeOrRemoveDriver()
-{
-    const bool hasService =
-            (IoC<FortSettings>()->hasService() || StartupUtil::isServiceInstalled());
-
-    if (!hasService && canInstallDriver()) {
-        removeDriver();
-    } else {
-        closeDriver();
-    }
-}
-
-bool FortManager::canInstallDriver() const
+void FortManager::checkRemoveDriver()
 {
     const auto settings = IoC<FortSettings>();
 
-    const bool canInstallDriver = (settings->canInstallDriver() || settings->isPortable());
-    const bool isMasterAdmin = (settings->isMaster() && settings->isUserAdmin());
-
-    return (canInstallDriver && isMasterAdmin);
+    if (canInstallDriver(settings) && !StartupUtil::isServiceInstalled()) {
+        removeDriver();
+    }
 }
 
 void FortManager::checkReinstallDriver()
 {
-    if (!canInstallDriver())
-        return;
+    const auto settings = IoC<FortSettings>();
 
-    IoC<DriverManager>()->checkReinstallDriver();
-
-    if (IoC<FortSettings>()->hasService()) {
-        // Install the service
-        StartupUtil::setServiceInstalled(true);
+    if (!settings->hasService() && canInstallDriver(settings)) {
+        IoC<DriverManager>()->checkReinstallDriver();
     }
 }
 
@@ -374,7 +369,9 @@ void FortManager::checkDriverOpened()
     if (IoC<DriverManager>()->isDeviceOpened())
         return;
 
-    if (canInstallDriver()) {
+    const auto settings = IoC<FortSettings>();
+
+    if (settings->isMaster() && canInstallDriver(settings)) {
         installDriver();
     }
 }
