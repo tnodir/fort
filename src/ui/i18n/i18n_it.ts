@@ -1118,7 +1118,7 @@ Assicurati di avere un backup recente.</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>
-        <translation type="unfinished"></translation>
+        <translation>La modifica sarà applicata solo all&apos;uscita dal programma.</translation>
     </message>
 </context>
 <context>
