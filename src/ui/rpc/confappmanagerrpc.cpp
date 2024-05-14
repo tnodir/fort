@@ -1,5 +1,6 @@
 #include "confappmanagerrpc.h"
 
+#include <conf/app.h>
 #include <conf/firewallconf.h>
 #include <conf/zone.h>
 #include <fortsettings.h>

@@ -5,7 +5,7 @@
 
 #include <functional>
 
-#include <conf/app.h>
+class App;
 
 using walkAppsCallback = bool(App &app);
 

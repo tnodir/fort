@@ -317,7 +317,7 @@ bool ConfRuleManager::updateRuleEnabled(int ruleId, bool enabled)
     return ok;
 }
 
-bool ConfRuleManager::walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds, int &maxRuleId,
+bool ConfRuleManager::walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, int &maxRuleId,
         const std::function<walkRulesCallback> &func) const
 {
     bool ok = false;
@@ -326,7 +326,7 @@ bool ConfRuleManager::walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds
 
     maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
 
-    walkRulesMap(ruleSetMap, ruleIds);
+    walkRulesMap(ruleSetMap, ruleSetIds);
 
     ok = walkRulesLoop(func);
 
@@ -335,7 +335,7 @@ bool ConfRuleManager::walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds
     return ok;
 }
 
-void ConfRuleManager::walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds) const
+void ConfRuleManager::walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds) const
 {
     SqliteStmt stmt;
     if (!DbQuery(sqliteDb()).sql(sqlSelectRuleSets).prepare(stmt))
@@ -352,23 +352,23 @@ void ConfRuleManager::walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &rule
         const int subRuleId = stmt.columnInt(1);
 
         if (prevRuleId != ruleId) {
-            const RuleSetIndex ruleSetIndex = {
+            const RuleSetInfo ruleSetInfo = {
                 .index = quint32(prevIndex),
                 .count = quint8(index - prevIndex),
             };
 
-            ruleSetMap.insert(prevRuleId, ruleSetIndex);
+            ruleSetMap.insert(prevRuleId, ruleSetInfo);
 
             prevRuleId = ruleId;
             prevIndex = index;
         }
 
-        ruleIds.append(subRuleId);
-
-        ++index;
-
         if (!isStepRow)
             break;
+
+        ruleSetIds.append(subRuleId);
+
+        ++index;
     }
 }
 

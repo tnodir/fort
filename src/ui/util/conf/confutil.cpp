@@ -7,6 +7,7 @@
 #include <conf/app.h>
 #include <conf/appgroup.h>
 #include <conf/firewallconf.h>
+#include <conf/rule.h>
 #include <driver/drivercommon.h>
 #include <manager/envmanager.h>
 #include <util/bitutil.h>
@@ -298,15 +299,12 @@ bool ConfUtil::writeAppEntry(const App &app, bool isNew)
 bool ConfUtil::writeRules(const ConfRulesWalker &confRulesWalker)
 {
     ruleset_map_t ruleSetMap;
-    ruleid_arr_t ruleIds;
+    ruleid_arr_t ruleSetIds;
     int maxRuleId;
 
-    int outSize = 0;
-    int ruleOffset = 0;
-
-    return confRulesWalker.walkRules(ruleSetMap, ruleIds, maxRuleId, [&](Rule &rule) -> bool {
-        if (outSize == 0) {
-            outSize = FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
+    return confRulesWalker.walkRules(ruleSetMap, ruleSetIds, maxRuleId, [&](Rule &rule) -> bool {
+        if (buffer().isEmpty()) {
+            const int outSize = FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
 
             buffer().resize(outSize);
             buffer().fill('\0');
@@ -315,27 +313,7 @@ bool ConfUtil::writeRules(const ConfRulesWalker &confRulesWalker)
             rules->max_rule_id = maxRuleId;
         }
 
-        const int ruleId = rule.ruleId;
-        const auto ruleSetIndex = ruleSetMap[ruleId];
-
-        // Store the rule's offset
-        {
-            int *ruleOffsets = (int *) (buffer().data() + FORT_CONF_RULES_DATA_OFF);
-            ruleOffsets[ruleId] = ruleOffset;
-        }
-
-        // Store the rule
-        PFORT_CONF_RULE confRule = (PFORT_CONF_RULE) (buffer().data() + outSize);
-        confRule->enabled = rule.enabled;
-        confRule->blocked = rule.blocked;
-        confRule->exclusive = rule.exclusive;
-
-        const bool hasZones = (rule.acceptZones != 0 || rule.rejectZones != 0);
-        confRule->has_zones = hasZones;
-
-        confRule->has_expr = !rule.ruleText.isEmpty();
-
-        confRule->set_count = ruleSetIndex.count;
+        writeRule(rule, ruleSetMap, ruleSetIds);
 
         return true;
     });
@@ -383,6 +361,59 @@ void ConfUtil::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSi
 #undef CONF_DATA_OFFSET
 
         zonesMask ^= zoneMask;
+    }
+}
+
+void ConfUtil::writeRule(
+        const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds)
+{
+    const int ruleId = rule.ruleId;
+    const auto ruleSetInfo = ruleSetMap[ruleId];
+
+    FORT_CONF_RULE confRule;
+    confRule.enabled = rule.enabled;
+    confRule.blocked = rule.blocked;
+    confRule.exclusive = rule.exclusive;
+
+    const bool hasZones = (rule.acceptZones != 0 || rule.rejectZones != 0);
+    confRule.has_zones = hasZones;
+    confRule.has_expr = !rule.ruleText.isEmpty();
+    confRule.set_count = ruleSetInfo.count;
+
+    // Resize the buffer
+    const int oldSize = buffer().size();
+
+    buffer().resize(oldSize + FORT_CONF_RULE_SIZE(&confRule));
+    char *data = buffer().data();
+
+    // Write the rule's offset
+    {
+        int *ruleOffsets = (int *) (data + FORT_CONF_RULES_DATA_OFF);
+        ruleOffsets[ruleId] = oldSize;
+
+        data += oldSize;
+    }
+
+    // Write the rule
+    {
+        *((PFORT_CONF_RULE) data) = confRule;
+
+        data += sizeof(FORT_CONF_RULE);
+    }
+
+    // Write the rule's zones
+    if (hasZones) {
+        PFORT_CONF_RULE_ZONES ruleZones = (PFORT_CONF_RULE_ZONES) data;
+        ruleZones->accept_zones = rule.acceptZones;
+        ruleZones->reject_zones = rule.rejectZones;
+
+        data += sizeof(FORT_CONF_RULE_ZONES);
+    }
+
+    // Write the rule's set
+    if (ruleSetInfo.count != 0) {
+        const shorts_arr_t array = ruleSetIds.mid(ruleSetInfo.index, ruleSetInfo.count);
+        writeShorts(&data, array);
     }
 }
 

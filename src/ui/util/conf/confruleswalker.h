@@ -7,15 +7,15 @@
 
 #include <functional>
 
-#include <conf/rule.h>
+class Rule;
 
-struct RuleSetIndex
+struct RuleSetInfo
 {
     quint32 index : 24;
     quint32 count : 8;
 };
 
-using ruleset_map_t = QHash<quint16, RuleSetIndex>;
+using ruleset_map_t = QHash<quint16, RuleSetInfo>;
 using ruleid_arr_t = QVector<quint16>;
 
 using walkRulesCallback = bool(Rule &rule);
@@ -23,7 +23,7 @@ using walkRulesCallback = bool(Rule &rule);
 class ConfRulesWalker
 {
 public:
-    virtual bool walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds, int &maxRuleId,
+    virtual bool walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, int &maxRuleId,
             const std::function<walkRulesCallback> &func) const = 0;
 };
 

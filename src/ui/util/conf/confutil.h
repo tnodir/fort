@@ -7,15 +7,14 @@
 #include <QRegularExpressionMatch>
 #include <QVector>
 
+#include <util/conf/confappswalker.h>
+#include <util/conf/confruleswalker.h>
 #include <util/service/serviceinfo.h>
 
 #include "appparseoptions.h"
 
 class AddressGroup;
-class App;
 class AppGroup;
-class ConfAppsWalker;
-class ConfRulesWalker;
 class EnvManager;
 class FirewallConf;
 
@@ -126,6 +125,9 @@ private:
     static bool loadAddress6List(const char **data, IpRange &ipRange, uint &bufSize);
 
     static void writeApps(char **data, const appdata_map_t &appsMap, bool useHeader = false);
+
+    void writeRule(
+            const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds);
 
     static void migrateZoneData(char **data, const QByteArray &zoneData);
 

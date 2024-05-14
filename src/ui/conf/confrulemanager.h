@@ -36,7 +36,7 @@ public:
     virtual bool updateRuleName(int ruleId, const QString &ruleName);
     virtual bool updateRuleEnabled(int ruleId, bool enabled);
 
-    bool walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds, int &maxRuleId,
+    bool walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, int &maxRuleId,
             const std::function<walkRulesCallback> &func) const override;
 
     void updateDriverRules();
@@ -47,7 +47,7 @@ signals:
     void ruleUpdated();
 
 private:
-    void walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleIds) const;
+    void walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds) const;
     bool walkRulesLoop(const std::function<walkRulesCallback> &func) const;
 
     static void fillRule(Rule &rule, const SqliteStmt &stmt);
