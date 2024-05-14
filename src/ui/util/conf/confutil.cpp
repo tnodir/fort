@@ -17,6 +17,7 @@
 
 #include "confappswalker.h"
 #include "confruleswalker.h"
+#include "ruletextparser.h"
 
 #define APP_GROUP_MAX      FORT_CONF_GROUP_MAX
 #define APP_GROUP_NAME_MAX 128
@@ -377,8 +378,12 @@ void ConfUtil::writeRule(
 
     const bool hasZones = (rule.acceptZones != 0 || rule.rejectZones != 0);
     confRule.has_zones = hasZones;
-    confRule.has_expr = !rule.ruleText.isEmpty();
-    confRule.set_count = ruleSetInfo.count;
+
+    const bool hasExpr = !rule.ruleText.isEmpty();
+    confRule.has_expr = hasExpr;
+
+    const int ruleSetCount = ruleSetInfo.count;
+    confRule.set_count = ruleSetCount;
 
     // Resize the buffer
     const int oldSize = buffer().size();
@@ -411,9 +416,25 @@ void ConfUtil::writeRule(
     }
 
     // Write the rule's set
-    if (ruleSetInfo.count != 0) {
-        const shorts_arr_t array = ruleSetIds.mid(ruleSetInfo.index, ruleSetInfo.count);
-        writeShorts(&data, array);
+    if (ruleSetCount != 0) {
+        const auto array = QByteArray::fromRawData(
+                (const char *) &ruleSetIds[ruleSetInfo.index], ruleSetCount * sizeof(quint16));
+
+        writeArray(&data, array);
+    }
+
+    // Write the rule's conditions
+    if (hasExpr) {
+        writeRuleText(rule.ruleText);
+    }
+}
+
+void ConfUtil::writeRuleText(const QString &ruleText)
+{
+    RuleTextParser parser(ruleText);
+
+    while (parser.parse()) {
+        // TODO
     }
 }
 

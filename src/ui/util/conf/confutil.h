@@ -128,6 +128,7 @@ private:
 
     void writeRule(
             const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds);
+    void writeRuleText(const QString &ruleText);
 
     static void migrateZoneData(char **data, const QByteArray &zoneData);
 

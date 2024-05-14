@@ -183,7 +183,7 @@ SOURCES += \
     util/conf/addressrange.cpp \
     util/conf/appparseoptions.cpp \
     util/conf/confutil.cpp \
-    util/conf/ruleexpr.cpp \
+    util/conf/ruletextparser.cpp \
     util/dateutil.cpp \
     util/device.cpp \
     util/fileutil.cpp \
@@ -405,7 +405,7 @@ HEADERS += \
     util/conf/confappswalker.h \
     util/conf/confruleswalker.h \
     util/conf/confutil.h \
-    util/conf/ruleexpr.h \
+    util/conf/ruletextparser.h \
     util/dateutil.h \
     util/device.h \
     util/fileutil.h \
