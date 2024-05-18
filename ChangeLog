@@ -1,8 +1,8 @@
 Fort Firewall ChangeLog
 
-v3.12.8-test01, 2024-05-13:
+v3.12.8, 2024-05-18:
 - UI: Portable: Fix driver auto-(un)installing on startup/exit (Regression from v3.12.5).
-- UI: Optionally use "ping" for timeout on client restarting.
+- Installer: Add "/PATH" command line argument.
 
 v3.12.7, 2024-05-12:
 - UI: Options: Add ability to set Light/Dark Theme.
