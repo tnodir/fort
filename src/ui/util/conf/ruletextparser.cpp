@@ -1,5 +1,7 @@
 #include "ruletextparser.h"
 
+#include <common/fortconf.h>
+
 RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent)
 {
     setupText(text);

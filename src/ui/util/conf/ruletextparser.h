@@ -8,21 +8,7 @@
 
 struct RuleExpr
 {
-    bool cond_or : 1 = false;
-    bool cond_not : 1 = false;
-
-    enum ExprType : qint8 {
-        ExprNone = 0,
-        ExprList,
-        ExprAddress,
-        ExprLocalAddress,
-        ExprPort,
-        ExprLocalPort,
-        ExprDirection,
-        ExprProtocol,
-    };
-
-    ExprType exprType = ExprNone;
+    quint8 flags = 0;
 
     quint16 listIndex = 0;
     quint16 listCount = 0;
@@ -37,9 +23,7 @@ class RuleTextParser : public QObject
 public:
     explicit RuleTextParser(const QString &text, QObject *parent = nullptr);
 
-    RuleExpr::ExprType exprType() const { return m_exprType; }
-
-    const QVector<RuleExpr> &ruleExprList() const { return m_ruleExprList; }
+    const QVector<RuleExpr> &ruleExprArray() const { return m_ruleExprArray; }
 
     bool parse();
 
@@ -51,12 +35,12 @@ private:
 private:
     bool m_skipLine : 1 = false;
 
-    RuleExpr::ExprType m_exprType = RuleExpr::ExprNone;
+    quint8 m_exprType = 0;
 
     const QChar *m_p = nullptr;
     const QChar *m_end = nullptr;
 
-    QVector<RuleExpr> m_ruleExprList;
+    QVector<RuleExpr> m_ruleExprArray;
 };
 
 #endif // RULETEXTPARSER_H
