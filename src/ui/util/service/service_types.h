@@ -2,7 +2,7 @@
 #define SERVICE_TYPES_H
 
 enum ServiceControlCode {
-    ServiceControlStop = 0x0100, // SERVICE_USER_DEFINED_CONTROL
+    ServiceControlStop = 128,
     ServiceControlStopRestarting,
 };
 
