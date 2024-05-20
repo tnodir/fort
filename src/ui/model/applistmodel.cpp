@@ -188,13 +188,16 @@ QVariant dataDisplayName(const AppRow &appRow, int role)
                                                                   : QString());
 }
 
-QVariant dataDisplayAction(const AppRow &appRow, int /*role*/)
+QVariant dataDisplayAction(const AppRow &appRow, int role)
 {
     if (appRow.killProcess)
         return AppListModel::tr("Kill Process");
 
     if (appRow.blocked)
         return AppListModel::tr("Block");
+
+    if (role == Qt::ToolTipRole && appRow.lanOnly)
+        return AppListModel::tr("Block Internet Traffic");
 
     return AppListModel::tr("Allow");
 }
