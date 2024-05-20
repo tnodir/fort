@@ -22,7 +22,23 @@ class AppListModel : public FtsTableSqlModel
     Q_OBJECT
 
 public:
+    enum FilterFlag {
+        FilterNone = 0,
+        FilterWildcard = (1 << 0),
+    };
+    Q_ENUM(FilterFlag)
+    Q_DECLARE_FLAGS(FilterFlags, FilterFlag)
+
     explicit AppListModel(QObject *parent = nullptr);
+
+    FilterFlags filters() const { return m_filters; }
+    void setFilters(FilterFlags v);
+    void setFilter(FilterFlag v, bool on = true);
+
+    FilterFlags filterValues() const { return m_filterValues; }
+    void setFilterValue(FilterFlag v, Qt::CheckState checkState);
+
+    void clearFilters();
 
     ConfManager *confManager() const;
     ConfAppManager *confAppManager() const;
@@ -41,11 +57,15 @@ public:
     AppRow appRowById(qint64 appId) const;
     AppRow appRowByPath(const QString &appPath) const;
 
+signals:
+    void filtersChanged();
+
 protected:
     bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_appRow; }
 
     QString sqlBase() const override;
+    QString sqlWhere() const override;
     QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;
 
@@ -60,7 +80,12 @@ private:
     bool updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const;
 
 private:
+    FilterFlags m_filters = FilterNone;
+    FilterFlags m_filterValues = FilterNone;
+
     mutable AppRow m_appRow;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(AppListModel::FilterFlags)
 
 #endif // APPLISTMODEL_H

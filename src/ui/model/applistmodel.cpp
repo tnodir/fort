@@ -267,6 +267,41 @@ inline QVariant dataDisplayRow(const AppRow &appRow, int column, int role)
 
 AppListModel::AppListModel(QObject *parent) : FtsTableSqlModel(parent) { }
 
+void AppListModel::setFilters(FilterFlags v)
+{
+    if (m_filters == v)
+        return;
+
+    m_filters = v;
+    emit filtersChanged();
+
+    resetLater();
+}
+
+void AppListModel::setFilter(FilterFlag v, bool on)
+{
+    auto filters = m_filters;
+    filters.setFlag(v, on);
+
+    setFilters(filters);
+}
+
+void AppListModel::setFilterValue(FilterFlag v, Qt::CheckState checkState)
+{
+    m_filterValues.setFlag(v, (checkState == Qt::Checked));
+
+    setFilter(v, (checkState != Qt::PartiallyChecked));
+
+    resetLater();
+}
+
+void AppListModel::clearFilters()
+{
+    m_filterValues = FilterNone;
+
+    setFilters(FilterNone);
+}
+
 ConfManager *AppListModel::confManager() const
 {
     return IoC<ConfManager>();
@@ -526,6 +561,24 @@ QString AppListModel::sqlBase() const
            "    JOIN app_group g ON g.app_group_id = t.app_group_id"
            "    LEFT JOIN app_alert a ON a.app_id = t.app_id"
            "    LEFT JOIN rule r ON r.rule_id = t.rule_id";
+}
+
+QString AppListModel::sqlWhere() const
+{
+    QString sql = FtsTableSqlModel::sqlWhere();
+
+    if (filters() != FilterNone) {
+        if (sql.isEmpty()) {
+            sql = " WHERE ";
+        }
+
+        if (filters().testFlag(FilterWildcard)) {
+            sql += QString("t.is_wildcard = %1")
+                           .arg(filterValues().testFlag(FilterWildcard) ? "1" : "0");
+        }
+    }
+
+    return sql;
 }
 
 QString AppListModel::sqlWhereFts() const

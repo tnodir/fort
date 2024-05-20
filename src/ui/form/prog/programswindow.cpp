@@ -142,6 +142,9 @@ void ProgramsWindow::retranslateUi()
     m_btBlockApp->setText(tr("Block"));
     m_btRemoveApp->setText(tr("Remove"));
     m_editSearch->setPlaceholderText(tr("Search"));
+    m_btFilter->setToolTip(tr("Filters"));
+    m_btClearFilter->setToolTip(tr("Clear Filters"));
+    m_cbFilterWildcard->setText(tr("Wildcard Paths"));
 
     m_btGroups->setText(tr("Groups"));
     m_btServices->setText(tr("Services"));
@@ -208,6 +211,10 @@ QLayout *ProgramsWindow::setupHeader()
     // Search edit line
     setupEditSearch();
 
+    // Filter button
+    setupFilter();
+    setupClearFilter();
+
     // Groups button
     m_btGroups = ControlUtil::createFlatToolButton(":/icons/application_double.png");
 
@@ -232,6 +239,8 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(m_btRemoveApp);
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_editSearch);
+    layout->addWidget(m_btFilter);
+    layout->addWidget(m_btClearFilter);
     layout->addStretch();
     layout->addWidget(m_btGroups);
     layout->addWidget(m_btServices);
@@ -308,6 +317,48 @@ void ProgramsWindow::setupEditSearch()
     m_editSearch->setMaximumWidth(200);
 
     connect(this, &ProgramsWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
+}
+
+void ProgramsWindow::setupFilter()
+{
+    m_cbFilterWildcard = new QCheckBox();
+    m_cbFilterWildcard->setIcon(IconCache::icon(":/icons/coding.png"));
+
+    m_cbFilterWildcard->setTristate(true);
+    m_cbFilterWildcard->setCheckState(Qt::PartiallyChecked);
+
+    connect(m_cbFilterWildcard, &QCheckBox::clicked, this, [&] {
+        appListModel()->setFilterValue(
+                AppListModel::FilterWildcard, m_cbFilterWildcard->checkState());
+    });
+
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbFilterWildcard });
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
+
+    m_btFilter = ControlUtil::createButton(":/icons/filter.png");
+    m_btFilter->setMenu(menu);
+}
+
+void ProgramsWindow::setupClearFilter()
+{
+    m_btClearFilter = new QPushButton(
+            GuiUtil::overlayIcon(":/icons/filter.png", ":/icons/cross.png"), QString());
+
+    connect(m_btClearFilter, &QPushButton::clicked, this, [&] {
+        appListModel()->clearFilters();
+
+        m_cbFilterWildcard->setCheckState(Qt::PartiallyChecked);
+    });
+
+    const auto refreshClearFilter = [&] {
+        const auto isEmpty = (appListModel()->filters() == AppListModel::FilterNone);
+        m_btClearFilter->setVisible(!isEmpty);
+    };
+
+    refreshClearFilter();
+
+    connect(appListModel(), &AppListModel::filtersChanged, this, refreshClearFilter);
 }
 
 void ProgramsWindow::setupTableApps()
