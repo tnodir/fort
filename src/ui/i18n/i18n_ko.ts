@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Install</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Install</translation>
     </message>
 </context>
 <context>
@@ -135,6 +135,10 @@
     <message>
         <source>Rule</source>
         <translation>규칙</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Block Internet Traffic</translation>
     </message>
 </context>
 <context>
@@ -1102,23 +1106,23 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>테마:</translation>
     </message>
     <message>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>시스템</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>밝은</translation>
     </message>
     <message>
         <source>Dark</source>
-        <translation type="unfinished"></translation>
+        <translation>어두운</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>
-        <translation type="unfinished"></translation>
+        <translation>변경 사항은 프로그램 종료 시에만 적용됩니다.</translation>
     </message>
 </context>
 <context>
@@ -1470,6 +1474,18 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Review Alerts</source>
         <translation>경고 검토</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wildcard Paths</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

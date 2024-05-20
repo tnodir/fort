@@ -136,6 +136,10 @@
         <source>Rule</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1460,6 +1464,18 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Review Alerts</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Clear Filters</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Wildcard Paths</source>
         <translation></translation>
     </message>
 </context>

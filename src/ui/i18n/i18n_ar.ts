@@ -136,6 +136,10 @@
         <source>Rule</source>
         <translation>قاعدة</translation>
     </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1470,6 +1474,18 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Review Alerts</source>
         <translation>عرض التحذير</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wildcard Paths</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

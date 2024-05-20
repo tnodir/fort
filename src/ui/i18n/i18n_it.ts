@@ -136,6 +136,10 @@
         <source>Rule</source>
         <translation>Regola</translation>
     </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Blocca traffico internet</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1470,6 +1474,18 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <message>
         <source>Review Alerts</source>
         <translation>Rivedi allerte</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wildcard Paths</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

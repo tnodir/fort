@@ -136,6 +136,10 @@
         <source>Rule</source>
         <translation>Pravilo</translation>
     </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Onemogoči internetni promet</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1470,6 +1474,18 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Review Alerts</source>
         <translation>Pregled opozoril</translation>
+    </message>
+    <message>
+        <source>Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Clear Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Wildcard Paths</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
