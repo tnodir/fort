@@ -13,6 +13,8 @@ public:
     explicit StatMainPage(StatisticsController *ctrl = nullptr, QWidget *parent = nullptr);
 
 protected slots:
+    void onRestoreWindowState(IniUser *ini) override;
+
     void onRetranslateUi() override;
 
 private:

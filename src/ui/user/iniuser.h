@@ -197,6 +197,9 @@ public:
     bool statWindowMaximized() const { return valueBool("statWindow/maximized"); }
     void setStatWindowMaximized(bool on) { setValue("statWindow/maximized", on); }
 
+    int statTabIndex() const { return valueInt("statWindow/tabIndex"); }
+    void setStatTabIndex(int v) { setValue("statWindow/tabIndex", v); }
+
     int statTrafUnit() const { return valueInt("statWindow/trafUnit"); }
     void setStatTrafUnit(int v) { setValue("statWindow/trafUnit", v); }
 

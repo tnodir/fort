@@ -11,6 +11,7 @@
 #include <form/tray/trayicon.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
+#include <user/iniuser.h>
 #include <util/iconcache.h>
 
 #include "connectionspage.h"
@@ -19,6 +20,11 @@
 StatMainPage::StatMainPage(StatisticsController *ctrl, QWidget *parent) : StatBasePage(ctrl, parent)
 {
     setupUi();
+}
+
+void StatMainPage::onRestoreWindowState(IniUser *ini)
+{
+    m_tabWidget->setCurrentIndex(qBound(0, ini->statTabIndex(), m_tabWidget->count() - 1));
 }
 
 void StatMainPage::onRetranslateUi()
