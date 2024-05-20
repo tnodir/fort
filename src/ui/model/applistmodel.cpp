@@ -568,14 +568,14 @@ QString AppListModel::sqlWhere() const
     QString sql = FtsTableSqlModel::sqlWhere();
 
     if (filters() != FilterNone) {
-        if (sql.isEmpty()) {
-            sql = " WHERE ";
-        }
+        QStringList list;
 
         if (filters().testFlag(FilterWildcard)) {
-            sql += QString("t.is_wildcard = %1")
-                           .arg(filterValues().testFlag(FilterWildcard) ? "1" : "0");
+            list << QString("t.is_wildcard = %1")
+                            .arg(filterValues().testFlag(FilterWildcard) ? "1" : "0");
         }
+
+        sql += (sql.isEmpty() ? " WHERE " : " AND ") + list.join(" AND ");
     }
 
     return sql;
