@@ -16,19 +16,19 @@
 				"${BUILD}-driver-${CONFIG}/Win32/fortfw.sys"
 			]
 		},
-		"${TARGET}/driver/ARM64 | win10-arm64": {
+		"${TARGET}/driver/x86_64_old | win7 win10": {
 			"sys": [
-				"${BUILD}-driver-win10/ARM64/fortfw.sys"
+				"${BUILD}-driver-win7/x64/fortfw.sys"
 			]
 		},
 		"${TARGET}/driver/x86_64 | win7 win10": {
 			"sys": [
-				"${BUILD}-driver-${CONFIG}/x64/fortfw.sys"
+				"${BUILD}-driver-win10/x64/fortfw.sys"
 			]
 		},
-		"${TARGET}/driver/x86_64_old | win10": {
+		"${TARGET}/driver/ARM64 | win10-arm64": {
 			"sys": [
-				"${BUILD}-driver-win7/x64/fortfw.sys"
+				"${BUILD}-driver-win10/ARM64/fortfw.sys"
 			]
 		}
 	}
