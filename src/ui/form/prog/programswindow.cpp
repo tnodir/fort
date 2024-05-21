@@ -143,7 +143,7 @@ void ProgramsWindow::retranslateUi()
     m_btRemoveApp->setText(tr("Remove"));
     m_editSearch->setPlaceholderText(tr("Search"));
     m_btFilter->setToolTip(tr("Filters"));
-    m_btClearFilter->setToolTip(tr("Clear Filters"));
+    m_btClearFilter->setText(tr("Clear Filters"));
     m_cbFilterWildcard->setText(tr("Wildcard Paths"));
 
     m_btGroups->setText(tr("Groups"));
@@ -213,7 +213,6 @@ QLayout *ProgramsWindow::setupHeader()
 
     // Filter button
     setupFilter();
-    setupClearFilter();
 
     // Groups button
     m_btGroups = ControlUtil::createFlatToolButton(":/icons/application_double.png");
@@ -240,7 +239,6 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_editSearch);
     layout->addWidget(m_btFilter);
-    layout->addWidget(m_btClearFilter);
     layout->addStretch();
     layout->addWidget(m_btGroups);
     layout->addWidget(m_btServices);
@@ -321,6 +319,34 @@ void ProgramsWindow::setupEditSearch()
 
 void ProgramsWindow::setupFilter()
 {
+    setupFilterWildcard();
+    setupFilterClear();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbFilterWildcard);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_btClearFilter, 0, Qt::AlignCenter);
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
+
+    m_btFilter = ControlUtil::createButton(":/icons/filter.png");
+    m_btFilter->setMenu(menu);
+
+    const auto refreshFilter = [&] {
+        const auto isEmpty = (appListModel()->filters() == AppListModel::FilterNone);
+
+        m_btFilter->setIcon(isEmpty
+                        ? IconCache::icon(":/icons/filter.png")
+                        : GuiUtil::overlayIcon(":/icons/filter.png", ":/icons/tick.png"));
+    };
+
+    refreshFilter();
+
+    connect(appListModel(), &AppListModel::filtersChanged, this, refreshFilter);
+}
+
+void ProgramsWindow::setupFilterWildcard()
+{
     m_cbFilterWildcard = new QCheckBox();
     m_cbFilterWildcard->setIcon(IconCache::icon(":/icons/coding.png"));
 
@@ -331,34 +357,15 @@ void ProgramsWindow::setupFilter()
         appListModel()->setFilterValue(
                 AppListModel::FilterWildcard, m_cbFilterWildcard->checkState());
     });
-
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbFilterWildcard });
-
-    auto menu = ControlUtil::createMenuByLayout(layout, this);
-
-    m_btFilter = ControlUtil::createButton(":/icons/filter.png");
-    m_btFilter->setMenu(menu);
 }
 
-void ProgramsWindow::setupClearFilter()
+void ProgramsWindow::setupFilterClear()
 {
-    m_btClearFilter = new QPushButton(
-            GuiUtil::overlayIcon(":/icons/filter.png", ":/icons/cross.png"), QString());
-
-    connect(m_btClearFilter, &QPushButton::clicked, this, [&] {
+    m_btClearFilter = ControlUtil::createFlatToolButton(":/icons/recycle.png", [&] {
         appListModel()->clearFilters();
 
         m_cbFilterWildcard->setCheckState(Qt::PartiallyChecked);
     });
-
-    const auto refreshClearFilter = [&] {
-        const auto isEmpty = (appListModel()->filters() == AppListModel::FilterNone);
-        m_btClearFilter->setVisible(!isEmpty);
-    };
-
-    refreshClearFilter();
-
-    connect(appListModel(), &AppListModel::filtersChanged, this, refreshClearFilter);
 }
 
 void ProgramsWindow::setupTableApps()
