@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Install</source>
-        <translation type="unfinished">Install</translation>
+        <translation>설치</translation>
     </message>
 </context>
 <context>
@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Block Internet Traffic</translation>
+        <translation>인터넷 트래픽 차단</translation>
     </message>
 </context>
 <context>
@@ -1477,15 +1477,15 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>필터</translation>
     </message>
     <message>
         <source>Clear Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 지우기</translation>
     </message>
     <message>
         <source>Wildcard Paths</source>
-        <translation type="unfinished"></translation>
+        <translation>와일드카드 경로</translation>
     </message>
 </context>
 <context>

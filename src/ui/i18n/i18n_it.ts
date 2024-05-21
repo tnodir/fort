@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Blocca traffico internet</translation>
+        <translation>Blocca traffico internet</translation>
     </message>
 </context>
 <context>
@@ -1477,15 +1477,15 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtri</translation>
     </message>
     <message>
         <source>Clear Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancella Filtri</translation>
     </message>
     <message>
         <source>Wildcard Paths</source>
-        <translation type="unfinished"></translation>
+        <translation>Percorsi Wildcard</translation>
     </message>
 </context>
 <context>
