@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.12.10, 2024-05-21:
+- Installer: Fix 32-bit installation on 64-bit Windows < 10 1809.
+- UI: Programs: Tweak "Filters" menu.
+
 v3.12.9, 2024-05-20:
 - UI: Programs: Add "Filters" menu to show/hide Wildcard paths.
 - UI: Statistics: Open by "statWindow/tabIndex" .ini key.
