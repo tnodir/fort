@@ -46,7 +46,7 @@ bool ServiceHandle::stopService(bool restarting)
 
         ControlService(SC_HANDLE(m_serviceHandle), controlCode, &status);
 
-        QThread::msleep(n * 100);
+        QThread::msleep(100);
     } while (--n > 0);
 
     return false;

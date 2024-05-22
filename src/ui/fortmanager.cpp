@@ -277,8 +277,10 @@ void FortManager::install(const char *arg)
 void FortManager::uninstall(const char *arg)
 {
     StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
-    StartupUtil::setServiceInstalled(false); // Uninstall service
     StartupUtil::setExplorerIntegrated(false); // Remove Windows Explorer integration
+
+    StartupUtil::stopService(); // Quit clients & Stop service
+    StartupUtil::setServiceInstalled(false); // Uninstall service
 
     StartupUtil::clearGlobalExplorerIntegrated(); // COMPAT: Remove Global Windows Explorer
                                                   // integration

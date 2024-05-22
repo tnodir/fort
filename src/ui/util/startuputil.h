@@ -16,7 +16,7 @@ public:
     static bool isServiceRunning();
 
     static bool startService();
-    static bool stopService();
+    static bool stopService(bool restarting = false);
 
     static AutoRunMode autoRunMode();
     static void setAutoRunMode(int mode, const QString &defaultLanguage = QString());

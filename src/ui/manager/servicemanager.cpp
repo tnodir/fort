@@ -152,8 +152,9 @@ quint32 ServiceManager::processControlStopState()
 
 quint32 ServiceManager::processControlShutdownState(quint32 code)
 {
-    if (code == ServiceControlStopRestarting) {
-        emit stopRestartingRequested();
+    const bool restarting = (code == ServiceControlStopRestarting);
+    if (code == ServiceControlStop || restarting) {
+        emit stopRestartingRequested(restarting);
     }
 
     return SERVICE_STOP_PENDING;

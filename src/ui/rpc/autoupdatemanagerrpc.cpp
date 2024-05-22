@@ -18,12 +18,18 @@ inline bool processAutoUpdateManager_updateState(
 }
 
 inline bool processAutoUpdateManager_restartClients(
-        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs & /*p*/)
+        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p)
 {
+    const bool restarting = p.args.value(0).toBool();
+
     if (qobject_cast<AutoUpdateManagerRpc *>(autoUpdateManager)) {
-        OsUtil::restartClient();
+        if (restarting) {
+            OsUtil::restartClient();
+        } else {
+            OsUtil::quit("uninstall");
+        }
     } else {
-        emit autoUpdateManager->restartClients();
+        emit autoUpdateManager->restartClients(restarting);
     }
     return true;
 }
@@ -131,7 +137,10 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
             updateClientStates);
 
     connect(autoUpdateManager, &AutoUpdateManager::restartClients, rpcManager,
-            [=] { rpcManager->invokeOnClients(Control::Rpc_AutoUpdateManager_restartClients); });
+            [=](bool restarting) {
+                rpcManager->invokeOnClients(
+                        Control::Rpc_AutoUpdateManager_restartClients, { restarting });
+            });
 }
 
 bool AutoUpdateManagerRpc::startDownload()
@@ -153,6 +162,7 @@ void AutoUpdateManagerRpc::setupClientSignals()
 {
     auto rpcManager = IoCDependency<RpcManager>();
 
-    connect(this, &AutoUpdateManager::restartClients, rpcManager,
-            [=] { rpcManager->invokeOnServer(Control::Rpc_AutoUpdateManager_restartClients); });
+    connect(this, &AutoUpdateManager::restartClients, rpcManager, [=](bool restarting) {
+        rpcManager->invokeOnServer(Control::Rpc_AutoUpdateManager_restartClients, { restarting });
+    });
 }

@@ -60,7 +60,7 @@ signals:
     void bytesReceivedChanged(int size);
     void fileNameChanged();
 
-    void restartClients();
+    void restartClients(bool restarting);
 
 protected:
     virtual void setupManager();

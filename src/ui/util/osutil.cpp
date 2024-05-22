@@ -186,9 +186,10 @@ void OsUtil::restartClient()
 
     const auto scriptPath = qEnvironmentVariable("ComSpec", "cmd.exe");
 
-    const auto command =
-            QString("(timeout /t 2 || ping -n 3 127.0.0.1) >NUL & start %1 --restarted")
-                    .arg(fi.fileName());
+    const auto command = QString("for /L %i in (1,1,30) do ("
+                                 "ping -n 2 127.0.0.1 >NUL"
+                                 " & if not exist inst.tmp start %1 --restarted & exit)")
+                                 .arg(fi.fileName());
 
     const QStringList args = { "/c", command };
 

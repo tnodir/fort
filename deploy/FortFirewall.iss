@@ -65,8 +65,9 @@ Name: "portable"; Description: "{cm:Portable}"; Flags: unchecked
 
 [Files]
 Source: "build\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "data\{#APP_EXE_NAME}.example.ini"; DestDir: "{app}"; Flags: ignoreversion
+Source: "data\*.ini"; DestDir: "{app}"; Flags: ignoreversion
 Source: "data\qt.conf"; DestDir: "{app}"; Flags: ignoreversion
+Source: "data\inst.tmp"; DestDir: "{app}"; Flags: ignoreversion deleteafterinstall
 
 [Dirs]
 Name: "{app}\Data"; Flags: uninsneveruninstall; Permissions: users-modify; Tasks: portable
@@ -313,9 +314,10 @@ begin
   Result := True;
 end;
 
-function StopFortService(): Boolean;
+function StopFortService(const Restarting: Boolean): Boolean;
 var
   path: String;
+  params: String;
   ResultCode: Integer;
 begin
   path := ExpandConstant('{#APP_EXE}');
@@ -326,7 +328,13 @@ begin
     Exit;
   end;
 
-  Exec(path, '-s', '', SW_HIDE, ewWaitUntilTerminated, ResultCode)
+  params := '-s';
+  if Restarting then
+  begin
+    params := params + ' restart';
+  end;
+
+  Exec(path, params, '', SW_HIDE, ewWaitUntilTerminated, ResultCode)
 
   Result := (ResultCode = 0);
 end;
@@ -448,7 +456,7 @@ end;
 
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 begin
-  StopFortService();
+  StopFortService(True);
 
   Result := '';
 end;
