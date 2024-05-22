@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.12.11-test01, 2024-05-22:
+- Installer: Improve clients restarting.
+
 v3.12.10, 2024-05-21:
 - Installer: Fix 32-bit installation on 64-bit Windows < 10 1809.
 - UI: Programs: Tweak "Filters" menu.
