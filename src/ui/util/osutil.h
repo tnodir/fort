@@ -44,7 +44,10 @@ public:
 
     static bool registerAppRestart();
 
+    static void beginRestartClients();
+    static void endRestartClients();
     static void restartClient();
+
     static void restart();
     static void quit(const QString &reason);
 };

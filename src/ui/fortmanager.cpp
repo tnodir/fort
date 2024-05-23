@@ -267,6 +267,8 @@ void FortManager::install(const char *arg)
     case 's': { // "service"
         StartupUtil::setAutoRunMode(StartupUtil::StartupAllUsers);
         StartupUtil::setServiceInstalled(true);
+
+        OsUtil::endRestartClients();
     } break;
     case 'e': { // "explorer"
         StartupUtil::setExplorerIntegrated(true);

@@ -83,7 +83,7 @@ void AutoUpdateManager::setupRestart()
 {
     if (IoC<FortSettings>()->isService()) {
         connect(IoC<ServiceManager>(), &ServiceManager::stopRestartingRequested, this,
-                &AutoUpdateManager::restartClients);
+                &AutoUpdateManager::onRestartClientsRequested);
     } else {
         if (!OsUtil::registerAppRestart()) {
             qCWarning(LC) << "Restart registration error";
@@ -144,6 +144,15 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
     qCDebug(LC) << "Check:" << taskInfo->version() << "downloaded:" << downloaded;
 
     setIsDownloaded(downloaded);
+}
+
+void AutoUpdateManager::onRestartClientsRequested(bool restarting)
+{
+    if (restarting) {
+        OsUtil::beginRestartClients();
+    }
+
+    emit restartClients(restarting);
 }
 
 void AutoUpdateManager::clearUpdateDir()

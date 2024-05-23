@@ -180,6 +180,16 @@ bool OsUtil::registerAppRestart()
             RegisterApplicationRestart(L"--restarted", RESTART_NO_CRASH | RESTART_NO_REBOOT));
 }
 
+void OsUtil::beginRestartClients()
+{
+    FileUtil::writeFileData(FileUtil::appBinLocation() + "/inst.tmp", {});
+}
+
+void OsUtil::endRestartClients()
+{
+    FileUtil::removeFile(FileUtil::appBinLocation() + "/inst.tmp");
+}
+
 void OsUtil::restartClient()
 {
     const QFileInfo fi(QCoreApplication::applicationFilePath());

@@ -74,6 +74,8 @@ protected slots:
 private:
     void setupByTaskInfo(TaskInfoUpdateChecker *taskInfo);
 
+    void onRestartClientsRequested(bool restarting);
+
     void clearUpdateDir();
 
     bool saveInstaller(const QByteArray &fileData);
