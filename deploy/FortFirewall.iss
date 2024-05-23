@@ -100,7 +100,7 @@ Filename: "{#APP_EXE}"; Parameters: "-i explorer"; Flags: runasoriginaluser; Tas
 Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; \
   Flags: nowait; Tasks: service
 
-Filename: "{#APP_EXE}"; Parameters: "--lang {code:LanguageName}"; \
+Filename: "{#APP_EXE}"; Parameters: "--launch --lang {code:LanguageName}"; \
   Description: {cm:LaunchProgram,{#APP_NAME}}; Flags: nowait postinstall; Check: ShouldLaunch
 
 [UninstallRun]

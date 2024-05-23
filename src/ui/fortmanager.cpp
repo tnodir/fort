@@ -155,7 +155,7 @@ FortManager::~FortManager()
     OsUtil::closeMutex(m_instanceMutex);
 }
 
-bool FortManager::checkRunningInstance(bool isService)
+bool FortManager::checkRunningInstance(bool isService, bool isLaunch)
 {
     bool isSingleInstance;
     m_instanceMutex =
@@ -165,7 +165,7 @@ bool FortManager::checkRunningInstance(bool isService)
 
     if (isService) {
         qCWarning(LC) << "Quit due Service is already running!";
-    } else {
+    } else if (!isLaunch) {
         if (!IoC<ControlManager>()->postCommand(Control::CommandHome, { "show" })) {
             QMessageBox::warning(nullptr, QString(), tr("Application is already running!"));
         }

@@ -176,8 +176,7 @@ bool OsUtil::allowOtherForegroundWindows()
 
 bool OsUtil::registerAppRestart()
 {
-    return SUCCEEDED(
-            RegisterApplicationRestart(L"--restarted", RESTART_NO_CRASH | RESTART_NO_REBOOT));
+    return SUCCEEDED(RegisterApplicationRestart(L"--launch", RESTART_NO_CRASH | RESTART_NO_REBOOT));
 }
 
 void OsUtil::beginRestartClients()
@@ -198,7 +197,7 @@ void OsUtil::restartClient()
 
     const auto command = QString("for /L %i in (1,1,30) do ("
                                  "ping -n 2 127.0.0.1 >NUL"
-                                 " & if not exist inst.tmp start %1 --restarted & exit)")
+                                 " & if not exist inst.tmp start %1 --launch & exit)")
                                  .arg(fi.fileName());
 
     const QStringList args = { "/c", command };

@@ -203,12 +203,12 @@ void FortSettings::processLangOption(
     }
 }
 
-void FortSettings::processRestartedOption(
-        const QCommandLineParser &parser, const QCommandLineOption &restartedOption)
+void FortSettings::processLaunchOption(
+        const QCommandLineParser &parser, const QCommandLineOption &launchOption)
 {
-    // Restarted by Installer
-    if (parser.isSet(restartedOption)) {
-        m_isRestarted = true;
+    // Launched by Installer
+    if (parser.isSet(launchOption)) {
+        m_isLaunch = true;
     }
 }
 
@@ -239,7 +239,7 @@ void FortSettings::processArguments(const QStringList &args)
     QCommandLineParser parser;
 
     const QCommandLineOption profileOption(
-            QStringList() << "p" << "profile", "Directory to store settings.", "profile");
+            { "p", "profile" }, "Directory to store settings.", "profile");
     parser.addOption(profileOption);
 
     const QCommandLineOption statOption("stat", "Directory to store statistics.", "stat");
@@ -266,14 +266,18 @@ void FortSettings::processArguments(const QStringList &args)
     const QCommandLineOption langOption("lang", "Default language.", "lang", "en");
     parser.addOption(langOption);
 
+    // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
     const QCommandLineOption restartedOption("restarted", "Restarted by Installer?");
     parser.addOption(restartedOption);
+
+    const QCommandLineOption launchOption("launch", "Launched by Installer?");
+    parser.addOption(launchOption);
 
     const QCommandLineOption serviceOption("service", "Is running as a service?");
     parser.addOption(serviceOption);
 
-    const QCommandLineOption controlOption(QStringList() << "c" << "control",
-            "Control running instance by executing the command.", "control");
+    const QCommandLineOption controlOption(
+            { "c", "control" }, "Control running instance by executing the command.", "control");
     parser.addOption(controlOption);
 
     parser.addVersionOption();
@@ -288,7 +292,8 @@ void FortSettings::processArguments(const QStringList &args)
     processNoCacheOption(parser, noCacheOption);
     processNoSplashOption(parser, noSplashOption);
     processLangOption(parser, langOption);
-    processRestartedOption(parser, restartedOption);
+    processLaunchOption(parser, restartedOption);
+    processLaunchOption(parser, launchOption);
     processServiceOption(parser, serviceOption);
     processControlOption(parser, controlOption);
     processOtherOptions(parser);
