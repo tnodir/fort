@@ -5,7 +5,7 @@
     @set ARCH=x86_64
 
     @rem Check for Windows 10 2004
-    @for /f "tokens=6 delims=. " %%i in ('ver') do @(
+    @for /f "tokens=6 delims=.[] " %%i in ('ver') do @(
         @if %%i lss 19041 @set ARCH=x86_64_old
     )
 ) else (
