@@ -1,7 +1,8 @@
 Fort Firewall ChangeLog
 
-v3.12.11-test01, 2024-05-22:
+v3.12.11, 2024-05-23:
 - Installer: Improve clients restarting.
+- Installer: Fix OS version checking.
 
 v3.12.10, 2024-05-21:
 - Installer: Fix 32-bit installation on 64-bit Windows < 10 1809.
