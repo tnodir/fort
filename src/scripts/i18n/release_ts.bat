@@ -3,6 +3,6 @@
 
 cd ..\..\ui
 
-for %%L in (ar,de,fr,it,ko,pt_BR,ru,sl,zh_CN) do (
+for %%L in (ar,de,fr,it,ko,pt_BR,ru,sl,zh_CN,pl) do (
 	%QT_HOME%\bin\lrelease -removeidentical i18n\i18n_%%L.ts i18n\qt\qtbase_%%L.ts -qm i18n\i18n_%%L.qm
 )
