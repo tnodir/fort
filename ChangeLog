@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.12.12, 2024-05-26:
+- UI: Add Polish language.
+- Installer: Don't show "My Fort" window of running instance on launch.
+- UI: Update SQLite to 3.46.0
+
 v3.12.11, 2024-05-23:
 - Installer: Improve clients restarting.
 - Installer: Fix OS version checking.
