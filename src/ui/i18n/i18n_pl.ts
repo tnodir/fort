@@ -768,7 +768,7 @@
     </message>
     <message>
         <source>Import</source>
-        <translation>Import</translation>
+        <translation>Importuj</translation>
     </message>
     <message>
         <source>Default</source>

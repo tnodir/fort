@@ -51,6 +51,7 @@ Name: "de"; MessagesFile: "compiler:Languages\German.isl,{#LANG_CUSTOM}\German.i
 Name: "fr"; MessagesFile: "compiler:Languages\French.isl,{#LANG_CUSTOM}\French.isl"
 Name: "it"; MessagesFile: "compiler:Languages\Italian.isl,{#LANG_CUSTOM}\Italian.isl"
 Name: "ko"; MessagesFile: "compiler:Languages\Korean.isl,{#LANG_CUSTOM}\Korean.isl"
+Name: "pl"; MessagesFile: "compiler:Languages\Polish.isl,{#LANG_CUSTOM}\Polish.isl"
 Name: "pt"; MessagesFile: "compiler:Languages\Portuguese.isl,{#LANG_CUSTOM}\Portuguese.isl"
 Name: "pt_BR"; MessagesFile: "compiler:Languages\BrazilianPortuguese.isl,{#LANG_CUSTOM}\BrazilianPortuguese.isl"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl,{#LANG_CUSTOM}\Russian.isl"
