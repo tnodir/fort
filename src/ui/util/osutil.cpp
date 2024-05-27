@@ -193,20 +193,23 @@ void OsUtil::restartClient()
 {
     const QFileInfo fi(QCoreApplication::applicationFilePath());
 
-    const auto scriptPath = qEnvironmentVariable("ComSpec", "cmd.exe");
-
     const auto command = QString("for /L %i in (1,1,30) do ("
                                  "ping -n 2 127.0.0.1 >NUL"
                                  " & if not exist inst.tmp start %1 --launch & exit)")
                                  .arg(fi.fileName());
 
-    const QStringList args = { "/c", command };
+    runCommand(command, /*workingDir=*/fi.path());
 
-    qCDebug(LC) << "restartClient:" << scriptPath << args;
+    quit("client required restart");
+}
 
-    QProcess::startDetached(scriptPath, args, /*workingDirectory=*/fi.path());
+void OsUtil::startService(const QString &serviceName)
+{
+    const auto command = QString("ping -n 2 127.0.0.1 >NUL"
+                                 " & sc start %1")
+                                 .arg(serviceName);
 
-    quit("required client restart");
+    runCommand(command);
 }
 
 void OsUtil::restart()
@@ -228,4 +231,15 @@ void OsUtil::quit(const QString &reason)
     qCDebug(LC) << "Quit due" << reason;
 
     QCoreApplication::quit();
+}
+
+bool OsUtil::runCommand(const QString &command, const QString &workingDir)
+{
+    const QString scriptPath = qEnvironmentVariable("ComSpec", "cmd.exe");
+
+    const QStringList args = { "/c", command };
+
+    qCDebug(LC) << "Run command:" << scriptPath << args;
+
+    return QProcess::startDetached(scriptPath, args, workingDir);
 }

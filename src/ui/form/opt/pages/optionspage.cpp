@@ -172,7 +172,7 @@ void OptionsPage::saveService(bool isService)
         });
     }
 
-    fortManager()->processRestartRequired(tr("Windows Service installation changed.") + '\n'
+    windowManager()->processRestartRequired(tr("Windows Service installation changed.") + '\n'
             + tr("The change will be applied only on program exit."));
 }
 

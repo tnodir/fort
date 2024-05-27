@@ -6,6 +6,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include <fort_version.h>
+
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
@@ -24,7 +26,7 @@ ServiceManager::ServiceManager(QObject *parent) : QObject(parent) { }
 
 void ServiceManager::setUp()
 {
-    qApp->connect(qApp, &QObject::destroyed, [] { reportStatus(SERVICE_STOPPED); });
+    connect(qApp, &QObject::destroyed, [] { reportStatus(SERVICE_STOPPED); });
 
     setupControlManager();
     setupConfManager();
@@ -169,5 +171,7 @@ void ServiceManager::processControlDeviceEvent(quint32 eventType)
 
 void ServiceManager::restart()
 {
+    connect(qApp, &QObject::destroyed, [] { OsUtil::startService(APP_BASE "Svc"); });
+
     OsUtil::quit("service required restart");
 }

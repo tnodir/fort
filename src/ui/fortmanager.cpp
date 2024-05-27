@@ -294,14 +294,18 @@ void FortManager::uninstall(const char *arg)
 
 bool FortManager::installDriver()
 {
-    closeDriver();
+    const bool hasService = IoC<FortSettings>()->hasService();
+
+    if (hasService) {
+        StartupUtil::stopService();
+    } else {
+        closeDriver();
+    }
 
     IoC<DriverManager>()->reinstallDriver();
 
-    if (IoC<FortSettings>()->hasService()) {
-        // Install the service and app restart required to continue
-        StartupUtil::setServiceInstalled(true);
-        processRestartRequired(tr("Driver reinstalled"));
+    if (hasService) {
+        StartupUtil::startService();
     } else {
         // Re-open the driver device and initialize it
         if (setupDriver()) {
@@ -379,7 +383,7 @@ void FortManager::checkDriverOpened()
 
     const auto settings = IoC<FortSettings>();
 
-    if (settings->isMaster() && canInstallDriver(settings)) {
+    if (!settings->isService() && canInstallDriver(settings)) {
         installDriver();
     }
 }
@@ -475,11 +479,12 @@ void FortManager::setupServiceInfoManager()
 
 void FortManager::processRestartRequired(const QString &info)
 {
+    qCDebug(LC) << "Restart required:" << info;
+
     if (IoC<FortSettings>()->isService()) {
-        qCDebug(LC) << "Restart required:" << info;
         IoC<ServiceManager>()->restart();
     } else {
-        IoC<WindowManager>()->processRestartRequired(info);
+        OsUtil::restart();
     }
 }
 

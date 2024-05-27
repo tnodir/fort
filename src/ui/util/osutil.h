@@ -48,8 +48,12 @@ public:
     static void endRestartClients();
     static void restartClient();
 
+    static void startService(const QString &serviceName);
+
     static void restart();
     static void quit(const QString &reason);
+
+    static bool runCommand(const QString &command, const QString &workingDir = {});
 };
 
 #endif // OSUTIL_H

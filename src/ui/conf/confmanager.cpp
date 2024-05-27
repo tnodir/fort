@@ -11,11 +11,11 @@
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
 #include <driver/drivermanager.h>
+#include <fortmanager.h>
 #include <fortsettings.h>
 #include <log/logmanager.h>
 #include <manager/envmanager.h>
 #include <manager/serviceinfomanager.h>
-#include <manager/servicemanager.h>
 #include <task/taskinfo.h>
 #include <task/taskmanager.h>
 #include <user/iniuser.h>
@@ -791,12 +791,10 @@ bool ConfManager::importMasterBackup(const QString &path)
     }
 
     if (!ok) {
-        qCWarning(LC) << "Import error from:" << path;
+        qCWarning(LC) << "Import error:" << path;
     }
 
-    if (IoC<FortSettings>()->isService()) {
-        IoC<ServiceManager>()->restart();
-    }
+    IoC<FortManager>()->processRestartRequired("Backup Imported");
 
     return ok;
 }

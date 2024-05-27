@@ -41,7 +41,7 @@ void DbErrorManager::setUp()
     auto settings = IoC<FortSettings>();
 
     // Drive Mask
-    m_driveMask |= FileUtil::driveMaskByPath(settings->confFilePath());
+    m_driveMask = FileUtil::driveMaskByPath(settings->confFilePath());
 
     // SQLite Log Callback
     SqliteDb::setErrorLogCallback(sqliteLogHandler, /*context=*/this);
@@ -62,7 +62,7 @@ void DbErrorManager::checkDriveList()
     const quint32 driveMask = FileUtil::mountedDriveMask(m_driveMask);
 
     if (m_driveMask == driveMask) {
-        // Restart on profile drive mounted
+        // Restart on profile's drive mounted
         IoC<FortManager>()->processRestartRequired(tr("Profile's drive mounted"));
         return;
     }
