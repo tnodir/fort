@@ -354,7 +354,7 @@ void FortManager::checkRemoveDriver()
 {
     const auto settings = IoC<FortSettings>();
 
-    if (canInstallDriver(settings))
+    if (!canInstallDriver(settings))
         return;
 
     if (settings->isService() || StartupUtil::isServiceInstalled())
