@@ -81,6 +81,7 @@ private:
     bool saveInstaller(const QByteArray &fileData);
 
     static QStringList installerArgs(FortSettings *settings);
+    static QString installerPortableTasks(FortSettings *settings);
 
 private:
     Flags m_flags = NoFlag;

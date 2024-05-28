@@ -100,8 +100,6 @@ QLayout *AboutPage::setupButtonsLayout()
     m_btDownload = ControlUtil::createFlatToolButton(
             ":/icons/download.png", [&] { autoUpdateManager()->startDownload(); });
 
-    m_btDownload->setEnabled(!settings()->isPortable());
-
     // Install
     m_btInstall = ControlUtil::createFlatToolButton(
             ":/icons/tick.png", [&] { autoUpdateManager()->runInstaller(); });
