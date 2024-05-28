@@ -10,12 +10,28 @@
     @goto EXIT
 )
 
-robocopy "%SRCDIR%" "%DSTDIR%" "%FILENAME%" /R:0 >NUL || copy "%SRCPATH%" "%DSTPATH%"
+
+@if not exist "%SystemRoot%\System32\robocopy.exe" @goto USE_COPY
+
+robocopy "%SRCDIR%" "%DSTDIR%" "%FILENAME%" /R:0 >NUL
 @if ERRORLEVEL 2 (
     @echo Error: Cannot copy driver to system
     @set RCODE=%ERRORLEVEL%
     @goto EXIT
 )
+
+@goto END_USE_COPY
+
+:USE_COPY
+
+copy "%SRCPATH%" "%DSTPATH%"
+@if ERRORLEVEL 1 (
+    @echo Error: Cannot copy driver to system
+    @set RCODE=%ERRORLEVEL%
+    @goto EXIT
+)
+
+:END_USE_COPY
 
 
 @rem Create the driver service
