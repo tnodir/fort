@@ -128,5 +128,5 @@ void NetDownloader::onSslErrors(const QList<QSslError> &errors)
         qCWarning(LC) << "SSL Error:" << error.errorString();
     }
 
-    finish();
+    m_reply->ignoreSslErrors();
 }
