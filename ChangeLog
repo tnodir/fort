@@ -1,7 +1,9 @@
 Fort Firewall ChangeLog
 
-v3.12.13-test01, 2024-05-27:
+v3.12.13-test02, 2024-05-28:
 - UI: Auto-restart on profile's drive re-mount.
+- UI: Portable: Can Install from My Fort: About.
+- Installer: Fallback to "copy" when "robocopy" fails.
 
 v3.12.12, 2024-05-26:
 - UI: Add Polish language.
