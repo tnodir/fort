@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+#include <util/dirinfo.h>
 #include <util/ioc/iocservice.h>
 
 class DbErrorManager : public QObject, public IocService
@@ -14,16 +15,16 @@ public:
 
     void setUp() override;
 
-public slots:
-    void onDbIoError();
-
 private slots:
-    void checkDriveList();
+    void checkConfDir();
+
+protected:
+    virtual void setupTimer();
+
+    void setupDirInfo();
 
 private:
-    bool m_polling : 1 = false;
-
-    quint32 m_driveMask = 0;
+    DirInfo m_confDir;
 };
 
 #endif // DBERRORMANAGER_H

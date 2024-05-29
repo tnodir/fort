@@ -39,9 +39,10 @@ void DriveListManager::onDriveListChanged()
     const quint32 addedMask = (driveMask & ~m_driveMask);
     const quint32 removedMask = (~driveMask & m_driveMask);
 
+    qCDebug(LC) << Qt::hex << "driveMask:" << driveMask << "addedMask:" << addedMask
+                << "removedMask:" << removedMask;
+
     m_driveMask = driveMask;
 
-    if (addedMask != 0 || removedMask != 0) {
-        emit driveMaskChanged(addedMask, removedMask);
-    }
+    emit driveMaskChanged(addedMask, removedMask);
 }

@@ -14,7 +14,6 @@
 #include <form/dialog/passworddialog.h>
 #include <fortsettings.h>
 #include <hostinfo/hostinfocache.h>
-#include <manager/dberrormanager.h>
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <manager/hotkeymanager.h>
@@ -30,6 +29,7 @@
 #include <rpc/confmanagerrpc.h>
 #include <rpc/confrulemanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
+#include <rpc/dberrormanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
@@ -80,6 +80,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new LogManager());
     ioc->setService(new ServiceInfoManager());
     ioc->setService(new TaskManager());
+    ioc->setService(new DbErrorManager());
 
     // For Master only
     ioc->setService(new DriveListManager());
@@ -101,6 +102,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<LogManager>(new LogManagerRpc());
     ioc->setService<ServiceInfoManager>(new ServiceInfoManagerRpc());
     ioc->setService<TaskManager>(new TaskManagerRpc());
+    ioc->setService<DbErrorManager>(new DbErrorManagerRpc());
 }
 
 inline void setupServices(IocContainer *ioc, const FortSettings *settings)
@@ -131,7 +133,6 @@ inline void setupServices(IocContainer *ioc, const FortSettings *settings)
 
     ioc->setService(new NativeEventFilter());
     ioc->setService(new AppInfoCache());
-    ioc->setService(new DbErrorManager());
     ioc->setService(new HostInfoCache());
     ioc->setService(new ZoneListModel());
 }

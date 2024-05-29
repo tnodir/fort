@@ -148,6 +148,7 @@ SOURCES += \
     rpc/confmanagerrpc.cpp \
     rpc/confrulemanagerrpc.cpp \
     rpc/confzonemanagerrpc.cpp \
+    rpc/dberrormanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
     rpc/logmanagerrpc.cpp \
     rpc/quotamanagerrpc.cpp \
@@ -186,6 +187,7 @@ SOURCES += \
     util/conf/ruletextparser.cpp \
     util/dateutil.cpp \
     util/device.cpp \
+    util/dirinfo.cpp \
     util/fileutil.cpp \
     util/guiutil.cpp \
     util/iconcache.cpp \
@@ -367,6 +369,7 @@ HEADERS += \
     rpc/confmanagerrpc.h \
     rpc/confrulemanagerrpc.h \
     rpc/confzonemanagerrpc.h \
+    rpc/dberrormanagerrpc.h \
     rpc/drivermanagerrpc.h \
     rpc/logmanagerrpc.h \
     rpc/quotamanagerrpc.h \
@@ -408,6 +411,7 @@ HEADERS += \
     util/conf/ruletextparser.h \
     util/dateutil.h \
     util/device.h \
+    util/dirinfo.h \
     util/fileutil.h \
     util/guiutil.h \
     util/iconcache.h \
