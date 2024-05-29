@@ -44,7 +44,7 @@ bool DirInfo::checkIsValid()
     if (m_handle == DIR_INVALID_HANDLE)
         return false;
 
-    if (GetFileType(m_handle) == FILE_TYPE_UNKNOWN) {
+    if (!GetFileTime(m_handle, nullptr, nullptr, nullptr)) {
         close();
         return false;
     }
