@@ -21,7 +21,7 @@ private slots:
 protected:
     virtual void setupTimer();
 
-    void setupDirInfo();
+    void setupDirInfo(const QString &path);
 
 private:
     DirInfo m_confDir;

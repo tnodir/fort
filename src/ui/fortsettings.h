@@ -35,6 +35,7 @@ public:
     bool forceDebug() const { return m_forceDebug; }
     bool canInstallDriver() const { return m_canInstallDriver; }
     bool canStartService() const { return m_canStartService; }
+    bool checkProfileOnline() const { return m_checkProfileOnline; }
 
     bool isLaunch() const { return m_isLaunch; }
 
@@ -137,6 +138,7 @@ private:
     uint m_forceDebug : 1 = false;
     uint m_canInstallDriver : 1 = false;
     uint m_canStartService : 1 = false;
+    uint m_checkProfileOnline : 1 = false;
     uint m_isLaunch : 1 = false;
     uint m_isService : 1 = false;
     uint m_hasService : 1 = false;

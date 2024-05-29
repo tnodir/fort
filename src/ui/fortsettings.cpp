@@ -121,6 +121,7 @@ void FortSettings::setupGlobal()
     m_forceDebug = settings.value("global/forceDebug").toBool();
     m_canInstallDriver = settings.value("global/canInstallDriver").toBool();
     m_canStartService = settings.value("global/canStartService").toBool();
+    m_checkProfileOnline = settings.value("global/checkProfileOnline").toBool();
     m_defaultLanguage = settings.value("global/defaultLanguage").toString();
 
     m_profilePath = settings.value("global/profileDir").toString();

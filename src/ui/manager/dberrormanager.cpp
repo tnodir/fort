@@ -52,19 +52,23 @@ void DbErrorManager::checkConfDir()
 
 void DbErrorManager::setupTimer()
 {
+    auto settings = IoC<FortSettings>();
+
+    const bool checkProfileOnline = (settings->checkProfileOnline() || settings->isPortable());
+    if (!checkProfileOnline)
+        return;
+
+    setupDirInfo(settings->confFilePath());
+
     auto timer = new QTimer(this);
     timer->setInterval(1500);
     timer->start();
 
     connect(timer, &QTimer::timeout, this, &DbErrorManager::checkConfDir);
-
-    setupDirInfo();
 }
 
-void DbErrorManager::setupDirInfo()
+void DbErrorManager::setupDirInfo(const QString &path)
 {
-    auto settings = IoC<FortSettings>();
-
-    m_confDir.setPath(settings->confFilePath());
+    m_confDir.setPath(path);
     m_confDir.open();
 }
