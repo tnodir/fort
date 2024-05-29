@@ -193,7 +193,7 @@ void OsUtil::restartClient()
 {
     const QFileInfo fi(QCoreApplication::applicationFilePath());
 
-    const auto command = QString("ping -n 3 127.0.0.1 >NUL"
+    const auto command = QString("ping -n 4 127.0.0.1 >NUL"
                                  " & if not exist inst.tmp start %1 --launch")
                                  .arg(fi.fileName());
 
