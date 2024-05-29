@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+using SvcHandle = void *;
+
 struct CreateServiceArg
 {
     const wchar_t *serviceName;
@@ -38,8 +40,8 @@ private:
     void closeService();
 
 private:
-    qintptr m_managerHandle = 0;
-    qintptr m_serviceHandle = 0;
+    SvcHandle m_managerHandle = 0;
+    SvcHandle m_serviceHandle = 0;
 };
 
 #endif // SERVICEHANDLE_H

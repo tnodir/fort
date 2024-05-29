@@ -5,7 +5,7 @@
 
 #define PROC_PATH_MAX 65536
 
-ProcessInfo::ProcessInfo(quint32 pid, QObject *parent) : QObject(parent), m_pid(pid)
+ProcessInfo::ProcessInfo(quint32 pid) : m_pid(pid)
 {
     openProcess();
 }

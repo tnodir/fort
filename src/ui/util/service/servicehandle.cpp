@@ -54,10 +54,10 @@ bool ServiceHandle::stopService(bool restarting)
 
 bool ServiceHandle::createService(const CreateServiceArg &csa)
 {
-    m_serviceHandle = qintptr(CreateServiceW(SC_HANDLE(m_managerHandle), csa.serviceName,
+    m_serviceHandle = CreateServiceW(SC_HANDLE(m_managerHandle), csa.serviceName,
             csa.serviceDisplay, SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START,
             SERVICE_ERROR_NORMAL, csa.command, csa.serviceGroup, nullptr, csa.dependencies, nullptr,
-            nullptr));
+            nullptr);
 
     if (!isServiceOpened())
         return false;
@@ -98,13 +98,12 @@ bool ServiceHandle::setupServiceRestartConfig()
 void ServiceHandle::openService(
         const wchar_t *serviceName, quint32 managerAccess, quint32 serviceAccess)
 {
-    m_managerHandle = qintptr(OpenSCManagerW(nullptr, nullptr, managerAccess));
+    m_managerHandle = OpenSCManagerW(nullptr, nullptr, managerAccess);
     if (!m_managerHandle)
         return;
 
     if (serviceAccess != 0) {
-        m_serviceHandle =
-                qintptr(OpenServiceW(SC_HANDLE(m_managerHandle), serviceName, serviceAccess));
+        m_serviceHandle = OpenServiceW(SC_HANDLE(m_managerHandle), serviceName, serviceAccess);
     }
 }
 

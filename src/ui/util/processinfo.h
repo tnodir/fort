@@ -3,22 +3,16 @@
 
 #include <QObject>
 
-#include "classhelpers.h"
-
-using phandle_t = void *;
+using ProcessHandle = void *;
 
 #define PROC_INVALID_PID    quint32(-1)
 #define PROC_INVALID_HANDLE nullptr
 
-class ProcessInfo : public QObject
+class ProcessInfo final
 {
-    Q_OBJECT
-    Q_PROPERTY(quint32 pid READ pid CONSTANT)
-
 public:
-    explicit ProcessInfo(quint32 pid = PROC_INVALID_PID, QObject *parent = nullptr);
-    ~ProcessInfo() override;
-    CLASS_DELETE_COPY_MOVE(ProcessInfo)
+    explicit ProcessInfo(quint32 pid = PROC_INVALID_PID);
+    ~ProcessInfo();
 
     quint32 pid() const { return m_pid; }
 
@@ -34,7 +28,7 @@ private:
 
 private:
     quint32 m_pid = 0;
-    phandle_t m_handle = PROC_INVALID_HANDLE;
+    ProcessHandle m_handle = PROC_INVALID_HANDLE;
 };
 
 #endif // PROCESSINFO_H
