@@ -243,8 +243,13 @@ bool Logger::checkFileSize()
 
 void Logger::writeLogLine(const QString &logLine)
 {
-    m_file.write(logLine.toUtf8());
-    m_file.flush();
+    const auto logData = logLine.toUtf8();
+
+    if (m_file.write(logData) == logData.size()) {
+        m_file.flush();
+    } else {
+        closeFile();
+    }
 }
 
 void Logger::writeLog(const QString &dateString, const QString &logLine)
