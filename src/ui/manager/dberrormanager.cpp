@@ -39,10 +39,12 @@ void DbErrorManager::setUp()
     setupTimer();
 }
 
-void DbErrorManager::checkConfDir()
+void DbErrorManager::checkProfileDir()
 {
     if (m_confDir.checkIsValid())
         return;
+
+    qCDebug(LC) << "Profile drive is offline";
 
     if (m_confDir.open()) {
         // Restart on profile's drive mounted
@@ -64,7 +66,7 @@ void DbErrorManager::setupTimer()
     timer->setInterval(1500);
     timer->start();
 
-    connect(timer, &QTimer::timeout, this, &DbErrorManager::checkConfDir);
+    connect(timer, &QTimer::timeout, this, &DbErrorManager::checkProfileDir);
 }
 
 void DbErrorManager::setupDirInfo(const QString &path)

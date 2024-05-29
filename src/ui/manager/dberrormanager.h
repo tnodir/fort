@@ -16,7 +16,7 @@ public:
     void setUp() override;
 
 private slots:
-    void checkConfDir();
+    void checkProfileDir();
 
 protected:
     virtual void setupTimer();
