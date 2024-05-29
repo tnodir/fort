@@ -58,7 +58,8 @@ static bool isDriveMounted(WCHAR drive)
 {
     const WCHAR volume[] = { L'\\', L'\\', L'.', L'\\', drive, L':', L'\0' };
 
-    const DWORD shareMode = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
+    constexpr DWORD shareMode = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
+
     const HANDLE volumeHandle =
             CreateFileW(volume, GENERIC_READ, shareMode, nullptr, OPEN_EXISTING, 0, nullptr);
 
@@ -293,8 +294,10 @@ QString realPath(const QString &path)
     if (path.isEmpty())
         return path;
 
-    const HANDLE fileHandle = CreateFileW((LPCWSTR) path.utf16(), GENERIC_READ, FILE_SHARE_READ,
-            nullptr, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS /* open dir */, nullptr);
+    constexpr DWORD shareMode = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
+
+    const HANDLE fileHandle = CreateFileW((LPCWSTR) path.utf16(), GENERIC_READ, shareMode, nullptr,
+            OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS /* open dir */, nullptr);
 
     QString resPath;
     if (fileHandle != INVALID_HANDLE_VALUE) {

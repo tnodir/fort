@@ -21,7 +21,9 @@ bool DirInfo::open()
 {
     close();
 
-    m_handle = CreateFileW((LPCWSTR) path().utf16(), GENERIC_READ, FILE_SHARE_READ, nullptr,
+    constexpr DWORD shareMode = FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE;
+
+    m_handle = CreateFileW((LPCWSTR) path().utf16(), GENERIC_READ, shareMode, nullptr,
             OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, nullptr);
 
     return isOpen();
