@@ -60,10 +60,10 @@ void DbErrorManager::setupTimer()
     if (!checkProfileOnline)
         return;
 
-    setupDirInfo(settings->confFilePath());
+    setupDirInfo(settings->profilePath());
 
     auto timer = new QTimer(this);
-    timer->setInterval(1500);
+    timer->setInterval(2000);
     timer->start();
 
     connect(timer, &QTimer::timeout, this, &DbErrorManager::checkProfileDir);

@@ -14,7 +14,7 @@ public:
     ~DirInfo();
 
     const QString &path() const { return m_path; }
-    void setPath(const QString &path) { m_path = path; }
+    void setPath(const QString &path);
 
     bool open();
     void close();

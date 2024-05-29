@@ -3,11 +3,18 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include <util/fileutil.h>
+
 DirInfo::DirInfo() { }
 
 DirInfo::~DirInfo()
 {
     close();
+}
+
+void DirInfo::setPath(const QString &path)
+{
+    m_path = FileUtil::toNativeSeparators(path);
 }
 
 bool DirInfo::open()
