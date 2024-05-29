@@ -711,8 +711,7 @@ void TrayIcon::updateActionHotKeys()
         if (!shortcut.isEmpty() && iniKey == HotKey::appGroupModifier) {
             const QKeyCombination key = shortcut[0];
 
-            shortcut = Qt::KeyboardModifiers(key & Qt::KeyboardModifierMask)
-                    | (Qt::Key_F1 + groupIndex);
+            shortcut = key.keyboardModifiers() | (Qt::Key_F1 + groupIndex);
             ++groupIndex;
         }
 
