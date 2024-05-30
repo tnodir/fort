@@ -247,7 +247,7 @@ QString AutoUpdateManager::installerPortableTasks(FortSettings *settings)
         tasks += ",service";
     }
 
-    tasks = '"';
+    tasks += '"';
 
     return tasks;
 }
