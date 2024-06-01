@@ -15,6 +15,8 @@ public:
 
     static QDateTime now();
 
+    static QDateTime startOfDayUTC(const QDate &date);
+
     static qint64 getUnixTime();
     static qint64 toUnixTime(qint32 unixHour);
 

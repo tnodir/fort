@@ -1,12 +1,22 @@
 #include "dateutil.h"
 
 #include <QLocale>
+#include <QTimeZone>
 
 DateUtil::DateUtil(QObject *parent) : QObject(parent) { }
 
 QDateTime DateUtil::now()
 {
     return QDateTime::currentDateTime();
+}
+
+QDateTime DateUtil::startOfDayUTC(const QDate &date)
+{
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+    return date.startOfDay(Qt::UTC);
+#else
+    return date.startOfDay(QTimeZone::UTC);
+#endif
 }
 
 qint64 DateUtil::getUnixTime()
@@ -27,7 +37,7 @@ qint32 DateUtil::getUnixHour(qint64 unixTime)
 qint32 DateUtil::getUnixDay(qint64 unixTime)
 {
     const QDate date = QDateTime::fromSecsSinceEpoch(unixTime).date();
-    const QDateTime dateTime = date.startOfDay(Qt::UTC);
+    const QDateTime dateTime = startOfDayUTC(date);
 
     return getUnixHour(dateTime.toSecsSinceEpoch());
 }
@@ -40,7 +50,7 @@ qint32 DateUtil::getUnixMonth(qint64 unixTime, int monthStart)
     }
 
     const QDate dateMonth = QDate(date.year(), date.month(), 1);
-    const QDateTime dateTime = dateMonth.startOfDay(Qt::UTC);
+    const QDateTime dateTime = startOfDayUTC(dateMonth);
 
     return getUnixHour(dateTime.toSecsSinceEpoch());
 }
