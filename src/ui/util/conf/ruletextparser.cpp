@@ -15,23 +15,51 @@ void RuleTextParser::setupText(const QString &text)
 
 bool RuleTextParser::parse()
 {
-    while (m_p < m_end) {
-        processChar(*m_p++);
-    }
+    const auto charType = nextCharType();
 
     return false;
 }
 
-void RuleTextParser::processChar(const QChar c)
+RuleTextParser::CharType RuleTextParser::nextCharType()
 {
-    if (m_skipLine) {
-        m_skipLine = (c != '\n');
-        return;
+    bool skipLine = false;
+
+    while (m_p < m_end) {
+        const QChar c = *m_p++;
+
+        if (skipLine) {
+            skipLine = (c != '\n');
+            continue;
+        }
+
+        if (c.isLetter()) {
+            return CharNameBegin;
+        }
+
+        if (c.isDigit()) {
+            return CharValueBegin;
+        }
+
+        switch (c.unicode()) {
+        case '{':
+            return CharListBegin;
+        case '}':
+            return CharListEnd;
+        case '(':
+            return CharBracketBegin;
+        case ')':
+            return CharBracketEnd;
+        case '[':
+            return CharValueBegin;
+        case ',':
+            return CharValueSeparator;
+        case ':':
+            return CharColon;
+        case '#': {
+            skipLine = true;
+        } break;
+        }
     }
 
-    switch (c.unicode()) {
-    case '#': {
-        m_skipLine = true;
-    } break;
-    }
+    return CharNone;
 }

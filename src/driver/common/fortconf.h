@@ -110,18 +110,28 @@ typedef struct fort_conf_addr_group
     char data[4];
 } FORT_CONF_ADDR_GROUP, *PFORT_CONF_ADDR_GROUP;
 
-#define FORT_RULE_EXPR_NOT       0x01
-#define FORT_RULE_EXPR_LIST      0x02
-#define FORT_RULE_EXPR_LOCAL     0x04
-#define FORT_RULE_EXPR_ADDRESS   0x08
-#define FORT_RULE_EXPR_PORT      0x10
-#define FORT_RULE_EXPR_PROTOCOL  0x20
-#define FORT_RULE_EXPR_DIRECTION 0x40
+#define FORT_RULE_EXPR_FLAG_LIST 0x01
+#define FORT_RULE_EXPR_FLAG_NOT  0x02
+
+enum FortRuleExprList {
+    FORT_RULE_EXPR_LIST_OR = 0,
+    FORT_RULE_EXPR_LIST_AND,
+};
+
+enum FortRuleExprType {
+    FORT_RULE_EXPR_TYPE_ADDRESS = 0,
+    FORT_RULE_EXPR_TYPE_PORT,
+    FORT_RULE_EXPR_TYPE_LOCAL_ADDRESS,
+    FORT_RULE_EXPR_TYPE_LOCAL_PORT,
+    FORT_RULE_EXPR_TYPE_PROTOCOL,
+    FORT_RULE_EXPR_TYPE_DIRECTION,
+};
 
 typedef struct fort_conf_rule_expr
 {
-    UINT32 flags : 8;
-    UINT32 size : 24;
+    UINT32 flags : 2;
+    UINT32 type : 3;
+    UINT32 size : 27;
 } FORT_CONF_RULE_EXPR, *PFORT_CONF_RULE_EXPR;
 
 typedef struct fort_conf_rule_zones

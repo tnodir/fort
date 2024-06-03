@@ -9,6 +9,7 @@
 struct RuleExpr
 {
     quint8 flags = 0;
+    quint8 type = 0;
 
     quint16 listIndex = 0;
     quint16 listCount = 0;
@@ -28,13 +29,26 @@ public:
     bool parse();
 
 private:
+    enum CharType : qint8 {
+        CharNone = 0,
+        CharListBegin, // {
+        CharListEnd, // }
+        CharBracketBegin, // (
+        CharBracketEnd, // )
+        CharNameBegin, // a-zA-Z
+        CharName, // a-zA-Z0-9_-
+        CharValueBegin, // [0-9
+        CharValue, // 0-9.:-/
+        CharValueSeparator, // ,
+        CharColon, // :
+        CharComment, // #
+    };
+
     void setupText(const QString &text);
 
-    void processChar(const QChar c);
+    RuleTextParser::CharType nextCharType();
 
 private:
-    bool m_skipLine : 1 = false;
-
     quint8 m_exprType = 0;
 
     const QChar *m_p = nullptr;
