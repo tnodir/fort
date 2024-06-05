@@ -29,19 +29,19 @@ public:
     bool parse();
 
 private:
-    enum CharType : qint8 {
+    enum CharType {
         CharNone = 0,
-        CharListBegin, // {
-        CharListEnd, // }
-        CharBracketBegin, // (
-        CharBracketEnd, // )
-        CharNameBegin, // a-zA-Z
-        CharName, // a-zA-Z0-9_-
-        CharValueBegin, // [0-9
-        CharValue, // 0-9.:-/
-        CharValueSeparator, // ,
-        CharColon, // :
-        CharComment, // #
+        CharListBegin = (1 << 0), // {
+        CharListEnd = (1 << 1), // }
+        CharBracketBegin = (1 << 2), // (
+        CharBracketEnd = (1 << 3), // )
+        CharNameBegin = (1 << 4), // a-zA-Z
+        CharName = (1 << 5), // a-zA-Z0-9_-
+        CharValueBegin = (1 << 6), // [0-9
+        CharValue = (1 << 7), // 0-9.:-/
+        CharValueSeparator = (1 << 8), // ,
+        CharColon = (1 << 9), // :
+        CharComment = (1 << 10), // #
     };
 
     void setupText(const QString &text);
