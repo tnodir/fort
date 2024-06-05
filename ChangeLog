@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.12.13-test02, 2024-05-28:
+v3.12.13, 2024-06-05:
 - UI: Auto-restart on profile's drive re-mount.
 - UI: Portable: Can Install from My Fort: About.
 - Installer: Fallback to "copy" when "robocopy" fails.
