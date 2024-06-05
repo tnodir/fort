@@ -1,6 +1,49 @@
 #include "ruletextparser.h"
 
+#include <QHash>
+
 #include <common/fortconf.h>
+
+namespace {
+
+RuleCharType processChar(const QChar c)
+{
+    if (c.isLetter()) {
+        return CharNameBegin;
+    }
+
+    if (c.isDigit()) {
+        return CharValueBegin;
+    }
+
+    static QHash<char, RuleCharType> charTypeMap = {
+        { '{', CharListBegin },
+        { '}', CharListEnd },
+        { '(', CharBracketBegin },
+        { ')', CharBracketEnd },
+        { '[', CharValueBegin },
+        { ',', CharValueSeparator },
+        { ':', CharColon },
+        { '#', CharComment },
+    };
+
+    return charTypeMap.value(c.unicode(), CharNone);
+}
+
+RuleCharType processCharType(RuleCharType charType, const QChar c)
+{
+    if (charType == CharComment) {
+        if (c == '\n') {
+            return CharNone;
+        }
+
+        return CharComment;
+    }
+
+    return processChar(c);
+}
+
+}
 
 RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent)
 {
@@ -20,44 +63,17 @@ bool RuleTextParser::parse()
     return false;
 }
 
-RuleTextParser::CharType RuleTextParser::nextCharType()
+RuleCharType RuleTextParser::nextCharType()
 {
-    bool skipLine = false;
+    RuleCharType charType = CharNone;
 
     while (m_p < m_end) {
         const QChar c = *m_p++;
 
-        if (skipLine) {
-            skipLine = (c != '\n');
-            continue;
-        }
+        charType = processCharType(charType, c);
 
-        if (c.isLetter()) {
-            return CharNameBegin;
-        }
-
-        if (c.isDigit()) {
-            return CharValueBegin;
-        }
-
-        switch (c.unicode()) {
-        case '{':
-            return CharListBegin;
-        case '}':
-            return CharListEnd;
-        case '(':
-            return CharBracketBegin;
-        case ')':
-            return CharBracketEnd;
-        case '[':
-            return CharValueBegin;
-        case ',':
-            return CharValueSeparator;
-        case ':':
-            return CharColon;
-        case '#': {
-            skipLine = true;
-        } break;
+        if (charType != CharNone) {
+            return charType;
         }
     }
 
