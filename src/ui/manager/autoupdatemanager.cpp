@@ -227,9 +227,10 @@ QStringList AutoUpdateManager::installerArgs(FortSettings *settings)
     if (settings->isPortable()) {
         const QString appPath = FileUtil::toNativeSeparators(FileUtil::appBinLocation());
 
-        args << QString("/PATH=\"%1\"").arg(appPath)
-             // Portable Tasks
-             << installerPortableTasks(settings);
+        args << QString("/PATH=%1").arg(appPath);
+
+        // Portable Tasks
+        args << installerPortableTasks(settings);
     }
 
     if (!settings->hasService()) {
@@ -241,13 +242,11 @@ QStringList AutoUpdateManager::installerArgs(FortSettings *settings)
 
 QString AutoUpdateManager::installerPortableTasks(FortSettings *settings)
 {
-    QString tasks = "/TASKS=\"portable";
+    QString tasks = "/TASKS=portable";
 
     if (settings->hasService()) {
         tasks += ",service";
     }
-
-    tasks += '"';
 
     return tasks;
 }
