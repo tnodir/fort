@@ -192,12 +192,10 @@ void FortManager::initialize()
     setupServiceInfoManager();
 
     checkReinstallDriver();
-    setupDriver();
-
-    loadConf();
-
-    checkDriverOpened();
     checkStartService();
+
+    setupDriver();
+    loadConf();
 }
 
 void FortManager::setupThreadPool()
@@ -298,7 +296,7 @@ bool FortManager::installDriver()
     const bool hasService = IoC<FortSettings>()->hasService();
 
     if (hasService) {
-        StartupUtil::stopService();
+        StartupUtil::stopService(/*restarting=*/true);
     } else {
         closeDriver();
     }
@@ -374,18 +372,6 @@ void FortManager::checkReinstallDriver()
 
     if (!settings->hasService() && canInstallDriver(settings)) {
         IoC<DriverManager>()->checkReinstallDriver();
-    }
-}
-
-void FortManager::checkDriverOpened()
-{
-    if (IoC<DriverManager>()->isDeviceOpened())
-        return;
-
-    const auto settings = IoC<FortSettings>();
-
-    if (!settings->isService() && canInstallDriver(settings)) {
-        installDriver();
     }
 }
 

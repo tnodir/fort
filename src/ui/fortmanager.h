@@ -50,7 +50,6 @@ private:
     void checkRemoveDriver();
 
     void checkReinstallDriver();
-    void checkDriverOpened();
     void checkStartService();
 
     void setupEnvManager();
