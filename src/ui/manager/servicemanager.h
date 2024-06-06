@@ -23,6 +23,9 @@ public:
     bool controlEnabled() const { return m_controlEnabled; }
     void setControlEnabled(bool v);
 
+    bool acceptStop() const override { return controlEnabled(); }
+    bool acceptPauseContinue() const override { return controlEnabled(); }
+
     void initialize(qintptr hstatus) override;
 
     const wchar_t *serviceName() const override;
@@ -41,18 +44,8 @@ protected:
     void setupControlManager();
     void setupConfManager();
 
-    bool acceptStop() const override { return controlEnabled(); }
-    bool acceptPauseContinue() const override { return controlEnabled(); }
-
 private:
     void setupByConf(const IniOptions &ini);
-
-    quint32 processControlState(quint32 code, quint32 eventType);
-    quint32 processControlPauseState();
-    quint32 processControlContinueState();
-    quint32 processControlStopState();
-    quint32 processControlShutdownState(quint32 code);
-    void processControlDeviceEvent(quint32 eventType);
 
 private:
     bool m_controlEnabled = false;
