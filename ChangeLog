@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.13.0-test01, 2024-06-06:
+- UI: Portable: Fix service/driver handling on startup.
+
 v3.12.13, 2024-06-05:
 - UI: Auto-restart on profile's drive re-mount.
 - UI: Portable: Can Install from My Fort: About.
