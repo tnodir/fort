@@ -175,11 +175,11 @@ bool StartupUtil::startService()
     return false;
 }
 
-bool StartupUtil::stopService(bool restarting)
+bool StartupUtil::stopService(ServiceControlCode controlCode)
 {
     ServiceHandle svc(serviceNameStr, SC_MANAGER_ALL_ACCESS, SERVICE_ALL_ACCESS);
     if (svc.isServiceOpened()) {
-        return svc.stopService(restarting);
+        return svc.stopService(controlCode);
     }
 
     return false;

@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "service_types.h"
+
 using SvcHandle = void *;
 
 struct CreateServiceArg
@@ -28,7 +30,7 @@ public:
     bool queryIsRunning();
 
     bool startService();
-    bool stopService(bool restarting = false);
+    bool stopService(ServiceControlCode controlCode = ServiceControlStop);
 
     bool createService(const CreateServiceArg &csa);
     bool deleteService();

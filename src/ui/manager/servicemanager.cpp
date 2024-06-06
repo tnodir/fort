@@ -111,6 +111,7 @@ quint32 ServiceManager::processControlState(quint32 code, quint32 eventType)
 
     case ServiceControlStop:
     case ServiceControlStopRestarting:
+    case ServiceControlStopUninstall:
     case SERVICE_CONTROL_SHUTDOWN: {
         return processControlShutdownState(code);
     } break;
@@ -155,7 +156,7 @@ quint32 ServiceManager::processControlStopState()
 quint32 ServiceManager::processControlShutdownState(quint32 code)
 {
     const bool restarting = (code == ServiceControlStopRestarting);
-    if (code == ServiceControlStop || restarting) {
+    if (restarting || code == ServiceControlStopUninstall) {
         emit stopRestartingRequested(restarting);
     }
 

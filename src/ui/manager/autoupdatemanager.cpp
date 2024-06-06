@@ -250,3 +250,12 @@ QString AutoUpdateManager::installerPortableTasks(FortSettings *settings)
 
     return tasks;
 }
+
+void AutoUpdateManager::onRestartClient(bool restarting)
+{
+    if (restarting) {
+        OsUtil::restartClient();
+    } else {
+        OsUtil::quit("uninstall");
+    }
+}

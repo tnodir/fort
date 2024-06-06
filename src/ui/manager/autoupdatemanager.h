@@ -55,6 +55,8 @@ public slots:
 
     virtual bool runInstaller();
 
+    void onRestartClient(bool restarting);
+
 signals:
     void flagsChanged();
     void bytesReceivedChanged(int size);

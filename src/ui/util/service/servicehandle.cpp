@@ -33,7 +33,7 @@ bool ServiceHandle::startService()
     return StartServiceW(SC_HANDLE(m_serviceHandle), 0, nullptr);
 }
 
-bool ServiceHandle::stopService(bool restarting)
+bool ServiceHandle::stopService(ServiceControlCode controlCode)
 {
     int n = 3; /* count of attempts to stop the service */
     do {
@@ -41,8 +41,6 @@ bool ServiceHandle::stopService(bool restarting)
         if (QueryServiceStatus(SC_HANDLE(m_serviceHandle), &status)
                 && status.dwCurrentState == SERVICE_STOPPED)
             return true;
-
-        const DWORD controlCode = restarting ? ServiceControlStopRestarting : ServiceControlStop;
 
         ControlService(SC_HANDLE(m_serviceHandle), controlCode, &status);
 

@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <util/service/service_types.h>
+
 class StartupUtil
 {
 public:
@@ -16,7 +18,7 @@ public:
     static bool isServiceRunning();
 
     static bool startService();
-    static bool stopService(bool restarting = false);
+    static bool stopService(ServiceControlCode controlCode = ServiceControlStop);
 
     static AutoRunMode autoRunMode();
     static void setAutoRunMode(int mode, const QString &defaultLanguage = QString());

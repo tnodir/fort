@@ -3,7 +3,6 @@
 #include <control/controlworker.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
-#include <util/osutil.h>
 
 namespace {
 
@@ -23,11 +22,7 @@ inline bool processAutoUpdateManager_restartClients(
     const bool restarting = p.args.value(0).toBool();
 
     if (qobject_cast<AutoUpdateManagerRpc *>(autoUpdateManager)) {
-        if (restarting) {
-            OsUtil::restartClient();
-        } else {
-            OsUtil::quit("uninstall");
-        }
+        autoUpdateManager->onRestartClient(restarting);
     } else {
         emit autoUpdateManager->restartClients(restarting);
     }

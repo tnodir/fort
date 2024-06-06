@@ -32,7 +32,10 @@ inline bool processArgsParam(const char param, const char *arg2, int &rc)
     switch (param) {
     case 's': { // Service: Stop
         const bool restarting = (arg2 && arg2[0] == 'r');
-        rc = StartupUtil::stopService(restarting) ? 0 : FortErrorService;
+        const auto controlCode =
+                restarting ? ServiceControlStopRestarting : ServiceControlStopUninstall;
+
+        rc = StartupUtil::stopService(controlCode) ? 0 : FortErrorService;
     } break;
     case 'i': { // Install
         FortManager::install(arg2);

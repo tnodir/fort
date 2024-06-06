@@ -280,7 +280,7 @@ void FortManager::uninstall(const char *arg)
     StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
     StartupUtil::setExplorerIntegrated(false); // Remove Windows Explorer integration
 
-    StartupUtil::stopService(); // Quit clients & Stop service
+    StartupUtil::stopService(ServiceControlStopUninstall); // Quit clients & Stop service
     StartupUtil::setServiceInstalled(false); // Uninstall service
 
     StartupUtil::clearGlobalExplorerIntegrated(); // COMPAT: Remove Global Windows Explorer
@@ -296,7 +296,7 @@ bool FortManager::installDriver()
     const bool hasService = IoC<FortSettings>()->hasService();
 
     if (hasService) {
-        StartupUtil::stopService(/*restarting=*/true);
+        StartupUtil::stopService();
     } else {
         closeDriver();
     }
