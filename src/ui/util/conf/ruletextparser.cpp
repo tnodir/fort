@@ -16,7 +16,7 @@ RuleCharType processChar(const QChar c)
         return CharValueBegin;
     }
 
-    static QHash<char, RuleCharType> charTypeMap = {
+    static const QHash<char, RuleCharType> charTypeMap = {
         { '{', CharListBegin },
         { '}', CharListEnd },
         { '(', CharBracketBegin },

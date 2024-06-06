@@ -40,7 +40,7 @@ bool processConfRuleManager_updateRuleEnabled(
 using processConfRuleManager_func = bool (*)(
         ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList &resArgs);
 
-static processConfRuleManager_func processConfRuleManager_funcList[] = {
+static const processConfRuleManager_func processConfRuleManager_funcList[] = {
     &processConfRuleManager_addOrUpdateRule, // Rpc_ConfRuleManager_addOrUpdateRule,
     &processConfRuleManager_deleteRule, // Rpc_ConfRuleManager_deleteRule,
     &processConfRuleManager_updateRuleName, // Rpc_ConfRuleManager_updateRuleName,

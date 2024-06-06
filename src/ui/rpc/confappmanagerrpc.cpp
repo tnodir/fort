@@ -74,7 +74,7 @@ bool processConfAppManager_updateAppsBlocked(
 using processConfAppManager_func = bool (*)(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs);
 
-static processConfAppManager_func processConfAppManager_funcList[] = {
+static const processConfAppManager_func processConfAppManager_funcList[] = {
     &processConfAppManager_addOrUpdateAppPath, // Rpc_ConfAppManager_addOrUpdateAppPath,
     &processConfAppManager_deleteAppPath, // Rpc_ConfAppManager_deleteAppPath,
     &processConfAppManager_addOrUpdateApp, // Rpc_ConfAppManager_addOrUpdateApp,

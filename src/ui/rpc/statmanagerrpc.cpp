@@ -42,7 +42,7 @@ bool processStatManager_appTrafTotalsResetted(
 using processStatManagerSignal_func = bool (*)(
         StatManager *statManager, const ProcessCommandArgs &p);
 
-static processStatManagerSignal_func processStatManagerSignal_funcList[] = {
+static const processStatManagerSignal_func processStatManagerSignal_funcList[] = {
     &processStatManager_trafficCleared, // Rpc_StatManager_trafficCleared,
     &processStatManager_appStatRemoved, // Rpc_StatManager_appStatRemoved,
     &processStatManager_appCreated, // Rpc_StatManager_appCreated,

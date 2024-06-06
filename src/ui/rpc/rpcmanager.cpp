@@ -216,7 +216,7 @@ bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
     }
 }
 
-static processManager_func processManager_funcList[] = {
+static const processManager_func processManager_funcList[] = {
     &AppInfoManagerRpc::processServerCommand, // Control::Rpc_AppInfoManager,
     &AutoUpdateManagerRpc::processServerCommand, // Control::Rpc_AutoUpdateManager,
     &ConfManagerRpc::processServerCommand, // Control::Rpc_ConfManager,

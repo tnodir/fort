@@ -39,7 +39,7 @@ bool processConfZoneManager_updateZoneEnabled(
 using processConfZoneManager_func = bool (*)(
         ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs);
 
-static processConfZoneManager_func processConfZoneManager_funcList[] = {
+static const processConfZoneManager_func processConfZoneManager_funcList[] = {
     &processConfZoneManager_addOrUpdateZone, // Rpc_ConfZoneManager_addOrUpdateZone,
     &processConfZoneManager_deleteZone, // Rpc_ConfZoneManager_deleteZone,
     &processConfZoneManager_updateZoneName, // Rpc_ConfZoneManager_updateZoneName,

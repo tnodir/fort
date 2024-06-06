@@ -150,7 +150,7 @@ QVariant headerDataDisplayCreationTime(int /*role*/)
 
 using headerDataDisplay_func = QVariant (*)(int role);
 
-static headerDataDisplay_func headerDataDisplay_funcList[] = {
+static const headerDataDisplay_func headerDataDisplay_funcList[] = {
     &headerDataDisplayName,
     &headerDataDisplayParked,
     &headerDataDisplayRule,
@@ -244,7 +244,7 @@ QVariant dataDisplayCreationTime(const AppRow &appRow, int /*role*/)
 
 using dataDisplay_func = QVariant (*)(const AppRow &appRow, int role);
 
-static dataDisplay_func dataDisplay_funcList[] = {
+static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayName,
     &dataDisplayParked,
     &dataDisplayRule,

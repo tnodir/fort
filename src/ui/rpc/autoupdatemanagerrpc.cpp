@@ -44,7 +44,7 @@ bool processAutoUpdateManager_runInstaller(AutoUpdateManager *autoUpdateManager,
 using processAutoUpdateManager_func = bool (*)(
         AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p, QVariantList &resArgs);
 
-static processAutoUpdateManager_func processAutoUpdateManager_funcList[] = {
+static const processAutoUpdateManager_func processAutoUpdateManager_funcList[] = {
     &processAutoUpdateManager_startDownload, // Rpc_AutoUpdateManager_startDownload,
     &processAutoUpdateManager_runInstaller, // Rpc_AutoUpdateManager_runInstaller,
 };

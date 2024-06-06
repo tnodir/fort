@@ -41,7 +41,7 @@ public:
 
     template<typename F>
     constexpr static F *getProcessFunc(
-            Control::Command command, F *funcList[], int minIndex, int maxIndex)
+            Control::Command command, F *const funcList[], int minIndex, int maxIndex)
     {
         if (command < minIndex || command > maxIndex)
             return nullptr;
