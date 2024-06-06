@@ -1,5 +1,6 @@
 #include "drivermanager.h"
 
+#include <QLoggingCategory>
 #include <QProcess>
 #include <QThreadPool>
 
@@ -10,6 +11,12 @@
 #include <util/osutil.h>
 
 #include "driverworker.h"
+
+namespace {
+
+const QLoggingCategory LC("driver.manager");
+
+}
 
 DriverManager::DriverManager(QObject *parent, bool useDevice) : QObject(parent)
 {
@@ -157,6 +164,8 @@ bool DriverManager::executeCommand(const QString &fileName)
 
     const QString cmdPath = qEnvironmentVariable("COMSPEC");
     const QString scriptPath = binPath + R"(\driver\scripts\execute-cmd.bat)";
+
+    qCDebug(LC) << "executeCommand:" << cmdPath << scriptPath << fileName;
 
     return QProcess::execute(cmdPath, { "/C", scriptPath, fileName }) == 0;
 }
