@@ -13,7 +13,7 @@ public:
     static const wchar_t *serviceName();
 
     static bool isServiceInstalled();
-    static void setServiceInstalled(bool install);
+    static void setServiceInstalled(bool install = true);
 
     static bool isServiceRunning();
 

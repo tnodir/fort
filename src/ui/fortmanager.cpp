@@ -304,7 +304,7 @@ bool FortManager::installDriver()
     IoC<DriverManager>()->reinstallDriver();
 
     if (hasService) {
-        StartupUtil::startService();
+        StartupUtil::setServiceInstalled();
     } else {
         // Re-open the driver device and initialize it
         if (setupDriver()) {
