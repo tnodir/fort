@@ -42,8 +42,7 @@ public:
         ActionShowStatistics,
         ActionShowTrafficGraph,
         ActionSwitchFilterEnabled,
-        ActionSwitchBlockTraffic,
-        ActionSwitchBlockInetTraffic,
+        ActionShowBlockTrafficMenu,
         ActionShowFilterModeMenu,
         ActionShowTrayMenu,
         ActionIgnore,
@@ -82,6 +81,7 @@ protected slots:
     void setupByIniUser(const IniUser &ini, bool onlyFlags);
 
     void switchTrayMenu(bool checked);
+    void switchBlockTrafficMenu(bool checked);
     void switchFilterModeMenu(bool checked);
 
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
@@ -91,17 +91,20 @@ protected slots:
     void saveTrayFlags();
 
     void switchTrayFlag(bool checked);
+    void switchBlockTraffic(QAction *action);
     void switchFilterMode(QAction *action);
 
 private:
     void setupController();
 
     void retranslateUi();
+    void retranslateBlockTrafficActions();
     void retranslateFilterModeActions();
 
     void setupUi();
     void setupTrayMenu();
     void setupTrayMenuOptions();
+    void setupTrayMenuBlockTraffic();
     void setupTrayMenuFilterMode();
 
     void updateTrayMenuFlags();
@@ -150,8 +153,9 @@ private:
     QAction *m_statisticsAction = nullptr;
     QAction *m_graphAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
-    QAction *m_blockTrafficAction = nullptr;
-    QAction *m_blockInetTrafficAction = nullptr;
+    QAction *m_blockTrafficMenuAction = nullptr;
+    QMenu *m_blockTrafficMenu = nullptr;
+    QActionGroup *m_blockTrafficActions = nullptr;
     QAction *m_filterModeMenuAction = nullptr;
     QMenu *m_filterModeMenu = nullptr;
     QActionGroup *m_filterModeActions = nullptr;

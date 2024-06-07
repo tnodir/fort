@@ -13,6 +13,7 @@ const char *const list[] = {
     statistics,
     graph,
     filter,
+    blockTrafficOff,
     blockTraffic,
     blockInetTraffic,
     filterModeAutoLearn,
@@ -27,7 +28,7 @@ const int listCount = int(std::size(list));
 
 const char *const defaultValue(const char *key)
 {
-    static QHash<const char *, const char *> g_defaultValuesMap = {
+    static const QHash<const char *, const char *> g_defaultValuesMap = {
         { filter, Default::filter },
         { appGroupModifier, Default::appGroupModifier },
     };

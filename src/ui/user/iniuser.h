@@ -14,6 +14,8 @@ const char *const statistics = "statistics";
 const char *const graph = "graph";
 
 const char *const filter = "filter";
+
+const char *const blockTrafficOff = "blockTrafficOff";
 const char *const blockTraffic = "blockTraffic";
 const char *const blockInetTraffic = "blockInetTraffic";
 

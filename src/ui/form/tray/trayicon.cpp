@@ -43,8 +43,7 @@ const QString actionShowOptions = QStringLiteral("Options");
 const QString actionShowStatistics = QStringLiteral("Statistics");
 const QString actionShowTrafficGraph = QStringLiteral("TrafficGraph");
 const QString actionSwitchFilterEnabled = QStringLiteral("FilterEnabled");
-const QString actionSwitchBlockTraffic = QStringLiteral("BlockTraffic");
-const QString actionSwitchBlockInetTraffic = QStringLiteral("BlockInetTraffic");
+const QString actionShowBlockTrafficMenu = QStringLiteral("BlockTrafficMenu");
 const QString actionShowFilterModeMenu = QStringLiteral("FilterModeMenu");
 const QString actionShowTrayMenu = QStringLiteral("TrayMenu");
 const QString actionIgnore = QStringLiteral("Ignore");
@@ -79,8 +78,7 @@ QString actionNameByType(TrayIcon::ActionType actionType)
         actionShowStatistics,
         actionShowTrafficGraph,
         actionSwitchFilterEnabled,
-        actionSwitchBlockTraffic,
-        actionSwitchBlockInetTraffic,
+        actionShowBlockTrafficMenu,
         actionShowFilterModeMenu,
         actionShowTrayMenu,
         actionIgnore,
@@ -103,8 +101,7 @@ TrayIcon::ActionType actionTypeByName(const QString &name)
         { actionShowStatistics, TrayIcon::ActionShowStatistics },
         { actionShowTrafficGraph, TrayIcon::ActionShowTrafficGraph },
         { actionSwitchFilterEnabled, TrayIcon::ActionSwitchFilterEnabled },
-        { actionSwitchBlockTraffic, TrayIcon::ActionSwitchBlockTraffic },
-        { actionSwitchBlockInetTraffic, TrayIcon::ActionSwitchBlockInetTraffic },
+        { actionShowBlockTrafficMenu, TrayIcon::ActionShowBlockTrafficMenu },
         { actionShowFilterModeMenu, TrayIcon::ActionShowFilterModeMenu },
         { actionShowTrayMenu, TrayIcon::ActionShowTrayMenu },
         { actionIgnore, TrayIcon::ActionIgnore }
@@ -306,6 +303,11 @@ void TrayIcon::switchTrayMenu(bool /*checked*/)
     showTrayMenu(QCursor::pos());
 }
 
+void TrayIcon::switchBlockTrafficMenu(bool /*checked*/)
+{
+    m_blockTrafficMenu->popup(QCursor::pos());
+}
+
 void TrayIcon::switchFilterModeMenu(bool /*checked*/)
 {
     m_filterModeMenu->popup(QCursor::pos());
@@ -336,13 +338,23 @@ void TrayIcon::retranslateUi()
     m_graphAction->setText(tr("Traffic Graph"));
 
     m_filterEnabledAction->setText(tr("Filter Enabled"));
-    m_blockTrafficAction->setText(tr("Block All Traffic"));
-    m_blockInetTrafficAction->setText(tr("Block Internet Traffic"));
+
+    m_blockTrafficMenu->setTitle(tr("Block Traffic"));
+    retranslateBlockTrafficActions();
 
     m_filterModeMenu->setTitle(tr("Filter Mode"));
     retranslateFilterModeActions();
 
     m_quitAction->setText(tr("Quit"));
+}
+
+void TrayIcon::retranslateBlockTrafficActions()
+{
+    int index = 0;
+    for (const QString &name : FirewallConf::blockTrafficNames()) {
+        QAction *a = m_blockTrafficActions->actions().at(index++);
+        a->setText(name);
+    }
 }
 
 void TrayIcon::retranslateFilterModeActions()
@@ -403,13 +415,12 @@ void TrayIcon::setupTrayMenu()
             ActionSwitchFilterEnabled, /*checkable=*/true);
     addHotKey(m_filterEnabledAction, HotKey::filter);
 
-    m_blockTrafficAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)),
-            ActionSwitchBlockTraffic, /*checkable=*/true);
-    addHotKey(m_blockTrafficAction, HotKey::blockTraffic);
+    m_blockTrafficMenuAction = addAction(m_menu, QString(), this,
+            SLOT(switchBlockTrafficMenu(bool)), ActionShowBlockTrafficMenu);
+    m_blockTrafficMenuAction->setVisible(false);
 
-    m_blockInetTrafficAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)),
-            ActionSwitchBlockInetTraffic, /*checkable=*/true);
-    addHotKey(m_blockInetTrafficAction, HotKey::blockInetTraffic);
+    setupTrayMenuBlockTraffic();
+    m_menu->addMenu(m_blockTrafficMenu);
 
     m_filterModeMenuAction = addAction(
             m_menu, QString(), this, SLOT(switchFilterModeMenu(bool)), ActionShowFilterModeMenu);
@@ -461,6 +472,37 @@ void TrayIcon::setupTrayMenuOptions()
     addHotKey(m_zonesAction, HotKey::zones);
 }
 
+void TrayIcon::setupTrayMenuBlockTraffic()
+{
+    static const char *const blockTrafficIniKeys[] = {
+        HotKey::blockTrafficOff,
+        HotKey::blockTraffic,
+        HotKey::blockInetTraffic,
+    };
+
+    m_blockTrafficMenu = ControlUtil::createMenu(m_menu);
+
+    m_blockTrafficActions = new QActionGroup(m_blockTrafficMenu);
+
+    int index = 0;
+    const QStringList iconPaths = FirewallConf::blockTrafficIconPaths();
+    for (const QString &name : FirewallConf::blockTrafficNames()) {
+        const QString iconPath = iconPaths.at(index);
+        const auto &iniKey = blockTrafficIniKeys[index];
+
+        QAction *a = addAction(m_blockTrafficMenu, iconPath, /*receiver=*/nullptr,
+                /*member=*/nullptr, ActionNone, /*checkable=*/true);
+        a->setText(name);
+
+        addHotKey(a, iniKey);
+
+        m_blockTrafficActions->addAction(a);
+        ++index;
+    }
+
+    connect(m_blockTrafficActions, &QActionGroup::triggered, this, &TrayIcon::switchBlockTraffic);
+}
+
 void TrayIcon::setupTrayMenuFilterMode()
 {
     static const char *const filterModeIniKeys[] = {
@@ -505,11 +547,14 @@ void TrayIcon::updateTrayMenuFlags()
     m_filterEnabledAction->setEnabled(editEnabled);
     m_filterEnabledAction->setChecked(conf()->filterEnabled());
 
-    m_blockTrafficAction->setEnabled(editEnabled);
-    m_blockTrafficAction->setChecked(conf()->blockTraffic());
-
-    m_blockInetTrafficAction->setEnabled(editEnabled);
-    m_blockInetTrafficAction->setChecked(conf()->blockInetTraffic());
+    m_blockTrafficMenu->setEnabled(editEnabled);
+    {
+        QAction *action = m_blockTrafficActions->actions().at(conf()->blockTrafficIndex());
+        if (!action->isChecked()) {
+            action->setChecked(true);
+            m_blockTrafficMenu->setIcon(action->icon());
+        }
+    }
 
     m_filterModeMenu->setEnabled(editEnabled);
     {
@@ -630,8 +675,16 @@ void TrayIcon::updateTrayIconShape()
 void TrayIcon::saveTrayFlags()
 {
     conf()->setFilterEnabled(m_filterEnabledAction->isChecked());
-    conf()->setBlockTraffic(m_blockTrafficAction->isChecked());
-    conf()->setBlockInetTraffic(m_blockInetTrafficAction->isChecked());
+
+    // Set Block Traffic
+    {
+        QAction *action = m_blockTrafficActions->checkedAction();
+        const int index = m_blockTrafficActions->actions().indexOf(action);
+        if (conf()->blockTrafficIndex() != index) {
+            conf()->setBlockTrafficIndex(index);
+            m_blockTrafficMenu->setIcon(action->icon());
+        }
+    }
 
     // Set Filter Mode
     {
@@ -671,6 +724,29 @@ void TrayIcon::switchTrayFlag(bool checked)
                     }
                 },
                 tr("Are you sure to switch the \"%1\"?").arg(action->text()));
+    } else {
+        saveTrayFlags();
+    }
+}
+
+void TrayIcon::switchBlockTraffic(QAction *action)
+{
+    const int index = m_blockTrafficActions->actions().indexOf(action);
+    if (index < 0 || index == conf()->blockTrafficIndex())
+        return;
+
+    if (iniUser()->confirmTrayFlags()) {
+        windowManager()->showQuestionBox(
+                [=, this](bool confirmed) {
+                    if (confirmed) {
+                        saveTrayFlags();
+                    } else {
+                        QAction *a =
+                                m_blockTrafficActions->actions().at(conf()->blockTrafficIndex());
+                        a->setChecked(true);
+                    }
+                },
+                tr("Are you sure to select the \"%1\"?").arg(action->text()));
     } else {
         saveTrayFlags();
     }
@@ -786,8 +862,7 @@ QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
         m_statisticsAction,
         m_graphAction,
         m_filterEnabledAction,
-        m_blockTrafficAction,
-        m_blockInetTrafficAction,
+        m_blockTrafficMenuAction,
         m_filterModeMenuAction,
         m_trayMenuAction,
     };

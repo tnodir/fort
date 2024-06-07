@@ -42,6 +42,22 @@ struct Startup
     quint8 isService : 1 = false;
 } g_startup;
 
+void updateComboBox(
+        QComboBox *c, const QStringList &names, const QStringList &iconPaths, int currentIndex)
+{
+    int index = 0;
+    for (const QString &name : names) {
+        const QString iconPath = iconPaths.at(index);
+
+        c->setItemText(index, name);
+        c->setItemIcon(index, IconCache::icon(iconPath));
+
+        ++index;
+    }
+
+    c->setCurrentIndex(currentIndex);
+}
+
 }
 
 OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
@@ -53,8 +69,7 @@ OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage
 void OptionsPage::onResetToDefault()
 {
     m_cbFilterEnabled->setChecked(true);
-    m_cbBlockTraffic->setChecked(false);
-    m_cbBlockInetTraffic->setChecked(false);
+    m_comboBlockTraffic->setCurrentIndex(0);
 
     m_cbLogBlocked->setChecked(true);
     m_cbAppNotifyMessage->setChecked(true);
@@ -196,8 +211,9 @@ void OptionsPage::onRetranslateUi()
     m_cbService->setToolTip(tr("Run Fort Firewall as a Service in background"));
 
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
-    m_cbBlockTraffic->setText(tr("Block All Traffic"));
-    m_cbBlockInetTraffic->setText(tr("Block Internet Traffic"));
+
+    m_labelBlockTraffic->setText(tr("Block Traffic:"));
+    retranslateComboBlockTraffic();
 
     m_labelFilterMode->setText(tr("Filter Mode:"));
     retranslateComboFilterMode();
@@ -288,20 +304,16 @@ void OptionsPage::retranslateComboStartMode()
     }
 }
 
+void OptionsPage::retranslateComboBlockTraffic()
+{
+    updateComboBox(m_comboBlockTraffic, FirewallConf::blockTrafficNames(),
+            FirewallConf::blockTrafficIconPaths(), conf()->blockTrafficIndex());
+}
+
 void OptionsPage::retranslateComboFilterMode()
 {
-    int index = 0;
-    const QStringList iconPaths = FirewallConf::filterModeIconPaths();
-    for (const QString &name : FirewallConf::filterModeNames()) {
-        const QString iconPath = iconPaths.at(index);
-
-        m_comboFilterMode->setItemText(index, name);
-        m_comboFilterMode->setItemIcon(index, IconCache::icon(iconPath));
-
-        ++index;
-    }
-
-    m_comboFilterMode->setCurrentIndex(conf()->filterModeIndex());
+    updateComboBox(m_comboFilterMode, FirewallConf::filterModeNames(),
+            FirewallConf::filterModeIconPaths(), conf()->filterModeIndex());
 }
 
 void OptionsPage::retranslateEditPassword()
@@ -325,12 +337,16 @@ void OptionsPage::retranslateComboHotKey()
     // Sync with TrayIcon::retranslateUi() & HotKey::list[]
     QStringList list = { TrayIcon::tr("My Fort"), TrayIcon::tr("Programs"), TrayIcon::tr("Options"),
         TrayIcon::tr("Rules"), TrayIcon::tr("Zones"), TrayIcon::tr("Statistics"),
-        TrayIcon::tr("Traffic Graph"), TrayIcon::tr("Filter Enabled"),
-        TrayIcon::tr("Block All Traffic"), TrayIcon::tr("Block Internet Traffic") };
+        TrayIcon::tr("Traffic Graph"), TrayIcon::tr("Filter Enabled") };
+
+    const auto blockTraffic = tr("Block Traffic:");
+    for (const auto &name : FirewallConf::blockTrafficNames()) {
+        list.append(blockTraffic + ' ' + name);
+    }
 
     const auto filterMode = tr("Filter Mode:");
-    for (const auto &filterModeName : FirewallConf::filterModeNames()) {
-        list.append(filterMode + ' ' + filterModeName);
+    for (const auto &name : FirewallConf::filterModeNames()) {
+        list.append(filterMode + ' ' + name);
     }
 
     list.append({ TrayIcon::tr("App Group Modifier"), TrayIcon::tr("Quit") });
@@ -359,9 +375,8 @@ void OptionsPage::retranslateComboTrayAction()
     // Sync with TrayIcon::ActionType
     const QStringList list = { tr("Show My Fort"), tr("Show Programs"),
         tr("Show Programs Or Alert Window"), tr("Show Options"), tr("Show Statistics"),
-        tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Block All Traffic"),
-        tr("Switch Block Internet Traffic"), tr("Show Filter Mode Menu"), tr("Show Tray Menu"),
-        tr("Ignore") };
+        tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Show Block Traffic Menu"),
+        tr("Show Filter Mode Menu"), tr("Show Tray Menu"), tr("Ignore") };
 
     ControlUtil::setComboBoxTexts(m_comboTrayAction, list, /*currentIndex=*/-1);
 }
@@ -456,26 +471,34 @@ void OptionsPage::setupTrafficBox()
         conf()->setFilterEnabled(checked);
         ctrl()->setFlagsEdited();
     });
-    m_cbBlockTraffic = ControlUtil::createCheckBox(conf()->blockTraffic(), [&](bool checked) {
-        conf()->setBlockTraffic(checked);
-        ctrl()->setFlagsEdited();
-    });
-    m_cbBlockInetTraffic =
-            ControlUtil::createCheckBox(conf()->blockInetTraffic(), [&](bool checked) {
-                conf()->setBlockInetTraffic(checked);
-                ctrl()->setFlagsEdited();
-            });
+
+    auto blockTrafficLayout = setupBlockTrafficLayout();
 
     auto filterModeLayout = setupFilterModeLayout();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
-    layout->addWidget(m_cbBlockTraffic);
-    layout->addWidget(m_cbBlockInetTraffic);
+    layout->addLayout(blockTrafficLayout);
     layout->addLayout(filterModeLayout);
 
     m_gbTraffic = new QGroupBox();
     m_gbTraffic->setLayout(layout);
+}
+
+QLayout *OptionsPage::setupBlockTrafficLayout()
+{
+    m_labelBlockTraffic = ControlUtil::createLabel();
+
+    m_comboBlockTraffic =
+            ControlUtil::createComboBox(FirewallConf::blockTrafficNames(), [&](int index) {
+                if (conf()->blockTrafficIndex() != index) {
+                    conf()->setBlockTrafficIndex(index);
+                    ctrl()->setFlagsEdited();
+                }
+            });
+    m_comboBlockTraffic->setFixedWidth(200);
+
+    return ControlUtil::createRowLayout(m_labelBlockTraffic, m_comboBlockTraffic);
 }
 
 QLayout *OptionsPage::setupFilterModeLayout()

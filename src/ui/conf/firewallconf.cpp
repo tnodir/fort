@@ -91,6 +91,28 @@ void FirewallConf::setAppAllowAll(bool appAllowAll)
     m_appAllowAll = appAllowAll;
 }
 
+int FirewallConf::blockTrafficIndex() const
+{
+    return m_blockInetTraffic ? 2 : (m_blockTraffic ? 1 : 0);
+}
+
+void FirewallConf::setBlockTrafficIndex(int index)
+{
+    m_blockTraffic = false;
+    m_blockInetTraffic = false;
+
+    switch (index) {
+    case 0: { // Disabled
+    } break;
+    case 1: { // Block All Traffic
+        m_blockTraffic = true;
+    } break;
+    case 2: { // Block Internet Traffic
+        m_blockInetTraffic = true;
+    } break;
+    }
+}
+
 int FirewallConf::filterModeIndex() const
 {
     return m_allowAllNew ? 0 : (m_askToConnect ? 1 : (m_appBlockAll ? 2 : (m_appAllowAll ? 3 : 4)));
@@ -119,6 +141,16 @@ void FirewallConf::setFilterModeIndex(int index)
         m_appAllowAll = true;
     } break;
     }
+}
+
+QStringList FirewallConf::blockTrafficNames()
+{
+    return { tr("Disabled"), tr("Block All Traffic"), tr("Block Internet Traffic") };
+}
+
+QStringList FirewallConf::blockTrafficIconPaths()
+{
+    return { QString(), ":/icons/cross.png", ":/icons/hostname.png" };
 }
 
 QStringList FirewallConf::filterModeNames()

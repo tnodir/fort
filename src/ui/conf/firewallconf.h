@@ -88,8 +88,14 @@ public:
     bool appAllowAll() const { return m_appAllowAll; }
     void setAppAllowAll(bool appAllowAll);
 
+    int blockTrafficIndex() const;
+    void setBlockTrafficIndex(int index);
+
     int filterModeIndex() const;
     void setFilterModeIndex(int index);
+
+    static QStringList blockTrafficNames();
+    static QStringList blockTrafficIconPaths();
 
     static QStringList filterModeNames();
     static QStringList filterModeIconPaths();

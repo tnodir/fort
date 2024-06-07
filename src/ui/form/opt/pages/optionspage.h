@@ -38,6 +38,7 @@ private:
     void saveService(bool isService);
 
     void retranslateComboStartMode();
+    void retranslateComboBlockTraffic();
     void retranslateComboFilterMode();
     void retranslateEditPassword();
     void retranslateComboTheme();
@@ -52,6 +53,7 @@ private:
     void setupStartupBox();
     QLayout *setupStartModeLayout();
     void setupTrafficBox();
+    QLayout *setupBlockTrafficLayout();
     QLayout *setupFilterModeLayout();
     void setupProtectionBox();
     QLayout *setupPasswordLayout();
@@ -101,8 +103,8 @@ private:
     QComboBox *m_comboAutoRun = nullptr;
     QCheckBox *m_cbService = nullptr;
     QCheckBox *m_cbFilterEnabled = nullptr;
-    QCheckBox *m_cbBlockTraffic = nullptr;
-    QCheckBox *m_cbBlockInetTraffic = nullptr;
+    QLabel *m_labelBlockTraffic = nullptr;
+    QComboBox *m_comboBlockTraffic = nullptr;
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
     QCheckBox *m_cbBootFilter = nullptr;
