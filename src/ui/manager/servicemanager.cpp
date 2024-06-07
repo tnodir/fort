@@ -83,16 +83,21 @@ enum ServiceControlHandlerCode : qint8 {
     ControlHandlerDeviceEvent,
 };
 
-static const QHash<quint8, ServiceControlHandlerCode> g_controlHandlerCodes = {
-    { SERVICE_CONTROL_PAUSE, ControlHandlerPause },
-    { SERVICE_CONTROL_CONTINUE, ControlHandlerContinue },
-    { SERVICE_CONTROL_STOP, ControlHandlerStop },
-    { ServiceControlStop, ControlHandlerShutdown },
-    { ServiceControlStopRestarting, ControlHandlerShutdown },
-    { ServiceControlStopUninstall, ControlHandlerShutdown },
-    { SERVICE_CONTROL_SHUTDOWN, ControlHandlerShutdown },
-    { SERVICE_CONTROL_DEVICEEVENT, ControlHandlerDeviceEvent },
-};
+inline ServiceControlHandlerCode toControlHandlerCode(quint32 code)
+{
+    static const QHash<quint8, ServiceControlHandlerCode> controlHandlerCodes = {
+        { SERVICE_CONTROL_PAUSE, ControlHandlerPause },
+        { SERVICE_CONTROL_CONTINUE, ControlHandlerContinue },
+        { SERVICE_CONTROL_STOP, ControlHandlerStop },
+        { ServiceControlStop, ControlHandlerShutdown },
+        { ServiceControlStopRestarting, ControlHandlerShutdown },
+        { ServiceControlStopUninstall, ControlHandlerShutdown },
+        { SERVICE_CONTROL_SHUTDOWN, ControlHandlerShutdown },
+        { SERVICE_CONTROL_DEVICEEVENT, ControlHandlerDeviceEvent },
+    };
+
+    return controlHandlerCodes.value(code, ControlHandlerNone);
+}
 
 using controlHandler_func = quint32 (*)(
         ServiceManager *serviceManager, quint32 code, quint32 eventType);
@@ -107,7 +112,7 @@ static const controlHandler_func controlHandler_funcList[] = {
 
 inline quint32 processControlState(ServiceManager *serviceManager, quint32 code, quint32 eventType)
 {
-    const auto handlerCode = g_controlHandlerCodes.value(code, ControlHandlerNone);
+    const auto handlerCode = toControlHandlerCode(code);
     if (handlerCode == ControlHandlerNone)
         return 0;
 
