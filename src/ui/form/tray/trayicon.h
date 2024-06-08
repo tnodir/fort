@@ -118,6 +118,8 @@ private:
 
     void updateTrayIconShape();
 
+    QString trayIconPath() const;
+
     void updateActionHotKeys();
 
     void addHotKey(QAction *action, const char *iniKey);

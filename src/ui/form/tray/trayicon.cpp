@@ -662,15 +662,7 @@ void TrayIcon::removeAlertTimer()
 
 void TrayIcon::updateTrayIconShape()
 {
-    QString mainIconPath;
-
-    if (!conf()->filterEnabled() || !driverManager()->isDeviceOpened()) {
-        mainIconPath = ":/icons/fort_gray.png";
-    } else if (conf()->blockTraffic() || conf()->blockInetTraffic()) {
-        mainIconPath = ":/icons/fort_red.png";
-    } else {
-        mainIconPath = ":/icons/fort.png";
-    }
+    const QString mainIconPath = trayIconPath();
 
     const auto icon = m_alerted
             ? (m_animatedAlert ? IconCache::icon(":/icons/error.png")
@@ -678,6 +670,20 @@ void TrayIcon::updateTrayIconShape()
             : IconCache::icon(mainIconPath);
 
     this->setIcon(icon);
+}
+
+QString TrayIcon::trayIconPath() const
+{
+    if (!conf()->filterEnabled() || !driverManager()->isDeviceOpened()) {
+        return ":/icons/fort_gray.png";
+    }
+    if (conf()->blockTraffic()) {
+        return ":/icons/fort_red.png";
+    }
+    if (conf()->blockInetTraffic()) {
+        return ":/icons/fort_orange.png";
+    }
+    return ":/icons/fort.png";
 }
 
 void TrayIcon::saveTrayFlags()
