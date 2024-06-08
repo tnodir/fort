@@ -487,8 +487,12 @@ void TrayIcon::setupTrayMenuBlockTraffic()
     int index = 0;
     const QStringList iconPaths = FirewallConf::blockTrafficIconPaths();
     for (const QString &name : FirewallConf::blockTrafficNames()) {
-        const QString iconPath = iconPaths.at(index);
-        const auto &iniKey = blockTrafficIniKeys[index];
+        const QString &iconPath = iconPaths.at(index);
+
+        if (Q_UNLIKELY(index >= std::size(blockTrafficIniKeys)))
+            break;
+
+        const char *iniKey = blockTrafficIniKeys[index];
 
         QAction *a = addAction(m_blockTrafficMenu, iconPath, /*receiver=*/nullptr,
                 /*member=*/nullptr, ActionNone, /*checkable=*/true);
@@ -520,8 +524,12 @@ void TrayIcon::setupTrayMenuFilterMode()
     int index = 0;
     const QStringList iconPaths = FirewallConf::filterModeIconPaths();
     for (const QString &name : FirewallConf::filterModeNames()) {
-        const QString iconPath = iconPaths.at(index);
-        const auto &iniKey = filterModeIniKeys[index];
+        const QString &iconPath = iconPaths.at(index);
+
+        if (Q_UNLIKELY(index >= std::size(filterModeIniKeys)))
+            break;
+
+        const char *iniKey = filterModeIniKeys[index];
 
         QAction *a = addAction(m_filterModeMenu, iconPath, /*receiver=*/nullptr, /*member=*/nullptr,
                 ActionNone, /*checkable=*/true);

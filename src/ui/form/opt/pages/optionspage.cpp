@@ -47,7 +47,7 @@ void updateComboBox(
 {
     int index = 0;
     for (const QString &name : names) {
-        const QString iconPath = iconPaths.at(index);
+        const QString &iconPath = iconPaths.at(index);
 
         c->setItemText(index, name);
         c->setItemIcon(index, IconCache::icon(iconPath));
