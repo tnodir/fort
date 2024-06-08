@@ -12,7 +12,7 @@ class AppInfoManagerRpc : public AppInfoManager
     Q_OBJECT
 
 public:
-    explicit AppInfoManagerRpc(const QString &filePath, QObject *parent = nullptr);
+    explicit AppInfoManagerRpc(const QString &filePath, bool noCache, QObject *parent = nullptr);
 
     static bool processServerCommand(
             const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);

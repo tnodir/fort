@@ -5,8 +5,9 @@
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
 
-AppInfoManagerRpc::AppInfoManagerRpc(const QString &filePath, QObject *parent) :
-    AppInfoManager(filePath, parent, SqliteDb::OpenDefaultReadOnly)
+AppInfoManagerRpc::AppInfoManagerRpc(const QString &filePath, bool noCache, QObject *parent) :
+    AppInfoManager(filePath, parent,
+            (noCache ? SqliteDb::OpenDefaultReadWrite : SqliteDb::OpenDefaultReadOnly))
 {
 }
 
