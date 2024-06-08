@@ -1,7 +1,10 @@
 Fort Firewall ChangeLog
 
-v3.13.0-test01, 2024-06-06:
+v3.13.0, 2024-06-08:
 - UI: Portable: Fix service/driver handling on startup.
+- UI: Tray/Options: Add "Block Traffic" menu.
+- UI: AppInfoManager: Use "noCache" flag.
+- UI: Tray: Update icons.
 
 v3.12.13, 2024-06-05:
 - UI: Auto-restart on profile's drive re-mount.
