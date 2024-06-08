@@ -479,6 +479,18 @@
         <source>Ask to Connect</source>
         <translation>نبهني عند محاولة الاتصال</translation>
     </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished">عدم التفعيل</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished">إيقاف اتصال الشبكة</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -505,10 +517,6 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>فشل قراءة الإعدادات :(</translation>
-    </message>
-    <message>
-        <source>Driver reinstalled</source>
-        <translation>تم إعادة تثبيت التعريفات</translation>
     </message>
 </context>
 <context>
@@ -1033,28 +1041,12 @@ Make sure that you have a fresh backup.</source>
         <translation>عرض القائمة تلقائيًا</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>إيقاف اتصال الشبكة</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>إيقاف اتصال الإنترنت</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>حظر اتصال الشبكة عندما يكون الجدار الناري متوقفًا</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
         <translation>استخدام الإعدادات وفق النظام</translation>
-    </message>
-    <message>
-        <source>Switch Block All Traffic</source>
-        <translation>تشغيل / إيقاف اتصال الشبكة</translation>
-    </message>
-    <message>
-        <source>Switch Block Internet Traffic</source>
-        <translation>تشغيل / إيقاف اتصال الإنترنت</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1123,6 +1115,14 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>The change will be applied only on program exit.</source>
         <translation>سيتم تطبيق التغيير فقط عند الخروج من البرنامج.</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2074,14 +2074,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Fort الخاص بي</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>إيقاف اتصال الشبكة</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>إيقاف اتصال الإنترنت</translation>
-    </message>
-    <message>
         <source>New program detected!</source>
         <translation>تم اكتشاف برنامج يحاول الاتصال!</translation>
     </message>
@@ -2092,6 +2084,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>App Group Modifier</source>
         <translation>محرّر مجموعة التطبيق</translation>
+    </message>
+    <message>
+        <source>Block Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

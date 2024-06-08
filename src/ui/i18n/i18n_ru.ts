@@ -479,6 +479,18 @@
         <source>Ask to Connect</source>
         <translation>Спрашивать для соединения</translation>
     </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Отключено</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation>Блокировать весь трафик</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Блокировать Интернет трафик</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -505,10 +517,6 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>Невозможно загрузить Найстройки</translation>
-    </message>
-    <message>
-        <source>Driver reinstalled</source>
-        <translation>Драйвер переустановлен</translation>
     </message>
 </context>
 <context>
@@ -1033,28 +1041,12 @@ Make sure that you have a fresh backup.</source>
         <translation>Авто-показ Меню</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Блокировать трафик</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Блокировать Интернет трафик</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Блокировать трафик, когда Fort Firewall не запущен</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
         <translation>Использовать системные региональные настройки</translation>
-    </message>
-    <message>
-        <source>Switch Block All Traffic</source>
-        <translation>Переключить &quot;Блокировать трафик&quot;</translation>
-    </message>
-    <message>
-        <source>Switch Block Internet Traffic</source>
-        <translation>Переключить &quot;Блокировать Интернет трафик&quot;</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1123,6 +1115,14 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>The change will be applied only on program exit.</source>
         <translation>Изменение будет применено только при выходе из программы.</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>Блокировка трафика:</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>Показать меню Блокировки трафика</translation>
     </message>
 </context>
 <context>
@@ -2074,14 +2074,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Мой Форт</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Блокировать трафик</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Блокировать Интернет трафик</translation>
-    </message>
-    <message>
         <source>New program detected!</source>
         <translation>Обнаружена новая программа!</translation>
     </message>
@@ -2092,6 +2084,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>App Group Modifier</source>
         <translation>Модификатор группы приложений</translation>
+    </message>
+    <message>
+        <source>Block Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

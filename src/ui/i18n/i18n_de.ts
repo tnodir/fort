@@ -479,6 +479,18 @@
         <source>Ask to Connect</source>
         <translation>Nach Verbindung fragen</translation>
     </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished">Deaktiviert</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished">Datenverkehr blockieren</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Internetdatenverkehr blockieren</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -505,10 +517,6 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>Einstellungen können nicht geladen werden</translation>
-    </message>
-    <message>
-        <source>Driver reinstalled</source>
-        <translation>Treiber neu installiert</translation>
     </message>
 </context>
 <context>
@@ -1033,28 +1041,12 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Menü automatisch anzeigen</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Datenverkehr blockieren</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Internetdatenverkehr blockieren</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Internetverkehr bei Überschreitung des Kontingents blockieren</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
         <translation>Regionale Systemeinstellungen verwenden</translation>
-    </message>
-    <message>
-        <source>Switch Block All Traffic</source>
-        <translation>Datenverkehr blockieren</translation>
-    </message>
-    <message>
-        <source>Switch Block Internet Traffic</source>
-        <translation>Internetdatenverkehr blockieren</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1123,6 +1115,14 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>The change will be applied only on program exit.</source>
         <translation>Die Änderung wird nur beim Beenden des Programms angewendet.</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2074,14 +2074,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Mein Fort</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Datenverkehr blockieren</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Internetdatenverkehr blockieren</translation>
-    </message>
-    <message>
         <source>New program detected!</source>
         <translation>Neues Programm erkannt!</translation>
     </message>
@@ -2092,6 +2084,10 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     <message>
         <source>App Group Modifier</source>
         <translation>App-Gruppen-Modifikator</translation>
+    </message>
+    <message>
+        <source>Block Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

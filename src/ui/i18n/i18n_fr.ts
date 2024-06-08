@@ -479,6 +479,18 @@
         <source>Ask to Connect</source>
         <translation>Demander à se connecter</translation>
     </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Désactivé</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation>Bloquer tout le trafic</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Bloquer le trafic Internet</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -505,10 +517,6 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>Impossible de charger les paramètres</translation>
-    </message>
-    <message>
-        <source>Driver reinstalled</source>
-        <translation>Pilote réinstallé</translation>
     </message>
 </context>
 <context>
@@ -1033,28 +1041,12 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Affichage automatique du menu</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Bloquer tout le trafic</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Bloquer le trafic Internet</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Bloquer le trafic lorsque Fort Firewall ne fonctionne pas</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
         <translation>Utiliser les paramètres régionaux du système</translation>
-    </message>
-    <message>
-        <source>Switch Block All Traffic</source>
-        <translation>Commutateur Bloquer tout le trafic</translation>
-    </message>
-    <message>
-        <source>Switch Block Internet Traffic</source>
-        <translation>Commutateur Bloquer le trafic Internet</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1123,6 +1115,14 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <message>
         <source>The change will be applied only on program exit.</source>
         <translation>Le changement ne sera appliqué qu&apos;à la sortie du programme.</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>Bloquer tout le trafic:</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>Afficher le menu Bloquer le trafic</translation>
     </message>
 </context>
 <context>
@@ -2074,14 +2074,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Mon Fort</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Bloquer tout le trafic</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Bloquer le trafic Internet</translation>
-    </message>
-    <message>
         <source>New program detected!</source>
         <translation>Nouveau programme détecté !</translation>
     </message>
@@ -2092,6 +2084,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>App Group Modifier</source>
         <translation>Modificateur de groupe d&apos;applications</translation>
+    </message>
+    <message>
+        <source>Block Traffic</source>
+        <translation>Bloquer tout le trafic</translation>
     </message>
 </context>
 <context>

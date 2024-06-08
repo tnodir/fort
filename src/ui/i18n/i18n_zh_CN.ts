@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Install</source>
-        <translation type="unfinished"></translation>
+        <translation>安装</translation>
     </message>
 </context>
 <context>
@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">阻止互联网流量</translation>
+        <translation>阻止互联网流量</translation>
     </message>
 </context>
 <context>
@@ -479,6 +479,18 @@
         <source>Ask to Connect</source>
         <translation>请求连接</translation>
     </message>
+    <message>
+        <source>Disabled</source>
+        <translation>停用</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation>阻止所有流量</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>阻止互联网流量</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -505,10 +517,6 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>无法载入设置</translation>
-    </message>
-    <message>
-        <source>Driver reinstalled</source>
-        <translation>驱动程序已重新安装</translation>
     </message>
 </context>
 <context>
@@ -1031,28 +1039,12 @@ Make sure that you have a fresh backup.</source>
         <translation>自动显示菜单</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>阻止所有流量</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>阻止互联网流量</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>当堡垒防火墙未运行时阻止流量</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
         <translation>使用系统地区设置</translation>
-    </message>
-    <message>
-        <source>Switch Block All Traffic</source>
-        <translation>切换阻止所有流量</translation>
-    </message>
-    <message>
-        <source>Switch Block Internet Traffic</source>
-        <translation>切换阻止互联网流量</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1096,31 +1088,39 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation type="unfinished"></translation>
+        <translation>快捷键:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
-        <translation type="unfinished"></translation>
+        <translation>快捷键:</translation>
     </message>
     <message>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>主题：</translation>
     </message>
     <message>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>系统</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>亮色主题</translation>
     </message>
     <message>
         <source>Dark</source>
-        <translation type="unfinished"></translation>
+        <translation>深色主题</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>
-        <translation type="unfinished"></translation>
+        <translation>更改将仅在程序退出时应用。</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>阻止流量:</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>显示阻止流量菜单</translation>
     </message>
 </context>
 <context>
@@ -1181,7 +1181,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Bad Port</source>
-        <translation type="unfinished"></translation>
+        <translation>端口错误</translation>
     </message>
 </context>
 <context>
@@ -1475,15 +1475,15 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>筛选</translation>
     </message>
     <message>
         <source>Clear Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>清除筛选</translation>
     </message>
     <message>
         <source>Wildcard Paths</source>
-        <translation type="unfinished"></translation>
+        <translation>通配符路径</translation>
     </message>
 </context>
 <context>
@@ -1560,7 +1560,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>添加预设规则</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -1568,15 +1568,15 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Move Up</source>
-        <translation type="unfinished"></translation>
+        <translation>上移</translation>
     </message>
     <message>
         <source>Move Down</source>
-        <translation type="unfinished"></translation>
+        <translation>下移</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
-        <translation type="unfinished"></translation>
+        <translation>已超出全局规则计数！</translation>
     </message>
 </context>
 <context>
@@ -2072,14 +2072,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>我的堡垒</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>阻止所有流量</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>阻止互联网流量</translation>
-    </message>
-    <message>
         <source>New program detected!</source>
         <translation>检测到新程序！</translation>
     </message>
@@ -2089,7 +2081,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>App Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>应用组修改器</translation>
+    </message>
+    <message>
+        <source>Block Traffic</source>
+        <translation>阻止流量</translation>
     </message>
 </context>
 <context>

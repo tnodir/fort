@@ -479,6 +479,18 @@
         <source>Ask to Connect</source>
         <translation>Vprašaj za povezavo</translation>
     </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished">Onemogočeno</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished">Onemogoči ves promet</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished">Onemogoči internetni promet</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -505,10 +517,6 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>Nastavitev ni mogoče naložiti</translation>
-    </message>
-    <message>
-        <source>Driver reinstalled</source>
-        <translation>Gonilnik je znova nameščen</translation>
     </message>
 </context>
 <context>
@@ -1033,28 +1041,12 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Meni &apos;Samodejno prikaži&apos;</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Onemogoči ves promet</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Onemogoči internetni promet</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Onemogoči promet, ko Fort Firewall ne deluje</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
         <translation>Uporabi sistemske področne nastavitve</translation>
-    </message>
-    <message>
-        <source>Switch Block All Traffic</source>
-        <translation>Preklopi &apos;Onemogoči ves promet&apos;</translation>
-    </message>
-    <message>
-        <source>Switch Block Internet Traffic</source>
-        <translation>Preklopi &apos;Onemogoči internetni promet&apos;</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1122,6 +1114,14 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2074,14 +2074,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Moja trdnjava</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Onemogoči ves promet</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Onemogoči internetni promet</translation>
-    </message>
-    <message>
         <source>New program detected!</source>
         <translation>Zaznan je nov program!</translation>
     </message>
@@ -2091,6 +2083,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>App Group Modifier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Traffic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

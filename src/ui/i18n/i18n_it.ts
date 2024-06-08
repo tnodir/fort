@@ -479,6 +479,18 @@
         <source>Ask to Connect</source>
         <translation>Chiedi di connetterti</translation>
     </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Disabilitato</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation>Blocca tutto il traffico</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Blocca traffico internet</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -505,10 +517,6 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>Impossibile caricare impostazioni</translation>
-    </message>
-    <message>
-        <source>Driver reinstalled</source>
-        <translation>Driver reinstallato</translation>
     </message>
 </context>
 <context>
@@ -1033,28 +1041,12 @@ Assicurati di avere un backup recente.</translation>
         <translation>Auto-mostra menu&apos;</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Blocca tutto il traffico</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Blocca traffico internet</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Blocca il traffico quando Fort Firewall non è in esecuzione</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
         <translation>Usa impostazioni regionali di sistema</translation>
-    </message>
-    <message>
-        <source>Switch Block All Traffic</source>
-        <translation>Aziona Blocca tutto il traffico</translation>
-    </message>
-    <message>
-        <source>Switch Block Internet Traffic</source>
-        <translation>Aziona Blocca traffico internet</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1123,6 +1115,14 @@ Assicurati di avere un backup recente.</translation>
     <message>
         <source>The change will be applied only on program exit.</source>
         <translation>La modifica sarà applicata solo all&apos;uscita dal programma.</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>Blocca traffico:</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>Mostra menu&apos; blocco traffico</translation>
     </message>
 </context>
 <context>
@@ -2074,14 +2074,6 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <translation>Il mio forte</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>Blocca tutto il traffico</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>Blocca traffico internet</translation>
-    </message>
-    <message>
         <source>New program detected!</source>
         <translation>Nuovo programma rilevato.</translation>
     </message>
@@ -2093,6 +2085,10 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <source>App Group Modifier</source>
         <translation>Modificatore gruppo a
 App</translation>
+    </message>
+    <message>
+        <source>Block Traffic</source>
+        <translation>Blocca traffico</translation>
     </message>
 </context>
 <context>

@@ -479,6 +479,18 @@
         <source>Ask to Connect</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished">Desativado</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -504,10 +516,6 @@
     </message>
     <message>
         <source>Cannot load Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Driver reinstalled</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1031,27 +1039,11 @@ Make sure that you have a fresh backup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch Block All Traffic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch Block Internet Traffic</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1120,6 +1112,14 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2065,14 +2065,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>New program detected!</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2082,6 +2074,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>App Group Modifier</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Traffic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

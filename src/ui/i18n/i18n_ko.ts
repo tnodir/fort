@@ -479,6 +479,18 @@
         <source>Ask to Connect</source>
         <translation>연결 요청</translation>
     </message>
+    <message>
+        <source>Disabled</source>
+        <translation>사용 안 함</translation>
+    </message>
+    <message>
+        <source>Block All Traffic</source>
+        <translation>모든 트래픽 차단</translation>
+    </message>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>인터넷 트래픽 차단</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -505,10 +517,6 @@
     <message>
         <source>Cannot load Settings</source>
         <translation>설정을 로드할 수 없음</translation>
-    </message>
-    <message>
-        <source>Driver reinstalled</source>
-        <translation>드라이버 재설치</translation>
     </message>
 </context>
 <context>
@@ -1033,28 +1041,12 @@ Make sure that you have a fresh backup.</source>
         <translation>자동 표시 메뉴</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>모든 트래픽 차단</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>인터넷 트래픽 차단</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Fort Firewall이 실행되지 않을 때 트래픽 차단</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
         <translation>시스템 국가별 설정 사용</translation>
-    </message>
-    <message>
-        <source>Switch Block All Traffic</source>
-        <translation>모든 트래픽 차단 전환</translation>
-    </message>
-    <message>
-        <source>Switch Block Internet Traffic</source>
-        <translation>인터넷 트래픽 차단 전환</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1123,6 +1115,14 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>The change will be applied only on program exit.</source>
         <translation>변경 사항은 프로그램 종료 시에만 적용됩니다.</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>트래픽 차단:</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>트래픽 차단 메뉴 표시</translation>
     </message>
 </context>
 <context>
@@ -2074,14 +2074,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>내 Fort</translation>
     </message>
     <message>
-        <source>Block All Traffic</source>
-        <translation>모든 트래픽 차단</translation>
-    </message>
-    <message>
-        <source>Block Internet Traffic</source>
-        <translation>인터넷 트래픽 차단</translation>
-    </message>
-    <message>
         <source>New program detected!</source>
         <translation>새로운 프로그램이 감지되었습니다!</translation>
     </message>
@@ -2092,6 +2084,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>App Group Modifier</source>
         <translation>앱 그룹 수정자</translation>
+    </message>
+    <message>
+        <source>Block Traffic</source>
+        <translation>트래픽 차단</translation>
     </message>
 </context>
 <context>
