@@ -163,13 +163,13 @@ void AutoUpdateManager::clearUpdateDir()
     if (!IoC<FortSettings>()->isMaster())
         return;
 
-    if (!FileUtil::pathExists(m_updatePath))
+    if (!FileUtil::pathExists(updatePath()))
         return;
 
-    if (FileUtil::removePath(m_updatePath)) {
-        qCDebug(LC) << "Dir removed:" << m_updatePath;
+    if (FileUtil::removePath(updatePath())) {
+        qCDebug(LC) << "Dir removed:" << updatePath();
     } else {
-        qCWarning(LC) << "Dir remove error:" << m_updatePath;
+        qCWarning(LC) << "Dir remove error:" << updatePath();
     }
 }
 
@@ -220,10 +220,14 @@ QStringList AutoUpdateManager::installerArgs(FortSettings *settings)
 {
     QStringList args = { "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NOCANCEL" };
 
-    if (settings->forceDebug()) {
-        args << "/LOG";
+    // Log
+    {
+        const QString logPath = settings->logsPath() + "SetupLog.txt";
+
+        args << QString("/LOG=%1").arg(logPath);
     }
 
+    // Portable
     if (settings->isPortable()) {
         const QString appPath = FileUtil::toNativeSeparators(FileUtil::appBinLocation());
 
@@ -233,6 +237,7 @@ QStringList AutoUpdateManager::installerArgs(FortSettings *settings)
         args << installerPortableTasks(settings);
     }
 
+    // Launch
     if (!settings->hasService()) {
         args << "/LAUNCH";
     }

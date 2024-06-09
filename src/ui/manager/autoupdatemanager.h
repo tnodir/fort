@@ -48,7 +48,8 @@ public:
     void setUp() override;
     void tearDown() override;
 
-    QString installerPath() const { return m_updatePath + m_fileName; }
+    const QString &updatePath() const { return m_updatePath; }
+    QString installerPath() const { return updatePath() + m_fileName; }
 
 public slots:
     virtual bool startDownload();
