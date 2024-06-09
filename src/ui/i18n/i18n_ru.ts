@@ -2087,7 +2087,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Block Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Блокировка трафика</translation>
     </message>
 </context>
 <context>
