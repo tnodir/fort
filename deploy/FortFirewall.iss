@@ -119,6 +119,9 @@ Type: files; Name: "{app}\curl*.*"
 Type: files; Name: "{app}\ChangeLog"
 Type: files; Name: "{app}\delay-start.bat"
 
+[UninstallDelete]
+Type: files; Name: "{app}\restart.bat"
+
 [Registry]
 Root: HKLM; Subkey: "System\CurrentControlSet\Services\EventLog\System\fortfw"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "System\CurrentControlSet\Services\EventLog\System\fortfw"; \

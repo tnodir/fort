@@ -539,4 +539,5 @@ void FortManager::setupResources()
     Q_INIT_RESOURCE(stat_migrations);
 
     Q_INIT_RESOURCE(fort_icons);
+    Q_INIT_RESOURCE(fort_scripts);
 }

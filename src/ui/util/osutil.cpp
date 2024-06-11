@@ -181,21 +181,39 @@ bool OsUtil::registerAppRestart()
 
 void OsUtil::beginRestartClients()
 {
-    FileUtil::writeFileData(FileUtil::appBinLocation() + "/inst.tmp", {});
+    const auto appPath = FileUtil::pathSlash(FileUtil::appBinLocation());
+
+    FileUtil::writeFileData(appPath + "inst.tmp", {});
+
+    // Create a restart script
+    {
+        const auto restartScriptPath = appPath + "restart.bat";
+
+        FileUtil::removeFile(restartScriptPath);
+        FileUtil::copyFile(":/scripts/restart.bat", restartScriptPath);
+        QFile::setPermissions(restartScriptPath, QFile::WriteOwner);
+    }
 }
 
 void OsUtil::endRestartClients()
 {
-    FileUtil::removeFile(FileUtil::appBinLocation() + "/inst.tmp");
+    const auto appPath = FileUtil::pathSlash(FileUtil::appBinLocation());
+
+    FileUtil::removeFile(appPath + "inst.tmp");
 }
 
 void OsUtil::restartClient()
 {
     const QFileInfo fi(QCoreApplication::applicationFilePath());
 
-    const auto command = QString("ping -n 4 127.0.0.1 >NUL"
-                                 " & if not exist inst.tmp start %1 --launch")
-                                 .arg(fi.fileName());
+    QString command;
+    if (FileUtil::fileExists("restart.bat")) {
+        command = "restart.bat";
+    } else {
+        command = QString("ping -n 4 127.0.0.1 >NUL"
+                          " & if not exist inst.tmp start %1 --launch")
+                          .arg(fi.fileName());
+    }
 
     runCommand(command, /*workingDir=*/fi.path());
 
