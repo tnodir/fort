@@ -249,7 +249,7 @@ void WindowManager::setupByIniUser(const IniUser &ini)
 
 void WindowManager::updateTheme(const IniUser &ini)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     const auto colorScheme = Qt::ColorScheme(IniUser::colorSchemeByName(ini.theme()));
 
     QApplication::styleHints()->setColorScheme(colorScheme);
