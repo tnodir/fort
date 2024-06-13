@@ -210,22 +210,35 @@ RuleCharType RuleTextParser::nextCharType(quint32 expectedCharTypes, const char 
 
         charType = processCharType(charType, c, extraChars);
 
-        switch (charType) {
-        case CharNone: {
-            setErrorMessage(tr("Bad symbol: %1").arg(c));
-            return CharNone;
-        } break;
-        default:
-            if ((charType & expectedCharTypes) == 0) {
-                if (cp == m_p) {
-                    setErrorMessage(tr("Unexpected symbol: %1").arg(c));
-                }
-                return CharNone;
-            }
-
+        if (!checkNextCharType(expectedCharTypes, charType, cp, c)) {
             return charType;
         }
     }
 
     return CharNone;
+}
+
+bool RuleTextParser::checkNextCharType(
+        quint32 expectedCharTypes, RuleCharType &charType, const QChar *cp, const QChar c)
+{
+    switch (charType) {
+    case CharNone: {
+        setErrorMessage(tr("Bad symbol: %1").arg(c));
+
+        charType = CharNone;
+        return false;
+    } break;
+    default:
+        if ((charType & expectedCharTypes) == 0) {
+            if (cp == m_p) {
+                setErrorMessage(tr("Unexpected symbol: %1").arg(c));
+            }
+
+            charType = CharNone;
+        }
+
+        return false;
+    }
+
+    return true;
 }

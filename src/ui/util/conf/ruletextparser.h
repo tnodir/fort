@@ -79,6 +79,8 @@ private:
     RuleExpr &listNode(int listIndex) { return m_ruleExprArray[listIndex]; }
 
     RuleCharType nextCharType(quint32 expectedCharTypes, const char *extraChars = nullptr);
+    bool checkNextCharType(
+            quint32 expectedCharTypes, RuleCharType &charType, const QChar *cp, const QChar c);
 
 private:
     bool m_isNot = false;
