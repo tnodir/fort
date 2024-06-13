@@ -13,6 +13,8 @@
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <rpc/rpcmanager.h>
+#include <task/taskinfozonedownloader.h>
+#include <task/taskmanager.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
@@ -24,6 +26,11 @@ namespace {
 constexpr int maxClientsCount = 9;
 
 const QLoggingCategory LC("control");
+
+bool checkActionPassword()
+{
+    return IoC<WindowManager>()->checkPassword(/*temporary=*/true);
+}
 
 }
 
@@ -107,6 +114,8 @@ bool ControlManager::processCommandClient()
         command = Control::CommandHome;
     } else if (settings->controlCommand() == "prog") {
         command = Control::CommandProg;
+    } else if (settings->controlCommand() == "zone") {
+        command = Control::CommandZone;
     } else {
         qCWarning(LC) << "Unknown control command:" << settings->controlCommand();
         return false;
@@ -220,24 +229,27 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
 
 bool ControlManager::processCommand(const ProcessCommandArgs &p)
 {
+    bool ok;
+
     switch (p.command) {
     case Control::CommandHome: {
-        if (processCommandHome(p))
-            return true;
+        ok = processCommandHome(p);
     } break;
     case Control::CommandProg: {
-        if (processCommandProg(p))
-            return true;
+        ok = processCommandProg(p);
+    } break;
+    case Control::CommandZone: {
+        ok = processCommandZone(p);
     } break;
     default:
-        if (IoC<RpcManager>()->processCommandRpc(p))
-            return true;
+        ok = IoC<RpcManager>()->processCommandRpc(p);
     }
 
-    if (p.errorMessage.isEmpty()) {
+    if (!ok && p.errorMessage.isEmpty()) {
         p.errorMessage = "Invalid command";
     }
-    return false;
+
+    return ok;
 }
 
 bool ControlManager::processCommandHome(const ProcessCommandArgs &p)
@@ -297,8 +309,7 @@ bool ControlManager::checkProgActionPassword(ProgAction progAction)
     constexpr const quint32 passwordRequiredActions =
             ProgActionDel | ProgActionAllow | ProgActionBlock | ProgActionKill;
 
-    return (passwordRequiredActions & progAction) == 0
-            || IoC<WindowManager>()->checkPassword(/*temporary=*/true);
+    return (passwordRequiredActions & progAction) == 0 || checkActionPassword();
 }
 
 ControlManager::ProgAction ControlManager::progActionByText(const QString &commandText)
@@ -319,6 +330,49 @@ ControlManager::ProgAction ControlManager::progActionByText(const QString &comma
         return ProgActionKill;
 
     return ProgActionNone;
+}
+
+bool ControlManager::processCommandZone(const ProcessCommandArgs &p)
+{
+    const ZoneAction zoneAction = zoneActionByText(p.args.value(0).toString());
+    if (zoneAction == ZoneActionNone) {
+        p.errorMessage = "Usage: zone update";
+        return false;
+    }
+
+    if (!checkZoneActionPassword(zoneAction)) {
+        p.errorMessage = "Password required";
+        return false;
+    }
+
+    return processCommandZoneAction(zoneAction);
+}
+
+bool ControlManager::processCommandZoneAction(ZoneAction zoneAction)
+{
+    switch (zoneAction) {
+    case ZoneActionUpdate: {
+        IoC<TaskManager>()->runTask(TaskInfo::ZoneDownloader);
+        return true;
+    }
+    default:
+        return false;
+    }
+}
+
+bool ControlManager::checkZoneActionPassword(ZoneAction zoneAction)
+{
+    constexpr const quint32 passwordRequiredActions = ZoneActionUpdate;
+
+    return (passwordRequiredActions & zoneAction) == 0 || checkActionPassword();
+}
+
+ControlManager::ZoneAction ControlManager::zoneActionByText(const QString &commandText)
+{
+    if (commandText == "update")
+        return ZoneActionUpdate;
+
+    return ZoneActionNone;
 }
 
 QString ControlManager::getServerName(bool isService)

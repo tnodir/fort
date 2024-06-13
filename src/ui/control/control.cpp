@@ -13,6 +13,7 @@ const char *const commandString(Command cmd)
 
         CASE_STRING(CommandHome)
         CASE_STRING(CommandProg)
+        CASE_STRING(CommandZone)
 
         CASE_STRING(Rpc_Result_Ok)
         CASE_STRING(Rpc_Result_Error)
@@ -120,6 +121,7 @@ RpcManager managerByCommand(Command cmd)
 
         Rpc_NoneManager, // CommandHome,
         Rpc_NoneManager, // CommandProg,
+        Rpc_NoneManager, // CommandZone,
 
         Rpc_NoneManager, // Rpc_Result_Ok,
         Rpc_NoneManager, // Rpc_Result_Error,
@@ -206,6 +208,7 @@ bool commandRequiresValidation(Command cmd)
 
         0, // CommandHome,
         0, // CommandProg,
+        0, // CommandZone,
 
         0, // Rpc_Result_Ok,
         0, // Rpc_Result_Error,
