@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.13.1-test01, 2024-06-13:
+- UI: Update: Always create "logs/SetupLog.txt" file.
+- UI: Use "restart.bat" to restart clients.
+- UI: Add "-c zone update" command line argument.
+
 v3.13.0, 2024-06-08:
 - UI: Portable: Fix service/driver handling on startup.
 - UI: Tray/Options: Add "Block Traffic" menu.
