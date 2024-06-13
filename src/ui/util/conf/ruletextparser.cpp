@@ -6,6 +6,11 @@
 
 namespace {
 
+enum FortRuleExprSugarType {
+    FORT_RULE_EXPR_TYPE_PROTOCOL_TCP = -100,
+    FORT_RULE_EXPR_TYPE_PROTOCOL_UDP,
+};
+
 const char *const extraNameChars = "_";
 const char *const extraValueChars = ".:-/]";
 
@@ -84,6 +89,10 @@ bool RuleTextParser::parseLine()
 {
     bool ok = false;
 
+    const int listIndex = pushListNode(FORT_RULE_EXPR_LIST_AND);
+
+    m_isNot = false;
+
     const auto charType = nextCharType(CharAnyBegin);
 
     switch (charType) {
@@ -102,6 +111,8 @@ bool RuleTextParser::parseLine()
     default:
         break;
     }
+
+    popListNode(listIndex);
 
     return ok;
 }
@@ -132,6 +143,8 @@ bool RuleTextParser::parseName()
         { "protocol", FORT_RULE_EXPR_TYPE_PROTOCOL },
         { "dir", FORT_RULE_EXPR_TYPE_DIRECTION },
         { "direction", FORT_RULE_EXPR_TYPE_DIRECTION },
+        { "tcp", FORT_RULE_EXPR_TYPE_PROTOCOL_TCP },
+        { "udp", FORT_RULE_EXPR_TYPE_PROTOCOL_UDP },
     };
 
     m_exprType = exprTypesMap.value(nameLower, -1);
@@ -139,6 +152,12 @@ bool RuleTextParser::parseName()
     if (m_exprType == -1) {
         setErrorMessage(tr("Bad text: %1").arg(nameView));
         return false;
+    }
+
+    if (m_exprType < 0) {
+        // Desugar the expression
+    } else {
+        //
     }
 
     return true;
