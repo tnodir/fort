@@ -481,15 +481,15 @@
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">Deaktiviert</translation>
+        <translation>Deaktiviert</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished">Datenverkehr blockieren</translation>
+        <translation>Gesamten Datenverkehr blockieren</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Internetdatenverkehr blockieren</translation>
+        <translation>Internetdatenverkehr blockieren</translation>
     </message>
 </context>
 <context>
@@ -1118,11 +1118,11 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenverkehr blockieren:</translation>
     </message>
     <message>
         <source>Show Block Traffic Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menü für Blockieren des Datenverkehr anzeigen</translation>
     </message>
 </context>
 <context>
@@ -2087,7 +2087,7 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
     </message>
     <message>
         <source>Block Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenverkehr blockieren</translation>
     </message>
 </context>
 <context>

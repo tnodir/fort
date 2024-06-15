@@ -21,7 +21,7 @@
     </message>
     <message>
         <source>Install</source>
-        <translation type="unfinished"></translation>
+        <translation>Namesti</translation>
     </message>
 </context>
 <context>
@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Onemogoči internetni promet</translation>
+        <translation>Onemogoči internetni promet</translation>
     </message>
 </context>
 <context>
@@ -481,15 +481,15 @@
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">Onemogočeno</translation>
+        <translation>Onemogočeno</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished">Onemogoči ves promet</translation>
+        <translation>Onemogoči ves promet</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Onemogoči internetni promet</translation>
+        <translation>Onemogoči internetni promet</translation>
     </message>
 </context>
 <context>
@@ -1090,39 +1090,39 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation type="unfinished"></translation>
+        <translation>Vroče tipke:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bližnjica:</translation>
     </message>
     <message>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema:</translation>
     </message>
     <message>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>Sistem</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>Svetla</translation>
     </message>
     <message>
         <source>Dark</source>
-        <translation type="unfinished"></translation>
+        <translation>Temna</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sprememba bo uporabljena samo ob izhodu iz programa.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj promet:</translation>
     </message>
     <message>
         <source>Show Block Traffic Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaži meni Blokiraj promet</translation>
     </message>
 </context>
 <context>
@@ -1183,7 +1183,7 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
     </message>
     <message>
         <source>Bad Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Slabo pristanišče</translation>
     </message>
 </context>
 <context>
@@ -1391,7 +1391,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Izberite Pravilo</translation>
     </message>
 </context>
 <context>
@@ -1477,15 +1477,15 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtri</translation>
     </message>
     <message>
         <source>Clear Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Počisti filtre</translation>
     </message>
     <message>
         <source>Wildcard Paths</source>
-        <translation type="unfinished"></translation>
+        <translation>Poti z nadomestnimi znaki</translation>
     </message>
 </context>
 <context>
@@ -1562,7 +1562,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Dodajte prednastavljeno pravilo</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -1570,15 +1570,15 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Move Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Premakni gor</translation>
     </message>
     <message>
         <source>Move Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Premik navzdol</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
-        <translation type="unfinished"></translation>
+        <translation>Število globalnih pravil je preseženo!</translation>
     </message>
 </context>
 <context>
@@ -1663,7 +1663,7 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Izberite Pravilo</translation>
     </message>
 </context>
 <context>
@@ -2083,11 +2083,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>App Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Modifikator skupine aplikacij</translation>
     </message>
     <message>
         <source>Block Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokiraj promet</translation>
     </message>
 </context>
 <context>
