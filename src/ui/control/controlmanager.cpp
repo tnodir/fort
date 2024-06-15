@@ -32,6 +32,168 @@ bool checkActionPassword()
     return IoC<WindowManager>()->checkPassword(/*temporary=*/true);
 }
 
+bool processCommandHome(const ProcessCommandArgs &p)
+{
+    const auto commandText = p.args.value(0).toString();
+
+    if (commandText == "show") {
+        return IoC<WindowManager>()->exposeHomeWindow();
+    }
+
+    p.errorMessage = "Usage: home show";
+    return false;
+}
+
+enum ProgAction : quint32 {
+    ProgActionNone = 0,
+    ProgActionAdd = (1 << 0),
+    ProgActionDel = (1 << 1),
+    ProgActionAllow = (1 << 2),
+    ProgActionBlock = (1 << 3),
+    ProgActionKill = (1 << 4),
+};
+
+bool processCommandProgAction(ProgAction progAction, const QString &appPath)
+{
+    switch (progAction) {
+    case ProgActionAdd: {
+        return IoC<WindowManager>()->showProgramEditForm(appPath);
+    }
+    case ProgActionDel: {
+        return IoC<ConfAppManager>()->deleteAppPath(appPath);
+    }
+    case ProgActionAllow:
+    case ProgActionBlock:
+    case ProgActionKill: {
+        const bool blocked = (progAction != ProgActionAllow);
+        const bool killProcess = (progAction == ProgActionKill);
+
+        return IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked, killProcess);
+    }
+    default:
+        return false;
+    }
+}
+
+bool checkProgActionPassword(ProgAction progAction)
+{
+    constexpr const quint32 passwordRequiredActions =
+            ProgActionDel | ProgActionAllow | ProgActionBlock | ProgActionKill;
+
+    return (passwordRequiredActions & progAction) == 0 || checkActionPassword();
+}
+
+ProgAction progActionByText(const QString &commandText)
+{
+    if (commandText == "add")
+        return ProgActionAdd;
+
+    if (commandText == "del")
+        return ProgActionDel;
+
+    if (commandText == "allow")
+        return ProgActionAllow;
+
+    if (commandText == "block")
+        return ProgActionBlock;
+
+    if (commandText == "kill")
+        return ProgActionKill;
+
+    return ProgActionNone;
+}
+
+bool processCommandProg(const ProcessCommandArgs &p)
+{
+    const ProgAction progAction = progActionByText(p.args.value(0).toString());
+    if (progAction == ProgActionNone) {
+        p.errorMessage = "Usage: prog add|del|allow|block|kill|show <app-path>";
+        return false;
+    }
+
+    if (!checkProgActionPassword(progAction)) {
+        p.errorMessage = "Password required";
+        return false;
+    }
+
+    const QString appPath = p.args.value(1).toString();
+
+    return processCommandProgAction(progAction, appPath);
+}
+
+enum ZoneAction : quint32 {
+    ZoneActionNone = 0,
+    ZoneActionUpdate = (1 << 0),
+};
+
+bool processCommandZoneAction(ZoneAction zoneAction)
+{
+    switch (zoneAction) {
+    case ZoneActionUpdate: {
+        IoC<TaskManager>()->runTask(TaskInfo::ZoneDownloader);
+        return true;
+    }
+    default:
+        return false;
+    }
+}
+
+bool checkZoneActionPassword(ZoneAction zoneAction)
+{
+    constexpr const quint32 passwordRequiredActions = ZoneActionUpdate;
+
+    return (passwordRequiredActions & zoneAction) == 0 || checkActionPassword();
+}
+
+ZoneAction zoneActionByText(const QString &commandText)
+{
+    if (commandText == "update")
+        return ZoneActionUpdate;
+
+    return ZoneActionNone;
+}
+
+bool processCommandZone(const ProcessCommandArgs &p)
+{
+    const ZoneAction zoneAction = zoneActionByText(p.args.value(0).toString());
+    if (zoneAction == ZoneActionNone) {
+        p.errorMessage = "Usage: zone update";
+        return false;
+    }
+
+    if (!checkZoneActionPassword(zoneAction)) {
+        p.errorMessage = "Password required";
+        return false;
+    }
+
+    return processCommandZoneAction(zoneAction);
+}
+
+bool processCommand(const ProcessCommandArgs &p)
+{
+    bool ok;
+
+    switch (p.command) {
+    case Control::CommandHome: {
+        ok = processCommandHome(p);
+    } break;
+    case Control::CommandProg: {
+        ok = processCommandProg(p);
+    } break;
+    case Control::CommandZone: {
+        ok = processCommandZone(p);
+    } break;
+    default:
+        ok = IoC<RpcManager>()->processCommandRpc(p);
+    }
+
+    if (!ok && p.errorMessage.isEmpty()) {
+        p.errorMessage = "Invalid command";
+    }
+
+    return ok;
+}
+
 }
 
 ControlManager::ControlManager(QObject *parent) : QObject(parent) { }
@@ -225,154 +387,6 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
     // XXX: OsUtil::setThreadIsBusy(false);
 
     return success;
-}
-
-bool ControlManager::processCommand(const ProcessCommandArgs &p)
-{
-    bool ok;
-
-    switch (p.command) {
-    case Control::CommandHome: {
-        ok = processCommandHome(p);
-    } break;
-    case Control::CommandProg: {
-        ok = processCommandProg(p);
-    } break;
-    case Control::CommandZone: {
-        ok = processCommandZone(p);
-    } break;
-    default:
-        ok = IoC<RpcManager>()->processCommandRpc(p);
-    }
-
-    if (!ok && p.errorMessage.isEmpty()) {
-        p.errorMessage = "Invalid command";
-    }
-
-    return ok;
-}
-
-bool ControlManager::processCommandHome(const ProcessCommandArgs &p)
-{
-    const auto commandText = p.args.value(0).toString();
-
-    if (commandText == "show") {
-        return IoC<WindowManager>()->exposeHomeWindow();
-    }
-
-    p.errorMessage = "Usage: home show";
-    return false;
-}
-
-bool ControlManager::processCommandProg(const ProcessCommandArgs &p)
-{
-    const ProgAction progAction = progActionByText(p.args.value(0).toString());
-    if (progAction == ProgActionNone) {
-        p.errorMessage = "Usage: prog add|del|allow|block|kill|show <app-path>";
-        return false;
-    }
-
-    if (!checkProgActionPassword(progAction)) {
-        p.errorMessage = "Password required";
-        return false;
-    }
-
-    const QString appPath = p.args.value(1).toString();
-
-    return processCommandProgAction(progAction, appPath);
-}
-
-bool ControlManager::processCommandProgAction(ProgAction progAction, const QString &appPath)
-{
-    switch (progAction) {
-    case ProgActionAdd: {
-        return IoC<WindowManager>()->showProgramEditForm(appPath);
-    }
-    case ProgActionDel: {
-        return IoC<ConfAppManager>()->deleteAppPath(appPath);
-    }
-    case ProgActionAllow:
-    case ProgActionBlock:
-    case ProgActionKill: {
-        const bool blocked = (progAction != ProgActionAllow);
-        const bool killProcess = (progAction == ProgActionKill);
-
-        return IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked, killProcess);
-    }
-    default:
-        return false;
-    }
-}
-
-bool ControlManager::checkProgActionPassword(ProgAction progAction)
-{
-    constexpr const quint32 passwordRequiredActions =
-            ProgActionDel | ProgActionAllow | ProgActionBlock | ProgActionKill;
-
-    return (passwordRequiredActions & progAction) == 0 || checkActionPassword();
-}
-
-ControlManager::ProgAction ControlManager::progActionByText(const QString &commandText)
-{
-    if (commandText == "add")
-        return ProgActionAdd;
-
-    if (commandText == "del")
-        return ProgActionDel;
-
-    if (commandText == "allow")
-        return ProgActionAllow;
-
-    if (commandText == "block")
-        return ProgActionBlock;
-
-    if (commandText == "kill")
-        return ProgActionKill;
-
-    return ProgActionNone;
-}
-
-bool ControlManager::processCommandZone(const ProcessCommandArgs &p)
-{
-    const ZoneAction zoneAction = zoneActionByText(p.args.value(0).toString());
-    if (zoneAction == ZoneActionNone) {
-        p.errorMessage = "Usage: zone update";
-        return false;
-    }
-
-    if (!checkZoneActionPassword(zoneAction)) {
-        p.errorMessage = "Password required";
-        return false;
-    }
-
-    return processCommandZoneAction(zoneAction);
-}
-
-bool ControlManager::processCommandZoneAction(ZoneAction zoneAction)
-{
-    switch (zoneAction) {
-    case ZoneActionUpdate: {
-        IoC<TaskManager>()->runTask(TaskInfo::ZoneDownloader);
-        return true;
-    }
-    default:
-        return false;
-    }
-}
-
-bool ControlManager::checkZoneActionPassword(ZoneAction zoneAction)
-{
-    constexpr const quint32 passwordRequiredActions = ZoneActionUpdate;
-
-    return (passwordRequiredActions & zoneAction) == 0 || checkActionPassword();
-}
-
-ControlManager::ZoneAction ControlManager::zoneActionByText(const QString &commandText)
-{
-    if (commandText == "update")
-        return ZoneActionUpdate;
-
-    return ZoneActionNone;
 }
 
 QString ControlManager::getServerName(bool isService)

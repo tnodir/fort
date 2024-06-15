@@ -45,34 +45,6 @@ private slots:
     bool processRequest(Control::Command command, const QVariantList &args);
 
 private:
-    enum ProgAction : quint32 {
-        ProgActionNone = 0,
-        ProgActionAdd = (1 << 0),
-        ProgActionDel = (1 << 1),
-        ProgActionAllow = (1 << 2),
-        ProgActionBlock = (1 << 3),
-        ProgActionKill = (1 << 4),
-    };
-
-    enum ZoneAction : quint32 {
-        ZoneActionNone = 0,
-        ZoneActionUpdate = (1 << 0),
-    };
-
-    bool processCommand(const ProcessCommandArgs &p);
-
-    bool processCommandHome(const ProcessCommandArgs &p);
-
-    bool processCommandProg(const ProcessCommandArgs &p);
-    static bool processCommandProgAction(ProgAction progAction, const QString &appPath);
-    static bool checkProgActionPassword(ProgAction progAction);
-    static ProgAction progActionByText(const QString &commandText);
-
-    bool processCommandZone(const ProcessCommandArgs &p);
-    static bool processCommandZoneAction(ZoneAction zoneAction);
-    static bool checkZoneActionPassword(ZoneAction zoneAction);
-    static ZoneAction zoneActionByText(const QString &commandText);
-
     static QString getServerName(bool isService = false);
 
 private:
