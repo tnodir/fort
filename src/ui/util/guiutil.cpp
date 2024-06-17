@@ -30,9 +30,9 @@ QIcon GuiUtil::overlayIcon(
 {
     const auto key = QString("%1|%2|%3").arg(basePath, overlayPath, QString::number(alignment, 16));
 
-    QPixmap pixmap;
-    if (IconCache::find(key, &pixmap))
-        return pixmap;
+    QIcon icon;
+    if (IconCache::find(key, icon))
+        return icon;
 
     constexpr int xOffset = 2;
     constexpr int yOffset = 3;
@@ -41,10 +41,7 @@ QIcon GuiUtil::overlayIcon(
     constexpr int overlayWidth = 23;
     constexpr int deltaWidth = baseWidth - overlayWidth;
 
-    pixmap = IconCache::file(basePath);
-    if (pixmap.width() > baseWidth) {
-        pixmap = pixmap.scaled(baseWidth, baseWidth);
-    }
+    QPixmap pixmap = IconCache::pixmap(basePath, baseWidth);
 
     const int dx = (alignment & Qt::AlignRight) ? deltaWidth + xOffset : -xOffset;
     const int dy = (alignment & Qt::AlignBottom) ? deltaWidth + yOffset : -yOffset;
@@ -53,14 +50,16 @@ QIcon GuiUtil::overlayIcon(
 
     // Paint the overlay
     {
-        const QPixmap overlay = IconCache::file(overlayPath);
+        const QPixmap overlay = IconCache::pixmap(overlayPath, overlayWidth);
         QPainter p(&pixmap);
         p.drawPixmap(rect, overlay);
     }
 
-    IconCache::insert(key, pixmap);
+    icon = QIcon(pixmap);
 
-    return pixmap;
+    IconCache::insert(key, icon);
+
+    return icon;
 }
 
 QFont GuiUtil::fontBold()

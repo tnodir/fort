@@ -41,8 +41,6 @@ void AppsColumn::setupUi()
 QLayout *AppsColumn::setupHeaderLayout()
 {
     m_icon = ControlUtil::createLabel();
-    m_icon->setScaledContents(true);
-    m_icon->setMaximumSize(16, 16);
 
     m_labelTitle = ControlUtil::createLabel();
     m_labelTitle->setFont(GuiUtil::fontBold());
@@ -70,7 +68,11 @@ void AppsColumn::setupTextEdit()
 
 void AppsColumn::setupIcon(const QString &iconPath)
 {
-    icon()->setPixmap(IconCache::file(iconPath));
+    m_icon->setScaledContents(true);
+
+    const QSize iconSize(16, 16);
+    m_icon->setMaximumSize(iconSize);
+    m_icon->setPixmap(IconCache::pixmap(iconPath, iconSize));
 }
 
 void AppsColumn::updateBtClear()

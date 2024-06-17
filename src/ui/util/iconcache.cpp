@@ -1,10 +1,9 @@
 #include "iconcache.h"
 
+#include <QCache>
 #include <QDir>
 #include <QIcon>
 #include <QLoggingCategory>
-#include <QPixmapCache>
-#include <QThread>
 
 #include "fileutil.h"
 
@@ -12,33 +11,26 @@ namespace {
 
 const QLoggingCategory LC("util.iconCache");
 
-void checkThread()
-{
-#ifdef QT_DEBUG
-    static const Qt::HANDLE g_mainThreadId = QThread::currentThreadId();
+constexpr int CacheLimitCount = 200; // icons max count
 
-    const Qt::HANDLE threadId = QThread::currentThreadId();
-    if (g_mainThreadId != threadId) {
-        qCWarning(LC) << "QPixmap used by non-main thread:" << threadId
-                      << "; main:" << g_mainThreadId;
-    }
-#endif
-}
+static struct IconCachePrivate
+{
+    IconCachePrivate() : cache(CacheLimitCount) { }
+
+    bool dirChecked : 1 = false;
+    bool dirExists : 1 = false;
+
+    QCache<QString, QIcon> cache;
+} g_iconCache;
 
 QString adjustFilePath(const QString &filePath)
 {
-    static struct
-    {
-        bool checked : 1 = false;
-        bool exists : 1 = false;
-    } g_iconsDir;
-
-    if (!g_iconsDir.checked) {
-        g_iconsDir.checked = true;
-        g_iconsDir.exists = QDir().exists("icons");
+    if (!g_iconCache.dirChecked) {
+        g_iconCache.dirChecked = true;
+        g_iconCache.dirExists = QDir().exists("icons");
     }
 
-    if (!g_iconsDir.exists)
+    if (!g_iconCache.dirExists)
         return filePath;
 
     // Try to use "./icons/" folder from current working dir.
@@ -55,43 +47,82 @@ QString adjustFilePath(const QString &filePath)
 
 }
 
-bool IconCache::find(const QString &key, QPixmap *pixmap)
+QIcon *IconCache::findObject(const QString &key)
 {
-    checkThread();
-
-    return QPixmapCache::find(key, pixmap);
+    return g_iconCache.cache.object(key);
 }
 
-bool IconCache::insert(const QString &key, const QPixmap &pixmap)
+bool IconCache::insertObject(const QString &key, QIcon *iconObj)
 {
-    checkThread();
+    return g_iconCache.cache.insert(key, iconObj);
+}
 
-    return QPixmapCache::insert(key, pixmap);
+bool IconCache::find(const QString &key, QIcon &icon)
+{
+    const QIcon *iconObj = findObject(key);
+
+    if (iconObj) {
+        icon = *iconObj;
+        return true;
+    }
+    return false;
+}
+
+bool IconCache::insert(const QString &key, const QIcon &icon)
+{
+    QIcon *iconObj = new QIcon(icon);
+
+    return insertObject(key, iconObj);
 }
 
 void IconCache::remove(const QString &key)
 {
-    checkThread();
-
-    return QPixmapCache::remove(key);
+    g_iconCache.cache.remove(key);
 }
 
-QPixmap IconCache::file(const QString &filePath)
+QIcon *IconCache::iconObject(const QString &filePath)
 {
-    checkThread();
+    QIcon *iconObj = findObject(filePath);
 
-    QPixmap pixmap;
-    if (!find(filePath, &pixmap)) {
-        pixmap.load(adjustFilePath(filePath));
+    if (!iconObj) {
+        iconObj = new QIcon(adjustFilePath(filePath));
 
-        insert(filePath, pixmap);
+        if (!insertObject(filePath, iconObj)) {
+            iconObj = nullptr;
+        }
     }
-    return pixmap;
+    return iconObj;
 }
 
 QIcon IconCache::icon(const QString &filePath)
 {
-    checkThread();
+    if (filePath.isEmpty())
+        return {};
 
-    return filePath.isEmpty() ? QIcon() : QIcon(file(filePath));
+    QIcon *iconObj = iconObject(filePath);
+    if (iconObj) {
+        return *iconObj;
+    }
+
+    return QIcon(adjustFilePath(filePath));
+}
+
+QPixmap IconCache::pixmap(const QString &filePath, const QSize &size)
+{
+    if (filePath.isEmpty())
+        return {};
+
+    QIcon *iconObj = iconObject(filePath);
+    if (iconObj) {
+        return iconObj->pixmap(size);
+    }
+
+    return icon(filePath).pixmap(size);
+}
+
+QPixmap IconCache::pixmap(const QString &filePath, int extent)
+{
+    const QSize size(extent, extent);
+
+    return pixmap(filePath, size);
 }

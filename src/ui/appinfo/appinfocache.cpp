@@ -37,28 +37,23 @@ QString AppInfoCache::appName(const QString &appPath)
     return appInfo.fileDescription;
 }
 
-QPixmap AppInfoCache::appPixmap(const QString &appPath, const QString &nullIconPath)
+QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
 {
-    QPixmap pixmap;
-    if (IconCache::find(appPath, &pixmap))
-        return pixmap;
+    QIcon icon;
+    if (IconCache::find(appPath, icon))
+        return icon;
 
     const auto info = appInfo(appPath);
     if (info.isValid()) {
         IoC<AppInfoManager>()->lookupAppIcon(appPath, info.iconId);
     }
 
-    pixmap = IconCache::file(
+    icon = IconCache::icon(
             !nullIconPath.isEmpty() ? nullIconPath : ":/icons/application-window-96.png");
 
-    IconCache::insert(appPath, pixmap);
+    IconCache::insert(appPath, icon);
 
-    return pixmap;
-}
-
-QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
-{
-    return appPixmap(appPath, nullIconPath);
+    return icon;
 }
 
 AppInfo AppInfoCache::appInfo(const QString &appPath)
@@ -100,7 +95,9 @@ void AppInfoCache::handleFinishedIconLookup(const QString &appPath, const QImage
     if (image.isNull())
         return;
 
-    IconCache::insert(appPath, QPixmap::fromImage(image)); // update cached icon
+    const QPixmap pixmap = QPixmap::fromImage(image);
+
+    IconCache::insert(appPath, pixmap); // update cached icon
 
     emitCacheChanged();
 }

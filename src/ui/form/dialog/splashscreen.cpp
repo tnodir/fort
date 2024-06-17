@@ -111,7 +111,7 @@ QLabel *SplashScreen::createLogoIcon()
     iconLogo->setMinimumSize(logoSize);
     iconLogo->setMaximumSize(logoSize);
 
-    iconLogo->setPixmap(IconCache::file(":/icons/fort-96.png"));
+    iconLogo->setPixmap(IconCache::pixmap(":/icons/fort-96.png", logoSize));
 
     return iconLogo;
 }

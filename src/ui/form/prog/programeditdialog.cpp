@@ -38,6 +38,8 @@
 
 namespace {
 
+const QSize appIconSize(32, 32);
+
 const std::array appBlockInMinuteValues = { 15, 0, 1, 5, 10, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
     60 * 24 * 7, 60 * 24 * 30 };
 
@@ -166,7 +168,7 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection)
     m_editNotes->setText(m_appRow.notes);
     m_editNotes->setEnabled(isSingleSelection);
 
-    m_labelEditNotes->setPixmap(appIcon(isSingleSelection));
+    m_labelEditNotes->setPixmap(appIcon(isSingleSelection).pixmap(appIconSize));
 
     if (isSingleSelection) {
         if (m_appRow.appName.isEmpty()) {
@@ -197,15 +199,16 @@ void ProgramEditDialog::initializeFocus()
     }
 }
 
-QPixmap ProgramEditDialog::appIcon(bool isSingleSelection) const
+QIcon ProgramEditDialog::appIcon(bool isSingleSelection) const
 {
     if (!isSingleSelection)
         return {};
 
-    if (isWildcard())
-        return IconCache::file(":/icons/coding.png");
+    if (isWildcard()) {
+        return IconCache::icon(":/icons/coding.png");
+    }
 
-    return IoC<AppInfoCache>()->appPixmap(m_appRow.appPath);
+    return IoC<AppInfoCache>()->appIcon(m_appRow.appPath);
 }
 
 void ProgramEditDialog::closeOnSave()
@@ -402,7 +405,7 @@ QLayout *ProgramEditDialog::setupFormLayout()
     layout->addRow("Notes:", m_editNotes);
     m_labelEditNotes = ControlUtil::formRowLabel(layout, m_editNotes);
     m_labelEditNotes->setScaledContents(true);
-    m_labelEditNotes->setFixedSize(32, 32);
+    m_labelEditNotes->setFixedSize(appIconSize);
 
     // Group
     setupComboAppGroups();

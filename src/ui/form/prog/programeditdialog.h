@@ -59,7 +59,7 @@ private:
     void initializeRuleField(bool isSingleSelection);
     void initializeFocus();
 
-    QPixmap appIcon(bool isSingleSelection) const;
+    QIcon appIcon(bool isSingleSelection) const;
 
     void setupController();
 

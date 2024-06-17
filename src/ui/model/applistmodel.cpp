@@ -27,7 +27,7 @@ const auto blockColor = QColor("red");
 const auto killProcessColor = QColor("magenta");
 const auto inactiveColor = QColor("slategray");
 
-QString appStateIconPath(const AppRow &appRow)
+QString appActionIconPath(const AppRow &appRow)
 {
     if (appRow.alerted)
         return ":/icons/error.png";
@@ -60,7 +60,7 @@ QString appScheduleIconPath(const AppRow &appRow)
     return {};
 }
 
-QColor appStateColor(const AppRow &appRow)
+QColor appActionColor(const AppRow &appRow)
 {
     if (appRow.killProcess)
         return killProcessColor;
@@ -85,9 +85,9 @@ QVariant appGroupColor(const AppRow &appRow)
     return {};
 }
 
-QIcon appStateIcon(const AppRow &appRow)
+QIcon appActionIcon(const AppRow &appRow)
 {
-    return IconCache::icon(appStateIconPath(appRow));
+    return IconCache::icon(appActionIconPath(appRow));
 }
 
 QIcon appParkedIcon(const AppRow &appRow)
@@ -415,7 +415,7 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
     case 3:
         return appScheduledIcon(appRow);
     case 4:
-        return appStateIcon(appRow);
+        return appActionIcon(appRow);
     }
 
     return QVariant();
@@ -430,7 +430,7 @@ QVariant AppListModel::dataForeground(const QModelIndex &index) const
 
     switch (column) {
     case 4:
-        return appStateColor(appRow);
+        return appActionColor(appRow);
     case 5:
         return appGroupColor(appRow);
     }

@@ -25,6 +25,12 @@
 #include "rulescontroller.h"
 #include "ruleswindow.h"
 
+namespace {
+
+const QSize appIconSize(32, 32);
+
+}
+
 RuleEditDialog::RuleEditDialog(RulesController *ctrl, QWidget *parent) :
     QDialog(parent), m_ctrl(ctrl), m_ruleSetModel(new RuleSetModel(this))
 {
@@ -53,7 +59,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_editName->setStartText(ruleRow.ruleName);
     m_editName->setClearButtonEnabled(true);
 
-    m_labelEditNotes->setPixmap(IconCache::file(":/icons/script.png"));
+    m_labelEditNotes->setPixmap(IconCache::pixmap(":/icons/script.png", appIconSize));
     m_editNotes->setText(ruleRow.notes);
 
     m_labelRuleType->setText(tr("Type:"));
@@ -232,7 +238,7 @@ QLayout *RuleEditDialog::setupFormLayout()
     layout->addRow("Notes:", m_editNotes);
     m_labelEditNotes = ControlUtil::formRowLabel(layout, m_editNotes);
     m_labelEditNotes->setScaledContents(true);
-    m_labelEditNotes->setFixedSize(32, 32);
+    m_labelEditNotes->setFixedSize(appIconSize);
 
     // Rule Type
     m_comboRuleType = ControlUtil::createComboBox();
