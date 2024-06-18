@@ -481,15 +481,15 @@
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">Wyłączone</translation>
+        <translation>Wyłączone</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished">Blokuj cały ruch</translation>
+        <translation>Blokuj cały ruch</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished">Blokuj ruch internetowy</translation>
+        <translation>Blokuj ruch internetowy</translation>
     </message>
 </context>
 <context>
@@ -1118,11 +1118,11 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokuj ruch:</translation>
     </message>
     <message>
         <source>Show Block Traffic Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż menu blokowania ruchu</translation>
     </message>
 </context>
 <context>
@@ -2087,7 +2087,7 @@ Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowi
     </message>
     <message>
         <source>Block Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokuj ruch</translation>
     </message>
 </context>
 <context>
