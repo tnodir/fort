@@ -3,17 +3,19 @@
 #include <QLoggingCategory>
 #include <QNetworkAccessManager>
 
-#define DOWNLOAD_TIMEOUT (30 * 1000) // 30 seconds timeout
-#define DOWNLOAD_MAXSIZE (16 * 1024 * 1024)
-
 namespace {
+
 const QLoggingCategory LC("util.net.downloader");
+
+constexpr int DownloadTimeout = 30 * 1000; // 30 seconds timeout
+constexpr int DownloadMaxSize = 16 * 1024 * 1024;
+
 }
 
 NetDownloader::NetDownloader(QObject *parent) :
     QObject(parent), m_manager(new QNetworkAccessManager(this))
 {
-    m_downloadTimer.setInterval(DOWNLOAD_TIMEOUT);
+    m_downloadTimer.setInterval(DownloadTimeout);
 
     connect(&m_downloadTimer, &QTimer::timeout, this, [&] {
         qCDebug(LC) << "Error: Download timed out";
@@ -89,12 +91,12 @@ void NetDownloader::onDownloadProgress(qint64 bytesReceived, qint64 /*bytesTotal
     if (m_aborted || bytesReceived == 0)
         return;
 
-    const QByteArray data = m_reply->read(DOWNLOAD_MAXSIZE - m_buffer.size());
+    const QByteArray data = m_reply->read(DownloadMaxSize - m_buffer.size());
 
     m_buffer.append(data);
 
     const int bufferSize = m_buffer.size();
-    if (bufferSize < DOWNLOAD_MAXSIZE) {
+    if (bufferSize < DownloadMaxSize) {
         emit dataReceived(bufferSize);
     } else {
         qCWarning(LC) << "Error: Too big file";
