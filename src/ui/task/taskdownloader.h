@@ -17,6 +17,8 @@ public:
 protected:
     virtual void setupDownloader() = 0;
 
+    void startDownloader();
+
 public slots:
     void run() override;
     void finish(bool success = false) override;
@@ -27,8 +29,6 @@ protected slots:
 private:
     void createDownloader();
     void deleteDownloader();
-
-    void startDownloader();
 
 private:
     NetDownloader *m_downloader = nullptr;

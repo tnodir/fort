@@ -150,8 +150,9 @@ void AboutPage::setupAutoUpdate()
         const bool isDownloading = manager->isDownloading();
         const bool isDownloadActive = (isDownloading || isDownloaded);
 
-        if (isDownloaded) {
-            m_progressBar->setValue(m_progressBar->maximum());
+        if (!isDownloading || isDownloaded) {
+            m_progressBar->setValue(
+                    isDownloaded ? m_progressBar->maximum() : m_progressBar->minimum());
         }
         m_progressBar->setVisible(isDownloadActive);
 

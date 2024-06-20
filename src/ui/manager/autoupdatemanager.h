@@ -94,6 +94,7 @@ private:
     QString m_fileName;
     QString m_downloadUrl;
     int m_downloadSize = 0;
+    int m_downloadTryCount = 0;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(AutoUpdateManager::Flags)
