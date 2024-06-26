@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>منع حركة المرور على الإنترنت</translation>
     </message>
 </context>
 <context>
@@ -481,15 +481,15 @@
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">عدم التفعيل</translation>
+        <translation>عاجز</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished">إيقاف اتصال الشبكة</translation>
+        <translation>منع كافة حركة المرور</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>منع حركة المرور على الإنترنت</translation>
     </message>
 </context>
 <context>
@@ -1118,11 +1118,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation type="unfinished"></translation>
+        <translation>منع حركة المرور:</translation>
     </message>
     <message>
         <source>Show Block Traffic Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>إظهار قائمة حظر حركة المرور</translation>
     </message>
 </context>
 <context>
@@ -1477,15 +1477,15 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>المرشحات</translation>
     </message>
     <message>
         <source>Clear Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>مسح المرشحات</translation>
     </message>
     <message>
         <source>Wildcard Paths</source>
-        <translation type="unfinished"></translation>
+        <translation>مسارات البدل</translation>
     </message>
 </context>
 <context>
@@ -2087,7 +2087,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Block Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>منع حركة المرور</translation>
     </message>
 </context>
 <context>
