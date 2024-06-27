@@ -1487,6 +1487,14 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Wildcard Paths</source>
         <translation>Chemins de caractères génériques</translation>
     </message>
+    <message>
+        <source>Convert to Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to convert selected program to wildcard?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>
@@ -1606,6 +1614,21 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Preset Rules</source>
         <translation>Règles prédéfinies</translation>
+    </message>
+</context>
+<context>
+    <name>RuleTextParser</name>
+    <message>
+        <source>Bad text: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bad symbol: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected symbol: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

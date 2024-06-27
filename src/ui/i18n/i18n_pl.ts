@@ -1487,6 +1487,14 @@ Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowi
         <source>Wildcard Paths</source>
         <translation>Ścieżki wieloznaczne</translation>
     </message>
+    <message>
+        <source>Convert to Wildcard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to convert selected program to wildcard?</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>
@@ -1606,6 +1614,21 @@ Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowi
     <message>
         <source>Preset Rules</source>
         <translation>Ustawione reguły</translation>
+    </message>
+</context>
+<context>
+    <name>RuleTextParser</name>
+    <message>
+        <source>Bad text: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bad symbol: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected symbol: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
