@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.13.2, 2024-06-27:
+- UI: Programs: Add "Convert to Wildcard" menu item.
+- UI: Update: Try to re-download on timeout.
+
 v3.13.1, 2024-06-16:
 - UI: Update: Always create "logs/SetupLog.txt" file.
 - UI: Use "restart.bat" to restart clients.
