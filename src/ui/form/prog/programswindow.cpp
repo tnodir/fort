@@ -132,6 +132,7 @@ void ProgramsWindow::retranslateUi()
     m_actKillApp->setText(tr("Kill Process"));
     m_actAddApp->setText(tr("Add"));
     m_actAddWildcard->setText(tr("Add Wildcard"));
+    m_actToWildcard->setText(tr("Convert to Wildcard"));
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
     m_actReviewAlerts->setText(tr("Review Alerts"));
@@ -269,6 +270,8 @@ void ProgramsWindow::setupEditMenu()
     m_actAddWildcard = editMenu->addAction(IconCache::icon(":/icons/coding.png"), QString());
     m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
+    m_actToWildcard = editMenu->addAction(IconCache::icon(":/icons/coding.png"), QString());
+
     m_actEditApp = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditApp->setShortcut(Qt::Key_Enter);
 
@@ -291,6 +294,7 @@ void ProgramsWindow::setupEditMenu()
             [&] { updateSelectedApps(/*blocked=*/true, /*killProcess=*/true); });
     connect(m_actAddApp, &QAction::triggered, this, &ProgramsWindow::addNewProgram);
     connect(m_actAddWildcard, &QAction::triggered, this, &ProgramsWindow::addNewWildcard);
+    connect(m_actToWildcard, &QAction::triggered, this, &ProgramsWindow::convertToWildcard);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
     connect(m_actRemoveApp, &QAction::triggered, this, &ProgramsWindow::deleteSelectedApps);
     connect(m_actReviewAlerts, &QAction::triggered, this,
@@ -431,6 +435,7 @@ void ProgramsWindow::setupTableAppsChanged()
         m_actAllowApp->setEnabled(appSelected);
         m_actBlockApp->setEnabled(appSelected);
         m_actKillApp->setEnabled(appSelected);
+        m_actToWildcard->setEnabled(appSelected);
         m_actEditApp->setEnabled(appSelected);
         m_actRemoveApp->setEnabled(appSelected);
         m_btAllowApp->setEnabled(appSelected);
@@ -490,9 +495,28 @@ void ProgramsWindow::addNewWildcard()
     openAppEditForm(appRow);
 }
 
+void ProgramsWindow::convertToWildcard()
+{
+    const AppRow appRow = appListCurrentRow();
+    if (appRow.isNull())
+        return;
+
+    if (appRow.isWildcard)
+        return;
+
+    windowManager()->showConfirmBox(
+            [=, this] {
+                App app = appRow;
+                app.isWildcard = true;
+
+                ctrl()->addOrUpdateApp(app);
+            },
+            tr("Are you sure to convert selected program to wildcard?"));
+}
+
 void ProgramsWindow::editSelectedPrograms()
 {
-    const QVector<qint64> appIdList = selectedAppIdList();
+    const auto appIdList = selectedAppIdList();
     if (appIdList.isEmpty())
         return;
 
