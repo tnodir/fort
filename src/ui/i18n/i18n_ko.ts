@@ -1489,11 +1489,11 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     </message>
     <message>
         <source>Convert to Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>와일드카드로 변환</translation>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
-        <translation type="unfinished"></translation>
+        <translation>선택한 프로그램을 와일드카드로 변환하시겠습니까?</translation>
     </message>
 </context>
 <context>
@@ -1620,15 +1620,15 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <name>RuleTextParser</name>
     <message>
         <source>Bad text: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>잘못된 텍스트: %1</translation>
     </message>
     <message>
         <source>Bad symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>잘못된 기호: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>예기치 않은 기호: %1</translation>
     </message>
 </context>
 <context>
