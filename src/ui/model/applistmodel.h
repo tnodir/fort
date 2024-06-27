@@ -15,6 +15,7 @@ class ConfManager;
 
 struct AppRow : TableRow, public App
 {
+    const App &app() const { return *this; }
 };
 
 class AppListModel : public FtsTableSqlModel

@@ -506,10 +506,10 @@ void ProgramsWindow::convertToWildcard()
 
     windowManager()->showConfirmBox(
             [=, this] {
-                App app = appRow;
+                App app = appRow.app();
                 app.isWildcard = true;
 
-                ctrl()->addOrUpdateApp(app);
+                ctrl()->updateApp(app);
             },
             tr("Are you sure to convert selected program to wildcard?"));
 }
