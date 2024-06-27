@@ -54,8 +54,9 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 
 ### Sponsoring
 
-[![github](https://img.shields.io/badge/GitHub%20Sponsors-blue?logo=GitHub%20Sponsors&style=social)](https://github.com/sponsors/tnodir)
-[![patreon](https://img.shields.io/badge/Patreon%20Patrons-blue?logo=Patreon&style=social)](https://www.patreon.com/bePatron?u=9349286)
+[![GitHub](https://img.shields.io/badge/GitHub%20Sponsors-blue?logo=GitHub%20Sponsors&style=social)](https://github.com/sponsors/tnodir)
+[![Patreon](https://img.shields.io/badge/Patreon%20Patrons-blue?logo=Patreon&style=social)](https://www.patreon.com/bePatron?u=9349286)
+[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-blue?logo=BuyMeACoffee&style=social)](https://buymeacoffee.com/tnodir)
 
 ## SAST Tools
 
