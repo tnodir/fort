@@ -1489,11 +1489,11 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Convert to Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Converti in carattere universale</translation>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler convertire il programma selezionato in caratteri universali?</translation>
     </message>
 </context>
 <context>
@@ -1620,15 +1620,15 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     <name>RuleTextParser</name>
     <message>
         <source>Bad text: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Testo errato: %1</translation>
     </message>
     <message>
         <source>Bad symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Simbolo errato: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Simbolo inatteso: %1</translation>
     </message>
 </context>
 <context>

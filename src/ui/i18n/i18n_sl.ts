@@ -1489,11 +1489,11 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     </message>
     <message>
         <source>Convert to Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Pretvori v nadomestni znak</translation>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ali ste prepričani, da boste izbrani program pretvorili v nadomestni znak?</translation>
     </message>
 </context>
 <context>
@@ -1620,15 +1620,15 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <name>RuleTextParser</name>
     <message>
         <source>Bad text: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Slabo besedilo: %1</translation>
     </message>
     <message>
         <source>Bad symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Slab simbol: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nepričakovan simbol: %1</translation>
     </message>
 </context>
 <context>
