@@ -23,6 +23,7 @@ public:
     bool isNameEqual(const App &o) const;
 
     bool isProcWild() const;
+    bool hasZone() const;
 
 public:
     bool isWildcard : 1 = false;

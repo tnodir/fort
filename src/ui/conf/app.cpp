@@ -44,3 +44,8 @@ bool App::isProcWild() const
 {
     return applyChild || killChild || killProcess;
 }
+
+bool App::hasZone() const
+{
+    return acceptZones != 0 || rejectZones != 0;
+}

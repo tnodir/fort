@@ -77,15 +77,14 @@ void ZonesSelector::retranslateUi()
 void ZonesSelector::retranslateZonesText()
 {
     QString countText;
-    if (zonesCount() != 0 || uncheckedZonesCount() != 0) {
-        countText = " (";
-        if (zonesCount() != 0) {
-            countText += QString::number(zonesCount());
-        }
-        if (uncheckedZonesCount() != 0) {
-            countText += '^' + QString::number(uncheckedZonesCount());
-        }
-        countText += ')';
+    if (zonesCount() != 0) {
+        countText += QString::number(zonesCount());
+    }
+    if (uncheckedZonesCount() != 0) {
+        countText += '^' + QString::number(uncheckedZonesCount());
+    }
+    if (!countText.isEmpty()) {
+        countText = " (" + countText + ')';
     }
 
     this->setText(tr("Zones") + countText);

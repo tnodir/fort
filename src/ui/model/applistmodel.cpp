@@ -12,6 +12,7 @@
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <util/bitutil.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/guiutil.h>
@@ -90,9 +91,9 @@ QIcon appActionIcon(const AppRow &appRow)
     return IconCache::icon(appActionIconPath(appRow));
 }
 
-QIcon appParkedIcon(const AppRow &appRow)
+QIcon appZonesIcon(const AppRow &appRow)
 {
-    return appRow.parked ? IconCache::icon(":/icons/parking.png") : QIcon();
+    return appRow.hasZone() ? IconCache::icon(":/icons/ip_class.png") : QIcon();
 }
 
 QIcon appRuleIcon(const AppRow &appRow)
@@ -113,9 +114,9 @@ QVariant headerDataDisplayName(int /*role*/)
     return AppListModel::tr("Name");
 }
 
-QVariant headerDataDisplayParked(int role)
+QVariant headerDataDisplayZones(int role)
 {
-    return (role == Qt::ToolTipRole) ? AppListModel::tr("Parked") : QString();
+    return (role == Qt::ToolTipRole) ? AppListModel::tr("Zones") : QString();
 }
 
 QVariant headerDataDisplayRule(int role)
@@ -152,7 +153,7 @@ using headerDataDisplay_func = QVariant (*)(int role);
 
 static const headerDataDisplay_func headerDataDisplay_funcList[] = {
     &headerDataDisplayName,
-    &headerDataDisplayParked,
+    &headerDataDisplayZones,
     &headerDataDisplayRule,
     &headerDataDisplayScheduled,
     &headerDataDisplayAction,
@@ -172,7 +173,7 @@ inline QVariant headerDataDecoration(int column)
 {
     switch (column) {
     case 1:
-        return IconCache::icon(":/icons/parking.png");
+        return IconCache::icon(":/icons/ip_class.png");
     case 2:
         return IconCache::icon(":/icons/script.png");
     case 3:
@@ -202,9 +203,22 @@ QVariant dataDisplayAction(const AppRow &appRow, int role)
     return AppListModel::tr("Allow");
 }
 
-QVariant dataDisplayParked(const AppRow & /*appRow*/, int /*role*/)
+QVariant dataDisplayZones(const AppRow &appRow, int role)
 {
-    return {};
+    if (role != Qt::ToolTipRole)
+        return QString();
+
+    QString countText;
+    if (appRow.acceptZones != 0) {
+        const int acceptZonesCount = BitUtil::bitCount(appRow.acceptZones);
+        countText += QString::number(acceptZonesCount);
+    }
+    if (appRow.rejectZones != 0) {
+        const int rejectZonesCount = BitUtil::bitCount(appRow.rejectZones);
+        countText += '^' + QString::number(rejectZonesCount);
+    }
+
+    return countText;
 }
 
 QVariant dataDisplayRule(const AppRow &appRow, int role)
@@ -246,7 +260,7 @@ using dataDisplay_func = QVariant (*)(const AppRow &appRow, int role);
 
 static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayName,
-    &dataDisplayParked,
+    &dataDisplayZones,
     &dataDisplayRule,
     &dataDisplayScheduled,
     &dataDisplayAction,
@@ -409,7 +423,7 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
     case 0:
         return appIcon(appRow);
     case 1:
-        return appParkedIcon(appRow);
+        return appZonesIcon(appRow);
     case 2:
         return appRuleIcon(appRow);
     case 3:
@@ -597,7 +611,7 @@ QString AppListModel::sqlOrderColumn() const
 
     static const QStringList orderColumns = {
         nameColumn, // Name
-        "t.parked", // Parked
+        "t.accept_zones, t.reject_zones", // Zones
         "t.rule_id", // Rule
         "t.end_time", // Scheduled
         "alerted DESC, t.kill_process, t.blocked", // Action
@@ -607,7 +621,7 @@ QString AppListModel::sqlOrderColumn() const
     };
     static const QStringList postOrderColumns = {
         pathColumn, // Name
-        nameColumn, // Parked
+        nameColumn, // Zones
         nameColumn, // Rule
         nameColumn, // Scheduled
         nameColumn, // Action
