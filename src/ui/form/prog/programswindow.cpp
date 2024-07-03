@@ -146,6 +146,7 @@ void ProgramsWindow::retranslateUi()
     m_btFilter->setToolTip(tr("Filters"));
     m_btClearFilter->setText(tr("Clear Filters"));
     m_cbFilterWildcard->setText(tr("Wildcard Paths"));
+    m_cbFilterParked->setText(tr("Parked"));
 
     m_btGroups->setText(tr("Groups"));
     m_btServices->setText(tr("Services"));
@@ -324,10 +325,12 @@ void ProgramsWindow::setupEditSearch()
 void ProgramsWindow::setupFilter()
 {
     setupFilterWildcard();
+    setupFilterParked();
     setupFilterClear();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterWildcard);
+    layout->addWidget(m_cbFilterParked);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_btClearFilter, 0, Qt::AlignCenter);
 
@@ -363,12 +366,26 @@ void ProgramsWindow::setupFilterWildcard()
     });
 }
 
+void ProgramsWindow::setupFilterParked()
+{
+    m_cbFilterParked = new QCheckBox();
+    m_cbFilterParked->setIcon(IconCache::icon(":/icons/parking.png"));
+
+    m_cbFilterParked->setTristate(true);
+    m_cbFilterParked->setCheckState(Qt::PartiallyChecked);
+
+    connect(m_cbFilterParked, &QCheckBox::clicked, this, [&] {
+        appListModel()->setFilterValue(AppListModel::FilterParked, m_cbFilterParked->checkState());
+    });
+}
+
 void ProgramsWindow::setupFilterClear()
 {
     m_btClearFilter = ControlUtil::createFlatToolButton(":/icons/recycle.png", [&] {
         appListModel()->clearFilters();
 
         m_cbFilterWildcard->setCheckState(Qt::PartiallyChecked);
+        m_cbFilterParked->setCheckState(Qt::PartiallyChecked);
     });
 }
 

@@ -26,6 +26,7 @@ public:
     enum FilterFlag {
         FilterNone = 0,
         FilterWildcard = (1 << 0),
+        FilterParked = (1 << 1),
     };
     Q_ENUM(FilterFlag)
     Q_DECLARE_FLAGS(FilterFlags, FilterFlag)

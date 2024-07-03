@@ -575,7 +575,11 @@ QString AppListModel::sqlWhere() const
                             .arg(filterValues().testFlag(FilterWildcard) ? "1" : "0");
         }
 
-        sql += (sql.isEmpty() ? " WHERE " : " AND ") + list.join(" AND ");
+        if (filters().testFlag(FilterParked)) {
+            list << QString("t.parked = %1").arg(filterValues().testFlag(FilterParked) ? "1" : "0");
+        }
+
+        sql += QLatin1String(sql.isEmpty() ? " WHERE " : " AND ") + list.join(" AND ");
     }
 
     return sql;
