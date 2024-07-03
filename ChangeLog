@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.13.3, 2024-07-03:
+- UI: Programs: Show "Zones" column, instead of "Parked" (Add "Parked" filter).
+- Installer: Set "Auto-run for all users" (with Service checked) only on initial setup.
+
 v3.13.2, 2024-06-27:
 - UI: Programs: Add "Convert to Wildcard" menu item.
 - UI: Update: Try to re-download on timeout.
