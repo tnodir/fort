@@ -203,8 +203,13 @@ void StartupUtil::setAutoRunMode(int mode, const QString &defaultLanguage)
     if (mode == StartupDisabled)
         return;
 
-    const QString command = wrappedAppFilePath()
-            + (defaultLanguage.isEmpty() ? QString() : " --lang " + defaultLanguage);
+    QStringList commandList = { wrappedAppFilePath(), "--launch" };
+
+    if (!defaultLanguage.isEmpty()) {
+        commandList << "--lang" << defaultLanguage;
+    }
+
+    const QString command = commandList.join(' ');
 
     switch (mode) {
     case StartupCurrentUser:

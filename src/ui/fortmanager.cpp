@@ -257,15 +257,17 @@ void FortManager::install(const char *arg)
         return;
 
     switch (arg[0]) {
-    case 'b': { // "boot_filter"
+    case 'b': { // "boot-filter"
         DriverCommon::provRegister(/*bootFilter=*/true); // Register booted provider
     } break;
     case 'p': { // "portable"
         FortManager::setupPortableResource();
         StartupUtil::setPortable(true);
     } break;
-    case 's': { // "service"
+    case 'a': { // "auto-run"
         StartupUtil::setAutoRunMode(StartupUtil::StartupAllUsers);
+    } break;
+    case 's': { // "service"
         StartupUtil::setServiceInstalled(true);
 
         OsUtil::endRestartClients();
@@ -278,16 +280,17 @@ void FortManager::install(const char *arg)
 
 void FortManager::uninstall(const char *arg)
 {
-    StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
+    // COMPAT: Remove Global Windows Explorer integration
+    StartupUtil::clearGlobalExplorerIntegrated();
+
     StartupUtil::setExplorerIntegrated(false); // Remove Windows Explorer integration
 
     StartupUtil::stopService(ServiceControlStopUninstall); // Quit clients & Stop service
     StartupUtil::setServiceInstalled(false); // Uninstall service
 
-    StartupUtil::clearGlobalExplorerIntegrated(); // COMPAT: Remove Global Windows Explorer
-                                                  // integration
-
     if (!arg) {
+        StartupUtil::setAutoRunMode(StartupUtil::StartupDisabled); // Remove auto-run
+
         DriverCommon::provUnregister(); // Unregister booted provider
     }
 }

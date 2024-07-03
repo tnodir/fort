@@ -96,6 +96,7 @@ Filename: "{app}\driver\scripts\reinstall.bat"; Parameters: {code:DriverInstallA
 
 Filename: "{#APP_EXE}"; Parameters: "-i portable"; Tasks: portable
 Filename: "{#APP_EXE}"; Parameters: "-i service"; Tasks: service
+Filename: "{#APP_EXE}"; Parameters: "-i auto-run"; Tasks: service; Check: (not IsUpgrade)
 Filename: "{#APP_EXE}"; Parameters: "-i explorer"; Flags: runasoriginaluser; Tasks: explorer
 
 Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start service"; \
@@ -133,6 +134,8 @@ Root: HKLM; Subkey: "SOFTWARE\{#APP_NAME}"; Flags: dontcreatekey uninsdeletekeyi
 Root: HKLM; Subkey: "SOFTWARE\{#APP_NAME}"; ValueName: "passwordHash"; Flags: dontcreatekey uninsdeletevalue
 
 [Code]
+var 
+  IsUpgradeVar: boolean;
 
 function ParamExists(const Value: string): Boolean;
 var
@@ -180,13 +183,19 @@ var
   UninstallKey: String;
 begin
   UninstallKey := ExpandConstant('Software\Microsoft\Windows\CurrentVersion\Uninstall\{#emit SetupSetting("AppName")}_is1');
+
   if not RegQueryStringValue(HKLM, UninstallKey, 'UninstallString', Result) then
     RegQueryStringValue(HKCU, UninstallKey, 'UninstallString', Result);
 end;
 
+procedure SetupIsUpgrade();
+begin
+  IsUpgradeVar := GetUninstallString() <> '';
+end;
+
 function IsUpgrade(): Boolean;
 begin
-  Result := GetUninstallString() <> '';
+  Result := IsUpgradeVar;
 end;
 
 function VCRedist86Exists(): Boolean;
@@ -396,6 +405,8 @@ begin
     Result := False;
     Exit;
   end;
+
+  SetupIsUpgrade();
 
   if IsUpgrade() then
   begin
