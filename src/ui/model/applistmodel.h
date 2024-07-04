@@ -71,13 +71,13 @@ protected:
     QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;
 
+    void addSqlFilter(QStringList &list, const QString &name, FilterFlag flag) const;
+
 private:
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataForeground(const QModelIndex &index) const;
     QVariant dataTextAlignment(const QModelIndex &index) const;
-
-    QIcon appIcon(const AppRow &appRow) const;
 
     bool updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const;
 

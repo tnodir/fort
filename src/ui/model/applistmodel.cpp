@@ -86,9 +86,13 @@ QVariant appGroupColor(const AppRow &appRow)
     return {};
 }
 
-QIcon appActionIcon(const AppRow &appRow)
+QIcon appIcon(const AppRow &appRow)
 {
-    return IconCache::icon(appActionIconPath(appRow));
+    if (appRow.isWildcard) {
+        return IconCache::icon(":/icons/coding.png");
+    }
+
+    return IoC<AppInfoCache>()->appIcon(appRow.appPath);
 }
 
 QIcon appZonesIcon(const AppRow &appRow)
@@ -107,6 +111,31 @@ QIcon appScheduledIcon(const AppRow &appRow)
         return QIcon();
 
     return IconCache::icon(appScheduleIconPath(appRow));
+}
+
+QIcon appActionIcon(const AppRow &appRow)
+{
+    return IconCache::icon(appActionIconPath(appRow));
+}
+
+using dataDecorationIcon_func = QIcon (*)(const AppRow &appRow);
+
+static const dataDecorationIcon_func dataDecorationIcon_funcList[] = {
+    &appIcon,
+    &appZonesIcon,
+    &appRuleIcon,
+    &appScheduledIcon,
+    &appActionIcon,
+};
+
+inline QVariant dataDecorationIcon(int column, const AppRow &appRow)
+{
+    if (column < 0 || column >= std::size(dataDecorationIcon_funcList))
+        return QVariant();
+
+    const dataDecorationIcon_func func = dataDecorationIcon_funcList[column];
+
+    return func(appRow);
 }
 
 QVariant headerDataDisplayName(int /*role*/)
@@ -419,20 +448,7 @@ QVariant AppListModel::dataDecoration(const QModelIndex &index) const
     if (appRow.isNull())
         return QVariant();
 
-    switch (column) {
-    case 0:
-        return appIcon(appRow);
-    case 1:
-        return appZonesIcon(appRow);
-    case 2:
-        return appRuleIcon(appRow);
-    case 3:
-        return appScheduledIcon(appRow);
-    case 4:
-        return appActionIcon(appRow);
-    }
-
-    return QVariant();
+    return dataDecorationIcon(column, appRow);
 }
 
 QVariant AppListModel::dataForeground(const QModelIndex &index) const
@@ -461,15 +477,6 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
     }
 
     return QVariant();
-}
-
-QIcon AppListModel::appIcon(const AppRow &appRow) const
-{
-    if (appRow.isWildcard) {
-        return IconCache::icon(":/icons/coding.png");
-    }
-
-    return appInfoCache()->appIcon(appRow.appPath);
 }
 
 bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const
@@ -583,15 +590,8 @@ QString AppListModel::sqlWhere() const
 
     if (filters() != FilterNone) {
         QStringList list;
-
-        if (filters().testFlag(FilterWildcard)) {
-            list << QString("t.is_wildcard = %1")
-                            .arg(filterValues().testFlag(FilterWildcard) ? "1" : "0");
-        }
-
-        if (filters().testFlag(FilterParked)) {
-            list << QString("t.parked = %1").arg(filterValues().testFlag(FilterParked) ? "1" : "0");
-        }
+        addSqlFilter(list, "t.is_wildcard", FilterWildcard);
+        addSqlFilter(list, "t.parked", FilterParked);
 
         sql += QLatin1String(sql.isEmpty() ? " WHERE " : " AND ") + list.join(" AND ");
     }
@@ -637,4 +637,13 @@ QString AppListModel::sqlOrderColumn() const
     const auto &postColumnsStr = postOrderColumns.at(sortColumn());
 
     return columnsStr + sqlOrderAsc() + ", " + postColumnsStr;
+}
+
+void AppListModel::addSqlFilter(QStringList &list, const QString &name, FilterFlag flag) const
+{
+    if (filters().testFlag(flag)) {
+        const QLatin1String value(filterValues().testFlag(flag) ? "1" : "0");
+
+        list << QString("%1 = %2").arg(name, value);
+    }
 }
