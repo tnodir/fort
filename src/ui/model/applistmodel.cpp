@@ -12,301 +12,13 @@
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <util/bitutil.h>
 #include <util/conf/confutil.h>
-#include <util/dateutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netutil.h>
 
-namespace {
-
-const auto alertColor = QColor("orange");
-const auto allowColor = QColor("green");
-const auto blockColor = QColor("red");
-const auto killProcessColor = QColor("magenta");
-const auto inactiveColor = QColor("slategray");
-
-QString appActionIconPath(const AppRow &appRow)
-{
-    if (appRow.alerted)
-        return ":/icons/error.png";
-
-    if (appRow.killProcess)
-        return ":/icons/scull.png";
-
-    if (appRow.blocked)
-        return ":/icons/deny.png";
-
-    if (appRow.lanOnly)
-        return ":/icons/hostname.png";
-
-    return ":/icons/accept.png";
-}
-
-QString appScheduleIconPath(const AppRow &appRow)
-{
-    switch (appRow.scheduleAction) {
-    case App::ScheduleBlock:
-        return ":/icons/deny.png";
-    case App::ScheduleAllow:
-        return ":/icons/accept.png";
-    case App::ScheduleRemove:
-        return ":/icons/delete.png";
-    case App::ScheduleKillProcess:
-        return ":/icons/scull.png";
-    }
-
-    return {};
-}
-
-QColor appActionColor(const AppRow &appRow)
-{
-    if (appRow.killProcess)
-        return killProcessColor;
-
-    if (appRow.blocked)
-        return blockColor;
-
-    return allowColor;
-}
-
-QVariant appGroupColor(const AppRow &appRow)
-{
-    if (!appRow.useGroupPerm)
-        return inactiveColor;
-
-    const FirewallConf *conf = IoC<ConfAppManager>()->conf();
-
-    const AppGroup *appGroup = conf->appGroupAt(appRow.groupIndex);
-    if (!appGroup->enabled())
-        return blockColor;
-
-    return {};
-}
-
-QIcon appIcon(const AppRow &appRow)
-{
-    if (appRow.isWildcard) {
-        return IconCache::icon(":/icons/coding.png");
-    }
-
-    return IoC<AppInfoCache>()->appIcon(appRow.appPath);
-}
-
-QIcon appZonesIcon(const AppRow &appRow)
-{
-    return appRow.hasZone() ? IconCache::icon(":/icons/ip_class.png") : QIcon();
-}
-
-QIcon appRuleIcon(const AppRow &appRow)
-{
-    return (appRow.ruleId != 0) ? IconCache::icon(":/icons/script.png") : QIcon();
-}
-
-QIcon appScheduledIcon(const AppRow &appRow)
-{
-    if (appRow.scheduleTime.isNull())
-        return QIcon();
-
-    return IconCache::icon(appScheduleIconPath(appRow));
-}
-
-QIcon appActionIcon(const AppRow &appRow)
-{
-    return IconCache::icon(appActionIconPath(appRow));
-}
-
-using dataDecorationIcon_func = QIcon (*)(const AppRow &appRow);
-
-static const dataDecorationIcon_func dataDecorationIcon_funcList[] = {
-    &appIcon,
-    &appZonesIcon,
-    &appRuleIcon,
-    &appScheduledIcon,
-    &appActionIcon,
-};
-
-inline QVariant dataDecorationIcon(int column, const AppRow &appRow)
-{
-    if (column < 0 || column >= std::size(dataDecorationIcon_funcList))
-        return QVariant();
-
-    const dataDecorationIcon_func func = dataDecorationIcon_funcList[column];
-
-    return func(appRow);
-}
-
-QVariant headerDataDisplayName(int /*role*/)
-{
-    return AppListModel::tr("Name");
-}
-
-QVariant headerDataDisplayZones(int role)
-{
-    return (role == Qt::ToolTipRole) ? AppListModel::tr("Zones") : QString();
-}
-
-QVariant headerDataDisplayRule(int role)
-{
-    return (role == Qt::ToolTipRole) ? AppListModel::tr("Rule") : QString();
-}
-
-QVariant headerDataDisplayScheduled(int role)
-{
-    return (role == Qt::ToolTipRole) ? AppListModel::tr("Scheduled") : QString();
-}
-
-QVariant headerDataDisplayAction(int /*role*/)
-{
-    return AppListModel::tr("Action");
-}
-
-QVariant headerDataDisplayGroup(int /*role*/)
-{
-    return AppListModel::tr("Group");
-}
-
-QVariant headerDataDisplayFilePath(int /*role*/)
-{
-    return AppListModel::tr("File Path");
-}
-
-QVariant headerDataDisplayCreationTime(int /*role*/)
-{
-    return AppListModel::tr("Creation Time");
-}
-
-using headerDataDisplay_func = QVariant (*)(int role);
-
-static const headerDataDisplay_func headerDataDisplay_funcList[] = {
-    &headerDataDisplayName,
-    &headerDataDisplayZones,
-    &headerDataDisplayRule,
-    &headerDataDisplayScheduled,
-    &headerDataDisplayAction,
-    &headerDataDisplayGroup,
-    &headerDataDisplayFilePath,
-    &headerDataDisplayCreationTime,
-};
-
-inline QVariant headerDataDisplay(int column, int role)
-{
-    const headerDataDisplay_func func = headerDataDisplay_funcList[column];
-
-    return func(role);
-}
-
-inline QVariant headerDataDecoration(int column)
-{
-    switch (column) {
-    case 1:
-        return IconCache::icon(":/icons/ip_class.png");
-    case 2:
-        return IconCache::icon(":/icons/script.png");
-    case 3:
-        return IconCache::icon(":/icons/time.png");
-    }
-    return QVariant();
-}
-
-QVariant dataDisplayName(const AppRow &appRow, int role)
-{
-    return appRow.appName
-            + (role == Qt::ToolTipRole && !appRow.notes.isEmpty() ? "\n\n" + appRow.notes
-                                                                  : QString());
-}
-
-QVariant dataDisplayAction(const AppRow &appRow, int role)
-{
-    if (appRow.killProcess)
-        return AppListModel::tr("Kill Process");
-
-    if (appRow.blocked)
-        return AppListModel::tr("Block");
-
-    if (role == Qt::ToolTipRole && appRow.lanOnly)
-        return AppListModel::tr("Block Internet Traffic");
-
-    return AppListModel::tr("Allow");
-}
-
-QVariant dataDisplayZones(const AppRow &appRow, int role)
-{
-    if (role != Qt::ToolTipRole)
-        return QString();
-
-    QString countText;
-    if (appRow.acceptZones != 0) {
-        const int acceptZonesCount = BitUtil::bitCount(appRow.acceptZones);
-        countText += QString::number(acceptZonesCount);
-    }
-    if (appRow.rejectZones != 0) {
-        const int rejectZonesCount = BitUtil::bitCount(appRow.rejectZones);
-        countText += '^' + QString::number(rejectZonesCount);
-    }
-
-    return countText;
-}
-
-QVariant dataDisplayRule(const AppRow &appRow, int role)
-{
-    if (role != Qt::ToolTipRole)
-        return QString();
-
-    return appRow.ruleName;
-}
-
-QVariant dataDisplayScheduled(const AppRow &appRow, int role)
-{
-    if (role != Qt::ToolTipRole || appRow.scheduleTime.isNull())
-        return QString();
-
-    return DateUtil::localeDateTime(appRow.scheduleTime);
-}
-
-QVariant dataDisplayGroup(const AppRow &appRow, int /*role*/)
-{
-    const FirewallConf *conf = IoC<ConfAppManager>()->conf();
-
-    const AppGroup *appGroup = conf->appGroupAt(appRow.groupIndex);
-
-    return appGroup->name();
-}
-
-QVariant dataDisplayFilePath(const AppRow &appRow, int /*role*/)
-{
-    return appRow.appOriginPath;
-}
-
-QVariant dataDisplayCreationTime(const AppRow &appRow, int /*role*/)
-{
-    return appRow.creatTime;
-}
-
-using dataDisplay_func = QVariant (*)(const AppRow &appRow, int role);
-
-static const dataDisplay_func dataDisplay_funcList[] = {
-    &dataDisplayName,
-    &dataDisplayZones,
-    &dataDisplayRule,
-    &dataDisplayScheduled,
-    &dataDisplayAction,
-    &dataDisplayGroup,
-    &dataDisplayFilePath,
-    &dataDisplayCreationTime,
-};
-
-inline QVariant dataDisplayRow(const AppRow &appRow, int column, int role)
-{
-    const dataDisplay_func func = dataDisplay_funcList[column];
-    Q_ASSERT(func);
-
-    return func(appRow, role);
-}
-
-}
+#include "applistmodeldata.h"
 
 AppListModel::AppListModel(QObject *parent) : FtsTableSqlModel(parent) { }
 
@@ -390,20 +102,20 @@ QVariant AppListModel::headerData(int section, Qt::Orientation orientation, int 
         // Label
         case Qt::DisplayRole:
         case Qt::ToolTipRole:
-            return headerDataDisplay(section, role);
+            return AppListModelData::headerDataDisplay(section, role);
 
         // Icon
         case Qt::DecorationRole:
-            return headerDataDecoration(section);
+            return AppListModelData::headerDataDecoration(section);
         }
     }
-    return QVariant();
+    return {};
 }
 
 QVariant AppListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+        return {};
 
     switch (role) {
     // Label
@@ -424,48 +136,46 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
         return dataTextAlignment(index);
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
 {
     const int row = index.row();
-    const int column = index.column();
 
     const auto &appRow = appRowAt(row);
     if (appRow.isNull())
-        return QVariant();
+        return {};
 
-    return dataDisplayRow(appRow, column, role);
+    const AppListModelData data(appRow, index, role);
+
+    return data.dataDisplayRow();
 }
 
 QVariant AppListModel::dataDecoration(const QModelIndex &index) const
 {
     const int row = index.row();
-    const int column = index.column();
 
     const auto &appRow = appRowAt(row);
     if (appRow.isNull())
-        return QVariant();
+        return {};
 
-    return dataDecorationIcon(column, appRow);
+    const AppListModelData data(appRow, index);
+
+    return data.dataDecorationIcon();
 }
 
 QVariant AppListModel::dataForeground(const QModelIndex &index) const
 {
-    const int column = index.column();
-
     const int row = index.row();
+
     const auto &appRow = appRowAt(row);
+    if (appRow.isNull())
+        return {};
 
-    switch (column) {
-    case 4:
-        return appActionColor(appRow);
-    case 5:
-        return appGroupColor(appRow);
-    }
+    const AppListModelData data(appRow, index);
 
-    return QVariant();
+    return data.dataForeground();
 }
 
 QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
@@ -476,7 +186,7 @@ QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
         return int(Qt::AlignHCenter | Qt::AlignVCenter);
     }
 
-    return QVariant();
+    return {};
 }
 
 bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const
