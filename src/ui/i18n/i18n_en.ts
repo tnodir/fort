@@ -125,10 +125,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Scheduled</source>
         <translation></translation>
     </message>
@@ -138,6 +134,10 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Zones</source>
         <translation></translation>
     </message>
 </context>
@@ -1484,6 +1484,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Parked</source>
         <translation></translation>
     </message>
 </context>

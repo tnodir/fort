@@ -125,10 +125,6 @@
         <translation>إجراء</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>تأجيل</translation>
-    </message>
-    <message>
         <source>Scheduled</source>
         <translation>الجدولة</translation>
     </message>
@@ -139,6 +135,10 @@
     <message>
         <source>Block Internet Traffic</source>
         <translation>منع حركة المرور على الإنترنت</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation>المناطق</translation>
     </message>
 </context>
 <context>
@@ -1494,6 +1494,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>تأجيل</translation>
     </message>
 </context>
 <context>

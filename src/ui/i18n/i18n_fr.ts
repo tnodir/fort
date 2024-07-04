@@ -125,10 +125,6 @@
         <translation>Action</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>Parqué</translation>
-    </message>
-    <message>
         <source>Scheduled</source>
         <translation>Planifié</translation>
     </message>
@@ -139,6 +135,10 @@
     <message>
         <source>Block Internet Traffic</source>
         <translation>Bloquer le trafic Internet</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation>Zones</translation>
     </message>
 </context>
 <context>
@@ -1494,6 +1494,10 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
         <translation>Êtes-vous sûr de convertir le programme sélectionné en caractère générique ?</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>Parqué</translation>
     </message>
 </context>
 <context>

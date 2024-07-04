@@ -125,10 +125,6 @@
         <translation>Akcija</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>Parkirano</translation>
-    </message>
-    <message>
         <source>Scheduled</source>
         <translation>Načrtovano</translation>
     </message>
@@ -139,6 +135,10 @@
     <message>
         <source>Block Internet Traffic</source>
         <translation>Onemogoči internetni promet</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation>Področja</translation>
     </message>
 </context>
 <context>
@@ -1494,6 +1494,10 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
         <translation>Ali ste prepričani, da boste izbrani program pretvorili v nadomestni znak?</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>Parkirano</translation>
     </message>
 </context>
 <context>

@@ -125,10 +125,6 @@
         <translation>Действие</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>Припаркован</translation>
-    </message>
-    <message>
         <source>Scheduled</source>
         <translation>Запланирован</translation>
     </message>
@@ -139,6 +135,10 @@
     <message>
         <source>Block Internet Traffic</source>
         <translation>Блокировать Интернет трафик</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation>Зоны</translation>
     </message>
 </context>
 <context>
@@ -1494,6 +1494,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
         <translation>Преобразовать выбыранную программу в подстановочный путь?</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>Припаркован</translation>
     </message>
 </context>
 <context>

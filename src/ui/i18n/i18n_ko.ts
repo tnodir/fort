@@ -125,10 +125,6 @@
         <translation>행동</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>압축됨</translation>
-    </message>
-    <message>
         <source>Scheduled</source>
         <translation>예약됨</translation>
     </message>
@@ -139,6 +135,10 @@
     <message>
         <source>Block Internet Traffic</source>
         <translation>인터넷 트래픽 차단</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1494,6 +1494,10 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
         <translation>선택한 프로그램을 와일드카드로 변환하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>압축됨</translation>
     </message>
 </context>
 <context>

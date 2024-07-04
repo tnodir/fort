@@ -125,10 +125,6 @@
         <translation>行为</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>停靠的</translation>
-    </message>
-    <message>
         <source>Scheduled</source>
         <translation>计划</translation>
     </message>
@@ -139,6 +135,10 @@
     <message>
         <source>Block Internet Traffic</source>
         <translation>阻止互联网流量</translation>
+    </message>
+    <message>
+        <source>Zones</source>
+        <translation>区域</translation>
     </message>
 </context>
 <context>
@@ -1492,6 +1492,10 @@ It can cause a Windows malfunction or totally unusable.</source>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>停靠的</translation>
     </message>
 </context>
 <context>
