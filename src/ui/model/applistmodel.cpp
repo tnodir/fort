@@ -1,23 +1,17 @@
 #include "applistmodel.h"
 
-#include <QFont>
-#include <QIcon>
-
 #include <sqlite/dbquery.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
 #include <appinfo/appinfocache.h>
-#include <conf/appgroup.h>
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <util/conf/confutil.h>
-#include <util/guiutil.h>
-#include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netutil.h>
 
+#include "applistmodelheaderdata.h"
 #include "applistmodeldata.h"
 
 AppListModel::AppListModel(QObject *parent) : FtsTableSqlModel(parent) { }
@@ -101,12 +95,18 @@ QVariant AppListModel::headerData(int section, Qt::Orientation orientation, int 
         switch (role) {
         // Label
         case Qt::DisplayRole:
-        case Qt::ToolTipRole:
-            return AppListModelData::headerDataDisplay(section, role);
+        case Qt::ToolTipRole: {
+            const AppListModelHeaderData data(section, role);
+
+            return data.headerDataDisplay();
+        }
 
         // Icon
-        case Qt::DecorationRole:
-            return AppListModelData::headerDataDecoration(section);
+        case Qt::DecorationRole: {
+            const AppListModelHeaderData data(section, role);
+
+            return data.headerDataDecoration();
+        }
         }
     }
     return {};

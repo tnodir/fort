@@ -133,6 +133,7 @@ SOURCES += \
     manager/windowmanager.cpp \
     model/applistmodel.cpp \
     model/applistmodeldata.cpp \
+    model/applistmodelheaderdata.cpp \
     model/appstatmodel.cpp \
     model/connblocklistmodel.cpp \
     model/rulelistmodel.cpp \
@@ -355,6 +356,7 @@ HEADERS += \
     manager/windowmanager.h \
     model/applistmodel.h \
     model/applistmodeldata.h \
+    model/applistmodelheaderdata.h \
     model/appstatmodel.h \
     model/connblocklistmodel.h \
     model/rulelistmodel.h \

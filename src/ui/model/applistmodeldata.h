@@ -34,9 +34,6 @@ public:
     QVariant dataForeground() const;
     QVariant dataDisplayRow() const;
 
-    static QVariant headerDataDisplay(int column, int role);
-    static QVariant headerDataDecoration(int column);
-
 private:
     int m_role = Qt::DisplayRole;
     const QModelIndex &m_index;
