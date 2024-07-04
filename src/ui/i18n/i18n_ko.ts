@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>구역</translation>
     </message>
 </context>
 <context>
