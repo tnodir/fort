@@ -1487,15 +1487,15 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Convert to Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>转换为通配符</translation>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要将选定的程序转换为通配符吗？</translation>
     </message>
     <message>
         <source>Parked</source>
-        <translation>停靠的</translation>
+        <translation>已停靠</translation>
     </message>
 </context>
 <context>
@@ -1622,15 +1622,15 @@ It can cause a Windows malfunction or totally unusable.</source>
     <name>RuleTextParser</name>
     <message>
         <source>Bad text: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>错误文本： %1</translation>
     </message>
     <message>
         <source>Bad symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>错误符号：%1</translation>
     </message>
     <message>
         <source>Unexpected symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>意外符号： %1</translation>
     </message>
 </context>
 <context>
