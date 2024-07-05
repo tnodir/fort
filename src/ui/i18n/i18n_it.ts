@@ -1497,7 +1497,7 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
     </message>
     <message>
         <source>Parked</source>
-        <translation>Parcheggiata</translation>
+        <translation>Parcheggiato</translation>
     </message>
 </context>
 <context>
