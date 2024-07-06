@@ -1,7 +1,7 @@
 Fort Firewall ChangeLog
 
 v3.13.4, 2024-07-06:
-- Fix SvcHost group services handling (Grop services was identified as some service from the group).
+- Fix SvcHost group services handling (Group services was identified as some service from the group).
 
 Attention: You have to make trackable the required services by Programs: Services window.
 
