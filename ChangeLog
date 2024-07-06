@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.13.4, 2024-07-06:
+- Fix SvcHost group services handling (Grop services was identified as some service from the group).
+
+Attention: You have to make trackable the required services by Programs: Services window.
+
 v3.13.3, 2024-07-03:
 - UI: Programs: Show "Zones" column, instead of "Parked" (Add "Parked" filter).
 - Installer: Set "Auto-run for all users" (with Service checked) only on initial setup.
