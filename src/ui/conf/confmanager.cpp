@@ -834,9 +834,9 @@ void ConfManager::updateServices()
     auto serviceInfoManager = IoC<ServiceInfoManager>();
 
     int runningServicesCount = 0;
-    const QVector<ServiceInfo> services =
-            serviceInfoManager->loadServiceInfoList(ServiceInfo::TypeWin32, ServiceInfo::StateAll,
-                    /*displayName=*/false, &runningServicesCount);
+    const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
+            ServiceInfo::TypeWin32OwnProcess, ServiceInfo::StateAll,
+            /*displayName=*/false, &runningServicesCount);
 
     serviceInfoManager->monitorServices(services);
 
