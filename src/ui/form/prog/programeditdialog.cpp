@@ -219,6 +219,7 @@ void ProgramEditDialog::closeOnSave()
 void ProgramEditDialog::setAdvancedMode(bool on)
 {
     m_rbKillProcess->setVisible(on);
+    m_btMenu->setVisible(!on);
 }
 
 void ProgramEditDialog::setupController()
@@ -331,6 +332,9 @@ void ProgramEditDialog::setupUi()
     // Main Layout
     auto layout = setupMainLayout();
     this->setLayout(layout);
+
+    // Advanced Mode
+    setAdvancedMode(true);
 
     // Font
     this->setFont(WindowManager::defaultFont());
@@ -687,6 +691,9 @@ void ProgramEditDialog::setupComboScheduleType()
 
 QLayout *ProgramEditDialog::setupButtonsLayout()
 {
+    // Menu button
+    m_btMenu = windowManager()->createMenuButton();
+
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
         if (save()) {
@@ -703,6 +710,7 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_btOptions);
+    layout->addWidget(m_btMenu);
     layout->addWidget(m_btOk, 1, Qt::AlignRight);
     layout->addWidget(m_btCancel);
 

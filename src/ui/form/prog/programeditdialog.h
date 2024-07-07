@@ -142,6 +142,7 @@ private:
     SpinCombo *m_scScheduleIn = nullptr;
     QDateTimeEdit *m_dteScheduleAt = nullptr;
     QPushButton *m_btOptions = nullptr;
+    QPushButton *m_btMenu = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 
