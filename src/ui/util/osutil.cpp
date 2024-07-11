@@ -208,7 +208,7 @@ void OsUtil::restartClient()
 
     QString command;
     if (FileUtil::fileExists("restart.bat")) {
-        command = "restart.bat";
+        command = "start /min cmd /c restart.bat";
     } else {
         command = QString("ping -n 4 127.0.0.1 >NUL"
                           " & if not exist inst.tmp start %1 --launch")
