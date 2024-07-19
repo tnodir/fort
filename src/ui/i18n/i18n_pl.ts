@@ -1489,15 +1489,15 @@ Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowi
     </message>
     <message>
         <source>Convert to Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Konwertuj na wieloznacznik</translation>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
-        <translation type="unfinished"></translation>
+        <translation>Czy na pewno chcesz przekonwertować zaznaczony program na wieloznacznik?</translation>
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaparkowany</translation>
     </message>
 </context>
 <context>
@@ -1624,15 +1624,15 @@ Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowi
     <name>RuleTextParser</name>
     <message>
         <source>Bad text: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Błędny tekst: %1</translation>
     </message>
     <message>
         <source>Bad symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Błędny symbol: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieoczekiwany symbol: %1</translation>
     </message>
 </context>
 <context>
