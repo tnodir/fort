@@ -56,6 +56,11 @@ QString makeTriggerColumnNames(
     return (prefix + rowIdName) + (',' + prefix) + columnNames.join(',' + prefix);
 }
 
+const char *makeSavepointName(const char *name)
+{
+    return name ? name : "_";
+}
+
 }
 
 SqliteDb::SqliteDb(const QString &filePath, quint32 openFlags) :
@@ -177,17 +182,17 @@ bool SqliteDb::rollbackTransaction()
 
 bool SqliteDb::beginSavepoint(const char *name)
 {
-    return !name ? execute("SAVEPOINT _;") : executeStr(QString("SAVEPOINT %1;").arg(name));
+    return executeStr(QString("SAVEPOINT %1;").arg(makeSavepointName(name)));
 }
 
 bool SqliteDb::releaseSavepoint(const char *name)
 {
-    return !name ? execute("RELEASE _;") : executeStr(QString("RELEASE %1;").arg(name));
+    return executeStr(QString("RELEASE %1;").arg(makeSavepointName(name)));
 }
 
 bool SqliteDb::rollbackSavepoint(const char *name)
 {
-    return !name ? execute("ROLLBACK TO _;") : executeStr(QString("ROLLBACK TO %1;").arg(name));
+    return executeStr(QString("ROLLBACK TO %1;").arg(makeSavepointName(name)));
 }
 
 int SqliteDb::errorCode() const
