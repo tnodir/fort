@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.13.5, 2024-07-24:
+- UI: ProgramAlert: Add "Menu" button.
+- UI: Programs: Warn for "Apply same rules to child processes" option.
+- UI: Update: Show minimized console window of restarting client (for Windows 7 x64).
+- UI: restart.bat: Use "timeout", instead of "ping" for delays.
+- Zones: Update TAS-IX MRLG query.
+
 v3.13.4, 2024-07-06:
 - Fix SvcHost group services handling (Group services was identified as some service from the group).
 
