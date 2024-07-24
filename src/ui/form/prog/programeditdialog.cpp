@@ -564,6 +564,8 @@ void ProgramEditDialog::setupChildOptions()
     m_cbApplyChild->setIcon(
             GuiUtil::overlayIcon(":/icons/application_double.png", ":/icons/tick.png"));
 
+    connect(m_cbApplyChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnRestartNeededOption);
+
     // Kill Child
     m_cbKillChild = new QCheckBox();
     m_cbKillChild->setIcon(IconCache::icon(":/icons/scull.png"));
@@ -894,4 +896,11 @@ void ProgramEditDialog::warnDangerousOption() const
             tr("Attention: This option is very dangerous!!!\n\n"
                "Be careful when killing a system services or other important programs!\n"
                "It can cause a Windows malfunction or totally unusable."));
+}
+
+void ProgramEditDialog::warnRestartNeededOption() const
+{
+    IoC<WindowManager>()->showErrorBox(
+            tr("Attention: This option only affects new processes!\n\n"
+               "Please restart the running program to take effect of this option."));
 }

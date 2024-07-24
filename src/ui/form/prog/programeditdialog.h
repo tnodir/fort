@@ -107,6 +107,7 @@ private:
     void editRuleDialog(int ruleId);
 
     void warnDangerousOption() const;
+    void warnRestartNeededOption() const;
 
 private:
     ProgramsController *m_ctrl = nullptr;
