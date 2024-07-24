@@ -1397,7 +1397,9 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
-        <translation type="unfinished"></translation>
+        <translation>Attention : Cette option n&apos;affecte que les nouveaux processus !
+
+Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet de cette option.</translation>
     </message>
 </context>
 <context>
