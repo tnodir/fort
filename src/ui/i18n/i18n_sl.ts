@@ -1393,6 +1393,14 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <source>Select Rule</source>
         <translation>Izberite Pravilo</translation>
     </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>Upozornenie: Táto možnosť ovplyvňuje iba nové procesy!
+
+Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

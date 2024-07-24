@@ -1391,6 +1391,12 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Select Rule</source>
         <translation>选择规则</translation>
     </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

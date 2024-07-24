@@ -1393,6 +1393,14 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Select Rule</source>
         <translation>Выбрать правило</translation>
     </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>Внимание: эта опция влияет только на новые процессы!
+
+Перезапустите запущенную программу, чтобы эта опция вступила в силу.</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

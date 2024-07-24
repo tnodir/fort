@@ -1393,6 +1393,12 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <source>Select Rule</source>
         <translation>Sélectionner une règle</translation>
     </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

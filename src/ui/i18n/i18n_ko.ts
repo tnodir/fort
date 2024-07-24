@@ -1393,6 +1393,12 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Select Rule</source>
         <translation>규칙 선택</translation>
     </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>

@@ -1384,6 +1384,12 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Select Rule</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
