@@ -1397,7 +1397,9 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
-        <translation type="unfinished"></translation>
+        <translation>Achtung: Diese Option wirkt sich nur auf neue Prozesse aus!
+
+Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</translation>
     </message>
 </context>
 <context>
@@ -1495,11 +1497,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Convert to Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>In Platzhalter umwandeln</translation>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sind Sie sicher, das ausgewählte Programm in eine Platzhalter umzuwandeln?</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -1630,15 +1632,15 @@ Please restart the running program to take effect of this option.</source>
     <name>RuleTextParser</name>
     <message>
         <source>Bad text: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Falscher Text: %1</translation>
     </message>
     <message>
         <source>Bad symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Falsches Symbol: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Unerwartetes Symbol: %1</translation>
     </message>
 </context>
 <context>

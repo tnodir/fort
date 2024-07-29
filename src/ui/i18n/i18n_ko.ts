@@ -1397,7 +1397,9 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
-        <translation type="unfinished"></translation>
+        <translation>주의: 이 옵션은 새 프로세스에만 영향을 미칩니다!
+
+이 옵션을 적용하려면 실행 중인 프로그램을 다시 시작하세요.</translation>
     </message>
 </context>
 <context>

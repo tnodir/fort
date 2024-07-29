@@ -1395,7 +1395,9 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
-        <translation type="unfinished"></translation>
+        <translation>请注意： 此选项只影响新进程！
+
+请重新启动正在运行的程序，以使该选项生效。</translation>
     </message>
 </context>
 <context>
