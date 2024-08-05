@@ -175,7 +175,7 @@ const char *const StatSql::sqlSelectMinMaxConnBlockId =
 const char *const StatSql::sqlDeleteConnBlock = "DELETE FROM conn_block WHERE conn_id <= ?1;";
 
 const char *const StatSql::sqlDeleteConnBlockApps =
-        "DELETE FROM app t"
+        "DELETE FROM app as t"
         "  WHERE ("
         "    SELECT 1 FROM conn_block c WHERE c.app_id = t.app_id LIMIT 1"
         "  ) IS NULL;";
