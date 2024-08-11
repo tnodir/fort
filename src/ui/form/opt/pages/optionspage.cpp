@@ -875,8 +875,8 @@ QLayout *OptionsPage::setupEditShortcutLayout()
 void OptionsPage::setupHomeBox()
 {
     m_cbHomeAutoShowMenu =
-            ControlUtil::createCheckBox(iniUser()->homeAutoShowMenu(), [&](bool checked) {
-                iniUser()->setHomeAutoShowMenu(checked);
+            ControlUtil::createCheckBox(iniUser()->homeWindowAutoShowMenu(), [&](bool checked) {
+                iniUser()->setHomeWindowAutoShowMenu(checked);
                 ctrl()->setIniUserEdited();
             });
 

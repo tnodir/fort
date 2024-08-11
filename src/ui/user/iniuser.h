@@ -69,9 +69,6 @@ public:
     bool splashWindowVisible() const { return valueBool("splashWindow/visible", true); }
     void setSplashWindowVisible(bool on) { setValue("splashWindow/visible", on, true); }
 
-    bool homeAutoShowMenu() const { return valueBool("home/autoShowMenu"); }
-    void setHomeAutoShowMenu(bool v) { setValue("home/autoShowMenu", v); }
-
     bool progNotifyMessage() const { return valueBool("prog/notifyMessage", true); }
     void setProgNotifyMessage(bool v) { setValue("prog/notifyMessage", v, true); }
 
@@ -98,6 +95,9 @@ public:
 
     bool homeWindowMaximized() const { return valueBool("homeWindow/maximized"); }
     void setHomeWindowMaximized(bool on) { setValue("homeWindow/maximized", on); }
+
+    bool homeWindowAutoShowMenu() const { return valueBool("homeWindow/autoShowMenu"); }
+    void setHomeWindowAutoShowMenu(bool v) { setValue("homeWindow/autoShowMenu", v); }
 
     QRect progWindowGeometry() const { return value("progWindow/geometry").toRect(); }
     void setProgWindowGeometry(const QRect &v) { setValue("progWindow/geometry", v); }

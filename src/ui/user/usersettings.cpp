@@ -46,6 +46,11 @@ void UserSettings::migrateIniOnStartup()
     if (version < 0x030911) {
         setCacheValue("prog/notifyMessage", ini()->value("tray/alertMessage"));
     }
+
+    // COMPAT: v3.13.6
+    if (version < 0x031306) {
+        setCacheValue("homeWindow/autoShowMenu", ini()->value("home/autoShowMenu"));
+    }
 }
 
 void UserSettings::migrateIniOnWrite()
@@ -107,5 +112,10 @@ void UserSettings::migrateIniOnWrite()
     // COMPAT: v3.9.11
     if (version < 0x030911) {
         removeIniKey("tray/alertMessage");
+    }
+
+    // COMPAT: v3.13.6
+    if (version < 0x031306) {
+        removeIniKey("home/autoShowMenu");
     }
 }

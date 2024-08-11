@@ -92,7 +92,7 @@ void HomeWindow::selectAboutTab()
 
 void HomeWindow::onActivationChanged(bool isActive)
 {
-    if (isActive && iniUser()->homeAutoShowMenu()) {
+    if (isActive && iniUser()->homeWindowAutoShowMenu()) {
         if (isActiveWindow()) {
             m_btMenu->showMenu();
         }
