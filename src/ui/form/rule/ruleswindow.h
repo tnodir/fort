@@ -2,12 +2,7 @@
 #define RULESWINDOW_H
 
 #include <conf/rule.h>
-#include <form/form_types.h>
-#include <util/window/widgetwindow.h>
-
-QT_FORWARD_DECLARE_CLASS(QLineEdit)
-QT_FORWARD_DECLARE_CLASS(QPushButton)
-QT_FORWARD_DECLARE_CLASS(QToolButton)
+#include <form/controls/formwindow.h>
 
 class ConfManager;
 class FirewallConf;
@@ -17,12 +12,11 @@ class RuleEditDialog;
 class RuleListModel;
 class RulesController;
 class TreeView;
-class WidgetWindowStateWatcher;
 class WindowManager;
 
 struct RuleRow;
 
-class RulesWindow : public WidgetWindow
+class RulesWindow : public FormWindow
 {
     Q_OBJECT
 
@@ -30,7 +24,7 @@ public:
     explicit RulesWindow(Rule::RuleType ruleType = Rule::RuleNone, QWidget *parent = nullptr,
             Qt::WindowFlags f = {});
 
-    quint32 windowCode() const override { return WindowRules; }
+    WindowCode windowCode() const override { return WindowRules; }
 
     Rule::RuleType ruleType() const { return m_ruleType; }
     bool isOpenSelectRule() const { return ruleType() != Rule::RuleNone; }
@@ -54,7 +48,6 @@ signals:
 
 private:
     void setupController();
-    void setupStateWatcher();
 
     void retranslateUi();
 
@@ -88,7 +81,6 @@ private:
     Rule::RuleType m_ruleType = Rule::RuleNone;
 
     RulesController *m_ctrl = nullptr;
-    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     QPushButton *m_btEdit = nullptr;
     QAction *m_actAddRule = nullptr;

@@ -36,13 +36,12 @@ constexpr int APPS_HEADER_VERSION = 11;
 }
 
 ProgramsWindow::ProgramsWindow(QWidget *parent) :
-    WidgetWindow(parent),
-    m_ctrl(new ProgramsController(this)),
-    m_stateWatcher(new WidgetWindowStateWatcher(this))
+    FormWindow(parent), m_ctrl(new ProgramsController(this))
 {
     setupUi();
     setupController();
-    setupStateWatcher();
+
+    setupFormWindow(iniUser(), IniUser::progWindowGroup());
 }
 
 FortSettings *ProgramsWindow::settings() const
@@ -87,8 +86,8 @@ AppListModel *ProgramsWindow::appListModel() const
 
 void ProgramsWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setProgWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setProgWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setProgWindowGeometry(stateWatcher()->geometry());
+    iniUser()->setProgWindowMaximized(stateWatcher()->maximized());
 
     auto header = m_appListView->horizontalHeader();
     iniUser()->setProgAppsHeader(header->saveState());
@@ -99,7 +98,7 @@ void ProgramsWindow::saveWindowState(bool /*wasVisible*/)
 
 void ProgramsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->progWindowGeometry(),
+    stateWatcher()->restore(this, QSize(1024, 768), iniUser()->progWindowGeometry(),
             iniUser()->progWindowMaximized());
 
     if (iniUser()->progAppsHeaderVersion() == APPS_HEADER_VERSION) {
@@ -115,11 +114,6 @@ void ProgramsWindow::setupController()
     connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramsWindow::retranslateUi);
 
     retranslateUi();
-}
-
-void ProgramsWindow::setupStateWatcher()
-{
-    m_stateWatcher->install(this);
 }
 
 void ProgramsWindow::retranslateUi()

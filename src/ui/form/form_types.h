@@ -4,6 +4,7 @@
 #include <QtGlobal>
 
 enum WindowCode {
+    WindowNone = 0,
     WindowHome = (1 << 0),
     WindowPrograms = (1 << 1),
     WindowProgramAlert = (1 << 2),

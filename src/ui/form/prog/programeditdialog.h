@@ -1,18 +1,8 @@
 #ifndef PROGRAMEDITDIALOG_H
 #define PROGRAMEDITDIALOG_H
 
+#include <form/controls/formwindow.h>
 #include <model/applistmodel.h>
-#include <util/window/widgetwindow.h>
-
-QT_FORWARD_DECLARE_CLASS(QButtonGroup)
-QT_FORWARD_DECLARE_CLASS(QCheckBox)
-QT_FORWARD_DECLARE_CLASS(QComboBox)
-QT_FORWARD_DECLARE_CLASS(QDateTimeEdit)
-QT_FORWARD_DECLARE_CLASS(QFrame)
-QT_FORWARD_DECLARE_CLASS(QLabel)
-QT_FORWARD_DECLARE_CLASS(QPushButton)
-QT_FORWARD_DECLARE_CLASS(QRadioButton)
-QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class ConfAppManager;
 class ConfManager;
@@ -26,7 +16,7 @@ class SpinCombo;
 class WindowManager;
 class ZonesSelector;
 
-class ProgramEditDialog : public WidgetWindow
+class ProgramEditDialog : public FormWindow
 {
     Q_OBJECT
 

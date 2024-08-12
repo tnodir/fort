@@ -5,8 +5,6 @@
 
 #include "programeditdialog.h"
 
-class WidgetWindowStateWatcher;
-
 class ProgramAlertWindow : public ProgramEditDialog
 {
     Q_OBJECT
@@ -14,7 +12,7 @@ class ProgramAlertWindow : public ProgramEditDialog
 public:
     explicit ProgramAlertWindow(QWidget *parent = nullptr);
 
-    quint32 windowCode() const override { return WindowProgramAlert; }
+    WindowCode windowCode() const override { return WindowProgramAlert; }
 
     void initialize();
 
@@ -26,14 +24,10 @@ protected:
 
 private:
     void setupController();
-    void setupStateWatcher();
 
     void retranslateWindowTitle() override;
 
     void setupUi();
-
-private:
-    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 };
 
 #endif // PROGRAMALERTWINDOW_H

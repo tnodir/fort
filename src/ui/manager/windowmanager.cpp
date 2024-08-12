@@ -156,7 +156,6 @@ void WindowManager::closeMainWindow()
 void WindowManager::setupHomeWindow()
 {
     m_homeWindow = new HomeWindow();
-    m_homeWindow->restoreWindowState();
 
     connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::quitHomeWindow);
 }
@@ -164,7 +163,6 @@ void WindowManager::setupHomeWindow()
 void WindowManager::setupProgramsWindow()
 {
     m_progWindow = new ProgramsWindow();
-    m_progWindow->restoreWindowState();
 
     connect(m_progWindow, &ProgramsWindow::aboutToClose, this, &WindowManager::closeProgramsWindow);
 }
@@ -172,7 +170,6 @@ void WindowManager::setupProgramsWindow()
 void WindowManager::setupProgramAlertWindow()
 {
     m_progAlertWindow = new ProgramAlertWindow();
-    m_progAlertWindow->restoreWindowState();
 
     connect(m_progAlertWindow, &ProgramAlertWindow::aboutToClose, this,
             &WindowManager::closeProgramAlertWindow);
@@ -181,7 +178,6 @@ void WindowManager::setupProgramAlertWindow()
 void WindowManager::setupOptionsWindow()
 {
     m_optWindow = new OptionsWindow();
-    m_optWindow->restoreWindowState();
 
     connect(m_optWindow, &OptionsWindow::aboutToClose, this, &WindowManager::closeOptionsWindow);
 }
@@ -189,7 +185,6 @@ void WindowManager::setupOptionsWindow()
 void WindowManager::setupRulesWindow()
 {
     m_rulesWindow = new RulesWindow();
-    m_rulesWindow->restoreWindowState();
 
     connect(m_rulesWindow, &RulesWindow::aboutToClose, this, &WindowManager::closeRulesWindow);
 }
@@ -197,7 +192,6 @@ void WindowManager::setupRulesWindow()
 void WindowManager::setupServicesWindow()
 {
     m_servicesWindow = new ServicesWindow();
-    m_servicesWindow->restoreWindowState();
 
     connect(m_servicesWindow, &ServicesWindow::aboutToClose, this,
             &WindowManager::closeServicesWindow);
@@ -206,7 +200,6 @@ void WindowManager::setupServicesWindow()
 void WindowManager::setupZonesWindow()
 {
     m_zonesWindow = new ZonesWindow();
-    m_zonesWindow->restoreWindowState();
 
     connect(m_zonesWindow, &ZonesWindow::aboutToClose, this, &WindowManager::closeZonesWindow);
 }
@@ -214,7 +207,6 @@ void WindowManager::setupZonesWindow()
 void WindowManager::setupGraphWindow()
 {
     m_graphWindow = new GraphWindow();
-    m_graphWindow->restoreWindowState();
 
     connect(m_graphWindow, &GraphWindow::aboutToClose, this, [&] { closeGraphWindow(); });
     connect(m_graphWindow, &GraphWindow::mouseRightClick, this,
@@ -227,7 +219,6 @@ void WindowManager::setupGraphWindow()
 void WindowManager::setupStatisticsWindow()
 {
     m_statWindow = new StatisticsWindow();
-    m_statWindow->restoreWindowState();
 
     connect(m_statWindow, &StatisticsWindow::aboutToClose, this,
             &WindowManager::closeStatisticsWindow);
@@ -771,14 +762,14 @@ void WindowManager::onTrayMessageClicked()
     }
 }
 
-void WindowManager::showWindow(WidgetWindow *w, bool activate)
+void WindowManager::showWindow(FormWindow *w, bool activate)
 {
     w->showWindow(activate);
 
     windowOpened(w->windowCode());
 }
 
-bool WindowManager::closeWindow(WidgetWindow *w)
+bool WindowManager::closeWindow(FormWindow *w)
 {
     if (!w) {
         return false;
@@ -803,14 +794,14 @@ bool WindowManager::closeWindow(WidgetWindow *w)
     return false;
 }
 
-void WindowManager::windowOpened(quint32 code)
+void WindowManager::windowOpened(WindowCode code)
 {
     m_openedWindows |= code;
 
     emit windowVisibilityChanged(code, /*isVisible=*/true);
 }
 
-void WindowManager::windowClosed(quint32 code)
+void WindowManager::windowClosed(WindowCode code)
 {
     m_openedWindows &= ~code;
 

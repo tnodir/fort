@@ -34,14 +34,12 @@ QToolButton *createFlatToolButton(const QString &iconPath, const QString &linkPa
 
 }
 
-HomeWindow::HomeWindow(QWidget *parent) :
-    WidgetWindow(parent),
-    m_ctrl(new HomeController(this)),
-    m_stateWatcher(new WidgetWindowStateWatcher(this))
+HomeWindow::HomeWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new HomeController(this))
 {
     setupUi();
     setupController();
-    setupStateWatcher();
+
+    setupFormWindow(iniUser(), IniUser::homeWindowGroup());
 
     connect(this, &HomeWindow::activationChanged, this, &HomeWindow::onActivationChanged,
             Qt::QueuedConnection); // queued to properly show the menu after window opening
@@ -69,8 +67,8 @@ WindowManager *HomeWindow::windowManager() const
 
 void HomeWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setHomeWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setHomeWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setHomeWindowGeometry(stateWatcher()->geometry());
+    iniUser()->setHomeWindowMaximized(stateWatcher()->maximized());
 
     emit ctrl()->afterSaveWindowState(iniUser());
 
@@ -79,7 +77,7 @@ void HomeWindow::saveWindowState(bool /*wasVisible*/)
 
 void HomeWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(600, 400), iniUser()->homeWindowGeometry(),
+    stateWatcher()->restore(this, QSize(600, 400), iniUser()->homeWindowGeometry(),
             iniUser()->homeWindowMaximized());
 
     emit ctrl()->afterRestoreWindowState(iniUser());
@@ -120,11 +118,6 @@ void HomeWindow::setupController()
     connect(ctrl(), &HomeController::retranslateUi, this, &HomeWindow::retranslateUi);
 
     emit ctrl()->retranslateUi();
-}
-
-void HomeWindow::setupStateWatcher()
-{
-    m_stateWatcher->install(this);
 }
 
 void HomeWindow::setupUi()

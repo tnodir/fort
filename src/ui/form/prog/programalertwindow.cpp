@@ -9,12 +9,12 @@
 #include "programscontroller.h"
 
 ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) :
-    ProgramEditDialog(new ProgramsController(/*this*/), parent),
-    m_stateWatcher(new WidgetWindowStateWatcher(this))
+    ProgramEditDialog(new ProgramsController(/*this*/), parent)
 {
     setupUi();
     setupController();
-    setupStateWatcher();
+
+    setupFormWindow(iniUser(), IniUser::progAlertWindowGroup());
 
     initialize();
 }
@@ -29,15 +29,15 @@ void ProgramAlertWindow::initialize()
 
 void ProgramAlertWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setProgAlertWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setProgAlertWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setProgAlertWindowGeometry(stateWatcher()->geometry());
+    iniUser()->setProgAlertWindowMaximized(stateWatcher()->maximized());
 
     confManager()->saveIniUser();
 }
 
 void ProgramAlertWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(500, 400), iniUser()->progAlertWindowGeometry(),
+    stateWatcher()->restore(this, QSize(500, 400), iniUser()->progAlertWindowGeometry(),
             iniUser()->progAlertWindowMaximized());
 }
 
@@ -54,11 +54,6 @@ void ProgramAlertWindow::setupController()
 {
     ctrl()->setParent(this); // can't set in ctor, because the widget isn't yet fully constructed
     ctrl()->initialize();
-}
-
-void ProgramAlertWindow::setupStateWatcher()
-{
-    m_stateWatcher->install(this);
 }
 
 void ProgramAlertWindow::retranslateWindowTitle()

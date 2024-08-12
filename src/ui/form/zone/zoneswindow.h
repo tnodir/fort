@@ -1,18 +1,13 @@
 #ifndef ZONESWINDOW_H
 #define ZONESWINDOW_H
 
-#include <form/form_types.h>
-#include <util/window/widgetwindow.h>
-
-QT_FORWARD_DECLARE_CLASS(QPushButton)
-QT_FORWARD_DECLARE_CLASS(QToolButton)
+#include <form/controls/formwindow.h>
 
 class ConfManager;
 class IniOptions;
 class IniUser;
 class TableView;
 class TaskManager;
-class WidgetWindowStateWatcher;
 class WindowManager;
 class ZoneEditDialog;
 class ZoneListModel;
@@ -20,14 +15,14 @@ class ZonesController;
 
 struct ZoneRow;
 
-class ZonesWindow : public WidgetWindow
+class ZonesWindow : public FormWindow
 {
     Q_OBJECT
 
 public:
     explicit ZonesWindow(QWidget *parent = nullptr);
 
-    quint32 windowCode() const override { return WindowZones; }
+    WindowCode windowCode() const override { return WindowZones; }
 
     ZonesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
@@ -42,7 +37,6 @@ public:
 
 private:
     void setupController();
-    void setupStateWatcher();
 
     void retranslateUi();
 
@@ -67,7 +61,6 @@ private:
 
 private:
     ZonesController *m_ctrl = nullptr;
-    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     QPushButton *m_btEdit = nullptr;
     QAction *m_actAddZone = nullptr;

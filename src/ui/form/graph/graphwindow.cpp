@@ -81,13 +81,13 @@ void adjustGraphData(
 
 }
 
-GraphWindow::GraphWindow(QWidget *parent) :
-    WidgetWindow(parent), m_stateWatcher(new WidgetWindowStateWatcher(this))
+GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
 {
     setupUi();
     setupFlagsAndColors();
     setupTimer();
-    setupStateWatcher();
+
+    setupFormWindow(iniUser(), IniUser::graphWindowGroup());
 
     setMinimumSize(QSize(30, 10));
 }
@@ -119,8 +119,8 @@ IniUser *GraphWindow::iniUser() const
 
 void GraphWindow::saveWindowState(bool wasVisible)
 {
-    iniUser()->setGraphWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setGraphWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setGraphWindowGeometry(stateWatcher()->geometry());
+    iniUser()->setGraphWindowMaximized(stateWatcher()->maximized());
 
     iniUser()->setGraphWindowVisible(wasVisible);
 
@@ -129,13 +129,8 @@ void GraphWindow::saveWindowState(bool wasVisible)
 
 void GraphWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(400, 300), iniUser()->graphWindowGeometry(),
+    stateWatcher()->restore(this, QSize(400, 300), iniUser()->graphWindowGeometry(),
             iniUser()->graphWindowMaximized());
-}
-
-void GraphWindow::setupStateWatcher()
-{
-    m_stateWatcher->install(this);
 }
 
 void GraphWindow::setupUi()

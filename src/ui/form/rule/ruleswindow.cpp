@@ -35,14 +35,12 @@ constexpr quint8 ruleTypeBit(Rule::RuleType ruleType)
 }
 
 RulesWindow::RulesWindow(Rule::RuleType ruleType, QWidget *parent, Qt::WindowFlags f) :
-    WidgetWindow(parent, f),
-    m_ruleType(ruleType),
-    m_ctrl(new RulesController(this)),
-    m_stateWatcher(new WidgetWindowStateWatcher(this))
+    FormWindow(parent, f), m_ruleType(ruleType), m_ctrl(new RulesController(this))
 {
     setupUi();
     setupController();
-    setupStateWatcher();
+
+    setupFormWindow(iniUser(), IniUser::ruleWindowGroup());
 }
 
 ConfManager *RulesWindow::confManager() const
@@ -77,8 +75,8 @@ RuleListModel *RulesWindow::ruleListModel() const
 
 void RulesWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setRuleWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setRuleWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setRuleWindowGeometry(stateWatcher()->geometry());
+    iniUser()->setRuleWindowMaximized(stateWatcher()->maximized());
 
     auto header = m_ruleListView->header();
     iniUser()->setRulesHeader(header->saveState());
@@ -91,7 +89,7 @@ void RulesWindow::saveWindowState(bool /*wasVisible*/)
 
 void RulesWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(500, 600), iniUser()->ruleWindowGeometry(),
+    stateWatcher()->restore(this, QSize(500, 600), iniUser()->ruleWindowGeometry(),
             iniUser()->ruleWindowMaximized());
 
     if (iniUser()->rulesHeaderVersion() == RULES_HEADER_VERSION) {
@@ -109,11 +107,6 @@ void RulesWindow::setupController()
     connect(ctrl(), &RulesController::retranslateUi, this, &RulesWindow::retranslateUi);
 
     retranslateUi();
-}
-
-void RulesWindow::setupStateWatcher()
-{
-    m_stateWatcher->install(this);
 }
 
 void RulesWindow::retranslateUi()

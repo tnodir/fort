@@ -1,13 +1,7 @@
 #ifndef PROGRAMSWINDOW_H
 #define PROGRAMSWINDOW_H
 
-#include <form/form_types.h>
-#include <util/window/widgetwindow.h>
-
-QT_FORWARD_DECLARE_CLASS(QCheckBox)
-QT_FORWARD_DECLARE_CLASS(QLineEdit)
-QT_FORWARD_DECLARE_CLASS(QPushButton)
-QT_FORWARD_DECLARE_CLASS(QToolButton)
+#include <form/controls/formwindow.h>
 
 class AppInfoCache;
 class AppInfoRow;
@@ -21,19 +15,18 @@ class IniUser;
 class ProgramEditDialog;
 class ProgramsController;
 class TableView;
-class WidgetWindowStateWatcher;
 class WindowManager;
 
 struct AppRow;
 
-class ProgramsWindow : public WidgetWindow
+class ProgramsWindow : public FormWindow
 {
     Q_OBJECT
 
 public:
     explicit ProgramsWindow(QWidget *parent = nullptr);
 
-    quint32 windowCode() const override { return WindowPrograms; }
+    WindowCode windowCode() const override { return WindowPrograms; }
 
     ProgramsController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
@@ -56,7 +49,6 @@ protected:
 
 private:
     void setupController();
-    void setupStateWatcher();
 
     void retranslateUi();
 
@@ -94,7 +86,6 @@ private:
 
 private:
     ProgramsController *m_ctrl = nullptr;
-    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     QAction *m_actAllowApp = nullptr;
     QAction *m_actBlockApp = nullptr;

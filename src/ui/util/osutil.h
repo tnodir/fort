@@ -41,6 +41,7 @@ public:
     static void setThreadIsBusy(bool on);
 
     static bool allowOtherForegroundWindows();
+    static bool excludeWindowFromCapture(QWidget *window, bool on = true);
 
     static bool registerAppRestart();
 

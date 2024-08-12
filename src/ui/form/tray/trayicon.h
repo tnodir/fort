@@ -3,6 +3,8 @@
 
 #include <QSystemTrayIcon>
 
+#include <form/form_types.h>
+
 QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QTimer)
@@ -135,7 +137,7 @@ private:
     void onTrayActivatedByTrigger();
     void onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkTriggered = false);
 
-    void onWindowVisibilityChanged(quint32 code, bool isVisible);
+    void onWindowVisibilityChanged(WindowCode code, bool isVisible);
 
 private:
     bool m_trayTriggered : 1 = false;

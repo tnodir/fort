@@ -17,7 +17,6 @@ public:
 
     void clear();
 
-protected:
     int valueInt(const QString &key, int defaultValue = 0) const;
     bool valueBool(const QString &key, bool defaultValue = false) const;
     uint valueUInt(const QString &key, int defaultValue = 0) const;
@@ -30,6 +29,7 @@ protected:
     QColor valueColor(const QString &key, const QColor &defaultValue = QColor()) const;
     void setColor(const QString &key, const QColor &v);
 
+protected:
     virtual QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const;
     virtual void setValue(
             const QString &key, const QVariant &v, const QVariant &defaultValue = QVariant());

@@ -1,22 +1,20 @@
 #ifndef STATISTICSWINDOW_H
 #define STATISTICSWINDOW_H
 
-#include <form/form_types.h>
-#include <util/window/widgetwindow.h>
+#include <form/controls/formwindow.h>
 
 class ConfManager;
 class IniUser;
 class StatisticsController;
-class WidgetWindowStateWatcher;
 
-class StatisticsWindow : public WidgetWindow
+class StatisticsWindow : public FormWindow
 {
     Q_OBJECT
 
 public:
     explicit StatisticsWindow(QWidget *parent = nullptr);
 
-    quint32 windowCode() const override { return WindowStatistics; }
+    WindowCode windowCode() const override { return WindowStatistics; }
 
     StatisticsController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
@@ -27,7 +25,6 @@ public:
 
 private:
     void setupController();
-    void setupStateWatcher();
 
     void retranslateUi();
 
@@ -35,7 +32,6 @@ private:
 
 private:
     StatisticsController *m_ctrl = nullptr;
-    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 };
 
 #endif // STATISTICSWINDOW_H

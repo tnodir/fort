@@ -30,14 +30,12 @@ constexpr int ZONES_HEADER_VERSION = 3;
 
 }
 
-ZonesWindow::ZonesWindow(QWidget *parent) :
-    WidgetWindow(parent),
-    m_ctrl(new ZonesController(this)),
-    m_stateWatcher(new WidgetWindowStateWatcher(this))
+ZonesWindow::ZonesWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new ZonesController(this))
 {
     setupUi();
     setupController();
-    setupStateWatcher();
+
+    setupFormWindow(iniUser(), IniUser::zoneWindowGroup());
 }
 
 ConfManager *ZonesWindow::confManager() const
@@ -72,8 +70,8 @@ ZoneListModel *ZonesWindow::zoneListModel() const
 
 void ZonesWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setZoneWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setZoneWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setZoneWindowGeometry(stateWatcher()->geometry());
+    iniUser()->setZoneWindowMaximized(stateWatcher()->maximized());
 
     auto header = m_zoneListView->horizontalHeader();
     iniUser()->setZonesHeader(header->saveState());
@@ -84,7 +82,7 @@ void ZonesWindow::saveWindowState(bool /*wasVisible*/)
 
 void ZonesWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(900, 400), iniUser()->zoneWindowGeometry(),
+    stateWatcher()->restore(this, QSize(900, 400), iniUser()->zoneWindowGeometry(),
             iniUser()->zoneWindowMaximized());
 
     if (iniUser()->zonesHeaderVersion() == ZONES_HEADER_VERSION) {
@@ -98,11 +96,6 @@ void ZonesWindow::setupController()
     connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::retranslateUi);
 
     emit ctrl()->retranslateUi();
-}
-
-void ZonesWindow::setupStateWatcher()
-{
-    m_stateWatcher->install(this);
 }
 
 void ZonesWindow::retranslateUi()

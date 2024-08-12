@@ -12,13 +12,12 @@
 #include "statisticscontroller.h"
 
 StatisticsWindow::StatisticsWindow(QWidget *parent) :
-    WidgetWindow(parent),
-    m_ctrl(new StatisticsController(this)),
-    m_stateWatcher(new WidgetWindowStateWatcher(this))
+    FormWindow(parent), m_ctrl(new StatisticsController(this))
 {
     setupUi();
     setupController();
-    setupStateWatcher();
+
+    setupFormWindow(iniUser(), IniUser::statWindowGroup());
 }
 
 ConfManager *StatisticsWindow::confManager() const
@@ -33,8 +32,8 @@ IniUser *StatisticsWindow::iniUser() const
 
 void StatisticsWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setStatWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setStatWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setStatWindowGeometry(stateWatcher()->geometry());
+    iniUser()->setStatWindowMaximized(stateWatcher()->maximized());
 
     emit ctrl()->afterSaveWindowState(iniUser());
 
@@ -43,7 +42,7 @@ void StatisticsWindow::saveWindowState(bool /*wasVisible*/)
 
 void StatisticsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->statWindowGeometry(),
+    stateWatcher()->restore(this, QSize(1024, 768), iniUser()->statWindowGeometry(),
             iniUser()->statWindowMaximized());
 
     emit ctrl()->afterRestoreWindowState(iniUser());
@@ -54,11 +53,6 @@ void StatisticsWindow::setupController()
     connect(ctrl(), &StatisticsController::retranslateUi, this, &StatisticsWindow::retranslateUi);
 
     emit ctrl()->retranslateUi();
-}
-
-void StatisticsWindow::setupStateWatcher()
-{
-    m_stateWatcher->install(this);
 }
 
 void StatisticsWindow::retranslateUi()

@@ -31,13 +31,12 @@ constexpr int SERVICES_HEADER_VERSION = 2;
 }
 
 ServicesWindow::ServicesWindow(QWidget *parent) :
-    WidgetWindow(parent),
-    m_ctrl(new ServicesController(this)),
-    m_stateWatcher(new WidgetWindowStateWatcher(this))
+    FormWindow(parent), m_ctrl(new ServicesController(this))
 {
     setupUi();
     setupController();
-    setupStateWatcher();
+
+    setupFormWindow(iniUser(), IniUser::serviceWindowGroup());
 }
 
 ConfManager *ServicesWindow::confManager() const
@@ -67,8 +66,8 @@ ServiceListModel *ServicesWindow::serviceListModel() const
 
 void ServicesWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setServiceWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setServiceWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setServiceWindowGeometry(stateWatcher()->geometry());
+    iniUser()->setServiceWindowMaximized(stateWatcher()->maximized());
 
     auto header = m_serviceListView->horizontalHeader();
     iniUser()->setServicesHeader(header->saveState());
@@ -79,7 +78,7 @@ void ServicesWindow::saveWindowState(bool /*wasVisible*/)
 
 void ServicesWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(800, 600), iniUser()->serviceWindowGeometry(),
+    stateWatcher()->restore(this, QSize(800, 600), iniUser()->serviceWindowGeometry(),
             iniUser()->serviceWindowMaximized());
 
     if (iniUser()->servicesHeaderVersion() == SERVICES_HEADER_VERSION) {
@@ -111,11 +110,6 @@ void ServicesWindow::setupController()
     connect(ctrl(), &ServicesController::retranslateUi, this, &ServicesWindow::retranslateUi);
 
     retranslateUi();
-}
-
-void ServicesWindow::setupStateWatcher()
-{
-    m_stateWatcher->install(this);
 }
 
 void ServicesWindow::setupUi()

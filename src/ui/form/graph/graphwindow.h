@@ -3,8 +3,7 @@
 
 #include <QTimer>
 
-#include <form/form_types.h>
-#include <util/window/widgetwindow.h>
+#include <form/controls/formwindow.h>
 
 class ConfManager;
 class FirewallConf;
@@ -12,16 +11,15 @@ class IniOptions;
 class IniUser;
 class GraphPlot;
 class QCPBars;
-class WidgetWindowStateWatcher;
 
-class GraphWindow : public WidgetWindow
+class GraphWindow : public FormWindow
 {
     Q_OBJECT
 
 public:
     explicit GraphWindow(QWidget *parent = nullptr);
 
-    quint32 windowCode() const override { return WindowGraph; }
+    WindowCode windowCode() const override { return WindowGraph; }
     bool deleteOnClose() const override;
 
     ConfManager *confManager() const;
@@ -52,8 +50,6 @@ private:
     void cancelMousePressAndDragging();
 
 private:
-    void setupStateWatcher();
-
     void setupUi();
 
     void setupFlagsAndColors();
@@ -81,8 +77,6 @@ private:
     bool m_mouseDragResize = false;
 
     qint64 m_lastUnixTime = 0;
-
-    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     GraphPlot *m_plot = nullptr;
     QCPBars *m_graphIn = nullptr;

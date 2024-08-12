@@ -43,6 +43,7 @@ SOURCES += \
     form/controls/controlutil.cpp \
     form/controls/doublespinbox.cpp \
     form/controls/focusablemenu.cpp \
+    form/controls/formwindow.cpp \
     form/controls/labelcolor.cpp \
     form/controls/labeldoublespin.cpp \
     form/controls/labelspin.cpp \
@@ -265,6 +266,7 @@ HEADERS += \
     form/controls/controlutil.h \
     form/controls/doublespinbox.h \
     form/controls/focusablemenu.h \
+    form/controls/formwindow.h \
     form/controls/labelcolor.h \
     form/controls/labeldoublespin.h \
     form/controls/labelspin.h \

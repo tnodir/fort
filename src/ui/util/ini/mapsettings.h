@@ -20,9 +20,9 @@ public slots:
     void saveAndClear();
 
 protected:
-    QVariant value(const QString &key, const QVariant &defaultValue = QVariant()) const override;
-    void setValue(const QString &key, const QVariant &v,
-            const QVariant &defaultValue = QVariant()) override;
+    QVariant value(const QString &key, const QVariant &defaultValue = {}) const override;
+    void setValue(
+            const QString &key, const QVariant &v, const QVariant &defaultValue = {}) override;
 
     void setCacheValue(const QString &key, const QVariant &v) const;
 

@@ -15,13 +15,12 @@
 #include "pages/optmainpage.h"
 
 OptionsWindow::OptionsWindow(QWidget *parent) :
-    WidgetWindow(parent),
-    m_ctrl(new OptionsController(this)),
-    m_stateWatcher(new WidgetWindowStateWatcher(this))
+    FormWindow(parent), m_ctrl(new OptionsController(this))
 {
     setupUi();
     setupController();
-    setupStateWatcher();
+
+    setupFormWindow(iniUser(), IniUser::optWindowGroup());
 
     connect(this, &OptionsWindow::aboutToShow, this, &OptionsWindow::checkDeprecatedAppGroups);
 }
@@ -50,8 +49,8 @@ void OptionsWindow::cancelChanges()
 
 void OptionsWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setOptWindowGeometry(m_stateWatcher->geometry());
-    iniUser()->setOptWindowMaximized(m_stateWatcher->maximized());
+    iniUser()->setOptWindowGeometry(stateWatcher()->geometry());
+    iniUser()->setOptWindowMaximized(stateWatcher()->maximized());
 
     emit ctrl()->afterSaveWindowState(iniUser());
 
@@ -60,7 +59,7 @@ void OptionsWindow::saveWindowState(bool /*wasVisible*/)
 
 void OptionsWindow::restoreWindowState()
 {
-    m_stateWatcher->restore(this, QSize(1024, 768), iniUser()->optWindowGeometry(),
+    stateWatcher()->restore(this, QSize(1024, 768), iniUser()->optWindowGeometry(),
             iniUser()->optWindowMaximized());
 
     emit ctrl()->afterRestoreWindowState(iniUser());
@@ -74,11 +73,6 @@ void OptionsWindow::setupController()
     connect(ctrl(), &OptionsController::retranslateUi, this, &OptionsWindow::retranslateUi);
 
     emit ctrl()->retranslateUi();
-}
-
-void OptionsWindow::setupStateWatcher()
-{
-    m_stateWatcher->install(this);
 }
 
 void OptionsWindow::keyPressEvent(QKeyEvent *event)

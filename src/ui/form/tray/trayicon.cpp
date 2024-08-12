@@ -940,7 +940,7 @@ void TrayIcon::showProgramsOrAlertWindow()
     }
 }
 
-void TrayIcon::onWindowVisibilityChanged(quint32 code, bool isVisible)
+void TrayIcon::onWindowVisibilityChanged(WindowCode code, bool isVisible)
 {
     switch (code) {
     case WindowPrograms:

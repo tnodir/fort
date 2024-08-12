@@ -1,28 +1,23 @@
 #ifndef HOMEWINDOW_H
 #define HOMEWINDOW_H
 
-#include <form/form_types.h>
-#include <util/window/widgetwindow.h>
-
-QT_FORWARD_DECLARE_CLASS(QPushButton)
-QT_FORWARD_DECLARE_CLASS(QToolButton)
+#include <form/controls/formwindow.h>
 
 class ConfManager;
 class FortSettings;
 class HomeController;
 class HomeMainPage;
 class IniUser;
-class WidgetWindowStateWatcher;
 class WindowManager;
 
-class HomeWindow : public WidgetWindow
+class HomeWindow : public FormWindow
 {
     Q_OBJECT
 
 public:
     explicit HomeWindow(QWidget *parent = nullptr);
 
-    quint32 windowCode() const override { return WindowHome; }
+    WindowCode windowCode() const override { return WindowHome; }
 
     HomeController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
@@ -41,7 +36,6 @@ private slots:
 
 private:
     void setupController();
-    void setupStateWatcher();
 
     void retranslateUi();
 
@@ -52,7 +46,6 @@ private:
 
 private:
     HomeController *m_ctrl = nullptr;
-    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     HomeMainPage *m_mainPage = nullptr;
     QToolButton *m_btPasswordLock = nullptr;

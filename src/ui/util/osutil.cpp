@@ -6,6 +6,7 @@
 #include <QLoggingCategory>
 #include <QProcess>
 #include <QUrl>
+#include <QWidget>
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
@@ -172,6 +173,11 @@ void OsUtil::setThreadIsBusy(bool on)
 bool OsUtil::allowOtherForegroundWindows()
 {
     return AllowSetForegroundWindow(ASFW_ANY);
+}
+
+bool OsUtil::excludeWindowFromCapture(QWidget *window, bool on)
+{
+    return SetWindowDisplayAffinity((HWND) window->winId(), on ? WDA_EXCLUDEFROMCAPTURE : WDA_NONE);
 }
 
 bool OsUtil::registerAppRestart()

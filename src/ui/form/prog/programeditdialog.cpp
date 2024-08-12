@@ -51,7 +51,7 @@ enum ScheduleTimeType : qint8 {
 };
 
 ProgramEditDialog::ProgramEditDialog(ProgramsController *ctrl, QWidget *parent, Qt::WindowFlags f) :
-    WidgetWindow(parent, (f == Qt::Widget ? Qt::Dialog : f)), m_ctrl(ctrl)
+    FormWindow(parent, (f == Qt::Widget ? Qt::Dialog : f)), m_ctrl(ctrl)
 {
     setupUi();
     setupController();

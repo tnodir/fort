@@ -8,6 +8,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
+class FormWindow;
 class GraphWindow;
 class HomeWindow;
 class IniUser;
@@ -61,7 +62,7 @@ public:
     static QFont defaultFont();
 
 signals:
-    void windowVisibilityChanged(quint32 code, bool isVisible);
+    void windowVisibilityChanged(WindowCode code, bool isVisible);
 
 public slots:
     void setupAppPalette();
@@ -167,11 +168,11 @@ private:
 
     void onTrayMessageClicked();
 
-    void showWindow(WidgetWindow *w, bool activate = true);
-    bool closeWindow(WidgetWindow *w);
+    void showWindow(FormWindow *w, bool activate = true);
+    bool closeWindow(FormWindow *w);
 
-    void windowOpened(quint32 code);
-    void windowClosed(quint32 code);
+    void windowOpened(WindowCode code);
+    void windowClosed(WindowCode code);
     bool isAnyWindowOpen(quint32 codes) const;
 
 private:

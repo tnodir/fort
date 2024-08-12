@@ -54,6 +54,9 @@ public:
     bool useSystemLocale() const { return valueBool("base/useSystemLocale", true); }
     void setUseSystemLocale(bool v) { setValue("base/useSystemLocale", v, true); }
 
+    bool excludeFromCapture() const { return valueBool("base/excludeFromCapture"); }
+    void setExcludeFromCapture(bool v) { setValue("base/excludeFromCapture", v); }
+
     QString theme() const { return valueText("base/theme"); }
     void setTheme(const QString &v) { setValue("base/theme", v); }
 
@@ -90,6 +93,8 @@ public:
     bool confirmQuit() const { return valueBool("confirm/quit", true); }
     void setConfirmQuit(bool v) { setValue("confirm/quit", v, true); }
 
+    static QString homeWindowGroup() { return "homeWindow"; }
+
     QRect homeWindowGeometry() const { return value("homeWindow/geometry").toRect(); }
     void setHomeWindowGeometry(const QRect &v) { setValue("homeWindow/geometry", v); }
 
@@ -98,6 +103,8 @@ public:
 
     bool homeWindowAutoShowMenu() const { return valueBool("homeWindow/autoShowMenu"); }
     void setHomeWindowAutoShowMenu(bool v) { setValue("homeWindow/autoShowMenu", v); }
+
+    static QString progWindowGroup() { return "progWindow"; }
 
     QRect progWindowGeometry() const { return value("progWindow/geometry").toRect(); }
     void setProgWindowGeometry(const QRect &v) { setValue("progWindow/geometry", v); }
@@ -117,6 +124,8 @@ public:
     QByteArray progAppsHeader() const { return valueByteArray("progWindow/appsHeader"); }
     void setProgAppsHeader(const QByteArray &v) { setValue("progWindow/appsHeader", v); }
 
+    static QString progAlertWindowGroup() { return "progAlertWindow"; }
+
     QRect progAlertWindowGeometry() const { return value("progAlertWindow/geometry").toRect(); }
     void setProgAlertWindowGeometry(const QRect &v) { setValue("progAlertWindow/geometry", v); }
 
@@ -129,6 +138,8 @@ public:
     bool progAlertWindowAlwaysOnTop() const { return valueBool("progAlertWindow/alwaysOnTop"); }
     void setProgAlertWindowAlwaysOnTop(bool on) { setValue("progAlertWindow/alwaysOnTop", on); }
 
+    static QString optWindowGroup() { return "optWindow"; }
+
     QRect optWindowGeometry() const { return value("optWindow/geometry").toRect(); }
     void setOptWindowGeometry(const QRect &v) { setValue("optWindow/geometry", v); }
 
@@ -140,6 +151,8 @@ public:
 
     QByteArray optWindowAppsSplit() const { return valueByteArray("optWindow/appsSplit"); }
     void setOptWindowAppsSplit(const QByteArray &v) { setValue("optWindow/appsSplit", v); }
+
+    static QString ruleWindowGroup() { return "ruleWindow"; }
 
     QRect ruleWindowGeometry() const { return value("ruleWindow/geometry").toRect(); }
     void setRuleWindowGeometry(const QRect &v) { setValue("ruleWindow/geometry", v); }
@@ -156,6 +169,8 @@ public:
     int rulesExpanded() const { return valueInt("ruleWindow/rulesExpanded", 0x01); }
     void setRulesExpanded(int v) { setValue("ruleWindow/rulesExpanded", v); }
 
+    static QString serviceWindowGroup() { return "serviceWindow"; }
+
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }
     void setServiceWindowGeometry(const QRect &v) { setValue("serviceWindow/geometry", v); }
 
@@ -167,6 +182,8 @@ public:
 
     QByteArray servicesHeader() const { return valueByteArray("serviceWindow/servicesHeader"); }
     void setServicesHeader(const QByteArray &v) { setValue("serviceWindow/servicesHeader", v); }
+
+    static QString zoneWindowGroup() { return "zoneWindow"; }
 
     QRect zoneWindowGeometry() const { return value("zoneWindow/geometry").toRect(); }
     void setZoneWindowGeometry(const QRect &v) { setValue("zoneWindow/geometry", v); }
@@ -180,6 +197,8 @@ public:
     QByteArray zonesHeader() const { return valueByteArray("zoneWindow/zonesHeader"); }
     void setZonesHeader(const QByteArray &v) { setValue("zoneWindow/zonesHeader", v); }
 
+    static QString graphWindowGroup() { return "graphWindow"; }
+
     constexpr bool graphWindowHideOnCloseDefault() const { return false; }
     bool graphWindowHideOnClose() const { return valueBool("graphWindow/hideOnClose"); }
     void setGraphWindowHideOnClose(bool on) { setValue("graphWindow/hideOnClose", on); }
@@ -192,6 +211,8 @@ public:
 
     bool graphWindowMaximized() const { return valueBool("graphWindow/maximized"); }
     void setGraphWindowMaximized(bool on) { setValue("graphWindow/maximized", on); }
+
+    static QString statWindowGroup() { return "statWindow"; }
 
     QRect statWindowGeometry() const { return value("statWindow/geometry").toRect(); }
     void setStatWindowGeometry(const QRect &v) { setValue("statWindow/geometry", v); }

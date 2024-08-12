@@ -1,8 +1,7 @@
 #ifndef SERVICESWINDOW_H
 #define SERVICESWINDOW_H
 
-#include <form/form_types.h>
-#include <util/window/widgetwindow.h>
+#include <form/controls/formwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
@@ -13,17 +12,16 @@ class ServiceInfoManager;
 class ServiceListModel;
 class ServicesController;
 class TableView;
-class WidgetWindowStateWatcher;
 class WindowManager;
 
-class ServicesWindow : public WidgetWindow
+class ServicesWindow : public FormWindow
 {
     Q_OBJECT
 
 public:
     explicit ServicesWindow(QWidget *parent = nullptr);
 
-    quint32 windowCode() const override { return WindowServices; }
+    WindowCode windowCode() const override { return WindowServices; }
 
     ServicesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;
@@ -37,7 +35,6 @@ public:
 
 private:
     void setupController();
-    void setupStateWatcher();
 
     void retranslateUi();
 
@@ -53,7 +50,6 @@ private:
 
 private:
     ServicesController *m_ctrl = nullptr;
-    WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 
     QAction *m_actTrack = nullptr;
     QAction *m_actRevert = nullptr;
