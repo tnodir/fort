@@ -117,5 +117,6 @@ void UserSettings::migrateIniOnWrite()
     // COMPAT: v3.13.6
     if (version < 0x031306) {
         removeIniKey("home/autoShowMenu");
+        ini()->setValue("homeWindow/autoShowMenu", cacheValue("homeWindow/autoShowMenu"));
     }
 }
