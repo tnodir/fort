@@ -2,6 +2,8 @@
 
 #include <QWindowStateChangeEvent>
 
+#include <util/osutil.h>
+
 WidgetWindow::WidgetWindow(QWidget *parent, Qt::WindowFlags f) : QWidget(parent, f) { }
 
 void WidgetWindow::showWindow(bool activate)
@@ -50,6 +52,11 @@ void WidgetWindow::exposeWidget(QWidget *w)
     w->show();
 
     w->activateWindow();
+}
+
+void WidgetWindow::excludeWindowFromCapture(QWidget *w, bool exclude)
+{
+    OsUtil::excludeWindowFromCapture(w, exclude);
 }
 
 void WidgetWindow::moveEvent(QMoveEvent *event)

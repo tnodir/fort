@@ -542,6 +542,8 @@ void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64>
 {
     if (!m_formAppEdit) {
         m_formAppEdit = new ProgramEditDialog(ctrl(), this);
+
+        m_formAppEdit->setExcludeFromCapture(this->excludeFromCapture());
     }
 
     m_formAppEdit->initialize(appRow, appIdList);

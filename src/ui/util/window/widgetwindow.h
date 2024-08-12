@@ -19,6 +19,7 @@ public:
 
     static void showWidget(QWidget *w, bool activate = true);
     static void exposeWidget(QWidget *w);
+    static void excludeWindowFromCapture(QWidget *w, bool exclude = true);
 
 signals:
     void activationChanged(bool isActive);

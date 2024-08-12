@@ -27,6 +27,9 @@ public:
 
     virtual WindowCode windowCode() const { return WindowNone; }
 
+    bool excludeFromCapture() const { return m_excludeFromCapture; }
+    void setExcludeFromCapture(bool v);
+
     WidgetWindowStateWatcher *stateWatcher() const { return m_stateWatcher; }
 
     virtual void saveWindowState(bool wasVisible) { Q_UNUSED(wasVisible); }
@@ -40,6 +43,8 @@ private:
     void setupWindowCapture(IniUser *iniUser, const QString &iniGroup);
 
 private:
+    bool m_excludeFromCapture = false;
+
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;
 };
 
