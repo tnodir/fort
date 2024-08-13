@@ -171,25 +171,26 @@ QStringList NetUtil::localIpNetworks()
 {
     static QStringList list = {
         "0.0.0.0/32", // non-routable meta-address
-        "10.0.0.0/8", //
-        "100.64.0.0/10", // for carrier-grade NAT deployment
+        "10.0.0.0/8", // Private use
+        "100.64.0.0/10", // Carrier-grade NAT deployment
         "127.0.0.0/8", // Loopback
-        "169.254.0.0/16", // if cannot obtain a network address via DHCP
-        "172.16.0.0/12", //
-        "192.168.0.0/16", //
+        "169.254.0.0/16", // Link Local (if cannot obtain a network address via DHCP)
+        "172.16.0.0/12", // Private use
+        "192.168.0.0/16", // Private use
+        "198.18.0.0/15", // Benchmarking
         "239.255.255.250/32", // IP Multicast for DLNA/UPNP
         "255.255.255.255/32", // IP Broadcast
         "::/0", // non-routable meta-address
-        "::/128", //
-        "::1/128", // Localhost
-        "::ffff:0:0/96", //
+        "::/128", // Unspecified Address
+        "::1/128", // Loopback
+        "::ffff:0:0/96", // IPv4-mapped Address
         "::ffff:0:0:0/96", //
-        "64:ff9b::/96", //
-        "100::/64", //
+        "64:ff9b::/96", // IPv4-IPv6 Translat.
+        "100::/64", // Discard-Only Address Block
         "2001::/32", // Global Unique Addresses (GUA) - Routable IPv6 addresses
-        "2001:20::/28", //
+        "2001:20::/28", // ORCHIDv2
         "2001:db8::/32", // Documentation prefix used for examples
-        "2002::/16", //
+        "2002::/16", // 6to4
         "fc00::/7", // Unique Local Addresses (ULA) - also known as “Private” IPv6 addresses
         "fe80::/10", // Link Local addresses, only valid inside a single broadcast domain
         "ff00::/8", // Multicast addresses
