@@ -14,7 +14,7 @@ sc stop %DRIVERSVC%
 @rem Remove the driver service
 sc delete %DRIVERSVC%
 @if ERRORLEVEL 1 (
-    @echo Error: Cannot delete a service (%DRIVERSVC%)
+    @echo Error: Cannot delete a service: %DRIVERSVC%
     @set RCODE=%ERRORLEVEL%
     @rem @goto EXIT
 )
