@@ -1139,6 +1139,14 @@ Make sure that you have a fresh backup.</source>
         <source>Block Traffic:</source>
         <translation>منع حركة المرور:</translation>
     </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

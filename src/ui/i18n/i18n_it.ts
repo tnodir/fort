@@ -1139,6 +1139,14 @@ Assicurati di avere un backup recente.</translation>
         <source>Block Traffic:</source>
         <translation>Blocca traffico:</translation>
     </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

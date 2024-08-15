@@ -1139,6 +1139,14 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source>Block Traffic:</source>
         <translation>Blokuj ruch:</translation>
     </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

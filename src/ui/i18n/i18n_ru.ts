@@ -1139,6 +1139,14 @@ Make sure that you have a fresh backup.</source>
         <source>Block Traffic:</source>
         <translation>Блокировка трафика:</translation>
     </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation>Локальная сеть</translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation>Фильтр локальной сети</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

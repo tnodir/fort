@@ -1139,6 +1139,14 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Block Traffic:</source>
         <translation>Datenverkehr blockieren:</translation>
     </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -967,7 +967,7 @@
     </message>
     <message>
         <source>Interface</source>
-        <translation>Rozhranie</translation>
+        <translation>Vmesnik</translation>
     </message>
 </context>
 <context>
@@ -1138,6 +1138,14 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Block Traffic:</source>
         <translation>Blokiraj promet:</translation>
+    </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation>Lokalno omrežje</translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation>Filtriraj lokalno omrežje</translation>
     </message>
 </context>
 <context>

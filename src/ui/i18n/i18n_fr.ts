@@ -1139,6 +1139,14 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <source>Block Traffic:</source>
         <translation>Bloquer tout le trafic:</translation>
     </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
