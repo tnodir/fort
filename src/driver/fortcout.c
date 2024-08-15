@@ -201,16 +201,21 @@ inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CA
     return fort_callout_ale_associate_flow(ca, cx, app_flags);
 }
 
-static BOOL fort_callout_ale_is_zone_blocked(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_DATA app_data)
+static BOOL fort_callout_ale_is_zone_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
+        PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
     const BOOL app_found = (app_data.flags.v != 0);
     if (!app_found)
         return FALSE;
 
     if (app_data.flags.lan_only) {
-        cx->block_reason = FORT_BLOCK_REASON_LAN_ONLY;
-        return TRUE; /* block LAN Only */
+        if (!conf_flags.filter_local_net
+                || fort_conf_ip_is_inet(&conf_ref->conf,
+                        (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
+                        &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
+            cx->block_reason = FORT_BLOCK_REASON_LAN_ONLY;
+            return TRUE; /* block LAN Only */
+        }
     }
 
     if (app_data.reject_zones != 0
@@ -249,7 +254,7 @@ inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALL
         return TRUE;
 
     /* Check LAN Only and Zones */
-    if (fort_callout_ale_is_zone_blocked(ca, cx, app_data))
+    if (fort_callout_ale_is_zone_blocked(ca, cx, conf_ref, conf_flags, app_data))
         return FALSE;
 
     /* Check the conf for a blocked app */
