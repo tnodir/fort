@@ -19,6 +19,7 @@
 #include "addressespage.h"
 #include "applicationspage.h"
 #include "graphpage.h"
+#include "ifacepage.h"
 #include "optionspage.h"
 #include "schedulepage.h"
 #include "statisticspage.h"
@@ -36,11 +37,12 @@ void OptMainPage::selectTab(int index)
 void OptMainPage::onRetranslateUi()
 {
     m_tabWidget->setTabText(0, tr("Options"));
-    m_tabWidget->setTabText(1, tr("IP Addresses"));
-    m_tabWidget->setTabText(2, tr("Application Groups"));
-    m_tabWidget->setTabText(3, tr("Statistics"));
-    m_tabWidget->setTabText(4, tr("Traffic Graph"));
-    m_tabWidget->setTabText(5, tr("Schedule"));
+    m_tabWidget->setTabText(1, tr("Interface"));
+    m_tabWidget->setTabText(2, tr("IP Addresses"));
+    m_tabWidget->setTabText(3, tr("Application Groups"));
+    m_tabWidget->setTabText(4, tr("Statistics"));
+    m_tabWidget->setTabText(5, tr("Traffic Graph"));
+    m_tabWidget->setTabText(6, tr("Schedule"));
 
     m_btBackup->setText(tr("Backup"));
     m_actExport->setText(tr("Export"));
@@ -74,18 +76,21 @@ void OptMainPage::setupUi()
 void OptMainPage::setupTabBar()
 {
     auto optionsPage = new OptionsPage(ctrl());
+    auto ifacePage = new IfacePage(ctrl());
     auto addressesPage = new AddressesPage(ctrl());
     auto applicationsPage = new ApplicationsPage(ctrl());
     auto statisticsPage = new StatisticsPage(ctrl());
     auto graphPage = new GraphPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
 
-    m_pages = { optionsPage, addressesPage, applicationsPage, statisticsPage, graphPage,
+    m_pages = { optionsPage, ifacePage, addressesPage, applicationsPage, statisticsPage, graphPage,
         schedulePage };
 
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(optionsPage),
             IconCache::icon(":/icons/cog.png"), QString());
+    m_tabWidget->addTab(ControlUtil::wrapToScrollArea(ifacePage),
+            IconCache::icon(":/icons/interface_preferences.png"), QString());
     m_tabWidget->addTab(addressesPage, IconCache::icon(":/icons/ip.png"), QString());
     m_tabWidget->addTab(
             applicationsPage, IconCache::icon(":/icons/application_double.png"), QString());
