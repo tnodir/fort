@@ -48,6 +48,7 @@ private:
     void setupPasswordLock();
     void setupProgBox();
     void setupLogBlocked();
+    void setupLanBox();
     void setupLogsBox();
 
 private:
@@ -59,18 +60,19 @@ private:
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbProtection = nullptr;
     QGroupBox *m_gbProg = nullptr;
+    QGroupBox *m_gbLan = nullptr;
     QGroupBox *m_gbLogs = nullptr;
 
     QLabel *m_labelStartMode = nullptr;
     QComboBox *m_comboAutoRun = nullptr;
     QCheckBox *m_cbService = nullptr;
+
     QCheckBox *m_cbFilterEnabled = nullptr;
     QLabel *m_labelBlockTraffic = nullptr;
     QComboBox *m_comboBlockTraffic = nullptr;
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
     QCheckBox *m_cbBootFilter = nullptr;
-    QCheckBox *m_cbFilterLocals = nullptr;
     QCheckBox *m_cbNoServiceControl = nullptr;
     QCheckBox *m_cbCheckPasswordOnUninstall = nullptr;
     QCheckBox *m_cbPassword = nullptr;
@@ -82,6 +84,9 @@ private:
     QCheckBox *m_cbAppAlertAutoShow = nullptr;
     QCheckBox *m_cbAppAlertAlwaysOnTop = nullptr;
     QCheckBox *m_cbPurgeOnMounted = nullptr;
+
+    QCheckBox *m_cbFilterLocals = nullptr;
+    QCheckBox *m_cbFilterLocalNet = nullptr;
 
     QCheckBox *m_cbLogDebug = nullptr;
     QCheckBox *m_cbLogConsole = nullptr;

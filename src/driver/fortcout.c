@@ -286,11 +286,12 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
         return TRUE; /* block all */
     }
 
-    if (!fort_conf_ip_is_inet(&conf_ref->conf,
-                (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
-                &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
+    if (!conf_flags.filter_local_net
+            && !fort_conf_ip_is_inet(&conf_ref->conf,
+                    (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
+                    &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
         cx->blocked = FALSE;
-        return TRUE; /* allow LocalNetwork */
+        return TRUE; /* allow Local Network */
     }
 
     if (conf_flags.block_inet_traffic) {

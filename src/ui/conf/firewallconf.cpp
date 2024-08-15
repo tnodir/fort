@@ -31,6 +31,11 @@ void FirewallConf::setFilterLocals(bool filterLocals)
     m_filterLocals = filterLocals;
 }
 
+void FirewallConf::setFilterLocalNet(bool filterLocalNet)
+{
+    m_filterLocalNet = filterLocalNet;
+}
+
 void FirewallConf::setBlockTraffic(bool blockTraffic)
 {
     m_blockTraffic = blockTraffic;
@@ -353,6 +358,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_bootFilter = o.bootFilter();
     m_filterEnabled = o.filterEnabled();
     m_filterLocals = o.filterLocals();
+    m_filterLocalNet = o.filterLocalNet();
     m_blockTraffic = o.blockTraffic();
     m_blockInetTraffic = o.blockInetTraffic();
     m_allowAllNew = o.allowAllNew();
@@ -400,6 +406,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["bootFilter"] = bootFilter();
     map["filterEnabled"] = filterEnabled();
     map["filterLocals"] = filterLocals();
+    map["filterLocalNet"] = filterLocalNet();
     map["blockTraffic"] = blockTraffic();
     map["blockInetTraffic"] = blockInetTraffic();
     map["allowAllNew"] = allowAllNew();
@@ -432,6 +439,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_bootFilter = map["bootFilter"].toBool();
     m_filterEnabled = map["filterEnabled"].toBool();
     m_filterLocals = map["filterLocals"].toBool();
+    m_filterLocalNet = map["filterLocalNet"].toBool();
     m_blockTraffic = map["blockTraffic"].toBool();
     m_blockInetTraffic = map["blockInetTraffic"].toBool();
     m_allowAllNew = map["allowAllNew"].toBool();

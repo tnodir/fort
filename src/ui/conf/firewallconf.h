@@ -52,6 +52,9 @@ public:
     bool filterLocals() const { return m_filterLocals; }
     void setFilterLocals(bool filterLocals);
 
+    bool filterLocalNet() const { return m_filterLocalNet; }
+    void setFilterLocalNet(bool filterLocalNet);
+
     bool blockTraffic() const { return m_blockTraffic; }
     void setBlockTraffic(bool blockTraffic);
 
@@ -185,6 +188,7 @@ private:
     uint m_bootFilter : 1 = false;
     uint m_filterEnabled : 1 = true;
     uint m_filterLocals : 1 = false;
+    uint m_filterLocalNet : 1 = false;
     uint m_blockTraffic : 1 = false;
     uint m_blockInetTraffic : 1 = false;
     uint m_allowAllNew : 1 = false;

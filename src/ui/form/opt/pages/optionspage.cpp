@@ -139,6 +139,7 @@ void OptionsPage::onRetranslateUi()
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbProtection->setTitle(tr("Self Protection"));
     m_gbProg->setTitle(tr("Programs"));
+    m_gbLan->setTitle(tr("Local Area Network"));
     m_gbLogs->setTitle(tr("Logs"));
 
     m_labelStartMode->setText(tr("Auto-run:"));
@@ -156,9 +157,6 @@ void OptionsPage::onRetranslateUi()
     retranslateComboFilterMode();
 
     m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
-    m_cbFilterLocals->setText(tr("Filter Local Addresses"));
-    m_cbFilterLocals->setToolTip(
-            tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbNoServiceControl->setText(tr("Disable Service controls"));
     m_cbCheckPasswordOnUninstall->setText(tr("Check password on Uninstall"));
 
@@ -173,6 +171,11 @@ void OptionsPage::onRetranslateUi()
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
     m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
+
+    m_cbFilterLocals->setText(tr("Filter Local Addresses") + " (127.0.0.0/8, 255.255.255.255)");
+    m_cbFilterLocals->setToolTip(
+            tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
+    m_cbFilterLocalNet->setText(tr("Filter Local Network"));
 
     m_cbLogDebug->setText(tr("Log debug messages"));
     m_cbLogConsole->setText(tr("Show log messages in console"));
@@ -286,12 +289,16 @@ QLayout *OptionsPage::setupColumn2()
     // Programs Group Box
     setupProgBox();
 
+    // LAN Group Box
+    setupLanBox();
+
     // Logs Group Box
     setupLogsBox();
 
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
     layout->addWidget(m_gbProg);
+    layout->addWidget(m_gbLan);
     layout->addWidget(m_gbLogs);
     layout->addStretch();
 
@@ -391,11 +398,6 @@ void OptionsPage::setupProtectionBox()
         ctrl()->setFlagsEdited();
     });
 
-    m_cbFilterLocals = ControlUtil::createCheckBox(conf()->filterLocals(), [&](bool checked) {
-        conf()->setFilterLocals(checked);
-        ctrl()->setFlagsEdited();
-    });
-
     m_cbNoServiceControl =
             ControlUtil::createCheckBox(ini()->noServiceControl(), [&](bool checked) {
                 ini()->setNoServiceControl(checked);
@@ -416,7 +418,6 @@ void OptionsPage::setupProtectionBox()
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbBootFilter);
-    layout->addWidget(m_cbFilterLocals);
     layout->addWidget(m_cbNoServiceControl);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addWidget(m_cbCheckPasswordOnUninstall);
@@ -532,6 +533,25 @@ void OptionsPage::setupLogBlocked()
     });
 
     m_cbLogBlocked->setFont(GuiUtil::fontBold());
+}
+
+void OptionsPage::setupLanBox()
+{
+    m_cbFilterLocals = ControlUtil::createCheckBox(conf()->filterLocals(), [&](bool checked) {
+        conf()->setFilterLocals(checked);
+        ctrl()->setFlagsEdited();
+    });
+
+    m_cbFilterLocalNet = ControlUtil::createCheckBox(conf()->filterLocalNet(), [&](bool checked) {
+        conf()->setFilterLocalNet(checked);
+        ctrl()->setFlagsEdited();
+    });
+
+    // Layout
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbFilterLocals, m_cbFilterLocalNet });
+
+    m_gbLan = new QGroupBox();
+    m_gbLan->setLayout(layout);
 }
 
 void OptionsPage::setupLogsBox()
