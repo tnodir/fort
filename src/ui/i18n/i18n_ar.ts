@@ -695,6 +695,181 @@
     </message>
 </context>
 <context>
+    <name>IfacePage</name>
+    <message>
+        <source>Global</source>
+        <translation>شامل</translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation>الاختصارات</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Fort الخاص بي</translation>
+    </message>
+    <message>
+        <source>Tray</source>
+        <translation>أيقونة الدُرج</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>التأكد عند تنفيذ الإجراءات:</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>الاندماج مع مسكتشف Windows</translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation>استخدام الإعدادات وفق النظام</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>اللغة:</translation>
+    </message>
+    <message>
+        <source>Theme:</source>
+        <translation>السمة:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>تفعيل</translation>
+    </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation>مفتاح الاختصار:</translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation>الاختصار:</translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation>عرض القائمة تلقائيًا</translation>
+    </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation>عرض شعار البرنامج عند التشغيل</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation>عرض أيقونة الدُرج (بجانب الساعة)</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation>تفعيل الحركة في أيقونة الدُرج</translation>
+    </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation>العدد الأقصى للمجموعات في القائمة:</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>الحدث:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>الإجراء:</translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>إشارة أيقونة الدُرج</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>خروج</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>النظام</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>فاتح</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>داكن</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>منع حركة المرور:</translation>
+    </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation>نمط المرّشح:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>نقرة واحدة</translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation>Ctrl + نقرة واحدة</translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation>Alt + نقرة واحدة</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>نقر مزدوج</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>نقر بالزر الأوسط</translation>
+    </message>
+    <message>
+        <source>Right Click</source>
+        <translation>نقرة بالزر الأيمن</translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation>عرض نافذة My Fort</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>عرض واجهة التطبيق</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation>عرض قائمة البرامج أو نافذة التحذير</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>عرض الإعدادات</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>عرض الإحصائيات</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>عرض / إخفاء مخطط حركة البيانات</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>تفعيل المرشّح</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>إظهار قائمة حظر حركة المرور</translation>
+    </message>
+    <message>
+        <source>Show Filter Mode Menu</source>
+        <translation>عرض قائمة أسلوب المرشّح</translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation>قائمة سياق أيقونة الدُرج</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>تجاهل</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -790,6 +965,10 @@
         <source>Reset to default current tab</source>
         <translation>استعادة الإعدادات الافتراضية للتبويب الحالي</translation>
     </message>
+    <message>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -841,10 +1020,6 @@ Make sure that you have a fresh backup.</source>
         <translation>حركة البيانات</translation>
     </message>
     <message>
-        <source>Global</source>
-        <translation>شامل</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>تفعيل المرشّح</translation>
     </message>
@@ -857,20 +1032,12 @@ Make sure that you have a fresh backup.</source>
         <translation>ترشيح العنوان الداخلي (127.0.0.0/8) و عناوين البث (255.255.255.255)</translation>
     </message>
     <message>
-        <source>Hot Keys</source>
-        <translation>الاختصارات</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>كلمة المرور:</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>قفل كلمة المرور (عدم الإقفال حتى &quot;%1&quot;)</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation>اللغة:</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -905,10 +1072,6 @@ Make sure that you have a fresh backup.</source>
         <translation>عرض سجلات تصحيح في مجه الأوامر</translation>
     </message>
     <message>
-        <source>Windows Explorer integration</source>
-        <translation>الاندماج مع مسكتشف Windows</translation>
-    </message>
-    <message>
         <source>Auto-run:</source>
         <translation>التشغيل التلقائي:</translation>
     </message>
@@ -917,80 +1080,8 @@ Make sure that you have a fresh backup.</source>
         <translation>تشغيل Fort Firewall كخدمة تعمل في الخلفية</translation>
     </message>
     <message>
-        <source>Tray</source>
-        <translation>أيقونة الدُرج</translation>
-    </message>
-    <message>
-        <source>Event:</source>
-        <translation>الحدث:</translation>
-    </message>
-    <message>
-        <source>Action:</source>
-        <translation>الإجراء:</translation>
-    </message>
-    <message>
-        <source>Single Click</source>
-        <translation>نقرة واحدة</translation>
-    </message>
-    <message>
-        <source>Double Click</source>
-        <translation>نقر مزدوج</translation>
-    </message>
-    <message>
-        <source>Middle Click</source>
-        <translation>نقر بالزر الأوسط</translation>
-    </message>
-    <message>
-        <source>Show Programs</source>
-        <translation>عرض واجهة التطبيق</translation>
-    </message>
-    <message>
-        <source>Show Options</source>
-        <translation>عرض الإعدادات</translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation>عرض الإحصائيات</translation>
-    </message>
-    <message>
-        <source>Show/Hide Traffic Graph</source>
-        <translation>عرض / إخفاء مخطط حركة البيانات</translation>
-    </message>
-    <message>
-        <source>Switch Filter Enabled</source>
-        <translation>تفعيل المرشّح</translation>
-    </message>
-    <message>
-        <source>Tray Menu Flags</source>
-        <translation>إشارة أيقونة الدُرج</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>خروج</translation>
-    </message>
-    <message>
-        <source>Action Confirmations</source>
-        <translation>التأكد عند تنفيذ الإجراءات:</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>نمط المرّشح:</translation>
-    </message>
-    <message>
-        <source>Right Click</source>
-        <translation>نقرة بالزر الأيمن</translation>
-    </message>
-    <message>
-        <source>Show Tray Menu</source>
-        <translation>قائمة سياق أيقونة الدُرج</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>تجاهل</translation>
-    </message>
-    <message>
-        <source>Animate Alert Icon</source>
-        <translation>تفعيل الحركة في أيقونة الدُرج</translation>
     </message>
     <message>
         <source>Self Protection</source>
@@ -1005,48 +1096,12 @@ Make sure that you have a fresh backup.</source>
         <translation>طلب كلمة المرور عند إزالة التثبيت</translation>
     </message>
     <message>
-        <source>Ctrl + Single Click</source>
-        <translation>Ctrl + نقرة واحدة</translation>
-    </message>
-    <message>
-        <source>Alt + Single Click</source>
-        <translation>Alt + نقرة واحدة</translation>
-    </message>
-    <message>
-        <source>Show Filter Mode Menu</source>
-        <translation>عرض قائمة أسلوب المرشّح</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>تفعيل</translation>
-    </message>
-    <message>
-        <source>Show Icon</source>
-        <translation>عرض أيقونة الدُرج (بجانب الساعة)</translation>
-    </message>
-    <message>
-        <source>Show My Fort</source>
-        <translation>عرض نافذة My Fort</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>البرامج التي تحاول الاتصال</translation>
     </message>
     <message>
-        <source>My Fort</source>
-        <translation>Fort الخاص بي</translation>
-    </message>
-    <message>
-        <source>Auto-Show Menu</source>
-        <translation>عرض القائمة تلقائيًا</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>حظر اتصال الشبكة عندما يكون الجدار الناري متوقفًا</translation>
-    </message>
-    <message>
-        <source>Use System Regional Settings</source>
-        <translation>استخدام الإعدادات وفق النظام</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1055,10 +1110,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Collect New Programs</source>
         <translation>اكتشاف أي برنامج جديد يحاول استخدام الشبكة</translation>
-    </message>
-    <message>
-        <source>Maximum count of Groups in menu:</source>
-        <translation>العدد الأقصى للمجموعات في القائمة:</translation>
     </message>
     <message>
         <source>Windows Service</source>
@@ -1073,10 +1124,6 @@ Make sure that you have a fresh backup.</source>
         <translation>تم تغيير وضع تثبيت خدمة الوندوز.</translation>
     </message>
     <message>
-        <source>Show Programs Or Alert Window</source>
-        <translation>عرض قائمة البرامج أو نافذة التحذير</translation>
-    </message>
-    <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>عرض نافذة تحذير عند محاولة برنامج جديد الاتصال بالشبكة</translation>
     </message>
@@ -1085,44 +1132,12 @@ Make sure that you have a fresh backup.</source>
         <translation>جعل نافذة التحذير في مقدمة النوافذ دائمًا</translation>
     </message>
     <message>
-        <source>Show Splash screen on startup</source>
-        <translation>عرض شعار البرنامج عند التشغيل</translation>
-    </message>
-    <message>
-        <source>Hot Key:</source>
-        <translation>مفتاح الاختصار:</translation>
-    </message>
-    <message>
-        <source>Shortcut:</source>
-        <translation>الاختصار:</translation>
-    </message>
-    <message>
-        <source>Theme:</source>
-        <translation>السمة:</translation>
-    </message>
-    <message>
-        <source>System</source>
-        <translation>النظام</translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation>فاتح</translation>
-    </message>
-    <message>
-        <source>Dark</source>
-        <translation>داكن</translation>
-    </message>
-    <message>
         <source>The change will be applied only on program exit.</source>
         <translation>سيتم تطبيق التغيير فقط عند الخروج من البرنامج.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
         <translation>منع حركة المرور:</translation>
-    </message>
-    <message>
-        <source>Show Block Traffic Menu</source>
-        <translation>إظهار قائمة حظر حركة المرور</translation>
     </message>
 </context>
 <context>

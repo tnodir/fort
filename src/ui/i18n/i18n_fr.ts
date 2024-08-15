@@ -695,6 +695,181 @@
     </message>
 </context>
 <context>
+    <name>IfacePage</name>
+    <message>
+        <source>Global</source>
+        <translation>Global</translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation>Raccourcis clavier</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Mon Fort</translation>
+    </message>
+    <message>
+        <source>Tray</source>
+        <translation>Barre de programme</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>Confirmation des actions</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Intégration de l&apos;Explorateur Windows</translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation>Utiliser les paramètres régionaux du système</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>Langage:</translation>
+    </message>
+    <message>
+        <source>Theme:</source>
+        <translation>Thème :</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Activé</translation>
+    </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation>Raccourcis clavier:</translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation>Raccourci:</translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation>Affichage automatique du menu</translation>
+    </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation>Afficher l&apos;écran d&apos;accueil au démarrage</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation>Afficher l&apos;icône</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation>Icône d&apos;alerte animée</translation>
+    </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation>Nombre maximum de groupes dans le menu :</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>Événement:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Action :</translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>Drapeaux du menu de la barre d&apos;outils</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Quitter</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Système</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Clair</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Sombre</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>Bloquer tout le trafic:</translation>
+    </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation>Mode de filtrage&#xa0;:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>Simple-Clic</translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation>Ctrl + Simple-Clic</translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation>Alt + Simple-Clic</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>Double-clic</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>Clic du milieu</translation>
+    </message>
+    <message>
+        <source>Right Click</source>
+        <translation>Clic Droit</translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation>Afficher mon Fort</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>Afficher les programmes</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation>Afficher la fenêtre Programmes ou Alertes</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>Afficher les options</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>Afficher les statistiques</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>Afficher/Masquer graphique du trafic</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>Commutateur Filtre activé</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>Afficher le menu Bloquer le trafic</translation>
+    </message>
+    <message>
+        <source>Show Filter Mode Menu</source>
+        <translation>Afficher le menu Mode Filtre</translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation>Afficher le menu de la barre d&apos;état</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Ignorer</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -790,6 +965,10 @@
         <source>Reset to default current tab</source>
         <translation>Rétablir l&apos;onglet actuel par défaut</translation>
     </message>
+    <message>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -841,10 +1020,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Trafic</translation>
     </message>
     <message>
-        <source>Global</source>
-        <translation>Global</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>Filtre activé</translation>
     </message>
@@ -857,20 +1032,12 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Filtrer les adresses de bouclage local (127.0.0.0/8) et de diffusion (255.255.255.255)</translation>
     </message>
     <message>
-        <source>Hot Keys</source>
-        <translation>Raccourcis clavier</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>Mot de Passe:</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>Verrouiller mot de passe (déverrouillé jusqu&apos;à &quot;%1&quot;)</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation>Langage:</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -905,10 +1072,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Afficher les messages du journal dans la console</translation>
     </message>
     <message>
-        <source>Windows Explorer integration</source>
-        <translation>Intégration de l&apos;Explorateur Windows</translation>
-    </message>
-    <message>
         <source>Auto-run:</source>
         <translation>Exécution automatique:</translation>
     </message>
@@ -917,80 +1080,8 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Exécutez Fort Firewall en tant que service en arrière-plan</translation>
     </message>
     <message>
-        <source>Tray</source>
-        <translation>Barre de programme</translation>
-    </message>
-    <message>
-        <source>Event:</source>
-        <translation>Événement:</translation>
-    </message>
-    <message>
-        <source>Action:</source>
-        <translation>Action :</translation>
-    </message>
-    <message>
-        <source>Single Click</source>
-        <translation>Simple-Clic</translation>
-    </message>
-    <message>
-        <source>Double Click</source>
-        <translation>Double-clic</translation>
-    </message>
-    <message>
-        <source>Middle Click</source>
-        <translation>Clic du milieu</translation>
-    </message>
-    <message>
-        <source>Show Programs</source>
-        <translation>Afficher les programmes</translation>
-    </message>
-    <message>
-        <source>Show Options</source>
-        <translation>Afficher les options</translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation>Afficher les statistiques</translation>
-    </message>
-    <message>
-        <source>Show/Hide Traffic Graph</source>
-        <translation>Afficher/Masquer graphique du trafic</translation>
-    </message>
-    <message>
-        <source>Switch Filter Enabled</source>
-        <translation>Commutateur Filtre activé</translation>
-    </message>
-    <message>
-        <source>Tray Menu Flags</source>
-        <translation>Drapeaux du menu de la barre d&apos;outils</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>Quitter</translation>
-    </message>
-    <message>
-        <source>Action Confirmations</source>
-        <translation>Confirmation des actions</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>Mode de filtrage&#xa0;:</translation>
-    </message>
-    <message>
-        <source>Right Click</source>
-        <translation>Clic Droit</translation>
-    </message>
-    <message>
-        <source>Show Tray Menu</source>
-        <translation>Afficher le menu de la barre d&apos;état</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>Ignorer</translation>
-    </message>
-    <message>
-        <source>Animate Alert Icon</source>
-        <translation>Icône d&apos;alerte animée</translation>
     </message>
     <message>
         <source>Self Protection</source>
@@ -1005,48 +1096,12 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Vérifier le mot de passe lors de la désinstallation</translation>
     </message>
     <message>
-        <source>Ctrl + Single Click</source>
-        <translation>Ctrl + Simple-Clic</translation>
-    </message>
-    <message>
-        <source>Alt + Single Click</source>
-        <translation>Alt + Simple-Clic</translation>
-    </message>
-    <message>
-        <source>Show Filter Mode Menu</source>
-        <translation>Afficher le menu Mode Filtre</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Activé</translation>
-    </message>
-    <message>
-        <source>Show Icon</source>
-        <translation>Afficher l&apos;icône</translation>
-    </message>
-    <message>
-        <source>Show My Fort</source>
-        <translation>Afficher mon Fort</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programmes</translation>
     </message>
     <message>
-        <source>My Fort</source>
-        <translation>Mon Fort</translation>
-    </message>
-    <message>
-        <source>Auto-Show Menu</source>
-        <translation>Affichage automatique du menu</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Bloquer le trafic lorsque Fort Firewall ne fonctionne pas</translation>
-    </message>
-    <message>
-        <source>Use System Regional Settings</source>
-        <translation>Utiliser les paramètres régionaux du système</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1055,10 +1110,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <message>
         <source>Collect New Programs</source>
         <translation>Collecter de nouveaux programmes</translation>
-    </message>
-    <message>
-        <source>Maximum count of Groups in menu:</source>
-        <translation>Nombre maximum de groupes dans le menu :</translation>
     </message>
     <message>
         <source>Windows Service</source>
@@ -1073,10 +1124,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Installation du service Windows changée.</translation>
     </message>
     <message>
-        <source>Show Programs Or Alert Window</source>
-        <translation>Afficher la fenêtre Programmes ou Alertes</translation>
-    </message>
-    <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>Affichage auto de la fenêtre d&apos;alerte pour les nouveaux programmes</translation>
     </message>
@@ -1085,44 +1132,12 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>La fenêtre d&apos;alerte est toujours visible</translation>
     </message>
     <message>
-        <source>Show Splash screen on startup</source>
-        <translation>Afficher l&apos;écran d&apos;accueil au démarrage</translation>
-    </message>
-    <message>
-        <source>Hot Key:</source>
-        <translation>Raccourcis clavier:</translation>
-    </message>
-    <message>
-        <source>Shortcut:</source>
-        <translation>Raccourci:</translation>
-    </message>
-    <message>
-        <source>Theme:</source>
-        <translation>Thème :</translation>
-    </message>
-    <message>
-        <source>System</source>
-        <translation>Système</translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation>Clair</translation>
-    </message>
-    <message>
-        <source>Dark</source>
-        <translation>Sombre</translation>
-    </message>
-    <message>
         <source>The change will be applied only on program exit.</source>
         <translation>Le changement ne sera appliqué qu&apos;à la sortie du programme.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
         <translation>Bloquer tout le trafic:</translation>
-    </message>
-    <message>
-        <source>Show Block Traffic Menu</source>
-        <translation>Afficher le menu Bloquer le trafic</translation>
     </message>
 </context>
 <context>

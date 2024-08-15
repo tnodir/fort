@@ -695,6 +695,181 @@
     </message>
 </context>
 <context>
+    <name>IfacePage</name>
+    <message>
+        <source>Global</source>
+        <translation>Глобально</translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation>Горячие клавиши</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Мой Форт</translation>
+    </message>
+    <message>
+        <source>Tray</source>
+        <translation>Трей</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>Подтверждения действий</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Интеграция с Windows Explorer</translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation>Использовать системные региональные настройки</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>Язык:</translation>
+    </message>
+    <message>
+        <source>Theme:</source>
+        <translation>Тема:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Включено</translation>
+    </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation>Горячая клавиша:</translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation>Комбинация клавиш:</translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation>Авто-показ Меню</translation>
+    </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation>Показ Заставки при старте</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation>Показать Иконку</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation>Анимировать иконку оповещения</translation>
+    </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation>Макс. количество групп в меню:</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>Событие:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Действие:</translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>Флаги из меню трея</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Выход из программы</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Системная</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Светлая</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Тёмная</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>Блокировка трафика:</translation>
+    </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation>Режим фильтра:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>Единичное нажатие</translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation>Ctrl + Единичное нажатие</translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation>Alt + Единичное нажатие</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>Двойное нажатие</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>Нажатие средней кнопки</translation>
+    </message>
+    <message>
+        <source>Right Click</source>
+        <translation>Нажатие правой кнопки</translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation>Показать Мой Форт</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>Показать Программы</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation>Показать Программы или Окно Оповещения</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>Показать Опции</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>Показать Статистику</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>Показать/Скрыть График трафика</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>Переключить &quot;Фильтр включен&quot;</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>Показать меню Блокировки трафика</translation>
+    </message>
+    <message>
+        <source>Show Filter Mode Menu</source>
+        <translation>Показать меню Режима фильтра</translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation>Показать меню</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Игнорировать</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -790,6 +965,10 @@
         <source>Reset to default current tab</source>
         <translation>Сброс опций текущей вкладки</translation>
     </message>
+    <message>
+        <source>Interface</source>
+        <translation>Интерфейс</translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -841,10 +1020,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Трафик</translation>
     </message>
     <message>
-        <source>Global</source>
-        <translation>Глобально</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>Фильтр включен</translation>
     </message>
@@ -857,20 +1032,12 @@ Make sure that you have a fresh backup.</source>
         <translation>Фильтр локальных Loopback (127.0.0.0/8) и Broadcast (255.255.255.255) адресов</translation>
     </message>
     <message>
-        <source>Hot Keys</source>
-        <translation>Горячие клавиши</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>Заблокировать пароль (разблокировано до &quot;%1&quot;)</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation>Язык:</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -905,10 +1072,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Логи в консоле</translation>
     </message>
     <message>
-        <source>Windows Explorer integration</source>
-        <translation>Интеграция с Windows Explorer</translation>
-    </message>
-    <message>
         <source>Auto-run:</source>
         <translation>Авто-запуск</translation>
     </message>
@@ -917,80 +1080,8 @@ Make sure that you have a fresh backup.</source>
         <translation>Запускать Fort Firewall как Службу в фоне</translation>
     </message>
     <message>
-        <source>Tray</source>
-        <translation>Трей</translation>
-    </message>
-    <message>
-        <source>Event:</source>
-        <translation>Событие:</translation>
-    </message>
-    <message>
-        <source>Action:</source>
-        <translation>Действие:</translation>
-    </message>
-    <message>
-        <source>Single Click</source>
-        <translation>Единичное нажатие</translation>
-    </message>
-    <message>
-        <source>Double Click</source>
-        <translation>Двойное нажатие</translation>
-    </message>
-    <message>
-        <source>Middle Click</source>
-        <translation>Нажатие средней кнопки</translation>
-    </message>
-    <message>
-        <source>Show Programs</source>
-        <translation>Показать Программы</translation>
-    </message>
-    <message>
-        <source>Show Options</source>
-        <translation>Показать Опции</translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation>Показать Статистику</translation>
-    </message>
-    <message>
-        <source>Show/Hide Traffic Graph</source>
-        <translation>Показать/Скрыть График трафика</translation>
-    </message>
-    <message>
-        <source>Switch Filter Enabled</source>
-        <translation>Переключить &quot;Фильтр включен&quot;</translation>
-    </message>
-    <message>
-        <source>Tray Menu Flags</source>
-        <translation>Флаги из меню трея</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>Выход из программы</translation>
-    </message>
-    <message>
-        <source>Action Confirmations</source>
-        <translation>Подтверждения действий</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>Режим фильтра:</translation>
-    </message>
-    <message>
-        <source>Right Click</source>
-        <translation>Нажатие правой кнопки</translation>
-    </message>
-    <message>
-        <source>Show Tray Menu</source>
-        <translation>Показать меню</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>Игнорировать</translation>
-    </message>
-    <message>
-        <source>Animate Alert Icon</source>
-        <translation>Анимировать иконку оповещения</translation>
     </message>
     <message>
         <source>Self Protection</source>
@@ -1005,48 +1096,12 @@ Make sure that you have a fresh backup.</source>
         <translation>Проверить пароль при деинсталляции</translation>
     </message>
     <message>
-        <source>Ctrl + Single Click</source>
-        <translation>Ctrl + Единичное нажатие</translation>
-    </message>
-    <message>
-        <source>Alt + Single Click</source>
-        <translation>Alt + Единичное нажатие</translation>
-    </message>
-    <message>
-        <source>Show Filter Mode Menu</source>
-        <translation>Показать меню Режима фильтра</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Включено</translation>
-    </message>
-    <message>
-        <source>Show Icon</source>
-        <translation>Показать Иконку</translation>
-    </message>
-    <message>
-        <source>Show My Fort</source>
-        <translation>Показать Мой Форт</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Программы</translation>
     </message>
     <message>
-        <source>My Fort</source>
-        <translation>Мой Форт</translation>
-    </message>
-    <message>
-        <source>Auto-Show Menu</source>
-        <translation>Авто-показ Меню</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Блокировать трафик, когда Fort Firewall не запущен</translation>
-    </message>
-    <message>
-        <source>Use System Regional Settings</source>
-        <translation>Использовать системные региональные настройки</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1055,10 +1110,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Collect New Programs</source>
         <translation>Собирать новые программы</translation>
-    </message>
-    <message>
-        <source>Maximum count of Groups in menu:</source>
-        <translation>Макс. количество групп в меню:</translation>
     </message>
     <message>
         <source>Windows Service</source>
@@ -1073,10 +1124,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Установка Службы Windows изменена.</translation>
     </message>
     <message>
-        <source>Show Programs Or Alert Window</source>
-        <translation>Показать Программы или Окно Оповещения</translation>
-    </message>
-    <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>Авто-показ Окна Оповещения для новых программ</translation>
     </message>
@@ -1085,44 +1132,12 @@ Make sure that you have a fresh backup.</source>
         <translation>Окно Оповещения всегда сверху</translation>
     </message>
     <message>
-        <source>Show Splash screen on startup</source>
-        <translation>Показ Заставки при старте</translation>
-    </message>
-    <message>
-        <source>Hot Key:</source>
-        <translation>Горячая клавиша:</translation>
-    </message>
-    <message>
-        <source>Shortcut:</source>
-        <translation>Комбинация клавиш:</translation>
-    </message>
-    <message>
-        <source>Theme:</source>
-        <translation>Тема:</translation>
-    </message>
-    <message>
-        <source>System</source>
-        <translation>Системная</translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation>Светлая</translation>
-    </message>
-    <message>
-        <source>Dark</source>
-        <translation>Тёмная</translation>
-    </message>
-    <message>
         <source>The change will be applied only on program exit.</source>
         <translation>Изменение будет применено только при выходе из программы.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
         <translation>Блокировка трафика:</translation>
-    </message>
-    <message>
-        <source>Show Block Traffic Menu</source>
-        <translation>Показать меню Блокировки трафика</translation>
     </message>
 </context>
 <context>

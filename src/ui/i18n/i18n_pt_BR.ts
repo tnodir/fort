@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Zones</source>
-        <translation type="unfinished">Zonas</translation>
+        <translation>Zonas</translation>
     </message>
 </context>
 <context>
@@ -268,11 +268,11 @@
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Opções</translation>
+        <translation>Opções</translation>
     </message>
     <message>
         <source>Clear</source>
-        <translation type="unfinished">Limpar</translation>
+        <translation>Limpar</translation>
     </message>
 </context>
 <context>
@@ -447,7 +447,7 @@
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Opções</translation>
+        <translation>Opções</translation>
     </message>
 </context>
 <context>
@@ -481,7 +481,7 @@
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">Desativado</translation>
+        <translation>Desativado</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
@@ -512,7 +512,7 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation type="unfinished">Por favor, primeiro instale o Fort Firewall v%1 e salve as Opções.</translation>
+        <translation>Por favor, primeiro instale o Fort Firewall v%1 e salve as Opções.</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
@@ -695,6 +695,181 @@
     </message>
 </context>
 <context>
+    <name>IfacePage</name>
+    <message>
+        <source>Global</source>
+        <translation>Global</translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation>Teclas de Atalho</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tray</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Integração com Windows Explorer</translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>Idioma:</translation>
+    </message>
+    <message>
+        <source>Theme:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation type="unfinished">Ativado</translation>
+    </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Sair</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Right Click</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Filter Mode Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -790,6 +965,10 @@
         <source>Reset to default current tab</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -839,10 +1018,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Tráfego</translation>
     </message>
     <message>
-        <source>Global</source>
-        <translation>Global</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>Filtro Ativado</translation>
     </message>
@@ -855,20 +1030,12 @@ Make sure that you have a fresh backup.</source>
         <translation>Filtrar Endereços de Loopback Local (127.0.0.0/8) e Transmissão (255.255.255.255)</translation>
     </message>
     <message>
-        <source>Hot Keys</source>
-        <translation>Teclas de Atalho</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>Senha:</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>Bloquear a senha (desbloqueado até &quot;%1&quot;)</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation>Idioma:</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -903,10 +1070,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Mostrar registro de mensagens no console</translation>
     </message>
     <message>
-        <source>Windows Explorer integration</source>
-        <translation>Integração com Windows Explorer</translation>
-    </message>
-    <message>
         <source>Auto-run:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -915,79 +1078,7 @@ Make sure that you have a fresh backup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Tray</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Action Confirmations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Event:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Action:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Tray Menu Flags</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>Sair</translation>
-    </message>
-    <message>
-        <source>Single Click</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Double Click</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Middle Click</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Programs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show/Hide Traffic Graph</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Switch Filter Enabled</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Right Click</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Tray Menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Animate Alert Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1003,47 +1094,11 @@ Make sure that you have a fresh backup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Ctrl + Single Click</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alt + Single Click</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Filter Mode Menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Ativado</translation>
-    </message>
-    <message>
-        <source>Show Icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show My Fort</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programas</translation>
     </message>
     <message>
-        <source>My Fort</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Auto-Show Menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Use System Regional Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1053,10 +1108,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Collect New Programs</source>
         <translation>Colete Novos Programas</translation>
-    </message>
-    <message>
-        <source>Maximum count of Groups in menu:</source>
-        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Windows Service</source>
@@ -1071,10 +1122,6 @@ Make sure that you have a fresh backup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show Programs Or Alert Window</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1083,43 +1130,11 @@ Make sure that you have a fresh backup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Show Splash screen on startup</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Hot Key:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Shortcut:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Theme:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>System</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Dark</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The change will be applied only on program exit.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Show Block Traffic Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1165,15 +1180,15 @@ Do you want to open a discussion thread in browser?</source>
     <name>PortRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
-        <translation type="unfinished">Erro na linha %1: %2 (%3)</translation>
+        <translation>Erro na linha %1: %2 (%3)</translation>
     </message>
     <message>
         <source>Bad format</source>
-        <translation type="unfinished">Formato impróprio</translation>
+        <translation>Formato impróprio</translation>
     </message>
     <message>
         <source>Bad range</source>
-        <translation type="unfinished">Alcance impróprio</translation>
+        <translation>Alcance impróprio</translation>
     </message>
     <message>
         <source>Bad Port</source>
@@ -1302,11 +1317,11 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source># Examples:</source>
-        <translation type="unfinished"># Exemplos:</translation>
+        <translation># Exemplos:</translation>
     </message>
     <message>
         <source># All programs in the sub-path:</source>
-        <translation type="unfinished"># Todos os programas no sub-caminho:</translation>
+        <translation># Todos os programas no sub-caminho:</translation>
     </message>
     <message>
         <source># Name wildcard:</source>
@@ -1350,7 +1365,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Schedule</source>
-        <translation type="unfinished">Intervalo de Tempo</translation>
+        <translation>Intervalo de Tempo</translation>
     </message>
     <message>
         <source>5 minutes</source>
@@ -1531,15 +1546,15 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished">Ativado</translation>
+        <translation>Ativado</translation>
     </message>
     <message>
         <source>Allow</source>
-        <translation type="unfinished">Permitir</translation>
+        <translation>Permitir</translation>
     </message>
     <message>
         <source>Block</source>
-        <translation type="unfinished">Bloquear</translation>
+        <translation>Bloquear</translation>
     </message>
     <message>
         <source>Exclusive</source>
@@ -1547,11 +1562,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Cancelar</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <source>Edit Rule</source>
@@ -1563,7 +1578,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source># Examples:</source>
-        <translation type="unfinished"># Exemplos:</translation>
+        <translation># Exemplos:</translation>
     </message>
     <message>
         <source># IP address and port:</source>
@@ -1575,7 +1590,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished">Remover</translation>
+        <translation>Remover</translation>
     </message>
     <message>
         <source>Move Up</source>
@@ -1655,15 +1670,15 @@ Please restart the running program to take effect of this option.</source>
     <name>RulesWindow</name>
     <message>
         <source>Edit</source>
-        <translation type="unfinished">Editar</translation>
+        <translation>Editar</translation>
     </message>
     <message>
         <source>Add</source>
-        <translation type="unfinished">Adicionar</translation>
+        <translation>Adicionar</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation type="unfinished">Remover</translation>
+        <translation>Remover</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -1679,11 +1694,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">Ok</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Cancelar</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <source>Select Rule</source>
@@ -1795,7 +1810,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Opções</translation>
+        <translation>Opções</translation>
     </message>
 </context>
 <context>
@@ -2214,11 +2229,11 @@ Please restart the running program to take effect of this option.</source>
     <name>ZonesSelector</name>
     <message>
         <source>Select Zones</source>
-        <translation type="unfinished">Selecionar Zonas</translation>
+        <translation>Selecionar Zonas</translation>
     </message>
     <message>
         <source>Zones</source>
-        <translation type="unfinished">Zonas</translation>
+        <translation>Zonas</translation>
     </message>
 </context>
 <context>

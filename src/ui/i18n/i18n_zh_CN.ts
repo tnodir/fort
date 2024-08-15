@@ -695,6 +695,181 @@
     </message>
 </context>
 <context>
+    <name>IfacePage</name>
+    <message>
+        <source>Global</source>
+        <translation>全局配置</translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation>快捷键</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>我的堡垒</translation>
+    </message>
+    <message>
+        <source>Tray</source>
+        <translation>系统托盘</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>操作确认</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Windows 资源管理器整合</translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation>使用系统地区设置</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>语言</translation>
+    </message>
+    <message>
+        <source>Theme:</source>
+        <translation>主题：</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>已启用</translation>
+    </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation>快捷键:</translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation>快捷键:</translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation>自动显示菜单</translation>
+    </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation>启动时显示启动画面</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation>显示图标</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation>动画提示图标</translation>
+    </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation>菜单中最大组的数量：</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>事件</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>操作：</translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>托盘菜单标记</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>退出</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>系统</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>亮色主题</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>深色主题</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>阻止流量:</translation>
+    </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation>过滤模式：</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>单击</translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation>Ctrl + 单击</translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation>Alt + 单击</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>双击</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>中键点击</translation>
+    </message>
+    <message>
+        <source>Right Click</source>
+        <translation>右键点击</translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation>显示我的堡垒</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>显示程序</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation>显示程序或提醒窗口</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>显示选项</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>显示统计</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>显示/隐藏流量图</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>开关过滤器启用</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>显示阻止流量菜单</translation>
+    </message>
+    <message>
+        <source>Show Filter Mode Menu</source>
+        <translation>显示过滤模式菜单</translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation>显示托盘菜单</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>忽略</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -790,6 +965,10 @@
         <source>Reset to default current tab</source>
         <translation>重置当前标签页至默认值</translation>
     </message>
+    <message>
+        <source>Interface</source>
+        <translation>界面</translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -839,10 +1018,6 @@ Make sure that you have a fresh backup.</source>
         <translation>数据流量</translation>
     </message>
     <message>
-        <source>Global</source>
-        <translation>全局配置</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>过滤器已启用</translation>
     </message>
@@ -855,20 +1030,12 @@ Make sure that you have a fresh backup.</source>
         <translation>过滤本地回路(127.0.0.0/8)和广播(255.255.255)地址</translation>
     </message>
     <message>
-        <source>Hot Keys</source>
-        <translation>快捷键</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>密码:</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>锁定密码(解锁到 &quot;%1&quot;)</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation>语言</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -903,10 +1070,6 @@ Make sure that you have a fresh backup.</source>
         <translation>在控制台中显示日志消息</translation>
     </message>
     <message>
-        <source>Windows Explorer integration</source>
-        <translation>Windows 资源管理器整合</translation>
-    </message>
-    <message>
         <source>Auto-run:</source>
         <translation>自动运行：</translation>
     </message>
@@ -915,80 +1078,8 @@ Make sure that you have a fresh backup.</source>
         <translation>在后台运行堡垒防火墙</translation>
     </message>
     <message>
-        <source>Tray</source>
-        <translation>系统托盘</translation>
-    </message>
-    <message>
-        <source>Event:</source>
-        <translation>事件</translation>
-    </message>
-    <message>
-        <source>Action:</source>
-        <translation>操作：</translation>
-    </message>
-    <message>
-        <source>Single Click</source>
-        <translation>单击</translation>
-    </message>
-    <message>
-        <source>Double Click</source>
-        <translation>双击</translation>
-    </message>
-    <message>
-        <source>Middle Click</source>
-        <translation>中键点击</translation>
-    </message>
-    <message>
-        <source>Show Programs</source>
-        <translation>显示程序</translation>
-    </message>
-    <message>
-        <source>Show Options</source>
-        <translation>显示选项</translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation>显示统计</translation>
-    </message>
-    <message>
-        <source>Show/Hide Traffic Graph</source>
-        <translation>显示/隐藏流量图</translation>
-    </message>
-    <message>
-        <source>Switch Filter Enabled</source>
-        <translation>开关过滤器启用</translation>
-    </message>
-    <message>
-        <source>Tray Menu Flags</source>
-        <translation>托盘菜单标记</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>退出</translation>
-    </message>
-    <message>
-        <source>Action Confirmations</source>
-        <translation>操作确认</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>过滤模式：</translation>
-    </message>
-    <message>
-        <source>Right Click</source>
-        <translation>右键点击</translation>
-    </message>
-    <message>
-        <source>Show Tray Menu</source>
-        <translation>显示托盘菜单</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>忽略</translation>
-    </message>
-    <message>
-        <source>Animate Alert Icon</source>
-        <translation>动画提示图标</translation>
     </message>
     <message>
         <source>Self Protection</source>
@@ -1003,48 +1094,12 @@ Make sure that you have a fresh backup.</source>
         <translation>卸载时检查密码</translation>
     </message>
     <message>
-        <source>Ctrl + Single Click</source>
-        <translation>Ctrl + 单击</translation>
-    </message>
-    <message>
-        <source>Alt + Single Click</source>
-        <translation>Alt + 单击</translation>
-    </message>
-    <message>
-        <source>Show Filter Mode Menu</source>
-        <translation>显示过滤模式菜单</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>已启用</translation>
-    </message>
-    <message>
-        <source>Show Icon</source>
-        <translation>显示图标</translation>
-    </message>
-    <message>
-        <source>Show My Fort</source>
-        <translation>显示我的堡垒</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>程序</translation>
     </message>
     <message>
-        <source>My Fort</source>
-        <translation>我的堡垒</translation>
-    </message>
-    <message>
-        <source>Auto-Show Menu</source>
-        <translation>自动显示菜单</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>当堡垒防火墙未运行时阻止流量</translation>
-    </message>
-    <message>
-        <source>Use System Regional Settings</source>
-        <translation>使用系统地区设置</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1053,10 +1108,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Collect New Programs</source>
         <translation>收集新程序</translation>
-    </message>
-    <message>
-        <source>Maximum count of Groups in menu:</source>
-        <translation>菜单中最大组的数量：</translation>
     </message>
     <message>
         <source>Windows Service</source>
@@ -1071,10 +1122,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Windows 服务安装已更改。</translation>
     </message>
     <message>
-        <source>Show Programs Or Alert Window</source>
-        <translation>显示程序或提醒窗口</translation>
-    </message>
-    <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>自动显示新程序的提醒窗口</translation>
     </message>
@@ -1083,44 +1130,12 @@ Make sure that you have a fresh backup.</source>
         <translation>提醒窗口始终置顶</translation>
     </message>
     <message>
-        <source>Show Splash screen on startup</source>
-        <translation>启动时显示启动画面</translation>
-    </message>
-    <message>
-        <source>Hot Key:</source>
-        <translation>快捷键:</translation>
-    </message>
-    <message>
-        <source>Shortcut:</source>
-        <translation>快捷键:</translation>
-    </message>
-    <message>
-        <source>Theme:</source>
-        <translation>主题：</translation>
-    </message>
-    <message>
-        <source>System</source>
-        <translation>系统</translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation>亮色主题</translation>
-    </message>
-    <message>
-        <source>Dark</source>
-        <translation>深色主题</translation>
-    </message>
-    <message>
         <source>The change will be applied only on program exit.</source>
         <translation>更改将仅在程序退出时应用。</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
         <translation>阻止流量:</translation>
-    </message>
-    <message>
-        <source>Show Block Traffic Menu</source>
-        <translation>显示阻止流量菜单</translation>
     </message>
 </context>
 <context>

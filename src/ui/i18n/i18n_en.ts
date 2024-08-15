@@ -695,6 +695,181 @@
     </message>
 </context>
 <context>
+    <name>IfacePage</name>
+    <message>
+        <source>Global</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tray</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Theme:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Right Click</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Filter Mode Menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -790,6 +965,10 @@
         <source>Reset to default current tab</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Interface</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -839,10 +1018,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Global</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation></translation>
     </message>
@@ -855,19 +1030,11 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Hot Keys</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation></translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Language:</source>
         <translation></translation>
     </message>
     <message>
@@ -903,10 +1070,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Windows Explorer integration</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Auto-run:</source>
         <translation></translation>
     </message>
@@ -915,79 +1078,7 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Tray</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Event:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Action:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Single Click</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Double Click</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Middle Click</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show Programs</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show Options</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show/Hide Traffic Graph</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Switch Filter Enabled</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Tray Menu Flags</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Action Confirmations</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Right Click</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show Tray Menu</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Animate Alert Icon</source>
         <translation></translation>
     </message>
     <message>
@@ -1003,47 +1094,11 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Ctrl + Single Click</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Alt + Single Click</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show Filter Mode Menu</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show Icon</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show My Fort</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation></translation>
     </message>
     <message>
-        <source>My Fort</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Auto-Show Menu</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Use System Regional Settings</source>
         <translation></translation>
     </message>
     <message>
@@ -1052,10 +1107,6 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Collect New Programs</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Maximum count of Groups in menu:</source>
         <translation></translation>
     </message>
     <message>
@@ -1071,10 +1122,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Show Programs Or Alert Window</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation></translation>
     </message>
@@ -1083,43 +1130,11 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Show Splash screen on startup</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Hot Key:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Shortcut:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Theme:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>System</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Dark</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>The change will be applied only on program exit.</source>
         <translation></translation>
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Show Block Traffic Menu</source>
         <translation></translation>
     </message>
 </context>

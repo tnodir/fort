@@ -695,6 +695,181 @@
     </message>
 </context>
 <context>
+    <name>IfacePage</name>
+    <message>
+        <source>Global</source>
+        <translation>Splošno</translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation>Vroče tipke</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>Moja trdnjava</translation>
+    </message>
+    <message>
+        <source>Tray</source>
+        <translation>Programska vrstica</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>Potrditve akcij</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Vključitev Windows Raziskovalca</translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation>Uporabi sistemske področne nastavitve</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>Jezik:</translation>
+    </message>
+    <message>
+        <source>Theme:</source>
+        <translation>Tema:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>Omogočeno</translation>
+    </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation>Vroče tipke:</translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation>Bližnjica:</translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation>Meni &apos;Samodejno prikaži&apos;</translation>
+    </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation>Prikaži začetni zaslon ob zagonu</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation>Prikaži ikono</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation>Ikona animirane ure</translation>
+    </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation>Največje število skupin v meniju:</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>Dogodek:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>Akcija:</translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>Zastavice menija programske vrstice</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>Končaj</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>Sistem</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>Svetla</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>Temna</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>Blokiraj promet:</translation>
+    </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation>Način filtra:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>En klik</translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation>Ctrl + En klik</translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation>Alt + En klik</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>Dvojni klik</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>Srednji klik</translation>
+    </message>
+    <message>
+        <source>Right Click</source>
+        <translation>Desni klik</translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation>Prikaži Mojo trdnjavo</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>Prikaži programe</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation>Prikaži programe ali opozorilno okno</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>Prikaži možnosti</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>Prikaži statistiko</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>Prikaži/skrij graf prometa</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>Preklop filtra omogočen</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>Pokaži meni Blokiraj promet</translation>
+    </message>
+    <message>
+        <source>Show Filter Mode Menu</source>
+        <translation>Prikaži meni Način filtra</translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation>Prikaži meni programske vrstice</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>Prezri</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -790,6 +965,10 @@
         <source>Reset to default current tab</source>
         <translation>Ponastavi na privzeti trenutni zavihek</translation>
     </message>
+    <message>
+        <source>Interface</source>
+        <translation>Rozhranie</translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -841,10 +1020,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Promet</translation>
     </message>
     <message>
-        <source>Global</source>
-        <translation>Splošno</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>Filter je omogočen</translation>
     </message>
@@ -857,20 +1032,12 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Filtriraj naslove lokalne povratne zanke (127.0.0.0/8) in oddajne (255.255.255.255) naslove</translation>
     </message>
     <message>
-        <source>Hot Keys</source>
-        <translation>Vroče tipke</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>Geslo:</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>Zakleni geslo (odklenjeno do &quot;%1&quot;)</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation>Jezik:</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -905,10 +1072,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Prikaži sporočila dnevnika v konzoli</translation>
     </message>
     <message>
-        <source>Windows Explorer integration</source>
-        <translation>Vključitev Windows Raziskovalca</translation>
-    </message>
-    <message>
         <source>Auto-run:</source>
         <translation>Samodejno zaženi:</translation>
     </message>
@@ -917,80 +1080,8 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Zaženi &apos;Fort Firewall&apos; kot storitev v ozadju</translation>
     </message>
     <message>
-        <source>Tray</source>
-        <translation>Programska vrstica</translation>
-    </message>
-    <message>
-        <source>Event:</source>
-        <translation>Dogodek:</translation>
-    </message>
-    <message>
-        <source>Action:</source>
-        <translation>Akcija:</translation>
-    </message>
-    <message>
-        <source>Single Click</source>
-        <translation>En klik</translation>
-    </message>
-    <message>
-        <source>Double Click</source>
-        <translation>Dvojni klik</translation>
-    </message>
-    <message>
-        <source>Middle Click</source>
-        <translation>Srednji klik</translation>
-    </message>
-    <message>
-        <source>Show Programs</source>
-        <translation>Prikaži programe</translation>
-    </message>
-    <message>
-        <source>Show Options</source>
-        <translation>Prikaži možnosti</translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation>Prikaži statistiko</translation>
-    </message>
-    <message>
-        <source>Show/Hide Traffic Graph</source>
-        <translation>Prikaži/skrij graf prometa</translation>
-    </message>
-    <message>
-        <source>Switch Filter Enabled</source>
-        <translation>Preklop filtra omogočen</translation>
-    </message>
-    <message>
-        <source>Tray Menu Flags</source>
-        <translation>Zastavice menija programske vrstice</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>Končaj</translation>
-    </message>
-    <message>
-        <source>Action Confirmations</source>
-        <translation>Potrditve akcij</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>Način filtra:</translation>
-    </message>
-    <message>
-        <source>Right Click</source>
-        <translation>Desni klik</translation>
-    </message>
-    <message>
-        <source>Show Tray Menu</source>
-        <translation>Prikaži meni programske vrstice</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>Prezri</translation>
-    </message>
-    <message>
-        <source>Animate Alert Icon</source>
-        <translation>Ikona animirane ure</translation>
     </message>
     <message>
         <source>Self Protection</source>
@@ -1005,48 +1096,12 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Preveri geslo ob odstranitvi</translation>
     </message>
     <message>
-        <source>Ctrl + Single Click</source>
-        <translation>Ctrl + En klik</translation>
-    </message>
-    <message>
-        <source>Alt + Single Click</source>
-        <translation>Alt + En klik</translation>
-    </message>
-    <message>
-        <source>Show Filter Mode Menu</source>
-        <translation>Prikaži meni Način filtra</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>Omogočeno</translation>
-    </message>
-    <message>
-        <source>Show Icon</source>
-        <translation>Prikaži ikono</translation>
-    </message>
-    <message>
-        <source>Show My Fort</source>
-        <translation>Prikaži Mojo trdnjavo</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>Programi</translation>
     </message>
     <message>
-        <source>My Fort</source>
-        <translation>Moja trdnjava</translation>
-    </message>
-    <message>
-        <source>Auto-Show Menu</source>
-        <translation>Meni &apos;Samodejno prikaži&apos;</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Onemogoči promet, ko Fort Firewall ne deluje</translation>
-    </message>
-    <message>
-        <source>Use System Regional Settings</source>
-        <translation>Uporabi sistemske področne nastavitve</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1055,10 +1110,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Collect New Programs</source>
         <translation>Zberi nove programe</translation>
-    </message>
-    <message>
-        <source>Maximum count of Groups in menu:</source>
-        <translation>Največje število skupin v meniju:</translation>
     </message>
     <message>
         <source>Windows Service</source>
@@ -1073,10 +1124,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Namestitev storitve Windows je spremenjena.</translation>
     </message>
     <message>
-        <source>Show Programs Or Alert Window</source>
-        <translation>Prikaži programe ali opozorilno okno</translation>
-    </message>
-    <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>Samodejno prikaži opozorilno okno za nove programe</translation>
     </message>
@@ -1085,44 +1132,12 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Opozorilno okno je vedno na zaslonu</translation>
     </message>
     <message>
-        <source>Show Splash screen on startup</source>
-        <translation>Prikaži začetni zaslon ob zagonu</translation>
-    </message>
-    <message>
-        <source>Hot Key:</source>
-        <translation>Vroče tipke:</translation>
-    </message>
-    <message>
-        <source>Shortcut:</source>
-        <translation>Bližnjica:</translation>
-    </message>
-    <message>
-        <source>Theme:</source>
-        <translation>Tema:</translation>
-    </message>
-    <message>
-        <source>System</source>
-        <translation>Sistem</translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation>Svetla</translation>
-    </message>
-    <message>
-        <source>Dark</source>
-        <translation>Temna</translation>
-    </message>
-    <message>
         <source>The change will be applied only on program exit.</source>
         <translation>Sprememba bo uporabljena samo ob izhodu iz programa.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
         <translation>Blokiraj promet:</translation>
-    </message>
-    <message>
-        <source>Show Block Traffic Menu</source>
-        <translation>Pokaži meni Blokiraj promet</translation>
     </message>
 </context>
 <context>

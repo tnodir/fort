@@ -695,6 +695,181 @@
     </message>
 </context>
 <context>
+    <name>IfacePage</name>
+    <message>
+        <source>Global</source>
+        <translation>전역</translation>
+    </message>
+    <message>
+        <source>Hot Keys</source>
+        <translation>단축키</translation>
+    </message>
+    <message>
+        <source>My Fort</source>
+        <translation>내 Fort</translation>
+    </message>
+    <message>
+        <source>Tray</source>
+        <translation>트레이</translation>
+    </message>
+    <message>
+        <source>Action Confirmations</source>
+        <translation>다음 작업 확인</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Windows 탐색기와 통합</translation>
+    </message>
+    <message>
+        <source>Use System Regional Settings</source>
+        <translation>시스템 국가별 설정 사용</translation>
+    </message>
+    <message>
+        <source>Language:</source>
+        <translation>언어:</translation>
+    </message>
+    <message>
+        <source>Theme:</source>
+        <translation>테마:</translation>
+    </message>
+    <message>
+        <source>Enabled</source>
+        <translation>활성화</translation>
+    </message>
+    <message>
+        <source>Hot Key:</source>
+        <translation>단축키:</translation>
+    </message>
+    <message>
+        <source>Shortcut:</source>
+        <translation>바로가기:</translation>
+    </message>
+    <message>
+        <source>Auto-Show Menu</source>
+        <translation>자동 표시 메뉴</translation>
+    </message>
+    <message>
+        <source>Show Splash screen on startup</source>
+        <translation>시작 시 스플래시 화면 표시</translation>
+    </message>
+    <message>
+        <source>Show Icon</source>
+        <translation>아이콘 표시</translation>
+    </message>
+    <message>
+        <source>Animate Alert Icon</source>
+        <translation>애니메이션 알림 아이콘</translation>
+    </message>
+    <message>
+        <source>Maximum count of Groups in menu:</source>
+        <translation>메뉴에서 그룹의 최대 수:</translation>
+    </message>
+    <message>
+        <source>Event:</source>
+        <translation>이벤트:</translation>
+    </message>
+    <message>
+        <source>Action:</source>
+        <translation>처리:</translation>
+    </message>
+    <message>
+        <source>Tray Menu Flags</source>
+        <translation>체크 가능한 트레이 메뉴</translation>
+    </message>
+    <message>
+        <source>Quit</source>
+        <translation>프로그램 종료</translation>
+    </message>
+    <message>
+        <source>System</source>
+        <translation>시스템</translation>
+    </message>
+    <message>
+        <source>Light</source>
+        <translation>밝은</translation>
+    </message>
+    <message>
+        <source>Dark</source>
+        <translation>어두운</translation>
+    </message>
+    <message>
+        <source>Block Traffic:</source>
+        <translation>트래픽 차단:</translation>
+    </message>
+    <message>
+        <source>Filter Mode:</source>
+        <translation>필터 모드:</translation>
+    </message>
+    <message>
+        <source>Single Click</source>
+        <translation>한 번 클릭</translation>
+    </message>
+    <message>
+        <source>Ctrl + Single Click</source>
+        <translation>Ctrl + 한 번 클릭</translation>
+    </message>
+    <message>
+        <source>Alt + Single Click</source>
+        <translation>Alt + 한 번 클릭</translation>
+    </message>
+    <message>
+        <source>Double Click</source>
+        <translation>두 번 클릭</translation>
+    </message>
+    <message>
+        <source>Middle Click</source>
+        <translation>중간 버튼 클릭</translation>
+    </message>
+    <message>
+        <source>Right Click</source>
+        <translation>오른쪽 클릭</translation>
+    </message>
+    <message>
+        <source>Show My Fort</source>
+        <translation>내 Fort 표시</translation>
+    </message>
+    <message>
+        <source>Show Programs</source>
+        <translation>프로그램 표시</translation>
+    </message>
+    <message>
+        <source>Show Programs Or Alert Window</source>
+        <translation>프로그램 또는 알림 창 표시</translation>
+    </message>
+    <message>
+        <source>Show Options</source>
+        <translation>옵션 표시</translation>
+    </message>
+    <message>
+        <source>Show Statistics</source>
+        <translation>상태 표시</translation>
+    </message>
+    <message>
+        <source>Show/Hide Traffic Graph</source>
+        <translation>트래픽 도표 표시/숨김</translation>
+    </message>
+    <message>
+        <source>Switch Filter Enabled</source>
+        <translation>필터 활성화 전환</translation>
+    </message>
+    <message>
+        <source>Show Block Traffic Menu</source>
+        <translation>트래픽 차단 메뉴 표시</translation>
+    </message>
+    <message>
+        <source>Show Filter Mode Menu</source>
+        <translation>필터 모드 메뉴 표시</translation>
+    </message>
+    <message>
+        <source>Show Tray Menu</source>
+        <translation>트레이 메뉴 표시</translation>
+    </message>
+    <message>
+        <source>Ignore</source>
+        <translation>무시</translation>
+    </message>
+</context>
+<context>
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
@@ -790,6 +965,10 @@
         <source>Reset to default current tab</source>
         <translation>기본 현재 탭으로 재설정</translation>
     </message>
+    <message>
+        <source>Interface</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -841,10 +1020,6 @@ Make sure that you have a fresh backup.</source>
         <translation>트래픽</translation>
     </message>
     <message>
-        <source>Global</source>
-        <translation>전역</translation>
-    </message>
-    <message>
         <source>Filter Enabled</source>
         <translation>필터링 활성화됨</translation>
     </message>
@@ -857,20 +1032,12 @@ Make sure that you have a fresh backup.</source>
         <translation>로컬 루프백 필터링 (127.0.0.0/8) 및 브로드캐스트 (255.255.255.255) 주소</translation>
     </message>
     <message>
-        <source>Hot Keys</source>
-        <translation>단축키</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>암호:</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
         <translation>암호 잠금 (&quot;%1&quot;까지 잠금 해제됨)</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation>언어:</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -905,10 +1072,6 @@ Make sure that you have a fresh backup.</source>
         <translation>콘솔에 로그 메세지 표시</translation>
     </message>
     <message>
-        <source>Windows Explorer integration</source>
-        <translation>Windows 탐색기와 통합</translation>
-    </message>
-    <message>
         <source>Auto-run:</source>
         <translation>자동-실행:</translation>
     </message>
@@ -917,80 +1080,8 @@ Make sure that you have a fresh backup.</source>
         <translation>Fort Firewall을 백그라운드에서 서비스로 실행</translation>
     </message>
     <message>
-        <source>Tray</source>
-        <translation>트레이</translation>
-    </message>
-    <message>
-        <source>Event:</source>
-        <translation>이벤트:</translation>
-    </message>
-    <message>
-        <source>Action:</source>
-        <translation>처리:</translation>
-    </message>
-    <message>
-        <source>Single Click</source>
-        <translation>한 번 클릭</translation>
-    </message>
-    <message>
-        <source>Double Click</source>
-        <translation>두 번 클릭</translation>
-    </message>
-    <message>
-        <source>Middle Click</source>
-        <translation>중간 버튼 클릭</translation>
-    </message>
-    <message>
-        <source>Show Programs</source>
-        <translation>프로그램 표시</translation>
-    </message>
-    <message>
-        <source>Show Options</source>
-        <translation>옵션 표시</translation>
-    </message>
-    <message>
-        <source>Show Statistics</source>
-        <translation>상태 표시</translation>
-    </message>
-    <message>
-        <source>Show/Hide Traffic Graph</source>
-        <translation>트래픽 도표 표시/숨김</translation>
-    </message>
-    <message>
-        <source>Switch Filter Enabled</source>
-        <translation>필터 활성화 전환</translation>
-    </message>
-    <message>
-        <source>Tray Menu Flags</source>
-        <translation>체크 가능한 트레이 메뉴</translation>
-    </message>
-    <message>
-        <source>Quit</source>
-        <translation>프로그램 종료</translation>
-    </message>
-    <message>
-        <source>Action Confirmations</source>
-        <translation>다음 작업 확인</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>필터 모드:</translation>
-    </message>
-    <message>
-        <source>Right Click</source>
-        <translation>오른쪽 클릭</translation>
-    </message>
-    <message>
-        <source>Show Tray Menu</source>
-        <translation>트레이 메뉴 표시</translation>
-    </message>
-    <message>
-        <source>Ignore</source>
-        <translation>무시</translation>
-    </message>
-    <message>
-        <source>Animate Alert Icon</source>
-        <translation>애니메이션 알림 아이콘</translation>
     </message>
     <message>
         <source>Self Protection</source>
@@ -1005,48 +1096,12 @@ Make sure that you have a fresh backup.</source>
         <translation>제거 시 암호 확인</translation>
     </message>
     <message>
-        <source>Ctrl + Single Click</source>
-        <translation>Ctrl + 한 번 클릭</translation>
-    </message>
-    <message>
-        <source>Alt + Single Click</source>
-        <translation>Alt + 한 번 클릭</translation>
-    </message>
-    <message>
-        <source>Show Filter Mode Menu</source>
-        <translation>필터 모드 메뉴 표시</translation>
-    </message>
-    <message>
-        <source>Enabled</source>
-        <translation>활성화</translation>
-    </message>
-    <message>
-        <source>Show Icon</source>
-        <translation>아이콘 표시</translation>
-    </message>
-    <message>
-        <source>Show My Fort</source>
-        <translation>내 Fort 표시</translation>
-    </message>
-    <message>
         <source>Programs</source>
         <translation>프로그램</translation>
     </message>
     <message>
-        <source>My Fort</source>
-        <translation>내 Fort</translation>
-    </message>
-    <message>
-        <source>Auto-Show Menu</source>
-        <translation>자동 표시 메뉴</translation>
-    </message>
-    <message>
         <source>Block traffic when Fort Firewall is not running</source>
         <translation>Fort Firewall이 실행되지 않을 때 트래픽 차단</translation>
-    </message>
-    <message>
-        <source>Use System Regional Settings</source>
-        <translation>시스템 국가별 설정 사용</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -1055,10 +1110,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Collect New Programs</source>
         <translation>새 프로그램 집계</translation>
-    </message>
-    <message>
-        <source>Maximum count of Groups in menu:</source>
-        <translation>메뉴에서 그룹의 최대 수:</translation>
     </message>
     <message>
         <source>Windows Service</source>
@@ -1073,10 +1124,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Windows Service 설치가 변경됨.</translation>
     </message>
     <message>
-        <source>Show Programs Or Alert Window</source>
-        <translation>프로그램 또는 알림 창 표시</translation>
-    </message>
-    <message>
         <source>Auto-Show Alert Window for New Programs</source>
         <translation>새 프로그램 자동 표시 알림 창</translation>
     </message>
@@ -1085,44 +1132,12 @@ Make sure that you have a fresh backup.</source>
         <translation>경고 창이 항상 맨 위에 있음</translation>
     </message>
     <message>
-        <source>Show Splash screen on startup</source>
-        <translation>시작 시 스플래시 화면 표시</translation>
-    </message>
-    <message>
-        <source>Hot Key:</source>
-        <translation>단축키:</translation>
-    </message>
-    <message>
-        <source>Shortcut:</source>
-        <translation>바로가기:</translation>
-    </message>
-    <message>
-        <source>Theme:</source>
-        <translation>테마:</translation>
-    </message>
-    <message>
-        <source>System</source>
-        <translation>시스템</translation>
-    </message>
-    <message>
-        <source>Light</source>
-        <translation>밝은</translation>
-    </message>
-    <message>
-        <source>Dark</source>
-        <translation>어두운</translation>
-    </message>
-    <message>
         <source>The change will be applied only on program exit.</source>
         <translation>변경 사항은 프로그램 종료 시에만 적용됩니다.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
         <translation>트래픽 차단:</translation>
-    </message>
-    <message>
-        <source>Show Block Traffic Menu</source>
-        <translation>트래픽 차단 메뉴 표시</translation>
     </message>
 </context>
 <context>
