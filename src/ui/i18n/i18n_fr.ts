@@ -870,7 +870,7 @@
     </message>
     <message>
         <source>Exclude from screen capture</source>
-        <translation type="unfinished"></translation>
+        <translation>Exclure de la capture d&apos;écran</translation>
     </message>
 </context>
 <context>
