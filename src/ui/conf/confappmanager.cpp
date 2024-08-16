@@ -116,6 +116,8 @@ const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);
 
 const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
 
+const char *const sqlDeleteAppAlerts = "DELETE FROM app_alert;";
+
 const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2, kill_process = ?3"
                                         "  WHERE app_id = ?1;";
 
@@ -390,6 +392,17 @@ bool ConfAppManager::deleteApps(const QVector<qint64> &appIdList)
 
     if (isWildcard) {
         updateDriverConf();
+    }
+
+    return ok;
+}
+
+bool ConfAppManager::clearAlerts()
+{
+    const bool ok = DbQuery(sqliteDb()).sql(sqlDeleteAppAlerts).executeOk();
+
+    if (ok) {
+        emitAppsChanged();
     }
 
     return ok;

@@ -63,6 +63,11 @@ void ProgramsController::deleteApps(const QVector<qint64> &appIdList)
     }
 }
 
+void ProgramsController::clearAlerts()
+{
+    confAppManager()->clearAlerts();
+}
+
 void ProgramsController::purgeApps()
 {
     taskManager()->runTask(TaskInfo::AppPurger);

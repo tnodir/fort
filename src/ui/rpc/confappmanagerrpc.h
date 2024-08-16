@@ -21,6 +21,7 @@ public:
     bool updateApp(App &app) override;
     bool updateAppName(qint64 appId, const QString &appName) override;
     bool deleteApps(const QVector<qint64> &appIdList) override;
+    bool clearAlerts() override;
     bool purgeApps() override;
     bool updateAppsBlocked(
             const QVector<qint64> &appIdList, bool blocked, bool killProcess) override;

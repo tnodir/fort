@@ -42,6 +42,7 @@ public:
     virtual bool updateApp(App &app);
     virtual bool updateAppName(qint64 appId, const QString &appName);
     virtual bool deleteApps(const QVector<qint64> &appIdList);
+    virtual bool clearAlerts();
     virtual bool purgeApps();
     virtual bool updateAppsBlocked(
             const QVector<qint64> &appIdList, bool blocked, bool killProcess);

@@ -55,6 +55,12 @@ bool processConfAppManager_deleteApps(
     return confAppManager->deleteApps(appIdList);
 }
 
+bool processConfAppManager_clearAlerts(ConfAppManager *confAppManager,
+        const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+{
+    return confAppManager->clearAlerts();
+}
+
 bool processConfAppManager_purgeApps(ConfAppManager *confAppManager,
         const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
 {
@@ -81,6 +87,7 @@ static const processConfAppManager_func processConfAppManager_funcList[] = {
     &processConfAppManager_updateApp, // Rpc_ConfAppManager_updateApp,
     &processConfAppManager_updateAppName, // Rpc_ConfAppManager_updateAppName,
     &processConfAppManager_deleteApps, // Rpc_ConfAppManager_deleteApps,
+    &processConfAppManager_clearAlerts, // Rpc_ConfAppManager_clearAlerts,
     &processConfAppManager_purgeApps, // Rpc_ConfAppManager_purgeApps,
     &processConfAppManager_updateAppsBlocked, // Rpc_ConfAppManager_updateAppsBlocked,
 };
@@ -138,6 +145,11 @@ bool ConfAppManagerRpc::deleteApps(const QVector<qint64> &appIdList)
     VariantUtil::addToList(args, QVariant(appIdVarList));
 
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_deleteApps, args);
+}
+
+bool ConfAppManagerRpc::clearAlerts()
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_clearAlerts);
 }
 
 bool ConfAppManagerRpc::purgeApps()

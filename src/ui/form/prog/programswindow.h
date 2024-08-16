@@ -76,6 +76,8 @@ private:
     void updateSelectedApps(bool blocked, bool killProcess = false);
     void deleteSelectedApps();
 
+    void clearAlerts();
+
     int appListCurrentIndex() const;
     AppRow appListCurrentRow() const;
     QString appListCurrentPath() const;
@@ -96,6 +98,7 @@ private:
     QAction *m_actEditApp = nullptr;
     QAction *m_actRemoveApp = nullptr;
     QAction *m_actReviewAlerts = nullptr;
+    QAction *m_actClearAlerts = nullptr;
     QAction *m_actPurgeApps = nullptr;
     QAction *m_actFindApps = nullptr;
     QPushButton *m_btEdit = nullptr;
