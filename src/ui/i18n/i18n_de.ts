@@ -967,7 +967,7 @@
     </message>
     <message>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Oberfläche</translation>
     </message>
 </context>
 <context>
@@ -1141,11 +1141,11 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Local Area Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokales Netzwerk</translation>
     </message>
     <message>
         <source>Filter Local Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokale Netzwerke filtern</translation>
     </message>
 </context>
 <context>

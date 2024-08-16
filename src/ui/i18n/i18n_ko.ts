@@ -967,7 +967,7 @@
     </message>
     <message>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>인터페이스</translation>
     </message>
 </context>
 <context>
@@ -1141,11 +1141,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Local Area Network</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 영역 네트워크</translation>
     </message>
     <message>
         <source>Filter Local Network</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 네트워크 필터링</translation>
     </message>
 </context>
 <context>

@@ -702,7 +702,7 @@
     </message>
     <message>
         <source>Hot Keys</source>
-        <translation>Tasti di scelta rapida</translation>
+        <translation>Tasti attivatori</translation>
     </message>
     <message>
         <source>My Fort</source>
@@ -967,7 +967,7 @@
     </message>
     <message>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Interfaccia</translation>
     </message>
 </context>
 <context>
@@ -1141,11 +1141,11 @@ Assicurati di avere un backup recente.</translation>
     </message>
     <message>
         <source>Local Area Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Rete locale</translation>
     </message>
     <message>
         <source>Filter Local Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtra rete locale</translation>
     </message>
 </context>
 <context>

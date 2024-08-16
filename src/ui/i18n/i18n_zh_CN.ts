@@ -1139,11 +1139,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Local Area Network</source>
-        <translation type="unfinished"></translation>
+        <translation>局域网</translation>
     </message>
     <message>
         <source>Filter Local Network</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤本地网络</translation>
     </message>
 </context>
 <context>
