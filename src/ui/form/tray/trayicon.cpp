@@ -258,6 +258,9 @@ void TrayIcon::updateTrayIcon(bool alerted)
     if (m_alerted == alerted)
         return;
 
+    if (alerted && !iniUser()->trayShowAlert())
+        return;
+
     m_alerted = alerted;
     m_animatedAlert = false;
 

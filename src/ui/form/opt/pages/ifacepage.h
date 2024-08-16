@@ -84,6 +84,7 @@ private:
     QCheckBox *m_cbHomeAutoShowMenu = nullptr;
     QCheckBox *m_cbSplashVisible = nullptr;
     QCheckBox *m_cbTrayShowIcon = nullptr;
+    QCheckBox *m_cbTrayShowAlert = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
     QLabel *m_labelTrayMaxGroups = nullptr;
     QSpinBox *m_spinTrayMaxGroups = nullptr;

@@ -54,6 +54,7 @@ void IfacePage::onResetToDefault()
     m_cbHomeAutoShowMenu->setChecked(false);
     m_cbSplashVisible->setChecked(true);
     m_cbTrayShowIcon->setChecked(true);
+    m_cbTrayShowAlert->setChecked(true);
     m_cbTrayAnimateAlert->setChecked(true);
 
     m_spinTrayMaxGroups->setValue(trayMaxGroups);
@@ -123,6 +124,7 @@ void IfacePage::onRetranslateUi()
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
+    m_cbTrayShowAlert->setText(tr("Show Alert Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
     m_labelTrayMaxGroups->setText(tr("Maximum count of Groups in menu:"));
     m_labelTrayEvent->setText(tr("Event:"));
@@ -452,6 +454,11 @@ void IfacePage::setupTrayBox()
         ctrl()->setIniUserEdited(true);
     });
 
+    m_cbTrayShowAlert = ControlUtil::createCheckBox(iniUser()->trayShowAlert(), [&](bool checked) {
+        iniUser()->setTrayShowAlert(checked);
+        ctrl()->setIniUserEdited();
+    });
+
     m_cbTrayAnimateAlert =
             ControlUtil::createCheckBox(iniUser()->trayAnimateAlert(), [&](bool checked) {
                 iniUser()->setTrayAnimateAlert(checked);
@@ -467,6 +474,7 @@ void IfacePage::setupTrayBox()
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbTrayShowIcon);
+    layout->addWidget(m_cbTrayShowAlert);
     layout->addWidget(m_cbTrayAnimateAlert);
     layout->addLayout(maxGroupsLayout);
     layout->addWidget(ControlUtil::createSeparator());

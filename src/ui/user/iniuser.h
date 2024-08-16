@@ -78,6 +78,9 @@ public:
     bool trayShowIcon() const { return valueBool("tray/showIcon", true); }
     void setTrayShowIcon(bool v) { setValue("tray/showIcon", v, true); }
 
+    bool trayShowAlert() const { return valueBool("tray/showAlert", true); }
+    void setTrayShowAlert(bool v) { setValue("tray/showAlert", v, true); }
+
     bool trayAnimateAlert() const { return valueBool("tray/animateAlert", true); }
     void setTrayAnimateAlert(bool v) { setValue("tray/animateAlert", v, true); }
 
