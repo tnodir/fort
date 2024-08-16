@@ -209,21 +209,16 @@ inline static BOOL fort_callout_ale_is_zone_blocked(
                     &fort_device()->conf, zones_mask, cx->remote_ip, ca->isIPv6);
 }
 
-static BOOL fort_callout_ale_is_ip_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
-        PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
+static BOOL fort_callout_ale_is_ip_blocked(
+        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_DATA app_data)
 {
     const BOOL app_found = (app_data.flags.v != 0);
     if (!app_found)
         return FALSE;
 
-    if (app_data.flags.lan_only) {
-        if (!conf_flags.filter_local_net
-                || fort_conf_ip_is_inet(&conf_ref->conf,
-                        (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
-                        &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
-            cx->block_reason = FORT_BLOCK_REASON_LAN_ONLY;
-            return TRUE; /* block LAN Only */
-        }
+    if (app_data.flags.lan_only && !cx->is_local_net) {
+        cx->block_reason = FORT_BLOCK_REASON_LAN_ONLY;
+        return TRUE; /* block LAN Only */
     }
 
     if (fort_callout_ale_is_zone_blocked(ca, cx, app_data.reject_zones)
@@ -254,7 +249,7 @@ inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALL
         return TRUE;
 
     /* Check LAN Only and Zones */
-    if (fort_callout_ale_is_ip_blocked(ca, cx, conf_ref, conf_flags, app_data))
+    if (fort_callout_ale_is_ip_blocked(ca, cx, app_data))
         return FALSE;
 
     /* Check the conf for a blocked app */
@@ -291,15 +286,16 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
         return TRUE; /* block all */
     }
 
-    if (!conf_flags.filter_local_net
-            && !fort_conf_ip_is_inet(&conf_ref->conf,
-                    (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
-                    &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
+    cx->is_local_net = !fort_conf_ip_is_inet(&conf_ref->conf,
+            (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included, &fort_device()->conf,
+            cx->remote_ip, ca->isIPv6);
+
+    if (!conf_flags.filter_local_net && cx->is_local_net) {
         cx->blocked = FALSE;
         return TRUE; /* allow Local Network */
     }
 
-    if (conf_flags.block_inet_traffic) {
+    if (conf_flags.block_inet_traffic && !cx->is_local_net) {
         return TRUE; /* block Internet */
     }
 
