@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.13.7-test01, 2024-08-16:
+- Driver: Fix "Block Internet traffic" with "Filter Local Network" turned on.
+
 v3.13.6, 2024-08-16:
 - UI: Options: Add "Filter Local Network" flag.
 - UI: Options: Add "Exclude from screen capture" flag.
