@@ -872,6 +872,10 @@
         <source>Exclude from screen capture</source>
         <translation>Exclure de la capture d&apos;écran</translation>
     </message>
+    <message>
+        <source>Show Alert Icon</source>
+        <translation>Afficher l&apos;icône d&apos;alerte</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1533,6 +1537,14 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Parked</source>
         <translation>Parqué</translation>
+    </message>
+    <message>
+        <source>Clear Alerts</source>
+        <translation>Effacer les alertes</translation>
+    </message>
+    <message>
+        <source>Are you sure to clear alerts?</source>
+        <translation>Êtes-vous sûr de vouloir effacer les alertes ?</translation>
     </message>
 </context>
 <context>

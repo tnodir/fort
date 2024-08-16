@@ -870,7 +870,11 @@
     </message>
     <message>
         <source>Exclude from screen capture</source>
-        <translation>Izključi iz zajema zaslona></translation>
+        <translation>Izključi iz zajema zaslona&gt;</translation>
+    </message>
+    <message>
+        <source>Show Alert Icon</source>
+        <translation>Pokaži opozorilno ikono</translation>
     </message>
 </context>
 <context>
@@ -1533,6 +1537,14 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Parked</source>
         <translation>Parkirano</translation>
+    </message>
+    <message>
+        <source>Clear Alerts</source>
+        <translation>Počisti opozorila</translation>
+    </message>
+    <message>
+        <source>Are you sure to clear alerts?</source>
+        <translation>Ali ste prepričani, da želite počistiti opozorila?</translation>
     </message>
 </context>
 <context>

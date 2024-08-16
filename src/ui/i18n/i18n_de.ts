@@ -872,6 +872,10 @@
         <source>Exclude from screen capture</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Show Alert Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1533,6 +1537,14 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Parked</source>
         <translation>Geparkt</translation>
+    </message>
+    <message>
+        <source>Clear Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to clear alerts?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
