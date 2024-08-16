@@ -38,6 +38,7 @@ IfacePage::IfacePage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctr
 
 void IfacePage::onResetToDefault()
 {
+    m_cbExcludeCapture->setChecked(false);
     m_cbUseSystemLocale->setChecked(true);
     m_comboTheme->setCurrentIndex(0);
     m_cbHotKeysEnabled->setChecked(false);
@@ -105,6 +106,7 @@ void IfacePage::onRetranslateUi()
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
 
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
+    m_cbExcludeCapture->setText(tr("Exclude from screen capture"));
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_labelLanguage->setText(tr("Language:"));
     m_labelTheme->setText(tr("Theme:"));
@@ -256,6 +258,12 @@ void IfacePage::setupGlobalBox()
                 ctrl()->setIniUserEdited();
             });
 
+    m_cbExcludeCapture =
+            ControlUtil::createCheckBox(iniUser()->excludeFromCapture(), [&](bool checked) {
+                iniUser()->setExcludeFromCapture(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     m_cbUseSystemLocale =
             ControlUtil::createCheckBox(iniUser()->useSystemLocale(), [&](bool checked) {
                 iniUser()->setUseSystemLocale(checked);
@@ -270,6 +278,7 @@ void IfacePage::setupGlobalBox()
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbExplorerMenu);
+    layout->addWidget(m_cbExcludeCapture);
     layout->addWidget(m_cbUseSystemLocale);
     layout->addLayout(langLayout);
     layout->addLayout(themeLayout);

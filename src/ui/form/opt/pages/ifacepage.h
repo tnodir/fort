@@ -68,6 +68,7 @@ private:
     QGroupBox *m_gbConfirmations = nullptr;
 
     QCheckBox *m_cbExplorerMenu = nullptr;
+    QCheckBox *m_cbExcludeCapture = nullptr;
     QCheckBox *m_cbUseSystemLocale = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
