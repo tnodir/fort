@@ -201,7 +201,15 @@ inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CA
     return fort_callout_ale_associate_flow(ca, cx, app_flags);
 }
 
-static BOOL fort_callout_ale_is_zone_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
+inline static BOOL fort_callout_ale_is_zone_blocked(
+        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, UINT32 zones_mask)
+{
+    return zones_mask != 0
+            && fort_conf_zones_ip_included(
+                    &fort_device()->conf, zones_mask, cx->remote_ip, ca->isIPv6);
+}
+
+static BOOL fort_callout_ale_is_ip_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
     const BOOL app_found = (app_data.flags.v != 0);
@@ -218,18 +226,10 @@ static BOOL fort_callout_ale_is_zone_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOU
         }
     }
 
-    if (app_data.reject_zones != 0
-            && fort_conf_zones_ip_included(
-                    &fort_device()->conf, app_data.reject_zones, cx->remote_ip, ca->isIPv6)) {
+    if (fort_callout_ale_is_zone_blocked(ca, cx, app_data.reject_zones)
+            || fort_callout_ale_is_zone_blocked(ca, cx, app_data.accept_zones)) {
         cx->block_reason = FORT_BLOCK_REASON_ZONE;
-        return TRUE; /* block Rejected Zone */
-    }
-
-    if (app_data.accept_zones != 0
-            && !fort_conf_zones_ip_included(
-                    &fort_device()->conf, app_data.accept_zones, cx->remote_ip, ca->isIPv6)) {
-        cx->block_reason = FORT_BLOCK_REASON_ZONE;
-        return TRUE; /* block Not Accepted Zone */
+        return TRUE; /* block Rejected or Not Accepted Zones */
     }
 
     return FALSE;
@@ -254,7 +254,7 @@ inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALL
         return TRUE;
 
     /* Check LAN Only and Zones */
-    if (fort_callout_ale_is_zone_blocked(ca, cx, conf_ref, conf_flags, app_data))
+    if (fort_callout_ale_is_ip_blocked(ca, cx, conf_ref, conf_flags, app_data))
         return FALSE;
 
     /* Check the conf for a blocked app */
