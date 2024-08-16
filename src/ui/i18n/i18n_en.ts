@@ -868,6 +868,10 @@
         <source>Ignore</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Exclude from screen capture</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

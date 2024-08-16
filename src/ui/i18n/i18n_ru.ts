@@ -868,6 +868,10 @@
         <source>Ignore</source>
         <translation>Игнорировать</translation>
     </message>
+    <message>
+        <source>Exclude from screen capture</source>
+        <translation>Исключить из захвата экрана</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
