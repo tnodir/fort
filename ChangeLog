@@ -1,6 +1,8 @@
 Fort Firewall ChangeLog
 
-v3.13.7-test01, 2024-08-16:
+v3.13.7, 2024-08-17:
+- UI: Options: Tray: Add "Show Alert Icon" flag.
+- UI: Programs: Add "Clear Alerts" button.
 - Driver: Fix "Block Internet traffic" with "Filter Local Network" turned on.
 
 v3.13.6, 2024-08-16:
