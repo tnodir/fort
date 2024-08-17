@@ -1,6 +1,8 @@
 #ifndef ABOUTPAGE_H
 #define ABOUTPAGE_H
 
+#include <QDateTime>
+
 #include "homebasepage.h"
 
 class AboutPage : public HomeBasePage
@@ -24,6 +26,7 @@ private:
 
 private:
     bool m_isNewVersion = false;
+    QDateTime m_lastCheckTime;
 
     QGroupBox *m_gbNewVersion = nullptr;
     QLabel *m_labelRelease = nullptr;

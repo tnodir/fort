@@ -47,7 +47,10 @@ void AboutPage::onRetranslateUi()
 
 void AboutPage::retranslateNewVersionBox()
 {
-    m_gbNewVersion->setTitle(m_isNewVersion ? tr("New Version") : tr("No Update"));
+    const auto title = m_isNewVersion ? tr("New Version") : tr("No Update");
+    const auto lastTime = DateUtil::localeDateTime(m_lastCheckTime);
+
+    m_gbNewVersion->setTitle(QString("%1 — %2").arg(lastTime, title));
 }
 
 void AboutPage::setupUi()
@@ -123,6 +126,7 @@ void AboutPage::setupNewVersionUpdate()
         auto taskInfo = taskManager()->taskInfoUpdateChecker();
 
         m_isNewVersion = taskInfo->isNewVersion();
+        m_lastCheckTime = taskInfo->lastSuccess();
 
         m_labelArea->setVisible(m_isNewVersion);
         m_labelRelease->setText(taskInfo->releaseText());
@@ -138,6 +142,12 @@ void AboutPage::setupNewVersionUpdate()
     refreshNewVersion();
 
     connect(taskManager(), &TaskManager::appVersionUpdated, this, refreshNewVersion);
+
+    connect(taskManager(), &TaskManager::taskFinished, this, [=, this](qint8 taskType) {
+        if (taskType == TaskInfo::UpdateChecker) {
+            refreshNewVersion();
+        }
+    });
 }
 
 void AboutPage::setupAutoUpdate()
