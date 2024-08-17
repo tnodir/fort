@@ -74,6 +74,7 @@ private:
     QComboBox *m_comboLanguage = nullptr;
     QLabel *m_labelTheme = nullptr;
     QComboBox *m_comboTheme = nullptr;
+
     QCheckBox *m_cbHotKeysEnabled = nullptr;
     QCheckBox *m_cbHotKeysGlobal = nullptr;
     QLabel *m_labelHotKey = nullptr;

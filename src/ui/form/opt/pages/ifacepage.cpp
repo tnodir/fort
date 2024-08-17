@@ -142,9 +142,10 @@ void IfacePage::retranslateComboTheme()
     // Sync with Qt::ColorScheme
     const QStringList list = { tr("System"), tr("Light"), tr("Dark") };
 
-    const int currentIndex = qMax(m_comboTheme->currentIndex(), 0);
+    ControlUtil::setComboBoxTexts(m_comboTheme, list);
 
-    ControlUtil::setComboBoxTexts(m_comboTheme, list, currentIndex);
+    const auto colorScheme = IniUser::colorSchemeByName(iniUser()->theme());
+    m_comboTheme->setCurrentIndex(colorScheme);
 }
 
 void IfacePage::retranslateComboHotKey()
@@ -335,9 +336,6 @@ QLayout *IfacePage::setupThemeLayout()
         }
     });
     m_comboTheme->setFixedWidth(200);
-
-    const auto colorScheme = IniUser::colorSchemeByName(iniUser()->theme());
-    m_comboTheme->setCurrentIndex(colorScheme);
 
 #if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
     m_comboTheme->setEnabled(false);
