@@ -112,7 +112,7 @@ Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "UninsDriver"
 [InstallDelete]
 Type: filesandordirs; Name: "{app}\driver"
 Type: filesandordirs; Name: "{app}\i18n"
-Type: files; Name: "{app}\README*.*"
+Type: files; Name: "{app}\README*.*"; Check: not IsTaskSelected('portable')
 Type: files; Name: "{app}\qt*.*"
 ; TODO: COMPAT: Remove the following 4 lines after v4.1.0
 Type: filesandordirs; Name: "{app}\plugins"
