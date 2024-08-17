@@ -870,11 +870,11 @@
     </message>
     <message>
         <source>Exclude from screen capture</source>
-        <translation type="unfinished"></translation>
+        <translation>Escludi dalla cattura dello schermo</translation>
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra icona di allarme</translation>
     </message>
 </context>
 <context>
@@ -1540,11 +1540,11 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Clear Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancella allarmi</translation>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di cancellare gli allarmi?</translation>
     </message>
 </context>
 <context>
