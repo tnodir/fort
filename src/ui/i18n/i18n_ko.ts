@@ -870,11 +870,11 @@
     </message>
     <message>
         <source>Exclude from screen capture</source>
-        <translation type="unfinished"></translation>
+        <translation>화면 캡처에서 제외</translation>
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>알림 아이콘 표시</translation>
     </message>
 </context>
 <context>
@@ -1540,11 +1540,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Clear Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>알림 지우기</translation>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation type="unfinished"></translation>
+        <translation>알림을 지우시겠습니까?</translation>
     </message>
 </context>
 <context>
