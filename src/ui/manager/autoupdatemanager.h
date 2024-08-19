@@ -23,7 +23,7 @@ public:
     Q_ENUM(Flag)
     Q_DECLARE_FLAGS(Flags, Flag)
 
-    explicit AutoUpdateManager(const QString &cachePath, QObject *parent = nullptr);
+    explicit AutoUpdateManager(const QString &updatePath, QObject *parent = nullptr);
 
     Flags flags() const { return m_flags; }
     void setFlags(Flags v);

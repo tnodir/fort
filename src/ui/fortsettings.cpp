@@ -129,6 +129,7 @@ void FortSettings::setupGlobal()
     m_cachePath = settings.value("global/cacheDir").toString();
     m_userPath = settings.value("global/userDir").toString();
     m_logsPath = settings.value("global/logsDir").toString();
+    m_updatePath = settings.value("global/updateDir").toString();
 }
 
 void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
@@ -336,6 +337,13 @@ void FortSettings::setupPaths(EnvManager *envManager)
         m_logsPath = m_userPath + "logs/";
     } else {
         m_logsPath = expandPath(m_logsPath, envManager);
+    }
+
+    // Update Path
+    if (m_updatePath.isEmpty()) {
+        m_updatePath = m_cachePath;
+    } else {
+        m_updatePath = expandPath(m_updatePath, envManager);
     }
 }
 

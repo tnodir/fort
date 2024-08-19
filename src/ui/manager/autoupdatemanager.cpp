@@ -23,8 +23,8 @@ constexpr int DownloadMaxTryCount = 3;
 
 }
 
-AutoUpdateManager::AutoUpdateManager(const QString &cachePath, QObject *parent) :
-    TaskDownloader(parent), m_updatePath(cachePath + "update/")
+AutoUpdateManager::AutoUpdateManager(const QString &updatePath, QObject *parent) :
+    TaskDownloader(parent), m_updatePath(updatePath + "update/")
 {
 }
 

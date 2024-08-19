@@ -15,22 +15,6 @@
 #include <util/dateutil.h>
 #include <util/iconcache.h>
 
-namespace {
-
-QString checkUpdateToolTip(TaskInfoUpdateChecker *updateChecker)
-{
-    const QDateTime lastRun = updateChecker->lastRun();
-    const QDateTime lastSuccess = updateChecker->lastSuccess();
-
-    QString text = DateUtil::localeDateTime(lastRun);
-    if (lastRun != lastSuccess) {
-        text += " / " + DateUtil::localeDateTime(lastSuccess);
-    }
-    return text;
-}
-
-}
-
 AboutPage::AboutPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
 {
     setupUi();
@@ -134,8 +118,6 @@ void AboutPage::setupNewVersionUpdate()
         m_progressBar->setRange(0, taskInfo->downloadSize());
         m_btDownload->setVisible(m_isNewVersion && !m_btInstall->isVisible());
 
-        m_btCheckUpdate->setToolTip(checkUpdateToolTip(taskInfo));
-
         retranslateNewVersionBox();
     };
 
@@ -168,6 +150,8 @@ void AboutPage::setupAutoUpdate()
 
         m_btDownload->setVisible(isNewVersion && !isDownloadActive);
         m_btInstall->setVisible(isNewVersion && isDownloaded);
+
+        m_btInstall->setToolTip(isDownloaded ? manager->installerPath() : QString());
     };
 
     refreshAutoUpdate();

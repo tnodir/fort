@@ -64,6 +64,8 @@ public:
 
     QString logsPath() const { return m_logsPath; }
 
+    QString updatePath() const { return m_updatePath; }
+
     QString controlCommand() const { return m_controlCommand; }
 
     const QStringList &args() const { return m_args; }
@@ -153,6 +155,7 @@ private:
     QString m_cachePath;
     QString m_userPath;
     QString m_logsPath;
+    QString m_updatePath;
     QString m_controlCommand;
     QStringList m_args;
 };

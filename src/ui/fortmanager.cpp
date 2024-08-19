@@ -74,7 +74,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new StatManager(settings->statFilePath()));
     ioc->setService(new StatBlockManager(settings->statBlockFilePath()));
     ioc->setService(new AskPendingManager());
-    ioc->setService(new AutoUpdateManager(settings->cachePath()));
+    ioc->setService(new AutoUpdateManager(settings->updatePath()));
     ioc->setService(new DriverManager());
     ioc->setService(new AppInfoManager(settings->cacheFilePath()));
     ioc->setService(new LogManager());
@@ -96,7 +96,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<StatManager>(new StatManagerRpc(settings->statFilePath()));
     ioc->setService<StatBlockManager>(new StatBlockManagerRpc(settings->statBlockFilePath()));
     ioc->setService<AskPendingManager>(new AskPendingManagerRpc());
-    ioc->setService<AutoUpdateManager>(new AutoUpdateManagerRpc(settings->cachePath()));
+    ioc->setService<AutoUpdateManager>(new AutoUpdateManagerRpc(settings->updatePath()));
     ioc->setService<DriverManager>(new DriverManagerRpc());
     ioc->setService<AppInfoManager>(
             new AppInfoManagerRpc(settings->cacheFilePath(), settings->noCache()));

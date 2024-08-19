@@ -13,7 +13,7 @@ class AutoUpdateManagerRpc : public AutoUpdateManager
     Q_OBJECT
 
 public:
-    explicit AutoUpdateManagerRpc(const QString &cachePath, QObject *parent = nullptr);
+    explicit AutoUpdateManagerRpc(const QString &updatePath, QObject *parent = nullptr);
 
     int bytesReceived() const override { return m_bytesReceived; }
     void setBytesReceived(int v);

@@ -61,8 +61,8 @@ inline bool processAutoUpdateManagerRpcResult(
 
 }
 
-AutoUpdateManagerRpc::AutoUpdateManagerRpc(const QString &cachePath, QObject *parent) :
-    AutoUpdateManager(cachePath, parent)
+AutoUpdateManagerRpc::AutoUpdateManagerRpc(const QString &updatePath, QObject *parent) :
+    AutoUpdateManager(updatePath, parent)
 {
 }
 
