@@ -135,7 +135,7 @@ QString NetUtil::formatSpeed(quint32 bitsPerSecond)
 {
     const QString text = formatDataSize(bitsPerSecond, /*precision=*/0);
 
-    return text + QObject::tr("ps");
+    return text + QObject::tr("/s");
 }
 
 QString NetUtil::getHostName(const QString &address)

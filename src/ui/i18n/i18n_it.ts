@@ -1548,6 +1548,13 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <source>/s</source>
+        <translation>/s</translation>
+    </message>
+</context>
+<context>
     <name>QuotaManager</name>
     <message>
         <source>Day traffic quota exceeded!</source>

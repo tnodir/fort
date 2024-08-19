@@ -1548,6 +1548,13 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <source>/s</source>
+        <translation>/s</translation>
+    </message>
+</context>
+<context>
     <name>QuotaManager</name>
     <message>
         <source>Day traffic quota exceeded!</source>
