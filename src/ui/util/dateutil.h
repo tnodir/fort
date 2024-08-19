@@ -6,13 +6,9 @@
 #include <QObject>
 #include <QString>
 
-class DateUtil : public QObject
+class DateUtil
 {
-    Q_OBJECT
-
 public:
-    explicit DateUtil(QObject *parent = nullptr);
-
     static QDateTime now();
 
     static QDateTime startOfDayUTC(const QDate &date);
@@ -35,13 +31,13 @@ public:
 
     static QString formatPeriod(const QString &from, const QString &to);
 
-    Q_INVOKABLE static QString formatTime(quint8 hour, quint8 minute);
+    static QString formatTime(quint8 hour, quint8 minute);
     static QString reformatTime(const QString &time);
 
     static void parseTime(const QString &time, quint8 &hour, quint8 &minute);
 
-    Q_INVOKABLE static quint8 parseTimeHour(const QString &period);
-    Q_INVOKABLE static quint8 parseTimeMinute(const QString &period);
+    static quint8 parseTimeHour(const QString &period);
+    static quint8 parseTimeMinute(const QString &period);
 
     static QString localeDateTime(
             const QDateTime &dateTime, QLocale::FormatType format = QLocale::ShortFormat);

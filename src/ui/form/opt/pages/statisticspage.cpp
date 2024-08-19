@@ -33,7 +33,7 @@ const std::array quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 
 
 QString formatQuota(int mbytes)
 {
-    return NetUtil::formatDataSize1(qint64(mbytes) * 1024 * 1024);
+    return NetUtil::formatDataSize(qint64(mbytes) * 1024 * 1024, /*precision=*/0);
 }
 
 }

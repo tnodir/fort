@@ -3,8 +3,6 @@
 #include <QLocale>
 #include <QTimeZone>
 
-DateUtil::DateUtil(QObject *parent) : QObject(parent) { }
-
 QDateTime DateUtil::now()
 {
     return QDateTime::currentDateTime();
