@@ -150,7 +150,8 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
     const QFileInfo fi(installerPath());
     const bool downloaded = (fi.exists() && fi.size() == m_downloadSize);
 
-    qCDebug(LC) << "Check:" << taskInfo->version() << "downloaded:" << downloaded;
+    qCDebug(LC) << "Check:" << taskInfo->version() << "downloaded:" << downloaded
+                << "path:" << fi.filePath();
 
     setIsDownloaded(downloaded);
 }
