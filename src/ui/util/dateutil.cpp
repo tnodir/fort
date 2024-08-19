@@ -84,7 +84,7 @@ QString DateUtil::formatMonth(qint64 unixTime)
 QString DateUtil::formatDateTime(qint64 unixTime, const QString &format)
 {
     const QDateTime dt = QDateTime::fromSecsSinceEpoch(unixTime);
-    return QLocale::c().toString(dt, format);
+    return QLocale().toString(dt, format);
 }
 
 QString DateUtil::formatPeriod(const QString &from, const QString &to)
