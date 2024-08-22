@@ -1,16 +1,16 @@
 CREATE TABLE app(
-  path TEXT PRIMARY KEY,
+  app_id INTEGER PRIMARY KEY,
+  path TEXT NOT NULL,
   alt_path TEXT,
   file_descr TEXT,
   company_name TEXT,
   product_name TEXT,
   product_ver TEXT,
   file_mod_time INTEGER,
-  icon_id INTEGER,
-  access_time DATETIME
-) WITHOUT ROWID;
+  icon_id INTEGER
+);
 
-CREATE INDEX app_access_time_idx ON app(access_time);
+CREATE UNIQUE INDEX app_path_uk ON app(path);
 
 CREATE TABLE icon(
   icon_id INTEGER PRIMARY KEY,

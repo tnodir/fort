@@ -16,17 +16,14 @@ namespace {
 
 const QLoggingCategory LC("appInfo");
 
-constexpr int DATABASE_USER_VERSION = 6;
+constexpr int DATABASE_USER_VERSION = 7;
 
-constexpr int APP_CACHE_MAX_COUNT = 2000;
+constexpr int APP_CACHE_MAX_COUNT = 3000;
+constexpr int APP_PURGE_INTERVAL = 3000; // 3 seconds
 
 const char *const sqlSelectAppInfo = "SELECT alt_path, file_descr, company_name,"
                                      "    product_name, product_ver, file_mod_time, icon_id"
                                      "  FROM app WHERE path = ?1;";
-
-const char *const sqlUpdateAppAccessTime = "UPDATE app"
-                                           "  SET access_time = datetime('now')"
-                                           "  WHERE path = ?1;";
 
 const char *const sqlSelectIconImage = "SELECT image FROM icon WHERE icon_id = ?1;";
 
@@ -40,15 +37,14 @@ const char *const sqlUpdateIconRefCount = "UPDATE icon"
                                           "  WHERE icon_id = ?1;";
 
 const char *const sqlInsertAppInfo = "INSERT INTO app(path, alt_path, file_descr, company_name,"
-                                     "    product_name, product_ver, file_mod_time,"
-                                     "    icon_id, access_time)"
-                                     "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, datetime('now'));";
+                                     "    product_name, product_ver, file_mod_time, icon_id)"
+                                     "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);";
 
 const char *const sqlSelectAppCount = "SELECT count(*) FROM app;";
 
-const char *const sqlSelectAppOlds = "SELECT path, icon_id"
+const char *const sqlSelectOldApps = "SELECT path, icon_id"
                                      "  FROM app"
-                                     "  ORDER BY access_time DESC"
+                                     "  ORDER BY app_id"
                                      "  LIMIT ?1;";
 
 const char *const sqlDeleteIconIfNotUsed = "DELETE FROM icon"
@@ -59,9 +55,13 @@ const char *const sqlDeleteApp = "DELETE FROM app WHERE path = ?1;";
 }
 
 AppInfoManager::AppInfoManager(const QString &filePath, QObject *parent, quint32 openFlags) :
-    WorkerManager(parent), m_sqliteDb(new SqliteDb(filePath, openFlags))
+    WorkerManager(parent),
+    m_appsPurgeTimer(APP_PURGE_INTERVAL),
+    m_sqliteDb(new SqliteDb(filePath, openFlags))
 {
     setMaxWorkersCount(1);
+
+    connect(&m_appsPurgeTimer, &QTimer::timeout, this, &AppInfoManager::purgeApps);
 }
 
 void AppInfoManager::setUp()
@@ -127,15 +127,7 @@ bool AppInfoManager::loadInfoFromDb(const QString &appPath, AppInfo &appInfo)
     appInfo.fileModTime = stmt.columnDateTime(5);
     appInfo.iconId = stmt.columnInt64(6);
 
-    // Update last access time
-    updateAppAccessTime(appPath);
-
     return true;
-}
-
-void AppInfoManager::updateAppAccessTime(const QString &appPath)
-{
-    DbQuery(sqliteDb()).sql(sqlUpdateAppAccessTime).vars({ appPath }).executeOk();
 }
 
 bool AppInfoManager::setupDb()
@@ -196,14 +188,25 @@ void AppInfoManager::saveAppInfo(
     DbQuery(sqliteDb(), &ok).sql(sqlInsertAppInfo).vars(vars).executeOk();
 }
 
-void AppInfoManager::deleteExcessAppInfos()
+void AppInfoManager::emitAppsPurge()
 {
+    QMetaObject::invokeMethod(&m_appsPurgeTimer, &TriggerTimer::startTrigger, Qt::QueuedConnection);
+}
+
+void AppInfoManager::purgeApps()
+{
+    QMutexLocker locker(&m_mutex);
+
+    sqliteDb()->beginWriteTransaction();
+
     const int appCount = DbQuery(sqliteDb()).sql(sqlSelectAppCount).execute().toInt();
     const int excessCount = appCount - APP_CACHE_MAX_COUNT;
 
     if (excessCount > 0) {
         deleteOldApps(excessCount);
     }
+
+    sqliteDb()->commitTransaction();
 }
 
 QImage AppInfoManager::loadIconFromDb(qint64 iconId)
@@ -240,8 +243,8 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo, const QI
     if (ok) {
         appInfo.iconId = iconId.toLongLong();
 
-        // Delete excess info
-        deleteExcessAppInfos();
+        // Delete excess infos later
+        emitAppsPurge();
     }
 
     return ok;
@@ -258,9 +261,16 @@ void AppInfoManager::deleteAppInfo(const QString &appPath, const AppInfo &appInf
         iconIds.insert(appInfo.iconId, 1);
     }
 
-    QMutexLocker locker(&m_mutex);
+    // Delete app info & icon
+    {
+        QMutexLocker locker(&m_mutex);
 
-    deleteAppsAndIcons(appPaths, iconIds);
+        sqliteDb()->beginWriteTransaction();
+
+        deleteAppsAndIcons(appPaths, iconIds);
+
+        sqliteDb()->commitTransaction();
+    }
 }
 
 void AppInfoManager::deleteOldApps(int limitCount)
@@ -281,12 +291,10 @@ void AppInfoManager::getOldAppsAndIcons(
         QStringList &appPaths, QHash<qint64, int> &iconIds, int limitCount) const
 {
     SqliteStmt stmt;
-    if (!stmt.prepare(sqliteDb()->db(), sqlSelectAppOlds, SqliteStmt::PreparePersistent))
+    if (!stmt.prepare(sqliteDb()->db(), sqlSelectOldApps, SqliteStmt::PreparePersistent))
         return;
 
-    if (limitCount != 0) {
-        stmt.bindInt(1, limitCount);
-    }
+    stmt.bindInt(1, limitCount);
 
     while (stmt.step() == SqliteStmt::StepRow) {
         const QString appPath = stmt.columnText(0);
@@ -298,12 +306,10 @@ void AppInfoManager::getOldAppsAndIcons(
     }
 }
 
-bool AppInfoManager::deleteAppsAndIcons(
+void AppInfoManager::deleteAppsAndIcons(
         const QStringList &appPaths, const QHash<qint64, int> &iconIds)
 {
     bool ok = false;
-
-    sqliteDb()->beginWriteTransaction();
 
     // Delete old icons
     deleteIcons(iconIds, ok);
@@ -312,10 +318,6 @@ bool AppInfoManager::deleteAppsAndIcons(
     if (ok) {
         deleteApps(appPaths, ok);
     }
-
-    sqliteDb()->endTransaction(ok);
-
-    return ok;
 }
 
 void AppInfoManager::deleteIcons(const QHash<qint64, int> &iconIds, bool &ok)

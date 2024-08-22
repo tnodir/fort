@@ -2,11 +2,13 @@
 #define APPINFOMANAGER_H
 
 #include <QMutex>
+#include <QVector>
 
 #include <sqlite/sqlite_types.h>
 
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
+#include <util/triggertimer.h>
 #include <util/worker/workermanager.h>
 
 #include "appinfo.h"
@@ -33,7 +35,7 @@ public:
     bool saveToDb(const QString &appPath, AppInfo &appInfo, const QImage &appIcon);
 
     void deleteAppInfo(const QString &appPath, const AppInfo &appInfo);
-    void deleteOldApps(int limitCount = 0);
+    void deleteOldApps(int limitCount);
 
 signals:
     void lookupInfoFinished(const QString &appPath, const AppInfo &appInfo);
@@ -48,8 +50,6 @@ public slots:
 protected:
     WorkerObject *createWorker() override;
 
-    virtual void updateAppAccessTime(const QString &appPath);
-
 private:
     bool setupDb();
 
@@ -57,11 +57,12 @@ private:
     void saveAppInfo(
             const QString &appPath, const AppInfo &appInfo, const QVariant &iconId, bool &ok);
 
-    void deleteExcessAppInfos();
+    void emitAppsPurge();
+    void purgeApps();
 
     void getOldAppsAndIcons(
             QStringList &appPaths, QHash<qint64, int> &iconIds, int limitCount) const;
-    bool deleteAppsAndIcons(const QStringList &appPaths, const QHash<qint64, int> &iconIds);
+    void deleteAppsAndIcons(const QStringList &appPaths, const QHash<qint64, int> &iconIds);
 
     void deleteIcons(const QHash<qint64, int> &iconIds, bool &ok);
     void deleteIcon(qint64 iconId, int deleteCount, bool &ok);
@@ -70,6 +71,8 @@ private:
     void deleteApp(const QString &appPath, bool &ok);
 
 private:
+    TriggerTimer m_appsPurgeTimer;
+
     SqliteDbPtr m_sqliteDb;
     QMutex m_mutex;
 };
