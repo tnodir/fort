@@ -71,7 +71,7 @@ void TrafficPage::onRetranslateUi()
 
 void TrafficPage::retranslateTrafUnitNames()
 {
-    const QStringList list = { tr("Adaptive"), tr("Bytes"), "kB", "MB", "GB", "TB" };
+    const QStringList list = { tr("Adaptive"), tr("Bytes"), "KB", "MB", "GB", "TB", "PB" };
 
     ControlUtil::setComboBoxTexts(m_comboTrafUnit, list);
 

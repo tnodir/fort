@@ -192,7 +192,7 @@ bool TrafListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
 QString TrafListModel::formatTrafUnit(qint64 bytes) const
 {
     if (bytes == 0) {
-        return QLatin1String("0");
+        return "0";
     }
 
     const int trafPrec = (unit() == UnitBytes) ? 0 : 2;

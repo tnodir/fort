@@ -1,56 +1,81 @@
 #include "formatutil.h"
 
+#include <QtMath>
+
 namespace {
-
-static const qint64 g_baseSiPowerValues[] = {
-    1,
-    1024LL, // kilo
-    1024LL * 1024LL, // mega
-    1024LL * 1024LL * 1024LL, // giga
-    1024LL * 1024LL * 1024LL * 1024LL, // tera
-    1024LL * 1024LL * 1024LL * 1024LL * 1024LL, // peta
-    1024LL * 1024LL * 1024LL * 1024LL * 1024LL * 1024LL, // exa
-};
-
-static const qint64 g_baseIecPowerValues[] = {
-    1,
-    1000LL, // kibi
-    1000LL * 1000LL, // mebi
-    1000LL * 1000LL * 1000LL, // gibi
-    1000LL * 1000LL * 1000LL * 1000LL, // tebi
-    1000LL * 1000LL * 1000LL * 1000LL * 1000LL, // pebi
-    1000LL * 1000LL * 1000LL * 1000LL * 1000LL * 1000LL, // exbi
-};
 
 constexpr int FORMAT_POWER_VALUES_SIZE = 7;
 
-static_assert(
-        std::size(g_baseSiPowerValues) == FORMAT_POWER_VALUES_SIZE, "powerValues size mismatch");
+bool isBase1000(FormatUtil::SizeFormat format)
+{
+    return (format & FormatUtil::SizeBase1000) != 0;
+}
+
+bool isBits(FormatUtil::SizeFormat format)
+{
+    return (format & FormatUtil::SizeBits) != 0;
+}
 
 }
 
-QString FormatUtil::formatSize(
-        qint64 value, int power, int precision, QLocale::DataSizeFormats format)
+int FormatUtil::getPower(qint64 value, SizeFormat format)
+{
+    if (value == 0) {
+        return 0;
+    }
+
+    if (isBase1000(format)) {
+        return int(qLn(qAbs(value)) / 3);
+    }
+
+    // Compute log2(value) / 10
+    return int((63 - qCountLeadingZeroBits(quint64(qAbs(value)))) / 10);
+}
+
+QString FormatUtil::formatSize(qint64 value, int power, int precision, SizeFormat format)
 {
     // We don't support sizes in units larger than exbibytes because
     // the number of bytes would not fit into qint64.
-    Q_ASSERT(power < FORMAT_POWER_VALUES_SIZE && power >= 0);
+    Q_ASSERT(power >= 0 && power < FORMAT_POWER_VALUES_SIZE);
 
-    const qint64 *powerValues =
-            (format & QLocale::DataSizeBase1000) ? g_baseIecPowerValues : g_baseSiPowerValues;
-    const qint64 powerValue = powerValues[power];
+    if (power == 0) {
+        return QLocale().toString(value);
+    }
 
-    return QLocale().toString(qreal(value) / powerValue, 'f', precision);
+    const int base = isBase1000(format) ? 1000 : 1024;
+    const qreal powerValue = qPow(qreal(base), power);
+
+    return QLocale().toString(value / powerValue, 'f', precision);
 }
 
-QString FormatUtil::formatDataSize(qint64 bytes, int precision, QLocale::DataSizeFormats format)
+QString FormatUtil::formatPowerUnit(int power, SizeFormat format)
 {
-    return QLocale().formattedDataSize(bytes, precision, format);
+    const QString byteUnit(isBits(format) ? 'b' : 'B');
+    if (power == 0) {
+        return byteUnit;
+    }
+
+    static const char units[] = { 'K', 'M', 'G', 'T', 'P', 'E' };
+
+    const QString unit(units[power - 1]);
+    const QString unitSuffix = isBase1000(format) ? QLatin1String("i") : QString();
+
+    return unit + unitSuffix + byteUnit;
+}
+
+QString FormatUtil::formatDataSize(qint64 bytes, int precision, SizeFormat format)
+{
+    const int power = getPower(bytes, format);
+    const auto sizeStr = formatSize(bytes, power, precision, format);
+    const auto unitStr = formatPowerUnit(power, format);
+
+    return sizeStr + ' ' + unitStr;
 }
 
 QString FormatUtil::formatSpeed(quint32 bitsPerSecond)
 {
-    const QString text = formatDataSize(bitsPerSecond, /*precision=*/0);
+    const auto format = SizeFormat(SizeTraditionalFormat | SizeBits);
+    const auto text = formatDataSize(bitsPerSecond, /*precision=*/0, format);
 
-    return text + QObject::tr("/s");
+    return text + "/s";
 }
