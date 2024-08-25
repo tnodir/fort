@@ -180,7 +180,7 @@ int RuleTextParser::pushListNode(int listType)
     const int listIndex = m_ruleExprArray.size();
 
     RuleExpr ruleExpr;
-    ruleExpr.flags = FORT_RULE_EXPR_FLAG_LIST;
+    ruleExpr.flags = FORT_RULE_EXPR_FLAG_LIST | (m_isNot ? FORT_RULE_EXPR_FLAG_NOT : 0);
     ruleExpr.type = listType;
 
     m_ruleExprArray.append(ruleExpr);
