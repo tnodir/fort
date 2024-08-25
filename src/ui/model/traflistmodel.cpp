@@ -191,15 +191,6 @@ bool TrafListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
 
 QString TrafListModel::formatTrafUnit(qint64 bytes) const
 {
-    static const QVector<qint64> unitMults = {
-        1, // Adaptive
-        1, // Bytes
-        1024, // KB
-        1024 * 1024, // MB
-        qint64(1024) * 1024 * 1024, // GB
-        qint64(1024) * 1024 * 1024 * 1024 // TB
-    };
-
     if (bytes == 0) {
         return QLatin1String("0");
     }
@@ -210,9 +201,9 @@ QString TrafListModel::formatTrafUnit(qint64 bytes) const
         return FormatUtil::formatDataSize(bytes, trafPrec);
     }
 
-    const qint64 unitMult = unitMults.at(unit());
+    const int power = unit() - 1;
 
-    return QLocale().toString(qreal(bytes) / unitMult, 'f', trafPrec);
+    return FormatUtil::formatSize(bytes, power, trafPrec);
 }
 
 QString TrafListModel::formatTrafTime(qint32 trafTime) const

@@ -9,6 +9,9 @@ class FormatUtil : public QObject
     Q_OBJECT
 
 public:
+    static QString formatSize(qint64 value, int power, int precision = 2,
+            QLocale::DataSizeFormats format = QLocale::DataSizeTraditionalFormat);
+
     static QString formatDataSize(qint64 bytes, int precision = 2,
             QLocale::DataSizeFormats format = QLocale::DataSizeTraditionalFormat);
 

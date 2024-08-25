@@ -17,7 +17,7 @@ class TrafListModel : public TableItemModel
     Q_OBJECT
 
 public:
-    enum TrafUnit { UnitAdaptive = 0, UnitBytes, UnitKB, UnitMB, UnitGB, UnitTB };
+    enum TrafUnit { UnitAdaptive = 0, UnitBytes, UnitKB, UnitMB, UnitGB, UnitTB, UnitPB, UnitEB };
     Q_ENUM(TrafUnit)
 
     enum TrafType { TrafHourly = 0, TrafDaily, TrafMonthly, TrafTotal };
