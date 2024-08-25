@@ -8,9 +8,9 @@
 #include <conf/firewallconf.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
+#include <util/formatutil.h>
 #include <util/guiutil.h>
 #include <util/ioc/ioccontainer.h>
-#include <util/net/netutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "axistickerspeed.h"
@@ -422,8 +422,8 @@ void GraphWindow::updateWindowTitleSpeed()
             m_graphOut->data()->isEmpty() ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
     setWindowTitle(QChar(0x2193) // ↓
-            + NetUtil::formatSpeed(quint32(inBits)) + ' ' + QChar(0x2191) // ↑
-            + NetUtil::formatSpeed(quint32(outBits)));
+            + FormatUtil::formatSpeed(quint32(inBits)) + ' ' + QChar(0x2191) // ↑
+            + FormatUtil::formatSpeed(quint32(outBits)));
 }
 
 void GraphWindow::setWindowOpacityPercent(int percent)

@@ -27,8 +27,8 @@
 #include <form/opt/optionscontroller.h>
 #include <fortsettings.h>
 #include <user/iniuser.h>
+#include <util/formatutil.h>
 #include <util/guiutil.h>
-#include <util/net/netutil.h>
 #include <util/textareautil.h>
 
 #include "apps/appscolumn.h"
@@ -52,7 +52,7 @@ CheckSpinCombo *createGroupLimit()
 
 QString formatSpeed(int kbits)
 {
-    return NetUtil::formatSpeed(quint32(kbits * 1024));
+    return FormatUtil::formatSpeed(quint32(kbits * 1024));
 }
 
 void pageAppGroupCheckEdited(ApplicationsPage *page, AppGroup *appGroup, bool isFlag = false)

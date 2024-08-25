@@ -6,9 +6,9 @@
 
 #include <fort_version.h>
 
+#include <util/formatutil.h>
 #include <util/json/jsonutil.h>
 #include <util/net/netdownloader.h>
-#include <util/net/netutil.h>
 
 namespace {
 
@@ -47,7 +47,8 @@ QString TaskUpdateChecker::releaseText() const
 
     return "[" + m_releaseName + "](" + APP_UPDATES_URL + "/tag/v" + m_version + ") (*"
             + publishedTime.toString("dd-MMM-yyyy hh:mm") + "*, "
-            + NetUtil::formatDataSize(m_downloadSize) + ")\n\n*Release Notes:*\n" + m_releaseNotes;
+            + FormatUtil::formatDataSize(m_downloadSize) + ")\n\n*Release Notes:*\n"
+            + m_releaseNotes;
 }
 
 void TaskUpdateChecker::setupDownloader()

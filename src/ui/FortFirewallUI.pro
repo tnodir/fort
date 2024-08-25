@@ -193,6 +193,7 @@ SOURCES += \
     util/device.cpp \
     util/dirinfo.cpp \
     util/fileutil.cpp \
+    util/formatutil.cpp \
     util/guiutil.cpp \
     util/iconcache.cpp \
     util/ini/mapsettings.cpp \
@@ -421,6 +422,7 @@ HEADERS += \
     util/device.h \
     util/dirinfo.h \
     util/fileutil.h \
+    util/formatutil.h \
     util/guiutil.h \
     util/iconcache.h \
     util/ini/mapsettings.h \

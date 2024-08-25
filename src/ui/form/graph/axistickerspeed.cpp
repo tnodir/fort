@@ -1,6 +1,6 @@
 #include "axistickerspeed.h"
 
-#include <util/net/netutil.h>
+#include <util/formatutil.h>
 
 double AxisTickerSpeed::getTickStep(const QCPRange &range)
 {
@@ -17,5 +17,5 @@ QString AxisTickerSpeed::getTickLabel(
     Q_UNUSED(formatChar);
     Q_UNUSED(precision);
 
-    return NetUtil::formatSpeed(quint32(tick));
+    return FormatUtil::formatSpeed(quint32(tick));
 }

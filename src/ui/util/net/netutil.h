@@ -34,9 +34,6 @@ public:
     static QByteArray ip6ToRawArray(const ip_addr_t &ip);
     static const ip6_addr_t &rawArrayToIp6(const QByteArray &buf);
 
-    static QString formatDataSize(qint64 bytes, int precision = 2);
-    static QString formatSpeed(quint32 bitsPerSecond);
-
     static QString getHostName(const QString &address);
 
     static QStringList localIpNetworks();

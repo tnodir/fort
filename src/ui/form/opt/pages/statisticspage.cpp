@@ -16,9 +16,9 @@
 #include <form/controls/labelspin.h>
 #include <form/controls/labelspincombo.h>
 #include <form/opt/optionscontroller.h>
+#include <util/formatutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
-#include <util/net/netutil.h>
 
 namespace {
 
@@ -33,7 +33,7 @@ const std::array quotaValues = { 10, 0, 100, 500, 1024, 8 * 1024, 10 * 1024, 30 
 
 QString formatQuota(int mbytes)
 {
-    return NetUtil::formatDataSize(qint64(mbytes) * 1024 * 1024, /*precision=*/0);
+    return FormatUtil::formatDataSize(qint64(mbytes) * 1024 * 1024, /*precision=*/0);
 }
 
 }

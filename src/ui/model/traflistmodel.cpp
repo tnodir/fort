@@ -5,8 +5,8 @@
 #include <stat/statmanager.h>
 #include <stat/statsql.h>
 #include <util/dateutil.h>
+#include <util/formatutil.h>
 #include <util/ioc/ioccontainer.h>
-#include <util/net/netutil.h>
 
 namespace {
 
@@ -207,7 +207,7 @@ QString TrafListModel::formatTrafUnit(qint64 bytes) const
     const int trafPrec = (unit() == UnitBytes) ? 0 : 2;
 
     if (unit() == UnitAdaptive) {
-        return NetUtil::formatDataSize(bytes, trafPrec);
+        return FormatUtil::formatDataSize(bytes, trafPrec);
     }
 
     const qint64 unitMult = unitMults.at(unit());

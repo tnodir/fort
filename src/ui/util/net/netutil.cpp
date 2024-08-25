@@ -1,7 +1,5 @@
 #include "netutil.h"
 
-#include <QLocale>
-
 #define WIN32_LEAN_AND_MEAN
 #include <ws2tcpip.h>
 
@@ -124,18 +122,6 @@ const ip6_addr_t &NetUtil::rawArrayToIp6(const QByteArray &buf)
 {
     Q_ASSERT(buf.size() == sizeof(ip6_addr_t));
     return *reinterpret_cast<const ip6_addr_t *>(buf.data());
-}
-
-QString NetUtil::formatDataSize(qint64 bytes, int precision)
-{
-    return QLocale().formattedDataSize(bytes, precision, QLocale::DataSizeTraditionalFormat);
-}
-
-QString NetUtil::formatSpeed(quint32 bitsPerSecond)
-{
-    const QString text = formatDataSize(bitsPerSecond, /*precision=*/0);
-
-    return text + QObject::tr("/s");
 }
 
 QString NetUtil::getHostName(const QString &address)
