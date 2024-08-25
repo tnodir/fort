@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v3.13.8-test0, 2024-08-25:
+- Driver: fortbuf: Improve IRP cancelling.
+- UI: Statistics: Format traffic dates and bytes per locale.
+- UI: Options: Fix "Theme" selected value.
+- UI: About: Show last success check time.
+- Installer: Don't re-create "README.portable" for Portable.
+- FortFirewall.exe.ini: Add "updateDir" option.
+
 v3.13.7, 2024-08-17:
 - UI: Options: Tray: Add "Show Alert Icon" flag.
 - UI: Programs: Add "Clear Alerts" button.
