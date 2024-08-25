@@ -1,10 +1,8 @@
 #include "formatutil.h"
 
-#include <QLocale>
-
-QString FormatUtil::formatDataSize(qint64 bytes, int precision)
+QString FormatUtil::formatDataSize(qint64 bytes, int precision, QLocale::DataSizeFormats format)
 {
-    return QLocale().formattedDataSize(bytes, precision, QLocale::DataSizeTraditionalFormat);
+    return QLocale().formattedDataSize(bytes, precision, format);
 }
 
 QString FormatUtil::formatSpeed(quint32 bitsPerSecond)
