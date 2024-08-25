@@ -107,7 +107,7 @@ inline static NTSTATUS fort_buffer_prepare_pending(
 
     /* Is it time to flush logs? */
     if (buf->out_len - new_top < FORT_LOG_SIZE_MAX) {
-        if (irp != NULL) {
+        if (irp != NULL && *irp == NULL) {
             *irp = buf->irp;
             buf->irp = NULL;
 
@@ -287,7 +287,7 @@ FORT_API NTSTATUS fort_buffer_xmove(
 
 inline static NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
 {
-    NTSTATUS status = STATUS_CANCELLED;
+    NTSTATUS status = STATUS_NOT_FOUND;
 
     *info = 0;
 
@@ -298,6 +298,8 @@ inline static NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, UL
     if (irp == buf->irp) {
         buf->irp = NULL;
         buf->out_len = 0;
+
+        status = STATUS_CANCELLED;
 
         if (buf->out_top != 0) {
             *info = buf->out_top;
@@ -315,6 +317,8 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
 
+    /* Already called: IoAcquireCancelSpinLock(irp->CancelIrql); */
+
     FORT_CHECK_STACK(FORT_DEVICE_CANCEL_PENDING);
 
     ULONG_PTR info;
@@ -324,7 +328,9 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
     IoSetCancelRoutine(irp, NULL);
     IoReleaseCancelSpinLock(irp->CancelIrql); /* before IoCompleteRequest()! */
 
-    fort_request_complete_info(irp, status, info);
+    if (status != STATUS_NOT_FOUND) {
+        fort_request_complete_info(irp, status, info);
+    }
 }
 
 FORT_API void fort_buffer_irp_mark_pending(PIRP irp)
