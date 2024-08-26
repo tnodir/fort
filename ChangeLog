@@ -1,10 +1,11 @@
 Fort Firewall ChangeLog
 
-v3.13.8-test0, 2024-08-25:
-- Driver: fortbuf: Improve IRP cancelling.
-- UI: Statistics: Format traffic dates and bytes per locale.
+v3.13.8, 2024-08-26:
+- UI: Options: Traffic Graph: Add "Units" option.
+- UI: Format traffic dates and bytes per locale.
 - UI: Options: Fix "Theme" selected value.
 - UI: About: Show last success check time.
+- Driver: fortbuf: Improve IRP cancelling.
 - Installer: Don't re-create "README.portable" for Portable.
 - FortFirewall.exe.ini: Add "updateDir" option.
 
