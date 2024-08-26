@@ -56,6 +56,8 @@ private:
     QLayout *setupTrayActionLayout();
     void setupConfirmationsBox();
 
+    void updateTheme();
+
 private:
     bool m_explorerEdited : 1 = false;
     bool m_languageEdited : 1 = false;

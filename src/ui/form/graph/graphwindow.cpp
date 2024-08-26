@@ -8,7 +8,6 @@
 #include <conf/firewallconf.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
-#include <util/formatutil.h>
 #include <util/guiutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/window/widgetwindowstatewatcher.h>
@@ -161,8 +160,8 @@ void GraphWindow::setupUi()
     axisRect->setMinimumMargins(QMargins(1, 2, 1, 1));
 
     // Axis Ticker
-    QSharedPointer<AxisTickerSpeed> ticker(new AxisTickerSpeed());
-    yAxis->setTicker(ticker);
+    m_ticker.reset(new AxisTickerSpeed());
+    yAxis->setTicker(m_ticker);
 
     // Graph Inbound
     m_graphIn = new QCPBars(m_plot->xAxis, m_plot->yAxis);
@@ -194,6 +193,7 @@ void GraphWindow::setupFlagsAndColors()
     const auto updateFlagsAndColors = [&] {
         updateWindowFlags();
         updateColors();
+        updateFormat();
     };
 
     updateFlagsAndColors();
@@ -239,6 +239,13 @@ void GraphWindow::updateColors()
 
     // Graph Outbound
     m_graphOut->setPen(QPen(ini()->graphWindowColorOut()));
+}
+
+void GraphWindow::updateFormat()
+{
+    m_unitFormat = FormatUtil::graphUnitFormat(ini()->graphWindowTrafUnit());
+
+    m_ticker->setUnitFormat(m_unitFormat);
 }
 
 void GraphWindow::setupTimer()
@@ -422,8 +429,8 @@ void GraphWindow::updateWindowTitleSpeed()
             m_graphOut->data()->isEmpty() ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
     setWindowTitle(QChar(0x2193) // ↓
-            + FormatUtil::formatSpeed(quint32(inBits)) + ' ' + QChar(0x2191) // ↑
-            + FormatUtil::formatSpeed(quint32(outBits)));
+            + FormatUtil::formatSpeed(quint64(inBits), m_unitFormat) + ' ' + QChar(0x2191) // ↑
+            + FormatUtil::formatSpeed(quint64(outBits), m_unitFormat));
 }
 
 void GraphWindow::setWindowOpacityPercent(int percent)

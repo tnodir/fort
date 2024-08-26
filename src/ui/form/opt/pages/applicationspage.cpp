@@ -52,7 +52,7 @@ CheckSpinCombo *createGroupLimit()
 
 QString formatSpeed(int kbits)
 {
-    return FormatUtil::formatSpeed(quint32(kbits * 1024));
+    return FormatUtil::formatSpeed(kbits * 1024LL);
 }
 
 void pageAppGroupCheckEdited(ApplicationsPage *page, AppGroup *appGroup, bool isFlag = false)

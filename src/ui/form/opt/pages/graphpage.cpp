@@ -1,6 +1,7 @@
 #include "graphpage.h"
 
 #include <QCheckBox>
+#include <QComboBox>
 #include <QGroupBox>
 #include <QHBoxLayout>
 #include <QLabel>
@@ -32,6 +33,7 @@ void GraphPage::onResetToDefault()
     m_graphOpacity->spinBox()->setValue(ini()->graphWindowOpacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(ini()->graphWindowHoverOpacityDefault());
     m_graphMaxSeconds->spinBox()->setValue(ini()->graphWindowMaxSecondsDefault());
+    m_comboTrafUnit->setCurrentIndex(ini()->graphWindowTrafUnitDefault());
 
     m_graphColor->setColor(ini()->graphWindowColorDefault());
     m_graphColorIn->setColor(ini()->graphWindowColorInDefault());
@@ -56,6 +58,7 @@ void GraphPage::onRetranslateUi()
     m_graphOpacity->label()->setText(tr("Opacity:"));
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
     m_graphMaxSeconds->label()->setText(tr("Max seconds:"));
+    m_traphUnits->setText(tr("Units:"));
 
     m_graphColor->label()->setText(tr("Background:"));
     m_graphColorIn->label()->setText(tr("Download:"));
@@ -97,13 +100,25 @@ QLayout *GraphPage::setupColumns()
 
 QLayout *GraphPage::setupColumn1()
 {
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
-
     // Graph Group Box
     setupGraphBox();
-    layout->addWidget(m_gbGraph);
 
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
+    layout->addWidget(m_gbGraph);
+    layout->addStretch();
+
+    return layout;
+}
+
+QLayout *GraphPage::setupColumn2()
+{
+    // Graph Colors Group Box
+    setupColorsBox();
+
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
+    layout->addWidget(m_gbColors);
     layout->addStretch();
 
     return layout;
@@ -114,10 +129,22 @@ void GraphPage::setupGraphBox()
     setupGraphCheckboxes();
     setupGraphOptions();
 
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbGraphHideOnClose,
-            ControlUtil::createSeparator(), m_cbGraphAlwaysOnTop, m_cbGraphFrameless,
-            m_cbGraphClickThrough, m_cbGraphHideOnHover, ControlUtil::createSeparator(),
-            m_graphOpacity, m_graphHoverOpacity, m_graphMaxSeconds });
+    // Traffic Units
+    auto trafUnitsLayout = setupTrafUnitsLayout();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbGraphHideOnClose);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addWidget(m_cbGraphAlwaysOnTop);
+    layout->addWidget(m_cbGraphFrameless);
+    layout->addWidget(m_cbGraphClickThrough);
+    layout->addWidget(m_cbGraphHideOnHover);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addWidget(m_graphOpacity);
+    layout->addWidget(m_graphHoverOpacity);
+    layout->addWidget(m_graphMaxSeconds);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addLayout(trafUnitsLayout);
 
     m_gbGraph = new QGroupBox();
     m_gbGraph->setLayout(layout);
@@ -188,18 +215,23 @@ void GraphPage::setupGraphOptions()
             });
 }
 
-QLayout *GraphPage::setupColumn2()
+QLayout *GraphPage::setupTrafUnitsLayout()
 {
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
+    const QStringList list = { "b/s", "B/s", "ib/s", "iB/s" };
 
-    // Graph Colors Group Box
-    setupColorsBox();
-    layout->addWidget(m_gbColors);
+    m_traphUnits = ControlUtil::createLabel();
 
-    layout->addStretch();
+    m_comboTrafUnit = ControlUtil::createComboBox(list, [&](int index) {
+        if (ini()->graphWindowTrafUnit() != index) {
+            ini()->setGraphWindowTrafUnit(index);
+            ctrl()->setIniEdited();
+        }
+    });
+    m_comboTrafUnit->setFixedWidth(110);
 
-    return layout;
+    m_comboTrafUnit->setCurrentIndex(ini()->graphWindowTrafUnit());
+
+    return ControlUtil::createRowLayout(m_traphUnits, m_comboTrafUnit);
 }
 
 void GraphPage::setupColorsBox()

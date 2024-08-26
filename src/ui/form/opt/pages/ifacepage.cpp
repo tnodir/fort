@@ -144,8 +144,7 @@ void IfacePage::retranslateComboTheme()
 
     ControlUtil::setComboBoxTexts(m_comboTheme, list);
 
-    const auto colorScheme = IniUser::colorSchemeByName(iniUser()->theme());
-    m_comboTheme->setCurrentIndex(colorScheme);
+    updateTheme();
 }
 
 void IfacePage::retranslateComboHotKey()
@@ -557,4 +556,10 @@ void IfacePage::setupConfirmationsBox()
 
     m_gbConfirmations = new QGroupBox();
     m_gbConfirmations->setLayout(layout);
+}
+
+void IfacePage::updateTheme()
+{
+    const auto colorScheme = IniUser::colorSchemeByName(iniUser()->theme());
+    m_comboTheme->setCurrentIndex(colorScheme);
 }

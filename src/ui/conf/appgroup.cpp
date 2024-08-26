@@ -171,12 +171,12 @@ QString AppGroup::menuLabel() const
 
     if (enabledSpeedLimitIn() != 0) {
         text += QLatin1Char(' ') + QChar(0x2193) // ↓
-                + FormatUtil::formatSpeed(speedLimitIn() * 1024);
+                + FormatUtil::formatSpeed(speedLimitIn() * 1024LL);
     }
 
     if (enabledSpeedLimitOut() != 0) {
         text += QLatin1Char(' ') + QChar(0x2191) // ↑
-                + FormatUtil::formatSpeed(speedLimitOut() * 1024);
+                + FormatUtil::formatSpeed(speedLimitOut() * 1024LL);
     }
 
     if (periodEnabled()) {

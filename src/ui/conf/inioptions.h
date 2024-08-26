@@ -124,6 +124,10 @@ public:
     int graphWindowMaxSeconds() const { return valueInt("graphWindow/maxSeconds", 500); }
     void setGraphWindowMaxSeconds(int v) { setValue("graphWindow/maxSeconds", v); }
 
+    constexpr int graphWindowTrafUnitDefault() const { return 0; }
+    int graphWindowTrafUnit() const { return valueInt("graphWindow/trafUnit", 0); }
+    void setGraphWindowTrafUnit(int v) { setValue("graphWindow/trafUnit", v); }
+
     constexpr QColor graphWindowColorDefault() const { return QColor(255, 255, 255); }
     QColor graphWindowColor() const
     {

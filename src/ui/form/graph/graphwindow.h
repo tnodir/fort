@@ -4,6 +4,9 @@
 #include <QTimer>
 
 #include <form/controls/formwindow.h>
+#include <util/formatutil.h>
+
+class AxisTickerSpeed;
 
 class ConfManager;
 class FirewallConf;
@@ -55,6 +58,7 @@ private:
     void setupFlagsAndColors();
     void updateWindowFlags();
     void updateColors();
+    void updateFormat();
 
     void setupTimer();
 
@@ -76,9 +80,12 @@ protected:
 private:
     bool m_mouseDragResize = false;
 
+    FormatUtil::SizeFormat m_unitFormat = FormatUtil::SpeedTraditionalFormat;
+
     qint64 m_lastUnixTime = 0;
 
     GraphPlot *m_plot = nullptr;
+    QSharedPointer<AxisTickerSpeed> m_ticker;
     QCPBars *m_graphIn = nullptr;
     QCPBars *m_graphOut = nullptr;
 

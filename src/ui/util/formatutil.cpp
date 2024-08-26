@@ -25,7 +25,7 @@ int FormatUtil::getPower(qint64 value, SizeFormat format)
     }
 
     if (isBase1000(format)) {
-        return int(qLn(qAbs(value)) / 3);
+        return int(std::log10(qAbs(value)) / 3);
     }
 
     // Compute log2(value) / 10
@@ -42,8 +42,8 @@ QString FormatUtil::formatSize(qint64 value, int power, int precision, SizeForma
         return QLocale().toString(value);
     }
 
-    const int base = isBase1000(format) ? 1000 : 1024;
-    const qreal powerValue = qPow(qreal(base), power);
+    const qreal base = isBase1000(format) ? 1000 : 1024;
+    const qreal powerValue = qPow(base, power);
 
     return QLocale().toString(value / powerValue, 'f', precision);
 }
@@ -72,10 +72,32 @@ QString FormatUtil::formatDataSize(qint64 bytes, int precision, SizeFormat forma
     return sizeStr + ' ' + unitStr;
 }
 
-QString FormatUtil::formatSpeed(quint32 bitsPerSecond)
+QString FormatUtil::formatSpeed(qint64 bitsPerSecond, SizeFormat format)
 {
-    const auto format = SizeFormat(SizeTraditionalFormat | SizeBits);
+    if (!isBits(format)) {
+        bitsPerSecond /= 8;
+    }
+
     const auto text = formatDataSize(bitsPerSecond, /*precision=*/0, format);
 
     return text + "/s";
+}
+
+QStringList FormatUtil::graphUnitNames()
+{
+    static const QStringList list = { "b/s", "B/s", "ib/s", "iB/s" };
+
+    return list;
+}
+
+FormatUtil::SizeFormat FormatUtil::graphUnitFormat(int index)
+{
+    static const SizeFormat list[] = { SpeedTraditionalFormat, SizeTraditionalFormat,
+        SpeedIecFormat, SizeIecFormat };
+
+    if (index < 0 || index >= std::size(list)) {
+        index = 0;
+    }
+
+    return list[index];
 }

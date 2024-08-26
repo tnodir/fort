@@ -23,10 +23,12 @@ private:
     void setupUi();
     QLayout *setupColumns();
     QLayout *setupColumn1();
+    QLayout *setupColumn2();
+
     void setupGraphBox();
     void setupGraphCheckboxes();
     void setupGraphOptions();
-    QLayout *setupColumn2();
+    QLayout *setupTrafUnitsLayout();
     void setupColorsBox();
     void setupGraphColors();
 
@@ -42,6 +44,8 @@ private:
     LabelSpin *m_graphOpacity = nullptr;
     LabelSpin *m_graphHoverOpacity = nullptr;
     LabelSpin *m_graphMaxSeconds = nullptr;
+    QLabel *m_traphUnits = nullptr;
+    QComboBox *m_comboTrafUnit = nullptr;
 
     LabelColor *m_graphColor = nullptr;
     LabelColor *m_graphColorIn = nullptr;

@@ -17,5 +17,5 @@ QString AxisTickerSpeed::getTickLabel(
     Q_UNUSED(formatChar);
     Q_UNUSED(precision);
 
-    return FormatUtil::formatSpeed(quint32(tick));
+    return FormatUtil::formatSpeed(qint64(tick), unitFormat());
 }
