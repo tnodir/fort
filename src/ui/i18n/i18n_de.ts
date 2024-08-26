@@ -604,6 +604,10 @@
         <source>Hide on close</source>
         <translation>Beim Schließen ausblenden</translation>
     </message>
+    <message>
+        <source>Units:</source>
+        <translation>Einheiten:</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1545,13 +1549,6 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Are you sure to clear alerts?</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>/s</source>
-        <translation>/s</translation>
     </message>
 </context>
 <context>

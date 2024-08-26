@@ -604,6 +604,10 @@
         <source>Hide on close</source>
         <translation>Skrij ob zapiranju</translation>
     </message>
+    <message>
+        <source>Units:</source>
+        <translation>Enote:</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1545,13 +1549,6 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Are you sure to clear alerts?</source>
         <translation>Ali ste prepričani, da želite počistiti opozorila?</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>/s</source>
-        <translation>/s</translation>
     </message>
 </context>
 <context>

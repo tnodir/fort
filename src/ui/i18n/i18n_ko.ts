@@ -604,6 +604,10 @@
         <source>Hide on close</source>
         <translation>닫기 시 숨기기</translation>
     </message>
+    <message>
+        <source>Units:</source>
+        <translation>단위:</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1545,13 +1549,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to clear alerts?</source>
         <translation>알림을 지우시겠습니까?</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>/s</source>
-        <translation>/s</translation>
     </message>
 </context>
 <context>

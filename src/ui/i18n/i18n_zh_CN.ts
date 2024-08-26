@@ -604,6 +604,10 @@
         <source>Hide on close</source>
         <translation>关闭时隐藏</translation>
     </message>
+    <message>
+        <source>Units:</source>
+        <translation>单元：</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1543,13 +1547,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to clear alerts?</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>/s</source>
-        <translation>/秒</translation>
     </message>
 </context>
 <context>

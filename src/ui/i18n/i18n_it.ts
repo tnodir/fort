@@ -604,6 +604,10 @@
         <source>Hide on close</source>
         <translation>Nascondi alla chiusura</translation>
     </message>
+    <message>
+        <source>Units:</source>
+        <translation>Unità:</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1545,13 +1549,6 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Are you sure to clear alerts?</source>
         <translation>Sei sicuro di cancellare gli allarmi?</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>/s</source>
-        <translation>/s</translation>
     </message>
 </context>
 <context>

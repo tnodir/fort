@@ -604,6 +604,10 @@
         <source>Hide on close</source>
         <translation>Masquer à la fermeture</translation>
     </message>
+    <message>
+        <source>Units:</source>
+        <translation>Unités:</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1545,13 +1549,6 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Are you sure to clear alerts?</source>
         <translation>Êtes-vous sûr de vouloir effacer les alertes ?</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>/s</source>
-        <translation>/s</translation>
     </message>
 </context>
 <context>

@@ -604,6 +604,10 @@
         <source>Hide on close</source>
         <translation>إخفاء عند الإغلاق</translation>
     </message>
+    <message>
+        <source>Units:</source>
+        <translation>الوحدة:</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1543,13 +1547,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to clear alerts?</source>
         <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>/s</source>
-        <translation> الثانية</translation>
     </message>
 </context>
 <context>

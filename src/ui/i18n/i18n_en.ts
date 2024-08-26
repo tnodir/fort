@@ -604,6 +604,10 @@
         <source>Hide on close</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Units:</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1533,13 +1537,6 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>/s</source>
         <translation></translation>
     </message>
 </context>
