@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.13.9-test0, 2024-08-28:
+- Driver: fortcout: Fix app's zones checking.
+
 v3.13.8, 2024-08-26:
 - UI: Options: Traffic Graph: Add "Units" option.
 - UI: Format traffic dates and bytes per locale.
