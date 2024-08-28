@@ -201,11 +201,19 @@ inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CA
     return fort_callout_ale_associate_flow(ca, cx, app_flags);
 }
 
-inline static BOOL fort_callout_ale_is_zone_blocked(
+inline static BOOL fort_callout_ale_ip_zone_included(
         PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, UINT32 zones_mask)
 {
     return zones_mask != 0
             && fort_conf_zones_ip_included(
+                    &fort_device()->conf, zones_mask, cx->remote_ip, ca->isIPv6);
+}
+
+inline static BOOL fort_callout_ale_ip_zone_excluded(
+        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, UINT32 zones_mask)
+{
+    return zones_mask != 0
+            && !fort_conf_zones_ip_included(
                     &fort_device()->conf, zones_mask, cx->remote_ip, ca->isIPv6);
 }
 
@@ -221,8 +229,8 @@ static BOOL fort_callout_ale_is_ip_blocked(
         return TRUE; /* block LAN Only */
     }
 
-    if (fort_callout_ale_is_zone_blocked(ca, cx, app_data.reject_zones)
-            || fort_callout_ale_is_zone_blocked(ca, cx, app_data.accept_zones)) {
+    if (fort_callout_ale_ip_zone_included(ca, cx, app_data.reject_zones)
+            || fort_callout_ale_ip_zone_excluded(ca, cx, app_data.accept_zones)) {
         cx->block_reason = FORT_BLOCK_REASON_ZONE;
         return TRUE; /* block Rejected or Not Accepted Zones */
     }
