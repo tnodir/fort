@@ -874,11 +874,11 @@
     </message>
     <message>
         <source>Exclude from screen capture</source>
-        <translation type="unfinished"></translation>
+        <translation>从屏幕截图中排除</translation>
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>显示警报图标</translation>
     </message>
 </context>
 <context>
@@ -1542,11 +1542,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Clear Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>清除警报</translation>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要清除警报吗？</translation>
     </message>
 </context>
 <context>
