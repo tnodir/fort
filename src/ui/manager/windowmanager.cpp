@@ -494,12 +494,12 @@ void WindowManager::showOptionsWindowTab(int index)
 
 void WindowManager::showAppGroupsWindow()
 {
-    showOptionsWindowTab(2);
+    showOptionsWindowTab(3);
 }
 
 void WindowManager::showStatOptionsWindow()
 {
-    showOptionsWindowTab(3);
+    showOptionsWindowTab(4);
 }
 
 void WindowManager::showServicesWindow()
