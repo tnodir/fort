@@ -52,6 +52,10 @@ sc start %DRIVERSVC%
 )
 
 
+@rem Start the FortFirewall service
+@sc start %FORTSVC%
+
+
 @set RCODE=0
 @goto EXIT
 

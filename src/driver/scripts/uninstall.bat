@@ -3,9 +3,8 @@
 @call "%~dp0setup-vars.bat"
 
 
-@rem Stop and delete the FortFirewall service
+@rem Stop the FortFirewall service
 @sc stop %FORTSVC%
-@sc delete %FORTSVC%
 
 
 @rem Stop the driver service
