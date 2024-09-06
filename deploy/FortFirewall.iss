@@ -105,6 +105,9 @@ Filename: "sc.exe"; Parameters: "start {#APP_SVC_NAME}"; Description: "Start ser
 Filename: "{#APP_EXE}"; Parameters: "--launch --lang {code:LanguageName}"; \
   Description: {cm:LaunchProgram,{#APP_NAME}}; Flags: nowait postinstall; Check: ShouldLaunch
 
+Filename: "notepad"; Parameters: "{app}\README.portable"; Description: "README.portable"; \
+  Flags: nowait postinstall skipifsilent runasoriginaluser; Tasks: portable
+
 [UninstallRun]
 Filename: "{#APP_EXE}"; Parameters: "-u"; RunOnceId: "Uninstall"
 Filename: "{app}\driver\scripts\uninstall.bat"; RunOnceId: "UninsDriver"
@@ -158,9 +161,14 @@ begin
   end;
 end;
 
+function IsSilentInstall: Boolean;
+begin
+  Result := ParamExists('/SILENT') or ParamExists('/VERYSILENT');
+end;
+
 function ShouldLaunch: Boolean;
 begin
-  Result := ParamExists('/LAUNCH') or not (ParamExists('/SILENT') or ParamExists('/VERYSILENT'));
+  Result := ParamExists('/LAUNCH') or not IsSilentInstall;
 end;
 
 #if CHECK_WIN10 == "Y"

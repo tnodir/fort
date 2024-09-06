@@ -3,7 +3,16 @@ README.portable
 
 This version of Fort Firewall is portable, i.e. does not need to
 be installed. It will run from any directory you place it in, even
-from a USB thumbdrive. It will not write permanent entries into the
-Windows registry.
+from a USB thumbdrive.
 
-It needs administrator privileges to install drivers only.
+Please DO NOT REMOVE the "README.portable" file, as this will reverse
+the portability of the application!
+
+Fort Firewall needs administrator privileges to install driver.
+
+How to UNINSTALL a portable installation:
+
+    - Run the Fort Firewall as Administrator.
+    - Open the 'My Fort' window and click on Portable: Uninstall button.
+    - Close the running Fort Firewall.
+    - Delete the Fort Firewall application's folder.
