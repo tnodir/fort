@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.13.10, 2024-09-07:
+- UI: Add Spanish language.
+- Installer: Show "README.portable" file (for how to uninstall the portable installation).
+- Driver Scripts: Don't remove FortFirewall service.
+
 v3.13.9, 2024-08-28:
 - Driver: fortcout: Fix app's zones checking (v3.13.6 regression).
 
