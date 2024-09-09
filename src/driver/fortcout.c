@@ -374,12 +374,6 @@ inline static void fort_callout_ale_check_conf(
                 &fort_device()->ps_tree, process_id, &path, &isSvcHost, &inherited)) {
         path = real_path;
     } else if (!inherited) {
-        /* TODO: Check "ServiceTag" on Windows 10+ */
-#if 0 // !defined(FORT_WIN7_COMPAT)
-        PVOID subProcessTag = ca->inMetaValues->subProcessTag;
-        if (subProcessTag && isSvcHost) { }
-#endif
-
         real_path = path;
     }
 
@@ -496,6 +490,7 @@ static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedVa
         .localPort = FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_PORT,
         .remotePort = FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_PORT,
         .ipProto = FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL,
+        .userId = FWPS_FIELD_ALE_AUTH_CONNECT_V4_ALE_USER_ID,
     };
 
     fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
@@ -513,6 +508,7 @@ static void NTAPI fort_callout_connect_v6(const FWPS_INCOMING_VALUES0 *inFixedVa
         .localPort = FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_LOCAL_PORT,
         .remotePort = FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_REMOTE_PORT,
         .ipProto = FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_PROTOCOL,
+        .userId = FWPS_FIELD_ALE_AUTH_CONNECT_V6_ALE_USER_ID,
     };
 
     fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
@@ -530,6 +526,7 @@ static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedVal
         .localPort = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_LOCAL_PORT,
         .remotePort = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_PORT,
         .ipProto = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL,
+        .userId = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_ALE_USER_ID,
     };
 
     fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
@@ -547,6 +544,7 @@ static void NTAPI fort_callout_accept_v6(const FWPS_INCOMING_VALUES0 *inFixedVal
         .localPort = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_LOCAL_PORT,
         .remotePort = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_REMOTE_PORT,
         .ipProto = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_PROTOCOL,
+        .userId = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_ALE_USER_ID,
     };
 
     fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
