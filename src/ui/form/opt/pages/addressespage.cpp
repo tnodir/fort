@@ -92,12 +92,10 @@ void AddressesPage::retranslateAddressesPlaceholderText()
 
 void AddressesPage::setupUi()
 {
-    auto layout = new QVBoxLayout();
-
     // Tab Bar
     m_tabBar = new QTabBar();
     m_tabBar->setShape(QTabBar::RoundedNorth);
-    layout->addWidget(m_tabBar);
+    m_tabBar->setExpanding(false);
 
     m_tabBar->addTab(IconCache::icon(":/icons/global_telecom.png"), QString());
     m_tabBar->addTab(IconCache::icon(":/icons/ip_block.png"), QString());
@@ -109,10 +107,13 @@ void AddressesPage::setupUi()
 
     // Splitter
     setupSplitter();
-    layout->addWidget(m_splitter, 1);
 
     // Splitter Buttons
     setupSplitterButtons();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_tabBar);
+    layout->addWidget(m_splitter, 1);
 
     this->setLayout(layout);
 }
