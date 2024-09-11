@@ -874,11 +874,11 @@
     </message>
     <message>
         <source>Exclude from screen capture</source>
-        <translation type="unfinished"></translation>
+        <translation>Von der Bildschirmaufnahme ausschließen</translation>
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarm-Symbol anzeigen</translation>
     </message>
 </context>
 <context>
@@ -1544,11 +1544,11 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Clear Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarme löschen</translation>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sind Sie sicher, dass Sie Warnungen löschen möchten?</translation>
     </message>
 </context>
 <context>

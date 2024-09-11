@@ -606,7 +606,7 @@
     </message>
     <message>
         <source>Units:</source>
-        <translation>الوحدة:</translation>
+        <translation>الوحدات:</translation>
     </message>
 </context>
 <context>
@@ -874,11 +874,11 @@
     </message>
     <message>
         <source>Exclude from screen capture</source>
-        <translation type="unfinished"></translation>
+        <translation>استبعاد من التقاط الشاشة</translation>
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>إظهار أيقونة التنبيه</translation>
     </message>
 </context>
 <context>
@@ -979,7 +979,7 @@
     </message>
     <message>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>الواجهة</translation>
     </message>
 </context>
 <context>
@@ -1153,11 +1153,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Local Area Network</source>
-        <translation type="unfinished"></translation>
+        <translation>شبكة المنطقة المحلية</translation>
     </message>
     <message>
         <source>Filter Local Network</source>
-        <translation type="unfinished"></translation>
+        <translation>تصفية الشبكة المحلية</translation>
     </message>
 </context>
 <context>
@@ -1432,7 +1432,9 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
-        <translation type="unfinished"></translation>
+        <translation>تنبيه: هذا الخيار يؤثر فقط على العمليات الجديدة!
+
+الرجاء إعادة تشغيل البرنامج لتفعيل هذا الخيار.</translation>
     </message>
 </context>
 <context>
@@ -1530,11 +1532,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Convert to Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>تحويل إلى بطاقة برية</translation>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
-        <translation type="unfinished"></translation>
+        <translation>هل أنت متأكد من تحويل البرنامج المحدد إلى كارت حر؟</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -1542,11 +1544,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Clear Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>مسح التنبيهات</translation>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation type="unfinished"></translation>
+        <translation>هل أنت متأكد من مسح التنبيهات؟</translation>
     </message>
 </context>
 <context>
@@ -1673,15 +1675,15 @@ Please restart the running program to take effect of this option.</source>
     <name>RuleTextParser</name>
     <message>
         <source>Bad text: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>نص سيئ: %1</translation>
     </message>
     <message>
         <source>Bad symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>رمز سيئ: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>رمز غير متوقع: %1</translation>
     </message>
 </context>
 <context>

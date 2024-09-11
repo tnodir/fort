@@ -874,11 +874,11 @@
     </message>
     <message>
         <source>Exclude from screen capture</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyklucz z przechwytywania ekranu</translation>
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż ikonę alertu</translation>
     </message>
 </context>
 <context>
@@ -979,7 +979,7 @@
     </message>
     <message>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Interfejs</translation>
     </message>
 </context>
 <context>
@@ -1153,11 +1153,11 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     </message>
     <message>
         <source>Local Area Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Sieć lokalna</translation>
     </message>
     <message>
         <source>Filter Local Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtruj sieć lokalną</translation>
     </message>
 </context>
 <context>
@@ -1432,7 +1432,9 @@ Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowi
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
-        <translation type="unfinished"></translation>
+        <translation>Uwaga: Ta opcja dotyczy tylko nowych procesów!
+
+Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
 </context>
 <context>
@@ -1542,11 +1544,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Clear Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Wyczyść alerty</translation>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation type="unfinished"></translation>
+        <translation>Czy na pewno chcesz wyczyścić alerty?</translation>
     </message>
 </context>
 <context>
