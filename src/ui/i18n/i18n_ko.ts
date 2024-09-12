@@ -404,7 +404,7 @@
     </message>
     <message>
         <source>Reason</source>
-        <translation type="unfinished"></translation>
+        <translation>이유</translation>
     </message>
 </context>
 <context>
@@ -898,7 +898,7 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation type="unfinished"></translation>
+        <translation>알림 창이 자동으로 활성화됩니다</translation>
     </message>
 </context>
 <context>
