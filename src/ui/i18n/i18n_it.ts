@@ -347,10 +347,6 @@
         <translation>IP e porta remoti</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>Dir.</translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation>Direzione</translation>
     </message>
@@ -405,6 +401,10 @@
     <message>
         <source>Restrict access by Zone</source>
         <translation>Limita l&apos;accesso per zona</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation>Mostra icona di allarme</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programmi</translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation>Usa notifiche di sistema per nuovi programmi</translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation>Auto-mostra finestra di allerta per nuovi programmi</translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation>La finestra di allerta è sempre in vista</translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1116,10 +1136,6 @@ Assicurati di avere un backup recente.</translation>
         <translation>Blocca il traffico quando Fort Firewall non è in esecuzione</translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation>Usa notifiche di sistema per nuovi programmi</translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation>Raccogli nuovi programmi</translation>
     </message>
@@ -1134,14 +1150,6 @@ Assicurati di avere un backup recente.</translation>
     <message>
         <source>Windows Service installation changed.</source>
         <translation>Installazione di Windows Service modificata.</translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation>Auto-mostra finestra di allerta per nuovi programmi</translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
-        <translation>La finestra di allerta è sempre in vista</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>

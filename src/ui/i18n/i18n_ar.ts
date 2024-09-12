@@ -347,10 +347,6 @@
         <translation>عنوان الـIP البعيد ورقم المنفذ</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>الاتجاه</translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation>الاتجاه</translation>
     </message>
@@ -405,6 +401,10 @@
     <message>
         <source>Restrict access by Zone</source>
         <translation>تقييد الوصول حسب المنطقة</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation>إظهار أيقونة التنبيه</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation>إرسال الإشعارات إلى النظام عند محاولة برنامج الاتصال بالشبكة</translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation>عرض نافذة تحذير عند محاولة برنامج جديد الاتصال بالشبكة</translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation>جعل نافذة التحذير في مقدمة النوافذ دائمًا</translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1116,10 +1136,6 @@ Make sure that you have a fresh backup.</source>
         <translation>حظر اتصال الشبكة عندما يكون الجدار الناري متوقفًا</translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation>إرسال الإشعارات إلى النظام عند محاولة برنامج الاتصال بالشبكة</translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation>اكتشاف أي برنامج جديد يحاول استخدام الشبكة</translation>
     </message>
@@ -1134,14 +1150,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Windows Service installation changed.</source>
         <translation>تم تغيير وضع تثبيت خدمة الوندوز.</translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation>عرض نافذة تحذير عند محاولة برنامج جديد الاتصال بالشبكة</translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
-        <translation>جعل نافذة التحذير في مقدمة النوافذ دائمًا</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>

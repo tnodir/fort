@@ -347,10 +347,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation></translation>
     </message>
@@ -404,6 +400,10 @@
     </message>
     <message>
         <source>Restrict access by Zone</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Reason</source>
         <translation></translation>
     </message>
 </context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1114,10 +1134,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation></translation>
     </message>
@@ -1131,14 +1147,6 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
         <translation></translation>
     </message>
     <message>

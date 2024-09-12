@@ -347,10 +347,6 @@
         <translation>IP Remoto e Porta</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>Dir.</translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation>Direção</translation>
     </message>
@@ -404,6 +400,10 @@
     </message>
     <message>
         <source>Restrict access by Zone</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Reason</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation type="unfinished">Programas</translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1114,10 +1134,6 @@ Make sure that you have a fresh backup.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation>Colete Novos Programas</translation>
     </message>
@@ -1131,14 +1147,6 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

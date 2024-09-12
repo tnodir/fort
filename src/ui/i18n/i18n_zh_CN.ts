@@ -347,10 +347,6 @@
         <translation>远程IP和端口</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>目录</translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation>排序顺序</translation>
     </message>
@@ -405,6 +401,10 @@
     <message>
         <source>Restrict access by Zone</source>
         <translation>按区域限制访问</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation>显示警报图标</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>程序</translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation>使用系统通知新程序</translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation>自动显示新程序的提醒窗口</translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation>提醒窗口始终置顶</translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1114,10 +1134,6 @@ Make sure that you have a fresh backup.</source>
         <translation>当堡垒防火墙未运行时阻止流量</translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation>使用系统通知新程序</translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation>收集新程序</translation>
     </message>
@@ -1132,14 +1148,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Windows Service installation changed.</source>
         <translation>Windows 服务安装已更改。</translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation>自动显示新程序的提醒窗口</translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
-        <translation>提醒窗口始终置顶</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>

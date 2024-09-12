@@ -347,10 +347,6 @@
         <translation>IP et port distants</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>Dir.</translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation>Direction</translation>
     </message>
@@ -405,6 +401,10 @@
     <message>
         <source>Restrict access by Zone</source>
         <translation>Restreindre l’accès par Zone</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Raison</translation>
     </message>
 </context>
 <context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation>Afficher l&apos;icône d&apos;alerte</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programmes</translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation>Utiliser les notifications système pour les nouveaux programmes</translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation>Affichage auto de la fenêtre d&apos;alerte pour les nouveaux programmes</translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation>La fenêtre d&apos;alerte est toujours visible</translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation>La fenêtre d&apos;alerte est auto-active</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1116,10 +1136,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
         <translation>Bloquer le trafic lorsque Fort Firewall ne fonctionne pas</translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation>Utiliser les notifications système pour les nouveaux programmes</translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation>Collecter de nouveaux programmes</translation>
     </message>
@@ -1134,14 +1150,6 @@ Assurez-vous d&apos;avoir une nouvelle sauvegarde.</translation>
     <message>
         <source>Windows Service installation changed.</source>
         <translation>Installation du service Windows changée.</translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation>Affichage auto de la fenêtre d&apos;alerte pour les nouveaux programmes</translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
-        <translation>La fenêtre d&apos;alerte est toujours visible</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>

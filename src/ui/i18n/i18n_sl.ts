@@ -347,10 +347,6 @@
         <translation>Oddaljeni IP in vrata</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>Mapa</translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation>Smer</translation>
     </message>
@@ -405,6 +401,10 @@
     <message>
         <source>Restrict access by Zone</source>
         <translation>Omeji dostop glede na področje</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Razlog</translation>
     </message>
 </context>
 <context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation>Pokaži opozorilno ikono</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programi</translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation>Uporabi sistemska obvestila za nove programe</translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation>Samodejno prikaži opozorilno okno za nove programe</translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation>Opozorilno okno je vedno na zaslonu</translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation>Opozorilno okno je samodejno aktivno</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1116,10 +1136,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Onemogoči promet, ko Fort Firewall ne deluje</translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation>Uporabi sistemska obvestila za nove programe</translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation>Zberi nove programe</translation>
     </message>
@@ -1134,14 +1150,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Windows Service installation changed.</source>
         <translation>Namestitev storitve Windows je spremenjena.</translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation>Samodejno prikaži opozorilno okno za nove programe</translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
-        <translation>Opozorilno okno je vedno na zaslonu</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>

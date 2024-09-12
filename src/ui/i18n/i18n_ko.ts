@@ -347,10 +347,6 @@
         <translation>원격 IP 및 포트</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>방향</translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation>방향</translation>
     </message>
@@ -405,6 +401,10 @@
     <message>
         <source>Restrict access by Zone</source>
         <translation>영역별 접근 제한</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation>알림 아이콘 표시</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>프로그램</translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation>새 프로그램에 대한 시스템 알림 사용</translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation>새 프로그램 자동 표시 알림 창</translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation>경고 창이 항상 맨 위에 있음</translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1116,10 +1136,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Fort Firewall이 실행되지 않을 때 트래픽 차단</translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation>새 프로그램에 대한 시스템 알림 사용</translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation>새 프로그램 집계</translation>
     </message>
@@ -1134,14 +1150,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Windows Service installation changed.</source>
         <translation>Windows Service 설치가 변경됨.</translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation>새 프로그램 자동 표시 알림 창</translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
-        <translation>경고 창이 항상 맨 위에 있음</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>

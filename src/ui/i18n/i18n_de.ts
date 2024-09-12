@@ -347,10 +347,6 @@
         <translation>Remote IP und Port</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>Ric.</translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation>Richtung</translation>
     </message>
@@ -405,6 +401,10 @@
     <message>
         <source>Restrict access by Zone</source>
         <translation>Zugriff nach Zone einschränken</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation>Alarm-Symbol anzeigen</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Programme</translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation>Systembenachrichtigungen für neue Programme verwenden</translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation>Alarmfenster für neue Programme automatisch anzeigen</translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation>Alarmfenster ist immer im Vordergrund</translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1116,10 +1136,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Internetverkehr bei Überschreitung des Kontingents blockieren</translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation>Systembenachrichtigungen für neue Programme verwenden</translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation>Neue Programme sammeln</translation>
     </message>
@@ -1134,14 +1150,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Windows Service installation changed.</source>
         <translation>Installation des Windows-Dienst geändert.</translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation>Alarmfenster für neue Programme automatisch anzeigen</translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
-        <translation>Alarmfenster ist immer im Vordergrund</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>

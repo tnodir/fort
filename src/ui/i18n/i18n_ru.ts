@@ -347,10 +347,6 @@
         <translation>Удал. IP и Port</translation>
     </message>
     <message>
-        <source>Dir.</source>
-        <translation>Напр.</translation>
-    </message>
-    <message>
         <source>Direction</source>
         <translation>Направление</translation>
     </message>
@@ -405,6 +401,10 @@
     <message>
         <source>Restrict access by Zone</source>
         <translation>Ограничить доступ по Зоне</translation>
+    </message>
+    <message>
+        <source>Reason</source>
+        <translation>Причина</translation>
     </message>
 </context>
 <context>
@@ -880,6 +880,26 @@
         <source>Show Alert Icon</source>
         <translation>Показать иконку оповещения</translation>
     </message>
+    <message>
+        <source>Programs</source>
+        <translation>Программы</translation>
+    </message>
+    <message>
+        <source>Use System Notifications for New Programs</source>
+        <translation>Оповещение о новых программах через Системные сообщения</translation>
+    </message>
+    <message>
+        <source>Auto-Show Alert Window for New Programs</source>
+        <translation>Авто-показ Окна Оповещения для новых программ</translation>
+    </message>
+    <message>
+        <source>Alert Window is Always on top</source>
+        <translation>Окно Оповещения всегда сверху</translation>
+    </message>
+    <message>
+        <source>Alert Window is auto-active</source>
+        <translation>Окно Оповещения авто-активно</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1116,10 +1136,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Блокировать трафик, когда Fort Firewall не запущен</translation>
     </message>
     <message>
-        <source>Use System Notifications for New Programs</source>
-        <translation>Оповещение о новых программах через Системные сообщения</translation>
-    </message>
-    <message>
         <source>Collect New Programs</source>
         <translation>Собирать новые программы</translation>
     </message>
@@ -1134,14 +1150,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Windows Service installation changed.</source>
         <translation>Установка Службы Windows изменена.</translation>
-    </message>
-    <message>
-        <source>Auto-Show Alert Window for New Programs</source>
-        <translation>Авто-показ Окна Оповещения для новых программ</translation>
-    </message>
-    <message>
-        <source>Alert Window is Always on top</source>
-        <translation>Окно Оповещения всегда сверху</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>
