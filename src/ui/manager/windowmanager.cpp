@@ -389,7 +389,7 @@ bool WindowManager::showProgramEditForm(const QString &appPath)
     return true;
 }
 
-void WindowManager::showProgramAlertWindow()
+void WindowManager::showProgramAlertWindow(bool activate)
 {
     if (!checkWindowPassword(WindowProgramAlert))
         return;
@@ -402,7 +402,7 @@ void WindowManager::showProgramAlertWindow()
         closeProgramAlertWindow();
         showProgramsWindow();
     } else {
-        showWindow(m_progAlertWindow);
+        showWindow(m_progAlertWindow, activate || m_progAlertWindow->isAutoActive());
     }
 }
 

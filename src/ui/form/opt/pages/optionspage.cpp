@@ -65,9 +65,6 @@ void OptionsPage::onResetToDefault()
     m_comboBlockTraffic->setCurrentIndex(0);
 
     m_cbLogBlocked->setChecked(true);
-    m_cbAppNotifyMessage->setChecked(true);
-    m_cbAppAlertAutoShow->setChecked(true);
-    m_cbAppAlertAlwaysOnTop->setChecked(false);
     m_cbPurgeOnMounted->setChecked(false);
 
     m_cbLogDebug->setChecked(false);
@@ -167,9 +164,6 @@ void OptionsPage::onRetranslateUi()
                                       .arg(settings()->passwordUnlockedTillText()));
 
     m_cbLogBlocked->setText(tr("Collect New Programs"));
-    m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
-    m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
-    m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
 
     m_cbFilterLocals->setText(tr("Filter Local Addresses") + " (127.0.0.0/8, 255.255.255.255)");
@@ -488,24 +482,6 @@ void OptionsPage::setupProgBox()
 {
     setupLogBlocked();
 
-    m_cbAppNotifyMessage =
-            ControlUtil::createCheckBox(iniUser()->progNotifyMessage(), [&](bool checked) {
-                iniUser()->setProgNotifyMessage(checked);
-                ctrl()->setIniUserEdited();
-            });
-
-    m_cbAppAlertAutoShow =
-            ControlUtil::createCheckBox(iniUser()->progAlertWindowAutoShow(), [&](bool checked) {
-                iniUser()->setProgAlertWindowAutoShow(checked);
-                ctrl()->setIniUserEdited();
-            });
-
-    m_cbAppAlertAlwaysOnTop =
-            ControlUtil::createCheckBox(iniUser()->progAlertWindowAlwaysOnTop(), [&](bool checked) {
-                iniUser()->setProgAlertWindowAlwaysOnTop(checked);
-                ctrl()->setIniUserEdited();
-            });
-
     m_cbPurgeOnMounted =
             ControlUtil::createCheckBox(ini()->progPurgeOnMounted(), [&](bool checked) {
                 if (ini()->progPurgeOnMounted() != checked) {
@@ -516,8 +492,7 @@ void OptionsPage::setupProgBox()
 
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbLogBlocked, m_cbAppNotifyMessage, m_cbAppAlertAutoShow, m_cbAppAlertAlwaysOnTop,
-                    ControlUtil::createSeparator(), m_cbPurgeOnMounted });
+            { m_cbLogBlocked, ControlUtil::createSeparator(), m_cbPurgeOnMounted });
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);

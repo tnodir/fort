@@ -618,7 +618,7 @@ void TrayIcon::sendAlertMessage()
     }
 
     if (iniUser()->progAlertWindowAutoShow()) {
-        windowManager()->showProgramAlertWindow();
+        windowManager()->showProgramAlertWindow(/*activate=*/false);
     }
 }
 

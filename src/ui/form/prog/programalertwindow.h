@@ -14,6 +14,8 @@ public:
 
     WindowCode windowCode() const override { return WindowProgramAlert; }
 
+    bool isAutoActive() const;
+
     void initialize();
 
     void saveWindowState(bool wasVisible) override;

@@ -87,7 +87,7 @@ public slots:
 
     virtual bool showProgramEditForm(const QString &appPath);
 
-    void showProgramAlertWindow();
+    void showProgramAlertWindow(bool activate = true);
     void closeProgramAlertWindow();
 
     void showOptionsWindow();

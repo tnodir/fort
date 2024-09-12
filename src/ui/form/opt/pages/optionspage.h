@@ -80,9 +80,6 @@ private:
     QToolButton *m_btPasswordLock = nullptr;
 
     QCheckBox *m_cbLogBlocked = nullptr;
-    QCheckBox *m_cbAppNotifyMessage = nullptr;
-    QCheckBox *m_cbAppAlertAutoShow = nullptr;
-    QCheckBox *m_cbAppAlertAlwaysOnTop = nullptr;
     QCheckBox *m_cbPurgeOnMounted = nullptr;
 
     QCheckBox *m_cbFilterLocals = nullptr;

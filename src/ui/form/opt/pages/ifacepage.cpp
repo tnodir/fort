@@ -53,6 +53,12 @@ void IfacePage::onResetToDefault()
 
     m_cbHomeAutoShowMenu->setChecked(false);
     m_cbSplashVisible->setChecked(true);
+
+    m_cbAppNotifyMessage->setChecked(true);
+    m_cbAppAlertAutoShow->setChecked(true);
+    m_cbAppAlertAlwaysOnTop->setChecked(true);
+    m_cbAppAlertAutoActive->setChecked(false);
+
     m_cbTrayShowIcon->setChecked(true);
     m_cbTrayShowAlert->setChecked(true);
     m_cbTrayAnimateAlert->setChecked(true);
@@ -103,6 +109,7 @@ void IfacePage::onRetranslateUi()
     m_gbGlobal->setTitle(tr("Global"));
     m_gbHotKeys->setTitle(tr("Hot Keys"));
     m_gbHome->setTitle(tr("My Fort"));
+    m_gbProg->setTitle(tr("Programs"));
     m_gbTray->setTitle(tr("Tray"));
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
 
@@ -122,6 +129,11 @@ void IfacePage::onRetranslateUi()
 
     m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
+
+    m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
+    m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
+    m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
+    m_cbAppAlertAutoActive->setText(tr("Alert Window is auto-active"));
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayShowAlert->setText(tr("Show Alert Icon"));
@@ -222,10 +234,14 @@ QLayout *IfacePage::setupColumn1()
     // Hot Keys Group Box
     setupHotKeysBox();
 
+    // Home Group Box
+    setupHomeBox();
+
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
     layout->addWidget(m_gbGlobal);
     layout->addWidget(m_gbHotKeys);
+    layout->addWidget(m_gbHome);
     layout->addStretch();
 
     return layout;
@@ -233,8 +249,8 @@ QLayout *IfacePage::setupColumn1()
 
 QLayout *IfacePage::setupColumn2()
 {
-    // Home Group Box
-    setupHomeBox();
+    // Programs Group Box
+    setupProgBox();
 
     // Tray Group Box
     setupTrayBox();
@@ -244,7 +260,7 @@ QLayout *IfacePage::setupColumn2()
 
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
-    layout->addWidget(m_gbHome);
+    layout->addWidget(m_gbProg);
     layout->addWidget(m_gbTray);
     layout->addWidget(m_gbConfirmations);
     layout->addStretch();
@@ -442,6 +458,40 @@ void IfacePage::setupHomeBox()
 
     m_gbHome = new QGroupBox();
     m_gbHome->setLayout(layout);
+}
+
+void IfacePage::setupProgBox()
+{
+    m_cbAppNotifyMessage =
+            ControlUtil::createCheckBox(iniUser()->progNotifyMessage(), [&](bool checked) {
+                iniUser()->setProgNotifyMessage(checked);
+                ctrl()->setIniUserEdited();
+            });
+
+    m_cbAppAlertAutoShow =
+            ControlUtil::createCheckBox(iniUser()->progAlertWindowAutoShow(), [&](bool checked) {
+                iniUser()->setProgAlertWindowAutoShow(checked);
+                ctrl()->setIniUserEdited();
+            });
+
+    m_cbAppAlertAlwaysOnTop =
+            ControlUtil::createCheckBox(iniUser()->progAlertWindowAlwaysOnTop(), [&](bool checked) {
+                iniUser()->setProgAlertWindowAlwaysOnTop(checked);
+                ctrl()->setIniUserEdited();
+            });
+
+    m_cbAppAlertAutoActive =
+            ControlUtil::createCheckBox(iniUser()->progAlertWindowAutoActive(), [&](bool checked) {
+                iniUser()->setProgAlertWindowAutoActive(checked);
+                ctrl()->setIniUserEdited();
+            });
+
+    // Layout
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbAppNotifyMessage, m_cbAppAlertAutoShow,
+            m_cbAppAlertAlwaysOnTop, m_cbAppAlertAutoActive });
+
+    m_gbProg = new QGroupBox();
+    m_gbProg->setLayout(layout);
 }
 
 void IfacePage::setupTrayBox()

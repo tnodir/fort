@@ -49,6 +49,7 @@ private:
     QLayout *setupComboHotKeyLayout();
     QLayout *setupEditShortcutLayout();
     void setupHomeBox();
+    void setupProgBox();
     void setupTrayBox();
     QLayout *setupTrayMaxGroupsLayout();
     void refreshComboTrayAction();
@@ -66,6 +67,7 @@ private:
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
     QGroupBox *m_gbHome = nullptr;
+    QGroupBox *m_gbProg = nullptr;
     QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbConfirmations = nullptr;
 
@@ -86,6 +88,12 @@ private:
 
     QCheckBox *m_cbHomeAutoShowMenu = nullptr;
     QCheckBox *m_cbSplashVisible = nullptr;
+
+    QCheckBox *m_cbAppNotifyMessage = nullptr;
+    QCheckBox *m_cbAppAlertAutoShow = nullptr;
+    QCheckBox *m_cbAppAlertAlwaysOnTop = nullptr;
+    QCheckBox *m_cbAppAlertAutoActive = nullptr;
+
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayShowAlert = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;

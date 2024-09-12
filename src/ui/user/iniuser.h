@@ -138,8 +138,14 @@ public:
     bool progAlertWindowAutoShow() const { return valueBool("progAlertWindow/autoShow", true); }
     void setProgAlertWindowAutoShow(bool on) { setValue("progAlertWindow/autoShow", on); }
 
-    bool progAlertWindowAlwaysOnTop() const { return valueBool("progAlertWindow/alwaysOnTop"); }
+    bool progAlertWindowAlwaysOnTop() const
+    {
+        return valueBool("progAlertWindow/alwaysOnTop", true);
+    }
     void setProgAlertWindowAlwaysOnTop(bool on) { setValue("progAlertWindow/alwaysOnTop", on); }
+
+    bool progAlertWindowAutoActive() const { return valueBool("progAlertWindow/autoActive"); }
+    void setProgAlertWindowAutoActive(bool on) { setValue("progAlertWindow/autoActive", on); }
 
     static QString optWindowGroup() { return "optWindow"; }
 

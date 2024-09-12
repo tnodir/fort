@@ -19,6 +19,11 @@ ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) :
     initialize();
 }
 
+bool ProgramAlertWindow::isAutoActive() const
+{
+    return iniUser()->progAlertWindowAutoActive();
+}
+
 void ProgramAlertWindow::initialize()
 {
     const qint64 appId = confAppManager()->getAlertAppId();
@@ -71,6 +76,7 @@ void ProgramAlertWindow::setupUi()
 
     // Top Window
     this->setWindowFlag(Qt::WindowStaysOnTopHint, iniUser()->progAlertWindowAlwaysOnTop());
+    this->setAttribute(Qt::WA_ShowWithoutActivating, !isAutoActive());
 
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/error.png"));
