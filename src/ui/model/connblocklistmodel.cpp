@@ -21,6 +21,133 @@ namespace {
 
 const QLoggingCategory LC("connBlockListModel");
 
+QString formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6, bool resolveAddress)
+{
+    QString address = NetUtil::ipToText(ip, isIPv6);
+    if (resolveAddress) {
+        const QString hostName = IoC<HostInfoCache>()->hostName(address);
+        if (!hostName.isEmpty()) {
+            address = hostName;
+        }
+    }
+    if (isIPv6) {
+        address = '[' + address + ']';
+    }
+    return address + ':' + QString::number(port);
+}
+
+QString reasonText(const ConnRow &connRow)
+{
+    static const char *const blockReasonTexts[] = {
+        QT_TR_NOOP("Blocked Internet address"),
+        QT_TR_NOOP("Old connection closed on startup"),
+        QT_TR_NOOP("Programs logic"),
+        QT_TR_NOOP("App. Group logic"),
+        QT_TR_NOOP("Filter Mode logic"),
+        QT_TR_NOOP("Restrict access to LAN only"),
+        QT_TR_NOOP("Restrict access by Zone"),
+        QT_TR_NOOP("Limit of Ask to Connect"),
+    };
+
+    if (connRow.blockReason >= FORT_BLOCK_REASON_IP_INET
+            && connRow.blockReason <= FORT_BLOCK_REASON_ASK_LIMIT) {
+        const int index = connRow.blockReason - FORT_BLOCK_REASON_IP_INET;
+        return ConnBlockListModel::tr(blockReasonTexts[index]);
+    }
+
+    return ConnBlockListModel::tr("Unknown");
+}
+
+QString reasonIconPath(const ConnRow &connRow)
+{
+    static const char *const blockReasonIcons[] = {
+        ":/icons/ip.png",
+        ":/icons/arrow_refresh_small.png",
+        ":/icons/application.png",
+        ":/icons/application_double.png",
+        ":/icons/deny.png",
+        ":/icons/hostname.png",
+        ":/icons/ip_class.png",
+        ":/icons/help.png",
+    };
+
+    if (connRow.blockReason >= FORT_BLOCK_REASON_IP_INET
+            && connRow.blockReason <= FORT_BLOCK_REASON_ASK_LIMIT) {
+        const int index = connRow.blockReason - FORT_BLOCK_REASON_IP_INET;
+        return blockReasonIcons[index];
+    }
+
+    return ":/icons/error.png";
+}
+
+QString directionIconPath(const ConnRow &connRow)
+{
+    return connRow.inbound ? ":/icons/green_down.png" : ":/icons/blue_up.png";
+}
+
+QVariant dataDisplayAppName(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
+{
+    return IoC<AppInfoCache>()->appName(connRow.appPath);
+}
+
+QVariant dataDisplayProcessId(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
+{
+    return connRow.pid;
+}
+
+QVariant dataDisplayProtocolName(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
+{
+    return NetUtil::protocolName(connRow.ipProto);
+}
+
+QVariant dataDisplayLocalIpPort(const ConnRow &connRow, bool resolveAddress, int /*role*/)
+{
+    return formatIpPort(connRow.localIp, connRow.localPort, connRow.isIPv6, resolveAddress);
+}
+
+QVariant dataDisplayRemoteIpPort(const ConnRow &connRow, bool resolveAddress, int /*role*/)
+{
+    return formatIpPort(connRow.remoteIp, connRow.remotePort, connRow.isIPv6, resolveAddress);
+}
+
+QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, int role)
+{
+    if (role == Qt::ToolTipRole) {
+        return connRow.inbound ? ConnBlockListModel::tr("In") : ConnBlockListModel::tr("Out");
+    }
+
+    return QVariant();
+}
+
+QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int role)
+{
+    if (role == Qt::ToolTipRole) {
+        return reasonText(connRow)
+                + (connRow.inherited ? " (" + ConnBlockListModel::tr("Inherited") + ")"
+                                     : QString());
+    }
+
+    return QVariant();
+}
+
+QVariant dataDisplayTime(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
+{
+    return connRow.connTime;
+}
+
+using dataDisplay_func = QVariant (*)(const ConnRow &connRow, bool resolveAddress, int role);
+
+static const dataDisplay_func dataDisplay_funcList[] = {
+    &dataDisplayAppName,
+    &dataDisplayProcessId,
+    &dataDisplayProtocolName,
+    &dataDisplayLocalIpPort,
+    &dataDisplayRemoteIpPort,
+    &dataDisplayDirection,
+    &dataDisplayReason,
+    &dataDisplayTime,
+};
+
 }
 
 ConnBlockListModel::ConnBlockListModel(QObject *parent) : TableSqlModel(parent) { }
@@ -165,45 +292,12 @@ QVariant ConnBlockListModel::dataDisplay(const QModelIndex &index, int role) con
     const int column = index.column();
 
     const auto &connRow = connRowAt(row);
+    if (connRow.isNull())
+        return {};
 
-    switch (column) {
-    case 0:
-        return appInfoCache()->appName(connRow.appPath);
-    case 1:
-        return connRow.pid;
-    case 2:
-        return NetUtil::protocolName(connRow.ipProto);
-    case 3:
-        return formatIpPort(connRow.localIp, connRow.localPort, connRow.isIPv6);
-    case 4:
-        return formatIpPort(connRow.remoteIp, connRow.remotePort, connRow.isIPv6);
-    case 5:
-        return dataDisplayDirection(connRow, role);
-    case 6:
-        return dataDisplayReason(connRow, role);
-    case 7:
-        return connRow.connTime;
-    }
+    const dataDisplay_func func = dataDisplay_funcList[column];
 
-    return QVariant();
-}
-
-QVariant ConnBlockListModel::dataDisplayDirection(const ConnRow &connRow, int role) const
-{
-    if (role == Qt::ToolTipRole) {
-        return connRow.inbound ? tr("In") : tr("Out");
-    }
-
-    return QVariant();
-}
-
-QVariant ConnBlockListModel::dataDisplayReason(const ConnRow &connRow, int role) const
-{
-    if (role == Qt::ToolTipRole) {
-        return reasonText(connRow) + (connRow.inherited ? " (" + tr("Inherited") + ")" : QString());
-    }
-
-    return QVariant();
+    return func(connRow, resolveAddress(), role);
 }
 
 QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
@@ -225,55 +319,6 @@ QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
     }
 
     return QVariant();
-}
-
-QString ConnBlockListModel::reasonText(const ConnRow &connRow)
-{
-    static const char *const blockReasonTexts[] = {
-        QT_TR_NOOP("Blocked Internet address"),
-        QT_TR_NOOP("Old connection closed on startup"),
-        QT_TR_NOOP("Programs logic"),
-        QT_TR_NOOP("App. Group logic"),
-        QT_TR_NOOP("Filter Mode logic"),
-        QT_TR_NOOP("Restrict access to LAN only"),
-        QT_TR_NOOP("Restrict access by Zone"),
-        QT_TR_NOOP("Limit of Ask to Connect"),
-    };
-
-    if (connRow.blockReason >= FORT_BLOCK_REASON_IP_INET
-            && connRow.blockReason <= FORT_BLOCK_REASON_ASK_LIMIT) {
-        const int index = connRow.blockReason - FORT_BLOCK_REASON_IP_INET;
-        return tr(blockReasonTexts[index]);
-    }
-
-    return tr("Unknown");
-}
-
-QString ConnBlockListModel::reasonIconPath(const ConnRow &connRow)
-{
-    static const char *const blockReasonIcons[] = {
-        ":/icons/ip.png",
-        ":/icons/arrow_refresh_small.png",
-        ":/icons/application.png",
-        ":/icons/application_double.png",
-        ":/icons/deny.png",
-        ":/icons/hostname.png",
-        ":/icons/ip_class.png",
-        ":/icons/help.png",
-    };
-
-    if (connRow.blockReason >= FORT_BLOCK_REASON_IP_INET
-            && connRow.blockReason <= FORT_BLOCK_REASON_ASK_LIMIT) {
-        const int index = connRow.blockReason - FORT_BLOCK_REASON_IP_INET;
-        return blockReasonIcons[index];
-    }
-
-    return ":/icons/error.png";
-}
-
-QString ConnBlockListModel::directionIconPath(const ConnRow &connRow)
-{
-    return connRow.inbound ? ":/icons/green_down.png" : ":/icons/blue_up.png";
 }
 
 void ConnBlockListModel::deleteConn(qint64 connIdTo)
@@ -378,21 +423,6 @@ QString ConnBlockListModel::sqlWhere() const
 QString ConnBlockListModel::sqlLimitOffset() const
 {
     return QString();
-}
-
-QString ConnBlockListModel::formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6) const
-{
-    QString address = NetUtil::ipToText(ip, isIPv6);
-    if (resolveAddress()) {
-        const QString hostName = hostInfoCache()->hostName(address);
-        if (!hostName.isEmpty()) {
-            address = hostName;
-        }
-    }
-    if (isIPv6) {
-        address = '[' + address + ']';
-    }
-    return address + ':' + QString::number(port);
 }
 
 void ConnBlockListModel::updateConnRows(
