@@ -217,6 +217,11 @@ static BOOL fort_callout_ale_is_ip_blocked(
     if (!app_found)
         return FALSE;
 
+    if (app_data.flags.blocked) {
+        cx->block_reason = FORT_BLOCK_REASON_PROGRAM;
+        return TRUE; /* block Program */
+    }
+
     if (app_data.flags.lan_only && !cx->is_local_net) {
         cx->block_reason = FORT_BLOCK_REASON_LAN_ONLY;
         return TRUE; /* block LAN Only */
@@ -264,7 +269,7 @@ inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALL
     return FALSE;
 }
 
-inline static void fort_callout_ale_log(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
+inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(cx, conf_ref);
@@ -387,7 +392,7 @@ inline static void fort_callout_ale_check_conf(
     cx->block_reason = FORT_BLOCK_REASON_UNKNOWN;
 
     if (!fort_callout_ale_check_flags(ca, cx, conf_ref, conf_flags)) {
-        fort_callout_ale_log(ca, cx, conf_ref, conf_flags);
+        fort_callout_ale_check_app(ca, cx, conf_ref, conf_flags);
     }
 
     fort_callout_ale_classify_action(ca, cx, conf_ref, conf_flags);
