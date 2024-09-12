@@ -303,19 +303,17 @@ QVariant ConnBlockListModel::dataDisplay(const QModelIndex &index, int role) con
 QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
 {
     const int column = index.column();
+    const int row = index.row();
 
-    if (column == 0 || column == 5 || column == 6) {
-        const int row = index.row();
-        const auto &connRow = connRowAt(row);
+    const auto &connRow = connRowAt(row);
 
-        switch (column) {
-        case 0:
-            return appInfoCache()->appIcon(connRow.appPath);
-        case 5:
-            return IconCache::icon(directionIconPath(connRow));
-        case 6:
-            return IconCache::icon(reasonIconPath(connRow));
-        }
+    switch (column) {
+    case 0:
+        return appInfoCache()->appIcon(connRow.appPath);
+    case 5:
+        return IconCache::icon(directionIconPath(connRow));
+    case 6:
+        return IconCache::icon(reasonIconPath(connRow));
     }
 
     return QVariant();
