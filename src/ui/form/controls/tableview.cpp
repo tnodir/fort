@@ -7,6 +7,7 @@ TableView::TableView(QWidget *parent) : QTableView(parent)
 {
     setWordWrap(false);
     setTextElideMode(Qt::ElideMiddle);
+    setAlternatingRowColors(true);
     setTabKeyNavigation(false);
 }
 

@@ -35,9 +35,9 @@ int ServiceListModel::rowCount(const QModelIndex &parent) const
     return services().size();
 }
 
-int ServiceListModel::columnCount(const QModelIndex &parent) const
+int ServiceListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return parent.isValid() ? 0 : 3;
+    return 3;
 }
 
 QVariant ServiceListModel::headerData(int section, Qt::Orientation orientation, int role) const

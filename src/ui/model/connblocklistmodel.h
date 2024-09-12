@@ -82,13 +82,16 @@ protected:
 
 private:
     QVariant headerDataDisplay(int section, int role) const;
+    QVariant headerDataDecoration(int section) const;
 
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDisplayDirection(const ConnRow &connRow, int role) const;
+    QVariant dataDisplayReason(const ConnRow &connRow, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
 
-    static QString blockReasonText(const ConnRow &connRow);
-    static QString connIconPath(const ConnRow &connRow);
+    static QString reasonText(const ConnRow &connRow);
+    static QString reasonIconPath(const ConnRow &connRow);
+    static QString directionIconPath(const ConnRow &connRow);
 
     qint64 connIdMin() const { return m_connIdMin; }
     qint64 connIdMax() const { return m_connIdMax; }

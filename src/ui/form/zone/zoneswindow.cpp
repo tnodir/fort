@@ -211,7 +211,6 @@ void ZonesWindow::setupTaskRun()
 void ZonesWindow::setupTableZones()
 {
     m_zoneListView = new TableView();
-    m_zoneListView->setAlternatingRowColors(true);
     m_zoneListView->setSelectionMode(QAbstractItemView::SingleSelection);
     m_zoneListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 

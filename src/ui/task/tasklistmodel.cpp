@@ -48,9 +48,9 @@ int TaskListModel::rowCount(const QModelIndex &parent) const
     return taskInfoList().size();
 }
 
-int TaskListModel::columnCount(const QModelIndex &parent) const
+int TaskListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return parent.isValid() ? 0 : 4;
+    return 4;
 }
 
 QVariant TaskListModel::headerData(int section, Qt::Orientation orientation, int role) const

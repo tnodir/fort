@@ -23,7 +23,7 @@
 
 namespace {
 
-constexpr int CONN_LIST_HEADER_VERSION = 2;
+constexpr int CONN_LIST_HEADER_VERSION = 3;
 
 }
 
@@ -203,7 +203,6 @@ void ConnectionsPage::setupShowHostNames()
 void ConnectionsPage::setupTableConnList()
 {
     m_connListView = new TableView();
-    m_connListView->setAlternatingRowColors(true);
     m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
@@ -222,18 +221,16 @@ void ConnectionsPage::setupTableConnListHeader()
     header->setSectionResizeMode(3, QHeaderView::Interactive);
     header->setSectionResizeMode(4, QHeaderView::Interactive);
     header->setSectionResizeMode(5, QHeaderView::Fixed);
-    header->setSectionResizeMode(6, QHeaderView::Stretch);
+    header->setSectionResizeMode(6, QHeaderView::Fixed);
+    header->setSectionResizeMode(7, QHeaderView::Stretch);
 
     header->resizeSection(0, 430);
     header->resizeSection(1, 50);
     header->resizeSection(2, 60);
     header->resizeSection(3, 140);
     header->resizeSection(4, 140);
-    header->resizeSection(5, 60);
-
-    // header->setSectionsClickable(true);
-    // header->setSortIndicatorShown(true);
-    // header->setSortIndicator(4, Qt::DescendingOrder);
+    header->resizeSection(5, 30);
+    header->resizeSection(6, 30);
 }
 
 void ConnectionsPage::setupAppInfoRow()

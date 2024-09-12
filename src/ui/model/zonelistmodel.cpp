@@ -50,9 +50,9 @@ void ZoneListModel::setUp()
     connect(confZoneManager, &ConfZoneManager::zoneUpdated, this, &TableItemModel::refresh);
 }
 
-int ZoneListModel::columnCount(const QModelIndex &parent) const
+int ZoneListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return parent.isValid() ? 0 : 5;
+    return 5;
 }
 
 QVariant ZoneListModel::headerData(int section, Qt::Orientation orientation, int role) const

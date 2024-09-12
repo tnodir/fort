@@ -11,8 +11,8 @@
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netutil.h>
 
-#include "applistmodelheaderdata.h"
 #include "applistmodeldata.h"
+#include "applistmodelheaderdata.h"
 
 AppListModel::AppListModel(QObject *parent) : FtsTableSqlModel(parent) { }
 

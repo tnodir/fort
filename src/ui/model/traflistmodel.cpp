@@ -85,9 +85,9 @@ int TrafListModel::rowCount(const QModelIndex &parent) const
     return m_trafCount;
 }
 
-int TrafListModel::columnCount(const QModelIndex &parent) const
+int TrafListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return parent.isValid() ? 0 : 4;
+    return 4;
 }
 
 QVariant TrafListModel::headerData(int section, Qt::Orientation orientation, int role) const

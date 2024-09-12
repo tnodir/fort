@@ -392,7 +392,6 @@ void ProgramsWindow::setupFilterClear()
 void ProgramsWindow::setupTableApps()
 {
     m_appListView = new TableView();
-    m_appListView->setAlternatingRowColors(true);
     m_appListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_appListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 

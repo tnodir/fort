@@ -68,18 +68,27 @@ void ConnBlockListModel::initialize()
     updateConnIdRange();
 }
 
-int ConnBlockListModel::columnCount(const QModelIndex &parent) const
+int ConnBlockListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return parent.isValid() ? 0 : 7;
+    return 8;
 }
 
 QVariant ConnBlockListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    const bool isDisplayRole = (role == Qt::DisplayRole || role == Qt::ToolTipRole);
+    if (orientation != Qt::Horizontal)
+        return QVariant();
 
-    if (orientation == Qt::Horizontal && isDisplayRole) {
+    switch (role) {
+    // Label
+    case Qt::DisplayRole:
+    case Qt::ToolTipRole:
         return headerDataDisplay(section, role);
+
+    // Icon
+    case Qt::DecorationRole:
+        return headerDataDecoration(section);
     }
+
     return QVariant();
 }
 
@@ -110,7 +119,8 @@ QVariant ConnBlockListModel::headerDataDisplay(int section, int role) const
         QT_TR_NOOP("Protocol"),
         QT_TR_NOOP("Local IP and Port"),
         QT_TR_NOOP("Remote IP and Port"),
-        QT_TR_NOOP("Dir."),
+        nullptr,
+        nullptr,
         QT_TR_NOOP("Time"),
     };
 
@@ -121,12 +131,29 @@ QVariant ConnBlockListModel::headerDataDisplay(int section, int role) const
         QT_TR_NOOP("Local IP and Port"),
         QT_TR_NOOP("Remote IP and Port"),
         QT_TR_NOOP("Direction"),
+        QT_TR_NOOP("Reason"),
         QT_TR_NOOP("Time"),
     };
 
-    if (section >= 0 && section <= 6) {
+    if (section >= 0 && section <= 7) {
         const char *const *arr = (role == Qt::ToolTipRole) ? headerTooltips : headerTexts;
-        return tr(arr[section]);
+        const char *text = arr[section];
+
+        if (text != nullptr) {
+            return tr(text);
+        }
+    }
+
+    return QVariant();
+}
+
+QVariant ConnBlockListModel::headerDataDecoration(int section) const
+{
+    switch (section) {
+    case 5:
+        return IconCache::icon(":/icons/green_down.png");
+    case 6:
+        return IconCache::icon(":/icons/help.png");
     }
 
     return QVariant();
@@ -153,6 +180,8 @@ QVariant ConnBlockListModel::dataDisplay(const QModelIndex &index, int role) con
     case 5:
         return dataDisplayDirection(connRow, role);
     case 6:
+        return dataDisplayReason(connRow, role);
+    case 7:
         return connRow.connTime;
     }
 
@@ -162,19 +191,26 @@ QVariant ConnBlockListModel::dataDisplay(const QModelIndex &index, int role) con
 QVariant ConnBlockListModel::dataDisplayDirection(const ConnRow &connRow, int role) const
 {
     if (role == Qt::ToolTipRole) {
-        // Show block reason in a tool-tip
-        return blockReasonText(connRow)
-                + (connRow.inherited ? " (" + tr("Inherited") + ")" : QString());
+        return connRow.inbound ? tr("In") : tr("Out");
     }
 
-    return connRow.inbound ? tr("In") : tr("Out");
+    return QVariant();
+}
+
+QVariant ConnBlockListModel::dataDisplayReason(const ConnRow &connRow, int role) const
+{
+    if (role == Qt::ToolTipRole) {
+        return reasonText(connRow) + (connRow.inherited ? " (" + tr("Inherited") + ")" : QString());
+    }
+
+    return QVariant();
 }
 
 QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
 {
     const int column = index.column();
 
-    if (column == 0 || column == 5) {
+    if (column == 0 || column == 5 || column == 6) {
         const int row = index.row();
         const auto &connRow = connRowAt(row);
 
@@ -182,14 +218,16 @@ QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
         case 0:
             return appInfoCache()->appIcon(connRow.appPath);
         case 5:
-            return IconCache::icon(connIconPath(connRow));
+            return IconCache::icon(directionIconPath(connRow));
+        case 6:
+            return IconCache::icon(reasonIconPath(connRow));
         }
     }
 
     return QVariant();
 }
 
-QString ConnBlockListModel::blockReasonText(const ConnRow &connRow)
+QString ConnBlockListModel::reasonText(const ConnRow &connRow)
 {
     static const char *const blockReasonTexts[] = {
         QT_TR_NOOP("Blocked Internet address"),
@@ -211,7 +249,7 @@ QString ConnBlockListModel::blockReasonText(const ConnRow &connRow)
     return tr("Unknown");
 }
 
-QString ConnBlockListModel::connIconPath(const ConnRow &connRow)
+QString ConnBlockListModel::reasonIconPath(const ConnRow &connRow)
 {
     static const char *const blockReasonIcons[] = {
         ":/icons/ip.png",
@@ -231,6 +269,11 @@ QString ConnBlockListModel::connIconPath(const ConnRow &connRow)
     }
 
     return ":/icons/error.png";
+}
+
+QString ConnBlockListModel::directionIconPath(const ConnRow &connRow)
+{
+    return connRow.inbound ? ":/icons/green_down.png" : ":/icons/blue_up.png";
 }
 
 void ConnBlockListModel::deleteConn(qint64 connIdTo)

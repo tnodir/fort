@@ -223,7 +223,6 @@ void TrafficPage::setupTabBar()
 void TrafficPage::setupTableTraf()
 {
     m_tableTraf = new TableView();
-    m_tableTraf->setTextElideMode(Qt::ElideRight);
     m_tableTraf->setSelectionMode(QAbstractItemView::SingleSelection);
     m_tableTraf->setSelectionBehavior(QAbstractItemView::SelectItems);
 
