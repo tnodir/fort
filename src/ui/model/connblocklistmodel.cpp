@@ -321,23 +321,11 @@ QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
     return QVariant();
 }
 
-void ConnBlockListModel::deleteConn(qint64 connIdTo)
-{
-    statBlockManager()->deleteConn(connIdTo);
-}
-
 const ConnRow &ConnBlockListModel::connRowAt(int row) const
 {
     updateRowCache(row);
 
     return m_connRow;
-}
-
-void ConnBlockListModel::clear()
-{
-    statBlockManager()->deleteConn();
-
-    hostInfoCache()->clear();
 }
 
 void ConnBlockListModel::updateConnIdRange()
@@ -350,6 +338,10 @@ void ConnBlockListModel::updateConnIdRange()
 
     if (idMin == oldIdMin && idMax == oldIdMax)
         return;
+
+    if (idMax == 0) {
+        hostInfoCache()->clear();
+    }
 
     updateConnRows(oldIdMin, oldIdMax, idMin, idMax);
 }

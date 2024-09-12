@@ -135,7 +135,7 @@ QLayout *ConnectionsPage::setupHeader()
         }
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox([&] { connBlockListModel()->clear(); },
+        windowManager()->showConfirmBox([&] { ctrl()->deleteBlockedConn(); },
                 tr("Are you sure to remove all connections?"));
     });
 
@@ -288,7 +288,7 @@ void ConnectionsPage::deleteConn(int row)
     if (connRow.isNull())
         return;
 
-    connBlockListModel()->deleteConn(connRow.connId);
+    ctrl()->deleteBlockedConn(connRow.connId);
 }
 
 int ConnectionsPage::connListCurrentIndex() const
