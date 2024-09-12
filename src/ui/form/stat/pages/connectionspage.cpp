@@ -209,6 +209,8 @@ void ConnectionsPage::setupTableConnList()
     m_connListView->setModel(connBlockListModel());
 
     m_connListView->setMenu(m_btEdit->menu());
+
+    connect(m_connListView, &TableView::doubleClicked, m_actAddProgram, &QAction::trigger);
 }
 
 void ConnectionsPage::setupTableConnListHeader()
