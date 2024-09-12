@@ -20,6 +20,7 @@ public:
     QModelIndexList sortedSelectedIndexes() const;
 
     QString selectedText() const;
+    QString cellText(const QModelIndex &index) const;
 
 signals:
     void currentIndexChanged(const QModelIndex &index);

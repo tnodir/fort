@@ -75,11 +75,20 @@ QString TableView::selectedText() const
             prevColumn = column;
         }
 
-        const QString s = model()->data(index).toString();
-        text.append(s);
+        text.append(cellText(index));
     }
 
     return text;
+}
+
+QString TableView::cellText(const QModelIndex &index) const
+{
+    const QString displayText = model()->data(index).toString();
+    if (!displayText.isEmpty())
+        return displayText;
+
+    const QString tooltipText = model()->data(index, Qt::ToolTipRole).toString();
+    return tooltipText;
 }
 
 void TableView::selectCell(int row, int column)
