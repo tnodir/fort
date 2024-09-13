@@ -697,6 +697,7 @@ bool ConfManager::loadTasks(const QList<TaskInfo *> &taskInfos)
         if (!loadTask(taskInfo))
             return false;
     }
+
     return true;
 }
 

@@ -57,6 +57,8 @@ private slots:
     void runExpiredTasks();
 
 protected:
+    virtual void initializeTasks();
+
     virtual void setupTimer(bool enabled = true);
 
     TaskInfo *taskInfoByType(qint8 taskType) const;

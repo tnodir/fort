@@ -69,6 +69,8 @@ public:
 
     void editFromVariant(const QVariant &v);
 
+    virtual void initialize() { }
+
     static QString typeToString(TaskInfo::TaskType type);
     static TaskInfo::TaskType stringToType(const QString &name);
 

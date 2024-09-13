@@ -39,8 +39,16 @@ TaskInfo *TaskManager::taskInfoAt(int row) const
 void TaskManager::setUp()
 {
     loadSettings();
+    initializeTasks();
 
     setupTimer();
+}
+
+void TaskManager::initializeTasks()
+{
+    for (TaskInfo *taskInfo : taskInfoList()) {
+        taskInfo->initialize();
+    }
 }
 
 void TaskManager::setupTimer(bool enabled)

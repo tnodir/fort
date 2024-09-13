@@ -342,6 +342,8 @@ bool FortManager::setupDriver()
 
     if (ok) {
         confManager->updateServices();
+
+        updateTaskManager();
     }
 
     return ok;
@@ -504,19 +506,29 @@ void FortManager::loadConf()
 
 bool FortManager::updateDriverConf(bool onlyFlags)
 {
-    auto confManager = IoC<ConfManager>();
-    auto confAppManager = IoC<ConfAppManager>();
-
     updateLogManager(false);
 
-    const bool res = confAppManager->updateDriverConf(onlyFlags);
+    const bool res = IoC<ConfAppManager>()->updateDriverConf(onlyFlags);
     if (res) {
-        updateStatManager(confManager->conf());
+        updateStatManager(IoC<ConfManager>()->conf());
     }
 
     updateLogManager(true);
 
     return res;
+}
+
+void FortManager::updateTaskManager()
+{
+    auto taskManager = IoC<TaskManager>();
+
+    // Zones
+    {
+        auto zd = taskManager->taskInfoZoneDownloader();
+
+        IoC<ConfZoneManager>()->updateDriverZones(
+                zd->dataZonesMask(), zd->enabledMask(), zd->dataSize(), zd->zonesData());
+    }
 }
 
 void FortManager::updateLogManager(bool active)

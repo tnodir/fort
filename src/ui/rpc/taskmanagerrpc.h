@@ -27,6 +27,8 @@ public slots:
     void abortTask(qint8 taskType) override;
 
 protected:
+    void initializeTasks() override { }
+
     void setupTimer(bool /*enabled*/ = true) override { }
 };
 

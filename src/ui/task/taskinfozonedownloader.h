@@ -15,8 +15,17 @@ class TaskInfoZoneDownloader : public TaskInfo
 public:
     explicit TaskInfoZoneDownloader(TaskManager &taskManager);
 
+    quint32 dataZonesMask() const { return m_dataZonesMask; }
+    quint32 enabledMask() const { return m_enabledMask; }
+    quint32 dataSize() const { return m_dataSize; }
+
+    const QStringList &zoneNames() const { return m_zoneNames; }
+    const QList<QByteArray> &zonesData() const { return m_zonesData; }
+
     TaskZoneDownloader *zoneDownloader() const;
     ZoneListModel *zoneListModel() const;
+
+    void initialize() override;
 
 public slots:
     bool processResult(bool success) override;
@@ -38,6 +47,8 @@ private:
 
     void insertZoneId(quint32 &zonesMask, int zoneId);
     bool containsZoneId(quint32 zonesMask, int zoneId) const;
+
+    void loadZones();
 
     void emitZonesUpdated();
 

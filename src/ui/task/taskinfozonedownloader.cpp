@@ -36,6 +36,11 @@ ZoneListModel *TaskInfoZoneDownloader::zoneListModel() const
     return IoC<ZoneListModel>();
 }
 
+void TaskInfoZoneDownloader::initialize()
+{
+    loadZones();
+}
+
 bool TaskInfoZoneDownloader::processResult(bool success)
 {
     if (!success) {
@@ -206,6 +211,17 @@ void TaskInfoZoneDownloader::insertZoneId(quint32 &zonesMask, int zoneId)
 bool TaskInfoZoneDownloader::containsZoneId(quint32 zonesMask, int zoneId) const
 {
     return (zonesMask & (quint32(1) << (zoneId - 1))) != 0;
+}
+
+void TaskInfoZoneDownloader::loadZones()
+{
+    TaskZoneDownloader worker;
+
+    const int rowCount = zoneListModel()->rowCount();
+    for (m_zoneIndex = 0; m_zoneIndex < rowCount; ++m_zoneIndex) {
+        setupTaskWorkerByZone(&worker);
+        addSubResult(&worker, /*success=*/false);
+    }
 }
 
 void TaskInfoZoneDownloader::removeOrphanCacheFiles()

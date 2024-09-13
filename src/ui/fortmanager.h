@@ -62,6 +62,7 @@ private:
 
     bool updateDriverConf(bool onlyFlags = false);
 
+    void updateTaskManager();
     void updateLogManager(bool active);
     void updateStatManager(FirewallConf *conf);
 
