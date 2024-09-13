@@ -404,7 +404,7 @@
     </message>
     <message>
         <source>Reason</source>
-        <translation type="unfinished"></translation>
+        <translation>السبب</translation>
     </message>
 </context>
 <context>
@@ -882,7 +882,7 @@
     </message>
     <message>
         <source>Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>البرامج</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
@@ -898,7 +898,7 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation type="unfinished"></translation>
+        <translation>نافذة التنبيه نشطة تلقائياً</translation>
     </message>
 </context>
 <context>
