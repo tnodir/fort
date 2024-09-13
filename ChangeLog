@@ -1,10 +1,11 @@
 Fort Firewall ChangeLog
 
-v3.13.11-test01, 2024-09-12:
+v3.13.11-test02, 2024-09-13:
 - UI: Options: Programs: Add "Alert Window is auto-active" flag.
 - UI: Options: IP Addresses: Don't expand tabs.
 - UI: Blocked Conn: Separate "Direction" and "Reason" columns.
 - UI: Blocked Conn: "Add Program" on double click.
+- UI: Fix initial Zones loading to Driver.
 - Driver: fortcout: Don't process Zones of blocked app.
 
 v3.13.10, 2024-09-07:
