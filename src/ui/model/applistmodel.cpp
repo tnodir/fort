@@ -204,23 +204,24 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, Ap
     appRow.notes = stmt.columnText(4);
     appRow.isWildcard = stmt.columnBool(5);
     appRow.useGroupPerm = stmt.columnBool(6);
-    appRow.applyChild = stmt.columnBool(7);
-    appRow.killChild = stmt.columnBool(8);
-    appRow.lanOnly = stmt.columnBool(9);
-    appRow.parked = stmt.columnBool(10);
-    appRow.logBlocked = stmt.columnBool(11);
-    appRow.logConn = stmt.columnBool(12);
-    appRow.blocked = stmt.columnBool(13);
-    appRow.killProcess = stmt.columnBool(14);
-    appRow.acceptZones = stmt.columnUInt(15);
-    appRow.rejectZones = stmt.columnUInt(16);
-    appRow.ruleId = stmt.columnUInt(17);
-    appRow.scheduleAction = stmt.columnInt(18);
-    appRow.scheduleTime = stmt.columnDateTime(19);
-    appRow.creatTime = stmt.columnDateTime(20);
-    appRow.groupIndex = stmt.columnInt(21);
-    appRow.alerted = stmt.columnBool(22);
-    appRow.ruleName = stmt.columnText(23);
+    appRow.applyParent = stmt.columnBool(7);
+    appRow.applyChild = stmt.columnBool(8);
+    appRow.killChild = stmt.columnBool(9);
+    appRow.lanOnly = stmt.columnBool(10);
+    appRow.parked = stmt.columnBool(11);
+    appRow.logBlocked = stmt.columnBool(12);
+    appRow.logConn = stmt.columnBool(13);
+    appRow.blocked = stmt.columnBool(14);
+    appRow.killProcess = stmt.columnBool(15);
+    appRow.acceptZones = stmt.columnUInt(16);
+    appRow.rejectZones = stmt.columnUInt(17);
+    appRow.ruleId = stmt.columnUInt(18);
+    appRow.scheduleAction = stmt.columnInt(19);
+    appRow.scheduleTime = stmt.columnDateTime(20);
+    appRow.creatTime = stmt.columnDateTime(21);
+    appRow.groupIndex = stmt.columnInt(22);
+    appRow.alerted = stmt.columnBool(23);
+    appRow.ruleName = stmt.columnText(24);
 
     return true;
 }
@@ -271,6 +272,7 @@ QString AppListModel::sqlBase() const
            "    t.notes,"
            "    t.is_wildcard,"
            "    t.use_group_perm,"
+           "    t.apply_parent,"
            "    t.apply_child,"
            "    t.kill_child,"
            "    t.lan_only,"

@@ -227,34 +227,28 @@ typedef struct fort_period
 
 typedef struct fort_app_flags
 {
-    union {
-        UINT16 v;
+    UINT16 group_index : 5;
+    UINT16 use_group_perm : 1;
 
-        struct
-        {
-            UINT16 group_index : 5;
-            UINT16 use_group_perm : 1;
+    UINT16 apply_parent : 1;
+    UINT16 apply_child : 1;
+    UINT16 kill_child : 1;
+    UINT16 lan_only : 1;
+    UINT16 log_blocked : 1;
+    UINT16 log_conn : 1;
 
-            UINT16 apply_child : 1;
-            UINT16 kill_child : 1;
-            UINT16 lan_only : 1;
-            UINT16 log_blocked : 1;
-            UINT16 log_conn : 1;
-
-            UINT16 blocked : 1;
-            UINT16 kill_process : 1;
-            UINT16 alerted : 1;
-            UINT16 is_new : 1;
-            UINT16 found : 1;
-        };
-    };
+    UINT16 blocked : 1;
+    UINT16 kill_process : 1;
+    UINT16 alerted : 1;
+    UINT16 is_new : 1;
 } FORT_APP_FLAGS, *PFORT_APP_FLAGS;
 
 typedef struct fort_app_data
 {
     FORT_APP_FLAGS flags;
 
-    UINT16 rule_id;
+    UINT16 found : 1;
+    UINT16 rule_id : 15;
 
     UINT16 accept_zones;
     UINT16 reject_zones;
@@ -300,7 +294,7 @@ typedef struct fort_conf
 
     UCHAR app_periods_n;
 
-    UCHAR proc_wild : 1;
+    UCHAR proc_wild : 1; /* check also wildcard paths on process creation */
 
     UINT16 wild_apps_n;
     UINT16 prefix_apps_n;
@@ -392,7 +386,7 @@ FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, const PVOID pat
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
 FORT_API BOOL fort_conf_app_blocked(
-        const PFORT_CONF conf, FORT_APP_FLAGS app_flags, INT8 *block_reason);
+        const PFORT_CONF conf, FORT_APP_DATA app_data, INT8 *block_reason);
 
 FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n);
 

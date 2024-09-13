@@ -1,9 +1,9 @@
 #ifndef DRIVERCOMMON_H
 #define DRIVERCOMMON_H
 
-#include <QString>
+#include <QObject>
 
-#include <common/common_types.h>
+#include <common/fortconf.h>
 
 namespace DriverCommon {
 
@@ -70,9 +70,8 @@ bool confIp4InRange(const void *drvConf, quint32 ip, bool included = false, int 
 bool confIp6InRange(
         const void *drvConf, const ip6_addr_t &ip, bool included = false, int addrGroupIndex = 0);
 
-quint16 confAppFind(const void *drvConf, const QString &kernelPath);
-quint8 confAppGroupIndex(quint16 appFlags);
-bool confAppBlocked(const void *drvConf, quint16 appFlags, qint8 *blockReason);
+FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath);
+bool confAppBlocked(const void *drvConf, FORT_APP_DATA appData, qint8 *blockReason);
 quint16 confAppPeriodBits(const void *drvConf, quint8 hour, quint8 minute);
 
 bool isTimeInPeriod(quint8 hour, quint8 minute, quint8 fromHour, quint8 fromMinute, quint8 toHour,

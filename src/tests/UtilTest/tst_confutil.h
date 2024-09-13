@@ -122,11 +122,11 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 0, 0), 0x01);
     ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 12, 0), 0);
 
-    const quint16 firefoxFlags = DriverCommon::confAppFind(
+    const auto firefoxData = DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe"));
-    ASSERT_TRUE(DriverCommon::confAppBlocked(data, firefoxFlags, &blockReason));
+    ASSERT_TRUE(DriverCommon::confAppBlocked(data, firefoxData, &blockReason));
     ASSERT_EQ(blockReason, FORT_BLOCK_REASON_APP_GROUP_FOUND);
-    ASSERT_EQ(int(DriverCommon::confAppGroupIndex(firefoxFlags)), 1);
+    ASSERT_EQ(int(firefoxData.flags.group_index), 1);
 }
 
 TEST_F(ConfUtilTest, checkPeriod)

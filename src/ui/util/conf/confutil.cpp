@@ -653,6 +653,7 @@ bool ConfUtil::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint3
         .flags = {
                 .group_index = quint8(app.groupIndex),
                 .use_group_perm = app.useGroupPerm,
+                .apply_parent = app.applyParent,
                 .apply_child = app.applyChild,
                 .kill_child = app.killChild,
                 .lan_only = app.lanOnly,
@@ -662,8 +663,8 @@ bool ConfUtil::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint3
                 .kill_process = app.killProcess,
                 .alerted = app.alerted,
                 .is_new = isNew,
-                .found = 1,
         },
+        .found = 1,
         .rule_id = app.ruleId,
         .accept_zones = quint16(app.acceptZones),
         .reject_zones = quint16(app.rejectZones),

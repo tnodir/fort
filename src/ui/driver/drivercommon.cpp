@@ -217,7 +217,7 @@ bool confIp6InRange(const void *drvConf, const ip6_addr_t &ip, bool included, in
     return confIpInRange(drvConf, &ip.addr32[0], /*isIPv6=*/true, included, addrGroupIndex);
 }
 
-quint16 confAppFind(const void *drvConf, const QString &kernelPath)
+FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
     const QString kernelPathLower = kernelPath.startsWith('\\') ? kernelPath.toLower() : kernelPath;
@@ -227,21 +227,14 @@ quint16 confAppFind(const void *drvConf, const QString &kernelPath)
     const FORT_APP_DATA app_data = fort_conf_app_find(
             conf, (const PVOID) p, len, fort_conf_app_exe_find, /*exe_context=*/nullptr);
 
-    return app_data.flags.v;
+    return app_data;
 }
 
-quint8 confAppGroupIndex(quint16 appFlags)
-{
-    const FORT_APP_FLAGS app_flags = { appFlags };
-
-    return app_flags.group_index;
-}
-
-bool confAppBlocked(const void *drvConf, quint16 appFlags, qint8 *blockReason)
+bool confAppBlocked(const void *drvConf, FORT_APP_DATA appData, qint8 *blockReason)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
 
-    return fort_conf_app_blocked(conf, { appFlags }, blockReason);
+    return fort_conf_app_blocked(conf, appData, blockReason);
 }
 
 quint16 confAppPeriodBits(const void *drvConf, quint8 hour, quint8 minute)

@@ -102,16 +102,16 @@ inline static BOOL fort_callout_ale_associate_flow(
 }
 
 inline static BOOL fort_callout_ale_log_app_path_check(
-        FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
+        FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
-    return app_flags.v == 0 && conf_flags.filter_enabled
+    return app_data.found == 0 && conf_flags.filter_enabled
             && (conf_flags.allow_all_new || conf_flags.log_blocked);
 }
 
 inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
-    if (cx->ignore || !fort_callout_ale_log_app_path_check(conf_flags, app_data.flags))
+    if (cx->ignore || !fort_callout_ale_log_app_path_check(conf_flags, app_data))
         return;
 
     app_data.flags.log_blocked = TRUE;
@@ -135,10 +135,10 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
 }
 
 inline static BOOL fort_callout_ale_log_blocked_ip_check_app(
-        FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
+        FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
-    return (app_flags.v == 0 || app_flags.log_blocked)
-            && (app_flags.alerted || !conf_flags.log_alerted_blocked_ip);
+    return (app_data.found == 0 || app_data.flags.log_blocked)
+            && (app_data.flags.alerted || !conf_flags.log_alerted_blocked_ip);
 }
 
 inline static BOOL fort_callout_ale_log_blocked_ip_check(
@@ -152,7 +152,7 @@ inline static BOOL fort_callout_ale_log_blocked_ip_check(
 
     const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(cx, conf_ref);
 
-    return fort_callout_ale_log_blocked_ip_check_app(conf_flags, app_data.flags);
+    return fort_callout_ale_log_blocked_ip_check_app(conf_flags, app_data);
 }
 
 inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
@@ -189,16 +189,16 @@ inline static BOOL fort_callout_ale_add_pending(
 }
 
 inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
-        FORT_CONF_FLAGS conf_flags, FORT_APP_FLAGS app_flags)
+        FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
-    if (app_flags.v == 0 && conf_flags.ask_to_connect) {
+    if (app_data.found == 0 && conf_flags.ask_to_connect) {
         return fort_callout_ale_add_pending(ca, cx, conf_flags);
     }
 
     if (!conf_flags.log_stat)
         return FALSE;
 
-    return fort_callout_ale_associate_flow(ca, cx, app_flags);
+    return fort_callout_ale_associate_flow(ca, cx, app_data.flags);
 }
 
 inline static BOOL fort_callout_ale_ip_zone_check(
@@ -213,7 +213,7 @@ inline static BOOL fort_callout_ale_ip_zone_check(
 static BOOL fort_callout_ale_is_ip_blocked(
         PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_DATA app_data)
 {
-    const BOOL app_found = (app_data.flags.v != 0);
+    const BOOL app_found = (app_data.found != 0);
     if (!app_found)
         return FALSE;
 
@@ -238,7 +238,7 @@ static BOOL fort_callout_ale_is_ip_blocked(
 
 inline static BOOL fort_callout_ale_is_new(FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
-    const BOOL app_found = (app_data.flags.v != 0);
+    const BOOL app_found = (app_data.found != 0);
 
     return !app_found && (conf_flags.allow_all_new || conf_flags.ask_to_connect);
 }
@@ -259,7 +259,7 @@ inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALL
         return FALSE;
 
     /* Check the conf for a blocked app */
-    if (!fort_conf_app_blocked(&conf_ref->conf, app_data.flags, &cx->block_reason))
+    if (!fort_conf_app_blocked(&conf_ref->conf, app_data, &cx->block_reason))
         return TRUE;
 
     if (cx->block_reason == FORT_BLOCK_REASON_NONE) {
@@ -276,7 +276,7 @@ inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
 
     if (fort_callout_ale_is_allowed(ca, cx, conf_ref, conf_flags, app_data)) {
 
-        if (fort_callout_ale_process_flow(ca, cx, conf_flags, app_data.flags))
+        if (fort_callout_ale_process_flow(ca, cx, conf_flags, app_data))
             return;
 
         cx->blocked = FALSE; /* allow */

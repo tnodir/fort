@@ -287,11 +287,11 @@ FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, const PVOID pat
     FORT_APP_DATA app_data;
 
     app_data = exe_find_func(conf, exe_context, path, path_len);
-    if (app_data.flags.v != 0)
+    if (app_data.found != 0)
         return app_data;
 
     app_data = fort_conf_app_wild_find(conf, path, path_len);
-    if (app_data.flags.v != 0)
+    if (app_data.found != 0)
         return app_data;
 
     app_data = fort_conf_app_prefix_find(conf, path, path_len);
@@ -323,19 +323,19 @@ static BOOL fort_conf_app_blocked_check(const PFORT_CONF conf, INT8 *block_reaso
 }
 
 FORT_API BOOL fort_conf_app_blocked(
-        const PFORT_CONF conf, FORT_APP_FLAGS app_flags, INT8 *block_reason)
+        const PFORT_CONF conf, FORT_APP_DATA app_data, INT8 *block_reason)
 {
-    const BOOL app_found = (app_flags.v != 0);
+    const BOOL app_found = (app_data.found != 0);
 
     if (app_found) {
-        if (!app_flags.use_group_perm) {
+        if (!app_data.flags.use_group_perm) {
             *block_reason = FORT_BLOCK_REASON_PROGRAM;
-            return app_flags.blocked;
+            return app_data.flags.blocked;
         }
     }
 
-    const UINT32 app_perm_val = app_flags.blocked ? 2 : 1;
-    const UINT32 app_perm = app_perm_val << (app_flags.group_index * 2);
+    const UINT32 app_perm_val = app_data.flags.blocked ? 2 : 1;
+    const UINT32 app_perm = app_perm_val << (app_data.flags.group_index * 2);
 
     const BOOL app_allowed = app_found && (app_perm & conf->app_perms_allow_mask) != 0;
     const BOOL app_blocked = app_found && (app_perm & conf->app_perms_block_mask) != 0;

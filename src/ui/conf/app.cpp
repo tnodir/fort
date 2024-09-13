@@ -8,14 +8,14 @@ bool App::isFlagsEqual(const App &o) const
 bool App::isBaseFlagsEqual(const App &o) const
 {
     return isWildcard == o.isWildcard && useGroupPerm == o.useGroupPerm
-            && applyChild == o.applyChild && killChild == o.killChild && lanOnly == o.lanOnly
-            && parked == o.parked;
+            && applyParent == o.applyParent && applyChild == o.applyChild
+            && killChild == o.killChild && lanOnly == o.lanOnly;
 }
 
 bool App::isExtraFlagsEqual(const App &o) const
 {
-    return logBlocked == o.logBlocked && logConn == o.logConn && blocked == o.blocked
-            && killProcess == o.killProcess;
+    return parked == o.parked && logBlocked == o.logBlocked && logConn == o.logConn
+            && blocked == o.blocked && killProcess == o.killProcess;
 }
 
 bool App::isZonesEqual(const App &o) const
@@ -42,7 +42,7 @@ bool App::isNameEqual(const App &o) const
 
 bool App::isProcWild() const
 {
-    return applyChild || killChild || killProcess;
+    return applyParent || applyChild || killChild || killProcess;
 }
 
 bool App::hasZone() const

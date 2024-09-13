@@ -406,8 +406,10 @@ inline static void fort_pstree_proc_set_name(
 inline static void fort_pstree_check_proc_app_flags(PFORT_PSTREE ps_tree, PFORT_PSNODE proc,
         const PVOID path_buf, UINT16 path_len, FORT_APP_FLAGS app_flags)
 {
-    const UINT16 kill_flags = (app_flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0)
-            | (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
+    const UINT16 kill_process_flag = (app_flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0);
+    const UINT16 kill_child_flag = (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
+    const UINT16 kill_flags = kill_process_flag | kill_child_flag;
+
     proc->flags |= kill_flags;
 
     if (kill_flags == 0 && app_flags.apply_child) {
@@ -433,7 +435,7 @@ inline static void fort_pstree_check_proc_conf(
             ? fort_conf_app_find(conf, path_buf, path_len, fort_conf_exe_find, conf_ref)
             : fort_conf_exe_find(conf, conf_ref, path_buf, path_len);
 
-    if (app_data.flags.v != 0) {
+    if (app_data.found != 0) {
         fort_pstree_check_proc_app_flags(ps_tree, proc, path_buf, path_len, app_data.flags);
     }
 }

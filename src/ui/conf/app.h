@@ -28,6 +28,7 @@ public:
 public:
     bool isWildcard : 1 = false;
     bool useGroupPerm : 1 = true;
+    bool applyParent : 1 = false;
     bool applyChild : 1 = false;
     bool killChild : 1 = false;
     bool lanOnly : 1 = false;
