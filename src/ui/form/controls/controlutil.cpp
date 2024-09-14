@@ -256,10 +256,16 @@ QFrame *ControlUtil::createSeparator(Qt::Orientation o)
     return c;
 }
 
-QLayout *ControlUtil::createRowLayout(QWidget *w1, QWidget *w2, int stretch1)
+QHBoxLayout *ControlUtil::createHLayout()
 {
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(0, 0, 0, 0);
+    return layout;
+}
+
+QLayout *ControlUtil::createRowLayout(QWidget *w1, QWidget *w2, int stretch1)
+{
+    auto layout = createHLayout();
     layout->addWidget(w1, stretch1);
     layout->addWidget(w2);
     return layout;

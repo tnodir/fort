@@ -12,6 +12,7 @@ QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QFormLayout)
 QT_FORWARD_DECLARE_CLASS(QFrame)
+QT_FORWARD_DECLARE_CLASS(QHBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QLayout)
 QT_FORWARD_DECLARE_CLASS(QLineEdit)
@@ -88,6 +89,7 @@ public:
     inline static QFrame *createHSeparator() { return createSeparator(Qt::Horizontal); }
     inline static QFrame *createVSeparator() { return createSeparator(Qt::Vertical); }
 
+    static QHBoxLayout *createHLayout();
     static QLayout *createRowLayout(QWidget *w1, QWidget *w2, int stretch1 = 1);
 
     static void clearLayout(QLayout *layout);

@@ -38,6 +38,7 @@
 
 namespace {
 
+const QSize labelIconSize(16, 16);
 const QSize appIconSize(32, 32);
 
 const std::array appBlockInMinuteValues = { 15, 0, 1, 5, 10, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
@@ -108,9 +109,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_rbKillProcess->setChecked(appRow.killProcess);
 
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
-    m_cbApplyParent->setChecked(appRow.applyParent);
-    m_cbApplyChild->setChecked(appRow.applyChild);
-    m_cbApplySpecChild->setChecked(appRow.applySpecChild);
+    updateApplyChild();
     m_cbKillChild->setChecked(appRow.killChild);
 
     m_cbParked->setChecked(appRow.parked);
@@ -248,9 +247,8 @@ void ProgramEditDialog::retranslateUi()
     m_rbKillProcess->setText(tr("Kill Process"));
 
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
-    m_cbApplyParent->setText(tr("Apply same rules from parent process"));
-    m_cbApplyChild->setText(tr("Apply same rules to child processes"));
-    m_cbApplySpecChild->setText(tr("Apply same rules only to specified child processes"));
+    m_labelApplyChild->setText(tr("Apply same rules:"));
+    retranslateComboApplyChild();
     m_cbKillChild->setText(tr("Kill child processes"));
 
     m_cbParked->setText(tr("Parked"));
@@ -296,6 +294,17 @@ void ProgramEditDialog::retranslatePathPlaceholderText()
               "\n%ProgramFiles%\\Internet Explorer\\iexplore.exe";
 
     m_editWildcard->setPlaceholderText(placeholderText);
+}
+
+void ProgramEditDialog::retranslateComboApplyChild()
+{
+    // Sync with ProgramEditDialog::ApplyChildType
+    const QStringList list = { tr("Disabled"), tr("To specified child processes"),
+        tr("To child processes"), tr("From parent process") };
+
+    ControlUtil::setComboBoxTexts(m_comboApplyChild, list);
+
+    updateApplyChild();
 }
 
 void ProgramEditDialog::retranslateScheduleAction()
@@ -538,23 +547,22 @@ void ProgramEditDialog::setupAdvancedOptions()
     m_cbParked->setIcon(IconCache::icon(":/icons/parking.png"));
 
     // Child Options
-    setupChildOptions();
+    auto applyChildLayout = setupApplyChildLayout();
+
+    setupChildOptionsLayout();
 
     // Log Options
     setupLogOptions();
 
-    auto layout = ControlUtil::createVLayoutByWidgets({
-            m_cbUseGroupPerm,
-            m_cbParked,
-            ControlUtil::createHSeparator(),
-            m_cbApplyParent,
-            m_cbApplyChild,
-            m_cbApplySpecChild,
-            m_cbKillChild,
-            ControlUtil::createHSeparator(),
-            m_cbLogBlocked,
-            m_cbLogConn,
-    });
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbUseGroupPerm);
+    layout->addWidget(m_cbParked);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(applyChildLayout);
+    layout->addWidget(m_cbKillChild);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_cbLogBlocked);
+    layout->addWidget(m_cbLogConn);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
@@ -563,24 +571,29 @@ void ProgramEditDialog::setupAdvancedOptions()
     m_btOptions->setMenu(menu);
 }
 
-void ProgramEditDialog::setupChildOptions()
+QLayout *ProgramEditDialog::setupApplyChildLayout()
 {
-    // Apply Parent
-    m_cbApplyParent = new QCheckBox();
+    auto labelIcon = ControlUtil::createLabel();
+    labelIcon->setScaledContents(true);
+    labelIcon->setFixedSize(labelIconSize);
+    labelIcon->setPixmap(IconCache::pixmap(":/icons/application_double.png", labelIconSize));
 
-    connect(m_cbApplyParent, &QCheckBox::clicked, this,
-            &ProgramEditDialog::warnRestartNeededOption);
+    m_labelApplyChild = ControlUtil::createLabel();
 
-    // Apply Child
-    m_cbApplyChild = new QCheckBox();
-    m_cbApplyChild->setIcon(
-            GuiUtil::overlayIcon(":/icons/application_double.png", ":/icons/tick.png"));
+    m_comboApplyChild =
+            ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
+    m_comboApplyChild->setFixedWidth(200);
 
-    connect(m_cbApplyChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnRestartNeededOption);
+    auto layout = ControlUtil::createHLayout();
+    layout->addWidget(labelIcon);
+    layout->addWidget(m_labelApplyChild, 1);
+    layout->addWidget(m_comboApplyChild);
 
-    // Apply Specified Child
-    m_cbApplySpecChild = new QCheckBox();
+    return layout;
+}
 
+void ProgramEditDialog::setupChildOptionsLayout()
+{
     // Kill Child
     m_cbKillChild = new QCheckBox();
     m_cbKillChild->setIcon(IconCache::icon(":/icons/scull.png"));
@@ -734,6 +747,16 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     return layout;
 }
 
+void ProgramEditDialog::updateApplyChild()
+{
+    const ApplyChildType type = m_appRow.applyParent ? ApplyChildType::FromParent
+            : m_appRow.applySpecChild                ? ApplyChildType::ToSpecChild
+            : m_appRow.applyChild                    ? ApplyChildType::ToChild
+                                                     : ApplyChildType::Disabled;
+
+    m_comboApplyChild->setCurrentIndex(type);
+}
+
 void ProgramEditDialog::fillEditName()
 {
     const QString appPath = getEditText();
@@ -833,9 +856,6 @@ void ProgramEditDialog::fillApp(App &app) const
 {
     app.isWildcard = isWildcard();
     app.useGroupPerm = m_cbUseGroupPerm->isChecked();
-    app.applyParent = m_cbApplyParent->isChecked();
-    app.applyChild = m_cbApplyChild->isChecked();
-    app.applySpecChild = m_cbApplySpecChild->isChecked();
     app.killChild = m_cbKillChild->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();
     app.parked = m_cbParked->isChecked();
@@ -852,6 +872,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.rejectZones = m_btZones->uncheckedZones();
 
     fillAppPath(app);
+    fillAppApplyChild(app);
     fillAppEndTime(app);
 }
 
@@ -861,6 +882,30 @@ void ProgramEditDialog::fillAppPath(App &app) const
 
     app.appOriginPath = appPath;
     app.appPath = FileUtil::normalizePath(StringUtil::firstLine(appPath));
+}
+
+void ProgramEditDialog::fillAppApplyChild(App &app) const
+{
+    const auto type = ApplyChildType(m_comboApplyChild->currentIndex());
+
+    app.applyParent = false;
+    app.applyChild = false;
+    app.applySpecChild = false;
+
+    switch (type) {
+    case ApplyChildType::Disabled: {
+    } break;
+    case ApplyChildType::ToSpecChild: {
+        app.applySpecChild = true;
+    }
+        Q_FALLTHROUGH();
+    case ApplyChildType::ToChild: {
+        app.applyChild = true;
+    } break;
+    case ApplyChildType::FromParent: {
+        app.applyParent = true;
+    } break;
+    }
 }
 
 void ProgramEditDialog::fillAppEndTime(App &app) const

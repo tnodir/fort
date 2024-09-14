@@ -43,6 +43,13 @@ protected:
     void setAdvancedMode(bool on);
 
 private:
+    enum ApplyChildType : qint8 {
+        Disabled = 0,
+        ToSpecChild,
+        ToChild,
+        FromParent,
+    };
+
     void initializePathNameRuleFields();
     void initializePathField(bool isSingleSelection, bool isPathEditable);
     void initializeNameField(bool isSingleSelection);
@@ -55,6 +62,7 @@ private:
 
     void retranslateUi();
     void retranslatePathPlaceholderText();
+    void retranslateComboApplyChild();
     void retranslateScheduleAction();
     void retranslateScheduleType();
     void retranslateScheduleIn();
@@ -69,7 +77,8 @@ private:
     QLayout *setupActionsLayout();
     void setupActionsGroup();
     void setupAdvancedOptions();
-    void setupChildOptions();
+    QLayout *setupApplyChildLayout();
+    void setupChildOptionsLayout();
     void setupLogOptions();
     QLayout *setupZonesRuleLayout();
     QLayout *setupRuleLayout();
@@ -77,6 +86,8 @@ private:
     void setupCbSchedule();
     void setupComboScheduleType();
     QLayout *setupButtonsLayout();
+
+    void updateApplyChild();
 
     void fillEditName();
 
@@ -87,6 +98,7 @@ private:
     bool validateFields() const;
     void fillApp(App &app) const;
     void fillAppPath(App &app) const;
+    void fillAppApplyChild(App &app) const;
     void fillAppEndTime(App &app) const;
 
     bool isWildcard() const;
@@ -118,9 +130,8 @@ private:
     QRadioButton *m_rbKillProcess = nullptr;
     QButtonGroup *m_btgActions = nullptr;
     QCheckBox *m_cbUseGroupPerm = nullptr;
-    QCheckBox *m_cbApplyParent = nullptr;
-    QCheckBox *m_cbApplyChild = nullptr;
-    QCheckBox *m_cbApplySpecChild = nullptr;
+    QLabel *m_labelApplyChild = nullptr;
+    QComboBox *m_comboApplyChild = nullptr;
     QCheckBox *m_cbKillChild = nullptr;
     QCheckBox *m_cbParked = nullptr;
     QCheckBox *m_cbLogBlocked = nullptr;
