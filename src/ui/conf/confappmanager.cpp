@@ -109,7 +109,7 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    log_blocked = ?15, log_conn = ?16,"
                                  "    blocked = ?17, kill_process = ?18,"
                                  "    accept_zones = ?19, reject_zones = ?20, rule_id = ?21,"
-                                 "    end_action = ?21, end_time = ?22"
+                                 "    end_action = ?22, end_time = ?23"
                                  "  WHERE app_id = ?1"
                                  "  RETURNING app_id;";
 
