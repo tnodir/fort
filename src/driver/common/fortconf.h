@@ -240,15 +240,15 @@ typedef struct fort_app_flags
     UINT16 blocked : 1;
     UINT16 kill_process : 1;
     UINT16 alerted : 1;
-    UINT16 is_new : 1;
 } FORT_APP_FLAGS, *PFORT_APP_FLAGS;
 
 typedef struct fort_app_data
 {
     FORT_APP_FLAGS flags;
 
-    UINT16 found : 1;
-    UINT16 rule_id : 15;
+    UINT16 is_new : 1; /* can replace an existing app data? */
+    UINT16 found : 1; /* is app data not empty? */
+    UINT16 rule_id : 14;
 
     UINT16 accept_zones;
     UINT16 reject_zones;

@@ -118,7 +118,9 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     app_data.flags.log_conn = TRUE;
     app_data.flags.blocked = (UCHAR) cx->blocked;
     app_data.flags.alerted = TRUE;
-    app_data.flags.is_new = TRUE;
+
+    app_data.is_new = TRUE;
+    app_data.found = TRUE;
 
     FORT_APP_ENTRY app_entry = {
         .app_data = app_data,
