@@ -582,7 +582,7 @@ QLayout *ProgramEditDialog::setupApplyChildLayout()
 
     m_comboApplyChild =
             ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
-    m_comboApplyChild->setFixedWidth(200);
+    m_comboApplyChild->setFixedWidth(110);
 
     auto layout = ControlUtil::createHLayout();
     layout->addWidget(labelIcon);
