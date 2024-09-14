@@ -32,6 +32,9 @@ public:
 
     void initialize(const ZoneRow &zoneRow);
 
+signals:
+    void saved();
+
 protected slots:
     void retranslateUi();
 

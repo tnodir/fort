@@ -57,6 +57,8 @@ private:
     void deleteZone(int row);
     void deleteSelectedZone();
 
+    void downloadZones();
+
     int zoneListCurrentIndex() const;
 
 private:

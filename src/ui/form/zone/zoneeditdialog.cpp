@@ -243,6 +243,7 @@ QLayout *ZoneEditDialog::setupButtons()
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
         if (save()) {
+            emit saved();
             this->close();
         }
     });

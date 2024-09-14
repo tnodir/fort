@@ -204,8 +204,8 @@ void ZonesWindow::setupSaveAsText()
 
 void ZonesWindow::setupTaskRun()
 {
-    m_btUpdateZones = ControlUtil::createFlatToolButton(
-            ":/icons/play.png", [&] { taskManager()->runTask(TaskInfo::ZoneDownloader); });
+    m_btUpdateZones =
+            ControlUtil::createFlatToolButton(":/icons/play.png", [&] { downloadZones(); });
 }
 
 void ZonesWindow::setupTableZones()
@@ -283,6 +283,10 @@ void ZonesWindow::openZoneEditForm(const ZoneRow &zoneRow)
 {
     if (!m_formZoneEdit) {
         m_formZoneEdit = new ZoneEditDialog(ctrl(), this);
+
+        connect(m_formZoneEdit, &ZoneEditDialog::saved, [&] {
+            windowManager()->showConfirmBox([&] { downloadZones(); }, tr("Update Zones?"));
+        });
     }
 
     m_formZoneEdit->initialize(zoneRow);
@@ -302,6 +306,11 @@ void ZonesWindow::deleteZone(int row)
 void ZonesWindow::deleteSelectedZone()
 {
     deleteZone(zoneListCurrentIndex());
+}
+
+void ZonesWindow::downloadZones()
+{
+    taskManager()->runTask(TaskInfo::ZoneDownloader);
 }
 
 int ZonesWindow::zoneListCurrentIndex() const
