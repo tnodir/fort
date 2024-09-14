@@ -1,12 +1,11 @@
 Fort Firewall ChangeLog
 
-v3.13.11-test02, 2024-09-13:
-- UI: Options: Programs: Add "Alert Window is auto-active" flag.
+v3.13.11-test04, 2024-09-14:
+- UI: Programs: Add "Connection rule inheritance" combo-box.
 - UI: Options: IP Addresses: Don't expand tabs.
 - UI: Blocked Conn: Separate "Direction" and "Reason" columns.
 - UI: Blocked Conn: "Add Program" on double click.
 - UI: Fix initial Zones loading to Driver (v3.11.3 regression).
-- Driver: fortcout: Don't process Zones of blocked app.
 
 v3.13.10, 2024-09-07:
 - UI: Add Spanish language.
