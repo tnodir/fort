@@ -1303,10 +1303,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
     </message>
     <message>
-        <source>Apply same rules to child processes</source>
-        <translation>하위 프로세스에 동일한 규칙 적용</translation>
-    </message>
-    <message>
         <source>File Path:</source>
         <translation>파일 경로:</translation>
     </message>
@@ -1443,6 +1439,26 @@ Please restart the running program to take effect of this option.</source>
         <translation>주의: 이 옵션은 새 프로세스에만 영향을 미칩니다!
 
 이 옵션을 적용하려면 실행 중인 프로그램을 다시 시작하세요.</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Propagate to designated child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Propagate to all child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Receive from the parent process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection rule inheritance:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2320,6 +2336,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Update Zones</source>
         <translation>영역 업데이트</translation>
+    </message>
+    <message>
+        <source>Update Zones?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

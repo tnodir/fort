@@ -1301,10 +1301,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>程序 (*.exe);;所有文件 (*.*)</translation>
     </message>
     <message>
-        <source>Apply same rules to child processes</source>
-        <translation>将相同的规则应用于子进程</translation>
-    </message>
-    <message>
         <source>File Path:</source>
         <translation>文件路径：</translation>
     </message>
@@ -1441,6 +1437,26 @@ Please restart the running program to take effect of this option.</source>
         <translation>请注意： 此选项只影响新进程！
 
 请重新启动正在运行的程序，以使该选项生效。</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished">停用</translation>
+    </message>
+    <message>
+        <source>Propagate to designated child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Propagate to all child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Receive from the parent process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection rule inheritance:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2318,6 +2334,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Update Zones</source>
         <translation>更新区域</translation>
+    </message>
+    <message>
+        <source>Update Zones?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

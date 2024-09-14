@@ -1303,10 +1303,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>البرامج (*.exe);;كل الملفات (*.*)</translation>
     </message>
     <message>
-        <source>Apply same rules to child processes</source>
-        <translation>تطبيق القواعد نفسها للعمليات الفرعية</translation>
-    </message>
-    <message>
         <source>File Path:</source>
         <translation>مسار الملف:</translation>
     </message>
@@ -1443,6 +1439,26 @@ Please restart the running program to take effect of this option.</source>
         <translation>تنبيه: هذا الخيار يؤثر فقط على العمليات الجديدة!
 
 الرجاء إعادة تشغيل البرنامج لتفعيل هذا الخيار.</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Propagate to designated child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Propagate to all child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Receive from the parent process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection rule inheritance:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2320,6 +2336,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Update Zones</source>
         <translation>تحديث المناطق</translation>
+    </message>
+    <message>
+        <source>Update Zones?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

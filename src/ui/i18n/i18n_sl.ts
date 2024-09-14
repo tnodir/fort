@@ -1303,10 +1303,6 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
         <translation>Programi (*.exe);;Vse datoteke (*.*)</translation>
     </message>
     <message>
-        <source>Apply same rules to child processes</source>
-        <translation>Uporabi ista pravila za podrejene procese</translation>
-    </message>
-    <message>
         <source>File Path:</source>
         <translation>Pot do datoteke:</translation>
     </message>
@@ -1443,6 +1439,26 @@ Please restart the running program to take effect of this option.</source>
         <translation>Upozornenie: Táto možnosť ovplyvňuje iba nové procesy!
 
 Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Onemogočeno</translation>
+    </message>
+    <message>
+        <source>Propagate to designated child processes</source>
+        <translation>Razširi na določene podrejene procese</translation>
+    </message>
+    <message>
+        <source>Propagate to all child processes</source>
+        <translation>Razširi na vse podrejene procese</translation>
+    </message>
+    <message>
+        <source>Receive from the parent process</source>
+        <translation>Prejmi iz nadrejenega procesa</translation>
+    </message>
+    <message>
+        <source>Connection rule inheritance:</source>
+        <translation>Dedovanje pravil povezave:</translation>
     </message>
 </context>
 <context>
@@ -2320,6 +2336,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Update Zones</source>
         <translation>Posodobi področja</translation>
+    </message>
+    <message>
+        <source>Update Zones?</source>
+        <translation>Posodobi področja?</translation>
     </message>
 </context>
 </TS>

@@ -1303,10 +1303,6 @@ Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
         <translation>Programmes (*.exe);;Tous les fichiers (*.*)</translation>
     </message>
     <message>
-        <source>Apply same rules to child processes</source>
-        <translation>Appliquer les mêmes règles aux processus enfants</translation>
-    </message>
-    <message>
         <source>File Path:</source>
         <translation>Chemin du fichier:</translation>
     </message>
@@ -1443,6 +1439,26 @@ Please restart the running program to take effect of this option.</source>
         <translation>Attention : Cette option n&apos;affecte que les nouveaux processus !
 
 Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet de cette option.</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished">Désactivé</translation>
+    </message>
+    <message>
+        <source>Propagate to designated child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Propagate to all child processes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Receive from the parent process</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connection rule inheritance:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2320,6 +2336,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Update Zones</source>
         <translation>Mettre à jour les Zones</translation>
+    </message>
+    <message>
+        <source>Update Zones?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

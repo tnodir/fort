@@ -1297,10 +1297,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Apply same rules to child processes</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>File Path:</source>
         <translation></translation>
     </message>
@@ -1431,6 +1427,26 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Propagate to designated child processes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Propagate to all child processes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Receive from the parent process</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connection rule inheritance:</source>
         <translation></translation>
     </message>
 </context>
@@ -2308,6 +2324,10 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Update Zones</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Update Zones?</source>
         <translation></translation>
     </message>
 </context>

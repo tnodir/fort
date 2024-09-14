@@ -247,7 +247,7 @@ void ProgramEditDialog::retranslateUi()
     m_rbKillProcess->setText(tr("Kill Process"));
 
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
-    m_labelApplyChild->setText(tr("Apply same rules:"));
+    m_labelApplyChild->setText(tr("Connection rule inheritance:"));
     retranslateComboApplyChild();
     m_cbKillChild->setText(tr("Kill child processes"));
 
@@ -299,8 +299,8 @@ void ProgramEditDialog::retranslatePathPlaceholderText()
 void ProgramEditDialog::retranslateComboApplyChild()
 {
     // Sync with ProgramEditDialog::ApplyChildType
-    const QStringList list = { tr("Disabled"), tr("To specified child processes"),
-        tr("To child processes"), tr("From parent process") };
+    const QStringList list = { tr("Disabled"), tr("Propagate to designated child processes"),
+        tr("Propagate to all child processes"), tr("Receive from the parent process") };
 
     ControlUtil::setComboBoxTexts(m_comboApplyChild, list);
 

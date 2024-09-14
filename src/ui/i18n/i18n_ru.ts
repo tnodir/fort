@@ -1303,10 +1303,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
     </message>
     <message>
-        <source>Apply same rules to child processes</source>
-        <translation>Применить те же правила к дочерним процессам</translation>
-    </message>
-    <message>
         <source>File Path:</source>
         <translation>Путь файла:</translation>
     </message>
@@ -1443,6 +1439,26 @@ Please restart the running program to take effect of this option.</source>
         <translation>Внимание: эта опция влияет только на новые процессы!
 
 Перезапустите запущенную программу, чтобы эта опция вступила в силу.</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Отключено</translation>
+    </message>
+    <message>
+        <source>Propagate to designated child processes</source>
+        <translation>Распространить на указанные дочерние процессы</translation>
+    </message>
+    <message>
+        <source>Propagate to all child processes</source>
+        <translation>Распространить на все дочерние процессы</translation>
+    </message>
+    <message>
+        <source>Receive from the parent process</source>
+        <translation>Получить от родительского процесса</translation>
+    </message>
+    <message>
+        <source>Connection rule inheritance:</source>
+        <translation>Наследование правил соединения:</translation>
     </message>
 </context>
 <context>
@@ -2320,6 +2336,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Update Zones</source>
         <translation>Обновить Зоны</translation>
+    </message>
+    <message>
+        <source>Update Zones?</source>
+        <translation>Обновить Зоны?</translation>
     </message>
 </context>
 </TS>
