@@ -232,6 +232,7 @@ typedef struct fort_app_flags
 
     UINT16 apply_parent : 1;
     UINT16 apply_child : 1;
+    UINT16 apply_spec_child : 1;
     UINT16 kill_child : 1;
     UINT16 lan_only : 1;
     UINT16 log_blocked : 1;

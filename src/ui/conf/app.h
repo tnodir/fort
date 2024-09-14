@@ -30,6 +30,7 @@ public:
     bool useGroupPerm : 1 = true;
     bool applyParent : 1 = false;
     bool applyChild : 1 = false;
+    bool applySpecChild : 1 = false;
     bool killChild : 1 = false;
     bool lanOnly : 1 = false;
     bool parked : 1 = false;

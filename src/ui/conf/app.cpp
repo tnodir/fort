@@ -9,7 +9,8 @@ bool App::isBaseFlagsEqual(const App &o) const
 {
     return isWildcard == o.isWildcard && useGroupPerm == o.useGroupPerm
             && applyParent == o.applyParent && applyChild == o.applyChild
-            && killChild == o.killChild && lanOnly == o.lanOnly;
+            && applySpecChild == o.applySpecChild && killChild == o.killChild
+            && lanOnly == o.lanOnly;
 }
 
 bool App::isExtraFlagsEqual(const App &o) const

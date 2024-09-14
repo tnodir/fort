@@ -110,6 +110,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     m_cbApplyParent->setChecked(appRow.applyParent);
     m_cbApplyChild->setChecked(appRow.applyChild);
+    m_cbApplySpecChild->setChecked(appRow.applySpecChild);
     m_cbKillChild->setChecked(appRow.killChild);
 
     m_cbParked->setChecked(appRow.parked);
@@ -247,8 +248,9 @@ void ProgramEditDialog::retranslateUi()
     m_rbKillProcess->setText(tr("Kill Process"));
 
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
-    m_cbApplyChild->setText(tr("Apply same rules from parent process"));
+    m_cbApplyParent->setText(tr("Apply same rules from parent process"));
     m_cbApplyChild->setText(tr("Apply same rules to child processes"));
+    m_cbApplySpecChild->setText(tr("Apply same rules only to specified child processes"));
     m_cbKillChild->setText(tr("Kill child processes"));
 
     m_cbParked->setText(tr("Parked"));
@@ -547,6 +549,7 @@ void ProgramEditDialog::setupAdvancedOptions()
             ControlUtil::createHSeparator(),
             m_cbApplyParent,
             m_cbApplyChild,
+            m_cbApplySpecChild,
             m_cbKillChild,
             ControlUtil::createHSeparator(),
             m_cbLogBlocked,
@@ -564,10 +567,9 @@ void ProgramEditDialog::setupChildOptions()
 {
     // Apply Parent
     m_cbApplyParent = new QCheckBox();
-    m_cbApplyParent->setIcon(
-            GuiUtil::overlayIcon(":/icons/application_double.png", ":/icons/tick.png"));
 
-    connect(m_cbApplyParent, &QCheckBox::clicked, this, &ProgramEditDialog::warnRestartNeededOption);
+    connect(m_cbApplyParent, &QCheckBox::clicked, this,
+            &ProgramEditDialog::warnRestartNeededOption);
 
     // Apply Child
     m_cbApplyChild = new QCheckBox();
@@ -575,6 +577,9 @@ void ProgramEditDialog::setupChildOptions()
             GuiUtil::overlayIcon(":/icons/application_double.png", ":/icons/tick.png"));
 
     connect(m_cbApplyChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnRestartNeededOption);
+
+    // Apply Specified Child
+    m_cbApplySpecChild = new QCheckBox();
 
     // Kill Child
     m_cbKillChild = new QCheckBox();
@@ -830,6 +835,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.useGroupPerm = m_cbUseGroupPerm->isChecked();
     app.applyParent = m_cbApplyParent->isChecked();
     app.applyChild = m_cbApplyChild->isChecked();
+    app.applySpecChild = m_cbApplySpecChild->isChecked();
     app.killChild = m_cbKillChild->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();
     app.parked = m_cbParked->isChecked();

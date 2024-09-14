@@ -172,10 +172,11 @@ bool ConfAppManagerRpc::updateAppsBlocked(
 
 QVariantList ConfAppManagerRpc::appToVarList(const App &app)
 {
-    return { app.isWildcard, app.useGroupPerm, app.applyParent, app.applyChild, app.killChild,
-        app.lanOnly, app.parked, app.logBlocked, app.logConn, app.blocked, app.killProcess,
-        app.groupIndex, app.acceptZones, app.rejectZones, app.ruleId, app.appId, app.appOriginPath,
-        app.appPath, app.appName, app.notes, app.scheduleAction, app.scheduleTime };
+    return { app.isWildcard, app.useGroupPerm, app.applyParent, app.applyChild, app.applySpecChild,
+        app.killChild, app.lanOnly, app.parked, app.logBlocked, app.logConn, app.blocked,
+        app.killProcess, app.groupIndex, app.acceptZones, app.rejectZones, app.ruleId, app.appId,
+        app.appOriginPath, app.appPath, app.appName, app.notes, app.scheduleAction,
+        app.scheduleTime };
 }
 
 App ConfAppManagerRpc::varListToApp(const QVariantList &v)
@@ -185,24 +186,25 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.useGroupPerm = v.value(1).toBool();
     app.applyParent = v.value(2).toBool();
     app.applyChild = v.value(3).toBool();
-    app.killChild = v.value(4).toBool();
-    app.lanOnly = v.value(5).toBool();
-    app.parked = v.value(6).toBool();
-    app.logBlocked = v.value(7).toBool();
-    app.logConn = v.value(8).toBool();
-    app.blocked = v.value(9).toBool();
-    app.killProcess = v.value(10).toBool();
-    app.groupIndex = v.value(11).toInt();
-    app.acceptZones = v.value(12).toUInt();
-    app.rejectZones = v.value(13).toUInt();
-    app.ruleId = v.value(14).toUInt();
-    app.appId = v.value(15).toLongLong();
-    app.appOriginPath = v.value(16).toString();
-    app.appPath = v.value(17).toString();
-    app.appName = v.value(18).toString();
-    app.notes = v.value(19).toString();
-    app.scheduleAction = v.value(20).toInt();
-    app.scheduleTime = v.value(21).toDateTime();
+    app.applySpecChild = v.value(4).toBool();
+    app.killChild = v.value(5).toBool();
+    app.lanOnly = v.value(6).toBool();
+    app.parked = v.value(7).toBool();
+    app.logBlocked = v.value(8).toBool();
+    app.logConn = v.value(9).toBool();
+    app.blocked = v.value(10).toBool();
+    app.killProcess = v.value(11).toBool();
+    app.groupIndex = v.value(12).toInt();
+    app.acceptZones = v.value(13).toUInt();
+    app.rejectZones = v.value(14).toUInt();
+    app.ruleId = v.value(15).toUInt();
+    app.appId = v.value(16).toLongLong();
+    app.appOriginPath = v.value(17).toString();
+    app.appPath = v.value(18).toString();
+    app.appName = v.value(19).toString();
+    app.notes = v.value(20).toString();
+    app.scheduleAction = v.value(21).toInt();
+    app.scheduleTime = v.value(22).toDateTime();
     return app;
 }
 
