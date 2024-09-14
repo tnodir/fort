@@ -36,28 +36,6 @@ QString formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6, bool resolv
     return address + ':' + QString::number(port);
 }
 
-QString reasonText(const ConnRow &connRow)
-{
-    static const char *const blockReasonTexts[] = {
-        QT_TR_NOOP("Blocked Internet address"),
-        QT_TR_NOOP("Old connection closed on startup"),
-        QT_TR_NOOP("Programs logic"),
-        QT_TR_NOOP("App. Group logic"),
-        QT_TR_NOOP("Filter Mode logic"),
-        QT_TR_NOOP("Restrict access to LAN only"),
-        QT_TR_NOOP("Restrict access by Zone"),
-        QT_TR_NOOP("Limit of Ask to Connect"),
-    };
-
-    if (connRow.blockReason >= FORT_BLOCK_REASON_IP_INET
-            && connRow.blockReason <= FORT_BLOCK_REASON_ASK_LIMIT) {
-        const int index = connRow.blockReason - FORT_BLOCK_REASON_IP_INET;
-        return ConnBlockListModel::tr(blockReasonTexts[index]);
-    }
-
-    return ConnBlockListModel::tr("Unknown");
-}
-
 QString reasonIconPath(const ConnRow &connRow)
 {
     static const char *const blockReasonIcons[] = {
@@ -122,7 +100,7 @@ QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, i
 QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int role)
 {
     if (role == Qt::ToolTipRole) {
-        return reasonText(connRow)
+        return ConnBlockListModel::blockReasonText(FortBlockReason(connRow.blockReason))
                 + (connRow.inherited ? " (" + ConnBlockListModel::tr("Inherited") + ")"
                                      : QString());
     }
@@ -459,4 +437,25 @@ void ConnBlockListModel::insertConnRows(qint64 idMax, int endRow, int count)
     m_connIdMax = idMax;
     invalidateRowCache();
     endInsertRows();
+}
+
+QString ConnBlockListModel::blockReasonText(FortBlockReason reason)
+{
+    static const char *const blockReasonTexts[] = {
+        QT_TR_NOOP("Blocked Internet address"),
+        QT_TR_NOOP("Old connection closed on startup"),
+        QT_TR_NOOP("Programs logic"),
+        QT_TR_NOOP("App. Group logic"),
+        QT_TR_NOOP("Filter Mode logic"),
+        QT_TR_NOOP("Restrict access to LAN only"),
+        QT_TR_NOOP("Restrict access by Zone"),
+        QT_TR_NOOP("Limit of Ask to Connect"),
+    };
+
+    if (reason >= FORT_BLOCK_REASON_IP_INET && reason <= FORT_BLOCK_REASON_ASK_LIMIT) {
+        const int index = reason - FORT_BLOCK_REASON_IP_INET;
+        return tr(blockReasonTexts[index]);
+    }
+
+    return tr("Unknown");
 }

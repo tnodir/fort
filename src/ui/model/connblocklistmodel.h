@@ -4,6 +4,7 @@
 #include <QDateTime>
 
 #include <common/common_types.h>
+#include <common/fortdef.h>
 #include <util/model/tablesqlmodel.h>
 
 class AppInfoCache;
@@ -60,6 +61,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
     const ConnRow &connRowAt(int row) const;
+
+    static QString blockReasonText(FortBlockReason reason);
 
 protected slots:
     void updateConnIdRange();
