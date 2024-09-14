@@ -6,6 +6,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <form/controls/controlutil.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
 #include <util/guiutil.h>
@@ -182,10 +183,9 @@ void GraphWindow::setupUi()
     group->append(m_graphOut);
 
     // Widget Layout
-    auto mainLayout = new QVBoxLayout();
-    mainLayout->setContentsMargins(0, 0, 0, 0);
-    mainLayout->addWidget(m_plot);
-    setLayout(mainLayout);
+    auto layout = ControlUtil::createVLayout();
+    layout->addWidget(m_plot);
+    setLayout(layout);
 }
 
 void GraphWindow::setupFlagsAndColors()

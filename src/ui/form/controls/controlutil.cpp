@@ -1,6 +1,5 @@
 #include "controlutil.h"
 
-#include <QBoxLayout>
 #include <QCheckBox>
 #include <QFormLayout>
 #include <QLabel>
@@ -256,10 +255,10 @@ QFrame *ControlUtil::createSeparator(Qt::Orientation o)
     return c;
 }
 
-QHBoxLayout *ControlUtil::createHLayout()
+QBoxLayout *ControlUtil::createLayout(QBoxLayout::Direction direction, int margin)
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = new QBoxLayout(direction);
+    layout->setContentsMargins(margin, margin, margin, margin);
     return layout;
 }
 
@@ -298,8 +297,7 @@ QLayout *ControlUtil::createScrollLayout(QLayout *content, bool isBgTransparent)
 
     auto scrollArea = wrapToScrollArea(scrollAreaContent, isBgTransparent);
 
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = createHLayout();
     layout->addWidget(scrollArea);
 
     return layout;

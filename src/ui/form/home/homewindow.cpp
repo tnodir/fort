@@ -122,8 +122,7 @@ void HomeWindow::setupController()
 
 void HomeWindow::setupUi()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = ControlUtil::createVLayout();
     layout->setSpacing(0);
 
     // Header

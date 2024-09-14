@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
+#include <form/controls/controlutil.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
@@ -64,10 +65,9 @@ void StatisticsWindow::retranslateUi()
 
 void StatisticsWindow::setupUi()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-
     auto mainPage = new StatMainPage(ctrl());
+
+    auto layout = ControlUtil::createVLayout();
     layout->addWidget(mainPage);
 
     this->setLayout(layout);

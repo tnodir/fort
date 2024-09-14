@@ -48,8 +48,7 @@ void TextArea2SplitterHandle::setupUi()
     const auto direction =
             (orientation() == Qt::Horizontal) ? QBoxLayout::TopToBottom : QBoxLayout::LeftToRight;
 
-    auto layout = new QBoxLayout(direction);
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = ControlUtil::createLayout(direction);
 
     m_btMoveAllFrom1To2 = ControlUtil::createSplitterButton(":/icons/control_fastforward.png",
             [&] { TextAreaUtil::moveAllLines(textArea1(), textArea2()); });
@@ -62,8 +61,7 @@ void TextArea2SplitterHandle::setupUi()
     m_btMoveAllFrom2To1 = ControlUtil::createSplitterButton(":/icons/control_rewind.png",
             [&] { TextAreaUtil::moveAllLines(textArea2(), textArea1()); });
 
-    m_buttonsLayout = new QBoxLayout(direction);
-    m_buttonsLayout->setContentsMargins(0, 0, 0, 0);
+    m_buttonsLayout = ControlUtil::createLayout(direction);
     m_buttonsLayout->setSpacing(10);
 
     m_buttonsLayout->addWidget(m_btMoveAllFrom1To2, 0, Qt::AlignHCenter);

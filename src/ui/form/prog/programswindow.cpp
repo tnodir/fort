@@ -155,24 +155,23 @@ void ProgramsWindow::retranslateUi()
 
 void ProgramsWindow::setupUi()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
-
     // Header
     auto header = setupHeader();
-    layout->addLayout(header);
 
     // Table
     setupTableApps();
     setupTableAppsHeader();
-    layout->addWidget(m_appListView, 1);
 
     // App Info Row
     setupAppInfoRow();
-    layout->addWidget(m_appInfoRow);
 
     // Actions on apps table's current changed
     setupTableAppsChanged();
+
+    auto layout = ControlUtil::createVLayout(/*margin=*/6);
+    layout->addLayout(header);
+    layout->addWidget(m_appListView, 1);
+    layout->addWidget(m_appInfoRow);
 
     this->setLayout(layout);
 

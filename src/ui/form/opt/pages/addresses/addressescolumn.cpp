@@ -25,8 +25,7 @@ void AddressesColumn::retranslateUi()
 
 void AddressesColumn::setupUi()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = ControlUtil::createVLayout();
 
     // Header
     auto headerLayout = setupHeaderLayout();

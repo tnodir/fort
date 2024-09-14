@@ -114,16 +114,15 @@ void ServicesWindow::setupController()
 
 void ServicesWindow::setupUi()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
-
     // Header
     auto header = setupHeader();
-    layout->addLayout(header);
 
     // Table
     setupTableServiceList();
     setupTableServiceListHeader();
+
+    auto layout = ControlUtil::createVLayout(/*margin=*/6);
+    layout->addLayout(header);
     layout->addWidget(m_serviceListView, 1);
 
     this->setLayout(layout);

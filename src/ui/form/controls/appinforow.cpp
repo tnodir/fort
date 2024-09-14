@@ -24,9 +24,6 @@ void AppInfoRow::retranslateUi()
 
 void AppInfoRow::setupUi()
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
-
     m_btAppCopyPath = ControlUtil::createIconToolButton(":/icons/page_copy.png");
     m_btAppOpenFolder = ControlUtil::createIconToolButton(":/icons/folder.png");
 
@@ -42,6 +39,7 @@ void AppInfoRow::setupUi()
     connect(m_btAppOpenFolder, &QAbstractButton::clicked, this,
             [&] { AppInfoUtil::openFolder(m_filePath); });
 
+    auto layout = ControlUtil::createHLayout();
     layout->addWidget(m_btAppCopyPath);
     layout->addWidget(m_btAppOpenFolder);
     layout->addWidget(m_lineAppPath, 1);

@@ -104,10 +104,9 @@ void TrafficPage::setupUi()
     m_splitter->addWidget(m_appListView);
 
     // Tab Bar
-    auto trafLayout = new QVBoxLayout();
-    trafLayout->setContentsMargins(0, 0, 0, 0);
-
     setupTabBar();
+
+    auto trafLayout = ControlUtil::createHLayout();
     trafLayout->addWidget(m_tabBar);
 
     // Traf Table

@@ -30,8 +30,7 @@ void AppsColumn::setupUi()
     // Text Area
     setupTextEdit();
 
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = ControlUtil::createVLayout();
     layout->addLayout(m_headerLayout);
     layout->addWidget(m_editText);
 

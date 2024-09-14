@@ -59,15 +59,14 @@ void OptMainPage::onRetranslateUi()
 
 void OptMainPage::setupUi()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
-
     // Main Tab Bar
     setupTabBar();
-    layout->addWidget(m_tabWidget);
 
     // Dialog buttons
     auto buttonsLayout = setupDialogButtons();
+
+    auto layout = ControlUtil::createVLayout(/*margin=*/6);
+    layout->addWidget(m_tabWidget);
     layout->addLayout(buttonsLayout);
 
     this->setLayout(layout);

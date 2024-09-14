@@ -37,11 +37,10 @@ void StatMainPage::onRetranslateUi()
 
 void StatMainPage::setupUi()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
-
     // Main Tab Bar
     setupTabBar();
+
+    auto layout = ControlUtil::createVLayout(/*margin=*/6);
     layout->addWidget(m_tabWidget);
 
     this->setLayout(layout);

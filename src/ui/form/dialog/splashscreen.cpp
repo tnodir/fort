@@ -90,8 +90,7 @@ QLayout *SplashScreen::setupMainLayout()
     // Logo text
     auto logoText = createLogoTextLayout();
 
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
+    auto layout = ControlUtil::createHLayout(/*margin=*/6);
     layout->setSpacing(10);
 
     layout->addStretch();
@@ -118,8 +117,7 @@ QLabel *SplashScreen::createLogoIcon()
 
 QLayout *SplashScreen::createLogoTextLayout()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = ControlUtil::createVLayout();
     layout->setSpacing(0);
 
     QPalette palette;

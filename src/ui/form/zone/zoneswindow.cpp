@@ -129,8 +129,7 @@ void ZonesWindow::setupUi()
     // Actions on zone list model's changed
     setupZoneListModelChanged();
 
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
+    auto layout = ControlUtil::createVLayout(/*margin=*/6);
     layout->addLayout(header);
     layout->addWidget(m_zoneListView, 1);
 

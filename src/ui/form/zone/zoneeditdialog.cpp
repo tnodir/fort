@@ -180,41 +180,41 @@ void ZoneEditDialog::setupUrlFrame()
     m_frameUrl = new QFrame();
 
     auto layout = setupUrlLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
 
     m_frameUrl->setLayout(layout);
 }
 
 QLayout *ZoneEditDialog::setupUrlLayout()
 {
-    auto formLayout = new QFormLayout();
+    auto layout = new QFormLayout();
+    layout->setContentsMargins(0, 0, 0, 0);
 
     // Custom URL
     m_cbCustomUrl = new QCheckBox();
 
-    formLayout->addRow(QString(), m_cbCustomUrl);
+    layout->addRow(QString(), m_cbCustomUrl);
 
     // URL
     m_editUrl = new LineEdit();
     m_editUrl->setEnabled(false);
     m_editUrl->setMaxLength(1024);
 
-    formLayout->addRow("URL:", m_editUrl);
-    m_labelUrl = ControlUtil::formRowLabel(formLayout, m_editUrl);
+    layout->addRow("URL:", m_editUrl);
+    m_labelUrl = ControlUtil::formRowLabel(layout, m_editUrl);
 
     // Form Data
     m_editFormData = new LineEdit();
     m_editFormData->setEnabled(false);
 
-    formLayout->addRow("Form Data:", m_editFormData);
-    m_labelFormData = ControlUtil::formRowLabel(formLayout, m_editFormData);
+    layout->addRow("Form Data:", m_editFormData);
+    m_labelFormData = ControlUtil::formRowLabel(layout, m_editFormData);
 
     connect(m_cbCustomUrl, &QCheckBox::toggled, this, [&](bool checked) {
         m_editUrl->setEnabled(checked);
         m_editFormData->setEnabled(checked);
     });
 
-    return formLayout;
+    return layout;
 }
 
 void ZoneEditDialog::setupTextFrame()
@@ -222,7 +222,6 @@ void ZoneEditDialog::setupTextFrame()
     m_frameText = new QFrame();
 
     auto layout = setupTextLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
 
     m_frameText->setLayout(layout);
 }
@@ -232,7 +231,7 @@ QLayout *ZoneEditDialog::setupTextLayout()
     m_editText = new PlainTextEdit();
     m_editText->setPlaceholderText(NetUtil::localIpNetworksText());
 
-    auto layout = new QVBoxLayout();
+    auto layout = ControlUtil::createVLayout();
     layout->addWidget(m_editText);
 
     return layout;

@@ -147,8 +147,7 @@ void RulesWindow::setupUi()
     // Actions on rule list model's changed/reset
     setupRuleListModelReset();
 
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
+    auto layout = ControlUtil::createVLayout(/*margin=*/6);
     layout->addLayout(header);
     layout->addWidget(m_ruleListView, 1);
 

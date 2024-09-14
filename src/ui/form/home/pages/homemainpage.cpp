@@ -28,8 +28,7 @@ void HomeMainPage::onRetranslateUi()
 
 void HomeMainPage::setupUi()
 {
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
+    auto layout = ControlUtil::createHLayout(/*margin=*/6);
     layout->setSpacing(0);
 
     // Side Bar
@@ -46,8 +45,7 @@ void HomeMainPage::setupUi()
 
 QLayout *HomeMainPage::setupSideBar()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = ControlUtil::createVLayout();
     layout->setSpacing(10);
 
     setupSideBarButtons();

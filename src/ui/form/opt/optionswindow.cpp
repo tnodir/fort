@@ -5,6 +5,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <form/controls/controlutil.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
@@ -100,8 +101,7 @@ void OptionsWindow::retranslateUi()
 
 void OptionsWindow::setupUi()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = ControlUtil::createVLayout();
 
     m_mainPage = new OptMainPage(ctrl());
     layout->addWidget(m_mainPage);

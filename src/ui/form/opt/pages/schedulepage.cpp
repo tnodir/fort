@@ -130,8 +130,7 @@ void SchedulePage::setupTaskDetails()
     m_btTaskAbort = ControlUtil::createFlatToolButton(
             ":/icons/cancel.png", [&] { taskManager()->abortTask(currentTaskInfo()->type()); });
 
-    auto layout = new QHBoxLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = ControlUtil::createHLayout();
     layout->addWidget(m_cscTaskInterval, 1);
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_cbTaskRunOnStartup);

@@ -79,24 +79,23 @@ void ConnectionsPage::onRetranslateUi()
 
 void ConnectionsPage::setupUi()
 {
-    auto layout = new QVBoxLayout();
-    layout->setContentsMargins(6, 6, 6, 6);
-
     // Header
     auto header = setupHeader();
-    layout->addLayout(header);
 
     // Table
     setupTableConnList();
     setupTableConnListHeader();
-    layout->addWidget(m_connListView, 1);
 
     // App Info Row
     setupAppInfoRow();
-    layout->addWidget(m_appInfoRow);
 
     // Actions on conns table's current changed
     setupTableConnsChanged();
+
+    auto layout = ControlUtil::createVLayout(/*margin=*/6);
+    layout->addLayout(header);
+    layout->addWidget(m_connListView, 1);
+    layout->addWidget(m_appInfoRow);
 
     this->setLayout(layout);
 }
