@@ -247,7 +247,7 @@ void ProgramEditDialog::retranslateUi()
     m_rbKillProcess->setText(tr("Kill Process"));
 
     m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
-    m_labelApplyChild->setText(tr("Connection rule inheritance:"));
+    m_labelApplyChild->setText(tr("Rules inheritance:"));
     retranslateComboApplyChild();
     m_cbKillChild->setText(tr("Kill child processes"));
 

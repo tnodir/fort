@@ -1442,22 +1442,22 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">Désactivé</translation>
+        <translation>Désactivé</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Propager aux processus enfants désignés</translation>
     </message>
     <message>
         <source>Propagate to all child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Propager à tous les processus enfants</translation>
     </message>
     <message>
         <source>Receive from the parent process</source>
-        <translation type="unfinished"></translation>
+        <translation>Recevoir du processus parent</translation>
     </message>
     <message>
-        <source>Connection rule inheritance:</source>
+        <source>Rules inheritance:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2339,7 +2339,7 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>Update Zones?</source>
-        <translation type="unfinished"></translation>
+        <translation>Mettre à jour les Zones ?</translation>
     </message>
 </context>
 </TS>

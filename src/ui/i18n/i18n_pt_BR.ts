@@ -1446,7 +1446,7 @@ Please restart the running program to take effect of this option.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Connection rule inheritance:</source>
+        <source>Rules inheritance:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

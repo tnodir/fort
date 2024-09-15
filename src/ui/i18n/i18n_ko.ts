@@ -1442,22 +1442,22 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>사용 안 함</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>지정된 하위 프로세스로 전파</translation>
     </message>
     <message>
         <source>Propagate to all child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>모든 하위 프로세스에 전파</translation>
     </message>
     <message>
         <source>Receive from the parent process</source>
-        <translation type="unfinished"></translation>
+        <translation>상위 프로세스에서 받기</translation>
     </message>
     <message>
-        <source>Connection rule inheritance:</source>
+        <source>Rules inheritance:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2339,7 +2339,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Update Zones?</source>
-        <translation type="unfinished"></translation>
+        <translation>영역 업데이트?</translation>
     </message>
 </context>
 </TS>

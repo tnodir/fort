@@ -1457,8 +1457,8 @@ Please restart the running program to take effect of this option.</source>
         <translation>Получить от родительского процесса</translation>
     </message>
     <message>
-        <source>Connection rule inheritance:</source>
-        <translation>Наследование правил соединения:</translation>
+        <source>Rules inheritance:</source>
+        <translation>Наследование правил:</translation>
     </message>
 </context>
 <context>

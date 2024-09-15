@@ -1460,7 +1460,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Connection rule inheritance:</source>
+        <source>Rules inheritance:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

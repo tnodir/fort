@@ -1457,7 +1457,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Connection rule inheritance:</source>
+        <source>Rules inheritance:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -1457,8 +1457,8 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <translation>Prejmi iz nadrejenega procesa</translation>
     </message>
     <message>
-        <source>Connection rule inheritance:</source>
-        <translation>Dedovanje pravil povezave:</translation>
+        <source>Rules inheritance:</source>
+        <translation>Pravila dedovanja:</translation>
     </message>
 </context>
 <context>

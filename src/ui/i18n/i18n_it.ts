@@ -1457,7 +1457,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Connection rule inheritance:</source>
+        <source>Rules inheritance:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
