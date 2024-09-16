@@ -1,7 +1,7 @@
 Fort Firewall ChangeLog
 
-v3.13.11-test04, 2024-09-14:
-- UI: Programs: Add "Connection rule inheritance" combo-box.
+v3.13.11, 2024-09-16:
+- UI: Programs: Add "Rules inheritance" combo-box.
 - UI: Options: IP Addresses: Don't expand tabs.
 - UI: Blocked Conn: Separate "Direction" and "Reason" columns.
 - UI: Blocked Conn: "Add Program" on double click.
