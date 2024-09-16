@@ -1,5 +1,6 @@
 #include "formatutil.h"
 
+#include <QRegularExpression>
 #include <QtMath>
 
 namespace {
@@ -45,7 +46,13 @@ QString FormatUtil::formatSize(qint64 value, int power, int precision, SizeForma
     const qreal base = isBase1000(format) ? 1000 : 1024;
     const qreal powerValue = qPow(base, power);
 
-    return QLocale().toString(value / powerValue, 'f', precision);
+    qreal result = value / powerValue;
+
+    if (precision == -1 && qFuzzyCompare(result, qRound(result))) {
+        precision = 0;
+    }
+
+    return QLocale().toString(result, 'f', qAbs(precision));
 }
 
 QString FormatUtil::formatPowerUnit(int power, SizeFormat format)
@@ -78,7 +85,7 @@ QString FormatUtil::formatSpeed(qint64 bitsPerSecond, SizeFormat format)
         bitsPerSecond /= 8;
     }
 
-    const auto text = formatDataSize(bitsPerSecond, /*precision=*/0, format);
+    const auto text = formatDataSize(bitsPerSecond, /*precision=*/-1, format);
 
     return text + "/s";
 }

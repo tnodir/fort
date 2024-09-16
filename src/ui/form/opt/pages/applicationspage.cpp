@@ -44,7 +44,7 @@ CheckSpinCombo *createGroupLimit()
 {
     auto c = new CheckSpinCombo();
     c->spinBox()->setRange(0, 999999);
-    c->spinBox()->setSuffix(" kb/s");
+    c->spinBox()->setSuffix(" Kb/s");
     c->setValues(speedLimitValues);
     c->setDisabledIndex(speedLimitDisabledIndex);
     return c;
