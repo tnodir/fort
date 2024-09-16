@@ -1458,7 +1458,7 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation type="unfinished"></translation>
+        <translation>Règles d&apos;héritage :</translation>
     </message>
 </context>
 <context>

@@ -1458,7 +1458,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙 상속:</translation>
     </message>
 </context>
 <context>
