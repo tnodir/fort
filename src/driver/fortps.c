@@ -443,7 +443,9 @@ inline static BOOL fort_pstree_check_proc_inherited(
     if ((parent_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
         return FALSE;
 
-    if ((parent_flags & FORT_PSNODE_NAME_INHERIT_SPEC) != 0 && app_data.flags.apply_parent == 0)
+    const UINT16 inherit_spec_flag = (parent_flags & FORT_PSNODE_NAME_INHERIT_SPEC);
+
+    if (inherit_spec_flag != 0 && app_data.flags.apply_parent == 0)
         return FALSE;
 
     PFORT_PSNAME ps_name = parent->ps_name;
@@ -452,7 +454,7 @@ inline static BOOL fort_pstree_check_proc_inherited(
     ++ps_name->refcount;
     proc->ps_name = ps_name;
 
-    proc->flags |= FORT_PSNODE_NAME_INHERITED;
+    proc->flags |= inherit_spec_flag | FORT_PSNODE_NAME_INHERITED;
 
     return TRUE;
 }
