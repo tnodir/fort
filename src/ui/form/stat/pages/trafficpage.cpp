@@ -106,7 +106,7 @@ void TrafficPage::setupUi()
     // Tab Bar
     setupTabBar();
 
-    auto trafLayout = ControlUtil::createHLayout();
+    auto trafLayout = ControlUtil::createVLayout();
     trafLayout->addWidget(m_tabBar);
 
     // Traf Table
