@@ -99,13 +99,13 @@ inline static BOOL fort_packet_is_ipsec_tunneled(PCFORT_CALLOUT_ARG ca)
 inline static ULONG fort_packet_data_length(PCFORT_CALLOUT_ARG ca)
 {
     PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(ca->netBufList);
-    const ULONG data_length = NET_BUFFER_DATA_LENGTH(netBuf);
+    const ULONG dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
 
-    const ULONG header_size = ca->inbound
-            ? 0
-            : ca->inMetaValues->transportHeaderSize + ca->inMetaValues->ipHeaderSize;
+    const ULONG headerSize = ca->inbound
+            ? ca->inMetaValues->transportHeaderSize + ca->inMetaValues->ipHeaderSize
+            : 0;
 
-    return header_size + data_length;
+    return headerSize + dataSize;
 }
 
 inline static PFORT_FLOW_PACKET fort_shaper_packet_new(void)

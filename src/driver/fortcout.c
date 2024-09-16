@@ -568,13 +568,6 @@ static NTSTATUS NTAPI fort_callout_notify(
     return STATUS_SUCCESS;
 }
 
-inline static void fort_callout_flow_classify(PCFORT_CALLOUT_ARG ca, UINT32 dataSize)
-{
-    const UINT32 headerSize = ca->inbound ? ca->inMetaValues->transportHeaderSize : 0;
-
-    fort_flow_classify(&fort_device()->stat, ca->flowContext, headerSize + dataSize, ca->inbound);
-}
-
 static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
@@ -589,6 +582,10 @@ static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFi
 
     const BOOL inbound = (streamFlags & FWPS_STREAM_FLAG_RECEIVE) != 0;
 
+    const UINT32 headerSize = inMetaValues->transportHeaderSize + inMetaValues->ipHeaderSize;
+
+    UNUSED(inFixedValues);
+    /*
     const FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
         .inMetaValues = inMetaValues,
@@ -598,26 +595,11 @@ static void NTAPI fort_callout_stream_classify(const FWPS_INCOMING_VALUES0 *inFi
         .classifyOut = classifyOut,
         .inbound = inbound,
     };
+    */
 
-    fort_callout_flow_classify(&ca, dataSize);
+    fort_flow_classify(&fort_device()->stat, flowContext, headerSize + dataSize, inbound);
 
     fort_callout_classify_permit(filter, classifyOut);
-}
-
-static void fort_callout_datagram_classify(PFORT_CALLOUT_ARG ca)
-{
-    FORT_CHECK_STACK(FORT_CALLOUT_DATAGRAM_CLASSIFY);
-
-    const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(ca->netBufList);
-    const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
-
-    const FWP_DIRECTION direction =
-            (FWP_DIRECTION) ca->inFixedValues->incomingValue[ca->fi->direction].value.uint8;
-    ca->inbound = (direction == FWP_DIRECTION_INBOUND);
-
-    fort_callout_flow_classify(ca, dataSize);
-
-    fort_callout_classify_permit(ca->filter, ca->classifyOut);
 }
 
 inline static void fort_callout_datagram_classify_v(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -625,18 +607,37 @@ inline static void fort_callout_datagram_classify_v(const FWPS_INCOMING_VALUES0 
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
         PCFORT_CALLOUT_FIELD_INDEX fi, BOOL isIPv6)
 {
+    FORT_CHECK_STACK(FORT_CALLOUT_DATAGRAM_CLASSIFY);
+
+    const PNET_BUFFER_LIST netBufList = layerData;
+    const PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
+    const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
+
+    const FWP_DIRECTION direction =
+            (FWP_DIRECTION) inFixedValues->incomingValue[fi->direction].value.uint8;
+    const BOOL inbound = (direction == FWP_DIRECTION_INBOUND);
+
+    const UINT32 headerSize =
+            inbound ? inMetaValues->transportHeaderSize + inMetaValues->ipHeaderSize : 0;
+
+    UNUSED(isIPv6);
+    /*
     FORT_CALLOUT_ARG ca = {
         .fi = fi,
         .inFixedValues = inFixedValues,
         .inMetaValues = inMetaValues,
-        .netBufList = layerData,
+        .netBufList = netBufList,
         .filter = filter,
         .flowContext = flowContext,
         .classifyOut = classifyOut,
+        .inbound = inbound,
         .isIPv6 = isIPv6,
     };
+    */
 
-    fort_callout_datagram_classify(&ca);
+    fort_flow_classify(&fort_device()->stat, flowContext, headerSize + dataSize, inbound);
+
+    fort_callout_classify_permit(filter, classifyOut);
 }
 
 static void NTAPI fort_callout_datagram_classify_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
