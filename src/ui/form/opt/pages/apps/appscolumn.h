@@ -27,10 +27,9 @@ signals:
     void textEdited(const QString &text);
 
 private:
-    void setupUi();
-    QLayout *setupHeaderLayout();
+    void setupUi(const QString &iconPath);
+    QLayout *setupHeaderLayout(const QString &iconPath);
     void setupTextEdit();
-    void setupIcon(const QString &iconPath);
 
     void updateBtClear();
 

@@ -111,12 +111,8 @@ void HomePage::setupDriverBox()
 
 void HomePage::setupDriverIcon()
 {
-    m_iconDriver = ControlUtil::createLabel();
-    m_iconDriver->setScaledContents(true);
-
     const QSize iconSize(16, 16);
-    m_iconDriver->setMaximumSize(iconSize);
-    m_iconDriver->setPixmap(IconCache::pixmap(":/icons/server_components.png", iconSize));
+    m_iconDriver = ControlUtil::createIconLabel(":/icons/server_components.png", iconSize);
 
     const auto refreshDriverInfo = [&] {
         m_iconDriver->setEnabled(driverManager()->isDeviceOpened());

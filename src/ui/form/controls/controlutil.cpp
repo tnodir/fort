@@ -185,6 +185,15 @@ QLabel *ControlUtil::createLabel(const QString &text)
     return c;
 }
 
+QLabel *ControlUtil::createIconLabel(const QString &iconPath, const QSize &size)
+{
+    auto c = createLabel();
+    c->setScaledContents(true);
+    c->setFixedSize(size);
+    c->setPixmap(IconCache::pixmap(iconPath, size));
+    return c;
+}
+
 QLineEdit *ControlUtil::createLineLabel()
 {
     auto c = new LineEdit();

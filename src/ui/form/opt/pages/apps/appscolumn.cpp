@@ -11,8 +11,7 @@
 
 AppsColumn::AppsColumn(const QString &iconPath, QWidget *parent) : QWidget(parent)
 {
-    setupUi();
-    setupIcon(iconPath);
+    setupUi(iconPath);
 }
 
 void AppsColumn::setText(const QString &text)
@@ -22,10 +21,10 @@ void AppsColumn::setText(const QString &text)
     updateBtClear();
 }
 
-void AppsColumn::setupUi()
+void AppsColumn::setupUi(const QString &iconPath)
 {
     // Header
-    m_headerLayout = setupHeaderLayout();
+    m_headerLayout = setupHeaderLayout(iconPath);
 
     // Text Area
     setupTextEdit();
@@ -37,14 +36,18 @@ void AppsColumn::setupUi()
     this->setLayout(layout);
 }
 
-QLayout *AppsColumn::setupHeaderLayout()
+QLayout *AppsColumn::setupHeaderLayout(const QString &iconPath)
 {
-    m_icon = ControlUtil::createLabel();
+    // Icon
+    const QSize iconSize(16, 16);
+    m_icon = ControlUtil::createIconLabel(iconPath, iconSize);
 
+    // Title
     m_labelTitle = ControlUtil::createLabel();
     m_labelTitle->setFont(GuiUtil::fontBold());
     m_labelTitle->setFixedHeight(24);
 
+    // Clear Button
     m_btClear =
             ControlUtil::createFlatToolButton(":/icons/delete.png", [&] { m_editText->clear(); });
 
@@ -63,15 +66,6 @@ void AppsColumn::setupTextEdit()
     m_editText->setReadOnly(true); // TODO: COMPAT: Remove AppGroup::*Text() after v4.1.0
 
     connect(m_editText, &QPlainTextEdit::textChanged, this, &AppsColumn::onTextChanged);
-}
-
-void AppsColumn::setupIcon(const QString &iconPath)
-{
-    m_icon->setScaledContents(true);
-
-    const QSize iconSize(16, 16);
-    m_icon->setMaximumSize(iconSize);
-    m_icon->setPixmap(IconCache::pixmap(iconPath, iconSize));
 }
 
 void AppsColumn::updateBtClear()

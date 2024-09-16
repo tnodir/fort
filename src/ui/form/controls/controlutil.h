@@ -63,7 +63,8 @@ public:
     static QToolButton *createSplitterButton(
             const QString &iconPath, const std::function<void()> &onClicked);
 
-    static QLabel *createLabel(const QString &text = QString());
+    static QLabel *createLabel(const QString &text = {});
+    static QLabel *createIconLabel(const QString &iconPath, const QSize &size);
     static QLineEdit *createLineLabel();
     static QLineEdit *createLineEdit(
             const QString &text, const std::function<void(const QString &text)> &onChanged);

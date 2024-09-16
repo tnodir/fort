@@ -573,10 +573,7 @@ void ProgramEditDialog::setupAdvancedOptions()
 
 QLayout *ProgramEditDialog::setupApplyChildLayout()
 {
-    auto labelIcon = ControlUtil::createLabel();
-    labelIcon->setScaledContents(true);
-    labelIcon->setFixedSize(labelIconSize);
-    labelIcon->setPixmap(IconCache::pixmap(":/icons/application_double.png", labelIconSize));
+    auto labelIcon = ControlUtil::createIconLabel(":/icons/application_double.png", labelIconSize);
 
     m_labelApplyChild = ControlUtil::createLabel();
 

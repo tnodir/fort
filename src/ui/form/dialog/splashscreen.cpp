@@ -103,14 +103,9 @@ QLayout *SplashScreen::setupMainLayout()
 
 QLabel *SplashScreen::createLogoIcon()
 {
-    auto iconLogo = ControlUtil::createLabel();
-
-    iconLogo->setScaledContents(true);
     const QSize logoSize(48, 48);
-    iconLogo->setMinimumSize(logoSize);
-    iconLogo->setMaximumSize(logoSize);
 
-    iconLogo->setPixmap(IconCache::pixmap(":/icons/fort-96.png", logoSize));
+    auto iconLogo = ControlUtil::createIconLabel(":/icons/fort-96.png", logoSize);
 
     return iconLogo;
 }
