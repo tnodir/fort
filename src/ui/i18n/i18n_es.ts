@@ -13,7 +13,7 @@
     </message>
     <message>
         <source>Check for update</source>
-        <translation>Buscar actualización</translation>
+        <translation>Comprobar actualización</translation>
     </message>
     <message>
         <source>No Update</source>
@@ -156,7 +156,7 @@
     </message>
     <message>
         <source>Add Group</source>
-        <translation>Añadir grupo</translation>
+        <translation>Añadir Grupo</translation>
     </message>
     <message>
         <source>Rename Group</source>
@@ -180,7 +180,7 @@
     </message>
     <message>
         <source>time period:</source>
-        <translation>Periodo de tiempo:</translation>
+        <translation>Período de tiempo:</translation>
     </message>
     <message>
         <source>Block</source>
@@ -706,7 +706,7 @@
     </message>
     <message>
         <source>Hot Keys</source>
-        <translation>Atajos</translation>
+        <translation>Teclas de Atajo</translation>
     </message>
     <message>
         <source>My Fort</source>
@@ -742,7 +742,7 @@
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation>Tecla rápida:</translation>
+        <translation>Teclas de atajo:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
@@ -758,7 +758,7 @@
     </message>
     <message>
         <source>Show Icon</source>
-        <translation>Mostrar Icono</translation>
+        <translation>Mostrar icono</translation>
     </message>
     <message>
         <source>Animate Alert Icon</source>
@@ -834,23 +834,23 @@
     </message>
     <message>
         <source>Show Programs</source>
-        <translation>Mostrar Programa</translation>
+        <translation>Mostrar programas</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation>Mostrar Programas o Ventana de Alerta</translation>
+        <translation>Mostrar programas o ventana de alerta</translation>
     </message>
     <message>
         <source>Show Options</source>
-        <translation>Mostrar Opciones</translation>
+        <translation>Mostrar opciones</translation>
     </message>
     <message>
         <source>Show Statistics</source>
-        <translation>Mostrar Estadísticas</translation>
+        <translation>Mostrar estadísticas</translation>
     </message>
     <message>
         <source>Show/Hide Traffic Graph</source>
-        <translation>Mostrar / Ocultar Gráfico del Tráfico</translation>
+        <translation>Mostrar / Ocultar gráfica del tráfico</translation>
     </message>
     <message>
         <source>Switch Filter Enabled</source>
@@ -862,11 +862,11 @@
     </message>
     <message>
         <source>Show Filter Mode Menu</source>
-        <translation>Ver menú del modo de filtrado</translation>
+        <translation>Mostrar menú de modo filtro</translation>
     </message>
     <message>
         <source>Show Tray Menu</source>
-        <translation>Mostrar Menú de Bandeja</translation>
+        <translation>Mostrar menú de bandeja</translation>
     </message>
     <message>
         <source>Ignore</source>
@@ -878,7 +878,7 @@
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation>Mostrar Icono de Alerta</translation>
+        <translation>Mostrar icono de alerta</translation>
     </message>
     <message>
         <source>Programs</source>
@@ -1145,7 +1145,7 @@ Asegúrate de tener una copia de seguridad nueva.</translation>
     </message>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation>Purgar obsoletos en unidades montadas</translation>
+        <translation>Eliminar obsoletos solo en unidades montadas</translation>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
@@ -1304,7 +1304,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>File Path:</source>
-        <translation>Ruta del archivo:</translation>
+        <translation>Ruta de archivo:</translation>
     </message>
     <message>
         <source>Name:</source>
@@ -1371,7 +1371,7 @@ Tenga cuidado al finalizar servicios del sistema u otros programas importantes. 
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation>No purgar como obsoleto</translation>
+        <translation>No eliminar como obsoleto</translation>
     </message>
     <message>
         <source>Notes</source>
@@ -1519,7 +1519,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation>Purgar obsoletos</translation>
+        <translation>Eliminar obsoletos</translation>
     </message>
     <message>
         <source>Search</source>
@@ -1527,7 +1527,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Find</source>
-        <translation>Encontrar</translation>
+        <translation>Buscar</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -2017,7 +2017,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Purge Obsolete Programs</source>
-        <translation>Purgar programas obsoletos</translation>
+        <translation>Eliminar programas obsoletos</translation>
     </message>
 </context>
 <context>

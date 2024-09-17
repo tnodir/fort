@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt_BR">
+<TS version="2.1" language="pt_BR" sourcelanguage="en_US">
 <context>
     <name>QGuiApplication</name>
     <message>
@@ -13,7 +13,6 @@
     <name>CloseButton</name>
     <message>
         <source>Close Tab</source>
-        <translatorcomment>Fechar aba</translatorcomment>
         <translation>Fechar aba</translation>
     </message>
 </context>
@@ -40,11 +39,11 @@
     </message>
     <message>
         <source>&amp;Sat:</source>
-        <translation>&amp;Sat:</translation>
+        <translation>&amp;Saturação:</translation>
     </message>
     <message>
         <source>&amp;Val:</source>
-        <translation>&amp;Val:</translation>
+        <translation>&amp;Valor:</translation>
     </message>
     <message>
         <source>&amp;Red:</source>
@@ -73,8 +72,22 @@ Press ESC to cancel</source>
 Pressione ESC para cancelar</translation>
     </message>
     <message>
+        <source>&amp;Pick Screen Color</source>
+        <translation>&amp;Selecionar cor na tela</translation>
+    </message>
+    <message>
+        <source>Cursor at %1, %2, color: %3
+Press ESC to cancel</source>
+        <translation>Cursor em %1, %2, cor: %3
+Pressione ESC para cancelar</translation>
+    </message>
+    <message>
         <source>Select Color</source>
         <translation>Selecionar cor</translation>
+    </message>
+    <message>
+        <source>Pick Screen Color</source>
+        <translation>Selecionar cor na tela</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>
@@ -87,10 +100,6 @@ Pressione ESC para cancelar</translation>
     <message>
         <source>&amp;Add to Custom Colors</source>
         <translation>&amp;Adicionar às cores personalizadas</translation>
-    </message>
-    <message>
-        <source>&amp;Pick Screen Color</source>
-        <translation>&amp;Selecionar cor na tela</translation>
     </message>
 </context>
 <context>
@@ -140,7 +149,7 @@ Pressione ESC para cancelar</translation>
     <name>QPlatformTheme</name>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Save</source>

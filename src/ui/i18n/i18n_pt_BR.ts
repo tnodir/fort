@@ -13,15 +13,15 @@
     </message>
     <message>
         <source>Check for update</source>
-        <translation type="unfinished"></translation>
+        <translation>Verificar atualizações</translation>
     </message>
     <message>
         <source>No Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Nenhuma Atualização</translation>
     </message>
     <message>
         <source>Install</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalar</translation>
     </message>
 </context>
 <context>
@@ -114,27 +114,27 @@
     </message>
     <message>
         <source>File Path</source>
-        <translation type="unfinished"></translation>
+        <translation>Local do Arquivo</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Terminar processo</translation>
     </message>
     <message>
         <source>Action</source>
-        <translation type="unfinished"></translation>
+        <translation>Ação</translation>
     </message>
     <message>
         <source>Scheduled</source>
-        <translation type="unfinished"></translation>
+        <translation>Agendada</translation>
     </message>
     <message>
         <source>Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regra</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Parar Tráfego de Internet</translation>
     </message>
     <message>
         <source>Zones</source>
@@ -236,23 +236,23 @@
     </message>
     <message>
         <source>Apply same rules to child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Aplicar as mesmas regras aos processos filhos</translation>
     </message>
     <message>
         <source>Latency:</source>
-        <translation type="unfinished"></translation>
+        <translation>Latência:</translation>
     </message>
     <message>
         <source>Packet Loss:</source>
-        <translation type="unfinished"></translation>
+        <translation>Perda de Pacote:</translation>
     </message>
     <message>
         <source>Download Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho do Buffer baixado:</translation>
     </message>
     <message>
         <source>Upload Buffer Size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho do Buffer baixado:</translation>
     </message>
     <message>
         <source>Collect blocked connections</source>
@@ -260,11 +260,11 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Parar Tráfego de Internet</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Terminar processo</translation>
     </message>
     <message>
         <source>Options</source>
@@ -286,7 +286,7 @@
     <name>ConfManagerRpc</name>
     <message>
         <source>Settings changed by someone else</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurações alteradas por outra pessoa</translation>
     </message>
 </context>
 <context>
@@ -356,7 +356,7 @@
     </message>
     <message>
         <source>Inherited</source>
-        <translation type="unfinished"></translation>
+        <translation>Herdado</translation>
     </message>
     <message>
         <source>In</source>
@@ -384,11 +384,11 @@
     </message>
     <message>
         <source>Filter Mode logic</source>
-        <translation type="unfinished"></translation>
+        <translation>Lógica de filtro</translation>
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Restringir acesso apenas a LAN</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -396,15 +396,15 @@
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Limite de Pedido para Conectar</translation>
     </message>
     <message>
         <source>Restrict access by Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Restringir acesso por Área</translation>
     </message>
     <message>
         <source>Reason</source>
-        <translation type="unfinished"></translation>
+        <translation>Razão</translation>
     </message>
 </context>
 <context>
@@ -454,30 +454,30 @@
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
-        <translation type="unfinished"></translation>
+        <translation>Perfil&apos;Unidade montada</translation>
     </message>
 </context>
 <context>
     <name>FirewallConf</name>
     <message>
         <source>Auto-Learn</source>
-        <translation type="unfinished"></translation>
+        <translation>Aprender automaticamente</translation>
     </message>
     <message>
         <source>Block, if not allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear, se não permitido</translation>
     </message>
     <message>
         <source>Allow, if not blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Permitir, se não estiver bloqueado</translation>
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignorar, se não estiver bloqueado ou permitido</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation type="unfinished"></translation>
+        <translation>Pedir para conectar</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -485,11 +485,11 @@
     </message>
     <message>
         <source>Block All Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear todo o tráfego</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear tráfego de Internet</translation>
     </message>
 </context>
 <context>
@@ -516,14 +516,14 @@
     </message>
     <message>
         <source>Cannot load Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível carregar configurações</translation>
     </message>
 </context>
 <context>
     <name>FortSettings</name>
     <message>
         <source>Window closed</source>
-        <translation type="unfinished"></translation>
+        <translation>Janela fechada</translation>
     </message>
     <message>
         <source>Session lockout</source>
@@ -570,11 +570,11 @@
     </message>
     <message>
         <source>Download:</source>
-        <translation>Download:</translation>
+        <translation>Baixar:</translation>
     </message>
     <message>
         <source>Upload:</source>
-        <translation>Upload:</translation>
+        <translation>Enviar:</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -594,30 +594,30 @@
     </message>
     <message>
         <source>Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Janela</translation>
     </message>
     <message>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Cores</translation>
     </message>
     <message>
         <source>Hide on close</source>
-        <translation type="unfinished"></translation>
+        <translation>Ocultar ao fechar</translation>
     </message>
     <message>
         <source>Units:</source>
-        <translation type="unfinished">Unidades:</translation>
+        <translation>Unidades</translation>
     </message>
 </context>
 <context>
     <name>HomeMainPage</name>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Meu Forte</translation>
     </message>
     <message>
         <source>About</source>
-        <translation type="unfinished"></translation>
+        <translation>Sobre</translation>
     </message>
 </context>
 <context>
@@ -652,30 +652,30 @@
     </message>
     <message>
         <source>Portable</source>
-        <translation type="unfinished"></translation>
+        <translation>Portátil</translation>
     </message>
     <message>
         <source>Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>Desinstalar</translation>
     </message>
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation type="unfinished"></translation>
+        <translation>Você tem certeza que deseja desinstalar o Fort Firewall?</translation>
     </message>
 </context>
 <context>
     <name>HomeWindow</name>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Meu Forte</translation>
     </message>
     <message>
         <source>Lock</source>
-        <translation type="unfinished"></translation>
+        <translation>Trancar</translation>
     </message>
     <message>
         <source>Unlock</source>
-        <translation type="unfinished"></translation>
+        <translation>Destrancar</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -695,7 +695,7 @@
     </message>
     <message>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuda</translation>
     </message>
 </context>
 <context>
@@ -710,15 +710,15 @@
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Meu Forte</translation>
     </message>
     <message>
         <source>Tray</source>
-        <translation type="unfinished"></translation>
+        <translation>Bandeja</translation>
     </message>
     <message>
         <source>Action Confirmations</source>
-        <translation type="unfinished"></translation>
+        <translation>Confirmação de ação</translation>
     </message>
     <message>
         <source>Windows Explorer integration</source>
@@ -726,7 +726,7 @@
     </message>
     <message>
         <source>Use System Regional Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Usar configurações regionais do sistema</translation>
     </message>
     <message>
         <source>Language:</source>
@@ -734,51 +734,51 @@
     </message>
     <message>
         <source>Theme:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tema:</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation type="unfinished">Ativado</translation>
+        <translation>Ativado</translation>
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation type="unfinished"></translation>
+        <translation>Teclas de Atalho:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
-        <translation type="unfinished"></translation>
+        <translation>Atalho:</translation>
     </message>
     <message>
         <source>Auto-Show Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menu Mostrar Automaticamente</translation>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar tela de abertura na inicialização</translation>
     </message>
     <message>
         <source>Show Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Exibir Ícone</translation>
     </message>
     <message>
         <source>Animate Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Animar Ícone de Alerta</translation>
     </message>
     <message>
         <source>Maximum count of Groups in menu:</source>
-        <translation type="unfinished"></translation>
+        <translation>Contagem máxima de grupos no menu:</translation>
     </message>
     <message>
         <source>Event:</source>
-        <translation type="unfinished"></translation>
+        <translation>Evento:</translation>
     </message>
     <message>
         <source>Action:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ação:</translation>
     </message>
     <message>
         <source>Tray Menu Flags</source>
-        <translation type="unfinished"></translation>
+        <translation>Sinalizadores de Menu de Bandeiras</translation>
     </message>
     <message>
         <source>Quit</source>
@@ -786,119 +786,119 @@
     </message>
     <message>
         <source>System</source>
-        <translation type="unfinished"></translation>
+        <translation>Sistema</translation>
     </message>
     <message>
         <source>Light</source>
-        <translation type="unfinished"></translation>
+        <translation>Luz</translation>
     </message>
     <message>
         <source>Dark</source>
-        <translation type="unfinished"></translation>
+        <translation>Escuro</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear Tráfego:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo do Filtro:</translation>
     </message>
     <message>
         <source>Single Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Clique único</translation>
     </message>
     <message>
         <source>Ctrl + Single Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl + Clique único</translation>
     </message>
     <message>
         <source>Alt + Single Click</source>
-        <translation type="unfinished"></translation>
+        <translation>ALT + Clique único</translation>
     </message>
     <message>
         <source>Double Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Clique Duplo</translation>
     </message>
     <message>
         <source>Middle Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Clique do Meio</translation>
     </message>
     <message>
         <source>Right Click</source>
-        <translation type="unfinished"></translation>
+        <translation>Botão Direito</translation>
     </message>
     <message>
         <source>Show My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar Meu Forte</translation>
     </message>
     <message>
         <source>Show Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar Programas</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar Janela de Alerta ou Programas</translation>
     </message>
     <message>
         <source>Show Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar Opções</translation>
     </message>
     <message>
         <source>Show Statistics</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar estatísticas</translation>
     </message>
     <message>
         <source>Show/Hide Traffic Graph</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar/ocultar gráfico de tráfego</translation>
     </message>
     <message>
         <source>Switch Filter Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtro de mudança habilitado</translation>
     </message>
     <message>
         <source>Show Block Traffic Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar Menu de bloqueio de tráfego</translation>
     </message>
     <message>
         <source>Show Filter Mode Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar menu de modo de filtro</translation>
     </message>
     <message>
         <source>Show Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar Menu da Bandeja</translation>
     </message>
     <message>
         <source>Ignore</source>
-        <translation type="unfinished"></translation>
+        <translation>ignorar</translation>
     </message>
     <message>
         <source>Exclude from screen capture</source>
-        <translation type="unfinished"></translation>
+        <translation>Remover da captura de tela</translation>
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar ícone de alerta</translation>
     </message>
     <message>
         <source>Programs</source>
-        <translation type="unfinished">Programas</translation>
+        <translation>programas</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Usar Notificações de Sistema para Novos Programas</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar automaticamente janela de alerta para programas novos</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation type="unfinished"></translation>
+        <translation>Janela de alerta está sempre na parte superior</translation>
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation type="unfinished"></translation>
+        <translation>Janela de alerta é ativada automaticamente</translation>
     </message>
 </context>
 <context>
@@ -975,68 +975,70 @@
     </message>
     <message>
         <source>Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Backup</translation>
     </message>
     <message>
         <source>Export</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportar</translation>
     </message>
     <message>
         <source>Import</source>
-        <translation type="unfinished"></translation>
+        <translation>Importar</translation>
     </message>
     <message>
         <source>Default</source>
-        <translation type="unfinished"></translation>
+        <translation>Padrão</translation>
     </message>
     <message>
         <source>Reset to default all options</source>
-        <translation type="unfinished"></translation>
+        <translation>Redefinir todas as opções para o padrão</translation>
     </message>
     <message>
         <source>Reset to default current tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Retornar para a aba atual padrão</translation>
     </message>
     <message>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Interface</translation>
     </message>
 </context>
 <context>
     <name>OptionsController</name>
     <message>
         <source>Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportar Backup</translation>
     </message>
     <message>
         <source>Backup Exported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>Backup exportado com sucesso</translation>
     </message>
     <message>
         <source>Cannot Export Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível exportar backup</translation>
     </message>
     <message>
         <source>Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Importar Backup</translation>
     </message>
     <message>
         <source>Backup Imported Successfully</source>
-        <translation type="unfinished"></translation>
+        <translation>Backup Importado com Sucesso</translation>
     </message>
     <message>
         <source>Cannot Import Backup</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível importar backup</translation>
     </message>
     <message>
         <source>Program will be restarted after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
-        <translation type="unfinished"></translation>
+        <translation>Programa será reiniciado após importação bem-sucedida
+
+Tenha certeza que você tem um backup recente.</translation>
     </message>
     <message>
         <source>Cannot save the options</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível salvar as opções</translation>
     </message>
 </context>
 <context>
@@ -1103,27 +1105,27 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-run:</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-execução:</translation>
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
-        <translation type="unfinished"></translation>
+        <translation>Executar Fort Firewall como Serviço em segundo plano</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo do Filtro:</translation>
     </message>
     <message>
         <source>Self Protection</source>
-        <translation type="unfinished"></translation>
+        <translation>Proteção Pessoal</translation>
     </message>
     <message>
         <source>Disable Service controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Desativar controles de serviço</translation>
     </message>
     <message>
         <source>Check password on Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>Verifique a senha ao desinstalar</translation>
     </message>
     <message>
         <source>Programs</source>
@@ -1131,7 +1133,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic when Fort Firewall is not running</source>
-        <translation type="unfinished"></translation>
+        <translation>Parar o tráfego quando o Fort Firewall não estiver funcionando</translation>
     </message>
     <message>
         <source>Collect New Programs</source>
@@ -1139,31 +1141,31 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Windows Service</source>
-        <translation type="unfinished"></translation>
+        <translation>Serviço Windows</translation>
     </message>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpar obsoleto apenas em unidades montadas</translation>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalação do serviço Windows alterada.</translation>
     </message>
     <message>
         <source>The change will be applied only on program exit.</source>
-        <translation type="unfinished"></translation>
+        <translation>A mudança será aplicada apenas na saída do programa.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear Tráfego:</translation>
     </message>
     <message>
         <source>Local Area Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Rede de área local</translation>
     </message>
     <message>
         <source>Filter Local Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtrar rede local</translation>
     </message>
 </context>
 <context>
@@ -1178,7 +1180,11 @@ Make sure that you have a fresh backup.</source>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation type="unfinished"></translation>
+        <translation>Por favor, mova os textos dos campos Permitir/Bloquear de Grupos de Aplicativos para Programas Curinga!!!
+
+(Agora, eles são leitura-somente e serão removidos na v4.)
+
+Você quer abrir um fio de discussão no navegador?</translation>
     </message>
 </context>
 <context>
@@ -1220,14 +1226,14 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Bad Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta Ruim</translation>
     </message>
 </context>
 <context>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
-        <translation type="unfinished"></translation>
+        <translation>Programa de alerta</translation>
     </message>
 </context>
 <context>
@@ -1298,11 +1304,11 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>File Path:</source>
-        <translation type="unfinished"></translation>
+        <translation>Caminho do Arquivo:</translation>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>nome:</translation>
     </message>
     <message>
         <source>Collect blocked connections</source>
@@ -1314,30 +1320,33 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Terminar processo</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear tráfego de Internet</translation>
     </message>
     <message>
         <source>Edit Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Editar coringa</translation>
     </message>
     <message>
         <source>Kill child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Encerrar processos filhos</translation>
     </message>
     <message>
         <source>Attention: This option is very dangerous!!!
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation type="unfinished"></translation>
+        <translation>Atenção: Essa opção é muito perigosa
+
+Tome cuidado ao encerrar um serviço de sistema ou outros programas importantes!
+Isso pode causar problemas no Windows ou o deixar totalmente inutilizável.</translation>
     </message>
     <message>
         <source>Wildcard Paths:</source>
-        <translation type="unfinished"></translation>
+        <translation>Caminhos de Curinga:</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1349,120 +1358,122 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source># Name wildcard:</source>
-        <translation type="unfinished"></translation>
+        <translation># Nome Curinga:</translation>
     </message>
     <message>
         <source># Environment Variable:</source>
-        <translation type="unfinished"></translation>
+        <translation># Variável de Ambiente:</translation>
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>Estacionado</translation>
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Não &apos;t expurgue como obsoleto.</translation>
     </message>
     <message>
         <source>Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Notas</translation>
     </message>
     <message>
         <source>1 second</source>
-        <translation type="unfinished"></translation>
+        <translation>1 segundo</translation>
     </message>
     <message>
         <source>1 minute</source>
-        <translation type="unfinished"></translation>
+        <translation>1 minuto</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 Minutos</translation>
     </message>
     <message>
         <source>10 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>10 Minutos</translation>
     </message>
     <message>
         <source>30 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>30 Minutos</translation>
     </message>
     <message>
         <source> minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation> minutos</translation>
     </message>
     <message>
         <source>Schedule</source>
         <translation>Intervalo de Tempo</translation>
     </message>
     <message>
-        <source>5 minutes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Remove</source>
-        <translation type="unfinished">Remover</translation>
+        <translation>Remover</translation>
     </message>
     <message>
         <source>In:</source>
-        <translation type="unfinished"></translation>
+        <translation>Em:</translation>
     </message>
     <message>
         <source>At:</source>
-        <translation type="unfinished"></translation>
+        <translation>Em:</translation>
     </message>
     <message>
         <source>Group:</source>
-        <translation type="unfinished"></translation>
+        <translation>Grupo:</translation>
     </message>
     <message>
         <source>Advanced Options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opções Avançadas</translation>
     </message>
     <message>
         <source>Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regra</translation>
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecionar Regra</translation>
     </message>
     <message>
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
-        <translation type="unfinished"></translation>
+        <translation>Atenção: Essa opção só afeta processos novos!
+
+Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">Desativado</translation>
+        <translation>Desativado</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Propagar para os processos filhos designados</translation>
     </message>
     <message>
         <source>Propagate to all child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Propagar para todos os processos filhos</translation>
     </message>
     <message>
         <source>Receive from the parent process</source>
-        <translation type="unfinished"></translation>
+        <translation>Receber do processo pai</translation>
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation type="unfinished"></translation>
+        <translation>Herança das regras:</translation>
     </message>
 </context>
 <context>
     <name>ProgramsController</name>
     <message>
         <source>App Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro de Configuração do aplicativo</translation>
     </message>
     <message>
         <source>Cannot update program&apos;s state</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível atualizar o estado do programa&apos;s</translation>
     </message>
     <message>
         <source>Cannot delete program</source>
-        <translation type="unfinished"></translation>
+        <translation>Não foi possível excluir o programa</translation>
     </message>
 </context>
 <context>
@@ -1501,67 +1512,67 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Services</source>
-        <translation type="unfinished"></translation>
+        <translation>Serviços</translation>
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpar obsoleto</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Buscar</translation>
     </message>
     <message>
         <source>Find</source>
-        <translation type="unfinished"></translation>
+        <translation>Localizar</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation type="unfinished"></translation>
+        <translation>Terminar processo</translation>
     </message>
     <message>
         <source>Add Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Adicionar caractere curinga</translation>
     </message>
     <message>
         <source>Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Grupos</translation>
     </message>
     <message>
         <source>Review Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alertas de Revisão</translation>
     </message>
     <message>
         <source>Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtros</translation>
     </message>
     <message>
         <source>Clear Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpar Filtros</translation>
     </message>
     <message>
         <source>Wildcard Paths</source>
-        <translation type="unfinished"></translation>
+        <translation>Caminhos Curinga</translation>
     </message>
     <message>
         <source>Convert to Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Converter para Curinga</translation>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza que deseja converter o programa selecionado para um caractere curinga?</translation>
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>estacionado</translation>
     </message>
     <message>
         <source>Clear Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpar alertas</translation>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza que deseja limpar alertas?</translation>
     </message>
 </context>
 <context>
@@ -1579,22 +1590,22 @@ Please restart the running program to take effect of this option.</source>
     <name>RpcManager</name>
     <message>
         <source>Service isn&apos;t available.</source>
-        <translation type="unfinished"></translation>
+        <translation>Serviço não está disponível&apos;t.</translation>
     </message>
     <message>
         <source>Service isn&apos;t responding.</source>
-        <translation type="unfinished"></translation>
+        <translation>Serviço não está respondendo.</translation>
     </message>
 </context>
 <context>
     <name>RuleEditDialog</name>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome:</translation>
     </message>
     <message>
         <source>Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Anotações</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -1610,7 +1621,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Exclusive</source>
-        <translation type="unfinished"></translation>
+        <translation>Exclusivo</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1622,11 +1633,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Editar regra</translation>
     </message>
     <message>
         <source>Type:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tipo:</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1634,11 +1645,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source># IP address and port:</source>
-        <translation type="unfinished"></translation>
+        <translation># Endereço IP e porta:</translation>
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Adicionar regra de predefinição</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -1646,76 +1657,76 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Move Up</source>
-        <translation type="unfinished"></translation>
+        <translation>Mover para cima</translation>
     </message>
     <message>
         <source>Move Down</source>
-        <translation type="unfinished"></translation>
+        <translation>Mover para baixo</translation>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
-        <translation type="unfinished"></translation>
+        <translation>Contagem de regras globais excedida!</translation>
     </message>
 </context>
 <context>
     <name>RuleListModel</name>
     <message>
         <source>Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Regra</translation>
     </message>
     <message>
         <source>Change Time</source>
-        <translation type="unfinished"></translation>
+        <translation>Mudar Horário</translation>
     </message>
     <message>
         <source>Application Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regras de Aplicativos</translation>
     </message>
     <message>
         <source>Global Rules, applied before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regras globais, aplicadas antes das regras do aplicativo</translation>
     </message>
     <message>
         <source>Global Rules, applied after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regras globais, aplicadas após as regras do aplicativo</translation>
     </message>
     <message>
         <source>Preset Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regras predefinidas</translation>
     </message>
 </context>
 <context>
     <name>RuleTextParser</name>
     <message>
         <source>Bad text: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Texto ruim: %1</translation>
     </message>
     <message>
         <source>Bad symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Símbolo ruim: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Símbolo inesperado: %1</translation>
     </message>
 </context>
 <context>
     <name>RulesController</name>
     <message>
         <source>Rule Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro de configuração da regra</translation>
     </message>
     <message>
         <source>Cannot edit Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível editar regra</translation>
     </message>
     <message>
         <source>Cannot delete Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível excluir regra</translation>
     </message>
     <message>
         <source>Cannot update Rule&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível atualizar nome &apos; da regra</translation>
     </message>
 </context>
 <context>
@@ -1734,15 +1745,15 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regras</translation>
     </message>
     <message>
         <source>Are you sure to remove selected rule?</source>
-        <translation type="unfinished"></translation>
+        <translation>Você tem certeza que quer remover a regra selecionada?</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Busque</translation>
     </message>
     <message>
         <source>OK</source>
@@ -1754,7 +1765,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Select Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecionar regra</translation>
     </message>
 </context>
 <context>
@@ -1801,18 +1812,18 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Run On Startup</source>
-        <translation type="unfinished"></translation>
+        <translation>Executar na Inicialização</translation>
     </message>
 </context>
 <context>
     <name>ServiceListModel</name>
     <message>
         <source>Service Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome Serviço</translation>
     </message>
     <message>
         <source>Display Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome para Exibição</translation>
     </message>
     <message>
         <source>Process ID</source>
@@ -1827,11 +1838,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Make Trackable</source>
-        <translation type="unfinished"></translation>
+        <translation>Tornar Rastreável</translation>
     </message>
     <message>
         <source>Revert Changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Reverter Mudanças</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -1843,11 +1854,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Services</source>
-        <translation type="unfinished"></translation>
+        <translation>Serviços</translation>
     </message>
     <message>
         <source>Please restart the computer to reload changed services!</source>
-        <translation type="unfinished"></translation>
+        <translation>Reinicie o computador para recarregar os serviços alterados!</translation>
     </message>
 </context>
 <context>
@@ -1969,7 +1980,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Alerted only</source>
-        <translation type="unfinished"></translation>
+        <translation>Somente alertas</translation>
     </message>
     <message>
         <source>Blocked Connections</source>
@@ -1977,11 +1988,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexões Permitidas</translation>
     </message>
     <message>
         <source>Block Internet traffic when quota exceeds</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear tráfego de Internet quando a cota exceder</translation>
     </message>
 </context>
 <context>
@@ -2003,7 +2014,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Purge Obsolete Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpar Programas obsoletos</translation>
     </message>
 </context>
 <context>
@@ -2111,7 +2122,7 @@ Please restart the running program to take effect of this option.</source>
     <name>TranslationManager</name>
     <message>
         <source>System Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma do Sistema</translation>
     </message>
 </context>
 <context>
@@ -2146,39 +2157,39 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza que deseja trocar o &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza de que deseja encerrar o processo?</translation>
     </message>
     <message>
         <source>Filter Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo do Filtro</translation>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza que deseja selecionar &quot;%1&quot;?</translation>
     </message>
     <message>
         <source>My Fort</source>
-        <translation type="unfinished"></translation>
+        <translation>Meu Forte</translation>
     </message>
     <message>
         <source>New program detected!</source>
-        <translation type="unfinished"></translation>
+        <translation>Novo programa detectado!</translation>
     </message>
     <message>
         <source>Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regras</translation>
     </message>
     <message>
         <source>App Group Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Modificador de Grupo de Aplicativo</translation>
     </message>
     <message>
         <source>Block Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear Tráfego</translation>
     </message>
 </context>
 <context>
@@ -2232,7 +2243,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Name:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome:</translation>
     </message>
 </context>
 <context>
@@ -2255,26 +2266,26 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Last Download</source>
-        <translation type="unfinished"></translation>
+        <translation>Último Download</translation>
     </message>
 </context>
 <context>
     <name>ZonesController</name>
     <message>
         <source>Cannot edit Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível editar zona</translation>
     </message>
     <message>
         <source>Cannot delete Zone</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível excluir zona</translation>
     </message>
     <message>
         <source>Cannot update Zone&apos;s name</source>
-        <translation type="unfinished"></translation>
+        <translation>Não é possível atualizar o nome da Zona&apos;s</translation>
     </message>
     <message>
         <source>Zone Configuration Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Erro de Configuração da Zona</translation>
     </message>
 </context>
 <context>
@@ -2324,11 +2335,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Update Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>Atualizar zonas</translation>
     </message>
     <message>
         <source>Update Zones?</source>
-        <translation type="unfinished"></translation>
+        <translation>Atualizar Zonas?</translation>
     </message>
 </context>
 </TS>
