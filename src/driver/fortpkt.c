@@ -514,13 +514,18 @@ static void fort_shaper_queue_advance_available(
 
     /* Advance the available bytes */
     const UINT64 accumulated =
-            ((now.QuadPart - last_tick.QuadPart) * bps) / shaper->qpcFrequency.QuadPart;
+            (bps * (now.QuadPart - last_tick.QuadPart)) / shaper->qpcFrequency.QuadPart;
 
     queue->available_bytes += accumulated;
 
     const UINT64 max_available = bps;
     if (queue->available_bytes > max_available) {
         queue->available_bytes = max_available;
+    }
+
+    if (fort_shaper_packet_list_is_empty(&queue->bandwidth_list)
+            && queue->available_bytes > FORT_QUEUE_INITIAL_TOKEN_COUNT) {
+        queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
     }
 
     /*
@@ -534,6 +539,8 @@ static void fort_shaper_queue_advance_available(
 static void fort_shaper_queue_process_bandwidth(
         PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue, const LARGE_INTEGER now)
 {
+    UNUSED(shaper);
+
     /* Move packets to the latency queue as the accumulated available bytes will allow */
     PFORT_FLOW_PACKET pkt_chain = queue->bandwidth_list.packet_head;
     if (pkt_chain == NULL)
@@ -642,8 +649,7 @@ inline static BOOL fort_shaper_queue_is_empty(PFORT_PACKET_QUEUE queue)
             && fort_shaper_packet_list_is_empty(&queue->latency_list);
 }
 
-static BOOL fort_shaper_queue_process(
-        PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue, const LARGE_INTEGER now)
+static BOOL fort_shaper_queue_process(PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue)
 {
     PFORT_FLOW_PACKET pkt_chain = NULL;
     BOOL is_active = FALSE;
@@ -652,6 +658,8 @@ static BOOL fort_shaper_queue_process(
     KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
 
     if (!fort_shaper_queue_is_empty(queue)) {
+        const LARGE_INTEGER now = KeQueryPerformanceCounter(NULL);
+
         fort_shaper_queue_advance_available(shaper, queue, now);
         fort_shaper_queue_process_bandwidth(shaper, queue, now);
 
@@ -727,8 +735,7 @@ inline static void fort_shaper_thread_set_event(PFORT_SHAPER shaper)
     KeSetEvent(&shaper->thread_event, IO_NO_INCREMENT, FALSE);
 }
 
-inline static ULONG fort_shaper_thread_process_queues(
-        PFORT_SHAPER shaper, ULONG active_io_bits, const LARGE_INTEGER now)
+inline static ULONG fort_shaper_thread_process_queues(PFORT_SHAPER shaper, ULONG active_io_bits)
 {
     ULONG new_active_io_bits = 0;
 
@@ -743,7 +750,7 @@ inline static ULONG fort_shaper_thread_process_queues(
         if (queue == NULL)
             continue;
 
-        if (fort_shaper_queue_process(shaper, queue, now)) {
+        if (fort_shaper_queue_process(shaper, queue)) {
             new_active_io_bits |= (1 << i);
         }
     }
@@ -751,7 +758,7 @@ inline static ULONG fort_shaper_thread_process_queues(
     return new_active_io_bits;
 }
 
-inline static BOOL fort_shaper_thread_process(PFORT_SHAPER shaper, const LARGE_INTEGER now)
+inline static BOOL fort_shaper_thread_process(PFORT_SHAPER shaper)
 {
     ULONG active_io_bits =
             fort_shaper_io_bits_set(&shaper->active_io_bits, FORT_PACKET_FLUSH_ALL, FALSE);
@@ -759,7 +766,7 @@ inline static BOOL fort_shaper_thread_process(PFORT_SHAPER shaper, const LARGE_I
     if (active_io_bits == 0)
         return FALSE;
 
-    active_io_bits = fort_shaper_thread_process_queues(shaper, active_io_bits, now);
+    active_io_bits = fort_shaper_thread_process_queues(shaper, active_io_bits);
 
     if (active_io_bits != 0) {
         fort_shaper_io_bits_set(&shaper->active_io_bits, active_io_bits, TRUE);
@@ -784,9 +791,7 @@ static void fort_shaper_thread_loop(PVOID context)
     do {
         KeWaitForSingleObject(thread_event, Executive, KernelMode, FALSE, timeout);
 
-        const LARGE_INTEGER now = KeQueryPerformanceCounter(NULL); /* get current time ASAP */
-
-        const BOOL is_active = fort_shaper_thread_process(shaper, now);
+        const BOOL is_active = fort_shaper_thread_process(shaper);
 
         timeout = is_active ? &delay : NULL;
 
