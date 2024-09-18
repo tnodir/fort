@@ -83,7 +83,7 @@
     <name>AppInfoRow</name>
     <message>
         <source>Copy Path</source>
-        <translation>Copiar Ruta</translation>
+        <translation>Copiar ruta</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -152,7 +152,7 @@
     <name>ApplicationsPage</name>
     <message>
         <source>Group Name</source>
-        <translation>Nombre del Grupo</translation>
+        <translation>Nombre del grupo</translation>
     </message>
     <message>
         <source>Add Group</source>
@@ -172,11 +172,11 @@
     </message>
     <message>
         <source>Collect connection statistics</source>
-        <translation>Compilar estadísticas de conexión</translation>
+        <translation>Registrar estadísticas de conexión</translation>
     </message>
     <message>
         <source>Enabled</source>
-        <translation>Habilitado</translation>
+        <translation>Activado</translation>
     </message>
     <message>
         <source>time period:</source>
@@ -256,7 +256,7 @@
     </message>
     <message>
         <source>Collect blocked connections</source>
-        <translation>Compilar conexiones bloqueadas</translation>
+        <translation>Registrar conexiones bloqueadas</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -328,7 +328,7 @@
     </message>
     <message>
         <source>Proc. ID</source>
-        <translation>ID de proceso</translation>
+        <translation>ID de Proceso</translation>
     </message>
     <message>
         <source>Process ID</source>
@@ -404,7 +404,7 @@
     </message>
     <message>
         <source>Reason</source>
-        <translation type="unfinished"></translation>
+        <translation>Razón</translation>
     </message>
 </context>
 <context>
@@ -738,11 +738,11 @@
     </message>
     <message>
         <source>Enabled</source>
-        <translation>Habilitado</translation>
+        <translation>Activado</translation>
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation>Teclas de atajo:</translation>
+        <translation>Tecla de atajo:</translation>
     </message>
     <message>
         <source>Shortcut:</source>
@@ -898,7 +898,7 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation type="unfinished"></translation>
+        <translation>La ventana de alerta está autoactiva</translation>
     </message>
 </context>
 <context>
@@ -1089,7 +1089,7 @@ Asegúrate de tener una copia de seguridad nueva.</translation>
     </message>
     <message>
         <source>Not Installed</source>
-        <translation>No instalado</translation>
+        <translation>No establecida</translation>
     </message>
     <message>
         <source>Logs</source>
@@ -1137,7 +1137,7 @@ Asegúrate de tener una copia de seguridad nueva.</translation>
     </message>
     <message>
         <source>Collect New Programs</source>
-        <translation>Compilar nuevos programas</translation>
+        <translation>Registrar nuevos programas</translation>
     </message>
     <message>
         <source>Windows Service</source>
@@ -1248,7 +1248,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Use Application Group&apos;s Enabled State</source>
-        <translation>Usar el estado habilitado del grupo de aplicaciones</translation>
+        <translation>Usar el estado activado del grupo de aplicaciones</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1312,11 +1312,11 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Collect blocked connections</source>
-        <translation>Compilar conexiones bloqueadas</translation>
+        <translation>Registrar conexiones bloqueadas</translation>
     </message>
     <message>
         <source>Collect connection statistics</source>
-        <translation>Compilar estadísticas de conexiones</translation>
+        <translation>Registrar estadísticas de conexiones</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -1445,23 +1445,23 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>Desactivado</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Propagar a los procesos hijos designados</translation>
     </message>
     <message>
         <source>Propagate to all child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Propagar a todos los procesos hijos</translation>
     </message>
     <message>
         <source>Receive from the parent process</source>
-        <translation type="unfinished"></translation>
+        <translation>Recibir del proceso padre</translation>
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation type="unfinished"></translation>
+        <translation>Herencia de reglas:</translation>
     </message>
 </context>
 <context>
@@ -1612,7 +1612,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Enabled</source>
-        <translation>Habilitado</translation>
+        <translation>Activado</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1787,7 +1787,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Hourly</source>
-        <translation>Por hora</translation>
+        <translation>Cada hora</translation>
     </message>
     <message>
         <source>Each 6 hours</source>
@@ -1830,7 +1830,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Process ID</source>
-        <translation>ID del proceso</translation>
+        <translation>ID del Proceso</translation>
     </message>
 </context>
 <context>
@@ -1883,11 +1883,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
-        <translation>Compilar estadísticas de tráfico</translation>
+        <translation>Registrar estadísticas de tráfico</translation>
     </message>
     <message>
         <source>Collect Traffic, when Filter Disabled</source>
-        <translation>Compilar tráfico, cuando el filtro está desactivado</translation>
+        <translation>Registrar tráfico, cuando el filtro está desactivado</translation>
     </message>
     <message>
         <source>Active time period:</source>
@@ -1899,7 +1899,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Keep data for &apos;Hourly&apos;:</source>
-        <translation>Mantener datos para &apos;Por hora&apos;:</translation>
+        <translation>Mantener datos para &apos;Cada hora&apos;:</translation>
     </message>
     <message>
         <source> day(s)</source>
@@ -1911,7 +1911,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Keep data for &apos;Monthly&apos;:</source>
-        <translation>Mantener datos para &apos;Mensual&apos;:</translation>
+        <translation>Conservar datos para &apos;Mensual&apos;:</translation>
     </message>
     <message>
         <source> month(s)</source>
@@ -1931,7 +1931,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>Mantener el conteo de &apos;conexiones bloqueadas&apos;:</translation>
+        <translation>Conservar el conteo de &apos;conexiones bloqueadas&apos;:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1975,11 +1975,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Collect allowed connections</source>
-        <translation>Compilar conexiones permitidas</translation>
+        <translation>Registrar conexiones permitidas</translation>
     </message>
     <message>
         <source>Collect blocked connections</source>
-        <translation>Compilar conexiones bloqueadas</translation>
+        <translation>Registrar conexiones bloqueadas</translation>
     </message>
     <message>
         <source>Alerted only</source>
@@ -2074,7 +2074,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Reset Total</source>
-        <translation>Restablecer total</translation>
+        <translation>Restablecimiento total</translation>
     </message>
     <message>
         <source>Clear All</source>
@@ -2094,7 +2094,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Hourly</source>
-        <translation>Por hora</translation>
+        <translation>Cada hora</translation>
     </message>
     <message>
         <source>Daily</source>
@@ -2218,7 +2218,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Enabled</source>
-        <translation>Habilitado</translation>
+        <translation>Activado</translation>
     </message>
     <message>
         <source>Custom URL</source>
@@ -2342,7 +2342,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Update Zones?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Actualizar zonas?</translation>
     </message>
 </context>
 </TS>

@@ -1442,23 +1442,23 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>معطل</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>نشر إلى العمليات الفرعية المعينة</translation>
     </message>
     <message>
         <source>Propagate to all child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>نشر إلى جميع العمليات الفرعية</translation>
     </message>
     <message>
         <source>Receive from the parent process</source>
-        <translation type="unfinished"></translation>
+        <translation>تلقي من العملية الأصلية</translation>
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation type="unfinished"></translation>
+        <translation>قواعد التوريث:</translation>
     </message>
 </context>
 <context>
@@ -2339,7 +2339,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Update Zones?</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديث المناطق؟</translation>
     </message>
 </context>
 </TS>
