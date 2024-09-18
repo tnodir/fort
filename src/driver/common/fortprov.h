@@ -44,7 +44,7 @@ FORT_API DWORD fort_prov_trans_register(const FORT_PROV_BOOT_CONF boot_conf);
 
 FORT_API BOOL fort_prov_get_boot_conf(HANDLE engine, PFORT_PROV_BOOT_CONF boot_conf);
 
-FORT_API DWORD fort_prov_flow_register(HANDLE engine, BOOL filter_packets);
+FORT_API DWORD fort_prov_flow_register(HANDLE engine);
 
 FORT_API void fort_prov_reauth(HANDLE engine);
 

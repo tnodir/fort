@@ -96,18 +96,6 @@ inline static BOOL fort_packet_is_ipsec_tunneled(PCFORT_CALLOUT_ARG ca)
     return info.isTunnelMode && !info.isDeTunneled;
 }
 
-inline static ULONG fort_packet_data_length(PCFORT_CALLOUT_ARG ca)
-{
-    PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(ca->netBufList);
-    const ULONG dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
-
-    const ULONG headerSize = ca->inbound
-            ? ca->inMetaValues->transportHeaderSize + ca->inMetaValues->ipHeaderSize
-            : 0;
-
-    return headerSize + dataSize;
-}
-
 inline static PFORT_FLOW_PACKET fort_shaper_packet_new(void)
 {
     return fort_mem_alloc(sizeof(FORT_FLOW_PACKET), FORT_PACKET_POOL_TAG);
@@ -415,6 +403,8 @@ static NTSTATUS fort_packet_fill(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO pkt, UCH
 
 static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt)
 {
+    UNUSED(shaper);
+
     NTSTATUS status;
 
     status = fort_packet_inject(&pkt->io);
@@ -931,12 +921,10 @@ static void fort_shaper_packet_queue_add_packet(
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-inline static BOOL fort_shaper_packet_queue_check_plr(PFORT_PACKET_QUEUE queue)
+inline static BOOL fort_shaper_packet_queue_check_plr(PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue)
 {
     const UINT16 plr = queue->limit.plr;
     if (plr > 0) {
-        PFORT_SHAPER shaper = &fort_device()->shaper;
-
         const ULONG random = RtlRandomEx(&shaper->randomSeed) % 10000; /* PLR range is 0-10000 */
         if (random < plr)
             return FALSE;
@@ -952,14 +940,15 @@ inline static BOOL fort_shaper_packet_queue_check_buffer(
     return buffer_bytes == 0 || (UINT64) buffer_bytes >= (queue->queued_bytes + data_length);
 }
 
-static BOOL fort_shaper_packet_queue_check_packet(PFORT_PACKET_QUEUE queue, ULONG data_length)
+static BOOL fort_shaper_packet_queue_check_packet(
+        PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue, ULONG data_length)
 {
     BOOL res;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
     {
-        res = fort_shaper_packet_queue_check_plr(queue)
+        res = fort_shaper_packet_queue_check_plr(shaper, queue)
                 && fort_shaper_packet_queue_check_buffer(queue, data_length);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -982,11 +971,8 @@ inline static NTSTATUS fort_shaper_packet_queue(
     if (queue == NULL)
         return STATUS_NO_SUCH_GROUP;
 
-    /* Calculate the Packets' Data Length */
-    const ULONG data_length = fort_packet_data_length(ca);
-
     /* Check the Queue for new Packet */
-    if (!fort_shaper_packet_queue_check_packet(queue, data_length)) {
+    if (!fort_shaper_packet_queue_check_packet(shaper, queue, ca->dataSize)) {
         return STATUS_SUCCESS; /* drop the packet */
     }
 
@@ -1004,7 +990,7 @@ inline static NTSTATUS fort_shaper_packet_queue(
     }
 
     pkt->flow = flow;
-    pkt->data_length = data_length;
+    pkt->data_length = ca->dataSize;
 
     /* Add the Packet to Queue */
     fort_shaper_packet_queue_add_packet(shaper, queue, pkt, queue_bit);
@@ -1038,7 +1024,7 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG 
     if (fort_packet_injected_by_self(ca))
         return FALSE;
 
-    const NTSTATUS status = fort_shaper_packet_queue(&fort_device()->shaper, ca, flow);
+    const NTSTATUS status = fort_shaper_packet_queue(shaper, ca, flow);
 
     return NT_SUCCESS(status);
 }

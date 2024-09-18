@@ -30,8 +30,10 @@ typedef struct fort_callout_arg
         const FWPS_STREAM_CALLOUT_IO_PACKET0 *packet;
     };
     const FWPS_FILTER0 *filter;
-    UINT64 flowContext;
     FWPS_CLASSIFY_OUT0 *classifyOut;
+    UINT64 flowContext;
+
+    UINT32 dataSize;
 
     UCHAR inbound : 1;
     UCHAR isIPv6 : 1;

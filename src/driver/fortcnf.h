@@ -28,8 +28,7 @@ typedef struct fort_conf_ref
 #define FORT_DEVICE_IS_OPENED           0x04
 #define FORT_DEVICE_IS_VALIDATED        0x08
 #define FORT_DEVICE_POWER_OFF           0x10
-#define FORT_DEVICE_FILTER_PACKETS      0x20
-#define FORT_DEVICE_SHUTDOWN_REGISTERED 0x40
+#define FORT_DEVICE_SHUTDOWN_REGISTERED 0x20
 
 typedef struct fort_device_conf
 {

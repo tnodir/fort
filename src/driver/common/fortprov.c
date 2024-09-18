@@ -4,13 +4,13 @@
 
 #include "fortioctl.h"
 
-#define FORT_PROV_CALLOUTS_COUNT        12
 #define FORT_PROV_BOOT_FILTERS_COUNT    4
 #define FORT_PROV_PERSIST_FILTERS_COUNT 4
 #define FORT_PROV_CALLOUT_FILTERS_COUNT 4
-#define FORT_PROV_FLOW_FILTERS_COUNT    4
 #define FORT_PROV_PACKET_FILTERS_COUNT  4
 #define FORT_PROV_REAUTH_FILTERS_COUNT  4
+
+#define FORT_PROV_CALLOUTS_COUNT (FORT_PROV_CALLOUT_FILTERS_COUNT + FORT_PROV_PACKET_FILTERS_COUNT)
 
 static struct
 {
@@ -30,7 +30,6 @@ static struct
     FWPM_FILTER0 callout_filters[FORT_PROV_CALLOUT_FILTERS_COUNT];
     FWPM_FILTER0 callout_boot_filters[FORT_PROV_CALLOUT_FILTERS_COUNT];
 
-    FWPM_FILTER0 flow_filters[FORT_PROV_FLOW_FILTERS_COUNT];
     FWPM_FILTER0 packet_filters[FORT_PROV_PACKET_FILTERS_COUNT];
 
     FWPM_FILTER0 reauth_filters[FORT_PROV_REAUTH_FILTERS_COUNT];
@@ -62,18 +61,6 @@ static void fort_prov_init_callouts(void)
     /* icallout6 */
     fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_ACCEPT_V6, L"FortCalloutAccept6",
             L"Fort Firewall Callout Accept V6", FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6);
-    /* scallout4 */
-    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_STREAM_V4, L"FortCalloutStream4",
-            L"Fort Firewall Callout Stream V4", FWPM_LAYER_STREAM_V4);
-    /* scallout6 */
-    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_STREAM_V6, L"FortCalloutStream6",
-            L"Fort Firewall Callout Stream V6", FWPM_LAYER_STREAM_V6);
-    /* dcallout4 */
-    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_DATAGRAM_V4, L"FortCalloutDatagram4",
-            L"Fort Firewall Callout Datagram V4", FWPM_LAYER_DATAGRAM_DATA_V4);
-    /* dcallout6 */
-    fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_DATAGRAM_V6, L"FortCalloutDatagram6",
-            L"Fort Firewall Callout Datagram V6", FWPM_LAYER_DATAGRAM_DATA_V6);
     /* itcallout4 */
     fort_prov_init_callout(cout++, FORT_GUID_CALLOUT_IN_TRANSPORT_V4, L"FortCalloutInTransport4",
             L"Fort Firewall Callout Inbound Transport V4", FWPM_LAYER_INBOUND_TRANSPORT_V4);
@@ -227,26 +214,6 @@ static void fort_prov_init_flow_filter(FWPM_FILTER0 *filter, GUID filterKey, GUI
     filter->action.calloutKey = calloutKey;
 }
 
-static void fort_prov_init_flow_filters(void)
-{
-    FWPM_FILTER0 *filter = g_provGlobal.flow_filters;
-
-    /* sfilter4 */
-    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_STREAM_V4, FWPM_LAYER_STREAM_V4,
-            FORT_GUID_CALLOUT_STREAM_V4, L"FortFilterStream4", L"Fort Firewall Filter Stream V4");
-    /* sfilter6 */
-    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_STREAM_V6, FWPM_LAYER_STREAM_V6,
-            FORT_GUID_CALLOUT_STREAM_V6, L"FortFilterStream6", L"Fort Firewall Filter Stream V6");
-    /* dfilter4 */
-    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_DATAGRAM_V4, FWPM_LAYER_DATAGRAM_DATA_V4,
-            FORT_GUID_CALLOUT_DATAGRAM_V4, L"FortFilterDatagram4",
-            L"Fort Firewall Filter Datagram V4");
-    /* dfilter6 */
-    fort_prov_init_flow_filter(filter++, FORT_GUID_FILTER_DATAGRAM_V6, FWPM_LAYER_DATAGRAM_DATA_V6,
-            FORT_GUID_CALLOUT_DATAGRAM_V6, L"FortFilterDatagram6",
-            L"Fort Firewall Filter Datagram V6");
-}
-
 static void fort_prov_init_packet_filters(void)
 {
     FWPM_FILTER0 *filter = g_provGlobal.packet_filters;
@@ -341,7 +308,6 @@ FORT_API void fort_prov_init()
     fort_prov_init_callout_filters();
     fort_prov_init_callout_boot_filters();
 
-    fort_prov_init_flow_filters();
     fort_prov_init_packet_filters();
 
     fort_prov_init_reauth_filters();
@@ -433,11 +399,6 @@ static void fort_prov_unregister_callouts(HANDLE engine)
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_ACCEPT_V4);
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_ACCEPT_V6);
 
-    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_STREAM_V4);
-    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_STREAM_V6);
-    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_DATAGRAM_V4);
-    FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_DATAGRAM_V6);
-
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_IN_TRANSPORT_V4);
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_IN_TRANSPORT_V6);
     FwpmCalloutDeleteByKey0(engine, (GUID *) &FORT_GUID_CALLOUT_OUT_TRANSPORT_V4);
@@ -457,11 +418,6 @@ static void fort_prov_unregister_provider(HANDLE engine)
 
 FORT_API void fort_prov_flow_unregister(HANDLE engine)
 {
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_DATAGRAM_V6);
-
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V6);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V4);
@@ -576,18 +532,10 @@ FORT_API BOOL fort_prov_get_boot_conf(HANDLE engine, PFORT_PROV_BOOT_CONF boot_c
     return FALSE;
 }
 
-FORT_API DWORD fort_prov_flow_register(HANDLE engine, BOOL filter_packets)
+FORT_API DWORD fort_prov_flow_register(HANDLE engine)
 {
-    DWORD status;
-
-    status = fort_prov_add_filters(engine, g_provGlobal.flow_filters, FORT_PROV_FLOW_FILTERS_COUNT);
-
-    if (status == 0 && filter_packets) {
-        status = fort_prov_add_filters(
-                engine, g_provGlobal.packet_filters, FORT_PROV_PACKET_FILTERS_COUNT);
-    }
-
-    return status;
+    return fort_prov_add_filters(
+            engine, g_provGlobal.packet_filters, FORT_PROV_PACKET_FILTERS_COUNT);
 }
 
 FORT_API void fort_prov_reauth(HANDLE engine)
