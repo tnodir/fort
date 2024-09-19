@@ -102,11 +102,11 @@
     </message>
     <message>
         <source>Block</source>
-        <translation>Bloquear</translation>
+        <translation>Bloqueado</translation>
     </message>
     <message>
         <source>Allow</source>
-        <translation>Permitir</translation>
+        <translation>Permitido</translation>
     </message>
     <message>
         <source>Name</source>
@@ -750,7 +750,7 @@
     </message>
     <message>
         <source>Auto-Show Menu</source>
-        <translation>Auto Mostrar Menú</translation>
+        <translation>Automostrar menú</translation>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
@@ -762,7 +762,7 @@
     </message>
     <message>
         <source>Animate Alert Icon</source>
-        <translation>Animar Icono de Alerta</translation>
+        <translation>Animar icono de alerta</translation>
     </message>
     <message>
         <source>Maximum count of Groups in menu:</source>
@@ -778,7 +778,7 @@
     </message>
     <message>
         <source>Tray Menu Flags</source>
-        <translation>Icono en Bandeja del Sistema</translation>
+        <translation>Icono en bandeja del sistema</translation>
     </message>
     <message>
         <source>Quit</source>
