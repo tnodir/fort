@@ -51,16 +51,18 @@ enum ProgAction : quint32 {
     ProgActionAllow = (1 << 2),
     ProgActionBlock = (1 << 3),
     ProgActionKill = (1 << 4),
+    ProgActionExport = (1 << 5),
+    ProgActionImport = (1 << 6),
 };
 
-bool processCommandProgAction(ProgAction progAction, const QString &appPath)
+bool processCommandProgAction(ProgAction progAction, const QString &path)
 {
     switch (progAction) {
     case ProgActionAdd: {
-        return IoC<WindowManager>()->showProgramEditForm(appPath);
+        return IoC<WindowManager>()->showProgramEditForm(path);
     }
     case ProgActionDel: {
-        return IoC<ConfAppManager>()->deleteAppPath(appPath);
+        return IoC<ConfAppManager>()->deleteAppPath(path);
     }
     case ProgActionAllow:
     case ProgActionBlock:
@@ -68,7 +70,13 @@ bool processCommandProgAction(ProgAction progAction, const QString &appPath)
         const bool blocked = (progAction != ProgActionAllow);
         const bool killProcess = (progAction == ProgActionKill);
 
-        return IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked, killProcess);
+        return IoC<ConfAppManager>()->addOrUpdateAppPath(path, blocked, killProcess);
+    }
+    case ProgActionExport: {
+        return IoC<ConfAppManager>()->exportJson(path);
+    }
+    case ProgActionImport: {
+        return IoC<ConfAppManager>()->importJson(path);
     }
     default:
         return false;
@@ -107,7 +115,7 @@ bool processCommandProg(const ProcessCommandArgs &p)
 {
     const ProgAction progAction = progActionByText(p.args.value(0).toString());
     if (progAction == ProgActionNone) {
-        p.errorMessage = "Usage: prog add|del|allow|block|kill|show <app-path>";
+        p.errorMessage = "Usage: prog add|del|allow|block|kill|show <path>";
         return false;
     }
 
@@ -116,9 +124,9 @@ bool processCommandProg(const ProcessCommandArgs &p)
         return false;
     }
 
-    const QString appPath = p.args.value(1).toString();
+    const QString path = p.args.value(1).toString();
 
-    return processCommandProgAction(progAction, appPath);
+    return processCommandProgAction(progAction, path);
 }
 
 enum ZoneAction : quint32 {
