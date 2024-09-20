@@ -404,7 +404,7 @@
     </message>
     <message>
         <source>Reason</source>
-        <translation>Razón</translation>
+        <translation>Motivo</translation>
     </message>
 </context>
 <context>
