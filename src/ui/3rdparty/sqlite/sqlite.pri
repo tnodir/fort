@@ -16,6 +16,7 @@ SOURCES += \
     $$PWD/dbutil.cpp \
     $$PWD/dbvar.cpp \
     $$PWD/sqlitedb.cpp \
+    $$PWD/sqlitedbext.cpp \
     $$PWD/sqlitestmt.cpp
 
 HEADERS += \
@@ -27,4 +28,5 @@ HEADERS += \
     $$PWD/dbvar.h \
     $$PWD/sqlite_types.h \
     $$PWD/sqlitedb.h \
+    $$PWD/sqlitedbext.h \
     $$PWD/sqlitestmt.h

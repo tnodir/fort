@@ -9,6 +9,7 @@
 #include <sqlite.h>
 
 #include "dbquery.h"
+#include "sqlitedbext.h"
 #include "sqlitestmt.h"
 
 namespace {
@@ -84,7 +85,13 @@ bool SqliteDb::open()
 {
     const auto filePathUtf8 = m_filePath.toUtf8();
 
-    return sqlite3_open_v2(filePathUtf8.data(), &m_db, m_openFlags, nullptr) == SQLITE_OK;
+    const bool ok = sqlite3_open_v2(filePathUtf8.data(), &m_db, m_openFlags, nullptr) == SQLITE_OK;
+
+    if (ok) {
+        SqliteDbExt::registerExtensions(this);
+    }
+
+    return ok;
 }
 
 void SqliteDb::close()

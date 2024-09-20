@@ -320,7 +320,7 @@ QString AppListModel::sqlWhereFts() const
 
 QString AppListModel::sqlOrderColumn() const
 {
-    static const QString nameColumn = "t.name";
+    static const QString nameColumn = "EXT_LOWER(t.name)";
     static const QString pathColumn = "t.path";
 
     static const QStringList orderColumns = {
