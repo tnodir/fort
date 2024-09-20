@@ -46,13 +46,15 @@ QString FormatUtil::formatSize(qint64 value, int power, int precision, SizeForma
     const qreal base = isBase1000(format) ? 1000 : 1024;
     const qreal powerValue = qPow(base, power);
 
-    qreal result = value / powerValue;
+    const qreal result = value / powerValue;
 
-    if (precision == -1 && qFuzzyCompare(result, qRound(result))) {
-        precision = 0;
+    if (precision == -1) {
+        precision = qFuzzyCompare(result, qRound(result)) ? 0 : 1;
     }
 
-    return QLocale().toString(result, 'f', qAbs(precision));
+    Q_ASSERT(precision >= 0);
+
+    return QLocale().toString(result, 'f', precision);
 }
 
 QString FormatUtil::formatPowerUnit(int power, SizeFormat format)
