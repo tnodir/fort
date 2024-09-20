@@ -1073,7 +1073,7 @@ Asegúrate de tener una copia de seguridad nueva.</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>Desabilitar</translation>
+        <translation>Desactivado</translation>
     </message>
     <message>
         <source>For current user</source>
