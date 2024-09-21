@@ -415,6 +415,9 @@ bool importFile(const QString &filePath, const QString &path)
     const QString fileName = FileUtil::fileName(filePath);
     const QString srcFilePath = path + fileName;
 
+    if (!FileUtil::fileExists(srcFilePath))
+        return true;
+
     if (!FileUtil::replaceFile(srcFilePath, filePath)) {
         qCWarning(LC) << "Import file error from:" << srcFilePath << "to:" << filePath;
         return false;
@@ -721,13 +724,17 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
 
 bool ConfManager::exportBackup(const QString &path)
 {
+    FileUtil::makePath(path);
+
+    const QString outPath = FileUtil::pathSlash(path);
+
     // Export User Ini
     {
-        if (!exportFile(iniUser().settings()->filePath(), path))
+        if (!exportFile(iniUser().settings()->filePath(), outPath))
             return false;
     }
 
-    return exportMasterBackup(path);
+    return exportMasterBackup(outPath);
 }
 
 bool ConfManager::exportMasterBackup(const QString &path)
@@ -744,6 +751,7 @@ bool ConfManager::exportMasterBackup(const QString &path)
         const QString destFilePath = path + fileName;
 
         FileUtil::removeFile(destFilePath);
+
         if (!sqliteDb()->vacuumInto(destFilePath)) {
             qCWarning(LC) << "Export Db error:" << sqliteDb()->errorMessage() << "to:" << path;
             return false;
@@ -755,20 +763,24 @@ bool ConfManager::exportMasterBackup(const QString &path)
 
 bool ConfManager::importBackup(const QString &path)
 {
+    const QString inPath = FileUtil::pathSlash(path);
+
     // Import User Ini
     {
-        if (!importFile(iniUser().settings()->filePath(), path))
+        Settings *settings = iniUser().settings();
+
+        if (!importFile(settings->filePath(), inPath))
             return false;
 
-        iniUser().settings()->clearCache();
+        settings->clearCache();
     }
 
-    // Import Db: Close DB from UI side
+    // Import DB: Close DB from UI side
     {
         sqliteDb()->close();
     }
 
-    return importMasterBackup(path);
+    return importMasterBackup(inPath);
 }
 
 bool ConfManager::importMasterBackup(const QString &path)

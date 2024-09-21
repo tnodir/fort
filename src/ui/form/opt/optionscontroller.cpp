@@ -9,7 +9,6 @@
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
 #include <user/iniuser.h>
-#include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
 namespace {
@@ -168,11 +167,7 @@ void OptionsController::exportBackup()
     if (path.isEmpty())
         return;
 
-    FileUtil::makePath(path);
-
-    const QString outPath = FileUtil::pathSlash(path);
-
-    if (confManager()->exportBackup(outPath)) {
+    if (confManager()->exportBackup(path)) {
         windowManager()->showInfoDialog(tr("Backup Exported Successfully"));
     } else {
         windowManager()->showErrorBox(tr("Cannot Export Backup"));
@@ -185,9 +180,7 @@ void OptionsController::importBackup()
     if (path.isEmpty())
         return;
 
-    const QString inPath = FileUtil::pathSlash(path);
-
-    const bool ok = confManager()->importBackup(inPath);
+    const bool ok = confManager()->importBackup(path);
 
     windowManager()->processRestartRequired(
             ok ? tr("Backup Imported Successfully") : tr("Cannot Import Backup"));

@@ -27,8 +27,11 @@ constexpr int maxClientsCount = 9;
 
 const QLoggingCategory LC("control");
 
-bool checkActionPassword()
+bool checkActionPassword(quint32 action, quint32 passwordNotRequiredActions = 0)
 {
+    if ((action & passwordNotRequiredActions) != 0)
+        return true;
+
     return IoC<WindowManager>()->checkPassword(/*temporary=*/true);
 }
 
@@ -51,18 +54,16 @@ enum ProgAction : quint32 {
     ProgActionAllow = (1 << 2),
     ProgActionBlock = (1 << 3),
     ProgActionKill = (1 << 4),
-    ProgActionExport = (1 << 5),
-    ProgActionImport = (1 << 6),
 };
 
-bool processCommandProgAction(ProgAction progAction, const QString &path)
+bool processCommandProgAction(ProgAction progAction, const QString &appPath)
 {
     switch (progAction) {
     case ProgActionAdd: {
-        return IoC<WindowManager>()->showProgramEditForm(path);
+        return IoC<WindowManager>()->showProgramEditForm(appPath);
     }
     case ProgActionDel: {
-        return IoC<ConfAppManager>()->deleteAppPath(path);
+        return IoC<ConfAppManager>()->deleteAppPath(appPath);
     }
     case ProgActionAllow:
     case ProgActionBlock:
@@ -70,25 +71,11 @@ bool processCommandProgAction(ProgAction progAction, const QString &path)
         const bool blocked = (progAction != ProgActionAllow);
         const bool killProcess = (progAction == ProgActionKill);
 
-        return IoC<ConfAppManager>()->addOrUpdateAppPath(path, blocked, killProcess);
-    }
-    case ProgActionExport: {
-        return IoC<ConfAppManager>()->exportJson(path);
-    }
-    case ProgActionImport: {
-        return IoC<ConfAppManager>()->importJson(path);
+        return IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked, killProcess);
     }
     default:
         return false;
     }
-}
-
-bool checkProgActionPassword(ProgAction progAction)
-{
-    constexpr const quint32 passwordRequiredActions =
-            ProgActionDel | ProgActionAllow | ProgActionBlock | ProgActionKill;
-
-    return (passwordRequiredActions & progAction) == 0 || checkActionPassword();
 }
 
 ProgAction progActionByText(const QString &commandText)
@@ -115,18 +102,67 @@ bool processCommandProg(const ProcessCommandArgs &p)
 {
     const ProgAction progAction = progActionByText(p.args.value(0).toString());
     if (progAction == ProgActionNone) {
-        p.errorMessage = "Usage: prog add|del|allow|block|kill|show <path>";
+        p.errorMessage = "Usage: prog add|del|allow|block|kill|show <app-path>";
         return false;
     }
 
-    if (!checkProgActionPassword(progAction)) {
+    if (!checkActionPassword(progAction, ProgActionAdd)) {
         p.errorMessage = "Password required";
         return false;
     }
 
-    const QString path = p.args.value(1).toString();
+    const QString appPath = p.args.value(1).toString();
 
-    return processCommandProgAction(progAction, path);
+    return processCommandProgAction(progAction, appPath);
+}
+
+enum BackupAction : quint32 {
+    BackupActionNone = 0,
+    BackupActionExport = (1 << 0),
+    BackupActionImport = (1 << 1),
+};
+
+bool processCommandBackupAction(BackupAction backupAction, const QString &dirPath)
+{
+    switch (backupAction) {
+    case BackupActionExport: {
+        return IoC<ConfManager>()->exportBackup(dirPath);
+    }
+    case BackupActionImport: {
+        return IoC<ConfManager>()->importBackup(dirPath);
+    }
+    default:
+        return false;
+    }
+}
+
+BackupAction backupActionByText(const QString &commandText)
+{
+    if (commandText == "export")
+        return BackupActionExport;
+
+    if (commandText == "import")
+        return BackupActionImport;
+
+    return BackupActionNone;
+}
+
+bool processCommandBackup(const ProcessCommandArgs &p)
+{
+    const BackupAction backupAction = backupActionByText(p.args.value(0).toString());
+    if (backupAction == BackupActionNone) {
+        p.errorMessage = "Usage: backup export/import <dir-path>";
+        return false;
+    }
+
+    if (!checkActionPassword(backupAction)) {
+        p.errorMessage = "Password required";
+        return false;
+    }
+
+    const QString dirPath = p.args.value(1).toString();
+
+    return processCommandBackupAction(backupAction, dirPath);
 }
 
 enum ZoneAction : quint32 {
@@ -146,13 +182,6 @@ bool processCommandZoneAction(ZoneAction zoneAction)
     }
 }
 
-bool checkZoneActionPassword(ZoneAction zoneAction)
-{
-    constexpr const quint32 passwordRequiredActions = ZoneActionUpdate;
-
-    return (passwordRequiredActions & zoneAction) == 0 || checkActionPassword();
-}
-
 ZoneAction zoneActionByText(const QString &commandText)
 {
     if (commandText == "update")
@@ -169,7 +198,7 @@ bool processCommandZone(const ProcessCommandArgs &p)
         return false;
     }
 
-    if (!checkZoneActionPassword(zoneAction)) {
+    if (!checkActionPassword(zoneAction)) {
         p.errorMessage = "Password required";
         return false;
     }
@@ -187,6 +216,9 @@ bool processCommand(const ProcessCommandArgs &p)
     } break;
     case Control::CommandProg: {
         ok = processCommandProg(p);
+    } break;
+    case Control::CommandBackup: {
+        ok = processCommandBackup(p);
     } break;
     case Control::CommandZone: {
         ok = processCommandZone(p);
@@ -284,6 +316,8 @@ bool ControlManager::processCommandClient()
         command = Control::CommandHome;
     } else if (settings->controlCommand() == "prog") {
         command = Control::CommandProg;
+    } else if (settings->controlCommand() == "backup") {
+        command = Control::CommandBackup;
     } else if (settings->controlCommand() == "zone") {
         command = Control::CommandZone;
     } else {

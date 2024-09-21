@@ -13,6 +13,7 @@ enum Command : qint8 {
 
     CommandHome,
     CommandProg,
+    CommandBackup,
     CommandZone,
 
     Rpc_Result_Ok,

@@ -56,9 +56,6 @@ public:
 
     virtual bool updateDriverConf(bool onlyFlags = false);
 
-    bool exportJson(const QString &path) const;
-    bool importJson(const QString &path);
-
 signals:
     void appAlerted();
     void appsChanged();

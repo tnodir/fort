@@ -646,20 +646,6 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     return true;
 }
 
-bool ConfAppManager::exportJson(const QString &path) const
-{
-    qCDebug(LC) << "Export apps as JSON:" << path;
-
-    return false;
-}
-
-bool ConfAppManager::importJson(const QString &path)
-{
-    qCDebug(LC) << "Import apps as JSON:" << path;
-
-    return false;
-}
-
 bool ConfAppManager::loadAppById(App &app)
 {
     SqliteStmt stmt;
