@@ -87,6 +87,7 @@ private:
     void setupComboScheduleType();
     QLayout *setupButtonsLayout();
 
+    void updateZonesRulesLayout();
     void updateApplyChild();
 
     void fillEditName();

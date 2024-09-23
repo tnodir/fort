@@ -369,7 +369,7 @@ QLayout *ProgramEditDialog::setupMainLayout()
 
     setupActionsGroup();
 
-    // Zones
+    // Zones/Rules
     auto zonesRulesLayout = setupZonesRuleLayout();
 
     // Schedule
@@ -535,6 +535,8 @@ void ProgramEditDialog::setupActionsGroup()
     m_btgActions->addButton(m_rbAllow);
     m_btgActions->addButton(m_rbBlock);
     m_btgActions->addButton(m_rbKillProcess);
+
+    connect(m_rbAllow, &QRadioButton::toggled, this, &ProgramEditDialog::updateZonesRulesLayout);
 }
 
 void ProgramEditDialog::setupAdvancedOptions()
@@ -742,6 +744,15 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     layout->addWidget(m_btCancel);
 
     return layout;
+}
+
+void ProgramEditDialog::updateZonesRulesLayout()
+{
+    const bool enabled = m_rbAllow->isChecked();
+
+    m_cbLanOnly->setEnabled(enabled);
+    m_btZones->setEnabled(enabled);
+    m_btSelectRule->setEnabled(enabled);
 }
 
 void ProgramEditDialog::updateApplyChild()
