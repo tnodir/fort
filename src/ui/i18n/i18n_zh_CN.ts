@@ -404,7 +404,7 @@
     </message>
     <message>
         <source>Reason</source>
-        <translation type="unfinished"></translation>
+        <translation>原因</translation>
     </message>
 </context>
 <context>
@@ -898,7 +898,7 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation type="unfinished"></translation>
+        <translation>警告窗口是自动激活的</translation>
     </message>
 </context>
 <context>
@@ -1440,23 +1440,23 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">停用</translation>
+        <translation>停用</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>传播到指定的子进程</translation>
     </message>
     <message>
         <source>Propagate to all child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>传播到所有子流程</translation>
     </message>
     <message>
         <source>Receive from the parent process</source>
-        <translation type="unfinished"></translation>
+        <translation>从父进程中接收</translation>
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation type="unfinished"></translation>
+        <translation>规则继承:</translation>
     </message>
 </context>
 <context>
@@ -2337,7 +2337,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Update Zones?</source>
-        <translation type="unfinished"></translation>
+        <translation>更新区域吗？</translation>
     </message>
 </context>
 </TS>

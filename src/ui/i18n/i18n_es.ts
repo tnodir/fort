@@ -898,7 +898,7 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation>La ventana de alerta está autoactiva</translation>
+        <translation>Ventana de alerta autoactiva</translation>
     </message>
 </context>
 <context>
