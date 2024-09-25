@@ -120,6 +120,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_cbLanOnly->setChecked(appRow.lanOnly);
     m_btZones->setZones(appRow.acceptZones);
     m_btZones->setUncheckedZones(appRow.rejectZones);
+    updateZonesRulesLayout();
 
     m_cbSchedule->setChecked(!appRow.scheduleTime.isNull());
     m_comboScheduleAction->setCurrentIndex(appRow.scheduleAction);
@@ -752,6 +753,11 @@ void ProgramEditDialog::updateZonesRulesLayout()
 
     m_cbLanOnly->setEnabled(enabled);
     m_btZones->setEnabled(enabled);
+
+    const bool isSingleSelection = (m_appIdList.size() <= 1);
+    if (!isSingleSelection)
+        return;
+
     m_btSelectRule->setEnabled(enabled);
 }
 
