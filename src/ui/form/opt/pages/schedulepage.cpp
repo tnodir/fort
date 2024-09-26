@@ -31,6 +31,22 @@ SchedulePage::SchedulePage(OptionsController *ctrl, QWidget *parent) :
     setupUi();
 }
 
+void SchedulePage::onResetToDefault()
+{
+    auto model = taskListModel();
+
+    const int n = model->rowCount();
+    for (int i = 0; i < n; ++i) {
+        const auto index = model->index(i, 0);
+
+        model->setData(index, false, TaskListModel::RoleEnabled);
+        model->setData(index, false, TaskListModel::RoleRunOnStartup);
+        model->setData(index, TaskDefaultIntervalHours, TaskListModel::RoleIntervalHours);
+    }
+
+    model->refresh();
+}
+
 void SchedulePage::onAboutToSave()
 {
     if (conf()->taskEdited()) {

@@ -40,7 +40,9 @@ void IfacePage::onResetToDefault()
 {
     m_cbExcludeCapture->setChecked(false);
     m_cbUseSystemLocale->setChecked(true);
+    m_comboLanguage->setCurrentIndex(0);
     m_comboTheme->setCurrentIndex(0);
+
     m_cbHotKeysEnabled->setChecked(false);
     m_cbHotKeysGlobal->setChecked(true);
 

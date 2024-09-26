@@ -41,6 +41,8 @@ public:
     QVariant toVariant() const;
     void fromVariant(const QVariant &v);
 
+    void resetToDefault();
+
 private:
     bool m_edited : 1 = false;
 

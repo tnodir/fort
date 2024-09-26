@@ -23,6 +23,9 @@ public:
 signals:
     void addressGroupChanged();
 
+public slots:
+    void onResetToDefault() override;
+
 protected slots:
     void onSaveWindowState(IniUser *ini) override;
     void onRestoreWindowState(IniUser *ini) override;

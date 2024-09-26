@@ -63,9 +63,18 @@ void OptionsPage::onResetToDefault()
 {
     m_cbFilterEnabled->setChecked(true);
     m_comboBlockTraffic->setCurrentIndex(0);
+    m_comboFilterMode->setCurrentIndex(0);
+
+    m_cbBootFilter->setChecked(false);
+    m_cbNoServiceControl->setChecked(false);
+    m_cbCheckPasswordOnUninstall->setChecked(false);
+    m_cbPassword->setChecked(false);
 
     m_cbLogBlocked->setChecked(true);
     m_cbPurgeOnMounted->setChecked(false);
+
+    m_cbFilterLocals->setChecked(false);
+    m_cbFilterLocalNet->setChecked(false);
 
     m_cbLogDebug->setChecked(false);
     m_cbLogConsole->setChecked(false);

@@ -103,3 +103,17 @@ void AddressGroup::fromVariant(const QVariant &v)
     m_includeText = map["includeText"].toString();
     m_excludeText = map["excludeText"].toString();
 }
+
+void AddressGroup::resetToDefault()
+{
+    setEdited(true);
+
+    m_includeAll = true;
+    m_excludeAll = false;
+
+    m_includeZones = 0;
+    m_excludeZones = 0;
+
+    m_includeText.clear();
+    m_excludeText.clear();
+}

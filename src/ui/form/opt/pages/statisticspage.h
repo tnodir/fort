@@ -44,6 +44,7 @@ private:
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbBlockedConn = nullptr;
     QGroupBox *m_gbAllowedConn = nullptr;
+
     QCheckBox *m_cbLogStat = nullptr;
     QCheckBox *m_cbLogStatNoFilter = nullptr;
     CheckTimePeriod *m_ctpActivePeriod = nullptr;

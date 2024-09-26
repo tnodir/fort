@@ -19,6 +19,9 @@ public:
 
     TaskListModel *taskListModel() const { return m_taskListModel; }
 
+public slots:
+    void onResetToDefault() override;
+
 protected slots:
     void onAboutToSave() override;
     void onEditResetted() override;

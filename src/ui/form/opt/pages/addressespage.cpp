@@ -49,6 +49,17 @@ void AddressesPage::setAddressGroupIndex(int v)
     }
 }
 
+void AddressesPage::onResetToDefault()
+{
+    for (auto addressGroup : addressGroups()) {
+        addressGroup->resetToDefault();
+    }
+
+    conf()->setupDefaultAddressGroups();
+
+    updateGroup();
+}
+
 void AddressesPage::onSaveWindowState(IniUser *ini)
 {
     ini->setOptWindowAddrSplit(m_splitter->saveState());

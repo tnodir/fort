@@ -9,6 +9,8 @@
 class TaskManager;
 class TaskWorker;
 
+constexpr int TaskDefaultIntervalHours = 24;
+
 class TaskInfo : public QObject
 {
     Q_OBJECT
@@ -108,7 +110,7 @@ private:
     bool m_running : 1 = false;
     bool m_aborted : 1 = false; // transient
 
-    quint16 m_intervalHours = 24;
+    quint16 m_intervalHours = TaskDefaultIntervalHours;
 
     TaskType m_type = TypeNone;
 
