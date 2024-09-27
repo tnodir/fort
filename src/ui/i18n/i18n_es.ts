@@ -56,7 +56,7 @@
     </message>
     <message>
         <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>Mover Todas las Líneas a &apos;Incluir&apos;</translation>
+        <translation>Mover todas las líneas a &apos;Incluir&apos;</translation>
     </message>
     <message>
         <source>Interchange All Lines</source>
@@ -192,11 +192,11 @@
     </message>
     <message>
         <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>Mover Todas las Líneas a &apos;Incluir&apos;</translation>
+        <translation>Mover todas las líneas a &apos;Incluir&apos;</translation>
     </message>
     <message>
         <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>Mover Todas las Líneas a &apos;Bloquear&apos;</translation>
+        <translation>Mover todas las líneas a &apos;Bloquear&apos;</translation>
     </message>
     <message>
         <source>Interchange All Lines</source>
@@ -204,11 +204,11 @@
     </message>
     <message>
         <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>Mover Líneas Seleccionadas a &apos;Incluir&apos;</translation>
+        <translation>Mover las líneas seleccionadas a &apos;Permitir&apos;</translation>
     </message>
     <message>
         <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>Mover Todas las Líneas a &apos;Bloquear&apos;</translation>
+        <translation>Mover las líneas seleccionadas a &apos;Bloquear&apos;</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -1411,11 +1411,11 @@ Tenga cuidado al finalizar servicios del sistema u otros programas importantes. 
     </message>
     <message>
         <source>In:</source>
-        <translation>Entrante:</translation>
+        <translation>En:</translation>
     </message>
     <message>
         <source>At:</source>
-        <translation>En:</translation>
+        <translation>El:</translation>
     </message>
     <message>
         <source>Group:</source>
@@ -1507,7 +1507,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Are you sure to remove selected program(s)?</source>
-        <translation>¿Está seguro que desea eliminar los programa(s) seleccionados?</translation>
+        <translation>¿Está seguro de que desea eliminar el/los programa(s) seleccionado(s)?</translation>
     </message>
     <message>
         <source>Are you sure to remove all non-existent programs?</source>
