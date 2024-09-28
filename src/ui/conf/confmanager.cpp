@@ -219,6 +219,30 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     return true;
 }
 
+SqliteDb::MigrateOptions migrateOptions()
+{
+    SqliteDb::MigrateOptions opt = {
+        .sqlDir = ":/conf/migrations",
+        .version = DATABASE_USER_VERSION,
+        .recreate = true,
+        .migrateFunc = &migrateFunc,
+        .ftsTables = {
+                {
+                        .contentTable = "app",
+                        .contentRowid = "app_id",
+                        .columns = { "path", "name", "notes" }
+                },
+                {
+                        .contentTable = "rule",
+                        .contentRowid = "rule_id",
+                        .columns = { "name", "notes" }
+                },
+                },
+        };
+
+    return opt;
+}
+
 bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups, int &index)
 {
     SqliteStmt stmt;
@@ -512,24 +536,7 @@ bool ConfManager::setupDb()
         return false;
     }
 
-    SqliteDb::MigrateOptions opt = {
-        .sqlDir = ":/conf/migrations",
-        .version = DATABASE_USER_VERSION,
-        .recreate = true,
-        .migrateFunc = &migrateFunc,
-        .ftsTables = {
-                {
-                        .contentTable = "app",
-                        .contentRowid = "app_id",
-                        .columns = { "path", "name", "notes" }
-                },
-                {
-                        .contentTable = "rule",
-                        .contentRowid = "rule_id",
-                        .columns = { "name", "notes" }
-                },
-                },
-        };
+    SqliteDb::MigrateOptions opt = migrateOptions();
 
     if (!sqliteDb()->migrate(opt)) {
         qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
@@ -773,13 +780,11 @@ bool ConfManager::importBackup(const QString &path)
             return false;
 
         settings->clearCache();
+
+        emit iniUserChanged(iniUser(), /*onlyFlags=*/false);
     }
 
-    // Import DB: Close DB from UI side
-    {
-        sqliteDb()->close();
-    }
-
+    // Import DB
     return importMasterBackup(inPath);
 }
 
@@ -798,16 +803,19 @@ bool ConfManager::importMasterBackup(const QString &path)
 
     // Import Db
     if (ok) {
-        sqliteDb()->close();
+        SqliteDb::MigrateOptions opt = migrateOptions();
 
-        ok = importFile(sqliteDb()->filePath(), path);
+        opt.backupFilePath = path + FileUtil::fileName(sqliteDb()->filePath());
+
+        ok = sqliteDb()->import(opt);
     }
 
-    if (!ok) {
+    if (ok) {
+        emit iniChanged(conf()->ini());
+        emit confChanged(/*onlyFlags=*/false);
+    } else {
         qCWarning(LC) << "Import error:" << path;
     }
-
-    IoC<FortManager>()->processRestartRequired("Backup Imported");
 
     return ok;
 }

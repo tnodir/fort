@@ -88,6 +88,8 @@ bool SqliteDb::open()
     const bool ok = sqlite3_open_v2(filePathUtf8.data(), &m_db, m_openFlags, nullptr) == SQLITE_OK;
 
     if (ok) {
+        setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
+
         SqliteDbExt::registerExtensions(this);
     }
 
@@ -300,10 +302,22 @@ QStringList SqliteDb::columnNames(const QString &tableName, const QString &schem
     return list;
 }
 
+bool SqliteDb::import(SqliteDb::MigrateOptions &opt)
+{
+    // Get the importing DB version
+    {
+        SqliteDb db(opt.backupFilePath, SqliteDb::OpenDefaultReadOnly);
+        if (!db.open())
+            return false;
+
+        opt.userVersion = db.userVersion();
+    }
+
+    return importDb(opt);
+}
+
 bool SqliteDb::migrate(MigrateOptions &opt)
 {
-    setBusyTimeoutMs(DATABASE_BUSY_TIMEOUT);
-
     if (!opt.sqlPragmas) {
         opt.sqlPragmas = defaultSqlPragmas;
     }
@@ -316,15 +330,13 @@ bool SqliteDb::migrate(MigrateOptions &opt)
 
     opt.userVersion = userVersion;
 
-    // Check migration options
-    if (!canMigrate(opt))
-        return false;
-
     // Migrate the DB
     const bool isNewDb = (userVersion == 0);
     if (isNewDb) {
         opt.recreate = false;
     }
+
+    opt.backupFilePath = backupFilePath();
 
     return migrateDb(opt, userVersion, isNewDb);
 }
@@ -347,6 +359,10 @@ bool SqliteDb::canMigrate(const MigrateOptions &opt) const
 
 bool SqliteDb::migrateDb(const MigrateOptions &opt, int userVersion, bool isNewDb)
 {
+    // Check migration options
+    if (!canMigrate(opt))
+        return false;
+
     if (!migrateDbBegin(opt, userVersion, isNewDb))
         return false;
 
@@ -422,7 +438,7 @@ bool SqliteDb::migrateDbBegin(const MigrateOptions &opt, int &userVersion, bool 
     userVersion = 0;
     isNewDb = true;
 
-    return clearWithBackup(opt.sqlPragmas);
+    return clearWithBackup(opt);
 }
 
 bool SqliteDb::migrateDbEnd(const MigrateOptions &opt)
@@ -506,21 +522,19 @@ bool SqliteDb::createFtsTable(const FtsTable &ftsTable)
     return executeStr(sql);
 }
 
-bool SqliteDb::clearWithBackup(const char *sqlPragmas)
+bool SqliteDb::clearWithBackup(const MigrateOptions &opt)
 {
     const QString oldEncoding = this->encoding();
 
     close();
 
-    const QString tempFilePath = backupFilePath();
-
-    if (!(renameDbFile(m_filePath, tempFilePath) && open())) {
+    if (!(renameDbFile(m_filePath, opt.backupFilePath) && open())) {
         qCWarning(LC) << "Cannot re-create the DB" << m_filePath;
-        renameDbFile(tempFilePath, m_filePath);
+        renameDbFile(opt.backupFilePath, m_filePath);
         return false;
     }
 
-    execute(sqlPragmas);
+    execute(opt.sqlPragmas);
     setEncoding(oldEncoding);
 
     return true;
@@ -530,16 +544,14 @@ bool SqliteDb::importBackup(const MigrateOptions &opt)
 {
     bool success = true;
 
-    const QString tempFilePath = backupFilePath();
-
     // Re-import the DB
     if (opt.importOldData) {
-        success = importDb(opt, tempFilePath);
+        success = importDb(opt);
     }
 
     // Remove the old DB
     if (success) {
-        removeDbFile(tempFilePath);
+        removeDbFile(opt.backupFilePath);
     }
 
     return success;
@@ -550,10 +562,12 @@ QString SqliteDb::backupFilePath() const
     return m_filePath + ".temp";
 }
 
-bool SqliteDb::importDb(const MigrateOptions &opt, const QString &sourceFilePath)
+bool SqliteDb::importDb(const MigrateOptions &opt)
 {
     const QString srcSchema = migrationOldSchemaName();
     const QString dstSchema = migrationNewSchemaName();
+
+    const QString &sourceFilePath = opt.backupFilePath;
 
     if (!attach(srcSchema, sourceFilePath)) {
         qCWarning(LC) << "Cannot attach the DB" << sourceFilePath << "Error:" << errorMessage();
@@ -587,6 +601,8 @@ bool SqliteDb::copyTables(const QString &srcSchema, const QString &dstSchema)
     const QStringList srcTableNames = tableNames(srcSchema);
 
     for (const QString &tableName : srcTableNames) {
+        clearTable(dstSchema, tableName);
+
         if (!copyTable(srcSchema, dstSchema, tableName))
             return false;
     }
@@ -619,6 +635,13 @@ bool SqliteDb::copyTable(
     const auto sql = QString("INSERT INTO %1 (%3) SELECT %3 FROM %2;")
                              .arg(entityName(dstSchema, tableName),
                                      entityName(srcSchema, tableName), columnNames);
+
+    return executeStr(sql);
+}
+
+bool SqliteDb::clearTable(const QString &dstSchema, const QString &tableName)
+{
+    const auto sql = QString("DELETE FROM %1;").arg(entityName(dstSchema, tableName));
 
     return executeStr(sql);
 }

@@ -45,15 +45,21 @@ public:
 
     struct MigrateOptions
     {
-        const QString sqlDir;
+        const char *sqlDir;
         const char *sqlPragmas = nullptr;
+
         int version = 0;
         int userVersion = 0;
+
         bool recreate = true;
         bool importOldData = true;
         bool autoCopyTables = true;
+
+        QString backupFilePath;
+
         SQLITEDB_MIGRATE_FUNC migrateFunc = nullptr;
         void *migrateContext = nullptr;
+
         QVector<FtsTable> ftsTables;
     };
 
@@ -115,6 +121,8 @@ public:
     QStringList tableNames(const QString &schemaName = {});
     QStringList columnNames(const QString &tableName, const QString &schemaName = {});
 
+    bool import(SqliteDb::MigrateOptions &opt);
+
     bool migrate(SqliteDb::MigrateOptions &opt);
 
     SqliteStmt *stmt(const char *sql);
@@ -136,14 +144,15 @@ private:
     bool createFtsTables(const MigrateOptions &opt);
     bool createFtsTable(const FtsTable &ftsTable);
 
-    bool clearWithBackup(const char *sqlPragmas);
+    bool clearWithBackup(const MigrateOptions &opt);
     bool importBackup(const MigrateOptions &opt);
 
     QString backupFilePath() const;
 
-    bool importDb(const MigrateOptions &opt, const QString &sourceFilePath);
+    bool importDb(const MigrateOptions &opt);
     bool copyTables(const QString &srcSchema, const QString &dstSchema);
     bool copyTable(const QString &srcSchema, const QString &dstSchema, const QString &tableName);
+    bool clearTable(const QString &dstSchema, const QString &tableName);
 
     void clearStmts();
 
