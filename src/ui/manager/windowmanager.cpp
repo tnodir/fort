@@ -654,12 +654,12 @@ bool WindowManager::checkPassword(bool temporary)
 
 void WindowManager::showErrorBox(const QString &text, const QString &title, QWidget *parent)
 {
-    showErrorDialog(text, title, parent);
+    showMessageBox(QMessageBox::Warning, text, title, parent);
 }
 
 void WindowManager::showInfoBox(const QString &text, const QString &title, QWidget *parent)
 {
-    showInfoDialog(text, title, parent);
+    showMessageBox(QMessageBox::Information, text, title, parent);
 }
 
 void WindowManager::showConfirmBox(const std::function<void()> &onConfirmed, const QString &text,
@@ -694,25 +694,12 @@ void WindowManager::showQuestionBox(const std::function<void(bool confirmed)> &o
     DialogUtil::showDialog(box);
 }
 
-void WindowManager::showErrorDialog(const QString &text, const QString &title, QWidget *parent)
+void WindowManager::showMessageBox(
+        QMessageBox::Icon icon, const QString &text, const QString &title, QWidget *parent)
 {
     auto box = DialogUtil::createMessageBox(
             {
-                    .icon = QMessageBox::Warning,
-                    .buttons = QMessageBox::Ok,
-                    .text = text,
-                    .title = title,
-            },
-            parent);
-
-    DialogUtil::showDialog(box);
-}
-
-void WindowManager::showInfoDialog(const QString &text, const QString &title, QWidget *parent)
-{
-    auto box = DialogUtil::createMessageBox(
-            {
-                    .icon = QMessageBox::Information,
+                    .icon = icon,
                     .buttons = QMessageBox::Ok,
                     .text = text,
                     .title = title,

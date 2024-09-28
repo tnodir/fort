@@ -167,11 +167,12 @@ void OptionsController::exportBackup()
     if (path.isEmpty())
         return;
 
-    if (confManager()->exportBackup(path)) {
-        windowManager()->showInfoDialog(tr("Backup Exported Successfully"));
-    } else {
-        windowManager()->showErrorBox(tr("Cannot Export Backup"));
-    }
+    const bool ok = confManager()->exportBackup(path);
+
+    const auto icon = ok ? QMessageBox::Information : QMessageBox::Critical;
+    const auto title = ok ? tr("Backup Exported Successfully") : tr("Cannot Export Backup");
+
+    windowManager()->showMessageBox(icon, title, tr("Export Backup"));
 }
 
 void OptionsController::importBackup()
@@ -182,14 +183,16 @@ void OptionsController::importBackup()
 
     const bool ok = confManager()->importBackup(path);
 
-    windowManager()->processRestartRequired(
-            ok ? tr("Backup Imported Successfully") : tr("Cannot Import Backup"));
+    const auto icon = ok ? QMessageBox::Information : QMessageBox::Critical;
+    const auto title = ok ? tr("Backup Imported Successfully") : tr("Cannot Import Backup");
+
+    windowManager()->showMessageBox(icon, title, tr("Import Backup"));
 }
 
 void OptionsController::confirmImportBackup()
 {
     windowManager()->showConfirmBox([&] { importBackup(); },
-            tr("Program will be restarted after successful import. Continue?\n\n"
+            tr("All Options and Programs will be replaced after successful import. Continue?\n\n"
                "Make sure that you have a fresh backup."),
             tr("Import Backup"));
 }
