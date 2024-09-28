@@ -241,6 +241,10 @@ void FortManager::createManagers()
     }
 
     ioc->setUpAll();
+
+    if (settings->isMaster()) {
+        OsUtil::endRestartClients();
+    }
 }
 
 void FortManager::deleteManagers()
@@ -269,8 +273,6 @@ void FortManager::install(const char *arg)
     } break;
     case 's': { // "service"
         StartupUtil::setServiceInstalled(true);
-
-        OsUtil::endRestartClients();
     } break;
     case 'e': { // "explorer"
         StartupUtil::setExplorerIntegrated(true);
@@ -490,7 +492,7 @@ void FortManager::loadConf()
     QString viaVersion;
     if (!settings->canMigrate(viaVersion)) {
         showErrorMessage(tr("Please first install Fort Firewall v%1 and save Options from it.")
-                                 .arg(viaVersion));
+                        .arg(viaVersion));
         exit(-1); // Exit the program
     }
 
