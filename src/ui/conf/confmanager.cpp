@@ -447,6 +447,8 @@ bool importFile(const QString &filePath, const QString &path)
         return false;
     }
 
+    FileUtil::resetFilePermissions(filePath);
+
     return true;
 }
 

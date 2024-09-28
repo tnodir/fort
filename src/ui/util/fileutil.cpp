@@ -358,6 +358,11 @@ bool replaceFile(const QString &filePath, const QString &newFilePath)
     return FileUtil::copyFile(filePath, newFilePath);
 }
 
+bool resetFilePermissions(const QString &filePath)
+{
+    return QFile::setPermissions(filePath, QFile::ReadOther | QFile::WriteOther);
+}
+
 bool linkFile(const QString &filePath, const QString &linkPath)
 {
     return QFile::link(filePath, linkPath);
