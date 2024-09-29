@@ -1036,7 +1036,9 @@
         <source>All Options and Programs will be replaced after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
-        <translation type="unfinished"></translation>
+        <translation>가져오기에 성공하면 모든 옵션과 프로그램이 교체됩니다. 계속하시겠습니까?
+
+새 백업이 있는지 확인합니다.</translation>
     </message>
 </context>
 <context>
