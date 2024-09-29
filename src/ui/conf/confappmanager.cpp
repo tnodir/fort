@@ -409,7 +409,7 @@ bool ConfAppManager::clearAlerts()
     const bool ok = DbQuery(sqliteDb()).sql(sqlDeleteAppAlerts).executeOk();
 
     if (ok) {
-        emitAppsChanged();
+        emitAppUpdated();
     }
 
     return ok;
