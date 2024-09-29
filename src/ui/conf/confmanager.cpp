@@ -516,6 +516,8 @@ void ConfManager::setIniUserToEdit(IniUser *iniUser)
 
 void ConfManager::setConf(FirewallConf *newConf)
 {
+    Q_ASSERT(newConf);
+
     conf()->deleteLater();
     m_conf = newConf;
 
@@ -813,7 +815,6 @@ bool ConfManager::importMasterBackup(const QString &path)
     }
 
     if (ok) {
-        emit iniChanged(conf()->ini());
         emit confChanged(/*onlyFlags=*/false);
     } else {
         qCWarning(LC) << "Import error:" << path;

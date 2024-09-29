@@ -56,6 +56,7 @@ private:
     void saveIniUser(bool onlyFlags);
 
     void initConfManagerToEdit();
+    void closeConfManagerToEdit();
 
 private:
     bool m_iniUserEdited : 1 = false;

@@ -29,8 +29,7 @@ OptionsController::OptionsController(QObject *parent) : BaseController(parent)
 
 OptionsController::~OptionsController()
 {
-    confManager()->setConfToEdit(nullptr);
-    confManager()->setIniUserToEdit(nullptr);
+    closeConfManagerToEdit();
 }
 
 FirewallConf *OptionsController::confToEdit() const
@@ -159,6 +158,12 @@ void OptionsController::initConfManagerToEdit()
 {
     confManager()->initConfToEdit();
     confManager()->initIniUserToEdit();
+}
+
+void OptionsController::closeConfManagerToEdit()
+{
+    confManager()->setConfToEdit(nullptr);
+    confManager()->setIniUserToEdit(nullptr);
 }
 
 void OptionsController::exportBackup()

@@ -438,9 +438,17 @@ void WindowManager::reloadOptionsWindow(const QString &reason)
     if (!m_optWindow)
         return;
 
+    const bool wasVisible = m_optWindow->isVisible();
+
     // Unsaved changes are lost
+    m_optWindow->setDeleteOnClose(true);
     closeOptionsWindow();
-    showOptionsWindow();
+
+    if (!wasVisible)
+        return;
+
+    // Show after new conf initialization
+    QMetaObject::invokeMethod(this, &WindowManager::showOptionsWindow, Qt::QueuedConnection);
 
     showTrayMessage(reason);
 }
