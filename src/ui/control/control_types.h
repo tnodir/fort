@@ -34,6 +34,7 @@ enum Command : qint8 {
     Rpc_ConfManager_importMasterBackup,
     Rpc_ConfManager_checkPassword,
     Rpc_ConfManager_confChanged,
+    Rpc_ConfManager_imported,
 
     Rpc_ConfAppManager_addOrUpdateAppPath,
     Rpc_ConfAppManager_deleteAppPath,

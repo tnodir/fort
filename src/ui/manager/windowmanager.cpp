@@ -444,11 +444,10 @@ void WindowManager::reloadOptionsWindow(const QString &reason)
     m_optWindow->setDeleteOnClose(true);
     closeOptionsWindow();
 
-    if (!wasVisible)
-        return;
-
-    // Show after new conf initialization
-    QMetaObject::invokeMethod(this, &WindowManager::showOptionsWindow, Qt::QueuedConnection);
+    if (wasVisible) {
+        // Show after new conf initialization
+        QMetaObject::invokeMethod(this, &WindowManager::showOptionsWindow, Qt::QueuedConnection);
+    }
 
     showTrayMessage(reason);
 }

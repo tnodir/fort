@@ -32,6 +32,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfManager_importMasterBackup),
     CASE_STRING(Rpc_ConfManager_checkPassword),
     CASE_STRING(Rpc_ConfManager_confChanged),
+    CASE_STRING(Rpc_ConfManager_imported),
 
     CASE_STRING(Rpc_ConfAppManager_addOrUpdateAppPath),
     CASE_STRING(Rpc_ConfAppManager_deleteAppPath),
@@ -141,6 +142,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfManager, // Rpc_ConfManager_importMasterBackup,
     Rpc_ConfManager, // Rpc_ConfManager_checkPassword,
     Rpc_ConfManager, // Rpc_ConfManager_confChanged,
+    Rpc_ConfManager, // Rpc_ConfManager_imported,
 
     Rpc_ConfAppManager, // Rpc_ConfAppManager_addOrUpdateAppPath,
     Rpc_ConfAppManager, // Rpc_ConfAppManager_deleteAppPath,
@@ -230,6 +232,7 @@ static const qint8 g_commandValidations[] = {
     true, // Rpc_ConfManager_importMasterBackup,
     0, // Rpc_ConfManager_checkPassword,
     0, // Rpc_ConfManager_confChanged,
+    0, // Rpc_ConfManager_imported,
 
     true, // Rpc_ConfAppManager_addOrUpdateAppPath,
     true, // Rpc_ConfAppManager_deleteAppPath,

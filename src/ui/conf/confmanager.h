@@ -69,6 +69,7 @@ public:
     void updateDriverServices(const QVector<ServiceInfo> &services, int runningServicesCount);
 
 signals:
+    void imported();
     void confChanged(bool onlyFlags);
     void iniChanged(const IniOptions &ini);
     void iniUserChanged(const IniUser &ini, bool onlyFlags);

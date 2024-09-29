@@ -410,7 +410,12 @@ void FortManager::setupEnvManager()
 
 void FortManager::setupConfManager()
 {
-    connect(IoC<ConfManager>(), &ConfManager::confChanged, this, [&](bool onlyFlags) {
+    auto confManager = IoC<ConfManager>();
+
+    connect(confManager, &ConfManager::imported, IoC<WindowManager>(),
+            &WindowManager::closeAllWindows);
+
+    connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags) {
         const FirewallConf *conf = IoC<ConfManager>()->conf();
 
         updateLogger(conf);

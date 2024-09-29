@@ -815,6 +815,8 @@ bool ConfManager::importMasterBackup(const QString &path)
     }
 
     if (ok) {
+        emit imported();
+
         emit confChanged(/*onlyFlags=*/false);
     } else {
         qCWarning(LC) << "Import error:" << path;

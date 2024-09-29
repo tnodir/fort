@@ -152,6 +152,10 @@ bool ConfManagerRpc::processServerCommand(
     case Control::Rpc_ConfManager_confChanged: {
         return processConfManager_confChanged(confManager, p);
     }
+    case Control::Rpc_ConfManager_imported: {
+        emit confManager->imported();
+        return true;
+    }
     default: {
         ok = processConfManagerRpcResult(confManager, p, resArgs);
         isSendResult = true;
@@ -168,4 +172,6 @@ void ConfManagerRpc::setupServerSignals(RpcManager *rpcManager)
         const QVariant confVar = IoC<ConfManager>()->toPatchVariant(onlyFlags);
         rpcManager->invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
     });
+    connect(confManager, &ConfManager::imported, rpcManager,
+            [=] { rpcManager->invokeOnClients(Control::Rpc_ConfManager_imported); });
 }

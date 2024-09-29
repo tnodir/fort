@@ -40,10 +40,13 @@ SqliteDb *ZoneListModel::sqliteDb() const
 
 void ZoneListModel::setUp()
 {
+    auto confManager = IoCDependency<ConfManager>();
     auto confZoneManager = IoCDependency<ConfZoneManager>();
 
     setupZoneTypes();
     setupZoneSources();
+
+    connect(confManager, &ConfManager::confChanged, this, &ZoneListModel::refresh);
 
     connect(confZoneManager, &ConfZoneManager::zoneAdded, this, &TableItemModel::reset);
     connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, &TableItemModel::reset);
