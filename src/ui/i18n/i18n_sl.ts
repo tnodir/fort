@@ -1029,16 +1029,16 @@
         <translation>Ni mogoče uvoziti varnostno kopijo</translation>
     </message>
     <message>
-        <source>Program will be restarted after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Po uspešnem uvozu se bo program znova zagnal. Želite nadaljevati?
-
-Prepričajte se, da imate svežo varnostno kopijo.</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Možnosti ni mogoče shraniti</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Vse možnosti in programi bodo po uspešnem uvozu zamenjani. Želite nadaljevati?
+
+Prepričajte se, da imate svežo varnostno kopijo.</translation>
     </message>
 </context>
 <context>

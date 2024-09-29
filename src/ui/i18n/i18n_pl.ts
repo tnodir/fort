@@ -1029,16 +1029,14 @@
         <translation>Nie można zaimportować kopii zapasowej</translation>
     </message>
     <message>
-        <source>Program will be restarted after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Program zostanie uruchomiony ponownie po udanym zaimportowaniu. Kontynuować?
-
-Upewnij się, że masz świeżą kopię zapasową.</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Nie można zapisać opcji</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

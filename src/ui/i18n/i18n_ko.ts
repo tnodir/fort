@@ -1029,16 +1029,14 @@
         <translation>백업을 가져올 수 없음</translation>
     </message>
     <message>
-        <source>Program will be restarted after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>가져오기를 완료한 후 프로그램이 다시 시작됩니다. 계속하시겠습니까?
-
-새로운 백업이 있는지 확인하십시오.</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>옵션을 저장할 수 없습니다</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

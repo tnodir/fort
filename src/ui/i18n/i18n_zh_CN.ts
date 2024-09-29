@@ -1029,14 +1029,14 @@
         <translation>无法导入备份</translation>
     </message>
     <message>
-        <source>Program will be restarted after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>导入成功后，程序将重新启动。是否继续？</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>无法保存选项</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

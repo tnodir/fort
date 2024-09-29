@@ -1029,16 +1029,16 @@
         <translation>Невозможно импортировать резервную копию</translation>
     </message>
     <message>
-        <source>Program will be restarted after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Программа будет перезапущена после успешного импорта. Продолжить?
-
-Убедитесь, что у вас есть новая резервная копия.</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Невозможно сохранить настройки</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Все настройки и программы будут заменены после успешного импорта. Продолжить?
+
+Убедитесь, что у вас есть свежая резервная копия.</translation>
     </message>
 </context>
 <context>

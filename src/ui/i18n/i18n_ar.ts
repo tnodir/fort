@@ -1029,16 +1029,14 @@
         <translation>لايمكن استيراد النسخ الاحتياطية</translation>
     </message>
     <message>
-        <source>Program will be restarted after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>سيتم إعادة تشغيل البرنامج بعد الاستيراد بنجاح. هل تريد الاستمرار؟
-
-            تأكد أن لديك نسخة احتياطية حديثة.</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>لا يمكن حفظ الإعدادات</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

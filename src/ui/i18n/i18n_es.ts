@@ -192,7 +192,7 @@
     </message>
     <message>
         <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>Mover todas las líneas a &apos;Incluir&apos;</translation>
+        <translation>Mover todas las líneas a &apos;Permitir&apos;</translation>
     </message>
     <message>
         <source>Move All Lines to &apos;Block&apos;</source>
@@ -1029,16 +1029,16 @@
         <translation>No es posible importar la copia de seguridad</translation>
     </message>
     <message>
-        <source>Program will be restarted after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>El programa se reiniciará después de la importación exitosa. ¿Continuar?
-
-Asegúrate de tener una copia de seguridad nueva.</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>No es posible guardar las opciones</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation>Todas las Opciones y Programas serán reemplazados después de la importación exitosa. ¿Continuar?
+
+Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
 </context>
 <context>

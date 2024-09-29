@@ -1029,16 +1029,14 @@
         <translation>Não é possível importar backup</translation>
     </message>
     <message>
-        <source>Program will be restarted after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Programa será reiniciado após importação bem-sucedida
-
-Tenha certeza que você tem um backup recente.</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Não é possível salvar as opções</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1029,16 +1029,14 @@
         <translation>Sicherung konnte nicht importiert werden</translation>
     </message>
     <message>
-        <source>Program will be restarted after successful import. Continue?
-
-Make sure that you have a fresh backup.</source>
-        <translation>Programm wird nach erfolgreichem Import neu gestartet. Fortfahren?
-
-Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
-    </message>
-    <message>
         <source>Cannot save the options</source>
         <translation>Optionen können nicht gespeichert werden</translation>
+    </message>
+    <message>
+        <source>All Options and Programs will be replaced after successful import. Continue?
+
+Make sure that you have a fresh backup.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
