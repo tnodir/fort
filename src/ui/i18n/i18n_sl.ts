@@ -23,6 +23,10 @@
         <source>Install</source>
         <translation>Namesti</translation>
     </message>
+    <message>
+        <source>Current Version</source>
+        <translation>Trenutna različica</translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1166,6 +1170,18 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Filter Local Network</source>
         <translation>Filtriraj lokalno omrežje</translation>
+    </message>
+    <message>
+        <source>Auto Update</source>
+        <translation>Samodejna posodobitev</translation>
+    </message>
+    <message>
+        <source>Keep current version</source>
+        <translation>Ohrani trenutno različico</translation>
+    </message>
+    <message>
+        <source>Auto-download new version</source>
+        <translation>Samodejni prenos nove različice</translation>
     </message>
 </context>
 <context>

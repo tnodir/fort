@@ -23,6 +23,10 @@
         <source>Install</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Current Version</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1163,6 +1167,18 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Filter Local Network</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto Update</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Keep current version</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-download new version</source>
         <translation></translation>
     </message>
 </context>

@@ -23,6 +23,10 @@
         <source>Install</source>
         <translation>설치</translation>
     </message>
+    <message>
+        <source>Current Version</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1166,6 +1170,18 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Filter Local Network</source>
         <translation>로컬 네트워크 필터링</translation>
+    </message>
+    <message>
+        <source>Auto Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep current version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-download new version</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -23,6 +23,10 @@
         <source>Install</source>
         <translation>Установить</translation>
     </message>
+    <message>
+        <source>Current Version</source>
+        <translation>Текущая версия</translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1166,6 +1170,18 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Filter Local Network</source>
         <translation>Фильтр локальной сети</translation>
+    </message>
+    <message>
+        <source>Auto Update</source>
+        <translation>Авто-обновление</translation>
+    </message>
+    <message>
+        <source>Keep current version</source>
+        <translation>Хранить текущую версию</translation>
+    </message>
+    <message>
+        <source>Auto-download new version</source>
+        <translation>Авто-скачивание новой версии</translation>
     </message>
 </context>
 <context>

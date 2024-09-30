@@ -23,6 +23,10 @@
         <source>Install</source>
         <translation>Installieren</translation>
     </message>
+    <message>
+        <source>Current Version</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AddressesPage</name>
@@ -1164,6 +1168,18 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Filter Local Network</source>
         <translation>Lokale Netzwerke filtern</translation>
+    </message>
+    <message>
+        <source>Auto Update</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep current version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-download new version</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
