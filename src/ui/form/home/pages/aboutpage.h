@@ -24,6 +24,8 @@ private:
     void setupNewVersionUpdate();
     void setupAutoUpdate();
 
+    void refreshAutoUpdate();
+
 private:
     bool m_keepCurrentVersion = false;
     bool m_isNewVersion = false;

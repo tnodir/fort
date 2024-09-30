@@ -140,32 +140,33 @@ void AboutPage::setupNewVersionUpdate()
 
 void AboutPage::setupAutoUpdate()
 {
-    const auto refreshAutoUpdate = [&] {
-        auto manager = autoUpdateManager();
-
-        const bool hasUpdate = manager->hasUpdate();
-        const bool isDownloaded = manager->isDownloaded();
-        const bool isDownloading = manager->isDownloading();
-        const bool isDownloadActive = (isDownloading || isDownloaded);
-
-        if (!isDownloading || isDownloaded) {
-            m_progressBar->setValue(
-                    isDownloaded ? m_progressBar->maximum() : m_progressBar->minimum());
-        }
-        m_progressBar->setVisible(hasUpdate && isDownloadActive);
-
-        m_btDownload->setVisible(hasUpdate && !isDownloadActive);
-        m_btInstall->setVisible(hasUpdate && isDownloaded);
-
-        m_btInstall->setToolTip(isDownloaded ? manager->installerPath() : QString());
-    };
-
     refreshAutoUpdate();
 
     connect(autoUpdateManager(), &AutoUpdateManager::keepCurrentVersionChanged, this,
-            refreshAutoUpdate);
-    connect(autoUpdateManager(), &AutoUpdateManager::flagsChanged, this, refreshAutoUpdate);
+            &AboutPage::refreshAutoUpdate);
+    connect(autoUpdateManager(), &AutoUpdateManager::flagsChanged, this,
+            &AboutPage::refreshAutoUpdate);
 
     connect(autoUpdateManager(), &AutoUpdateManager::bytesReceivedChanged, m_progressBar,
             &QProgressBar::setValue);
+}
+
+void AboutPage::refreshAutoUpdate()
+{
+    auto manager = autoUpdateManager();
+
+    const bool hasUpdate = manager->hasUpdate();
+    const bool isDownloaded = manager->isDownloaded();
+    const bool isDownloading = manager->isDownloading();
+    const bool isDownloadActive = (isDownloading || isDownloaded);
+
+    if (!isDownloading || isDownloaded) {
+        m_progressBar->setValue(isDownloaded ? m_progressBar->maximum() : m_progressBar->minimum());
+    }
+    m_progressBar->setVisible(hasUpdate && isDownloadActive);
+
+    m_btDownload->setVisible(hasUpdate && !isDownloadActive);
+    m_btInstall->setVisible(hasUpdate && isDownloaded);
+
+    m_btInstall->setToolTip(isDownloaded ? manager->installerPath() : QString());
 }
