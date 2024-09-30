@@ -3,6 +3,7 @@
 #include <conf/firewallconf.h>
 #include <form/opt/optionscontroller.h>
 #include <fortmanager.h>
+#include <user/iniuser.h>
 
 OptBasePage::OptBasePage(OptionsController *ctrl, QWidget *parent) : QFrame(parent), m_ctrl(ctrl)
 {
