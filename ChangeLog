@@ -1,12 +1,13 @@
 Fort Firewall ChangeLog
 
-v3.13.12, 2024-09-30:
+v3.13.13, 2024-09-30:
 - UI: Add "-c backup export/import [dir-path]" command line argument.
 - UI: Programs: Sort "Name" column case-insensitively.
 - UI: ProgramEdit: Disable blocked Zones/Rules row.
 - UI: Options: Auto Update: Add "Keep current version", "Auto-download new version" flags.
 - UI: Options: Improve "Reset to default".
 - UI: Options: Import Backup without app restarting, but close all windows.
+- Driver: Simplify traffic stats handling.
 
 v3.13.11, 2024-09-16:
 - UI: Programs: Add "Rules inheritance" combo-box.
