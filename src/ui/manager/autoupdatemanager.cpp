@@ -186,7 +186,8 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
 
     setIsDownloaded(downloaded);
 
-    if (autoDownload() && isNewVersion() && !downloaded) {
+    const bool shouldDownload = (autoDownload() && isNewVersion());
+    if (shouldDownload && !downloaded) {
         startDownload();
     }
 }
