@@ -185,6 +185,10 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
     qCDebug(LC) << "Check:" << fileName() << "downloaded:" << downloaded;
 
     setIsDownloaded(downloaded);
+
+    if (autoDownload() && isNewVersion() && !downloaded) {
+        startDownload();
+    }
 }
 
 void AutoUpdateManager::onRestartClientsRequested(bool restarting)
@@ -235,6 +239,7 @@ bool AutoUpdateManager::saveInstaller(const QByteArray &fileData)
 void AutoUpdateManager::setupByConf(const IniOptions &ini)
 {
     setKeepCurrentVersion(ini.updateKeepCurrentVersion());
+    setAutoDownload(ini.updateAutoDownload());
 }
 
 bool AutoUpdateManager::runInstaller()

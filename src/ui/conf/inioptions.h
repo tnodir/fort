@@ -96,6 +96,9 @@ public:
     bool updateKeepCurrentVersion() const { return valueBool("autoUpdate/keepCurrentVersion"); }
     void setUpdateKeepCurrentVersion(bool v) { setValue("autoUpdate/keepCurrentVersion", v); }
 
+    bool updateAutoDownload() const { return valueBool("autoUpdate/autoDownload"); }
+    void setUpdateAutoDownload(bool v) { setValue("autoUpdate/autoDownload", v); }
+
     bool progPurgeOnMounted() const { return valueBool("prog/purgeOnMounted"); }
     void setProgPurgeOnMounted(bool v) { setValue("prog/purgeOnMounted", v); }
 

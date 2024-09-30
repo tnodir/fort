@@ -73,6 +73,9 @@ protected:
     bool keepCurrentVersion() const { return m_keepCurrentVersion; }
     void setKeepCurrentVersion(bool v);
 
+    bool autoDownload() const { return m_autoDownload; }
+    void setAutoDownload(bool v) { m_autoDownload = v; }
+
     virtual void setupManager();
     void setupConfManager();
     void setupTaskManager();
@@ -99,7 +102,8 @@ private:
     static QString installerPortableTasks(FortSettings *settings);
 
 private:
-    bool m_keepCurrentVersion = false;
+    bool m_keepCurrentVersion : 1 = false;
+    bool m_autoDownload : 1 = false;
 
     Flags m_flags = NoFlag;
 

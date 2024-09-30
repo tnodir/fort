@@ -71,6 +71,7 @@ void OptionsPage::onResetToDefault()
     m_cbPassword->setChecked(false);
 
     m_cbUpdateKeepCurrentVersion->setChecked(false);
+    m_cbUpdateAutoDownload->setChecked(false);
 
     m_cbLogBlocked->setChecked(true);
     m_cbPurgeOnMounted->setChecked(false);
@@ -176,6 +177,7 @@ void OptionsPage::onRetranslateUi()
                                       .arg(settings()->passwordUnlockedTillText()));
 
     m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
+    m_cbUpdateAutoDownload->setText(tr("Auto-download new version"));
 
     m_cbLogBlocked->setText(tr("Collect New Programs"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
@@ -504,8 +506,15 @@ void OptionsPage::setupUpdateBox()
                 ctrl()->setIniEdited();
             });
 
+    m_cbUpdateAutoDownload =
+            ControlUtil::createCheckBox(ini()->updateAutoDownload(), [&](bool checked) {
+                ini()->setUpdateAutoDownload(checked);
+                ctrl()->setIniEdited();
+            });
+
     // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbUpdateKeepCurrentVersion });
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_cbUpdateKeepCurrentVersion, m_cbUpdateAutoDownload });
 
     m_gbUpdate = new QGroupBox();
     m_gbUpdate->setLayout(layout);
