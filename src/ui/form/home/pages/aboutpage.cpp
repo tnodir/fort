@@ -6,6 +6,7 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
+#include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/home/homecontroller.h>
 #include <fortsettings.h>
@@ -31,7 +32,9 @@ void AboutPage::onRetranslateUi()
 
 void AboutPage::retranslateNewVersionBox()
 {
-    const auto title = m_isNewVersion ? tr("New Version") : tr("No Update");
+    const auto title = m_isNewVersion
+            ? tr("New Version")
+            : (m_keepCurrentVersion ? tr("Current Version") : tr("No Update"));
     const auto lastTime = DateUtil::localeDateTime(m_lastCheckTime);
 
     m_gbNewVersion->setTitle(QString("%1 — %2").arg(lastTime, title));
@@ -109,14 +112,17 @@ void AboutPage::setupNewVersionUpdate()
     const auto refreshNewVersion = [&] {
         auto taskInfo = taskManager()->taskInfoUpdateChecker();
 
+        m_keepCurrentVersion = ini()->updateKeepCurrentVersion();
         m_isNewVersion = taskInfo->isNewVersion();
         m_lastCheckTime = taskInfo->lastSuccess();
 
-        m_labelArea->setVisible(m_isNewVersion);
+        const bool hasUpdate = m_keepCurrentVersion || m_isNewVersion;
+
+        m_labelArea->setVisible(hasUpdate);
         m_labelRelease->setText(taskInfo->releaseText());
 
         m_progressBar->setRange(0, taskInfo->downloadSize());
-        m_btDownload->setVisible(m_isNewVersion && !m_btInstall->isVisible());
+        m_btDownload->setVisible(hasUpdate && !m_btInstall->isVisible());
 
         retranslateNewVersionBox();
     };
@@ -137,7 +143,7 @@ void AboutPage::setupAutoUpdate()
     const auto refreshAutoUpdate = [&] {
         auto manager = autoUpdateManager();
 
-        const bool isNewVersion = manager->isNewVersion();
+        const bool hasUpdate = manager->hasUpdate();
         const bool isDownloaded = manager->isDownloaded();
         const bool isDownloading = manager->isDownloading();
         const bool isDownloadActive = (isDownloading || isDownloaded);
@@ -146,16 +152,18 @@ void AboutPage::setupAutoUpdate()
             m_progressBar->setValue(
                     isDownloaded ? m_progressBar->maximum() : m_progressBar->minimum());
         }
-        m_progressBar->setVisible(isDownloadActive);
+        m_progressBar->setVisible(hasUpdate && isDownloadActive);
 
-        m_btDownload->setVisible(isNewVersion && !isDownloadActive);
-        m_btInstall->setVisible(isNewVersion && isDownloaded);
+        m_btDownload->setVisible(hasUpdate && !isDownloadActive);
+        m_btInstall->setVisible(hasUpdate && isDownloaded);
 
         m_btInstall->setToolTip(isDownloaded ? manager->installerPath() : QString());
     };
 
     refreshAutoUpdate();
 
+    connect(autoUpdateManager(), &AutoUpdateManager::keepCurrentVersionChanged, this,
+            refreshAutoUpdate);
     connect(autoUpdateManager(), &AutoUpdateManager::flagsChanged, this, refreshAutoUpdate);
 
     connect(autoUpdateManager(), &AutoUpdateManager::bytesReceivedChanged, m_progressBar,

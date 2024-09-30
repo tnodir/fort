@@ -7,6 +7,7 @@
 #include <util/ioc/iocservice.h>
 
 class FortSettings;
+class IniOptions;
 class TaskInfoUpdateChecker;
 
 class AutoUpdateManager : public TaskDownloader, public IocService
@@ -40,6 +41,8 @@ public:
     bool isDownloading() const { return testFlag(IsDownloading); }
     void setIsDownloading(bool on) { setFlag(IsDownloading, on); }
 
+    bool hasUpdate() const { return isNewVersion() || keepCurrentVersion(); }
+
     QString fileName() const { return m_fileName; }
     void setFileName(const QString &v);
 
@@ -59,6 +62,7 @@ public slots:
     void onRestartClient(bool restarting);
 
 signals:
+    void keepCurrentVersionChanged();
     void flagsChanged();
     void bytesReceivedChanged(int size);
     void fileNameChanged();
@@ -66,8 +70,14 @@ signals:
     void restartClients(bool restarting);
 
 protected:
+    bool keepCurrentVersion() const { return m_keepCurrentVersion; }
+    void setKeepCurrentVersion(bool v);
+
     virtual void setupManager();
-    virtual void setupRestart();
+    void setupConfManager();
+    void setupTaskManager();
+
+    void setupRestart();
 
     void setupDownloader() override;
 
@@ -83,10 +93,14 @@ private:
 
     bool saveInstaller(const QByteArray &fileData);
 
+    void setupByConf(const IniOptions &ini);
+
     static QStringList installerArgs(FortSettings *settings);
     static QString installerPortableTasks(FortSettings *settings);
 
 private:
+    bool m_keepCurrentVersion = false;
+
     Flags m_flags = NoFlag;
 
     QString m_updatePath;

@@ -21,6 +21,7 @@ class FirewallConf;
 class FortManager;
 class FortSettings ;
 class HomeController;
+class IniOptions;
 class IniUser;
 class TaskManager;
 class TranslationManager;
@@ -39,6 +40,7 @@ protected:
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
+    IniOptions *ini() const;
     IniUser *iniUser() const;
     DriverManager *driverManager() const;
     AutoUpdateManager *autoUpdateManager() const;

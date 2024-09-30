@@ -93,6 +93,9 @@ public:
     }
     void setBlockedIpKeepCount(int v) { setValue("stat/blockedIpKeepCount", v); }
 
+    bool updateKeepCurrentVersion() const { return valueBool("autoUpdate/keepCurrentVersion"); }
+    void setUpdateKeepCurrentVersion(bool v) { setValue("autoUpdate/keepCurrentVersion", v); }
+
     bool progPurgeOnMounted() const { return valueBool("prog/purgeOnMounted"); }
     void setProgPurgeOnMounted(bool v) { setValue("prog/purgeOnMounted", v); }
 

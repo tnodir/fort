@@ -46,6 +46,7 @@ private:
     QLayout *setupPasswordLayout();
     void setupEditPassword();
     void setupPasswordLock();
+    void setupUpdateBox();
     void setupProgBox();
     void setupLogBlocked();
     void setupLanBox();
@@ -59,6 +60,7 @@ private:
     QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbProtection = nullptr;
+    QGroupBox *m_gbUpdate = nullptr;
     QGroupBox *m_gbProg = nullptr;
     QGroupBox *m_gbLan = nullptr;
     QGroupBox *m_gbLogs = nullptr;
@@ -72,12 +74,15 @@ private:
     QComboBox *m_comboBlockTraffic = nullptr;
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
+
     QCheckBox *m_cbBootFilter = nullptr;
     QCheckBox *m_cbNoServiceControl = nullptr;
     QCheckBox *m_cbCheckPasswordOnUninstall = nullptr;
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
+
+    QCheckBox *m_cbUpdateKeepCurrentVersion = nullptr;
 
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbPurgeOnMounted = nullptr;

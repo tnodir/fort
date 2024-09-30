@@ -90,6 +90,10 @@ bool TaskManagerRpc::processServerCommand(const ProcessCommandArgs &p, QVariantL
     case Control::Rpc_TaskManager_taskFinished: {
         return processTaskManager_taskFinished(taskManager, p);
     }
+    case Control::Rpc_TaskManager_appVersionUpdated: {
+        emit taskManager->appVersionUpdated();
+        return true;
+    }
     case Control::Rpc_TaskManager_appVersionDownloaded: {
         emit taskManager->appVersionDownloaded(p.args[0].toString());
         return true;
@@ -114,6 +118,8 @@ void TaskManagerRpc::setupServerSignals(RpcManager *rpcManager)
         rpcManager->invokeOnClients(Control::Rpc_TaskManager_taskFinished, { taskType });
     });
 
+    connect(taskManager, &TaskManager::appVersionUpdated, rpcManager,
+            [=] { rpcManager->invokeOnClients(Control::Rpc_TaskManager_appVersionUpdated); });
     connect(taskManager, &TaskManager::appVersionDownloaded, rpcManager,
             [=](const QString &version) {
                 rpcManager->invokeOnClients(

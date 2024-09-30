@@ -110,5 +110,5 @@ bool TaskInfoUpdateChecker::processResult(bool success)
 
 void TaskInfoUpdateChecker::emitAppVersionUpdated()
 {
-    emit taskManager()->appVersionUpdated(m_version);
+    emit taskManager()->appVersionUpdated();
 }

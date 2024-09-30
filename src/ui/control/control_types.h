@@ -89,6 +89,7 @@ enum Command : qint8 {
     Rpc_TaskManager_abortTask,
     Rpc_TaskManager_taskStarted,
     Rpc_TaskManager_taskFinished,
+    Rpc_TaskManager_appVersionUpdated,
     Rpc_TaskManager_appVersionDownloaded,
     Rpc_TaskManager_zonesDownloaded,
 };

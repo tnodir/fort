@@ -34,7 +34,7 @@ signals:
 
     void taskDoubleClicked(qint8 taskType);
 
-    void appVersionUpdated(const QString &version);
+    void appVersionUpdated();
     void appVersionDownloaded(const QString &version);
 
     void zonesUpdated(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,

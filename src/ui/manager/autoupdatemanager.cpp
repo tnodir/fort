@@ -5,6 +5,8 @@
 #include <QProcess>
 #include <QTimer>
 
+#include <conf/confmanager.h>
+#include <conf/firewallconf.h>
 #include <fortsettings.h>
 #include <manager/servicemanager.h>
 #include <rpc/rpcmanager.h>
@@ -67,10 +69,39 @@ void AutoUpdateManager::tearDown()
     finish();
 }
 
+void AutoUpdateManager::setKeepCurrentVersion(bool v)
+{
+    if (m_keepCurrentVersion == v)
+        return;
+
+    m_keepCurrentVersion = v;
+
+    emit keepCurrentVersionChanged();
+}
+
 void AutoUpdateManager::setupManager()
+{
+    setupConfManager();
+    setupTaskManager();
+}
+
+void AutoUpdateManager::setupConfManager()
+{
+    auto confManager = IoCDependency<ConfManager>();
+    auto ini = confManager->conf()->ini();
+
+    setupByConf(ini);
+
+    connect(confManager, &ConfManager::iniChanged, this, &AutoUpdateManager::setupByConf);
+}
+
+void AutoUpdateManager::setupTaskManager()
 {
     auto taskManager = IoCDependency<TaskManager>();
     auto taskInfo = taskManager->taskInfoUpdateChecker();
+
+    connect(this, &AutoUpdateManager::keepCurrentVersionChanged, taskManager,
+            &TaskManager::appVersionUpdated);
 
     connect(taskManager, &TaskManager::appVersionUpdated, this,
             [=, this] { setupByTaskInfo(taskInfo); });
@@ -137,7 +168,8 @@ void AutoUpdateManager::downloadFinished(const QByteArray &data, bool success)
 void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
 {
     setIsNewVersion(taskInfo->isNewVersion());
-    if (!isNewVersion())
+
+    if (!hasUpdate())
         return;
 
     m_downloadUrl = taskInfo->downloadUrl();
@@ -150,8 +182,7 @@ void AutoUpdateManager::setupByTaskInfo(TaskInfoUpdateChecker *taskInfo)
     const QFileInfo fi(installerPath());
     const bool downloaded = (fi.exists() && fi.size() == m_downloadSize);
 
-    qCDebug(LC) << "Check:" << taskInfo->version() << "downloaded:" << downloaded
-                << "path:" << fi.filePath();
+    qCDebug(LC) << "Check:" << fileName() << "downloaded:" << downloaded;
 
     setIsDownloaded(downloaded);
 }
@@ -199,6 +230,11 @@ bool AutoUpdateManager::saveInstaller(const QByteArray &fileData)
     qCDebug(LC) << "Installer saved:" << installerPath();
 
     return true;
+}
+
+void AutoUpdateManager::setupByConf(const IniOptions &ini)
+{
+    setKeepCurrentVersion(ini.updateKeepCurrentVersion());
 }
 
 bool AutoUpdateManager::runInstaller()

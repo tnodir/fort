@@ -70,6 +70,8 @@ void OptionsPage::onResetToDefault()
     m_cbCheckPasswordOnUninstall->setChecked(false);
     m_cbPassword->setChecked(false);
 
+    m_cbUpdateKeepCurrentVersion->setChecked(false);
+
     m_cbLogBlocked->setChecked(true);
     m_cbPurgeOnMounted->setChecked(false);
 
@@ -144,6 +146,7 @@ void OptionsPage::onRetranslateUi()
     m_gbStartup->setTitle(tr("Startup"));
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbProtection->setTitle(tr("Self Protection"));
+    m_gbUpdate->setTitle(tr("Auto Update"));
     m_gbProg->setTitle(tr("Programs"));
     m_gbLan->setTitle(tr("Local Area Network"));
     m_gbLogs->setTitle(tr("Logs"));
@@ -171,6 +174,8 @@ void OptionsPage::onRetranslateUi()
 
     m_btPasswordLock->setText(tr("Lock the password (unlocked till \"%1\")")
                                       .arg(settings()->passwordUnlockedTillText()));
+
+    m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
 
     m_cbLogBlocked->setText(tr("Collect New Programs"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
@@ -277,11 +282,15 @@ QLayout *OptionsPage::setupColumn1()
     // Protection Group Box
     setupProtectionBox();
 
+    // Update Group Box
+    setupUpdateBox();
+
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
     layout->addWidget(m_gbStartup);
     layout->addWidget(m_gbTraffic);
     layout->addWidget(m_gbProtection);
+    layout->addWidget(m_gbUpdate);
     layout->addStretch();
 
     return layout;
@@ -485,6 +494,21 @@ void OptionsPage::setupPasswordLock()
     refreshPasswordLock();
 
     connect(settings(), &FortSettings::passwordCheckedChanged, this, refreshPasswordLock);
+}
+
+void OptionsPage::setupUpdateBox()
+{
+    m_cbUpdateKeepCurrentVersion =
+            ControlUtil::createCheckBox(ini()->updateKeepCurrentVersion(), [&](bool checked) {
+                ini()->setUpdateKeepCurrentVersion(checked);
+                ctrl()->setIniEdited();
+            });
+
+    // Layout
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbUpdateKeepCurrentVersion });
+
+    m_gbUpdate = new QGroupBox();
+    m_gbUpdate->setLayout(layout);
 }
 
 void OptionsPage::setupProgBox()

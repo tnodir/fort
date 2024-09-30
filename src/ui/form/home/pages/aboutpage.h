@@ -25,6 +25,7 @@ private:
     void setupAutoUpdate();
 
 private:
+    bool m_keepCurrentVersion = false;
     bool m_isNewVersion = false;
     QDateTime m_lastCheckTime;
 

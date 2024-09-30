@@ -30,6 +30,11 @@ FirewallConf *HomeBasePage::conf() const
     return ctrl()->conf();
 }
 
+IniOptions *HomeBasePage::ini() const
+{
+    return ctrl()->ini();
+}
+
 IniUser *HomeBasePage::iniUser() const
 {
     return ctrl()->iniUser();
