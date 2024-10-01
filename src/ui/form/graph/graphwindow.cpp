@@ -94,7 +94,7 @@ GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
 
 bool GraphWindow::deleteOnClose() const
 {
-    return !iniUser()->graphWindowHideOnClose() || FormWindow::deleteOnClose();
+    return !iniUser()->graphWindowHideOnClose();
 }
 
 ConfManager *GraphWindow::confManager() const

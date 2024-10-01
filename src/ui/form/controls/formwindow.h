@@ -27,9 +27,6 @@ public:
 
     virtual WindowCode windowCode() const { return WindowNone; }
 
-    bool deleteOnClose() const override { return m_deleteOnClose; }
-    void setDeleteOnClose(bool v) { m_deleteOnClose = v; }
-
     bool excludeFromCapture() const { return m_excludeFromCapture; }
     void setExcludeFromCapture(bool v);
 
@@ -46,7 +43,6 @@ private:
     void setupWindowCapture(IniUser *iniUser, const QString &iniGroup);
 
 private:
-    bool m_deleteOnClose : 1 = false;
     bool m_excludeFromCapture : 1 = false;
 
     WidgetWindowStateWatcher *m_stateWatcher = nullptr;

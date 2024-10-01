@@ -428,7 +428,6 @@ void WindowManager::showOptionsWindow()
 void WindowManager::closeOptionsWindow()
 {
     if (closeWindow(m_optWindow)) {
-        m_optWindow->cancelChanges();
         m_optWindow = nullptr;
     }
 }
@@ -438,16 +437,11 @@ void WindowManager::reloadOptionsWindow(const QString &reason)
     if (!m_optWindow)
         return;
 
-    const bool wasVisible = m_optWindow->isVisible();
-
     // Unsaved changes are lost
-    m_optWindow->setDeleteOnClose(true);
     closeOptionsWindow();
 
-    if (wasVisible) {
-        // Show after new conf initialization
-        QMetaObject::invokeMethod(this, &WindowManager::showOptionsWindow, Qt::QueuedConnection);
-    }
+    // Show after new conf initialization
+    QMetaObject::invokeMethod(this, &WindowManager::showOptionsWindow, Qt::QueuedConnection);
 
     showTrayMessage(reason);
 }
