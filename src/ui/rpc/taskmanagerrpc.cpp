@@ -6,6 +6,43 @@
 
 namespace {
 
+bool processTaskManager_appVersionUpdated(
+        TaskManager *taskManager, const ProcessCommandArgs & /*p*/)
+{
+    emit taskManager->appVersionUpdated();
+    return true;
+}
+
+bool processTaskManager_appVersionDownloaded(TaskManager *taskManager, const ProcessCommandArgs &p)
+{
+    emit taskManager->appVersionDownloaded(p.args[0].toString());
+    return true;
+}
+
+bool processTaskManager_zonesDownloaded(TaskManager *taskManager, const ProcessCommandArgs &p)
+{
+    emit taskManager->zonesDownloaded(p.args[0].toStringList());
+    return true;
+}
+
+using processTaskManagerSignal_func = bool (*)(
+        TaskManager *taskManager, const ProcessCommandArgs &p);
+
+static const processTaskManagerSignal_func processTaskManagerSignal_funcList[] = {
+    &processTaskManager_appVersionUpdated, // Rpc_TaskManager_appVersionUpdated,
+    &processTaskManager_appVersionDownloaded, // Rpc_TaskManager_appVersionDownloaded,
+    &processTaskManager_zonesDownloaded, // Rpc_TaskManager_zonesDownloaded,
+};
+
+inline bool processTaskManagerRpcSignal(TaskManager *taskManager, const ProcessCommandArgs &p)
+{
+    const processTaskManagerSignal_func func = RpcManager::getProcessFunc(p.command,
+            processTaskManagerSignal_funcList, Control::Rpc_TaskManager_appVersionUpdated,
+            Control::Rpc_TaskManager_zonesDownloaded);
+
+    return func ? func(taskManager, p) : false;
+}
+
 inline bool processTaskManager_runTask(TaskManager *taskManager, const ProcessCommandArgs &p)
 {
     taskManager->runTask(p.args.value(0).toInt());
@@ -32,6 +69,26 @@ inline bool processTaskManager_taskFinished(TaskManager *taskManager, const Proc
         tm->onTaskFinished(p.args.value(0).toInt());
     }
     return true;
+}
+
+inline bool processTaskManagerRpcResult(TaskManager *taskManager, const ProcessCommandArgs &p)
+{
+    switch (p.command) {
+    case Control::Rpc_TaskManager_runTask: {
+        return processTaskManager_runTask(taskManager, p);
+    }
+    case Control::Rpc_TaskManager_abortTask: {
+        return processTaskManager_abortTask(taskManager, p);
+    }
+    case Control::Rpc_TaskManager_taskStarted: {
+        return processTaskManager_taskStarted(taskManager, p);
+    }
+    case Control::Rpc_TaskManager_taskFinished: {
+        return processTaskManager_taskFinished(taskManager, p);
+    }
+    default:
+        return false;
+    }
 }
 
 }
@@ -78,32 +135,13 @@ bool TaskManagerRpc::processServerCommand(const ProcessCommandArgs &p, QVariantL
     auto taskManager = IoC<TaskManager>();
 
     switch (p.command) {
-    case Control::Rpc_TaskManager_runTask: {
-        return processTaskManager_runTask(taskManager, p);
-    }
-    case Control::Rpc_TaskManager_abortTask: {
-        return processTaskManager_abortTask(taskManager, p);
-    }
-    case Control::Rpc_TaskManager_taskStarted: {
-        return processTaskManager_taskStarted(taskManager, p);
-    }
-    case Control::Rpc_TaskManager_taskFinished: {
-        return processTaskManager_taskFinished(taskManager, p);
-    }
-    case Control::Rpc_TaskManager_appVersionUpdated: {
-        emit taskManager->appVersionUpdated();
-        return true;
-    }
-    case Control::Rpc_TaskManager_appVersionDownloaded: {
-        emit taskManager->appVersionDownloaded(p.args[0].toString());
-        return true;
-    }
+    case Control::Rpc_TaskManager_appVersionUpdated:
+    case Control::Rpc_TaskManager_appVersionDownloaded:
     case Control::Rpc_TaskManager_zonesDownloaded: {
-        emit taskManager->zonesDownloaded(p.args[0].toStringList());
-        return true;
+        return processTaskManagerRpcSignal(taskManager, p);
     }
     default:
-        return false;
+        return processTaskManagerRpcResult(taskManager, p);
     }
 }
 
