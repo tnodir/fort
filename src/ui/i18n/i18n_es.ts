@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>Current Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Versión actual</translation>
     </message>
 </context>
 <context>
@@ -754,7 +754,7 @@
     </message>
     <message>
         <source>Auto-Show Menu</source>
-        <translation>Automostrar menú</translation>
+        <translation>Mostrar menú automático</translation>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
@@ -1173,15 +1173,15 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Auto Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualización automática</translation>
     </message>
     <message>
         <source>Keep current version</source>
-        <translation type="unfinished"></translation>
+        <translation>Conservar la versión actual</translation>
     </message>
     <message>
         <source>Auto-download new version</source>
-        <translation type="unfinished"></translation>
+        <translation>Autodescargar nueva versión</translation>
     </message>
 </context>
 <context>
@@ -1915,7 +1915,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Keep data for &apos;Hourly&apos;:</source>
-        <translation>Mantener datos para &apos;Cada hora&apos;:</translation>
+        <translation>Conservar datos para &apos;Cada hora&apos;:</translation>
     </message>
     <message>
         <source> day(s)</source>
@@ -1923,7 +1923,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Keep data for &apos;Daily&apos;:</source>
-        <translation>Mantener datos para &apos;Diario&apos;:</translation>
+        <translation>Conservar datos para &apos;Diario&apos;:</translation>
     </message>
     <message>
         <source>Keep data for &apos;Monthly&apos;:</source>
@@ -1943,11 +1943,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>Mantener el conteo de &apos;Conexiones permitidas&apos;:</translation>
+        <translation>Conservar el conteo de &apos;Conexiones permitidas&apos;:</translation>
     </message>
     <message>
         <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>Conservar el conteo de &apos;conexiones bloqueadas&apos;:</translation>
+        <translation>Conservar el conteo de &apos;Conexiones bloqueadas&apos;:</translation>
     </message>
     <message>
         <source>Custom</source>

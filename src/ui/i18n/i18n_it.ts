@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>Current Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Versione corrente</translation>
     </message>
 </context>
 <context>
@@ -1173,15 +1173,15 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Auto Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-aggiorna</translation>
     </message>
     <message>
         <source>Keep current version</source>
-        <translation type="unfinished"></translation>
+        <translation>Mantieni versione corrente</translation>
     </message>
     <message>
         <source>Auto-download new version</source>
-        <translation type="unfinished"></translation>
+        <translation>Scarica automaticamente la nuova versione</translation>
     </message>
 </context>
 <context>
