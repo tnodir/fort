@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.13.14, 2024-10-01:
+- UI: Form windows should be deleted on close (v3.13.13 regression).
+
 v3.13.13, 2024-09-30:
 - UI: Add "-c backup export/import [dir-path]" command line argument.
 - UI: Programs: Sort "Name" column case-insensitively.
