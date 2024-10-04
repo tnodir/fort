@@ -304,6 +304,7 @@ QString AppListModel::sqlWhere() const
 
     if (filters() != FilterNone) {
         QStringList list;
+        addSqlFilter(list, "alerted", FilterAlerted);
         addSqlFilter(list, "t.is_wildcard", FilterWildcard);
         addSqlFilter(list, "t.parked", FilterParked);
 

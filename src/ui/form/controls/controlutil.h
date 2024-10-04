@@ -30,6 +30,8 @@ class ControlUtil
 public:
     static QCheckBox *createCheckBox(
             bool checked, const std::function<void(bool checked)> &onToggled);
+    static QCheckBox *createCheckStateBox(const QString &iconPath, Qt::CheckState state,
+            const std::function<void()> &onClicked);
 
     static QSpinBox *createSpinBox();
 

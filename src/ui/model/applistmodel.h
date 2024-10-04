@@ -25,8 +25,9 @@ class AppListModel : public FtsTableSqlModel
 public:
     enum FilterFlag {
         FilterNone = 0,
-        FilterWildcard = (1 << 0),
-        FilterParked = (1 << 1),
+        FilterAlerted = (1 << 0),
+        FilterWildcard = (1 << 1),
+        FilterParked = (1 << 2),
     };
     Q_ENUM(FilterFlag)
     Q_DECLARE_FLAGS(FilterFlags, FilterFlag)

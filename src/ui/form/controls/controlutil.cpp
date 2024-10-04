@@ -33,6 +33,20 @@ QCheckBox *ControlUtil::createCheckBox(
     return c;
 }
 
+QCheckBox *ControlUtil::createCheckStateBox(
+        const QString &iconPath, Qt::CheckState state, const std::function<void()> &onClicked)
+{
+    auto c = new QCheckBox();
+    c->setIcon(IconCache::icon(iconPath));
+
+    c->setTristate(true);
+    c->setCheckState(state);
+
+    c->connect(c, &QCheckBox::clicked, c, onClicked);
+
+    return c;
+}
+
 QSpinBox *ControlUtil::createSpinBox()
 {
     auto c = new SpinBox();

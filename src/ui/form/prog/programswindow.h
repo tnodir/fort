@@ -57,8 +57,7 @@ private:
     void setupEditMenu();
     void setupEditSearch();
     void setupFilter();
-    void setupFilterWildcard();
-    void setupFilterParked();
+    void setupFilterCheckBoxes();
     void setupFilterClear();
     void setupTableApps();
     void setupTableAppsHeader();
@@ -108,6 +107,7 @@ private:
     QLineEdit *m_editSearch = nullptr;
     QPushButton *m_btFilter = nullptr;
     QToolButton *m_btClearFilter = nullptr;
+    QCheckBox *m_cbFilterAlerted = nullptr;
     QCheckBox *m_cbFilterWildcard = nullptr;
     QCheckBox *m_cbFilterParked = nullptr;
     QToolButton *m_btGroups = nullptr;
