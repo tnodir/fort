@@ -356,7 +356,7 @@
     </message>
     <message>
         <source>Time</source>
-        <translation>Tiempo</translation>
+        <translation>Fecha</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -730,7 +730,7 @@
     </message>
     <message>
         <source>Use System Regional Settings</source>
-        <translation>Usar Ajustes Regionales del Sistema</translation>
+        <translation>Usar ajustes regionales del sistema</translation>
     </message>
     <message>
         <source>Language:</source>
@@ -858,7 +858,7 @@
     </message>
     <message>
         <source>Switch Filter Enabled</source>
-        <translation>Cambiar filtro habilitado</translation>
+        <translation>Alternar filtro activado</translation>
     </message>
     <message>
         <source>Show Block Traffic Menu</source>
@@ -1320,7 +1320,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>File Path:</source>
-        <translation>Ruta de archivo:</translation>
+        <translation>Ruta del archivo:</translation>
     </message>
     <message>
         <source>Name:</source>

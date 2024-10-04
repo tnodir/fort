@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>Current Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuelle Version</translation>
     </message>
 </context>
 <context>
@@ -408,7 +408,7 @@
     </message>
     <message>
         <source>Reason</source>
-        <translation type="unfinished"></translation>
+        <translation>Grund</translation>
     </message>
 </context>
 <context>
@@ -902,7 +902,7 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarmfenster ist automatisch aktiv</translation>
     </message>
 </context>
 <context>
@@ -1040,7 +1040,9 @@
         <source>All Options and Programs will be replaced after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle Einstellungen und Programme werden mit erfolgreichem Import ersetzt. Fortfahren?
+
+Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
 </context>
 <context>
@@ -1171,15 +1173,15 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisch aktualisieren</translation>
     </message>
     <message>
         <source>Keep current version</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktuelle Version behalten</translation>
     </message>
     <message>
         <source>Auto-download new version</source>
-        <translation type="unfinished"></translation>
+        <translation>Neue Version automatisch herunterladen</translation>
     </message>
 </context>
 <context>
@@ -1456,23 +1458,23 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">Deaktiviert</translation>
+        <translation>Deaktiviert</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>An bestimmte untergeordnete Prozesse verteilen</translation>
     </message>
     <message>
         <source>Propagate to all child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Auf alle untergeordneten Prozesse verteilen</translation>
     </message>
     <message>
         <source>Receive from the parent process</source>
-        <translation type="unfinished"></translation>
+        <translation>Von übergeordnetem Prozess erhalten</translation>
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation type="unfinished"></translation>
+        <translation>Regelvererbung:</translation>
     </message>
 </context>
 <context>
@@ -2353,7 +2355,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Update Zones?</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonen aktualisieren?</translation>
     </message>
 </context>
 </TS>
