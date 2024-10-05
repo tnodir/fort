@@ -1,15 +1,17 @@
 #include "zonesourcewrapper.h"
 
+#include <QHash>
+
 ZoneSourceWrapper::ZoneSourceWrapper(const QVariant &var) : MapWrapper(var) { }
 
-int ZoneSourceWrapper::index() const
+int ZoneSourceWrapper::id() const
 {
-    return valueInt("index");
+    return valueInt("id");
 }
 
-void ZoneSourceWrapper::setIndex(int index)
+void ZoneSourceWrapper::setId(int id)
 {
-    setValue("index", index);
+    setValue("id", id);
 }
 
 QString ZoneSourceWrapper::code() const
@@ -39,10 +41,10 @@ QString ZoneSourceWrapper::formData() const
 
 bool ZoneSourceWrapper::isTextInline() const
 {
-    return code() == textSourceCode();
+    return code() == defaultSourceCode();
 }
 
-QString ZoneSourceWrapper::textSourceCode()
+QString ZoneSourceWrapper::defaultSourceCode()
 {
     return "text";
 }

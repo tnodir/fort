@@ -6,10 +6,18 @@
 class ZoneSourceWrapper : public MapWrapper
 {
 public:
+    enum SourceId {
+        SourceText = 0,
+        SourceFile,
+        SourceWinSpyBlock,
+        SourceFireHolLevel1,
+        SourceTasix,
+    };
+
     explicit ZoneSourceWrapper(const QVariant &var = QVariant());
 
-    int index() const;
-    void setIndex(int index);
+    int id() const;
+    void setId(int id);
 
     QString code() const;
     QString title() const;
@@ -19,7 +27,7 @@ public:
 
     bool isTextInline() const;
 
-    static QString textSourceCode();
+    static QString defaultSourceCode();
 };
 
 #endif // ZONESOURCEWRAPPER_H

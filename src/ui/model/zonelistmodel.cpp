@@ -114,7 +114,7 @@ QVariant ZoneListModel::dataDisplay(const QModelIndex &index) const
         return QString("%1) %2").arg(QString::number(m_zoneRow.zoneId), zoneRow.zoneName);
     case 1: {
         const auto zoneSource = ZoneSourceWrapper(zoneSourceByCode(zoneRow.sourceCode));
-        return zoneSource.title();
+        return zoneSourceTitleById(zoneSource.id());
     }
     case 2:
         return zoneRow.addressCount;
@@ -263,8 +263,25 @@ void ZoneListModel::setupZoneSources()
     int index = 0;
     for (const auto &sourceVar : zoneSources) {
         ZoneSourceWrapper zoneSource(sourceVar);
-        zoneSource.setIndex(index++);
+        zoneSource.setId(index++);
         m_zoneSourcesMap.insert(zoneSource.code(), zoneSource.map());
         m_zoneSources.append(zoneSource.map());
     }
+}
+
+QString ZoneListModel::zoneSourceTitleById(const int sourceId)
+{
+    static const char *const sourceTitles[] = {
+        QT_TR_NOOP("Addresses from Inline Text"),
+        QT_TR_NOOP("Addresses from Local File"),
+        QT_TR_NOOP("WindowsSpyBlocker"),
+        QT_TR_NOOP("FireHOL Level-1"),
+        QT_TR_NOOP("TAS-IX Addresses"),
+    };
+
+    if (sourceId >= 0 && sourceId < std::size(sourceTitles)) {
+        return tr(sourceTitles[sourceId]);
+    }
+
+    return {};
 }

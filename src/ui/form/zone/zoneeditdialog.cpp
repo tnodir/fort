@@ -35,11 +35,12 @@ void ZoneEditDialog::initialize(const ZoneRow &zoneRow)
 
     retranslateUi();
 
-    const QString sourceCode = isEmpty() ? ZoneSourceWrapper::textSourceCode() : zoneRow.sourceCode;
+    const QString sourceCode =
+            isEmpty() ? ZoneSourceWrapper::defaultSourceCode() : zoneRow.sourceCode;
     const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(sourceCode));
 
     m_editName->setStartText(zoneRow.zoneName);
-    m_comboSources->setCurrentIndex(zoneSource.index());
+    m_comboSources->setCurrentIndex(zoneSource.id());
     m_cbEnabled->setChecked(zoneRow.enabled);
 
     m_cbCustomUrl->setChecked(zoneRow.customUrl);

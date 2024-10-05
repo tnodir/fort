@@ -44,6 +44,8 @@ public:
     QVariant zoneSourceByCode(const QString &sourceCode) const;
     const QVariantList &zoneSources() const { return m_zoneSources; }
 
+    static QString zoneSourceTitleById(const int sourceId);
+
 protected:
     Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
 
