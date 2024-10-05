@@ -97,7 +97,7 @@ void ControlWorker::setupForAsync()
 
     connect(socket(), &QLocalSocket::errorOccurred, this,
             [&](QLocalSocket::LocalSocketError socketError) {
-                if (!m_isReconnecting) {
+                if (!m_isReconnecting && socketError != QLocalSocket::PeerClosedError) {
                     qCWarning(LC) << "Client error:" << id() << socketError << errorString();
                 }
                 close();
