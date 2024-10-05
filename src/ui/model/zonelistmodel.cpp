@@ -165,14 +165,26 @@ const ZoneRow &ZoneListModel::zoneRowAt(int row) const
     return m_zoneRow;
 }
 
+QVariant ZoneListModel::zoneTypeById(int typeId) const
+{
+    return zoneTypes().value(typeId);
+}
+
 QVariant ZoneListModel::zoneTypeByCode(const QString &typeCode) const
 {
-    return m_zoneTypesMap.value(typeCode);
+    const int typeId = ZoneTypeWrapper::idByCode(typeCode);
+    return zoneTypeById(typeId);
+}
+
+QVariant ZoneListModel::zoneSourceById(int sourceId) const
+{
+    return zoneSources().value(sourceId);
 }
 
 QVariant ZoneListModel::zoneSourceByCode(const QString &sourceCode) const
 {
-    return m_zoneSourcesMap.value(sourceCode);
+    const int sourceId = ZoneSourceWrapper::idByCode(sourceCode);
+    return zoneSourceById(sourceId);
 }
 
 bool ZoneListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
@@ -241,8 +253,7 @@ void ZoneListModel::setupZoneTypes()
     int index = 0;
     for (const auto &typeVar : zoneTypes) {
         ZoneTypeWrapper zoneType(typeVar);
-        zoneType.setIndex(index++);
-        m_zoneTypesMap.insert(zoneType.code(), zoneType.map());
+        zoneType.setId(index++);
         m_zoneTypes.append(zoneType.map());
     }
 }
@@ -264,7 +275,6 @@ void ZoneListModel::setupZoneSources()
     for (const auto &sourceVar : zoneSources) {
         ZoneSourceWrapper zoneSource(sourceVar);
         zoneSource.setId(index++);
-        m_zoneSourcesMap.insert(zoneSource.code(), zoneSource.map());
         m_zoneSources.append(zoneSource.map());
     }
 }

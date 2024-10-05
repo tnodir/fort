@@ -35,9 +35,7 @@ void ZoneEditDialog::initialize(const ZoneRow &zoneRow)
 
     retranslateUi();
 
-    const QString sourceCode =
-            isEmpty() ? ZoneSourceWrapper::defaultSourceCode() : zoneRow.sourceCode;
-    const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(sourceCode));
+    const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
 
     m_editName->setStartText(zoneRow.zoneName);
     m_comboSources->setCurrentIndex(zoneSource.id());

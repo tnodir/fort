@@ -39,8 +39,11 @@ public:
 
     const ZoneRow &zoneRowAt(int row) const;
 
+    QVariant zoneTypeById(int typeId) const;
     QVariant zoneTypeByCode(const QString &typeCode) const;
+    const QVariantList &zoneTypes() const { return m_zoneTypes; }
 
+    QVariant zoneSourceById(int sourceId) const;
     QVariant zoneSourceByCode(const QString &sourceCode) const;
     const QVariantList &zoneSources() const { return m_zoneSources; }
 
@@ -67,10 +70,7 @@ private:
 
 private:
     QVariantList m_zoneTypes;
-    QVariantHash m_zoneTypesMap;
-
     QVariantList m_zoneSources;
-    QVariantHash m_zoneSourcesMap;
 
     mutable ZoneRow m_zoneRow;
 };

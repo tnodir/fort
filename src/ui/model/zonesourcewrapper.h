@@ -10,11 +10,11 @@ public:
         SourceText = 0,
         SourceFile,
         SourceWinSpyBlock,
-        SourceFireHolLevel1,
+        SourceFireHol_Level1,
         SourceTasix,
     };
 
-    explicit ZoneSourceWrapper(const QVariant &var = QVariant());
+    explicit ZoneSourceWrapper(const QVariant &var = {});
 
     int id() const;
     void setId(int id);
@@ -27,7 +27,7 @@ public:
 
     bool isTextInline() const;
 
-    static QString defaultSourceCode();
+    static int idByCode(const QString &code);
 };
 
 #endif // ZONESOURCEWRAPPER_H

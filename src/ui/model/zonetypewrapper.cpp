@@ -2,14 +2,14 @@
 
 ZoneTypeWrapper::ZoneTypeWrapper(const QVariant &var) : MapWrapper(var) { }
 
-int ZoneTypeWrapper::index() const
+int ZoneTypeWrapper::id() const
 {
-    return valueInt("index");
+    return valueInt("id");
 }
 
-void ZoneTypeWrapper::setIndex(int index)
+void ZoneTypeWrapper::setId(int id)
 {
-    setValue("index", index);
+    setValue("id", id);
 }
 
 QString ZoneTypeWrapper::code() const
@@ -40,4 +40,14 @@ QString ZoneTypeWrapper::pattern() const
 int ZoneTypeWrapper::emptyNetMask() const
 {
     return valueInt("emptyNetMask");
+}
+
+int ZoneTypeWrapper::idByCode(const QString &code)
+{
+    static const QHash<QString, int> map = {
+        { "gen", TypeGeneric },
+        { "bgp", TypeBgp },
+    };
+
+    return map.value(code, TypeGeneric);
 }

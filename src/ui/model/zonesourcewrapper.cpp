@@ -41,10 +41,18 @@ QString ZoneSourceWrapper::formData() const
 
 bool ZoneSourceWrapper::isTextInline() const
 {
-    return code() == defaultSourceCode();
+    return id() == SourceText;
 }
 
-QString ZoneSourceWrapper::defaultSourceCode()
+int ZoneSourceWrapper::idByCode(const QString &code)
 {
-    return "text";
+    static const QHash<QString, int> map = {
+        { "text", SourceText },
+        { "file", SourceFile },
+        { "winspyblock", SourceWinSpyBlock },
+        { "firehol_level1", SourceFireHol_Level1 },
+        { "tasix", SourceTasix },
+    };
+
+    return map.value(code, SourceText);
 }

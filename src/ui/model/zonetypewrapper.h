@@ -6,10 +6,15 @@
 class ZoneTypeWrapper : public MapWrapper
 {
 public:
-    explicit ZoneTypeWrapper(const QVariant &var = QVariant());
+    enum TypeId {
+        TypeGeneric = 0,
+        TypeBgp,
+    };
 
-    int index() const;
-    void setIndex(int index);
+    explicit ZoneTypeWrapper(const QVariant &var = {});
+
+    int id() const;
+    void setId(int index);
 
     QString code() const;
     QString title() const;
@@ -17,6 +22,8 @@ public:
     bool sort() const;
     QString pattern() const;
     int emptyNetMask() const;
+
+    static int idByCode(const QString &code);
 };
 
 #endif // ZONEWRAPPER_H
