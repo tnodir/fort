@@ -1590,6 +1590,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Are you sure to clear alerts?</source>
         <translation>Ali ste prepričani, da želite počistiti opozorila?</translation>
     </message>
+    <message>
+        <source>Alerts</source>
+        <translation>Opozorila</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

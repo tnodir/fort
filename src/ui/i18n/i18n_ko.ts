@@ -1590,6 +1590,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Are you sure to clear alerts?</source>
         <translation>알림을 지우시겠습니까?</translation>
     </message>
+    <message>
+        <source>Alerts</source>
+        <translation>경고</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

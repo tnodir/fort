@@ -204,7 +204,7 @@
     </message>
     <message>
         <source>Interchange All Lines</source>
-        <translation>Intercambiar Todas las Líneas</translation>
+        <translation>Intercambiar todas las líneas</translation>
     </message>
     <message>
         <source>Move Selected Lines to &apos;Allow&apos;</source>
@@ -1593,6 +1593,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Are you sure to clear alerts?</source>
         <translation>¿Está seguro de que desea borrar las alertas?</translation>
     </message>
+    <message>
+        <source>Alerts</source>
+        <translation>Alertas</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>
@@ -1695,7 +1699,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Change Time</source>
-        <translation>Cambiar hora</translation>
+        <translation>Cambiar Hora</translation>
     </message>
     <message>
         <source>Application Rules</source>
@@ -2025,11 +2029,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <name>TaskInfo</name>
     <message>
         <source>Fort Firewall Update Checker</source>
-        <translation>Verificador de actualizaciones de Fort Firewall</translation>
+        <translation>Verificación de actualizaciones de Fort Firewall</translation>
     </message>
     <message>
         <source>Zones Downloader</source>
-        <translation>Descargador de zonas</translation>
+        <translation>Descarga de zonas</translation>
     </message>
     <message>
         <source>Purge Obsolete Programs</source>
@@ -2292,11 +2296,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <name>ZonesController</name>
     <message>
         <source>Cannot edit Zone</source>
-        <translation>No se puede editar la regla</translation>
+        <translation>No se puede editar la zona</translation>
     </message>
     <message>
         <source>Cannot delete Zone</source>
-        <translation>No se puede eliminar la regla</translation>
+        <translation>No se puede eliminar la zona</translation>
     </message>
     <message>
         <source>Cannot update Zone&apos;s name</source>

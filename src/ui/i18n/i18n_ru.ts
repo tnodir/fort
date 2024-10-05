@@ -1590,6 +1590,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Are you sure to clear alerts?</source>
         <translation>Очистить оповещения?</translation>
     </message>
+    <message>
+        <source>Alerts</source>
+        <translation>Оповещения</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

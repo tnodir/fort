@@ -1590,6 +1590,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Are you sure to clear alerts?</source>
         <translation>Êtes-vous sûr de vouloir effacer les alertes ?</translation>
     </message>
+    <message>
+        <source>Alerts</source>
+        <translation>Alertes</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

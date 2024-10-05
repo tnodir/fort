@@ -1590,6 +1590,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Are you sure to clear alerts?</source>
         <translation>Sei sicuro di cancellare gli allarmi?</translation>
     </message>
+    <message>
+        <source>Alerts</source>
+        <translation>Allerte</translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

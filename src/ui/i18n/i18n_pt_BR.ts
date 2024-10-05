@@ -1588,6 +1588,10 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <source>Are you sure to clear alerts?</source>
         <translation>Tem certeza que deseja limpar alertas?</translation>
     </message>
+    <message>
+        <source>Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>

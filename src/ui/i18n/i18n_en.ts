@@ -1579,6 +1579,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Are you sure to clear alerts?</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Alerts</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>QuotaManager</name>
