@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.14.0, 2024-10-05:
+- UI: Programs: Add "Alerts" filter.
+- UI: Options: Reset changes on close (v3.13.13 regression).
+
 v3.13.14, 2024-10-01:
 - UI: Form windows should be deleted on close (v3.13.13 regression).
 
