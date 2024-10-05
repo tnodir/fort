@@ -39,6 +39,8 @@ protected slots:
     void retranslateUi();
 
 private:
+    void retranslateComboSources();
+
     void initializeBySource(const ZoneSourceWrapper &zoneSource);
     void initializeFocus();
 

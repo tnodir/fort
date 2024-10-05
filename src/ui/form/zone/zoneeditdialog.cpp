@@ -74,14 +74,27 @@ void ZoneEditDialog::retranslateUi()
 
     m_labelName->setText(tr("Name:"));
     m_labelSource->setText(tr("Source:"));
+    retranslateComboSources();
+
     m_cbEnabled->setText(tr("Enabled"));
     m_cbCustomUrl->setText(tr("Custom URL"));
     m_labelUrl->setText(tr("URL:"));
     m_labelFormData->setText(tr("Form Data:"));
+
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
     this->setWindowTitle(tr("Edit Zone"));
+}
+
+void ZoneEditDialog::retranslateComboSources()
+{
+    const int n = m_comboSources->count();
+    for (int i = 0; i < n; ++i) {
+        const auto title = zoneListModel()->zoneSourceTitleById(i);
+
+        m_comboSources->setItemText(i, title);
+    }
 }
 
 void ZoneEditDialog::setupController()
@@ -160,8 +173,8 @@ QLayout *ZoneEditDialog::setupNameLayout()
 
 void ZoneEditDialog::setupSources()
 {
-    m_comboSources = ControlUtil::createComboBox(QStringList(), [&](int /*index*/) {
-        const auto zoneSource = ZoneSourceWrapper(m_comboSources->currentData());
+    m_comboSources = ControlUtil::createComboBox(QStringList(), [&](int index) {
+        const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceById(index));
 
         initializeBySource(zoneSource);
     });
@@ -169,7 +182,7 @@ void ZoneEditDialog::setupSources()
     m_comboSources->clear();
     for (const auto &sourceVar : zoneListModel()->zoneSources()) {
         const ZoneSourceWrapper zoneSource(sourceVar);
-        m_comboSources->addItem(zoneSource.title(), sourceVar);
+        m_comboSources->addItem(zoneSource.title());
     }
     m_comboSources->setCurrentIndex(0);
 }
