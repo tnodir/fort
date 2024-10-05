@@ -2290,23 +2290,23 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>Addresses from Inline Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresses depuis le texte en ligne</translation>
     </message>
     <message>
         <source>Addresses from Local File</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresses depuis un fichier local</translation>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloqueur d&apos;espions Windows</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation type="unfinished"></translation>
+        <translation>FireHOL Niveau 1</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresses TAS-IX</translation>
     </message>
 </context>
 <context>
