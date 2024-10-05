@@ -41,6 +41,13 @@ void OptionsWindow::selectTab(int index)
     m_mainPage->selectTab(index);
 }
 
+void OptionsWindow::cancelChanges()
+{
+    if (ctrl()->confToEdit() && ctrl()->anyEdited()) {
+        ctrl()->resetEdited();
+    }
+}
+
 void OptionsWindow::saveWindowState(bool /*wasVisible*/)
 {
     iniUser()->setOptWindowGeometry(stateWatcher()->geometry());

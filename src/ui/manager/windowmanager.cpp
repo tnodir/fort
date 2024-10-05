@@ -428,6 +428,7 @@ void WindowManager::showOptionsWindow()
 void WindowManager::closeOptionsWindow()
 {
     if (closeWindow(m_optWindow)) {
+        m_optWindow->cancelChanges();
         m_optWindow = nullptr;
     }
 }
