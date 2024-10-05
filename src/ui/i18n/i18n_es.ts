@@ -2291,6 +2291,26 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Last Download</source>
         <translation>Última descarga</translation>
     </message>
+    <message>
+        <source>Addresses from Inline Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Addresses from Local File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WindowsSpyBlocker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FireHOL Level-1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TAS-IX Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZonesController</name>

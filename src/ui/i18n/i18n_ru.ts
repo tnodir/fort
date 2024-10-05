@@ -2288,6 +2288,26 @@ Please restart the running program to take effect of this option.</source>
         <source>Last Download</source>
         <translation>Скачивание</translation>
     </message>
+    <message>
+        <source>Addresses from Inline Text</source>
+        <translation>Адреса из встроенного текста</translation>
+    </message>
+    <message>
+        <source>Addresses from Local File</source>
+        <translation>Адреса из локального файла</translation>
+    </message>
+    <message>
+        <source>WindowsSpyBlocker</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>FireHOL Level-1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>TAS-IX Addresses</source>
+        <translation>Адреса TAS-IX</translation>
+    </message>
 </context>
 <context>
     <name>ZonesController</name>

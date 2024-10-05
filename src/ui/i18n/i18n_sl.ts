@@ -2288,6 +2288,26 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Last Download</source>
         <translation>Zadnji prenos</translation>
     </message>
+    <message>
+        <source>Addresses from Inline Text</source>
+        <translation>Naslovi iz besedila v vrstici</translation>
+    </message>
+    <message>
+        <source>Addresses from Local File</source>
+        <translation>Naslovi iz lokalne datoteke</translation>
+    </message>
+    <message>
+        <source>WindowsSpyBlocker</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>FireHOL Level-1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>TAS-IX Addresses</source>
+        <translation>Naslovi TAS-IX</translation>
+    </message>
 </context>
 <context>
     <name>ZonesController</name>

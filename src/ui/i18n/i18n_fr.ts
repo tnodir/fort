@@ -2288,6 +2288,26 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Last Download</source>
         <translation>Dernier Téléchargement</translation>
     </message>
+    <message>
+        <source>Addresses from Inline Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Addresses from Local File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WindowsSpyBlocker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FireHOL Level-1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TAS-IX Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZonesController</name>

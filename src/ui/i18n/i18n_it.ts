@@ -2289,6 +2289,26 @@ App</translation>
         <source>Last Download</source>
         <translation>Ultimo scaricamento</translation>
     </message>
+    <message>
+        <source>Addresses from Inline Text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Addresses from Local File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>WindowsSpyBlocker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>FireHOL Level-1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>TAS-IX Addresses</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ZonesController</name>
