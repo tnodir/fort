@@ -570,6 +570,9 @@ static NTSTATUS NTAPI fort_callout_notify(
 inline static UINT32 fort_packet_data_size(const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues,
         const PNET_BUFFER_LIST netBufList, BOOL inbound)
 {
+    if (netBufList == NULL)
+        return 0;
+
     PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
     const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
 
@@ -590,14 +593,7 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
             || classifyOut->actionType == FWP_ACTION_BLOCK)
         return; /* Can't act on the packet */
 
-    if (FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED))
-        return;
-
     const PNET_BUFFER_LIST netBufList = layerData;
-    if (netBufList == NULL)
-        return;
-
-    const UINT32 dataSize = fort_packet_data_size(inMetaValues, netBufList, inbound);
 
     FORT_CALLOUT_ARG ca = {
         .inFixedValues = inFixedValues,
@@ -606,7 +602,7 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
         .filter = filter,
         .classifyOut = classifyOut,
         .flowContext = flowContext,
-        .dataSize = dataSize,
+        .dataSize = fort_packet_data_size(inMetaValues, netBufList, inbound),
         .inbound = inbound,
     };
 

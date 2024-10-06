@@ -1008,6 +1008,15 @@ inline static NTSTATUS fort_shaper_packet_queue(
 
 FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG ca)
 {
+    if (ca->netBufList == NULL)
+        return FALSE;
+
+    if (FWPS_IS_METADATA_FIELD_PRESENT(
+                ca->inMetaValues, FWPS_METADATA_FIELD_ALE_CLASSIFY_REQUIRED)) {
+        /* Skip the packet that needs to be re-classified */
+        return FALSE;
+    }
+
     if (fort_packet_is_ipsec_tunneled(ca)) {
         /* To be compatible with Vista's IpSec implementation, we must not
          * intercept not-yet-detunneled IpSec traffic. */

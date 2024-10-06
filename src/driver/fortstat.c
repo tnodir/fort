@@ -492,6 +492,9 @@ FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
 
 FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL inbound)
 {
+    if (data_len == 0)
+        return;
+
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
     KLOCK_QUEUE_HANDLE lock_queue;
