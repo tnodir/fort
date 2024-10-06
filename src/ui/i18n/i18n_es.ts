@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>Allowed Internet Addresses</source>
-        <translation>Direcciones de Internet permitidas</translation>
+        <translation>Direcciones de Internet Permitidas</translation>
     </message>
     <message>
         <source>Include</source>
@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation>Bloquee el Tráfico de Interne</translation>
+        <translation>Bloquear tráfico de Internet</translation>
     </message>
     <message>
         <source>Zones</source>
@@ -264,7 +264,7 @@
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation>Bloquear Tráfico de Internet</translation>
+        <translation>Bloquear tráfico de Internet</translation>
     </message>
     <message>
         <source>Kill Process</source>
@@ -710,7 +710,7 @@
     </message>
     <message>
         <source>Hot Keys</source>
-        <translation>Teclas de Atajo</translation>
+        <translation>Teclas de atajo</translation>
     </message>
     <message>
         <source>My Fort</source>
@@ -1672,7 +1672,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation>Añadir regla preestablecida</translation>
+        <translation>Añadir Regla Preestablecida</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -1842,11 +1842,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <name>ServiceListModel</name>
     <message>
         <source>Service Name</source>
-        <translation>Nombre del servicio</translation>
+        <translation>Nombre del Servicio</translation>
     </message>
     <message>
         <source>Display Name</source>
-        <translation>Mostrar nombre</translation>
+        <translation>Descripción</translation>
     </message>
     <message>
         <source>Process ID</source>
@@ -1861,11 +1861,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Make Trackable</source>
-        <translation>Hacer rastreable</translation>
+        <translation>Hacer Rastreable</translation>
     </message>
     <message>
         <source>Revert Changes</source>
-        <translation>Revertir cambios</translation>
+        <translation>Revertir Cambios</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -1892,7 +1892,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Blocked Connections</source>
-        <translation>Conexiones bloqueadas</translation>
+        <translation>Conexiones Bloqueadas</translation>
     </message>
     <message>
         <source>Options</source>
@@ -2048,15 +2048,15 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Interval, hours</source>
-        <translation>Intervalo, horas</translation>
+        <translation>Intervalo, Horas</translation>
     </message>
     <message>
         <source>Last Run</source>
-        <translation>Última ejecución</translation>
+        <translation>Última Ejecución</translation>
     </message>
     <message>
         <source>Last Success</source>
-        <translation>Último éxito</translation>
+        <translation>Último Éxito</translation>
     </message>
 </context>
 <context>
@@ -2114,7 +2114,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Hourly</source>
-        <translation>Cada hora</translation>
+        <translation>Cada Hora</translation>
     </message>
     <message>
         <source>Daily</source>
@@ -2281,7 +2281,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Last Success</source>
-        <translation>Último éxito</translation>
+        <translation>Último Éxito</translation>
     </message>
     <message>
         <source>Addresses</source>
@@ -2289,27 +2289,27 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Last Download</source>
-        <translation>Última descarga</translation>
+        <translation>Última Descarga</translation>
     </message>
     <message>
         <source>Addresses from Inline Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Direcciones desde texto en línea</translation>
     </message>
     <message>
         <source>Addresses from Local File</source>
-        <translation type="unfinished"></translation>
+        <translation>Direcciones desde archivo local</translation>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation type="unfinished"></translation>
+        <translation>WindowsSpyBlocker</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation type="unfinished"></translation>
+        <translation>FireHOL Level-1</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Direcciones TAS-IX</translation>
     </message>
 </context>
 <context>
@@ -2358,7 +2358,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Save As Text</source>
-        <translation>Guardar como texto</translation>
+        <translation>Guardar Como Texto</translation>
     </message>
     <message>
         <source>Zones</source>
@@ -2378,7 +2378,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Update Zones</source>
-        <translation>Actualizar zonas</translation>
+        <translation>Actualizar Zonas</translation>
     </message>
     <message>
         <source>Update Zones?</source>

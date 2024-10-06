@@ -2291,23 +2291,23 @@ App</translation>
     </message>
     <message>
         <source>Addresses from Inline Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzi da testo in rete</translation>
     </message>
     <message>
         <source>Addresses from Local File</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzi da file locale</translation>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation type="unfinished"></translation>
+        <translation>WindowsSpyBlocker</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation type="unfinished"></translation>
+        <translation>FireHOL Level-1</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzi TAS-IX</translation>
     </message>
 </context>
 <context>

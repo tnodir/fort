@@ -1592,7 +1592,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Warnungen</translation>
     </message>
 </context>
 <context>
@@ -2290,23 +2290,23 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Addresses from Inline Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Adressen aus Inline-Text</translation>
     </message>
     <message>
         <source>Addresses from Local File</source>
-        <translation type="unfinished"></translation>
+        <translation>Adressen aus lokaler Datei</translation>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation type="unfinished"></translation>
+        <translation>WindowsSpyBlocker</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation type="unfinished"></translation>
+        <translation>FireHOL Level-1</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>TAS-IX-Adressen</translation>
     </message>
 </context>
 <context>
