@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.14.1-test01, 2024-10-06:
+v3.14.1, 2024-10-06:
 - Driver: Fix empty packets handling (v3.13.13 regression).
 
 v3.14.0, 2024-10-05:
