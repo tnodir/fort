@@ -612,6 +612,9 @@ void TrayIcon::updateAppGroupActions()
 
 void TrayIcon::sendAlertMessage()
 {
+    if (conf()->allowAllNew())
+        return; // do not notify in Auto-Learn mode
+
     if (iniUser()->progNotifyMessage()) {
         windowManager()->showTrayMessage(
                 tr("New program detected!"), WindowManager::TrayMessageAlert);
