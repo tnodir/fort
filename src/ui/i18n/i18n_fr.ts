@@ -902,7 +902,7 @@
     </message>
     <message>
         <source>Operations from Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Opérations depuis le menu de la barre d&apos;état</translation>
     </message>
 </context>
 <context>

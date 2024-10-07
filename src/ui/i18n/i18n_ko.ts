@@ -902,7 +902,7 @@
     </message>
     <message>
         <source>Operations from Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>트레이 메뉴에서의 작업</translation>
     </message>
 </context>
 <context>
