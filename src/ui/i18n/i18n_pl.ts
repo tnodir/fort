@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>Current Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktualna wersja</translation>
     </message>
 </context>
 <context>
@@ -408,7 +408,7 @@
     </message>
     <message>
         <source>Reason</source>
-        <translation type="unfinished"></translation>
+        <translation>Przyczyna</translation>
     </message>
 </context>
 <context>
@@ -898,11 +898,11 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation type="unfinished"></translation>
+        <translation>Okno alertu jest automatycznie uaktywaniane</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Operacje z menu zasobnika</translation>
     </message>
 </context>
 <context>
@@ -1040,7 +1040,9 @@
         <source>All Options and Programs will be replaced after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
-        <translation type="unfinished"></translation>
+        <translation>Wszystkie Opcje i Programy zostaną zastąpione po pomyślnym zaimportowaniu. Kontynuować?
+
+Upewnij się, że masz świeżą kopię zapasową.</translation>
     </message>
 </context>
 <context>
@@ -1171,15 +1173,15 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatyczna aktualizacja</translation>
     </message>
     <message>
         <source>Keep current version</source>
-        <translation type="unfinished"></translation>
+        <translation>Zachowaj aktualną wersję</translation>
     </message>
     <message>
         <source>Auto-download new version</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatyczne pobieranie nowej wersji</translation>
     </message>
 </context>
 <context>
@@ -1456,23 +1458,23 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished">Wyłączone</translation>
+        <translation>Wyłączone</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Propagacja do wyznaczonych procesów podrzędnych</translation>
     </message>
     <message>
         <source>Propagate to all child processes</source>
-        <translation type="unfinished"></translation>
+        <translation>Propagacja do wszystkich procesów podrzędnych</translation>
     </message>
     <message>
         <source>Receive from the parent process</source>
-        <translation type="unfinished"></translation>
+        <translation>Odbieranie z procesu nadrzędnego</translation>
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation type="unfinished"></translation>
+        <translation>Reguły dziedziczenia:</translation>
     </message>
 </context>
 <context>
@@ -1590,7 +1592,7 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alerty</translation>
     </message>
 </context>
 <context>
@@ -1694,7 +1696,7 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>Change Time</source>
-        <translation>Zmiana czasu</translation>
+        <translation>Czas zmiany</translation>
     </message>
     <message>
         <source>Application Rules</source>
@@ -2288,23 +2290,23 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>Addresses from Inline Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresy z tekstu wbudowanego</translation>
     </message>
     <message>
         <source>Addresses from Local File</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresy z lokalnego pliku</translation>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation type="unfinished"></translation>
+        <translation>WindowsSpyBlocker</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation type="unfinished"></translation>
+        <translation>FireHOL Level-1</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresy TAS-IX</translation>
     </message>
 </context>
 <context>
@@ -2377,7 +2379,7 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>Update Zones?</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktualizować strefy?</translation>
     </message>
 </context>
 </TS>
