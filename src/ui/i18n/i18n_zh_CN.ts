@@ -781,10 +781,6 @@
         <translation>操作：</translation>
     </message>
     <message>
-        <source>Tray Menu Flags</source>
-        <translation>托盘菜单标记</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>退出</translation>
     </message>
@@ -903,6 +899,10 @@
     <message>
         <source>Alert Window is auto-active</source>
         <translation>警告窗口是自动激活的</translation>
+    </message>
+    <message>
+        <source>Operations from Tray Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

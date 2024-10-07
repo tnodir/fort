@@ -781,10 +781,6 @@
         <translation>Akcija:</translation>
     </message>
     <message>
-        <source>Tray Menu Flags</source>
-        <translation>Zastavice menija programske vrstice</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Končaj</translation>
     </message>
@@ -903,6 +899,10 @@
     <message>
         <source>Alert Window is auto-active</source>
         <translation>Opozorilno okno je samodejno aktivno</translation>
+    </message>
+    <message>
+        <source>Operations from Tray Menu</source>
+        <translation>Delovanje menija pladnja</translation>
     </message>
 </context>
 <context>

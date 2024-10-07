@@ -781,10 +781,6 @@
         <translation>처리:</translation>
     </message>
     <message>
-        <source>Tray Menu Flags</source>
-        <translation>체크 가능한 트레이 메뉴</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>프로그램 종료</translation>
     </message>
@@ -903,6 +899,10 @@
     <message>
         <source>Alert Window is auto-active</source>
         <translation>알림 창이 자동으로 활성화됩니다</translation>
+    </message>
+    <message>
+        <source>Operations from Tray Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

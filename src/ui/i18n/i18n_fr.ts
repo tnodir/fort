@@ -781,10 +781,6 @@
         <translation>Action :</translation>
     </message>
     <message>
-        <source>Tray Menu Flags</source>
-        <translation>Drapeaux du menu de la barre d&apos;outils</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
@@ -903,6 +899,10 @@
     <message>
         <source>Alert Window is auto-active</source>
         <translation>La fenêtre d&apos;alerte est auto-active</translation>
+    </message>
+    <message>
+        <source>Operations from Tray Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

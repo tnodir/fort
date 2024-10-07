@@ -781,10 +781,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Tray Menu Flags</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation></translation>
     </message>
@@ -902,6 +898,10 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Operations from Tray Menu</source>
         <translation></translation>
     </message>
 </context>

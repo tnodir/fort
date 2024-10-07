@@ -781,10 +781,6 @@
         <translation>Действие:</translation>
     </message>
     <message>
-        <source>Tray Menu Flags</source>
-        <translation>Флаги из меню трея</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Выход из программы</translation>
     </message>
@@ -903,6 +899,10 @@
     <message>
         <source>Alert Window is auto-active</source>
         <translation>Окно Оповещения авто-активно</translation>
+    </message>
+    <message>
+        <source>Operations from Tray Menu</source>
+        <translation>Операции из меню трея</translation>
     </message>
 </context>
 <context>

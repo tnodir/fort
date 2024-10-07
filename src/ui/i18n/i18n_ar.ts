@@ -781,10 +781,6 @@
         <translation>الإجراء:</translation>
     </message>
     <message>
-        <source>Tray Menu Flags</source>
-        <translation>إشارة أيقونة الدُرج</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>خروج</translation>
     </message>
@@ -903,6 +899,10 @@
     <message>
         <source>Alert Window is auto-active</source>
         <translation>نافذة التنبيه نشطة تلقائياً</translation>
+    </message>
+    <message>
+        <source>Operations from Tray Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

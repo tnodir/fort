@@ -147,7 +147,7 @@ void IfacePage::onRetranslateUi()
     retranslateComboTrayAction();
     refreshComboTrayAction();
 
-    m_cbConfirmTrayFlags->setText(tr("Tray Menu Flags"));
+    m_cbConfirmTrayFlags->setText(tr("Operations from Tray Menu"));
     m_cbConfirmQuit->setText(tr("Quit"));
 }
 

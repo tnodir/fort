@@ -781,10 +781,6 @@
         <translation>Ação:</translation>
     </message>
     <message>
-        <source>Tray Menu Flags</source>
-        <translation>Sinalizadores de Menu de Bandeiras</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Sair</translation>
     </message>
@@ -903,6 +899,10 @@
     <message>
         <source>Alert Window is auto-active</source>
         <translation>Janela de alerta é ativada automaticamente</translation>
+    </message>
+    <message>
+        <source>Operations from Tray Menu</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -781,10 +781,6 @@
         <translation>Działanie:</translation>
     </message>
     <message>
-        <source>Tray Menu Flags</source>
-        <translation>Flagi menu w zasobniku</translation>
-    </message>
-    <message>
         <source>Quit</source>
         <translation>Wyjście</translation>
     </message>
@@ -902,6 +898,10 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Operations from Tray Menu</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
