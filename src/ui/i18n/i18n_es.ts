@@ -710,7 +710,7 @@
     </message>
     <message>
         <source>Hot Keys</source>
-        <translation>Teclas de atajo</translation>
+        <translation>Teclas de Acceso Directo</translation>
     </message>
     <message>
         <source>My Fort</source>
@@ -722,7 +722,7 @@
     </message>
     <message>
         <source>Action Confirmations</source>
-        <translation>Confirmaciones de acciones</translation>
+        <translation>Confirmaciones de Acciones</translation>
     </message>
     <message>
         <source>Windows Explorer integration</source>
@@ -1173,7 +1173,7 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Auto Update</source>
-        <translation>Actualización automática</translation>
+        <translation>Actualización Automática</translation>
     </message>
     <message>
         <source>Keep current version</source>
@@ -1699,7 +1699,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Change Time</source>
-        <translation>Cambiar Hora</translation>
+        <translation>Cambio de Tiempo</translation>
     </message>
     <message>
         <source>Application Rules</source>
@@ -2007,7 +2007,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Blocked Connections</source>
-        <translation>Conexiones bloqueadas</translation>
+        <translation>Conexiones Bloqueadas</translation>
     </message>
     <message>
         <source>Allowed Connections</source>
