@@ -28,6 +28,7 @@ public:
         FilterAlerted = (1 << 0),
         FilterWildcard = (1 << 1),
         FilterParked = (1 << 2),
+        FilterKillProcess = (1 << 3),
     };
     Q_ENUM(FilterFlag)
     Q_DECLARE_FLAGS(FilterFlags, FilterFlag)

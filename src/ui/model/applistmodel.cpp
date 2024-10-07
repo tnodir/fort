@@ -307,6 +307,7 @@ QString AppListModel::sqlWhere() const
         addSqlFilter(list, "alerted", FilterAlerted);
         addSqlFilter(list, "t.is_wildcard", FilterWildcard);
         addSqlFilter(list, "t.parked", FilterParked);
+        addSqlFilter(list, "t.kill_process", FilterKillProcess);
 
         sql += QLatin1String(sql.isEmpty() ? " WHERE " : " AND ") + list.join(" AND ");
     }
@@ -329,7 +330,7 @@ QString AppListModel::sqlOrderColumn() const
         "t.accept_zones, t.reject_zones", // Zones
         "t.rule_id", // Rule
         "t.end_time", // Scheduled
-        "alerted DESC, t.kill_process, t.blocked", // Action
+        "t.blocked", // Action
         "group_index", // Group
         pathColumn, // File Path
         "t.app_id", // Creation Time ~ App ID

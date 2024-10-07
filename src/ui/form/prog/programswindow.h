@@ -110,6 +110,7 @@ private:
     QCheckBox *m_cbFilterAlerted = nullptr;
     QCheckBox *m_cbFilterWildcard = nullptr;
     QCheckBox *m_cbFilterParked = nullptr;
+    QCheckBox *m_cbFilterKillProcess = nullptr;
     QToolButton *m_btGroups = nullptr;
     QToolButton *m_btServices = nullptr;
     QPushButton *m_btMenu = nullptr;

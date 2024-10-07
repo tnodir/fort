@@ -143,6 +143,7 @@ void ProgramsWindow::retranslateUi()
     m_cbFilterAlerted->setText(tr("Alerts"));
     m_cbFilterWildcard->setText(tr("Wildcard Paths"));
     m_cbFilterParked->setText(tr("Parked"));
+    m_cbFilterKillProcess->setText(tr("Kill Process"));
 
     m_btGroups->setText(tr("Groups"));
     m_btServices->setText(tr("Services"));
@@ -331,6 +332,7 @@ void ProgramsWindow::setupFilter()
     layout->addWidget(m_cbFilterAlerted);
     layout->addWidget(m_cbFilterWildcard);
     layout->addWidget(m_cbFilterParked);
+    layout->addWidget(m_cbFilterKillProcess);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_btClearFilter, 0, Qt::AlignCenter);
 
@@ -371,6 +373,12 @@ void ProgramsWindow::setupFilterCheckBoxes()
                 appListModel()->setFilterValue(
                         AppListModel::FilterParked, m_cbFilterParked->checkState());
             });
+
+    m_cbFilterKillProcess =
+            ControlUtil::createCheckStateBox(":/icons/scull.png", Qt::PartiallyChecked, [&] {
+                appListModel()->setFilterValue(
+                        AppListModel::FilterKillProcess, m_cbFilterKillProcess->checkState());
+            });
 }
 
 void ProgramsWindow::setupFilterClear()
@@ -381,6 +389,7 @@ void ProgramsWindow::setupFilterClear()
         m_cbFilterAlerted->setCheckState(Qt::PartiallyChecked);
         m_cbFilterWildcard->setCheckState(Qt::PartiallyChecked);
         m_cbFilterParked->setCheckState(Qt::PartiallyChecked);
+        m_cbFilterKillProcess->setCheckState(Qt::PartiallyChecked);
     });
 }
 
