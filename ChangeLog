@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.14.2, 2024-10-08:
+- UI: Do not open Alert Program in Auto-Learn mode.
+- UI: Programs: Add "Kill Process" filter.
+- UI: Update translations.
+
 v3.14.1, 2024-10-06:
 - Driver: Fix empty packets handling (v3.13.13 regression).
 
