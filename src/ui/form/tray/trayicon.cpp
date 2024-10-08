@@ -901,6 +901,30 @@ QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
     return nullptr;
 }
 
+void TrayIcon::processMouseClick(Qt::MouseButton button, Qt::KeyboardModifiers modifiers)
+{
+    ClickType clickType;
+    switch (button) {
+    case Qt::LeftButton: {
+        clickType = SingleClick;
+
+        if (modifiers & Qt::ControlModifier) {
+            clickType = CtrlSingleClick;
+        } else if (modifiers & Qt::AltModifier) {
+            clickType = AltSingleClick;
+        }
+    } break;
+    case Qt::MiddleButton: {
+        clickType = MiddleClick;
+    } break;
+    case Qt::RightButton: {
+        clickType = RightClick;
+    } break;
+    }
+
+    onMouseClicked(clickType);
+}
+
 void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
 {
     QAction *action = clickAction(clickType);
@@ -921,10 +945,10 @@ void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType)
 
 void TrayIcon::onTrayActivatedByTrigger()
 {
-    const Qt::KeyboardModifiers kbMods = qApp->queryKeyboardModifiers();
-    const ClickType clickType = (kbMods & Qt::ControlModifier) != 0
+    const Qt::KeyboardModifiers modifiers = QApplication::queryKeyboardModifiers();
+    const ClickType clickType = (modifiers & Qt::ControlModifier) != 0
             ? CtrlSingleClick
-            : ((kbMods & Qt::AltModifier) != 0 ? AltSingleClick : SingleClick);
+            : ((modifiers & Qt::AltModifier) != 0 ? AltSingleClick : SingleClick);
 
     if (clickAction(DoubleClick)) {
         m_trayTriggered = true;

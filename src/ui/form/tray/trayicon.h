@@ -79,6 +79,8 @@ public slots:
 
     void quitProgram();
 
+    void processMouseClick(Qt::MouseButton button, Qt::KeyboardModifiers modifiers);
+
 protected slots:
     void setupByIniUser(const IniUser &ini, bool onlyFlags);
 

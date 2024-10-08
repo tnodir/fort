@@ -51,6 +51,7 @@ SOURCES += \
     form/controls/lineedit.cpp \
     form/controls/listview.cpp \
     form/controls/mainwindow.cpp \
+    form/controls/menubutton.cpp \
     form/controls/menuwidget.cpp \
     form/controls/plaintextedit.cpp \
     form/controls/sidebutton.cpp \
@@ -276,6 +277,7 @@ HEADERS += \
     form/controls/lineedit.h \
     form/controls/listview.h \
     form/controls/mainwindow.h \
+    form/controls/menubutton.h \
     form/controls/menuwidget.h \
     form/controls/plaintextedit.h \
     form/controls/sidebutton.h \

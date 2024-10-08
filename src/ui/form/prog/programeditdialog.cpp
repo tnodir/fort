@@ -722,7 +722,7 @@ void ProgramEditDialog::setupComboScheduleType()
 QLayout *ProgramEditDialog::setupButtonsLayout()
 {
     // Menu button
-    m_btMenu = windowManager()->createMenuButton();
+    m_btMenu = ControlUtil::createMenuButton();
 
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {

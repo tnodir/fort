@@ -226,7 +226,7 @@ QLayout *ProgramsWindow::setupHeader()
             &WindowManager::showServicesWindow);
 
     // Menu button
-    m_btMenu = windowManager()->createMenuButton();
+    m_btMenu = ControlUtil::createMenuButton();
 
     layout->addWidget(m_btEdit);
     layout->addWidget(ControlUtil::createVSeparator());

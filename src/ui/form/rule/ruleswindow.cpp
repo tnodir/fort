@@ -198,7 +198,7 @@ QLayout *RulesWindow::setupHeader()
     setupEditSearch();
 
     // Menu button
-    m_btMenu = windowManager()->createMenuButton();
+    m_btMenu = ControlUtil::createMenuButton();
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
             m_editSearch, /*stretch*/ nullptr, m_btMenu });

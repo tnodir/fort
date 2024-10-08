@@ -168,7 +168,7 @@ QWidget *HomeWindow::setupHeader()
     setupPasswordButtons();
 
     // Menu button
-    m_btMenu = windowManager()->createMenuButton();
+    m_btMenu = ControlUtil::createMenuButton();
 
     auto layout = new QHBoxLayout();
     layout->setContentsMargins(16, 6, 6, 6);

@@ -77,7 +77,7 @@ QLayout *StatMainPage::setupCornerLayout()
             &WindowManager::showStatOptionsWindow);
 
     // Menu button
-    m_btMenu = windowManager()->createMenuButton();
+    m_btMenu = ControlUtil::createMenuButton();
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_btOptions, ControlUtil::createVSeparator(), m_btMenu });

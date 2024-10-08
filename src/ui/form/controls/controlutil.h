@@ -119,6 +119,8 @@ public:
 
     static QLabel *formRowLabel(QFormLayout *formLayout, QWidget *field);
     static QLabel *formRowLabel(QFormLayout *formLayout, QLayout *field);
+
+    static QPushButton *createMenuButton();
 };
 
 #endif // CONTROLUTIL_H

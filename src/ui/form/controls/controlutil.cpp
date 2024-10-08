@@ -18,6 +18,7 @@
 #include "labelspin.h"
 #include "labelspincombo.h"
 #include "lineedit.h"
+#include "menubutton.h"
 #include "menuwidget.h"
 #include "sidebutton.h"
 #include "spinbox.h"
@@ -411,4 +412,9 @@ QLabel *ControlUtil::formRowLabel(QFormLayout *formLayout, QLayout *field)
     label->setMinimumWidth(100);
 
     return label;
+}
+
+QPushButton *ControlUtil::createMenuButton()
+{
+    return new MenuButton();
 }

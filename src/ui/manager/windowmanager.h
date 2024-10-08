@@ -7,8 +7,6 @@
 #include <form/form_types.h>
 #include <util/ioc/iocservice.h>
 
-QT_FORWARD_DECLARE_CLASS(QPushButton)
-
 class FormWindow;
 class GraphWindow;
 class HomeWindow;
@@ -57,8 +55,6 @@ public:
     void initialize();
 
     bool isWindowOpen(WindowCode code) const { return isAnyWindowOpen(code); }
-
-    QPushButton *createMenuButton() const;
 
     static QFont defaultFont();
 
