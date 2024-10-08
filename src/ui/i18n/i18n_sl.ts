@@ -904,6 +904,10 @@
         <source>Operations from Tray Menu</source>
         <translation>Delovanje menija pladnja</translation>
     </message>
+    <message>
+        <source>Sound Alert</source>
+        <translation>Zvočno opozorilo</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

@@ -904,6 +904,10 @@
         <source>Operations from Tray Menu</source>
         <translation>Операции из меню трея</translation>
     </message>
+    <message>
+        <source>Sound Alert</source>
+        <translation>Звуковое оповещение</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

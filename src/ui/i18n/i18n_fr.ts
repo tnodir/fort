@@ -904,6 +904,10 @@
         <source>Operations from Tray Menu</source>
         <translation>Opérations depuis le menu de la barre d&apos;état</translation>
     </message>
+    <message>
+        <source>Sound Alert</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

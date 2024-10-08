@@ -904,6 +904,10 @@
         <source>Operations from Tray Menu</source>
         <translation>通过托盘菜单进行操作</translation>
     </message>
+    <message>
+        <source>Sound Alert</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
