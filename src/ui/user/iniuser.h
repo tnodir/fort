@@ -75,6 +75,9 @@ public:
     bool progNotifyMessage() const { return valueBool("prog/notifyMessage", true); }
     void setProgNotifyMessage(bool v) { setValue("prog/notifyMessage", v, true); }
 
+    bool progAlertSound() const { return valueBool("prog/soundAlert"); }
+    void setProgAlertSound(bool v) { setValue("prog/soundAlert", v); }
+
     bool trayShowIcon() const { return valueBool("tray/showIcon", true); }
     void setTrayShowIcon(bool v) { setValue("tray/showIcon", v, true); }
 
@@ -83,9 +86,6 @@ public:
 
     bool trayAnimateAlert() const { return valueBool("tray/animateAlert", true); }
     void setTrayAnimateAlert(bool v) { setValue("tray/animateAlert", v, true); }
-
-    bool traySoundAlert() const { return valueBool("tray/soundAlert"); }
-    void setTraySoundAlert(bool v) { setValue("tray/soundAlert", v); }
 
     int trayMaxGroups(int v = 0) const { return valueInt("tray/maxGroups", v); }
     void setTrayMaxGroups(int v) { setValue("tray/maxGroups", v); }

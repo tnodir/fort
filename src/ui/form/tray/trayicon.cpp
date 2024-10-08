@@ -260,10 +260,6 @@ void TrayIcon::updateTrayIcon(bool alerted)
         return;
 
     if (alerted) {
-        if (iniUser()->traySoundAlert()) {
-            OsUtil::playSound();
-        }
-
         if (!iniUser()->trayShowAlert())
             return;
     }
@@ -625,6 +621,10 @@ void TrayIcon::sendAlertMessage()
     if (iniUser()->progNotifyMessage()) {
         windowManager()->showTrayMessage(
                 tr("New program detected!"), WindowManager::TrayMessageAlert);
+    }
+
+    if (iniUser()->progAlertSound()) {
+        OsUtil::playSound();
     }
 
     if (iniUser()->progAlertWindowAutoShow()) {

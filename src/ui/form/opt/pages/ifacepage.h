@@ -93,11 +93,11 @@ private:
     QCheckBox *m_cbAppAlertAutoShow = nullptr;
     QCheckBox *m_cbAppAlertAlwaysOnTop = nullptr;
     QCheckBox *m_cbAppAlertAutoActive = nullptr;
+    QCheckBox *m_cbAppAlertSound = nullptr;
 
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayShowAlert = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
-    QCheckBox *m_cbTraySoundAlert = nullptr;
     QLabel *m_labelTrayMaxGroups = nullptr;
     QSpinBox *m_spinTrayMaxGroups = nullptr;
 

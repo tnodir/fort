@@ -60,11 +60,11 @@ void IfacePage::onResetToDefault()
     m_cbAppAlertAutoShow->setChecked(true);
     m_cbAppAlertAlwaysOnTop->setChecked(true);
     m_cbAppAlertAutoActive->setChecked(false);
+    m_cbAppAlertSound->setChecked(false);
 
     m_cbTrayShowIcon->setChecked(true);
     m_cbTrayShowAlert->setChecked(true);
     m_cbTrayAnimateAlert->setChecked(true);
-    m_cbTraySoundAlert->setChecked(false);
 
     m_spinTrayMaxGroups->setValue(trayMaxGroups);
 
@@ -137,11 +137,11 @@ void IfacePage::onRetranslateUi()
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
     m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
     m_cbAppAlertAutoActive->setText(tr("Alert Window is auto-active"));
+    m_cbAppAlertSound->setText(tr("Sound Alert"));
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayShowAlert->setText(tr("Show Alert Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
-    m_cbTraySoundAlert->setText(tr("Sound Alert"));
     m_labelTrayMaxGroups->setText(tr("Maximum count of Groups in menu:"));
     m_labelTrayEvent->setText(tr("Event:"));
     m_labelTrayAction->setText(tr("Action:"));
@@ -490,9 +490,14 @@ void IfacePage::setupProgBox()
                 ctrl()->setIniUserEdited();
             });
 
+    m_cbAppAlertSound = ControlUtil::createCheckBox(iniUser()->progAlertSound(), [&](bool checked) {
+        iniUser()->setProgAlertSound(checked);
+        ctrl()->setIniUserEdited();
+    });
+
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets({ m_cbAppNotifyMessage, m_cbAppAlertAutoShow,
-            m_cbAppAlertAlwaysOnTop, m_cbAppAlertAutoActive });
+            m_cbAppAlertAlwaysOnTop, m_cbAppAlertAutoActive, m_cbAppAlertSound });
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);
@@ -516,12 +521,6 @@ void IfacePage::setupTrayBox()
                 ctrl()->setIniUserEdited();
             });
 
-    m_cbTraySoundAlert =
-            ControlUtil::createCheckBox(iniUser()->traySoundAlert(), [&](bool checked) {
-                iniUser()->setTraySoundAlert(checked);
-                ctrl()->setIniUserEdited();
-            });
-
     // Tray Max. Groups Row
     auto maxGroupsLayout = setupTrayMaxGroupsLayout();
 
@@ -533,7 +532,6 @@ void IfacePage::setupTrayBox()
     layout->addWidget(m_cbTrayShowIcon);
     layout->addWidget(m_cbTrayShowAlert);
     layout->addWidget(m_cbTrayAnimateAlert);
-    layout->addWidget(m_cbTraySoundAlert);
     layout->addLayout(maxGroupsLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(eventLayout);
