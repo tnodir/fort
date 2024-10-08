@@ -11,6 +11,10 @@ enum BeepType {
     BeepSimple = -1
 };
 
+enum SoundType {
+    SoundDefault = 0,
+};
+
 #define OS_TICKS_PER_SECOND 1000
 
 class OsUtil
@@ -33,6 +37,7 @@ public:
     static bool isUserAdmin();
 
     static bool beep(BeepType type = BeepSimple);
+    static bool playSound(SoundType type = SoundDefault);
 
     static void showConsole(bool visible);
     static void writeToConsole(const QString &line);

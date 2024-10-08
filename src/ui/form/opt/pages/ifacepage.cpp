@@ -64,6 +64,7 @@ void IfacePage::onResetToDefault()
     m_cbTrayShowIcon->setChecked(true);
     m_cbTrayShowAlert->setChecked(true);
     m_cbTrayAnimateAlert->setChecked(true);
+    m_cbTraySoundAlert->setChecked(false);
 
     m_spinTrayMaxGroups->setValue(trayMaxGroups);
 
@@ -140,6 +141,7 @@ void IfacePage::onRetranslateUi()
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayShowAlert->setText(tr("Show Alert Icon"));
     m_cbTrayAnimateAlert->setText(tr("Animate Alert Icon"));
+    m_cbTraySoundAlert->setText(tr("Sound Alert"));
     m_labelTrayMaxGroups->setText(tr("Maximum count of Groups in menu:"));
     m_labelTrayEvent->setText(tr("Event:"));
     m_labelTrayAction->setText(tr("Action:"));
@@ -514,6 +516,12 @@ void IfacePage::setupTrayBox()
                 ctrl()->setIniUserEdited();
             });
 
+    m_cbTraySoundAlert =
+            ControlUtil::createCheckBox(iniUser()->traySoundAlert(), [&](bool checked) {
+                iniUser()->setTraySoundAlert(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     // Tray Max. Groups Row
     auto maxGroupsLayout = setupTrayMaxGroupsLayout();
 
@@ -525,6 +533,7 @@ void IfacePage::setupTrayBox()
     layout->addWidget(m_cbTrayShowIcon);
     layout->addWidget(m_cbTrayShowAlert);
     layout->addWidget(m_cbTrayAnimateAlert);
+    layout->addWidget(m_cbTraySoundAlert);
     layout->addLayout(maxGroupsLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(eventLayout);

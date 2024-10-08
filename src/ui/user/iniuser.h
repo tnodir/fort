@@ -84,6 +84,9 @@ public:
     bool trayAnimateAlert() const { return valueBool("tray/animateAlert", true); }
     void setTrayAnimateAlert(bool v) { setValue("tray/animateAlert", v, true); }
 
+    bool traySoundAlert() const { return valueBool("tray/soundAlert"); }
+    void setTraySoundAlert(bool v) { setValue("tray/soundAlert", v); }
+
     int trayMaxGroups(int v = 0) const { return valueInt("tray/maxGroups", v); }
     void setTrayMaxGroups(int v) { setValue("tray/maxGroups", v); }
 

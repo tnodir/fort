@@ -21,6 +21,7 @@
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/osutil.h>
 #include <util/window/widgetwindow.h>
 
 #include "traycontroller.h"
@@ -258,8 +259,14 @@ void TrayIcon::updateTrayIcon(bool alerted)
     if (m_alerted == alerted)
         return;
 
-    if (alerted && !iniUser()->trayShowAlert())
-        return;
+    if (alerted) {
+        if (iniUser()->traySoundAlert()) {
+            OsUtil::playSound();
+        }
+
+        if (!iniUser()->trayShowAlert())
+            return;
+    }
 
     m_alerted = alerted;
     m_animatedAlert = false;

@@ -97,6 +97,7 @@ private:
     QCheckBox *m_cbTrayShowIcon = nullptr;
     QCheckBox *m_cbTrayShowAlert = nullptr;
     QCheckBox *m_cbTrayAnimateAlert = nullptr;
+    QCheckBox *m_cbTraySoundAlert = nullptr;
     QLabel *m_labelTrayMaxGroups = nullptr;
     QSpinBox *m_spinTrayMaxGroups = nullptr;
 

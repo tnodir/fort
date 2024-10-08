@@ -12,6 +12,7 @@
 #include <qt_windows.h>
 
 #include <lmcons.h>
+#include <mmsystem.h>
 
 #include "fileutil.h"
 #include "processinfo.h"
@@ -126,6 +127,13 @@ bool OsUtil::isUserAdmin()
 bool OsUtil::beep(BeepType type)
 {
     return MessageBeep(type);
+}
+
+bool OsUtil::playSound(SoundType /*type*/)
+{
+    constexpr DWORD flags = SND_ALIAS_ID | SND_ASYNC | SND_SENTRY;
+
+    return PlaySoundW(LPCWSTR(SND_ALIAS_SYSTEMDEFAULT), nullptr, flags);
 }
 
 void OsUtil::showConsole(bool visible)
