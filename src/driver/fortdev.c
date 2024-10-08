@@ -430,7 +430,7 @@ static NTSTATUS fort_device_register_provider(void)
 
     if (!fort_prov_get_boot_conf(engine, &boot_conf)) {
         // Default flags from Registry
-        boot_conf.boot_filter = fort_reg_flag(L"BootFilter");
+        boot_conf.boot_filter = fort_reg_flag(L"bootFilter");
     }
 
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER, boot_conf.boot_filter);

@@ -332,8 +332,14 @@ FORT_API void KeFlushQueuedDpcs(void);
 #define DrvRtPoolNxOptIn 0x00000001
 FORT_API VOID ExInitializeDriverRuntime(ULONG runtimeFlags);
 
-FORT_API NTSTATUS IoCreateDevice(PDRIVER_OBJECT driver, ULONG extensionSize, PUNICODE_STRING name,
-        DEVICE_TYPE type, ULONG characteristics, BOOLEAN exclusive, PDEVICE_OBJECT *device);
+#define FILE_DEVICE_SECURE_OPEN 0x00000100
+
+extern const UNICODE_STRING SDDL_DEVOBJ_SYS_ALL_ADM_ALL;
+extern const UNICODE_STRING SDDL_DEVOBJ_SYS_ALL_ADM_RWX_WORLD_RWX_RES_RWX;
+
+FORT_API NTSTATUS IoCreateDeviceSecure(PDRIVER_OBJECT driver, ULONG extensionSize,
+        PUNICODE_STRING name, DEVICE_TYPE type, ULONG characteristics, BOOLEAN exclusive,
+        PCUNICODE_STRING sddl, LPCGUID class, PDEVICE_OBJECT *device);
 FORT_API VOID IoDeleteDevice(PDEVICE_OBJECT device);
 
 FORT_API NTSTATUS IoCreateSymbolicLink(PUNICODE_STRING symbolicLink, PUNICODE_STRING deviceName);

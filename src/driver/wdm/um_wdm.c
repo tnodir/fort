@@ -76,8 +76,12 @@ void ExInitializeDriverRuntime(ULONG runtimeFlags)
     UNUSED(runtimeFlags);
 }
 
-NTSTATUS IoCreateDevice(PDRIVER_OBJECT driver, ULONG extensionSize, PUNICODE_STRING name,
-        DWORD type, ULONG characteristics, BOOLEAN exclusive, PDEVICE_OBJECT *device)
+const UNICODE_STRING SDDL_DEVOBJ_SYS_ALL_ADM_ALL = {};
+const UNICODE_STRING SDDL_DEVOBJ_SYS_ALL_ADM_RWX_WORLD_RWX_RES_RWX = {};
+
+NTSTATUS IoCreateDeviceSecure(PDRIVER_OBJECT driver, ULONG extensionSize, PUNICODE_STRING name,
+        DEVICE_TYPE type, ULONG characteristics, BOOLEAN exclusive, PCUNICODE_STRING sddl,
+        LPCGUID class, PDEVICE_OBJECT *device)
 {
     UNUSED(driver);
     UNUSED(extensionSize);
@@ -85,6 +89,8 @@ NTSTATUS IoCreateDevice(PDRIVER_OBJECT driver, ULONG extensionSize, PUNICODE_STR
     UNUSED(type);
     UNUSED(characteristics);
     UNUSED(exclusive);
+    UNUSED(sddl);
+    UNUSED(class);
     UNUSED(device);
     return STATUS_SUCCESS;
 }

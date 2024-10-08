@@ -73,7 +73,7 @@
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\aux_klib.lib;$(DDK_LIB_PATH)\fwpkclnt.lib;$(DDK_LIB_PATH)\ndis.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies);$(DDK_LIB_PATH)\aux_klib.lib;$(DDK_LIB_PATH)\fwpkclnt.lib;$(DDK_LIB_PATH)\ndis.lib;$(DDK_LIB_PATH)\wdmsec.lib;$(SDK_LIB_PATH)\uuid.lib</AdditionalDependencies>
       <AdditionalOptions>/INTEGRITYCHECK</AdditionalOptions>
       <AdditionalOptions Condition="'$(Platform)'=='Win32'">%(AdditionalOptions) /SAFESEH:NO</AdditionalOptions>
       <ModuleDefinitionFile>fortdrv.def</ModuleDefinitionFile>

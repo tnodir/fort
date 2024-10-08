@@ -33,10 +33,13 @@ static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver)
     UNICODE_STRING device_name;
     RtlInitUnicodeString(&device_name, FORT_NT_DEVICE_NAME);
 
-    /* TODO: Use IoCreateDeviceSecure() with custom SDDL for Service SID */
+    const BOOL isDriverAdmin = fort_reg_flag(L"isDriverAdmin") != 0;
+    const PCUNICODE_STRING sddl = (isDriverAdmin ? &SDDL_DEVOBJ_SYS_ALL_ADM_ALL
+                                                 : &SDDL_DEVOBJ_SYS_ALL_ADM_RWX_WORLD_RWX_RES_RWX);
+
     PDEVICE_OBJECT device_obj;
-    status = IoCreateDevice(driver, sizeof(FORT_DEVICE), &device_name, FORT_DEVICE_TYPE, 0,
-            /*exclusive=*/TRUE, &device_obj);
+    status = IoCreateDeviceSecure(driver, sizeof(FORT_DEVICE), &device_name, FORT_DEVICE_TYPE,
+            FILE_DEVICE_SECURE_OPEN, /*exclusive=*/TRUE, sddl, NULL, &device_obj);
     if (!NT_SUCCESS(status)) {
         LOG("Create Device: Error: %x\n", status);
         return status;
