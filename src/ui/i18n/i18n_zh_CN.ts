@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>Current Version</source>
-        <translation type="unfinished"></translation>
+        <translation>当前版本</translation>
     </message>
 </context>
 <context>
@@ -902,7 +902,7 @@
     </message>
     <message>
         <source>Operations from Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>通过托盘菜单进行操作</translation>
     </message>
 </context>
 <context>
@@ -1040,7 +1040,9 @@
         <source>All Options and Programs will be replaced after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
-        <translation type="unfinished"></translation>
+        <translation>导入成功后，所有选项和程序都将被替换。是否继续？
+
+请确保您有进行完整的备份。</translation>
     </message>
 </context>
 <context>
@@ -1171,15 +1173,15 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto Update</source>
-        <translation type="unfinished"></translation>
+        <translation>自动更新</translation>
     </message>
     <message>
         <source>Keep current version</source>
-        <translation type="unfinished"></translation>
+        <translation>保持当前版本</translation>
     </message>
     <message>
         <source>Auto-download new version</source>
-        <translation type="unfinished"></translation>
+        <translation>自动下载新版本</translation>
     </message>
 </context>
 <context>
@@ -1590,7 +1592,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>警报</translation>
     </message>
 </context>
 <context>
@@ -2288,23 +2290,23 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Addresses from Inline Text</source>
-        <translation type="unfinished"></translation>
+        <translation>来自于内联文本中的地址</translation>
     </message>
     <message>
         <source>Addresses from Local File</source>
-        <translation type="unfinished"></translation>
+        <translation>来自于本地文件中的地址</translation>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation type="unfinished"></translation>
+        <translation>Windows 间谍阻止器</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation type="unfinished"></translation>
+        <translation>FireHOL 一级防火墙规则</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>TAS-IX 地址</translation>
     </message>
 </context>
 <context>
