@@ -115,6 +115,11 @@ bool RegKey::setValue(const QString &name, const QVariant &value, bool expand)
             (HKEY) handle(), (LPCWSTR) name.utf16(), 0, type, (const BYTE *) dataPtr, size);
 }
 
+bool RegKey::setOrRemoveValue(const QString &name, const QVariant &value, bool expand)
+{
+    return !value.isNull() ? setValue(name, value, expand) : removeValue(name);
+}
+
 QVariant RegKey::value(const QString &name, bool *expand) const
 {
     char data[16 * 1024];

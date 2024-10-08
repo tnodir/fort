@@ -67,6 +67,7 @@ void OptionsPage::onResetToDefault()
 
     m_cbBootFilter->setChecked(false);
     m_cbNoServiceControl->setChecked(false);
+    m_cbIsDriverAdmin->setChecked(false);
     m_cbCheckPasswordOnUninstall->setChecked(false);
     m_cbPassword->setChecked(false);
 
@@ -168,6 +169,7 @@ void OptionsPage::onRetranslateUi()
 
     m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
     m_cbNoServiceControl->setText(tr("Disable Service controls"));
+    m_cbIsDriverAdmin->setText(tr("Only Administrator can open Driver"));
     m_cbCheckPasswordOnUninstall->setText(tr("Check password on Uninstall"));
 
     m_cbPassword->setText(tr("Password:"));
@@ -418,13 +420,21 @@ void OptionsPage::setupProtectionBox()
                 ctrl()->setIniEdited();
             });
 
+    m_cbIsDriverAdmin = ControlUtil::createCheckBox(ini()->isDriverAdmin(), [&](bool checked) {
+        ini()->setIsDriverAdmin(checked);
+        ctrl()->setIniEdited();
+    });
+
     m_cbCheckPasswordOnUninstall =
             ControlUtil::createCheckBox(ini()->checkPasswordOnUninstall(), [&](bool checked) {
                 ini()->setCheckPasswordOnUninstall(checked);
                 ctrl()->setIniEdited();
             });
 
-    m_cbCheckPasswordOnUninstall->setEnabled(settings()->hasMasterAdmin());
+    if (!settings()->hasMasterAdmin()) {
+        m_cbIsDriverAdmin->setEnabled(false);
+        m_cbCheckPasswordOnUninstall->setEnabled(false);
+    }
 
     // Password Row
     auto passwordLayout = setupPasswordLayout();
@@ -433,6 +443,7 @@ void OptionsPage::setupProtectionBox()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbBootFilter);
     layout->addWidget(m_cbNoServiceControl);
+    layout->addWidget(m_cbIsDriverAdmin);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addWidget(m_cbCheckPasswordOnUninstall);
     layout->addLayout(passwordLayout);

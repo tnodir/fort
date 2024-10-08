@@ -26,7 +26,7 @@ static void fort_driver_delete_device(PDRIVER_OBJECT driver)
     IoDeleteDevice(device_obj);
 }
 
-static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path)
+static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver)
 {
     NTSTATUS status;
 
@@ -95,7 +95,7 @@ static NTSTATUS fort_driver_load(PDRIVER_OBJECT driver, PUNICODE_STRING reg_path
         return status;
     }
 
-    status = fort_driver_create_device(driver, reg_path);
+    status = fort_driver_create_device(driver);
     if (!NT_SUCCESS(status))
         return status;
 

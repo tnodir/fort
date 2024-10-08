@@ -31,6 +31,9 @@ public:
     static QString registryPasswordHash();
     static void setRegistryPasswordHash(const QString &passwordHash);
 
+    static bool registryIsDriverAdmin();
+    static void setRegistryIsDriverAdmin(bool isDriverAdmin);
+
     static void setPortable(bool portable);
 };
 

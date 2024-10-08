@@ -7,6 +7,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
 
+#include <sqlite/dbvar.h>
+
 #include <fort_version_l.h>
 
 #include <util/fileutil.h>
@@ -114,6 +116,13 @@ bool uninstallService(const wchar_t *serviceName)
     }
 
     return false;
+}
+
+RegKey registryAppKey(quint32 flags = RegKey::DefaultReadOnly)
+{
+    const RegKey regSw(RegKey::HKLM, R"(SOFTWARE)", flags);
+
+    return RegKey(regSw, APP_NAME, flags);
 }
 
 }
@@ -258,27 +267,30 @@ void StartupUtil::clearGlobalExplorerIntegrated()
 
 QString StartupUtil::registryPasswordHash()
 {
-    const RegKey regApp(RegKey::HKLM, R"(SOFTWARE)");
+    const RegKey regApp = registryAppKey();
 
-    const RegKey reg(regApp, APP_NAME);
-
-    return reg.value("passwordHash").toString();
+    return regApp.value("passwordHash").toString();
 }
 
 void StartupUtil::setRegistryPasswordHash(const QString &passwordHash)
 {
-    const bool isAdding = !passwordHash.isEmpty();
+    RegKey regApp = registryAppKey(RegKey::DefaultCreate);
 
-    const RegKey regApp(RegKey::HKLM, R"(SOFTWARE)",
-            isAdding ? RegKey::DefaultCreate : RegKey::DefaultReadWrite);
+    regApp.setOrRemoveValue("passwordHash", DbVar::nullable(passwordHash));
+}
 
-    RegKey reg(regApp, APP_NAME, RegKey::DefaultCreate);
+bool StartupUtil::registryIsDriverAdmin()
+{
+    const RegKey regApp = registryAppKey();
 
-    if (isAdding) {
-        reg.setValue("passwordHash", passwordHash);
-    } else {
-        reg.removeValue("passwordHash");
-    }
+    return regApp.value("isDriverAdmin").toBool();
+}
+
+void StartupUtil::setRegistryIsDriverAdmin(bool isDriverAdmin)
+{
+    RegKey regApp = registryAppKey(RegKey::DefaultCreate);
+
+    regApp.setOrRemoveValue("isDriverAdmin", DbVar::nullable(isDriverAdmin));
 }
 
 void StartupUtil::setPortable(bool portable)

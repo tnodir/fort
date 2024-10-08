@@ -49,7 +49,8 @@ public:
     bool removeRecursively(const QString &subKey);
     bool removeValue(const QString &name);
     bool setValue(const QString &name, const QVariant &value, bool expand = false);
-    bool setDefaultValue(const QVariant &value) { return setValue(QString(), value); }
+    inline bool setDefaultValue(const QVariant &value) { return setValue(QString(), value); }
+    bool setOrRemoveValue(const QString &name, const QVariant &value, bool expand = false);
     QVariant value(const QString &name, bool *expand = nullptr) const;
     bool contains(const QString &name) const;
 
