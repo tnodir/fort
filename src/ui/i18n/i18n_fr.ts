@@ -906,7 +906,7 @@
     </message>
     <message>
         <source>Sound Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>Alerte Sonore</translation>
     </message>
 </context>
 <context>
