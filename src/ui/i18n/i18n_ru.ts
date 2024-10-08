@@ -2298,11 +2298,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation></translation>
+        <translation>WindowsSpyBlocker</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation></translation>
+        <translation>FireHOL Уровень-1</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>

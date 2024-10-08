@@ -240,7 +240,7 @@
     </message>
     <message>
         <source>Apply same rules to child processes</source>
-        <translation>Aplicar las mismas reglas a los procesos hijo</translation>
+        <translation>Aplicar las mismas reglas a los procesos hijos</translation>
     </message>
     <message>
         <source>Latency:</source>
@@ -902,7 +902,7 @@
     </message>
     <message>
         <source>Operations from Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Operaciones desde el menú de la bandeja</translation>
     </message>
 </context>
 <context>

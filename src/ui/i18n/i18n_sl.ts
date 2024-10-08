@@ -2298,11 +2298,11 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation></translation>
+        <translation>WindowsSpyBlocker</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation></translation>
+        <translation>FireHOL Stopnja-1</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
