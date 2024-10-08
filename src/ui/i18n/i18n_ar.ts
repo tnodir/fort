@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>Current Version</source>
-        <translation type="unfinished"></translation>
+        <translation>النسخة الحالية</translation>
     </message>
 </context>
 <context>
@@ -1175,14 +1175,18 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto Update</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديث تلقائي</translation>
     </message>
     <message>
         <source>Keep current version</source>
-        <translation type="unfinished"></translation>
+        <translation>الاحتفاظ بالنسخة الحالية</translation>
     </message>
     <message>
         <source>Auto-download new version</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only Administrator can open Driver</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

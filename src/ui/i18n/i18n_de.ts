@@ -1187,6 +1187,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Auto-download new version</source>
         <translation>Neue Version automatisch herunterladen</translation>
     </message>
+    <message>
+        <source>Only Administrator can open Driver</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -1187,6 +1187,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source>Auto-download new version</source>
         <translation>Automatyczne pobieranie nowej wersji</translation>
     </message>
+    <message>
+        <source>Only Administrator can open Driver</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

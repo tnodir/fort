@@ -902,11 +902,11 @@
     </message>
     <message>
         <source>Operations from Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Operazioni dal menu&apos; in Avvio rapido</translation>
     </message>
     <message>
         <source>Sound Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>Avviso sonoro</translation>
     </message>
 </context>
 <context>
@@ -1186,6 +1186,10 @@ Assicurati di avere un nuovo backup.</translation>
     <message>
         <source>Auto-download new version</source>
         <translation>Scarica automaticamente la nuova versione</translation>
+    </message>
+    <message>
+        <source>Only Administrator can open Driver</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

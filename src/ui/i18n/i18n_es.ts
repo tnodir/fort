@@ -1187,6 +1187,10 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <source>Auto-download new version</source>
         <translation>Autodescargar nueva versión</translation>
     </message>
+    <message>
+        <source>Only Administrator can open Driver</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

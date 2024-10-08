@@ -1187,6 +1187,10 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-download new version</source>
         <translation>Авто-скачивание новой версии</translation>
     </message>
+    <message>
+        <source>Only Administrator can open Driver</source>
+        <translation>Только администратор может открыть драйвер</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
