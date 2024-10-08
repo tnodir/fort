@@ -131,9 +131,9 @@ bool OsUtil::beep(BeepType type)
 
 bool OsUtil::playSound(SoundType /*type*/)
 {
-    constexpr DWORD flags = SND_ALIAS_ID | SND_ASYNC | SND_SENTRY;
+    constexpr DWORD flags = SND_ASYNC | SND_SENTRY;
 
-    return PlaySoundW(LPCWSTR(SND_ALIAS_SYSTEMDEFAULT), nullptr, flags);
+    return PlaySoundA("MessageNudge", nullptr, flags);
 }
 
 void OsUtil::showConsole(bool visible)
