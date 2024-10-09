@@ -135,7 +135,8 @@ private:
     QAction *clickActionFromIni(TrayIcon::ClickType clickType) const;
     QAction *clickActionByType(TrayIcon::ActionType actionType) const;
 
-    void onMouseClicked(TrayIcon::ClickType clickType);
+    void onMouseClicked(
+            TrayIcon::ClickType clickType, TrayIcon::ClickType menuClickType = RightClick);
     void onTrayActivatedByTrigger();
     void onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkTriggered = false);
 

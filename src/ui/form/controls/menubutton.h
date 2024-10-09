@@ -20,6 +20,9 @@ private:
 protected:
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
+
+private:
+    bool m_mousePressed : 1 = false;
 };
 
 #endif // MENUBUTTON_H

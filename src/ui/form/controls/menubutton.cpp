@@ -1,6 +1,7 @@
 #include "menubutton.h"
 
 #include <QGuiApplication>
+#include <QMenu>
 #include <QMouseEvent>
 
 #include <form/tray/trayicon.h>
@@ -27,23 +28,24 @@ void MenuButton::setupUi()
 
 void MenuButton::mousePressEvent(QMouseEvent *e)
 {
-    const auto button = e->button();
-    const auto modifiers = e->modifiers();
-
-    if (button == Qt::LeftButton && modifiers == Qt::NoModifier) {
+    if (e->button() == Qt::LeftButton && e->modifiers() == Qt::NoModifier) {
         QPushButton::mousePressEvent(e);
     }
+
+    m_mousePressed = true;
 }
 
 void MenuButton::mouseReleaseEvent(QMouseEvent *e)
 {
     QPushButton::mouseReleaseEvent(e);
 
-    const auto button = e->button();
-    const auto modifiers = e->modifiers();
+    if (!m_mousePressed)
+        return;
 
-    if (button == Qt::LeftButton && modifiers == Qt::NoModifier)
+    m_mousePressed = false;
+
+    if (menu()->isVisible())
         return; // standard behavior
 
-    trayIcon()->processMouseClick(button, modifiers);
+    trayIcon()->processMouseClick(e->button(), e->modifiers());
 }
