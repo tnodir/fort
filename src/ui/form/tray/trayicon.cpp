@@ -132,6 +132,27 @@ TrayIcon::ActionType defaultActionTypeByClick(TrayIcon::ClickType clickType)
     }
 }
 
+TrayIcon::ClickType clickTypeByMouse(Qt::MouseButton button, Qt::KeyboardModifiers modifiers)
+{
+    switch (button) {
+    case Qt::LeftButton: {
+        if (modifiers & Qt::ControlModifier) {
+            return TrayIcon::CtrlSingleClick;
+        } else if (modifiers & Qt::AltModifier) {
+            return TrayIcon::AltSingleClick;
+        }
+    } break;
+    case Qt::MiddleButton: {
+        return TrayIcon::MiddleClick;
+    } break;
+    case Qt::RightButton: {
+        return TrayIcon::RightClick;
+    } break;
+    }
+
+    return TrayIcon::SingleClick;
+}
+
 void setActionCheckable(QAction *action, bool checked = false, const QObject *receiver = nullptr,
         const char *member = nullptr)
 {
@@ -903,22 +924,7 @@ QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
 
 void TrayIcon::processMouseClick(Qt::MouseButton button, Qt::KeyboardModifiers modifiers)
 {
-    ClickType clickType = SingleClick;
-    switch (button) {
-    case Qt::LeftButton: {
-        if (modifiers & Qt::ControlModifier) {
-            clickType = CtrlSingleClick;
-        } else if (modifiers & Qt::AltModifier) {
-            clickType = AltSingleClick;
-        }
-    } break;
-    case Qt::MiddleButton: {
-        clickType = MiddleClick;
-    } break;
-    case Qt::RightButton: {
-        clickType = RightClick;
-    } break;
-    }
+    const auto clickType = clickTypeByMouse(button, modifiers);
 
     onMouseClicked(clickType, /*menuClickType=*/SingleClick);
 }
