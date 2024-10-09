@@ -903,11 +903,9 @@ QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
 
 void TrayIcon::processMouseClick(Qt::MouseButton button, Qt::KeyboardModifiers modifiers)
 {
-    ClickType clickType;
+    ClickType clickType = SingleClick;
     switch (button) {
     case Qt::LeftButton: {
-        clickType = SingleClick;
-
         if (modifiers & Qt::ControlModifier) {
             clickType = CtrlSingleClick;
         } else if (modifiers & Qt::AltModifier) {
