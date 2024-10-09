@@ -279,20 +279,6 @@ void StartupUtil::setRegistryPasswordHash(const QString &passwordHash)
     regApp.setOrRemoveValue("passwordHash", DbVar::nullable(passwordHash));
 }
 
-bool StartupUtil::registryIsDriverAdmin()
-{
-    const RegKey regApp = registryAppKey();
-
-    return regApp.value("isDriverAdmin").toBool();
-}
-
-void StartupUtil::setRegistryIsDriverAdmin(bool isDriverAdmin)
-{
-    RegKey regApp = registryAppKey(RegKey::DefaultCreate);
-
-    regApp.setOrRemoveValue("isDriverAdmin", DbVar::nullable(isDriverAdmin));
-}
-
 void StartupUtil::setPortable(bool portable)
 {
     const QString readmePortablePath = FileUtil::nativeAppBinLocation() + "/README.portable";

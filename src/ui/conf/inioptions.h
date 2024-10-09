@@ -37,11 +37,6 @@ public:
     bool noServiceControl() const { return valueBool("protect/noServiceControl"); }
     void setNoServiceControl(bool v) { setValue("protect/noServiceControl", v); }
 
-    bool isDriverAdminSet() const { return contains("protect/isDriverAdmin"); }
-
-    bool isDriverAdmin() const { return valueBool("protect/isDriverAdmin"); }
-    void setIsDriverAdmin(bool v) { setValue("protect/isDriverAdmin", v); }
-
     bool checkPasswordOnUninstallSet() const
     {
         return contains("protect/checkPasswordOnUninstall");

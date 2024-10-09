@@ -482,11 +482,6 @@ void FortSettings::writeConfIniOptions(const IniOptions &ini)
     // Save changed keys
     ini.save();
 
-    // Only Administrator can open Driver
-    if (ini.isDriverAdminSet()) {
-        StartupUtil::setRegistryIsDriverAdmin(ini.isDriverAdmin());
-    }
-
     // Password
     const bool isPasswordSet = (ini.hasPasswordSet() && ini.hasPassword() != hasPassword());
     if (isPasswordSet || !ini.password().isEmpty()) {

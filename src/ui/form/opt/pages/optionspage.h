@@ -77,7 +77,6 @@ private:
 
     QCheckBox *m_cbBootFilter = nullptr;
     QCheckBox *m_cbNoServiceControl = nullptr;
-    QCheckBox *m_cbIsDriverAdmin = nullptr;
     QCheckBox *m_cbCheckPasswordOnUninstall = nullptr;
     QCheckBox *m_cbPassword = nullptr;
     QLineEdit *m_editPassword = nullptr;
