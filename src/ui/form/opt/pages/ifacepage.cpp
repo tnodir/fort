@@ -60,7 +60,7 @@ void IfacePage::onResetToDefault()
     m_cbAppAlertAutoShow->setChecked(true);
     m_cbAppAlertAlwaysOnTop->setChecked(true);
     m_cbAppAlertAutoActive->setChecked(false);
-    m_cbAppAlertSound->setChecked(false);
+    m_cbAppAlertSound->setChecked(true);
 
     m_cbTrayShowIcon->setChecked(true);
     m_cbTrayShowAlert->setChecked(true);

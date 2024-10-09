@@ -75,8 +75,8 @@ public:
     bool progNotifyMessage() const { return valueBool("prog/notifyMessage", true); }
     void setProgNotifyMessage(bool v) { setValue("prog/notifyMessage", v, true); }
 
-    bool progAlertSound() const { return valueBool("prog/soundAlert"); }
-    void setProgAlertSound(bool v) { setValue("prog/soundAlert", v); }
+    bool progAlertSound() const { return valueBool("prog/soundAlert", true); }
+    void setProgAlertSound(bool v) { setValue("prog/soundAlert", v, true); }
 
     bool trayShowIcon() const { return valueBool("tray/showIcon", true); }
     void setTrayShowIcon(bool v) { setValue("tray/showIcon", v, true); }
