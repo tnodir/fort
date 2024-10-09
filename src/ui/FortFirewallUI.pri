@@ -5,3 +5,6 @@ include($$PWD/FortFirewallUI-include.pri)
 LIBS *= -L$$builddir/ui
 LIBS *= -lFortFirewallUILib
 PRE_TARGETDEPS *= $$builddir/ui/FortFirewallUILib.lib
+
+# Windows
+LIBS *= -lwinmm
