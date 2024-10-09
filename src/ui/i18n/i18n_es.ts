@@ -160,11 +160,11 @@
     </message>
     <message>
         <source>Add Group</source>
-        <translation>Añadir Grupo</translation>
+        <translation>Añadir grupo</translation>
     </message>
     <message>
         <source>Rename Group</source>
-        <translation>Renombrar Grupo</translation>
+        <translation>Renombrar grupo</translation>
     </message>
     <message>
         <source>Download speed limit:</source>
@@ -431,7 +431,7 @@
     </message>
     <message>
         <source>Clear All</source>
-        <translation>Borrar Todo</translation>
+        <translation>Borrar todo</translation>
     </message>
     <message>
         <source>Auto scroll</source>
@@ -906,7 +906,7 @@
     </message>
     <message>
         <source>Sound Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>Sonido de alerta</translation>
     </message>
 </context>
 <context>
@@ -1189,7 +1189,7 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Only Administrator can open Driver</source>
-        <translation type="unfinished"></translation>
+        <translation>Sólo el administrador puede abrir el controlador</translation>
     </message>
 </context>
 <context>
@@ -1680,7 +1680,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation>Añadir Regla Preestablecida</translation>
+        <translation>Añadir regla preestablecida</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -1869,11 +1869,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Make Trackable</source>
-        <translation>Hacer Rastreable</translation>
+        <translation>Hacer rastreable</translation>
     </message>
     <message>
         <source>Revert Changes</source>
-        <translation>Revertir Cambios</translation>
+        <translation>Revertir cambios</translation>
     </message>
     <message>
         <source>Add Program</source>
@@ -2366,7 +2366,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Save As Text</source>
-        <translation>Guardar Como Texto</translation>
+        <translation>Guardar como texto</translation>
     </message>
     <message>
         <source>Zones</source>
@@ -2386,7 +2386,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Update Zones</source>
-        <translation>Actualizar Zonas</translation>
+        <translation>Actualizar zonas</translation>
     </message>
     <message>
         <source>Update Zones?</source>

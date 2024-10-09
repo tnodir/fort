@@ -906,7 +906,7 @@
     </message>
     <message>
         <source>Sound Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarm dźwiękowy</translation>
     </message>
 </context>
 <context>
@@ -1189,7 +1189,7 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     </message>
     <message>
         <source>Only Administrator can open Driver</source>
-        <translation type="unfinished"></translation>
+        <translation>Tylko administrator może otworzyć sterownik</translation>
     </message>
 </context>
 <context>

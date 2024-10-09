@@ -1189,7 +1189,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Only Administrator can open Driver</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo l&apos;amministratore può aprire il driver</translation>
     </message>
 </context>
 <context>

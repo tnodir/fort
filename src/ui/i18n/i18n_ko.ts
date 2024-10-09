@@ -1189,7 +1189,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Only Administrator can open Driver</source>
-        <translation type="unfinished"></translation>
+        <translation>관리자만 드라이버를 열 수 있습니다</translation>
     </message>
 </context>
 <context>

@@ -20,15 +20,15 @@
     <name>QAbstractSpinBox</name>
     <message>
         <source>&amp;Select All</source>
-        <translation>Seleccionar Todo</translation>
+        <translation>&amp;Seleccionar todo</translation>
     </message>
     <message>
         <source>&amp;Step up</source>
-        <translation>Subir</translation>
+        <translation>&amp;Aumentar</translation>
     </message>
     <message>
         <source>Step &amp;down</source>
-        <translation>Bajar</translation>
+        <translation>&amp;Reducir</translation>
     </message>
 </context>
 <context>
@@ -63,7 +63,7 @@
     </message>
     <message>
         <source>&amp;HTML:</source>
-        <translation>HTML:</translation>
+        <translation>&amp;HTML:</translation>
     </message>
     <message>
         <source>Cursor at %1, %2
@@ -73,7 +73,7 @@ Presiona ESC para cancelar</translation>
     </message>
     <message>
         <source>&amp;Pick Screen Color</source>
-        <translation>Tomar un color de la pantalla</translation>
+        <translation>&amp;Tomar un color de la pantalla</translation>
     </message>
     <message>
         <source>Cursor at %1, %2, color: %3
@@ -91,11 +91,11 @@ Presione ESC para cancelar</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>
-        <translation>Colores básicos</translation>
+        <translation>Colores &amp;básicos</translation>
     </message>
     <message>
         <source>&amp;Custom colors</source>
-        <translation>Colores personalizados</translation>
+        <translation>&amp;Colores personalizados</translation>
     </message>
     <message>
         <source>&amp;Add to Custom Colors</source>
@@ -118,23 +118,23 @@ Presione ESC para cancelar</translation>
     <name>QLineEdit</name>
     <message>
         <source>&amp;Undo</source>
-        <translation>Deshacer</translation>
+        <translation>&amp;Deshacer</translation>
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation>Rehacer</translation>
+        <translation>&amp;Rehacer</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
-        <translation>Cortar</translation>
+        <translation>Cor&amp;tar</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>Copiar</translation>
+        <translation>&amp;Copiar</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
-        <translation>Pegar</translation>
+        <translation>&amp;Pegar</translation>
     </message>
     <message>
         <source>Delete</source>
@@ -165,7 +165,7 @@ Presione ESC para cancelar</translation>
     </message>
     <message>
         <source>&amp;Yes</source>
-        <translation>Si</translation>
+        <translation>&amp;Sí</translation>
     </message>
     <message>
         <source>Yes to &amp;All</source>
@@ -173,7 +173,7 @@ Presione ESC para cancelar</translation>
     </message>
     <message>
         <source>&amp;No</source>
-        <translation>No</translation>
+        <translation>&amp;No</translation>
     </message>
     <message>
         <source>N&amp;o to All</source>
@@ -224,27 +224,27 @@ Presione ESC para cancelar</translation>
     <name>QWidgetTextControl</name>
     <message>
         <source>&amp;Undo</source>
-        <translation>Deshacer</translation>
+        <translation>&amp;Deshacer</translation>
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation>Rehacer</translation>
+        <translation>&amp;Rehacer</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
-        <translation>Cortar</translation>
+        <translation>Cor&amp;tar</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
-        <translation>Copiar</translation>
+        <translation>&amp;Copiar</translation>
     </message>
     <message>
         <source>Copy &amp;Link Location</source>
-        <translation>Copiar ubicación del enlace</translation>
+        <translation>Copiar la ubicación del &amp;enlace</translation>
     </message>
     <message>
         <source>&amp;Paste</source>
-        <translation>Pegar</translation>
+        <translation>&amp;Pegar</translation>
     </message>
     <message>
         <source>Delete</source>
