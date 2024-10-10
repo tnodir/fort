@@ -1187,10 +1187,6 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <source>Auto-download new version</source>
         <translation>Autodescargar nueva versión</translation>
     </message>
-    <message>
-        <source>Only Administrator can open Driver</source>
-        <translation>Sólo el administrador puede abrir el controlador</translation>
-    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

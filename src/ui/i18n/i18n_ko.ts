@@ -1187,10 +1187,6 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-download new version</source>
         <translation>새 버전 자동 다운로드</translation>
     </message>
-    <message>
-        <source>Only Administrator can open Driver</source>
-        <translation>관리자만 드라이버를 열 수 있습니다</translation>
-    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

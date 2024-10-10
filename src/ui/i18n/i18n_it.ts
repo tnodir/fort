@@ -1187,10 +1187,6 @@ Assicurati di avere un nuovo backup.</translation>
         <source>Auto-download new version</source>
         <translation>Scarica automaticamente la nuova versione</translation>
     </message>
-    <message>
-        <source>Only Administrator can open Driver</source>
-        <translation>Solo l&apos;amministratore può aprire il driver</translation>
-    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

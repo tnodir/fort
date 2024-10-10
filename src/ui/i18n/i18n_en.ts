@@ -1185,10 +1185,6 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-download new version</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Only Administrator can open Driver</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

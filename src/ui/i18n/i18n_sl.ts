@@ -1187,10 +1187,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Auto-download new version</source>
         <translation>Samodejni prenos nove različice</translation>
     </message>
-    <message>
-        <source>Only Administrator can open Driver</source>
-        <translation>Gonilnik lahko odpre samo skrbnik</translation>
-    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

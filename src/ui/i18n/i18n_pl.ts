@@ -1187,10 +1187,6 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source>Auto-download new version</source>
         <translation>Automatyczne pobieranie nowej wersji</translation>
     </message>
-    <message>
-        <source>Only Administrator can open Driver</source>
-        <translation>Tylko administrator może otworzyć sterownik</translation>
-    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -1187,10 +1187,6 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <source>Auto-download new version</source>
         <translation>Téléchargement auto de la nouvelle version</translation>
     </message>
-    <message>
-        <source>Only Administrator can open Driver</source>
-        <translation>Seul l&apos;administrateur peut ouvrir le pilote</translation>
-    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
