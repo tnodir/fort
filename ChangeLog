@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.14.3, 2024-10-10:
+- UI: Options: Programs: Add "Sound Alert" flag.
+- UI: Apply Tray Events to Menu button.
+- Driver can be opened only by Administrator.
+
+Attention: If you use Fort Firewall without Service, then you have to run it as Admin!
+
 v3.14.2, 2024-10-08:
 - UI: Do not open Alert Program in Auto-Learn mode.
 - UI: Programs: Add "Kill Process" filter.
