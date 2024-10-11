@@ -134,20 +134,19 @@ FORT_API DWORD fort_reg_flag(PCWSTR name)
     InitializeObjectAttributes(
             &objectAttr, &regPath, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 
-    status = ZwOpenKey(&regKey, KEY_READ, &objectAttr);
-    if (!NT_SUCCESS(status))
-        return status;
-
-    UNICODE_STRING valueName;
-    RtlInitUnicodeString(&valueName, name);
-
     DWORD flagValue = 0;
 
-    status = fort_reg_value_dword(regKey, &valueName, &flagValue);
+    status = ZwOpenKey(&regKey, KEY_READ, &objectAttr);
+    if (NT_SUCCESS(status)) {
+        UNICODE_STRING valueName;
+        RtlInitUnicodeString(&valueName, name);
 
-    ZwClose(regKey);
+        status = fort_reg_value_dword(regKey, &valueName, &flagValue);
 
-    return flagValue;
+        ZwClose(regKey);
+    }
+
+    return NT_SUCCESS(status) ? flagValue : 0;
 }
 
 static void fort_system_drive_init(PCUNICODE_STRING path)
