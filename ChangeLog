@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.14.4-test01, 2024-10-11:
+- Driver: Fix check of Administrator.
+
 v3.14.3, 2024-10-10:
 - UI: Options: Programs: Add "Sound Alert" flag.
 - UI: Apply Tray Events to Menu button.
