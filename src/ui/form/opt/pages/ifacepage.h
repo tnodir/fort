@@ -91,6 +91,7 @@ private:
 
     QCheckBox *m_cbAppNotifyMessage = nullptr;
     QCheckBox *m_cbAppAlertAutoShow = nullptr;
+    QCheckBox *m_cbAppAlertAutoLearn = nullptr;
     QCheckBox *m_cbAppAlertAlwaysOnTop = nullptr;
     QCheckBox *m_cbAppAlertAutoActive = nullptr;
     QCheckBox *m_cbAppAlertSound = nullptr;

@@ -636,7 +636,7 @@ void TrayIcon::updateAppGroupActions()
 
 void TrayIcon::sendAlertMessage()
 {
-    if (conf()->allowAllNew())
+    if (conf()->allowAllNew() && !iniUser()->progAlertWindowAutoLearn())
         return; // do not notify in Auto-Learn mode
 
     if (iniUser()->progNotifyMessage()) {

@@ -58,6 +58,7 @@ void IfacePage::onResetToDefault()
 
     m_cbAppNotifyMessage->setChecked(true);
     m_cbAppAlertAutoShow->setChecked(true);
+    m_cbAppAlertAutoLearn->setChecked(false);
     m_cbAppAlertAlwaysOnTop->setChecked(true);
     m_cbAppAlertAutoActive->setChecked(false);
     m_cbAppAlertSound->setChecked(true);
@@ -135,6 +136,7 @@ void IfacePage::onRetranslateUi()
 
     m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
+    m_cbAppAlertAutoLearn->setText(tr("Alert Window for Auto-Learn mode"));
     m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
     m_cbAppAlertAutoActive->setText(tr("Alert Window is auto-active"));
     m_cbAppAlertSound->setText(tr("Sound Alert"));
@@ -478,6 +480,12 @@ void IfacePage::setupProgBox()
                 ctrl()->setIniUserEdited();
             });
 
+    m_cbAppAlertAutoLearn =
+            ControlUtil::createCheckBox(iniUser()->progAlertWindowAutoLearn(), [&](bool checked) {
+                iniUser()->setProgAlertWindowAutoLearn(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     m_cbAppAlertAlwaysOnTop =
             ControlUtil::createCheckBox(iniUser()->progAlertWindowAlwaysOnTop(), [&](bool checked) {
                 iniUser()->setProgAlertWindowAlwaysOnTop(checked);
@@ -496,8 +504,9 @@ void IfacePage::setupProgBox()
     });
 
     // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbAppNotifyMessage, m_cbAppAlertAutoShow,
-            m_cbAppAlertAlwaysOnTop, m_cbAppAlertAutoActive, m_cbAppAlertSound });
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_cbAppNotifyMessage, m_cbAppAlertAutoShow, m_cbAppAlertAutoLearn,
+                    m_cbAppAlertAlwaysOnTop, m_cbAppAlertAutoActive, m_cbAppAlertSound });
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);

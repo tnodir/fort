@@ -141,6 +141,9 @@ public:
     bool progAlertWindowAutoShow() const { return valueBool("progAlertWindow/autoShow", true); }
     void setProgAlertWindowAutoShow(bool on) { setValue("progAlertWindow/autoShow", on); }
 
+    bool progAlertWindowAutoLearn() const { return valueBool("progAlertWindow/autoLearn"); }
+    void setProgAlertWindowAutoLearn(bool on) { setValue("progAlertWindow/autoLearn", on); }
+
     bool progAlertWindowAlwaysOnTop() const
     {
         return valueBool("progAlertWindow/alwaysOnTop", true);
