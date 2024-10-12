@@ -908,6 +908,10 @@
         <source>Sound Alert</source>
         <translation>소리 알림</translation>
     </message>
+    <message>
+        <source>Alert Window for Auto-Learn mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1187,6 +1191,10 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-download new version</source>
         <translation>새 버전 자동 다운로드</translation>
     </message>
+    <message>
+        <source>Block traffic for disabled App Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1265,10 +1273,6 @@ Do you want to open a discussion thread in browser?</source>
     <message>
         <source>Get Program Name</source>
         <translation>프로그램 이름 가져오기</translation>
-    </message>
-    <message>
-        <source>Use Application Group&apos;s Enabled State</source>
-        <translation>응용 프로그램 그룹의 활성화 상태 사용</translation>
     </message>
     <message>
         <source>Allow</source>

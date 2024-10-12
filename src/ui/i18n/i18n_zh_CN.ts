@@ -908,6 +908,10 @@
         <source>Sound Alert</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Alert Window for Auto-Learn mode</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1187,6 +1191,10 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-download new version</source>
         <translation>自动下载新版本</translation>
     </message>
+    <message>
+        <source>Block traffic for disabled App Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1265,10 +1273,6 @@ Do you want to open a discussion thread in browser?</source>
     <message>
         <source>Get Program Name</source>
         <translation>获取程序名称</translation>
-    </message>
-    <message>
-        <source>Use Application Group&apos;s Enabled State</source>
-        <translation>使用应用程序组的启用状态</translation>
     </message>
     <message>
         <source>Allow</source>

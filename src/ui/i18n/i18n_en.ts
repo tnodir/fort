@@ -908,6 +908,10 @@
         <source>Sound Alert</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Alert Window for Auto-Learn mode</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1185,6 +1189,10 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-download new version</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Block traffic for disabled App Groups</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1258,10 +1266,6 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Get Program Name</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Use Application Group&apos;s Enabled State</source>
         <translation></translation>
     </message>
     <message>

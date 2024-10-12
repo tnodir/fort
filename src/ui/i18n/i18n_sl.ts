@@ -908,6 +908,10 @@
         <source>Sound Alert</source>
         <translation>Zvočno opozorilo</translation>
     </message>
+    <message>
+        <source>Alert Window for Auto-Learn mode</source>
+        <translation>Opozorilno okno za način Samodejnega učenja</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1187,6 +1191,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Auto-download new version</source>
         <translation>Samodejni prenos nove različice</translation>
     </message>
+    <message>
+        <source>Block traffic for disabled App Groups</source>
+        <translation>Blokiraj promet za onemogočene skupine aplikacij</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1265,10 +1273,6 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
     <message>
         <source>Get Program Name</source>
         <translation>Dobi ime programa</translation>
-    </message>
-    <message>
-        <source>Use Application Group&apos;s Enabled State</source>
-        <translation>Uporabi omogočeno stanje skupine aplikacij</translation>
     </message>
     <message>
         <source>Allow</source>
