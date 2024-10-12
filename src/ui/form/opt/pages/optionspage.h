@@ -74,6 +74,7 @@ private:
     QComboBox *m_comboBlockTraffic = nullptr;
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
+    QCheckBox *m_cbGroupBlocked = nullptr;
 
     QCheckBox *m_cbBootFilter = nullptr;
     QCheckBox *m_cbNoServiceControl = nullptr;
