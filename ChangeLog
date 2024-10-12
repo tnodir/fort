@@ -1,6 +1,9 @@
 Fort Firewall ChangeLog
 
-v3.14.4-test01, 2024-10-11:
+v3.14.4-test02, 2024-10-12:
+- UI: Options: Add "Alert Window for Auto-Learn mode" flag.
+- UI: Options: Add "Block traffic for disabled App Groups" flag.
+- UI: Programs: Remove "Use Application Group's Enabled State" flag.
 - Driver: Fix check of Administrator.
 
 v3.14.3, 2024-10-10:
