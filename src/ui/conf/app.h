@@ -27,7 +27,6 @@ public:
 
 public:
     bool isWildcard : 1 = false;
-    bool useGroupPerm : 1 = true;
     bool applyParent : 1 = false;
     bool applyChild : 1 = false;
     bool applySpecChild : 1 = false;

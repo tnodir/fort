@@ -108,7 +108,6 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_rbBlock->setChecked(appRow.blocked);
     m_rbKillProcess->setChecked(appRow.killProcess);
 
-    m_cbUseGroupPerm->setChecked(appRow.useGroupPerm);
     updateApplyChild();
     m_cbKillChild->setChecked(appRow.killChild);
 
@@ -247,7 +246,6 @@ void ProgramEditDialog::retranslateUi()
     m_rbBlock->setText(tr("Block"));
     m_rbKillProcess->setText(tr("Kill Process"));
 
-    m_cbUseGroupPerm->setText(tr("Use Application Group's Enabled State"));
     m_labelApplyChild->setText(tr("Rules inheritance:"));
     retranslateComboApplyChild();
     m_cbKillChild->setText(tr("Kill child processes"));
@@ -542,9 +540,6 @@ void ProgramEditDialog::setupActionsGroup()
 
 void ProgramEditDialog::setupAdvancedOptions()
 {
-    // Use Group Perm.
-    m_cbUseGroupPerm = new QCheckBox();
-
     // Parked
     m_cbParked = new QCheckBox();
     m_cbParked->setIcon(IconCache::icon(":/icons/parking.png"));
@@ -558,7 +553,6 @@ void ProgramEditDialog::setupAdvancedOptions()
     setupLogOptions();
 
     auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbUseGroupPerm);
     layout->addWidget(m_cbParked);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(applyChildLayout);
@@ -869,7 +863,6 @@ bool ProgramEditDialog::validateFields() const
 void ProgramEditDialog::fillApp(App &app) const
 {
     app.isWildcard = isWildcard();
-    app.useGroupPerm = m_cbUseGroupPerm->isChecked();
     app.killChild = m_cbKillChild->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();
     app.parked = m_cbParked->isChecked();

@@ -130,7 +130,6 @@ private:
     QRadioButton *m_rbBlock = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
     QButtonGroup *m_btgActions = nullptr;
-    QCheckBox *m_cbUseGroupPerm = nullptr;
     QLabel *m_labelApplyChild = nullptr;
     QComboBox *m_comboApplyChild = nullptr;
     QCheckBox *m_cbKillChild = nullptr;

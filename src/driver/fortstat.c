@@ -4,7 +4,7 @@
 
 #define FORT_STAT_POOL_TAG 'SwfF'
 
-#define FORT_PROC_BAD_INDEX ((UINT16) -1)
+#define FORT_PROC_BAD_INDEX ((UINT16) - 1)
 #define FORT_PROC_COUNT_MAX 0xFFFF
 
 #define fort_stat_proc_hash(process_id) tommy_inthash_u32((UINT32) (process_id))
@@ -401,12 +401,12 @@ FORT_API void fort_stat_conf_update(PFORT_STAT stat, const PFORT_CONF_IO conf_io
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const PFORT_CONF_FLAGS conf_flags)
+FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
     {
-        stat->conf_group.group_bits = (UINT16) conf_flags->group_bits;
+        stat->conf_group.group_bits = (UINT16) conf_flags.group_bits;
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }

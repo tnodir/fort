@@ -65,6 +65,7 @@ void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
     confFlags->block_inet_traffic = conf.blockInetTraffic();
     confFlags->allow_all_new = conf.allowAllNew();
     confFlags->ask_to_connect = conf.askToConnect();
+    confFlags->group_blocked = conf.groupBlocked();
 
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
@@ -488,16 +489,14 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         addressRange.setExcludeZones(addressGroup->excludeZones());
 
         if (!addressRange.includeRange().fromText(addressGroup->includeText())) {
-            setErrorMessage(
-                    tr("Bad Include IP address: #%1 %2")
+            setErrorMessage(tr("Bad Include IP address: #%1 %2")
                             .arg(QString::number(i),
                                     addressRange.includeRange().errorLineAndMessageDetails()));
             return false;
         }
 
         if (!addressRange.excludeRange().fromText(addressGroup->excludeText())) {
-            setErrorMessage(
-                    tr("Bad Exclude IP address: #%1 %2")
+            setErrorMessage(tr("Bad Exclude IP address: #%1 %2")
                             .arg(QString::number(i),
                                     addressRange.excludeRange().errorLineAndMessageDetails()));
             return false;
@@ -615,8 +614,6 @@ bool ConfUtil::parseAppLine(App &app, const QStringView &line, AppParseOptions &
         return true;
 
     app.appPath = appPath;
-    app.useGroupPerm = true;
-    app.alerted = false;
 
     if (isWild || isPrefix) {
         if (app.isProcWild()) {
@@ -652,7 +649,6 @@ bool ConfUtil::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint3
     const FORT_APP_DATA appData = {
         .flags = {
                 .group_index = quint8(app.groupIndex),
-                .use_group_perm = app.useGroupPerm,
                 .apply_parent = app.applyParent,
                 .apply_child = app.applyChild,
                 .apply_spec_child = app.applySpecChild,
@@ -662,7 +658,6 @@ bool ConfUtil::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint3
                 .log_conn = app.logConn,
                 .blocked = app.blocked,
                 .kill_process = app.killProcess,
-                .alerted = app.alerted,
         },
         .is_new = isNew,
         .found = true,
@@ -751,21 +746,23 @@ void ConfUtil::writeConf(char *output, const WriteConfArgs &wca, AppParseOptions
     writeApps(&data, opt.exeAppsMap);
 #undef CONF_DATA_OFFSET
 
-    writeAppGroupFlags(&drvConfIo->conf_group, wca.conf);
+    PFORT_CONF_GROUP conf_group = &drvConfIo->conf_group;
 
-    writeLimits(&drvConfIo->conf_group, wca.conf.appGroups());
+    writeAppGroupFlags(conf_group, wca.conf);
+
+    writeLimits(conf_group, wca.conf.appGroups());
 
     writeConfFlags(wca.conf, &drvConf->flags);
 
-    DriverCommon::confAppPermsMaskInit(drvConf);
+    drvConf->proc_wild = opt.procWild;
 
     drvConf->app_periods_n = wca.gr.appPeriodsCount;
-
-    drvConf->proc_wild = opt.procWild;
 
     drvConf->wild_apps_n = quint16(opt.wildAppsMap.size());
     drvConf->prefix_apps_n = quint16(opt.prefixAppsMap.size());
     drvConf->exe_apps_n = quint16(opt.exeAppsMap.size());
+
+    drvConf->active_group_bits = conf_group->group_bits;
 
     drvConf->addr_groups_off = addrGroupsOff;
 

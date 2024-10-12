@@ -33,6 +33,8 @@ typedef struct fort_conf_flags
 
     UINT32 allow_all_new : 1;
     UINT32 ask_to_connect : 1;
+    UINT32 group_blocked : 1;
+
     UINT32 app_block_all : 1;
     UINT32 app_allow_all : 1;
 
@@ -44,7 +46,10 @@ typedef struct fort_conf_flags
     UINT32 log_blocked_ip : 1;
     UINT32 log_alerted_blocked_ip : 1;
 
-    UINT32 group_bits : 16;
+    UINT32 reserved_flags : 15; /* not used */
+
+    UINT16 group_bits;
+    UINT16 reserved; /* not used */
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
 typedef struct fort_service_info
@@ -228,7 +233,6 @@ typedef struct fort_period
 typedef struct fort_app_flags
 {
     UINT16 group_index : 5;
-    UINT16 use_group_perm : 1;
 
     UINT16 apply_parent : 1;
     UINT16 apply_child : 1;
@@ -240,7 +244,8 @@ typedef struct fort_app_flags
 
     UINT16 blocked : 1;
     UINT16 kill_process : 1;
-    UINT16 alerted : 1;
+
+    UINT16 reserved : 2; /* not used */
 } FORT_APP_FLAGS, *PFORT_APP_FLAGS;
 
 typedef struct fort_app_data
@@ -249,7 +254,8 @@ typedef struct fort_app_data
 
     UINT16 is_new : 1; /* can replace an existing app data? */
     UINT16 found : 1; /* is app data not empty? */
-    UINT16 rule_id : 14;
+    UINT16 alerted : 1;
+    UINT16 rule_id : 13;
 
     UINT16 accept_zones;
     UINT16 reject_zones;
@@ -293,16 +299,16 @@ typedef struct fort_conf
 {
     FORT_CONF_FLAGS flags;
 
-    UCHAR app_periods_n;
-
     UCHAR proc_wild : 1; /* check also wildcard paths on process creation */
+
+    UCHAR app_periods_n;
 
     UINT16 wild_apps_n;
     UINT16 prefix_apps_n;
     UINT16 exe_apps_n;
 
-    UINT32 app_perms_block_mask;
-    UINT32 app_perms_allow_mask;
+    UINT16 active_group_bits;
+    UINT16 reserved; /* not used */
 
     UINT32 addr_groups_off;
 
@@ -386,12 +392,9 @@ FORT_API FORT_APP_DATA fort_conf_app_exe_find(
 FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
-FORT_API BOOL fort_conf_app_blocked(
-        const PFORT_CONF conf, FORT_APP_DATA app_data, INT8 *block_reason);
+FORT_API BOOL fort_conf_app_group_blocked(const PFORT_CONF conf, FORT_APP_DATA app_data);
 
 FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n);
-
-FORT_API void fort_conf_app_perms_mask_init(PFORT_CONF conf, UINT32 group_bits);
 
 #ifdef __cplusplus
 } // extern "C"

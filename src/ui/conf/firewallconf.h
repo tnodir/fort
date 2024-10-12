@@ -44,52 +44,58 @@ public:
     void resetEdited(bool v = false);
 
     bool bootFilter() const { return m_bootFilter; }
-    void setBootFilter(bool bootFilter);
+    void setBootFilter(bool bootFilter) { m_bootFilter = bootFilter; }
 
     bool filterEnabled() const { return m_filterEnabled; }
-    void setFilterEnabled(bool filterEnabled);
+    void setFilterEnabled(bool filterEnabled) { m_filterEnabled = filterEnabled; }
 
     bool filterLocals() const { return m_filterLocals; }
-    void setFilterLocals(bool filterLocals);
+    void setFilterLocals(bool filterLocals) { m_filterLocals = filterLocals; }
 
     bool filterLocalNet() const { return m_filterLocalNet; }
-    void setFilterLocalNet(bool filterLocalNet);
+    void setFilterLocalNet(bool filterLocalNet) { m_filterLocalNet = filterLocalNet; }
 
     bool blockTraffic() const { return m_blockTraffic; }
-    void setBlockTraffic(bool blockTraffic);
+    void setBlockTraffic(bool blockTraffic) { m_blockTraffic = blockTraffic; }
 
     bool blockInetTraffic() const { return m_blockInetTraffic; }
-    void setBlockInetTraffic(bool blockInetTraffic);
+    void setBlockInetTraffic(bool blockInetTraffic) { m_blockInetTraffic = blockInetTraffic; }
 
     bool allowAllNew() const { return m_allowAllNew; }
-    void setAllowAllNew(bool allowAllNew);
+    void setAllowAllNew(bool allowAllNew) { m_allowAllNew = allowAllNew; }
 
     bool askToConnect() const { return m_askToConnect; }
-    void setAskToConnect(bool askToConnect);
+    void setAskToConnect(bool askToConnect) { m_askToConnect = askToConnect; }
+
+    bool groupBlocked() const { return m_groupBlocked; }
+    void setGroupBlocked(bool groupBlocked) { m_groupBlocked = groupBlocked; }
 
     bool logStat() const { return m_logStat; }
-    void setLogStat(bool logStat);
+    void setLogStat(bool logStat) { m_logStat = logStat; }
 
     bool logStatNoFilter() const { return m_logStatNoFilter; }
-    void setLogStatNoFilter(bool logStatNoFilter);
+    void setLogStatNoFilter(bool logStatNoFilter) { m_logStatNoFilter = logStatNoFilter; }
 
     bool logBlocked() const { return m_logBlocked; }
-    void setLogBlocked(bool logBlocked);
+    void setLogBlocked(bool logBlocked) { m_logBlocked = logBlocked; }
 
     bool logAllowedIp() const { return m_logAllowedIp; }
-    void setLogAllowedIp(bool logAllowedIp);
+    void setLogAllowedIp(bool logAllowedIp) { m_logAllowedIp = logAllowedIp; }
 
     bool logBlockedIp() const { return m_logBlockedIp; }
-    void setLogBlockedIp(bool logBlockedIp);
+    void setLogBlockedIp(bool logBlockedIp) { m_logBlockedIp = logBlockedIp; }
 
     bool logAlertedBlockedIp() const { return m_logAlertedBlockedIp; }
-    void setLogAlertedBlockedIp(bool logAlertedBlockedIp);
+    void setLogAlertedBlockedIp(bool logAlertedBlockedIp)
+    {
+        m_logAlertedBlockedIp = logAlertedBlockedIp;
+    }
 
     bool appBlockAll() const { return m_appBlockAll; }
-    void setAppBlockAll(bool appBlockAll);
+    void setAppBlockAll(bool appBlockAll) { m_appBlockAll = appBlockAll; }
 
     bool appAllowAll() const { return m_appAllowAll; }
-    void setAppAllowAll(bool appAllowAll);
+    void setAppAllowAll(bool appAllowAll) { m_appAllowAll = appAllowAll; }
 
     int blockTrafficIndex() const;
     void setBlockTrafficIndex(int index);
@@ -193,6 +199,7 @@ private:
     uint m_blockInetTraffic : 1 = false;
     uint m_allowAllNew : 1 = false;
     uint m_askToConnect : 1 = false;
+    uint m_groupBlocked : 1 = true;
 
     uint m_logStat : 1 = false;
     uint m_logStatNoFilter : 1 = false;

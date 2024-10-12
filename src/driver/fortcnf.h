@@ -72,7 +72,7 @@ FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf);
 FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref);
 
 FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
-        PFORT_DEVICE_CONF device_conf, const PFORT_CONF_FLAGS conf_flags);
+        PFORT_DEVICE_CONF device_conf, const FORT_CONF_FLAGS conf_flags);
 
 FORT_API BOOL fort_conf_ref_period_update(
         PFORT_DEVICE_CONF device_conf, BOOL force, int *periods_n);

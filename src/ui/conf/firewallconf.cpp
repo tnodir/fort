@@ -16,86 +16,6 @@ void FirewallConf::resetEdited(bool v)
     m_editedFlags = v ? AllEdited : NoneEdited;
 }
 
-void FirewallConf::setBootFilter(bool bootFilter)
-{
-    m_bootFilter = bootFilter;
-}
-
-void FirewallConf::setFilterEnabled(bool filterEnabled)
-{
-    m_filterEnabled = filterEnabled;
-}
-
-void FirewallConf::setFilterLocals(bool filterLocals)
-{
-    m_filterLocals = filterLocals;
-}
-
-void FirewallConf::setFilterLocalNet(bool filterLocalNet)
-{
-    m_filterLocalNet = filterLocalNet;
-}
-
-void FirewallConf::setBlockTraffic(bool blockTraffic)
-{
-    m_blockTraffic = blockTraffic;
-}
-
-void FirewallConf::setBlockInetTraffic(bool blockInetTraffic)
-{
-    m_blockInetTraffic = blockInetTraffic;
-}
-
-void FirewallConf::setAllowAllNew(bool allowAllNew)
-{
-    m_allowAllNew = allowAllNew;
-}
-
-void FirewallConf::setAskToConnect(bool askToConnect)
-{
-    m_askToConnect = askToConnect;
-}
-
-void FirewallConf::setLogStat(bool logStat)
-{
-    m_logStat = logStat;
-}
-
-void FirewallConf::setLogStatNoFilter(bool logStatNoFilter)
-{
-    m_logStatNoFilter = logStatNoFilter;
-}
-
-void FirewallConf::setLogBlocked(bool logBlocked)
-{
-    m_logBlocked = logBlocked;
-}
-
-void FirewallConf::setLogAllowedIp(bool logAllowedIp)
-{
-    m_logAllowedIp = logAllowedIp;
-}
-
-void FirewallConf::setLogBlockedIp(bool logBlockedIp)
-{
-    m_logBlockedIp = logBlockedIp;
-}
-
-void FirewallConf::setLogAlertedBlockedIp(bool logAlertedBlockedIp)
-{
-    m_logAlertedBlockedIp = logAlertedBlockedIp;
-}
-
-void FirewallConf::setAppBlockAll(bool appBlockAll)
-{
-    m_appBlockAll = appBlockAll;
-}
-
-void FirewallConf::setAppAllowAll(bool appAllowAll)
-{
-    m_appAllowAll = appAllowAll;
-}
-
 int FirewallConf::blockTrafficIndex() const
 {
     return m_blockInetTraffic ? 2 : (m_blockTraffic ? 1 : 0);
@@ -363,6 +283,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_blockInetTraffic = o.blockInetTraffic();
     m_allowAllNew = o.allowAllNew();
     m_askToConnect = o.askToConnect();
+    m_groupBlocked = o.groupBlocked();
 
     m_logStat = o.logStat();
     m_logStatNoFilter = o.logStatNoFilter();
@@ -411,6 +332,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["blockInetTraffic"] = blockInetTraffic();
     map["allowAllNew"] = allowAllNew();
     map["askToConnect"] = askToConnect();
+    map["groupBlocked"] = groupBlocked();
 
     map["logStat"] = logStat();
     map["logStatNoFilter"] = logStatNoFilter();
@@ -444,6 +366,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_blockInetTraffic = map["blockInetTraffic"].toBool();
     m_allowAllNew = map["allowAllNew"].toBool();
     m_askToConnect = map["askToConnect"].toBool();
+    m_groupBlocked = map["groupBlocked"].toBool();
 
     m_logBlocked = map["logBlocked"].toBool();
     m_logStat = map["logStat"].toBool();

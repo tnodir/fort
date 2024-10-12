@@ -9,7 +9,7 @@
 
 static_assert(sizeof(ip6_addr_t) == 16, "ip6_addr_t size mismatch");
 
-static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT32), "FORT_CONF_FLAGS size mismatch");
+static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT64), "FORT_CONF_FLAGS size mismatch");
 static_assert(sizeof(FORT_CONF_RULE_EXPR) == sizeof(UINT32), "FORT_CONF_RULE_EXPR size mismatch");
 static_assert(sizeof(FORT_CONF_RULE) == sizeof(UINT16), "FORT_CONF_RULE size mismatch");
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
@@ -299,48 +299,14 @@ FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, const PVOID pat
     return app_data;
 }
 
-static BOOL fort_conf_app_blocked_check(const PFORT_CONF conf, INT8 *block_reason, BOOL app_found,
-        BOOL app_allowed, BOOL app_blocked)
+FORT_API BOOL fort_conf_app_group_blocked(const PFORT_CONF conf, FORT_APP_DATA app_data)
 {
-    *block_reason = app_found ? FORT_BLOCK_REASON_APP_GROUP_FOUND : FORT_BLOCK_REASON_FILTER_MODE;
+    const UINT16 app_group_bit = (1 << app_data.flags.group_index);
 
-    /* Block All */
-    if (conf->flags.app_block_all)
-        return !app_allowed; /* Block, if it is not explicitly allowed */
+    if ((app_group_bit & conf->active_group_bits) != 0)
+        return FALSE;
 
-    /* Allow All */
-    if (conf->flags.app_allow_all)
-        return app_blocked; /* Block, if it is explicitly blocked */
-
-    /* Ignore */
-    if (!app_found) {
-        *block_reason = FORT_BLOCK_REASON_NONE; /* Don't block or allow */
-        return TRUE;
-    }
-
-    /* Block, if it is explicitly blocked and not allowed */
-    return app_blocked && !app_allowed;
-}
-
-FORT_API BOOL fort_conf_app_blocked(
-        const PFORT_CONF conf, FORT_APP_DATA app_data, INT8 *block_reason)
-{
-    const BOOL app_found = (app_data.found != 0);
-
-    if (app_found) {
-        if (!app_data.flags.use_group_perm) {
-            *block_reason = FORT_BLOCK_REASON_PROGRAM;
-            return app_data.flags.blocked;
-        }
-    }
-
-    const UINT32 app_perm_val = app_data.flags.blocked ? 2 : 1;
-    const UINT32 app_perm = app_perm_val << (app_data.flags.group_index * 2);
-
-    const BOOL app_allowed = app_found && (app_perm & conf->app_perms_allow_mask) != 0;
-    const BOOL app_blocked = app_found && (app_perm & conf->app_perms_block_mask) != 0;
-
-    return fort_conf_app_blocked_check(conf, block_reason, app_found, app_allowed, app_blocked);
+    return conf->flags.group_blocked;
 }
 
 FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n)
@@ -376,21 +342,4 @@ FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time,
     }
 
     return period_bits;
-}
-
-FORT_API void fort_conf_app_perms_mask_init(PFORT_CONF conf, UINT32 group_bits)
-{
-    UINT32 perms_mask = (group_bits & 0x0001) | ((group_bits & 0x0002) << 1)
-            | ((group_bits & 0x0004) << 2) | ((group_bits & 0x0008) << 3)
-            | ((group_bits & 0x0010) << 4) | ((group_bits & 0x0020) << 5)
-            | ((group_bits & 0x0040) << 6) | ((group_bits & 0x0080) << 7)
-            | ((group_bits & 0x0100) << 8) | ((group_bits & 0x0200) << 9)
-            | ((group_bits & 0x0400) << 10) | ((group_bits & 0x0800) << 11)
-            | ((group_bits & 0x1000) << 12) | ((group_bits & 0x2000) << 13)
-            | ((group_bits & 0x4000) << 14) | ((group_bits & 0x8000) << 15);
-
-    perms_mask |= perms_mask << 1;
-
-    conf->app_perms_block_mask = (perms_mask & 0xAAAAAAAA);
-    conf->app_perms_allow_mask = (perms_mask & 0x55555555);
 }

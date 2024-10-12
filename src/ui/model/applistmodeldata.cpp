@@ -162,14 +162,11 @@ QColor AppListModelData::appActionColor() const
 
 QVariant AppListModelData::appGroupColor() const
 {
-    if (!app().useGroupPerm)
-        return inactiveColor;
-
     const FirewallConf *conf = IoC<ConfAppManager>()->conf();
 
     const AppGroup *appGroup = conf->appGroupAt(app().groupIndex);
     if (!appGroup->enabled())
-        return blockColor;
+        return inactiveColor;
 
     return {};
 }

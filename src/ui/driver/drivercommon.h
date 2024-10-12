@@ -62,8 +62,6 @@ void logStatTrafHeaderRead(const char *input, quint16 *procCount);
 void logTimeWrite(char *output, int systemTimeChanged, qint64 unixTime);
 void logTimeRead(const char *input, int *systemTimeChanged, qint64 *unixTime);
 
-void confAppPermsMaskInit(void *drvConf);
-
 bool confIpInRange(const void *drvConf, const quint32 *ip, bool isIPv6 = false,
         bool included = false, int addrGroupIndex = 0);
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included = false, int addrGroupIndex = 0);
@@ -71,7 +69,6 @@ bool confIp6InRange(
         const void *drvConf, const ip6_addr_t &ip, bool included = false, int addrGroupIndex = 0);
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath);
-bool confAppBlocked(const void *drvConf, FORT_APP_DATA appData, qint8 *blockReason);
 quint16 confAppPeriodBits(const void *drvConf, quint8 hour, quint8 minute);
 
 bool isTimeInPeriod(quint8 hour, quint8 minute, quint8 fromHour, quint8 fromMinute, quint8 toHour,

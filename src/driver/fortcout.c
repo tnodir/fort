@@ -117,10 +117,10 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     app_data.flags.log_blocked = TRUE;
     app_data.flags.log_conn = TRUE;
     app_data.flags.blocked = (UCHAR) cx->blocked;
-    app_data.flags.alerted = TRUE;
 
     app_data.is_new = TRUE;
     app_data.found = TRUE;
+    app_data.alerted = TRUE;
 
     FORT_APP_ENTRY app_entry = {
         .app_data = app_data,
@@ -140,7 +140,7 @@ inline static BOOL fort_callout_ale_log_blocked_ip_check_app(
         FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
     return (app_data.found == 0 || app_data.flags.log_blocked)
-            && (app_data.flags.alerted || !conf_flags.log_alerted_blocked_ip);
+            && (app_data.alerted || !conf_flags.log_alerted_blocked_ip);
 }
 
 inline static BOOL fort_callout_ale_log_blocked_ip_check(
@@ -177,8 +177,7 @@ inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
             cx->process_id, cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
 }
 
-inline static BOOL fort_callout_ale_add_pending(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags)
+inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
 {
     if (!fort_pending_add_packet(&fort_device()->pending, ca, cx)) {
         cx->block_reason = FORT_BLOCK_REASON_ASK_LIMIT;
@@ -194,7 +193,7 @@ inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CA
         FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
     if (app_data.found == 0 && conf_flags.ask_to_connect) {
-        return fort_callout_ale_add_pending(ca, cx, conf_flags);
+        return fort_callout_ale_add_pending(ca, cx);
     }
 
     if (!conf_flags.log_stat)
@@ -206,18 +205,22 @@ inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CA
 inline static BOOL fort_callout_ale_ip_zone_check(
         PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, UINT32 zones_mask, BOOL included)
 {
-    return zones_mask != 0
-            && (included
-                    == fort_conf_zones_ip_included(
-                            &fort_device()->conf, zones_mask, cx->remote_ip, ca->isIPv6));
+    if (zones_mask == 0)
+        return FALSE;
+
+    const BOOL ip_included = fort_conf_zones_ip_included(
+            &fort_device()->conf, zones_mask, cx->remote_ip, ca->isIPv6);
+
+    return ip_included == included;
 }
 
-static BOOL fort_callout_ale_is_ip_blocked(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_DATA app_data)
+static BOOL fort_callout_ale_app_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
+        PFORT_CONF_REF conf_ref, FORT_APP_DATA app_data)
 {
-    const BOOL app_found = (app_data.found != 0);
-    if (!app_found)
-        return FALSE;
+    if (fort_conf_app_group_blocked(&conf_ref->conf, app_data)) {
+        cx->block_reason = FORT_BLOCK_REASON_APP_GROUP_FOUND;
+        return TRUE; /* block Group */
+    }
 
     if (app_data.flags.blocked) {
         cx->block_reason = FORT_BLOCK_REASON_PROGRAM;
@@ -238,11 +241,22 @@ static BOOL fort_callout_ale_is_ip_blocked(
     return FALSE;
 }
 
-inline static BOOL fort_callout_ale_is_new(FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
+inline static BOOL fort_callout_ale_flags_allowed(
+        PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags)
 {
-    const BOOL app_found = (app_data.found != 0);
+    /* "Auto-Learn" or "Ask to Connect" */
+    if (conf_flags.allow_all_new || conf_flags.ask_to_connect)
+        return TRUE;
 
-    return !app_found && (conf_flags.allow_all_new || conf_flags.ask_to_connect);
+    /* Block/Allow All */
+    if (conf_flags.app_block_all || conf_flags.app_allow_all) {
+        return conf_flags.app_allow_all;
+    }
+
+    /* Ignore */
+    cx->ignore = TRUE;
+    cx->block_reason = FORT_BLOCK_REASON_NONE; /* Don't block or allow */
+    return TRUE;
 }
 
 inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
@@ -252,23 +266,12 @@ inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALL
     if (!cx->blocked)
         return TRUE;
 
-    /* "Allow, if not blocked" or "Ask to Connect" */
-    if (fort_callout_ale_is_new(conf_flags, app_data))
-        return TRUE;
-
-    /* Check LAN Only and Zones */
-    if (fort_callout_ale_is_ip_blocked(ca, cx, app_data))
-        return FALSE;
-
-    /* Check the conf for a blocked app */
-    if (!fort_conf_app_blocked(&conf_ref->conf, app_data, &cx->block_reason))
-        return TRUE;
-
-    if (cx->block_reason == FORT_BLOCK_REASON_NONE) {
-        cx->ignore = TRUE;
+    if (app_data.found != 0) {
+        /* Check app is blocked */
+        return !fort_callout_ale_app_blocked(ca, cx, conf_ref, app_data);
     }
 
-    return FALSE;
+    return fort_callout_ale_flags_allowed(cx, conf_flags);
 }
 
 inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
@@ -357,6 +360,7 @@ inline static void fort_callout_ale_classify_action(PCFORT_CALLOUT_ARG ca,
         /* Allow the connection */
         fort_callout_classify_permit(ca->filter, ca->classifyOut);
     } else {
+        /* Block/Drop the connection */
         fort_callout_ale_classify_blocked(ca, cx, conf_ref, conf_flags);
     }
 }

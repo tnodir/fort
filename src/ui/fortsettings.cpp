@@ -402,6 +402,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setBlockInetTraffic(iniBool("blockInetTraffic"));
     conf.setAllowAllNew(iniBool("allowAllNew", true));
     conf.setAskToConnect(iniBool("askToConnect"));
+    conf.setGroupBlocked(iniBool("groupBlocked", true));
     conf.setLogStat(iniBool("logStat", true));
     conf.setLogStatNoFilter(iniBool("logStatNoFilter", true));
     conf.setLogBlocked(iniBool("logBlocked", true));
@@ -445,6 +446,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("blockInetTraffic", conf.blockInetTraffic());
         setIniValue("allowAllNew", conf.allowAllNew());
         setIniValue("askToConnect", conf.askToConnect());
+        setIniValue("groupBlocked", conf.groupBlocked());
         setIniValue("logStat", conf.logStat());
         setIniValue("logStatNoFilter", conf.logStatNoFilter());
         setIniValue("logBlocked", conf.logBlocked());

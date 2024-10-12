@@ -183,13 +183,6 @@ void logTimeRead(const char *input, int *systemTimeChanged, qint64 *unixTime)
     fort_log_time_read(input, systemTimeChanged, unixTime);
 }
 
-void confAppPermsMaskInit(void *drvConf)
-{
-    PFORT_CONF conf = (PFORT_CONF) drvConf;
-
-    fort_conf_app_perms_mask_init(conf, conf->flags.group_bits);
-}
-
 bool confIpInRange(
         const void *drvConf, const quint32 *ip, bool isIPv6, bool included, int addrGroupIndex)
 {
@@ -228,13 +221,6 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
             conf, (const PVOID) p, len, fort_conf_app_exe_find, /*exe_context=*/nullptr);
 
     return app_data;
-}
-
-bool confAppBlocked(const void *drvConf, FORT_APP_DATA appData, qint8 *blockReason)
-{
-    const PFORT_CONF conf = (const PFORT_CONF) drvConf;
-
-    return fort_conf_app_blocked(conf, appData, blockReason);
 }
 
 quint16 confAppPeriodBits(const void *drvConf, quint8 hour, quint8 minute)

@@ -375,7 +375,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
 }
 
 FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
-        PFORT_DEVICE_CONF device_conf, const PFORT_CONF_FLAGS conf_flags)
+        PFORT_DEVICE_CONF device_conf, const FORT_CONF_FLAGS conf_flags)
 {
     FORT_CONF_FLAGS old_conf_flags;
 
@@ -388,15 +388,15 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
             PFORT_CONF conf = &conf_ref->conf;
 
             old_conf_flags = conf->flags;
-            conf->flags = *conf_flags;
+            conf->flags = conf_flags;
 
-            fort_conf_app_perms_mask_init(conf, conf_flags->group_bits);
+            conf->active_group_bits = conf_flags.group_bits;
 
-            fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags->boot_filter);
+            fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags.boot_filter);
             fort_device_flag_set(
-                    device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS, conf_flags->filter_locals);
+                    device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS, conf_flags.filter_locals);
 
-            device_conf->conf_flags = *conf_flags;
+            device_conf->conf_flags = conf_flags;
         } else {
             const UCHAR flags = fort_device_flag(device_conf, FORT_DEVICE_BOOT_MASK);
 
@@ -429,7 +429,7 @@ FORT_API BOOL fort_conf_ref_period_update(PFORT_DEVICE_CONF device_conf, BOOL fo
         if (force || device_conf->conf_flags.group_bits != period_bits) {
             device_conf->conf_flags.group_bits = period_bits;
 
-            fort_conf_app_perms_mask_init(conf, period_bits);
+            conf->active_group_bits = period_bits;
 
             res = TRUE;
         }

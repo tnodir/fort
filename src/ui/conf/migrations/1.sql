@@ -59,7 +59,6 @@ CREATE TABLE app(
   name TEXT,
   notes TEXT,
   is_wildcard BOOLEAN NOT NULL DEFAULT 0,
-  use_group_perm BOOLEAN NOT NULL DEFAULT 1,
   apply_parent BOOLEAN NOT NULL DEFAULT 0,
   apply_child BOOLEAN NOT NULL DEFAULT 0,
   apply_spec_child BOOLEAN NOT NULL DEFAULT 0,

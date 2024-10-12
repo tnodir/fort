@@ -90,42 +90,30 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("::ffff:0:2")));
     ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("65::")));
 
-    qint8 blockReason = FORT_BLOCK_REASON_UNKNOWN;
+    ASSERT_TRUE(DriverCommon::confAppFind(data, "System").found);
 
-    ASSERT_TRUE(DriverCommon::confAppBlocked(
-            data, DriverCommon::confAppFind(data, "System"), &blockReason));
-    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_APP_GROUP_FOUND);
+    ASSERT_TRUE(DriverCommon::confAppFind(
+            data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe"))
+                    .found);
+    ASSERT_TRUE(DriverCommon::confAppFind(
+            data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\git.exe"))
+                    .found);
+    ASSERT_TRUE(DriverCommon::confAppFind(
+            data, FileUtil::pathToKernelPath("D:\\Utils\\Dev\\Git\\bin\\git.exe"))
+                    .found);
+    ASSERT_TRUE(DriverCommon::confAppFind(
+            data, FileUtil::pathToKernelPath("D:\\My\\Programs\\Test.exe"))
+                    .found);
 
-    ASSERT_FALSE(DriverCommon::confAppBlocked(data,
-            DriverCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe")),
-            &blockReason));
-    ASSERT_FALSE(DriverCommon::confAppBlocked(data,
-            DriverCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\git.exe")),
-            &blockReason));
-    ASSERT_FALSE(DriverCommon::confAppBlocked(data,
-            DriverCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("D:\\Utils\\Dev\\Git\\bin\\git.exe")),
-            &blockReason));
-    ASSERT_FALSE(DriverCommon::confAppBlocked(data,
-            DriverCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("D:\\My\\Programs\\Test.exe")),
-            &blockReason));
-
-    ASSERT_TRUE(DriverCommon::confAppBlocked(data,
-            DriverCommon::confAppFind(
-                    data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe")),
-            &blockReason));
-    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_FILTER_MODE);
+    ASSERT_FALSE(DriverCommon::confAppFind(
+            data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe"))
+                    .found);
 
     ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 0, 0), 0x01);
     ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 12, 0), 0);
 
     const auto firefoxData = DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe"));
-    ASSERT_TRUE(DriverCommon::confAppBlocked(data, firefoxData, &blockReason));
-    ASSERT_EQ(blockReason, FORT_BLOCK_REASON_APP_GROUP_FOUND);
     ASSERT_EQ(int(firefoxData.flags.group_index), 1);
 }
 

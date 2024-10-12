@@ -203,26 +203,25 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, Ap
     appRow.appName = stmt.columnText(3);
     appRow.notes = stmt.columnText(4);
     appRow.isWildcard = stmt.columnBool(5);
-    appRow.useGroupPerm = stmt.columnBool(6);
-    appRow.applyParent = stmt.columnBool(7);
-    appRow.applyChild = stmt.columnBool(8);
-    appRow.applySpecChild = stmt.columnBool(9);
-    appRow.killChild = stmt.columnBool(10);
-    appRow.lanOnly = stmt.columnBool(11);
-    appRow.parked = stmt.columnBool(12);
-    appRow.logBlocked = stmt.columnBool(13);
-    appRow.logConn = stmt.columnBool(14);
-    appRow.blocked = stmt.columnBool(15);
-    appRow.killProcess = stmt.columnBool(16);
-    appRow.acceptZones = stmt.columnUInt(17);
-    appRow.rejectZones = stmt.columnUInt(18);
-    appRow.ruleId = stmt.columnUInt(19);
-    appRow.scheduleAction = stmt.columnInt(20);
-    appRow.scheduleTime = stmt.columnDateTime(21);
-    appRow.creatTime = stmt.columnDateTime(22);
-    appRow.groupIndex = stmt.columnInt(23);
-    appRow.alerted = stmt.columnBool(24);
-    appRow.ruleName = stmt.columnText(25);
+    appRow.applyParent = stmt.columnBool(6);
+    appRow.applyChild = stmt.columnBool(7);
+    appRow.applySpecChild = stmt.columnBool(8);
+    appRow.killChild = stmt.columnBool(9);
+    appRow.lanOnly = stmt.columnBool(10);
+    appRow.parked = stmt.columnBool(11);
+    appRow.logBlocked = stmt.columnBool(12);
+    appRow.logConn = stmt.columnBool(13);
+    appRow.blocked = stmt.columnBool(14);
+    appRow.killProcess = stmt.columnBool(15);
+    appRow.acceptZones = stmt.columnUInt(16);
+    appRow.rejectZones = stmt.columnUInt(17);
+    appRow.ruleId = stmt.columnUInt(18);
+    appRow.scheduleAction = stmt.columnInt(19);
+    appRow.scheduleTime = stmt.columnDateTime(20);
+    appRow.creatTime = stmt.columnDateTime(21);
+    appRow.groupIndex = stmt.columnInt(22);
+    appRow.alerted = stmt.columnBool(23);
+    appRow.ruleName = stmt.columnText(24);
 
     return true;
 }
@@ -272,7 +271,6 @@ QString AppListModel::sqlBase() const
            "    t.name,"
            "    t.notes,"
            "    t.is_wildcard,"
-           "    t.use_group_perm,"
            "    t.apply_parent,"
            "    t.apply_child,"
            "    t.apply_spec_child,"

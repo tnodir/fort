@@ -119,11 +119,11 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
     /* Clear conf */
     {
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(&fort_device()->conf, NULL);
-        FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
+        const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
         fort_conf_zones_set(&fort_device()->conf, NULL);
 
-        fort_stat_conf_flags_update(&fort_device()->stat, &conf_flags);
+        fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
 
         fort_device_reauth_force(old_conf_flags);
     }
@@ -209,10 +209,12 @@ static NTSTATUS fort_device_control_setconf(PFORT_DEVICE_CONTROL_ARG dca)
 
 static NTSTATUS fort_device_control_setflags(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_CONF_FLAGS conf_flags = dca->buffer;
+    const PFORT_CONF_FLAGS in_conf_flags = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len == sizeof(FORT_CONF_FLAGS)) {
+        const FORT_CONF_FLAGS conf_flags = *in_conf_flags;
+
         const FORT_CONF_FLAGS old_conf_flags =
                 fort_conf_ref_flags_set(&fort_device()->conf, conf_flags);
 

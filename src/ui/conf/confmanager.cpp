@@ -34,7 +34,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-constexpr int DATABASE_USER_VERSION = 44;
+constexpr int DATABASE_USER_VERSION = 45;
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
