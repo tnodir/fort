@@ -906,7 +906,7 @@
     </message>
     <message>
         <source>Sound Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>تنبيه صوتي</translation>
     </message>
     <message>
         <source>Alert Window for Auto-Learn mode</source>
@@ -1048,7 +1048,9 @@
         <source>All Options and Programs will be replaced after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
-        <translation type="unfinished"></translation>
+        <translation>جميع الخيارات والبرامج ستستبدل بعد الاستيراد الناجح. هل ترغب في المتابعة؟
+
+تأكد من أنك قد قمت بعمل نسخة احتياطية جديدة.</translation>
     </message>
 </context>
 <context>
@@ -1187,7 +1189,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-download new version</source>
-        <translation type="unfinished"></translation>
+        <translation>التنزيل التلقائي للإصدار الجديد</translation>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
@@ -1598,7 +1600,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>التنبيهات</translation>
     </message>
 </context>
 <context>

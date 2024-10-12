@@ -910,7 +910,7 @@
     </message>
     <message>
         <source>Alert Window for Auto-Learn mode</source>
-        <translation type="unfinished"></translation>
+        <translation>자동 학습 모드 알림 창</translation>
     </message>
 </context>
 <context>
@@ -1193,7 +1193,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>비활성화된 앱 그룹의 트래픽 차단</translation>
     </message>
 </context>
 <context>
