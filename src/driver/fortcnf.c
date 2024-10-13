@@ -15,22 +15,6 @@ typedef struct fort_conf_exe_node
     tommy_key_t path_hash; /* tommy_hashdyn_node::index */
 } FORT_CONF_EXE_NODE, *PFORT_CONF_EXE_NODE;
 
-static FORT_TIME fort_current_time(void)
-{
-    TIME_FIELDS tf;
-    LARGE_INTEGER system_time, local_time;
-
-    KeQuerySystemTime(&system_time);
-    ExSystemTimeToLocalTime(&system_time, &local_time);
-    RtlTimeToTimeFields(&local_time, &tf);
-
-    FORT_TIME time;
-    time.hour = (UCHAR) tf.Hour;
-    time.minute = (UCHAR) tf.Minute;
-
-    return time;
-}
-
 static int bit_scan_forward(ULONG mask)
 {
     unsigned long index;
@@ -390,8 +374,6 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
             old_conf_flags = conf->flags;
             conf->flags = conf_flags;
 
-            conf->active_group_bits = conf_flags.group_bits;
-
             fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags.boot_filter);
             fort_device_flag_set(
                     device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS, conf_flags.filter_locals);
@@ -410,34 +392,6 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     return old_conf_flags;
-}
-
-FORT_API BOOL fort_conf_ref_period_update(PFORT_DEVICE_CONF device_conf, BOOL force, int *periods_n)
-{
-    PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
-
-    if (conf_ref == NULL)
-        return FALSE;
-
-    BOOL res = FALSE;
-    PFORT_CONF conf = &conf_ref->conf;
-
-    if (conf->app_periods_n != 0) {
-        const FORT_TIME time = fort_current_time();
-        const UINT16 period_bits = fort_conf_app_period_bits(conf, time, periods_n);
-
-        if (force || device_conf->conf_flags.group_bits != period_bits) {
-            device_conf->conf_flags.group_bits = period_bits;
-
-            conf->active_group_bits = period_bits;
-
-            res = TRUE;
-        }
-    }
-
-    fort_conf_ref_put(device_conf, conf_ref);
-
-    return res;
 }
 
 FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PFORT_CONF_ZONES zones, ULONG len)

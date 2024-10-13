@@ -76,8 +76,6 @@ static void NTAPI fort_syscb_time(PVOID context, PVOID event, PVOID specifics)
     FORT_CHECK_STACK(FORT_SYSCB_TIME);
 
     fort_stat_flags_set(&fort_device()->stat, FORT_STAT_SYSTEM_TIME_CHANGED, TRUE);
-
-    fort_device_on_system_time();
 }
 
 FORT_API NTSTATUS fort_syscb_time_register(void)

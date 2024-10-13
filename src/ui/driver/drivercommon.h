@@ -69,10 +69,6 @@ bool confIp6InRange(
         const void *drvConf, const ip6_addr_t &ip, bool included = false, int addrGroupIndex = 0);
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath);
-quint16 confAppPeriodBits(const void *drvConf, quint8 hour, quint8 minute);
-
-bool isTimeInPeriod(quint8 hour, quint8 minute, quint8 fromHour, quint8 fromMinute, quint8 toHour,
-        quint8 toMinute);
 
 bool provRegister(bool bootFilter);
 void provUnregister();

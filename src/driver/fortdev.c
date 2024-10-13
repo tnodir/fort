@@ -57,20 +57,6 @@ static void fort_device_reauth_queue(void)
     fort_worker_queue(&fort_device()->worker, FORT_WORKER_REAUTH);
 }
 
-static void fort_app_period_timer(void)
-{
-    if (fort_conf_ref_period_update(&fort_device()->conf, /*force=*/FALSE, /*periods_n=*/NULL)) {
-        fort_device_reauth_queue();
-    }
-}
-
-FORT_API void fort_device_on_system_time(void)
-{
-    if (fort_timer_is_running(&fort_device()->app_timer)) {
-        fort_app_period_timer();
-    }
-}
-
 FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
@@ -464,8 +450,6 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     fort_pending_open(&fort_device()->pending);
     fort_shaper_open(&fort_device()->shaper);
     fort_timer_open(&fort_device()->log_timer, 500, /*flags=*/0, &fort_callout_timer);
-    fort_timer_open(
-            &fort_device()->app_timer, 60000, FORT_TIMER_COALESCABLE, &fort_app_period_timer);
     fort_pstree_open(&fort_device()->ps_tree);
 
     /* Register filters provider */
@@ -505,7 +489,6 @@ FORT_API void fort_device_unload(void)
     fort_syscb_time_unregister();
 
     /* Stop timers */
-    fort_timer_close(&fort_device()->app_timer);
     fort_timer_close(&fort_device()->log_timer);
 
     /* Stop worker threads */

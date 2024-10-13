@@ -77,18 +77,11 @@ private:
         longs_arr_t addressGroupOffsets;
     };
 
-    struct ParseAppGroupsArgs
-    {
-        chars_arr_t appPeriods;
-        quint8 appPeriodsCount = 0;
-    };
-
     struct WriteConfArgs
     {
         const FirewallConf &conf;
 
         ParseAddressGroupsArgs ad;
-        ParseAppGroupsArgs gr;
     };
 
     bool parseAddressGroups(const QList<AddressGroup *> &addressGroups, ParseAddressGroupsArgs &ad,
@@ -96,7 +89,7 @@ private:
 
     // Convert app. groups to plain lists
     bool parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &appGroups,
-            ParseAppGroupsArgs &gr, AppParseOptions &opt);
+            AppParseOptions &opt);
 
     bool parseExeApps(
             EnvManager &envManager, const ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
@@ -108,8 +101,6 @@ private:
     bool addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize);
 
     static QString parseAppPath(const QStringView &line, bool &isWild, bool &isPrefix);
-
-    static void parseAppPeriod(const AppGroup *appGroup, ParseAppGroupsArgs &gr);
 
     static void writeConf(char *output, const WriteConfArgs &wca, AppParseOptions &opt);
 

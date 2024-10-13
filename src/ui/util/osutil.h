@@ -15,8 +15,6 @@ enum SoundType {
     SoundDefault = 0,
 };
 
-#define OS_TICKS_PER_SECOND 1000
-
 class OsUtil
 {
 public:
@@ -30,8 +28,6 @@ public:
 
     static quint32 lastErrorCode();
     static QString errorMessage(quint32 errorCode = lastErrorCode());
-
-    static qint32 getTickCount();
 
     static QString userName();
     static bool isUserAdmin();

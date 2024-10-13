@@ -13,8 +13,6 @@ static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT64), "FORT_CONF_FLAGS size m
 static_assert(sizeof(FORT_CONF_RULE_EXPR) == sizeof(UINT32), "FORT_CONF_RULE_EXPR size mismatch");
 static_assert(sizeof(FORT_CONF_RULE) == sizeof(UINT16), "FORT_CONF_RULE size mismatch");
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
-static_assert(sizeof(FORT_TIME) == sizeof(UINT16), "FORT_TIME size mismatch");
-static_assert(sizeof(FORT_PERIOD) == sizeof(UINT32), "FORT_PERIOD size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
 static_assert(sizeof(FORT_APP_DATA) == 2 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
 
@@ -27,15 +25,6 @@ static int fort_memcmp(const void *p1, const void *p2, size_t len)
     return (n == len) ? 0 : (((const char *) p1)[n] - ((const char *) p2)[n]);
 }
 #endif
-
-FORT_API BOOL is_time_in_period(FORT_TIME time, FORT_PERIOD period)
-{
-    const int x = time.hour * 60 + time.minute;
-    const int from = period.from.hour * 60 + period.from.minute;
-    const int to = period.to.hour * 60 + period.to.minute;
-
-    return (from <= to ? (x >= from && x < (to - 1)) : (x >= from || x < (to - 1)));
-}
 
 static BOOL fort_conf_ip4_find(const UINT32 *iparr, UINT32 ip, UINT32 count, BOOL is_range)
 {
@@ -299,47 +288,12 @@ FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, const PVOID pat
     return app_data;
 }
 
-FORT_API BOOL fort_conf_app_group_blocked(const PFORT_CONF conf, FORT_APP_DATA app_data)
+FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
     const UINT16 app_group_bit = (1 << app_data.flags.group_index);
 
-    if ((app_group_bit & conf->active_group_bits) != 0)
+    if ((app_group_bit & conf_flags.group_bits) != 0)
         return FALSE;
 
-    return conf->flags.group_blocked;
-}
-
-FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n)
-{
-    UINT8 count = conf->app_periods_n;
-
-    if (count == 0)
-        return 0;
-
-    const char *data = conf->data;
-    PFORT_PERIOD app_periods = (const PFORT_PERIOD)(data + conf->app_periods_off);
-    UINT16 period_bits = (UINT16) conf->flags.group_bits;
-    int n = 0;
-
-    for (int i = 0; i < FORT_CONF_GROUP_MAX; ++i) {
-        const UINT16 bit = (1 << i);
-        const FORT_PERIOD period = *app_periods++;
-
-        if ((period_bits & bit) != 0 && period.v != 0) {
-            if (!is_time_in_period(time, period)) {
-                period_bits ^= bit;
-            }
-
-            ++n;
-
-            if (--count == 0)
-                break;
-        }
-    }
-
-    if (periods_n != NULL) {
-        *periods_n = n;
-    }
-
-    return period_bits;
+    return conf_flags.group_blocked;
 }

@@ -24,8 +24,6 @@ const QLoggingCategory LC("stat");
 
 constexpr int DATABASE_USER_VERSION = 7;
 
-constexpr qint32 ACTIVE_PERIOD_CHECK_SECS = 60 * OS_TICKS_PER_SECOND;
-
 constexpr qint64 INVALID_APP_ID = Q_INT64_C(-1);
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
@@ -88,7 +86,7 @@ void StatManager::setupByConf()
         logClear();
     }
 
-    m_isActivePeriodSet = false;
+    m_tickSecs = 0;
 
     if (conf()) {
         setupActivePeriod();
@@ -97,29 +95,26 @@ void StatManager::setupByConf()
 
 void StatManager::setupActivePeriod()
 {
-    DateUtil::parseTime(
-            conf()->activePeriodFrom(), m_activePeriodFromHour, m_activePeriodFromMinute);
+    m_activePeriodFrom = DateUtil::parseTime(conf()->activePeriodFrom());
 
-    DateUtil::parseTime(conf()->activePeriodTo(), m_activePeriodToHour, m_activePeriodToMinute);
+    m_activePeriodTo = DateUtil::parseTime(conf()->activePeriodTo());
 }
 
-void StatManager::updateActivePeriod()
+void StatManager::updateActivePeriod(qint32 tickSecs)
 {
-    const qint32 currentTick = OsUtil::getTickCount();
+    constexpr qint32 ACTIVE_PERIOD_CHECK_SECS = 60;
 
-    if (!m_isActivePeriodSet || qAbs(currentTick - m_tick) >= ACTIVE_PERIOD_CHECK_SECS) {
-        m_tick = currentTick;
+    if (qAbs(tickSecs - m_tickSecs) < ACTIVE_PERIOD_CHECK_SECS)
+        return;
 
-        m_isActivePeriodSet = true;
-        m_isActivePeriod = true;
+    m_tickSecs = tickSecs;
 
-        if (conf() && conf()->activePeriodEnabled()) {
-            const QTime now = QTime::currentTime();
+    m_isActivePeriod = true;
 
-            m_isActivePeriod = DriverCommon::isTimeInPeriod(quint8(now.hour()),
-                    quint8(now.minute()), m_activePeriodFromHour, m_activePeriodFromMinute,
-                    m_activePeriodToHour, m_activePeriodToMinute);
-        }
+    if (conf() && conf()->activePeriodEnabled()) {
+        const QTime now = DateUtil::currentTime();
+
+        m_isActivePeriod = DateUtil::isTimeInPeriod(now, m_activePeriodFrom, m_activePeriodTo);
     }
 }
 
@@ -132,15 +127,16 @@ void StatManager::clearQuotas(bool isNewDay, bool isNewMonth)
 
 void StatManager::checkQuotas(quint32 inBytes)
 {
-    if (m_isActivePeriod) {
-        auto quotaManager = IoC<QuotaManager>();
+    if (!m_isActivePeriod)
+        return;
 
-        // Update quota traffic bytes
-        quotaManager->addTraf(inBytes);
+    auto quotaManager = IoC<QuotaManager>();
 
-        quotaManager->checkQuotaDay(m_trafDay);
-        quotaManager->checkQuotaMonth(m_trafMonth);
-    }
+    // Update quota traffic bytes
+    quotaManager->addTraf(inBytes);
+
+    quotaManager->checkQuotaDay(m_trafDay);
+    quotaManager->checkQuotaMonth(m_trafMonth);
 }
 
 bool StatManager::updateTrafDay(qint64 unixTime)
@@ -256,7 +252,7 @@ bool StatManager::logProcNew(const LogEntryProcNew &entry, qint64 unixTime)
 bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 {
     // Active period
-    updateActivePeriod();
+    updateActivePeriod(qint32(unixTime));
 
     const bool logStat = conf() && conf()->logStat() && m_isActivePeriod;
 

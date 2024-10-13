@@ -109,30 +109,9 @@ TEST_F(ConfUtilTest, confWriteRead)
             data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe"))
                     .found);
 
-    ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 0, 0), 0x01);
-    ASSERT_EQ(DriverCommon::confAppPeriodBits(data, 12, 0), 0);
-
     const auto firefoxData = DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe"));
     ASSERT_EQ(int(firefoxData.flags.group_index), 1);
-}
-
-TEST_F(ConfUtilTest, checkPeriod)
-{
-    const quint8 h = 15, m = 35;
-
-    ASSERT_TRUE(DriverCommon::isTimeInPeriod(h, m, 0, 0, 24, 0));
-    ASSERT_TRUE(DriverCommon::isTimeInPeriod(h, m, 15, 0, 16, 0));
-    ASSERT_TRUE(DriverCommon::isTimeInPeriod(h, m, 15, 0, 10, 0));
-    ASSERT_FALSE(DriverCommon::isTimeInPeriod(h, m, 15, 0, 15, 0));
-    ASSERT_FALSE(DriverCommon::isTimeInPeriod(h, m, 0, 0, 15, 0));
-    ASSERT_FALSE(DriverCommon::isTimeInPeriod(h, m, 16, 0, 15, 0));
-    ASSERT_FALSE(DriverCommon::isTimeInPeriod(h, m, 24, 0, 0, 0));
-    ASSERT_FALSE(DriverCommon::isTimeInPeriod(h, m, 16, 0, 14, 0));
-    ASSERT_FALSE(DriverCommon::isTimeInPeriod(h, m, 16, 0, 24, 0));
-
-    ASSERT_TRUE(DriverCommon::isTimeInPeriod(h, m, 15, 35, 15, 37));
-    ASSERT_TRUE(!DriverCommon::isTimeInPeriod(h, m, 15, 35, 15, 36));
 }
 
 TEST_F(ConfUtilTest, checkEnvManager)

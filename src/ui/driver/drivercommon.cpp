@@ -223,33 +223,6 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
     return app_data;
 }
 
-quint16 confAppPeriodBits(const void *drvConf, quint8 hour, quint8 minute)
-{
-    const PFORT_CONF conf = (const PFORT_CONF) drvConf;
-
-    FORT_TIME time;
-    time.hour = hour;
-    time.minute = minute;
-
-    return fort_conf_app_period_bits(conf, time, nullptr);
-}
-
-bool isTimeInPeriod(quint8 hour, quint8 minute, quint8 fromHour, quint8 fromMinute, quint8 toHour,
-        quint8 toMinute)
-{
-    FORT_TIME time;
-    time.hour = hour;
-    time.minute = minute;
-
-    FORT_PERIOD period;
-    period.from.hour = fromHour;
-    period.from.minute = fromMinute;
-    period.to.hour = toHour;
-    period.to.minute = toMinute;
-
-    return is_time_in_period(time, period);
-}
-
 bool provRegister(bool bootFilter)
 {
     const FORT_PROV_BOOT_CONF boot_conf = {

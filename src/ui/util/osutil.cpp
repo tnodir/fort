@@ -93,11 +93,6 @@ QString OsUtil::errorMessage(quint32 errorCode)
     return text;
 }
 
-qint32 OsUtil::getTickCount()
-{
-    return qint32(GetTickCount());
-}
-
 QString OsUtil::userName()
 {
     wchar_t buf[UNLEN + 1];

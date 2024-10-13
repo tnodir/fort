@@ -4,6 +4,7 @@
 #include <QHash>
 #include <QObject>
 #include <QStringList>
+#include <QTime>
 #include <QVector>
 
 #include <sqlite/sqlite_types.h>
@@ -70,7 +71,7 @@ private:
     void setupByConf();
 
     void setupActivePeriod();
-    void updateActivePeriod();
+    void updateActivePeriod(qint32 tickSecs);
 
     void clearQuotas(bool isNewDay, bool isNewMonth);
     void checkQuotas(quint32 inBytes);
@@ -110,18 +111,16 @@ private:
     void commitTransaction(bool &ok);
 
 private:
-    bool m_isActivePeriodSet : 1 = false;
     bool m_isActivePeriod : 1 = false;
-
-    quint8 m_activePeriodFromHour = 0;
-    quint8 m_activePeriodFromMinute = 0;
-    quint8 m_activePeriodToHour = 0;
-    quint8 m_activePeriodToMinute = 0;
 
     qint32 m_trafHour = 0;
     qint32 m_trafDay = 0;
     qint32 m_trafMonth = 0;
-    qint32 m_tick = 0;
+
+    qint32 m_tickSecs = 0;
+
+    QTime m_activePeriodFrom;
+    QTime m_activePeriodTo;
 
     const FirewallConf *m_conf = nullptr;
 

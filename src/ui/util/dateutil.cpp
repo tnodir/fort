@@ -3,6 +3,20 @@
 #include <QLocale>
 #include <QTimeZone>
 
+namespace {
+
+quint8 parseTimeHour(const QString &time)
+{
+    return quint8(QStringView(time).left(2).toUInt());
+}
+
+quint8 parseTimeMinute(const QString &time)
+{
+    return quint8(QStringView(time).right(2).toUInt());
+}
+
+}
+
 QDateTime DateUtil::now()
 {
     return QDateTime::currentDateTime();
@@ -111,23 +125,38 @@ QString DateUtil::reformatTime(const QString &time)
     return formatTime(hour, minute);
 }
 
-void DateUtil::parseTime(const QString &time, quint8 &hour, quint8 &minute)
-{
-    hour = parseTimeHour(time);
-    minute = parseTimeMinute(time);
-}
-
-quint8 DateUtil::parseTimeHour(const QString &period)
-{
-    return quint8(QStringView(period).left(2).toUInt());
-}
-
-quint8 DateUtil::parseTimeMinute(const QString &period)
-{
-    return quint8(QStringView(period).right(2).toUInt());
-}
-
 QString DateUtil::localeDateTime(const QDateTime &dateTime, QLocale::FormatType format)
 {
     return QLocale().toString(dateTime, format);
+}
+
+QTime DateUtil::currentTime()
+{
+    return QTime::currentTime();
+}
+
+QTime DateUtil::midnightTime()
+{
+    return QTime(23, 59, 59, 999);
+}
+
+QTime DateUtil::parseTime(const QString &time)
+{
+    const quint8 hour = parseTimeHour(time);
+    if (hour > 23) {
+        return midnightTime();
+    }
+
+    const quint8 minute = parseTimeMinute(time);
+
+    return QTime(hour, minute);
+}
+
+bool DateUtil::isTimeInPeriod(QTime time, QTime periodFrom, QTime periodTo)
+{
+    const int x = time.msecsSinceStartOfDay();
+    const int from = periodFrom.msecsSinceStartOfDay();
+    const int to = periodTo.msecsSinceStartOfDay();
+
+    return (from <= to) ? (x >= from && x < to) : (x >= from || x < to);
 }

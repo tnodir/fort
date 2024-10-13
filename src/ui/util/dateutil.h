@@ -34,13 +34,15 @@ public:
     static QString formatTime(quint8 hour, quint8 minute);
     static QString reformatTime(const QString &time);
 
-    static void parseTime(const QString &time, quint8 &hour, quint8 &minute);
-
-    static quint8 parseTimeHour(const QString &period);
-    static quint8 parseTimeMinute(const QString &period);
-
     static QString localeDateTime(
             const QDateTime &dateTime, QLocale::FormatType format = QLocale::ShortFormat);
+
+    static QTime currentTime();
+    static QTime midnightTime();
+
+    static QTime parseTime(const QString &time);
+
+    static bool isTimeInPeriod(QTime time, QTime periodFrom, QTime periodTo);
 };
 
 #endif // DATEUTIL_H

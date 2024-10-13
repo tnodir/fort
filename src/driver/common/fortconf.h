@@ -204,32 +204,6 @@ typedef struct fort_traf
     };
 } FORT_TRAF, *PFORT_TRAF;
 
-typedef struct fort_time
-{
-    union {
-        UINT16 v;
-
-        struct
-        {
-            UCHAR hour;
-            UCHAR minute;
-        };
-    };
-} FORT_TIME, *PFORT_TIME;
-
-typedef struct fort_period
-{
-    union {
-        UINT32 v;
-
-        struct
-        {
-            FORT_TIME from;
-            FORT_TIME to;
-        };
-    };
-} FORT_PERIOD, *PFORT_PERIOD;
-
 typedef struct fort_app_flags
 {
     UINT16 group_index : 5;
@@ -301,18 +275,11 @@ typedef struct fort_conf
 
     UCHAR proc_wild : 1; /* check also wildcard paths on process creation */
 
-    UCHAR app_periods_n;
-
     UINT16 wild_apps_n;
     UINT16 prefix_apps_n;
     UINT16 exe_apps_n;
 
-    UINT16 active_group_bits;
-    UINT16 reserved; /* not used */
-
     UINT32 addr_groups_off;
-
-    UINT32 app_periods_off;
 
     UINT32 wild_apps_off;
     UINT32 prefix_apps_off;
@@ -359,8 +326,6 @@ typedef BOOL fort_conf_zones_ip_included_func(
 extern "C" {
 #endif
 
-FORT_API BOOL is_time_in_period(FORT_TIME time, FORT_PERIOD period);
-
 FORT_API BOOL fort_conf_ip_inlist(
         const UINT32 *ip, const PFORT_CONF_ADDR4_LIST addr_list, BOOL isIPv6);
 
@@ -392,9 +357,7 @@ FORT_API FORT_APP_DATA fort_conf_app_exe_find(
 FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
-FORT_API BOOL fort_conf_app_group_blocked(const PFORT_CONF conf, FORT_APP_DATA app_data);
-
-FORT_API UINT16 fort_conf_app_period_bits(const PFORT_CONF conf, FORT_TIME time, int *periods_n);
+FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
 
 #ifdef __cplusplus
 } // extern "C"

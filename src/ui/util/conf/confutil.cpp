@@ -246,7 +246,7 @@ bool ConfUtil::write(
     if (!parseExeApps(envManager, confAppsWalker, opt))
         return false;
 
-    if (!parseAppGroups(envManager, conf.appGroups(), wca.gr, opt))
+    if (!parseAppGroups(envManager, conf.appGroups(), opt))
         return false;
 
     const quint32 appsSize = opt.wildAppsSize + opt.prefixAppsSize + opt.exeAppsSize;
@@ -257,7 +257,6 @@ bool ConfUtil::write(
 
     // Fill the buffer
     const int confIoSize = int(FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF + addressGroupsSize
-            + FORT_CONF_STR_DATA_SIZE(conf.appGroups().size() * sizeof(FORT_PERIOD)) // appPeriods
             + FORT_CONF_STR_DATA_SIZE(opt.wildAppsSize)
             + FORT_CONF_STR_HEADER_SIZE(opt.prefixAppsMap.size())
             + FORT_CONF_STR_DATA_SIZE(opt.prefixAppsSize)
@@ -522,8 +521,8 @@ bool ConfUtil::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
     return true;
 }
 
-bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &appGroups,
-        ParseAppGroupsArgs &gr, AppParseOptions &opt)
+bool ConfUtil::parseAppGroups(
+        EnvManager &envManager, const QList<AppGroup *> &appGroups, AppParseOptions &opt)
 {
     const int groupsCount = appGroups.size();
     if (groupsCount < 1 || groupsCount > APP_GROUP_MAX) {
@@ -565,9 +564,6 @@ bool ConfUtil::parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &a
         app.blocked = false;
         if (!parseAppsText(envManager, app, opt))
             return false;
-
-        // Enabled Period
-        parseAppPeriod(appGroup, gr);
     }
 
     return true;
@@ -696,45 +692,18 @@ QString ConfUtil::parseAppPath(const QStringView &line, bool &isWild, bool &isPr
     return path.toString();
 }
 
-void ConfUtil::parseAppPeriod(const AppGroup *appGroup, ParseAppGroupsArgs &gr)
-{
-    quint8 fromHour = 0, fromMinute = 0;
-    quint8 toHour = 0, toMinute = 0;
-
-    if (appGroup->periodEnabled()) {
-        DateUtil::parseTime(appGroup->periodFrom(), fromHour, fromMinute);
-        DateUtil::parseTime(appGroup->periodTo(), toHour, toMinute);
-
-        const bool fromIsEmpty = (fromHour == 0 && fromMinute == 0);
-        const bool toIsEmpty = (toHour == 0 && toMinute == 0);
-
-        if (!fromIsEmpty || !toIsEmpty) {
-            ++gr.appPeriodsCount;
-        }
-    }
-
-    gr.appPeriods.append(qint8(fromHour));
-    gr.appPeriods.append(qint8(fromMinute));
-    gr.appPeriods.append(qint8(toHour));
-    gr.appPeriods.append(qint8(toMinute));
-}
-
 void ConfUtil::writeConf(char *output, const WriteConfArgs &wca, AppParseOptions &opt)
 {
     PFORT_CONF_IO drvConfIo = (PFORT_CONF_IO) output;
     PFORT_CONF drvConf = &drvConfIo->conf;
     char *data = drvConf->data;
     quint32 addrGroupsOff;
-    quint32 appPeriodsOff;
     quint32 wildAppsOff, prefixAppsOff, exeAppsOff;
 
 #define CONF_DATA_OFFSET quint32(data - drvConf->data)
     addrGroupsOff = CONF_DATA_OFFSET;
     writeLongs(&data, wca.ad.addressGroupOffsets);
     writeAddressRanges(&data, wca.ad.addressRanges);
-
-    appPeriodsOff = CONF_DATA_OFFSET;
-    writeChars(&data, wca.gr.appPeriods);
 
     wildAppsOff = CONF_DATA_OFFSET;
     writeApps(&data, opt.wildAppsMap);
@@ -756,17 +725,11 @@ void ConfUtil::writeConf(char *output, const WriteConfArgs &wca, AppParseOptions
 
     drvConf->proc_wild = opt.procWild;
 
-    drvConf->app_periods_n = wca.gr.appPeriodsCount;
-
     drvConf->wild_apps_n = quint16(opt.wildAppsMap.size());
     drvConf->prefix_apps_n = quint16(opt.prefixAppsMap.size());
     drvConf->exe_apps_n = quint16(opt.exeAppsMap.size());
 
-    drvConf->active_group_bits = conf_group->group_bits;
-
     drvConf->addr_groups_off = addrGroupsOff;
-
-    drvConf->app_periods_off = appPeriodsOff;
 
     drvConf->wild_apps_off = wildAppsOff;
     drvConf->prefix_apps_off = prefixAppsOff;

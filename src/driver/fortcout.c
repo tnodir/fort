@@ -215,9 +215,9 @@ inline static BOOL fort_callout_ale_ip_zone_check(
 }
 
 static BOOL fort_callout_ale_app_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
-        PFORT_CONF_REF conf_ref, FORT_APP_DATA app_data)
+        FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
-    if (fort_conf_app_group_blocked(&conf_ref->conf, app_data)) {
+    if (fort_conf_app_group_blocked(conf_flags, app_data)) {
         cx->block_reason = FORT_BLOCK_REASON_APP_GROUP_FOUND;
         return TRUE; /* block Group */
     }
@@ -260,7 +260,7 @@ inline static BOOL fort_callout_ale_flags_allowed(
 }
 
 inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
-        PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
+        FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
     /* Collect traffic, when Filter Disabled */
     if (!cx->blocked)
@@ -268,7 +268,7 @@ inline static BOOL fort_callout_ale_is_allowed(PCFORT_CALLOUT_ARG ca, PFORT_CALL
 
     if (app_data.found != 0) {
         /* Check app is blocked */
-        return !fort_callout_ale_app_blocked(ca, cx, conf_ref, app_data);
+        return !fort_callout_ale_app_blocked(ca, cx, conf_flags, app_data);
     }
 
     return fort_callout_ale_flags_allowed(cx, conf_flags);
@@ -279,7 +279,7 @@ inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
 {
     const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(cx, conf_ref);
 
-    if (fort_callout_ale_is_allowed(ca, cx, conf_ref, conf_flags, app_data)) {
+    if (fort_callout_ale_is_allowed(ca, cx, conf_flags, app_data)) {
 
         if (fort_callout_ale_process_flow(ca, cx, conf_flags, app_data))
             return;
@@ -867,15 +867,6 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
     FORT_CHECK_STACK(FORT_CALLOUT_FORCE_REAUTH);
 
     NTSTATUS status;
-
-    /* Check app group periods & update group_bits */
-    {
-        int periods_n = 0;
-
-        fort_conf_ref_period_update(&fort_device()->conf, /*force=*/TRUE, &periods_n);
-
-        fort_timer_set_running(&fort_device()->app_timer, /*run=*/(periods_n != 0));
-    }
 
     const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 

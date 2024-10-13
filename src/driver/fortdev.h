@@ -30,7 +30,6 @@ typedef struct fort_device
     FORT_SHAPER shaper;
     FORT_PSTREE ps_tree;
     FORT_TIMER log_timer;
-    FORT_TIMER app_timer;
     FORT_WORKER worker;
 } FORT_DEVICE, *PFORT_DEVICE;
 
@@ -41,8 +40,6 @@ extern "C" {
 FORT_API PFORT_DEVICE fort_device(void);
 
 FORT_API void fort_device_set(PFORT_DEVICE device);
-
-FORT_API void fort_device_on_system_time(void);
 
 FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp);
 
