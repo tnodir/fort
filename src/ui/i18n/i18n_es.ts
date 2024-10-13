@@ -910,7 +910,7 @@
     </message>
     <message>
         <source>Alert Window for Auto-Learn mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Ventana de alerta para el modo de autoaprendizaje</translation>
     </message>
 </context>
 <context>
@@ -1189,11 +1189,11 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Auto-download new version</source>
-        <translation>Autodescargar nueva versión</translation>
+        <translation>Descargar automáticamente la nueva versión</translation>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear el tráfico para grupos de aplicaciones desactivados</translation>
     </message>
 </context>
 <context>
