@@ -42,7 +42,7 @@ public:
 
     static QTime parseTime(const QString &time);
 
-    static bool isTimeInPeriod(QTime time, QTime periodFrom, QTime periodTo);
+    static bool isTimeInPeriod(QTime time, QTime from, QTime to);
 };
 
 #endif // DATEUTIL_H

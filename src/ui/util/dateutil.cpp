@@ -152,11 +152,7 @@ QTime DateUtil::parseTime(const QString &time)
     return QTime(hour, minute);
 }
 
-bool DateUtil::isTimeInPeriod(QTime time, QTime periodFrom, QTime periodTo)
+bool DateUtil::isTimeInPeriod(QTime time, QTime from, QTime to)
 {
-    const int x = time.msecsSinceStartOfDay();
-    const int from = periodFrom.msecsSinceStartOfDay();
-    const int to = periodTo.msecsSinceStartOfDay();
-
-    return (from <= to) ? (x >= from && x < to) : (x >= from || x < to);
+    return (from <= to) ? (time >= from && time < to) : (time >= from || time < to);
 }
