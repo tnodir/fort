@@ -639,14 +639,6 @@
         <translation>제거</translation>
     </message>
     <message>
-        <source>Installed</source>
-        <translation>설치됨</translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation>설치 안됨</translation>
-    </message>
-    <message>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>드라이버를 다시 설치하시겠습니까?</translation>
     </message>
@@ -665,6 +657,46 @@
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
         <translation>Fort Firewall을 제거하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Windows 서비스</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>설치</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Fort Firewall을 백그라운드에서 서비스로 실행</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Windows Service 설치가 변경됨.</translation>
     </message>
 </context>
 <context>
@@ -1120,10 +1152,6 @@ Make sure that you have a fresh backup.</source>
         <translation>자동-실행:</translation>
     </message>
     <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Fort Firewall을 백그라운드에서 서비스로 실행</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>필터 모드:</translation>
     </message>
@@ -1152,20 +1180,8 @@ Make sure that you have a fresh backup.</source>
         <translation>새 프로그램 집계</translation>
     </message>
     <message>
-        <source>Windows Service</source>
-        <translation>Windows 서비스</translation>
-    </message>
-    <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>마운트된 드라이브에서만 사용되지 않음 정리</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Windows Service 설치가 변경됨.</translation>
-    </message>
-    <message>
-        <source>The change will be applied only on program exit.</source>
-        <translation>변경 사항은 프로그램 종료 시에만 적용됩니다.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>

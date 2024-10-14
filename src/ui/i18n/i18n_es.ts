@@ -639,14 +639,6 @@
         <translation>Eliminar</translation>
     </message>
     <message>
-        <source>Installed</source>
-        <translation>Instalado</translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation>No instalado</translation>
-    </message>
-    <message>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>¿Está seguro de que deseas eliminar el controlador?</translation>
     </message>
@@ -665,6 +657,46 @@
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
         <translation>¿Está seguro de que deseas desinstalar Fort Firewall?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Servicio de Windows</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Instalar</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Ejecutar Fort Firewall como un servicio en segundo plano</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Se ha cambiado la instalación del servicio de Windows.</translation>
     </message>
 </context>
 <context>
@@ -1120,10 +1152,6 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <translation>Autoejecución:</translation>
     </message>
     <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Ejecutar Fort Firewall como un servicio en segundo plano</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>Modo de filtrado:</translation>
     </message>
@@ -1152,20 +1180,8 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <translation>Registrar nuevos programas</translation>
     </message>
     <message>
-        <source>Windows Service</source>
-        <translation>Servicio de Windows</translation>
-    </message>
-    <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>Eliminar obsoletos solo en unidades montadas</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Se ha cambiado la instalación del servicio de Windows.</translation>
-    </message>
-    <message>
-        <source>The change will be applied only on program exit.</source>
-        <translation>El cambio se aplicará solo al salir del programa.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>

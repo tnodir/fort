@@ -639,14 +639,6 @@
         <translation>Odstrani</translation>
     </message>
     <message>
-        <source>Installed</source>
-        <translation>Nameščen</translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation>Ni nameščeno</translation>
-    </message>
-    <message>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>Ali ste prepričani, da želite znova namestiti gonilnik?</translation>
     </message>
@@ -665,6 +657,46 @@
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
         <translation>Ali ste prepričani, da želite odstraniti Fort Firewall?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Windows storitev</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Namesti</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Zaženi &apos;Fort Firewall&apos; kot storitev v ozadju</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>Gonilnik nameščen</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>Gonilnik ni nameščen</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>Nameščena storitev</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>Storitev ni nameščena</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>Ali ste prepričani, da želite namestiti storitev?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>Ali ste prepričani, da želite odstraniti storitev?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Namestitev storitve Windows je spremenjena.</translation>
     </message>
 </context>
 <context>
@@ -1120,10 +1152,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Samodejno zaženi:</translation>
     </message>
     <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Zaženi &apos;Fort Firewall&apos; kot storitev v ozadju</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>Način filtra:</translation>
     </message>
@@ -1152,20 +1180,8 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Zberi nove programe</translation>
     </message>
     <message>
-        <source>Windows Service</source>
-        <translation>Windows storitev</translation>
-    </message>
-    <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>Počisti Zastarelo samo na nameščenih pogonih</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Namestitev storitve Windows je spremenjena.</translation>
-    </message>
-    <message>
-        <source>The change will be applied only on program exit.</source>
-        <translation>Sprememba bo uporabljena samo ob izhodu iz programa.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>

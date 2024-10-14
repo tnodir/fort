@@ -639,14 +639,6 @@
         <translation>Удалить</translation>
     </message>
     <message>
-        <source>Installed</source>
-        <translation>Установлен</translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation>Не установлен</translation>
-    </message>
-    <message>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>Переустановить драйвер?</translation>
     </message>
@@ -665,6 +657,46 @@
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
         <translation>Деинсталлировать Fort Firewall?</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>Служба Windows</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>Установить</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>Запускать Fort Firewall как Службу в фоне</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation>Драйвер установлен</translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation>Драйвер не установлен</translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation>Служба установлена</translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation>Служба не установлена</translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation>Установить службу?</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation>Удалить службу?</translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Установка Службы Windows изменена.</translation>
     </message>
 </context>
 <context>
@@ -1120,10 +1152,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Авто-запуск</translation>
     </message>
     <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>Запускать Fort Firewall как Службу в фоне</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>Режим фильтра:</translation>
     </message>
@@ -1152,20 +1180,8 @@ Make sure that you have a fresh backup.</source>
         <translation>Собирать новые программы</translation>
     </message>
     <message>
-        <source>Windows Service</source>
-        <translation>Служба Windows</translation>
-    </message>
-    <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>Очистить устаревшее только на монтированных дисках</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Установка Службы Windows изменена.</translation>
-    </message>
-    <message>
-        <source>The change will be applied only on program exit.</source>
-        <translation>Изменение будет применено только при выходе из программы.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>

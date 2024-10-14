@@ -639,14 +639,6 @@
         <translation>إزالة</translation>
     </message>
     <message>
-        <source>Installed</source>
-        <translation>مثبتة</translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation>غير مثبتة</translation>
-    </message>
-    <message>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>هل تريد إعادة تثبيت التعريفات؟</translation>
     </message>
@@ -665,6 +657,46 @@
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
         <translation>هل تريد إزالة Fort الجدار الناري؟</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>تفعيل خدمة نظام Windows</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>تثبيت</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>تشغيل Fort Firewall كخدمة تعمل في الخلفية</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>تم تغيير وضع تثبيت خدمة الوندوز.</translation>
     </message>
 </context>
 <context>
@@ -1120,10 +1152,6 @@ Make sure that you have a fresh backup.</source>
         <translation>التشغيل التلقائي:</translation>
     </message>
     <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>تشغيل Fort Firewall كخدمة تعمل في الخلفية</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>نمط المرّشح:</translation>
     </message>
@@ -1152,20 +1180,8 @@ Make sure that you have a fresh backup.</source>
         <translation>اكتشاف أي برنامج جديد يحاول استخدام الشبكة</translation>
     </message>
     <message>
-        <source>Windows Service</source>
-        <translation>تفعيل خدمة نظام Windows</translation>
-    </message>
-    <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>إزالة البرامج المفقودة من الأقراص المتصلة فقط</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>تم تغيير وضع تثبيت خدمة الوندوز.</translation>
-    </message>
-    <message>
-        <source>The change will be applied only on program exit.</source>
-        <translation>سيتم تطبيق التغيير فقط عند الخروج من البرنامج.</translation>
     </message>
     <message>
         <source>Block Traffic:</source>

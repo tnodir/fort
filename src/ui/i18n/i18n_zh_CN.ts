@@ -639,14 +639,6 @@
         <translation>移除</translation>
     </message>
     <message>
-        <source>Installed</source>
-        <translation>已安装</translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation>未安装</translation>
-    </message>
-    <message>
         <source>Are you sure to reinstall the Driver?</source>
         <translation>您确定要重装驱动程序吗？</translation>
     </message>
@@ -665,6 +657,46 @@
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
         <translation>你确定要卸载堡垒防火墙？</translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation>添加Windows服务</translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation>安装</translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation>在后台运行堡垒防火墙</translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
+        <translation>Windows 服务安装已更改。</translation>
     </message>
 </context>
 <context>
@@ -1120,10 +1152,6 @@ Make sure that you have a fresh backup.</source>
         <translation>自动运行：</translation>
     </message>
     <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation>在后台运行堡垒防火墙</translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation>过滤模式：</translation>
     </message>
@@ -1152,20 +1180,8 @@ Make sure that you have a fresh backup.</source>
         <translation>收集新程序</translation>
     </message>
     <message>
-        <source>Windows Service</source>
-        <translation>添加Windows服务</translation>
-    </message>
-    <message>
         <source>Purge Obsolete only on mounted drives</source>
         <translation>仅清除已挂载驱动器上的过时数据</translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation>Windows 服务安装已更改。</translation>
-    </message>
-    <message>
-        <source>The change will be applied only on program exit.</source>
-        <translation>更改将仅在程序退出时应用。</translation>
     </message>
     <message>
         <source>Block Traffic:</source>

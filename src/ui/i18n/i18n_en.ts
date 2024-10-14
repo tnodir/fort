@@ -639,14 +639,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Installed</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Not Installed</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Are you sure to reinstall the Driver?</source>
         <translation></translation>
     </message>
@@ -664,6 +656,46 @@
     </message>
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Windows Service</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Install</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Run Fort Firewall as a Service in background</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Driver Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Driver Not Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Service Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Service Not Installed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to install the Service?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove the Service?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Windows Service installation changed.</source>
         <translation></translation>
     </message>
 </context>
@@ -1118,10 +1150,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Run Fort Firewall as a Service in background</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Filter Mode:</source>
         <translation></translation>
     </message>
@@ -1150,19 +1178,7 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Windows Service</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Windows Service installation changed.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>The change will be applied only on program exit.</source>
         <translation></translation>
     </message>
     <message>
