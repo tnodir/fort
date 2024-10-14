@@ -24,7 +24,6 @@ protected slots:
 
 private:
     void saveAutoRunMode(int mode);
-    void saveService(bool isService);
 
     void retranslateComboStartMode();
     void retranslateComboBlockTraffic();
@@ -67,7 +66,6 @@ private:
 
     QLabel *m_labelStartMode = nullptr;
     QComboBox *m_comboAutoRun = nullptr;
-    QCheckBox *m_cbService = nullptr;
 
     QCheckBox *m_cbFilterEnabled = nullptr;
     QLabel *m_labelBlockTraffic = nullptr;

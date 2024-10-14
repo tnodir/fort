@@ -27,14 +27,6 @@
 
 namespace {
 
-struct Startup
-{
-    quint8 initialized : 1 = false;
-    quint8 isServiceChanged : 1 = false;
-    quint8 wasService : 1 = false;
-    quint8 isService : 1 = false;
-} g_startup;
-
 void updateComboBox(
         QComboBox *c, const QStringList &names, const QStringList &iconPaths, int currentIndex)
 {
@@ -88,7 +80,6 @@ void OptionsPage::onAboutToSave()
 {
     // Startup
     saveAutoRunMode(m_comboAutoRun->currentIndex());
-    saveService(m_cbService->isChecked());
 
     // Password
     if (passwordEdited()) {
@@ -122,27 +113,6 @@ void OptionsPage::saveAutoRunMode(int mode)
     StartupUtil::setAutoRunMode(mode, settings()->defaultLanguage());
 }
 
-void OptionsPage::saveService(bool isService)
-{
-    if (g_startup.isService == isService)
-        return;
-
-    g_startup.isService = isService;
-
-    if (!g_startup.isServiceChanged) {
-        g_startup.isServiceChanged = true;
-
-        connect(fortManager(), &FortManager::aboutToDestroy, [=] {
-            if (g_startup.wasService != g_startup.isService) {
-                StartupUtil::setServiceInstalled(g_startup.isService);
-            }
-        });
-    }
-
-    windowManager()->processRestartRequired(tr("Windows Service installation changed.") + '\n'
-            + tr("The change will be applied only on program exit."));
-}
-
 void OptionsPage::onRetranslateUi()
 {
     m_gbStartup->setTitle(tr("Startup"));
@@ -155,9 +125,6 @@ void OptionsPage::onRetranslateUi()
 
     m_labelStartMode->setText(tr("Auto-run:"));
     retranslateComboStartMode();
-
-    m_cbService->setText(tr("Windows Service"));
-    m_cbService->setToolTip(tr("Run Fort Firewall as a Service in background"));
 
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
 
@@ -208,8 +175,6 @@ void OptionsPage::retranslateComboStartMode()
     if (settings()->isUserAdmin())
         return;
 
-    m_cbService->setEnabled(false);
-
     if (currentIndex >= StartupUtil::StartupAllUsers) {
         m_comboAutoRun->setEnabled(false);
         return;
@@ -249,12 +214,6 @@ void OptionsPage::retranslateEditPassword()
 void OptionsPage::setupStartup()
 {
     m_currentAutoRunMode = StartupUtil::autoRunMode();
-
-    if (g_startup.initialized)
-        return;
-
-    g_startup.initialized = true;
-    g_startup.wasService = g_startup.isService = settings()->hasService();
 }
 
 void OptionsPage::setupUi()
@@ -325,12 +284,8 @@ void OptionsPage::setupStartupBox()
 {
     auto startModeLayout = setupStartModeLayout();
 
-    m_cbService = ControlUtil::createCheckBox(
-            g_startup.isService, [&](bool /*checked*/) { ctrl()->emitEdited(); });
-
     auto layout = new QVBoxLayout();
     layout->addLayout(startModeLayout);
-    layout->addWidget(m_cbService);
 
     m_gbStartup = new QGroupBox();
     m_gbStartup->setLayout(layout);
