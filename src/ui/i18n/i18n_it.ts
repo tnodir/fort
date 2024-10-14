@@ -910,7 +910,7 @@
     </message>
     <message>
         <source>Alert Window for Auto-Learn mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Finestra di allerta per la modalità di apprendimento</translation>
     </message>
 </context>
 <context>
@@ -1193,7 +1193,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Blocca traffico per gruppi di app disabilitati</translation>
     </message>
 </context>
 <context>
