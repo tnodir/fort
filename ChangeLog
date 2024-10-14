@@ -1,9 +1,11 @@
 Fort Firewall ChangeLog
 
-v3.14.4-test02, 2024-10-12:
+v3.14.4, 2024-10-14:
+- UI: MyFort: Move "Windows Service" from Options.
 - UI: Options: Add "Alert Window for Auto-Learn mode" flag.
 - UI: Options: Add "Block traffic for disabled App Groups" flag.
 - UI: Programs: Remove "Use Application Group's Enabled State" flag.
+- UI: Move app group periods handling from Driver.
 - Driver: Fix check of Administrator.
 
 v3.14.3, 2024-10-10:
