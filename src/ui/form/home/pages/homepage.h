@@ -10,6 +10,8 @@ class HomePage : public HomeBasePage
 public:
     explicit HomePage(HomeController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    bool hasService() const { return m_hasService; }
+
 protected slots:
     void onRetranslateUi() override;
 
@@ -28,9 +30,12 @@ private:
     QLayout *setupServiceButtonsLayout();
     void setupPortableBox();
 
+    void updateHasService();
     void setServiceInstalled(bool install);
 
 private:
+    bool m_hasService = false;
+
     QGroupBox *m_gbDriver = nullptr;
     QGroupBox *m_gbService = nullptr;
     QGroupBox *m_gbPortable = nullptr;

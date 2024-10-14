@@ -42,14 +42,15 @@ void HomePage::retranslateDriverMessage()
 {
     const auto text = driverManager()->isDeviceError()
             ? driverManager()->errorMessage()
-            : (driverManager()->isDeviceOpened() ? tr("Installed") : tr("Not Installed"));
+            : (driverManager()->isDeviceOpened() ? tr("Driver Installed")
+                                                 : tr("Driver Not Installed"));
 
     m_labelDriverMessage->setText(text);
 }
 
 void HomePage::retranslateServiceMessage()
 {
-    const auto text = settings()->hasService() ? tr("Installed") : tr("Not Installed");
+    const auto text = hasService() ? tr("Service Installed") : tr("Service Not Installed");
 
     m_labelServiceMessage->setText(text);
 }
@@ -64,6 +65,8 @@ void HomePage::setupUi()
 
     // Portable Group Box
     setupPortableBox();
+
+    updateHasService();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_gbDriver, 0, Qt::AlignHCenter);
@@ -120,7 +123,6 @@ void HomePage::setupDriverIcon()
 
     const auto refreshDriverInfo = [&] {
         m_iconDriver->setEnabled(driverManager()->isDeviceOpened());
-        retranslateDriverMessage();
     };
 
     refreshDriverInfo();
@@ -145,7 +147,6 @@ QLayout *HomePage::setupDriverButtonsLayout()
         m_btInstallDriver->setEnabled(false);
         m_btRemoveDriver->setEnabled(false);
     }
-    m_btRemoveDriver->setVisible(!settings()->hasService());
 
     auto layout = new QHBoxLayout();
     layout->setSpacing(10);
@@ -200,9 +201,6 @@ void HomePage::setupServiceIcon()
 {
     const QSize iconSize(16, 16);
     m_iconService = ControlUtil::createIconLabel(":/icons/widgets.png", iconSize);
-
-    m_iconService->setEnabled(settings()->hasService());
-    retranslateServiceMessage();
 }
 
 QLayout *HomePage::setupServiceButtonsLayout()
@@ -223,8 +221,6 @@ QLayout *HomePage::setupServiceButtonsLayout()
         m_btInstallService->setEnabled(false);
         m_btRemoveService->setEnabled(false);
     }
-    m_btInstallService->setVisible(!settings()->hasService());
-    m_btRemoveService->setVisible(!m_btInstallService->isVisible());
 
     layout->addStretch();
     layout->addWidget(m_btInstallService);
@@ -269,9 +265,22 @@ void HomePage::setupPortableBox()
     m_gbPortable->setVisible(settings()->isPortable());
 }
 
+void HomePage::updateHasService()
+{
+    m_hasService = StartupUtil::isServiceInstalled();
+
+    m_btRemoveDriver->setVisible(!hasService());
+    retranslateServiceMessage();
+    m_iconService->setEnabled(hasService());
+    m_btInstallService->setVisible(!hasService());
+    m_btRemoveService->setVisible(hasService());
+}
+
 void HomePage::setServiceInstalled(bool install)
 {
     StartupUtil::setServiceInstalled(install);
+
+    updateHasService();
 
     windowManager()->processRestartRequired(tr("Windows Service installation changed."));
 }
