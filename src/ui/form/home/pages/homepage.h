@@ -29,8 +29,10 @@ private:
     void setupServiceIcon();
     QLayout *setupServiceButtonsLayout();
     void setupPortableBox();
+    QLayout *setupPortableButtonsLayout();
 
     void updateIsUserAdmin();
+    void updateIsPortable();
     void updateHasService();
 
     void setServiceInstalled(bool install);

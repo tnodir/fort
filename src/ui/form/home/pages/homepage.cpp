@@ -15,6 +15,28 @@
 #include <util/iconcache.h>
 #include <util/startuputil.h>
 
+namespace {
+
+QGroupBox *createGroupBox()
+{
+    auto c = new QGroupBox();
+    c->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    c->setMinimumWidth(200);
+
+    auto layout = new QVBoxLayout();
+    layout->setSpacing(10);
+    c->setLayout(layout);
+
+    return c;
+}
+
+QVBoxLayout *groupBoxLayout(QGroupBox *c)
+{
+    return static_cast<QVBoxLayout *>(c->layout());
+}
+
+}
+
 HomePage::HomePage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
 {
     setupUi();
@@ -67,6 +89,7 @@ void HomePage::setupUi()
     setupPortableBox();
 
     updateIsUserAdmin();
+    updateIsPortable();
     updateHasService();
 
     auto layout = new QVBoxLayout();
@@ -86,15 +109,11 @@ void HomePage::setupDriverBox()
     // Buttons Row
     auto buttonsLayout = setupDriverButtonsLayout();
 
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
+    m_gbDriver = createGroupBox();
+
+    auto layout = groupBoxLayout(m_gbDriver);
     layout->addLayout(labelLayout);
     layout->addLayout(buttonsLayout);
-
-    m_gbDriver = new QGroupBox();
-    m_gbDriver->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    m_gbDriver->setMinimumWidth(200);
-    m_gbDriver->setLayout(layout);
 }
 
 QLayout *HomePage::setupDriverLabelLayout()
@@ -162,15 +181,11 @@ void HomePage::setupServiceBox()
     // Buttons Row
     auto buttonsLayout = setupServiceButtonsLayout();
 
-    auto layout = new QVBoxLayout();
-    layout->setSpacing(10);
+    m_gbService = createGroupBox();
+
+    auto layout = groupBoxLayout(m_gbService);
     layout->addLayout(labelLayout);
     layout->addLayout(buttonsLayout);
-
-    m_gbService = new QGroupBox();
-    m_gbService->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    m_gbService->setMinimumWidth(200);
-    m_gbService->setLayout(layout);
 }
 
 QLayout *HomePage::setupServiceLabelLayout()
@@ -223,14 +238,17 @@ QLayout *HomePage::setupServiceButtonsLayout()
 
 void HomePage::setupPortableBox()
 {
-    auto colLayout = new QVBoxLayout();
-    colLayout->setSpacing(10);
-
     // Buttons Row
-    auto buttonsLayout = new QHBoxLayout();
-    buttonsLayout->setSpacing(10);
-    colLayout->addLayout(buttonsLayout);
+    auto buttonsLayout = setupPortableButtonsLayout();
 
+    m_gbPortable = createGroupBox();
+
+    auto layout = groupBoxLayout(m_gbPortable);
+    layout->addLayout(buttonsLayout);
+}
+
+QLayout *HomePage::setupPortableButtonsLayout()
+{
     m_btUninstallPortable = ControlUtil::createButton(QString(), [&] {
         windowManager()->showConfirmBox(
                 [&] {
@@ -242,16 +260,13 @@ void HomePage::setupPortableBox()
                 tr("Are you sure to uninstall the Fort Firewall?"));
     });
 
-    buttonsLayout->addStretch();
-    buttonsLayout->addWidget(m_btUninstallPortable);
-    buttonsLayout->addStretch();
+    auto layout = new QHBoxLayout();
+    layout->setSpacing(10);
+    layout->addStretch();
+    layout->addWidget(m_btUninstallPortable);
+    layout->addStretch();
 
-    m_gbPortable = new QGroupBox();
-    m_gbPortable->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    m_gbPortable->setMinimumWidth(200);
-    m_gbPortable->setLayout(colLayout);
-
-    m_gbPortable->setVisible(settings()->isPortable());
+    return layout;
 }
 
 void HomePage::updateIsUserAdmin()
@@ -266,6 +281,14 @@ void HomePage::updateIsUserAdmin()
     m_btRemoveService->setEnabled(false);
 
     m_btUninstallPortable->setEnabled(false);
+}
+
+void HomePage::updateIsPortable()
+{
+    if (settings()->isPortable())
+        return;
+
+    m_gbPortable->setVisible(false);
 }
 
 void HomePage::updateHasService()
