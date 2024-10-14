@@ -167,7 +167,7 @@ void AppGroup::setPeriodTo(const QString &periodTo)
 
 bool AppGroup::isTimeInPeriod(QTime time) const
 {
-    if (m_periodFrom.isNull()) {
+    if (m_periodFromTime.isNull()) {
         m_periodFromTime = DateUtil::parseTime(m_periodFrom);
         m_periodToTime = DateUtil::parseTime(m_periodTo);
     }

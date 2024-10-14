@@ -198,7 +198,7 @@ void FirewallConf::loadGroupPeriodBits()
     m_groupActivePeriodBits = quint32(-1);
     int groupIndex = 0;
     for (AppGroup *appGroup : appGroups()) {
-        if (appGroup->periodEnabled()) {
+        if (appGroup->enabled() && appGroup->periodEnabled()) {
             m_anyGroupPeriodEnabled = true;
 
             if (!appGroup->isTimeInPeriod(now)) {
@@ -266,11 +266,9 @@ void FirewallConf::afterSaved()
     ini().clear();
 }
 
-bool FirewallConf::updateGroupPeriods(bool onlyFlags)
+bool FirewallConf::updateGroupPeriods(bool /*onlyFlags*/)
 {
-    if (!onlyFlags) {
-        loadGroupPeriodBits();
-    }
+    loadGroupPeriodBits();
 
     return m_anyGroupPeriodEnabled;
 }
