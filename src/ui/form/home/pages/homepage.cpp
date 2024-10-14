@@ -66,6 +66,7 @@ void HomePage::setupUi()
     // Portable Group Box
     setupPortableBox();
 
+    updateIsUserAdmin();
     updateHasService();
 
     auto layout = new QVBoxLayout();
@@ -143,11 +144,6 @@ QLayout *HomePage::setupDriverButtonsLayout()
                 [&] { fortManager()->removeDriver(); }, tr("Are you sure to remove the Driver?"));
     });
 
-    if (!settings()->isUserAdmin()) {
-        m_btInstallDriver->setEnabled(false);
-        m_btRemoveDriver->setEnabled(false);
-    }
-
     auto layout = new QHBoxLayout();
     layout->setSpacing(10);
     layout->addStretch();
@@ -217,11 +213,6 @@ QLayout *HomePage::setupServiceButtonsLayout()
                 [&] { setServiceInstalled(false); }, tr("Are you sure to remove the Service?"));
     });
 
-    if (!settings()->isUserAdmin()) {
-        m_btInstallService->setEnabled(false);
-        m_btRemoveService->setEnabled(false);
-    }
-
     layout->addStretch();
     layout->addWidget(m_btInstallService);
     layout->addWidget(m_btRemoveService);
@@ -245,13 +236,11 @@ void HomePage::setupPortableBox()
                 [&] {
                     FortManager::uninstall();
                     fortManager()->removeDriver();
+
+                    updateHasService();
                 },
                 tr("Are you sure to uninstall the Fort Firewall?"));
     });
-
-    if (!settings()->isUserAdmin()) {
-        m_btUninstallPortable->setEnabled(false);
-    }
 
     buttonsLayout->addStretch();
     buttonsLayout->addWidget(m_btUninstallPortable);
@@ -263,6 +252,20 @@ void HomePage::setupPortableBox()
     m_gbPortable->setLayout(colLayout);
 
     m_gbPortable->setVisible(settings()->isPortable());
+}
+
+void HomePage::updateIsUserAdmin()
+{
+    if (settings()->isUserAdmin())
+        return;
+
+    m_btInstallDriver->setEnabled(false);
+    m_btRemoveDriver->setEnabled(false);
+
+    m_btInstallService->setEnabled(false);
+    m_btRemoveService->setEnabled(false);
+
+    m_btUninstallPortable->setEnabled(false);
 }
 
 void HomePage::updateHasService()

@@ -30,7 +30,9 @@ private:
     QLayout *setupServiceButtonsLayout();
     void setupPortableBox();
 
+    void updateIsUserAdmin();
     void updateHasService();
+
     void setServiceInstalled(bool install);
 
 private:
