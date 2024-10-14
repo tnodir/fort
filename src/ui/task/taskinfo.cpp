@@ -22,38 +22,6 @@ TaskManager *TaskInfo::taskManager() const
     return qobject_cast<TaskManager *>(parent());
 }
 
-void TaskInfo::setEnabled(bool enabled)
-{
-    if (m_enabled != enabled) {
-        m_enabled = enabled;
-        emit enabledChanged();
-    }
-}
-
-void TaskInfo::setRunOnStatup(bool runOnStatup)
-{
-    if (m_runOnStatup != runOnStatup) {
-        m_runOnStatup = runOnStatup;
-        emit runOnStatupChanged();
-    }
-}
-
-void TaskInfo::setRunning(bool running)
-{
-    if (m_running != running) {
-        m_running = running;
-        emit enabledChanged();
-    }
-}
-
-void TaskInfo::setIntervalHours(int intervalHours)
-{
-    if (m_intervalHours != intervalHours) {
-        m_intervalHours = quint16(intervalHours);
-        emit intervalHoursChanged();
-    }
-}
-
 QString TaskInfo::title() const
 {
     return title(m_type);
@@ -74,41 +42,9 @@ QString TaskInfo::title(TaskType type)
     }
 }
 
-void TaskInfo::setType(TaskInfo::TaskType type)
-{
-    if (m_type != type) {
-        m_type = type;
-        emit typeChanged();
-    }
-}
-
-void TaskInfo::setLastRun(const QDateTime &lastRun)
-{
-    if (m_lastRun != lastRun) {
-        m_lastRun = lastRun;
-        emit lastRunChanged();
-    }
-}
-
 QDateTime TaskInfo::plannedRun() const
 {
     return m_lastRun.addSecs(m_intervalHours * 60 * 60);
-}
-
-void TaskInfo::setLastSuccess(const QDateTime &lastSuccess)
-{
-    if (m_lastSuccess != lastSuccess) {
-        m_lastSuccess = lastSuccess;
-        emit lastSuccessChanged();
-    }
-}
-
-void TaskInfo::setTaskWorker(TaskWorker *taskWorker)
-{
-    if (m_taskWorker != taskWorker) {
-        m_taskWorker = taskWorker;
-        emit taskWorkerChanged();
-    }
 }
 
 void TaskInfo::editFromVariant(const QVariant &v)

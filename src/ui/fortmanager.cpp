@@ -216,10 +216,9 @@ void FortManager::setupLogger()
     logger->setForceDebug(settings->forceDebug());
 }
 
-void FortManager::updateLogger(const FirewallConf *conf)
+void FortManager::updateLogger()
 {
-    if (!conf->iniEdited())
-        return;
+    const FirewallConf *conf = IoC<ConfManager>()->conf();
 
     Logger *logger = Logger::instance();
 
@@ -333,22 +332,16 @@ bool FortManager::removeDriver()
 bool FortManager::setupDriver()
 {
     auto driverManager = IoC<DriverManager>();
-    auto confManager = IoC<ConfManager>();
 
-    bool ok = driverManager->openDevice();
+    if (!driverManager->openDevice())
+        return false;
 
-    if (ok && !confManager->validateDriver()) {
+    if (!setupDriverConf()) {
         driverManager->closeDevice();
-        ok = false;
+        return false;
     }
 
-    if (ok) {
-        confManager->updateServices();
-
-        updateTaskManager();
-    }
-
-    return ok;
+    return true;
 }
 
 void FortManager::closeDriver()
@@ -415,12 +408,12 @@ void FortManager::setupConfManager()
     connect(confManager, &ConfManager::imported, IoC<WindowManager>(),
             &WindowManager::closeAllWindows);
 
-    connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags) {
-        const FirewallConf *conf = IoC<ConfManager>()->conf();
+    connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags, uint editedFlags) {
+        if (!onlyFlags && (editedFlags & FirewallConf::IniEdited) != 0) {
+            updateLogger();
+        }
 
-        updateLogger(conf);
-
-        if (!onlyFlags || conf->flagsEdited()) {
+        if (!onlyFlags || (editedFlags & FirewallConf::FlagsEdited) != 0) {
             updateDriverConf(onlyFlags);
         }
     });
@@ -491,7 +484,6 @@ void FortManager::processRestartRequired(const QString &info)
 void FortManager::loadConf()
 {
     const auto settings = IoC<FortSettings>();
-    const auto confManager = IoC<ConfManager>();
 
     // Validate migration
     QString viaVersion;
@@ -501,14 +493,35 @@ void FortManager::loadConf()
         exit(-1); // Exit the program
     }
 
-    if (!confManager->load()) {
-        showErrorMessage(tr("Cannot load Settings"));
-    }
-
     qCDebug(LC) << "Started as"
                 << (settings->isService()                   ? "Service"
                                    : settings->hasService() ? "Client"
                                                             : "Program");
+
+    if (!IoC<ConfManager>()->load()) {
+        showErrorMessage(tr("Cannot load Settings"));
+    }
+}
+
+bool FortManager::setupDriverConf()
+{
+    auto confManager = IoC<ConfManager>();
+
+    if (!confManager->validateDriver())
+        return false;
+
+    // Services
+    confManager->updateServices();
+
+    // Zones
+    {
+        auto zd = IoC<TaskManager>()->taskInfoZoneDownloader();
+
+        IoC<ConfZoneManager>()->updateDriverZones(
+                zd->dataZonesMask(), zd->enabledMask(), zd->dataSize(), zd->zonesData());
+    }
+
+    return true;
 }
 
 bool FortManager::updateDriverConf(bool onlyFlags)
@@ -523,19 +536,6 @@ bool FortManager::updateDriverConf(bool onlyFlags)
     updateLogManager(true);
 
     return res;
-}
-
-void FortManager::updateTaskManager()
-{
-    auto taskManager = IoC<TaskManager>();
-
-    // Zones
-    {
-        auto zd = taskManager->taskInfoZoneDownloader();
-
-        IoC<ConfZoneManager>()->updateDriverZones(
-                zd->dataZonesMask(), zd->enabledMask(), zd->dataSize(), zd->zonesData());
-    }
 }
 
 void FortManager::updateLogManager(bool active)

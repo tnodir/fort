@@ -3,7 +3,7 @@
 
 #include <util/ini/mapsettings.h>
 
-#define DEFAULT_APP_GROUP_BITS         0xFFFF
+#define DEFAULT_APP_GROUP_BITS         quint32(-1)
 #define DEFAULT_MONTH_START            1
 #define DEFAULT_TRAF_HOUR_KEEP_DAYS    90 // ~3 months
 #define DEFAULT_TRAF_DAY_KEEP_DAYS     365 // ~1 year

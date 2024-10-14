@@ -2,6 +2,7 @@
 #define CONFMANAGER_H
 
 #include <QObject>
+#include <QTimer>
 
 #include <sqlite/sqlite_types.h>
 
@@ -49,7 +50,7 @@ public:
     void saveIni();
     void saveIniUser(bool edited = false, bool onlyFlags = false);
 
-    QVariant toPatchVariant(bool onlyFlags) const;
+    QVariant toPatchVariant(bool onlyFlags, uint editedFlags) const;
     bool saveVariant(const QVariant &confVar);
 
     bool loadTasks(const QList<TaskInfo *> &taskInfos);
@@ -70,7 +71,7 @@ public:
 
 signals:
     void imported();
-    void confChanged(bool onlyFlags);
+    void confChanged(bool onlyFlags, uint editedFlags);
     void iniChanged(const IniOptions &ini);
     void iniUserChanged(const IniUser &ini, bool onlyFlags);
 
@@ -78,7 +79,11 @@ protected:
     void setConf(FirewallConf *newConf);
     FirewallConf *createConf();
 
+    virtual bool applyConfPeriods(bool onlyFlags);
+
 private:
+    void updateConfPeriods();
+
     bool setupDb();
 
     void setupDefault(FirewallConf &conf) const;
@@ -103,6 +108,8 @@ private:
     FirewallConf *m_confToEdit = nullptr;
 
     IniUser *m_iniUserToEdit = nullptr;
+
+    QTimer m_confTimer;
 };
 
 #endif // CONFMANAGER_H

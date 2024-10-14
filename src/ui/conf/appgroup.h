@@ -2,6 +2,7 @@
 #define APPGROUP_H
 
 #include <QObject>
+#include <QTime>
 #include <QVariant>
 
 #define MAX_APP_GROUP_COUNT       16
@@ -90,6 +91,8 @@ public:
     QString periodTo() const { return m_periodTo; }
     void setPeriodTo(const QString &periodTo);
 
+    bool isTimeInPeriod(QTime time) const;
+
     QString menuLabel() const;
 
     void copy(const AppGroup &o);
@@ -132,6 +135,9 @@ private:
     // In format "hh:mm"
     QString m_periodFrom;
     QString m_periodTo;
+
+    mutable QTime m_periodFromTime; // transient
+    mutable QTime m_periodToTime; // transient
 };
 
 #endif // APPGROUP_H

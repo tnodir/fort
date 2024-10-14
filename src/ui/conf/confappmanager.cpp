@@ -185,19 +185,18 @@ void ConfAppManager::setupAppEndTimer()
 
 void ConfAppManager::updateAppEndTimer()
 {
+    m_appEndTimer.stop();
+
     const qint64 endTimeMsecs = DbQuery(sqliteDb()).sql(sqlSelectMinEndApp).execute().toLongLong();
+    if (endTimeMsecs == 0)
+        return;
 
-    if (endTimeMsecs != 0) {
-        const qint64 currentMsecs = QDateTime::currentMSecsSinceEpoch();
-        const qint64 deltaMsecs = endTimeMsecs - currentMsecs;
-        const int interval = qMax(
-                (deltaMsecs > 0 ? int(qMin(deltaMsecs, qint64(APP_END_TIMER_INTERVAL_MAX))) : 0),
-                APP_END_TIMER_INTERVAL_MIN);
+    const qint64 currentMsecs = QDateTime::currentMSecsSinceEpoch();
+    const qint64 deltaMsecs = endTimeMsecs - currentMsecs;
+    const int interval = qBound(
+            qint64(APP_END_TIMER_INTERVAL_MIN), deltaMsecs, qint64(APP_END_TIMER_INTERVAL_MAX));
 
-        m_appEndTimer.start(interval);
-    } else {
-        m_appEndTimer.stop();
-    }
+    m_appEndTimer.start(interval);
 }
 
 bool ConfAppManager::addAppPathBlocked(App &app)

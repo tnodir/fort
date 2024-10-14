@@ -1,6 +1,7 @@
 #include "taskmanager.h"
 
 #include <conf/confmanager.h>
+#include <conf/firewallconf.h>
 #include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -38,10 +39,19 @@ TaskInfo *TaskManager::taskInfoAt(int row) const
 
 void TaskManager::setUp()
 {
+    auto confManager = IoCDependency<ConfManager>();
+
     loadSettings();
     initializeTasks();
 
     setupTimer();
+
+    connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags, uint editedFlags) {
+        if (onlyFlags || (editedFlags & FirewallConf::TaskEdited) == 0)
+            return;
+
+        loadSettings();
+    });
 }
 
 void TaskManager::initializeTasks()
@@ -79,9 +89,7 @@ void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
 
 void TaskManager::loadSettings()
 {
-    auto confManager = IoCDependency<ConfManager>();
-
-    confManager->loadTasks(taskInfoList());
+    IoC<ConfManager>()->loadTasks(taskInfoList());
 }
 
 bool TaskManager::saveSettings()

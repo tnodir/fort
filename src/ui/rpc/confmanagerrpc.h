@@ -15,6 +15,8 @@ class ConfManagerRpc : public ConfManager
 public:
     explicit ConfManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
+    bool saveConf(FirewallConf &newConf) override;
+
     bool exportMasterBackup(const QString &path) override;
     bool importMasterBackup(const QString &path) override;
 
@@ -28,7 +30,7 @@ public:
     static void setupServerSignals(RpcManager *rpcManager);
 
 protected:
-    bool saveConf(FirewallConf &newConf) override;
+    bool applyConfPeriods(bool /*onlyFlags*/) override { return false; }
 
 private:
     bool saving() const { return m_saving; }

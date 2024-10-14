@@ -1,6 +1,7 @@
 #include "firewallconf.h"
 
 #include <manager/envmanager.h>
+#include <util/dateutil.h>
 #include <util/net/netutil.h>
 
 #include "addressgroup.h"
@@ -9,11 +10,6 @@
 FirewallConf::FirewallConf(Settings *settings, QObject *parent) : QObject(parent), m_ini(settings)
 {
     setupAddressGroups();
-}
-
-void FirewallConf::resetEdited(bool v)
-{
-    m_editedFlags = v ? AllEdited : NoneEdited;
 }
 
 int FirewallConf::blockTrafficIndex() const
@@ -90,29 +86,9 @@ QStringList FirewallConf::filterModeIconPaths()
         ":/icons/road_sign.png" };
 }
 
-void FirewallConf::setActivePeriodEnabled(bool activePeriodEnabled)
+void FirewallConf::setupAppGroupBits(quint32 v)
 {
-    m_activePeriodEnabled = activePeriodEnabled;
-}
-
-void FirewallConf::setActivePeriodFrom(const QString &activePeriodFrom)
-{
-    m_activePeriodFrom = activePeriodFrom;
-}
-
-void FirewallConf::setActivePeriodTo(const QString &activePeriodTo)
-{
-    m_activePeriodTo = activePeriodTo;
-}
-
-void FirewallConf::setAppGroupBits(quint32 groupBits)
-{
-    m_appGroupBits = groupBits;
-}
-
-void FirewallConf::setupAppGroupBits(quint32 groupBits)
-{
-    setAppGroupBits(groupBits);
+    setAppGroupBits(v);
     applyAppGroupBits();
 }
 
@@ -214,6 +190,25 @@ void FirewallConf::clearRemovedAppGroupIdList() const
     m_removedAppGroupIdList.clear();
 }
 
+void FirewallConf::loadGroupPeriodBits()
+{
+    const QTime now = DateUtil::currentTime();
+
+    m_anyGroupPeriodEnabled = false;
+    m_groupActivePeriodBits = quint32(-1);
+    int groupIndex = 0;
+    for (AppGroup *appGroup : appGroups()) {
+        if (appGroup->periodEnabled()) {
+            m_anyGroupPeriodEnabled = true;
+
+            if (!appGroup->isTimeInPeriod(now)) {
+                m_groupActivePeriodBits ^= (1 << groupIndex);
+            }
+        }
+        ++groupIndex;
+    }
+}
+
 void FirewallConf::loadAppGroupBits()
 {
     m_appGroupBits = 0;
@@ -269,6 +264,15 @@ void FirewallConf::prepareToSave()
 void FirewallConf::afterSaved()
 {
     ini().clear();
+}
+
+bool FirewallConf::updateGroupPeriods(bool onlyFlags)
+{
+    if (!onlyFlags) {
+        loadGroupPeriodBits();
+    }
+
+    return m_anyGroupPeriodEnabled;
 }
 
 void FirewallConf::copyFlags(const FirewallConf &o)
@@ -476,11 +480,8 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyEdited)
 {
     const QVariantMap map = v.toMap();
 
-    if (onlyEdited) {
-        m_editedFlags = editedFlagsFromVariant(v);
-    } else {
-        resetEdited(true);
-    }
+    resetEdited(onlyEdited ? FirewallConf::EditedFlags(editedFlagsFromVariant(v))
+                           : FirewallConf::AllEdited);
 
     if (optEdited()) {
         addressesFromVariant(map["addressGroups"]);
@@ -510,5 +511,6 @@ QVariant FirewallConf::editedFlagsToVariant(uint editedFlags)
 uint FirewallConf::editedFlagsFromVariant(const QVariant &v)
 {
     const QVariantMap map = v.toMap();
+
     return map["editedFlags"].toUInt();
 }

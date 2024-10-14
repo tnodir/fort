@@ -64,7 +64,7 @@ TEST_F(ConfUtilTest, confWriteRead)
     conf.addAppGroup(appGroup1);
     conf.addAppGroup(appGroup2);
 
-    conf.resetEdited(true);
+    conf.resetEdited(FirewallConf::AllEdited);
     conf.prepareToSave();
 
     ConfUtil confUtil;

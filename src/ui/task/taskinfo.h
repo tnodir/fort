@@ -33,41 +33,41 @@ public:
     QString name() const { return typeToString(type()); }
 
     bool enabled() const { return m_enabled; }
-    void setEnabled(bool enabled);
+    void setEnabled(bool v) { m_enabled = v; }
 
     bool runOnStatup() const { return m_runOnStatup; }
-    void setRunOnStatup(bool runOnStatup);
+    void setRunOnStatup(bool v) { m_runOnStatup = v; }
 
     bool aborted() const { return m_aborted; }
 
     bool running() const { return m_running; }
-    void setRunning(bool running);
+    void setRunning(bool v) { m_running = v; }
 
     int intervalHours() const { return m_intervalHours; }
-    void setIntervalHours(int intervalHours);
+    void setIntervalHours(int v) { m_intervalHours = quint16(v); }
 
     QString title() const;
     static QString title(TaskType type);
 
     TaskInfo::TaskType type() const { return m_type; }
-    void setType(TaskInfo::TaskType type);
+    void setType(TaskInfo::TaskType v) { m_type = v; }
 
     qint64 id() const { return m_id; }
     void setId(qint64 id) { m_id = id; }
 
     QDateTime lastRun() const { return m_lastRun; }
-    void setLastRun(const QDateTime &lastRun);
+    void setLastRun(const QDateTime &v) { m_lastRun = v; }
 
     QDateTime plannedRun() const;
 
     QDateTime lastSuccess() const { return m_lastSuccess; }
-    void setLastSuccess(const QDateTime &lastSuccess);
+    void setLastSuccess(const QDateTime &v) { m_lastSuccess = v; }
 
     virtual QByteArray data() const { return QByteArray(); }
     virtual void setData(const QByteArray &data) { Q_UNUSED(data); }
 
     TaskWorker *taskWorker() const { return m_taskWorker; }
-    void setTaskWorker(TaskWorker *taskWorker);
+    void setTaskWorker(TaskWorker *v) { m_taskWorker = v; }
 
     void editFromVariant(const QVariant &v);
 
@@ -77,15 +77,6 @@ public:
     static TaskInfo::TaskType stringToType(const QString &name);
 
 signals:
-    void enabledChanged();
-    void runOnStatupChanged();
-    void runningChanged();
-    void intervalHoursChanged();
-    void typeChanged();
-    void lastRunChanged();
-    void lastSuccessChanged();
-    void taskWorkerChanged();
-
     void workStarted();
     void workFinished(bool success);
 

@@ -7,7 +7,6 @@
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <rpc/rpcmanager.h>
-#include <task/taskmanager.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/variantutil.h>
 
@@ -76,21 +75,6 @@ ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
 {
 }
 
-bool ConfManagerRpc::exportMasterBackup(const QString &path)
-{
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_exportMasterBackup, { path });
-}
-
-bool ConfManagerRpc::importMasterBackup(const QString &path)
-{
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_importMasterBackup, { path });
-}
-
-bool ConfManagerRpc::checkPassword(const QString &password)
-{
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
-}
-
 bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 {
     Q_ASSERT(&newConf == conf() || &newConf == confToEdit()); // else newConf.deleteLater()
@@ -117,6 +101,21 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
     return true;
 }
 
+bool ConfManagerRpc::exportMasterBackup(const QString &path)
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_exportMasterBackup, { path });
+}
+
+bool ConfManagerRpc::importMasterBackup(const QString &path)
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_importMasterBackup, { path });
+}
+
+bool ConfManagerRpc::checkPassword(const QString &password)
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
+}
+
 void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 {
     IoC<FortSettings>()->clearCache(); // FirewallConf::IniEdited is handled here
@@ -130,10 +129,6 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
     } else {
         // Apply only flags
         conf()->fromVariant(confVar, /*onlyEdited=*/true);
-    }
-
-    if ((editedFlags & FirewallConf::TaskEdited) != 0) {
-        IoC<TaskManager>()->loadSettings();
     }
 
     applySavedConf(conf());
@@ -168,10 +163,11 @@ void ConfManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
     auto confManager = IoC<ConfManager>();
 
-    connect(confManager, &ConfManager::confChanged, rpcManager, [=](bool onlyFlags) {
-        const QVariant confVar = IoC<ConfManager>()->toPatchVariant(onlyFlags);
-        rpcManager->invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
-    });
+    connect(confManager, &ConfManager::confChanged, rpcManager,
+            [=](bool onlyFlags, uint editedFlags) {
+                const QVariant confVar = IoC<ConfManager>()->toPatchVariant(onlyFlags, editedFlags);
+                rpcManager->invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
+            });
     connect(confManager, &ConfManager::imported, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfManager_imported); });
 }

@@ -41,55 +41,52 @@ public:
     void setTaskEdited() { m_editedFlags |= TaskEdited; }
 
     bool anyEdited() const { return m_editedFlags != NoneEdited; }
-    void resetEdited(bool v = false);
+    void resetEdited(EditedFlags v = NoneEdited) { m_editedFlags = v; }
 
     bool bootFilter() const { return m_bootFilter; }
-    void setBootFilter(bool bootFilter) { m_bootFilter = bootFilter; }
+    void setBootFilter(bool v) { m_bootFilter = v; }
 
     bool filterEnabled() const { return m_filterEnabled; }
-    void setFilterEnabled(bool filterEnabled) { m_filterEnabled = filterEnabled; }
+    void setFilterEnabled(bool v) { m_filterEnabled = v; }
 
     bool filterLocals() const { return m_filterLocals; }
-    void setFilterLocals(bool filterLocals) { m_filterLocals = filterLocals; }
+    void setFilterLocals(bool v) { m_filterLocals = v; }
 
     bool filterLocalNet() const { return m_filterLocalNet; }
-    void setFilterLocalNet(bool filterLocalNet) { m_filterLocalNet = filterLocalNet; }
+    void setFilterLocalNet(bool v) { m_filterLocalNet = v; }
 
     bool blockTraffic() const { return m_blockTraffic; }
-    void setBlockTraffic(bool blockTraffic) { m_blockTraffic = blockTraffic; }
+    void setBlockTraffic(bool v) { m_blockTraffic = v; }
 
     bool blockInetTraffic() const { return m_blockInetTraffic; }
-    void setBlockInetTraffic(bool blockInetTraffic) { m_blockInetTraffic = blockInetTraffic; }
+    void setBlockInetTraffic(bool v) { m_blockInetTraffic = v; }
 
     bool allowAllNew() const { return m_allowAllNew; }
-    void setAllowAllNew(bool allowAllNew) { m_allowAllNew = allowAllNew; }
+    void setAllowAllNew(bool v) { m_allowAllNew = v; }
 
     bool askToConnect() const { return m_askToConnect; }
-    void setAskToConnect(bool askToConnect) { m_askToConnect = askToConnect; }
+    void setAskToConnect(bool v) { m_askToConnect = v; }
 
     bool groupBlocked() const { return m_groupBlocked; }
-    void setGroupBlocked(bool groupBlocked) { m_groupBlocked = groupBlocked; }
+    void setGroupBlocked(bool v) { m_groupBlocked = v; }
 
     bool logStat() const { return m_logStat; }
-    void setLogStat(bool logStat) { m_logStat = logStat; }
+    void setLogStat(bool v) { m_logStat = v; }
 
     bool logStatNoFilter() const { return m_logStatNoFilter; }
-    void setLogStatNoFilter(bool logStatNoFilter) { m_logStatNoFilter = logStatNoFilter; }
+    void setLogStatNoFilter(bool v) { m_logStatNoFilter = v; }
 
     bool logBlocked() const { return m_logBlocked; }
-    void setLogBlocked(bool logBlocked) { m_logBlocked = logBlocked; }
+    void setLogBlocked(bool v) { m_logBlocked = v; }
 
     bool logAllowedIp() const { return m_logAllowedIp; }
-    void setLogAllowedIp(bool logAllowedIp) { m_logAllowedIp = logAllowedIp; }
+    void setLogAllowedIp(bool v) { m_logAllowedIp = v; }
 
     bool logBlockedIp() const { return m_logBlockedIp; }
-    void setLogBlockedIp(bool logBlockedIp) { m_logBlockedIp = logBlockedIp; }
+    void setLogBlockedIp(bool v) { m_logBlockedIp = v; }
 
     bool logAlertedBlockedIp() const { return m_logAlertedBlockedIp; }
-    void setLogAlertedBlockedIp(bool logAlertedBlockedIp)
-    {
-        m_logAlertedBlockedIp = logAlertedBlockedIp;
-    }
+    void setLogAlertedBlockedIp(bool v) { m_logAlertedBlockedIp = v; }
 
     bool appBlockAll() const { return m_appBlockAll; }
     void setAppBlockAll(bool appBlockAll) { m_appBlockAll = appBlockAll; }
@@ -110,18 +107,20 @@ public:
     static QStringList filterModeIconPaths();
 
     bool activePeriodEnabled() const { return m_activePeriodEnabled; }
-    void setActivePeriodEnabled(bool activePeriodEnabled);
+    void setActivePeriodEnabled(bool v) { m_activePeriodEnabled = v; }
 
     QString activePeriodFrom() const { return m_activePeriodFrom; }
-    void setActivePeriodFrom(const QString &activePeriodFrom);
+    void setActivePeriodFrom(const QString &v) { m_activePeriodFrom = v; }
 
     QString activePeriodTo() const { return m_activePeriodTo; }
-    void setActivePeriodTo(const QString &activePeriodTo);
+    void setActivePeriodTo(const QString &v) { m_activePeriodTo = v; }
 
     quint32 appGroupBits() const { return m_appGroupBits; }
-    void setAppGroupBits(quint32 groupBits);
+    void setAppGroupBits(quint32 v) { m_appGroupBits = v; }
 
-    void setupAppGroupBits(quint32 groupBits);
+    quint32 activeGroupBits() const { return m_appGroupBits & m_groupActivePeriodBits; }
+
+    void setupAppGroupBits(quint32 v);
 
     bool appGroupEnabled(int groupIndex) const;
 
@@ -168,10 +167,14 @@ public slots:
     void prepareToSave();
     void afterSaved();
 
+    bool updateGroupPeriods(bool onlyFlags);
+
 private:
     void setupAddressGroups();
 
     void setAppGroupsEdited(int from, int to);
+
+    void loadGroupPeriodBits();
 
     void loadAppGroupBits();
     void applyAppGroupBits();
@@ -213,8 +216,10 @@ private:
     uint m_appAllowAll : 1 = false;
 
     uint m_activePeriodEnabled : 1 = false;
+    uint m_anyGroupPeriodEnabled : 1 = false;
 
     quint32 m_appGroupBits = 0;
+    quint32 m_groupActivePeriodBits = quint32(-1); // transient
 
     QString m_activePeriodFrom;
     QString m_activePeriodTo;

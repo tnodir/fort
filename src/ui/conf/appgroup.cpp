@@ -165,6 +165,16 @@ void AppGroup::setPeriodTo(const QString &periodTo)
     }
 }
 
+bool AppGroup::isTimeInPeriod(QTime time) const
+{
+    if (m_periodFrom.isNull()) {
+        m_periodFromTime = DateUtil::parseTime(m_periodFrom);
+        m_periodToTime = DateUtil::parseTime(m_periodTo);
+    }
+
+    return DateUtil::isTimeInPeriod(time, m_periodFromTime, m_periodToTime);
+}
+
 QString AppGroup::menuLabel() const
 {
     QString text = name();

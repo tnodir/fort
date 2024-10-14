@@ -39,7 +39,7 @@ private:
     void setupThreadPool();
 
     void setupLogger();
-    void updateLogger(const FirewallConf *conf);
+    void updateLogger();
 
     void createManagers();
     void deleteManagers();
@@ -60,9 +60,9 @@ private:
 
     void loadConf();
 
+    bool setupDriverConf();
     bool updateDriverConf(bool onlyFlags = false);
 
-    void updateTaskManager();
     void updateLogManager(bool active);
     void updateStatManager(FirewallConf *conf);
 

@@ -36,6 +36,8 @@ const QLoggingCategory LC("conf");
 
 constexpr int DATABASE_USER_VERSION = 45;
 
+constexpr int CONF_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
+
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
                                            "    include_text, exclude_text"
@@ -457,6 +459,8 @@ bool importFile(const QString &filePath, const QString &path)
 ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openFlags) :
     QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags)), m_conf(createConf())
 {
+    m_confTimer.setSingleShot(true);
+    connect(&m_confTimer, &QTimer::timeout, this, &ConfManager::updateConfPeriods);
 }
 
 IniUser &ConfManager::iniUser() const
@@ -530,6 +534,25 @@ FirewallConf *ConfManager::createConf()
 {
     FirewallConf *conf = new FirewallConf(IoC<FortSettings>(), this);
     return conf;
+}
+
+bool ConfManager::applyConfPeriods(bool onlyFlags)
+{
+    m_confTimer.stop();
+
+    if (!conf() || !conf()->updateGroupPeriods(onlyFlags))
+        return false;
+
+    m_confTimer.start(CONF_PERIODS_UPDATE_INTERVAL);
+
+    return true;
+}
+
+void ConfManager::updateConfPeriods()
+{
+    if (applyConfPeriods(/*onlyFlags=*/false)) {
+        emit confChanged(/*onlyFlags=*/true, FirewallConf::FlagsEdited);
+    }
 }
 
 bool ConfManager::setupDb()
@@ -623,7 +646,9 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
         }
     }
 
-    emit confChanged(onlyFlags);
+    applyConfPeriods(onlyFlags);
+
+    emit confChanged(onlyFlags, conf()->editedFlags());
 
     if (conf()->iniEdited()) {
         emit iniChanged(conf()->ini());
@@ -669,11 +694,11 @@ void ConfManager::saveIniUser(bool edited, bool onlyFlags)
     }
 }
 
-QVariant ConfManager::toPatchVariant(bool onlyFlags) const
+QVariant ConfManager::toPatchVariant(bool onlyFlags, uint editedFlags) const
 {
     return onlyFlags ? conf()->toVariant(/*onlyEdited=*/true) // send only flags to clients
                      : FirewallConf::editedFlagsToVariant(
-                               FirewallConf::AllEdited); // clients have to reload all from storage
+                               editedFlags); // clients have to reload all from storage
 }
 
 bool ConfManager::saveVariant(const QVariant &confVar)
@@ -817,7 +842,7 @@ bool ConfManager::importMasterBackup(const QString &path)
     if (ok) {
         emit imported();
 
-        emit confChanged(/*onlyFlags=*/false);
+        load(); // Reload conf
     } else {
         qCWarning(LC) << "Import error:" << path;
     }
