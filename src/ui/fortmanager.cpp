@@ -409,7 +409,7 @@ void FortManager::setupConfManager()
             &WindowManager::closeAllWindows);
 
     connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags, uint editedFlags) {
-        if (!onlyFlags && (editedFlags & FirewallConf::IniEdited) != 0) {
+        if ((editedFlags & FirewallConf::IniEdited) != 0) {
             updateLogger();
         }
 
@@ -417,6 +417,9 @@ void FortManager::setupConfManager()
             updateDriverConf(onlyFlags);
         }
     });
+
+    connect(confManager, &ConfManager::confPeriodsChanged, this,
+            [&] { updateDriverConf(/*onlyFlags=*/true); });
 }
 
 void FortManager::setupQuotaManager()

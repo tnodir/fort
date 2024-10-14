@@ -72,6 +72,7 @@ public:
 signals:
     void imported();
     void confChanged(bool onlyFlags, uint editedFlags);
+    void confPeriodsChanged();
     void iniChanged(const IniOptions &ini);
     void iniUserChanged(const IniUser &ini, bool onlyFlags);
 

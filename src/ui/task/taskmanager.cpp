@@ -47,7 +47,7 @@ void TaskManager::setUp()
     setupTimer();
 
     connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags, uint editedFlags) {
-        if (onlyFlags || (editedFlags & FirewallConf::TaskEdited) == 0)
+        if (onlyFlags && (editedFlags & FirewallConf::TaskEdited) == 0)
             return;
 
         loadSettings();

@@ -550,8 +550,13 @@ bool ConfManager::applyConfPeriods(bool onlyFlags)
 
 void ConfManager::updateConfPeriods()
 {
-    if (applyConfPeriods(/*onlyFlags=*/false)) {
-        emit confChanged(/*onlyFlags=*/true, FirewallConf::FlagsEdited);
+    const auto activeGroupBits = conf() ? conf()->activeGroupBits() : 0;
+
+    if (!applyConfPeriods(/*onlyFlags=*/false))
+        return;
+
+    if (activeGroupBits != conf()->activeGroupBits()) {
+        emit confPeriodsChanged();
     }
 }
 
