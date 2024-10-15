@@ -89,6 +89,7 @@ Name: "{commondesktop}\{#APP_NAME}"; Filename: "{#APP_EXE}"; WorkingDir: "{app}"
 [Run]
 ; 1. Uninstall -> 2. Install Driver -> 3. Portable -> 4. Service
 
+Filename: "{#APP_EXE}"; Parameters: "-u explorer"; Flags: runasoriginaluser
 Filename: "{#APP_EXE}"; Parameters: "-u most"
 
 Filename: "{app}\driver\scripts\reinstall.bat"; Parameters: {code:DriverInstallArgs}; \
