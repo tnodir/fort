@@ -22,7 +22,17 @@ public:
         TaskEdited = (1 << 3),
         AllEdited = (OptEdited | FlagsEdited | IniEdited | TaskEdited)
     };
+    Q_ENUM(EditedFlag)
     Q_DECLARE_FLAGS(EditedFlags, EditedFlag)
+
+    enum FilterMode {
+        ModeAutoLearn = 0,
+        ModeAskToConnect,
+        ModeAllowAll,
+        ModeBlockAll,
+        ModeIgnore,
+    };
+    Q_ENUM(FilterMode)
 
     explicit FirewallConf(Settings *settings = nullptr, QObject *parent = nullptr);
 

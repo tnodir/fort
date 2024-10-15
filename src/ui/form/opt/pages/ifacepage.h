@@ -50,6 +50,9 @@ private:
     QLayout *setupEditShortcutLayout();
     void setupHomeBox();
     void setupProgBox();
+    QLayout *setupAlertLayout();
+    void setupAlertModes();
+    void setupAlertModesButton();
     void setupTrayBox();
     QLayout *setupTrayMaxGroupsLayout();
     void refreshComboTrayAction();
@@ -92,6 +95,9 @@ private:
     QCheckBox *m_cbAppNotifyMessage = nullptr;
     QCheckBox *m_cbAppAlertAutoShow = nullptr;
     QCheckBox *m_cbAppAlertAutoLearn = nullptr;
+    QCheckBox *m_cbAppAlertAllowAll = nullptr;
+    QCheckBox *m_cbAppAlertBlockAll = nullptr;
+    QPushButton *m_btAlertModes = nullptr;
     QCheckBox *m_cbAppAlertAlwaysOnTop = nullptr;
     QCheckBox *m_cbAppAlertAutoActive = nullptr;
     QCheckBox *m_cbAppAlertSound = nullptr;

@@ -141,8 +141,14 @@ public:
     bool progAlertWindowAutoShow() const { return valueBool("progAlertWindow/autoShow", true); }
     void setProgAlertWindowAutoShow(bool on) { setValue("progAlertWindow/autoShow", on); }
 
-    bool progAlertWindowAutoLearn() const { return valueBool("progAlertWindow/autoLearn"); }
-    void setProgAlertWindowAutoLearn(bool on) { setValue("progAlertWindow/autoLearn", on); }
+    bool progAlertWindowAutoLearn() const { return valueBool("progAlertWindow/modeAutoLearn"); }
+    void setProgAlertWindowAutoLearn(bool on) { setValue("progAlertWindow/modeAutoLearn", on); }
+
+    bool progAlertWindowAllowAll() const { return valueBool("progAlertWindow/modeAllowAll", true); }
+    void setProgAlertWindowAllowAll(bool on) { setValue("progAlertWindow/modeAllowAll", on, true); }
+
+    bool progAlertWindowBlockAll() const { return valueBool("progAlertWindow/modeBlockAll", true); }
+    void setProgAlertWindowBlockAll(bool on) { setValue("progAlertWindow/modeBlockAll", on, true); }
 
     bool progAlertWindowAlwaysOnTop() const
     {

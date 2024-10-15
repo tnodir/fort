@@ -29,6 +29,16 @@ namespace {
 
 constexpr int trayMaxGroups = 16;
 
+void setAlertModeIcon(QCheckBox *cb, FirewallConf::FilterMode mode)
+{
+    cb->setIcon(IconCache::icon(FirewallConf::filterModeIconPaths().value(mode)));
+}
+
+void setAlertModeText(QCheckBox *cb, FirewallConf::FilterMode mode)
+{
+    cb->setText(FirewallConf::filterModeNames().value(mode));
+}
+
 }
 
 IfacePage::IfacePage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
@@ -59,6 +69,8 @@ void IfacePage::onResetToDefault()
     m_cbAppNotifyMessage->setChecked(true);
     m_cbAppAlertAutoShow->setChecked(true);
     m_cbAppAlertAutoLearn->setChecked(false);
+    m_cbAppAlertAllowAll->setChecked(true);
+    m_cbAppAlertBlockAll->setChecked(true);
     m_cbAppAlertAlwaysOnTop->setChecked(true);
     m_cbAppAlertAutoActive->setChecked(false);
     m_cbAppAlertSound->setChecked(true);
@@ -136,7 +148,9 @@ void IfacePage::onRetranslateUi()
 
     m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
-    m_cbAppAlertAutoLearn->setText(tr("Alert Window for Auto-Learn mode"));
+    setAlertModeText(m_cbAppAlertAutoLearn, FirewallConf::ModeAutoLearn);
+    setAlertModeText(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
+    setAlertModeText(m_cbAppAlertBlockAll, FirewallConf::ModeBlockAll);
     m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
     m_cbAppAlertAutoActive->setText(tr("Alert Window is auto-active"));
     m_cbAppAlertSound->setText(tr("Sound Alert"));
@@ -474,17 +488,8 @@ void IfacePage::setupProgBox()
                 ctrl()->setIniUserEdited();
             });
 
-    m_cbAppAlertAutoShow =
-            ControlUtil::createCheckBox(iniUser()->progAlertWindowAutoShow(), [&](bool checked) {
-                iniUser()->setProgAlertWindowAutoShow(checked);
-                ctrl()->setIniUserEdited();
-            });
-
-    m_cbAppAlertAutoLearn =
-            ControlUtil::createCheckBox(iniUser()->progAlertWindowAutoLearn(), [&](bool checked) {
-                iniUser()->setProgAlertWindowAutoLearn(checked);
-                ctrl()->setIniUserEdited();
-            });
+    // Alert layout
+    auto alertLayout = setupAlertLayout();
 
     m_cbAppAlertAlwaysOnTop =
             ControlUtil::createCheckBox(iniUser()->progAlertWindowAlwaysOnTop(), [&](bool checked) {
@@ -504,12 +509,79 @@ void IfacePage::setupProgBox()
     });
 
     // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbAppNotifyMessage, m_cbAppAlertAutoShow, m_cbAppAlertAutoLearn,
-                    m_cbAppAlertAlwaysOnTop, m_cbAppAlertAutoActive, m_cbAppAlertSound });
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbAppNotifyMessage);
+    layout->addLayout(alertLayout);
+    layout->addWidget(m_cbAppAlertAlwaysOnTop);
+    layout->addWidget(m_cbAppAlertAutoActive);
+    layout->addWidget(m_cbAppAlertSound);
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);
+}
+
+QLayout *IfacePage::setupAlertLayout()
+{
+    m_cbAppAlertAutoShow =
+            ControlUtil::createCheckBox(iniUser()->progAlertWindowAutoShow(), [&](bool checked) {
+                iniUser()->setProgAlertWindowAutoShow(checked);
+                ctrl()->setIniUserEdited();
+            });
+
+    // Alert Modes Box
+    setupAlertModes();
+
+    auto layout = ControlUtil::createRowLayout(m_cbAppAlertAutoShow, m_btAlertModes);
+
+    return layout;
+}
+
+void IfacePage::setupAlertModes()
+{
+    m_cbAppAlertAutoLearn =
+            ControlUtil::createCheckBox(iniUser()->progAlertWindowAutoLearn(), [&](bool checked) {
+                iniUser()->setProgAlertWindowAutoLearn(checked);
+                ctrl()->setIniUserEdited();
+            });
+    setAlertModeIcon(m_cbAppAlertAutoLearn, FirewallConf::ModeAutoLearn);
+
+    m_cbAppAlertAllowAll =
+            ControlUtil::createCheckBox(iniUser()->progAlertWindowAllowAll(), [&](bool checked) {
+                iniUser()->setProgAlertWindowAllowAll(checked);
+                ctrl()->setIniUserEdited();
+            });
+    setAlertModeIcon(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
+
+    m_cbAppAlertBlockAll =
+            ControlUtil::createCheckBox(iniUser()->progAlertWindowBlockAll(), [&](bool checked) {
+                iniUser()->setProgAlertWindowBlockAll(checked);
+                ctrl()->setIniUserEdited();
+            });
+    setAlertModeIcon(m_cbAppAlertBlockAll, FirewallConf::ModeBlockAll);
+
+    // Setup Alert Modes Button
+    setupAlertModesButton();
+}
+
+void IfacePage::setupAlertModesButton()
+{
+    // Menu
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_cbAppAlertAutoLearn, m_cbAppAlertAllowAll, m_cbAppAlertBlockAll });
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
+
+    m_btAlertModes = ControlUtil::createButton(":/icons/widgets.png");
+    m_btAlertModes->setMenu(menu);
+
+    // Refresh Alert Modes Button
+    const auto refreshAlertModes = [&] {
+        m_btAlertModes->setEnabled(m_cbAppAlertAutoShow->isChecked());
+    };
+
+    refreshAlertModes();
+
+    connect(m_cbAppAlertAutoShow, &QCheckBox::toggled, this, refreshAlertModes);
 }
 
 void IfacePage::setupTrayBox()

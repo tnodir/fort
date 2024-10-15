@@ -76,6 +76,7 @@ QStringList FirewallConf::blockTrafficIconPaths()
 
 QStringList FirewallConf::filterModeNames()
 {
+    // Sync with enum FilterMode
     return { tr("Auto-Learn"), tr("Ask to Connect"), tr("Block, if not allowed"),
         tr("Allow, if not blocked"), tr("Ignore, if not blocked or allowed") };
 }
