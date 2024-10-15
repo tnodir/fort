@@ -212,21 +212,21 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
                               .getFreeId(/*maxId=*/ConfUtil::ruleMaxCount() - 1);
     }
 
-    const QVariantList vars = {
-        DbVar::nullable(rule.ruleId),
-        rule.enabled,
-        rule.blocked,
-        rule.exclusive,
-        rule.ruleName,
-        rule.notes,
-        rule.ruleText,
-        rule.ruleType,
-        rule.acceptZones,
-        rule.rejectZones,
-        DateUtil::now(),
-    };
-
     if (ok) {
+        const QVariantList vars = {
+            DbVar::nullable(rule.ruleId),
+            rule.enabled,
+            rule.blocked,
+            rule.exclusive,
+            rule.ruleName,
+            rule.notes,
+            rule.ruleText,
+            rule.ruleType,
+            rule.acceptZones,
+            rule.rejectZones,
+            DateUtil::now(),
+        };
+
         DbQuery(sqliteDb(), &ok).sql(isNew ? sqlInsertRule : sqlUpdateRule).vars(vars).executeOk();
 
         saveRuleSet(rule);

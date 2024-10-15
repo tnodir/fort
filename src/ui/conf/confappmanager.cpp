@@ -114,7 +114,7 @@ const char *const sqlUpdateApp = "UPDATE app"
 
 const char *const sqlUpdateAppName = "UPDATE app SET name = ?2 WHERE app_id = ?1;";
 
-const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1 RETURNING path, is_wildcard;";
+const char *const sqlDeleteApp = "DELETE FROM app WHERE app_id = ?1 RETURNING is_wildcard, path;";
 
 const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);";
 
@@ -429,11 +429,11 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
     commitTransaction(ok);
 
     if (ok) {
-        const QString appPath = resList.at(0).toString();
-
-        if (resList.at(1).toBool()) {
+        if (resList.at(0).toBool()) {
             isWildcard = true;
         } else {
+            const QString appPath = resList.at(0).toString();
+
             updateDriverDeleteApp(appPath);
         }
 

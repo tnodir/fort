@@ -45,7 +45,7 @@ public:
 
     struct MigrateOptions
     {
-        const char *sqlDir;
+        const char *sqlDir = nullptr;
         const char *sqlPragmas = nullptr;
 
         int version = 0;

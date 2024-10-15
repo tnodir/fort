@@ -21,7 +21,7 @@ namespace {
 
 const QLoggingCategory LC("connBlockListModel");
 
-QString formatIpPort(const ip_addr_t &ip, quint16 port, bool isIPv6, bool resolveAddress)
+QString formatIpPort(const ip_addr_t ip, quint16 port, bool isIPv6, bool resolveAddress)
 {
     QString address = NetUtil::ipToText(ip, isIPv6);
     if (resolveAddress) {

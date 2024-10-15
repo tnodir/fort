@@ -21,17 +21,17 @@ public:
     static ip6_addr_t textToIp6(const char *text, bool *ok = nullptr);
 
     // Convert IPv6 address from number to text
-    static QString ip6ToText(const ip6_addr_t &ip);
+    static QString ip6ToText(const ip6_addr_t ip);
 
-    static QString ipToText(const ip_addr_t &ip, bool isIPv6 = false);
+    static QString ipToText(const ip_addr_t ip, bool isIPv6 = false);
 
     // Get IPv4 address mask
     static int ip4Mask(quint32 ip);
 
     static quint32 applyIp4Mask(quint32 ip, int nbits);
-    static ip6_addr_t applyIp6Mask(const ip6_addr_t &ip, int nbits);
+    static ip6_addr_t applyIp6Mask(const ip6_addr_t ip, int nbits);
 
-    static QByteArray ip6ToRawArray(const ip_addr_t &ip);
+    static QByteArray ip6ToRawArray(const ip_addr_t ip);
     static const ip6_addr_t &rawArrayToIp6(const QByteArray &buf);
 
     static QString getHostName(const QString &address);

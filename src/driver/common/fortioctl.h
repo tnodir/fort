@@ -178,7 +178,7 @@ DEFINE_GUID(FORT_GUID_EMPTY, 0x00000000, 0x0000, 0x0000, 0x00, 0x00, 0x00, 0x00,
 #define FORT_CTL_CODE(i, a) CTL_CODE(FORT_DEVICE_TYPE, FORT_IOCTL_BASE + (i), METHOD_BUFFERED, (a))
 
 /* Macro to extract function index out of the device io control code */
-#define FORT_CTL_INDEX_FROM_CODE(ctrlCode) ((DWORD) ((ctrlCode >> 2) & 0xFF))
+#define FORT_CTL_INDEX_FROM_CODE(ctrlCode) ((DWORD) (((ctrlCode) >> 2) & 0xFF))
 
 #define FORT_IOCTL_INDEX_VALIDATE    0
 #define FORT_IOCTL_INDEX_SETSERVICES 1

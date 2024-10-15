@@ -66,7 +66,7 @@ bool confIpInRange(const void *drvConf, const quint32 *ip, bool isIPv6 = false,
         bool included = false, int addrGroupIndex = 0);
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included = false, int addrGroupIndex = 0);
 bool confIp6InRange(
-        const void *drvConf, const ip6_addr_t &ip, bool included = false, int addrGroupIndex = 0);
+        const void *drvConf, const ip6_addr_t ip, bool included = false, int addrGroupIndex = 0);
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath);
 

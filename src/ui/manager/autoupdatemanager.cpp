@@ -88,9 +88,9 @@ void AutoUpdateManager::setupManager()
 void AutoUpdateManager::setupConfManager()
 {
     auto confManager = IoCDependency<ConfManager>();
-    auto ini = confManager->conf()->ini();
+    auto conf = confManager->conf();
 
-    setupByConf(ini);
+    setupByConf(conf->ini());
 
     connect(confManager, &ConfManager::iniChanged, this, &AutoUpdateManager::setupByConf);
 }

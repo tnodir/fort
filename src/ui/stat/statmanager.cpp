@@ -163,7 +163,7 @@ bool StatManager::updateTrafDay(qint64 unixTime)
 
 bool StatManager::clearTraffic()
 {
-    bool ok = true;
+    bool ok;
 
     beginTransaction();
     ok = sqliteDb()->execute(StatSql::sqlDeleteAllTraffic);

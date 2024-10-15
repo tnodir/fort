@@ -71,7 +71,7 @@ ip6_addr_t NetUtil::textToIp6(const char *text, bool *ok)
     return textToIp6(QString::fromLatin1(text), ok);
 }
 
-QString NetUtil::ip6ToText(const ip6_addr_t &ip)
+QString NetUtil::ip6ToText(const ip6_addr_t ip)
 {
     wchar_t buf[MAX_IPV6_LEN];
 
@@ -81,7 +81,7 @@ QString NetUtil::ip6ToText(const ip6_addr_t &ip)
     return QString::fromWCharArray(buf);
 }
 
-QString NetUtil::ipToText(const ip_addr_t &ip, bool isIPv6)
+QString NetUtil::ipToText(const ip_addr_t ip, bool isIPv6)
 {
     return isIPv6 ? ip6ToText(ip.v6) : ip4ToText(ip.v4);
 }
@@ -96,7 +96,7 @@ quint32 NetUtil::applyIp4Mask(quint32 ip, int nbits)
     return nbits == 0 ? quint32(-1) : (ip | (nbits == 32 ? 0 : ((1 << (32 - nbits)) - 1)));
 }
 
-ip6_addr_t NetUtil::applyIp6Mask(const ip6_addr_t &ip, int nbits)
+ip6_addr_t NetUtil::applyIp6Mask(const ip6_addr_t ip, int nbits)
 {
     ip6_addr_t ip6 = ip;
     quint64 *masked = &ip6.hi64;
@@ -113,7 +113,7 @@ ip6_addr_t NetUtil::applyIp6Mask(const ip6_addr_t &ip, int nbits)
     return ip6;
 }
 
-QByteArray NetUtil::ip6ToRawArray(const ip_addr_t &ip)
+QByteArray NetUtil::ip6ToRawArray(const ip_addr_t ip)
 {
     return QByteArray::fromRawData(ip.v6.data, sizeof(ip6_addr_t));
 }

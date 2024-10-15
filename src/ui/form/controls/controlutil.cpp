@@ -347,10 +347,12 @@ LabelSpinCombo *ControlUtil::createSpinCombo(int v, int min, int max, const QVec
         const QString &suffix, const std::function<void(int)> &onValueChanged)
 {
     auto c = new LabelSpinCombo();
-    c->spinBox()->setRange(min, max);
-    c->spinBox()->setSuffix(suffix);
-    c->spinBox()->setValue(v);
     c->setValues(values);
+
+    auto spinBox = c->spinBox();
+    spinBox->setRange(min, max);
+    spinBox->setSuffix(suffix);
+    spinBox->setValue(v);
 
     c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
 
@@ -361,9 +363,11 @@ LabelSpin *ControlUtil::createSpin(int v, int min, int max, const QString &suffi
         const std::function<void(int)> &onValueChanged)
 {
     auto c = new LabelSpin();
-    c->spinBox()->setRange(min, max);
-    c->spinBox()->setSuffix(suffix);
-    c->spinBox()->setValue(v);
+
+    auto spinBox = c->spinBox();
+    spinBox->setRange(min, max);
+    spinBox->setSuffix(suffix);
+    spinBox->setValue(v);
 
     c->connect(c->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), onValueChanged);
 
@@ -374,9 +378,11 @@ LabelDoubleSpin *ControlUtil::createDoubleSpin(double v, double min, double max,
         const QString &suffix, const std::function<void(double)> &onValueChanged)
 {
     auto c = new LabelDoubleSpin();
-    c->spinBox()->setRange(min, max);
-    c->spinBox()->setSuffix(suffix);
-    c->spinBox()->setValue(v);
+
+    auto spinBox = c->spinBox();
+    spinBox->setRange(min, max);
+    spinBox->setSuffix(suffix);
+    spinBox->setValue(v);
 
     c->connect(c->spinBox(), QOverload<double>::of(&QDoubleSpinBox::valueChanged), onValueChanged);
 

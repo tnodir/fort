@@ -205,7 +205,7 @@ bool confIp4InRange(const void *drvConf, quint32 ip, bool included, int addrGrou
     return confIpInRange(drvConf, &ip, /*isIPv6=*/false, included, addrGroupIndex);
 }
 
-bool confIp6InRange(const void *drvConf, const ip6_addr_t &ip, bool included, int addrGroupIndex)
+bool confIp6InRange(const void *drvConf, const ip6_addr_t ip, bool included, int addrGroupIndex)
 {
     return confIpInRange(drvConf, &ip.addr32[0], /*isIPv6=*/true, included, addrGroupIndex);
 }

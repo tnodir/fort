@@ -111,18 +111,18 @@ bool ConfZoneManager::addOrUpdateZone(Zone &zone)
         updateDriverZoneFlag(zone.zoneId, zone.enabled);
     }
 
-    const QVariantList vars = {
-        zone.zoneId,
-        zone.zoneName,
-        zone.enabled,
-        zone.customUrl,
-        zone.sourceCode,
-        zone.url,
-        zone.formData,
-        zone.textInline,
-    };
-
     if (ok) {
+        const QVariantList vars = {
+            zone.zoneId,
+            zone.zoneName,
+            zone.enabled,
+            zone.customUrl,
+            zone.sourceCode,
+            zone.url,
+            zone.formData,
+            zone.textInline,
+        };
+
         DbQuery(sqliteDb(), &ok).sql(isNew ? sqlInsertZone : sqlUpdateZone).vars(vars).executeOk();
     }
 

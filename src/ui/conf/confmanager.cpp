@@ -555,7 +555,7 @@ void ConfManager::updateConfPeriods()
     if (!applyConfPeriods(/*onlyFlags=*/false))
         return;
 
-    if (activeGroupBits != conf()->activeGroupBits()) {
+    if (conf() && activeGroupBits != conf()->activeGroupBits()) {
         emit confPeriodsChanged();
     }
 }

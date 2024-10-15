@@ -16,12 +16,12 @@ inline bool checkIp6MaskBitsCount(const int nbits)
     return (nbits >= 0 && nbits <= 128);
 }
 
-bool compareLessIp6(const ip6_addr_t &l, const ip6_addr_t &r)
+inline bool compareLessIp6(const ip6_addr_t l, const ip6_addr_t r)
 {
     return memcmp(&l, &r, sizeof(ip6_addr_t)) < 0;
 }
 
-void sortIp6Array(ip6_arr_t &array)
+inline void sortIp6Array(ip6_arr_t &array)
 {
     std::sort(array.begin(), array.end(), compareLessIp6);
 }

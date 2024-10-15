@@ -68,6 +68,6 @@
 
 #define FORT_ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
 
-#define FORT_ALIGN_SIZE(size, align) ((((size) + (align - 1)) & ~(align - 1)))
+#define FORT_ALIGN_SIZE(size, align) ((((size) + ((align) - 1)) & ~((align) - 1)))
 
 #endif // COMMON_H
