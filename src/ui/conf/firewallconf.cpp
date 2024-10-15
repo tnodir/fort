@@ -34,31 +34,39 @@ void FirewallConf::setBlockTrafficIndex(int index)
     }
 }
 
-int FirewallConf::filterModeIndex() const
+FirewallConf::FilterMode FirewallConf::filterMode() const
 {
-    return m_allowAllNew ? 0 : (m_askToConnect ? 1 : (m_appBlockAll ? 2 : (m_appAllowAll ? 3 : 4)));
+    if (m_allowAllNew)
+        return ModeAutoLearn;
+    if (m_askToConnect)
+        return ModeAskToConnect;
+    if (m_appBlockAll)
+        return ModeBlockAll;
+    if (m_appAllowAll)
+        return ModeAllowAll;
+    return ModeIgnore;
 }
 
-void FirewallConf::setFilterModeIndex(int index)
+void FirewallConf::setFilterMode(FirewallConf::FilterMode mode)
 {
     m_allowAllNew = false;
     m_askToConnect = false;
     m_appBlockAll = false;
     m_appAllowAll = false;
 
-    switch (index) {
-    case 0: { // Auto-Learn
+    switch (mode) {
+    case ModeAutoLearn: {
         m_allowAllNew = true;
         m_appBlockAll = true;
     } break;
-    case 1: { // Ask
+    case ModeAskToConnect: {
         m_askToConnect = true;
         m_appBlockAll = true;
     } break;
-    case 2: { // Block
+    case ModeBlockAll: {
         m_appBlockAll = true;
     } break;
-    case 3: { // Allow
+    case ModeAllowAll: {
         m_appAllowAll = true;
     } break;
     }

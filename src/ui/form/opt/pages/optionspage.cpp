@@ -202,7 +202,7 @@ void OptionsPage::retranslateComboBlockTraffic()
 void OptionsPage::retranslateComboFilterMode()
 {
     updateComboBox(m_comboFilterMode, FirewallConf::filterModeNames(),
-            FirewallConf::filterModeIconPaths(), conf()->filterModeIndex());
+            FirewallConf::filterModeIconPaths(), conf()->filterMode());
 }
 
 void OptionsPage::retranslateEditPassword()
@@ -353,8 +353,8 @@ QLayout *OptionsPage::setupFilterModeLayout()
 
     m_comboFilterMode =
             ControlUtil::createComboBox(FirewallConf::filterModeNames(), [&](int index) {
-                if (conf()->filterModeIndex() != index) {
-                    conf()->setFilterModeIndex(index);
+                if (conf()->filterMode() != index) {
+                    conf()->setFilterMode(FirewallConf::FilterMode(index));
                     ctrl()->setFlagsEdited();
                 }
             });

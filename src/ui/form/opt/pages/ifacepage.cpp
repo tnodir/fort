@@ -69,8 +69,8 @@ void IfacePage::onResetToDefault()
     m_cbAppNotifyMessage->setChecked(true);
     m_cbAppAlertAutoShow->setChecked(true);
     m_cbAppAlertAutoLearn->setChecked(false);
-    m_cbAppAlertAllowAll->setChecked(true);
     m_cbAppAlertBlockAll->setChecked(true);
+    m_cbAppAlertAllowAll->setChecked(true);
     m_cbAppAlertAlwaysOnTop->setChecked(true);
     m_cbAppAlertAutoActive->setChecked(false);
     m_cbAppAlertSound->setChecked(true);
@@ -149,8 +149,8 @@ void IfacePage::onRetranslateUi()
     m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
     setAlertModeText(m_cbAppAlertAutoLearn, FirewallConf::ModeAutoLearn);
-    setAlertModeText(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
     setAlertModeText(m_cbAppAlertBlockAll, FirewallConf::ModeBlockAll);
+    setAlertModeText(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
     m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
     m_cbAppAlertAutoActive->setText(tr("Alert Window is auto-active"));
     m_cbAppAlertSound->setText(tr("Sound Alert"));
@@ -545,19 +545,19 @@ void IfacePage::setupAlertModes()
             });
     setAlertModeIcon(m_cbAppAlertAutoLearn, FirewallConf::ModeAutoLearn);
 
-    m_cbAppAlertAllowAll =
-            ControlUtil::createCheckBox(iniUser()->progAlertWindowAllowAll(), [&](bool checked) {
-                iniUser()->setProgAlertWindowAllowAll(checked);
-                ctrl()->setIniUserEdited();
-            });
-    setAlertModeIcon(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
-
     m_cbAppAlertBlockAll =
             ControlUtil::createCheckBox(iniUser()->progAlertWindowBlockAll(), [&](bool checked) {
                 iniUser()->setProgAlertWindowBlockAll(checked);
                 ctrl()->setIniUserEdited();
             });
     setAlertModeIcon(m_cbAppAlertBlockAll, FirewallConf::ModeBlockAll);
+
+    m_cbAppAlertAllowAll =
+            ControlUtil::createCheckBox(iniUser()->progAlertWindowAllowAll(), [&](bool checked) {
+                iniUser()->setProgAlertWindowAllowAll(checked);
+                ctrl()->setIniUserEdited();
+            });
+    setAlertModeIcon(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
 
     // Setup Alert Modes Button
     setupAlertModesButton();
@@ -567,7 +567,7 @@ void IfacePage::setupAlertModesButton()
 {
     // Menu
     auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbAppAlertAutoLearn, m_cbAppAlertAllowAll, m_cbAppAlertBlockAll });
+            { m_cbAppAlertAutoLearn, m_cbAppAlertBlockAll, m_cbAppAlertAllowAll });
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 

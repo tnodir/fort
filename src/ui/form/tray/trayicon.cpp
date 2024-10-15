@@ -186,6 +186,22 @@ QAction *addAction(QWidget *widget, const QString &iconPath, const QObject *rece
     return action;
 }
 
+bool checkAlertFilterMode(FirewallConf *conf, IniUser *iniUser)
+{
+    switch (conf->filterMode()) {
+    case FirewallConf::ModeAutoLearn:
+        return iniUser->progAlertWindowAutoLearn();
+    case FirewallConf::ModeAskToConnect:
+        return true;
+    case FirewallConf::ModeBlockAll:
+        return iniUser->progAlertWindowBlockAll();
+    case FirewallConf::ModeAllowAll:
+        return iniUser->progAlertWindowAllowAll();
+    default:
+        return false;
+    }
+}
+
 }
 
 TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayController(this))
@@ -593,7 +609,7 @@ void TrayIcon::updateTrayMenuFlags()
 
     m_filterModeMenu->setEnabled(editEnabled);
     {
-        QAction *action = m_filterModeActions->actions().at(conf()->filterModeIndex());
+        QAction *action = m_filterModeActions->actions().at(conf()->filterMode());
         if (!action->isChecked()) {
             action->setChecked(true);
             m_filterModeMenu->setIcon(action->icon());
@@ -636,8 +652,8 @@ void TrayIcon::updateAppGroupActions()
 
 void TrayIcon::sendAlertMessage()
 {
-    if (conf()->allowAllNew() && !iniUser()->progAlertWindowAutoLearn())
-        return; // do not notify in Auto-Learn mode
+    if (!checkAlertFilterMode(conf(), iniUser()))
+        return;
 
     if (iniUser()->progNotifyMessage()) {
         windowManager()->showTrayMessage(
@@ -738,8 +754,8 @@ void TrayIcon::saveTrayFlags()
     {
         QAction *action = m_filterModeActions->checkedAction();
         const int index = m_filterModeActions->actions().indexOf(action);
-        if (conf()->filterModeIndex() != index) {
-            conf()->setFilterModeIndex(index);
+        if (conf()->filterMode() != index) {
+            conf()->setFilterMode(FirewallConf::FilterMode(index));
             m_filterModeMenu->setIcon(action->icon());
         }
     }
@@ -803,7 +819,7 @@ void TrayIcon::switchBlockTraffic(QAction *action)
 void TrayIcon::switchFilterMode(QAction *action)
 {
     const int index = m_filterModeActions->actions().indexOf(action);
-    if (index < 0 || index == conf()->filterModeIndex())
+    if (index < 0 || index == conf()->filterMode())
         return;
 
     if (iniUser()->confirmTrayFlags()) {
@@ -812,7 +828,7 @@ void TrayIcon::switchFilterMode(QAction *action)
                     if (confirmed) {
                         saveTrayFlags();
                     } else {
-                        QAction *a = m_filterModeActions->actions().at(conf()->filterModeIndex());
+                        QAction *a = m_filterModeActions->actions().at(conf()->filterMode());
                         a->setChecked(true);
                     }
                 },

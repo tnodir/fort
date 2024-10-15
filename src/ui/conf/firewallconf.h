@@ -28,8 +28,8 @@ public:
     enum FilterMode {
         ModeAutoLearn = 0,
         ModeAskToConnect,
-        ModeAllowAll,
         ModeBlockAll,
+        ModeAllowAll,
         ModeIgnore,
     };
     Q_ENUM(FilterMode)
@@ -107,8 +107,8 @@ public:
     int blockTrafficIndex() const;
     void setBlockTrafficIndex(int index);
 
-    int filterModeIndex() const;
-    void setFilterModeIndex(int index);
+    FirewallConf::FilterMode filterMode() const;
+    void setFilterMode(FirewallConf::FilterMode mode);
 
     static QStringList blockTrafficNames();
     static QStringList blockTrafficIconPaths();
