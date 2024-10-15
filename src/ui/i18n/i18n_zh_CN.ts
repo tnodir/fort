@@ -672,27 +672,27 @@
     </message>
     <message>
         <source>Driver Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>驱动已安装</translation>
     </message>
     <message>
         <source>Driver Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>驱动未安装</translation>
     </message>
     <message>
         <source>Service Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>服务已安装</translation>
     </message>
     <message>
         <source>Service Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>服务未安装</translation>
     </message>
     <message>
         <source>Are you sure to install the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要安装服务吗？</translation>
     </message>
     <message>
         <source>Are you sure to remove the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>您确定要删除服务吗？</translation>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
@@ -910,7 +910,7 @@
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation>显示警报图标</translation>
+        <translation>显示提醒图标</translation>
     </message>
     <message>
         <source>Programs</source>
@@ -930,7 +930,7 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation>警告窗口是自动激活的</translation>
+        <translation>提醒窗口是自动激活的</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -938,11 +938,11 @@
     </message>
     <message>
         <source>Sound Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>声音提醒</translation>
     </message>
     <message>
         <source>Alert Window for Auto-Learn mode</source>
-        <translation type="unfinished"></translation>
+        <translation>自动学习模式的提醒窗口</translation>
     </message>
 </context>
 <context>
@@ -1209,7 +1209,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止已禁用应用程序组的流量</translation>
     </message>
 </context>
 <context>
@@ -1608,15 +1608,15 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Clear Alerts</source>
-        <translation>清除警报</translation>
+        <translation>清除提醒</translation>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation>您确定要清除警报吗？</translation>
+        <translation>您确定要清除提醒吗？</translation>
     </message>
     <message>
         <source>Alerts</source>
-        <translation>警报</translation>
+        <translation>提醒</translation>
     </message>
 </context>
 <context>
@@ -2024,7 +2024,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Alerted only</source>
-        <translation>仅警报</translation>
+        <translation>仅提醒</translation>
     </message>
     <message>
         <source>Blocked Connections</source>
@@ -2322,11 +2322,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation>Windows 间谍阻止器</translation>
+        <translation>WindowsSpyBlocker 地址</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation>FireHOL 一级防火墙规则</translation>
+        <translation>FireHOL Level-1 地址</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
