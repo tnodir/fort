@@ -672,27 +672,27 @@
     </message>
     <message>
         <source>Driver Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Controlador instalado</translation>
     </message>
     <message>
         <source>Driver Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Controlador no instalado</translation>
     </message>
     <message>
         <source>Service Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Servicio instalado</translation>
     </message>
     <message>
         <source>Service Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Servicio no instalado</translation>
     </message>
     <message>
         <source>Are you sure to install the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Está seguro de que desea instalar el servicio?</translation>
     </message>
     <message>
         <source>Are you sure to remove the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Está seguro de que deseas eliminar el servicio?</translation>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
