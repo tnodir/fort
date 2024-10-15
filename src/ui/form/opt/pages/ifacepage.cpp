@@ -38,10 +38,10 @@ IfacePage::IfacePage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctr
 
 void IfacePage::onResetToDefault()
 {
-    m_cbExcludeCapture->setChecked(false);
-    m_cbUseSystemLocale->setChecked(true);
     m_comboLanguage->setCurrentIndex(0);
     m_comboTheme->setCurrentIndex(0);
+    m_cbUseSystemLocale->setChecked(true);
+    m_cbExcludeCapture->setChecked(false);
 
     m_cbHotKeysEnabled->setChecked(false);
     m_cbHotKeysGlobal->setChecked(true);
@@ -117,12 +117,12 @@ void IfacePage::onRetranslateUi()
     m_gbTray->setTitle(tr("Tray"));
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
 
-    m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
-    m_cbExcludeCapture->setText(tr("Exclude from screen capture"));
-    m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_labelLanguage->setText(tr("Language:"));
     m_labelTheme->setText(tr("Theme:"));
     retranslateComboTheme();
+    m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
+    m_cbExcludeCapture->setText(tr("Exclude from screen capture"));
+    m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
 
     m_cbHotKeysEnabled->setText(tr("Enabled"));
     m_cbHotKeysGlobal->setText(tr("Global"));
@@ -276,10 +276,16 @@ QLayout *IfacePage::setupColumn2()
 
 void IfacePage::setupGlobalBox()
 {
-    m_cbExplorerMenu =
-            ControlUtil::createCheckBox(StartupUtil::isExplorerIntegrated(), [&](bool /*checked*/) {
-                setExplorerEdited(true);
-                ctrl()->setIniUserEdited();
+    // Language Row
+    auto langLayout = setupLangLayout();
+
+    // Theme Row
+    auto themeLayout = setupThemeLayout();
+
+    m_cbUseSystemLocale =
+            ControlUtil::createCheckBox(iniUser()->useSystemLocale(), [&](bool checked) {
+                iniUser()->setUseSystemLocale(checked);
+                ctrl()->setIniUserEdited(true);
             });
 
     m_cbExcludeCapture =
@@ -288,24 +294,18 @@ void IfacePage::setupGlobalBox()
                 ctrl()->setIniUserEdited();
             });
 
-    m_cbUseSystemLocale =
-            ControlUtil::createCheckBox(iniUser()->useSystemLocale(), [&](bool checked) {
-                iniUser()->setUseSystemLocale(checked);
-                ctrl()->setIniUserEdited(true);
+    m_cbExplorerMenu =
+            ControlUtil::createCheckBox(StartupUtil::isExplorerIntegrated(), [&](bool /*checked*/) {
+                setExplorerEdited(true);
+                ctrl()->setIniUserEdited();
             });
 
-    // Language Row
-    auto langLayout = setupLangLayout();
-
-    // Theme Row
-    auto themeLayout = setupThemeLayout();
-
     auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbExplorerMenu);
-    layout->addWidget(m_cbExcludeCapture);
-    layout->addWidget(m_cbUseSystemLocale);
     layout->addLayout(langLayout);
     layout->addLayout(themeLayout);
+    layout->addWidget(m_cbUseSystemLocale);
+    layout->addWidget(m_cbExcludeCapture);
+    layout->addWidget(m_cbExplorerMenu);
 
     m_gbGlobal = new QGroupBox();
     m_gbGlobal->setLayout(layout);

@@ -71,13 +71,13 @@ private:
     QGroupBox *m_gbTray = nullptr;
     QGroupBox *m_gbConfirmations = nullptr;
 
-    QCheckBox *m_cbExplorerMenu = nullptr;
-    QCheckBox *m_cbExcludeCapture = nullptr;
-    QCheckBox *m_cbUseSystemLocale = nullptr;
     QLabel *m_labelLanguage = nullptr;
     QComboBox *m_comboLanguage = nullptr;
     QLabel *m_labelTheme = nullptr;
     QComboBox *m_comboTheme = nullptr;
+    QCheckBox *m_cbUseSystemLocale = nullptr;
+    QCheckBox *m_cbExcludeCapture = nullptr;
+    QCheckBox *m_cbExplorerMenu = nullptr;
 
     QCheckBox *m_cbHotKeysEnabled = nullptr;
     QCheckBox *m_cbHotKeysGlobal = nullptr;
