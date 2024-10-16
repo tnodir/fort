@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.14.5, 2024-10-16:
+- UI: Options: Programs: Alert Window for Filter Modes.
+
 v3.14.4, 2024-10-14:
 - UI: MyFort: Move "Windows Service" from Options.
 - UI: Options: Add "Alert Window for Auto-Learn mode" flag.
