@@ -940,10 +940,6 @@
         <source>Sound Alert</source>
         <translation>Звуковое оповещение</translation>
     </message>
-    <message>
-        <source>Alert Window for Auto-Learn mode</source>
-        <translation>Окно оповещения для режима Авто-обучения</translation>
-    </message>
 </context>
 <context>
     <name>IpRange</name>
