@@ -499,7 +499,7 @@ void FortSettings::writeConfIniOptions(const IniOptions &ini)
     }
 }
 
-void FortSettings::migrateIniOnStartup()
+void FortSettings::migrateIniOnLoad()
 {
     if (!iniExists()) {
         iniFlush();
@@ -574,36 +574,6 @@ void FortSettings::migrateIniOnWrite()
         ini()->setValue("confFlags/blockInetTraffic", cacheValue("confFlags/blockInetTraffic"));
         ini()->setValue("quota/blockInetTraffic", cacheValue("quota/blockInetTraffic"));
     }
-}
-
-bool FortSettings::wasMigrated() const
-{
-    int version;
-    if (checkIniVersion(version))
-        return false;
-
-#if 0
-    // COMPAT: v3.0.0
-    if (version < 0x030000 && appVersion() >= 0x030000)
-        return true;
-#endif
-
-    return false;
-}
-
-bool FortSettings::canMigrate(QString &viaVersion) const
-{
-    int version;
-    if (checkIniVersion(version))
-        return true;
-
-    // COMPAT: v3.0.0
-    if (version < 0x030000 && appVersion() > 0x030000) {
-        viaVersion = "3.0.0";
-        return false;
-    }
-
-    return true;
 }
 
 QStringList FortSettings::unlockTypeStrings()

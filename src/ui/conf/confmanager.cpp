@@ -8,14 +8,11 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
-#include <appinfo/appinfocache.h>
-#include <appinfo/appinfoutil.h>
 #include <driver/drivermanager.h>
-#include <fortmanager.h>
 #include <fortsettings.h>
-#include <log/logmanager.h>
 #include <manager/envmanager.h>
 #include <manager/serviceinfomanager.h>
+#include <manager/windowmanager.h>
 #include <task/taskinfo.h>
 #include <task/taskmanager.h>
 #include <user/iniuser.h>
@@ -23,7 +20,6 @@
 #include <util/conf/confutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
-#include <util/startuputil.h>
 
 #include "addressgroup.h"
 #include "appgroup.h"
@@ -454,6 +450,11 @@ bool importFile(const QString &filePath, const QString &path)
     return true;
 }
 
+void showErrorMessage(const QString &errorMessage)
+{
+    IoC<WindowManager>()->showErrorBox(errorMessage);
+}
+
 }
 
 ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openFlags) :
@@ -584,6 +585,17 @@ void ConfManager::setupDefault(FirewallConf &conf) const
     conf.addDefaultAppGroup();
 }
 
+bool ConfManager::checkCanMigrate(Settings *settings) const
+{
+    QString viaVersion;
+    if (!settings->canMigrate(viaVersion)) {
+        showErrorMessage(tr("Please first install Fort Firewall v%1 and save Options from it.")
+                        .arg(viaVersion));
+        return false;
+    }
+    return true;
+}
+
 bool ConfManager::loadConf(FirewallConf &conf)
 {
     if (conf.optEdited()) {
@@ -603,16 +615,22 @@ bool ConfManager::loadConf(FirewallConf &conf)
     return true;
 }
 
-bool ConfManager::load()
+void ConfManager::load()
 {
     Q_ASSERT(conf());
 
-    if (!loadConf(*conf()))
-        return false;
+    if (!loadConf(*conf())) {
+        showErrorMessage(tr("Cannot load Settings"));
+        return;
+    }
 
     applySavedConf(conf());
+}
 
-    return true;
+void ConfManager::reload()
+{
+    setConf(createConf());
+    load();
 }
 
 bool ConfManager::saveConf(FirewallConf &conf)
@@ -771,18 +789,28 @@ bool ConfManager::exportBackup(const QString &path)
 
     // Export User Ini
     {
-        if (!exportFile(iniUser().settings()->filePath(), outPath))
+        Settings *settings = iniUser().settings();
+
+        if (!exportFile(settings->filePath(), outPath))
             return false;
     }
 
-    return exportMasterBackup(outPath);
+    // Export DB
+    if (!exportMasterBackup(outPath)) {
+        qCWarning(LC) << "Export error:" << path;
+        return false;
+    }
+
+    return true;
 }
 
 bool ConfManager::exportMasterBackup(const QString &path)
 {
     // Export Ini
     {
-        if (!exportFile(conf()->ini().settings()->filePath(), path))
+        Settings *settings = conf()->ini().settings();
+
+        if (!exportFile(settings->filePath(), path))
             return false;
     }
 
@@ -794,7 +822,7 @@ bool ConfManager::exportMasterBackup(const QString &path)
         FileUtil::removeFile(destFilePath);
 
         if (!sqliteDb()->vacuumInto(destFilePath)) {
-            qCWarning(LC) << "Export Db error:" << sqliteDb()->errorMessage() << "to:" << path;
+            qCWarning(LC) << "Export Db error:" << sqliteDb()->errorMessage();
             return false;
         }
     }
@@ -810,49 +838,51 @@ bool ConfManager::importBackup(const QString &path)
     {
         Settings *settings = iniUser().settings();
 
+        if (!checkCanMigrate(settings))
+            return false;
+
         if (!importFile(settings->filePath(), inPath))
             return false;
 
-        settings->clearCache();
+        settings->reload();
 
         emit iniUserChanged(iniUser(), /*onlyFlags=*/false);
     }
 
     // Import DB
-    return importMasterBackup(inPath);
+    if (!importMasterBackup(inPath)) {
+        qCWarning(LC) << "Import error:" << path;
+        return false;
+    }
+
+    return true;
 }
 
 bool ConfManager::importMasterBackup(const QString &path)
 {
-    bool ok;
-
     // Import Ini
     {
         Settings *settings = conf()->ini().settings();
 
-        ok = importFile(settings->filePath(), path);
+        if (!importFile(settings->filePath(), path))
+            return false;
 
-        settings->clearCache();
+        settings->reload();
     }
 
     // Import Db
-    if (ok) {
-        SqliteDb::MigrateOptions opt = migrateOptions();
+    SqliteDb::MigrateOptions opt = migrateOptions();
 
-        opt.backupFilePath = path + FileUtil::fileName(sqliteDb()->filePath());
+    opt.backupFilePath = path + FileUtil::fileName(sqliteDb()->filePath());
 
-        ok = sqliteDb()->import(opt);
-    }
+    if (!sqliteDb()->import(opt))
+        return false;
 
-    if (ok) {
-        emit imported();
+    emit imported();
 
-        load(); // Reload conf
-    } else {
-        qCWarning(LC) << "Import error:" << path;
-    }
+    reload(); // Reload conf
 
-    return ok;
+    return true;
 }
 
 bool ConfManager::checkPassword(const QString &password)

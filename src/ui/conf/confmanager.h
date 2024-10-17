@@ -13,6 +13,7 @@
 class FirewallConf;
 class IniOptions;
 class IniUser;
+class Settings;
 class TaskInfo;
 
 class ConfManager : public QObject, public IocService
@@ -39,8 +40,11 @@ public:
     void initIniUserToEdit();
     void setIniUserToEdit(IniUser *iniUser);
 
+    bool checkCanMigrate(Settings *settings) const;
+
     bool loadConf(FirewallConf &conf);
-    bool load();
+    void load();
+    void reload();
 
     virtual bool saveConf(FirewallConf &conf);
     void applySavedConf(FirewallConf *newConf);

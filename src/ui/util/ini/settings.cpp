@@ -14,6 +14,21 @@ const QLoggingCategory LC("settings");
 
 Settings::Settings(QObject *parent) : QObject(parent) { }
 
+bool Settings::canMigrate(QString &viaVersion) const
+{
+    int version;
+    if (checkIniVersion(version))
+        return true;
+
+    // COMPAT: v3.0.0
+    if (version < 0x030000 && appVersion() > 0x030000) {
+        viaVersion = "3.0.0";
+        return false;
+    }
+
+    return true;
+}
+
 bool Settings::checkIniVersion(int &oldVersion) const
 {
     if (!iniExists())
@@ -46,7 +61,7 @@ void Settings::setupIni(const QString &filePath)
     m_iniExists = FileUtil::fileExists(iniPath);
     m_ini = new QSettings(iniPath, QSettings::IniFormat, this);
 
-    migrateIniOnStartup();
+    migrateIniOnLoad();
 }
 
 void Settings::migrateIniOnWrite()
@@ -156,6 +171,15 @@ QVariant Settings::cacheValue(const QString &key) const
 void Settings::setCacheValue(const QString &key, const QVariant &value) const
 {
     m_cache.insert(key, value);
+}
+
+void Settings::reload()
+{
+    m_iniExists = true;
+
+    clearCache();
+
+    migrateIniOnLoad();
 }
 
 void Settings::clearCache()

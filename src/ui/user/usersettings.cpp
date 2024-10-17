@@ -16,7 +16,7 @@ void UserSettings::setUp()
     setupIni(settings->userPath() + APP_BASE + ".user.ini");
 }
 
-void UserSettings::migrateIniOnStartup()
+void UserSettings::migrateIniOnLoad()
 {
     if (!iniExists()) {
         iniUser().saveDefaultIni();
@@ -27,7 +27,7 @@ void UserSettings::migrateIniOnStartup()
     if (checkIniVersion(version))
         return;
 
-    Settings::migrateIniOnStartup();
+    Settings::migrateIniOnLoad();
 
     // COMPAT: v3.4.0: .ini ~> .user.ini
     if (version < 0x030400) {

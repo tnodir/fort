@@ -87,9 +87,6 @@ public:
     void setupGlobal();
     void initialize(const QStringList &args, EnvManager *envManager);
 
-    bool wasMigrated() const;
-    bool canMigrate(QString &viaVersion) const;
-
     static bool isPortable();
     static QString defaultProfilePath(bool isService);
 
@@ -106,7 +103,7 @@ public slots:
     void writeConfIniOptions(const IniOptions &ini);
 
 protected:
-    void migrateIniOnStartup() override;
+    void migrateIniOnLoad() override;
     void migrateIniOnWrite() override;
 
 private:

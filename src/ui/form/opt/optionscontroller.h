@@ -19,8 +19,6 @@ public:
 
     bool anyEdited() const;
 
-    void initialize();
-
 signals:
     void editedChanged(bool anyEdited);
 

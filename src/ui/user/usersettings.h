@@ -19,7 +19,7 @@ public:
     void setUp() override;
 
 protected:
-    void migrateIniOnStartup() override;
+    void migrateIniOnLoad() override;
     void migrateIniOnWrite() override;
 
 private:

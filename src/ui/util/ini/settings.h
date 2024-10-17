@@ -18,7 +18,10 @@ public:
 
     QString filePath() const { return ini()->fileName(); }
 
+    void reload();
     void clearCache();
+
+    bool canMigrate(QString &viaVersion) const;
 
 protected:
     bool iniVersionSet() const { return ini()->contains("base/version"); }
@@ -35,7 +38,7 @@ protected:
 
     void setupIni(const QString &filePath);
 
-    virtual void migrateIniOnStartup() { }
+    virtual void migrateIniOnLoad() { }
     virtual void migrateIniOnWrite();
 
     bool iniBool(const QString &key, bool defaultValue = false) const;

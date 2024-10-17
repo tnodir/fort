@@ -59,11 +59,6 @@ bool canInstallDriver(FortSettings *settings)
     return (canInstallDriver && isAdmin);
 }
 
-void showErrorMessage(const QString &errorMessage)
-{
-    IoC<WindowManager>()->showErrorBox(errorMessage);
-}
-
 inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
 {
     ioc->setService(new ConfManager(settings->confFilePath()));
@@ -488,13 +483,11 @@ void FortManager::processRestartRequired(const QString &info)
 
 void FortManager::loadConf()
 {
+    auto confManager = IoC<ConfManager>();
     const auto settings = IoC<FortSettings>();
 
     // Validate migration
-    QString viaVersion;
-    if (!settings->canMigrate(viaVersion)) {
-        showErrorMessage(tr("Please first install Fort Firewall v%1 and save Options from it.")
-                        .arg(viaVersion));
+    if (!confManager->checkCanMigrate(settings)) {
         exit(-1); // Exit the program
     }
 
@@ -503,9 +496,7 @@ void FortManager::loadConf()
                                    : settings->hasService() ? "Client"
                                                             : "Program");
 
-    if (!IoC<ConfManager>()->load()) {
-        showErrorMessage(tr("Cannot load Settings"));
-    }
+    confManager->load();
 }
 
 bool FortManager::setupDriverConf()

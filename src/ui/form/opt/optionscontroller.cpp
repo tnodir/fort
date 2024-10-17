@@ -108,14 +108,6 @@ void OptionsController::resetEdited()
     emit editResetted();
 }
 
-void OptionsController::initialize()
-{
-    // Settings/configuration was migrated?
-    if (settings()->wasMigrated()) {
-        setOptEdited();
-    }
-}
-
 void OptionsController::save(bool closeOnSuccess)
 {
     emit aboutToSave();
