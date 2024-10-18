@@ -4,6 +4,11 @@
 
 TaskDownloader::TaskDownloader(QObject *parent) : TaskWorker(parent) { }
 
+void TaskDownloader::setupDownloader()
+{
+    m_downloadTryCount = 0;
+}
+
 void TaskDownloader::run()
 {
     createDownloader();
@@ -30,7 +35,7 @@ void TaskDownloader::createDownloader()
 
     m_downloader = new NetDownloader(this);
 
-    connect(m_downloader, &NetDownloader::finished, this, &TaskDownloader::downloadFinished);
+    connect(m_downloader, &NetDownloader::finished, this, &TaskDownloader::onFinished);
 }
 
 void TaskDownloader::deleteDownloader()
@@ -51,4 +56,16 @@ void TaskDownloader::startDownloader()
     if (m_downloader) {
         m_downloader->start();
     }
+}
+
+void TaskDownloader::onFinished(const QByteArray &data, bool success)
+{
+    if (!success) {
+        if (++m_downloadTryCount < m_downloadMaxTryCount) {
+            startDownloader();
+            return;
+        }
+    }
+
+    emit downloadFinished(data, success);
 }

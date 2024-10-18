@@ -15,9 +15,9 @@ public:
     NetDownloader *downloader() const { return m_downloader; }
 
 protected:
-    virtual void setupDownloader() = 0;
+    void setDownloadMaxTryCount(quint16 v) { m_downloadMaxTryCount = v; }
 
-    void startDownloader();
+    virtual void setupDownloader();
 
 public slots:
     void run() override;
@@ -26,11 +26,18 @@ public slots:
 protected slots:
     virtual void downloadFinished(const QByteArray &data, bool success) = 0;
 
+    void startDownloader();
+
 private:
+    void onFinished(const QByteArray &data, bool success);
+
     void createDownloader();
     void deleteDownloader();
 
 private:
+    quint16 m_downloadMaxTryCount = 0;
+    quint16 m_downloadTryCount = 0;
+
     NetDownloader *m_downloader = nullptr;
 };
 

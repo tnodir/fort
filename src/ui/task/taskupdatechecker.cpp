@@ -53,6 +53,8 @@ QString TaskUpdateChecker::releaseText() const
 
 void TaskUpdateChecker::setupDownloader()
 {
+    TaskDownloader::setupDownloader();
+
     downloader()->setUrl(APP_UPDATES_API_URL);
 }
 

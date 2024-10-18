@@ -21,13 +21,12 @@ namespace {
 
 const QLoggingCategory LC("manager.autoUpdate");
 
-constexpr int DownloadMaxTryCount = 3;
-
 }
 
 AutoUpdateManager::AutoUpdateManager(const QString &updatePath, QObject *parent) :
     TaskDownloader(parent), m_updatePath(updatePath + "update/")
 {
+    setDownloadMaxTryCount(3);
 }
 
 void AutoUpdateManager::setFlags(Flags v)
@@ -136,6 +135,8 @@ bool AutoUpdateManager::startDownload()
 
 void AutoUpdateManager::setupDownloader()
 {
+    TaskDownloader::setupDownloader();
+
     downloader()->setUrl(m_downloadUrl);
 
     connect(downloader(), &NetDownloader::dataReceived, this,
@@ -143,8 +144,6 @@ void AutoUpdateManager::setupDownloader()
 
     setIsDownloaded(false);
     setIsDownloading(true);
-
-    m_downloadTryCount = 0;
 }
 
 void AutoUpdateManager::downloadFinished(const QByteArray &data, bool success)
@@ -153,11 +152,6 @@ void AutoUpdateManager::downloadFinished(const QByteArray &data, bool success)
         success = saveInstaller(data);
 
         setIsDownloaded(success);
-    } else {
-        if (++m_downloadTryCount < DownloadMaxTryCount) {
-            startDownloader();
-            return;
-        }
     }
 
     setIsDownloading(false);

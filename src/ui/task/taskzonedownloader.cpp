@@ -18,6 +18,8 @@ TaskZoneDownloader::TaskZoneDownloader(QObject *parent) : TaskDownloader(parent)
 
 void TaskZoneDownloader::setupDownloader()
 {
+    TaskDownloader::setupDownloader();
+
     // Load addresses from text inline
     if (url().isEmpty()) {
         loadTextInline();
