@@ -82,6 +82,9 @@ void AutoUpdateManager::setupManager()
 {
     setupConfManager();
     setupTaskManager();
+
+    // Wait Installer's exit
+    QTimer::singleShot(900, this, &AutoUpdateManager::clearUpdateDir);
 }
 
 void AutoUpdateManager::setupConfManager()
@@ -106,9 +109,6 @@ void AutoUpdateManager::setupTaskManager()
             [=, this] { setupByTaskInfo(taskInfo); });
 
     setupByTaskInfo(taskInfo);
-
-    // Wait Installer's exit
-    QTimer::singleShot(500, this, &AutoUpdateManager::clearUpdateDir);
 }
 
 void AutoUpdateManager::setupRestart()
@@ -197,10 +197,7 @@ void AutoUpdateManager::onRestartClientsRequested(bool restarting)
 
 void AutoUpdateManager::clearUpdateDir()
 {
-    if (isDownloaded())
-        return;
-
-    if (!IoC<FortSettings>()->isMaster())
+    if (isDownloaded() || isDownloading())
         return;
 
     if (!FileUtil::pathExists(updatePath()))
