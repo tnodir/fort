@@ -205,6 +205,7 @@ void FortManager::setupLogger()
 
     const auto settings = IoC<FortSettings>();
 
+    logger->setIsPortable(settings->isPortable());
     logger->setIsService(settings->isService());
     logger->setHasService(settings->hasService());
     logger->setPath(settings->logsPath());

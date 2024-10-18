@@ -113,6 +113,7 @@ void Logger::setPath(const QString &path)
 QString Logger::getFileTitle() const
 {
     return QLatin1String(APP_NAME) + ' ' + APP_VERSION_STR + APP_VERSION_BUILD_STR
+            + (isPortable() ? " Portable" : QString())
             + (isService() ? " Service" : (hasService() ? " Client" : QString()));
 }
 

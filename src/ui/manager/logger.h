@@ -15,6 +15,9 @@ public:
     enum LogLevel { Info = 0, Warning, Error };
     Q_ENUM(LogLevel)
 
+    bool isPortable() const { return m_isPortable; }
+    void setIsPortable(bool v) { m_isPortable = v; }
+
     bool isService() const { return m_isService; }
     void setIsService(bool v) { m_isService = v; }
 
@@ -61,6 +64,7 @@ private:
     void writeLogLine(const QString &logLine);
 
 private:
+    bool m_isPortable : 1 = false;
     bool m_isService : 1 = false;
     bool m_hasService : 1 = false;
     bool m_forceDebug : 1 = false;
