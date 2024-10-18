@@ -30,7 +30,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-constexpr int DATABASE_USER_VERSION = 45;
+constexpr int DATABASE_USER_VERSION = 46;
 
 constexpr int CONF_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
 
@@ -94,19 +94,25 @@ const char *const sqlUpdateAppResetGroup = "UPDATE app"
                                            "  SET app_group_id = ?2"
                                            "  WHERE app_group_id = ?1;";
 
-const char *const sqlSelectTaskByName = "SELECT task_id, enabled, run_on_startup, interval_hours,"
+const char *const sqlSelectTaskByName = "SELECT task_id, enabled,"
+                                        "    run_on_startup, delay_startup,"
+                                        "    interval_hours, max_retries, interval_hours,"
                                         "    last_run, last_success, data"
                                         "  FROM task"
                                         "  WHERE name = ?1;";
 
-const char *const sqlInsertTask = "INSERT INTO task(task_id, name, enabled, run_on_startup,"
-                                  "    interval_hours, last_run, last_success, data)"
-                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);";
+const char *const sqlInsertTask = "INSERT INTO task(task_id, name, enabled,"
+                                  "    run_on_startup, delay_startup,"
+                                  "    max_retries, retry_minutes, interval_hours,"
+                                  "    last_run, last_success, data)"
+                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11);";
 
 const char *const sqlUpdateTask = "UPDATE task"
-                                  "  SET name = ?2, enabled = ?3, run_on_startup = ?4,"
-                                  "    interval_hours = ?5, last_run = ?6, last_success = ?7,"
-                                  "    data = ?8"
+                                  "  SET name = ?2, enabled = ?3,"
+                                  "    run_on_startup = ?4, delay_startup = ?5,"
+                                  "    max_retries = ?6, retry_minutes = ?7, interval_hours = ?8,"
+                                  "    last_run = ?9, last_success = ?10,"
+                                  "    data = ?11"
                                   "  WHERE task_id = ?1;";
 
 using AppsMap = QHash<qint64, QString>;
@@ -997,11 +1003,14 @@ bool ConfManager::loadTask(TaskInfo *taskInfo)
 
     taskInfo->setId(stmt.columnInt64(0));
     taskInfo->setEnabled(stmt.columnBool(1));
-    taskInfo->setRunOnStatup(stmt.columnBool(2));
-    taskInfo->setIntervalHours(stmt.columnInt(3));
-    taskInfo->setLastRun(stmt.columnDateTime(4));
-    taskInfo->setLastSuccess(stmt.columnDateTime(5));
-    taskInfo->setData(stmt.columnBlob(6));
+    taskInfo->setRunOnStartup(stmt.columnBool(2));
+    taskInfo->setDelayStartup(stmt.columnBool(3));
+    taskInfo->setMaxRetries(stmt.columnInt(4));
+    taskInfo->setRetrySeconds(stmt.columnInt(5));
+    taskInfo->setIntervalHours(stmt.columnInt(6));
+    taskInfo->setLastRun(stmt.columnDateTime(7));
+    taskInfo->setLastSuccess(stmt.columnDateTime(8));
+    taskInfo->setData(stmt.columnBlob(9));
 
     return true;
 }
@@ -1014,7 +1023,10 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
         DbVar::nullable(taskInfo->id(), !rowExists),
         taskInfo->name(),
         taskInfo->enabled(),
-        taskInfo->runOnStatup(),
+        taskInfo->runOnStartup(),
+        taskInfo->delayStartup(),
+        taskInfo->maxRetries(),
+        taskInfo->retrySeconds(),
         taskInfo->intervalHours(),
         taskInfo->lastRun(),
         taskInfo->lastSuccess(),

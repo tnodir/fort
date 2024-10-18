@@ -52,7 +52,10 @@ void TaskInfo::editFromVariant(const QVariant &v)
     const TaskEditInfo info(v.toUInt());
 
     setEnabled(info.enabled());
-    setRunOnStatup(info.runOnStartup());
+    setRunOnStartup(info.runOnStartup());
+    setDelayStartup(info.delayStartup());
+    setMaxRetries(info.maxRetries());
+    setRetrySeconds(info.retrySeconds());
     setIntervalHours(info.intervalHours());
 }
 

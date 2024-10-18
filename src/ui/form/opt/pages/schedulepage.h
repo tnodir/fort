@@ -6,7 +6,10 @@
 QT_FORWARD_DECLARE_CLASS(QTableView)
 
 class CheckSpinCombo;
+class LabelSpin;
+class LabelSpinCombo;
 class TableView;
+class TaskEditInfo;
 class TaskInfo;
 class TaskListModel;
 
@@ -30,13 +33,17 @@ protected slots:
 
 private:
     void retranslateTaskInterval();
+    void retranslateTaskRetrySeconds();
 
     void setupUi();
     void setupTableTasks();
     void setupTableTasksHeader();
     void setupTaskDetails();
     void setupTaskInterval();
-    void setupTaskRunOnStartup();
+    void setupTaskOptionsButton();
+    void setupTaskStartup();
+    void setupTaskMaxRetries();
+    void setupTaskRetrySeconds();
     void setupTableTasksChanged();
 
     int currentTaskIndex() const;
@@ -44,6 +51,10 @@ private:
 
     TaskInfo *currentTaskInfo() const { return m_taskInfo; }
     void setCurrentTaskInfo(TaskInfo *v) { m_taskInfo = v; }
+
+    TaskEditInfo &currentTaskRow();
+
+    void setCurrentTaskRowEdited(int role = Qt::DisplayRole);
 
 private:
     TaskListModel *m_taskListModel = nullptr;
@@ -53,6 +64,10 @@ private:
     QWidget *m_taskDetailsRow = nullptr;
     CheckSpinCombo *m_cscTaskInterval = nullptr;
     QCheckBox *m_cbTaskRunOnStartup = nullptr;
+    QCheckBox *m_cbTaskDelayStartup = nullptr;
+    LabelSpin *m_lsTaskMaxRetries = nullptr;
+    LabelSpinCombo *m_lscTaskRetrySeconds = nullptr;
+    QPushButton *m_btOptions = nullptr;
     QToolButton *m_btTaskRun = nullptr;
     QToolButton *m_btTaskAbort = nullptr;
 };

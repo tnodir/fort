@@ -35,16 +35,16 @@ public:
     bool enabled() const { return m_enabled; }
     void setEnabled(bool v) { m_enabled = v; }
 
-    bool runOnStatup() const { return m_runOnStatup; }
-    void setRunOnStatup(bool v) { m_runOnStatup = v; }
+    bool runOnStartup() const { return m_runOnStartup; }
+    void setRunOnStartup(bool v) { m_runOnStartup = v; }
+
+    bool delayStartup() const { return m_delayStartup; }
+    void setDelayStartup(bool v) { m_delayStartup = v; }
 
     bool aborted() const { return m_aborted; }
 
     bool running() const { return m_running; }
     void setRunning(bool v) { m_running = v; }
-
-    int intervalHours() const { return m_intervalHours; }
-    void setIntervalHours(int v) { m_intervalHours = quint16(v); }
 
     QString title() const;
     static QString title(TaskType type);
@@ -54,6 +54,15 @@ public:
 
     qint64 id() const { return m_id; }
     void setId(qint64 id) { m_id = id; }
+
+    int maxRetries() const { return m_maxRetries; }
+    void setMaxRetries(int v) { m_maxRetries = quint8(v); }
+
+    int retrySeconds() const { return m_retrySeconds; }
+    void setRetrySeconds(int v) { m_retrySeconds = quint16(v); }
+
+    int intervalHours() const { return m_intervalHours; }
+    void setIntervalHours(int v) { m_intervalHours = quint16(v); }
 
     QDateTime lastRun() const { return m_lastRun; }
     void setLastRun(const QDateTime &v) { m_lastRun = v; }
@@ -97,13 +106,16 @@ private:
 
 private:
     bool m_enabled : 1 = false;
-    bool m_runOnStatup : 1 = false;
+    bool m_runOnStartup : 1 = false;
+    bool m_delayStartup : 1 = false;
     bool m_running : 1 = false;
     bool m_aborted : 1 = false; // transient
 
-    quint16 m_intervalHours = TaskDefaultIntervalHours;
-
     TaskType m_type = TypeNone;
+
+    quint8 m_maxRetries = 0;
+    quint16 m_retrySeconds = 0;
+    quint16 m_intervalHours = TaskDefaultIntervalHours;
 
     qint64 m_id = 0;
 

@@ -165,7 +165,7 @@ bool TaskManager::runExpiredTask(TaskInfo *taskInfo, const QDateTime &now)
     if (!taskInfo->enabled())
         return false;
 
-    if ((m_isFirstRun && taskInfo->runOnStatup()) || now >= taskInfo->plannedRun()) {
+    if ((m_isFirstRun && taskInfo->runOnStartup()) || now >= taskInfo->plannedRun()) {
         taskInfo->run();
     }
 

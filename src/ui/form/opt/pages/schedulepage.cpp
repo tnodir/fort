@@ -4,6 +4,8 @@
 #include <QDate>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QLabel>
+#include <QPushButton>
 #include <QSpinBox>
 #include <QTableView>
 #include <QToolButton>
@@ -12,6 +14,8 @@
 #include <conf/firewallconf.h>
 #include <form/controls/checkspincombo.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/labelspin.h>
+#include <form/controls/labelspincombo.h>
 #include <form/controls/tableview.h>
 #include <form/opt/optionscontroller.h>
 #include <task/taskinfo.h>
@@ -22,6 +26,7 @@
 namespace {
 
 const std::array taskIntervalHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
+const std::array taskRetrySecondsValues = { 3, 1, 20, 60, 2 * 60, 5 * 60, 10 * 60 };
 
 }
 
@@ -37,14 +42,11 @@ void SchedulePage::onResetToDefault()
 
     const int n = model->rowCount();
     for (int i = 0; i < n; ++i) {
-        const auto index = model->index(i, 0);
+        auto &task = model->taskRowAt(i);
 
-        model->setData(index, false, TaskListModel::RoleEnabled);
-        model->setData(index, false, TaskListModel::RoleRunOnStartup);
-        model->setData(index, TaskDefaultIntervalHours, TaskListModel::RoleIntervalHours);
+        task.resetToDefault();
+        model->setTaskRowEdited(i);
     }
-
-    model->refresh();
 }
 
 void SchedulePage::onAboutToSave()
@@ -65,7 +67,14 @@ void SchedulePage::onRetranslateUi()
 
     retranslateTaskInterval();
 
+    m_btOptions->setText(tr("Options"));
+
     m_cbTaskRunOnStartup->setText(tr("Run On Startup"));
+    m_cbTaskDelayStartup->setText(tr("Delay startup to retry's seconds"));
+
+    m_lsTaskMaxRetries->label()->setText(tr("Maximum retries count"));
+    m_lscTaskRetrySeconds->label()->setText(tr("Delay seconds to retry"));
+    retranslateTaskRetrySeconds();
 
     m_btTaskRun->setText(tr("Run"));
     m_btTaskAbort->setText(tr("Abort"));
@@ -78,6 +87,15 @@ void SchedulePage::retranslateTaskInterval()
 
     m_cscTaskInterval->setNames(list);
     m_cscTaskInterval->spinBox()->setSuffix(tr(" hour(s)"));
+}
+
+void SchedulePage::retranslateTaskRetrySeconds()
+{
+    const QStringList list = { tr("Custom"), tr("3 seconds"), tr("20 seconds"), tr("1 minute"),
+        tr("2 minutes"), tr("5 minutes"), tr("10 minutes") };
+
+    m_lscTaskRetrySeconds->setNames(list);
+    m_lscTaskRetrySeconds->spinBox()->setSuffix(tr(" second(s)"));
 }
 
 void SchedulePage::setupUi()
@@ -113,7 +131,7 @@ void SchedulePage::setupTableTasks()
 
     connect(m_tableTasks, &TableView::doubleClicked, this, [&](const QModelIndex &index) {
         const auto taskInfo = taskListModel()->taskInfoAt(index.row());
-        emit taskManager()->taskDoubleClicked(taskInfo->type());
+        emit taskManager() -> taskDoubleClicked(taskInfo->type());
     });
 }
 
@@ -139,7 +157,7 @@ void SchedulePage::setupTableTasksHeader()
 void SchedulePage::setupTaskDetails()
 {
     setupTaskInterval();
-    setupTaskRunOnStartup();
+    setupTaskOptionsButton();
 
     m_btTaskRun = ControlUtil::createFlatToolButton(
             ":/icons/play.png", [&] { taskManager()->runTask(currentTaskInfo()->type()); });
@@ -149,7 +167,7 @@ void SchedulePage::setupTaskDetails()
     auto layout = ControlUtil::createHLayout();
     layout->addWidget(m_cscTaskInterval, 1);
     layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_cbTaskRunOnStartup);
+    layout->addWidget(m_btOptions);
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btTaskRun);
     layout->addWidget(m_btTaskAbort);
@@ -166,31 +184,81 @@ void SchedulePage::setupTaskInterval()
     m_cscTaskInterval->setValues(taskIntervalHourValues);
 
     connect(m_cscTaskInterval->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
-        const int taskIndex = currentTaskIndex();
-        if (taskIndex >= 0) {
-            const auto index = taskListModel()->index(taskIndex, 0);
-            taskListModel()->setData(index, checked, TaskListModel::RoleEnabled);
-        }
+        auto &task = currentTaskRow();
+
+        task.setEnabled(checked);
+        setCurrentTaskRowEdited(Qt::CheckStateRole);
     });
+
     connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                const int taskIndex = currentTaskIndex();
-                if (taskIndex >= 0) {
-                    const auto index = taskListModel()->index(taskIndex, 1);
-                    taskListModel()->setData(index, value, TaskListModel::RoleIntervalHours);
-                }
+                auto &task = currentTaskRow();
+
+                task.setIntervalHours(value);
+                setCurrentTaskRowEdited();
             });
 }
 
-void SchedulePage::setupTaskRunOnStartup()
+void SchedulePage::setupTaskOptionsButton()
+{
+    setupTaskStartup();
+    setupTaskMaxRetries();
+    setupTaskRetrySeconds();
+
+    // Menu
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbTaskRunOnStartup, m_cbTaskDelayStartup,
+            ControlUtil::createHSeparator(), m_lsTaskMaxRetries, m_lscTaskRetrySeconds });
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
+
+    m_btOptions = ControlUtil::createButton(":/icons/widgets.png");
+    m_btOptions->setMenu(menu);
+}
+
+void SchedulePage::setupTaskStartup()
 {
     m_cbTaskRunOnStartup = ControlUtil::createCheckBox(false, [&](bool checked) {
-        const int taskIndex = currentTaskIndex();
-        if (taskIndex >= 0) {
-            const auto index = taskListModel()->index(taskIndex, 2);
-            taskListModel()->setData(index, checked, TaskListModel::RoleRunOnStartup);
-        }
+        auto &task = currentTaskRow();
+
+        task.setRunOnStartup(checked);
+        setCurrentTaskRowEdited();
     });
+
+    m_cbTaskDelayStartup = ControlUtil::createCheckBox(false, [&](bool checked) {
+        auto &task = currentTaskRow();
+
+        task.setDelayStartup(checked);
+        setCurrentTaskRowEdited();
+    });
+}
+
+void SchedulePage::setupTaskMaxRetries()
+{
+    m_lsTaskMaxRetries = new LabelSpin();
+    m_lsTaskMaxRetries->spinBox()->setRange(0, 99);
+
+    connect(m_lsTaskMaxRetries->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                auto &task = currentTaskRow();
+
+                task.setMaxRetries(value);
+                setCurrentTaskRowEdited();
+            });
+}
+
+void SchedulePage::setupTaskRetrySeconds()
+{
+    m_lscTaskRetrySeconds = new LabelSpinCombo();
+    m_lscTaskRetrySeconds->spinBox()->setRange(0, 60000); // ~16.6 hours
+    m_lscTaskRetrySeconds->setValues(taskRetrySecondsValues);
+
+    connect(m_lscTaskRetrySeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                auto &task = currentTaskRow();
+
+                task.setRetrySeconds(value);
+                setCurrentTaskRowEdited();
+            });
 }
 
 void SchedulePage::setupTableTasksChanged()
@@ -199,22 +267,22 @@ void SchedulePage::setupTableTasksChanged()
         const int taskIndex = currentTaskIndex();
         const bool taskSelected = (taskIndex >= 0);
 
-        setCurrentTaskInfo(taskSelected ? taskListModel()->taskInfoAt(taskIndex) : nullptr);
+        const auto taskInfo = taskSelected ? taskListModel()->taskInfoAt(taskIndex) : nullptr;
+        setCurrentTaskInfo(taskInfo);
+
         m_taskDetailsRow->setEnabled(taskSelected);
 
         if (taskSelected) {
-            const auto index = taskListModel()->index(taskIndex, 0);
+            const auto &task = taskListModel()->taskRowAt(taskIndex);
 
-            m_cscTaskInterval->checkBox()->setChecked(
-                    taskListModel()->data(index, TaskListModel::RoleEnabled).toBool());
-            m_cscTaskInterval->checkBox()->setText(taskListModel()->data(index).toString());
-            m_cscTaskInterval->spinBox()->setValue(
-                    taskListModel()->data(index, TaskListModel::RoleIntervalHours).toInt());
+            m_cscTaskInterval->checkBox()->setChecked(task.enabled());
+            m_cscTaskInterval->checkBox()->setText(taskInfo->title());
+            m_cscTaskInterval->spinBox()->setValue(task.intervalHours());
 
-            m_cbTaskRunOnStartup->setChecked(
-                    taskListModel()->data(index, TaskListModel::RoleRunOnStartup).toBool());
+            m_cbTaskRunOnStartup->setChecked(task.runOnStartup());
+            m_cbTaskDelayStartup->setChecked(task.delayStartup());
 
-            const bool running = currentTaskInfo()->running();
+            const bool running = taskInfo->running();
             m_btTaskRun->setEnabled(!running);
             m_btTaskAbort->setEnabled(running);
         } else {
@@ -238,4 +306,14 @@ int SchedulePage::currentTaskIndex() const
 void SchedulePage::setCurrentTaskIndex(int index)
 {
     m_tableTasks->selectCell(index);
+}
+
+TaskEditInfo &SchedulePage::currentTaskRow()
+{
+    return taskListModel()->taskRowAt(currentTaskIndex());
+}
+
+void SchedulePage::setCurrentTaskRowEdited(int role)
+{
+    taskListModel()->setTaskRowEdited(currentTaskIndex(), role);
 }

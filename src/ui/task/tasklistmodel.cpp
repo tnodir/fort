@@ -77,17 +77,7 @@ QVariant TaskListModel::data(const QModelIndex &index, int role) const
         return dataDisplay(index);
 
     case Qt::CheckStateRole:
-    case RoleEnabled:
         return dataCheckState(index);
-
-    case RoleRunOnStartup:
-        return taskRunOnStartup(index.row());
-
-    case RoleIntervalHours:
-        return taskIntervalHours(index.row());
-
-    case RoleRunning:
-        return taskRunning(index.row());
     }
 
     return QVariant();
@@ -103,24 +93,27 @@ QVariant TaskListModel::dataDisplay(const QModelIndex &index) const
     switch (column) {
     case 0:
         return taskInfo->title();
-    case 1:
-        return taskIntervalHours(row);
+    case 1: {
+        const auto &task = taskRowAt(row);
+        return task.intervalHours();
+    }
     case 2:
         return taskInfo->lastRun();
     case 3:
         return taskInfo->lastSuccess();
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant TaskListModel::dataCheckState(const QModelIndex &index) const
 {
     if (index.column() == 0) {
-        return taskEnabled(index.row()) ? Qt::Checked : Qt::Unchecked;
+        const auto &task = taskRowAt(index.row());
+        return task.enabled() ? Qt::Checked : Qt::Unchecked;
     }
 
-    return QVariant();
+    return {};
 }
 
 bool TaskListModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -132,19 +125,7 @@ bool TaskListModel::setData(const QModelIndex &index, const QVariant &value, int
 
     switch (role) {
     case Qt::CheckStateRole:
-        setTaskEnabled(index, !taskEnabled(index.row()));
-        return true;
-
-    case RoleEnabled:
-        setTaskEnabled(index, value.toBool());
-        return true;
-
-    case RoleRunOnStartup:
-        setTaskRunOnStartup(index, value.toBool());
-        return true;
-
-    case RoleIntervalHours:
-        setTaskIntervalHours(index, value.toInt());
+        switchTaskEnabled(index);
         return true;
     }
 
@@ -166,7 +147,10 @@ void TaskListModel::setupTaskRows()
 
         TaskEditInfo &taskRow = taskRowAt(i);
         taskRow.setEnabled(taskInfo->enabled());
-        taskRow.setRunOnStartup(taskInfo->runOnStatup());
+        taskRow.setRunOnStartup(taskInfo->runOnStartup());
+        taskRow.setDelayStartup(taskInfo->delayStartup());
+        taskRow.setMaxRetries(taskInfo->maxRetries());
+        taskRow.setRetrySeconds(taskInfo->retrySeconds());
         taskRow.setIntervalHours(taskInfo->intervalHours());
     }
 }
@@ -180,65 +164,26 @@ QVariant TaskListModel::toVariant() const
     return list;
 }
 
-bool TaskListModel::taskEnabled(int row) const
+void TaskListModel::setTaskRowEdited(int row, int role)
 {
-    const TaskEditInfo &taskRow = taskRowAt(row);
-    return taskRow.enabled();
+    const auto index = this->index(row, 0);
+    const auto endIndex = this->index(row, columnCount() - 1);
+
+    emitDataEdited(index, endIndex, role);
 }
 
-void TaskListModel::setTaskEnabled(const QModelIndex &index, bool v)
+void TaskListModel::switchTaskEnabled(const QModelIndex &index)
 {
-    TaskEditInfo &taskRow = taskRowAt(index);
-    if (taskRow.enabled() == v)
-        return;
+    TaskEditInfo &taskRow = taskRowAt(index.row());
 
-    taskRow.setEnabled(v);
+    taskRow.setEnabled(!taskRow.enabled());
 
-    emitDataEdited(index, Qt::CheckStateRole);
+    emitDataEdited(index, index, Qt::CheckStateRole);
 }
 
-bool TaskListModel::taskRunOnStartup(int row) const
+void TaskListModel::emitDataEdited(const QModelIndex &index, const QModelIndex &endIndex, int role)
 {
-    const TaskEditInfo &taskRow = taskRowAt(row);
-    return taskRow.runOnStartup();
-}
+    emit dataChanged(index, endIndex, { role });
 
-void TaskListModel::setTaskRunOnStartup(const QModelIndex &index, bool v)
-{
-    TaskEditInfo &taskRow = taskRowAt(index);
-    if (taskRow.runOnStartup() == v)
-        return;
-
-    taskRow.setRunOnStartup(v);
-
-    emitDataEdited(index, Qt::DisplayRole);
-}
-
-int TaskListModel::taskIntervalHours(int row) const
-{
-    const TaskEditInfo &taskRow = taskRowAt(row);
-    return taskRow.intervalHours();
-}
-
-void TaskListModel::setTaskIntervalHours(const QModelIndex &index, int v)
-{
-    TaskEditInfo &taskRow = taskRowAt(index);
-    if (taskRow.intervalHours() == v)
-        return;
-
-    taskRow.setIntervalHours(v);
-
-    emitDataEdited(index, Qt::DisplayRole);
-}
-
-bool TaskListModel::taskRunning(int row) const
-{
-    const auto taskInfo = taskInfoAt(row);
-    return taskInfo->running();
-}
-
-void TaskListModel::emitDataEdited(const QModelIndex &index, int role)
-{
-    emit dataChanged(index, index, { role });
     emit dataEdited();
 }

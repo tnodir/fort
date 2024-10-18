@@ -15,14 +15,6 @@ class TaskListModel : public TableItemModel
     Q_OBJECT
 
 public:
-    enum Roles {
-        RoleEnabled = Qt::UserRole,
-        RoleRunOnStartup,
-        RoleIntervalHours,
-        RoleRunning,
-    };
-    Q_ENUM(Roles)
-
     explicit TaskListModel(TaskManager *taskManager, QObject *parent = nullptr);
 
     TaskManager *taskManager() const { return m_taskManager; }
@@ -42,6 +34,11 @@ public:
 
     QVariant toVariant() const;
 
+    void setTaskRowEdited(int row, int role = Qt::DisplayRole);
+
+    TaskEditInfo &taskRowAt(int row) { return m_taskRows[row]; }
+    const TaskEditInfo &taskRowAt(int row) const { return m_taskRows[row]; }
+
 signals:
     void dataEdited();
 
@@ -57,23 +54,11 @@ private:
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataCheckState(const QModelIndex &index) const;
 
-    bool taskEnabled(int row) const;
-    void setTaskEnabled(const QModelIndex &index, bool v);
-
-    bool taskRunOnStartup(int row) const;
-    void setTaskRunOnStartup(const QModelIndex &index, bool v);
-
-    int taskIntervalHours(int row) const;
-    void setTaskIntervalHours(const QModelIndex &index, int v);
+    void switchTaskEnabled(const QModelIndex &index);
 
     bool taskRunning(int row) const;
 
-    TaskEditInfo &taskRowAt(int row) { return m_taskRows[row]; }
-    const TaskEditInfo &taskRowAt(int row) const { return m_taskRows[row]; }
-
-    inline TaskEditInfo &taskRowAt(const QModelIndex &index) { return taskRowAt(index.row()); }
-
-    void emitDataEdited(const QModelIndex &index, int role);
+    void emitDataEdited(const QModelIndex &index, const QModelIndex &endIndex, int role);
 
 private:
     TaskManager *m_taskManager = nullptr;
