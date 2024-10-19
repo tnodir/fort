@@ -59,7 +59,7 @@ private slots:
 protected:
     virtual void initializeTasks();
 
-    virtual void setupTimer(bool enabled = true);
+    virtual void setupTimer(int secs);
 
     TaskInfo *taskInfoByType(qint8 taskType) const;
 
@@ -68,7 +68,7 @@ private:
 
     void appendTaskInfo(TaskInfo *taskInfo);
 
-    bool runExpiredTask(TaskInfo *taskInfo, const QDateTime &now);
+    bool runExpiredTask(TaskInfo *taskInfo, const QDateTime &now, qint64 &secsToRun);
 
 private:
     bool m_isFirstRun = true;

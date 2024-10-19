@@ -67,8 +67,6 @@ public:
     QDateTime lastRun() const { return m_lastRun; }
     void setLastRun(const QDateTime &v) { m_lastRun = v; }
 
-    QDateTime plannedRun() const;
-
     QDateTime lastSuccess() const { return m_lastSuccess; }
     void setLastSuccess(const QDateTime &v) { m_lastSuccess = v; }
 
@@ -79,6 +77,8 @@ public:
     void setTaskWorker(TaskWorker *v) { m_taskWorker = v; }
 
     void editFromVariant(const QVariant &v);
+
+    qint64 secondsToRun(const QDateTime &now, bool isFirstRun) const;
 
     virtual void initialize() { }
 
@@ -113,6 +113,7 @@ private:
 
     TaskType m_type = TypeNone;
 
+    quint8 m_failedCount = 0; // transient
     quint8 m_maxRetries = 0;
     quint16 m_retrySeconds = 0;
     quint16 m_intervalHours = TaskDefaultIntervalHours;

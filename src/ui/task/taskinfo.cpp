@@ -42,11 +42,6 @@ QString TaskInfo::title(TaskType type)
     }
 }
 
-QDateTime TaskInfo::plannedRun() const
-{
-    return m_lastRun.addSecs(m_intervalHours * 60 * 60);
-}
-
 void TaskInfo::editFromVariant(const QVariant &v)
 {
     const TaskEditInfo task(v.toULongLong());
@@ -57,6 +52,19 @@ void TaskInfo::editFromVariant(const QVariant &v)
     setMaxRetries(task.maxRetries());
     setRetrySeconds(task.retrySeconds());
     setIntervalHours(task.intervalHours());
+}
+
+qint64 TaskInfo::secondsToRun(const QDateTime &now, bool isFirstRun) const
+{
+    if (isFirstRun && runOnStartup()) {
+        return delayStartup() ? retrySeconds() : 0;
+    }
+
+    const qint64 delaySecs = (m_failedCount > 0) ? retrySeconds() : (intervalHours() * 60 * 60);
+
+    const QDateTime plannedRun = m_lastRun.addSecs(delaySecs);
+
+    return now.secsTo(plannedRun);
 }
 
 QString TaskInfo::typeToString(TaskInfo::TaskType type)
@@ -123,8 +131,15 @@ void TaskInfo::handleFinished(bool success)
         return;
 
     setLastRun(DateUtil::now());
+
     if (success) {
         setLastSuccess(lastRun());
+
+        m_failedCount = 0;
+    } else {
+        if (++m_failedCount >= maxRetries()) {
+            m_failedCount = 0;
+        }
     }
 
     setRunning(false);

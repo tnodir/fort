@@ -29,7 +29,7 @@ public slots:
 protected:
     void initializeTasks() override { }
 
-    void setupTimer(bool /*enabled*/ = true) override { }
+    void setupTimer(int /*secs*/) override { }
 };
 
 #endif // TASKMANAGERRPC_H

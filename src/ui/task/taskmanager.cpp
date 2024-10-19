@@ -9,6 +9,14 @@
 #include "taskinfoupdatechecker.h"
 #include "taskinfozonedownloader.h"
 
+namespace {
+
+constexpr int TIMER_STARTUP_SECONDS = 1;
+constexpr int TIMER_DEFAULT_SECONDS = 5;
+constexpr int TIMER_MAX_SECONDS = 24 * 60 * 60; // 1 day
+
+}
+
 TaskManager::TaskManager(QObject *parent) : QObject(parent)
 {
     setupTasks();
@@ -44,7 +52,7 @@ void TaskManager::setUp()
     loadSettings();
     initializeTasks();
 
-    setupTimer();
+    setupTimer(TIMER_STARTUP_SECONDS);
 
     connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags, uint editedFlags) {
         if (onlyFlags && (editedFlags & FirewallConf::TaskEdited) == 0)
@@ -61,12 +69,10 @@ void TaskManager::initializeTasks()
     }
 }
 
-void TaskManager::setupTimer(bool enabled)
+void TaskManager::setupTimer(int secs)
 {
-    if (enabled) {
-        const int msecs = m_isFirstRun ? 1000 // 1 second
-                                       : 5 * 60 * 1000; // 5 minutes
-        m_timer.start(msecs);
+    if (secs >= 0) {
+        m_timer.start(secs * 1000);
     } else {
         m_timer.stop();
     }
@@ -147,25 +153,37 @@ void TaskManager::handleTaskFinished(bool success)
 void TaskManager::runExpiredTasks()
 {
     const QDateTime now = DateUtil::now();
-    bool enabledTaskExists = false;
+    qint64 sleepSecs = -1;
 
     for (TaskInfo *taskInfo : taskInfoList()) {
-        if (runExpiredTask(taskInfo, now)) {
-            enabledTaskExists = true;
+        qint64 secsToRun;
+        if (runExpiredTask(taskInfo, now, secsToRun)) {
+            sleepSecs = (sleepSecs < 0) ? secsToRun : qMin(sleepSecs, secsToRun);
         }
     }
 
     m_isFirstRun = false;
 
-    setupTimer(enabledTaskExists);
+    const int secs = qMin(sleepSecs, TIMER_MAX_SECONDS);
+
+    setupTimer(secs);
 }
 
-bool TaskManager::runExpiredTask(TaskInfo *taskInfo, const QDateTime &now)
+bool TaskManager::runExpiredTask(TaskInfo *taskInfo, const QDateTime &now, qint64 &secsToRun)
 {
     if (!taskInfo->enabled())
         return false;
 
-    if ((m_isFirstRun && taskInfo->runOnStartup()) || now >= taskInfo->plannedRun()) {
+    if (taskInfo->running()) {
+        secsToRun = TIMER_DEFAULT_SECONDS;
+        return true;
+    }
+
+    secsToRun = taskInfo->secondsToRun(now, m_isFirstRun);
+
+    if (secsToRun <= 1) {
+        secsToRun = TIMER_DEFAULT_SECONDS;
+
         taskInfo->run();
     }
 
