@@ -285,6 +285,14 @@
         <source>Configuration Error</source>
         <translation>Napaka nastavitev</translation>
     </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Nastavitev ni mogoče naložiti</translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -513,14 +521,6 @@
     <message>
         <source>Zone Addresses Updated: %1.</source>
         <translation>Posodobljeni naslovi področij: %1.</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>Nastavitev ni mogoče naložiti</translation>
     </message>
 </context>
 <context>
@@ -1853,6 +1853,50 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Run On Startup</source>
         <translation>Zaženi ob zagonu</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Možnosti</translation>
+    </message>
+    <message>
+        <source>Delay startup to retry&apos;s seconds</source>
+        <translation>Zakasni zagon za ponovni poskus sekund</translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation>Največje število ponovnih poskusov:</translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation>Zakasnitev sekund za ponovni poskus:</translation>
+    </message>
+    <message>
+        <source>3 seconds</source>
+        <translation>3 sekunde</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 sekund</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuta</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 minuti</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minut</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minut</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> sekundo(i)</translation>
     </message>
 </context>
 <context>

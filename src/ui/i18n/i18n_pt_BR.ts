@@ -285,6 +285,14 @@
         <source>Configuration Error</source>
         <translation>Erro de configuração</translation>
     </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Por favor, primeiro instale o Fort Firewall v%1 e salve as Opções.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Não é possível carregar configurações</translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -513,14 +521,6 @@
     <message>
         <source>Zone Addresses Updated: %1.</source>
         <translation>Endereços de Zona Atualizados: %1.</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Por favor, primeiro instale o Fort Firewall v%1 e salve as Opções.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>Não é possível carregar configurações</translation>
     </message>
 </context>
 <context>
@@ -1851,6 +1851,50 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     <message>
         <source>Run On Startup</source>
         <translation>Executar na Inicialização</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Opções</translation>
+    </message>
+    <message>
+        <source>Delay startup to retry&apos;s seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>3 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuto</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 Minutos</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 Minutos</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

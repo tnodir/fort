@@ -285,6 +285,14 @@
         <source>Configuration Error</source>
         <translation>Erreur de configuration</translation>
     </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Impossible de charger les paramètres</translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -513,14 +521,6 @@
     <message>
         <source>Zone Addresses Updated: %1.</source>
         <translation>Adresses de zone mises à jour: %1.</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>Impossible de charger les paramètres</translation>
     </message>
 </context>
 <context>
@@ -1853,6 +1853,50 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Run On Startup</source>
         <translation>Lancer au démarrage</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Options</translation>
+    </message>
+    <message>
+        <source>Delay startup to retry&apos;s seconds</source>
+        <translation>Délai de démarrage pour réessayer&apos;s secondes</translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation>Nombre maximum de tentatives:</translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation>Délai de secondes pour réessayer:</translation>
+    </message>
+    <message>
+        <source>3 seconds</source>
+        <translation>3 secondes</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 secondes</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minute</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 minutes</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minutes</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minutes</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> seconde(s)</translation>
     </message>
 </context>
 <context>

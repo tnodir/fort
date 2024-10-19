@@ -285,6 +285,14 @@
         <source>Configuration Error</source>
         <translation>Ошибка конфигурации</translation>
     </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Невозможно загрузить Найстройки</translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -513,14 +521,6 @@
     <message>
         <source>Zone Addresses Updated: %1.</source>
         <translation>Адреса Зон обновлены: %1.</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>Невозможно загрузить Найстройки</translation>
     </message>
 </context>
 <context>
@@ -1853,6 +1853,50 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Run On Startup</source>
         <translation>Запуск при старте</translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation>Опции</translation>
+    </message>
+    <message>
+        <source>Delay startup to retry&apos;s seconds</source>
+        <translation>Задержка запуска на секунды повтора</translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation>Максимальное количество повторных попыток:</translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation>Задержка в секундах для повторной попытки:</translation>
+    </message>
+    <message>
+        <source>3 seconds</source>
+        <translation>3 секунды</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 секунд</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 минута</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 минуты</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 минут</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 минут</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> секунд(ы)</translation>
     </message>
 </context>
 <context>

@@ -285,6 +285,14 @@
         <source>Configuration Error</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ConfManagerRpc</name>
@@ -512,14 +520,6 @@
     </message>
     <message>
         <source>Zone Addresses Updated: %1.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
         <translation></translation>
     </message>
 </context>
@@ -1841,6 +1841,50 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Run On Startup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Options</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Delay startup to retry&apos;s seconds</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>3 seconds</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source> second(s)</source>
         <translation></translation>
     </message>
 </context>
