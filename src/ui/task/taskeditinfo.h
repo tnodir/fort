@@ -6,9 +6,7 @@
 class TaskEditInfo
 {
 public:
-    explicit TaskEditInfo(
-            bool enabled = false, bool runOnStartup = false, quint16 intervalHours = 0);
-    explicit TaskEditInfo(quint32 v);
+    explicit TaskEditInfo(quint64 v = 0);
 
     bool enabled() const { return m_enabled; }
     void setEnabled(bool v) { m_enabled = v; }
@@ -28,7 +26,7 @@ public:
     int intervalHours() const { return m_intervalHours; }
     void setIntervalHours(int v) { m_intervalHours = quint16(v); }
 
-    quint32 value() const { return m_value; }
+    quint64 value() const { return m_value; }
 
     void resetToDefault();
 
@@ -42,9 +40,10 @@ private:
             quint8 m_maxRetries;
             quint16 m_retrySeconds;
             quint16 m_intervalHours;
+            quint16 m_reserved; // not used
         };
 
-        quint32 m_value = 0;
+        quint64 m_value = 0;
     };
 };
 

@@ -2,12 +2,9 @@
 
 #include "taskinfo.h"
 
-TaskEditInfo::TaskEditInfo(bool enabled, bool runOnStartup, quint16 intervalHours) :
-    m_enabled(enabled), m_runOnStartup(runOnStartup), m_intervalHours(intervalHours)
-{
-}
+static_assert(sizeof(TaskEditInfo) == sizeof(quint64), "TaskEditInfo size mismatch");
 
-TaskEditInfo::TaskEditInfo(quint32 v) : m_value(v) { }
+TaskEditInfo::TaskEditInfo(quint64 v) : m_value(v) { }
 
 void TaskEditInfo::resetToDefault()
 {

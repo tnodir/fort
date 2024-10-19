@@ -96,21 +96,21 @@ const char *const sqlUpdateAppResetGroup = "UPDATE app"
 
 const char *const sqlSelectTaskByName = "SELECT task_id, enabled,"
                                         "    run_on_startup, delay_startup,"
-                                        "    interval_hours, max_retries, interval_hours,"
+                                        "    max_retries, retry_seconds, interval_hours,"
                                         "    last_run, last_success, data"
                                         "  FROM task"
                                         "  WHERE name = ?1;";
 
 const char *const sqlInsertTask = "INSERT INTO task(task_id, name, enabled,"
                                   "    run_on_startup, delay_startup,"
-                                  "    max_retries, retry_minutes, interval_hours,"
+                                  "    max_retries, retry_seconds, interval_hours,"
                                   "    last_run, last_success, data)"
                                   "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11);";
 
 const char *const sqlUpdateTask = "UPDATE task"
                                   "  SET name = ?2, enabled = ?3,"
                                   "    run_on_startup = ?4, delay_startup = ?5,"
-                                  "    max_retries = ?6, retry_minutes = ?7, interval_hours = ?8,"
+                                  "    max_retries = ?6, retry_seconds = ?7, interval_hours = ?8,"
                                   "    last_run = ?9, last_success = ?10,"
                                   "    data = ?11"
                                   "  WHERE task_id = ?1;";

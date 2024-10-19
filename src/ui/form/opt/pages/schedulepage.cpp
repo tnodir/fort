@@ -185,6 +185,8 @@ void SchedulePage::setupTaskInterval()
 
     connect(m_cscTaskInterval->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         auto &task = currentTaskRow();
+        if (task.enabled() == checked)
+            return;
 
         task.setEnabled(checked);
         setCurrentTaskRowEdited(Qt::CheckStateRole);
@@ -193,6 +195,8 @@ void SchedulePage::setupTaskInterval()
     connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
                 auto &task = currentTaskRow();
+                if (task.intervalHours() == value)
+                    return;
 
                 task.setIntervalHours(value);
                 setCurrentTaskRowEdited();
@@ -219,6 +223,8 @@ void SchedulePage::setupTaskStartup()
 {
     m_cbTaskRunOnStartup = ControlUtil::createCheckBox(false, [&](bool checked) {
         auto &task = currentTaskRow();
+        if (task.runOnStartup() == checked)
+            return;
 
         task.setRunOnStartup(checked);
         setCurrentTaskRowEdited();
@@ -226,6 +232,8 @@ void SchedulePage::setupTaskStartup()
 
     m_cbTaskDelayStartup = ControlUtil::createCheckBox(false, [&](bool checked) {
         auto &task = currentTaskRow();
+        if (task.delayStartup() == checked)
+            return;
 
         task.setDelayStartup(checked);
         setCurrentTaskRowEdited();
@@ -240,6 +248,8 @@ void SchedulePage::setupTaskMaxRetries()
     connect(m_lsTaskMaxRetries->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
                 auto &task = currentTaskRow();
+                if (task.maxRetries() == value)
+                    return;
 
                 task.setMaxRetries(value);
                 setCurrentTaskRowEdited();
@@ -255,6 +265,8 @@ void SchedulePage::setupTaskRetrySeconds()
     connect(m_lscTaskRetrySeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
                 auto &task = currentTaskRow();
+                if (task.retrySeconds() == value)
+                    return;
 
                 task.setRetrySeconds(value);
                 setCurrentTaskRowEdited();
@@ -281,6 +293,9 @@ void SchedulePage::setupTableTasksChanged()
 
             m_cbTaskRunOnStartup->setChecked(task.runOnStartup());
             m_cbTaskDelayStartup->setChecked(task.delayStartup());
+
+            m_lsTaskMaxRetries->spinBox()->setValue(task.maxRetries());
+            m_lscTaskRetrySeconds->spinBox()->setValue(task.retrySeconds());
 
             const bool running = taskInfo->running();
             m_btTaskRun->setEnabled(!running);

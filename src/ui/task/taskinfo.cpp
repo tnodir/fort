@@ -49,14 +49,14 @@ QDateTime TaskInfo::plannedRun() const
 
 void TaskInfo::editFromVariant(const QVariant &v)
 {
-    const TaskEditInfo info(v.toUInt());
+    const TaskEditInfo task(v.toULongLong());
 
-    setEnabled(info.enabled());
-    setRunOnStartup(info.runOnStartup());
-    setDelayStartup(info.delayStartup());
-    setMaxRetries(info.maxRetries());
-    setRetrySeconds(info.retrySeconds());
-    setIntervalHours(info.intervalHours());
+    setEnabled(task.enabled());
+    setRunOnStartup(task.runOnStartup());
+    setDelayStartup(task.delayStartup());
+    setMaxRetries(task.maxRetries());
+    setRetrySeconds(task.retrySeconds());
+    setIntervalHours(task.intervalHours());
 }
 
 QString TaskInfo::typeToString(TaskInfo::TaskType type)
