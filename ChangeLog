@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.14.6, 2024-10-19:
+- UI: Options: Schedule: Add ability to retry tasks on error.
+- UI: Options: Fix conf reloading after import.
+
 v3.14.5, 2024-10-16:
 - UI: Options: Programs: Alert Window for Filter Modes.
 
