@@ -26,7 +26,7 @@
 namespace {
 
 const std::array taskIntervalHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
-const std::array taskRetrySecondsValues = { 3, 1, 20, 60, 2 * 60, 5 * 60, 10 * 60 };
+const std::array taskRetrySecondsValues = { 10, 3, 20, 60, 2 * 60, 5 * 60, 10 * 60 };
 
 }
 
