@@ -26,6 +26,9 @@ public slots:
     void runTask(qint8 taskType) override;
     void abortTask(qint8 taskType) override;
 
+protected slots:
+    void runExpiredTasks() override { }
+
 protected:
     void initializeTasks() override { }
 

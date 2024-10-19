@@ -50,11 +50,11 @@ public slots:
     virtual void runTask(qint8 taskType);
     virtual void abortTask(qint8 taskType);
 
-private slots:
+protected slots:
     void handleTaskStarted();
     void handleTaskFinished(bool success);
 
-    void runExpiredTasks();
+    virtual void runExpiredTasks();
 
 protected:
     virtual void initializeTasks();

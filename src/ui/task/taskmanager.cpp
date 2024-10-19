@@ -59,6 +59,8 @@ void TaskManager::setUp()
             return;
 
         loadSettings();
+
+        runExpiredTasks();
     });
 }
 
@@ -71,10 +73,10 @@ void TaskManager::initializeTasks()
 
 void TaskManager::setupTimer(int secs)
 {
+    m_timer.stop();
+
     if (secs >= 0) {
         m_timer.start(secs * 1000);
-    } else {
-        m_timer.stop();
     }
 }
 
