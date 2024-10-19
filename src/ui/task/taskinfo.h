@@ -78,7 +78,7 @@ public:
 
     void editFromVariant(const QVariant &v);
 
-    qint64 secondsToRun(const QDateTime &now, bool isFirstRun) const;
+    qint64 secondsToRun(const QDateTime &now, bool isFirstRun);
 
     virtual void initialize() { }
 
@@ -108,6 +108,7 @@ private:
     bool m_enabled : 1 = false;
     bool m_runOnStartup : 1 = false;
     bool m_delayStartup : 1 = false;
+    bool m_isFirstDelayRun : 1 = false; // transient
     bool m_running : 1 = false;
     bool m_aborted : 1 = false; // transient
 

@@ -54,10 +54,18 @@ void TaskInfo::editFromVariant(const QVariant &v)
     setIntervalHours(task.intervalHours());
 }
 
-qint64 TaskInfo::secondsToRun(const QDateTime &now, bool isFirstRun) const
+qint64 TaskInfo::secondsToRun(const QDateTime &now, bool isFirstRun)
 {
     if (isFirstRun && runOnStartup()) {
-        return delayStartup() ? retrySeconds() : 0;
+        m_isFirstDelayRun = true;
+        if (delayStartup()) {
+            return retrySeconds();
+        }
+    }
+
+    if (m_isFirstDelayRun) {
+        m_isFirstDelayRun = false;
+        return 0;
     }
 
     const qint64 delaySecs = (m_failedCount > 0) ? retrySeconds() : (intervalHours() * 60 * 60);
