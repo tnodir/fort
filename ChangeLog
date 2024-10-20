@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.14.7, 2024-10-20:
+- UI: Options: Schedule: Add Startup and Retry columns.
+- UI: ZoneEdit: Fix saving (v3.14.0 regression).
+
 v3.14.6, 2024-10-19:
 - UI: Options: Schedule: Add ability to retry tasks on error.
 - UI: Options: Fix conf reloading after import.
