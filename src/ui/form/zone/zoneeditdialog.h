@@ -49,7 +49,7 @@ private:
     void setupUi();
     QLayout *setupMainLayout();
     QLayout *setupNameLayout();
-    void setupSources();
+    void setupComboSources();
     void setupUrlFrame();
     QLayout *setupUrlLayout();
     void setupTextFrame();

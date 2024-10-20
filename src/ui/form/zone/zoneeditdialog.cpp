@@ -158,7 +158,7 @@ QLayout *ZoneEditDialog::setupNameLayout()
     m_labelName = ControlUtil::formRowLabel(layout, m_editName);
 
     // Sources
-    setupSources();
+    setupComboSources();
 
     layout->addRow("Source:", m_comboSources);
     m_labelSource = ControlUtil::formRowLabel(layout, m_comboSources);
@@ -171,7 +171,7 @@ QLayout *ZoneEditDialog::setupNameLayout()
     return layout;
 }
 
-void ZoneEditDialog::setupSources()
+void ZoneEditDialog::setupComboSources()
 {
     m_comboSources = ControlUtil::createComboBox(QStringList(), [&](int index) {
         const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceById(index));
@@ -182,6 +182,7 @@ void ZoneEditDialog::setupSources()
     m_comboSources->clear();
     for (const auto &sourceVar : zoneListModel()->zoneSources()) {
         const ZoneSourceWrapper zoneSource(sourceVar);
+
         m_comboSources->addItem(zoneSource.title());
     }
     m_comboSources->setCurrentIndex(0);
@@ -273,7 +274,8 @@ QLayout *ZoneEditDialog::setupButtons()
 
 bool ZoneEditDialog::save()
 {
-    const auto zoneSource = ZoneSourceWrapper(m_comboSources->currentData());
+    const ZoneSourceWrapper zoneSource(
+            zoneListModel()->zoneSourceById(m_comboSources->currentIndex()));
 
     if (!validateFields(zoneSource))
         return false;
