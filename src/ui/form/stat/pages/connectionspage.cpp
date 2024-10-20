@@ -116,7 +116,7 @@ QLayout *ConnectionsPage::setupHeader()
     m_actRemoveConn = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveConn->setShortcut(Qt::Key_Delete);
 
-    m_actClearAll = editMenu->addAction(IconCache::icon(":/icons/recycle.png"), QString());
+    m_actClearAll = editMenu->addAction(IconCache::icon(":/icons/broom.png"), QString());
 
     connect(m_actCopy, &QAction::triggered, this,
             [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
@@ -142,7 +142,7 @@ QLayout *ConnectionsPage::setupHeader()
     m_btEdit->setMenu(editMenu);
 
     // Toolbar buttons
-    m_btClearAll = ControlUtil::createFlatToolButton(":/icons/recycle.png");
+    m_btClearAll = ControlUtil::createFlatToolButton(":/icons/broom.png");
 
     connect(m_btClearAll, &QAbstractButton::clicked, m_actClearAll, &QAction::trigger);
 

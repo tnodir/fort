@@ -383,7 +383,7 @@ void ProgramsWindow::setupFilterCheckBoxes()
 
 void ProgramsWindow::setupFilterClear()
 {
-    m_btClearFilter = ControlUtil::createFlatToolButton(":/icons/recycle.png", [&] {
+    m_btClearFilter = ControlUtil::createFlatToolButton(":/icons/broom.png", [&] {
         appListModel()->clearFilters();
 
         m_cbFilterAlerted->setCheckState(Qt::PartiallyChecked);
