@@ -57,20 +57,22 @@ void TaskInfo::editFromVariant(const QVariant &v)
 qint64 TaskInfo::secondsToRun(const QDateTime &now, bool isFirstRun)
 {
     if (isFirstRun && runOnStartup()) {
-        m_isFirstDelayRun = true;
         if (delayStartup()) {
+            m_plannedRun = now.addSecs(retrySeconds());
             return retrySeconds();
         }
-    }
-
-    if (m_isFirstDelayRun) {
-        m_isFirstDelayRun = false;
         return 0;
     }
 
-    const qint64 delaySecs = (m_failedCount > 0) ? retrySeconds() : (intervalHours() * 60 * 60);
+    QDateTime plannedRun;
 
-    const QDateTime plannedRun = m_lastRun.addSecs(delaySecs);
+    if (!m_plannedRun.isNull()) {
+        plannedRun = m_plannedRun;
+    } else {
+        const qint64 delaySecs = (m_failedCount > 0) ? retrySeconds() : (intervalHours() * 60 * 60);
+
+        plannedRun = lastRun().addSecs(delaySecs);
+    }
 
     return now.secsTo(plannedRun);
 }
@@ -139,6 +141,8 @@ void TaskInfo::handleFinished(bool success)
         return;
 
     setLastRun(DateUtil::now());
+
+    m_plannedRun = {}; // clear planned run
 
     if (success) {
         setLastSuccess(lastRun());

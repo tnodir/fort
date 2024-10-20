@@ -108,7 +108,6 @@ private:
     bool m_enabled : 1 = false;
     bool m_runOnStartup : 1 = false;
     bool m_delayStartup : 1 = false;
-    bool m_isFirstDelayRun : 1 = false; // transient
     bool m_running : 1 = false;
     bool m_aborted : 1 = false; // transient
 
@@ -123,6 +122,8 @@ private:
 
     QDateTime m_lastRun;
     QDateTime m_lastSuccess;
+
+    QDateTime m_plannedRun; // transient
 
     TaskWorker *m_taskWorker = nullptr;
 };
