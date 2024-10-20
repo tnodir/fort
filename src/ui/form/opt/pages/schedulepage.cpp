@@ -22,6 +22,7 @@
 #include <task/tasklistmodel.h>
 #include <task/taskmanager.h>
 #include <util/guiutil.h>
+#include <util/iconcache.h>
 
 namespace {
 
@@ -141,12 +142,17 @@ void SchedulePage::setupTableTasksHeader()
 
     header->setSectionResizeMode(0, QHeaderView::Fixed);
     header->setSectionResizeMode(1, QHeaderView::Stretch);
-    header->setSectionResizeMode(2, QHeaderView::Stretch);
-    header->setSectionResizeMode(3, QHeaderView::Stretch);
+    header->setSectionResizeMode(2, QHeaderView::Fixed);
+    header->setSectionResizeMode(3, QHeaderView::Fixed);
+    header->setSectionResizeMode(4, QHeaderView::Stretch);
+    header->setSectionResizeMode(5, QHeaderView::Stretch);
 
     const auto refreshTableTasksHeader = [&] {
         auto hh = m_tableTasks->horizontalHeader();
-        hh->resizeSection(0, qRound(hh->width() * 0.45));
+        hh->resizeSection(0, qRound(hh->width() * 0.45f));
+
+        hh->resizeSection(2, 30);
+        hh->resizeSection(3, 30);
     };
 
     refreshTableTasksHeader();
@@ -229,6 +235,7 @@ void SchedulePage::setupTaskStartup()
         task.setRunOnStartup(checked);
         setCurrentTaskRowEdited();
     });
+    m_cbTaskRunOnStartup->setIcon(IconCache::icon(":/icons/play.png"));
 
     m_cbTaskDelayStartup = ControlUtil::createCheckBox(false, [&](bool checked) {
         auto &task = currentTaskRow();
@@ -244,6 +251,12 @@ void SchedulePage::setupTaskMaxRetries()
 {
     m_lsTaskMaxRetries = new LabelSpin();
     m_lsTaskMaxRetries->spinBox()->setRange(0, 99);
+
+    // Icon
+    const QSize iconSize(16, 16);
+    auto icon = ControlUtil::createIconLabel(":/icons/arrow_rotate_clockwise.png", iconSize);
+
+    m_lsTaskMaxRetries->boxLayout()->insertWidget(0, icon);
 
     connect(m_lsTaskMaxRetries->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {

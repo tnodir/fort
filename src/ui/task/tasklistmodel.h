@@ -51,8 +51,12 @@ protected:
     void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
 private:
-    QVariant dataDisplay(const QModelIndex &index) const;
+    QVariant dataDisplay(const QModelIndex &index, int role) const;
+    QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataCheckState(const QModelIndex &index) const;
+
+    QString taskStartupText(const TaskEditInfo &task) const;
+    QString taskRetryText(const TaskEditInfo &task) const;
 
     void switchTaskEnabled(const QModelIndex &index);
 

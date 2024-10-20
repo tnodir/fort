@@ -1,11 +1,13 @@
 #include "tasklistmodel.h"
 
+#include <util/iconcache.h>
+
 #include "taskinfo.h"
 #include "taskmanager.h"
 
 namespace {
 
-inline QVariant headerDataDisplay(int column)
+inline QVariant headerDataDisplay(int column, int role)
 {
     switch (column) {
     case 0:
@@ -13,11 +15,28 @@ inline QVariant headerDataDisplay(int column)
     case 1:
         return TaskListModel::tr("Interval, hours");
     case 2:
-        return TaskListModel::tr("Last Run");
+        return (role == Qt::ToolTipRole) ? TaskListModel::tr("Run On Startup") : QString();
     case 3:
+        return (role == Qt::ToolTipRole) ? TaskListModel::tr("Maximum retries count") : QString();
+    case 4:
+        return TaskListModel::tr("Last Run");
+    case 5:
         return TaskListModel::tr("Last Success");
     }
-    return QVariant();
+
+    return {};
+}
+
+inline QVariant headerDataDecoration(int column)
+{
+    switch (column) {
+    case 2:
+        return IconCache::icon(":/icons/play.png");
+    case 3:
+        return IconCache::icon(":/icons/arrow_rotate_clockwise.png");
+    }
+
+    return {};
 }
 
 }
@@ -50,7 +69,7 @@ int TaskListModel::rowCount(const QModelIndex &parent) const
 
 int TaskListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 4;
+    return 6;
 }
 
 QVariant TaskListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -60,47 +79,76 @@ QVariant TaskListModel::headerData(int section, Qt::Orientation orientation, int
         // Label
         case Qt::DisplayRole:
         case Qt::ToolTipRole:
-            return headerDataDisplay(section);
+            return headerDataDisplay(section, role);
+
+        // Icon
+        case Qt::DecorationRole:
+            return headerDataDecoration(section);
         }
     }
-    return QVariant();
+    return {};
 }
 
 QVariant TaskListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+        return {};
 
     switch (role) {
     case Qt::DisplayRole:
     case Qt::ToolTipRole:
-        return dataDisplay(index);
+        return dataDisplay(index, role);
+
+        // Icon
+    case Qt::DecorationRole:
+        return dataDecoration(index);
 
     case Qt::CheckStateRole:
         return dataCheckState(index);
     }
 
-    return QVariant();
+    return {};
 }
 
-QVariant TaskListModel::dataDisplay(const QModelIndex &index) const
+QVariant TaskListModel::dataDisplay(const QModelIndex &index, int role) const
 {
     const int row = index.row();
     const int column = index.column();
 
     const auto taskInfo = taskInfoAt(row);
+    const auto &task = taskRowAt(row);
 
     switch (column) {
     case 0:
         return taskInfo->title();
-    case 1: {
-        const auto &task = taskRowAt(row);
+    case 1:
         return task.intervalHours();
-    }
     case 2:
-        return taskInfo->lastRun();
+        return (role == Qt::ToolTipRole) ? taskStartupText(task) : QString();
     case 3:
+        return (role == Qt::ToolTipRole) ? taskRetryText(task) : QString();
+    case 4:
+        return taskInfo->lastRun();
+    case 5:
         return taskInfo->lastSuccess();
+    }
+
+    return {};
+}
+
+QVariant TaskListModel::dataDecoration(const QModelIndex &index) const
+{
+    const int row = index.row();
+    const int column = index.column();
+
+    const auto &task = taskRowAt(row);
+
+    switch (column) {
+    case 2:
+        return task.runOnStartup() ? IconCache::icon(":/icons/play.png") : QIcon();
+    case 3:
+        return task.maxRetries() > 0 ? IconCache::icon(":/icons/arrow_rotate_clockwise.png")
+                                     : QIcon();
     }
 
     return {};
@@ -114,6 +162,28 @@ QVariant TaskListModel::dataCheckState(const QModelIndex &index) const
     }
 
     return {};
+}
+
+QString TaskListModel::taskStartupText(const TaskEditInfo &task) const
+{
+    if (!task.runOnStartup())
+        return {};
+
+    return QString("(%1)").arg(task.delayStartup());
+}
+
+QString TaskListModel::taskRetryText(const TaskEditInfo &task) const
+{
+    if (task.maxRetries() == 0)
+        return {};
+
+    QString text = QString::number(task.maxRetries());
+
+    if (task.retrySeconds() > 0) {
+        text += QString(" (%1)").arg(task.retrySeconds());
+    }
+
+    return text;
 }
 
 bool TaskListModel::setData(const QModelIndex &index, const QVariant &value, int role)

@@ -1,6 +1,7 @@
 #ifndef ICONCACHE_H
 #define ICONCACHE_H
 
+#include <QIcon>
 #include <QObject>
 
 class IconCache
