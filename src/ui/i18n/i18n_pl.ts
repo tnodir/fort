@@ -2119,6 +2119,14 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <source>Last Success</source>
         <translation>Ostatni sukces</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation type="unfinished">Uruchom przy starcie</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

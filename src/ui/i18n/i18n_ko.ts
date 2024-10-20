@@ -2119,6 +2119,14 @@ Please restart the running program to take effect of this option.</source>
         <source>Last Success</source>
         <translation>마지막 성공</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>시작 시 실행</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation>최대 재시도 횟수</translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

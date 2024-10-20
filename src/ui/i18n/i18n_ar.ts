@@ -2119,6 +2119,14 @@ Please restart the running program to take effect of this option.</source>
         <source>Last Success</source>
         <translation>آخر إكمال بنجاح</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>تشغيل عند البدء</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

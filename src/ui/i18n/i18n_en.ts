@@ -2108,6 +2108,14 @@ Please restart the running program to take effect of this option.</source>
         <source>Last Success</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

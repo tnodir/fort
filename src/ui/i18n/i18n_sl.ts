@@ -2119,6 +2119,14 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Last Success</source>
         <translation>Zadnji uspeh</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>Zaženi ob zagonu</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation>Največje število ponovnih poskusov</translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

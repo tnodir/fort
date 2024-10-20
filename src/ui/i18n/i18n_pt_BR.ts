@@ -2117,6 +2117,14 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <source>Last Success</source>
         <translation>Último Sucesso</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation type="unfinished">Executar na Inicialização</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

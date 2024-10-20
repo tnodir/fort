@@ -2122,6 +2122,14 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Last Success</source>
         <translation>Último Éxito</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>Ejecutar al iniciar el sistema</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation>Número máximo de reintentos</translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

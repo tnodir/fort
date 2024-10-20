@@ -2119,6 +2119,14 @@ Please restart the running program to take effect of this option.</source>
         <source>Last Success</source>
         <translation>Успешный запуск</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>Запуск при старте</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation>Максимальное количество повторных попыток</translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

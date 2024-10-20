@@ -2119,6 +2119,14 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <source>Last Success</source>
         <translation>Zuletzt erfolgreich</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>Beim Start ausführen</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

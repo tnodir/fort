@@ -2119,6 +2119,14 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Last Success</source>
         <translation>Dernier succès</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>Lancer au démarrage</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation>Nombre maximum de tentatives</translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

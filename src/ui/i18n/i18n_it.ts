@@ -2119,6 +2119,14 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Last Success</source>
         <translation>Ultimo successo</translation>
     </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>Esegui all&apos;avvio</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation>Numero massimo tentativi</translation>
+    </message>
 </context>
 <context>
     <name>TrafListModel</name>

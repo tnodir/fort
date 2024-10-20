@@ -1888,7 +1888,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source> second(s)</source>
-        <translation>秒</translation>
+        <translation> 秒</translation>
     </message>
     <message>
         <source>Maximum retries count:</source>
@@ -2118,6 +2118,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Last Success</source>
         <translation>上次成功</translation>
+    </message>
+    <message>
+        <source>Run On Startup</source>
+        <translation>开机自启</translation>
+    </message>
+    <message>
+        <source>Maximum retries count</source>
+        <translation>最大重试次数</translation>
     </message>
 </context>
 <context>
