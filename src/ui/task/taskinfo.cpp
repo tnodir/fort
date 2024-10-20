@@ -149,7 +149,7 @@ void TaskInfo::handleFinished(bool success)
 
         m_failedCount = 0;
     } else {
-        if (++m_failedCount >= maxRetries()) {
+        if (++m_failedCount > maxRetries()) {
             m_failedCount = 0;
         }
     }
