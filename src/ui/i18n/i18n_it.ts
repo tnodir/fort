@@ -1860,15 +1860,23 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Delay startup to retry&apos;s seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>Ritarda l&apos;avvio dei tentativi n secondi</translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation>Numero massimo tentativi:</translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation>Secondi tra i tentativi:</translation>
     </message>
     <message>
         <source>3 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>3 secondi</translation>
     </message>
     <message>
         <source>20 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>20 secondi</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1876,7 +1884,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>2 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>2 minuti</translation>
     </message>
     <message>
         <source>5 minutes</source>
@@ -1888,15 +1896,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source> second(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum retries count:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delay seconds to retry:</source>
-        <translation type="unfinished"></translation>
+        <translation> secondo/i</translation>
     </message>
 </context>
 <context>
