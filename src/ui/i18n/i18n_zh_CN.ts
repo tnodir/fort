@@ -1860,15 +1860,15 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Delay startup to retry&apos;s seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>根据重试秒数延迟启动</translation>
     </message>
     <message>
         <source>3 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>3 秒</translation>
     </message>
     <message>
         <source>20 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>20 秒</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1876,7 +1876,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>2 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>2 分钟</translation>
     </message>
     <message>
         <source>5 minutes</source>
@@ -1888,15 +1888,15 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source> second(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>秒</translation>
     </message>
     <message>
         <source>Maximum retries count:</source>
-        <translation type="unfinished"></translation>
+        <translation>最大重试次数：</translation>
     </message>
     <message>
         <source>Delay seconds to retry:</source>
-        <translation type="unfinished"></translation>
+        <translation>重试的延迟时间（秒）：</translation>
     </message>
 </context>
 <context>
