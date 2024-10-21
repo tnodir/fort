@@ -234,7 +234,7 @@ static NTSTATUS fort_device_control_getlog(PFORT_DEVICE_CONTROL_ARG dca)
 }
 
 inline static NTSTATUS fort_device_control_app_conf(
-        PCFORT_APP_ENTRY app_entry, PFORT_CONF_REF conf_ref, BOOL is_adding)
+        PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry, BOOL is_adding)
 {
     NTSTATUS status;
 
@@ -259,9 +259,9 @@ static NTSTATUS fort_device_control_app(PFORT_DEVICE_CONTROL_ARG dca, BOOL is_ad
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(&fort_device()->conf);
 
     if (conf_ref == NULL)
-        return STATUS_INSUFFICIENT_RESOURCES;
+        return STATUS_INVALID_PARAMETER;
 
-    const NTSTATUS status = fort_device_control_app_conf(app_entry, conf_ref, is_adding);
+    const NTSTATUS status = fort_device_control_app_conf(conf_ref, app_entry, is_adding);
 
     fort_conf_ref_put(&fort_device()->conf, conf_ref);
 
