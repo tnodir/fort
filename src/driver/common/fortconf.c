@@ -168,28 +168,25 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
     return ip_included && !ip_excluded;
 }
 
-FORT_API BOOL fort_conf_app_exe_equal(
-        const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
+FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
 {
+    const UINT16 path_len = path->len;
+
     if (path_len != app_entry->path_len)
         return FALSE;
 
-    return fort_memcmp(path, app_entry->path, path_len) == 0;
+    return fort_memcmp(path->buffer, app_entry->path, path_len) == 0;
 }
 
-static BOOL fort_conf_app_wild_equal(
-        const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
+static BOOL fort_conf_app_wild_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
 {
-    UNUSED(path_len);
-
-    return wildmatch(app_entry->path, (const WCHAR *) path) == WM_MATCH;
+    return wildmatch(app_entry->path, path->buffer) == WM_MATCH;
 }
 
-typedef BOOL fort_conf_app_equal_func(
-        const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len);
+typedef BOOL fort_conf_app_equal_func(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
-static FORT_APP_DATA fort_conf_app_find_loop(const PFORT_CONF conf, const PVOID path,
-        UINT32 path_len, UINT32 apps_off, UINT16 apps_n, fort_conf_app_equal_func *app_equal_func)
+static FORT_APP_DATA fort_conf_app_find_loop(const PFORT_CONF conf, PCFORT_APP_PATH path,
+        UINT32 apps_off, UINT16 apps_n, fort_conf_app_equal_func *app_equal_func)
 {
     const FORT_APP_DATA app_data = { 0 };
 
@@ -199,9 +196,9 @@ static FORT_APP_DATA fort_conf_app_find_loop(const PFORT_CONF conf, const PVOID 
     const char *app_entries = (const char *) (conf->data + apps_off);
 
     do {
-        const PFORT_APP_ENTRY app_entry = (const PFORT_APP_ENTRY) app_entries;
+        PCFORT_APP_ENTRY app_entry = (PCFORT_APP_ENTRY) app_entries;
 
-        if (app_equal_func(app_entry, path, path_len))
+        if (app_equal_func(app_entry, path))
             return app_entry->app_data;
 
         app_entries += FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len);
@@ -211,32 +208,32 @@ static FORT_APP_DATA fort_conf_app_find_loop(const PFORT_CONF conf, const PVOID 
 }
 
 FORT_API FORT_APP_DATA fort_conf_app_exe_find(
-        const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len)
+        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
 {
     UNUSED(context);
 
     return fort_conf_app_find_loop(
-            conf, path, path_len, conf->exe_apps_off, conf->exe_apps_n, fort_conf_app_exe_equal);
+            conf, path, conf->exe_apps_off, conf->exe_apps_n, fort_conf_app_exe_equal);
 }
 
-static FORT_APP_DATA fort_conf_app_wild_find(
-        const PFORT_CONF conf, const PVOID path, UINT32 path_len)
+static FORT_APP_DATA fort_conf_app_wild_find(const PFORT_CONF conf, PCFORT_APP_PATH path)
 {
     return fort_conf_app_find_loop(
-            conf, path, path_len, conf->wild_apps_off, conf->wild_apps_n, fort_conf_app_wild_equal);
+            conf, path, conf->wild_apps_off, conf->wild_apps_n, fort_conf_app_wild_equal);
 }
 
-static int fort_conf_app_prefix_cmp(PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len)
+static int fort_conf_app_prefix_cmp(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
 {
+    UINT16 path_len = path->len;
+
     if (path_len > app_entry->path_len) {
         path_len = app_entry->path_len;
     }
 
-    return fort_memcmp(path, app_entry->path, path_len);
+    return fort_memcmp(path->buffer, app_entry->path, path_len);
 }
 
-static FORT_APP_DATA fort_conf_app_prefix_find(
-        const PFORT_CONF conf, const PVOID path, UINT32 path_len)
+static FORT_APP_DATA fort_conf_app_prefix_find(const PFORT_CONF conf, PCFORT_APP_PATH path)
 {
     const FORT_APP_DATA app_data = { 0 };
 
@@ -254,9 +251,9 @@ static FORT_APP_DATA fort_conf_app_prefix_find(
     do {
         const int mid = (low + high) / 2;
         const UINT32 app_off = app_offsets[mid];
-        const PFORT_APP_ENTRY app_entry = (PFORT_APP_ENTRY) (app_entries + app_off);
+        PCFORT_APP_ENTRY app_entry = (PCFORT_APP_ENTRY) (app_entries + app_off);
 
-        const int res = fort_conf_app_prefix_cmp(app_entry, path, path_len);
+        const int res = fort_conf_app_prefix_cmp(app_entry, path);
 
         if (res < 0) {
             high = mid - 1;
@@ -270,20 +267,20 @@ static FORT_APP_DATA fort_conf_app_prefix_find(
     return app_data;
 }
 
-FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
+FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, PCFORT_APP_PATH path,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context)
 {
     FORT_APP_DATA app_data;
 
-    app_data = exe_find_func(conf, exe_context, path, path_len);
+    app_data = exe_find_func(conf, exe_context, path);
     if (app_data.found != 0)
         return app_data;
 
-    app_data = fort_conf_app_wild_find(conf, path, path_len);
+    app_data = fort_conf_app_wild_find(conf, path);
     if (app_data.found != 0)
         return app_data;
 
-    app_data = fort_conf_app_prefix_find(conf, path, path_len);
+    app_data = fort_conf_app_prefix_find(conf, path);
 
     return app_data;
 }

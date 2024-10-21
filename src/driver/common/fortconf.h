@@ -244,6 +244,8 @@ typedef struct fort_app_entry
     WCHAR path[2];
 } FORT_APP_ENTRY, *PFORT_APP_ENTRY;
 
+typedef const FORT_APP_ENTRY *PCFORT_APP_ENTRY;
+
 #define FORT_CONF_APP_ENTRY_PATH_OFF offsetof(FORT_APP_ENTRY, path)
 #define FORT_CONF_APP_ENTRY_SIZE(path_len)                                                         \
     (FORT_CONF_APP_ENTRY_PATH_OFF + (path_len) + sizeof(WCHAR)) /* include terminating zero */
@@ -317,7 +319,7 @@ typedef struct fort_conf_io
     (FORT_CONF_ADDR4_LIST_SIZE(ip4_n, pair4_n) + FORT_CONF_ADDR6_LIST_SIZE(ip6_n, pair6_n))
 
 typedef FORT_APP_DATA fort_conf_app_exe_find_func(
-        const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len);
+        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
 typedef BOOL fort_conf_zones_ip_included_func(
         void *ctx, UINT32 zones_mask, const UINT32 *remote_ip, BOOL isIPv6);
@@ -348,13 +350,12 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
 #define fort_conf_ip_inet_included(conf, zone_func, ctx, remote_ip, isIPv6)                        \
     fort_conf_ip_included((conf), (zone_func), (ctx), (remote_ip), isIPv6, /*addr_group_index=*/1)
 
-FORT_API BOOL fort_conf_app_exe_equal(
-        const PFORT_APP_ENTRY app_entry, const PVOID path, UINT32 path_len);
+FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
 FORT_API FORT_APP_DATA fort_conf_app_exe_find(
-        const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len);
+        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
-FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, const PVOID path, UINT32 path_len,
+FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, PCFORT_APP_PATH path,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);

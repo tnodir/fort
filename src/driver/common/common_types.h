@@ -20,6 +20,14 @@ typedef union ip_addr_t {
     ip6_addr_t v6;
 } ip_addr_t;
 
+typedef struct fort_app_path
+{
+    unsigned short len;
+    const void *buffer;
+} FORT_APP_PATH, *PFORT_APP_PATH;
+
+typedef const FORT_APP_PATH *PCFORT_APP_PATH;
+
 #define UNUSED(p) ((void) (p))
 
 #endif // COMMON_TYPES_H

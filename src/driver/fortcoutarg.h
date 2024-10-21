@@ -58,8 +58,8 @@ typedef struct fort_callout_ale_extra
 
     const UINT32 *remote_ip;
 
-    PCUNICODE_STRING path;
-    PCUNICODE_STRING real_path;
+    FORT_APP_PATH path;
+    FORT_APP_PATH real_path;
 
     PIRP irp;
     ULONG_PTR info;

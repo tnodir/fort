@@ -12,13 +12,14 @@ FORT_API void fort_log_blocked_header_write(char *p, BOOL blocked, UINT32 pid, U
     *up = pid;
 }
 
-FORT_API void fort_log_blocked_write(
-        char *p, BOOL blocked, UINT32 pid, UINT32 path_len, const char *path)
+FORT_API void fort_log_blocked_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_PATH path)
 {
+    const UINT16 path_len = path->len;
+
     fort_log_blocked_header_write(p, blocked, pid, path_len);
 
     if (path_len != 0) {
-        RtlCopyMemory(p + FORT_LOG_BLOCKED_HEADER_SIZE, path, path_len);
+        RtlCopyMemory(p + FORT_LOG_BLOCKED_HEADER_SIZE, path->buffer, path_len);
     }
 }
 
@@ -54,14 +55,15 @@ void fort_log_blocked_ip_header_write(char *p, BOOL isIPv6, BOOL inbound, BOOL i
 
 void fort_log_blocked_ip_write(char *p, BOOL isIPv6, BOOL inbound, BOOL inherited,
         UCHAR block_reason, UCHAR ip_proto, UINT16 local_port, UINT16 remote_port,
-        const UINT32 *local_ip, const UINT32 *remote_ip, UINT32 pid, UINT32 path_len,
-        const char *path)
+        const UINT32 *local_ip, const UINT32 *remote_ip, UINT32 pid, PCFORT_APP_PATH path)
 {
+    const UINT16 path_len = path->len;
+
     fort_log_blocked_ip_header_write(p, isIPv6, inbound, inherited, block_reason, ip_proto,
             local_port, remote_port, local_ip, remote_ip, pid, path_len);
 
     if (path_len != 0) {
-        RtlCopyMemory(p + FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6), path, path_len);
+        RtlCopyMemory(p + FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6), path->buffer, path_len);
     }
 }
 
@@ -98,12 +100,14 @@ FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_le
     *up = pid;
 }
 
-FORT_API void fort_log_proc_new_write(char *p, UINT32 pid, UINT32 path_len, const char *path)
+FORT_API void fort_log_proc_new_write(char *p, UINT32 pid, PCFORT_APP_PATH path)
 {
+    const UINT16 path_len = path->len;
+
     fort_log_proc_new_header_write(p, pid, path_len);
 
     if (path_len != 0) {
-        RtlCopyMemory(p + FORT_LOG_PROC_NEW_HEADER_SIZE, path, path_len);
+        RtlCopyMemory(p + FORT_LOG_PROC_NEW_HEADER_SIZE, path->buffer, path_len);
     }
 }
 

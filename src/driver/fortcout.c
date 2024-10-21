@@ -59,8 +59,8 @@ static FORT_APP_DATA fort_callout_ale_conf_app_data(
     if (cx->app_data_found)
         return cx->app_data;
 
-    const FORT_APP_DATA app_data = fort_conf_app_find(
-            &conf_ref->conf, cx->path->Buffer, cx->path->Length, fort_conf_exe_find, conf_ref);
+    const FORT_APP_DATA app_data =
+            fort_conf_app_find(&conf_ref->conf, &cx->path, fort_conf_exe_find, conf_ref);
 
     fort_callout_ale_set_app_flags(cx, app_data);
 
@@ -94,8 +94,8 @@ inline static BOOL fort_callout_ale_associate_flow(
     }
 
     if (!log_stat) {
-        fort_buffer_proc_new_write(&fort_device()->buffer, cx->process_id, cx->real_path->Length,
-                cx->real_path->Buffer, &cx->irp, &cx->info);
+        fort_buffer_proc_new_write(
+                &fort_device()->buffer, cx->process_id, &cx->real_path, &cx->irp, &cx->info);
     }
 
     return FALSE;
@@ -124,16 +124,16 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
 
     FORT_APP_ENTRY app_entry = {
         .app_data = app_data,
-        .path_len = cx->path->Length,
+        .path_len = cx->path.len,
     };
 
-    if (!NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, &app_entry, cx->path->Buffer)))
+    if (!NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, &app_entry, &cx->path)))
         return;
 
     fort_callout_ale_set_app_flags(cx, app_data);
 
-    fort_buffer_blocked_write(&fort_device()->buffer, cx->blocked, cx->process_id,
-            cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
+    fort_buffer_blocked_write(&fort_device()->buffer, cx->blocked, cx->process_id, &cx->real_path,
+            &cx->irp, &cx->info);
 }
 
 inline static BOOL fort_callout_ale_log_blocked_ip_check_app(
@@ -174,7 +174,7 @@ inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
 
     fort_buffer_blocked_ip_write(&fort_device()->buffer, ca->isIPv6, ca->inbound, cx->inherited,
             cx->block_reason, ip_proto, local_port, remote_port, local_ip, cx->remote_ip,
-            cx->process_id, cx->real_path->Length, cx->real_path->Buffer, &cx->irp, &cx->info);
+            cx->process_id, &cx->real_path, &cx->irp, &cx->info);
 }
 
 inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
@@ -365,37 +365,40 @@ inline static void fort_callout_ale_classify_action(PCFORT_CALLOUT_ARG ca,
     }
 }
 
-inline static void fort_callout_ale_check_conf(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
+inline static void fort_callout_ale_fill_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
 {
-    const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
-
     const UINT32 process_id = (UINT32) ca->inMetaValues->processId;
 
-    UNICODE_STRING real_path;
-    real_path.Length = (UINT16) (ca->inMetaValues->processPath->size
+    PFORT_APP_PATH real_path = &cx->real_path;
+    real_path->len = (UINT16) (ca->inMetaValues->processPath->size
             - sizeof(WCHAR)); /* chop terminating zero */
-    real_path.MaximumLength = real_path.Length;
-    real_path.Buffer = (PWSTR) ca->inMetaValues->processPath->data;
+    real_path->buffer = (PCWSTR) ca->inMetaValues->processPath->data;
 
     BOOL isSvcHost = FALSE;
     BOOL inherited = FALSE;
-    UNICODE_STRING path;
+
+    PFORT_APP_PATH path = &cx->path;
     if (!fort_pstree_get_proc_name(
-                &fort_device()->ps_tree, process_id, &path, &isSvcHost, &inherited)) {
-        path = real_path;
+                &fort_device()->ps_tree, process_id, path, &isSvcHost, &inherited)) {
+        *path = *real_path;
     } else if (!inherited) {
-        real_path = path;
+        *real_path = *path;
     }
 
     cx->process_id = process_id;
-    cx->path = &path;
-    cx->real_path = &real_path;
     cx->inherited = (UCHAR) inherited;
+}
+
+inline static void fort_callout_ale_check_conf(
+        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
+{
+    fort_callout_ale_fill_path(ca, cx);
 
     cx->blocked = TRUE;
     cx->ignore = FALSE;
     cx->block_reason = FORT_BLOCK_REASON_UNKNOWN;
+
+    const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
     if (!fort_callout_ale_check_flags(ca, cx, conf_ref, conf_flags)) {
         fort_callout_ale_check_app(ca, cx, conf_ref, conf_flags);

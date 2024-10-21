@@ -234,7 +234,7 @@ static NTSTATUS fort_device_control_getlog(PFORT_DEVICE_CONTROL_ARG dca)
 }
 
 inline static NTSTATUS fort_device_control_app_conf(
-        const PFORT_APP_ENTRY app_entry, PFORT_CONF_REF conf_ref, BOOL is_adding)
+        PCFORT_APP_ENTRY app_entry, PFORT_CONF_REF conf_ref, BOOL is_adding)
 {
     NTSTATUS status;
 
@@ -250,7 +250,7 @@ inline static NTSTATUS fort_device_control_app_conf(
 
 static NTSTATUS fort_device_control_app(PFORT_DEVICE_CONTROL_ARG dca, BOOL is_adding)
 {
-    const PFORT_APP_ENTRY app_entry = dca->buffer;
+    PCFORT_APP_ENTRY app_entry = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len < sizeof(FORT_APP_ENTRY) || len < FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len))

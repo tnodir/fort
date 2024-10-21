@@ -53,15 +53,15 @@ FORT_API UCHAR fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UCHAR flag, B
 FORT_API UCHAR fort_device_flag(PFORT_DEVICE_CONF device_conf, UCHAR flag);
 
 FORT_API FORT_APP_DATA fort_conf_exe_find(
-        const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len);
+        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_path(
-        PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY app_entry, const PVOID path);
+        PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
-        PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry, BOOL locked);
+        PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY entry, BOOL locked);
 
-FORT_API void fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry);
+FORT_API void fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY entry);
 
 FORT_API PFORT_CONF_REF fort_conf_ref_new(const PFORT_CONF conf, ULONG len);
 

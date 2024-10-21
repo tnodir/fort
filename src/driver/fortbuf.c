@@ -9,6 +9,17 @@
 
 #define FORT_BUFFER_POOL_TAG 'BwfF'
 
+static FORT_APP_PATH fort_buffer_adjust_log_path(PCFORT_APP_PATH path)
+{
+    FORT_APP_PATH log_path = *path;
+
+    if (log_path.len > FORT_LOG_PATH_MAX) {
+        log_path.len = 0; /* drop too long path */
+    }
+
+    return log_path;
+}
+
 static PFORT_BUFFER_DATA fort_buffer_data_new(PFORT_BUFFER buf)
 {
     PFORT_BUFFER_DATA data = buf->data_free;
@@ -155,15 +166,13 @@ FORT_API NTSTATUS fort_buffer_prepare(
 }
 
 FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT32 pid,
-        UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info)
+        PCFORT_APP_PATH path, PIRP *irp, ULONG_PTR *info)
 {
     NTSTATUS status;
 
-    if (path_len > FORT_LOG_PATH_MAX) {
-        path_len = 0; /* drop too long path */
-    }
+    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(path);
 
-    const UINT32 len = FORT_LOG_BLOCKED_SIZE(path_len);
+    const UINT32 len = FORT_LOG_BLOCKED_SIZE(log_path.len);
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
@@ -172,7 +181,7 @@ FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT
         status = fort_buffer_prepare(buf, len, &out, irp, info);
 
         if (NT_SUCCESS(status)) {
-            fort_log_blocked_write(out, blocked, pid, path_len, path);
+            fort_log_blocked_write(out, blocked, pid, &log_path);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -182,18 +191,16 @@ FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT
 
 NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL isIPv6, BOOL inbound, BOOL inherited,
         UCHAR block_reason, UCHAR ip_proto, UINT16 local_port, UINT16 remote_port,
-        const UINT32 *local_ip, const UINT32 *remote_ip, UINT32 pid, UINT32 path_len,
-        const PVOID path, PIRP *irp, ULONG_PTR *info)
+        const UINT32 *local_ip, const UINT32 *remote_ip, UINT32 pid, PCFORT_APP_PATH path,
+        PIRP *irp, ULONG_PTR *info)
 {
     FORT_CHECK_STACK(FORT_BUFFER_BLOCKED_IP_WRITE);
 
     NTSTATUS status;
 
-    if (path_len > FORT_LOG_PATH_MAX) {
-        path_len = 0; /* drop too long path */
-    }
+    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(path);
 
-    const UINT32 len = FORT_LOG_BLOCKED_IP_SIZE(path_len, isIPv6);
+    const UINT32 len = FORT_LOG_BLOCKED_IP_SIZE(log_path.len, isIPv6);
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
@@ -203,7 +210,7 @@ NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL isIPv6, BOOL inboun
 
         if (NT_SUCCESS(status)) {
             fort_log_blocked_ip_write(out, isIPv6, inbound, inherited, block_reason, ip_proto,
-                    local_port, remote_port, local_ip, remote_ip, pid, path_len, path);
+                    local_port, remote_port, local_ip, remote_ip, pid, &log_path);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -212,15 +219,13 @@ NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL isIPv6, BOOL inboun
 }
 
 FORT_API NTSTATUS fort_buffer_proc_new_write(
-        PFORT_BUFFER buf, UINT32 pid, UINT32 path_len, const PVOID path, PIRP *irp, ULONG_PTR *info)
+        PFORT_BUFFER buf, UINT32 pid, PCFORT_APP_PATH path, PIRP *irp, ULONG_PTR *info)
 {
     NTSTATUS status;
 
-    if (path_len > FORT_LOG_PATH_MAX) {
-        path_len = 0; /* drop too long path */
-    }
+    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(path);
 
-    const UINT32 len = FORT_LOG_PROC_NEW_SIZE(path_len);
+    const UINT32 len = FORT_LOG_PROC_NEW_SIZE(log_path.len);
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
@@ -229,7 +234,7 @@ FORT_API NTSTATUS fort_buffer_proc_new_write(
         status = fort_buffer_prepare(buf, len, &out, irp, info);
 
         if (NT_SUCCESS(status)) {
-            fort_log_proc_new_write(out, pid, path_len, path);
+            fort_log_proc_new_write(out, pid, &log_path);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);

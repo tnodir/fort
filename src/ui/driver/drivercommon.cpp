@@ -214,11 +214,14 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
     const QString kernelPathLower = kernelPath.startsWith('\\') ? kernelPath.toLower() : kernelPath;
-    const quint32 len = quint32(kernelPathLower.size()) * sizeof(WCHAR);
-    const WCHAR *p = (PCWCHAR) kernelPathLower.utf16();
 
-    const FORT_APP_DATA app_data = fort_conf_app_find(
-            conf, (const PVOID) p, len, fort_conf_app_exe_find, /*exe_context=*/nullptr);
+    const FORT_APP_PATH path = {
+        .len = quint16(kernelPathLower.size() * sizeof(WCHAR)),
+        .buffer = kernelPathLower.utf16(),
+    };
+
+    const FORT_APP_DATA app_data =
+            fort_conf_app_find(conf, &path, fort_conf_app_exe_find, /*exe_context=*/nullptr);
 
     return app_data;
 }

@@ -43,13 +43,13 @@ FORT_API UCHAR fort_device_flag(PFORT_DEVICE_CONF device_conf, UCHAR flag)
 }
 
 static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
-        PFORT_CONF_REF conf_ref, const PVOID path, UINT32 path_len, tommy_key_t path_hash)
+        PFORT_CONF_REF conf_ref, PCFORT_APP_PATH path, tommy_key_t path_hash)
 {
     PFORT_CONF_EXE_NODE node =
             (PFORT_CONF_EXE_NODE) tommy_hashdyn_bucket(&conf_ref->exe_map, path_hash);
 
     while (node != NULL) {
-        if (fort_conf_app_exe_equal(node->app_entry, path, path_len))
+        if (fort_conf_app_exe_equal(node->app_entry, path))
             return node;
 
         node = node->next;
@@ -59,19 +59,18 @@ static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
 }
 
 FORT_API FORT_APP_DATA fort_conf_exe_find(
-        const PFORT_CONF conf, PVOID context, const PVOID path, UINT32 path_len)
+        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
 {
     UNUSED(conf);
 
     PFORT_CONF_REF conf_ref = context;
-    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
+    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path->buffer, path->len);
 
     FORT_APP_DATA app_data = { 0 };
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&conf_ref->conf_lock);
     {
-        const PFORT_CONF_EXE_NODE node =
-                fort_conf_ref_exe_find_node(conf_ref, path, path_len, path_hash);
+        const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
 
         if (node != NULL) {
             app_data = node->app_entry->app_data;
@@ -107,10 +106,10 @@ static void fort_conf_ref_exe_new_path(
     ++conf->exe_apps_n;
 }
 
-static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref,
-        const PFORT_APP_ENTRY app_entry, const PVOID path, tommy_key_t path_hash)
+static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry,
+        PCFORT_APP_PATH path, tommy_key_t path_hash)
 {
-    const UINT32 path_len = app_entry->path_len;
+    const UINT16 path_len = path->len;
 
     const UINT16 entry_size = (UINT16) FORT_CONF_APP_ENTRY_SIZE(path_len);
     PFORT_APP_ENTRY entry = fort_pool_malloc(&conf_ref->pool_list, entry_size);
@@ -118,11 +117,12 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref,
     if (entry == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
-    *entry = *app_entry;
+    entry->app_data = app_entry->app_data;
+    entry->path_len = path_len;
 
     /* Copy the path */
     {
-        RtlCopyMemory(entry->path, path, path_len);
+        RtlCopyMemory(entry->path, path->buffer, path_len);
         entry->path[path_len / sizeof(WCHAR)] = L'\0';
     }
 
@@ -133,10 +133,9 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref,
 }
 
 static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
-        const PFORT_APP_ENTRY app_entry, const PVOID path, tommy_key_t path_hash)
+        PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path, tommy_key_t path_hash)
 {
-    const PFORT_CONF_EXE_NODE node =
-            fort_conf_ref_exe_find_node(conf_ref, path, app_entry->path_len, path_hash);
+    const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
 
     if (node == NULL) {
         return fort_conf_ref_exe_new_entry(conf_ref, app_entry, path, path_hash);
@@ -145,7 +144,7 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
     if (app_entry->app_data.is_new)
         return FORT_STATUS_USER_ERROR;
 
-    /* Replace the data */
+    /* Replace the app data */
     {
         PFORT_APP_ENTRY entry = node->app_entry;
         entry->app_data = app_entry->app_data;
@@ -155,9 +154,9 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
 }
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_path(
-        PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY app_entry, const PVOID path)
+        PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
 {
-    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, app_entry->path_len);
+    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path->buffer, path->len);
     NTSTATUS status;
 
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&conf_ref->conf_lock);
@@ -168,16 +167,19 @@ FORT_API NTSTATUS fort_conf_ref_exe_add_path(
 }
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
-        PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY app_entry, BOOL locked)
+        PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry, BOOL locked)
 {
-    const PVOID path = app_entry->path;
+    const FORT_APP_PATH path = {
+        .len = app_entry->path_len,
+        .buffer = app_entry->path,
+    };
 
     if (locked) {
-        const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, app_entry->path_len);
+        const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path.buffer, path.len);
 
-        return fort_conf_ref_exe_add_path_locked(conf_ref, app_entry, path, path_hash);
+        return fort_conf_ref_exe_add_path_locked(conf_ref, app_entry, &path, path_hash);
     } else {
-        return fort_conf_ref_exe_add_path(conf_ref, app_entry, path);
+        return fort_conf_ref_exe_add_path(conf_ref, app_entry, &path);
     }
 }
 
@@ -188,7 +190,7 @@ static void fort_conf_ref_exe_fill(PFORT_CONF_REF conf_ref, const PFORT_CONF con
     const int count = conf->exe_apps_n;
 
     for (int i = 0; i < count; ++i) {
-        const PFORT_APP_ENTRY entry = (const PFORT_APP_ENTRY) app_entries;
+        PCFORT_APP_ENTRY entry = (PCFORT_APP_ENTRY) app_entries;
 
         fort_conf_ref_exe_add_entry(conf_ref, entry, TRUE);
 
@@ -196,13 +198,13 @@ static void fort_conf_ref_exe_fill(PFORT_CONF_REF conf_ref, const PFORT_CONF con
     }
 }
 
-static void fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, const PVOID path, UINT32 path_len)
+static void fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, PCFORT_APP_PATH path)
 {
-    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path, path_len);
+    const tommy_key_t path_hash = (tommy_key_t) tommy_hash_u64(0, path->buffer, path->len);
 
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&conf_ref->conf_lock);
     {
-        PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_len, path_hash);
+        PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
 
         if (node != NULL) {
             /* Delete from conf */
@@ -226,9 +228,14 @@ static void fort_conf_ref_exe_del_path(PFORT_CONF_REF conf_ref, const PVOID path
     ExReleaseSpinLockExclusive(&conf_ref->conf_lock, oldIrql);
 }
 
-FORT_API void fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, const PFORT_APP_ENTRY entry)
+FORT_API void fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY entry)
 {
-    fort_conf_ref_exe_del_path(conf_ref, entry->path, entry->path_len);
+    const FORT_APP_PATH path = {
+        .len = entry->path_len,
+        .buffer = entry->path,
+    };
+
+    fort_conf_ref_exe_del_path(conf_ref, &path);
 }
 
 static void fort_conf_ref_init(PFORT_CONF_REF conf_ref)
