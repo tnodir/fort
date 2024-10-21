@@ -52,11 +52,8 @@ protected:
 
 private:
     QVariant dataDisplay(const QModelIndex &index, int role) const;
-    QVariant dataDecoration(const QModelIndex &index) const;
+    QVariant dataDecoration(const QModelIndex &index, int role) const;
     QVariant dataCheckState(const QModelIndex &index) const;
-
-    QString taskStartupText(const TaskEditInfo &task) const;
-    QString taskRetryText(const TaskEditInfo &task) const;
 
     void switchTaskEnabled(const QModelIndex &index);
 

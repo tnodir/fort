@@ -1,7 +1,6 @@
 #include "applistmodelheaderdata.h"
 
 #include <QFont>
-#include <QIcon>
 
 #include <util/iconcache.h>
 
