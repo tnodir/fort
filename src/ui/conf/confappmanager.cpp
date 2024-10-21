@@ -432,7 +432,7 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
         if (resList.at(0).toBool()) {
             isWildcard = true;
         } else {
-            const QString appPath = resList.at(0).toString();
+            const QString appPath = resList.at(1).toString();
 
             updateDriverDeleteApp(appPath);
         }
