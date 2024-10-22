@@ -226,7 +226,7 @@ typedef struct fort_app_data
 {
     FORT_APP_FLAGS flags;
 
-    UINT16 is_new : 1; /* can replace an existing app data? */
+    UINT16 is_new : 1; /* can not replace an existing app data? */
     UINT16 found : 1; /* is app data not empty? */
     UINT16 alerted : 1;
     UINT16 rule_id : 13;

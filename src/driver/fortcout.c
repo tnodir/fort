@@ -365,33 +365,69 @@ inline static void fort_callout_ale_classify_action(PCFORT_CALLOUT_ARG ca,
     }
 }
 
+#if 0
+inline static BOOL fort_callout_ale_fill_path_sid(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+{
+    const FWP_VALUE0 userIdField = ca->inFixedValues->incomingValue[ca->fi->userId].value;
+    if (userIdField.type != FWP_TOKEN_ACCESS_INFORMATION_TYPE)
+        return FALSE;
+
+    const PTOKEN_ACCESS_INFORMATION tokenInfo =
+            (PTOKEN_ACCESS_INFORMATION) userIdField.tokenAccessInformation->data;
+    if (tokenInfo == NULL)
+        return FALSE;
+
+    const PSID sid = tokenInfo->SidHash->SidAttr->Sid;
+    if (sid == NULL)
+        return FALSE;
+
+    WCHAR buffer[256];
+    UNICODE_STRING sid_str = {
+        .Length = 0,
+        .MaximumLength = sizeof(buffer),
+        .Buffer = buffer,
+    };
+
+    if (NT_SUCCESS(RtlConvertSidToUnicodeString(&sid_str, sid, /*allocate=*/FALSE))) {
+        LOG("TEST> pid=%d sid=%c%c%c%c%c%c%c%c%c%c%c%c\n", cx->process_id, (char) buffer[0],
+                (char) buffer[1], (char) buffer[2], (char) buffer[3], (char) buffer[4],
+                (char) buffer[5], (char) buffer[6], (char) buffer[7], (char) buffer[8],
+                (char) buffer[9], (char) buffer[10], (char) buffer[11]);
+    }
+
+    return FALSE;
+}
+#endif
+
 inline static void fort_callout_ale_fill_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
 {
-    const UINT32 process_id = (UINT32) ca->inMetaValues->processId;
-
     PFORT_APP_PATH real_path = &cx->real_path;
+
     real_path->len = (UINT16) (ca->inMetaValues->processPath->size
             - sizeof(WCHAR)); /* chop terminating zero */
     real_path->buffer = (PCWSTR) ca->inMetaValues->processPath->data;
 
     BOOL isSvcHost = FALSE;
     BOOL inherited = FALSE;
-
     PFORT_APP_PATH path = &cx->path;
-    if (!fort_pstree_get_proc_name(
-                &fort_device()->ps_tree, process_id, path, &isSvcHost, &inherited)) {
+
+    if (fort_pstree_get_proc_name(
+                &fort_device()->ps_tree, cx->process_id, path, &isSvcHost, &inherited)) {
+        if (!inherited) {
+            *real_path = *path;
+        }
+    } else {
         *path = *real_path;
-    } else if (!inherited) {
-        *real_path = *path;
     }
 
-    cx->process_id = process_id;
     cx->inherited = (UCHAR) inherited;
 }
 
 inline static void fort_callout_ale_check_conf(
         PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
+    cx->process_id = (UINT32) ca->inMetaValues->processId;
+
     fort_callout_ale_fill_path(ca, cx);
 
     cx->blocked = TRUE;

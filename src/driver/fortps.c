@@ -838,10 +838,10 @@ inline static void fort_pstree_update_service_proc(
         proc = fort_pstree_proc_new(ps_tree, pid_hash);
 
         proc->process_id = processId;
-        proc->flags = 0;
+        proc->flags = FORT_PSNODE_IS_SVCHOST;
     }
 
-    if (proc != NULL && proc->ps_name == NULL) {
+    if (proc->ps_name == NULL) {
         PFORT_PSNAME ps_name = fort_pstree_create_service_name(ps_tree, serviceName);
 
         fort_pstree_proc_set_service_name(proc, ps_name);
