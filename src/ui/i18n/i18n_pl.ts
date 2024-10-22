@@ -672,27 +672,27 @@
     </message>
     <message>
         <source>Driver Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Sterownik zainstalowany</translation>
     </message>
     <message>
         <source>Driver Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Sterownik nie jest zainstalowany</translation>
     </message>
     <message>
         <source>Service Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Usługa zainstalowana</translation>
     </message>
     <message>
         <source>Service Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Usługa nie jest zainstalowana</translation>
     </message>
     <message>
         <source>Are you sure to install the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>Czy na pewno chcesz zainstalować usługę?</translation>
     </message>
     <message>
         <source>Are you sure to remove the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>Czy na pewno chcesz usunąć usługę?</translation>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
@@ -1205,7 +1205,7 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Blokuj ruch dla wyłączonych grup aplikacji</translation>
     </message>
 </context>
 <context>
@@ -1860,15 +1860,23 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>Delay startup to retry&apos;s seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>Opóźnij uruchamianie przed ponowną próbą</translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation>Maksymalna liczba ponowień:</translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation>Sekundy opóźnienia przed ponowieniem:</translation>
     </message>
     <message>
         <source>3 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>3 sekundy</translation>
     </message>
     <message>
         <source>20 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>20 sekund</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1876,7 +1884,7 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>2 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>2 minuty</translation>
     </message>
     <message>
         <source>5 minutes</source>
@@ -1888,15 +1896,7 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source> second(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum retries count:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delay seconds to retry:</source>
-        <translation type="unfinished"></translation>
+        <translation> sekund(y)</translation>
     </message>
 </context>
 <context>
@@ -2121,11 +2121,11 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>Run On Startup</source>
-        <translation type="unfinished">Uruchom przy starcie</translation>
+        <translation>Uruchom przy starcie</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
-        <translation type="unfinished"></translation>
+        <translation>Maksymalna liczba ponowień</translation>
     </message>
 </context>
 <context>
