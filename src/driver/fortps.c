@@ -250,7 +250,7 @@ static BOOL fort_pstree_svchost_path_check(PCUNICODE_STRING path)
     return TRUE;
 }
 
-static BOOL fort_pstree_svchost_check(PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
+static BOOL fort_pstree_svchost_name_check(PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
     PWCHAR argp = wcsstr(commandLine->Buffer, L"-s ");
     if (argp == NULL)
@@ -321,7 +321,7 @@ static void fort_pstree_proc_check_svchost(
     proc->flags |= FORT_PSNODE_IS_SVCHOST;
 
     UNICODE_STRING serviceName;
-    if (!fort_pstree_svchost_check(psi->commandLine, &serviceName))
+    if (!fort_pstree_svchost_name_check(psi->commandLine, &serviceName))
         return;
 
     PFORT_PSNAME ps_name = fort_pstree_create_service_name(ps_tree, &serviceName);

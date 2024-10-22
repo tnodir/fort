@@ -365,7 +365,6 @@ inline static void fort_callout_ale_classify_action(PCFORT_CALLOUT_ARG ca,
     }
 }
 
-#if 0
 inline static BOOL fort_callout_ale_fill_path_sid(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
 {
     const FWP_VALUE0 userIdField = ca->inFixedValues->incomingValue[ca->fi->userId].value;
@@ -377,27 +376,39 @@ inline static BOOL fort_callout_ale_fill_path_sid(PCFORT_CALLOUT_ARG ca, PFORT_C
     if (tokenInfo == NULL)
         return FALSE;
 
-    const PSID sid = tokenInfo->SidHash->SidAttr->Sid;
-    if (sid == NULL)
+    const PSID_AND_ATTRIBUTES_HASH sidHash = tokenInfo->SidHash;
+    if (sidHash == NULL)
         return FALSE;
 
-    WCHAR buffer[256];
-    UNICODE_STRING sid_str = {
-        .Length = 0,
-        .MaximumLength = sizeof(buffer),
-        .Buffer = buffer,
-    };
+    const int sidCount = sidHash->SidCount;
 
-    if (NT_SUCCESS(RtlConvertSidToUnicodeString(&sid_str, sid, /*allocate=*/FALSE))) {
-        LOG("TEST> pid=%d sid=%c%c%c%c%c%c%c%c%c%c%c%c\n", cx->process_id, (char) buffer[0],
-                (char) buffer[1], (char) buffer[2], (char) buffer[3], (char) buffer[4],
-                (char) buffer[5], (char) buffer[6], (char) buffer[7], (char) buffer[8],
-                (char) buffer[9], (char) buffer[10], (char) buffer[11]);
+    for (int i = 0; i < sidCount; ++i) {
+        const SID *sid = sidHash->SidAttr[i].Sid;
+        if (sid == NULL)
+            continue;
+
+        if (sid->Revision != 1)
+            continue;
+
+        if (sid->SubAuthorityCount != 6)
+            continue; // not "Service SID"'s count
+
+        const DWORD *subAuth = &sid->SubAuthority[0];
+        if (*subAuth != 80)
+            continue; // not "Service SID"'s prefix
+
+        const BYTE *idAuth = &sid->IdentifierAuthority.Value[0];
+        if (idAuth[5] != 5 || idAuth[4] != 0 || *((PUINT32) &idAuth[0]) != 0)
+            continue; // not "NT Authority"
+
+        // Get Service Name by SID
+        // TODO
+
+        return FALSE;
     }
 
     return FALSE;
 }
-#endif
 
 inline static void fort_callout_ale_fill_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
 {
@@ -407,12 +418,15 @@ inline static void fort_callout_ale_fill_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
             - sizeof(WCHAR)); /* chop terminating zero */
     real_path->buffer = (PCWSTR) ca->inMetaValues->processPath->data;
 
+    PFORT_APP_PATH path = &cx->path;
     BOOL isSvcHost = FALSE;
     BOOL inherited = FALSE;
-    PFORT_APP_PATH path = &cx->path;
 
     if (fort_pstree_get_proc_name(
-                &fort_device()->ps_tree, cx->process_id, path, &isSvcHost, &inherited)) {
+                &fort_device()->ps_tree, cx->process_id, path, &isSvcHost, &inherited)
+            // Check Service SID
+            || (isSvcHost && fort_callout_ale_fill_path_sid(ca, cx))) {
+
         if (!inherited) {
             *real_path = *path;
         }
