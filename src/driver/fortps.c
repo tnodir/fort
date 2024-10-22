@@ -232,25 +232,23 @@ static BOOL fort_pstree_svchost_path_check(PCUNICODE_STRING path)
         return FALSE;
 
     /* Check the file name */
-    if (RtlCompareMemory(pathBuffer + (pathLength - svchostSize), FORT_SVCHOST_EXE, svchostSize)
-            != svchostSize)
+    if (!fort_mem_eql(pathBuffer + (pathLength - svchostSize), FORT_SVCHOST_EXE, svchostSize))
         return FALSE;
 
     /* Check the drive */
-    if (RtlCompareMemory(pathBuffer, sysDrivePath->Buffer, sysDrivePath->Length)
-            != sysDrivePath->Length)
+    if (!fort_mem_eql(pathBuffer, sysDrivePath->Buffer, sysDrivePath->Length))
         return FALSE;
 
     /* Check the path */
-    if (RtlCompareMemory(pathBuffer + sysDrivePath->Length,
-                (PCHAR) sys32Path->Buffer + sys32DrivePrefixSize, sys32PathSize)
-            != sys32PathSize)
+    if (!fort_mem_eql(pathBuffer + sysDrivePath->Length,
+                (PCHAR) sys32Path->Buffer + sys32DrivePrefixSize, sys32PathSize))
         return FALSE;
 
     return TRUE;
 }
 
-static BOOL fort_pstree_svchost_name_check(PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
+static BOOL fort_pstree_svchost_name_check(
+        PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
     PWCHAR argp = wcsstr(commandLine->Buffer, L"-s ");
     if (argp == NULL)

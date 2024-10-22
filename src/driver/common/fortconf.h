@@ -328,6 +328,10 @@ typedef BOOL fort_conf_zones_ip_included_func(
 extern "C" {
 #endif
 
+FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len);
+
+FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len);
+
 FORT_API BOOL fort_conf_ip_inlist(
         const UINT32 *ip, const PFORT_CONF_ADDR4_LIST addr_list, BOOL isIPv6);
 

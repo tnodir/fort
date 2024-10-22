@@ -16,16 +16,6 @@ static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
 static_assert(sizeof(FORT_APP_DATA) == 2 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
 
-#ifndef FORT_DRIVER
-#    define fort_memcmp memcmp
-#else
-static int fort_memcmp(const void *p1, const void *p2, size_t len)
-{
-    const size_t n = RtlCompareMemory(p1, p2, len);
-    return (n == len) ? 0 : (((const char *) p1)[n] - ((const char *) p2)[n]);
-}
-#endif
-
 static BOOL fort_conf_ip4_find(const UINT32 *iparr, UINT32 ip, UINT32 count, BOOL is_range)
 {
     if (count == 0)
@@ -52,7 +42,7 @@ static BOOL fort_conf_ip4_find(const UINT32 *iparr, UINT32 ip, UINT32 count, BOO
     return high >= 0 && ip >= iparr[high] && ip <= iparr[count + high];
 }
 
-#define fort_ip6_cmp(l, r) fort_memcmp(l, r, sizeof(ip6_addr_t))
+#define fort_ip6_cmp(l, r) fort_mem_cmp(l, r, sizeof(ip6_addr_t))
 
 static BOOL fort_conf_ip6_find(
         const ip6_addr_t *iparr, const ip6_addr_t *ip, UINT32 count, BOOL is_range)
@@ -102,6 +92,17 @@ static BOOL fort_conf_ip6_find(
 #define fort_conf_addr_list_ip6_ref(addr6_list) (addr6_list)->ip
 
 #define fort_conf_addr_list_pair6_ref(addr6_list) &(addr6_list)->ip[(addr6_list)->ip_n]
+
+FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len)
+{
+    const size_t n = RtlCompareMemory(p1, p2, len);
+    return (n == len) ? 0 : (((const char *) p1)[n] - ((const char *) p2)[n]);
+}
+
+FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len)
+{
+    return RtlCompareMemory(p1, p2, len) == len;
+}
 
 FORT_API BOOL fort_conf_ip_inlist(
         const UINT32 *ip, const PFORT_CONF_ADDR4_LIST addr_list, BOOL isIPv6)
@@ -175,7 +176,7 @@ FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PAT
     if (path_len != app_entry->path_len)
         return FALSE;
 
-    return fort_memcmp(path->buffer, app_entry->path, path_len) == 0;
+    return fort_mem_eql(path->buffer, app_entry->path, path_len);
 }
 
 static BOOL fort_conf_app_wild_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
@@ -216,13 +217,13 @@ FORT_API FORT_APP_DATA fort_conf_app_exe_find(
             conf, path, conf->exe_apps_off, conf->exe_apps_n, fort_conf_app_exe_equal);
 }
 
-static FORT_APP_DATA fort_conf_app_wild_find(const PFORT_CONF conf, PCFORT_APP_PATH path)
+inline static FORT_APP_DATA fort_conf_app_wild_find(const PFORT_CONF conf, PCFORT_APP_PATH path)
 {
     return fort_conf_app_find_loop(
             conf, path, conf->wild_apps_off, conf->wild_apps_n, fort_conf_app_wild_equal);
 }
 
-static int fort_conf_app_prefix_cmp(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
+inline static int fort_conf_app_prefix_cmp(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
 {
     UINT16 path_len = path->len;
 
@@ -230,10 +231,10 @@ static int fort_conf_app_prefix_cmp(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH 
         path_len = app_entry->path_len;
     }
 
-    return fort_memcmp(path->buffer, app_entry->path, path_len);
+    return fort_mem_cmp(path->buffer, app_entry->path, path_len);
 }
 
-static FORT_APP_DATA fort_conf_app_prefix_find(const PFORT_CONF conf, PCFORT_APP_PATH path)
+inline static FORT_APP_DATA fort_conf_app_prefix_find(const PFORT_CONF conf, PCFORT_APP_PATH path)
 {
     const FORT_APP_DATA app_data = { 0 };
 
