@@ -401,6 +401,29 @@ inline static BOOL fort_callout_ale_fill_path_sid(PCFORT_CALLOUT_ARG ca, PFORT_C
         if (idAuth[5] != 5 || idAuth[4] != 0 || *((PUINT32) &idAuth[0]) != 0)
             continue; // not "NT Authority"
 
+        // Print SID
+        {
+            WCHAR buf[256];
+            UNICODE_STRING sid_str = {
+                .Length = 0,
+                .MaximumLength = sizeof(buf),
+                .Buffer = buf,
+            };
+
+            if (NT_SUCCESS(
+                        RtlConvertSidToUnicodeString(&sid_str, (PSID) sid, /*allocate=*/FALSE))) {
+                LOG("Service SID: pid=%d sid=%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",
+                        // Process ID
+                        cx->process_id,
+                        // Service SID
+                        (char) buf[0], (char) buf[1], (char) buf[2], (char) buf[3], (char) buf[4],
+                        (char) buf[5], (char) buf[6], (char) buf[7], (char) buf[8], (char) buf[9],
+                        (char) buf[10], (char) buf[11], (char) buf[12], (char) buf[13],
+                        (char) buf[14], (char) buf[15], (char) buf[16], (char) buf[17],
+                        (char) buf[18], (char) buf[19], (char) buf[20], (char) buf[21]);
+            }
+        }
+
         // Get Service Name by SID
         cx->path.buffer = cx->svchost_name;
 
