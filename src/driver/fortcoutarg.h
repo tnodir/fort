@@ -60,6 +60,7 @@ typedef struct fort_callout_ale_extra
 
     FORT_APP_PATH path;
     FORT_APP_PATH real_path;
+    WCHAR svchost_name[80];
 
     PIRP irp;
     ULONG_PTR info;

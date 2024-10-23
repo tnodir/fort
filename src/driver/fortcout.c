@@ -402,9 +402,12 @@ inline static BOOL fort_callout_ale_fill_path_sid(PCFORT_CALLOUT_ARG ca, PFORT_C
             continue; // not "NT Authority"
 
         // Get Service Name by SID
-        // TODO
+        cx->path.buffer = cx->svchost_name;
 
-        return FALSE;
+        if (fort_pstree_get_svchost_name(&fort_device()->ps_tree, &subAuth[1], &cx->path))
+            return TRUE;
+
+        break;
     }
 
     return FALSE;

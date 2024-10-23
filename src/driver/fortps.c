@@ -826,6 +826,26 @@ FORT_API BOOL fort_pstree_get_proc_name(PFORT_PSTREE ps_tree, DWORD processId, P
     return res;
 }
 
+static BOOL fort_pstree_get_svchost_name_locked(
+        PFORT_PSTREE ps_tree, const DWORD *sidBytes, PFORT_APP_PATH path)
+{
+    return FALSE;
+}
+
+BOOL fort_pstree_get_svchost_name(PFORT_PSTREE ps_tree, const DWORD *sidBytes, PFORT_APP_PATH path)
+{
+    BOOL res;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        res = fort_pstree_get_svchost_name_locked(ps_tree, sidBytes, path);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return res;
+}
+
 inline static void fort_pstree_update_service_proc(
         PFORT_PSTREE ps_tree, PCUNICODE_STRING serviceName, DWORD processId)
 {
