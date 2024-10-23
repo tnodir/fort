@@ -395,14 +395,21 @@ inline static BOOL fort_callout_ale_check_svchost_sid(const SID *sid)
         return FALSE; // not "Service SID"'s prefix
 
     const BYTE *idAuth = &sid->IdentifierAuthority.Value[0];
-    if (idAuth[5] != 5 || idAuth[4] != 0 || *((PUINT32) &idAuth[0]) != 0)
+    if (idAuth[5] != 5)
+        return FALSE; // not "NT Authority"
+
+    if (idAuth[4] != 0 || *((PUINT32) &idAuth[0]) != 0)
         return FALSE; // not "NT Authority"
 
     return TRUE;
 }
 
-inline static BOOL fort_callout_ale_fill_path_sid(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+inline static BOOL fort_callout_ale_fill_path_sid(
+        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, BOOL isSvcHost)
 {
+    if (!isSvcHost)
+        return FALSE;
+
     const PSID_AND_ATTRIBUTES_HASH sidHash = fort_callout_ale_get_sid(ca);
     if (sidHash == NULL)
         return FALSE;
@@ -440,8 +447,7 @@ inline static void fort_callout_ale_fill_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
 
     if (fort_pstree_get_proc_name(
                 &fort_device()->ps_tree, cx->process_id, path, &isSvcHost, &inherited)
-            // Check Service SID
-            || (isSvcHost && fort_callout_ale_fill_path_sid(ca, cx))) {
+            || fort_callout_ale_fill_path_sid(ca, cx, isSvcHost)) {
 
         if (!inherited) {
             *real_path = *path;
