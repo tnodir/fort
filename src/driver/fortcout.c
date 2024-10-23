@@ -365,18 +365,45 @@ inline static void fort_callout_ale_classify_action(PCFORT_CALLOUT_ARG ca,
     }
 }
 
-inline static BOOL fort_callout_ale_fill_path_sid(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+inline static PSID_AND_ATTRIBUTES_HASH fort_callout_ale_get_sid(PCFORT_CALLOUT_ARG ca)
 {
     const FWP_VALUE0 userIdField = ca->inFixedValues->incomingValue[ca->fi->userId].value;
     if (userIdField.type != FWP_TOKEN_ACCESS_INFORMATION_TYPE)
-        return FALSE;
+        return NULL;
 
     const PTOKEN_ACCESS_INFORMATION tokenInfo =
             (PTOKEN_ACCESS_INFORMATION) userIdField.tokenAccessInformation->data;
     if (tokenInfo == NULL)
+        return NULL;
+
+    return tokenInfo->SidHash;
+}
+
+inline static BOOL fort_callout_ale_check_svchost_sid(const SID *sid)
+{
+    if (sid == NULL)
         return FALSE;
 
-    const PSID_AND_ATTRIBUTES_HASH sidHash = tokenInfo->SidHash;
+    if (sid->Revision != 1)
+        return FALSE;
+
+    if (sid->SubAuthorityCount != 6)
+        return FALSE; // not "Service SID"'s sub-auth count
+
+    const DWORD *subAuth = &sid->SubAuthority[0];
+    if (*subAuth != 80)
+        return FALSE; // not "Service SID"'s prefix
+
+    const BYTE *idAuth = &sid->IdentifierAuthority.Value[0];
+    if (idAuth[5] != 5 || idAuth[4] != 0 || *((PUINT32) &idAuth[0]) != 0)
+        return FALSE; // not "NT Authority"
+
+    return TRUE;
+}
+
+inline static BOOL fort_callout_ale_fill_path_sid(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+{
+    const PSID_AND_ATTRIBUTES_HASH sidHash = fort_callout_ale_get_sid(ca);
     if (sidHash == NULL)
         return FALSE;
 
@@ -384,50 +411,13 @@ inline static BOOL fort_callout_ale_fill_path_sid(PCFORT_CALLOUT_ARG ca, PFORT_C
 
     for (int i = 0; i < sidCount; ++i) {
         const SID *sid = sidHash->SidAttr[i].Sid;
-        if (sid == NULL)
+        if (!fort_callout_ale_check_svchost_sid(sid))
             continue;
-
-        if (sid->Revision != 1)
-            continue;
-
-        if (sid->SubAuthorityCount != 6)
-            continue; // not "Service SID"'s count
-
-        const DWORD *subAuth = &sid->SubAuthority[0];
-        if (*subAuth != 80)
-            continue; // not "Service SID"'s prefix
-
-        const BYTE *idAuth = &sid->IdentifierAuthority.Value[0];
-        if (idAuth[5] != 5 || idAuth[4] != 0 || *((PUINT32) &idAuth[0]) != 0)
-            continue; // not "NT Authority"
-
-        // Print SID
-        {
-            WCHAR buf[256];
-            UNICODE_STRING sid_str = {
-                .Length = 0,
-                .MaximumLength = sizeof(buf),
-                .Buffer = buf,
-            };
-
-            if (NT_SUCCESS(
-                        RtlConvertSidToUnicodeString(&sid_str, (PSID) sid, /*allocate=*/FALSE))) {
-                LOG("Service SID: pid=%d sid=%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c\n",
-                        // Process ID
-                        cx->process_id,
-                        // Service SID
-                        (char) buf[0], (char) buf[1], (char) buf[2], (char) buf[3], (char) buf[4],
-                        (char) buf[5], (char) buf[6], (char) buf[7], (char) buf[8], (char) buf[9],
-                        (char) buf[10], (char) buf[11], (char) buf[12], (char) buf[13],
-                        (char) buf[14], (char) buf[15], (char) buf[16], (char) buf[17],
-                        (char) buf[18], (char) buf[19], (char) buf[20], (char) buf[21]);
-            }
-        }
 
         // Get Service Name by SID
         cx->path.buffer = cx->svchost_name;
 
-        if (fort_pstree_get_svchost_name(&fort_device()->ps_tree, &subAuth[1], &cx->path))
+        if (fort_pstree_get_svchost_name(&fort_device()->ps_tree, &sid->SubAuthority[1], &cx->path))
             return TRUE;
 
         break;
