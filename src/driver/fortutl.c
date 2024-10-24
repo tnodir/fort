@@ -121,7 +121,7 @@ FORT_API NTSTATUS fort_driver_path(
     return status;
 }
 
-FORT_API DWORD fort_reg_flag(PCWSTR name)
+FORT_API DWORD fort_reg_value(PCWSTR name, DWORD defaultValue)
 {
     NTSTATUS status;
 
@@ -134,19 +134,19 @@ FORT_API DWORD fort_reg_flag(PCWSTR name)
     InitializeObjectAttributes(
             &objectAttr, &regPath, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 
-    DWORD flagValue = 0;
+    DWORD value = 0;
 
     status = ZwOpenKey(&regKey, KEY_READ, &objectAttr);
     if (NT_SUCCESS(status)) {
         UNICODE_STRING valueName;
         RtlInitUnicodeString(&valueName, name);
 
-        status = fort_reg_value_dword(regKey, &valueName, &flagValue);
+        status = fort_reg_value_dword(regKey, &valueName, &value);
 
         ZwClose(regKey);
     }
 
-    return NT_SUCCESS(status) ? flagValue : 0;
+    return NT_SUCCESS(status) ? value : defaultValue;
 }
 
 static void fort_system_drive_init(PCUNICODE_STRING path)

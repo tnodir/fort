@@ -33,7 +33,7 @@ static NTSTATUS fort_driver_create_device(PDRIVER_OBJECT driver)
     UNICODE_STRING device_name;
     RtlInitUnicodeString(&device_name, FORT_NT_DEVICE_NAME);
 
-    const BOOL isDriverNonAdmin = fort_reg_flag(L"isDriverNonAdmin") != 0;
+    const BOOL isDriverNonAdmin = fort_reg_value(L"isDriverNonAdmin", 0) != 0;
     const PCUNICODE_STRING sddl = (isDriverNonAdmin ? &SDDL_DEVOBJ_SYS_ALL_ADM_RWX_WORLD_RWX_RES_RWX
                                                     : &SDDL_DEVOBJ_SYS_ALL_ADM_ALL);
 

@@ -407,7 +407,11 @@ static NTSTATUS fort_device_register_provider(void)
 {
     NTSTATUS status;
 
-    fort_prov_init();
+    const FORT_PROV_INIT_CONF init_conf = {
+        .sublayer_weight = (UINT16) fort_reg_value(L"sublayerWeight", FORT_SUBLAYER_MAX_WEIGHT),
+    };
+
+    fort_prov_init(init_conf);
 
     HANDLE engine;
     status = fort_prov_trans_open(&engine);
@@ -418,7 +422,7 @@ static NTSTATUS fort_device_register_provider(void)
 
     if (!fort_prov_get_boot_conf(engine, &boot_conf)) {
         // Default flags from Registry
-        boot_conf.boot_filter = fort_reg_flag(L"bootFilter");
+        boot_conf.boot_filter = fort_reg_value(L"bootFilter", 0);
     }
 
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER, boot_conf.boot_filter);

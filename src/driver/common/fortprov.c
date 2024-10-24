@@ -279,7 +279,7 @@ static void fort_prov_init_provider(void)
     boot_provider->flags = FWPM_PROVIDER_FLAG_PERSISTENT;
 }
 
-static void fort_prov_init_sublayer(void)
+static void fort_prov_init_sublayer(const FORT_PROV_INIT_CONF init_conf)
 {
     FWPM_SUBLAYER0 *sublayer = &g_provGlobal.sublayer;
     sublayer->flags = 0;
@@ -287,18 +287,19 @@ static void fort_prov_init_sublayer(void)
     sublayer->displayData.name = (PWCHAR) L"FortSublayer";
     sublayer->displayData.description = (PWCHAR) L"Fort Firewall Sublayer";
     sublayer->providerKey = (GUID *) &FORT_GUID_PROVIDER;
+    sublayer->weight = init_conf.sublayer_weight;
 
     FWPM_SUBLAYER0 *boot_sublayer = &g_provGlobal.boot_sublayer;
     *boot_sublayer = *sublayer;
     boot_sublayer->flags = FWPM_SUBLAYER_FLAG_PERSISTENT;
 }
 
-FORT_API void fort_prov_init()
+FORT_API void fort_prov_init(const FORT_PROV_INIT_CONF init_conf)
 {
     RtlZeroMemory(&g_provGlobal, sizeof(g_provGlobal));
 
     fort_prov_init_provider();
-    fort_prov_init_sublayer();
+    fort_prov_init_sublayer(init_conf);
 
     fort_prov_init_callouts();
 

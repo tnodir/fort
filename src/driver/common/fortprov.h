@@ -3,6 +3,13 @@
 
 #include "common.h"
 
+#define FORT_SUBLAYER_MAX_WEIGHT 0xFFFF
+
+typedef struct fort_prov_init_conf
+{
+    UINT16 sublayer_weight;
+} FORT_PROV_INIT_CONF, *PFORT_PROV_INIT_CONF;
+
 typedef struct fort_prov_boot_conf
 {
     union {
@@ -26,7 +33,7 @@ typedef struct fort_prov_boot_conf
 extern "C" {
 #endif
 
-FORT_API void fort_prov_init(void);
+FORT_API void fort_prov_init(const FORT_PROV_INIT_CONF init_conf);
 
 FORT_API DWORD fort_prov_trans_open(HANDLE *engine);
 
