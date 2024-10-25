@@ -9,15 +9,28 @@ QString StringUtil::capitalize(const QString &text)
     return firstChar.toUpper() + text.mid(1);
 }
 
+QByteArray StringUtil::cryptoSha1(const QByteArray &data)
+{
+    return QCryptographicHash::hash(data, QCryptographicHash::Sha1);
+}
+
 QString StringUtil::cryptoHash(const QString &text)
 {
     if (text.isEmpty())
         return QString();
 
     const QByteArray data = text.toUtf8();
-    const QByteArray hash = QCryptographicHash::hash(data, QCryptographicHash::Sha1);
+    const QByteArray hash = cryptoSha1(data);
 
     return QString::fromLatin1(hash.toHex());
+}
+
+QByteArray StringUtil::serviceSid(const QString &serviceName)
+{
+    const auto name = serviceName.toUpper();
+    const QByteArray nameData((const char *) name.utf16(), name.size() * sizeof(wchar_t));
+
+    return StringUtil::cryptoSha1(nameData);
 }
 
 int StringUtil::lineStart(const QString &text, int pos, int badPos)

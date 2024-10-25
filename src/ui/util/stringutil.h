@@ -11,7 +11,10 @@ class StringUtil
 public:
     static QString capitalize(const QString &text);
 
+    static QByteArray cryptoSha1(const QByteArray &data);
     static QString cryptoHash(const QString &text);
+
+    static QByteArray serviceSid(const QString &serviceName);
 
     static int lineStart(const QString &text, int pos, int badPos = -1);
     static int lineEnd(const QString &text, int pos, int badPos = -1);
