@@ -42,6 +42,7 @@ public slots:
 protected:
     virtual Qt::ItemFlags flagHasChildren(const QModelIndex &index) const;
     virtual Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const;
+    virtual Qt::ItemFlags flagIsEnabled(const QModelIndex &index) const;
 
     virtual void invalidateRowCache() const;
     void updateRowCache(int row) const;

@@ -18,6 +18,7 @@ const char *const servicesSubKey = R"(SYSTEM\CurrentControlSet\Services)";
 const char *const serviceImagePathKey = "ImagePath";
 const char *const serviceImagePathOldKey = "_Fort_ImagePath";
 const char *const serviceTypeKey = "Type";
+const char *const serviceHostSplitDisableKey = "SvcHostSplitDisable";
 const char *const serviceTypeOldKey = "_Fort_Type";
 const char *const serviceTrackFlagsKey = "_FortTrackFlags";
 
@@ -55,7 +56,7 @@ bool checkIsSvcHostService(const RegKey &svcReg)
     if (!imagePath.contains(R"(\system32\svchost.exe)", Qt::CaseInsensitive))
         return false;
 
-    if (!svcReg.contains("ServiceSidType") || svcReg.value("SvcHostSplitDisable").toInt() != 0)
+    if (!svcReg.contains("ServiceSidType"))
         return false;
 
     const QString dllPath = getServiceDll(svcReg);
@@ -84,6 +85,7 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
 
         ServiceInfo info;
         info.isRunning = (service->ServiceStatusProcess.dwCurrentState == SERVICE_RUNNING);
+        info.isHostSplitDisabled = svcReg.value(serviceHostSplitDisableKey).toInt() != 0;
         info.serviceType = ServiceInfo::Type(service->ServiceStatusProcess.dwServiceType);
         info.trackFlags = trackFlags;
         info.processId = service->ServiceStatusProcess.dwProcessId;

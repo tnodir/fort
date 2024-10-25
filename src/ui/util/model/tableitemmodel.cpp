@@ -24,8 +24,8 @@ Qt::ItemFlags TableItemModel::flags(const QModelIndex &index) const
     if (!index.isValid())
         return Qt::NoItemFlags;
 
-    return Qt::ItemIsSelectable | Qt::ItemIsEnabled | flagHasChildren(index)
-            | flagIsUserCheckable(index);
+    return Qt::ItemIsSelectable | flagHasChildren(index) | flagIsUserCheckable(index)
+            | flagIsEnabled(index);
 }
 
 void TableItemModel::resetLater()
@@ -47,6 +47,11 @@ Qt::ItemFlags TableItemModel::flagHasChildren(const QModelIndex & /*index*/) con
 Qt::ItemFlags TableItemModel::flagIsUserCheckable(const QModelIndex & /*index*/) const
 {
     return Qt::NoItemFlags;
+}
+
+Qt::ItemFlags TableItemModel::flagIsEnabled(const QModelIndex & /*index*/) const
+{
+    return Qt::ItemIsEnabled;
 }
 
 void TableItemModel::reset()

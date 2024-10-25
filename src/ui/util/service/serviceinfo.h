@@ -23,7 +23,9 @@ public:
 
     bool isTracked() const { return trackFlags != 0; }
 
-    bool isRunning = false;
+public:
+    bool isRunning : 1 = false;
+    bool isHostSplitDisabled : 1 = false;
     Type serviceType = TypeUnknown;
     quint16 trackFlags = 0;
     quint32 processId = 0;

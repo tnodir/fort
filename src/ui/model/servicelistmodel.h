@@ -33,6 +33,8 @@ public:
     const ServiceInfo &serviceInfoAt(int index) const;
 
 protected:
+    Qt::ItemFlags flagIsEnabled(const QModelIndex &index) const override;
+
     bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_serviceRow; }
 

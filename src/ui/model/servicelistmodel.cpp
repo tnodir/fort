@@ -52,13 +52,13 @@ QVariant ServiceListModel::headerData(int section, Qt::Orientation orientation, 
             return tr("Process ID");
         }
     }
-    return QVariant();
+    return {};
 }
 
 QVariant ServiceListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+        return {};
 
     switch (role) {
     // Label
@@ -71,7 +71,7 @@ QVariant ServiceListModel::data(const QModelIndex &index, int role) const
         return dataDecoration(index);
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
@@ -90,7 +90,7 @@ QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
         return dataDisplayProcessId(info);
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant ServiceListModel::dataDisplayProcessId(const ServiceInfo &info) const
@@ -107,11 +107,21 @@ QVariant ServiceListModel::dataDecoration(const QModelIndex &index) const
 
         const auto &info = serviceInfoAt(row);
 
-        if (info.isTracked())
+        if (info.isTracked()) {
             return IconCache::icon(":/icons/widgets.png");
+        }
     }
 
-    return QVariant();
+    return {};
+}
+
+Qt::ItemFlags ServiceListModel::flagIsEnabled(const QModelIndex &index) const
+{
+    const int row = index.row();
+
+    const auto &info = serviceInfoAt(row);
+
+    return info.isHostSplitDisabled ? Qt::NoItemFlags : Qt::ItemIsEnabled;
 }
 
 bool ServiceListModel::updateTableRow(const QVariantHash & /*vars*/, int /*row*/) const
