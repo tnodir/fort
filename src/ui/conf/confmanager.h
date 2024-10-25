@@ -13,6 +13,7 @@
 class FirewallConf;
 class IniOptions;
 class IniUser;
+class ServiceInfoManager;
 class Settings;
 class TaskInfo;
 
@@ -70,8 +71,9 @@ public:
 
     bool validateDriver();
 
-    void updateServices();
     void updateDriverServices(const QVector<ServiceInfo> &services, int runningServicesCount);
+
+    void updateServices();
 
 signals:
     void imported();
@@ -94,6 +96,11 @@ private:
     void setupDefault(FirewallConf &conf) const;
 
     bool validateConf(const FirewallConf &newConf);
+
+    void updateDriverServiceSids(const QVector<ServiceInfo> &services);
+
+    void updateOwnProcessServices(ServiceInfoManager *serviceInfoManager);
+    void updateShareProcessServices(ServiceInfoManager *serviceInfoManager);
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);

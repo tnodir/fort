@@ -925,6 +925,31 @@ void ConfManager::updateServices()
 {
     auto serviceInfoManager = IoC<ServiceInfoManager>();
 
+    updateOwnProcessServices(serviceInfoManager);
+    updateShareProcessServices(serviceInfoManager);
+}
+
+void ConfManager::updateDriverServices(
+        const QVector<ServiceInfo> &services, int runningServicesCount)
+{
+    ConfUtil confUtil;
+
+    confUtil.writeServices(services, runningServicesCount);
+
+    IoC<DriverManager>()->writeServices(confUtil.buffer());
+}
+
+void ConfManager::updateDriverServiceSids(const QVector<ServiceInfo> &services)
+{
+    ConfUtil confUtil;
+
+    confUtil.writeServiceSids(services);
+
+    IoC<DriverManager>()->writeServiceSids(confUtil.buffer());
+}
+
+void ConfManager::updateOwnProcessServices(ServiceInfoManager *serviceInfoManager)
+{
     int runningServicesCount = 0;
     const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
             ServiceInfo::TypeWin32OwnProcess, ServiceInfo::StateAll,
@@ -937,14 +962,15 @@ void ConfManager::updateServices()
     }
 }
 
-void ConfManager::updateDriverServices(
-        const QVector<ServiceInfo> &services, int runningServicesCount)
+void ConfManager::updateShareProcessServices(ServiceInfoManager *serviceInfoManager)
 {
-    ConfUtil confUtil;
+    const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
+            ServiceInfo::TypeWin32ShareProcess, ServiceInfo::StateAll,
+            /*displayName=*/false);
 
-    confUtil.writeServices(services, runningServicesCount);
-
-    IoC<DriverManager>()->writeServices(confUtil.buffer());
+    if (!services.isEmpty()) {
+        updateDriverServiceSids(services);
+    }
 }
 
 bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)

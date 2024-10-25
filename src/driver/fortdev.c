@@ -155,6 +155,13 @@ static NTSTATUS fort_device_control_setservices(PFORT_DEVICE_CONTROL_ARG dca)
     return STATUS_UNSUCCESSFUL;
 }
 
+static NTSTATUS fort_device_control_setservice_sids(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    // TODO
+
+    return STATUS_UNSUCCESSFUL;
+}
+
 inline static NTSTATUS fort_device_control_setconf_ref(
         const PFORT_CONF_IO conf_io, PFORT_CONF_REF conf_ref)
 {
@@ -329,6 +336,7 @@ typedef FORT_DEVICE_CONTROL_PROCESS_FUNC *PFORT_DEVICE_CONTROL_PROCESS_FUNC;
 static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_validate,
     &fort_device_control_setservices,
+    &fort_device_control_setservice_sids,
     &fort_device_control_setconf,
     &fort_device_control_setflags,
     &fort_device_control_getlog,

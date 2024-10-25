@@ -11,6 +11,7 @@ QString deviceName();
 
 quint32 ioctlValidate();
 quint32 ioctlSetServices();
+quint32 ioctlSetServiceSids();
 quint32 ioctlSetConf();
 quint32 ioctlSetFlags();
 quint32 ioctlGetLog();

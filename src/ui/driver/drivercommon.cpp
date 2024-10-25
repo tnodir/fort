@@ -22,6 +22,11 @@ quint32 ioctlSetServices()
     return FORT_IOCTL_SETSERVICES;
 }
 
+quint32 ioctlSetServiceSids()
+{
+    return FORT_IOCTL_SETSERVICE_SIDS;
+}
+
 quint32 ioctlSetConf()
 {
     return FORT_IOCTL_SETCONF;

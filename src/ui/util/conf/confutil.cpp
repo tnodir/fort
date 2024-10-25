@@ -227,7 +227,12 @@ void ConfUtil::writeServices(const QVector<ServiceInfo> &services, int runningSe
         outSize += writeServiceInfo(data + outSize, info);
     }
 
-    buffer().resize(outSize);
+    buffer().resize(outSize); // shrink to actual size
+}
+
+void ConfUtil::writeServiceSids(const QVector<ServiceInfo> &services)
+{
+    // TODO
 }
 
 bool ConfUtil::write(
