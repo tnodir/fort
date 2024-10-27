@@ -1,5 +1,7 @@
 #include "iprange.h"
 
+#include <common/fortconf.h>
+
 #include <util/stringutil.h>
 
 #include "netutil.h"
@@ -16,9 +18,9 @@ inline bool checkIp6MaskBitsCount(const int nbits)
     return (nbits >= 0 && nbits <= 128);
 }
 
-inline bool compareLessIp6(const ip6_addr_t l, const ip6_addr_t r)
+inline bool compareLessIp6(const ip6_addr_t &l, const ip6_addr_t &r)
 {
-    return memcmp(&l, &r, sizeof(ip6_addr_t)) < 0;
+    return fort_ip6_cmp(&l, &r) < 0;
 }
 
 inline void sortIp6Array(ip6_arr_t &array)

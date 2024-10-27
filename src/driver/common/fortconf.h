@@ -347,6 +347,8 @@ extern "C" {
 
 FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len);
 
+#define fort_ip6_cmp(l, r) fort_mem_cmp(l, r, sizeof(ip6_addr_t))
+
 FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len);
 
 FORT_API BOOL fort_conf_ip_inlist(

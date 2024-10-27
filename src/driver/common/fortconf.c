@@ -42,8 +42,6 @@ static BOOL fort_conf_ip4_find(const UINT32 *iparr, UINT32 ip, UINT32 count, BOO
     return high >= 0 && ip >= iparr[high] && ip <= iparr[count + high];
 }
 
-#define fort_ip6_cmp(l, r) fort_mem_cmp(l, r, sizeof(ip6_addr_t))
-
 static BOOL fort_conf_ip6_find(
         const ip6_addr_t *iparr, const ip6_addr_t *ip, UINT32 count, BOOL is_range)
 {
@@ -97,7 +95,7 @@ static BOOL fort_conf_ip6_find(
 FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len)
 {
     const size_t n = RtlCompareMemory(p1, p2, len);
-    return (n == len) ? 0 : (((const char *) p1)[n] - ((const char *) p2)[n]);
+    return (n == len) ? 0 : (((unsigned char *) p1)[n] - ((unsigned char *) p2)[n]);
 }
 
 FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len)
