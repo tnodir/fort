@@ -1,5 +1,8 @@
 #include "confutil.h"
 
+#include <QHash>
+#include <QMap>
+
 #include <common/fortconf.h>
 #include <fort_version.h>
 
@@ -52,6 +55,51 @@ int writeServiceInfo(char *data, const ServiceInfo &serviceInfo)
     memcpy(info->name, serviceInfo.serviceName.utf16(), nameLen);
 
     return FORT_SERVICE_INFO_NAME_OFF + FORT_CONF_STR_DATA_SIZE(nameLen);
+}
+
+void collectServiceSidsNames(const QVector<ServiceInfo> &services,
+        QMap<QByteArray, int> &sidNameIndexMap, QStringList &namesList)
+{
+    QHash<QString, int> nameIndexMap;
+
+    for (const ServiceInfo &info : services) {
+        const auto sid = StringUtil::serviceSid(info.realServiceName);
+
+        const auto name = info.serviceName;
+        int nameIndex = nameIndexMap.value(name, -1);
+
+        if (nameIndex == -1) {
+            nameIndex = namesList.size();
+            namesList.append(name);
+        }
+
+        sidNameIndexMap.insert(sid, nameIndex);
+    }
+}
+
+int writeServiceSidsHeader(char *data, int servicesCount, int namesCount)
+{
+    PFORT_SERVICE_SID_LIST sidList = (PFORT_SERVICE_SID_LIST) data;
+
+    sidList->services_n = servicesCount;
+    sidList->names_n = namesCount;
+
+    return FORT_SERVICE_SID_LIST_DATA_OFF;
+}
+
+int writeServiceSidsList(char *data, const QMap<QByteArray, int> &sidNameIndexMap)
+{
+    const int servicesCount = sidNameIndexMap.size();
+
+    char *sid = data;
+    quint16 *nameIndex = (quint16 *) (data + servicesCount * FORT_SERVICE_SID_SIZE);
+
+    for (const auto &[sidData, index] : sidNameIndexMap.asKeyValueRange()) {
+        writeArray(&sid, sidData);
+        *nameIndex++ = index;
+    }
+
+    return servicesCount * (FORT_SERVICE_SID_SIZE + sizeof(quint16));
 }
 
 void writeConfFlags(const FirewallConf &conf, PFORT_CONF_FLAGS confFlags)
@@ -232,7 +280,23 @@ void ConfUtil::writeServices(const QVector<ServiceInfo> &services, int runningSe
 
 void ConfUtil::writeServiceSids(const QVector<ServiceInfo> &services)
 {
-    // TODO
+    QMap<QByteArray, int> sidNameIndexMap;
+    QStringList namesList;
+
+    collectServiceSidsNames(services, sidNameIndexMap, namesList);
+
+    const int servicesCount = sidNameIndexMap.size();
+    const int namesCount = namesList.size();
+
+    buffer().resize(FORT_SERVICE_SID_LIST_MAX_SIZE(servicesCount, namesCount));
+
+    char *data = buffer().data();
+
+    int outSize = writeServiceSidsHeader(data, servicesCount, namesCount);
+
+    outSize += writeServiceSidsList(data + outSize, sidNameIndexMap);
+
+    buffer().resize(outSize); // shrink to actual size
 }
 
 bool ConfUtil::write(

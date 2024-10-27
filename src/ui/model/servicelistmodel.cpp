@@ -83,7 +83,7 @@ QVariant ServiceListModel::dataDisplay(const QModelIndex &index) const
 
     switch (column) {
     case 0:
-        return info.serviceName;
+        return info.realServiceName;
     case 1:
         return info.displayName;
     case 2:

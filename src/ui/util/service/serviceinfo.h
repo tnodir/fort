@@ -30,6 +30,7 @@ public:
     quint16 trackFlags = 0;
     quint32 processId = 0;
     QString serviceName;
+    QString realServiceName;
     QString displayName;
 };
 

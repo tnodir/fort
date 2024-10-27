@@ -73,10 +73,10 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
     for (int infoIndex = infoList.size(); serviceCount > 0;
             --serviceCount, ++service, ++infoIndex) {
 
-        const auto serviceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
+        const auto realServiceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
 
-        const auto originServiceName = resolveSvcHostServiceName(servicesReg, serviceName);
-        const RegKey svcReg(servicesReg, originServiceName);
+        const auto serviceName = resolveSvcHostServiceName(servicesReg, realServiceName);
+        const RegKey svcReg(servicesReg, serviceName);
 
         if (!checkIsSvcHostService(svcReg))
             continue;
@@ -89,7 +89,8 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
         info.serviceType = ServiceInfo::Type(service->ServiceStatusProcess.dwServiceType);
         info.trackFlags = trackFlags;
         info.processId = service->ServiceStatusProcess.dwProcessId;
-        info.serviceName = std::move(serviceName);
+        info.serviceName = serviceName;
+        info.realServiceName = realServiceName;
 
         if (displayName) {
             info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);

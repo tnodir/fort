@@ -60,6 +60,12 @@ typedef struct fort_service_info
     WCHAR name[2];
 } FORT_SERVICE_INFO, *PFORT_SERVICE_INFO;
 
+#define FORT_SERVICE_INFO_NAME_MAX      256
+#define FORT_SERVICE_INFO_NAME_MAX_SIZE (FORT_SERVICE_INFO_NAME_MAX * sizeof(WCHAR))
+
+#define FORT_SERVICE_INFO_NAME_OFF offsetof(FORT_SERVICE_INFO, name)
+#define FORT_SERVICE_INFO_MAX_SIZE (FORT_SERVICE_INFO_NAME_OFF + FORT_SERVICE_INFO_NAME_MAX_SIZE)
+
 typedef struct fort_service_info_list
 {
     UINT16 services_n;
@@ -67,13 +73,33 @@ typedef struct fort_service_info_list
     FORT_SERVICE_INFO data[1];
 } FORT_SERVICE_INFO_LIST, *PFORT_SERVICE_INFO_LIST;
 
-#define FORT_SERVICE_INFO_NAME_OFF      offsetof(FORT_SERVICE_INFO, name)
 #define FORT_SERVICE_INFO_LIST_DATA_OFF offsetof(FORT_SERVICE_INFO_LIST, data)
-#define FORT_SERVICE_INFO_NAME_MAX      256
-#define FORT_SERVICE_INFO_NAME_MAX_SIZE (FORT_SERVICE_INFO_NAME_MAX * sizeof(WCHAR))
-#define FORT_SERVICE_INFO_MAX_SIZE      (FORT_SERVICE_INFO_NAME_OFF + FORT_SERVICE_INFO_NAME_MAX_SIZE)
 #define FORT_SERVICE_INFO_LIST_MIN_SIZE                                                            \
     (FORT_SERVICE_INFO_LIST_DATA_OFF + FORT_SERVICE_INFO_MAX_SIZE)
+
+typedef struct fort_service_sid_list
+{
+    UINT16 services_n;
+    UINT16 names_n;
+
+    DWORD data[1];
+} FORT_SERVICE_SID_LIST, *PFORT_SERVICE_SID_LIST;
+
+#define FORT_SERVICE_SID_LIST_DATA_OFF offsetof(FORT_SERVICE_SID_LIST, data)
+#define FORT_SERVICE_SID_SIZE          (5 * sizeof(UINT32))
+
+#define FORT_SERVICE_SID_LIST_SID_NAME_INDEXES_OFF(services_n)                                     \
+    (FORT_SERVICE_SID_LIST_DATA_OFF + (services_n) * FORT_SERVICE_SID_SIZE)
+
+#define FORT_SERVICE_SID_LIST_NAMES_OFF(services_n)                                                \
+    (FORT_SERVICE_SID_LIST_SID_NAME_INDEXES_OFF(services_n) + (services_n) * sizeof(UINT16))
+
+#define FORT_SERVICE_SID_LIST_NAMES_HEADER_SIZE(names_n) ((names_n) * sizeof(UINT32))
+
+#define FORT_SERVICE_SID_LIST_MAX_SIZE(services_n, names_n)                                        \
+    (FORT_SERVICE_SID_LIST_NAMES_OFF(services_n)                                                   \
+            + FORT_SERVICE_SID_LIST_NAMES_HEADER_SIZE(names_n)                                     \
+            + (names_n) * FORT_SERVICE_INFO_NAME_MAX_SIZE)
 
 typedef struct fort_conf_port_list
 {
