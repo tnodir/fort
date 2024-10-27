@@ -190,6 +190,7 @@ SOURCES += \
     util/bitutil.cpp \
     util/conf/addressrange.cpp \
     util/conf/appparseoptions.cpp \
+    util/conf/confbuffer.cpp \
     util/conf/confutil.cpp \
     util/conf/ruletextparser.cpp \
     util/dateutil.cpp \
@@ -421,6 +422,7 @@ HEADERS += \
     util/conf/addressrange.h \
     util/conf/appparseoptions.h \
     util/conf/confappswalker.h \
+    util/conf/confbuffer.h \
     util/conf/confruleswalker.h \
     util/conf/confutil.h \
     util/conf/ruletextparser.h \

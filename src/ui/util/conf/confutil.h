@@ -7,40 +7,30 @@
 #include <QRegularExpressionMatch>
 #include <QVector>
 
-#include <util/conf/confappswalker.h>
-#include <util/conf/confruleswalker.h>
-#include <util/service/serviceinfo.h>
-
 #include "appparseoptions.h"
 
-class AddressGroup;
-class AppGroup;
-class EnvManager;
 class FirewallConf;
 
 using longs_arr_t = QVector<quint32>;
 using shorts_arr_t = QVector<quint16>;
 using chars_arr_t = QVector<qint8>;
 
-class ConfUtil : public QObject
+struct ParseAddressGroupsArgs
 {
-    Q_OBJECT
+    addrranges_arr_t addressRanges;
+    longs_arr_t addressGroupOffsets;
+};
 
+struct WriteConfArgs
+{
+    const FirewallConf &conf;
+
+    ParseAddressGroupsArgs ad;
+};
+
+class ConfUtil
+{
 public:
-    explicit ConfUtil(const QByteArray &buffer = {}, QObject *parent = nullptr);
-
-    quint32 driveMask() const { return m_driveMask; }
-
-    QString errorMessage() const { return m_errorMessage; }
-
-    bool hasError() const { return !errorMessage().isEmpty(); }
-
-    const QByteArray &buffer() const { return m_buffer; }
-    QByteArray &buffer() { return m_buffer; }
-
-    const char *data() const { return buffer().constData(); }
-    char *data() { return m_buffer.data(); }
-
     static int ruleMaxCount();
     static int ruleSetMaxCount();
     static int ruleDepthMaxCount();
@@ -50,61 +40,10 @@ public:
 
     static QRegularExpressionMatch matchWildcard(const QStringView &path);
 
-public slots:
-    void writeVersion();
-
-    void writeServices(const QVector<ServiceInfo> &services, int runningServicesCount);
-    void writeServiceSids(const QVector<ServiceInfo> &services);
-
-    bool write(
-            const FirewallConf &conf, const ConfAppsWalker *confAppsWalker, EnvManager &envManager);
-    void writeFlags(const FirewallConf &conf);
-    bool writeAppEntry(const App &app, bool isNew = false);
-
-    bool writeRules(const ConfRulesWalker &confRulesWalker);
-
-    void writeZone(const IpRange &ipRange);
-    void writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
-            const QList<QByteArray> &zonesData);
-    void writeZoneFlag(int zoneId, bool enabled);
-
-    bool loadZone(IpRange &ipRange);
-
-private:
-    void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
-
-    struct ParseAddressGroupsArgs
-    {
-        addrranges_arr_t addressRanges;
-        longs_arr_t addressGroupOffsets;
-    };
-
-    struct WriteConfArgs
-    {
-        const FirewallConf &conf;
-
-        ParseAddressGroupsArgs ad;
-    };
-
-    bool parseAddressGroups(const QList<AddressGroup *> &addressGroups, ParseAddressGroupsArgs &ad,
-            quint32 &addressGroupsSize);
-
-    // Convert app. groups to plain lists
-    bool parseAppGroups(EnvManager &envManager, const QList<AppGroup *> &appGroups,
-            AppParseOptions &opt);
-
-    bool parseExeApps(
-            EnvManager &envManager, const ConfAppsWalker *confAppsWalker, AppParseOptions &opt);
-
-    bool parseAppsText(EnvManager &envManager, App &app, AppParseOptions &opt);
-
-    bool parseAppLine(App &app, const QStringView &line, AppParseOptions &opt);
-
-    bool addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize);
-
     static QString parseAppPath(const QStringView &line, bool &isWild, bool &isPrefix);
 
     static void writeConf(char *output, const WriteConfArgs &wca, AppParseOptions &opt);
+    static void writeConfFlags(char **data, const FirewallConf &conf);
 
     static void writeAddressRanges(char **data, const addrranges_arr_t &addressRanges);
     static void writeAddressRange(char **data, const AddressRange &addressRange);
@@ -119,10 +58,6 @@ private:
 
     static void writeApps(char **data, const appdata_map_t &appsMap, bool useHeader = false);
 
-    void writeRule(
-            const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds);
-    void writeRuleText(const QString &ruleText);
-
     static void migrateZoneData(char **data, const QByteArray &zoneData);
 
     static void writeShorts(char **data, const shorts_arr_t &array);
@@ -135,13 +70,6 @@ private:
     static void loadLongs(const char **data, longs_arr_t &array);
     static void loadIp6Array(const char **data, ip6_arr_t &array);
     static void loadData(const char **data, void *dst, int elemCount, uint elemSize);
-
-private:
-    quint32 m_driveMask = 0;
-
-    QString m_errorMessage;
-
-    QByteArray m_buffer;
 };
 
 #endif // CONFUTIL_H

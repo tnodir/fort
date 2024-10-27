@@ -11,7 +11,7 @@
 #include <log/logentryblockedip.h>
 #include <manager/envmanager.h>
 #include <util/conf/confappswalker.h>
-#include <util/conf/confutil.h>
+#include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
 #include <util/net/netutil.h>
 
@@ -67,16 +67,16 @@ TEST_F(ConfUtilTest, confWriteRead)
     conf.resetEdited(FirewallConf::AllEdited);
     conf.prepareToSave();
 
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    const int confIoSize = confUtil.write(conf, nullptr, envManager);
+    const int confIoSize = confBuf.write(conf, nullptr, envManager);
     if (confIoSize == 0) {
-        qCritical() << "Error:" << confUtil.errorMessage();
+        qCritical() << "Error:" << confBuf.errorMessage();
         ASSERT_NE(confIoSize, 0);
     }
 
     // Check the buffer
-    const char *data = confUtil.data() + DriverCommon::confIoConfOff();
+    const char *data = confBuf.data() + DriverCommon::confIoConfOff();
 
     ASSERT_FALSE(DriverCommon::confIp4InRange(data, 0, true));
     ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("9.255.255.255")));

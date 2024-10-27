@@ -15,6 +15,7 @@
 #include <log/logmanager.h>
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
+#include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
@@ -622,23 +623,23 @@ qint64 ConfAppManager::getAlertAppId()
 
 bool ConfAppManager::updateDriverConf(bool onlyFlags)
 {
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    const bool ok = onlyFlags ? (confUtil.writeFlags(*conf()), true)
-                              : confUtil.write(*conf(), this, *IoC<EnvManager>());
+    const bool ok = onlyFlags ? (confBuf.writeFlags(*conf()), true)
+                              : confBuf.write(*conf(), this, *IoC<EnvManager>());
 
     if (!ok) {
-        qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
+        qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();
         return false;
     }
 
     auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeConf(confUtil.buffer(), onlyFlags)) {
+    if (!driverManager->writeConf(confBuf.buffer(), onlyFlags)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
 
-    m_driveMask = confUtil.driveMask();
+    m_driveMask = confBuf.driveMask();
 
     return true;
 }
@@ -695,20 +696,20 @@ bool ConfAppManager::updateDriverDeleteApp(const QString &appPath)
 
 bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
 {
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    if (!confUtil.writeAppEntry(app)) {
-        qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
+    if (!confBuf.writeAppEntry(app)) {
+        qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();
         return false;
     }
 
     auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeApp(confUtil.buffer(), remove)) {
+    if (!driverManager->writeApp(confBuf.buffer(), remove)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
 
-    m_driveMask |= remove ? 0 : confUtil.driveMask();
+    m_driveMask |= remove ? 0 : confBuf.driveMask();
 
     return true;
 }

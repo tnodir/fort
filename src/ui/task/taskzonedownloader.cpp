@@ -4,7 +4,7 @@
 #include <QLoggingCategory>
 #include <QUrl>
 
-#include <util/conf/confutil.h>
+#include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
 #include <util/net/iprange.h>
 #include <util/net/netdownloader.h>
@@ -123,11 +123,11 @@ bool TaskZoneDownloader::storeAddresses(const StringViewList &list)
     FileUtil::removeFile(cacheFileBinPath());
 
     // Store binary file
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    confUtil.writeZone(ipRange);
+    confBuf.writeZone(ipRange);
 
-    m_zoneData = confUtil.buffer();
+    m_zoneData = confBuf.buffer();
     if (m_zoneData.isEmpty())
         return false;
 
@@ -163,10 +163,10 @@ bool TaskZoneDownloader::saveAddressesAsText(const QString &filePath)
     QString text;
 
     if (loadAddresses() && !zoneData().isEmpty()) {
-        ConfUtil confUtil(zoneData());
+        ConfBuffer confBuf(zoneData());
 
         IpRange ipRange;
-        if (!confUtil.loadZone(ipRange))
+        if (!confBuf.loadZone(ipRange))
             return false;
 
         text = ipRange.toText();

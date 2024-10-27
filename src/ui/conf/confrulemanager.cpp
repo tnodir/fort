@@ -8,6 +8,7 @@
 #include <sqlite/sqlitestmt.h>
 
 #include <driver/drivermanager.h>
+#include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
@@ -101,10 +102,10 @@ const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id =
 
 const char *const sqlUpdateRuleEnabled = "UPDATE rule SET enabled = ?2 WHERE rule_id = ?1;";
 
-bool driverWriteRules(ConfUtil &confUtil, QByteArray &buf, int entrySize, bool onlyFlags = false)
+bool driverWriteRules(ConfBuffer &confBuf, QByteArray &buf, int entrySize, bool onlyFlags = false)
 {
     if (entrySize == 0) {
-        qCWarning(LC) << "Driver config error:" << confUtil.errorMessage();
+        qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();
         return false;
     }
 
@@ -403,21 +404,21 @@ void ConfRuleManager::fillRule(Rule &rule, const SqliteStmt &stmt)
 
 void ConfRuleManager::updateDriverRules()
 {
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    confUtil.writeRules(*this);
+    confBuf.writeRules(*this);
 
-    // driverWriteRules(confUtil, confUtil.buffer(), entrySize);
+    // driverWriteRules(confBuf, confBuf.buffer(), entrySize);
 }
 
 bool ConfRuleManager::updateDriverRuleFlag(int ruleId, bool enabled)
 {
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
 #if 0
-    confUtil.writeRuleFlag(ruleId, enabled);
+    confBuf.writeRuleFlag(ruleId, enabled);
 
-    return driverWriteRules(confUtil, confUtil.buffer(), /*onlyFlags=*/true);
+    return driverWriteRules(confBuf, confBuf.buffer(), /*onlyFlags=*/true);
 #endif
     return true;
 }

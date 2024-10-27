@@ -17,7 +17,7 @@
 #include <task/taskmanager.h>
 #include <user/iniuser.h>
 #include <user/usersettings.h>
-#include <util/conf/confutil.h>
+#include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -901,11 +901,11 @@ bool ConfManager::validateConf(const FirewallConf &newConf)
     if (!newConf.optEdited())
         return true;
 
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    const int confSize = confUtil.write(newConf, IoC<ConfAppManager>(), *IoC<EnvManager>());
+    const int confSize = confBuf.write(newConf, IoC<ConfAppManager>(), *IoC<EnvManager>());
     if (confSize == 0) {
-        qCCritical(LC) << "Conf save error:" << confUtil.errorMessage();
+        qCCritical(LC) << "Conf save error:" << confBuf.errorMessage();
         return false;
     }
 
@@ -914,11 +914,11 @@ bool ConfManager::validateConf(const FirewallConf &newConf)
 
 bool ConfManager::validateDriver()
 {
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    confUtil.writeVersion();
+    confBuf.writeVersion();
 
-    return IoC<DriverManager>()->validate(confUtil.buffer());
+    return IoC<DriverManager>()->validate(confBuf.buffer());
 }
 
 void ConfManager::updateServices()
@@ -932,20 +932,20 @@ void ConfManager::updateServices()
 void ConfManager::updateDriverServices(
         const QVector<ServiceInfo> &services, int runningServicesCount)
 {
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    confUtil.writeServices(services, runningServicesCount);
+    confBuf.writeServices(services, runningServicesCount);
 
-    IoC<DriverManager>()->writeServices(confUtil.buffer());
+    IoC<DriverManager>()->writeServices(confBuf.buffer());
 }
 
 void ConfManager::updateDriverServiceSids(const QVector<ServiceInfo> &services)
 {
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    confUtil.writeServiceSids(services);
+    confBuf.writeServiceSids(services);
 
-    IoC<DriverManager>()->writeServiceSids(confUtil.buffer());
+    IoC<DriverManager>()->writeServiceSids(confBuf.buffer());
 }
 
 void ConfManager::updateOwnProcessServices(ServiceInfoManager *serviceInfoManager)

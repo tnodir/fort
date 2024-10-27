@@ -15,7 +15,7 @@
 #include <log/logentrytime.h>
 #include <manager/envmanager.h>
 #include <util/conf/confappswalker.h>
-#include <util/conf/confutil.h>
+#include <util/conf/confbuffer.h>
 #include <util/device.h>
 #include <util/fileutil.h>
 #include <util/net/netutil.h>
@@ -38,12 +38,12 @@ namespace {
 
 void validateDriver(Device &device)
 {
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    confUtil.writeVersion();
-    ASSERT_FALSE(confUtil.buffer().isEmpty());
+    confBuf.writeVersion();
+    ASSERT_FALSE(confBuf.buffer().isEmpty());
 
-    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlValidate(), confUtil.data()));
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlValidate(), confBuf.data()));
 }
 
 void setConf(Device &device)
@@ -68,12 +68,12 @@ void setConf(Device &device)
     conf.setAppBlockAll(true);
     conf.setAppAllowAll(false);
 
-    ConfUtil confUtil;
+    ConfBuffer confBuf;
 
-    const int confIoSize = confUtil.write(conf, nullptr, envManager);
+    const int confIoSize = confBuf.write(conf, nullptr, envManager);
     ASSERT_NE(confIoSize, 0);
 
-    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), confUtil.data(), confIoSize));
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), confBuf.data(), confIoSize));
 }
 
 void printLogs(LogBuffer &buf)
