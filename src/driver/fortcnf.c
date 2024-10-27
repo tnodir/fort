@@ -453,8 +453,8 @@ FORT_API BOOL fort_conf_zones_ip_included(
         zones_mask &= (zones->mask & zones->enabled_mask);
         while (zones_mask != 0) {
             const int zone_index = bit_scan_forward(zones_mask);
-            PFORT_CONF_ADDR4_LIST addr_list =
-                    (PFORT_CONF_ADDR4_LIST) (zones->data + zones->addr_off[zone_index]);
+            PFORT_CONF_ADDR_LIST addr_list =
+                    (PFORT_CONF_ADDR_LIST) (zones->data + zones->addr_off[zone_index]);
 
             if (fort_conf_ip_inlist(remote_ip, addr_list, isIPv6)) {
                 res = TRUE;

@@ -89,9 +89,10 @@ static BOOL fort_conf_ip6_find(
 #define fort_conf_ip6_inrange(iprange, ip, count)                                                  \
     fort_conf_ip6_find(iprange, ip, count, /*is_range=*/TRUE)
 
-#define fort_conf_addr_list_ip6_ref(addr6_list) (addr6_list)->ip
+#define fort_conf_addr_list_ip6_ref(addr6_list) ((ip6_addr_t *) (addr6_list)->ip)
 
-#define fort_conf_addr_list_pair6_ref(addr6_list) &(addr6_list)->ip[(addr6_list)->ip_n]
+#define fort_conf_addr_list_pair6_ref(addr6_list)                                                  \
+    (fort_conf_addr_list_ip6_ref(addr6_list) + (addr6_list)->ip_n)
 
 FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len)
 {
@@ -105,13 +106,12 @@ FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len)
 }
 
 FORT_API BOOL fort_conf_ip_inlist(
-        const UINT32 *ip, const PFORT_CONF_ADDR4_LIST addr_list, BOOL isIPv6)
+        const UINT32 *ip, const PFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6)
 {
     if (isIPv6) {
         const ip6_addr_t *ip6 = (const ip6_addr_t *) ip;
-        const PFORT_CONF_ADDR6_LIST addr6_list =
-                (const PFORT_CONF_ADDR6_LIST)((const PCHAR) addr_list
-                        + FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n));
+        const PFORT_CONF_ADDR_LIST addr6_list = (const PFORT_CONF_ADDR_LIST)((const PCHAR) addr_list
+                + FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n));
 
         return fort_conf_ip6_inarr(fort_conf_addr_list_ip6_ref(addr6_list), ip6, addr6_list->ip_n)
                 || fort_conf_ip6_inrange(
@@ -131,7 +131,7 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, i
     return (PFORT_CONF_ADDR_GROUP) (addr_group_data + addr_group_offsets[addr_group_index]);
 }
 
-static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR4_LIST addr_list,
+static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR_LIST addr_list,
         fort_conf_zones_ip_included_func zone_func, void *ctx, const UINT32 *remote_ip,
         UINT32 zones_mask, BOOL list_is_empty, BOOL isIPv6)
 {

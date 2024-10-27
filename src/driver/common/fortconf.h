@@ -109,21 +109,13 @@ typedef struct fort_conf_port_list
     UINT16 port[1];
 } FORT_CONF_PORT_LIST, *PFORT_CONF_PORT_LIST;
 
-typedef struct fort_conf_addr4_list
+typedef struct fort_conf_addr_list
 {
     UINT32 ip_n;
     UINT32 pair_n;
 
     UINT32 ip[1];
-} FORT_CONF_ADDR4_LIST, *PFORT_CONF_ADDR4_LIST;
-
-typedef struct fort_conf_addr6_list
-{
-    UINT32 ip_n;
-    UINT32 pair_n;
-
-    ip6_addr_t ip[1];
-} FORT_CONF_ADDR6_LIST, *PFORT_CONF_ADDR6_LIST;
+} FORT_CONF_ADDR_LIST, *PFORT_CONF_ADDR_LIST;
 
 typedef struct fort_conf_addr_group
 {
@@ -330,16 +322,15 @@ typedef struct fort_conf_io
 
 #define FORT_CONF_DATA_OFF       offsetof(FORT_CONF, data)
 #define FORT_CONF_IO_CONF_OFF    offsetof(FORT_CONF_IO, conf)
-#define FORT_CONF_ADDR4_LIST_OFF offsetof(FORT_CONF_ADDR4_LIST, ip)
-#define FORT_CONF_ADDR6_LIST_OFF offsetof(FORT_CONF_ADDR6_LIST, ip)
+#define FORT_CONF_ADDR_LIST_OFF  offsetof(FORT_CONF_ADDR_LIST, ip)
 #define FORT_CONF_ADDR_GROUP_OFF offsetof(FORT_CONF_ADDR_GROUP, data)
 #define FORT_CONF_ZONES_DATA_OFF offsetof(FORT_CONF_ZONES, data)
 
 #define FORT_CONF_ADDR4_LIST_SIZE(ip_n, pair_n)                                                    \
-    (FORT_CONF_ADDR4_LIST_OFF + FORT_CONF_IP4_ARR_SIZE(ip_n) + FORT_CONF_IP4_RANGE_SIZE(pair_n))
+    (FORT_CONF_ADDR_LIST_OFF + FORT_CONF_IP4_ARR_SIZE(ip_n) + FORT_CONF_IP4_RANGE_SIZE(pair_n))
 
 #define FORT_CONF_ADDR6_LIST_SIZE(ip_n, pair_n)                                                    \
-    (FORT_CONF_ADDR6_LIST_OFF + FORT_CONF_IP6_ARR_SIZE(ip_n) + FORT_CONF_IP6_RANGE_SIZE(pair_n))
+    (FORT_CONF_ADDR_LIST_OFF + FORT_CONF_IP6_ARR_SIZE(ip_n) + FORT_CONF_IP6_RANGE_SIZE(pair_n))
 
 #define FORT_CONF_ADDR_LIST_SIZE(ip4_n, pair4_n, ip6_n, pair6_n)                                   \
     (FORT_CONF_ADDR4_LIST_SIZE(ip4_n, pair4_n) + FORT_CONF_ADDR6_LIST_SIZE(ip6_n, pair6_n))
@@ -359,16 +350,16 @@ FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len);
 FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len);
 
 FORT_API BOOL fort_conf_ip_inlist(
-        const UINT32 *ip, const PFORT_CONF_ADDR4_LIST addr_list, BOOL isIPv6);
+        const UINT32 *ip, const PFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6);
 
 FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(
         const PFORT_CONF conf, int addr_group_index);
 
 #define fort_conf_addr_group_include_list_ref(addr_group)                                          \
-    ((PFORT_CONF_ADDR4_LIST) (addr_group)->data)
+    ((PFORT_CONF_ADDR_LIST) (addr_group)->data)
 
 #define fort_conf_addr_group_exclude_list_ref(addr_group)                                          \
-    ((PFORT_CONF_ADDR4_LIST) ((addr_group)->data + (addr_group)->exclude_off))
+    ((PFORT_CONF_ADDR_LIST) ((addr_group)->data + (addr_group)->exclude_off))
 
 FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
         fort_conf_zones_ip_included_func zone_func, void *ctx, const UINT32 *remote_ip, BOOL isIPv6,

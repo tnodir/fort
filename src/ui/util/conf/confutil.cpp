@@ -121,11 +121,11 @@ QRegularExpressionMatch ConfUtil::matchWildcard(const QStringView &path)
 
 void ConfUtil::migrateZoneData(char **data, const QByteArray &zoneData)
 {
-    PFORT_CONF_ADDR4_LIST addr_list = (PFORT_CONF_ADDR4_LIST) zoneData.data();
+    PFORT_CONF_ADDR_LIST addr_list = (PFORT_CONF_ADDR_LIST) zoneData.data();
 
     if (FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n) == zoneData.size()) {
         IpRange ipRange;
-        writeAddress6List(data, ipRange);
+        writeIpRange(data, ipRange, /*isIPv6=*/true);
     }
 }
 
@@ -257,90 +257,70 @@ void ConfUtil::writeAddressRange(char **data, const AddressRange &addressRange)
 
 void ConfUtil::writeAddressList(char **data, const IpRange &ipRange)
 {
-    writeAddress4List(data, ipRange);
-    writeAddress6List(data, ipRange);
+    writeIpRange(data, ipRange);
+    writeIpRange(data, ipRange, /*isIPv6=*/true);
 }
 
-void ConfUtil::writeAddress4List(char **data, const IpRange &ipRange)
+void ConfUtil::writeIpRange(char **data, const IpRange &ipRange, bool isIPv6)
 {
-    PFORT_CONF_ADDR4_LIST addrList = PFORT_CONF_ADDR4_LIST(*data);
+    PFORT_CONF_ADDR_LIST addrList = PFORT_CONF_ADDR_LIST(*data);
 
-    addrList->ip_n = quint32(ipRange.ip4Size());
-    addrList->pair_n = quint32(ipRange.pair4Size());
+    addrList->ip_n = quint32(isIPv6 ? ipRange.ip6Size() : ipRange.ip4Size());
+    addrList->pair_n = quint32(isIPv6 ? ipRange.pair6Size() : ipRange.pair4Size());
 
-    *data += FORT_CONF_ADDR4_LIST_OFF;
+    *data += FORT_CONF_ADDR_LIST_OFF;
 
-    writeLongs(data, ipRange.ip4Array());
-    writeLongs(data, ipRange.pair4FromArray());
-    writeLongs(data, ipRange.pair4ToArray());
-}
-
-void ConfUtil::writeAddress6List(char **data, const IpRange &ipRange)
-{
-    PFORT_CONF_ADDR6_LIST addrList = PFORT_CONF_ADDR6_LIST(*data);
-
-    addrList->ip_n = quint32(ipRange.ip6Size());
-    addrList->pair_n = quint32(ipRange.pair6Size());
-
-    *data += FORT_CONF_ADDR6_LIST_OFF;
-
-    writeIp6Array(data, ipRange.ip6Array());
-    writeIp6Array(data, ipRange.pair6FromArray());
-    writeIp6Array(data, ipRange.pair6ToArray());
+    if (isIPv6) {
+        writeIp6Array(data, ipRange.ip6Array());
+        writeIp6Array(data, ipRange.pair6FromArray());
+        writeIp6Array(data, ipRange.pair6ToArray());
+    } else {
+        writeLongs(data, ipRange.ip4Array());
+        writeLongs(data, ipRange.pair4FromArray());
+        writeLongs(data, ipRange.pair4ToArray());
+    }
 }
 
 bool ConfUtil::loadAddressList(const char **data, IpRange &ipRange, uint &bufSize)
 {
-    return loadAddress4List(data, ipRange, bufSize)
-            && (bufSize == 0 || loadAddress6List(data, ipRange, bufSize));
+    return loadIpRange(data, ipRange, bufSize)
+            && (bufSize == 0 || loadIpRange(data, ipRange, bufSize, /*isIPv6=*/true));
 }
 
-bool ConfUtil::loadAddress4List(const char **data, IpRange &ipRange, uint &bufSize)
+bool ConfUtil::loadIpRange(const char **data, IpRange &ipRange, uint &bufSize, bool isIPv6)
 {
-    if (bufSize < FORT_CONF_ADDR4_LIST_OFF)
+    if (bufSize < FORT_CONF_ADDR_LIST_OFF)
         return false;
 
-    PFORT_CONF_ADDR4_LIST addr_list = (PFORT_CONF_ADDR4_LIST) *data;
+    PFORT_CONF_ADDR_LIST addr_list = (PFORT_CONF_ADDR_LIST) *data;
     *data = (const char *) addr_list->ip;
 
-    const uint addrListSize = FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n);
+    const uint addrListSize = isIPv6
+            ? FORT_CONF_ADDR6_LIST_SIZE(addr_list->ip_n, addr_list->pair_n)
+            : FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n);
+
     if (bufSize < addrListSize)
         return false;
 
     bufSize -= addrListSize;
 
-    ipRange.ip4Array().resize(addr_list->ip_n);
-    ipRange.pair4FromArray().resize(addr_list->pair_n);
-    ipRange.pair4ToArray().resize(addr_list->pair_n);
+    if (isIPv6) {
+        ipRange.ip6Array().resize(addr_list->ip_n);
+        ipRange.pair6FromArray().resize(addr_list->pair_n);
+        ipRange.pair6ToArray().resize(addr_list->pair_n);
 
-    loadLongs(data, ipRange.ip4Array());
-    loadLongs(data, ipRange.pair4FromArray());
-    loadLongs(data, ipRange.pair4ToArray());
+        loadIp6Array(data, ipRange.ip6Array());
+        loadIp6Array(data, ipRange.pair6FromArray());
+        loadIp6Array(data, ipRange.pair6ToArray());
+    } else {
+        ipRange.ip4Array().resize(addr_list->ip_n);
+        ipRange.pair4FromArray().resize(addr_list->pair_n);
+        ipRange.pair4ToArray().resize(addr_list->pair_n);
 
-    return true;
-}
-
-bool ConfUtil::loadAddress6List(const char **data, IpRange &ipRange, uint &bufSize)
-{
-    if (bufSize < FORT_CONF_ADDR6_LIST_OFF)
-        return false;
-
-    PFORT_CONF_ADDR6_LIST addr_list = (PFORT_CONF_ADDR6_LIST) *data;
-    *data = (const char *) addr_list->ip;
-
-    const uint addrListSize = FORT_CONF_ADDR6_LIST_SIZE(addr_list->ip_n, addr_list->pair_n);
-    if (bufSize < addrListSize)
-        return false;
-
-    bufSize -= addrListSize;
-
-    ipRange.ip6Array().resize(addr_list->ip_n);
-    ipRange.pair6FromArray().resize(addr_list->pair_n);
-    ipRange.pair6ToArray().resize(addr_list->pair_n);
-
-    loadIp6Array(data, ipRange.ip6Array());
-    loadIp6Array(data, ipRange.pair6FromArray());
-    loadIp6Array(data, ipRange.pair6ToArray());
+        loadLongs(data, ipRange.ip4Array());
+        loadLongs(data, ipRange.pair4FromArray());
+        loadLongs(data, ipRange.pair4ToArray());
+    }
 
     return true;
 }

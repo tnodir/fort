@@ -49,12 +49,11 @@ public:
     static void writeAddressRange(char **data, const AddressRange &addressRange);
 
     static void writeAddressList(char **data, const IpRange &ipRange);
-    static void writeAddress4List(char **data, const IpRange &ipRange);
-    static void writeAddress6List(char **data, const IpRange &ipRange);
+    static void writeIpRange(char **data, const IpRange &ipRange, bool isIPv6 = false);
 
     static bool loadAddressList(const char **data, IpRange &ipRange, uint &bufSize);
-    static bool loadAddress4List(const char **data, IpRange &ipRange, uint &bufSize);
-    static bool loadAddress6List(const char **data, IpRange &ipRange, uint &bufSize);
+    static bool loadIpRange(
+            const char **data, IpRange &ipRange, uint &bufSize, bool isIPv6 = false);
 
     static void writeApps(char **data, const appdata_map_t &appsMap, bool useHeader = false);
 

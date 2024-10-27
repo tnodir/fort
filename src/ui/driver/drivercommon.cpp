@@ -198,7 +198,7 @@ bool confIpInRange(
     if (is_empty)
         return false;
 
-    const PFORT_CONF_ADDR4_LIST addr_list = included
+    const PFORT_CONF_ADDR_LIST addr_list = included
             ? fort_conf_addr_group_include_list_ref(addr_group)
             : fort_conf_addr_group_exclude_list_ref(addr_group);
 
