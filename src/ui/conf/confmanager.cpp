@@ -903,8 +903,7 @@ bool ConfManager::validateConf(const FirewallConf &newConf)
 
     ConfBuffer confBuf;
 
-    const int confSize = confBuf.write(newConf, IoC<ConfAppManager>(), *IoC<EnvManager>());
-    if (confSize == 0) {
+    if (!confBuf.write(newConf, IoC<ConfAppManager>(), *IoC<EnvManager>())) {
         qCCritical(LC) << "Conf save error:" << confBuf.errorMessage();
         return false;
     }

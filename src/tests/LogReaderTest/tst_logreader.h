@@ -70,10 +70,10 @@ void setConf(Device &device)
 
     ConfBuffer confBuf;
 
-    const int confIoSize = confBuf.write(conf, nullptr, envManager);
-    ASSERT_NE(confIoSize, 0);
+    ASSERT_TRUE(confBuf.write(conf, nullptr, envManager));
 
-    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), confBuf.data(), confIoSize));
+    auto confData = confBuf.buffer();
+    ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), confData.data(), confData.size()));
 }
 
 void printLogs(LogBuffer &buf)

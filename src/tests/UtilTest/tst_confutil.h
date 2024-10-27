@@ -69,10 +69,9 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     ConfBuffer confBuf;
 
-    const int confIoSize = confBuf.write(conf, nullptr, envManager);
-    if (confIoSize == 0) {
+    if (!confBuf.write(conf, nullptr, envManager)) {
         qCritical() << "Error:" << confBuf.errorMessage();
-        ASSERT_NE(confIoSize, 0);
+        Q_UNREACHABLE();
     }
 
     // Check the buffer
