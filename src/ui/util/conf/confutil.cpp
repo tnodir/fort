@@ -462,7 +462,7 @@ void ConfUtil::writeString(char **data, const QString &s)
 
     array[n] = L'\0';
 
-    *data += n + 1; // +1 for the null terminator
+    *data += (n + 1) * sizeof(wchar_t); // +1 for the null terminator
 }
 
 void ConfUtil::loadLongs(const char **data, longs_arr_t &array)
