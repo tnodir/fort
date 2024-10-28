@@ -5,7 +5,6 @@
 
 #include <util/conf/confappswalker.h>
 #include <util/conf/confruleswalker.h>
-#include <util/service/serviceinfo.h>
 
 #include "confutil.h"
 

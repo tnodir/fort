@@ -119,14 +119,40 @@ QRegularExpressionMatch ConfUtil::matchWildcard(const QStringView &path)
     return StringUtil::match(wildMatcher, path);
 }
 
-void ConfUtil::migrateZoneData(char **data, const QByteArray &zoneData)
+int ConfUtil::writeServiceSids(char **data, const WriteServiceSidsArgs &wssa)
 {
-    PFORT_CONF_ADDR_LIST addr_list = (PFORT_CONF_ADDR_LIST) zoneData.data();
+    PFORT_SERVICE_SID_LIST sidList = PFORT_SERVICE_SID_LIST(*data);
 
-    if (FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n) == zoneData.size()) {
-        IpRange ipRange;
-        writeIpRange(data, ipRange, /*isIPv6=*/true);
+    const int servicesCount = wssa.sidNameIndexMap.size();
+    const int namesCount = wssa.namesList.size();
+
+    sidList->services_n = servicesCount;
+    sidList->names_n = namesCount;
+
+    // Write Service SID-s and Name Indexes
+    char *sid = sidList->data;
+    quint16 *nameIndex = (quint16 *) (sid + servicesCount * FORT_SERVICE_SID_SIZE);
+
+    for (const auto &[sidData, index] : wssa.sidNameIndexMap.asKeyValueRange()) {
+        writeArray(&sid, sidData);
+        sid += FORT_SERVICE_SID_SIZE;
+
+        *nameIndex++ = index;
     }
+
+    // Write Service Names: Offsets and Texts
+    quint32 *nameOffset = (quint32 *) nameIndex;
+
+    char *nameData = (char *) (nameOffset + namesCount);
+    char *nameText = nameData;
+
+    for (const auto &name : wssa.namesList) {
+        *nameOffset++ = nameText - nameData;
+
+        writeString(&nameText, name);
+    }
+
+    return (nameText - *data);
 }
 
 QString ConfUtil::parseAppPath(const QStringView &line, bool &isWild, bool &isPrefix)
@@ -294,7 +320,7 @@ bool ConfUtil::loadIpRange(const char **data, IpRange &ipRange, uint &bufSize, b
     if (bufSize < FORT_CONF_ADDR_LIST_OFF)
         return false;
 
-    PFORT_CONF_ADDR_LIST addr_list = (PFORT_CONF_ADDR_LIST) *data;
+    PFORT_CONF_ADDR_LIST addr_list = PFORT_CONF_ADDR_LIST(*data);
     *data = (const char *) addr_list->ip;
 
     const uint addrListSize = isIPv6
@@ -351,7 +377,7 @@ void ConfUtil::writeApps(char **data, const appdata_map_t &appsMap, bool useHead
         const quint16 appPathLen = quint16(kernelPathSize * sizeof(wchar_t));
         const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen);
 
-        PFORT_APP_ENTRY entry = (PFORT_APP_ENTRY) p;
+        PFORT_APP_ENTRY entry = PFORT_APP_ENTRY(p);
         entry->app_data = appData;
         entry->path_len = appPathLen;
 
@@ -366,6 +392,16 @@ void ConfUtil::writeApps(char **data, const appdata_map_t &appsMap, bool useHead
     }
 
     *data += offTableSize + FORT_CONF_STR_DATA_SIZE(off);
+}
+
+void ConfUtil::migrateZoneData(char **data, const QByteArray &zoneData)
+{
+    PFORT_CONF_ADDR_LIST addr_list = PFORT_CONF_ADDR_LIST(zoneData.data());
+
+    if (FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n) == zoneData.size()) {
+        IpRange ipRange;
+        writeIpRange(data, ipRange, /*isIPv6=*/true);
+    }
 }
 
 void ConfUtil::writeShorts(char **data, const shorts_arr_t &array)
@@ -408,6 +444,17 @@ void ConfUtil::writeArray(char **data, const QByteArray &array)
     memcpy(*data, array.constData(), arraySize);
 
     *data += arraySize;
+}
+
+void ConfUtil::writeString(char **data, const QString &s)
+{
+    wchar_t *array = (wchar_t *) *data;
+
+    const int n = s.toWCharArray(array);
+
+    array[n] = L'\0';
+
+    *data += n + 1; // +1 for the null terminator
 }
 
 void ConfUtil::loadLongs(const char **data, longs_arr_t &array)

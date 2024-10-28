@@ -82,7 +82,7 @@ typedef struct fort_service_sid_list
     UINT16 services_n;
     UINT16 names_n;
 
-    DWORD data[1];
+    char data[1];
 } FORT_SERVICE_SID_LIST, *PFORT_SERVICE_SID_LIST;
 
 #define FORT_SERVICE_SID_LIST_DATA_OFF offsetof(FORT_SERVICE_SID_LIST, data)

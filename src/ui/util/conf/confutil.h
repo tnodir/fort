@@ -7,6 +7,8 @@
 #include <QRegularExpressionMatch>
 #include <QVector>
 
+#include <util/service/serviceinfo.h>
+
 #include "appparseoptions.h"
 
 class FirewallConf;
@@ -14,6 +16,12 @@ class FirewallConf;
 using longs_arr_t = QVector<quint32>;
 using shorts_arr_t = QVector<quint16>;
 using chars_arr_t = QVector<qint8>;
+
+struct WriteServiceSidsArgs
+{
+    QMap<QByteArray, int> sidNameIndexMap;
+    QStringList namesList;
+};
 
 struct ParseAddressGroupsArgs
 {
@@ -40,6 +48,8 @@ public:
 
     static QRegularExpressionMatch matchWildcard(const QStringView &path);
 
+    static int writeServiceSids(char **data, const WriteServiceSidsArgs &wssa);
+
     static QString parseAppPath(const QStringView &line, bool &isWild, bool &isPrefix);
 
     static void writeConf(char **data, const WriteConfArgs &wca, AppParseOptions &opt);
@@ -65,6 +75,7 @@ public:
     static void writeData(char **data, void const *src, int elemCount, uint elemSize);
     static void writeChars(char **data, const chars_arr_t &array);
     static void writeArray(char **data, const QByteArray &array);
+    static void writeString(char **data, const QString &s);
 
     static void loadLongs(const char **data, longs_arr_t &array);
     static void loadIp6Array(const char **data, ip6_arr_t &array);
