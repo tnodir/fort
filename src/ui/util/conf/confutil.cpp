@@ -152,27 +152,29 @@ QString ConfUtil::parseAppPath(const QStringView &line, bool &isWild, bool &isPr
     return path.toString();
 }
 
-void ConfUtil::writeConf(char *output, const WriteConfArgs &wca, AppParseOptions &opt)
+void ConfUtil::writeConf(char **data, const WriteConfArgs &wca, AppParseOptions &opt)
 {
-    PFORT_CONF_IO drvConfIo = (PFORT_CONF_IO) output;
+    PFORT_CONF_IO drvConfIo = PFORT_CONF_IO(*data);
     PFORT_CONF drvConf = &drvConfIo->conf;
-    char *data = drvConf->data;
+
     quint32 addrGroupsOff;
     quint32 wildAppsOff, prefixAppsOff, exeAppsOff;
 
-#define CONF_DATA_OFFSET quint32(data - drvConf->data)
+    *data = drvConf->data;
+
+#define CONF_DATA_OFFSET quint32(*data - drvConf->data)
     addrGroupsOff = CONF_DATA_OFFSET;
-    writeLongs(&data, wca.ad.addressGroupOffsets);
-    writeAddressRanges(&data, wca.ad.addressRanges);
+    writeLongs(data, wca.ad.addressGroupOffsets);
+    writeAddressRanges(data, wca.ad.addressRanges);
 
     wildAppsOff = CONF_DATA_OFFSET;
-    writeApps(&data, opt.wildAppsMap);
+    writeApps(data, opt.wildAppsMap);
 
     prefixAppsOff = CONF_DATA_OFFSET;
-    writeApps(&data, opt.prefixAppsMap, /*useHeader=*/true);
+    writeApps(data, opt.prefixAppsMap, /*useHeader=*/true);
 
     exeAppsOff = CONF_DATA_OFFSET;
-    writeApps(&data, opt.exeAppsMap);
+    writeApps(data, opt.exeAppsMap);
 #undef CONF_DATA_OFFSET
 
     PFORT_CONF_GROUP conf_group = &drvConfIo->conf_group;
@@ -181,8 +183,8 @@ void ConfUtil::writeConf(char *output, const WriteConfArgs &wca, AppParseOptions
 
     writeLimits(conf_group, wca.conf.appGroups());
 
-    data = (char *) &drvConf->flags;
-    writeConfFlags(&data, wca.conf);
+    *data = (char *) &drvConf->flags;
+    writeConfFlags(data, wca.conf);
 
     drvConf->proc_wild = opt.procWild;
 

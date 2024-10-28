@@ -42,7 +42,7 @@ public:
 
     static QString parseAppPath(const QStringView &line, bool &isWild, bool &isPrefix);
 
-    static void writeConf(char *output, const WriteConfArgs &wca, AppParseOptions &opt);
+    static void writeConf(char **data, const WriteConfArgs &wca, AppParseOptions &opt);
     static void writeConfFlags(char **data, const FirewallConf &conf);
 
     static void writeAddressRanges(char **data, const addrranges_arr_t &addressRanges);

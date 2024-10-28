@@ -271,9 +271,11 @@ bool ConfBuffer::write(
             + FORT_CONF_STR_DATA_SIZE(opt.prefixAppsSize)
             + FORT_CONF_STR_DATA_SIZE(opt.exeAppsSize));
 
-    buffer().resize(confIoSize);
+    buffer().resize(confIoSize); // shrink to actual size
 
-    ConfUtil::writeConf(buffer().data(), wca, opt);
+    char *data = buffer().data();
+
+    ConfUtil::writeConf(&data, wca, opt);
 
     return true;
 }
