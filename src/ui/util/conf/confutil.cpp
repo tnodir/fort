@@ -133,7 +133,15 @@ int ConfUtil::writeServiceSids(char **data, const WriteServiceSidsArgs &wssa)
     char *sid = sidList->data;
     quint16 *nameIndex = (quint16 *) (sid + servicesCount * FORT_SERVICE_SID_SIZE);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
     for (const auto &[sidData, index] : wssa.sidNameIndexMap.asKeyValueRange()) {
+#else
+    auto it = wssa.sidNameIndexMap.constBegin();
+    for (; it != wssa.sidNameIndexMap.constEnd(); ++it) {
+        const auto &sidData = it.key();
+        const auto index = it.value();
+#endif
+
         writeArray(&sid, sidData);
         sid += FORT_SERVICE_SID_SIZE;
 
