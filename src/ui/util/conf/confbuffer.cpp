@@ -187,6 +187,7 @@ ConfBuffer::ConfBuffer(const QByteArray &buffer, QObject *parent) :
 
 void ConfBuffer::writeVersion()
 {
+    // Resize the buffer
     const int verSize = sizeof(FORT_CONF_VERSION);
 
     buffer().resize(verSize);
@@ -199,11 +200,13 @@ void ConfBuffer::writeVersion()
 
 void ConfBuffer::writeServices(const QVector<ServiceInfo> &services, int runningServicesCount)
 {
+    // Resize the buffer to max size
     const int servicesSize =
             FORT_SERVICE_INFO_LIST_MIN_SIZE + runningServicesCount * FORT_SERVICE_INFO_MAX_SIZE;
 
     buffer().resize(servicesSize);
 
+    // Fill the buffer
     char *data = buffer().data();
 
     int outSize = writeServicesHeader(data, runningServicesCount);
@@ -225,11 +228,13 @@ void ConfBuffer::writeServiceSids(const QVector<ServiceInfo> &services)
 
     collectServiceSidsNames(services, sidNameIndexMap, namesList);
 
+    // Resize the buffer to max size
     const int servicesCount = sidNameIndexMap.size();
     const int namesCount = namesList.size();
 
     buffer().resize(FORT_SERVICE_SID_LIST_MAX_SIZE(servicesCount, namesCount));
 
+    // Fill the buffer
     char *data = buffer().data();
 
     int outSize = writeServiceSidsHeader(data, servicesCount, namesCount);
@@ -264,7 +269,7 @@ bool ConfBuffer::write(
         return false;
     }
 
-    // Fill the buffer
+    // Resize the buffer
     const int confIoSize = int(FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF + addressGroupsSize
             + FORT_CONF_STR_DATA_SIZE(opt.wildAppsSize)
             + FORT_CONF_STR_HEADER_SIZE(opt.prefixAppsMap.size())
@@ -273,6 +278,7 @@ bool ConfBuffer::write(
 
     buffer().resize(confIoSize); // shrink to actual size
 
+    // Fill the buffer
     char *data = buffer().data();
 
     ConfUtil::writeConf(&data, wca, opt);
@@ -282,6 +288,7 @@ bool ConfBuffer::write(
 
 void ConfBuffer::writeFlags(const FirewallConf &conf)
 {
+    // Resize the buffer
     const int flagsSize = sizeof(FORT_CONF_FLAGS);
 
     buffer().resize(flagsSize);
@@ -300,6 +307,7 @@ bool ConfBuffer::writeAppEntry(const App &app, bool isNew)
     if (!addApp(app, isNew, appsMap, appsSize))
         return false;
 
+    // Resize the buffer
     buffer().resize(appsSize);
 
     // Fill the buffer
@@ -335,6 +343,7 @@ bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
 
 void ConfBuffer::writeZone(const IpRange &ipRange)
 {
+    // Resize the buffer
     const int addrSize = FORT_CONF_ADDR_LIST_SIZE(
             ipRange.ip4Size(), ipRange.pair4Size(), ipRange.ip6Size(), ipRange.pair6Size());
 
@@ -349,18 +358,22 @@ void ConfBuffer::writeZone(const IpRange &ipRange)
 void ConfBuffer::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
         const QList<QByteArray> &zonesData)
 {
+    // Resize the buffer
     const int zonesSize = FORT_CONF_ZONES_DATA_OFF + dataSize;
 
     buffer().resize(zonesSize);
 
     // Fill the buffer
-    PFORT_CONF_ZONES confZones = (PFORT_CONF_ZONES) buffer().data();
-    char *data = confZones->data;
+    char *data = buffer().data();
+
+    PFORT_CONF_ZONES confZones = PFORT_CONF_ZONES(data);
 
     memset(confZones, 0, sizeof(FORT_CONF_ZONES_DATA_OFF));
 
     confZones->mask = zonesMask;
     confZones->enabled_mask = enabledMask;
+
+    data = confZones->data;
 
     for (const auto &zoneData : zonesData) {
         Q_ASSERT(!zoneData.isEmpty());
@@ -381,12 +394,15 @@ void ConfBuffer::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 data
 
 void ConfBuffer::writeZoneFlag(int zoneId, bool enabled)
 {
+    // Resize the buffer
     const int flagSize = sizeof(FORT_CONF_ZONE_FLAG);
 
     buffer().resize(flagSize);
 
     // Fill the buffer
-    PFORT_CONF_ZONE_FLAG confZoneFlag = (PFORT_CONF_ZONE_FLAG) buffer().data();
+    char *data = buffer().data();
+
+    PFORT_CONF_ZONE_FLAG confZoneFlag = PFORT_CONF_ZONE_FLAG(data);
 
     confZoneFlag->zone_id = zoneId;
     confZoneFlag->enabled = enabled;
@@ -622,6 +638,8 @@ void ConfBuffer::writeRule(
     const int oldSize = buffer().size();
 
     buffer().resize(oldSize + FORT_CONF_RULE_SIZE(&confRule));
+
+    // Fill the buffer
     char *data = buffer().data();
 
     // Write the rule's offset
