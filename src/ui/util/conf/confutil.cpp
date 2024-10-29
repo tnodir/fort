@@ -121,16 +121,16 @@ QRegularExpressionMatch ConfUtil::matchWildcard(const QStringView &path)
 
 int ConfUtil::writeServiceSids(char **data, const WriteServiceSidsArgs &wssa)
 {
-    PFORT_SERVICE_SID_LIST sidList = PFORT_SERVICE_SID_LIST(*data);
+    PFORT_SERVICE_SID_LIST serviceSids = PFORT_SERVICE_SID_LIST(*data);
 
     const int servicesCount = wssa.sidNameIndexMap.size();
     const int namesCount = wssa.namesList.size();
 
-    sidList->services_n = servicesCount;
-    sidList->names_n = namesCount;
+    serviceSids->services_n = servicesCount;
+    serviceSids->names_n = namesCount;
 
     // Write Service SID-s and Name Indexes
-    char *sid = sidList->data;
+    char *sid = serviceSids->data;
     quint16 *nameIndex = (quint16 *) (sid + servicesCount * FORT_SERVICE_SID_SIZE);
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
@@ -143,7 +143,6 @@ int ConfUtil::writeServiceSids(char **data, const WriteServiceSidsArgs &wssa)
 #endif
 
         writeArray(&sid, sidData);
-        sid += FORT_SERVICE_SID_SIZE;
 
         *nameIndex++ = index;
     }
@@ -155,7 +154,9 @@ int ConfUtil::writeServiceSids(char **data, const WriteServiceSidsArgs &wssa)
     char *nameText = nameData;
 
     for (const auto &name : wssa.namesList) {
-        *nameOffset++ = nameText - nameData;
+        const quint32 off = nameText - nameData;
+
+        *nameOffset++ = off;
 
         writeString(&nameText, name.toLower());
     }
