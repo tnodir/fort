@@ -250,7 +250,6 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
 
     AppRow appRow = appRowById(appId);
     if (appRow.appId == 0) {
-        appRow.isWildcard = ConfUtil::matchWildcard(normPath).hasMatch();
         appRow.appOriginPath = appPath;
         appRow.appPath = normPath;
     }
