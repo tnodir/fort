@@ -16,7 +16,6 @@
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <util/conf/confbuffer.h>
-#include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
@@ -207,8 +206,7 @@ bool ConfAppManager::addAppPathBlocked(App &app)
     if (app.appId > 0)
         return false; // already exists
 
-    app.isWildcard = ConfUtil::matchWildcard(app.appPath).hasMatch();
-    app.appName = app.isWildcard ? app.appOriginPath : IoC<AppInfoCache>()->appName(app.appPath);
+    app.appName = IoC<AppInfoCache>()->appName(app.appPath);
 
     const bool ok = addOrUpdateApp(app);
 
