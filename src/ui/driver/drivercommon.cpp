@@ -231,6 +231,13 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
     return app_data;
 }
 
+QString confServiceSidNameFind(PCFORT_SERVICE_SID_LIST service_sids, const char *sidBytes)
+{
+    PCWSTR name = fort_conf_service_sid_name_find(service_sids, sidBytes);
+
+    return name ? QString::fromWCharArray(name) : QString();
+}
+
 bool provRegister(bool bootFilter)
 {
     const FORT_PROV_BOOT_CONF boot_conf = {

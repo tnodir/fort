@@ -71,6 +71,8 @@ bool confIp6InRange(
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath);
 
+QString confServiceSidNameFind(PCFORT_SERVICE_SID_LIST service_sids, const char *sidBytes);
+
 bool provRegister(bool bootFilter);
 void provUnregister();
 

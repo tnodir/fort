@@ -319,7 +319,7 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
 }
 
 FORT_API PCWSTR fort_conf_service_sid_name_find(
-        PFORT_SERVICE_SID_LIST service_sids, const char *sidBytes)
+        PCFORT_SERVICE_SID_LIST service_sids, const char *sidBytes)
 {
     if (service_sids == NULL)
         return NULL;

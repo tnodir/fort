@@ -21,7 +21,7 @@ static int bit_scan_forward(ULONG mask)
     return _BitScanForward(&index, mask) ? index : -1;
 }
 
-static PVOID fort_conf_mem_alloc(PVOID src, ULONG len)
+static PVOID fort_conf_mem_alloc(const void *src, ULONG len)
 {
     PVOID p = fort_mem_alloc(len, FORT_DEVICE_CONF_POOL_TAG);
     if (p != NULL) {
@@ -418,7 +418,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
 }
 
 FORT_API PFORT_SERVICE_SID_LIST fort_conf_service_sids_new(
-        PFORT_SERVICE_SID_LIST service_sids, ULONG len)
+        PCFORT_SERVICE_SID_LIST service_sids, ULONG len)
 {
     return fort_conf_mem_alloc(service_sids, len);
 }

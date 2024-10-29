@@ -81,7 +81,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
         PFORT_DEVICE_CONF device_conf, const FORT_CONF_FLAGS conf_flags);
 
 FORT_API PFORT_SERVICE_SID_LIST fort_conf_service_sids_new(
-        PFORT_SERVICE_SID_LIST service_sids, ULONG len);
+        PCFORT_SERVICE_SID_LIST service_sids, ULONG len);
 
 FORT_API void fort_conf_service_sids_set(
         PFORT_DEVICE_CONF device_conf, PFORT_SERVICE_SID_LIST service_sids);

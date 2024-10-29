@@ -14,6 +14,7 @@
 #include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
 #include <util/net/netutil.h>
+#include <util/stringutil.h>
 
 class ConfUtilTest : public Test
 {
@@ -137,4 +138,43 @@ TEST_F(ConfUtilTest, checkEnvManager)
     ASSERT_EQ(envManager.expandString("%d%"), "a");
 
     ASSERT_NE(envManager.expandString("%HOME%"), QString());
+}
+
+TEST_F(ConfUtilTest, serviceSidsWriteRead)
+{
+    const auto SVC = [](const char *name) -> ServiceInfo {
+        ServiceInfo si;
+        si.serviceName = si.realServiceName = name;
+        return si;
+    };
+
+    const QVector<ServiceInfo> services = { SVC("AJRouter"), SVC("Browser"), SVC("camsvc"),
+        SVC("Dhcp"), SVC("EventLog") };
+
+    ConfBuffer confBuf;
+
+    confBuf.writeServiceSids(services);
+
+    // Check the buffer
+    const auto buffer = confBuf.buffer();
+
+    ASSERT_NE(buffer.size(), 0);
+
+    PCFORT_SERVICE_SID_LIST service_sids = PCFORT_SERVICE_SID_LIST(buffer.data());
+
+    // Find Service Name by SID
+    {
+        const QLatin1String name("Dhcp");
+        const auto sid = StringUtil::serviceSid(name);
+
+        ASSERT_EQ(sid.size(), FORT_SERVICE_SID_SIZE);
+        ASSERT_EQ(DriverCommon::confServiceSidNameFind(service_sids, sid), name);
+    }
+
+    // Can't Find Service Name by SID
+    {
+        const auto sid = StringUtil::serviceSid("Bad");
+
+        ASSERT_EQ(DriverCommon::confServiceSidNameFind(service_sids, sid), QString());
+    }
 }

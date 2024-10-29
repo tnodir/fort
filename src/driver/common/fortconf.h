@@ -85,6 +85,8 @@ typedef struct fort_service_sid_list
     char data[1];
 } FORT_SERVICE_SID_LIST, *PFORT_SERVICE_SID_LIST;
 
+typedef const FORT_SERVICE_SID_LIST *PCFORT_SERVICE_SID_LIST;
+
 #define FORT_SERVICE_SID_LIST_DATA_OFF offsetof(FORT_SERVICE_SID_LIST, data)
 #define FORT_SERVICE_SID_SIZE          (5 * sizeof(UINT32))
 
@@ -387,7 +389,7 @@ FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, PCFORT_APP_PATH
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
 
 FORT_API PCWSTR fort_conf_service_sid_name_find(
-        PFORT_SERVICE_SID_LIST service_sids, const char *sidBytes);
+        PCFORT_SERVICE_SID_LIST service_sids, const char *sidBytes);
 
 #ifdef __cplusplus
 } // extern "C"

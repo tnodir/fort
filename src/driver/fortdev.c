@@ -158,7 +158,7 @@ static NTSTATUS fort_device_control_setservices(PFORT_DEVICE_CONTROL_ARG dca)
 
 static NTSTATUS fort_device_control_setservice_sids(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_SERVICE_SID_LIST service_sids = dca->buffer;
+    const PCFORT_SERVICE_SID_LIST service_sids = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len > sizeof(FORT_SERVICE_SID_LIST)) {
