@@ -212,6 +212,9 @@ static void fort_pstree_name_del(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
 
 static BOOL fort_pstree_svchost_path_check(PCUNICODE_STRING path)
 {
+    if (path == NULL)
+        return FALSE;
+
     const USHORT svchostSize = sizeof(FORT_SVCHOST_EXE) - sizeof(WCHAR); /* skip terminating zero */
 
     const USHORT pathLength = path->Length;
@@ -246,6 +249,9 @@ static BOOL fort_pstree_svchost_path_check(PCUNICODE_STRING path)
 static BOOL fort_pstree_svchost_name_check(
         PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
+    if (commandLine == NULL)
+        return FALSE;
+
     PWCHAR argp = wcsstr(commandLine->Buffer, L"-s ");
     if (argp == NULL)
         return FALSE;
@@ -306,9 +312,6 @@ static void fort_pstree_proc_set_service_name(PFORT_PSNODE proc, PFORT_PSNAME ps
 static void fort_pstree_proc_check_svchost(
         PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi, PFORT_PSNODE proc)
 {
-    if (psi->path == NULL || psi->commandLine == NULL)
-        return;
-
     if (!fort_pstree_svchost_path_check(psi->path))
         return;
 
@@ -567,6 +570,8 @@ inline static void fort_pstree_notify_process_created(
     if (fort_is_system_process(psi->processId, psi->parentProcessId))
         return; /* skip System (sub)processes */
 
+    psi->commandLine = createInfo->CommandLine;
+
     PFORT_PSNODE proc = fort_pstree_handle_created_proc(ps_tree, psi);
 
     fort_pstree_check_kill_proc(proc, createInfo, FORT_PSNODE_KILL_PROCESS);
@@ -610,8 +615,6 @@ inline static void fort_pstree_notify_process(PFORT_PSTREE ps_tree, PCFORT_PSTRE
         .pid_hash = fort_pstree_proc_hash(processId),
         .processId = processId,
         .parentProcessId = parentProcessId,
-
-        .commandLine = (createInfo != NULL ? createInfo->CommandLine : NULL),
     };
 
 #ifdef FORT_DEBUG
