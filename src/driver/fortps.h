@@ -37,9 +37,6 @@ FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree);
 FORT_API BOOL fort_pstree_get_proc_name(PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path,
         BOOL *isSvcHost, BOOL *inherited);
 
-FORT_API BOOL fort_pstree_get_svchost_name(
-        PFORT_PSTREE ps_tree, const DWORD *sidBytes, PFORT_APP_PATH path);
-
 FORT_API void fort_pstree_update_services(
         PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO_LIST services, ULONG data_len);
 

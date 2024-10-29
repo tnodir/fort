@@ -71,6 +71,30 @@ static BOOL fort_conf_ip6_find(
             && fort_ip6_cmp(ip, &iparr[count + high]) <= 0;
 }
 
+static int fort_conf_blob_index(const char *arr, const char *p, UINT32 blob_len, UINT32 count)
+{
+    if (count == 0)
+        return FALSE;
+
+    int low = 0;
+    int high = count - 1;
+
+    do {
+        const int mid = (low + high) / 2;
+        const char *mid_p = &arr[mid * blob_len];
+
+        const int res = fort_mem_cmp(p, mid_p, blob_len);
+        if (res < 0)
+            high = mid - 1;
+        else if (res > 0)
+            low = mid + 1;
+        else
+            return mid;
+    } while (low <= high);
+
+    return -1;
+}
+
 #define fort_conf_ip4_inarr(iparr, ip, count)                                                      \
     fort_conf_ip4_find(iparr, ip, count, /*is_range=*/FALSE)
 
@@ -292,4 +316,31 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
         return FALSE;
 
     return conf_flags.group_blocked;
+}
+
+FORT_API PCWSTR fort_conf_service_sid_name_find(
+        PFORT_SERVICE_SID_LIST service_sids, const char *sidBytes)
+{
+    if (service_sids == NULL)
+        return NULL;
+
+    const char *data = service_sids->data;
+    const int services_n = service_sids->services_n;
+
+    const int sid_index = fort_conf_blob_index(data, sidBytes, FORT_SERVICE_SID_SIZE, services_n);
+    if (sid_index < 0)
+        return NULL;
+
+    const UINT16 name_index =
+            ((UINT16 *) (data + FORT_SERVICE_SID_LIST_SID_NAME_INDEXES_OFF(services_n)))[sid_index];
+
+    const UINT32 name_off =
+            ((UINT32 *) (data + FORT_SERVICE_SID_LIST_NAMES_HEADER_OFF(services_n)))[name_index];
+
+    const int names_n = service_sids->names_n;
+    const char *names_data = data + FORT_SERVICE_SID_LIST_NAMES_OFF(services_n, names_n);
+
+    PCWSTR name = (PCWSTR) (names_data + name_off);
+
+    return name;
 }

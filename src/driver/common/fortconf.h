@@ -89,16 +89,19 @@ typedef struct fort_service_sid_list
 #define FORT_SERVICE_SID_SIZE          (5 * sizeof(UINT32))
 
 #define FORT_SERVICE_SID_LIST_SID_NAME_INDEXES_OFF(services_n)                                     \
-    (FORT_SERVICE_SID_LIST_DATA_OFF + (services_n) * FORT_SERVICE_SID_SIZE)
+    ((services_n) * FORT_SERVICE_SID_SIZE)
 
-#define FORT_SERVICE_SID_LIST_NAMES_OFF(services_n)                                                \
+#define FORT_SERVICE_SID_LIST_NAMES_HEADER_OFF(services_n)                                         \
     (FORT_SERVICE_SID_LIST_SID_NAME_INDEXES_OFF(services_n) + (services_n) * sizeof(UINT16))
 
 #define FORT_SERVICE_SID_LIST_NAMES_HEADER_SIZE(names_n) ((names_n) * sizeof(UINT32))
 
+#define FORT_SERVICE_SID_LIST_NAMES_OFF(services_n, names_n)                                       \
+    (FORT_SERVICE_SID_LIST_NAMES_HEADER_OFF(services_n)                                            \
+            + FORT_SERVICE_SID_LIST_NAMES_HEADER_SIZE(names_n))
+
 #define FORT_SERVICE_SID_LIST_MAX_SIZE(services_n, names_n)                                        \
-    (FORT_SERVICE_SID_LIST_NAMES_OFF(services_n)                                                   \
-            + FORT_SERVICE_SID_LIST_NAMES_HEADER_SIZE(names_n)                                     \
+    (FORT_SERVICE_SID_LIST_DATA_OFF + FORT_SERVICE_SID_LIST_NAMES_OFF(services_n, names_n)         \
             + (names_n) * FORT_SERVICE_INFO_NAME_MAX_SIZE)
 
 typedef struct fort_conf_port_list
@@ -382,6 +385,9 @@ FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, PCFORT_APP_PATH
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
+
+FORT_API PCWSTR fort_conf_service_sid_name_find(
+        PFORT_SERVICE_SID_LIST service_sids, const char *sidBytes);
 
 #ifdef __cplusplus
 } // extern "C"

@@ -418,13 +418,16 @@ inline static BOOL fort_callout_ale_fill_path_sid(
 
     for (int i = 0; i < sidCount; ++i) {
         const SID *sid = sidHash->SidAttr[i].Sid;
+
         if (!fort_callout_ale_check_svchost_sid(sid))
             continue;
 
         // Get Service Name by SID
+        const char *sidBytes = (const char *) &sid->SubAuthority[1];
+
         cx->path.buffer = cx->svchost_name;
 
-        if (fort_pstree_get_svchost_name(&fort_device()->ps_tree, &sid->SubAuthority[1], &cx->path))
+        if (fort_conf_get_service_sid_path(&fort_device()->conf, sidBytes, &cx->path))
             return TRUE;
 
         break;

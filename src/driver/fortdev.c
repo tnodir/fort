@@ -107,6 +107,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(&fort_device()->conf, NULL);
         const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
+        fort_conf_service_sids_set(&fort_device()->conf, NULL);
         fort_conf_zones_set(&fort_device()->conf, NULL);
 
         fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
@@ -157,7 +158,24 @@ static NTSTATUS fort_device_control_setservices(PFORT_DEVICE_CONTROL_ARG dca)
 
 static NTSTATUS fort_device_control_setservice_sids(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    // TODO
+    const PFORT_SERVICE_SID_LIST service_sids = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len > sizeof(FORT_SERVICE_SID_LIST)) {
+        PFORT_SERVICE_SID_LIST sids = fort_conf_service_sids_new(service_sids, len);
+
+        if (sids == NULL) {
+            return STATUS_INSUFFICIENT_RESOURCES;
+        } else {
+            fort_conf_service_sids_set(&fort_device()->conf, sids);
+
+            fort_device_reauth_queue();
+
+            return STATUS_SUCCESS;
+        }
+
+        return STATUS_SUCCESS;
+    }
 
     return STATUS_UNSUCCESSFUL;
 }

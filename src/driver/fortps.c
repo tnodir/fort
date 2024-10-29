@@ -10,10 +10,6 @@
 
 #define FORT_PSTREE_POOL_TAG 'PwfF'
 
-#define FORT_SVCHOST_PREFIX L"\\svchost\\"
-#define FORT_SVCHOST_PREFIX_SIZE                                                                   \
-    (sizeof(FORT_SVCHOST_PREFIX) - sizeof(WCHAR)) /* skip terminating zero */
-
 #define FORT_SVCHOST_EXE L"svchost.exe"
 
 #define FORT_PSTREE_NAME_LEN_MAX      120
@@ -820,26 +816,6 @@ FORT_API BOOL fort_pstree_get_proc_name(PFORT_PSTREE ps_tree, DWORD processId, P
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
         res = fort_pstree_get_proc_name_locked(ps_tree, processId, path, isSvcHost, inherited);
-    }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    return res;
-}
-
-static BOOL fort_pstree_get_svchost_name_locked(
-        PFORT_PSTREE ps_tree, const DWORD *sidBytes, PFORT_APP_PATH path)
-{
-    return FALSE;
-}
-
-BOOL fort_pstree_get_svchost_name(PFORT_PSTREE ps_tree, const DWORD *sidBytes, PFORT_APP_PATH path)
-{
-    BOOL res;
-
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
-    {
-        res = fort_pstree_get_svchost_name_locked(ps_tree, sidBytes, path);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 

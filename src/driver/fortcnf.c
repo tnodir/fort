@@ -2,7 +2,7 @@
 
 #include "fortcnf.h"
 
-#define FORT_ZONES_POOL_TAG 'ZwfF'
+#define FORT_DEVICE_CONF_POOL_TAG 'CwfF'
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_conf_exe_node
@@ -19,6 +19,22 @@ static int bit_scan_forward(ULONG mask)
 {
     unsigned long index;
     return _BitScanForward(&index, mask) ? index : -1;
+}
+
+static PVOID fort_conf_mem_alloc(PVOID src, ULONG len)
+{
+    PVOID p = fort_mem_alloc(len, FORT_DEVICE_CONF_POOL_TAG);
+    if (p != NULL) {
+        RtlCopyMemory(p, src, len);
+    }
+    return p;
+}
+
+static void fort_conf_mem_free(PVOID p)
+{
+    if (p != NULL) {
+        fort_mem_free(p, FORT_DEVICE_CONF_POOL_TAG);
+    }
 }
 
 FORT_API void fort_device_conf_open(PFORT_DEVICE_CONF device_conf)
@@ -401,35 +417,71 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
     return old_conf_flags;
 }
 
-FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PFORT_CONF_ZONES zones, ULONG len)
+FORT_API PFORT_SERVICE_SID_LIST fort_conf_service_sids_new(
+        PFORT_SERVICE_SID_LIST service_sids, ULONG len)
 {
-    PFORT_CONF_ZONES conf_zones = fort_mem_alloc(len, FORT_ZONES_POOL_TAG);
-    if (conf_zones != NULL) {
-        RtlCopyMemory(conf_zones, zones, len);
-    }
-    return conf_zones;
+    return fort_conf_mem_alloc(service_sids, len);
 }
 
-static void fort_conf_zones_free(PFORT_CONF_ZONES zones)
+FORT_API void fort_conf_service_sids_set(
+        PFORT_DEVICE_CONF device_conf, PFORT_SERVICE_SID_LIST service_sids)
 {
-    if (zones != NULL) {
-        fort_mem_free(zones, FORT_ZONES_POOL_TAG);
+    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
+    {
+        fort_conf_mem_free(device_conf->service_sids);
+        device_conf->service_sids = service_sids;
     }
+    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
+}
+
+FORT_API BOOL fort_conf_get_service_sid_path(
+        PFORT_DEVICE_CONF device_conf, const char *sidBytes, PFORT_APP_PATH path)
+{
+    char *buffer = (char *) path->buffer;
+
+    path->len = 0;
+
+    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
+    {
+        PCWSTR service_name = fort_conf_service_sid_name_find(device_conf->service_sids, sidBytes);
+        if (service_name != NULL) {
+            char *name_buf = buffer + FORT_SVCHOST_PREFIX_SIZE;
+            const DWORD name_size = (DWORD) (wcslen(service_name) * sizeof(WCHAR));
+
+            RtlCopyMemory(
+                    name_buf, service_name, name_size + sizeof(WCHAR)); /* + null terminator */
+
+            path->len = (UINT16) (FORT_SVCHOST_PREFIX_SIZE + name_size);
+        }
+    }
+    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
+
+    if (path->len == 0)
+        return FALSE;
+
+    RtlCopyMemory(buffer, FORT_SVCHOST_PREFIX, FORT_SVCHOST_PREFIX_SIZE);
+
+    return TRUE;
+}
+
+FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PFORT_CONF_ZONES zones, ULONG len)
+{
+    return fort_conf_mem_alloc(zones, len);
 }
 
 FORT_API void fort_conf_zones_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONES zones)
 {
-    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->zones_lock);
+    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
     {
-        fort_conf_zones_free(device_conf->zones);
+        fort_conf_mem_free(device_conf->zones);
         device_conf->zones = zones;
     }
-    ExReleaseSpinLockExclusive(&device_conf->zones_lock, oldIrql);
+    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
 FORT_API void fort_conf_zone_flag_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONE_FLAG zone_flag)
 {
-    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->zones_lock);
+    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
     PFORT_CONF_ZONES zones = device_conf->zones;
     if (zones != NULL) {
         const UINT32 zone_mask = (1u << (zone_flag->zone_id - 1));
@@ -439,7 +491,7 @@ FORT_API void fort_conf_zone_flag_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_
             zones->enabled_mask &= ~zone_mask;
         }
     }
-    ExReleaseSpinLockExclusive(&device_conf->zones_lock, oldIrql);
+    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
 FORT_API BOOL fort_conf_zones_ip_included(
@@ -447,7 +499,7 @@ FORT_API BOOL fort_conf_zones_ip_included(
 {
     BOOL res = FALSE;
 
-    KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->zones_lock);
+    KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
     PFORT_CONF_ZONES zones = device_conf->zones;
     if (zones != NULL) {
         zones_mask &= (zones->mask & zones->enabled_mask);
@@ -464,7 +516,7 @@ FORT_API BOOL fort_conf_zones_ip_included(
             zones_mask ^= (1u << zone_index);
         }
     }
-    ExReleaseSpinLockShared(&device_conf->zones_lock, oldIrql);
+    ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 
     return res;
 }

@@ -7,6 +7,10 @@
 #include "fortpool.h"
 #include "forttds.h"
 
+#define FORT_SVCHOST_PREFIX L"\\svchost\\"
+#define FORT_SVCHOST_PREFIX_SIZE                                                                   \
+    (sizeof(FORT_SVCHOST_PREFIX) - sizeof(WCHAR)) /* skip terminating zero */
+
 typedef struct fort_conf_ref
 {
     UINT32 volatile refcount;
@@ -38,8 +42,10 @@ typedef struct fort_device_conf
     PFORT_CONF_REF volatile ref;
     KSPIN_LOCK ref_lock;
 
+    PFORT_SERVICE_SID_LIST service_sids;
     PFORT_CONF_ZONES zones;
-    EX_SPIN_LOCK zones_lock;
+
+    EX_SPIN_LOCK lock;
 } FORT_DEVICE_CONF, *PFORT_DEVICE_CONF;
 
 #if defined(__cplusplus)
@@ -73,6 +79,15 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
 
 FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
         PFORT_DEVICE_CONF device_conf, const FORT_CONF_FLAGS conf_flags);
+
+FORT_API PFORT_SERVICE_SID_LIST fort_conf_service_sids_new(
+        PFORT_SERVICE_SID_LIST service_sids, ULONG len);
+
+FORT_API void fort_conf_service_sids_set(
+        PFORT_DEVICE_CONF device_conf, PFORT_SERVICE_SID_LIST service_sids);
+
+FORT_API BOOL fort_conf_get_service_sid_path(
+        PFORT_DEVICE_CONF device_conf, const char *sidBytes, PFORT_APP_PATH path);
 
 FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PFORT_CONF_ZONES zones, ULONG len);
 
