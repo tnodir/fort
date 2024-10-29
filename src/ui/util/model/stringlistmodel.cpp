@@ -103,8 +103,12 @@ void StringListModel::reset()
 
 void StringListModel::refresh()
 {
+    const int rowCount = this->rowCount();
+    if (rowCount <= 0)
+        return;
+
     const auto firstCell = index(0, 0);
-    const auto lastCell = index(rowCount() - 1, 0);
+    const auto lastCell = index(rowCount - 1, 0);
 
     emit dataChanged(firstCell, lastCell);
 }
