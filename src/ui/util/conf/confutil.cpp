@@ -157,7 +157,7 @@ int ConfUtil::writeServiceSids(char **data, const WriteServiceSidsArgs &wssa)
     for (const auto &name : wssa.namesList) {
         *nameOffset++ = nameText - nameData;
 
-        writeString(&nameText, name);
+        writeString(&nameText, name.toLower());
     }
 
     return (nameText - *data);
