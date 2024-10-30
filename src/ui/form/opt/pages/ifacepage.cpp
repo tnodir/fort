@@ -50,6 +50,7 @@ void IfacePage::onResetToDefault()
 {
     m_comboLanguage->setCurrentIndex(0);
     m_comboTheme->setCurrentIndex(0);
+    m_comboStyle->setCurrentText(IniUser::styleDefault());
     m_cbUseSystemLocale->setChecked(true);
     m_cbExcludeCapture->setChecked(false);
 
@@ -118,6 +119,12 @@ void IfacePage::onEditResetted()
         setThemeEdited(false);
         WindowManager::updateTheme(confManager()->iniUser());
     }
+
+    // Style
+    if (styleEdited()) {
+        setStyleEdited(false);
+        WindowManager::updateStyle(confManager()->iniUser());
+    }
 }
 
 void IfacePage::onRetranslateUi()
@@ -132,6 +139,8 @@ void IfacePage::onRetranslateUi()
     m_labelLanguage->setText(tr("Language:"));
     m_labelTheme->setText(tr("Theme:"));
     retranslateComboTheme();
+    m_labelStyle->setText(tr("Style:"));
+    retranslateComboStyle();
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_cbExcludeCapture->setText(tr("Exclude from screen capture"));
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
@@ -177,6 +186,15 @@ void IfacePage::retranslateComboTheme()
     ControlUtil::setComboBoxTexts(m_comboTheme, list);
 
     updateTheme();
+}
+
+void IfacePage::retranslateComboStyle()
+{
+    const QStringList list = { IniUser::styleDefault(), "Windows11" };
+
+    ControlUtil::setComboBoxTexts(m_comboStyle, list);
+
+    updateStyle();
 }
 
 void IfacePage::retranslateComboHotKey()
@@ -296,6 +314,9 @@ void IfacePage::setupGlobalBox()
     // Theme Row
     auto themeLayout = setupThemeLayout();
 
+    // Style Row
+    auto styleLayout = setupStyleLayout();
+
     m_cbUseSystemLocale =
             ControlUtil::createCheckBox(iniUser()->useSystemLocale(), [&](bool checked) {
                 iniUser()->setUseSystemLocale(checked);
@@ -317,6 +338,7 @@ void IfacePage::setupGlobalBox()
     auto layout = new QVBoxLayout();
     layout->addLayout(langLayout);
     layout->addLayout(themeLayout);
+    layout->addLayout(styleLayout);
     layout->addWidget(m_cbUseSystemLocale);
     layout->addWidget(m_cbExcludeCapture);
     layout->addWidget(m_cbExplorerMenu);
@@ -377,6 +399,26 @@ QLayout *IfacePage::setupThemeLayout()
 #endif
 
     return ControlUtil::createRowLayout(m_labelTheme, m_comboTheme);
+}
+
+QLayout *IfacePage::setupStyleLayout()
+{
+    m_labelStyle = ControlUtil::createLabel();
+
+    m_comboStyle = ControlUtil::createComboBox({}, [&](int index) {
+        const auto style = m_comboStyle->itemText(index);
+
+        if (iniUser()->style() != style) {
+            setStyleEdited(true);
+            iniUser()->setStyle(style);
+            ctrl()->setIniUserEdited();
+
+            WindowManager::updateStyle(*iniUser());
+        }
+    });
+    m_comboStyle->setFixedWidth(200);
+
+    return ControlUtil::createRowLayout(m_labelStyle, m_comboStyle);
 }
 
 void IfacePage::setupHotKeysBox()
@@ -702,4 +744,10 @@ void IfacePage::updateTheme()
 {
     const auto colorScheme = IniUser::colorSchemeByName(iniUser()->theme());
     m_comboTheme->setCurrentIndex(colorScheme);
+}
+
+void IfacePage::updateStyle()
+{
+    const auto style = iniUser()->style();
+    m_comboStyle->setCurrentText(style);
 }

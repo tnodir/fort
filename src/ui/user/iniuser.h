@@ -60,6 +60,10 @@ public:
     QString theme() const { return valueText("base/theme"); }
     void setTheme(const QString &v) { setValue("base/theme", v); }
 
+    static QString styleDefault() { return "Fusion"; }
+    QString style() const { return valueText("base/style", styleDefault()); }
+    void setStyle(const QString &v) { setValue("base/style", v, styleDefault()); }
+
     bool hotKeyEnabled() const { return valueBool("hotKey/enabled"); }
     void setHotKeyEnabled(bool v) { setValue("hotKey/enabled", v); }
 

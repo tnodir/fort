@@ -21,6 +21,9 @@ public:
     bool themeEdited() const { return m_themeEdited; }
     void setThemeEdited(bool v) { m_themeEdited = v; }
 
+    bool styleEdited() const { return m_styleEdited; }
+    void setStyleEdited(bool v) { m_styleEdited = v; }
+
 public slots:
     void onResetToDefault() override;
 
@@ -32,6 +35,7 @@ protected slots:
 
 private:
     void retranslateComboTheme();
+    void retranslateComboStyle();
     void retranslateComboHotKey();
     void retranslateComboTrayEvent();
     void retranslateComboTrayAction();
@@ -44,6 +48,7 @@ private:
     QLayout *setupLangLayout();
     void setupComboLanguage();
     QLayout *setupThemeLayout();
+    QLayout *setupStyleLayout();
     void setupHotKeysBox();
     void refreshEditShortcut();
     QLayout *setupComboHotKeyLayout();
@@ -61,11 +66,13 @@ private:
     void setupConfirmationsBox();
 
     void updateTheme();
+    void updateStyle();
 
 private:
     bool m_explorerEdited : 1 = false;
     bool m_languageEdited : 1 = false;
     bool m_themeEdited : 1 = false;
+    bool m_styleEdited : 1 = false;
 
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
@@ -78,6 +85,8 @@ private:
     QComboBox *m_comboLanguage = nullptr;
     QLabel *m_labelTheme = nullptr;
     QComboBox *m_comboTheme = nullptr;
+    QLabel *m_labelStyle = nullptr;
+    QComboBox *m_comboStyle = nullptr;
     QCheckBox *m_cbUseSystemLocale = nullptr;
     QCheckBox *m_cbExcludeCapture = nullptr;
     QCheckBox *m_cbExplorerMenu = nullptr;

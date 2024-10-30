@@ -62,8 +62,6 @@ signals:
     void windowVisibilityChanged(WindowCode code, bool isVisible);
 
 public slots:
-    void setupAppPalette();
-
     void setupTrayIcon();
     void showTrayIcon();
     void closeTrayIcon();
@@ -137,8 +135,12 @@ public slots:
     static bool activateModalWidget();
 
     static void updateTheme(const IniUser &ini);
+    static void updateStyle(const IniUser &ini);
 
 private:
+    void setupAppPalette();
+    static void refreshAppPalette();
+
     void setupMainWindow();
     void closeMainWindow();
 

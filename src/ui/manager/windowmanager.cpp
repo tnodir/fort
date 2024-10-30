@@ -5,7 +5,6 @@
 #include <QMouseEvent>
 #include <QProcess>
 #include <QStyle>
-#include <QStyleFactory>
 #include <QStyleHints>
 
 #include <conf/confmanager.h>
@@ -36,12 +35,6 @@ namespace {
 
 const QLoggingCategory LC("manager.window");
 
-void setupAppStyle()
-{
-    QStyle *style = QStyleFactory::create("Fusion");
-    QApplication::setStyle(style);
-}
-
 inline bool isWindowVisible(WidgetWindow *w)
 {
     return w && w->isVisible();
@@ -53,7 +46,6 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 
 void WindowManager::setUp()
 {
-    setupAppStyle();
     setupAppPalette();
 
     setupMainWindow();
@@ -99,17 +91,17 @@ QFont WindowManager::defaultFont()
 
 void WindowManager::setupAppPalette()
 {
-    const auto refreshAppPalette = [] {
-        const QPalette palette = QApplication::style()->standardPalette();
-
-        QApplication::setPalette(palette);
-    };
-
-    refreshAppPalette();
-
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-    connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this, refreshAppPalette);
+    connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this,
+            &WindowManager::refreshAppPalette);
 #endif
+}
+
+void WindowManager::refreshAppPalette()
+{
+    const QPalette palette = QApplication::style()->standardPalette();
+
+    QApplication::setPalette(palette);
 }
 
 void WindowManager::setupMainWindow()
@@ -225,6 +217,7 @@ void WindowManager::setupConfManager()
 void WindowManager::setupByIniUser(const IniUser &ini)
 {
     updateTheme(ini);
+    updateStyle(ini);
     updateTrayIconVisibility(ini);
     updateGraphWindowVisibility(ini);
 }
@@ -238,6 +231,13 @@ void WindowManager::updateTheme(const IniUser &ini)
 #else
     Q_UNUSED(ini);
 #endif
+}
+
+void WindowManager::updateStyle(const IniUser &ini)
+{
+    QApplication::setStyle(ini.style());
+
+    refreshAppPalette();
 }
 
 void WindowManager::updateTrayIconVisibility(const IniUser &ini)
