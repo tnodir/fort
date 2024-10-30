@@ -942,7 +942,7 @@
     </message>
     <message>
         <source>Style:</source>
-        <translation type="unfinished"></translation>
+        <translation>样式：</translation>
     </message>
 </context>
 <context>
@@ -1213,7 +1213,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-install after download</source>
-        <translation type="unfinished"></translation>
+        <translation>下载后自动安装</translation>
     </message>
 </context>
 <context>
@@ -1871,6 +1871,14 @@ Please restart the running program to take effect of this option.</source>
         <translation>根据重试秒数延迟启动</translation>
     </message>
     <message>
+        <source>Maximum retries count:</source>
+        <translation>最大重试次数：</translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation>重试的延迟时间（秒）：</translation>
+    </message>
+    <message>
         <source>3 seconds</source>
         <translation>3 秒</translation>
     </message>
@@ -1897,14 +1905,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source> second(s)</source>
         <translation> 秒</translation>
-    </message>
-    <message>
-        <source>Maximum retries count:</source>
-        <translation>最大重试次数：</translation>
-    </message>
-    <message>
-        <source>Delay seconds to retry:</source>
-        <translation>重试的延迟时间（秒）：</translation>
     </message>
 </context>
 <context>
