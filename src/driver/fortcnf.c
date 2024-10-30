@@ -176,7 +176,9 @@ FORT_API NTSTATUS fort_conf_ref_exe_add_path(
     NTSTATUS status;
 
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&conf_ref->conf_lock);
-    status = fort_conf_ref_exe_add_path_locked(conf_ref, app_entry, path, path_hash);
+    {
+        status = fort_conf_ref_exe_add_path_locked(conf_ref, app_entry, path, path_hash);
+    }
     ExReleaseSpinLockExclusive(&conf_ref->conf_lock, oldIrql);
 
     return status;

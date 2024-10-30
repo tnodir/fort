@@ -379,29 +379,29 @@ inline static PSID_AND_ATTRIBUTES_HASH fort_callout_ale_get_sid(PCFORT_CALLOUT_A
     return tokenInfo->SidHash;
 }
 
-inline static BOOL fort_callout_ale_check_svchost_sid(const SID *sid)
+inline static const char *fort_callout_ale_get_service_sid(const SID *sid)
 {
     if (sid == NULL)
-        return FALSE;
+        return NULL;
 
     if (sid->Revision != 1)
-        return FALSE;
+        return NULL;
 
     if (sid->SubAuthorityCount != 6)
-        return FALSE; // not "Service SID"'s sub-auth count
+        return NULL; // not "Service SID"'s sub-auth count
 
     const DWORD *subAuth = &sid->SubAuthority[0];
     if (*subAuth != 80)
-        return FALSE; // not "Service SID"'s prefix
+        return NULL; // not "Service SID"'s prefix
 
     const BYTE *idAuth = &sid->IdentifierAuthority.Value[0];
     if (idAuth[5] != 5)
-        return FALSE; // not "NT Authority"
+        return NULL; // not "NT Authority"
 
     if (idAuth[4] != 0 || *((PUINT32) &idAuth[0]) != 0)
-        return FALSE; // not "NT Authority"
+        return NULL; // not "NT Authority"
 
-    return TRUE;
+    return (const char *) &subAuth[1];
 }
 
 inline static BOOL fort_callout_ale_fill_path_sid(
@@ -419,11 +419,10 @@ inline static BOOL fort_callout_ale_fill_path_sid(
     for (int i = 0; i < sidCount; ++i) {
         const SID *sid = sidHash->SidAttr[i].Sid;
 
-        if (!fort_callout_ale_check_svchost_sid(sid))
-            continue;
-
         // Get Service Name by SID
-        const char *sidBytes = (const char *) &sid->SubAuthority[1];
+        const char *sidBytes = fort_callout_ale_get_service_sid(sid);
+        if (sidBytes == NULL)
+            continue;
 
         cx->path.buffer = cx->svchost_name;
 
