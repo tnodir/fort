@@ -99,6 +99,9 @@ public:
     bool updateAutoDownload() const { return valueBool("autoUpdate/autoDownload"); }
     void setUpdateAutoDownload(bool v) { setValue("autoUpdate/autoDownload", v); }
 
+    bool updateAutoInstall() const { return valueBool("autoUpdate/autoInstall"); }
+    void setUpdateAutoInstall(bool v) { setValue("autoUpdate/autoInstall", v); }
+
     bool progPurgeOnMounted() const { return valueBool("prog/purgeOnMounted"); }
     void setProgPurgeOnMounted(bool v) { setValue("prog/purgeOnMounted", v); }
 

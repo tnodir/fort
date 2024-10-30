@@ -152,6 +152,10 @@ void AutoUpdateManager::downloadFinished(const QByteArray &data, bool success)
         success = saveInstaller(data);
 
         setIsDownloaded(success);
+
+        if (autoInstall()) {
+            QMetaObject::invokeMethod(this, &AutoUpdateManager::runInstaller, Qt::QueuedConnection);
+        }
     }
 
     setIsDownloading(false);
@@ -232,6 +236,7 @@ void AutoUpdateManager::setupByConf(const IniOptions &ini)
 {
     setKeepCurrentVersion(ini.updateKeepCurrentVersion());
     setAutoDownload(ini.updateAutoDownload());
+    setAutoInstall(ini.updateAutoInstall());
 }
 
 bool AutoUpdateManager::runInstaller()

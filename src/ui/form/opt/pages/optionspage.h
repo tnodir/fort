@@ -83,6 +83,7 @@ private:
 
     QCheckBox *m_cbUpdateKeepCurrentVersion = nullptr;
     QCheckBox *m_cbUpdateAutoDownload = nullptr;
+    QCheckBox *m_cbUpdateAutoInstall = nullptr;
 
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbPurgeOnMounted = nullptr;

@@ -76,6 +76,9 @@ protected:
     bool autoDownload() const { return m_autoDownload; }
     void setAutoDownload(bool v) { m_autoDownload = v; }
 
+    bool autoInstall() const { return m_autoInstall; }
+    void setAutoInstall(bool v) { m_autoInstall = v; }
+
     virtual void setupManager();
     void setupConfManager();
     void setupTaskManager();
@@ -104,6 +107,7 @@ private:
 private:
     bool m_keepCurrentVersion : 1 = false;
     bool m_autoDownload : 1 = false;
+    bool m_autoInstall : 1 = false;
 
     Flags m_flags = NoFlag;
 

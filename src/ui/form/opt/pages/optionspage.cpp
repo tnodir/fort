@@ -65,6 +65,7 @@ void OptionsPage::onResetToDefault()
 
     m_cbUpdateKeepCurrentVersion->setChecked(false);
     m_cbUpdateAutoDownload->setChecked(false);
+    m_cbUpdateAutoInstall->setChecked(false);
 
     m_cbLogBlocked->setChecked(true);
     m_cbPurgeOnMounted->setChecked(false);
@@ -147,6 +148,7 @@ void OptionsPage::onRetranslateUi()
 
     m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
     m_cbUpdateAutoDownload->setText(tr("Auto-download new version"));
+    m_cbUpdateAutoInstall->setText(tr("Auto-install after download"));
 
     m_cbLogBlocked->setText(tr("Collect New Programs"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
@@ -477,9 +479,15 @@ void OptionsPage::setupUpdateBox()
                 ctrl()->setIniEdited();
             });
 
+    m_cbUpdateAutoInstall =
+            ControlUtil::createCheckBox(ini()->updateAutoInstall(), [&](bool checked) {
+                ini()->setUpdateAutoInstall(checked);
+                ctrl()->setIniEdited();
+            });
+
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbUpdateKeepCurrentVersion, m_cbUpdateAutoDownload });
+            { m_cbUpdateKeepCurrentVersion, m_cbUpdateAutoDownload, m_cbUpdateAutoInstall });
 
     m_gbUpdate = new QGroupBox();
     m_gbUpdate->setLayout(layout);
