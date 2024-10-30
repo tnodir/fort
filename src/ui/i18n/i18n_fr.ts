@@ -280,29 +280,7 @@
     </message>
 </context>
 <context>
-    <name>ConfManager</name>
-    <message>
-        <source>Configuration Error</source>
-        <translation>Erreur de configuration</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>Impossible de charger les paramètres</translation>
-    </message>
-</context>
-<context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Paramètres modifiés par quelqu&apos;un d&apos;autre</translation>
-    </message>
-</context>
-<context>
-    <name>ConfUtil</name>
+    <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
         <translation>Trop de chemins d&apos;application</translation>
@@ -330,6 +308,28 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Longueur du chemin d&apos;application doit être &lt; %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManager</name>
+    <message>
+        <source>Configuration Error</source>
+        <translation>Erreur de configuration</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Veuillez d&apos;abord installer Fort Firewall v%1 et enregistrer les options depuis celui-ci.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Impossible de charger les paramètres</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation>Paramètres modifiés par quelqu&apos;un d&apos;autre</translation>
     </message>
 </context>
 <context>
@@ -940,6 +940,10 @@
         <source>Sound Alert</source>
         <translation>Alerte Sonore</translation>
     </message>
+    <message>
+        <source>Style:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1206,6 +1210,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <message>
         <source>Block traffic for disabled App Groups</source>
         <translation>Bloquer le trafic des groupes d&apos;applications désactivés</translation>
+    </message>
+    <message>
+        <source>Auto-install after download</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -280,29 +280,7 @@
     </message>
 </context>
 <context>
-    <name>ConfManager</name>
-    <message>
-        <source>Configuration Error</source>
-        <translation>Ошибка конфигурации</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>Невозможно загрузить Найстройки</translation>
-    </message>
-</context>
-<context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Настройки изменены кем-то другим</translation>
-    </message>
-</context>
-<context>
-    <name>ConfUtil</name>
+    <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
         <translation>Слишком много путей приложений</translation>
@@ -330,6 +308,28 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Длина пути приложения должна быть &lt; %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManager</name>
+    <message>
+        <source>Configuration Error</source>
+        <translation>Ошибка конфигурации</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Сперва установите Fort Firewall v%1 и сохраните Опции пожалуйста.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Невозможно загрузить Найстройки</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation>Настройки изменены кем-то другим</translation>
     </message>
 </context>
 <context>
@@ -940,6 +940,10 @@
         <source>Sound Alert</source>
         <translation>Звуковое оповещение</translation>
     </message>
+    <message>
+        <source>Style:</source>
+        <translation>Стиль:</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1206,6 +1210,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Block traffic for disabled App Groups</source>
         <translation>Блокировать трафик для отключенных групп приложений</translation>
+    </message>
+    <message>
+        <source>Auto-install after download</source>
+        <translation>Авто-установка после скачивания</translation>
     </message>
 </context>
 <context>

@@ -280,29 +280,7 @@
     </message>
 </context>
 <context>
-    <name>ConfManager</name>
-    <message>
-        <source>Configuration Error</source>
-        <translation>설정 오류</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>먼저 Fort Firewall %1 버전을 설치한 다음 옵션을 저장해 주세요.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>설정을 로드할 수 없음</translation>
-    </message>
-</context>
-<context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>다른 사람이 설정을 변경함</translation>
-    </message>
-</context>
-<context>
-    <name>ConfUtil</name>
+    <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
         <translation>응용 프로그램의 경로가 너무 많습니다.</translation>
@@ -330,6 +308,28 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>응용 프로그램의 경로 길이는 %1보다 작아야 합니다.</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManager</name>
+    <message>
+        <source>Configuration Error</source>
+        <translation>설정 오류</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>먼저 Fort Firewall %1 버전을 설치한 다음 옵션을 저장해 주세요.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>설정을 로드할 수 없음</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation>다른 사람이 설정을 변경함</translation>
     </message>
 </context>
 <context>
@@ -940,6 +940,10 @@
         <source>Sound Alert</source>
         <translation>소리 알림</translation>
     </message>
+    <message>
+        <source>Style:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1206,6 +1210,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Block traffic for disabled App Groups</source>
         <translation>비활성화된 앱 그룹의 트래픽 차단</translation>
+    </message>
+    <message>
+        <source>Auto-install after download</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

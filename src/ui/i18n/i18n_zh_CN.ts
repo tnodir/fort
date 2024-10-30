@@ -280,29 +280,7 @@
     </message>
 </context>
 <context>
-    <name>ConfManager</name>
-    <message>
-        <source>Configuration Error</source>
-        <translation>配置错误</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>请先安装防火墙 v%1 并保存选项。</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>无法载入设置</translation>
-    </message>
-</context>
-<context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>设置已被其他人更改</translation>
-    </message>
-</context>
-<context>
-    <name>ConfUtil</name>
+    <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
         <translation>应用程序路径过多</translation>
@@ -330,6 +308,28 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>应用程序路径的长度必须小于 %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManager</name>
+    <message>
+        <source>Configuration Error</source>
+        <translation>配置错误</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>请先安装防火墙 v%1 并保存选项。</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>无法载入设置</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation>设置已被其他人更改</translation>
     </message>
 </context>
 <context>
@@ -940,6 +940,10 @@
         <source>Sound Alert</source>
         <translation>声音提醒</translation>
     </message>
+    <message>
+        <source>Style:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1206,6 +1210,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Block traffic for disabled App Groups</source>
         <translation>阻止已禁用应用程序组的流量</translation>
+    </message>
+    <message>
+        <source>Auto-install after download</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

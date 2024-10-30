@@ -280,29 +280,7 @@
     </message>
 </context>
 <context>
-    <name>ConfManager</name>
-    <message>
-        <source>Configuration Error</source>
-        <translation>Napaka nastavitev</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>Nastavitev ni mogoče naložiti</translation>
-    </message>
-</context>
-<context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Nastavitve je spremenil nekdo drug</translation>
-    </message>
-</context>
-<context>
-    <name>ConfUtil</name>
+    <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
         <translation>Preveč aplikacijskih poti</translation>
@@ -330,6 +308,28 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Dolžina poti aplikacij mora biti &lt; %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManager</name>
+    <message>
+        <source>Configuration Error</source>
+        <translation>Napaka nastavitev</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Najprej namestite &apos;Fort Firewall&apos; v%1 in iz njega shranite možnosti.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Nastavitev ni mogoče naložiti</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation>Nastavitve je spremenil nekdo drug</translation>
     </message>
 </context>
 <context>
@@ -940,6 +940,10 @@
         <source>Sound Alert</source>
         <translation>Zvočno opozorilo</translation>
     </message>
+    <message>
+        <source>Style:</source>
+        <translation>Slog:</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1206,6 +1210,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Block traffic for disabled App Groups</source>
         <translation>Blokiraj promet za onemogočene skupine aplikacij</translation>
+    </message>
+    <message>
+        <source>Auto-install after download</source>
+        <translation>Samodejna namestitev po prenosu</translation>
     </message>
 </context>
 <context>

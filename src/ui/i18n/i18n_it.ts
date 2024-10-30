@@ -280,29 +280,7 @@
     </message>
 </context>
 <context>
-    <name>ConfManager</name>
-    <message>
-        <source>Configuration Error</source>
-        <translation>Errore di configurazione</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Per prima cosa installa Fort Firewall v%1 e salva le Opzioni da esso.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>Impossibile caricare impostazioni</translation>
-    </message>
-</context>
-<context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Impostazioni modificate da qualcun altro</translation>
-    </message>
-</context>
-<context>
-    <name>ConfUtil</name>
+    <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
         <translation>Troppi percorsi di applicazione</translation>
@@ -330,6 +308,28 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>La lunghezza del percorso dell&apos;applicazione deve essere &lt; %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManager</name>
+    <message>
+        <source>Configuration Error</source>
+        <translation>Errore di configurazione</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Per prima cosa installa Fort Firewall v%1 e salva le Opzioni da esso.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Impossibile caricare impostazioni</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation>Impostazioni modificate da qualcun altro</translation>
     </message>
 </context>
 <context>
@@ -940,6 +940,10 @@
         <source>Sound Alert</source>
         <translation>Avviso sonoro</translation>
     </message>
+    <message>
+        <source>Style:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1206,6 +1210,10 @@ Assicurati di avere un nuovo backup.</translation>
     <message>
         <source>Block traffic for disabled App Groups</source>
         <translation>Blocca traffico per gruppi di app disabilitati</translation>
+    </message>
+    <message>
+        <source>Auto-install after download</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

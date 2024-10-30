@@ -280,29 +280,7 @@
     </message>
 </context>
 <context>
-    <name>ConfManager</name>
-    <message>
-        <source>Configuration Error</source>
-        <translation>Błąd konfiguracji</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Proszę najpierw zainstalować Fort Frewall v%1 i zapisać opcje.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>Nie można wczytać ustawień</translation>
-    </message>
-</context>
-<context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>Ustawienia zmienione przez kogoś innego</translation>
-    </message>
-</context>
-<context>
-    <name>ConfUtil</name>
+    <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
         <translation>Zbyt wiele ścieżek aplikacji</translation>
@@ -330,6 +308,28 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Długość ścieżki aplikacji musi być &lt; %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManager</name>
+    <message>
+        <source>Configuration Error</source>
+        <translation>Błąd konfiguracji</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>Proszę najpierw zainstalować Fort Frewall v%1 i zapisać opcje.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>Nie można wczytać ustawień</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation>Ustawienia zmienione przez kogoś innego</translation>
     </message>
 </context>
 <context>
@@ -940,6 +940,10 @@
         <source>Sound Alert</source>
         <translation>Alarm dźwiękowy</translation>
     </message>
+    <message>
+        <source>Style:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1206,6 +1210,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     <message>
         <source>Block traffic for disabled App Groups</source>
         <translation>Blokuj ruch dla wyłączonych grup aplikacji</translation>
+    </message>
+    <message>
+        <source>Auto-install after download</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -280,29 +280,7 @@
     </message>
 </context>
 <context>
-    <name>ConfManager</name>
-    <message>
-        <source>Configuration Error</source>
-        <translation>خطأ في الإعدادات</translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>يرجى تثبيت Fort Firewall  v%1 وحفظ الإعدادات بواسطته أولًا.</translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation>فشل قراءة الإعدادات :(</translation>
-    </message>
-</context>
-<context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation>تم تغيير الإعدادات بواسطة شخص آخر</translation>
-    </message>
-</context>
-<context>
-    <name>ConfUtil</name>
+    <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
         <translation>مسارات التطبيقات كثيرة جدًا</translation>
@@ -330,6 +308,28 @@
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>طول مسار التطبيقات يجب أن يكون أقل من %1</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManager</name>
+    <message>
+        <source>Configuration Error</source>
+        <translation>خطأ في الإعدادات</translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation>يرجى تثبيت Fort Firewall  v%1 وحفظ الإعدادات بواسطته أولًا.</translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation>فشل قراءة الإعدادات :(</translation>
+    </message>
+</context>
+<context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
+        <translation>تم تغيير الإعدادات بواسطة شخص آخر</translation>
     </message>
 </context>
 <context>
@@ -940,6 +940,10 @@
         <source>Sound Alert</source>
         <translation>تنبيه صوتي</translation>
     </message>
+    <message>
+        <source>Style:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1205,6 +1209,10 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-install after download</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

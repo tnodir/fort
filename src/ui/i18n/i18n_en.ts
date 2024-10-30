@@ -280,29 +280,7 @@
     </message>
 </context>
 <context>
-    <name>ConfManager</name>
-    <message>
-        <source>Configuration Error</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Cannot load Settings</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>ConfManagerRpc</name>
-    <message>
-        <source>Settings changed by someone else</source>
-        <translation></translation>
-    </message>
-</context>
-<context>
-    <name>ConfUtil</name>
+    <name>ConfBuffer</name>
     <message>
         <source>Too many application paths</source>
         <translation></translation>
@@ -329,6 +307,28 @@
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ConfManager</name>
+    <message>
+        <source>Configuration Error</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Please first install Fort Firewall v%1 and save Options from it.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cannot load Settings</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ConfManagerRpc</name>
+    <message>
+        <source>Settings changed by someone else</source>
         <translation></translation>
     </message>
 </context>
@@ -940,6 +940,10 @@
         <source>Sound Alert</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Style:</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1203,6 +1207,10 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-install after download</source>
         <translation></translation>
     </message>
 </context>
