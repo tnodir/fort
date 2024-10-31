@@ -942,7 +942,7 @@
     </message>
     <message>
         <source>Style:</source>
-        <translation type="unfinished"></translation>
+        <translation>Stile:</translation>
     </message>
 </context>
 <context>
@@ -1213,7 +1213,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Auto-install after download</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-installa dopo lo scaricamento</translation>
     </message>
 </context>
 <context>
