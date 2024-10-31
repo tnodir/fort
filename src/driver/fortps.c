@@ -784,19 +784,18 @@ FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
     fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
 }
 
-static BOOL fort_pstree_get_proc_name_locked(PFORT_PSTREE ps_tree, DWORD processId,
-        PFORT_APP_PATH path, BOOL *isSvcHost, BOOL *inherited)
+static BOOL fort_pstree_get_proc_name_locked(
+        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, BOOL *inherited)
 {
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
     if (proc == NULL)
         return FALSE;
 
-    const UINT16 procFlags = proc->flags;
-    *isSvcHost = (procFlags & FORT_PSNODE_IS_SVCHOST) != 0;
-
     PFORT_PSNAME ps_name = proc->ps_name;
     if (ps_name == NULL)
         return FALSE;
+
+    const UINT16 procFlags = proc->flags;
 
     if ((procFlags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
             == FORT_PSNODE_NAME_INHERIT)
@@ -810,15 +809,15 @@ static BOOL fort_pstree_get_proc_name_locked(PFORT_PSTREE ps_tree, DWORD process
     return TRUE;
 }
 
-FORT_API BOOL fort_pstree_get_proc_name(PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path,
-        BOOL *isSvcHost, BOOL *inherited)
+FORT_API BOOL fort_pstree_get_proc_name(
+        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, BOOL *inherited)
 {
     BOOL res;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        res = fort_pstree_get_proc_name_locked(ps_tree, processId, path, isSvcHost, inherited);
+        res = fort_pstree_get_proc_name_locked(ps_tree, processId, path, inherited);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 

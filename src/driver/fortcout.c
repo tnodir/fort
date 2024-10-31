@@ -365,18 +365,6 @@ inline static void fort_callout_ale_classify_action(PCFORT_CALLOUT_ARG ca,
     }
 }
 
-inline static BOOL fort_callout_ale_fill_path_tag(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, BOOL isSvcHost)
-{
-    if (!isSvcHost)
-        return FALSE;
-
-    // TODO
-    // PCWSTR tag = (PCWSTR) ca->inMetaValues->subProcessTag;
-
-    return FALSE;
-}
-
 inline static void fort_callout_ale_fill_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
 {
     PFORT_APP_PATH real_path = &cx->real_path;
@@ -386,13 +374,9 @@ inline static void fort_callout_ale_fill_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
     real_path->buffer = (PCWSTR) ca->inMetaValues->processPath->data;
 
     PFORT_APP_PATH path = &cx->path;
-    BOOL isSvcHost = FALSE;
     BOOL inherited = FALSE;
 
-    if (fort_pstree_get_proc_name(
-                &fort_device()->ps_tree, cx->process_id, path, &isSvcHost, &inherited)
-            || fort_callout_ale_fill_path_tag(ca, cx, isSvcHost)) {
-
+    if (fort_pstree_get_proc_name(&fort_device()->ps_tree, cx->process_id, path, &inherited)) {
         if (!inherited) {
             *real_path = *path;
         }
