@@ -16,7 +16,9 @@
 #include <util/stringutil.h>
 
 #include "confappswalker.h"
+#include "confconstdata.h"
 #include "confruleswalker.h"
+#include "confutil.h"
 #include "ruletextparser.h"
 
 #define APP_GROUP_MAX      FORT_CONF_GROUP_MAX
@@ -213,7 +215,7 @@ bool ConfBuffer::write(
     // Fill the buffer
     char *data = buffer().data();
 
-    ConfUtil::writeConf(&data, wca, opt);
+    ConfData(data).writeConf(wca, opt);
 
     return true;
 }
@@ -228,7 +230,7 @@ void ConfBuffer::writeFlags(const FirewallConf &conf)
     // Fill the buffer
     char *data = buffer().data();
 
-    ConfUtil::writeConfFlags(&data, conf);
+    ConfData(data).writeConfFlags(conf);
 }
 
 bool ConfBuffer::writeAppEntry(const App &app, bool isNew)
@@ -245,7 +247,7 @@ bool ConfBuffer::writeAppEntry(const App &app, bool isNew)
     // Fill the buffer
     char *data = buffer().data();
 
-    ConfUtil::writeApps(&data, appsMap);
+    ConfData(data).writeApps(appsMap);
 
     return true;
 }
@@ -284,7 +286,7 @@ void ConfBuffer::writeZone(const IpRange &ipRange)
     // Fill the buffer
     char *data = buffer().data();
 
-    ConfUtil::writeAddressList(&data, ipRange);
+    ConfData(data).writeAddressList(ipRange);
 }
 
 void ConfBuffer::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
@@ -307,6 +309,8 @@ void ConfBuffer::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 data
 
     data = confZones->data;
 
+    ConfData confUtilData(data);
+
     for (const auto &zoneData : zonesData) {
         Q_ASSERT(!zoneData.isEmpty());
 
@@ -316,8 +320,8 @@ void ConfBuffer::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 data
 #define CONF_DATA_OFFSET quint32(data - confZones->data)
         confZones->addr_off[zoneIndex] = CONF_DATA_OFFSET;
 
-        ConfUtil::writeArray(&data, zoneData);
-        ConfUtil::migrateZoneData(&data, zoneData);
+        confUtilData.writeArray(zoneData);
+        confUtilData.migrateZoneData(zoneData);
 #undef CONF_DATA_OFFSET
 
         zonesMask ^= zoneMask;
@@ -345,7 +349,7 @@ bool ConfBuffer::loadZone(IpRange &ipRange)
     const char *data = buffer().data();
     uint bufSize = buffer().size();
 
-    return ConfUtil::loadAddressList(&data, ipRange, bufSize);
+    return ConfConstData(data).loadAddressList(ipRange, bufSize);
 }
 
 bool ConfBuffer::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
@@ -603,7 +607,7 @@ void ConfBuffer::writeRule(
         const auto array = QByteArray::fromRawData(
                 (const char *) &ruleSetIds[ruleSetInfo.index], ruleSetCount * sizeof(quint16));
 
-        ConfUtil::writeArray(&data, array);
+        ConfData(data).writeArray(array);
     }
 
     // Write the rule's conditions

@@ -191,6 +191,8 @@ SOURCES += \
     util/conf/addressrange.cpp \
     util/conf/appparseoptions.cpp \
     util/conf/confbuffer.cpp \
+    util/conf/confconstdata.cpp \
+    util/conf/confdata.cpp \
     util/conf/confutil.cpp \
     util/conf/ruletextparser.cpp \
     util/dateutil.cpp \
@@ -421,8 +423,11 @@ HEADERS += \
     util/classhelpers.h \
     util/conf/addressrange.h \
     util/conf/appparseoptions.h \
+    util/conf/conf_types.h \
     util/conf/confappswalker.h \
     util/conf/confbuffer.h \
+    util/conf/confconstdata.h \
+    util/conf/confdata.h \
     util/conf/confruleswalker.h \
     util/conf/confutil.h \
     util/conf/ruletextparser.h \

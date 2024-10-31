@@ -6,7 +6,7 @@
 #include <util/conf/confappswalker.h>
 #include <util/conf/confruleswalker.h>
 
-#include "confutil.h"
+#include "confdata.h"
 
 class AddressGroup;
 class AppGroup;
