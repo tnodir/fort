@@ -77,35 +77,6 @@ typedef struct fort_service_info_list
 #define FORT_SERVICE_INFO_LIST_MIN_SIZE                                                            \
     (FORT_SERVICE_INFO_LIST_DATA_OFF + FORT_SERVICE_INFO_MAX_SIZE)
 
-typedef struct fort_service_sid_list
-{
-    UINT16 services_n;
-    UINT16 names_n;
-
-    char data[1];
-} FORT_SERVICE_SID_LIST, *PFORT_SERVICE_SID_LIST;
-
-typedef const FORT_SERVICE_SID_LIST *PCFORT_SERVICE_SID_LIST;
-
-#define FORT_SERVICE_SID_LIST_DATA_OFF offsetof(FORT_SERVICE_SID_LIST, data)
-#define FORT_SERVICE_SID_SIZE          (5 * sizeof(UINT32))
-
-#define FORT_SERVICE_SID_LIST_SID_NAME_INDEXES_OFF(services_n)                                     \
-    ((services_n) * FORT_SERVICE_SID_SIZE)
-
-#define FORT_SERVICE_SID_LIST_NAMES_HEADER_OFF(services_n)                                         \
-    (FORT_SERVICE_SID_LIST_SID_NAME_INDEXES_OFF(services_n) + (services_n) * sizeof(UINT16))
-
-#define FORT_SERVICE_SID_LIST_NAMES_HEADER_SIZE(names_n) ((names_n) * sizeof(UINT32))
-
-#define FORT_SERVICE_SID_LIST_NAMES_OFF(services_n, names_n)                                       \
-    (FORT_SERVICE_SID_LIST_NAMES_HEADER_OFF(services_n)                                            \
-            + FORT_SERVICE_SID_LIST_NAMES_HEADER_SIZE(names_n))
-
-#define FORT_SERVICE_SID_LIST_MAX_SIZE(services_n, names_n)                                        \
-    (FORT_SERVICE_SID_LIST_DATA_OFF + FORT_SERVICE_SID_LIST_NAMES_OFF(services_n, names_n)         \
-            + (names_n) * FORT_SERVICE_INFO_NAME_MAX_SIZE)
-
 typedef struct fort_conf_port_list
 {
     UINT8 port_n;
@@ -387,9 +358,6 @@ FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, PCFORT_APP_PATH
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
-
-FORT_API PCWSTR fort_conf_service_sid_name_find(
-        PCFORT_SERVICE_SID_LIST service_sids, const char *sidBytes);
 
 #ifdef __cplusplus
 } // extern "C"

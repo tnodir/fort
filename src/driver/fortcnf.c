@@ -419,53 +419,6 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
     return old_conf_flags;
 }
 
-FORT_API PFORT_SERVICE_SID_LIST fort_conf_service_sids_new(
-        PCFORT_SERVICE_SID_LIST service_sids, ULONG len)
-{
-    return fort_conf_mem_alloc(service_sids, len);
-}
-
-FORT_API void fort_conf_service_sids_set(
-        PFORT_DEVICE_CONF device_conf, PFORT_SERVICE_SID_LIST service_sids)
-{
-    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
-    {
-        fort_conf_mem_free(device_conf->service_sids);
-        device_conf->service_sids = service_sids;
-    }
-    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
-}
-
-FORT_API BOOL fort_conf_get_service_sid_path(
-        PFORT_DEVICE_CONF device_conf, const char *sidBytes, PFORT_APP_PATH path)
-{
-    char *buffer = (char *) path->buffer;
-
-    path->len = 0;
-
-    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
-    {
-        PCWSTR service_name = fort_conf_service_sid_name_find(device_conf->service_sids, sidBytes);
-        if (service_name != NULL) {
-            char *name_buf = buffer + FORT_SVCHOST_PREFIX_SIZE;
-            const DWORD name_size = (DWORD) (wcslen(service_name) * sizeof(WCHAR));
-
-            RtlCopyMemory(
-                    name_buf, service_name, name_size + sizeof(WCHAR)); /* + null terminator */
-
-            path->len = (UINT16) (FORT_SVCHOST_PREFIX_SIZE + name_size);
-        }
-    }
-    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
-
-    if (path->len == 0)
-        return FALSE;
-
-    RtlCopyMemory(buffer, FORT_SVCHOST_PREFIX, FORT_SVCHOST_PREFIX_SIZE);
-
-    return TRUE;
-}
-
 FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PFORT_CONF_ZONES zones, ULONG len)
 {
     return fort_conf_mem_alloc(zones, len);

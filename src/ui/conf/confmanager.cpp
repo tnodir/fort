@@ -925,7 +925,6 @@ void ConfManager::updateServices()
     auto serviceInfoManager = IoC<ServiceInfoManager>();
 
     updateOwnProcessServices(serviceInfoManager);
-    updateShareProcessServices(serviceInfoManager);
 }
 
 void ConfManager::updateDriverServices(
@@ -936,15 +935,6 @@ void ConfManager::updateDriverServices(
     confBuf.writeServices(services, runningServicesCount);
 
     IoC<DriverManager>()->writeServices(confBuf.buffer());
-}
-
-void ConfManager::updateDriverServiceSids(const QVector<ServiceInfo> &services)
-{
-    ConfBuffer confBuf;
-
-    confBuf.writeServiceSids(services);
-
-    IoC<DriverManager>()->writeServiceSids(confBuf.buffer());
 }
 
 void ConfManager::updateOwnProcessServices(ServiceInfoManager *serviceInfoManager)
@@ -958,17 +948,6 @@ void ConfManager::updateOwnProcessServices(ServiceInfoManager *serviceInfoManage
 
     if (runningServicesCount > 0) {
         updateDriverServices(services, runningServicesCount);
-    }
-}
-
-void ConfManager::updateShareProcessServices(ServiceInfoManager *serviceInfoManager)
-{
-    const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
-            ServiceInfo::TypeWin32ShareProcess, ServiceInfo::StateAll,
-            /*displayName=*/false);
-
-    if (!services.isEmpty()) {
-        updateDriverServiceSids(services);
     }
 }
 

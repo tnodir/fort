@@ -119,51 +119,6 @@ QRegularExpressionMatch ConfUtil::matchWildcard(const QStringView &path)
     return StringUtil::match(wildMatcher, path);
 }
 
-int ConfUtil::writeServiceSids(char **data, const WriteServiceSidsArgs &wssa)
-{
-    PFORT_SERVICE_SID_LIST serviceSids = PFORT_SERVICE_SID_LIST(*data);
-
-    const int servicesCount = wssa.sidNameIndexMap.size();
-    const int namesCount = wssa.namesList.size();
-
-    serviceSids->services_n = servicesCount;
-    serviceSids->names_n = namesCount;
-
-    // Write Service SID-s and Name Indexes
-    char *sid = serviceSids->data;
-    quint16 *nameIndex = (quint16 *) (sid + servicesCount * FORT_SERVICE_SID_SIZE);
-
-#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
-    for (const auto &[sidData, index] : wssa.sidNameIndexMap.asKeyValueRange()) {
-#else
-    auto it = wssa.sidNameIndexMap.constBegin();
-    for (; it != wssa.sidNameIndexMap.constEnd(); ++it) {
-        const auto &sidData = it.key();
-        const auto index = it.value();
-#endif
-
-        writeArray(&sid, sidData);
-
-        *nameIndex++ = index;
-    }
-
-    // Write Service Names: Offsets and Texts
-    quint32 *nameOffset = (quint32 *) nameIndex;
-
-    char *nameData = (char *) (nameOffset + namesCount);
-    char *nameText = nameData;
-
-    for (const auto &name : wssa.namesList) {
-        const quint32 off = nameText - nameData;
-
-        *nameOffset++ = off;
-
-        writeString(&nameText, name.toLower());
-    }
-
-    return (nameText - *data);
-}
-
 QString ConfUtil::parseAppPath(const QStringView &line, bool &isWild, bool &isPrefix)
 {
     auto path = line;

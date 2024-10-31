@@ -22,11 +22,6 @@ quint32 ioctlSetServices()
     return FORT_IOCTL_SETSERVICES;
 }
 
-quint32 ioctlSetServiceSids()
-{
-    return FORT_IOCTL_SETSERVICE_SIDS;
-}
-
 quint32 ioctlSetConf()
 {
     return FORT_IOCTL_SETCONF;
@@ -229,13 +224,6 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
             fort_conf_app_find(conf, &path, fort_conf_app_exe_find, /*exe_context=*/nullptr);
 
     return app_data;
-}
-
-QString confServiceSidNameFind(PCFORT_SERVICE_SID_LIST service_sids, const char *sidBytes)
-{
-    PCWSTR name = fort_conf_service_sid_name_find(service_sids, sidBytes);
-
-    return name ? QString::fromWCharArray(name) : QString();
 }
 
 bool provRegister(bool bootFilter)

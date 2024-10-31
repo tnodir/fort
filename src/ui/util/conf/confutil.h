@@ -17,12 +17,6 @@ using longs_arr_t = QVector<quint32>;
 using shorts_arr_t = QVector<quint16>;
 using chars_arr_t = QVector<qint8>;
 
-struct WriteServiceSidsArgs
-{
-    QMap<QByteArray, int> sidNameIndexMap;
-    QStringList namesList;
-};
-
 struct ParseAddressGroupsArgs
 {
     addrranges_arr_t addressRanges;
@@ -47,8 +41,6 @@ public:
     static int zoneMaxCount();
 
     static QRegularExpressionMatch matchWildcard(const QStringView &path);
-
-    static int writeServiceSids(char **data, const WriteServiceSidsArgs &wssa);
 
     static QString parseAppPath(const QStringView &line, bool &isWild, bool &isPrefix);
 

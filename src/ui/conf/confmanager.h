@@ -97,10 +97,7 @@ private:
 
     bool validateConf(const FirewallConf &newConf);
 
-    void updateDriverServiceSids(const QVector<ServiceInfo> &services);
-
     void updateOwnProcessServices(ServiceInfoManager *serviceInfoManager);
-    void updateShareProcessServices(ServiceInfoManager *serviceInfoManager);
 
     bool loadFromDb(FirewallConf &conf, bool &isNew);
     bool saveToDb(const FirewallConf &conf);

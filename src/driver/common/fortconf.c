@@ -317,30 +317,3 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
 
     return conf_flags.group_blocked;
 }
-
-FORT_API PCWSTR fort_conf_service_sid_name_find(
-        PCFORT_SERVICE_SID_LIST service_sids, const char *sidBytes)
-{
-    if (service_sids == NULL)
-        return NULL;
-
-    const char *data = service_sids->data;
-    const int services_n = service_sids->services_n;
-
-    const int sid_index = fort_conf_blob_index(data, sidBytes, FORT_SERVICE_SID_SIZE, services_n);
-    if (sid_index < 0)
-        return NULL;
-
-    const UINT16 name_index =
-            ((UINT16 *) (data + FORT_SERVICE_SID_LIST_SID_NAME_INDEXES_OFF(services_n)))[sid_index];
-
-    const UINT32 name_off =
-            ((UINT32 *) (data + FORT_SERVICE_SID_LIST_NAMES_HEADER_OFF(services_n)))[name_index];
-
-    const int names_n = service_sids->names_n;
-    const char *names_data = data + FORT_SERVICE_SID_LIST_NAMES_OFF(services_n, names_n);
-
-    PCWSTR name = (PCWSTR) (names_data + name_off);
-
-    return name;
-}

@@ -54,25 +54,6 @@ int writeServiceInfo(char *data, const ServiceInfo &serviceInfo)
     return FORT_SERVICE_INFO_NAME_OFF + FORT_CONF_STR_DATA_SIZE(nameLen);
 }
 
-void collectServiceSidsNames(const QVector<ServiceInfo> &services, WriteServiceSidsArgs &wssa)
-{
-    QHash<QString, int> nameIndexMap;
-
-    for (const ServiceInfo &info : services) {
-        const auto sid = StringUtil::serviceSid(info.realServiceName);
-
-        const auto name = info.serviceName;
-        int nameIndex = nameIndexMap.value(name, -1);
-
-        if (nameIndex == -1) {
-            nameIndex = wssa.namesList.size();
-            wssa.namesList.append(name);
-        }
-
-        wssa.sidNameIndexMap.insert(sid, nameIndex);
-    }
-}
-
 void writeAppGroupFlags(PFORT_CONF_GROUP out, const FirewallConf &conf)
 {
     out->group_bits = 0;
@@ -191,28 +172,6 @@ void ConfBuffer::writeServices(const QVector<ServiceInfo> &services, int running
 
         outSize += writeServiceInfo(data + outSize, info);
     }
-
-    buffer().resize(outSize); // shrink to actual size
-}
-
-void ConfBuffer::writeServiceSids(const QVector<ServiceInfo> &services)
-{
-    WriteServiceSidsArgs wssa;
-
-    collectServiceSidsNames(services, wssa);
-
-    // Resize the buffer to max size
-    {
-        const int servicesCount = wssa.sidNameIndexMap.size();
-        const int namesCount = wssa.namesList.size();
-
-        buffer().resize(FORT_SERVICE_SID_LIST_MAX_SIZE(servicesCount, namesCount));
-    }
-
-    // Fill the buffer
-    char *data = buffer().data();
-
-    const int outSize = ConfUtil::writeServiceSids(&data, wssa);
 
     buffer().resize(outSize); // shrink to actual size
 }

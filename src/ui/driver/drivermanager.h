@@ -44,7 +44,6 @@ public slots:
     bool validate(QByteArray &buf);
 
     bool writeServices(QByteArray &buf);
-    bool writeServiceSids(QByteArray &buf);
     bool writeConf(QByteArray &buf, bool onlyFlags = false);
     bool writeApp(QByteArray &buf, bool remove = false);
     bool writeZones(QByteArray &buf, bool onlyFlags = false);

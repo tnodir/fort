@@ -365,72 +365,14 @@ inline static void fort_callout_ale_classify_action(PCFORT_CALLOUT_ARG ca,
     }
 }
 
-inline static PSID_AND_ATTRIBUTES_HASH fort_callout_ale_get_sid(PCFORT_CALLOUT_ARG ca)
-{
-    const FWP_VALUE0 userIdField = ca->inFixedValues->incomingValue[ca->fi->userId].value;
-    if (userIdField.type != FWP_TOKEN_ACCESS_INFORMATION_TYPE)
-        return NULL;
-
-    const PTOKEN_ACCESS_INFORMATION tokenInfo =
-            (PTOKEN_ACCESS_INFORMATION) userIdField.tokenAccessInformation->data;
-    if (tokenInfo == NULL)
-        return NULL;
-
-    return tokenInfo->SidHash;
-}
-
-inline static const char *fort_callout_ale_get_service_sid(const SID *sid)
-{
-    if (sid == NULL)
-        return NULL;
-
-    if (sid->Revision != 1)
-        return NULL;
-
-    if (sid->SubAuthorityCount != 6)
-        return NULL; // not "Service SID"'s sub-auth count
-
-    const DWORD *subAuth = &sid->SubAuthority[0];
-    if (*subAuth != 80)
-        return NULL; // not "Service SID"'s prefix
-
-    const BYTE *idAuth = &sid->IdentifierAuthority.Value[0];
-    if (idAuth[5] != 5)
-        return NULL; // not "NT Authority"
-
-    if (idAuth[4] != 0 || *((PUINT32) &idAuth[0]) != 0)
-        return NULL; // not "NT Authority"
-
-    return (const char *) &subAuth[1];
-}
-
-inline static BOOL fort_callout_ale_fill_path_sid(
+inline static BOOL fort_callout_ale_fill_path_tag(
         PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, BOOL isSvcHost)
 {
     if (!isSvcHost)
         return FALSE;
 
-    const PSID_AND_ATTRIBUTES_HASH sidHash = fort_callout_ale_get_sid(ca);
-    if (sidHash == NULL)
-        return FALSE;
-
-    const int sidCount = sidHash->SidCount;
-
-    for (int i = 0; i < sidCount; ++i) {
-        const SID *sid = sidHash->SidAttr[i].Sid;
-
-        // Get Service Name by SID
-        const char *sidBytes = fort_callout_ale_get_service_sid(sid);
-        if (sidBytes == NULL)
-            continue;
-
-        cx->path.buffer = cx->svchost_name;
-
-        if (fort_conf_get_service_sid_path(&fort_device()->conf, sidBytes, &cx->path))
-            return TRUE;
-
-        break;
-    }
+    // TODO
+    // PCWSTR tag = (PCWSTR) ca->inMetaValues->subProcessTag;
 
     return FALSE;
 }
@@ -449,7 +391,7 @@ inline static void fort_callout_ale_fill_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
 
     if (fort_pstree_get_proc_name(
                 &fort_device()->ps_tree, cx->process_id, path, &isSvcHost, &inherited)
-            || fort_callout_ale_fill_path_sid(ca, cx, isSvcHost)) {
+            || fort_callout_ale_fill_path_tag(ca, cx, isSvcHost)) {
 
         if (!inherited) {
             *real_path = *path;

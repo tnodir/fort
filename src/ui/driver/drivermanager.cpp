@@ -108,11 +108,6 @@ bool DriverManager::writeServices(QByteArray &buf)
     return writeData(DriverCommon::ioctlSetServices(), buf);
 }
 
-bool DriverManager::writeServiceSids(QByteArray &buf)
-{
-    return writeData(DriverCommon::ioctlSetServiceSids(), buf);
-}
-
 bool DriverManager::writeConf(QByteArray &buf, bool onlyFlags)
 {
     return writeData(onlyFlags ? DriverCommon::ioctlSetFlags() : DriverCommon::ioctlSetConf(), buf);

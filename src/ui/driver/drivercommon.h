@@ -11,7 +11,6 @@ QString deviceName();
 
 quint32 ioctlValidate();
 quint32 ioctlSetServices();
-quint32 ioctlSetServiceSids();
 quint32 ioctlSetConf();
 quint32 ioctlSetFlags();
 quint32 ioctlGetLog();
@@ -70,8 +69,6 @@ bool confIp6InRange(
         const void *drvConf, const ip6_addr_t ip, bool included = false, int addrGroupIndex = 0);
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath);
-
-QString confServiceSidNameFind(PCFORT_SERVICE_SID_LIST service_sids, const char *sidBytes);
 
 bool provRegister(bool bootFilter);
 void provUnregister();
