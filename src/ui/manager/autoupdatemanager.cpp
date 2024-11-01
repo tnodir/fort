@@ -258,7 +258,8 @@ bool AutoUpdateManager::runInstaller()
     }
 
     if (settings->isMaster()) {
-        OsUtil::quit("new version install");
+        // Let clients to restart
+        QTimer::singleShot(100, this, [&] { OsUtil::quit("new version install"); });
     }
 
     return true;
