@@ -30,8 +30,8 @@ class ControlUtil
 public:
     static QCheckBox *createCheckBox(
             bool checked, const std::function<void(bool checked)> &onToggled);
-    static QCheckBox *createCheckStateBox(const QString &iconPath, Qt::CheckState state,
-            const std::function<void()> &onClicked);
+    static QCheckBox *createCheckStateBox(
+            const QString &iconPath, Qt::CheckState state, const std::function<void()> &onClicked);
 
     static QSpinBox *createSpinBox();
 
@@ -114,8 +114,10 @@ public:
             const std::function<void(int value)> &onValueChanged);
     static LabelDoubleSpin *createDoubleSpin(double v, double min, double max,
             const QString &suffix, const std::function<void(double value)> &onValueChanged);
-    static LabelColor *createLabelColor(
-            const QColor &v, const std::function<void(const QColor &color)> &onColorChanged);
+
+    static LabelColor *createLabelColor(const QColor &color, const QColor &darkColor,
+            const std::function<void(const QColor &color)> &onColorChanged,
+            const std::function<void(const QColor &color)> &onDarkColorChanged);
 
     static QLabel *formRowLabel(QFormLayout *formLayout, QWidget *field);
     static QLabel *formRowLabel(QFormLayout *formLayout, QLayout *field);

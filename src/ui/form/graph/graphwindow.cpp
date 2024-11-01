@@ -1,11 +1,11 @@
 #include "graphwindow.h"
 
-#include <QGuiApplication>
+#include <QApplication>
 #include <QScreen>
+#include <QStyleHints>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
@@ -79,6 +79,13 @@ void adjustGraphData(
     data->removeAfter(unixTimeKey);
 }
 
+QPen adjustPen(const QPen &pen, const QColor &color)
+{
+    QPen newPen(pen);
+    newPen.setColor(color);
+    return newPen;
+}
+
 }
 
 GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
@@ -88,8 +95,6 @@ GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
     setupTimer();
 
     setupFormWindow(iniUser(), IniUser::graphWindowGroup());
-
-    setMinimumSize(QSize(30, 10));
 }
 
 bool GraphWindow::deleteOnClose() const
@@ -100,16 +105,6 @@ bool GraphWindow::deleteOnClose() const
 ConfManager *GraphWindow::confManager() const
 {
     return IoC<ConfManager>();
-}
-
-FirewallConf *GraphWindow::conf() const
-{
-    return confManager()->conf();
-}
-
-IniOptions *GraphWindow::ini() const
-{
-    return &conf()->ini();
 }
 
 IniUser *GraphWindow::iniUser() const
@@ -186,64 +181,71 @@ void GraphWindow::setupUi()
     auto layout = ControlUtil::createVLayout();
     layout->addWidget(m_plot);
     setLayout(layout);
+
+    setMinimumSize(QSize(30, 10));
 }
 
 void GraphWindow::setupFlagsAndColors()
 {
-    const auto updateFlagsAndColors = [&] {
-        updateWindowFlags();
-        updateColors();
-        updateFormat();
+    const auto updateFlagsAndColors = [&](const IniUser &ini, bool onlyFlags) {
+        if (onlyFlags)
+            return;
+
+        updateWindowFlags(ini);
+        updateColors(ini);
+        updateFormat(ini);
     };
 
-    updateFlagsAndColors();
+    updateFlagsAndColors(*iniUser(), /*onlyFlags=*/false);
 
-    connect(confManager(), &ConfManager::confChanged, this, updateFlagsAndColors);
+    connect(confManager(), &ConfManager::iniUserChanged, this, updateFlagsAndColors);
 }
 
-void GraphWindow::updateWindowFlags()
+void GraphWindow::updateWindowFlags(const IniUser &ini)
 {
     const bool visible = isVisible();
 
     setWindowFlags(Qt::Tool | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint
-            | (ini()->graphWindowAlwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
-            | (ini()->graphWindowFrameless() ? Qt::FramelessWindowHint : Qt::Widget)
-            | (ini()->graphWindowClickThrough() ? Qt::WindowTransparentForInput : Qt::Widget));
+            | (ini.graphWindowAlwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
+            | (ini.graphWindowFrameless() ? Qt::FramelessWindowHint : Qt::Widget)
+            | (ini.graphWindowClickThrough() ? Qt::WindowTransparentForInput : Qt::Widget));
 
     if (visible) {
         show(); // setWindowFlags() hides the window
     }
 }
 
-void GraphWindow::updateColors()
+void GraphWindow::updateColors(const IniUser &ini)
 {
-    setWindowOpacityPercent(ini()->graphWindowOpacity());
+    const auto colors = getColors(ini);
 
-    m_plot->setBackground(QBrush(ini()->graphWindowColor()));
+    setWindowOpacityPercent(ini.graphWindowOpacity());
+
+    m_plot->setBackground(QBrush(colors[ColorBg]));
 
     // Axis
     auto yAxis = m_plot->yAxis;
 
-    const QColor axisColor = ini()->graphWindowAxisColor();
+    const QColor axisColor = colors[ColorAxis];
     yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
     yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
     yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
 
-    yAxis->setTickLabelColor(ini()->graphWindowTickLabelColor());
-    yAxis->setLabelColor(ini()->graphWindowLabelColor());
+    yAxis->setTickLabelColor(colors[ColorTickLabel]);
+    yAxis->setLabelColor(colors[ColorLabel]);
 
-    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), ini()->graphWindowGridColor()));
+    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), colors[ColorGrid]));
 
     // Graph Inbound
-    m_graphIn->setPen(QPen(ini()->graphWindowColorIn()));
+    m_graphIn->setPen(QPen(colors[ColorIn]));
 
     // Graph Outbound
-    m_graphOut->setPen(QPen(ini()->graphWindowColorOut()));
+    m_graphOut->setPen(QPen(colors[ColorOut]));
 }
 
-void GraphWindow::updateFormat()
+void GraphWindow::updateFormat(const IniUser &ini)
 {
-    m_unitFormat = FormatUtil::graphUnitFormat(ini()->graphWindowTrafUnit());
+    m_unitFormat = FormatUtil::graphUnitFormat(ini.graphWindowTrafUnit());
 
     m_ticker->setUnitFormat(m_unitFormat);
 }
@@ -325,20 +327,20 @@ void GraphWindow::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
 
-    if (ini()->graphWindowHideOnHover()) {
+    if (iniUser()->graphWindowHideOnHover()) {
         hide();
         m_hoverTimer.start();
         return;
     }
 
-    setWindowOpacityPercent(ini()->graphWindowHoverOpacity());
+    setWindowOpacityPercent(iniUser()->graphWindowHoverOpacity());
 }
 
 void GraphWindow::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
 
-    setWindowOpacityPercent(ini()->graphWindowOpacity());
+    setWindowOpacityPercent(iniUser()->graphWindowOpacity());
 }
 
 void GraphWindow::keyPressEvent(QKeyEvent *event)
@@ -375,7 +377,7 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
         updateWindowTitleSpeed();
     }
 
-    const qint64 rangeLower = unixTime - ini()->graphWindowMaxSeconds();
+    const qint64 rangeLower = unixTime - iniUser()->graphWindowMaxSeconds();
 
     const double rangeLowerKey = double(rangeLower);
     const double unixTimeKey = double(unixTime);
@@ -399,6 +401,8 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
 
     m_plot->replot();
 }
+
+void GraphWindow::setupByIniUser(const IniUser &ini, bool onlyFlags) { }
 
 void GraphWindow::addEmptyTraffic()
 {
@@ -456,9 +460,27 @@ void GraphWindow::checkWindowEdges()
     }
 }
 
-QPen GraphWindow::adjustPen(const QPen &pen, const QColor &color)
+QVarLengthArray<QColor, GraphWindow::ColorCount> GraphWindow::getColors(const IniUser &ini)
 {
-    QPen newPen(pen);
-    newPen.setColor(color);
-    return newPen;
+    QVarLengthArray<QColor, GraphWindow::ColorCount> colors;
+
+    const bool isLightTheme =
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+            QApplication::styleHints()->colorScheme() != Qt::ColorScheme::Dark;
+#else
+            true;
+#endif
+
+    if (isLightTheme) {
+        colors << ini.graphWindowColor() << ini.graphWindowColorIn() << ini.graphWindowColorOut()
+               << ini.graphWindowAxisColor() << ini.graphWindowTickLabelColor()
+               << ini.graphWindowLabelColor() << ini.graphWindowGridColor();
+    } else {
+        colors << ini.graphWindowDarkColor() << ini.graphWindowDarkColorIn()
+               << ini.graphWindowDarkColorOut() << ini.graphWindowDarkAxisColor()
+               << ini.graphWindowDarkTickLabelColor() << ini.graphWindowDarkLabelColor()
+               << ini.graphWindowDarkGridColor();
+    }
+
+    return colors;
 }

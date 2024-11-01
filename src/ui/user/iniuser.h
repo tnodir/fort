@@ -237,6 +237,145 @@ public:
     bool graphWindowMaximized() const { return valueBool("graphWindow/maximized"); }
     void setGraphWindowMaximized(bool on) { setValue("graphWindow/maximized", on); }
 
+    constexpr bool graphWindowAlwaysOnTopDefault() const { return true; }
+    bool graphWindowAlwaysOnTop() const { return valueBool("graphWindow/alwaysOnTop", true); }
+    void setGraphWindowAlwaysOnTop(bool on) { setValue("graphWindow/alwaysOnTop", on); }
+
+    constexpr bool graphWindowFramelessDefault() const { return false; }
+    bool graphWindowFrameless() const { return valueBool("graphWindow/frameless"); }
+    void setGraphWindowFrameless(bool on) { setValue("graphWindow/frameless", on); }
+
+    constexpr bool graphWindowClickThroughDefault() const { return false; }
+    bool graphWindowClickThrough() const { return valueBool("graphWindow/clickThrough"); }
+    void setGraphWindowClickThrough(bool on) { setValue("graphWindow/clickThrough", on); }
+
+    constexpr bool graphWindowHideOnHoverDefault() const { return false; }
+    bool graphWindowHideOnHover() const { return valueBool("graphWindow/hideOnHover"); }
+    void setGraphWindowHideOnHover(bool on) { setValue("graphWindow/hideOnHover", on); }
+
+    constexpr int graphWindowOpacityDefault() const { return 90; }
+    int graphWindowOpacity() const { return valueInt("graphWindow/opacity", 90); }
+    void setGraphWindowOpacity(int v) { setValue("graphWindow/opacity", v); }
+
+    constexpr int graphWindowHoverOpacityDefault() const { return 95; }
+    int graphWindowHoverOpacity() const { return valueInt("graphWindow/hoverOpacity", 95); }
+    void setGraphWindowHoverOpacity(int v) { setValue("graphWindow/hoverOpacity", v); }
+
+    constexpr int graphWindowMaxSecondsDefault() const { return 500; }
+    int graphWindowMaxSeconds() const { return valueInt("graphWindow/maxSeconds", 500); }
+    void setGraphWindowMaxSeconds(int v) { setValue("graphWindow/maxSeconds", v); }
+
+    constexpr int graphWindowTrafUnitDefault() const { return 0; }
+    int graphWindowTrafUnit() const { return valueInt("graphWindow/trafUnit", 0); }
+    void setGraphWindowTrafUnit(int v) { setValue("graphWindow/trafUnit", v); }
+
+    constexpr QColor graphWindowColorDefault() const { return QColor(255, 255, 255); }
+    QColor graphWindowColor() const
+    {
+        return valueColor("graphWindow/color", graphWindowColorDefault());
+    }
+    void setGraphWindowColor(const QColor &v) { setColor("graphWindow/color", v); }
+
+    constexpr QColor graphWindowColorInDefault() const { return QColor(52, 196, 84); }
+    QColor graphWindowColorIn() const
+    {
+        return valueColor("graphWindow/colorIn", graphWindowColorInDefault());
+    }
+    void setGraphWindowColorIn(const QColor &v) { setColor("graphWindow/colorIn", v); }
+
+    constexpr QColor graphWindowColorOutDefault() const { return QColor(235, 71, 63); }
+    QColor graphWindowColorOut() const
+    {
+        return valueColor("graphWindow/colorOut", graphWindowColorOutDefault());
+    }
+    void setGraphWindowColorOut(const QColor &v) { setColor("graphWindow/colorOut", v); }
+
+    constexpr QColor graphWindowAxisColorDefault() const { return QColor(108, 108, 108); }
+    QColor graphWindowAxisColor() const
+    {
+        return valueColor("graphWindow/axisColor", graphWindowAxisColorDefault());
+    }
+    void setGraphWindowAxisColor(const QColor &v) { setColor("graphWindow/axisColor", v); }
+
+    constexpr QColor graphWindowTickLabelColorDefault() const { return QColor(0, 0, 0); }
+    QColor graphWindowTickLabelColor() const
+    {
+        return valueColor("graphWindow/tickLabelColor", graphWindowTickLabelColorDefault());
+    }
+    void setGraphWindowTickLabelColor(const QColor &v)
+    {
+        setColor("graphWindow/tickLabelColor", v);
+    }
+
+    constexpr QColor graphWindowLabelColorDefault() const { return QColor(33, 33, 33); }
+    QColor graphWindowLabelColor() const
+    {
+        return valueColor("graphWindow/labelColor", graphWindowLabelColorDefault());
+    }
+    void setGraphWindowLabelColor(const QColor &v) { setColor("graphWindow/labelColor", v); }
+
+    constexpr QColor graphWindowGridColorDefault() const { return QColor(200, 200, 200); }
+    QColor graphWindowGridColor() const
+    {
+        return valueColor("graphWindow/gridColor", graphWindowGridColorDefault());
+    }
+    void setGraphWindowGridColor(const QColor &v) { setColor("graphWindow/gridColor", v); }
+
+    constexpr QColor graphWindowDarkColorDefault() const { return QColor(56, 56, 56); }
+    QColor graphWindowDarkColor() const
+    {
+        return valueColor("graphWindow/darkColor", graphWindowDarkColorDefault());
+    }
+    void setGraphWindowDarkColor(const QColor &v) { setColor("graphWindow/darkColor", v); }
+
+    constexpr QColor graphWindowDarkColorInDefault() const { return QColor(52, 196, 84); }
+    QColor graphWindowDarkColorIn() const
+    {
+        return valueColor("graphWindow/darkColorIn", graphWindowDarkColorInDefault());
+    }
+    void setGraphWindowDarkColorIn(const QColor &v) { setColor("graphWindow/darkColorIn", v); }
+
+    constexpr QColor graphWindowDarkColorOutDefault() const { return QColor(235, 71, 63); }
+    QColor graphWindowDarkColorOut() const
+    {
+        return valueColor("graphWindow/darkColorOut", graphWindowDarkColorOutDefault());
+    }
+    void setGraphWindowDarkColorOut(const QColor &v) { setColor("graphWindow/darkColorOut", v); }
+
+    constexpr QColor graphWindowDarkAxisColorDefault() const { return QColor(141, 141, 141); }
+    QColor graphWindowDarkAxisColor() const
+    {
+        return valueColor("graphWindow/darkAxisColor", graphWindowDarkAxisColorDefault());
+    }
+    void setGraphWindowDarkAxisColor(const QColor &v) { setColor("graphWindow/darkAxisColor", v); }
+
+    constexpr QColor graphWindowDarkTickLabelColorDefault() const { return QColor(248, 248, 248); }
+    QColor graphWindowDarkTickLabelColor() const
+    {
+        return valueColor("graphWindow/darkTickLabelColor", graphWindowDarkTickLabelColorDefault());
+    }
+    void setGraphWindowDarkTickLabelColor(const QColor &v)
+    {
+        setColor("graphWindow/darkTickLabelColor", v);
+    }
+
+    constexpr QColor graphWindowDarkLabelColorDefault() const { return QColor(248, 248, 248); }
+    QColor graphWindowDarkLabelColor() const
+    {
+        return valueColor("graphWindow/darkLabelColor", graphWindowDarkLabelColorDefault());
+    }
+    void setGraphWindowDarkLabelColor(const QColor &v)
+    {
+        setColor("graphWindow/darkLabelColor", v);
+    }
+
+    constexpr QColor graphWindowDarkGridColorDefault() const { return QColor(108, 108, 108); }
+    QColor graphWindowDarkGridColor() const
+    {
+        return valueColor("graphWindow/darkGridColor", graphWindowDarkGridColorDefault());
+    }
+    void setGraphWindowDarkGridColor(const QColor &v) { setColor("graphWindow/darkGridColor", v); }
+
     static QString statWindowGroup() { return "statWindow"; }
 
     QRect statWindowGeometry() const { return value("statWindow/geometry").toRect(); }

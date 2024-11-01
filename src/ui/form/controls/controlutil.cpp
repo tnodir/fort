@@ -389,13 +389,16 @@ LabelDoubleSpin *ControlUtil::createDoubleSpin(double v, double min, double max,
     return c;
 }
 
-LabelColor *ControlUtil::createLabelColor(
-        const QColor &v, const std::function<void(const QColor &)> &onColorChanged)
+LabelColor *ControlUtil::createLabelColor(const QColor &color, const QColor &darkColor,
+        const std::function<void(const QColor &color)> &onColorChanged,
+        const std::function<void(const QColor &color)> &onDarkColorChanged)
 {
     auto c = new LabelColor();
-    c->setColor(v);
+    c->setColor(color);
+    c->setDarkColor(darkColor);
 
     c->connect(c, &LabelColor::colorChanged, onColorChanged);
+    c->connect(c, &LabelColor::darkColorChanged, onDarkColorChanged);
 
     return c;
 }

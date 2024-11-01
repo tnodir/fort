@@ -9,8 +9,6 @@
 class AxisTickerSpeed;
 
 class ConfManager;
-class FirewallConf;
-class IniOptions;
 class IniUser;
 class GraphPlot;
 class QCPBars;
@@ -26,8 +24,6 @@ public:
     bool deleteOnClose() const override;
 
     ConfManager *confManager() const;
-    FirewallConf *conf() const;
-    IniOptions *ini() const;
     IniUser *iniUser() const;
 
     void saveWindowState(bool wasVisible) override;
@@ -38,6 +34,9 @@ signals:
 
 public slots:
     void addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes);
+
+protected slots:
+    void setupByIniUser(const IniUser &ini, bool onlyFlags);
 
 private slots:
     void checkHoverLeave();
@@ -56,9 +55,9 @@ private:
     void setupUi();
 
     void setupFlagsAndColors();
-    void updateWindowFlags();
-    void updateColors();
-    void updateFormat();
+    void updateWindowFlags(const IniUser &ini);
+    void updateColors(const IniUser &ini);
+    void updateFormat(const IniUser &ini);
 
     void setupTimer();
 
@@ -69,7 +68,18 @@ private:
 
     void checkWindowEdges();
 
-    static QPen adjustPen(const QPen &pen, const QColor &color);
+    enum ColorType : qint8 {
+        ColorBg = 0,
+        ColorIn,
+        ColorOut,
+        ColorAxis,
+        ColorTickLabel,
+        ColorLabel,
+        ColorGrid,
+        ColorCount
+    };
+
+    static QVarLengthArray<QColor, GraphWindow::ColorCount> getColors(const IniUser &ini);
 
 protected:
     void enterEvent(QEnterEvent *event) override;
