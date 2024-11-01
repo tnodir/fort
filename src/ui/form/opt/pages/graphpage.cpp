@@ -260,105 +260,77 @@ void GraphPage::setupGraphColors()
     m_graphColor = ControlUtil::createLabelColor(
             iniUser()->graphWindowColor(), iniUser()->graphWindowDarkColor(),
             [&](const QColor &v) {
-                if (iniUser()->graphWindowColor() != v) {
-                    iniUser()->setGraphWindowColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowColor(v);
+                ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                if (iniUser()->graphWindowDarkColor() != v) {
-                    iniUser()->setGraphWindowDarkColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowDarkColor(v);
+                ctrl()->setIniUserEdited();
             });
 
     m_graphColorIn = ControlUtil::createLabelColor(
             iniUser()->graphWindowColorIn(), iniUser()->graphWindowDarkColorIn(),
             [&](const QColor &v) {
-                if (iniUser()->graphWindowColorIn() != v) {
-                    iniUser()->setGraphWindowColorIn(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowColorIn(v);
+                ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                if (iniUser()->graphWindowDarkColorIn() != v) {
-                    iniUser()->setGraphWindowDarkColorIn(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowDarkColorIn(v);
+                ctrl()->setIniUserEdited();
             });
 
     m_graphColorOut = ControlUtil::createLabelColor(
             iniUser()->graphWindowColorOut(), iniUser()->graphWindowDarkColorOut(),
             [&](const QColor &v) {
-                if (iniUser()->graphWindowColorOut() != v) {
-                    iniUser()->setGraphWindowColorOut(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowColorOut(v);
+                ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                if (iniUser()->graphWindowDarkColorOut() != v) {
-                    iniUser()->setGraphWindowDarkColorOut(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowDarkColorOut(v);
+                ctrl()->setIniUserEdited();
             });
 
     m_graphAxisColor = ControlUtil::createLabelColor(
             iniUser()->graphWindowAxisColor(), iniUser()->graphWindowDarkAxisColor(),
             [&](const QColor &v) {
-                if (iniUser()->graphWindowAxisColor() != v) {
-                    iniUser()->setGraphWindowAxisColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowAxisColor(v);
+                ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                if (iniUser()->graphWindowDarkAxisColor() != v) {
-                    iniUser()->setGraphWindowDarkAxisColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowDarkAxisColor(v);
+                ctrl()->setIniUserEdited();
             });
 
     m_graphTickLabelColor = ControlUtil::createLabelColor(
             iniUser()->graphWindowTickLabelColor(), iniUser()->graphWindowDarkTickLabelColor(),
             [&](const QColor &v) {
-                if (iniUser()->graphWindowTickLabelColor() != v) {
-                    iniUser()->setGraphWindowTickLabelColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowTickLabelColor(v);
+                ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                if (iniUser()->graphWindowDarkTickLabelColor() != v) {
-                    iniUser()->setGraphWindowDarkTickLabelColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowDarkTickLabelColor(v);
+                ctrl()->setIniUserEdited();
             });
 
     m_graphLabelColor = ControlUtil::createLabelColor(
             iniUser()->graphWindowLabelColor(), iniUser()->graphWindowDarkLabelColor(),
             [&](const QColor &v) {
-                if (iniUser()->graphWindowLabelColor() != v) {
-                    iniUser()->setGraphWindowLabelColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowLabelColor(v);
+                ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                if (iniUser()->graphWindowDarkLabelColor() != v) {
-                    iniUser()->setGraphWindowDarkLabelColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowDarkLabelColor(v);
+                ctrl()->setIniUserEdited();
             });
 
     m_graphGridColor = ControlUtil::createLabelColor(
             iniUser()->graphWindowGridColor(), iniUser()->graphWindowDarkGridColor(),
             [&](const QColor &v) {
-                if (iniUser()->graphWindowGridColor() != v) {
-                    iniUser()->setGraphWindowGridColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowGridColor(v);
+                ctrl()->setIniUserEdited();
             },
             [&](const QColor &v) {
-                if (iniUser()->graphWindowDarkGridColor() != v) {
-                    iniUser()->setGraphWindowDarkGridColor(v);
-                    ctrl()->setIniUserEdited();
-                }
+                iniUser()->setGraphWindowDarkGridColor(v);
+                ctrl()->setIniUserEdited();
             });
 }
