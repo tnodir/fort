@@ -610,7 +610,7 @@
     </message>
     <message>
         <source>Colors (Light | Dark)</source>
-        <translation type="unfinished"></translation>
+        <translation>Colori (Chiaro | Scuro)</translation>
     </message>
 </context>
 <context>
@@ -980,7 +980,7 @@
     </message>
     <message>
         <source>Select dark color for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleziona colore scuro per %1</translation>
     </message>
 </context>
 <context>
