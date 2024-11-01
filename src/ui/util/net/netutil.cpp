@@ -151,6 +151,7 @@ QStringList NetUtil::localIpNetworks()
         "172.16.0.0/12", // Private use
         "192.168.0.0/16", // Private use
         "198.18.0.0/15", // Benchmarking
+        "224.0.0.0/24", // Multicast addresses
         "239.255.255.250/32", // IP Multicast for DLNA/UPNP
         "255.255.255.255/32", // IP Broadcast
         "::/0", // non-routable meta-address
