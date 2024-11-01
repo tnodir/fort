@@ -601,16 +601,16 @@
         <translation>Ventana</translation>
     </message>
     <message>
-        <source>Colors</source>
-        <translation>Colores</translation>
-    </message>
-    <message>
         <source>Hide on close</source>
         <translation>Ocultar al cerrar</translation>
     </message>
     <message>
         <source>Units:</source>
         <translation>Unidades:</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -977,6 +977,10 @@
     <message>
         <source>Select color for %1</source>
         <translation>Seleccionar color para %1</translation>
+    </message>
+    <message>
+        <source>Select dark color for %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

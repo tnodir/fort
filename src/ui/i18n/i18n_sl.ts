@@ -601,16 +601,16 @@
         <translation>Okno</translation>
     </message>
     <message>
-        <source>Colors</source>
-        <translation>Barve</translation>
-    </message>
-    <message>
         <source>Hide on close</source>
         <translation>Skrij ob zapiranju</translation>
     </message>
     <message>
         <source>Units:</source>
         <translation>Enote:</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>Barve (Svetla | Temna)</translation>
     </message>
 </context>
 <context>
@@ -977,6 +977,10 @@
     <message>
         <source>Select color for %1</source>
         <translation>Izberi barvo za %1</translation>
+    </message>
+    <message>
+        <source>Select dark color for %1</source>
+        <translation>Izberite temno barvo za %1</translation>
     </message>
 </context>
 <context>

@@ -601,15 +601,15 @@
         <translation></translation>
     </message>
     <message>
-        <source>Colors</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Hide on close</source>
         <translation></translation>
     </message>
     <message>
         <source>Units:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
         <translation></translation>
     </message>
 </context>
@@ -976,6 +976,10 @@
     <name>LabelColor</name>
     <message>
         <source>Select color for %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Select dark color for %1</source>
         <translation></translation>
     </message>
 </context>

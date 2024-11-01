@@ -601,16 +601,16 @@
         <translation>창</translation>
     </message>
     <message>
-        <source>Colors</source>
-        <translation>색상</translation>
-    </message>
-    <message>
         <source>Hide on close</source>
         <translation>닫기 시 숨기기</translation>
     </message>
     <message>
         <source>Units:</source>
         <translation>단위:</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -977,6 +977,10 @@
     <message>
         <source>Select color for %1</source>
         <translation>%1의 색상 선택</translation>
+    </message>
+    <message>
+        <source>Select dark color for %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

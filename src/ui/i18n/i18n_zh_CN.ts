@@ -601,16 +601,16 @@
         <translation>窗口</translation>
     </message>
     <message>
-        <source>Colors</source>
-        <translation>颜色</translation>
-    </message>
-    <message>
         <source>Hide on close</source>
         <translation>关闭时隐藏</translation>
     </message>
     <message>
         <source>Units:</source>
         <translation>单元：</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -977,6 +977,10 @@
     <message>
         <source>Select color for %1</source>
         <translation>选择 %1 的颜色</translation>
+    </message>
+    <message>
+        <source>Select dark color for %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

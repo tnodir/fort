@@ -601,16 +601,16 @@
         <translation>Fenster</translation>
     </message>
     <message>
-        <source>Colors</source>
-        <translation>Farben</translation>
-    </message>
-    <message>
         <source>Hide on close</source>
         <translation>Beim Schließen ausblenden</translation>
     </message>
     <message>
         <source>Units:</source>
         <translation>Einheiten:</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -977,6 +977,10 @@
     <message>
         <source>Select color for %1</source>
         <translation>Farbe für %1 auswählen</translation>
+    </message>
+    <message>
+        <source>Select dark color for %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

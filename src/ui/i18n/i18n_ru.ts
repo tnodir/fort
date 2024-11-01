@@ -601,16 +601,16 @@
         <translation>Окно</translation>
     </message>
     <message>
-        <source>Colors</source>
-        <translation>Цвета</translation>
-    </message>
-    <message>
         <source>Hide on close</source>
         <translation>Скрыть при закрытии</translation>
     </message>
     <message>
         <source>Units:</source>
         <translation>Единицы:</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation>Цвета (Светлый | Тёмный)</translation>
     </message>
 </context>
 <context>
@@ -977,6 +977,10 @@
     <message>
         <source>Select color for %1</source>
         <translation>Выберите цвет для %1</translation>
+    </message>
+    <message>
+        <source>Select dark color for %1</source>
+        <translation>Выберите тёмный цвет для %1</translation>
     </message>
 </context>
 <context>

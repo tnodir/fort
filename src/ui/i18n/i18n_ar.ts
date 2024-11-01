@@ -601,16 +601,16 @@
         <translation>النافذة</translation>
     </message>
     <message>
-        <source>Colors</source>
-        <translation>الألوان</translation>
-    </message>
-    <message>
         <source>Hide on close</source>
         <translation>إخفاء عند الإغلاق</translation>
     </message>
     <message>
         <source>Units:</source>
         <translation>الوحدات:</translation>
+    </message>
+    <message>
+        <source>Colors (Light | Dark)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -977,6 +977,10 @@
     <message>
         <source>Select color for %1</source>
         <translation>اختر لونًا لـ %1</translation>
+    </message>
+    <message>
+        <source>Select dark color for %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
