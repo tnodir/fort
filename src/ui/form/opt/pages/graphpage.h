@@ -31,6 +31,8 @@ private:
     QLayout *setupTrafUnitsLayout();
     void setupColorsBox();
     void setupGraphColors();
+    void setupGraphColors1();
+    void setupGraphColors2();
 
 private:
     QGroupBox *m_gbGraph = nullptr;

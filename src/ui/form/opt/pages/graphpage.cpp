@@ -257,6 +257,12 @@ void GraphPage::setupColorsBox()
 
 void GraphPage::setupGraphColors()
 {
+    setupGraphColors1();
+    setupGraphColors2();
+}
+
+void GraphPage::setupGraphColors1()
+{
     m_graphColor = ControlUtil::createLabelColor(
             iniUser()->graphWindowColor(), iniUser()->graphWindowDarkColor(),
             [&](const QColor &v) {
@@ -289,7 +295,10 @@ void GraphPage::setupGraphColors()
                 iniUser()->setGraphWindowDarkColorOut(v);
                 ctrl()->setIniUserEdited();
             });
+}
 
+void GraphPage::setupGraphColors2()
+{
     m_graphAxisColor = ControlUtil::createLabelColor(
             iniUser()->graphWindowAxisColor(), iniUser()->graphWindowDarkAxisColor(),
             [&](const QColor &v) {
