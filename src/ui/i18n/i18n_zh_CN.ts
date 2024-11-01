@@ -610,7 +610,7 @@
     </message>
     <message>
         <source>Colors (Light | Dark)</source>
-        <translation type="unfinished"></translation>
+        <translation>颜色（浅色 | 深色）</translation>
     </message>
 </context>
 <context>
@@ -976,11 +976,11 @@
     <name>LabelColor</name>
     <message>
         <source>Select color for %1</source>
-        <translation>选择 %1 的颜色</translation>
+        <translation>为 %1 选择颜色</translation>
     </message>
     <message>
         <source>Select dark color for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>为 %1 选择深色</translation>
     </message>
 </context>
 <context>
