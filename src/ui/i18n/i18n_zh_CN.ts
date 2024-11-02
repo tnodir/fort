@@ -493,7 +493,7 @@
     </message>
     <message>
         <source>Disabled</source>
-        <translation>禁用</translation>
+        <translation>已禁用</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
@@ -1121,7 +1121,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>禁用</translation>
+        <translation>已禁用</translation>
     </message>
     <message>
         <source>For current user</source>
@@ -1490,7 +1490,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>禁用</translation>
+        <translation>已禁用</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -2060,7 +2060,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>禁用</translation>
+        <translation>已禁用</translation>
     </message>
     <message>
         <source>Traffic</source>
