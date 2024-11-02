@@ -574,6 +574,11 @@ void FortSettings::migrateIniOnWrite()
         ini()->setValue("confFlags/blockInetTraffic", cacheValue("confFlags/blockInetTraffic"));
         ini()->setValue("quota/blockInetTraffic", cacheValue("quota/blockInetTraffic"));
     }
+
+    // COMPAT: v3.14.9: .ini ~> .user.ini
+    if (version < 0x031409) {
+        removeIniKey("graphWindow");
+    }
 }
 
 QStringList FortSettings::unlockTypeStrings()
