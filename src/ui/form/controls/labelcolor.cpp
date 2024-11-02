@@ -56,7 +56,7 @@ void LabelColor::setupUi()
     setupDarkButton();
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_label, /*stretch*/ nullptr, m_button, m_darkButton });
+            { m_label, /*stretch*/ nullptr, m_button, m_darkButton }, /*margin=*/0);
 
     this->setLayout(layout);
 }

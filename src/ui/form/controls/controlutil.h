@@ -74,23 +74,6 @@ public:
     static QMenu *createMenu(QWidget *parent = nullptr);
     static QMenu *createMenuByLayout(QBoxLayout *layout, QWidget *parent);
 
-    static QBoxLayout *createLayoutByWidgets(
-            const QList<QWidget *> &widgets, Qt::Orientation o = Qt::Vertical);
-
-    inline static QBoxLayout *createHLayoutByWidgets(const QList<QWidget *> &widgets)
-    {
-        return createLayoutByWidgets(widgets, Qt::Horizontal);
-    }
-    inline static QBoxLayout *createVLayoutByWidgets(const QList<QWidget *> &widgets)
-    {
-        return createLayoutByWidgets(widgets, Qt::Vertical);
-    }
-
-    static QFrame *createSeparator(Qt::Orientation o = Qt::Horizontal);
-
-    inline static QFrame *createHSeparator() { return createSeparator(Qt::Horizontal); }
-    inline static QFrame *createVSeparator() { return createSeparator(Qt::Vertical); }
-
     static QBoxLayout *createLayout(QBoxLayout::Direction direction, int margin = 0);
     inline static QBoxLayout *createHLayout(int margin = 0)
     {
@@ -102,6 +85,27 @@ public:
     }
 
     static QLayout *createRowLayout(QWidget *w1, QWidget *w2, int stretch1 = 1);
+
+    static void fillLayoutByWidgets(QBoxLayout *layout, const QList<QWidget *> &widgets);
+
+    static QBoxLayout *createLayoutByWidgets(
+            const QList<QWidget *> &widgets, QBoxLayout::Direction direction, int margin = -1);
+
+    inline static QBoxLayout *createHLayoutByWidgets(
+            const QList<QWidget *> &widgets, int margin = -1)
+    {
+        return createLayoutByWidgets(widgets, QBoxLayout::LeftToRight, margin);
+    }
+    inline static QBoxLayout *createVLayoutByWidgets(
+            const QList<QWidget *> &widgets, int margin = -1)
+    {
+        return createLayoutByWidgets(widgets, QBoxLayout::TopToBottom, margin);
+    }
+
+    static QFrame *createSeparator(Qt::Orientation o = Qt::Horizontal);
+
+    inline static QFrame *createHSeparator() { return createSeparator(Qt::Horizontal); }
+    inline static QFrame *createVSeparator() { return createSeparator(Qt::Vertical); }
 
     static void clearLayout(QLayout *layout);
 

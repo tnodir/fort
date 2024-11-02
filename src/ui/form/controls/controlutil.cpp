@@ -255,11 +255,27 @@ QMenu *ControlUtil::createMenuByLayout(QBoxLayout *layout, QWidget *parent)
     return menu;
 }
 
-QBoxLayout *ControlUtil::createLayoutByWidgets(const QList<QWidget *> &widgets, Qt::Orientation o)
+QBoxLayout *ControlUtil::createLayout(QBoxLayout::Direction direction, int margin)
 {
-    auto layout =
-            new QBoxLayout(o == Qt::Vertical ? QBoxLayout::TopToBottom : QBoxLayout::LeftToRight);
+    auto layout = new QBoxLayout(direction);
 
+    if (margin >= 0) {
+        layout->setContentsMargins(margin, margin, margin, margin);
+    }
+
+    return layout;
+}
+
+QLayout *ControlUtil::createRowLayout(QWidget *w1, QWidget *w2, int stretch1)
+{
+    auto layout = createHLayout();
+    layout->addWidget(w1, stretch1);
+    layout->addWidget(w2);
+    return layout;
+}
+
+void ControlUtil::fillLayoutByWidgets(QBoxLayout *layout, const QList<QWidget *> &widgets)
+{
     for (auto w : widgets) {
         if (!w) {
             layout->addStretch();
@@ -267,6 +283,14 @@ QBoxLayout *ControlUtil::createLayoutByWidgets(const QList<QWidget *> &widgets, 
             layout->addWidget(w);
         }
     }
+}
+
+QBoxLayout *ControlUtil::createLayoutByWidgets(
+        const QList<QWidget *> &widgets, QBoxLayout::Direction direction, int margin)
+{
+    auto layout = createLayout(direction, margin);
+
+    fillLayoutByWidgets(layout, widgets);
 
     return layout;
 }
@@ -277,21 +301,6 @@ QFrame *ControlUtil::createSeparator(Qt::Orientation o)
     c->setFrameShape(o == Qt::Horizontal ? QFrame::HLine : QFrame::VLine);
     c->setFrameShadow(QFrame::Sunken);
     return c;
-}
-
-QBoxLayout *ControlUtil::createLayout(QBoxLayout::Direction direction, int margin)
-{
-    auto layout = new QBoxLayout(direction);
-    layout->setContentsMargins(margin, margin, margin, margin);
-    return layout;
-}
-
-QLayout *ControlUtil::createRowLayout(QWidget *w1, QWidget *w2, int stretch1)
-{
-    auto layout = createHLayout();
-    layout->addWidget(w1, stretch1);
-    layout->addWidget(w2);
-    return layout;
 }
 
 void ControlUtil::clearLayout(QLayout *layout)
