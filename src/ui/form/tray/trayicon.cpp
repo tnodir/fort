@@ -528,16 +528,13 @@ void TrayIcon::setupTrayMenuBlockTraffic()
     m_blockTrafficActions = new QActionGroup(m_blockTrafficMenu);
 
     int index = 0;
-    const QStringList iconPaths = FirewallConf::blockTrafficIconPaths();
     for (const QString &name : FirewallConf::blockTrafficNames()) {
-        const QString &iconPath = iconPaths.at(index);
-
         if (Q_UNLIKELY(index >= std::size(blockTrafficIniKeys)))
             break;
 
         const char *iniKey = blockTrafficIniKeys[index];
 
-        QAction *a = addAction(m_blockTrafficMenu, iconPath, /*receiver=*/nullptr,
+        QAction *a = addAction(m_blockTrafficMenu, /*iconPath=*/ {}, /*receiver=*/nullptr,
                 /*member=*/nullptr, ActionNone, /*checkable=*/true);
         a->setText(name);
 
@@ -565,17 +562,14 @@ void TrayIcon::setupTrayMenuFilterMode()
     m_filterModeActions = new QActionGroup(m_filterModeMenu);
 
     int index = 0;
-    const QStringList iconPaths = FirewallConf::filterModeIconPaths();
     for (const QString &name : FirewallConf::filterModeNames()) {
-        const QString &iconPath = iconPaths.at(index);
-
         if (Q_UNLIKELY(index >= std::size(filterModeIniKeys)))
             break;
 
         const char *iniKey = filterModeIniKeys[index];
 
-        QAction *a = addAction(m_filterModeMenu, iconPath, /*receiver=*/nullptr, /*member=*/nullptr,
-                ActionNone, /*checkable=*/true);
+        QAction *a = addAction(m_filterModeMenu, /*iconPath=*/ {}, /*receiver=*/nullptr,
+                /*member=*/nullptr, ActionNone, /*checkable=*/true);
         a->setText(name);
 
         addHotKey(a, iniKey);
@@ -600,19 +594,21 @@ void TrayIcon::updateTrayMenuFlags()
 
     m_blockTrafficMenu->setEnabled(editEnabled);
     {
-        QAction *action = m_blockTrafficActions->actions().at(conf()->blockTrafficIndex());
+        const int index = conf()->blockTrafficIndex();
+        QAction *action = m_blockTrafficActions->actions().at(index);
         if (!action->isChecked()) {
             action->setChecked(true);
-            m_blockTrafficMenu->setIcon(action->icon());
+            updateBlockTrafficMenuIcon(index);
         }
     }
 
     m_filterModeMenu->setEnabled(editEnabled);
     {
-        QAction *action = m_filterModeActions->actions().at(conf()->filterMode());
+        const int index = conf()->filterMode();
+        QAction *action = m_filterModeActions->actions().at(index);
         if (!action->isChecked()) {
             action->setChecked(true);
-            m_filterModeMenu->setIcon(action->icon());
+            updateFilterModeMenuIcon(index);
         }
     }
 
@@ -648,6 +644,22 @@ void TrayIcon::updateAppGroupActions()
         action->setVisible(visible);
         action->setEnabled(visible);
     }
+}
+
+void TrayIcon::updateBlockTrafficMenuIcon(int index)
+{
+    const QStringList iconPaths = FirewallConf::blockTrafficIconPaths();
+    const QString iconPath = iconPaths.at(index);
+
+    m_blockTrafficMenu->setIcon(IconCache::icon(iconPath));
+}
+
+void TrayIcon::updateFilterModeMenuIcon(int index)
+{
+    const QStringList iconPaths = FirewallConf::filterModeIconPaths();
+    const QString iconPath = iconPaths.at(index);
+
+    m_filterModeMenu->setIcon(IconCache::icon(iconPath));
 }
 
 void TrayIcon::sendAlertMessage()
@@ -746,7 +758,7 @@ void TrayIcon::saveTrayFlags()
         const int index = m_blockTrafficActions->actions().indexOf(action);
         if (conf()->blockTrafficIndex() != index) {
             conf()->setBlockTrafficIndex(index);
-            m_blockTrafficMenu->setIcon(action->icon());
+            updateBlockTrafficMenuIcon(index);
         }
     }
 
@@ -756,7 +768,7 @@ void TrayIcon::saveTrayFlags()
         const int index = m_filterModeActions->actions().indexOf(action);
         if (conf()->filterMode() != index) {
             conf()->setFilterMode(FirewallConf::FilterMode(index));
-            m_filterModeMenu->setIcon(action->icon());
+            updateFilterModeMenuIcon(index);
         }
     }
 

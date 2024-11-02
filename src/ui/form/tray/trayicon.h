@@ -114,6 +114,9 @@ private:
     void updateTrayMenuFlags();
     void updateAppGroupActions();
 
+    void updateBlockTrafficMenuIcon(int index);
+    void updateFilterModeMenuIcon(int index);
+
     void sendAlertMessage();
     void updateAlertTimer();
 
