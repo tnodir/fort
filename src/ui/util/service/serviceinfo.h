@@ -6,7 +6,7 @@
 class ServiceInfo
 {
 public:
-    enum RegTrackFlag { RegImagePath = 0x01, RegType = 0x02 };
+    enum TrackFlag { TrackImagePath = 0x01, TrackType = 0x02 };
 
     enum Type : quint16 {
         TypeUnknown = 0,

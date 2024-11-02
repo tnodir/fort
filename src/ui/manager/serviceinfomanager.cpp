@@ -66,6 +66,11 @@ bool checkIsSvcHostService(const RegKey &svcReg)
     return true;
 }
 
+quint16 getServiceTrackFlags(const RegKey &svcReg)
+{
+    return svcReg.value(serviceTrackFlagsKey).toUInt();
+}
+
 void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesReg,
         const ENUM_SERVICE_STATUS_PROCESSW *service, DWORD serviceCount, bool displayName,
         int &runningCount)
@@ -81,7 +86,7 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
         if (!checkIsSvcHostService(svcReg))
             continue;
 
-        const quint16 trackFlags = svcReg.value(serviceTrackFlagsKey).toUInt();
+        const quint16 trackFlags = getServiceTrackFlags(svcReg);
 
         ServiceInfo info;
         info.isRunning = (service->ServiceStatusProcess.dwCurrentState == SERVICE_RUNNING);
@@ -186,7 +191,7 @@ void ServiceInfoManager::trackService(const QString &serviceName)
     svcReg.setValue(serviceTypeOldKey, shareType);
     svcReg.setValue(serviceTypeKey, 0x10); // Own process
 
-    svcReg.setValue(serviceTrackFlagsKey, ServiceInfo::RegImagePath | ServiceInfo::RegType);
+    svcReg.setValue(serviceTrackFlagsKey, ServiceInfo::TrackImagePath | ServiceInfo::TrackType);
 }
 
 void ServiceInfoManager::revertService(const QString &serviceName)
@@ -213,6 +218,9 @@ void ServiceInfoManager::revertService(const QString &serviceName)
 void ServiceInfoManager::monitorServices(const QVector<ServiceInfo> &serviceInfoList)
 {
     for (const ServiceInfo &serviceInfo : serviceInfoList) {
+        if ((serviceInfo.trackFlags & ServiceInfo::TrackImagePath) != 0)
+            continue;
+
         setupServiceMonitor(serviceInfo.serviceName);
     }
 }
@@ -269,6 +277,11 @@ void ServiceInfoManager::onServicesCreated(const QStringList &serviceNames)
         const RegKey svcReg(servicesReg, serviceName);
 
         if (!checkIsSvcHostService(svcReg))
+            continue;
+
+        const quint16 trackFlags = getServiceTrackFlags(svcReg);
+
+        if ((trackFlags & ServiceInfo::TrackImagePath) != 0)
             continue;
 
         setupServiceMonitor(serviceName);
