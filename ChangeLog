@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.14.9, 2024-11-02:
+- UI: Options: Traffic Graph: Add Colors for Dark Theme.
+- Driver: Remove Service SID-s handling.
+
 v3.14.8, 2024-10-30:
 - UI: Options: Interface: Add "Style" combobox.
 - UI: Options: AutoUpdate: Add "Auto-install after download" flag.
