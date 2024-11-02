@@ -187,18 +187,29 @@ void GraphWindow::setupUi()
 
 void GraphWindow::setupFlagsAndColors()
 {
-    const auto updateFlagsAndColors = [&](const IniUser &ini, bool onlyFlags) {
-        if (onlyFlags)
-            return;
+    forceUpdateFlagsAndColors();
 
-        updateWindowFlags(ini);
-        updateColors(ini);
-        updateFormat(ini);
-    };
+    connect(confManager(), &ConfManager::iniUserChanged, this, &GraphWindow::updateFlagsAndColors);
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    connect(QApplication::styleHints(), &QStyleHints::colorSchemeChanged, this,
+            &GraphWindow::forceUpdateFlagsAndColors);
+#endif
+}
+
+void GraphWindow::forceUpdateFlagsAndColors()
+{
     updateFlagsAndColors(*iniUser(), /*onlyFlags=*/false);
+}
 
-    connect(confManager(), &ConfManager::iniUserChanged, this, updateFlagsAndColors);
+void GraphWindow::updateFlagsAndColors(const IniUser &ini, bool onlyFlags)
+{
+    if (onlyFlags)
+        return;
+
+    updateWindowFlags(ini);
+    updateColors(ini);
+    updateFormat(ini);
 }
 
 void GraphWindow::updateWindowFlags(const IniUser &ini)

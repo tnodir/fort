@@ -55,6 +55,9 @@ private:
     void setupUi();
 
     void setupFlagsAndColors();
+
+    void forceUpdateFlagsAndColors();
+    void updateFlagsAndColors(const IniUser &ini, bool onlyFlags);
     void updateWindowFlags(const IniUser &ini);
     void updateColors(const IniUser &ini);
     void updateFormat(const IniUser &ini);
