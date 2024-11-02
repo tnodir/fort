@@ -610,7 +610,7 @@
     </message>
     <message>
         <source>Colors (Light | Dark)</source>
-        <translation type="unfinished"></translation>
+        <translation>색상 (밝은 | 어두운)</translation>
     </message>
 </context>
 <context>
@@ -980,7 +980,7 @@
     </message>
     <message>
         <source>Select dark color for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>%1의 어두운 색상 선택</translation>
     </message>
 </context>
 <context>
