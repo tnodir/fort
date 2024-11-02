@@ -36,7 +36,7 @@
     </message>
     <message>
         <source>Allowed Internet Addresses</source>
-        <translation>允许的互联网网络地址</translation>
+        <translation>允许的互联网地址</translation>
     </message>
     <message>
         <source>Include</source>
@@ -48,7 +48,7 @@
     </message>
     <message>
         <source>Exclude</source>
-        <translation>不包括</translation>
+        <translation>不包含</translation>
     </message>
     <message>
         <source>Exclude All</source>
@@ -56,11 +56,11 @@
     </message>
     <message>
         <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation>移动所有行到 &apos;排除&apos;</translation>
+        <translation>移动所有行到“排除”</translation>
     </message>
     <message>
         <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>移动所有行到 &apos;包括&apos;</translation>
+        <translation>移动所有行到“包含”</translation>
     </message>
     <message>
         <source>Interchange All Lines</source>
@@ -68,11 +68,11 @@
     </message>
     <message>
         <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation>移动选中的行到 &apos;排除&apos;</translation>
+        <translation>移动选中的行到“排除”</translation>
     </message>
     <message>
         <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation>移动选中的行到 &apos;包括&apos;</translation>
+        <translation>移动选中的行到“包含”</translation>
     </message>
     <message>
         <source>Add Local Networks</source>
@@ -122,7 +122,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation>杀死进程</translation>
+        <translation>终止进程</translation>
     </message>
     <message>
         <source>Action</source>
@@ -156,7 +156,7 @@
     <name>ApplicationsPage</name>
     <message>
         <source>Group Name</source>
-        <translation>组名称</translation>
+        <translation>分组名称</translation>
     </message>
     <message>
         <source>Add Group</source>
@@ -168,15 +168,15 @@
     </message>
     <message>
         <source>Download speed limit:</source>
-        <translation>下载速度限制</translation>
+        <translation>下载速度限制：</translation>
     </message>
     <message>
         <source>Upload speed limit:</source>
-        <translation>上传速度限制</translation>
+        <translation>上传速度限制：</translation>
     </message>
     <message>
         <source>Collect connection statistics</source>
-        <translation>统计数据集合</translation>
+        <translation>收集连接统计数据</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -184,7 +184,7 @@
     </message>
     <message>
         <source>time period:</source>
-        <translation>时间段：</translation>
+        <translation>时间周期：</translation>
     </message>
     <message>
         <source>Block</source>
@@ -196,11 +196,11 @@
     </message>
     <message>
         <source>Move All Lines to &apos;Allow&apos;</source>
-        <translation>移动所有行到 &apos;允许&apos;</translation>
+        <translation>移动所有行到“允许”</translation>
     </message>
     <message>
         <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>移动所有行到 &apos;阻止&apos;</translation>
+        <translation>移动所有行到“阻止”</translation>
     </message>
     <message>
         <source>Interchange All Lines</source>
@@ -208,11 +208,11 @@
     </message>
     <message>
         <source>Move Selected Lines to &apos;Allow&apos;</source>
-        <translation>移动选中的行到 &apos;允许&apos;</translation>
+        <translation>移动选中的行到“允许”</translation>
     </message>
     <message>
         <source>Move Selected Lines to &apos;Block&apos;</source>
-        <translation>移动选中的行到 &apos;阻止&apos;</translation>
+        <translation>移动选中的行到“阻止”</translation>
     </message>
     <message>
         <source>Select File</source>
@@ -224,7 +224,7 @@
     </message>
     <message>
         <source>Disabled</source>
-        <translation>停用</translation>
+        <translation>已禁用</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -232,11 +232,11 @@
     </message>
     <message>
         <source># All programs in the sub-path:</source>
-        <translation># 子路径中的所有程序：</translation>
+        <translation># 子路径中的所有应用程序：</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>程序 (*.exe);;所有文件 (*.*)</translation>
+        <translation>应用程序 (*.exe);;所有文件 (*.*)</translation>
     </message>
     <message>
         <source>Apply same rules to child processes</source>
@@ -260,7 +260,7 @@
     </message>
     <message>
         <source>Collect blocked connections</source>
-        <translation>收集已屏蔽的连接</translation>
+        <translation>收集被阻止的连接</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -268,7 +268,7 @@
     </message>
     <message>
         <source>Kill Process</source>
-        <translation>杀死进程</translation>
+        <translation>终止进程</translation>
     </message>
     <message>
         <source>Options</source>
@@ -287,23 +287,23 @@
     </message>
     <message>
         <source>Bad Include IP address: #%1 %2</source>
-        <translation>错误的 IP 地址： #%1 %2</translation>
+        <translation>包含的 IP 地址无效：#%1 %2</translation>
     </message>
     <message>
         <source>Bad Exclude IP address: #%1 %2</source>
-        <translation>错误排除IP地址： #%1 %2</translation>
+        <translation>排除的 IP 地址无效：#%1 %2</translation>
     </message>
     <message>
         <source>Too many IP addresses</source>
-        <translation>IP地址太多</translation>
+        <translation>IP 地址过多</translation>
     </message>
     <message>
         <source>Number of Application Groups must be between 1 and %1</source>
-        <translation>应用程序组数必须介于 1 和 %1 之间</translation>
+        <translation>应用程序组的数量必须介于 1 和 %1 之间</translation>
     </message>
     <message>
         <source>Length of Application Group&apos;s Name must be &lt; %1</source>
-        <translation>应用程序组的长度名称必须小于 %1</translation>
+        <translation>应用程序组名称的长度必须小于 %1</translation>
     </message>
     <message>
         <source>Length of Application&apos;s Path must be &lt; %1</source>
@@ -318,11 +318,11 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>请先安装防火墙 v%1 并保存选项。</translation>
+        <translation>请先安装堡垒防火墙 v%1 并保存其中的选项。</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
-        <translation>无法载入设置</translation>
+        <translation>无法加载设置</translation>
     </message>
 </context>
 <context>
@@ -336,7 +336,7 @@
     <name>ConnBlockListModel</name>
     <message>
         <source>Program</source>
-        <translation>程序</translation>
+        <translation>应用程序</translation>
     </message>
     <message>
         <source>Proc. ID</source>
@@ -352,11 +352,11 @@
     </message>
     <message>
         <source>Local IP and Port</source>
-        <translation>本地IP和端口</translation>
+        <translation>本地 IP 和端口</translation>
     </message>
     <message>
         <source>Remote IP and Port</source>
-        <translation>远程IP和端口</translation>
+        <translation>远程 IP 和端口</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -384,15 +384,15 @@
     </message>
     <message>
         <source>Old connection closed on startup</source>
-        <translation>启动时关闭旧连接</translation>
+        <translation>旧连接在启动时已关闭</translation>
     </message>
     <message>
         <source>Programs logic</source>
-        <translation>程序逻辑：</translation>
+        <translation>应用程序逻辑</translation>
     </message>
     <message>
         <source>App. Group logic</source>
-        <translation>应用组逻辑：</translation>
+        <translation>应用程序组逻辑</translation>
     </message>
     <message>
         <source>Filter Mode logic</source>
@@ -400,7 +400,7 @@
     </message>
     <message>
         <source>Restrict access to LAN only</source>
-        <translation>仅限制局域网的访问</translation>
+        <translation>仅限制访问局域网</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -408,7 +408,7 @@
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
-        <translation>请求连接的限制</translation>
+        <translation>连接请求限制</translation>
     </message>
     <message>
         <source>Restrict access by Zone</source>
@@ -431,11 +431,11 @@
     </message>
     <message>
         <source>Add Program</source>
-        <translation>添加程序</translation>
+        <translation>添加应用程序</translation>
     </message>
     <message>
         <source>Remove</source>
-        <translation>移除</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>Clear All</source>
@@ -451,11 +451,11 @@
     </message>
     <message>
         <source>Are you sure to remove connections till this row?</source>
-        <translation>您确定要移除到此行的连接吗？</translation>
+        <translation>您确定要删除到此行的连接吗？</translation>
     </message>
     <message>
         <source>Are you sure to remove all connections?</source>
-        <translation>您确定要移除所有连接吗？</translation>
+        <translation>您确定要删除所有连接吗？</translation>
     </message>
     <message>
         <source>Options</source>
@@ -466,7 +466,7 @@
     <name>DbErrorManager</name>
     <message>
         <source>Profile&apos;s drive mounted</source>
-        <translation>配置的驱动器已安装</translation>
+        <translation>配置文件的驱动器已挂载</translation>
     </message>
 </context>
 <context>
@@ -477,15 +477,15 @@
     </message>
     <message>
         <source>Block, if not allowed</source>
-        <translation>如果不允许，则屏蔽</translation>
+        <translation>如果不允许则阻止</translation>
     </message>
     <message>
         <source>Allow, if not blocked</source>
-        <translation>如果未被阻止，则允许</translation>
+        <translation>如果未被阻止则允许</translation>
     </message>
     <message>
         <source>Ignore, if not blocked or allowed</source>
-        <translation>如果未被屏蔽或允许，则忽略</translation>
+        <translation>如果未被阻止或允许则忽略</translation>
     </message>
     <message>
         <source>Ask to Connect</source>
@@ -493,7 +493,7 @@
     </message>
     <message>
         <source>Disabled</source>
-        <translation>停用</translation>
+        <translation>禁用</translation>
     </message>
     <message>
         <source>Block All Traffic</source>
@@ -512,22 +512,22 @@
     </message>
     <message>
         <source>Quota Alert</source>
-        <translation>配额提醒</translation>
+        <translation>配额提示</translation>
     </message>
     <message>
         <source>New version v%1 available!</source>
-        <translation>发现新版本 v%1 ！</translation>
+        <translation>新版本 v%1 可用！</translation>
     </message>
     <message>
         <source>Zone Addresses Updated: %1.</source>
-        <translation>区域地址更新: %1</translation>
+        <translation>区域地址已更新：%1。</translation>
     </message>
 </context>
 <context>
     <name>FortSettings</name>
     <message>
         <source>Window closed</source>
-        <translation>关闭的窗口</translation>
+        <translation>已关闭的窗口</translation>
     </message>
     <message>
         <source>Session lockout</source>
@@ -574,11 +574,11 @@
     </message>
     <message>
         <source>Download:</source>
-        <translation>下载:</translation>
+        <translation>下载：</translation>
     </message>
     <message>
         <source>Upload:</source>
-        <translation>上传:</translation>
+        <translation>上传：</translation>
     </message>
     <message>
         <source>Axis:</source>
@@ -636,11 +636,11 @@
     </message>
     <message>
         <source>Remove</source>
-        <translation>移除</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>Are you sure to reinstall the Driver?</source>
-        <translation>您确定要重装驱动程序吗？</translation>
+        <translation>您确定要重新安装驱动程序吗？</translation>
     </message>
     <message>
         <source>Are you sure to remove the Driver?</source>
@@ -656,11 +656,11 @@
     </message>
     <message>
         <source>Are you sure to uninstall the Fort Firewall?</source>
-        <translation>你确定要卸载堡垒防火墙？</translation>
+        <translation>您确定要卸载堡垒防火墙吗？</translation>
     </message>
     <message>
         <source>Windows Service</source>
-        <translation>添加Windows服务</translation>
+        <translation>添加 Windows 服务</translation>
     </message>
     <message>
         <source>Install</source>
@@ -668,7 +668,7 @@
     </message>
     <message>
         <source>Run Fort Firewall as a Service in background</source>
-        <translation>在后台运行堡垒防火墙</translation>
+        <translation>在后台以服务的方式运行堡垒防火墙</translation>
     </message>
     <message>
         <source>Driver Installed</source>
@@ -719,7 +719,7 @@
     </message>
     <message>
         <source>Profile</source>
-        <translation>资料</translation>
+        <translation>配置文件</translation>
     </message>
     <message>
         <source>Statistics</source>
@@ -758,15 +758,15 @@
     </message>
     <message>
         <source>Windows Explorer integration</source>
-        <translation>Windows 资源管理器整合</translation>
+        <translation>Windows 资源管理器集成</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
-        <translation>使用系统地区设置</translation>
+        <translation>使用系统区域设置</translation>
     </message>
     <message>
         <source>Language:</source>
-        <translation>语言</translation>
+        <translation>语言：</translation>
     </message>
     <message>
         <source>Theme:</source>
@@ -778,11 +778,11 @@
     </message>
     <message>
         <source>Hot Key:</source>
-        <translation>快捷键:</translation>
+        <translation>快捷键：</translation>
     </message>
     <message>
         <source>Shortcut:</source>
-        <translation>快捷键:</translation>
+        <translation>快捷键：</translation>
     </message>
     <message>
         <source>Auto-Show Menu</source>
@@ -790,7 +790,7 @@
     </message>
     <message>
         <source>Show Splash screen on startup</source>
-        <translation>启动时显示启动画面</translation>
+        <translation>启动时显示欢迎界面</translation>
     </message>
     <message>
         <source>Show Icon</source>
@@ -802,11 +802,11 @@
     </message>
     <message>
         <source>Maximum count of Groups in menu:</source>
-        <translation>菜单中最大组的数量：</translation>
+        <translation>菜单中组的最大数量：</translation>
     </message>
     <message>
         <source>Event:</source>
-        <translation>事件</translation>
+        <translation>事件：</translation>
     </message>
     <message>
         <source>Action:</source>
@@ -830,7 +830,7 @@
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation>阻止流量:</translation>
+        <translation>阻止流量：</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -866,11 +866,11 @@
     </message>
     <message>
         <source>Show Programs</source>
-        <translation>显示程序</translation>
+        <translation>显示应用程序</translation>
     </message>
     <message>
         <source>Show Programs Or Alert Window</source>
-        <translation>显示程序或提醒窗口</translation>
+        <translation>显示应用程序或提示窗口</translation>
     </message>
     <message>
         <source>Show Options</source>
@@ -886,7 +886,7 @@
     </message>
     <message>
         <source>Switch Filter Enabled</source>
-        <translation>开关过滤器启用</translation>
+        <translation>切换过滤器启用</translation>
     </message>
     <message>
         <source>Show Block Traffic Menu</source>
@@ -910,27 +910,27 @@
     </message>
     <message>
         <source>Show Alert Icon</source>
-        <translation>显示提醒图标</translation>
+        <translation>显示提示图标</translation>
     </message>
     <message>
         <source>Programs</source>
-        <translation>程序</translation>
+        <translation>应用程序</translation>
     </message>
     <message>
         <source>Use System Notifications for New Programs</source>
-        <translation>使用系统通知新程序</translation>
+        <translation>为新应用程序使用系统通知</translation>
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
-        <translation>自动显示新程序的提醒窗口</translation>
+        <translation>为新应用程序自动显示提示窗口</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
-        <translation>提醒窗口始终置顶</translation>
+        <translation>提示窗口始终置顶</translation>
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation>提醒窗口是自动激活的</translation>
+        <translation>提示窗口是自动激活的</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -938,7 +938,7 @@
     </message>
     <message>
         <source>Sound Alert</source>
-        <translation>声音提醒</translation>
+        <translation>声音提示</translation>
     </message>
     <message>
         <source>Style:</source>
@@ -949,7 +949,7 @@
     <name>IpRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
-        <translation>第 %1 行错误: %2 (%3)</translation>
+        <translation>第 %1 行错误：%2（%3）</translation>
     </message>
     <message>
         <source>Bad format</source>
@@ -961,11 +961,11 @@
     </message>
     <message>
         <source>Bad IP address</source>
-        <translation>IP地址错误</translation>
+        <translation>IP 地址错误</translation>
     </message>
     <message>
         <source>Bad second IP address</source>
-        <translation>第二个IP地址错误</translation>
+        <translation>第二个 IP 地址错误</translation>
     </message>
     <message>
         <source>Bad range</source>
@@ -991,7 +991,7 @@
     </message>
     <message>
         <source>IP Addresses</source>
-        <translation>IP地址</translation>
+        <translation>IP 地址</translation>
     </message>
     <message>
         <source>Application Groups</source>
@@ -1039,11 +1039,11 @@
     </message>
     <message>
         <source>Reset to default all options</source>
-        <translation>重置全部选项至默认值</translation>
+        <translation>重置所有选项为默认值</translation>
     </message>
     <message>
         <source>Reset to default current tab</source>
-        <translation>重置当前标签页至默认值</translation>
+        <translation>重置当前标签页为默认值</translation>
     </message>
     <message>
         <source>Interface</source>
@@ -1058,7 +1058,7 @@
     </message>
     <message>
         <source>Backup Exported Successfully</source>
-        <translation>已成功导出备份</translation>
+        <translation>备份导出成功</translation>
     </message>
     <message>
         <source>Cannot Export Backup</source>
@@ -1084,7 +1084,7 @@
         <source>All Options and Programs will be replaced after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
-        <translation>导入成功后，所有选项和程序都将被替换。是否继续？
+        <translation>所有选项和应用程序都将在成功导入后被替换。是否继续？
 
 请确保您有进行完整的备份。</translation>
     </message>
@@ -1109,19 +1109,19 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>过滤本地回路(127.0.0.0/8)和广播(255.255.255)地址</translation>
+        <translation>过滤本地回环（127.0.0.0/8）和广播（255.255.255.255）地址</translation>
     </message>
     <message>
         <source>Password:</source>
-        <translation>密码:</translation>
+        <translation>密码：</translation>
     </message>
     <message>
         <source>Lock the password (unlocked till &quot;%1&quot;)</source>
-        <translation>锁定密码(解锁到 &quot;%1&quot;)</translation>
+        <translation>锁定密码（解锁直到“%1”）</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>停用</translation>
+        <translation>禁用</translation>
     </message>
     <message>
         <source>For current user</source>
@@ -1173,7 +1173,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Programs</source>
-        <translation>程序</translation>
+        <translation>应用程序</translation>
     </message>
     <message>
         <source>Block traffic when Fort Firewall is not running</source>
@@ -1181,15 +1181,15 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Collect New Programs</source>
-        <translation>收集新程序</translation>
+        <translation>收集新应用程序</translation>
     </message>
     <message>
         <source>Purge Obsolete only on mounted drives</source>
-        <translation>仅清除已挂载驱动器上的过时数据</translation>
+        <translation>仅在已挂载驱动器上清除过时的数据</translation>
     </message>
     <message>
         <source>Block Traffic:</source>
-        <translation>阻止流量:</translation>
+        <translation>阻止流量：</translation>
     </message>
     <message>
         <source>Local Area Network</source>
@@ -1232,9 +1232,9 @@ Make sure that you have a fresh backup.</source>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation>请将 &quot;允许/阻止 &quot;字段的文本从 &quot;应用程序组 &quot;移至 &quot;通配符程序&quot;！！！
+        <translation>请将【允许/阻止】字段的文本从【应用程序组】移至【通配符程序】！！！
 
-(它们现在是只读的，将在第 4 版中删除。)
+（它们现在是只读的，将在 v4 版本中被删除。）
 
 您想在浏览器中打开一个讨论主题吗？</translation>
     </message>
@@ -1266,7 +1266,7 @@ Do you want to open a discussion thread in browser?</source>
     <name>PortRange</name>
     <message>
         <source>Error at line %1: %2 (%3)</source>
-        <translation>第 %1 行错误: %2 (%3)</translation>
+        <translation>第 %1 行错误：%2（%3）</translation>
     </message>
     <message>
         <source>Bad format</source>
@@ -1285,7 +1285,7 @@ Do you want to open a discussion thread in browser?</source>
     <name>ProgramAlertWindow</name>
     <message>
         <source>Alert Program</source>
-        <translation>提醒程序</translation>
+        <translation>提示应用程序</translation>
     </message>
 </context>
 <context>
@@ -1296,7 +1296,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Get Program Name</source>
-        <translation>获取程序名称</translation>
+        <translation>获取应用程序名称</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1316,7 +1316,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Edit Program</source>
-        <translation>编辑程序</translation>
+        <translation>编辑应用程序</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1324,7 +1324,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>1 hour</source>
-        <translation>1小时</translation>
+        <translation>1 小时</translation>
     </message>
     <message>
         <source>6 hours</source>
@@ -1340,15 +1340,15 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Week</source>
-        <translation>1 周</translation>
+        <translation>周</translation>
     </message>
     <message>
         <source>Month</source>
-        <translation>1 个月</translation>
+        <translation>月</translation>
     </message>
     <message>
         <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>程序 (*.exe);;所有文件 (*.*)</translation>
+        <translation>应用程序 (*.exe);;所有文件 (*.*)</translation>
     </message>
     <message>
         <source>File Path:</source>
@@ -1360,15 +1360,15 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Collect blocked connections</source>
-        <translation>收集已屏蔽的连接</translation>
+        <translation>收集被阻止的连接</translation>
     </message>
     <message>
         <source>Collect connection statistics</source>
-        <translation>统计数据集合</translation>
+        <translation>收集连接统计数据</translation>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation>杀死进程</translation>
+        <translation>终止进程</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
@@ -1380,21 +1380,21 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Kill child processes</source>
-        <translation>杀死子进程</translation>
+        <translation>终止子进程</translation>
     </message>
     <message>
         <source>Attention: This option is very dangerous!!!
 
 Be careful when killing a system services or other important programs!
 It can cause a Windows malfunction or totally unusable.</source>
-        <translation>注意：这个选项非常危险！
+        <translation>注意：此选项非常危险！！！
 
-在杀死系统服务或其他重要程序时要小心!
-它可能导致 Windows 故障或完全无法使用。</translation>
+在终止系统服务或其他重要应用程序时请务必小心！
+这可能会导致 Windows 故障或完全无法使用。</translation>
     </message>
     <message>
         <source>Wildcard Paths:</source>
-        <translation>通配符路径:</translation>
+        <translation>通配符路径：</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1402,7 +1402,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source># All programs in the sub-path:</source>
-        <translation># 子路径中的所有程序：</translation>
+        <translation># 子路径中的所有应用程序：</translation>
     </message>
     <message>
         <source># Name wildcard:</source>
@@ -1418,7 +1418,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
-        <translation>不清理过时数据</translation>
+        <translation>不清理过时的数据</translation>
     </message>
     <message>
         <source>Notes</source>
@@ -1454,7 +1454,7 @@ It can cause a Windows malfunction or totally unusable.</source>
     </message>
     <message>
         <source>Remove</source>
-        <translation>移除</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>In:</source>
@@ -1484,13 +1484,13 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
-        <translation>请注意： 此选项只影响新进程！
+        <translation>请注意： 此选项仅影响新进程！
 
-请重新启动正在运行的程序，以使该选项生效。</translation>
+请重新启动正在运行的应用程序以使此选项生效。</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>停用</translation>
+        <translation>禁用</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1498,7 +1498,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Propagate to all child processes</source>
-        <translation>传播到所有子流程</translation>
+        <translation>传播到所有子进程</translation>
     </message>
     <message>
         <source>Receive from the parent process</source>
@@ -1506,22 +1506,22 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Rules inheritance:</source>
-        <translation>规则继承:</translation>
+        <translation>规则继承：</translation>
     </message>
 </context>
 <context>
     <name>ProgramsController</name>
     <message>
         <source>App Configuration Error</source>
-        <translation>应用配置错误</translation>
+        <translation>应用程序配置错误</translation>
     </message>
     <message>
         <source>Cannot update program&apos;s state</source>
-        <translation>无法更新程序状态</translation>
+        <translation>无法更新应用程序状态</translation>
     </message>
     <message>
         <source>Cannot delete program</source>
-        <translation>无法删除程序</translation>
+        <translation>无法删除应用程序</translation>
     </message>
 </context>
 <context>
@@ -1544,19 +1544,19 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Remove</source>
-        <translation>移除</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>Programs</source>
-        <translation>程序</translation>
+        <translation>应用程序</translation>
     </message>
     <message>
         <source>Are you sure to remove selected program(s)?</source>
-        <translation>您确定要删除选定的程序？</translation>
+        <translation>您确定要删除所选应用程序吗？</translation>
     </message>
     <message>
         <source>Are you sure to remove all non-existent programs?</source>
-        <translation>您确定要移除所有不存在的程序吗？</translation>
+        <translation>您确定要删除所有不存在的应用程序吗？</translation>
     </message>
     <message>
         <source>Services</source>
@@ -1564,7 +1564,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Purge Obsolete</source>
-        <translation>清理过时数据</translation>
+        <translation>清理过时的数据</translation>
     </message>
     <message>
         <source>Search</source>
@@ -1576,7 +1576,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Kill Process</source>
-        <translation>杀死进程</translation>
+        <translation>终止进程</translation>
     </message>
     <message>
         <source>Add Wildcard</source>
@@ -1588,7 +1588,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Review Alerts</source>
-        <translation>查看提醒</translation>
+        <translation>查看提示</translation>
     </message>
     <message>
         <source>Filters</source>
@@ -1608,7 +1608,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to convert selected program to wildcard?</source>
-        <translation>您确定要将选定的程序转换为通配符吗？</translation>
+        <translation>您确定要将所选应用程序转换为通配符吗？</translation>
     </message>
     <message>
         <source>Parked</source>
@@ -1616,26 +1616,26 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Clear Alerts</source>
-        <translation>清除提醒</translation>
+        <translation>清除提示</translation>
     </message>
     <message>
         <source>Are you sure to clear alerts?</source>
-        <translation>您确定要清除提醒吗？</translation>
+        <translation>您确定要清除提示吗？</translation>
     </message>
     <message>
         <source>Alerts</source>
-        <translation>提醒</translation>
+        <translation>提示</translation>
     </message>
 </context>
 <context>
     <name>QuotaManager</name>
     <message>
         <source>Day traffic quota exceeded!</source>
-        <translation>超过日流量配额！</translation>
+        <translation>每日流量配额已超限！</translation>
     </message>
     <message>
         <source>Month traffic quota exceeded!</source>
-        <translation>超过月流量配额！</translation>
+        <translation>每月流量配额已超限！</translation>
     </message>
 </context>
 <context>
@@ -1697,7 +1697,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source># IP address and port:</source>
-        <translation># IP地址和端口：</translation>
+        <translation># IP 地址和端口：</translation>
     </message>
     <message>
         <source>Add Preset Rule</source>
@@ -1705,7 +1705,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Remove</source>
-        <translation>移除</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>Move Up</source>
@@ -1717,7 +1717,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Global rules count exceeded!</source>
-        <translation>已超出全局规则计数！</translation>
+        <translation>全局规则数量已超限！</translation>
     </message>
 </context>
 <context>
@@ -1732,15 +1732,15 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Application Rules</source>
-        <translation>程序规则</translation>
+        <translation>应用程序规则</translation>
     </message>
     <message>
         <source>Global Rules, applied before App Rules</source>
-        <translation>全局规则（在程序规则之前生效）：</translation>
+        <translation>全局规则，在应用程序规则之前适用</translation>
     </message>
     <message>
         <source>Global Rules, applied after App Rules</source>
-        <translation>全局规则（在程序规则之后生效）：</translation>
+        <translation>全局规则，在应用程序规则之后适用</translation>
     </message>
     <message>
         <source>Preset Rules</source>
@@ -1751,7 +1751,7 @@ Please restart the running program to take effect of this option.</source>
     <name>RuleTextParser</name>
     <message>
         <source>Bad text: %1</source>
-        <translation>错误文本： %1</translation>
+        <translation>错误文本：%1</translation>
     </message>
     <message>
         <source>Bad symbol: %1</source>
@@ -1759,7 +1759,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Unexpected symbol: %1</source>
-        <translation>意外符号： %1</translation>
+        <translation>意外符号：%1</translation>
     </message>
 </context>
 <context>
@@ -1793,7 +1793,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Remove</source>
-        <translation>移除</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -1801,7 +1801,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to remove selected rule?</source>
-        <translation>确定移除所选规则？</translation>
+        <translation>您确定要删除所选的规则吗？</translation>
     </message>
     <message>
         <source>Search</source>
@@ -1828,7 +1828,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Abort</source>
-        <translation>终止</translation>
+        <translation>中止</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1844,11 +1844,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Each 12 hours</source>
-        <translation>每12小时</translation>
+        <translation>每 12 小时</translation>
     </message>
     <message>
         <source>Daily</source>
-        <translation>每天</translation>
+        <translation>每日</translation>
     </message>
     <message>
         <source>Weekly</source>
@@ -1860,11 +1860,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source> hour(s)</source>
-        <translation>小时</translation>
+        <translation> 小时</translation>
     </message>
     <message>
         <source>Run On Startup</source>
-        <translation>开机自启</translation>
+        <translation>开机时运行</translation>
     </message>
     <message>
         <source>Options</source>
@@ -1872,7 +1872,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Delay startup to retry&apos;s seconds</source>
-        <translation>根据重试秒数延迟启动</translation>
+        <translation>根据重试的秒数延迟启动</translation>
     </message>
     <message>
         <source>Maximum retries count:</source>
@@ -1938,11 +1938,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Revert Changes</source>
-        <translation>恢复更改</translation>
+        <translation>还原更改</translation>
     </message>
     <message>
         <source>Add Program</source>
-        <translation>添加程序</translation>
+        <translation>添加应用程序</translation>
     </message>
     <message>
         <source>Refresh</source>
@@ -1954,7 +1954,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Please restart the computer to reload changed services!</source>
-        <translation>请重启计算机重新加载已更改的服务！</translation>
+        <translation>请重启计算机以重新加载已更改的服务！</translation>
     </message>
 </context>
 <context>
@@ -1965,7 +1965,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Blocked Connections</source>
-        <translation>已屏蔽的连接</translation>
+        <translation>已阻止的连接</translation>
     </message>
     <message>
         <source>Options</source>
@@ -1976,7 +1976,7 @@ Please restart the running program to take effect of this option.</source>
     <name>StatisticsPage</name>
     <message>
         <source>Collect Traffic Statistics</source>
-        <translation>收集流量数据</translation>
+        <translation>收集流量统计数据</translation>
     </message>
     <message>
         <source>Collect Traffic, when Filter Disabled</source>
@@ -1988,43 +1988,43 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Month starts on:</source>
-        <translation>月开始于：</translation>
+        <translation>月份开始于：</translation>
     </message>
     <message>
         <source>Keep data for &apos;Hourly&apos;:</source>
-        <translation>保留 &quot;每小时数据&quot;</translation>
+        <translation>保留“每小时”数据：</translation>
     </message>
     <message>
         <source> day(s)</source>
-        <translation>天</translation>
+        <translation> 日</translation>
     </message>
     <message>
         <source>Keep data for &apos;Daily&apos;:</source>
-        <translation>保留 &quot;每天数据&quot;</translation>
+        <translation>保留“每日”数据：</translation>
     </message>
     <message>
         <source>Keep data for &apos;Monthly&apos;:</source>
-        <translation>保留 &quot;每月数据&quot;</translation>
+        <translation>保留“每月”数据：</translation>
     </message>
     <message>
         <source> month(s)</source>
-        <translation>月</translation>
+        <translation> 月</translation>
     </message>
     <message>
         <source>Day&apos;s Quota:</source>
-        <translation>一天的配额：</translation>
+        <translation>每日配额：</translation>
     </message>
     <message>
         <source>Month&apos;s Quota:</source>
-        <translation>一个月的配额：</translation>
+        <translation>每月配额：</translation>
     </message>
     <message>
         <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>记录 &apos;已允许的连接&apos; 数：</translation>
+        <translation>保留“已允许的连接”的计数：</translation>
     </message>
     <message>
         <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>记录 &apos;已阻止的连接&apos; 数：</translation>
+        <translation>保留“已阻止的连接”的计数：</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2036,11 +2036,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>3 months</source>
-        <translation>3个月</translation>
+        <translation>3 个月</translation>
     </message>
     <message>
         <source>6 months</source>
-        <translation>6个月</translation>
+        <translation>6 个月</translation>
     </message>
     <message>
         <source>1 year</source>
@@ -2056,11 +2056,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>10 years</source>
-        <translation>10年</translation>
+        <translation>10 年</translation>
     </message>
     <message>
         <source>Disabled</source>
-        <translation>停用</translation>
+        <translation>禁用</translation>
     </message>
     <message>
         <source>Traffic</source>
@@ -2068,23 +2068,23 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Collect allowed connections</source>
-        <translation>收集允许的连接</translation>
+        <translation>收集已允许的连接</translation>
     </message>
     <message>
         <source>Collect blocked connections</source>
-        <translation>收集已屏蔽的连接</translation>
+        <translation>收集被阻止的连接</translation>
     </message>
     <message>
         <source>Alerted only</source>
-        <translation>仅提醒</translation>
+        <translation>仅提示</translation>
     </message>
     <message>
         <source>Blocked Connections</source>
-        <translation>已屏蔽的连接</translation>
+        <translation>已阻止的连接</translation>
     </message>
     <message>
         <source>Allowed Connections</source>
-        <translation>允许连接量</translation>
+        <translation>已允许的连接</translation>
     </message>
     <message>
         <source>Block Internet traffic when quota exceeds</source>
@@ -2110,7 +2110,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Purge Obsolete Programs</source>
-        <translation>清除过时程序</translation>
+        <translation>清除过时应用程序</translation>
     </message>
 </context>
 <context>
@@ -2121,19 +2121,19 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Interval, hours</source>
-        <translation>间隔时间 (小时)</translation>
+        <translation>间隔时间（小时）</translation>
     </message>
     <message>
         <source>Last Run</source>
-        <translation>最近一次运行</translation>
+        <translation>最后运行</translation>
     </message>
     <message>
         <source>Last Success</source>
-        <translation>上次成功</translation>
+        <translation>最后成功</translation>
     </message>
     <message>
         <source>Run On Startup</source>
-        <translation>开机自启</translation>
+        <translation>开机时运行</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -2171,7 +2171,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Remove Application</source>
-        <translation>移除应用</translation>
+        <translation>删除应用程序</translation>
     </message>
     <message>
         <source>Reset Total</source>
@@ -2191,7 +2191,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Bytes</source>
-        <translation>字节(B)</translation>
+        <translation>字节</translation>
     </message>
     <message>
         <source>Hourly</source>
@@ -2211,15 +2211,15 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to remove statistics for selected application?</source>
-        <translation>您确定要移除选定应用的统计信息？</translation>
+        <translation>您确定要删除所选应用程序的统计信息吗？</translation>
     </message>
     <message>
         <source>Are you sure to reset total statistics?</source>
-        <translation>您确定要重置总统计吗？</translation>
+        <translation>您确定要重置总统计信息吗？</translation>
     </message>
     <message>
         <source>Are you sure to clear all statistics?</source>
-        <translation>确认要清空所有信息么?</translation>
+        <translation>您确定要清除所有统计信息吗？</translation>
     </message>
 </context>
 <context>
@@ -2233,7 +2233,7 @@ Please restart the running program to take effect of this option.</source>
     <name>TrayIcon</name>
     <message>
         <source>Programs</source>
-        <translation>程序</translation>
+        <translation>应用程序</translation>
     </message>
     <message>
         <source>Options</source>
@@ -2261,11 +2261,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to switch the &quot;%1&quot;?</source>
-        <translation>您确定要删除 &quot;%1&quot;？</translation>
+        <translation>您确定要切换“%1”吗？</translation>
     </message>
     <message>
         <source>Are you sure you want to quit the program?</source>
-        <translation>您确定要退出程序吗？</translation>
+        <translation>您确定要退出应用程序吗？</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -2273,7 +2273,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to select the &quot;%1&quot;?</source>
-        <translation>您确定要删除 &quot;%1&quot; 吗？</translation>
+        <translation>您确定要选择“%1”吗？</translation>
     </message>
     <message>
         <source>My Fort</source>
@@ -2281,7 +2281,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>New program detected!</source>
-        <translation>检测到新程序！</translation>
+        <translation>检测到新的应用程序！</translation>
     </message>
     <message>
         <source>Rules</source>
@@ -2289,7 +2289,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>App Group Modifier</source>
-        <translation>应用组修改器</translation>
+        <translation>应用程序组修改器</translation>
     </message>
     <message>
         <source>Block Traffic</source>
@@ -2300,11 +2300,11 @@ Please restart the running program to take effect of this option.</source>
     <name>WindowManager</name>
     <message>
         <source>Please close already opened Edit Program window and try again.</source>
-        <translation>请关闭已打开的编辑程序窗口，然后重试。</translation>
+        <translation>请关闭已打开的编辑应用程序窗口，然后重试。</translation>
     </message>
     <message>
         <source>Restart Now?</source>
-        <translation>立即重启?</translation>
+        <translation>立即重启？</translation>
     </message>
     <message>
         <source>Restart Required</source>
@@ -2315,7 +2315,7 @@ Please restart the running program to take effect of this option.</source>
     <name>ZoneEditDialog</name>
     <message>
         <source>Source:</source>
-        <translation>来源:</translation>
+        <translation>来源：</translation>
     </message>
     <message>
         <source>Enabled</source>
@@ -2323,7 +2323,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Custom URL</source>
-        <translation>自定义URL</translation>
+        <translation>自定义 URL</translation>
     </message>
     <message>
         <source>URL:</source>
@@ -2331,7 +2331,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Form Data:</source>
-        <translation>表单数据</translation>
+        <translation>表单数据：</translation>
     </message>
     <message>
         <source>OK</source>
@@ -2362,7 +2362,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Last Success</source>
-        <translation>上次成功</translation>
+        <translation>最后成功</translation>
     </message>
     <message>
         <source>Addresses</source>
@@ -2405,7 +2405,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Cannot update Zone&apos;s name</source>
-        <translation>无法更新区域的名称</translation>
+        <translation>无法更新区域名称</translation>
     </message>
     <message>
         <source>Zone Configuration Error</source>
@@ -2435,11 +2435,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Remove</source>
-        <translation>移除</translation>
+        <translation>删除</translation>
     </message>
     <message>
         <source>Save As Text</source>
-        <translation>作为文本保存</translation>
+        <translation>另存为文本</translation>
     </message>
     <message>
         <source>Zones</source>
@@ -2447,7 +2447,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to remove selected zone?</source>
-        <translation>您确定要移除选定的区域吗？</translation>
+        <translation>您确定要删除所选的区域吗？</translation>
     </message>
     <message>
         <source>Text files (*.txt);;All files (*.*)</source>
