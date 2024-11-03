@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.14.10, 2024-11-03:
+- UI: Tray: Don't show icons for "Block Traffic" and "Filter Mode" menus.
+- UI: Fix Zones processing (v3.14.9 regression).
+- UI: Log purged obsolete app paths as Info.
+
 v3.14.9, 2024-11-02:
 - UI: Options: Traffic Graph: Add Colors for Dark Theme.
 - Driver: Remove Service SID-s handling.
