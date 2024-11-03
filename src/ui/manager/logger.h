@@ -12,7 +12,7 @@ protected:
     explicit Logger(QObject *parent = nullptr);
 
 public:
-    enum LogLevel { Info = 0, Warning, Error };
+    enum LogLevel { Debug = 0, Info, Warning, Error };
     Q_ENUM(LogLevel)
 
     bool isPortable() const { return m_isPortable; }

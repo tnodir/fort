@@ -34,5 +34,5 @@ void WindowManagerFake::showErrorBox(
 
 void WindowManagerFake::showInfoBox(const QString &text, const QString &title, QWidget * /*parent*/)
 {
-    qCInfo(LC) << title << ":" << text;
+    qCDebug(LC) << title << ":" << text;
 }

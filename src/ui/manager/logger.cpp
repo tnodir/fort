@@ -25,8 +25,10 @@ Logger::LogLevel levelByMsgType(QtMsgType type)
     case QtCriticalMsg:
     case QtFatalMsg:
         return Logger::Error;
-    default:
+    case QtInfoMsg:
         return Logger::Info;
+    default:
+        return Logger::Debug;
     }
 }
 
@@ -36,7 +38,7 @@ void processMessage(QtMsgType type, const QMessageLogContext &context, const QSt
 
     Logger *logger = Logger::instance();
 
-    const bool isLogToFile = (level != Logger::Info || logger->debug());
+    const bool isLogToFile = (level != Logger::Debug || logger->debug());
     const bool isLogConsole = logger->console();
 
     if (!(isLogToFile || isLogConsole))
@@ -134,7 +136,7 @@ QString Logger::getDateString(const QString &format)
 
 QString Logger::makeLogLine(LogLevel level, const QString &dateString, const QString &message)
 {
-    static const char *const g_levelChars = ".WE";
+    static const char *const g_levelChars = "..WE";
 
     return dateString + ' ' + g_levelChars[int(level)] + ' ' + message + '\n';
 }

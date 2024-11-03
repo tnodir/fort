@@ -535,7 +535,7 @@ QVector<qint64> ConfAppManager::collectObsoleteApps(quint32 driveMask)
             const qint64 appId = stmt.columnInt64(0);
             appIdList.append(appId);
 
-            qCDebug(LC) << "Obsolete app:" << appId << appPath;
+            qCInfo(LC) << "Obsolete app:" << appId << appPath;
         }
     }
 
