@@ -29,6 +29,8 @@ class ConfData
 public:
     explicit ConfData(void *data);
 
+    char *data() const { return m_data; }
+
     void writeConf(const WriteConfArgs &wca, AppParseOptions &opt);
     void writeConfFlags(const FirewallConf &conf);
 
