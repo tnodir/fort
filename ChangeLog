@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.14.11-test01, 2024-11-04:
+- UI: Options: TrafficGraph: Add "Fixed Speed" option.
+
 v3.14.10, 2024-11-03:
 - UI: Tray: Don't show icons for "Block Traffic" and "Filter Mode" menus.
 - UI: Fix Zones processing (v3.14.9 regression).
