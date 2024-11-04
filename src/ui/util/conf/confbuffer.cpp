@@ -317,12 +317,10 @@ void ConfBuffer::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 data
         const int zoneIndex = BitUtil::bitScanForward(zonesMask);
         const quint32 zoneMask = (quint32(1) << zoneIndex);
 
-#define CONF_DATA_OFFSET quint32(confData.data() - data)
-        confZones->addr_off[zoneIndex] = CONF_DATA_OFFSET;
+        confZones->addr_off[zoneIndex] = confData.dataOffset();
 
         confData.writeArray(zoneData);
         confData.migrateZoneData(zoneData);
-#undef CONF_DATA_OFFSET
 
         zonesMask ^= zoneMask;
     }

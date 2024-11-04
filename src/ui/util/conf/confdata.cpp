@@ -86,7 +86,7 @@ void writeLimits(PFORT_CONF_GROUP out, const QList<AppGroup *> &appGroups)
 
 }
 
-ConfData::ConfData(void *data) : m_data((char *) data) { }
+ConfData::ConfData(void *data) : m_data((char *) data), m_base((char *) data) { }
 
 void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
 {
@@ -97,21 +97,20 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
     quint32 wildAppsOff, prefixAppsOff, exeAppsOff;
 
     m_data = drvConf->data;
+    resetBase();
 
-#define CONF_DATA_OFFSET quint32(m_data - drvConf->data)
-    addrGroupsOff = CONF_DATA_OFFSET;
+    addrGroupsOff = dataOffset();
     writeLongs(wca.ad.addressGroupOffsets);
     writeAddressRanges(wca.ad.addressRanges);
 
-    wildAppsOff = CONF_DATA_OFFSET;
+    wildAppsOff = dataOffset();
     writeApps(opt.wildAppsMap);
 
-    prefixAppsOff = CONF_DATA_OFFSET;
+    prefixAppsOff = dataOffset();
     writeApps(opt.prefixAppsMap, /*useHeader=*/true);
 
-    exeAppsOff = CONF_DATA_OFFSET;
+    exeAppsOff = dataOffset();
     writeApps(opt.exeAppsMap);
-#undef CONF_DATA_OFFSET
 
     PFORT_CONF_GROUP conf_group = &drvConfIo->conf_group;
 

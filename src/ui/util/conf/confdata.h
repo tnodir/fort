@@ -30,6 +30,10 @@ public:
     explicit ConfData(void *data);
 
     char *data() const { return m_data; }
+    char *base() const { return m_base; }
+
+    quint32 dataOffset() const { return m_data - m_base; }
+    void resetBase() { m_base = m_data; }
 
     void writeConf(const WriteConfArgs &wca, AppParseOptions &opt);
     void writeConfFlags(const FirewallConf &conf);
@@ -57,6 +61,7 @@ public:
 
 private:
     char *m_data = nullptr;
+    char *m_base = nullptr;
 };
 
 #endif // CONFDATA_H
