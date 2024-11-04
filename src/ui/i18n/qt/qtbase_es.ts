@@ -142,7 +142,7 @@ Presione ESC para cancelar</translation>
     </message>
     <message>
         <source>Select All</source>
-        <translation>Seleccionar Todo</translation>
+        <translation>Seleccionar todo</translation>
     </message>
 </context>
 <context>
@@ -252,7 +252,7 @@ Presione ESC para cancelar</translation>
     </message>
     <message>
         <source>Select All</source>
-        <translation>Seleccionar Todo</translation>
+        <translation>Seleccionar todo</translation>
     </message>
 </context>
 </TS>

@@ -610,7 +610,7 @@
     </message>
     <message>
         <source>Colors (Light | Dark)</source>
-        <translation type="unfinished"></translation>
+        <translation>Colores (Claro | Oscuro)</translation>
     </message>
 </context>
 <context>
@@ -980,7 +980,7 @@
     </message>
     <message>
         <source>Select dark color for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Seleccionar color oscuro para %1</translation>
     </message>
 </context>
 <context>
@@ -1875,7 +1875,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Delay startup to retry&apos;s seconds</source>
-        <translation>Retrasar el inicio para reintentar&apos;s segundos</translation>
+        <translation>Retrasar el inicio unos segundos para reintentar</translation>
     </message>
     <message>
         <source>Maximum retries count:</source>
