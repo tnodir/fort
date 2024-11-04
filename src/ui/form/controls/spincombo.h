@@ -9,13 +9,13 @@ QT_FORWARD_DECLARE_CLASS(QHBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QSpinBox)
 
-using ValuesList = QVector<int>;
-
 class SpinCombo : public QWidget
 {
     Q_OBJECT
 
 public:
+    using ValuesList = QVector<int>;
+
     explicit SpinCombo(QWidget *parent = nullptr);
 
     const ValuesList &values() const { return m_values; }
@@ -61,7 +61,7 @@ private:
 };
 
 template<size_t N>
-ValuesList SpinCombo::makeValuesList(const std::array<int, N> &arr)
+SpinCombo::ValuesList SpinCombo::makeValuesList(const std::array<int, N> &arr)
 {
     return ValuesList(arr.begin(), arr.end());
 }

@@ -40,13 +40,16 @@ const std::array speedLimitValues = { 10, 0, 20, 30, 50, 75, 100, 150, 200, 300,
     qRound(1.5 * 1024), 2 * 1024, 3 * 1024, 5 * 1024, qRound(7.5 * 1024), 10 * 1024, 15 * 1024,
     20 * 1024, 30 * 1024, 50 * 1024 };
 
-CheckSpinCombo *createGroupLimit()
+CheckSpinCombo *createSpeedLimitCombo()
 {
     auto c = new CheckSpinCombo();
-    c->spinBox()->setRange(0, 999999);
-    c->spinBox()->setSuffix(" Kb/s");
     c->setValues(speedLimitValues);
     c->setDisabledIndex(speedLimitDisabledIndex);
+
+    auto spinBox = c->spinBox();
+    spinBox->setRange(0, 9999999);
+    spinBox->setSuffix(" Kb/s");
+
     return c;
 }
 
@@ -456,7 +459,7 @@ void ApplicationsPage::setupGroupLog()
 
 void ApplicationsPage::setupGroupLimitIn()
 {
-    m_cscLimitIn = createGroupLimit();
+    m_cscLimitIn = createSpeedLimitCombo();
 
     connect(m_cscLimitIn->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         pageAppGroupSetChecked(this, &AppGroup::setLimitInEnabled, checked);
@@ -469,7 +472,7 @@ void ApplicationsPage::setupGroupLimitIn()
 
 void ApplicationsPage::setupGroupLimitOut()
 {
-    m_cscLimitOut = createGroupLimit();
+    m_cscLimitOut = createSpeedLimitCombo();
 
     connect(m_cscLimitOut->checkBox(), &QCheckBox::toggled, this, [&](bool checked) {
         pageAppGroupSetChecked(this, &AppGroup::setLimitOutEnabled, checked);

@@ -5,6 +5,7 @@
 
 class LabelColor;
 class LabelSpin;
+class LabelSpinCombo;
 
 class GraphPage : public OptBasePage
 {
@@ -20,6 +21,8 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
+    void retranslateFixedSpeedCombo();
+
     void setupUi();
     QLayout *setupColumns();
     QLayout *setupColumn1();
@@ -28,6 +31,7 @@ private:
     void setupGraphBox();
     void setupGraphCheckboxes();
     void setupGraphOptions();
+    void setupGraphFixedSpeed();
     QLayout *setupTrafUnitsLayout();
     void setupColorsBox();
     void setupGraphColors();
@@ -46,6 +50,7 @@ private:
     LabelSpin *m_graphOpacity = nullptr;
     LabelSpin *m_graphHoverOpacity = nullptr;
     LabelSpin *m_graphMaxSeconds = nullptr;
+    LabelSpinCombo *m_graphFixedSpeed = nullptr;
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
 

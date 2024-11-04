@@ -265,6 +265,10 @@ public:
     int graphWindowMaxSeconds() const { return valueInt("graphWindow/maxSeconds", 500); }
     void setGraphWindowMaxSeconds(int v) { setValue("graphWindow/maxSeconds", v); }
 
+    constexpr int graphWindowFixedSpeedDefault() const { return 0; }
+    int graphWindowFixedSpeed() const { return valueInt("graphWindow/fixedSpeed"); }
+    void setGraphWindowFixedSpeed(int v) { setValue("graphWindow/fixedSpeed", v); }
+
     constexpr int graphWindowTrafUnitDefault() const { return 0; }
     int graphWindowTrafUnit() const { return valueInt("graphWindow/trafUnit", 0); }
     void setGraphWindowTrafUnit(int v) { setValue("graphWindow/trafUnit", v); }

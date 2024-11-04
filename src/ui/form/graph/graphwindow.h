@@ -35,9 +35,6 @@ signals:
 public slots:
     void addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
-protected slots:
-    void setupByIniUser(const IniUser &ini, bool onlyFlags);
-
 private slots:
     void checkHoverLeave();
 

@@ -410,10 +410,15 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
         m_plot->yAxis->setRange(yRange);
     }
 
+    const qint64 yRangeMax = iniUser()->graphWindowFixedSpeed() * 1024LL;
+    if (yRangeMax > 0) {
+        yRange.upper = yRangeMax;
+
+        m_plot->yAxis->setRange(yRange);
+    }
+
     m_plot->replot();
 }
-
-void GraphWindow::setupByIniUser(const IniUser &ini, bool onlyFlags) { }
 
 void GraphWindow::addEmptyTraffic()
 {

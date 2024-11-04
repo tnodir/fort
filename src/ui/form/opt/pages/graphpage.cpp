@@ -13,8 +13,10 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/labelcolor.h>
 #include <form/controls/labelspin.h>
+#include <form/controls/labelspincombo.h>
 #include <form/opt/optionscontroller.h>
 #include <user/iniuser.h>
+#include <util/formatutil.h>
 #include <util/iconcache.h>
 
 GraphPage::GraphPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
@@ -33,6 +35,7 @@ void GraphPage::onResetToDefault()
     m_graphOpacity->spinBox()->setValue(iniUser()->graphWindowOpacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(iniUser()->graphWindowHoverOpacityDefault());
     m_graphMaxSeconds->spinBox()->setValue(iniUser()->graphWindowMaxSecondsDefault());
+    m_graphFixedSpeed->spinBox()->setValue(iniUser()->graphWindowFixedSpeedDefault());
     m_comboTrafUnit->setCurrentIndex(iniUser()->graphWindowTrafUnitDefault());
 
     m_graphColor->setColor(iniUser()->graphWindowColorDefault());
@@ -66,6 +69,8 @@ void GraphPage::onRetranslateUi()
     m_graphOpacity->label()->setText(tr("Opacity:"));
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
     m_graphMaxSeconds->label()->setText(tr("Max seconds:"));
+    m_graphFixedSpeed->label()->setText(tr("Fixed speed:"));
+    retranslateFixedSpeedCombo();
     m_traphUnits->setText(tr("Units:"));
 
     m_graphColor->label()->setText(tr("Background:"));
@@ -75,6 +80,16 @@ void GraphPage::onRetranslateUi()
     m_graphTickLabelColor->label()->setText(tr("Tick label:"));
     m_graphLabelColor->label()->setText(tr("Label:"));
     m_graphGridColor->label()->setText(tr("Grid:"));
+}
+
+void GraphPage::retranslateFixedSpeedCombo()
+{
+    auto names = m_graphFixedSpeed->names();
+
+    names.replace(0, tr("Custom"));
+    names.replace(1, tr("Auto-scale"));
+
+    m_graphFixedSpeed->setNames(names);
 }
 
 void GraphPage::setupUi()
@@ -151,6 +166,7 @@ void GraphPage::setupGraphBox()
     layout->addWidget(m_graphOpacity);
     layout->addWidget(m_graphHoverOpacity);
     layout->addWidget(m_graphMaxSeconds);
+    layout->addWidget(m_graphFixedSpeed);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(trafUnitsLayout);
 
@@ -222,6 +238,30 @@ void GraphPage::setupGraphOptions()
                     ctrl()->setIniUserEdited();
                 }
             });
+
+    setupGraphFixedSpeed();
+}
+
+void GraphPage::setupGraphFixedSpeed()
+{
+    const std::array speedValues = { 100, 0, 500, 1024, 3 * 1024, 5 * 1024, 10 * 1024, 20 * 1024,
+        50 * 1024 };
+
+    QStringList speedNames;
+    for (const int kbits : speedValues) {
+        const auto name = FormatUtil::formatSpeed(kbits * 1024LL);
+        speedNames.append(name);
+    }
+
+    const auto speedValuesList = SpinCombo::makeValuesList(speedValues);
+    m_graphFixedSpeed = ControlUtil::createSpinCombo(iniUser()->graphWindowFixedSpeed(), 0, 9999999,
+            speedValuesList, " Kb/s", [&](int value) {
+                if (iniUser()->graphWindowFixedSpeed() != value) {
+                    iniUser()->setGraphWindowFixedSpeed(value);
+                    ctrl()->setIniUserEdited();
+                }
+            });
+    m_graphFixedSpeed->setNames(speedNames);
 }
 
 QLayout *GraphPage::setupTrafUnitsLayout()
