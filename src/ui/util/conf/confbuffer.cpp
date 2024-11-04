@@ -16,7 +16,7 @@
 #include <util/stringutil.h>
 
 #include "confappswalker.h"
-#include "confconstdata.h"
+#include "confrodata.h"
 #include "confruleswalker.h"
 #include "confutil.h"
 #include "ruletextparser.h"
@@ -349,7 +349,7 @@ bool ConfBuffer::loadZone(IpRange &ipRange)
     const char *data = buffer().data();
     uint bufSize = buffer().size();
 
-    return ConfConstData(data).loadAddressList(ipRange, bufSize);
+    return ConfRoData(data).loadAddressList(ipRange, bufSize);
 }
 
 bool ConfBuffer::parseAddressGroups(const QList<AddressGroup *> &addressGroups,

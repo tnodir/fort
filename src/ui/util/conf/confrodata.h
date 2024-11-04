@@ -1,5 +1,5 @@
-#ifndef CONFCONSTDATA_H
-#define CONFCONSTDATA_H
+#ifndef CONFRODATA_H
+#define CONFRODATA_H
 
 #include <QObject>
 
@@ -7,10 +7,10 @@
 
 #include "conf_types.h"
 
-class ConfConstData
+class ConfRoData
 {
 public:
-    explicit ConfConstData(const void *data);
+    explicit ConfRoData(const void *data);
 
     bool loadAddressList(IpRange &ipRange, uint &bufSize);
     bool loadIpRange(IpRange &ipRange, uint &bufSize, bool isIPv6 = false);
@@ -23,4 +23,4 @@ private:
     const char *m_data = nullptr;
 };
 
-#endif // CONFCONSTDATA_H
+#endif // CONFRODATA_H

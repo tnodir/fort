@@ -1,16 +1,16 @@
-#include "confconstdata.h"
+#include "confrodata.h"
 
 #include <common/fortconf.h>
 
-ConfConstData::ConfConstData(const void *data) : m_data((const char *) data) { }
+ConfRoData::ConfRoData(const void *data) : m_data((const char *) data) { }
 
-bool ConfConstData::loadAddressList(IpRange &ipRange, uint &bufSize)
+bool ConfRoData::loadAddressList(IpRange &ipRange, uint &bufSize)
 {
     return loadIpRange(ipRange, bufSize)
             && (bufSize == 0 || loadIpRange(ipRange, bufSize, /*isIPv6=*/true));
 }
 
-bool ConfConstData::loadIpRange(IpRange &ipRange, uint &bufSize, bool isIPv6)
+bool ConfRoData::loadIpRange(IpRange &ipRange, uint &bufSize, bool isIPv6)
 {
     if (bufSize < FORT_CONF_ADDR_LIST_OFF)
         return false;
@@ -48,17 +48,17 @@ bool ConfConstData::loadIpRange(IpRange &ipRange, uint &bufSize, bool isIPv6)
     return true;
 }
 
-void ConfConstData::loadLongs(longs_arr_t &array)
+void ConfRoData::loadLongs(longs_arr_t &array)
 {
     loadData(array.data(), array.size(), sizeof(quint32));
 }
 
-void ConfConstData::loadIp6Array(ip6_arr_t &array)
+void ConfRoData::loadIp6Array(ip6_arr_t &array)
 {
     loadData(array.data(), array.size(), sizeof(ip6_addr_t));
 }
 
-void ConfConstData::loadData(void *dst, int elemCount, uint elemSize)
+void ConfRoData::loadData(void *dst, int elemCount, uint elemSize)
 {
     const size_t arraySize = size_t(elemCount) * elemSize;
 
