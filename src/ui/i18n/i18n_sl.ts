@@ -612,6 +612,18 @@
         <source>Colors (Light | Dark)</source>
         <translation>Barve (Svetla | Temna)</translation>
     </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>Fiksna hitrost:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Po meri</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>Samodejno merilo</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>

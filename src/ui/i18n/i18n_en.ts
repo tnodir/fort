@@ -612,6 +612,18 @@
         <source>Colors (Light | Dark)</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>

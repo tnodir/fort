@@ -612,6 +612,18 @@
         <source>Colors (Light | Dark)</source>
         <translation>색상 (밝은 | 어두운)</translation>
     </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished">사용자 지정</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>

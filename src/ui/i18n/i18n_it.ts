@@ -612,6 +612,18 @@
         <source>Colors (Light | Dark)</source>
         <translation>Colori (Chiaro | Scuro)</translation>
     </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>

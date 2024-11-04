@@ -612,6 +612,18 @@
         <source>Colors (Light | Dark)</source>
         <translation>Цвета (Светлый | Тёмный)</translation>
     </message>
+    <message>
+        <source>Fixed speed:</source>
+        <translation>Фиксированная скорость:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Нестандартный</translation>
+    </message>
+    <message>
+        <source>Auto-scale</source>
+        <translation>Автомасштабирование</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
