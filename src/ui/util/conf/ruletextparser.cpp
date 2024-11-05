@@ -6,13 +6,14 @@
 
 namespace {
 
-enum FortRuleExprSugarType {
-    FORT_RULE_EXPR_TYPE_PROTOCOL_TCP = -100,
-    FORT_RULE_EXPR_TYPE_PROTOCOL_UDP,
-};
-
 const char *const extraNameChars = "_";
 const char *const extraValueChars = ".:-/]";
+
+int getCharIndex(const char *chars, const char c)
+{
+    const char *cp = strchr(chars, c);
+    return cp ? (cp - chars) : -1;
+}
 
 RuleCharType processChar(const QChar c, const char *extraChars = nullptr)
 {
@@ -24,9 +25,13 @@ RuleCharType processChar(const QChar c, const char *extraChars = nullptr)
         return CharDigit;
     }
 
+    if (c.isSpace()) {
+        return CharSpace;
+    }
+
     const char c1 = c.toLatin1();
 
-    if (extraChars && strchr(extraChars, c1)) {
+    if (extraChars && getCharIndex(extraChars, c1) >= 0) {
         return CharExtra;
     }
 
@@ -35,16 +40,16 @@ RuleCharType processChar(const QChar c, const char *extraChars = nullptr)
         CharBracketEnd, CharValueBegin, CharValueSeparator, CharColon, CharComment, CharNot,
         CharNewLine };
 
-    const char *cp = strchr(chars, c1);
+    const int index = getCharIndex(chars, c1);
 
-    return cp ? charTypes[cp - chars] : CharNone;
+    return (index >= 0) ? charTypes[index] : CharNone;
 }
 
-RuleCharType processCharType(RuleCharType charType, const QChar c, const char *extraChars = nullptr)
+RuleCharType getCharType(RuleCharType prevCharType, const QChar c, const char *extraChars = nullptr)
 {
-    if (charType == CharComment) {
+    if (prevCharType == CharComment) {
         if (c == '\n') {
-            return CharNone;
+            return CharNewLine;
         }
 
         return CharComment;
@@ -53,6 +58,12 @@ RuleCharType processCharType(RuleCharType charType, const QChar c, const char *e
     return processChar(c, extraChars);
 }
 
+}
+
+bool RuleFilter::isTypeAddress() const
+{
+    return type == FORT_RULE_FILTER_TYPE_ADDRESS || type == FORT_RULE_FILTER_TYPE_ADDRESS_TCP
+            || type == FORT_RULE_FILTER_TYPE_ADDRESS_UDP;
 }
 
 RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent)
@@ -68,60 +79,120 @@ void RuleTextParser::setupText(const QString &text)
 
 bool RuleTextParser::parse()
 {
-    return parseLines();
+    parseLines();
+
+    return !hasError();
 }
 
-bool RuleTextParser::parseLines()
+void RuleTextParser::parseLines()
 {
-    const int listIndex = pushListNode(FORT_RULE_EXPR_LIST_OR);
+    const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_OR);
 
     for (;;) {
+        if (!skipComments())
+            break;
+
         if (!parseLine())
             break;
     }
 
-    popListNode(listIndex);
+    endList(nodeIndex);
+}
+
+bool RuleTextParser::skipComments()
+{
+    if (!nextCharType(CharAnyBegin | CharLineBreak))
+        return false;
+
+    ungetChar();
 
     return true;
 }
 
 bool RuleTextParser::parseLine()
 {
-    bool ok = false;
+    const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_AND);
 
-    const int listIndex = pushListNode(FORT_RULE_EXPR_LIST_AND);
+    m_ruleFilter.type = FORT_RULE_FILTER_TYPE_ADDRESS; // default type
 
-    m_isNot = false;
+    for (;;) {
+        if (!parseLineSection())
+            break;
 
-    const auto charType = nextCharType(CharAnyBegin);
+        if (!checkAddFilter())
+            return false;
 
-    switch (charType) {
-    case CharListBegin: {
-        ok = parseLines();
-    } break;
-    case CharBracketBegin: {
-        ok = parseBracketValues();
-    } break;
-    case CharLetter: {
-        ok = parseName();
-    } break;
-    case CharNot: {
-        m_isNot = !m_isNot;
-    } break;
-    default:
-        break;
+        if (!m_ruleFilter.hasFilterName) {
+            // next default type, if applicable
+            m_ruleFilter.type = m_ruleFilter.isTypeAddress() ? FORT_RULE_FILTER_TYPE_PORT
+                                                             : FORT_RULE_FILTER_TYPE_INVALID;
+        }
     }
 
-    popListNode(listIndex);
+    endList(nodeIndex);
 
-    return ok;
+    return true;
+}
+
+bool RuleTextParser::parseLineSection()
+{
+    for (;;) {
+        if (!nextCharType(CharAnyBegin | CharSpace))
+            return false;
+
+        if (!processSectionChar())
+            break;
+    }
+
+    return !hasError();
+}
+
+bool RuleTextParser::processSectionChar()
+{
+    switch (m_charType) {
+    case CharListBegin: {
+        processSectionLines();
+    } break;
+    case CharBracketBegin: {
+        parseBracketValues();
+    } break;
+    case CharDigit:
+    case CharValueBegin: {
+        parseValue();
+    } break;
+    case CharLetter: {
+        return parseName();
+    } break;
+    case CharNot: {
+        m_ruleFilter.isNot = !m_ruleFilter.isNot;
+        return true;
+    } break;
+    case CharColon:
+    case CharNewLine: {
+        m_ruleFilter.isSectionEnd = true;
+    } break;
+    case CharListEnd: {
+        m_ruleFilter.isListEnd = true;
+    } break;
+    }
+
+    return false;
+}
+
+void RuleTextParser::processSectionLines()
+{
+    parseLines();
+
+    if (!m_ruleFilter.isListEnd) {
+        setErrorMessage(tr("Unexpected end of list"));
+    }
 }
 
 bool RuleTextParser::parseName()
 {
     const QChar *name = parsedCharPtr();
 
-    while (nextCharType(CharName, extraNameChars) != CharNone) {
+    while (nextCharType(CharName, extraNameChars)) {
         continue;
     }
 
@@ -131,112 +202,147 @@ bool RuleTextParser::parseName()
 
     ungetChar();
 
-    const QStringView nameView(name, currentCharPtr() - name);
-    const auto nameLower = nameView.toString().toLower();
-
-    static const QHash<QString, qint8> exprTypesMap = {
-        { "ip", FORT_RULE_EXPR_TYPE_ADDRESS },
-        { "port", FORT_RULE_EXPR_TYPE_PORT },
-        { "local_ip", FORT_RULE_EXPR_TYPE_LOCAL_ADDRESS },
-        { "local_port", FORT_RULE_EXPR_TYPE_LOCAL_PORT },
-        { "proto", FORT_RULE_EXPR_TYPE_PROTOCOL },
-        { "protocol", FORT_RULE_EXPR_TYPE_PROTOCOL },
-        { "dir", FORT_RULE_EXPR_TYPE_DIRECTION },
-        { "direction", FORT_RULE_EXPR_TYPE_DIRECTION },
-        { "tcp", FORT_RULE_EXPR_TYPE_PROTOCOL_TCP },
-        { "udp", FORT_RULE_EXPR_TYPE_PROTOCOL_UDP },
+    static const QHash<QString, qint8> filterTypesMap = {
+        { "ip", FORT_RULE_FILTER_TYPE_ADDRESS },
+        { "port", FORT_RULE_FILTER_TYPE_PORT },
+        { "local_ip", FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS },
+        { "local_port", FORT_RULE_FILTER_TYPE_LOCAL_PORT },
+        { "proto", FORT_RULE_FILTER_TYPE_PROTOCOL },
+        { "protocol", FORT_RULE_FILTER_TYPE_PROTOCOL },
+        { "dir", FORT_RULE_FILTER_TYPE_DIRECTION },
+        { "direction", FORT_RULE_FILTER_TYPE_DIRECTION },
+        { "tcp", FORT_RULE_FILTER_TYPE_ADDRESS_TCP },
+        { "udp", FORT_RULE_FILTER_TYPE_ADDRESS_UDP },
     };
 
-    m_exprType = exprTypesMap.value(nameLower, -1);
+    const QStringView nameView(name, currentCharPtr() - name);
 
-    if (m_exprType == -1) {
-        setErrorMessage(tr("Bad text: %1").arg(nameView));
+    if (m_ruleFilter.hasFilterName) {
+        setErrorMessage(tr("Extra filter name: %1").arg(nameView));
         return false;
     }
 
-    if (m_exprType < 0) {
-        // Desugar the expression
-    } else {
-        //
+    const auto nameLower = nameView.toString().toLower();
+
+    m_ruleFilter.type = filterTypesMap.value(nameLower, FORT_RULE_FILTER_TYPE_INVALID);
+
+    if (m_ruleFilter.type == -1) {
+        setErrorMessage(tr("Bad filter name: %1").arg(nameView));
+        return false;
     }
+
+    m_ruleFilter.hasFilterName = true;
 
     return true;
 }
 
-bool RuleTextParser::parseBracketValues()
+void RuleTextParser::parseBracketValues()
 {
-    const auto endCharType = parseValues();
-
-    return (endCharType == CharBracketEnd);
+    parseValue();
 }
 
-RuleCharType RuleTextParser::parseValues()
+void RuleTextParser::parseValue()
 {
-    return CharNone;
+    // TODO: implement
 }
 
-int RuleTextParser::pushListNode(int listType)
+bool RuleTextParser::checkAddFilter()
 {
-    const int listIndex = m_ruleExprArray.size();
+    if (!m_ruleFilter.hasValues()) {
+        if (m_ruleFilter.isSectionEnd) {
+            setErrorMessage(tr("Unexpected end of line section"));
+            return false;
+        }
 
-    RuleExpr ruleExpr;
-    ruleExpr.flags = FORT_RULE_EXPR_FLAG_LIST | (m_isNot ? FORT_RULE_EXPR_FLAG_NOT : 0);
-    ruleExpr.type = listType;
+        return true;
+    }
 
-    m_ruleExprArray.append(ruleExpr);
+    if (m_ruleFilter.type == FORT_RULE_FILTER_TYPE_INVALID) {
+        setErrorMessage(tr("No filter name"));
+        return false;
+    }
 
-    return listIndex;
+    addFilter();
+
+    return true;
 }
 
-void RuleTextParser::popListNode(int listIndex)
+void RuleTextParser::resetFilter()
 {
-    const int curListIndex = m_ruleExprArray.size();
+    m_ruleFilter.isNot = false;
+    m_ruleFilter.hasFilterName = false;
+    m_ruleFilter.isSectionEnd = false;
+    m_ruleFilter.isListEnd = false;
 
-    RuleExpr &ruleExpr = m_ruleExprArray[listIndex];
+    // m_ruleFilter.type is not reset
 
-    ruleExpr.listCount = curListIndex - listIndex;
+    m_ruleFilter.values.clear();
 }
 
-RuleCharType RuleTextParser::nextCharType(quint32 expectedCharTypes, const char *extraChars)
+void RuleTextParser::addFilter()
+{
+    m_ruleFilterArray.append(m_ruleFilter);
+
+    resetFilter();
+}
+
+int RuleTextParser::beginList(qint8 listType)
+{
+    const int nodeIndex = m_ruleFilterArray.size();
+
+    m_ruleFilter.type = listType;
+
+    addFilter();
+
+    return nodeIndex;
+}
+
+void RuleTextParser::endList(int nodeIndex)
+{
+    const int currentIndex = m_ruleFilterArray.size();
+
+    if (currentIndex == nodeIndex) {
+        m_ruleFilterArray.removeLast(); // Empty list
+        return;
+    }
+
+    RuleFilter &ruleFilter = m_ruleFilterArray[nodeIndex];
+
+    ruleFilter.listCount = currentIndex - nodeIndex;
+}
+
+bool RuleTextParser::nextCharType(quint32 expectedCharTypes, const char *extraChars)
 {
     Q_ASSERT(!extraChars || (expectedCharTypes & CharExtra) != 0);
 
-    const auto cp = m_p;
-
-    RuleCharType charType = CharNone;
+    m_charType = CharNone;
 
     while (m_p < m_end) {
         const QChar c = *m_p++;
 
-        charType = processCharType(charType, c, extraChars);
+        m_charType = getCharType(m_charType, c, extraChars);
 
-        if (!checkNextCharType(expectedCharTypes, charType, cp, c)) {
-            return charType;
+        if (!checkNextCharType(expectedCharTypes, c)) {
+            m_charType = CharNone;
+            return false;
         }
+
+        if ((m_charType & (CharComment | CharSpace)) == 0)
+            return true;
     }
 
-    return CharNone;
+    return false;
 }
 
-bool RuleTextParser::checkNextCharType(
-        quint32 expectedCharTypes, RuleCharType &charType, const QChar *cp, const QChar c)
+bool RuleTextParser::checkNextCharType(quint32 expectedCharTypes, const QChar c)
 {
-    switch (charType) {
-    case CharNone: {
+    if (m_charType == CharNone) {
         setErrorMessage(tr("Bad symbol: %1").arg(c));
-
-        charType = CharNone;
         return false;
-    } break;
-    default:
-        if ((charType & expectedCharTypes) == 0) {
-            if (cp == m_p) {
-                setErrorMessage(tr("Unexpected symbol: %1").arg(c));
-            }
+    }
 
-            charType = CharNone;
-        }
-
+    if ((m_charType & expectedCharTypes) == 0) {
+        setErrorMessage(tr("Unexpected symbol: %1").arg(c));
         return false;
     }
 

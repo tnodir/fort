@@ -562,8 +562,8 @@ void ConfBuffer::writeRule(
     const bool hasZones = (rule.acceptZones != 0 || rule.rejectZones != 0);
     confRule.has_zones = hasZones;
 
-    const bool hasExpr = !rule.ruleText.isEmpty();
-    confRule.has_expr = hasExpr;
+    const bool hasFilter = !rule.ruleText.isEmpty();
+    confRule.has_filter = hasFilter;
 
     const int ruleSetCount = ruleSetInfo.count;
     confRule.set_count = ruleSetCount;
@@ -609,7 +609,7 @@ void ConfBuffer::writeRule(
     }
 
     // Write the rule's conditions
-    if (hasExpr) {
+    if (hasFilter) {
         writeRuleText(rule.ruleText);
     }
 }

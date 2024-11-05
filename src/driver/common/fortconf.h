@@ -108,29 +108,28 @@ typedef struct fort_conf_addr_group
     char data[4];
 } FORT_CONF_ADDR_GROUP, *PFORT_CONF_ADDR_GROUP;
 
-#define FORT_RULE_EXPR_FLAG_LIST 0x01
-#define FORT_RULE_EXPR_FLAG_NOT  0x02
-
-enum FortRuleExprList {
-    FORT_RULE_EXPR_LIST_OR = 0,
-    FORT_RULE_EXPR_LIST_AND,
+enum FORT_RULE_FILTER_TYPE {
+    FORT_RULE_FILTER_TYPE_INVALID = -1,
+    FORT_RULE_FILTER_TYPE_ADDRESS = 0,
+    FORT_RULE_FILTER_TYPE_PORT,
+    FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS,
+    FORT_RULE_FILTER_TYPE_LOCAL_PORT,
+    FORT_RULE_FILTER_TYPE_PROTOCOL,
+    FORT_RULE_FILTER_TYPE_DIRECTION,
+    // List types
+    FORT_RULE_FILTER_TYPE_LIST_OR,
+    FORT_RULE_FILTER_TYPE_LIST_AND,
+    // Complex types
+    FORT_RULE_FILTER_TYPE_ADDRESS_TCP,
+    FORT_RULE_FILTER_TYPE_ADDRESS_UDP,
 };
 
-enum FortRuleExprType {
-    FORT_RULE_EXPR_TYPE_ADDRESS = 0,
-    FORT_RULE_EXPR_TYPE_PORT,
-    FORT_RULE_EXPR_TYPE_LOCAL_ADDRESS,
-    FORT_RULE_EXPR_TYPE_LOCAL_PORT,
-    FORT_RULE_EXPR_TYPE_PROTOCOL,
-    FORT_RULE_EXPR_TYPE_DIRECTION,
-};
-
-typedef struct fort_conf_rule_expr
+typedef struct fort_conf_rule_filter
 {
-    UINT32 flags : 2;
-    UINT32 type : 3;
+    UINT32 is_not : 1;
+    UINT32 type : 4;
     UINT32 size : 27;
-} FORT_CONF_RULE_EXPR, *PFORT_CONF_RULE_EXPR;
+} FORT_CONF_RULE_FILTER, *PFORT_CONF_RULE_FILTER;
 
 typedef struct fort_conf_rule_zones
 {
@@ -145,7 +144,7 @@ typedef struct fort_conf_rule
     UINT8 exclusive : 1;
 
     UINT8 has_zones : 1;
-    UINT8 has_expr : 1;
+    UINT8 has_filter : 1;
 
     UINT8 set_count;
 } FORT_CONF_RULE, *PFORT_CONF_RULE;

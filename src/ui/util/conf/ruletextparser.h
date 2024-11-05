@@ -19,25 +19,34 @@ enum RuleCharType : RuleCharTypes {
     CharValueBegin = (1 << 6), // [
     CharValueSeparator = (1 << 7), // ,
     CharColon = (1 << 8), // :
-    CharComment = (1 << 9), // #
-    CharNot = (1 << 10), // !
-    CharExtra = (1 << 11), // Name | Value
-    CharNewLine = (1 << 12), // \n
+    CharSpace = (1 << 9),
+    CharNewLine = (1 << 10), // \n
+    CharComment = (1 << 11), // #
+    CharNot = (1 << 12), // !
+    CharExtra = (1 << 13), // Name | Value
+    // Complex types
     CharAnyBegin =
             (CharListBegin | CharBracketBegin | CharLetter | CharDigit | CharValueBegin | CharNot),
     CharName = (CharLetter | CharExtra), // a-zA-Z_
     CharValue = (CharDigit | CharValueBegin | CharExtra), // 0-9.:-/]
-    CharAny = RuleCharTypes(-1),
+    CharLineBreak = (CharSpace | CharNewLine | CharComment),
 };
 
-struct RuleExpr
+struct RuleFilter
 {
-    quint8 flags = 0;
-    quint8 type = 0;
+    bool isTypeAddress() const;
+    bool hasValues() const { return !values.isEmpty(); }
+
+    bool isNot : 1 = false;
+    bool hasFilterName : 1 = false;
+    bool isSectionEnd : 1 = false;
+    bool isListEnd : 1 = false;
+
+    qint8 type = 0;
 
     quint16 listCount = 0;
 
-    StringViewList viewList;
+    StringViewList values;
 };
 
 class RuleTextParser : public QObject
@@ -51,7 +60,7 @@ public:
 
     bool hasError() const { return !errorMessage().isEmpty(); }
 
-    const QVector<RuleExpr> &ruleExprArray() const { return m_ruleExprArray; }
+    const QVector<RuleFilter> &ruleFilterArray() const { return m_ruleFilterArray; }
 
     bool parse();
 
@@ -60,39 +69,46 @@ private:
 
     void setupText(const QString &text);
 
-    bool parseLines();
+    void parseLines();
+    bool skipComments();
     bool parseLine();
+    bool parseLineSection();
+    bool processSectionChar();
+    void processSectionLines();
 
     bool parseName();
 
-    bool parseBracketValues();
-    RuleCharType parseValues();
+    void parseBracketValues();
+    void parseValue();
 
-    int pushListNode(int listType);
-    void popListNode(int listIndex);
+    bool checkAddFilter();
+
+    void resetFilter();
+
+    void addFilter();
+    int beginList(qint8 listType);
+    void endList(int nodeIndex);
 
     void ungetChar() { --m_p; }
 
     const QChar *currentCharPtr() const { return m_p; }
     const QChar *parsedCharPtr() const { return m_p - 1; }
 
-    RuleExpr &listNode(int listIndex) { return m_ruleExprArray[listIndex]; }
+    RuleFilter &listNode(int listIndex) { return m_ruleFilterArray[listIndex]; }
 
-    RuleCharType nextCharType(quint32 expectedCharTypes, const char *extraChars = nullptr);
-    bool checkNextCharType(
-            quint32 expectedCharTypes, RuleCharType &charType, const QChar *cp, const QChar c);
+    bool nextCharType(quint32 expectedCharTypes, const char *extraChars = nullptr);
+    bool checkNextCharType(quint32 expectedCharTypes, const QChar c);
 
 private:
-    bool m_isNot = false;
-
-    quint8 m_exprType = 0;
+    RuleCharType m_charType = CharNone;
+    RuleFilter m_ruleFilter;
 
     const QChar *m_p = nullptr;
     const QChar *m_end = nullptr;
 
     QString m_errorMessage;
 
-    QVector<RuleExpr> m_ruleExprArray;
+    QVector<RuleFilter> m_ruleFilterArray;
 };
 
 #endif // RULETEXTPARSER_H

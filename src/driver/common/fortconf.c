@@ -10,7 +10,8 @@
 static_assert(sizeof(ip6_addr_t) == 16, "ip6_addr_t size mismatch");
 
 static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT64), "FORT_CONF_FLAGS size mismatch");
-static_assert(sizeof(FORT_CONF_RULE_EXPR) == sizeof(UINT32), "FORT_CONF_RULE_EXPR size mismatch");
+static_assert(
+        sizeof(FORT_CONF_RULE_FILTER) == sizeof(UINT32), "FORT_CONF_RULE_FILTER size mismatch");
 static_assert(sizeof(FORT_CONF_RULE) == sizeof(UINT16), "FORT_CONF_RULE size mismatch");
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
