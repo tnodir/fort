@@ -149,17 +149,11 @@ bool RuleTextParser::parseLineSection()
 
 bool RuleTextParser::processSectionChar()
 {
+    if ((m_charType & (CharListBegin | CharBracketBegin | CharDigit | CharValueBegin)) != 0) {
+        return processSectionBlock();
+    }
+
     switch (m_charType) {
-    case CharListBegin: {
-        processSectionLines();
-    } break;
-    case CharBracketBegin: {
-        parseBracketValues();
-    } break;
-    case CharDigit:
-    case CharValueBegin: {
-        parseValue();
-    } break;
     case CharLetter: {
         return parseName();
     } break;
@@ -173,6 +167,24 @@ bool RuleTextParser::processSectionChar()
     } break;
     case CharListEnd: {
         m_ruleFilter.isListEnd = true;
+    } break;
+    }
+
+    return false;
+}
+
+bool RuleTextParser::processSectionBlock()
+{
+    switch (m_charType) {
+    case CharListBegin: {
+        processSectionLines();
+    } break;
+    case CharBracketBegin: {
+        parseBracketValues();
+    } break;
+    case CharDigit:
+    case CharValueBegin: {
+        parseValue();
     } break;
     }
 

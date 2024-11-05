@@ -74,6 +74,7 @@ private:
     bool parseLine();
     bool parseLineSection();
     bool processSectionChar();
+    bool processSectionBlock();
     void processSectionLines();
 
     bool parseName();
