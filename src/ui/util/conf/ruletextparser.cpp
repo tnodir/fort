@@ -7,7 +7,7 @@
 namespace {
 
 const char *const extraNameChars = "_";
-const char *const extraValueChars = ".:-/]";
+const char *const extraValueChars = ".:-/";
 
 int getCharIndex(const char *chars, const char c)
 {
@@ -35,10 +35,10 @@ RuleCharType processChar(const QChar c, const char *extraChars = nullptr)
         return CharExtra;
     }
 
-    static const char chars[] = "{}()[,:#!\n";
+    static const char chars[] = "{}()[],:#!\n";
     static const RuleCharType charTypes[] = { CharListBegin, CharListEnd, CharBracketBegin,
-        CharBracketEnd, CharValueBegin, CharValueSeparator, CharColon, CharComment, CharNot,
-        CharNewLine };
+        CharBracketEnd, CharValueBegin, CharValueEnd, CharValueSeparator, CharColon, CharComment,
+        CharNot, CharNewLine };
 
     const int index = getCharIndex(chars, c1);
 
@@ -140,19 +140,42 @@ bool RuleTextParser::parseLineSection()
         if (!nextCharType(CharAnyBegin | CharSpace))
             return false;
 
-        if (!processSectionChar())
+        if (!processSection())
             break;
     }
 
     return !hasError();
 }
 
-bool RuleTextParser::processSectionChar()
+bool RuleTextParser::processSection()
 {
     if ((m_charType & (CharListBegin | CharBracketBegin | CharDigit | CharValueBegin)) != 0) {
         return processSectionBlock();
     }
 
+    return processSectionChar();
+}
+
+bool RuleTextParser::processSectionBlock()
+{
+    switch (m_charType) {
+    case CharListBegin: {
+        processSectionList();
+    } break;
+    case CharBracketBegin: {
+        parseBracketValues();
+    } break;
+    case CharDigit:
+    case CharValueBegin: {
+        parseValue();
+    } break;
+    }
+
+    return false;
+}
+
+bool RuleTextParser::processSectionChar()
+{
     switch (m_charType) {
     case CharLetter: {
         return parseName();
@@ -167,32 +190,18 @@ bool RuleTextParser::processSectionChar()
     } break;
     case CharListEnd: {
         m_ruleFilter.isListEnd = true;
+        checkListEnd();
     } break;
     }
 
     return false;
 }
 
-bool RuleTextParser::processSectionBlock()
+void RuleTextParser::processSectionList()
 {
-    switch (m_charType) {
-    case CharListBegin: {
-        processSectionLines();
-    } break;
-    case CharBracketBegin: {
-        parseBracketValues();
-    } break;
-    case CharDigit:
-    case CharValueBegin: {
-        parseValue();
-    } break;
-    }
+    if (!checkListBegin())
+        return;
 
-    return false;
-}
-
-void RuleTextParser::processSectionLines()
-{
     parseLines();
 
     if (!m_ruleFilter.isListEnd) {
@@ -200,19 +209,33 @@ void RuleTextParser::processSectionLines()
     }
 }
 
+bool RuleTextParser::checkListBegin()
+{
+    if (++m_listDepth > FORT_CONF_RULE_FILTER_DEPTH_MAX) {
+        setErrorMessage(tr("Max list depth exceeded: %1").arg(m_listDepth));
+        return false;
+    }
+
+    return true;
+}
+
+bool RuleTextParser::checkListEnd()
+{
+    if (--m_listDepth < 0) {
+        setErrorMessage(tr("Unexpected symbol of list end"));
+        return false;
+    }
+
+    return true;
+}
+
 bool RuleTextParser::parseName()
 {
     const QChar *name = parsedCharPtr();
 
-    while (nextCharType(CharName, extraNameChars)) {
-        continue;
-    }
-
-    if (hasError()) {
+    if (!parseChars(CharName, extraNameChars)) {
         return false;
     }
-
-    ungetChar();
 
     static const QHash<QString, qint8> filterTypesMap = {
         { "ip", FORT_RULE_FILTER_TYPE_ADDRESS },
@@ -250,12 +273,19 @@ bool RuleTextParser::parseName()
 
 void RuleTextParser::parseBracketValues()
 {
-    parseValue();
+    parseValue(CharValueEnd);
 }
 
-void RuleTextParser::parseValue()
+void RuleTextParser::parseValue(quint32 extraCharTypes)
 {
-    // TODO: implement
+    const QChar *value = parsedCharPtr();
+
+    if (!parseChars(CharValue | extraCharTypes, extraValueChars))
+        return;
+
+    const QStringView valueView(value, currentCharPtr() - value);
+
+    m_ruleFilter.addValue(valueView);
 }
 
 bool RuleTextParser::checkAddFilter()
@@ -321,6 +351,21 @@ void RuleTextParser::endList(int nodeIndex)
     RuleFilter &ruleFilter = m_ruleFilterArray[nodeIndex];
 
     ruleFilter.listCount = currentIndex - nodeIndex;
+}
+
+bool RuleTextParser::parseChars(quint32 expectedCharTypes, const char *extraChars)
+{
+    while (nextCharType(expectedCharTypes, extraChars)) {
+        continue;
+    }
+
+    if (hasError()) {
+        return false;
+    }
+
+    ungetChar();
+
+    return true;
 }
 
 bool RuleTextParser::nextCharType(quint32 expectedCharTypes, const char *extraChars)

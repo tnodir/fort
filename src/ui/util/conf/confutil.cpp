@@ -16,7 +16,7 @@ int ConfUtil::ruleSetMaxCount()
 
 int ConfUtil::ruleDepthMaxCount()
 {
-    return FORT_CONF_RULE_DEPTH_MAX;
+    return FORT_CONF_RULE_FILTER_DEPTH_MAX;
 }
 
 int ConfUtil::ruleSetDepthMaxCount()

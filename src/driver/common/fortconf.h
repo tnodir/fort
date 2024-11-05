@@ -3,23 +3,23 @@
 
 #include "common.h"
 
-#define FORT_CONF_IP_MAX              (2 * 1024 * 1024)
-#define FORT_CONF_IP4_ARR_SIZE(n)     ((n) * sizeof(UINT32))
-#define FORT_CONF_IP6_ARR_SIZE(n)     ((n) * sizeof(ip6_addr_t))
-#define FORT_CONF_IP4_RANGE_SIZE(n)   (FORT_CONF_IP4_ARR_SIZE(n) * 2)
-#define FORT_CONF_IP6_RANGE_SIZE(n)   (FORT_CONF_IP6_ARR_SIZE(n) * 2)
-#define FORT_CONF_RULE_MAX            1024
-#define FORT_CONF_RULE_SET_MAX        32
-#define FORT_CONF_RULE_DEPTH_MAX      4
-#define FORT_CONF_RULE_SET_DEPTH_MAX  8
-#define FORT_CONF_ZONE_MAX            32
-#define FORT_CONF_GROUP_MAX           16
-#define FORT_CONF_APPS_LEN_MAX        (64 * 1024 * 1024)
-#define FORT_CONF_APP_PATH_MAX        1024
-#define FORT_CONF_APP_PATH_MAX_SIZE   (FORT_CONF_APP_PATH_MAX * sizeof(WCHAR))
-#define FORT_CONF_STR_ALIGN           4
-#define FORT_CONF_STR_HEADER_SIZE(n)  (((n) + 1) * sizeof(UINT32))
-#define FORT_CONF_STR_DATA_SIZE(size) FORT_ALIGN_SIZE((size), FORT_CONF_STR_ALIGN)
+#define FORT_CONF_IP_MAX                (2 * 1024 * 1024)
+#define FORT_CONF_IP4_ARR_SIZE(n)       ((n) * sizeof(UINT32))
+#define FORT_CONF_IP6_ARR_SIZE(n)       ((n) * sizeof(ip6_addr_t))
+#define FORT_CONF_IP4_RANGE_SIZE(n)     (FORT_CONF_IP4_ARR_SIZE(n) * 2)
+#define FORT_CONF_IP6_RANGE_SIZE(n)     (FORT_CONF_IP6_ARR_SIZE(n) * 2)
+#define FORT_CONF_RULE_MAX              1024
+#define FORT_CONF_RULE_SET_MAX          32
+#define FORT_CONF_RULE_FILTER_DEPTH_MAX 4
+#define FORT_CONF_RULE_SET_DEPTH_MAX    8
+#define FORT_CONF_ZONE_MAX              32
+#define FORT_CONF_GROUP_MAX             16
+#define FORT_CONF_APPS_LEN_MAX          (64 * 1024 * 1024)
+#define FORT_CONF_APP_PATH_MAX          1024
+#define FORT_CONF_APP_PATH_MAX_SIZE     (FORT_CONF_APP_PATH_MAX * sizeof(WCHAR))
+#define FORT_CONF_STR_ALIGN             4
+#define FORT_CONF_STR_HEADER_SIZE(n)    (((n) + 1) * sizeof(UINT32))
+#define FORT_CONF_STR_DATA_SIZE(size)   FORT_ALIGN_SIZE((size), FORT_CONF_STR_ALIGN)
 
 typedef struct fort_conf_flags
 {
