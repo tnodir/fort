@@ -26,10 +26,10 @@ enum RuleCharType : RuleCharTypes {
     CharNot = (1 << 13), // !
     CharExtra = (1 << 14), // Name | Value
     // Complex types
-    CharAnyBegin = (CharListBegin | CharListEnd | CharBracketBegin | CharLetter | CharDigit
+    CharLineBegin = (CharListBegin | CharListEnd | CharBracketBegin | CharLetter | CharDigit
             | CharValueBegin | CharNot),
     CharName = (CharLetter | CharExtra), // a-zA-Z_
-    CharValue = (CharDigit | CharExtra), // 0-9.:-/
+    CharValue = (CharDigit | CharExtra), // 0-9.-/:
     CharSpaceComment = (CharSpace | CharComment),
 };
 
@@ -43,6 +43,7 @@ struct RuleFilter
     bool isNot : 1 = false;
     bool hasFilterName : 1 = false;
     bool isListEnd : 1 = false;
+    bool isLineEnd : 1 = false;
     bool isSectionEnd : 1 = false;
 
     qint8 type = 0;
@@ -74,7 +75,7 @@ private:
 
     void parseLines();
     bool parseLine();
-    bool parseLineSection();
+    bool parseLineSection(RuleCharTypes expectedSeparator);
     bool processSection();
     bool processSectionBlock();
     bool processSectionChar();
@@ -86,7 +87,7 @@ private:
 
     void parseBracketValues();
     bool parseBracketValue(RuleCharTypes expectedSeparator);
-    bool parseValue();
+    bool parseValue(bool expectValueEnd);
 
     bool checkAddFilter();
 
@@ -97,11 +98,14 @@ private:
     void endList(int nodeIndex);
 
     void resetParsedCharTypes() { m_parsedCharTypes = CharNone; }
+    bool hasParsedCharTypes(RuleCharTypes v) { return v != 0 && (m_parsedCharTypes & v) != 0; }
 
     void ungetChar() { --m_p; }
 
     const QChar *currentCharPtr() const { return m_p; }
     const QChar *parsedCharPtr() const { return m_p - 1; }
+
+    bool isEmpty() const { return m_p >= m_end; }
 
     RuleFilter &listNode(int listIndex) { return m_ruleFilters[listIndex]; }
 
@@ -114,6 +118,8 @@ private:
 
     bool parseChars(RuleCharTypes expectedCharTypes, RuleCharTypes skipCharTypes,
             const char *extraChars = nullptr);
+
+    void ungetParsedChar();
 
     bool nextCharType(RuleCharTypes expectedCharTypes, RuleCharTypes skipCharTypes,
             const char *extraChars = nullptr);

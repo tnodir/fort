@@ -7,7 +7,8 @@
 namespace {
 
 const char *const extraNameChars = "_";
-const char *const extraValueChars = ".:-/";
+const char *const extraValueChars = ".-/";
+const char *const extraValueEndChars = ".-/:";
 
 int getCharIndex(const char *chars, const char c)
 {
@@ -89,7 +90,7 @@ void RuleTextParser::parseLines()
     const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_OR);
 
     for (;;) {
-        if (!skipComments(CharAnyBegin))
+        if (!skipComments(CharLineBegin))
             break;
 
         if (!parseLine())
@@ -103,20 +104,31 @@ bool RuleTextParser::parseLine()
 {
     const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_AND);
 
-    m_ruleFilter.type = FORT_RULE_FILTER_TYPE_ADDRESS; // default type
+    RuleCharTypes expectedSeparator = CharNone;
+
+    m_ruleFilter.type = FORT_RULE_FILTER_TYPE_ADDRESS; // Default type
 
     for (;;) {
-        if (!parseLineSection())
+        if (!parseLineSection(expectedSeparator))
             break;
+
+        if (m_ruleFilter.isLineEnd || m_ruleFilter.isListEnd)
+            break;
+
+        const bool isSectionEnd = m_ruleFilter.isSectionEnd;
 
         if (!checkAddFilter())
             return false;
 
-        if (!m_ruleFilter.hasFilterName) {
-            // next default type, if applicable
+        resetFilter();
+
+        // Next default type, if applicable
+        if (!isSectionEnd && !m_ruleFilter.hasFilterName) {
             m_ruleFilter.type = m_ruleFilter.isTypeAddress() ? FORT_RULE_FILTER_TYPE_PORT
                                                              : FORT_RULE_FILTER_TYPE_INVALID;
         }
+
+        expectedSeparator = CharColon | CharNewLine;
     }
 
     endList(nodeIndex);
@@ -124,10 +136,10 @@ bool RuleTextParser::parseLine()
     return true;
 }
 
-bool RuleTextParser::parseLineSection()
+bool RuleTextParser::parseLineSection(RuleCharTypes expectedSeparator)
 {
     for (;;) {
-        if (!nextCharType(CharAnyBegin, CharSpace))
+        if (!nextCharType(CharLineBegin | expectedSeparator, CharSpace))
             return false;
 
         if (!processSection())
@@ -157,7 +169,9 @@ bool RuleTextParser::processSectionBlock()
     } break;
     case CharDigit:
     case CharValueBegin: {
-        parseValue();
+        const bool expectValueEnd = (m_charType == CharValueBegin);
+
+        parseValue(expectValueEnd);
     } break;
     }
 
@@ -174,9 +188,11 @@ bool RuleTextParser::processSectionChar()
         m_ruleFilter.isNot = !m_ruleFilter.isNot;
         return true;
     } break;
-    case CharColon:
-    case CharNewLine: {
+    case CharColon: {
         m_ruleFilter.isSectionEnd = true;
+    } break;
+    case CharNewLine: {
+        m_ruleFilter.isLineEnd = true;
     } break;
     case CharListEnd: {
         m_ruleFilter.isListEnd = true;
@@ -278,26 +294,35 @@ bool RuleTextParser::parseBracketValue(RuleCharTypes expectedSeparator)
     resetParsedCharTypes();
 
     if (!parseChars(CharValueBegin | CharValue,
-                CharSpaceComment | CharBracketEnd | expectedSeparator, extraValueChars))
+                CharSpaceComment | CharBracketEnd | expectedSeparator, extraValueEndChars))
         return false;
 
-    if ((m_parsedCharTypes & CharBracketEnd) != 0)
+    if (hasParsedCharTypes(CharBracketEnd))
         return false;
 
-    if ((m_parsedCharTypes & expectedSeparator) == 0) {
+    if (!hasParsedCharTypes(expectedSeparator)) {
         setErrorMessage(tr("Unexpected end of values list"));
         return false;
     }
 
-    return parseValue();
+    const bool expectValueEnd = hasParsedCharTypes(CharValueBegin);
+
+    return parseValue(expectValueEnd);
 }
 
-bool RuleTextParser::parseValue()
+bool RuleTextParser::parseValue(bool expectValueEnd)
 {
     const QChar *value = parsedCharPtr();
 
-    if (!parseChars(CharLetter | CharValue | CharValueEnd, extraValueChars))
+    const char *extraChars = expectValueEnd ? extraValueEndChars : extraValueChars;
+
+    if (!parseChars(CharLetter | CharValue, extraChars))
         return false;
+
+    if (expectValueEnd && m_charType != CharValueEnd) {
+        setErrorMessage(tr("Unexpected end of value"));
+        return false;
+    }
 
     const QStringView valueView(value, currentCharPtr() - value);
 
@@ -309,7 +334,7 @@ bool RuleTextParser::parseValue()
 bool RuleTextParser::checkAddFilter()
 {
     if (!m_ruleFilter.hasValues()) {
-        if (m_ruleFilter.isSectionEnd) {
+        if (!m_ruleFilter.isSectionEnd) {
             setErrorMessage(tr("Unexpected end of line section"));
             return false;
         }
@@ -332,6 +357,7 @@ void RuleTextParser::resetFilter()
     m_ruleFilter.isNot = false;
     m_ruleFilter.hasFilterName = false;
     m_ruleFilter.isListEnd = false;
+    m_ruleFilter.isLineEnd = false;
     m_ruleFilter.isSectionEnd = false;
 
     // m_ruleFilter.type is not reset
@@ -342,8 +368,6 @@ void RuleTextParser::resetFilter()
 void RuleTextParser::addFilter()
 {
     m_ruleFilters.append(m_ruleFilter);
-
-    resetFilter();
 }
 
 int RuleTextParser::beginList(qint8 listType)
@@ -353,6 +377,8 @@ int RuleTextParser::beginList(qint8 listType)
     m_ruleFilter.type = listType;
 
     addFilter();
+
+    resetFilter();
 
     return nodeIndex;
 }
@@ -392,9 +418,16 @@ bool RuleTextParser::parseChars(
         return false;
     }
 
-    ungetChar();
+    ungetParsedChar();
 
     return true;
+}
+
+void RuleTextParser::ungetParsedChar()
+{
+    if (!isEmpty()) {
+        ungetChar();
+    }
 }
 
 bool RuleTextParser::nextCharType(
@@ -406,7 +439,7 @@ bool RuleTextParser::nextCharType(
 
     m_charType = CharNone;
 
-    while (m_p < m_end) {
+    while (!isEmpty()) {
         const QChar c = *m_p++;
 
         m_charType = getCharType(m_charType, c, extraChars);
