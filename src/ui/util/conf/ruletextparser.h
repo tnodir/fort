@@ -78,7 +78,7 @@ public:
     ErrorCode errorCode() const { return m_errorCode; }
     const QString &errorMessage() const { return m_errorMessage; }
 
-    bool hasError() const { return !errorMessage().isEmpty(); }
+    bool hasError() const { return errorCode() != ErrorNone; }
 
     const QVector<RuleFilter> &ruleFilters() const { return m_ruleFilters; }
 
@@ -107,6 +107,7 @@ private:
     void parseBracketValues();
     bool parseBracketValue(RuleCharTypes expectedSeparator);
     bool parseValue(bool expectValueEnd);
+    bool checkValueEnd(bool &expectValueEnd);
 
     bool checkAddFilter();
 

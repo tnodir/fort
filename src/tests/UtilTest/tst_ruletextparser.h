@@ -187,3 +187,26 @@ TEST_F(RuleTextParserTest, lineSectionList)
         checkStringList(rf.values, { "80" });
     }
 }
+
+TEST_F(RuleTextParserTest, lineIp6Range)
+{
+    RuleTextParser p("[2:]/3-[4:]/5:67");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 4);
+
+    // Check IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[2];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "[2:]/3-[4:]/5" });
+    }
+
+    // Check Port
+    {
+        const RuleFilter &rf = p.ruleFilters()[3];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT);
+        checkStringList(rf.values, { "67" });
+    }
+}

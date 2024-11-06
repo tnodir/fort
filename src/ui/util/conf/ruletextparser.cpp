@@ -324,23 +324,16 @@ bool RuleTextParser::parseValue(bool expectValueEnd)
 {
     const QChar *value = parsedCharPtr();
 
-    const char *extraChars = expectValueEnd ? extraValueEndChars : extraValueChars;
-
     for (;;) {
+        const char *extraChars = expectValueEnd ? extraValueEndChars : extraValueChars;
+
         if (!parseChars(CharLetter | CharValue, extraChars))
             return false;
 
-        if (expectValueEnd) {
-            if (m_charType != CharValueEnd) {
-                setError(ErrorUnexpectedEndOfValue, tr("Unexpected end of value"));
+        if (!checkValueEnd(expectValueEnd)) {
+            if (hasError())
                 return false;
-            }
 
-            advanceCharPtr();
-
-            expectValueEnd = false;
-            extraChars = extraValueChars;
-        } else {
             break;
         }
     }
@@ -350,6 +343,25 @@ bool RuleTextParser::parseValue(bool expectValueEnd)
     m_ruleFilter.addValue(valueView);
 
     return true;
+}
+
+bool RuleTextParser::checkValueEnd(bool &expectValueEnd)
+{
+    const bool isValueBegin = (m_charType == CharValueBegin);
+
+    if (isValueBegin || expectValueEnd) {
+        if (isValueBegin ? expectValueEnd : (m_charType != CharValueEnd)) {
+            setError(ErrorUnexpectedEndOfValue, tr("Unexpected end of value"));
+            return false;
+        }
+
+        advanceCharPtr();
+
+        expectValueEnd = isValueBegin;
+        return true;
+    }
+
+    return false;
 }
 
 bool RuleTextParser::checkAddFilter()
