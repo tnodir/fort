@@ -29,7 +29,7 @@ enum RuleCharType : RuleCharTypes {
     CharLineBegin = (CharListBegin | CharListEnd | CharBracketBegin | CharLetter | CharDigit
             | CharValueBegin | CharNot),
     CharName = (CharLetter | CharExtra), // a-zA-Z_
-    CharValue = (CharDigit | CharExtra), // 0-9.-/:
+    CharValue = (CharDigit | CharExtra), // 0-9._-/:
     CharSpaceComment = (CharSpace | CharComment),
     CharLineBreak = (CharSpaceComment | CharNewLine),
 };
@@ -65,7 +65,6 @@ public:
         ErrorUnexpectedEndOfValuesList,
         ErrorUnexpectedSymboOfListEnd,
         ErrorUnexpectedEndOfValue,
-        ErrorUnexpectedEndOfLineSection,
         ErrorListMaxDepth,
         ErrorExtraFilterName,
         ErrorBadFilterName,

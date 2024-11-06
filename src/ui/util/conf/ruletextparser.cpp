@@ -7,8 +7,8 @@
 namespace {
 
 const char *const extraNameChars = "_";
-const char *const extraValueChars = ".-/";
-const char *const extraValueEndChars = ".-/:";
+const char *const extraValueChars = "._-/";
+const char *const extraValueEndChars = "._-/:";
 
 int getCharIndex(const char *chars, const char c)
 {
@@ -295,7 +295,7 @@ void RuleTextParser::parseBracketValues()
         if (!parseBracketValue(expectedSeparator))
             break;
 
-        expectedSeparator = CharValueSeparator;
+        expectedSeparator = CharValueSeparator | CharNewLine;
     }
 }
 
@@ -303,7 +303,7 @@ bool RuleTextParser::parseBracketValue(RuleCharTypes expectedSeparator)
 {
     resetParsedCharTypes();
 
-    if (!nextCharType(CharValueBegin | CharValue,
+    if (!nextCharType(CharValueBegin | CharLetter | CharValue,
                 CharLineBreak | CharBracketEnd | expectedSeparator, extraValueEndChars))
         return false;
 
@@ -354,14 +354,8 @@ bool RuleTextParser::parseValue(bool expectValueEnd)
 
 bool RuleTextParser::checkAddFilter()
 {
-    if (!m_ruleFilter.hasValues()) {
-        if (!m_ruleFilter.isSectionEnd) {
-            setError(ErrorUnexpectedEndOfLineSection, tr("Unexpected end of line section"));
-            return false;
-        }
-
+    if (!m_ruleFilter.hasValues())
         return true;
-    }
 
     if (m_ruleFilter.type == FORT_RULE_FILTER_TYPE_INVALID) {
         setError(ErrorNoFilterName, tr("No filter name"));

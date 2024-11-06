@@ -4,24 +4,9 @@
 
 #include <googletest.h>
 
+#include <common/fortconf.h>
+
 #include <util/conf/ruletextparser.h>
-
-namespace {
-
-bool compareStringList(const StringViewList &l1, const QStringList &l2)
-{
-    if (l1.size() != l2.size())
-        return false;
-
-    for (int i = 0; i < l1.size(); ++i) {
-        if (l1[i] != l2[i])
-            return false;
-    }
-
-    return true;
-}
-
-}
 
 class RuleTextParserTest : public Test
 {
@@ -29,11 +14,28 @@ class RuleTextParserTest : public Test
 protected:
     void SetUp();
     void TearDown();
+
+protected:
+    void checkStringList(const StringViewList &l1, const QStringList &l2);
 };
 
 void RuleTextParserTest::SetUp() { }
 
 void RuleTextParserTest::TearDown() { }
+
+void RuleTextParserTest::checkStringList(const StringViewList &l1, const QStringList &l2)
+{
+    ASSERT_EQ(l1.size(), l2.size());
+
+    for (int i = 0; i < l1.size(); ++i) {
+        const QStringView &s1 = l1[i];
+        const QString &s2 = l2[i];
+
+        if (s1 != QStringView(s2)) {
+            ASSERT_EQ(s1.toString(), s2);
+        }
+    }
+}
 
 TEST_F(RuleTextParserTest, emptyList)
 {
@@ -73,13 +75,15 @@ TEST_F(RuleTextParserTest, lineIpPort)
     // Check IP
     {
         const RuleFilter &rf = p.ruleFilters()[2];
-        ASSERT_TRUE(compareStringList(rf.values, { "1.1.1.1" }));
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "1.1.1.1" });
     }
 
     // Check Port
     {
         const RuleFilter &rf = p.ruleFilters()[3];
-        ASSERT_TRUE(compareStringList(rf.values, { "53" }));
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT);
+        checkStringList(rf.values, { "53" });
     }
 }
 
@@ -94,7 +98,8 @@ TEST_F(RuleTextParserTest, lineIpValues)
     // Check IP Values
     {
         const RuleFilter &rf = p.ruleFilters()[2];
-        ASSERT_TRUE(compareStringList(rf.values, { "1.1.1.1/8", "[2::]/16" }));
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "1.1.1.1/8", "[2::]/16" });
     }
 }
 
@@ -111,24 +116,74 @@ TEST_F(RuleTextParserTest, lineIpPortList)
     // Check IP
     {
         const RuleFilter &rf = p.ruleFilters()[5];
-        ASSERT_TRUE(compareStringList(rf.values, { "2.2.2.2" }));
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "2.2.2.2" });
     }
 
     // Check Port
     {
         const RuleFilter &rf = p.ruleFilters()[6];
-        ASSERT_TRUE(compareStringList(rf.values, { "64" }));
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT);
+        checkStringList(rf.values, { "64" });
     }
 
     // Check IP
     {
         const RuleFilter &rf = p.ruleFilters()[8];
-        ASSERT_TRUE(compareStringList(rf.values, { "3.3.3.3" }));
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "3.3.3.3" });
     }
 
     // Check Port
     {
         const RuleFilter &rf = p.ruleFilters()[9];
-        ASSERT_TRUE(compareStringList(rf.values, { "75" }));
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT);
+        checkStringList(rf.values, { "75" });
+    }
+}
+
+TEST_F(RuleTextParserTest, filterDirUdp)
+{
+    RuleTextParser p("dir(out):udp(53)");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 4);
+
+    // Check Direction
+    {
+        const RuleFilter &rf = p.ruleFilters()[2];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_DIRECTION);
+        checkStringList(rf.values, { "out" });
+    }
+
+    // Check UDP Port
+    {
+        const RuleFilter &rf = p.ruleFilters()[3];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT_UDP);
+        checkStringList(rf.values, { "53" });
+    }
+}
+
+TEST_F(RuleTextParserTest, lineSectionList)
+{
+    RuleTextParser p("ip(\n#1\n1.1.1.1/8\n#2\n2.2.2.2/16\n):{\ntcp(80)\n}");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 6);
+
+    // Check IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[2];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "1.1.1.1/8", "2.2.2.2/16" });
+    }
+
+    // Check Port
+    {
+        const RuleFilter &rf = p.ruleFilters()[5];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT_TCP);
+        checkStringList(rf.values, { "80" });
     }
 }
