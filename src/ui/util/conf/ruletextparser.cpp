@@ -66,15 +66,15 @@ bool RuleFilter::isTypeAddress() const
             || type == FORT_RULE_FILTER_TYPE_ADDRESS_UDP;
 }
 
-RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent)
+RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent), m_text(text)
 {
-    setupText(text);
+    setupCharPtr();
 }
 
-void RuleTextParser::setupText(const QString &text)
+void RuleTextParser::setupCharPtr()
 {
-    m_p = text.data();
-    m_end = m_p + text.size();
+    m_p = m_text.data();
+    m_end = m_p + m_text.size();
 }
 
 bool RuleTextParser::parse()
@@ -341,14 +341,14 @@ void RuleTextParser::resetFilter()
 
 void RuleTextParser::addFilter()
 {
-    m_ruleFilterArray.append(m_ruleFilter);
+    m_ruleFilters.append(m_ruleFilter);
 
     resetFilter();
 }
 
 int RuleTextParser::beginList(qint8 listType)
 {
-    const int nodeIndex = m_ruleFilterArray.size();
+    const int nodeIndex = m_ruleFilters.size();
 
     m_ruleFilter.type = listType;
 
@@ -359,14 +359,14 @@ int RuleTextParser::beginList(qint8 listType)
 
 void RuleTextParser::endList(int nodeIndex)
 {
-    const int currentIndex = m_ruleFilterArray.size();
+    const int currentIndex = m_ruleFilters.size();
 
-    if (currentIndex == nodeIndex) {
-        m_ruleFilterArray.removeLast(); // Empty list
+    if (currentIndex == nodeIndex + 1) {
+        m_ruleFilters.removeLast(); // Empty list
         return;
     }
 
-    RuleFilter &ruleFilter = m_ruleFilterArray[nodeIndex];
+    RuleFilter &ruleFilter = m_ruleFilters[nodeIndex];
 
     ruleFilter.listCount = currentIndex - nodeIndex;
 }
@@ -433,7 +433,6 @@ bool RuleTextParser::checkNextCharType(RuleCharTypes expectedCharTypes, const QC
     }
 
     if ((m_charType & expectedCharTypes) == 0) {
-        setErrorMessage(tr("Unexpected symbol: %1").arg(c));
         return false;
     }
 

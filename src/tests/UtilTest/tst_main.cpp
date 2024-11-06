@@ -4,6 +4,7 @@
 #include "tst_fileutil.h"
 #include "tst_ioccontainer.h"
 #include "tst_netutil.h"
+#include "tst_ruletextparser.h"
 #include "tst_stringutil.h"
 
 #include <QCoreApplication>

@@ -26,8 +26,8 @@ enum RuleCharType : RuleCharTypes {
     CharNot = (1 << 13), // !
     CharExtra = (1 << 14), // Name | Value
     // Complex types
-    CharAnyBegin =
-            (CharListBegin | CharBracketBegin | CharLetter | CharDigit | CharValueBegin | CharNot),
+    CharAnyBegin = (CharListBegin | CharListEnd | CharBracketBegin | CharLetter | CharDigit
+            | CharValueBegin | CharNot),
     CharName = (CharLetter | CharExtra), // a-zA-Z_
     CharValue = (CharDigit | CharExtra), // 0-9.:-/
     CharSpaceComment = (CharSpace | CharComment),
@@ -63,14 +63,14 @@ public:
 
     bool hasError() const { return !errorMessage().isEmpty(); }
 
-    const QVector<RuleFilter> &ruleFilterArray() const { return m_ruleFilterArray; }
+    const QVector<RuleFilter> &ruleFilters() const { return m_ruleFilters; }
 
     bool parse();
 
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
 
-    void setupText(const QString &text);
+    void setupCharPtr();
 
     void parseLines();
     bool parseLine();
@@ -103,7 +103,7 @@ private:
     const QChar *currentCharPtr() const { return m_p; }
     const QChar *parsedCharPtr() const { return m_p - 1; }
 
-    RuleFilter &listNode(int listIndex) { return m_ruleFilterArray[listIndex]; }
+    RuleFilter &listNode(int listIndex) { return m_ruleFilters[listIndex]; }
 
     bool skipComments(RuleCharTypes expectedCharTypes);
 
@@ -129,9 +129,10 @@ private:
     const QChar *m_p = nullptr;
     const QChar *m_end = nullptr;
 
+    QString m_text;
     QString m_errorMessage;
 
-    QVector<RuleFilter> m_ruleFilterArray;
+    QVector<RuleFilter> m_ruleFilters;
 };
 
 #endif // RULETEXTPARSER_H

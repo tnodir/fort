@@ -7,6 +7,7 @@ HEADERS += \
     tst_fileutil.h \
     tst_ioccontainer.h \
     tst_netutil.h \
+    tst_ruletextparser.h \
     tst_stringutil.h
 
 SOURCES += \
