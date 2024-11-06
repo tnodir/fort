@@ -26,6 +26,10 @@ RuleCharType processChar(const QChar c, const char *extraChars = nullptr)
         return CharDigit;
     }
 
+    if (c == '\n') {
+        return CharNewLine;
+    }
+
     if (c.isSpace()) {
         return CharSpace;
     }
@@ -414,20 +418,7 @@ bool RuleTextParser::parseChars(
         continue;
     }
 
-    if (hasError()) {
-        return false;
-    }
-
-    ungetParsedChar();
-
-    return true;
-}
-
-void RuleTextParser::ungetParsedChar()
-{
-    if (!isEmpty()) {
-        ungetChar();
-    }
+    return !hasError();
 }
 
 bool RuleTextParser::nextCharType(
@@ -440,7 +431,7 @@ bool RuleTextParser::nextCharType(
     m_charType = CharNone;
 
     while (!isEmpty()) {
-        const QChar c = *m_p++;
+        const QChar c = *m_p;
 
         m_charType = getCharType(m_charType, c, extraChars);
 
@@ -448,6 +439,8 @@ bool RuleTextParser::nextCharType(
             m_charType = CharNone;
             return false;
         }
+
+        ++m_p;
 
         m_parsedCharTypes |= m_charType;
 

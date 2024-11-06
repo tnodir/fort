@@ -64,3 +64,38 @@ TEST_F(RuleTextParserTest, lineIpPort)
         ASSERT_TRUE(compareStringList(rf.values, { "53" }));
     }
 }
+
+TEST_F(RuleTextParserTest, lineIpPortList)
+{
+    RuleTextParser p("1.1.1.1:53\n"
+                     "2.2.2.2:64\n"
+                     "3.3.3.3:75\n");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 10);
+
+    // Check IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[5];
+        ASSERT_TRUE(compareStringList(rf.values, { "2.2.2.2" }));
+    }
+
+    // Check Port
+    {
+        const RuleFilter &rf = p.ruleFilters()[6];
+        ASSERT_TRUE(compareStringList(rf.values, { "64" }));
+    }
+
+    // Check IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[8];
+        ASSERT_TRUE(compareStringList(rf.values, { "3.3.3.3" }));
+    }
+
+    // Check Port
+    {
+        const RuleFilter &rf = p.ruleFilters()[9];
+        ASSERT_TRUE(compareStringList(rf.values, { "75" }));
+    }
+}

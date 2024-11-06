@@ -119,8 +119,6 @@ private:
     bool parseChars(RuleCharTypes expectedCharTypes, RuleCharTypes skipCharTypes,
             const char *extraChars = nullptr);
 
-    void ungetParsedChar();
-
     bool nextCharType(RuleCharTypes expectedCharTypes, RuleCharTypes skipCharTypes,
             const char *extraChars = nullptr);
 
