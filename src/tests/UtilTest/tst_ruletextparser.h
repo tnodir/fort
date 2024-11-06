@@ -44,6 +44,24 @@ TEST_F(RuleTextParserTest, emptyList)
     ASSERT_EQ(p.ruleFilters().size(), 0);
 }
 
+TEST_F(RuleTextParserTest, emptyListDepth)
+{
+    RuleTextParser p("{{{{{{{}}}}}}}");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 0);
+}
+
+TEST_F(RuleTextParserTest, maxListDepth)
+{
+    RuleTextParser p("{{{{{{{{{{");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorListMaxDepth);
+}
+
 TEST_F(RuleTextParserTest, lineIpPort)
 {
     RuleTextParser p("1.1.1.1:53");

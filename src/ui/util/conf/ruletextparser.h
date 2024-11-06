@@ -59,9 +59,25 @@ class RuleTextParser : public QObject
     Q_OBJECT
 
 public:
+    enum ErrorCode : quint16 {
+        ErrorNone = 0,
+        ErrorUnexpectedEndOfList,
+        ErrorUnexpectedEndOfValuesList,
+        ErrorUnexpectedSymboOfListEnd,
+        ErrorUnexpectedEndOfValue,
+        ErrorUnexpectedEndOfLineSection,
+        ErrorListMaxDepth,
+        ErrorExtraFilterName,
+        ErrorBadFilterName,
+        ErrorNoFilterName,
+        ErrorBadSymbol,
+    };
+    Q_ENUM(ErrorCode)
+
     explicit RuleTextParser(const QString &text, QObject *parent = nullptr);
 
-    QString errorMessage() const { return m_errorMessage; }
+    ErrorCode errorCode() const { return m_errorCode; }
+    const QString &errorMessage() const { return m_errorMessage; }
 
     bool hasError() const { return !errorMessage().isEmpty(); }
 
@@ -70,11 +86,14 @@ public:
     bool parse();
 
 private:
-    void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
+    void setErrorCode(ErrorCode v) { m_errorCode = v; }
+    void setErrorMessage(const QString &v) { m_errorMessage = v; }
+
+    void setError(ErrorCode errorCode, const QString &errorMessage);
 
     void setupCharPtr();
 
-    void parseLines();
+    bool parseLines();
     bool parseLine();
     bool parseLineSection(RuleCharTypes expectedSeparator);
     bool processSection();
@@ -128,6 +147,7 @@ private:
 
 private:
     qint8 m_listDepth = 0;
+    ErrorCode m_errorCode = ErrorNone;
     RuleCharType m_charType = CharNone;
     RuleCharTypes m_parsedCharTypes = CharNone;
     RuleFilter m_ruleFilter;

@@ -67,8 +67,7 @@ RuleCharType getCharType(RuleCharType prevCharType, const QChar c, const char *e
 
 bool RuleFilter::isTypeAddress() const
 {
-    return type == FORT_RULE_FILTER_TYPE_ADDRESS || type == FORT_RULE_FILTER_TYPE_ADDRESS_TCP
-            || type == FORT_RULE_FILTER_TYPE_ADDRESS_UDP;
+    return type == FORT_RULE_FILTER_TYPE_ADDRESS;
 }
 
 RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent), m_text(text)
@@ -84,12 +83,16 @@ void RuleTextParser::setupCharPtr()
 
 bool RuleTextParser::parse()
 {
-    parseLines();
-
-    return !hasError();
+    return parseLines();
 }
 
-void RuleTextParser::parseLines()
+void RuleTextParser::setError(ErrorCode errorCode, const QString &errorMessage)
+{
+    setErrorCode(errorCode);
+    setErrorMessage(errorMessage);
+}
+
+bool RuleTextParser::parseLines()
 {
     const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_OR);
 
@@ -102,6 +105,8 @@ void RuleTextParser::parseLines()
     }
 
     endList(nodeIndex);
+
+    return !hasError();
 }
 
 bool RuleTextParser::parseLine()
@@ -212,17 +217,18 @@ void RuleTextParser::processSectionList()
     if (!checkListBegin())
         return;
 
-    parseLines();
+    if (!parseLines())
+        return;
 
     if (!m_ruleFilter.isListEnd) {
-        setErrorMessage(tr("Unexpected end of list"));
+        setError(ErrorUnexpectedEndOfList, tr("Unexpected end of list"));
     }
 }
 
 bool RuleTextParser::checkListBegin()
 {
     if (++m_listDepth > FORT_CONF_RULE_FILTER_DEPTH_MAX) {
-        setErrorMessage(tr("Max list depth exceeded: %1").arg(m_listDepth));
+        setError(ErrorListMaxDepth, tr("Max list depth exceeded: %1").arg(m_listDepth));
         return false;
     }
 
@@ -232,7 +238,7 @@ bool RuleTextParser::checkListBegin()
 bool RuleTextParser::checkListEnd()
 {
     if (--m_listDepth < 0) {
-        setErrorMessage(tr("Unexpected symbol of list end"));
+        setError(ErrorUnexpectedSymboOfListEnd, tr("Unexpected symbol of list end"));
         return false;
     }
 
@@ -256,14 +262,14 @@ bool RuleTextParser::parseName()
         { "protocol", FORT_RULE_FILTER_TYPE_PROTOCOL },
         { "dir", FORT_RULE_FILTER_TYPE_DIRECTION },
         { "direction", FORT_RULE_FILTER_TYPE_DIRECTION },
-        { "tcp", FORT_RULE_FILTER_TYPE_ADDRESS_TCP },
-        { "udp", FORT_RULE_FILTER_TYPE_ADDRESS_UDP },
+        { "tcp", FORT_RULE_FILTER_TYPE_PORT_TCP },
+        { "udp", FORT_RULE_FILTER_TYPE_PORT_UDP },
     };
 
     const QStringView nameView(name, currentCharPtr() - name);
 
     if (m_ruleFilter.hasFilterName) {
-        setErrorMessage(tr("Extra filter name: %1").arg(nameView));
+        setError(ErrorExtraFilterName, tr("Extra filter name: %1").arg(nameView));
         return false;
     }
 
@@ -272,7 +278,7 @@ bool RuleTextParser::parseName()
     m_ruleFilter.type = filterTypesMap.value(nameLower, FORT_RULE_FILTER_TYPE_INVALID);
 
     if (m_ruleFilter.type == -1) {
-        setErrorMessage(tr("Bad filter name: %1").arg(nameView));
+        setError(ErrorBadFilterName, tr("Bad filter name: %1").arg(nameView));
         return false;
     }
 
@@ -305,7 +311,7 @@ bool RuleTextParser::parseBracketValue(RuleCharTypes expectedSeparator)
         return false;
 
     if (!hasParsedCharTypes(expectedSeparator)) {
-        setErrorMessage(tr("Unexpected end of values list"));
+        setError(ErrorUnexpectedEndOfValuesList, tr("Unexpected end of values list"));
         return false;
     }
 
@@ -326,7 +332,7 @@ bool RuleTextParser::parseValue(bool expectValueEnd)
 
         if (expectValueEnd) {
             if (m_charType != CharValueEnd) {
-                setErrorMessage(tr("Unexpected end of value"));
+                setError(ErrorUnexpectedEndOfValue, tr("Unexpected end of value"));
                 return false;
             }
 
@@ -350,7 +356,7 @@ bool RuleTextParser::checkAddFilter()
 {
     if (!m_ruleFilter.hasValues()) {
         if (!m_ruleFilter.isSectionEnd) {
-            setErrorMessage(tr("Unexpected end of line section"));
+            setError(ErrorUnexpectedEndOfLineSection, tr("Unexpected end of line section"));
             return false;
         }
 
@@ -358,7 +364,7 @@ bool RuleTextParser::checkAddFilter()
     }
 
     if (m_ruleFilter.type == FORT_RULE_FILTER_TYPE_INVALID) {
-        setErrorMessage(tr("No filter name"));
+        setError(ErrorNoFilterName, tr("No filter name"));
         return false;
     }
 
@@ -464,7 +470,7 @@ bool RuleTextParser::nextCharType(
 bool RuleTextParser::checkNextCharType(RuleCharTypes expectedCharTypes, const QChar c)
 {
     if (m_charType == CharNone) {
-        setErrorMessage(tr("Bad symbol: %1").arg(c));
+        setError(ErrorBadSymbol, tr("Bad symbol: %1").arg(c));
         return false;
     }
 
