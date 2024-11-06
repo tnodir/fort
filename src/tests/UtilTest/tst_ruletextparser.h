@@ -65,6 +65,21 @@ TEST_F(RuleTextParserTest, lineIpPort)
     }
 }
 
+TEST_F(RuleTextParserTest, lineIpValues)
+{
+    RuleTextParser p("(1.1.1.1/8, [2::]/16)");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 3);
+
+    // Check IP Values
+    {
+        const RuleFilter &rf = p.ruleFilters()[2];
+        ASSERT_TRUE(compareStringList(rf.values, { "1.1.1.1/8", "[2::]/16" }));
+    }
+}
+
 TEST_F(RuleTextParserTest, lineIpPortList)
 {
     RuleTextParser p("1.1.1.1:53\n"

@@ -31,6 +31,7 @@ enum RuleCharType : RuleCharTypes {
     CharName = (CharLetter | CharExtra), // a-zA-Z_
     CharValue = (CharDigit | CharExtra), // 0-9.-/:
     CharSpaceComment = (CharSpace | CharComment),
+    CharLineBreak = (CharSpaceComment | CharNewLine),
 };
 
 struct RuleFilter
@@ -98,9 +99,10 @@ private:
     void endList(int nodeIndex);
 
     void resetParsedCharTypes() { m_parsedCharTypes = CharNone; }
-    bool hasParsedCharTypes(RuleCharTypes v) { return v != 0 && (m_parsedCharTypes & v) != 0; }
+    bool hasParsedCharTypes(RuleCharTypes v) { return v == 0 || (m_parsedCharTypes & v) != 0; }
 
     void ungetChar() { --m_p; }
+    void advanceCharPtr() { ++m_p; }
 
     const QChar *currentCharPtr() const { return m_p; }
     const QChar *parsedCharPtr() const { return m_p - 1; }

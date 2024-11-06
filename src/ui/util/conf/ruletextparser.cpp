@@ -289,7 +289,7 @@ void RuleTextParser::parseBracketValues()
         if (!parseBracketValue(expectedSeparator))
             break;
 
-        expectedSeparator = CharNewLine | CharValueSeparator;
+        expectedSeparator = CharValueSeparator;
     }
 }
 
@@ -297,8 +297,8 @@ bool RuleTextParser::parseBracketValue(RuleCharTypes expectedSeparator)
 {
     resetParsedCharTypes();
 
-    if (!parseChars(CharValueBegin | CharValue,
-                CharSpaceComment | CharBracketEnd | expectedSeparator, extraValueEndChars))
+    if (!nextCharType(CharValueBegin | CharValue,
+                CharLineBreak | CharBracketEnd | expectedSeparator, extraValueEndChars))
         return false;
 
     if (hasParsedCharTypes(CharBracketEnd))
@@ -320,12 +320,23 @@ bool RuleTextParser::parseValue(bool expectValueEnd)
 
     const char *extraChars = expectValueEnd ? extraValueEndChars : extraValueChars;
 
-    if (!parseChars(CharLetter | CharValue, extraChars))
-        return false;
+    for (;;) {
+        if (!parseChars(CharLetter | CharValue, extraChars))
+            return false;
 
-    if (expectValueEnd && m_charType != CharValueEnd) {
-        setErrorMessage(tr("Unexpected end of value"));
-        return false;
+        if (expectValueEnd) {
+            if (m_charType != CharValueEnd) {
+                setErrorMessage(tr("Unexpected end of value"));
+                return false;
+            }
+
+            advanceCharPtr();
+
+            expectValueEnd = false;
+            extraChars = extraValueChars;
+        } else {
+            break;
+        }
     }
 
     const QStringView valueView(value, currentCharPtr() - value);
@@ -403,7 +414,7 @@ void RuleTextParser::endList(int nodeIndex)
 
 bool RuleTextParser::skipComments(RuleCharTypes expectedCharTypes)
 {
-    if (!nextCharType(expectedCharTypes, CharSpaceComment | CharNewLine))
+    if (!nextCharType(expectedCharTypes, CharLineBreak))
         return false;
 
     ungetChar();
@@ -436,11 +447,10 @@ bool RuleTextParser::nextCharType(
         m_charType = getCharType(m_charType, c, extraChars);
 
         if (!checkNextCharType(expectedCharTypes, c)) {
-            m_charType = CharNone;
             return false;
         }
 
-        ++m_p;
+        advanceCharPtr();
 
         m_parsedCharTypes |= m_charType;
 
