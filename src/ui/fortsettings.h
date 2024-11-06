@@ -64,6 +64,8 @@ public:
 
     QString logsPath() const { return m_logsPath; }
 
+    QString profileLogsPath() const { return profilePath() + "logs/"; }
+
     QString updatePath() const { return m_updatePath; }
 
     QString controlCommand() const { return m_controlCommand; }

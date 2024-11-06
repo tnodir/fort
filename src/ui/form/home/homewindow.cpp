@@ -106,6 +106,7 @@ void HomeWindow::retranslateUi()
 
     m_btProfile->setText(tr("Profile"));
     m_btLogs->setText(tr("Logs"));
+    m_btServiceLogs->setText(tr("Service Logs"));
     m_btStat->setText(tr("Statistics"));
     m_btReleases->setText(tr("Releases"));
     m_btHelp->setText(tr("Help"));
@@ -208,19 +209,23 @@ QLayout *HomeWindow::setupDialogButtons()
 {
     m_btProfile = createFlatToolButton(":/icons/folder.png", settings()->profilePath());
     m_btLogs = createFlatToolButton(":/icons/folder.png", settings()->logsPath());
+    m_btServiceLogs = createFlatToolButton(":/icons/folder.png", settings()->profileLogsPath());
     m_btStat = createFlatToolButton(":/icons/folder.png", settings()->statPath());
     m_btReleases = createFlatToolButton(":/icons/github.png", APP_UPDATES_URL);
     m_btHelp = createFlatToolButton(
             ":/icons/help.png", "https://github.com/tnodir/fort/wiki/User-Guide");
 
+    m_btServiceLogs->setVisible(settings()->hasService());
+
     connect(m_btProfile, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btServiceLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btStat, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btReleases, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btHelp, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
 
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btProfile, m_btLogs, m_btStat, m_btReleases, m_btHelp, /*stretch*/ nullptr });
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btProfile, m_btLogs, m_btServiceLogs,
+            m_btStat, m_btReleases, m_btHelp, /*stretch*/ nullptr });
     layout->setContentsMargins(6, 4, 6, 4);
 
     return layout;
