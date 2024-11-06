@@ -210,3 +210,39 @@ TEST_F(RuleTextParserTest, lineIp6Range)
         checkStringList(rf.values, { "67" });
     }
 }
+
+TEST_F(RuleTextParserTest, lineEmptySections)
+{
+    RuleTextParser p("1:::2::\n");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 4);
+}
+
+TEST_F(RuleTextParserTest, badStartOfLine)
+{
+    RuleTextParser p(":1\n");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorUnexpectedStartOfLine);
+}
+
+TEST_F(RuleTextParserTest, badNoFilterName)
+{
+    RuleTextParser p("1:2:3");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorNoFilterName);
+}
+
+TEST_F(RuleTextParserTest, badFilterName)
+{
+    RuleTextParser p("test(1)");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorBadFilterName);
+}

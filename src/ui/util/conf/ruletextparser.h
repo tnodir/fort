@@ -61,6 +61,7 @@ class RuleTextParser : public QObject
 public:
     enum ErrorCode : quint16 {
         ErrorNone = 0,
+        ErrorUnexpectedStartOfLine,
         ErrorUnexpectedEndOfList,
         ErrorUnexpectedEndOfValuesList,
         ErrorUnexpectedSymboOfListEnd,

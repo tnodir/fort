@@ -97,8 +97,14 @@ bool RuleTextParser::parseLines()
     const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_OR);
 
     for (;;) {
-        if (!skipComments(CharLineBegin))
+        if (!skipComments(CharLineBegin)) {
+            if (!isEmpty()) {
+                setError(ErrorUnexpectedStartOfLine, tr("Unexpected start of line"));
+                return false;
+            }
+
             break;
+        }
 
         if (!parseLine())
             break;
@@ -142,7 +148,7 @@ bool RuleTextParser::parseLine()
 
     endList(nodeIndex);
 
-    return true;
+    return !hasError();
 }
 
 bool RuleTextParser::parseLineSection(RuleCharTypes expectedSeparator)
