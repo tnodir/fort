@@ -89,7 +89,7 @@ void RuleTextParser::parseLines()
     const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_OR);
 
     for (;;) {
-        if (!skipComments())
+        if (!skipComments(CharAnyBegin))
             break;
 
         if (!parseLine())
@@ -97,16 +97,6 @@ void RuleTextParser::parseLines()
     }
 
     endList(nodeIndex);
-}
-
-bool RuleTextParser::skipComments()
-{
-    if (!nextCharType(CharAnyBegin | CharLineBreak))
-        return false;
-
-    ungetChar();
-
-    return true;
 }
 
 bool RuleTextParser::parseLine()
@@ -137,7 +127,7 @@ bool RuleTextParser::parseLine()
 bool RuleTextParser::parseLineSection()
 {
     for (;;) {
-        if (!nextCharType(CharAnyBegin | CharSpace))
+        if (!nextCharType(CharAnyBegin, CharSpace))
             return false;
 
         if (!processSection())
@@ -273,19 +263,47 @@ bool RuleTextParser::parseName()
 
 void RuleTextParser::parseBracketValues()
 {
-    parseValue(CharValueEnd);
+    RuleCharTypes expectedSeparator = CharNone;
+
+    for (;;) {
+        if (!parseBracketValue(expectedSeparator))
+            break;
+
+        expectedSeparator = CharNewLine | CharValueSeparator;
+    }
 }
 
-void RuleTextParser::parseValue(quint32 extraCharTypes)
+bool RuleTextParser::parseBracketValue(RuleCharTypes expectedSeparator)
+{
+    resetParsedCharTypes();
+
+    if (!parseChars(CharValueBegin | CharValue,
+                CharSpaceComment | CharBracketEnd | expectedSeparator, extraValueChars))
+        return false;
+
+    if ((m_parsedCharTypes & CharBracketEnd) != 0)
+        return false;
+
+    if ((m_parsedCharTypes & expectedSeparator) == 0) {
+        setErrorMessage(tr("Unexpected end of values list"));
+        return false;
+    }
+
+    return parseValue();
+}
+
+bool RuleTextParser::parseValue()
 {
     const QChar *value = parsedCharPtr();
 
-    if (!parseChars(CharValue | extraCharTypes, extraValueChars))
-        return;
+    if (!parseChars(CharLetter | CharValue | CharValueEnd, extraValueChars))
+        return false;
 
     const QStringView valueView(value, currentCharPtr() - value);
 
     m_ruleFilter.addValue(valueView);
+
+    return true;
 }
 
 bool RuleTextParser::checkAddFilter()
@@ -313,8 +331,8 @@ void RuleTextParser::resetFilter()
 {
     m_ruleFilter.isNot = false;
     m_ruleFilter.hasFilterName = false;
-    m_ruleFilter.isSectionEnd = false;
     m_ruleFilter.isListEnd = false;
+    m_ruleFilter.isSectionEnd = false;
 
     // m_ruleFilter.type is not reset
 
@@ -353,9 +371,20 @@ void RuleTextParser::endList(int nodeIndex)
     ruleFilter.listCount = currentIndex - nodeIndex;
 }
 
-bool RuleTextParser::parseChars(quint32 expectedCharTypes, const char *extraChars)
+bool RuleTextParser::skipComments(RuleCharTypes expectedCharTypes)
 {
-    while (nextCharType(expectedCharTypes, extraChars)) {
+    if (!nextCharType(expectedCharTypes, CharSpaceComment | CharNewLine))
+        return false;
+
+    ungetChar();
+
+    return true;
+}
+
+bool RuleTextParser::parseChars(
+        RuleCharTypes expectedCharTypes, RuleCharTypes skipCharTypes, const char *extraChars)
+{
+    while (nextCharType(expectedCharTypes, skipCharTypes, extraChars)) {
         continue;
     }
 
@@ -368,9 +397,12 @@ bool RuleTextParser::parseChars(quint32 expectedCharTypes, const char *extraChar
     return true;
 }
 
-bool RuleTextParser::nextCharType(quint32 expectedCharTypes, const char *extraChars)
+bool RuleTextParser::nextCharType(
+        RuleCharTypes expectedCharTypes, RuleCharTypes skipCharTypes, const char *extraChars)
 {
     Q_ASSERT(!extraChars || (expectedCharTypes & CharExtra) != 0);
+
+    expectedCharTypes |= skipCharTypes;
 
     m_charType = CharNone;
 
@@ -384,14 +416,16 @@ bool RuleTextParser::nextCharType(quint32 expectedCharTypes, const char *extraCh
             return false;
         }
 
-        if ((m_charType & (CharComment | CharSpace)) == 0)
+        m_parsedCharTypes |= m_charType;
+
+        if ((m_charType & skipCharTypes) == 0)
             return true;
     }
 
     return false;
 }
 
-bool RuleTextParser::checkNextCharType(quint32 expectedCharTypes, const QChar c)
+bool RuleTextParser::checkNextCharType(RuleCharTypes expectedCharTypes, const QChar c)
 {
     if (m_charType == CharNone) {
         setErrorMessage(tr("Bad symbol: %1").arg(c));

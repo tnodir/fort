@@ -30,7 +30,7 @@ enum RuleCharType : RuleCharTypes {
             (CharListBegin | CharBracketBegin | CharLetter | CharDigit | CharValueBegin | CharNot),
     CharName = (CharLetter | CharExtra), // a-zA-Z_
     CharValue = (CharDigit | CharExtra), // 0-9.:-/
-    CharLineBreak = (CharSpace | CharNewLine | CharComment),
+    CharSpaceComment = (CharSpace | CharComment),
 };
 
 struct RuleFilter
@@ -42,8 +42,8 @@ struct RuleFilter
 
     bool isNot : 1 = false;
     bool hasFilterName : 1 = false;
-    bool isSectionEnd : 1 = false;
     bool isListEnd : 1 = false;
+    bool isSectionEnd : 1 = false;
 
     qint8 type = 0;
 
@@ -73,7 +73,6 @@ private:
     void setupText(const QString &text);
 
     void parseLines();
-    bool skipComments();
     bool parseLine();
     bool parseLineSection();
     bool processSection();
@@ -86,7 +85,8 @@ private:
     bool parseName();
 
     void parseBracketValues();
-    void  parseValue(quint32 extraCharTypes = 0);
+    bool parseBracketValue(RuleCharTypes expectedSeparator);
+    bool parseValue();
 
     bool checkAddFilter();
 
@@ -96,6 +96,8 @@ private:
     int beginList(qint8 listType);
     void endList(int nodeIndex);
 
+    void resetParsedCharTypes() { m_parsedCharTypes = CharNone; }
+
     void ungetChar() { --m_p; }
 
     const QChar *currentCharPtr() const { return m_p; }
@@ -103,13 +105,25 @@ private:
 
     RuleFilter &listNode(int listIndex) { return m_ruleFilterArray[listIndex]; }
 
-    bool parseChars(quint32 expectedCharTypes, const char *extraChars = nullptr);
-    bool nextCharType(quint32 expectedCharTypes, const char *extraChars = nullptr);
-    bool checkNextCharType(quint32 expectedCharTypes, const QChar c);
+    bool skipComments(RuleCharTypes expectedCharTypes);
+
+    inline bool parseChars(RuleCharTypes expectedCharTypes, const char *extraChars = nullptr)
+    {
+        return parseChars(expectedCharTypes, CharNone, extraChars);
+    }
+
+    bool parseChars(RuleCharTypes expectedCharTypes, RuleCharTypes skipCharTypes,
+            const char *extraChars = nullptr);
+
+    bool nextCharType(RuleCharTypes expectedCharTypes, RuleCharTypes skipCharTypes,
+            const char *extraChars = nullptr);
+
+    bool checkNextCharType(RuleCharTypes expectedCharTypes, const QChar c);
 
 private:
     qint8 m_listDepth = 0;
     RuleCharType m_charType = CharNone;
+    RuleCharTypes m_parsedCharTypes = CharNone;
     RuleFilter m_ruleFilter;
 
     const QChar *m_p = nullptr;
