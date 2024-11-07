@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.14.11, 2024-11-07:
+v3.14.11-test02, 2024-11-07:
 - UI: Options: TrafficGraph: Add "Fixed Speed" option.
 - UI: MyFort: Add "Service Logs" link.
 - UI: Add "-c block none|all|internet" command-line argument.
