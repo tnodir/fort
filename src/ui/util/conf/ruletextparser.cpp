@@ -365,25 +365,29 @@ bool RuleTextParser::parseValue(bool expectValueEnd)
 {
     const QChar *value = parsedCharPtr();
 
-    for (;;) {
-        const char *extraChars = expectValueEnd ? extraValueEndChars : extraValueChars;
-
-        if (!parseChars(CharLetter | CharValue, extraChars))
-            return false;
-
-        if (!checkValueEnd(expectValueEnd)) {
-            if (hasError())
-                return false;
-
-            break;
-        }
-    }
+    if (!parseValueChars(expectValueEnd))
+        return false;
 
     const QStringView valueView(value, currentCharPtr() - value);
 
     m_ruleFilter.addValue(valueView);
 
     return true;
+}
+
+bool RuleTextParser::parseValueChars(bool &expectValueEnd)
+{
+    for (;;) {
+        const char *extraChars = expectValueEnd ? extraValueEndChars : extraValueChars;
+
+        if (!parseChars(CharLetter | CharValue, extraChars))
+            return false;
+
+        if (!checkValueEnd(expectValueEnd))
+            break;
+    }
+
+    return !hasError();
 }
 
 bool RuleTextParser::checkValueEnd(bool &expectValueEnd)

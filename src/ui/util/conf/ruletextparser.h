@@ -112,6 +112,7 @@ private:
     bool checkBracketValuesSeparator(RuleCharTypes expectedSeparator);
     bool checkBracketValueEnd();
     bool parseValue(bool expectValueEnd);
+    bool parseValueChars(bool &expectValueEnd);
     bool checkValueEnd(bool &expectValueEnd);
 
     bool checkAddFilter();
