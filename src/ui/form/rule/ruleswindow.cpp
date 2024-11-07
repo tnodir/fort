@@ -396,6 +396,8 @@ RulesWindow *RulesWindow::showRulesDialog(Rule::RuleType ruleType, QWidget *pare
     auto w = new RulesWindow(ruleType, parent, Qt::Dialog);
     w->setAttribute(Qt::WA_DeleteOnClose);
 
+    w->setWindowModality(Qt::WindowModal);
+
     w->showWindow();
 
     return w;
