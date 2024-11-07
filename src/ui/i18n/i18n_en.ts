@@ -745,6 +745,10 @@
         <source>Help</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Service Logs</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IfacePage</name>
@@ -1751,15 +1755,43 @@ Please restart the running program to take effect of this option.</source>
 <context>
     <name>RuleTextParser</name>
     <message>
-        <source>Bad text: %1</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Bad symbol: %1</source>
         <translation></translation>
     </message>
     <message>
-        <source>Unexpected symbol: %1</source>
+        <source>Unexpected start of line</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unexpected end of list</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Max list depth exceeded: %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unexpected symbol of list end</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Extra filter name: %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Bad filter name: %1</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unexpected end of values list</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unexpected end of value</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>No filter name</source>
         <translation></translation>
     </message>
 </context>

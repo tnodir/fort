@@ -745,6 +745,10 @@
         <source>Help</source>
         <translation>Pomoč</translation>
     </message>
+    <message>
+        <source>Service Logs</source>
+        <translation>Dnevniki storitev</translation>
+    </message>
 </context>
 <context>
     <name>IfacePage</name>
@@ -1762,16 +1766,44 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
 <context>
     <name>RuleTextParser</name>
     <message>
-        <source>Bad text: %1</source>
-        <translation>Slabo besedilo: %1</translation>
-    </message>
-    <message>
         <source>Bad symbol: %1</source>
         <translation>Slab simbol: %1</translation>
     </message>
     <message>
-        <source>Unexpected symbol: %1</source>
-        <translation>Nepričakovan simbol: %1</translation>
+        <source>Unexpected start of line</source>
+        <translation>Nepričakovan začetek vrstice</translation>
+    </message>
+    <message>
+        <source>Unexpected end of list</source>
+        <translation>Nepričakovan konec seznama</translation>
+    </message>
+    <message>
+        <source>Max list depth exceeded: %1</source>
+        <translation>Največja globina seznama je presežena: %1</translation>
+    </message>
+    <message>
+        <source>Unexpected symbol of list end</source>
+        <translation>Nepričakovan simbol konca seznama</translation>
+    </message>
+    <message>
+        <source>Extra filter name: %1</source>
+        <translation>Ime dodatnega filtra: %1</translation>
+    </message>
+    <message>
+        <source>Bad filter name: %1</source>
+        <translation>Napačno ime filtra: %1</translation>
+    </message>
+    <message>
+        <source>Unexpected end of values list</source>
+        <translation>Nepričakovan konec seznama vrednosti</translation>
+    </message>
+    <message>
+        <source>Unexpected end of value</source>
+        <translation>Nepričakovan konec vrednosti</translation>
+    </message>
+    <message>
+        <source>No filter name</source>
+        <translation>Brez imena filtra</translation>
     </message>
 </context>
 <context>

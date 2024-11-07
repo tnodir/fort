@@ -745,6 +745,10 @@
         <source>Help</source>
         <translation>Ayuda</translation>
     </message>
+    <message>
+        <source>Service Logs</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IfacePage</name>
@@ -1765,16 +1769,44 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
 <context>
     <name>RuleTextParser</name>
     <message>
-        <source>Bad text: %1</source>
-        <translation>Texto incorrecto: %1</translation>
-    </message>
-    <message>
         <source>Bad symbol: %1</source>
         <translation>Símbolo incorrecto: %1</translation>
     </message>
     <message>
-        <source>Unexpected symbol: %1</source>
-        <translation>Símbolo inesperado: %1</translation>
+        <source>Unexpected start of line</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected end of list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max list depth exceeded: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected symbol of list end</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Extra filter name: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Bad filter name: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected end of values list</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Unexpected end of value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>No filter name</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
