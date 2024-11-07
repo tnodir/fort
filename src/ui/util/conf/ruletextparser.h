@@ -96,6 +96,7 @@ private:
     bool parseLines();
     bool parseLineComments();
     bool parseLine();
+    bool processSectionFilter();
     bool parseLineSection(RuleCharTypes expectedSeparator);
     bool parseSection();
     bool parseSectionBlock();

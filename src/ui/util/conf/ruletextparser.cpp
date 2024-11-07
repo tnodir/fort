@@ -134,21 +134,8 @@ bool RuleTextParser::parseLine()
         if (!parseLineSection(expectedSeparator))
             break;
 
-        if (m_ruleFilter.isLineEnd || m_ruleFilter.isListEnd)
+        if (!processSectionFilter())
             break;
-
-        const bool isSectionEnd = m_ruleFilter.isSectionEnd;
-
-        if (!checkAddFilter())
-            return false;
-
-        resetFilter();
-
-        // Next default type, if applicable
-        if (!isSectionEnd && !m_ruleFilter.hasFilterName) {
-            m_ruleFilter.type = m_ruleFilter.isTypeAddress() ? FORT_RULE_FILTER_TYPE_PORT
-                                                             : FORT_RULE_FILTER_TYPE_INVALID;
-        }
 
         expectedSeparator = CharColon | CharNewLine;
     }
@@ -156,6 +143,27 @@ bool RuleTextParser::parseLine()
     endList(filterIndex);
 
     return !hasError();
+}
+
+bool RuleTextParser::processSectionFilter()
+{
+    if (m_ruleFilter.isLineEnd || m_ruleFilter.isListEnd)
+        return false;
+
+    if (!checkAddFilter())
+        return false;
+
+    const bool isSectionEnd = m_ruleFilter.isSectionEnd;
+
+    resetFilter();
+
+    // Next default type, if applicable
+    if (!isSectionEnd && !m_ruleFilter.hasFilterName) {
+        m_ruleFilter.type = m_ruleFilter.isTypeAddress() ? FORT_RULE_FILTER_TYPE_PORT
+                                                         : FORT_RULE_FILTER_TYPE_INVALID;
+    }
+
+    return true;
 }
 
 bool RuleTextParser::parseLineSection(RuleCharTypes expectedSeparator)
