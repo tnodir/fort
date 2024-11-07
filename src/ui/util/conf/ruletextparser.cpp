@@ -317,20 +317,40 @@ bool RuleTextParser::parseBracketValue(RuleCharTypes expectedSeparator)
     resetParsedCharTypes();
 
     if (!nextCharType(CharValueBegin | CharLetter | CharValue,
-                CharLineBreak | CharBracketEnd | expectedSeparator, extraValueEndChars))
+                CharLineBreak | CharBracketEnd | expectedSeparator, extraValueEndChars)) {
+        checkBracketValueEnd();
         return false;
+    }
 
     if (hasParsedCharTypes(CharBracketEnd))
         return false;
 
+    if (!checkBracketValuesSeparator(expectedSeparator))
+        return false;
+
+    const bool expectValueEnd = hasParsedCharTypes(CharValueBegin);
+
+    return parseValue(expectValueEnd);
+}
+
+bool RuleTextParser::checkBracketValuesSeparator(RuleCharTypes expectedSeparator)
+{
     if (!hasParsedCharTypes(expectedSeparator)) {
         setError(ErrorUnexpectedEndOfValuesList, tr("Unexpected end of values list"));
         return false;
     }
 
-    const bool expectValueEnd = hasParsedCharTypes(CharValueBegin);
+    return true;
+}
 
-    return parseValue(expectValueEnd);
+bool RuleTextParser::checkBracketValueEnd()
+{
+    if (!hasParsedCharTypes(CharBracketEnd)) {
+        setError(ErrorUnexpectedEndOfValuesList, tr("Unexpected end of values list"));
+        return false;
+    }
+
+    return true;
 }
 
 bool RuleTextParser::parseValue(bool expectValueEnd)

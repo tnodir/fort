@@ -64,6 +64,15 @@ TEST_F(RuleTextParserTest, maxListDepth)
     ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorListMaxDepth);
 }
 
+TEST_F(RuleTextParserTest, emptyComment)
+{
+    RuleTextParser p("#");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 0);
+}
+
 TEST_F(RuleTextParserTest, lineIpPort)
 {
     RuleTextParser p("1.1.1.1:53");
@@ -245,4 +254,67 @@ TEST_F(RuleTextParserTest, badFilterName)
     ASSERT_FALSE(p.parse());
 
     ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorBadFilterName);
+}
+
+TEST_F(RuleTextParserTest, badEndOfValueBegin)
+{
+    RuleTextParser p("[1[");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorUnexpectedEndOfValue);
+}
+
+TEST_F(RuleTextParserTest, badEndOfValueEnd)
+{
+    RuleTextParser p("[1]]");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorUnexpectedStartOfLine);
+}
+
+TEST_F(RuleTextParserTest, badEndOfList)
+{
+    RuleTextParser p("{1");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorUnexpectedEndOfList);
+}
+
+TEST_F(RuleTextParserTest, badEndOfValuesList)
+{
+    RuleTextParser p("(1");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorUnexpectedEndOfValuesList);
+}
+
+TEST_F(RuleTextParserTest, badSymboOfListEnd)
+{
+    RuleTextParser p("1}");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorUnexpectedSymboOfListEnd);
+}
+
+TEST_F(RuleTextParserTest, badExtraFilterName)
+{
+    RuleTextParser p("ip dir(1)");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorExtraFilterName);
+}
+
+TEST_F(RuleTextParserTest, badBadSymbol)
+{
+    RuleTextParser p("1\b");
+
+    ASSERT_FALSE(p.parse());
+
+    ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorBadSymbol);
 }

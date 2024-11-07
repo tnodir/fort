@@ -108,6 +108,8 @@ private:
 
     void parseBracketValues();
     bool parseBracketValue(RuleCharTypes expectedSeparator);
+    bool checkBracketValuesSeparator(RuleCharTypes expectedSeparator);
+    bool checkBracketValueEnd();
     bool parseValue(bool expectValueEnd);
     bool checkValueEnd(bool &expectValueEnd);
 
