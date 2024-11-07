@@ -215,7 +215,8 @@ QLayout *HomeWindow::setupDialogButtons()
     m_btHelp = createFlatToolButton(
             ":/icons/help.png", "https://github.com/tnodir/fort/wiki/User-Guide");
 
-    m_btServiceLogs->setVisible(settings()->hasService());
+    m_btServiceLogs->setVisible(
+            settings()->hasService() && settings()->profileLogsPath() != settings()->logsPath());
 
     connect(m_btProfile, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
     connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
