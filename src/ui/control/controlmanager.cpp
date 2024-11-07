@@ -47,6 +47,53 @@ bool processCommandHome(const ProcessCommandArgs &p)
     return false;
 }
 
+enum BlockAction : qint8 {
+    BlockActionInvalid = -1,
+    BlockActionNone = 0,
+    BlockActionAll,
+    BlockActionInet,
+};
+
+bool processCommandProgBlock(BlockAction blockAction)
+{
+    auto confManager = IoC<ConfManager>();
+
+    auto conf = confManager->conf();
+    conf->setBlockTrafficIndex(blockAction);
+
+    return confManager->saveFlags();
+}
+
+BlockAction blockActionByText(const QString &commandText)
+{
+    if (commandText == "none")
+        return BlockActionNone;
+
+    if (commandText == "all")
+        return BlockActionAll;
+
+    if (commandText == "internet")
+        return BlockActionInet;
+
+    return BlockActionInvalid;
+}
+
+bool processCommandBlock(const ProcessCommandArgs &p)
+{
+    const BlockAction blockAction = blockActionByText(p.args.value(0).toString());
+    if (blockAction == BlockActionInvalid) {
+        p.errorMessage = "Usage: block none|all|internet";
+        return false;
+    }
+
+    if (!checkActionPassword(blockAction)) {
+        p.errorMessage = "Password required";
+        return false;
+    }
+
+    return processCommandProgBlock(blockAction);
+}
+
 enum ProgAction : quint32 {
     ProgActionNone = 0,
     ProgActionAdd = (1 << 0),
@@ -214,6 +261,9 @@ bool processCommand(const ProcessCommandArgs &p)
     case Control::CommandHome: {
         ok = processCommandHome(p);
     } break;
+    case Control::CommandBlock: {
+        ok = processCommandBlock(p);
+    } break;
     case Control::CommandProg: {
         ok = processCommandProg(p);
     } break;
@@ -314,6 +364,8 @@ bool ControlManager::processCommandClient()
     Control::Command command;
     if (settings->controlCommand() == "home") {
         command = Control::CommandHome;
+    } else if (settings->controlCommand() == "block") {
+        command = Control::CommandBlock;
     } else if (settings->controlCommand() == "prog") {
         command = Control::CommandProg;
     } else if (settings->controlCommand() == "backup") {

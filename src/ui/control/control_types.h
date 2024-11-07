@@ -12,6 +12,7 @@ enum Command : qint8 {
     CommandNone = 0,
 
     CommandHome,
+    CommandBlock,
     CommandProg,
     CommandBackup,
     CommandZone,
