@@ -614,15 +614,15 @@
     </message>
     <message>
         <source>Fixed speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>固定速度：</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished">自定义</translation>
+        <translation>自定义</translation>
     </message>
     <message>
         <source>Auto-scale</source>
-        <translation type="unfinished"></translation>
+        <translation>自动扩展</translation>
     </message>
 </context>
 <context>
@@ -747,7 +747,7 @@
     </message>
     <message>
         <source>Service Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>服务日志</translation>
     </message>
 </context>
 <context>
@@ -1771,39 +1771,39 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Unexpected start of line</source>
-        <translation type="unfinished"></translation>
+        <translation>意外的行首起始</translation>
     </message>
     <message>
         <source>Unexpected end of list</source>
-        <translation type="unfinished"></translation>
+        <translation>意外的列表结尾</translation>
     </message>
     <message>
         <source>Max list depth exceeded: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>超出最大列表深度：%1</translation>
     </message>
     <message>
         <source>Unexpected symbol of list end</source>
-        <translation type="unfinished"></translation>
+        <translation>意外的列表结尾符号</translation>
     </message>
     <message>
         <source>Extra filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>额外的过滤器名称：%1</translation>
     </message>
     <message>
         <source>Bad filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>无效的过滤器名称：%1</translation>
     </message>
     <message>
         <source>Unexpected end of values list</source>
-        <translation type="unfinished"></translation>
+        <translation>意外的值列表结尾</translation>
     </message>
     <message>
         <source>Unexpected end of value</source>
-        <translation type="unfinished"></translation>
+        <translation>意外的值结尾</translation>
     </message>
     <message>
         <source>No filter name</source>
-        <translation type="unfinished"></translation>
+        <translation>没有过滤器名称</translation>
     </message>
 </context>
 <context>
