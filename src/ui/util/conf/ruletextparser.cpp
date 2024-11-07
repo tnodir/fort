@@ -94,7 +94,7 @@ void RuleTextParser::setError(ErrorCode errorCode, const QString &errorMessage)
 
 bool RuleTextParser::parseLines()
 {
-    const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_OR);
+    const int filterIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_OR);
 
     for (;;) {
         if (!parseLineComments())
@@ -104,7 +104,7 @@ bool RuleTextParser::parseLines()
             break;
     }
 
-    endList(nodeIndex);
+    endList(filterIndex);
 
     return !hasError();
 }
@@ -124,7 +124,7 @@ bool RuleTextParser::parseLineComments()
 
 bool RuleTextParser::parseLine()
 {
-    const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_AND);
+    const int filterIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_AND);
 
     RuleCharTypes expectedSeparator = CharNone;
 
@@ -153,7 +153,7 @@ bool RuleTextParser::parseLine()
         expectedSeparator = CharColon | CharNewLine;
     }
 
-    endList(nodeIndex);
+    endList(filterIndex);
 
     return !hasError();
 }
@@ -423,18 +423,18 @@ int RuleTextParser::beginList(qint8 listType)
     return nodeIndex;
 }
 
-void RuleTextParser::endList(int nodeIndex)
+void RuleTextParser::endList(int filterIndex)
 {
-    const int currentIndex = m_ruleFilters.size();
+    const int currentIndex = m_ruleFilters.size() - 1;
 
-    if (currentIndex == nodeIndex + 1) {
+    if (currentIndex == filterIndex) {
         m_ruleFilters.removeLast(); // Empty list
         return;
     }
 
-    RuleFilter &ruleFilter = m_ruleFilters[nodeIndex];
+    RuleFilter &ruleFilter = m_ruleFilters[filterIndex];
 
-    ruleFilter.listCount = currentIndex - nodeIndex;
+    ruleFilter.filterListCount = currentIndex - filterIndex;
 }
 
 bool RuleTextParser::skipComments(RuleCharTypes expectedCharTypes)

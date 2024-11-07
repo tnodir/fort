@@ -49,7 +49,7 @@ struct RuleFilter
 
     qint8 type = 0;
 
-    quint16 listCount = 0;
+    quint16 filterListCount = 0;
 
     StringViewList values;
 };
@@ -117,7 +117,7 @@ private:
 
     void addFilter();
     int beginList(qint8 listType);
-    void endList(int nodeIndex);
+    void endList(int filterIndex);
 
     void resetParsedCharTypes() { m_parsedCharTypes = CharNone; }
     bool hasParsedCharTypes(RuleCharTypes v) { return v == 0 || (m_parsedCharTypes & v) != 0; }
@@ -130,7 +130,7 @@ private:
 
     bool isEmpty() const { return m_p >= m_end; }
 
-    RuleFilter &listNode(int listIndex) { return m_ruleFilters[listIndex]; }
+    RuleFilter &listNode(int filterIndex) { return m_ruleFilters[filterIndex]; }
 
     bool skipComments(RuleCharTypes expectedCharTypes);
 
