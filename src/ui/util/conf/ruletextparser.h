@@ -94,12 +94,13 @@ private:
     void setupCharPtr();
 
     bool parseLines();
+    bool parseLineComments();
     bool parseLine();
     bool parseLineSection(RuleCharTypes expectedSeparator);
-    bool processSection();
-    bool processSectionBlock();
-    bool processSectionChar();
-    void processSectionList();
+    bool parseSection();
+    bool parseSectionBlock();
+    bool parseSectionChar();
+    void parseSectionList();
     bool checkListBegin();
     bool checkListEnd();
 

@@ -97,14 +97,8 @@ bool RuleTextParser::parseLines()
     const int nodeIndex = beginList(FORT_RULE_FILTER_TYPE_LIST_OR);
 
     for (;;) {
-        if (!skipComments(CharLineBegin)) {
-            if (!isEmpty()) {
-                setError(ErrorUnexpectedStartOfLine, tr("Unexpected start of line"));
-                return false;
-            }
-
+        if (!parseLineComments())
             break;
-        }
 
         if (!parseLine())
             break;
@@ -113,6 +107,19 @@ bool RuleTextParser::parseLines()
     endList(nodeIndex);
 
     return !hasError();
+}
+
+bool RuleTextParser::parseLineComments()
+{
+    if (!skipComments(CharLineBegin)) {
+        if (!isEmpty()) {
+            setError(ErrorUnexpectedStartOfLine, tr("Unexpected start of line"));
+        }
+
+        return false;
+    }
+
+    return true;
 }
 
 bool RuleTextParser::parseLine()
@@ -157,27 +164,27 @@ bool RuleTextParser::parseLineSection(RuleCharTypes expectedSeparator)
         if (!nextCharType(CharLineBegin | expectedSeparator, CharSpace))
             return false;
 
-        if (!processSection())
+        if (!parseSection())
             break;
     }
 
     return !hasError();
 }
 
-bool RuleTextParser::processSection()
+bool RuleTextParser::parseSection()
 {
     if ((m_charType & (CharListBegin | CharBracketBegin | CharDigit | CharValueBegin)) != 0) {
-        return processSectionBlock();
+        return parseSectionBlock();
     }
 
-    return processSectionChar();
+    return parseSectionChar();
 }
 
-bool RuleTextParser::processSectionBlock()
+bool RuleTextParser::parseSectionBlock()
 {
     switch (m_charType) {
     case CharListBegin: {
-        processSectionList();
+        parseSectionList();
     } break;
     case CharBracketBegin: {
         parseBracketValues();
@@ -193,7 +200,7 @@ bool RuleTextParser::processSectionBlock()
     return false;
 }
 
-bool RuleTextParser::processSectionChar()
+bool RuleTextParser::parseSectionChar()
 {
     switch (m_charType) {
     case CharLetter: {
@@ -218,7 +225,7 @@ bool RuleTextParser::processSectionChar()
     return false;
 }
 
-void RuleTextParser::processSectionList()
+void RuleTextParser::parseSectionList()
 {
     if (!checkListBegin())
         return;
