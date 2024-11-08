@@ -30,7 +30,7 @@ FORT_API DWORD fort_le_u32_read(const char *cp, int offset);
 
 FORT_API void fort_ascii_downcase(PUNICODE_STRING dst, PCUNICODE_STRING src);
 
-FORT_API BOOL fort_addr_is_local_broadcast(const UINT32 *ip, BOOL isIPv6);
+FORT_API BOOL fort_addr_is_local_multicast(const UINT32 *ip, BOOL isIPv6);
 
 FORT_API UINT32 fort_bits_duplicate16(UINT16 num);
 

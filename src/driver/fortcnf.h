@@ -29,8 +29,6 @@ typedef struct fort_conf_ref
 #define FORT_DEVICE_BOOT_FILTER         0x01
 #define FORT_DEVICE_BOOT_FILTER_LOCALS  0x02
 #define FORT_DEVICE_BOOT_MASK           (FORT_DEVICE_BOOT_FILTER | FORT_DEVICE_BOOT_FILTER_LOCALS)
-#define FORT_DEVICE_BLOCK_TRAFFIC       0x04
-#define FORT_DEVICE_BLOCK_LAN_TRAFFIC   0x08
 #define FORT_DEVICE_IS_OPENED           0x10
 #define FORT_DEVICE_IS_VALIDATED        0x20
 #define FORT_DEVICE_POWER_OFF           0x40
@@ -56,8 +54,6 @@ extern "C" {
 FORT_API void fort_device_conf_open(PFORT_DEVICE_CONF device_conf);
 
 FORT_API UINT16 fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UINT16 flag, BOOL on);
-
-FORT_API UINT16 fort_device_flags(PFORT_DEVICE_CONF device_conf);
 
 FORT_API UINT16 fort_device_flag(PFORT_DEVICE_CONF device_conf, UINT16 flag);
 

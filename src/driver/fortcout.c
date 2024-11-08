@@ -299,7 +299,7 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
             cx->remote_ip, ca->isIPv6);
 
     if (cx->is_local_net) {
-        if (conf_flags.block_lan_traffic) {
+        if (conf_flags.block_lan_traffic && !cx->is_loopback) {
             return TRUE; /* block LAN */
         }
 
@@ -439,19 +439,21 @@ inline static void fort_callout_ale_by_conf(
 }
 
 inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
-        PCFORT_CALLOUT_ALE_EXTRA cx, PFORT_DEVICE_CONF device_conf, const UINT32 classify_flags)
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_DEVICE_CONF device_conf, const UINT32 classify_flags)
 {
-    const UINT16 device_flags = fort_device_flags(device_conf);
+    const FORT_CONF_FLAGS conf_flags = device_conf->conf_flags;
 
-    if ((device_flags & FORT_DEVICE_BOOT_FILTER_LOCALS) != 0)
+    cx->is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
+
+    if (conf_flags.filter_locals)
         return FALSE;
 
-    if ((classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) == 0
-            || (device_flags & FORT_DEVICE_BLOCK_TRAFFIC) != 0)
+    /* Loopback */
+    if (!cx->is_loopback || conf_flags.block_traffic)
         return FALSE;
 
-    if (!fort_addr_is_local_broadcast(cx->remote_ip, ca->isIPv6)
-            || (device_flags & FORT_DEVICE_BLOCK_LAN_TRAFFIC) != 0)
+    /* Multicast */
+    if (!fort_addr_is_local_multicast(cx->remote_ip, ca->isIPv6) || conf_flags.block_lan_traffic)
         return FALSE;
 
     return TRUE;
