@@ -14,7 +14,13 @@ FirewallConf::FirewallConf(Settings *settings, QObject *parent) : QObject(parent
 
 int FirewallConf::blockTrafficIndex() const
 {
-    return m_blockInetTraffic ? 3 : (m_blockLanTraffic ? 2 : (m_blockTraffic ? 1 : 0));
+    if (m_blockInetTraffic)
+        return BlockTrafficInet;
+    if (m_blockLanTraffic)
+        return BlockTrafficLan;
+    if (m_blockTraffic)
+        return BlockTrafficAll;
+    return BlockTrafficNone;
 }
 
 void FirewallConf::setBlockTrafficIndex(int index)
@@ -24,15 +30,15 @@ void FirewallConf::setBlockTrafficIndex(int index)
     m_blockInetTraffic = false;
 
     switch (index) {
-    case 0: { // Disabled
+    case BlockTrafficNone: { // Disabled
     } break;
-    case 1: { // Block All Traffic
+    case BlockTrafficAll: { // Block All Traffic
         m_blockTraffic = true;
     } break;
-    case 2: { // Block LAN & Internet Traffic
+    case BlockTrafficLan: { // Block LAN & Internet Traffic
         m_blockLanTraffic = true;
     } break;
-    case 3: { // Block Internet Traffic
+    case BlockTrafficInet: { // Block Internet Traffic
         m_blockInetTraffic = true;
     } break;
     }

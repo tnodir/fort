@@ -25,6 +25,14 @@ public:
     Q_ENUM(EditedFlag)
     Q_DECLARE_FLAGS(EditedFlags, EditedFlag)
 
+    enum BlockTrafficType {
+        BlockTrafficNone = 0,
+        BlockTrafficAll,
+        BlockTrafficLan,
+        BlockTrafficInet,
+    };
+    Q_ENUM(BlockTrafficType)
+
     enum FilterMode {
         ModeAutoLearn = 0,
         ModeAskToConnect,

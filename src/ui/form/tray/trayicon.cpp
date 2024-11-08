@@ -725,28 +725,50 @@ void TrayIcon::removeAlertTimer()
 
 void TrayIcon::updateTrayIconShape()
 {
-    const QString mainIconPath = trayIconPath();
+    QString overlayIconPath;
+    const QString mainIconPath = trayIconPath(overlayIconPath);
 
-    const auto icon = m_alerted
-            ? (m_animatedAlert ? IconCache::icon(":/icons/error.png")
-                               : GuiUtil::overlayIcon(mainIconPath, ":/icons/error.png"))
-            : IconCache::icon(mainIconPath);
+    QIcon icon;
+
+    if (m_alerted || !overlayIconPath.isEmpty()) {
+        if (m_alerted) {
+            overlayIconPath = ":/icons/error.png";
+        }
+
+        icon = m_animatedAlert ? IconCache::icon(overlayIconPath)
+                               : GuiUtil::overlayIcon(mainIconPath, overlayIconPath);
+    } else {
+        icon = IconCache::icon(mainIconPath);
+    }
 
     this->setIcon(icon);
 }
 
-QString TrayIcon::trayIconPath() const
+QString TrayIcon::trayIconPath(QString &overlayIconPath) const
 {
     if (!conf()->filterEnabled() || !driverManager()->isDeviceOpened()) {
         return ":/icons/fort_gray.png";
     }
-    if (conf()->blockTraffic()) {
-        return ":/icons/fort_red.png";
+
+    const auto blockType = conf()->blockTrafficIndex();
+    if (blockType != FirewallConf::BlockTrafficNone) {
+        return trayIconBlockPath(blockType, overlayIconPath);
     }
-    if (conf()->blockLanTraffic() || conf()->blockInetTraffic()) {
+
+    return ":/icons/fort.png";
+}
+
+QString TrayIcon::trayIconBlockPath(int blockType, QString &overlayIconPath) const
+{
+    switch (blockType) {
+    case FirewallConf::BlockTrafficAll:
+        return ":/icons/fort_red.png";
+    case FirewallConf::BlockTrafficInet:
+        overlayIconPath = ":/icons/global_telecom.png";
+        Q_FALLTHROUGH();
+    default:
         return ":/icons/fort_orange.png";
     }
-    return ":/icons/fort.png";
 }
 
 void TrayIcon::saveTrayFlags()
