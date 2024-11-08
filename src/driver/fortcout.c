@@ -166,11 +166,10 @@ inline static void fort_callout_ale_log_blocked_ip(
 
     const UINT16 local_port = ca->inFixedValues->incomingValue[ca->fi->localPort].value.uint16;
     const UINT16 remote_port = ca->inFixedValues->incomingValue[ca->fi->remotePort].value.uint16;
-    const IPPROTO ip_proto =
-            (IPPROTO) ca->inFixedValues->incomingValue[ca->fi->ipProto].value.uint8;
+    const UCHAR ip_proto = ca->inFixedValues->incomingValue[ca->fi->ipProto].value.uint8;
 
     fort_buffer_blocked_ip_write(&fort_device()->buffer, ca->isIPv6, ca->inbound, cx->inherited,
-            cx->block_reason, ip_proto, local_port, remote_port, local_ip, cx->remote_ip,
+            cx->block_reason, ip_proto, local_port, remote_port, local_ip, cx->conn.remote_ip,
             cx->process_id, &cx->real_path, &cx->irp, &cx->info);
 }
 
@@ -206,7 +205,7 @@ inline static BOOL fort_callout_ale_ip_zone_check(
         return FALSE;
 
     const BOOL ip_included = fort_conf_zones_ip_included(
-            &fort_device()->conf, zones_mask, cx->remote_ip, ca->isIPv6);
+            &fort_device()->conf, zones_mask, cx->conn.remote_ip, ca->isIPv6);
 
     return ip_included == included;
 }
@@ -224,7 +223,7 @@ static BOOL fort_callout_ale_app_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_AL
         return TRUE; /* block Program */
     }
 
-    if (app_data.flags.lan_only && !cx->is_local_net) {
+    if (app_data.flags.lan_only && !cx->conn.is_local_net) {
         cx->block_reason = FORT_BLOCK_REASON_LAN_ONLY;
         return TRUE; /* block LAN Only */
     }
@@ -294,12 +293,12 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
         return TRUE; /* block all */
     }
 
-    cx->is_local_net = !fort_conf_ip_is_inet(&conf_ref->conf,
+    cx->conn.is_local_net = !fort_conf_ip_is_inet(&conf_ref->conf,
             (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included, &fort_device()->conf,
-            cx->remote_ip, ca->isIPv6);
+            cx->conn.remote_ip, ca->isIPv6);
 
-    if (cx->is_local_net) {
-        if (conf_flags.block_lan_traffic && !cx->is_loopback) {
+    if (cx->conn.is_local_net) {
+        if (conf_flags.block_lan_traffic && !cx->conn.is_loopback) {
             return TRUE; /* block LAN */
         }
 
@@ -315,7 +314,7 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
 
     if (!fort_conf_ip_inet_included(&conf_ref->conf,
                 (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
-                &fort_device()->conf, cx->remote_ip, ca->isIPv6)) {
+                &fort_device()->conf, cx->conn.remote_ip, ca->isIPv6)) {
         cx->block_reason = FORT_BLOCK_REASON_IP_INET;
         return TRUE; /* block address */
     }
@@ -443,17 +442,18 @@ inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
 {
     const FORT_CONF_FLAGS conf_flags = device_conf->conf_flags;
 
-    cx->is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
+    cx->conn.is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
 
     if (conf_flags.filter_locals)
         return FALSE;
 
     /* Loopback */
-    if (!cx->is_loopback || conf_flags.block_traffic)
+    if (!cx->conn.is_loopback || conf_flags.block_traffic)
         return FALSE;
 
     /* Multicast */
-    if (!fort_addr_is_local_multicast(cx->remote_ip, ca->isIPv6) || conf_flags.block_lan_traffic)
+    if (!fort_addr_is_local_multicast(cx->conn.remote_ip, ca->isIPv6)
+            || conf_flags.block_lan_traffic)
         return FALSE;
 
     return TRUE;
@@ -476,7 +476,11 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
 
     FORT_CALLOUT_ALE_EXTRA cx = {
         .is_reauth = is_reauth,
-        .remote_ip = remote_ip,
+        .conn = {
+                .inbound = ca->inbound,
+                .isIPv6 = ca->isIPv6,
+                .remote_ip = remote_ip,
+        },
     };
 
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;

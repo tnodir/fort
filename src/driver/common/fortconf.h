@@ -169,6 +169,24 @@ typedef struct fort_conf_rule_flag
     (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \
             + (rule)->set_count * sizeof(UINT16))
 
+typedef struct fort_conf_conn
+{
+    UCHAR inbound : 1;
+    UCHAR isIPv6 : 1;
+    UCHAR is_loopback : 1;
+    UCHAR is_local_net : 1;
+
+    const UCHAR ip_proto;
+
+    const UINT16 local_port;
+    const UINT16 remote_port;
+
+    const UINT32 *remote_ip;
+    const UINT32 *local_ip;
+} FORT_CONF_CONN, *PFORT_CONF_CONN;
+
+typedef const FORT_CONF_CONN *PCCONF_CONN;
+
 typedef struct fort_conf_zones
 {
     UINT32 mask;

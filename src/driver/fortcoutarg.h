@@ -44,8 +44,6 @@ typedef const FORT_CALLOUT_ARG *PCFORT_CALLOUT_ARG;
 typedef struct fort_callout_ale_extra
 {
     UCHAR is_reauth : 1;
-    UCHAR is_loopback : 1;
-    UCHAR is_local_net : 1;
     UCHAR app_data_found : 1;
     UCHAR inherited : 1;
     UCHAR drop_blocked : 1;
@@ -57,7 +55,7 @@ typedef struct fort_callout_ale_extra
 
     UINT32 process_id;
 
-    const UINT32 *remote_ip;
+    FORT_CONF_CONN conn;
 
     FORT_APP_PATH path;
     FORT_APP_PATH real_path;
