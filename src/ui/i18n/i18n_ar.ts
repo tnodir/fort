@@ -503,6 +503,10 @@
         <source>Block Internet Traffic</source>
         <translation>منع حركة المرور على الإنترنت</translation>
     </message>
+    <message>
+        <source>Block LAN and Internet Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>

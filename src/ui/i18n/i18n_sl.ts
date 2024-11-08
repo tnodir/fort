@@ -503,6 +503,10 @@
         <source>Block Internet Traffic</source>
         <translation>Onemogoči internetni promet</translation>
     </message>
+    <message>
+        <source>Block LAN and Internet Traffic</source>
+        <translation>Onemogoči LAN in internetni promet</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
