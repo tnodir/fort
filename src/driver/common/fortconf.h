@@ -29,6 +29,7 @@ typedef struct fort_conf_flags
     UINT32 filter_local_net : 1;
 
     UINT32 block_traffic : 1;
+    UINT32 block_lan_traffic : 1;
     UINT32 block_inet_traffic : 1;
 
     UINT32 allow_all_new : 1;
@@ -46,7 +47,7 @@ typedef struct fort_conf_flags
     UINT32 log_blocked_ip : 1;
     UINT32 log_alerted_blocked_ip : 1;
 
-    UINT32 reserved_flags : 15; /* not used */
+    UINT32 reserved_flags : 14; /* not used */
 
     UINT16 group_bits;
     UINT16 reserved; /* not used */

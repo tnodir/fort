@@ -29,14 +29,16 @@ typedef struct fort_conf_ref
 #define FORT_DEVICE_BOOT_FILTER         0x01
 #define FORT_DEVICE_BOOT_FILTER_LOCALS  0x02
 #define FORT_DEVICE_BOOT_MASK           (FORT_DEVICE_BOOT_FILTER | FORT_DEVICE_BOOT_FILTER_LOCALS)
-#define FORT_DEVICE_IS_OPENED           0x04
-#define FORT_DEVICE_IS_VALIDATED        0x08
-#define FORT_DEVICE_POWER_OFF           0x10
-#define FORT_DEVICE_SHUTDOWN_REGISTERED 0x20
+#define FORT_DEVICE_BLOCK_TRAFFIC       0x04
+#define FORT_DEVICE_BLOCK_LAN_TRAFFIC   0x08
+#define FORT_DEVICE_IS_OPENED           0x10
+#define FORT_DEVICE_IS_VALIDATED        0x20
+#define FORT_DEVICE_POWER_OFF           0x40
+#define FORT_DEVICE_SHUTDOWN_REGISTERED 0x80
 
 typedef struct fort_device_conf
 {
-    UCHAR volatile flags;
+    UINT16 volatile flags;
 
     FORT_CONF_FLAGS volatile conf_flags;
     PFORT_CONF_REF volatile ref;
@@ -53,9 +55,11 @@ extern "C" {
 
 FORT_API void fort_device_conf_open(PFORT_DEVICE_CONF device_conf);
 
-FORT_API UCHAR fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UCHAR flag, BOOL on);
+FORT_API UINT16 fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UINT16 flag, BOOL on);
 
-FORT_API UCHAR fort_device_flag(PFORT_DEVICE_CONF device_conf, UCHAR flag);
+FORT_API UINT16 fort_device_flags(PFORT_DEVICE_CONF device_conf);
+
+FORT_API UINT16 fort_device_flag(PFORT_DEVICE_CONF device_conf, UINT16 flag);
 
 FORT_API FORT_APP_DATA fort_conf_exe_find(
         const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);

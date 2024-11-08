@@ -68,6 +68,9 @@ public:
     bool blockTraffic() const { return m_blockTraffic; }
     void setBlockTraffic(bool v) { m_blockTraffic = v; }
 
+    bool blockLanTraffic() const { return m_blockLanTraffic; }
+    void setBlockLanTraffic(bool v) { m_blockLanTraffic = v; }
+
     bool blockInetTraffic() const { return m_blockInetTraffic; }
     void setBlockInetTraffic(bool v) { m_blockInetTraffic = v; }
 
@@ -209,6 +212,7 @@ private:
     uint m_filterLocals : 1 = false;
     uint m_filterLocalNet : 1 = false;
     uint m_blockTraffic : 1 = false;
+    uint m_blockLanTraffic : 1 = false;
     uint m_blockInetTraffic : 1 = false;
     uint m_allowAllNew : 1 = false;
     uint m_askToConnect : 1 = false;

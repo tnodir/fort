@@ -520,6 +520,7 @@ void TrayIcon::setupTrayMenuBlockTraffic()
     static const char *const blockTrafficIniKeys[] = {
         HotKey::blockTrafficOff,
         HotKey::blockTraffic,
+        HotKey::blockLanTraffic,
         HotKey::blockInetTraffic,
     };
 
@@ -742,7 +743,7 @@ QString TrayIcon::trayIconPath() const
     if (conf()->blockTraffic()) {
         return ":/icons/fort_red.png";
     }
-    if (conf()->blockInetTraffic()) {
+    if (conf()->blockLanTraffic() || conf()->blockInetTraffic()) {
         return ":/icons/fort_orange.png";
     }
     return ":/icons/fort.png";

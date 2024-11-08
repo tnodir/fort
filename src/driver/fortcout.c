@@ -157,12 +157,9 @@ inline static BOOL fort_callout_ale_log_blocked_ip_check(
     return fort_callout_ale_log_blocked_ip_check_app(conf_flags, app_data);
 }
 
-inline static void fort_callout_ale_log_blocked_ip(PCFORT_CALLOUT_ARG ca,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+inline static void fort_callout_ale_log_blocked_ip(
+        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
 {
-    if (!fort_callout_ale_log_blocked_ip_check(cx, conf_ref, conf_flags))
-        return;
-
     const UINT32 *local_ip = ca->isIPv6
             ? (const UINT32 *) ca->inFixedValues->incomingValue[ca->fi->localIp].value.byteArray16
             : &ca->inFixedValues->incomingValue[ca->fi->localIp].value.uint32;
@@ -301,13 +298,19 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
             (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included, &fort_device()->conf,
             cx->remote_ip, ca->isIPv6);
 
-    if (!conf_flags.filter_local_net && cx->is_local_net) {
-        cx->blocked = FALSE;
-        return TRUE; /* allow Local Network */
-    }
+    if (cx->is_local_net) {
+        if (conf_flags.block_lan_traffic) {
+            return TRUE; /* block LAN */
+        }
 
-    if (conf_flags.block_inet_traffic && !cx->is_local_net) {
-        return TRUE; /* block Internet */
+        if (!conf_flags.filter_local_net) {
+            cx->blocked = FALSE;
+            return TRUE; /* allow Local Network */
+        }
+    } else {
+        if (conf_flags.block_inet_traffic) {
+            return TRUE; /* block Internet */
+        }
     }
 
     if (!fort_conf_ip_inet_included(&conf_ref->conf,
@@ -339,7 +342,9 @@ inline static void fort_callout_ale_classify_blocked(PCFORT_CALLOUT_ARG ca,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
     /* Log the blocked connection */
-    fort_callout_ale_log_blocked_ip(ca, cx, conf_ref, conf_flags);
+    if (fort_callout_ale_log_blocked_ip_check(cx, conf_ref, conf_flags)) {
+        fort_callout_ale_log_blocked_ip(ca, cx);
+    }
 
     if (cx->drop_blocked) {
         /* Drop the connection */
@@ -436,11 +441,20 @@ inline static void fort_callout_ale_by_conf(
 inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
         PCFORT_CALLOUT_ALE_EXTRA cx, PFORT_DEVICE_CONF device_conf, const UINT32 classify_flags)
 {
-    if (fort_device_flag(device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS) != 0)
+    const UINT16 device_flags = fort_device_flags(device_conf);
+
+    if ((device_flags & FORT_DEVICE_BOOT_FILTER_LOCALS) != 0)
         return FALSE;
 
-    return ((classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0
-            || fort_addr_is_local_broadcast(cx->remote_ip, ca->isIPv6));
+    if ((classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) == 0
+            || (device_flags & FORT_DEVICE_BLOCK_TRAFFIC) != 0)
+        return FALSE;
+
+    if (!fort_addr_is_local_broadcast(cx->remote_ip, ca->isIPv6)
+            || (device_flags & FORT_DEVICE_BLOCK_LAN_TRAFFIC) != 0)
+        return FALSE;
+
+    return TRUE;
 }
 
 static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)

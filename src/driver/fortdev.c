@@ -66,7 +66,7 @@ FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
     NTSTATUS status = STATUS_SUCCESS;
 
     /* Device opened */
-    const UCHAR flags = fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_IS_OPENED, TRUE);
+    const UINT16 flags = fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_IS_OPENED, TRUE);
     if ((flags & FORT_DEVICE_IS_OPENED) != 0) {
         status = STATUS_SHARING_VIOLATION; /* Only one client may connect */
     }

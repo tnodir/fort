@@ -51,6 +51,7 @@ enum BlockAction : qint8 {
     BlockActionInvalid = -1,
     BlockActionNone = 0,
     BlockActionAll,
+    BlockActionLan,
     BlockActionInet,
 };
 
@@ -72,6 +73,9 @@ BlockAction blockActionByText(const QString &commandText)
     if (commandText == "all")
         return BlockActionAll;
 
+    if (commandText == "lan")
+        return BlockActionLan;
+
     if (commandText == "internet")
         return BlockActionInet;
 
@@ -82,7 +86,7 @@ bool processCommandBlock(const ProcessCommandArgs &p)
 {
     const BlockAction blockAction = blockActionByText(p.args.value(0).toString());
     if (blockAction == BlockActionInvalid) {
-        p.errorMessage = "Usage: block none|all|internet";
+        p.errorMessage = "Usage: block none|all|lan|internet";
         return false;
     }
 

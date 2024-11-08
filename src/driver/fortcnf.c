@@ -42,18 +42,18 @@ FORT_API void fort_device_conf_open(PFORT_DEVICE_CONF device_conf)
     KeInitializeSpinLock(&device_conf->ref_lock);
 }
 
-FORT_API UCHAR fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UCHAR flag, BOOL on)
+FORT_API UINT16 fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UINT16 flag, BOOL on)
 {
-    return on ? InterlockedOr8(&device_conf->flags, flag)
-              : InterlockedAnd8(&device_conf->flags, ~flag);
+    return on ? InterlockedOr16(&device_conf->flags, flag)
+              : InterlockedAnd16(&device_conf->flags, ~flag);
 }
 
-static UCHAR fort_device_flags(PFORT_DEVICE_CONF device_conf)
+FORT_API UINT16 fort_device_flags(PFORT_DEVICE_CONF device_conf)
 {
     return fort_device_flag_set(device_conf, 0, TRUE);
 }
 
-FORT_API UCHAR fort_device_flag(PFORT_DEVICE_CONF device_conf, UCHAR flag)
+FORT_API UINT16 fort_device_flag(PFORT_DEVICE_CONF device_conf, UINT16 flag)
 {
     return fort_device_flags(device_conf) & flag;
 }
@@ -336,6 +336,15 @@ FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
     return conf_ref;
 }
 
+static void fort_device_flags_conf_set(PFORT_DEVICE_CONF device_conf, FORT_CONF_FLAGS conf_flags)
+{
+    fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags.boot_filter);
+    fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS, conf_flags.filter_locals);
+
+    fort_device_flag_set(device_conf, FORT_DEVICE_BLOCK_TRAFFIC, conf_flags.block_traffic);
+    fort_device_flag_set(device_conf, FORT_DEVICE_BLOCK_LAN_TRAFFIC, conf_flags.block_lan_traffic);
+}
+
 FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
 {
     FORT_CONF_FLAGS old_conf_flags;
@@ -345,7 +354,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
     if (old_conf_ref != NULL) {
         old_conf_flags = old_conf_ref->conf.flags;
     } else {
-        const UCHAR flags = fort_device_flag(device_conf, FORT_DEVICE_BOOT_MASK);
+        const UINT16 flags = fort_device_flag(device_conf, FORT_DEVICE_BOOT_MASK);
 
         RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
         old_conf_flags.boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0;
@@ -363,9 +372,8 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
             PFORT_CONF conf = &conf_ref->conf;
 
             conf_flags = conf->flags;
-            fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags.boot_filter);
-            fort_device_flag_set(
-                    device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS, conf_flags.filter_locals);
+
+            fort_device_flags_conf_set(device_conf, conf_flags);
         } else {
             RtlZeroMemory((void *) &conf_flags, sizeof(FORT_CONF_FLAGS));
             conf_flags.boot_filter = old_conf_flags.boot_filter;
@@ -399,13 +407,11 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
             old_conf_flags = conf->flags;
             conf->flags = conf_flags;
 
-            fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags.boot_filter);
-            fort_device_flag_set(
-                    device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS, conf_flags.filter_locals);
+            fort_device_flags_conf_set(device_conf, conf_flags);
 
             device_conf->conf_flags = conf_flags;
         } else {
-            const UCHAR flags = fort_device_flag(device_conf, FORT_DEVICE_BOOT_MASK);
+            const UINT16 flags = fort_device_flag(device_conf, FORT_DEVICE_BOOT_MASK);
 
             RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
             old_conf_flags.boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0;

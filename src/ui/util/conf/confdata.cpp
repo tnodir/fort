@@ -143,6 +143,7 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
     confFlags->filter_local_net = conf.filterLocalNet();
 
     confFlags->block_traffic = conf.blockTraffic();
+    confFlags->block_lan_traffic = conf.blockLanTraffic();
     confFlags->block_inet_traffic = conf.blockInetTraffic();
     confFlags->allow_all_new = conf.allowAllNew();
     confFlags->ask_to_connect = conf.askToConnect();

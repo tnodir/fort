@@ -443,6 +443,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("filterLocals", conf.filterLocals());
         setIniValue("filterLocalNet", conf.filterLocalNet());
         setIniValue("blockTraffic", conf.blockTraffic());
+        setIniValue("blockLanTraffic", conf.blockLanTraffic());
         setIniValue("blockInetTraffic", conf.blockInetTraffic());
         setIniValue("allowAllNew", conf.allowAllNew());
         setIniValue("askToConnect", conf.askToConnect());

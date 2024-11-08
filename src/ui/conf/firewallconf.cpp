@@ -14,12 +14,13 @@ FirewallConf::FirewallConf(Settings *settings, QObject *parent) : QObject(parent
 
 int FirewallConf::blockTrafficIndex() const
 {
-    return m_blockInetTraffic ? 2 : (m_blockTraffic ? 1 : 0);
+    return m_blockInetTraffic ? 3 : (m_blockLanTraffic ? 2 : (m_blockTraffic ? 1 : 0));
 }
 
 void FirewallConf::setBlockTrafficIndex(int index)
 {
     m_blockTraffic = false;
+    m_blockLanTraffic = false;
     m_blockInetTraffic = false;
 
     switch (index) {
@@ -28,7 +29,10 @@ void FirewallConf::setBlockTrafficIndex(int index)
     case 1: { // Block All Traffic
         m_blockTraffic = true;
     } break;
-    case 2: { // Block Internet Traffic
+    case 2: { // Block LAN & Internet Traffic
+        m_blockLanTraffic = true;
+    } break;
+    case 3: { // Block Internet Traffic
         m_blockInetTraffic = true;
     } break;
     }
@@ -74,12 +78,13 @@ void FirewallConf::setFilterMode(FirewallConf::FilterMode mode)
 
 QStringList FirewallConf::blockTrafficNames()
 {
-    return { tr("Disabled"), tr("Block All Traffic"), tr("Block Internet Traffic") };
+    return { tr("Disabled"), tr("Block All Traffic"), tr("Block LAN and Internet Traffic"),
+        tr("Block Internet Traffic") };
 }
 
 QStringList FirewallConf::blockTrafficIconPaths()
 {
-    return { QString(), ":/icons/cross.png", ":/icons/hostname.png" };
+    return { QString(), ":/icons/cross.png", ":/icons/computer.png", ":/icons/hostname.png" };
 }
 
 QStringList FirewallConf::filterModeNames()
@@ -291,6 +296,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_filterLocals = o.filterLocals();
     m_filterLocalNet = o.filterLocalNet();
     m_blockTraffic = o.blockTraffic();
+    m_blockLanTraffic = o.blockLanTraffic();
     m_blockInetTraffic = o.blockInetTraffic();
     m_allowAllNew = o.allowAllNew();
     m_askToConnect = o.askToConnect();
@@ -340,6 +346,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["filterLocals"] = filterLocals();
     map["filterLocalNet"] = filterLocalNet();
     map["blockTraffic"] = blockTraffic();
+    map["blockLanTraffic"] = blockLanTraffic();
     map["blockInetTraffic"] = blockInetTraffic();
     map["allowAllNew"] = allowAllNew();
     map["askToConnect"] = askToConnect();
@@ -374,6 +381,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_filterLocals = map["filterLocals"].toBool();
     m_filterLocalNet = map["filterLocalNet"].toBool();
     m_blockTraffic = map["blockTraffic"].toBool();
+    m_blockLanTraffic = map["blockLanTraffic"].toBool();
     m_blockInetTraffic = map["blockInetTraffic"].toBool();
     m_allowAllNew = map["allowAllNew"].toBool();
     m_askToConnect = map["askToConnect"].toBool();
