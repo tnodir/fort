@@ -505,7 +505,7 @@
     </message>
     <message>
         <source>Block LAN and Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear tráfico LAN e Internet</translation>
     </message>
 </context>
 <context>
@@ -751,7 +751,7 @@
     </message>
     <message>
         <source>Service Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>Registros de servicio</translation>
     </message>
 </context>
 <context>
@@ -1778,39 +1778,39 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Unexpected start of line</source>
-        <translation type="unfinished"></translation>
+        <translation>Inicio inesperado de la línea</translation>
     </message>
     <message>
         <source>Unexpected end of list</source>
-        <translation type="unfinished"></translation>
+        <translation>Fin inesperado de la lista</translation>
     </message>
     <message>
         <source>Max list depth exceeded: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Profundidad máxima de la lista excedida: % 1</translation>
     </message>
     <message>
         <source>Unexpected symbol of list end</source>
-        <translation type="unfinished"></translation>
+        <translation>Símbolo inesperado del final de la lista</translation>
     </message>
     <message>
         <source>Extra filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombre de filtro adicional: %1</translation>
     </message>
     <message>
         <source>Bad filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombre de filtro incorrecto: %1</translation>
     </message>
     <message>
         <source>Unexpected end of values list</source>
-        <translation type="unfinished"></translation>
+        <translation>Fin inesperado de la lista de valores</translation>
     </message>
     <message>
         <source>Unexpected end of value</source>
-        <translation type="unfinished"></translation>
+        <translation>Fin inesperado del valor</translation>
     </message>
     <message>
         <source>No filter name</source>
-        <translation type="unfinished"></translation>
+        <translation>No hay nombre de filtro</translation>
     </message>
 </context>
 <context>

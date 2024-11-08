@@ -505,7 +505,7 @@
     </message>
     <message>
         <source>Block LAN and Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquer le trafic LAN et Internet</translation>
     </message>
 </context>
 <context>
