@@ -265,13 +265,14 @@ bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
             buffer().resize(outSize);
             buffer().fill('\0');
 
-            PFORT_CONF_RULES rules = (PFORT_CONF_RULES) buffer().data();
+            // Fill the buffer
+            char *data = buffer().data();
+
+            PFORT_CONF_RULES rules = PFORT_CONF_RULES(data);
             rules->max_rule_id = maxRuleId;
         }
 
-        writeRule(rule, ruleSetMap, ruleSetIds);
-
-        return true;
+        return writeRule(rule, ruleSetMap, ruleSetIds);
     });
 }
 
@@ -548,7 +549,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
     return true;
 }
 
-void ConfBuffer::writeRule(
+bool ConfBuffer::writeRule(
         const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds)
 {
     const int ruleId = rule.ruleId;
@@ -610,15 +611,19 @@ void ConfBuffer::writeRule(
 
     // Write the rule's conditions
     if (hasFilter) {
-        writeRuleText(rule.ruleText);
+        if (!writeRuleText(rule.ruleText))
+            return false;
     }
+
+    return true;
 }
 
-void ConfBuffer::writeRuleText(const QString &ruleText)
+bool ConfBuffer::writeRuleText(const QString &ruleText)
 {
     RuleTextParser parser(ruleText);
 
-    while (parser.parse()) {
-        // TODO
-    }
+    if (!parser.parse())
+        return false;
+
+    return true;
 }

@@ -68,9 +68,9 @@ private:
 
     bool addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize);
 
-    void writeRule(
+    bool writeRule(
             const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds);
-    void writeRuleText(const QString &ruleText);
+    bool writeRuleText(const QString &ruleText);
 
 private:
     quint32 m_driveMask = 0;
