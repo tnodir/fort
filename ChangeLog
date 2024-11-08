@@ -1,9 +1,10 @@
 Fort Firewall ChangeLog
 
-v3.14.11-test02, 2024-11-07:
+v3.14.11-test03, 2024-11-08:
 - UI: Options: TrafficGraph: Add "Fixed Speed" option.
 - UI: MyFort: Add "Service Logs" link.
-- UI: Add "-c block none|all|internet" command-line argument.
+- UI: Add ability to "Block LAN and Internet Traffic" ("Block All Traffic" also blocks 127.0.0.0/8 and 255.255.255.255).
+- UI: Add "-c block none|all|lan|internet" command-line argument.
 
 v3.14.10, 2024-11-03:
 - UI: Tray: Don't show icons for "Block Traffic" and "Filter Mode" menus.
