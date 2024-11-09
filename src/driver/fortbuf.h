@@ -48,7 +48,7 @@ FORT_API NTSTATUS fort_buffer_blocked_ip_write(
         PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info);
 
 FORT_API NTSTATUS fort_buffer_proc_new_write(
-        PFORT_BUFFER buf, UINT32 pid, PCFORT_APP_PATH path, PIRP *irp, ULONG_PTR *info);
+        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info);
 
 FORT_API NTSTATUS fort_buffer_xmove(
         PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len, ULONG_PTR *info);

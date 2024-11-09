@@ -237,8 +237,7 @@ static void fort_flow_free(PFORT_STAT stat, PFORT_FLOW flow)
     stat->flow_free = flow;
 }
 
-static PFORT_FLOW fort_flow_new(PFORT_STAT stat, UINT64 flow_id, const tommy_key_t flow_hash,
-        BOOL isIPv6, BOOL is_tcp, BOOL inbound)
+static PFORT_FLOW fort_flow_new(PFORT_STAT stat, UINT64 flow_id, const tommy_key_t flow_hash)
 {
     PFORT_FLOW flow;
 
@@ -271,32 +270,31 @@ inline static UCHAR fort_stat_group_speed_limit(PFORT_CONF_GROUP conf_group, UCH
 }
 
 inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW *flow, UINT64 flow_id,
-        tommy_key_t flow_hash, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth)
+        tommy_key_t flow_hash, PCFORT_CONF_META_CONN conn)
 {
-    *flow = fort_flow_new(stat, flow_id, flow_hash, isIPv6, is_tcp, inbound);
+    *flow = fort_flow_new(stat, flow_id, flow_hash);
     if (*flow == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
-    NTSTATUS status = fort_flow_context_set(stat, *flow, isIPv6);
+    NTSTATUS status = fort_flow_context_set(stat, *flow, conn->isIPv6);
     if (!NT_SUCCESS(status)) {
         fort_flow_free(stat, *flow);
 
         /* Can't remove existing context, because of possible deadlock */
-        status = is_reauth ? FORT_STATUS_FLOW_BLOCK : status;
+        status = conn->is_reauth ? FORT_STATUS_FLOW_BLOCK : status;
     }
 
     return status;
 }
 
-static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index, UINT16 proc_index,
-        BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth)
+static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, PCFORT_CONF_META_CONN conn,
+        UINT16 proc_index, UCHAR group_index)
 {
     const tommy_key_t flow_hash = fort_flow_hash(flow_id);
     PFORT_FLOW flow = fort_flow_get(stat, flow_id, flow_hash);
 
     if (flow == NULL) {
-        const NTSTATUS status = fort_flow_add_new(
-                stat, &flow, flow_id, flow_hash, isIPv6, is_tcp, inbound, is_reauth);
+        const NTSTATUS status = fort_flow_add_new(stat, &flow, flow_id, flow_hash, conn);
 
         if (!NT_SUCCESS(status))
             return status;
@@ -306,8 +304,8 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, UCHAR group_index
 
     const UCHAR speed_limit = fort_stat_group_speed_limit(&stat->conf_group, group_index);
 
-    flow->opt.flags = speed_limit | (is_tcp ? FORT_FLOW_TCP : 0) | (isIPv6 ? FORT_FLOW_IP6 : 0)
-            | (inbound ? FORT_FLOW_INBOUND : 0);
+    flow->opt.flags = speed_limit | (conn->is_tcp ? FORT_FLOW_TCP : 0)
+            | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0);
     flow->opt.group_index = group_index;
     flow->opt.proc_index = proc_index;
 
@@ -433,8 +431,8 @@ static NTSTATUS fort_flow_associate_proc(
     return STATUS_SUCCESS;
 }
 
-FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 process_id,
-        UCHAR group_index, BOOL isIPv6, BOOL is_tcp, BOOL inbound, BOOL is_reauth, BOOL *log_stat)
+FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, PCFORT_CONF_META_CONN conn,
+        UCHAR group_index, BOOL *log_stat)
 {
     NTSTATUS status;
 
@@ -443,12 +441,11 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, UINT64 flow_id, UINT32 pr
 
     BOOL is_new_proc = FALSE;
     PFORT_STAT_PROC proc = NULL;
-    status = fort_flow_associate_proc(stat, process_id, &is_new_proc, &proc);
+    status = fort_flow_associate_proc(stat, conn->process_id, &is_new_proc, &proc);
 
     /* Add flow */
     if (NT_SUCCESS(status)) {
-        status = fort_flow_add(
-                stat, flow_id, group_index, proc->proc_index, isIPv6, is_tcp, inbound, is_reauth);
+        status = fort_flow_add(stat, flow_id, conn, proc->proc_index, group_index);
 
         if (NT_SUCCESS(status)) {
             *log_stat = proc->log_stat;

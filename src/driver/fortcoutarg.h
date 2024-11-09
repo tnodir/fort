@@ -43,7 +43,6 @@ typedef const FORT_CALLOUT_ARG *PCFORT_CALLOUT_ARG;
 
 typedef struct fort_callout_ale_extra
 {
-    UCHAR is_reauth : 1;
     UCHAR app_data_found : 1;
     UCHAR drop_blocked : 1;
     UCHAR ignore : 1;

@@ -9,9 +9,9 @@
 
 #define FORT_BUFFER_POOL_TAG 'BwfF'
 
-static FORT_APP_PATH fort_buffer_adjust_log_path(PCFORT_APP_PATH path)
+static FORT_APP_PATH fort_buffer_adjust_log_path(PCFORT_CONF_META_CONN conn)
 {
-    FORT_APP_PATH log_path = *path;
+    FORT_APP_PATH log_path = conn->real_path;
 
     if (log_path.len > FORT_LOG_PATH_MAX) {
         log_path.len = 0; /* drop too long path */
@@ -170,7 +170,7 @@ FORT_API NTSTATUS fort_buffer_blocked_write(
 {
     NTSTATUS status;
 
-    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(&conn->real_path);
+    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(conn);
 
     const UINT32 len = FORT_LOG_BLOCKED_SIZE(log_path.len);
 
@@ -192,11 +192,9 @@ FORT_API NTSTATUS fort_buffer_blocked_write(
 FORT_API NTSTATUS fort_buffer_blocked_ip_write(
         PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info)
 {
-    FORT_CHECK_STACK(FORT_BUFFER_BLOCKED_IP_WRITE);
-
     NTSTATUS status;
 
-    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(&conn->real_path);
+    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(conn);
 
     const UINT32 len = FORT_LOG_BLOCKED_IP_SIZE(log_path.len, conn->isIPv6);
 
@@ -216,11 +214,11 @@ FORT_API NTSTATUS fort_buffer_blocked_ip_write(
 }
 
 FORT_API NTSTATUS fort_buffer_proc_new_write(
-        PFORT_BUFFER buf, UINT32 pid, PCFORT_APP_PATH path, PIRP *irp, ULONG_PTR *info)
+        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info)
 {
     NTSTATUS status;
 
-    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(path);
+    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(conn);
 
     const UINT32 len = FORT_LOG_PROC_NEW_SIZE(log_path.len);
 
@@ -231,7 +229,7 @@ FORT_API NTSTATUS fort_buffer_proc_new_write(
         status = fort_buffer_prepare(buf, len, &out, irp, info);
 
         if (NT_SUCCESS(status)) {
-            fort_log_proc_new_write(out, pid, &log_path);
+            fort_log_proc_new_write(out, conn->process_id, &log_path);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);

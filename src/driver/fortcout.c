@@ -101,6 +101,7 @@ static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT
     PFORT_CONF_META_CONN conn = &cx->conn;
 
     conn->ip_proto = ca->inFixedValues->incomingValue[ca->fi->ipProto].value.uint8;
+    conn->is_tcp = (conn->ip_proto == IPPROTO_TCP);
 
     conn->local_port = ca->inFixedValues->incomingValue[ca->fi->localPort].value.uint16;
     conn->remote_port = ca->inFixedValues->incomingValue[ca->fi->remotePort].value.uint16;
@@ -127,16 +128,14 @@ inline static BOOL fort_callout_ale_associate_flow(
 {
     const UINT64 flow_id = ca->inMetaValues->flowHandle;
 
-    const IPPROTO ip_proto =
-            (IPPROTO) ca->inFixedValues->incomingValue[ca->fi->ipProto].value.uint8;
-    const BOOL is_tcp = (ip_proto == IPPROTO_TCP);
+    fort_callout_ale_fill_meta_conn(ca, cx);
 
     const UCHAR group_index = (UCHAR) app_flags.group_index;
 
     BOOL log_stat = FALSE;
 
-    const NTSTATUS status = fort_flow_associate(&fort_device()->stat, flow_id, cx->conn.process_id,
-            group_index, ca->isIPv6, is_tcp, ca->inbound, cx->is_reauth, &log_stat);
+    const NTSTATUS status =
+            fort_flow_associate(&fort_device()->stat, flow_id, &cx->conn, group_index, &log_stat);
 
     if (!NT_SUCCESS(status)) {
         if (status != FORT_STATUS_FLOW_BLOCK) {
@@ -149,8 +148,7 @@ inline static BOOL fort_callout_ale_associate_flow(
     }
 
     if (!log_stat) {
-        fort_buffer_proc_new_write(&fort_device()->buffer, cx->conn.process_id, &cx->conn.real_path,
-                &cx->irp, &cx->info);
+        fort_buffer_proc_new_write(&fort_device()->buffer, &cx->conn, &cx->irp, &cx->info);
     }
 
     return FALSE;
@@ -522,10 +520,10 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
     }
 
     FORT_CALLOUT_ALE_EXTRA cx = {
-        .is_reauth = is_reauth,
         .conn = {
                 .inbound = ca->inbound,
                 .isIPv6 = ca->isIPv6,
+                .is_reauth = is_reauth,
                 .remote_ip = fort_callout_meta_ip(ca, ca->fi->remoteIp),
         },
     };
