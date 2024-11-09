@@ -762,10 +762,10 @@ QString TrayIcon::trayIconBlockPath(int blockType, QString &overlayIconPath) con
 {
     switch (blockType) {
     case FirewallConf::BlockTrafficAll:
+        overlayIconPath = ":/icons/cross.png";
+        return ":/icons/fort_gray.png";
+    case FirewallConf::BlockTrafficLan:
         return ":/icons/fort_red.png";
-    case FirewallConf::BlockTrafficInet:
-        overlayIconPath = ":/icons/global_telecom.png";
-        Q_FALLTHROUGH();
     default:
         return ":/icons/fort_orange.png";
     }
