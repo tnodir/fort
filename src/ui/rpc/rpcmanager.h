@@ -40,11 +40,11 @@ public:
     bool processCommandRpc(const ProcessCommandArgs &p);
 
     template<typename F>
-    constexpr static F *getProcessFunc(
-            Control::Command command, F *const funcList[], int minIndex, int maxIndex)
+    constexpr static F *getProcessFunc(Control::Command command, F *const funcList[], int minIndex,
+            int maxIndex, F *defaultFunc = nullptr)
     {
         if (command < minIndex || command > maxIndex)
-            return nullptr;
+            return defaultFunc;
 
         const int funcIndex = command - minIndex;
         return funcList[funcIndex];

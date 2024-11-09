@@ -257,29 +257,27 @@ bool processCommandZone(const ProcessCommandArgs &p)
     return processCommandZoneAction(zoneAction);
 }
 
+bool processCommandRpc(const ProcessCommandArgs &p)
+{
+    return IoC<RpcManager>()->processCommandRpc(p);
+}
+
+using processCommand_func = bool (*)(const ProcessCommandArgs &p);
+
+static const processCommand_func processCommand_funcList[] = {
+    &processCommandHome, // Control::CommandHome,
+    &processCommandBlock, // Control::CommandBlock,
+    &processCommandProg, // Control::CommandProg,
+    &processCommandBackup, // Control::CommandBackup,
+    &processCommandZone, // Control::CommandZone,
+};
+
 bool processCommand(const ProcessCommandArgs &p)
 {
-    bool ok;
+    const processCommand_func func = RpcManager::getProcessFunc(p.command, processCommand_funcList,
+            Control::CommandHome, Control::CommandZone, &processCommandRpc);
 
-    switch (p.command) {
-    case Control::CommandHome: {
-        ok = processCommandHome(p);
-    } break;
-    case Control::CommandBlock: {
-        ok = processCommandBlock(p);
-    } break;
-    case Control::CommandProg: {
-        ok = processCommandProg(p);
-    } break;
-    case Control::CommandBackup: {
-        ok = processCommandBackup(p);
-    } break;
-    case Control::CommandZone: {
-        ok = processCommandZone(p);
-    } break;
-    default:
-        ok = IoC<RpcManager>()->processCommandRpc(p);
-    }
+    const bool ok = func(p);
 
     if (!ok && p.errorMessage.isEmpty()) {
         p.errorMessage = "Invalid command";
