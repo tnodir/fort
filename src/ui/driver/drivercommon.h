@@ -47,12 +47,8 @@ quint8 logType(const char *input);
 void logBlockedHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen);
 void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen);
 
-void logBlockedIpHeaderWrite(char *output, int isIPv6, int inbound, int inherited,
-        quint8 blockReason, quint8 ipProto, quint16 localPort, quint16 remotePort,
-        const ip_addr_t *localIp, const ip_addr_t *remoteIp, quint32 pid, quint32 pathLen);
-void logBlockedIpHeaderRead(const char *input, int *isIPv6, int *inbound, int *inherited,
-        quint8 *blockReason, quint8 *ipProto, quint16 *localPort, quint16 *remotePort,
-        ip_addr_t *localIp, ip_addr_t *remoteIp, quint32 *pid, quint32 *pathLen);
+void logBlockedIpHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint32 pathLen);
+void logBlockedIpHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint32 *pathLen);
 
 void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen);
 void logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen);
@@ -62,11 +58,11 @@ void logStatTrafHeaderRead(const char *input, quint16 *procCount);
 void logTimeWrite(char *output, int systemTimeChanged, qint64 unixTime);
 void logTimeRead(const char *input, int *systemTimeChanged, qint64 *unixTime);
 
-bool confIpInRange(const void *drvConf, const quint32 *ip, bool isIPv6 = false,
+bool confIpInRange(const void *drvConf, const ip_addr_t ip, bool isIPv6 = false,
         bool included = false, int addrGroupIndex = 0);
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included = false, int addrGroupIndex = 0);
 bool confIp6InRange(
-        const void *drvConf, const ip6_addr_t ip, bool included = false, int addrGroupIndex = 0);
+        const void *drvConf, ip6_addr_t ip, bool included = false, int addrGroupIndex = 0);
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath);
 

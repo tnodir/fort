@@ -1172,7 +1172,7 @@ static NTSTATUS fort_pending_proc_add_packet_locked(PFORT_PENDING pending, PCFOR
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_PENDING_PACKET pkt)
 {
     /* Create the Pending Process */
-    PFORT_PENDING_PROC proc = fort_pending_proc_get_check(pending, cx->process_id);
+    PFORT_PENDING_PROC proc = fort_pending_proc_get_check(pending, cx->conn.process_id);
     if (proc == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
@@ -1278,7 +1278,7 @@ FORT_API BOOL fort_pending_add_packet(
         return FALSE;
 
     /* Check the Process's Limits */
-    if (!fort_pending_proc_check_limits(pending, cx->process_id))
+    if (!fort_pending_proc_check_limits(pending, cx->conn.process_id))
         return FALSE;
 
     /* Create the Packet */

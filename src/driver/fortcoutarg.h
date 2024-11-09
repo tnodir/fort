@@ -45,20 +45,15 @@ typedef struct fort_callout_ale_extra
 {
     UCHAR is_reauth : 1;
     UCHAR app_data_found : 1;
-    UCHAR inherited : 1;
     UCHAR drop_blocked : 1;
     UCHAR blocked : 1;
     UCHAR ignore : 1;
-    INT8 block_reason;
+    UCHAR is_path_filled : 1;
+    UCHAR is_conn_filled : 1;
 
     FORT_APP_DATA app_data;
 
-    UINT32 process_id;
-
-    FORT_CONF_CONN conn;
-
-    FORT_APP_PATH path;
-    FORT_APP_PATH real_path;
+    FORT_CONF_META_CONN conn;
 
     PIRP irp;
     ULONG_PTR info;

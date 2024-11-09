@@ -106,10 +106,20 @@ void LogBuffer::writeEntryBlockedIp(const LogEntryBlockedIp *logEntry)
 
     char *output = this->output();
 
-    DriverCommon::logBlockedIpHeaderWrite(output, logEntry->isIPv6(), logEntry->inbound(),
-            logEntry->inherited(), logEntry->blockReason(), logEntry->ipProto(),
-            logEntry->localPort(), logEntry->remotePort(), &logEntry->localIp(),
-            &logEntry->remoteIp(), logEntry->pid(), pathLen);
+    const FORT_CONF_META_CONN conn = {
+        .inbound = logEntry->inbound(),
+        .isIPv6 = logEntry->isIPv6(),
+        .inherited = logEntry->inherited(),
+        .block_reason = logEntry->blockReason(),
+        .ip_proto = logEntry->ipProto(),
+        .local_port = logEntry->localPort(),
+        .remote_port = logEntry->remotePort(),
+        .process_id = logEntry->pid(),
+        .local_ip = logEntry->localIp(),
+        .remote_ip = logEntry->remoteIp(),
+    };
+
+    DriverCommon::logBlockedIpHeaderWrite(output, &conn, pathLen);
 
     if (pathLen) {
         output += DriverCommon::logBlockedIpHeaderSize(logEntry->isIPv6());
@@ -125,37 +135,30 @@ void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
 
     const char *input = this->input();
 
-    int isIPv6;
-    int inbound;
-    int inherited;
-    quint8 blockReason;
-    quint8 proto;
-    quint16 localPort;
-    quint16 remotePort;
-    ip_addr_t localIp, remoteIp;
-    quint32 pid, pathLen;
-    DriverCommon::logBlockedIpHeaderRead(input, &isIPv6, &inbound, &inherited, &blockReason, &proto,
-            &localPort, &remotePort, &localIp, &remoteIp, &pid, &pathLen);
+    FORT_CONF_META_CONN conn;
+    quint32 pathLen;
+
+    DriverCommon::logBlockedIpHeaderRead(input, &conn, &pathLen);
 
     QString path;
     if (pathLen) {
-        input += DriverCommon::logBlockedIpHeaderSize(isIPv6 != 0);
+        input += DriverCommon::logBlockedIpHeaderSize(conn.isIPv6);
         path = QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
     }
 
-    logEntry->setIsIPv6(isIPv6 != 0);
-    logEntry->setInbound(inbound != 0);
-    logEntry->setInherited(inherited != 0);
-    logEntry->setBlockReason(blockReason);
-    logEntry->setIpProto(proto);
-    logEntry->setLocalPort(localPort);
-    logEntry->setRemotePort(remotePort);
-    logEntry->setLocalIp(localIp);
-    logEntry->setRemoteIp(remoteIp);
-    logEntry->setPid(pid);
+    logEntry->setIsIPv6(conn.isIPv6);
+    logEntry->setInbound(conn.inbound);
+    logEntry->setInherited(conn.inherited);
+    logEntry->setBlockReason(conn.block_reason);
+    logEntry->setIpProto(conn.ip_proto);
+    logEntry->setLocalPort(conn.local_port);
+    logEntry->setRemotePort(conn.remote_port);
+    logEntry->setLocalIp(conn.local_ip);
+    logEntry->setRemoteIp(conn.remote_ip);
+    logEntry->setPid(conn.process_id);
     logEntry->setKernelPath(path);
 
-    const int entrySize = int(DriverCommon::logBlockedIpSize(pathLen, isIPv6 != 0));
+    const int entrySize = int(DriverCommon::logBlockedIpSize(pathLen, conn.isIPv6));
     m_offset += entrySize;
 }
 

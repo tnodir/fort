@@ -142,20 +142,14 @@ void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32
     fort_log_blocked_header_read(input, blocked, pid, pathLen);
 }
 
-void logBlockedIpHeaderWrite(char *output, int isIPv6, int inbound, int inherited,
-        quint8 blockReason, quint8 ipProto, quint16 localPort, quint16 remotePort,
-        const ip_addr_t *localIp, const ip_addr_t *remoteIp, quint32 pid, quint32 pathLen)
+void logBlockedIpHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint32 pathLen)
 {
-    fort_log_blocked_ip_header_write(output, isIPv6, inbound, inherited, blockReason, ipProto,
-            localPort, remotePort, &localIp->v4, &remoteIp->v4, pid, pathLen);
+    fort_log_blocked_ip_header_write(output, conn, pathLen);
 }
 
-void logBlockedIpHeaderRead(const char *input, int *isIPv6, int *inbound, int *inherited,
-        quint8 *blockReason, quint8 *ipProto, quint16 *localPort, quint16 *remotePort,
-        ip_addr_t *localIp, ip_addr_t *remoteIp, quint32 *pid, quint32 *pathLen)
+void logBlockedIpHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint32 *pathLen)
 {
-    fort_log_blocked_ip_header_read(input, isIPv6, inbound, inherited, blockReason, ipProto,
-            localPort, remotePort, &localIp->v4, &remoteIp->v4, pid, pathLen);
+    fort_log_blocked_ip_header_read(input, conn, pathLen);
 }
 
 void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen)
@@ -184,7 +178,7 @@ void logTimeRead(const char *input, int *systemTimeChanged, qint64 *unixTime)
 }
 
 bool confIpInRange(
-        const void *drvConf, const quint32 *ip, bool isIPv6, bool included, int addrGroupIndex)
+        const void *drvConf, const ip_addr_t ip, bool isIPv6, bool included, int addrGroupIndex)
 {
     const PFORT_CONF conf = (const PFORT_CONF) drvConf;
     const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addrGroupIndex);
@@ -202,12 +196,16 @@ bool confIpInRange(
 
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included, int addrGroupIndex)
 {
-    return confIpInRange(drvConf, &ip, /*isIPv6=*/false, included, addrGroupIndex);
+    const ip_addr_t ip_addr = { .v4 = ip };
+
+    return confIpInRange(drvConf, ip_addr, /*isIPv6=*/false, included, addrGroupIndex);
 }
 
-bool confIp6InRange(const void *drvConf, const ip6_addr_t ip, bool included, int addrGroupIndex)
+bool confIp6InRange(const void *drvConf, ip6_addr_t ip, bool included, int addrGroupIndex)
 {
-    return confIpInRange(drvConf, &ip.addr32[0], /*isIPv6=*/true, included, addrGroupIndex);
+    const ip_addr_t ip_addr = { .v6 = ip };
+
+    return confIpInRange(drvConf, ip_addr, /*isIPv6=*/true, included, addrGroupIndex);
 }
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)

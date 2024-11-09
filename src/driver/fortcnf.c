@@ -452,8 +452,8 @@ FORT_API void fort_conf_zone_flag_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
-FORT_API BOOL fort_conf_zones_ip_included(
-        PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const UINT32 *remote_ip, BOOL isIPv6)
+FORT_API BOOL fort_conf_zones_ip_included(PFORT_DEVICE_CONF device_conf, UINT32 zones_mask,
+        const ip_addr_t remote_ip, BOOL isIPv6)
 {
     BOOL res = FALSE;
 

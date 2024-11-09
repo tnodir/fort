@@ -129,10 +129,10 @@ FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len)
 }
 
 FORT_API BOOL fort_conf_ip_inlist(
-        const UINT32 *ip, const PFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6)
+        const ip_addr_t ip, const PFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6)
 {
     if (isIPv6) {
-        const ip6_addr_t *ip6 = (const ip6_addr_t *) ip;
+        const ip6_addr_t *ip6 = &ip.v6;
         const PFORT_CONF_ADDR_LIST addr6_list = (const PFORT_CONF_ADDR_LIST)((const PCHAR) addr_list
                 + FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n));
 
@@ -140,9 +140,9 @@ FORT_API BOOL fort_conf_ip_inlist(
                 || fort_conf_ip6_inrange(
                         fort_conf_addr_list_pair6_ref(addr6_list), ip6, addr6_list->pair_n);
     } else {
-        return fort_conf_ip4_inarr(fort_conf_addr_list_ip4_ref(addr_list), *ip, addr_list->ip_n)
+        return fort_conf_ip4_inarr(fort_conf_addr_list_ip4_ref(addr_list), ip.v4, addr_list->ip_n)
                 || fort_conf_ip4_inrange(
-                        fort_conf_addr_list_pair4_ref(addr_list), *ip, addr_list->pair_n);
+                        fort_conf_addr_list_pair4_ref(addr_list), ip.v4, addr_list->pair_n);
     }
 }
 
@@ -155,7 +155,7 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, i
 }
 
 static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR_LIST addr_list,
-        fort_conf_zones_ip_included_func zone_func, void *ctx, const UINT32 *remote_ip,
+        fort_conf_zones_ip_included_func zone_func, void *ctx, const ip_addr_t remote_ip,
         UINT32 zones_mask, BOOL list_is_empty, BOOL isIPv6)
 {
     return (!list_is_empty && fort_conf_ip_inlist(remote_ip, addr_list, isIPv6))
@@ -163,8 +163,8 @@ static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR_LIST addr_list,
 }
 
 FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
-        fort_conf_zones_ip_included_func zone_func, void *ctx, const UINT32 *remote_ip, BOOL isIPv6,
-        int addr_group_index)
+        fort_conf_zones_ip_included_func zone_func, void *ctx, const ip_addr_t remote_ip,
+        BOOL isIPv6, int addr_group_index)
 {
     const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addr_group_index);
 

@@ -16,6 +16,7 @@ typedef struct ip6_addr_t
 } ip6_addr_t;
 
 typedef union ip_addr_t {
+    unsigned short v2;
     unsigned int v4;
     ip6_addr_t v6;
 } ip_addr_t;

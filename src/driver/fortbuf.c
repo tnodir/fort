@@ -189,18 +189,16 @@ FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT
     return status;
 }
 
-NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL isIPv6, BOOL inbound, BOOL inherited,
-        UCHAR block_reason, UCHAR ip_proto, UINT16 local_port, UINT16 remote_port,
-        const UINT32 *local_ip, const UINT32 *remote_ip, UINT32 pid, PCFORT_APP_PATH path,
-        PIRP *irp, ULONG_PTR *info)
+FORT_API NTSTATUS fort_buffer_blocked_ip_write(
+        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info)
 {
     FORT_CHECK_STACK(FORT_BUFFER_BLOCKED_IP_WRITE);
 
     NTSTATUS status;
 
-    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(path);
+    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(&conn->real_path);
 
-    const UINT32 len = FORT_LOG_BLOCKED_IP_SIZE(log_path.len, isIPv6);
+    const UINT32 len = FORT_LOG_BLOCKED_IP_SIZE(log_path.len, conn->isIPv6);
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
@@ -209,8 +207,7 @@ NTSTATUS fort_buffer_blocked_ip_write(PFORT_BUFFER buf, BOOL isIPv6, BOOL inboun
         status = fort_buffer_prepare(buf, len, &out, irp, info);
 
         if (NT_SUCCESS(status)) {
-            fort_log_blocked_ip_write(out, isIPv6, inbound, inherited, block_reason, ip_proto,
-                    local_port, remote_port, local_ip, remote_ip, pid, &log_path);
+            fort_log_blocked_ip_write(out, conn, &log_path);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);

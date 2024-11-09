@@ -169,23 +169,31 @@ typedef struct fort_conf_rule_flag
     (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \
             + (rule)->set_count * sizeof(UINT16))
 
-typedef struct fort_conf_conn
+typedef struct fort_conf_meta_conn
 {
     UCHAR inbound : 1;
     UCHAR isIPv6 : 1;
     UCHAR is_loopback : 1;
     UCHAR is_local_net : 1;
+    UCHAR inherited : 1;
 
-    const UCHAR ip_proto;
+    UCHAR block_reason;
 
-    const UINT16 local_port;
-    const UINT16 remote_port;
+    UCHAR ip_proto;
 
-    const UINT32 *remote_ip;
-    const UINT32 *local_ip;
-} FORT_CONF_CONN, *PFORT_CONF_CONN;
+    UINT16 local_port;
+    UINT16 remote_port;
 
-typedef const FORT_CONF_CONN *PCCONF_CONN;
+    UINT32 process_id;
+
+    ip_addr_t local_ip;
+    ip_addr_t remote_ip;
+
+    FORT_APP_PATH path;
+    FORT_APP_PATH real_path;
+} FORT_CONF_META_CONN, *PFORT_CONF_META_CONN;
+
+typedef const FORT_CONF_META_CONN *PCFORT_CONF_META_CONN;
 
 typedef struct fort_conf_zones
 {
@@ -333,7 +341,7 @@ typedef FORT_APP_DATA fort_conf_app_exe_find_func(
         const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
 typedef BOOL fort_conf_zones_ip_included_func(
-        void *ctx, UINT32 zones_mask, const UINT32 *remote_ip, BOOL isIPv6);
+        void *ctx, UINT32 zones_mask, const ip_addr_t remote_ip, BOOL isIPv6);
 
 #if defined(__cplusplus)
 extern "C" {
@@ -346,7 +354,7 @@ FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len);
 FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len);
 
 FORT_API BOOL fort_conf_ip_inlist(
-        const UINT32 *ip, const PFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6);
+        const ip_addr_t ip, const PFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6);
 
 FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(
         const PFORT_CONF conf, int addr_group_index);
@@ -358,8 +366,8 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(
     ((PFORT_CONF_ADDR_LIST) ((addr_group)->data + (addr_group)->exclude_off))
 
 FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
-        fort_conf_zones_ip_included_func zone_func, void *ctx, const UINT32 *remote_ip, BOOL isIPv6,
-        int addr_group_index);
+        fort_conf_zones_ip_included_func zone_func, void *ctx, const ip_addr_t remote_ip,
+        BOOL isIPv6, int addr_group_index);
 
 #define fort_conf_ip_is_inet(conf, zone_func, ctx, remote_ip, isIPv6)                              \
     fort_conf_ip_included((conf), (zone_func), (ctx), (remote_ip), isIPv6, /*addr_group_index=*/0)
