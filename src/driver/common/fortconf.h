@@ -176,7 +176,7 @@ typedef struct fort_conf_meta_conn
     UCHAR is_loopback : 1;
     UCHAR is_local_net : 1;
     UCHAR inherited : 1;
-
+    UCHAR blocked : 1;
     UCHAR block_reason;
 
     UCHAR ip_proto;

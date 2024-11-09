@@ -165,12 +165,12 @@ FORT_API NTSTATUS fort_buffer_prepare(
     return fort_buffer_prepare_new(buf, len, out);
 }
 
-FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT32 pid,
-        PCFORT_APP_PATH path, PIRP *irp, ULONG_PTR *info)
+FORT_API NTSTATUS fort_buffer_blocked_write(
+        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info)
 {
     NTSTATUS status;
 
-    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(path);
+    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(&conn->real_path);
 
     const UINT32 len = FORT_LOG_BLOCKED_SIZE(log_path.len);
 
@@ -181,7 +181,7 @@ FORT_API NTSTATUS fort_buffer_blocked_write(PFORT_BUFFER buf, BOOL blocked, UINT
         status = fort_buffer_prepare(buf, len, &out, irp, info);
 
         if (NT_SUCCESS(status)) {
-            fort_log_blocked_write(out, blocked, pid, &log_path);
+            fort_log_blocked_write(out, conn->blocked, conn->process_id, &log_path);
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
