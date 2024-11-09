@@ -334,29 +334,39 @@ inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLO
     fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_data);
 }
 
-inline static BOOL fort_callout_ale_check_filter_inet_flags(
-        PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+inline static BOOL fort_callout_ale_check_filter_lan_flags(
+        PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
 {
-    conn->is_local_net = !fort_conf_ip_is_inet(&conf_ref->conf,
-            (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included, &fort_device()->conf,
-            conn->remote_ip, conn->isIPv6);
+    if (conf_flags.block_lan_traffic && !conn->is_loopback) {
+        return TRUE; /* block LAN */
+    }
 
-    if (conn->is_local_net) {
-        if (conf_flags.block_lan_traffic && !conn->is_loopback) {
-            return TRUE; /* block LAN */
-        }
-
-        if (!conf_flags.filter_local_net) {
-            conn->blocked = FALSE;
-            return TRUE; /* allow Local Network */
-        }
-    } else {
-        if (conf_flags.block_inet_traffic) {
-            return TRUE; /* block Internet */
-        }
+    if (!conf_flags.filter_local_net) {
+        conn->blocked = FALSE;
+        return TRUE; /* allow Local Network */
     }
 
     return FALSE;
+}
+
+inline static BOOL fort_callout_ale_check_filter_inet_flags(
+        PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
+{
+    if (conf_flags.block_inet_traffic) {
+        return TRUE; /* block Internet */
+    }
+
+    return FALSE;
+}
+
+inline static BOOL fort_callout_ale_check_filter_net_flags(
+        PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
+{
+    if (conn->is_local_net) {
+        return fort_callout_ale_check_filter_lan_flags(conn, conf_flags);
+    } else {
+        return fort_callout_ale_check_filter_inet_flags(conn, conf_flags);
+    }
 }
 
 inline static BOOL fort_callout_ale_check_filter_flags(
@@ -366,7 +376,11 @@ inline static BOOL fort_callout_ale_check_filter_flags(
         return TRUE; /* block all */
     }
 
-    if (fort_callout_ale_check_filter_inet_flags(conn, conf_ref, conf_flags)) {
+    conn->is_local_net = !fort_conf_ip_is_inet(&conf_ref->conf,
+            (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included, &fort_device()->conf,
+            conn->remote_ip, conn->isIPv6);
+
+    if (fort_callout_ale_check_filter_net_flags(conn, conf_flags)) {
         return TRUE; /* block net */
     }
 
