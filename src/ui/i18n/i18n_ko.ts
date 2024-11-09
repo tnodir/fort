@@ -505,7 +505,7 @@
     </message>
     <message>
         <source>Block LAN and Internet Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN 및 인터넷 트래픽 차단</translation>
     </message>
 </context>
 <context>
@@ -618,15 +618,15 @@
     </message>
     <message>
         <source>Fixed speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>고정 속도:</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished">사용자 지정</translation>
+        <translation>사용자 지정</translation>
     </message>
     <message>
         <source>Auto-scale</source>
-        <translation type="unfinished"></translation>
+        <translation>자동 비율</translation>
     </message>
 </context>
 <context>
@@ -751,7 +751,7 @@
     </message>
     <message>
         <source>Service Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>서비스 로그</translation>
     </message>
 </context>
 <context>
@@ -1775,39 +1775,39 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Unexpected start of line</source>
-        <translation type="unfinished"></translation>
+        <translation>예상치 못한 줄 시작</translation>
     </message>
     <message>
         <source>Unexpected end of list</source>
-        <translation type="unfinished"></translation>
+        <translation>예상치 못한 목록 끝</translation>
     </message>
     <message>
         <source>Max list depth exceeded: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>최대 목록 깊이 초과: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol of list end</source>
-        <translation type="unfinished"></translation>
+        <translation>목록 끝의 예기치 않은 기호</translation>
     </message>
     <message>
         <source>Extra filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>추가 필터 이름: %1</translation>
     </message>
     <message>
         <source>Bad filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>잘못된 필터 이름: %1</translation>
     </message>
     <message>
         <source>Unexpected end of values list</source>
-        <translation type="unfinished"></translation>
+        <translation>예상치 못한 값 끝 목록</translation>
     </message>
     <message>
         <source>Unexpected end of value</source>
-        <translation type="unfinished"></translation>
+        <translation>예상치 못한 값 끝</translation>
     </message>
     <message>
         <source>No filter name</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 이름 없음</translation>
     </message>
 </context>
 <context>
