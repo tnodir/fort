@@ -215,8 +215,7 @@ bool RuleTextParser::parseSectionChar()
         return parseName();
     } break;
     case CharNot: {
-        m_ruleFilter.isNot = !m_ruleFilter.isNot;
-        return true;
+        return parseNot();
     } break;
     case CharColon: {
         m_ruleFilter.isSectionEnd = true;
@@ -304,6 +303,13 @@ bool RuleTextParser::parseName()
     }
 
     m_ruleFilter.hasFilterName = true;
+
+    return true;
+}
+
+bool RuleTextParser::parseNot()
+{
+    m_ruleFilter.isNot = !m_ruleFilter.isNot;
 
     return true;
 }

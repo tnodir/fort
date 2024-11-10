@@ -106,6 +106,7 @@ private:
     bool checkListEnd();
 
     bool parseName();
+    bool parseNot();
 
     void parseBracketValues();
     bool parseBracketValue(RuleCharTypes expectedSeparator);
