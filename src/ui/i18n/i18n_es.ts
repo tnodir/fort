@@ -489,7 +489,7 @@
     </message>
     <message>
         <source>Ask to Connect</source>
-        <translation>Solicitar Conexión</translation>
+        <translation>Solicitar conexión</translation>
     </message>
     <message>
         <source>Disabled</source>
