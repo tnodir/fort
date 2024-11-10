@@ -50,9 +50,9 @@ bool processCommandHome(const ProcessCommandArgs &p)
 enum BlockAction : qint8 {
     BlockActionInvalid = -1,
     BlockActionNone = 0,
-    BlockActionAll,
-    BlockActionLan,
     BlockActionInet,
+    BlockActionLan,
+    BlockActionAll,
 };
 
 bool processCommandProgBlock(BlockAction blockAction)
@@ -67,17 +67,17 @@ bool processCommandProgBlock(BlockAction blockAction)
 
 BlockAction blockActionByText(const QString &commandText)
 {
-    if (commandText == "none")
+    if (commandText == "no")
         return BlockActionNone;
 
-    if (commandText == "all")
-        return BlockActionAll;
+    if (commandText == "inet")
+        return BlockActionInet;
 
     if (commandText == "lan")
         return BlockActionLan;
 
-    if (commandText == "internet")
-        return BlockActionInet;
+    if (commandText == "all")
+        return BlockActionAll;
 
     return BlockActionInvalid;
 }
@@ -86,7 +86,7 @@ bool processCommandBlock(const ProcessCommandArgs &p)
 {
     const BlockAction blockAction = blockActionByText(p.args.value(0).toString());
     if (blockAction == BlockActionInvalid) {
-        p.errorMessage = "Usage: block none|all|lan|internet";
+        p.errorMessage = "Usage: block no|inet|lan|all";
         return false;
     }
 

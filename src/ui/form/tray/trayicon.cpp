@@ -519,9 +519,9 @@ void TrayIcon::setupTrayMenuBlockTraffic()
 {
     static const char *const blockTrafficIniKeys[] = {
         HotKey::blockTrafficOff,
-        HotKey::blockTraffic,
-        HotKey::blockLanTraffic,
         HotKey::blockInetTraffic,
+        HotKey::blockLanTraffic,
+        HotKey::blockTraffic,
     };
 
     m_blockTrafficMenu = ControlUtil::createMenu(m_menu);

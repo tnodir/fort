@@ -27,9 +27,9 @@ public:
 
     enum BlockTrafficType {
         BlockTrafficNone = 0,
-        BlockTrafficAll,
-        BlockTrafficLan,
         BlockTrafficInet,
+        BlockTrafficLan,
+        BlockTrafficAll,
     };
     Q_ENUM(BlockTrafficType)
 
