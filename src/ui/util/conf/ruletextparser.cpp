@@ -134,8 +134,16 @@ bool RuleTextParser::parseLine()
         if (!parseLineSection(expectedSeparator))
             break;
 
+        const bool isSectionEnd = m_ruleFilter.isSectionEnd;
+
         if (!processSectionFilter())
             break;
+
+        // Next default type, if applicable
+        if (!isSectionEnd && !m_ruleFilter.hasFilterName) {
+            m_ruleFilter.type = m_ruleFilter.isTypeAddress() ? FORT_RULE_FILTER_TYPE_PORT
+                                                             : FORT_RULE_FILTER_TYPE_INVALID;
+        }
 
         expectedSeparator = CharColon | CharNewLine;
     }
@@ -153,15 +161,7 @@ bool RuleTextParser::processSectionFilter()
     if (!checkAddFilter())
         return false;
 
-    const bool isSectionEnd = m_ruleFilter.isSectionEnd;
-
     resetFilter();
-
-    // Next default type, if applicable
-    if (!isSectionEnd && !m_ruleFilter.hasFilterName) {
-        m_ruleFilter.type = m_ruleFilter.isTypeAddress() ? FORT_RULE_FILTER_TYPE_PORT
-                                                         : FORT_RULE_FILTER_TYPE_INVALID;
-    }
 
     return true;
 }

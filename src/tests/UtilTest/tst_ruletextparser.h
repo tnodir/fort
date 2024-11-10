@@ -318,3 +318,44 @@ TEST_F(RuleTextParserTest, badBadSymbol)
 
     ASSERT_EQ(p.errorCode(), RuleTextParser::ErrorBadSymbol);
 }
+
+TEST_F(RuleTextParserTest, filterNot)
+{
+    RuleTextParser p("!!!1");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 3);
+
+    // Check IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[2];
+        ASSERT_TRUE(rf.isNot);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "1" });
+    }
+}
+
+TEST_F(RuleTextParserTest, lineEndNot)
+{
+    RuleTextParser p("1!2");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 4);
+
+    // Check IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[2];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "1" });
+    }
+
+    // Check Port
+    {
+        const RuleFilter &rf = p.ruleFilters()[3];
+        ASSERT_TRUE(rf.isNot);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT);
+        checkStringList(rf.values, { "2" });
+    }
+}
