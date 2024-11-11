@@ -360,7 +360,7 @@ inline static BOOL fort_callout_ale_check_filter_lan_flags(
 inline static BOOL fort_callout_ale_check_filter_inet_flags(
         PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
 {
-    if (conf_flags.block_inet_traffic) {
+    if (conf_flags.block_inet_traffic && !conn->is_multicast) {
         return TRUE; /* block Internet */
     }
 
@@ -510,20 +510,24 @@ inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
-    conn->is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
-
     if (conf_flags.filter_locals)
         return FALSE;
 
     /* Loopback */
-    if (!conn->is_loopback || conf_flags.block_traffic)
-        return FALSE;
+    conn->is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
+
+    if (conn->is_loopback) {
+        return !conf_flags.block_traffic;
+    }
 
     /* Multicast */
-    if (!fort_addr_is_local_multicast(conn) || conf_flags.block_lan_traffic)
-        return FALSE;
+    conn->is_multicast = (UINT16) fort_addr_is_local_multicast(conn);
 
-    return TRUE;
+    if (conn->is_multicast) {
+        return !conf_flags.block_lan_traffic;
+    }
+
+    return FALSE;
 }
 
 static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)

@@ -171,14 +171,16 @@ typedef struct fort_conf_rule_flag
 
 typedef struct fort_conf_meta_conn
 {
-    UCHAR is_reauth : 1;
-    UCHAR inbound : 1;
-    UCHAR isIPv6 : 1;
-    UCHAR is_tcp : 1;
-    UCHAR is_loopback : 1;
-    UCHAR is_local_net : 1;
-    UCHAR inherited : 1;
-    UCHAR blocked : 1;
+    UINT16 is_reauth : 1;
+    UINT16 inbound : 1;
+    UINT16 isIPv6 : 1;
+    UINT16 is_tcp : 1;
+    UINT16 is_loopback : 1;
+    UINT16 is_multicast : 1;
+    UINT16 is_local_net : 1;
+    UINT16 inherited : 1;
+    UINT16 blocked : 1;
+
     UCHAR block_reason;
 
     UCHAR ip_proto;
