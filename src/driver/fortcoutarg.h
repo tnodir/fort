@@ -14,7 +14,6 @@ typedef struct fort_callout_field_index
     UCHAR remotePort;
     UCHAR ipProto;
     UCHAR direction; /* used by DATAGRAM only */
-    UCHAR userId;
 } FORT_CALLOUT_FIELD_INDEX, *PFORT_CALLOUT_FIELD_INDEX;
 
 typedef const FORT_CALLOUT_FIELD_INDEX *PCFORT_CALLOUT_FIELD_INDEX;
