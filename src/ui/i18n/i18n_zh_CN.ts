@@ -492,10 +492,6 @@
         <translation>请求连接</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>已禁用</translation>
-    </message>
-    <message>
         <source>Block All Traffic</source>
         <translation>阻止所有流量</translation>
     </message>
@@ -504,8 +500,12 @@
         <translation>阻止互联网流量</translation>
     </message>
     <message>
-        <source>Block LAN and Internet Traffic</source>
-        <translation>阻止局域网和互联网流量</translation>
+        <source>No Block</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet and LAN Traffic</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -492,10 +492,6 @@
         <translation>연결 요청</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>사용 안 함</translation>
-    </message>
-    <message>
         <source>Block All Traffic</source>
         <translation>모든 트래픽 차단</translation>
     </message>
@@ -504,8 +500,12 @@
         <translation>인터넷 트래픽 차단</translation>
     </message>
     <message>
-        <source>Block LAN and Internet Traffic</source>
-        <translation>LAN 및 인터넷 트래픽 차단</translation>
+        <source>No Block</source>
+        <translation>차단 없음</translation>
+    </message>
+    <message>
+        <source>Block Internet and LAN Traffic</source>
+        <translation>인터넷 및 LAN 트래픽 차단</translation>
     </message>
 </context>
 <context>

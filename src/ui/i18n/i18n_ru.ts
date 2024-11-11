@@ -492,10 +492,6 @@
         <translation>Спрашивать для соединения</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Отключено</translation>
-    </message>
-    <message>
         <source>Block All Traffic</source>
         <translation>Блокировать весь трафик</translation>
     </message>
@@ -504,8 +500,12 @@
         <translation>Блокировать Интернет трафик</translation>
     </message>
     <message>
-        <source>Block LAN and Internet Traffic</source>
-        <translation>Блокировать LAN и Интернет трафик</translation>
+        <source>No Block</source>
+        <translation>Не блокировать</translation>
+    </message>
+    <message>
+        <source>Block Internet and LAN Traffic</source>
+        <translation>Блокировать Интернет и LAN трафик</translation>
     </message>
 </context>
 <context>

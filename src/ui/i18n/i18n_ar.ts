@@ -492,10 +492,6 @@
         <translation>نبهني عند محاولة الاتصال</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>عاجز</translation>
-    </message>
-    <message>
         <source>Block All Traffic</source>
         <translation>منع كافة حركة المرور</translation>
     </message>
@@ -504,7 +500,11 @@
         <translation>منع حركة المرور على الإنترنت</translation>
     </message>
     <message>
-        <source>Block LAN and Internet Traffic</source>
+        <source>No Block</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Block Internet and LAN Traffic</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

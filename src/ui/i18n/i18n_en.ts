@@ -492,10 +492,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Block All Traffic</source>
         <translation></translation>
     </message>
@@ -504,7 +500,11 @@
         <translation></translation>
     </message>
     <message>
-        <source>Block LAN and Internet Traffic</source>
+        <source>No Block</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Internet and LAN Traffic</source>
         <translation></translation>
     </message>
 </context>

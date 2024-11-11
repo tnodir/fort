@@ -492,20 +492,20 @@
         <translation>Vprašaj za povezavo</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Onemogočeno</translation>
-    </message>
-    <message>
         <source>Block All Traffic</source>
-        <translation>Onemogoči ves promet</translation>
+        <translation>Blokiraj ves promet</translation>
     </message>
     <message>
         <source>Block Internet Traffic</source>
-        <translation>Onemogoči internetni promet</translation>
+        <translation>Blokirajte internetni promet</translation>
     </message>
     <message>
-        <source>Block LAN and Internet Traffic</source>
-        <translation>Onemogoči LAN in internetni promet</translation>
+        <source>No Block</source>
+        <translation>Brez bloka</translation>
+    </message>
+    <message>
+        <source>Block Internet and LAN Traffic</source>
+        <translation>Blokirajte internetni in LAN promet</translation>
     </message>
 </context>
 <context>

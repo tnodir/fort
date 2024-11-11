@@ -492,10 +492,6 @@
         <translation>Solicitar conexión</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Desactivado</translation>
-    </message>
-    <message>
         <source>Block All Traffic</source>
         <translation>Bloquear todo el tráfico</translation>
     </message>
@@ -504,8 +500,12 @@
         <translation>Bloquear tráfico de Internet</translation>
     </message>
     <message>
-        <source>Block LAN and Internet Traffic</source>
-        <translation>Bloquear tráfico LAN e Internet</translation>
+        <source>No Block</source>
+        <translation>No bloquear</translation>
+    </message>
+    <message>
+        <source>Block Internet and LAN Traffic</source>
+        <translation>Bloquear acceso a Internet y redes LAN</translation>
     </message>
 </context>
 <context>
