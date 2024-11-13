@@ -1,5 +1,9 @@
 @rem Setup variables
 
+@if defined FORTSVC goto EXIT
+
+@set PATH=%SystemRoot%\System32;%PATH%
+
 @set ARCH=x86
 @if "%PROCESSOR_ARCHITECTURE%" == "AMD64" (
     @set ARCH=x86_64
@@ -25,3 +29,5 @@
 @set DISPNAME=Fort Firewall Driver
 
 @set FORTSVC=FortFirewallSvc
+
+:EXIT
