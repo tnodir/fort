@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.14.12-test01, 2024-11-13:
+- UI: Reorganize "Block Traffic" options.
+
 v3.14.11, 2024-11-09:
 - UI: Options: TrafficGraph: Add "Fixed Speed" option.
 - UI: MyFort: Add "Service Logs" link.
