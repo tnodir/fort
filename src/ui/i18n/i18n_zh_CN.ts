@@ -501,11 +501,11 @@
     </message>
     <message>
         <source>No Block</source>
-        <translation type="unfinished"></translation>
+        <translation>不阻止</translation>
     </message>
     <message>
         <source>Block Internet and LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止互联网和局域网流量</translation>
     </message>
 </context>
 <context>
