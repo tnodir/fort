@@ -82,15 +82,15 @@ static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT
     conn->inherited = (UCHAR) inherited;
 }
 
-static ip_addr_t fort_callout_meta_ip(PCFORT_CALLOUT_ARG ca, UCHAR ipIndex)
+static void fort_callout_fill_meta_ip(PCFORT_CALLOUT_ARG ca, UCHAR ipIndex, ip_addr_t *ip)
 {
-    ip_addr_t ip;
+    const FWP_VALUE0 value = ca->inFixedValues->incomingValue[ipIndex].value;
+
     if (ca->isIPv6) {
-        ip.v6 = *((ip6_addr_t *) ca->inFixedValues->incomingValue[ipIndex].value.byteArray16);
+        RtlCopyMemory(ip->v6.data, value.byteArray16, sizeof(ip6_addr_t));
     } else {
-        ip.v4 = ca->inFixedValues->incomingValue[ipIndex].value.uint32;
+        ip->v4 = value.uint32;
     }
-    return ip;
 }
 
 static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
@@ -108,7 +108,7 @@ static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT
     conn->local_port = ca->inFixedValues->incomingValue[ca->fi->localPort].value.uint16;
     conn->remote_port = ca->inFixedValues->incomingValue[ca->fi->remotePort].value.uint16;
 
-    conn->local_ip = fort_callout_meta_ip(ca, ca->fi->localIp);
+    fort_callout_fill_meta_ip(ca, ca->fi->localIp, &conn->local_ip);
 }
 
 static FORT_APP_DATA fort_callout_ale_conf_app_data(
@@ -510,6 +510,8 @@ inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
+    fort_callout_fill_meta_ip(ca, ca->fi->remoteIp, &conn->remote_ip);
+
     if (conf_flags.filter_locals)
         return FALSE;
 
@@ -546,7 +548,6 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
                 .inbound = ca->inbound,
                 .isIPv6 = ca->isIPv6,
                 .is_reauth = is_reauth,
-                .remote_ip = fort_callout_meta_ip(ca, ca->fi->remoteIp),
         },
     };
 
