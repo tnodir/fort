@@ -47,11 +47,11 @@ FORT_API void fort_log_blocked_ip_header_write(char *p, PCFORT_CONF_META_CONN co
     const int ip_size = FORT_IP_ADDR_SIZE(conn->isIPv6);
 
     // Local IP
-    RtlCopyMemory(up, &conn->local_ip, ip_size);
+    RtlCopyMemory(up, conn->local_ip.data, ip_size);
 
     // Remote IP
     up = (UINT32 *) ((PCHAR) up + ip_size);
-    RtlCopyMemory(up, &conn->remote_ip, ip_size);
+    RtlCopyMemory(up, conn->remote_ip.data, ip_size);
 }
 
 FORT_API void fort_log_blocked_ip_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path)
@@ -85,11 +85,11 @@ FORT_API void fort_log_blocked_ip_header_read(
     const int ip_size = FORT_IP_ADDR_SIZE(conn->isIPv6);
 
     // Local IP
-    RtlCopyMemory(&conn->local_ip, up, ip_size);
+    RtlCopyMemory(conn->local_ip.data, up, ip_size);
 
     // Remote IP
     up = (const UINT32 *) ((const PCHAR) up + ip_size);
-    RtlCopyMemory(&conn->remote_ip, up, ip_size);
+    RtlCopyMemory(conn->remote_ip.data, up, ip_size);
 }
 
 FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_len)

@@ -19,6 +19,7 @@ typedef union ip_addr_t {
     unsigned short v2;
     unsigned int v4;
     ip6_addr_t v6;
+    char data[sizeof(ip6_addr_t)];
 } ip_addr_t;
 
 typedef struct fort_app_path
