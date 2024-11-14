@@ -42,7 +42,7 @@ void LogEntryBlockedIp::setConnTime(qint64 connTime)
     m_connTime = connTime;
 }
 
-void LogEntryBlockedIp::setLocalIp(ip_addr_t &ip)
+void LogEntryBlockedIp::setLocalIp(const ip_addr_t ip)
 {
     m_localIp = ip;
 }
@@ -62,7 +62,7 @@ void LogEntryBlockedIp::setLocalIp6(const QByteArray &ip)
     m_localIp.v6 = NetUtil::rawArrayToIp6(ip);
 }
 
-void LogEntryBlockedIp::setRemoteIp(ip_addr_t &ip)
+void LogEntryBlockedIp::setRemoteIp(const ip_addr_t ip)
 {
     m_remoteIp = ip;
 }

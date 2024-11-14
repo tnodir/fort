@@ -36,7 +36,7 @@ public:
 
     const ip_addr_t &localIp() const { return m_localIp; }
     ip_addr_t &localIp() { return m_localIp; }
-    void setLocalIp(ip_addr_t &ip);
+    void setLocalIp(const ip_addr_t ip);
 
     quint32 localIp4() const { return m_localIp.v4; }
     void setLocalIp4(quint32 ip);
@@ -46,7 +46,7 @@ public:
 
     const ip_addr_t &remoteIp() const { return m_remoteIp; }
     ip_addr_t &remoteIp() { return m_remoteIp; }
-    void setRemoteIp(ip_addr_t &ip);
+    void setRemoteIp(const ip_addr_t ip);
 
     quint32 remoteIp4() const { return m_remoteIp.v4; }
     void setRemoteIp4(quint32 ip);
