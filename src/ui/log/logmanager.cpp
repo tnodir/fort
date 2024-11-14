@@ -95,15 +95,22 @@ void LogManager::cancelAsyncIo()
 
 LogBuffer *LogManager::getFreeBuffer()
 {
-    if (m_freeBuffers.isEmpty())
-        return new LogBuffer(DriverCommon::bufferSize(), this);
+    if (!m_freeBuffers.isEmpty()) {
+        return m_freeBuffers.takeLast();
+    }
 
-    return m_freeBuffers.takeLast();
+    return new LogBuffer(DriverCommon::bufferSize(), this);
 }
 
 void LogManager::addFreeBuffer(LogBuffer *logBuffer)
 {
-    m_freeBuffers.append(logBuffer);
+    constexpr int maxBufferCount = 8;
+    if (m_freeBuffers.size() < maxBufferCount) {
+        m_freeBuffers.append(logBuffer);
+        return;
+    }
+
+    delete logBuffer;
 }
 
 void LogManager::processLogBuffer(LogBuffer *logBuffer, bool success, quint32 errorCode)
