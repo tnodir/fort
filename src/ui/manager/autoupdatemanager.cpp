@@ -253,14 +253,13 @@ bool AutoUpdateManager::runInstaller()
 
     qCDebug(LC) << "Run Installer:" << installerPath << args;
 
-    if (settings->hasService()) {
+    if (settings->isService()) {
         onRestartClientsRequested(/*restarting=*/true);
     }
 
-    if (settings->isMaster()) {
-        // Let clients to restart
-        QTimer::singleShot(100, this, [&] { OsUtil::quit("new version install"); });
-    }
+    QTimer::singleShot(100, this, [&] { // Let clients to restart
+        OsUtil::quit("new version install");
+    });
 
     return true;
 }

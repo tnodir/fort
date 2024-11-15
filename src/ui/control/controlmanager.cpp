@@ -452,10 +452,11 @@ void ControlManager::onDisconnected()
     if (Q_UNLIKELY(!w))
         return;
 
+    qCDebug(LC) << "Client disconnected: id:" << w->id();
+
     w->deleteLater();
     m_clients.removeOne(w);
 
-    qCDebug(LC) << "Client disconnected: id:" << w->id();
 }
 
 bool ControlManager::processRequest(Control::Command command, const QVariantList &args)
