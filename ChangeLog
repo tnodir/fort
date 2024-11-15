@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.14.12-test02, 2024-11-15:
+v3.14.12, 2024-11-15:
 - UI: Reorganize "Block Traffic" options.
 - UI: Fix IPv6 addresses handling (v3.14.11 regression).
 
