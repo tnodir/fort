@@ -94,7 +94,7 @@ QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, i
         return connRow.inbound ? ConnBlockListModel::tr("In") : ConnBlockListModel::tr("Out");
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int role)
@@ -105,7 +105,7 @@ QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int 
                                      : QString());
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant dataDisplayTime(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)

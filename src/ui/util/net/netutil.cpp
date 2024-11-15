@@ -96,26 +96,25 @@ quint32 NetUtil::applyIp4Mask(quint32 ip, int nbits)
     return nbits == 0 ? quint32(-1) : (ip | (nbits == 32 ? 0 : ((1 << (32 - nbits)) - 1)));
 }
 
-ip6_addr_t NetUtil::applyIp6Mask(const ip6_addr_t ip, int nbits)
+ip6_addr_t NetUtil::applyIp6Mask(ip6_addr_t ip, int nbits)
 {
-    ip6_addr_t ip6 = ip;
-    quint64 *masked = &ip6.hi64;
+    quint64 *masked = &ip.hi64;
 
     if (nbits <= 64) {
         *masked = quint64(-1LL);
-        masked = &ip6.lo64;
+        masked = &ip.lo64;
     } else {
         nbits -= 64;
     }
 
     *masked |= nbits == 0 ? quint64(-1LL) : (nbits == 64 ? 0 : htonll((1ULL << (64 - nbits)) - 1));
 
-    return ip6;
+    return ip;
 }
 
-QByteArray NetUtil::ip6ToRawArray(const ip_addr_t ip)
+QByteArray NetUtil::ip6ToRawArray(const ip6_addr_t &ip)
 {
-    return QByteArray::fromRawData(ip.v6.data, sizeof(ip6_addr_t));
+    return QByteArray::fromRawData(ip.data, sizeof(ip6_addr_t));
 }
 
 const ip6_addr_t &NetUtil::rawArrayToIp6(const QByteArray &buf)

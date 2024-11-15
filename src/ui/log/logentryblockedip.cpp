@@ -54,7 +54,7 @@ void LogEntryBlockedIp::setLocalIp4(quint32 ip)
 
 QByteArray LogEntryBlockedIp::localIp6() const
 {
-    return NetUtil::ip6ToRawArray(m_localIp);
+    return NetUtil::ip6ToRawArray(m_localIp.v6);
 }
 
 void LogEntryBlockedIp::setLocalIp6(const QByteArray &ip)
@@ -74,7 +74,7 @@ void LogEntryBlockedIp::setRemoteIp4(quint32 ip)
 
 QByteArray LogEntryBlockedIp::remoteIp6() const
 {
-    return NetUtil::ip6ToRawArray(m_remoteIp);
+    return NetUtil::ip6ToRawArray(m_remoteIp.v6);
 }
 
 void LogEntryBlockedIp::setRemoteIp6(const QByteArray &ip)

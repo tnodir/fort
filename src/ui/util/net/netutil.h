@@ -29,9 +29,9 @@ public:
     static int ip4Mask(quint32 ip);
 
     static quint32 applyIp4Mask(quint32 ip, int nbits);
-    static ip6_addr_t applyIp6Mask(const ip6_addr_t ip, int nbits);
+    static ip6_addr_t applyIp6Mask(ip6_addr_t ip, int nbits);
 
-    static QByteArray ip6ToRawArray(const ip_addr_t ip);
+    static QByteArray ip6ToRawArray(const ip6_addr_t &ip);
     static const ip6_addr_t &rawArrayToIp6(const QByteArray &buf);
 
     static QString getHostName(const QString &address);
