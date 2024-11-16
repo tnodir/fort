@@ -4,6 +4,7 @@
 
 #include <util/stringutil.h>
 
+#include "netformatutil.h"
 #include "netutil.h"
 
 namespace {
@@ -80,25 +81,27 @@ QString IpRange::toText() const
     for (int i = 0, n = ip4Size(); i < n; ++i) {
         const ip4_t ip = ip4At(i);
 
-        text += QString("%1\n").arg(NetUtil::ip4ToText(ip));
+        text += QString("%1\n").arg(NetFormatUtil::ip4ToText(ip));
     }
 
     for (int i = 0, n = pair4Size(); i < n; ++i) {
         const Ip4Pair ip = pair4At(i);
 
-        text += QString("%1-%2\n").arg(NetUtil::ip4ToText(ip.from), NetUtil::ip4ToText(ip.to));
+        text += QString("%1-%2\n").arg(
+                NetFormatUtil::ip4ToText(ip.from), NetFormatUtil::ip4ToText(ip.to));
     }
 
     for (int i = 0, n = ip6Size(); i < n; ++i) {
         const ip6_addr_t ip = ip6At(i);
 
-        text += QString("%1\n").arg(NetUtil::ip6ToText(ip));
+        text += QString("%1\n").arg(NetFormatUtil::ip6ToText(ip));
     }
 
     for (int i = 0, n = pair6Size(); i < n; ++i) {
         const Ip6Pair ip = pair6At(i);
 
-        text += QString("%1-%2\n").arg(NetUtil::ip6ToText(ip.from), NetUtil::ip6ToText(ip.to));
+        text += QString("%1-%2\n").arg(
+                NetFormatUtil::ip6ToText(ip.from), NetFormatUtil::ip6ToText(ip.to));
     }
 
     return text;
@@ -182,7 +185,7 @@ IpRange::ParseError IpRange::parseIp4Address(const QStringView &ip, const QStrin
     ip4_t from, to = 0;
 
     bool ok;
-    from = NetUtil::textToIp4(ip, &ok);
+    from = NetFormatUtil::textToIp4(ip, &ok);
     if (!ok) {
         setErrorMessage(tr("Bad IP address"));
         setErrorDetails(QString("IPv4 ip='%1'").arg(ip));
@@ -220,7 +223,7 @@ IpRange::ParseError IpRange::parseIp4AddressMaskFull(
         const QStringView &mask, ip4_t &from, ip4_t &to)
 {
     bool ok;
-    to = NetUtil::textToIp4(mask, &ok);
+    to = NetFormatUtil::textToIp4(mask, &ok);
     if (!ok) {
         setErrorMessage(tr("Bad second IP address"));
         setErrorDetails(QString("IPv4 ip='%1'").arg(mask));
@@ -260,7 +263,7 @@ IpRange::ParseError IpRange::parseIp6Address(
     ip6_addr_t from, to;
 
     bool ok;
-    from = NetUtil::textToIp6(ip, &ok);
+    from = NetFormatUtil::textToIp6(ip, &ok);
     if (!ok) {
         setErrorMessage(tr("Bad IP address"));
         setErrorDetails(QString("IPv6 ip='%1'").arg(ip));
@@ -300,7 +303,7 @@ IpRange::ParseError IpRange::parseIp6AddressMaskFull(
         const QStringView &mask, ip6_addr_t &to, bool &hasMask)
 {
     bool ok;
-    to = NetUtil::textToIp6(mask, &ok);
+    to = NetFormatUtil::textToIp6(mask, &ok);
     if (!ok) {
         setErrorMessage(tr("Bad second IP address"));
         setErrorDetails(QString("IPv6 ip='%1'").arg(mask));

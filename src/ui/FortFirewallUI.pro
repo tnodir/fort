@@ -213,6 +213,7 @@ SOURCES += \
     util/model/tablesqlmodel.cpp \
     util/net/iprange.cpp \
     util/net/netdownloader.cpp \
+    util/net/netformatutil.cpp \
     util/net/netutil.cpp \
     util/net/portrange.cpp \
     util/net/protorange.cpp \
@@ -452,6 +453,7 @@ HEADERS += \
     util/model/tablesqlmodel.h \
     util/net/iprange.h \
     util/net/netdownloader.h \
+    util/net/netformatutil.h \
     util/net/netutil.h \
     util/net/portrange.h \
     util/net/protorange.h \

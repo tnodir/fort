@@ -18,6 +18,7 @@
 #include <util/conf/confbuffer.h>
 #include <util/device.h>
 #include <util/fileutil.h>
+#include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
 #include <util/osutil.h>
 #include <util/processinfo.h>
@@ -95,7 +96,7 @@ void printLogs(LogBuffer &buf)
         buf.readEntryBlockedIp(&entry);
 
         qDebug() << entry.pid() << entry.kernelPath() << entry.path()
-                 << NetUtil::ipToText(entry.remoteIp()) << entry.remotePort();
+                 << NetFormatUtil::ipToText(entry.remoteIp()) << entry.remotePort();
     }
 }
 

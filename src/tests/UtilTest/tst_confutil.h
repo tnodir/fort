@@ -13,6 +13,7 @@
 #include <util/conf/confappswalker.h>
 #include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
+#include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
 #include <util/stringutil.h>
 
@@ -79,17 +80,17 @@ TEST_F(ConfUtilTest, confWriteRead)
     const char *data = confBuf.data() + DriverCommon::confIoConfOff();
 
     ASSERT_FALSE(DriverCommon::confIp4InRange(data, 0, true));
-    ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("9.255.255.255")));
-    ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("11.0.0.0")));
-    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("10.0.0.0")));
-    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("169.254.100.100")));
-    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("192.168.255.255")));
-    ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("193.0.0.0")));
-    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetUtil::textToIp4("239.255.255.250")));
-    ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("::1")));
-    ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("::2")));
-    ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("::ffff:0:2")));
-    ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetUtil::textToIp6("65::")));
+    ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetFormatUtil::textToIp4("9.255.255.255")));
+    ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetFormatUtil::textToIp4("11.0.0.0")));
+    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetFormatUtil::textToIp4("10.0.0.0")));
+    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetFormatUtil::textToIp4("169.254.100.100")));
+    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetFormatUtil::textToIp4("192.168.255.255")));
+    ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetFormatUtil::textToIp4("193.0.0.0")));
+    ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetFormatUtil::textToIp4("239.255.255.250")));
+    ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::1")));
+    ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::2")));
+    ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::ffff:0:2")));
+    ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("65::")));
 
     ASSERT_TRUE(DriverCommon::confAppFind(data, "System").found);
 

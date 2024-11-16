@@ -8,6 +8,7 @@
 #include <task/taskzonedownloader.h>
 #include <util/fileutil.h>
 #include <util/net/iprange.h>
+#include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
 #include <util/net/portrange.h>
 #include <util/net/protorange.h>
@@ -34,19 +35,19 @@ TEST_F(NetUtilTest, ip4Text)
 {
     const QString ip4Str("172.16.0.1");
 
-    ASSERT_EQ(NetUtil::ip4ToText(NetUtil::textToIp4(ip4Str)), ip4Str);
+    ASSERT_EQ(NetFormatUtil::ip4ToText(NetFormatUtil::textToIp4(ip4Str)), ip4Str);
 }
 
 TEST_F(NetUtilTest, ip6Text)
 {
     const QString ip6Str("::1");
 
-    ASSERT_EQ(NetUtil::ip6ToText(NetUtil::textToIp6(ip6Str)), ip6Str);
+    ASSERT_EQ(NetFormatUtil::ip6ToText(NetFormatUtil::textToIp6(ip6Str)), ip6Str);
 }
 
 TEST_F(NetUtilTest, ip6Bytes01)
 {
-    const ip6_addr_t ip = NetUtil::textToIp6("ff02::1:3");
+    const ip6_addr_t ip = NetFormatUtil::textToIp6("ff02::1:3");
 
     ASSERT_EQ(ip.addr32[0], 0x2ff);
     ASSERT_EQ(ip.addr32[1], 0);
@@ -56,7 +57,7 @@ TEST_F(NetUtilTest, ip6Bytes01)
 
 TEST_F(NetUtilTest, ip6Bytes02)
 {
-    const ip6_addr_t ip = NetUtil::textToIp6("fe80::e58c:84f8:a156:2a23");
+    const ip6_addr_t ip = NetFormatUtil::textToIp6("fe80::e58c:84f8:a156:2a23");
 
     ASSERT_EQ(ip.addr32[0], 0x80fe);
     ASSERT_EQ(ip.addr32[1], 0);
@@ -66,7 +67,7 @@ TEST_F(NetUtilTest, ip6Bytes02)
 
 TEST_F(NetUtilTest, ip6Mask01)
 {
-    const ip6_addr_t ip = NetUtil::applyIp6Mask(NetUtil::textToIp6("::2"), 126);
+    const ip6_addr_t ip = NetUtil::applyIp6Mask(NetFormatUtil::textToIp6("::2"), 126);
 
     ASSERT_EQ(ip.addr32[0], 0);
     ASSERT_EQ(ip.addr32[1], 0);
@@ -99,14 +100,14 @@ TEST_F(NetUtilTest, ip4Ranges)
         ASSERT_EQ(ipRange.ip4Size(), 1);
 
         const Ip4Pair &ipPair1 = ipRange.pair4At(0);
-        ASSERT_EQ(ipPair1.from, NetUtil::textToIp4("172.16.0.0"));
-        ASSERT_EQ(ipPair1.to, NetUtil::textToIp4("172.16.15.255"));
+        ASSERT_EQ(ipPair1.from, NetFormatUtil::textToIp4("172.16.0.0"));
+        ASSERT_EQ(ipPair1.to, NetFormatUtil::textToIp4("172.16.15.255"));
 
         const Ip4Pair &ipPair2 = ipRange.pair4At(1);
-        ASSERT_EQ(ipPair2.from, NetUtil::textToIp4("192.168.0.0"));
-        ASSERT_EQ(ipPair2.to, NetUtil::textToIp4("192.168.255.255"));
+        ASSERT_EQ(ipPair2.from, NetFormatUtil::textToIp4("192.168.0.0"));
+        ASSERT_EQ(ipPair2.to, NetFormatUtil::textToIp4("192.168.255.255"));
 
-        ASSERT_EQ(ipRange.ip4At(0), NetUtil::textToIp4("127.0.0.1"));
+        ASSERT_EQ(ipRange.ip4At(0), NetFormatUtil::textToIp4("127.0.0.1"));
     }
 
     // Merge ranges
@@ -118,8 +119,8 @@ TEST_F(NetUtilTest, ip4Ranges)
         ASSERT_EQ(ipRange.pair4Size(), 1);
 
         const Ip4Pair &ipPair1 = ipRange.pair4At(0);
-        ASSERT_EQ(ipPair1.from, NetUtil::textToIp4("10.0.0.0"));
-        ASSERT_EQ(ipPair1.to, NetUtil::textToIp4("10.0.2.0"));
+        ASSERT_EQ(ipPair1.from, NetFormatUtil::textToIp4("10.0.0.0"));
+        ASSERT_EQ(ipPair1.to, NetFormatUtil::textToIp4("10.0.2.0"));
     }
 }
 
