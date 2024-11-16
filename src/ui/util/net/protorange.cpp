@@ -24,7 +24,7 @@ QString ProtoRange::toText() const
     QString text;
 
     for (int i = 0, n = protoSize(); i < n; ++i) {
-        const quint8 proto = protoAt(i);
+        const proto_t proto = protoAt(i);
 
         text += QString("%1\n").arg(NetUtil::protocolName(proto));
     }
@@ -66,7 +66,7 @@ bool ProtoRange::fromList(const StringViewList &list)
         }
     }
 
-    fillRangeArrays<quint8>({
+    fillRangeArrays<proto_t>({
             .rangeMap = protoRangeMap,
             .valuesArray = m_protoArray,
             .pairFromArray = m_pairFromArray,
@@ -104,7 +104,7 @@ ProtoRange::ParseError ProtoRange::parseProtoLine(
 ProtoRange::ParseError ProtoRange::parseProtoRange(const QStringView &proto,
         const QStringView &proto2, protorange_map_t &protoRangeMap, int &pairSize)
 {
-    quint8 from = 0, to = 0;
+    proto_t from = 0, to = 0;
 
     if (!(parseProtoNumber(proto, from) && parseProtoNumber(proto2, to)))
         return ErrorBadProto;
@@ -122,7 +122,7 @@ ProtoRange::ParseError ProtoRange::parseProtoRange(const QStringView &proto,
     return ErrorOk;
 }
 
-bool ProtoRange::parseProtoNumber(const QStringView &proto, quint8 &v)
+bool ProtoRange::parseProtoNumber(const QStringView &proto, proto_t &v)
 {
     if (proto.isEmpty())
         return true;

@@ -6,13 +6,12 @@
 
 #include "valuerange.h"
 
-using ProtoPair = struct
-{
-    quint8 from, to;
-};
+using proto_t = quint8;
 
-using protorange_map_t = QMap<quint8, quint8>;
-using proto_arr_t = QVector<quint8>;
+using protorange_map_t = QMap<proto_t, proto_t>;
+using proto_arr_t = QVector<proto_t>;
+
+using ProtoPair = ValuePair<proto_t>;
 
 class ProtoRange : public ValueRange
 {
@@ -33,7 +32,7 @@ public:
     int protoSize() const { return m_protoArray.size(); }
     int pairSize() const { return m_pairToArray.size(); }
 
-    quint8 protoAt(int i) const { return m_protoArray.at(i); }
+    proto_t protoAt(int i) const { return m_protoArray.at(i); }
     ProtoPair pairAt(int i) const
     {
         return ProtoPair { m_pairFromArray.at(i), m_pairToArray.at(i) };
@@ -64,7 +63,7 @@ private:
     ProtoRange::ParseError parseProtoRange(const QStringView &proto, const QStringView &proto2,
             protorange_map_t &protoRangeMap, int &pairSize);
 
-    bool parseProtoNumber(const QStringView &proto, quint8 &v);
+    bool parseProtoNumber(const QStringView &proto, proto_t &v);
 
 private:
     proto_arr_t m_protoArray;

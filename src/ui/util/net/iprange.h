@@ -6,18 +6,13 @@
 
 #include "valuerange.h"
 
-using Ip4Pair = struct
-{
-    quint32 from, to;
-};
+using ip4_t = quint32;
 
-using Ip6Pair = struct
-{
-    ip6_addr_t from, to;
-};
+using ip4range_map_t = QMap<ip4_t, ip4_t>;
+using ip4_arr_t = QVector<ip4_t>;
 
-using ip4range_map_t = QMap<quint32, quint32>;
-using ip4_arr_t = QVector<quint32>;
+using Ip4Pair = ValuePair<ip4_t>;
+using Ip6Pair = ValuePair<ip6_addr_t>;
 
 using ip6_pair_arr_t = QVector<Ip6Pair>;
 using ip6_arr_t = QVector<ip6_addr_t>;
@@ -44,7 +39,7 @@ public:
     int ip4Size() const { return m_ip4Array.size(); }
     int pair4Size() const { return m_pair4ToArray.size(); }
 
-    quint32 ip4At(int i) const { return m_ip4Array.at(i); }
+    ip4_t ip4At(int i) const { return m_ip4Array.at(i); }
     Ip4Pair pair4At(int i) const
     {
         return Ip4Pair { m_pair4FromArray.at(i), m_pair4ToArray.at(i) };
@@ -96,12 +91,12 @@ private:
             ip4range_map_t &ip4RangeMap, int &pair4Size, char maskSep);
 
     IpRange::ParseError parseIp4AddressMask(
-            const QStringView &mask, quint32 &from, quint32 &to, char maskSep);
-    IpRange::ParseError parseIp4AddressMaskFull(const QStringView &mask, quint32 &from, quint32 &to);
-    IpRange::ParseError parseIp4AddressMaskPrefix(
-            const QStringView &mask, quint32 &from, quint32 &to);
+            const QStringView &mask, ip4_t &from, ip4_t &to, char maskSep);
+    IpRange::ParseError parseIp4AddressMaskFull(const QStringView &mask, ip4_t &from, ip4_t &to);
+    IpRange::ParseError parseIp4AddressMaskPrefix(const QStringView &mask, ip4_t &from, ip4_t &to);
 
-    IpRange::ParseError parseIp6Address(const QStringView &ip, const QStringView &mask, char maskSep);
+    IpRange::ParseError parseIp6Address(
+            const QStringView &ip, const QStringView &mask, char maskSep);
 
     IpRange::ParseError parseIp6AddressMask(
             const QStringView &mask, ip6_addr_t &from, ip6_addr_t &to, bool &hasMask, char maskSep);

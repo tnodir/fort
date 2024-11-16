@@ -78,7 +78,7 @@ QString IpRange::toText() const
     QString text;
 
     for (int i = 0, n = ip4Size(); i < n; ++i) {
-        const quint32 ip = ip4At(i);
+        const ip4_t ip = ip4At(i);
 
         text += QString("%1\n").arg(NetUtil::ip4ToText(ip));
     }
@@ -132,7 +132,7 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
         }
     }
 
-    fillRangeArrays<quint32>({
+    fillRangeArrays<ip4_t>({
             .rangeMap = ip4RangeMap,
             .valuesArray = m_ip4Array,
             .pairFromArray = m_pair4FromArray,
@@ -179,7 +179,7 @@ IpRange::ParseError IpRange::parseIpLine(
 IpRange::ParseError IpRange::parseIp4Address(const QStringView &ip, const QStringView &mask,
         ip4range_map_t &ip4RangeMap, int &pair4Size, char maskSep)
 {
-    quint32 from, to = 0;
+    ip4_t from, to = 0;
 
     bool ok;
     from = NetUtil::textToIp4(ip, &ok);
@@ -203,7 +203,7 @@ IpRange::ParseError IpRange::parseIp4Address(const QStringView &ip, const QStrin
 }
 
 IpRange::ParseError IpRange::parseIp4AddressMask(
-        const QStringView &mask, quint32 &from, quint32 &to, char maskSep)
+        const QStringView &mask, ip4_t &from, ip4_t &to, char maskSep)
 {
     switch (maskSep) {
     case '-': // e.g. "127.0.0.0-127.255.255.255"
@@ -217,7 +217,7 @@ IpRange::ParseError IpRange::parseIp4AddressMask(
 }
 
 IpRange::ParseError IpRange::parseIp4AddressMaskFull(
-        const QStringView &mask, quint32 &from, quint32 &to)
+        const QStringView &mask, ip4_t &from, ip4_t &to)
 {
     bool ok;
     to = NetUtil::textToIp4(mask, &ok);
@@ -237,7 +237,7 @@ IpRange::ParseError IpRange::parseIp4AddressMaskFull(
 }
 
 IpRange::ParseError IpRange::parseIp4AddressMaskPrefix(
-        const QStringView &mask, quint32 &from, quint32 &to)
+        const QStringView &mask, ip4_t &from, ip4_t &to)
 {
     bool ok = true;
     const int nbits = mask.isEmpty() ? emptyNetMask() : mask.toInt(&ok);

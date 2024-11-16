@@ -24,7 +24,7 @@ QString PortRange::toText() const
     QString text;
 
     for (int i = 0, n = portSize(); i < n; ++i) {
-        const quint16 port = portAt(i);
+        const port_t port = portAt(i);
 
         text += QString("%1\n").arg(port);
     }
@@ -66,7 +66,7 @@ bool PortRange::fromList(const StringViewList &list)
         }
     }
 
-    fillRangeArrays<quint16>({
+    fillRangeArrays<port_t>({
             .rangeMap = portRangeMap,
             .valuesArray = m_portArray,
             .pairFromArray = m_pairFromArray,
@@ -104,7 +104,7 @@ PortRange::ParseError PortRange::parsePortLine(
 PortRange::ParseError PortRange::parsePortRange(const QStringView &port, const QStringView &port2,
         portrange_map_t &portRangeMap, int &pairSize)
 {
-    quint16 from = 0, to = 0;
+    port_t from = 0, to = 0;
 
     if (!(parsePortNumber(port, from) && parsePortNumber(port2, to)))
         return ErrorBadPort;
@@ -122,7 +122,7 @@ PortRange::ParseError PortRange::parsePortRange(const QStringView &port, const Q
     return ErrorOk;
 }
 
-bool PortRange::parsePortNumber(const QStringView &port, quint16 &v)
+bool PortRange::parsePortNumber(const QStringView &port, port_t &v)
 {
     if (port.isEmpty())
         return true;

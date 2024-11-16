@@ -6,13 +6,12 @@
 
 #include "valuerange.h"
 
-using PortPair = struct
-{
-    quint16 from, to;
-};
+using port_t = quint16;
 
-using portrange_map_t = QMap<quint16, quint16>;
-using port_arr_t = QVector<quint16>;
+using portrange_map_t = QMap<port_t, port_t>;
+using port_arr_t = QVector<port_t>;
+
+using PortPair = ValuePair<port_t>;
 
 class PortRange : public ValueRange
 {
@@ -39,7 +38,7 @@ public:
     int portSize() const { return m_portArray.size(); }
     int pairSize() const { return m_pairToArray.size(); }
 
-    quint16 portAt(int i) const { return m_portArray.at(i); }
+    port_t portAt(int i) const { return m_portArray.at(i); }
     PortPair pairAt(int i) const { return PortPair { m_pairFromArray.at(i), m_pairToArray.at(i) }; }
 
     bool isEmpty() const;
@@ -66,7 +65,7 @@ private:
     PortRange::ParseError parsePortRange(const QStringView &port, const QStringView &port2,
             portrange_map_t &portRangeMap, int &pairSize);
 
-    bool parsePortNumber(const QStringView &port, quint16 &v);
+    bool parsePortNumber(const QStringView &port, port_t &v);
 
 private:
     bool m_isProtoTcp : 1 = false;
