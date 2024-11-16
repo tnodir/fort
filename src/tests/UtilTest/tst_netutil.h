@@ -9,6 +9,7 @@
 #include <util/fileutil.h>
 #include <util/net/iprange.h>
 #include <util/net/netutil.h>
+#include <util/net/portrange.h>
 
 class NetUtilTest : public Test
 {
@@ -18,9 +19,15 @@ protected:
     void TearDown();
 };
 
-void NetUtilTest::SetUp() { }
+void NetUtilTest::SetUp()
+{
+    NetUtil::windowsSockInit();
+}
 
-void NetUtilTest::TearDown() { }
+void NetUtilTest::TearDown()
+{
+    NetUtil::windowsSockCleanup();
+}
 
 TEST_F(NetUtilTest, ip4Text)
 {
@@ -134,6 +141,26 @@ TEST_F(NetUtilTest, ip6Ranges)
     ASSERT_EQ(ipRange.toText(),
             QString("::1-::3\n"
                     "::2-::3\n"));
+}
+
+TEST_F(NetUtilTest, portRanges)
+{
+    PortRange portRange;
+
+    ASSERT_FALSE(portRange.fromText("-16"));
+    ASSERT_EQ(portRange.errorLineNo(), 1);
+
+    ASSERT_TRUE(portRange.fromText("1-128"));
+    ASSERT_EQ(portRange.toText(), QString("1-128\n"));
+
+    // TCP Prots
+    portRange.setProtoTcp(true);
+
+    ASSERT_TRUE(portRange.fromText("http\n"
+                                   "https\n"));
+    ASSERT_EQ(portRange.toText(),
+            QString("80\n"
+                    "443\n"));
 }
 
 TEST_F(NetUtilTest, taskTasix)

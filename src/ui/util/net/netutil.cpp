@@ -20,6 +20,17 @@ struct sock_addr
 
 #define sock_addr_get_inp(sap) ((void *) &(sap)->u.in.sin_addr)
 
+bool NetUtil::windowsSockInit()
+{
+    WSAData wsadata;
+    return WSAStartup(MAKEWORD(2, 0), &wsadata) == 0;
+}
+
+void NetUtil::windowsSockCleanup()
+{
+    WSACleanup();
+}
+
 quint32 NetUtil::textToIp4(const QStringView &text, bool *ok)
 {
     quint32 ip4;
@@ -191,8 +202,25 @@ QString NetUtil::protocolName(quint8 ipProto)
     case IPPROTO_ICMPV6:
         return "ICMPv6";
     default:
+        const protoent *pe = getprotobynumber(ipProto);
+        if (pe) {
+            return QString::fromLatin1(pe->p_name);
+        }
+
         return QString("0x%1").arg(ipProto, 0, 16);
     }
+}
+
+quint8 NetUtil::protocolNumber(const QStringView &name)
+{
+    const QByteArray nameData = name.toLatin1();
+
+    const protoent *pe = getprotobyname(nameData.constData());
+    if (pe) {
+        return quint8(pe->p_proto);
+    }
+
+    return 0;
 }
 
 quint16 NetUtil::serviceToPort(const QStringView &name, const char *proto, bool &ok)

@@ -9,6 +9,9 @@
 class NetUtil
 {
 public:
+    static bool windowsSockInit();
+    static void windowsSockCleanup();
+
     // Convert IPv4 address from text to number
     static quint32 textToIp4(const QStringView &text, bool *ok = nullptr);
     static quint32 textToIp4(const char *text, bool *ok = nullptr);
@@ -40,6 +43,7 @@ public:
     static QString localIpNetworksText();
 
     static QString protocolName(quint8 ipProto);
+    static quint8 protocolNumber(const QStringView &name);
 
     static quint16 serviceToPort(const QStringView &name, const char *proto, bool &ok);
 };

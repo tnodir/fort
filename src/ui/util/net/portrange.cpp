@@ -87,7 +87,7 @@ bool PortRange::fromList(const StringViewList &list)
 PortRange::ParseError PortRange::parsePortLine(
         const QStringView &line, portrange_map_t &portRangeMap, int &pairSize)
 {
-    static const QRegularExpression portRe(R"(^(\d+)\s*(-?)\s*(\S*))");
+    static const QRegularExpression portRe(R"(^([\d\w]+)\s*(-?)\s*(\S*))");
 
     const auto match = StringUtil::match(portRe, line);
     if (!match.hasMatch()) {
@@ -113,8 +113,12 @@ PortRange::ParseError PortRange::parsePortRange(const QStringView &port, const Q
 {
     quint16 from, to = 0;
 
-    if (!(parsePortNumber(port, from) || parsePortNumber(port2, to)))
+    if (!(parsePortNumber(port, from) && parsePortNumber(port2, to)))
         return ErrorBadPort;
+
+    if (to == 0) {
+        to = from;
+    }
 
     portRangeMap.insert(from, to);
 
@@ -127,6 +131,9 @@ PortRange::ParseError PortRange::parsePortRange(const QStringView &port, const Q
 
 bool PortRange::parsePortNumber(const QStringView &port, quint16 &v)
 {
+    if (port.isEmpty())
+        return true;
+
     bool ok;
 
     if (port.at(0).isDigit()) {
@@ -142,4 +149,43 @@ bool PortRange::parsePortNumber(const QStringView &port, quint16 &v)
         setErrorDetails(QString("Port='%1'").arg(port));
     }
     return ok;
+}
+
+void PortRange::fillPortRange(const portrange_map_t &portRangeMap, int pairSize)
+{
+    if (portRangeMap.isEmpty())
+        return;
+
+    const int mapSize = portRangeMap.size();
+    m_portArray.reserve(mapSize - pairSize);
+    m_pairFromArray.reserve(pairSize);
+    m_pairToArray.reserve(pairSize);
+
+    PortPair prevPort;
+    int prevIndex = -1;
+
+    auto it = portRangeMap.constBegin();
+    auto end = portRangeMap.constEnd();
+
+    for (; it != end; ++it) {
+        PortPair port { it.key(), it.value() };
+
+        // try to merge colliding addresses
+        if (prevIndex >= 0 && port.from <= prevPort.to + 1) {
+            if (port.to > prevPort.to) {
+                m_pairToArray.replace(prevIndex, port.to);
+
+                prevPort.to = port.to;
+            }
+            // else skip it
+        } else if (port.from == port.to) {
+            m_portArray.append(port.from);
+        } else {
+            m_pairFromArray.append(port.from);
+            m_pairToArray.append(port.to);
+
+            prevPort = port;
+            ++prevIndex;
+        }
+    }
 }
