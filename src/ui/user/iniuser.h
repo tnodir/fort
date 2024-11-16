@@ -319,7 +319,7 @@ public:
     }
     void setGraphWindowLabelColor(const QColor &v) { setColor("graphWindow/labelColor", v); }
 
-    constexpr QColor graphWindowGridColorDefault() const { return QColor(200, 200, 200); }
+    constexpr QColor graphWindowGridColorDefault() const { return QColor(141, 141, 141); }
     QColor graphWindowGridColor() const
     {
         return valueColor("graphWindow/gridColor", graphWindowGridColorDefault());
