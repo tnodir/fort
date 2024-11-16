@@ -1,12 +1,10 @@
 #ifndef PORTRANGE_H
 #define PORTRANGE_H
 
-#include <QMap>
-#include <QObject>
-#include <QVector>
-
 #include <common/common_types.h>
 #include <util/util_types.h>
+
+#include "valuerange.h"
 
 using PortPair = struct
 {
@@ -16,7 +14,7 @@ using PortPair = struct
 using portrange_map_t = QMap<quint16, quint16>;
 using port_arr_t = QVector<quint16>;
 
-class PortRange : public QObject
+class PortRange : public ValueRange
 {
     Q_OBJECT
 
@@ -28,12 +26,6 @@ public:
 
     bool isProtoUdp() const { return m_isProtoUdp; }
     void setProtoUdp(bool v) { m_isProtoUdp = v; }
-
-    int errorLineNo() const { return m_errorLineNo; }
-
-    QString errorMessage() const { return m_errorMessage; }
-    QString errorDetails() const { return m_errorDetails; }
-    QString errorLineAndMessageDetails() const;
 
     const port_arr_t &portArray() const { return m_portArray; }
     port_arr_t &portArray() { return m_portArray; }
@@ -58,8 +50,7 @@ public:
     bool fromText(const QString &text);
     bool fromList(const StringViewList &list);
 
-public slots:
-    void clear();
+    void clear() override;
 
 private:
     enum ParseError {
@@ -69,12 +60,6 @@ private:
         ErrorBadPort,
     };
 
-    void setErrorLineNo(int lineNo) { m_errorLineNo = lineNo; }
-    void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
-    void setErrorDetails(const QString &errorDetails) { m_errorDetails = errorDetails; }
-
-    void appendErrorDetails(const QString &errorDetails);
-
     PortRange::ParseError parsePortLine(
             const QStringView &line, portrange_map_t &portRangeMap, int &pairSize);
 
@@ -83,15 +68,9 @@ private:
 
     bool parsePortNumber(const QStringView &port, quint16 &v);
 
-    void fillPortRange(const portrange_map_t &portRangeMap, int pairSize);
-
 private:
     bool m_isProtoTcp : 1 = false;
     bool m_isProtoUdp : 1 = false;
-
-    int m_errorLineNo = 0;
-    QString m_errorMessage;
-    QString m_errorDetails;
 
     port_arr_t m_portArray;
     port_arr_t m_pairFromArray;

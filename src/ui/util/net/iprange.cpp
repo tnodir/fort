@@ -53,13 +53,11 @@ void sortIp6PairArray(ip6_arr_t &fromArray, ip6_arr_t &toArray)
 
 }
 
-IpRange::IpRange(QObject *parent) : QObject(parent) { }
+IpRange::IpRange(QObject *parent) : ValueRange(parent) { }
 
 void IpRange::clear()
 {
-    m_errorLineNo = 0;
-    m_errorMessage.clear();
-    m_errorDetails.clear();
+    ValueRange::clear();
 
     m_ip4Array.clear();
     m_pair4FromArray.clear();
@@ -68,17 +66,6 @@ void IpRange::clear()
     m_ip6Array.clear();
     m_pair6FromArray.clear();
     m_pair6ToArray.clear();
-}
-
-void IpRange::appendErrorDetails(const QString &errorDetails)
-{
-    m_errorDetails += (m_errorDetails.isEmpty() ? QString() : QString(' ')) + errorDetails;
-}
-
-QString IpRange::errorLineAndMessageDetails() const
-{
-    return tr("Error at line %1: %2 (%3)")
-            .arg(QString::number(errorLineNo()), errorMessage(), errorDetails());
 }
 
 bool IpRange::isEmpty() const
@@ -145,7 +132,13 @@ bool IpRange::fromList(const StringViewList &list, bool sort)
         }
     }
 
-    fillIp4Range(ip4RangeMap, pair4Size);
+    fillRangeArrays<quint32>({
+            .rangeMap = ip4RangeMap,
+            .valuesArray = m_ip4Array,
+            .pairFromArray = m_pair4FromArray,
+            .pairToArray = m_pair4ToArray,
+            .pairSize = pair4Size,
+    });
 
     if (sort) {
         sortIp6Array(m_ip6Array);
@@ -339,43 +332,4 @@ IpRange::ParseError IpRange::parseIp6AddressMaskPrefix(
     hasMask = true;
 
     return ErrorOk;
-}
-
-void IpRange::fillIp4Range(const ip4range_map_t &ipRangeMap, int pairSize)
-{
-    if (ipRangeMap.isEmpty())
-        return;
-
-    const int mapSize = ipRangeMap.size();
-    m_ip4Array.reserve(mapSize - pairSize);
-    m_pair4FromArray.reserve(pairSize);
-    m_pair4ToArray.reserve(pairSize);
-
-    Ip4Pair prevIp;
-    int prevIndex = -1;
-
-    auto it = ipRangeMap.constBegin();
-    auto end = ipRangeMap.constEnd();
-
-    for (; it != end; ++it) {
-        Ip4Pair ip { it.key(), it.value() };
-
-        // try to merge colliding addresses
-        if (prevIndex >= 0 && ip.from <= prevIp.to + 1) {
-            if (ip.to > prevIp.to) {
-                m_pair4ToArray.replace(prevIndex, ip.to);
-
-                prevIp.to = ip.to;
-            }
-            // else skip it
-        } else if (ip.from == ip.to) {
-            m_ip4Array.append(ip.from);
-        } else {
-            m_pair4FromArray.append(ip.from);
-            m_pair4ToArray.append(ip.to);
-
-            prevIp = ip;
-            ++prevIndex;
-        }
-    }
 }

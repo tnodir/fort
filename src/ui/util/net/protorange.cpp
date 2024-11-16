@@ -3,28 +3,15 @@
 #include <util/net/netutil.h>
 #include <util/stringutil.h>
 
-ProtoRange::ProtoRange(QObject *parent) : QObject(parent) { }
+ProtoRange::ProtoRange(QObject *parent) : ValueRange(parent) { }
 
 void ProtoRange::clear()
 {
-    m_errorLineNo = 0;
-    m_errorMessage.clear();
-    m_errorDetails.clear();
+    ValueRange::clear();
 
     m_protoArray.clear();
     m_pairFromArray.clear();
     m_pairToArray.clear();
-}
-
-void ProtoRange::appendErrorDetails(const QString &errorDetails)
-{
-    m_errorDetails += (m_errorDetails.isEmpty() ? QString() : QString(' ')) + errorDetails;
-}
-
-QString ProtoRange::errorLineAndMessageDetails() const
-{
-    return tr("Error at line %1: %2 (%3)")
-            .arg(QString::number(errorLineNo()), errorMessage(), errorDetails());
 }
 
 bool ProtoRange::isEmpty() const
@@ -79,7 +66,13 @@ bool ProtoRange::fromList(const StringViewList &list)
         }
     }
 
-    fillProtoRange(protoRangeMap, pairSize);
+    fillRangeArrays<quint8>({
+            .rangeMap = protoRangeMap,
+            .valuesArray = m_protoArray,
+            .pairFromArray = m_pairFromArray,
+            .pairToArray = m_pairToArray,
+            .pairSize = pairSize,
+    });
 
     return true;
 }
@@ -148,43 +141,4 @@ bool ProtoRange::parseProtoNumber(const QStringView &proto, quint8 &v)
         setErrorDetails(QString("Protocol='%1'").arg(proto));
     }
     return ok;
-}
-
-void ProtoRange::fillProtoRange(const protorange_map_t &protoRangeMap, int pairSize)
-{
-    if (protoRangeMap.isEmpty())
-        return;
-
-    const int mapSize = protoRangeMap.size();
-    m_protoArray.reserve(mapSize - pairSize);
-    m_pairFromArray.reserve(pairSize);
-    m_pairToArray.reserve(pairSize);
-
-    ProtoPair prevProto;
-    int prevIndex = -1;
-
-    auto it = protoRangeMap.constBegin();
-    auto end = protoRangeMap.constEnd();
-
-    for (; it != end; ++it) {
-        ProtoPair proto { it.key(), it.value() };
-
-        // try to merge colliding addresses
-        if (prevIndex >= 0 && proto.from <= prevProto.to + 1) {
-            if (proto.to > prevProto.to) {
-                m_pairToArray.replace(prevIndex, proto.to);
-
-                prevProto.to = proto.to;
-            }
-            // else skip it
-        } else if (proto.from == proto.to) {
-            m_protoArray.append(proto.from);
-        } else {
-            m_pairFromArray.append(proto.from);
-            m_pairToArray.append(proto.to);
-
-            prevProto = proto;
-            ++prevIndex;
-        }
-    }
 }

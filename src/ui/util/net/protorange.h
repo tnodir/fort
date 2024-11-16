@@ -1,12 +1,10 @@
 #ifndef PROTORANGE_H
 #define PROTORANGE_H
 
-#include <QMap>
-#include <QObject>
-#include <QVector>
-
 #include <common/common_types.h>
 #include <util/util_types.h>
+
+#include "valuerange.h"
 
 using ProtoPair = struct
 {
@@ -16,18 +14,12 @@ using ProtoPair = struct
 using protorange_map_t = QMap<quint8, quint8>;
 using proto_arr_t = QVector<quint8>;
 
-class ProtoRange : public QObject
+class ProtoRange : public ValueRange
 {
     Q_OBJECT
 
 public:
     explicit ProtoRange(QObject *parent = nullptr);
-
-    int errorLineNo() const { return m_errorLineNo; }
-
-    QString errorMessage() const { return m_errorMessage; }
-    QString errorDetails() const { return m_errorDetails; }
-    QString errorLineAndMessageDetails() const;
 
     const proto_arr_t &protoArray() const { return m_protoArray; }
     proto_arr_t &protoArray() { return m_protoArray; }
@@ -66,12 +58,6 @@ private:
         ErrorBadProto,
     };
 
-    void setErrorLineNo(int lineNo) { m_errorLineNo = lineNo; }
-    void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
-    void setErrorDetails(const QString &errorDetails) { m_errorDetails = errorDetails; }
-
-    void appendErrorDetails(const QString &errorDetails);
-
     ProtoRange::ParseError parseProtoLine(
             const QStringView &line, protorange_map_t &protoRangeMap, int &pairSize);
 
@@ -80,13 +66,7 @@ private:
 
     bool parseProtoNumber(const QStringView &proto, quint8 &v);
 
-    void fillProtoRange(const protorange_map_t &protoRangeMap, int pairSize);
-
 private:
-    int m_errorLineNo = 0;
-    QString m_errorMessage;
-    QString m_errorDetails;
-
     proto_arr_t m_protoArray;
     proto_arr_t m_pairFromArray;
     proto_arr_t m_pairToArray;

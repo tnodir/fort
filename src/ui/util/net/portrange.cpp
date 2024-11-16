@@ -3,28 +3,15 @@
 #include <util/net/netutil.h>
 #include <util/stringutil.h>
 
-PortRange::PortRange(QObject *parent) : QObject(parent) { }
+PortRange::PortRange(QObject *parent) : ValueRange(parent) { }
 
 void PortRange::clear()
 {
-    m_errorLineNo = 0;
-    m_errorMessage.clear();
-    m_errorDetails.clear();
+    ValueRange::clear();
 
     m_portArray.clear();
     m_pairFromArray.clear();
     m_pairToArray.clear();
-}
-
-void PortRange::appendErrorDetails(const QString &errorDetails)
-{
-    m_errorDetails += (m_errorDetails.isEmpty() ? QString() : QString(' ')) + errorDetails;
-}
-
-QString PortRange::errorLineAndMessageDetails() const
-{
-    return tr("Error at line %1: %2 (%3)")
-            .arg(QString::number(errorLineNo()), errorMessage(), errorDetails());
 }
 
 bool PortRange::isEmpty() const
@@ -79,7 +66,13 @@ bool PortRange::fromList(const StringViewList &list)
         }
     }
 
-    fillPortRange(portRangeMap, pairSize);
+    fillRangeArrays<quint16>({
+            .rangeMap = portRangeMap,
+            .valuesArray = m_portArray,
+            .pairFromArray = m_pairFromArray,
+            .pairToArray = m_pairToArray,
+            .pairSize = pairSize,
+    });
 
     return true;
 }
@@ -149,43 +142,4 @@ bool PortRange::parsePortNumber(const QStringView &port, quint16 &v)
         setErrorDetails(QString("Port='%1'").arg(port));
     }
     return ok;
-}
-
-void PortRange::fillPortRange(const portrange_map_t &portRangeMap, int pairSize)
-{
-    if (portRangeMap.isEmpty())
-        return;
-
-    const int mapSize = portRangeMap.size();
-    m_portArray.reserve(mapSize - pairSize);
-    m_pairFromArray.reserve(pairSize);
-    m_pairToArray.reserve(pairSize);
-
-    PortPair prevPort;
-    int prevIndex = -1;
-
-    auto it = portRangeMap.constBegin();
-    auto end = portRangeMap.constEnd();
-
-    for (; it != end; ++it) {
-        PortPair port { it.key(), it.value() };
-
-        // try to merge colliding addresses
-        if (prevIndex >= 0 && port.from <= prevPort.to + 1) {
-            if (port.to > prevPort.to) {
-                m_pairToArray.replace(prevIndex, port.to);
-
-                prevPort.to = port.to;
-            }
-            // else skip it
-        } else if (port.from == port.to) {
-            m_portArray.append(port.from);
-        } else {
-            m_pairFromArray.append(port.from);
-            m_pairToArray.append(port.to);
-
-            prevPort = port;
-            ++prevIndex;
-        }
-    }
 }
