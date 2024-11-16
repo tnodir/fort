@@ -1648,6 +1648,25 @@ Please restart the running program to take effect of this option.</source>
     </message>
 </context>
 <context>
+    <name>ProtoRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>第 %1 行错误：%2（%3）</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>格式错误</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>范围错误</translation>
+    </message>
+    <message>
+        <source>Bad Protocol</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QuotaManager</name>
     <message>
         <source>Day traffic quota exceeded!</source>

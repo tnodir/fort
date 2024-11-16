@@ -1648,6 +1648,25 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
 </context>
 <context>
+    <name>ProtoRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Błąd w wierszu %1: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>Błędny format</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>Błędny zakres</translation>
+    </message>
+    <message>
+        <source>Bad Protocol</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QuotaManager</name>
     <message>
         <source>Day traffic quota exceeded!</source>

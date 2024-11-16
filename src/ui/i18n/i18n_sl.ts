@@ -1648,6 +1648,25 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     </message>
 </context>
 <context>
+    <name>ProtoRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Napaka v vrstici %1: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>Napačna oblika</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>Napačen razpon</translation>
+    </message>
+    <message>
+        <source>Bad Protocol</source>
+        <translation>Napačen protokol</translation>
+    </message>
+</context>
+<context>
     <name>QuotaManager</name>
     <message>
         <source>Day traffic quota exceeded!</source>

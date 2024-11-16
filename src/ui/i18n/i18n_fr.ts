@@ -1648,6 +1648,25 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
 </context>
 <context>
+    <name>ProtoRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Erreur à la ligne %1: %2 (%3)</translation>
+    </message>
+    <message>
+        <source>Bad format</source>
+        <translation>Mauvais format</translation>
+    </message>
+    <message>
+        <source>Bad range</source>
+        <translation>Mauvaise portée</translation>
+    </message>
+    <message>
+        <source>Bad Protocol</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>QuotaManager</name>
     <message>
         <source>Day traffic quota exceeded!</source>
