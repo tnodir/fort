@@ -10,6 +10,7 @@
 #include <util/net/iprange.h>
 #include <util/net/netutil.h>
 #include <util/net/portrange.h>
+#include <util/net/protorange.h>
 
 class NetUtilTest : public Test
 {
@@ -161,6 +162,23 @@ TEST_F(NetUtilTest, portRanges)
     ASSERT_EQ(portRange.toText(),
             QString("80\n"
                     "443\n"));
+}
+
+TEST_F(NetUtilTest, protocolRanges)
+{
+    ProtoRange protoRange;
+
+    ASSERT_FALSE(protoRange.fromText("-16"));
+    ASSERT_EQ(protoRange.errorLineNo(), 1);
+
+    ASSERT_TRUE(protoRange.fromText("1-128"));
+    ASSERT_EQ(protoRange.toText(), QString("1-128\n"));
+
+    ASSERT_TRUE(protoRange.fromText("tcp\n"
+                                    "udp\n"));
+    ASSERT_EQ(protoRange.toText(),
+            QString("TCP\n"
+                    "UDP\n"));
 }
 
 TEST_F(NetUtilTest, taskTasix)

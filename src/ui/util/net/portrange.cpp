@@ -111,7 +111,7 @@ PortRange::ParseError PortRange::parsePortLine(
 PortRange::ParseError PortRange::parsePortRange(const QStringView &port, const QStringView &port2,
         portrange_map_t &portRangeMap, int &pairSize)
 {
-    quint16 from, to = 0;
+    quint16 from = 0, to = 0;
 
     if (!(parsePortNumber(port, from) && parsePortNumber(port2, to)))
         return ErrorBadPort;

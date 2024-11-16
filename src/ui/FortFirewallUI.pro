@@ -215,6 +215,7 @@ SOURCES += \
     util/net/netdownloader.cpp \
     util/net/netutil.cpp \
     util/net/portrange.cpp \
+    util/net/protorange.cpp \
     util/osutil.cpp \
     util/processinfo.cpp \
     util/regkey.cpp \
@@ -452,6 +453,7 @@ HEADERS += \
     util/net/netdownloader.h \
     util/net/netutil.h \
     util/net/portrange.h \
+    util/net/protorange.h \
     util/osutil.h \
     util/processinfo.h \
     util/regkey.h \
