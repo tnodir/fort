@@ -194,3 +194,17 @@ QString NetUtil::protocolName(quint8 ipProto)
         return QString("0x%1").arg(ipProto, 0, 16);
     }
 }
+
+quint16 NetUtil::serviceToPort(const QStringView &name, const char *proto, bool &ok)
+{
+    const QByteArray nameData = name.toLatin1();
+
+    const servent *se = getservbyname(nameData.constData(), proto);
+    if (!se) {
+        ok = false;
+        return 0;
+    }
+
+    ok = true;
+    return ntohs(se->s_port);
+}

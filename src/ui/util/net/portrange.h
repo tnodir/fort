@@ -29,8 +29,6 @@ public:
     bool isProtoUdp() const { return m_isProtoUdp; }
     void setProtoUdp(bool v) { m_isProtoUdp = v; }
 
-    bool isProtoAny() const { return isProtoTcp() == isProtoUdp(); }
-
     int errorLineNo() const { return m_errorLineNo; }
 
     QString errorMessage() const { return m_errorMessage; }

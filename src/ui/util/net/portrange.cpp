@@ -1,5 +1,6 @@
 #include "portrange.h"
 
+#include <util/net/netutil.h>
 #include <util/stringutil.h>
 
 PortRange::PortRange(QObject *parent) : QObject(parent) { }
@@ -127,7 +128,15 @@ PortRange::ParseError PortRange::parsePortRange(const QStringView &port, const Q
 bool PortRange::parsePortNumber(const QStringView &port, quint16 &v)
 {
     bool ok;
-    v = port.toUShort(&ok);
+
+    if (port.at(0).isDigit()) {
+        v = port.toUShort(&ok);
+    } else {
+        const char *proto = isProtoTcp() ? "tcp" : (isProtoUdp() ? "udp" : nullptr);
+
+        v = NetUtil::serviceToPort(port, proto, ok);
+    }
+
     if (!ok) {
         setErrorMessage(tr("Bad Port"));
         setErrorDetails(QString("Port='%1'").arg(port));
