@@ -135,8 +135,8 @@ qint64 LogBlockedIpJob::insertConn(const LogEntryBlockedIp &entry, qint64 appId)
     } else {
         stmt->bindNull(9);
         stmt->bindNull(10);
-        stmt->bindBlob(11, entry.localIp6());
-        stmt->bindBlob(12, entry.remoteIp6());
+        stmt->bindBlobView(11, entry.localIp6View());
+        stmt->bindBlobView(12, entry.remoteIp6View());
     }
 
     stmt->bindInt(13, entry.blockReason());

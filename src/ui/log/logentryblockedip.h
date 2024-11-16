@@ -41,8 +41,8 @@ public:
     quint32 localIp4() const { return m_localIp.v4; }
     void setLocalIp4(quint32 ip);
 
-    QByteArray localIp6() const;
-    void setLocalIp6(const QByteArray &ip);
+    QByteArrayView localIp6View() const;
+    void setLocalIp6ByView(const QByteArrayView &ip);
 
     const ip_addr_t &remoteIp() const { return m_remoteIp; }
     ip_addr_t &remoteIp() { return m_remoteIp; }
@@ -51,8 +51,8 @@ public:
     quint32 remoteIp4() const { return m_remoteIp.v4; }
     void setRemoteIp4(quint32 ip);
 
-    QByteArray remoteIp6() const;
-    void setRemoteIp6(const QByteArray &ip);
+    QByteArrayView remoteIp6View() const;
+    void setRemoteIp6ByView(const QByteArrayView &ip);
 
     bool isAskPending() const;
 

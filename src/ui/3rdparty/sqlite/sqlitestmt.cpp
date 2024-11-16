@@ -153,9 +153,14 @@ bool SqliteStmt::bindDateTime(int index, const QDateTime &dateTime)
 
 bool SqliteStmt::bindBlob(int index, const QByteArray &data)
 {
-    const int bytesCount = data.size();
-
     m_bindObjects.insert(index, data);
+
+    return bindBlobView(index, data);
+}
+
+bool SqliteStmt::bindBlobView(int index, const QByteArrayView &data)
+{
+    const int bytesCount = data.size();
 
     return checkBindResult(
             sqlite3_bind_blob(m_stmt, index, data.constData(), bytesCount, SQLITE_STATIC));
@@ -328,17 +333,17 @@ QDateTime SqliteStmt::columnUnixTime(int column) const
     return (secs == 0) ? QDateTime() : QDateTime::fromSecsSinceEpoch(secs);
 }
 
-QByteArray SqliteStmt::columnBlob(int column, bool isRaw) const
+QByteArray SqliteStmt::columnBlob(int column, bool isView) const
 {
     const char *p = static_cast<const char *>(sqlite3_column_blob(m_stmt, column));
     if (!p)
-        return QByteArray();
+        return {};
 
     const int bytesCount = sqlite3_column_bytes(m_stmt, column);
     if (bytesCount == 0)
-        return QByteArray();
+        return {};
 
-    return isRaw ? QByteArray::fromRawData(p, bytesCount) : QByteArray(p, bytesCount);
+    return isView ? QByteArray::fromRawData(p, bytesCount) : QByteArray(p, bytesCount);
 }
 
 QVariant SqliteStmt::columnDataStream(int column) const

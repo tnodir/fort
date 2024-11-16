@@ -112,12 +112,12 @@ ip6_addr_t NetUtil::applyIp6Mask(ip6_addr_t ip, int nbits)
     return ip;
 }
 
-QByteArray NetUtil::ip6ToRawArray(const ip6_addr_t &ip)
+QByteArrayView NetUtil::ip6ToArrayView(const ip6_addr_t &ip)
 {
-    return QByteArray::fromRawData(ip.data, sizeof(ip6_addr_t));
+    return QByteArrayView(ip.data, sizeof(ip6_addr_t));
 }
 
-const ip6_addr_t &NetUtil::rawArrayToIp6(const QByteArray &buf)
+const ip6_addr_t &NetUtil::arrayViewToIp6(const QByteArrayView &buf)
 {
     Q_ASSERT(buf.size() == sizeof(ip6_addr_t));
     return *reinterpret_cast<const ip6_addr_t *>(buf.data());

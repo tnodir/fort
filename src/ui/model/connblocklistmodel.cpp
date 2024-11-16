@@ -345,8 +345,8 @@ bool ConnBlockListModel::updateTableRow(const QVariantHash & /*vars*/, int row) 
         m_connRow.localIp.v4 = stmt.columnInt(9);
         m_connRow.remoteIp.v4 = stmt.columnInt(10);
     } else {
-        m_connRow.localIp.v6 = NetUtil::rawArrayToIp6(stmt.columnBlob(11, /*isRaw=*/true));
-        m_connRow.remoteIp.v6 = NetUtil::rawArrayToIp6(stmt.columnBlob(12, /*isRaw=*/true));
+        m_connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(11, /*isView=*/true));
+        m_connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(12, /*isView=*/true));
     }
 
     m_connRow.blockReason = stmt.columnInt(13);

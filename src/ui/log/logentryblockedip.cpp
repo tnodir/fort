@@ -52,14 +52,14 @@ void LogEntryBlockedIp::setLocalIp4(quint32 ip)
     m_localIp.v4 = ip;
 }
 
-QByteArray LogEntryBlockedIp::localIp6() const
+QByteArrayView LogEntryBlockedIp::localIp6View() const
 {
-    return NetUtil::ip6ToRawArray(m_localIp.v6);
+    return NetUtil::ip6ToArrayView(m_localIp.v6);
 }
 
-void LogEntryBlockedIp::setLocalIp6(const QByteArray &ip)
+void LogEntryBlockedIp::setLocalIp6ByView(const QByteArrayView &ip)
 {
-    m_localIp.v6 = NetUtil::rawArrayToIp6(ip);
+    m_localIp.v6 = NetUtil::arrayViewToIp6(ip);
 }
 
 void LogEntryBlockedIp::setRemoteIp(const ip_addr_t ip)
@@ -72,14 +72,14 @@ void LogEntryBlockedIp::setRemoteIp4(quint32 ip)
     m_remoteIp.v4 = ip;
 }
 
-QByteArray LogEntryBlockedIp::remoteIp6() const
+QByteArrayView LogEntryBlockedIp::remoteIp6View() const
 {
-    return NetUtil::ip6ToRawArray(m_remoteIp.v6);
+    return NetUtil::ip6ToArrayView(m_remoteIp.v6);
 }
 
-void LogEntryBlockedIp::setRemoteIp6(const QByteArray &ip)
+void LogEntryBlockedIp::setRemoteIp6ByView(const QByteArrayView &ip)
 {
-    m_remoteIp.v6 = NetUtil::rawArrayToIp6(ip);
+    m_remoteIp.v6 = NetUtil::arrayViewToIp6(ip);
 }
 
 bool LogEntryBlockedIp::isAskPending() const
