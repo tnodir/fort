@@ -2,7 +2,6 @@
 #define IPRANGE_H
 
 #include <common/common_types.h>
-#include <util/util_types.h>
 
 #include "valuerange.h"
 
@@ -63,15 +62,13 @@ public:
         return Ip6Pair { m_pair6FromArray.at(i), m_pair6ToArray.at(i) };
     }
 
-    bool isEmpty() const;
-
-    QString toText() const;
-
-    // Parse IP ranges
-    bool fromText(const QString &text);
-    bool fromList(const StringViewList &list, bool sort = true);
+    bool isEmpty() const override;
 
     void clear() override;
+
+    QString toText() const override;
+
+    bool fromList(const StringViewList &list, bool sort = true) override;
 
 private:
     enum ParseError {

@@ -56,6 +56,11 @@ void sortIp6PairArray(ip6_arr_t &fromArray, ip6_arr_t &toArray)
 
 IpRange::IpRange(QObject *parent) : ValueRange(parent) { }
 
+bool IpRange::isEmpty() const
+{
+    return ip4Size() == 0 && pair4Size() == 0 && ip6Size() == 0 && pair6Size() == 0;
+}
+
 void IpRange::clear()
 {
     ValueRange::clear();
@@ -67,11 +72,6 @@ void IpRange::clear()
     m_ip6Array.clear();
     m_pair6FromArray.clear();
     m_pair6ToArray.clear();
-}
-
-bool IpRange::isEmpty() const
-{
-    return ip4Size() == 0 && pair4Size() == 0 && ip6Size() == 0 && pair6Size() == 0;
 }
 
 QString IpRange::toText() const
@@ -105,12 +105,6 @@ QString IpRange::toText() const
     }
 
     return text;
-}
-
-bool IpRange::fromText(const QString &text)
-{
-    const auto list = StringUtil::splitView(text, QLatin1Char('\n'));
-    return fromList(list);
 }
 
 bool IpRange::fromList(const StringViewList &list, bool sort)

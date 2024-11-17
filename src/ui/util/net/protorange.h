@@ -2,7 +2,6 @@
 #define PROTORANGE_H
 
 #include <common/common_types.h>
-#include <util/util_types.h>
 
 #include "valuerange.h"
 
@@ -38,16 +37,13 @@ public:
         return ProtoPair { m_pairFromArray.at(i), m_pairToArray.at(i) };
     }
 
-    bool isEmpty() const;
+    bool isEmpty() const override;
 
-    QString toText() const;
+    void clear() override;
 
-    // Parse Protocol ranges
-    bool fromText(const QString &text);
-    bool fromList(const StringViewList &list);
+    QString toText() const override;
 
-public slots:
-    void clear();
+    bool fromList(const StringViewList &list, bool sort = true) override;
 
 private:
     enum ParseError {

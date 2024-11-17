@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QVector>
 
+#include <util/util_types.h>
+
 template<typename T>
 struct ValuePair
 {
@@ -24,7 +26,14 @@ public:
     QString errorDetails() const { return m_errorDetails; }
     QString errorLineAndMessageDetails() const;
 
+    virtual bool isEmpty() const = 0;
+
     virtual void clear();
+
+    virtual QString toText() const = 0;
+
+    bool fromText(const QString &text);
+    virtual bool fromList(const StringViewList &list, bool sort = true) = 0;
 
 protected:
     void setErrorLineNo(int lineNo) { m_errorLineNo = lineNo; }

@@ -2,7 +2,6 @@
 #define PORTRANGE_H
 
 #include <common/common_types.h>
-#include <util/util_types.h>
 
 #include "valuerange.h"
 
@@ -41,15 +40,13 @@ public:
     port_t portAt(int i) const { return m_portArray.at(i); }
     PortPair pairAt(int i) const { return PortPair { m_pairFromArray.at(i), m_pairToArray.at(i) }; }
 
-    bool isEmpty() const;
-
-    QString toText() const;
-
-    // Parse Port ranges
-    bool fromText(const QString &text);
-    bool fromList(const StringViewList &list);
+    bool isEmpty() const override;
 
     void clear() override;
+
+    QString toText() const override;
+
+    bool fromList(const StringViewList &list, bool sort = true) override;
 
 private:
     enum ParseError {

@@ -1,5 +1,7 @@
 #include "valuerange.h"
 
+#include <util/stringutil.h>
+
 ValueRange::ValueRange(QObject *parent) : QObject(parent) { }
 
 void ValueRange::clear()
@@ -7,6 +9,12 @@ void ValueRange::clear()
     m_errorLineNo = 0;
     m_errorMessage.clear();
     m_errorDetails.clear();
+}
+
+bool ValueRange::fromText(const QString &text)
+{
+    const auto list = StringUtil::splitView(text, QLatin1Char('\n'));
+    return fromList(list);
 }
 
 QString ValueRange::errorLineAndMessageDetails() const

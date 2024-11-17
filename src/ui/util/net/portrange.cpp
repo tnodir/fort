@@ -5,6 +5,11 @@
 
 PortRange::PortRange(QObject *parent) : ValueRange(parent) { }
 
+bool PortRange::isEmpty() const
+{
+    return portSize() == 0 && pairSize() == 0;
+}
+
 void PortRange::clear()
 {
     ValueRange::clear();
@@ -12,11 +17,6 @@ void PortRange::clear()
     m_portArray.clear();
     m_pairFromArray.clear();
     m_pairToArray.clear();
-}
-
-bool PortRange::isEmpty() const
-{
-    return portSize() == 0 && pairSize() == 0;
 }
 
 QString PortRange::toText() const
@@ -38,13 +38,7 @@ QString PortRange::toText() const
     return text;
 }
 
-bool PortRange::fromText(const QString &text)
-{
-    const auto list = StringUtil::splitView(text, QLatin1Char('\n'));
-    return fromList(list);
-}
-
-bool PortRange::fromList(const StringViewList &list)
+bool PortRange::fromList(const StringViewList &list, bool /*sort*/)
 {
     clear();
 

@@ -7,6 +7,7 @@
 
 #include <task/taskzonedownloader.h>
 #include <util/fileutil.h>
+#include <util/net/dirrange.h>
 #include <util/net/iprange.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
@@ -180,6 +181,23 @@ TEST_F(NetUtilTest, protocolRanges)
     ASSERT_EQ(protoRange.toText(),
             QString("TCP\n"
                     "UDP\n"));
+}
+
+TEST_F(NetUtilTest, directionRanges)
+{
+    DirRange dirRange;
+
+    ASSERT_FALSE(dirRange.fromText("1"));
+    ASSERT_EQ(dirRange.errorLineNo(), 1);
+
+    ASSERT_TRUE(dirRange.fromText("in"));
+    ASSERT_EQ(dirRange.toText(), QString("IN"));
+
+    ASSERT_TRUE(dirRange.fromText("out\n"
+                                  "in\n"));
+    ASSERT_EQ(dirRange.toText(),
+            QString("IN\n"
+                    "OUT"));
 }
 
 TEST_F(NetUtilTest, taskTasix)

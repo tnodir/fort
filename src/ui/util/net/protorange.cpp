@@ -5,6 +5,11 @@
 
 ProtoRange::ProtoRange(QObject *parent) : ValueRange(parent) { }
 
+bool ProtoRange::isEmpty() const
+{
+    return protoSize() == 0 && pairSize() == 0;
+}
+
 void ProtoRange::clear()
 {
     ValueRange::clear();
@@ -12,11 +17,6 @@ void ProtoRange::clear()
     m_protoArray.clear();
     m_pairFromArray.clear();
     m_pairToArray.clear();
-}
-
-bool ProtoRange::isEmpty() const
-{
-    return protoSize() == 0 && pairSize() == 0;
 }
 
 QString ProtoRange::toText() const
@@ -38,13 +38,7 @@ QString ProtoRange::toText() const
     return text;
 }
 
-bool ProtoRange::fromText(const QString &text)
-{
-    const auto list = StringUtil::splitView(text, QLatin1Char('\n'));
-    return fromList(list);
-}
-
-bool ProtoRange::fromList(const StringViewList &list)
+bool ProtoRange::fromList(const StringViewList &list, bool /*sort*/)
 {
     clear();
 

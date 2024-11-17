@@ -211,6 +211,7 @@ SOURCES += \
     util/model/stringlistmodel.cpp \
     util/model/tableitemmodel.cpp \
     util/model/tablesqlmodel.cpp \
+    util/net/dirrange.cpp \
     util/net/iprange.cpp \
     util/net/netdownloader.cpp \
     util/net/netformatutil.cpp \
@@ -451,6 +452,7 @@ HEADERS += \
     util/model/stringlistmodel.h \
     util/model/tableitemmodel.h \
     util/model/tablesqlmodel.h \
+    util/net/dirrange.h \
     util/net/iprange.h \
     util/net/netdownloader.h \
     util/net/netformatutil.h \
