@@ -90,6 +90,8 @@ FORT_API void fort_conf_zone_flag_set(
 FORT_API BOOL fort_conf_zones_ip_included(
         PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const ip_addr_t remote_ip, BOOL isIPv6);
 
+FORT_API PFORT_CONF_RULES fort_conf_rules_new(PFORT_CONF_RULES rules, ULONG len);
+
 FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULES rules);
 
 FORT_API void fort_conf_rule_flag_set(

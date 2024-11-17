@@ -479,6 +479,11 @@ FORT_API BOOL fort_conf_zones_ip_included(
     return res;
 }
 
+FORT_API PFORT_CONF_RULES fort_conf_rules_new(PFORT_CONF_RULES rules, ULONG len)
+{
+    return fort_conf_mem_alloc(rules, len);
+}
+
 FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULES rules)
 {
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);

@@ -338,7 +338,7 @@ static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
     const ULONG len = dca->in_len;
 
     if (len >= FORT_CONF_RULES_DATA_OFF) {
-        PFORT_CONF_RULES conf_rules = fort_conf_zones_new(rules, len);
+        PFORT_CONF_RULES conf_rules = fort_conf_rules_new(rules, len);
 
         if (conf_rules == NULL) {
             return STATUS_INSUFFICIENT_RESOURCES;
