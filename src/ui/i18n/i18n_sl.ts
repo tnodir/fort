@@ -309,6 +309,10 @@
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>Dolžina poti aplikacij mora biti &lt; %1</translation>
     </message>
+    <message>
+        <source>Too many values</source>
+        <translation>Preveč vrednosti</translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>

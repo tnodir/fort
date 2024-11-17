@@ -309,6 +309,10 @@
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Too many values</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>

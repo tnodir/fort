@@ -309,6 +309,10 @@
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>응용 프로그램의 경로 길이는 %1보다 작아야 합니다.</translation>
     </message>
+    <message>
+        <source>Too many values</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>

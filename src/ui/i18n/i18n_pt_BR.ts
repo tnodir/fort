@@ -309,6 +309,10 @@
         <source>Length of Application&apos;s Path must be &lt; %1</source>
         <translation>O comprimento da Aplicação&apos;s O caminho deve ser &lt; %1</translation>
     </message>
+    <message>
+        <source>Too many values</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConfManager</name>
