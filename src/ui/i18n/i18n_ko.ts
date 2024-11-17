@@ -1663,7 +1663,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Bad Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>잘못된 프로토콜</translation>
     </message>
 </context>
 <context>

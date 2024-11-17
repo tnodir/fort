@@ -1663,7 +1663,7 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>Bad Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>Mauvais protocole</translation>
     </message>
 </context>
 <context>

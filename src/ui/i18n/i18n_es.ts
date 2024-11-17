@@ -1666,7 +1666,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Bad Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>Protocolo Incorrecto</translation>
     </message>
 </context>
 <context>

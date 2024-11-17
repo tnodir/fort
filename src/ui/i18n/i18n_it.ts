@@ -1663,7 +1663,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Bad Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>Protocollo non valido</translation>
     </message>
 </context>
 <context>
