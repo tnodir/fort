@@ -70,6 +70,11 @@ bool RuleFilter::isTypeAddress() const
     return type == FORT_RULE_FILTER_TYPE_ADDRESS;
 }
 
+bool RuleFilter::isTypeList() const
+{
+    return type == FORT_RULE_FILTER_TYPE_LIST_AND || type == FORT_RULE_FILTER_TYPE_LIST_OR;
+}
+
 RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent), m_text(text)
 {
     setupCharPtr();
