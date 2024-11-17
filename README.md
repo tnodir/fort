@@ -28,6 +28,9 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 
 ## [System Requirements](https://github.com/tnodir/fort/wiki/User-Guide#system-requirements)
 
+  - Install latest [Visual C++ redistributable packages](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version): [x64](https://aka.ms/vs/17/release/vc_redist.x64.exe), [x86](https://aka.ms/vs/17/release/vc_redist.x86.exe), [ARM64](https://aka.ms/vs/17/release/vc_redist.arm64.exe)
+  - Disable [HVCI (Core Isolation, Memory Integration)](https://github.com/tnodir/fort/discussions/40) on Windows 10+
+
 ### Which installer should I download?
 
   - for **Windows 10 1809** or newer:
