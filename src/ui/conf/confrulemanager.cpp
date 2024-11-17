@@ -102,20 +102,18 @@ const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id =
 
 const char *const sqlUpdateRuleEnabled = "UPDATE rule SET enabled = ?2 WHERE rule_id = ?1;";
 
-bool driverWriteRules(ConfBuffer &confBuf, QByteArray &buf, int entrySize, bool onlyFlags = false)
+bool driverWriteRules(ConfBuffer &confBuf, bool onlyFlags = false)
 {
-    if (entrySize == 0) {
+    if (confBuf.hasError()) {
         qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();
         return false;
     }
 
-#if 0
     auto driverManager = IoC<DriverManager>();
-    if (!driverManager->writeRules(buf, entrySize, onlyFlags)) {
+    if (!driverManager->writeRules(confBuf.buffer(), onlyFlags)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
-#endif
 
     return true;
 }
@@ -408,19 +406,16 @@ void ConfRuleManager::updateDriverRules()
 
     confBuf.writeRules(*this);
 
-    // driverWriteRules(confBuf, confBuf.buffer(), entrySize);
+    driverWriteRules(confBuf);
 }
 
 bool ConfRuleManager::updateDriverRuleFlag(int ruleId, bool enabled)
 {
     ConfBuffer confBuf;
 
-#if 0
     confBuf.writeRuleFlag(ruleId, enabled);
 
-    return driverWriteRules(confBuf, confBuf.buffer(), /*onlyFlags=*/true);
-#endif
-    return true;
+    return driverWriteRules(confBuf, /*onlyFlags=*/true);
 }
 
 bool ConfRuleManager::beginTransaction()

@@ -518,6 +518,11 @@ bool FortManager::setupDriverConf()
                 zd->dataZonesMask(), zd->enabledMask(), zd->dataSize(), zd->zonesData());
     }
 
+    // Rules
+    {
+        IoC<ConfRuleManager>()->updateDriverRules();
+    }
+
     return true;
 }
 

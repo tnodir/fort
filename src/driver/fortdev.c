@@ -108,6 +108,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
         const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
 
         fort_conf_zones_set(&fort_device()->conf, NULL);
+        fort_conf_rules_set(&fort_device()->conf, NULL);
 
         fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
 
@@ -311,6 +312,44 @@ static NTSTATUS fort_device_control_setzoneflag(PFORT_DEVICE_CONTROL_ARG dca)
 
     if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
         fort_conf_zone_flag_set(&fort_device()->conf, zone_flag);
+
+        fort_device_reauth_queue();
+
+        return STATUS_SUCCESS;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    const PFORT_CONF_RULES rules = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len >= FORT_CONF_RULES_DATA_OFF) {
+        PFORT_CONF_RULES conf_rules = fort_conf_zones_new(rules, len);
+
+        if (conf_rules == NULL) {
+            return STATUS_INSUFFICIENT_RESOURCES;
+        } else {
+            fort_conf_rules_set(&fort_device()->conf, conf_rules);
+
+            fort_device_reauth_queue();
+
+            return STATUS_SUCCESS;
+        }
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_setruleflag(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    const PFORT_CONF_RULE_FLAG rule_flag = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len == sizeof(FORT_CONF_RULE_FLAG)) {
+        fort_conf_rule_flag_set(&fort_device()->conf, rule_flag);
 
         fort_device_reauth_queue();
 

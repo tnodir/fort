@@ -18,6 +18,8 @@ quint32 ioctlAddApp();
 quint32 ioctlDelApp();
 quint32 ioctlSetZones();
 quint32 ioctlSetZoneFlag();
+quint32 ioctlSetRules();
+quint32 ioctlSetRuleFlag();
 
 quint32 userErrorCode();
 

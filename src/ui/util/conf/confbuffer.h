@@ -42,14 +42,15 @@ public slots:
     void writeFlags(const FirewallConf &conf);
     bool writeAppEntry(const App &app, bool isNew = false);
 
-    bool writeRules(const ConfRulesWalker &confRulesWalker);
-
     void writeZone(const IpRange &ipRange);
     void writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
             const QList<QByteArray> &zonesData);
     void writeZoneFlag(int zoneId, bool enabled);
 
     bool loadZone(IpRange &ipRange);
+
+    bool writeRules(const ConfRulesWalker &confRulesWalker);
+    void writeRuleFlag(int ruleId, bool enabled);
 
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }

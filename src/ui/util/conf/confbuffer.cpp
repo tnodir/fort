@@ -248,30 +248,6 @@ bool ConfBuffer::writeAppEntry(const App &app, bool isNew)
     return true;
 }
 
-bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
-{
-    ruleset_map_t ruleSetMap;
-    ruleid_arr_t ruleSetIds;
-    int maxRuleId;
-
-    return confRulesWalker.walkRules(ruleSetMap, ruleSetIds, maxRuleId, [&](Rule &rule) -> bool {
-        if (buffer().isEmpty()) {
-            const int outSize = FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
-
-            buffer().resize(outSize);
-            buffer().fill('\0');
-
-            // Fill the buffer
-            char *data = buffer().data();
-
-            PFORT_CONF_RULES rules = PFORT_CONF_RULES(data);
-            rules->max_rule_id = maxRuleId;
-        }
-
-        return writeRule(rule, ruleSetMap, ruleSetIds);
-    });
-}
-
 void ConfBuffer::writeZone(const IpRange &ipRange)
 {
     // Resize the buffer
@@ -544,6 +520,46 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
     return true;
 }
 
+bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
+{
+    ruleset_map_t ruleSetMap;
+    ruleid_arr_t ruleSetIds;
+    int maxRuleId;
+
+    return confRulesWalker.walkRules(ruleSetMap, ruleSetIds, maxRuleId, [&](Rule &rule) -> bool {
+        if (buffer().isEmpty()) {
+            const int outSize = FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
+
+            buffer().resize(outSize);
+            buffer().fill('\0');
+
+            // Fill the buffer
+            char *data = buffer().data();
+
+            PFORT_CONF_RULES rules = PFORT_CONF_RULES(data);
+            rules->max_rule_id = maxRuleId;
+        }
+
+        return writeRule(rule, ruleSetMap, ruleSetIds);
+    });
+}
+
+void ConfBuffer::writeRuleFlag(int ruleId, bool enabled)
+{
+    // Resize the buffer
+    const int flagSize = sizeof(FORT_CONF_RULE_FLAG);
+
+    buffer().resize(flagSize);
+
+    // Fill the buffer
+    char *data = buffer().data();
+
+    PFORT_CONF_RULE_FLAG confRuleFlag = PFORT_CONF_RULE_FLAG(data);
+
+    confRuleFlag->rule_id = ruleId;
+    confRuleFlag->enabled = enabled;
+}
+
 bool ConfBuffer::writeRule(
         const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds)
 {
@@ -575,7 +591,7 @@ bool ConfBuffer::writeRule(
     // Write the rule's offset
     {
         int *ruleOffsets = (int *) (data + FORT_CONF_RULES_DATA_OFF);
-        ruleOffsets[ruleId] = oldSize;
+        ruleOffsets[ruleId] = oldSize - FORT_CONF_RULES_DATA_OFF;
 
         data += oldSize;
     }

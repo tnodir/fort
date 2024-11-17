@@ -57,6 +57,16 @@ quint32 ioctlSetZoneFlag()
     return FORT_IOCTL_SETZONEFLAG;
 }
 
+quint32 ioctlSetRules()
+{
+    return FORT_IOCTL_SETRULES;
+}
+
+quint32 ioctlSetRuleFlag()
+{
+    return FORT_IOCTL_SETRULEFLAG;
+}
+
 quint32 userErrorCode()
 {
     return FORT_ERROR_USER_ERROR;

@@ -452,8 +452,8 @@ FORT_API void fort_conf_zone_flag_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
-FORT_API BOOL fort_conf_zones_ip_included(PFORT_DEVICE_CONF device_conf, UINT32 zones_mask,
-        const ip_addr_t remote_ip, BOOL isIPv6)
+FORT_API BOOL fort_conf_zones_ip_included(
+        PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const ip_addr_t remote_ip, BOOL isIPv6)
 {
     BOOL res = FALSE;
 
@@ -477,4 +477,38 @@ FORT_API BOOL fort_conf_zones_ip_included(PFORT_DEVICE_CONF device_conf, UINT32 
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 
     return res;
+}
+
+FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULES rules)
+{
+    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
+    {
+        fort_conf_mem_free(device_conf->rules);
+        device_conf->rules = rules;
+    }
+    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
+}
+
+static void fort_conf_rule_flag_set_locked(PFORT_CONF_RULES rules, PFORT_CONF_RULE_FLAG rule_flag)
+{
+    const UINT16 max_rule_id = rules->max_rule_id;
+
+    if (rule_flag->rule_id > max_rule_id)
+        return;
+
+    const UINT32 rule_off = *((PUINT32) rules->data + rule_flag->rule_id);
+    PFORT_CONF_RULE rule =
+            (PFORT_CONF_RULE) &rules->data[FORT_CONF_RULES_OFFSETS_SIZE(max_rule_id) + rule_off];
+
+    rule->enabled = rule_flag->enabled;
+}
+
+FORT_API void fort_conf_rule_flag_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE_FLAG rule_flag)
+{
+    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
+    PFORT_CONF_RULES rules = device_conf->rules;
+    if (rules != NULL) {
+        fort_conf_rule_flag_set_locked(rules, rule_flag);
+    }
+    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
