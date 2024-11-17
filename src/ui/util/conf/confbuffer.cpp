@@ -174,11 +174,13 @@ void ConfBuffer::writeServices(const QVector<ServiceInfo> &services, int running
     buffer().resize(outSize); // shrink to actual size
 }
 
-bool ConfBuffer::write(
+bool ConfBuffer::writeConf(
         const FirewallConf &conf, const ConfAppsWalker *confAppsWalker, EnvManager &envManager)
 {
-    WriteConfArgs wca = { .conf = conf,
-        .ad = { .addressRanges = addrranges_arr_t(conf.addressGroups().size()) } };
+    WriteConfArgs wca = {
+        .conf = conf,
+        .ad = { .addressRanges = addrranges_arr_t(conf.addressGroups().size()) },
+    };
 
     quint32 addressGroupsSize = 0;
 

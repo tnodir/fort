@@ -624,7 +624,7 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     ConfBuffer confBuf;
 
     const bool ok = onlyFlags ? (confBuf.writeFlags(*conf()), true)
-                              : confBuf.write(*conf(), this, *IoC<EnvManager>());
+                              : confBuf.writeConf(*conf(), this, *IoC<EnvManager>());
 
     if (!ok) {
         qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();

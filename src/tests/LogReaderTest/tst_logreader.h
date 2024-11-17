@@ -71,7 +71,7 @@ void setConf(Device &device)
 
     ConfBuffer confBuf;
 
-    ASSERT_TRUE(confBuf.write(conf, nullptr, envManager));
+    ASSERT_TRUE(confBuf.writeConf(conf, nullptr, envManager));
 
     auto confData = confBuf.buffer();
     ASSERT_TRUE(device.ioctl(DriverCommon::ioctlSetConf(), confData.data(), confData.size()));
