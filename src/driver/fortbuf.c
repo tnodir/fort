@@ -165,38 +165,25 @@ FORT_API NTSTATUS fort_buffer_prepare(
     return fort_buffer_prepare_new(buf, len, out);
 }
 
-FORT_API NTSTATUS fort_buffer_blocked_write(
-        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info)
+FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn,
+        FORT_BUFFER_CONN_WRITE_TYPE log_type, PIRP *irp, ULONG_PTR *info)
 {
     NTSTATUS status;
 
     const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(conn);
 
-    const UINT32 len = FORT_LOG_BLOCKED_SIZE(log_path.len);
-
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
-    {
-        PCHAR out;
-        status = fort_buffer_prepare(buf, len, &out, irp, info);
-
-        if (NT_SUCCESS(status)) {
-            fort_log_blocked_write(out, conn->blocked, conn->process_id, &log_path);
-        }
+    UINT32 len;
+    switch (log_type) {
+    case FORT_BUFFER_CONN_WRITE_BLOCKED: {
+        len = FORT_LOG_BLOCKED_SIZE(log_path.len);
+    } break;
+    case FORT_BUFFER_CONN_WRITE_BLOCKED_IP: {
+        len = FORT_LOG_BLOCKED_IP_SIZE(log_path.len, conn->isIPv6);
+    } break;
+    case FORT_BUFFER_CONN_WRITE_PROC_NEW: {
+        len = FORT_LOG_PROC_NEW_SIZE(log_path.len);
+    } break;
     }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    return status;
-}
-
-FORT_API NTSTATUS fort_buffer_blocked_ip_write(
-        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info)
-{
-    NTSTATUS status;
-
-    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(conn);
-
-    const UINT32 len = FORT_LOG_BLOCKED_IP_SIZE(log_path.len, conn->isIPv6);
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
@@ -205,31 +192,17 @@ FORT_API NTSTATUS fort_buffer_blocked_ip_write(
         status = fort_buffer_prepare(buf, len, &out, irp, info);
 
         if (NT_SUCCESS(status)) {
-            fort_log_blocked_ip_write(out, conn, &log_path);
-        }
-    }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    return status;
-}
-
-FORT_API NTSTATUS fort_buffer_proc_new_write(
-        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info)
-{
-    NTSTATUS status;
-
-    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(conn);
-
-    const UINT32 len = FORT_LOG_PROC_NEW_SIZE(log_path.len);
-
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
-    {
-        PCHAR out;
-        status = fort_buffer_prepare(buf, len, &out, irp, info);
-
-        if (NT_SUCCESS(status)) {
-            fort_log_proc_new_write(out, conn->process_id, &log_path);
+            switch (log_type) {
+            case FORT_BUFFER_CONN_WRITE_BLOCKED: {
+                fort_log_blocked_write(out, conn->blocked, conn->process_id, &log_path);
+            } break;
+            case FORT_BUFFER_CONN_WRITE_BLOCKED_IP: {
+                fort_log_blocked_ip_write(out, conn, &log_path);
+            } break;
+            case FORT_BUFFER_CONN_WRITE_PROC_NEW: {
+                fort_log_proc_new_write(out, conn->process_id, &log_path);
+            } break;
+            }
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);

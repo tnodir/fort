@@ -6,6 +6,12 @@
 #include "common/fortconf.h"
 #include "common/fortlog.h"
 
+typedef enum FORT_BUFFER_CONN_WRITE_TYPE {
+    FORT_BUFFER_CONN_WRITE_BLOCKED = 0,
+    FORT_BUFFER_CONN_WRITE_BLOCKED_IP,
+    FORT_BUFFER_CONN_WRITE_PROC_NEW,
+} FORT_BUFFER_CONN_WRITE_TYPE;
+
 typedef struct fort_buffer_data
 {
     struct fort_buffer_data *next;
@@ -41,14 +47,8 @@ FORT_API void fort_buffer_clear(PFORT_BUFFER buf);
 FORT_API NTSTATUS fort_buffer_prepare(
         PFORT_BUFFER buf, UINT32 len, PCHAR *out, PIRP *irp, ULONG_PTR *info);
 
-FORT_API NTSTATUS fort_buffer_blocked_write(
-        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info);
-
-FORT_API NTSTATUS fort_buffer_blocked_ip_write(
-        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info);
-
-FORT_API NTSTATUS fort_buffer_proc_new_write(
-        PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn, PIRP *irp, ULONG_PTR *info);
+FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn,
+        FORT_BUFFER_CONN_WRITE_TYPE log_type, PIRP *irp, ULONG_PTR *info);
 
 FORT_API NTSTATUS fort_buffer_xmove(
         PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len, ULONG_PTR *info);

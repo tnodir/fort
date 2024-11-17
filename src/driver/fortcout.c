@@ -152,7 +152,8 @@ inline static BOOL fort_callout_ale_associate_flow(
     }
 
     if (!log_stat) {
-        fort_buffer_proc_new_write(&fort_device()->buffer, conn, &cx->irp, &cx->info);
+        fort_buffer_conn_write(
+                &fort_device()->buffer, conn, FORT_BUFFER_CONN_WRITE_PROC_NEW, &cx->irp, &cx->info);
     }
 
     return FALSE;
@@ -191,7 +192,8 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
 
     fort_callout_ale_set_app_flags(cx, app_data);
 
-    fort_buffer_blocked_write(&fort_device()->buffer, conn, &cx->irp, &cx->info);
+    fort_buffer_conn_write(
+            &fort_device()->buffer, conn, FORT_BUFFER_CONN_WRITE_BLOCKED, &cx->irp, &cx->info);
 }
 
 inline static BOOL fort_callout_ale_log_blocked_ip_check_app(
@@ -222,7 +224,8 @@ inline static void fort_callout_ale_log_blocked_ip(
 {
     fort_callout_ale_fill_meta_conn(ca, cx);
 
-    fort_buffer_blocked_ip_write(&fort_device()->buffer, &cx->conn, &cx->irp, &cx->info);
+    fort_buffer_conn_write(&fort_device()->buffer, &cx->conn, FORT_BUFFER_CONN_WRITE_BLOCKED_IP,
+            &cx->irp, &cx->info);
 }
 
 inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
