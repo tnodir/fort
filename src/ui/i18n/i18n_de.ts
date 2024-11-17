@@ -501,11 +501,11 @@
     </message>
     <message>
         <source>No Block</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Blockierung</translation>
     </message>
     <message>
         <source>Block Internet and LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet- und LAN-Verkehr blockieren</translation>
     </message>
 </context>
 <context>
@@ -614,19 +614,19 @@
     </message>
     <message>
         <source>Colors (Light | Dark)</source>
-        <translation type="unfinished"></translation>
+        <translation>Farben (Hell | Dunkel)</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>Feste Geschwindigkeit:</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished">Benutzerdefiniert</translation>
+        <translation>Benutzerdefiniert</translation>
     </message>
     <message>
         <source>Auto-scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-Skalierung</translation>
     </message>
 </context>
 <context>
@@ -688,27 +688,27 @@
     </message>
     <message>
         <source>Driver Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Treiber installiert</translation>
     </message>
     <message>
         <source>Driver Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Treiber nicht installiert</translation>
     </message>
     <message>
         <source>Service Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienst installiert</translation>
     </message>
     <message>
         <source>Service Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienst nicht installiert</translation>
     </message>
     <message>
         <source>Are you sure to install the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sind Sie sicher, dass Sie den Dienst installieren wollen?</translation>
     </message>
     <message>
         <source>Are you sure to remove the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sind Sie sicher, dass Sie den Dienst entfernen wollen?</translation>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
@@ -751,7 +751,7 @@
     </message>
     <message>
         <source>Service Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienstprotokolle</translation>
     </message>
 </context>
 <context>
@@ -954,23 +954,19 @@
     </message>
     <message>
         <source>Operations from Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Operationen aus dem Tray-Menü</translation>
     </message>
     <message>
         <source>Sound Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>Akustischer Alarm</translation>
     </message>
     <message>
         <source>Style:</source>
-        <translation type="unfinished"></translation>
+        <translation>Stil:</translation>
     </message>
 </context>
 <context>
     <name>IpRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Fehler in Zeile %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Ungültiges Format</translation>
@@ -1000,7 +996,7 @@
     </message>
     <message>
         <source>Select dark color for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Dunkle Farbe für %1 auswählen</translation>
     </message>
 </context>
 <context>
@@ -1233,11 +1229,11 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Datenverkehr für deaktivierte App-Gruppen blockieren</translation>
     </message>
     <message>
         <source>Auto-install after download</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach dem Download automatisch installieren</translation>
     </message>
 </context>
 <context>
@@ -1284,10 +1280,6 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
 </context>
 <context>
     <name>PortRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Fehler in Zeile %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Ungültiges Format</translation>
@@ -1650,10 +1642,6 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
 <context>
     <name>ProtoRange</name>
     <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Fehler in Zeile %1: %2 (%3)</translation>
-    </message>
-    <message>
         <source>Bad format</source>
         <translation>Ungültiges Format</translation>
     </message>
@@ -1663,7 +1651,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Bad Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>Protokoll fehlerhaft</translation>
     </message>
 </context>
 <context>
@@ -1794,39 +1782,39 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Unexpected start of line</source>
-        <translation type="unfinished"></translation>
+        <translation>Unerwarteter Zeilenbeginn</translation>
     </message>
     <message>
         <source>Unexpected end of list</source>
-        <translation type="unfinished"></translation>
+        <translation>Unerwartetes Ende der Liste</translation>
     </message>
     <message>
         <source>Max list depth exceeded: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximale Listentiefe überschritten: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol of list end</source>
-        <translation type="unfinished"></translation>
+        <translation>Unerwartetes Symbol am Listenende</translation>
     </message>
     <message>
         <source>Extra filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Zusätzlicher Filtername: %1</translation>
     </message>
     <message>
         <source>Bad filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Fehlerhafter Filtername: %1</translation>
     </message>
     <message>
         <source>Unexpected end of values list</source>
-        <translation type="unfinished"></translation>
+        <translation>Unerwartetes Ende der Werteliste</translation>
     </message>
     <message>
         <source>Unexpected end of value</source>
-        <translation type="unfinished"></translation>
+        <translation>Unerwartetes Ende des Wertes</translation>
     </message>
     <message>
         <source>No filter name</source>
-        <translation type="unfinished"></translation>
+        <translation>Kein Filtername</translation>
     </message>
 </context>
 <context>
@@ -1939,15 +1927,23 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Delay startup to retry&apos;s seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>Startup verzögern, um Sekunden später erneut zu versuchen</translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation>Maximale Anzahl an Wiederholungen:</translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation>Verzögerung:</translation>
     </message>
     <message>
         <source>3 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>3 Sekunden</translation>
     </message>
     <message>
         <source>20 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>20 Sekunden</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1955,7 +1951,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>2 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>2 Minuten</translation>
     </message>
     <message>
         <source>5 minutes</source>
@@ -1967,15 +1963,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source> second(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum retries count:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delay seconds to retry:</source>
-        <translation type="unfinished"></translation>
+        <translation> Sekunde(n)</translation>
     </message>
 </context>
 <context>
@@ -2204,7 +2192,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Maximum retries count</source>
-        <translation type="unfinished"></translation>
+        <translation>Maximale Anzahl an Wiederholungen</translation>
     </message>
 </context>
 <context>
@@ -2361,6 +2349,13 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Block Traffic</source>
         <translation>Datenverkehr blockieren</translation>
+    </message>
+</context>
+<context>
+    <name>ValueRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Fehler in Zeile %1: %2 (%3)</translation>
     </message>
 </context>
 <context>

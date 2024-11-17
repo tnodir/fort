@@ -968,10 +968,6 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Bad format</source>
         <translation></translation>
     </message>
@@ -1278,10 +1274,6 @@ Do you want to open a discussion thread in browser?</source>
 </context>
 <context>
     <name>PortRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation></translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation></translation>
@@ -1638,10 +1630,6 @@ Please restart the running program to take effect of this option.</source>
 </context>
 <context>
     <name>ProtoRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation></translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation></translation>
@@ -2349,6 +2337,13 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Block Traffic</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ValueRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
         <translation></translation>
     </message>
 </context>

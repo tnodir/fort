@@ -622,7 +622,7 @@
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished">مخصص</translation>
+        <translation>مخصص</translation>
     </message>
     <message>
         <source>Auto-scale</source>
@@ -968,10 +968,6 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>خطأ في الأسطر %1: %2 (%3)</translation>
-    </message>
-    <message>
         <source>Bad format</source>
         <translation>صياغة غير صحيحة</translation>
     </message>
@@ -1284,10 +1280,6 @@ Do you want to open a discussion thread in browser?</source>
 </context>
 <context>
     <name>PortRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>خطأ في الأسطر %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>صياغة غير صحيحة</translation>
@@ -1649,10 +1641,6 @@ Please restart the running program to take effect of this option.</source>
 </context>
 <context>
     <name>ProtoRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>خطأ في الأسطر %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>صياغة غير صحيحة</translation>
@@ -2361,6 +2349,13 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Block Traffic</source>
         <translation>منع حركة المرور</translation>
+    </message>
+</context>
+<context>
+    <name>ValueRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>خطأ في الأسطر %1: %2 (%3)</translation>
     </message>
 </context>
 <context>

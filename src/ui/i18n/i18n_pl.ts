@@ -622,7 +622,7 @@
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished">Własne</translation>
+        <translation>Własne</translation>
     </message>
     <message>
         <source>Auto-scale</source>
@@ -968,10 +968,6 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Błąd w wierszu %1: %2 (%3)</translation>
-    </message>
-    <message>
         <source>Bad format</source>
         <translation>Błędny format</translation>
     </message>
@@ -1284,10 +1280,6 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
 </context>
 <context>
     <name>PortRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Błąd w linnii</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Błędny format</translation>
@@ -1649,10 +1641,6 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
 </context>
 <context>
     <name>ProtoRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Błąd w wierszu %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Błędny format</translation>
@@ -2361,6 +2349,13 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     <message>
         <source>Block Traffic</source>
         <translation>Blokuj ruch</translation>
+    </message>
+</context>
+<context>
+    <name>ValueRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Błąd w wierszu %1: %2 (%3)</translation>
     </message>
 </context>
 <context>

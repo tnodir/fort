@@ -968,10 +968,6 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Napaka v vrstici %1: %2 (%3)</translation>
-    </message>
-    <message>
         <source>Bad format</source>
         <translation>Napačna oblika</translation>
     </message>
@@ -1284,10 +1280,6 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
 </context>
 <context>
     <name>PortRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Napaka v vrstici %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Napačna oblika</translation>
@@ -1649,10 +1641,6 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
 </context>
 <context>
     <name>ProtoRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Napaka v vrstici %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Napačna oblika</translation>
@@ -2361,6 +2349,13 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Block Traffic</source>
         <translation>Blokiraj promet</translation>
+    </message>
+</context>
+<context>
+    <name>ValueRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Napaka v vrstici %1: %2 (%3)</translation>
     </message>
 </context>
 <context>

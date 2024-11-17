@@ -968,10 +968,6 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Error en la línea %1: %2 (%3)</translation>
-    </message>
-    <message>
         <source>Bad format</source>
         <translation>Formato incorrecto</translation>
     </message>
@@ -1284,10 +1280,6 @@ Do you want to open a discussion thread in browser?</source>
 </context>
 <context>
     <name>PortRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Error en la línea %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Formato incorrecto</translation>
@@ -1652,10 +1644,6 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
 </context>
 <context>
     <name>ProtoRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Error en la línea %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Formato incorrecto</translation>
@@ -2364,6 +2352,13 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Block Traffic</source>
         <translation>Bloquear tráfico</translation>
+    </message>
+</context>
+<context>
+    <name>ValueRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Error en la línea %1: %2 (%3)</translation>
     </message>
 </context>
 <context>

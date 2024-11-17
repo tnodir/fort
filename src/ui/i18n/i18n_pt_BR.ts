@@ -622,7 +622,7 @@
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished">Personalizar</translation>
+        <translation>Personalizar</translation>
     </message>
     <message>
         <source>Auto-scale</source>
@@ -968,10 +968,6 @@
 <context>
     <name>IpRange</name>
     <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Erro na linha %1: %2 (%3)</translation>
-    </message>
-    <message>
         <source>Bad format</source>
         <translation>Formato impróprio</translation>
     </message>
@@ -1282,10 +1278,6 @@ Você quer abrir um fio de discussão no navegador?</translation>
 </context>
 <context>
     <name>PortRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Erro na linha %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Formato impróprio</translation>
@@ -1647,10 +1639,6 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
 </context>
 <context>
     <name>ProtoRange</name>
-    <message>
-        <source>Error at line %1: %2 (%3)</source>
-        <translation>Erro na linha %1: %2 (%3)</translation>
-    </message>
     <message>
         <source>Bad format</source>
         <translation>Formato impróprio</translation>
@@ -2198,7 +2186,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Run On Startup</source>
-        <translation type="unfinished">Executar na Inicialização</translation>
+        <translation>Executar na Inicialização</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
@@ -2359,6 +2347,13 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     <message>
         <source>Block Traffic</source>
         <translation>Bloquear Tráfego</translation>
+    </message>
+</context>
+<context>
+    <name>ValueRange</name>
+    <message>
+        <source>Error at line %1: %2 (%3)</source>
+        <translation>Erro na linha %1: %2 (%3)</translation>
     </message>
 </context>
 <context>
