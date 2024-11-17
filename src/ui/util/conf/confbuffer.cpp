@@ -13,9 +13,11 @@
 #include <manager/envmanager.h>
 #include <util/bitutil.h>
 #include <util/fileutil.h>
+#include <util/net/valuerange.h>
 #include <util/stringutil.h>
 
 #include "confappswalker.h"
+#include "confdatarule.h"
 #include "confrodata.h"
 #include "confruleswalker.h"
 #include "confutil.h"
@@ -26,12 +28,6 @@
 #define APP_PATH_MAX       FORT_CONF_APP_PATH_MAX
 
 namespace {
-
-inline bool checkIpRangeSize(const IpRange &range)
-{
-    return (range.ip4Size() + range.pair4Size()) < FORT_CONF_IP_MAX
-            && (range.ip6Size() + range.pair6Size()) < FORT_CONF_IP_MAX;
-}
 
 int writeServicesHeader(char *data, int servicesCount)
 {
@@ -279,8 +275,7 @@ bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
 void ConfBuffer::writeZone(const IpRange &ipRange)
 {
     // Resize the buffer
-    const int addrSize = FORT_CONF_ADDR_LIST_SIZE(
-            ipRange.ip4Size(), ipRange.pair4Size(), ipRange.ip6Size(), ipRange.pair6Size());
+    const int addrSize = ipRange.sizeToWrite();
 
     buffer().resize(addrSize);
 
@@ -384,7 +379,7 @@ bool ConfBuffer::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
         const IpRange &incRange = addressRange.includeRange();
         const IpRange &excRange = addressRange.excludeRange();
 
-        if (!(checkIpRangeSize(incRange) && checkIpRangeSize(excRange))) {
+        if (!(incRange.checkSize() && excRange.checkSize())) {
             setErrorMessage(tr("Too many IP addresses"));
             return false;
         }
@@ -609,21 +604,96 @@ bool ConfBuffer::writeRule(
         ConfData(data).writeArray(array);
     }
 
-    // Write the rule's conditions
+    // Write the rule's text
     if (hasFilter) {
-        if (!writeRuleText(rule.ruleText))
+        int filtersCount = 0;
+        if (!writeRuleText(rule.ruleText, filtersCount))
+            return false;
+
+        confRule.has_filter = (filtersCount > 0);
+    }
+
+    return true;
+}
+
+bool ConfBuffer::writeRuleText(const QString &ruleText, int &filtersCount)
+{
+    RuleTextParser parser(ruleText);
+
+    if (!parser.parse()) {
+        setErrorMessage(parser.errorMessage());
+        return false;
+    }
+
+    filtersCount = parser.ruleFilters().size();
+    if (filtersCount == 0)
+        return true;
+
+    auto &ruleFilter = parser.ruleFilters()[0];
+    Q_ASSERT(ruleFilter.isTypeList());
+
+    return writeRuleFilter(&ruleFilter);
+}
+
+bool ConfBuffer::writeRuleFilter(const RuleFilter *ruleFilter)
+{
+    // Resize the buffer
+    const int oldSize = buffer().size();
+    const int newSize = oldSize + sizeof(FORT_CONF_RULE_FILTER);
+
+    buffer().resize(newSize);
+
+    // Fill the buffer
+    PFORT_CONF_RULE_FILTER confFilter = PFORT_CONF_RULE_FILTER(data() + oldSize);
+
+    confFilter->is_not = ruleFilter->isNot;
+    confFilter->type = ruleFilter->type;
+
+    if (ruleFilter->isTypeList()) {
+        if (!writeRuleFilterList(ruleFilter + 1, ruleFilter->filterListCount))
+            return false;
+    } else {
+        if (!writeRuleFilterValues(ruleFilter))
+            return false;
+    }
+
+    confFilter->size = buffer().size() - newSize;
+
+    return true;
+}
+
+bool ConfBuffer::writeRuleFilterList(const RuleFilter *ruleFilter, int count)
+{
+    for (; --count >= 0; ++ruleFilter) {
+        if (!writeRuleFilter(ruleFilter))
             return false;
     }
 
     return true;
 }
 
-bool ConfBuffer::writeRuleText(const QString &ruleText)
+bool ConfBuffer::writeRuleFilterValues(const RuleFilter *ruleFilter)
 {
-    RuleTextParser parser(ruleText);
+    QScopedPointer<ValueRange> range(ConfDataRule::createRangeByType(ruleFilter->type));
 
-    if (!parser.parse())
+    if (!range->fromList(ruleFilter->values)) {
+        setErrorMessage(range->errorLineAndMessageDetails());
         return false;
+    }
+
+    if (!range->checkSize()) {
+        setErrorMessage(tr("Too many values"));
+        return false;
+    }
+
+    // Resize the buffer
+    const int oldSize = buffer().size();
+    const int newSize = oldSize + range->sizeToWrite();
+
+    buffer().resize(newSize);
+
+    // Fill the buffer
+    ConfDataRule confData(data() + oldSize);
 
     return true;
 }

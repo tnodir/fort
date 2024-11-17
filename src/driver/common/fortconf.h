@@ -3,6 +3,12 @@
 
 #include "common.h"
 
+#define FORT_CONF_PROTO_MAX             255
+#define FORT_CONF_PROTO_ARR_SIZE(n)     ((n) * sizeof(UINT8))
+#define FORT_CONF_PROTO_RANGE_SIZE(n)   (FORT_CONF_PROTO_ARR_SIZE(n) * 2)
+#define FORT_CONF_PORT_MAX              255
+#define FORT_CONF_PORT_ARR_SIZE(n)      ((n) * sizeof(UINT16))
+#define FORT_CONF_PORT_RANGE_SIZE(n)    (FORT_CONF_PORT_ARR_SIZE(n) * 2)
 #define FORT_CONF_IP_MAX                (2 * 1024 * 1024)
 #define FORT_CONF_IP4_ARR_SIZE(n)       ((n) * sizeof(UINT32))
 #define FORT_CONF_IP6_ARR_SIZE(n)       ((n) * sizeof(ip6_addr_t))
@@ -77,6 +83,14 @@ typedef struct fort_service_info_list
 #define FORT_SERVICE_INFO_LIST_DATA_OFF offsetof(FORT_SERVICE_INFO_LIST, data)
 #define FORT_SERVICE_INFO_LIST_MIN_SIZE                                                            \
     (FORT_SERVICE_INFO_LIST_DATA_OFF + FORT_SERVICE_INFO_MAX_SIZE)
+
+typedef struct fort_conf_proto_list
+{
+    UINT8 proto_n;
+    UINT8 pair_n;
+
+    UINT8 proto[1];
+} FORT_CONF_PROTO_LIST, *PFORT_CONF_PROTO_LIST;
 
 typedef struct fort_conf_port_list
 {
@@ -329,9 +343,18 @@ typedef struct fort_conf_io
 
 #define FORT_CONF_DATA_OFF       offsetof(FORT_CONF, data)
 #define FORT_CONF_IO_CONF_OFF    offsetof(FORT_CONF_IO, conf)
+#define FORT_CONF_PROTO_LIST_OFF offsetof(FORT_CONF_PROTO_LIST, proto)
+#define FORT_CONF_PORT_LIST_OFF  offsetof(FORT_CONF_PORT_LIST, port)
 #define FORT_CONF_ADDR_LIST_OFF  offsetof(FORT_CONF_ADDR_LIST, ip)
 #define FORT_CONF_ADDR_GROUP_OFF offsetof(FORT_CONF_ADDR_GROUP, data)
 #define FORT_CONF_ZONES_DATA_OFF offsetof(FORT_CONF_ZONES, data)
+
+#define FORT_CONF_PROTO_LIST_SIZE(proto_n, pair_n)                                                 \
+    (FORT_CONF_PROTO_LIST_OFF + FORT_CONF_PROTO_ARR_SIZE(proto_n)                                  \
+            + FORT_CONF_PROTO_RANGE_SIZE(pair_n))
+
+#define FORT_CONF_PORT_LIST_SIZE(port_n, pair_n)                                                   \
+    (FORT_CONF_PORT_LIST_OFF + FORT_CONF_PORT_ARR_SIZE(port_n) + FORT_CONF_PORT_RANGE_SIZE(pair_n))
 
 #define FORT_CONF_ADDR4_LIST_SIZE(ip_n, pair_n)                                                    \
     (FORT_CONF_ADDR_LIST_OFF + FORT_CONF_IP4_ARR_SIZE(ip_n) + FORT_CONF_IP4_RANGE_SIZE(pair_n))

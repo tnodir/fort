@@ -1,5 +1,7 @@
 #include "portrange.h"
 
+#include <common/fortconf.h>
+
 #include <util/net/netutil.h>
 #include <util/stringutil.h>
 
@@ -8,6 +10,16 @@ PortRange::PortRange(QObject *parent) : ValueRange(parent) { }
 bool PortRange::isEmpty() const
 {
     return portSize() == 0 && pairSize() == 0;
+}
+
+bool PortRange::checkSize() const
+{
+    return (portSize() + pairSize()) < FORT_CONF_PORT_MAX;
+}
+
+int PortRange::sizeToWrite() const
+{
+    return FORT_CONF_PORT_LIST_SIZE(portSize(), pairSize());
 }
 
 void PortRange::clear()

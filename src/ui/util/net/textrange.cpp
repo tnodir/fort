@@ -2,6 +2,11 @@
 
 TextRange::TextRange(QObject *parent) : ValueRange(parent) { }
 
+int TextRange::sizeToWrite() const
+{
+    return sizeof(quint16);
+}
+
 bool TextRange::fromList(const StringViewList &list, bool /*sort*/)
 {
     clear();

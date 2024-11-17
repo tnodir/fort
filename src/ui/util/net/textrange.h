@@ -12,6 +12,8 @@ class TextRange : public ValueRange
 public:
     explicit TextRange(QObject *parent = nullptr);
 
+    int sizeToWrite() const override;
+
     bool fromList(const StringViewList &list, bool sort = true) override;
 
 protected:

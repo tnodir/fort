@@ -28,6 +28,9 @@ public:
 
     virtual bool isEmpty() const = 0;
 
+    virtual bool checkSize() const { return true; }
+    virtual int sizeToWrite() const = 0;
+
     virtual void clear();
 
     QString toText() const;

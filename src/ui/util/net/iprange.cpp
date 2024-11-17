@@ -61,6 +61,17 @@ bool IpRange::isEmpty() const
     return ip4Size() == 0 && pair4Size() == 0 && ip6Size() == 0 && pair6Size() == 0;
 }
 
+bool IpRange::checkSize() const
+{
+    return (ip4Size() + pair4Size()) < FORT_CONF_IP_MAX
+            && (ip6Size() + pair6Size()) < FORT_CONF_IP_MAX;
+}
+
+int IpRange::sizeToWrite() const
+{
+    return FORT_CONF_ADDR_LIST_SIZE(ip4Size(), pair4Size(), ip6Size(), pair6Size());
+}
+
 void IpRange::clear()
 {
     ValueRange::clear();

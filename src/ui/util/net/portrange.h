@@ -42,6 +42,9 @@ public:
 
     bool isEmpty() const override;
 
+    bool checkSize() const override;
+    int sizeToWrite() const override;
+
     void clear() override;
 
     void toList(QStringList &list) const override;

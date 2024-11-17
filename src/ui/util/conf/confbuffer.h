@@ -11,6 +11,7 @@
 class AddressGroup;
 class AppGroup;
 class EnvManager;
+class RuleFilter;
 
 class ConfBuffer : public QObject
 {
@@ -70,7 +71,10 @@ private:
 
     bool writeRule(
             const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds);
-    bool writeRuleText(const QString &ruleText);
+    bool writeRuleText(const QString &ruleText, int &filtersCount);
+    bool writeRuleFilter(const RuleFilter *ruleFilter);
+    bool writeRuleFilterList(const RuleFilter *ruleFilter, int count = 1);
+    bool writeRuleFilterValues(const RuleFilter *ruleFilter);
 
 private:
     quint32 m_driveMask = 0;

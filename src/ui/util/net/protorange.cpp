@@ -1,5 +1,7 @@
 #include "protorange.h"
 
+#include <common/fortconf.h>
+
 #include <util/net/netutil.h>
 #include <util/stringutil.h>
 
@@ -8,6 +10,16 @@ ProtoRange::ProtoRange(QObject *parent) : ValueRange(parent) { }
 bool ProtoRange::isEmpty() const
 {
     return protoSize() == 0 && pairSize() == 0;
+}
+
+bool ProtoRange::checkSize() const
+{
+    return (protoSize() + pairSize()) < FORT_CONF_PROTO_MAX;
+}
+
+int ProtoRange::sizeToWrite() const
+{
+    return FORT_CONF_PROTO_LIST_SIZE(protoSize(), pairSize());
 }
 
 void ProtoRange::clear()

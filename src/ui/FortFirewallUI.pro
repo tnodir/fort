@@ -192,6 +192,7 @@ SOURCES += \
     util/conf/appparseoptions.cpp \
     util/conf/confbuffer.cpp \
     util/conf/confdata.cpp \
+    util/conf/confdatarule.cpp \
     util/conf/confrodata.cpp \
     util/conf/confutil.cpp \
     util/conf/ruletextparser.cpp \
@@ -433,6 +434,7 @@ HEADERS += \
     util/conf/confappswalker.h \
     util/conf/confbuffer.h \
     util/conf/confdata.h \
+    util/conf/confdatarule.h \
     util/conf/confrodata.h \
     util/conf/confruleswalker.h \
     util/conf/confutil.h \
