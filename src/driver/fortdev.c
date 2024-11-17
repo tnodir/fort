@@ -374,7 +374,7 @@ static NTSTATUS fort_device_control_setruleflag(PFORT_DEVICE_CONTROL_ARG dca)
     return STATUS_UNSUCCESSFUL;
 }
 
-static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETZONEFLAG) == FORT_IOCTL_INDEX_SETZONEFLAG,
+static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETRULEFLAG) == FORT_IOCTL_INDEX_SETRULEFLAG,
         "Invalid FORT_CTL_INDEX_FROM_CODE()");
 
 typedef NTSTATUS(FORT_DEVICE_CONTROL_PROCESS_FUNC)(PFORT_DEVICE_CONTROL_ARG dca);
@@ -400,7 +400,7 @@ static NTSTATUS fort_device_control_process(
     const UCHAR control_index =
             FORT_CTL_INDEX_FROM_CODE(irp_stack->Parameters.DeviceIoControl.IoControlCode);
 
-    if (control_index > FORT_IOCTL_INDEX_SETZONEFLAG)
+    if (control_index >= FORT_IOCTL_INDEX_COUNT)
         return STATUS_INVALID_PARAMETER;
 
     if (control_index != FORT_IOCTL_INDEX_VALIDATE
