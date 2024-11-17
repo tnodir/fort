@@ -174,6 +174,22 @@ TEST_F(RuleTextParserTest, filterDirUdp)
     }
 }
 
+TEST_F(RuleTextParserTest, filterArea)
+{
+    RuleTextParser p("area(localhost,lan,inet)");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 3);
+
+    // Check Area
+    {
+        const RuleFilter &rf = p.ruleFilters()[2];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_AREA);
+        checkStringList(rf.values, { "localhost", "lan", "inet" });
+    }
+}
+
 TEST_F(RuleTextParserTest, lineSectionList)
 {
     RuleTextParser p("ip(\n#1\n1.1.1.1/8\n#2\n2.2.2.2/16\n):{\ntcp(80)\n}");

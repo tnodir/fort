@@ -3,9 +3,9 @@
 
 #include <QObject>
 
-#include "valuerange.h"
+#include "textrange.h"
 
-class DirRange : public ValueRange
+class DirRange : public TextRange
 {
     Q_OBJECT
 
@@ -19,17 +19,10 @@ public:
 
     void clear() override;
 
-    QString toText() const override;
+    void toList(QStringList &list) const override;
 
-    bool fromList(const StringViewList &list, bool sort = true) override;
-
-private:
-    enum ParseError {
-        ErrorOk = 0,
-        ErrorBadDirection,
-    };
-
-    DirRange::ParseError parseDirectionLine(const QStringView &line);
+protected:
+    TextRange::ParseError parseText(const QStringView &text);
 
 private:
     bool m_isIn : 1 = false;

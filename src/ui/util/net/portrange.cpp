@@ -19,23 +19,19 @@ void PortRange::clear()
     m_pairToArray.clear();
 }
 
-QString PortRange::toText() const
+void PortRange::toList(QStringList &list) const
 {
-    QString text;
-
     for (int i = 0, n = portSize(); i < n; ++i) {
         const port_t port = portAt(i);
 
-        text += QString("%1\n").arg(port);
+        list << QString::number(port);
     }
 
     for (int i = 0, n = pairSize(); i < n; ++i) {
         const PortPair pair = pairAt(i);
 
-        text += QString("%1-%2\n").arg(QString::number(pair.from), QString::number(pair.to));
+        list << QString("%1-%2").arg(QString::number(pair.from), QString::number(pair.to));
     }
-
-    return text;
 }
 
 bool PortRange::fromList(const StringViewList &list, bool /*sort*/)

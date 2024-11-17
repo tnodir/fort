@@ -11,6 +11,13 @@ void ValueRange::clear()
     m_errorDetails.clear();
 }
 
+QString ValueRange::toText() const
+{
+    QStringList list;
+    toList(list);
+    return list.join('\n') + '\n';
+}
+
 bool ValueRange::fromText(const QString &text)
 {
     const auto list = StringUtil::splitView(text, QLatin1Char('\n'));

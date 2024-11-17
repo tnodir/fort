@@ -74,37 +74,33 @@ void IpRange::clear()
     m_pair6ToArray.clear();
 }
 
-QString IpRange::toText() const
+void IpRange::toList(QStringList &list) const
 {
-    QString text;
-
     for (int i = 0, n = ip4Size(); i < n; ++i) {
         const ip4_t ip = ip4At(i);
 
-        text += QString("%1\n").arg(NetFormatUtil::ip4ToText(ip));
+        list << NetFormatUtil::ip4ToText(ip);
     }
 
     for (int i = 0, n = pair4Size(); i < n; ++i) {
         const Ip4Pair ip = pair4At(i);
 
-        text += QString("%1-%2\n").arg(
+        list << QString("%1-%2").arg(
                 NetFormatUtil::ip4ToText(ip.from), NetFormatUtil::ip4ToText(ip.to));
     }
 
     for (int i = 0, n = ip6Size(); i < n; ++i) {
         const ip6_addr_t ip = ip6At(i);
 
-        text += QString("%1\n").arg(NetFormatUtil::ip6ToText(ip));
+        list << NetFormatUtil::ip6ToText(ip);
     }
 
     for (int i = 0, n = pair6Size(); i < n; ++i) {
         const Ip6Pair ip = pair6At(i);
 
-        text += QString("%1-%2\n").arg(
+        list << QString("%1-%2").arg(
                 NetFormatUtil::ip6ToText(ip.from), NetFormatUtil::ip6ToText(ip.to));
     }
-
-    return text;
 }
 
 bool IpRange::fromList(const StringViewList &list, bool sort)

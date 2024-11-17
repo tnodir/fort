@@ -19,23 +19,19 @@ void ProtoRange::clear()
     m_pairToArray.clear();
 }
 
-QString ProtoRange::toText() const
+void ProtoRange::toList(QStringList &list) const
 {
-    QString text;
-
     for (int i = 0, n = protoSize(); i < n; ++i) {
         const proto_t proto = protoAt(i);
 
-        text += QString("%1\n").arg(NetUtil::protocolName(proto));
+        list << NetUtil::protocolName(proto);
     }
 
     for (int i = 0, n = pairSize(); i < n; ++i) {
         const ProtoPair pair = pairAt(i);
 
-        text += QString("%1-%2\n").arg(QString::number(pair.from), QString::number(pair.to));
+        list << QString("%1-%2").arg(QString::number(pair.from), QString::number(pair.to));
     }
-
-    return text;
 }
 
 bool ProtoRange::fromList(const StringViewList &list, bool /*sort*/)

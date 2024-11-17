@@ -44,7 +44,7 @@ public:
 
     void clear() override;
 
-    QString toText() const override;
+    void toList(QStringList &list) const override;
 
     bool fromList(const StringViewList &list, bool sort = true) override;
 

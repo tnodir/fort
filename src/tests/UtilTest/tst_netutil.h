@@ -7,6 +7,7 @@
 
 #include <task/taskzonedownloader.h>
 #include <util/fileutil.h>
+#include <util/net/arearange.h>
 #include <util/net/dirrange.h>
 #include <util/net/iprange.h>
 #include <util/net/netformatutil.h>
@@ -191,13 +192,32 @@ TEST_F(NetUtilTest, directionRanges)
     ASSERT_EQ(dirRange.errorLineNo(), 1);
 
     ASSERT_TRUE(dirRange.fromText("in"));
-    ASSERT_EQ(dirRange.toText(), QString("IN"));
+    ASSERT_EQ(dirRange.toText(), QString("IN\n"));
 
     ASSERT_TRUE(dirRange.fromText("out\n"
                                   "in\n"));
     ASSERT_EQ(dirRange.toText(),
             QString("IN\n"
-                    "OUT"));
+                    "OUT\n"));
+}
+
+TEST_F(NetUtilTest, areaRanges)
+{
+    AreaRange areaRange;
+
+    ASSERT_FALSE(areaRange.fromText("1"));
+    ASSERT_EQ(areaRange.errorLineNo(), 1);
+
+    ASSERT_TRUE(areaRange.fromText("lan"));
+    ASSERT_EQ(areaRange.toText(), QString("LAN\n"));
+
+    ASSERT_TRUE(areaRange.fromText("inet\n"
+                                   "localhost\n"
+                                   "lan\n"));
+    ASSERT_EQ(areaRange.toText(),
+            QString("LOCALHOST\n"
+                    "LAN\n"
+                    "INET\n"));
 }
 
 TEST_F(NetUtilTest, taskTasix)

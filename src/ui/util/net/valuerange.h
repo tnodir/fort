@@ -30,7 +30,8 @@ public:
 
     virtual void clear();
 
-    virtual QString toText() const = 0;
+    QString toText() const;
+    virtual void toList(QStringList &list) const = 0;
 
     bool fromText(const QString &text);
     virtual bool fromList(const StringViewList &list, bool sort = true) = 0;
