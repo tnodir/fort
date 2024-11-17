@@ -57,6 +57,13 @@ static void fort_device_reauth_queue(void)
     fort_worker_queue(&fort_device()->worker, FORT_WORKER_REAUTH);
 }
 
+static void fort_device_conf_reauth_queue(PFORT_DEVICE_CONF device_conf)
+{
+    if (device_conf->ref != NULL) {
+        fort_device_reauth_queue();
+    }
+}
+
 FORT_API NTSTATUS fort_device_create(PDEVICE_OBJECT device, PIRP irp)
 {
     UNUSED(device);
@@ -294,9 +301,11 @@ static NTSTATUS fort_device_control_setzones(PFORT_DEVICE_CONTROL_ARG dca)
         if (conf_zones == NULL) {
             return STATUS_INSUFFICIENT_RESOURCES;
         } else {
-            fort_conf_zones_set(&fort_device()->conf, conf_zones);
+            PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
 
-            fort_device_reauth_queue();
+            fort_conf_zones_set(device_conf, conf_zones);
+
+            fort_device_conf_reauth_queue(device_conf);
 
             return STATUS_SUCCESS;
         }
@@ -311,9 +320,11 @@ static NTSTATUS fort_device_control_setzoneflag(PFORT_DEVICE_CONTROL_ARG dca)
     const ULONG len = dca->in_len;
 
     if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
-        fort_conf_zone_flag_set(&fort_device()->conf, zone_flag);
+        PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
 
-        fort_device_reauth_queue();
+        fort_conf_zone_flag_set(device_conf, zone_flag);
+
+        fort_device_conf_reauth_queue(device_conf);
 
         return STATUS_SUCCESS;
     }
@@ -332,9 +343,11 @@ static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
         if (conf_rules == NULL) {
             return STATUS_INSUFFICIENT_RESOURCES;
         } else {
-            fort_conf_rules_set(&fort_device()->conf, conf_rules);
+            PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
 
-            fort_device_reauth_queue();
+            fort_conf_rules_set(device_conf, conf_rules);
+
+            fort_device_conf_reauth_queue(device_conf);
 
             return STATUS_SUCCESS;
         }
@@ -349,9 +362,11 @@ static NTSTATUS fort_device_control_setruleflag(PFORT_DEVICE_CONTROL_ARG dca)
     const ULONG len = dca->in_len;
 
     if (len == sizeof(FORT_CONF_RULE_FLAG)) {
-        fort_conf_rule_flag_set(&fort_device()->conf, rule_flag);
+        PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
 
-        fort_device_reauth_queue();
+        fort_conf_rule_flag_set(device_conf, rule_flag);
+
+        fort_device_conf_reauth_queue(device_conf);
 
         return STATUS_SUCCESS;
     }
@@ -375,6 +390,8 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_delapp,
     &fort_device_control_setzones,
     &fort_device_control_setzoneflag,
+    &fort_device_control_setrules,
+    &fort_device_control_setruleflag,
 };
 
 static NTSTATUS fort_device_control_process(
