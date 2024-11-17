@@ -269,6 +269,11 @@ void ConfData::migrateZoneData(const QByteArray &zoneData)
     }
 }
 
+void ConfData::writeBytes(const bytes_arr_t &array)
+{
+    writeData(array.constData(), array.size(), sizeof(quint8));
+}
+
 void ConfData::writeShorts(const shorts_arr_t &array)
 {
     writeData(array.constData(), array.size(), sizeof(quint16));

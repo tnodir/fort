@@ -44,13 +44,11 @@ public:
     void writeAddressList(const IpRange &ipRange);
     void writeIpRange(const IpRange &ipRange, bool isIPv6 = false);
 
-    bool loadAddressList(IpRange &ipRange, uint &bufSize);
-    bool loadIpRange(IpRange &ipRange, uint &bufSize, bool isIPv6 = false);
-
     void writeApps(const appdata_map_t &appsMap, bool useHeader = false);
 
     void migrateZoneData(const QByteArray &zoneData);
 
+    void writeBytes(const bytes_arr_t &array);
     void writeShorts(const shorts_arr_t &array);
     void writeLongs(const longs_arr_t &array);
     void writeIp6Array(const ip6_arr_t &array);
@@ -59,7 +57,7 @@ public:
     void writeArray(const QByteArray &array);
     void writeString(const QString &s);
 
-private:
+protected:
     char *m_data = nullptr;
     char *m_base = nullptr;
 };

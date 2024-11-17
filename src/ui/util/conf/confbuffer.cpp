@@ -695,5 +695,7 @@ bool ConfBuffer::writeRuleFilterValues(const RuleFilter *ruleFilter)
     // Fill the buffer
     ConfDataRule confData(data() + oldSize);
 
+    confData.writeRange(range.data(), ruleFilter->type);
+
     return true;
 }

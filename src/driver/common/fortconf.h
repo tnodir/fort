@@ -140,6 +140,21 @@ enum FORT_RULE_FILTER_TYPE {
     FORT_RULE_FILTER_TYPE_PORT_UDP,
 };
 
+enum {
+    // Direction
+    FORT_RULE_FILTER_DIRECTION_IN = (1 << 0),
+    FORT_RULE_FILTER_DIRECTION_OUT = (1 << 1),
+    // Area
+    FORT_RULE_FILTER_AREA_LOCALHOST = (1 << 0),
+    FORT_RULE_FILTER_AREA_LAN = (1 << 1),
+    FORT_RULE_FILTER_AREA_INET = (1 << 2),
+};
+
+typedef struct fort_conf_rule_filter_flags
+{
+    UINT16 flags;
+} FORT_CONF_RULE_FILTER_FLAGS, *PFORT_CONF_RULE_FILTER_FLAGS;
+
 typedef struct fort_conf_rule_filter
 {
     UINT32 is_not : 1;

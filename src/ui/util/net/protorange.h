@@ -25,7 +25,7 @@ public:
     const proto_arr_t &pairFromArray() const { return m_pairFromArray; }
     proto_arr_t &pairFromArray() { return m_pairFromArray; }
 
-    const proto_arr_t &pair4oArray() const { return m_pairToArray; }
+    const proto_arr_t &pairToArray() const { return m_pairToArray; }
     proto_arr_t &pairToArray() { return m_pairToArray; }
 
     int protoSize() const { return m_protoArray.size(); }
