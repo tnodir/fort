@@ -8,28 +8,54 @@
 #include <util/net/portrange.h>
 #include <util/net/protorange.h>
 
+namespace {
+
+enum RangeType : qint8 {
+    RangeTypeIp = 0,
+    RangeTypePort,
+    RangeTypeProto,
+    RangeTypeDir,
+    RangeTypeArea,
+};
+
+// Sync with FORT_RULE_FILTER_TYPE enum
+RangeType g_filterRangeTypes[] = {
+    RangeTypeIp, // FORT_RULE_FILTER_TYPE_ADDRESS = 0,
+    RangeTypePort, // FORT_RULE_FILTER_TYPE_PORT,
+    RangeTypeIp, // FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS,
+    RangeTypePort, // FORT_RULE_FILTER_TYPE_LOCAL_PORT,
+    RangeTypeProto, // FORT_RULE_FILTER_TYPE_PROTOCOL,
+    RangeTypeDir, // FORT_RULE_FILTER_TYPE_DIRECTION,
+    RangeTypeArea, // FORT_RULE_FILTER_TYPE_AREA,
+    // Complex types
+    RangeTypePort, // FORT_RULE_FILTER_TYPE_PORT_TCP,
+    RangeTypePort, // FORT_RULE_FILTER_TYPE_PORT_UDP,
+};
+
+}
+
 ConfDataRule::ConfDataRule(void *data) : ConfData(data) { }
 
 void ConfDataRule::writeRange(const ValueRange *range, qint8 type)
 {
-    switch (type) {
-    case FORT_RULE_FILTER_TYPE_ADDRESS:
-    case FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS: {
+    Q_ASSERT(type >= 0 && type < std::size(g_filterRangeTypes));
+
+    const RangeType rangeType = g_filterRangeTypes[type];
+
+    switch (rangeType) {
+    case RangeTypeIp: {
         writeAddressList(*static_cast<const IpRange *>(range));
     } break;
-    case FORT_RULE_FILTER_TYPE_PORT:
-    case FORT_RULE_FILTER_TYPE_LOCAL_PORT:
-    case FORT_RULE_FILTER_TYPE_PORT_TCP:
-    case FORT_RULE_FILTER_TYPE_PORT_UDP: {
+    case RangeTypePort: {
         writePortRange(*static_cast<const PortRange *>(range));
     } break;
-    case FORT_RULE_FILTER_TYPE_PROTOCOL: {
+    case RangeTypeProto: {
         writeProtoRange(*static_cast<const ProtoRange *>(range));
     } break;
-    case FORT_RULE_FILTER_TYPE_DIRECTION: {
+    case RangeTypeDir: {
         writeDirRange(*static_cast<const DirRange *>(range));
     } break;
-    case FORT_RULE_FILTER_TYPE_AREA: {
+    case RangeTypeArea: {
         writeAreaRange(*static_cast<const AreaRange *>(range));
     } break;
     default:
@@ -88,20 +114,20 @@ void ConfDataRule::writeAreaRange(const AreaRange &areaRange)
 
 ValueRange *ConfDataRule::createRangeByType(qint8 type)
 {
-    switch (type) {
-    case FORT_RULE_FILTER_TYPE_ADDRESS:
-    case FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS:
+    Q_ASSERT(type >= 0 && type < std::size(g_filterRangeTypes));
+
+    const RangeType rangeType = g_filterRangeTypes[type];
+
+    switch (rangeType) {
+    case RangeTypeIp:
         return new IpRange();
-    case FORT_RULE_FILTER_TYPE_PORT:
-    case FORT_RULE_FILTER_TYPE_LOCAL_PORT:
-    case FORT_RULE_FILTER_TYPE_PORT_TCP:
-    case FORT_RULE_FILTER_TYPE_PORT_UDP:
+    case RangeTypePort:
         return new PortRange();
-    case FORT_RULE_FILTER_TYPE_PROTOCOL:
+    case RangeTypeProto:
         return new ProtoRange();
-    case FORT_RULE_FILTER_TYPE_DIRECTION:
+    case RangeTypeDir:
         return new DirRange();
-    case FORT_RULE_FILTER_TYPE_AREA:
+    case RangeTypeArea:
         return new AreaRange();
     default:
         Q_UNREACHABLE();

@@ -193,6 +193,8 @@ TEST_F(ConfUtilTest, rulesWriteRead)
 
             ON_CALL(stmt, columnInt).WillByDefault([&](int column) -> qint32 {
                 Q_ASSERT(column >= 0 && column <= 1);
+                Q_ASSERT(subRulesIndex > 0 && subRulesIndex <= subRulesCount);
+
                 const SubRule &subRule = g_subRules[subRulesIndex - 1];
                 return subRule.ids[column];
             });
