@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Too many values</source>
-        <translation type="unfinished"></translation>
+        <translation>Troppi valori</translation>
     </message>
 </context>
 <context>
@@ -322,7 +322,7 @@
     </message>
     <message>
         <source>Please first install Fort Firewall v%1 and save Options from it.</source>
-        <translation>Per prima cosa installa Fort Firewall v%1 e salva le Opzioni da esso.</translation>
+        <translation>Per prima cosa installa Fort Firewall v%1 e salva le opzioni da esso.</translation>
     </message>
     <message>
         <source>Cannot load Settings</source>
@@ -1252,9 +1252,9 @@ Assicurati di avere un nuovo backup.</translation>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation>Si prega di spostare Testi di Permesso/Blocca campi da Gruppi di App a Programmi Wildcard!!!
+        <translation>Spostare testi di autorizzazione/blocco campi da Gruppi di App a Programmi Wildcard!!!
 
-(Sono solo di lettura ora e saranno rimossi in v4.)
+(Sono di sola lettura ora e saranno rimossi in v4.)
 
 Vuoi aprire una discussione nel browser?</translation>
     </message>

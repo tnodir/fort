@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Too many values</source>
-        <translation type="unfinished"></translation>
+        <translation>Demasiados valores</translation>
     </message>
 </context>
 <context>
