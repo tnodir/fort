@@ -334,12 +334,9 @@ bool ConfRuleManager::walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSet
     return ok;
 }
 
-void ConfRuleManager::walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds) const
+void ConfRuleManager::walkRulesMapByStmt(
+        ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, SqliteStmt &stmt)
 {
-    SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectRuleSets).prepare(stmt))
-        return;
-
     int prevRuleId = 0;
     int prevIndex = 0;
 
@@ -369,6 +366,15 @@ void ConfRuleManager::walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &rule
 
         ++index;
     }
+}
+
+void ConfRuleManager::walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds) const
+{
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectRuleSets).prepare(stmt))
+        return;
+
+    walkRulesMapByStmt(ruleSetMap, ruleSetIds, stmt);
 }
 
 bool ConfRuleManager::walkRulesLoop(const std::function<walkRulesCallback> &func) const

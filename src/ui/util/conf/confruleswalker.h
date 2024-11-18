@@ -18,7 +18,7 @@ struct RuleSetInfo
 using ruleset_map_t = QHash<quint16, RuleSetInfo>;
 using ruleid_arr_t = QVector<quint16>;
 
-using walkRulesCallback = bool(Rule &rule);
+using walkRulesCallback = bool(const Rule &rule);
 
 class ConfRulesWalker
 {

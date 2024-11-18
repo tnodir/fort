@@ -528,7 +528,7 @@ bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
     ruleid_arr_t ruleSetIds;
     int maxRuleId;
 
-    return confRulesWalker.walkRules(ruleSetMap, ruleSetIds, maxRuleId, [&](Rule &rule) -> bool {
+    return confRulesWalker.walkRules(ruleSetMap, ruleSetIds, maxRuleId, [&](const Rule &rule) -> bool {
         if (buffer().isEmpty()) {
             const int outSize = FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
 

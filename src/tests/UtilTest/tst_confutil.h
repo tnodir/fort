@@ -6,16 +6,21 @@
 
 #include <conf/addressgroup.h>
 #include <conf/appgroup.h>
+#include <conf/confrulemanager.h>
 #include <conf/firewallconf.h>
+#include <conf/rule.h>
 #include <driver/drivercommon.h>
 #include <log/logentryblockedip.h>
 #include <manager/envmanager.h>
 #include <util/conf/confappswalker.h>
 #include <util/conf/confbuffer.h>
+#include <util/conf/confruleswalker.h>
 #include <util/fileutil.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
 #include <util/stringutil.h>
+
+#include <mocks/mocksqlitestmt.h>
 
 class ConfUtilTest : public Test
 {
@@ -139,4 +144,89 @@ TEST_F(ConfUtilTest, checkEnvManager)
     ASSERT_EQ(envManager.expandString("%d%"), "a");
 
     ASSERT_NE(envManager.expandString("%HOME%"), QString());
+}
+
+TEST_F(ConfUtilTest, rulesWriteRead)
+{
+    static Rule g_rules[] = {
+        { .ruleId = 1, .ruleText = "1.1.1.1" },
+        { .ruleId = 2, .ruleText = "2.2.2.2" },
+        { .ruleId = 3, .ruleText = "3.3.3.3" },
+        { .ruleId = 4, .ruleText = "4.4.4.4" },
+        { .ruleId = 5, .ruleText = "5.5.5.5" },
+        { .ruleType = Rule::PresetRule, .ruleId = 6, .ruleText = "tcp(80)" },
+        { .ruleType = Rule::PresetRule, .ruleId = 7, .ruleText = "udp(53)" },
+        { .ruleType = Rule::PresetRule, .ruleId = 8, .ruleText = "dir(in)" },
+        { .ruleType = Rule::PresetRule, .ruleId = 9, .ruleText = "area(lan)" },
+    };
+
+    struct SubRule
+    {
+        quint16 ids[2]; // ruleId, subRuleId
+    };
+
+    static SubRule g_subRules[] = { // Sub Rules
+        // Rule 1
+        { 1, 6 }, { 1, 7 }, { 1, 8 }, { 1, 9 },
+        // Rule 2
+        { 2, 6 }, { 2, 8 },
+        // Rule 5
+        { 5, 7 }
+    };
+
+    class TestRules : public ConfRulesWalker
+    {
+    public:
+        bool walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, int &maxRuleId,
+                const std::function<walkRulesCallback> &func) const override
+        {
+            NiceMock<MockSqliteStmt> stmt;
+            const int subRulesCount = std::size(g_subRules);
+            int subRulesIndex = 0;
+
+            ON_CALL(stmt, step).WillByDefault([&]() -> SqliteStmt::StepResult {
+                return (++subRulesIndex < subRulesCount) ? SqliteStmt::StepRow
+                                                         : SqliteStmt::StepDone;
+            });
+
+            ON_CALL(stmt, columnInt).WillByDefault([&](int column) -> qint32 {
+                Q_ASSERT(column >= 0 && column <= 1);
+                const SubRule &subRule = g_subRules[subRulesIndex - 1];
+                return subRule.ids[column];
+            });
+
+            ConfRuleManager::walkRulesMapByStmt(ruleSetMap, ruleSetIds, stmt);
+
+            return walkRulesLoop(maxRuleId, func);
+        }
+
+    private:
+        bool walkRulesLoop(int &maxRuleId, const std::function<walkRulesCallback> &func) const
+        {
+            for (const auto &rule : g_rules) {
+                if (maxRuleId < rule.ruleId) {
+                    maxRuleId = rule.ruleId;
+                }
+
+                if (!func(rule))
+                    return false;
+            }
+
+            return true;
+        }
+    };
+
+    TestRules testRules;
+
+    ConfBuffer confBuf;
+
+    if (!confBuf.writeRules(testRules)) {
+        qCritical() << "Error:" << confBuf.errorMessage();
+        Q_UNREACHABLE();
+    }
+
+    // Check the buffer
+    const char *data = confBuf.data() + DriverCommon::confIoConfOff();
+
+    ASSERT_FALSE(DriverCommon::confIp4InRange(data, 0, true));
 }

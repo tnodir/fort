@@ -39,6 +39,9 @@ public:
     bool walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, int &maxRuleId,
             const std::function<walkRulesCallback> &func) const override;
 
+    static void walkRulesMapByStmt(
+            ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, SqliteStmt &stmt);
+
     void updateDriverRules();
 
 signals:

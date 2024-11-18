@@ -153,13 +153,13 @@ QVariant RuleListModel::headerData(int section, Qt::Orientation orientation, int
     if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
         return headerDataDisplay(section);
     }
-    return QVariant();
+    return {};
 }
 
 QVariant RuleListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+        return {};
 
     const quint32 id = index.internalId();
     if (isIndexIdRoot(id)) {
@@ -181,13 +181,13 @@ QVariant RuleListModel::data(const QModelIndex &index, int role) const
         return dataEnabled(index);
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant RuleListModel::rootData(const QModelIndex &index, int role) const
 {
     if (index.column() > 0)
-        return QVariant();
+        return {};
 
     switch (role) {
     // Label
@@ -200,7 +200,7 @@ QVariant RuleListModel::rootData(const QModelIndex &index, int role) const
         return GuiUtil::fontBold();
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant RuleListModel::headerDataDisplay(int section) const
@@ -211,7 +211,7 @@ QVariant RuleListModel::headerDataDisplay(int section) const
     case 1:
         return tr("Change Time");
     }
-    return QVariant();
+    return {};
 }
 
 QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
@@ -225,21 +225,21 @@ QVariant RuleListModel::dataDisplay(const QModelIndex &index, int role) const
         return ruleRow.modTime;
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant RuleListModel::dataDecoration(const QModelIndex &index) const
 {
     const auto &ruleRow = ruleRowAt(index);
     if (ruleRow.isNull())
-        return QVariant();
+        return {};
 
     switch (index.column()) {
     case 0:
         return IconCache::icon(ruleStateIconPath(ruleRow));
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant RuleListModel::dataEnabled(const QModelIndex &index) const
