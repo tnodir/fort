@@ -29,7 +29,7 @@ void AreaRange::toList(QStringList &list) const
     }
 }
 
-TextRange::ParseError AreaRange::parseText(const QStringView &text)
+TextRange::ParseError AreaRange::parseText(const QString &text)
 {
     if (text == "LOCALHOST") {
         m_isLocalhost = true;

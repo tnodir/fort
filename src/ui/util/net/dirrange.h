@@ -22,7 +22,7 @@ public:
     void toList(QStringList &list) const override;
 
 protected:
-    TextRange::ParseError parseText(const QStringView &text);
+    TextRange::ParseError parseText(const QString &text);
 
 private:
     bool m_isIn : 1 = false;

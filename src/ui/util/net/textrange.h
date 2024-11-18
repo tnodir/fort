@@ -22,7 +22,7 @@ protected:
         ErrorBadText,
     };
 
-    virtual TextRange::ParseError parseText(const QStringView &text) = 0;
+    virtual TextRange::ParseError parseText(const QString &text) = 0;
 };
 
 #endif // TEXTRANGE_H

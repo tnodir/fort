@@ -25,7 +25,7 @@ void DirRange::toList(QStringList &list) const
     }
 }
 
-TextRange::ParseError DirRange::parseText(const QStringView &text)
+TextRange::ParseError DirRange::parseText(const QString &text)
 {
     if (text == "IN") {
         m_isIn = true;
