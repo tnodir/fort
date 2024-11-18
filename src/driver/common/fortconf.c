@@ -291,7 +291,7 @@ inline static FORT_APP_DATA fort_conf_app_prefix_find(const PFORT_CONF conf, PCF
     return app_data;
 }
 
-FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, PCFORT_APP_PATH path,
+FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context)
 {
     FORT_APP_DATA app_data;
@@ -317,4 +317,11 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
         return FALSE;
 
     return conf_flags.group_blocked;
+}
+
+FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_META_CONN conn)
+{
+    // TODO
+
+    return TRUE;
 }

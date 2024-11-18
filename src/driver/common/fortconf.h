@@ -187,6 +187,8 @@ typedef struct fort_conf_rules
     char data[4];
 } FORT_CONF_RULES, *PFORT_CONF_RULES;
 
+typedef const FORT_CONF_RULES *PCFORT_CONF_RULES;
+
 typedef struct fort_conf_rule_flag
 {
     UINT16 rule_id;
@@ -344,6 +346,8 @@ typedef struct fort_conf
     char data[4];
 } FORT_CONF, *PFORT_CONF;
 
+typedef const FORT_CONF *PCFORT_CONF;
+
 typedef struct fort_conf_version
 {
     UINT16 driver_version;
@@ -423,10 +427,12 @@ FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PAT
 FORT_API FORT_APP_DATA fort_conf_app_exe_find(
         const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
-FORT_API FORT_APP_DATA fort_conf_app_find(const PFORT_CONF conf, PCFORT_APP_PATH path,
+FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
+
+FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_META_CONN conn);
 
 #ifdef __cplusplus
 } // extern "C"

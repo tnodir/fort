@@ -228,5 +228,8 @@ TEST_F(ConfUtilTest, rulesWriteRead)
     // Check the buffer
     const char *data = confBuf.data() + DriverCommon::confIoConfOff();
 
-    ASSERT_FALSE(DriverCommon::confIp4InRange(data, 0, true));
+    const FORT_CONF_META_CONN conn = {
+    };
+
+    ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn));
 }

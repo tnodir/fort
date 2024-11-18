@@ -220,7 +220,7 @@ bool confIp6InRange(const void *drvConf, const ip6_addr_t ip, bool included, int
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
 {
-    const PFORT_CONF conf = (const PFORT_CONF) drvConf;
+    PCFORT_CONF conf = PCFORT_CONF(drvConf);
     const QString kernelPathLower = kernelPath.startsWith('\\') ? kernelPath.toLower() : kernelPath;
 
     const FORT_APP_PATH path = {
@@ -232,6 +232,13 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
             fort_conf_app_find(conf, &path, fort_conf_app_exe_find, /*exe_context=*/nullptr);
 
     return app_data;
+}
+
+bool confRulesConnBlocked(const void *drvRules, PCFORT_CONF_META_CONN conn)
+{
+    PCFORT_CONF_RULES rules = PCFORT_CONF_RULES(drvRules);
+
+    return fort_conf_rules_conn_blocked(rules, conn);
 }
 
 bool provRegister(bool bootFilter)
