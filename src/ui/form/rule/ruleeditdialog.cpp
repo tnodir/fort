@@ -411,7 +411,7 @@ bool RuleEditDialog::validateFields() const
     // Global Rules Count
     const auto ruleType = Rule::RuleType(m_comboRuleType->currentIndex());
     if (ruleType == Rule::GlobalBeforeAppsRule || ruleType == Rule::GlobalAfterAppsRule) {
-        if (confRuleManager()->rulesCountByType(ruleType) >= ConfUtil::ruleSetMaxCount()) {
+        if (confRuleManager()->rulesCountByType(ruleType) >= ConfUtil::ruleGlobalMaxCount()) {
             windowManager()->showErrorBox(tr("Global rules count exceeded!"));
             m_comboRuleType->setFocus();
             return false;

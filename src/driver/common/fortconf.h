@@ -15,6 +15,7 @@
 #define FORT_CONF_IP4_RANGE_SIZE(n)     (FORT_CONF_IP4_ARR_SIZE(n) * 2)
 #define FORT_CONF_IP6_RANGE_SIZE(n)     (FORT_CONF_IP6_ARR_SIZE(n) * 2)
 #define FORT_CONF_RULE_MAX              1024
+#define FORT_CONF_RULE_GLOBAL_MAX       64
 #define FORT_CONF_RULE_SET_MAX          32
 #define FORT_CONF_RULE_FILTER_DEPTH_MAX 7
 #define FORT_CONF_RULE_SET_DEPTH_MAX    8
@@ -190,9 +191,14 @@ typedef struct fort_conf_rule
     UINT8 set_count;
 } FORT_CONF_RULE, *PFORT_CONF_RULE;
 
+typedef const FORT_CONF_RULE *PCFORT_CONF_RULE;
+
 typedef struct fort_conf_rules
 {
     UINT16 max_rule_id;
+
+    UINT16 pre_rule_id;
+    UINT16 post_rule_id;
 
     char data[4];
 } FORT_CONF_RULES, *PFORT_CONF_RULES;
@@ -207,8 +213,10 @@ typedef struct fort_conf_rule_flag
 
 typedef const FORT_CONF_RULE_FLAG *PCFORT_CONF_RULE_FLAG;
 
-#define FORT_CONF_RULES_DATA_OFF                  offsetof(FORT_CONF_RULES, data)
+#define FORT_CONF_RULES_DATA_OFF offsetof(FORT_CONF_RULES, data)
+
 #define FORT_CONF_RULES_OFFSETS_SIZE(max_rule_id) (((max_rule_id) + 1) * sizeof(UINT32))
+
 #define FORT_CONF_RULE_SIZE(rule)                                                                  \
     (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \
             + (rule)->set_count * sizeof(UINT16))
@@ -262,6 +270,16 @@ typedef struct fort_conf_zone_flag
 } FORT_CONF_ZONE_FLAG, *PFORT_CONF_ZONE_FLAG;
 
 typedef const FORT_CONF_ZONE_FLAG *PCFORT_CONF_ZONE_FLAG;
+
+typedef struct fort_conf_rules_rt
+{
+    const UINT32 *rule_offsets;
+    const char *rules_data;
+
+    PCFORT_CONF_ZONES zones;
+} FORT_CONF_RULES_RT, *PFORT_CONF_RULES_RT;
+
+typedef const FORT_CONF_RULES_RT *PCFORT_CONF_RULES_RT;
 
 typedef struct fort_traf
 {
@@ -443,6 +461,12 @@ FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_include
 #define fort_conf_ip_inet_included(conf, zone_func, ctx, remote_ip, isIPv6)                        \
     fort_conf_ip_included((conf), (zone_func), (ctx), (remote_ip), isIPv6, /*addr_group_index=*/1)
 
+FORT_API BOOL fort_conf_zones_ip_included(
+        PCFORT_CONF_ZONES zones, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6);
+
+FORT_API BOOL fort_conf_zones_conn_blocked(PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn,
+        UINT32 reject_mask, UINT32 accept_mask);
+
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
 FORT_API FORT_APP_DATA fort_conf_app_exe_find(
@@ -453,7 +477,14 @@ FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
 
-FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_META_CONN conn);
+FORT_API BOOL fort_conf_rules_rt_conn_blocked(
+        PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, UINT16 rule_id);
+
+#define fort_conf_rules_rt_rule(rt, rule_id)                                                       \
+    ((PFORT_CONF_RULE) & (rt)->rules_data[((rt)->rule_offsets[rule_id])])
+
+FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
+        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones);
 
 #ifdef __cplusplus
 } // extern "C"

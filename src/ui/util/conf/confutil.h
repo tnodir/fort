@@ -8,8 +8,9 @@ class ConfUtil
 {
 public:
     static int ruleMaxCount();
+    static int ruleGlobalMaxCount();
     static int ruleSetMaxCount();
-    static int ruleDepthMaxCount();
+    static int ruleDepthFilterMaxCount();
     static int ruleSetDepthMaxCount();
 
     static int zoneMaxCount();

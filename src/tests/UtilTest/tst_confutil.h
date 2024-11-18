@@ -153,13 +153,13 @@ TEST_F(ConfUtilTest, rulesWriteRead)
     static Rule g_rules[] = {
         { .ruleId = 1, .ruleText = "1.1.1.1" },
         { .ruleId = 2, .ruleText = "2.2.2.2" },
-        { .ruleId = 3, .ruleText = "3.3.3.3" },
+        { .blocked = true, .ruleId = 3, .ruleText = "3.3.3.3" },
         { .ruleId = 4, .ruleText = "4.4.4.4" },
         { .ruleId = 5, .ruleText = "5.5.5.5" },
         { .ruleType = Rule::PresetRule, .ruleId = 6, .ruleText = "tcp(80)" },
         { .ruleType = Rule::PresetRule, .ruleId = 7, .ruleText = "udp(53)" },
         { .ruleType = Rule::PresetRule, .ruleId = 8, .ruleText = "dir(in)" },
-        { .ruleType = Rule::PresetRule, .ruleId = 9, .ruleText = "area(lan)" },
+        { .blocked = true, .ruleType = Rule::PresetRule, .ruleId = 9, .ruleText = "area(lan)" },
     };
 
     struct SubRule
@@ -232,8 +232,16 @@ TEST_F(ConfUtilTest, rulesWriteRead)
     // Check the buffer
     const char *data = confBuf.data() + DriverCommon::confIoConfOff();
 
-    const FORT_CONF_META_CONN conn = {
-    };
+    // Allowed IP
+    {
+        const FORT_CONF_META_CONN conn = {
+            .inbound = false,
+            .is_local_net = true,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("2.2.2.2") },
+        };
 
-    ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn));
+        ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/2));
+    }
 }

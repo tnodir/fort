@@ -68,7 +68,7 @@ bool confIp6InRange(
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath);
 
-bool confRulesConnBlocked(const void *drvRules, PCFORT_CONF_META_CONN conn);
+bool confRulesConnBlocked(const void *drvRules, PCFORT_CONF_META_CONN conn, quint16 ruleId);
 
 bool provRegister(bool bootFilter);
 void provUnregister();

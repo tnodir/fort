@@ -17,12 +17,6 @@ typedef struct fort_conf_exe_node
 
 typedef const FORT_CONF_EXE_NODE *PCFORT_CONF_EXE_NODE;
 
-static int bit_scan_forward(ULONG mask)
-{
-    unsigned long index;
-    return _BitScanForward(&index, mask) ? index : -1;
-}
-
 static PVOID fort_conf_mem_alloc(const void *src, ULONG len)
 {
     PVOID p = fort_mem_alloc(len, FORT_DEVICE_CONF_POOL_TAG);
@@ -438,43 +432,53 @@ FORT_API void fort_conf_zones_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONE
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
+inline static void fort_conf_zone_flag_set_locked(
+        PFORT_CONF_ZONES zones, PCFORT_CONF_ZONE_FLAG zone_flag)
+{
+    const UINT32 zone_mask = (1u << (zone_flag->zone_id - 1));
+
+    if (zone_flag->enabled) {
+        zones->enabled_mask |= zone_mask;
+    } else {
+        zones->enabled_mask &= ~zone_mask;
+    }
+}
+
 FORT_API void fort_conf_zone_flag_set(
         PFORT_DEVICE_CONF device_conf, PCFORT_CONF_ZONE_FLAG zone_flag)
 {
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
     PFORT_CONF_ZONES zones = device_conf->zones;
     if (zones != NULL) {
-        const UINT32 zone_mask = (1u << (zone_flag->zone_id - 1));
-        if (zone_flag->enabled) {
-            zones->enabled_mask |= zone_mask;
-        } else {
-            zones->enabled_mask &= ~zone_mask;
-        }
+        fort_conf_zone_flag_set_locked(zones, zone_flag);
     }
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
-FORT_API BOOL fort_conf_zones_ip_included(
-        PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const ip_addr_t remote_ip, BOOL isIPv6)
+FORT_API BOOL fort_devconf_zones_ip_included(
+        PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6)
 {
     BOOL res = FALSE;
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
-    PFORT_CONF_ZONES zones = device_conf->zones;
+    PCFORT_CONF_ZONES zones = device_conf->zones;
     if (zones != NULL) {
-        zones_mask &= (zones->mask & zones->enabled_mask);
-        while (zones_mask != 0) {
-            const int zone_index = bit_scan_forward(zones_mask);
-            PFORT_CONF_ADDR_LIST addr_list =
-                    (PFORT_CONF_ADDR_LIST) (zones->data + zones->addr_off[zone_index]);
+        res = fort_conf_zones_ip_included(zones, zones_mask, ip, isIPv6);
+    }
+    ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 
-            if (fort_conf_ip_inlist(remote_ip, addr_list, isIPv6)) {
-                res = TRUE;
-                break;
-            }
+    return res;
+}
 
-            zones_mask ^= (1u << zone_index);
-        }
+FORT_API BOOL fort_devconf_zones_conn_blocked(PFORT_DEVICE_CONF device_conf,
+        PCFORT_CONF_META_CONN conn, UINT32 reject_mask, UINT32 accept_mask)
+{
+    BOOL res = FALSE;
+
+    KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
+    PCFORT_CONF_ZONES zones = device_conf->zones;
+    if (zones != NULL) {
+        res = fort_conf_zones_conn_blocked(zones, conn, reject_mask, accept_mask);
     }
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 
@@ -496,16 +500,16 @@ FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
-static void fort_conf_rule_flag_set_locked(PFORT_CONF_RULES rules, PCFORT_CONF_RULE_FLAG rule_flag)
+inline static void fort_conf_rule_flag_set_locked(
+        PFORT_CONF_RULES rules, PCFORT_CONF_RULE_FLAG rule_flag)
 {
     const UINT16 max_rule_id = rules->max_rule_id;
 
     if (rule_flag->rule_id > max_rule_id)
         return;
 
-    const UINT32 rule_off = *((PUINT32) rules->data + rule_flag->rule_id);
-    PFORT_CONF_RULE rule =
-            (PFORT_CONF_RULE) &rules->data[FORT_CONF_RULES_OFFSETS_SIZE(max_rule_id) + rule_off];
+    const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, /*zones=*/NULL);
+    PFORT_CONF_RULE rule = fort_conf_rules_rt_rule(&rules_rt, rule_flag->rule_id);
 
     rule->enabled = rule_flag->enabled;
 }
@@ -519,4 +523,21 @@ FORT_API void fort_conf_rule_flag_set(
         fort_conf_rule_flag_set_locked(rules, rule_flag);
     }
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
+}
+
+FORT_API BOOL fort_devconf_rules_conn_blocked(
+        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_META_CONN conn, UINT16 rule_id)
+{
+    BOOL res = FALSE;
+
+    KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
+    PFORT_CONF_RULES rules = device_conf->rules;
+    if (rules != NULL) {
+        const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, device_conf->zones);
+
+        res = fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rule_id);
+    }
+    ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
+
+    return res;
 }

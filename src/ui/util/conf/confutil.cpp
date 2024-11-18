@@ -9,12 +9,17 @@ int ConfUtil::ruleMaxCount()
     return FORT_CONF_RULE_MAX;
 }
 
+int ConfUtil::ruleGlobalMaxCount()
+{
+    return FORT_CONF_RULE_GLOBAL_MAX;
+}
+
 int ConfUtil::ruleSetMaxCount()
 {
     return FORT_CONF_RULE_SET_MAX;
 }
 
-int ConfUtil::ruleDepthMaxCount()
+int ConfUtil::ruleDepthFilterMaxCount()
 {
     return FORT_CONF_RULE_FILTER_DEPTH_MAX;
 }

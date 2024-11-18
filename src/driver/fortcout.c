@@ -255,16 +255,14 @@ inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CA
     return fort_callout_ale_associate_flow(ca, cx, app_data.flags);
 }
 
-inline static BOOL fort_callout_ale_ip_zone_check(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, UINT32 zones_mask, BOOL included)
+inline static BOOL fort_callout_ale_conn_zone_blocked(
+        PFORT_CONF_META_CONN conn, FORT_APP_DATA app_data)
 {
-    if (zones_mask == 0)
+    if (app_data.reject_zones == 0 && app_data.accept_zones == 0)
         return FALSE;
 
-    const BOOL ip_included = fort_conf_zones_ip_included(
-            &fort_device()->conf, zones_mask, cx->conn.remote_ip, ca->isIPv6);
-
-    return ip_included == included;
+    return fort_devconf_zones_conn_blocked(
+            &fort_device()->conf, conn, app_data.reject_zones, app_data.accept_zones);
 }
 
 static BOOL fort_callout_ale_app_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
@@ -287,8 +285,7 @@ static BOOL fort_callout_ale_app_blocked(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_AL
         return TRUE; /* block LAN Only */
     }
 
-    if (fort_callout_ale_ip_zone_check(ca, cx, app_data.reject_zones, /*included=*/TRUE)
-            || fort_callout_ale_ip_zone_check(ca, cx, app_data.accept_zones, /*included=*/FALSE)) {
+    if (fort_callout_ale_conn_zone_blocked(conn, app_data)) {
         conn->block_reason = FORT_BLOCK_REASON_ZONE;
         return TRUE; /* block Rejected or Not Accepted Zones */
     }
@@ -388,15 +385,15 @@ inline static BOOL fort_callout_ale_check_filter_flags(
     }
 
     conn->is_local_net = !fort_conf_ip_is_inet(&conf_ref->conf,
-            (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included, &fort_device()->conf,
-            conn->remote_ip, conn->isIPv6);
+            (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
+            &fort_device()->conf, conn->remote_ip, conn->isIPv6);
 
     if (fort_callout_ale_check_filter_net_flags(conn, conf_flags)) {
         return TRUE; /* block net */
     }
 
     if (!fort_conf_ip_inet_included(&conf_ref->conf,
-                (fort_conf_zones_ip_included_func *) &fort_conf_zones_ip_included,
+                (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
                 &fort_device()->conf, conn->remote_ip, conn->isIPv6)) {
         conn->block_reason = FORT_BLOCK_REASON_IP_INET;
         return TRUE; /* block address */

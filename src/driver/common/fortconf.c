@@ -13,9 +13,19 @@ static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT64), "FORT_CONF_FLAGS size m
 static_assert(
         sizeof(FORT_CONF_RULE_FILTER) == sizeof(UINT32), "FORT_CONF_RULE_FILTER size mismatch");
 static_assert(sizeof(FORT_CONF_RULE) == sizeof(UINT16), "FORT_CONF_RULE size mismatch");
+
+static_assert((FORT_CONF_RULE_GLOBAL_MAX + FORT_CONF_RULE_SET_MAX) < 256,
+        "FORT_CONF_RULE_GLOBAL_MAX count mismatch");
+
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
 static_assert(sizeof(FORT_APP_DATA) == 2 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
+
+static int bit_scan_forward(ULONG mask)
+{
+    unsigned long index;
+    return _BitScanForward(&index, mask) ? index : -1;
+}
 
 static BOOL fort_conf_ip4_find(const UINT32 *iparr, UINT32 ip, UINT32 count, BOOL is_range)
 {
@@ -190,6 +200,45 @@ FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_include
     return ip_included && !ip_excluded;
 }
 
+FORT_API BOOL fort_conf_zones_ip_included(
+        PCFORT_CONF_ZONES zones, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6)
+{
+    zones_mask &= (zones->mask & zones->enabled_mask);
+
+    while (zones_mask != 0) {
+        const int zone_index = bit_scan_forward(zones_mask);
+
+        const UINT32 addr_off = zones->addr_off[zone_index];
+        PCFORT_CONF_ADDR_LIST addr_list = (PCFORT_CONF_ADDR_LIST) &zones->data[addr_off];
+
+        if (fort_conf_ip_inlist(ip, addr_list, isIPv6))
+            return TRUE;
+
+        zones_mask ^= (1u << zone_index);
+    }
+
+    return FALSE;
+}
+
+static BOOL fort_conf_zones_masks_conn_check(
+        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, UINT32 zones_mask, BOOL included)
+{
+    if (zones_mask == 0)
+        return FALSE;
+
+    const BOOL ip_included =
+            fort_conf_zones_ip_included(zones, zones_mask, conn->remote_ip, conn->isIPv6);
+
+    return ip_included == included;
+}
+
+FORT_API BOOL fort_conf_zones_conn_blocked(
+        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, UINT32 reject_mask, UINT32 accept_mask)
+{
+    return fort_conf_zones_masks_conn_check(zones, conn, reject_mask, /*included=*/TRUE)
+            || fort_conf_zones_masks_conn_check(zones, conn, accept_mask, /*included=*/FALSE);
+}
+
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
 {
     const UINT16 path_len = path->len;
@@ -316,9 +365,32 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
     return conf_flags.group_blocked;
 }
 
-FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_META_CONN conn)
+FORT_API BOOL fort_conf_rules_rt_conn_blocked(
+        PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
-    // TODO
+    PCFORT_CONF_RULE rule = fort_conf_rules_rt_rule(rules_rt, rule_id);
+
+    if (!rule->enabled)
+        return FALSE;
+
+    if (rule->has_zones) {
+        UINT32 reject_mask = 0;
+        UINT32 accept_mask = 0;
+
+        if (fort_conf_zones_conn_blocked(rules_rt->zones, conn, reject_mask, accept_mask))
+            return TRUE;
+    }
 
     return FALSE;
+}
+
+FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
+        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones)
+{
+    const FORT_CONF_RULES_RT rules_rt = {
+        .rule_offsets = (PUINT32) rules->data,
+        .rules_data = rules->data + FORT_CONF_RULES_OFFSETS_SIZE(rules->max_rule_id),
+        .zones = zones,
+    };
+    return rules_rt;
 }

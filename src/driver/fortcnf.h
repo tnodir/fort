@@ -86,8 +86,11 @@ FORT_API void fort_conf_zones_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONE
 FORT_API void fort_conf_zone_flag_set(
         PFORT_DEVICE_CONF device_conf, PCFORT_CONF_ZONE_FLAG zone_flag);
 
-FORT_API BOOL fort_conf_zones_ip_included(
-        PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const ip_addr_t remote_ip, BOOL isIPv6);
+FORT_API BOOL fort_devconf_zones_ip_included(
+        PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6);
+
+FORT_API BOOL fort_devconf_zones_conn_blocked(PFORT_DEVICE_CONF device_conf,
+        PCFORT_CONF_META_CONN conn, UINT32 reject_mask, UINT32 accept_mask);
 
 FORT_API PFORT_CONF_RULES fort_conf_rules_new(PCFORT_CONF_RULES rules, ULONG len);
 
@@ -95,6 +98,9 @@ FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE
 
 FORT_API void fort_conf_rule_flag_set(
         PFORT_DEVICE_CONF device_conf, PCFORT_CONF_RULE_FLAG rule_flag);
+
+FORT_API BOOL fort_devconf_rules_conn_blocked(
+        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_META_CONN conn, UINT16 rule_id);
 
 #ifdef __cplusplus
 } // extern "C"
