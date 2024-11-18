@@ -454,7 +454,7 @@ bool ConfBuffer::parseAppsText(EnvManager &envManager, App &app, AppParseOptions
     return true;
 }
 
-bool ConfBuffer::parseAppLine(App &app, const QStringView &line, AppParseOptions &opt)
+bool ConfBuffer::parseAppLine(App &app, const QStringView line, AppParseOptions &opt)
 {
     bool isWild = false;
     bool isPrefix = false;

@@ -132,7 +132,7 @@ QString NetUtil::protocolName(quint8 ipProto)
     }
 }
 
-quint8 NetUtil::protocolNumber(const QStringView &name)
+quint8 NetUtil::protocolNumber(const QStringView name)
 {
     const QByteArray nameData = name.toLatin1();
 
@@ -144,7 +144,7 @@ quint8 NetUtil::protocolNumber(const QStringView &name)
     return 0;
 }
 
-quint16 NetUtil::serviceToPort(const QStringView &name, const char *proto, bool &ok)
+quint16 NetUtil::serviceToPort(const QStringView name, const char *proto, bool &ok)
 {
     const QByteArray nameData = name.toLatin1();
 

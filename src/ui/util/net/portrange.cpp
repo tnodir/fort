@@ -80,7 +80,7 @@ bool PortRange::fromList(const StringViewList &list, bool /*sort*/)
 }
 
 PortRange::ParseError PortRange::parsePortLine(
-        const QStringView &line, portrange_map_t &portRangeMap, int &pairSize)
+        const QStringView line, portrange_map_t &portRangeMap, int &pairSize)
 {
     static const QRegularExpression portRe(R"(^([\d\w]+)\s*(-?)\s*(\S*))");
 
@@ -103,7 +103,7 @@ PortRange::ParseError PortRange::parsePortLine(
     return parsePortRange(port, port2, portRangeMap, pairSize);
 }
 
-PortRange::ParseError PortRange::parsePortRange(const QStringView &port, const QStringView &port2,
+PortRange::ParseError PortRange::parsePortRange(const QStringView port, const QStringView port2,
         portrange_map_t &portRangeMap, int &pairSize)
 {
     port_t from = 0, to = 0;
@@ -124,7 +124,7 @@ PortRange::ParseError PortRange::parsePortRange(const QStringView &port, const Q
     return ErrorOk;
 }
 
-bool PortRange::parsePortNumber(const QStringView &port, port_t &v)
+bool PortRange::parsePortNumber(const QStringView port, port_t &v)
 {
     if (port.isEmpty())
         return true;

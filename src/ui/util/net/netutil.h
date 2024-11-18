@@ -27,9 +27,9 @@ public:
     static QString localIpNetworksText();
 
     static QString protocolName(quint8 ipProto);
-    static quint8 protocolNumber(const QStringView &name);
+    static quint8 protocolNumber(const QStringView name);
 
-    static quint16 serviceToPort(const QStringView &name, const char *proto, bool &ok);
+    static quint16 serviceToPort(const QStringView name, const char *proto, bool &ok);
 };
 
 #endif // NETUTIL_H

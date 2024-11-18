@@ -104,7 +104,7 @@ QString StringUtil::firstLine(const QString &text)
     return (pos != -1) ? text.left(pos) : text;
 }
 
-QRegularExpressionMatch StringUtil::match(const QRegularExpression &re, const QStringView &text)
+QRegularExpressionMatch StringUtil::match(const QRegularExpression &re, const QStringView text)
 {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
     return re.matchView(text);

@@ -30,7 +30,7 @@ public:
 
     static QString firstLine(const QString &text);
 
-    static QRegularExpressionMatch match(const QRegularExpression &re, const QStringView &text);
+    static QRegularExpressionMatch match(const QRegularExpression &re, const QStringView text);
 };
 
 #endif // STRINGUTIL_H

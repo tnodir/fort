@@ -80,7 +80,7 @@ bool ProtoRange::fromList(const StringViewList &list, bool /*sort*/)
 }
 
 ProtoRange::ParseError ProtoRange::parseProtoLine(
-        const QStringView &line, protorange_map_t &protoRangeMap, int &pairSize)
+        const QStringView line, protorange_map_t &protoRangeMap, int &pairSize)
 {
     static const QRegularExpression protoRe(R"(^([\d\w]+)\s*(-?)\s*(\S*))");
 
@@ -103,8 +103,8 @@ ProtoRange::ParseError ProtoRange::parseProtoLine(
     return parseProtoRange(proto, proto2, protoRangeMap, pairSize);
 }
 
-ProtoRange::ParseError ProtoRange::parseProtoRange(const QStringView &proto,
-        const QStringView &proto2, protorange_map_t &protoRangeMap, int &pairSize)
+ProtoRange::ParseError ProtoRange::parseProtoRange(const QStringView proto,
+        const QStringView proto2, protorange_map_t &protoRangeMap, int &pairSize)
 {
     proto_t from = 0, to = 0;
 
@@ -124,7 +124,7 @@ ProtoRange::ParseError ProtoRange::parseProtoRange(const QStringView &proto,
     return ErrorOk;
 }
 
-bool ProtoRange::parseProtoNumber(const QStringView &proto, proto_t &v)
+bool ProtoRange::parseProtoNumber(const QStringView proto, proto_t &v)
 {
     if (proto.isEmpty())
         return true;

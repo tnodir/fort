@@ -60,12 +60,12 @@ private:
     };
 
     PortRange::ParseError parsePortLine(
-            const QStringView &line, portrange_map_t &portRangeMap, int &pairSize);
+            const QStringView line, portrange_map_t &portRangeMap, int &pairSize);
 
-    PortRange::ParseError parsePortRange(const QStringView &port, const QStringView &port2,
+    PortRange::ParseError parsePortRange(const QStringView port, const QStringView port2,
             portrange_map_t &portRangeMap, int &pairSize);
 
-    bool parsePortNumber(const QStringView &port, port_t &v);
+    bool parsePortNumber(const QStringView port, port_t &v);
 
 private:
     bool m_isProtoTcp : 1 = false;

@@ -57,12 +57,12 @@ private:
     };
 
     ProtoRange::ParseError parseProtoLine(
-            const QStringView &line, protorange_map_t &protoRangeMap, int &pairSize);
+            const QStringView line, protorange_map_t &protoRangeMap, int &pairSize);
 
-    ProtoRange::ParseError parseProtoRange(const QStringView &proto, const QStringView &proto2,
+    ProtoRange::ParseError parseProtoRange(const QStringView proto, const QStringView proto2,
             protorange_map_t &protoRangeMap, int &pairSize);
 
-    bool parseProtoNumber(const QStringView &proto, proto_t &v);
+    bool parseProtoNumber(const QStringView proto, proto_t &v);
 
 private:
     proto_arr_t m_protoArray;

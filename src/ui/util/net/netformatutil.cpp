@@ -19,7 +19,7 @@ struct sock_addr
 
 #define sock_addr_get_inp(sap) ((void *) &(sap)->u.in.sin_addr)
 
-quint32 NetFormatUtil::textToIp4(const QStringView &text, bool *ok)
+quint32 NetFormatUtil::textToIp4(const QStringView text, bool *ok)
 {
     quint32 ip4;
 
@@ -50,7 +50,7 @@ QString NetFormatUtil::ip4ToText(quint32 ip)
     return QString::fromWCharArray(buf);
 }
 
-ip6_addr_t NetFormatUtil::textToIp6(const QStringView &text, bool *ok)
+ip6_addr_t NetFormatUtil::textToIp6(const QStringView text, bool *ok)
 {
     ip6_addr_t ip6;
 

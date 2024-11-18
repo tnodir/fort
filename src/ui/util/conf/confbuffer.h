@@ -66,7 +66,7 @@ private:
 
     bool parseAppsText(EnvManager &envManager, App &app, AppParseOptions &opt);
 
-    bool parseAppLine(App &app, const QStringView &line, AppParseOptions &opt);
+    bool parseAppLine(App &app, const QStringView line, AppParseOptions &opt);
 
     bool addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize);
 
