@@ -123,18 +123,33 @@ QString NetUtil::protocolName(quint8 ipProto)
     case IPPROTO_ICMPV6:
         return "ICMPv6";
     default:
-        const protoent *pe = getprotobynumber(ipProto);
-        if (pe) {
-            return QString::fromLatin1(pe->p_name);
-        }
-
-        return QString("0x%1").arg(ipProto, 0, 16);
+        break;
     }
+
+    const protoent *pe = getprotobynumber(ipProto);
+    if (pe) {
+        return QString::fromLatin1(pe->p_name);
+    }
+
+    return QString::number(ipProto);
 }
 
 quint8 NetUtil::protocolNumber(const QStringView name)
 {
-    const QByteArray nameData = name.toLatin1();
+    const auto nameUpper = name.toString().toUpper();
+
+    if (nameUpper == "TCP")
+        return IPPROTO_TCP;
+    if (nameUpper == "UDP")
+        return IPPROTO_UDP;
+    if (nameUpper == "ICMP")
+        return IPPROTO_ICMP;
+    if (nameUpper == "ICMPv6")
+        IPPROTO_ICMPV6;
+    if (nameUpper == "IGMP")
+        return IPPROTO_IGMP;
+
+    const QByteArray nameData = nameUpper.toLatin1();
 
     const protoent *pe = getprotobyname(nameData.constData());
     if (pe) {
