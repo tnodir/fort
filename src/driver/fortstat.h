@@ -159,7 +159,7 @@ FORT_API void fort_stat_close(PFORT_STAT stat);
 
 FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat);
 
-FORT_API void fort_stat_conf_update(PFORT_STAT stat, const PFORT_CONF_IO conf_io);
+FORT_API void fort_stat_conf_update(PFORT_STAT stat, PCFORT_CONF_IO conf_io);
 
 FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags);
 

@@ -128,12 +128,11 @@ FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len)
     return RtlCompareMemory(p1, p2, len) == len;
 }
 
-FORT_API BOOL fort_conf_ip_inlist(
-        const ip_addr_t ip, const PFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6)
+FORT_API BOOL fort_conf_ip_inlist(const ip_addr_t ip, PCFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6)
 {
     if (isIPv6) {
         const ip6_addr_t *ip6 = &ip.v6;
-        const PFORT_CONF_ADDR_LIST addr6_list = (const PFORT_CONF_ADDR_LIST)((const PCHAR) addr_list
+        PCFORT_CONF_ADDR_LIST addr6_list = (PCFORT_CONF_ADDR_LIST) ((PCCH) addr_list
                 + FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n));
 
         return fort_conf_ip6_inarr(fort_conf_addr_list_ip6_ref(addr6_list), ip6, addr6_list->ip_n)
@@ -146,15 +145,15 @@ FORT_API BOOL fort_conf_ip_inlist(
     }
 }
 
-FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(const PFORT_CONF conf, int addr_group_index)
+FORT_API PCFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(PCFORT_CONF conf, int addr_group_index)
 {
     const UINT32 *addr_group_offsets = (const UINT32 *) (conf->data + conf->addr_groups_off);
     const char *addr_group_data = (const char *) addr_group_offsets;
 
-    return (PFORT_CONF_ADDR_GROUP) (addr_group_data + addr_group_offsets[addr_group_index]);
+    return (PCFORT_CONF_ADDR_GROUP) (addr_group_data + addr_group_offsets[addr_group_index]);
 }
 
-static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR_LIST addr_list,
+static BOOL fort_conf_ip_included_check(PCFORT_CONF_ADDR_LIST addr_list,
         fort_conf_zones_ip_included_func zone_func, void *ctx, const ip_addr_t remote_ip,
         UINT32 zones_mask, BOOL list_is_empty, BOOL isIPv6)
 {
@@ -162,11 +161,10 @@ static BOOL fort_conf_ip_included_check(const PFORT_CONF_ADDR_LIST addr_list,
             || (zone_func != NULL && zone_func(ctx, zones_mask, remote_ip, isIPv6));
 }
 
-FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
-        fort_conf_zones_ip_included_func zone_func, void *ctx, const ip_addr_t remote_ip,
-        BOOL isIPv6, int addr_group_index)
+FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_included_func zone_func,
+        void *ctx, const ip_addr_t remote_ip, BOOL isIPv6, int addr_group_index)
 {
-    const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addr_group_index);
+    PCFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addr_group_index);
 
     const BOOL include_all = addr_group->include_all;
     const BOOL exclude_all = addr_group->exclude_all;
@@ -209,7 +207,7 @@ static BOOL fort_conf_app_wild_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH
 
 typedef BOOL fort_conf_app_equal_func(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
-static FORT_APP_DATA fort_conf_app_find_loop(const PFORT_CONF conf, PCFORT_APP_PATH path,
+static FORT_APP_DATA fort_conf_app_find_loop(PCFORT_CONF conf, PCFORT_APP_PATH path,
         UINT32 apps_off, UINT16 apps_n, fort_conf_app_equal_func *app_equal_func)
 {
     const FORT_APP_DATA app_data = { 0 };
@@ -231,8 +229,7 @@ static FORT_APP_DATA fort_conf_app_find_loop(const PFORT_CONF conf, PCFORT_APP_P
     return app_data;
 }
 
-FORT_API FORT_APP_DATA fort_conf_app_exe_find(
-        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
+FORT_API FORT_APP_DATA fort_conf_app_exe_find(PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
 {
     UNUSED(context);
 
@@ -240,7 +237,7 @@ FORT_API FORT_APP_DATA fort_conf_app_exe_find(
             conf, path, conf->exe_apps_off, conf->exe_apps_n, fort_conf_app_exe_equal);
 }
 
-inline static FORT_APP_DATA fort_conf_app_wild_find(const PFORT_CONF conf, PCFORT_APP_PATH path)
+inline static FORT_APP_DATA fort_conf_app_wild_find(PCFORT_CONF conf, PCFORT_APP_PATH path)
 {
     return fort_conf_app_find_loop(
             conf, path, conf->wild_apps_off, conf->wild_apps_n, fort_conf_app_wild_equal);
@@ -257,7 +254,7 @@ inline static int fort_conf_app_prefix_cmp(PCFORT_APP_ENTRY app_entry, PCFORT_AP
     return fort_mem_cmp(path->buffer, app_entry->path, path_len);
 }
 
-inline static FORT_APP_DATA fort_conf_app_prefix_find(const PFORT_CONF conf, PCFORT_APP_PATH path)
+inline static FORT_APP_DATA fort_conf_app_prefix_find(PCFORT_CONF conf, PCFORT_APP_PATH path)
 {
     const FORT_APP_DATA app_data = { 0 };
 
@@ -323,5 +320,5 @@ FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_
 {
     // TODO
 
-    return TRUE;
+    return FALSE;
 }

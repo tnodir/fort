@@ -135,7 +135,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 
 static NTSTATUS fort_device_control_validate(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_CONF_VERSION conf_ver = dca->buffer;
+    PCFORT_CONF_VERSION conf_ver = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len == sizeof(FORT_CONF_VERSION)) {
@@ -150,7 +150,7 @@ static NTSTATUS fort_device_control_validate(PFORT_DEVICE_CONTROL_ARG dca)
 
 static NTSTATUS fort_device_control_setservices(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_SERVICE_INFO_LIST services = dca->buffer;
+    PCFORT_SERVICE_INFO_LIST services = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len > sizeof(FORT_SERVICE_INFO_LIST)) {
@@ -164,7 +164,7 @@ static NTSTATUS fort_device_control_setservices(PFORT_DEVICE_CONTROL_ARG dca)
 }
 
 inline static NTSTATUS fort_device_control_setconf_ref(
-        const PFORT_CONF_IO conf_io, PFORT_CONF_REF conf_ref)
+        PCFORT_CONF_IO conf_io, PFORT_CONF_REF conf_ref)
 {
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
     const BOOL was_null_conf = (device_conf->ref == NULL);
@@ -184,11 +184,11 @@ inline static NTSTATUS fort_device_control_setconf_ref(
 
 static NTSTATUS fort_device_control_setconf(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_CONF_IO conf_io = dca->buffer;
+    PCFORT_CONF_IO conf_io = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len > sizeof(FORT_CONF_IO)) {
-        const PFORT_CONF conf = &conf_io->conf;
+        PCFORT_CONF conf = &conf_io->conf;
         PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len - FORT_CONF_IO_CONF_OFF);
 
         if (conf_ref == NULL) {
@@ -203,7 +203,7 @@ static NTSTATUS fort_device_control_setconf(PFORT_DEVICE_CONTROL_ARG dca)
 
 static NTSTATUS fort_device_control_setflags(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_CONF_FLAGS in_conf_flags = dca->buffer;
+    PCFORT_CONF_FLAGS in_conf_flags = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len == sizeof(FORT_CONF_FLAGS)) {
@@ -292,7 +292,7 @@ static NTSTATUS fort_device_control_delapp(PFORT_DEVICE_CONTROL_ARG dca)
 
 static NTSTATUS fort_device_control_setzones(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_CONF_ZONES zones = dca->buffer;
+    PCFORT_CONF_ZONES zones = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len >= FORT_CONF_ZONES_DATA_OFF) {
@@ -316,7 +316,7 @@ static NTSTATUS fort_device_control_setzones(PFORT_DEVICE_CONTROL_ARG dca)
 
 static NTSTATUS fort_device_control_setzoneflag(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_CONF_ZONE_FLAG zone_flag = dca->buffer;
+    PCFORT_CONF_ZONE_FLAG zone_flag = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len == sizeof(FORT_CONF_ZONE_FLAG)) {
@@ -334,7 +334,7 @@ static NTSTATUS fort_device_control_setzoneflag(PFORT_DEVICE_CONTROL_ARG dca)
 
 static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_CONF_RULES rules = dca->buffer;
+    PCFORT_CONF_RULES rules = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len >= FORT_CONF_RULES_DATA_OFF) {
@@ -358,7 +358,7 @@ static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
 
 static NTSTATUS fort_device_control_setruleflag(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const PFORT_CONF_RULE_FLAG rule_flag = dca->buffer;
+    PCFORT_CONF_RULE_FLAG rule_flag = dca->buffer;
     const ULONG len = dca->in_len;
 
     if (len == sizeof(FORT_CONF_RULE_FLAG)) {

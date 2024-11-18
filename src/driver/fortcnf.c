@@ -15,6 +15,8 @@ typedef struct fort_conf_exe_node
     tommy_key_t path_hash; /* tommy_hashdyn_node::index */
 } FORT_CONF_EXE_NODE, *PFORT_CONF_EXE_NODE;
 
+typedef const FORT_CONF_EXE_NODE *PCFORT_CONF_EXE_NODE;
+
 static int bit_scan_forward(ULONG mask)
 {
     unsigned long index;
@@ -74,8 +76,7 @@ static PFORT_CONF_EXE_NODE fort_conf_ref_exe_find_node(
     return NULL;
 }
 
-FORT_API FORT_APP_DATA fort_conf_exe_find(
-        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
+FORT_API FORT_APP_DATA fort_conf_exe_find(PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path)
 {
     UNUSED(conf);
 
@@ -86,7 +87,7 @@ FORT_API FORT_APP_DATA fort_conf_exe_find(
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&conf_ref->conf_lock);
     {
-        const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
+        PCFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
 
         if (node != NULL) {
             app_data = node->app_entry->app_data;
@@ -151,7 +152,7 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_
 static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
         PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path, tommy_key_t path_hash)
 {
-    const PFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
+    PCFORT_CONF_EXE_NODE node = fort_conf_ref_exe_find_node(conf_ref, path, path_hash);
 
     if (node == NULL) {
         return fort_conf_ref_exe_new_entry(conf_ref, app_entry, path, path_hash);
@@ -201,7 +202,7 @@ FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
     }
 }
 
-static void fort_conf_ref_exe_fill(PFORT_CONF_REF conf_ref, const PFORT_CONF conf)
+static void fort_conf_ref_exe_fill(PFORT_CONF_REF conf_ref, PCFORT_CONF conf)
 {
     const char *app_entries = (const char *) (conf->data + conf->exe_apps_off);
 
@@ -269,7 +270,7 @@ static void fort_conf_ref_init(PFORT_CONF_REF conf_ref)
     conf_ref->conf_lock = 0;
 }
 
-FORT_API PFORT_CONF_REF fort_conf_ref_new(const PFORT_CONF conf, ULONG len)
+FORT_API PFORT_CONF_REF fort_conf_ref_new(PCFORT_CONF conf, ULONG len)
 {
     const ULONG conf_len = FORT_CONF_DATA_OFF + conf->exe_apps_off;
     const ULONG ref_len = conf_len + offsetof(FORT_CONF_REF, conf);
@@ -422,7 +423,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
     return old_conf_flags;
 }
 
-FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PFORT_CONF_ZONES zones, ULONG len)
+FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PCFORT_CONF_ZONES zones, ULONG len)
 {
     return fort_conf_mem_alloc(zones, len);
 }
@@ -437,7 +438,8 @@ FORT_API void fort_conf_zones_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONE
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
-FORT_API void fort_conf_zone_flag_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONE_FLAG zone_flag)
+FORT_API void fort_conf_zone_flag_set(
+        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_ZONE_FLAG zone_flag)
 {
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
     PFORT_CONF_ZONES zones = device_conf->zones;
@@ -479,7 +481,7 @@ FORT_API BOOL fort_conf_zones_ip_included(
     return res;
 }
 
-FORT_API PFORT_CONF_RULES fort_conf_rules_new(PFORT_CONF_RULES rules, ULONG len)
+FORT_API PFORT_CONF_RULES fort_conf_rules_new(PCFORT_CONF_RULES rules, ULONG len)
 {
     return fort_conf_mem_alloc(rules, len);
 }
@@ -494,7 +496,7 @@ FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
-static void fort_conf_rule_flag_set_locked(PFORT_CONF_RULES rules, PFORT_CONF_RULE_FLAG rule_flag)
+static void fort_conf_rule_flag_set_locked(PFORT_CONF_RULES rules, PCFORT_CONF_RULE_FLAG rule_flag)
 {
     const UINT16 max_rule_id = rules->max_rule_id;
 
@@ -508,7 +510,8 @@ static void fort_conf_rule_flag_set_locked(PFORT_CONF_RULES rules, PFORT_CONF_RU
     rule->enabled = rule_flag->enabled;
 }
 
-FORT_API void fort_conf_rule_flag_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE_FLAG rule_flag)
+FORT_API void fort_conf_rule_flag_set(
+        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_RULE_FLAG rule_flag)
 {
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
     PFORT_CONF_RULES rules = device_conf->rules;

@@ -38,7 +38,7 @@ FORT_API BOOL fort_pstree_get_proc_name(
         PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, BOOL *inherited);
 
 FORT_API void fort_pstree_update_services(
-        PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO_LIST services, ULONG data_len);
+        PFORT_PSTREE ps_tree, PCFORT_SERVICE_INFO_LIST services, ULONG data_len);
 
 #ifdef __cplusplus
 } // extern "C"

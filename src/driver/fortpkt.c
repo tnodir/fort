@@ -187,9 +187,9 @@ static void NTAPI fort_packet_inject_complete(
 }
 
 static NTSTATUS fort_packet_inject_in(
-        const PFORT_PACKET_IO pkt, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
+        PFORT_PACKET_IO pkt, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
 {
-    const PFORT_PACKET_IN pkt_in = &pkt->in;
+    PCFORT_PACKET_IN pkt_in = &pkt->in;
 
     return FwpsInjectTransportReceiveAsync0(injection_id, NULL, NULL, 0, addressFamily,
             pkt->compartmentId, pkt_in->interfaceIndex, pkt_in->subInterfaceIndex, pkt->netBufList,
@@ -197,7 +197,7 @@ static NTSTATUS fort_packet_inject_in(
 }
 
 static NTSTATUS fort_packet_inject_out(
-        const PFORT_PACKET_IO pkt, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
+        PFORT_PACKET_IO pkt, HANDLE injection_id, ADDRESS_FAMILY addressFamily)
 {
     PFORT_PACKET_OUT pkt_out = &pkt->out;
 
@@ -697,7 +697,7 @@ inline static PFORT_PACKET_QUEUE fort_shaper_create_queue(PFORT_SHAPER shaper, i
 }
 
 static void fort_shaper_create_queues(
-        PFORT_SHAPER shaper, PFORT_SPEED_LIMIT limits, UINT32 limit_io_bits)
+        PFORT_SHAPER shaper, PCFORT_SPEED_LIMIT limits, UINT32 limit_io_bits)
 {
     const LARGE_INTEGER now = KeQueryPerformanceCounter(NULL);
 
@@ -865,10 +865,10 @@ FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
     fort_shaper_free_queues(shaper);
 }
 
-FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO conf_io)
+FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, PCFORT_CONF_IO conf_io)
 {
-    const PFORT_CONF_GROUP conf_group = &conf_io->conf_group;
-    const PFORT_CONF_FLAGS conf_flags = &conf_io->conf.flags;
+    PCFORT_CONF_GROUP conf_group = &conf_io->conf_group;
+    PCFORT_CONF_FLAGS conf_flags = &conf_io->conf.flags;
 
     const UINT32 limit_io_bits = conf_group->limit_io_bits;
     const UINT32 group_io_bits = conf_flags->filter_enabled

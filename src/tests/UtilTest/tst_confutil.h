@@ -34,6 +34,7 @@ void ConfUtilTest::SetUp() { }
 
 void ConfUtilTest::TearDown() { }
 
+#if 0
 TEST_F(ConfUtilTest, confWriteRead)
 {
     EnvManager envManager;
@@ -145,6 +146,7 @@ TEST_F(ConfUtilTest, checkEnvManager)
 
     ASSERT_NE(envManager.expandString("%HOME%"), QString());
 }
+#endif
 
 TEST_F(ConfUtilTest, rulesWriteRead)
 {

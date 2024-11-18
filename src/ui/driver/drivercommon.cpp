@@ -190,8 +190,8 @@ void logTimeRead(const char *input, int *systemTimeChanged, qint64 *unixTime)
 bool confIpInRange(
         const void *drvConf, const ip_addr_t ip, bool isIPv6, bool included, int addrGroupIndex)
 {
-    const PFORT_CONF conf = (const PFORT_CONF) drvConf;
-    const PFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addrGroupIndex);
+    PCFORT_CONF conf = (PCFORT_CONF) drvConf;
+    PCFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addrGroupIndex);
 
     const bool is_empty = included ? addr_group->include_is_empty : addr_group->exclude_is_empty;
     if (is_empty)

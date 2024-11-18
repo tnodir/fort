@@ -59,6 +59,8 @@ typedef struct fort_conf_flags
     UINT16 reserved; /* not used */
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
+typedef const FORT_CONF_FLAGS *PCFORT_CONF_FLAGS;
+
 typedef struct fort_service_info
 {
     UINT32 process_id;
@@ -66,6 +68,8 @@ typedef struct fort_service_info
     UINT16 name_len;
     WCHAR name[2];
 } FORT_SERVICE_INFO, *PFORT_SERVICE_INFO;
+
+typedef const FORT_SERVICE_INFO *PCFORT_SERVICE_INFO;
 
 #define FORT_SERVICE_INFO_NAME_MAX      256
 #define FORT_SERVICE_INFO_NAME_MAX_SIZE (FORT_SERVICE_INFO_NAME_MAX * sizeof(WCHAR))
@@ -79,6 +83,8 @@ typedef struct fort_service_info_list
 
     FORT_SERVICE_INFO data[1];
 } FORT_SERVICE_INFO_LIST, *PFORT_SERVICE_INFO_LIST;
+
+typedef const FORT_SERVICE_INFO_LIST *PCFORT_SERVICE_INFO_LIST;
 
 #define FORT_SERVICE_INFO_LIST_DATA_OFF offsetof(FORT_SERVICE_INFO_LIST, data)
 #define FORT_SERVICE_INFO_LIST_MIN_SIZE                                                            \
@@ -108,6 +114,8 @@ typedef struct fort_conf_addr_list
     UINT32 ip[1];
 } FORT_CONF_ADDR_LIST, *PFORT_CONF_ADDR_LIST;
 
+typedef const FORT_CONF_ADDR_LIST *PCFORT_CONF_ADDR_LIST;
+
 typedef struct fort_conf_addr_group
 {
     UINT32 include_all : 1;
@@ -122,6 +130,8 @@ typedef struct fort_conf_addr_group
 
     char data[4];
 } FORT_CONF_ADDR_GROUP, *PFORT_CONF_ADDR_GROUP;
+
+typedef const FORT_CONF_ADDR_GROUP *PCFORT_CONF_ADDR_GROUP;
 
 enum FORT_RULE_FILTER_TYPE {
     FORT_RULE_FILTER_TYPE_INVALID = -1,
@@ -195,6 +205,8 @@ typedef struct fort_conf_rule_flag
     UCHAR enabled;
 } FORT_CONF_RULE_FLAG, *PFORT_CONF_RULE_FLAG;
 
+typedef const FORT_CONF_RULE_FLAG *PCFORT_CONF_RULE_FLAG;
+
 #define FORT_CONF_RULES_DATA_OFF                  offsetof(FORT_CONF_RULES, data)
 #define FORT_CONF_RULES_OFFSETS_SIZE(max_rule_id) (((max_rule_id) + 1) * sizeof(UINT32))
 #define FORT_CONF_RULE_SIZE(rule)                                                                  \
@@ -241,11 +253,15 @@ typedef struct fort_conf_zones
     char data[4];
 } FORT_CONF_ZONES, *PFORT_CONF_ZONES;
 
+typedef const FORT_CONF_ZONES *PCFORT_CONF_ZONES;
+
 typedef struct fort_conf_zone_flag
 {
     UCHAR zone_id;
     UCHAR enabled;
 } FORT_CONF_ZONE_FLAG, *PFORT_CONF_ZONE_FLAG;
+
+typedef const FORT_CONF_ZONE_FLAG *PCFORT_CONF_ZONE_FLAG;
 
 typedef struct fort_traf
 {
@@ -314,6 +330,8 @@ typedef struct fort_speed_limit
     UINT64 bps; /* bandwidth in bytes per second */
 } FORT_SPEED_LIMIT, *PFORT_SPEED_LIMIT;
 
+typedef const FORT_SPEED_LIMIT *PCFORT_SPEED_LIMIT;
+
 typedef struct fort_conf_group
 {
     UINT16 group_bits;
@@ -326,6 +344,8 @@ typedef struct fort_conf_group
 
     FORT_SPEED_LIMIT limits[FORT_CONF_GROUP_MAX * 2]; /* in/out-bound pairs */
 } FORT_CONF_GROUP, *PFORT_CONF_GROUP;
+
+typedef const FORT_CONF_GROUP *PCFORT_CONF_GROUP;
 
 typedef struct fort_conf
 {
@@ -353,12 +373,16 @@ typedef struct fort_conf_version
     UINT16 driver_version;
 } FORT_CONF_VERSION, *PFORT_CONF_VERSION;
 
+typedef const FORT_CONF_VERSION *PCFORT_CONF_VERSION;
+
 typedef struct fort_conf_io
 {
     FORT_CONF_GROUP conf_group;
 
     FORT_CONF conf;
 } FORT_CONF_IO, *PFORT_CONF_IO;
+
+typedef const FORT_CONF_IO *PCFORT_CONF_IO;
 
 #define FORT_CONF_DATA_OFF       offsetof(FORT_CONF, data)
 #define FORT_CONF_IO_CONF_OFF    offsetof(FORT_CONF_IO, conf)
@@ -385,7 +409,7 @@ typedef struct fort_conf_io
     (FORT_CONF_ADDR4_LIST_SIZE(ip4_n, pair4_n) + FORT_CONF_ADDR6_LIST_SIZE(ip6_n, pair6_n))
 
 typedef FORT_APP_DATA fort_conf_app_exe_find_func(
-        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
+        PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
 typedef BOOL fort_conf_zones_ip_included_func(
         void *ctx, UINT32 zones_mask, const ip_addr_t remote_ip, BOOL isIPv6);
@@ -400,11 +424,9 @@ FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len);
 
 FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len);
 
-FORT_API BOOL fort_conf_ip_inlist(
-        const ip_addr_t ip, const PFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6);
+FORT_API BOOL fort_conf_ip_inlist(const ip_addr_t ip, PCFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6);
 
-FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(
-        const PFORT_CONF conf, int addr_group_index);
+FORT_API PCFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(PCFORT_CONF conf, int addr_group_index);
 
 #define fort_conf_addr_group_include_list_ref(addr_group)                                          \
     ((PFORT_CONF_ADDR_LIST) (addr_group)->data)
@@ -412,9 +434,8 @@ FORT_API PFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(
 #define fort_conf_addr_group_exclude_list_ref(addr_group)                                          \
     ((PFORT_CONF_ADDR_LIST) ((addr_group)->data + (addr_group)->exclude_off))
 
-FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
-        fort_conf_zones_ip_included_func zone_func, void *ctx, const ip_addr_t remote_ip,
-        BOOL isIPv6, int addr_group_index);
+FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_included_func zone_func,
+        void *ctx, const ip_addr_t remote_ip, BOOL isIPv6, int addr_group_index);
 
 #define fort_conf_ip_is_inet(conf, zone_func, ctx, remote_ip, isIPv6)                              \
     fort_conf_ip_included((conf), (zone_func), (ctx), (remote_ip), isIPv6, /*addr_group_index=*/0)
@@ -425,7 +446,7 @@ FORT_API BOOL fort_conf_ip_included(const PFORT_CONF conf,
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
 FORT_API FORT_APP_DATA fort_conf_app_exe_find(
-        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
+        PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
 FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);

@@ -58,8 +58,7 @@ FORT_API UINT16 fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UINT16 flag,
 
 FORT_API UINT16 fort_device_flag(PFORT_DEVICE_CONF device_conf, UINT16 flag);
 
-FORT_API FORT_APP_DATA fort_conf_exe_find(
-        const PFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
+FORT_API FORT_APP_DATA fort_conf_exe_find(PCFORT_CONF conf, PVOID context, PCFORT_APP_PATH path);
 
 FORT_API NTSTATUS fort_conf_ref_exe_add_path(
         PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
@@ -69,7 +68,7 @@ FORT_API NTSTATUS fort_conf_ref_exe_add_entry(
 
 FORT_API void fort_conf_ref_exe_del_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_ENTRY entry);
 
-FORT_API PFORT_CONF_REF fort_conf_ref_new(const PFORT_CONF conf, ULONG len);
+FORT_API PFORT_CONF_REF fort_conf_ref_new(PCFORT_CONF conf, ULONG len);
 
 FORT_API void fort_conf_ref_put(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref);
 
@@ -80,22 +79,22 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
 FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
         PFORT_DEVICE_CONF device_conf, const FORT_CONF_FLAGS conf_flags);
 
-FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PFORT_CONF_ZONES zones, ULONG len);
+FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PCFORT_CONF_ZONES zones, ULONG len);
 
 FORT_API void fort_conf_zones_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONES zones);
 
 FORT_API void fort_conf_zone_flag_set(
-        PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONE_FLAG zone_flag);
+        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_ZONE_FLAG zone_flag);
 
 FORT_API BOOL fort_conf_zones_ip_included(
         PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const ip_addr_t remote_ip, BOOL isIPv6);
 
-FORT_API PFORT_CONF_RULES fort_conf_rules_new(PFORT_CONF_RULES rules, ULONG len);
+FORT_API PFORT_CONF_RULES fort_conf_rules_new(PCFORT_CONF_RULES rules, ULONG len);
 
 FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULES rules);
 
 FORT_API void fort_conf_rule_flag_set(
-        PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE_FLAG rule_flag);
+        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_RULE_FLAG rule_flag);
 
 #ifdef __cplusplus
 } // extern "C"

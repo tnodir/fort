@@ -476,7 +476,7 @@ static void fort_pstree_check_proc_inheritance(
         .buffer = has_ps_name ? proc->ps_name->data : psi->path->Buffer,
     };
 
-    const PFORT_CONF conf = &conf_ref->conf;
+    PCFORT_CONF conf = &conf_ref->conf;
 
     const FORT_APP_DATA app_data = conf->proc_wild
             ? fort_conf_app_find(conf, &path, fort_conf_exe_find, conf_ref)
@@ -845,7 +845,7 @@ inline static void fort_pstree_update_service_proc(
 }
 
 static int fort_pstree_update_service(
-        PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO service, const PCHAR end_data)
+        PFORT_PSTREE ps_tree, PCFORT_SERVICE_INFO service, const PCHAR end_data)
 {
     if ((PCHAR) service + FORT_SERVICE_INFO_NAME_OFF > end_data)
         return 0;
@@ -853,7 +853,7 @@ static int fort_pstree_update_service(
     UNICODE_STRING serviceName;
     serviceName.Length = service->name_len;
     serviceName.MaximumLength = serviceName.Length;
-    serviceName.Buffer = service->name;
+    serviceName.Buffer = (PWSTR) service->name;
 
     if ((PCHAR) service + FORT_SERVICE_INFO_NAME_OFF + serviceName.Length > end_data)
         return 0;
@@ -864,7 +864,7 @@ static int fort_pstree_update_service(
 }
 
 FORT_API void fort_pstree_update_services(
-        PFORT_PSTREE ps_tree, const PFORT_SERVICE_INFO_LIST services, ULONG data_len)
+        PFORT_PSTREE ps_tree, PCFORT_SERVICE_INFO_LIST services, ULONG data_len)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);

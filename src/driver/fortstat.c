@@ -389,7 +389,7 @@ FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-FORT_API void fort_stat_conf_update(PFORT_STAT stat, const PFORT_CONF_IO conf_io)
+FORT_API void fort_stat_conf_update(PFORT_STAT stat, PCFORT_CONF_IO conf_io)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);

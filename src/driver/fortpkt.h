@@ -8,13 +8,15 @@
 #include "forttds.h"
 #include "fortthr.h"
 
-#define FORT_PACKET_QUEUE_BAD_INDEX ((UINT16) -1)
+#define FORT_PACKET_QUEUE_BAD_INDEX ((UINT16) - 1)
 
 typedef struct fort_packet_in
 {
     IF_INDEX interfaceIndex;
     IF_INDEX subInterfaceIndex;
 } FORT_PACKET_IN, *PFORT_PACKET_IN;
+
+typedef const FORT_PACKET_IN *PCFORT_PACKET_IN;
 
 typedef struct fort_packet_out
 {
@@ -26,6 +28,8 @@ typedef struct fort_packet_out
 
     ip_addr_t remoteAddr;
 } FORT_PACKET_OUT, *PFORT_PACKET_OUT;
+
+typedef const FORT_PACKET_OUT *PCFORT_PACKET_OUT;
 
 #define FORT_PACKET_INBOUND         0x01
 #define FORT_PACKET_IP6             0x02
@@ -46,6 +50,8 @@ typedef struct fort_packet_io
         FORT_PACKET_OUT out;
     };
 } FORT_PACKET_IO, *PFORT_PACKET_IO;
+
+typedef const FORT_PACKET_IO *PCFORT_PACKET_IO;
 
 typedef struct fort_flow_packet
 {
@@ -156,7 +162,7 @@ FORT_API void fort_shaper_open(PFORT_SHAPER shaper);
 
 FORT_API void fort_shaper_close(PFORT_SHAPER shaper);
 
-FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, const PFORT_CONF_IO conf_io);
+FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, PCFORT_CONF_IO conf_io);
 
 FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const FORT_CONF_FLAGS conf_flags);
 
