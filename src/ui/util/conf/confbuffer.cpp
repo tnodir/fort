@@ -528,22 +528,24 @@ bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
     ruleid_arr_t ruleSetIds;
     int maxRuleId;
 
-    return confRulesWalker.walkRules(ruleSetMap, ruleSetIds, maxRuleId, [&](const Rule &rule) -> bool {
-        if (buffer().isEmpty()) {
-            const int outSize = FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
+    return confRulesWalker.walkRules(
+            ruleSetMap, ruleSetIds, maxRuleId, [&](const Rule &rule) -> bool {
+                if (buffer().isEmpty()) {
+                    const int outSize =
+                            FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
 
-            buffer().resize(outSize);
-            buffer().fill('\0');
+                    buffer().resize(outSize);
+                    buffer().fill('\0');
 
-            // Fill the buffer
-            char *data = buffer().data();
+                    // Fill the buffer
+                    char *data = buffer().data();
 
-            PFORT_CONF_RULES rules = PFORT_CONF_RULES(data);
-            rules->max_rule_id = maxRuleId;
-        }
+                    PFORT_CONF_RULES rules = PFORT_CONF_RULES(data);
+                    rules->max_rule_id = maxRuleId;
+                }
 
-        return writeRule(rule, ruleSetMap, ruleSetIds);
-    });
+                return writeRule(rule, ruleSetMap, ruleSetIds);
+            });
 }
 
 void ConfBuffer::writeRuleFlag(int ruleId, bool enabled)
@@ -667,13 +669,12 @@ bool ConfBuffer::writeRuleFilter(const RuleFilter *ruleFilter)
     confFilter->is_not = ruleFilter->isNot;
     confFilter->type = ruleFilter->type;
 
-    if (ruleFilter->isTypeList()) {
-        if (!writeRuleFilterList(ruleFilter + 1, ruleFilter->filterListCount))
-            return false;
-    } else {
-        if (!writeRuleFilterValues(ruleFilter))
-            return false;
-    }
+    const bool ok = ruleFilter->isTypeList()
+            ? writeRuleFilterList(ruleFilter + 1, ruleFilter->filterListCount)
+            : writeRuleFilterValues(ruleFilter);
+
+    if (!ok)
+        return false;
 
     confFilter->size = buffer().size() - newSize;
 
