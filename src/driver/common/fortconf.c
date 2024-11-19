@@ -208,6 +208,9 @@ FORT_API BOOL fort_conf_zones_ip_included(
     while (zones_mask != 0) {
         const int zone_index = bit_scan_forward(zones_mask);
 
+        if (zone_index == -1)
+            break; /* never, but to avoid static analizers warning */
+
         const UINT32 addr_off = zones->addr_off[zone_index];
         PCFORT_CONF_ADDR_LIST addr_list = (PCFORT_CONF_ADDR_LIST) &zones->data[addr_off];
 
