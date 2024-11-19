@@ -539,6 +539,8 @@ bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
 
             PFORT_CONF_RULES rules = PFORT_CONF_RULES(data);
             rules->max_rule_id = wra.maxRuleId;
+            rules->glob_pre_rule_id = wra.globPreRuleId;
+            rules->glob_post_rule_id = wra.globPostRuleId;
         }
 
         return writeRule(rule, wra);

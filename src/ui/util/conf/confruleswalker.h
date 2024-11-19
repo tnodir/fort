@@ -22,7 +22,10 @@ struct WalkRulesArgs
 {
     ruleset_map_t ruleSetMap;
     ruleid_arr_t ruleSetIds;
-    int maxRuleId = 0;
+
+    quint16 maxRuleId = 0;
+    quint16 globPreRuleId = 0;
+    quint16 globPostRuleId = 0;
 };
 
 using walkRulesCallback = bool(const Rule &rule);

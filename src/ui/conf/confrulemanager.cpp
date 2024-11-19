@@ -38,6 +38,9 @@ const char *const sqlSelectRuleSets = "SELECT t.rule_id, t.sub_rule_id"
 
 const char *const sqlSelectMaxRuleId = "SELECT MAX(rule_id) FROM rule;";
 
+const char *const sqlSelectGlobMinRuleIdByType = "SELECT MIN(t.rule_id) FROM rule t"
+                                                 "  WHERE t.rule_type = ?1;";
+
 const char *const sqlInsertRule = "INSERT INTO rule(rule_id, enabled, blocked, exclusive,"
                                   "    name, notes, rule_text, rule_type,"
                                   "    accept_zones, reject_zones, mod_time)"
@@ -324,6 +327,18 @@ bool ConfRuleManager::walkRules(
     sqliteDb()->beginTransaction();
 
     wra.maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
+
+    wra.globPreRuleId = DbQuery(sqliteDb())
+                                .sql(sqlSelectGlobMinRuleIdByType)
+                                .vars({ Rule::GlobalBeforeAppsRule })
+                                .execute()
+                                .toInt();
+
+    wra.globPostRuleId = DbQuery(sqliteDb())
+                                 .sql(sqlSelectGlobMinRuleIdByType)
+                                 .vars({ Rule::GlobalAfterAppsRule })
+                                 .execute()
+                                 .toInt();
 
     walkRulesMap(wra);
 

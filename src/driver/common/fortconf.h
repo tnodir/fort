@@ -197,8 +197,8 @@ typedef struct fort_conf_rules
 {
     UINT16 max_rule_id;
 
-    UINT16 pre_rule_id;
-    UINT16 post_rule_id;
+    UINT16 glob_pre_rule_id;
+    UINT16 glob_post_rule_id;
 
     char data[4];
 } FORT_CONF_RULES, *PFORT_CONF_RULES;

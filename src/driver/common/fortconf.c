@@ -384,6 +384,9 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
 FORT_API BOOL fort_conf_rules_rt_conn_blocked(
         PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
+    if (rule_id == 0)
+        return FALSE;
+
     PCFORT_CONF_RULE rule = fort_conf_rules_rt_rule(rules_rt, rule_id);
 
     if (!rule->enabled)
@@ -398,12 +401,17 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
 FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones,
         PCFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
-    if (rule_id > rules->max_rule_id)
-        return FALSE;
-
     const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, zones);
 
-    return fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rule_id);
+    if (fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rules->glob_pre_rule_id))
+        return TRUE;
+
+    if (rule_id <= rules->max_rule_id) {
+        if (fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rule_id))
+            return TRUE;
+    }
+
+    return fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rules->glob_post_rule_id);
 }
 
 FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
