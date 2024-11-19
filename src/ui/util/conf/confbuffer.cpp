@@ -600,16 +600,16 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
 
     // Write the rule
     {
-        *((PFORT_CONF_RULE) data) = confRule;
+        *(PFORT_CONF_RULE(data)) = confRule;
 
         data += sizeof(FORT_CONF_RULE);
     }
 
     // Write the rule's zones
     if (hasZones) {
-        PFORT_CONF_RULE_ZONES ruleZones = (PFORT_CONF_RULE_ZONES) data;
-        ruleZones->accept_zones = rule.acceptZones;
-        ruleZones->reject_zones = rule.rejectZones;
+        PFORT_CONF_RULE_ZONES ruleZones = PFORT_CONF_RULE_ZONES(data);
+        ruleZones->accept_mask = rule.acceptZones;
+        ruleZones->reject_mask = rule.rejectZones;
 
         data += sizeof(FORT_CONF_RULE_ZONES);
     }
@@ -617,7 +617,8 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     // Write the rule's set
     if (ruleSetCount != 0) {
         const char *setIndexes = (const char *) &wra.ruleSetIds[ruleSetInfo.index];
-        const auto array = QByteArray::fromRawData(setIndexes, ruleSetCount * sizeof(quint16));
+        const auto array =
+                QByteArray::fromRawData(setIndexes, FORT_CONF_RULES_SET_INDEXES_SIZE(ruleSetCount));
 
         ConfData(data).writeArray(array);
     }

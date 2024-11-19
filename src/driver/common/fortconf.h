@@ -175,9 +175,11 @@ typedef struct fort_conf_rule_filter
 
 typedef struct fort_conf_rule_zones
 {
-    UINT32 accept_zones;
-    UINT32 reject_zones;
+    UINT32 accept_mask;
+    UINT32 reject_mask;
 } FORT_CONF_RULE_ZONES, *PFORT_CONF_RULE_ZONES;
+
+typedef const FORT_CONF_RULE_ZONES *PCFORT_CONF_RULE_ZONES;
 
 typedef struct fort_conf_rule
 {
@@ -216,6 +218,8 @@ typedef const FORT_CONF_RULE_FLAG *PCFORT_CONF_RULE_FLAG;
 #define FORT_CONF_RULES_DATA_OFF offsetof(FORT_CONF_RULES, data)
 
 #define FORT_CONF_RULES_OFFSETS_SIZE(max_rule_id) ((max_rule_id) * sizeof(UINT32))
+
+#define FORT_CONF_RULES_SET_INDEXES_SIZE(n) ((n) * sizeof(UINT16))
 
 #define FORT_CONF_RULE_SIZE(rule)                                                                  \
     (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \

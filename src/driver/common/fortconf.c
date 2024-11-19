@@ -378,10 +378,10 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
     if (!zones)
         return FALSE;
 
-    UINT32 reject_mask = 0;
-    UINT32 accept_mask = 0;
+    PCFORT_CONF_RULE_ZONES rule_zones = (PCFORT_CONF_RULE_ZONES) (rule + 1);
 
-    return fort_conf_zones_conn_blocked(zones, conn, reject_mask, accept_mask);
+    return fort_conf_zones_conn_blocked(
+            zones, conn, rule_zones->reject_mask, rule_zones->accept_mask);
 }
 
 FORT_API BOOL fort_conf_rules_rt_conn_blocked(
