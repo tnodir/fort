@@ -665,17 +665,12 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
 FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones,
         PCFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
+    if (rule_id > rules->max_rule_id)
+        return FALSE;
+
     const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, zones);
 
-    if (fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rules->glob_pre_rule_id))
-        return TRUE;
-
-    if (rule_id <= rules->max_rule_id) {
-        if (fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rule_id))
-            return TRUE;
-    }
-
-    return fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rules->glob_post_rule_id);
+    return fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rule_id);
 }
 
 FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(

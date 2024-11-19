@@ -47,6 +47,9 @@ QString reasonIconPath(const ConnRow &connRow)
         ":/icons/deny.png",
         ":/icons/hostname.png",
         ":/icons/ip_class.png",
+        ":/icons/script.png",
+        ":/icons/script.png",
+        ":/icons/script.png",
         ":/icons/help.png",
     };
 
@@ -450,6 +453,9 @@ QString ConnBlockListModel::blockReasonText(FortBlockReason reason)
         QT_TR_NOOP("Filter Mode logic"),
         QT_TR_NOOP("Restrict access to LAN only"),
         QT_TR_NOOP("Restrict access by Zone"),
+        QT_TR_NOOP("Restrict access by Rule"),
+        QT_TR_NOOP("Restrict access by Global Rule before App Rules"),
+        QT_TR_NOOP("Restrict access by Global Rule after App Rules"),
         QT_TR_NOOP("Limit of Ask to Connect"),
     };
 

@@ -496,6 +496,13 @@ FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE
     {
         fort_conf_mem_free(device_conf->rules);
         device_conf->rules = rules;
+
+        if (rules != NULL) {
+            device_conf->rules_glob = rules->glob;
+        } else {
+            const FORT_CONF_RULES_GLOB rules_glob = { 0 };
+            device_conf->rules_glob = rules_glob;
+        }
     }
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }

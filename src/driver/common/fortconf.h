@@ -203,12 +203,17 @@ typedef struct fort_conf_rule
 
 typedef const FORT_CONF_RULE *PCFORT_CONF_RULE;
 
+typedef struct fort_conf_rules_glob
+{
+    UINT16 pre_rule_id;
+    UINT16 post_rule_id;
+} FORT_CONF_RULES_GLOB, *PFORT_CONF_RULES_GLOB;
+
 typedef struct fort_conf_rules
 {
     UINT16 max_rule_id;
 
-    UINT16 glob_pre_rule_id;
-    UINT16 glob_post_rule_id;
+    FORT_CONF_RULES_GLOB glob;
 
     char data[4];
 } FORT_CONF_RULES, *PFORT_CONF_RULES;
