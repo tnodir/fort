@@ -410,7 +410,7 @@ FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
         PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones)
 {
     const FORT_CONF_RULES_RT rules_rt = {
-        .rule_offsets = (PUINT32) rules->data - 1, // exclude zero index
+        .rule_offsets = (PUINT32) rules->data - 1, /* exclude zero index */
         .rules_data = rules->data + FORT_CONF_RULES_OFFSETS_SIZE(rules->max_rule_id),
         .zones = zones,
     };

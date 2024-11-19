@@ -590,7 +590,7 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
 
     // Write the rule's offset
     {
-        int *ruleOffsets = (int *) (data + FORT_CONF_RULES_DATA_OFF);
+        int *ruleOffsets = (int *) (data + FORT_CONF_RULES_DATA_OFF) - 1; // exclude zero index
         ruleOffsets[ruleId] = oldSize - FORT_CONF_RULES_DATA_OFF;
 
         data += oldSize;
