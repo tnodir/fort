@@ -240,7 +240,7 @@ typedef struct fort_conf_meta_conn
     UINT16 isIPv6 : 1;
     UINT16 is_tcp : 1;
     UINT16 is_loopback : 1;
-    UINT16 is_multicast : 1;
+    UINT16 is_broadcast : 1;
     UINT16 is_local_net : 1;
     UINT16 inherited : 1;
     UINT16 blocked : 1;

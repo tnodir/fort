@@ -360,7 +360,7 @@ inline static BOOL fort_callout_ale_check_filter_lan_flags(
 inline static BOOL fort_callout_ale_check_filter_inet_flags(
         PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
 {
-    if (conf_flags.block_inet_traffic && !conn->is_multicast) {
+    if (conf_flags.block_inet_traffic && !conn->is_broadcast) {
         return TRUE; /* block Internet */
     }
 
@@ -496,7 +496,7 @@ inline static void fort_callout_ale_by_conf(
     }
 }
 
-inline static BOOL fort_addr_is_local_multicast(PCFORT_CONF_META_CONN conn)
+inline static BOOL fort_addr_is_local_broadcast(PCFORT_CONF_META_CONN conn)
 {
     if (conn->isIPv6) {
         return conn->remote_ip.v2 == 0x2FF;
@@ -522,10 +522,10 @@ inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
         return !conf_flags.block_traffic;
     }
 
-    /* Multicast */
-    conn->is_multicast = (UINT16) fort_addr_is_local_multicast(conn);
+    /* Broadcast */
+    conn->is_broadcast = (UINT16) fort_addr_is_local_broadcast(conn);
 
-    if (conn->is_multicast) {
+    if (conn->is_broadcast) {
         return !conf_flags.block_lan_traffic;
     }
 
