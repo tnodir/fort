@@ -516,57 +516,106 @@ static BOOL fort_conf_rule_filter_list_check(
     return isAnd;
 }
 
+static fort_conf_rule_filter_check_address(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    return fort_conf_ip_inlist(conn->remote_ip, data, conn->isIPv6);
+}
+
+static fort_conf_rule_filter_check_port(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    return fort_conf_port_inlist(conn->remote_port, data);
+}
+
+static fort_conf_rule_filter_check_local_address(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    return fort_conf_ip_inlist(conn->local_ip, data, conn->isIPv6);
+}
+
+static fort_conf_rule_filter_check_local_port(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    return fort_conf_port_inlist(conn->local_port, data);
+}
+
+static fort_conf_rule_filter_check_protocol(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    return fort_conf_proto_inlist(conn->ip_proto, data);
+}
+
+static fort_conf_rule_filter_check_direction(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
+
+    const UINT16 conn_flags =
+            (conn->inbound ? FORT_RULE_FILTER_DIRECTION_IN : FORT_RULE_FILTER_DIRECTION_OUT);
+
+    return (flags & conn_flags) != 0;
+}
+
+static fort_conf_rule_filter_check_area(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
+
+    const UINT16 conn_flags = (conn->is_loopback ? FORT_RULE_FILTER_AREA_LOCALHOST : 0)
+            | ((conn->is_local_net) ? FORT_RULE_FILTER_AREA_LAN : 0)
+            | (!(conn->is_loopback || conn->is_local_net) ? FORT_RULE_FILTER_AREA_INET : 0);
+
+    return (flags & conn_flags) != 0;
+}
+
+static fort_conf_rule_filter_check_port_protocol(
+        PCFORT_CONF_META_CONN conn, const void *data, UCHAR proto)
+{
+    if (conn->ip_proto != proto)
+        return FALSE;
+
+    return fort_conf_port_inlist(conn->remote_port, data);
+}
+
+static fort_conf_rule_filter_check_port_tcp(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    return fort_conf_rule_filter_check_port_protocol(conn, data, IpProto_TCP);
+}
+
+static fort_conf_rule_filter_check_port_udp(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    return fort_conf_rule_filter_check_port_protocol(conn, data, IpProto_UDP);
+}
+
+typedef BOOL (*FORT_CONF_RULE_FILTER_CHECK_FUNC)(PCFORT_CONF_META_CONN conn, const void *data);
+
+static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcList[] = {
+    &fort_conf_rule_filter_check_address, // FORT_RULE_FILTER_TYPE_ADDRESS,
+    &fort_conf_rule_filter_check_port, // FORT_RULE_FILTER_TYPE_PORT,
+    &fort_conf_rule_filter_check_local_address, // FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS,
+    &fort_conf_rule_filter_check_local_port, // FORT_RULE_FILTER_TYPE_LOCAL_PORT,
+    &fort_conf_rule_filter_check_protocol, // FORT_RULE_FILTER_TYPE_PROTOCOL,
+    &fort_conf_rule_filter_check_protocol, // FORT_RULE_FILTER_TYPE_DIRECTION,
+    &fort_conf_rule_filter_check_area, // FORT_RULE_FILTER_TYPE_AREA,
+    // Complex types
+    &fort_conf_rule_filter_check_port_tcp, // FORT_RULE_FILTER_TYPE_PORT_TCP,
+    &fort_conf_rule_filter_check_port_udp, // FORT_RULE_FILTER_TYPE_PORT_UDP,
+};
+
 static BOOL fort_conf_rule_filter_check(
         PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn)
 {
     assert(rule_filter->size != 0);
 
-    const void *data = (const void *) (rule_filter + 1);
+    const int filter_type = rule_filter->type;
 
-    switch (rule_filter->type) {
-    case FORT_RULE_FILTER_TYPE_ADDRESS:
-        return fort_conf_ip_inlist(conn->remote_ip, data, conn->isIPv6);
-    case FORT_RULE_FILTER_TYPE_PORT:
-        return fort_conf_port_inlist(conn->remote_port, data);
-    case FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS:
-        return fort_conf_ip_inlist(conn->local_ip, data, conn->isIPv6);
-    case FORT_RULE_FILTER_TYPE_LOCAL_PORT:
-        return fort_conf_port_inlist(conn->local_port, data);
-    case FORT_RULE_FILTER_TYPE_PROTOCOL:
-        return fort_conf_proto_inlist(conn->ip_proto, data);
-
-    case FORT_RULE_FILTER_TYPE_DIRECTION:
-    case FORT_RULE_FILTER_TYPE_AREA: {
-        const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
-
-        const UINT16 conn_flags =
-                (conn->inbound ? FORT_RULE_FILTER_DIRECTION_IN : FORT_RULE_FILTER_DIRECTION_OUT)
-                | (conn->is_loopback ? FORT_RULE_FILTER_AREA_LOCALHOST : 0)
-                | ((conn->is_local_net) ? FORT_RULE_FILTER_AREA_LAN : 0)
-                | (!(conn->is_loopback || conn->is_local_net) ? FORT_RULE_FILTER_AREA_INET : 0);
-
-        return (flags & conn_flags) != 0;
-    }
-
-    case FORT_RULE_FILTER_TYPE_PORT_TCP: {
-        if (conn->ip_proto != IpProto_TCP)
-            return FALSE;
-
-        return fort_conf_port_inlist(conn->remote_port, data);
-    }
-    case FORT_RULE_FILTER_TYPE_PORT_UDP: {
-        if (conn->ip_proto != IpProto_UDP)
-            return FALSE;
-
-        return fort_conf_port_inlist(conn->remote_port, data);
-    }
-
-    case FORT_RULE_FILTER_TYPE_LIST_OR:
-    case FORT_RULE_FILTER_TYPE_LIST_AND:
+    if (filter_type == FORT_RULE_FILTER_TYPE_LIST_OR
+            || filter_type == FORT_RULE_FILTER_TYPE_LIST_AND) {
         return fort_conf_rule_filter_list_check(rule_filter, conn);
     }
 
-    return FALSE;
+    if (filter_type < FORT_RULE_FILTER_TYPE_ADDRESS || filter_type > FORT_RULE_FILTER_TYPE_PORT_UDP)
+        return FALSE;
+
+    const FORT_CONF_RULE_FILTER_CHECK_FUNC func = fort_conf_rule_filter_check_funcList[filter_type];
+
+    const void *data = (const void *) (rule_filter + 1);
+
+    return func(conn, data);
 }
 
 inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
