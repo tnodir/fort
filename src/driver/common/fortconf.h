@@ -215,7 +215,7 @@ typedef const FORT_CONF_RULE_FLAG *PCFORT_CONF_RULE_FLAG;
 
 #define FORT_CONF_RULES_DATA_OFF offsetof(FORT_CONF_RULES, data)
 
-#define FORT_CONF_RULES_OFFSETS_SIZE(max_rule_id) (((max_rule_id) + 1) * sizeof(UINT32))
+#define FORT_CONF_RULES_OFFSETS_SIZE(max_rule_id) ((max_rule_id) * sizeof(UINT32))
 
 #define FORT_CONF_RULE_SIZE(rule)                                                                  \
     (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \
@@ -480,8 +480,11 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
 FORT_API BOOL fort_conf_rules_rt_conn_blocked(
         PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, UINT16 rule_id);
 
+FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones,
+        PCFORT_CONF_META_CONN conn, UINT16 rule_id);
+
 #define fort_conf_rules_rt_rule(rt, rule_id)                                                       \
-    ((PFORT_CONF_RULE) & (rt)->rules_data[((rt)->rule_offsets[rule_id])])
+    ((PFORT_CONF_RULE) ((rt)->rules_data + (rt)->rule_offsets[rule_id]))
 
 FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
         PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones);

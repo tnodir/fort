@@ -238,9 +238,7 @@ bool confRulesConnBlocked(const void *drvRules, PCFORT_CONF_META_CONN conn, quin
 {
     PCFORT_CONF_RULES rules = PCFORT_CONF_RULES(drvRules);
 
-    const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, /*zones=*/nullptr);
-
-    return fort_conf_rules_rt_conn_blocked(&rules_rt, conn, ruleId);
+    return fort_conf_rules_conn_blocked(rules, /*zones=*/nullptr, conn, ruleId);
 }
 
 bool provRegister(bool bootFilter)

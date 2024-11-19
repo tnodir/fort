@@ -503,9 +503,7 @@ FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE
 inline static void fort_conf_rule_flag_set_locked(
         PFORT_CONF_RULES rules, PCFORT_CONF_RULE_FLAG rule_flag)
 {
-    const UINT16 max_rule_id = rules->max_rule_id;
-
-    if (rule_flag->rule_id > max_rule_id)
+    if (rule_flag->rule_id > rules->max_rule_id)
         return;
 
     const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, /*zones=*/NULL);
@@ -533,9 +531,7 @@ FORT_API BOOL fort_devconf_rules_conn_blocked(
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
     PFORT_CONF_RULES rules = device_conf->rules;
     if (rules != NULL) {
-        const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, device_conf->zones);
-
-        res = fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rule_id);
+        res = fort_conf_rules_conn_blocked(rules, device_conf->zones, conn, rule_id);
     }
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 

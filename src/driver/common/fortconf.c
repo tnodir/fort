@@ -365,6 +365,22 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
     return conf_flags.group_blocked;
 }
 
+inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
+        PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+{
+    if (!rule->has_zones)
+        return FALSE;
+
+    PCFORT_CONF_ZONES zones = rules_rt->zones;
+    if (!zones)
+        return FALSE;
+
+    UINT32 reject_mask = 0;
+    UINT32 accept_mask = 0;
+
+    return fort_conf_zones_conn_blocked(zones, conn, reject_mask, accept_mask);
+}
+
 FORT_API BOOL fort_conf_rules_rt_conn_blocked(
         PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
@@ -373,22 +389,28 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
     if (!rule->enabled)
         return FALSE;
 
-    if (rule->has_zones) {
-        UINT32 reject_mask = 0;
-        UINT32 accept_mask = 0;
-
-        if (fort_conf_zones_conn_blocked(rules_rt->zones, conn, reject_mask, accept_mask))
-            return TRUE;
-    }
+    if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule))
+        return TRUE;
 
     return FALSE;
+}
+
+FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones,
+        PCFORT_CONF_META_CONN conn, UINT16 rule_id)
+{
+    if (rule_id > rules->max_rule_id)
+        return FALSE;
+
+    const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, zones);
+
+    return fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rule_id);
 }
 
 FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
         PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones)
 {
     const FORT_CONF_RULES_RT rules_rt = {
-        .rule_offsets = (PUINT32) rules->data,
+        .rule_offsets = (PUINT32) rules->data - 1, // exclude zero index
         .rules_data = rules->data + FORT_CONF_RULES_OFFSETS_SIZE(rules->max_rule_id),
         .zones = zones,
     };
