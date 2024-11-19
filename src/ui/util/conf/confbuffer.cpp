@@ -576,8 +576,8 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     const bool hasZones = (rule.acceptZones != 0 || rule.rejectZones != 0);
     confRule.has_zones = hasZones;
 
-    const bool hasFilter = !rule.ruleText.isEmpty();
-    confRule.has_filter = hasFilter;
+    const bool hasFilters = !rule.ruleText.isEmpty();
+    confRule.has_filters = hasFilters;
 
     const int ruleSetCount = ruleSetInfo.count;
     confRule.set_count = ruleSetCount;
@@ -624,12 +624,12 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     }
 
     // Write the rule's text
-    if (hasFilter) {
+    if (hasFilters) {
         int filtersCount = 0;
         if (!writeRuleText(rule.ruleText, filtersCount))
             return false;
 
-        confRule.has_filter = (filtersCount > 0);
+        confRule.has_filters = (filtersCount > 0);
     }
 
     return true;
