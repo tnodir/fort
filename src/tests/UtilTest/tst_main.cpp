@@ -1,11 +1,11 @@
-// #include "tst_bitutil.h"
+#include "tst_bitutil.h"
 #include "tst_confutil.h"
-// #include "tst_dateutil.h"
-// #include "tst_fileutil.h"
-// #include "tst_ioccontainer.h"
-// #include "tst_netutil.h"
-// #include "tst_ruletextparser.h"
-// #include "tst_stringutil.h"
+#include "tst_dateutil.h"
+#include "tst_fileutil.h"
+#include "tst_ioccontainer.h"
+#include "tst_netutil.h"
+#include "tst_ruletextparser.h"
+#include "tst_stringutil.h"
 
 #include <QCoreApplication>
 

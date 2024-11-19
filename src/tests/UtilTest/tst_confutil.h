@@ -171,7 +171,7 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         // Rule 1
         { 1, 6 }, { 1, 8 }, { 1, 9 },
         // Rule 2
-        { 2, 6 }, { 2, 7 },
+        { 2, 7 },
         // Rule 5
         { 5, 7 }
     };
@@ -258,7 +258,6 @@ TEST_F(ConfUtilTest, rulesWriteRead)
     {
         const FORT_CONF_META_CONN conn = {
             .inbound = false,
-            .is_local_net = true,
             .ip_proto = IpProto_TCP,
             .remote_port = 80,
             .remote_ip = { .v4 = NetFormatUtil::textToIp4("3.3.3.3") },
@@ -271,9 +270,8 @@ TEST_F(ConfUtilTest, rulesWriteRead)
     {
         const FORT_CONF_META_CONN conn = {
             .inbound = false,
-            .is_local_net = true,
-            .ip_proto = IpProto_TCP,
-            .remote_port = 80,
+            .ip_proto = IpProto_UDP,
+            .remote_port = 53,
             .remote_ip = { .v4 = NetFormatUtil::textToIp4("2.2.2.2") },
         };
 
