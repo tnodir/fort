@@ -27,6 +27,58 @@ static int bit_scan_forward(ULONG mask)
     return _BitScanForward(&index, mask) ? index : -1;
 }
 
+static BOOL fort_conf_proto_find(const UINT8 *proto_arr, UINT8 proto, UINT16 count, BOOL is_range)
+{
+    if (count == 0)
+        return FALSE;
+
+    int low = 0;
+    int high = count - 1;
+
+    do {
+        const int mid = (low + high) / 2;
+        const UINT8 mid_proto = proto_arr[mid];
+
+        if (proto < mid_proto)
+            high = mid - 1;
+        else if (proto > mid_proto)
+            low = mid + 1;
+        else
+            return TRUE;
+    } while (low <= high);
+
+    if (!is_range)
+        return FALSE;
+
+    return high >= 0 && proto >= proto_arr[high] && proto <= proto_arr[count + high];
+}
+
+static BOOL fort_conf_port_find(const UINT16 *port_arr, UINT16 port, UINT16 count, BOOL is_range)
+{
+    if (count == 0)
+        return FALSE;
+
+    int low = 0;
+    int high = count - 1;
+
+    do {
+        const int mid = (low + high) / 2;
+        const UINT16 mid_port = port_arr[mid];
+
+        if (port < mid_port)
+            high = mid - 1;
+        else if (port > mid_port)
+            low = mid + 1;
+        else
+            return TRUE;
+    } while (low <= high);
+
+    if (!is_range)
+        return FALSE;
+
+    return high >= 0 && port >= port_arr[high] && port <= port_arr[count + high];
+}
+
 static BOOL fort_conf_ip4_find(const UINT32 *iparr, UINT32 ip, UINT32 count, BOOL is_range)
 {
     if (count == 0)
@@ -106,6 +158,26 @@ static int fort_conf_blob_index(const char *arr, const char *p, UINT32 blob_len,
     return -1;
 }
 
+#define fort_conf_proto_inarr(proto_arr, proto, count)                                             \
+    fort_conf_proto_find(proto_arr, proto, count, /*is_range=*/FALSE)
+
+#define fort_conf_proto_inrange(proto_range, proto, count)                                         \
+    fort_conf_proto_find(proto_range, proto, count, /*is_range=*/TRUE)
+
+#define fort_conf_proto_list_arr_ref(proto_list) (proto_list)->proto
+
+#define fort_conf_proto_list_pair_ref(proto_list) &(proto_list)->proto[(proto_list)->proto_n]
+
+#define fort_conf_port_inarr(port_arr, port, count)                                                \
+    fort_conf_port_find(port_arr, port, count, /*is_range=*/FALSE)
+
+#define fort_conf_port_inrange(port_range, port, count)                                            \
+    fort_conf_port_find(port_range, port, count, /*is_range=*/TRUE)
+
+#define fort_conf_port_list_arr_ref(port_list) (port_list)->port
+
+#define fort_conf_port_list_pair_ref(port_list) &(port_list)->port[(port_list)->port_n]
+
 #define fort_conf_ip4_inarr(iparr, ip, count)                                                      \
     fort_conf_ip4_find(iparr, ip, count, /*is_range=*/FALSE)
 
@@ -136,6 +208,21 @@ FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len)
 FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len)
 {
     return RtlCompareMemory(p1, p2, len) == len;
+}
+
+static BOOL fort_conf_proto_inlist(const UINT8 proto, PCFORT_CONF_PROTO_LIST proto_list)
+{
+    return fort_conf_proto_inarr(
+                   fort_conf_proto_list_arr_ref(proto_list), proto, proto_list->proto_n)
+            || fort_conf_proto_inrange(
+                    fort_conf_proto_list_pair_ref(proto_list), proto, proto_list->pair_n);
+}
+
+static BOOL fort_conf_port_inlist(const UINT16 port, PCFORT_CONF_PORT_LIST port_list)
+{
+    return fort_conf_port_inarr(fort_conf_port_list_arr_ref(port_list), port, port_list->port_n)
+            || fort_conf_port_inrange(
+                    fort_conf_port_list_pair_ref(port_list), port, port_list->pair_n);
 }
 
 FORT_API BOOL fort_conf_ip_inlist(const ip_addr_t ip, PCFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6)
@@ -384,16 +471,91 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
             zones, conn, rule_zones->reject_mask, rule_zones->accept_mask);
 }
 
-inline static BOOL fort_conf_rule_filter_blocked(
+static BOOL fort_conf_rule_filter_check(
+        PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn);
+
+static BOOL fort_conf_rule_filter_list_check(
         PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn)
 {
-    // TODO
+    const BOOL isAnd = (rule_filter->type == FORT_RULE_FILTER_TYPE_LIST_AND);
+
+    const char *data = (const char *) (rule_filter + 1);
+    const char *end = (const char *) data + rule_filter->size;
+
+    do {
+        PCFORT_CONF_RULE_FILTER filter = (PCFORT_CONF_RULE_FILTER) data;
+
+        const BOOL filter_res = fort_conf_rule_filter_check(filter, conn);
+
+        if (isAnd) {
+            if (!filter_res)
+                return FALSE;
+        } else {
+            if (filter_res)
+                return TRUE;
+        }
+
+        data += filter->size;
+    } while (data < end);
+
+    return isAnd;
+}
+
+static BOOL fort_conf_rule_filter_check(
+        PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn)
+{
+    assert(rule_filter->size != 0);
+
+    const void *data = (const void *) (rule_filter + 1);
+
+    switch (rule_filter->type) {
+    case FORT_RULE_FILTER_TYPE_ADDRESS:
+        return fort_conf_ip_inlist(conn->remote_ip, data, conn->isIPv6);
+    case FORT_RULE_FILTER_TYPE_PORT:
+        return fort_conf_port_inlist(conn->remote_port, data);
+    case FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS:
+        return fort_conf_ip_inlist(conn->local_ip, data, conn->isIPv6);
+    case FORT_RULE_FILTER_TYPE_LOCAL_PORT:
+        return fort_conf_port_inlist(conn->local_port, data);
+    case FORT_RULE_FILTER_TYPE_PROTOCOL:
+        return fort_conf_proto_inlist(conn->ip_proto, data);
+
+    case FORT_RULE_FILTER_TYPE_DIRECTION:
+    case FORT_RULE_FILTER_TYPE_AREA: {
+        const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
+
+        const UINT16 conn_flags =
+                (conn->inbound ? FORT_RULE_FILTER_DIRECTION_IN : FORT_RULE_FILTER_DIRECTION_OUT)
+                | (conn->is_loopback ? FORT_RULE_FILTER_AREA_LOCALHOST : 0)
+                | ((conn->is_local_net) ? FORT_RULE_FILTER_AREA_LAN : 0)
+                | (!(conn->is_loopback || conn->is_local_net) ? FORT_RULE_FILTER_AREA_INET : 0);
+
+        return (flags & conn_flags) != 0;
+    }
+
+    case FORT_RULE_FILTER_TYPE_PORT_TCP: {
+        if (conn->ip_proto != IpProto_TCP)
+            return FALSE;
+
+        return fort_conf_port_inlist(conn->remote_port, data);
+    }
+    case FORT_RULE_FILTER_TYPE_PORT_UDP: {
+        if (conn->ip_proto != IpProto_UDP)
+            return FALSE;
+
+        return fort_conf_port_inlist(conn->remote_port, data);
+    }
+
+    case FORT_RULE_FILTER_TYPE_LIST_OR:
+    case FORT_RULE_FILTER_TYPE_LIST_AND:
+        return fort_conf_rule_filter_list_check(rule_filter, conn);
+    }
 
     return FALSE;
 }
 
 inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
-        PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+        PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     if (!rule->has_filters)
         return FALSE;
@@ -402,7 +564,13 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
             + (rule->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)
             + FORT_CONF_RULES_SET_INDEXES_SIZE(rule->set_count));
 
-    return fort_conf_rule_filter_blocked(rule_filter, conn);
+    BOOL filter_res = fort_conf_rule_filter_check(rule_filter, conn);
+
+    if (!rule->blocked) {
+        filter_res = !filter_res;
+    }
+
+    return filter_res;
 }
 
 inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
@@ -439,7 +607,7 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
     if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule))
         return TRUE;
 
-    if (fort_conf_rules_rt_conn_blocked_filters(rules_rt, conn, rule))
+    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule))
         return TRUE;
 
     if (fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule))

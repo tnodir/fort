@@ -1,6 +1,14 @@
 #ifndef COMMON_TYPES_H
 #define COMMON_TYPES_H
 
+enum {
+    IpProto_ICMP = 1,
+    IpProto_IGMP = 2,
+    IpProto_TCP = 6,
+    IpProto_UDP = 17,
+    IpProto_ICMPV6 = 58,
+};
+
 typedef struct ip6_addr_t
 {
     union {

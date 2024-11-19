@@ -99,6 +99,8 @@ typedef struct fort_conf_proto_list
     UINT8 proto[1];
 } FORT_CONF_PROTO_LIST, *PFORT_CONF_PROTO_LIST;
 
+typedef const FORT_CONF_PROTO_LIST *PCFORT_CONF_PROTO_LIST;
+
 typedef struct fort_conf_port_list
 {
     UINT8 port_n;
@@ -106,6 +108,8 @@ typedef struct fort_conf_port_list
 
     UINT16 port[1];
 } FORT_CONF_PORT_LIST, *PFORT_CONF_PORT_LIST;
+
+typedef const FORT_CONF_PORT_LIST *PCFORT_CONF_PORT_LIST;
 
 typedef struct fort_conf_addr_list
 {
