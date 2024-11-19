@@ -230,7 +230,7 @@ TEST_F(ConfUtilTest, rulesWriteRead)
     }
 
     // Check the buffer
-    const char *data = confBuf.data() + DriverCommon::confIoConfOff();
+    const char *data = confBuf.data();
 
     // Allowed IP
     {

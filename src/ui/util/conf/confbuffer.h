@@ -72,9 +72,9 @@ private:
 
     bool writeRule(const Rule &rule, const WalkRulesArgs &wra);
     bool writeRuleText(const QString &ruleText, int &filtersCount);
-    bool writeRuleFilter(const RuleFilter *ruleFilter);
-    bool writeRuleFilterList(const RuleFilter *ruleFilter, int count = 1);
-    bool writeRuleFilterValues(const RuleFilter *ruleFilter);
+    bool writeRuleFilter(const RuleFilter &ruleFilter);
+    bool writeRuleFilterList(const RuleFilter &ruleListFilter);
+    bool writeRuleFilterValues(const RuleFilter &ruleFilter);
 
 private:
     quint32 m_driveMask = 0;

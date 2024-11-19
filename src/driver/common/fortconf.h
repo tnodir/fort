@@ -231,7 +231,7 @@ typedef const FORT_CONF_RULE_FLAG *PCFORT_CONF_RULE_FLAG;
 
 #define FORT_CONF_RULE_SIZE(rule)                                                                  \
     (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \
-            + (rule)->set_count * sizeof(UINT16))
+            + FORT_CONF_RULES_SET_INDEXES_SIZE((rule)->set_count))
 
 typedef struct fort_conf_meta_conn
 {

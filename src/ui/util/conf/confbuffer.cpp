@@ -535,9 +535,7 @@ bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
             buffer().fill('\0');
 
             // Fill the buffer
-            char *data = buffer().data();
-
-            PFORT_CONF_RULES rules = PFORT_CONF_RULES(data);
+            PFORT_CONF_RULES rules = PFORT_CONF_RULES(data());
             rules->max_rule_id = wra.maxRuleId;
             rules->glob_pre_rule_id = wra.globPreRuleId;
             rules->glob_post_rule_id = wra.globPostRuleId;
@@ -588,7 +586,7 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     buffer().resize(oldSize + FORT_CONF_RULE_SIZE(&confRule));
 
     // Fill the buffer
-    char *data = buffer().data();
+    char *data = this->data();
 
     // Write the rule's offset
     {
@@ -629,7 +627,11 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
         if (!writeRuleText(rule.ruleText, filtersCount))
             return false;
 
-        confRule.has_filters = (filtersCount > 0);
+        if (filtersCount == 0) {
+            PFORT_CONF_RULE oldConfRule = PFORT_CONF_RULE(this->data() + oldSize);
+
+            oldConfRule->has_filters = false;
+        }
     }
 
     return true;
@@ -648,13 +650,13 @@ bool ConfBuffer::writeRuleText(const QString &ruleText, int &filtersCount)
     if (filtersCount == 0)
         return true;
 
-    auto &ruleFilter = parser.ruleFilters()[0];
+    const auto &ruleFilter = parser.ruleFilters().first();
     Q_ASSERT(ruleFilter.isTypeList());
 
-    return writeRuleFilter(&ruleFilter);
+    return writeRuleFilter(ruleFilter);
 }
 
-bool ConfBuffer::writeRuleFilter(const RuleFilter *ruleFilter)
+bool ConfBuffer::writeRuleFilter(const RuleFilter &ruleFilter)
 {
     // Resize the buffer
     const int oldSize = buffer().size();
@@ -663,38 +665,39 @@ bool ConfBuffer::writeRuleFilter(const RuleFilter *ruleFilter)
     buffer().resize(newSize);
 
     // Fill the buffer
-    PFORT_CONF_RULE_FILTER confFilter = PFORT_CONF_RULE_FILTER(data() + oldSize);
+    const bool ok = ruleFilter.isTypeList() ? writeRuleFilterList(ruleFilter)
+                                            : writeRuleFilterValues(ruleFilter);
 
-    confFilter->is_not = ruleFilter->isNot;
-    confFilter->type = ruleFilter->type;
+    if (ok) {
+        PFORT_CONF_RULE_FILTER confFilter = PFORT_CONF_RULE_FILTER(data() + oldSize);
 
-    const bool ok = ruleFilter->isTypeList()
-            ? writeRuleFilterList(ruleFilter + 1, ruleFilter->filterListCount)
-            : writeRuleFilterValues(ruleFilter);
+        confFilter->is_not = ruleFilter.isNot;
+        confFilter->type = ruleFilter.type;
 
-    if (!ok)
-        return false;
+        confFilter->size = buffer().size() - newSize;
+    }
 
-    confFilter->size = buffer().size() - newSize;
-
-    return true;
+    return ok;
 }
 
-bool ConfBuffer::writeRuleFilterList(const RuleFilter *ruleFilter, int count)
+bool ConfBuffer::writeRuleFilterList(const RuleFilter &ruleListFilter)
 {
+    const RuleFilter *ruleFilter = &ruleListFilter + 1;
+    int count = ruleListFilter.filterListCount;
+
     for (; --count >= 0; ++ruleFilter) {
-        if (!writeRuleFilter(ruleFilter))
+        if (!writeRuleFilter(*ruleFilter))
             return false;
     }
 
     return true;
 }
 
-bool ConfBuffer::writeRuleFilterValues(const RuleFilter *ruleFilter)
+bool ConfBuffer::writeRuleFilterValues(const RuleFilter &ruleFilter)
 {
-    QScopedPointer<ValueRange> range(ConfDataRule::createRangeByType(ruleFilter->type));
+    QScopedPointer<ValueRange> range(ConfDataRule::createRangeByType(ruleFilter.type));
 
-    if (!range->fromList(ruleFilter->values)) {
+    if (!range->fromList(ruleFilter.values)) {
         setErrorMessage(range->errorLineAndMessageDetails());
         return false;
     }
@@ -713,7 +716,7 @@ bool ConfBuffer::writeRuleFilterValues(const RuleFilter *ruleFilter)
     // Fill the buffer
     ConfDataRule confData(data() + oldSize);
 
-    confData.writeRange(range.data(), ruleFilter->type);
+    confData.writeRange(range.data(), ruleFilter.type);
 
     return true;
 }
