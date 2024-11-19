@@ -480,12 +480,12 @@ static BOOL fort_conf_rule_filter_list_check(
     const BOOL isAnd = (rule_filter->type == FORT_RULE_FILTER_TYPE_LIST_AND);
 
     const char *data = (const char *) (rule_filter + 1);
-    const char *end = (const char *) data + rule_filter->size;
+    const char *end = (const char *) rule_filter + rule_filter->size;
 
     do {
         PCFORT_CONF_RULE_FILTER sub_filter = (PCFORT_CONF_RULE_FILTER) data;
 
-        const BOOL filter_res = fort_conf_rule_filter_check(rule_filter, conn);
+        const BOOL filter_res = fort_conf_rule_filter_check(sub_filter, conn);
 
         if (isAnd ? !filter_res : filter_res) {
             return filter_res;
@@ -570,7 +570,7 @@ static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcLi
     &fort_conf_rule_filter_check_local_address, // FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS,
     &fort_conf_rule_filter_check_local_port, // FORT_RULE_FILTER_TYPE_LOCAL_PORT,
     &fort_conf_rule_filter_check_protocol, // FORT_RULE_FILTER_TYPE_PROTOCOL,
-    &fort_conf_rule_filter_check_protocol, // FORT_RULE_FILTER_TYPE_DIRECTION,
+    &fort_conf_rule_filter_check_direction, // FORT_RULE_FILTER_TYPE_DIRECTION,
     &fort_conf_rule_filter_check_area, // FORT_RULE_FILTER_TYPE_AREA,
     // Complex types
     &fort_conf_rule_filter_check_port_tcp, // FORT_RULE_FILTER_TYPE_PORT_TCP,
@@ -596,7 +596,9 @@ static BOOL fort_conf_rule_filter_check(
 
     const void *data = (const void *) (rule_filter + 1);
 
-    return func(conn, data);
+    const BOOL filter_res = func(conn, data);
+
+    return filter_res;
 }
 
 inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
@@ -605,9 +607,8 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
     if (!rule->has_filters)
         return FALSE;
 
-    PCFORT_CONF_RULE_FILTER rule_filter = (PCFORT_CONF_RULE_FILTER) ((PCCH) rule
-            + (rule->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)
-            + FORT_CONF_RULES_SET_INDEXES_SIZE(rule->set_count));
+    PCFORT_CONF_RULE_FILTER rule_filter =
+            (PCFORT_CONF_RULE_FILTER) ((PCCH) rule + FORT_CONF_RULE_SIZE(rule));
 
     BOOL filter_res = fort_conf_rule_filter_check(rule_filter, conn);
 
@@ -626,7 +627,7 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
         return FALSE;
 
     const UINT16 *rule_ids =
-            (const UINT16 *) ((PCCH) rule + (rule->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0));
+            (const UINT16 *) ((PCCH) rule + FORT_CONF_RULE_SET_INDEXES_OFFSET(rule));
 
     for (int i = 0; i < set_count; ++i) {
         const UINT16 rule_id = rule_ids[i];
@@ -682,7 +683,7 @@ FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
 {
     const FORT_CONF_RULES_RT rules_rt = {
         .rule_offsets = (PUINT32) rules->data - 1, /* exclude zero index */
-        .rules_data = rules->data + FORT_CONF_RULES_OFFSETS_SIZE(rules->max_rule_id),
+        .rules_data = rules->data,
         .zones = zones,
     };
     return rules_rt;

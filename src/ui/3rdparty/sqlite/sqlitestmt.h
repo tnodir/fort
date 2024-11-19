@@ -26,7 +26,7 @@ public:
     };
 
     explicit SqliteStmt();
-    ~SqliteStmt();
+    virtual ~SqliteStmt();
     CLASS_DEFAULT_COPY_MOVE(SqliteStmt)
 
     bool prepare(struct sqlite3 *db, const char *sql, PrepareFlags flags = PrepareDefault);
@@ -54,13 +54,13 @@ public:
 
     bool isBusy() const;
 
-    SqliteStmt::StepResult step();
+    virtual SqliteStmt::StepResult step();
 
     int dataCount() const;
     int columnCount() const;
 
     QString columnName(int column = 0) const;
-    qint32 columnInt(int column = 0) const;
+    virtual qint32 columnInt(int column = 0) const;
     quint32 columnUInt(int column = 0) const;
     qint64 columnInt64(int column = 0) const;
     quint64 columnUInt64(int column = 0) const;

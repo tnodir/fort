@@ -660,9 +660,8 @@ bool ConfBuffer::writeRuleFilter(const RuleFilter &ruleFilter)
 {
     // Resize the buffer
     const int oldSize = buffer().size();
-    const int newSize = oldSize + sizeof(FORT_CONF_RULE_FILTER);
 
-    buffer().resize(newSize);
+    buffer().resize(oldSize + sizeof(FORT_CONF_RULE_FILTER));
 
     // Fill the buffer
     const bool ok = ruleFilter.isTypeList() ? writeRuleFilterList(ruleFilter)
@@ -674,7 +673,10 @@ bool ConfBuffer::writeRuleFilter(const RuleFilter &ruleFilter)
         confFilter->is_not = ruleFilter.isNot;
         confFilter->type = ruleFilter.type;
 
-        confFilter->size = buffer().size() - newSize;
+        const quint32 filterSize = buffer().size() - oldSize;
+        Q_ASSERT(filterSize > 0);
+
+        confFilter->size = filterSize;
     }
 
     return ok;

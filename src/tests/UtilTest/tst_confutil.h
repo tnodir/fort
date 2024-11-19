@@ -169,9 +169,9 @@ TEST_F(ConfUtilTest, rulesWriteRead)
 
     static SubRule g_subRules[] = { // Sub Rules
         // Rule 1
-        { 1, 6 }, { 1, 7 }, { 1, 8 }, { 1, 9 },
+        { 1, 6 }, { 1, 8 }, { 1, 9 },
         // Rule 2
-        { 2, 6 }, { 2, 8 },
+        { 2, 6 }, { 2, 7 },
         // Rule 5
         { 5, 7 }
     };
@@ -199,19 +199,17 @@ TEST_F(ConfUtilTest, rulesWriteRead)
                 return subRule.ids[column];
             });
 
+            wra.maxRuleId = 9;
+
             ConfRuleManager::walkRulesMapByStmt(wra, stmt);
 
-            return walkRulesLoop(wra, func);
+            return walkRulesLoop(func);
         }
 
     private:
-        bool walkRulesLoop(WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const
+        bool walkRulesLoop(const std::function<walkRulesCallback> &func) const
         {
             for (const auto &rule : g_rules) {
-                if (wra.maxRuleId < rule.ruleId) {
-                    wra.maxRuleId = rule.ruleId;
-                }
-
                 if (!func(rule))
                     return false;
             }
@@ -235,6 +233,43 @@ TEST_F(ConfUtilTest, rulesWriteRead)
     // Allowed IP
     {
         const FORT_CONF_META_CONN conn = {
+            .inbound = true,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("1.1.1.1") },
+        };
+
+        ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+
+    // Allowed IP
+    {
+        const FORT_CONF_META_CONN conn = {
+            .inbound = false,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("4.4.4.4") },
+        };
+
+        ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/4));
+    }
+
+    // Blocked IP
+    {
+        const FORT_CONF_META_CONN conn = {
+            .inbound = false,
+            .is_local_net = true,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("3.3.3.3") },
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+
+    // Allowed IP
+    {
+        const FORT_CONF_META_CONN conn = {
             .inbound = false,
             .is_local_net = true,
             .ip_proto = IpProto_TCP,
@@ -243,5 +278,18 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         };
 
         ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/2));
+    }
+
+    // Blocked IP
+    {
+        const FORT_CONF_META_CONN conn = {
+            .inbound = false,
+            .is_local_net = true,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("3.3.3.3") },
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/2));
     }
 }

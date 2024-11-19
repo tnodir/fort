@@ -229,9 +229,11 @@ typedef const FORT_CONF_RULE_FLAG *PCFORT_CONF_RULE_FLAG;
 
 #define FORT_CONF_RULES_SET_INDEXES_SIZE(n) ((n) * sizeof(UINT16))
 
+#define FORT_CONF_RULE_SET_INDEXES_OFFSET(rule)                                                    \
+    (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0))
+
 #define FORT_CONF_RULE_SIZE(rule)                                                                  \
-    (sizeof(FORT_CONF_RULE) + ((rule)->has_zones ? sizeof(FORT_CONF_RULE_ZONES) : 0)               \
-            + FORT_CONF_RULES_SET_INDEXES_SIZE((rule)->set_count))
+    (FORT_CONF_RULE_SET_INDEXES_OFFSET(rule) + FORT_CONF_RULES_SET_INDEXES_SIZE((rule)->set_count))
 
 typedef struct fort_conf_meta_conn
 {
