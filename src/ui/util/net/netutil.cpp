@@ -10,7 +10,7 @@
 bool NetUtil::windowsSockInit()
 {
     WSAData wsadata;
-    return WSAStartup(MAKEWORD(2, 0), &wsadata) == 0;
+    return WSAStartup(MAKEWORD(2, 2), &wsadata) == 0;
 }
 
 void NetUtil::windowsSockCleanup()
