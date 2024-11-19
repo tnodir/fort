@@ -524,28 +524,25 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
 
 bool ConfBuffer::writeRules(const ConfRulesWalker &confRulesWalker)
 {
-    ruleset_map_t ruleSetMap;
-    ruleid_arr_t ruleSetIds;
-    int maxRuleId;
+    WalkRulesArgs wra;
 
-    return confRulesWalker.walkRules(
-            ruleSetMap, ruleSetIds, maxRuleId, [&](const Rule &rule) -> bool {
-                if (buffer().isEmpty()) {
-                    const int outSize =
-                            FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(maxRuleId);
+    return confRulesWalker.walkRules(wra, [&](const Rule &rule) -> bool {
+        if (buffer().isEmpty()) {
+            const int outSize =
+                    FORT_CONF_RULES_DATA_OFF + FORT_CONF_RULES_OFFSETS_SIZE(wra.maxRuleId);
 
-                    buffer().resize(outSize);
-                    buffer().fill('\0');
+            buffer().resize(outSize);
+            buffer().fill('\0');
 
-                    // Fill the buffer
-                    char *data = buffer().data();
+            // Fill the buffer
+            char *data = buffer().data();
 
-                    PFORT_CONF_RULES rules = PFORT_CONF_RULES(data);
-                    rules->max_rule_id = maxRuleId;
-                }
+            PFORT_CONF_RULES rules = PFORT_CONF_RULES(data);
+            rules->max_rule_id = wra.maxRuleId;
+        }
 
-                return writeRule(rule, ruleSetMap, ruleSetIds);
-            });
+        return writeRule(rule, wra);
+    });
 }
 
 void ConfBuffer::writeRuleFlag(int ruleId, bool enabled)
@@ -564,11 +561,10 @@ void ConfBuffer::writeRuleFlag(int ruleId, bool enabled)
     confRuleFlag->enabled = enabled;
 }
 
-bool ConfBuffer::writeRule(
-        const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds)
+bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
 {
     const int ruleId = rule.ruleId;
-    const auto ruleSetInfo = ruleSetMap[ruleId];
+    const auto ruleSetInfo = wra.ruleSetMap[ruleId];
 
     FORT_CONF_RULE confRule;
     confRule.enabled = rule.enabled;
@@ -618,8 +614,8 @@ bool ConfBuffer::writeRule(
 
     // Write the rule's set
     if (ruleSetCount != 0) {
-        const auto array = QByteArray::fromRawData(
-                (const char *) &ruleSetIds[ruleSetInfo.index], ruleSetCount * sizeof(quint16));
+        const char *setIndexes = (const char *) &wra.ruleSetIds[ruleSetInfo.index];
+        const auto array = QByteArray::fromRawData(setIndexes, ruleSetCount * sizeof(quint16));
 
         ConfData(data).writeArray(array);
     }

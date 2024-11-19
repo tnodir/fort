@@ -179,8 +179,8 @@ TEST_F(ConfUtilTest, rulesWriteRead)
     class TestRules : public ConfRulesWalker
     {
     public:
-        bool walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, int &maxRuleId,
-                const std::function<walkRulesCallback> &func) const override
+        bool walkRules(
+                WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override
         {
             NiceMock<MockSqliteStmt> stmt;
             const int subRulesCount = std::size(g_subRules);
@@ -199,17 +199,17 @@ TEST_F(ConfUtilTest, rulesWriteRead)
                 return subRule.ids[column];
             });
 
-            ConfRuleManager::walkRulesMapByStmt(ruleSetMap, ruleSetIds, stmt);
+            ConfRuleManager::walkRulesMapByStmt(wra, stmt);
 
-            return walkRulesLoop(maxRuleId, func);
+            return walkRulesLoop(wra, func);
         }
 
     private:
-        bool walkRulesLoop(int &maxRuleId, const std::function<walkRulesCallback> &func) const
+        bool walkRulesLoop(WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const
         {
             for (const auto &rule : g_rules) {
-                if (maxRuleId < rule.ruleId) {
-                    maxRuleId = rule.ruleId;
+                if (wra.maxRuleId < rule.ruleId) {
+                    wra.maxRuleId = rule.ruleId;
                 }
 
                 if (!func(rule))

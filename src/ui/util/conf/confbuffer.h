@@ -70,8 +70,7 @@ private:
 
     bool addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize);
 
-    bool writeRule(
-            const Rule &rule, const ruleset_map_t &ruleSetMap, const ruleid_arr_t &ruleSetIds);
+    bool writeRule(const Rule &rule, const WalkRulesArgs &wra);
     bool writeRuleText(const QString &ruleText, int &filtersCount);
     bool writeRuleFilter(const RuleFilter *ruleFilter);
     bool writeRuleFilterList(const RuleFilter *ruleFilter, int count = 1);

@@ -316,16 +316,16 @@ bool ConfRuleManager::updateRuleEnabled(int ruleId, bool enabled)
     return ok;
 }
 
-bool ConfRuleManager::walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, int &maxRuleId,
-        const std::function<walkRulesCallback> &func) const
+bool ConfRuleManager::walkRules(
+        WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const
 {
     bool ok = false;
 
     sqliteDb()->beginTransaction();
 
-    maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
+    wra.maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
 
-    walkRulesMap(ruleSetMap, ruleSetIds);
+    walkRulesMap(wra);
 
     ok = walkRulesLoop(func);
 
@@ -334,8 +334,7 @@ bool ConfRuleManager::walkRules(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSet
     return ok;
 }
 
-void ConfRuleManager::walkRulesMapByStmt(
-        ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds, SqliteStmt &stmt)
+void ConfRuleManager::walkRulesMapByStmt(WalkRulesArgs &wra, SqliteStmt &stmt)
 {
     int prevRuleId = 0;
     int prevIndex = 0;
@@ -353,7 +352,7 @@ void ConfRuleManager::walkRulesMapByStmt(
                 .count = quint8(index - prevIndex),
             };
 
-            ruleSetMap.insert(prevRuleId, ruleSetInfo);
+            wra.ruleSetMap.insert(prevRuleId, ruleSetInfo);
 
             prevRuleId = ruleId;
             prevIndex = index;
@@ -362,19 +361,19 @@ void ConfRuleManager::walkRulesMapByStmt(
         if (!isStepRow)
             break;
 
-        ruleSetIds.append(subRuleId);
+        wra.ruleSetIds.append(subRuleId);
 
         ++index;
     }
 }
 
-void ConfRuleManager::walkRulesMap(ruleset_map_t &ruleSetMap, ruleid_arr_t &ruleSetIds) const
+void ConfRuleManager::walkRulesMap(WalkRulesArgs &wra) const
 {
     SqliteStmt stmt;
     if (!DbQuery(sqliteDb()).sql(sqlSelectRuleSets).prepare(stmt))
         return;
 
-    walkRulesMapByStmt(ruleSetMap, ruleSetIds, stmt);
+    walkRulesMapByStmt(wra, stmt);
 }
 
 bool ConfRuleManager::walkRulesLoop(const std::function<walkRulesCallback> &func) const
