@@ -474,6 +474,26 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
 static BOOL fort_conf_rule_filter_check(
         PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn);
 
+inline static BOOL fort_conf_rule_filter_list_check_done(PCFORT_CONF_RULE_FILTER rule_filter,
+        PCFORT_CONF_META_CONN conn, BOOL isAnd, BOOL *filter_res)
+{
+    const BOOL res = fort_conf_rule_filter_check(rule_filter, conn);
+
+    if (isAnd) {
+        if (!res) {
+            *filter_res = FALSE;
+            return TRUE;
+        }
+    } else {
+        if (res) {
+            *filter_res = TRUE;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
 static BOOL fort_conf_rule_filter_list_check(
         PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn)
 {
@@ -483,19 +503,14 @@ static BOOL fort_conf_rule_filter_list_check(
     const char *end = (const char *) data + rule_filter->size;
 
     do {
-        PCFORT_CONF_RULE_FILTER filter = (PCFORT_CONF_RULE_FILTER) data;
+        PCFORT_CONF_RULE_FILTER sub_filter = (PCFORT_CONF_RULE_FILTER) data;
 
-        const BOOL filter_res = fort_conf_rule_filter_check(filter, conn);
-
-        if (isAnd) {
-            if (!filter_res)
-                return FALSE;
-        } else {
-            if (filter_res)
-                return TRUE;
+        BOOL filter_res = FALSE;
+        if (fort_conf_rule_filter_list_check_done(sub_filter, conn, isAnd, &filter_res)) {
+            return filter_res;
         }
 
-        data += filter->size;
+        data += sub_filter->size;
     } while (data < end);
 
     return isAnd;
