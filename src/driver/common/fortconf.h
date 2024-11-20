@@ -251,6 +251,8 @@ typedef struct fort_conf_meta_conn
     UINT16 is_local_net : 1;
     UINT16 inherited : 1;
     UINT16 blocked : 1;
+    UINT16 drop_blocked : 1;
+    UINT16 ignore : 1;
 
     UCHAR block_reason;
 
