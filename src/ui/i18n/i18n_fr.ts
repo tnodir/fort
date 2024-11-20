@@ -424,15 +424,15 @@
     </message>
     <message>
         <source>Restrict access by Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Restreindre l&apos;accès par règle</translation>
     </message>
     <message>
         <source>Restrict access by Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Restreindre l&apos;accès par une règle globale avant les règles d&apos;application</translation>
     </message>
     <message>
         <source>Restrict access by Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Restreindre l&apos;accès par une règle globale après les règles d&apos;application</translation>
     </message>
 </context>
 <context>
