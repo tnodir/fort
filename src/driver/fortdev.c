@@ -337,23 +337,23 @@ static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
     PCFORT_CONF_RULES rules = dca->buffer;
     const ULONG len = dca->in_len;
 
+    PFORT_CONF_RULES conf_rules = NULL;
+
     if (len >= FORT_CONF_RULES_DATA_OFF) {
-        PFORT_CONF_RULES conf_rules = fort_conf_rules_new(rules, len);
+        conf_rules = fort_conf_rules_new(rules, len);
 
         if (conf_rules == NULL) {
             return STATUS_INSUFFICIENT_RESOURCES;
-        } else {
-            PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
-
-            fort_conf_rules_set(device_conf, conf_rules);
-
-            fort_device_conf_reauth_queue(device_conf);
-
-            return STATUS_SUCCESS;
         }
     }
 
-    return STATUS_UNSUCCESSFUL;
+    PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+
+    fort_conf_rules_set(device_conf, conf_rules);
+
+    fort_device_conf_reauth_queue(device_conf);
+
+    return STATUS_SUCCESS;
 }
 
 static NTSTATUS fort_device_control_setruleflag(PFORT_DEVICE_CONTROL_ARG dca)
@@ -381,17 +381,17 @@ typedef NTSTATUS(FORT_DEVICE_CONTROL_PROCESS_FUNC)(PFORT_DEVICE_CONTROL_ARG dca)
 typedef FORT_DEVICE_CONTROL_PROCESS_FUNC *PFORT_DEVICE_CONTROL_PROCESS_FUNC;
 
 static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
-    &fort_device_control_validate,
-    &fort_device_control_setservices,
-    &fort_device_control_setconf,
-    &fort_device_control_setflags,
-    &fort_device_control_getlog,
-    &fort_device_control_addapp,
-    &fort_device_control_delapp,
-    &fort_device_control_setzones,
-    &fort_device_control_setzoneflag,
-    &fort_device_control_setrules,
-    &fort_device_control_setruleflag,
+    &fort_device_control_validate, // FORT_IOCTL_VALIDATE
+    &fort_device_control_setservices, // FORT_IOCTL_SETSERVICES
+    &fort_device_control_setconf, // FORT_IOCTL_SETCONF
+    &fort_device_control_setflags, // FORT_IOCTL_SETFLAGS
+    &fort_device_control_getlog, // FORT_IOCTL_GETLOG
+    &fort_device_control_addapp, // FORT_IOCTL_ADDAPP
+    &fort_device_control_delapp, // FORT_IOCTL_DELAPP
+    &fort_device_control_setzones, // FORT_IOCTL_SETZONES
+    &fort_device_control_setzoneflag, // FORT_IOCTL_SETZONEFLAG
+    &fort_device_control_setrules, // FORT_IOCTL_SETRULES
+    &fort_device_control_setruleflag, // FORT_IOCTL_SETRULEFLAG
 };
 
 static NTSTATUS fort_device_control_process(
