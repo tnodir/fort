@@ -19,6 +19,7 @@
 #include <manager/windowmanager.h>
 #include <model/rulesetmodel.h>
 #include <util/conf/confutil.h>
+#include <util/conf/ruletextparser.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 
@@ -411,6 +412,17 @@ bool RuleEditDialog::validateFields() const
         if (confRuleManager()->rulesCountByType(ruleType) >= ConfUtil::ruleGlobalMaxCount()) {
             windowManager()->showErrorBox(tr("Global rules count exceeded!"));
             m_comboRuleType->setFocus();
+            return false;
+        }
+    }
+
+    // Rule Text
+    const auto ruleText = m_editRuleText->toPlainText();
+    if (!ruleText.isEmpty()) {
+        RuleTextParser parser(ruleText);
+        if (!parser.parse()) {
+            windowManager()->showErrorBox(parser.errorMessage());
+            m_editRuleText->setFocus();
             return false;
         }
     }
