@@ -313,9 +313,8 @@ inline static BOOL fort_callout_ale_is_allowed(
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
-    /* Collect traffic, when Filter Disabled */
     if (!conn->blocked)
-        return TRUE;
+        return TRUE; /* collect traffic, when Filter Disabled */
 
     const FORT_CONF_RULES_GLOB rules_glob = fort_device()->conf.rules_glob;
 
@@ -326,12 +325,17 @@ inline static BOOL fort_callout_ale_is_allowed(
 
     if (app_data.found != 0) {
         /* Check app is allowed */
-        return fort_callout_ale_app_allowed(conn, conf_flags, app_data);
+        if (!fort_callout_ale_app_allowed(conn, conf_flags, app_data))
+            return FALSE; /* block App */
     }
 
     if (fort_callout_ale_conn_rule_blocked(conn, rules_glob.post_rule_id)) {
         conn->block_reason = FORT_BLOCK_REASON_RULE_GLOB_POST;
         return FALSE; /* block Global Rule Post Apps */
+    }
+
+    if (app_data.found != 0) {
+        return TRUE; /* allow App */
     }
 
     return fort_callout_ale_flags_allowed(conn, conf_flags);
