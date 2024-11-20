@@ -32,9 +32,18 @@ const QLoggingCategory LC("confRule");
 const char *const sqlSelectRules = "SELECT" SELECT_RULE_FIELDS "  FROM rule t"
                                    "  ORDER BY t.rule_id;";
 
-const char *const sqlSelectRuleSets = "SELECT t.rule_id, t.sub_rule_id"
-                                      "  FROM rule_set t"
-                                      "  ORDER BY t.rule_id, t.order_index;";
+const char *const sqlSelectRuleSets = "SELECT * FROM ("
+                                      "  SELECT t.rule_id, t.sub_rule_id, t.order_index"
+                                      "    FROM rule_set t"
+                                      "  UNION ALL" // Global Before App Rules
+                                      "  SELECT ?1, t.rule_id, t.rule_id + 99999 AS order_index"
+                                      "    FROM rule t"
+                                      "    WHERE t.rule_id > ?1 AND t.rule_type = ?2"
+                                      "  UNION ALL" // Global After App Rules
+                                      "  SELECT ?3, t.rule_id, t.rule_id + 99999 AS order_index"
+                                      "    FROM rule t"
+                                      "    WHERE t.rule_id > ?3 AND t.rule_type = ?4"
+                                      ") ORDER BY rule_id, order_index;";
 
 const char *const sqlSelectMaxRuleId = "SELECT MAX(rule_id) FROM rule;";
 
@@ -385,7 +394,15 @@ void ConfRuleManager::walkRulesMapByStmt(WalkRulesArgs &wra, SqliteStmt &stmt)
 void ConfRuleManager::walkRulesMap(WalkRulesArgs &wra) const
 {
     SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectRuleSets).prepare(stmt))
+    if (!DbQuery(sqliteDb())
+                    .sql(sqlSelectRuleSets)
+                    .vars({
+                            wra.globPreRuleId,
+                            Rule::GlobalBeforeAppsRule,
+                            wra.globPostRuleId,
+                            Rule::GlobalAfterAppsRule,
+                    })
+                    .prepare(stmt))
         return;
 
     walkRulesMapByStmt(wra, stmt);
