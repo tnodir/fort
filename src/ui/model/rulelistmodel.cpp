@@ -195,6 +195,10 @@ QVariant RuleListModel::rootData(const QModelIndex &index, int role) const
     case Qt::ToolTipRole:
         return ruleTypeNames().value(index.row());
 
+    // Icon
+    case Qt::DecorationRole:
+        return IconCache::icon(ruleTypeIconPaths().value(index.row()));
+
     // Font
     case Qt::FontRole:
         return GuiUtil::fontBold();
@@ -362,4 +366,16 @@ QStringList RuleListModel::ruleTypeNames()
         RuleListModel::tr("Global Rules, applied after App Rules"),
         RuleListModel::tr("Preset Rules"),
     };
+}
+
+QStringList RuleListModel::ruleTypeIconPaths()
+{
+    static QStringList ruleTypeIcons = {
+        ":/icons/script.png",
+        ":/icons/script_code.png",
+        ":/icons/script_code_red.png",
+        ":/icons/help.png",
+    };
+
+    return ruleTypeIcons;
 }

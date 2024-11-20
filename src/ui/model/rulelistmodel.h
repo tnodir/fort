@@ -53,6 +53,7 @@ public:
     RuleRow ruleRowById(int ruleId, Rule::RuleType ruleType) const;
 
     static QStringList ruleTypeNames();
+    static QStringList ruleTypeIconPaths();
 
 protected:
     Qt::ItemFlags flagHasChildren(const QModelIndex &index) const override;

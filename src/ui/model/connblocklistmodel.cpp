@@ -48,8 +48,8 @@ QString reasonIconPath(const ConnRow &connRow)
         ":/icons/hostname.png",
         ":/icons/ip_class.png",
         ":/icons/script.png",
-        ":/icons/script.png",
-        ":/icons/script.png",
+        ":/icons/script_code.png",
+        ":/icons/script_code_red.png",
         ":/icons/help.png",
     };
 

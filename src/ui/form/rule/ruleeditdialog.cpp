@@ -60,7 +60,8 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_editName->setStartText(ruleRow.ruleName);
     m_editName->setClearButtonEnabled(true);
 
-    m_labelEditNotes->setPixmap(IconCache::pixmap(":/icons/script.png", appIconSize));
+    const auto ruleIconPath = RuleListModel::ruleTypeIconPaths().value(ruleRow.ruleType);
+    m_labelEditNotes->setPixmap(IconCache::pixmap(ruleIconPath, appIconSize));
     m_editNotes->setText(ruleRow.notes);
 
     m_labelRuleType->setText(tr("Type:"));
@@ -140,6 +141,7 @@ void RuleEditDialog::retranslateUi()
 void RuleEditDialog::retranslateComboRuleType()
 {
     ControlUtil::setComboBoxTexts(m_comboRuleType, RuleListModel::ruleTypeNames());
+    ControlUtil::setComboBoxIcons(m_comboRuleType, RuleListModel::ruleTypeIconPaths());
 }
 
 void RuleEditDialog::retranslateRulePlaceholderText()
