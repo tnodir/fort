@@ -97,6 +97,8 @@ static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT
 
     PFORT_CONF_META_CONN conn = &cx->conn;
 
+    conn->process_id = (UINT32) ca->inMetaValues->processId;
+
     conn->ip_proto = ca->inFixedValues->incomingValue[ca->fi->ipProto].value.uint8;
     conn->is_tcp = (conn->ip_proto == IPPROTO_TCP);
 
@@ -126,8 +128,6 @@ inline static BOOL fort_callout_ale_associate_flow(
         PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_FLAGS app_flags)
 {
     const UINT64 flow_id = ca->inMetaValues->flowHandle;
-
-    fort_callout_ale_fill_meta_conn(ca, cx);
 
     PFORT_CONF_META_CONN conn = &cx->conn;
 
@@ -212,15 +212,6 @@ inline static BOOL fort_callout_ale_log_blocked_ip_check(PCFORT_CALLOUT_ARG ca,
     const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, cx, conf_ref);
 
     return fort_callout_ale_log_blocked_ip_check_app(conf_flags, app_data);
-}
-
-inline static void fort_callout_ale_log_blocked_ip(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
-{
-    fort_callout_ale_fill_meta_conn(ca, cx);
-
-    fort_buffer_conn_write(&fort_device()->buffer, &cx->conn, FORT_BUFFER_CONN_WRITE_BLOCKED_IP,
-            &cx->irp, &cx->info);
 }
 
 inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
@@ -442,7 +433,10 @@ inline static void fort_callout_ale_classify_blocked(PCFORT_CALLOUT_ARG ca,
 {
     /* Log the blocked connection */
     if (fort_callout_ale_log_blocked_ip_check(ca, cx, conf_ref, conf_flags)) {
-        fort_callout_ale_log_blocked_ip(ca, cx);
+        fort_callout_ale_fill_meta_conn(ca, cx);
+
+        fort_buffer_conn_write(&fort_device()->buffer, &cx->conn, FORT_BUFFER_CONN_WRITE_BLOCKED_IP,
+                &cx->irp, &cx->info);
     }
 
     if (cx->conn.drop_blocked) {
@@ -474,7 +468,7 @@ inline static void fort_callout_ale_check_conf(
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
-    conn->process_id = (UINT32) ca->inMetaValues->processId;
+    fort_callout_ale_fill_meta_conn(ca, cx);
 
     conn->ignore = FALSE;
     conn->blocked = TRUE;
