@@ -422,6 +422,18 @@
         <source>Reason</source>
         <translation>Razlog</translation>
     </message>
+    <message>
+        <source>Restrict access by Rule</source>
+        <translation>Omejite dostop s pravilom</translation>
+    </message>
+    <message>
+        <source>Restrict access by Global Rule before App Rules</source>
+        <translation>Omejite dostop z globalnim pravilom pred pravili aplikacije</translation>
+    </message>
+    <message>
+        <source>Restrict access by Global Rule after App Rules</source>
+        <translation>Omejite dostop z globalnim pravilom po pravilih aplikacije</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>

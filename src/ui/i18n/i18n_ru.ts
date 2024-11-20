@@ -422,6 +422,18 @@
         <source>Reason</source>
         <translation>Причина</translation>
     </message>
+    <message>
+        <source>Restrict access by Rule</source>
+        <translation>Ограничить доступ по Правилу</translation>
+    </message>
+    <message>
+        <source>Restrict access by Global Rule before App Rules</source>
+        <translation>Ограничить доступ по Глобальному правилу, применяемому до правил приложений</translation>
+    </message>
+    <message>
+        <source>Restrict access by Global Rule after App Rules</source>
+        <translation>Ограничить доступ по Глобальному правилу, применяемому после правил приложений</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
