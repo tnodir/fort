@@ -1,6 +1,5 @@
 #include "formatutil.h"
 
-#include <QRegularExpression>
 #include <QtMath>
 
 namespace {
