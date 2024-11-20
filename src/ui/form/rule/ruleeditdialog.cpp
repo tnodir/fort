@@ -401,12 +401,32 @@ bool RuleEditDialog::saveRule(Rule &rule)
 bool RuleEditDialog::validateFields() const
 {
     // Name
+    if (!validateEditName())
+        return false;
+
+    // Global Rules Count
+    if (!validateComboRuleType())
+        return false;
+
+    // Rule Text
+    if (!validateEditRuleText())
+        return false;
+
+    return true;
+}
+
+bool RuleEditDialog::validateEditName() const
+{
     if (m_editName->text().isEmpty()) {
         m_editName->setFocus();
         return false;
     }
 
-    // Global Rules Count
+    return true;
+}
+
+bool RuleEditDialog::validateComboRuleType() const
+{
     const auto ruleType = Rule::RuleType(m_comboRuleType->currentIndex());
     if (ruleType == Rule::GlobalBeforeAppsRule || ruleType == Rule::GlobalAfterAppsRule) {
         if (confRuleManager()->rulesCountByType(ruleType) >= ConfUtil::ruleGlobalMaxCount()) {
@@ -416,7 +436,11 @@ bool RuleEditDialog::validateFields() const
         }
     }
 
-    // Rule Text
+    return true;
+}
+
+bool RuleEditDialog::validateEditRuleText() const
+{
     const auto ruleText = m_editRuleText->toPlainText();
     if (!ruleText.isEmpty()) {
         RuleTextParser parser(ruleText);

@@ -66,6 +66,10 @@ private:
     bool saveRule(Rule &rule);
 
     bool validateFields() const;
+    bool validateEditName() const;
+    bool validateComboRuleType() const;
+    bool validateEditRuleText() const;
+
     void fillRule(Rule &rule) const;
 
     void selectPresetRuleDialog();
