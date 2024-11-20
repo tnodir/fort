@@ -55,11 +55,6 @@ inline static void fort_callout_ale_set_app_flags(
 
 static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
 {
-    if (cx->is_path_filled)
-        return;
-
-    cx->is_path_filled = TRUE;
-
     PFORT_CONF_META_CONN conn = &cx->conn;
 
     PFORT_APP_PATH real_path = &conn->real_path;
@@ -112,10 +107,12 @@ static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT
 }
 
 static FORT_APP_DATA fort_callout_ale_conf_app_data(
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
+        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
 {
     if (cx->app_data_found)
         return cx->app_data;
+
+    fort_callout_ale_fill_meta_path(ca, cx);
 
     const FORT_APP_DATA app_data =
             fort_conf_app_find(&conf_ref->conf, &cx->conn.path, fort_conf_exe_find, conf_ref);
@@ -212,9 +209,7 @@ inline static BOOL fort_callout_ale_log_blocked_ip_check(PCFORT_CALLOUT_ARG ca,
     if (!(conf_flags.ask_to_connect || conf_flags.log_blocked_ip))
         return FALSE;
 
-    fort_callout_ale_fill_meta_path(ca, cx);
-
-    const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(cx, conf_ref);
+    const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, cx, conf_ref);
 
     return fort_callout_ale_log_blocked_ip_check_app(conf_flags, app_data);
 }
@@ -354,7 +349,7 @@ inline static BOOL fort_callout_ale_is_allowed(
 inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
-    const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(cx, conf_ref);
+    const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, cx, conf_ref);
 
     if (fort_callout_ale_is_allowed(cx, conf_flags, app_data)) {
 
@@ -488,7 +483,6 @@ inline static void fort_callout_ale_check_conf(
     const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 
     if (!fort_callout_ale_check_flags(conn, conf_ref, conf_flags)) {
-        fort_callout_ale_fill_meta_path(ca, cx);
         fort_callout_ale_check_app(ca, cx, conf_ref, conf_flags);
     }
 
