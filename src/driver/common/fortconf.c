@@ -596,7 +596,11 @@ static BOOL fort_conf_rule_filter_check(
 
     const void *data = (const void *) (rule_filter + 1);
 
-    const BOOL filter_res = func(conn, data);
+    BOOL filter_res = func(conn, data);
+
+    if (rule_filter->is_not) {
+        filter_res = !filter_res;
+    }
 
     return filter_res;
 }
