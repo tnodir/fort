@@ -298,6 +298,7 @@ bool RuleTextParser::parseName()
         { "dir", FORT_RULE_FILTER_TYPE_DIRECTION },
         { "direction", FORT_RULE_FILTER_TYPE_DIRECTION },
         { "area", FORT_RULE_FILTER_TYPE_AREA },
+        { "profile", FORT_RULE_FILTER_TYPE_PROFILE },
         { "tcp", FORT_RULE_FILTER_TYPE_PORT_TCP },
         { "udp", FORT_RULE_FILTER_TYPE_PORT_UDP },
     };

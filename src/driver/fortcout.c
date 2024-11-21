@@ -102,6 +102,8 @@ static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT
     conn->ip_proto = ca->inFixedValues->incomingValue[ca->fi->ipProto].value.uint8;
     conn->is_tcp = (conn->ip_proto == IPPROTO_TCP);
 
+    conn->profile_id = ca->inFixedValues->incomingValue[ca->fi->profileId].value.uint8;
+
     conn->local_port = ca->inFixedValues->incomingValue[ca->fi->localPort].value.uint16;
     conn->remote_port = ca->inFixedValues->incomingValue[ca->fi->remotePort].value.uint16;
 
@@ -609,6 +611,7 @@ static void NTAPI fort_callout_connect_v4(const FWPS_INCOMING_VALUES0 *inFixedVa
         .localPort = FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_LOCAL_PORT,
         .remotePort = FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_REMOTE_PORT,
         .ipProto = FWPS_FIELD_ALE_AUTH_CONNECT_V4_IP_PROTOCOL,
+        .profileId = FWPS_FIELD_ALE_AUTH_CONNECT_V4_ORIGINAL_PROFILE_ID,
     };
 
     fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
@@ -626,6 +629,7 @@ static void NTAPI fort_callout_connect_v6(const FWPS_INCOMING_VALUES0 *inFixedVa
         .localPort = FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_LOCAL_PORT,
         .remotePort = FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_REMOTE_PORT,
         .ipProto = FWPS_FIELD_ALE_AUTH_CONNECT_V6_IP_PROTOCOL,
+        .profileId = FWPS_FIELD_ALE_AUTH_CONNECT_V6_ORIGINAL_PROFILE_ID,
     };
 
     fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
@@ -643,6 +647,7 @@ static void NTAPI fort_callout_accept_v4(const FWPS_INCOMING_VALUES0 *inFixedVal
         .localPort = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_LOCAL_PORT,
         .remotePort = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_REMOTE_PORT,
         .ipProto = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_IP_PROTOCOL,
+        .profileId = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V4_ORIGINAL_PROFILE_ID,
     };
 
     fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,
@@ -660,6 +665,7 @@ static void NTAPI fort_callout_accept_v6(const FWPS_INCOMING_VALUES0 *inFixedVal
         .localPort = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_LOCAL_PORT,
         .remotePort = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_REMOTE_PORT,
         .ipProto = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_IP_PROTOCOL,
+        .profileId = FWPS_FIELD_ALE_AUTH_RECV_ACCEPT_V6_ORIGINAL_PROFILE_ID,
     };
 
     fort_callout_ale_classify_v(inFixedValues, inMetaValues, layerData, filter, flowContext,

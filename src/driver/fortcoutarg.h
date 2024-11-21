@@ -13,6 +13,7 @@ typedef struct fort_callout_field_index
     UCHAR localPort;
     UCHAR remotePort;
     UCHAR ipProto;
+    UCHAR profileId;
     UCHAR direction; /* used by DATAGRAM only */
 } FORT_CALLOUT_FIELD_INDEX, *PFORT_CALLOUT_FIELD_INDEX;
 

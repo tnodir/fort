@@ -6,6 +6,7 @@
 #include <util/net/dirrange.h>
 #include <util/net/iprange.h>
 #include <util/net/portrange.h>
+#include <util/net/profilerange.h>
 #include <util/net/protorange.h>
 
 namespace {
@@ -16,6 +17,7 @@ enum RangeType : qint8 {
     RangeTypeProto,
     RangeTypeDir,
     RangeTypeArea,
+    RangeTypeProfile,
 };
 
 // Sync with FORT_RULE_FILTER_TYPE enum
@@ -27,6 +29,7 @@ RangeType g_filterRangeTypes[] = {
     RangeTypeProto, // FORT_RULE_FILTER_TYPE_PROTOCOL,
     RangeTypeDir, // FORT_RULE_FILTER_TYPE_DIRECTION,
     RangeTypeArea, // FORT_RULE_FILTER_TYPE_AREA,
+    RangeTypeProfile, // FORT_RULE_FILTER_TYPE_PROFILE,
     // Complex types
     RangeTypePort, // FORT_RULE_FILTER_TYPE_PORT_TCP,
     RangeTypePort, // FORT_RULE_FILTER_TYPE_PORT_UDP,
@@ -57,6 +60,9 @@ void ConfDataRule::writeRange(const ValueRange *range, qint8 type)
     } break;
     case RangeTypeArea: {
         writeAreaRange(*static_cast<const AreaRange *>(range));
+    } break;
+    case RangeTypeProfile: {
+        writeProfileRange(*static_cast<const ProfileRange *>(range));
     } break;
     default:
         Q_UNREACHABLE();
@@ -112,6 +118,15 @@ void ConfDataRule::writeAreaRange(const AreaRange &areaRange)
     m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
 }
 
+void ConfDataRule::writeProfileRange(const ProfileRange &profileRange)
+{
+    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
+
+    filter->flags = profileRange.profileId();
+
+    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
+}
+
 ValueRange *ConfDataRule::createRangeByType(qint8 type)
 {
     Q_ASSERT(type >= 0 && type < std::size(g_filterRangeTypes));
@@ -129,6 +144,8 @@ ValueRange *ConfDataRule::createRangeByType(qint8 type)
         return new DirRange();
     case RangeTypeArea:
         return new AreaRange();
+    case RangeTypeProfile:
+        return new ProfileRange();
     default:
         Q_UNREACHABLE();
         return nullptr;

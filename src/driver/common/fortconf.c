@@ -543,6 +543,15 @@ static fort_conf_rule_filter_check_area(PCFORT_CONF_META_CONN conn, const void *
     return (flags & conn_flags) != 0;
 }
 
+static fort_conf_rule_filter_check_profile(PCFORT_CONF_META_CONN conn, const void *data)
+{
+    const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
+
+    const UINT16 conn_flags = (1 << conn->profile_id);
+
+    return (flags & conn_flags) != 0;
+}
+
 static fort_conf_rule_filter_check_port_protocol(
         PCFORT_CONF_META_CONN conn, const void *data, UCHAR proto)
 {
@@ -572,6 +581,7 @@ static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcLi
     &fort_conf_rule_filter_check_protocol, // FORT_RULE_FILTER_TYPE_PROTOCOL,
     &fort_conf_rule_filter_check_direction, // FORT_RULE_FILTER_TYPE_DIRECTION,
     &fort_conf_rule_filter_check_area, // FORT_RULE_FILTER_TYPE_AREA,
+    &fort_conf_rule_filter_check_profile, // FORT_RULE_FILTER_TYPE_PROFILE,
     // Complex types
     &fort_conf_rule_filter_check_port_tcp, // FORT_RULE_FILTER_TYPE_PORT_TCP,
     &fort_conf_rule_filter_check_port_udp, // FORT_RULE_FILTER_TYPE_PORT_UDP,

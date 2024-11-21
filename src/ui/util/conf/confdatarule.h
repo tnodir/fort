@@ -5,6 +5,7 @@
 
 class AreaRange;
 class DirRange;
+class ProfileRange;
 class PortRange;
 class ProtoRange;
 class ValueRange;
@@ -23,6 +24,7 @@ private:
     void writeProtoRange(const ProtoRange &protoRange);
     void writeDirRange(const DirRange &dirRange);
     void writeAreaRange(const AreaRange &areaRange);
+    void writeProfileRange(const ProfileRange &profileRange);
 };
 
 #endif // CONFDATARULE_H

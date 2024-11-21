@@ -147,6 +147,7 @@ enum FORT_RULE_FILTER_TYPE {
     FORT_RULE_FILTER_TYPE_PROTOCOL,
     FORT_RULE_FILTER_TYPE_DIRECTION,
     FORT_RULE_FILTER_TYPE_AREA,
+    FORT_RULE_FILTER_TYPE_PROFILE,
     // Complex types
     FORT_RULE_FILTER_TYPE_PORT_TCP,
     FORT_RULE_FILTER_TYPE_PORT_UDP,
@@ -163,6 +164,10 @@ enum {
     FORT_RULE_FILTER_AREA_LOCALHOST = (1 << 0),
     FORT_RULE_FILTER_AREA_LAN = (1 << 1),
     FORT_RULE_FILTER_AREA_INET = (1 << 2),
+    // Profile ID
+    FORT_RULE_FILTER_PROFILE_PUBLIC = (1 << 1),
+    FORT_RULE_FILTER_PROFILE_PRIVATE = (1 << 2),
+    FORT_RULE_FILTER_PROFILE_DOMAIN = (1 << 3),
 };
 
 typedef struct fort_conf_rule_filter_flags
@@ -246,6 +251,7 @@ typedef struct fort_conf_meta_conn
     UINT16 inbound : 1;
     UINT16 isIPv6 : 1;
     UINT16 is_tcp : 1;
+    UINT16 profile_id : 2;
     UINT16 is_loopback : 1;
     UINT16 is_broadcast : 1;
     UINT16 is_local_net : 1;

@@ -98,7 +98,7 @@ QStringList NetUtil::localIpNetworks()
         "2002::/16", // 6to4
         "fc00::/7", // Unique Local Addresses (ULA) - also known as “Private” IPv6 addresses
         "fe80::/10", // Link Local addresses, only valid inside a single broadcast domain
-        "ff00::/8", // IP Broadcast
+        "ff00::/8", // Multicast addresses
     };
 
     return list;

@@ -219,6 +219,7 @@ SOURCES += \
     util/net/netformatutil.cpp \
     util/net/netutil.cpp \
     util/net/portrange.cpp \
+    util/net/profilerange.cpp \
     util/net/protorange.cpp \
     util/net/textrange.cpp \
     util/net/valuerange.cpp \
@@ -463,6 +464,7 @@ HEADERS += \
     util/net/netformatutil.h \
     util/net/netutil.h \
     util/net/portrange.h \
+    util/net/profilerange.h \
     util/net/protorange.h \
     util/net/textrange.h \
     util/net/valuerange.h \
