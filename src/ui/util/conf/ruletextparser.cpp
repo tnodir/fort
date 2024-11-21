@@ -107,6 +107,9 @@ bool RuleTextParser::parseLines()
 
         if (!parseLine())
             break;
+
+        if (m_ruleFilter.isListEnd)
+            break;
     }
 
     endList(filterIndex);
@@ -245,9 +248,16 @@ void RuleTextParser::parseSectionList()
     if (!parseLines())
         return;
 
+    checkSectionListEnd();
+}
+
+void RuleTextParser::checkSectionListEnd()
+{
     if (!m_ruleFilter.isListEnd) {
         setError(ErrorUnexpectedEndOfList, tr("Unexpected end of list"));
     }
+
+    m_ruleFilter.isListEnd = false;
 }
 
 bool RuleTextParser::checkListBegin()

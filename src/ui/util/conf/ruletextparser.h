@@ -105,6 +105,7 @@ private:
     bool parseSectionBlock();
     bool parseSectionChar();
     void parseSectionList();
+    void checkSectionListEnd();
     bool checkListBegin();
     bool checkListEnd();
 

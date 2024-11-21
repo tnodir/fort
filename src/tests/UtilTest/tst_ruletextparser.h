@@ -408,3 +408,13 @@ TEST_F(RuleTextParserTest, lineBracketValues)
 
     ASSERT_EQ(p.ruleFilters().size(), 5);
 }
+
+
+TEST_F(RuleTextParserTest, lineIpPortSubList)
+{
+    RuleTextParser p("{1}\n2");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 7);
+}
