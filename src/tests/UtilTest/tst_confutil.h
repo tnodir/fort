@@ -343,6 +343,18 @@ TEST_F(ConfUtilTest, rulesOneFilter)
         ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
     }
 
+    // Blocked IP, but Allowed Port
+    {
+        const FORT_CONF_META_CONN conn = {
+            .inbound = false,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 443,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("1.1.1.1") },
+        };
+
+        ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+
     // Allowed IP
     {
         const FORT_CONF_META_CONN conn = {
