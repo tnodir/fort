@@ -657,8 +657,12 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
     if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule))
         return TRUE;
 
-    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule))
+    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule)) {
+        if (rule->exclusive && !rule->blocked)
+            return FALSE; /* don't process sub-rules for exclusive rule */
+
         return TRUE;
+    }
 
     if (fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule))
         return TRUE;
