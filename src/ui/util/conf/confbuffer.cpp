@@ -692,7 +692,10 @@ bool ConfBuffer::writeRuleFilterList(const RuleFilter &ruleListFilter)
             return false;
 
         if (ruleFilter->isTypeList()) {
-            count -= ruleFilter->filterListCount;
+            const int filterListCount = ruleFilter->filterListCount;
+
+            count -= filterListCount;
+            ruleFilter += filterListCount;
         }
     }
 
