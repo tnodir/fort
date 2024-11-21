@@ -342,8 +342,10 @@ bool RuleTextParser::parseBracketValue(RuleCharTypes expectedSeparator)
         return false;
     }
 
-    if (hasParsedCharTypes(CharBracketEnd))
+    if (hasParsedCharTypes(CharBracketEnd)) {
+        returnToCharType(CharBracketEnd); // Unget new lines
         return false;
+    }
 
     if (!checkBracketValuesSeparator(expectedSeparator))
         return false;
@@ -542,4 +544,18 @@ bool RuleTextParser::checkNextCharType(RuleCharTypes expectedCharTypes, const QC
     }
 
     return true;
+}
+
+void RuleTextParser::returnToCharType(RuleCharTypes expectedCharTypes)
+{
+    for (;;) {
+        const QChar c = *(m_p - 1);
+
+        m_charType = getCharType(CharNone, c);
+
+        if ((m_charType & expectedCharTypes) != 0)
+            break;
+
+        ungetChar();
+    }
 }

@@ -155,6 +155,8 @@ private:
 
     bool checkNextCharType(RuleCharTypes expectedCharTypes, const QChar c);
 
+    void returnToCharType(RuleCharTypes expectedCharTypes);
+
 private:
     qint8 m_listDepth = 0;
     ErrorCode m_errorCode = ErrorNone;

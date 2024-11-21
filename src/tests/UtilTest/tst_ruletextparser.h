@@ -375,3 +375,36 @@ TEST_F(RuleTextParserTest, lineEndNot)
         checkStringList(rf.values, { "2" });
     }
 }
+
+TEST_F(RuleTextParserTest, lineIpPortNameList)
+{
+    RuleTextParser p("1.1.1.1:udp(53)\n"
+                     "2.2.2.2:tcp(80)\n");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 7);
+
+    // Check IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[2];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "1.1.1.1" });
+    }
+
+    // Check Port
+    {
+        const RuleFilter &rf = p.ruleFilters()[3];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT_UDP);
+        checkStringList(rf.values, { "53" });
+    }
+}
+
+TEST_F(RuleTextParserTest, lineBracketValues)
+{
+    RuleTextParser p("area(inet):udp(53):dir(out)");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 5);
+}
