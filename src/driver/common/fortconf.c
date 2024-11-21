@@ -479,8 +479,8 @@ static BOOL fort_conf_rule_filter_list_check(
 {
     const BOOL isAnd = (rule_filter->type == FORT_RULE_FILTER_TYPE_LIST_AND);
 
-    const char *data = (const char *) (rule_filter + 1);
     const char *end = (const char *) rule_filter + rule_filter->size;
+    const char *data = (const char *) (rule_filter + 1);
 
     do {
         PCFORT_CONF_RULE_FILTER sub_filter = (PCFORT_CONF_RULE_FILTER) data;

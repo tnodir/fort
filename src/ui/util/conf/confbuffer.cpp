@@ -690,6 +690,10 @@ bool ConfBuffer::writeRuleFilterList(const RuleFilter &ruleListFilter)
     for (; --count >= 0; ++ruleFilter) {
         if (!writeRuleFilter(*ruleFilter))
             return false;
+
+        if (ruleFilter->isTypeList()) {
+            count -= ruleFilter->filterListCount;
+        }
     }
 
     return true;

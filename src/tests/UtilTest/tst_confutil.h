@@ -289,3 +289,69 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/2));
     }
 }
+
+TEST_F(ConfUtilTest, rulesOneFilter)
+{
+    static Rule g_rules[] = {
+        { .blocked = true, .ruleId = 1, .ruleText = "1.1.1.1:80" },
+    };
+
+    class TestRules : public ConfRulesWalker
+    {
+    public:
+        bool walkRules(
+                WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override
+        {
+            wra.maxRuleId = 1;
+
+            return walkRulesLoop(func);
+        }
+
+    private:
+        bool walkRulesLoop(const std::function<walkRulesCallback> &func) const
+        {
+            for (const auto &rule : g_rules) {
+                if (!func(rule))
+                    return false;
+            }
+
+            return true;
+        }
+    };
+
+    TestRules testRules;
+
+    ConfBuffer confBuf;
+
+    if (!confBuf.writeRules(testRules)) {
+        qCritical() << "Error:" << confBuf.errorMessage();
+        Q_UNREACHABLE();
+    }
+
+    // Check the buffer
+    const char *data = confBuf.data();
+
+    // Blocked IP
+    {
+        const FORT_CONF_META_CONN conn = {
+            .inbound = false,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("1.1.1.1") },
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+
+    // Allowed IP
+    {
+        const FORT_CONF_META_CONN conn = {
+            .inbound = true,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("2.2.2.2") },
+        };
+
+        ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+}
