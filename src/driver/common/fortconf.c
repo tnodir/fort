@@ -467,8 +467,14 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
 
     PCFORT_CONF_RULE_ZONES rule_zones = (PCFORT_CONF_RULE_ZONES) (rule + 1);
 
-    return fort_conf_zones_conn_blocked(
+    BOOL filter_res = fort_conf_zones_conn_blocked(
             zones, conn, rule_zones->reject_mask, rule_zones->accept_mask);
+
+    if (rule->blocked) {
+        filter_res = !filter_res;
+    }
+
+    return filter_res;
 }
 
 static BOOL fort_conf_rule_filter_check(
