@@ -33,8 +33,7 @@ signals:
 
 private:
     void setupUi();
-    void setupButton();
-    void setupDarkButton();
+    void setupButtons();
 
 private:
     QColor m_color;

@@ -8,6 +8,26 @@
 
 #include "controlutil.h"
 
+namespace {
+
+QPushButton *createColorButton(const std::function<void()> &onClicked)
+{
+    auto c = new QPushButton();
+    c->setFixedSize(40, 30);
+
+    c->connect(c, &QPushButton::clicked, onClicked);
+
+    return c;
+}
+
+void setButtonColor(QPushButton *c, const QColor &color)
+{
+    const auto qss = QString("background-color: %1").arg(color.name());
+    c->setStyleSheet(qss);
+}
+
+}
+
 LabelColor::LabelColor(QWidget *parent) : QWidget(parent)
 {
     setupUi();
@@ -52,8 +72,7 @@ void LabelColor::setupUi()
     m_label = ControlUtil::createLabel();
 
     // Color Buttons
-    setupButton();
-    setupDarkButton();
+    setupButtons();
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_label, /*stretch*/ nullptr, m_button, m_darkButton }, /*margin=*/0);
@@ -61,28 +80,16 @@ void LabelColor::setupUi()
     this->setLayout(layout);
 }
 
-void LabelColor::setupButton()
+void LabelColor::setupButtons()
 {
-    m_button = new QPushButton();
-    m_button->setFixedSize(40, 30);
+    // Light
+    m_button = createColorButton([&] { selectColor(); });
 
-    connect(button(), &QPushButton::clicked, this, &LabelColor::selectColor);
+    connect(this, &LabelColor::colorChanged, [&] { setButtonColor(button(), color().name()); });
 
-    connect(this, &LabelColor::colorChanged, [&] {
-        const auto qss = QString("background-color: %1").arg(color().name());
-        button()->setStyleSheet(qss);
-    });
-}
+    // Dark
+    m_darkButton = createColorButton([&] { selectDarkColor(); });
 
-void LabelColor::setupDarkButton()
-{
-    m_darkButton = new QPushButton();
-    m_darkButton->setFixedSize(40, 30);
-
-    connect(darkButton(), &QPushButton::clicked, this, &LabelColor::selectDarkColor);
-
-    connect(this, &LabelColor::darkColorChanged, [&] {
-        const auto qss = QString("background-color: %1").arg(darkColor().name());
-        darkButton()->setStyleSheet(qss);
-    });
+    connect(this, &LabelColor::darkColorChanged,
+            [&] { setButtonColor(darkButton(), darkColor().name()); });
 }
