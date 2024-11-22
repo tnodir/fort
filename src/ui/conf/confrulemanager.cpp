@@ -253,7 +253,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
     if (isNew) {
         emit ruleAdded();
     } else {
-        emit ruleUpdated();
+        emit ruleUpdated(rule.ruleId);
     }
 
     return true;
@@ -301,7 +301,7 @@ bool ConfRuleManager::updateRuleName(int ruleId, const QString &ruleName)
     commitTransaction(ok);
 
     if (ok) {
-        emit ruleUpdated();
+        emit ruleUpdated(ruleId);
     }
 
     return ok;
@@ -320,7 +320,7 @@ bool ConfRuleManager::updateRuleEnabled(int ruleId, bool enabled)
     commitTransaction(ok);
 
     if (ok) {
-        emit ruleUpdated();
+        emit ruleUpdated(ruleId);
 
         updateDriverRuleFlag(ruleId, enabled);
     }

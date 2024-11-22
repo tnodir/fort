@@ -14,6 +14,7 @@
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
 #include <conf/confmanager.h>
+#include <conf/confrulemanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
@@ -56,6 +57,7 @@ ProgramEditDialog::ProgramEditDialog(ProgramsController *ctrl, QWidget *parent, 
 {
     setupUi();
     setupController();
+    setupRuleManager();
 }
 
 FortManager *ProgramEditDialog::fortManager() const
@@ -66,6 +68,11 @@ FortManager *ProgramEditDialog::fortManager() const
 ConfAppManager *ProgramEditDialog::confAppManager() const
 {
     return ctrl()->confAppManager();
+}
+
+ConfRuleManager *ProgramEditDialog::confRuleManager() const
+{
+    return ctrl()->confRuleManager();
 }
 
 ConfManager *ProgramEditDialog::confManager() const
@@ -180,7 +187,7 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection)
 
 void ProgramEditDialog::initializeRuleField(bool isSingleSelection)
 {
-    VariantUtil::setUserData(m_editRuleName, m_appRow.ruleId);
+    setCurrentRuleId(m_appRow.ruleId);
 
     m_editRuleName->setStartText(isSingleSelection ? m_appRow.ruleName : QString());
     m_editRuleName->setEnabled(isSingleSelection);
@@ -226,6 +233,24 @@ void ProgramEditDialog::setAdvancedMode(bool on)
 void ProgramEditDialog::setupController()
 {
     connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramEditDialog::retranslateUi);
+}
+
+void ProgramEditDialog::setupRuleManager()
+{
+    connect(confRuleManager(), &ConfRuleManager::ruleRemoved, this, [&](int ruleId) {
+        if (ruleId == currentRuleId()) {
+            setCurrentRuleId();
+            m_editRuleName->clear();
+        }
+    });
+
+    connect(confRuleManager(), &ConfRuleManager::ruleUpdated, this, [&](int ruleId) {
+        if (ruleId == currentRuleId()) {
+            const auto ruleRow = RuleListModel().ruleRowById(ruleId, Rule::AppRule);
+
+            m_editRuleName->setStartText(ruleRow.ruleName);
+        }
+    });
 }
 
 void ProgramEditDialog::retranslateUi()
@@ -638,13 +663,13 @@ QLayout *ProgramEditDialog::setupRuleLayout()
 
     connect(m_editRuleName, &QLineEdit::textEdited, this, [&](const QString &text) {
         if (text.isEmpty()) {
-            VariantUtil::setUserData(m_editRuleName);
+            setCurrentRuleId();
         }
     });
 
     // Select Rule
     m_btSelectRule = ControlUtil::createIconToolButton(":/icons/script.png", [&] {
-        const int ruleId = VariantUtil::userData(m_editRuleName).toInt();
+        const int ruleId = currentRuleId();
         if (ruleId != 0) {
             editRuleDialog(ruleId);
         } else {
@@ -824,7 +849,7 @@ bool ProgramEditDialog::saveApp(App &app)
 
 bool ProgramEditDialog::saveMulti(App &app)
 {
-    for (qint64 appId : m_appIdList) {
+    for (qint64 appId : std::as_const(m_appIdList)) {
         const auto appRow = appListModel()->appRowById(appId);
 
         app.appId = appId;
@@ -871,7 +896,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.blocked = !m_rbAllow->isChecked();
     app.killProcess = m_rbKillProcess->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
-    app.ruleId = VariantUtil::userData(m_editRuleName).toInt();
+    app.ruleId = currentRuleId();
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();
 
@@ -949,7 +974,7 @@ void ProgramEditDialog::selectRuleDialog()
     auto rulesDialog = RulesWindow::showRulesDialog(Rule::AppRule, this);
 
     connect(rulesDialog, &RulesWindow::ruleSelected, this, [&](const RuleRow &ruleRow) {
-        VariantUtil::setUserData(m_editRuleName, ruleRow.ruleId);
+        setCurrentRuleId(ruleRow.ruleId);
         m_editRuleName->setStartText(ruleRow.ruleName);
     });
 }

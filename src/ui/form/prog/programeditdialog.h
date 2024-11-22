@@ -5,6 +5,7 @@
 #include <model/applistmodel.h>
 
 class ConfAppManager;
+class ConfRuleManager;
 class ConfManager;
 class FirewallConf;
 class FortManager;
@@ -27,6 +28,7 @@ public:
     ProgramsController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     ConfAppManager *confAppManager() const;
+    ConfRuleManager *confRuleManager() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;
     IniUser *iniUser() const;
@@ -41,6 +43,9 @@ protected:
     virtual void closeOnSave();
 
     void setAdvancedMode(bool on);
+
+    int currentRuleId() const { return m_currentRuleId; }
+    void setCurrentRuleId(int ruleId = 0) { m_currentRuleId = ruleId; }
 
 private:
     enum ApplyChildType : qint8 {
@@ -59,6 +64,7 @@ private:
     QIcon appIcon(bool isSingleSelection) const;
 
     void setupController();
+    void setupRuleManager();
 
     void retranslateUi();
     void retranslatePathPlaceholderText();
@@ -113,6 +119,8 @@ private:
     void warnRestartNeededOption() const;
 
 private:
+    int m_currentRuleId = 0;
+
     ProgramsController *m_ctrl = nullptr;
 
     QLabel *m_labelEditPath = nullptr;

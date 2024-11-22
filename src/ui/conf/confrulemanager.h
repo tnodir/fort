@@ -45,7 +45,7 @@ public:
 signals:
     void ruleAdded();
     void ruleRemoved(int ruleId);
-    void ruleUpdated();
+    void ruleUpdated(int ruleId);
 
 private:
     void walkRulesMap(WalkRulesArgs &wra) const;
