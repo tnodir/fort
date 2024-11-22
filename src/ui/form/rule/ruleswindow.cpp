@@ -346,7 +346,8 @@ void RulesWindow::addNewRule()
     const auto ruleIndex = ruleListCurrentIndex();
 
     RuleRow ruleRow;
-    ruleRow.ruleType = RuleListModel::indexRuleType(ruleIndex);
+    ruleRow.ruleType =
+            (ruleType() != Rule::RuleNone) ? ruleType() : RuleListModel::indexRuleType(ruleIndex);
 
     openRuleEditForm(ruleRow);
 }
