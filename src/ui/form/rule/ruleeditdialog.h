@@ -73,6 +73,7 @@ private:
     void fillRule(Rule &rule) const;
 
     void selectPresetRuleDialog();
+    void editCurrentPresetRuleDialog();
 
 private:
     RulesController *m_ctrl = nullptr;
@@ -92,6 +93,7 @@ private:
     PlainTextEdit *m_editRuleText = nullptr;
     QToolButton *m_btAddPresetRule = nullptr;
     QToolButton *m_btRemovePresetRule = nullptr;
+    QToolButton *m_btEditPresetRule = nullptr;
     QToolButton *m_btUpPresetRule = nullptr;
     QToolButton *m_btDownPresetRule = nullptr;
     ListView *m_ruleSetView = nullptr;

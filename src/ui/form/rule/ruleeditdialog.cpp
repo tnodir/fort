@@ -129,6 +129,7 @@ void RuleEditDialog::retranslateUi()
 
     m_btAddPresetRule->setText(tr("Add Preset Rule"));
     m_btRemovePresetRule->setText(tr("Remove"));
+    m_btEditPresetRule->setText(tr("Edit"));
     m_btUpPresetRule->setToolTip(tr("Move Up"));
     m_btDownPresetRule->setToolTip(tr("Move Down"));
 
@@ -295,14 +296,16 @@ QLayout *RuleEditDialog::setupRuleSetHeaderLayout()
             ControlUtil::createFlatToolButton(":/icons/add.png", [&] { selectPresetRuleDialog(); });
     m_btRemovePresetRule = ControlUtil::createFlatToolButton(
             ":/icons/delete.png", [&] { ruleSetModel()->remove(ruleSetCurrentIndex()); });
+    m_btEditPresetRule = ControlUtil::createFlatToolButton(
+            ":/icons/pencil.png", [&] { editCurrentPresetRuleDialog(); });
     m_btUpPresetRule = ControlUtil::createIconToolButton(
             ":/icons/bullet_arrow_up.png", [&] { ruleSetModel()->moveUp(ruleSetCurrentIndex()); });
     m_btDownPresetRule = ControlUtil::createIconToolButton(":/icons/bullet_arrow_down.png",
             [&] { ruleSetModel()->moveDown(ruleSetCurrentIndex()); });
 
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btAddPresetRule, m_btRemovePresetRule, ControlUtil::createVSeparator(),
-                    m_btUpPresetRule, m_btDownPresetRule, /*stretch*/ nullptr });
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btAddPresetRule, m_btRemovePresetRule,
+            m_btEditPresetRule, ControlUtil::createVSeparator(), m_btUpPresetRule,
+            m_btDownPresetRule, /*stretch*/ nullptr });
 
     return layout;
 }
@@ -316,6 +319,8 @@ void RuleEditDialog::setupRuleSetView()
     m_ruleSetView->setAlternatingRowColors(true);
 
     m_ruleSetView->setModel(ruleSetModel());
+
+    connect(m_ruleSetView, &ListView::doubleClicked, m_btEditPresetRule, &QToolButton::click);
 
     connect(ruleSetModel(), &RuleSetModel::rowCountChanged, this,
             &RuleEditDialog::updateRuleSetViewVisible);
@@ -347,6 +352,7 @@ void RuleEditDialog::setupRuleSetViewChanged()
     const auto refreshRuleSetViewChanged = [&] {
         const bool ruleSelected = (ruleSetCurrentIndex() >= 0);
         m_btRemovePresetRule->setEnabled(ruleSelected);
+        m_btEditPresetRule->setEnabled(ruleSelected);
         m_btUpPresetRule->setEnabled(ruleSelected);
         m_btDownPresetRule->setEnabled(ruleSelected);
     };
@@ -480,4 +486,11 @@ void RuleEditDialog::selectPresetRuleDialog()
     auto rulesDialog = RulesWindow::showRulesDialog(Rule::PresetRule, this);
 
     connect(rulesDialog, &RulesWindow::ruleSelected, ruleSetModel(), &RuleSetModel::addRule);
+}
+
+void RuleEditDialog::editCurrentPresetRuleDialog()
+{
+    const int ruleId = ruleSetModel()->ruleSet().value(ruleSetCurrentIndex());
+
+    RulesWindow::showRuleEditDialog(ruleId, Rule::PresetRule, this);
 }
