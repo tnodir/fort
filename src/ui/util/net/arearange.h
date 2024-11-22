@@ -22,6 +22,8 @@ public:
 
     void toList(QStringList &list) const override;
 
+    void write(ConfData &confData) const override;
+
 protected:
     TextRange::ParseError parseText(const QString &text);
 

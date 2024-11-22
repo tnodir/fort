@@ -1,30 +1,12 @@
 #ifndef CONFDATARULE_H
 #define CONFDATARULE_H
 
-#include "confdata.h"
+#include <util/net/valuerange.h>
 
-class AreaRange;
-class DirRange;
-class ProfileRange;
-class PortRange;
-class ProtoRange;
-class ValueRange;
-
-class ConfDataRule : public ConfData
+class ConfDataRule
 {
 public:
-    explicit ConfDataRule(void *data);
-
-    void writeRange(const ValueRange *range, qint8 type);
-
     static ValueRange *createRangeByType(qint8 type);
-
-private:
-    void writePortRange(const PortRange &portRange);
-    void writeProtoRange(const ProtoRange &protoRange);
-    void writeDirRange(const DirRange &dirRange);
-    void writeAreaRange(const AreaRange &areaRange);
-    void writeProfileRange(const ProfileRange &profileRange);
 };
 
 #endif // CONFDATARULE_H

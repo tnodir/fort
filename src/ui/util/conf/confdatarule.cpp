@@ -35,96 +35,23 @@ RangeType g_filterRangeTypes[] = {
     RangeTypePort, // FORT_RULE_FILTER_TYPE_PORT_UDP,
 };
 
+template<class T>
+ValueRange *createRange()
+{
+    return new T();
 }
 
-ConfDataRule::ConfDataRule(void *data) : ConfData(data) { }
+using createRange_func = ValueRange *(*) (void);
 
-void ConfDataRule::writeRange(const ValueRange *range, qint8 type)
-{
-    Q_ASSERT(type >= 0 && type < std::size(g_filterRangeTypes));
+static const createRange_func createRange_funcList[] = {
+    &createRange<IpRange>, // RangeTypeIp
+    &createRange<PortRange>, // RangeTypePort
+    &createRange<ProtoRange>, // RangeTypeProto
+    &createRange<DirRange>, // RangeTypeDir
+    &createRange<AreaRange>, // RangeTypeArea
+    &createRange<ProfileRange>, // RangeTypeProfile
+};
 
-    const RangeType rangeType = g_filterRangeTypes[type];
-
-    switch (rangeType) {
-    case RangeTypeIp: {
-        writeAddressList(*static_cast<const IpRange *>(range));
-    } break;
-    case RangeTypePort: {
-        writePortRange(*static_cast<const PortRange *>(range));
-    } break;
-    case RangeTypeProto: {
-        writeProtoRange(*static_cast<const ProtoRange *>(range));
-    } break;
-    case RangeTypeDir: {
-        writeDirRange(*static_cast<const DirRange *>(range));
-    } break;
-    case RangeTypeArea: {
-        writeAreaRange(*static_cast<const AreaRange *>(range));
-    } break;
-    case RangeTypeProfile: {
-        writeProfileRange(*static_cast<const ProfileRange *>(range));
-    } break;
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
-void ConfDataRule::writePortRange(const PortRange &portRange)
-{
-    PFORT_CONF_PORT_LIST portList = PFORT_CONF_PORT_LIST(m_data);
-
-    portList->port_n = quint8(portRange.portSize());
-    portList->pair_n = quint8(portRange.pairSize());
-
-    m_data += FORT_CONF_PORT_LIST_OFF;
-
-    writeShorts(portRange.portArray());
-    writeShorts(portRange.pairFromArray());
-    writeShorts(portRange.pairToArray());
-}
-
-void ConfDataRule::writeProtoRange(const ProtoRange &protoRange)
-{
-    PFORT_CONF_PROTO_LIST protoList = PFORT_CONF_PROTO_LIST(m_data);
-
-    protoList->proto_n = quint8(protoRange.protoSize());
-    protoList->pair_n = quint8(protoRange.pairSize());
-
-    m_data += FORT_CONF_PROTO_LIST_OFF;
-
-    writeBytes(protoRange.protoArray());
-    writeBytes(protoRange.pairFromArray());
-    writeBytes(protoRange.pairToArray());
-}
-
-void ConfDataRule::writeDirRange(const DirRange &dirRange)
-{
-    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
-
-    filter->flags = (dirRange.isIn() ? FORT_RULE_FILTER_DIRECTION_IN : 0)
-            | (dirRange.isOut() ? FORT_RULE_FILTER_DIRECTION_OUT : 0);
-
-    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
-}
-
-void ConfDataRule::writeAreaRange(const AreaRange &areaRange)
-{
-    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
-
-    filter->flags = (areaRange.isLocalhost() ? FORT_RULE_FILTER_AREA_LOCALHOST : 0)
-            | (areaRange.isLan() ? FORT_RULE_FILTER_AREA_LAN : 0)
-            | (areaRange.isInet() ? FORT_RULE_FILTER_AREA_INET : 0);
-
-    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
-}
-
-void ConfDataRule::writeProfileRange(const ProfileRange &profileRange)
-{
-    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
-
-    filter->flags = profileRange.profileId();
-
-    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
 }
 
 ValueRange *ConfDataRule::createRangeByType(qint8 type)
@@ -133,21 +60,7 @@ ValueRange *ConfDataRule::createRangeByType(qint8 type)
 
     const RangeType rangeType = g_filterRangeTypes[type];
 
-    switch (rangeType) {
-    case RangeTypeIp:
-        return new IpRange();
-    case RangeTypePort:
-        return new PortRange();
-    case RangeTypeProto:
-        return new ProtoRange();
-    case RangeTypeDir:
-        return new DirRange();
-    case RangeTypeArea:
-        return new AreaRange();
-    case RangeTypeProfile:
-        return new ProfileRange();
-    default:
-        Q_UNREACHABLE();
-        return nullptr;
-    }
+    const createRange_func func = createRange_funcList[rangeType];
+
+    return func();
 }

@@ -1,5 +1,7 @@
 #include "arearange.h"
 
+#include <util/conf/confdata.h>
+
 AreaRange::AreaRange(QObject *parent) : TextRange(parent) { }
 
 bool AreaRange::isEmpty() const
@@ -42,4 +44,9 @@ TextRange::ParseError AreaRange::parseText(const QString &text)
     }
 
     return ErrorOk;
+}
+
+void AreaRange::write(ConfData &confData) const
+{
+    confData.writeAreaRange(*this);
 }

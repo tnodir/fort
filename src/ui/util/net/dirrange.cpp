@@ -1,5 +1,7 @@
 #include "dirrange.h"
 
+#include <util/conf/confdata.h>
+
 DirRange::DirRange(QObject *parent) : TextRange(parent) { }
 
 bool DirRange::isEmpty() const
@@ -36,4 +38,9 @@ TextRange::ParseError DirRange::parseText(const QString &text)
     }
 
     return ErrorOk;
+}
+
+void DirRange::write(ConfData &confData) const
+{
+    confData.writeDirRange(*this);
 }

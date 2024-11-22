@@ -2,6 +2,12 @@
 
 #include <conf/appgroup.h>
 #include <conf/firewallconf.h>
+#include <util/net/arearange.h>
+#include <util/net/dirrange.h>
+#include <util/net/iprange.h>
+#include <util/net/portrange.h>
+#include <util/net/profilerange.h>
+#include <util/net/protorange.h>
 
 namespace {
 
@@ -216,6 +222,64 @@ void ConfData::writeIpRange(const IpRange &ipRange, bool isIPv6)
         writeLongs(ipRange.pair4FromArray());
         writeLongs(ipRange.pair4ToArray());
     }
+}
+
+void ConfData::writePortRange(const PortRange &portRange)
+{
+    PFORT_CONF_PORT_LIST portList = PFORT_CONF_PORT_LIST(m_data);
+
+    portList->port_n = quint8(portRange.portSize());
+    portList->pair_n = quint8(portRange.pairSize());
+
+    m_data += FORT_CONF_PORT_LIST_OFF;
+
+    writeShorts(portRange.portArray());
+    writeShorts(portRange.pairFromArray());
+    writeShorts(portRange.pairToArray());
+}
+
+void ConfData::writeProtoRange(const ProtoRange &protoRange)
+{
+    PFORT_CONF_PROTO_LIST protoList = PFORT_CONF_PROTO_LIST(m_data);
+
+    protoList->proto_n = quint8(protoRange.protoSize());
+    protoList->pair_n = quint8(protoRange.pairSize());
+
+    m_data += FORT_CONF_PROTO_LIST_OFF;
+
+    writeBytes(protoRange.protoArray());
+    writeBytes(protoRange.pairFromArray());
+    writeBytes(protoRange.pairToArray());
+}
+
+void ConfData::writeDirRange(const DirRange &dirRange)
+{
+    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
+
+    filter->flags = (dirRange.isIn() ? FORT_RULE_FILTER_DIRECTION_IN : 0)
+            | (dirRange.isOut() ? FORT_RULE_FILTER_DIRECTION_OUT : 0);
+
+    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
+}
+
+void ConfData::writeAreaRange(const AreaRange &areaRange)
+{
+    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
+
+    filter->flags = (areaRange.isLocalhost() ? FORT_RULE_FILTER_AREA_LOCALHOST : 0)
+            | (areaRange.isLan() ? FORT_RULE_FILTER_AREA_LAN : 0)
+            | (areaRange.isInet() ? FORT_RULE_FILTER_AREA_INET : 0);
+
+    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
+}
+
+void ConfData::writeProfileRange(const ProfileRange &profileRange)
+{
+    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
+
+    filter->flags = profileRange.profileId();
+
+    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
 }
 
 void ConfData::writeApps(const appdata_map_t &appsMap, bool useHeader)

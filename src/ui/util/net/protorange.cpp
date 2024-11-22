@@ -2,6 +2,7 @@
 
 #include <common/fortconf.h>
 
+#include <util/conf/confdata.h>
 #include <util/net/netutil.h>
 #include <util/stringutil.h>
 
@@ -143,4 +144,9 @@ bool ProtoRange::parseProtoNumber(const QStringView proto, proto_t &v)
         setErrorDetails(QString("Protocol='%1'").arg(proto));
     }
     return ok;
+}
+
+void ProtoRange::write(ConfData &confData) const
+{
+    confData.writeProtoRange(*this);
 }

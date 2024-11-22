@@ -2,6 +2,7 @@
 
 #include <common/fortconf.h>
 
+#include <util/conf/confdata.h>
 #include <util/stringutil.h>
 
 #include "netformatutil.h"
@@ -335,4 +336,9 @@ IpRange::ParseError IpRange::parseIp6AddressMaskPrefix(
     hasMask = true;
 
     return ErrorOk;
+}
+
+void IpRange::write(ConfData &confData) const
+{
+    confData.writeAddressList(*this);
 }

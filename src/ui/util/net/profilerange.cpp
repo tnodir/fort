@@ -2,6 +2,8 @@
 
 #include <common/fortconf.h>
 
+#include <util/conf/confdata.h>
+
 ProfileRange::ProfileRange(QObject *parent) : TextRange(parent) { }
 
 bool ProfileRange::isEmpty() const
@@ -42,4 +44,9 @@ TextRange::ParseError ProfileRange::parseText(const QString &text)
     }
 
     return ErrorOk;
+}
+
+void ProfileRange::write(ConfData &confData) const
+{
+    confData.writeProfileRange(*this);
 }

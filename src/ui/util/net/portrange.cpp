@@ -2,6 +2,7 @@
 
 #include <common/fortconf.h>
 
+#include <util/conf/confdata.h>
 #include <util/net/netutil.h>
 #include <util/stringutil.h>
 
@@ -144,4 +145,9 @@ bool PortRange::parsePortNumber(const QStringView port, port_t &v)
         setErrorDetails(QString("Port='%1'").arg(port));
     }
     return ok;
+}
+
+void PortRange::write(ConfData &confData) const
+{
+    confData.writePortRange(*this);
 }

@@ -7,6 +7,8 @@
 
 #include <util/util_types.h>
 
+class ConfData;
+
 template<typename T>
 struct ValuePair
 {
@@ -38,6 +40,8 @@ public:
 
     bool fromText(const QString &text);
     virtual bool fromList(const StringViewList &list, bool sort = true) = 0;
+
+    virtual void write(ConfData &confData) const = 0;
 
 protected:
     void setErrorLineNo(int lineNo) { m_errorLineNo = lineNo; }

@@ -48,6 +48,8 @@ public:
 
     bool fromList(const StringViewList &list, bool sort = true) override;
 
+    void write(ConfData &confData) const override;
+
 private:
     enum ParseError {
         ErrorOk = 0,

@@ -9,7 +9,13 @@
 #include "appparseoptions.h"
 #include "conf_types.h"
 
+class AreaRange;
+class DirRange;
 class FirewallConf;
+class PortRange;
+class ProfileRange;
+class ProtoRange;
+class ValueRange;
 
 struct ParseAddressGroupsArgs
 {
@@ -43,6 +49,12 @@ public:
 
     void writeAddressList(const IpRange &ipRange);
     void writeIpRange(const IpRange &ipRange, bool isIPv6 = false);
+
+    void writePortRange(const PortRange &portRange);
+    void writeProtoRange(const ProtoRange &protoRange);
+    void writeDirRange(const DirRange &dirRange);
+    void writeAreaRange(const AreaRange &areaRange);
+    void writeProfileRange(const ProfileRange &profileRange);
 
     void writeApps(const appdata_map_t &appsMap, bool useHeader = false);
 
