@@ -558,7 +558,7 @@ static fort_conf_rule_filter_check_port_protocol(
     if (conn->ip_proto != proto)
         return FALSE;
 
-    return fort_conf_port_inlist(conn->remote_port, data);
+    return fort_conf_rule_filter_check_port(conn, data);
 }
 
 static fort_conf_rule_filter_check_port_tcp(PCFORT_CONF_META_CONN conn, const void *data)
