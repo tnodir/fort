@@ -250,7 +250,6 @@ typedef struct fort_conf_meta_conn
     UINT16 is_reauth : 1;
     UINT16 inbound : 1;
     UINT16 isIPv6 : 1;
-    UINT16 is_tcp : 1;
     UINT16 profile_id : 2;
     UINT16 is_loopback : 1;
     UINT16 is_broadcast : 1;

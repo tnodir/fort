@@ -304,7 +304,7 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, UINT64 flow_id, PCFORT_CONF_META_
 
     const UCHAR speed_limit = fort_stat_group_speed_limit(&stat->conf_group, group_index);
 
-    flow->opt.flags = speed_limit | (conn->is_tcp ? FORT_FLOW_TCP : 0)
+    flow->opt.flags = speed_limit | (conn->ip_proto == IPPROTO_TCP ? FORT_FLOW_TCP : 0)
             | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0);
     flow->opt.group_index = group_index;
     flow->opt.proc_index = proc_index;
