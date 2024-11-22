@@ -58,6 +58,7 @@ private:
     QLayout *setupButtons();
     void setupRuleSetViewChanged();
 
+    void updateZonesLayout();
     void updateRuleSetViewVisible();
 
     int ruleSetCurrentIndex() const;

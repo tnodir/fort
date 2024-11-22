@@ -79,6 +79,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 
     m_btZones->setZones(ruleRow.acceptZones);
     m_btZones->setUncheckedZones(ruleRow.rejectZones);
+    updateZonesLayout();
 
     initializeFocus();
 }
@@ -263,6 +264,8 @@ QLayout *RuleEditDialog::setupActionsLayout()
     m_rbAllow->setIcon(IconCache::icon(":/icons/accept.png"));
     m_rbAllow->setChecked(true);
 
+    connect(m_rbAllow, &QRadioButton::toggled, this, &RuleEditDialog::updateZonesLayout);
+
     // Block
     m_rbBlock = new QRadioButton();
     m_rbBlock->setIcon(IconCache::icon(":/icons/deny.png"));
@@ -360,6 +363,13 @@ void RuleEditDialog::setupRuleSetViewChanged()
     refreshRuleSetViewChanged();
 
     connect(m_ruleSetView, &ListView::currentIndexChanged, this, refreshRuleSetViewChanged);
+}
+
+void RuleEditDialog::updateZonesLayout()
+{
+    const bool enabled = m_rbAllow->isChecked();
+
+    m_cbExclusive->setEnabled(enabled);
 }
 
 void RuleEditDialog::updateRuleSetViewVisible()
