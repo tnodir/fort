@@ -301,6 +301,8 @@ bool RuleTextParser::parseName()
         { "profile", FORT_RULE_FILTER_TYPE_PROFILE },
         { "tcp", FORT_RULE_FILTER_TYPE_PORT_TCP },
         { "udp", FORT_RULE_FILTER_TYPE_PORT_UDP },
+        { "icmp_type", FORT_RULE_FILTER_TYPE_LOCAL_PORT },
+        { "icmp_code", FORT_RULE_FILTER_TYPE_PORT },
     };
 
     const QStringView nameView(name, currentCharPtr() - name);
