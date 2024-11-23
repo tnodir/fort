@@ -1762,6 +1762,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Global rules count exceeded!</source>
         <translation>Število globalnih pravil je preseženo!</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation>Uredi</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

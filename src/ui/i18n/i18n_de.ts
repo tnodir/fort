@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Too many values</source>
-        <translation type="unfinished"></translation>
+        <translation>Zu viele Werte</translation>
     </message>
 </context>
 <context>
@@ -424,15 +424,15 @@
     </message>
     <message>
         <source>Restrict access by Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>Zugriff nach Regel einschränken</translation>
     </message>
     <message>
         <source>Restrict access by Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Zugriff durch globale Regel vor App-Regeln einschränken</translation>
     </message>
     <message>
         <source>Restrict access by Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Zugriff durch globale Regel nach App-Regeln einschränken</translation>
     </message>
 </context>
 <context>
@@ -1761,6 +1761,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Global rules count exceeded!</source>
         <translation>Anzahl globaler Regeln überschritten!</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Bearbeiten</translation>
     </message>
 </context>
 <context>

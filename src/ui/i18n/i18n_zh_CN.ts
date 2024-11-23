@@ -1762,6 +1762,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Global rules count exceeded!</source>
         <translation>全局规则数量已超限！</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation>编辑</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

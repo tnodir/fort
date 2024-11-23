@@ -1762,6 +1762,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Global rules count exceeded!</source>
         <translation>Conteggio regole globali superato!</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation>Modifica</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

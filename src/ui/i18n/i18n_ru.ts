@@ -1762,6 +1762,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Global rules count exceeded!</source>
         <translation>Превышено количество глобальных правил!</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

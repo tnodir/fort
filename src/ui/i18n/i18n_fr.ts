@@ -1762,6 +1762,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Global rules count exceeded!</source>
         <translation>Nombre de règles globales dépassé!</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation>Éditer</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

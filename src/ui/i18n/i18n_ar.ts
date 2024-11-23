@@ -1762,6 +1762,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Global rules count exceeded!</source>
         <translation>عدد القواعد العامة تجاوز الحد الأقصى!</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation>تعديل</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

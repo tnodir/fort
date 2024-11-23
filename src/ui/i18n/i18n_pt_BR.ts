@@ -1760,6 +1760,10 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <source>Global rules count exceeded!</source>
         <translation>Contagem de regras globais excedida!</translation>
     </message>
+    <message>
+        <source>Edit</source>
+        <translation>Editar</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
