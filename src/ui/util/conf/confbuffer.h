@@ -52,6 +52,8 @@ public slots:
     bool writeRules(const ConfRulesWalker &confRulesWalker);
     void writeRuleFlag(int ruleId, bool enabled);
 
+    bool validateRuleText(const QString &ruleText);
+
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }
 

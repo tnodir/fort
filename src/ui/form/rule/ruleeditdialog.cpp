@@ -18,8 +18,8 @@
 #include <form/controls/zonesselector.h>
 #include <manager/windowmanager.h>
 #include <model/rulesetmodel.h>
+#include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
-#include <util/conf/ruletextparser.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 
@@ -392,12 +392,12 @@ bool RuleEditDialog::save()
     Rule rule;
     fillRule(rule);
 
-    // Add new zone
+    // Add new rule
     if (isEmpty()) {
         return ctrl()->addOrUpdateRule(rule);
     }
 
-    // Edit selected zone
+    // Edit selected rule
     return saveRule(rule);
 }
 
@@ -461,9 +461,9 @@ bool RuleEditDialog::validateEditRuleText() const
 {
     const auto ruleText = m_editRuleText->toPlainText();
     if (!ruleText.isEmpty()) {
-        RuleTextParser parser(ruleText);
-        if (!parser.parse()) {
-            windowManager()->showErrorBox(parser.errorMessage());
+        ConfBuffer confBuf;
+        if (!confBuf.validateRuleText(ruleText)) {
+            windowManager()->showErrorBox(confBuf.errorMessage());
             m_editRuleText->setFocus();
             return false;
         }

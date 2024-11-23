@@ -560,6 +560,12 @@ void ConfBuffer::writeRuleFlag(int ruleId, bool enabled)
     confRuleFlag->enabled = enabled;
 }
 
+bool ConfBuffer::validateRuleText(const QString &ruleText)
+{
+    int filtersCount;
+    return writeRuleText(ruleText, filtersCount);
+}
+
 bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
 {
     const int ruleId = rule.ruleId;
