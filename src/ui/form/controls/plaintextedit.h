@@ -12,8 +12,16 @@ public:
 
     bool isEmpty() const;
 
+    void addMenuAction(QAction *a) { return m_menuActions.append(a); }
+
 public slots:
     void setText(const QString &text);
+
+protected:
+    void contextMenuEvent(QContextMenuEvent *e) override;
+
+private:
+    QList<QAction *> m_menuActions;
 };
 
 #endif // PLAINTEXTEDIT_H

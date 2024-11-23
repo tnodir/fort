@@ -16,6 +16,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/plaintextedit.h>
 #include <form/opt/optionscontroller.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
@@ -25,6 +26,7 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
+#include <util/textareautil.h>
 
 namespace {
 
@@ -147,6 +149,7 @@ void OptionsPage::onRetranslateUi()
     m_cbFilterLocalNet->setText(tr("Filter Local Network"));
 
     m_labelLanText->setText(tr("Local Network Addresses:"));
+    m_actAddLanText->setText(tr("Add Local Networks"));
     retranslateEditLanPlaceholderText();
 }
 
@@ -484,37 +487,34 @@ void OptionsPage::setupLanBox()
         ctrl()->setFlagsEdited();
     });
 
-    // LAN Header Layout
-    auto lanHeaderLayout = setupLanHeaderLayout();
-
     // Edit LAN Text
     setupEditLanText();
 
     // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbFilterLocals, m_cbFilterLocalNet, ControlUtil::createHSeparator() });
-    layout->addLayout(lanHeaderLayout);
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbFilterLocals, m_cbFilterLocalNet,
+            ControlUtil::createHSeparator(), m_labelLanText });
     layout->addWidget(m_editLanText, 1);
 
     m_gbLan = new QGroupBox();
     m_gbLan->setLayout(layout);
 }
 
-QLayout *OptionsPage::setupLanHeaderLayout()
-{
-    m_labelLanText = ControlUtil::createLabel();
-
-    // Layout
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_labelLanText });
-
-    return layout;
-}
-
 void OptionsPage::setupEditLanText()
 {
-    m_editLanText = new QPlainTextEdit();
+    // LAN Label
+    m_labelLanText = ControlUtil::createLabel();
 
-    m_editLanText->setPlainText(conf()->lanText());
+    // Add LAN Text Action
+    m_actAddLanText = new QAction(IconCache::icon(":/icons/hostname.png"), QString(), this);
+
+    connect(m_actAddLanText, &QAction::triggered, this,
+            [&] { TextAreaUtil::appendText(m_editLanText, NetUtil::localIpNetworksText()); });
+
+    // Edit LAN Text
+    m_editLanText = new PlainTextEdit();
+
+    m_editLanText->addMenuAction(m_actAddLanText);
+    m_editLanText->setText(conf()->lanText());
 
     connect(m_editLanText, &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_editLanText->toPlainText();

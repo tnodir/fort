@@ -1,5 +1,8 @@
 #include "plaintextedit.h"
 
+#include <QContextMenuEvent>
+#include <QMenu>
+
 PlainTextEdit::PlainTextEdit(QWidget *parent) : QPlainTextEdit(parent)
 {
     setTabChangesFocus(true);
@@ -16,4 +19,19 @@ void PlainTextEdit::setText(const QString &text)
         return; // Workaround to show placeholder text on startup
 
     setPlainText(text);
+}
+
+void PlainTextEdit::contextMenuEvent(QContextMenuEvent *e)
+{
+    if (m_menuActions.isEmpty()) {
+        QPlainTextEdit::contextMenuEvent(e);
+        return;
+    }
+
+    QMenu *menu = createStandardContextMenu();
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+
+    menu->addActions(m_menuActions);
+
+    menu->popup(e->globalPos());
 }

@@ -3,6 +3,8 @@
 
 #include "optbasepage.h"
 
+class PlainTextEdit;
+
 class OptionsPage : public OptBasePage
 {
     Q_OBJECT
@@ -44,7 +46,6 @@ private:
     void setupProgBox();
     void setupLogBlocked();
     void setupLanBox();
-    QLayout *setupLanHeaderLayout();
     void setupEditLanText();
 
 private:
@@ -85,7 +86,8 @@ private:
     QCheckBox *m_cbFilterLocalNet = nullptr;
 
     QLabel *m_labelLanText = nullptr;
-    QPlainTextEdit *m_editLanText = nullptr;
+    QAction *m_actAddLanText = nullptr;
+    PlainTextEdit *m_editLanText = nullptr;
 };
 
 #endif // OPTIONSPAGE_H
