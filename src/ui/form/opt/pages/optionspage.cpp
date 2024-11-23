@@ -67,6 +67,9 @@ void OptionsPage::onResetToDefault()
     m_cbUpdateAutoDownload->setChecked(false);
     m_cbUpdateAutoInstall->setChecked(false);
 
+    m_cbLogDebug->setChecked(false);
+    m_cbLogConsole->setChecked(false);
+
     m_cbLogBlocked->setChecked(true);
     m_cbPurgeOnMounted->setChecked(false);
 
@@ -74,9 +77,6 @@ void OptionsPage::onResetToDefault()
     m_cbFilterLocalNet->setChecked(false);
 
     m_editLanText->setPlainText(NetUtil::localIpNetworksText());
-
-    m_cbLogDebug->setChecked(false);
-    m_cbLogConsole->setChecked(false);
 }
 
 void OptionsPage::onAboutToSave()
@@ -108,9 +108,9 @@ void OptionsPage::onRetranslateUi()
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbProtection->setTitle(tr("Self Protection"));
     m_gbUpdate->setTitle(tr("Auto Update"));
+    m_gbLogs->setTitle(tr("Logs"));
     m_gbProg->setTitle(tr("Programs"));
     m_gbLan->setTitle(tr("Local Area Network"));
-    m_gbLogs->setTitle(tr("Logs"));
 
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
 
@@ -135,6 +135,9 @@ void OptionsPage::onRetranslateUi()
     m_cbUpdateAutoDownload->setText(tr("Auto-download new version"));
     m_cbUpdateAutoInstall->setText(tr("Auto-install after download"));
 
+    m_cbLogDebug->setText(tr("Log debug messages"));
+    m_cbLogConsole->setText(tr("Show log messages in console"));
+
     m_cbLogBlocked->setText(tr("Collect New Programs"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
 
@@ -145,9 +148,6 @@ void OptionsPage::onRetranslateUi()
 
     m_labelLanText->setText(tr("Local Network Addresses:"));
     retranslateEditLanPlaceholderText();
-
-    m_cbLogDebug->setText(tr("Log debug messages"));
-    m_cbLogConsole->setText(tr("Show log messages in console"));
 }
 
 void OptionsPage::retranslateComboBlockTraffic()
@@ -204,11 +204,15 @@ QLayout *OptionsPage::setupColumn1()
     // Update Group Box
     setupUpdateBox();
 
+    // Logs Group Box
+    setupLogsBox();
+
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
     layout->addWidget(m_gbTraffic);
     layout->addWidget(m_gbProtection);
     layout->addWidget(m_gbUpdate);
+    layout->addWidget(m_gbLogs);
     layout->addStretch();
 
     return layout;
@@ -222,14 +226,10 @@ QLayout *OptionsPage::setupColumn2()
     // LAN Group Box
     setupLanBox();
 
-    // Logs Group Box
-    setupLogsBox();
-
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
     layout->addWidget(m_gbProg);
     layout->addWidget(m_gbLan, 1);
-    layout->addWidget(m_gbLogs);
     layout->addStretch();
 
     return layout;
@@ -421,6 +421,25 @@ void OptionsPage::setupUpdateBox()
     m_gbUpdate->setLayout(layout);
 }
 
+void OptionsPage::setupLogsBox()
+{
+    m_cbLogDebug = ControlUtil::createCheckBox(ini()->logDebug(), [&](bool checked) {
+        ini()->setLogDebug(checked);
+        ctrl()->setIniEdited();
+    });
+    m_cbLogConsole = ControlUtil::createCheckBox(ini()->logConsole(), [&](bool checked) {
+        ini()->setLogConsole(checked);
+        ctrl()->setIniEdited();
+    });
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbLogDebug);
+    layout->addWidget(m_cbLogConsole);
+
+    m_gbLogs = new QGroupBox();
+    m_gbLogs->setLayout(layout);
+}
+
 void OptionsPage::setupProgBox()
 {
     setupLogBlocked();
@@ -503,23 +522,4 @@ void OptionsPage::setupEditLanText()
         conf()->setLanText(text);
         ctrl()->setFlagsEdited();
     });
-}
-
-void OptionsPage::setupLogsBox()
-{
-    m_cbLogDebug = ControlUtil::createCheckBox(ini()->logDebug(), [&](bool checked) {
-        ini()->setLogDebug(checked);
-        ctrl()->setIniEdited();
-    });
-    m_cbLogConsole = ControlUtil::createCheckBox(ini()->logConsole(), [&](bool checked) {
-        ini()->setLogConsole(checked);
-        ctrl()->setIniEdited();
-    });
-
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbLogDebug);
-    layout->addWidget(m_cbLogConsole);
-
-    m_gbLogs = new QGroupBox();
-    m_gbLogs->setLayout(layout);
 }

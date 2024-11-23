@@ -40,12 +40,12 @@ private:
     void setupEditPassword();
     void setupPasswordLock();
     void setupUpdateBox();
+    void setupLogsBox();
     void setupProgBox();
     void setupLogBlocked();
     void setupLanBox();
     QLayout *setupLanHeaderLayout();
     void setupEditLanText();
-    void setupLogsBox();
 
 private:
     bool m_passwordEdited : 1 = false;
@@ -53,9 +53,9 @@ private:
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbProtection = nullptr;
     QGroupBox *m_gbUpdate = nullptr;
+    QGroupBox *m_gbLogs = nullptr;
     QGroupBox *m_gbProg = nullptr;
     QGroupBox *m_gbLan = nullptr;
-    QGroupBox *m_gbLogs = nullptr;
 
     QCheckBox *m_cbFilterEnabled = nullptr;
     QLabel *m_labelBlockTraffic = nullptr;
@@ -75,6 +75,9 @@ private:
     QCheckBox *m_cbUpdateAutoDownload = nullptr;
     QCheckBox *m_cbUpdateAutoInstall = nullptr;
 
+    QCheckBox *m_cbLogDebug = nullptr;
+    QCheckBox *m_cbLogConsole = nullptr;
+
     QCheckBox *m_cbLogBlocked = nullptr;
     QCheckBox *m_cbPurgeOnMounted = nullptr;
 
@@ -83,9 +86,6 @@ private:
 
     QLabel *m_labelLanText = nullptr;
     QPlainTextEdit *m_editLanText = nullptr;
-
-    QCheckBox *m_cbLogDebug = nullptr;
-    QCheckBox *m_cbLogConsole = nullptr;
 };
 
 #endif // OPTIONSPAGE_H
