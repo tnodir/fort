@@ -23,22 +23,15 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
-    void saveAutoRunMode(int mode);
-
-    void retranslateComboStartMode();
     void retranslateComboBlockTraffic();
     void retranslateComboFilterMode();
     void retranslateEditPassword();
     void retranslateEditLanPlaceholderText();
 
-    void setupStartup();
-
     void setupUi();
     QLayout *setupColumn1();
     QLayout *setupColumn2();
 
-    void setupStartupBox();
-    QLayout *setupStartModeLayout();
     void setupTrafficBox();
     QLayout *setupBlockTrafficLayout();
     QLayout *setupFilterModeLayout();
@@ -57,18 +50,12 @@ private:
 private:
     bool m_passwordEdited : 1 = false;
 
-    qint8 m_currentAutoRunMode = 0;
-
-    QGroupBox *m_gbStartup = nullptr;
     QGroupBox *m_gbTraffic = nullptr;
     QGroupBox *m_gbProtection = nullptr;
     QGroupBox *m_gbUpdate = nullptr;
     QGroupBox *m_gbProg = nullptr;
     QGroupBox *m_gbLan = nullptr;
     QGroupBox *m_gbLogs = nullptr;
-
-    QLabel *m_labelStartMode = nullptr;
-    QComboBox *m_comboAutoRun = nullptr;
 
     QCheckBox *m_cbFilterEnabled = nullptr;
     QLabel *m_labelBlockTraffic = nullptr;

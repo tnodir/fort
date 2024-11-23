@@ -34,11 +34,16 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
+    void saveAutoRunMode(int mode);
+
     void retranslateComboTheme();
     void retranslateComboStyle();
+    void retranslateComboAutoRun();
     void retranslateComboHotKey();
     void retranslateComboTrayEvent();
     void retranslateComboTrayAction();
+
+    void setupAutoRun();
 
     void setupUi();
     QLayout *setupColumn1();
@@ -49,6 +54,7 @@ private:
     void setupComboLanguage();
     QLayout *setupThemeLayout();
     QLayout *setupStyleLayout();
+    QLayout *setupAutoRunLayout();
     void setupHotKeysBox();
     void refreshEditShortcut();
     QLayout *setupComboHotKeyLayout();
@@ -74,6 +80,8 @@ private:
     bool m_themeEdited : 1 = false;
     bool m_styleEdited : 1 = false;
 
+    qint8 m_currentAutoRunMode = 0;
+
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
     QGroupBox *m_gbHome = nullptr;
@@ -90,6 +98,9 @@ private:
     QCheckBox *m_cbUseSystemLocale = nullptr;
     QCheckBox *m_cbExcludeCapture = nullptr;
     QCheckBox *m_cbExplorerMenu = nullptr;
+
+    QLabel *m_labelAutoRun = nullptr;
+    QComboBox *m_comboAutoRun = nullptr;
 
     QCheckBox *m_cbHotKeysEnabled = nullptr;
     QCheckBox *m_cbHotKeysGlobal = nullptr;

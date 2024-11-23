@@ -25,7 +25,6 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
-#include <util/startuputil.h>
 
 namespace {
 
@@ -49,7 +48,6 @@ void updateComboBox(
 
 OptionsPage::OptionsPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
-    setupStartup();
     setupUi();
 }
 
@@ -83,9 +81,6 @@ void OptionsPage::onResetToDefault()
 
 void OptionsPage::onAboutToSave()
 {
-    // Startup
-    saveAutoRunMode(m_comboAutoRun->currentIndex());
-
     // Password
     if (passwordEdited()) {
         const bool isPasswordCleared = (ini()->hasPassword() && ini()->password().isEmpty());
@@ -108,28 +103,14 @@ void OptionsPage::onEditResetted()
     retranslateEditPassword();
 }
 
-void OptionsPage::saveAutoRunMode(int mode)
-{
-    if (m_currentAutoRunMode == mode)
-        return;
-
-    m_currentAutoRunMode = mode;
-
-    StartupUtil::setAutoRunMode(mode, settings()->defaultLanguage());
-}
-
 void OptionsPage::onRetranslateUi()
 {
-    m_gbStartup->setTitle(tr("Startup"));
     m_gbTraffic->setTitle(tr("Traffic"));
     m_gbProtection->setTitle(tr("Self Protection"));
     m_gbUpdate->setTitle(tr("Auto Update"));
     m_gbProg->setTitle(tr("Programs"));
     m_gbLan->setTitle(tr("Local Area Network"));
     m_gbLogs->setTitle(tr("Logs"));
-
-    m_labelStartMode->setText(tr("Auto-run:"));
-    retranslateComboStartMode();
 
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
 
@@ -169,39 +150,6 @@ void OptionsPage::onRetranslateUi()
     m_cbLogConsole->setText(tr("Show log messages in console"));
 }
 
-void OptionsPage::retranslateComboStartMode()
-{
-    const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users") };
-
-    int currentIndex = m_comboAutoRun->currentIndex();
-    if (currentIndex < 0) {
-        currentIndex = m_currentAutoRunMode;
-    }
-
-    ControlUtil::setComboBoxTexts(m_comboAutoRun, list, currentIndex);
-
-    // Disable some items if user is not an administrator
-    if (settings()->isUserAdmin())
-        return;
-
-    if (currentIndex >= StartupUtil::StartupAllUsers) {
-        m_comboAutoRun->setEnabled(false);
-        return;
-    }
-
-    auto comboModel = qobject_cast<QStandardItemModel *>(m_comboAutoRun->model());
-    if (!comboModel)
-        return;
-
-    const int itemCount = comboModel->rowCount();
-    for (int i = StartupUtil::StartupAllUsers; i < itemCount; ++i) {
-        auto item = comboModel->item(i);
-        if (item) {
-            item->setEnabled(false);
-        }
-    }
-}
-
 void OptionsPage::retranslateComboBlockTraffic()
 {
     updateComboBox(m_comboBlockTraffic, FirewallConf::blockTrafficNames(),
@@ -227,11 +175,6 @@ void OptionsPage::retranslateEditLanPlaceholderText()
     m_editLanText->setPlaceholderText(placeholderText);
 }
 
-void OptionsPage::setupStartup()
-{
-    m_currentAutoRunMode = StartupUtil::autoRunMode();
-}
-
 void OptionsPage::setupUi()
 {
     // Column #1
@@ -252,9 +195,6 @@ void OptionsPage::setupUi()
 
 QLayout *OptionsPage::setupColumn1()
 {
-    // Startup Group Box
-    setupStartupBox();
-
     // Traffic Group Box
     setupTrafficBox();
 
@@ -266,7 +206,6 @@ QLayout *OptionsPage::setupColumn1()
 
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
-    layout->addWidget(m_gbStartup);
     layout->addWidget(m_gbTraffic);
     layout->addWidget(m_gbProtection);
     layout->addWidget(m_gbUpdate);
@@ -294,31 +233,6 @@ QLayout *OptionsPage::setupColumn2()
     layout->addStretch();
 
     return layout;
-}
-
-void OptionsPage::setupStartupBox()
-{
-    auto startModeLayout = setupStartModeLayout();
-
-    auto layout = new QVBoxLayout();
-    layout->addLayout(startModeLayout);
-
-    m_gbStartup = new QGroupBox();
-    m_gbStartup->setLayout(layout);
-}
-
-QLayout *OptionsPage::setupStartModeLayout()
-{
-    m_labelStartMode = ControlUtil::createLabel();
-
-    m_comboAutoRun = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        if (m_currentAutoRunMode != index) {
-            ctrl()->emitEdited();
-        }
-    });
-    m_comboAutoRun->setFixedWidth(200);
-
-    return ControlUtil::createRowLayout(m_labelStartMode, m_comboAutoRun);
 }
 
 void OptionsPage::setupTrafficBox()
