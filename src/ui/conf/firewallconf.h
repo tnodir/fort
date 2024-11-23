@@ -136,6 +136,9 @@ public:
     QString activePeriodTo() const { return m_activePeriodTo; }
     void setActivePeriodTo(const QString &v) { m_activePeriodTo = v; }
 
+    QString lanText() const { return m_lanText; }
+    void setLanText(const QString &v) { m_lanText = v; }
+
     quint32 appGroupBits() const { return m_appGroupBits; }
     void setAppGroupBits(quint32 v) { m_appGroupBits = v; }
 
@@ -245,6 +248,8 @@ private:
 
     QString m_activePeriodFrom;
     QString m_activePeriodTo;
+
+    QString m_lanText;
 
     QList<AddressGroup *> m_addressGroups;
 

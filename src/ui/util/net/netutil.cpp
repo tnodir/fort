@@ -104,9 +104,9 @@ QStringList NetUtil::localIpNetworks()
     return list;
 }
 
-QString NetUtil::localIpNetworksText()
+QString NetUtil::localIpNetworksText(int count)
 {
-    return NetUtil::localIpNetworks().join('\n') + '\n';
+    return NetUtil::localIpNetworks().mid(0, count).join('\n') + '\n';
 }
 
 QString NetUtil::protocolName(quint8 ipProto)

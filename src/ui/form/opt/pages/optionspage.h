@@ -29,6 +29,7 @@ private:
     void retranslateComboBlockTraffic();
     void retranslateComboFilterMode();
     void retranslateEditPassword();
+    void retranslateEditLanPlaceholderText();
 
     void setupStartup();
 
@@ -49,6 +50,8 @@ private:
     void setupProgBox();
     void setupLogBlocked();
     void setupLanBox();
+    QLayout *setupLanHeaderLayout();
+    void setupEditLanText();
     void setupLogsBox();
 
 private:
@@ -90,6 +93,9 @@ private:
 
     QCheckBox *m_cbFilterLocals = nullptr;
     QCheckBox *m_cbFilterLocalNet = nullptr;
+
+    QLabel *m_labelLanText = nullptr;
+    QPlainTextEdit *m_editLanText = nullptr;
 
     QCheckBox *m_cbLogDebug = nullptr;
     QCheckBox *m_cbLogConsole = nullptr;

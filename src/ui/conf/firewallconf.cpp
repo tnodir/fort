@@ -329,6 +329,8 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_activePeriodFrom = o.activePeriodFrom();
     m_activePeriodTo = o.activePeriodTo();
 
+    m_lanText = o.lanText();
+
     setupAppGroupBits(o.appGroupBits());
 }
 
@@ -379,6 +381,8 @@ QVariant FirewallConf::flagsToVariant() const
     map["activePeriodFrom"] = activePeriodFrom();
     map["activePeriodTo"] = activePeriodTo();
 
+    map["lanText"] = lanText();
+
     map["appGroupBits"] = appGroupBits();
 
     return map;
@@ -413,6 +417,8 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_activePeriodEnabled = map["activePeriodEnabled"].toBool();
     m_activePeriodFrom = map["activePeriodFrom"].toString();
     m_activePeriodTo = map["activePeriodTo"].toString();
+
+    m_lanText = map["lanText"].toString();
 
     setupAppGroupBits(map["appGroupBits"].toUInt());
 }

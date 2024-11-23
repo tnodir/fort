@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QPlainTextEdit>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QStandardItemModel>
@@ -23,6 +24,7 @@
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/net/netutil.h>
 #include <util/startuputil.h>
 
 namespace {
@@ -72,6 +74,8 @@ void OptionsPage::onResetToDefault()
 
     m_cbFilterLocals->setChecked(false);
     m_cbFilterLocalNet->setChecked(false);
+
+    m_editLanText->setPlainText(NetUtil::localIpNetworksText());
 
     m_cbLogDebug->setChecked(false);
     m_cbLogConsole->setChecked(false);
@@ -144,7 +148,7 @@ void OptionsPage::onRetranslateUi()
     retranslateEditPassword();
 
     m_btPasswordLock->setText(tr("Lock the password (unlocked till \"%1\")")
-                                      .arg(settings()->passwordUnlockedTillText()));
+                    .arg(settings()->passwordUnlockedTillText()));
 
     m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
     m_cbUpdateAutoDownload->setText(tr("Auto-download new version"));
@@ -157,6 +161,9 @@ void OptionsPage::onRetranslateUi()
     m_cbFilterLocals->setToolTip(
             tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
     m_cbFilterLocalNet->setText(tr("Filter Local Network"));
+
+    m_labelLanText->setText(tr("Local Network Addresses:"));
+    retranslateEditLanPlaceholderText();
 
     m_cbLogDebug->setText(tr("Log debug messages"));
     m_cbLogConsole->setText(tr("Show log messages in console"));
@@ -211,6 +218,13 @@ void OptionsPage::retranslateEditPassword()
 {
     m_editPassword->setPlaceholderText(
             settings()->hasPassword() ? tr("Installed") : tr("Not Installed"));
+}
+
+void OptionsPage::retranslateEditLanPlaceholderText()
+{
+    const auto placeholderText = tr("# Examples:") + '\n' + NetUtil::localIpNetworksText(9);
+
+    m_editLanText->setPlaceholderText(placeholderText);
 }
 
 void OptionsPage::setupStartup()
@@ -275,7 +289,7 @@ QLayout *OptionsPage::setupColumn2()
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
     layout->addWidget(m_gbProg);
-    layout->addWidget(m_gbLan);
+    layout->addWidget(m_gbLan, 1);
     layout->addWidget(m_gbLogs);
     layout->addStretch();
 
@@ -537,11 +551,44 @@ void OptionsPage::setupLanBox()
         ctrl()->setFlagsEdited();
     });
 
+    // LAN Header Layout
+    auto lanHeaderLayout = setupLanHeaderLayout();
+
+    // Edit LAN Text
+    setupEditLanText();
+
     // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbFilterLocals, m_cbFilterLocalNet });
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_cbFilterLocals, m_cbFilterLocalNet, ControlUtil::createHSeparator() });
+    layout->addLayout(lanHeaderLayout);
+    layout->addWidget(m_editLanText, 1);
 
     m_gbLan = new QGroupBox();
     m_gbLan->setLayout(layout);
+}
+
+QLayout *OptionsPage::setupLanHeaderLayout()
+{
+    m_labelLanText = ControlUtil::createLabel();
+
+    // Layout
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_labelLanText });
+
+    return layout;
+}
+
+void OptionsPage::setupEditLanText()
+{
+    m_editLanText = new QPlainTextEdit();
+
+    m_editLanText->setPlainText(conf()->lanText());
+
+    connect(m_editLanText, &QPlainTextEdit::textChanged, this, [&] {
+        const auto text = m_editLanText->toPlainText();
+
+        conf()->setLanText(text);
+        ctrl()->setFlagsEdited();
+    });
 }
 
 void OptionsPage::setupLogsBox()

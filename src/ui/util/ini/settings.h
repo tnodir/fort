@@ -50,9 +50,8 @@ protected:
     QVariantMap iniMap(const QString &key) const;
     QByteArray iniByteArray(const QString &key) const;
 
-    QVariant iniValue(const QString &key, const QVariant &defaultValue = QVariant()) const;
-    void setIniValue(
-            const QString &key, const QVariant &value, const QVariant &defaultValue = QVariant());
+    QVariant iniValue(const QString &key, const QVariant &defaultValue = {}) const;
+    void setIniValue(const QString &key, const QVariant &value, const QVariant &defaultValue = {});
 
     QString cacheKey(const QString &key) const;
     QVariant cacheValue(const QString &key) const;
