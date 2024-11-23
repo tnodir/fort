@@ -374,7 +374,7 @@ QStringList RuleListModel::ruleTypeIconPaths()
         ":/icons/script.png",
         ":/icons/script_code.png",
         ":/icons/script_code_red.png",
-        ":/icons/help.png",
+        ":/icons/books.png",
     };
 
     return ruleTypeIcons;
