@@ -13,11 +13,10 @@
 #include <manager/envmanager.h>
 #include <util/bitutil.h>
 #include <util/fileutil.h>
-#include <util/net/valuerange.h>
+#include <util/net/valuerangeutil.h>
 #include <util/stringutil.h>
 
 #include "confappswalker.h"
-#include "confdatarule.h"
 #include "confrodata.h"
 #include "confruleswalker.h"
 #include "confutil.h"
@@ -704,7 +703,7 @@ bool ConfBuffer::writeRuleFilterList(const RuleFilter &ruleListFilter)
 
 bool ConfBuffer::writeRuleFilterValues(const RuleFilter &ruleFilter)
 {
-    QScopedPointer<ValueRange> range(ConfDataRule::createRangeByType(ruleFilter.type));
+    QScopedPointer<ValueRange> range(ValueRangeUtil::createRangeByType(ruleFilter.type));
 
     if (!range->fromList(ruleFilter.values)) {
         setErrorMessage(range->errorLineAndMessageDetails());
