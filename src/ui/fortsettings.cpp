@@ -420,10 +420,6 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setActivePeriodTo(DateUtil::reformatTime(iniText("activePeriodTo")));
     ini()->endGroup();
 
-    ini()->beginGroup("lan");
-    conf.setLanText(iniText("lanText"));
-    ini()->endGroup();
-
     // Ini Options
     readConfIniOptions(conf.ini());
 }
@@ -467,10 +463,6 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("activePeriodEnabled", conf.activePeriodEnabled());
         setIniValue("activePeriodFrom", conf.activePeriodFrom());
         setIniValue("activePeriodTo", conf.activePeriodTo());
-        ini()->endGroup();
-
-        ini()->beginGroup("lan");
-        setIniValue("lanText", conf.lanText());
         ini()->endGroup();
 
         changed = true;

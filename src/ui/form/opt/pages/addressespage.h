@@ -25,6 +25,7 @@ signals:
 
 public slots:
     void onResetToDefault() override;
+    void onEditResetted() override;
 
 protected slots:
     void onSaveWindowState(IniUser *ini) override;

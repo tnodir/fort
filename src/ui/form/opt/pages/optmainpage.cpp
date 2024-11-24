@@ -44,6 +44,9 @@ void OptMainPage::onRetranslateUi()
     m_tabWidget->setTabText(5, tr("Traffic Graph"));
     m_tabWidget->setTabText(6, tr("Schedule"));
 
+    // TODO: COMPAT: Remove after v4.1.0
+    m_tabWidget->setTabEnabled(2, !conf()->checkDeprecatedAddressGroups());
+
     m_btBackup->setText(tr("Backup"));
     m_actExport->setText(tr("Export"));
     m_actImport->setText(tr("Import"));

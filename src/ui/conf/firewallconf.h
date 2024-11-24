@@ -136,9 +136,6 @@ public:
     QString activePeriodTo() const { return m_activePeriodTo; }
     void setActivePeriodTo(const QString &v) { m_activePeriodTo = v; }
 
-    QString lanText() const { return m_lanText; }
-    void setLanText(const QString &v) { m_lanText = v; }
-
     quint32 appGroupBits() const { return m_appGroupBits; }
     void setAppGroupBits(quint32 v) { m_appGroupBits = v; }
 
@@ -148,7 +145,7 @@ public:
 
     bool appGroupEnabled(int groupIndex) const;
 
-    AddressGroup *inetAddressGroup() const { return m_addressGroups.at(0); }
+    AddressGroup *inetAddressGroup() const { return m_addressGroups.first(); }
 
     const QList<AddressGroup *> &addressGroups() const { return m_addressGroups; }
 
@@ -160,6 +157,7 @@ public:
     const QList<AppGroup *> &appGroups() const { return m_appGroups; }
 
     bool checkDeprecatedAppGroups() const; // TODO: COMPAT: Remove after v4.1.0
+    bool checkDeprecatedAddressGroups() const; // TODO: COMPAT: Remove after v4.1.0
 
     const QVector<qint64> &removedAppGroupIdList() const { return m_removedAppGroupIdList; }
     void clearRemovedAppGroupIdList() const;
@@ -248,8 +246,6 @@ private:
 
     QString m_activePeriodFrom;
     QString m_activePeriodTo;
-
-    QString m_lanText;
 
     QList<AddressGroup *> m_addressGroups;
 

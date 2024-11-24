@@ -46,6 +46,7 @@ private:
     void setupProgBox();
     void setupLogBlocked();
     void setupLanBox();
+    void setupEditLanHeader();
     void setupEditLanText();
 
 private:

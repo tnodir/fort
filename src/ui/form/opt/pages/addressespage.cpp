@@ -60,6 +60,11 @@ void AddressesPage::onResetToDefault()
     updateGroup();
 }
 
+void AddressesPage::onEditResetted()
+{
+    updateGroup();
+}
+
 void AddressesPage::onSaveWindowState(IniUser *ini)
 {
     ini->setOptWindowAddrSplit(m_splitter->saveState());

@@ -13,6 +13,7 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
+#include <conf/addressgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
@@ -487,6 +488,9 @@ void OptionsPage::setupLanBox()
         ctrl()->setFlagsEdited();
     });
 
+    // LAN Text Header
+    setupEditLanHeader();
+
     // Edit LAN Text
     setupEditLanText();
 
@@ -499,7 +503,7 @@ void OptionsPage::setupLanBox()
     m_gbLan->setLayout(layout);
 }
 
-void OptionsPage::setupEditLanText()
+void OptionsPage::setupEditLanHeader()
 {
     // LAN Label
     m_labelLanText = ControlUtil::createLabel();
@@ -509,17 +513,23 @@ void OptionsPage::setupEditLanText()
 
     connect(m_actAddLanText, &QAction::triggered, this,
             [&] { TextAreaUtil::appendText(m_editLanText, NetUtil::localIpNetworksText()); });
+}
 
+void OptionsPage::setupEditLanText()
+{
     // Edit LAN Text
     m_editLanText = new PlainTextEdit();
 
     m_editLanText->addMenuAction(m_actAddLanText);
-    m_editLanText->setText(conf()->lanText());
+    m_editLanText->setText(conf()->inetAddressGroup()->excludeText());
 
     connect(m_editLanText, &QPlainTextEdit::textChanged, this, [&] {
         const auto text = m_editLanText->toPlainText();
 
-        conf()->setLanText(text);
-        ctrl()->setFlagsEdited();
+        AddressGroup *inetGroup = conf()->inetAddressGroup();
+        if (inetGroup->excludeText() != text) {
+            conf()->inetAddressGroup()->setExcludeText(text);
+            ctrl()->setOptEdited();
+        }
     });
 }

@@ -25,14 +25,14 @@ void AddressesColumn::retranslateUi()
 
 void AddressesColumn::setupUi()
 {
-    auto layout = ControlUtil::createVLayout();
-
     // Header
     auto headerLayout = setupHeaderLayout();
-    layout->addLayout(headerLayout);
 
     // Text Area
     m_editIpText = new PlainTextEdit();
+
+    auto layout = ControlUtil::createVLayout();
+    layout->addLayout(headerLayout);
     layout->addWidget(m_editIpText);
 
     this->setLayout(layout);

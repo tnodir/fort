@@ -39,7 +39,9 @@ private:
 
     void setupUi();
 
+    void checkDeprecated();
     void checkDeprecatedAppGroups();
+    void checkDeprecatedAddressGroups();
 
 private:
     OptionsController *m_ctrl = nullptr;
