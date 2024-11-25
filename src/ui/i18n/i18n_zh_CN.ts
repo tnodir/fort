@@ -428,11 +428,11 @@
     </message>
     <message>
         <source>Restrict access by Global Rule before App Rules</source>
-        <translation>在应用程序规则之前按全局规则限制访问</translation>
+        <translation>应用程序规则前通过全局规则限制访问权限</translation>
     </message>
     <message>
         <source>Restrict access by Global Rule after App Rules</source>
-        <translation>在应用程序规则之后按全局规则限制访问</translation>
+        <translation>应用程序规则后通过全局规则限制访问权限</translation>
     </message>
 </context>
 <context>
@@ -1667,7 +1667,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Bad Protocol</source>
-        <translation>协议错误</translation>
+        <translation>无效协议</translation>
     </message>
 </context>
 <context>
