@@ -1,5 +1,6 @@
 #include "optionspage.h"
 
+#include <QAction>
 #include <QCheckBox>
 #include <QComboBox>
 #include <QGroupBox>
