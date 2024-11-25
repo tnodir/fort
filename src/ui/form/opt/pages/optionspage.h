@@ -4,6 +4,7 @@
 #include "optbasepage.h"
 
 class PlainTextEdit;
+class ZonesSelector;
 
 class OptionsPage : public OptBasePage
 {
@@ -46,7 +47,7 @@ private:
     void setupProgBox();
     void setupLogBlocked();
     void setupLanBox();
-    void setupEditLanHeader();
+    QLayout *setupLanHeaderLayout();
     void setupEditLanText();
 
 private:
@@ -87,7 +88,8 @@ private:
     QCheckBox *m_cbFilterLocalNet = nullptr;
 
     QLabel *m_labelLanText = nullptr;
-    QAction *m_actAddLanText = nullptr;
+    ZonesSelector *m_btLanZones = nullptr;
+    QAction *m_actAddLocalNetworks = nullptr;
     PlainTextEdit *m_editLanText = nullptr;
 };
 

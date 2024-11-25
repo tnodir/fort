@@ -173,7 +173,7 @@ bool FirewallConf::checkDeprecatedAddressGroups() const
         if (!ag->includeText().isEmpty())
             return false;
 
-        if (ag->includeZones() != 0 || ag->excludeZones() != 0)
+        if (ag->includeZones() != 0)
             return false;
     }
 

@@ -139,8 +139,7 @@ void OptionsWindow::checkDeprecatedAddressGroups()
     if (!ctrl()->conf()->checkDeprecatedAddressGroups()) {
         ctrl()->windowManager()->showConfirmBox(
                 [&] { OsUtil::openUrlOrFolder("https://github.com/tnodir/fort/discussions/347"); },
-                tr("Please move Texts of 'IP Addresses' fields to 'Locan Network Addresses' and "
-                   "Global Rules!!!"
+                tr("Please move settings of 'IP Addresses' fields to Global Rules!!!"
                    "\n\n(They are read-only now and will be removed in v4.)"
                    "\n\nDo you want to open a discussion thread in browser?"),
                 {}, this);

@@ -23,7 +23,7 @@ void PlainTextEdit::setText(const QString &text)
 
 void PlainTextEdit::contextMenuEvent(QContextMenuEvent *e)
 {
-    if (m_menuActions.isEmpty()) {
+    if (m_contextActions.isEmpty()) {
         QPlainTextEdit::contextMenuEvent(e);
         return;
     }
@@ -31,7 +31,7 @@ void PlainTextEdit::contextMenuEvent(QContextMenuEvent *e)
     QMenu *menu = createStandardContextMenu();
     menu->setAttribute(Qt::WA_DeleteOnClose);
 
-    menu->addActions(m_menuActions);
+    menu->addActions(m_contextActions);
 
     menu->popup(e->globalPos());
 }
