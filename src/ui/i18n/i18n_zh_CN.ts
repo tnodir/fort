@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Too many values</source>
-        <translation type="unfinished"></translation>
+        <translation>值过多</translation>
     </message>
 </context>
 <context>
@@ -424,15 +424,15 @@
     </message>
     <message>
         <source>Restrict access by Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>按规则限制访问</translation>
     </message>
     <message>
         <source>Restrict access by Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>在应用程序规则之前按全局规则限制访问</translation>
     </message>
     <message>
         <source>Restrict access by Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>在应用程序规则之后按全局规则限制访问</translation>
     </message>
 </context>
 <context>
@@ -1667,7 +1667,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Bad Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>协议错误</translation>
     </message>
 </context>
 <context>
