@@ -230,7 +230,7 @@ TEST_F(ConfUtilTest, rulesWriteRead)
 
     // Allowed IP
     {
-        const FORT_CONF_META_CONN conn = {
+        FORT_CONF_META_CONN conn = {
             .inbound = true,
             .ip_proto = IpProto_TCP,
             .remote_port = 80,
@@ -242,7 +242,7 @@ TEST_F(ConfUtilTest, rulesWriteRead)
 
     // Allowed IP
     {
-        const FORT_CONF_META_CONN conn = {
+        FORT_CONF_META_CONN conn = {
             .inbound = false,
             .ip_proto = IpProto_TCP,
             .remote_port = 80,
@@ -252,21 +252,22 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/4));
     }
 
-    // Blocked IP
+    // Allowed Port
     {
-        const FORT_CONF_META_CONN conn = {
+        FORT_CONF_META_CONN conn = {
             .inbound = false,
             .ip_proto = IpProto_TCP,
             .remote_port = 80,
             .remote_ip = { .v4 = NetFormatUtil::textToIp4("3.3.3.3") },
         };
 
-        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+        ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+        ASSERT_FALSE(conn.blocked);
     }
 
     // Allowed IP
     {
-        const FORT_CONF_META_CONN conn = {
+        FORT_CONF_META_CONN conn = {
             .inbound = false,
             .ip_proto = IpProto_UDP,
             .remote_port = 53,
@@ -274,19 +275,6 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         };
 
         ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/2));
-    }
-
-    // Blocked IP
-    {
-        const FORT_CONF_META_CONN conn = {
-            .inbound = false,
-            .is_local_net = true,
-            .ip_proto = IpProto_TCP,
-            .remote_port = 80,
-            .remote_ip = { .v4 = NetFormatUtil::textToIp4("3.3.3.3") },
-        };
-
-        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/2));
     }
 }
 
@@ -333,7 +321,7 @@ TEST_F(ConfUtilTest, rulesOneFilter)
 
     // Blocked IP
     {
-        const FORT_CONF_META_CONN conn = {
+        FORT_CONF_META_CONN conn = {
             .inbound = false,
             .ip_proto = IpProto_TCP,
             .remote_port = 80,
@@ -345,7 +333,7 @@ TEST_F(ConfUtilTest, rulesOneFilter)
 
     // Blocked IP, but Allowed Port
     {
-        const FORT_CONF_META_CONN conn = {
+        FORT_CONF_META_CONN conn = {
             .inbound = false,
             .ip_proto = IpProto_TCP,
             .remote_port = 443,
@@ -357,7 +345,7 @@ TEST_F(ConfUtilTest, rulesOneFilter)
 
     // Allowed IP
     {
-        const FORT_CONF_META_CONN conn = {
+        FORT_CONF_META_CONN conn = {
             .inbound = true,
             .ip_proto = IpProto_TCP,
             .remote_port = 80,
@@ -416,7 +404,7 @@ TEST_F(ConfUtilTest, rulesTwoFilters)
 
     // Allowed IP
     {
-        const FORT_CONF_META_CONN conn = {
+        FORT_CONF_META_CONN conn = {
             .inbound = false,
             .ip_proto = IpProto_TCP,
             .remote_port = 443,
@@ -428,7 +416,7 @@ TEST_F(ConfUtilTest, rulesTwoFilters)
 
     // Blocked IP
     {
-        const FORT_CONF_META_CONN conn = {
+        FORT_CONF_META_CONN conn = {
             .inbound = false,
             .ip_proto = IpProto_TCP,
             .remote_port = 443,

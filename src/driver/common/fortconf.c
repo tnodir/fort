@@ -622,7 +622,7 @@ static BOOL fort_conf_rule_filter_check(
 }
 
 inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
-        PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, BOOL *blocked)
 {
     if (!rule->has_filters)
         return FALSE;
@@ -632,15 +632,24 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
 
     BOOL filter_res = fort_conf_rule_filter_check(rule_filter, conn);
 
-    if (!rule->blocked) {
-        filter_res = !filter_res;
+    if (rule->blocked) {
+        *blocked = filter_res;
+        return filter_res;
+    }
+
+    *blocked = FALSE;
+
+    if (filter_res) {
+        conn->blocked = FALSE;
+    } else if (rule->exclusive) {
+        return TRUE; /* skip the exclusive allowed rule */
     }
 
     return filter_res;
 }
 
 inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
-        PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     const int set_count = rule->set_count;
     if (set_count == 0)
@@ -654,13 +663,16 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
 
         if (fort_conf_rules_rt_conn_blocked(rules_rt, conn, rule_id))
             return TRUE;
+
+        if (!conn->blocked)
+            break;
     }
 
     return FALSE;
 }
 
 FORT_API BOOL fort_conf_rules_rt_conn_blocked(
-        PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, UINT16 rule_id)
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
     if (rule_id == 0)
         return FALSE;
@@ -673,11 +685,9 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
     if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule))
         return TRUE;
 
-    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule)) {
-        if (rule->exclusive && !rule->blocked)
-            return FALSE; /* don't process sub-rules for exclusive rule */
-
-        return TRUE;
+    BOOL blocked;
+    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule, &blocked)) {
+        return blocked;
     }
 
     if (fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule))
@@ -686,11 +696,13 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
     return FALSE;
 }
 
-FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones,
-        PCFORT_CONF_META_CONN conn, UINT16 rule_id)
+FORT_API BOOL fort_conf_rules_conn_blocked(
+        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
     if (rule_id > rules->max_rule_id)
         return FALSE;
+
+    conn->blocked = TRUE; /* default block */
 
     const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, zones);
 

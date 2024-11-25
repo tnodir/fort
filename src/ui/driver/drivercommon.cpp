@@ -234,7 +234,7 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
     return app_data;
 }
 
-bool confRulesConnBlocked(const void *drvRules, PCFORT_CONF_META_CONN conn, quint16 ruleId)
+bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)
 {
     PCFORT_CONF_RULES rules = PCFORT_CONF_RULES(drvRules);
 
