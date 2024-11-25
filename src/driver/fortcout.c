@@ -534,19 +534,18 @@ inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
 
     fort_callout_fill_meta_ip(ca, ca->fi->remoteIp, &conn->remote_ip);
 
+    conn->is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
+    conn->is_broadcast = (UINT16) fort_addr_is_local_broadcast(conn);
+
     if (conf_flags.filter_locals)
         return FALSE;
 
     /* Loopback */
-    conn->is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
-
     if (conn->is_loopback) {
         return !conf_flags.block_traffic;
     }
 
     /* Broadcast */
-    conn->is_broadcast = (UINT16) fort_addr_is_local_broadcast(conn);
-
     if (conn->is_broadcast) {
         return !conf_flags.block_lan_traffic;
     }

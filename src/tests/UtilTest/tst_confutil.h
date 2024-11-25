@@ -158,7 +158,13 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         { .ruleType = Rule::PresetRule, .ruleId = 7, .ruleText = "udp(53)" },
         { .ruleType = Rule::PresetRule, .ruleId = 8, .ruleText = "dir(in)" },
         { .blocked = true, .ruleType = Rule::PresetRule, .ruleId = 9, .ruleText = "area(lan)" },
+        { .blocked = true,
+                .ruleType = Rule::PresetRule,
+                .ruleId = 10,
+                .ruleText = "area(localhost)" },
     };
+
+    constexpr int MaxRuleId = 10;
 
     struct SubRule
     {
@@ -197,7 +203,7 @@ TEST_F(ConfUtilTest, rulesWriteRead)
                 return subRule.ids[column];
             });
 
-            wra.maxRuleId = 9;
+            wra.maxRuleId = MaxRuleId;
 
             ConfRuleManager::walkRulesMapByStmt(wra, stmt);
 
@@ -275,6 +281,19 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         };
 
         ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/2));
+    }
+
+    // Blocked LocalHost
+    {
+        FORT_CONF_META_CONN conn = {
+            .inbound = false,
+            .is_loopback = true,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 3128,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("127.0.0.1") },
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/10));
     }
 }
 
