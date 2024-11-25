@@ -531,7 +531,7 @@ FORT_API void fort_conf_rule_flag_set(
 }
 
 FORT_API BOOL fort_devconf_rules_conn_blocked(
-        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_META_CONN conn, UINT16 rule_id)
+        PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
     BOOL res = FALSE;
 

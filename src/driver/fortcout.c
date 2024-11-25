@@ -328,6 +328,10 @@ inline static BOOL fort_callout_ale_is_allowed(
         /* Check app is allowed */
         if (!fort_callout_ale_app_allowed(conn, conf_flags, app_data))
             return FALSE; /* block App */
+
+        /* Check the Rule is explicitly allowed */
+        if (!conn->blocked)
+            return TRUE; /* allow App */
     }
 
     if (fort_callout_ale_conn_rule_blocked(conn, rules_glob.post_rule_id)) {
