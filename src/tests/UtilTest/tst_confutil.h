@@ -294,6 +294,7 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         };
 
         ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/10));
+        ASSERT_TRUE(conn.blocked);
     }
 }
 
