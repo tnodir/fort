@@ -1,5 +1,15 @@
 Fort Firewall ChangeLog
 
+v3.15.0, 2024-11-25:
+- UI: Options: Add "Local Network Addresses" field.
+- UI: Move "Auto-run" from Options to Interface tab.
+- UI: Rule Edit Dialog: Validate rule text filters on save.
+- UI: My Fort: Help button opens a WIKI.
+- Driver: Improve allowed rules handling.
+
+Attention: Please move settings of 'IP Addresses' fields to Global Rules!
+  (They will be removed in v4.)
+
 v3.14.13, 2024-11-23:
 - Implement Rules.
 
