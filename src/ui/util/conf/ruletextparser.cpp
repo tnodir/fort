@@ -67,7 +67,7 @@ RuleCharType getCharType(RuleCharType prevCharType, const QChar c, const char *e
 
 bool RuleFilter::isTypeAddress() const
 {
-    return type == FORT_RULE_FILTER_TYPE_ADDRESS;
+    return type == FORT_RULE_FILTER_TYPE_ADDRESS || type == FORT_RULE_FILTER_TYPE_AREA;
 }
 
 bool RuleFilter::isTypeList() const
