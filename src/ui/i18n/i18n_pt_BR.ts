@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Auto-execução:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Desativado</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Para usuário atual</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Para todos os usuários</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1122,10 +1138,6 @@ Make sure that you have a fresh backup.</source>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>Inicializar</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>Tráfego</translation>
     </message>
@@ -1150,18 +1162,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Bloquear a senha (desbloqueado até &quot;%1&quot;)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Desativado</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Para usuário atual</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Para todos os usuários</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>Instalado</translation>
     </message>
@@ -1180,10 +1180,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Show log messages in console</source>
         <translation>Mostrar registro de mensagens no console</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Auto-execução:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1249,6 +1245,18 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-install after download</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>Adicionar Redes Locais</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Exemplos:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1267,6 +1275,14 @@ Do you want to open a discussion thread in browser?</source>
 (Agora, eles são leitura-somente e serão removidos na v4.)
 
 Você quer abrir um fio de discussão no navegador?</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

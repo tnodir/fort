@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation>Estilo:</translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Autoejecución:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Desactivado</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Para el usuario actual</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Para todos los usuarios</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>Inicio</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>Tráfico</translation>
     </message>
@@ -1152,18 +1164,6 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <translation>Bloquear la contraseña (desbloqueado hasta &apos;%1&apos;)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Desactivado</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Para el usuario actual</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Para todos los usuarios</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>Instalado</translation>
     </message>
@@ -1182,10 +1182,6 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     <message>
         <source>Show log messages in console</source>
         <translation>Mostrar mensajes de registro en la consola</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Autoejecución:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <source>Auto-install after download</source>
         <translation>Instalación automática tras la descarga</translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>Direcciones de Red Local:</translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>Añadir redes locales</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Ejemplos:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1269,6 +1277,18 @@ Do you want to open a discussion thread in browser?</source>
 (Ahora son de solo lectura y se eliminarán en la v4.)
 
 ¿Desea abrir un hilo de discusión en el navegador?</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation>¡Por favor, mueve la configuración de los campos de &apos;Direcciones IP&apos; a las reglas globales!
+
+(Actualmente son de solo lectura y se eliminarán en la versión 4.)
+
+¿Quieres abrir un hilo de discusión en el navegador?</translation>
     </message>
 </context>
 <context>

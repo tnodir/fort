@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation>Стиль:</translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Авто-запуск</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Отключено</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Для текущего пользователя</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Для всех пользователей</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Make sure that you have a fresh backup.</source>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>Запуск</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>Трафик</translation>
     </message>
@@ -1152,18 +1164,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Заблокировать пароль (разблокировано до &quot;%1&quot;)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Отключен</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Для текущего пользователя</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Для всех пользователей</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>Установлен</translation>
     </message>
@@ -1182,10 +1182,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Show log messages in console</source>
         <translation>Логи в консоле</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Авто-запуск</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-install after download</source>
         <translation>Авто-установка после скачивания</translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>Адреса локальной сети:</translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>Добавить локальные сети</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Примеры:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1265,6 +1273,18 @@ Make sure that you have a fresh backup.</source>
 
 Do you want to open a discussion thread in browser?</source>
         <translation>Пожалуйста, переместите тексты полей Разрешить/Блокировать из Групп приложений в Программы с подстановочными знаками!!!
+
+(Сейчас они доступны только для чтения и будут удалены в версии 4.)
+
+Хотите открыть ветку обсуждения в браузере?</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation>Пожалуйста, переместите настройки из вкладки &quot;IP Адреса&quot; в Глобальные Правила!!!
 
 (Сейчас они доступны только для чтения и будут удалены в версии 4.)
 

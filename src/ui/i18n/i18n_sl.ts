@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation>Slog:</translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Samodejno zaženi:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Onemogočeno</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Za trenutnega uporabnika</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Za vse uporabnike</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>Zagon</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>Promet</translation>
     </message>
@@ -1152,18 +1164,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Zakleni geslo (odklenjeno do &quot;%1&quot;)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Onemogočeno</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Za trenutnega uporabnika</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Za vse uporabnike</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>Nameščen</translation>
     </message>
@@ -1182,10 +1182,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Show log messages in console</source>
         <translation>Prikaži sporočila dnevnika v konzoli</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Samodejno zaženi:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Auto-install after download</source>
         <translation>Samodejna namestitev po prenosu</translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>Naslovi lokalnega omrežja:</translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>Dodaj lokalna omrežja</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation>#Primeri:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1267,6 +1275,18 @@ Do you want to open a discussion thread in browser?</source>
         <translation>Premaknite besedila polj Dovoli/Onemogoči iz skupin aplikacij v Nadomestni znaki programov!!!
 
 (Zdaj so samo za branje in bodo odstranjena v različici 4.)
+
+Ali želite odpreti nit razprave v brskalniku?</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation>Prosimo premaknite nastavitve &apos;IP naslovov&apos; polja v Globalna pravila!!!
+
+(Zdaj so samo za branje in bodo odstranjeni v različici 4.)
 
 Ali želite odpreti nit razprave v brskalniku?</translation>
     </message>

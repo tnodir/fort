@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Automatyczne uruchomienie:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Wyłączone</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Dla bieżącego użytkownika</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Dla wszystkich użytkowników</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>Uruchamianie</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>Ruch</translation>
     </message>
@@ -1152,18 +1164,6 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Zablokuj hasło (odblokowane do &quot;%1&quot;)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Wyłączone</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Dla bieżącego użytkownika</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Dla wszystkich użytkowników</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>Hasło ustawiono</translation>
     </message>
@@ -1182,10 +1182,6 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     <message>
         <source>Show log messages in console</source>
         <translation>Wyświetlanie komunikatów dziennika w konsoli</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Automatyczne uruchomienie:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source>Auto-install after download</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>Dodaj sieci lokalne</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Przykłady:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1269,6 +1277,14 @@ Do you want to open a discussion thread in browser?</source>
 (Są one teraz tylko do odczytu i zostaną usunięte w v4.)
 
 Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

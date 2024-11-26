@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation>样式：</translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>自动运行：</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>已禁用</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>对于当前用户</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>对于所有用户</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Make sure that you have a fresh backup.</source>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>启动</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>数据流量</translation>
     </message>
@@ -1152,18 +1164,6 @@ Make sure that you have a fresh backup.</source>
         <translation>锁定密码（解锁直到“%1”）</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>已禁用</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>对于当前用户</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>对于所有用户</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>已安装</translation>
     </message>
@@ -1182,10 +1182,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Show log messages in console</source>
         <translation>在控制台中显示日志消息</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>自动运行：</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-install after download</source>
         <translation>下载后自动安装</translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>本地网络地址：</translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>添加本地网络</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># 示例：</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1267,6 +1275,18 @@ Do you want to open a discussion thread in browser?</source>
         <translation>请将【允许/阻止】字段的文本从【应用程序组】移至【通配符程序】！！！
 
 （它们现在是只读的，将在 v4 版本中被删除。）
+
+您想在浏览器中打开一个讨论主题吗？</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation>请将 IP 地址字段的设置移至 “全局规则”！！！
+
+（它们现在是只读的，将在 v4 中移除）。
 
 您想在浏览器中打开一个讨论主题吗？</translation>
     </message>

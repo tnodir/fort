@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1122,10 +1138,6 @@ Make sure that you have a fresh backup.</source>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation></translation>
     </message>
@@ -1150,18 +1162,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation></translation>
     </message>
@@ -1179,10 +1179,6 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Show log messages in console</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
         <translation></translation>
     </message>
     <message>
@@ -1249,6 +1245,18 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-install after download</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1258,6 +1266,14 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
 
 (They are read-only now and will be removed in v4.)
 

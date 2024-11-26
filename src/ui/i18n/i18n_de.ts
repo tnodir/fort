@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation>Stil:</translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Auto-Ausführen:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Deaktiviert</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Für den aktuellen Benutzer</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Für alle Benutzer</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>Beim Starten</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>Datenverkehr</translation>
     </message>
@@ -1152,18 +1164,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Sperren Sie das Passwort (entsperrt bis &quot;%1&quot;)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Deaktiviert</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Für den aktuellen Benutzer</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Für alle Benutzer</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>Installiert</translation>
     </message>
@@ -1182,10 +1182,6 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Show log messages in console</source>
         <translation>Protokollnachrichten in der Konsole anzeigen</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Auto-Ausführen:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Auto-install after download</source>
         <translation>Nach dem Download automatisch installieren</translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>Lokale Netzwerke hinzufügen</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Beispiele:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1269,6 +1277,14 @@ Do you want to open a discussion thread in browser?</source>
 (Sie sind jetzt schreibgeschützt und werden in v4 entfernt.)
 
 Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

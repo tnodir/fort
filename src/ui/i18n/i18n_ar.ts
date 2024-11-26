@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>التشغيل التلقائي:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>للمستخدم الحالي فقط</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>لكل المستخدمين</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Make sure that you have a fresh backup.</source>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>بدء التشغيل</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>حركة البيانات</translation>
     </message>
@@ -1152,18 +1164,6 @@ Make sure that you have a fresh backup.</source>
         <translation>قفل كلمة المرور (عدم الإقفال حتى &quot;%1&quot;)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>عدم التفعيل</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>للمستخدم الحالي فقط</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>لكل المستخدمين</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>تم التثبيت</translation>
     </message>
@@ -1182,10 +1182,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Show log messages in console</source>
         <translation>عرض سجلات تصحيح في مجه الأوامر</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>التشغيل التلقائي:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-install after download</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>إضافة شبكة محلية</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># أمثلة:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1269,6 +1277,14 @@ Do you want to open a discussion thread in browser?</source>
             (هذه القيم للفراءة فقط وسيتم إزالتها عند الإصدار v4.0)
 
             هل تريد فتح discussion thread في متصفح الإنترنت؟</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

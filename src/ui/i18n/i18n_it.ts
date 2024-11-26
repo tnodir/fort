@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation>Stile:</translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Auto-esegui:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Disabilitato</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Per l&apos;utente corrente</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Per tutti gli utenti</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Assicurati di avere un nuovo backup.</translation>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>Avvio</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>Traffico</translation>
     </message>
@@ -1152,18 +1164,6 @@ Assicurati di avere un nuovo backup.</translation>
         <translation>Blocca la password (sbloccata fino a &quot;%1&quot;)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Disabilitato</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Per l&apos;utente corrente</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Per tutti gli utenti</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>Installato</translation>
     </message>
@@ -1182,10 +1182,6 @@ Assicurati di avere un nuovo backup.</translation>
     <message>
         <source>Show log messages in console</source>
         <translation>Mostra i messaggi di registro nella console</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Esecuzione automatica:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Assicurati di avere un nuovo backup.</translation>
         <source>Auto-install after download</source>
         <translation>Auto-installa dopo lo scaricamento</translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>Indirizzi della rete locale:</translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>Aggiungi reti locali</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Esempi:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1267,6 +1275,18 @@ Do you want to open a discussion thread in browser?</source>
         <translation>Spostare testi di autorizzazione/blocco campi da Gruppi di App a Programmi Wildcard!!!
 
 (Sono di sola lettura ora e saranno rimossi in v4.)
+
+Vuoi aprire una discussione nel browser?</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation>Spostare le impostazioni dei campi &apos;indirizzi IP&apos; in Regole globali!!!
+
+(sono di sola lettura ora e saranno rimossi in v4)
 
 Vuoi aprire una discussione nel browser?</translation>
     </message>

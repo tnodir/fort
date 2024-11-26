@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation>스타일:</translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>자동-실행:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>사용 안 함</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>현재 사용자용</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>모든 사용자용</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Make sure that you have a fresh backup.</source>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>시작</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>트래픽</translation>
     </message>
@@ -1152,18 +1164,6 @@ Make sure that you have a fresh backup.</source>
         <translation>암호 잠금 (&quot;%1&quot;까지 잠금 해제됨)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>비활성화됨</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>현재 사용자용</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>모든 사용자용</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>설치됨</translation>
     </message>
@@ -1182,10 +1182,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Show log messages in console</source>
         <translation>콘솔에 로그 메세지 표시</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>자동-실행:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Make sure that you have a fresh backup.</source>
         <source>Auto-install after download</source>
         <translation>다운로드 후 자동 설치</translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>로컬 네트워크 주소:</translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>로컬 네트워크 추가</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># 예제:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1269,6 +1277,18 @@ Do you want to open a discussion thread in browser?</source>
 (현재 읽기 전용이며 v4에서 제거됩니다.)
 
 브라우저에서 토론 스레드를 열고 싶습니까?</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation>&apos;IP 주소&amp;apos&apos; 필드의 설정을 전역 규칙으로 이동하세요!!!
+
+(현재는 읽기 전용이며 v4에서 제거될 예정입니다.)
+
+브라우저에서 토론 스레드를 열고 싶으신가요?</translation>
     </message>
 </context>
 <context>

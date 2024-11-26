@@ -980,6 +980,22 @@
         <source>Style:</source>
         <translation>Style&#xa0;:</translation>
     </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Exécution automatique:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Désactivé</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Pour l&apos;utilisateur actuel</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Pour tout utilisateurs</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1124,10 +1140,6 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
 <context>
     <name>OptionsPage</name>
     <message>
-        <source>Startup</source>
-        <translation>Démarrage</translation>
-    </message>
-    <message>
         <source>Traffic</source>
         <translation>Trafic</translation>
     </message>
@@ -1152,18 +1164,6 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>Verrouiller mot de passe (déverrouillé jusqu&apos;à &quot;%1&quot;)</translation>
     </message>
     <message>
-        <source>Disabled</source>
-        <translation>Désactivé</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Pour l&apos;utilisateur actuel</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Pour tout utilisateurs</translation>
-    </message>
-    <message>
         <source>Installed</source>
         <translation>Installée</translation>
     </message>
@@ -1182,10 +1182,6 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <message>
         <source>Show log messages in console</source>
         <translation>Afficher les messages du journal dans la console</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Exécution automatique:</translation>
     </message>
     <message>
         <source>Filter Mode:</source>
@@ -1251,6 +1247,18 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <source>Auto-install after download</source>
         <translation>Auto-installation après le téléchargement</translation>
     </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>Adresses du réseau local :</translation>
+    </message>
+    <message>
+        <source>Add Local Networks</source>
+        <translation>Ajouter des réseaux locaux</translation>
+    </message>
+    <message>
+        <source># Examples:</source>
+        <translation># Exemples:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1267,6 +1275,18 @@ Do you want to open a discussion thread in browser?</source>
         <translation>Veuillez déplacer les textes des champs Autoriser/Bloquer des groupes d&apos;applications vers les programmes génériques !!!
 
 (Ils sont désormais en lecture seule et seront supprimés dans la v4.)
+
+Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
+    </message>
+    <message>
+        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
+
+(They are read-only now and will be removed in v4.)
+
+Do you want to open a discussion thread in browser?</source>
+        <translation>Veuillez déplacer les paramètres des champs &apos;IP Addresses&amp;apos ; dans les règles globales!!!
+
+(Ils sont en lecture seule maintenant et seront retirés dans v4.)
 
 Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
     </message>
