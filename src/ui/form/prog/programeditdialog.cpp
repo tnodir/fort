@@ -237,12 +237,13 @@ void ProgramEditDialog::setupController()
 
 void ProgramEditDialog::setupRuleManager()
 {
-    connect(confRuleManager(), &ConfRuleManager::ruleRemoved, this, [&](int ruleId) {
-        if (ruleId == currentRuleId()) {
-            setCurrentRuleId();
-            m_editRuleName->clear();
-        }
-    });
+    connect(confRuleManager(), &ConfRuleManager::ruleRemoved, this,
+            [&](int ruleId, int appRulesCount) {
+                if (appRulesCount > 0 && ruleId == currentRuleId()) {
+                    setCurrentRuleId();
+                    m_editRuleName->clear();
+                }
+            });
 
     connect(confRuleManager(), &ConfRuleManager::ruleUpdated, this, [&](int ruleId) {
         if (ruleId == currentRuleId()) {

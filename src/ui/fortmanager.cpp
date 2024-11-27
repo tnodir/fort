@@ -183,6 +183,7 @@ void FortManager::initialize()
 
     setupEnvManager();
     setupConfManager();
+    setupConfRuleManager();
     setupQuotaManager();
     setupTaskManager();
     setupServiceInfoManager();
@@ -418,6 +419,18 @@ void FortManager::setupConfManager()
 
     connect(confManager, &ConfManager::confPeriodsChanged, this,
             [&] { updateDriverConf(/*onlyFlags=*/true); });
+}
+
+void FortManager::setupConfRuleManager()
+{
+    auto confRuleManager = IoC<ConfRuleManager>();
+
+    connect(confRuleManager, &ConfRuleManager::ruleRemoved, this,
+            [&](int /*ruleId*/, int appRulesCount) {
+                if (appRulesCount > 0) {
+                    updateDriverConf(); // Update all apps
+                }
+            });
 }
 
 void FortManager::setupQuotaManager()

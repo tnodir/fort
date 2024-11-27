@@ -262,6 +262,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 bool ConfRuleManager::deleteRule(int ruleId)
 {
     bool ok = false;
+    int appRulesCount = 0;
 
     beginTransaction();
 
@@ -272,6 +273,8 @@ bool ConfRuleManager::deleteRule(int ruleId)
         // Delete the App Rule from Programs
         DbQuery(sqliteDb()).sql(sqlDeleteAppRule).vars(vars).executeOk();
 
+        appRulesCount = sqliteDb()->changes();
+
         // Delete the Preset Rule from Rules
         DbQuery(sqliteDb()).sql(sqlDeleteRuleSet).vars(vars).executeOk();
         DbQuery(sqliteDb()).sql(sqlDeleteRuleSetSub).vars(vars).executeOk();
@@ -280,9 +283,9 @@ bool ConfRuleManager::deleteRule(int ruleId)
     commitTransaction(ok);
 
     if (ok) {
-        emit ruleRemoved(ruleId);
-
         updateDriverRules();
+
+        emit ruleRemoved(ruleId, appRulesCount);
     }
 
     return ok;

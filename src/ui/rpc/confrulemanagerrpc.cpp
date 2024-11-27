@@ -130,7 +130,7 @@ bool ConfRuleManagerRpc::processServerCommand(
         return true;
     }
     case Control::Rpc_ConfRuleManager_ruleRemoved: {
-        emit confRuleManager->ruleRemoved(p.args.value(0).toInt());
+        emit confRuleManager->ruleRemoved(p.args.value(0).toInt(), p.args.value(1).toInt());
         return true;
     }
     case Control::Rpc_ConfRuleManager_ruleUpdated: {
@@ -151,9 +151,11 @@ void ConfRuleManagerRpc::setupServerSignals(RpcManager *rpcManager)
 
     connect(confRuleManager, &ConfRuleManager::ruleAdded, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleAdded); });
-    connect(confRuleManager, &ConfRuleManager::ruleRemoved, rpcManager, [=](int ruleId) {
-        rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleRemoved, { ruleId });
-    });
+    connect(confRuleManager, &ConfRuleManager::ruleRemoved, rpcManager,
+            [=](int ruleId, int appRulesCount) {
+                rpcManager->invokeOnClients(
+                        Control::Rpc_ConfRuleManager_ruleRemoved, { ruleId, appRulesCount });
+            });
     connect(confRuleManager, &ConfRuleManager::ruleUpdated, rpcManager, [=](int ruleId) {
         rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleUpdated, { ruleId });
     });

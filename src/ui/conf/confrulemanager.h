@@ -44,7 +44,7 @@ public:
 
 signals:
     void ruleAdded();
-    void ruleRemoved(int ruleId);
+    void ruleRemoved(int ruleId, int appRulesCount);
     void ruleUpdated(int ruleId);
 
 private:
