@@ -1,7 +1,8 @@
 Fort Firewall ChangeLog
 
-v3.15.1-test01, 2024-11-29:
+v3.15.1-test02, 2024-11-29:
 - Driver: Improve blocked rules handling (Empty Rule's Text means "All IP Addresses").
+- Driver: Improve Rule's Zones handling.
 - UI: Update SQLite to 3.47.1
 
 v3.15.0, 2024-11-25:
