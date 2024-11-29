@@ -471,14 +471,16 @@ FORT_API BOOL fort_devconf_zones_ip_included(
 }
 
 FORT_API BOOL fort_devconf_zones_conn_blocked(PFORT_DEVICE_CONF device_conf,
-        PCFORT_CONF_META_CONN conn, UINT32 reject_mask, UINT32 accept_mask)
+        PCFORT_CONF_META_CONN conn, const FORT_CONF_RULE_ZONES rule_zones)
 {
     BOOL res = FALSE;
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
     PCFORT_CONF_ZONES zones = device_conf->zones;
     if (zones != NULL) {
-        res = fort_conf_zones_conn_blocked(zones, conn, reject_mask, accept_mask);
+        BOOL included = FALSE;
+
+        res = fort_conf_zones_conn_blocked(zones, conn, rule_zones, &included);
     }
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 

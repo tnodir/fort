@@ -248,8 +248,12 @@ inline static BOOL fort_callout_ale_conn_zone_blocked(
     if (app_data.reject_zones == 0 && app_data.accept_zones == 0)
         return FALSE;
 
-    return fort_devconf_zones_conn_blocked(
-            &fort_device()->conf, conn, app_data.reject_zones, app_data.accept_zones);
+    const FORT_CONF_RULE_ZONES rule_zones = {
+        .accept_mask = app_data.accept_zones,
+        .reject_mask = app_data.reject_zones,
+    };
+
+    return fort_devconf_zones_conn_blocked(&fort_device()->conf, conn, rule_zones);
 }
 
 inline static BOOL fort_callout_ale_conn_rule_blocked(PFORT_CONF_META_CONN conn, UINT16 rule_id)

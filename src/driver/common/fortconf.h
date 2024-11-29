@@ -491,7 +491,7 @@ FORT_API BOOL fort_conf_zones_ip_included(
         PCFORT_CONF_ZONES zones, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6);
 
 FORT_API BOOL fort_conf_zones_conn_blocked(PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn,
-        UINT32 reject_mask, UINT32 accept_mask);
+        const FORT_CONF_RULE_ZONES rule_zones, BOOL *included);
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 

@@ -311,22 +311,30 @@ FORT_API BOOL fort_conf_zones_ip_included(
 }
 
 static BOOL fort_conf_zones_masks_conn_check(
-        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, UINT32 zones_mask, BOOL included)
+        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, UINT32 zones_mask, BOOL *included)
 {
     if (zones_mask == 0)
         return FALSE;
 
-    const BOOL ip_included =
-            fort_conf_zones_ip_included(zones, zones_mask, conn->remote_ip, conn->isIPv6);
+    *included = fort_conf_zones_ip_included(zones, zones_mask, conn->remote_ip, conn->isIPv6);
 
-    return ip_included == included;
+    return TRUE;
 }
 
-FORT_API BOOL fort_conf_zones_conn_blocked(
-        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, UINT32 reject_mask, UINT32 accept_mask)
+FORT_API BOOL fort_conf_zones_conn_blocked(PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn,
+        const FORT_CONF_RULE_ZONES rule_zones, BOOL *included)
 {
-    return fort_conf_zones_masks_conn_check(zones, conn, reject_mask, /*included=*/TRUE)
-            || fort_conf_zones_masks_conn_check(zones, conn, accept_mask, /*included=*/FALSE);
+    if (fort_conf_zones_masks_conn_check(zones, conn, rule_zones.reject_mask, included)
+            && *included) {
+        return TRUE; /* rejected */
+    }
+
+    if (fort_conf_zones_masks_conn_check(zones, conn, rule_zones.accept_mask, included)
+            && !*included) {
+        return TRUE; /* not accepted */
+    }
+
+    return FALSE;
 }
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
@@ -456,7 +464,7 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
 }
 
 inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
-        PCFORT_CONF_RULES_RT rules_rt, PCFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     if (!rule->has_zones)
         return FALSE;
@@ -465,13 +473,22 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
     if (!zones)
         return FALSE;
 
-    PCFORT_CONF_RULE_ZONES rule_zones = (PCFORT_CONF_RULE_ZONES) (rule + 1);
-
-    BOOL filter_res = fort_conf_zones_conn_blocked(
-            zones, conn, rule_zones->reject_mask, rule_zones->accept_mask);
+    FORT_CONF_RULE_ZONES rule_zones = *((PCFORT_CONF_RULE_ZONES) (rule + 1));
 
     if (rule->blocked) {
-        filter_res = !filter_res;
+        const UINT32 accept_mask = rule_zones.accept_mask;
+        rule_zones.accept_mask = rule_zones.reject_mask;
+        rule_zones.reject_mask = accept_mask;
+    }
+
+    BOOL included = FALSE;
+    const BOOL filter_res = fort_conf_zones_conn_blocked(zones, conn, rule_zones, &included);
+
+    if (!included)
+        return FALSE;
+
+    if (!filter_res) {
+        conn->blocked = FALSE;
     }
 
     return filter_res;
@@ -678,10 +695,8 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
     if (!rule->enabled)
         return FALSE;
 
-    if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule))
-        return TRUE;
-
-    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule)
+    if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule)
+            || fort_conf_rules_rt_conn_blocked_filters(conn, rule)
             || fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule)) {
         return conn->blocked;
     }
