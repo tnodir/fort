@@ -532,7 +532,7 @@ QLayout *OptionsPage::setupLanHeaderLayout()
 
 void OptionsPage::setupEditLanText()
 {
-    // Add LAN Text Action
+    // Add Local Networks Action
     m_actAddLocalNetworks = new QAction(IconCache::icon(":/icons/hostname.png"), QString(), this);
 
     connect(m_actAddLocalNetworks, &QAction::triggered, this,

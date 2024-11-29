@@ -22,6 +22,7 @@
 #include <util/conf/confutil.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
+#include <util/osutil.h>
 
 #include "rulescontroller.h"
 #include "ruleswindow.h"
@@ -127,6 +128,7 @@ void RuleEditDialog::retranslateUi()
     m_btZones->retranslateUi();
 
     retranslateRulePlaceholderText();
+    m_actRuleHelp->setText(tr("Help"));
 
     m_btAddPresetRule->setText(tr("Add Preset Rule"));
     m_btRemovePresetRule->setText(tr("Remove"));
@@ -189,7 +191,7 @@ QLayout *RuleEditDialog::setupMainLayout()
     auto zonesLayout = setupZonesLayout();
 
     // Rule Text
-    m_editRuleText = new PlainTextEdit();
+    setupEditRuleText();
 
     // RuleSet Header
     auto ruleSetHeaderLayout = setupRuleSetHeaderLayout();
@@ -291,6 +293,20 @@ QLayout *RuleEditDialog::setupZonesLayout()
             { m_cbExclusive, ControlUtil::createVSeparator(), m_btZones, /*stretch*/ nullptr });
 
     return layout;
+}
+
+void RuleEditDialog::setupEditRuleText()
+{
+    // Help Action
+    m_actRuleHelp = new QAction(IconCache::icon(":/icons/help.png"), QString(), this);
+
+    connect(m_actRuleHelp, &QAction::triggered, this,
+            [&] { OsUtil::openUrl(QUrl("https://github.com/tnodir/fort/wiki/Rules")); });
+
+    // Edit Rule Text
+    m_editRuleText = new PlainTextEdit();
+
+    m_editRuleText->addContextAction(m_actRuleHelp);
 }
 
 QLayout *RuleEditDialog::setupRuleSetHeaderLayout()

@@ -31,6 +31,7 @@ void PlainTextEdit::contextMenuEvent(QContextMenuEvent *e)
     QMenu *menu = createStandardContextMenu();
     menu->setAttribute(Qt::WA_DeleteOnClose);
 
+    menu->addSeparator();
     menu->addActions(m_contextActions);
 
     menu->popup(e->globalPos());

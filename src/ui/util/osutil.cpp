@@ -44,6 +44,11 @@ bool OsUtil::openFolder(const QString &filePath)
     return QProcess::execute("explorer.exe", { "/select,", nativePath }) == 0;
 }
 
+bool OsUtil::openUrl(const QUrl &url)
+{
+    return QDesktopServices::openUrl(url);
+}
+
 bool OsUtil::openUrlOrFolder(const QString &path)
 {
     const QUrl url = QUrl::fromUserInput(path);
@@ -56,7 +61,7 @@ bool OsUtil::openUrlOrFolder(const QString &path)
         // else open the folder's content
     }
 
-    return QDesktopServices::openUrl(url);
+    return openUrl(url);
 }
 
 void *OsUtil::createMutex(const char *name, bool &isSingleInstance)

@@ -53,6 +53,7 @@ private:
     QLayout *setupFormLayout();
     QLayout *setupActionsLayout();
     QLayout *setupZonesLayout();
+    void setupEditRuleText();
     QLayout *setupRuleSetHeaderLayout();
     void setupRuleSetView();
     QLayout *setupButtons();
@@ -91,6 +92,7 @@ private:
     QRadioButton *m_rbBlock = nullptr;
     QCheckBox *m_cbExclusive = nullptr;
     ZonesSelector *m_btZones = nullptr;
+    QAction *m_actRuleHelp = nullptr;
     PlainTextEdit *m_editRuleText = nullptr;
     QToolButton *m_btAddPresetRule = nullptr;
     QToolButton *m_btRemovePresetRule = nullptr;

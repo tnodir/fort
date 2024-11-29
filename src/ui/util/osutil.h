@@ -21,6 +21,7 @@ public:
     static QString pidToPath(quint32 pid, bool isKernelPath = false);
 
     static bool openFolder(const QString &filePath);
+    static bool openUrl(const QUrl &url);
     static bool openUrlOrFolder(const QString &path);
 
     static void *createMutex(const char *name, bool &isSingleInstance);
