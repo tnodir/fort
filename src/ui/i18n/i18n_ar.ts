@@ -1782,6 +1782,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Edit</source>
         <translation>تعديل</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>مساعدة</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

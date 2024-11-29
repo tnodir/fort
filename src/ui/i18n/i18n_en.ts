@@ -1771,6 +1771,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Edit</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

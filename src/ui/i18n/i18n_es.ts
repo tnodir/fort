@@ -1789,6 +1789,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Edit</source>
         <translation>Editar</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>Ayuda</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

@@ -1782,6 +1782,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <source>Edit</source>
         <translation>Bearbeiten</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>Hilfe</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

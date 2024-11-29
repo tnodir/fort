@@ -1786,6 +1786,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Edit</source>
         <translation>Uredi</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>Pomoč</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

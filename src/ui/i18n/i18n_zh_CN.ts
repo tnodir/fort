@@ -1786,6 +1786,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>帮助</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

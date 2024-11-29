@@ -1782,6 +1782,10 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <source>Edit</source>
         <translation>Edycja</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>Pomoc</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

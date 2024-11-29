@@ -1786,6 +1786,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Edit</source>
         <translation>Modifica</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>Aiuto</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

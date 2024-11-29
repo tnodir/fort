@@ -1786,6 +1786,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Edit</source>
         <translation>Éditer</translation>
     </message>
+    <message>
+        <source>Help</source>
+        <translation>Aide</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
