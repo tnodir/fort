@@ -622,7 +622,7 @@ static BOOL fort_conf_rule_filter_check(
 }
 
 inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
-        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, BOOL *blocked)
+        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     if (!rule->has_filters)
         return FALSE;
@@ -630,26 +630,24 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
     PCFORT_CONF_RULE_FILTER rule_filter =
             (PCFORT_CONF_RULE_FILTER) ((PCCH) rule + FORT_CONF_RULE_SIZE(rule));
 
-    BOOL filter_res = fort_conf_rule_filter_check(rule_filter, conn);
+    const BOOL filter_res = fort_conf_rule_filter_check(rule_filter, conn);
 
     if (rule->blocked) {
-        *blocked = filter_res;
         return filter_res;
     }
 
-    *blocked = FALSE;
-
-    if (filter_res) {
+    if (filter_res
+            /* skip the exclusive allowed rule */
+            || rule->exclusive) {
         conn->blocked = FALSE;
-    } else if (rule->exclusive) {
-        return TRUE; /* skip the exclusive allowed rule */
+        return TRUE;
     }
 
-    return filter_res;
+    return FALSE;
 }
 
-inline static BOOL fort_conf_rules_rt_conn_blocked_sets(PCFORT_CONF_RULES_RT rules_rt,
-        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, BOOL *blocked)
+inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     const int set_count = rule->set_count;
     if (set_count == 0)
@@ -661,13 +659,7 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_sets(PCFORT_CONF_RULES_RT rul
     for (int i = 0; i < set_count; ++i) {
         const UINT16 rule_id = rule_ids[i];
 
-        if (fort_conf_rules_rt_conn_blocked(rules_rt, conn, rule_id)) {
-            *blocked = TRUE;
-            return TRUE;
-        }
-
-        if (!conn->blocked) {
-            *blocked = FALSE;
+        if (fort_conf_rules_rt_conn_blocked(rules_rt, conn, rule_id) || !conn->blocked) {
             return TRUE;
         }
     }
@@ -689,16 +681,17 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
     if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule))
         return TRUE;
 
-    BOOL blocked;
-    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule, &blocked)
-            || fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule, &blocked)) {
-        return blocked;
+    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule)
+            || fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule)) {
+        return conn->blocked;
     }
 
-    /* Empty Rule's Text means "All IP Addresses" */
-    const BOOL rule_blocked = (!rule->has_filters && rule->blocked);
+    /* Empty Blocked Rule's Text means "Block All" */
+    if (!rule->has_filters && rule->blocked) {
+        return TRUE;
+    }
 
-    return rule_blocked;
+    return FALSE;
 }
 
 FORT_API BOOL fort_conf_rules_conn_blocked(
