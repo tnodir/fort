@@ -701,9 +701,9 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
         return conn->blocked;
     }
 
-    /* Empty Blocked Rule's Text means "Block All" */
-    if (!rule->has_filters && rule->blocked) {
-        return TRUE;
+    /* Empty Blocked Rule means "Block All" */
+    if (rule->blocked) {
+        return !(rule->has_zones || rule->has_filters);
     }
 
     return FALSE;
