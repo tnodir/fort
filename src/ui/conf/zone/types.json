@@ -4,7 +4,7 @@
         "title": "Generic",
         "description": "Generic list",
         "sort": true,
-        "pattern": "^\\D*([\\d./-]{7,})",
+        "pattern": "^\\[?([A-Fa-f\\d:.]+)\\]?\\s*([\/-]?)\\s*(\\S*)",
         "emptyNetMask": 32
     },
     {
