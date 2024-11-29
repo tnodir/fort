@@ -648,8 +648,8 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
     return filter_res;
 }
 
-inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
-        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+inline static BOOL fort_conf_rules_rt_conn_blocked_sets(PCFORT_CONF_RULES_RT rules_rt,
+        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, BOOL *blocked)
 {
     const int set_count = rule->set_count;
     if (set_count == 0)
@@ -661,11 +661,15 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
     for (int i = 0; i < set_count; ++i) {
         const UINT16 rule_id = rule_ids[i];
 
-        if (fort_conf_rules_rt_conn_blocked(rules_rt, conn, rule_id))
+        if (fort_conf_rules_rt_conn_blocked(rules_rt, conn, rule_id)) {
+            *blocked = TRUE;
             return TRUE;
+        }
 
-        if (!conn->blocked)
-            break;
+        if (!conn->blocked) {
+            *blocked = FALSE;
+            return TRUE;
+        }
     }
 
     return FALSE;
@@ -686,14 +690,15 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
         return TRUE;
 
     BOOL blocked;
-    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule, &blocked)) {
+    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule, &blocked)
+            || fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule, &blocked)) {
         return blocked;
     }
 
-    if (fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule))
-        return TRUE;
+    /* Empty Rule's Text means "All IP Addresses" */
+    const BOOL rule_blocked = (!rule->has_filters && rule->blocked);
 
-    return FALSE;
+    return rule_blocked;
 }
 
 FORT_API BOOL fort_conf_rules_conn_blocked(
