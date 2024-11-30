@@ -1,5 +1,6 @@
 #include "ruleeditdialog.h"
 
+#include <QAction>
 #include <QCheckBox>
 #include <QComboBox>
 #include <QFormLayout>
