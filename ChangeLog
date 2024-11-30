@@ -1,8 +1,8 @@
 Fort Firewall ChangeLog
 
-v3.15.1-test03, 2024-11-29:
+v3.15.1, 2024-11-30:
+- UI: Rule: Add "Terminating" action.
 - UI: Zones: Support IPv6 addresses.
-- Driver: Improve blocked rules handling (Rule's Empty Zones/Text means "All IP Addresses").
 - Driver: Improve Rule's Zones handling.
 - UI: Update SQLite to 3.47.1
 
