@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.15.2, 2024-11-30:
+- UI: Zones: Fix IPv4 address masks (v3.15.1 regression).
+
 v3.15.1, 2024-11-30:
 - UI: Rule: Add "Terminating" action.
 - UI: Zones: Support IPv6 addresses.
