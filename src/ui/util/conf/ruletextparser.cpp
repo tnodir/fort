@@ -356,7 +356,7 @@ bool RuleTextParser::parseBracketValue(RuleCharTypes expectedSeparator)
     }
 
     if (hasParsedCharTypes(CharBracketEnd)) {
-        returnToCharType(CharBracketEnd); // Unget new lines
+        checkBracketValueEnd();
         return false;
     }
 
@@ -384,6 +384,8 @@ bool RuleTextParser::checkBracketValueEnd()
         setError(ErrorUnexpectedEndOfValuesList, tr("Unexpected end of values list"));
         return false;
     }
+
+    returnToCharType(CharBracketEnd); // Unget new lines
 
     return true;
 }

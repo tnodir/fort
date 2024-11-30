@@ -409,7 +409,6 @@ TEST_F(RuleTextParserTest, lineBracketValues)
     ASSERT_EQ(p.ruleFilters().size(), 5);
 }
 
-
 TEST_F(RuleTextParserTest, lineIpPortSubList)
 {
     RuleTextParser p("{1}\n2");
@@ -417,4 +416,21 @@ TEST_F(RuleTextParserTest, lineIpPortSubList)
     ASSERT_TRUE(p.parse());
 
     ASSERT_EQ(p.ruleFilters().size(), 7);
+}
+
+TEST_F(RuleTextParserTest, linesNotBracketValues)
+{
+    RuleTextParser p("!(1.1.1.1)\n!(2.2.2.2)");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 5);
+
+    // Check Last IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[4];
+        ASSERT_TRUE(rf.isNot);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "2.2.2.2" });
+    }
 }
