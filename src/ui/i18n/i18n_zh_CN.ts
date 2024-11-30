@@ -1792,7 +1792,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Terminating Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>结束规则：</translation>
     </message>
 </context>
 <context>
