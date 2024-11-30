@@ -4,7 +4,7 @@
         "title": "Generic",
         "description": "Generic list",
         "sort": true,
-        "pattern": "^\\s*\\[?([A-Fa-f\\d:.]+)\\]?\\s*([\/-]?)\\s*(\\S*)",
+        "pattern": "^\\s*(\\[?[A-Fa-f\\d:.]+\\]?\\s*[\\/-]?\\s*\\S*)",
         "emptyNetMask": 32
     },
     {
