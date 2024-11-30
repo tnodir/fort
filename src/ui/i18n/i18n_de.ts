@@ -1786,6 +1786,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <source>Help</source>
         <translation>Hilfe</translation>
     </message>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

@@ -1784,6 +1784,10 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <source>Help</source>
         <translation>Ajuda</translation>
     </message>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

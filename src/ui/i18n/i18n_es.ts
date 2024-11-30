@@ -1793,6 +1793,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Help</source>
         <translation>Ayuda</translation>
     </message>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

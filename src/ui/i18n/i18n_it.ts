@@ -1790,6 +1790,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Help</source>
         <translation>Aiuto</translation>
     </message>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

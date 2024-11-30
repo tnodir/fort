@@ -1775,6 +1775,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Help</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

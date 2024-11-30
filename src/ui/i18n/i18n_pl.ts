@@ -1786,6 +1786,10 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <source>Help</source>
         <translation>Pomoc</translation>
     </message>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

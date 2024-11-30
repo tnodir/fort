@@ -1790,6 +1790,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

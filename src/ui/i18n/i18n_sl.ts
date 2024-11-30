@@ -1790,6 +1790,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Help</source>
         <translation>Pomoč</translation>
     </message>
+    <message>
+        <source>Terminating Rule:</source>
+        <translation>Končno pravilo:</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
