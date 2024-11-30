@@ -684,6 +684,27 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
     return FALSE;
 }
 
+inline static BOOL fort_conf_rules_rt_conn_blocked_check(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+{
+    if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule))
+        return TRUE;
+
+    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule))
+        return TRUE;
+
+    if (fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule))
+        return TRUE;
+
+    /* Terminating Rule? */
+    if (rule->terminate) {
+        conn->blocked = rule->term_blocked;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 FORT_API BOOL fort_conf_rules_rt_conn_blocked(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
@@ -695,15 +716,8 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
     if (!rule->enabled)
         return FALSE;
 
-    if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule)
-            || fort_conf_rules_rt_conn_blocked_filters(conn, rule)
-            || fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule)) {
+    if (fort_conf_rules_rt_conn_blocked_check(rules_rt, conn, rule)) {
         return conn->blocked;
-    }
-
-    /* Empty Blocked Rule means "Block All" */
-    if (rule->blocked) {
-        return !(rule->has_zones || rule->has_filters);
     }
 
     return FALSE;

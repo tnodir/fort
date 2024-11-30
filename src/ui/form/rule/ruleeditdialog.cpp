@@ -82,6 +82,9 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_btZones->setUncheckedZones(ruleRow.rejectZones);
     updateZonesLayout();
 
+    m_cbTerminate->setChecked(ruleRow.terminate);
+    m_comboTerminateAction->setCurrentIndex(ruleRow.terminateActionType());
+
     initializeFocus();
 }
 
@@ -136,6 +139,9 @@ void RuleEditDialog::retranslateUi()
     m_btUpPresetRule->setToolTip(tr("Move Up"));
     m_btDownPresetRule->setToolTip(tr("Move Down"));
 
+    m_cbTerminate->setText(tr("Terminating Rule:"));
+    retranslateComboTerminate();
+
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
@@ -158,6 +164,16 @@ void RuleEditDialog::retranslateRulePlaceholderText()
               "\n1.1.1.1:80:dir(in)";
 
     m_editRuleText->setPlaceholderText(placeholderText);
+}
+
+void RuleEditDialog::retranslateComboTerminate()
+{
+    const QStringList list = { tr("Allow"), tr("Block") };
+
+    ControlUtil::setComboBoxTexts(m_comboTerminateAction, list);
+
+    ControlUtil::setComboBoxIcons(
+            m_comboTerminateAction, { ":/icons/accept.png", ":/icons/deny.png" });
 }
 
 void RuleEditDialog::setupUi()
@@ -202,6 +218,9 @@ QLayout *RuleEditDialog::setupMainLayout()
     // Actions on rule set view's current changed
     setupRuleSetViewChanged();
 
+    // Terminate Layout
+    auto terminateLayout = setupTerminateLayout();
+
     // OK/Cancel
     auto buttonsLayout = setupButtons();
 
@@ -216,6 +235,8 @@ QLayout *RuleEditDialog::setupMainLayout()
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(ruleSetHeaderLayout);
     layout->addWidget(m_ruleSetView);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(terminateLayout);
     layout->addStretch();
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(buttonsLayout);
@@ -345,6 +366,49 @@ void RuleEditDialog::setupRuleSetView()
             &RuleEditDialog::updateRuleSetViewVisible);
 }
 
+void RuleEditDialog::setupRuleSetViewChanged()
+{
+    const auto refreshRuleSetViewChanged = [&] {
+        const bool ruleSelected = (ruleSetCurrentIndex() >= 0);
+        m_btRemovePresetRule->setEnabled(ruleSelected);
+        m_btEditPresetRule->setEnabled(ruleSelected);
+        m_btUpPresetRule->setEnabled(ruleSelected);
+        m_btDownPresetRule->setEnabled(ruleSelected);
+    };
+
+    refreshRuleSetViewChanged();
+
+    connect(m_ruleSetView, &ListView::currentIndexChanged, this, refreshRuleSetViewChanged);
+}
+
+QLayout *RuleEditDialog::setupTerminateLayout()
+{
+    // Terminate Action
+    m_comboTerminateAction = ControlUtil::createComboBox();
+    m_comboTerminateAction->setMinimumWidth(100);
+
+    // Terminate Check Box
+    setupCbTerminate();
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbTerminate, m_comboTerminateAction,
+            /*stretch*/ nullptr });
+
+    return layout;
+}
+
+void RuleEditDialog::setupCbTerminate()
+{
+    m_cbTerminate = new QCheckBox();
+
+    const auto refreshTerminateEnabled = [&](bool checked) {
+        m_comboTerminateAction->setEnabled(checked);
+    };
+
+    refreshTerminateEnabled(false);
+
+    connect(m_cbTerminate, &QCheckBox::toggled, this, refreshTerminateEnabled);
+}
+
 QLayout *RuleEditDialog::setupButtons()
 {
     // OK
@@ -364,21 +428,6 @@ QLayout *RuleEditDialog::setupButtons()
     layout->addWidget(m_btCancel);
 
     return layout;
-}
-
-void RuleEditDialog::setupRuleSetViewChanged()
-{
-    const auto refreshRuleSetViewChanged = [&] {
-        const bool ruleSelected = (ruleSetCurrentIndex() >= 0);
-        m_btRemovePresetRule->setEnabled(ruleSelected);
-        m_btEditPresetRule->setEnabled(ruleSelected);
-        m_btUpPresetRule->setEnabled(ruleSelected);
-        m_btDownPresetRule->setEnabled(ruleSelected);
-    };
-
-    refreshRuleSetViewChanged();
-
-    connect(m_ruleSetView, &ListView::currentIndexChanged, this, refreshRuleSetViewChanged);
 }
 
 void RuleEditDialog::updateZonesLayout()
@@ -495,6 +544,9 @@ void RuleEditDialog::fillRule(Rule &rule) const
     rule.enabled = m_cbEnabled->isChecked();
     rule.blocked = !m_rbAllow->isChecked();
     rule.exclusive = m_cbExclusive->isChecked();
+
+    rule.terminate = m_cbTerminate->isChecked();
+    rule.setTerminateActionType(m_comboTerminateAction->currentIndex());
 
     rule.acceptZones = m_btZones->zones();
     rule.rejectZones = m_btZones->uncheckedZones();

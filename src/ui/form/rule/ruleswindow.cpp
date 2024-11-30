@@ -343,11 +343,15 @@ bool RulesWindow::emitRuleSelected(const QModelIndex &index)
 
 void RulesWindow::addNewRule()
 {
-    const auto ruleIndex = ruleListCurrentIndex();
-
     RuleRow ruleRow;
-    ruleRow.ruleType =
-            (ruleType() != Rule::RuleNone) ? ruleType() : RuleListModel::indexRuleType(ruleIndex);
+
+    if (ruleType() != Rule::RuleNone) {
+        ruleRow.ruleType = ruleType();
+    } else {
+        const auto ruleIndex = ruleListCurrentIndex();
+
+        ruleRow.ruleType = RuleListModel::indexRuleType(ruleIndex);
+    }
 
     openRuleEditForm(ruleRow);
 }

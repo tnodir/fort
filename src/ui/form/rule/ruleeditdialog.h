@@ -47,6 +47,7 @@ private:
     void retranslateUi();
     void retranslateComboRuleType();
     void retranslateRulePlaceholderText();
+    void retranslateComboTerminate();
 
     void setupUi();
     QLayout *setupMainLayout();
@@ -56,8 +57,10 @@ private:
     void setupEditRuleText();
     QLayout *setupRuleSetHeaderLayout();
     void setupRuleSetView();
-    QLayout *setupButtons();
     void setupRuleSetViewChanged();
+    QLayout *setupTerminateLayout();
+    void setupCbTerminate();
+    QLayout *setupButtons();
 
     void updateZonesLayout();
     void updateRuleSetViewVisible();
@@ -100,6 +103,8 @@ private:
     QToolButton *m_btUpPresetRule = nullptr;
     QToolButton *m_btDownPresetRule = nullptr;
     ListView *m_ruleSetView = nullptr;
+    QCheckBox *m_cbTerminate = nullptr;
+    QComboBox *m_comboTerminateAction = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 

@@ -304,13 +304,15 @@ bool RuleListModel::updateRuleRow(
     ruleRow.enabled = stmt.columnBool(1);
     ruleRow.blocked = stmt.columnBool(2);
     ruleRow.exclusive = stmt.columnBool(3);
-    ruleRow.ruleName = stmt.columnText(4);
-    ruleRow.notes = stmt.columnText(5);
-    ruleRow.ruleText = stmt.columnText(6);
-    ruleRow.ruleType = Rule::RuleType(stmt.columnInt(7));
-    ruleRow.acceptZones = stmt.columnUInt(8);
-    ruleRow.rejectZones = stmt.columnUInt(9);
-    ruleRow.modTime = stmt.columnDateTime(10);
+    ruleRow.terminate = stmt.columnBool(4);
+    ruleRow.terminateBlocked = stmt.columnBool(5);
+    ruleRow.ruleName = stmt.columnText(6);
+    ruleRow.notes = stmt.columnText(7);
+    ruleRow.ruleText = stmt.columnText(8);
+    ruleRow.ruleType = Rule::RuleType(stmt.columnInt(9));
+    ruleRow.acceptZones = stmt.columnUInt(10);
+    ruleRow.rejectZones = stmt.columnUInt(11);
+    ruleRow.modTime = stmt.columnDateTime(12);
 
     return true;
 }
@@ -322,6 +324,8 @@ QString RuleListModel::sqlBase() const
            "    enabled,"
            "    blocked,"
            "    exclusive,"
+           "    terminate,"
+           "    term_blocked,"
            "    name,"
            "    notes,"
            "    rule_text,"

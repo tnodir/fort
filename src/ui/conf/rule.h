@@ -19,13 +19,24 @@ public:
         RuleTypeCount
     };
 
+    enum TerminateActionType : qint8 {
+        TerminateAllow = 0,
+        TerminateBlock,
+    };
+
     bool isNameEqual(const Rule &o) const;
     bool isOptionsEqual(const Rule &o) const;
+    bool isFlagsEqual(const Rule &o) const;
+
+    int terminateActionType() const;
+    void setTerminateActionType(qint8 v);
 
 public:
     bool enabled : 1 = true;
     bool blocked : 1 = false;
     bool exclusive : 1 = false;
+    bool terminate : 1 = false;
+    bool terminateBlocked : 1 = true;
     bool ruleSetEdited : 1 = false; // transient
 
     RuleType ruleType = AppRule;

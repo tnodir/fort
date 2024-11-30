@@ -24,6 +24,8 @@ const QLoggingCategory LC("confRule");
     "    t.enabled,"                                                                               \
     "    t.blocked,"                                                                               \
     "    t.exclusive,"                                                                             \
+    "    t.terminate,"                                                                             \
+    "    t.term_blocked,"                                                                          \
     "    t.rule_text,"                                                                             \
     "    t.rule_type,"                                                                             \
     "    t.accept_zones,"                                                                          \
@@ -50,15 +52,17 @@ const char *const sqlSelectMaxRuleId = "SELECT MAX(rule_id) FROM rule;";
 const char *const sqlSelectGlobMinRuleIdByType = "SELECT MIN(t.rule_id) FROM rule t"
                                                  "  WHERE t.rule_type = ?1;";
 
-const char *const sqlInsertRule = "INSERT INTO rule(rule_id, enabled, blocked, exclusive,"
-                                  "    name, notes, rule_text, rule_type,"
-                                  "    accept_zones, reject_zones, mod_time)"
-                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11);";
+const char *const sqlInsertRule =
+        "INSERT INTO rule(rule_id, enabled, blocked, exclusive,"
+        "    terminate, term_blocked, name, notes, rule_text, rule_type,"
+        "    accept_zones, reject_zones, mod_time)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13);";
 
 const char *const sqlUpdateRule = "UPDATE rule"
                                   "  SET enabled = ?2, blocked = ?3, exclusive = ?4,"
-                                  "    name = ?5, notes = ?6, rule_text = ?7, rule_type = ?8,"
-                                  "    accept_zones = ?9, reject_zones = ?10, mod_time = ?11"
+                                  "    terminate = ?5, term_blocked = ?6, name = ?7,"
+                                  "    notes = ?8, rule_text = ?9, rule_type = ?10,"
+                                  "    accept_zones = ?11, reject_zones = ?12, mod_time = ?13"
                                   "  WHERE rule_id = ?1;";
 
 const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
@@ -229,6 +233,8 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
             rule.enabled,
             rule.blocked,
             rule.exclusive,
+            rule.terminate,
+            rule.terminateBlocked,
             rule.ruleName,
             rule.notes,
             rule.ruleText,
@@ -434,10 +440,12 @@ void ConfRuleManager::fillRule(Rule &rule, const SqliteStmt &stmt)
     rule.enabled = stmt.columnBool(1);
     rule.blocked = stmt.columnBool(2);
     rule.exclusive = stmt.columnBool(3);
-    rule.ruleText = stmt.columnText(4);
-    rule.ruleType = Rule::RuleType(stmt.columnInt(5));
-    rule.acceptZones = stmt.columnUInt64(6);
-    rule.rejectZones = stmt.columnUInt64(7);
+    rule.terminate = stmt.columnBool(4);
+    rule.terminateBlocked = stmt.columnBool(5);
+    rule.ruleText = stmt.columnText(6);
+    rule.ruleType = Rule::RuleType(stmt.columnInt(7));
+    rule.acceptZones = stmt.columnUInt64(8);
+    rule.rejectZones = stmt.columnUInt64(9);
 }
 
 void ConfRuleManager::updateDriverRules()

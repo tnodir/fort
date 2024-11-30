@@ -575,6 +575,8 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     confRule.enabled = rule.enabled;
     confRule.blocked = rule.blocked;
     confRule.exclusive = rule.exclusive;
+    confRule.terminate = rule.terminate;
+    confRule.term_blocked = rule.terminateBlocked;
 
     const bool hasZones = (rule.acceptZones != 0 || rule.rejectZones != 0);
     confRule.has_zones = hasZones;

@@ -92,6 +92,8 @@ CREATE TABLE rule(
   enabled BOOLEAN NOT NULL,
   blocked BOOLEAN NOT NULL,
   exclusive BOOLEAN NOT NULL,
+  terminate BOOLEAN NOT NULL DEFAULT 0,
+  term_blocked BOOLEAN NOT NULL DEFAULT 1,
   name TEXT NOT NULL,
   notes TEXT,
   rule_text TEXT NOT NULL,

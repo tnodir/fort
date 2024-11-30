@@ -196,14 +196,16 @@ typedef const FORT_CONF_RULE_ZONES *PCFORT_CONF_RULE_ZONES;
 
 typedef struct fort_conf_rule
 {
-    UINT8 enabled : 1;
-    UINT8 blocked : 1;
-    UINT8 exclusive : 1;
+    UCHAR enabled : 1;
+    UCHAR blocked : 1;
+    UCHAR exclusive : 1;
+    UCHAR terminate : 1;
+    UCHAR term_blocked : 1;
 
-    UINT8 has_zones : 1;
-    UINT8 has_filters : 1;
+    UCHAR has_zones : 1;
+    UCHAR has_filters : 1;
 
-    UINT8 set_count;
+    UCHAR set_count;
 } FORT_CONF_RULE, *PFORT_CONF_RULE;
 
 typedef const FORT_CONF_RULE *PCFORT_CONF_RULE;
