@@ -227,7 +227,6 @@ void ProgramEditDialog::closeOnSave()
 void ProgramEditDialog::setAdvancedMode(bool on)
 {
     m_rbKillProcess->setVisible(on);
-    m_btMenu->setVisible(!on);
 }
 
 void ProgramEditDialog::setupController()
@@ -758,11 +757,8 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     m_btCancel = new QPushButton();
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
-    auto layout = new QHBoxLayout();
-    layout->addWidget(m_btOptions);
-    layout->addWidget(m_btMenu);
-    layout->addWidget(m_btOk, 1, Qt::AlignRight);
-    layout->addWidget(m_btCancel);
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_btMenu, m_btOptions, /*stretch*/ nullptr, m_btOk, m_btCancel });
 
     return layout;
 }
