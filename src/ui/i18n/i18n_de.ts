@@ -1249,7 +1249,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Local Network Addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokale Netzwerkadressen:</translation>
     </message>
     <message>
         <source>Add Local Networks</source>
@@ -1284,7 +1284,11 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation type="unfinished"></translation>
+        <translation>Bitte verschieben Sie die Einstellungen der Felder &apos;IP-Adressen&apos; in die globalen Regeln!!!
+
+(Sie sind jetzt schreibgeschützt und werden in v4 entfernt.)
+
+Möchten Sie einen Diskussionsthread im Browser öffnen?</translation>
     </message>
 </context>
 <context>
@@ -1788,7 +1792,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Terminating Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Terminierungsregel:</translation>
     </message>
 </context>
 <context>

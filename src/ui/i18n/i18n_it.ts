@@ -1792,7 +1792,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Terminating Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Regola terminante:</translation>
     </message>
 </context>
 <context>

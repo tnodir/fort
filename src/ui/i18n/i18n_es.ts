@@ -1795,7 +1795,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Terminating Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Regla de finalización:</translation>
     </message>
 </context>
 <context>
