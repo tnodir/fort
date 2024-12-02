@@ -542,6 +542,10 @@
         <source>Zone Addresses Updated: %1.</source>
         <translation>Posodobljeni naslovi področij: %1.</translation>
     </message>
+    <message>
+        <source>Run Fort Firewall as Administrator or install its Windows Service to access the Driver!</source>
+        <translation>Zaženite Fort Firewall kot skrbnik ali namestite njegovo storitev Windows za dostop do gonilnika!</translation>
+    </message>
 </context>
 <context>
     <name>FortSettings</name>
@@ -1555,6 +1559,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Rules inheritance:</source>
         <translation>Pravila dedovanja:</translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation>Preklopi način nadomestnih znakov</translation>
     </message>
 </context>
 <context>

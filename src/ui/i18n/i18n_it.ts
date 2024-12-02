@@ -542,6 +542,10 @@
         <source>Zone Addresses Updated: %1.</source>
         <translation>Indirizzi di zona aggiornati: %1.</translation>
     </message>
+    <message>
+        <source>Run Fort Firewall as Administrator or install its Windows Service to access the Driver!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortSettings</name>
@@ -1555,6 +1559,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Rules inheritance:</source>
         <translation>Ereditarietà regole:</translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

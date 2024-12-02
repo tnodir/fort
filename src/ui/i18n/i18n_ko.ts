@@ -542,6 +542,10 @@
         <source>Zone Addresses Updated: %1.</source>
         <translation>업데이트된 대역 주소: %1.</translation>
     </message>
+    <message>
+        <source>Run Fort Firewall as Administrator or install its Windows Service to access the Driver!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortSettings</name>
@@ -1555,6 +1559,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Rules inheritance:</source>
         <translation>규칙 상속:</translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
