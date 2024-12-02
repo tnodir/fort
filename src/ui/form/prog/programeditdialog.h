@@ -35,7 +35,8 @@ public:
     WindowManager *windowManager() const;
     AppListModel *appListModel() const;
 
-    bool isEmpty() const { return m_appRow.appId == 0; }
+    bool isWildcard() const { return m_isWildcard; }
+    bool isNew() const { return m_appRow.appId == 0; }
 
     void initialize(const AppRow &appRow, const QVector<qint64> &appIdList = {});
 
@@ -55,8 +56,8 @@ private:
         FromParent,
     };
 
-    void initializePathNameRuleFields();
-    void initializePathField(bool isSingleSelection, bool isPathEditable);
+    void initializePathNameRuleFields(bool isSingleSelection = true);
+    void initializePathField(bool isSingleSelection);
     void initializeNameField(bool isSingleSelection);
     void initializeRuleField(bool isSingleSelection);
     void initializeFocus();
@@ -82,19 +83,23 @@ private:
     void setupComboAppGroups();
     QLayout *setupActionsLayout();
     void setupActionsGroup();
-    void setupAdvancedOptions();
-    QLayout *setupApplyChildLayout();
-    void setupChildOptionsLayout();
-    void setupLogOptions();
     QLayout *setupZonesRuleLayout();
     QLayout *setupRuleLayout();
     QLayout *setupScheduleLayout();
     void setupCbSchedule();
     void setupComboScheduleType();
     QLayout *setupButtonsLayout();
+    void setupAdvancedOptions();
+    QLayout *setupApplyChildLayout();
+    void setupChildOptionsLayout();
+    void setupLogOptions();
+    void setupSwitchWildcard();
 
     void updateZonesRulesLayout();
     void updateApplyChild();
+    void updateWildcard(bool isSingleSelection = true);
+
+    void switchWildcardPaths();
 
     void fillEditName();
 
@@ -108,8 +113,6 @@ private:
     void fillAppApplyChild(App &app) const;
     void fillAppEndTime(App &app) const;
 
-    bool isWildcard() const;
-
     QString getEditText() const;
 
     void selectRuleDialog();
@@ -119,6 +122,8 @@ private:
     void warnRestartNeededOption() const;
 
 private:
+    bool m_isWildcard = false;
+
     int m_currentRuleId = 0;
 
     ProgramsController *m_ctrl = nullptr;
@@ -154,6 +159,7 @@ private:
     SpinCombo *m_scScheduleIn = nullptr;
     QDateTimeEdit *m_dteScheduleAt = nullptr;
     QPushButton *m_btOptions = nullptr;
+    QToolButton *m_btSwitchWildcard = nullptr;
     QPushButton *m_btMenu = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;

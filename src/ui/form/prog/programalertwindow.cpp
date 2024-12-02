@@ -50,7 +50,7 @@ void ProgramAlertWindow::closeOnSave()
 {
     initialize();
 
-    if (isEmpty()) {
+    if (isNew()) {
         ProgramEditDialog::closeOnSave();
     }
 }

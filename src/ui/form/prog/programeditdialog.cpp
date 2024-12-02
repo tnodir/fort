@@ -102,12 +102,15 @@ AppListModel *ProgramEditDialog::appListModel() const
 
 void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &appIdList)
 {
+    const bool isSingleSelection = (appIdList.size() <= 1);
+
+    m_isWildcard = appRow.isWildcard;
     m_appRow = appRow;
     m_appIdList = appIdList;
 
     retranslateUi();
 
-    initializePathNameRuleFields();
+    initializePathNameRuleFields(isSingleSelection);
 
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
 
@@ -119,7 +122,6 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_cbKillChild->setChecked(appRow.killChild);
 
     m_cbParked->setChecked(appRow.parked);
-    m_cbParked->setEnabled(!isWildcard());
     m_cbLogBlocked->setChecked(appRow.logBlocked);
     m_cbLogConn->setChecked(appRow.logConn);
 
@@ -136,31 +138,33 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_dteScheduleAt->setDateTime(appRow.scheduleTime);
     m_dteScheduleAt->setMinimumDateTime(DateUtil::now());
 
+    m_btSwitchWildcard->setChecked(isWildcard());
+    m_btSwitchWildcard->setEnabled(isSingleSelection);
+
+    updateWildcard(isSingleSelection);
+
     initializeFocus();
 }
 
-void ProgramEditDialog::initializePathNameRuleFields()
+void ProgramEditDialog::initializePathNameRuleFields(bool isSingleSelection)
 {
-    const bool isSingleSelection = (m_appIdList.size() <= 1);
-    const bool isPathEditable = isSingleSelection && (m_appRow.appId == 0 || isWildcard());
-
-    initializePathField(isSingleSelection, isPathEditable);
+    initializePathField(isSingleSelection);
     initializeNameField(isSingleSelection);
     initializeRuleField(isSingleSelection);
 }
 
-void ProgramEditDialog::initializePathField(bool isSingleSelection, bool isPathEditable)
+void ProgramEditDialog::initializePathField(bool isSingleSelection)
 {
-    m_editPath->setText(isSingleSelection && !isWildcard() ? m_appRow.appOriginPath : QString());
+    const bool isPathEditable = isSingleSelection && (isNew() || isWildcard());
+
     m_editPath->setReadOnly(!isPathEditable);
     m_editPath->setClearButtonEnabled(isPathEditable);
+
+    m_editPath->setText(isSingleSelection && !isWildcard() ? m_appRow.appOriginPath : QString());
     m_editPath->setEnabled(isSingleSelection);
-    m_editPath->setVisible(!isWildcard());
 
     m_editWildcard->setText(isSingleSelection && isWildcard() ? m_appRow.appOriginPath : QString());
-    m_editWildcard->setReadOnly(!isPathEditable);
     m_editWildcard->setEnabled(isSingleSelection);
-    m_editWildcard->setVisible(isWildcard());
 
     m_btSelectFile->setEnabled(isSingleSelection);
 }
@@ -175,8 +179,6 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection)
 
     m_editNotes->setText(m_appRow.notes);
     m_editNotes->setEnabled(isSingleSelection);
-
-    m_labelEditNotes->setPixmap(appIcon(isSingleSelection).pixmap(appIconSize));
 
     if (isSingleSelection) {
         if (m_appRow.appName.isEmpty()) {
@@ -198,7 +200,7 @@ void ProgramEditDialog::initializeRuleField(bool isSingleSelection)
 
 void ProgramEditDialog::initializeFocus()
 {
-    if (!isEmpty()) {
+    if (!isNew()) {
         m_btgActions->checkedButton()->setFocus();
     } else if (isWildcard()) {
         m_editWildcard->setFocus();
@@ -293,6 +295,7 @@ void ProgramEditDialog::retranslateUi()
     m_dteScheduleAt->unsetLocale();
 
     m_btOptions->setToolTip(tr("Advanced Options"));
+    m_btSwitchWildcard->setToolTip(tr("Switch Wildcard"));
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
@@ -399,9 +402,6 @@ QLayout *ProgramEditDialog::setupMainLayout()
     // Schedule
     auto scheduleLayout = setupScheduleLayout();
 
-    // Advanced Options
-    setupAdvancedOptions();
-
     // Menu, OK/Cancel
     auto buttonsLayout = setupButtonsLayout();
 
@@ -468,7 +468,7 @@ QLayout *ProgramEditDialog::setupPathLayout()
 
     // Select File
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
-        if (!isEmpty() && !isWildcard()) {
+        if (!(isWildcard() || m_editPath->isReadOnly())) {
             AppInfoUtil::openFolder(m_editPath->text());
             return;
         }
@@ -489,6 +489,7 @@ QLayout *ProgramEditDialog::setupPathLayout()
 
         fillEditName(); // Auto-fill the name
     });
+    m_btSelectFile->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_O));
 
     auto layout = new QHBoxLayout();
     layout->addWidget(m_editPath);
@@ -561,73 +562,6 @@ void ProgramEditDialog::setupActionsGroup()
     m_btgActions->addButton(m_rbKillProcess);
 
     connect(m_rbAllow, &QRadioButton::toggled, this, &ProgramEditDialog::updateZonesRulesLayout);
-}
-
-void ProgramEditDialog::setupAdvancedOptions()
-{
-    // Parked
-    m_cbParked = new QCheckBox();
-    m_cbParked->setIcon(IconCache::icon(":/icons/parking.png"));
-
-    // Child Options
-    auto applyChildLayout = setupApplyChildLayout();
-
-    setupChildOptionsLayout();
-
-    // Log Options
-    setupLogOptions();
-
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbParked);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addLayout(applyChildLayout);
-    layout->addWidget(m_cbKillChild);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addWidget(m_cbLogBlocked);
-    layout->addWidget(m_cbLogConn);
-
-    auto menu = ControlUtil::createMenuByLayout(layout, this);
-
-    m_btOptions = ControlUtil::createButton(":/icons/widgets.png");
-    m_btOptions->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_O));
-    m_btOptions->setMenu(menu);
-}
-
-QLayout *ProgramEditDialog::setupApplyChildLayout()
-{
-    auto labelIcon = ControlUtil::createIconLabel(":/icons/application_double.png", labelIconSize);
-
-    m_labelApplyChild = ControlUtil::createLabel();
-
-    m_comboApplyChild =
-            ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
-    m_comboApplyChild->setFixedWidth(150);
-
-    auto layout = ControlUtil::createHLayout();
-    layout->addWidget(labelIcon);
-    layout->addWidget(m_labelApplyChild, 1);
-    layout->addWidget(m_comboApplyChild);
-
-    return layout;
-}
-
-void ProgramEditDialog::setupChildOptionsLayout()
-{
-    // Kill Child
-    m_cbKillChild = new QCheckBox();
-    m_cbKillChild->setIcon(IconCache::icon(":/icons/scull.png"));
-
-    connect(m_cbKillChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnDangerousOption);
-}
-
-void ProgramEditDialog::setupLogOptions()
-{
-    // Log Blocked
-    m_cbLogBlocked = new QCheckBox();
-
-    // Log Conn
-    m_cbLogConn = new QCheckBox();
-    m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
 }
 
 QLayout *ProgramEditDialog::setupZonesRuleLayout()
@@ -740,6 +674,12 @@ void ProgramEditDialog::setupComboScheduleType()
 
 QLayout *ProgramEditDialog::setupButtonsLayout()
 {
+    // Advanced Options
+    setupAdvancedOptions();
+
+    // Switch Wildcard
+    setupSwitchWildcard();
+
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
@@ -758,9 +698,90 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btMenu, m_btOptions, /*stretch*/ nullptr, m_btOk, m_btCancel });
+            { m_btMenu, m_btOptions, m_btSwitchWildcard, /*stretch*/ nullptr, m_btOk, m_btCancel });
 
     return layout;
+}
+
+void ProgramEditDialog::setupAdvancedOptions()
+{
+    // Parked
+    m_cbParked = new QCheckBox();
+    m_cbParked->setIcon(IconCache::icon(":/icons/parking.png"));
+
+    // Child Options
+    auto applyChildLayout = setupApplyChildLayout();
+
+    setupChildOptionsLayout();
+
+    // Log Options
+    setupLogOptions();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbParked);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(applyChildLayout);
+    layout->addWidget(m_cbKillChild);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_cbLogBlocked);
+    layout->addWidget(m_cbLogConn);
+
+    auto menu = ControlUtil::createMenuByLayout(layout, this);
+
+    m_btOptions = ControlUtil::createButton(":/icons/widgets.png");
+    m_btOptions->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_M));
+    m_btOptions->setMenu(menu);
+}
+
+QLayout *ProgramEditDialog::setupApplyChildLayout()
+{
+    auto labelIcon = ControlUtil::createIconLabel(":/icons/application_double.png", labelIconSize);
+
+    m_labelApplyChild = ControlUtil::createLabel();
+
+    m_comboApplyChild =
+            ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
+    m_comboApplyChild->setFixedWidth(150);
+
+    auto layout = ControlUtil::createHLayout();
+    layout->addWidget(labelIcon);
+    layout->addWidget(m_labelApplyChild, 1);
+    layout->addWidget(m_comboApplyChild);
+
+    return layout;
+}
+
+void ProgramEditDialog::setupChildOptionsLayout()
+{
+    // Kill Child
+    m_cbKillChild = new QCheckBox();
+    m_cbKillChild->setIcon(IconCache::icon(":/icons/scull.png"));
+
+    connect(m_cbKillChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnDangerousOption);
+}
+
+void ProgramEditDialog::setupLogOptions()
+{
+    // Log Blocked
+    m_cbLogBlocked = new QCheckBox();
+
+    // Log Conn
+    m_cbLogConn = new QCheckBox();
+    m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
+}
+
+void ProgramEditDialog::setupSwitchWildcard()
+{
+    m_btSwitchWildcard = ControlUtil::createIconToolButton(":/icons/coding.png", [&] {
+        m_isWildcard = !m_isWildcard;
+
+        switchWildcardPaths();
+
+        updateWildcard();
+        retranslateUi();
+    });
+
+    m_btSwitchWildcard->setCheckable(true);
 }
 
 void ProgramEditDialog::updateZonesRulesLayout()
@@ -785,6 +806,29 @@ void ProgramEditDialog::updateApplyChild()
                                                      : ApplyChildType::Disabled;
 
     m_comboApplyChild->setCurrentIndex(type);
+}
+
+void ProgramEditDialog::updateWildcard(bool isSingleSelection)
+{
+    m_editPath->setVisible(!isWildcard());
+
+    m_editWildcard->setVisible(isWildcard());
+
+    m_labelEditNotes->setPixmap(appIcon(isSingleSelection).pixmap(appIconSize));
+}
+
+void ProgramEditDialog::switchWildcardPaths()
+{
+    if (isWildcard()) {
+        m_editWildcard->setText(m_editPath->text());
+        return;
+    }
+
+    if (!m_editPath->isReadOnly()) {
+        const auto line = StringUtil::firstLine(m_editWildcard->toPlainText());
+
+        m_editPath->setText(line);
+    }
 }
 
 void ProgramEditDialog::fillEditName()
@@ -954,11 +998,6 @@ void ProgramEditDialog::fillAppEndTime(App &app) const
     } else {
         app.scheduleTime = m_dteScheduleAt->dateTime();
     }
-}
-
-bool ProgramEditDialog::isWildcard() const
-{
-    return m_appRow.isWildcard;
 }
 
 QString ProgramEditDialog::getEditText() const

@@ -389,7 +389,7 @@ void WindowManager::showProgramAlertWindow(bool activate)
         setupProgramAlertWindow();
     }
 
-    if (m_progAlertWindow->isEmpty()) {
+    if (m_progAlertWindow->isNew()) {
         closeProgramAlertWindow();
         showProgramsWindow();
     } else {
