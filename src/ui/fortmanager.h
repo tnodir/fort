@@ -51,6 +51,7 @@ private:
 
     void checkReinstallDriver();
     void checkStartService();
+    void checkDriverAccess();
 
     void setupEnvManager();
     void setupConfManager();

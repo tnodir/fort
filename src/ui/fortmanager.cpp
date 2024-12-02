@@ -191,7 +191,10 @@ void FortManager::initialize()
     checkReinstallDriver();
     checkStartService();
 
-    setupDriver();
+    if (!setupDriver()) {
+        checkDriverAccess();
+    }
+
     loadConf();
 }
 
@@ -387,6 +390,20 @@ void FortManager::checkStartService()
 
     if (canStartService && isAdmin) {
         StartupUtil::startService();
+    }
+}
+
+void FortManager::checkDriverAccess()
+{
+    const auto settings = IoC<FortSettings>();
+
+    const bool hasService = settings->hasService();
+    const bool isAdmin = settings->isUserAdmin();
+
+    if (!(hasService || isAdmin)) {
+        QMessageBox::warning(nullptr, QString(),
+                tr("Run Fort Firewall as Administrator or install its Windows Service"
+                   " to access the Driver!"));
     }
 }
 
