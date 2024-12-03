@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.15.3, 2024-12-03:
+- UI: ProgramEdit: Add "Switch Wildcard" button.
+- UI: Show tooltips in combobox lists.
+- UI: Warn to run as Admin or install Service to access the Driver.
+
 v3.15.2, 2024-11-30:
 - UI: Zones: Fix IPv4 address masks (v3.15.1 regression).
 
