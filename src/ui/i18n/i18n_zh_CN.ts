@@ -544,7 +544,7 @@
     </message>
     <message>
         <source>Run Fort Firewall as Administrator or install its Windows Service to access the Driver!</source>
-        <translation type="unfinished"></translation>
+        <translation>以管理员身份运行防火墙堡，或安装其 Windows 服务来访问驱动程序！</translation>
     </message>
 </context>
 <context>
@@ -1562,7 +1562,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Switch Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>切换通配符</translation>
     </message>
 </context>
 <context>

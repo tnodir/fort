@@ -544,7 +544,7 @@
     </message>
     <message>
         <source>Run Fort Firewall as Administrator or install its Windows Service to access the Driver!</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Ejecuta Fort Firewall como administrador o instala su servicio de Windows para acceder al controlador!</translation>
     </message>
 </context>
 <context>
@@ -1565,7 +1565,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Switch Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambiar comodín</translation>
     </message>
 </context>
 <context>

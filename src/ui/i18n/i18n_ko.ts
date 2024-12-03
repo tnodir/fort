@@ -544,7 +544,7 @@
     </message>
     <message>
         <source>Run Fort Firewall as Administrator or install its Windows Service to access the Driver!</source>
-        <translation type="unfinished"></translation>
+        <translation>포트 방화벽을 관리자로 실행하거나 Windows 서비스를 설치하여 드라이버에 액세스하세요!</translation>
     </message>
 </context>
 <context>
@@ -1562,7 +1562,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Switch Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>와일드카드 전환</translation>
     </message>
 </context>
 <context>
@@ -1800,7 +1800,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Terminating Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>종료 규칙:</translation>
     </message>
 </context>
 <context>
