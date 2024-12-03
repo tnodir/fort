@@ -41,6 +41,7 @@ void updateComboBox(
         const QString &iconPath = iconPaths.at(index);
 
         c->setItemText(index, name);
+        c->setItemData(index, name, Qt::ToolTipRole);
         c->setItemIcon(index, IconCache::icon(iconPath));
 
         ++index;

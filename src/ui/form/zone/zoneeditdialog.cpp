@@ -94,6 +94,7 @@ void ZoneEditDialog::retranslateComboSources()
         const auto title = zoneListModel()->zoneSourceTitleById(i);
 
         m_comboSources->setItemText(i, title);
+        m_comboSources->setItemData(i, title, Qt::ToolTipRole);
     }
 }
 

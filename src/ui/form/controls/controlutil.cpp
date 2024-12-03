@@ -83,6 +83,10 @@ void ControlUtil::setComboBoxTexts(QComboBox *c, const QStringList &texts, int c
     c->clear();
     c->addItems(texts);
 
+    for (int i = 0; i < texts.size(); ++i) {
+        c->setItemData(i, texts[i], Qt::ToolTipRole);
+    }
+
     c->setCurrentIndex(currentIndex);
 }
 
