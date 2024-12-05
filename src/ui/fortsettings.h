@@ -87,6 +87,8 @@ public:
     void resetCheckedPassword(UnlockType unlockType = UnlockDisabled);
 
     void setupGlobal();
+    void setupGlobalDpi(const QSettings &settings);
+
     void initialize(const QStringList &args, EnvManager *envManager);
 
     static bool isPortable();

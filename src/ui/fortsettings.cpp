@@ -108,11 +108,7 @@ void FortSettings::setupGlobal()
     // Global settings from program's binary directory
     const QSettings settings(appFileInfo.filePath() + ".ini", QSettings::IniFormat);
 
-    // High-DPI scale factor rounding policy
-    const auto dpiPolicy = settings.value("global/dpiPolicy").toString();
-    if (!dpiPolicy.isEmpty()) {
-        qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", dpiPolicy.toLatin1());
-    }
+    setupGlobalDpi(settings);
 
     m_hasService = StartupUtil::isServiceInstalled();
     m_isUserAdmin = OsUtil::isUserAdmin();
@@ -130,6 +126,21 @@ void FortSettings::setupGlobal()
     m_userPath = settings.value("global/userDir").toString();
     m_logsPath = settings.value("global/logsDir").toString();
     m_updatePath = settings.value("global/updateDir").toString();
+}
+
+void FortSettings::setupGlobalDpi(const QSettings &settings)
+{
+    // High-DPI scale factor rounding policy
+    const auto dpiPolicy = settings.value("global/dpiPolicy").toString();
+    if (!dpiPolicy.isEmpty()) {
+        qputenv("QT_SCALE_FACTOR_ROUNDING_POLICY", dpiPolicy.toLatin1());
+    }
+
+    // High-DPI scale factor
+    const auto scaleFactor = settings.value("global/scaleFactor").toString();
+    if (!scaleFactor.isEmpty()) {
+        qputenv("QT_SCALE_FACTOR", scaleFactor.toLatin1());
+    }
 }
 
 void FortSettings::initialize(const QStringList &args, EnvManager *envManager)
