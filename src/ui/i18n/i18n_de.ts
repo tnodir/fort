@@ -544,7 +544,7 @@
     </message>
     <message>
         <source>Run Fort Firewall as Administrator or install its Windows Service to access the Driver!</source>
-        <translation type="unfinished"></translation>
+        <translation>Fort Firewall als Administrator ausführen oder den Windowsdienst installieren, um auf den Treiber zuzugreifen!</translation>
     </message>
 </context>
 <context>
@@ -1562,7 +1562,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Switch Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Platzhalter wechseln</translation>
     </message>
 </context>
 <context>
