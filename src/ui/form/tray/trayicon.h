@@ -125,8 +125,8 @@ private:
 
     void updateTrayIconShape();
 
-    QString trayIconPath(QString &overlayIconPath) const;
-    QString trayIconBlockPath(int blockType, QString &overlayIconPath) const;
+    QString trayIconPath() const;
+    QString trayIconBlockPath(int blockType) const;
 
     void updateActionHotKeys();
 

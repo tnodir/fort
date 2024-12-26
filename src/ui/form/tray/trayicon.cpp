@@ -296,13 +296,11 @@ void TrayIcon::updateTrayIcon(bool alerted)
     if (m_alerted == alerted)
         return;
 
-    if (alerted) {
-        if (!iniUser()->trayShowAlert())
-            return;
-    }
-
     m_alerted = alerted;
     m_animatedAlert = false;
+
+    if (m_alerted && !iniUser()->trayShowAlert())
+        return;
 
     updateAlertTimer();
     updateTrayIconShape();
@@ -725,49 +723,42 @@ void TrayIcon::removeAlertTimer()
 
 void TrayIcon::updateTrayIconShape()
 {
-    QString overlayIconPath;
-    const QString mainIconPath = trayIconPath(overlayIconPath);
+    const QString iconPath = trayIconPath();
 
     QIcon icon;
 
-    if (m_alerted || !overlayIconPath.isEmpty()) {
-        if (m_alerted) {
-            overlayIconPath = ":/icons/error.png";
-        }
+    if (m_alerted) {
+        const QString alertIconPath = ":/icons/error.png";
 
-        icon = m_animatedAlert ? IconCache::icon(overlayIconPath)
-                               : GuiUtil::overlayIcon(mainIconPath, overlayIconPath);
+        icon = m_animatedAlert ? IconCache::icon(alertIconPath)
+                               : GuiUtil::overlayIcon(iconPath, alertIconPath);
     } else {
-        icon = IconCache::icon(mainIconPath);
+        icon = IconCache::icon(iconPath);
     }
 
     this->setIcon(icon);
 }
 
-QString TrayIcon::trayIconPath(QString &overlayIconPath) const
+QString TrayIcon::trayIconPath() const
 {
     if (!conf()->filterEnabled() || !driverManager()->isDeviceOpened()) {
         return ":/icons/fort_gray.png";
     }
 
-    const auto blockType = conf()->blockTrafficIndex();
-    if (blockType != FirewallConf::BlockTrafficNone) {
-        return trayIconBlockPath(blockType, overlayIconPath);
-    }
-
-    return ":/icons/fort.png";
+    return trayIconBlockPath(conf()->blockTrafficIndex());
 }
 
-QString TrayIcon::trayIconBlockPath(int blockType, QString &overlayIconPath) const
+QString TrayIcon::trayIconBlockPath(int blockType) const
 {
     switch (blockType) {
     case FirewallConf::BlockTrafficAll:
-        overlayIconPath = ":/icons/cross.png";
-        return ":/icons/fort_gray.png";
+        return ":/icons/fort_deny.png";
     case FirewallConf::BlockTrafficLan:
         return ":/icons/fort_red.png";
-    default:
+    case FirewallConf::BlockTrafficInet:
         return ":/icons/fort_orange.png";
+    default:
+        return ":/icons/fort.png";
     }
 }
 
