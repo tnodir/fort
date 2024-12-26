@@ -1000,6 +1000,10 @@
         <source>For all users</source>
         <translation>Для всех пользователей</translation>
     </message>
+    <message>
+        <source>Update window icons</source>
+        <translation>Обновлять иконки окон</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
