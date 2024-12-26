@@ -13,6 +13,7 @@
 #include <form/controls/plaintextedit.h>
 #include <manager/windowmanager.h>
 #include <model/zonesourcewrapper.h>
+#include <util/guiutil.h>
 #include <util/net/netutil.h>
 
 #include "zonescontroller.h"
@@ -114,6 +115,9 @@ void ZoneEditDialog::setupUi()
 
     // Modality
     this->setWindowModality(Qt::WindowModal);
+
+    // Icon
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/ip_class.png"));
 
     // Size Grip
     this->setSizeGripEnabled(true);

@@ -22,6 +22,7 @@ public:
     explicit ServicesWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowServices; }
+    QString windowOverlayIconPath() const override { return ":/icons/windows-48.png"; }
 
     ServicesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;

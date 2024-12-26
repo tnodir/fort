@@ -143,9 +143,6 @@ void HomeWindow::setupUi()
     // Font
     this->setFont(WindowManager::defaultFont());
 
-    // Icon
-    this->setWindowIcon(IconCache::icon(":/icons/fort.png"));
-
     // Size
     this->setMinimumSize(500, 300);
 }

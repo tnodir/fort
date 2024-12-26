@@ -26,6 +26,7 @@ public:
     explicit FormWindow(QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
     virtual WindowCode windowCode() const { return WindowNone; }
+    virtual QString windowOverlayIconPath() const { return {}; }
 
     bool excludeFromCapture() const { return m_excludeFromCapture; }
     void setExcludeFromCapture(bool v);
@@ -39,6 +40,8 @@ protected:
     void setupFormWindow(IniUser *iniUser, const QString &iniGroup);
 
 private:
+    void setupWindowIcon(IniUser *iniUser);
+
     void setupStateWatcher();
     void setupWindowCapture(IniUser *iniUser, const QString &iniGroup);
 

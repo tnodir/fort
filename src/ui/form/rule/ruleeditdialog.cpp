@@ -21,6 +21,7 @@
 #include <model/rulesetmodel.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 #include <util/osutil.h>
@@ -188,6 +189,9 @@ void RuleEditDialog::setupUi()
 
     // Modality
     this->setWindowModality(Qt::WindowModal);
+
+    // Icon
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/script.png"));
 
     // Size Grip
     this->setSizeGripEnabled(true);

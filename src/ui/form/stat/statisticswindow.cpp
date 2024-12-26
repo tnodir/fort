@@ -75,9 +75,6 @@ void StatisticsWindow::setupUi()
     // Font
     this->setFont(WindowManager::defaultFont());
 
-    // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/chart_bar.png"));
-
     // Size
     this->setMinimumSize(500, 400);
 }

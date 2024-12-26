@@ -23,6 +23,7 @@ public:
     explicit ZonesWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowZones; }
+    QString windowOverlayIconPath() const override { return ":/icons/ip_class.png"; }
 
     ZonesController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;

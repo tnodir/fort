@@ -133,9 +133,6 @@ void ServicesWindow::setupUi()
     // Font
     this->setFont(WindowManager::defaultFont());
 
-    // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/windows-48.png"));
-
     // Size
     this->setMinimumSize(500, 400);
 }

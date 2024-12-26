@@ -25,6 +25,7 @@ public:
             Qt::WindowFlags f = {});
 
     WindowCode windowCode() const override { return WindowRules; }
+    QString windowOverlayIconPath() const override { return ":/icons/script.png"; }
 
     Rule::RuleType ruleType() const { return m_ruleType; }
     bool isOpenSelectRule() const { return ruleType() != Rule::RuleNone; }

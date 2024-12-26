@@ -379,6 +379,9 @@ void ProgramEditDialog::setupUi()
     // Font
     this->setFont(WindowManager::defaultFont());
 
+    // Icon
+    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/application.png"));
+
     // Modality
     this->setWindowModality(Qt::WindowModal);
 

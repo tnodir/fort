@@ -77,7 +77,4 @@ void ProgramAlertWindow::setupUi()
     // Top Window
     this->setWindowFlag(Qt::WindowStaysOnTopHint, iniUser()->progAlertWindowAlwaysOnTop());
     this->setAttribute(Qt::WA_ShowWithoutActivating, !isAutoActive());
-
-    // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/error.png"));
 }

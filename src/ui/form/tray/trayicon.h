@@ -53,6 +53,8 @@ public:
 
     explicit TrayIcon(QObject *parent = nullptr);
 
+    QString iconPath() const { return m_iconPath; }
+
     TrayController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
     ConfManager *confManager() const;
@@ -70,6 +72,9 @@ public:
     static void setClickEventActionType(
             IniUser *iniUser, ClickType clickType, ActionType actionType);
     static void resetClickEventActionType(IniUser *iniUser, ClickType clickType);
+
+signals:
+    void iconPathChanged(const QString &iconPath);
 
 public slots:
     void updateTrayIcon(bool alerted = false);
@@ -99,6 +104,8 @@ protected slots:
     void switchFilterMode(QAction *action);
 
 private:
+    void setIconPath(const QString &v);
+
     void setupController();
 
     void retranslateUi();
@@ -125,6 +132,8 @@ private:
 
     void updateTrayIconShape();
 
+    QIcon getTrayIcon() const;
+
     QString trayIconPath() const;
     QString trayIconBlockPath(int blockType) const;
 
@@ -150,6 +159,8 @@ private:
     bool m_trayTriggered : 1 = false;
     bool m_alerted : 1 = false;
     bool m_animatedAlert : 1 = false;
+
+    QString m_iconPath;
 
     TrayController *m_ctrl = nullptr;
 

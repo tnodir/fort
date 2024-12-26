@@ -68,6 +68,7 @@ void IfacePage::onResetToDefault()
 
     m_cbHomeAutoShowMenu->setChecked(false);
     m_cbSplashVisible->setChecked(true);
+    m_cbUpdateWindowIcons->setChecked(true);
 
     m_cbAppNotifyMessage->setChecked(true);
     m_cbAppAlertAutoShow->setChecked(true);
@@ -162,6 +163,7 @@ void IfacePage::onRetranslateUi()
 
     m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
+    m_cbUpdateWindowIcons->setText(tr("Update window icons"));
 
     m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
@@ -589,9 +591,16 @@ void IfacePage::setupHomeBox()
                 ctrl()->setIniUserEdited();
             });
 
+    m_cbUpdateWindowIcons =
+            ControlUtil::createCheckBox(iniUser()->updateWindowIcons(), [&](bool checked) {
+                iniUser()->setUpdateWindowIcons(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbHomeAutoShowMenu);
     layout->addWidget(m_cbSplashVisible);
+    layout->addWidget(m_cbUpdateWindowIcons);
 
     m_gbHome = new QGroupBox();
     m_gbHome->setLayout(layout);

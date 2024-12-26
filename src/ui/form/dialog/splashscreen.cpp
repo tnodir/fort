@@ -72,9 +72,6 @@ void SplashScreen::setupUi()
     // Font
     this->setFont(WindowManager::defaultFont());
 
-    // Icon
-    this->setWindowIcon(IconCache::icon(":/icons/fort.png"));
-
     // Size
     this->resize(250, 80);
 

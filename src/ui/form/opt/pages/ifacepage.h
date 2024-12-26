@@ -111,6 +111,7 @@ private:
 
     QCheckBox *m_cbHomeAutoShowMenu = nullptr;
     QCheckBox *m_cbSplashVisible = nullptr;
+    QCheckBox *m_cbUpdateWindowIcons = nullptr;
 
     QCheckBox *m_cbAppNotifyMessage = nullptr;
     QCheckBox *m_cbAppAlertAutoShow = nullptr;

@@ -15,6 +15,7 @@ public:
     explicit StatisticsWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowStatistics; }
+    QString windowOverlayIconPath() const override { return ":/icons/chart_bar.png"; }
 
     StatisticsController *ctrl() const { return m_ctrl; }
     ConfManager *confManager() const;

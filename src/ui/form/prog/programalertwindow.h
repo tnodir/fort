@@ -13,6 +13,7 @@ public:
     explicit ProgramAlertWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowProgramAlert; }
+    QString windowOverlayIconPath() const override { return ":/icons/error.png"; }
 
     bool isAutoActive() const;
 

@@ -27,6 +27,7 @@ public:
     explicit ProgramsWindow(QWidget *parent = nullptr);
 
     WindowCode windowCode() const override { return WindowPrograms; }
+    QString windowOverlayIconPath() const override { return ":/icons/application.png"; }
 
     ProgramsController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;

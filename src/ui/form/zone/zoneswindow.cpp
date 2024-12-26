@@ -138,9 +138,6 @@ void ZonesWindow::setupUi()
     // Font
     this->setFont(WindowManager::defaultFont());
 
-    // Icon
-    this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/ip_class.png"));
-
     // Size
     this->setMinimumSize(500, 400);
 }

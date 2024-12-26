@@ -223,6 +223,14 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
             &TrayIcon::updateTrayIconShape);
 }
 
+void TrayIcon::setIconPath(const QString &v)
+{
+    if (m_iconPath != v) {
+        m_iconPath = v;
+        emit iconPathChanged(v);
+    }
+}
+
 FortSettings *TrayIcon::settings() const
 {
     return ctrl()->settings();
@@ -723,20 +731,23 @@ void TrayIcon::removeAlertTimer()
 
 void TrayIcon::updateTrayIconShape()
 {
-    const QString iconPath = trayIconPath();
+    setIconPath(trayIconPath());
 
-    QIcon icon;
+    const QIcon icon = getTrayIcon();
 
+    this->setIcon(icon);
+}
+
+QIcon TrayIcon::getTrayIcon() const
+{
     if (m_alerted) {
         const QString alertIconPath = ":/icons/error.png";
 
-        icon = m_animatedAlert ? IconCache::icon(alertIconPath)
-                               : GuiUtil::overlayIcon(iconPath, alertIconPath);
-    } else {
-        icon = IconCache::icon(iconPath);
+        return m_animatedAlert ? IconCache::icon(alertIconPath)
+                               : GuiUtil::overlayIcon(iconPath(), alertIconPath);
     }
 
-    this->setIcon(icon);
+    return IconCache::icon(iconPath());
 }
 
 QString TrayIcon::trayIconPath() const
