@@ -28,6 +28,10 @@ void GuiUtil::setClipboardData(const QVariant &data)
 QIcon GuiUtil::overlayIcon(
         const QString &basePath, const QString &overlayPath, Qt::Alignment alignment)
 {
+    if (overlayPath.isEmpty()) {
+        return IconCache::icon(basePath);
+    }
+
     const auto key = QString("%1|%2|%3").arg(basePath, overlayPath, QString::number(alignment, 16));
 
     QIcon icon;
