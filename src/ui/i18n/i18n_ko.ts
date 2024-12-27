@@ -1002,7 +1002,7 @@
     </message>
     <message>
         <source>Update window icons</source>
-        <translation type="unfinished"></translation>
+        <translation>창 아이콘 업데이트</translation>
     </message>
 </context>
 <context>
