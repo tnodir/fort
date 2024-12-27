@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.15.4, 2024-12-27:
+- UI: Show state on taskbar button.
+- UI: Options: Add "Update window icons" flag.
+- UI: Update SQLite to 3.47.2
+
 v3.15.3, 2024-12-03:
 - UI: ProgramEdit: Add "Switch Wildcard" button.
 - UI: Show tooltips in combobox lists.
