@@ -234,6 +234,7 @@ SOURCES += \
     util/service/serviceworker.cpp \
     util/startuputil.cpp \
     util/stringutil.cpp \
+    util/taskbarbutton.cpp \
     util/textareautil.cpp \
     util/threadstorage.cpp \
     util/triggertimer.cpp \
@@ -480,6 +481,7 @@ HEADERS += \
     util/service/serviceworker.h \
     util/startuputil.h \
     util/stringutil.h \
+    util/taskbarbutton.h \
     util/textareautil.h \
     util/threadstorage.h \
     util/triggertimer.h \

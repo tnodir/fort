@@ -731,11 +731,14 @@ void TrayIcon::removeAlertTimer()
 
 void TrayIcon::updateTrayIconShape()
 {
-    setIconPath(trayIconPath());
+    bool isDefault = false;
+    setIconPath(trayIconPath(isDefault));
 
     const QIcon icon = getTrayIcon();
 
     this->setIcon(icon);
+
+    windowManager()->taskbarButton().setApplicationBadge(isDefault ? QIcon() : icon);
 }
 
 QIcon TrayIcon::getTrayIcon() const
@@ -750,16 +753,16 @@ QIcon TrayIcon::getTrayIcon() const
     return IconCache::icon(iconPath());
 }
 
-QString TrayIcon::trayIconPath() const
+QString TrayIcon::trayIconPath(bool &isDefault) const
 {
     if (!conf()->filterEnabled() || !driverManager()->isDeviceOpened()) {
         return ":/icons/fort_gray.png";
     }
 
-    return trayIconBlockPath(conf()->blockTrafficIndex());
+    return trayIconBlockPath(conf()->blockTrafficIndex(), isDefault);
 }
 
-QString TrayIcon::trayIconBlockPath(int blockType) const
+QString TrayIcon::trayIconBlockPath(int blockType, bool &isDefault) const
 {
     switch (blockType) {
     case FirewallConf::BlockTrafficAll:
@@ -769,6 +772,7 @@ QString TrayIcon::trayIconBlockPath(int blockType) const
     case FirewallConf::BlockTrafficInet:
         return ":/icons/fort_orange.png";
     default:
+        isDefault = true;
         return ":/icons/fort.png";
     }
 }

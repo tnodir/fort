@@ -55,6 +55,8 @@ public:
 
     QString iconPath() const { return m_iconPath; }
 
+    QMenu *menu() const { return m_menu; }
+
     TrayController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
     ConfManager *confManager() const;
@@ -65,8 +67,6 @@ public:
     HotKeyManager *hotKeyManager() const;
     DriverManager *driverManager() const;
     WindowManager *windowManager() const;
-
-    QMenu *menu() const { return m_menu; }
 
     static ActionType clickEventActionType(IniUser *iniUser, ClickType clickType);
     static void setClickEventActionType(
@@ -134,8 +134,8 @@ private:
 
     QIcon getTrayIcon() const;
 
-    QString trayIconPath() const;
-    QString trayIconBlockPath(int blockType) const;
+    QString trayIconPath(bool &isDefault) const;
+    QString trayIconBlockPath(int blockType, bool &isDefault) const;
 
     void updateActionHotKeys();
 

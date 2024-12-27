@@ -6,6 +6,7 @@
 
 #include <form/form_types.h>
 #include <util/ioc/iocservice.h>
+#include <util/taskbarbutton.h>
 
 class FormWindow;
 class GraphWindow;
@@ -48,6 +49,8 @@ public:
     ZonesWindow *zonesWindow() const { return m_zonesWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
     TrayIcon *trayIcon() const { return m_trayIcon; }
+
+    TaskbarButton &taskbarButton() { return m_taskbarButton; }
 
     void setUp() override;
     void tearDown() override;
@@ -178,6 +181,8 @@ private:
     quint32 m_openedWindows = 0;
 
     TrayMessageType m_lastTrayMessageType = TrayMessageOptions;
+
+    TaskbarButton m_taskbarButton;
 
     TrayIcon *m_trayIcon = nullptr;
 

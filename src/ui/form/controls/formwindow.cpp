@@ -32,7 +32,7 @@ void FormWindow::setupFormWindow(IniUser *iniUser, const QString &iniGroup)
 
 void FormWindow::setupWindowIcon(IniUser *iniUser)
 {
-    const auto refreshAlertModes = [&](const QString &iconPath) {
+    const auto refreshWindowIcon = [&](const QString &iconPath) {
         this->setWindowIcon(GuiUtil::overlayIcon(iconPath, windowOverlayIconPath()));
     };
 
@@ -43,12 +43,16 @@ void FormWindow::setupWindowIcon(IniUser *iniUser)
 
         iconPath = trayIcon->iconPath();
 
-        connect(trayIcon, &TrayIcon::iconPathChanged, this, refreshAlertModes);
+        connect(trayIcon, &TrayIcon::iconPathChanged, this, refreshWindowIcon);
     } else {
         iconPath = ":/icons/fort.png";
     }
 
-    refreshAlertModes(iconPath);
+    refreshWindowIcon(iconPath);
+
+    QMetaObject::invokeMethod(
+            this, [&] { IoC<WindowManager>()->taskbarButton().setWindowBadge(windowHandle()); },
+            Qt::QueuedConnection);
 }
 
 void FormWindow::setupStateWatcher()

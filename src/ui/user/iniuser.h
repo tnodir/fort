@@ -77,8 +77,8 @@ public:
     bool splashWindowVisible() const { return valueBool("splashWindow/visible", true); }
     void setSplashWindowVisible(bool on) { setValue("splashWindow/visible", on, true); }
 
-    bool updateWindowIcons() const { return valueBool("splashWindow/updateWindowIcons", true); }
-    void setUpdateWindowIcons(bool on) { setValue("splashWindow/updateWindowIcons", on, true); }
+    bool updateWindowIcons() const { return valueBool("splashWindow/updateWindowIcons"); }
+    void setUpdateWindowIcons(bool on) { setValue("splashWindow/updateWindowIcons", on); }
 
     bool progNotifyMessage() const { return valueBool("prog/notifyMessage", true); }
     void setProgNotifyMessage(bool v) { setValue("prog/notifyMessage", v, true); }

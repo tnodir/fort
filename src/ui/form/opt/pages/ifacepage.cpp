@@ -68,7 +68,7 @@ void IfacePage::onResetToDefault()
 
     m_cbHomeAutoShowMenu->setChecked(false);
     m_cbSplashVisible->setChecked(true);
-    m_cbUpdateWindowIcons->setChecked(true);
+    m_cbUpdateWindowIcons->setChecked(false);
 
     m_cbAppNotifyMessage->setChecked(true);
     m_cbAppAlertAutoShow->setChecked(true);
