@@ -1002,7 +1002,7 @@
     </message>
     <message>
         <source>Update window icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Aggiorna icone finestra</translation>
     </message>
 </context>
 <context>
