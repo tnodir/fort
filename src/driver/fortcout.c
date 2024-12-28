@@ -703,16 +703,33 @@ inline static UINT32 fort_packet_data_size(const FWPS_INCOMING_METADATA_VALUES0 
     return dataSize + headerSize;
 }
 
+inline static BOOL fort_callout_transport_classify_packet(PFORT_CALLOUT_ARG ca)
+{
+    FWPS_CLASSIFY_OUT0 *classifyOut = ca->classifyOut;
+
+    const BOOL canAlterAction = (classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) != 0;
+
+    if (canAlterAction) {
+        if (fort_shaper_packet_process(&fort_device()->shaper, ca)) {
+            fort_callout_classify_drop(classifyOut); /* drop */
+            return TRUE;
+        }
+    } else {
+        if (classifyOut->actionType == FWP_ACTION_BLOCK) {
+            fort_callout_classify_continue(classifyOut); /* continue */
+            return TRUE; /* Can't act on the packet */
+        }
+    }
+
+    return FALSE;
+}
+
 static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
         const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
         const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
         BOOL inbound)
 {
     FORT_CHECK_STACK(FORT_CALLOUT_TRANSPORT_CLASSIFY);
-
-    if ((classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0
-            || classifyOut->actionType == FWP_ACTION_BLOCK)
-        return; /* Can't act on the packet */
 
     const PNET_BUFFER_LIST netBufList = layerData;
 
@@ -727,13 +744,12 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
         .inbound = inbound,
     };
 
-    if (fort_shaper_packet_process(&fort_device()->shaper, &ca)) {
-        fort_callout_classify_drop(classifyOut); /* drop */
-    } else {
-        fort_flow_classify(&fort_device()->stat, flowContext, ca.dataSize, inbound);
+    if (fort_callout_transport_classify_packet(&ca))
+        return;
 
-        fort_callout_classify_permit(filter, classifyOut); /* permit */
-    }
+    fort_flow_classify(&fort_device()->stat, flowContext, ca.dataSize, inbound);
+
+    fort_callout_classify_permit(filter, classifyOut); /* permit */
 }
 
 static void NTAPI fort_callout_transport_classify_in(const FWPS_INCOMING_VALUES0 *inFixedValues,

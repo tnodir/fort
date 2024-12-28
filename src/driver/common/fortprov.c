@@ -230,7 +230,7 @@ static void fort_prov_init_packet_filters(void)
         .subLayerKey = FORT_GUID_SUBLAYER,
         .flags = FWPM_FILTER_FLAG_PERMIT_IF_CALLOUT_UNREGISTERED
                 | FWP_CALLOUT_FLAG_ALLOW_MID_STREAM_INSPECTION,
-        .actionType = FWP_ACTION_CALLOUT_TERMINATING,
+        .actionType = FWP_ACTION_CALLOUT_UNKNOWN,
     };
 
     const FORT_PROV_INIT_FILTER_ARGS args[] = {
