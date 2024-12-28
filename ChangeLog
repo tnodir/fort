@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.15.5-test01, 2024-12-28:
+- Driver: Don't block allowed packets by other firewall in transport layer.
+
 v3.15.4, 2024-12-27:
 - UI: Show state on taskbar button.
 - UI: Options: Add "Update window icons" flag.
