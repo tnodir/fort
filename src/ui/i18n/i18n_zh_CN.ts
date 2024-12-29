@@ -1002,11 +1002,11 @@
     </message>
     <message>
         <source>Update window icons</source>
-        <translation type="unfinished"></translation>
+        <translation>更新窗口图标</translation>
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭窗口时自动清除提示</translation>
     </message>
 </context>
 <context>

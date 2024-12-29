@@ -1006,7 +1006,7 @@
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation type="unfinished"></translation>
+        <translation>Effacement automatique des alertes à la fermeture de la fenêtre</translation>
     </message>
 </context>
 <context>
