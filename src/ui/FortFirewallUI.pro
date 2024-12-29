@@ -375,6 +375,7 @@ HEADERS += \
     manager/servicemanager.h \
     manager/translationmanager.h \
     manager/windowmanager.h \
+    model/applistcolumn.h \
     model/applistmodel.h \
     model/applistmodeldata.h \
     model/applistmodelheaderdata.h \

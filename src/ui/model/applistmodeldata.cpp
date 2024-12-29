@@ -12,6 +12,7 @@
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 
+#include "applistcolumn.h"
 #include "applistmodel.h"
 
 namespace {
@@ -206,16 +207,16 @@ QIcon AppListModelData::appActionIcon() const
 
 QVariant AppListModelData::dataDecorationIcon() const
 {
-    switch (column()) {
-    case 0:
+    switch (AppListColumn(column())) {
+    case AppListColumn::Name:
         return appIcon();
-    case 1:
+    case AppListColumn::Zones:
         return appZonesIcon();
-    case 2:
+    case AppListColumn::Rule:
         return appRuleIcon();
-    case 3:
+    case AppListColumn::Scheduled:
         return appScheduledIcon();
-    case 4:
+    case AppListColumn::Action:
         return appActionIcon();
     }
 
@@ -224,11 +225,21 @@ QVariant AppListModelData::dataDecorationIcon() const
 
 QVariant AppListModelData::dataForeground() const
 {
-    switch (column()) {
-    case 4:
+    switch (AppListColumn(column())) {
+    case AppListColumn::Action:
         return appActionColor();
-    case 5:
+    case AppListColumn::Group:
         return appGroupColor();
+    }
+
+    return {};
+}
+
+QVariant AppListModelData::dataTextAlignment() const
+{
+    switch (AppListColumn(column())) {
+    case AppListColumn::Group:
+        return int(Qt::AlignHCenter | Qt::AlignVCenter);
     }
 
     return {};

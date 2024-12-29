@@ -4,6 +4,7 @@
 
 #include <util/iconcache.h>
 
+#include "applistcolumn.h"
 #include "applistmodel.h"
 
 namespace {
@@ -77,12 +78,12 @@ QVariant AppListModelHeaderData::headerDataDisplay() const
 
 QVariant AppListModelHeaderData::headerDataDecoration() const
 {
-    switch (column()) {
-    case 1:
+    switch (AppListColumn(column())) {
+    case AppListColumn::Zones:
         return IconCache::icon(":/icons/ip_class.png");
-    case 2:
+    case AppListColumn::Rule:
         return IconCache::icon(":/icons/script.png");
-    case 3:
+    case AppListColumn::Scheduled:
         return IconCache::icon(":/icons/time.png");
     }
     return {};

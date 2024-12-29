@@ -10,6 +10,7 @@
 
 class AppGroup;
 class AppInfoCache;
+class AppListModelData;
 class ConfAppManager;
 class ConfManager;
 
@@ -82,6 +83,8 @@ private:
     QVariant dataTextAlignment(const QModelIndex &index) const;
 
     bool updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const;
+
+    AppListModelData appDataAt(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
 private:
     FilterFlags m_filters = FilterNone;

@@ -11,6 +11,7 @@
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netutil.h>
 
+#include "applistcolumn.h"
 #include "applistmodeldata.h"
 #include "applistmodelheaderdata.h"
 
@@ -73,7 +74,7 @@ SqliteDb *AppListModel::sqliteDb() const
 
 void AppListModel::initialize()
 {
-    setSortColumn(7);
+    setSortColumn(int(AppListColumn::CreationTime));
     setSortOrder(Qt::DescendingOrder);
 
     connect(confManager(), &ConfManager::confChanged, this, &AppListModel::refresh);
@@ -86,7 +87,7 @@ void AppListModel::initialize()
 
 int AppListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 8;
+    return int(AppListColumn::Count);
 }
 
 QVariant AppListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -141,52 +142,30 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
 
 QVariant AppListModel::dataDisplay(const QModelIndex &index, int role) const
 {
-    const int row = index.row();
-
-    const auto &appRow = appRowAt(row);
-    if (appRow.isNull())
-        return {};
-
-    const AppListModelData data(appRow, index, role);
+    const AppListModelData data = appDataAt(index, role);
 
     return data.dataDisplayRow();
 }
 
 QVariant AppListModel::dataDecoration(const QModelIndex &index) const
 {
-    const int row = index.row();
-
-    const auto &appRow = appRowAt(row);
-    if (appRow.isNull())
-        return {};
-
-    const AppListModelData data(appRow, index);
+    const AppListModelData data = appDataAt(index);
 
     return data.dataDecorationIcon();
 }
 
 QVariant AppListModel::dataForeground(const QModelIndex &index) const
 {
-    const int row = index.row();
-
-    const auto &appRow = appRowAt(row);
-    if (appRow.isNull())
-        return {};
-
-    const AppListModelData data(appRow, index);
+    const AppListModelData data = appDataAt(index);
 
     return data.dataForeground();
 }
 
 QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
 {
-    const int column = index.column();
+    const AppListModelData data = appDataAt(index);
 
-    if (column == 5) {
-        return int(Qt::AlignHCenter | Qt::AlignVCenter);
-    }
-
-    return {};
+    return data.dataTextAlignment();
 }
 
 bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const
@@ -224,6 +203,15 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, Ap
     appRow.ruleName = stmt.columnText(24);
 
     return true;
+}
+
+AppListModelData AppListModel::appDataAt(const QModelIndex &index, int role) const
+{
+    const int row = index.row();
+
+    const auto &appRow = appRowAt(row);
+
+    return AppListModelData(appRow, index, role);
 }
 
 const AppRow &AppListModel::appRowAt(int row) const

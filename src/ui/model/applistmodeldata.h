@@ -32,6 +32,7 @@ public:
 
     QVariant dataDecorationIcon() const;
     QVariant dataForeground() const;
+    QVariant dataTextAlignment() const;
     QVariant dataDisplayRow() const;
 
 private:
