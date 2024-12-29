@@ -1690,6 +1690,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Alerts</source>
         <translation>Allerte</translation>
     </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProtoRange</name>

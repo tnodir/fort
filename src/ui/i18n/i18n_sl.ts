@@ -1690,6 +1690,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Alerts</source>
         <translation>Opozorila</translation>
     </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Raztegnite zadnji stolpec</translation>
+    </message>
 </context>
 <context>
     <name>ProtoRange</name>

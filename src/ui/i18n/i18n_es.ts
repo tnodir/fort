@@ -1693,6 +1693,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Alerts</source>
         <translation>Alertas</translation>
     </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProtoRange</name>

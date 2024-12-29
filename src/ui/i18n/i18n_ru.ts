@@ -1690,6 +1690,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Alerts</source>
         <translation>Оповещения</translation>
     </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Растянуть последнюю колонку</translation>
+    </message>
 </context>
 <context>
     <name>ProtoRange</name>

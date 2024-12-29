@@ -1690,6 +1690,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <source>Alerts</source>
         <translation>Warnungen</translation>
     </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProtoRange</name>

@@ -1684,6 +1684,10 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <source>Alerts</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProtoRange</name>

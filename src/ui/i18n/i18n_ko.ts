@@ -1690,6 +1690,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Alerts</source>
         <translation>경고</translation>
     </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProtoRange</name>

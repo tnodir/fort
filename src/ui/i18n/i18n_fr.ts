@@ -1690,6 +1690,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Alerts</source>
         <translation>Alertes</translation>
     </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProtoRange</name>
