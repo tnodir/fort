@@ -86,6 +86,10 @@ AppListModel *ProgramsWindow::appListModel() const
 
 void ProgramsWindow::saveWindowState(bool /*wasVisible*/)
 {
+    if (iniUser()->progWindowAutoClearAlerts()) {
+        ctrl()->clearAlerts();
+    }
+
     iniUser()->setProgWindowGeometry(stateWatcher()->geometry());
     iniUser()->setProgWindowMaximized(stateWatcher()->maximized());
 

@@ -121,6 +121,7 @@ private:
     QPushButton *m_btAlertModes = nullptr;
     QCheckBox *m_cbAppAlertAlwaysOnTop = nullptr;
     QCheckBox *m_cbAppAlertAutoActive = nullptr;
+    QCheckBox *m_cbAppAlertAutoClear = nullptr;
     QCheckBox *m_cbAppAlertSound = nullptr;
 
     QCheckBox *m_cbTrayShowIcon = nullptr;

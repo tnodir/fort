@@ -138,6 +138,9 @@ public:
     QByteArray progAppsHeader() const { return valueByteArray("progWindow/appsHeader"); }
     void setProgAppsHeader(const QByteArray &v) { setValue("progWindow/appsHeader", v); }
 
+    bool progWindowAutoClearAlerts() const { return valueBool("progWindow/autoClearAlerts"); }
+    void setProgWindowAutoClearAlerts(bool on) { setValue("progWindow/autoClearAlerts", on); }
+
     static QString progAlertWindowGroup() { return "progAlertWindow"; }
 
     QRect progAlertWindowGeometry() const { return value("progAlertWindow/geometry").toRect(); }

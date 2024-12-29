@@ -77,6 +77,7 @@ void IfacePage::onResetToDefault()
     m_cbAppAlertAllowAll->setChecked(true);
     m_cbAppAlertAlwaysOnTop->setChecked(true);
     m_cbAppAlertAutoActive->setChecked(false);
+    m_cbAppAlertAutoClear->setChecked(false);
     m_cbAppAlertSound->setChecked(true);
 
     m_cbTrayShowIcon->setChecked(true);
@@ -172,6 +173,7 @@ void IfacePage::onRetranslateUi()
     setAlertModeText(m_cbAppAlertAllowAll, FirewallConf::ModeAllowAll);
     m_cbAppAlertAlwaysOnTop->setText(tr("Alert Window is Always on top"));
     m_cbAppAlertAutoActive->setText(tr("Alert Window is auto-active"));
+    m_cbAppAlertAutoClear->setText(tr("Auto-Clear alerts on window close"));
     m_cbAppAlertSound->setText(tr("Sound Alert"));
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
@@ -629,6 +631,12 @@ void IfacePage::setupProgBox()
                 ctrl()->setIniUserEdited();
             });
 
+    m_cbAppAlertAutoClear =
+            ControlUtil::createCheckBox(iniUser()->progWindowAutoClearAlerts(), [&](bool checked) {
+                iniUser()->setProgWindowAutoClearAlerts(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     m_cbAppAlertSound = ControlUtil::createCheckBox(iniUser()->progAlertSound(), [&](bool checked) {
         iniUser()->setProgAlertSound(checked);
         ctrl()->setIniUserEdited();
@@ -640,6 +648,7 @@ void IfacePage::setupProgBox()
     layout->addLayout(alertLayout);
     layout->addWidget(m_cbAppAlertAlwaysOnTop);
     layout->addWidget(m_cbAppAlertAutoActive);
+    layout->addWidget(m_cbAppAlertAutoClear);
     layout->addWidget(m_cbAppAlertSound);
 
     m_gbProg = new QGroupBox();
