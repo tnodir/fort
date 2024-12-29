@@ -65,7 +65,7 @@ void TaskbarButton::setBadgeIcon(const QIcon &icon)
     const QSize iconSize(16, 16);
     const qreal dpr = qApp->devicePixelRatio();
 
-    const QImage image = icon.pixmap(iconSize * dpr).toImage();
+    const QImage image = icon.pixmap(iconSize, dpr).toImage();
 
     m_badgeIcon = image.toHICON();
 }
