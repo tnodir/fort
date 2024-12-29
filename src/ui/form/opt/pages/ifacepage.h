@@ -36,6 +36,7 @@ protected slots:
 private:
     void saveAutoRunMode(int mode);
 
+    void retranslateComboLanguage();
     void retranslateComboTheme();
     void retranslateComboStyle();
     void retranslateComboAutoRun();
@@ -51,7 +52,6 @@ private:
 
     void setupGlobalBox();
     QLayout *setupLangLayout();
-    void setupComboLanguage();
     QLayout *setupThemeLayout();
     QLayout *setupStyleLayout();
     QLayout *setupAutoRunLayout();

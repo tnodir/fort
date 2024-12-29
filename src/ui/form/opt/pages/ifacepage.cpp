@@ -144,6 +144,7 @@ void IfacePage::onRetranslateUi()
     m_gbConfirmations->setTitle(tr("Action Confirmations"));
 
     m_labelLanguage->setText(tr("Language:"));
+    retranslateComboLanguage();
     m_labelTheme->setText(tr("Theme:"));
     retranslateComboTheme();
     m_labelStyle->setText(tr("Style:"));
@@ -198,6 +199,12 @@ void IfacePage::saveAutoRunMode(int mode)
     m_currentAutoRunMode = mode;
 
     StartupUtil::setAutoRunMode(mode, settings()->defaultLanguage());
+}
+
+void IfacePage::retranslateComboLanguage()
+{
+    ControlUtil::setComboBoxTexts(m_comboLanguage, translationManager()->displayLabels(),
+            translationManager()->language());
 }
 
 void IfacePage::retranslateComboTheme()
@@ -414,15 +421,10 @@ void IfacePage::setupGlobalBox()
 
 QLayout *IfacePage::setupLangLayout()
 {
+    // Language Label
     m_labelLanguage = ControlUtil::createLabel();
 
-    setupComboLanguage();
-
-    return ControlUtil::createRowLayout(m_labelLanguage, m_comboLanguage);
-}
-
-void IfacePage::setupComboLanguage()
-{
+    // Language Combobox
     m_comboLanguage = ControlUtil::createComboBox({}, [&](int index) {
         if (translationManager()->switchLanguage(index)) {
             setLanguageEdited(true);
@@ -432,14 +434,7 @@ void IfacePage::setupComboLanguage()
     });
     m_comboLanguage->setFixedWidth(200);
 
-    const auto refreshComboLanguage = [&] {
-        ControlUtil::setComboBoxTexts(m_comboLanguage, translationManager()->displayLabels(),
-                translationManager()->language());
-    };
-
-    refreshComboLanguage();
-
-    connect(translationManager(), &TranslationManager::languageChanged, this, refreshComboLanguage);
+    return ControlUtil::createRowLayout(m_labelLanguage, m_comboLanguage);
 }
 
 QLayout *IfacePage::setupThemeLayout()
