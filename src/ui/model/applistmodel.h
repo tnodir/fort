@@ -64,7 +64,7 @@ public:
     AppRow appRowById(qint64 appId) const;
     AppRow appRowByPath(const QString &appPath) const;
 
-    static QString columnName(AppListColumn column);
+    static QString columnName(const AppListColumn column);
 
 signals:
     void filtersChanged();

@@ -7,6 +7,7 @@
 #include <appinfo/appinfocache.h>
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
+#include <manager/translationmanager.h>
 #include <util/conf/confutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netutil.h>
@@ -348,26 +349,24 @@ void AppListModel::addSqlFilter(QStringList &list, const QString &name, FilterFl
     }
 }
 
-QString AppListModel::columnName(AppListColumn column)
+QString AppListModel::columnName(const AppListColumn column)
 {
-    switch (column) {
-    case AppListColumn::Name:
-        return tr("Name");
-    case AppListColumn::Zones:
-        return tr("Zones");
-    case AppListColumn::Rule:
-        return tr("Rule");
-    case AppListColumn::Scheduled:
-        return tr("Scheduled");
-    case AppListColumn::Action:
-        return tr("Action");
-    case AppListColumn::Group:
-        return tr("Group");
-    case AppListColumn::FilePath:
-        return tr("File Path");
-    case AppListColumn::CreationTime:
-        return tr("Creation Time");
-    default:
-        return {};
+    static QStringList g_columnNames;
+    static int g_language = -1;
+
+    const int language = IoC<TranslationManager>()->language();
+    if (g_language != language) {
+        g_columnNames = {
+            tr("Name"),
+            tr("Zones"),
+            tr("Rule"),
+            tr("Scheduled"),
+            tr("Action"),
+            tr("Group"),
+            tr("File Path"),
+            tr("Creation Time"),
+        };
     }
+
+    return g_columnNames.value(int(column));
 }
