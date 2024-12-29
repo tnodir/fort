@@ -1,6 +1,7 @@
 Fort Firewall ChangeLog
 
-v3.15.5-test01, 2024-12-28:
+v3.15.5-test02, 2024-12-29:
+- UI: Options: Programs: Add "Auto-Clear alerts on window close" flag.
 - Driver: Don't block allowed packets by other firewall in transport layer.
 
 v3.15.4, 2024-12-27:
