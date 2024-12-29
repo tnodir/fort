@@ -1004,6 +1004,10 @@
         <source>Update window icons</source>
         <translation>Posodobite ikone oken</translation>
     </message>
+    <message>
+        <source>Auto-Clear alerts on window close</source>
+        <translation>Samodejno počisti opozorila ob zaprtju okna</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

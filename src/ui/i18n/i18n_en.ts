@@ -1004,6 +1004,10 @@
         <source>Update window icons</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Auto-Clear alerts on window close</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
