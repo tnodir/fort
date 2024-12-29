@@ -3,6 +3,8 @@
 
 #include <form/controls/formwindow.h>
 
+QT_FORWARD_DECLARE_CLASS(QHeaderView)
+
 class AppInfoCache;
 class AppInfoRow;
 class AppListModel;
@@ -66,6 +68,7 @@ private:
     void setupTableAppsChanged();
 
     void showTableAppsHeaderMenu(const QPoint &pos);
+    void setupTableAppsHeaderMenuColumns(QMenu *menu, QHeaderView *header);
 
     void addNewProgram();
     void addNewWildcard();

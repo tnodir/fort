@@ -478,6 +478,33 @@ void ProgramsWindow::setupTableAppsChanged()
 
 void ProgramsWindow::showTableAppsHeaderMenu(const QPoint &pos)
 {
+    auto menu = ControlUtil::createMenu();
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+
+    auto header = m_appListView->horizontalHeader();
+
+    setupTableAppsHeaderMenuColumns(menu, header);
+
+    menu->addSeparator();
+
+    // Stretch last column
+    {
+        auto a = new QAction(tr("Stretch last column"), menu);
+        a->setCheckable(true);
+        a->setChecked(header->stretchLastSection());
+
+        connect(a, &QAction::triggered, this, [&](bool checked) {
+            m_appListView->horizontalHeader()->setStretchLastSection(checked);
+        });
+
+        menu->addAction(a);
+    }
+
+    menu->popup(header->mapToGlobal(pos));
+}
+
+void ProgramsWindow::setupTableAppsHeaderMenuColumns(QMenu *menu, QHeaderView *header)
+{
     const auto switchColumnVisible = [&](bool checked) {
         const auto action = qobject_cast<QAction *>(sender());
         const int column = action->data().toInt();
@@ -486,11 +513,6 @@ void ProgramsWindow::showTableAppsHeaderMenu(const QPoint &pos)
 
         header->setSectionHidden(column, !checked);
     };
-
-    auto header = m_appListView->horizontalHeader();
-
-    auto menu = ControlUtil::createMenu();
-    menu->setAttribute(Qt::WA_DeleteOnClose);
 
     const bool canHide = (header->hiddenSectionCount() < int(AppListColumn::Count) - 1);
 
@@ -509,8 +531,6 @@ void ProgramsWindow::showTableAppsHeaderMenu(const QPoint &pos)
 
         menu->addAction(a);
     }
-
-    menu->popup(header->mapToGlobal(pos));
 }
 
 bool ProgramsWindow::editProgramByPath(const QString &appPath)
