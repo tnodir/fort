@@ -4,6 +4,7 @@
 #include <form/controls/formwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QHeaderView)
+QT_FORWARD_DECLARE_CLASS(QMenu)
 
 class AppInfoCache;
 class AppInfoRow;
