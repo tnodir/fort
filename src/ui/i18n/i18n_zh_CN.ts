@@ -1692,7 +1692,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished"></translation>
+        <translation>拉伸最后一列</translation>
     </message>
 </context>
 <context>

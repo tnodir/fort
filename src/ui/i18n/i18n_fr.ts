@@ -1692,7 +1692,7 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished"></translation>
+        <translation>Étirer la dernière colonne</translation>
     </message>
 </context>
 <context>
