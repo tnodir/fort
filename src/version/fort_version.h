@@ -5,7 +5,7 @@
 #define APP_VERSION_MINOR	15
 #define APP_VERSION_PATCH	5
 #define APP_VERSION_STR		"3.15.5"
-#define APP_VERSION_BUILD_STR	"-test01"
+#define APP_VERSION_BUILD_STR	"-test02"
 #define APP_VERSION		0x031505
 
 #define APP_NAME		"Fort Firewall"
