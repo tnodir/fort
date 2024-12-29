@@ -1,6 +1,7 @@
 Fort Firewall ChangeLog
 
-v3.15.5-test02, 2024-12-29:
+v3.15.5, 2024-12-29:
+- UI: Programs: Add ability to move and hide columns.
 - UI: Options: Programs: Add "Auto-Clear alerts on window close" flag.
 - Driver: Don't block allowed packets by other firewall in transport layer.
 
