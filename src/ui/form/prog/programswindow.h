@@ -65,6 +65,8 @@ private:
     void setupAppInfoRow();
     void setupTableAppsChanged();
 
+    void showTableAppsHeaderMenu(const QPoint &pos);
+
     void addNewProgram();
     void addNewWildcard();
     void convertToWildcard();

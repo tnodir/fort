@@ -12,7 +12,6 @@
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 
-#include "applistcolumn.h"
 #include "applistmodel.h"
 
 namespace {

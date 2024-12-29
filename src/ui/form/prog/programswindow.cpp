@@ -31,7 +31,7 @@
 
 namespace {
 
-constexpr int APPS_HEADER_VERSION = 11;
+constexpr int APPS_HEADER_VERSION = 12;
 
 }
 
@@ -412,26 +412,32 @@ void ProgramsWindow::setupTableAppsHeader()
 {
     auto header = m_appListView->horizontalHeader();
 
-    header->setSectionResizeMode(0, QHeaderView::Interactive);
-    header->setSectionResizeMode(1, QHeaderView::Fixed);
-    header->setSectionResizeMode(2, QHeaderView::Fixed);
-    header->setSectionResizeMode(3, QHeaderView::Fixed);
-    header->setSectionResizeMode(4, QHeaderView::Interactive);
-    header->setSectionResizeMode(5, QHeaderView::Interactive);
-    header->setSectionResizeMode(6, QHeaderView::Interactive);
-    header->setSectionResizeMode(7, QHeaderView::Stretch);
+    header->setSectionResizeMode(int(AppListColumn::Name), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(AppListColumn::Zones), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(AppListColumn::Rule), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(AppListColumn::Scheduled), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(AppListColumn::Action), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(AppListColumn::Group), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(AppListColumn::FilePath), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(AppListColumn::CreationTime), QHeaderView::Interactive);
 
-    header->resizeSection(0, 300);
-    header->resizeSection(1, 30);
-    header->resizeSection(2, 30);
-    header->resizeSection(3, 30);
-    header->resizeSection(4, 100);
-    header->resizeSection(5, 100);
-    header->resizeSection(6, 270);
+    header->resizeSection(int(AppListColumn::Name), 300);
+    header->resizeSection(int(AppListColumn::Zones), 30);
+    header->resizeSection(int(AppListColumn::Rule), 30);
+    header->resizeSection(int(AppListColumn::Scheduled), 30);
+    header->resizeSection(int(AppListColumn::Action), 100);
+    header->resizeSection(int(AppListColumn::Group), 100);
+    header->resizeSection(int(AppListColumn::FilePath), 270);
+    header->resizeSection(int(AppListColumn::CreationTime), 130);
 
+    header->setSectionsMovable(true);
     header->setSectionsClickable(true);
     header->setSortIndicatorShown(true);
-    header->setSortIndicator(7, Qt::DescendingOrder);
+    header->setSortIndicator(int(AppListColumn::CreationTime), Qt::DescendingOrder);
+
+    header->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(header, &QHeaderView::customContextMenuRequested, this,
+            &ProgramsWindow::showTableAppsHeaderMenu);
 }
 
 void ProgramsWindow::setupAppInfoRow()
@@ -468,6 +474,43 @@ void ProgramsWindow::setupTableAppsChanged()
     refreshTableAppsChanged();
 
     connect(m_appListView, &TableView::currentIndexChanged, this, refreshTableAppsChanged);
+}
+
+void ProgramsWindow::showTableAppsHeaderMenu(const QPoint &pos)
+{
+    const auto switchColumnVisible = [&](bool checked) {
+        const auto action = qobject_cast<QAction *>(sender());
+        const int column = action->data().toInt();
+
+        auto header = m_appListView->horizontalHeader();
+
+        header->setSectionHidden(column, !checked);
+    };
+
+    auto header = m_appListView->horizontalHeader();
+
+    auto menu = ControlUtil::createMenu();
+    menu->setAttribute(Qt::WA_DeleteOnClose);
+
+    const bool canHide = (header->hiddenSectionCount() < int(AppListColumn::Count) - 1);
+
+    for (int i = 0; i < int(AppListColumn::Count); ++i) {
+        const auto name = AppListModel::columnName(AppListColumn(i));
+
+        auto a = new QAction(name, menu);
+        a->setData(i);
+
+        const bool isHidden = header->isSectionHidden(i);
+        a->setCheckable(true);
+        a->setChecked(!isHidden);
+        a->setEnabled(isHidden || canHide);
+
+        connect(a, &QAction::triggered, this, switchColumnVisible);
+
+        menu->addAction(a);
+    }
+
+    menu->popup(header->mapToGlobal(pos));
 }
 
 bool ProgramsWindow::editProgramByPath(const QString &appPath)

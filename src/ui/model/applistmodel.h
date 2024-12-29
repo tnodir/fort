@@ -8,6 +8,8 @@
 #include <conf/app.h>
 #include <util/model/ftstablesqlmodel.h>
 
+#include "applistcolumn.h"
+
 class AppGroup;
 class AppInfoCache;
 class AppListModelData;
@@ -61,6 +63,8 @@ public:
     const AppRow &appRowAt(int row) const;
     AppRow appRowById(qint64 appId) const;
     AppRow appRowByPath(const QString &appPath) const;
+
+    static QString columnName(AppListColumn column);
 
 signals:
     void filtersChanged();

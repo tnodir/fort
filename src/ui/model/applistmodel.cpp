@@ -11,7 +11,6 @@
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netutil.h>
 
-#include "applistcolumn.h"
 #include "applistmodeldata.h"
 #include "applistmodelheaderdata.h"
 
@@ -346,5 +345,29 @@ void AppListModel::addSqlFilter(QStringList &list, const QString &name, FilterFl
         const QLatin1String value(filterValues().testFlag(flag) ? "1" : "0");
 
         list << QString("%1 = %2").arg(name, value);
+    }
+}
+
+QString AppListModel::columnName(AppListColumn column)
+{
+    switch (column) {
+    case AppListColumn::Name:
+        return tr("Name");
+    case AppListColumn::Zones:
+        return tr("Zones");
+    case AppListColumn::Rule:
+        return tr("Rule");
+    case AppListColumn::Scheduled:
+        return tr("Scheduled");
+    case AppListColumn::Action:
+        return tr("Action");
+    case AppListColumn::Group:
+        return tr("Group");
+    case AppListColumn::FilePath:
+        return tr("File Path");
+    case AppListColumn::CreationTime:
+        return tr("Creation Time");
+    default:
+        return {};
     }
 }
