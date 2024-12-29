@@ -703,22 +703,27 @@ inline static UINT32 fort_packet_data_size(const FWPS_INCOMING_METADATA_VALUES0 
     return dataSize + headerSize;
 }
 
-inline static BOOL fort_callout_transport_classify_packet(PFORT_CALLOUT_ARG ca)
+inline static BOOL fort_callout_transport_classify_packet_blocked(FWPS_CLASSIFY_OUT0 *classifyOut)
 {
-    FWPS_CLASSIFY_OUT0 *classifyOut = ca->classifyOut;
+    if (classifyOut->actionType == FWP_ACTION_BLOCK) {
+        fort_callout_classify_continue(classifyOut); /* continue */
+        return TRUE;
+    }
 
-    const BOOL canAlterAction = (classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) != 0;
+    return FALSE;
+}
 
-    if (canAlterAction) {
-        if (fort_shaper_packet_process(&fort_device()->shaper, ca)) {
-            fort_callout_classify_drop(classifyOut); /* drop */
-            return TRUE;
-        }
-    } else {
-        if (classifyOut->actionType == FWP_ACTION_BLOCK) {
-            fort_callout_classify_continue(classifyOut); /* continue */
-            return TRUE; /* Can't act on the packet */
-        }
+inline static BOOL fort_callout_transport_classify_packet(
+        FWPS_CLASSIFY_OUT0 *classifyOut, PFORT_CALLOUT_ARG ca)
+{
+    if ((classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0) {
+        /* Can't act on the packet */
+        return fort_callout_transport_classify_packet_blocked(classifyOut);
+    }
+
+    if (fort_shaper_packet_process(&fort_device()->shaper, ca)) {
+        fort_callout_classify_drop(classifyOut); /* drop */
+        return TRUE;
     }
 
     return FALSE;
@@ -744,7 +749,7 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
         .inbound = inbound,
     };
 
-    if (fort_callout_transport_classify_packet(&ca))
+    if (fort_callout_transport_classify_packet(classifyOut, &ca))
         return;
 
     fort_flow_classify(&fort_device()->stat, flowContext, ca.dataSize, inbound);
