@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.15.6, 2024-12-30:
+- UI: Programs: Add app states count and sorting.
+
 v3.15.5, 2024-12-29:
 - UI: Programs: Add ability to move and hide columns.
 - UI: Options: Programs: Add "Auto-Clear alerts on window close" flag.
