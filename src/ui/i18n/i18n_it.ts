@@ -1006,7 +1006,7 @@
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation type="unfinished"></translation>
+        <translation>Auto-cancella avvisi alla chiusura della finestra</translation>
     </message>
 </context>
 <context>
@@ -1692,7 +1692,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished"></translation>
+        <translation>Allunga l&apos;ultima colonna</translation>
     </message>
 </context>
 <context>
