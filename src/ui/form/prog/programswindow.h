@@ -63,6 +63,7 @@ private:
     void setupFilter();
     void setupFilterCheckBoxes();
     void setupFilterClear();
+    QLayout *setupSortStatesLayout();
     void setupTableApps();
     void setupTableAppsHeader();
     void setupAppInfoRow();
@@ -70,6 +71,9 @@ private:
 
     void showTableAppsHeaderMenu(const QPoint &pos);
     void setupTableAppsHeaderMenuColumns(QMenu *menu, QHeaderView *header);
+
+    void onSortStateClicked(int sortState);
+    void updateSortStateCounts();
 
     void addNewProgram();
     void addNewWildcard();
@@ -118,6 +122,9 @@ private:
     QCheckBox *m_cbFilterWildcard = nullptr;
     QCheckBox *m_cbFilterParked = nullptr;
     QCheckBox *m_cbFilterKillProcess = nullptr;
+    QToolButton *m_btSortAllowed = nullptr;
+    QToolButton *m_btSortBlocked = nullptr;
+    QToolButton *m_btSortAlerted = nullptr;
     QToolButton *m_btGroups = nullptr;
     QToolButton *m_btServices = nullptr;
     QPushButton *m_btMenu = nullptr;

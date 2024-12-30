@@ -33,6 +33,26 @@ namespace {
 
 constexpr int APPS_HEADER_VERSION = 12;
 
+QToolButton *createCheckableToolButton(
+        const QString &iconPath, const std::function<void()> &onClicked)
+{
+    auto c = ControlUtil::createFlatToolButton(iconPath, onClicked);
+
+    c->setCheckable(true);
+    c->setChecked(true);
+
+    return c;
+}
+
+void setToolButtonCount(QToolButton *c, int count)
+{
+    const bool isEmpty = (count == 0);
+    const auto text = isEmpty ? QString() : QString::number(count);
+
+    c->setText(text);
+    c->setVisible(!isEmpty);
+}
+
 }
 
 ProgramsWindow::ProgramsWindow(QWidget *parent) :
@@ -213,6 +233,10 @@ QLayout *ProgramsWindow::setupHeader()
     // Filter button
     setupFilter();
 
+    // Sort States
+    auto sortStatesLayout = setupSortStatesLayout();
+    updateSortStateCounts();
+
     // Groups button
     m_btGroups = ControlUtil::createFlatToolButton(":/icons/application_double.png");
 
@@ -238,6 +262,8 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_editSearch);
     layout->addWidget(m_btFilter);
+    layout->addStretch();
+    layout->addLayout(sortStatesLayout);
     layout->addStretch();
     layout->addWidget(m_btGroups);
     layout->addWidget(m_btServices);
@@ -394,6 +420,37 @@ void ProgramsWindow::setupFilterClear()
     });
 }
 
+QLayout *ProgramsWindow::setupSortStatesLayout()
+{
+    m_btSortAllowed = createCheckableToolButton(
+            ":/icons/accept.png", [&] { onSortStateClicked(AppListModel::SortAllowed); });
+    m_btSortBlocked = createCheckableToolButton(
+            ":/icons/deny.png", [&] { onSortStateClicked(AppListModel::SortBlocked); });
+    m_btSortAlerted = createCheckableToolButton(
+            ":/icons/error.png", [&] { onSortStateClicked(AppListModel::SortAlerted); });
+
+    appListModel()->setSortState(AppListModel::SortState(iniUser()->progWindowSortState()));
+
+    const auto refreshSortStates = [&] {
+        const auto sortState = appListModel()->sortState();
+
+        m_btSortAllowed->setChecked(sortState == AppListModel::SortAllowed);
+        m_btSortBlocked->setChecked(sortState == AppListModel::SortBlocked);
+        m_btSortAlerted->setChecked(sortState == AppListModel::SortAlerted);
+    };
+
+    refreshSortStates();
+
+    connect(appListModel(), &AppListModel::sortStateChanged, this, refreshSortStates);
+
+    // Layout
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_btSortAllowed, m_btSortBlocked, m_btSortAlerted });
+    layout->setSpacing(0);
+
+    return layout;
+}
+
 void ProgramsWindow::setupTableApps()
 {
     m_appListView = new TableView();
@@ -531,6 +588,33 @@ void ProgramsWindow::setupTableAppsHeaderMenuColumns(QMenu *menu, QHeaderView *h
 
         menu->addAction(a);
     }
+}
+
+void ProgramsWindow::onSortStateClicked(int sortState)
+{
+    if (sortState == appListModel()->sortState()) {
+        sortState = AppListModel::SortNone;
+    }
+
+    appListModel()->setSortState(AppListModel::SortState(sortState));
+
+    iniUser()->setProgWindowSortState(sortState);
+}
+
+void ProgramsWindow::updateSortStateCounts()
+{
+    const auto refreshSortStateCounts = [&] {
+        const AppStatesCount asc = appListModel()->appStatesCount();
+
+        setToolButtonCount(m_btSortAllowed, asc.allowed);
+        setToolButtonCount(m_btSortBlocked, asc.blocked);
+        setToolButtonCount(m_btSortAlerted, asc.alerted);
+    };
+
+    refreshSortStateCounts();
+
+    connect(appListModel(), &AppListModel::modelReset, this, refreshSortStateCounts);
+    connect(appListModel(), &AppListModel::dataChanged, this, refreshSortStateCounts);
 }
 
 bool ProgramsWindow::editProgramByPath(const QString &appPath)

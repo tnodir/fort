@@ -21,11 +21,26 @@ struct AppRow : TableRow, public App
     const App &app() const { return *this; }
 };
 
+struct AppStatesCount
+{
+    int allowed = 0;
+    int blocked = 0;
+    int alerted = 0;
+};
+
 class AppListModel : public FtsTableSqlModel
 {
     Q_OBJECT
 
 public:
+    enum SortState : qint8 {
+        SortNone = 0,
+        SortAllowed,
+        SortBlocked,
+        SortAlerted,
+    };
+    Q_ENUM(SortState)
+
     enum FilterFlag {
         FilterNone = 0,
         FilterAlerted = (1 << 0),
@@ -37,6 +52,9 @@ public:
     Q_DECLARE_FLAGS(FilterFlags, FilterFlag)
 
     explicit AppListModel(QObject *parent = nullptr);
+
+    SortState sortState() const { return m_sortState; }
+    void setSortState(SortState v);
 
     FilterFlags filters() const { return m_filters; }
     void setFilters(FilterFlags v);
@@ -64,9 +82,12 @@ public:
     AppRow appRowById(qint64 appId) const;
     AppRow appRowByPath(const QString &appPath) const;
 
+    AppStatesCount appStatesCount() const;
+
     static QString columnName(const AppListColumn column);
 
 signals:
+    void sortStateChanged();
     void filtersChanged();
 
 protected:
@@ -91,6 +112,8 @@ private:
     AppListModelData appDataAt(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
 private:
+    SortState m_sortState = SortNone;
+
     FilterFlags m_filters = FilterNone;
     FilterFlags m_filterValues = FilterNone;
 

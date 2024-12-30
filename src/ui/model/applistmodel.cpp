@@ -17,6 +17,17 @@
 
 AppListModel::AppListModel(QObject *parent) : FtsTableSqlModel(parent) { }
 
+void AppListModel::setSortState(SortState v)
+{
+    if (m_sortState == v)
+        return;
+
+    m_sortState = v;
+    emit sortStateChanged();
+
+    resetLater();
+}
+
 void AppListModel::setFilters(FilterFlags v)
 {
     if (m_filters == v)
@@ -244,6 +255,27 @@ AppRow AppListModel::appRowByPath(const QString &appPath) const
     return appRow;
 }
 
+AppStatesCount AppListModel::appStatesCount() const
+{
+    const auto sql = "SELECT"
+                     "    SUM(CASE WHEN blocked = 0 THEN 1 ELSE 0 END)," // Allowed
+                     "    SUM(CASE WHEN blocked = 1 THEN 1 ELSE 0 END)," // Blocked
+                     "    SUM(CASE WHEN alerted = 1 THEN 1 ELSE 0 END)" // Alerted
+                     "  FROM ("
+            + sqlBase() + sqlWhere() + ");";
+
+    QVariantHash vars;
+    fillQueryVars(vars);
+
+    const auto list = DbQuery(sqliteDb()).sql(sql).vars(vars).execute(3).toList();
+
+    return {
+        .allowed = list.value(0).toInt(),
+        .blocked = list.value(1).toInt(),
+        .alerted = list.value(2).toInt(),
+    };
+}
+
 bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
 {
     return updateAppRow(sql(), vars, m_appRow);
@@ -310,6 +342,12 @@ QString AppListModel::sqlOrderColumn() const
     static const QString nameColumn = "EXT_LOWER(t.name)";
     static const QString pathColumn = "t.path";
 
+    static const QStringList sortStateColumns = {
+        "t.blocked ASC", // SortAllowed
+        "t.blocked DESC", // SortBlocked
+        "alerted DESC", // SortAlerted
+    };
+
     static const QStringList orderColumns = {
         nameColumn, // Name
         "t.accept_zones, t.reject_zones", // Zones
@@ -320,6 +358,7 @@ QString AppListModel::sqlOrderColumn() const
         pathColumn, // File Path
         "t.app_id", // Creation Time ~ App ID
     };
+
     static const QStringList postOrderColumns = {
         pathColumn, // Name
         nameColumn, // Zones
@@ -334,10 +373,13 @@ QString AppListModel::sqlOrderColumn() const
     Q_ASSERT(sortColumn() >= 0 && sortColumn() < orderColumns.size()
             && orderColumns.size() == postOrderColumns.size());
 
+    const auto sortStateStr =
+            (sortState() != SortNone) ? sortStateColumns.at(sortState() - 1) + ", " : QString();
+
     const auto &columnsStr = orderColumns.at(sortColumn());
     const auto &postColumnsStr = postOrderColumns.at(sortColumn());
 
-    return columnsStr + sqlOrderAsc() + ", " + postColumnsStr;
+    return sortStateStr + columnsStr + sqlOrderAsc() + ", " + postColumnsStr;
 }
 
 void AppListModel::addSqlFilter(QStringList &list, const QString &name, FilterFlag flag) const

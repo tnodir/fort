@@ -141,6 +141,9 @@ public:
     bool progWindowAutoClearAlerts() const { return valueBool("progWindow/autoClearAlerts"); }
     void setProgWindowAutoClearAlerts(bool on) { setValue("progWindow/autoClearAlerts", on); }
 
+    int progWindowSortState() const { return valueInt("progWindow/sortState"); }
+    void setProgWindowSortState(int v) { setValue("progWindow/sortState", v); }
+
     static QString progAlertWindowGroup() { return "progAlertWindow"; }
 
     QRect progAlertWindowGeometry() const { return value("progAlertWindow/geometry").toRect(); }
