@@ -429,7 +429,8 @@ QLayout *ProgramsWindow::setupSortStatesLayout()
     m_btSortAlerted = createCheckableToolButton(
             ":/icons/error.png", [&] { onSortStateClicked(AppListModel::SortAlerted); });
 
-    appListModel()->setSortState(AppListModel::SortState(iniUser()->progWindowSortState()));
+    appListModel()->setSortState(qBound(AppListModel::SortNone,
+            AppListModel::SortState(iniUser()->progWindowSortState()), AppListModel::SortAlerted));
 
     const auto refreshSortStates = [&] {
         const auto sortState = appListModel()->sortState();
