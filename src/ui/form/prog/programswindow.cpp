@@ -262,7 +262,7 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_editSearch);
     layout->addWidget(m_btFilter);
-    layout->addStretch();
+    layout->addWidget(ControlUtil::createVSeparator());
     layout->addLayout(sortStatesLayout);
     layout->addStretch();
     layout->addWidget(m_btGroups);
