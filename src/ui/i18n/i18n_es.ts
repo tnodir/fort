@@ -1002,11 +1002,11 @@
     </message>
     <message>
         <source>Update window icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizar los iconos de las ventanas</translation>
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation type="unfinished"></translation>
+        <translation>Borrar automáticamente las alertas al cerrar la ventana</translation>
     </message>
 </context>
 <context>
@@ -1695,7 +1695,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished"></translation>
+        <translation>Ampliar la última columna</translation>
     </message>
 </context>
 <context>

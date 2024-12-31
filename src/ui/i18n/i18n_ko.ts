@@ -1006,7 +1006,7 @@
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation type="unfinished"></translation>
+        <translation>창을 닫을 때 알림 자동 지우기</translation>
     </message>
 </context>
 <context>
@@ -1692,7 +1692,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished"></translation>
+        <translation>마지막 열 늘리기</translation>
     </message>
 </context>
 <context>
