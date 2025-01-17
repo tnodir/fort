@@ -53,9 +53,9 @@ QString reasonIconPath(const ConnRow &connRow)
         ":/icons/help.png",
     };
 
-    if (connRow.blockReason >= FORT_BLOCK_REASON_IP_INET
-            && connRow.blockReason <= FORT_BLOCK_REASON_ASK_LIMIT) {
-        const int index = connRow.blockReason - FORT_BLOCK_REASON_IP_INET;
+    if (connRow.blockReason >= FORT_CONN_REASON_IP_INET
+            && connRow.blockReason <= FORT_CONN_REASON_ASK_LIMIT) {
+        const int index = connRow.blockReason - FORT_CONN_REASON_IP_INET;
         return blockReasonIcons[index];
     }
 
@@ -459,8 +459,8 @@ QString ConnBlockListModel::blockReasonText(FortBlockReason reason)
         QT_TR_NOOP("Limit of Ask to Connect"),
     };
 
-    if (reason >= FORT_BLOCK_REASON_IP_INET && reason <= FORT_BLOCK_REASON_ASK_LIMIT) {
-        const int index = reason - FORT_BLOCK_REASON_IP_INET;
+    if (reason >= FORT_CONN_REASON_IP_INET && reason <= FORT_CONN_REASON_ASK_LIMIT) {
+        const int index = reason - FORT_CONN_REASON_IP_INET;
         return tr(blockReasonTexts[index]);
     }
 

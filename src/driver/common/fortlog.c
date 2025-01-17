@@ -39,8 +39,8 @@ FORT_API void fort_log_blocked_ip_header_write(char *p, PCFORT_CONF_META_CONN co
 
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_BLOCKED_IP) | (conn->isIPv6 ? FORT_LOG_FLAG_IP6 : 0)
             | (conn->inbound ? FORT_LOG_FLAG_IP_INBOUND : 0) | path_len;
-    *up++ = (conn->inherited ? FORT_LOG_BLOCKED_IP_INHERITED : 0)
-            | ((UINT32) conn->block_reason << 8) | ((UINT32) conn->ip_proto << 16);
+    *up++ = (conn->inherited ? FORT_LOG_BLOCKED_IP_INHERITED : 0) | ((UINT32) conn->reason << 8)
+            | ((UINT32) conn->ip_proto << 16);
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
     *up++ = conn->process_id;
 
@@ -76,7 +76,7 @@ FORT_API void fort_log_blocked_ip_header_read(
 
     const UCHAR flags = (UCHAR) *up;
     conn->inherited = (flags & FORT_LOG_BLOCKED_IP_INHERITED) != 0;
-    conn->block_reason = (UCHAR) (*up >> 8);
+    conn->reason = (UCHAR) (*up >> 8);
     conn->ip_proto = (UCHAR) (*up++ >> 16);
     conn->local_port = *((const UINT16 *) up);
     conn->remote_port = (UINT16) (*up++ >> 16);

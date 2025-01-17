@@ -139,7 +139,7 @@ qint64 LogBlockedIpJob::insertConn(const LogEntryBlockedIp &entry, qint64 appId)
         stmt->bindBlobView(12, entry.remoteIp6View());
     }
 
-    stmt->bindInt(13, entry.blockReason());
+    stmt->bindInt(13, entry.reason());
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();

@@ -145,7 +145,7 @@ inline static BOOL fort_callout_ale_associate_flow(
             TRACE(FORT_CALLOUT_FLOW_ASSOC_ERROR, status, 0, 0);
         }
 
-        conn->block_reason = FORT_BLOCK_REASON_REAUTH;
+        conn->reason = FORT_CONN_REASON_REAUTH;
         return TRUE; /* block (Error) */
     }
 
@@ -204,7 +204,7 @@ inline static BOOL fort_callout_ale_log_blocked_ip_check_app(
 inline static BOOL fort_callout_ale_log_blocked_ip_check(PCFORT_CALLOUT_ARG ca,
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
 {
-    if (cx->conn.block_reason == FORT_BLOCK_REASON_UNKNOWN)
+    if (cx->conn.reason == FORT_CONN_REASON_UNKNOWN)
         return FALSE;
 
     if (!(conf_flags.ask_to_connect || conf_flags.log_blocked_ip))
@@ -220,12 +220,12 @@ inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CAL
     PFORT_CONF_META_CONN conn = &cx->conn;
 
     if (!fort_pending_add_packet(&fort_device()->pending, ca, cx)) {
-        conn->block_reason = FORT_BLOCK_REASON_ASK_LIMIT;
+        conn->reason = FORT_CONN_REASON_ASK_LIMIT;
         return TRUE; /* block (error) */
     }
 
     conn->drop_blocked = TRUE;
-    conn->block_reason = FORT_BLOCK_REASON_ASK_PENDING;
+    conn->reason = FORT_CONN_REASON_ASK_PENDING;
     return TRUE; /* drop (pending) */
 }
 
@@ -268,27 +268,27 @@ static BOOL fort_callout_ale_app_allowed(
         PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
     if (fort_conf_app_group_blocked(conf_flags, app_data)) {
-        conn->block_reason = FORT_BLOCK_REASON_APP_GROUP_FOUND;
+        conn->reason = FORT_CONN_REASON_APP_GROUP;
         return FALSE; /* block Group */
     }
 
     if (app_data.flags.blocked) {
-        conn->block_reason = FORT_BLOCK_REASON_PROGRAM;
+        conn->reason = FORT_CONN_REASON_PROGRAM;
         return FALSE; /* block Program */
     }
 
     if (app_data.flags.lan_only && !conn->is_local_net) {
-        conn->block_reason = FORT_BLOCK_REASON_LAN_ONLY;
+        conn->reason = FORT_CONN_REASON_LAN_ONLY;
         return FALSE; /* block LAN Only */
     }
 
     if (fort_callout_ale_conn_zone_blocked(conn, app_data)) {
-        conn->block_reason = FORT_BLOCK_REASON_ZONE;
+        conn->reason = FORT_CONN_REASON_ZONE;
         return FALSE; /* block Rejected or Not Accepted Zones */
     }
 
     if (fort_callout_ale_conn_rule_blocked(conn, app_data.rule_id)) {
-        conn->block_reason = FORT_BLOCK_REASON_RULE;
+        conn->reason = FORT_CONN_REASON_RULE;
         return FALSE; /* block Rule */
     }
 
@@ -304,12 +304,12 @@ inline static BOOL fort_callout_ale_flags_allowed(
 
     /* Block/Allow All */
     if (conf_flags.app_block_all || conf_flags.app_allow_all) {
+        conn->reason = FORT_CONN_REASON_FILTER_MODE;
         return conf_flags.app_allow_all;
     }
 
     /* Ignore */
-    conn->ignore = TRUE;
-    conn->block_reason = FORT_BLOCK_REASON_NONE; /* Don't block or allow */
+    conn->ignore = TRUE; /* Don't block or allow */
     return TRUE;
 }
 
@@ -324,7 +324,7 @@ inline static BOOL fort_callout_ale_is_allowed(
     const FORT_CONF_RULES_GLOB rules_glob = fort_device()->conf.rules_glob;
 
     if (fort_callout_ale_conn_rule_blocked(conn, rules_glob.pre_rule_id)) {
-        conn->block_reason = FORT_BLOCK_REASON_RULE_GLOB_PRE;
+        conn->reason = FORT_CONN_REASON_RULE_GLOB_PRE;
         return FALSE; /* block Global Rule Pre Apps */
     }
 
@@ -339,7 +339,7 @@ inline static BOOL fort_callout_ale_is_allowed(
     }
 
     if (fort_callout_ale_conn_rule_blocked(conn, rules_glob.post_rule_id)) {
-        conn->block_reason = FORT_BLOCK_REASON_RULE_GLOB_POST;
+        conn->reason = FORT_CONN_REASON_RULE_GLOB_POST;
         return FALSE; /* block Global Rule Post Apps */
     }
 
@@ -419,7 +419,7 @@ inline static BOOL fort_callout_ale_check_filter_flags(
     if (!fort_conf_ip_inet_included(&conf_ref->conf,
                 (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
                 &fort_device()->conf, conn->remote_ip, conn->isIPv6)) {
-        conn->block_reason = FORT_BLOCK_REASON_IP_INET;
+        conn->reason = FORT_CONN_REASON_IP_INET;
         return TRUE; /* block address */
     }
 
@@ -485,7 +485,7 @@ inline static void fort_callout_ale_check_conf(
 
     conn->ignore = FALSE;
     conn->blocked = TRUE;
-    conn->block_reason = FORT_BLOCK_REASON_UNKNOWN;
+    conn->reason = FORT_CONN_REASON_UNKNOWN;
 
     const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
 

@@ -19,8 +19,8 @@ public:
     bool inherited() const { return m_inherited; }
     void setInherited(bool inherited);
 
-    quint8 blockReason() const { return m_blockReason; }
-    void setBlockReason(quint8 blockReason);
+    quint8 reason() const { return m_reason; }
+    void setReason(quint8 blockReason);
 
     quint8 ipProto() const { return m_ipProto; }
     void setIpProto(quint8 proto);
@@ -60,7 +60,7 @@ private:
     bool m_isIPv6 : 1 = false;
     bool m_inbound : 1 = false;
     bool m_inherited : 1 = false;
-    quint8 m_blockReason = 0;
+    quint8 m_reason = 0;
     quint8 m_ipProto = 0;
     quint16 m_localPort = 0;
     quint16 m_remotePort = 0;

@@ -17,9 +17,9 @@ void LogEntryBlockedIp::setInherited(bool inherited)
     m_inherited = inherited;
 }
 
-void LogEntryBlockedIp::setBlockReason(quint8 blockReason)
+void LogEntryBlockedIp::setReason(quint8 reason)
 {
-    m_blockReason = blockReason;
+    m_reason = reason;
 }
 
 void LogEntryBlockedIp::setIpProto(quint8 proto)
@@ -84,5 +84,5 @@ void LogEntryBlockedIp::setRemoteIp6ByView(const QByteArrayView &ip)
 
 bool LogEntryBlockedIp::isAskPending() const
 {
-    return blockReason() == FORT_BLOCK_REASON_ASK_PENDING;
+    return reason() == FORT_CONN_REASON_ASK_PENDING;
 }

@@ -261,7 +261,7 @@ typedef struct fort_conf_meta_conn
     UINT16 drop_blocked : 1;
     UINT16 ignore : 1;
 
-    UCHAR block_reason;
+    UCHAR reason;
 
     UCHAR ip_proto;
 

@@ -110,7 +110,7 @@ void LogBuffer::writeEntryBlockedIp(const LogEntryBlockedIp *logEntry)
         .inbound = logEntry->inbound(),
         .isIPv6 = logEntry->isIPv6(),
         .inherited = logEntry->inherited(),
-        .block_reason = logEntry->blockReason(),
+        .reason = logEntry->reason(),
         .ip_proto = logEntry->ipProto(),
         .local_port = logEntry->localPort(),
         .remote_port = logEntry->remotePort(),
@@ -149,7 +149,7 @@ void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
     logEntry->setIsIPv6(conn.isIPv6);
     logEntry->setInbound(conn.inbound);
     logEntry->setInherited(conn.inherited);
-    logEntry->setBlockReason(conn.block_reason);
+    logEntry->setReason(conn.reason);
     logEntry->setIpProto(conn.ip_proto);
     logEntry->setLocalPort(conn.local_port);
     logEntry->setRemotePort(conn.remote_port);
