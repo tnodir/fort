@@ -62,7 +62,7 @@ public:
 
     const ConnRow &connRowAt(int row) const;
 
-    static QString blockReasonText(FortBlockReason reason);
+    static QString blockReasonText(FortConnReason reason);
 
 protected slots:
     void updateConnIdRange();

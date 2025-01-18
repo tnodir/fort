@@ -16,7 +16,7 @@ enum FortLogBlockedIpFlag {
     FORT_LOG_BLOCKED_IP_INHERITED = (1 << 0),
 };
 
-enum FortBlockReason {
+enum FortConnReason {
     FORT_CONN_REASON_UNKNOWN = 0,
     FORT_CONN_REASON_IP_INET,
     FORT_CONN_REASON_REAUTH,

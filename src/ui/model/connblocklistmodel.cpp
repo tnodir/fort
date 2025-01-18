@@ -104,7 +104,7 @@ QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, i
 QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int role)
 {
     if (role == Qt::ToolTipRole) {
-        return ConnBlockListModel::blockReasonText(FortBlockReason(connRow.blockReason))
+        return ConnBlockListModel::blockReasonText(FortConnReason(connRow.blockReason))
                 + (connRow.inherited ? " (" + ConnBlockListModel::tr("Inherited") + ")"
                                      : QString());
     }
@@ -443,7 +443,7 @@ void ConnBlockListModel::insertConnRows(qint64 idMax, int endRow, int count)
     endInsertRows();
 }
 
-QString ConnBlockListModel::blockReasonText(FortBlockReason reason)
+QString ConnBlockListModel::blockReasonText(FortConnReason reason)
 {
     static const char *const blockReasonTexts[] = {
         QT_TR_NOOP("Blocked Internet address"),
