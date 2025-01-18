@@ -202,7 +202,7 @@ bool processCommandBackup(const ProcessCommandArgs &p)
 {
     const BackupAction backupAction = backupActionByText(p.args.value(0).toString());
     if (backupAction == BackupActionNone) {
-        p.errorMessage = "Usage: backup export/import <dir-path>";
+        p.errorMessage = "Usage: backup export|import <dir-path>";
         return false;
     }
 
