@@ -99,24 +99,13 @@ QIcon IconCache::icon(const QString &filePath)
     if (filePath.isEmpty())
         return {};
 
-    QIcon *iconObj = iconObject(filePath);
-    if (iconObj) {
-        return *iconObj;
-    }
+    const QIcon *iconObj = iconObject(filePath);
 
-    return QIcon(adjustFilePath(filePath));
+    return iconObj ? *iconObj : QIcon();
 }
 
 QPixmap IconCache::pixmap(const QString &filePath, const QSize &size)
 {
-    if (filePath.isEmpty())
-        return {};
-
-    QIcon *iconObj = iconObject(filePath);
-    if (iconObj) {
-        return iconObj->pixmap(size);
-    }
-
     return icon(filePath).pixmap(size);
 }
 
