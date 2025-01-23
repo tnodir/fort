@@ -311,7 +311,7 @@
     </message>
     <message>
         <source>Too many values</source>
-        <translation type="unfinished"></translation>
+        <translation>قيم كثيرة جداً</translation>
     </message>
 </context>
 <context>
@@ -424,15 +424,15 @@
     </message>
     <message>
         <source>Restrict access by Rule</source>
-        <translation type="unfinished"></translation>
+        <translation>تقييد الوصول حسب القاعدة</translation>
     </message>
     <message>
         <source>Restrict access by Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>تقييد الوصول بواسطة القاعدة العامة قبل قواعد التطبيق</translation>
     </message>
     <message>
         <source>Restrict access by Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>تقييد الوصول بواسطة القاعدة العامة بعد قواعد التطبيق</translation>
     </message>
 </context>
 <context>
@@ -517,11 +517,11 @@
     </message>
     <message>
         <source>No Block</source>
-        <translation type="unfinished"></translation>
+        <translation>إلغاء الحظر</translation>
     </message>
     <message>
         <source>Block Internet and LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>حظر اتصال الإنترنت والشبكة المحلية</translation>
     </message>
 </context>
 <context>
@@ -544,7 +544,7 @@
     </message>
     <message>
         <source>Run Fort Firewall as Administrator or install its Windows Service to access the Driver!</source>
-        <translation type="unfinished"></translation>
+        <translation>قم بتشغيل البرنامج كمسؤول أو قم بتثبيت خدمة ويندوز للوصول إلى التعريفات!</translation>
     </message>
 </context>
 <context>
@@ -634,11 +634,11 @@
     </message>
     <message>
         <source>Colors (Light | Dark)</source>
-        <translation type="unfinished"></translation>
+        <translation>الألوان (فاتح | غامق)</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>السرعة الثابتة:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -646,7 +646,7 @@
     </message>
     <message>
         <source>Auto-scale</source>
-        <translation type="unfinished"></translation>
+        <translation>حجم تلقائي</translation>
     </message>
 </context>
 <context>
@@ -708,27 +708,27 @@
     </message>
     <message>
         <source>Driver Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>تم تثبيت التعريفات</translation>
     </message>
     <message>
         <source>Driver Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>التعريفات غير مثبتة</translation>
     </message>
     <message>
         <source>Service Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>تم تثبيت الخدمة</translation>
     </message>
     <message>
         <source>Service Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>الخدمة غير مثبتة</translation>
     </message>
     <message>
         <source>Are you sure to install the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>سيتم تثبيت الخدمة، هل أنت متأكد؟</translation>
     </message>
     <message>
         <source>Are you sure to remove the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>سيتم إزالة الخدمة، هل أنت متأكد؟</translation>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
@@ -771,7 +771,7 @@
     </message>
     <message>
         <source>Service Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>سجلات الخدمة</translation>
     </message>
 </context>
 <context>
@@ -974,7 +974,7 @@
     </message>
     <message>
         <source>Operations from Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>الإجراءات من قائمة أيقونة الإشعارات</translation>
     </message>
     <message>
         <source>Sound Alert</source>
@@ -982,7 +982,7 @@
     </message>
     <message>
         <source>Style:</source>
-        <translation type="unfinished"></translation>
+        <translation>الأسلوب:</translation>
     </message>
     <message>
         <source>Auto-run:</source>
@@ -990,7 +990,7 @@
     </message>
     <message>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>تم التعطيل</translation>
     </message>
     <message>
         <source>For current user</source>
@@ -1002,11 +1002,11 @@
     </message>
     <message>
         <source>Update window icons</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديث أيقونات النافذة</translation>
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation type="unfinished"></translation>
+        <translation>تنظيف تلقائي للتنبيهات عند إغلاق النافذة</translation>
     </message>
 </context>
 <context>
@@ -1040,7 +1040,7 @@
     </message>
     <message>
         <source>Select dark color for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>حدد اللون الغامق ل %1</translation>
     </message>
 </context>
 <context>
@@ -1253,15 +1253,15 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>حظر حركة المرور لمجموعات التطبيقات المعطلة</translation>
     </message>
     <message>
         <source>Auto-install after download</source>
-        <translation type="unfinished"></translation>
+        <translation>تثبيت تلقائي بعد التنزيل</translation>
     </message>
     <message>
         <source>Local Network Addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation>عناوين الشبكة المحلية:</translation>
     </message>
     <message>
         <source>Add Local Networks</source>
@@ -1296,7 +1296,11 @@ Do you want to open a discussion thread in browser?</source>
 (They are read-only now and will be removed in v4.)
 
 Do you want to open a discussion thread in browser?</source>
-        <translation type="unfinished"></translation>
+        <translation>الرجاء نقل إعدادات &apos;عناوين IP&apos; الحقول إلى القواعد العامة!!!
+
+(هي فقط للقراءة الآن وسيتم إزالتها في الإصدار 4)
+
+هل تريد فتح موضوع مناقشة في المتصفح؟</translation>
     </message>
 </context>
 <context>
@@ -1566,7 +1570,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Switch Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>تبديل حرف الاستبدال (Wildcard)</translation>
     </message>
 </context>
 <context>
@@ -1688,7 +1692,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished"></translation>
+        <translation>توسيع العمود الأخير</translation>
     </message>
 </context>
 <context>
@@ -1703,7 +1707,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Bad Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>البروتوكول غير صالح</translation>
     </message>
 </context>
 <context>
@@ -1808,7 +1812,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Terminating Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>قاعدة الإنهاء:</translation>
     </message>
 </context>
 <context>
@@ -1846,39 +1850,39 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Unexpected start of line</source>
-        <translation type="unfinished"></translation>
+        <translation>رمز غير متوقع في بداية القائمة</translation>
     </message>
     <message>
         <source>Unexpected end of list</source>
-        <translation type="unfinished"></translation>
+        <translation>نهاية غير متوقعة للقائمة</translation>
     </message>
     <message>
         <source>Max list depth exceeded: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>تم تجاوز الحد الأقصى لعمق القائمة: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol of list end</source>
-        <translation type="unfinished"></translation>
+        <translation>رمز غير متوقع في نهاية القائمة</translation>
     </message>
     <message>
         <source>Extra filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>اسم المرشّح الإضافي: %1</translation>
     </message>
     <message>
         <source>Bad filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>اسم المرشّح غير صالح: %1</translation>
     </message>
     <message>
         <source>Unexpected end of values list</source>
-        <translation type="unfinished"></translation>
+        <translation>نهاية غير متوقعة لقائمة القيم</translation>
     </message>
     <message>
         <source>Unexpected end of value</source>
-        <translation type="unfinished"></translation>
+        <translation>نهاية غير متوقعة للقيمة</translation>
     </message>
     <message>
         <source>No filter name</source>
-        <translation type="unfinished"></translation>
+        <translation>مرشّح بلا اسم</translation>
     </message>
 </context>
 <context>
@@ -1987,19 +1991,27 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished"></translation>
+        <translation>الخيارات</translation>
     </message>
     <message>
         <source>Delay startup to retry&apos;s seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>تأخير بدء تشغيل إعادة المحاولة&apos;s (ثانية)</translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation>الحد الأقصى لعدد المحاولات:</translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation>التأخير حتى إعادة المحاولة (ثوانٍ):</translation>
     </message>
     <message>
         <source>3 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>3 ثوانٍ</translation>
     </message>
     <message>
         <source>20 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>20 ثانية</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -2007,7 +2019,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>2 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>دقيقتان</translation>
     </message>
     <message>
         <source>5 minutes</source>
@@ -2019,15 +2031,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source> second(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum retries count:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delay seconds to retry:</source>
-        <translation type="unfinished"></translation>
+        <translation> ثوانٍ</translation>
     </message>
 </context>
 <context>
@@ -2256,7 +2260,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Maximum retries count</source>
-        <translation type="unfinished"></translation>
+        <translation>الحد الأقصى لعدد المحاولات</translation>
     </message>
 </context>
 <context>
@@ -2500,23 +2504,23 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Addresses from Inline Text</source>
-        <translation type="unfinished"></translation>
+        <translation>عناوين من النص</translation>
     </message>
     <message>
         <source>Addresses from Local File</source>
-        <translation type="unfinished"></translation>
+        <translation>عناوين من الملف</translation>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation type="unfinished"></translation>
+        <translation>WindowsSpyBlocker</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation type="unfinished"></translation>
+        <translation>FireHOL Level-1</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>TAS-IX Addresses</translation>
     </message>
 </context>
 <context>
