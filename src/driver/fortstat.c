@@ -34,6 +34,7 @@ static PFORT_STAT_PROC fort_stat_proc_get(PFORT_STAT stat, UINT32 process_id, to
 
         proc = proc->next;
     }
+
     return NULL;
 }
 
@@ -135,24 +136,49 @@ FORT_API UCHAR fort_flow_flags(PFORT_FLOW flow)
     return fort_flow_flags_set(flow, 0, TRUE);
 }
 
+typedef struct fort_flow_context_transport_opt
+{
+    UINT16 in_layerId;
+    UINT16 out_layerId;
+    UINT32 in_calloutId;
+    UINT32 out_calloutId;
+} FORT_FLOW_CONTEXT_TRANSPORT_OPT, *PFORT_FLOW_CONTEXT_TRANSPORT_OPT;
+
+static void fort_flow_context_transport_init(
+        PFORT_STAT stat, BOOL isIPv6, PFORT_FLOW_CONTEXT_TRANSPORT_OPT opt)
+{
+    opt->in_layerId = isIPv6 ? FWPS_LAYER_INBOUND_TRANSPORT_V6 : FWPS_LAYER_INBOUND_TRANSPORT_V4;
+    opt->out_layerId = isIPv6 ? FWPS_LAYER_OUTBOUND_TRANSPORT_V6 : FWPS_LAYER_OUTBOUND_TRANSPORT_V4;
+
+    const enum FORT_STAT_CALLOUT_ID_TYPE in_calloutIdType =
+            isIPv6 ? FORT_STAT_IN_TRANSPORT6_ID : FORT_STAT_IN_TRANSPORT4_ID;
+    const enum FORT_STAT_CALLOUT_ID_TYPE out_calloutIdType =
+            isIPv6 ? FORT_STAT_OUT_TRANSPORT6_ID : FORT_STAT_OUT_TRANSPORT4_ID;
+
+    opt->in_calloutId = fort_stat_callout_id(stat, in_calloutIdType);
+    opt->out_calloutId = fort_stat_callout_id(stat, out_calloutIdType);
+}
+
 inline static NTSTATUS fort_flow_context_transport_set(
         PFORT_STAT stat, UINT64 flow_id, UINT64 flowContext, BOOL isIPv6)
 {
-    NTSTATUS in_status, out_status;
+    FORT_FLOW_CONTEXT_TRANSPORT_OPT opt;
 
-    if (isIPv6) {
-        in_status = FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6,
-                fort_stat_callout_id(stat, FORT_STAT_IN_TRANSPORT6_ID), flowContext);
-        out_status = FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6,
-                fort_stat_callout_id(stat, FORT_STAT_OUT_TRANSPORT6_ID), flowContext);
-    } else {
-        in_status = FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4,
-                fort_stat_callout_id(stat, FORT_STAT_IN_TRANSPORT4_ID), flowContext);
-        out_status = FwpsFlowAssociateContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
-                fort_stat_callout_id(stat, FORT_STAT_OUT_TRANSPORT4_ID), flowContext);
+    fort_flow_context_transport_init(stat, isIPv6, &opt);
+
+    NTSTATUS status;
+
+    status = FwpsFlowAssociateContext0(flow_id, opt.in_layerId, opt.in_calloutId, flowContext);
+    if (!NT_SUCCESS(status)) {
+        return status;
     }
 
-    return in_status == 0 && out_status == 0;
+    status = FwpsFlowAssociateContext0(flow_id, opt.out_layerId, opt.out_calloutId, flowContext);
+    if (!NT_SUCCESS(status)) {
+        return status;
+    }
+
+    return STATUS_SUCCESS;
 }
 
 static NTSTATUS fort_flow_context_set(PFORT_STAT stat, PFORT_FLOW flow, BOOL isIPv6)
@@ -166,17 +192,13 @@ static NTSTATUS fort_flow_context_set(PFORT_STAT stat, PFORT_FLOW flow, BOOL isI
 inline static void fort_flow_context_transport_remove(
         PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, NTSTATUS *in_status, NTSTATUS *out_status)
 {
-    if (isIPv6) {
-        *in_status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V6,
-                fort_stat_callout_id(stat, FORT_STAT_IN_TRANSPORT6_ID));
-        *out_status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V6,
-                fort_stat_callout_id(stat, FORT_STAT_OUT_TRANSPORT6_ID));
-    } else {
-        *in_status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_INBOUND_TRANSPORT_V4,
-                fort_stat_callout_id(stat, FORT_STAT_IN_TRANSPORT4_ID));
-        *out_status = FwpsFlowRemoveContext0(flow_id, FWPS_LAYER_OUTBOUND_TRANSPORT_V4,
-                fort_stat_callout_id(stat, FORT_STAT_OUT_TRANSPORT4_ID));
-    }
+    FORT_FLOW_CONTEXT_TRANSPORT_OPT opt;
+
+    fort_flow_context_transport_init(stat, isIPv6, &opt);
+
+    *in_status = FwpsFlowRemoveContext0(flow_id, opt.in_layerId, opt.in_calloutId);
+
+    *out_status = FwpsFlowRemoveContext0(flow_id, opt.out_layerId, opt.out_calloutId);
 }
 
 static BOOL fort_flow_context_remove_id(PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL *pending)
@@ -223,6 +245,7 @@ static PFORT_FLOW fort_flow_get(PFORT_STAT stat, UINT64 flow_id, tommy_key_t flo
 
         flow = flow->next;
     }
+
     return NULL;
 }
 
