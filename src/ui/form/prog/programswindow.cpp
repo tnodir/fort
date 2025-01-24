@@ -257,7 +257,6 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btAllowApp);
     layout->addWidget(m_btBlockApp);
-    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btRemoveApp);
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_editSearch);
