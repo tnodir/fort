@@ -478,9 +478,7 @@ FORT_API BOOL fort_devconf_zones_conn_blocked(PFORT_DEVICE_CONF device_conf,
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
     PCFORT_CONF_ZONES zones = device_conf->zones;
     if (zones != NULL) {
-        BOOL included = FALSE;
-
-        res = fort_conf_zones_conn_blocked(zones, conn, rule_zones, &included);
+        res = fort_conf_zones_conn_blocked(zones, conn, rule_zones);
     }
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 
@@ -532,7 +530,7 @@ FORT_API void fort_conf_rule_flag_set(
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
-FORT_API BOOL fort_devconf_rules_conn_blocked(
+FORT_API BOOL fort_devconf_rules_conn_filtered(
         PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
     BOOL res = FALSE;
@@ -540,7 +538,7 @@ FORT_API BOOL fort_devconf_rules_conn_blocked(
     KIRQL oldIrql = ExAcquireSpinLockExclusive(&device_conf->lock);
     PFORT_CONF_RULES rules = device_conf->rules;
     if (rules != NULL) {
-        res = fort_conf_rules_conn_blocked(rules, device_conf->zones, conn, rule_id);
+        res = fort_conf_rules_conn_filtered(rules, device_conf->zones, conn, rule_id);
     }
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 

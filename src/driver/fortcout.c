@@ -180,7 +180,7 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     app_data.found = TRUE;
     app_data.alerted = TRUE;
 
-    FORT_APP_ENTRY app_entry = {
+    const FORT_APP_ENTRY app_entry = {
         .app_data = app_data,
         .path_len = conn->path.len,
     };
@@ -256,12 +256,18 @@ inline static BOOL fort_callout_ale_conn_zone_blocked(
     return fort_devconf_zones_conn_blocked(&fort_device()->conf, conn, rule_zones);
 }
 
-inline static BOOL fort_callout_ale_conn_rule_blocked(PFORT_CONF_META_CONN conn, UINT16 rule_id)
+inline static BOOL fort_callout_ale_conn_rule_filtered(
+        PFORT_CONF_META_CONN conn, UINT16 rule_id, UCHAR reason)
 {
     if (rule_id == 0)
         return FALSE;
 
-    return fort_devconf_rules_conn_blocked(&fort_device()->conf, conn, rule_id);
+    if (fort_devconf_rules_conn_filtered(&fort_device()->conf, conn, rule_id)) {
+        conn->reason = reason;
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 static BOOL fort_callout_ale_app_allowed(
@@ -287,8 +293,7 @@ static BOOL fort_callout_ale_app_allowed(
         return FALSE; /* block Rejected or Not Accepted Zones */
     }
 
-    if (fort_callout_ale_conn_rule_blocked(conn, app_data.rule_id)) {
-        conn->reason = FORT_CONN_REASON_RULE;
+    if (fort_callout_ale_conn_rule_filtered(conn, app_data.rule_id, FORT_CONN_REASON_RULE)) {
         return FALSE; /* block Rule */
     }
 
@@ -323,12 +328,13 @@ inline static BOOL fort_callout_ale_is_allowed(
 
     const FORT_CONF_RULES_GLOB rules_glob = fort_device()->conf.rules_glob;
 
-    if (fort_callout_ale_conn_rule_blocked(conn, rules_glob.pre_rule_id)) {
-        conn->reason = FORT_CONN_REASON_RULE_GLOB_PRE;
-        return FALSE; /* block Global Rule Pre Apps */
+    if (fort_callout_ale_conn_rule_filtered(
+                conn, rules_glob.pre_rule_id, FORT_CONN_REASON_RULE_GLOB_PRE)) {
+        return !conn->blocked; /* filtered by Global Rule Pre Apps */
     }
 
-    if (app_data.found != 0) {
+    const BOOL isAppFound = (app_data.found != 0);
+    if (isAppFound) {
         /* Check app is allowed */
         if (!fort_callout_ale_app_allowed(conn, conf_flags, app_data))
             return FALSE; /* block App */
@@ -338,12 +344,12 @@ inline static BOOL fort_callout_ale_is_allowed(
             return TRUE; /* allow App */
     }
 
-    if (fort_callout_ale_conn_rule_blocked(conn, rules_glob.post_rule_id)) {
-        conn->reason = FORT_CONN_REASON_RULE_GLOB_POST;
-        return FALSE; /* block Global Rule Post Apps */
+    if (fort_callout_ale_conn_rule_filtered(
+                conn, rules_glob.post_rule_id, FORT_CONN_REASON_RULE_GLOB_POST)) {
+        return !conn->blocked; /* filtered by Global Rule Post Apps */
     }
 
-    if (app_data.found != 0) {
+    if (isAppFound) {
         return TRUE; /* allow App */
     }
 
@@ -467,12 +473,12 @@ inline static void fort_callout_ale_classify_action(PCFORT_CALLOUT_ARG ca,
     if (cx->conn.ignore) {
         /* Continue the search */
         fort_callout_classify_continue(ca->classifyOut);
-    } else if (!cx->conn.blocked) {
-        /* Allow the connection */
-        fort_callout_classify_permit(ca->filter, ca->classifyOut);
-    } else {
+    } else if (cx->conn.blocked) {
         /* Block/Drop the connection */
         fort_callout_ale_classify_blocked(ca, cx, conf_ref, conf_flags);
+    } else {
+        /* Allow the connection */
+        fort_callout_classify_permit(ca->filter, ca->classifyOut);
     }
 }
 

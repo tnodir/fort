@@ -321,16 +321,18 @@ static BOOL fort_conf_zones_masks_conn_check(
     return TRUE;
 }
 
-FORT_API BOOL fort_conf_zones_conn_blocked(PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn,
-        const FORT_CONF_RULE_ZONES rule_zones, BOOL *included)
+FORT_API BOOL fort_conf_zones_conn_blocked(
+        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, const FORT_CONF_RULE_ZONES rule_zones)
 {
-    if (fort_conf_zones_masks_conn_check(zones, conn, rule_zones.reject_mask, included)
-            && *included) {
+    BOOL included = FALSE;
+
+    if (fort_conf_zones_masks_conn_check(zones, conn, rule_zones.reject_mask, &included)
+            && included) {
         return TRUE; /* rejected */
     }
 
-    if (fort_conf_zones_masks_conn_check(zones, conn, rule_zones.accept_mask, included)
-            && !*included) {
+    if (fort_conf_zones_masks_conn_check(zones, conn, rule_zones.accept_mask, &included)
+            && !included) {
         return TRUE; /* not accepted */
     }
 
@@ -463,7 +465,7 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
     return conf_flags.group_blocked;
 }
 
-inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
+inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     if (!rule->has_zones)
@@ -476,22 +478,18 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_zones(
     FORT_CONF_RULE_ZONES rule_zones = *((PCFORT_CONF_RULE_ZONES) (rule + 1));
 
     if (rule->blocked) {
+        /* Swap the accept/reject masks */
         const UINT32 accept_mask = rule_zones.accept_mask;
         rule_zones.accept_mask = rule_zones.reject_mask;
         rule_zones.reject_mask = accept_mask;
     }
 
-    BOOL included = FALSE;
-    const BOOL filter_res = fort_conf_zones_conn_blocked(zones, conn, rule_zones, &included);
-
-    if (!included)
-        return FALSE;
-
-    if (!filter_res) {
-        conn->blocked = FALSE;
+    if (fort_conf_zones_conn_blocked(zones, conn, rule_zones)) {
+        conn->blocked = rule->blocked;
+        return TRUE;
     }
 
-    return filter_res;
+    return FALSE;
 }
 
 static BOOL fort_conf_rule_filter_check(
@@ -638,7 +636,7 @@ static BOOL fort_conf_rule_filter_check(
     return filter_res;
 }
 
-inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
+inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
         PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     if (!rule->has_filters)
@@ -647,23 +645,15 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_filters(
     PCFORT_CONF_RULE_FILTER rule_filter =
             (PCFORT_CONF_RULE_FILTER) ((PCCH) rule + FORT_CONF_RULE_SIZE(rule));
 
-    const BOOL filter_res = fort_conf_rule_filter_check(rule_filter, conn);
-
-    if (rule->blocked) {
-        return filter_res;
-    }
-
-    if (filter_res
-            /* skip the exclusive allowed rule */
-            || rule->exclusive) {
-        conn->blocked = FALSE;
+    if (fort_conf_rule_filter_check(rule_filter, conn)) {
+        conn->blocked = rule->blocked;
         return TRUE;
     }
 
     return FALSE;
 }
 
-inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
+inline static BOOL fort_conf_rules_rt_conn_filtered_sets(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     const int set_count = rule->set_count;
@@ -676,7 +666,7 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
     for (int i = 0; i < set_count; ++i) {
         const UINT16 rule_id = rule_ids[i];
 
-        if (fort_conf_rules_rt_conn_blocked(rules_rt, conn, rule_id) || !conn->blocked) {
+        if (fort_conf_rules_rt_conn_filtered(rules_rt, conn, rule_id) || !conn->blocked) {
             return TRUE;
         }
     }
@@ -684,18 +674,9 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_sets(
     return FALSE;
 }
 
-inline static BOOL fort_conf_rules_rt_conn_blocked_check(
-        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
+        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
-    if (fort_conf_rules_rt_conn_blocked_zones(rules_rt, conn, rule))
-        return TRUE;
-
-    if (fort_conf_rules_rt_conn_blocked_filters(conn, rule))
-        return TRUE;
-
-    if (fort_conf_rules_rt_conn_blocked_sets(rules_rt, conn, rule))
-        return TRUE;
-
     /* Terminating Rule? */
     if (rule->terminate) {
         conn->blocked = rule->term_blocked;
@@ -705,7 +686,25 @@ inline static BOOL fort_conf_rules_rt_conn_blocked_check(
     return FALSE;
 }
 
-FORT_API BOOL fort_conf_rules_rt_conn_blocked(
+inline static BOOL fort_conf_rules_rt_conn_filtered_check(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+{
+    if (fort_conf_rules_rt_conn_filtered_zones(rules_rt, conn, rule))
+        return TRUE;
+
+    if (fort_conf_rules_rt_conn_filtered_filters(conn, rule))
+        return TRUE;
+
+    if (rule->exclusive)
+        return FALSE; /* skip the exclusive rule */
+
+    if (fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule))
+        return TRUE;
+
+    return fort_conf_rules_rt_conn_filtered_terminate(conn, rule);
+}
+
+FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
     if (rule_id == 0)
@@ -716,24 +715,18 @@ FORT_API BOOL fort_conf_rules_rt_conn_blocked(
     if (!rule->enabled)
         return FALSE;
 
-    if (fort_conf_rules_rt_conn_blocked_check(rules_rt, conn, rule)) {
-        return conn->blocked;
-    }
-
-    return FALSE;
+    return fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule);
 }
 
-FORT_API BOOL fort_conf_rules_conn_blocked(
+FORT_API BOOL fort_conf_rules_conn_filtered(
         PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
     if (rule_id > rules->max_rule_id)
         return FALSE;
 
-    conn->blocked = TRUE; /* default block */
-
     const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, zones);
 
-    return fort_conf_rules_rt_conn_blocked(&rules_rt, conn, rule_id);
+    return fort_conf_rules_rt_conn_filtered(&rules_rt, conn, rule_id);
 }
 
 FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(

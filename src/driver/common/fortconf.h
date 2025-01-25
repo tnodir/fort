@@ -492,8 +492,8 @@ FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_include
 FORT_API BOOL fort_conf_zones_ip_included(
         PCFORT_CONF_ZONES zones, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6);
 
-FORT_API BOOL fort_conf_zones_conn_blocked(PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn,
-        const FORT_CONF_RULE_ZONES rule_zones, BOOL *included);
+FORT_API BOOL fort_conf_zones_conn_blocked(
+        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, const FORT_CONF_RULE_ZONES rule_zones);
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
@@ -505,10 +505,10 @@ FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
 
-FORT_API BOOL fort_conf_rules_rt_conn_blocked(
+FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id);
 
-FORT_API BOOL fort_conf_rules_conn_blocked(PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones,
+FORT_API BOOL fort_conf_rules_conn_filtered(PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones,
         PFORT_CONF_META_CONN conn, UINT16 rule_id);
 
 #define fort_conf_rules_rt_rule(rt, rule_id)                                                       \

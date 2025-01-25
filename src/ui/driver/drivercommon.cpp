@@ -234,11 +234,18 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
     return app_data;
 }
 
-bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)
+bool confRulesConnFiltered(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)
 {
     PCFORT_CONF_RULES rules = PCFORT_CONF_RULES(drvRules);
 
-    return fort_conf_rules_conn_blocked(rules, /*zones=*/nullptr, conn, ruleId);
+    return fort_conf_rules_conn_filtered(rules, /*zones=*/nullptr, conn, ruleId);
+}
+
+bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)
+{
+    conn->blocked = TRUE; /* default block */
+
+    return confRulesConnFiltered(drvRules, conn, ruleId) && conn->blocked;
 }
 
 bool provRegister(bool bootFilter)
