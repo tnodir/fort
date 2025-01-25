@@ -8,7 +8,6 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QSpinBox>
-#include <QStandardItemModel>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -24,7 +23,6 @@
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
-#include <util/startuputil.h>
 
 namespace {
 
@@ -44,7 +42,6 @@ void setAlertModeText(QCheckBox *cb, FirewallConf::FilterMode mode)
 
 IfacePage::IfacePage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
-    setupAutoRun();
     setupUi();
 }
 
@@ -96,25 +93,8 @@ void IfacePage::onResetToDefault()
     m_cbConfirmQuit->setChecked(true);
 }
 
-void IfacePage::onAboutToSave()
-{
-    // Explorer
-    if (explorerEdited()) {
-        StartupUtil::setExplorerIntegrated(m_cbExplorerMenu->isChecked());
-    }
-
-    // Auto Run
-    saveAutoRunMode(m_comboAutoRun->currentIndex());
-}
-
 void IfacePage::onEditResetted()
 {
-    // Explorer
-    if (explorerEdited()) {
-        setExplorerEdited(false);
-        m_cbExplorerMenu->setChecked(StartupUtil::isExplorerIntegrated());
-    }
-
     // Language
     if (languageEdited()) {
         setLanguageEdited(false);
@@ -151,10 +131,6 @@ void IfacePage::onRetranslateUi()
     retranslateComboStyle();
     m_cbUseSystemLocale->setText(tr("Use System Regional Settings"));
     m_cbExcludeCapture->setText(tr("Exclude from screen capture"));
-    m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
-
-    m_labelAutoRun->setText(tr("Auto-run:"));
-    retranslateComboAutoRun();
 
     m_cbHotKeysEnabled->setText(tr("Enabled"));
     m_cbHotKeysGlobal->setText(tr("Global"));
@@ -191,16 +167,6 @@ void IfacePage::onRetranslateUi()
     m_cbConfirmQuit->setText(tr("Quit"));
 }
 
-void IfacePage::saveAutoRunMode(int mode)
-{
-    if (m_currentAutoRunMode == mode)
-        return;
-
-    m_currentAutoRunMode = mode;
-
-    StartupUtil::setAutoRunMode(mode, settings()->defaultLanguage());
-}
-
 void IfacePage::retranslateComboLanguage()
 {
     ControlUtil::setComboBoxTexts(m_comboLanguage, translationManager()->displayLabels(),
@@ -224,39 +190,6 @@ void IfacePage::retranslateComboStyle()
     ControlUtil::setComboBoxTexts(m_comboStyle, list);
 
     updateStyle();
-}
-
-void IfacePage::retranslateComboAutoRun()
-{
-    const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users") };
-
-    int currentIndex = m_comboAutoRun->currentIndex();
-    if (currentIndex < 0) {
-        currentIndex = m_currentAutoRunMode;
-    }
-
-    ControlUtil::setComboBoxTexts(m_comboAutoRun, list, currentIndex);
-
-    // Disable some items if user is not an administrator
-    if (settings()->isUserAdmin())
-        return;
-
-    if (currentIndex >= StartupUtil::StartupAllUsers) {
-        m_comboAutoRun->setEnabled(false);
-        return;
-    }
-
-    auto comboModel = qobject_cast<QStandardItemModel *>(m_comboAutoRun->model());
-    if (!comboModel)
-        return;
-
-    const int itemCount = comboModel->rowCount();
-    for (int i = StartupUtil::StartupAllUsers; i < itemCount; ++i) {
-        auto item = comboModel->item(i);
-        if (item) {
-            item->setEnabled(false);
-        }
-    }
 }
 
 void IfacePage::retranslateComboHotKey()
@@ -306,11 +239,6 @@ void IfacePage::retranslateComboTrayAction()
         tr("Show Filter Mode Menu"), tr("Show Tray Menu"), tr("Ignore") };
 
     ControlUtil::setComboBoxTexts(m_comboTrayAction, list, /*currentIndex=*/-1);
-}
-
-void IfacePage::setupAutoRun()
-{
-    m_currentAutoRunMode = StartupUtil::autoRunMode();
 }
 
 void IfacePage::setupUi()
@@ -396,24 +324,12 @@ void IfacePage::setupGlobalBox()
                 ctrl()->setIniUserEdited();
             });
 
-    m_cbExplorerMenu =
-            ControlUtil::createCheckBox(StartupUtil::isExplorerIntegrated(), [&](bool /*checked*/) {
-                setExplorerEdited(true);
-                ctrl()->setIniUserEdited();
-            });
-
-    // Auto Run Row
-    auto autoRunLayout = setupAutoRunLayout();
-
     auto layout = new QVBoxLayout();
     layout->addLayout(langLayout);
     layout->addLayout(themeLayout);
     layout->addLayout(styleLayout);
     layout->addWidget(m_cbUseSystemLocale);
     layout->addWidget(m_cbExcludeCapture);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addWidget(m_cbExplorerMenu);
-    layout->addLayout(autoRunLayout);
 
     m_gbGlobal = new QGroupBox();
     m_gbGlobal->setLayout(layout);
@@ -479,20 +395,6 @@ QLayout *IfacePage::setupStyleLayout()
     m_comboStyle->setFixedWidth(200);
 
     return ControlUtil::createRowLayout(m_labelStyle, m_comboStyle);
-}
-
-QLayout *IfacePage::setupAutoRunLayout()
-{
-    m_labelAutoRun = ControlUtil::createLabel();
-
-    m_comboAutoRun = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        if (m_currentAutoRunMode != index) {
-            ctrl()->emitEdited();
-        }
-    });
-    m_comboAutoRun->setFixedWidth(200);
-
-    return ControlUtil::createRowLayout(m_labelAutoRun, m_comboAutoRun);
 }
 
 void IfacePage::setupHotKeysBox()

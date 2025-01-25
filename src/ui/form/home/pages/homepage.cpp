@@ -1,8 +1,11 @@
 #include "homepage.h"
 
+#include <QCheckBox>
+#include <QComboBox>
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
+#include <QStandardItemModel>
 #include <QVBoxLayout>
 
 #include <driver/drivermanager.h>
@@ -47,6 +50,7 @@ void HomePage::onRetranslateUi()
     m_gbDriver->setTitle(tr("Driver"));
     m_gbService->setTitle(tr("Windows Service"));
     m_gbPortable->setTitle(tr("Portable"));
+    m_gbIntegration->setTitle(tr("Integration"));
 
     retranslateDriverMessage();
     m_btInstallDriver->setText(tr("Reinstall"));
@@ -58,6 +62,10 @@ void HomePage::onRetranslateUi()
     m_btRemoveService->setText(tr("Remove"));
 
     m_btUninstallPortable->setText(tr("Uninstall"));
+
+    m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
+    m_labelAutoRun->setText(tr("Auto-run:"));
+    retranslateComboAutoRun();
 }
 
 void HomePage::retranslateDriverMessage()
@@ -77,6 +85,39 @@ void HomePage::retranslateServiceMessage()
     m_labelServiceMessage->setText(text);
 }
 
+void HomePage::retranslateComboAutoRun()
+{
+    const QStringList list = { tr("Disabled"), tr("For current user"), tr("For all users") };
+
+    int currentIndex = m_comboAutoRun->currentIndex();
+    if (currentIndex < 0) {
+        currentIndex = StartupUtil::autoRunMode();
+    }
+
+    ControlUtil::setComboBoxTexts(m_comboAutoRun, list, currentIndex);
+
+    // Disable some items if user is not an administrator
+    if (settings()->isUserAdmin())
+        return;
+
+    // Disable the combobox
+    if (currentIndex >= StartupUtil::StartupAllUsers) {
+        m_comboAutoRun->setEnabled(false);
+        return;
+    }
+
+    // Disable the item for all users
+    {
+        auto comboModel = qobject_cast<QStandardItemModel *>(m_comboAutoRun->model());
+        Q_ASSERT(comboModel);
+
+        auto item = comboModel->item(StartupUtil::StartupAllUsers);
+        Q_ASSERT(item);
+
+        item->setEnabled(false);
+    }
+}
+
 void HomePage::setupUi()
 {
     // Driver Group Box
@@ -88,6 +129,9 @@ void HomePage::setupUi()
     // Portable Group Box
     setupPortableBox();
 
+    // Integration Group Box
+    setupIntegrationBox();
+
     updateIsUserAdmin();
     updateIsPortable();
     updateHasService();
@@ -96,6 +140,7 @@ void HomePage::setupUi()
     layout->addWidget(m_gbDriver, 0, Qt::AlignHCenter);
     layout->addWidget(m_gbService, 0, Qt::AlignHCenter);
     layout->addWidget(m_gbPortable, 0, Qt::AlignHCenter);
+    layout->addWidget(m_gbIntegration, 0, Qt::AlignHCenter);
     layout->addStretch();
 
     this->setLayout(layout);
@@ -267,6 +312,42 @@ QLayout *HomePage::setupPortableButtonsLayout()
     layout->addStretch();
 
     return layout;
+}
+
+void HomePage::setupIntegrationBox()
+{
+    auto integrationLayout = setupIntegrationLayout();
+
+    m_gbIntegration = createGroupBox();
+
+    auto layout = groupBoxLayout(m_gbIntegration);
+    layout->addLayout(integrationLayout);
+}
+
+QLayout *HomePage::setupIntegrationLayout()
+{
+    m_cbExplorerMenu = ControlUtil::createCheckBox(StartupUtil::isExplorerIntegrated(),
+            [&](bool checked) { StartupUtil::setExplorerIntegrated(checked); });
+
+    // Auto Run Row
+    auto autoRunLayout = setupAutoRunLayout();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbExplorerMenu);
+    layout->addLayout(autoRunLayout);
+
+    return layout;
+}
+
+QLayout *HomePage::setupAutoRunLayout()
+{
+    m_labelAutoRun = ControlUtil::createLabel();
+
+    m_comboAutoRun = ControlUtil::createComboBox(QStringList(),
+            [&](int index) { StartupUtil::setAutoRunMode(index, settings()->defaultLanguage()); });
+    m_comboAutoRun->setFixedWidth(200);
+
+    return ControlUtil::createRowLayout(m_labelAutoRun, m_comboAutoRun);
 }
 
 void HomePage::updateIsUserAdmin()

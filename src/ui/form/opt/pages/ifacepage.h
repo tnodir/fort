@@ -12,9 +12,6 @@ class IfacePage : public OptBasePage
 public:
     explicit IfacePage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    bool explorerEdited() const { return m_explorerEdited; }
-    void setExplorerEdited(bool v) { m_explorerEdited = v; }
-
     bool languageEdited() const { return m_languageEdited; }
     void setLanguageEdited(bool v) { m_languageEdited = v; }
 
@@ -28,23 +25,17 @@ public slots:
     void onResetToDefault() override;
 
 protected slots:
-    void onAboutToSave() override;
     void onEditResetted() override;
 
     void onRetranslateUi() override;
 
 private:
-    void saveAutoRunMode(int mode);
-
     void retranslateComboLanguage();
     void retranslateComboTheme();
     void retranslateComboStyle();
-    void retranslateComboAutoRun();
     void retranslateComboHotKey();
     void retranslateComboTrayEvent();
     void retranslateComboTrayAction();
-
-    void setupAutoRun();
 
     void setupUi();
     QLayout *setupColumn1();
@@ -54,7 +45,6 @@ private:
     QLayout *setupLangLayout();
     QLayout *setupThemeLayout();
     QLayout *setupStyleLayout();
-    QLayout *setupAutoRunLayout();
     void setupHotKeysBox();
     void refreshEditShortcut();
     QLayout *setupComboHotKeyLayout();
@@ -75,12 +65,9 @@ private:
     void updateStyle();
 
 private:
-    bool m_explorerEdited : 1 = false;
     bool m_languageEdited : 1 = false;
     bool m_themeEdited : 1 = false;
     bool m_styleEdited : 1 = false;
-
-    qint8 m_currentAutoRunMode = 0;
 
     QGroupBox *m_gbGlobal = nullptr;
     QGroupBox *m_gbHotKeys = nullptr;
@@ -97,10 +84,6 @@ private:
     QComboBox *m_comboStyle = nullptr;
     QCheckBox *m_cbUseSystemLocale = nullptr;
     QCheckBox *m_cbExcludeCapture = nullptr;
-    QCheckBox *m_cbExplorerMenu = nullptr;
-
-    QLabel *m_labelAutoRun = nullptr;
-    QComboBox *m_comboAutoRun = nullptr;
 
     QCheckBox *m_cbHotKeysEnabled = nullptr;
     QCheckBox *m_cbHotKeysGlobal = nullptr;

@@ -18,6 +18,7 @@ protected slots:
 private:
     void retranslateDriverMessage();
     void retranslateServiceMessage();
+    void retranslateComboAutoRun();
 
     void setupUi();
     void setupDriverBox();
@@ -30,6 +31,9 @@ private:
     QLayout *setupServiceButtonsLayout();
     void setupPortableBox();
     QLayout *setupPortableButtonsLayout();
+    void setupIntegrationBox();
+    QLayout *setupIntegrationLayout();
+    QLayout *setupAutoRunLayout();
 
     void updateIsUserAdmin();
     void updateIsPortable();
@@ -43,6 +47,7 @@ private:
     QGroupBox *m_gbDriver = nullptr;
     QGroupBox *m_gbService = nullptr;
     QGroupBox *m_gbPortable = nullptr;
+    QGroupBox *m_gbIntegration = nullptr;
 
     QLabel *m_iconDriver = nullptr;
     QLabel *m_labelDriverMessage = nullptr;
@@ -55,6 +60,10 @@ private:
     QPushButton *m_btRemoveService = nullptr;
 
     QPushButton *m_btUninstallPortable = nullptr;
+
+    QCheckBox *m_cbExplorerMenu = nullptr;
+    QLabel *m_labelAutoRun = nullptr;
+    QComboBox *m_comboAutoRun = nullptr;
 };
 
 #endif // HOMEPAGE_H
