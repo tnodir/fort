@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.15.7, 2025-01-25:
+- UI: Move "Explorer Integration", "Auto-Run" options to My Fort window.
+- UI: My Fort: Add "Control Panel: Sounds integration" flag.
+- UI: Update SQLite to 3.48.0
+- Driver: Improve Rules filtering logic.
+
 v3.15.6, 2024-12-30:
 - UI: Programs: Add app states count and sorting.
 
