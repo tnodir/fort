@@ -64,6 +64,7 @@ void HomePage::onRetranslateUi()
     m_btUninstallPortable->setText(tr("Uninstall"));
 
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
+    m_cbSoundsPanel->setText(tr("Control Panel: Sounds integration"));
     m_labelAutoRun->setText(tr("Auto-run:"));
     retranslateComboAutoRun();
 }
@@ -329,11 +330,15 @@ QLayout *HomePage::setupIntegrationLayout()
     m_cbExplorerMenu = ControlUtil::createCheckBox(StartupUtil::isExplorerIntegrated(),
             [&](bool checked) { StartupUtil::setExplorerIntegrated(checked); });
 
+    m_cbSoundsPanel = ControlUtil::createCheckBox(StartupUtil::isSoundsPanelIntegrated(),
+            [&](bool checked) { StartupUtil::setSoundsPanelIntegrated(checked); });
+
     // Auto Run Row
     auto autoRunLayout = setupAutoRunLayout();
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbExplorerMenu);
+    layout->addWidget(m_cbSoundsPanel);
     layout->addLayout(autoRunLayout);
 
     return layout;

@@ -27,6 +27,9 @@ const char *const regAllUsersRun = R"(SOFTWARE\Microsoft\Windows\CurrentVersion\
 constexpr RegKey::Root regShellRoot = RegKey::HKCU;
 const char *const regShellMenu = R"(SOFTWARE\Classes\SystemFileAssociations\.exe\Shell)";
 
+constexpr RegKey::Root regSoundRoot = RegKey::HKCU;
+const char *const regSoundApps = R"(AppEvents\Schemes\Apps)";
+
 const wchar_t *const serviceNameStr = L"" APP_BASE_L L"Svc";
 const wchar_t *const serviceDisplayStr = L"" APP_NAME_L L" Service";
 const wchar_t *const serviceDescriptionStr = L"Manages " APP_NAME_L L" logic as background server";
@@ -247,11 +250,11 @@ void StartupUtil::setExplorerIntegrated(bool integrate)
     if (integrate) {
         const QString wrappedPath = wrappedAppFilePath();
 
-        RegKey reg(std::move(regShell), APP_NAME, RegKey::DefaultCreate);
+        RegKey reg(regShell, APP_NAME, RegKey::DefaultCreate);
         reg.setValue("icon", wrappedPath);
         reg.setValue("MUIVerb", APP_NAME + QLatin1String(" ..."));
 
-        RegKey regCommand(std::move(reg), "command", RegKey::DefaultCreate);
+        RegKey regCommand(reg, "command", RegKey::DefaultCreate);
         regCommand.setDefaultValue(wrappedPath + " -c prog add \"%1\"");
     } else {
         regShell.removeRecursively(APP_NAME);
@@ -263,6 +266,30 @@ void StartupUtil::clearGlobalExplorerIntegrated()
     RegKey regShell(RegKey::HKLM, regShellMenu, RegKey::DefaultReadWrite);
 
     regShell.removeRecursively(APP_NAME);
+}
+
+bool StartupUtil::isSoundsPanelIntegrated()
+{
+    const RegKey regApps(regSoundRoot, regSoundApps, RegKey::DefaultReadOnly);
+    const RegKey regApp(regApps, APP_BASE, RegKey::DefaultReadOnly);
+    return !regApp.isNull();
+}
+
+void StartupUtil::setSoundsPanelIntegrated(bool integrate)
+{
+    RegKey regApps(regSoundRoot, regSoundApps,
+            integrate ? RegKey::DefaultCreate : RegKey::DefaultReadWrite);
+
+    if (integrate) {
+        RegKey regApp(regApps, APP_BASE, RegKey::DefaultCreate);
+        regApp.setDefaultValue(APP_NAME);
+
+        RegKey regSound(regApp, "MessageNudge", RegKey::DefaultCreate);
+        RegKey regSoundCur(regSound, ".Current", RegKey::DefaultCreate);
+        regSoundCur.removeDefaultValue();
+    } else {
+        regApps.removeRecursively(APP_BASE);
+    }
 }
 
 QString StartupUtil::registryPasswordHash()

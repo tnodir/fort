@@ -2,6 +2,7 @@
 
 #include <QIcon>
 #include <QLabel>
+#include <QScrollArea>
 #include <QStackedWidget>
 #include <QToolButton>
 #include <QVBoxLayout>
@@ -74,7 +75,7 @@ void HomeMainPage::setupStackedLayout()
 {
     m_stackedPages = new QStackedWidget();
 
-    m_stackedPages->addWidget(new HomePage(ctrl()));
+    m_stackedPages->addWidget(ControlUtil::wrapToScrollArea(new HomePage(ctrl())));
     m_stackedPages->addWidget(new AboutPage(ctrl()));
 }
 

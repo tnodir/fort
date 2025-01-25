@@ -62,6 +62,7 @@ private:
     QPushButton *m_btUninstallPortable = nullptr;
 
     QCheckBox *m_cbExplorerMenu = nullptr;
+    QCheckBox *m_cbSoundsPanel = nullptr;
     QLabel *m_labelAutoRun = nullptr;
     QComboBox *m_comboAutoRun = nullptr;
 };

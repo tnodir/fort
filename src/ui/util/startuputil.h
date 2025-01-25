@@ -28,6 +28,9 @@ public:
 
     static void clearGlobalExplorerIntegrated();
 
+    static bool isSoundsPanelIntegrated();
+    static void setSoundsPanelIntegrated(bool integrate);
+
     static QString registryPasswordHash();
     static void setRegistryPasswordHash(const QString &passwordHash);
 
