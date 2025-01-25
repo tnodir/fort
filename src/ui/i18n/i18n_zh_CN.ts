@@ -736,7 +736,7 @@
     </message>
     <message>
         <source>Integration</source>
-        <translation type="unfinished"></translation>
+        <translation>集成</translation>
     </message>
     <message>
         <source>Windows Explorer integration</source>
@@ -744,7 +744,7 @@
     </message>
     <message>
         <source>Control Panel: Sounds integration</source>
-        <translation type="unfinished"></translation>
+        <translation>控制面板：声音集成</translation>
     </message>
     <message>
         <source>Auto-run:</source>
