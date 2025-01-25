@@ -685,14 +685,13 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
 inline static BOOL fort_conf_rules_rt_conn_filtered_check(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
-    if (fort_conf_rules_rt_conn_filtered_zones(rules_rt, conn, rule))
-        return TRUE;
+    const BOOL filter_res = fort_conf_rules_rt_conn_filtered_zones(rules_rt, conn, rule)
+            || fort_conf_rules_rt_conn_filtered_filters(conn, rule);
 
-    if (fort_conf_rules_rt_conn_filtered_filters(conn, rule))
-        return TRUE;
-
-    if (rule->exclusive)
-        return FALSE; /* skip the exclusive rule */
+    const BOOL is_exclusive = (rule->exclusive && !rule->blocked);
+    if (is_exclusive ? !filter_res : filter_res) {
+        return filter_res;
+    }
 
     if (fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule))
         return TRUE;
