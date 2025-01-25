@@ -43,7 +43,7 @@ void TaskbarButton::setupTaskbarIface()
     if (FAILED(hresult)) {
         closeTaskbarIface();
 
-        qCWarning(LC) << "ITaskbarList4 initialize error:" << hresult;
+        qCDebug(LC) << "ITaskbarList4 initialize error:" << hresult;
     }
 }
 
