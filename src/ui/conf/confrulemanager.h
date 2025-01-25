@@ -50,6 +50,7 @@ signals:
 private:
     void walkRulesMap(WalkRulesArgs &wra) const;
     bool walkRulesLoop(const std::function<walkRulesCallback> &func) const;
+    bool walkGlobalRule(const std::function<walkRulesCallback> &func, quint16 ruleId) const;
 
     static void fillRule(Rule &rule, const SqliteStmt &stmt);
 

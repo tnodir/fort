@@ -40,11 +40,11 @@ const char *const sqlSelectRuleSets = "SELECT * FROM ("
                                       "  UNION ALL" // Global Before App Rules
                                       "  SELECT ?1, t.rule_id, t.rule_id + 99999 AS order_index"
                                       "    FROM rule t"
-                                      "    WHERE t.rule_id > ?1 AND t.rule_type = ?2"
+                                      "    WHERE t.rule_type = ?2"
                                       "  UNION ALL" // Global After App Rules
                                       "  SELECT ?3, t.rule_id, t.rule_id + 99999 AS order_index"
                                       "    FROM rule t"
-                                      "    WHERE t.rule_id > ?3 AND t.rule_type = ?4"
+                                      "    WHERE t.rule_type = ?4"
                                       ") ORDER BY rule_id, order_index;";
 
 const char *const sqlSelectMaxRuleId = "SELECT MAX(rule_id) FROM rule;";
@@ -346,23 +346,37 @@ bool ConfRuleManager::walkRules(
 
     wra.maxRuleId = DbQuery(sqliteDb()).sql(sqlSelectMaxRuleId).execute().toInt();
 
-    wra.globPreRuleId = DbQuery(sqliteDb())
-                                .sql(sqlSelectGlobMinRuleIdByType)
-                                .vars({ Rule::GlobalBeforeAppsRule })
-                                .execute()
-                                .toInt();
+    const bool hasGlobPreRule = DbQuery(sqliteDb())
+                                        .sql(sqlSelectGlobMinRuleIdByType)
+                                        .vars({ Rule::GlobalBeforeAppsRule })
+                                        .execute()
+                                        .toBool();
+    if (hasGlobPreRule) {
+        wra.globPreRuleId = ++wra.maxRuleId;
+    }
 
-    wra.globPostRuleId = DbQuery(sqliteDb())
-                                 .sql(sqlSelectGlobMinRuleIdByType)
-                                 .vars({ Rule::GlobalAfterAppsRule })
-                                 .execute()
-                                 .toInt();
+    const bool hasGlobPostRule = DbQuery(sqliteDb())
+                                         .sql(sqlSelectGlobMinRuleIdByType)
+                                         .vars({ Rule::GlobalAfterAppsRule })
+                                         .execute()
+                                         .toBool();
+    if (hasGlobPostRule) {
+        wra.globPostRuleId = ++wra.maxRuleId;
+    }
 
     walkRulesMap(wra);
 
     ok = walkRulesLoop(func);
 
     sqliteDb()->commitTransaction();
+
+    if (ok && hasGlobPreRule) {
+        ok = walkGlobalRule(func, wra.globPreRuleId);
+    }
+
+    if (ok && hasGlobPostRule) {
+        ok = walkGlobalRule(func, wra.globPostRuleId);
+    }
 
     return ok;
 }
@@ -432,6 +446,18 @@ bool ConfRuleManager::walkRulesLoop(const std::function<walkRulesCallback> &func
     }
 
     return true;
+}
+
+bool ConfRuleManager::walkGlobalRule(
+        const std::function<walkRulesCallback> &func, quint16 ruleId) const
+{
+    if (ruleId == 0)
+        return true;
+
+    Rule rule;
+    rule.ruleId = ruleId;
+
+    return func(rule);
 }
 
 void ConfRuleManager::fillRule(Rule &rule, const SqliteStmt &stmt)
