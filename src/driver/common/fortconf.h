@@ -430,6 +430,19 @@ typedef struct fort_conf_io
 
 typedef const FORT_CONF_IO *PCFORT_CONF_IO;
 
+typedef struct fort_conf_zones_conn_filtered_result
+{
+    UCHAR filtered : 1;
+    UCHAR included : 1;
+} FORT_CONF_ZONES_CONN_FILTERED_RESULT;
+
+typedef struct fort_conf_zones_conn_filtered_opt
+{
+    const FORT_CONF_RULE_ZONES rule_zones;
+    FORT_CONF_ZONES_CONN_FILTERED_RESULT accept;
+    FORT_CONF_ZONES_CONN_FILTERED_RESULT reject;
+} FORT_CONF_ZONES_CONN_FILTERED_OPT, *PFORT_CONF_ZONES_CONN_FILTERED_OPT;
+
 #define FORT_CONF_DATA_OFF       offsetof(FORT_CONF, data)
 #define FORT_CONF_IO_CONF_OFF    offsetof(FORT_CONF_IO, conf)
 #define FORT_CONF_PROTO_LIST_OFF offsetof(FORT_CONF_PROTO_LIST, proto)
@@ -492,8 +505,8 @@ FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_include
 FORT_API BOOL fort_conf_zones_ip_included(
         PCFORT_CONF_ZONES zones, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6);
 
-FORT_API BOOL fort_conf_zones_conn_blocked(
-        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, const FORT_CONF_RULE_ZONES rule_zones);
+FORT_API BOOL fort_conf_zones_conn_filtered(PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn,
+        PFORT_CONF_ZONES_CONN_FILTERED_OPT opt);
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 

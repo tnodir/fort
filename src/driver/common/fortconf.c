@@ -310,33 +310,29 @@ FORT_API BOOL fort_conf_zones_ip_included(
     return FALSE;
 }
 
-static BOOL fort_conf_zones_masks_conn_check(
-        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, UINT32 zones_mask, BOOL *included)
+static BOOL fort_conf_zones_masks_conn_check(PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn,
+        UINT32 zones_mask, FORT_CONF_ZONES_CONN_FILTERED_RESULT *result)
 {
     if (zones_mask == 0)
         return FALSE;
 
-    *included = fort_conf_zones_ip_included(zones, zones_mask, conn->remote_ip, conn->isIPv6);
+    result->filtered = TRUE;
+    result->included =
+            (UCHAR) fort_conf_zones_ip_included(zones, zones_mask, conn->remote_ip, conn->isIPv6);
 
     return TRUE;
 }
 
-FORT_API BOOL fort_conf_zones_conn_blocked(
-        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, const FORT_CONF_RULE_ZONES rule_zones)
+FORT_API BOOL fort_conf_zones_conn_filtered(
+        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, PFORT_CONF_ZONES_CONN_FILTERED_OPT opt)
 {
-    BOOL included = FALSE;
+    const BOOL accept_filtered = fort_conf_zones_masks_conn_check(
+            zones, conn, opt->rule_zones.accept_mask, &opt->accept);
 
-    if (fort_conf_zones_masks_conn_check(zones, conn, rule_zones.reject_mask, &included)
-            && included) {
-        return TRUE; /* rejected */
-    }
+    const BOOL reject_filtered = fort_conf_zones_masks_conn_check(
+            zones, conn, opt->rule_zones.reject_mask, &opt->reject);
 
-    if (fort_conf_zones_masks_conn_check(zones, conn, rule_zones.accept_mask, &included)
-            && !included) {
-        return TRUE; /* not accepted */
-    }
-
-    return FALSE;
+    return accept_filtered || reject_filtered;
 }
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
@@ -475,18 +471,18 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
     if (!zones)
         return FALSE;
 
-    FORT_CONF_RULE_ZONES rule_zones = *((PCFORT_CONF_RULE_ZONES) (rule + 1));
+    FORT_CONF_ZONES_CONN_FILTERED_OPT opt = {
+        .rule_zones = *((PCFORT_CONF_RULE_ZONES) (rule + 1)),
+    };
 
-    if (rule->blocked) {
-        /* Swap the accept/reject masks */
-        const UINT32 accept_mask = rule_zones.accept_mask;
-        rule_zones.accept_mask = rule_zones.reject_mask;
-        rule_zones.reject_mask = accept_mask;
-    }
+    if (fort_conf_zones_conn_filtered(zones, conn, &opt)) {
+        const BOOL accepted = (!opt.accept.filtered || opt.accept.included);
+        const BOOL rejected = (opt.reject.filtered && opt.reject.included);
 
-    if (fort_conf_zones_conn_blocked(zones, conn, rule_zones)) {
-        conn->blocked = rule->blocked;
-        return TRUE;
+        if (accepted && !rejected) {
+            conn->blocked = rule->blocked;
+            return TRUE;
+        }
     }
 
     return FALSE;

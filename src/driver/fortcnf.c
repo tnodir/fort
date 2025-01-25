@@ -470,15 +470,15 @@ FORT_API BOOL fort_devconf_zones_ip_included(
     return res;
 }
 
-FORT_API BOOL fort_devconf_zones_conn_blocked(PFORT_DEVICE_CONF device_conf,
-        PCFORT_CONF_META_CONN conn, const FORT_CONF_RULE_ZONES rule_zones)
+FORT_API BOOL fort_devconf_zones_conn_filtered(PFORT_DEVICE_CONF device_conf,
+        PCFORT_CONF_META_CONN conn, PFORT_CONF_ZONES_CONN_FILTERED_OPT opt)
 {
     BOOL res = FALSE;
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
     PCFORT_CONF_ZONES zones = device_conf->zones;
     if (zones != NULL) {
-        res = fort_conf_zones_conn_blocked(zones, conn, rule_zones);
+        res = fort_conf_zones_conn_filtered(zones, conn, opt);
     }
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 

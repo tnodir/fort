@@ -91,8 +91,8 @@ FORT_API void fort_conf_zone_flag_set(
 FORT_API BOOL fort_devconf_zones_ip_included(
         PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6);
 
-FORT_API BOOL fort_devconf_zones_conn_blocked(PFORT_DEVICE_CONF device_conf,
-        PCFORT_CONF_META_CONN conn, const FORT_CONF_RULE_ZONES rule_zones);
+FORT_API BOOL fort_devconf_zones_conn_filtered(PFORT_DEVICE_CONF device_conf,
+        PCFORT_CONF_META_CONN conn, PFORT_CONF_ZONES_CONN_FILTERED_OPT opt);
 
 FORT_API PFORT_CONF_RULES fort_conf_rules_new(PCFORT_CONF_RULES rules, ULONG len);
 
