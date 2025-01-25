@@ -326,13 +326,16 @@ static BOOL fort_conf_zones_masks_conn_check(PCFORT_CONF_ZONES zones, PCFORT_CON
 FORT_API BOOL fort_conf_zones_conn_filtered(
         PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, PFORT_CONF_ZONES_CONN_FILTERED_OPT opt)
 {
-    const BOOL accept_filtered = fort_conf_zones_masks_conn_check(
-            zones, conn, opt->rule_zones.accept_mask, &opt->accept);
-
     const BOOL reject_filtered = fort_conf_zones_masks_conn_check(
             zones, conn, opt->rule_zones.reject_mask, &opt->reject);
 
-    return accept_filtered || reject_filtered;
+    if (reject_filtered && opt->reject.included)
+        return TRUE; /* rejected */
+
+    const BOOL accept_filtered = fort_conf_zones_masks_conn_check(
+            zones, conn, opt->rule_zones.accept_mask, &opt->accept);
+
+    return accept_filtered;
 }
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
