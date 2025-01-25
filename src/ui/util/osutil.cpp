@@ -136,19 +136,27 @@ bool OsUtil::playSound(SoundType /*type*/)
     return PlaySoundA("MessageNudge", nullptr, flags);
 }
 
-void OsUtil::showConsole(bool visible)
+bool OsUtil::showConsole(bool visible)
 {
-    if (visible) {
-        if (AllocConsole()) {
-            SetConsoleCtrlHandler(consoleCtrlHandler, TRUE);
-
-            // Disable close button of console window
-            const HMENU hMenu = GetSystemMenu(GetConsoleWindow(), false);
-            DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
-        }
-    } else {
+    // Close the console window
+    if (!visible) {
         FreeConsole();
+        return true;
     }
+
+    // Show the console window
+    if (!AllocConsole())
+        return false;
+
+    SetConsoleCtrlHandler(consoleCtrlHandler, TRUE);
+
+    // Disable close button of console window
+    {
+        const HMENU hMenu = GetSystemMenu(GetConsoleWindow(), false);
+        DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
+    }
+
+    return true;
 }
 
 void OsUtil::writeToConsole(const QString &line)

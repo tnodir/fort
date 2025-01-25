@@ -36,7 +36,7 @@ public:
     static bool beep(BeepType type = BeepSimple);
     static bool playSound(SoundType type = SoundDefault);
 
-    static void showConsole(bool visible);
+    static bool showConsole(bool visible);
     static void writeToConsole(const QString &line);
 
     static bool setCurrentThreadName(const QString &name);
