@@ -734,6 +734,34 @@
         <source>Windows Service installation changed.</source>
         <translation>Windows Service 설치가 변경됨.</translation>
     </message>
+    <message>
+        <source>Integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Windows 탐색기와 통합</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>자동-실행:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>비활성화</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>현재 사용자용</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>모든 사용자용</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -795,10 +823,6 @@
     <message>
         <source>Action Confirmations</source>
         <translation>다음 작업 확인</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Windows 탐색기와 통합</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
@@ -983,22 +1007,6 @@
     <message>
         <source>Style:</source>
         <translation>스타일:</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>자동-실행:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>사용 안 함</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>현재 사용자용</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>모든 사용자용</translation>
     </message>
     <message>
         <source>Update window icons</source>

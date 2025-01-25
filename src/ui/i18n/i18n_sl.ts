@@ -734,6 +734,34 @@
         <source>Windows Service installation changed.</source>
         <translation>Namestitev storitve Windows je spremenjena.</translation>
     </message>
+    <message>
+        <source>Integration</source>
+        <translation>Integracija</translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Vključitev Windows Raziskovalca</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation>Integracija z nadzorno ploščo: Zvoki</translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Samodejno zaženi:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Onemogočeno</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Za trenutnega uporabnika</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Za vse uporabnike</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -795,10 +823,6 @@
     <message>
         <source>Action Confirmations</source>
         <translation>Potrditve akcij</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Vključitev Windows Raziskovalca</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
@@ -983,22 +1007,6 @@
     <message>
         <source>Style:</source>
         <translation>Slog:</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Samodejno zaženi:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Onemogočeno</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Za trenutnega uporabnika</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Za vse uporabnike</translation>
     </message>
     <message>
         <source>Update window icons</source>

@@ -734,6 +734,34 @@
         <source>Windows Service installation changed.</source>
         <translation>Windows 服务安装已更改。</translation>
     </message>
+    <message>
+        <source>Integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Windows 资源管理器集成</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>自动运行：</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>已禁用</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>对于当前用户</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>对于所有用户</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -795,10 +823,6 @@
     <message>
         <source>Action Confirmations</source>
         <translation>操作确认</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Windows 资源管理器集成</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
@@ -983,22 +1007,6 @@
     <message>
         <source>Style:</source>
         <translation>样式：</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>自动运行：</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>已禁用</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>对于当前用户</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>对于所有用户</translation>
     </message>
     <message>
         <source>Update window icons</source>

@@ -734,6 +734,34 @@
         <source>Windows Service installation changed.</source>
         <translation>تم تغيير وضع تثبيت خدمة الوندوز.</translation>
     </message>
+    <message>
+        <source>Integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>الاندماج مع مسكتشف Windows</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>التشغيل التلقائي:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>معطل</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>للمستخدم الحالي فقط</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>لكل المستخدمين</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -795,10 +823,6 @@
     <message>
         <source>Action Confirmations</source>
         <translation>التأكد عند تنفيذ الإجراءات:</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>الاندماج مع مسكتشف Windows</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
@@ -983,22 +1007,6 @@
     <message>
         <source>Style:</source>
         <translation>الأسلوب:</translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>التشغيل التلقائي:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>تم التعطيل</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>للمستخدم الحالي فقط</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>لكل المستخدمين</translation>
     </message>
     <message>
         <source>Update window icons</source>

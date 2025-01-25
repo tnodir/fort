@@ -734,6 +734,34 @@
         <source>Windows Service installation changed.</source>
         <translation>Instalação do serviço Windows alterada.</translation>
     </message>
+    <message>
+        <source>Integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation>Integração com Windows Explorer</translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation>Auto-execução:</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Desativado</translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation>Para usuário atual</translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation>Para todos os usuários</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -795,10 +823,6 @@
     <message>
         <source>Action Confirmations</source>
         <translation>Confirmação de ação</translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
-        <translation>Integração com Windows Explorer</translation>
     </message>
     <message>
         <source>Use System Regional Settings</source>
@@ -983,22 +1007,6 @@
     <message>
         <source>Style:</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation>Auto-execução:</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Desativado</translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation>Para usuário atual</translation>
-    </message>
-    <message>
-        <source>For all users</source>
-        <translation>Para todos os usuários</translation>
     </message>
     <message>
         <source>Update window icons</source>

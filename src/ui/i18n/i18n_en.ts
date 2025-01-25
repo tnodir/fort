@@ -734,6 +734,34 @@
         <source>Windows Service installation changed.</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Integration</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Windows Explorer integration</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Control Panel: Sounds integration</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Auto-run:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>For current user</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>For all users</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -794,10 +822,6 @@
     </message>
     <message>
         <source>Action Confirmations</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Windows Explorer integration</source>
         <translation></translation>
     </message>
     <message>
@@ -982,22 +1006,6 @@
     </message>
     <message>
         <source>Style:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Auto-run:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>For current user</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>For all users</source>
         <translation></translation>
     </message>
     <message>
