@@ -34,6 +34,7 @@ public:
     Q_ENUM(BlockTrafficType)
 
     enum FilterMode {
+        ModeInvalid = -1,
         ModeAutoLearn = 0,
         ModeAskToConnect,
         ModeBlockAll,

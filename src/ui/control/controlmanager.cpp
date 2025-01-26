@@ -27,12 +27,18 @@ constexpr int maxClientsCount = 9;
 
 const QLoggingCategory LC("control");
 
-bool checkActionPassword(quint32 action, quint32 passwordNotRequiredActions = 0)
+bool checkCommandActionPassword(
+        const ProcessCommandArgs &p, quint32 action, quint32 passwordNotRequiredActions = 0)
 {
     if ((action & passwordNotRequiredActions) != 0)
         return true;
 
-    return IoC<WindowManager>()->checkPassword(/*temporary=*/true);
+    if (!IoC<WindowManager>()->checkPassword(/*temporary=*/true)) {
+        p.errorMessage = "Password required";
+        return false;
+    }
+
+    return true;
 }
 
 bool processCommandHome(const ProcessCommandArgs &p)
@@ -47,6 +53,91 @@ bool processCommandHome(const ProcessCommandArgs &p)
     return false;
 }
 
+enum FilterAction : qint8 {
+    FilterActionInvalid = -1,
+    FilterActionOn = 0,
+    FilterActionOff,
+};
+
+bool processCommandFilterAction(FilterAction filterAction)
+{
+    auto confManager = IoC<ConfManager>();
+
+    auto conf = confManager->conf();
+    conf->setFilterEnabled(filterAction == FilterActionOn);
+
+    return confManager->saveFlags();
+}
+
+FilterAction filterActionByText(const QString &commandText)
+{
+    if (commandText == "on")
+        return FilterActionOn;
+
+    if (commandText == "off")
+        return FilterActionOff;
+
+    return FilterActionInvalid;
+}
+
+bool processCommandFilter(const ProcessCommandArgs &p)
+{
+    const FilterAction filterAction = filterActionByText(p.args.value(0).toString());
+    if (filterAction == FilterActionInvalid) {
+        p.errorMessage = "Usage: filter on|off";
+        return false;
+    }
+
+    if (!checkCommandActionPassword(p, filterAction))
+        return false;
+
+    return processCommandFilterAction(filterAction);
+}
+
+bool processCommandFilterModeAction(FirewallConf::FilterMode filterMode)
+{
+    auto confManager = IoC<ConfManager>();
+
+    auto conf = confManager->conf();
+    conf->setFilterMode(filterMode);
+
+    return confManager->saveFlags();
+}
+
+FirewallConf::FilterMode filterModeByText(const QString &commandText)
+{
+    if (commandText == "learn")
+        return FirewallConf::ModeAutoLearn;
+
+    if (commandText == "ask")
+        return FirewallConf::ModeAskToConnect;
+
+    if (commandText == "block")
+        return FirewallConf::ModeBlockAll;
+
+    if (commandText == "allow")
+        return FirewallConf::ModeAllowAll;
+
+    if (commandText == "ignore")
+        return FirewallConf::ModeIgnore;
+
+    return FirewallConf::ModeInvalid;
+}
+
+bool processCommandFilterMode(const ProcessCommandArgs &p)
+{
+    const FirewallConf::FilterMode filterMode = filterModeByText(p.args.value(0).toString());
+    if (filterMode == FirewallConf::ModeInvalid) {
+        p.errorMessage = "Usage: filter-mode learn|ask|block|allow|ignore";
+        return false;
+    }
+
+    if (!checkCommandActionPassword(p, filterMode))
+        return false;
+
+    return processCommandFilterModeAction(filterMode);
+}
+
 enum BlockAction : qint8 {
     BlockActionInvalid = -1,
     BlockActionNone = 0,
@@ -55,7 +146,7 @@ enum BlockAction : qint8 {
     BlockActionAll,
 };
 
-bool processCommandProgBlock(BlockAction blockAction)
+bool processCommandBlockAction(BlockAction blockAction)
 {
     auto confManager = IoC<ConfManager>();
 
@@ -90,12 +181,10 @@ bool processCommandBlock(const ProcessCommandArgs &p)
         return false;
     }
 
-    if (!checkActionPassword(blockAction)) {
-        p.errorMessage = "Password required";
+    if (!checkCommandActionPassword(p, blockAction))
         return false;
-    }
 
-    return processCommandProgBlock(blockAction);
+    return processCommandBlockAction(blockAction);
 }
 
 enum ProgAction : quint32 {
@@ -157,10 +246,8 @@ bool processCommandProg(const ProcessCommandArgs &p)
         return false;
     }
 
-    if (!checkActionPassword(progAction, ProgActionAdd)) {
-        p.errorMessage = "Password required";
+    if (!checkCommandActionPassword(p, progAction, ProgActionAdd))
         return false;
-    }
 
     const QString appPath = p.args.value(1).toString();
 
@@ -206,10 +293,8 @@ bool processCommandBackup(const ProcessCommandArgs &p)
         return false;
     }
 
-    if (!checkActionPassword(backupAction)) {
-        p.errorMessage = "Password required";
+    if (!checkCommandActionPassword(p, backupAction))
         return false;
-    }
 
     const QString dirPath = p.args.value(1).toString();
 
@@ -249,10 +334,8 @@ bool processCommandZone(const ProcessCommandArgs &p)
         return false;
     }
 
-    if (!checkActionPassword(zoneAction)) {
-        p.errorMessage = "Password required";
+    if (!checkCommandActionPassword(p, zoneAction))
         return false;
-    }
 
     return processCommandZoneAction(zoneAction);
 }
@@ -266,6 +349,8 @@ using processCommand_func = bool (*)(const ProcessCommandArgs &p);
 
 static const processCommand_func processCommand_funcList[] = {
     &processCommandHome, // Control::CommandHome,
+    &processCommandFilter, // Control::CommandFilter,
+    &processCommandFilterMode, // Control::CommandFilterMode,
     &processCommandBlock, // Control::CommandBlock,
     &processCommandProg, // Control::CommandProg,
     &processCommandBackup, // Control::CommandBackup,
@@ -366,6 +451,10 @@ bool ControlManager::processCommandClient()
     Control::Command command;
     if (settings->controlCommand() == "home") {
         command = Control::CommandHome;
+    } else if (settings->controlCommand() == "filter") {
+        command = Control::CommandFilter;
+    } else if (settings->controlCommand() == "filter-mode") {
+        command = Control::CommandFilterMode;
     } else if (settings->controlCommand() == "block") {
         command = Control::CommandBlock;
     } else if (settings->controlCommand() == "prog") {
@@ -456,7 +545,6 @@ void ControlManager::onDisconnected()
 
     w->deleteLater();
     m_clients.removeOne(w);
-
 }
 
 bool ControlManager::processRequest(Control::Command command, const QVariantList &args)

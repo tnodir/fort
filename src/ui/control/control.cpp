@@ -10,6 +10,8 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(CommandNone),
 
     CASE_STRING(CommandHome),
+    CASE_STRING(CommandFilter),
+    CASE_STRING(CommandFilterMode),
     CASE_STRING(CommandBlock),
     CASE_STRING(CommandProg),
     CASE_STRING(CommandBackup),
@@ -122,6 +124,8 @@ static const RpcManager g_commandManagers[] = {
     Rpc_NoneManager, // CommandNone = 0,
 
     Rpc_NoneManager, // CommandHome,
+    Rpc_NoneManager, // CommandFilter,
+    Rpc_NoneManager, // CommandFilterMode,
     Rpc_NoneManager, // CommandBlock,
     Rpc_NoneManager, // CommandProg,
     Rpc_NoneManager, // CommandBackup,
@@ -214,6 +218,8 @@ static const qint8 g_commandValidations[] = {
     0, // CommandNone = 0,
 
     0, // CommandHome,
+    0, // CommandFilter,
+    0, // CommandFilterMode,
     0, // CommandBlock,
     0, // CommandProg,
     0, // CommandBackup,
