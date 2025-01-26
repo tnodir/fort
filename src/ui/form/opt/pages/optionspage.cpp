@@ -65,6 +65,7 @@ void OptionsPage::onResetToDefault()
     m_cbGroupBlocked->setChecked(true);
 
     m_cbBootFilter->setChecked(false);
+    m_cbStealthMode->setChecked(false);
     m_cbNoServiceControl->setChecked(false);
     m_cbCheckPasswordOnUninstall->setChecked(false);
     m_cbPassword->setChecked(false);
@@ -129,6 +130,7 @@ void OptionsPage::onRetranslateUi()
     m_cbGroupBlocked->setText(tr("Block traffic for disabled App Groups"));
 
     m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
+    m_cbStealthMode->setText(tr("Stealth mode (Prevent port scanning)"));
     m_cbNoServiceControl->setText(tr("Disable Service controls"));
     m_cbCheckPasswordOnUninstall->setText(tr("Check password on Uninstall"));
 
@@ -314,6 +316,11 @@ void OptionsPage::setupProtectionBox()
         ctrl()->setFlagsEdited();
     });
 
+    m_cbStealthMode = ControlUtil::createCheckBox(conf()->stealthMode(), [&](bool checked) {
+        conf()->setStealthMode(checked);
+        ctrl()->setFlagsEdited();
+    });
+
     m_cbNoServiceControl =
             ControlUtil::createCheckBox(ini()->noServiceControl(), [&](bool checked) {
                 ini()->setNoServiceControl(checked);
@@ -336,6 +343,7 @@ void OptionsPage::setupProtectionBox()
 
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbBootFilter);
+    layout->addWidget(m_cbStealthMode);
     layout->addWidget(m_cbNoServiceControl);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addWidget(m_cbCheckPasswordOnUninstall);

@@ -31,6 +31,7 @@
 typedef struct fort_conf_flags
 {
     UINT32 boot_filter : 1;
+    UINT32 stealth_mode : 1;
     UINT32 filter_enabled : 1;
     UINT32 filter_locals : 1;
     UINT32 filter_local_net : 1;
@@ -54,7 +55,7 @@ typedef struct fort_conf_flags
     UINT32 log_blocked_ip : 1;
     UINT32 log_alerted_blocked_ip : 1;
 
-    UINT32 reserved_flags : 14; /* not used */
+    UINT32 reserved_flags : 13; /* not used */
 
     UINT16 group_bits;
     UINT16 reserved; /* not used */

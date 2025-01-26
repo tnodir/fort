@@ -334,7 +334,8 @@ FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
 static void fort_device_flags_conf_set(PFORT_DEVICE_CONF device_conf, FORT_CONF_FLAGS conf_flags)
 {
     fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags.boot_filter);
-    fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER_LOCALS, conf_flags.filter_locals);
+    fort_device_flag_set(device_conf, FORT_DEVICE_STEALTH_MODE, conf_flags.stealth_mode);
+    fort_device_flag_set(device_conf, FORT_DEVICE_FILTER_LOCALS, conf_flags.filter_locals);
 }
 
 FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
@@ -350,7 +351,8 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
 
         RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
         old_conf_flags.boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0;
-        old_conf_flags.filter_locals = (flags & FORT_DEVICE_BOOT_FILTER_LOCALS) != 0;
+        old_conf_flags.stealth_mode = (flags & FORT_DEVICE_STEALTH_MODE) != 0;
+        old_conf_flags.filter_locals = (flags & FORT_DEVICE_FILTER_LOCALS) != 0;
     }
 
     KLOCK_QUEUE_HANDLE lock_queue;
@@ -369,6 +371,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
         } else {
             RtlZeroMemory((void *) &conf_flags, sizeof(FORT_CONF_FLAGS));
             conf_flags.boot_filter = old_conf_flags.boot_filter;
+            conf_flags.stealth_mode = old_conf_flags.stealth_mode;
             conf_flags.filter_locals = old_conf_flags.filter_locals;
         }
 
@@ -405,7 +408,8 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
 
             RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
             old_conf_flags.boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0;
-            old_conf_flags.filter_locals = (flags & FORT_DEVICE_BOOT_FILTER_LOCALS) != 0;
+            old_conf_flags.stealth_mode = (flags & FORT_DEVICE_STEALTH_MODE) != 0;
+            old_conf_flags.filter_locals = (flags & FORT_DEVICE_FILTER_LOCALS) != 0;
 
             conf_flags = old_conf_flags;
         }

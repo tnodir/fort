@@ -68,6 +68,7 @@ private:
     QCheckBox *m_cbGroupBlocked = nullptr;
 
     QCheckBox *m_cbBootFilter = nullptr;
+    QCheckBox *m_cbStealthMode = nullptr;
     QCheckBox *m_cbNoServiceControl = nullptr;
     QCheckBox *m_cbCheckPasswordOnUninstall = nullptr;
     QCheckBox *m_cbPassword = nullptr;

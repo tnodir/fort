@@ -482,8 +482,8 @@ static NTSTATUS fort_device_register_provider(void)
     }
 
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER, boot_conf.boot_filter);
-    fort_device_flag_set(
-            &fort_device()->conf, FORT_DEVICE_BOOT_FILTER_LOCALS, boot_conf.filter_locals);
+    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_STEALTH_MODE, boot_conf.stealth_mode);
+    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_LOCALS, boot_conf.filter_locals);
 
     fort_prov_unregister(engine);
 

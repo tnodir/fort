@@ -19,6 +19,7 @@ typedef struct fort_prov_boot_conf
         {
             UINT32 boot_filter : 1;
             UINT32 filter_locals : 1;
+            UINT32 stealth_mode : 1;
         };
     };
 } FORT_PROV_BOOT_CONF, *PFORT_PROV_BOOT_CONF;

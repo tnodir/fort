@@ -967,6 +967,7 @@ inline static NTSTATUS fort_callout_force_reauth_prov_recreate(HANDLE engine,
         BOOL *prov_recreated)
 {
     const BOOL conf_changed = (old_conf_flags.boot_filter != conf_flags.boot_filter
+            || old_conf_flags.stealth_mode != conf_flags.stealth_mode
             || old_conf_flags.filter_locals != conf_flags.filter_locals);
 
     if (!conf_changed)
@@ -975,6 +976,7 @@ inline static NTSTATUS fort_callout_force_reauth_prov_recreate(HANDLE engine,
     const FORT_PROV_BOOT_CONF boot_conf = {
         .boot_filter = conf_flags.boot_filter,
         .filter_locals = conf_flags.filter_locals,
+        .stealth_mode = conf_flags.stealth_mode,
     };
 
     fort_prov_unregister(engine);

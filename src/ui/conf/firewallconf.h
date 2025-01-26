@@ -65,6 +65,9 @@ public:
     bool bootFilter() const { return m_bootFilter; }
     void setBootFilter(bool v) { m_bootFilter = v; }
 
+    bool stealthMode() const { return m_stealthMode; }
+    void setStealthMode(bool v) { m_stealthMode = v; }
+
     bool filterEnabled() const { return m_filterEnabled; }
     void setFilterEnabled(bool v) { m_filterEnabled = v; }
 
@@ -218,6 +221,7 @@ private:
     uint m_editedFlags : 8 = AllEdited; // update all on load()!
 
     uint m_bootFilter : 1 = false;
+    uint m_stealthMode : 1 = false;
     uint m_filterEnabled : 1 = true;
     uint m_filterLocals : 1 = false;
     uint m_filterLocalNet : 1 = false;

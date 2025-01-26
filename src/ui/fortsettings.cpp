@@ -406,6 +406,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
 {
     ini()->beginGroup("confFlags");
     conf.setBootFilter(iniBool("bootFilter"));
+    conf.setStealthMode(iniBool("stealthMode"));
     conf.setFilterEnabled(iniBool("filterEnabled", true));
     conf.setFilterLocals(iniBool("filterLocals"));
     conf.setFilterLocalNet(iniBool("filterLocalNet"));
@@ -450,6 +451,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
     if (conf.flagsEdited()) {
         ini()->beginGroup("confFlags");
         setIniValue("bootFilter", conf.bootFilter());
+        setIniValue("stealthMode", conf.stealthMode());
         setIniValue("filterEnabled", conf.filterEnabled());
         setIniValue("filterLocals", conf.filterLocals());
         setIniValue("filterLocalNet", conf.filterLocalNet());

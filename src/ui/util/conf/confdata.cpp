@@ -144,6 +144,7 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
     PFORT_CONF_FLAGS confFlags = PFORT_CONF_FLAGS(m_data);
 
     confFlags->boot_filter = conf.bootFilter();
+    confFlags->stealth_mode = conf.stealthMode();
     confFlags->filter_enabled = conf.filterEnabled();
     confFlags->filter_locals = conf.filterLocals();
     confFlags->filter_local_net = conf.filterLocalNet();
