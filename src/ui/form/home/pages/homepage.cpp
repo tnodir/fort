@@ -121,6 +121,20 @@ void HomePage::retranslateComboAutoRun()
 
 void HomePage::setupUi()
 {
+    // Column
+    auto colLayout = setupColumn();
+
+    // Main layout
+    auto layout = new QHBoxLayout();
+    layout->addStretch();
+    layout->addLayout(colLayout);
+    layout->addStretch();
+
+    this->setLayout(layout);
+}
+
+QLayout *HomePage::setupColumn()
+{
     // Driver Group Box
     setupDriverBox();
 
@@ -137,14 +151,11 @@ void HomePage::setupUi()
     updateIsPortable();
     updateHasService();
 
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_gbDriver, 0, Qt::AlignHCenter);
-    layout->addWidget(m_gbService, 0, Qt::AlignHCenter);
-    layout->addWidget(m_gbPortable, 0, Qt::AlignHCenter);
-    layout->addWidget(m_gbIntegration, 0, Qt::AlignHCenter);
-    layout->addStretch();
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_gbDriver, m_gbService, m_gbPortable, m_gbIntegration, /* stretch */ nullptr });
+    layout->setSpacing(10);
 
-    this->setLayout(layout);
+    return layout;
 }
 
 void HomePage::setupDriverBox()

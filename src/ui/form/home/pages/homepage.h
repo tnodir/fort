@@ -21,6 +21,7 @@ private:
     void retranslateComboAutoRun();
 
     void setupUi();
+    QLayout *setupColumn();
     void setupDriverBox();
     QLayout *setupDriverLabelLayout();
     void setupDriverIcon();
