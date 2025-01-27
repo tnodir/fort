@@ -169,8 +169,8 @@ void ProgramsWindow::retranslateUi()
     m_cbFilterParked->setText(tr("Parked"));
     m_cbFilterKillProcess->setText(tr("Kill Process"));
 
-    m_btGroups->setText(tr("Groups"));
-    m_btServices->setText(tr("Services"));
+    m_btGroups->setToolTip(tr("Groups"));
+    m_btServices->setToolTip(tr("Services"));
 
     appListModel()->refresh();
 
@@ -238,13 +238,13 @@ QLayout *ProgramsWindow::setupHeader()
     updateSortStateCounts();
 
     // Groups button
-    m_btGroups = ControlUtil::createFlatToolButton(":/icons/application_double.png");
+    m_btGroups = ControlUtil::createIconToolButton(":/icons/application_double.png");
 
     connect(m_btGroups, &QAbstractButton::clicked, windowManager(),
             &WindowManager::showAppGroupsWindow);
 
     // Services button
-    m_btServices = ControlUtil::createFlatToolButton(":/icons/windows-48.png");
+    m_btServices = ControlUtil::createIconToolButton(":/icons/windows-48.png");
     m_btServices->setEnabled(settings()->hasMasterAdmin());
 
     connect(m_btServices, &QAbstractButton::clicked, windowManager(),
