@@ -17,6 +17,7 @@ static struct
 {
     FWPS_CALLOUT0 ale_callouts[FORT_STAT_ALE_CALLOUT_IDS_COUNT];
     FWPS_CALLOUT0 packet_callouts[FORT_STAT_PACKET_CALLOUT_IDS_COUNT];
+    FWPS_CALLOUT0 discard_callouts[FORT_STAT_DISCARD_CALLOUT_IDS_COUNT];
 } g_calloutGlobal;
 
 static void fort_callout_classify_block(FWPS_CLASSIFY_OUT0 *classifyOut)
@@ -804,11 +805,64 @@ static void NTAPI fort_callout_flow_delete(UINT16 layerId, UINT32 calloutId, UIN
     UNUSED(layerId);
     UNUSED(calloutId);
 
-    FORT_CHECK_STACK(FORT_CALLOUT_TRANSPORT_DELETE);
+    FORT_CHECK_STACK(FORT_CALLOUT_FLOW_DELETE);
 
     fort_shaper_drop_flow_packets(&fort_device()->shaper, flowContext);
 
     fort_flow_delete(&fort_device()->stat, flowContext);
+}
+
+static void fort_callout_discard_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut,
+        UCHAR flagsIndex)
+{
+    UNUSED(inMetaValues);
+    UNUSED(layerData);
+    UNUSED(flowContext);
+
+    FORT_CHECK_STACK(FORT_CALLOUT_DISCARD_CLASSIFY);
+
+    const UINT32 classify_flags = inFixedValues->incomingValue[flagsIndex].value.uint32;
+    const BOOL is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
+
+    if (!is_loopback) {
+        fort_callout_classify_block(classifyOut); /* block */
+    }
+
+    fort_callout_classify_permit(filter, classifyOut); /* permit */
+}
+
+static void NTAPI fort_callout_transport_discard_in_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+    fort_callout_discard_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, FWPS_FIELD_INBOUND_TRANSPORT_V4_FLAGS);
+}
+
+static void NTAPI fort_callout_transport_discard_in_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+    fort_callout_discard_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, FWPS_FIELD_INBOUND_TRANSPORT_V6_FLAGS);
+}
+
+static void NTAPI fort_callout_ippacket_discard_in_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+    fort_callout_discard_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, FWPS_FIELD_INBOUND_IPPACKET_V4_FLAGS);
+}
+
+static void NTAPI fort_callout_ippacket_discard_in_v6(const FWPS_INCOMING_VALUES0 *inFixedValues,
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues, PVOID layerData,
+        const FWPS_FILTER0 *filter, UINT64 flowContext, FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+    fort_callout_discard_classify(inFixedValues, inMetaValues, layerData, filter, flowContext,
+            classifyOut, FWPS_FIELD_INBOUND_IPPACKET_V6_FLAGS);
 }
 
 static void NTAPI fort_callout_delete(UINT16 layerId, UINT32 calloutId, UINT64 flowContext)
@@ -875,12 +929,38 @@ static void fort_callout_init_packet_callouts(void)
             &fort_callout_transport_classify_out, &fort_callout_delete);
 }
 
+inline static void fort_callout_init_discard_callout(
+        FWPS_CALLOUT0 *cout, GUID calloutKey, FWPS_CALLOUT_CLASSIFY_FN0 classifyFn)
+{
+    fort_callout_init_callout(cout, calloutKey, classifyFn,
+            /*flowDeleteFn=*/NULL, /*flags=*/0);
+}
+
+static void fort_callout_init_discard_callouts(void)
+{
+    FWPS_CALLOUT0 *cout = g_calloutGlobal.discard_callouts;
+
+    /* IPv4 inbound transport discard callout */
+    fort_callout_init_discard_callout(cout++, FORT_GUID_CALLOUT_IN_TRANSPORT_DISCARD_V4,
+            &fort_callout_transport_discard_in_v4);
+    /* IPv6 inbound transport discard callout */
+    fort_callout_init_discard_callout(cout++, FORT_GUID_CALLOUT_IN_TRANSPORT_DISCARD_V6,
+            &fort_callout_transport_discard_in_v6);
+    /* IPv4 inbound ippacket discard callout */
+    fort_callout_init_discard_callout(
+            cout++, FORT_GUID_CALLOUT_IN_IPPACKET_DISCARD_V4, &fort_callout_ippacket_discard_in_v4);
+    /* IPv6 inbound ippacket discard callout */
+    fort_callout_init_discard_callout(
+            cout++, FORT_GUID_CALLOUT_IN_IPPACKET_DISCARD_V6, &fort_callout_ippacket_discard_in_v6);
+}
+
 static void fort_callout_init(void)
 {
     RtlZeroMemory(&g_calloutGlobal, sizeof(g_calloutGlobal));
 
     fort_callout_init_ale_callouts();
     fort_callout_init_packet_callouts();
+    fort_callout_init_discard_callouts();
 }
 
 static NTSTATUS fort_callout_register(
@@ -914,6 +994,14 @@ static NTSTATUS fort_callout_install_packet(PDEVICE_OBJECT device, PFORT_STAT st
             FORT_STAT_PACKET_CALLOUT_IDS_COUNT);
 }
 
+static NTSTATUS fort_callout_install_discard(PDEVICE_OBJECT device, PFORT_STAT stat)
+{
+    const PUINT32 calloutIds = &stat->callout_ids[FORT_STAT_DISCARD_CALLOUT_IDS_INDEX];
+
+    return fort_callout_register(device, g_calloutGlobal.discard_callouts, calloutIds,
+            FORT_STAT_DISCARD_CALLOUT_IDS_COUNT);
+}
+
 FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 {
     FORT_CHECK_STACK(FORT_CALLOUT_INSTALL);
@@ -924,7 +1012,8 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
 
     NTSTATUS status;
     if (!NT_SUCCESS(status = fort_callout_install_ale(device, stat))
-            || !NT_SUCCESS(status = fort_callout_install_packet(device, stat))) {
+            || !NT_SUCCESS(status = fort_callout_install_packet(device, stat))
+            || !NT_SUCCESS(status = fort_callout_install_discard(device, stat))) {
         return status;
     }
 
