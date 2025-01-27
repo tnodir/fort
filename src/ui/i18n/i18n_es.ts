@@ -736,7 +736,7 @@
     </message>
     <message>
         <source>Integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Integración</translation>
     </message>
     <message>
         <source>Windows Explorer integration</source>
@@ -744,7 +744,7 @@
     </message>
     <message>
         <source>Control Panel: Sounds integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Panel de control: Integración de sonidos</translation>
     </message>
     <message>
         <source>Auto-run:</source>
@@ -1278,6 +1278,10 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     <message>
         <source># Examples:</source>
         <translation># Ejemplos:</translation>
+    </message>
+    <message>
+        <source>Stealth mode (Prevent port scanning)</source>
+        <translation>Modo sigiloso (Evitar el escaneo de puertos)</translation>
     </message>
 </context>
 <context>

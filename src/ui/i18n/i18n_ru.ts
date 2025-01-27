@@ -1279,6 +1279,10 @@ Make sure that you have a fresh backup.</source>
         <source># Examples:</source>
         <translation># Примеры:</translation>
     </message>
+    <message>
+        <source>Stealth mode (Prevent port scanning)</source>
+        <translation>Скрытый режим (запрет сканирования портов)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -1279,6 +1279,10 @@ Make sure that you have a fresh backup.</source>
         <source># Examples:</source>
         <translation># 示例：</translation>
     </message>
+    <message>
+        <source>Stealth mode (Prevent port scanning)</source>
+        <translation>隐身模式（防止端口扫描）</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

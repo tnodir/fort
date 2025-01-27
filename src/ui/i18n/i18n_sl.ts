@@ -1279,6 +1279,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source># Examples:</source>
         <translation>#Primeri:</translation>
     </message>
+    <message>
+        <source>Stealth mode (Prevent port scanning)</source>
+        <translation>Prikriti način (prepreči skeniranje vrat)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

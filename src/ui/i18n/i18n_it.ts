@@ -1279,6 +1279,10 @@ Assicurati di avere un nuovo backup.</translation>
         <source># Examples:</source>
         <translation># Esempi:</translation>
     </message>
+    <message>
+        <source>Stealth mode (Prevent port scanning)</source>
+        <translation>Modalità occulta (previeni scansione porta)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

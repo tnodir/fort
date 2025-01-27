@@ -1279,6 +1279,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source># Examples:</source>
         <translation># Beispiele:</translation>
     </message>
+    <message>
+        <source>Stealth mode (Prevent port scanning)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -1279,6 +1279,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source># Examples:</source>
         <translation># Przykłady:</translation>
     </message>
+    <message>
+        <source>Stealth mode (Prevent port scanning)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
