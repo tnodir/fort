@@ -279,8 +279,8 @@ static void fort_prov_init_discard_filters(void)
 {
     const FORT_PROV_INIT_FILTER_ARGS d = {
         .subLayerKey = FORT_GUID_SUBLAYER,
-        .flags = FWPM_FILTER_FLAG_PERSISTENT,
-        .actionType = FWP_ACTION_CALLOUT_TERMINATING,
+        .flags = 0,
+        .actionType = FWP_ACTION_CALLOUT_UNKNOWN,
     };
 
     const FORT_PROV_INIT_FILTER_ARGS args[] = {
@@ -452,6 +452,11 @@ static void fort_prov_unregister_filters(HANDLE engine)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_CONNECT_V6);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_ACCEPT_V6);
+
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_DISCARD_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_DISCARD_V6);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_IPPACKET_DISCARD_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_IPPACKET_DISCARD_V6);
 }
 
 static DWORD fort_prov_unregister_reauth_filters(HANDLE engine)
@@ -507,11 +512,6 @@ FORT_API void fort_prov_flow_unregister(HANDLE engine)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V6);
 
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_DISCARD_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_DISCARD_V6);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_IPPACKET_DISCARD_V4);
-    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_IPPACKET_DISCARD_V6);
-
     // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V6);
@@ -554,7 +554,7 @@ static DWORD fort_prov_register_boot_filters(HANDLE engine, const FORT_PROV_BOOT
     return STATUS_SUCCESS;
 }
 
-static DWORD fort_prov_register_stealth_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+static DWORD fort_prov_register_discard_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
     if (!boot_conf.stealth_mode)
         return STATUS_SUCCESS;
@@ -575,7 +575,7 @@ static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF
     if ((status = fort_prov_register_boot_filters(engine, boot_conf)))
         return status;
 
-    if ((status = fort_prov_register_stealth_filters(engine, boot_conf)))
+    if ((status = fort_prov_register_discard_filters(engine, boot_conf)))
         return status;
 
     const FWPM_FILTER0 *filters = boot_conf.boot_filter ? g_provGlobal.callout_boot_filters

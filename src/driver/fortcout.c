@@ -826,11 +826,11 @@ static void fort_callout_discard_classify(const FWPS_INCOMING_VALUES0 *inFixedVa
     const UINT32 classify_flags = inFixedValues->incomingValue[flagsIndex].value.uint32;
     const BOOL is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
 
-    if (!is_loopback) {
+    if (is_loopback) {
+        fort_callout_classify_permit(filter, classifyOut); /* permit */
+    } else {
         fort_callout_classify_block(classifyOut); /* block */
     }
-
-    fort_callout_classify_permit(filter, classifyOut); /* permit */
 }
 
 static void NTAPI fort_callout_transport_discard_in_v4(const FWPS_INCOMING_VALUES0 *inFixedValues,
