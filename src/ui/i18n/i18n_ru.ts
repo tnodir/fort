@@ -1796,7 +1796,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Add Preset Rule</source>
-        <translation>ДОбавить заданное правило</translation>
+        <translation>Добавить заданное правило</translation>
     </message>
     <message>
         <source>Remove</source>
