@@ -1,6 +1,7 @@
 #include "controlmanager.h"
 
 #include <QApplication>
+#include <QHash>
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QLoggingCategory>
@@ -446,24 +447,22 @@ void ControlManager::closeAllClients()
 
 bool ControlManager::processCommandClient()
 {
+    static QHash<QString, Control::Command> g_commandsMap = {
+        { "home", Control::CommandHome },
+        { "filter", Control::CommandFilter },
+        { "filter-mode", Control::CommandFilterMode },
+        { "block", Control::CommandBlock },
+        { "prog", Control::CommandProg },
+        { "backup", Control::CommandBackup },
+        { "zone", Control::CommandZone },
+    };
+
     const auto settings = IoC<FortSettings>();
 
-    Control::Command command;
-    if (settings->controlCommand() == "home") {
-        command = Control::CommandHome;
-    } else if (settings->controlCommand() == "filter") {
-        command = Control::CommandFilter;
-    } else if (settings->controlCommand() == "filter-mode") {
-        command = Control::CommandFilterMode;
-    } else if (settings->controlCommand() == "block") {
-        command = Control::CommandBlock;
-    } else if (settings->controlCommand() == "prog") {
-        command = Control::CommandProg;
-    } else if (settings->controlCommand() == "backup") {
-        command = Control::CommandBackup;
-    } else if (settings->controlCommand() == "zone") {
-        command = Control::CommandZone;
-    } else {
+    const Control::Command command =
+            g_commandsMap.value(settings->controlCommand(), Control::CommandNone);
+
+    if (command == Control::CommandNone) {
         qCWarning(LC) << "Unknown control command:" << settings->controlCommand();
         return false;
     }
