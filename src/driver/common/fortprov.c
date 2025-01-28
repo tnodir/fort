@@ -536,32 +536,52 @@ FORT_API void fort_prov_trans_unregister(void)
     }
 }
 
+static DWORD fort_prov_register_boot_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+{
+    if (!boot_conf.boot_filter)
+        return STATUS_SUCCESS;
+
+    DWORD status;
+
+    if ((status = fort_prov_add_filters(
+                 engine, g_provGlobal.boot_filters, FORT_PROV_BOOT_FILTERS_COUNT)))
+        return status;
+
+    if ((status = fort_prov_add_filters(
+                 engine, g_provGlobal.persist_filters, FORT_PROV_PERSIST_FILTERS_COUNT)))
+        return status;
+
+    return STATUS_SUCCESS;
+}
+
+static DWORD fort_prov_register_stealth_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
+{
+    if (!boot_conf.stealth_mode)
+        return STATUS_SUCCESS;
+
+    DWORD status;
+
+    if ((status = fort_prov_add_filters(
+                 engine, g_provGlobal.discard_filters, FORT_PROV_DISCARD_FILTERS_COUNT)))
+        return status;
+
+    return STATUS_SUCCESS;
+}
+
 static DWORD fort_prov_register_filters(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)
 {
-    if (boot_conf.boot_filter) {
-        DWORD status;
+    DWORD status;
 
-        if ((status = fort_prov_add_filters(
-                     engine, g_provGlobal.boot_filters, FORT_PROV_BOOT_FILTERS_COUNT)))
-            return status;
+    if ((status = fort_prov_register_boot_filters(engine, boot_conf)))
+        return status;
 
-        if ((status = fort_prov_add_filters(
-                     engine, g_provGlobal.persist_filters, FORT_PROV_PERSIST_FILTERS_COUNT)))
-            return status;
-    }
+    if ((status = fort_prov_register_stealth_filters(engine, boot_conf)))
+        return status;
 
-    if (boot_conf.stealth_mode) {
-        DWORD status;
+    const FWPM_FILTER0 *filters = boot_conf.boot_filter ? g_provGlobal.callout_boot_filters
+                                                        : g_provGlobal.callout_filters;
 
-        if ((status = fort_prov_add_filters(
-                     engine, g_provGlobal.discard_filters, FORT_PROV_DISCARD_FILTERS_COUNT)))
-            return status;
-    }
-
-    return fort_prov_add_filters(engine,
-            (boot_conf.boot_filter ? g_provGlobal.callout_boot_filters
-                                   : g_provGlobal.callout_filters),
-            FORT_PROV_CALLOUT_FILTERS_COUNT);
+    return fort_prov_add_filters(engine, filters, FORT_PROV_CALLOUT_FILTERS_COUNT);
 }
 
 static DWORD fort_prov_register_provider(HANDLE engine, const FORT_PROV_BOOT_CONF boot_conf)

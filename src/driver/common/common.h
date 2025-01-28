@@ -55,6 +55,7 @@
 
 #ifndef NT_SUCCESS
 #    define NT_SUCCESS(status) ((LONG) (status) >= 0)
+#    define STATUS_SUCCESS     0
 #endif
 
 #define FORT_STATUS_USER_ERROR STATUS_INVALID_PARAMETER
