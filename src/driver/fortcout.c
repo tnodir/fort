@@ -1011,11 +1011,15 @@ FORT_API NTSTATUS fort_callout_install(PDEVICE_OBJECT device)
     fort_callout_init();
 
     NTSTATUS status;
-    if (!NT_SUCCESS(status = fort_callout_install_ale(device, stat))
-            || !NT_SUCCESS(status = fort_callout_install_packet(device, stat))
-            || !NT_SUCCESS(status = fort_callout_install_discard(device, stat))) {
+
+    if (!NT_SUCCESS(status = fort_callout_install_ale(device, stat)))
         return status;
-    }
+
+    if (!NT_SUCCESS(status = fort_callout_install_packet(device, stat)))
+        return status;
+
+    if (!NT_SUCCESS(status = fort_callout_install_discard(device, stat)))
+        return status;
 
     return STATUS_SUCCESS;
 }
