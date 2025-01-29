@@ -55,7 +55,6 @@ private:
     QToolButton *m_btProfile = nullptr;
     QToolButton *m_btLogs = nullptr;
     QToolButton *m_btServiceLogs = nullptr;
-    QToolButton *m_btStat = nullptr;
     QToolButton *m_btReleases = nullptr;
     QToolButton *m_btHelp = nullptr;
 };
