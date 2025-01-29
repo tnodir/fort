@@ -36,7 +36,6 @@ protected slots:
 
 private:
     void retranslateGroupLimits();
-    void retranslateAppsPlaceholderText();
 
     void setupUi();
     QLayout *setupHeader();

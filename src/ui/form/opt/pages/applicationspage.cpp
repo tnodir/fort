@@ -185,7 +185,7 @@ void ApplicationsPage::onRetranslateUi()
     splitterHandle->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Block'"));
     m_btSelectFile->setToolTip(tr("Select File"));
 
-    retranslateAppsPlaceholderText();
+    m_allowApps->editText()->setPlaceholderText("DEPRECATED! Use Programs: Wildcard paths.");
 }
 
 void ApplicationsPage::retranslateGroupLimits()
@@ -204,17 +204,6 @@ void ApplicationsPage::retranslateGroupLimits()
 
     m_cscLimitIn->setNames(list);
     m_cscLimitOut->setNames(list);
-}
-
-void ApplicationsPage::retranslateAppsPlaceholderText()
-{
-    const auto placeholderText = tr("# Examples:") + '\n'
-            + QLatin1String("System\n"
-                            "C:\\Program Files (x86)\\Microsoft\\Skype for Desktop\\Skype.exe\n"
-                            "%SystemRoot%\\System32\\telnet.exe\n")
-            + '\n' + tr("# All programs in the sub-path:") + QLatin1String("\nC:\\Git\\**");
-
-    m_allowApps->editText()->setPlaceholderText(placeholderText);
 }
 
 void ApplicationsPage::setupUi()
