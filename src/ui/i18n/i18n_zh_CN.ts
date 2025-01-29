@@ -227,14 +227,6 @@
         <translation>已禁用</translation>
     </message>
     <message>
-        <source># Examples:</source>
-        <translation># 示例：</translation>
-    </message>
-    <message>
-        <source># All programs in the sub-path:</source>
-        <translation># 子路径中的所有应用程序：</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>应用程序 (*.exe);;所有文件 (*.*)</translation>
     </message>
@@ -784,10 +776,6 @@
     <message>
         <source>Profile</source>
         <translation>配置文件</translation>
-    </message>
-    <message>
-        <source>Statistics</source>
-        <translation>统计数据</translation>
     </message>
     <message>
         <source>Releases</source>

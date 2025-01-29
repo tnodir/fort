@@ -227,14 +227,6 @@
         <translation>Onemogočeno</translation>
     </message>
     <message>
-        <source># Examples:</source>
-        <translation>#Primeri:</translation>
-    </message>
-    <message>
-        <source># All programs in the sub-path:</source>
-        <translation># Vsi programi v podpoti:</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programi (*.exe);;Vse datoteke (*.*)</translation>
     </message>
@@ -784,10 +776,6 @@
     <message>
         <source>Profile</source>
         <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Statistics</source>
-        <translation>Statistika</translation>
     </message>
     <message>
         <source>Releases</source>

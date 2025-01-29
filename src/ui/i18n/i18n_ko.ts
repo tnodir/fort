@@ -227,14 +227,6 @@
         <translation>비활성화</translation>
     </message>
     <message>
-        <source># Examples:</source>
-        <translation># 예제:</translation>
-    </message>
-    <message>
-        <source># All programs in the sub-path:</source>
-        <translation># 하위 경로의 모든 프로그램:</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
     </message>
@@ -784,10 +776,6 @@
     <message>
         <source>Profile</source>
         <translation>프로필</translation>
-    </message>
-    <message>
-        <source>Statistics</source>
-        <translation>통계</translation>
     </message>
     <message>
         <source>Releases</source>

@@ -227,14 +227,6 @@
         <translation>عدم التفعيل</translation>
     </message>
     <message>
-        <source># Examples:</source>
-        <translation># أمثلة:</translation>
-    </message>
-    <message>
-        <source># All programs in the sub-path:</source>
-        <translation># كل البرامج في المجلدات الفرعية:</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>البرامج (*.exe);;كل الملفات (*.*)</translation>
     </message>
@@ -784,10 +776,6 @@
     <message>
         <source>Profile</source>
         <translation>ملفات التفضيلات</translation>
-    </message>
-    <message>
-        <source>Statistics</source>
-        <translation>الإحصائيات</translation>
     </message>
     <message>
         <source>Releases</source>

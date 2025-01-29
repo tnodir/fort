@@ -227,14 +227,6 @@
         <translation>Отключено</translation>
     </message>
     <message>
-        <source># Examples:</source>
-        <translation># Примеры:</translation>
-    </message>
-    <message>
-        <source># All programs in the sub-path:</source>
-        <translation># Все программы по пути:</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Программы (*.exe);;Все файлы (*.*)</translation>
     </message>
@@ -784,10 +776,6 @@
     <message>
         <source>Profile</source>
         <translation>Профиль</translation>
-    </message>
-    <message>
-        <source>Statistics</source>
-        <translation>Статистика</translation>
     </message>
     <message>
         <source>Releases</source>

@@ -227,14 +227,6 @@
         <translation>Disabilitato</translation>
     </message>
     <message>
-        <source># Examples:</source>
-        <translation># Esempi:</translation>
-    </message>
-    <message>
-        <source># All programs in the sub-path:</source>
-        <translation># Tutti i programmi nel sottopercorso:</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programmi (*.exe);;Tutti i file (*.*)</translation>
     </message>
@@ -784,10 +776,6 @@
     <message>
         <source>Profile</source>
         <translation>Profilo</translation>
-    </message>
-    <message>
-        <source>Statistics</source>
-        <translation>Statistiche</translation>
     </message>
     <message>
         <source>Releases</source>

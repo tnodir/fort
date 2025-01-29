@@ -227,14 +227,6 @@
         <translation></translation>
     </message>
     <message>
-        <source># Examples:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source># All programs in the sub-path:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation></translation>
     </message>
@@ -783,10 +775,6 @@
     </message>
     <message>
         <source>Profile</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Statistics</source>
         <translation></translation>
     </message>
     <message>

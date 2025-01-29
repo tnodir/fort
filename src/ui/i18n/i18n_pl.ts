@@ -227,14 +227,6 @@
         <translation>Wyłączone</translation>
     </message>
     <message>
-        <source># Examples:</source>
-        <translation># Przykłady:</translation>
-    </message>
-    <message>
-        <source># All programs in the sub-path:</source>
-        <translation># Wszystkie programy w podfolderach:</translation>
-    </message>
-    <message>
         <source>Programs (*.exe);;All files (*.*)</source>
         <translation>Programy (*.exe);;Wszystkie pliki (*.*)</translation>
     </message>
@@ -784,10 +776,6 @@
     <message>
         <source>Profile</source>
         <translation>Profil</translation>
-    </message>
-    <message>
-        <source>Statistics</source>
-        <translation>Statystyki</translation>
     </message>
     <message>
         <source>Releases</source>
