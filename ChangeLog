@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.15.8, 2025-01-29:
+- UI: Options: Add "Stealth mode" to prevent port scanning.
+- UI: Add "filter", "filter-mode" command-line arguments.
+
 v3.15.7, 2025-01-25:
 - UI: Move "Explorer Integration", "Auto-Run" options to My Fort window.
 - UI: My Fort: Add "Control Panel: Sounds integration" flag.
