@@ -78,7 +78,6 @@ SOURCES += \
     form/home/pages/homepage.cpp \
     form/opt/optionscontroller.cpp \
     form/opt/optionswindow.cpp \
-    form/opt/pages/addresses/addressescolumn.cpp \
     form/opt/pages/addressespage.cpp \
     form/opt/pages/applicationspage.cpp \
     form/opt/pages/apps/appscolumn.cpp \
@@ -319,7 +318,6 @@ HEADERS += \
     form/home/pages/homepage.h \
     form/opt/optionscontroller.h \
     form/opt/optionswindow.h \
-    form/opt/pages/addresses/addressescolumn.h \
     form/opt/pages/addressespage.h \
     form/opt/pages/applicationspage.h \
     form/opt/pages/apps/appscolumn.h \

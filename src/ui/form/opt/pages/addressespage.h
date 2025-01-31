@@ -4,8 +4,7 @@
 #include "optbasepage.h"
 
 class AddressGroup;
-class AddressesColumn;
-class TextArea2Splitter;
+class PlainTextEdit;
 class ZonesSelector;
 
 class AddressesPage : public OptBasePage
@@ -15,52 +14,51 @@ class AddressesPage : public OptBasePage
 public:
     explicit AddressesPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    AddressGroup *addressGroup() const;
-
-    int addressGroupIndex() const { return m_addressGroupIndex; }
-    void setAddressGroupIndex(int v);
-
-signals:
-    void addressGroupChanged();
-
 public slots:
     void onResetToDefault() override;
     void onEditResetted() override;
 
 protected slots:
-    void onSaveWindowState(IniUser *ini) override;
-    void onRestoreWindowState(IniUser *ini) override;
-
     void onRetranslateUi() override;
 
 private:
-    void retranslateAddressesPlaceholderText();
+    void retranslateEditLanPlaceholderText();
 
     void setupUi();
-    void setupAddressColumns();
-    AddressesColumn *setupAddressColumn(bool include);
-    void setupAddressesUseAllEnabled();
-    void setupSplitter();
-    void setupSplitterButtons();
+    QLayout *setupColumn1();
+    QLayout *setupColumn2();
 
-    void setupZones();
-    void setupAddressGroup();
+    void setupLanBox();
+    QLayout *setupLanHeaderLayout();
+    void setupEditLanText();
+    void setupEditLanTextActions();
 
-    void updateGroup();
+    void setupBlockInetBox();
+    QLayout *setupBlockInetHeaderLayout();
+    void setupEditBlockInetText();
 
-    void checkAddressGroupEdited();
+    void updateUi();
 
     const QList<AddressGroup *> &addressGroups() const;
-    AddressGroup *addressGroupByIndex(int index) const;
+    AddressGroup *inetAddressGroup() const;
+    AddressGroup *allowAddressGroup() const;
 
 private:
-    int m_addressGroupIndex = -1;
+    QGroupBox *m_gbLan = nullptr;
+    QGroupBox *m_gbInet = nullptr;
 
-    QTabBar *m_tabBar = nullptr;
-    AddressesColumn *m_includeAddresses = nullptr;
-    AddressesColumn *m_excludeAddresses = nullptr;
-    TextArea2Splitter *m_splitter = nullptr;
-    QToolButton *m_btAddLocals = nullptr;
+    QCheckBox *m_cbFilterLocals = nullptr;
+    QCheckBox *m_cbFilterLocalNet = nullptr;
+    QLabel *m_iconLan = nullptr;
+    QLabel *m_labelLanText = nullptr;
+    ZonesSelector *m_btLanZones = nullptr;
+    PlainTextEdit *m_editLanText = nullptr;
+    QAction *m_actAddLocalNetworks = nullptr;
+
+    QLabel *m_iconBlockInet = nullptr;
+    QLabel *m_labelBlockInetText = nullptr;
+    ZonesSelector *m_btBlockInetZones = nullptr;
+    PlainTextEdit *m_editBlockInetText = nullptr;
 };
 
 #endif // ADDRESSESPAGE_H

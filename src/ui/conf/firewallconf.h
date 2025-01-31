@@ -161,7 +161,6 @@ public:
     const QList<AppGroup *> &appGroups() const { return m_appGroups; }
 
     bool checkDeprecatedAppGroups() const; // TODO: COMPAT: Remove after v4.1.0
-    bool checkDeprecatedAddressGroups() const; // TODO: COMPAT: Remove after v4.1.0
 
     const QVector<qint64> &removedAppGroupIdList() const { return m_removedAppGroupIdList; }
     void clearRemovedAppGroupIdList() const;

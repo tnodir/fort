@@ -116,7 +116,6 @@ void OptionsWindow::setupUi()
 void OptionsWindow::checkDeprecated()
 {
     checkDeprecatedAppGroups();
-    checkDeprecatedAddressGroups();
 }
 
 void OptionsWindow::checkDeprecatedAppGroups()
@@ -125,18 +124,6 @@ void OptionsWindow::checkDeprecatedAppGroups()
         ctrl()->windowManager()->showConfirmBox(
                 [&] { OsUtil::openUrlOrFolder("https://github.com/tnodir/fort/discussions/210"); },
                 tr("Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!"
-                   "\n\n(They are read-only now and will be removed in v4.)"
-                   "\n\nDo you want to open a discussion thread in browser?"),
-                {}, this);
-    }
-}
-
-void OptionsWindow::checkDeprecatedAddressGroups()
-{
-    if (!ctrl()->conf()->checkDeprecatedAddressGroups()) {
-        ctrl()->windowManager()->showConfirmBox(
-                [&] { OsUtil::openUrlOrFolder("https://github.com/tnodir/fort/discussions/347"); },
-                tr("Please move settings of 'IP Addresses' fields to Global Rules!!!"
                    "\n\n(They are read-only now and will be removed in v4.)"
                    "\n\nDo you want to open a discussion thread in browser?"),
                 {}, this);

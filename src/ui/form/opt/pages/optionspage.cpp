@@ -14,12 +14,9 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
-#include <conf/addressgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
-#include <form/controls/plaintextedit.h>
-#include <form/controls/zonesselector.h>
 #include <form/opt/optionscontroller.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
@@ -28,8 +25,6 @@
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
-#include <util/net/netutil.h>
-#include <util/textareautil.h>
 
 namespace {
 
@@ -79,12 +74,6 @@ void OptionsPage::onResetToDefault()
 
     m_cbLogBlocked->setChecked(true);
     m_cbPurgeOnMounted->setChecked(false);
-
-    m_cbFilterLocals->setChecked(false);
-    m_cbFilterLocalNet->setChecked(false);
-
-    m_btLanZones->setZones(0);
-    m_editLanText->setPlainText(NetUtil::localIpNetworksText());
 }
 
 void OptionsPage::onAboutToSave()
@@ -118,7 +107,6 @@ void OptionsPage::onRetranslateUi()
     m_gbUpdate->setTitle(tr("Auto Update"));
     m_gbLogs->setTitle(tr("Logs"));
     m_gbProg->setTitle(tr("Programs"));
-    m_gbLan->setTitle(tr("Local Area Network"));
 
     m_cbFilterEnabled->setText(tr("Filter Enabled"));
 
@@ -140,25 +128,15 @@ void OptionsPage::onRetranslateUi()
     m_btPasswordLock->setText(tr("Lock the password (unlocked till \"%1\")")
                     .arg(settings()->passwordUnlockedTillText()));
 
+    m_cbLogBlocked->setText(tr("Collect New Programs"));
+    m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
+
     m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
     m_cbUpdateAutoDownload->setText(tr("Auto-download new version"));
     m_cbUpdateAutoInstall->setText(tr("Auto-install after download"));
 
     m_cbLogDebug->setText(tr("Log debug messages"));
     m_cbLogConsole->setText(tr("Show log messages in console"));
-
-    m_cbLogBlocked->setText(tr("Collect New Programs"));
-    m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
-
-    m_cbFilterLocals->setText(tr("Filter Local Addresses") + " (127.0.0.0/8, 255.255.255.255)");
-    m_cbFilterLocals->setToolTip(
-            tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
-    m_cbFilterLocalNet->setText(tr("Filter Local Network"));
-
-    m_labelLanText->setText(tr("Local Network Addresses:"));
-    m_btLanZones->retranslateUi();
-    m_actAddLocalNetworks->setText(tr("Add Local Networks"));
-    retranslateEditLanPlaceholderText();
 }
 
 void OptionsPage::retranslateComboBlockTraffic()
@@ -177,13 +155,6 @@ void OptionsPage::retranslateEditPassword()
 {
     m_editPassword->setPlaceholderText(
             settings()->hasPassword() ? tr("Installed") : tr("Not Installed"));
-}
-
-void OptionsPage::retranslateEditLanPlaceholderText()
-{
-    const auto placeholderText = tr("# Examples:") + '\n' + NetUtil::localIpNetworksText(9);
-
-    m_editLanText->setPlaceholderText(placeholderText);
 }
 
 void OptionsPage::setupUi()
@@ -212,18 +183,10 @@ QLayout *OptionsPage::setupColumn1()
     // Protection Group Box
     setupProtectionBox();
 
-    // Update Group Box
-    setupUpdateBox();
-
-    // Logs Group Box
-    setupLogsBox();
-
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
     layout->addWidget(m_gbTraffic);
     layout->addWidget(m_gbProtection);
-    layout->addWidget(m_gbUpdate);
-    layout->addWidget(m_gbLogs);
     layout->addStretch();
 
     return layout;
@@ -234,13 +197,17 @@ QLayout *OptionsPage::setupColumn2()
     // Programs Group Box
     setupProgBox();
 
-    // LAN Group Box
-    setupLanBox();
+    // Update Group Box
+    setupUpdateBox();
+
+    // Logs Group Box
+    setupLogsBox();
 
     auto layout = new QVBoxLayout();
     layout->setSpacing(10);
     layout->addWidget(m_gbProg);
-    layout->addWidget(m_gbLan, 1);
+    layout->addWidget(m_gbUpdate);
+    layout->addWidget(m_gbLogs);
     layout->addStretch();
 
     return layout;
@@ -410,6 +377,38 @@ void OptionsPage::setupPasswordLock()
     connect(settings(), &FortSettings::passwordCheckedChanged, this, refreshPasswordLock);
 }
 
+void OptionsPage::setupProgBox()
+{
+    setupLogBlocked();
+
+    m_cbPurgeOnMounted =
+            ControlUtil::createCheckBox(ini()->progPurgeOnMounted(), [&](bool checked) {
+                if (ini()->progPurgeOnMounted() != checked) {
+                    ini()->setProgPurgeOnMounted(checked);
+                    ctrl()->setIniEdited();
+                }
+            });
+
+    // Layout
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_cbLogBlocked, ControlUtil::createSeparator(), m_cbPurgeOnMounted });
+
+    m_gbProg = new QGroupBox();
+    m_gbProg->setLayout(layout);
+}
+
+void OptionsPage::setupLogBlocked()
+{
+    m_cbLogBlocked = ControlUtil::createCheckBox(conf()->logBlocked(), [&](bool checked) {
+        if (conf()->logBlocked() != checked) {
+            conf()->setLogBlocked(checked);
+            ctrl()->setFlagsEdited();
+        }
+    });
+
+    m_cbLogBlocked->setFont(GuiUtil::fontBold());
+}
+
 void OptionsPage::setupUpdateBox()
 {
     m_cbUpdateKeepCurrentVersion =
@@ -455,111 +454,4 @@ void OptionsPage::setupLogsBox()
 
     m_gbLogs = new QGroupBox();
     m_gbLogs->setLayout(layout);
-}
-
-void OptionsPage::setupProgBox()
-{
-    setupLogBlocked();
-
-    m_cbPurgeOnMounted =
-            ControlUtil::createCheckBox(ini()->progPurgeOnMounted(), [&](bool checked) {
-                if (ini()->progPurgeOnMounted() != checked) {
-                    ini()->setProgPurgeOnMounted(checked);
-                    ctrl()->setIniEdited();
-                }
-            });
-
-    // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbLogBlocked, ControlUtil::createSeparator(), m_cbPurgeOnMounted });
-
-    m_gbProg = new QGroupBox();
-    m_gbProg->setLayout(layout);
-}
-
-void OptionsPage::setupLogBlocked()
-{
-    m_cbLogBlocked = ControlUtil::createCheckBox(conf()->logBlocked(), [&](bool checked) {
-        if (conf()->logBlocked() != checked) {
-            conf()->setLogBlocked(checked);
-            ctrl()->setFlagsEdited();
-        }
-    });
-
-    m_cbLogBlocked->setFont(GuiUtil::fontBold());
-}
-
-void OptionsPage::setupLanBox()
-{
-    m_cbFilterLocals = ControlUtil::createCheckBox(conf()->filterLocals(), [&](bool checked) {
-        conf()->setFilterLocals(checked);
-        ctrl()->setFlagsEdited();
-    });
-
-    m_cbFilterLocalNet = ControlUtil::createCheckBox(conf()->filterLocalNet(), [&](bool checked) {
-        conf()->setFilterLocalNet(checked);
-        ctrl()->setFlagsEdited();
-    });
-
-    // LAN Text Header
-    auto lanHeaderLayout = setupLanHeaderLayout();
-
-    // Edit LAN Text
-    setupEditLanText();
-
-    // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbFilterLocals, m_cbFilterLocalNet, ControlUtil::createHSeparator() });
-    layout->addLayout(lanHeaderLayout);
-    layout->addWidget(m_editLanText, 1);
-
-    m_gbLan = new QGroupBox();
-    m_gbLan->setLayout(layout);
-}
-
-QLayout *OptionsPage::setupLanHeaderLayout()
-{
-    // LAN Label
-    m_labelLanText = ControlUtil::createLabel();
-
-    // Select Zones
-    m_btLanZones = new ZonesSelector();
-    m_btLanZones->setMaxZoneCount(32);
-
-    m_btLanZones->setZones(conf()->inetAddressGroup()->excludeZones());
-
-    connect(m_btLanZones, &ZonesSelector::zonesChanged, this, [&] {
-        conf()->inetAddressGroup()->setExcludeZones(m_btLanZones->zones());
-        ctrl()->setOptEdited();
-    });
-
-    // Layout
-    auto layout = ControlUtil::createRowLayout(m_labelLanText, m_btLanZones);
-
-    return layout;
-}
-
-void OptionsPage::setupEditLanText()
-{
-    // Add Local Networks Action
-    m_actAddLocalNetworks = new QAction(IconCache::icon(":/icons/hostname.png"), QString(), this);
-
-    connect(m_actAddLocalNetworks, &QAction::triggered, this,
-            [&] { TextAreaUtil::appendText(m_editLanText, NetUtil::localIpNetworksText()); });
-
-    // Edit LAN Text
-    m_editLanText = new PlainTextEdit();
-
-    m_editLanText->addContextAction(m_actAddLocalNetworks);
-    m_editLanText->setText(conf()->inetAddressGroup()->excludeText());
-
-    connect(m_editLanText, &QPlainTextEdit::textChanged, this, [&] {
-        const auto text = m_editLanText->toPlainText();
-
-        AddressGroup *inetGroup = conf()->inetAddressGroup();
-        if (inetGroup->excludeText() != text) {
-            conf()->inetAddressGroup()->setExcludeText(text);
-            ctrl()->setOptEdited();
-        }
-    });
 }

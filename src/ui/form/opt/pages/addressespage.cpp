@@ -1,12 +1,12 @@
 #include "addressespage.h"
 
 #include <QCheckBox>
+#include <QGroupBox>
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QLabel>
 #include <QPlainTextEdit>
 #include <QPushButton>
-#include <QTabBar>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -15,8 +15,6 @@
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/plaintextedit.h>
-#include <form/controls/textarea2splitter.h>
-#include <form/controls/textarea2splitterhandle.h>
 #include <form/controls/zonesselector.h>
 #include <form/opt/optionscontroller.h>
 #include <fortmanager.h>
@@ -26,244 +24,244 @@
 #include <util/net/netutil.h>
 #include <util/textareautil.h>
 
-#include "addresses/addressescolumn.h"
-
 AddressesPage::AddressesPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {
     setupUi();
 
-    setupZones();
-    setupAddressGroup();
-}
-
-AddressGroup *AddressesPage::addressGroup() const
-{
-    return addressGroupByIndex(addressGroupIndex());
-}
-
-void AddressesPage::setAddressGroupIndex(int v)
-{
-    if (m_addressGroupIndex != v) {
-        m_addressGroupIndex = v;
-        emit addressGroupChanged();
-    }
+    updateUi();
 }
 
 void AddressesPage::onResetToDefault()
 {
+    m_cbFilterLocals->setChecked(false);
+    m_cbFilterLocalNet->setChecked(false);
+
     for (auto addressGroup : addressGroups()) {
         addressGroup->resetToDefault();
     }
 
     conf()->setupDefaultAddressGroups();
 
-    updateGroup();
+    updateUi();
 }
 
 void AddressesPage::onEditResetted()
 {
-    updateGroup();
-}
-
-void AddressesPage::onSaveWindowState(IniUser *ini)
-{
-    ini->setOptWindowAddrSplit(m_splitter->saveState());
-}
-
-void AddressesPage::onRestoreWindowState(IniUser *ini)
-{
-    m_splitter->restoreState(ini->optWindowAddrSplit());
+    updateUi();
 }
 
 void AddressesPage::onRetranslateUi()
 {
-    m_tabBar->setTabText(0, tr("Internet Addresses"));
-    m_tabBar->setTabText(1, tr("Allowed Internet Addresses"));
+    m_gbLan->setTitle(tr("Local Area Network"));
+    m_gbInet->setTitle(tr("Internet"));
 
-    m_includeAddresses->labelTitle()->setText(tr("Include"));
-    m_includeAddresses->cbUseAll()->setText(tr("Include All"));
-    m_includeAddresses->retranslateUi();
+    m_cbFilterLocals->setText(tr("Filter Local Addresses") + " (127.0.0.0/8, 255.255.255.255)");
+    m_cbFilterLocals->setToolTip(
+            tr("Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses"));
+    m_cbFilterLocalNet->setText(tr("Filter Local Network"));
 
-    m_excludeAddresses->labelTitle()->setText(tr("Exclude"));
-    m_excludeAddresses->cbUseAll()->setText(tr("Exclude All"));
-    m_excludeAddresses->retranslateUi();
+    m_labelLanText->setText(tr("Local Network Addresses:"));
+    m_btLanZones->retranslateUi();
+    m_actAddLocalNetworks->setText(tr("Add Local Networks"));
+    retranslateEditLanPlaceholderText();
 
-    auto splitterHandle = m_splitter->handle();
-    splitterHandle->btMoveAllFrom1To2()->setToolTip(tr("Move All Lines to 'Exclude'"));
-    splitterHandle->btMoveAllFrom2To1()->setToolTip(tr("Move All Lines to 'Include'"));
-    splitterHandle->btInterchangeAll()->setToolTip(tr("Interchange All Lines"));
-    splitterHandle->btMoveSelectedFrom1To2()->setToolTip(tr("Move Selected Lines to 'Exclude'"));
-    splitterHandle->btMoveSelectedFrom2To1()->setToolTip(tr("Move Selected Lines to 'Include'"));
-    m_btAddLocals->setToolTip(tr("Add Local Networks"));
-
-    retranslateAddressesPlaceholderText();
+    m_labelBlockInetText->setText(tr("Block Addresses:"));
+    m_btBlockInetZones->retranslateUi();
 }
 
-void AddressesPage::retranslateAddressesPlaceholderText()
+void AddressesPage::retranslateEditLanPlaceholderText()
 {
-    const auto placeholderText = tr("# Examples:") + '\n' + NetUtil::localIpNetworksText();
+    const auto placeholderText = tr("# Examples:") + '\n' + NetUtil::localIpNetworksText(9);
 
-    m_excludeAddresses->editIpText()->setPlaceholderText(placeholderText);
+    m_editLanText->setPlaceholderText(placeholderText);
 }
 
 void AddressesPage::setupUi()
 {
-    // Tab Bar
-    m_tabBar = new QTabBar();
-    m_tabBar->setShape(QTabBar::RoundedNorth);
-    m_tabBar->setExpanding(false);
+    // Column #1
+    auto colLayout1 = setupColumn1();
 
-    m_tabBar->addTab(IconCache::icon(":/icons/global_telecom.png"), QString());
-    m_tabBar->addTab(IconCache::icon(":/icons/ip_block.png"), QString());
+    // Column #2
+    auto colLayout2 = setupColumn2();
 
-    // Address Columns
-    setupAddressColumns();
-
-    setupAddressesUseAllEnabled();
-
-    // Splitter
-    setupSplitter();
-
-    // Splitter Buttons
-    setupSplitterButtons();
-
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_tabBar);
-    layout->addWidget(m_splitter, 1);
+    // Main layout
+    auto layout = new QHBoxLayout();
+    layout->addLayout(colLayout1);
+    layout->addStretch();
+    layout->addLayout(colLayout2);
+    layout->addStretch();
 
     this->setLayout(layout);
 }
 
-void AddressesPage::setupAddressColumns()
+QLayout *AddressesPage::setupColumn1()
 {
-    m_includeAddresses = setupAddressColumn(/*include=*/true);
-    m_excludeAddresses = setupAddressColumn(/*include=*/false);
+    // LAN Group Box
+    setupLanBox();
+
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_gbLan, 1);
+
+    return layout;
 }
 
-AddressesColumn *AddressesPage::setupAddressColumn(bool include)
+QLayout *AddressesPage::setupColumn2()
 {
-    auto addressesColumn = new AddressesColumn();
+    // Block Inet Box
+    setupBlockInetBox();
 
-    connect(addressesColumn->cbUseAll(), &QCheckBox::toggled, this, [=, this](bool checked) {
-        if (include) {
-            addressGroup()->setIncludeAll(checked);
-        } else {
-            addressGroup()->setExcludeAll(checked);
-        }
+    auto layout = new QVBoxLayout();
+    layout->addWidget(m_gbInet, 1);
 
-        checkAddressGroupEdited();
-    });
-    connect(addressesColumn->editIpText(), &QPlainTextEdit::textChanged, this, [=, this] {
-        const auto ipText = addressesColumn->editIpText()->toPlainText();
+    return layout;
+}
 
-        if (include) {
-            addressGroup()->setIncludeText(ipText);
-        } else {
-            addressGroup()->setExcludeText(ipText);
-        }
-
-        checkAddressGroupEdited();
+void AddressesPage::setupLanBox()
+{
+    m_cbFilterLocals = ControlUtil::createCheckBox(false, [&](bool checked) {
+        conf()->setFilterLocals(checked);
+        ctrl()->setFlagsEdited();
     });
 
-    return addressesColumn;
-}
-
-void AddressesPage::setupAddressesUseAllEnabled()
-{
-    const auto refreshUseAllEnabled = [&] {
-        auto cbIncludeAll = m_includeAddresses->cbUseAll();
-        auto cbExcludeAll = m_excludeAddresses->cbUseAll();
-
-        const bool includeAll = cbIncludeAll->isChecked();
-        const bool excludeAll = cbExcludeAll->isChecked();
-
-        cbIncludeAll->setEnabled(includeAll || !excludeAll);
-        cbExcludeAll->setEnabled(!includeAll || excludeAll);
-    };
-
-    refreshUseAllEnabled();
-
-    connect(m_includeAddresses->cbUseAll(), &QCheckBox::toggled, this, refreshUseAllEnabled);
-    connect(m_excludeAddresses->cbUseAll(), &QCheckBox::toggled, this, refreshUseAllEnabled);
-}
-
-void AddressesPage::setupSplitter()
-{
-    m_splitter = new TextArea2Splitter();
-
-    Q_ASSERT(!m_splitter->handle());
-
-    m_splitter->addWidget(m_includeAddresses);
-    m_splitter->addWidget(m_excludeAddresses);
-
-    auto splitterHandle = m_splitter->handle();
-    Q_ASSERT(splitterHandle);
-
-    splitterHandle->setTextArea1(m_includeAddresses->editIpText());
-    splitterHandle->setTextArea2(m_excludeAddresses->editIpText());
-}
-
-void AddressesPage::setupSplitterButtons()
-{
-    m_btAddLocals = ControlUtil::createSplitterButton(":/icons/hostname.png", [&] {
-        auto area = m_splitter->handle()->currentTextArea();
-        TextAreaUtil::appendText(area, NetUtil::localIpNetworksText());
+    m_cbFilterLocalNet = ControlUtil::createCheckBox(false, [&](bool checked) {
+        conf()->setFilterLocalNet(checked);
+        ctrl()->setFlagsEdited();
     });
 
-    const auto layout = m_splitter->handle()->buttonsLayout();
-    layout->addWidget(m_btAddLocals, 0, Qt::AlignHCenter);
+    // LAN Text Header
+    auto lanHeaderLayout = setupLanHeaderLayout();
+
+    // Edit LAN Text
+    setupEditLanText();
+    setupEditLanTextActions();
+
+    // Layout
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_cbFilterLocals, m_cbFilterLocalNet, ControlUtil::createHSeparator() });
+    layout->addLayout(lanHeaderLayout);
+    layout->addWidget(m_editLanText, 1);
+
+    m_gbLan = new QGroupBox();
+    m_gbLan->setLayout(layout);
 }
 
-void AddressesPage::setupZones()
+QLayout *AddressesPage::setupLanHeaderLayout()
 {
-    connect(m_includeAddresses->btSelectZones(), &ZonesSelector::zonesChanged, this, [&] {
-        const quint32 zones = m_includeAddresses->btSelectZones()->zones();
+    // LAN Icon
+    const QSize iconSize(16, 16);
+    m_iconLan = ControlUtil::createIconLabel(":/icons/hostname.png", iconSize);
 
-        addressGroup()->setIncludeZones(zones);
+    // LAN Label
+    m_labelLanText = ControlUtil::createLabel();
 
-        checkAddressGroupEdited();
-    });
+    // Select Zones
+    m_btLanZones = new ZonesSelector();
+    m_btLanZones->setMaxZoneCount(32);
 
-    connect(m_excludeAddresses->btSelectZones(), &ZonesSelector::zonesChanged, this, [&] {
-        const quint32 zones = m_excludeAddresses->btSelectZones()->zones();
-
-        addressGroup()->setExcludeZones(zones);
-
-        checkAddressGroupEdited();
-    });
-}
-
-void AddressesPage::setupAddressGroup()
-{
-    connect(this, &AddressesPage::addressGroupChanged, this, &AddressesPage::updateGroup);
-
-    const auto refreshAddressGroup = [&] {
-        const int tabIndex = m_tabBar->currentIndex();
-        setAddressGroupIndex(tabIndex);
-    };
-
-    refreshAddressGroup();
-
-    connect(m_tabBar, &QTabBar::currentChanged, this, refreshAddressGroup);
-}
-
-void AddressesPage::updateGroup()
-{
-    m_includeAddresses->cbUseAll()->setChecked(addressGroup()->includeAll());
-    m_includeAddresses->editIpText()->setText(addressGroup()->includeText());
-
-    m_excludeAddresses->cbUseAll()->setChecked(addressGroup()->excludeAll());
-    m_excludeAddresses->editIpText()->setText(addressGroup()->excludeText());
-
-    m_includeAddresses->btSelectZones()->setZones(addressGroup()->includeZones());
-    m_excludeAddresses->btSelectZones()->setZones(addressGroup()->excludeZones());
-}
-
-void AddressesPage::checkAddressGroupEdited()
-{
-    if (addressGroup()->edited()) {
+    connect(m_btLanZones, &ZonesSelector::zonesChanged, this, [&] {
+        inetAddressGroup()->setExcludeZones(m_btLanZones->zones());
         ctrl()->setOptEdited();
-    }
+    });
+
+    // Layout
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_iconLan, m_labelLanText, /*stretch*/ nullptr, m_btLanZones });
+
+    return layout;
+}
+
+void AddressesPage::setupEditLanText()
+{
+    m_editLanText = new PlainTextEdit();
+
+    connect(m_editLanText, &QPlainTextEdit::textChanged, this, [&] {
+        const auto text = m_editLanText->toPlainText();
+
+        AddressGroup *inetGroup = inetAddressGroup();
+        if (inetGroup->excludeText() != text) {
+            inetGroup->setExcludeText(text);
+            ctrl()->setOptEdited();
+        }
+    });
+}
+
+void AddressesPage::setupEditLanTextActions()
+{
+    m_actAddLocalNetworks = new QAction(IconCache::icon(":/icons/hostname.png"), QString(), this);
+
+    connect(m_actAddLocalNetworks, &QAction::triggered, this,
+            [&] { TextAreaUtil::appendText(m_editLanText, NetUtil::localIpNetworksText()); });
+
+    m_editLanText->addContextAction(m_actAddLocalNetworks);
+}
+
+void AddressesPage::setupBlockInetBox()
+{
+    // LAN Text Header
+    auto blockInetHeaderLayout = setupBlockInetHeaderLayout();
+
+    // Edit LAN Text
+    setupEditBlockInetText();
+
+    // Layout
+    auto layout = ControlUtil::createVLayout();
+    layout->addLayout(blockInetHeaderLayout);
+    layout->addWidget(m_editBlockInetText, 1);
+
+    m_gbInet = new QGroupBox();
+    m_gbInet->setLayout(layout);
+}
+
+QLayout *AddressesPage::setupBlockInetHeaderLayout()
+{
+    // Block Inet Icon
+    const QSize iconSize(16, 16);
+    m_iconBlockInet = ControlUtil::createIconLabel(":/icons/ip_block.png", iconSize);
+
+    // Block Inet Label
+    m_labelBlockInetText = ControlUtil::createLabel();
+
+    // Select Zones
+    m_btBlockInetZones = new ZonesSelector();
+    m_btBlockInetZones->setMaxZoneCount(32);
+
+    connect(m_btBlockInetZones, &ZonesSelector::zonesChanged, this, [&] {
+        allowAddressGroup()->setExcludeZones(m_btBlockInetZones->zones());
+        ctrl()->setOptEdited();
+    });
+
+    // Layout
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_iconBlockInet, m_labelBlockInetText, /*stretch*/ nullptr, m_btBlockInetZones });
+
+    return layout;
+}
+
+void AddressesPage::setupEditBlockInetText()
+{
+    m_editBlockInetText = new PlainTextEdit();
+
+    connect(m_editBlockInetText, &QPlainTextEdit::textChanged, this, [&] {
+        const auto text = m_editBlockInetText->toPlainText();
+
+        AddressGroup *allowGroup = allowAddressGroup();
+        if (allowGroup->excludeText() != text) {
+            allowGroup->setExcludeText(text);
+            ctrl()->setOptEdited();
+        }
+    });
+}
+
+void AddressesPage::updateUi()
+{
+    m_cbFilterLocals->setChecked(conf()->filterLocals());
+    m_cbFilterLocalNet->setChecked(conf()->filterLocalNet());
+
+    m_btLanZones->setZones(inetAddressGroup()->excludeZones());
+    m_editLanText->setPlainText(inetAddressGroup()->excludeText());
+
+    m_btBlockInetZones->setZones(allowAddressGroup()->excludeZones());
+    m_editBlockInetText->setPlainText(allowAddressGroup()->excludeText());
 }
 
 const QList<AddressGroup *> &AddressesPage::addressGroups() const
@@ -271,7 +269,12 @@ const QList<AddressGroup *> &AddressesPage::addressGroups() const
     return conf()->addressGroups();
 }
 
-AddressGroup *AddressesPage::addressGroupByIndex(int index) const
+AddressGroup *AddressesPage::inetAddressGroup() const
 {
-    return addressGroups().at(index);
+    return addressGroups().first();
+}
+
+AddressGroup *AddressesPage::allowAddressGroup() const
+{
+    return addressGroups().at(1);
 }

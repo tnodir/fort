@@ -165,39 +165,6 @@ bool FirewallConf::checkDeprecatedAppGroups() const
     return true;
 }
 
-bool FirewallConf::checkDeprecatedAddressGroups() const
-{
-    // Internet Addresses
-    {
-        auto ag = inetAddressGroup();
-
-        if (!ag->includeAll() || ag->excludeAll())
-            return false;
-
-        if (!ag->includeText().isEmpty())
-            return false;
-
-        if (ag->includeZones() != 0)
-            return false;
-    }
-
-    // Allowed Internet Addresses
-    {
-        auto ag = addressGroups().at(1);
-
-        if (!ag->includeAll() || ag->excludeAll())
-            return false;
-
-        if (!(ag->includeText().isEmpty() && ag->excludeText().isEmpty()))
-            return false;
-
-        if (ag->includeZones() != 0 || ag->excludeZones() != 0)
-            return false;
-    }
-
-    return true;
-}
-
 void FirewallConf::addAppGroup(AppGroup *appGroup)
 {
     appGroup->setParent(this);
