@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.15.9, 2025-02-01:
+- UI: Options: Rework "IP Addresses" tab.
+- UI: Add "Options" button to windows.
+
 v3.15.8, 2025-01-29:
 - UI: Options: Add "Stealth mode" to prevent port scanning.
 - UI: Add "filter", "filter-mode" command-line arguments.
