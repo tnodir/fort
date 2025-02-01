@@ -1,5 +1,6 @@
 #include "addressespage.h"
 
+#include <QAction>
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QHBoxLayout>
