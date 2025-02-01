@@ -31,56 +31,40 @@
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Internet Addresses</source>
-        <translation>Adresy internetowe</translation>
-    </message>
-    <message>
-        <source>Allowed Internet Addresses</source>
-        <translation>Dozwolone adresy internetowe</translation>
-    </message>
-    <message>
-        <source>Include</source>
-        <translation>Uwzględnij</translation>
-    </message>
-    <message>
-        <source>Include All</source>
-        <translation>Uwzględnij wszystkie</translation>
-    </message>
-    <message>
-        <source>Exclude</source>
-        <translation>Wyklucz</translation>
-    </message>
-    <message>
-        <source>Exclude All</source>
-        <translation>Wyklucz wszystkie</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation>Przenieś wszystkie wiersze do &apos;Wyklucz&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>Przenieś wszystkie wiersze do &apos;Uwzględnij&apos;</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Wymień wszystkie wiersze</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation>Przenieś zaznaczone wiersze do &apos;Wyklucz&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation>Przenieś zaznaczone wiersze do &apos;Uwzględnij&apos;</translation>
-    </message>
-    <message>
         <source>Add Local Networks</source>
         <translation>Dodaj sieci lokalne</translation>
     </message>
     <message>
         <source># Examples:</source>
         <translation># Przykłady:</translation>
+    </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation>Sieć lokalna</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Local Addresses</source>
+        <translation>Filtrowanie adresów lokalnych</translation>
+    </message>
+    <message>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation>Filtrowanie lokalnych pętli zwrotnej (127.0.0.0/8) i rozgłoszeniowe (255.255.255.255)</translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation>Filtruj sieć lokalną</translation>
+    </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Addresses:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1156,14 +1140,6 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Włączone filtry</translation>
     </message>
     <message>
-        <source>Filter Local Addresses</source>
-        <translation>Filtrowanie adresów lokalnych</translation>
-    </message>
-    <message>
-        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>Filtrowanie lokalnych pętli zwrotnej (127.0.0.0/8) i rozgłoszeniowe (255.255.255.255)</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>Hasło:</translation>
     </message>
@@ -1228,14 +1204,6 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation>Blokuj ruch:</translation>
     </message>
     <message>
-        <source>Local Area Network</source>
-        <translation>Sieć lokalna</translation>
-    </message>
-    <message>
-        <source>Filter Local Network</source>
-        <translation>Filtruj sieć lokalną</translation>
-    </message>
-    <message>
         <source>Auto Update</source>
         <translation>Automatyczna aktualizacja</translation>
     </message>
@@ -1254,18 +1222,6 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     <message>
         <source>Auto-install after download</source>
         <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Local Network Addresses:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Add Local Networks</source>
-        <translation>Dodaj sieci lokalne</translation>
-    </message>
-    <message>
-        <source># Examples:</source>
-        <translation># Przykłady:</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
@@ -1289,14 +1245,6 @@ Do you want to open a discussion thread in browser?</source>
 (Są one teraz tylko do odczytu i zostaną usunięte w v4.)
 
 Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
-    </message>
-    <message>
-        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

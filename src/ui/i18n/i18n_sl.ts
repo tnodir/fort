@@ -31,56 +31,40 @@
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Internet Addresses</source>
-        <translation>Internetni naslovi</translation>
-    </message>
-    <message>
-        <source>Allowed Internet Addresses</source>
-        <translation>Dovoljeni internetni naslovi</translation>
-    </message>
-    <message>
-        <source>Include</source>
-        <translation>Vključi</translation>
-    </message>
-    <message>
-        <source>Include All</source>
-        <translation>Vključi vse</translation>
-    </message>
-    <message>
-        <source>Exclude</source>
-        <translation>Izključi</translation>
-    </message>
-    <message>
-        <source>Exclude All</source>
-        <translation>Izključi vse</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation>Premakni vse vrstice v &apos;Izključi&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>Premakni vse vrstice v &apos;Vključi&apos;</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Zamenjaj vse vrstice</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation>Premakni izbrane vrstice v &apos;Izključi&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation>Premakni izbrane vrstice v &apos;Vključi&apos;</translation>
-    </message>
-    <message>
         <source>Add Local Networks</source>
         <translation>Dodaj lokalna omrežja</translation>
     </message>
     <message>
         <source># Examples:</source>
         <translation>#Primeri:</translation>
+    </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation>Lokalno omrežje</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Internet</translation>
+    </message>
+    <message>
+        <source>Filter Local Addresses</source>
+        <translation>Filtriraj lokalne naslove</translation>
+    </message>
+    <message>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation>Filtriraj naslove lokalne povratne zanke (127.0.0.0/8) in oddajne (255.255.255.255) naslove</translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation>Filtriraj lokalno omrežje</translation>
+    </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>Naslovi lokalnega omrežja:</translation>
+    </message>
+    <message>
+        <source>Block Addresses:</source>
+        <translation>Blokiraj naslove:</translation>
     </message>
 </context>
 <context>
@@ -1156,14 +1140,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Filter je omogočen</translation>
     </message>
     <message>
-        <source>Filter Local Addresses</source>
-        <translation>Filtriraj lokalne naslove</translation>
-    </message>
-    <message>
-        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>Filtriraj naslove lokalne povratne zanke (127.0.0.0/8) in oddajne (255.255.255.255) naslove</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>Geslo:</translation>
     </message>
@@ -1228,14 +1204,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Blokiraj promet:</translation>
     </message>
     <message>
-        <source>Local Area Network</source>
-        <translation>Lokalno omrežje</translation>
-    </message>
-    <message>
-        <source>Filter Local Network</source>
-        <translation>Filtriraj lokalno omrežje</translation>
-    </message>
-    <message>
         <source>Auto Update</source>
         <translation>Samodejna posodobitev</translation>
     </message>
@@ -1254,18 +1222,6 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Auto-install after download</source>
         <translation>Samodejna namestitev po prenosu</translation>
-    </message>
-    <message>
-        <source>Local Network Addresses:</source>
-        <translation>Naslovi lokalnega omrežja:</translation>
-    </message>
-    <message>
-        <source>Add Local Networks</source>
-        <translation>Dodaj lokalna omrežja</translation>
-    </message>
-    <message>
-        <source># Examples:</source>
-        <translation>#Primeri:</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
@@ -1287,18 +1243,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>Premaknite besedila polj Dovoli/Onemogoči iz skupin aplikacij v Nadomestni znaki programov!!!
 
 (Zdaj so samo za branje in bodo odstranjena v različici 4.)
-
-Ali želite odpreti nit razprave v brskalniku?</translation>
-    </message>
-    <message>
-        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>Prosimo premaknite nastavitve &apos;IP naslovov&apos; polja v Globalna pravila!!!
-
-(Zdaj so samo za branje in bodo odstranjeni v različici 4.)
 
 Ali želite odpreti nit razprave v brskalniku?</translation>
     </message>

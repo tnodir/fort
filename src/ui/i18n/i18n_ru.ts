@@ -31,56 +31,40 @@
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Internet Addresses</source>
-        <translation>Адреса Интернета</translation>
-    </message>
-    <message>
-        <source>Allowed Internet Addresses</source>
-        <translation>Разрешённые адреса Интернета</translation>
-    </message>
-    <message>
-        <source>Include</source>
-        <translation>Включить</translation>
-    </message>
-    <message>
-        <source>Include All</source>
-        <translation>Включить все</translation>
-    </message>
-    <message>
-        <source>Exclude</source>
-        <translation>Исключить</translation>
-    </message>
-    <message>
-        <source>Exclude All</source>
-        <translation>Исключить все</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation>Перенести все строки в &apos;Исключить&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>Перенести все строки во &apos;Включить&apos;</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>Обменять все строки</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation>Перенести выделенные строки в &apos;Исключить&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation>Перенести выделенные строки во &apos;Включить&apos;</translation>
-    </message>
-    <message>
         <source>Add Local Networks</source>
         <translation>Добавить локальные сети</translation>
     </message>
     <message>
         <source># Examples:</source>
         <translation># Примеры:</translation>
+    </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation>Локальная сеть</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>Интернет</translation>
+    </message>
+    <message>
+        <source>Filter Local Addresses</source>
+        <translation>Фильтр локальных адресов</translation>
+    </message>
+    <message>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation>Фильтр локальных Loopback (127.0.0.0/8) и Broadcast (255.255.255.255) адресов</translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation>Фильтр локальной сети</translation>
+    </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>Адреса локальной сети:</translation>
+    </message>
+    <message>
+        <source>Block Addresses:</source>
+        <translation>Блокировать адреса:</translation>
     </message>
 </context>
 <context>
@@ -1156,14 +1140,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Фильтр включен</translation>
     </message>
     <message>
-        <source>Filter Local Addresses</source>
-        <translation>Фильтр локальных адресов</translation>
-    </message>
-    <message>
-        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>Фильтр локальных Loopback (127.0.0.0/8) и Broadcast (255.255.255.255) адресов</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>Пароль:</translation>
     </message>
@@ -1228,14 +1204,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Блокировка трафика:</translation>
     </message>
     <message>
-        <source>Local Area Network</source>
-        <translation>Локальная сеть</translation>
-    </message>
-    <message>
-        <source>Filter Local Network</source>
-        <translation>Фильтр локальной сети</translation>
-    </message>
-    <message>
         <source>Auto Update</source>
         <translation>Авто-обновление</translation>
     </message>
@@ -1256,18 +1224,6 @@ Make sure that you have a fresh backup.</source>
         <translation>Авто-установка после скачивания</translation>
     </message>
     <message>
-        <source>Local Network Addresses:</source>
-        <translation>Адреса локальной сети:</translation>
-    </message>
-    <message>
-        <source>Add Local Networks</source>
-        <translation>Добавить локальные сети</translation>
-    </message>
-    <message>
-        <source># Examples:</source>
-        <translation># Примеры:</translation>
-    </message>
-    <message>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Скрытый режим (запрет сканирования портов)</translation>
     </message>
@@ -1285,18 +1241,6 @@ Make sure that you have a fresh backup.</source>
 
 Do you want to open a discussion thread in browser?</source>
         <translation>Пожалуйста, переместите тексты полей Разрешить/Блокировать из Групп приложений в Программы с подстановочными знаками!!!
-
-(Сейчас они доступны только для чтения и будут удалены в версии 4.)
-
-Хотите открыть ветку обсуждения в браузере?</translation>
-    </message>
-    <message>
-        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>Пожалуйста, переместите настройки из вкладки &quot;IP Адреса&quot; в Глобальные Правила!!!
 
 (Сейчас они доступны только для чтения и будут удалены в версии 4.)
 

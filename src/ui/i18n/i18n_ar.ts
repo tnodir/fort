@@ -31,56 +31,40 @@
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Internet Addresses</source>
-        <translation>عناوين الإنترنت</translation>
-    </message>
-    <message>
-        <source>Allowed Internet Addresses</source>
-        <translation>عناوين الإنترنت المسموح لها</translation>
-    </message>
-    <message>
-        <source>Include</source>
-        <translation>التضمين</translation>
-    </message>
-    <message>
-        <source>Include All</source>
-        <translation>تضمين الكل</translation>
-    </message>
-    <message>
-        <source>Exclude</source>
-        <translation>الاستثناء</translation>
-    </message>
-    <message>
-        <source>Exclude All</source>
-        <translation>استثناء الكل</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation>نقل كل العناصر إلى &apos;الاستثناء&apos;</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>نقل كل العناصر إلى &apos;التضمين&apos;</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>تبديل كل العناصر</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation>نقل العناصر المحددة إلى &apos;الاسثناء&apos;</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation>نقل العناصر المحددة إلى &apos;التضمين&apos;</translation>
-    </message>
-    <message>
         <source>Add Local Networks</source>
         <translation>إضافة شبكة محلية</translation>
     </message>
     <message>
         <source># Examples:</source>
         <translation># أمثلة:</translation>
+    </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation>شبكة المنطقة المحلية</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Local Addresses</source>
+        <translation>تفعيل المرشّح للعناوين المحلية</translation>
+    </message>
+    <message>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation>ترشيح العنوان الداخلي (127.0.0.0/8) و عناوين البث (255.255.255.255)</translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation>تصفية الشبكة المحلية</translation>
+    </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>عناوين الشبكة المحلية:</translation>
+    </message>
+    <message>
+        <source>Block Addresses:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1156,14 +1140,6 @@ Make sure that you have a fresh backup.</source>
         <translation>تفعيل المرشّح</translation>
     </message>
     <message>
-        <source>Filter Local Addresses</source>
-        <translation>تفعيل المرشّح للعناوين المحلية</translation>
-    </message>
-    <message>
-        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>ترشيح العنوان الداخلي (127.0.0.0/8) و عناوين البث (255.255.255.255)</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>كلمة المرور:</translation>
     </message>
@@ -1228,14 +1204,6 @@ Make sure that you have a fresh backup.</source>
         <translation>منع حركة المرور:</translation>
     </message>
     <message>
-        <source>Local Area Network</source>
-        <translation>شبكة المنطقة المحلية</translation>
-    </message>
-    <message>
-        <source>Filter Local Network</source>
-        <translation>تصفية الشبكة المحلية</translation>
-    </message>
-    <message>
         <source>Auto Update</source>
         <translation>تحديث تلقائي</translation>
     </message>
@@ -1254,18 +1222,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Auto-install after download</source>
         <translation>تثبيت تلقائي بعد التنزيل</translation>
-    </message>
-    <message>
-        <source>Local Network Addresses:</source>
-        <translation>عناوين الشبكة المحلية:</translation>
-    </message>
-    <message>
-        <source>Add Local Networks</source>
-        <translation>إضافة شبكة محلية</translation>
-    </message>
-    <message>
-        <source># Examples:</source>
-        <translation># أمثلة:</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
@@ -1289,18 +1245,6 @@ Do you want to open a discussion thread in browser?</source>
             (هذه القيم للفراءة فقط وسيتم إزالتها عند الإصدار v4.0)
 
             هل تريد فتح discussion thread في متصفح الإنترنت؟</translation>
-    </message>
-    <message>
-        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>الرجاء نقل إعدادات &apos;عناوين IP&apos; الحقول إلى القواعد العامة!!!
-
-(هي فقط للقراءة الآن وسيتم إزالتها في الإصدار 4)
-
-هل تريد فتح موضوع مناقشة في المتصفح؟</translation>
     </message>
 </context>
 <context>

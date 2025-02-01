@@ -31,56 +31,40 @@
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Internet Addresses</source>
-        <translation>인터넷 주소</translation>
-    </message>
-    <message>
-        <source>Allowed Internet Addresses</source>
-        <translation>허용된 인터넷 주소</translation>
-    </message>
-    <message>
-        <source>Include</source>
-        <translation>포함</translation>
-    </message>
-    <message>
-        <source>Include All</source>
-        <translation>모두 포함</translation>
-    </message>
-    <message>
-        <source>Exclude</source>
-        <translation>제외</translation>
-    </message>
-    <message>
-        <source>Exclude All</source>
-        <translation>모두 제외</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation>모든 라인을 &apos;제외&apos;로 이동</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>모든 라인을 &apos;포함&apos;으로 이동</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>모든 라인 교환</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation>선택한 라인을 &apos;제외&apos;로 이동</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation>선택한 라인을 &apos;포함&apos;으로 이동</translation>
-    </message>
-    <message>
         <source>Add Local Networks</source>
         <translation>로컬 네트워크 추가</translation>
     </message>
     <message>
         <source># Examples:</source>
         <translation># 예제:</translation>
+    </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation>로컬 영역 네트워크</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation>인터넷</translation>
+    </message>
+    <message>
+        <source>Filter Local Addresses</source>
+        <translation>로컬 주소 필터링</translation>
+    </message>
+    <message>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation>로컬 루프백 필터링 (127.0.0.0/8) 및 브로드캐스트 (255.255.255.255) 주소</translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation>로컬 네트워크 필터링</translation>
+    </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>로컬 네트워크 주소:</translation>
+    </message>
+    <message>
+        <source>Block Addresses:</source>
+        <translation>차단 주소:</translation>
     </message>
 </context>
 <context>
@@ -1156,14 +1140,6 @@ Make sure that you have a fresh backup.</source>
         <translation>필터링 활성화됨</translation>
     </message>
     <message>
-        <source>Filter Local Addresses</source>
-        <translation>로컬 주소 필터링</translation>
-    </message>
-    <message>
-        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>로컬 루프백 필터링 (127.0.0.0/8) 및 브로드캐스트 (255.255.255.255) 주소</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>암호:</translation>
     </message>
@@ -1228,14 +1204,6 @@ Make sure that you have a fresh backup.</source>
         <translation>트래픽 차단:</translation>
     </message>
     <message>
-        <source>Local Area Network</source>
-        <translation>로컬 영역 네트워크</translation>
-    </message>
-    <message>
-        <source>Filter Local Network</source>
-        <translation>로컬 네트워크 필터링</translation>
-    </message>
-    <message>
         <source>Auto Update</source>
         <translation>자동 업데이트</translation>
     </message>
@@ -1254,18 +1222,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Auto-install after download</source>
         <translation>다운로드 후 자동 설치</translation>
-    </message>
-    <message>
-        <source>Local Network Addresses:</source>
-        <translation>로컬 네트워크 주소:</translation>
-    </message>
-    <message>
-        <source>Add Local Networks</source>
-        <translation>로컬 네트워크 추가</translation>
-    </message>
-    <message>
-        <source># Examples:</source>
-        <translation># 예제:</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
@@ -1289,18 +1245,6 @@ Do you want to open a discussion thread in browser?</source>
 (현재 읽기 전용이며 v4에서 제거됩니다.)
 
 브라우저에서 토론 스레드를 열고 싶습니까?</translation>
-    </message>
-    <message>
-        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>&apos;IP 주소&amp;apos&apos; 필드의 설정을 전역 규칙으로 이동하세요!!!
-
-(현재는 읽기 전용이며 v4에서 제거될 예정입니다.)
-
-브라우저에서 토론 스레드를 열고 싶으신가요?</translation>
     </message>
 </context>
 <context>

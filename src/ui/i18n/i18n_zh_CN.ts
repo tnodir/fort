@@ -31,56 +31,40 @@
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Internet Addresses</source>
-        <translation>互联网地址</translation>
-    </message>
-    <message>
-        <source>Allowed Internet Addresses</source>
-        <translation>允许的互联网地址</translation>
-    </message>
-    <message>
-        <source>Include</source>
-        <translation>包含</translation>
-    </message>
-    <message>
-        <source>Include All</source>
-        <translation>包含全部</translation>
-    </message>
-    <message>
-        <source>Exclude</source>
-        <translation>不包含</translation>
-    </message>
-    <message>
-        <source>Exclude All</source>
-        <translation>排除全部</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation>移动所有行到“排除”</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Include&apos;</source>
-        <translation>移动所有行到“包含”</translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation>交换所有行</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation>移动选中的行到“排除”</translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation>移动选中的行到“包含”</translation>
-    </message>
-    <message>
         <source>Add Local Networks</source>
         <translation>添加本地网络</translation>
     </message>
     <message>
         <source># Examples:</source>
         <translation># 示例：</translation>
+    </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation>局域网</translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Local Addresses</source>
+        <translation>过滤本地地址</translation>
+    </message>
+    <message>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation>过滤本地回环（127.0.0.0/8）和广播（255.255.255.255）地址</translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation>过滤本地网络</translation>
+    </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation>本地网络地址：</translation>
+    </message>
+    <message>
+        <source>Block Addresses:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1156,14 +1140,6 @@ Make sure that you have a fresh backup.</source>
         <translation>过滤器已启用</translation>
     </message>
     <message>
-        <source>Filter Local Addresses</source>
-        <translation>过滤本地地址</translation>
-    </message>
-    <message>
-        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation>过滤本地回环（127.0.0.0/8）和广播（255.255.255.255）地址</translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation>密码：</translation>
     </message>
@@ -1228,14 +1204,6 @@ Make sure that you have a fresh backup.</source>
         <translation>阻止流量：</translation>
     </message>
     <message>
-        <source>Local Area Network</source>
-        <translation>局域网</translation>
-    </message>
-    <message>
-        <source>Filter Local Network</source>
-        <translation>过滤本地网络</translation>
-    </message>
-    <message>
         <source>Auto Update</source>
         <translation>自动更新</translation>
     </message>
@@ -1254,18 +1222,6 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Auto-install after download</source>
         <translation>下载后自动安装</translation>
-    </message>
-    <message>
-        <source>Local Network Addresses:</source>
-        <translation>本地网络地址：</translation>
-    </message>
-    <message>
-        <source>Add Local Networks</source>
-        <translation>添加本地网络</translation>
-    </message>
-    <message>
-        <source># Examples:</source>
-        <translation># 示例：</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
@@ -1287,18 +1243,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>请将【允许/阻止】字段的文本从【应用程序组】移至【通配符程序】！！！
 
 （它们现在是只读的，将在 v4 版本中被删除。）
-
-您想在浏览器中打开一个讨论主题吗？</translation>
-    </message>
-    <message>
-        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation>请将 IP 地址字段的设置移至 “全局规则”！！！
-
-（它们现在是只读的，将在 v4 中移除）。
 
 您想在浏览器中打开一个讨论主题吗？</translation>
     </message>

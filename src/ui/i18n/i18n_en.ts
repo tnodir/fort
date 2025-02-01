@@ -31,55 +31,39 @@
 <context>
     <name>AddressesPage</name>
     <message>
-        <source>Internet Addresses</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Allowed Internet Addresses</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Include</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Include All</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Exclude</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Exclude All</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Exclude&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Include&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Interchange All Lines</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Exclude&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Move Selected Lines to &apos;Include&apos;</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Add Local Networks</source>
         <translation></translation>
     </message>
     <message>
         <source># Examples:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Local Area Network</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Internet</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter Local Addresses</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter Local Network</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Local Network Addresses:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Block Addresses:</source>
         <translation></translation>
     </message>
 </context>
@@ -1154,14 +1138,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Filter Local Addresses</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Filter Local Loopback (127.0.0.0/8) and Broadcast (255.255.255.255) Addresses</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Password:</source>
         <translation></translation>
     </message>
@@ -1226,14 +1202,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Local Area Network</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Filter Local Network</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Auto Update</source>
         <translation></translation>
     </message>
@@ -1254,18 +1222,6 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Local Network Addresses:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Add Local Networks</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source># Examples:</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation></translation>
     </message>
@@ -1278,14 +1234,6 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!
-
-(They are read-only now and will be removed in v4.)
-
-Do you want to open a discussion thread in browser?</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Please move settings of &apos;IP Addresses&apos; fields to Global Rules!!!
 
 (They are read-only now and will be removed in v4.)
 
