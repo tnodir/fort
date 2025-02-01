@@ -9,7 +9,6 @@ QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QTimer)
 
-class ClickableMenu;
 class ConfAppManager;
 class ConfManager;
 class DriverManager;
@@ -56,6 +55,7 @@ public:
     QString iconPath() const { return m_iconPath; }
 
     QMenu *menu() const { return m_menu; }
+    QMenu *optionsMenu() const { return m_optionsMenu; }
 
     TrayController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
@@ -168,10 +168,12 @@ private:
     QAction *m_homeAction = nullptr;
     QAction *m_programsAction = nullptr;
     QAction *m_programsOrAlertAction = nullptr;
-    ClickableMenu *m_optionsMenu = nullptr;
+    QMenu *m_optionsMenu = nullptr;
     QAction *m_optionsAction = nullptr;
     QAction *m_rulesAction = nullptr;
     QAction *m_zonesAction = nullptr;
+    QAction *m_groupsAction = nullptr;
+    QAction *m_servicesAction = nullptr;
     QAction *m_statisticsAction = nullptr;
     QAction *m_graphAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;

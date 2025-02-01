@@ -12,6 +12,7 @@ class SplashScreen : public QSplashScreen
 public:
     explicit SplashScreen();
 
+    static QLayout *createLogoLayout();
     static QLabel *createLogoIcon();
     static QLayout *createLogoTextLayout();
 

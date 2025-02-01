@@ -41,6 +41,7 @@ private:
 
     void setupUi();
     QWidget *setupHeader();
+    void setupHeaderButtons();
     void setupPasswordButtons();
     QLayout *setupDialogButtons();
 
@@ -50,6 +51,7 @@ private:
     HomeMainPage *m_mainPage = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
     QToolButton *m_btPasswordUnlock = nullptr;
+    QToolButton *m_btOptions = nullptr;
     QPushButton *m_btMenu = nullptr;
 
     QToolButton *m_btProfile = nullptr;

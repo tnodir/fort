@@ -10,6 +10,8 @@ const char *const list[] = {
     options,
     rules,
     zones,
+    groups,
+    services,
     statistics,
     graph,
     filter,

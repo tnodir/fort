@@ -53,6 +53,7 @@ SOURCES += \
     form/controls/mainwindow.cpp \
     form/controls/menubutton.cpp \
     form/controls/menuwidget.cpp \
+    form/controls/optionsbutton.cpp \
     form/controls/plaintextedit.cpp \
     form/controls/sidebutton.cpp \
     form/controls/spinbox.cpp \
@@ -292,6 +293,7 @@ HEADERS += \
     form/controls/mainwindow.h \
     form/controls/menubutton.h \
     form/controls/menuwidget.h \
+    form/controls/optionsbutton.h \
     form/controls/plaintextedit.h \
     form/controls/sidebutton.h \
     form/controls/spinbox.h \

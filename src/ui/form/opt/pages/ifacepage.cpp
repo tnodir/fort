@@ -196,8 +196,9 @@ void IfacePage::retranslateComboHotKey()
 {
     // Sync with TrayIcon::retranslateUi() & HotKey::list[]
     QStringList list = { TrayIcon::tr("My Fort"), TrayIcon::tr("Programs"), TrayIcon::tr("Options"),
-        TrayIcon::tr("Rules"), TrayIcon::tr("Zones"), TrayIcon::tr("Statistics"),
-        TrayIcon::tr("Traffic Graph"), TrayIcon::tr("Filter Enabled") };
+        TrayIcon::tr("Rules"), TrayIcon::tr("Zones"), TrayIcon::tr("Groups"),
+        TrayIcon::tr("Services"), TrayIcon::tr("Statistics"), TrayIcon::tr("Traffic Graph"),
+        TrayIcon::tr("Filter Enabled") };
 
     const auto blockTraffic = tr("Block Traffic:");
     for (const auto &name : FirewallConf::blockTrafficNames()) {

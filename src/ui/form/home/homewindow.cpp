@@ -155,32 +155,37 @@ QWidget *HomeWindow::setupHeader()
     frame->setAutoFillBackground(true);
     frame->setPalette(palette);
 
-    // Logo icon
-    auto logoIcon = SplashScreen::createLogoIcon();
+    // Logo Layout
+    auto logoLayout = SplashScreen::createLogoLayout();
 
-    // Logo text
-    auto logoText = SplashScreen::createLogoTextLayout();
-
-    // Password Unlock button
-    setupPasswordButtons();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
+    // Buttons
+    setupHeaderButtons();
 
     auto layout = new QHBoxLayout();
-    layout->setContentsMargins(16, 6, 6, 6);
-    layout->setSpacing(10);
+    layout->setContentsMargins(10, 0, 6, 0);
 
-    layout->addWidget(logoIcon);
-    layout->addLayout(logoText);
+    layout->addLayout(logoLayout);
     layout->addStretch();
     layout->addWidget(m_btPasswordLock);
     layout->addWidget(m_btPasswordUnlock);
+    layout->addWidget(m_btOptions);
     layout->addWidget(m_btMenu);
 
     frame->setLayout(layout);
 
     return frame;
+}
+
+void HomeWindow::setupHeaderButtons()
+{
+    // Password Unlock button
+    setupPasswordButtons();
+
+    // Options button
+    m_btOptions = ControlUtil::createOptionsButton();
+
+    // Menu button
+    m_btMenu = ControlUtil::createMenuButton();
 }
 
 void HomeWindow::setupPasswordButtons()

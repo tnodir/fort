@@ -20,6 +20,7 @@
 #include "lineedit.h"
 #include "menubutton.h"
 #include "menuwidget.h"
+#include "optionsbutton.h"
 #include "sidebutton.h"
 #include "spinbox.h"
 
@@ -439,4 +440,9 @@ QLabel *ControlUtil::formRowLabel(QFormLayout *formLayout, QLayout *field)
 QPushButton *ControlUtil::createMenuButton()
 {
     return new MenuButton();
+}
+
+QToolButton *ControlUtil::createOptionsButton(int tabIndex)
+{
+    return new OptionsButton(tabIndex);
 }

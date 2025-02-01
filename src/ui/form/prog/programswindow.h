@@ -125,8 +125,7 @@ private:
     QToolButton *m_btSortAllowed = nullptr;
     QToolButton *m_btSortBlocked = nullptr;
     QToolButton *m_btSortAlerted = nullptr;
-    QToolButton *m_btGroups = nullptr;
-    QToolButton *m_btServices = nullptr;
+    QToolButton *m_btOptions = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_appListView = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;

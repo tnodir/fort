@@ -31,8 +31,6 @@ void StatMainPage::onRetranslateUi()
 {
     m_tabWidget->setTabText(0, tr("Traffic"));
     m_tabWidget->setTabText(1, tr("Blocked Connections"));
-
-    m_btOptions->setText(tr("Options"));
 }
 
 void StatMainPage::setupUi()
@@ -71,17 +69,12 @@ void StatMainPage::setupCornerWidget()
 QLayout *StatMainPage::setupCornerLayout()
 {
     // Options button
-    m_btOptions = ControlUtil::createFlatToolButton(":/icons/cog.png");
-
-    connect(m_btOptions, &QAbstractButton::clicked, windowManager(),
-            &WindowManager::showStatOptionsWindow);
+    m_btOptions = ControlUtil::createOptionsButton(4);
 
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btOptions, ControlUtil::createVSeparator(), m_btMenu });
-    layout->setContentsMargins(0, 0, 0, 0);
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btOptions, m_btMenu }, /*margin=*/0);
 
     return layout;
 }

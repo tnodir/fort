@@ -81,6 +81,18 @@ void SplashScreen::setupUi()
 
 QLayout *SplashScreen::setupMainLayout()
 {
+    auto logoLayout = createLogoLayout();
+
+    auto layout = ControlUtil::createHLayout();
+    layout->addStretch();
+    layout->addLayout(logoLayout);
+    layout->addStretch();
+
+    return layout;
+}
+
+QLayout *SplashScreen::createLogoLayout()
+{
     // Logo image
     auto logoIcon = createLogoIcon();
 
@@ -90,10 +102,8 @@ QLayout *SplashScreen::setupMainLayout()
     auto layout = ControlUtil::createHLayout(/*margin=*/6);
     layout->setSpacing(10);
 
-    layout->addStretch();
     layout->addWidget(logoIcon);
     layout->addLayout(logoText);
-    layout->addStretch();
 
     return layout;
 }

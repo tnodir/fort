@@ -490,11 +490,6 @@ void WindowManager::showAppGroupsWindow()
     showOptionsWindowTab(3);
 }
 
-void WindowManager::showStatOptionsWindow()
-{
-    showOptionsWindowTab(4);
-}
-
 void WindowManager::showServicesWindow()
 {
     if (!checkWindowPassword(WindowServices))

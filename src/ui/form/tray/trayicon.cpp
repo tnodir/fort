@@ -383,6 +383,8 @@ void TrayIcon::retranslateUi()
     m_optionsAction->setText(tr("Options"));
     m_rulesAction->setText(tr("Rules"));
     m_zonesAction->setText(tr("Zones"));
+    m_groupsAction->setText(tr("Groups"));
+    m_servicesAction->setText(tr("Services"));
     m_statisticsAction->setText(tr("Statistics"));
     m_graphAction->setText(tr("Traffic Graph"));
 
@@ -503,14 +505,12 @@ void TrayIcon::setupTrayMenu()
 
 void TrayIcon::setupTrayMenuOptions()
 {
-    m_optionsMenu = new ClickableMenu(m_menu);
+    m_optionsMenu = new QMenu(m_menu);
     m_optionsMenu->setIcon(IconCache::icon(":/icons/cog.png"));
 
     m_optionsAction =
             addAction(m_optionsMenu, ":/icons/cog.png", windowManager(), SLOT(showOptionsWindow()));
     addHotKey(m_optionsAction, HotKey::options);
-
-    connect(m_optionsMenu, &ClickableMenu::clicked, m_optionsAction, &QAction::trigger);
 
     m_rulesAction = addAction(
             m_optionsMenu, ":/icons/script.png", windowManager(), SLOT(showRulesWindow()));
@@ -519,6 +519,18 @@ void TrayIcon::setupTrayMenuOptions()
     m_zonesAction = addAction(
             m_optionsMenu, ":/icons/ip_class.png", windowManager(), SLOT(showZonesWindow()));
     addHotKey(m_zonesAction, HotKey::zones);
+
+    m_optionsMenu->addSeparator();
+
+    m_groupsAction = addAction(m_optionsMenu, ":/icons/application_double.png", windowManager(),
+            SLOT(showAppGroupsWindow()));
+    addHotKey(m_groupsAction, HotKey::groups);
+
+    m_servicesAction = addAction(
+            m_optionsMenu, ":/icons/windows-48.png", windowManager(), SLOT(showServicesWindow()));
+    addHotKey(m_servicesAction, HotKey::services);
+
+    m_servicesAction->setEnabled(settings()->hasMasterAdmin());
 }
 
 void TrayIcon::setupTrayMenuBlockTraffic()

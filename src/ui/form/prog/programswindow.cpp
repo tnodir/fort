@@ -169,9 +169,6 @@ void ProgramsWindow::retranslateUi()
     m_cbFilterParked->setText(tr("Parked"));
     m_cbFilterKillProcess->setText(tr("Kill Process"));
 
-    m_btGroups->setToolTip(tr("Groups"));
-    m_btServices->setToolTip(tr("Services"));
-
     appListModel()->refresh();
 
     m_appInfoRow->retranslateUi();
@@ -237,18 +234,8 @@ QLayout *ProgramsWindow::setupHeader()
     auto sortStatesLayout = setupSortStatesLayout();
     updateSortStateCounts();
 
-    // Groups button
-    m_btGroups = ControlUtil::createIconToolButton(":/icons/application_double.png");
-
-    connect(m_btGroups, &QAbstractButton::clicked, windowManager(),
-            &WindowManager::showAppGroupsWindow);
-
-    // Services button
-    m_btServices = ControlUtil::createIconToolButton(":/icons/windows-48.png");
-    m_btServices->setEnabled(settings()->hasMasterAdmin());
-
-    connect(m_btServices, &QAbstractButton::clicked, windowManager(),
-            &WindowManager::showServicesWindow);
+    // Options button
+    m_btOptions = ControlUtil::createOptionsButton();
 
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
@@ -264,9 +251,7 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addLayout(sortStatesLayout);
     layout->addStretch();
-    layout->addWidget(m_btGroups);
-    layout->addWidget(m_btServices);
-    layout->addWidget(ControlUtil::createVSeparator());
+    layout->addWidget(m_btOptions);
     layout->addWidget(m_btMenu);
 
     return layout;

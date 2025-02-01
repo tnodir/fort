@@ -10,6 +10,8 @@ const char *const programs = "programs";
 const char *const options = "options";
 const char *const rules = "rules";
 const char *const zones = "zones";
+const char *const groups = "groups";
+const char *const services = "services";
 const char *const statistics = "statistics";
 const char *const graph = "graph";
 
