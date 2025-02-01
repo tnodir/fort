@@ -1556,10 +1556,6 @@ Please restart the running program to take effect of this option.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation></translation>
     </message>
@@ -1577,10 +1573,6 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Add Wildcard</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Groups</source>
         <translation></translation>
     </message>
     <message>
@@ -2023,10 +2015,6 @@ Please restart the running program to take effect of this option.</source>
         <source>Blocked Connections</source>
         <translation></translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2349,6 +2337,14 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Block Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Services</source>
         <translation></translation>
     </message>
 </context>

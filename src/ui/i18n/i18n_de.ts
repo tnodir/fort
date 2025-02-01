@@ -1567,10 +1567,6 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <translation>Sind Sie sicher, dass Sie alle nicht existierenden Programme entfernen möchten?</translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation>Dienste</translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation>Veraltete löschen</translation>
     </message>
@@ -1589,10 +1585,6 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Add Wildcard</source>
         <translation>Platzhalter hinzufügen</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>Gruppen</translation>
     </message>
     <message>
         <source>Review Alerts</source>
@@ -2034,10 +2026,6 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <source>Blocked Connections</source>
         <translation>Blockierte Verbindungen</translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation>Optionen</translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2361,6 +2349,14 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Block Traffic</source>
         <translation>Datenverkehr blockieren</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Gruppen</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Dienste</translation>
     </message>
 </context>
 <context>

@@ -1567,10 +1567,6 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <translation>Êtes-vous sûr de supprimer tous les programmes inexistants?</translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation>Services</translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation>Purge obsolète</translation>
     </message>
@@ -1589,10 +1585,6 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Add Wildcard</source>
         <translation>Ajouter un caractère générique</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>Groupes</translation>
     </message>
     <message>
         <source>Review Alerts</source>
@@ -2034,10 +2026,6 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Blocked Connections</source>
         <translation>Connexions bloquées</translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation>Options</translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2361,6 +2349,14 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Block Traffic</source>
         <translation>Bloquer tout le trafic</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Groupes</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Services</translation>
     </message>
 </context>
 <context>

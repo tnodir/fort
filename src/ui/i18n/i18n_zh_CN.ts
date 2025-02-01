@@ -1567,10 +1567,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>您确定要删除所有不存在的应用程序吗？</translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation>服务</translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation>清理过时的数据</translation>
     </message>
@@ -1589,10 +1585,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Add Wildcard</source>
         <translation>添加通配符</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>分组</translation>
     </message>
     <message>
         <source>Review Alerts</source>
@@ -2034,10 +2026,6 @@ Please restart the running program to take effect of this option.</source>
         <source>Blocked Connections</source>
         <translation>已阻止的连接</translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation>选项</translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2361,6 +2349,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Block Traffic</source>
         <translation>阻止流量</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>分组</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>服务</translation>
     </message>
 </context>
 <context>

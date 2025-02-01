@@ -1570,10 +1570,6 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <translation>¿Está seguro de que desea eliminar todos los programas inexistentes?</translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation>Servicios</translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation>Eliminar obsoletos</translation>
     </message>
@@ -1592,10 +1588,6 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Add Wildcard</source>
         <translation>Añadir comodín</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>Grupos</translation>
     </message>
     <message>
         <source>Review Alerts</source>
@@ -2037,10 +2029,6 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Blocked Connections</source>
         <translation>Conexiones Bloqueadas</translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation>Opciones</translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2364,6 +2352,14 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Block Traffic</source>
         <translation>Bloquear tráfico</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Grupos</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Servicios</translation>
     </message>
 </context>
 <context>

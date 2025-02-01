@@ -1567,10 +1567,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>هل تريد حذف البرامج غير الموجودة؟</translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation>الخدمات</translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation>التخلص من البرامج المفقودة</translation>
     </message>
@@ -1589,10 +1585,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Add Wildcard</source>
         <translation>إضافة حرف استبدال (Wildcard)</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>المجموعات</translation>
     </message>
     <message>
         <source>Review Alerts</source>
@@ -2034,10 +2026,6 @@ Please restart the running program to take effect of this option.</source>
         <source>Blocked Connections</source>
         <translation>محاولات الاتصال المحظورة</translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation>الخيارات</translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2361,6 +2349,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Block Traffic</source>
         <translation>منع حركة المرور</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>المجموعات</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>الخدمات</translation>
     </message>
 </context>
 <context>

@@ -1567,10 +1567,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>존재하지 않는 프로그램을 모두 제거하시겠습니까?</translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation>서비스</translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation>사용되지 않는 제거</translation>
     </message>
@@ -1589,10 +1585,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Add Wildcard</source>
         <translation>와일드카드 추가</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>그룹</translation>
     </message>
     <message>
         <source>Review Alerts</source>
@@ -2034,10 +2026,6 @@ Please restart the running program to take effect of this option.</source>
         <source>Blocked Connections</source>
         <translation>차단 된 연결</translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation>옵션</translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2361,6 +2349,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Block Traffic</source>
         <translation>트래픽 차단</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>그룹</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>서비스</translation>
     </message>
 </context>
 <context>

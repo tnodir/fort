@@ -1567,10 +1567,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Удалить все несуществующие программы?</translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation>Службы</translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation>Очистить устаревшее</translation>
     </message>
@@ -1589,10 +1585,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Add Wildcard</source>
         <translation>Добавить подстановку</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>Группы</translation>
     </message>
     <message>
         <source>Review Alerts</source>
@@ -2034,10 +2026,6 @@ Please restart the running program to take effect of this option.</source>
         <source>Blocked Connections</source>
         <translation>Блокированные соединения</translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation>Опции</translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2361,6 +2349,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Block Traffic</source>
         <translation>Блокировка трафика</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Группы</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Службы</translation>
     </message>
 </context>
 <context>

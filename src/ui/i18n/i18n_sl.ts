@@ -1567,10 +1567,6 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <translation>Ali ste prepričani, da želite odstraniti neobstoječe programe?</translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation>Storitve</translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation>Počistiti zastarelo</translation>
     </message>
@@ -1589,10 +1585,6 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Add Wildcard</source>
         <translation>Dodaj nadomestni znak</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>Skupine</translation>
     </message>
     <message>
         <source>Review Alerts</source>
@@ -2034,10 +2026,6 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Blocked Connections</source>
         <translation>Blokirane povezave</translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2361,6 +2349,14 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Block Traffic</source>
         <translation>Blokiraj promet</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Skupine</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Storitve</translation>
     </message>
 </context>
 <context>

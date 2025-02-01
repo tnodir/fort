@@ -1567,10 +1567,6 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <translation>Sei sicuro di rimuovere tutti i programmi inesistenti?</translation>
     </message>
     <message>
-        <source>Services</source>
-        <translation>Servizi</translation>
-    </message>
-    <message>
         <source>Purge Obsolete</source>
         <translation>Elimina obsoleti</translation>
     </message>
@@ -1589,10 +1585,6 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Add Wildcard</source>
         <translation>Aggiungi Wildcard</translation>
-    </message>
-    <message>
-        <source>Groups</source>
-        <translation>Gruppi</translation>
     </message>
     <message>
         <source>Review Alerts</source>
@@ -2034,10 +2026,6 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Blocked Connections</source>
         <translation>Connessioni bloccate</translation>
     </message>
-    <message>
-        <source>Options</source>
-        <translation>Opzioni</translation>
-    </message>
 </context>
 <context>
     <name>StatisticsPage</name>
@@ -2362,6 +2350,14 @@ App</translation>
     <message>
         <source>Block Traffic</source>
         <translation>Blocca traffico</translation>
+    </message>
+    <message>
+        <source>Groups</source>
+        <translation>Gruppi</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Servizi</translation>
     </message>
 </context>
 <context>
