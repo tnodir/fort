@@ -83,7 +83,8 @@ QLayout *SplashScreen::setupMainLayout()
 {
     auto logoLayout = createLogoLayout();
 
-    auto layout = ControlUtil::createHLayout();
+    auto layout = ControlUtil::createHLayout(/*margin=*/10);
+
     layout->addStretch();
     layout->addLayout(logoLayout);
     layout->addStretch();
@@ -94,34 +95,40 @@ QLayout *SplashScreen::setupMainLayout()
 QLayout *SplashScreen::createLogoLayout()
 {
     // Logo image
-    auto logoIcon = createLogoIcon();
+    auto logoIconLayout = createLogoIconLayout();
 
     // Logo text
-    auto logoText = createLogoTextLayout();
+    auto logoTextLayout = createLogoTextLayout();
 
     auto layout = ControlUtil::createHLayout(/*margin=*/6);
     layout->setSpacing(10);
 
-    layout->addWidget(logoIcon);
-    layout->addLayout(logoText);
+    layout->addLayout(logoIconLayout);
+    layout->addLayout(logoTextLayout);
 
     return layout;
 }
 
-QLabel *SplashScreen::createLogoIcon()
+QLayout *SplashScreen::createLogoIconLayout()
 {
     const QSize logoSize(48, 48);
 
     auto iconLogo = ControlUtil::createIconLabel(":/icons/fort-96.png", logoSize);
 
-    return iconLogo;
+    // Layout
+    auto layout = ControlUtil::createVLayout();
+    layout->setSpacing(0);
+
+    layout->addStretch();
+    layout->addSpacing(1);
+    layout->addWidget(iconLogo);
+    layout->addStretch();
+
+    return layout;
 }
 
 QLayout *SplashScreen::createLogoTextLayout()
 {
-    auto layout = ControlUtil::createVLayout();
-    layout->setSpacing(0);
-
     QPalette palette;
     palette.setColor(QPalette::WindowText, Qt::white);
 
@@ -140,8 +147,15 @@ QLayout *SplashScreen::createLogoTextLayout()
     subLabel->setPalette(palette);
     subLabel->setFont(font);
 
-    layout->addWidget(label, 2, Qt::AlignHCenter | Qt::AlignBottom);
-    layout->addWidget(subLabel, 1, Qt::AlignHCenter | Qt::AlignTop);
+    // Layout
+    auto layout = ControlUtil::createVLayout();
+    layout->setSpacing(0);
+
+    layout->addStretch();
+    layout->addWidget(label, 0, Qt::AlignHCenter);
+    layout->addWidget(subLabel, 0, Qt::AlignHCenter);
+    layout->addSpacing(3);
+    layout->addStretch();
 
     return layout;
 }

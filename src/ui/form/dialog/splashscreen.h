@@ -13,7 +13,7 @@ public:
     explicit SplashScreen();
 
     static QLayout *createLogoLayout();
-    static QLabel *createLogoIcon();
+    static QLayout *createLogoIconLayout();
     static QLayout *createLogoTextLayout();
 
 public slots:
