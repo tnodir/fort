@@ -471,7 +471,7 @@ QLayout *ProgramEditDialog::setupPathLayout()
 
     // Select File
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
-        if (!(isWildcard() || m_editPath->isReadOnly())) {
+        if (!isWildcard() && m_editPath->isReadOnly()) {
             AppInfoUtil::openFolder(m_editPath->text());
             return;
         }
