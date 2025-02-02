@@ -2,6 +2,7 @@
 
 #include <QLoggingCategory>
 
+#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/dialog/dialogutil.h>
@@ -172,13 +173,14 @@ void OptionsController::exportBackup()
     windowManager()->showMessageBox(icon, title, tr("Export Backup"));
 }
 
-void OptionsController::importBackup()
+void OptionsController::importBackup(bool onlyNewApps)
 {
     const auto path = DialogUtil::getExistingDir(tr("Import Backup"));
     if (path.isEmpty())
         return;
 
-    const bool ok = confManager()->importBackup(path);
+    const bool ok = onlyNewApps ? confAppManager()->importAppsBackup(path)
+                                : confManager()->importBackup(path);
 
     const auto icon = ok ? QMessageBox::Information : QMessageBox::Critical;
     const auto title = ok ? tr("Backup Imported Successfully") : tr("Cannot Import Backup");
@@ -191,6 +193,13 @@ void OptionsController::confirmImportBackup()
     windowManager()->showConfirmBox([&] { importBackup(); },
             tr("All Options and Programs will be replaced after successful import. Continue?\n\n"
                "Make sure that you have a fresh backup."),
+            tr("Import Backup"));
+}
+
+void OptionsController::confirmImportAppsBackup()
+{
+    windowManager()->showConfirmBox([&] { importBackup(/*onlyNewApps=*/true); },
+            tr("Only new Programs will be added after successful import. Continue?"),
             tr("Import Backup"));
 }
 

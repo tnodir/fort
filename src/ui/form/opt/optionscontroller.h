@@ -44,8 +44,9 @@ public slots:
     void applyChanges() { save(/*closeOnSuccess=*/false); }
 
     void exportBackup();
-    void importBackup();
+    void importBackup(bool onlyNewApps = false);
     void confirmImportBackup();
+    void confirmImportAppsBackup();
 
     void closeWindow();
 

@@ -54,6 +54,8 @@ public:
 
     qint64 getAlertAppId();
 
+    virtual bool importAppsBackup(const QString &path);
+
     virtual bool updateDriverConf(bool onlyFlags = false);
 
 signals:

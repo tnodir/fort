@@ -619,6 +619,56 @@ qint64 ConfAppManager::getAlertAppId()
     return DbQuery(sqliteDb()).sql(sqlSelectMaxAlertAppId).execute().toLongLong();
 }
 
+bool ConfAppManager::importAppsBackup(const QString &path)
+{
+    const auto backupFilePath =
+            FileUtil::pathSlash(path) + FileUtil::fileName(sqliteDb()->filePath());
+
+    const QLatin1String schemaName("backup");
+
+    if (!sqliteDb()->attach(schemaName, backupFilePath)) {
+        qCWarning(LC) << "Open backup error:" << sqliteDb()->errorMessage() << backupFilePath;
+        return false;
+    }
+
+    const QString schemaApp = SqliteDb::entityName(schemaName, "app");
+
+    const QString columnNames = "origin_path, path, name, notes, is_wildcard,"
+                                " apply_parent, apply_child, apply_spec_child, kill_child,"
+                                " lan_only, parked, log_blocked, log_conn,"
+                                " blocked, kill_process, end_action, end_time, creat_time";
+
+    const QString sql = "INSERT INTO app(app_group_id, " + columnNames + ") SELECT 1, "
+            + columnNames + " FROM " + schemaApp
+            + " ba WHERE NOT EXISTS (SELECT 1 FROM app WHERE path = ba.path);";
+
+    sqliteDb()->beginWriteTransaction();
+
+    const qint64 oldMaxAppId =
+            DbQuery(sqliteDb()).sql("SELECT MAX(app_id) FROM app;").execute().toLongLong();
+
+    // Import apps
+    const bool ok = DbQuery(sqliteDb()).sql(sql).executeOk();
+
+    // Add alerts
+    if (ok) {
+        DbQuery(sqliteDb())
+                .sql("INSERT INTO app_alert(app_id) SELECT app_id FROM app WHERE app_id > ?1;")
+                .vars({ oldMaxAppId })
+                .executeOk();
+    }
+
+    if (!ok) {
+        qCWarning(LC) << "Import apps backup error:" << sqliteDb()->errorMessage();
+    }
+
+    sqliteDb()->commitTransaction();
+
+    sqliteDb()->detach(schemaName);
+
+    return ok;
+}
+
 bool ConfAppManager::updateDriverConf(bool onlyFlags)
 {
     ConfBuffer confBuf;

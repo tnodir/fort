@@ -26,6 +26,8 @@ public:
     bool updateAppsBlocked(
             const QVector<qint64> &appIdList, bool blocked, bool killProcess) override;
 
+    bool importAppsBackup(const QString &path) override;
+
     bool updateDriverConf(bool /*onlyFlags*/ = false) override { return false; }
 
     static QVariantList appToVarList(const App &app);

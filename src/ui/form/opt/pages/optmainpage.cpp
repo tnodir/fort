@@ -47,6 +47,7 @@ void OptMainPage::onRetranslateUi()
     m_btBackup->setText(tr("Backup"));
     m_actExport->setText(tr("Export"));
     m_actImport->setText(tr("Import"));
+    m_actImportApps->setText(tr("Import new programs"));
 
     m_btDefault->setText(tr("Default"));
     m_actDefaultAll->setText(tr("Reset to default all options"));
@@ -139,9 +140,12 @@ void OptMainPage::setupBackup()
 
     m_actExport = menu->addAction(IconCache::icon(":/icons/disk.png"), QString());
     m_actImport = menu->addAction(IconCache::icon(":/icons/folder.png"), QString());
+    m_actImportApps = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
 
     connect(m_actExport, &QAction::triggered, ctrl(), &OptionsController::exportBackup);
     connect(m_actImport, &QAction::triggered, ctrl(), &OptionsController::confirmImportBackup);
+    connect(m_actImportApps, &QAction::triggered, ctrl(),
+            &OptionsController::confirmImportAppsBackup);
 
     m_btBackup = new QPushButton();
     m_btBackup->setMenu(menu);
