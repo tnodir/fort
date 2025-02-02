@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.15.10, 2025-02-02:
+- UI: Options: Backup: Add "Import new programs".
+- UI: Options: IP Addresses: Fix changes checking.
+
 v3.15.9, 2025-02-01:
 - UI: Options: Rework "IP Addresses" tab.
 - UI: Add "Options" button to windows.
