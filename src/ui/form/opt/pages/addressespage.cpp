@@ -46,11 +46,6 @@ void AddressesPage::onResetToDefault()
     updateUi();
 }
 
-void AddressesPage::onEditResetted()
-{
-    updateUi();
-}
-
 void AddressesPage::onRetranslateUi()
 {
     m_gbLan->setTitle(tr("Local Area Network"));
@@ -119,12 +114,12 @@ QLayout *AddressesPage::setupColumn2()
 
 void AddressesPage::setupLanBox()
 {
-    m_cbFilterLocals = ControlUtil::createCheckBox(false, [&](bool checked) {
+    m_cbFilterLocals = ControlUtil::createCheckBox(conf()->filterLocals(), [&](bool checked) {
         conf()->setFilterLocals(checked);
         ctrl()->setFlagsEdited();
     });
 
-    m_cbFilterLocalNet = ControlUtil::createCheckBox(false, [&](bool checked) {
+    m_cbFilterLocalNet = ControlUtil::createCheckBox(conf()->filterLocalNet(), [&](bool checked) {
         conf()->setFilterLocalNet(checked);
         ctrl()->setFlagsEdited();
     });
@@ -255,9 +250,6 @@ void AddressesPage::setupEditBlockInetText()
 
 void AddressesPage::updateUi()
 {
-    m_cbFilterLocals->setChecked(conf()->filterLocals());
-    m_cbFilterLocalNet->setChecked(conf()->filterLocalNet());
-
     m_btLanZones->setZones(inetAddressGroup()->excludeZones());
     m_editLanText->setPlainText(inetAddressGroup()->excludeText());
 

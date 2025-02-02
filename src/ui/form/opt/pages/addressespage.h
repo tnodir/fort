@@ -16,7 +16,6 @@ public:
 
 public slots:
     void onResetToDefault() override;
-    void onEditResetted() override;
 
 protected slots:
     void onRetranslateUi() override;
