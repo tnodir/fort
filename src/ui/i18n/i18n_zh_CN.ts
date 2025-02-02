@@ -44,7 +44,7 @@
     </message>
     <message>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>互联网</translation>
     </message>
     <message>
         <source>Filter Local Addresses</source>
@@ -64,7 +64,7 @@
     </message>
     <message>
         <source>Block Addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止的地址：</translation>
     </message>
 </context>
 <context>

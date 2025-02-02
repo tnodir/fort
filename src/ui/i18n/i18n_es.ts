@@ -44,7 +44,7 @@
     </message>
     <message>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet</translation>
     </message>
     <message>
         <source>Filter Local Addresses</source>
@@ -64,7 +64,7 @@
     </message>
     <message>
         <source>Block Addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear direcciones:</translation>
     </message>
 </context>
 <context>
