@@ -95,7 +95,7 @@ void ZonesWindow::setupController()
 {
     connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::retranslateUi);
 
-    emit ctrl()->retranslateUi();
+    emit ctrl() -> retranslateUi();
 }
 
 void ZonesWindow::retranslateUi()
@@ -172,12 +172,15 @@ QLayout *ZonesWindow::setupHeader()
     // Run Task
     setupTaskRun();
 
+    // Options button
+    m_btOptions = ControlUtil::createOptionsButton();
+
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
             m_btSaveAsText, ControlUtil::createVSeparator(), m_btUpdateZones,
-            /*stretch*/ nullptr, m_btMenu });
+            /*stretch*/ nullptr, m_btOptions, m_btMenu });
 
     return layout;
 }

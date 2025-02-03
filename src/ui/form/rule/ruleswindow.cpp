@@ -194,11 +194,14 @@ QLayout *RulesWindow::setupHeader()
     // Search field
     setupEditSearch();
 
+    // Options button
+    m_btOptions = ControlUtil::createOptionsButton();
+
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
-            m_editSearch, /*stretch*/ nullptr, m_btMenu });
+            m_editSearch, /*stretch*/ nullptr, m_btOptions, m_btMenu });
 
     return layout;
 }

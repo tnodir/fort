@@ -88,6 +88,7 @@ private:
     QAction *m_actEditRule = nullptr;
     QAction *m_actRemoveRule = nullptr;
     QLineEdit *m_editSearch = nullptr;
+    QToolButton *m_btOptions = nullptr;
     QPushButton *m_btMenu = nullptr;
     TreeView *m_ruleListView = nullptr;
     QPushButton *m_btOk = nullptr;

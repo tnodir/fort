@@ -59,6 +59,8 @@ private:
     QToolButton *m_btTrack = nullptr;
     QToolButton *m_btRevert = nullptr;
     QToolButton *m_btRefresh = nullptr;
+    QToolButton *m_btOptions = nullptr;
+    QPushButton *m_btMenu = nullptr;
     TableView *m_serviceListView = nullptr;
 };
 

@@ -71,6 +71,7 @@ private:
     QAction *m_actRemoveZone = nullptr;
     QToolButton *m_btSaveAsText = nullptr;
     QToolButton *m_btUpdateZones = nullptr;
+    QToolButton *m_btOptions = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_zoneListView = nullptr;
 

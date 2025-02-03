@@ -139,8 +139,6 @@ void ServicesWindow::setupUi()
 
 QLayout *ServicesWindow::setupHeader()
 {
-    auto layout = new QHBoxLayout();
-
     // Edit Menu
     auto editMenu = ControlUtil::createMenu(this);
 
@@ -196,13 +194,15 @@ QLayout *ServicesWindow::setupHeader()
     connect(m_btRevert, &QAbstractButton::clicked, m_actRevert, &QAction::trigger);
     connect(m_btRefresh, &QAbstractButton::clicked, this, &ServicesWindow::updateServiceListModel);
 
-    layout->addWidget(m_btEdit);
-    layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_btTrack);
-    layout->addWidget(m_btRevert);
-    layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_btRefresh);
-    layout->addStretch();
+    // Options button
+    m_btOptions = ControlUtil::createOptionsButton();
+
+    // Menu button
+    m_btMenu = ControlUtil::createMenuButton();
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
+            m_btTrack, m_btRevert, ControlUtil::createVSeparator(), m_btRefresh,
+            /*stretch*/ nullptr, m_btOptions, m_btMenu });
 
     return layout;
 }
