@@ -666,6 +666,10 @@ bool ConfAppManager::importAppsBackup(const QString &path)
 
     sqliteDb()->detach(schemaName);
 
+    if (ok) {
+        emitAppsChanged();
+    }
+
     return ok;
 }
 
