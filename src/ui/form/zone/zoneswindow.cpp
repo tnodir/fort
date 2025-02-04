@@ -95,7 +95,7 @@ void ZonesWindow::setupController()
 {
     connect(ctrl(), &ZonesController::retranslateUi, this, &ZonesWindow::retranslateUi);
 
-    emit ctrl() -> retranslateUi();
+    emit ctrl()->retranslateUi();
 }
 
 void ZonesWindow::retranslateUi()
