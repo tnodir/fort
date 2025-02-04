@@ -499,6 +499,10 @@
         <source>Block Internet and LAN Traffic</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Block LAN Traffic</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -1089,6 +1093,10 @@
         <source>Interface</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Import new programs</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -1124,6 +1132,10 @@
         <source>All Options and Programs will be replaced after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
         <translation></translation>
     </message>
 </context>

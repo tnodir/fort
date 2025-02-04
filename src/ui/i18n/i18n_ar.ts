@@ -499,6 +499,10 @@
         <source>Block Internet and LAN Traffic</source>
         <translation>حظر اتصال الإنترنت والشبكة المحلية</translation>
     </message>
+    <message>
+        <source>Block LAN Traffic</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -1089,6 +1093,10 @@
         <source>Interface</source>
         <translation>الواجهة</translation>
     </message>
+    <message>
+        <source>Import new programs</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -1127,6 +1135,10 @@ Make sure that you have a fresh backup.</source>
         <translation>جميع الخيارات والبرامج ستستبدل بعد الاستيراد الناجح. هل ترغب في المتابعة؟
 
 تأكد من أنك قد قمت بعمل نسخة احتياطية جديدة.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

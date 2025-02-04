@@ -499,6 +499,10 @@
         <source>Block Internet and LAN Traffic</source>
         <translation>Blokirajte internetni in LAN promet</translation>
     </message>
+    <message>
+        <source>Block LAN Traffic</source>
+        <translation>Blokiraj LAN promet</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -1089,6 +1093,10 @@
         <source>Interface</source>
         <translation>Vmesnik</translation>
     </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>Uvozite nove programe</translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -1127,6 +1135,10 @@ Make sure that you have a fresh backup.</source>
         <translation>Vse možnosti in programi bodo po uspešnem uvozu zamenjani. Želite nadaljevati?
 
 Prepričajte se, da imate svežo varnostno kopijo.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>Po uspešnem uvozu bodo dodani samo novi programi. Nadaljevati?</translation>
     </message>
 </context>
 <context>

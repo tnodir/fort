@@ -499,6 +499,10 @@
         <source>Block Internet and LAN Traffic</source>
         <translation>Блокировать Интернет и LAN трафик</translation>
     </message>
+    <message>
+        <source>Block LAN Traffic</source>
+        <translation>Блокировать LAN трафик</translation>
+    </message>
 </context>
 <context>
     <name>FortManager</name>
@@ -1089,6 +1093,10 @@
         <source>Interface</source>
         <translation>Интерфейс</translation>
     </message>
+    <message>
+        <source>Import new programs</source>
+        <translation>Импорт новых программ</translation>
+    </message>
 </context>
 <context>
     <name>OptionsController</name>
@@ -1127,6 +1135,10 @@ Make sure that you have a fresh backup.</source>
         <translation>Все настройки и программы будут заменены после успешного импорта. Продолжить?
 
 Убедитесь, что у вас есть свежая резервная копия.</translation>
+    </message>
+    <message>
+        <source>Only new Programs will be added after successful import. Continue?</source>
+        <translation>Только новые программы будут добавлены после успешного импорта. Продолжить?</translation>
     </message>
 </context>
 <context>
