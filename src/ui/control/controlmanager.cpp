@@ -139,15 +139,7 @@ bool processCommandFilterMode(const ProcessCommandArgs &p)
     return processCommandFilterModeAction(filterMode);
 }
 
-enum BlockAction : qint8 {
-    BlockActionInvalid = -1,
-    BlockActionNone = 0,
-    BlockActionInet,
-    BlockActionLan,
-    BlockActionAll,
-};
-
-bool processCommandBlockAction(BlockAction blockAction)
+bool processCommandBlockAction(FirewallConf::BlockTrafficType blockAction)
 {
     auto confManager = IoC<ConfManager>();
 
@@ -157,28 +149,32 @@ bool processCommandBlockAction(BlockAction blockAction)
     return confManager->saveFlags();
 }
 
-BlockAction blockActionByText(const QString &commandText)
+FirewallConf::BlockTrafficType blockActionByText(const QString &commandText)
 {
     if (commandText == "no")
-        return BlockActionNone;
+        return FirewallConf::BlockTrafficNone;
 
     if (commandText == "inet")
-        return BlockActionInet;
+        return FirewallConf::BlockTrafficInet;
 
     if (commandText == "lan")
-        return BlockActionLan;
+        return FirewallConf::BlockTrafficLan;
+
+    if (commandText == "inet-lan")
+        return FirewallConf::BlockTrafficInetLan;
 
     if (commandText == "all")
-        return BlockActionAll;
+        return FirewallConf::BlockTrafficAll;
 
-    return BlockActionInvalid;
+    return FirewallConf::BlockTrafficInvalid;
 }
 
 bool processCommandBlock(const ProcessCommandArgs &p)
 {
-    const BlockAction blockAction = blockActionByText(p.args.value(0).toString());
-    if (blockAction == BlockActionInvalid) {
-        p.errorMessage = "Usage: block no|inet|lan|all";
+    const FirewallConf::BlockTrafficType blockAction =
+            blockActionByText(p.args.value(0).toString());
+    if (blockAction == FirewallConf::BlockTrafficInvalid) {
+        p.errorMessage = "Usage: block no|inet|lan|inet-lan|all";
         return false;
     }
 

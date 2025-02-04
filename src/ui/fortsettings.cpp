@@ -411,6 +411,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setFilterLocals(iniBool("filterLocals"));
     conf.setFilterLocalNet(iniBool("filterLocalNet"));
     conf.setBlockTraffic(iniBool("blockTraffic"));
+    conf.setBlockLanTraffic(iniBool("blockLanTraffic"));
     conf.setBlockInetTraffic(iniBool("blockInetTraffic"));
     conf.setAllowAllNew(iniBool("allowAllNew", true));
     conf.setAskToConnect(iniBool("askToConnect"));

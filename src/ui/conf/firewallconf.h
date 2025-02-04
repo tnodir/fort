@@ -26,9 +26,11 @@ public:
     Q_DECLARE_FLAGS(EditedFlags, EditedFlag)
 
     enum BlockTrafficType {
+        BlockTrafficInvalid = -1,
         BlockTrafficNone = 0,
         BlockTrafficInet,
         BlockTrafficLan,
+        BlockTrafficInetLan,
         BlockTrafficAll,
     };
     Q_ENUM(BlockTrafficType)

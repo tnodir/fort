@@ -19,6 +19,7 @@ const char *const filter = "filter";
 
 const char *const blockTrafficOff = "blockTrafficOff";
 const char *const blockTraffic = "blockTraffic";
+const char *const blockInetLanTraffic = "blockInetLanTraffic";
 const char *const blockLanTraffic = "blockLanTraffic";
 const char *const blockInetTraffic = "blockInetTraffic";
 

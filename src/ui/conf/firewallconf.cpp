@@ -16,10 +16,10 @@ int FirewallConf::blockTrafficIndex() const
 {
     if (m_blockTraffic)
         return BlockTrafficAll;
+    if (m_blockInetTraffic)
+        return m_blockLanTraffic ? BlockTrafficInetLan : BlockTrafficInet;
     if (m_blockLanTraffic)
         return BlockTrafficLan;
-    if (m_blockInetTraffic)
-        return BlockTrafficInet;
     return BlockTrafficNone;
 }
 
@@ -32,19 +32,17 @@ void FirewallConf::setBlockTrafficIndex(int index)
     switch (index) {
     case BlockTrafficAll: { // Block All Traffic
         m_blockTraffic = true;
-    }
-        Q_FALLTHROUGH();
-
-    case BlockTrafficLan: { // Block Internet & LAN Traffic
+    } break;
+    case BlockTrafficInetLan: { // Block Internet & LAN Traffic
+        m_blockInetTraffic = true;
         m_blockLanTraffic = true;
-    }
-        Q_FALLTHROUGH();
-
+    } break;
     case BlockTrafficInet: { // Block Internet Traffic
         m_blockInetTraffic = true;
-    }
-        Q_FALLTHROUGH();
-
+    } break;
+    case BlockTrafficLan: { // Block LAN Traffic
+        m_blockLanTraffic = true;
+    } break;
     case BlockTrafficNone: { // Disabled
     } break;
     }
@@ -94,13 +92,15 @@ void FirewallConf::setFilterMode(FirewallConf::FilterMode mode)
 
 QStringList FirewallConf::blockTrafficNames()
 {
-    return { tr("No Block"), tr("Block Internet Traffic"), tr("Block Internet and LAN Traffic"),
-        tr("Block All Traffic") };
+    // Sync with BlockTrafficType
+    return { tr("No Block"), tr("Block Internet Traffic"), tr("Block LAN Traffic"),
+        tr("Block Internet and LAN Traffic"), tr("Block All Traffic") };
 }
 
 QStringList FirewallConf::blockTrafficIconPaths()
 {
-    return { QString(), ":/icons/hostname.png", ":/icons/computer.png", ":/icons/cross.png" };
+    return { QString(), ":/icons/hostname.png", ":/icons/global_telecom.png",
+        ":/icons/computer.png", ":/icons/cross.png" };
 }
 
 QStringList FirewallConf::filterModeNames()

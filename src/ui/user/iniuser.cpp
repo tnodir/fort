@@ -18,6 +18,7 @@ const char *const list[] = {
     blockTrafficOff,
     blockInetTraffic,
     blockLanTraffic,
+    blockInetLanTraffic,
     blockTraffic,
     filterModeAutoLearn,
     filterModeAskToConnect,

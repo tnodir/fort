@@ -539,6 +539,7 @@ void TrayIcon::setupTrayMenuBlockTraffic()
         HotKey::blockTrafficOff,
         HotKey::blockInetTraffic,
         HotKey::blockLanTraffic,
+        HotKey::blockInetLanTraffic,
         HotKey::blockTraffic,
     };
 
@@ -779,7 +780,7 @@ QString TrayIcon::trayIconBlockPath(int blockType, bool &isDefault) const
     switch (blockType) {
     case FirewallConf::BlockTrafficAll:
         return ":/icons/fort_deny.png";
-    case FirewallConf::BlockTrafficLan:
+    case FirewallConf::BlockTrafficInetLan:
         return ":/icons/fort_red.png";
     case FirewallConf::BlockTrafficInet:
         return ":/icons/fort_orange.png";
