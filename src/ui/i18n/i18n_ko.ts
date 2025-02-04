@@ -501,7 +501,7 @@
     </message>
     <message>
         <source>Block LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN 트래픽 차단</translation>
     </message>
 </context>
 <context>
@@ -1095,7 +1095,7 @@
     </message>
     <message>
         <source>Import new programs</source>
-        <translation type="unfinished"></translation>
+        <translation>새 프로그램 가져오기</translation>
     </message>
 </context>
 <context>
@@ -1138,7 +1138,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>가져오기가 성공하면 새 프로그램만 추가됩니다. 계속하시겠습니까?</translation>
     </message>
 </context>
 <context>
