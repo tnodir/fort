@@ -32,7 +32,7 @@ CREATE TABLE app_group(
   enabled BOOLEAN NOT NULL,
   apply_child BOOLEAN NOT NULL DEFAULT 0,
   lan_only BOOLEAN NOT NULL DEFAULT 0,
-  log_allowed_conn BOOLEAN NOT NULL DEFAULT 0,
+  log_allowed_conn BOOLEAN NOT NULL DEFAULT 1,
   log_blocked_conn BOOLEAN NOT NULL DEFAULT 1,
   period_enabled BOOLEAN NOT NULL,
   limit_in_enabled BOOLEAN NOT NULL,

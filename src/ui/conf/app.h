@@ -33,7 +33,7 @@ public:
     bool killChild : 1 = false;
     bool lanOnly : 1 = false;
     bool parked : 1 = false;
-    bool logAllowedConn : 1 = false;
+    bool logAllowedConn : 1 = true;
     bool logBlockedConn : 1 = true;
     bool blocked : 1 = false;
     bool killProcess : 1 = false;
