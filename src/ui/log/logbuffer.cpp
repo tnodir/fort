@@ -146,6 +146,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
         path = QString::fromWCharArray((const wchar_t *) input, pathLen / int(sizeof(wchar_t)));
     }
 
+    logEntry->setBlocked(conn.blocked);
     logEntry->setIsIPv6(conn.isIPv6);
     logEntry->setInbound(conn.inbound);
     logEntry->setInherited(conn.inherited);
