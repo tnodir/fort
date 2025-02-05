@@ -11,7 +11,7 @@ CREATE TABLE conn(
   app_id INTEGER NOT NULL,
   conn_time INTEGER NOT NULL,
   process_id INTEGER NOT NULL,
-  reason INTEGER NOT NULL
+  reason INTEGER NOT NULL,
   blocked BOOLEAN NOT NULL,
   inherited BOOLEAN NOT NULL,
   inbound BOOLEAN NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE conn(
   local_ip INTEGER,
   remote_ip INTEGER,
   local_ip6 BLOB,
-  remote_ip6 BLOB,
+  remote_ip6 BLOB
 );
 
 CREATE INDEX conn_app_id_idx ON conn(app_id);
