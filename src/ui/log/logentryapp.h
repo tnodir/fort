@@ -8,7 +8,7 @@ class LogEntryApp : public LogEntry
 public:
     explicit LogEntryApp(quint32 pid = 0, const QString &kernelPath = QString());
 
-    FortLogType type() const override;
+    FortLogType type() const override { return FORT_LOG_TYPE_APP; }
 
     bool blocked() const { return m_blocked; }
     void setBlocked(bool blocked) { m_blocked = blocked; }

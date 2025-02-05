@@ -325,9 +325,9 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_logStatNoFilter = o.logStatNoFilter();
     m_logBlocked = o.logBlocked();
 
-    m_logAllowedIp = o.logAllowedIp();
-    m_logBlockedIp = o.logBlockedIp();
-    m_logAlertedBlockedIp = o.logAlertedBlockedIp();
+    m_logAllowedConn = o.logAllowedConn();
+    m_logBlockedConn = o.logBlockedConn();
+    m_logAlertedConn = o.logAlertedConn();
 
     m_appBlockAll = o.appBlockAll();
     m_appAllowAll = o.appAllowAll();
@@ -376,9 +376,9 @@ QVariant FirewallConf::flagsToVariant() const
     map["logStatNoFilter"] = logStatNoFilter();
     map["logBlocked"] = logBlocked();
 
-    map["logAllowedIp"] = logAllowedIp();
-    map["logBlockedIp"] = logBlockedIp();
-    map["logAlertedBlockedIp"] = logAlertedBlockedIp();
+    map["logAllowedConn"] = logAllowedConn();
+    map["logBlockedConn"] = logBlockedConn();
+    map["logAlertedConn"] = logAlertedConn();
 
     map["appBlockAll"] = appBlockAll();
     map["appAllowAll"] = appAllowAll();
@@ -412,9 +412,9 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_logStat = map["logStat"].toBool();
     m_logStatNoFilter = map["logStatNoFilter"].toBool();
 
-    m_logAllowedIp = map["logAllowedIp"].toBool();
-    m_logBlockedIp = map["logBlockedIp"].toBool();
-    m_logAlertedBlockedIp = map["logAlertedBlockedIp"].toBool();
+    m_logAllowedConn = map["logAllowedConn"].toBool();
+    m_logBlockedConn = map["logBlockedConn"].toBool();
+    m_logAlertedConn = map["logAlertedConn"].toBool();
 
     m_appBlockAll = map["appBlockAll"].toBool();
     m_appAllowAll = map["appAllowAll"].toBool();

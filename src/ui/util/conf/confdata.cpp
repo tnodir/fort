@@ -163,9 +163,9 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
     confFlags->log_stat_no_filter = conf.logStatNoFilter();
     confFlags->log_blocked = conf.logBlocked();
 
-    confFlags->log_allowed_ip = conf.logAllowedIp();
-    confFlags->log_blocked_ip = conf.logBlockedIp();
-    confFlags->log_alerted_blocked_ip = conf.logAlertedBlockedIp();
+    confFlags->log_allowed_conn = conf.logAllowedConn();
+    confFlags->log_blocked_conn = conf.logBlockedConn();
+    confFlags->log_alerted_conn = conf.logAlertedConn();
 
     confFlags->group_bits = conf.activeGroupBits();
 }

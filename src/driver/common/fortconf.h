@@ -51,9 +51,9 @@ typedef struct fort_conf_flags
     UINT32 log_stat_no_filter : 1;
     UINT32 log_blocked : 1;
 
-    UINT32 log_allowed_ip : 1;
-    UINT32 log_blocked_ip : 1;
-    UINT32 log_alerted_blocked_ip : 1;
+    UINT32 log_allowed_conn : 1;
+    UINT32 log_blocked_conn : 1;
+    UINT32 log_alerted_conn : 1;
 
     UINT32 reserved_flags : 13; /* not used */
 
@@ -332,8 +332,8 @@ typedef struct fort_app_flags
     UINT16 apply_spec_child : 1;
     UINT16 kill_child : 1;
     UINT16 lan_only : 1;
-    UINT16 log_blocked : 1;
-    UINT16 log_conn : 1;
+    UINT16 log_allowed_conn : 1;
+    UINT16 log_blocked_conn : 1;
 
     UINT16 blocked : 1;
     UINT16 kill_process : 1;

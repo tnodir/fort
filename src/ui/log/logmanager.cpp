@@ -147,10 +147,9 @@ void LogManager::processLogEntries(LogBuffer *logBuffer)
 bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
 {
     switch (logType) {
-    case FORT_LOG_TYPE_BLOCKED:
-    case FORT_LOG_TYPE_ALLOWED:
+    case FORT_LOG_TYPE_APP:
         return processLogEntryApp(logBuffer);
-    case FORT_LOG_TYPE_BLOCKED_IP:
+    case FORT_LOG_TYPE_CONN:
         return processLogEntryConn(logBuffer);
     case FORT_LOG_TYPE_PROC_NEW:
         return processLogEntryProcNew(logBuffer);

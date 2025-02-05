@@ -174,11 +174,11 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
 
     UINT32 len;
     switch (log_type) {
-    case FORT_BUFFER_CONN_WRITE_BLOCKED: {
-        len = FORT_LOG_BLOCKED_SIZE(log_path.len);
+    case FORT_BUFFER_CONN_WRITE_APP: {
+        len = FORT_LOG_APP_SIZE(log_path.len);
     } break;
-    case FORT_BUFFER_CONN_WRITE_BLOCKED_IP: {
-        len = FORT_LOG_BLOCKED_IP_SIZE(log_path.len, conn->isIPv6);
+    case FORT_BUFFER_CONN_WRITE_CONN: {
+        len = FORT_LOG_CONN_SIZE(log_path.len, conn->isIPv6);
     } break;
     case FORT_BUFFER_CONN_WRITE_PROC_NEW: {
         len = FORT_LOG_PROC_NEW_SIZE(log_path.len);
@@ -193,11 +193,11 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
 
         if (NT_SUCCESS(status)) {
             switch (log_type) {
-            case FORT_BUFFER_CONN_WRITE_BLOCKED: {
-                fort_log_blocked_write(out, conn->blocked, conn->process_id, &log_path);
+            case FORT_BUFFER_CONN_WRITE_APP: {
+                fort_log_app_write(out, conn->blocked, conn->process_id, &log_path);
             } break;
-            case FORT_BUFFER_CONN_WRITE_BLOCKED_IP: {
-                fort_log_blocked_ip_write(out, conn, &log_path);
+            case FORT_BUFFER_CONN_WRITE_CONN: {
+                fort_log_conn_write(out, conn, &log_path);
             } break;
             case FORT_BUFFER_CONN_WRITE_PROC_NEW: {
                 fort_log_proc_new_write(out, conn->process_id, &log_path);

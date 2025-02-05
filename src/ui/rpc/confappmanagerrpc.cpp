@@ -185,9 +185,10 @@ bool ConfAppManagerRpc::importAppsBackup(const QString &path)
 QVariantList ConfAppManagerRpc::appToVarList(const App &app)
 {
     return { app.isWildcard, app.applyParent, app.applyChild, app.applySpecChild, app.killChild,
-        app.lanOnly, app.parked, app.logBlocked, app.logConn, app.blocked, app.killProcess,
-        app.groupIndex, app.acceptZones, app.rejectZones, app.ruleId, app.appId, app.appOriginPath,
-        app.appPath, app.appName, app.notes, app.scheduleAction, app.scheduleTime };
+        app.lanOnly, app.parked, app.logAllowedConn, app.logBlockedConn, app.blocked,
+        app.killProcess, app.groupIndex, app.acceptZones, app.rejectZones, app.ruleId, app.appId,
+        app.appOriginPath, app.appPath, app.appName, app.notes, app.scheduleAction,
+        app.scheduleTime };
 }
 
 App ConfAppManagerRpc::varListToApp(const QVariantList &v)
@@ -200,8 +201,8 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.killChild = v.value(4).toBool();
     app.lanOnly = v.value(5).toBool();
     app.parked = v.value(6).toBool();
-    app.logBlocked = v.value(7).toBool();
-    app.logConn = v.value(8).toBool();
+    app.logAllowedConn = v.value(7).toBool();
+    app.logBlockedConn = v.value(8).toBool();
     app.blocked = v.value(9).toBool();
     app.killProcess = v.value(10).toBool();
     app.groupIndex = v.value(11).toInt();

@@ -49,7 +49,7 @@ TEST_F(LogBufferTest, blockedWriteRead)
     const int pathSize = path.size();
     ASSERT_EQ(pathSize, 8);
 
-    const int entrySize = DriverCommon::logBlockedHeaderSize() + pathSize * sizeof(wchar_t);
+    const int entrySize = DriverCommon::logAppHeaderSize() + pathSize * sizeof(wchar_t);
 
     const int testCount = 3;
 
@@ -65,10 +65,10 @@ TEST_F(LogBufferTest, blockedWriteRead)
 
     // Read
     int readCount = 0;
-    while (buf.peekEntryType() == FORT_LOG_TYPE_BLOCKED) {
+    while (buf.peekEntryType() == FORT_LOG_TYPE_APP) {
         buf.readEntryApp(&entry);
 
-        ASSERT_EQ(entry.type(), FORT_LOG_TYPE_BLOCKED);
+        ASSERT_EQ(entry.type(), FORT_LOG_TYPE_APP);
         ASSERT_EQ(entry.pid(), pid);
         ASSERT_EQ(entry.kernelPath(), path);
 
@@ -84,7 +84,7 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
     const int pathSize = path.size();
     ASSERT_EQ(pathSize, 8);
 
-    const int entrySize = DriverCommon::logBlockedIpHeaderSize() + pathSize * sizeof(wchar_t);
+    const int entrySize = DriverCommon::logConnHeaderSize() + pathSize * sizeof(wchar_t);
 
     const int testCount = 3;
 
@@ -110,11 +110,11 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
 
     // Read
     int index = 0;
-    while (buf.peekEntryType() == FORT_LOG_TYPE_BLOCKED_IP) {
+    while (buf.peekEntryType() == FORT_LOG_TYPE_CONN) {
         buf.readEntryConn(&entry);
 
         int v = index++;
-        ASSERT_EQ(entry.type(), FORT_LOG_TYPE_BLOCKED_IP);
+        ASSERT_EQ(entry.type(), FORT_LOG_TYPE_CONN);
         ASSERT_FALSE(entry.isIPv6());
         ASSERT_EQ(entry.inbound(), (v & 1) != 0);
         ASSERT_EQ(entry.reason(), ++v);
@@ -137,7 +137,7 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
     ASSERT_EQ(pathSize, 9);
 
     constexpr bool isIPv6 = true;
-    const int entrySize = DriverCommon::logBlockedIpHeaderSize(isIPv6) + pathSize * sizeof(wchar_t);
+    const int entrySize = DriverCommon::logConnHeaderSize(isIPv6) + pathSize * sizeof(wchar_t);
 
     const int testCount = 3;
 
@@ -164,11 +164,11 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
 
     // Read
     int index = 0;
-    while (buf.peekEntryType() == FORT_LOG_TYPE_BLOCKED_IP) {
+    while (buf.peekEntryType() == FORT_LOG_TYPE_CONN) {
         buf.readEntryConn(&entry);
 
         int v = index++;
-        ASSERT_EQ(entry.type(), FORT_LOG_TYPE_BLOCKED_IP);
+        ASSERT_EQ(entry.type(), FORT_LOG_TYPE_CONN);
         ASSERT_TRUE(entry.isIPv6());
         ASSERT_EQ(entry.inbound(), (v & 1) != 0);
         ASSERT_EQ(entry.reason(), ++v);

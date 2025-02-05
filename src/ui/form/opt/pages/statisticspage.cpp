@@ -59,9 +59,9 @@ void StatisticsPage::onResetToDefault()
     m_lscQuotaMonthMb->spinBox()->setValue(0);
     m_cbQuotaBlockInternet->setChecked(false);
 
-    m_cbLogBlockedIp->setChecked(true);
-    m_cbLogAlertedBlockedIp->setChecked(false);
-    m_cbLogAllowedIp->setChecked(false);
+    m_cbLogAllowedConn->setChecked(false);
+    m_cbLogBlockedConn->setChecked(true);
+    m_cbLogAlertedConn->setChecked(false);
     m_lscConnKeepCount->spinBox()->setValue(DEFAULT_LOG_CONN_KEEP_COUNT);
 }
 
@@ -86,9 +86,9 @@ void StatisticsPage::onRetranslateUi()
     m_lscQuotaMonthMb->label()->setText(tr("Month's Quota:"));
     m_cbQuotaBlockInternet->setText(tr("Block Internet traffic when quota exceeds"));
 
-    m_cbLogBlockedIp->setText(tr("Collect blocked connections"));
-    m_cbLogAlertedBlockedIp->setText(tr("Alerted only"));
-    m_cbLogAllowedIp->setText(tr("Collect allowed connections"));
+    m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
+    m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
+    m_cbLogAlertedConn->setText(tr("Alerted only"));
     m_lscConnKeepCount->label()->setText(tr("Keep count for connections:"));
 
     retranslateTrafKeepDayNames();
@@ -330,56 +330,48 @@ void StatisticsPage::setupQuota()
 
 void StatisticsPage::setupConnBox()
 {
-    setupLogBlockedIp();
-    setupLogAllowedIp();
-    setupConnKeepCount();
+    setupLogConn();
 
     // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbLogBlockedIp, m_cbLogAlertedBlockedIp, ControlUtil::createSeparator(),
-                    m_cbLogAllowedIp, ControlUtil::createSeparator(), m_lscConnKeepCount });
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbLogAllowedConn, m_cbLogBlockedConn,
+            m_cbLogAlertedConn, ControlUtil::createSeparator(), m_lscConnKeepCount });
 
     m_gbConn = new QGroupBox();
     m_gbConn->setLayout(layout);
 }
 
-void StatisticsPage::setupLogBlockedIp()
+void StatisticsPage::setupLogConn()
 {
-    m_cbLogBlockedIp = ControlUtil::createCheckBox(conf()->logBlockedIp(), [&](bool checked) {
-        if (conf()->logBlockedIp() != checked) {
-            conf()->setLogBlockedIp(checked);
+    // Allowed Connection
+    m_cbLogAllowedConn = ControlUtil::createCheckBox(conf()->logAllowedConn(), [&](bool checked) {
+        if (conf()->logAllowedConn() != checked) {
+            conf()->setLogAllowedConn(checked);
+            ctrl()->setFlagsEdited();
+        }
+    });
+    m_cbLogAllowedConn->setFont(GuiUtil::fontBold());
+
+    // Blocked Connection
+    m_cbLogBlockedConn = ControlUtil::createCheckBox(conf()->logBlockedConn(), [&](bool checked) {
+        if (conf()->logBlockedConn() != checked) {
+            conf()->setLogBlockedConn(checked);
+            ctrl()->setFlagsEdited();
+        }
+    });
+    m_cbLogBlockedConn->setFont(GuiUtil::fontBold());
+
+    // Alerted Connection
+    m_cbLogAlertedConn = ControlUtil::createCheckBox(conf()->logAlertedConn(), [&](bool checked) {
+        if (conf()->logAlertedConn() != checked) {
+            conf()->setLogAlertedConn(checked);
             ctrl()->setFlagsEdited();
         }
     });
 
-    m_cbLogBlockedIp->setFont(GuiUtil::fontBold());
-
-    m_cbLogAlertedBlockedIp =
-            ControlUtil::createCheckBox(conf()->logAlertedBlockedIp(), [&](bool checked) {
-                if (conf()->logAlertedBlockedIp() != checked) {
-                    conf()->setLogAlertedBlockedIp(checked);
-                    ctrl()->setFlagsEdited();
-                }
-            });
-}
-
-void StatisticsPage::setupLogAllowedIp()
-{
-    m_cbLogAllowedIp = ControlUtil::createCheckBox(conf()->logAllowedIp(), [&](bool checked) {
-        if (conf()->logAllowedIp() != checked) {
-            conf()->setLogAllowedIp(checked);
-            ctrl()->setFlagsEdited();
-        }
-    });
-
-    m_cbLogAllowedIp->setFont(GuiUtil::fontBold());
-}
-
-void StatisticsPage::setupConnKeepCount()
-{
-    const auto logIpKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
+    // Connections Keep Count
+    const auto logConnKeepCountList = SpinCombo::makeValuesList(logIpKeepCountValues);
     m_lscConnKeepCount = ControlUtil::createSpinCombo(
-            ini()->connKeepCount(), 0, 999999999, logIpKeepCountList, {}, [&](int value) {
+            ini()->connKeepCount(), 0, 999999999, logConnKeepCountList, {}, [&](int value) {
                 if (ini()->connKeepCount() != value) {
                     ini()->setConnKeepCount(value);
                     ctrl()->setIniEdited();

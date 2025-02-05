@@ -147,8 +147,8 @@ private:
     QComboBox *m_comboApplyChild = nullptr;
     QCheckBox *m_cbKillChild = nullptr;
     QCheckBox *m_cbParked = nullptr;
-    QCheckBox *m_cbLogBlocked = nullptr;
-    QCheckBox *m_cbLogConn = nullptr;
+    QCheckBox *m_cbLogAllowedConn = nullptr;
+    QCheckBox *m_cbLogBlockedConn = nullptr;
     QCheckBox *m_cbLanOnly = nullptr;
     ZonesSelector *m_btZones = nullptr;
     LineEdit *m_editRuleName = nullptr;

@@ -4,42 +4,43 @@
 
 #include "fortdef.h"
 
-FORT_API void fort_log_blocked_header_write(char *p, BOOL blocked, UINT32 pid, UINT32 path_len)
+FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT32 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
-    *up++ = fort_log_flag_type(blocked ? FORT_LOG_TYPE_BLOCKED : FORT_LOG_TYPE_ALLOWED) | path_len;
+    *up++ = fort_log_flag_type(FORT_LOG_TYPE_APP) | (blocked ? FORT_LOG_FLAG_OPT_BLOCKED : 0)
+            | path_len;
     *up = pid;
 }
 
-FORT_API void fort_log_blocked_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_PATH path)
+FORT_API void fort_log_app_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_PATH path)
 {
     const UINT16 path_len = path->len;
 
-    fort_log_blocked_header_write(p, blocked, pid, path_len);
+    fort_log_app_header_write(p, blocked, pid, path_len);
 
     if (path_len != 0) {
-        RtlCopyMemory(p + FORT_LOG_BLOCKED_HEADER_SIZE, path->buffer, path_len);
+        RtlCopyMemory(p + FORT_LOG_APP_HEADER_SIZE, path->buffer, path_len);
     }
 }
 
-FORT_API void fort_log_blocked_header_read(
-        const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len)
+FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
-    *blocked = (fort_log_type(up) == FORT_LOG_TYPE_BLOCKED);
+    *blocked = (*up & FORT_LOG_FLAG_OPT_BLOCKED) != 0;
     *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
     *pid = *up;
 }
 
-FORT_API void fort_log_blocked_ip_header_write(char *p, PCFORT_CONF_META_CONN conn, UINT32 path_len)
+FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UINT32 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
-    *up++ = fort_log_flag_type(FORT_LOG_TYPE_BLOCKED_IP) | (conn->isIPv6 ? FORT_LOG_FLAG_IP6 : 0)
-            | (conn->inbound ? FORT_LOG_FLAG_IP_INBOUND : 0) | path_len;
-    *up++ = (conn->inherited ? FORT_LOG_BLOCKED_IP_INHERITED : 0) | ((UINT32) conn->reason << 8)
+    *up++ = fort_log_flag_type(FORT_LOG_TYPE_CONN) | (conn->blocked ? FORT_LOG_FLAG_OPT_BLOCKED : 0)
+            | path_len;
+    *up++ = (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
+            | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0) | ((UINT32) conn->reason << 8)
             | ((UINT32) conn->ip_proto << 16);
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
     *up++ = conn->process_id;
@@ -54,28 +55,28 @@ FORT_API void fort_log_blocked_ip_header_write(char *p, PCFORT_CONF_META_CONN co
     RtlCopyMemory(up, conn->remote_ip.data, ip_size);
 }
 
-FORT_API void fort_log_blocked_ip_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path)
+FORT_API void fort_log_conn_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path)
 {
     const UINT16 path_len = path->len;
 
-    fort_log_blocked_ip_header_write(p, conn, path_len);
+    fort_log_conn_header_write(p, conn, path_len);
 
     if (path_len != 0) {
-        RtlCopyMemory(p + FORT_LOG_BLOCKED_IP_HEADER_SIZE(conn->isIPv6), path->buffer, path_len);
+        RtlCopyMemory(p + FORT_LOG_CONN_HEADER_SIZE(conn->isIPv6), path->buffer, path_len);
     }
 }
 
-FORT_API void fort_log_blocked_ip_header_read(
-        const char *p, PFORT_CONF_META_CONN conn, UINT32 *path_len)
+FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn, UINT32 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
-    conn->isIPv6 = (*up & FORT_LOG_FLAG_IP6) != 0;
-    conn->inbound = (*up & FORT_LOG_FLAG_IP_INBOUND) != 0;
+    conn->blocked = (*up & FORT_LOG_FLAG_OPT_BLOCKED) != 0;
     *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
 
     const UCHAR flags = (UCHAR) *up;
-    conn->inherited = (flags & FORT_LOG_BLOCKED_IP_INHERITED) != 0;
+    conn->isIPv6 = (flags & FORT_LOG_CONN_IP6) != 0;
+    conn->inbound = (flags & FORT_LOG_CONN_INBOUND) != 0;
+    conn->inherited = (flags & FORT_LOG_CONN_INHERITED) != 0;
     conn->reason = (UCHAR) (*up >> 8);
     conn->ip_proto = (UCHAR) (*up++ >> 16);
     conn->local_port = *((const UINT16 *) up);

@@ -106,14 +106,14 @@ public:
     bool logBlocked() const { return m_logBlocked; }
     void setLogBlocked(bool v) { m_logBlocked = v; }
 
-    bool logAllowedIp() const { return m_logAllowedIp; }
-    void setLogAllowedIp(bool v) { m_logAllowedIp = v; }
+    bool logAllowedConn() const { return m_logAllowedConn; }
+    void setLogAllowedConn(bool v) { m_logAllowedConn = v; }
 
-    bool logBlockedIp() const { return m_logBlockedIp; }
-    void setLogBlockedIp(bool v) { m_logBlockedIp = v; }
+    bool logBlockedConn() const { return m_logBlockedConn; }
+    void setLogBlockedConn(bool v) { m_logBlockedConn = v; }
 
-    bool logAlertedBlockedIp() const { return m_logAlertedBlockedIp; }
-    void setLogAlertedBlockedIp(bool v) { m_logAlertedBlockedIp = v; }
+    bool logAlertedConn() const { return m_logAlertedConn; }
+    void setLogAlertedConn(bool v) { m_logAlertedConn = v; }
 
     bool appBlockAll() const { return m_appBlockAll; }
     void setAppBlockAll(bool appBlockAll) { m_appBlockAll = appBlockAll; }
@@ -237,9 +237,9 @@ private:
     uint m_logStatNoFilter : 1 = false;
     uint m_logBlocked : 1 = false;
 
-    uint m_logAllowedIp : 1 = false;
-    uint m_logBlockedIp : 1 = false;
-    uint m_logAlertedBlockedIp : 1 = false;
+    uint m_logAllowedConn : 1 = false;
+    uint m_logBlockedConn : 1 = false;
+    uint m_logAlertedConn : 1 = false;
 
     uint m_appBlockAll : 1 = true;
     uint m_appAllowAll : 1 = false;

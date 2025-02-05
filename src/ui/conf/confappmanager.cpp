@@ -44,8 +44,8 @@ constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
     "    t.kill_child,"                                                                            \
     "    t.lan_only,"                                                                              \
     "    t.parked,"                                                                                \
-    "    t.log_blocked,"                                                                           \
-    "    t.log_conn,"                                                                              \
+    "    t.log_allowed_conn,"                                                                      \
+    "    t.log_blocked_conn,"                                                                      \
     "    t.blocked,"                                                                               \
     "    t.kill_process,"                                                                          \
     "    t.accept_zones,"                                                                          \
@@ -84,7 +84,7 @@ const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1
 const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, path,"
                                  "    name, notes, is_wildcard,"
                                  "    apply_parent, apply_child, apply_spec_child, kill_child,"
-                                 "    lan_only, parked, log_blocked, log_conn,"
+                                 "    lan_only, parked, log_allowed_conn, log_blocked_conn,"
                                  "    blocked, kill_process, accept_zones, reject_zones,"
                                  "    rule_id, end_action, end_time, creat_time)"
                                  "  VALUES(?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
@@ -94,7 +94,7 @@ const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, pat
                                  "    name = ?5, notes = ?6, is_wildcard = ?7,"
                                  "    apply_parent = ?8, apply_child = ?9, apply_spec_child = ?10,"
                                  "    kill_child = ?11, lan_only = ?12, parked = ?13,"
-                                 "    log_blocked = ?14, log_conn = ?15,"
+                                 "    log_allowed_conn = ?14, log_blocked_conn = ?15,"
                                  "    blocked = ?16, kill_process = ?17,"
                                  "    accept_zones = ?18, reject_zones = ?19, rule_id = ?20,"
                                  "    end_action = ?21, end_time = ?22"
@@ -105,7 +105,7 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    name = ?5, notes = ?6, is_wildcard = ?7,"
                                  "    apply_parent = ?8, apply_child = ?9, apply_spec_child = ?10,"
                                  "    kill_child = ?11, lan_only = ?12, parked = ?13,"
-                                 "    log_blocked = ?14, log_conn = ?15,"
+                                 "    log_allowed_conn = ?14, log_blocked_conn = ?15,"
                                  "    blocked = ?16, kill_process = ?17,"
                                  "    accept_zones = ?18, reject_zones = ?19, rule_id = ?20,"
                                  "    end_action = ?21, end_time = ?22"
@@ -234,8 +234,8 @@ void ConfAppManager::beginAddOrUpdateApp(
         app.killChild,
         app.lanOnly,
         app.parked,
-        app.logBlocked,
-        app.logConn,
+        app.logAllowedConn,
+        app.logBlockedConn,
         app.blocked,
         app.killProcess,
         app.acceptZones,
@@ -635,7 +635,7 @@ bool ConfAppManager::importAppsBackup(const QString &path)
 
     const QString columnNames = "origin_path, path, name, notes, is_wildcard,"
                                 " apply_parent, apply_child, apply_spec_child, kill_child,"
-                                " lan_only, parked, log_blocked, log_conn,"
+                                " lan_only, parked, log_allowed_conn, log_blocked_conn,"
                                 " blocked, kill_process, end_action, end_time, creat_time";
 
     const QString sql = "INSERT INTO app(app_group_id, " + columnNames + ") SELECT 1, "
@@ -725,8 +725,8 @@ void ConfAppManager::fillApp(App &app, const SqliteStmt &stmt)
     app.killChild = stmt.columnBool(9);
     app.lanOnly = stmt.columnBool(10);
     app.parked = stmt.columnBool(11);
-    app.logBlocked = stmt.columnBool(12);
-    app.logConn = stmt.columnBool(13);
+    app.logAllowedConn = stmt.columnBool(12);
+    app.logBlockedConn = stmt.columnBool(13);
     app.blocked = stmt.columnBool(14);
     app.killProcess = stmt.columnBool(15);
     app.acceptZones = stmt.columnUInt(16);

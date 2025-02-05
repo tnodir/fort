@@ -37,9 +37,7 @@ private:
     void setupTrafKeep();
     void setupQuota();
     void setupConnBox();
-    void setupLogBlockedIp();
-    void setupLogAllowedIp();
-    void setupConnKeepCount();
+    void setupLogConn();
 
 private:
     QGroupBox *m_gbTraffic = nullptr;
@@ -55,9 +53,9 @@ private:
     LabelSpinCombo *m_lscQuotaDayMb = nullptr;
     LabelSpinCombo *m_lscQuotaMonthMb = nullptr;
     QCheckBox *m_cbQuotaBlockInternet = nullptr;
-    QCheckBox *m_cbLogBlockedIp = nullptr;
-    QCheckBox *m_cbLogAlertedBlockedIp = nullptr;
-    QCheckBox *m_cbLogAllowedIp = nullptr;
+    QCheckBox *m_cbLogAllowedConn = nullptr;
+    QCheckBox *m_cbLogBlockedConn = nullptr;
+    QCheckBox *m_cbLogAlertedConn = nullptr;
     LabelSpinCombo *m_lscConnKeepCount = nullptr;
 };
 

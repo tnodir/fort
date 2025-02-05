@@ -29,11 +29,11 @@ int bufferSize();
 
 quint32 confIoConfOff();
 
-quint32 logBlockedHeaderSize();
-quint32 logBlockedSize(quint32 pathLen);
+quint32 logAppHeaderSize();
+quint32 logAppSize(quint32 pathLen);
 
-quint32 logBlockedIpHeaderSize(bool isIPv6 = false);
-quint32 logBlockedIpSize(quint32 pathLen, bool isIPv6 = false);
+quint32 logConnHeaderSize(bool isIPv6 = false);
+quint32 logConnSize(quint32 pathLen, bool isIPv6 = false);
 
 quint32 logProcNewHeaderSize();
 quint32 logProcNewSize(quint32 pathLen);
@@ -46,11 +46,11 @@ quint32 logTimeSize();
 
 quint8 logType(const char *input);
 
-void logBlockedHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen);
-void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen);
+void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen);
+void logAppHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen);
 
-void logBlockedIpHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint32 pathLen);
-void logBlockedIpHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint32 *pathLen);
+void logConnHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint32 pathLen);
+void logConnHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint32 *pathLen);
 
 void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen);
 void logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen);

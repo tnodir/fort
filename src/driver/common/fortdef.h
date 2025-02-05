@@ -3,17 +3,18 @@
 
 enum FortLogType {
     FORT_LOG_TYPE_NONE = 0,
-    FORT_LOG_TYPE_BLOCKED,
-    FORT_LOG_TYPE_BLOCKED_IP,
-    FORT_LOG_TYPE_ALLOWED,
+    FORT_LOG_TYPE_APP,
+    FORT_LOG_TYPE_CONN,
     FORT_LOG_TYPE_PROMPT,
     FORT_LOG_TYPE_PROC_NEW,
     FORT_LOG_TYPE_STAT_TRAF,
     FORT_LOG_TYPE_TIME,
 };
 
-enum FortLogBlockedIpFlag {
-    FORT_LOG_BLOCKED_IP_INHERITED = (1 << 0),
+enum FortLogConnFlag {
+    FORT_LOG_CONN_IP6 = (1 << 0),
+    FORT_LOG_CONN_INBOUND = (1 << 1),
+    FORT_LOG_CONN_INHERITED = (1 << 2),
 };
 
 enum FortConnReason {

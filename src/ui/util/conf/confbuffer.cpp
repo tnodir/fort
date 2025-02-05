@@ -396,8 +396,8 @@ bool ConfBuffer::parseAppGroups(
         App app;
         app.applyChild = appGroup->applyChild();
         app.lanOnly = appGroup->lanOnly();
-        app.logBlocked = appGroup->logBlocked();
-        app.logConn = appGroup->logConn();
+        app.logAllowedConn = appGroup->logConn();
+        app.logBlockedConn = appGroup->logBlocked();
         app.groupIndex = i;
 
         app.appOriginPath = appGroup->killText();
@@ -502,8 +502,8 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .apply_spec_child = app.applySpecChild,
                 .kill_child = app.killChild,
                 .lan_only = app.lanOnly,
-                .log_blocked = app.logBlocked,
-                .log_conn = app.logConn,
+                .log_allowed_conn = app.logAllowedConn,
+                .log_blocked_conn = app.logBlockedConn,
                 .blocked = app.blocked,
                 .kill_process = app.killProcess,
         },

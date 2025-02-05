@@ -199,8 +199,8 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, Ap
     appRow.killChild = stmt.columnBool(9);
     appRow.lanOnly = stmt.columnBool(10);
     appRow.parked = stmt.columnBool(11);
-    appRow.logBlocked = stmt.columnBool(12);
-    appRow.logConn = stmt.columnBool(13);
+    appRow.logAllowedConn = stmt.columnBool(12);
+    appRow.logBlockedConn = stmt.columnBool(13);
     appRow.blocked = stmt.columnBool(14);
     appRow.killProcess = stmt.columnBool(15);
     appRow.acceptZones = stmt.columnUInt(16);
@@ -296,8 +296,8 @@ QString AppListModel::sqlBase() const
            "    t.kill_child,"
            "    t.lan_only,"
            "    t.parked,"
-           "    t.log_blocked,"
-           "    t.log_conn,"
+           "    t.log_allowed_conn,"
+           "    t.log_blocked_conn,"
            "    t.blocked,"
            "    t.kill_process,"
            "    t.accept_zones,"

@@ -122,8 +122,8 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_cbKillChild->setChecked(appRow.killChild);
 
     m_cbParked->setChecked(appRow.parked);
-    m_cbLogBlocked->setChecked(appRow.logBlocked);
-    m_cbLogConn->setChecked(appRow.logConn);
+    m_cbLogAllowedConn->setChecked(appRow.logAllowedConn);
+    m_cbLogBlockedConn->setChecked(appRow.logBlockedConn);
 
     m_cbLanOnly->setChecked(appRow.lanOnly);
     m_btZones->setZones(appRow.acceptZones);
@@ -279,8 +279,8 @@ void ProgramEditDialog::retranslateUi()
 
     m_cbParked->setText(tr("Parked"));
     m_cbParked->setToolTip(tr("Don't purge as obsolete"));
-    m_cbLogBlocked->setText(tr("Collect blocked connections"));
-    m_cbLogConn->setText(tr("Collect connection statistics"));
+    m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
+    m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
 
     m_cbLanOnly->setText(tr("Block Internet Traffic"));
     m_btZones->retranslateUi();
@@ -726,8 +726,8 @@ void ProgramEditDialog::setupAdvancedOptions()
     layout->addLayout(applyChildLayout);
     layout->addWidget(m_cbKillChild);
     layout->addWidget(ControlUtil::createHSeparator());
-    layout->addWidget(m_cbLogBlocked);
-    layout->addWidget(m_cbLogConn);
+    layout->addWidget(m_cbLogAllowedConn);
+    layout->addWidget(m_cbLogBlockedConn);
 
     auto menu = ControlUtil::createMenuByLayout(layout, this);
 
@@ -765,12 +765,11 @@ void ProgramEditDialog::setupChildOptionsLayout()
 
 void ProgramEditDialog::setupLogOptions()
 {
-    // Log Blocked
-    m_cbLogBlocked = new QCheckBox();
+    // Log Allowed Connections
+    m_cbLogAllowedConn = new QCheckBox();
 
-    // Log Conn
-    m_cbLogConn = new QCheckBox();
-    m_cbLogConn->setVisible(false); // TODO: Collect allowed connections
+    // Log Blocked Connections
+    m_cbLogBlockedConn = new QCheckBox();
 }
 
 void ProgramEditDialog::setupSwitchWildcard()
@@ -935,8 +934,8 @@ void ProgramEditDialog::fillApp(App &app) const
     app.killChild = m_cbKillChild->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();
     app.parked = m_cbParked->isChecked();
-    app.logBlocked = m_cbLogBlocked->isChecked();
-    app.logConn = m_cbLogConn->isChecked();
+    app.logAllowedConn = m_cbLogAllowedConn->isChecked();
+    app.logBlockedConn = m_cbLogBlockedConn->isChecked();
     app.blocked = !m_rbAllow->isChecked();
     app.killProcess = m_rbKillProcess->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();

@@ -53,7 +53,7 @@ void setConf(Device &device)
     FirewallConf conf;
 
     conf.setBootFilter(true);
-    conf.setLogBlockedIp(true);
+    conf.setLogBlockedConn(true);
 
     // Address Groups
     AddressGroup *inetGroup = conf.inetAddressGroup();
@@ -90,7 +90,7 @@ void printLogs(LogBuffer &buf)
             continue;
         }
 
-        ASSERT_EQ(logType, FORT_LOG_TYPE_BLOCKED_IP);
+        ASSERT_EQ(logType, FORT_LOG_TYPE_CONN);
 
         LogEntryConn entry;
         buf.readEntryConn(&entry);

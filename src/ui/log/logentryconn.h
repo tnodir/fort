@@ -8,7 +8,7 @@
 class LogEntryConn : public LogEntryApp
 {
 public:
-    FortLogType type() const override { return FORT_LOG_TYPE_BLOCKED_IP; }
+    FortLogType type() const override { return FORT_LOG_TYPE_CONN; }
 
     bool isIPv6() const { return m_isIPv6; }
     void setIsIPv6(bool isIPv6) { m_isIPv6 = isIPv6; }

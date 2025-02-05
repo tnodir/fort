@@ -11,34 +11,30 @@
 
 #define FORT_LOG_FLAG_TYPE_MASK     0x0FF00000
 #define FORT_LOG_FLAG_TYPE_MASK_OFF 20
-#define FORT_LOG_FLAG_IP6           0x10000000
-#define FORT_LOG_FLAG_IP_INBOUND    0x20000000
+#define FORT_LOG_FLAG_OPT_BLOCKED   0x10000000
 #define FORT_LOG_FLAG_OPT_MASK      0xF0000000
-#define FORT_LOG_FLAG_OPT_MASK_OFF  28
 #define FORT_LOG_FLAG_EX_MASK       (FORT_LOG_FLAG_TYPE_MASK | FORT_LOG_FLAG_OPT_MASK)
 
 #define fort_log_flag_type(type) (((UINT32) (type)) << FORT_LOG_FLAG_TYPE_MASK_OFF)
-#define fort_log_flag_opt(opt)   (((UINT32) (opt)) << FORT_LOG_FLAG_OPT_MASK_OFF)
 
 #define fort_log_type(p)                                                                           \
     ((*((UINT32 *) (p)) & FORT_LOG_FLAG_TYPE_MASK) >> FORT_LOG_FLAG_TYPE_MASK_OFF)
-#define fort_log_opt(p) ((*((UINT32 *) (p)) & FORT_LOG_FLAG_OPT_MASK) >> FORT_LOG_FLAG_OPT_MASK_OFF)
 
-#define FORT_LOG_BLOCKED_HEADER_SIZE (2 * sizeof(UINT32))
+#define FORT_LOG_APP_HEADER_SIZE (2 * sizeof(UINT32))
 
-#define FORT_LOG_BLOCKED_SIZE(path_len)                                                            \
-    FORT_ALIGN_SIZE(FORT_LOG_BLOCKED_HEADER_SIZE + (path_len), FORT_LOG_ALIGN)
+#define FORT_LOG_APP_SIZE(path_len)                                                                \
+    FORT_ALIGN_SIZE(FORT_LOG_APP_HEADER_SIZE + (path_len), FORT_LOG_ALIGN)
 
-#define FORT_LOG_BLOCKED_SIZE_MAX FORT_LOG_BLOCKED_SIZE(FORT_LOG_PATH_MAX)
+#define FORT_LOG_APP_SIZE_MAX FORT_LOG_APP_SIZE(FORT_LOG_PATH_MAX)
 
 #define FORT_IP_ADDR_SIZE(isIPv6) ((isIPv6) ? sizeof(ip6_addr_t) : sizeof(UINT32))
 
-#define FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6) (4 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
+#define FORT_LOG_CONN_HEADER_SIZE(isIPv6) (4 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
 
-#define FORT_LOG_BLOCKED_IP_SIZE(path_len, isIPv6)                                                 \
-    FORT_ALIGN_SIZE(FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6) + (path_len), FORT_LOG_ALIGN)
+#define FORT_LOG_CONN_SIZE(path_len, isIPv6)                                                       \
+    FORT_ALIGN_SIZE(FORT_LOG_CONN_HEADER_SIZE(isIPv6) + (path_len), FORT_LOG_ALIGN)
 
-#define FORT_LOG_BLOCKED_IP_SIZE_MAX FORT_LOG_BLOCKED_IP_SIZE(FORT_LOG_PATH_MAX, /*isIPv6=*/TRUE)
+#define FORT_LOG_CONN_SIZE_MAX FORT_LOG_CONN_SIZE(FORT_LOG_PATH_MAX, /*isIPv6=*/TRUE)
 
 #define FORT_LOG_PROC_NEW_HEADER_SIZE (2 * sizeof(UINT32))
 
@@ -57,26 +53,23 @@
 
 #define FORT_LOG_TIME_SIZE (sizeof(UINT32) + sizeof(INT64))
 
-#define FORT_LOG_SIZE_MAX FORT_LOG_BLOCKED_SIZE_MAX
+#define FORT_LOG_SIZE_MAX FORT_LOG_APP_SIZE_MAX
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-FORT_API void fort_log_blocked_header_write(char *p, BOOL blocked, UINT32 pid, UINT32 path_len);
+FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT32 path_len);
 
-FORT_API void fort_log_blocked_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_PATH path);
+FORT_API void fort_log_app_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_PATH path);
 
-FORT_API void fort_log_blocked_header_read(
-        const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len);
+FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len);
 
-FORT_API void fort_log_blocked_ip_header_write(
-        char *p, PCFORT_CONF_META_CONN conn, UINT32 path_len);
+FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UINT32 path_len);
 
-FORT_API void fort_log_blocked_ip_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path);
+FORT_API void fort_log_conn_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path);
 
-FORT_API void fort_log_blocked_ip_header_read(
-        const char *p, PFORT_CONF_META_CONN conn, UINT32 *path_len);
+FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn, UINT32 *path_len);
 
 FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_len);
 

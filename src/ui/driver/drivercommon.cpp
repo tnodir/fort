@@ -87,24 +87,24 @@ quint32 confIoConfOff()
     return FORT_CONF_IO_CONF_OFF;
 }
 
-quint32 logBlockedHeaderSize()
+quint32 logAppHeaderSize()
 {
-    return FORT_LOG_BLOCKED_HEADER_SIZE;
+    return FORT_LOG_APP_HEADER_SIZE;
 }
 
-quint32 logBlockedSize(quint32 pathLen)
+quint32 logAppSize(quint32 pathLen)
 {
-    return FORT_LOG_BLOCKED_SIZE(pathLen);
+    return FORT_LOG_APP_SIZE(pathLen);
 }
 
-quint32 logBlockedIpHeaderSize(bool isIPv6)
+quint32 logConnHeaderSize(bool isIPv6)
 {
-    return FORT_LOG_BLOCKED_IP_HEADER_SIZE(isIPv6);
+    return FORT_LOG_CONN_HEADER_SIZE(isIPv6);
 }
 
-quint32 logBlockedIpSize(quint32 pathLen, bool isIPv6)
+quint32 logConnSize(quint32 pathLen, bool isIPv6)
 {
-    return FORT_LOG_BLOCKED_IP_SIZE(pathLen, isIPv6);
+    return FORT_LOG_CONN_SIZE(pathLen, isIPv6);
 }
 
 quint32 logProcNewHeaderSize()
@@ -142,24 +142,24 @@ quint8 logType(const char *input)
     return fort_log_type(input);
 }
 
-void logBlockedHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen)
+void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen)
 {
-    fort_log_blocked_header_write(output, blocked, pid, pathLen);
+    fort_log_app_header_write(output, blocked, pid, pathLen);
 }
 
-void logBlockedHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen)
+void logAppHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen)
 {
-    fort_log_blocked_header_read(input, blocked, pid, pathLen);
+    fort_log_app_header_read(input, blocked, pid, pathLen);
 }
 
-void logBlockedIpHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint32 pathLen)
+void logConnHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint32 pathLen)
 {
-    fort_log_blocked_ip_header_write(output, conn, pathLen);
+    fort_log_conn_header_write(output, conn, pathLen);
 }
 
-void logBlockedIpHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint32 *pathLen)
+void logConnHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint32 *pathLen)
 {
-    fort_log_blocked_ip_header_read(input, conn, pathLen);
+    fort_log_conn_header_read(input, conn, pathLen);
 }
 
 void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen)
