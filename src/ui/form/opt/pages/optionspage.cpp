@@ -71,7 +71,7 @@ void OptionsPage::onResetToDefault()
     m_cbLogDebug->setChecked(false);
     m_cbLogConsole->setChecked(false);
 
-    m_cbLogBlocked->setChecked(true);
+    m_cbLogApp->setChecked(true);
     m_cbPurgeOnMounted->setChecked(false);
 }
 
@@ -127,7 +127,7 @@ void OptionsPage::onRetranslateUi()
     m_btPasswordLock->setText(tr("Lock the password (unlocked till \"%1\")")
                     .arg(settings()->passwordUnlockedTillText()));
 
-    m_cbLogBlocked->setText(tr("Collect New Programs"));
+    m_cbLogApp->setText(tr("Collect New Programs"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
 
     m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
@@ -378,7 +378,7 @@ void OptionsPage::setupPasswordLock()
 
 void OptionsPage::setupProgBox()
 {
-    setupLogBlocked();
+    setupLogApp();
 
     m_cbPurgeOnMounted =
             ControlUtil::createCheckBox(ini()->progPurgeOnMounted(), [&](bool checked) {
@@ -390,22 +390,22 @@ void OptionsPage::setupProgBox()
 
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbLogBlocked, ControlUtil::createSeparator(), m_cbPurgeOnMounted });
+            { m_cbLogApp, ControlUtil::createSeparator(), m_cbPurgeOnMounted });
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);
 }
 
-void OptionsPage::setupLogBlocked()
+void OptionsPage::setupLogApp()
 {
-    m_cbLogBlocked = ControlUtil::createCheckBox(conf()->logBlocked(), [&](bool checked) {
-        if (conf()->logBlocked() != checked) {
-            conf()->setLogBlocked(checked);
+    m_cbLogApp = ControlUtil::createCheckBox(conf()->logApp(), [&](bool checked) {
+        if (conf()->logApp() != checked) {
+            conf()->setLogApp(checked);
             ctrl()->setFlagsEdited();
         }
     });
 
-    m_cbLogBlocked->setFont(GuiUtil::fontBold());
+    m_cbLogApp->setFont(GuiUtil::fontBold());
 }
 
 void OptionsPage::setupUpdateBox()

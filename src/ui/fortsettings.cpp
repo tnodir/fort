@@ -418,7 +418,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setGroupBlocked(iniBool("groupBlocked", true));
     conf.setLogStat(iniBool("logStat", true));
     conf.setLogStatNoFilter(iniBool("logStatNoFilter", true));
-    conf.setLogBlocked(iniBool("logBlocked", true));
+    conf.setLogApp(iniBool("logApp", true));
     conf.setLogAllowedConn(iniBool("logAllowedConn"));
     conf.setLogBlockedConn(iniBool("logBlockedConn", true));
     conf.setLogAlertedConn(iniBool("logAlertedConn"));
@@ -464,7 +464,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
         setIniValue("groupBlocked", conf.groupBlocked());
         setIniValue("logStat", conf.logStat());
         setIniValue("logStatNoFilter", conf.logStatNoFilter());
-        setIniValue("logBlocked", conf.logBlocked());
+        setIniValue("logApp", conf.logApp());
         setIniValue("logAllowedConn", conf.logAllowedConn());
         setIniValue("logBlockedConn", conf.logBlockedConn());
         setIniValue("logAlertedConn", conf.logAlertedConn());
@@ -550,6 +550,13 @@ void FortSettings::migrateIniOnLoad()
         setCacheValue("confFlags/blockInetTraffic", ini()->value("confFlags/stopInetTraffic"));
         setCacheValue("quota/blockInetTraffic", ini()->value("quota/stopInetTraffic"));
     }
+
+    // COMPAT: v3.16.0
+    if (version < 0x031600) {
+        setCacheValue("confFlags/logApp", ini()->value("confFlags/logBlocked"));
+        setCacheValue("confFlags/logBlockedConn", ini()->value("confFlags/logBlockedIp"));
+        setCacheValue("confFlags/logAlertedConn", ini()->value("confFlags/logAlertedBlockedIp"));
+    }
 }
 
 void FortSettings::migrateIniOnWrite()
@@ -593,6 +600,17 @@ void FortSettings::migrateIniOnWrite()
     // COMPAT: v3.14.9: .ini ~> .user.ini
     if (version < 0x031409) {
         removeIniKey("graphWindow");
+    }
+
+    // COMPAT: v3.16.0
+    if (version < 0x031600) {
+        removeIniKey("confFlags/logBlocked");
+        removeIniKey("confFlags/logAllowedIp");
+        removeIniKey("confFlags/logBlockedIp");
+        removeIniKey("confFlags/logAlertedBlockedIp");
+        ini()->setValue("confFlags/logApp", cacheValue("confFlags/logApp"));
+        ini()->setValue("confFlags/logBlockedConn", cacheValue("confFlags/logBlockedConn"));
+        ini()->setValue("confFlags/logAlertedConn", cacheValue("confFlags/logAlertedConn"));
     }
 }
 

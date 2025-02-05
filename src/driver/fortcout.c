@@ -162,7 +162,7 @@ inline static BOOL fort_callout_ale_log_app_path_check(
         FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
     return app_data.found == 0 && conf_flags.filter_enabled
-            && (conf_flags.allow_all_new || conf_flags.log_blocked);
+            && (conf_flags.allow_all_new || conf_flags.log_app);
 }
 
 inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,

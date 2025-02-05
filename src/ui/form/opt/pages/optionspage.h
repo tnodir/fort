@@ -39,7 +39,7 @@ private:
     void setupEditPassword();
     void setupPasswordLock();
     void setupProgBox();
-    void setupLogBlocked();
+    void setupLogApp();
     void setupUpdateBox();
     void setupLogsBox();
 
@@ -67,7 +67,7 @@ private:
     QLineEdit *m_editPassword = nullptr;
     QToolButton *m_btPasswordLock = nullptr;
 
-    QCheckBox *m_cbLogBlocked = nullptr;
+    QCheckBox *m_cbLogApp = nullptr;
     QCheckBox *m_cbPurgeOnMounted = nullptr;
 
     QCheckBox *m_cbUpdateKeepCurrentVersion = nullptr;

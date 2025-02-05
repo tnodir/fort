@@ -103,8 +103,8 @@ public:
     bool logStatNoFilter() const { return m_logStatNoFilter; }
     void setLogStatNoFilter(bool v) { m_logStatNoFilter = v; }
 
-    bool logBlocked() const { return m_logBlocked; }
-    void setLogBlocked(bool v) { m_logBlocked = v; }
+    bool logApp() const { return m_logApp; }
+    void setLogApp(bool v) { m_logApp = v; }
 
     bool logAllowedConn() const { return m_logAllowedConn; }
     void setLogAllowedConn(bool v) { m_logAllowedConn = v; }
@@ -235,7 +235,7 @@ private:
 
     uint m_logStat : 1 = false;
     uint m_logStatNoFilter : 1 = false;
-    uint m_logBlocked : 1 = false;
+    uint m_logApp : 1 = false;
 
     uint m_logAllowedConn : 1 = false;
     uint m_logBlockedConn : 1 = false;
