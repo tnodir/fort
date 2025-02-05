@@ -25,12 +25,15 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(db);
     Q_UNUSED(version);
+    Q_UNUSED(isNewDb);
     Q_UNUSED(ctx);
 
+#if 0
     if (isNewDb) {
         // COMPAT: DB schema
         return true;
     }
+#endif
 
     return true;
 }
