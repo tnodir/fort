@@ -320,7 +320,7 @@ static BOOL fort_callout_ale_app_filtered(
     return fort_callout_ale_conn_rule_filtered(conn, app_data.rule_id, FORT_CONN_REASON_RULE);
 }
 
-inline static BOOL fort_callout_ale_flags_allowed(
+inline static BOOL fort_callout_ale_filter_mode_allowed(
         PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
 {
     /* "Auto-Learn" or "Ask to Connect" */
@@ -329,7 +329,6 @@ inline static BOOL fort_callout_ale_flags_allowed(
 
     /* Block/Allow All */
     if (conf_flags.app_block_all || conf_flags.app_allow_all) {
-        conn->reason = FORT_CONN_REASON_FILTER_MODE;
         return conf_flags.app_allow_all;
     }
 
@@ -362,6 +361,7 @@ inline static BOOL fort_callout_ale_filtered(
 
     if (isAppFound) {
         conn->blocked = FALSE;
+        conn->reason = FORT_CONN_REASON_PROGRAM;
         return TRUE; /* allow App */
     }
 
@@ -380,7 +380,12 @@ inline static BOOL fort_callout_ale_allowed(
         return !conn->blocked;
     }
 
-    return fort_callout_ale_flags_allowed(conn, conf_flags);
+    if (fort_callout_ale_filter_mode_allowed(conn, conf_flags)) {
+        conn->reason = FORT_CONN_REASON_FILTER_MODE;
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
