@@ -45,8 +45,8 @@ private:
 
     void processLogEntries(LogBuffer *logBuffer);
     bool processLogEntry(LogBuffer *logBuffer, FortLogType logType);
-    bool processLogEntryBlocked(LogBuffer *logBuffer);
-    bool processLogEntryBlockedIp(LogBuffer *logBuffer);
+    bool processLogEntryApp(LogBuffer *logBuffer);
+    bool processLogEntryConn(LogBuffer *logBuffer);
     bool processLogEntryProcNew(LogBuffer *logBuffer);
     bool processLogEntryStatTraf(LogBuffer *logBuffer);
     bool processLogEntryTime(LogBuffer *logBuffer);

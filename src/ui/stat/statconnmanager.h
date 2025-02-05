@@ -1,5 +1,5 @@
-#ifndef STATBLOCKMANAGER_H
-#define STATBLOCKMANAGER_H
+#ifndef STATCONNMANAGER_H
+#define STATCONNMANAGER_H
 
 #include <QObject>
 
@@ -11,16 +11,16 @@
 #include <util/worker/workermanager.h>
 
 class IniOptions;
-class LogEntryBlockedIp;
+class LogEntryConn;
 
-class StatBlockManager : public WorkerManager, public IocService
+class StatConnManager : public WorkerManager, public IocService
 {
     Q_OBJECT
 
 public:
-    explicit StatBlockManager(
+    explicit StatConnManager(
             const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
-    CLASS_DELETE_COPY_MOVE(StatBlockManager)
+    CLASS_DELETE_COPY_MOVE(StatConnManager)
 
     SqliteDb *sqliteDb() const { return m_sqliteDb.data(); }
     SqliteDb *roSqliteDb() const { return m_roSqliteDb.data(); }
@@ -28,7 +28,7 @@ public:
     void setUp() override;
     void tearDown() override;
 
-    void logBlockedIp(const LogEntryBlockedIp &entry);
+    void logConn(const LogEntryConn &entry);
 
     virtual void deleteConn(qint64 connIdTo = 0);
 
@@ -37,12 +37,12 @@ public:
 signals:
     void connChanged();
 
-    void logBlockedIpFinished(int count, qint64 newConnId);
-    void deleteConnBlockFinished(qint64 connIdTo);
+    void logConnFinished(int count, qint64 newConnId);
+    void deleteConnFinished(qint64 connIdTo);
 
 private:
-    void onLogBlockedIpFinished(int count, qint64 newConnId);
-    void onDeleteConnBlockFinished(qint64 connIdTo);
+    void onLogConnFinished(int count, qint64 newConnId);
+    void onDeleteConnFinished(qint64 connIdTo);
 
     void emitConnChanged();
 
@@ -69,4 +69,4 @@ private:
     TriggerTimer m_connChangedTimer;
 };
 
-#endif // STATBLOCKMANAGER_H
+#endif // STATCONNMANAGER_H

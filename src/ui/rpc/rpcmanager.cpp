@@ -18,7 +18,7 @@
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/serviceinfomanagerrpc.h>
-#include <rpc/statblockmanagerrpc.h>
+#include <rpc/statconnmanagerrpc.h>
 #include <rpc/statmanagerrpc.h>
 #include <rpc/taskmanagerrpc.h>
 #include <util/ioc/ioccontainer.h>
@@ -88,7 +88,7 @@ void RpcManager::setupServerSignals()
     DriverManagerRpc::setupServerSignals(this);
     QuotaManagerRpc::setupServerSignals(this);
     StatManagerRpc::setupServerSignals(this);
-    StatBlockManagerRpc::setupServerSignals(this);
+    StatConnManagerRpc::setupServerSignals(this);
     TaskManagerRpc::setupServerSignals(this);
 }
 
@@ -226,7 +226,7 @@ static const processManager_func processManager_funcList[] = {
     &DriverManagerRpc::processServerCommand, // Control::Rpc_DriverManager,
     &QuotaManagerRpc::processServerCommand, // Control::Rpc_QuotaManager,
     &StatManagerRpc::processServerCommand, // Control::Rpc_StatManager,
-    &StatBlockManagerRpc::processServerCommand, // Control::Rpc_StatBlockManager,
+    &StatConnManagerRpc::processServerCommand, // Control::Rpc_StatBlockManager,
     &ServiceInfoManagerRpc::processServerCommand, // Control::Rpc_ServiceInfoManager,
     &TaskManagerRpc::processServerCommand, // Control::Rpc_TaskManager,
 };

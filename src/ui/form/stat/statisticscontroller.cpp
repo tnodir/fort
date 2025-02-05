@@ -1,16 +1,16 @@
 #include "statisticscontroller.h"
 
-#include <stat/statblockmanager.h>
+#include <stat/statconnmanager.h>
 #include <util/ioc/ioccontainer.h>
 
 StatisticsController::StatisticsController(QObject *parent) : BaseController(parent) { }
 
-StatBlockManager *StatisticsController::statBlockManager() const
+StatConnManager *StatisticsController::statConnManager() const
 {
-    return IoC<StatBlockManager>();
+    return IoC<StatConnManager>();
 }
 
-void StatisticsController::deleteBlockedConn(qint64 connIdTo)
+void StatisticsController::deleteConn(qint64 connIdTo)
 {
-    statBlockManager()->deleteConn(connIdTo);
+    statConnManager()->deleteConn(connIdTo);
 }

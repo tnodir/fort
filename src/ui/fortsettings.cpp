@@ -43,9 +43,9 @@ QString FortSettings::statFilePath() const
     return statPath() + APP_BASE + ".stat";
 }
 
-QString FortSettings::statBlockFilePath() const
+QString FortSettings::statConnFilePath() const
 {
-    return statFilePath() + "-block";
+    return statFilePath() + "-conn";
 }
 
 QString FortSettings::cacheFilePath() const

@@ -1,4 +1,4 @@
-#include "deleteconnblockjob.h"
+#include "deleteconnjob.h"
 
 #include <sqlite/dbutil.h>
 #include <sqlite/sqlitedb.h>
@@ -6,17 +6,17 @@
 
 #include <util/worker/workerobject.h>
 
-#include "statblockmanager.h"
+#include "statconnmanager.h"
 #include "statsql.h"
 
-DeleteConnBlockJob::DeleteConnBlockJob(qint64 connIdTo) : m_connIdTo(connIdTo) { }
+DeleteConnJob::DeleteConnJob(qint64 connIdTo) : m_connIdTo(connIdTo) { }
 
-bool DeleteConnBlockJob::processMerge(const StatBlockBaseJob &statJob)
+bool DeleteConnJob::processMerge(const StatConnBaseJob &statJob)
 {
     if (connIdTo() <= 0)
         return true; // already delete all
 
-    const auto &job = static_cast<const DeleteConnBlockJob &>(statJob);
+    const auto &job = static_cast<const DeleteConnJob &>(statJob);
 
     if (job.connIdTo() <= 0 || connIdTo() < job.connIdTo()) {
         m_connIdTo = job.connIdTo();
@@ -25,7 +25,7 @@ bool DeleteConnBlockJob::processMerge(const StatBlockBaseJob &statJob)
     return true;
 }
 
-void DeleteConnBlockJob::processJob()
+void DeleteConnJob::processJob()
 {
     const bool isDeleteAll = (connIdTo() <= 0);
 
@@ -33,10 +33,10 @@ void DeleteConnBlockJob::processJob()
 
     SqliteStmtList stmtList;
     if (isDeleteAll) {
-        stmtList = { getStmt(StatSql::sqlDeleteAllConnBlock), getStmt(StatSql::sqlDeleteAllApps) };
+        stmtList = { getStmt(StatSql::sqlDeleteAllConn), getStmt(StatSql::sqlDeleteAllApps) };
     } else {
-        stmtList = { getIdStmt(StatSql::sqlDeleteConnBlock, connIdTo()),
-            getStmt(StatSql::sqlDeleteConnBlockApps) };
+        stmtList = { getIdStmt(StatSql::sqlDeleteConn, connIdTo()),
+            getStmt(StatSql::sqlDeleteConnApps) };
     }
 
     DbUtil::doList(stmtList);
@@ -50,7 +50,7 @@ void DeleteConnBlockJob::processJob()
     setResultCount(1);
 }
 
-void DeleteConnBlockJob::emitFinished()
+void DeleteConnJob::emitFinished()
 {
-    emit manager()->deleteConnBlockFinished(connIdTo());
+    emit manager()->deleteConnFinished(connIdTo());
 }

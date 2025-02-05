@@ -1,18 +1,18 @@
-#ifndef STATBLOCKMANAGERRPC_H
-#define STATBLOCKMANAGERRPC_H
+#ifndef STATCONNMANAGERRPC_H
+#define STATCONNMANAGERRPC_H
 
-#include <stat/statblockmanager.h>
+#include <stat/statconnmanager.h>
 
 class RpcManager;
 
 struct ProcessCommandArgs;
 
-class StatBlockManagerRpc : public StatBlockManager
+class StatConnManagerRpc : public StatConnManager
 {
     Q_OBJECT
 
 public:
-    explicit StatBlockManagerRpc(const QString &filePath, QObject *parent = nullptr);
+    explicit StatConnManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
     void deleteConn(qint64 connIdTo = 0) override;
 
@@ -26,4 +26,4 @@ protected:
     void setupConfManager() override { }
 };
 
-#endif // STATBLOCKMANAGERRPC_H
+#endif // STATCONNMANAGERRPC_H

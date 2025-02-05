@@ -6,8 +6,8 @@
 
 #include "logentry.h"
 
-class LogEntryBlocked;
-class LogEntryBlockedIp;
+class LogEntryApp;
+class LogEntryConn;
 class LogEntryProcNew;
 class LogEntryStatTraf;
 class LogEntryTime;
@@ -26,11 +26,11 @@ public:
 
     FortLogType peekEntryType();
 
-    void writeEntryBlocked(const LogEntryBlocked *logEntry);
-    void readEntryBlocked(LogEntryBlocked *logEntry);
+    void writeEntryApp(const LogEntryApp *logEntry);
+    void readEntryApp(LogEntryApp *logEntry);
 
-    void writeEntryBlockedIp(const LogEntryBlockedIp *logEntry);
-    void readEntryBlockedIp(LogEntryBlockedIp *logEntry);
+    void writeEntryConn(const LogEntryConn *logEntry);
+    void readEntryConn(LogEntryConn *logEntry);
 
     void writeEntryProcNew(const LogEntryProcNew *logEntry);
     void readEntryProcNew(LogEntryProcNew *logEntry);

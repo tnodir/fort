@@ -2,8 +2,8 @@
 
 #include <driver/drivercommon.h>
 
-#include "logentryblocked.h"
-#include "logentryblockedip.h"
+#include "logentryapp.h"
+#include "logentryconn.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "logentrytime.h"
@@ -51,7 +51,7 @@ FortLogType LogBuffer::peekEntryType()
     return static_cast<FortLogType>(type);
 }
 
-void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
+void LogBuffer::writeEntryApp(const LogEntryApp *logEntry)
 {
     const QString path = logEntry->kernelPath();
     const quint32 pathLen = quint32(path.size()) * sizeof(wchar_t);
@@ -71,7 +71,7 @@ void LogBuffer::writeEntryBlocked(const LogEntryBlocked *logEntry)
     m_top += entrySize;
 }
 
-void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
+void LogBuffer::readEntryApp(LogEntryApp *logEntry)
 {
     Q_ASSERT(m_offset < m_top);
 
@@ -95,7 +95,7 @@ void LogBuffer::readEntryBlocked(LogEntryBlocked *logEntry)
     m_offset += entrySize;
 }
 
-void LogBuffer::writeEntryBlockedIp(const LogEntryBlockedIp *logEntry)
+void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
 {
     const QString path = logEntry->kernelPath();
     const quint32 pathLen = quint32(path.size()) * sizeof(wchar_t);
@@ -129,7 +129,7 @@ void LogBuffer::writeEntryBlockedIp(const LogEntryBlockedIp *logEntry)
     m_top += entrySize;
 }
 
-void LogBuffer::readEntryBlockedIp(LogEntryBlockedIp *logEntry)
+void LogBuffer::readEntryConn(LogEntryConn *logEntry)
 {
     Q_ASSERT(m_offset < m_top);
 

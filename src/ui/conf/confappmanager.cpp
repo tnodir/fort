@@ -11,7 +11,7 @@
 #include <appinfo/appinfoutil.h>
 #include <conf/app.h>
 #include <driver/drivermanager.h>
-#include <log/logentryblocked.h>
+#include <log/logentryapp.h>
 #include <log/logmanager.h>
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
@@ -199,7 +199,7 @@ void ConfAppManager::updateAppEndTimer()
     m_appEndTimer.start(interval);
 }
 
-bool ConfAppManager::addAppPathBlocked(App &app)
+bool ConfAppManager::addApp(App &app)
 {
     app.appId = appIdByPath(app.appOriginPath, app.appPath);
 
@@ -284,7 +284,7 @@ void ConfAppManager::emitAppUpdated()
     m_appUpdatedTimer.startTrigger();
 }
 
-void ConfAppManager::logBlockedApp(const LogEntryBlocked &logEntry)
+void ConfAppManager::logApp(const LogEntryApp &logEntry)
 {
     App app;
     app.blocked = logEntry.blocked();
@@ -292,7 +292,7 @@ void ConfAppManager::logBlockedApp(const LogEntryBlocked &logEntry)
     app.appOriginPath = FileUtil::realPath(logEntry.path());
     app.scheduleAction = App::ScheduleRemove; // default action for alert
 
-    addAppPathBlocked(app);
+    addApp(app);
 }
 
 qint64 ConfAppManager::appIdByPath(const QString &appOriginPath, QString &normPath)
@@ -309,7 +309,7 @@ bool ConfAppManager::addOrUpdateAppPath(
     app.blocked = blocked;
     app.appOriginPath = appOriginPath;
 
-    bool ok = addAppPathBlocked(app);
+    bool ok = addApp(app);
 
     if (!ok && app.appId > 0) {
         ok = updateAppsBlocked({ app.appId }, blocked, killProcess);

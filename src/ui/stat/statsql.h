@@ -66,14 +66,14 @@ public:
     static const char *const sqlResetAppTrafTotals;
     static const char *const sqlDeleteAllTraffic;
 
-    static const char *const sqlInsertConnBlock;
+    static const char *const sqlInsertConn;
 
-    static const char *const sqlSelectMinMaxConnBlockId;
+    static const char *const sqlSelectMinMaxConnId;
 
-    static const char *const sqlDeleteConnBlock;
-    static const char *const sqlDeleteConnBlockApps;
+    static const char *const sqlDeleteConn;
+    static const char *const sqlDeleteConnApps;
 
-    static const char *const sqlDeleteAllConnBlock;
+    static const char *const sqlDeleteAllConn;
     static const char *const sqlDeleteAllApps;
 };
 

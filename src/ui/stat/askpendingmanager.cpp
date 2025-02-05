@@ -7,7 +7,7 @@
 
 #include <util/ioc/ioccontainer.h>
 
-#include "logblockedipjob.h"
+#include "logconnjob.h"
 #include "statsql.h"
 
 namespace {
@@ -47,7 +47,7 @@ bool AskPendingManager::setupDb()
     return true;
 }
 
-void AskPendingManager::logBlockedIp(const LogEntryBlockedIp &entry)
+void AskPendingManager::logConn(const LogEntryConn &entry)
 {
     // TODO
     Q_UNUSED(entry);

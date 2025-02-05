@@ -1,42 +1,42 @@
-#ifndef LOGENTRYBLOCKEDIP_H
-#define LOGENTRYBLOCKEDIP_H
+#ifndef LOGENTRYCONN_H
+#define LOGENTRYCONN_H
 
 #include <common/common_types.h>
 
-#include "logentryblocked.h"
+#include "logentryapp.h"
 
-class LogEntryBlockedIp : public LogEntryBlocked
+class LogEntryConn : public LogEntryApp
 {
 public:
     FortLogType type() const override { return FORT_LOG_TYPE_BLOCKED_IP; }
 
     bool isIPv6() const { return m_isIPv6; }
-    void setIsIPv6(bool isIPv6);
+    void setIsIPv6(bool isIPv6) { m_isIPv6 = isIPv6; }
 
     bool inbound() const { return m_inbound; }
-    void setInbound(bool inbound);
+    void setInbound(bool inbound) { m_inbound = inbound; }
 
     bool inherited() const { return m_inherited; }
-    void setInherited(bool inherited);
+    void setInherited(bool inherited) { m_inherited = inherited; }
 
     quint8 reason() const { return m_reason; }
-    void setReason(quint8 blockReason);
+    void setReason(quint8 reason) { m_reason = reason; }
 
     quint8 ipProto() const { return m_ipProto; }
-    void setIpProto(quint8 proto);
+    void setIpProto(quint8 proto) { m_ipProto = proto; }
 
     quint16 localPort() const { return m_localPort; }
-    void setLocalPort(quint16 port);
+    void setLocalPort(quint16 port) { m_localPort = port; }
 
     quint16 remotePort() const { return m_remotePort; }
-    void setRemotePort(quint16 port);
+    void setRemotePort(quint16 port) { m_remotePort = port; }
 
     qint64 connTime() const { return m_connTime; }
-    void setConnTime(qint64 connTime);
+    void setConnTime(qint64 connTime) { m_connTime = connTime; }
 
     const ip_addr_t &localIp() const { return m_localIp; }
     ip_addr_t &localIp() { return m_localIp; }
-    void setLocalIp(const ip_addr_t ip);
+    void setLocalIp(const ip_addr_t ip) { m_localIp = ip; }
 
     quint32 localIp4() const { return m_localIp.v4; }
     void setLocalIp4(quint32 ip);
@@ -46,7 +46,7 @@ public:
 
     const ip_addr_t &remoteIp() const { return m_remoteIp; }
     ip_addr_t &remoteIp() { return m_remoteIp; }
-    void setRemoteIp(const ip_addr_t ip);
+    void setRemoteIp(const ip_addr_t ip) { m_remoteIp = ip; }
 
     quint32 remoteIp4() const { return m_remoteIp.v4; }
     void setRemoteIp4(quint32 ip);
@@ -69,4 +69,4 @@ private:
     ip_addr_t m_remoteIp;
 };
 
-#endif // LOGENTRYBLOCKEDIP_H
+#endif // LOGENTRYCONN_H

@@ -3,7 +3,7 @@
 
 #include <form/basecontroller.h>
 
-class StatBlockManager;
+class StatConnManager;
 
 class StatisticsController : public BaseController
 {
@@ -12,9 +12,9 @@ class StatisticsController : public BaseController
 public:
     explicit StatisticsController(QObject *parent = nullptr);
 
-    StatBlockManager *statBlockManager() const;
+    StatConnManager *statConnManager() const;
 
-    void deleteBlockedConn(qint64 connIdTo = 0);
+    void deleteConn(qint64 connIdTo = 0);
 
 signals:
     void afterSaveWindowState(IniUser *ini);

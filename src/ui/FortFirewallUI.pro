@@ -117,8 +117,8 @@ SOURCES += \
     hostinfo/hostinfomanager.cpp \
     log/logbuffer.cpp \
     log/logentry.cpp \
-    log/logentryblocked.cpp \
-    log/logentryblockedip.cpp \
+    log/logentryapp.cpp \
+    log/logentryconn.cpp \
     log/logentryprocnew.cpp \
     log/logentrystattraf.cpp \
     log/logentrytime.cpp \
@@ -138,7 +138,7 @@ SOURCES += \
     model/applistmodeldata.cpp \
     model/applistmodelheaderdata.cpp \
     model/appstatmodel.cpp \
-    model/connblocklistmodel.cpp \
+    model/connlistmodel.cpp \
     model/rulelistmodel.cpp \
     model/rulesetmodel.cpp \
     model/servicelistmodel.cpp \
@@ -159,17 +159,17 @@ SOURCES += \
     rpc/quotamanagerrpc.cpp \
     rpc/rpcmanager.cpp \
     rpc/serviceinfomanagerrpc.cpp \
-    rpc/statblockmanagerrpc.cpp \
+    rpc/statconnmanagerrpc.cpp \
     rpc/statmanagerrpc.cpp \
     rpc/taskmanagerrpc.cpp \
     rpc/windowmanagerfake.cpp \
     stat/askpendingmanager.cpp \
-    stat/deleteconnblockjob.cpp \
-    stat/logblockedipjob.cpp \
+    stat/deleteconnjob.cpp \
+    stat/logconnjob.cpp \
     stat/quotamanager.cpp \
-    stat/statblockbasejob.cpp \
-    stat/statblockmanager.cpp \
-    stat/statblockworker.cpp \
+    stat/statconnbasejob.cpp \
+    stat/statconnmanager.cpp \
+    stat/statconnworker.cpp \
     stat/statmanager.cpp \
     stat/statsql.cpp \
     task/taskdownloader.cpp \
@@ -358,8 +358,8 @@ HEADERS += \
     hostinfo/hostinfomanager.h \
     log/logbuffer.h \
     log/logentry.h \
-    log/logentryblocked.h \
-    log/logentryblockedip.h \
+    log/logentryapp.h \
+    log/logentryconn.h \
     log/logentryprocnew.h \
     log/logentrystattraf.h \
     log/logentrytime.h \
@@ -380,7 +380,7 @@ HEADERS += \
     model/applistmodeldata.h \
     model/applistmodelheaderdata.h \
     model/appstatmodel.h \
-    model/connblocklistmodel.h \
+    model/connlistmodel.h \
     model/rulelistmodel.h \
     model/rulesetmodel.h \
     model/servicelistmodel.h \
@@ -401,17 +401,17 @@ HEADERS += \
     rpc/quotamanagerrpc.h \
     rpc/rpcmanager.h \
     rpc/serviceinfomanagerrpc.h \
-    rpc/statblockmanagerrpc.h \
+    rpc/statconnmanagerrpc.h \
     rpc/statmanagerrpc.h \
     rpc/taskmanagerrpc.h \
     rpc/windowmanagerfake.h \
     stat/askpendingmanager.h \
-    stat/deleteconnblockjob.h \
-    stat/logblockedipjob.h \
+    stat/deleteconnjob.h \
+    stat/logconnjob.h \
     stat/quotamanager.h \
-    stat/statblockbasejob.h \
-    stat/statblockmanager.h \
-    stat/statblockworker.h \
+    stat/statconnbasejob.h \
+    stat/statconnmanager.h \
+    stat/statconnworker.h \
     stat/statmanager.h \
     stat/statsql.h \
     task/taskdownloader.h \

@@ -14,7 +14,7 @@ class App;
 class AppGroup;
 class ConfManager;
 class FirewallConf;
-class LogEntryBlocked;
+class LogEntryApp;
 
 class ConfAppManager : public QObject, public ConfAppsWalker, public IocService
 {
@@ -31,7 +31,7 @@ public:
 
     void setUp() override;
 
-    void logBlockedApp(const LogEntryBlocked &logEntry);
+    void logApp(const LogEntryApp &logEntry);
 
     qint64 appIdByPath(const QString &appOriginPath, QString &normPath);
 
@@ -70,7 +70,7 @@ protected:
     void updateAppEndTimer();
 
 private:
-    bool addAppPathBlocked(App &app);
+    bool addApp(App &app);
 
     void beginAddOrUpdateApp(App &app, const AppGroup &appGroup, bool onlyUpdate, bool &ok);
     void endAddOrUpdateApp(const App &app, bool onlyUpdate);

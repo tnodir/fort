@@ -1,18 +1,18 @@
-#ifndef STATBLOCKBASEJOB_H
-#define STATBLOCKBASEJOB_H
+#ifndef STATCONNBASEJOB_H
+#define STATCONNBASEJOB_H
 
 #include <sqlite/sqlite_types.h>
 
 #include <util/worker/workerjob.h>
 
-class StatBlockManager;
+class StatConnManager;
 
-class StatBlockBaseJob : public WorkerJob
+class StatConnBaseJob : public WorkerJob
 {
 public:
-    enum StatBlockJobType : qint8 { JobTypeBlockedIp, JobTypeDeleteConn };
+    enum StatConnJobType : qint8 { JobTypeLogConn, JobTypeDeleteConn };
 
-    StatBlockManager *manager() const { return m_manager; }
+    StatConnManager *manager() const { return m_manager; }
     SqliteDb *sqliteDb() const;
 
     bool mergeJob(const WorkerJob &job) override;
@@ -20,10 +20,10 @@ public:
     void doJob(WorkerObject &worker) override;
     void reportResult(WorkerObject &worker) override;
 
-    virtual StatBlockJobType jobType() const = 0;
+    virtual StatConnJobType jobType() const = 0;
 
 protected:
-    virtual bool processMerge(const StatBlockBaseJob &statJob) = 0;
+    virtual bool processMerge(const StatConnBaseJob &statJob) = 0;
     virtual void processJob() = 0;
     virtual void emitFinished() = 0;
 
@@ -36,7 +36,7 @@ protected:
 private:
     int m_resultCount = 0;
 
-    StatBlockManager *m_manager = nullptr;
+    StatConnManager *m_manager = nullptr;
 };
 
-#endif // STATBLOCKBASEJOB_H
+#endif // STATCONNBASEJOB_H

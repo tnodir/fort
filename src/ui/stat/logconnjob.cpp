@@ -1,4 +1,4 @@
-#include "logblockedipjob.h"
+#include "logconnjob.h"
 
 #include <QLoggingCategory>
 
@@ -7,7 +7,7 @@
 
 #include <util/worker/workerobject.h>
 
-#include "statblockmanager.h"
+#include "statconnmanager.h"
 #include "statsql.h"
 
 namespace {
@@ -17,14 +17,14 @@ constexpr int MAX_LOG_BLOCKED_IP_MERGE_COUNT = 1000;
 
 }
 
-LogBlockedIpJob::LogBlockedIpJob(const LogEntryBlockedIp &entry)
+LogConnJob::LogConnJob(const LogEntryConn &entry)
 {
     m_entries.append(entry);
 }
 
-bool LogBlockedIpJob::processMerge(const StatBlockBaseJob &statJob)
+bool LogConnJob::processMerge(const StatConnBaseJob &statJob)
 {
-    const auto &job = static_cast<const LogBlockedIpJob &>(statJob);
+    const auto &job = static_cast<const LogConnJob &>(statJob);
 
     if (m_entries.size() >= MAX_LOG_BLOCKED_IP_MERGE_COUNT)
         return false;
@@ -34,13 +34,13 @@ bool LogBlockedIpJob::processMerge(const StatBlockBaseJob &statJob)
     return true;
 }
 
-void LogBlockedIpJob::processJob()
+void LogConnJob::processJob()
 {
     int resultCount = 0;
 
     sqliteDb()->beginWriteTransaction();
 
-    for (const LogEntryBlockedIp &entry : entries()) {
+    for (const LogEntryConn &entry : entries()) {
         if (processEntry(entry)) {
             ++resultCount;
         }
@@ -51,12 +51,12 @@ void LogBlockedIpJob::processJob()
     setResultCount(resultCount);
 }
 
-void LogBlockedIpJob::emitFinished()
+void LogConnJob::emitFinished()
 {
-    emit manager()->logBlockedIpFinished(resultCount(), m_connId);
+    emit manager()->logConnFinished(resultCount(), m_connId);
 }
 
-bool LogBlockedIpJob::processEntry(const LogEntryBlockedIp &entry)
+bool LogConnJob::processEntry(const LogEntryConn &entry)
 {
     const qint64 appId = getOrCreateAppId(entry.path(), entry.connTime());
     if (appId == INVALID_APP_ID)
@@ -73,7 +73,7 @@ bool LogBlockedIpJob::processEntry(const LogEntryBlockedIp &entry)
     return true;
 }
 
-qint64 LogBlockedIpJob::getAppId(const QString &appPath)
+qint64 LogConnJob::getAppId(const QString &appPath)
 {
     qint64 appId = INVALID_APP_ID;
 
@@ -88,7 +88,7 @@ qint64 LogBlockedIpJob::getAppId(const QString &appPath)
     return appId;
 }
 
-qint64 LogBlockedIpJob::createAppId(const QString &appPath, qint64 unixTime)
+qint64 LogConnJob::createAppId(const QString &appPath, qint64 unixTime)
 {
     SqliteStmt *stmt = getStmt(StatSql::sqlInsertAppId);
 
@@ -102,7 +102,7 @@ qint64 LogBlockedIpJob::createAppId(const QString &appPath, qint64 unixTime)
     return INVALID_APP_ID;
 }
 
-qint64 LogBlockedIpJob::getOrCreateAppId(const QString &appPath, qint64 unixTime)
+qint64 LogConnJob::getOrCreateAppId(const QString &appPath, qint64 unixTime)
 {
     qint64 appId = getAppId(appPath);
     if (appId == INVALID_APP_ID) {
@@ -114,32 +114,32 @@ qint64 LogBlockedIpJob::getOrCreateAppId(const QString &appPath, qint64 unixTime
     return appId;
 }
 
-qint64 LogBlockedIpJob::insertConn(const LogEntryBlockedIp &entry, qint64 appId)
+qint64 LogConnJob::insertConn(const LogEntryConn &entry, qint64 appId)
 {
-    SqliteStmt *stmt = getStmt(StatSql::sqlInsertConnBlock);
+    SqliteStmt *stmt = getStmt(StatSql::sqlInsertConn);
 
     stmt->bindInt64(1, appId);
     stmt->bindInt64(2, entry.connTime());
     stmt->bindInt(3, entry.pid());
-    stmt->bindInt(4, entry.inbound());
-    stmt->bindInt(5, entry.inherited());
-    stmt->bindInt(6, entry.ipProto());
-    stmt->bindInt(7, entry.localPort());
-    stmt->bindInt(8, entry.remotePort());
+    stmt->bindInt(4, entry.reason());
+    stmt->bindInt(5, entry.blocked());
+    stmt->bindInt(6, entry.inherited());
+    stmt->bindInt(7, entry.inbound());
+    stmt->bindInt(8, entry.ipProto());
+    stmt->bindInt(9, entry.localPort());
+    stmt->bindInt(10, entry.remotePort());
 
     if (!entry.isIPv6()) {
-        stmt->bindInt(9, entry.localIp4());
-        stmt->bindInt(10, entry.remoteIp4());
+        stmt->bindInt(11, entry.localIp4());
+        stmt->bindInt(12, entry.remoteIp4());
+        stmt->bindNull(13);
+        stmt->bindNull(14);
+    } else {
         stmt->bindNull(11);
         stmt->bindNull(12);
-    } else {
-        stmt->bindNull(9);
-        stmt->bindNull(10);
-        stmt->bindBlobView(11, entry.localIp6View());
-        stmt->bindBlobView(12, entry.remoteIp6View());
+        stmt->bindBlobView(13, entry.localIp6View());
+        stmt->bindBlobView(14, entry.remoteIp6View());
     }
-
-    stmt->bindInt(13, entry.reason());
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();

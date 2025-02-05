@@ -35,7 +35,7 @@
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/rpcmanager.h>
 #include <rpc/serviceinfomanagerrpc.h>
-#include <rpc/statblockmanagerrpc.h>
+#include <rpc/statconnmanagerrpc.h>
 #include <rpc/statmanagerrpc.h>
 #include <rpc/taskmanagerrpc.h>
 #include <rpc/windowmanagerfake.h>
@@ -67,7 +67,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new ConfZoneManager());
     ioc->setService(new QuotaManager());
     ioc->setService(new StatManager(settings->statFilePath()));
-    ioc->setService(new StatBlockManager(settings->statBlockFilePath()));
+    ioc->setService(new StatConnManager(settings->statConnFilePath()));
     ioc->setService(new AskPendingManager());
     ioc->setService(new AutoUpdateManager(settings->updatePath()));
     ioc->setService(new DriverManager());
@@ -89,7 +89,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<ConfZoneManager>(new ConfZoneManagerRpc());
     ioc->setService<QuotaManager>(new QuotaManagerRpc());
     ioc->setService<StatManager>(new StatManagerRpc(settings->statFilePath()));
-    ioc->setService<StatBlockManager>(new StatBlockManagerRpc(settings->statBlockFilePath()));
+    ioc->setService<StatConnManager>(new StatConnManagerRpc(settings->statConnFilePath()));
     ioc->setService<AskPendingManager>(new AskPendingManagerRpc());
     ioc->setService<AutoUpdateManager>(new AutoUpdateManagerRpc(settings->updatePath()));
     ioc->setService<DriverManager>(new DriverManagerRpc());
@@ -236,7 +236,7 @@ void FortManager::createManagers()
 
     if (settings->isMaster()) {
         // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
-        FileUtil::copyFile(settings->statFilePath(), settings->statBlockFilePath());
+        FileUtil::removeFile(settings->statFilePath() + "-block");
     }
 
     ioc->setUpAll();

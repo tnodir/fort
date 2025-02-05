@@ -11,7 +11,7 @@
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
 #include <log/logbuffer.h>
-#include <log/logentryblockedip.h>
+#include <log/logentryconn.h>
 #include <log/logentrytime.h>
 #include <manager/envmanager.h>
 #include <util/conf/confappswalker.h>
@@ -92,8 +92,8 @@ void printLogs(LogBuffer &buf)
 
         ASSERT_EQ(logType, FORT_LOG_TYPE_BLOCKED_IP);
 
-        LogEntryBlockedIp entry;
-        buf.readEntryBlockedIp(&entry);
+        LogEntryConn entry;
+        buf.readEntryConn(&entry);
 
         qDebug() << entry.pid() << entry.kernelPath() << entry.path()
                  << NetFormatUtil::ipToText(entry.remoteIp()) << entry.remotePort();

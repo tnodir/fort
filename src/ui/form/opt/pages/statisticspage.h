@@ -23,10 +23,12 @@ private:
     void retranslateTrafKeepDayNames();
     void retranslateTrafKeepMonthNames();
     void retranslateQuotaNames();
-    void retranslateIpKeepCountNames();
+    void retranslateConnKeepCountNames();
 
     void setupUi();
     QLayout *setupColumn1();
+    QLayout *setupColumn2();
+
     void setupTrafficBox();
     void setupLogStat();
     void setupLogStatNoFilter();
@@ -34,16 +36,14 @@ private:
     void setupMonthStart();
     void setupTrafKeep();
     void setupQuota();
-    void setupBlockedConnBox();
+    void setupConnBox();
     void setupLogBlockedIp();
-    void setupAllowedConnBox();
     void setupLogAllowedIp();
-    QLayout *setupColumn2();
+    void setupConnKeepCount();
 
 private:
     QGroupBox *m_gbTraffic = nullptr;
-    QGroupBox *m_gbBlockedConn = nullptr;
-    QGroupBox *m_gbAllowedConn = nullptr;
+    QGroupBox *m_gbConn = nullptr;
 
     QCheckBox *m_cbLogStat = nullptr;
     QCheckBox *m_cbLogStatNoFilter = nullptr;
@@ -57,9 +57,8 @@ private:
     QCheckBox *m_cbQuotaBlockInternet = nullptr;
     QCheckBox *m_cbLogBlockedIp = nullptr;
     QCheckBox *m_cbLogAlertedBlockedIp = nullptr;
-    LabelSpinCombo *m_lscBlockedIpKeepCount = nullptr;
     QCheckBox *m_cbLogAllowedIp = nullptr;
-    LabelSpinCombo *m_lscAllowedIpKeepCount = nullptr;
+    LabelSpinCombo *m_lscConnKeepCount = nullptr;
 };
 
 #endif // STATISTICSPAGE_H

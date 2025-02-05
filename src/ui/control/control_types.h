@@ -83,8 +83,8 @@ enum Command : qint8 {
     Rpc_StatManager_trafficAdded,
     Rpc_StatManager_appTrafTotalsResetted,
 
-    Rpc_StatBlockManager_deleteConn,
-    Rpc_StatBlockManager_connChanged,
+    Rpc_StatConnManager_deleteConn,
+    Rpc_StatConnManager_connChanged,
 
     Rpc_ServiceInfoManager_trackService,
     Rpc_ServiceInfoManager_revertService,
@@ -109,7 +109,7 @@ enum RpcManager : qint8 {
     Rpc_DriverManager,
     Rpc_QuotaManager,
     Rpc_StatManager,
-    Rpc_StatBlockManager,
+    Rpc_StatConnManager,
     Rpc_ServiceInfoManager,
     Rpc_TaskManager,
 };

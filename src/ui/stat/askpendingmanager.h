@@ -8,7 +8,7 @@
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 
-class LogEntryBlockedIp;
+class LogEntryConn;
 
 class AskPendingManager : public QObject, public IocService
 {
@@ -22,7 +22,7 @@ public:
 
     void setUp() override;
 
-    void logBlockedIp(const LogEntryBlockedIp &entry);
+    void logConn(const LogEntryConn &entry);
 
 private:
     bool setupDb();

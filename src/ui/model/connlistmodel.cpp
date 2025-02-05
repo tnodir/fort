@@ -1,4 +1,4 @@
-#include "connblocklistmodel.h"
+#include "connlistmodel.h"
 
 #include <QFont>
 #include <QIcon>
@@ -11,8 +11,8 @@
 #include <appinfo/appinfocache.h>
 #include <fortmanager.h>
 #include <hostinfo/hostinfocache.h>
-#include <log/logentryblockedip.h>
-#include <stat/statblockmanager.h>
+#include <log/logentryconn.h>
+#include <stat/statconnmanager.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netformatutil.h>
@@ -20,7 +20,7 @@
 
 namespace {
 
-const QLoggingCategory LC("connBlockListModel");
+const QLoggingCategory LC("connListModel");
 
 QString formatIpPort(const ip_addr_t ip, quint16 port, bool isIPv6, bool resolveAddress)
 {
@@ -39,7 +39,7 @@ QString formatIpPort(const ip_addr_t ip, quint16 port, bool isIPv6, bool resolve
 
 QString reasonIconPath(const ConnRow &connRow)
 {
-    static const char *const blockReasonIcons[] = {
+    static const char *const reasonIcons[] = {
         ":/icons/ip.png",
         ":/icons/arrow_refresh_small.png",
         ":/icons/application.png",
@@ -53,10 +53,10 @@ QString reasonIconPath(const ConnRow &connRow)
         ":/icons/help.png",
     };
 
-    if (connRow.blockReason >= FORT_CONN_REASON_IP_INET
-            && connRow.blockReason <= FORT_CONN_REASON_ASK_LIMIT) {
-        const int index = connRow.blockReason - FORT_CONN_REASON_IP_INET;
-        return blockReasonIcons[index];
+    if (connRow.reason >= FORT_CONN_REASON_IP_INET
+            && connRow.reason <= FORT_CONN_REASON_ASK_LIMIT) {
+        const int index = connRow.reason - FORT_CONN_REASON_IP_INET;
+        return reasonIcons[index];
     }
 
     return ":/icons/error.png";
@@ -95,7 +95,7 @@ QVariant dataDisplayRemoteIpPort(const ConnRow &connRow, bool resolveAddress, in
 QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, int role)
 {
     if (role == Qt::ToolTipRole) {
-        return connRow.inbound ? ConnBlockListModel::tr("In") : ConnBlockListModel::tr("Out");
+        return connRow.inbound ? ConnListModel::tr("In") : ConnListModel::tr("Out");
     }
 
     return {};
@@ -104,9 +104,8 @@ QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, i
 QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int role)
 {
     if (role == Qt::ToolTipRole) {
-        return ConnBlockListModel::blockReasonText(FortConnReason(connRow.blockReason))
-                + (connRow.inherited ? " (" + ConnBlockListModel::tr("Inherited") + ")"
-                                     : QString());
+        return ConnListModel::reasonText(FortConnReason(connRow.reason))
+                + (connRow.inherited ? " (" + ConnListModel::tr("Inherited") + ")" : QString());
     }
 
     return {};
@@ -132,9 +131,9 @@ static const dataDisplay_func dataDisplay_funcList[] = {
 
 }
 
-ConnBlockListModel::ConnBlockListModel(QObject *parent) : TableSqlModel(parent) { }
+ConnListModel::ConnListModel(QObject *parent) : TableSqlModel(parent) { }
 
-void ConnBlockListModel::setResolveAddress(bool v)
+void ConnListModel::setResolveAddress(bool v)
 {
     if (m_resolveAddress != v) {
         m_resolveAddress = v;
@@ -142,50 +141,50 @@ void ConnBlockListModel::setResolveAddress(bool v)
     }
 }
 
-FortManager *ConnBlockListModel::fortManager() const
+FortManager *ConnListModel::fortManager() const
 {
     return IoC<FortManager>();
 }
 
-StatBlockManager *ConnBlockListModel::statBlockManager() const
+StatConnManager *ConnListModel::statConnManager() const
 {
-    return IoC<StatBlockManager>();
+    return IoC<StatConnManager>();
 }
 
-SqliteDb *ConnBlockListModel::sqliteDb() const
+SqliteDb *ConnListModel::sqliteDb() const
 {
-    return statBlockManager()->roSqliteDb();
+    return statConnManager()->roSqliteDb();
 }
 
-AppInfoCache *ConnBlockListModel::appInfoCache() const
+AppInfoCache *ConnListModel::appInfoCache() const
 {
     return IoC<AppInfoCache>();
 }
 
-HostInfoCache *ConnBlockListModel::hostInfoCache() const
+HostInfoCache *ConnListModel::hostInfoCache() const
 {
     return IoC<HostInfoCache>();
 }
 
-void ConnBlockListModel::initialize()
+void ConnListModel::initialize()
 {
-    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ConnBlockListModel::refresh);
-    connect(hostInfoCache(), &HostInfoCache::cacheChanged, this, &ConnBlockListModel::refresh);
-    connect(statBlockManager(), &StatBlockManager::connChanged, this,
-            &ConnBlockListModel::updateConnIdRange);
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ConnListModel::refresh);
+    connect(hostInfoCache(), &HostInfoCache::cacheChanged, this, &ConnListModel::refresh);
+    connect(statConnManager(), &StatConnManager::connChanged, this,
+            &ConnListModel::updateConnIdRange);
 
     updateConnIdRange();
 }
 
-int ConnBlockListModel::columnCount(const QModelIndex & /*parent*/) const
+int ConnListModel::columnCount(const QModelIndex & /*parent*/) const
 {
     return 8;
 }
 
-QVariant ConnBlockListModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     if (orientation != Qt::Horizontal)
-        return QVariant();
+        return {};
 
     switch (role) {
     // Label
@@ -198,13 +197,13 @@ QVariant ConnBlockListModel::headerData(int section, Qt::Orientation orientation
         return headerDataDecoration(section);
     }
 
-    return QVariant();
+    return {};
 }
 
-QVariant ConnBlockListModel::data(const QModelIndex &index, int role) const
+QVariant ConnListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+        return {};
 
     switch (role) {
     // Label
@@ -217,10 +216,10 @@ QVariant ConnBlockListModel::data(const QModelIndex &index, int role) const
         return dataDecoration(index);
     }
 
-    return QVariant();
+    return {};
 }
 
-QVariant ConnBlockListModel::headerDataDisplay(int section, int role) const
+QVariant ConnListModel::headerDataDisplay(int section, int role) const
 {
     static const char *const headerTexts[] = {
         QT_TR_NOOP("Program"),
@@ -253,10 +252,10 @@ QVariant ConnBlockListModel::headerDataDisplay(int section, int role) const
         }
     }
 
-    return QVariant();
+    return {};
 }
 
-QVariant ConnBlockListModel::headerDataDecoration(int section) const
+QVariant ConnListModel::headerDataDecoration(int section) const
 {
     switch (section) {
     case 5:
@@ -265,10 +264,10 @@ QVariant ConnBlockListModel::headerDataDecoration(int section) const
         return IconCache::icon(":/icons/help.png");
     }
 
-    return QVariant();
+    return {};
 }
 
-QVariant ConnBlockListModel::dataDisplay(const QModelIndex &index, int role) const
+QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
 {
     const int row = index.row();
     const int column = index.column();
@@ -282,7 +281,7 @@ QVariant ConnBlockListModel::dataDisplay(const QModelIndex &index, int role) con
     return func(connRow, resolveAddress(), role);
 }
 
-QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
+QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
 {
     const int column = index.column();
     const int row = index.row();
@@ -298,23 +297,23 @@ QVariant ConnBlockListModel::dataDecoration(const QModelIndex &index) const
         return IconCache::icon(reasonIconPath(connRow));
     }
 
-    return QVariant();
+    return {};
 }
 
-const ConnRow &ConnBlockListModel::connRowAt(int row) const
+const ConnRow &ConnListModel::connRowAt(int row) const
 {
     updateRowCache(row);
 
     return m_connRow;
 }
 
-void ConnBlockListModel::updateConnIdRange()
+void ConnListModel::updateConnIdRange()
 {
     const qint64 oldIdMin = connIdMin();
     const qint64 oldIdMax = connIdMax();
 
     qint64 idMin, idMax;
-    statBlockManager()->getConnIdRange(sqliteDb(), idMin, idMax);
+    statConnManager()->getConnIdRange(sqliteDb(), idMin, idMax);
 
     if (idMin == oldIdMin && idMax == oldIdMax)
         return;
@@ -326,7 +325,7 @@ void ConnBlockListModel::updateConnIdRange()
     updateConnRows(oldIdMin, oldIdMax, idMin, idMax);
 }
 
-bool ConnBlockListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
+bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
 {
     const qint64 connId = connIdMin() + row;
 
@@ -338,42 +337,44 @@ bool ConnBlockListModel::updateTableRow(const QVariantHash & /*vars*/, int row) 
     m_connRow.appId = stmt.columnInt64(1);
     m_connRow.connTime = stmt.columnUnixTime(2);
     m_connRow.pid = stmt.columnInt(3);
-    m_connRow.inbound = stmt.columnBool(4);
-    m_connRow.inherited = stmt.columnBool(5);
-    m_connRow.ipProto = stmt.columnInt(6);
-    m_connRow.localPort = stmt.columnInt(7);
-    m_connRow.remotePort = stmt.columnInt(8);
+    m_connRow.reason = stmt.columnInt(4);
+    m_connRow.blocked = stmt.columnBool(5);
+    m_connRow.inherited = stmt.columnBool(6);
+    m_connRow.inbound = stmt.columnBool(7);
+    m_connRow.ipProto = stmt.columnInt(8);
+    m_connRow.localPort = stmt.columnInt(9);
+    m_connRow.remotePort = stmt.columnInt(10);
 
-    m_connRow.isIPv6 = stmt.columnIsNull(9);
+    m_connRow.isIPv6 = stmt.columnIsNull(11);
     if (!m_connRow.isIPv6) {
-        m_connRow.localIp.v4 = stmt.columnInt(9);
-        m_connRow.remoteIp.v4 = stmt.columnInt(10);
+        m_connRow.localIp.v4 = stmt.columnInt(11);
+        m_connRow.remoteIp.v4 = stmt.columnInt(12);
     } else {
-        m_connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(11, /*isView=*/true));
-        m_connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(12, /*isView=*/true));
+        m_connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(13, /*isView=*/true));
+        m_connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(14, /*isView=*/true));
     }
 
-    m_connRow.blockReason = stmt.columnInt(13);
-
-    m_connRow.appPath = stmt.columnText(14);
+    m_connRow.appPath = stmt.columnText(15);
 
     return true;
 }
 
-int ConnBlockListModel::doSqlCount() const
+int ConnListModel::doSqlCount() const
 {
     return connIdMax() <= 0 ? 0 : int(connIdMax() - connIdMin()) + 1;
 }
 
-QString ConnBlockListModel::sqlBase() const
+QString ConnListModel::sqlBase() const
 {
     return "SELECT"
            "    t.conn_id,"
            "    t.app_id,"
            "    t.conn_time,"
            "    t.process_id,"
-           "    t.inbound,"
+           "    t.reason,"
+           "    t.blocked,"
            "    t.inherited,"
+           "    t.inbound,"
            "    t.ip_proto,"
            "    t.local_port,"
            "    t.remote_port,"
@@ -381,24 +382,22 @@ QString ConnBlockListModel::sqlBase() const
            "    t.remote_ip,"
            "    t.local_ip6,"
            "    t.remote_ip6,"
-           "    t.block_reason,"
            "    a.path"
-           "  FROM conn_block t"
+           "  FROM conn t"
            "    JOIN app a ON a.app_id = t.app_id";
 }
 
-QString ConnBlockListModel::sqlWhere() const
+QString ConnListModel::sqlWhere() const
 {
     return " WHERE t.conn_id = ?1";
 }
 
-QString ConnBlockListModel::sqlLimitOffset() const
+QString ConnListModel::sqlLimitOffset() const
 {
     return QString();
 }
 
-void ConnBlockListModel::updateConnRows(
-        qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax)
+void ConnListModel::updateConnRows(qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax)
 {
     const bool isIdMinOut = (idMin < oldIdMin || idMin >= oldIdMax);
     const bool isIdMaxOut = (idMax < oldIdMax || oldIdMax == 0);
@@ -420,14 +419,14 @@ void ConnBlockListModel::updateConnRows(
     }
 }
 
-void ConnBlockListModel::resetConnRows(qint64 idMin, qint64 idMax)
+void ConnListModel::resetConnRows(qint64 idMin, qint64 idMax)
 {
     m_connIdMin = idMin;
     m_connIdMax = idMax;
     reset();
 }
 
-void ConnBlockListModel::removeConnRows(qint64 idMin, int count)
+void ConnListModel::removeConnRows(qint64 idMin, int count)
 {
     beginRemoveRows({}, 0, count - 1);
     m_connIdMin = idMin;
@@ -435,7 +434,7 @@ void ConnBlockListModel::removeConnRows(qint64 idMin, int count)
     endRemoveRows();
 }
 
-void ConnBlockListModel::insertConnRows(qint64 idMax, int endRow, int count)
+void ConnListModel::insertConnRows(qint64 idMax, int endRow, int count)
 {
     beginInsertRows({}, endRow, endRow + count - 1);
     m_connIdMax = idMax;
@@ -443,25 +442,25 @@ void ConnBlockListModel::insertConnRows(qint64 idMax, int endRow, int count)
     endInsertRows();
 }
 
-QString ConnBlockListModel::blockReasonText(FortConnReason reason)
+QString ConnListModel::reasonText(FortConnReason reason)
 {
-    static const char *const blockReasonTexts[] = {
-        QT_TR_NOOP("Blocked Internet address"),
-        QT_TR_NOOP("Old connection closed on startup"),
-        QT_TR_NOOP("Programs logic"),
-        QT_TR_NOOP("App. Group logic"),
-        QT_TR_NOOP("Filter Mode logic"),
-        QT_TR_NOOP("Restrict access to LAN only"),
-        QT_TR_NOOP("Restrict access by Zone"),
-        QT_TR_NOOP("Restrict access by Rule"),
-        QT_TR_NOOP("Restrict access by Global Rule before App Rules"),
-        QT_TR_NOOP("Restrict access by Global Rule after App Rules"),
+    static const char *const reasonTexts[] = {
+        QT_TR_NOOP("Internet address"),
+        QT_TR_NOOP("Old connection"),
+        QT_TR_NOOP("Program's action"),
+        QT_TR_NOOP("App. Group"),
+        QT_TR_NOOP("Filter Mode"),
+        QT_TR_NOOP("LAN only"),
+        QT_TR_NOOP("Zone"),
+        QT_TR_NOOP("Rule"),
+        QT_TR_NOOP("Global Rule before App Rules"),
+        QT_TR_NOOP("Global Rule after App Rules"),
         QT_TR_NOOP("Limit of Ask to Connect"),
     };
 
     if (reason >= FORT_CONN_REASON_IP_INET && reason <= FORT_CONN_REASON_ASK_LIMIT) {
         const int index = reason - FORT_CONN_REASON_IP_INET;
-        return tr(blockReasonTexts[index]);
+        return tr(reasonTexts[index]);
     }
 
     return tr("Unknown");

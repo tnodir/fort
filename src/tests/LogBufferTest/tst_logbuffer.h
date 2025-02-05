@@ -6,8 +6,8 @@
 
 #include <driver/drivercommon.h>
 #include <log/logbuffer.h>
-#include <log/logentryblocked.h>
-#include <log/logentryblockedip.h>
+#include <log/logentryapp.h>
+#include <log/logentryconn.h>
 #include <log/logentrytime.h>
 #include <util/dateutil.h>
 
@@ -56,17 +56,17 @@ TEST_F(LogBufferTest, blockedWriteRead)
     LogBuffer buf(entrySize * testCount);
 
     const quint32 pid = 1;
-    LogEntryBlocked entry(pid, path);
+    LogEntryApp entry(pid, path);
 
     // Write
     for (int i = 0; i < testCount; ++i) {
-        buf.writeEntryBlocked(&entry);
+        buf.writeEntryApp(&entry);
     }
 
     // Read
     int readCount = 0;
     while (buf.peekEntryType() == FORT_LOG_TYPE_BLOCKED) {
-        buf.readEntryBlocked(&entry);
+        buf.readEntryApp(&entry);
 
         ASSERT_EQ(entry.type(), FORT_LOG_TYPE_BLOCKED);
         ASSERT_EQ(entry.pid(), pid);
@@ -90,7 +90,7 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
 
     LogBuffer buf(entrySize * testCount);
 
-    LogEntryBlockedIp entry;
+    LogEntryConn entry;
     entry.setKernelPath(path);
 
     // Write
@@ -105,13 +105,13 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         entry.setRemoteIp4(++v);
         entry.setPid(++v);
 
-        buf.writeEntryBlockedIp(&entry);
+        buf.writeEntryConn(&entry);
     }
 
     // Read
     int index = 0;
     while (buf.peekEntryType() == FORT_LOG_TYPE_BLOCKED_IP) {
-        buf.readEntryBlockedIp(&entry);
+        buf.readEntryConn(&entry);
 
         int v = index++;
         ASSERT_EQ(entry.type(), FORT_LOG_TYPE_BLOCKED_IP);
@@ -143,7 +143,7 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
 
     LogBuffer buf(entrySize * testCount);
 
-    LogEntryBlockedIp entry;
+    LogEntryConn entry;
     entry.setIsIPv6(isIPv6);
     entry.setKernelPath(path);
 
@@ -159,13 +159,13 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
         entry.setRemoteIp(makeIp6(++v));
         entry.setPid(++v);
 
-        buf.writeEntryBlockedIp(&entry);
+        buf.writeEntryConn(&entry);
     }
 
     // Read
     int index = 0;
     while (buf.peekEntryType() == FORT_LOG_TYPE_BLOCKED_IP) {
-        buf.readEntryBlockedIp(&entry);
+        buf.readEntryConn(&entry);
 
         int v = index++;
         ASSERT_EQ(entry.type(), FORT_LOG_TYPE_BLOCKED_IP);

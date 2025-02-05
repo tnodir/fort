@@ -132,7 +132,7 @@ void SchedulePage::setupTableTasks()
 
     connect(m_tableTasks, &TableView::doubleClicked, this, [&](const QModelIndex &index) {
         const auto taskInfo = taskListModel()->taskInfoAt(index.row());
-        emit taskManager() -> taskDoubleClicked(taskInfo->type());
+        emit taskManager()->taskDoubleClicked(taskInfo->type());
     });
 }
 

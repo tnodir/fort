@@ -80,8 +80,8 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_StatManager_trafficAdded),
     CASE_STRING(Rpc_StatManager_appTrafTotalsResetted),
 
-    CASE_STRING(Rpc_StatBlockManager_deleteConn),
-    CASE_STRING(Rpc_StatBlockManager_connChanged),
+    CASE_STRING(Rpc_StatConnManager_deleteConn),
+    CASE_STRING(Rpc_StatConnManager_connChanged),
 
     CASE_STRING(Rpc_ServiceInfoManager_trackService),
     CASE_STRING(Rpc_ServiceInfoManager_revertService),
@@ -111,7 +111,7 @@ static const QHash<RpcManager, const char *> g_managerNames = {
     CASE_STRING(Rpc_DriverManager),
     CASE_STRING(Rpc_QuotaManager),
     CASE_STRING(Rpc_StatManager),
-    CASE_STRING(Rpc_StatBlockManager),
+    CASE_STRING(Rpc_StatConnManager),
     CASE_STRING(Rpc_ServiceInfoManager),
     CASE_STRING(Rpc_TaskManager),
 };
@@ -196,8 +196,8 @@ static const RpcManager g_commandManagers[] = {
     Rpc_StatManager, // Rpc_StatManager_trafficAdded,
     Rpc_StatManager, // Rpc_StatManager_appTrafTotalsResetted,
 
-    Rpc_StatBlockManager, // Rpc_StatBlockManager_deleteConn,
-    Rpc_StatBlockManager, // Rpc_StatBlockManager_connChanged,
+    Rpc_StatConnManager, // Rpc_StatConnManager_deleteConn,
+    Rpc_StatConnManager, // Rpc_StatConnManager_connChanged,
 
     Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_trackService,
     Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_revertService,
@@ -291,8 +291,8 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_StatManager_trafficAdded,
     0, // Rpc_StatManager_appTrafTotalsResetted,
 
-    true, // Rpc_StatBlockManager_deleteConn,
-    0, // Rpc_StatBlockManager_connChanged,
+    true, // Rpc_StatConnManager_deleteConn,
+    0, // Rpc_StatConnManager_connChanged,
 
     true, // Rpc_TaskManager_runTask,
     true, // Rpc_TaskManager_abortTask,

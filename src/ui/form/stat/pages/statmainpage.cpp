@@ -30,7 +30,7 @@ void StatMainPage::onRestoreWindowState(IniUser *ini)
 void StatMainPage::onRetranslateUi()
 {
     m_tabWidget->setTabText(0, tr("Traffic"));
-    m_tabWidget->setTabText(1, tr("Blocked Connections"));
+    m_tabWidget->setTabText(1, tr("Connections"));
 }
 
 void StatMainPage::setupUi()

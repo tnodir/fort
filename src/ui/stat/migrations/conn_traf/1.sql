@@ -6,7 +6,7 @@ CREATE TABLE app(
 
 CREATE UNIQUE INDEX app_path_uk ON app(path);
 
-CREATE TABLE conn_block(
+CREATE TABLE conn_traffic(
   conn_id INTEGER PRIMARY KEY,
   app_id INTEGER NOT NULL,
   conn_time INTEGER NOT NULL,
@@ -21,7 +21,14 @@ CREATE TABLE conn_block(
   local_ip6 BLOB,
   remote_ip6 BLOB,
   --
-  block_reason INTEGER NOT NULL
+  end_time INTEGER NOT NULL,
+  in_bytes INTEGER NOT NULL,
+  out_bytes INTEGER NOT NULL
 );
 
-CREATE INDEX conn_block_app_id_idx ON conn_block(app_id);
+CREATE INDEX conn_traffic_app_id_idx ON conn_traffic(app_id);
+
+CREATE TABLE conn_flow(
+  conn_id INTEGER PRIMARY KEY,
+  flow_id INTEGER NOT NULL
+) WITHOUT ROWID;

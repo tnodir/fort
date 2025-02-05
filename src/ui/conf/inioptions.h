@@ -8,7 +8,7 @@
 #define DEFAULT_TRAF_HOUR_KEEP_DAYS    90 // ~3 months
 #define DEFAULT_TRAF_DAY_KEEP_DAYS     365 // ~1 year
 #define DEFAULT_TRAF_MONTH_KEEP_MONTHS 36 // ~3 years
-#define DEFAULT_LOG_IP_KEEP_COUNT      10000
+#define DEFAULT_LOG_CONN_KEEP_COUNT    10000
 
 class IniOptions : public MapSettings
 {
@@ -81,17 +81,11 @@ public:
     }
     void setTrafMonthKeepMonths(int v) { setValue("stat/trafMonthKeepMonths", v); }
 
-    int allowedIpKeepCount() const
+    int connKeepCount() const
     {
-        return valueInt("stat/allowedIpKeepCount", DEFAULT_LOG_IP_KEEP_COUNT);
+        return valueInt("stat/connKeepCount", DEFAULT_LOG_CONN_KEEP_COUNT);
     }
-    void setAllowedIpKeepCount(int v) { setValue("stat/allowedIpKeepCount", v); }
-
-    int blockedIpKeepCount() const
-    {
-        return valueInt("stat/blockedIpKeepCount", DEFAULT_LOG_IP_KEEP_COUNT);
-    }
-    void setBlockedIpKeepCount(int v) { setValue("stat/blockedIpKeepCount", v); }
+    void setConnKeepCount(int v) { setValue("stat/connKeepCount", v); }
 
     bool updateKeepCurrentVersion() const { return valueBool("autoUpdate/keepCurrentVersion"); }
     void setUpdateKeepCurrentVersion(bool v) { setValue("autoUpdate/keepCurrentVersion", v); }

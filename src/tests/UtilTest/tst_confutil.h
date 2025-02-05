@@ -10,7 +10,7 @@
 #include <conf/firewallconf.h>
 #include <conf/rule.h>
 #include <driver/drivercommon.h>
-#include <log/logentryblockedip.h>
+#include <log/logentryconn.h>
 #include <manager/envmanager.h>
 #include <util/conf/confappswalker.h>
 #include <util/conf/confbuffer.h>

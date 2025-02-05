@@ -1,5 +1,5 @@
-#ifndef CONNBLOCKLISTMODEL_H
-#define CONNBLOCKLISTMODEL_H
+#ifndef CONNLISTMODEL_H
+#define CONNLISTMODEL_H
 
 #include <QDateTime>
 
@@ -10,15 +10,16 @@
 class AppInfoCache;
 class FortManager;
 class HostInfoCache;
-class StatBlockManager;
+class StatConnManager;
 
 struct ConnRow : TableRow
 {
     bool isIPv6 : 1 = false;
-    bool inbound : 1 = false;
+    bool blocked : 1 = false;
     bool inherited : 1 = false;
+    bool inbound : 1 = false;
 
-    quint8 blockReason = 0;
+    quint8 reason = 0;
 
     quint8 ipProto = 0;
     quint16 localPort = 0;
@@ -36,18 +37,18 @@ struct ConnRow : TableRow
     QDateTime connTime;
 };
 
-class ConnBlockListModel : public TableSqlModel
+class ConnListModel : public TableSqlModel
 {
     Q_OBJECT
 
 public:
-    explicit ConnBlockListModel(QObject *parent = nullptr);
+    explicit ConnListModel(QObject *parent = nullptr);
 
     bool resolveAddress() const { return m_resolveAddress; }
     void setResolveAddress(bool v);
 
     FortManager *fortManager() const;
-    StatBlockManager *statBlockManager() const;
+    StatConnManager *statConnManager() const;
     SqliteDb *sqliteDb() const override;
     AppInfoCache *appInfoCache() const;
     HostInfoCache *hostInfoCache() const;
@@ -62,7 +63,7 @@ public:
 
     const ConnRow &connRowAt(int row) const;
 
-    static QString blockReasonText(FortConnReason reason);
+    static QString reasonText(FortConnReason reason);
 
 protected slots:
     void updateConnIdRange();
@@ -102,4 +103,4 @@ private:
     mutable ConnRow m_connRow;
 };
 
-#endif // CONNBLOCKLISTMODEL_H
+#endif // CONNLISTMODEL_H

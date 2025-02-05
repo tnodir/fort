@@ -1,12 +1,12 @@
-#ifndef LOGENTRYBLOCKED_H
-#define LOGENTRYBLOCKED_H
+#ifndef LOGENTRYAPP_H
+#define LOGENTRYAPP_H
 
 #include "logentry.h"
 
-class LogEntryBlocked : public LogEntry
+class LogEntryApp : public LogEntry
 {
 public:
-    explicit LogEntryBlocked(quint32 pid = 0, const QString &kernelPath = QString());
+    explicit LogEntryApp(quint32 pid = 0, const QString &kernelPath = QString());
 
     FortLogType type() const override;
 
@@ -31,4 +31,4 @@ private:
     QString m_kernelPath;
 };
 
-#endif // LOGENTRYBLOCKED_H
+#endif // LOGENTRYAPP_H

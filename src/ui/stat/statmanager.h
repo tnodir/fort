@@ -126,8 +126,8 @@ private:
 
     SqliteDbPtr m_sqliteDb;
 
-    QHash<quint32, QString> m_appPidPathMap; // pid -> appPath
-    QHash<QString, qint64> m_appPathIdCache; // appPath -> appId
+    QHash<quint32, QString> m_appPidPathMap; // pid => appPath
+    QHash<QString, qint64> m_appPathIdCache; // appPath => appId
 };
 
 #endif // STATMANAGER_H

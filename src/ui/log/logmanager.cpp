@@ -8,15 +8,15 @@
 #include <driver/drivermanager.h>
 #include <driver/driverworker.h>
 #include <stat/askpendingmanager.h>
-#include <stat/statblockmanager.h>
+#include <stat/statconnmanager.h>
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 
 #include "logbuffer.h"
-#include "logentryblocked.h"
-#include "logentryblockedip.h"
+#include "logentryapp.h"
+#include "logentryconn.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "logentrytime.h"
@@ -149,9 +149,9 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
     switch (logType) {
     case FORT_LOG_TYPE_BLOCKED:
     case FORT_LOG_TYPE_ALLOWED:
-        return processLogEntryBlocked(logBuffer);
+        return processLogEntryApp(logBuffer);
     case FORT_LOG_TYPE_BLOCKED_IP:
-        return processLogEntryBlockedIp(logBuffer);
+        return processLogEntryConn(logBuffer);
     case FORT_LOG_TYPE_PROC_NEW:
         return processLogEntryProcNew(logBuffer);
     case FORT_LOG_TYPE_STAT_TRAF:
@@ -163,27 +163,27 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
     }
 }
 
-bool LogManager::processLogEntryBlocked(LogBuffer *logBuffer)
+bool LogManager::processLogEntryApp(LogBuffer *logBuffer)
 {
-    LogEntryBlocked blockedEntry;
-    logBuffer->readEntryBlocked(&blockedEntry);
+    LogEntryApp appEntry;
+    logBuffer->readEntryApp(&appEntry);
 
-    IoC<ConfAppManager>()->logBlockedApp(blockedEntry);
+    IoC<ConfAppManager>()->logApp(appEntry);
 
     return true;
 }
 
-bool LogManager::processLogEntryBlockedIp(LogBuffer *logBuffer)
+bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
 {
-    LogEntryBlockedIp blockedIpEntry;
-    logBuffer->readEntryBlockedIp(&blockedIpEntry);
+    LogEntryConn connEntry;
+    logBuffer->readEntryConn(&connEntry);
 
-    blockedIpEntry.setConnTime(currentUnixTime());
+    connEntry.setConnTime(currentUnixTime());
 
-    if (blockedIpEntry.isAskPending()) {
-        IoC<AskPendingManager>()->logBlockedIp(blockedIpEntry);
+    if (connEntry.isAskPending()) {
+        IoC<AskPendingManager>()->logConn(connEntry);
     } else {
-        IoC<StatBlockManager>()->logBlockedIp(blockedIpEntry);
+        IoC<StatConnManager>()->logConn(connEntry);
     }
 
     return true;
