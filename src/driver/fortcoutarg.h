@@ -50,8 +50,7 @@ typedef struct fort_callout_ale_extra
 
     FORT_CONF_META_CONN conn;
 
-    PIRP irp;
-    ULONG_PTR info;
+    FORT_IRP_INFO irp_info;
 } FORT_CALLOUT_ALE_EXTRA, *PFORT_CALLOUT_ALE_EXTRA;
 
 typedef const FORT_CALLOUT_ALE_EXTRA *PCFORT_CALLOUT_ALE_EXTRA;

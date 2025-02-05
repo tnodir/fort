@@ -45,23 +45,23 @@ FORT_API void fort_buffer_close(PFORT_BUFFER buf);
 FORT_API void fort_buffer_clear(PFORT_BUFFER buf);
 
 FORT_API NTSTATUS fort_buffer_prepare(
-        PFORT_BUFFER buf, UINT32 len, PCHAR *out, PIRP *irp, ULONG_PTR *info);
+        PFORT_BUFFER buf, UINT32 len, PCHAR *out, PFORT_IRP_INFO irp_info);
 
 FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn,
-        FORT_BUFFER_CONN_WRITE_TYPE log_type, PIRP *irp, ULONG_PTR *info);
+        PFORT_IRP_INFO irp_info, FORT_BUFFER_CONN_WRITE_TYPE log_type);
 
 FORT_API NTSTATUS fort_buffer_xmove(
-        PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len, ULONG_PTR *info);
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len);
 
-FORT_API void fort_buffer_irp_mark_pending(PIRP irp);
+FORT_API void fort_buffer_irp_mark_pending(PFORT_IRP_INFO irp_info);
 
-FORT_API void fort_buffer_irp_clear_pending(PIRP irp);
+FORT_API void fort_buffer_irp_clear_pending(PFORT_IRP_INFO irp_info);
 
 FORT_API void fort_buffer_dpc_begin(PFORT_BUFFER buf, PKLOCK_QUEUE_HANDLE lock_queue);
 
 FORT_API void fort_buffer_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue);
 
-FORT_API void fort_buffer_flush_pending(PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info);
+FORT_API void fort_buffer_flush_pending(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info);
 
 #ifdef __cplusplus
 } // extern "C"

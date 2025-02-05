@@ -29,13 +29,24 @@
 #define fort_mem_free(p, tag)  ExFreePoolWithTag((p), (tag))
 #define fort_mem_free_notag(p) ExFreePool((p))
 
-#define fort_request_complete_info(irp, status, info)                                              \
+typedef struct fort_irp_info
+{
+    PIRP irp;
+    ULONG_PTR info;
+} FORT_IRP_INFO, *PFORT_IRP_INFO;
+
+#define fort_request_complete_info(irp_info, status)                                               \
     do {                                                                                           \
-        (irp)->IoStatus.Status = (status);                                                         \
-        (irp)->IoStatus.Information = (info);                                                      \
-        IoCompleteRequest((irp), IO_NO_INCREMENT);                                                 \
+        PIRP irp = (irp_info)->irp;                                                                \
+        irp->IoStatus.Status = (status);                                                           \
+        irp->IoStatus.Information = (irp_info)->info;                                              \
+        IoCompleteRequest(irp, IO_NO_INCREMENT);                                                   \
     } while (0)
 
-#define fort_request_complete(irp, status) fort_request_complete_info((irp), (status), 0)
+#define fort_request_complete(irp, status)                                                         \
+    do {                                                                                           \
+        FORT_IRP_INFO irp_info = { .irp = (irp) };                                                 \
+        fort_request_complete_info(&irp_info, (status));                                           \
+    } while (0)
 
 #endif // FORTDRV_H

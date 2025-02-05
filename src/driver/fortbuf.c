@@ -111,18 +111,20 @@ FORT_API void fort_buffer_clear(PFORT_BUFFER buf)
 }
 
 inline static NTSTATUS fort_buffer_prepare_pending(
-        PFORT_BUFFER buf, UINT32 len, PCHAR *out, PIRP *irp, ULONG_PTR *info)
+        PFORT_BUFFER buf, UINT32 len, PCHAR *out, PFORT_IRP_INFO irp_info)
 {
     const UINT32 out_top = buf->out_top;
     UINT32 new_top = out_top + len;
 
     /* Is it time to flush logs? */
     if (buf->out_len - new_top < FORT_LOG_SIZE_MAX) {
+        PIRP *irp = &irp_info->irp;
+
         if (irp != NULL && *irp == NULL) {
             *irp = buf->irp;
             buf->irp = NULL;
 
-            *info = new_top;
+            irp_info->info = new_top;
             new_top = 0;
         }
 
@@ -151,14 +153,14 @@ inline static NTSTATUS fort_buffer_prepare_new(PFORT_BUFFER buf, UINT32 len, PCH
 }
 
 FORT_API NTSTATUS fort_buffer_prepare(
-        PFORT_BUFFER buf, UINT32 len, PCHAR *out, PIRP *irp, ULONG_PTR *info)
+        PFORT_BUFFER buf, UINT32 len, PCHAR *out, PFORT_IRP_INFO irp_info)
 {
     /* Check a pending buffer */
     if (buf->data_head == NULL) {
         const ULONG out_len = buf->out_len;
 
         if (out_len != 0 && buf->out_top < out_len) {
-            return fort_buffer_prepare_pending(buf, len, out, irp, info);
+            return fort_buffer_prepare_pending(buf, len, out, irp_info);
         }
     }
 
@@ -166,7 +168,7 @@ FORT_API NTSTATUS fort_buffer_prepare(
 }
 
 FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn,
-        FORT_BUFFER_CONN_WRITE_TYPE log_type, PIRP *irp, ULONG_PTR *info)
+        PFORT_IRP_INFO irp_info, FORT_BUFFER_CONN_WRITE_TYPE log_type)
 {
     NTSTATUS status;
 
@@ -189,7 +191,7 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
     {
         PCHAR out;
-        status = fort_buffer_prepare(buf, len, &out, irp, info);
+        status = fort_buffer_prepare(buf, len, &out, irp_info);
 
         if (NT_SUCCESS(status)) {
             switch (log_type) {
@@ -211,12 +213,12 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
 }
 
 inline static NTSTATUS fort_buffer_xmove_locked_empty(
-        PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len)
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
 {
     if (buf->out_len != 0)
         return STATUS_UNSUCCESSFUL; /* collision */
 
-    buf->irp = irp;
+    buf->irp = irp_info->irp;
     buf->out = out;
     buf->out_len = out_len;
     buf->out_top = 0;
@@ -225,15 +227,16 @@ inline static NTSTATUS fort_buffer_xmove_locked_empty(
 }
 
 static NTSTATUS fort_buffer_xmove_locked(
-        PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len, ULONG_PTR *info)
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
 {
     PFORT_BUFFER_DATA data = buf->data_head;
     const UINT32 buf_top = (data ? data->top : 0);
 
-    *info = buf_top;
+    irp_info->info = buf_top;
 
-    if (buf_top == 0)
-        return fort_buffer_xmove_locked_empty(buf, irp, out, out_len);
+    if (buf_top == 0) {
+        return fort_buffer_xmove_locked_empty(buf, irp_info, out, out_len);
+    }
 
     if (out_len < buf_top)
         return STATUS_BUFFER_TOO_SMALL;
@@ -246,36 +249,36 @@ static NTSTATUS fort_buffer_xmove_locked(
 }
 
 FORT_API NTSTATUS fort_buffer_xmove(
-        PFORT_BUFFER buf, PIRP irp, PVOID out, ULONG out_len, ULONG_PTR *info)
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
-    const NTSTATUS status = fort_buffer_xmove_locked(buf, irp, out, out_len, info);
+    const NTSTATUS status = fort_buffer_xmove_locked(buf, irp_info, out, out_len);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
     return status;
 }
 
-inline static NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PIRP irp, ULONG_PTR *info)
+inline static NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
 {
     NTSTATUS status = STATUS_NOT_FOUND;
 
-    *info = 0;
+    irp_info->info = 0;
 
     /* Cancel routines are called at IRQL = DISPATCH_LEVEL */
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLockAtDpcLevel(&buf->lock, &lock_queue);
-    if (irp == buf->irp) {
+    if (irp_info->irp == buf->irp) {
         buf->irp = NULL;
         buf->out_len = 0;
 
         status = STATUS_CANCELLED;
 
         if (buf->out_top != 0) {
-            *info = buf->out_top;
+            irp_info->info = buf->out_top;
             buf->out_top = 0;
 
             status = STATUS_SUCCESS;
@@ -294,27 +297,31 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
 
     FORT_CHECK_STACK(FORT_DEVICE_CANCEL_PENDING);
 
-    ULONG_PTR info;
+    FORT_IRP_INFO irp_info = { .irp = irp };
 
-    const NTSTATUS status = fort_buffer_cancel_pending(&fort_device()->buffer, irp, &info);
+    const NTSTATUS status = fort_buffer_cancel_pending(&fort_device()->buffer, &irp_info);
 
     IoSetCancelRoutine(irp, NULL);
     IoReleaseCancelSpinLock(irp->CancelIrql); /* before IoCompleteRequest()! */
 
     if (status != STATUS_NOT_FOUND) {
-        fort_request_complete_info(irp, status, info);
+        fort_request_complete_info(&irp_info, status);
     }
 }
 
-FORT_API void fort_buffer_irp_mark_pending(PIRP irp)
+FORT_API void fort_buffer_irp_mark_pending(PFORT_IRP_INFO irp_info)
 {
+    PIRP irp = irp_info->irp;
+
     IoMarkIrpPending(irp);
 
     fort_irp_set_cancel_routine(irp, &fort_device_cancel_pending);
 }
 
-FORT_API void fort_buffer_irp_clear_pending(PIRP irp)
+FORT_API void fort_buffer_irp_clear_pending(PFORT_IRP_INFO irp_info)
 {
+    PIRP irp = irp_info->irp;
+
     fort_irp_set_cancel_routine(irp, NULL);
 }
 
@@ -328,7 +335,7 @@ FORT_API void fort_buffer_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue)
     KeReleaseInStackQueuedSpinLockFromDpcLevel(lock_queue);
 }
 
-FORT_API void fort_buffer_flush_pending(PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
+FORT_API void fort_buffer_flush_pending(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
 {
     UINT32 out_top = buf->out_top;
 
@@ -346,12 +353,12 @@ FORT_API void fort_buffer_flush_pending(PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *
     }
 
     if (out_top != 0) {
-        *info = out_top;
+        irp_info->info = out_top;
 
         buf->out_top = 0;
         buf->out_len = 0;
 
-        *irp = buf->irp;
+        irp_info->irp = buf->irp;
         buf->irp = NULL;
     }
 }

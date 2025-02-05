@@ -15,8 +15,7 @@ static PFORT_DEVICE g_device = NULL;
 
 typedef struct fort_device_control_arg
 {
-    PIRP irp;
-    ULONG_PTR *info;
+    PFORT_IRP_INFO irp_info;
 
     PVOID buffer;
     ULONG in_len;
@@ -229,13 +228,12 @@ static NTSTATUS fort_device_control_getlog(PFORT_DEVICE_CONTROL_ARG dca)
     if (out_len < FORT_BUFFER_SIZE)
         return STATUS_BUFFER_TOO_SMALL;
 
-    PIRP irp = dca->irp;
-    ULONG_PTR *info = dca->info;
+    PFORT_IRP_INFO irp_info = dca->irp_info;
 
-    const NTSTATUS status = fort_buffer_xmove(&fort_device()->buffer, irp, out, out_len, info);
+    const NTSTATUS status = fort_buffer_xmove(&fort_device()->buffer, irp_info, out, out_len);
 
     if (status == STATUS_PENDING) {
-        fort_buffer_irp_mark_pending(irp);
+        fort_buffer_irp_mark_pending(irp_info);
     }
 
     return status;
@@ -395,7 +393,7 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
 };
 
 static NTSTATUS fort_device_control_process(
-        const PIO_STACK_LOCATION irp_stack, PIRP irp, ULONG_PTR *info)
+        const PIO_STACK_LOCATION irp_stack, PFORT_IRP_INFO irp_info)
 {
     const UCHAR control_index =
             FORT_CTL_INDEX_FROM_CODE(irp_stack->Parameters.DeviceIoControl.IoControlCode);
@@ -407,9 +405,10 @@ static NTSTATUS fort_device_control_process(
             && fort_device_flag(&fort_device()->conf, FORT_DEVICE_IS_VALIDATED) == 0)
         return STATUS_INVALID_DEVICE_REQUEST;
 
+    PIRP irp = irp_info->irp;
+
     FORT_DEVICE_CONTROL_ARG dca = {
-        .irp = irp,
-        .info = info,
+        .irp_info = irp_info,
 
         .buffer = irp->AssociatedIrp.SystemBuffer,
         .in_len = irp_stack->Parameters.DeviceIoControl.InputBufferLength,
@@ -427,10 +426,10 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
 
     FORT_CHECK_STACK(FORT_DEVICE_CONTROL);
 
-    ULONG_PTR info = 0;
+    FORT_IRP_INFO irp_info = { .irp = irp };
 
     const PIO_STACK_LOCATION irp_stack = IoGetCurrentIrpStackLocation(irp);
-    const NTSTATUS status = fort_device_control_process(irp_stack, irp, &info);
+    const NTSTATUS status = fort_device_control_process(irp_stack, &irp_info);
 
     if (!NT_SUCCESS(status) && status != FORT_STATUS_USER_ERROR) {
         LOG("Device Control: Error: %x\n", status);
@@ -438,7 +437,7 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
     }
 
     if (status != STATUS_PENDING) {
-        fort_request_complete_info(irp, status, info);
+        fort_request_complete_info(&irp_info, status);
     }
 
     return status;

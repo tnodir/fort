@@ -152,7 +152,7 @@ inline static BOOL fort_callout_ale_associate_flow(
 
     if (!log_stat) {
         fort_buffer_conn_write(
-                &fort_device()->buffer, conn, FORT_BUFFER_CONN_WRITE_PROC_NEW, &cx->irp, &cx->info);
+                &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_PROC_NEW);
     }
 
     return FALSE;
@@ -191,8 +191,7 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
 
     fort_callout_ale_set_app_flags(cx, app_data);
 
-    fort_buffer_conn_write(
-            &fort_device()->buffer, conn, FORT_BUFFER_CONN_WRITE_APP, &cx->irp, &cx->info);
+    fort_buffer_conn_write(&fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_APP);
 }
 
 inline static BOOL fort_callout_ale_log_conn_check_app(
@@ -516,7 +515,7 @@ inline static void fort_callout_ale_check_conf(
         fort_callout_ale_fill_meta_conn(ca, cx);
 
         fort_buffer_conn_write(
-                &fort_device()->buffer, conn, FORT_BUFFER_CONN_WRITE_CONN, &cx->irp, &cx->info);
+                &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_CONN);
     }
 
     fort_callout_ale_classify_action(ca, conn);
@@ -536,15 +535,16 @@ inline static void fort_callout_ale_by_conf(
         return;
     }
 
-    cx->irp = NULL;
+    PFORT_IRP_INFO irp_info = &cx->irp_info;
+    irp_info->irp = NULL;
 
     fort_callout_ale_check_conf(ca, cx, conf_ref);
 
     fort_conf_ref_put(device_conf, conf_ref);
 
-    if (cx->irp != NULL) {
-        fort_buffer_irp_clear_pending(cx->irp);
-        fort_request_complete_info(cx->irp, STATUS_SUCCESS, cx->info);
+    if (irp_info->irp != NULL) {
+        fort_buffer_irp_clear_pending(irp_info);
+        fort_request_complete_info(irp_info, STATUS_SUCCESS);
     }
 }
 
@@ -1146,7 +1146,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
 }
 
 inline static void fort_callout_update_system_time(
-        PFORT_STAT stat, PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
+        PFORT_STAT stat, PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
 {
     LARGE_INTEGER system_time;
     KeQuerySystemTime(&system_time);
@@ -1157,7 +1157,7 @@ inline static void fort_callout_update_system_time(
     stat->system_time = system_time;
 
     PCHAR out;
-    if (NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, irp, info))) {
+    if (NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, irp_info))) {
         const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
 
         const UCHAR old_stat_flags =
@@ -1169,7 +1169,7 @@ inline static void fort_callout_update_system_time(
 }
 
 inline static void fort_callout_flush_stat_traf(
-        PFORT_STAT stat, PFORT_BUFFER buf, PIRP *irp, ULONG_PTR *info)
+        PFORT_STAT stat, PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
 {
     while (stat->proc_active_count != 0) {
         const UINT16 proc_count = (stat->proc_active_count < FORT_LOG_STAT_BUFFER_PROC_COUNT)
@@ -1178,7 +1178,7 @@ inline static void fort_callout_flush_stat_traf(
         const UINT32 len = FORT_LOG_STAT_SIZE(proc_count);
         PCHAR out;
 
-        const NTSTATUS status = fort_buffer_prepare(buf, len, &out, irp, info);
+        const NTSTATUS status = fort_buffer_prepare(buf, len, &out, irp_info);
         if (!NT_SUCCESS(status)) {
             LOG("Callout Timer: Error: %x\n", status);
             TRACE(FORT_CALLOUT_CALLOUT_TIMER_ERROR, status, 0, 0);
@@ -1199,8 +1199,7 @@ FORT_API void fort_callout_timer(void)
     PFORT_BUFFER buf = &fort_device()->buffer;
     PFORT_STAT stat = &fort_device()->stat;
 
-    PIRP irp = NULL;
-    ULONG_PTR info;
+    FORT_IRP_INFO irp_info = { .irp = NULL };
 
     /* Lock buffer */
     KLOCK_QUEUE_HANDLE buf_lock_queue;
@@ -1211,24 +1210,24 @@ FORT_API void fort_callout_timer(void)
     fort_stat_dpc_begin(stat, &stat_lock_queue);
 
     /* Get current Unix time */
-    fort_callout_update_system_time(stat, buf, &irp, &info);
+    fort_callout_update_system_time(stat, buf, &irp_info);
 
     /* Flush traffic statistics */
-    fort_callout_flush_stat_traf(stat, buf, &irp, &info);
+    fort_callout_flush_stat_traf(stat, buf, &irp_info);
 
     /* Unlock stat */
     fort_stat_dpc_end(&stat_lock_queue);
 
     /* Flush pending buffer */
-    if (irp == NULL) {
-        fort_buffer_flush_pending(buf, &irp, &info);
+    if (irp_info.irp == NULL) {
+        fort_buffer_flush_pending(buf, &irp_info);
     }
 
     /* Unlock buffer */
     fort_buffer_dpc_end(&buf_lock_queue);
 
-    if (irp != NULL) {
-        fort_buffer_irp_clear_pending(irp);
-        fort_request_complete_info(irp, STATUS_SUCCESS, info);
+    if (irp_info.irp != NULL) {
+        fort_buffer_irp_clear_pending(&irp_info);
+        fort_request_complete_info(&irp_info, STATUS_SUCCESS);
     }
 }
