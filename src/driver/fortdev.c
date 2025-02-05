@@ -20,6 +20,8 @@ typedef struct fort_device_control_arg
     PVOID buffer;
     ULONG in_len;
     ULONG out_len;
+
+    ULONG control_code;
 } FORT_DEVICE_CONTROL_ARG, *PFORT_DEVICE_CONTROL_ARG;
 
 FORT_API PFORT_DEVICE fort_device(void)
@@ -392,11 +394,9 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setruleflag, // FORT_IOCTL_SETRULEFLAG
 };
 
-static NTSTATUS fort_device_control_process(
-        const PIO_STACK_LOCATION irp_stack, PFORT_IRP_INFO irp_info)
+static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    const UCHAR control_index =
-            FORT_CTL_INDEX_FROM_CODE(irp_stack->Parameters.DeviceIoControl.IoControlCode);
+    const DWORD control_index = FORT_CTL_INDEX_FROM_CODE(dca->control_code);
 
     if (control_index >= FORT_IOCTL_INDEX_COUNT)
         return STATUS_INVALID_PARAMETER;
@@ -405,19 +405,9 @@ static NTSTATUS fort_device_control_process(
             && fort_device_flag(&fort_device()->conf, FORT_DEVICE_IS_VALIDATED) == 0)
         return STATUS_INVALID_DEVICE_REQUEST;
 
-    PIRP irp = irp_info->irp;
-
-    FORT_DEVICE_CONTROL_ARG dca = {
-        .irp_info = irp_info,
-
-        .buffer = irp->AssociatedIrp.SystemBuffer,
-        .in_len = irp_stack->Parameters.DeviceIoControl.InputBufferLength,
-        .out_len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength,
-    };
-
     PFORT_DEVICE_CONTROL_PROCESS_FUNC func = fortDeviceControlProcess_funcList[control_index];
 
-    return func(&dca);
+    return func(dca);
 }
 
 FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
@@ -426,10 +416,21 @@ FORT_API NTSTATUS fort_device_control(PDEVICE_OBJECT device, PIRP irp)
 
     FORT_CHECK_STACK(FORT_DEVICE_CONTROL);
 
+    const PIO_STACK_LOCATION irp_stack = IoGetCurrentIrpStackLocation(irp);
+
     FORT_IRP_INFO irp_info = { .irp = irp };
 
-    const PIO_STACK_LOCATION irp_stack = IoGetCurrentIrpStackLocation(irp);
-    const NTSTATUS status = fort_device_control_process(irp_stack, &irp_info);
+    FORT_DEVICE_CONTROL_ARG dca = {
+        .irp_info = &irp_info,
+
+        .buffer = irp->AssociatedIrp.SystemBuffer,
+        .in_len = irp_stack->Parameters.DeviceIoControl.InputBufferLength,
+        .out_len = irp_stack->Parameters.DeviceIoControl.OutputBufferLength,
+
+        .control_code = irp_stack->Parameters.DeviceIoControl.IoControlCode,
+    };
+
+    const NTSTATUS status = fort_device_control_process(&dca);
 
     if (!NT_SUCCESS(status) && status != FORT_STATUS_USER_ERROR) {
         LOG("Device Control: Error: %x\n", status);
