@@ -62,6 +62,11 @@ QString reasonIconPath(const ConnRow &connRow)
     return ":/icons/error.png";
 }
 
+QString actionIconPath(const ConnRow &connRow)
+{
+    return connRow.blocked ? ":/icons/deny.png" : ":/icons/accept.png";
+}
+
 QString directionIconPath(const ConnRow &connRow)
 {
     return connRow.inbound ? ":/icons/green_down.png" : ":/icons/blue_up.png";
@@ -111,6 +116,15 @@ QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int 
     return {};
 }
 
+QVariant dataDisplayAction(const ConnRow &connRow, bool /*resolveAddress*/, int role)
+{
+    if (role == Qt::ToolTipRole) {
+        return connRow.blocked ? ConnListModel::tr("Blocked") : ConnListModel::tr("Allowed");
+    }
+
+    return {};
+}
+
 QVariant dataDisplayTime(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
 {
     return connRow.connTime;
@@ -126,6 +140,7 @@ static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayRemoteIpPort,
     &dataDisplayDirection,
     &dataDisplayReason,
+    &dataDisplayAction,
     &dataDisplayTime,
 };
 
@@ -178,7 +193,7 @@ void ConnListModel::initialize()
 
 int ConnListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 8;
+    return 9;
 }
 
 QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -229,6 +244,7 @@ QVariant ConnListModel::headerDataDisplay(int section, int role) const
         QT_TR_NOOP("Remote IP and Port"),
         nullptr,
         nullptr,
+        nullptr,
         QT_TR_NOOP("Time"),
     };
 
@@ -240,10 +256,11 @@ QVariant ConnListModel::headerDataDisplay(int section, int role) const
         QT_TR_NOOP("Remote IP and Port"),
         QT_TR_NOOP("Direction"),
         QT_TR_NOOP("Reason"),
+        QT_TR_NOOP("Action"),
         QT_TR_NOOP("Time"),
     };
 
-    if (section >= 0 && section <= 7) {
+    if (section >= 0 && section <= 8) {
         const char *const *arr = (role == Qt::ToolTipRole) ? headerTooltips : headerTexts;
         const char *text = arr[section];
 
@@ -262,6 +279,8 @@ QVariant ConnListModel::headerDataDecoration(int section) const
         return IconCache::icon(":/icons/green_down.png");
     case 6:
         return IconCache::icon(":/icons/help.png");
+    case 7:
+        return IconCache::icon(":/icons/accept.png");
     }
 
     return {};
@@ -295,6 +314,8 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
         return IconCache::icon(directionIconPath(connRow));
     case 6:
         return IconCache::icon(reasonIconPath(connRow));
+    case 7:
+        return IconCache::icon(actionIconPath(connRow));
     }
 
     return {};

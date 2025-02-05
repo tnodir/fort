@@ -23,7 +23,7 @@
 
 namespace {
 
-constexpr int CONN_LIST_HEADER_VERSION = 3;
+constexpr int CONN_LIST_HEADER_VERSION = 4;
 
 }
 
@@ -223,15 +223,17 @@ void ConnectionsPage::setupTableConnListHeader()
     header->setSectionResizeMode(4, QHeaderView::Interactive);
     header->setSectionResizeMode(5, QHeaderView::Fixed);
     header->setSectionResizeMode(6, QHeaderView::Fixed);
-    header->setSectionResizeMode(7, QHeaderView::Stretch);
+    header->setSectionResizeMode(7, QHeaderView::Fixed);
+    header->setSectionResizeMode(8, QHeaderView::Stretch);
 
-    header->resizeSection(0, 430);
+    header->resizeSection(0, 400);
     header->resizeSection(1, 50);
     header->resizeSection(2, 60);
     header->resizeSection(3, 140);
     header->resizeSection(4, 140);
     header->resizeSection(5, 30);
     header->resizeSection(6, 30);
+    header->resizeSection(7, 30);
 }
 
 void ConnectionsPage::setupAppInfoRow()
