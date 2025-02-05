@@ -419,7 +419,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setLogStat(iniBool("logStat", true));
     conf.setLogStatNoFilter(iniBool("logStatNoFilter", true));
     conf.setLogBlocked(iniBool("logBlocked", true));
-    conf.setLogAllowedConn(iniBool("logAllowedConn", true));
+    conf.setLogAllowedConn(iniBool("logAllowedConn"));
     conf.setLogBlockedConn(iniBool("logBlockedConn", true));
     conf.setLogAlertedConn(iniBool("logAlertedConn"));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
