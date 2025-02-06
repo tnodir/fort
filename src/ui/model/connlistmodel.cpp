@@ -106,20 +106,20 @@ QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, i
     return {};
 }
 
-QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int role)
+QVariant dataDisplayAction(const ConnRow &connRow, bool /*resolveAddress*/, int role)
 {
     if (role == Qt::ToolTipRole) {
-        return ConnListModel::reasonText(FortConnReason(connRow.reason))
-                + (connRow.inherited ? " (" + ConnListModel::tr("Inherited") + ")" : QString());
+        return connRow.blocked ? ConnListModel::tr("Blocked") : ConnListModel::tr("Allowed");
     }
 
     return {};
 }
 
-QVariant dataDisplayAction(const ConnRow &connRow, bool /*resolveAddress*/, int role)
+QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int role)
 {
     if (role == Qt::ToolTipRole) {
-        return connRow.blocked ? ConnListModel::tr("Blocked") : ConnListModel::tr("Allowed");
+        return ConnListModel::reasonText(FortConnReason(connRow.reason))
+                + (connRow.inherited ? " (" + ConnListModel::tr("Inherited") + ")" : QString());
     }
 
     return {};
@@ -139,8 +139,8 @@ static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayLocalIpPort,
     &dataDisplayRemoteIpPort,
     &dataDisplayDirection,
-    &dataDisplayReason,
     &dataDisplayAction,
+    &dataDisplayReason,
     &dataDisplayTime,
 };
 
@@ -255,8 +255,8 @@ QVariant ConnListModel::headerDataDisplay(int section, int role) const
         QT_TR_NOOP("Local IP and Port"),
         QT_TR_NOOP("Remote IP and Port"),
         QT_TR_NOOP("Direction"),
-        QT_TR_NOOP("Reason"),
         QT_TR_NOOP("Action"),
+        QT_TR_NOOP("Reason"),
         QT_TR_NOOP("Time"),
     };
 
@@ -278,9 +278,9 @@ QVariant ConnListModel::headerDataDecoration(int section) const
     case 5:
         return IconCache::icon(":/icons/green_down.png");
     case 6:
-        return IconCache::icon(":/icons/help.png");
-    case 7:
         return IconCache::icon(":/icons/accept.png");
+    case 7:
+        return IconCache::icon(":/icons/help.png");
     }
 
     return {};
@@ -313,9 +313,9 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
     case 5:
         return IconCache::icon(directionIconPath(connRow));
     case 6:
-        return IconCache::icon(reasonIconPath(connRow));
-    case 7:
         return IconCache::icon(actionIconPath(connRow));
+    case 7:
+        return IconCache::icon(reasonIconPath(connRow));
     }
 
     return {};
