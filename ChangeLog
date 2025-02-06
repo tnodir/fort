@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.16.0, 2025-02-06:
+- UI: Statistics: Rework "Connections" tab to show allowed connections too.
+- UI: Options: Add "Block LAN Traffic" action.
+- UI: ProgramEdit: Fix "Select File" button for new program.
+
 v3.15.10, 2025-02-02:
 - UI: Options: Backup: Add "Import new programs".
 - UI: Options: IP Addresses: Fix changes checking.
