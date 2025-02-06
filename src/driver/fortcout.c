@@ -213,8 +213,9 @@ inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca,
 
     const BOOL blocked = conn->blocked;
     const BOOL log_conn = (blocked ? conf_flags.log_blocked_conn : conf_flags.log_allowed_conn);
+    const BOOL ask_to_connect = (blocked && conf_flags.ask_to_connect);
 
-    if (!(log_conn || (blocked && conf_flags.ask_to_connect)))
+    if (!(log_conn || ask_to_connect))
         return FALSE;
 
     const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, cx, conf_ref);
