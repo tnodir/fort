@@ -313,7 +313,27 @@
     </message>
 </context>
 <context>
-    <name>ConnBlockListModel</name>
+    <name>ConnListModel</name>
+    <message>
+        <source>In</source>
+        <translation>V</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>Ven</translation>
+    </message>
+    <message>
+        <source>Blocked</source>
+        <translation>Blokiran</translation>
+    </message>
+    <message>
+        <source>Allowed</source>
+        <translation>Dovoljeno</translation>
+    </message>
+    <message>
+        <source>Inherited</source>
+        <translation>Podedovano</translation>
+    </message>
     <message>
         <source>Program</source>
         <translation>Program</translation>
@@ -321,10 +341,6 @@
     <message>
         <source>Proc. ID</source>
         <translation>ID proc.</translation>
-    </message>
-    <message>
-        <source>Process ID</source>
-        <translation>ID procesa</translation>
     </message>
     <message>
         <source>Protocol</source>
@@ -339,76 +355,72 @@
         <translation>Oddaljeni IP in vrata</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>Smer</translation>
-    </message>
-    <message>
         <source>Time</source>
         <translation>Čas</translation>
     </message>
     <message>
-        <source>Inherited</source>
-        <translation>Podedovano</translation>
+        <source>Process ID</source>
+        <translation>ID procesa</translation>
     </message>
     <message>
-        <source>In</source>
-        <translation>V</translation>
+        <source>Direction</source>
+        <translation>Smer</translation>
     </message>
     <message>
-        <source>Out</source>
-        <translation>Ven</translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>Blokirani internetni naslovi</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>Stara povezava je zaprta ob zagonu</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>Logika programov</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>Logika skupin apikacij</translation>
-    </message>
-    <message>
-        <source>Filter Mode logic</source>
-        <translation>Logika načina filtra</translation>
-    </message>
-    <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Omeji dostop samo do LAN</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Neznano</translation>
-    </message>
-    <message>
-        <source>Limit of Ask to Connect</source>
-        <translation>Omejitev &apos;Vprašaj za povezavo&apos;</translation>
-    </message>
-    <message>
-        <source>Restrict access by Zone</source>
-        <translation>Omeji dostop glede na področje</translation>
+        <source>Action</source>
+        <translation>Akcija</translation>
     </message>
     <message>
         <source>Reason</source>
         <translation>Razlog</translation>
     </message>
     <message>
-        <source>Restrict access by Rule</source>
-        <translation>Omejite dostop s pravilom</translation>
+        <source>Internet address</source>
+        <translation>Internetni naslov</translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule before App Rules</source>
-        <translation>Omejite dostop z globalnim pravilom pred pravili aplikacije</translation>
+        <source>Old connection</source>
+        <translation>Stara povezava</translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule after App Rules</source>
-        <translation>Omejite dostop z globalnim pravilom po pravilih aplikacije</translation>
+        <source>Program&apos;s action</source>
+        <translation>Dejanje programa</translation>
+    </message>
+    <message>
+        <source>App. Group</source>
+        <translation>Aplikacija skupina</translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation>Način filtra</translation>
+    </message>
+    <message>
+        <source>LAN only</source>
+        <translation>Samo LAN</translation>
+    </message>
+    <message>
+        <source>Zone</source>
+        <translation>Področje</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Pravilo</translation>
+    </message>
+    <message>
+        <source>Global Rule before App Rules</source>
+        <translation>Globalno pravilo pred pravili aplikacije</translation>
+    </message>
+    <message>
+        <source>Global Rule after App Rules</source>
+        <translation>Globalno pravilo za pravili aplikacije</translation>
+    </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation>Omejitev &apos;Vprašaj za povezavo&apos;</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Neznano</translation>
     </message>
 </context>
 <context>
@@ -1379,10 +1391,6 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
         <translation>Zberi blokirane povezave</translation>
     </message>
     <message>
-        <source>Collect connection statistics</source>
-        <translation>Zberi statistiko povezave</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>Uniči proces</translation>
     </message>
@@ -1527,6 +1535,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Switch Wildcard</source>
         <translation>Preklopi način nadomestnih znakov</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Zberi dovoljene povezave</translation>
     </message>
 </context>
 <context>
@@ -2035,8 +2047,8 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <translation>Promet</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>Blokirane povezave</translation>
+        <source>Connections</source>
+        <translation>Povezave</translation>
     </message>
 </context>
 <context>
@@ -2084,14 +2096,6 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Mesečna kvota:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>Ohrani število za &apos;Dovoljene povezave&apos;:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>Ohrani število za &apos;Blokirane povezave&apos;:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2146,16 +2150,16 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <translation>Samo opozorjeno</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>Blokirane povezave</translation>
-    </message>
-    <message>
-        <source>Allowed Connections</source>
-        <translation>Dovoljene povezave</translation>
-    </message>
-    <message>
         <source>Block Internet traffic when quota exceeds</source>
         <translation>Onemogoči internetni promet, ko je kvota presežena</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Povezave</translation>
+    </message>
+    <message>
+        <source>Keep count for connections:</source>
+        <translation>Štejte povezave:</translation>
     </message>
 </context>
 <context>

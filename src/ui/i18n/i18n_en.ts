@@ -313,17 +313,33 @@
     </message>
 </context>
 <context>
-    <name>ConnBlockListModel</name>
+    <name>ConnListModel</name>
+    <message>
+        <source>In</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Blocked</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Allowed</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Inherited</source>
+        <translation></translation>
+    </message>
     <message>
         <source>Program</source>
         <translation></translation>
     </message>
     <message>
         <source>Proc. ID</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Process ID</source>
         <translation></translation>
     </message>
     <message>
@@ -339,59 +355,19 @@
         <translation></translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Time</source>
         <translation></translation>
     </message>
     <message>
-        <source>Inherited</source>
+        <source>Process ID</source>
         <translation></translation>
     </message>
     <message>
-        <source>In</source>
+        <source>Direction</source>
         <translation></translation>
     </message>
     <message>
-        <source>Out</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Filter Mode logic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Restrict access to LAN only</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Limit of Ask to Connect</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Restrict access by Zone</source>
+        <source>Action</source>
         <translation></translation>
     </message>
     <message>
@@ -399,15 +375,51 @@
         <translation></translation>
     </message>
     <message>
-        <source>Restrict access by Rule</source>
+        <source>Internet address</source>
         <translation></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule before App Rules</source>
+        <source>Old connection</source>
         <translation></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule after App Rules</source>
+        <source>Program&apos;s action</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>App. Group</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>LAN only</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Zone</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Global Rule before App Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Global Rule after App Rules</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Unknown</source>
         <translation></translation>
     </message>
 </context>
@@ -1373,10 +1385,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation></translation>
     </message>
     <message>
-        <source>Collect connection statistics</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation></translation>
     </message>
@@ -1515,6 +1523,10 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Switch Wildcard</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
         <translation></translation>
     </message>
 </context>
@@ -2024,7 +2036,7 @@ Please restart the running program to take effect of this option.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
+        <source>Connections</source>
         <translation></translation>
     </message>
 </context>
@@ -2072,14 +2084,6 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Month&apos;s Quota:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
         <translation></translation>
     </message>
     <message>
@@ -2135,15 +2139,15 @@ Please restart the running program to take effect of this option.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Allowed Connections</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Block Internet traffic when quota exceeds</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Keep count for connections:</source>
         <translation></translation>
     </message>
 </context>

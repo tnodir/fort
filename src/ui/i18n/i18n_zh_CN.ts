@@ -313,17 +313,33 @@
     </message>
 </context>
 <context>
-    <name>ConnBlockListModel</name>
+    <name>ConnListModel</name>
+    <message>
+        <source>In</source>
+        <translation>输入</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>输出</translation>
+    </message>
+    <message>
+        <source>Blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inherited</source>
+        <translation>继承</translation>
+    </message>
     <message>
         <source>Program</source>
         <translation>应用程序</translation>
     </message>
     <message>
         <source>Proc. ID</source>
-        <translation>进程 ID</translation>
-    </message>
-    <message>
-        <source>Process ID</source>
         <translation>进程 ID</translation>
     </message>
     <message>
@@ -339,76 +355,72 @@
         <translation>远程 IP 和端口</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>排序顺序</translation>
-    </message>
-    <message>
         <source>Time</source>
         <translation>时间</translation>
     </message>
     <message>
-        <source>Inherited</source>
-        <translation>继承</translation>
+        <source>Process ID</source>
+        <translation>进程 ID</translation>
     </message>
     <message>
-        <source>In</source>
-        <translation>输入</translation>
+        <source>Direction</source>
+        <translation>排序顺序</translation>
     </message>
     <message>
-        <source>Out</source>
-        <translation>输出</translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>已阻止的互联网地址</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>旧连接在启动时已关闭</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>应用程序逻辑</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>应用程序组逻辑</translation>
-    </message>
-    <message>
-        <source>Filter Mode logic</source>
-        <translation>过滤模式逻辑</translation>
-    </message>
-    <message>
-        <source>Restrict access to LAN only</source>
-        <translation>仅限制访问局域网</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>未知</translation>
-    </message>
-    <message>
-        <source>Limit of Ask to Connect</source>
-        <translation>连接请求限制</translation>
-    </message>
-    <message>
-        <source>Restrict access by Zone</source>
-        <translation>按区域限制访问</translation>
+        <source>Action</source>
+        <translation>行为</translation>
     </message>
     <message>
         <source>Reason</source>
         <translation>原因</translation>
     </message>
     <message>
-        <source>Restrict access by Rule</source>
-        <translation>按规则限制访问</translation>
+        <source>Internet address</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule before App Rules</source>
-        <translation>应用程序规则前通过全局规则限制访问权限</translation>
+        <source>Old connection</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule after App Rules</source>
-        <translation>应用程序规则后通过全局规则限制访问权限</translation>
+        <source>Program&apos;s action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>App. Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation>过滤模式</translation>
+    </message>
+    <message>
+        <source>LAN only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone</source>
+        <translation>区域</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>规则</translation>
+    </message>
+    <message>
+        <source>Global Rule before App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global Rule after App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation>连接请求限制</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>未知</translation>
     </message>
 </context>
 <context>
@@ -1379,10 +1391,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>收集被阻止的连接</translation>
     </message>
     <message>
-        <source>Collect connection statistics</source>
-        <translation>收集连接统计数据</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>终止进程</translation>
     </message>
@@ -1527,6 +1535,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Switch Wildcard</source>
         <translation>切换通配符</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>收集已允许的连接</translation>
     </message>
 </context>
 <context>
@@ -2035,8 +2047,8 @@ Please restart the running program to take effect of this option.</source>
         <translation>数据流量</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>已阻止的连接</translation>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2084,14 +2096,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>每月配额：</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>保留“已允许的连接”的计数：</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>保留“已阻止的连接”的计数：</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2146,16 +2150,16 @@ Please restart the running program to take effect of this option.</source>
         <translation>仅提示</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>已阻止的连接</translation>
-    </message>
-    <message>
-        <source>Allowed Connections</source>
-        <translation>已允许的连接</translation>
-    </message>
-    <message>
         <source>Block Internet traffic when quota exceeds</source>
         <translation>超过配额时阻止互联网流量</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep count for connections:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -313,7 +313,27 @@
     </message>
 </context>
 <context>
-    <name>ConnBlockListModel</name>
+    <name>ConnListModel</name>
+    <message>
+        <source>In</source>
+        <translation>Ing</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>Usc</translation>
+    </message>
+    <message>
+        <source>Blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inherited</source>
+        <translation>Ereditata</translation>
+    </message>
     <message>
         <source>Program</source>
         <translation>Programma</translation>
@@ -321,10 +341,6 @@
     <message>
         <source>Proc. ID</source>
         <translation>ID proc.</translation>
-    </message>
-    <message>
-        <source>Process ID</source>
-        <translation>ID processo</translation>
     </message>
     <message>
         <source>Protocol</source>
@@ -339,76 +355,72 @@
         <translation>IP e porta remoti</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>Direzione</translation>
-    </message>
-    <message>
         <source>Time</source>
         <translation>Ora</translation>
     </message>
     <message>
-        <source>Inherited</source>
-        <translation>Ereditata</translation>
+        <source>Process ID</source>
+        <translation>ID processo</translation>
     </message>
     <message>
-        <source>In</source>
-        <translation>Ing</translation>
+        <source>Direction</source>
+        <translation>Direzione</translation>
     </message>
     <message>
-        <source>Out</source>
-        <translation>Usc</translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>Indirizzo Internet bloccato</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>Vecchia connessione chiusa all&apos;avvio</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>Logica dei programmi</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>App. logica di gruppo</translation>
-    </message>
-    <message>
-        <source>Filter Mode logic</source>
-        <translation>Logica modalità filtro</translation>
-    </message>
-    <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Limita l&apos;accesso solo alla LAN</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Sconosciuto</translation>
-    </message>
-    <message>
-        <source>Limit of Ask to Connect</source>
-        <translation>Limite a richieste connessione</translation>
-    </message>
-    <message>
-        <source>Restrict access by Zone</source>
-        <translation>Limita l&apos;accesso per zona</translation>
+        <source>Action</source>
+        <translation>Azione</translation>
     </message>
     <message>
         <source>Reason</source>
         <translation>Motivo</translation>
     </message>
     <message>
-        <source>Restrict access by Rule</source>
-        <translation>Limita accesso con regola</translation>
+        <source>Internet address</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule before App Rules</source>
-        <translation>Limita accesso con regola globale prima delle regole dell&apos;app</translation>
+        <source>Old connection</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule after App Rules</source>
-        <translation>Limita accesso con regola globale dopo le regole dell&apos;app</translation>
+        <source>Program&apos;s action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>App. Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation>Modalità filtro</translation>
+    </message>
+    <message>
+        <source>LAN only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone</source>
+        <translation>Zona</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Regola</translation>
+    </message>
+    <message>
+        <source>Global Rule before App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global Rule after App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation>Limite a richieste connessione</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Sconosciuto</translation>
     </message>
 </context>
 <context>
@@ -1379,10 +1391,6 @@ Vuoi aprire una discussione nel browser?</translation>
         <translation>Raccogli le connessioni bloccate</translation>
     </message>
     <message>
-        <source>Collect connection statistics</source>
-        <translation>Raccogli statistiche di connessione</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>Termina processo</translation>
     </message>
@@ -1527,6 +1535,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Switch Wildcard</source>
         <translation>Cambia Wildcard</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Raccogli le connessioni consentite</translation>
     </message>
 </context>
 <context>
@@ -2035,8 +2047,8 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <translation>Traffico</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>Connessioni bloccate</translation>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2084,14 +2096,6 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Quota mensile:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>Conta per &apos;Connessioni consentite&apos;:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>Conta le &apos;connessioni bloccate&apos;:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2146,16 +2150,16 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <translation>Solo in allerta</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>Connessioni bloccate</translation>
-    </message>
-    <message>
-        <source>Allowed Connections</source>
-        <translation>Connessioni consentite</translation>
-    </message>
-    <message>
         <source>Block Internet traffic when quota exceeds</source>
         <translation>Blocca il traffico Internet quando la quota supera</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep count for connections:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

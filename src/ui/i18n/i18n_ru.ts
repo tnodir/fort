@@ -313,7 +313,27 @@
     </message>
 </context>
 <context>
-    <name>ConnBlockListModel</name>
+    <name>ConnListModel</name>
+    <message>
+        <source>In</source>
+        <translation>Вх.</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>Исх.</translation>
+    </message>
+    <message>
+        <source>Blocked</source>
+        <translation>Заблокировано</translation>
+    </message>
+    <message>
+        <source>Allowed</source>
+        <translation>Разрешено</translation>
+    </message>
+    <message>
+        <source>Inherited</source>
+        <translation>Унаследовано</translation>
+    </message>
     <message>
         <source>Program</source>
         <translation>Программа</translation>
@@ -321,10 +341,6 @@
     <message>
         <source>Proc. ID</source>
         <translation>ИД проц.</translation>
-    </message>
-    <message>
-        <source>Process ID</source>
-        <translation>ИД процесса</translation>
     </message>
     <message>
         <source>Protocol</source>
@@ -339,76 +355,72 @@
         <translation>Удал. IP и Port</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>Направление</translation>
-    </message>
-    <message>
         <source>Time</source>
         <translation>Время</translation>
     </message>
     <message>
-        <source>Inherited</source>
-        <translation>Унаследовано</translation>
+        <source>Process ID</source>
+        <translation>ИД процесса</translation>
     </message>
     <message>
-        <source>In</source>
-        <translation>Вх.</translation>
+        <source>Direction</source>
+        <translation>Направление</translation>
     </message>
     <message>
-        <source>Out</source>
-        <translation>Исх.</translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>Блокированный Internet адрес</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>Старое соединение закрыто при запуске</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>Логика Программ</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>Логика Группы Приложения</translation>
-    </message>
-    <message>
-        <source>Filter Mode logic</source>
-        <translation>Логика Режима фильтра</translation>
-    </message>
-    <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Ограничить доступ только к локальной сети</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Неизвестно</translation>
-    </message>
-    <message>
-        <source>Limit of Ask to Connect</source>
-        <translation>Лимит режима Спрашивать для соединения</translation>
-    </message>
-    <message>
-        <source>Restrict access by Zone</source>
-        <translation>Ограничить доступ по Зоне</translation>
+        <source>Action</source>
+        <translation>Действие</translation>
     </message>
     <message>
         <source>Reason</source>
         <translation>Причина</translation>
     </message>
     <message>
-        <source>Restrict access by Rule</source>
-        <translation>Ограничить доступ по Правилу</translation>
+        <source>Internet address</source>
+        <translation>Интернет адрес</translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule before App Rules</source>
-        <translation>Ограничить доступ по Глобальному правилу, применяемому до правил приложений</translation>
+        <source>Old connection</source>
+        <translation>Старое соединение</translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule after App Rules</source>
-        <translation>Ограничить доступ по Глобальному правилу, применяемому после правил приложений</translation>
+        <source>Program&apos;s action</source>
+        <translation>Действие программы</translation>
+    </message>
+    <message>
+        <source>App. Group</source>
+        <translation>Группа приложений</translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation>Режим фильтра</translation>
+    </message>
+    <message>
+        <source>LAN only</source>
+        <translation>Только локальная сеть</translation>
+    </message>
+    <message>
+        <source>Zone</source>
+        <translation>Зона</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Правило</translation>
+    </message>
+    <message>
+        <source>Global Rule before App Rules</source>
+        <translation>Глобальное правило перед правилами приложений</translation>
+    </message>
+    <message>
+        <source>Global Rule after App Rules</source>
+        <translation>Глобальное правило после правил приложений</translation>
+    </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation>Лимит режима Спрашивать для соединения</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Неизвестно</translation>
     </message>
 </context>
 <context>
@@ -1379,10 +1391,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>Собирать заблокированные соединения</translation>
     </message>
     <message>
-        <source>Collect connection statistics</source>
-        <translation>Собирать статистику соединений</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>Убить процесс</translation>
     </message>
@@ -1527,6 +1535,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Switch Wildcard</source>
         <translation>Переключить режим подстановочных знаков</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Собирать разрешённые соединения</translation>
     </message>
 </context>
 <context>
@@ -2035,8 +2047,8 @@ Please restart the running program to take effect of this option.</source>
         <translation>Трафик</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>Блокированные соединения</translation>
+        <source>Connections</source>
+        <translation>Соединения</translation>
     </message>
 </context>
 <context>
@@ -2084,14 +2096,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Квота на месяц</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>Хранить количество для &apos;Разрешённые соединения&apos;:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>Хранить количество для &apos;Блокированные соединения&apos;:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2146,16 +2150,16 @@ Please restart the running program to take effect of this option.</source>
         <translation>Только оповещения</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>Блокированные соединения</translation>
-    </message>
-    <message>
-        <source>Allowed Connections</source>
-        <translation>Разрешённые соединения</translation>
-    </message>
-    <message>
         <source>Block Internet traffic when quota exceeds</source>
         <translation>Блокировать Интернет трафик при превышении квоты</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Соединения</translation>
+    </message>
+    <message>
+        <source>Keep count for connections:</source>
+        <translation>Хранить количество для соединений:</translation>
     </message>
 </context>
 <context>

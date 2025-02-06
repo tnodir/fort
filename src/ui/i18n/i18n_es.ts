@@ -313,7 +313,27 @@
     </message>
 </context>
 <context>
-    <name>ConnBlockListModel</name>
+    <name>ConnListModel</name>
+    <message>
+        <source>In</source>
+        <translation>Entrante</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>Saliente</translation>
+    </message>
+    <message>
+        <source>Blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inherited</source>
+        <translation>Heredado</translation>
+    </message>
     <message>
         <source>Program</source>
         <translation>Programa</translation>
@@ -321,10 +341,6 @@
     <message>
         <source>Proc. ID</source>
         <translation>ID de Proceso</translation>
-    </message>
-    <message>
-        <source>Process ID</source>
-        <translation>ID del Proceso</translation>
     </message>
     <message>
         <source>Protocol</source>
@@ -339,76 +355,72 @@
         <translation>IP y Puerto Remoto</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>Dirección</translation>
-    </message>
-    <message>
         <source>Time</source>
         <translation>Fecha</translation>
     </message>
     <message>
-        <source>Inherited</source>
-        <translation>Heredado</translation>
+        <source>Process ID</source>
+        <translation>ID del Proceso</translation>
     </message>
     <message>
-        <source>In</source>
-        <translation>Entrante</translation>
+        <source>Direction</source>
+        <translation>Dirección</translation>
     </message>
     <message>
-        <source>Out</source>
-        <translation>Saliente</translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>Dirección de Internet bloqueada</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>Conexión antigua cerrada al iniciar</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>Lógica de programas</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>App. Lógica de programa</translation>
-    </message>
-    <message>
-        <source>Filter Mode logic</source>
-        <translation>Lógica del modo de filtrado</translation>
-    </message>
-    <message>
-        <source>Restrict access to LAN only</source>
-        <translation>Restringir solo acceso a LAN</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>Desconocido</translation>
-    </message>
-    <message>
-        <source>Limit of Ask to Connect</source>
-        <translation>Límite de Solicitudes de Conexión</translation>
-    </message>
-    <message>
-        <source>Restrict access by Zone</source>
-        <translation>Restringir el acceso por zona</translation>
+        <source>Action</source>
+        <translation>Acción</translation>
     </message>
     <message>
         <source>Reason</source>
         <translation>Motivo</translation>
     </message>
     <message>
-        <source>Restrict access by Rule</source>
-        <translation>Restringir el acceso por regla</translation>
+        <source>Internet address</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule before App Rules</source>
-        <translation>Restringir el acceso por regla global antes de las reglas de aplicación</translation>
+        <source>Old connection</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule after App Rules</source>
-        <translation>Restringir el acceso por regla global después de las reglas de aplicación</translation>
+        <source>Program&apos;s action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>App. Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation>Modo de filtrado</translation>
+    </message>
+    <message>
+        <source>LAN only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone</source>
+        <translation>Zona</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Regla</translation>
+    </message>
+    <message>
+        <source>Global Rule before App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global Rule after App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation>Límite de Solicitudes de Conexión</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>Desconocido</translation>
     </message>
 </context>
 <context>
@@ -1379,10 +1391,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>Registrar conexiones bloqueadas</translation>
     </message>
     <message>
-        <source>Collect connection statistics</source>
-        <translation>Registrar estadísticas de conexiones</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>Finalizar proceso</translation>
     </message>
@@ -1530,6 +1538,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Switch Wildcard</source>
         <translation>Cambiar comodín</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Registrar conexiones permitidas</translation>
     </message>
 </context>
 <context>
@@ -2038,8 +2050,8 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <translation>Tráfico</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>Conexiones Bloqueadas</translation>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2087,14 +2099,6 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>Cuota del mes:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>Conservar el conteo de &apos;Conexiones permitidas&apos;:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>Conservar el conteo de &apos;Conexiones bloqueadas&apos;:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2149,16 +2153,16 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <translation>Solo alertas</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>Conexiones Bloqueadas</translation>
-    </message>
-    <message>
-        <source>Allowed Connections</source>
-        <translation>Conexiones permitidas</translation>
-    </message>
-    <message>
         <source>Block Internet traffic when quota exceeds</source>
         <translation>Bloquear el tráfico de Internet cuando se excede la cuota</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep count for connections:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

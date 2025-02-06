@@ -313,7 +313,27 @@
     </message>
 </context>
 <context>
-    <name>ConnBlockListModel</name>
+    <name>ConnListModel</name>
+    <message>
+        <source>In</source>
+        <translation>استقبال</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>إرسال</translation>
+    </message>
+    <message>
+        <source>Blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inherited</source>
+        <translation>متأثر</translation>
+    </message>
     <message>
         <source>Program</source>
         <translation>البرنامج</translation>
@@ -321,10 +341,6 @@
     <message>
         <source>Proc. ID</source>
         <translation>م. العملية</translation>
-    </message>
-    <message>
-        <source>Process ID</source>
-        <translation>معرّف العملية</translation>
     </message>
     <message>
         <source>Protocol</source>
@@ -339,76 +355,72 @@
         <translation>عنوان الـIP البعيد ورقم المنفذ</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>الاتجاه</translation>
-    </message>
-    <message>
         <source>Time</source>
         <translation>الوقت</translation>
     </message>
     <message>
-        <source>Inherited</source>
-        <translation>متأثر</translation>
+        <source>Process ID</source>
+        <translation>معرّف العملية</translation>
     </message>
     <message>
-        <source>In</source>
-        <translation>استقبال</translation>
+        <source>Direction</source>
+        <translation>الاتجاه</translation>
     </message>
     <message>
-        <source>Out</source>
-        <translation>إرسال</translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>عناوين الإنترنت المحظورة</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>عمليات الاتصال السابقة المغلقة</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>أسلوب البرامج</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>أسلوب مجموعات التطبيقات</translation>
-    </message>
-    <message>
-        <source>Filter Mode logic</source>
-        <translation>أسلوب نمط المرشّح</translation>
-    </message>
-    <message>
-        <source>Restrict access to LAN only</source>
-        <translation>تقييد الوصول للشبكة المحلية فقط</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>مجهول</translation>
-    </message>
-    <message>
-        <source>Limit of Ask to Connect</source>
-        <translation>تقييد تحذيرات الاتصال</translation>
-    </message>
-    <message>
-        <source>Restrict access by Zone</source>
-        <translation>تقييد الوصول حسب المنطقة</translation>
+        <source>Action</source>
+        <translation>إجراء</translation>
     </message>
     <message>
         <source>Reason</source>
         <translation>السبب</translation>
     </message>
     <message>
-        <source>Restrict access by Rule</source>
-        <translation>تقييد الوصول حسب القاعدة</translation>
+        <source>Internet address</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule before App Rules</source>
-        <translation>تقييد الوصول بواسطة القاعدة العامة قبل قواعد التطبيق</translation>
+        <source>Old connection</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule after App Rules</source>
-        <translation>تقييد الوصول بواسطة القاعدة العامة بعد قواعد التطبيق</translation>
+        <source>Program&apos;s action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>App. Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation>نمط المرشّح</translation>
+    </message>
+    <message>
+        <source>LAN only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone</source>
+        <translation>المنطقة</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>قاعدة</translation>
+    </message>
+    <message>
+        <source>Global Rule before App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global Rule after App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation>تقييد تحذيرات الاتصال</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>مجهول</translation>
     </message>
 </context>
 <context>
@@ -1379,10 +1391,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>تسجيل محاولات الاتصال المحظورة</translation>
     </message>
     <message>
-        <source>Collect connection statistics</source>
-        <translation>تسجيل احصائيات الاتصال</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>إنهاء العملية</translation>
     </message>
@@ -1527,6 +1535,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Switch Wildcard</source>
         <translation>تبديل حرف الاستبدال (Wildcard)</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>تسجيل عمليات الاتصال المسموح لها</translation>
     </message>
 </context>
 <context>
@@ -2035,8 +2047,8 @@ Please restart the running program to take effect of this option.</source>
         <translation>حركة الشبكة</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>محاولات الاتصال المحظورة</translation>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2084,14 +2096,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>الحصة الشهرية:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>الاحتفاظ بعدد عمليات الاتصال المسموح لها:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>الاحتفاظ بعدد عمليات الاتصال المحظورة لها:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2146,16 +2150,16 @@ Please restart the running program to take effect of this option.</source>
         <translation>التي تم التحذير عنها</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>عمليات الاتصال المحظورة</translation>
-    </message>
-    <message>
-        <source>Allowed Connections</source>
-        <translation>عمليات الاتصال المسموح لها</translation>
-    </message>
-    <message>
         <source>Block Internet traffic when quota exceeds</source>
         <translation>إيقاف اتصال الإنترنت عند تجاوز الحصة</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep count for connections:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

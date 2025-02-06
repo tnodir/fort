@@ -313,17 +313,33 @@
     </message>
 </context>
 <context>
-    <name>ConnBlockListModel</name>
+    <name>ConnListModel</name>
+    <message>
+        <source>In</source>
+        <translation>인</translation>
+    </message>
+    <message>
+        <source>Out</source>
+        <translation>아웃</translation>
+    </message>
+    <message>
+        <source>Blocked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Allowed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Inherited</source>
+        <translation>상속됨</translation>
+    </message>
     <message>
         <source>Program</source>
         <translation>프로그램</translation>
     </message>
     <message>
         <source>Proc. ID</source>
-        <translation>프로세스 ID</translation>
-    </message>
-    <message>
-        <source>Process ID</source>
         <translation>프로세스 ID</translation>
     </message>
     <message>
@@ -339,76 +355,72 @@
         <translation>원격 IP 및 포트</translation>
     </message>
     <message>
-        <source>Direction</source>
-        <translation>방향</translation>
-    </message>
-    <message>
         <source>Time</source>
         <translation>시간</translation>
     </message>
     <message>
-        <source>Inherited</source>
-        <translation>상속됨</translation>
+        <source>Process ID</source>
+        <translation>프로세스 ID</translation>
     </message>
     <message>
-        <source>In</source>
-        <translation>인</translation>
+        <source>Direction</source>
+        <translation>방향</translation>
     </message>
     <message>
-        <source>Out</source>
-        <translation>아웃</translation>
-    </message>
-    <message>
-        <source>Blocked Internet address</source>
-        <translation>차단된 인터넷 주소</translation>
-    </message>
-    <message>
-        <source>Old connection closed on startup</source>
-        <translation>시작할 때 이전 연결이 닫힘</translation>
-    </message>
-    <message>
-        <source>Programs logic</source>
-        <translation>프로그램 로직</translation>
-    </message>
-    <message>
-        <source>App. Group logic</source>
-        <translation>앱 그룹 로직</translation>
-    </message>
-    <message>
-        <source>Filter Mode logic</source>
-        <translation>필터링 모드 로직</translation>
-    </message>
-    <message>
-        <source>Restrict access to LAN only</source>
-        <translation>LAN으로만 액세스 제한</translation>
-    </message>
-    <message>
-        <source>Unknown</source>
-        <translation>알 수 없음</translation>
-    </message>
-    <message>
-        <source>Limit of Ask to Connect</source>
-        <translation>연결 요청 횟수 제한</translation>
-    </message>
-    <message>
-        <source>Restrict access by Zone</source>
-        <translation>영역별 접근 제한</translation>
+        <source>Action</source>
+        <translation>행동</translation>
     </message>
     <message>
         <source>Reason</source>
         <translation>이유</translation>
     </message>
     <message>
-        <source>Restrict access by Rule</source>
-        <translation>규칙으로 액세스 제한</translation>
+        <source>Internet address</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule before App Rules</source>
-        <translation>앱 규칙 이전에 전역 규칙으로 액세스 제한</translation>
+        <source>Old connection</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restrict access by Global Rule after App Rules</source>
-        <translation>앱 규칙 이후에 전역 규칙으로 액세스 제한</translation>
+        <source>Program&apos;s action</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>App. Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Filter Mode</source>
+        <translation>필터 모드</translation>
+    </message>
+    <message>
+        <source>LAN only</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone</source>
+        <translation>대역</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>규칙</translation>
+    </message>
+    <message>
+        <source>Global Rule before App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Global Rule after App Rules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Limit of Ask to Connect</source>
+        <translation>연결 요청 횟수 제한</translation>
+    </message>
+    <message>
+        <source>Unknown</source>
+        <translation>알 수 없음</translation>
     </message>
 </context>
 <context>
@@ -1379,10 +1391,6 @@ Do you want to open a discussion thread in browser?</source>
         <translation>차단된 연결 집계</translation>
     </message>
     <message>
-        <source>Collect connection statistics</source>
-        <translation>연결 통계 집계</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>프로세스 종료</translation>
     </message>
@@ -1527,6 +1535,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Switch Wildcard</source>
         <translation>와일드카드 전환</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>허용된 연결 집계</translation>
     </message>
 </context>
 <context>
@@ -2035,8 +2047,8 @@ Please restart the running program to take effect of this option.</source>
         <translation>트래픽</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>차단 된 연결</translation>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2084,14 +2096,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Month&apos;s Quota:</source>
         <translation>월간 할당량:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Allowed connections&apos;:</source>
-        <translation>&apos;허용된 연결&apos; 수 보관:</translation>
-    </message>
-    <message>
-        <source>Keep count for &apos;Blocked connections&apos;:</source>
-        <translation>&apos;차단된 연결&apos; 수 보관:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -2146,16 +2150,16 @@ Please restart the running program to take effect of this option.</source>
         <translation>경고만</translation>
     </message>
     <message>
-        <source>Blocked Connections</source>
-        <translation>차단 된 연결</translation>
-    </message>
-    <message>
-        <source>Allowed Connections</source>
-        <translation>허용된 연결</translation>
-    </message>
-    <message>
         <source>Block Internet traffic when quota exceeds</source>
         <translation>할당량 초과 시 인터넷 트래픽 차단</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Keep count for connections:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
