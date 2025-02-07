@@ -94,11 +94,14 @@ class MemPlumberInternal {
         }
     }
 
-    bool isVerbose() {
+    bool isVerbose() const {
         return m_Verbose && m_Dumper != NULL;
     }
 
     public:
+
+    bool isStarted() const { return m_Started; }
+    FILE* dumper() const { return m_Dumper; }
 
     static MemPlumberInternal& getInstance() {
         static MemPlumberInternal instance;
@@ -352,11 +355,59 @@ class MemPlumberInternal {
 
 
 #if defined _MSC_VER || defined _WIN32
+
+#ifdef USE_BACKWARD_CPP
+#include <backward.hpp>
+static const char* getBackwardTrace() {
+    using namespace backward;
+
+    constexpr int maxFrames = 5;
+
+    StackTrace st;
+    const size_t backtraceArrSize = st.load_here(maxFrames);
+
+    if (backtraceArrSize < maxFrames) {
+        return "Unknown";
+    }
+
+    TraceResolver tr;
+    tr.load_stacktrace(st);
+
+    const ResolvedTrace trace = tr.resolve(st[maxFrames - 1]);
+
+    std::ostringstream buffer;
+    buffer << trace.object_filename << " " << trace.object_function;
+
+    const std::string str = buffer.str();
+
+    char* cstr = new char[str.length() + 1]; // +1 for the null terminator
+    std::strcpy(cstr, str.c_str());
+
+    return cstr;
+}
+
+const char* getCaller() {
+    static volatile bool isDumping = false;
+
+    if (isDumping)
+        return "";
+
+    isDumping = true;
+
+    const char* cstr = getBackwardTrace();
+
+    isDumping = false;
+
+    return cstr;
+}
+#else
 // TODO: backtrace() is not supported on Windows.
 // We can use dbghelp but it's not supported on MinGW. Need to figure out a way to solve it on all platforms
 const char* getCaller() {
     return "Unknown";
 }
+#endif
+
 #else
 #include <execinfo.h>
 const char* getCaller() {
