@@ -23,6 +23,7 @@
 #include <form/tray/trayicon.h>
 #include <form/zone/zoneswindow.h>
 #include <fortsettings.h>
+#include <memplumber/memplumberutil.h>
 #include <stat/statmanager.h>
 #include <user/usersettings.h>
 #include <util/guiutil.h>
@@ -355,6 +356,8 @@ bool WindowManager::showProgramsWindow()
         setupProgramsWindow();
     }
 
+    MemPlumberUtil::start();
+
     showWindow(m_progWindow);
 
     return true;
@@ -364,6 +367,8 @@ void WindowManager::closeProgramsWindow()
 {
     if (closeWindow(m_progWindow)) {
         m_progWindow = nullptr;
+
+        MemPlumberUtil::checkAndStop();
     }
 }
 
