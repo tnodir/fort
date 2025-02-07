@@ -27,7 +27,7 @@
 
 class MemPlumberInternal {
     private:
-    
+
     struct new_ptr_list_t {
         new_ptr_list_t* next;
         char file[MEMPLUMBER_FILENAME_LEN];
@@ -93,7 +93,7 @@ class MemPlumberInternal {
             }
         }
     }
-    
+
     bool isVerbose() {
         return m_Verbose && m_Dumper != NULL;
     }
@@ -125,7 +125,7 @@ class MemPlumberInternal {
         // if cannot allocate, return NULL
         if (pointerMetaDataRecord == NULL)
             return pointerMetaDataRecord;
-        
+
         // calculate the actual pointer to provide to the user
         void* actualPointer = (char*)pointerMetaDataRecord + sizeof(new_ptr_list_t);
 
@@ -134,14 +134,14 @@ class MemPlumberInternal {
 
         new_ptr_list_t** hashtable = (m_ProgramStarted == 0 ? m_StaticPointerListHashtable : m_PointerListHashtable);
 
-        // chain this metadata to the linked list of the specific bucket 
+        // chain this metadata to the linked list of the specific bucket
         pointerMetaDataRecord->next = hashtable[hashIndex];
 
         // fill in the metadata
         pointerMetaDataRecord->line = line;
         pointerMetaDataRecord->size = size;
         strncpy(pointerMetaDataRecord->file, file, MEMPLUMBER_FILENAME_LEN - 1);
-		pointerMetaDataRecord->file[MEMPLUMBER_FILENAME_LEN - 1] = '\0';
+        pointerMetaDataRecord->file[MEMPLUMBER_FILENAME_LEN - 1] = '\0';
 
         // put this metadata in the head of the list
         hashtable[hashIndex] = pointerMetaDataRecord;
@@ -166,7 +166,7 @@ class MemPlumberInternal {
         // find the metadata record bucket in the hash table
         size_t hashIndex = MEMPLUMBER_HASH(pointer);
         new_ptr_list_t* metaDataBucketLinkedListElement = m_PointerListHashtable[hashIndex];
-	    new_ptr_list_t* metaDataBucketLinkedListPrevElement = NULL;
+        new_ptr_list_t* metaDataBucketLinkedListPrevElement = NULL;
 
         // inside the bucket, go over the linked list until you find the specific pointer
         while (metaDataBucketLinkedListElement != NULL) {
@@ -191,10 +191,10 @@ class MemPlumberInternal {
                 }
 
                 if (isVerbose()) {
-                    fprintf(m_Dumper, "Free: 0x%p (size %d[bytes]) allocated in: %s:%d\n", 
+                    fprintf(m_Dumper, "Free: 0x%p (size %d[bytes]) allocated in: %s:%d\n",
                         pointer,
                         (int)metaDataBucketLinkedListElement->size,
-                        metaDataBucketLinkedListElement->file, 
+                        metaDataBucketLinkedListElement->file,
                         metaDataBucketLinkedListElement->line);
                 }
 
@@ -205,7 +205,7 @@ class MemPlumberInternal {
             }
         }
 
-        // if got to here it means memory was allocated before monitoring started. Simply free the memory and return 
+        // if got to here it means memory was allocated before monitoring started. Simply free the memory and return
         if (isVerbose()) {
             fprintf(m_Dumper, "Pointer 0x%p wasn't found\n", pointer);
         }
@@ -258,9 +258,9 @@ class MemPlumberInternal {
 
                 if (verbose) {
                     fprintf(dumper, "Found leaked object at 0x%p (size %d[bytes]) allocated in: %s:%d\n",
-                        (char*) metaDataBucketLinkedListElement + sizeof(new_ptr_list_t), 
+                        (char*) metaDataBucketLinkedListElement + sizeof(new_ptr_list_t),
                         (int) metaDataBucketLinkedListElement->size,
-                        metaDataBucketLinkedListElement->file, 
+                        metaDataBucketLinkedListElement->file,
                         metaDataBucketLinkedListElement->line);
                 }
 
@@ -294,9 +294,9 @@ class MemPlumberInternal {
 
                 if (verbose) {
                     fprintf(dumper, "Static object allocated at 0x%p (size %d[bytes]) allocated in: %s:%d\n",
-                        (char*) metaDataBucketLinkedListElement + sizeof(new_ptr_list_t), 
+                        (char*) metaDataBucketLinkedListElement + sizeof(new_ptr_list_t),
                         (int) metaDataBucketLinkedListElement->size,
-                        metaDataBucketLinkedListElement->file, 
+                        metaDataBucketLinkedListElement->file,
                         metaDataBucketLinkedListElement->line);
                 }
 
@@ -327,7 +327,7 @@ class MemPlumberInternal {
                 void* actualPointerInRecord = (char*)metaDataBucketLinkedListElement + sizeof(new_ptr_list_t);
 
                 if (isVerbose()) {
-                    fprintf(m_Dumper, "FreeAllMem: freeing 0x%p (size %d[bytes]) allocated in %s:%d\n", 
+                    fprintf(m_Dumper, "FreeAllMem: freeing 0x%p (size %d[bytes]) allocated in %s:%d\n",
                         actualPointerInRecord,
                         (int)metaDataBucketLinkedListElement->size,
                         metaDataBucketLinkedListElement->file,
@@ -340,11 +340,11 @@ class MemPlumberInternal {
                 // go to the next item on the list
                 metaDataBucketLinkedListElement = next;
             }
-            
+
             // done freeing all elements in the linked list, set the hashtable bucket to null
             m_PointerListHashtable[index] = NULL;
         }
-        
+
         closeFile(m_Dumper);
         m_Dumper = NULL;
     }
@@ -387,19 +387,19 @@ void* operator new[](std::size_t size, const char* file, int line) {
 }
 
 void* operator new[](size_t size) _THROW_BAD_ALLOC {
-	return operator new(size, getCaller(), 0);
+    return operator new(size, getCaller(), 0);
 }
 
 void* operator new(size_t size) _THROW_BAD_ALLOC {
-	return operator new(size, getCaller(), 0);
+    return operator new(size, getCaller(), 0);
 }
 
 void* operator new(size_t size, const std::nothrow_t&) _NOEXCEPT {
-	return operator new(size, getCaller(), 0);
+    return operator new(size, getCaller(), 0);
 }
 
 void* operator new[](size_t size, const std::nothrow_t&) _NOEXCEPT {
-	return operator new[](size, getCaller(), 0);
+    return operator new[](size, getCaller(), 0);
 }
 
 void operator delete(void* pointer, const char* file, int line) {
@@ -428,11 +428,11 @@ void operator delete[](void* pointer, const char* file, int line) {
 }
 
 void operator delete(void* pointer, const std::nothrow_t&) throw() {
-	operator delete(pointer);
+    operator delete(pointer);
 }
 
 void operator delete[](void* pointer, const std::nothrow_t&) throw() {
-	operator delete(pointer, std::nothrow);
+    operator delete(pointer, std::nothrow);
 }
 
 void __mem_leak_check(size_t& memLeakCount, uint64_t& memLeakSize, bool verbose, const char* fileDumperName, bool append) {
