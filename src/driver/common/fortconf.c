@@ -9,7 +9,7 @@
 
 static_assert(sizeof(ip6_addr_t) == 16, "ip6_addr_t size mismatch");
 
-static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT64), "FORT_CONF_FLAGS size mismatch");
+static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT32), "FORT_CONF_FLAGS size mismatch");
 static_assert(
         sizeof(FORT_CONF_RULE_FILTER) == sizeof(UINT32), "FORT_CONF_RULE_FILTER size mismatch");
 static_assert(sizeof(FORT_CONF_RULE_ZONES) == sizeof(UINT64), "FORT_CONF_RULE_ZONES size mismatch");
@@ -455,16 +455,6 @@ FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path
     app_data = fort_conf_app_prefix_find(conf, path);
 
     return app_data;
-}
-
-FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
-{
-    const UINT16 app_group_bit = (1 << app_data.group_index);
-
-    if ((app_group_bit & conf_flags.group_bits) != 0)
-        return FALSE;
-
-    return conf_flags.group_blocked;
 }
 
 inline static BOOL fort_conf_rules_rt_conn_filtered_zones(

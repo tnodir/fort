@@ -29,6 +29,11 @@ bool App::isPathsEqual(const App &o) const
     return appOriginPath == o.appOriginPath && appPath == o.appPath;
 }
 
+bool App::isLimitsEqual(const App &o) const
+{
+    return inLimitId == o.inLimitId && outLimitId == o.outLimitId;
+}
+
 bool App::isScheduleEqual(const App &o) const
 {
     return scheduleAction == o.scheduleAction && scheduleTime == o.scheduleTime;
@@ -36,8 +41,8 @@ bool App::isScheduleEqual(const App &o) const
 
 bool App::isOptionsEqual(const App &o) const
 {
-    return isFlagsEqual(o) && isZonesEqual(o) && groupIndex == o.groupIndex && ruleId == o.ruleId
-            && notes == o.notes && isPathsEqual(o) && isScheduleEqual(o);
+    return isFlagsEqual(o) && isZonesEqual(o) && groupId == o.groupId && ruleId == o.ruleId
+            && notes == o.notes && isPathsEqual(o) && isLimitsEqual(o) && isScheduleEqual(o);
 }
 
 bool App::isNameEqual(const App &o) const

@@ -72,7 +72,6 @@ TEST_F(ConfUtilTest, confWriteRead)
     conf.addAppGroup(appGroup2);
 
     conf.resetEdited(FirewallConf::AllEdited);
-    conf.prepareToSave();
 
     ConfBuffer confBuf;
 
@@ -118,7 +117,7 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     const auto firefoxData = DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe"));
-    ASSERT_EQ(int(firefoxData.group_index), 1);
+    ASSERT_EQ(int(firefoxData.group_id), 1);
 }
 
 TEST_F(ConfUtilTest, checkEnvManager)

@@ -117,7 +117,7 @@ void ProgramEditDialog::initialize(const App &app, const QVector<qint64> &appIdL
     initializePathNameRuleFields(isSingleSelection);
 
     updateApplyChild();
-    m_comboAppGroup->setCurrentIndex(app.groupIndex);
+    m_comboAppGroup->setCurrentIndex(app.groupId);
 
     m_rbAllow->setChecked(!app.blocked);
     m_rbBlock->setChecked(app.blocked);
@@ -604,7 +604,8 @@ void ProgramEditDialog::setupComboAppGroups()
         if (onlyFlags)
             return;
 
-        ControlUtil::setComboBoxTexts(m_comboAppGroup, conf()->appGroupNames(), /*currentIndex=*/0);
+        ControlUtil::setComboBoxTexts(
+                m_comboAppGroup, {} /*conf()->appGroupNames()*/, /*currentIndex=*/0);
     };
 
     refreshComboAppGroups();
@@ -1285,7 +1286,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.logBlockedConn = m_cbLogBlockedConn->isChecked();
     app.blocked = !m_rbAllow->isChecked();
     app.killProcess = m_rbKillProcess->isChecked();
-    app.groupIndex = m_comboAppGroup->currentIndex();
+    app.groupId = m_comboAppGroup->currentIndex();
     app.ruleId = currentRuleId();
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();

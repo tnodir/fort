@@ -138,10 +138,10 @@ typedef struct fort_shaper
 {
     UCHAR volatile flags;
 
-    UINT32 limit_io_bits;
+    UINT32 limit_bits;
 
-    LONG volatile group_io_bits;
-    LONG volatile active_io_bits;
+    UINT32 volatile group_io_bits;
+    UINT32 volatile active_bits;
 
     UINT32 randomSeed;
     LARGE_INTEGER qpcFrequency;
@@ -151,7 +151,7 @@ typedef struct fort_shaper
 
     KSPIN_LOCK lock;
 
-    PFORT_PACKET_QUEUE queues[FORT_CONF_GROUP_MAX * 2]; /* in/out-bound pairs */
+    PFORT_PACKET_QUEUE queues[FORT_CONF_SPEED_LIMIT_MAX];
 } FORT_SHAPER, *PFORT_SHAPER;
 
 #if defined(__cplusplus)
@@ -161,6 +161,12 @@ extern "C" {
 FORT_API void fort_shaper_open(PFORT_SHAPER shaper);
 
 FORT_API void fort_shaper_close(PFORT_SHAPER shaper);
+
+FORT_API NTSTATUS fort_shaper_speed_limits_set(
+        PFORT_SHAPER shaper, PCFORT_CONF_SPEED_LIMITS speed_limits);
+
+FORT_API void fort_shaper_speed_limit_flag_set(
+        PFORT_SHAPER shaper, PCFORT_CONF_SPEED_LIMIT_FLAG limit_flag);
 
 FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, PCFORT_CONF_IO conf_io);
 

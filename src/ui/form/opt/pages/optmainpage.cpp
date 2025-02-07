@@ -17,7 +17,6 @@
 #include <util/iconcache.h>
 
 #include "addressespage.h"
-#include "applicationspage.h"
 #include "graphpage.h"
 #include "ifacepage.h"
 #include "optionspage.h"
@@ -78,13 +77,11 @@ void OptMainPage::setupTabBar()
     auto optionsPage = new OptionsPage(ctrl());
     auto ifacePage = new IfacePage(ctrl());
     auto addressesPage = new AddressesPage(ctrl());
-    auto applicationsPage = new ApplicationsPage(ctrl());
     auto statisticsPage = new StatisticsPage(ctrl());
     auto graphPage = new GraphPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
 
-    m_pages = { optionsPage, ifacePage, addressesPage, applicationsPage, statisticsPage, graphPage,
-        schedulePage };
+    m_pages = { optionsPage, ifacePage, addressesPage, statisticsPage, graphPage, schedulePage };
 
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(optionsPage),
@@ -92,8 +89,6 @@ void OptMainPage::setupTabBar()
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(ifacePage),
             IconCache::icon(":/icons/interface_preferences.png"), QString());
     m_tabWidget->addTab(addressesPage, IconCache::icon(":/icons/ip.png"), QString());
-    m_tabWidget->addTab(
-            applicationsPage, IconCache::icon(":/icons/application_double.png"), QString());
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(statisticsPage),
             IconCache::icon(":/icons/chart_bar.png"), QString());
     m_tabWidget->addTab(graphPage, IconCache::icon(":/icons/action_log.png"), QString());

@@ -139,6 +139,8 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
     drvConf->wild_apps_off = wildAppsOff;
     drvConf->prefix_apps_off = prefixAppsOff;
     drvConf->exe_apps_off = exeAppsOff;
+
+    drvConf->groups_mask = wca.conf.activeGroupsMask();
 }
 
 void ConfData::writeConfFlags(const FirewallConf &conf)
@@ -172,8 +174,6 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
     confFlags->log_allowed_conn = conf.logAllowedConn();
     confFlags->log_blocked_conn = conf.logBlockedConn();
     confFlags->log_alerted_conn = conf.logAlertedConn();
-
-    confFlags->group_bits = conf.activeGroupBits();
 }
 
 void ConfData::writeAddressRanges(const addrranges_arr_t &addressRanges)

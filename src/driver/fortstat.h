@@ -33,18 +33,22 @@ typedef struct fort_stat_proc
 
     UINT16 proc_index;
 
-    UINT16 log_stat : 1;
-    UINT16 active : 1;
+    UCHAR log_stat : 1;
+    UCHAR active : 1;
+
+    UCHAR speed_limit_in_id;
+    UCHAR speed_limit_out_id;
 
     UINT32 refcount;
 
     struct fort_stat_proc *next_active;
 } FORT_STAT_PROC, *PFORT_STAT_PROC;
 
+typedef const FORT_STAT_PROC *PCFORT_STAT_PROC;
+
 #define FORT_FLOW_SPEED_LIMIT_IN    0x01
 #define FORT_FLOW_SPEED_LIMIT_OUT   0x02
-#define FORT_FLOW_SPEED_LIMIT_PROC  0x04
-#define FORT_FLOW_SPEED_LIMIT_FLAGS 0x07
+#define FORT_FLOW_SPEED_LIMIT_FLAGS (FORT_FLOW_SPEED_LIMIT_IN | FORT_FLOW_SPEED_LIMIT_OUT)
 #define FORT_FLOW_TCP               0x10
 #define FORT_FLOW_IP6               0x20
 #define FORT_FLOW_INBOUND           0x40
@@ -52,16 +56,9 @@ typedef struct fort_stat_proc
 
 typedef struct fort_flow_opt
 {
-    union {
-        struct
-        {
-            UCHAR volatile flags;
-            UCHAR group_index;
-            UINT16 proc_index;
-        };
+    UCHAR volatile flags;
 
-        UINT32 v;
-    };
+    UINT16 proc_index;
 } FORT_FLOW_OPT, *PFORT_FLOW_OPT;
 
 /* Synchronize with tommy_hashdyn_node! */

@@ -4,6 +4,16 @@
 
 #include <util/stringutil.h>
 
+int ConfUtil::groupMaxCount()
+{
+    return FORT_CONF_GROUP_MAX;
+}
+
+int ConfUtil::speedLimitMaxCount()
+{
+    return FORT_CONF_SPEED_LIMIT_MAX;
+}
+
 int ConfUtil::ruleMaxCount()
 {
     return FORT_CONF_RULE_MAX;

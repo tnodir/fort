@@ -28,6 +28,7 @@
 
 namespace {
 
+constexpr int AppGroupMaxCount = 16;
 constexpr int MaxFKeyCount = 12;
 
 const QString eventSingleClick = QStringLiteral("singleClick");
@@ -485,7 +486,7 @@ void TrayIcon::setupTrayMenu()
 
     m_menu->addSeparator();
 
-    for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
+    for (int i = 0; i < AppGroupMaxCount; ++i) {
         QAction *a = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)), ActionNone,
                 /*checkable=*/true);
 
@@ -635,24 +636,25 @@ void TrayIcon::updateTrayMenuFlags()
         }
     }
 
-    int appGroupIndex = 0;
+    quint8 groupId = 0;
     for (QAction *action : std::as_const(m_appGroupActions)) {
         if (!action->isVisible())
             break;
 
-        const bool appGroupEnabled = conf()->appGroupEnabled(appGroupIndex++);
+        const bool groupEnabled = conf()->appGroupEnabled(++groupId);
 
         action->setEnabled(editEnabled);
-        action->setChecked(appGroupEnabled);
+        action->setChecked(groupEnabled);
     }
 }
 
 void TrayIcon::updateAppGroupActions()
 {
-    const int trayMaxGroups = iniUser()->trayMaxGroups(MAX_APP_GROUP_COUNT);
+    const int trayMaxGroups = iniUser()->trayMaxGroups(AppGroupMaxCount);
+#if 0
     const int appGroupsCount = qMin(conf()->appGroups().count(), trayMaxGroups);
 
-    for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
+    for (int i = 0; i < AppGroupMaxCount; ++i) {
         QAction *action = m_appGroupActions.at(i);
 
         const bool visible = (i < appGroupsCount);
@@ -667,6 +669,7 @@ void TrayIcon::updateAppGroupActions()
         action->setVisible(visible);
         action->setEnabled(visible);
     }
+#endif
 }
 
 void TrayIcon::updateBlockTrafficMenuIcon(int index)
@@ -818,13 +821,12 @@ void TrayIcon::saveTrayFlags()
     }
 
     // Set App. Groups' enabled states
-    int i = 0;
-    for (AppGroup *appGroup : conf()->appGroups()) {
-        const QAction *action = m_appGroupActions.at(i++);
+    quint8 groupId = 0;
+    for (QAction *action : std::as_const(m_appGroupActions)) {
         if (!action->isVisible())
             break;
 
-        appGroup->setEnabled(action->isChecked());
+        conf()->setAppGroupEnabled(++groupId, action->isChecked());
     }
 
     confManager()->saveFlags();

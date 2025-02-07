@@ -97,11 +97,14 @@ QVariant dataDisplayScheduled(const App &app, int role)
 
 QVariant dataDisplayGroup(const App &app, int /*role*/)
 {
+#if 0
     const FirewallConf *conf = IoC<ConfAppManager>()->conf();
 
-    const AppGroup *appGroup = conf->appGroupAt(app.groupIndex);
+    const AppGroup *appGroup = conf->appGroupAt(app.groupId);
 
     return appGroup->name();
+#endif
+    return {};
 }
 
 QVariant dataDisplayFilePath(const App &app, int /*role*/)
@@ -188,8 +191,8 @@ QVariant AppListModelData::appGroupColor() const
 {
     const FirewallConf *conf = IoC<ConfAppManager>()->conf();
 
-    const AppGroup *appGroup = conf->appGroupAt(app().groupIndex);
-    if (!appGroup->enabled())
+    const bool groupEnabled = conf->appGroupEnabled(app().groupId);
+    if (!groupEnabled)
         return inactiveColor;
 
     return {};

@@ -24,10 +24,12 @@ SOURCES += \
     conf/confmanager.cpp \
     conf/confmanagerbase.cpp \
     conf/confrulemanager.cpp \
+    conf/confspeedlimitmanager.cpp \
     conf/confzonemanager.cpp \
     conf/firewallconf.cpp \
     conf/inioptions.cpp \
     conf/rule.cpp \
+    conf/speedlimit.cpp \
     conf/zone.cpp \
     control/command/controlcommandbackup.cpp \
     control/command/controlcommandbase.cpp \
@@ -85,6 +87,8 @@ SOURCES += \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
+    form/group/groupeditdialog.cpp \
+    form/group/groupswindow.cpp \
     form/home/homecontroller.cpp \
     form/home/homewindow.cpp \
     form/home/pages/aboutpage.cpp \
@@ -94,7 +98,6 @@ SOURCES += \
     form/opt/optionscontroller.cpp \
     form/opt/optionswindow.cpp \
     form/opt/pages/addressespage.cpp \
-    form/opt/pages/applicationspage.cpp \
     form/opt/pages/apps/appscolumn.cpp \
     form/opt/pages/graphpage.cpp \
     form/opt/pages/ifacepage.cpp \
@@ -111,6 +114,7 @@ SOURCES += \
     form/rule/ruleeditdialog.cpp \
     form/rule/rulescontroller.cpp \
     form/rule/ruleswindow.cpp \
+    form/speed/speedlimitswindow.cpp \
     form/stat/pages/connectionspage.cpp \
     form/stat/pages/statbasepage.cpp \
     form/stat/pages/statmainpage.cpp \
@@ -155,6 +159,7 @@ SOURCES += \
     model/applistmodelheaderdata.cpp \
     model/appstatmodel.cpp \
     model/connlistmodel.cpp \
+    model/grouplistmodel.cpp \
     model/rulelistmodel.cpp \
     model/rulesetmodel.cpp \
     model/servicelistmodel.cpp \
@@ -282,10 +287,12 @@ HEADERS += \
     conf/confmanager.h \
     conf/confmanagerbase.h \
     conf/confrulemanager.h \
+    conf/confspeedlimitmanager.h \
     conf/confzonemanager.h \
     conf/firewallconf.h \
     conf/inioptions.h \
     conf/rule.h \
+    conf/speedlimit.h \
     conf/zone.h \
     control/command/controlcommandbackup.h \
     control/command/controlcommandbase.h \
@@ -345,6 +352,8 @@ HEADERS += \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
+    form/group/groupeditdialog.h \
+    form/group/groupswindow.h \
     form/home/homecontroller.h \
     form/home/homewindow.h \
     form/home/pages/aboutpage.h \
@@ -354,7 +363,6 @@ HEADERS += \
     form/opt/optionscontroller.h \
     form/opt/optionswindow.h \
     form/opt/pages/addressespage.h \
-    form/opt/pages/applicationspage.h \
     form/opt/pages/apps/appscolumn.h \
     form/opt/pages/graphpage.h \
     form/opt/pages/ifacepage.h \
@@ -371,6 +379,7 @@ HEADERS += \
     form/rule/ruleeditdialog.h \
     form/rule/rulescontroller.h \
     form/rule/ruleswindow.h \
+    form/speed/speedlimitswindow.h \
     form/stat/pages/connectionspage.h \
     form/stat/pages/statbasepage.h \
     form/stat/pages/statmainpage.h \
@@ -417,6 +426,7 @@ HEADERS += \
     model/appstatmodel.h \
     model/connlistcolumn.h \
     model/connlistmodel.h \
+    model/grouplistmodel.h \
     model/rulelistmodel.h \
     model/rulesetmodel.h \
     model/servicelistmodel.h \
@@ -476,6 +486,7 @@ HEADERS += \
     util/conf/confdata.h \
     util/conf/confrodata.h \
     util/conf/confruleswalker.h \
+    util/conf/confspeedlimitswalker.h \
     util/conf/confutil.h \
     util/conf/ruletextparser.h \
     util/dateutil.h \

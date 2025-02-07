@@ -20,7 +20,8 @@
 #define FORT_CONF_RULE_FILTER_DEPTH_MAX 7
 #define FORT_CONF_RULE_SET_DEPTH_MAX    8
 #define FORT_CONF_ZONE_MAX              32
-#define FORT_CONF_GROUP_MAX             16
+#define FORT_CONF_GROUP_MAX             64
+#define FORT_CONF_SPEED_LIMIT_MAX       64
 #define FORT_CONF_APPS_LEN_MAX          (64 * 1024 * 1024)
 #define FORT_CONF_APP_PATH_MAX          1024
 #define FORT_CONF_APP_PATH_MAX_SIZE     (FORT_CONF_APP_PATH_MAX * sizeof(WCHAR))
@@ -323,7 +324,10 @@ typedef struct fort_app_data
 
     UCHAR reserved; /* not used */
 
-    UCHAR group_index;
+    UCHAR group_id;
+
+    UCHAR in_limit_id;
+    UCHAR out_limit_id;
 
     UINT16 rule_id;
 
@@ -400,6 +404,25 @@ typedef struct fort_speed_limit
 
 typedef const FORT_SPEED_LIMIT *PCFORT_SPEED_LIMIT;
 
+typedef struct fort_conf_speed_limits
+{
+    UINT8 max_limit_id;
+
+    char data[4];
+} FORT_CONF_SPEED_LIMITS, *PFORT_CONF_SPEED_LIMITS;
+
+typedef const FORT_CONF_SPEED_LIMITS *PCFORT_CONF_SPEED_LIMITS;
+
+typedef struct fort_conf_speed_limit_flag
+{
+    UINT8 limit_id;
+    UCHAR enabled;
+} FORT_CONF_SPEED_LIMIT_FLAG, *PFORT_CONF_SPEED_LIMIT_FLAG;
+
+typedef const FORT_CONF_SPEED_LIMIT_FLAG *PCFORT_CONF_SPEED_LIMIT_FLAG;
+
+#define FORT_CONF_SPEED_LIMITS_DATA_OFF offsetof(FORT_CONF_SPEED_LIMITS, data)
+
 typedef struct fort_conf_group
 {
     UINT16 group_bits;
@@ -430,6 +453,8 @@ typedef struct fort_conf
     UINT32 wild_apps_off;
     UINT32 prefix_apps_off;
     UINT32 exe_apps_off;
+
+    UINT64 groups_mask;
 
     char data[4];
 } FORT_CONF, *PFORT_CONF;
@@ -539,8 +564,6 @@ FORT_API FORT_APP_DATA fort_conf_app_exe_find(
 
 FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
-
-FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
 
 FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id);

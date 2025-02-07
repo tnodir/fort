@@ -7,6 +7,9 @@
 class ConfUtil
 {
 public:
+    static int groupMaxCount();
+    static int speedLimitMaxCount();
+
     static int ruleMaxCount();
     static int ruleGlobalMaxCount();
     static int ruleSetMaxCount();

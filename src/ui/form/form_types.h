@@ -8,16 +8,19 @@ enum WindowCode {
     WindowHome = (1 << 0),
     WindowPrograms = (1 << 1),
     WindowProgramAlert = (1 << 2),
-    WindowServices = (1 << 3),
-    WindowOptions = (1 << 4),
-    WindowRules = (1 << 5),
-    WindowStatistics = (1 << 6),
-    WindowZones = (1 << 7),
-    WindowGraph = (1 << 8),
-    WindowPasswordDialog = (1 << 9),
+    WindowGroups = (1 << 3),
+    WindowSpeedLimits = (1 << 4),
+    WindowServices = (1 << 5),
+    WindowOptions = (1 << 6),
+    WindowRules = (1 << 7),
+    WindowStatistics = (1 << 8),
+    WindowZones = (1 << 9),
+    WindowGraph = (1 << 10),
+    WindowPasswordDialog = (1 << 11),
 };
 
-constexpr quint32 WindowPasswordProtected = (WindowPrograms | WindowProgramAlert | WindowServices
-        | WindowOptions | WindowRules | WindowStatistics | WindowZones);
+constexpr quint32 WindowPasswordProtected =
+        (WindowPrograms | WindowProgramAlert | WindowGroups | WindowSpeedLimits | WindowServices
+                | WindowOptions | WindowRules | WindowStatistics | WindowZones);
 
 #endif // FORM_TYPES_H

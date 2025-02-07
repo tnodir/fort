@@ -120,181 +120,68 @@ QStringList FirewallConf::filterModeIconPaths()
         ":/icons/road_sign.png" };
 }
 
-void FirewallConf::setupAppGroupBits(quint32 v)
+bool FirewallConf::appGroupEnabled(quint8 groupId) const
 {
-    setAppGroupBits(v);
-    applyAppGroupBits();
+    const quint64 groupBit = (1ULL << groupId);
+
+    return (appGroupsMask() & groupBit) != 0;
 }
 
-bool FirewallConf::appGroupEnabled(int groupIndex) const
+void FirewallConf::setAppGroupEnabled(quint8 groupId, bool v)
 {
-    return (appGroupBits() & (1 << groupIndex)) != 0;
-}
+    const quint64 groupBit = (1ULL << groupId);
 
-const AppGroup *FirewallConf::appGroupAt(int index) const
-{
-    if (index < 0 || index >= appGroups().size()) {
-        static const AppGroup g_nullAppGroup;
-        return &g_nullAppGroup;
+    if (v) {
+        m_appGroupsMask |= groupBit;
+    } else {
+        m_appGroupsMask &= ~groupBit;
     }
-
-    const AppGroup *appGroup = appGroups().at(index);
-    return appGroup;
 }
 
-QStringList FirewallConf::appGroupNames() const
-{
-    QStringList list;
-    for (const auto &appGroup : std::as_const(appGroups())) {
-        list.append(appGroup->name());
-    }
-    return list;
-}
-
-AppGroup *FirewallConf::appGroupByName(const QString &name) const
-{
-    for (AppGroup *appGroup : appGroups()) {
-        if (appGroup->name() == name)
-            return appGroup;
-    }
-    return nullptr;
-}
-
-bool FirewallConf::checkDeprecatedAppGroups() const
-{
-    for (AppGroup *appGroup : appGroups()) {
-        if (appGroup->hasAnyText())
-            return false;
-    }
-    return true;
-}
-
-void FirewallConf::addAppGroup(AppGroup *appGroup)
-{
-    appGroup->setParent(this);
-
-    m_appGroups.append(appGroup);
-
-    emit appGroupsChanged();
-}
-
-AppGroup *FirewallConf::addAppGroupByName(const QString &name)
-{
-    AppGroup *appGroup = new AppGroup();
-    appGroup->setId(m_removedAppGroupIdList.isEmpty() ? 0 : m_removedAppGroupIdList.takeLast());
-    appGroup->setName(name);
-    appGroup->setEdited(true);
-
-    addAppGroup(appGroup);
-
-    return appGroup;
-}
-
-void FirewallConf::addDefaultAppGroup()
-{
-    addAppGroupByName("Main");
-}
-
-void FirewallConf::moveAppGroup(int from, int to)
-{
-    m_appGroups.move(from, to);
-
-    setAppGroupsEdited(from, to);
-}
-
-void FirewallConf::removeAppGroup(int from, int to)
-{
-    const int lo = qMin(from, to);
-    const int hi = qMax(from, to);
-    for (int i = hi; i >= lo; --i) {
-        AppGroup *appGroup = m_appGroups.at(i);
-        if (appGroup->id() > 0) {
-            m_removedAppGroupIdList.append(appGroup->id());
-        }
-        appGroup->deleteLater();
-
-        m_appGroups.removeAt(i);
-    }
-
-    setAppGroupsEdited(lo, m_appGroups.size() - 1);
-}
-
-void FirewallConf::clearRemovedAppGroupIdList() const
-{
-    m_removedAppGroupIdList.clear();
-}
-
-void FirewallConf::loadGroupPeriodBits()
+void FirewallConf::loadGroupPeriodsMask()
 {
     const QTime now = DateUtil::currentTime();
 
     m_anyGroupPeriodEnabled = false;
-    m_groupActivePeriodBits = quint32(-1);
-    int groupIndex = 0;
+    m_groupActivePeriodsMask = quint64(-1LL);
+
+#if 0
+    int groupId = 1;
     for (AppGroup *appGroup : appGroups()) {
         if (appGroup->enabled() && appGroup->periodEnabled()) {
             m_anyGroupPeriodEnabled = true;
 
             if (!appGroup->isTimeInPeriod(now)) {
-                m_groupActivePeriodBits ^= (1 << groupIndex);
+                const quint64 groupBit = (1ULL << groupId);
+
+                m_groupActivePeriodsMask ^= groupBit;
             }
         }
-        ++groupIndex;
+        ++groupId;
     }
-}
-
-void FirewallConf::loadAppGroupBits()
-{
-    m_appGroupBits = 0;
-    int groupIndex = 0;
-    for (const AppGroup *appGroup : appGroups()) {
-        if (appGroup->enabled()) {
-            m_appGroupBits |= (1 << groupIndex);
-        }
-        ++groupIndex;
-    }
-}
-
-void FirewallConf::applyAppGroupBits()
-{
-    int groupIndex = 0;
-    for (AppGroup *appGroup : appGroups()) {
-        appGroup->setEnabled(appGroupEnabled(groupIndex++));
-    }
+#endif
 }
 
 void FirewallConf::setupDefaultAddressGroups()
 {
-    AddressGroup *inetGroup = inetAddressGroup();
-    inetGroup->setExcludeText(NetUtil::localIpNetworksText());
+    // Internet Addresses
+    {
+        AddressGroup *inetGroup = inetAddressGroup();
+        inetGroup->setId(1);
+        inetGroup->setExcludeText(NetUtil::localIpNetworksText());
+    }
+
+    // Internet Block Addresses
+    {
+        AddressGroup *blockGroup = blockAddressGroup();
+        blockGroup->setId(2);
+    }
 }
 
 void FirewallConf::setupAddressGroups()
 {
     m_addressGroups.append(new AddressGroup(this));
-
-    // COMPAT: Remove after v4.1.0
     m_addressGroups.append(new AddressGroup(this));
-}
-
-void FirewallConf::setAppGroupsEdited(int from, int to)
-{
-    const int lo = qMin(from, to);
-    const int hi = qMax(from, to);
-
-    for (int i = lo; i <= hi; ++i) {
-        AppGroup *appGroup = m_appGroups.at(i);
-        appGroup->setEdited(true);
-    }
-
-    emit appGroupsChanged();
-}
-
-void FirewallConf::prepareToSave()
-{
-    if (flagsEdited()) {
-        loadAppGroupBits();
-    }
 }
 
 void FirewallConf::afterSaved()
@@ -304,7 +191,7 @@ void FirewallConf::afterSaved()
 
 bool FirewallConf::updateGroupPeriods(bool /*onlyFlags*/)
 {
-    loadGroupPeriodBits();
+    loadGroupPeriodsMask();
 
     return m_anyGroupPeriodEnabled;
 }
@@ -341,7 +228,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_activePeriodFrom = o.activePeriodFrom();
     m_activePeriodTo = o.activePeriodTo();
 
-    setupAppGroupBits(o.appGroupBits());
+    m_appGroupsMask = o.appGroupsMask();
 }
 
 void FirewallConf::copy(const FirewallConf &o)
@@ -350,12 +237,6 @@ void FirewallConf::copy(const FirewallConf &o)
     for (const AddressGroup *ag : o.addressGroups()) {
         AddressGroup *addressGroup = m_addressGroups.at(addrGroupIndex++);
         addressGroup->copy(*ag);
-    }
-
-    for (const AppGroup *ag : o.appGroups()) {
-        auto appGroup = new AppGroup();
-        appGroup->copy(*ag);
-        addAppGroup(appGroup);
     }
 
     copyFlags(o); // after app. groups created
@@ -393,7 +274,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["activePeriodFrom"] = activePeriodFrom();
     map["activePeriodTo"] = activePeriodTo();
 
-    map["appGroupBits"] = appGroupBits();
+    map["appGroupsMask"] = appGroupsMask();
 
     return map;
 }
@@ -430,7 +311,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_activePeriodFrom = map["activePeriodFrom"].toString();
     m_activePeriodTo = map["activePeriodTo"].toString();
 
-    setupAppGroupBits(map["appGroupBits"].toUInt());
+    m_appGroupsMask = map["appGroupsMask"].toULongLong();
 }
 
 QVariant FirewallConf::addressesToVariant() const
@@ -452,42 +333,6 @@ void FirewallConf::addressesFromVariant(const QVariant &v)
     }
 }
 
-QVariant FirewallConf::appGroupsToVariant() const
-{
-    QVariantList groups;
-    for (const AppGroup *appGroup : appGroups()) {
-        groups.append(appGroup->toVariant());
-    }
-    return groups;
-}
-
-void FirewallConf::appGroupsFromVariant(const QVariant &v)
-{
-    const QVariantList groups = v.toList();
-    for (const QVariant &gv : groups) {
-        auto appGroup = new AppGroup();
-        appGroup->fromVariant(gv);
-        addAppGroup(appGroup);
-    }
-}
-
-QVariant FirewallConf::removedAppGroupIdListToVariant() const
-{
-    QVariantList list;
-    for (const qint64 id : removedAppGroupIdList()) {
-        list.append(id);
-    }
-    return list;
-}
-
-void FirewallConf::removedAppGroupIdListFromVariant(const QVariant &v)
-{
-    const QVariantList list = v.toList();
-    for (const QVariant &v : list) {
-        m_removedAppGroupIdList.append(v.toLongLong());
-    }
-}
-
 QVariant FirewallConf::toVariant(bool onlyEdited) const
 {
     QVariantMap map;
@@ -500,9 +345,6 @@ QVariant FirewallConf::toVariant(bool onlyEdited) const
 
     if ((flags & OptEdited) != 0) {
         map["addressGroups"] = addressesToVariant();
-
-        map["appGroups"] = appGroupsToVariant();
-        map["removedAppGroupIdList"] = removedAppGroupIdListToVariant();
     }
 
     if ((flags & FlagsEdited) != 0) {
@@ -528,9 +370,6 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyEdited)
 
     if (optEdited()) {
         addressesFromVariant(map["addressGroups"]);
-
-        appGroupsFromVariant(map["appGroups"]);
-        removedAppGroupIdListFromVariant(map["removedAppGroupIdList"]);
     }
 
     if (flagsEdited()) {

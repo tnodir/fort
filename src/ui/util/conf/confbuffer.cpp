@@ -322,7 +322,7 @@ bool ConfBuffer::parseAppGroups(
         app.lanOnly = appGroup->lanOnly();
         app.logAllowedConn = appGroup->logConn();
         app.logBlockedConn = appGroup->logBlocked();
-        app.groupIndex = i;
+        app.groupId = i;
 
         app.appOriginPath = appGroup->killText();
         app.blocked = true;
@@ -432,7 +432,9 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .is_new = isNew,
                 .found = true,
         },
-        .group_index = app.groupIndex,
+        .group_id = app.groupId,
+        .in_limit_id = app.inLimitId,
+        .out_limit_id = app.outLimitId,
         .rule_id = app.ruleId,
         .zones = app.zones,
     };

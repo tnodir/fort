@@ -32,6 +32,11 @@ quint32 ioctlSetFlags()
     return FORT_IOCTL_SETFLAGS;
 }
 
+quint32 ioctlSetGroupsMask()
+{
+    return FORT_IOCTL_SETGROUPSMASK;
+}
+
 quint32 ioctlGetLog()
 {
     return FORT_IOCTL_GETLOG;
@@ -65,6 +70,16 @@ quint32 ioctlSetRules()
 quint32 ioctlSetRuleFlag()
 {
     return FORT_IOCTL_SETRULEFLAG;
+}
+
+quint32 ioctlSpeedLimits()
+{
+    return FORT_IOCTL_SETSPEEDLIMITS;
+}
+
+quint32 ioctlSetSpeedLimitFlag()
+{
+    return FORT_IOCTL_SETSPEEDLIMITFLAG;
 }
 
 quint32 userErrorCode()

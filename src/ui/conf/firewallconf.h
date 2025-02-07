@@ -7,7 +7,6 @@
 #include "inioptions.h"
 
 class AddressGroup;
-class AppGroup;
 
 class FirewallConf : public QObject
 {
@@ -149,30 +148,18 @@ public:
     QString activePeriodTo() const { return m_activePeriodTo; }
     void setActivePeriodTo(const QString &v) { m_activePeriodTo = v; }
 
-    quint32 appGroupBits() const { return m_appGroupBits; }
-    void setAppGroupBits(quint32 v) { m_appGroupBits = v; }
+    quint64 appGroupsMask() const { return m_appGroupsMask; }
+    void setAppGroupsMask(quint64 v) { m_appGroupsMask = v; }
 
-    quint32 activeGroupBits() const { return m_appGroupBits & m_groupActivePeriodBits; }
+    quint64 activeGroupsMask() const { return m_appGroupsMask & m_groupActivePeriodsMask; }
 
-    void setupAppGroupBits(quint32 v);
+    bool appGroupEnabled(quint8 groupId) const;
+    void setAppGroupEnabled(quint8 groupId, bool v);
 
-    bool appGroupEnabled(int groupIndex) const;
-
-    AddressGroup *inetAddressGroup() const { return m_addressGroups.first(); }
+    AddressGroup *inetAddressGroup() const { return addressGroups().at(0); }
+    AddressGroup *blockAddressGroup() const { return addressGroups().at(1); }
 
     const QList<AddressGroup *> &addressGroups() const { return m_addressGroups; }
-
-    const AppGroup *appGroupAt(int index) const;
-    QStringList appGroupNames() const;
-
-    AppGroup *appGroupByName(const QString &name) const;
-
-    const QList<AppGroup *> &appGroups() const { return m_appGroups; }
-
-    bool checkDeprecatedAppGroups() const; // TODO: COMPAT: Remove after v4.1.0
-
-    const QVector<qint64> &removedAppGroupIdList() const { return m_removedAppGroupIdList; }
-    void clearRemovedAppGroupIdList() const;
 
     IniOptions &ini() { return m_ini; }
     const IniOptions &ini() const { return m_ini; }
@@ -186,19 +173,9 @@ public:
     static QVariant editedFlagsToVariant(uint editedFlags);
     static uint editedFlagsFromVariant(const QVariant &v);
 
-signals:
-    void appGroupsChanged();
-
 public slots:
-    void addAppGroup(AppGroup *appGroup);
-    AppGroup *addAppGroupByName(const QString &name);
-    void addDefaultAppGroup();
-    void moveAppGroup(int from, int to);
-    void removeAppGroup(int from, int to);
-
     void setupDefaultAddressGroups();
 
-    void prepareToSave();
     void afterSaved();
 
     bool updateGroupPeriods(bool onlyFlags);
@@ -206,24 +183,13 @@ public slots:
 private:
     void setupAddressGroups();
 
-    void setAppGroupsEdited(int from, int to);
-
-    void loadGroupPeriodBits();
-
-    void loadAppGroupBits();
-    void applyAppGroupBits();
+    void loadGroupPeriodsMask();
 
     QVariant flagsToVariant() const;
     void flagsFromVariant(const QVariant &v);
 
     QVariant addressesToVariant() const;
     void addressesFromVariant(const QVariant &v);
-
-    QVariant appGroupsToVariant() const;
-    void appGroupsFromVariant(const QVariant &v);
-
-    QVariant removedAppGroupIdListToVariant() const;
-    void removedAppGroupIdListFromVariant(const QVariant &v);
 
 private:
     uint m_editedFlags : 8 = AllEdited; // update all on load()!
@@ -253,18 +219,15 @@ private:
     uint m_appAllowAll : 1 = false;
 
     uint m_activePeriodEnabled : 1 = false;
-    uint m_anyGroupPeriodEnabled : 1 = false;
+    uint m_anyGroupPeriodEnabled : 1 = false; // transient
 
-    quint32 m_appGroupBits = 0;
-    quint32 m_groupActivePeriodBits = quint32(-1); // transient
+    quint64 m_appGroupsMask = 0;
+    quint64 m_groupActivePeriodsMask = quint64(-1LL); // transient
 
     QString m_activePeriodFrom;
     QString m_activePeriodTo;
 
     QList<AddressGroup *> m_addressGroups;
-
-    QList<AppGroup *> m_appGroups;
-    mutable QVector<qint64> m_removedAppGroupIdList;
 
     IniOptions m_ini;
 };

@@ -295,6 +295,23 @@ inline static BOOL fort_callout_ale_conn_rule_filtered(
     return FALSE;
 }
 
+inline static BOOL fort_callout_ale_conf_group_blocked(
+        PFORT_CONF_REF conf_ref, const FORT_APP_DATA app_data)
+{
+    if (app_data.group_id == 0)
+        return FALSE;
+
+    PCFORT_CONF conf = &conf_ref->conf;
+
+    const UINT64 group_bit = (1ULL << app_data.group_id);
+    const UINT64 groups_mask = conf->groups_mask;
+
+    if ((group_bit & groups_mask) != 0)
+        return FALSE;
+
+    return conf->flags.group_blocked;
+}
+
 static BOOL fort_callout_ale_app_filtered(
         PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref, const FORT_APP_DATA app_data)
 {
@@ -308,7 +325,7 @@ static BOOL fort_callout_ale_app_filtered(
         return TRUE; /* block LAN Only */
     }
 
-    if (fort_conf_app_group_blocked(conf_ref->conf.flags, app_data)) {
+    if (fort_callout_ale_conf_group_blocked(conf_ref, app_data)) {
         conn->reason = FORT_CONN_REASON_APP_GROUP;
         return TRUE; /* block Group */
     }

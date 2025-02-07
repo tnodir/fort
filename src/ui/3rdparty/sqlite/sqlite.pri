@@ -11,6 +11,7 @@ SQLITE_DIR = $$PWD/../../../3rdparty/sqlite
 INCLUDEPATH += $$SQLITE_DIR
 
 SOURCES += \
+    $$PWD/sqliteutilbase.cpp \
     $$SQLITE_DIR/sqlite3.c \
     $$PWD/dbquery.cpp \
     $$PWD/dbutil.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
     $$PWD/sqliteutilbase.cpp
 
 HEADERS += \
+    $$PWD/sqliteutilbase.h \
     $$SQLITE_DIR/sqlite.h \
     $$SQLITE_DIR/sqlite3.h \
     $$SQLITE_DIR/sqlite_cfg.h \

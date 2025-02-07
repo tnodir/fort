@@ -22,8 +22,6 @@ OptionsWindow::OptionsWindow(QWidget *parent) :
     setupController();
 
     setupFormWindow(iniUser(), IniUser::optWindowGroup());
-
-    connect(this, &OptionsWindow::aboutToShow, this, &OptionsWindow::checkDeprecated);
 }
 
 ConfManager *OptionsWindow::confManager() const
@@ -111,21 +109,4 @@ void OptionsWindow::setupUi()
 
     // Size
     this->setMinimumSize(800, 500);
-}
-
-void OptionsWindow::checkDeprecated()
-{
-    checkDeprecatedAppGroups();
-}
-
-void OptionsWindow::checkDeprecatedAppGroups()
-{
-    if (!ctrl()->conf()->checkDeprecatedAppGroups()) {
-        ctrl()->windowManager()->showConfirmBox(
-                [&] { OsUtil::openUrlOrFolder("https://github.com/tnodir/fort/discussions/210"); },
-                tr("Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!"
-                   "\n\n(They are read-only now and will be removed in v4.)"
-                   "\n\nDo you want to open a discussion thread in browser?"),
-                {}, this);
-    }
 }

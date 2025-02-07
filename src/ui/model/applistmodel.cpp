@@ -209,7 +209,7 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, Ap
     appRow.scheduleAction = stmt.columnInt(19);
     appRow.scheduleTime = stmt.columnDateTime(20);
     appRow.creatTime = stmt.columnDateTime(21);
-    appRow.groupIndex = stmt.columnInt(22);
+    appRow.groupId = stmt.columnInt(22);
     appRow.alerted = stmt.columnBool(23);
 
     return true;

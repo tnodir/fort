@@ -217,6 +217,20 @@ public:
     int rulesExpanded() const { return valueInt("ruleWindow/rulesExpanded", 0x01); }
     void setRulesExpanded(int v) { setValue("ruleWindow/rulesExpanded", v); }
 
+    static QString groupWindowGroup() { return "groupWindow"; }
+
+    QRect groupWindowGeometry() const { return value("groupWindow/geometry").toRect(); }
+    void setGroupWindowGeometry(const QRect &v) { setValue("groupWindow/geometry", v); }
+
+    bool groupWindowMaximized() const { return valueBool("groupWindow/maximized"); }
+    void setGroupWindowMaximized(bool on) { setValue("groupWindow/maximized", on); }
+
+    int groupsHeaderVersion() const { return valueInt("groupWindow/groupsHeaderVersion"); }
+    void setGroupsHeaderVersion(int v) { setValue("groupWindow/groupsHeaderVersion", v); }
+
+    QByteArray groupsHeader() const { return valueByteArray("groupWindow/groupsHeader"); }
+    void setGroupsHeader(const QByteArray &v) { setValue("groupWindow/groupsHeader", v); }
+
     static QString serviceWindowGroup() { return "serviceWindow"; }
 
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }

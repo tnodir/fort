@@ -26,29 +26,27 @@ CREATE TABLE address_group(
   exclude_text TEXT NOT NULL
 );
 
+CREATE TABLE speed_limit(
+  limit_id INTEGER PRIMARY KEY,
+  enabled BOOLEAN NOT NULL,
+  inbound BOOLEAN NOT NULL,
+  name TEXT NOT NULL,
+  kbps INTEGER NOT NULL, -- kilobits per second
+  packet_loss INTEGER NOT NULL, -- percent
+  latency INTEGER NOT NULL, -- milliseconds
+  bufsize INTEGER NOT NULL,
+  mod_time INTEGER NOT NULL
+);
+
 CREATE TABLE app_group(
   app_group_id INTEGER PRIMARY KEY,
-  order_index INTEGER NOT NULL,
   enabled BOOLEAN NOT NULL,
-  apply_child BOOLEAN NOT NULL DEFAULT 0,
-  lan_only BOOLEAN NOT NULL DEFAULT 0,
-  log_blocked BOOLEAN NOT NULL DEFAULT 1,
-  log_conn BOOLEAN NOT NULL DEFAULT 1,
   period_enabled BOOLEAN NOT NULL,
-  limit_in_enabled BOOLEAN NOT NULL,
-  limit_out_enabled BOOLEAN NOT NULL,
-  speed_limit_in INTEGER NOT NULL,
-  speed_limit_out INTEGER NOT NULL,
-  limit_packet_loss INTEGER NOT NULL DEFAULT 0,
-  limit_latency INTEGER NOT NULL DEFAULT 0,
-  limit_bufsize_in INTEGER NOT NULL DEFAULT 150000,
-  limit_bufsize_out INTEGER NOT NULL DEFAULT 150000,
   name TEXT NOT NULL,
-  kill_text TEXT,
-  block_text TEXT NOT NULL,
-  allow_text TEXT NOT NULL,
-  period_from TEXT NOT NULL,
-  period_to TEXT NOT NULL
+  notes TEXT,
+  period_from TEXT,
+  period_to TEXT,
+  mod_time INTEGER NOT NULL
 );
 
 CREATE TABLE app(
@@ -72,6 +70,8 @@ CREATE TABLE app(
   accept_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   rule_id INTEGER,
+  in_limit_id INTEGER,
+  out_limit_id INTEGER,
   creat_time INTEGER NOT NULL,
   end_action INTEGER NOT NULL DEFAULT 0,
   end_time INTEGER
@@ -81,6 +81,8 @@ CREATE INDEX app_app_group_id_idx ON app(app_group_id);
 CREATE UNIQUE INDEX app_path_uk ON app(path);
 CREATE INDEX app_name_idx ON app(lower(name));
 CREATE INDEX app_rule_id_idx ON app(rule_id);
+CREATE INDEX app_in_limit_id_idx ON app(in_limit_id);
+CREATE INDEX app_out_limit_id_idx ON app(out_limit_id);
 CREATE INDEX app_end_time_idx ON app(end_time);
 
 CREATE TABLE app_alert(

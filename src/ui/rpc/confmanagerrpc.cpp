@@ -79,8 +79,6 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 {
     Q_ASSERT(&newConf == conf() || &newConf == confToEdit()); // else newConf.deleteLater()
 
-    newConf.prepareToSave();
-
     const QVariant confVar = newConf.toVariant(/*onlyEdited=*/true);
 
     setSaving(true);

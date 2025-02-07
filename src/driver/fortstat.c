@@ -10,6 +10,8 @@
 #define fort_stat_proc_hash(process_id) tommy_inthash_u32((UINT32) (process_id))
 #define fort_flow_hash(flow_id)         tommy_inthash_u32((UINT32) (flow_id))
 
+static_assert(sizeof(FORT_FLOW_OPT) == sizeof(UINT32), "FORT_FLOW_OPT size mismatch");
+
 static void fort_stat_proc_active_add(PFORT_STAT stat, PFORT_STAT_PROC proc)
 {
     if (proc->active)
@@ -324,15 +326,12 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT
         fort_stat_proc_inc(proc);
     }
 
-    const UCHAR group_index = conn->app_data.group_index;
-
-    const UCHAR speed_limit = fort_stat_group_speed_limit(&stat->conf_group, group_index);
+    const UCHAR speed_limit = 0; // fort_stat_group_speed_limit(&stat->conf_group, group_index);
 
     flow->opt.flags = speed_limit | (conn->ip_proto == IPPROTO_TCP ? FORT_FLOW_TCP : 0)
             | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0);
-
-    flow->opt.group_index = group_index;
-    flow->opt.proc_index = proc->proc_index;
+    // flow->opt.group_index = group_index;
+    flow->opt.proc_index = proc_index;
 
     return STATUS_SUCCESS;
 }
@@ -429,7 +428,7 @@ FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const FORT_CONF_FLAGS
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
     {
-        stat->conf_group.group_bits = (UINT16) conf_flags.group_bits;
+        stat->conf_group.group_bits = 0; // (UINT16) conf_flags.group_bits;
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }

@@ -40,9 +40,6 @@ private:
 
     void setupUi();
 
-    void checkDeprecated();
-    void checkDeprecatedAppGroups();
-
 private:
     OptionsController *m_ctrl = nullptr;
 

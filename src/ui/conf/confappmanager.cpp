@@ -219,12 +219,11 @@ bool ConfAppManager::addApp(App &app)
     return ok;
 }
 
-void ConfAppManager::beginAddOrUpdateApp(
-        App &app, const AppGroup &appGroup, bool onlyUpdate, bool &ok)
+void ConfAppManager::beginAddOrUpdateApp(App &app, bool onlyUpdate, bool &ok)
 {
     const QVariantList vars = {
         app.appId,
-        appGroup.id(),
+        app.groupId,
         app.appOriginPath,
         DbVar::nullable(app.appPath),
         app.appName,
@@ -353,15 +352,11 @@ bool ConfAppManager::deleteAppPath(const QString &appOriginPath)
 
 bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
 {
-    const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
-    if (appGroup->isNull())
-        return false;
-
     bool ok = false;
 
     beginWriteTransaction();
 
-    beginAddOrUpdateApp(app, *appGroup, onlyUpdate, ok);
+    beginAddOrUpdateApp(app, onlyUpdate, ok);
 
     if (ok) {
         // Alert
@@ -775,7 +770,7 @@ void ConfAppManager::fillApp(App &app, const SqliteStmt &stmt)
     app.ruleId = stmt.columnUInt(18);
     app.scheduleAction = stmt.columnInt(19);
     app.scheduleTime = stmt.columnDateTime(20);
-    app.groupIndex = stmt.columnInt(21);
+    app.groupId = stmt.columnInt(21);
     app.alerted = stmt.columnBool(22);
 }
 

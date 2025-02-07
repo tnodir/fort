@@ -225,6 +225,22 @@ static NTSTATUS fort_device_control_setflags(PFORT_DEVICE_CONTROL_ARG dca)
     return STATUS_UNSUCCESSFUL;
 }
 
+static NTSTATUS fort_device_control_setgroupsmask(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PUINT64 groups_mask = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len == sizeof(UINT64)) {
+        fort_conf_ref_groups_mask_set(&fort_device()->conf, *groups_mask);
+
+        fort_device_reauth();
+
+        return STATUS_SUCCESS;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
 static NTSTATUS fort_device_control_getlog(PFORT_DEVICE_CONTROL_ARG dca)
 {
     PVOID out = dca->buffer;
@@ -377,6 +393,40 @@ static NTSTATUS fort_device_control_setruleflag(PFORT_DEVICE_CONTROL_ARG dca)
     return STATUS_UNSUCCESSFUL;
 }
 
+static NTSTATUS fort_device_control_setspeedlimits(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PCFORT_CONF_SPEED_LIMITS limits = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len < FORT_CONF_SPEED_LIMITS_DATA_OFF) {
+        limits = NULL;
+    }
+
+    const NTSTATUS status = fort_shaper_speed_limits_set(&fort_device()->shaper, limits);
+
+    if (NT_SUCCESS(status)) {
+        fort_device_conf_reauth_queue(&fort_device()->conf);
+    }
+
+    return status;
+}
+
+static NTSTATUS fort_device_control_setspeedlimitflag(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PCFORT_CONF_SPEED_LIMIT_FLAG limit_flag = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len == sizeof(FORT_CONF_SPEED_LIMIT_FLAG)) {
+        fort_shaper_speed_limit_flag_set(&fort_device()->shaper, limit_flag);
+
+        fort_device_conf_reauth_queue(&fort_device()->conf);
+
+        return STATUS_SUCCESS;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
 static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETRULEFLAG) == FORT_IOCTL_INDEX_SETRULEFLAG,
         "Invalid FORT_CTL_INDEX_FROM_CODE()");
 
@@ -388,6 +438,7 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setservices, // FORT_IOCTL_SETSERVICES
     &fort_device_control_setconf, // FORT_IOCTL_SETCONF
     &fort_device_control_setflags, // FORT_IOCTL_SETFLAGS
+    &fort_device_control_setgroupsmask, // FORT_IOCTL_SETGROUPSMASK
     &fort_device_control_getlog, // FORT_IOCTL_GETLOG
     &fort_device_control_addapp, // FORT_IOCTL_ADDAPP
     &fort_device_control_delapp, // FORT_IOCTL_DELAPP
@@ -395,6 +446,8 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setzoneflag, // FORT_IOCTL_SETZONEFLAG
     &fort_device_control_setrules, // FORT_IOCTL_SETRULES
     &fort_device_control_setruleflag, // FORT_IOCTL_SETRULEFLAG
+    &fort_device_control_setspeedlimits, // FORT_IOCTL_SETSPEEDLIMITS
+    &fort_device_control_setspeedlimitflag, // FORT_IOCTL_SETSPEEDLIMITFLAG
 };
 
 static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)

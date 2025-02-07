@@ -48,6 +48,7 @@ public slots:
     bool writeApp(QByteArray &buf, bool remove = false);
     bool writeZones(QByteArray &buf, bool onlyFlags = false);
     bool writeRules(QByteArray &buf, bool onlyFlags = false);
+    bool writeSpeedLimits(QByteArray &buf, bool onlyFlags = false);
 
 protected:
     void setErrorCode(quint32 v);
