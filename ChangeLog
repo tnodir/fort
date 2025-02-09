@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.16.1, 2025-02-09:
+- UI: Rules: Fix "ICMPv6" protocol name parsing.
+- UI: Update SQLite to 3.49.0
+
 v3.16.0, 2025-02-06:
 - UI: Statistics: Rework "Connections" tab to show allowed connections too.
 - UI: Options: Add "Block LAN Traffic" action.
