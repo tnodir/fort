@@ -96,7 +96,7 @@ QStringList NetUtil::localIpNetworks()
         "2001:20::/28", // ORCHIDv2
         "2001:db8::/32", // Documentation prefix used for examples
         "2002::/16", // 6to4
-        "fc00::/7", // Unique Local Addresses (ULA) - also known as “Private” IPv6 addresses
+        "fc00::/7", // Unique Local Addresses (ULA) - also known as "Private" IPv6 addresses
         "fe80::/10", // Link Local addresses, only valid inside a single broadcast domain
         "ff00::/8", // Multicast addresses
     };
@@ -144,8 +144,8 @@ quint8 NetUtil::protocolNumber(const QStringView name)
         return IPPROTO_UDP;
     if (nameUpper == "ICMP")
         return IPPROTO_ICMP;
-    if (nameUpper == "ICMPv6")
-        IPPROTO_ICMPV6;
+    if (nameUpper == "ICMPV6")
+        return IPPROTO_ICMPV6;
     if (nameUpper == "IGMP")
         return IPPROTO_IGMP;
 
