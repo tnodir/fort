@@ -324,11 +324,11 @@
     </message>
     <message>
         <source>Blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloqué</translation>
     </message>
     <message>
         <source>Allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Autorisé</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -376,19 +376,19 @@
     </message>
     <message>
         <source>Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Adresse Internet</translation>
     </message>
     <message>
         <source>Old connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Ancienne connexion</translation>
     </message>
     <message>
         <source>Program&apos;s action</source>
-        <translation type="unfinished"></translation>
+        <translation>Action programme&apos;s</translation>
     </message>
     <message>
         <source>App. Group</source>
-        <translation type="unfinished"></translation>
+        <translation>App. Groupe</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -396,7 +396,7 @@
     </message>
     <message>
         <source>LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN seulement</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -408,11 +408,11 @@
     </message>
     <message>
         <source>Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Règle globale avant règles d&apos;App</translation>
     </message>
     <message>
         <source>Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Règle globale après règles d&apos;App</translation>
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
@@ -2048,7 +2048,7 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connexions</translation>
     </message>
 </context>
 <context>
@@ -2155,11 +2155,11 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connexions</translation>
     </message>
     <message>
         <source>Keep count for connections:</source>
-        <translation type="unfinished"></translation>
+        <translation>Garder le nombre de connexions :</translation>
     </message>
 </context>
 <context>

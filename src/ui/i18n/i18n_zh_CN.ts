@@ -324,11 +324,11 @@
     </message>
     <message>
         <source>Blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>已阻止</translation>
     </message>
     <message>
         <source>Allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>已允许</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -376,19 +376,19 @@
     </message>
     <message>
         <source>Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>互联网地址</translation>
     </message>
     <message>
         <source>Old connection</source>
-        <translation type="unfinished"></translation>
+        <translation>旧连接</translation>
     </message>
     <message>
         <source>Program&apos;s action</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序&apos;s 操作</translation>
     </message>
     <message>
         <source>App. Group</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序组</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -396,7 +396,7 @@
     </message>
     <message>
         <source>LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>仅限局域网</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -408,11 +408,11 @@
     </message>
     <message>
         <source>Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序规则之前的全局规则</translation>
     </message>
     <message>
         <source>Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>应用程序规则之后的全局规则</translation>
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
@@ -513,7 +513,7 @@
     </message>
     <message>
         <source>Block LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>阻止局域网流量</translation>
     </message>
 </context>
 <context>
@@ -1107,7 +1107,7 @@
     </message>
     <message>
         <source>Import new programs</source>
-        <translation type="unfinished"></translation>
+        <translation>导入新应用程序</translation>
     </message>
 </context>
 <context>
@@ -1150,7 +1150,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>导入成功后才会添加新的应用程序。是否继续？</translation>
     </message>
 </context>
 <context>
@@ -2048,7 +2048,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>连接数</translation>
     </message>
 </context>
 <context>
@@ -2155,11 +2155,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>连接数</translation>
     </message>
     <message>
         <source>Keep count for connections:</source>
-        <translation type="unfinished"></translation>
+        <translation>保持连接数：</translation>
     </message>
 </context>
 <context>

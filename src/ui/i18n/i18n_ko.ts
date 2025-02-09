@@ -324,11 +324,11 @@
     </message>
     <message>
         <source>Blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>차단됨</translation>
     </message>
     <message>
         <source>Allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>허용됨</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -376,19 +376,19 @@
     </message>
     <message>
         <source>Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>인터넷 주소</translation>
     </message>
     <message>
         <source>Old connection</source>
-        <translation type="unfinished"></translation>
+        <translation>기존 연결</translation>
     </message>
     <message>
         <source>Program&apos;s action</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램 작업</translation>
     </message>
     <message>
         <source>App. Group</source>
-        <translation type="unfinished"></translation>
+        <translation>앱. 그룹</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -396,7 +396,7 @@
     </message>
     <message>
         <source>LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN만</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -408,11 +408,11 @@
     </message>
     <message>
         <source>Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>앱 규칙 이전의 전역 규칙</translation>
     </message>
     <message>
         <source>Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>앱 규칙 이후의 전역 규칙</translation>
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
@@ -2048,7 +2048,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>연결</translation>
     </message>
 </context>
 <context>
@@ -2155,11 +2155,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>연결</translation>
     </message>
     <message>
         <source>Keep count for connections:</source>
-        <translation type="unfinished"></translation>
+        <translation>연결 수 유지:</translation>
     </message>
 </context>
 <context>

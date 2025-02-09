@@ -324,11 +324,11 @@
     </message>
     <message>
         <source>Blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloqueado</translation>
     </message>
     <message>
         <source>Allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Permitido</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -376,19 +376,19 @@
     </message>
     <message>
         <source>Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Direcciones de Internet</translation>
     </message>
     <message>
         <source>Old connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexión antigua</translation>
     </message>
     <message>
         <source>Program&apos;s action</source>
-        <translation type="unfinished"></translation>
+        <translation>Acción del programa</translation>
     </message>
     <message>
         <source>App. Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Grupo de aplicaciones</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -396,7 +396,7 @@
     </message>
     <message>
         <source>LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -408,11 +408,11 @@
     </message>
     <message>
         <source>Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regla global antes de las reglas de la aplicación</translation>
     </message>
     <message>
         <source>Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regla global después de las reglas de la aplicación</translation>
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
@@ -513,7 +513,7 @@
     </message>
     <message>
         <source>Block LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear tráfico LAN</translation>
     </message>
 </context>
 <context>
@@ -1107,7 +1107,7 @@
     </message>
     <message>
         <source>Import new programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Importar nuevos programas</translation>
     </message>
 </context>
 <context>
@@ -1150,7 +1150,7 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo se añadirán los nuevos programas después de una importación exitosa. ¿Continuar?</translation>
     </message>
 </context>
 <context>
@@ -2051,7 +2051,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexiones</translation>
     </message>
 </context>
 <context>
@@ -2158,11 +2158,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexiones</translation>
     </message>
     <message>
         <source>Keep count for connections:</source>
-        <translation type="unfinished"></translation>
+        <translation>Llevar la cuenta de las conexiones:</translation>
     </message>
 </context>
 <context>

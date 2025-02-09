@@ -316,7 +316,7 @@
     <name>ConnListModel</name>
     <message>
         <source>In</source>
-        <translation>Ing</translation>
+        <translation>Entr</translation>
     </message>
     <message>
         <source>Out</source>
@@ -324,11 +324,11 @@
     </message>
     <message>
         <source>Blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloccato</translation>
     </message>
     <message>
         <source>Allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Consentito</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -372,23 +372,23 @@
     </message>
     <message>
         <source>Reason</source>
-        <translation>Motivo</translation>
+        <translation>Ragione</translation>
     </message>
     <message>
         <source>Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Indirizzo Internet</translation>
     </message>
     <message>
         <source>Old connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Vecchia connessione</translation>
     </message>
     <message>
         <source>Program&apos;s action</source>
-        <translation type="unfinished"></translation>
+        <translation>Azione programma</translation>
     </message>
     <message>
         <source>App. Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Gruppo App</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -396,7 +396,7 @@
     </message>
     <message>
         <source>LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -408,11 +408,11 @@
     </message>
     <message>
         <source>Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regola globale prima delle regole dell&apos;app</translation>
     </message>
     <message>
         <source>Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regola globale dopo regole app</translation>
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
@@ -2048,7 +2048,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Collegamenti</translation>
     </message>
 </context>
 <context>
@@ -2155,11 +2155,11 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connessioni</translation>
     </message>
     <message>
         <source>Keep count for connections:</source>
-        <translation type="unfinished"></translation>
+        <translation>Mantieni conteggio per le connessioni:</translation>
     </message>
 </context>
 <context>
