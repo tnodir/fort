@@ -271,6 +271,8 @@ void ConnectionsPage::updateAutoScroll()
     if (iniUser()->statAutoScroll()) {
         connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
                 &QAbstractItemView::scrollToBottom);
+        connect(connListModel(), &QAbstractItemModel::modelReset, m_connListView,
+                &QAbstractItemView::scrollToBottom);
 
         m_connListView->scrollToBottom();
     } else {
