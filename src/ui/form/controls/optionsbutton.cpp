@@ -8,11 +8,12 @@
 #include <util/ioc/ioccontainer.h>
 
 OptionsButton::OptionsButton(int tabIndex, QWidget *parent) :
-    QToolButton(parent), m_tabIndex(tabIndex)
+    ToolButton(parent), m_tabIndex(tabIndex)
 {
     setupUi();
 
     connect(this, &QToolButton::clicked, this, &OptionsButton::showOptionsWindow);
+    connect(this, &ToolButton::rightClicked, this, &OptionsButton::showMenu);
 }
 
 TrayIcon *OptionsButton::trayIcon() const

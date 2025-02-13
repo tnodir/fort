@@ -1,11 +1,11 @@
 #ifndef OPTIONSBUTTON_H
 #define OPTIONSBUTTON_H
 
-#include <QToolButton>
+#include "toolbutton.h"
 
 class TrayIcon;
 
-class OptionsButton : public QToolButton
+class OptionsButton : public ToolButton
 {
     Q_OBJECT
 
