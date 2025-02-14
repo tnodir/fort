@@ -25,6 +25,8 @@ public:
 
     void setUp() override;
 
+    QString ruleNameById(int ruleId);
+
     void loadRuleSet(Rule &rule, QStringList &ruleSetNames);
     void saveRuleSet(Rule &rule);
 

@@ -65,6 +65,8 @@ const char *const sqlUpdateRule = "UPDATE rule"
                                   "    accept_zones = ?11, reject_zones = ?12, mod_time = ?13"
                                   "  WHERE rule_id = ?1;";
 
+const char *const sqlSelectRuleNameById = "SELECT name FROM rule WHERE rule_id = ?1;";
+
 const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
                                      "  WHERE rule_id < ?1 ORDER BY rule_id;";
 
@@ -151,6 +153,11 @@ SqliteDb *ConfRuleManager::sqliteDb() const
 void ConfRuleManager::setUp()
 {
     m_confManager = IoCDependency<ConfManager>();
+}
+
+QString ConfRuleManager::ruleNameById(int ruleId)
+{
+    return DbQuery(sqliteDb()).sql(sqlSelectRuleNameById).vars({ ruleId }).execute().toString();
 }
 
 void ConfRuleManager::loadRuleSet(Rule &rule, QStringList &ruleSetNames)

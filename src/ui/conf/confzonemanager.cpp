@@ -28,6 +28,8 @@ const char *const sqlUpdateZone = "UPDATE zone"
                                   "    form_data = ?7, text_inline = ?8"
                                   "  WHERE zone_id = ?1;";
 
+const char *const sqlSelectZoneNameById = "SELECT name FROM zone WHERE zone_id = ?1;";
+
 const char *const sqlSelectZoneIds = "SELECT zone_id FROM zone"
                                      "  WHERE zone_id < ?1 ORDER BY zone_id;";
 
@@ -94,6 +96,11 @@ SqliteDb *ConfZoneManager::sqliteDb() const
 void ConfZoneManager::setUp()
 {
     m_confManager = IoCDependency<ConfManager>();
+}
+
+QString ConfZoneManager::zoneNameById(int zoneId)
+{
+    return DbQuery(sqliteDb()).sql(sqlSelectZoneNameById).vars({ zoneId }).execute().toString();
 }
 
 bool ConfZoneManager::addOrUpdateZone(Zone &zone)

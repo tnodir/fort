@@ -22,6 +22,8 @@ struct ConnRow : TableRow
     quint8 reason = 0;
 
     quint8 ipProto = 0;
+    quint8 zoneId = 0;
+    quint16 ruleId = 0;
     quint16 localPort = 0;
     quint16 remotePort = 0;
     ip_addr_t localIp;

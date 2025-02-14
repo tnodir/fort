@@ -24,6 +24,8 @@ public:
 
     void setUp() override;
 
+    QString zoneNameById(int zoneId);
+
     virtual bool addOrUpdateZone(Zone &zone);
     virtual bool deleteZone(int zoneId);
     virtual bool updateZoneName(int zoneId, const QString &zoneName);

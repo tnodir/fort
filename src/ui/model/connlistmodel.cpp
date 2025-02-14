@@ -9,6 +9,8 @@
 #include <sqlite/sqlitestmt.h>
 
 #include <appinfo/appinfocache.h>
+#include <conf/confrulemanager.h>
+#include <conf/confzonemanager.h>
 #include <fortmanager.h>
 #include <hostinfo/hostinfocache.h>
 #include <log/logentryconn.h>
@@ -99,30 +101,44 @@ QVariant dataDisplayRemoteIpPort(const ConnRow &connRow, bool resolveAddress, in
 
 QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, int role)
 {
-    if (role == Qt::ToolTipRole) {
-        return connRow.inbound ? ConnListModel::tr("In") : ConnListModel::tr("Out");
-    }
+    if (role != Qt::ToolTipRole)
+        return {};
 
-    return {};
+    return connRow.inbound ? ConnListModel::tr("In") : ConnListModel::tr("Out");
 }
 
 QVariant dataDisplayAction(const ConnRow &connRow, bool /*resolveAddress*/, int role)
 {
-    if (role == Qt::ToolTipRole) {
-        return connRow.blocked ? ConnListModel::tr("Blocked") : ConnListModel::tr("Allowed");
-    }
+    if (role != Qt::ToolTipRole)
+        return {};
 
-    return {};
+    return connRow.blocked ? ConnListModel::tr("Blocked") : ConnListModel::tr("Allowed");
 }
 
 QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int role)
 {
-    if (role == Qt::ToolTipRole) {
-        return ConnListModel::reasonText(FortConnReason(connRow.reason))
-                + (connRow.inherited ? " (" + ConnListModel::tr("Inherited") + ")" : QString());
+    if (role != Qt::ToolTipRole)
+        return {};
+
+    QStringList list = { ConnListModel::reasonText(FortConnReason(connRow.reason)) };
+
+    if (connRow.inherited) {
+        list << ConnListModel::tr("Inherited");
     }
 
-    return {};
+    if (connRow.zoneId != 0) {
+        const QString zoneName = IoC<ConfZoneManager>()->zoneNameById(connRow.zoneId);
+
+        list << ConnListModel::tr("Zone: %1").arg(zoneName);
+    }
+
+    if (connRow.ruleId != 0) {
+        const QString ruleName = IoC<ConfRuleManager>()->ruleNameById(connRow.ruleId);
+
+        list << ConnListModel::tr("Rule: %1").arg(ruleName);
+    }
+
+    return list.join('\n');
 }
 
 QVariant dataDisplayTime(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
@@ -375,7 +391,10 @@ bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
         m_connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(14, /*isView=*/true));
     }
 
-    m_connRow.appPath = stmt.columnText(15);
+    m_connRow.zoneId = stmt.columnInt(15);
+    m_connRow.ruleId = stmt.columnInt(16);
+
+    m_connRow.appPath = stmt.columnText(17);
 
     return true;
 }
@@ -403,6 +422,8 @@ QString ConnListModel::sqlBase() const
            "    t.remote_ip,"
            "    t.local_ip6,"
            "    t.remote_ip6,"
+           "    t.zone_id,"
+           "    t.rule_id,"
            "    a.path"
            "  FROM conn t"
            "    JOIN app a ON a.app_id = t.app_id";
