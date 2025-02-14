@@ -190,7 +190,7 @@ void ZonesSelector::updateZonesMenuEnabled()
 
     const bool isZoneExist = (zoneListModel->rowCount() != 0);
 
-    this->setEnabled(isZoneExist);
+    this->setMenu(isZoneExist ? m_menuZones : nullptr);
 }
 
 void ZonesSelector::addZone(int zoneId)
