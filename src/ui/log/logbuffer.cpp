@@ -112,6 +112,8 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         .inherited = logEntry->inherited(),
         .reason = logEntry->reason(),
         .ip_proto = logEntry->ipProto(),
+        .zone_id = logEntry->zoneId(),
+        .rule_id = logEntry->ruleId(),
         .local_port = logEntry->localPort(),
         .remote_port = logEntry->remotePort(),
         .process_id = logEntry->pid(),

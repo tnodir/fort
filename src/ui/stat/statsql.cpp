@@ -165,8 +165,9 @@ const char *const StatSql::sqlDeleteAllTraffic = "DELETE FROM traffic_app;"
 
 const char *const StatSql::sqlInsertConn =
         "INSERT INTO conn(app_id, conn_time, process_id, reason, blocked, inherited, inbound,"
-        "    ip_proto, local_port, remote_port, local_ip, remote_ip, local_ip6, remote_ip6)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14);";
+        "    ip_proto, local_port, remote_port, local_ip, remote_ip, local_ip6, remote_ip6,"
+        "    zone_id, rule_id)"
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16);";
 
 const char *const StatSql::sqlSelectMinMaxConnId = "SELECT MIN(conn_id), MAX(conn_id) FROM conn;";
 

@@ -19,7 +19,7 @@ namespace {
 
 const QLoggingCategory LC("statConn");
 
-constexpr int DATABASE_USER_VERSION = 1;
+constexpr int DATABASE_USER_VERSION = 2;
 
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
@@ -71,6 +71,9 @@ void StatConnManager::tearDown()
 
 void StatConnManager::logConn(const LogEntryConn &entry)
 {
+    if (!(entry.blocked() ? m_logBlockedConn : m_logAllowedConn))
+        return;
+
     constexpr int maxJobCount = 16;
     if (jobCount() >= maxJobCount)
         return; // drop excessive data
@@ -142,7 +145,8 @@ void StatConnManager::setupConfManager()
 {
     auto confManager = IoCDependency<ConfManager>();
 
-    connect(confManager, &ConfManager::iniChanged, this, &StatConnManager::setupByConf);
+    connect(confManager, &ConfManager::confChanged, this, &StatConnManager::setupByConf);
+    connect(confManager, &ConfManager::iniChanged, this, &StatConnManager::setupByConfIni);
 }
 
 bool StatConnManager::setupDb()
@@ -176,7 +180,16 @@ bool StatConnManager::setupDb()
     return true;
 }
 
-void StatConnManager::setupByConf(const IniOptions &ini)
+void StatConnManager::setupByConf()
+{
+    auto confManager = IoC<ConfManager>();
+    FirewallConf *conf = confManager->conf();
+
+    m_logAllowedConn = conf->logAllowedConn();
+    m_logBlockedConn = conf->logAllowedConn();
+}
+
+void StatConnManager::setupByConfIni(const IniOptions &ini)
 {
     m_keepCount = ini.connKeepCount();
 }

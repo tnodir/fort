@@ -25,6 +25,12 @@ public:
     quint8 ipProto() const { return m_ipProto; }
     void setIpProto(quint8 proto) { m_ipProto = proto; }
 
+    quint8 zoneId() const { return m_zoneId; }
+    void setZoneId(quint8 zoneId) { m_zoneId = zoneId; }
+
+    quint16 ruleId() const { return m_ruleId; }
+    void setRuleId(quint16 ruleId) { m_ruleId = ruleId; }
+
     quint16 localPort() const { return m_localPort; }
     void setLocalPort(quint16 port) { m_localPort = port; }
 
@@ -62,6 +68,8 @@ private:
     bool m_inherited : 1 = false;
     quint8 m_reason = 0;
     quint8 m_ipProto = 0;
+    quint8 m_zoneId = 0;
+    quint16 m_ruleId = 0;
     quint16 m_localPort = 0;
     quint16 m_remotePort = 0;
     qint64 m_connTime = 0;

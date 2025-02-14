@@ -21,7 +21,9 @@ CREATE TABLE conn(
   local_ip INTEGER,
   remote_ip INTEGER,
   local_ip6 BLOB,
-  remote_ip6 BLOB
+  remote_ip6 BLOB,
+  zone_id INTEGER,
+  rule_id INTEGER
 );
 
 CREATE INDEX conn_app_id_idx ON conn(app_id);

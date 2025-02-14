@@ -141,6 +141,9 @@ qint64 LogConnJob::insertConn(const LogEntryConn &entry, qint64 appId)
         stmt->bindBlobView(14, entry.remoteIp6View());
     }
 
+    stmt->bindInt(15, entry.zoneId());
+    stmt->bindInt(16, entry.ruleId());
+
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();
     }

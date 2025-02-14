@@ -42,6 +42,7 @@ FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UI
     *up++ = (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
             | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0) | ((UINT32) conn->reason << 8)
             | ((UINT32) conn->ip_proto << 16);
+    *up++ = ((UINT32) conn->rule_id) | ((UINT32) conn->zone_id << 16);
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
     *up++ = conn->process_id;
 
@@ -70,18 +71,29 @@ FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn
 {
     const UINT32 *up = (const UINT32 *) p;
 
-    conn->blocked = (*up & FORT_LOG_FLAG_OPT_BLOCKED) != 0;
-    *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
+    UINT32 v;
+    v = *up++;
+    conn->blocked = (v & FORT_LOG_FLAG_OPT_BLOCKED) != 0;
+    *path_len = (v & ~FORT_LOG_FLAG_EX_MASK);
 
-    const UCHAR flags = (UCHAR) *up;
+    v = *up++;
+    const UCHAR flags = (UCHAR) v;
     conn->isIPv6 = (flags & FORT_LOG_CONN_IP6) != 0;
     conn->inbound = (flags & FORT_LOG_CONN_INBOUND) != 0;
     conn->inherited = (flags & FORT_LOG_CONN_INHERITED) != 0;
-    conn->reason = (UCHAR) (*up >> 8);
-    conn->ip_proto = (UCHAR) (*up++ >> 16);
-    conn->local_port = *((const UINT16 *) up);
-    conn->remote_port = (UINT16) (*up++ >> 16);
-    conn->process_id = *up++;
+    conn->reason = (UCHAR) (v >> 8);
+    conn->ip_proto = (UCHAR) (v >> 16);
+
+    v = *up++;
+    conn->zone_id = (UCHAR) (v >> 16);
+    conn->rule_id = (UINT16) v;
+
+    v = *up++;
+    conn->local_port = (UINT16) v;
+    conn->remote_port = (UINT16) (v >> 16);
+
+    v = *up++;
+    conn->process_id = v;
 
     const int ip_size = FORT_IP_ADDR_SIZE(conn->isIPv6);
 

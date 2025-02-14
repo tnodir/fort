@@ -56,12 +56,16 @@ protected:
 private:
     bool setupDb();
 
-    void setupByConf(const IniOptions &ini);
+    void setupByConf();
+    void setupByConfIni(const IniOptions &ini);
 
 private:
-    int m_connInc = 999999999; // to trigger on first check
+    bool m_logAllowedConn = false;
+    bool m_logBlockedConn = false;
 
     int m_keepCount = 0;
+
+    int m_connInc = 999999999; // to trigger on first check
 
     SqliteDbPtr m_sqliteDb;
     SqliteDbPtr m_roSqliteDb;

@@ -266,6 +266,9 @@ typedef struct fort_conf_meta_conn
 
     UCHAR ip_proto;
 
+    UCHAR zone_id;
+    UINT16 rule_id;
+
     UINT16 local_port;
     UINT16 remote_port;
 

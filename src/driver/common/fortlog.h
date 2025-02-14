@@ -29,7 +29,7 @@
 
 #define FORT_IP_ADDR_SIZE(isIPv6) ((isIPv6) ? sizeof(ip6_addr_t) : sizeof(UINT32))
 
-#define FORT_LOG_CONN_HEADER_SIZE(isIPv6) (4 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
+#define FORT_LOG_CONN_HEADER_SIZE(isIPv6) (5 * sizeof(UINT32) + 2 * FORT_IP_ADDR_SIZE(isIPv6))
 
 #define FORT_LOG_CONN_SIZE(path_len, isIPv6)                                                       \
     FORT_ALIGN_SIZE(FORT_LOG_CONN_HEADER_SIZE(isIPv6) + (path_len), FORT_LOG_ALIGN)
