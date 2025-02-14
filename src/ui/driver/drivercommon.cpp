@@ -201,7 +201,7 @@ bool confIpInRange(
             ? fort_conf_addr_group_include_list_ref(addr_group)
             : fort_conf_addr_group_exclude_list_ref(addr_group);
 
-    return fort_conf_ip_inlist(ip, addr_list, isIPv6);
+    return fort_conf_ip_inlist(addr_list, ip, isIPv6);
 }
 
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included, int addrGroupIndex)

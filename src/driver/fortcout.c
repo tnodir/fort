@@ -265,15 +265,18 @@ inline static BOOL fort_callout_ale_conn_zone_filtered(
 
     if (fort_devconf_zones_conn_filtered(&fort_device()->conf, conn, &opt)) {
         if (opt.reject.included) {
+            conn->zone_id = opt.reject.zone_id;
             return TRUE; /* block Rejected Zones */
         }
 
         if (opt.accept.included) {
+            conn->zone_id = opt.accept.zone_id;
             conn->blocked = FALSE;
             return TRUE; /* allow Accepted Zones */
         }
 
         if (opt.accept.filtered) {
+            conn->zone_id = opt.accept.zone_id;
             return TRUE; /* block Not Accepted Zones */
         }
     }
@@ -288,6 +291,7 @@ inline static BOOL fort_callout_ale_conn_rule_filtered(
         return FALSE;
 
     if (fort_devconf_rules_conn_filtered(&fort_device()->conf, conn, rule_id)) {
+        conn->rule_id = rule_id;
         conn->reason = reason;
         return TRUE;
     }
@@ -447,9 +451,10 @@ inline static BOOL fort_callout_ale_check_filter_flags(
         return TRUE; /* block all */
     }
 
+    UCHAR local_zone_id;
     conn->is_local_net = !fort_conf_ip_is_inet(&conf_ref->conf,
             (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
-            &fort_device()->conf, conn->remote_ip, conn->isIPv6);
+            &fort_device()->conf, conn, &local_zone_id);
 
     if (fort_callout_ale_check_filter_net_flags(conn, conf_flags)) {
         return TRUE; /* block net */
@@ -457,7 +462,7 @@ inline static BOOL fort_callout_ale_check_filter_flags(
 
     if (!fort_conf_ip_inet_included(&conf_ref->conf,
                 (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
-                &fort_device()->conf, conn->remote_ip, conn->isIPv6)) {
+                &fort_device()->conf, conn, &conn->zone_id)) {
         conn->reason = FORT_CONN_REASON_IP_INET;
         return TRUE; /* block address */
     }

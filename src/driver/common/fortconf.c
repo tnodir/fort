@@ -225,7 +225,7 @@ static BOOL fort_conf_port_inlist(const UINT16 port, PCFORT_CONF_PORT_LIST port_
                     fort_conf_port_list_pair_ref(port_list), port, port_list->pair_n);
 }
 
-FORT_API BOOL fort_conf_ip_inlist(const ip_addr_t ip, PCFORT_CONF_ADDR_LIST addr_list, BOOL isIPv6)
+FORT_API BOOL fort_conf_ip_inlist(PCFORT_CONF_ADDR_LIST addr_list, const ip_addr_t ip, BOOL isIPv6)
 {
     if (isIPv6) {
         const ip6_addr_t *ip6 = &ip.v6;
@@ -251,15 +251,15 @@ FORT_API PCFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(PCFORT_CONF conf, int a
 }
 
 static BOOL fort_conf_ip_included_check(PCFORT_CONF_ADDR_LIST addr_list,
-        fort_conf_zones_ip_included_func zone_func, void *ctx, const ip_addr_t remote_ip,
-        UINT32 zones_mask, BOOL list_is_empty, BOOL isIPv6)
+        fort_conf_zones_ip_included_func zone_func, void *ctx, PCFORT_CONF_META_CONN conn,
+        UCHAR *zone_id, UINT32 zones_mask, BOOL list_is_empty)
 {
-    return (!list_is_empty && fort_conf_ip_inlist(remote_ip, addr_list, isIPv6))
-            || (zone_func != NULL && zone_func(ctx, zones_mask, remote_ip, isIPv6));
+    return (!list_is_empty && fort_conf_ip_inlist(addr_list, conn->remote_ip, conn->isIPv6))
+            || (zone_func != NULL && zone_func(ctx, conn, zone_id, zones_mask));
 }
 
 FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_included_func zone_func,
-        void *ctx, const ip_addr_t remote_ip, BOOL isIPv6, int addr_group_index)
+        void *ctx, PCFORT_CONF_META_CONN conn, UCHAR *zone_id, int addr_group_index)
 {
     PCFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addr_group_index);
 
@@ -270,16 +270,16 @@ FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_include
     const BOOL ip_excluded = exclude_all
             ? TRUE
             : fort_conf_ip_included_check(fort_conf_addr_group_exclude_list_ref(addr_group),
-                      zone_func, ctx, remote_ip, addr_group->exclude_zones,
-                      addr_group->exclude_is_empty, isIPv6);
+                      zone_func, ctx, conn, zone_id, addr_group->exclude_zones,
+                      addr_group->exclude_is_empty);
     if (include_all)
         return !ip_excluded;
 
     /* Exclude All */
     const BOOL ip_included = /* include_all ? TRUE : */
             fort_conf_ip_included_check(fort_conf_addr_group_include_list_ref(addr_group),
-                    zone_func, ctx, remote_ip, addr_group->include_zones,
-                    addr_group->include_is_empty, isIPv6);
+                    zone_func, ctx, conn, zone_id, addr_group->include_zones,
+                    addr_group->include_is_empty);
     if (exclude_all)
         return ip_included;
 
@@ -288,7 +288,7 @@ FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_include
 }
 
 FORT_API BOOL fort_conf_zones_ip_included(
-        PCFORT_CONF_ZONES zones, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6)
+        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, UCHAR *zone_id, UINT32 zones_mask)
 {
     zones_mask &= (zones->mask & zones->enabled_mask);
 
@@ -301,8 +301,10 @@ FORT_API BOOL fort_conf_zones_ip_included(
         const UINT32 addr_off = zones->addr_off[zone_index];
         PCFORT_CONF_ADDR_LIST addr_list = (PCFORT_CONF_ADDR_LIST) &zones->data[addr_off];
 
-        if (fort_conf_ip_inlist(ip, addr_list, isIPv6))
+        if (fort_conf_ip_inlist(addr_list, conn->remote_ip, conn->isIPv6)) {
+            *zone_id = zone_index + 1;
             return TRUE;
+        }
 
         zones_mask ^= (1u << zone_index);
     }
@@ -318,7 +320,7 @@ static BOOL fort_conf_zones_masks_conn_check(PCFORT_CONF_ZONES zones, PCFORT_CON
 
     result->filtered = TRUE;
     result->included =
-            (UCHAR) fort_conf_zones_ip_included(zones, zones_mask, conn->remote_ip, conn->isIPv6);
+            (UCHAR) fort_conf_zones_ip_included(zones, conn, &result->zone_id, zones_mask);
 
     return TRUE;
 }
@@ -483,6 +485,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
         const BOOL rejected = (opt.reject.filtered && opt.reject.included);
 
         if (accepted && !rejected) {
+            conn->zone_id = opt.accept.zone_id;
             conn->blocked = rule->blocked;
             return TRUE;
         }
@@ -519,7 +522,7 @@ static BOOL fort_conf_rule_filter_list_check(
 
 static fort_conf_rule_filter_check_address(PCFORT_CONF_META_CONN conn, const void *data)
 {
-    return fort_conf_ip_inlist(conn->remote_ip, data, conn->isIPv6);
+    return fort_conf_ip_inlist(data, conn->remote_ip, conn->isIPv6);
 }
 
 static fort_conf_rule_filter_check_port(PCFORT_CONF_META_CONN conn, const void *data)
@@ -529,7 +532,7 @@ static fort_conf_rule_filter_check_port(PCFORT_CONF_META_CONN conn, const void *
 
 static fort_conf_rule_filter_check_local_address(PCFORT_CONF_META_CONN conn, const void *data)
 {
-    return fort_conf_ip_inlist(conn->local_ip, data, conn->isIPv6);
+    return fort_conf_ip_inlist(data, conn->local_ip, conn->isIPv6);
 }
 
 static fort_conf_rule_filter_check_local_port(PCFORT_CONF_META_CONN conn, const void *data)

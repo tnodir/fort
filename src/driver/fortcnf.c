@@ -459,15 +459,15 @@ FORT_API void fort_conf_zone_flag_set(
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
-FORT_API BOOL fort_devconf_zones_ip_included(
-        PFORT_DEVICE_CONF device_conf, UINT32 zones_mask, const ip_addr_t ip, BOOL isIPv6)
+FORT_API BOOL fort_devconf_zones_ip_included(PFORT_DEVICE_CONF device_conf,
+        PCFORT_CONF_META_CONN conn, UCHAR *zone_id, UINT32 zones_mask)
 {
     BOOL res = FALSE;
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
     PCFORT_CONF_ZONES zones = device_conf->zones;
     if (zones != NULL) {
-        res = fort_conf_zones_ip_included(zones, zones_mask, ip, isIPv6);
+        res = fort_conf_zones_ip_included(zones, conn, zone_id, zones_mask);
     }
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 
