@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>Неизвестно</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation>Правило: %1</translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation>Зона: %1</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1251,6 +1259,42 @@ Make sure that you have a fresh backup.</source>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Скрытый режим (запрет сканирования портов)</translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation>Секунды авто-обучения:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Нестандартный</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Отключено</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 секунд</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 минута</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 минуты</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 минут</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 минут</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> секунд(ы)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1966,10 +2010,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Задержка в секундах для повторной попытки:</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 секунды</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 секунд</translation>
     </message>
@@ -1992,6 +2032,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source> second(s)</source>
         <translation> секунд(ы)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Отключено</translation>
     </message>
 </context>
 <context>

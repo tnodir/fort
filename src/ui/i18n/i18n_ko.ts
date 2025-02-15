@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1251,6 +1259,42 @@ Make sure that you have a fresh backup.</source>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>스텔스 모드 (포트 스캔 방지)</translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>사용자 지정</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>비활성화</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 초</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1분</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 분</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5분</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10분</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> 초</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1966,10 +2010,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>재시도까지 몇 초 지연:</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 초</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 초</translation>
     </message>
@@ -1992,6 +2032,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source> second(s)</source>
         <translation> 초</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>비활성화</translation>
     </message>
 </context>
 <context>

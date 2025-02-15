@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>Unbekannt</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1251,6 +1259,42 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Benutzerdefiniert</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Deaktiviert</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 Sekunden</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 Minute</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 Minuten</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 Minuten</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 Minuten</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> Sekunde(n)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1966,10 +2010,6 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <translation>Verzögerung:</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 Sekunden</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 Sekunden</translation>
     </message>
@@ -1992,6 +2032,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source> second(s)</source>
         <translation> Sekunde(n)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Deaktiviert</translation>
     </message>
 </context>
 <context>

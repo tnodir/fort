@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>未知</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1251,6 +1259,42 @@ Make sure that you have a fresh backup.</source>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>隐身模式（防止端口扫描）</translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>自定义</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>已禁用</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 秒</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 分钟</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 分钟</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 分钟</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 分钟</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> 秒</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1966,10 +2010,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>重试的延迟时间（秒）：</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 秒</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 秒</translation>
     </message>
@@ -1992,6 +2032,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source> second(s)</source>
         <translation> 秒</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>已禁用</translation>
     </message>
 </context>
 <context>

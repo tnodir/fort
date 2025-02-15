@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>مجهول</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1251,6 +1259,42 @@ Make sure that you have a fresh backup.</source>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>مخصص</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>عدم التفعيل</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 ثانية</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>دقيقة واحدة</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>دقيقتان</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 دقائق</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 دقائق</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> ثوانٍ</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1966,10 +2010,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>التأخير حتى إعادة المحاولة (ثوانٍ):</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 ثوانٍ</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 ثانية</translation>
     </message>
@@ -1992,6 +2032,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source> second(s)</source>
         <translation> ثوانٍ</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>عدم التفعيل</translation>
     </message>
 </context>
 <context>

@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>Desconocido</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1251,6 +1259,42 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Modo sigiloso (Evitar el escaneo de puertos)</translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personalizado</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Desactivado</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 segundos</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuto</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 minutos</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minutos</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minutos</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> segundo(s)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1969,10 +2013,6 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <translation>Retraso en segundos para reintentar:</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 segundos</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 segundos</translation>
     </message>
@@ -1995,6 +2035,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source> second(s)</source>
         <translation> segundo(s)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Desactivado</translation>
     </message>
 </context>
 <context>

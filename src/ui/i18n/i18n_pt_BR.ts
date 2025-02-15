@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>Desconhecido</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1249,6 +1257,42 @@ Make sure that you have a fresh backup.</source>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Personalizar</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Desativado</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuto</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 Minutos</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 Minutos</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1956,10 +2000,6 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1990,6 +2030,10 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     <message>
         <source>Delay seconds to retry:</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Desativado</translation>
     </message>
 </context>
 <context>

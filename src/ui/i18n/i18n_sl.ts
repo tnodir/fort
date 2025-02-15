@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>Neznano</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation>Pravilo: %1</translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation>Področje: %1</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1251,6 +1259,42 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Prikriti način (prepreči skeniranje vrat)</translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation>Sekunde samodejnega učenja:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Po meri</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Onemogočeno</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 sekund</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuta</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 minuti</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minut</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minut</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> sekundo(i)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1966,10 +2010,6 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <translation>Zakasnitev sekund za ponovni poskus:</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 sekunde</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 sekund</translation>
     </message>
@@ -1992,6 +2032,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source> second(s)</source>
         <translation> sekundo(i)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Onemogočeno</translation>
     </message>
 </context>
 <context>

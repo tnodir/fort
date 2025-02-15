@@ -360,7 +360,7 @@
     </message>
     <message>
         <source>Process ID</source>
-        <translation type="unfinished"></translation>
+        <translation>ID usługi</translation>
     </message>
     <message>
         <source>Direction</source>
@@ -421,6 +421,14 @@
     <message>
         <source>Unknown</source>
         <translation>Nieznany</translation>
+    </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1251,6 +1259,42 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Własne</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Wyłączone</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 sekund</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuta</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 minuty</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minut</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minut</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> sekund(y)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1966,10 +2010,6 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <translation>Sekundy opóźnienia przed ponowieniem:</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 sekundy</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 sekund</translation>
     </message>
@@ -1992,6 +2032,10 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     <message>
         <source> second(s)</source>
         <translation> sekund(y)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Wyłączone</translation>
     </message>
 </context>
 <context>

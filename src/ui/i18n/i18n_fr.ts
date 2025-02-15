@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>Inconnu</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1251,6 +1259,42 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Mode furtif (Empêcher le balayage du port)</translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Désactivé</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 secondes</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minute</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 minutes</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minutes</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minutes</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> seconde(s)</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1966,10 +2010,6 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <translation>Délai de secondes pour réessayer:</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 secondes</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 secondes</translation>
     </message>
@@ -1992,6 +2032,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source> second(s)</source>
         <translation> seconde(s)</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Désactivé</translation>
     </message>
 </context>
 <context>

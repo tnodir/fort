@@ -422,6 +422,14 @@
         <source>Unknown</source>
         <translation>Sconosciuto</translation>
     </message>
+    <message>
+        <source>Rule: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Zone: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -1251,6 +1259,42 @@ Assicurati di avere un nuovo backup.</translation>
         <source>Stealth mode (Prevent port scanning)</source>
         <translation>Modalità occulta (previeni scansione porta)</translation>
     </message>
+    <message>
+        <source>Auto-learn seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Disabilitato</translation>
+    </message>
+    <message>
+        <source>20 seconds</source>
+        <translation>20 secondi</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuto</translation>
+    </message>
+    <message>
+        <source>2 minutes</source>
+        <translation>2 minuti</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minuti</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minuti</translation>
+    </message>
+    <message>
+        <source> second(s)</source>
+        <translation> secondo/i</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1966,10 +2010,6 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <translation>Secondi tra i tentativi:</translation>
     </message>
     <message>
-        <source>3 seconds</source>
-        <translation>3 secondi</translation>
-    </message>
-    <message>
         <source>20 seconds</source>
         <translation>20 secondi</translation>
     </message>
@@ -1992,6 +2032,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source> second(s)</source>
         <translation> secondo/i</translation>
+    </message>
+    <message>
+        <source>Disabled</source>
+        <translation>Disabilitato</translation>
     </message>
 </context>
 <context>
