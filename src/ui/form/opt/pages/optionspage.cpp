@@ -59,8 +59,8 @@ void OptionsPage::onResetToDefault()
     m_cbFilterEnabled->setChecked(true);
     m_comboBlockTraffic->setCurrentIndex(0);
     m_comboFilterMode->setCurrentIndex(0);
-    m_lscAutoLearnSeconds->spinBox()->setValue(DEFAULT_AUTO_LEARN_SECONDS);
     m_cbGroupBlocked->setChecked(true);
+    m_lscAutoLearnSeconds->spinBox()->setValue(DEFAULT_AUTO_LEARN_SECONDS);
 
     m_cbBootFilter->setChecked(false);
     m_cbStealthMode->setChecked(false);
@@ -119,10 +119,10 @@ void OptionsPage::onRetranslateUi()
     m_labelFilterMode->setText(tr("Filter Mode:"));
     retranslateComboFilterMode();
 
+    m_cbGroupBlocked->setText(tr("Block traffic for disabled App Groups"));
+
     m_lscAutoLearnSeconds->label()->setText(tr("Auto-learn seconds:"));
     retranslateAutoLearnSeconds();
-
-    m_cbGroupBlocked->setText(tr("Block traffic for disabled App Groups"));
 
     m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
     m_cbStealthMode->setText(tr("Stealth mode (Prevent port scanning)"));
@@ -240,19 +240,20 @@ void OptionsPage::setupTrafficBox()
 
     auto filterModeLayout = setupFilterModeLayout();
 
-    setupAutoLearnSeconds();
-
     m_cbGroupBlocked = ControlUtil::createCheckBox(conf()->groupBlocked(), [&](bool checked) {
         conf()->setGroupBlocked(checked);
         ctrl()->setFlagsEdited();
     });
 
+    setupAutoLearnSeconds();
+
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbFilterEnabled);
     layout->addLayout(blockTrafficLayout);
     layout->addLayout(filterModeLayout);
-    layout->addWidget(m_lscAutoLearnSeconds);
     layout->addWidget(m_cbGroupBlocked);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addWidget(m_lscAutoLearnSeconds);
 
     m_gbTraffic = new QGroupBox();
     m_gbTraffic->setLayout(layout);

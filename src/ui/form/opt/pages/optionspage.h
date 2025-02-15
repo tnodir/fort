@@ -61,8 +61,8 @@ private:
     QComboBox *m_comboBlockTraffic = nullptr;
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
-    LabelSpinCombo *m_lscAutoLearnSeconds = nullptr;
     QCheckBox *m_cbGroupBlocked = nullptr;
+    LabelSpinCombo *m_lscAutoLearnSeconds = nullptr;
 
     QCheckBox *m_cbBootFilter = nullptr;
     QCheckBox *m_cbStealthMode = nullptr;
