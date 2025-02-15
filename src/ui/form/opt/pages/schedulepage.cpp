@@ -131,8 +131,19 @@ void SchedulePage::setupTableTasks()
     m_tableTasks->setModel(taskListModel());
 
     connect(m_tableTasks, &TableView::doubleClicked, this, [&](const QModelIndex &index) {
-        const auto taskInfo = taskListModel()->taskInfoAt(index.row());
-        emit taskManager()->taskDoubleClicked(taskInfo->type());
+        switch (index.column()) {
+        case 0: {
+            const auto taskInfo = taskListModel()->taskInfoAt(index.row());
+            emit taskManager()->taskDoubleClicked(taskInfo->type());
+        } break;
+        case 1: {
+            m_cscTaskInterval->spinBox()->setFocus();
+        } break;
+        case 2:
+        case 3: {
+            m_btOptions->showMenu();
+        } break;
+        }
     });
 }
 
