@@ -122,8 +122,10 @@ QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int 
 
     QStringList list = { ConnListModel::reasonText(FortConnReason(connRow.reason)) };
 
-    if (connRow.inherited) {
-        list << ConnListModel::tr("Inherited");
+    if (connRow.ruleId != 0) {
+        const QString ruleName = IoC<ConfRuleManager>()->ruleNameById(connRow.ruleId);
+
+        list << ConnListModel::tr("Rule: %1").arg(ruleName);
     }
 
     if (connRow.zoneId != 0) {
@@ -132,10 +134,8 @@ QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int 
         list << ConnListModel::tr("Zone: %1").arg(zoneName);
     }
 
-    if (connRow.ruleId != 0) {
-        const QString ruleName = IoC<ConfRuleManager>()->ruleNameById(connRow.ruleId);
-
-        list << ConnListModel::tr("Rule: %1").arg(ruleName);
+    if (connRow.inherited) {
+        list << ConnListModel::tr("Inherited");
     }
 
     return list.join('\n');

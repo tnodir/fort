@@ -186,7 +186,7 @@ void StatConnManager::setupByConf()
     FirewallConf *conf = confManager->conf();
 
     m_logAllowedConn = conf->logAllowedConn();
-    m_logBlockedConn = conf->logAllowedConn();
+    m_logBlockedConn = conf->logBlockedConn();
 }
 
 void StatConnManager::setupByConfIni(const IniOptions &ini)

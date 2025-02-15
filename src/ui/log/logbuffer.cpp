@@ -154,6 +154,8 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setInherited(conn.inherited);
     logEntry->setReason(conn.reason);
     logEntry->setIpProto(conn.ip_proto);
+    logEntry->setZoneId(conn.zone_id);
+    logEntry->setRuleId(conn.rule_id);
     logEntry->setLocalPort(conn.local_port);
     logEntry->setRemotePort(conn.remote_port);
     logEntry->setLocalIp(conn.local_ip);
