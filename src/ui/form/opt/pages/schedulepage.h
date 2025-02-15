@@ -54,7 +54,7 @@ private:
 
     TaskEditInfo &currentTaskRow();
 
-    void setCurrentTaskRowEdited(int role = Qt::DisplayRole);
+    void setCurrentTaskRowEdited();
 
 private:
     TaskListModel *m_taskListModel = nullptr;

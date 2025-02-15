@@ -14,9 +14,9 @@ QVariant dataDisplayName(const TaskInfo *taskInfo, const TaskEditInfo & /*task*/
     return taskInfo->title();
 }
 
-QVariant dataDisplayInterval(const TaskInfo *taskInfo, const TaskEditInfo & /*task*/, int /*role*/)
+QVariant dataDisplayInterval(const TaskInfo * /*taskInfo*/, const TaskEditInfo &task, int /*role*/)
 {
-    return taskInfo->intervalHours();
+    return task.intervalHours();
 }
 
 QVariant dataDisplayStartup(const TaskInfo * /*taskInfo*/, const TaskEditInfo &task, int role)

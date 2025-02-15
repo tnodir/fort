@@ -206,7 +206,7 @@ void SchedulePage::setupTaskInterval()
             return;
 
         task.setEnabled(checked);
-        setCurrentTaskRowEdited(Qt::CheckStateRole);
+        setCurrentTaskRowEdited();
     });
 
     connect(m_cscTaskInterval->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
@@ -352,7 +352,7 @@ TaskEditInfo &SchedulePage::currentTaskRow()
     return taskListModel()->taskRowAt(currentTaskIndex());
 }
 
-void SchedulePage::setCurrentTaskRowEdited(int role)
+void SchedulePage::setCurrentTaskRowEdited()
 {
-    taskListModel()->setTaskRowEdited(currentTaskIndex(), role);
+    taskListModel()->setTaskRowEdited(currentTaskIndex());
 }

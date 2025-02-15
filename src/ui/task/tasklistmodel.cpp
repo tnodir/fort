@@ -165,12 +165,12 @@ QVariant TaskListModel::toVariant() const
     return list;
 }
 
-void TaskListModel::setTaskRowEdited(int row, int role)
+void TaskListModel::setTaskRowEdited(int row)
 {
     const auto index = this->index(row, 0);
     const auto endIndex = this->index(row, columnCount() - 1);
 
-    emitDataEdited(index, endIndex, role);
+    emitDataEdited(index, endIndex);
 }
 
 void TaskListModel::switchTaskEnabled(const QModelIndex &index)
@@ -179,12 +179,13 @@ void TaskListModel::switchTaskEnabled(const QModelIndex &index)
 
     taskRow.setEnabled(!taskRow.enabled());
 
-    emitDataEdited(index, index, Qt::CheckStateRole);
+    emitDataEdited(index, index, { Qt::CheckStateRole });
 }
 
-void TaskListModel::emitDataEdited(const QModelIndex &index, const QModelIndex &endIndex, int role)
+void TaskListModel::emitDataEdited(
+        const QModelIndex &index, const QModelIndex &endIndex, const QList<int> &roles)
 {
-    emit dataChanged(index, endIndex, { role });
+    emit dataChanged(index, endIndex, roles);
 
     emit dataEdited();
 }

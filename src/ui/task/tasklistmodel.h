@@ -34,7 +34,7 @@ public:
 
     QVariant toVariant() const;
 
-    void setTaskRowEdited(int row, int role = Qt::DisplayRole);
+    void setTaskRowEdited(int row);
 
     TaskEditInfo &taskRowAt(int row) { return m_taskRows[row]; }
     const TaskEditInfo &taskRowAt(int row) const { return m_taskRows[row]; }
@@ -59,7 +59,8 @@ private:
 
     bool taskRunning(int row) const;
 
-    void emitDataEdited(const QModelIndex &index, const QModelIndex &endIndex, int role);
+    void emitDataEdited(
+            const QModelIndex &index, const QModelIndex &endIndex, const QList<int> &roles = {});
 
 private:
     TaskManager *m_taskManager = nullptr;
