@@ -86,10 +86,14 @@ protected:
     void setConf(FirewallConf *newConf);
     FirewallConf *createConf();
 
+    virtual void setupTimers();
+
     virtual bool applyConfPeriods(bool onlyFlags);
+    virtual void applyAutoLearnSeconds();
 
 private:
     void updateConfPeriods();
+    void switchAutoLearn();
 
     bool setupDb();
 
@@ -119,6 +123,7 @@ private:
     IniUser *m_iniUserToEdit = nullptr;
 
     QTimer m_confTimer;
+    QTimer m_autoLearnTimer;
 };
 
 #endif // CONFMANAGER_H

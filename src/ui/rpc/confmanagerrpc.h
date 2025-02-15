@@ -30,7 +30,10 @@ public:
     static void setupServerSignals(RpcManager *rpcManager);
 
 protected:
+    void setupTimers() override { }
+
     bool applyConfPeriods(bool /*onlyFlags*/) override { return false; }
+    void applyAutoLearnSeconds() override { }
 
 private:
     bool saving() const { return m_saving; }

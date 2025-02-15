@@ -466,8 +466,7 @@ void showErrorMessage(const QString &errorMessage)
 ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openFlags) :
     QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags)), m_conf(createConf())
 {
-    m_confTimer.setSingleShot(true);
-    connect(&m_confTimer, &QTimer::timeout, this, &ConfManager::updateConfPeriods);
+    setupTimers();
 }
 
 IniUser &ConfManager::iniUser() const
@@ -555,6 +554,35 @@ bool ConfManager::applyConfPeriods(bool onlyFlags)
     return true;
 }
 
+void ConfManager::applyAutoLearnSeconds()
+{
+    if (!conf())
+        return;
+
+    const bool isAutoLearn = (conf()->filterMode() == FirewallConf::ModeAutoLearn);
+    const int autoLearnMsec = isAutoLearn ? conf()->ini().autoLearnSeconds() * 1000 : 0;
+
+    const bool isTimerActive =
+            (m_autoLearnTimer.isActive() && m_autoLearnTimer.interval() == autoLearnMsec);
+    if (isTimerActive)
+        return;
+
+    m_autoLearnTimer.stop();
+
+    if (autoLearnMsec > 0) {
+        m_autoLearnTimer.start(autoLearnMsec);
+    }
+}
+
+void ConfManager::setupTimers()
+{
+    m_confTimer.setSingleShot(true);
+    connect(&m_confTimer, &QTimer::timeout, this, &ConfManager::updateConfPeriods);
+
+    m_autoLearnTimer.setSingleShot(true);
+    connect(&m_autoLearnTimer, &QTimer::timeout, this, &ConfManager::switchAutoLearn);
+}
+
 void ConfManager::updateConfPeriods()
 {
     const auto activeGroupBits = conf() ? conf()->activeGroupBits() : 0;
@@ -565,6 +593,16 @@ void ConfManager::updateConfPeriods()
     if (conf() && activeGroupBits != conf()->activeGroupBits()) {
         emit confPeriodsChanged();
     }
+}
+
+void ConfManager::switchAutoLearn()
+{
+    if (!conf())
+        return;
+
+    conf()->setFilterMode(FirewallConf::ModeBlockAll);
+
+    saveFlags();
 }
 
 bool ConfManager::setupDb()
@@ -676,6 +714,7 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
     }
 
     applyConfPeriods(onlyFlags);
+    applyAutoLearnSeconds();
 
     emit confChanged(onlyFlags, conf()->editedFlags());
 
