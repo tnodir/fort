@@ -3,6 +3,7 @@
 
 #include <util/ini/mapsettings.h>
 
+#define DEFAULT_AUTO_LEARN_SECONDS     60
 #define DEFAULT_APP_GROUP_BITS         quint32(-1)
 #define DEFAULT_MONTH_START            1
 #define DEFAULT_TRAF_HOUR_KEEP_DAYS    90 // ~3 months
@@ -28,6 +29,12 @@ public:
 
     QString password() const { return valueText("base/password_"); }
     void setPassword(const QString &v) { setValue("base/password_", v); }
+
+    int autoLearnSeconds() const
+    {
+        return valueInt("conf/autoLearnSeconds", DEFAULT_AUTO_LEARN_SECONDS);
+    }
+    void setAutoLearnSeconds(int v) { setValue("conf/autoLearnSeconds", v); }
 
     bool taskInfoListSet() const { return contains("task/infoList_"); }
 

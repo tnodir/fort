@@ -3,6 +3,8 @@
 
 #include "optbasepage.h"
 
+class LabelSpinCombo;
+
 class OptionsPage : public OptBasePage
 {
     Q_OBJECT
@@ -25,6 +27,7 @@ protected slots:
 private:
     void retranslateComboBlockTraffic();
     void retranslateComboFilterMode();
+    void retranslateAutoLearnSeconds();
     void retranslateEditPassword();
 
     void setupUi();
@@ -34,6 +37,7 @@ private:
     void setupTrafficBox();
     QLayout *setupBlockTrafficLayout();
     QLayout *setupFilterModeLayout();
+    void setupAutoLearnSeconds();
     void setupProtectionBox();
     QLayout *setupPasswordLayout();
     void setupEditPassword();
@@ -57,6 +61,7 @@ private:
     QComboBox *m_comboBlockTraffic = nullptr;
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
+    LabelSpinCombo *m_lscAutoLearnSeconds = nullptr;
     QCheckBox *m_cbGroupBlocked = nullptr;
 
     QCheckBox *m_cbBootFilter = nullptr;

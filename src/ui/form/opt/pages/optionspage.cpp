@@ -16,6 +16,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/labelspincombo.h>
 #include <form/opt/optionscontroller.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
@@ -26,6 +27,8 @@
 #include <util/iconcache.h>
 
 namespace {
+
+const std::array autoLearnSecondsValues = { 10, 0, 20, 60, 2 * 60, 5 * 60, 10 * 60 };
 
 void updateComboBox(
         QComboBox *c, const QStringList &names, const QStringList &iconPaths, int currentIndex)
@@ -56,6 +59,7 @@ void OptionsPage::onResetToDefault()
     m_cbFilterEnabled->setChecked(true);
     m_comboBlockTraffic->setCurrentIndex(0);
     m_comboFilterMode->setCurrentIndex(0);
+    m_lscAutoLearnSeconds->spinBox()->setValue(DEFAULT_AUTO_LEARN_SECONDS);
     m_cbGroupBlocked->setChecked(true);
 
     m_cbBootFilter->setChecked(false);
@@ -114,6 +118,10 @@ void OptionsPage::onRetranslateUi()
 
     m_labelFilterMode->setText(tr("Filter Mode:"));
     retranslateComboFilterMode();
+
+    m_lscAutoLearnSeconds->label()->setText(tr("Auto-learn seconds:"));
+    retranslateAutoLearnSeconds();
+
     m_cbGroupBlocked->setText(tr("Block traffic for disabled App Groups"));
 
     m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
@@ -148,6 +156,15 @@ void OptionsPage::retranslateComboFilterMode()
 {
     updateComboBox(m_comboFilterMode, FirewallConf::filterModeNames(),
             FirewallConf::filterModeIconPaths(), conf()->filterMode());
+}
+
+void OptionsPage::retranslateAutoLearnSeconds()
+{
+    const QStringList list = { tr("Custom"), tr("Disabled"), tr("20 seconds"), tr("1 minute"),
+        tr("2 minutes"), tr("5 minutes"), tr("10 minutes") };
+
+    m_lscAutoLearnSeconds->setNames(list);
+    m_lscAutoLearnSeconds->spinBox()->setSuffix(tr(" second(s)"));
 }
 
 void OptionsPage::retranslateEditPassword()
@@ -223,6 +240,8 @@ void OptionsPage::setupTrafficBox()
 
     auto filterModeLayout = setupFilterModeLayout();
 
+    setupAutoLearnSeconds();
+
     m_cbGroupBlocked = ControlUtil::createCheckBox(conf()->groupBlocked(), [&](bool checked) {
         conf()->setGroupBlocked(checked);
         ctrl()->setFlagsEdited();
@@ -232,6 +251,7 @@ void OptionsPage::setupTrafficBox()
     layout->addWidget(m_cbFilterEnabled);
     layout->addLayout(blockTrafficLayout);
     layout->addLayout(filterModeLayout);
+    layout->addWidget(m_lscAutoLearnSeconds);
     layout->addWidget(m_cbGroupBlocked);
 
     m_gbTraffic = new QGroupBox();
@@ -273,6 +293,23 @@ QLayout *OptionsPage::setupFilterModeLayout()
     item->setFlags(item->flags() & ~Qt::ItemIsEnabled);
 
     return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
+}
+
+void OptionsPage::setupAutoLearnSeconds()
+{
+    m_lscAutoLearnSeconds = new LabelSpinCombo();
+    m_lscAutoLearnSeconds->spinBox()->setRange(0, 60000); // ~16.6 hours
+    m_lscAutoLearnSeconds->setValues(autoLearnSecondsValues);
+
+    m_lscAutoLearnSeconds->spinBox()->setValue(ini()->autoLearnSeconds());
+
+    connect(m_lscAutoLearnSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                if (ini()->autoLearnSeconds() != value) {
+                    ini()->setAutoLearnSeconds(value);
+                    ctrl()->setIniEdited();
+                }
+            });
 }
 
 void OptionsPage::setupProtectionBox()

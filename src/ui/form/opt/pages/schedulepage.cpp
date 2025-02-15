@@ -27,7 +27,7 @@
 namespace {
 
 const std::array taskIntervalHourValues = { 3, 1, 6, 12, 24, 24 * 7, 24 * 30 };
-const std::array taskRetrySecondsValues = { 10, 3, 20, 60, 2 * 60, 5 * 60, 10 * 60 };
+const std::array taskRetrySecondsValues = { 3, 0, 20, 60, 2 * 60, 5 * 60, 10 * 60 };
 
 }
 
@@ -92,7 +92,7 @@ void SchedulePage::retranslateTaskInterval()
 
 void SchedulePage::retranslateTaskRetrySeconds()
 {
-    const QStringList list = { tr("Custom"), tr("3 seconds"), tr("20 seconds"), tr("1 minute"),
+    const QStringList list = { tr("Custom"), tr("Disabled"), tr("20 seconds"), tr("1 minute"),
         tr("2 minutes"), tr("5 minutes"), tr("10 minutes") };
 
     m_lscTaskRetrySeconds->setNames(list);
