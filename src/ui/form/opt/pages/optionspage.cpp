@@ -81,6 +81,15 @@ void OptionsPage::onResetToDefault()
 
 void OptionsPage::onAboutToSave()
 {
+    // Filter Mode
+    if (!filterModeEdited()) {
+        const auto oldFilterMode = confManager()->conf()->filterMode();
+        if (conf()->filterMode() != oldFilterMode) {
+            // Reset to the new value, when auto-switched from Auto-learn
+            conf()->setFilterMode(oldFilterMode);
+        }
+    }
+
     // Password
     if (passwordEdited()) {
         const bool isPasswordCleared = (ini()->hasPassword() && ini()->password().isEmpty());
@@ -98,6 +107,9 @@ void OptionsPage::onAboutToSave()
 
 void OptionsPage::onEditResetted()
 {
+    // Filter Mode
+    setFilterModeEdited(false);
+
     // Password
     setPasswordEdited(false);
     retranslateEditPassword();
@@ -284,6 +296,7 @@ QLayout *OptionsPage::setupFilterModeLayout()
                 if (conf()->filterMode() != index) {
                     conf()->setFilterMode(FirewallConf::FilterMode(index));
                     ctrl()->setFlagsEdited();
+                    setFilterModeEdited(true);
                 }
             });
     m_comboFilterMode->setFixedWidth(200);
@@ -370,9 +383,9 @@ QLayout *OptionsPage::setupPasswordLayout()
             m_editPassword->clear();
         }
 
-        setPasswordEdited(true);
         ini()->setHasPassword(checked);
         ctrl()->setIniEdited();
+        setPasswordEdited(true);
     });
 
     setupEditPassword();

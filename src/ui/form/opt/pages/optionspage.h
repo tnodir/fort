@@ -12,6 +12,9 @@ class OptionsPage : public OptBasePage
 public:
     explicit OptionsPage(OptionsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    bool filterModeEdited() const { return m_filterModeEdited; }
+    void setFilterModeEdited(bool v) { m_filterModeEdited = v; }
+
     bool passwordEdited() const { return m_passwordEdited; }
     void setPasswordEdited(bool v) { m_passwordEdited = v; }
 
@@ -48,6 +51,7 @@ private:
     void setupLogsBox();
 
 private:
+    bool m_filterModeEdited : 1 = false;
     bool m_passwordEdited : 1 = false;
 
     QGroupBox *m_gbTraffic = nullptr;
