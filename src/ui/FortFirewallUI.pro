@@ -28,6 +28,16 @@ SOURCES += \
     conf/inioptions.cpp \
     conf/rule.cpp \
     conf/zone.cpp \
+    control/command/controlcommandbackup.cpp \
+    control/command/controlcommandbase.cpp \
+    control/command/controlcommandblock.cpp \
+    control/command/controlcommandfilter.cpp \
+    control/command/controlcommandfiltermode.cpp \
+    control/command/controlcommandhome.cpp \
+    control/command/controlcommandmanager.cpp \
+    control/command/controlcommandprog.cpp \
+    control/command/controlcommandrpc.cpp \
+    control/command/controlcommandzone.cpp \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
@@ -268,6 +278,16 @@ HEADERS += \
     conf/inioptions.h \
     conf/rule.h \
     conf/zone.h \
+    control/command/controlcommandbackup.h \
+    control/command/controlcommandbase.h \
+    control/command/controlcommandblock.h \
+    control/command/controlcommandfilter.h \
+    control/command/controlcommandfiltermode.h \
+    control/command/controlcommandhome.h \
+    control/command/controlcommandmanager.h \
+    control/command/controlcommandprog.h \
+    control/command/controlcommandrpc.h \
+    control/command/controlcommandzone.h \
     control/control.h \
     control/control_types.h \
     control/controlmanager.h \

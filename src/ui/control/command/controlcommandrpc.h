@@ -1,0 +1,12 @@
+#ifndef CONTROLCOMMANDRPC_H
+#define CONTROLCOMMANDRPC_H
+
+#include "controlcommandbase.h"
+
+class ControlCommandRpc : public ControlCommandBase
+{
+public:
+    static bool processCommand(const ProcessCommandArgs &p);
+};
+
+#endif // CONTROLCOMMANDRPC_H
