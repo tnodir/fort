@@ -424,11 +424,11 @@
     </message>
     <message>
         <source>Rule: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Règle : %1</translation>
     </message>
     <message>
         <source>Zone: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Zone : %1</translation>
     </message>
 </context>
 <context>
@@ -1261,11 +1261,11 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Secondes d&apos;auto-apprentissage :</translation>
     </message>
     <message>
         <source>Custom</source>
-        <translation type="unfinished"></translation>
+        <translation>Personnalisée</translation>
     </message>
     <message>
         <source>Disabled</source>

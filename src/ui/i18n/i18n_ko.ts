@@ -424,11 +424,11 @@
     </message>
     <message>
         <source>Rule: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>규칙: %1</translation>
     </message>
     <message>
         <source>Zone: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>영역: %1</translation>
     </message>
 </context>
 <context>
@@ -1261,7 +1261,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>자동 학습 초:</translation>
     </message>
     <message>
         <source>Custom</source>
