@@ -28,6 +28,9 @@ protected slots:
     void onRetranslateUi() override;
 
 private:
+    void onAboutToSave_filterMode();
+    void onAboutToSave_password();
+
     void retranslateComboBlockTraffic();
     void retranslateComboFilterMode();
     void retranslateAutoLearnSeconds();

@@ -81,16 +81,25 @@ void OptionsPage::onResetToDefault()
 
 void OptionsPage::onAboutToSave()
 {
-    // Filter Mode
-    if (!filterModeEdited()) {
-        const auto oldFilterMode = confManager()->conf()->filterMode();
-        if (conf()->filterMode() != oldFilterMode) {
-            // Reset to the new value, when auto-switched from Auto-learn
-            conf()->setFilterMode(oldFilterMode);
-        }
-    }
+    onAboutToSave_filterMode();
+    onAboutToSave_password();
+}
 
-    // Password
+void OptionsPage::onAboutToSave_filterMode()
+{
+    if (filterModeEdited())
+        return;
+
+    const auto oldFilterMode = confManager()->conf()->filterMode();
+
+    if (conf()->filterMode() != oldFilterMode) {
+        // Reset to the new value, when auto-switched from Auto-learn
+        conf()->setFilterMode(oldFilterMode);
+    }
+}
+
+void OptionsPage::onAboutToSave_password()
+{
     if (passwordEdited()) {
         const bool isPasswordCleared = (ini()->hasPassword() && ini()->password().isEmpty());
         if (isPasswordCleared && !settings()->hasPassword()) {
