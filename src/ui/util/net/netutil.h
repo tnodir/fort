@@ -27,7 +27,7 @@ public:
     static QString localIpNetworksText(int count = -1);
 
     static QString protocolName(quint8 ipProto);
-    static quint8 protocolNumber(const QStringView name);
+    static quint8 protocolNumber(const QStringView name, bool &ok);
 
     static quint16 serviceToPort(const QStringView name, const char *proto, bool &ok);
 };

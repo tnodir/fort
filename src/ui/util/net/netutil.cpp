@@ -11,7 +11,7 @@
 
 namespace {
 
-QHash<QString, quint8> protocolNameNumbersMap = {
+QHash<QString, qint16> protocolNameNumbersMap = {
     { "HOPOPT", 0 }, // IPv6 Hop-by-Hop Option
     { "ICMP", 1 }, // Internet Control Message Protocol
     { "IGMP", 2 }, // Internet Group Management Protocol
@@ -284,11 +284,14 @@ QString NetUtil::protocolName(quint8 ipProto)
     return QString::number(ipProto);
 }
 
-quint8 NetUtil::protocolNumber(const QStringView name)
+quint8 NetUtil::protocolNumber(const QStringView name, bool &ok)
 {
     const auto nameUpper = name.toString().toUpper();
 
-    return protocolNameNumbersMap.value(nameUpper, 0);
+    const auto v = protocolNameNumbersMap.value(nameUpper, -1);
+    ok = (v != -1);
+
+    return quint8(v);
 }
 
 quint16 NetUtil::serviceToPort(const QStringView name, const char *proto, bool &ok)
