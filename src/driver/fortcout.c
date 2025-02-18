@@ -791,7 +791,7 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
 
     fort_flow_classify(&fort_device()->stat, flowContext, ca.dataSize, inbound);
 
-    fort_callout_classify_permit(filter, classifyOut); /* permit */
+    fort_callout_classify_continue(classifyOut); /* continue */
 }
 
 static void NTAPI fort_callout_transport_classify_in(const FWPS_INCOMING_VALUES0 *inFixedValues,
