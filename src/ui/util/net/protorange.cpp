@@ -83,7 +83,7 @@ bool ProtoRange::fromList(const StringViewList &list, bool /*sort*/)
 ProtoRange::ParseError ProtoRange::parseProtoLine(
         const QStringView line, protorange_map_t &protoRangeMap, int &pairSize)
 {
-    static const QRegularExpression protoRe(R"(^([\d\w]+)\s*(-?)\s*(\S*))");
+    static const QRegularExpression protoRe(R"(^([\d\w+.]+)\s*(-?)\s*(\S*))");
 
     const auto match = StringUtil::match(protoRe, line);
     if (!match.hasMatch()) {

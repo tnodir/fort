@@ -182,6 +182,15 @@ TEST_F(NetUtilTest, protocolRanges)
     ASSERT_EQ(protoRange.toText(),
             QString("TCP\n"
                     "UDP\n"));
+
+    ASSERT_TRUE(protoRange.fromText("HOPOPT-IPV6_FRAG"));
+    ASSERT_EQ(protoRange.toText(), QString("0-44\n"));
+
+    ASSERT_TRUE(protoRange.fromText("TP++-A/N"));
+    ASSERT_EQ(protoRange.toText(), QString("39-107\n"));
+
+    ASSERT_TRUE(protoRange.fromText("AX.25-RAWSOCKET"));
+    ASSERT_EQ(protoRange.toText(), QString("93-255\n"));
 }
 
 TEST_F(NetUtilTest, directionRanges)

@@ -16,14 +16,14 @@ QHash<QString, qint16> protocolNameNumbersMap = {
     { "ICMP", 1 }, // Internet Control Message Protocol
     { "IGMP", 2 }, // Internet Group Management Protocol
     { "GGP", 3 }, // Gateway-to-Gateway Protocol
-    { "IP-IN-IP", 4 }, // IP in IP (encapsulation)
+    { "IP_IN_IP", 4 }, // IP in IP (encapsulation)
     { "ST", 5 }, // Internet Stream Protocol
     { "TCP", 6 }, // Transmission Control Protocol
     { "CBT", 7 }, // Core-based trees
     { "EGP", 8 }, // Exterior Gateway Protocol
     { "IGP", 9 }, // Interior gateway protocol (any private interior gateway, eg. Cisco's IGRP)
-    { "BBN-RCC-MON", 10 }, // BBN RCC Monitoring
-    { "NVP-II", 11 }, // Network Voice Protocol
+    { "BBN_RCC_MON", 10 }, // BBN RCC Monitoring
+    { "NVP_II", 11 }, // Network Voice Protocol
     { "PUP", 12 }, // PARC Universal Packet|Xerox PUP
     { "ARGUS", 13 }, // ARGUS
     { "EMCON", 14 }, // EMCON
@@ -31,32 +31,32 @@ QHash<QString, qint16> protocolNameNumbersMap = {
     { "CHAOS", 16 }, // Chaosnet|Chaos
     { "UDP", 17 }, // User Datagram Protocol
     { "MUX", 18 }, // Multiplexing
-    { "DCN-MEAS", 19 }, // DCN Measurement Subsystems
+    { "DCN_MEAS", 19 }, // DCN Measurement Subsystems
     { "HMP", 20 }, // Host Monitoring Protocol
     { "PRM", 21 }, // Packet Radio Measurement
-    { "XNS-IDP", 22 }, // XEROX NS IDP
-    { "TRUNK-1", 23 }, // Trunk-1
-    { "TRUNK-2", 24 }, // Trunk-2
-    { "LEAF-1", 25 }, // Leaf-1
-    { "LEAF-2", 26 }, // Leaf-2
+    { "XNS_IDP", 22 }, // XEROX NS IDP
+    { "TRUNK_1", 23 }, // Trunk-1
+    { "TRUNK_2", 24 }, // Trunk-2
+    { "LEAF_1", 25 }, // Leaf-1
+    { "LEAF_2", 26 }, // Leaf-2
     { "RDP", 27 }, // Reliable Data Protocol
     { "IRTP", 28 }, // Internet Reliable Transaction Protocol
-    { "ISO-TP4", 29 }, // ISO Transport Protocol Class 4
+    { "ISO_TP4", 29 }, // ISO Transport Protocol Class 4
     { "NETBLT", 30 }, // Bulk Data Transfer Protocol
-    { "MFE-NSP", 31 }, // MFE Network Services Protocol
-    { "MERIT-INP", 32 }, // MERIT Internodal Protocol
+    { "MFE_NSP", 31 }, // MFE Network Services Protocol
+    { "MERIT_INP", 32 }, // MERIT Internodal Protocol
     { "DCCP", 33 }, // Datagram Congestion Control Protocol
     { "3PC", 34 }, // Third Party Connect Protocol
     { "IDPR", 35 }, // Inter-Domain Policy Routing Protocol
     { "XTP", 36 }, // Xpress Transport Protocol
     { "DDP", 37 }, // Datagram Delivery Protocol
-    { "IDPR-CMTP", 38 }, // IDPR Control Message Transport Protocol
+    { "IDPR_CMTP", 38 }, // IDPR Control Message Transport Protocol
     { "TP++", 39 }, // TP++ Transport Protocol
     { "IL", 40 }, // IL (network protocol)|IL Transport Protocol
     { "IPV6", 41 }, // IPv6 Encapsulation (6to4 and 6in4)
     { "SDRP", 42 }, // Source Demand Routing Protocol
-    { "IPV6-ROUTE", 43 }, // Routing Header for IPv6
-    { "IPV6-FRAG", 44 }, // Fragment Header for IPv6
+    { "IPV6_ROUTE", 43 }, // Routing Header for IPv6
+    { "IPV6_FRAG", 44 }, // Fragment Header for IPv6
     { "IDRP", 45 }, // Inter-Domain Routing Protocol
     { "RSVP", 46 }, // Resource Reservation Protocol
     { "GRE", 47 }, // Generic Routing Encapsulation
@@ -64,54 +64,54 @@ QHash<QString, qint16> protocolNameNumbersMap = {
     { "BNA", 49 }, // Burroughs Network Architecture
     { "ESP", 50 }, // Encapsulating Security Payload
     { "AH", 51 }, // Authentication Header
-    { "I-NLSP", 52 }, // Integrated Net Layer Security Protocol
+    { "I_NLSP", 52 }, // Integrated Net Layer Security Protocol
     { "SWIPE", 53 }, // SwIPe (protocol)|SwIPe
     { "NARP", 54 }, // NBMA Address Resolution Protocol
     { "MOBILE", 55 }, // Mobile IP|IP Mobility (Min Encap)
     { "TLSP", 56 }, // Transport Layer Security Protocol (using Kryptonet key management)
     { "SKIP", 57 }, // Simple Key-Management for Internet Protocol
-    { "IPV6-ICMP", 58 }, // ICMP for IPv6
-    { "IPV6-NONXT", 59 }, // No Next Header for IPv6
-    { "IPV6-OPTS", 60 }, // Destination Options for IPv6
-    { "ANY-HOST", 61 }, // Any host internal protocol
+    { "IPV6_ICMP", 58 }, // ICMP for IPv6
+    { "IPV6_NONXT", 59 }, // No Next Header for IPv6
+    { "IPV6_OPTS", 60 }, // Destination Options for IPv6
+    { "ANY_HOST", 61 }, // Any host internal protocol
     { "CFTP", 62 }, // CFTP
-    { "ANY-LAN", 63 }, // Any local network
-    { "SAT-EXPAK", 64 }, // SATNET and Backroom EXPAK
+    { "ANY_LAN", 63 }, // Any local network
+    { "SAT_EXPAK", 64 }, // SATNET and Backroom EXPAK
     { "KRYPTOLAN", 65 }, // Kryptolan
     { "RVD", 66 }, // MIT Remote Virtual Disk Protocol
     { "IPPC", 67 }, // Internet Pluribus Packet Core
-    { "ANY-DFS", 68 }, // Any distributed file system
-    { "SAT-MON", 69 }, // SATNET Monitoring
+    { "ANY_DFS", 68 }, // Any distributed file system
+    { "SAT_MON", 69 }, // SATNET Monitoring
     { "VISA", 70 }, // VISA Protocol
     { "IPCU", 71 }, // Internet Packet Core Utility
     { "CPNX", 72 }, // Computer Protocol Network Executive
     { "CPHB", 73 }, //
     { "WSN", 74 }, // Wang Span Network
     { "PVP", 75 }, // Packet Video Protocol
-    { "BR-SAT-MON", 76 }, // Backroom SATNET Monitoring
-    { "SUN-ND", 77 }, // SUN ND PROTOCOL-Temporary
-    { "WB-MON", 78 }, // WIDEBAND Monitoring
-    { "WB-EXPAK", 79 }, // WIDEBAND EXPAK
-    { "ISO-IP", 80 }, // International Organization for Standardization Internet Protocol
+    { "BR_SAT_MON", 76 }, // Backroom SATNET Monitoring
+    { "SUN_ND", 77 }, // SUN ND PROTOCOL-Temporary
+    { "WB_MON", 78 }, // WIDEBAND Monitoring
+    { "WB_EXPAK", 79 }, // WIDEBAND EXPAK
+    { "ISO_IP", 80 }, // International Organization for Standardization Internet Protocol
     { "VMTP", 81 }, // Versatile Message Transaction Protocol
-    { "SECURE-VMTP", 82 }, // Secure Versatile Message Transaction Protocol
+    { "SECURE_VMTP", 82 }, // Secure Versatile Message Transaction Protocol
     { "VINES", 83 }, // VINES
     { "IPTM", 84 }, // Internet Protocol Traffic Manager
-    { "NSFNET-IGP", 85 }, // NSFNET-IGP
+    { "NSFNET_IGP", 85 }, // NSFNET-IGP
     { "DGP", 86 }, // Dissimilar Gateway Protocol
     { "TCF", 87 }, // TCF
     { "EIGRP", 88 }, // EIGRP
     { "OSPF", 89 }, // Open Shortest Path First
-    { "SPRITE-RPC", 90 }, // Sprite RPC Protocol
+    { "SPRITE_RPC", 90 }, // Sprite RPC Protocol
     { "LARP", 91 }, // Locus Address Resolution Protocol
     { "MTP", 92 }, // Multicast Transport Protocol
     { "AX.25", 93 }, // AX.25
     { "OS", 94 }, // KA9Q|KA9Q NOS compatible IP over IP tunneling
     { "MICP", 95 }, // Mobile Internetworking Control Protocol
-    { "SCC-SP", 96 }, // Semaphore Communications Sec. Pro
+    { "SCC_SP", 96 }, // Semaphore Communications Sec. Pro
     { "ETHERIP", 97 }, // Ethernet-within-IP Encapsulation
     { "ENCAP", 98 }, // Encapsulation Header
-    { "ANY-PRIV-ENC", 99 }, // Any private encryption scheme
+    { "ANY_PRIV_ENC", 99 }, // Any private encryption scheme
     { "GMTP", 100 }, // GMTP
     { "IFMP", 101 }, // Ipsilon Flow Management Protocol
     { "PNNI", 102 }, // Private Network-to-Network Interface|PNNI over IP
@@ -122,11 +122,11 @@ QHash<QString, qint16> protocolNameNumbersMap = {
     { "A/N", 107 }, // Active Networks
     { "IPCOMP", 108 }, // IP Payload Compression Protocol
     { "SNP", 109 }, // Sitara Networks Protocol
-    { "COMPAQ-PEER", 110 }, // Compaq Peer Protocol
-    { "IPX-IN-IP", 111 }, // IPX in IP
+    { "COMPAQ_PEER", 110 }, // Compaq Peer Protocol
+    { "IPX_IN_IP", 111 }, // IPX in IP
     { "VRRP", 112 }, // Virtual Router Redundancy Protocol
     { "PGM", 113 }, // Pragmatic General Multicast (PGM) Reliable Transport Protocol
-    { "ANY-0HOP", 114 }, // Any 0-hop protocol
+    { "ANY_0HOP", 114 }, // Any 0-hop protocol
     { "L2TP", 115 }, // (L2TPv3) Layer Two Tunneling Protocol Version 3
     { "DDX", 116 }, // D-II Data Exchange (DDX)
     { "IATP", 117 }, // Interactive Agent Transfer Protocol
@@ -136,7 +136,7 @@ QHash<QString, qint16> protocolNameNumbersMap = {
     { "SMP", 121 }, // Simple Message Protocol
     { "SM", 122 }, // Simple Multicast Protocol
     { "PTP", 123 }, // Performance Transparency Protocol
-    { "IS-IS-IPV4", 124 }, // Intermediate System to Intermediate System Protocol over IPv4
+    { "IS_IS_IPV4", 124 }, // Intermediate System to Intermediate System Protocol over IPv4
     { "FIRE", 125 }, // Flexible Intra-AS Routing Environment
     { "CRTP", 126 }, // Combat Radio Transport Protocol
     { "CRUDP", 127 }, // Combat Radio User Datagram
@@ -147,10 +147,10 @@ QHash<QString, qint16> protocolNameNumbersMap = {
     { "PIPE", 131 }, // Private IP Encapsulation within IP
     { "SCTP", 132 }, // Stream Control Transmission Protocol
     { "FC", 133 }, // Fibre Channel
-    { "RSVP-E2E-IGNORE", 134 }, // Reservation Protocol (RSVP) End-to-End Ignore
-    { "MOBILITY-HEADER", 135 }, // Mobility Extension Header for IPv6
+    { "RSVP_E2E_IGNORE", 134 }, // Reservation Protocol (RSVP) End-to-End Ignore
+    { "MOBILITY_HEADER", 135 }, // Mobility Extension Header for IPv6
     { "UDPLITE", 136 }, // Lightweight User Datagram Protocol
-    { "MPLS-IN-IP", 137 }, // Multiprotocol Label Switching Encapsulated in IP
+    { "MPLS_IN_IP", 137 }, // Multiprotocol Label Switching Encapsulated in IP
     { "MANET", 138 }, // MANET Protocols
     { "HIP", 139 }, // Host Identity Protocol
     { "SHIM6", 140 }, // Site Multihoming by IPv6 Intermediation
