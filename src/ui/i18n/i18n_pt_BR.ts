@@ -133,10 +133,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Process Exit</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Connections Closed</source>
         <translation type="unfinished"></translation>
     </message>

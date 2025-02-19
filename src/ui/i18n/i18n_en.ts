@@ -133,10 +133,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>Process Exit</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Connections Closed</source>
         <translation></translation>
     </message>

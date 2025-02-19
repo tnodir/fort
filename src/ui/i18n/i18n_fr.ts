@@ -133,10 +133,6 @@
         <translation>Jamais</translation>
     </message>
     <message>
-        <source>Process Exit</source>
-        <translation>Quitter le processus</translation>
-    </message>
-    <message>
         <source>Connections Closed</source>
         <translation>Connection fermée</translation>
     </message>

@@ -133,10 +133,6 @@
         <translation>Никогда</translation>
     </message>
     <message>
-        <source>Process Exit</source>
-        <translation>Завершении процесса</translation>
-    </message>
-    <message>
         <source>Connections Closed</source>
         <translation>Закрытии соединений</translation>
     </message>

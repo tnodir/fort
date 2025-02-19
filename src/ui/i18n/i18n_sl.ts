@@ -133,10 +133,6 @@
         <translation>Nikoli</translation>
     </message>
     <message>
-        <source>Process Exit</source>
-        <translation>Proces Izhod</translation>
-    </message>
-    <message>
         <source>Connections Closed</source>
         <translation>Povezave zaprte</translation>
     </message>

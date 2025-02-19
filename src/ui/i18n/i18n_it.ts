@@ -133,10 +133,6 @@
         <translation>Mai</translation>
     </message>
     <message>
-        <source>Process Exit</source>
-        <translation>Uscita processo</translation>
-    </message>
-    <message>
         <source>Connections Closed</source>
         <translation>Connessioni chiuse</translation>
     </message>
