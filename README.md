@@ -17,9 +17,9 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
 
 ## Features
 
-  - Filter by network addresses, application groups and more
+  - Flexible network rules per application or global by addresses, ports, protocols etc
+  - Wildcards in application path names
   - Filter by `SvcHost.exe` service names
-  - Support for wildcards in application path names
   - Speed limit application groups
   - Blocklists via "Zones"
   - Saves traffic statistics
