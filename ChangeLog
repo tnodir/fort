@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.16.3, 2025-02-19:
+- UI: ProgramEdit: Add "Schedule On: Connections Closed" option.
+- UI: Rules: Use '=' to check local port/ip is equal to remote one.
+- UI: Rules: Improve protocol and port names.
+- Driver: Don't veto packets in transport layer. (To fix NetLimiter's connections monitor.)
+- UI: Update SQLite to 3.49.1
+
 v3.16.2, 2025-02-16:
 - UI: Options: Add "Auto-learn seconds" to auto-switch to "Blocked.." mode.
 - UI: Options: Schedule: Tweak double-clicks on task row.
