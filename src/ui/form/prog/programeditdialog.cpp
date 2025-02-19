@@ -134,9 +134,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     const bool hasScheduleTime = (!appRow.scheduleTime.isNull());
     const bool hasScheduleEvent = (appRow.scheduleEvent != App::ScheduleOnNone);
 
-    const ScheduleType scheduleType = hasScheduleEvent
-            ? ScheduleOnEvent
-            : (hasScheduleTime ? ScheduleTimeAt : ScheduleTimeIn);
+    const ScheduleType scheduleType = hasScheduleTime ? ScheduleTimeAt : ScheduleOnEvent;
 
     m_cbSchedule->setChecked(hasScheduleTime);
     m_comboScheduleAction->setCurrentIndex(appRow.scheduleAction);

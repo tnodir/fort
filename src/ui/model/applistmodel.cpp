@@ -417,5 +417,5 @@ QString AppListModel::columnName(const AppListColumn column)
 
 QStringList AppListModel::scheduleEventNames()
 {
-    return { tr("Never"), tr("Process Exit") };
+    return { tr("Never"), tr("Process Exit"), tr("Connections Closed") };
 }

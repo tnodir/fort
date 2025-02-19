@@ -67,6 +67,8 @@ protected:
     virtual void setupDriveListManager();
 
     virtual void setupAppEndEvent();
+    void setupAppEndEvent_onProcessExit();
+    void setupAppEndEvent_onConnectionsClosed();
 
     virtual void setupAppEndTimer();
     void updateAppEndTimer();

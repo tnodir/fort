@@ -186,12 +186,22 @@ void ConfAppManager::setupAppEndEvent()
 {
     DbQuery(sqliteDb()).sql(sqlDeleteAppsEndEvent).executeOk();
 
+    setupAppEndEvent_onConnectionsClosed();
+}
+
+void ConfAppManager::setupAppEndEvent_onProcessExit()
+{
+    //
+}
+
+void ConfAppManager::setupAppEndEvent_onConnectionsClosed()
+{
     const auto onAppProcessIdRemoved = [&](qint32 /*pid*/, const QString &appPath) {
         // const QString normPath = FileUtil::normalizePath(appPath);
 
         const qint64 appId = DbQuery(sqliteDb())
                                      .sql(sqlSelectAppIdByPathEndEvent)
-                                     .vars({ appPath, App::ScheduleOnProcessExit })
+                                     .vars({ appPath, App::ScheduleOnConnectionsClosed })
                                      .execute()
                                      .toLongLong();
         if (appId > 0) {

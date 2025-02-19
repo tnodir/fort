@@ -17,6 +17,7 @@ public:
     enum ScheduleEvent : qint8 {
         ScheduleOnNone = 0,
         ScheduleOnProcessExit,
+        ScheduleOnConnectionsClosed,
     };
 
     bool isFlagsEqual(const App &o) const;
