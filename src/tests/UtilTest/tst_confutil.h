@@ -383,7 +383,14 @@ TEST_F(ConfUtilTest, rulesTwoFilters)
                 .blocked = true,
                 .ruleId = 1,
                 .ruleText = "104.21.5.235:443\n"
-                            "172.67.154.192",
+                            "172.67.154.192\n"
+                            "127.0.0.1:=local_ip:dir(IN)\n"
+                            "=port(999)\n",
+        },
+        {
+                .blocked = true,
+                .ruleId = 2,
+                .ruleText = "=ip()",
         },
     };
 
@@ -393,7 +400,7 @@ TEST_F(ConfUtilTest, rulesTwoFilters)
         bool walkRules(
                 WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override
         {
-            wra.maxRuleId = 1;
+            wra.maxRuleId = 2;
 
             return walkRulesLoop(func);
         }
@@ -425,9 +432,8 @@ TEST_F(ConfUtilTest, rulesTwoFilters)
     // Allowed IP
     {
         FORT_CONF_META_CONN conn = {
-            .inbound = false,
             .ip_proto = IpProto_TCP,
-            .remote_port = 443,
+            .remote_port = 80,
             .remote_ip = { .v4 = NetFormatUtil::textToIp4("2.2.2.2") },
         };
 
@@ -437,12 +443,51 @@ TEST_F(ConfUtilTest, rulesTwoFilters)
     // Blocked IP
     {
         FORT_CONF_META_CONN conn = {
-            .inbound = false,
             .ip_proto = IpProto_TCP,
             .remote_port = 443,
             .remote_ip = { .v4 = NetFormatUtil::textToIp4("104.21.5.235") },
         };
 
         ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+
+    // Blocked IP: Equal Local & Remote
+    {
+        const auto ip4 = NetFormatUtil::textToIp4("127.0.0.1");
+
+        FORT_CONF_META_CONN conn = {
+            .inbound = true,
+            .ip_proto = IpProto_TCP,
+            .local_ip = { .v4 = ip4 },
+            .remote_ip = { .v4 = ip4 },
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+
+    // Blocked Port: Equal Local & Remote
+    {
+        constexpr UINT16 port = 999;
+
+        FORT_CONF_META_CONN conn = {
+            .ip_proto = IpProto_UDP,
+            .local_port = port,
+            .remote_port = port,
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+
+    // Blocked IP: Any Equal Local & Remote
+    {
+        const auto ip4 = NetFormatUtil::textToIp4("127.0.0.1");
+
+        FORT_CONF_META_CONN conn = {
+            .ip_proto = IpProto_TCP,
+            .local_ip = { .v4 = ip4 },
+            .remote_ip = { .v4 = ip4 },
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/2));
     }
 }

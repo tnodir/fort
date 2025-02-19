@@ -599,6 +599,8 @@ bool ConfBuffer::writeRuleFilter(const RuleFilter &ruleFilter)
         PFORT_CONF_RULE_FILTER confFilter = PFORT_CONF_RULE_FILTER(data() + oldSize);
 
         confFilter->is_not = ruleFilter.isNot;
+        confFilter->equal_values = ruleFilter.equalValues;
+        confFilter->is_empty = !ruleFilter.hasValues();
         confFilter->type = ruleFilter.type;
 
         const quint32 filterSize = buffer().size() - oldSize;

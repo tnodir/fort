@@ -40,10 +40,10 @@ RuleCharType processChar(const QChar c, const char *extraChars = nullptr)
         return CharExtra;
     }
 
-    static const char chars[] = "{}()[],:#!\n";
+    static const char chars[] = "{}()[],:#!=\n";
     static const RuleCharType charTypes[] = { CharListBegin, CharListEnd, CharBracketBegin,
         CharBracketEnd, CharValueBegin, CharValueEnd, CharValueSeparator, CharColon, CharComment,
-        CharNot, CharNewLine };
+        CharNot, CharEqualValues, CharNewLine };
 
     const int index = getCharIndex(chars, c1);
 
@@ -225,6 +225,9 @@ bool RuleTextParser::parseSectionChar()
     case CharNot: {
         return parseNot();
     } break;
+    case CharEqualValues: {
+        return parseEqualValues();
+    } break;
     case CharColon: {
         m_ruleFilter.isSectionEnd = true;
     } break;
@@ -329,6 +332,13 @@ bool RuleTextParser::parseName()
 bool RuleTextParser::parseNot()
 {
     m_ruleFilter.isNot = !m_ruleFilter.isNot;
+
+    return true;
+}
+
+bool RuleTextParser::parseEqualValues()
+{
+    m_ruleFilter.equalValues = true;
 
     return true;
 }
@@ -440,7 +450,7 @@ bool RuleTextParser::checkValueEnd(bool &expectValueEnd)
 
 bool RuleTextParser::checkAddFilter()
 {
-    if (!m_ruleFilter.hasValues())
+    if (!(m_ruleFilter.hasValues() || m_ruleFilter.equalValues))
         return true;
 
     if (m_ruleFilter.type == FORT_RULE_FILTER_TYPE_INVALID) {

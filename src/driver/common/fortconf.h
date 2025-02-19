@@ -181,8 +181,10 @@ typedef const FORT_CONF_RULE_FILTER_FLAGS *PCFORT_CONF_RULE_FILTER_FLAGS;
 typedef struct fort_conf_rule_filter
 {
     UINT32 is_not : 1;
+    UINT32 equal_values : 1;
+    UINT32 is_empty : 1;
     UINT32 type : 4;
-    UINT32 size : 27;
+    UINT32 size : 25;
 } FORT_CONF_RULE_FILTER, *PFORT_CONF_RULE_FILTER;
 
 typedef const FORT_CONF_RULE_FILTER *PCFORT_CONF_RULE_FILTER;

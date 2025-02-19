@@ -610,6 +610,40 @@ static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcLi
     &fort_conf_rule_filter_check_port_udp, // FORT_RULE_FILTER_TYPE_PORT_UDP,
 };
 
+inline static BOOL fort_conf_rule_filter_check_type(
+        PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn, const int filter_type)
+{
+    if (rule_filter->is_empty)
+        return TRUE;
+
+    const FORT_CONF_RULE_FILTER_CHECK_FUNC func = fort_conf_rule_filter_check_funcList[filter_type];
+
+    const void *data = (const void *) (rule_filter + 1);
+
+    return func(conn, data);
+}
+
+inline static BOOL fort_conf_rule_filter_check_equal(
+        PCFORT_CONF_META_CONN conn, const int filter_type)
+{
+    switch (filter_type) {
+    case FORT_RULE_FILTER_TYPE_ADDRESS:
+    case FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS: {
+        const void *p1 = conn->local_ip.data;
+        const void *p2 = conn->remote_ip.data;
+        const UINT32 len = conn->isIPv6 ? sizeof(ip6_addr_t) : sizeof(UINT32);
+
+        return fort_mem_eql(p1, p2, len);
+    }
+    case FORT_RULE_FILTER_TYPE_PORT:
+    case FORT_RULE_FILTER_TYPE_LOCAL_PORT: {
+        return conn->local_port == conn->remote_port;
+    }
+    default:
+        return TRUE;
+    }
+}
+
 static BOOL fort_conf_rule_filter_check(
         PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn)
 {
@@ -625,11 +659,11 @@ static BOOL fort_conf_rule_filter_check(
     if (filter_type < FORT_RULE_FILTER_TYPE_ADDRESS || filter_type > FORT_RULE_FILTER_TYPE_PORT_UDP)
         return FALSE;
 
-    const FORT_CONF_RULE_FILTER_CHECK_FUNC func = fort_conf_rule_filter_check_funcList[filter_type];
+    BOOL filter_res = fort_conf_rule_filter_check_type(rule_filter, conn, filter_type);
 
-    const void *data = (const void *) (rule_filter + 1);
-
-    BOOL filter_res = func(conn, data);
+    if (filter_res && rule_filter->equal_values) {
+        filter_res = fort_conf_rule_filter_check_equal(conn, filter_type);
+    }
 
     if (rule_filter->is_not) {
         filter_res = !filter_res;

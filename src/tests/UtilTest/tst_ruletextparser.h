@@ -434,3 +434,12 @@ TEST_F(RuleTextParserTest, linesNotBracketValues)
         checkStringList(rf.values, { "2.2.2.2" });
     }
 }
+
+TEST_F(RuleTextParserTest, lineIpEqualValues)
+{
+    RuleTextParser p("1:=local_ip");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 3);
+}

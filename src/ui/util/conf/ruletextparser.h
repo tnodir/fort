@@ -24,10 +24,11 @@ enum RuleCharType : RuleCharTypes {
     CharNewLine = (1 << 11), // \n
     CharComment = (1 << 12), // #
     CharNot = (1 << 13), // !
-    CharExtra = (1 << 14), // Name | Value
+    CharEqualValues = (1 << 14), // =
+    CharExtra = (1 << 15), // Name | Value
     // Complex types
     CharLineBegin = (CharListBegin | CharListEnd | CharBracketBegin | CharLetter | CharDigit
-            | CharValueBegin | CharNot),
+            | CharValueBegin | CharNot | CharEqualValues),
     CharName = (CharLetter | CharExtra), // a-zA-Z_
     CharValue = (CharDigit | CharExtra), // 0-9._-/:
     CharSpaceComment = (CharSpace | CharComment),
@@ -45,6 +46,7 @@ public:
 
 public:
     bool isNot : 1 = false;
+    bool equalValues : 1 = false;
     bool hasFilterName : 1 = false;
     bool isListEnd : 1 = false;
     bool isLineEnd : 1 = false;
@@ -111,6 +113,7 @@ private:
 
     bool parseName();
     bool parseNot();
+    bool parseEqualValues();
 
     void parseBracketValues();
     bool parseBracketValue(RuleCharTypes expectedSeparator);
