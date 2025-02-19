@@ -16,7 +16,6 @@ public:
 
     enum ScheduleEvent : qint8 {
         ScheduleOnNone = 0,
-        ScheduleOnProcessExit,
         ScheduleOnConnectionsClosed,
     };
 

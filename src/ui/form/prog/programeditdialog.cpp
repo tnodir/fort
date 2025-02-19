@@ -134,7 +134,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     const bool hasScheduleTime = (!appRow.scheduleTime.isNull());
     const bool hasScheduleEvent = (appRow.scheduleEvent != App::ScheduleOnNone);
 
-    const ScheduleType scheduleType = hasScheduleTime ? ScheduleTimeAt : ScheduleOnEvent;
+    const ScheduleType scheduleType = hasScheduleTime ? ScheduleTimeAt : ScheduleTimeIn;
 
     m_cbSchedule->setChecked(hasScheduleTime);
     m_comboScheduleAction->setCurrentIndex(appRow.scheduleAction);
@@ -143,7 +143,7 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_dteScheduleAt->setDateTime(appRow.scheduleTime);
     m_dteScheduleAt->setMinimumDateTime(DateUtil::now());
     m_comboScheduleOn->setCurrentIndex(
-            hasScheduleEvent ? appRow.scheduleEvent : App::ScheduleOnProcessExit);
+            hasScheduleEvent ? appRow.scheduleEvent : App::ScheduleOnConnectionsClosed);
 
     m_btSwitchWildcard->setChecked(isWildcard());
     m_btSwitchWildcard->setEnabled(isSingleSelection);

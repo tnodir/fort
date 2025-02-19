@@ -71,8 +71,6 @@ const char *const sqlSelectApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
 const char *const sqlSelectAppsToPurge = "SELECT app_id, path FROM app"
                                          "  WHERE is_wildcard = 0 AND parked = 0;";
 
-const char *const sqlDeleteAppsEndEvent = "DELETE FROM app WHERE end_event <> 0;";
-
 const char *const sqlSelectAppIdByPathEndEvent = "SELECT app_id FROM app"
                                                  "  WHERE path = ?1 AND end_event = ?2;";
 
@@ -184,34 +182,10 @@ void ConfAppManager::setupDriveListManager()
 
 void ConfAppManager::setupAppEndEvent()
 {
-    DbQuery(sqliteDb()).sql(sqlDeleteAppsEndEvent).executeOk();
-
-    setupAppEndEvent_onConnectionsClosed();
-}
-
-void ConfAppManager::setupAppEndEvent_onProcessExit()
-{
-    //
-}
-
-void ConfAppManager::setupAppEndEvent_onConnectionsClosed()
-{
-    const auto onAppProcessIdRemoved = [&](qint32 /*pid*/, const QString &appPath) {
-        // const QString normPath = FileUtil::normalizePath(appPath);
-
-        const qint64 appId = DbQuery(sqliteDb())
-                                     .sql(sqlSelectAppIdByPathEndEvent)
-                                     .vars({ appPath, App::ScheduleOnConnectionsClosed })
-                                     .execute()
-                                     .toLongLong();
-        if (appId > 0) {
-            deleteAppPath(appPath);
-        }
-    };
-
     auto statManager = IoCDependency<StatManager>();
 
-    connect(statManager, &StatManager::appProcessIdRemoved, this, onAppProcessIdRemoved);
+    connect(statManager, &StatManager::appProcessIdRemoved, this,
+            &ConfAppManager::onStatProcessIdRemoved);
 }
 
 void ConfAppManager::setupAppEndTimer()
@@ -581,6 +555,18 @@ QVector<qint64> ConfAppManager::collectObsoleteApps(quint32 driveMask)
     }
 
     return appIdList;
+}
+
+void ConfAppManager::onStatProcessIdRemoved(qint32 /*pid*/, const QString &appPath)
+{
+    const qint64 appId = DbQuery(sqliteDb())
+                                 .sql(sqlSelectAppIdByPathEndEvent)
+                                 .vars({ appPath, App::ScheduleOnConnectionsClosed })
+                                 .execute()
+                                 .toLongLong();
+    if (appId > 0) {
+        deleteAppPath(appPath);
+    }
 }
 
 bool ConfAppManager::walkApps(const std::function<walkAppsCallback> &func) const
