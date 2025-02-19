@@ -135,7 +135,8 @@ bool PortRange::parsePortNumber(const QStringView port, port_t &v)
     if (port.at(0).isDigit()) {
         v = port.toUShort(&ok);
     } else {
-        const char *proto = isProtoTcp() ? "tcp" : (isProtoUdp() ? "udp" : nullptr);
+        const auto proto = isProtoTcp() ? NetUtil::ProtoTcp
+                                        : (isProtoUdp() ? NetUtil::ProtoUdp : NetUtil::ProtoAny);
 
         v = NetUtil::serviceToPort(port, proto, ok);
     }

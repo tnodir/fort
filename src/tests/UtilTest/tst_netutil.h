@@ -165,6 +165,9 @@ TEST_F(NetUtilTest, portRanges)
     ASSERT_EQ(portRange.toText(),
             QString("80\n"
                     "443\n"));
+
+    ASSERT_TRUE(portRange.fromText("ISO_TSAP-SSL"));
+    ASSERT_EQ(portRange.toText(), QString("102-465\n"));
 }
 
 TEST_F(NetUtilTest, protocolRanges)

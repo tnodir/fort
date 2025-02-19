@@ -9,6 +9,12 @@
 class NetUtil
 {
 public:
+    enum ProtocolType : quint8 {
+        ProtoAny = 0,
+        ProtoTcp = 6,
+        ProtoUdp = 17,
+    };
+
     static bool windowsSockInit();
     static void windowsSockCleanup();
 
@@ -29,7 +35,7 @@ public:
     static QString protocolName(quint8 ipProto);
     static quint8 protocolNumber(const QStringView name, bool &ok);
 
-    static quint16 serviceToPort(const QStringView name, const char *proto, bool &ok);
+    static quint16 serviceToPort(const QStringView name, ProtocolType proto, bool &ok);
 };
 
 #endif // NETUTIL_H

@@ -162,6 +162,101 @@ QHash<QString, qint16> protocolNameNumbersMap = {
     { "RAWSOCKET", 255 }, // Raw socket
 };
 
+QHash<QString, quint16> serviceNameNumbersMap = {
+    { "ECHO", 7 }, // Echo
+    { "DISCARD", 9 }, // "Discard
+    { "DAYTIME", 13 }, // Daytime
+    { "QOTD", 17 }, // Quote of the Day
+    { "CHARGEN", 19 }, // Character Generator
+    { "FTPDATA", 20 }, // File Transfer Protocol (Data)
+    { "FTP", 21 }, // File Transfer Protocol
+    { "SSH", 22 }, // Secure Shell
+    { "TELNET", 23 }, // Telnet Protocol
+    { "SMTP", 35 }, // Simple Message Transfer Protocol
+    { "TIME", 37 }, // Timeserver
+    { "RAP", 38 }, // Route Access Protocol
+    { "RIP", 39 }, // Resource Location Protocol
+    { "NAMESERVER", 42 }, // Host Name Server
+    { "WHOIS", 43 }, // Who Is
+    { "DNS", 53 }, // Domain Name Server
+    { "BOOTPS", 67 }, // Bootstrap Protocol Server
+    { "BOOTPC", 68 }, // Bootstrap Protocol Client
+    { "TFTP", 69 }, // Trivial File Transfer Protocol
+    { "GOPHER", 70 }, // Gopher
+    { "FINGER", 79 }, // Finger
+    { "HTTP", 80 }, // HyperText Transfer Protocol
+    { "HOSTNAMES", 101 }, // NIC Host Name Server
+    { "ISO_TSAP", 102 }, // ISO-TSAP Class 0
+    { "RTELNET", 107 }, // Remote Telnet Service
+    { "POP", 109 }, // Post Office Protocol v2
+    { "POP3", 110 }, // Post Office Protocol v3
+    { "SUNRPC", 111 }, // SUN Remote Procedure Call
+    { "AUTH", 113 }, // Authentication Service
+    { "UUCP_PATH", 117 }, // UUCP Path Service
+    { "NNTP", 119 }, // Network News Transfer Protocol
+    { "NTP", 123 }, // Network Time Protocol
+    { "DCOM", 135 }, // Microsoft RPC end point to end point mapping
+    { "NBT_NS", 137 }, // NETBIOS Name Service
+    { "NBT_DGM", 138 }, // NETBIOS Datagram Service
+    { "NBT_SS", 139 }, // NETBIOS Session Service
+    { "IMAP", 143 }, // Interim Mail Access Protocol v2
+    { "PCMAIL_SRV", 158 }, // PCMail Server
+    { "SNMP", 161 }, // Simple Network Management Protocol
+    { "SNMPTRAP", 162 }, // Simple Network Management Protocol Trap
+    { "PRINT_SRV", 170 }, // Network PostScript
+    { "BGP", 179 }, // Border Gateway Protocol
+    { "IRC", 194 }, // Internet Relay Chat Protocol
+    { "IPX", 213 }, // IPX
+    { "LDAP", 389 }, // Lightweight Directory Access Protocol
+    { "HTTPS", 443 }, // Secure connection
+    { "MS_DS", 445 }, // Microfort DS
+    { "KPASSWD", 464 }, // kpasswd
+    { "SSL", 465 }, // Simple Mail Transfer Protocol with SSL
+    { "ISAKMP", 500 }, // isakmp
+    { "EXEC", 512 }, // Remote Process Execution
+    { "LOGIN", 513 }, // Remote Login via Telnet
+    { "SHELL", 514 }, // Automatic Remote Process Execution
+    { "PRINTER", 515 }, // Printer Spooler
+    { "TALK", 517 }, // talk
+    { "NTALK", 518 }, // ntalk
+    { "EFS", 520 }, // Extended File Server
+    { "TIMED", 525 }, // Time Server
+    { "TEMPO", 526 }, // newdate
+    { "COURIER", 530 }, // rpc
+    { "CONFERENCE", 531 }, // chat
+    { "NETNEWS", 532 }, // readnews
+    { "NETWALL", 533 }, // Emergency Broadcasts
+    { "UUCP", 540 }, // UUCP Daemon
+    { "KLOGIN", 543 }, // Kerberos Authenticated Login
+    { "KSHELL", 544 }, // krcmd
+    { "DHCPV6C", 546 }, // DHCPv6 Client
+    { "DHCPV6S", 547 }, // DHCPv6 Server
+    { "NEW_RWHO", 550 }, // new-who
+    { "REMOTEFS", 556 }, // RFS (Remote File System) Server
+    { "RMONITOR", 560 }, // rmonitord
+    { "MONITOR", 561 }, // monitor
+    { "LDAPS", 636 }, // LDAP Protocol over TLS/SSL
+    { "DOOM", 666 }, // Doom (Id Software)
+    { "KERBEROS_ADM", 749 }, // Kerberos Administration
+    { "RFILE", 750 }, // RFILE
+    { "POP3S", 995 }, // Post Office Protocol over TLS/SSL
+    { "SOCKS", 1080 }, // Socks
+    { "KPOP", 1109 }, // kpop
+    { "MS_SQL_S", 1433 }, // Microsoft SQL Server
+    { "MS_SQL_M", 1434 }, // Microsoft SQL Monitor
+    { "WINS", 1512 }, // Microsoft's Windows Internet Name Service
+    { "INGRESLOCK", 1524 }, // ingres
+    { "PPTP", 1723 }, // pptp
+    { "RADIUS", 1812 }, // RADIUS
+    { "RADIUS_ACCT", 1813 }, // RADIUS Accounting
+    { "GL_CAT", 3268 }, // Microsoft Global Catalog
+    { "GL_CATS", 3269 }, // Microsoft Global Catalog with LDAP/SSL
+    { "RDP", 3389 }, // Remote Desktop Protocol
+    { "ICQ", 4000 }, // ICQ chat program
+    { "MAN", 9535 }, // man
+    { "AOL_4", 11523 }, // AOL-4
+};
+
 }
 
 bool NetUtil::windowsSockInit()
@@ -288,22 +383,22 @@ quint8 NetUtil::protocolNumber(const QStringView name, bool &ok)
 {
     const auto nameUpper = name.toString().toUpper();
 
-    const auto v = protocolNameNumbersMap.value(nameUpper, -1);
-    ok = (v != -1);
+    constexpr qint16 invalidProtocolValue = -1;
+
+    const auto v = protocolNameNumbersMap.value(nameUpper, invalidProtocolValue);
+    ok = (v != invalidProtocolValue);
 
     return quint8(v);
 }
 
-quint16 NetUtil::serviceToPort(const QStringView name, const char *proto, bool &ok)
+quint16 NetUtil::serviceToPort(const QStringView name, ProtocolType /*proto*/, bool &ok)
 {
-    const QByteArray nameData = name.toLatin1();
+    const auto nameUpper = name.toString().toUpper();
 
-    const servent *se = getservbyname(nameData.constData(), proto);
-    if (!se) {
-        ok = false;
-        return 0;
-    }
+    constexpr quint16 invalidServiceValue = 0;
 
-    ok = true;
-    return ntohs(se->s_port);
+    const auto v = serviceNameNumbersMap.value(nameUpper, invalidServiceValue);
+    ok = (v != invalidServiceValue);
+
+    return v;
 }
