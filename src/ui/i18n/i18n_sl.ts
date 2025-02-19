@@ -128,6 +128,18 @@
         <source>Zones</source>
         <translation>Področja</translation>
     </message>
+    <message>
+        <source>Never</source>
+        <translation>Nikoli</translation>
+    </message>
+    <message>
+        <source>Process Exit</source>
+        <translation>Proces Izhod</translation>
+    </message>
+    <message>
+        <source>Connections Closed</source>
+        <translation>Povezave zaprte</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1583,6 +1595,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Collect allowed connections</source>
         <translation>Zberi dovoljene povezave</translation>
+    </message>
+    <message>
+        <source>On:</source>
+        <translation>Pri:</translation>
     </message>
 </context>
 <context>

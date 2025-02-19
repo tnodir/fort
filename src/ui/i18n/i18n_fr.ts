@@ -128,6 +128,18 @@
         <source>Zones</source>
         <translation>Zones</translation>
     </message>
+    <message>
+        <source>Never</source>
+        <translation>Jamais</translation>
+    </message>
+    <message>
+        <source>Process Exit</source>
+        <translation>Quitter le processus</translation>
+    </message>
+    <message>
+        <source>Connections Closed</source>
+        <translation>Connection fermée</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1583,6 +1595,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Collect allowed connections</source>
         <translation>Collecter les connexions autorisées</translation>
+    </message>
+    <message>
+        <source>On:</source>
+        <translation>Activé :</translation>
     </message>
 </context>
 <context>

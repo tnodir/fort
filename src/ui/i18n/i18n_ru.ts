@@ -128,6 +128,18 @@
         <source>Zones</source>
         <translation>Зоны</translation>
     </message>
+    <message>
+        <source>Never</source>
+        <translation>Никогда</translation>
+    </message>
+    <message>
+        <source>Process Exit</source>
+        <translation>Завершении процесса</translation>
+    </message>
+    <message>
+        <source>Connections Closed</source>
+        <translation>Закрытии соединений</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1583,6 +1595,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Collect allowed connections</source>
         <translation>Собирать разрешённые соединения</translation>
+    </message>
+    <message>
+        <source>On:</source>
+        <translation>При:</translation>
     </message>
 </context>
 <context>

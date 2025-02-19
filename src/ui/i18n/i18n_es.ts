@@ -128,6 +128,18 @@
         <source>Zones</source>
         <translation>Zonas</translation>
     </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connections Closed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -424,11 +436,11 @@
     </message>
     <message>
         <source>Rule: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Regla: %1</translation>
     </message>
     <message>
         <source>Zone: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Zona: %1</translation>
     </message>
 </context>
 <context>
@@ -1261,7 +1273,7 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Segundos de autoaprendizaje:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1586,6 +1598,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Collect allowed connections</source>
         <translation>Registrar conexiones permitidas</translation>
+    </message>
+    <message>
+        <source>On:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

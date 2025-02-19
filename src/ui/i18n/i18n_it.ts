@@ -128,6 +128,18 @@
         <source>Zones</source>
         <translation>Zone</translation>
     </message>
+    <message>
+        <source>Never</source>
+        <translation>Mai</translation>
+    </message>
+    <message>
+        <source>Process Exit</source>
+        <translation>Uscita processo</translation>
+    </message>
+    <message>
+        <source>Connections Closed</source>
+        <translation>Connessioni chiuse</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1583,6 +1595,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Collect allowed connections</source>
         <translation>Raccogli le connessioni consentite</translation>
+    </message>
+    <message>
+        <source>On:</source>
+        <translation>Il:</translation>
     </message>
 </context>
 <context>

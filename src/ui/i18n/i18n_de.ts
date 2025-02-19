@@ -128,6 +128,18 @@
         <source>Zones</source>
         <translation>Zonen</translation>
     </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connections Closed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1583,6 +1595,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Collect allowed connections</source>
         <translation>Sammle erlaubte Verbindungen</translation>
+    </message>
+    <message>
+        <source>On:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

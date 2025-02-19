@@ -128,6 +128,18 @@
         <source>Zones</source>
         <translation>المناطق</translation>
     </message>
+    <message>
+        <source>Never</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Process Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connections Closed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -1583,6 +1595,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Collect allowed connections</source>
         <translation>تسجيل عمليات الاتصال المسموح لها</translation>
+    </message>
+    <message>
+        <source>On:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
