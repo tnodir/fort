@@ -33,7 +33,7 @@ bool App::isOptionsEqual(const App &o) const
 {
     return isFlagsEqual(o) && isZonesEqual(o) && groupIndex == o.groupIndex && ruleId == o.ruleId
             && isPathsEqual(o) && notes == o.notes && scheduleAction == o.scheduleAction
-            && scheduleTime == o.scheduleTime;
+            && scheduleEvent == o.scheduleEvent && scheduleTime == o.scheduleTime;
 }
 
 bool App::isNameEqual(const App &o) const

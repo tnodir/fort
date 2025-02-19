@@ -45,7 +45,7 @@ QVariant dataDisplayAction(const App &app, int role)
 QVariant dataDisplayZones(const App &app, int role)
 {
     if (role != Qt::ToolTipRole)
-        return QString();
+        return {};
 
     QString countText;
     if (app.acceptZones != 0) {
@@ -63,17 +63,25 @@ QVariant dataDisplayZones(const App &app, int role)
 QVariant dataDisplayRule(const App &app, int role)
 {
     if (role != Qt::ToolTipRole)
-        return QString();
+        return {};
 
     return app.ruleName;
 }
 
 QVariant dataDisplayScheduled(const App &app, int role)
 {
-    if (role != Qt::ToolTipRole || app.scheduleTime.isNull())
-        return QString();
+    if (role != Qt::ToolTipRole)
+        return {};
 
-    return DateUtil::localeDateTime(app.scheduleTime);
+    if (app.scheduleEvent != App::ScheduleOnNone) {
+        return AppListModel::scheduleEventNames().value(app.scheduleEvent);
+    }
+
+    if (!app.scheduleTime.isNull()) {
+        return DateUtil::localeDateTime(app.scheduleTime);
+    }
+
+    return {};
 }
 
 QVariant dataDisplayGroup(const App &app, int /*role*/)
@@ -191,12 +199,10 @@ QIcon AppListModelData::appRuleIcon() const
 
 QIcon AppListModelData::appScheduledIcon() const
 {
-    if (app().scheduleTime.isNull())
-        return QIcon();
+    if (app().scheduleEvent == App::ScheduleOnNone && app().scheduleTime.isNull())
+        return {};
 
-    const AppListModelData data(app());
-
-    return IconCache::icon(data.appScheduleIconPath());
+    return IconCache::icon(appScheduleIconPath());
 }
 
 QIcon AppListModelData::appActionIcon() const

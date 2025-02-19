@@ -73,6 +73,7 @@ private:
     void retranslateScheduleAction();
     void retranslateScheduleType();
     void retranslateScheduleIn();
+    void retranslateScheduleOn();
     virtual void retranslateWindowTitle();
 
     void setupUi();
@@ -143,6 +144,7 @@ private:
     QRadioButton *m_rbBlock = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;
     QButtonGroup *m_btgActions = nullptr;
+
     QLabel *m_labelApplyChild = nullptr;
     QComboBox *m_comboApplyChild = nullptr;
     QCheckBox *m_cbKillChild = nullptr;
@@ -153,11 +155,14 @@ private:
     ZonesSelector *m_btZones = nullptr;
     LineEdit *m_editRuleName = nullptr;
     QToolButton *m_btSelectRule = nullptr;
+
     QCheckBox *m_cbSchedule = nullptr;
     QComboBox *m_comboScheduleAction = nullptr;
     QComboBox *m_comboScheduleType = nullptr;
     SpinCombo *m_scScheduleIn = nullptr;
     QDateTimeEdit *m_dteScheduleAt = nullptr;
+    QComboBox *m_comboScheduleOn = nullptr;
+
     QPushButton *m_btOptions = nullptr;
     QToolButton *m_btSwitchWildcard = nullptr;
     QPushButton *m_btMenu = nullptr;

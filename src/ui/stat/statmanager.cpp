@@ -213,9 +213,27 @@ void StatManager::logClear()
     m_appPidPathMap.clear();
 }
 
-void StatManager::logClearApp(quint32 pid)
+void StatManager::addLoggedProcessId(const QString &appPath, quint32 pid)
 {
+    Q_ASSERT(!m_appPidPathMap.contains(pid));
+
+    m_appPidPathMap.insert(pid, appPath);
+}
+
+void StatManager::removeLoggedProcessId(quint32 pid)
+{
+    const QString appPath = getLoggedProcessIdPath(pid);
+    if (appPath.isEmpty())
+        return;
+
     m_appPidPathMap.remove(pid);
+
+    emit appProcessIdRemoved(pid, appPath);
+}
+
+QString StatManager::getLoggedProcessIdPath(quint32 pid)
+{
+    return m_appPidPathMap.value(pid);
 }
 
 void StatManager::addCachedAppId(const QString &appPath, qint64 appId)
@@ -228,7 +246,7 @@ qint64 StatManager::getCachedAppId(const QString &appPath) const
     return m_appPathIdCache.value(appPath, INVALID_APP_ID);
 }
 
-void StatManager::clearCachedAppId(const QString &appPath)
+void StatManager::removeCachedAppId(const QString &appPath)
 {
     m_appPathIdCache.remove(appPath);
 }
@@ -243,8 +261,7 @@ bool StatManager::logProcNew(const LogEntryProcNew &entry, qint64 unixTime)
     const quint32 pid = entry.pid();
     const QString appPath = entry.path();
 
-    Q_ASSERT(!m_appPidPathMap.contains(pid));
-    m_appPidPathMap.insert(pid, appPath);
+    addLoggedProcessId(appPath, pid);
 
     return getOrCreateAppId(appPath, unixTime) != INVALID_APP_ID;
 }
@@ -297,7 +314,7 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
                     inBytes, outBytes, unixTime, logStat);
 
             if (inactive) {
-                logClearApp(pid);
+                removeLoggedProcessId(pid);
             }
         }
     }
@@ -428,7 +445,7 @@ bool StatManager::deleteAppId(qint64 appId)
     const bool ok = (stmt->step() == SqliteStmt::StepDone && sqliteDb()->changes() != 0);
     if (ok) {
         const QString appPath = stmt->columnText(0);
-        clearCachedAppId(appPath);
+        removeCachedAppId(appPath);
     }
     stmt->reset();
     return ok;
@@ -483,7 +500,7 @@ void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
         const SqliteStmtList &updateStmtList, quint32 &sumInBytes, quint32 &sumOutBytes,
         quint32 pid, quint32 inBytes, quint32 outBytes, qint64 unixTime, bool logStat)
 {
-    const QString appPath = m_appPidPathMap.value(pid);
+    const QString appPath = getLoggedProcessIdPath(pid);
 
     if (Q_UNLIKELY(appPath.isEmpty())) {
         qCCritical(LC) << "UI & Driver's states mismatch! Expected processes:"

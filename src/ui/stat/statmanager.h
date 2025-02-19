@@ -54,6 +54,7 @@ signals:
 
     void appStatRemoved(qint64 appId);
     void appCreated(qint64 appId, const QString &appPath);
+    void appProcessIdRemoved(qint32 pid, const QString &appPath);
     void trafficAdded(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
     void connChanged();
@@ -79,11 +80,14 @@ private:
     bool updateTrafDay(qint64 unixTime);
 
     void logClear();
-    void logClearApp(quint32 pid);
+
+    void addLoggedProcessId(const QString &appPath, quint32 pid);
+    void removeLoggedProcessId(quint32 pid);
+    QString getLoggedProcessIdPath(quint32 pid);
 
     void addCachedAppId(const QString &appPath, qint64 appId);
     qint64 getCachedAppId(const QString &appPath) const;
-    void clearCachedAppId(const QString &appPath);
+    void removeCachedAppId(const QString &appPath);
     void clearAppIdCache();
 
     qint64 getAppId(const QString &appPath);

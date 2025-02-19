@@ -15,6 +15,7 @@
 #include <log/logmanager.h>
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
+#include <stat/statmanager.h>
 #include <util/conf/confbuffer.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
@@ -52,6 +53,7 @@ constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
     "    t.reject_zones,"                                                                          \
     "    t.rule_id,"                                                                               \
     "    t.end_action,"                                                                            \
+    "    t.end_event,"                                                                             \
     "    t.end_time,"                                                                              \
     "    g.order_index as group_index,"                                                            \
     "    (alert.app_id IS NOT NULL) as alerted"
@@ -68,6 +70,11 @@ const char *const sqlSelectApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
 
 const char *const sqlSelectAppsToPurge = "SELECT app_id, path FROM app"
                                          "  WHERE is_wildcard = 0 AND parked = 0;";
+
+const char *const sqlDeleteAppsEndEvent = "DELETE FROM app WHERE end_event <> 0;";
+
+const char *const sqlSelectAppIdByPathEndEvent = "SELECT app_id FROM app"
+                                                 "  WHERE path = ?1 AND end_event = ?2;";
 
 const char *const sqlSelectMinEndApp = "SELECT MIN(end_time) FROM app"
                                        "  WHERE end_time != 0;";
@@ -86,9 +93,9 @@ const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, pat
                                  "    apply_parent, apply_child, apply_spec_child, kill_child,"
                                  "    lan_only, parked, log_allowed_conn, log_blocked_conn,"
                                  "    blocked, kill_process, accept_zones, reject_zones,"
-                                 "    rule_id, end_action, end_time, creat_time)"
+                                 "    rule_id, end_action, end_event, end_time, creat_time)"
                                  "  VALUES(?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
-                                 "    ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23)"
+                                 "    ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24)"
                                  "  ON CONFLICT(path) DO UPDATE"
                                  "  SET app_group_id = ?2, origin_path = ?3,"
                                  "    name = ?5, notes = ?6, is_wildcard = ?7,"
@@ -97,7 +104,7 @@ const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, pat
                                  "    log_allowed_conn = ?14, log_blocked_conn = ?15,"
                                  "    blocked = ?16, kill_process = ?17,"
                                  "    accept_zones = ?18, reject_zones = ?19, rule_id = ?20,"
-                                 "    end_action = ?21, end_time = ?22"
+                                 "    end_action = ?21, end_event = ?22, end_time = ?23"
                                  "  RETURNING app_id;";
 
 const char *const sqlUpdateApp = "UPDATE app"
@@ -108,7 +115,7 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    log_allowed_conn = ?14, log_blocked_conn = ?15,"
                                  "    blocked = ?16, kill_process = ?17,"
                                  "    accept_zones = ?18, reject_zones = ?19, rule_id = ?20,"
-                                 "    end_action = ?21, end_time = ?22"
+                                 "    end_action = ?21, end_event = ?22, end_time = ?23"
                                  "  WHERE app_id = ?1"
                                  "  RETURNING app_id;";
 
@@ -161,6 +168,7 @@ void ConfAppManager::setUp()
 
     setupDriveListManager();
 
+    setupAppEndEvent();
     setupAppEndTimer();
 }
 
@@ -172,6 +180,28 @@ void ConfAppManager::setupDriveListManager()
                     updateDriverConf();
                 }
             });
+}
+
+void ConfAppManager::setupAppEndEvent()
+{
+    DbQuery(sqliteDb()).sql(sqlDeleteAppsEndEvent).executeOk();
+
+    const auto onAppProcessIdRemoved = [&](qint32 /*pid*/, const QString &appPath) {
+        // const QString normPath = FileUtil::normalizePath(appPath);
+
+        const qint64 appId = DbQuery(sqliteDb())
+                                     .sql(sqlSelectAppIdByPathEndEvent)
+                                     .vars({ appPath, App::ScheduleOnProcessExit })
+                                     .execute()
+                                     .toLongLong();
+        if (appId > 0) {
+            deleteAppPath(appPath);
+        }
+    };
+
+    auto statManager = IoCDependency<StatManager>();
+
+    connect(statManager, &StatManager::appProcessIdRemoved, this, onAppProcessIdRemoved);
 }
 
 void ConfAppManager::setupAppEndTimer()
@@ -242,6 +272,7 @@ void ConfAppManager::beginAddOrUpdateApp(
         app.rejectZones,
         DbVar::nullable(app.ruleId),
         app.scheduleAction,
+        app.scheduleEvent,
         DbVar::nullable(app.scheduleTime),
         DbVar::nullable(DateUtil::now(), onlyUpdate),
     };
@@ -733,9 +764,10 @@ void ConfAppManager::fillApp(App &app, const SqliteStmt &stmt)
     app.rejectZones = stmt.columnUInt(17);
     app.ruleId = stmt.columnUInt(18);
     app.scheduleAction = stmt.columnInt(19);
-    app.scheduleTime = stmt.columnDateTime(20);
-    app.groupIndex = stmt.columnInt(21);
-    app.alerted = stmt.columnBool(22);
+    app.scheduleEvent = stmt.columnInt(20);
+    app.scheduleTime = stmt.columnDateTime(21);
+    app.groupIndex = stmt.columnInt(22);
+    app.alerted = stmt.columnBool(23);
 }
 
 bool ConfAppManager::updateDriverDeleteApp(const QString &appPath)

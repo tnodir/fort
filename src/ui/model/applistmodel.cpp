@@ -207,11 +207,12 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, Ap
     appRow.rejectZones = stmt.columnUInt(17);
     appRow.ruleId = stmt.columnUInt(18);
     appRow.scheduleAction = stmt.columnInt(19);
-    appRow.scheduleTime = stmt.columnDateTime(20);
-    appRow.creatTime = stmt.columnDateTime(21);
-    appRow.groupIndex = stmt.columnInt(22);
-    appRow.alerted = stmt.columnBool(23);
-    appRow.ruleName = stmt.columnText(24);
+    appRow.scheduleEvent = stmt.columnInt(20);
+    appRow.scheduleTime = stmt.columnDateTime(21);
+    appRow.creatTime = stmt.columnDateTime(22);
+    appRow.groupIndex = stmt.columnInt(23);
+    appRow.alerted = stmt.columnBool(24);
+    appRow.ruleName = stmt.columnText(25);
 
     return true;
 }
@@ -304,6 +305,7 @@ QString AppListModel::sqlBase() const
            "    t.reject_zones,"
            "    t.rule_id,"
            "    t.end_action,"
+           "    t.end_event,"
            "    t.end_time,"
            "    t.creat_time,"
            "    g.order_index as group_index,"
@@ -352,7 +354,7 @@ QString AppListModel::sqlOrderColumn() const
         nameColumn, // Name
         "t.accept_zones, t.reject_zones", // Zones
         "t.rule_id", // Rule
-        "t.end_time", // Scheduled
+        "t.end_action, t.end_time", // Scheduled
         "t.blocked", // Action
         "group_index", // Group
         pathColumn, // File Path
@@ -411,4 +413,9 @@ QString AppListModel::columnName(const AppListColumn column)
     }
 
     return g_columnNames.value(int(column));
+}
+
+QStringList AppListModel::scheduleEventNames()
+{
+    return { tr("Never"), tr("Process Exit") };
 }

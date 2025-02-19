@@ -85,6 +85,7 @@ public:
     AppStatesCount appStatesCount() const;
 
     static QString columnName(const AppListColumn column);
+    static QStringList scheduleEventNames();
 
 signals:
     void sortStateChanged();
