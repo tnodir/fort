@@ -35,7 +35,7 @@ void AppInfoRow::setupUi()
     m_labelAppCompanyName = ControlUtil::createLabel();
 
     connect(m_btAppCopyPath, &QAbstractButton::clicked, this,
-            [&] { GuiUtil::setClipboardData(m_filePath); });
+            [&] { GuiUtil::setClipboardData(m_lineAppPath->text()); });
     connect(m_btAppOpenFolder, &QAbstractButton::clicked, this,
             [&] { AppInfoUtil::openFolder(m_filePath); });
 
