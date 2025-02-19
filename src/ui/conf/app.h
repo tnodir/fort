@@ -24,6 +24,7 @@ public:
     bool isExtraFlagsEqual(const App &o) const;
     bool isZonesEqual(const App &o) const;
     bool isPathsEqual(const App &o) const;
+    bool isScheduleEqual(const App &o) const;
     bool isOptionsEqual(const App &o) const;
     bool isNameEqual(const App &o) const;
 

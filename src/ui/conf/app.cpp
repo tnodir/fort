@@ -29,11 +29,16 @@ bool App::isPathsEqual(const App &o) const
     return appOriginPath == o.appOriginPath && appPath == o.appPath;
 }
 
+bool App::isScheduleEqual(const App &o) const
+{
+    return scheduleAction == o.scheduleAction && scheduleEvent == o.scheduleEvent
+            && scheduleTime == o.scheduleTime;
+}
+
 bool App::isOptionsEqual(const App &o) const
 {
     return isFlagsEqual(o) && isZonesEqual(o) && groupIndex == o.groupIndex && ruleId == o.ruleId
-            && isPathsEqual(o) && notes == o.notes && scheduleAction == o.scheduleAction
-            && scheduleEvent == o.scheduleEvent && scheduleTime == o.scheduleTime;
+            && notes == o.notes && isPathsEqual(o) && isScheduleEqual(o);
 }
 
 bool App::isNameEqual(const App &o) const
