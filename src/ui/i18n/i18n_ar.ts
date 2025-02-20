@@ -44,7 +44,7 @@
     </message>
     <message>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>الإنترنت</translation>
     </message>
     <message>
         <source>Filter Local Addresses</source>
@@ -64,7 +64,7 @@
     </message>
     <message>
         <source>Block Addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation>عناوين الحظر:</translation>
     </message>
 </context>
 <context>
@@ -130,11 +130,11 @@
     </message>
     <message>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>ابداً</translation>
     </message>
     <message>
         <source>Connections Closed</source>
-        <translation type="unfinished"></translation>
+        <translation>الاتصالات مغلقة</translation>
     </message>
 </context>
 <context>
@@ -332,11 +332,11 @@
     </message>
     <message>
         <source>Blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>محظور</translation>
     </message>
     <message>
         <source>Allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>مسموح</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -384,19 +384,19 @@
     </message>
     <message>
         <source>Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>عنوان الإنترنت</translation>
     </message>
     <message>
         <source>Old connection</source>
-        <translation type="unfinished"></translation>
+        <translation>اتصال قديم</translation>
     </message>
     <message>
         <source>Program&apos;s action</source>
-        <translation type="unfinished"></translation>
+        <translation>إجراء البرنامج</translation>
     </message>
     <message>
         <source>App. Group</source>
-        <translation type="unfinished"></translation>
+        <translation>تطبيق مجموعة</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -404,7 +404,7 @@
     </message>
     <message>
         <source>LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>فقط LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -416,11 +416,11 @@
     </message>
     <message>
         <source>Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>قاعدة عالمية قبل قواعد التطبيق</translation>
     </message>
     <message>
         <source>Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>قاعدة عالمية بعد قواعد التطبيق</translation>
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
@@ -432,11 +432,11 @@
     </message>
     <message>
         <source>Rule: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>قاعدة: %1</translation>
     </message>
     <message>
         <source>Zone: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>منطقة: %1</translation>
     </message>
 </context>
 <context>
@@ -529,7 +529,7 @@
     </message>
     <message>
         <source>Block LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>احظر حركة مرور LAN</translation>
     </message>
 </context>
 <context>
@@ -744,7 +744,7 @@
     </message>
     <message>
         <source>Integration</source>
-        <translation type="unfinished"></translation>
+        <translation>التكامل</translation>
     </message>
     <message>
         <source>Windows Explorer integration</source>
@@ -752,7 +752,7 @@
     </message>
     <message>
         <source>Control Panel: Sounds integration</source>
-        <translation type="unfinished"></translation>
+        <translation>لوحة التحكم: دمج الأصوات</translation>
     </message>
     <message>
         <source>Auto-run:</source>
@@ -1123,7 +1123,7 @@
     </message>
     <message>
         <source>Import new programs</source>
-        <translation type="unfinished"></translation>
+        <translation>استورد برامج جديدة</translation>
     </message>
 </context>
 <context>
@@ -1166,7 +1166,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>سيتم إضافة برامج جديدة فقط بعد الاستيراد بنجاح. هل تريد المتابعة؟</translation>
     </message>
 </context>
 <context>
@@ -1265,11 +1265,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
-        <translation type="unfinished"></translation>
+        <translation>وضع الشبح (امنع فحص المنفذ)</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>التعلم التلقائي للثوان:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1594,7 +1594,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>On:</source>
-        <translation type="unfinished"></translation>
+        <translation>متى:</translation>
     </message>
 </context>
 <context>
@@ -2104,7 +2104,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>الاتصالات</translation>
     </message>
 </context>
 <context>
@@ -2211,11 +2211,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>الاتصالات</translation>
     </message>
     <message>
         <source>Keep count for connections:</source>
-        <translation type="unfinished"></translation>
+        <translation>احتفظ بالعد للاتصالات:</translation>
     </message>
 </context>
 <context>

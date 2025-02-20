@@ -130,11 +130,11 @@
     </message>
     <message>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>안 함</translation>
     </message>
     <message>
         <source>Connections Closed</source>
-        <translation type="unfinished"></translation>
+        <translation>연결이 종료됨</translation>
     </message>
 </context>
 <context>
@@ -1594,7 +1594,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>On:</source>
-        <translation type="unfinished"></translation>
+        <translation>언제:</translation>
     </message>
 </context>
 <context>

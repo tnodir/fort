@@ -1594,7 +1594,7 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>On:</source>
-        <translation>Activé :</translation>
+        <translation>Quand:</translation>
     </message>
 </context>
 <context>
