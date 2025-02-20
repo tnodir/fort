@@ -5,7 +5,7 @@
 
 QT_FORWARD_DECLARE_CLASS(QWindow)
 
-class ITaskbarList4;
+struct ITaskbarList4;
 
 class TaskbarButton final
 {
