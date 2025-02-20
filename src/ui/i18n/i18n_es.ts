@@ -130,11 +130,11 @@
     </message>
     <message>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>Nunca</translation>
     </message>
     <message>
         <source>Connections Closed</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexiones Cerradas</translation>
     </message>
 </context>
 <context>
@@ -1597,7 +1597,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>On:</source>
-        <translation type="unfinished"></translation>
+        <translation>Sí:</translation>
     </message>
 </context>
 <context>
