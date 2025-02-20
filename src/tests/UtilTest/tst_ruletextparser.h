@@ -443,3 +443,12 @@ TEST_F(RuleTextParserTest, lineIpEqualValues)
 
     ASSERT_EQ(p.ruleFilters().size(), 3);
 }
+
+TEST_F(RuleTextParserTest, linePortEqualValues)
+{
+    RuleTextParser p("tcp(21)=local_port:dir(in)");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 5);
+}

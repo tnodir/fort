@@ -466,6 +466,7 @@ bool RuleTextParser::checkAddFilter()
 void RuleTextParser::resetFilter()
 {
     m_ruleFilter.isNot = false;
+    m_ruleFilter.equalValues = false;
     m_ruleFilter.hasFilterName = false;
     m_ruleFilter.isListEnd = false;
     m_ruleFilter.isLineEnd = false;
