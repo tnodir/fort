@@ -41,7 +41,6 @@ public:
 protected:
     void setupDriveListManager() override { }
 
-    void setupAppEndEvent() override { }
     void setupAppEndTimer() override { }
 };
 

@@ -14,11 +14,6 @@ public:
         ScheduleKillProcess,
     };
 
-    enum ScheduleEvent : qint8 {
-        ScheduleOnNone = 0,
-        ScheduleOnConnectionsClosed,
-    };
-
     bool isFlagsEqual(const App &o) const;
     bool isBaseFlagsEqual(const App &o) const;
     bool isExtraFlagsEqual(const App &o) const;
@@ -46,7 +41,6 @@ public:
     bool alerted : 1 = false;
 
     qint8 scheduleAction : 4 = ScheduleBlock;
-    qint8 scheduleEvent : 4 = ScheduleOnNone;
 
     qint8 groupIndex = 0; // "Main" app. group
 

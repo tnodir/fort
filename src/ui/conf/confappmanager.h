@@ -66,8 +66,6 @@ signals:
 protected:
     virtual void setupDriveListManager();
 
-    virtual void setupAppEndEvent();
-
     virtual void setupAppEndTimer();
     void updateAppEndTimer();
 
@@ -83,8 +81,6 @@ private:
     bool checkAppBlockedChanged(App &app, bool blocked, bool killProcess);
 
     QVector<qint64> collectObsoleteApps(quint32 driveMask);
-
-    void onStatProcessIdRemoved(qint32 pid, const QString &appPath);
 
 private:
     void emitAppAlerted();

@@ -222,13 +222,7 @@ void StatManager::addLoggedProcessId(const QString &appPath, quint32 pid)
 
 void StatManager::removeLoggedProcessId(quint32 pid)
 {
-    const QString appPath = getLoggedProcessIdPath(pid);
-    if (appPath.isEmpty())
-        return;
-
     m_appPidPathMap.remove(pid);
-
-    emit appProcessIdRemoved(pid, appPath);
 }
 
 QString StatManager::getLoggedProcessIdPath(quint32 pid)

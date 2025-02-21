@@ -188,7 +188,7 @@ QVariantList ConfAppManagerRpc::appToVarList(const App &app)
         app.lanOnly, app.parked, app.logAllowedConn, app.logBlockedConn, app.blocked,
         app.killProcess, app.groupIndex, app.acceptZones, app.rejectZones, app.ruleId, app.appId,
         app.appOriginPath, app.appPath, app.appName, app.notes, app.scheduleAction,
-        app.scheduleEvent, app.scheduleTime };
+        app.scheduleTime };
 }
 
 App ConfAppManagerRpc::varListToApp(const QVariantList &v)
@@ -215,8 +215,7 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.appName = v.value(18).toString();
     app.notes = v.value(19).toString();
     app.scheduleAction = v.value(20).toInt();
-    app.scheduleEvent = v.value(21).toInt();
-    app.scheduleTime = v.value(22).toDateTime();
+    app.scheduleTime = v.value(21).toDateTime();
     return app;
 }
 

@@ -73,10 +73,6 @@ QVariant dataDisplayScheduled(const App &app, int role)
     if (role != Qt::ToolTipRole)
         return {};
 
-    if (app.scheduleEvent != App::ScheduleOnNone) {
-        return AppListModel::scheduleEventNames().value(app.scheduleEvent);
-    }
-
     if (!app.scheduleTime.isNull()) {
         return DateUtil::localeDateTime(app.scheduleTime);
     }
@@ -199,10 +195,11 @@ QIcon AppListModelData::appRuleIcon() const
 
 QIcon AppListModelData::appScheduledIcon() const
 {
-    if (app().scheduleEvent == App::ScheduleOnNone && app().scheduleTime.isNull())
-        return {};
+    if (!app().scheduleTime.isNull()) {
+        return IconCache::icon(appScheduleIconPath());
+    }
 
-    return IconCache::icon(appScheduleIconPath());
+    return {};
 }
 
 QIcon AppListModelData::appActionIcon() const

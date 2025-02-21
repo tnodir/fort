@@ -31,8 +31,7 @@ bool App::isPathsEqual(const App &o) const
 
 bool App::isScheduleEqual(const App &o) const
 {
-    return scheduleAction == o.scheduleAction && scheduleEvent == o.scheduleEvent
-            && scheduleTime == o.scheduleTime;
+    return scheduleAction == o.scheduleAction && scheduleTime == o.scheduleTime;
 }
 
 bool App::isOptionsEqual(const App &o) const

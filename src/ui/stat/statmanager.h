@@ -54,7 +54,6 @@ signals:
 
     void appStatRemoved(qint64 appId);
     void appCreated(qint64 appId, const QString &appPath);
-    void appProcessIdRemoved(qint32 pid, const QString &appPath);
     void trafficAdded(qint64 unixTime, quint32 inBytes, quint32 outBytes);
 
     void connChanged();

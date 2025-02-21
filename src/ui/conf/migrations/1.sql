@@ -74,7 +74,6 @@ CREATE TABLE app(
   rule_id INTEGER,
   creat_time INTEGER NOT NULL,
   end_action INTEGER NOT NULL DEFAULT 0,
-  end_event INTEGER NOT NULL DEFAULT 0,
   end_time INTEGER
 );
 

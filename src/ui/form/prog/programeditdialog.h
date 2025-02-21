@@ -73,7 +73,6 @@ private:
     void retranslateScheduleAction();
     void retranslateScheduleType();
     void retranslateScheduleIn();
-    void retranslateScheduleOn();
     virtual void retranslateWindowTitle();
 
     void setupUi();
@@ -161,7 +160,6 @@ private:
     QComboBox *m_comboScheduleType = nullptr;
     SpinCombo *m_scScheduleIn = nullptr;
     QDateTimeEdit *m_dteScheduleAt = nullptr;
-    QComboBox *m_comboScheduleOn = nullptr;
 
     QPushButton *m_btOptions = nullptr;
     QToolButton *m_btSwitchWildcard = nullptr;

@@ -50,7 +50,6 @@ const std::array appBlockInMinuteValues = { 15, 0, 1, 5, 10, 30, 60 * 1, 60 * 6,
 enum ScheduleType : qint8 {
     ScheduleTimeIn = 0,
     ScheduleTimeAt,
-    ScheduleOnEvent,
 };
 
 ProgramEditDialog::ProgramEditDialog(ProgramsController *ctrl, QWidget *parent, Qt::WindowFlags f) :
@@ -131,21 +130,15 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_btZones->setUncheckedZones(appRow.rejectZones);
     updateZonesRulesLayout();
 
-    const bool hasScheduleTime = (!appRow.scheduleTime.isNull());
-    const bool hasScheduleEvent = (appRow.scheduleEvent != App::ScheduleOnNone);
+    const bool hasScheduleTime = !appRow.scheduleTime.isNull();
+    const ScheduleType scheduleType = hasScheduleTime ? ScheduleTimeAt : ScheduleTimeIn;
 
-    const ScheduleType scheduleType = hasScheduleEvent
-            ? ScheduleOnEvent
-            : (hasScheduleTime ? ScheduleTimeAt : ScheduleTimeIn);
-
-    m_cbSchedule->setChecked(hasScheduleTime || hasScheduleEvent);
+    m_cbSchedule->setChecked(hasScheduleTime);
     m_comboScheduleAction->setCurrentIndex(appRow.scheduleAction);
     m_comboScheduleType->setCurrentIndex(scheduleType);
     m_scScheduleIn->spinBox()->setValue(5);
     m_dteScheduleAt->setDateTime(appRow.scheduleTime);
     m_dteScheduleAt->setMinimumDateTime(DateUtil::now());
-    m_comboScheduleOn->setCurrentIndex(
-            hasScheduleEvent ? appRow.scheduleEvent : App::ScheduleOnConnectionsClosed);
 
     m_btSwitchWildcard->setChecked(isWildcard());
     m_btSwitchWildcard->setEnabled(isSingleSelection);
@@ -301,7 +294,6 @@ void ProgramEditDialog::retranslateUi()
     retranslateScheduleAction();
     retranslateScheduleType();
     retranslateScheduleIn();
-    retranslateScheduleOn();
     m_dteScheduleAt->unsetLocale();
 
     m_btOptions->setToolTip(tr("Advanced Options"));
@@ -357,7 +349,7 @@ void ProgramEditDialog::retranslateScheduleAction()
 
 void ProgramEditDialog::retranslateScheduleType()
 {
-    const QStringList list = { tr("In:"), tr("At:"), tr("On:") };
+    const QStringList list = { tr("In:"), tr("At:") };
 
     ControlUtil::setComboBoxTexts(m_comboScheduleType, list);
 }
@@ -370,11 +362,6 @@ void ProgramEditDialog::retranslateScheduleIn()
 
     m_scScheduleIn->setNames(list);
     m_scScheduleIn->spinBox()->setSuffix(tr(" minute(s)"));
-}
-
-void ProgramEditDialog::retranslateScheduleOn()
-{
-    ControlUtil::setComboBoxTexts(m_comboScheduleOn, AppListModel::scheduleEventNames());
 }
 
 void ProgramEditDialog::retranslateWindowTitle()
@@ -653,16 +640,11 @@ QLayout *ProgramEditDialog::setupScheduleLayout()
     m_dteScheduleAt = new QDateTimeEdit();
     m_dteScheduleAt->setCalendarPopup(true);
 
-    // Schedule On Event
-    m_comboScheduleOn = ControlUtil::createComboBox();
-    m_comboScheduleOn->setMinimumWidth(150);
-
     // Schedule Check Box
     setupCbSchedule();
 
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_cbSchedule, m_comboScheduleAction, m_comboScheduleType, /*stretch*/ nullptr,
-                    m_scScheduleIn, m_dteScheduleAt, m_comboScheduleOn });
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbSchedule, m_comboScheduleAction,
+            m_comboScheduleType, /*stretch*/ nullptr, m_scScheduleIn, m_dteScheduleAt });
 
     return layout;
 }
@@ -677,7 +659,6 @@ void ProgramEditDialog::setupCbSchedule()
         m_comboScheduleType->setEnabled(checked);
         m_scScheduleIn->setEnabled(checked);
         m_dteScheduleAt->setEnabled(checked);
-        m_comboScheduleOn->setEnabled(checked);
     };
 
     refreshScheduleEnabled(false);
@@ -692,7 +673,6 @@ void ProgramEditDialog::setupComboScheduleType()
     connect(m_comboScheduleType, &QComboBox::currentIndexChanged, this, [&](int index) {
         m_scScheduleIn->setVisible(index == ScheduleTimeIn);
         m_dteScheduleAt->setVisible(index == ScheduleTimeAt);
-        m_comboScheduleOn->setVisible(index == ScheduleOnEvent);
     });
 }
 
@@ -1006,7 +986,6 @@ void ProgramEditDialog::fillAppApplyChild(App &app) const
 
 void ProgramEditDialog::fillAppEndTime(App &app) const
 {
-    app.scheduleEvent = App::ScheduleOnNone;
     app.scheduleTime = {};
 
     if (!m_cbSchedule->isChecked()) {
@@ -1024,9 +1003,6 @@ void ProgramEditDialog::fillAppEndTime(App &app) const
     } break;
     case ScheduleTimeAt: {
         app.scheduleTime = m_dteScheduleAt->dateTime();
-    } break;
-    case ScheduleOnEvent: {
-        app.scheduleEvent = m_comboScheduleOn->currentIndex();
     } break;
     }
 }
