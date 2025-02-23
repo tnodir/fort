@@ -152,7 +152,6 @@ QLayout *AddressesPage::setupLanHeaderLayout()
 
     // Select Zones
     m_btLanZones = new ZonesSelector();
-    m_btLanZones->setMaxZoneCount(32);
 
     connect(m_btLanZones, &ZonesSelector::zonesChanged, this, [&] {
         inetAddressGroup()->setExcludeZones(m_btLanZones->zones());
@@ -219,7 +218,6 @@ QLayout *AddressesPage::setupBlockInetHeaderLayout()
 
     // Select Zones
     m_btBlockInetZones = new ZonesSelector();
-    m_btBlockInetZones->setMaxZoneCount(32);
 
     connect(m_btBlockInetZones, &ZonesSelector::zonesChanged, this, [&] {
         allowAddressGroup()->setExcludeZones(m_btBlockInetZones->zones());

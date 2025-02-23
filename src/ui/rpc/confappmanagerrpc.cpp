@@ -186,8 +186,8 @@ QVariantList ConfAppManagerRpc::appToVarList(const App &app)
 {
     return { app.isWildcard, app.applyParent, app.applyChild, app.applySpecChild, app.killChild,
         app.lanOnly, app.parked, app.logAllowedConn, app.logBlockedConn, app.blocked,
-        app.killProcess, app.groupIndex, app.acceptZones, app.rejectZones, app.ruleId, app.appId,
-        app.appOriginPath, app.appPath, app.appName, app.notes, app.scheduleAction,
+        app.killProcess, app.groupIndex, app.zones.accept_mask, app.zones.reject_mask, app.ruleId,
+        app.appId, app.appOriginPath, app.appPath, app.appName, app.notes, app.scheduleAction,
         app.scheduleTime };
 }
 
@@ -206,8 +206,8 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.blocked = v.value(9).toBool();
     app.killProcess = v.value(10).toBool();
     app.groupIndex = v.value(11).toInt();
-    app.acceptZones = v.value(12).toUInt();
-    app.rejectZones = v.value(13).toUInt();
+    app.zones.accept_mask = v.value(12).toUInt();
+    app.zones.reject_mask = v.value(13).toUInt();
     app.ruleId = v.value(14).toUInt();
     app.appId = v.value(15).toLongLong();
     app.appOriginPath = v.value(16).toString();

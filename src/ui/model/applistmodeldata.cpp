@@ -42,19 +42,31 @@ QVariant dataDisplayAction(const App &app, int role)
     return AppListModel::tr("Allow");
 }
 
+QString zonesCountString(quint32 mask)
+{
+    if (mask == 0)
+        return {};
+
+    const int zonesCount = BitUtil::bitCount(mask);
+
+    return QString::number(zonesCount);
+}
+
 QVariant dataDisplayZones(const App &app, int role)
 {
     if (role != Qt::ToolTipRole)
         return {};
 
     QString countText;
-    if (app.acceptZones != 0) {
-        const int acceptZonesCount = BitUtil::bitCount(app.acceptZones);
-        countText += QString::number(acceptZonesCount);
+
+    const auto acceptCount = zonesCountString(app.zones.accept_mask);
+    if (!acceptCount.isEmpty()) {
+        countText += acceptCount;
     }
-    if (app.rejectZones != 0) {
-        const int rejectZonesCount = BitUtil::bitCount(app.rejectZones);
-        countText += '^' + QString::number(rejectZonesCount);
+
+    const auto rejectCount = zonesCountString(app.zones.reject_mask);
+    if (!rejectCount.isEmpty()) {
+        countText += '^' + rejectCount;
     }
 
     return countText;

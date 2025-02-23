@@ -431,10 +431,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
         },
         .group_index = app.groupIndex,
         .rule_id = app.ruleId,
-        .zones = {
-            .accept_mask = app.acceptZones,
-            .reject_mask = app.rejectZones,
-        },
+        .zones = app.zones,
     };
 
     appsMap.insert(kernelPath, appData);
@@ -501,7 +498,7 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     confRule.terminate = rule.terminate;
     confRule.term_blocked = rule.terminateBlocked;
 
-    const bool hasZones = (rule.acceptZones != 0 || rule.rejectZones != 0);
+    const bool hasZones = (rule.zones.accept_mask != 0 || rule.zones.reject_mask != 0);
     confRule.has_zones = hasZones;
 
     const bool hasFilters = !rule.ruleText.isEmpty();
@@ -536,8 +533,7 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     // Write the rule's zones
     if (hasZones) {
         PFORT_CONF_RULE_ZONES ruleZones = PFORT_CONF_RULE_ZONES(data);
-        ruleZones->accept_mask = rule.acceptZones;
-        ruleZones->reject_mask = rule.rejectZones;
+        *ruleZones = rule.zones;
 
         data += sizeof(FORT_CONF_RULE_ZONES);
     }

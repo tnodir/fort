@@ -310,8 +310,8 @@ bool RuleListModel::updateRuleRow(
     ruleRow.notes = stmt.columnText(7);
     ruleRow.ruleText = stmt.columnText(8);
     ruleRow.ruleType = Rule::RuleType(stmt.columnInt(9));
-    ruleRow.acceptZones = stmt.columnUInt(10);
-    ruleRow.rejectZones = stmt.columnUInt(11);
+    ruleRow.zones.accept_mask = stmt.columnUInt(10);
+    ruleRow.zones.reject_mask = stmt.columnUInt(11);
     ruleRow.modTime = stmt.columnDateTime(12);
 
     return true;

@@ -21,7 +21,7 @@ bool App::isExtraFlagsEqual(const App &o) const
 
 bool App::isZonesEqual(const App &o) const
 {
-    return acceptZones == o.acceptZones && rejectZones == o.rejectZones;
+    return zones.accept_mask == o.zones.accept_mask && zones.reject_mask == o.zones.reject_mask;
 }
 
 bool App::isPathsEqual(const App &o) const
@@ -52,5 +52,5 @@ bool App::isProcWild() const
 
 bool App::hasZone() const
 {
-    return acceptZones != 0 || rejectZones != 0;
+    return zones.accept_mask != 0 || zones.reject_mask != 0;
 }

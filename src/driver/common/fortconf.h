@@ -189,14 +189,6 @@ typedef struct fort_conf_rule_filter
 
 typedef const FORT_CONF_RULE_FILTER *PCFORT_CONF_RULE_FILTER;
 
-typedef struct fort_conf_rule_zones
-{
-    UINT32 accept_mask;
-    UINT32 reject_mask;
-} FORT_CONF_RULE_ZONES, *PFORT_CONF_RULE_ZONES;
-
-typedef const FORT_CONF_RULE_ZONES *PCFORT_CONF_RULE_ZONES;
-
 typedef struct fort_conf_rule
 {
     UCHAR enabled : 1;

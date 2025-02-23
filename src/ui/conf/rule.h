@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QVector>
 
+#include <common/common_types.h>
+
 using RuleSetList = QVector<quint16>;
 
 class Rule
@@ -27,6 +29,7 @@ public:
     bool isNameEqual(const Rule &o) const;
     bool isOptionsEqual(const Rule &o) const;
     bool isFlagsEqual(const Rule &o) const;
+    bool isZonesEqual(const Rule &o) const;
 
     int terminateActionType() const;
     void setTerminateActionType(qint8 v);
@@ -43,8 +46,7 @@ public:
 
     quint16 ruleId = 0;
 
-    quint32 acceptZones = 0;
-    quint32 rejectZones = 0;
+    FORT_CONF_RULE_ZONES zones = {};
 
     QString ruleName;
     QString notes;

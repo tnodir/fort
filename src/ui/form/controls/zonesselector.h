@@ -5,6 +5,8 @@
 
 QT_FORWARD_DECLARE_CLASS(QVBoxLayout)
 
+constexpr int DefaultMaxZoneCount = 32;
+
 class ZonesSelector : public QPushButton
 {
     Q_OBJECT
@@ -57,7 +59,7 @@ private:
 private:
     bool m_isTristate = false;
 
-    int m_maxZoneCount = INT_MAX;
+    int m_maxZoneCount = DefaultMaxZoneCount;
 
     quint32 m_zones = 0;
     quint32 m_uncheckedZones = 0;

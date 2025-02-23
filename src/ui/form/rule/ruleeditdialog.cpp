@@ -80,8 +80,8 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 
     m_cbExclusive->setChecked(ruleRow.exclusive);
 
-    m_btZones->setZones(ruleRow.acceptZones);
-    m_btZones->setUncheckedZones(ruleRow.rejectZones);
+    m_btZones->setZones(ruleRow.zones.accept_mask);
+    m_btZones->setUncheckedZones(ruleRow.zones.reject_mask);
     updateZonesLayout();
 
     m_cbTerminate->setChecked(ruleRow.terminate);
@@ -313,7 +313,6 @@ QLayout *RuleEditDialog::setupZonesLayout()
     // Zones
     m_btZones = new ZonesSelector();
     m_btZones->setIsTristate(true);
-    m_btZones->setMaxZoneCount(32); // sync with driver's FORT_CONF_RULE_ZONES
 
     auto layout = ControlUtil::createHLayoutByWidgets(
             { m_cbExclusive, ControlUtil::createVSeparator(), m_btZones, /*stretch*/ nullptr });
@@ -553,8 +552,8 @@ void RuleEditDialog::fillRule(Rule &rule) const
     rule.terminate = m_cbTerminate->isChecked();
     rule.setTerminateActionType(m_comboTerminateAction->currentIndex());
 
-    rule.acceptZones = m_btZones->zones();
-    rule.rejectZones = m_btZones->uncheckedZones();
+    rule.zones.accept_mask = m_btZones->zones();
+    rule.zones.reject_mask = m_btZones->uncheckedZones();
 
     rule.ruleName = m_editName->text();
     rule.notes = m_editNotes->toPlainText();

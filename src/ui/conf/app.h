@@ -4,6 +4,8 @@
 #include <QDateTime>
 #include <QObject>
 
+#include <common/common_types.h>
+
 class App
 {
 public:
@@ -46,10 +48,9 @@ public:
 
     quint16 ruleId = 0;
 
-    quint32 acceptZones = 0;
-    quint32 rejectZones = 0;
-
     qint64 appId = 0;
+
+    FORT_CONF_RULE_ZONES zones = {};
 
     QString appOriginPath;
     QString appPath;

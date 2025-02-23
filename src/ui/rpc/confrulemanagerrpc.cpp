@@ -97,8 +97,8 @@ QVariantList ConfRuleManagerRpc::ruleToVarList(const Rule &rule)
     VariantUtil::vectorToList(rule.ruleSet, ruleSetList);
 
     return { rule.enabled, rule.blocked, rule.exclusive, rule.terminate, rule.terminateBlocked,
-        rule.ruleSetEdited, rule.ruleType, rule.ruleId, rule.acceptZones, rule.rejectZones,
-        rule.ruleName, rule.notes, rule.ruleText, ruleSetList };
+        rule.ruleSetEdited, rule.ruleType, rule.ruleId, rule.zones.accept_mask,
+        rule.zones.reject_mask, rule.ruleName, rule.notes, rule.ruleText, ruleSetList };
 }
 
 Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
@@ -112,8 +112,8 @@ Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
     rule.ruleSetEdited = v.value(5).toBool();
     rule.ruleType = Rule::RuleType(v.value(6).toInt());
     rule.ruleId = v.value(7).toInt();
-    rule.acceptZones = v.value(8).toUInt();
-    rule.rejectZones = v.value(9).toUInt();
+    rule.zones.accept_mask = v.value(8).toUInt();
+    rule.zones.reject_mask = v.value(9).toUInt();
     rule.ruleName = v.value(10).toString();
     rule.notes = v.value(11).toString();
     rule.ruleText = v.value(12).toString();

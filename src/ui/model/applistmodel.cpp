@@ -203,8 +203,8 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, Ap
     appRow.logBlockedConn = stmt.columnBool(13);
     appRow.blocked = stmt.columnBool(14);
     appRow.killProcess = stmt.columnBool(15);
-    appRow.acceptZones = stmt.columnUInt(16);
-    appRow.rejectZones = stmt.columnUInt(17);
+    appRow.zones.accept_mask = stmt.columnUInt(16);
+    appRow.zones.reject_mask = stmt.columnUInt(17);
     appRow.ruleId = stmt.columnUInt(18);
     appRow.scheduleAction = stmt.columnInt(19);
     appRow.scheduleTime = stmt.columnDateTime(20);

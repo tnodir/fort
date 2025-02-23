@@ -223,8 +223,8 @@ void ConfAppManager::beginAddOrUpdateApp(
         app.logBlockedConn,
         app.blocked,
         app.killProcess,
-        app.acceptZones,
-        app.rejectZones,
+        app.zones.accept_mask,
+        app.zones.reject_mask,
         DbVar::nullable(app.ruleId),
         app.scheduleAction,
         DbVar::nullable(app.scheduleTime),
@@ -714,8 +714,8 @@ void ConfAppManager::fillApp(App &app, const SqliteStmt &stmt)
     app.logBlockedConn = stmt.columnBool(13);
     app.blocked = stmt.columnBool(14);
     app.killProcess = stmt.columnBool(15);
-    app.acceptZones = stmt.columnUInt(16);
-    app.rejectZones = stmt.columnUInt(17);
+    app.zones.accept_mask = stmt.columnUInt(16);
+    app.zones.reject_mask = stmt.columnUInt(17);
     app.ruleId = stmt.columnUInt(18);
     app.scheduleAction = stmt.columnInt(19);
     app.scheduleTime = stmt.columnDateTime(20);

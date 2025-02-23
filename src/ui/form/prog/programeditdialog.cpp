@@ -126,8 +126,8 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     m_cbLogBlockedConn->setChecked(appRow.logBlockedConn);
 
     m_cbLanOnly->setChecked(appRow.lanOnly);
-    m_btZones->setZones(appRow.acceptZones);
-    m_btZones->setUncheckedZones(appRow.rejectZones);
+    m_btZones->setZones(appRow.zones.accept_mask);
+    m_btZones->setUncheckedZones(appRow.zones.reject_mask);
     updateZonesRulesLayout();
 
     const bool hasScheduleTime = !appRow.scheduleTime.isNull();
@@ -578,7 +578,6 @@ QLayout *ProgramEditDialog::setupZonesRuleLayout()
     // Zones
     m_btZones = new ZonesSelector();
     m_btZones->setIsTristate(true);
-    m_btZones->setMaxZoneCount(16); // sync with driver's FORT_APP_ENTRY
 
     // Rule
     auto ruleLayout = setupRuleLayout();
@@ -944,8 +943,8 @@ void ProgramEditDialog::fillApp(App &app) const
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();
 
-    app.acceptZones = m_btZones->zones();
-    app.rejectZones = m_btZones->uncheckedZones();
+    app.zones.accept_mask = m_btZones->zones();
+    app.zones.reject_mask = m_btZones->uncheckedZones();
 
     fillAppPath(app);
     fillAppApplyChild(app);

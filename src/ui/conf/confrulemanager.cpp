@@ -231,8 +231,8 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
             rule.notes,
             rule.ruleText,
             rule.ruleType,
-            rule.acceptZones,
-            rule.rejectZones,
+            rule.zones.accept_mask,
+            rule.zones.reject_mask,
             DateUtil::now(),
         };
 
@@ -462,8 +462,8 @@ void ConfRuleManager::fillRule(Rule &rule, const SqliteStmt &stmt)
     rule.terminateBlocked = stmt.columnBool(5);
     rule.ruleText = stmt.columnText(6);
     rule.ruleType = Rule::RuleType(stmt.columnInt(7));
-    rule.acceptZones = stmt.columnUInt64(8);
-    rule.rejectZones = stmt.columnUInt64(9);
+    rule.zones.accept_mask = stmt.columnUInt64(8);
+    rule.zones.reject_mask = stmt.columnUInt64(9);
 }
 
 void ConfRuleManager::updateDriverRules()
