@@ -25,18 +25,18 @@ public:
 
     void setUp() override;
 
-    QString ruleNameById(int ruleId);
+    QString ruleNameById(quint16 ruleId);
 
     void loadRuleSet(Rule &rule, QStringList &ruleSetNames);
     void saveRuleSet(Rule &rule);
 
     int rulesCountByType(Rule::RuleType ruleType);
-    bool checkRuleSetValid(int ruleId, int subRuleId, int extraDepth = 0);
+    bool checkRuleSetValid(quint16 ruleId, quint16 subRuleId, int extraDepth = 0);
 
     virtual bool addOrUpdateRule(Rule &rule);
-    virtual bool deleteRule(int ruleId);
-    virtual bool updateRuleName(int ruleId, const QString &ruleName);
-    virtual bool updateRuleEnabled(int ruleId, bool enabled);
+    virtual bool deleteRule(quint16 ruleId);
+    virtual bool updateRuleName(quint16 ruleId, const QString &ruleName);
+    virtual bool updateRuleEnabled(quint16 ruleId, bool enabled);
 
     bool walkRules(WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override;
 
@@ -46,8 +46,8 @@ public:
 
 signals:
     void ruleAdded();
-    void ruleRemoved(int ruleId, int appRulesCount);
-    void ruleUpdated(int ruleId);
+    void ruleRemoved(quint16 ruleId, int appRulesCount);
+    void ruleUpdated(quint16 ruleId);
 
 private:
     void walkRulesMap(WalkRulesArgs &wra) const;
@@ -56,13 +56,13 @@ private:
 
     static void fillRule(Rule &rule, const SqliteStmt &stmt);
 
-    bool updateDriverRuleFlag(int ruleId, bool enabled);
 
     bool beginTransaction();
     void commitTransaction(bool &ok);
 
 private:
     ConfManager *m_confManager = nullptr;
+    bool updateDriverRuleFlag(quint16 ruleId, bool enabled);
 };
 
 #endif // CONFRULEMANAGER_H

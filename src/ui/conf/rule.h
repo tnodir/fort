@@ -41,7 +41,7 @@ public:
 
     RuleType ruleType = AppRule;
 
-    int ruleId = 0;
+    quint16 ruleId = 0;
 
     quint32 acceptZones = 0;
     quint32 rejectZones = 0;

@@ -241,14 +241,14 @@ void ProgramEditDialog::setupController()
 void ProgramEditDialog::setupRuleManager()
 {
     connect(confRuleManager(), &ConfRuleManager::ruleRemoved, this,
-            [&](int ruleId, int appRulesCount) {
+            [&](quint16 ruleId, int appRulesCount) {
                 if (appRulesCount > 0 && ruleId == currentRuleId()) {
                     setCurrentRuleId();
                     m_editRuleName->clear();
                 }
             });
 
-    connect(confRuleManager(), &ConfRuleManager::ruleUpdated, this, [&](int ruleId) {
+    connect(confRuleManager(), &ConfRuleManager::ruleUpdated, this, [&](quint16 ruleId) {
         if (ruleId == currentRuleId()) {
             const auto ruleRow = RuleListModel().ruleRowById(ruleId, Rule::AppRule);
 
@@ -608,7 +608,7 @@ QLayout *ProgramEditDialog::setupRuleLayout()
 
     // Select Rule
     m_btSelectRule = ControlUtil::createIconToolButton(":/icons/script.png", [&] {
-        const int ruleId = currentRuleId();
+        const quint16 ruleId = currentRuleId();
         if (ruleId != 0) {
             editRuleDialog(ruleId);
         } else {

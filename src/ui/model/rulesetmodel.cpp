@@ -48,7 +48,7 @@ void RuleSetModel::addRule(const RuleRow &ruleRow)
         return;
     }
 
-    const int subRuleId = ruleRow.ruleId;
+    const quint16 subRuleId = ruleRow.ruleId;
 
     if (m_ruleSet.contains(subRuleId)) {
         qCDebug(LC) << "Sub-Rule already exists";

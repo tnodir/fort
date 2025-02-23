@@ -40,7 +40,7 @@ private:
     bool m_edited = false;
 
     Rule::RuleType m_ruleType = Rule::AppRule;
-    int m_ruleId = 0;
+    quint16 m_ruleId = 0;
 
     RuleSetList m_ruleSet;
 };

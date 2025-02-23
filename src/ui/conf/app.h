@@ -42,7 +42,7 @@ public:
 
     qint8 scheduleAction : 4 = ScheduleBlock;
 
-    qint8 groupIndex = 0; // "Main" app. group
+    quint8 groupIndex = 0; // "Main" app. group
 
     quint16 ruleId = 0;
 

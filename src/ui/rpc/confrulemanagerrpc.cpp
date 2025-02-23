@@ -74,18 +74,18 @@ bool ConfRuleManagerRpc::addOrUpdateRule(Rule &rule)
     return true;
 }
 
-bool ConfRuleManagerRpc::deleteRule(int ruleId)
+bool ConfRuleManagerRpc::deleteRule(quint16 ruleId)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfRuleManager_deleteRule, { ruleId });
 }
 
-bool ConfRuleManagerRpc::updateRuleName(int ruleId, const QString &ruleName)
+bool ConfRuleManagerRpc::updateRuleName(quint16 ruleId, const QString &ruleName)
 {
     return IoC<RpcManager>()->doOnServer(
             Control::Rpc_ConfRuleManager_updateRuleName, { ruleId, ruleName });
 }
 
-bool ConfRuleManagerRpc::updateRuleEnabled(int ruleId, bool enabled)
+bool ConfRuleManagerRpc::updateRuleEnabled(quint16 ruleId, bool enabled)
 {
     return IoC<RpcManager>()->doOnServer(
             Control::Rpc_ConfRuleManager_updateRuleEnabled, { ruleId, enabled });
@@ -154,11 +154,11 @@ void ConfRuleManagerRpc::setupServerSignals(RpcManager *rpcManager)
     connect(confRuleManager, &ConfRuleManager::ruleAdded, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleAdded); });
     connect(confRuleManager, &ConfRuleManager::ruleRemoved, rpcManager,
-            [=](int ruleId, int appRulesCount) {
+            [=](quint16 ruleId, int appRulesCount) {
                 rpcManager->invokeOnClients(
                         Control::Rpc_ConfRuleManager_ruleRemoved, { ruleId, appRulesCount });
             });
-    connect(confRuleManager, &ConfRuleManager::ruleUpdated, rpcManager, [=](int ruleId) {
+    connect(confRuleManager, &ConfRuleManager::ruleUpdated, rpcManager, [=](quint16 ruleId) {
         rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleUpdated, { ruleId });
     });
 }

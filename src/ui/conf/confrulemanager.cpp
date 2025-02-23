@@ -170,7 +170,7 @@ void ConfRuleManager::loadRuleSet(Rule &rule, QStringList &ruleSetNames)
         return;
 
     while (stmt.step() == SqliteStmt::StepRow) {
-        const int subRuleId = stmt.columnInt(0);
+        const quint16 subRuleId = stmt.columnInt(0);
         const auto subRuleName = stmt.columnText(1);
 
         rule.ruleSet.append(subRuleId);
@@ -192,7 +192,7 @@ void ConfRuleManager::saveRuleSet(Rule &rule)
     stmt.bindInt(1, rule.ruleId);
 
     int orderIndex = 0;
-    for (const auto subRuleId : rule.ruleSet) {
+    for (const quint16 subRuleId : rule.ruleSet) {
         stmt.bindInt(2, subRuleId);
         stmt.bindInt(3, ++orderIndex);
 
@@ -206,7 +206,7 @@ int ConfRuleManager::rulesCountByType(Rule::RuleType ruleType)
     return DbQuery(sqliteDb()).sql(sqlSelectRulesCountByType).vars({ ruleType }).execute().toInt();
 }
 
-bool ConfRuleManager::checkRuleSetValid(int ruleId, int subRuleId, int extraDepth)
+bool ConfRuleManager::checkRuleSetValid(quint16 ruleId, quint16 subRuleId, int extraDepth)
 {
     const auto list = DbQuery(sqliteDb())
                               .sql(sqlSelectRuleSetLoop)
@@ -304,7 +304,7 @@ bool ConfRuleManager::deleteRule(int ruleId)
     return ok;
 }
 
-bool ConfRuleManager::updateRuleName(int ruleId, const QString &ruleName)
+bool ConfRuleManager::updateRuleName(quint16 ruleId, const QString &ruleName)
 {
     bool ok = false;
 
@@ -323,7 +323,7 @@ bool ConfRuleManager::updateRuleName(int ruleId, const QString &ruleName)
     return ok;
 }
 
-bool ConfRuleManager::updateRuleEnabled(int ruleId, bool enabled)
+bool ConfRuleManager::updateRuleEnabled(quint16 ruleId, bool enabled)
 {
     bool ok = false;
 
@@ -390,15 +390,15 @@ bool ConfRuleManager::walkRules(
 
 void ConfRuleManager::walkRulesMapByStmt(WalkRulesArgs &wra, SqliteStmt &stmt)
 {
-    int prevRuleId = 0;
+    quint16 prevRuleId = 0;
     int prevIndex = 0;
 
     int index = 0;
     for (;;) {
         const bool isStepRow = (stmt.step() == SqliteStmt::StepRow);
 
-        const int ruleId = stmt.columnInt(0);
-        const int subRuleId = stmt.columnInt(1);
+        const quint16 ruleId = stmt.columnInt(0);
+        const quint16 subRuleId = stmt.columnInt(1);
 
         if (prevRuleId != ruleId) {
             const RuleSetInfo ruleSetInfo = {
@@ -490,7 +490,7 @@ void ConfRuleManager::updateDriverRules()
     driverWriteRules(confBuf);
 }
 
-bool ConfRuleManager::updateDriverRuleFlag(int ruleId, bool enabled)
+bool ConfRuleManager::updateDriverRuleFlag(quint16 ruleId, bool enabled)
 {
     ConfBuffer confBuf;
 

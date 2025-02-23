@@ -45,8 +45,8 @@ protected:
 
     void setAdvancedMode(bool on);
 
-    int currentRuleId() const { return m_currentRuleId; }
-    void setCurrentRuleId(int ruleId = 0) { m_currentRuleId = ruleId; }
+    quint16 currentRuleId() const { return m_currentRuleId; }
+    void setCurrentRuleId(quint16 ruleId = 0) { m_currentRuleId = ruleId; }
 
 private:
     enum ApplyChildType : qint8 {
@@ -124,7 +124,7 @@ private:
 private:
     bool m_isWildcard = false;
 
-    int m_currentRuleId = 0;
+    quint16 m_currentRuleId = 0;
 
     ProgramsController *m_ctrl = nullptr;
 

@@ -491,7 +491,7 @@ bool ConfBuffer::validateRuleText(const QString &ruleText)
 
 bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
 {
-    const int ruleId = rule.ruleId;
+    const quint16 ruleId = rule.ruleId;
     const auto ruleSetInfo = wra.ruleSetMap[ruleId];
 
     FORT_CONF_RULE confRule;

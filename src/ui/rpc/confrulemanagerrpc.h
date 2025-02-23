@@ -15,9 +15,9 @@ public:
     explicit ConfRuleManagerRpc(QObject *parent = nullptr);
 
     bool addOrUpdateRule(Rule &rule) override;
-    bool deleteRule(int ruleId) override;
-    bool updateRuleName(int ruleId, const QString &ruleName) override;
-    bool updateRuleEnabled(int ruleId, bool enabled) override;
+    bool deleteRule(quint16 ruleId) override;
+    bool updateRuleName(quint16 ruleId, const QString &ruleName) override;
+    bool updateRuleEnabled(quint16 ruleId, bool enabled) override;
 
     static QVariantList ruleToVarList(const Rule &rule);
     static Rule varListToRule(const QVariantList &v);
