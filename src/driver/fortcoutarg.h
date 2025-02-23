@@ -43,11 +43,6 @@ typedef const FORT_CALLOUT_ARG *PCFORT_CALLOUT_ARG;
 
 typedef struct fort_callout_ale_extra
 {
-    UCHAR app_data_found : 1;
-    UCHAR is_conn_filled : 1;
-
-    FORT_APP_DATA app_data;
-
     FORT_CONF_META_CONN conn;
 
     FORT_IRP_INFO irp_info;

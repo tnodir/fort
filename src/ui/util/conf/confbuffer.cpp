@@ -417,7 +417,6 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
 
     const FORT_APP_DATA appData = {
         .flags = {
-                .group_index = quint8(app.groupIndex),
                 .apply_parent = app.applyParent,
                 .apply_child = app.applyChild,
                 .apply_spec_child = app.applySpecChild,
@@ -427,12 +426,15 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .log_blocked_conn = app.logBlockedConn,
                 .blocked = app.blocked,
                 .kill_process = app.killProcess,
+                .is_new = isNew,
+                .found = true,
         },
-        .is_new = isNew,
-        .found = true,
+        .group_index = app.groupIndex,
         .rule_id = app.ruleId,
-        .accept_zones = quint16(app.acceptZones),
-        .reject_zones = quint16(app.rejectZones),
+        .zones = {
+            .accept_mask = app.acceptZones,
+            .reject_mask = app.rejectZones,
+        },
     };
 
     appsMap.insert(kernelPath, appData);

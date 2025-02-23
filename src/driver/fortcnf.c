@@ -152,7 +152,7 @@ static NTSTATUS fort_conf_ref_exe_add_path_locked(PFORT_CONF_REF conf_ref,
         return fort_conf_ref_exe_new_entry(conf_ref, app_entry, path, path_hash);
     }
 
-    if (app_entry->app_data.is_new)
+    if (app_entry->app_data.flags.is_new)
         return FORT_STATUS_USER_ERROR;
 
     /* Replace the app data */

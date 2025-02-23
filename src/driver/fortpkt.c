@@ -1169,10 +1169,10 @@ static void fort_pending_proc_put_locked(PFORT_PENDING pending, PFORT_PENDING_PR
 }
 
 static NTSTATUS fort_pending_proc_add_packet_locked(PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_PENDING_PACKET pkt)
+        PCFORT_CONF_META_CONN conn, PFORT_PENDING_PACKET pkt)
 {
     /* Create the Pending Process */
-    PFORT_PENDING_PROC proc = fort_pending_proc_get_check(pending, cx->conn.process_id);
+    PFORT_PENDING_PROC proc = fort_pending_proc_get_check(pending, conn->process_id);
     if (proc == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
@@ -1195,14 +1195,14 @@ static NTSTATUS fort_pending_proc_add_packet_locked(PFORT_PENDING pending, PCFOR
 }
 
 static NTSTATUS fort_pending_proc_add_packet(PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_PENDING_PACKET pkt)
+        PCFORT_CONF_META_CONN conn, PFORT_PENDING_PACKET pkt)
 {
     NTSTATUS status;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&pending->lock, &lock_queue);
 
-    status = fort_pending_proc_add_packet_locked(pending, ca, cx, pkt);
+    status = fort_pending_proc_add_packet_locked(pending, ca, conn, pkt);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -1269,7 +1269,7 @@ FORT_API void fort_pending_clear(PFORT_PENDING pending)
 }
 
 FORT_API BOOL fort_pending_add_packet(
-        PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+        PFORT_PENDING pending, PCFORT_CALLOUT_ARG ca, PCFORT_CONF_META_CONN conn)
 {
     NTSTATUS status;
 
@@ -1278,7 +1278,7 @@ FORT_API BOOL fort_pending_add_packet(
         return FALSE;
 
     /* Check the Process's Limits */
-    if (!fort_pending_proc_check_limits(pending, cx->conn.process_id))
+    if (!fort_pending_proc_check_limits(pending, conn->process_id))
         return FALSE;
 
     /* Create the Packet */
@@ -1293,7 +1293,7 @@ FORT_API BOOL fort_pending_add_packet(
     status = fort_packet_fill(ca, &pkt->io, ipsec_flag | FORT_PACKET_TYPE_PENDING);
     if (NT_SUCCESS(status)) {
         /* Add the Packet to Pending Process */
-        status = fort_pending_proc_add_packet(pending, ca, cx, pkt);
+        status = fort_pending_proc_add_packet(pending, ca, conn, pkt);
     }
 
     if (!NT_SUCCESS(status)) {

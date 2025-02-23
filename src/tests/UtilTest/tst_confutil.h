@@ -97,28 +97,28 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::ffff:0:2")));
     ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("65::")));
 
-    ASSERT_TRUE(DriverCommon::confAppFind(data, "System").found);
+    ASSERT_TRUE(DriverCommon::confAppFind(data, "System").flags.found);
 
     ASSERT_TRUE(DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe"))
-                    .found);
+                    .flags.found);
     ASSERT_TRUE(DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\git.exe"))
-                    .found);
+                    .flags.found);
     ASSERT_TRUE(DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("D:\\Utils\\Dev\\Git\\bin\\git.exe"))
-                    .found);
+                    .flags.found);
     ASSERT_TRUE(DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("D:\\My\\Programs\\Test.exe"))
-                    .found);
+                    .flags.found);
 
     ASSERT_FALSE(DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe"))
-                    .found);
+                    .flags.found);
 
     const auto firefoxData = DriverCommon::confAppFind(
             data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe"));
-    ASSERT_EQ(int(firefoxData.flags.group_index), 1);
+    ASSERT_EQ(int(firefoxData.group_index), 1);
 }
 
 TEST_F(ConfUtilTest, checkEnvManager)

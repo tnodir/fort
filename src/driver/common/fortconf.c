@@ -12,6 +12,7 @@ static_assert(sizeof(ip6_addr_t) == 16, "ip6_addr_t size mismatch");
 static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT64), "FORT_CONF_FLAGS size mismatch");
 static_assert(
         sizeof(FORT_CONF_RULE_FILTER) == sizeof(UINT32), "FORT_CONF_RULE_FILTER size mismatch");
+static_assert(sizeof(FORT_CONF_RULE_ZONES) == sizeof(UINT64), "FORT_CONF_RULE_ZONES size mismatch");
 static_assert(sizeof(FORT_CONF_RULE) == sizeof(UINT16), "FORT_CONF_RULE size mismatch");
 
 static_assert((FORT_CONF_RULE_GLOBAL_MAX + FORT_CONF_RULE_SET_MAX) < 256,
@@ -19,7 +20,7 @@ static_assert((FORT_CONF_RULE_GLOBAL_MAX + FORT_CONF_RULE_SET_MAX) < 256,
 
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
-static_assert(sizeof(FORT_APP_DATA) == 2 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
+static_assert(sizeof(FORT_APP_DATA) == 2 * sizeof(UINT64), "FORT_APP_DATA size mismatch");
 
 static int bit_scan_forward(ULONG mask)
 {
@@ -444,11 +445,11 @@ FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path
     FORT_APP_DATA app_data;
 
     app_data = exe_find_func(conf, exe_context, path);
-    if (app_data.found != 0)
+    if (app_data.flags.found != 0)
         return app_data;
 
     app_data = fort_conf_app_wild_find(conf, path);
-    if (app_data.found != 0)
+    if (app_data.flags.found != 0)
         return app_data;
 
     app_data = fort_conf_app_prefix_find(conf, path);
@@ -458,7 +459,7 @@ FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
 {
-    const UINT16 app_group_bit = (1 << app_data.flags.group_index);
+    const UINT16 app_group_bit = (1 << app_data.group_index);
 
     if ((app_group_bit & conf_flags.group_bits) != 0)
         return FALSE;

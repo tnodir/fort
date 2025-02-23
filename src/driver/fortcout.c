@@ -48,16 +48,14 @@ static void fort_callout_classify_continue(FWPS_CLASSIFY_OUT0 *classifyOut)
 }
 
 inline static void fort_callout_ale_set_app_flags(
-        PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_DATA app_data)
+        PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
-    cx->app_data_found = TRUE;
-    cx->app_data = app_data;
+    conn->app_data_filled = TRUE;
+    conn->app_data = app_data;
 }
 
-static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
 {
-    PFORT_CONF_META_CONN conn = &cx->conn;
-
     PFORT_APP_PATH real_path = &conn->real_path;
 
     real_path->len = (UINT16) (ca->inMetaValues->processPath->size
@@ -89,16 +87,20 @@ static void fort_callout_fill_meta_ip(PCFORT_CALLOUT_ARG ca, UCHAR ipIndex, ip_a
     }
 }
 
-static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+inline static void fort_callout_ale_fill_meta_conn_proc(
+        PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
 {
-    if (cx->is_conn_filled)
+    conn->process_id = (UINT32) ca->inMetaValues->processId;
+}
+
+static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
+{
+    if (conn->conn_filled)
         return;
 
-    cx->is_conn_filled = TRUE;
+    conn->conn_filled = TRUE;
 
-    PFORT_CONF_META_CONN conn = &cx->conn;
-
-    conn->process_id = (UINT32) ca->inMetaValues->processId;
+    conn->flow_id = ca->inMetaValues->flowHandle;
 
     conn->profile_id = ca->inFixedValues->incomingValue[ca->fi->profileId].value.uint8;
 
@@ -111,34 +113,28 @@ static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT
 }
 
 static FORT_APP_DATA fort_callout_ale_conf_app_data(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
+        PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref)
 {
-    if (cx->app_data_found)
-        return cx->app_data;
+    if (conn->app_data_filled) {
+        return conn->app_data;
+    }
 
-    fort_callout_ale_fill_meta_path(ca, cx);
+    fort_callout_ale_fill_meta_path(ca, conn);
 
     const FORT_APP_DATA app_data =
-            fort_conf_app_find(&conf_ref->conf, &cx->conn.path, fort_conf_exe_find, conf_ref);
+            fort_conf_app_find(&conf_ref->conf, &conn->path, fort_conf_exe_find, conf_ref);
 
-    fort_callout_ale_set_app_flags(cx, app_data);
+    fort_callout_ale_set_app_flags(conn, app_data);
 
     return app_data;
 }
 
 inline static BOOL fort_callout_ale_associate_flow(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, FORT_APP_FLAGS app_flags)
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_META_CONN conn)
 {
-    const UINT64 flow_id = ca->inMetaValues->flowHandle;
+    BOOL proc_stat = FALSE;
 
-    PFORT_CONF_META_CONN conn = &cx->conn;
-
-    const UCHAR group_index = (UCHAR) app_flags.group_index;
-
-    BOOL log_stat = FALSE;
-
-    const NTSTATUS status =
-            fort_flow_associate(&fort_device()->stat, flow_id, conn, group_index, &log_stat);
+    const NTSTATUS status = fort_flow_associate(&fort_device()->stat, conn, &proc_stat);
 
     if (!NT_SUCCESS(status)) {
         if (status != FORT_STATUS_FLOW_BLOCK) {
@@ -150,7 +146,7 @@ inline static BOOL fort_callout_ale_associate_flow(
         return TRUE; /* block (Error) */
     }
 
-    if (!log_stat) {
+    if (!proc_stat) {
         fort_buffer_conn_write(
                 &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_PROC_NEW);
     }
@@ -159,9 +155,9 @@ inline static BOOL fort_callout_ale_associate_flow(
 }
 
 inline static BOOL fort_callout_ale_log_app_path_check(
-        FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
+        FORT_CONF_FLAGS conf_flags, const FORT_APP_DATA app_data)
 {
-    return app_data.found == 0 && conf_flags.filter_enabled
+    return app_data.flags.found == 0 && conf_flags.filter_enabled
             && (conf_flags.allow_all_new || conf_flags.log_app);
 }
 
@@ -177,9 +173,9 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     app_data.flags.log_blocked_conn = TRUE;
     app_data.flags.blocked = (UCHAR) conn->blocked;
 
-    app_data.is_new = TRUE;
-    app_data.found = TRUE;
-    app_data.alerted = TRUE;
+    app_data.flags.is_new = TRUE;
+    app_data.flags.found = TRUE;
+    app_data.flags.alerted = TRUE;
 
     const FORT_APP_ENTRY app_entry = {
         .app_data = app_data,
@@ -189,7 +185,7 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     if (!NT_SUCCESS(fort_conf_ref_exe_add_path(conf_ref, &app_entry, &conn->path)))
         return;
 
-    fort_callout_ale_set_app_flags(cx, app_data);
+    fort_callout_ale_set_app_flags(conn, app_data);
 
     fort_buffer_conn_write(&fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_APP);
 }
@@ -197,17 +193,15 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
 inline static BOOL fort_callout_ale_log_conn_check_app(
         FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data, BOOL blocked)
 {
-    const BOOL log_conn = app_data.found == 0
+    const BOOL log_conn = app_data.flags.found == 0
             || (blocked ? app_data.flags.log_blocked_conn : app_data.flags.log_allowed_conn);
 
-    return log_conn && (app_data.alerted || !conf_flags.log_alerted_conn);
+    return log_conn && (app_data.flags.alerted || !conf_flags.log_alerted_conn);
 }
 
-inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca,
-        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn,
+        PFORT_CONF_REF conf_ref, const FORT_CONF_FLAGS conf_flags)
 {
-    PFORT_CONF_META_CONN conn = &cx->conn;
-
     if (conn->ignore || conn->reason == FORT_CONN_REASON_UNKNOWN)
         return FALSE;
 
@@ -218,16 +212,14 @@ inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca,
     if (!(log_conn || ask_to_connect))
         return FALSE;
 
-    const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, cx, conf_ref);
+    const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, conn, conf_ref);
 
     return fort_callout_ale_log_conn_check_app(conf_flags, app_data, blocked);
 }
 
-inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx)
+inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
 {
-    PFORT_CONF_META_CONN conn = &cx->conn;
-
-    if (!fort_pending_add_packet(&fort_device()->pending, ca, cx)) {
+    if (!fort_pending_add_packet(&fort_device()->pending, ca, conn)) {
         conn->reason = FORT_CONN_REASON_ASK_LIMIT;
         return TRUE; /* block (error) */
     }
@@ -238,29 +230,28 @@ inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CAL
 }
 
 inline static BOOL fort_callout_ale_process_flow(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
-        FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
+        const FORT_CONF_FLAGS conf_flags, const FORT_APP_DATA app_data)
 {
-    if (app_data.found == 0 && conf_flags.ask_to_connect) {
-        return fort_callout_ale_add_pending(ca, cx);
+    PFORT_CONF_META_CONN conn = &cx->conn;
+
+    if (app_data.flags.found == 0 && conf_flags.ask_to_connect) {
+        return fort_callout_ale_add_pending(ca, conn);
     }
 
     if (!conf_flags.log_stat)
         return FALSE;
 
-    return fort_callout_ale_associate_flow(ca, cx, app_data.flags);
+    return fort_callout_ale_associate_flow(cx, conn);
 }
 
 inline static BOOL fort_callout_ale_conn_zone_filtered(
-        PFORT_CONF_META_CONN conn, FORT_APP_DATA app_data)
+        PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data)
 {
-    if (app_data.reject_zones == 0 && app_data.accept_zones == 0)
+    if (app_data.zones.accept_mask == 0 && app_data.zones.reject_mask == 0)
         return FALSE;
 
     FORT_CONF_ZONES_CONN_FILTERED_OPT opt = {
-        .rule_zones = {
-                .accept_mask = app_data.accept_zones,
-                .reject_mask = app_data.reject_zones,
-        },
+        .rule_zones = app_data.zones,
     };
 
     if (fort_devconf_zones_conn_filtered(&fort_device()->conf, conn, &opt)) {
@@ -300,7 +291,7 @@ inline static BOOL fort_callout_ale_conn_rule_filtered(
 }
 
 static BOOL fort_callout_ale_app_filtered(
-        PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
+        PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref, const FORT_APP_DATA app_data)
 {
     if (app_data.flags.blocked) {
         conn->reason = FORT_CONN_REASON_PROGRAM;
@@ -312,7 +303,7 @@ static BOOL fort_callout_ale_app_filtered(
         return TRUE; /* block LAN Only */
     }
 
-    if (fort_conf_app_group_blocked(conf_flags, app_data)) {
+    if (fort_conf_app_group_blocked(conf_ref->conf.flags, app_data)) {
         conn->reason = FORT_CONN_REASON_APP_GROUP;
         return TRUE; /* block Group */
     }
@@ -326,7 +317,7 @@ static BOOL fort_callout_ale_app_filtered(
 }
 
 inline static BOOL fort_callout_ale_filter_mode_allowed(
-        PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
+        PFORT_CONF_META_CONN conn, const FORT_CONF_FLAGS conf_flags)
 {
     /* "Auto-Learn" or "Ask to Connect" */
     if (conf_flags.allow_all_new || conf_flags.ask_to_connect)
@@ -343,7 +334,7 @@ inline static BOOL fort_callout_ale_filter_mode_allowed(
 }
 
 inline static BOOL fort_callout_ale_filtered(
-        PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
+        PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref, const FORT_APP_DATA app_data)
 {
     const FORT_CONF_RULES_GLOB rules_glob = fort_device()->conf.rules_glob;
 
@@ -352,9 +343,9 @@ inline static BOOL fort_callout_ale_filtered(
         return TRUE; /* filtered by Global Rule Pre Apps */
     }
 
-    const BOOL isAppFound = (app_data.found != 0);
-    if (isAppFound) {
-        if (fort_callout_ale_app_filtered(conn, conf_flags, app_data)) {
+    const BOOL app_found = (app_data.flags.found != 0);
+    if (app_found) {
+        if (fort_callout_ale_app_filtered(conn, conf_ref, app_data)) {
             return TRUE; /* filtered by App */
         }
     }
@@ -364,7 +355,7 @@ inline static BOOL fort_callout_ale_filtered(
         return TRUE; /* filtered by Global Rule Post Apps */
     }
 
-    if (isAppFound) {
+    if (app_found) {
         conn->blocked = FALSE;
         conn->reason = FORT_CONN_REASON_PROGRAM;
         return TRUE; /* allow App */
@@ -373,15 +364,13 @@ inline static BOOL fort_callout_ale_filtered(
     return FALSE;
 }
 
-inline static BOOL fort_callout_ale_allowed(
-        PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
+inline static BOOL fort_callout_ale_allowed(PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref,
+        const FORT_CONF_FLAGS conf_flags, const FORT_APP_DATA app_data)
 {
-    PFORT_CONF_META_CONN conn = &cx->conn;
-
     if (!conn->blocked)
         return TRUE; /* collect traffic, when Filter Disabled */
 
-    if (fort_callout_ale_filtered(conn, conf_flags, app_data)) {
+    if (fort_callout_ale_filtered(conn, conf_ref, app_data)) {
         return !conn->blocked;
     }
 
@@ -394,23 +383,25 @@ inline static BOOL fort_callout_ale_allowed(
 }
 
 inline static void fort_callout_ale_check_app(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
-        PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+        PFORT_CONF_REF conf_ref, const FORT_CONF_FLAGS conf_flags)
 {
-    const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, cx, conf_ref);
+    PFORT_CONF_META_CONN conn = &cx->conn;
 
-    if (fort_callout_ale_allowed(cx, conf_flags, app_data)) {
+    const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, conn, conf_ref);
+
+    if (fort_callout_ale_allowed(conn, conf_ref, conf_flags, app_data)) {
 
         if (fort_callout_ale_process_flow(ca, cx, conf_flags, app_data))
             return;
 
-        cx->conn.blocked = FALSE; /* allow */
+        conn->blocked = FALSE; /* allow */
     }
 
     fort_callout_ale_log_app_path(cx, conf_ref, conf_flags, app_data);
 }
 
 inline static BOOL fort_callout_ale_check_filter_lan_flags(
-        PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
+        PFORT_CONF_META_CONN conn, const FORT_CONF_FLAGS conf_flags)
 {
     if (conf_flags.block_lan_traffic && !conn->is_loopback) {
         return TRUE; /* block LAN */
@@ -425,7 +416,7 @@ inline static BOOL fort_callout_ale_check_filter_lan_flags(
 }
 
 inline static BOOL fort_callout_ale_check_filter_inet_flags(
-        PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
+        PFORT_CONF_META_CONN conn, const FORT_CONF_FLAGS conf_flags)
 {
     if (conf_flags.block_inet_traffic && !conn->is_broadcast) {
         return TRUE; /* block Internet */
@@ -435,7 +426,7 @@ inline static BOOL fort_callout_ale_check_filter_inet_flags(
 }
 
 inline static BOOL fort_callout_ale_check_filter_net_flags(
-        PFORT_CONF_META_CONN conn, FORT_CONF_FLAGS conf_flags)
+        PFORT_CONF_META_CONN conn, const FORT_CONF_FLAGS conf_flags)
 {
     if (conn->is_local_net) {
         return fort_callout_ale_check_filter_lan_flags(conn, conf_flags);
@@ -444,12 +435,14 @@ inline static BOOL fort_callout_ale_check_filter_net_flags(
     }
 }
 
-inline static BOOL fort_callout_ale_check_filter_flags(
-        PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
+        PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref, const FORT_CONF_FLAGS conf_flags)
 {
     if (conf_flags.block_traffic) {
         return TRUE; /* block all */
     }
+
+    fort_callout_ale_fill_meta_conn(ca, conn);
 
     UCHAR local_zone_id;
     conn->is_local_net = !fort_conf_ip_is_inet(&conf_ref->conf,
@@ -470,11 +463,11 @@ inline static BOOL fort_callout_ale_check_filter_flags(
     return FALSE;
 }
 
-inline static BOOL fort_callout_ale_check_flags(
-        PFORT_CONF_META_CONN conn, PFORT_CONF_REF conf_ref, FORT_CONF_FLAGS conf_flags)
+inline static BOOL fort_callout_ale_check_flags(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn,
+        PFORT_CONF_REF conf_ref, const FORT_CONF_FLAGS conf_flags)
 {
     if (conf_flags.filter_enabled) {
-        return fort_callout_ale_check_filter_flags(conn, conf_ref, conf_flags);
+        return fort_callout_ale_check_filter_flags(ca, conn, conf_ref, conf_flags);
     }
 
     conn->blocked = FALSE;
@@ -505,25 +498,40 @@ inline static void fort_callout_ale_classify_action(
     }
 }
 
-inline static void fort_callout_ale_check_conf(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_REF conf_ref)
+inline static void fort_callout_ale_classify_boot_action(
+        PCFORT_CALLOUT_ARG ca, PFORT_DEVICE_CONF device_conf)
+{
+    FWPS_CLASSIFY_OUT0 *classifyOut = ca->classifyOut;
+
+    const BOOL isBootFilter = fort_device_flag(device_conf, FORT_DEVICE_BOOT_FILTER) != 0;
+    if (isBootFilter) {
+        /* Block the connection */
+        fort_callout_classify_block(classifyOut);
+    } else {
+        /* Continue the search */
+        fort_callout_classify_continue(classifyOut);
+    }
+}
+
+inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
+        PFORT_CONF_REF conf_ref, const FORT_CONF_FLAGS conf_flags)
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
-    fort_callout_ale_fill_meta_conn(ca, cx);
+    fort_callout_ale_fill_meta_conn_proc(ca, conn);
 
     conn->blocked = TRUE;
     conn->reason = FORT_CONN_REASON_UNKNOWN;
 
-    const FORT_CONF_FLAGS conf_flags = conf_ref->conf.flags;
+    if (!fort_callout_ale_check_flags(ca, conn, conf_ref, conf_flags)) {
+        fort_callout_ale_fill_meta_conn(ca, conn);
 
-    if (!fort_callout_ale_check_flags(conn, conf_ref, conf_flags)) {
         fort_callout_ale_check_app(ca, cx, conf_ref, conf_flags);
     }
 
     /* Log the connection */
-    if (fort_callout_ale_log_conn_check(ca, cx, conf_ref, conf_flags)) {
-        fort_callout_ale_fill_meta_conn(ca, cx);
+    if (fort_callout_ale_log_conn_check(ca, conn, conf_ref, conf_flags)) {
+        fort_callout_ale_fill_meta_conn(ca, conn);
 
         fort_buffer_conn_write(
                 &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_CONN);
@@ -532,24 +540,20 @@ inline static void fort_callout_ale_check_conf(
     fort_callout_ale_classify_action(ca, conn);
 }
 
-inline static void fort_callout_ale_by_conf(
-        PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, PFORT_DEVICE_CONF device_conf)
+inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
+        PFORT_DEVICE_CONF device_conf, const FORT_CONF_FLAGS conf_flags)
 {
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
 
     if (conf_ref == NULL) {
-        if (fort_device_flag(device_conf, FORT_DEVICE_BOOT_FILTER) != 0) {
-            fort_callout_classify_block(ca->classifyOut);
-        } else {
-            fort_callout_classify_continue(ca->classifyOut);
-        }
+        fort_callout_ale_classify_boot_action(ca, device_conf);
         return;
     }
 
     PFORT_IRP_INFO irp_info = &cx->irp_info;
     irp_info->irp = NULL;
 
-    fort_callout_ale_check_conf(ca, cx, conf_ref);
+    fort_callout_ale_check_conf(ca, cx, conf_ref, conf_flags);
 
     fort_conf_ref_put(device_conf, conf_ref);
 
@@ -569,7 +573,7 @@ inline static BOOL fort_addr_is_local_broadcast(PCFORT_CONF_META_CONN conn)
 }
 
 inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
-        PFORT_CALLOUT_ALE_EXTRA cx, FORT_CONF_FLAGS conf_flags, const UINT32 classify_flags)
+        PFORT_CALLOUT_ALE_EXTRA cx, const FORT_CONF_FLAGS conf_flags, const UINT32 classify_flags)
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
@@ -619,7 +623,7 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
     if (fort_callout_ale_is_local_address(ca, &cx, conf_flags, classify_flags)) {
         fort_callout_classify_permit(ca->filter, ca->classifyOut);
     } else {
-        fort_callout_ale_by_conf(ca, &cx, device_conf);
+        fort_callout_ale_by_conf(ca, &cx, device_conf, conf_flags);
     }
 }
 

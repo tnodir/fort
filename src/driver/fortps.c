@@ -404,18 +404,18 @@ inline static void fort_pstree_proc_set_name(
 }
 
 inline static void fort_pstree_check_proc_conf(
-        PFORT_PSTREE ps_tree, PFORT_PSNODE proc, PCFORT_APP_PATH path, FORT_APP_DATA app_data)
+        PFORT_PSTREE ps_tree, PFORT_PSNODE proc, PCFORT_APP_PATH path, FORT_APP_FLAGS app_flags)
 {
-    if (app_data.found == 0)
+    if (app_flags.found == 0)
         return;
 
-    const UINT16 kill_process_flag = (app_data.flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0);
-    const UINT16 kill_child_flag = (app_data.flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
+    const UINT16 kill_process_flag = (app_flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0);
+    const UINT16 kill_child_flag = (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
     const UINT16 kill_flags = kill_process_flag | kill_child_flag;
 
     proc->flags |= kill_flags;
 
-    if (kill_flags == 0 && app_data.flags.apply_child) {
+    if (kill_flags == 0 && app_flags.apply_child) {
         const BOOL has_ps_name = (proc->ps_name != NULL);
 
         if (!has_ps_name) {
@@ -423,12 +423,12 @@ inline static void fort_pstree_check_proc_conf(
         }
 
         proc->flags |= FORT_PSNODE_NAME_INHERIT
-                | (app_data.flags.apply_spec_child ? FORT_PSNODE_NAME_INHERIT_SPEC : 0);
+                | (app_flags.apply_spec_child ? FORT_PSNODE_NAME_INHERIT_SPEC : 0);
     }
 }
 
 inline static BOOL fort_pstree_check_proc_inherited(
-        PFORT_PSTREE ps_tree, PFORT_PSNODE proc, DWORD parentProcessId, FORT_APP_DATA app_data)
+        PFORT_PSTREE ps_tree, PFORT_PSNODE proc, DWORD parentProcessId, FORT_APP_FLAGS app_flags)
 {
     if (proc->ps_name != NULL)
         return FALSE;
@@ -444,7 +444,7 @@ inline static BOOL fort_pstree_check_proc_inherited(
 
     const UINT16 inherit_spec_flag = (parent_flags & FORT_PSNODE_NAME_INHERIT_SPEC);
 
-    if (inherit_spec_flag != 0 && app_data.flags.apply_parent == 0)
+    if (inherit_spec_flag != 0 && app_flags.apply_parent == 0)
         return FALSE;
 
     PFORT_PSNAME ps_name = parent->ps_name;
@@ -482,8 +482,8 @@ static void fort_pstree_check_proc_inheritance(
             ? fort_conf_app_find(conf, &path, fort_conf_exe_find, conf_ref)
             : fort_conf_exe_find(conf, conf_ref, &path);
 
-    if (!fort_pstree_check_proc_inherited(ps_tree, proc, psi->parentProcessId, app_data)) {
-        fort_pstree_check_proc_conf(ps_tree, proc, &path, app_data);
+    if (!fort_pstree_check_proc_inherited(ps_tree, proc, psi->parentProcessId, app_data.flags)) {
+        fort_pstree_check_proc_conf(ps_tree, proc, &path, app_data.flags);
     }
 
     fort_conf_ref_put(device_conf, conf_ref);
