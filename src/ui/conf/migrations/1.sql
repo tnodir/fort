@@ -17,11 +17,10 @@ CREATE TABLE zone(
 
 CREATE TABLE address_group(
   addr_group_id INTEGER PRIMARY KEY,
-  order_index INTEGER NOT NULL,
   include_all BOOLEAN NOT NULL,
   exclude_all BOOLEAN NOT NULL,
-  include_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
-  exclude_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
+  include_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
+  exclude_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   include_text TEXT NOT NULL,
   exclude_text TEXT NOT NULL
 );
@@ -69,8 +68,8 @@ CREATE TABLE app(
   log_blocked_conn BOOLEAN NOT NULL DEFAULT 1,
   blocked BOOLEAN NOT NULL,
   kill_process BOOLEAN NOT NULL DEFAULT 0,
-  accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
-  reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
+  accept_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
+  reject_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   rule_id INTEGER,
   creat_time INTEGER NOT NULL,
   end_action INTEGER NOT NULL DEFAULT 0,
@@ -80,7 +79,7 @@ CREATE TABLE app(
 CREATE INDEX app_app_group_id_idx ON app(app_group_id);
 CREATE UNIQUE INDEX app_path_uk ON app(path);
 CREATE INDEX app_name_idx ON app(EXT_LOWER(name));
-CREATE INDEX app_rule_idx ON app(rule_id);
+CREATE INDEX app_rule_id_idx ON app(rule_id);
 CREATE INDEX app_end_time_idx ON app(end_time);
 
 CREATE TABLE app_alert(
@@ -98,8 +97,8 @@ CREATE TABLE rule(
   notes TEXT,
   rule_text TEXT NOT NULL,
   rule_type INTEGER NOT NULL, -- app rules, global before/after apps, preset rules
-  accept_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
-  reject_zones INTEGER NOT NULL DEFAULT 0,  -- zone ids bit mask
+  accept_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
+  reject_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   mod_time INTEGER NOT NULL
 );
 

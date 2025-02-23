@@ -38,7 +38,19 @@ const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, e
                                            "    include_zones, exclude_zones,"
                                            "    include_text, exclude_text"
                                            "  FROM address_group"
-                                           "  ORDER BY order_index;";
+                                           "  ORDER BY addr_group_id;";
+
+const char *const sqlInsertAddressGroup = "INSERT INTO address_group(addr_group_id,"
+                                          "    include_all, exclude_all,"
+                                          "    include_zones, exclude_zones,"
+                                          "    include_text, exclude_text)"
+                                          "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7);";
+
+const char *const sqlUpdateAddressGroup = "UPDATE address_group"
+                                          "  SET include_all = ?2, exclude_all = ?3,"
+                                          "    include_zones = ?4, exclude_zones = ?5,"
+                                          "    include_text = ?6, exclude_text = ?7"
+                                          "  WHERE addr_group_id = ?1;";
 
 const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled, apply_child,"
                                        "    lan_only, log_blocked, log_conn, period_enabled,"
@@ -50,19 +62,6 @@ const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled, apply_chil
                                        "    period_from, period_to"
                                        "  FROM app_group"
                                        "  ORDER BY order_index;";
-
-const char *const sqlInsertAddressGroup = "INSERT INTO address_group(addr_group_id, order_index,"
-                                          "    include_all, exclude_all,"
-                                          "    include_zones, exclude_zones,"
-                                          "    include_text, exclude_text)"
-                                          "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);";
-
-const char *const sqlUpdateAddressGroup = "UPDATE address_group"
-                                          "  SET order_index = ?2,"
-                                          "    include_all = ?3, exclude_all = ?4,"
-                                          "    include_zones = ?5, exclude_zones = ?6,"
-                                          "    include_text = ?7, exclude_text = ?8"
-                                          "  WHERE addr_group_id = ?1;";
 
 const char *const sqlInsertAppGroup = "INSERT INTO app_group(app_group_id, order_index, enabled,"
                                       "    apply_child, lan_only, log_blocked, log_conn,"
@@ -275,7 +274,7 @@ bool loadAddressGroups(SqliteDb *db, const QList<AddressGroup *> &addressGroups,
     return true;
 }
 
-bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
+bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup)
 {
     const bool rowExists = (addrGroup->id() != 0);
     if (!addrGroup->edited() && rowExists)
@@ -283,7 +282,6 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 
     const QVariantList vars = {
         DbVar::nullable(addrGroup->id(), !rowExists),
-        orderIndex,
         addrGroup->includeAll(),
         addrGroup->excludeAll(),
         qint64(addrGroup->includeZones()),
@@ -308,9 +306,8 @@ bool saveAddressGroup(SqliteDb *db, AddressGroup *addrGroup, int orderIndex)
 
 bool saveAddressGroups(SqliteDb *db, const FirewallConf &conf)
 {
-    int orderIndex = 0;
     for (AddressGroup *addrGroup : conf.addressGroups()) {
-        if (!saveAddressGroup(db, addrGroup, orderIndex++))
+        if (!saveAddressGroup(db, addrGroup))
             return false;
     }
     return true;

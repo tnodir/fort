@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QVariant>
-#include <QVector>
 
 class AddressGroup : public QObject
 {
