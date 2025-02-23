@@ -244,10 +244,11 @@ void RulesWindow::setupTreeRulesHeader()
     auto header = m_ruleListView->header();
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
-    header->setSectionResizeMode(1, QHeaderView::Stretch);
+    header->setSectionResizeMode(1, QHeaderView::Interactive);
     header->setStretchLastSection(true);
 
     header->resizeSection(0, 360);
+    header->resizeSection(1, 130);
 }
 
 void RulesWindow::setupTreeRulesExpandingChanged()

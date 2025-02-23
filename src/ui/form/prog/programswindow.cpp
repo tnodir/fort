@@ -462,6 +462,7 @@ void ProgramsWindow::setupTableAppsHeader()
     header->setSectionResizeMode(int(AppListColumn::Group), QHeaderView::Interactive);
     header->setSectionResizeMode(int(AppListColumn::FilePath), QHeaderView::Interactive);
     header->setSectionResizeMode(int(AppListColumn::CreationTime), QHeaderView::Interactive);
+    header->setStretchLastSection(true);
 
     header->resizeSection(int(AppListColumn::Name), 300);
     header->resizeSection(int(AppListColumn::Zones), 30);

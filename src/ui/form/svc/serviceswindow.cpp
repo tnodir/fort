@@ -224,7 +224,8 @@ void ServicesWindow::setupTableServiceListHeader()
 
     header->setSectionResizeMode(0, QHeaderView::Interactive);
     header->setSectionResizeMode(1, QHeaderView::Interactive);
-    header->setSectionResizeMode(2, QHeaderView::Stretch);
+    header->setSectionResizeMode(2, QHeaderView::Interactive);
+    header->setStretchLastSection(true);
 
     header->resizeSection(0, 180);
     header->resizeSection(1, 520);

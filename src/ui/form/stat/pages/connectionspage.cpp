@@ -224,7 +224,8 @@ void ConnectionsPage::setupTableConnListHeader()
     header->setSectionResizeMode(5, QHeaderView::Fixed);
     header->setSectionResizeMode(6, QHeaderView::Fixed);
     header->setSectionResizeMode(7, QHeaderView::Fixed);
-    header->setSectionResizeMode(8, QHeaderView::Stretch);
+    header->setSectionResizeMode(8, QHeaderView::Interactive);
+    header->setStretchLastSection(true);
 
     header->resizeSection(0, 400);
     header->resizeSection(1, 50);
@@ -234,6 +235,7 @@ void ConnectionsPage::setupTableConnListHeader()
     header->resizeSection(5, 30);
     header->resizeSection(6, 30);
     header->resizeSection(7, 30);
+    header->resizeSection(8, 130);
 }
 
 void ConnectionsPage::setupAppInfoRow()
