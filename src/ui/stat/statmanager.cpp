@@ -165,9 +165,11 @@ bool StatManager::clearTraffic()
 {
     bool ok;
 
-    beginTransaction();
+    beginWriteTransaction();
+
     ok = sqliteDb()->execute(StatSql::sqlDeleteAllTraffic);
-    commitTransaction(ok);
+
+    endTransaction(ok);
 
     if (!ok)
         return false;
@@ -269,7 +271,7 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 
     const bool isNewDay = updateTrafDay(unixTime);
 
-    sqliteDb()->beginWriteTransaction();
+    beginWriteTransaction();
 
     // Delete old data
     if (isNewDay) {
@@ -328,7 +330,7 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
         updateTrafficList(insertTrafStmts, updateTrafStmts, sumInBytes, sumOutBytes);
     }
 
-    sqliteDb()->commitTransaction();
+    commitTransaction();
 
     // Check quotas
     checkQuotas(sumInBytes);
@@ -341,7 +343,7 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
 
 bool StatManager::deleteStatApp(qint64 appId)
 {
-    sqliteDb()->beginWriteTransaction();
+    beginWriteTransaction();
 
     DbUtil::doList({ getIdStmt(StatSql::sqlDeleteAppTrafHour, appId),
             getIdStmt(StatSql::sqlDeleteAppTrafDay, appId),
@@ -350,7 +352,7 @@ bool StatManager::deleteStatApp(qint64 appId)
 
     deleteAppId(appId);
 
-    sqliteDb()->commitTransaction();
+    commitTransaction();
 
     emit appStatRemoved(appId);
 
@@ -611,14 +613,4 @@ SqliteStmt *StatManager::getIdStmt(const char *sql, qint64 id)
     stmt->bindInt64(1, id);
 
     return stmt;
-}
-
-bool StatManager::beginTransaction()
-{
-    return sqliteDb()->beginWriteTransaction();
-}
-
-void StatManager::commitTransaction(bool &ok)
-{
-    ok = sqliteDb()->endTransaction(ok);
 }

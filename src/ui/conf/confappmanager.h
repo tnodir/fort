@@ -3,12 +3,12 @@
 
 #include <QObject>
 
-#include <sqlite/sqlite_types.h>
-
 #include <util/classhelpers.h>
 #include <util/conf/confappswalker.h>
 #include <util/ioc/iocservice.h>
 #include <util/triggertimer.h>
+
+#include "confmanagerbase.h"
 
 class App;
 class AppGroup;
@@ -16,18 +16,13 @@ class ConfManager;
 class FirewallConf;
 class LogEntryApp;
 
-class ConfAppManager : public QObject, public ConfAppsWalker, public IocService
+class ConfAppManager : public ConfManagerBase, public ConfAppsWalker, public IocService
 {
     Q_OBJECT
 
 public:
     explicit ConfAppManager(QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(ConfAppManager)
-
-    ConfManager *confManager() const;
-    SqliteDb *sqliteDb() const;
-
-    FirewallConf *conf() const;
 
     void setUp() override;
 
@@ -94,13 +89,8 @@ private:
     bool updateDriverUpdateApp(const App &app, bool remove = false);
     bool updateDriverUpdateAppConf(const App &app);
 
-    bool beginTransaction();
-    void commitTransaction(bool &ok);
-
 private:
     quint32 m_driveMask = 0;
-
-    ConfManager *m_confManager = nullptr;
 
     TriggerTimer m_appAlertedTimer;
     TriggerTimer m_appsChangedTimer;

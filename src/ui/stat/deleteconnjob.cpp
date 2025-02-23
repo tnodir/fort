@@ -29,7 +29,7 @@ void DeleteConnJob::processJob()
 {
     const bool isDeleteAll = (connIdTo() <= 0);
 
-    sqliteDb()->beginWriteTransaction();
+    beginWriteTransaction();
 
     SqliteStmtList stmtList;
     if (isDeleteAll) {
@@ -41,7 +41,7 @@ void DeleteConnJob::processJob()
 
     DbUtil::doList(stmtList);
 
-    sqliteDb()->commitTransaction();
+    commitTransaction();
 
     if (isDeleteAll) {
         sqliteDb()->vacuum(); // Vacuum outside of transaction

@@ -22,6 +22,7 @@ SOURCES += \
     conf/appgroup.cpp \
     conf/confappmanager.cpp \
     conf/confmanager.cpp \
+    conf/confmanagerbase.cpp \
     conf/confrulemanager.cpp \
     conf/confzonemanager.cpp \
     conf/firewallconf.cpp \
@@ -272,6 +273,7 @@ HEADERS += \
     conf/appgroup.h \
     conf/confappmanager.h \
     conf/confmanager.h \
+    conf/confmanagerbase.h \
     conf/confrulemanager.h \
     conf/confzonemanager.h \
     conf/firewallconf.h \

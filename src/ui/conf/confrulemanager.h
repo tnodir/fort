@@ -3,27 +3,20 @@
 
 #include <QObject>
 
-#include <sqlite/sqlite_types.h>
-
 #include <conf/rule.h>
 #include <util/classhelpers.h>
 #include <util/conf/confruleswalker.h>
 #include <util/ioc/iocservice.h>
 
-class ConfManager;
+#include "confmanagerbase.h"
 
-class ConfRuleManager : public QObject, public ConfRulesWalker, public IocService
+class ConfRuleManager : public ConfManagerBase, public ConfRulesWalker, public IocService
 {
     Q_OBJECT
 
 public:
     explicit ConfRuleManager(QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(ConfRuleManager)
-
-    ConfManager *confManager() const;
-    SqliteDb *sqliteDb() const;
-
-    void setUp() override;
 
     QString ruleNameById(quint16 ruleId);
 
@@ -56,12 +49,6 @@ private:
 
     static void fillRule(Rule &rule, const SqliteStmt &stmt);
 
-
-    bool beginTransaction();
-    void commitTransaction(bool &ok);
-
-private:
-    ConfManager *m_confManager = nullptr;
     bool updateDriverRuleFlag(quint16 ruleId, bool enabled);
 };
 

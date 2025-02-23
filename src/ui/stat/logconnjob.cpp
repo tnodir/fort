@@ -38,7 +38,7 @@ void LogConnJob::processJob()
 {
     int resultCount = 0;
 
-    sqliteDb()->beginWriteTransaction();
+    beginWriteTransaction();
 
     for (const LogEntryConn &entry : entries()) {
         if (processEntry(entry)) {
@@ -46,7 +46,7 @@ void LogConnJob::processJob()
         }
     }
 
-    sqliteDb()->endTransaction();
+    commitTransaction();
 
     setResultCount(resultCount);
 }

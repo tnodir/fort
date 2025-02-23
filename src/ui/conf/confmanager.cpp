@@ -812,7 +812,7 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
 {
     bool ok = true;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     for (TaskInfo *taskInfo : taskInfos) {
         if (!saveTask(taskInfo)) {
@@ -821,7 +821,7 @@ bool ConfManager::saveTasks(const QList<TaskInfo *> &taskInfos)
         }
     }
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     return ok;
 }
@@ -1014,13 +1014,13 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
 
 bool ConfManager::saveToDb(const FirewallConf &conf)
 {
-    beginTransaction();
+    beginWriteTransaction();
 
     bool ok = saveAddressGroups(sqliteDb(), conf) // Save Address Groups
             && saveAppGroups(sqliteDb(), conf) // Save App Groups
             && removeAppGroupsInDb(sqliteDb(), conf); // Remove App Groups
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     return ok;
 }
@@ -1085,14 +1085,4 @@ bool ConfManager::saveTask(TaskInfo *taskInfo)
         taskInfo->setId(sqliteDb()->lastInsertRowid());
     }
     return true;
-}
-
-bool ConfManager::beginTransaction()
-{
-    return sqliteDb()->beginWriteTransaction();
-}
-
-void ConfManager::commitTransaction(bool &ok)
-{
-    ok = sqliteDb()->endTransaction(ok);
 }

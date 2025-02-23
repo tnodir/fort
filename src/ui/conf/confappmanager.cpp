@@ -130,7 +130,7 @@ using AppIdsArray = QVector<qint64>;
 
 }
 
-ConfAppManager::ConfAppManager(QObject *parent) : QObject(parent)
+ConfAppManager::ConfAppManager(QObject *parent) : ConfManagerBase(parent)
 {
     connect(&m_appAlertedTimer, &QTimer::timeout, this, &ConfAppManager::appAlerted);
     connect(&m_appsChangedTimer, &QTimer::timeout, this, &ConfAppManager::appsChanged);
@@ -140,24 +140,9 @@ ConfAppManager::ConfAppManager(QObject *parent) : QObject(parent)
     connect(&m_appEndTimer, &QTimer::timeout, this, &ConfAppManager::updateAppEndTimes);
 }
 
-ConfManager *ConfAppManager::confManager() const
-{
-    return m_confManager;
-}
-
-SqliteDb *ConfAppManager::sqliteDb() const
-{
-    return confManager()->sqliteDb();
-}
-
-FirewallConf *ConfAppManager::conf() const
-{
-    return confManager()->conf();
-}
-
 void ConfAppManager::setUp()
 {
-    m_confManager = IoCDependency<ConfManager>();
+    IoCDependency<ConfManager>();
 
     setupDriveListManager();
 
@@ -337,7 +322,7 @@ bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
 
     bool ok = false;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     beginAddOrUpdateApp(app, *appGroup, onlyUpdate, ok);
 
@@ -348,7 +333,7 @@ bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
         DbQuery(sqliteDb()).sql(sql).vars({ app.appId }).executeOk();
     }
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     if (ok) {
         endAddOrUpdateApp(app, onlyUpdate);
@@ -366,13 +351,13 @@ bool ConfAppManager::updateAppName(qint64 appId, const QString &appName)
 {
     bool ok = false;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     const QVariantList vars = { appId, appName };
 
     DbQuery(sqliteDb(), &ok).sql(sqlUpdateAppName).vars(vars).executeOk();
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     if (ok) {
         emitAppUpdated();
@@ -415,7 +400,7 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 {
     bool ok = false;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     const QVariantList vars = { appId };
 
@@ -425,7 +410,7 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteAppAlert).vars(vars).executeOk();
     }
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     if (ok) {
         if (resList.at(0).toBool()) {
@@ -563,7 +548,7 @@ bool ConfAppManager::saveAppBlocked(const App &app)
 {
     bool ok = true;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     const QVariantList vars = { app.appId, app.blocked, app.killProcess };
 
@@ -573,7 +558,7 @@ bool ConfAppManager::saveAppBlocked(const App &app)
         DbQuery(sqliteDb(), &ok).sql(sqlDeleteAppAlert).vars({ app.appId }).executeOk();
     }
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     if (ok) {
         emitAppUpdated();
@@ -642,27 +627,27 @@ bool ConfAppManager::importAppsBackup(const QString &path)
             + columnNames + " FROM " + schemaApp
             + " ba WHERE NOT EXISTS (SELECT 1 FROM app WHERE path = ba.path);";
 
-    sqliteDb()->beginWriteTransaction();
+    beginWriteTransaction();
 
     const qint64 oldMaxAppId =
             DbQuery(sqliteDb()).sql("SELECT MAX(app_id) FROM app;").execute().toLongLong();
 
     // Import apps
-    const bool ok = DbQuery(sqliteDb()).sql(sql).executeOk();
+    bool ok = DbQuery(sqliteDb()).sql(sql).executeOk();
 
     // Add alerts
     if (ok) {
-        DbQuery(sqliteDb())
+        DbQuery(sqliteDb(), &ok)
                 .sql("INSERT INTO app_alert(app_id) SELECT app_id FROM app WHERE app_id > ?1;")
                 .vars({ oldMaxAppId })
                 .executeOk();
     }
 
+    endTransaction(ok);
+
     if (!ok) {
         qCWarning(LC) << "Import apps backup error:" << sqliteDb()->errorMessage();
     }
-
-    sqliteDb()->commitTransaction();
 
     sqliteDb()->detach(schemaName);
 
@@ -769,14 +754,4 @@ bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
 bool ConfAppManager::updateDriverUpdateAppConf(const App &app)
 {
     return app.isWildcard ? updateDriverConf() : updateDriverUpdateApp(app);
-}
-
-bool ConfAppManager::beginTransaction()
-{
-    return sqliteDb()->beginWriteTransaction();
-}
-
-void ConfAppManager::commitTransaction(bool &ok)
-{
-    ok = sqliteDb()->endTransaction(ok);
 }

@@ -5,6 +5,8 @@
 
 #include <util/ioc/iocservice.h>
 
+class ConfManager;
+class FirewallConf;
 class IniOptions;
 
 class QuotaManager : public QObject, public IocService
@@ -21,6 +23,10 @@ public:
 
     void setTrafDayBytes(qint64 bytes);
     void setTrafMonthBytes(qint64 bytes);
+
+    ConfManager *confManager() const;
+    FirewallConf *conf() const;
+    IniOptions &ini() const;
 
     void setUp() override;
 

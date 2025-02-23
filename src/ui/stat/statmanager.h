@@ -7,7 +7,7 @@
 #include <QTime>
 #include <QVector>
 
-#include <sqlite/sqlite_types.h>
+#include <sqlite/sqliteutilbase.h>
 
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
@@ -17,7 +17,7 @@ class IniOptions;
 class LogEntryProcNew;
 class LogEntryStatTraf;
 
-class StatManager : public QObject, public IocService
+class StatManager : public QObject, public IocService, public SqliteUtilBase
 {
     Q_OBJECT
 
@@ -109,9 +109,6 @@ private:
     SqliteStmt *getStmt(const char *sql);
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);
     SqliteStmt *getIdStmt(const char *sql, qint64 id);
-
-    bool beginTransaction();
-    void commitTransaction(bool &ok);
 
 private:
     bool m_isActivePeriod : 1 = false;

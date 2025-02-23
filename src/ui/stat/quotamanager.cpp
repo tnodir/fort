@@ -42,6 +42,21 @@ void QuotaManager::setTrafMonthBytes(qint64 bytes)
     m_trafMonthBytes = bytes;
 }
 
+ConfManager *QuotaManager::confManager() const
+{
+    return IoC<ConfManager>();
+}
+
+FirewallConf *QuotaManager::conf() const
+{
+    return confManager()->conf();
+}
+
+IniOptions &QuotaManager::ini() const
+{
+    return conf()->ini();
+}
+
 void QuotaManager::setUp()
 {
     setupConfManager();
@@ -128,54 +143,46 @@ void QuotaManager::setupConfManager()
 
 int QuotaManager::quotaDayAlerted() const
 {
-    auto confManager = IoC<ConfManager>();
-    const IniOptions &ini = confManager->conf()->ini();
-
-    return ini.quotaDayAlerted();
+    return ini().quotaDayAlerted();
 }
 
 void QuotaManager::setQuotaDayAlerted(int v)
 {
-    auto confManager = IoC<ConfManager>();
-    IniOptions &ini = confManager->conf()->ini();
+    IniOptions &ini = this->ini();
 
     m_quotaDayAlerted = v;
 
     if (ini.quotaDayAlerted() != v) {
         ini.setQuotaDayAlerted(v);
-        confManager->saveIni();
+        confManager()->saveIni();
     }
 }
 
 int QuotaManager::quotaMonthAlerted() const
 {
-    auto confManager = IoC<ConfManager>();
-    const IniOptions &ini = confManager->conf()->ini();
-
-    return ini.quotaMonthAlerted();
+    return ini().quotaMonthAlerted();
 }
 
 void QuotaManager::setQuotaMonthAlerted(int v)
 {
-    auto confManager = IoC<ConfManager>();
-    IniOptions &ini = confManager->conf()->ini();
+    IniOptions &ini = this->ini();
 
     m_quotaMonthAlerted = v;
 
     if (ini.quotaMonthAlerted() != v) {
         ini.setQuotaMonthAlerted(v);
-        confManager->saveIni();
+        confManager()->saveIni();
     }
 }
 
 void QuotaManager::processQuotaExceed(AlertType alertType)
 {
-    auto confManager = IoC<ConfManager>();
-    FirewallConf *conf = confManager->conf();
+    FirewallConf *conf = this->conf();
+    IniOptions &ini = conf->ini();
 
-    if (conf->ini().quotaBlockInetTraffic() && !conf->blockInetTraffic()) {
+    if (ini.quotaBlockInetTraffic() && !conf->blockInetTraffic()) {
         conf->setBlockInetTraffic(true);
-        confManager->saveFlags();
+        confManager()->saveFlags();
     }
 
     emit alert(alertType);

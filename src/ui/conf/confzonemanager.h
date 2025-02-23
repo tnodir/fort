@@ -3,15 +3,14 @@
 
 #include <QObject>
 
-#include <sqlite/sqlite_types.h>
-
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 
-class ConfManager;
+#include "confmanagerbase.h"
+
 class Zone;
 
-class ConfZoneManager : public QObject, public IocService
+class ConfZoneManager : public ConfManagerBase, public IocService
 {
     Q_OBJECT
 
@@ -19,17 +18,13 @@ public:
     explicit ConfZoneManager(QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(ConfZoneManager)
 
-    ConfManager *confManager() const;
-    SqliteDb *sqliteDb() const;
-
-    void setUp() override;
-
     QString zoneNameById(int zoneId);
 
     virtual bool addOrUpdateZone(Zone &zone);
     virtual bool deleteZone(int zoneId);
     virtual bool updateZoneName(int zoneId, const QString &zoneName);
     virtual bool updateZoneEnabled(int zoneId, bool enabled);
+
     bool updateZoneResult(const Zone &zone);
 
     void updateDriverZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
@@ -42,12 +37,6 @@ signals:
 
 private:
     bool updateDriverZoneFlag(int zoneId, bool enabled);
-
-    bool beginTransaction();
-    void commitTransaction(bool &ok);
-
-private:
-    ConfManager *m_confManager = nullptr;
 };
 
 #endif // CONFZONEMANAGER_H

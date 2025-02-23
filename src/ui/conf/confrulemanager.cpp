@@ -138,24 +138,9 @@ bool driverWriteRules(ConfBuffer &confBuf, bool onlyFlags = false)
 
 }
 
-ConfRuleManager::ConfRuleManager(QObject *parent) : QObject(parent) { }
+ConfRuleManager::ConfRuleManager(QObject *parent) : ConfManagerBase(parent) { }
 
-ConfManager *ConfRuleManager::confManager() const
-{
-    return m_confManager;
-}
-
-SqliteDb *ConfRuleManager::sqliteDb() const
-{
-    return confManager()->sqliteDb();
-}
-
-void ConfRuleManager::setUp()
-{
-    m_confManager = IoCDependency<ConfManager>();
-}
-
-QString ConfRuleManager::ruleNameById(int ruleId)
+QString ConfRuleManager::ruleNameById(quint16 ruleId)
 {
     return DbQuery(sqliteDb()).sql(sqlSelectRuleNameById).vars({ ruleId }).execute().toString();
 }
@@ -224,7 +209,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 {
     bool ok = true;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     const bool isNew = (rule.ruleId == 0);
     if (isNew) {
@@ -256,7 +241,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
         saveRuleSet(rule);
     }
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     if (!ok)
         return false;
@@ -272,12 +257,12 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
     return true;
 }
 
-bool ConfRuleManager::deleteRule(int ruleId)
+bool ConfRuleManager::deleteRule(quint16 ruleId)
 {
     bool ok = false;
     int appRulesCount = 0;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     DbQuery(sqliteDb(), &ok).sql(sqlDeleteRule).vars({ ruleId }).executeOk();
     if (ok) {
@@ -293,7 +278,7 @@ bool ConfRuleManager::deleteRule(int ruleId)
         DbQuery(sqliteDb()).sql(sqlDeleteRuleSetSub).vars(vars).executeOk();
     }
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     if (ok) {
         updateDriverRules();
@@ -308,13 +293,13 @@ bool ConfRuleManager::updateRuleName(quint16 ruleId, const QString &ruleName)
 {
     bool ok = false;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     const QVariantList vars = { ruleId, ruleName };
 
     DbQuery(sqliteDb(), &ok).sql(sqlUpdateRuleName).vars(vars).executeOk();
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     if (ok) {
         emit ruleUpdated(ruleId);
@@ -327,13 +312,13 @@ bool ConfRuleManager::updateRuleEnabled(quint16 ruleId, bool enabled)
 {
     bool ok = false;
 
-    beginTransaction();
+    beginWriteTransaction();
 
     const QVariantList vars = { ruleId, enabled };
 
     DbQuery(sqliteDb(), &ok).sql(sqlUpdateRuleEnabled).vars(vars).executeOk();
 
-    commitTransaction(ok);
+    endTransaction(ok);
 
     if (ok) {
         emit ruleUpdated(ruleId);
@@ -497,14 +482,4 @@ bool ConfRuleManager::updateDriverRuleFlag(quint16 ruleId, bool enabled)
     confBuf.writeRuleFlag(ruleId, enabled);
 
     return driverWriteRules(confBuf, /*onlyFlags=*/true);
-}
-
-bool ConfRuleManager::beginTransaction()
-{
-    return sqliteDb()->beginWriteTransaction();
-}
-
-void ConfRuleManager::commitTransaction(bool &ok)
-{
-    ok = sqliteDb()->endTransaction(ok);
 }

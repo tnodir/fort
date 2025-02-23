@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTimer>
 
-#include <sqlite/sqlite_types.h>
+#include <sqlite/sqliteutilbase.h>
 
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
@@ -17,7 +17,7 @@ class ServiceInfoManager;
 class Settings;
 class TaskInfo;
 
-class ConfManager : public QObject, public IocService
+class ConfManager : public QObject, public IocService, public SqliteUtilBase
 {
     Q_OBJECT
 
@@ -25,7 +25,7 @@ public:
     explicit ConfManager(const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     CLASS_DELETE_COPY_MOVE(ConfManager)
 
-    SqliteDb *sqliteDb() const { return m_sqliteDb.data(); }
+    SqliteDb *sqliteDb() const override { return m_sqliteDb.data(); }
 
     FirewallConf *conf() const { return m_conf; }
     FirewallConf *confToEdit() const { return m_confToEdit; }
@@ -110,9 +110,6 @@ private:
 
     bool loadTask(TaskInfo *taskInfo);
     bool saveTask(TaskInfo *taskInfo);
-
-    bool beginTransaction();
-    void commitTransaction(bool &ok);
 
 private:
     SqliteDbPtr m_sqliteDb;

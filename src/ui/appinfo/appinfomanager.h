@@ -4,7 +4,7 @@
 #include <QMutex>
 #include <QVector>
 
-#include <sqlite/sqlite_types.h>
+#include <sqlite/sqliteutilbase.h>
 
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
@@ -13,7 +13,7 @@
 
 #include "appinfo.h"
 
-class AppInfoManager : public WorkerManager, public IocService
+class AppInfoManager : public WorkerManager, public IocService, public SqliteUtilBase
 {
     Q_OBJECT
 

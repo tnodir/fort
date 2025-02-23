@@ -197,7 +197,7 @@ void AppInfoManager::purgeApps()
 {
     QMutexLocker locker(&m_mutex);
 
-    sqliteDb()->beginWriteTransaction();
+    beginWriteTransaction();
 
     const int appCount = DbQuery(sqliteDb()).sql(sqlSelectAppCount).execute().toInt();
     const int excessCount = appCount - APP_CACHE_MAX_COUNT;
@@ -206,7 +206,7 @@ void AppInfoManager::purgeApps()
         deleteOldApps(excessCount);
     }
 
-    sqliteDb()->commitTransaction();
+    commitTransaction();
 }
 
 QImage AppInfoManager::loadIconFromDb(qint64 iconId)
@@ -227,7 +227,7 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo, const QI
 
     bool ok = true;
 
-    sqliteDb()->beginWriteTransaction();
+    beginWriteTransaction();
 
     // Save icon image
     QVariant iconId;
@@ -238,7 +238,7 @@ bool AppInfoManager::saveToDb(const QString &appPath, AppInfo &appInfo, const QI
         saveAppInfo(appPath, appInfo, iconId, ok);
     }
 
-    sqliteDb()->endTransaction(ok);
+    endTransaction(ok);
 
     if (ok) {
         appInfo.iconId = iconId.toLongLong();
@@ -265,11 +265,11 @@ void AppInfoManager::deleteAppInfo(const QString &appPath, const AppInfo &appInf
     {
         QMutexLocker locker(&m_mutex);
 
-        sqliteDb()->beginWriteTransaction();
+        beginWriteTransaction();
 
         deleteAppsAndIcons(appPaths, iconIds);
 
-        sqliteDb()->commitTransaction();
+        commitTransaction();
     }
 }
 

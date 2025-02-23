@@ -1,19 +1,19 @@
 #ifndef STATCONNBASEJOB_H
 #define STATCONNBASEJOB_H
 
-#include <sqlite/sqlite_types.h>
+#include <sqlite/sqliteutilbase.h>
 
 #include <util/worker/workerjob.h>
 
 class StatConnManager;
 
-class StatConnBaseJob : public WorkerJob
+class StatConnBaseJob : public WorkerJob, public SqliteUtilBase
 {
 public:
     enum StatConnJobType : qint8 { JobTypeLogConn, JobTypeDeleteConn };
 
     StatConnManager *manager() const { return m_manager; }
-    SqliteDb *sqliteDb() const;
+    SqliteDb *sqliteDb() const override;
 
     bool mergeJob(const WorkerJob &job) override;
 
