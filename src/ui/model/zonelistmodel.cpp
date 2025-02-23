@@ -63,13 +63,13 @@ QVariant ZoneListModel::headerData(int section, Qt::Orientation orientation, int
     if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
         return headerDataDisplay(section);
     }
-    return QVariant();
+    return {};
 }
 
 QVariant ZoneListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+        return {};
 
     switch (role) {
     // Label
@@ -82,7 +82,7 @@ QVariant ZoneListModel::data(const QModelIndex &index, int role) const
         return dataCheckState(index);
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant ZoneListModel::headerDataDisplay(int section) const
@@ -99,7 +99,7 @@ QVariant ZoneListModel::headerDataDisplay(int section) const
     case 4:
         return tr("Last Success");
     }
-    return QVariant();
+    return {};
 }
 
 QVariant ZoneListModel::dataDisplay(const QModelIndex &index) const
@@ -111,7 +111,7 @@ QVariant ZoneListModel::dataDisplay(const QModelIndex &index) const
 
     switch (column) {
     case 0:
-        return QString("%1) %2").arg(QString::number(m_zoneRow.zoneId), zoneRow.zoneName);
+        return QString("%1) %2").arg(QString::number(zoneRow.zoneId), zoneRow.zoneName);
     case 1: {
         const auto zoneSource = ZoneSourceWrapper(zoneSourceByCode(zoneRow.sourceCode));
         return zoneSourceTitleById(zoneSource.id());
@@ -124,7 +124,7 @@ QVariant ZoneListModel::dataDisplay(const QModelIndex &index) const
         return zoneRow.lastSuccess;
     }
 
-    return QVariant();
+    return {};
 }
 
 QVariant ZoneListModel::dataCheckState(const QModelIndex &index) const
@@ -134,7 +134,7 @@ QVariant ZoneListModel::dataCheckState(const QModelIndex &index) const
         return zoneRow.enabled ? Qt::Checked : Qt::Unchecked;
     }
 
-    return QVariant();
+    return {};
 }
 
 bool ZoneListModel::setData(const QModelIndex &index, const QVariant &value, int role)

@@ -1,8 +1,6 @@
 #ifndef ZONELISTMODEL_H
 #define ZONELISTMODEL_H
 
-#include <QDateTime>
-
 #include <sqlite/sqlite_types.h>
 
 #include <conf/zone.h>

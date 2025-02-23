@@ -11,8 +11,8 @@ public:
     bool isOptionsEqual(const Zone &o) const;
 
 public:
-    bool enabled = true;
-    bool customUrl = false;
+    bool enabled : 1 = true;
+    bool customUrl : 1 = false;
 
     int zoneId = 0;
 

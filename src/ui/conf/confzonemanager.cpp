@@ -10,6 +10,7 @@
 #include <driver/drivermanager.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
+#include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
 
 #include "confmanager.h"
@@ -19,13 +20,13 @@ namespace {
 const QLoggingCategory LC("confZone");
 
 const char *const sqlInsertZone = "INSERT INTO zone(zone_id, name, enabled, custom_url,"
-                                  "    source_code, url, form_data, text_inline)"
-                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8);";
+                                  "    source_code, url, form_data, text_inline, mod_time)"
+                                  "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9);";
 
 const char *const sqlUpdateZone = "UPDATE zone"
                                   "  SET name = ?2, enabled = ?3, custom_url = ?4,"
                                   "    source_code = ?5, url = ?6,"
-                                  "    form_data = ?7, text_inline = ?8"
+                                  "    form_data = ?7, text_inline = ?8, mod_time = ?9"
                                   "  WHERE zone_id = ?1;";
 
 const char *const sqlSelectZoneNameById = "SELECT name FROM zone WHERE zone_id = ?1;";
@@ -114,6 +115,7 @@ bool ConfZoneManager::addOrUpdateZone(Zone &zone)
             zone.url,
             zone.formData,
             zone.textInline,
+            DateUtil::now(),
         };
 
         DbQuery(sqliteDb(), &ok).sql(isNew ? sqlInsertZone : sqlUpdateZone).vars(vars).executeOk();

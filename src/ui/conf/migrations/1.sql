@@ -12,7 +12,8 @@ CREATE TABLE zone(
   bin_checksum TEXT,
   source_modtime INTEGER,
   last_run INTEGER,
-  last_success INTEGER
+  last_success INTEGER,
+  mod_time INTEGER
 );
 
 CREATE TABLE address_group(
