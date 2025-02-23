@@ -43,7 +43,8 @@ protected:
 
     bool iniBool(const QString &key, bool defaultValue = false) const;
     int iniInt(const QString &key, int defaultValue = 0) const;
-    uint iniUInt(const QString &key, int defaultValue = 0) const;
+    uint iniUInt(const QString &key, uint defaultValue = 0) const;
+    quint64 iniUInt64(const QString &key, quint64 defaultValue = 0) const;
     qreal iniReal(const QString &key, qreal defaultValue = 0) const;
     QString iniText(const QString &key, const QString &defaultValue = QString()) const;
     QStringList iniList(const QString &key) const;

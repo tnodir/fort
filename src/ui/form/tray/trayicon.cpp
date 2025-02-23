@@ -651,13 +651,13 @@ void TrayIcon::updateAppGroupActions()
 
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
         QAction *action = m_appGroupActions.at(i);
-        QString menuLabel;
-        bool visible = false;
 
-        if (i < appGroupsCount) {
+        const bool visible = (i < appGroupsCount);
+        QString menuLabel;
+
+        if (visible) {
             const AppGroup *appGroup = conf()->appGroups().at(i);
             menuLabel = appGroup->menuLabel();
-            visible = true;
         }
 
         action->setText(menuLabel);

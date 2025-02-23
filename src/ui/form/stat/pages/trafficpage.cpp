@@ -250,7 +250,7 @@ void TrafficPage::setupTableTrafHeader()
 
     const auto refreshTableTrafHeader = [&] {
         auto hh = m_tableTraf->horizontalHeader();
-        hh->resizeSection(0, qBound(150, qRound(hh->width() * 0.3), 180));
+        hh->resizeSection(0, qBound(150, qRound(hh->width() * 0.3f), 180));
     };
 
     refreshTableTrafHeader();

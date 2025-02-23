@@ -96,9 +96,14 @@ int Settings::iniInt(const QString &key, int defaultValue) const
     return iniValue(key, defaultValue).toInt();
 }
 
-uint Settings::iniUInt(const QString &key, int defaultValue) const
+uint Settings::iniUInt(const QString &key, uint defaultValue) const
 {
     return iniValue(key, defaultValue).toUInt();
+}
+
+quint64 Settings::iniUInt64(const QString &key, quint64 defaultValue) const
+{
+    return iniValue(key, defaultValue).toULongLong();
 }
 
 qreal Settings::iniReal(const QString &key, qreal defaultValue) const
