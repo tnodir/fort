@@ -13,12 +13,15 @@ enum WindowCode {
     WindowRules = (1 << 5),
     WindowStatistics = (1 << 6),
     WindowZones = (1 << 7),
-    WindowGraph = (1 << 8),
-    WindowCount = 9,
-    WindowPasswordDialog = (1 << 9),
+    WindowGroups = (1 << 8),
+    WindowSpeedLimits = (1 << 9),
+    WindowGraph = (1 << 10),
+    WindowCount = 11,
+    WindowPasswordDialog = (1 << 11),
 };
 
 constexpr quint32 WindowPasswordProtected = (WindowPrograms | WindowProgramAlert | WindowServices
-        | WindowOptions | WindowRules | WindowStatistics | WindowZones);
+        | WindowOptions | WindowRules | WindowStatistics | WindowZones | WindowGroups
+        | WindowSpeedLimits);
 
 #endif // FORM_TYPES_H

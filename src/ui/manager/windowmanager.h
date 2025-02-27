@@ -13,6 +13,7 @@
 class FormWindow;
 class FortSettings;
 class GraphWindow;
+class GroupsWindow;
 class HomeWindow;
 class IniUser;
 class MainWindow;
@@ -21,6 +22,7 @@ class ProgramAlertWindow;
 class ProgramsWindow;
 class RulesWindow;
 class ServicesWindow;
+class SpeedLimitsWindow;
 class StatisticsWindow;
 class TrayIcon;
 class WidgetWindow;
@@ -105,6 +107,10 @@ public slots:
     bool showStatisticsWindow() { return showWindowByCode(WindowStatistics); }
 
     bool showZonesWindow() { return showWindowByCode(WindowZones); }
+
+    bool showGroupsWindow() { return showWindowByCode(WindowGroups); }
+
+    bool showSpeedLimitsWindow() { return showWindowByCode(WindowSpeedLimits); }
 
     bool showGraphWindow() { return showWindowByCode(WindowGraph, /*activate=*/false); }
 
@@ -193,6 +199,8 @@ private:
         FormPointer(WindowRules),
         FormPointer(WindowStatistics),
         FormPointer(WindowZones),
+        FormPointer(WindowGroups),
+        FormPointer(WindowSpeedLimits),
         FormPointer(WindowGraph),
     };
 };

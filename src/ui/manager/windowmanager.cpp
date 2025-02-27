@@ -13,6 +13,7 @@
 #include <form/dialog/passworddialog.h>
 #include <form/dialog/splashscreen.h>
 #include <form/graph/graphwindow.h>
+#include <form/group/groupswindow.h>
 #include <form/home/homewindow.h>
 #include <form/opt/optionswindow.h>
 #include <form/prog/programalertwindow.h>

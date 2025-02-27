@@ -3,6 +3,7 @@
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfomanager.h>
 #include <conf/confappmanager.h>
+#include <conf/confgroupmanager.h>
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
 #include <conf/confzonemanager.h>
@@ -21,6 +22,7 @@
 #include <manager/servicemanager.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
+#include <model/grouplistmodel.h>
 #include <model/zonelistmodel.h>
 #include <rpc/rpcmanager.h>
 #include <stat/askpendingmanager.h>
@@ -55,6 +57,11 @@ AutoUpdateManager *autoUpdateManager()
 ConfAppManager *confAppManager()
 {
     return IoC<ConfAppManager>();
+}
+
+ConfGroupManager *confGroupManager()
+{
+    return IoC<ConfGroupManager>();
 }
 
 ConfManager *confManager()
@@ -107,6 +114,11 @@ UserSettings *userSettings()
     return IoC<UserSettings>();
 }
 
+GroupListModel *groupListModel()
+{
+    return IoC<GroupListModel>();
+}
+
 HostInfoCache *hostInfoCache()
 {
     return IoC<HostInfoCache>();
@@ -157,14 +169,14 @@ ServiceManager *serviceManager()
     return IoC<ServiceManager>();
 }
 
-StatManager *statManager()
-{
-    return IoC<StatManager>();
-}
-
 StatConnManager *statConnManager()
 {
     return IoC<StatConnManager>();
+}
+
+StatManager *statManager()
+{
+    return IoC<StatManager>();
 }
 
 TaskManager *taskManager()
