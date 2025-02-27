@@ -130,11 +130,11 @@
     </message>
     <message>
         <source>Never</source>
-        <translation type="unfinished"></translation>
+        <translation>永不</translation>
     </message>
     <message>
         <source>Connections Closed</source>
-        <translation type="unfinished"></translation>
+        <translation>连接已关闭</translation>
     </message>
 </context>
 <context>
@@ -432,11 +432,11 @@
     </message>
     <message>
         <source>Rule: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>规则： %1</translation>
     </message>
     <message>
         <source>Zone: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>区域： %1</translation>
     </message>
 </context>
 <context>
@@ -1269,7 +1269,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>自动学习秒数：</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1594,7 +1594,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>On:</source>
-        <translation type="unfinished"></translation>
+        <translation>关于：</translation>
     </message>
 </context>
 <context>
