@@ -9,6 +9,7 @@ SOURCES += \
     fortcb.c \
     fortcnf.c \
     fortcnf_conf.c \
+    fortcnf_group.c \
     fortcnf_rule.c \
     fortcnf_zone.c \
     fortcout.c \
@@ -50,6 +51,7 @@ HEADERS += \
     fortcb.h \
     fortcnf.h \
     fortcnf_conf.h \
+    fortcnf_group.h \
     fortcnf_rule.h \
     fortcnf_zone.h \
     fortcout.h \

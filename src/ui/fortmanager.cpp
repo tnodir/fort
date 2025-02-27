@@ -26,6 +26,7 @@
 #include <rpc/askpendingmanagerrpc.h>
 #include <rpc/autoupdatemanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
+#include <rpc/confgroupmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
 #include <rpc/confrulemanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
@@ -541,9 +542,10 @@ bool FortManager::setupDriverConf()
     }
 
     // Rules
-    {
-        confRuleManager()->updateDriverRules();
-    }
+    confRuleManager()->updateDriverRules();
+
+    // Groups
+    confGroupManager()->updateDriverGroups();
 
     return true;
 }

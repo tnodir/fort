@@ -355,6 +355,23 @@ FORT_API BOOL fort_conf_zones_conn_filtered(
     return accept_filtered;
 }
 
+FORT_API BOOL fort_conf_groups_mask_included(PCFORT_CONF_GROUPS groups, UINT32 groups_mask)
+{
+    groups_mask &= (groups->mask & groups->enabled_mask);
+
+    return groups_mask != 0;
+}
+
+FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
+{
+    const UINT16 app_group_bit = (1 << app_data.group_index);
+
+    if ((app_group_bit & conf_flags.group_bits) != 0)
+        return FALSE;
+
+    return conf_flags.group_blocked;
+}
+
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
 {
     const UINT16 path_len = path->len;
@@ -492,16 +509,6 @@ FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path
     app_data = fort_conf_app_prefix_find(conf, path);
 
     return app_data;
-}
-
-FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)
-{
-    const UINT16 app_group_bit = (1 << app_data.group_index);
-
-    if ((app_group_bit & conf_flags.group_bits) != 0)
-        return FALSE;
-
-    return conf_flags.group_blocked;
 }
 
 inline static BOOL fort_conf_rules_rt_conn_filtered_zones_result(PFORT_CONF_META_CONN conn,
