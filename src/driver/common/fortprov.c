@@ -2,7 +2,7 @@
 
 #include "fortprov.h"
 
-#include "fortioctl.h"
+#include "fortguid.h"
 
 #define FORT_PROV_BOOT_FILTERS_COUNT    4
 #define FORT_PROV_PERSIST_FILTERS_COUNT 4

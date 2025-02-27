@@ -11,6 +11,7 @@ HEADERS += \
     $$PWD/common/common_types.h \
     $$PWD/common/fortconf.h \
     $$PWD/common/fortdef.h \
+    $$PWD/common/fortguid.h \
     $$PWD/common/fortioctl.h \
     $$PWD/common/fortlog.h \
     $$PWD/common/fortprov.h \

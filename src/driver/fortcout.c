@@ -3,7 +3,7 @@
 #include "fortcout.h"
 
 #include "common/fortdef.h"
-#include "common/fortioctl.h"
+#include "common/fortguid.h"
 #include "common/fortprov.h"
 
 #include "fortcoutarg.h"
