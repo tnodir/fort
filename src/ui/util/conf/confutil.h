@@ -7,13 +7,15 @@
 class ConfUtil
 {
 public:
+    static int zoneMaxCount();
+
     static int ruleMaxCount();
     static int ruleGlobalMaxCount();
     static int ruleSetMaxCount();
     static int ruleDepthFilterMaxCount();
     static int ruleSetDepthMaxCount();
 
-    static int zoneMaxCount();
+    static int groupMaxCount();
 
     static QRegularExpressionMatch matchWildcard(const QStringView path);
     static bool hasWildcard(const QStringView path);

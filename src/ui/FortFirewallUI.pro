@@ -21,11 +21,13 @@ SOURCES += \
     conf/app.cpp \
     conf/appgroup.cpp \
     conf/confappmanager.cpp \
+    conf/confgroupmanager.cpp \
     conf/confmanager.cpp \
     conf/confmanagerbase.cpp \
     conf/confrulemanager.cpp \
     conf/confzonemanager.cpp \
     conf/firewallconf.cpp \
+    conf/group.cpp \
     conf/inioptions.cpp \
     conf/rule.cpp \
     conf/zone.cpp \
@@ -88,6 +90,9 @@ SOURCES += \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
+    form/group/groupeditdialog.cpp \
+    form/group/groupscontroller.cpp \
+    form/group/groupswindow.cpp \
     form/home/homecontroller.cpp \
     form/home/homewindow.cpp \
     form/home/pages/aboutpage.cpp \
@@ -159,6 +164,7 @@ SOURCES += \
     model/applistmodelheaderdata.cpp \
     model/appstatmodel.cpp \
     model/connlistmodel.cpp \
+    model/grouplistmodel.cpp \
     model/rulelistmodel.cpp \
     model/rulesetmodel.cpp \
     model/servicelistmodel.cpp \
@@ -171,6 +177,7 @@ SOURCES += \
     rpc/askpendingmanagerrpc.cpp \
     rpc/autoupdatemanagerrpc.cpp \
     rpc/confappmanagerrpc.cpp \
+    rpc/confgroupmanagerrpc.cpp \
     rpc/confmanagerrpc.cpp \
     rpc/confrulemanagerrpc.cpp \
     rpc/confzonemanagerrpc.cpp \
@@ -286,11 +293,13 @@ HEADERS += \
     conf/app.h \
     conf/appgroup.h \
     conf/confappmanager.h \
+    conf/confgroupmanager.h \
     conf/confmanager.h \
     conf/confmanagerbase.h \
     conf/confrulemanager.h \
     conf/confzonemanager.h \
     conf/firewallconf.h \
+    conf/group.h \
     conf/inioptions.h \
     conf/rule.h \
     conf/zone.h \
@@ -355,6 +364,9 @@ HEADERS += \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \
+    form/group/groupeditdialog.h \
+    form/group/groupscontroller.h \
+    form/group/groupswindow.h \
     form/home/homecontroller.h \
     form/home/homewindow.h \
     form/home/pages/aboutpage.h \
@@ -429,6 +441,7 @@ HEADERS += \
     model/appstatmodel.h \
     model/connlistcolumn.h \
     model/connlistmodel.h \
+    model/grouplistmodel.h \
     model/rulelistmodel.h \
     model/rulesetmodel.h \
     model/servicelistmodel.h \
@@ -442,6 +455,7 @@ HEADERS += \
     rpc/askpendingmanagerrpc.h \
     rpc/autoupdatemanagerrpc.h \
     rpc/confappmanagerrpc.h \
+    rpc/confgroupmanagerrpc.h \
     rpc/confmanagerrpc.h \
     rpc/confrulemanagerrpc.h \
     rpc/confzonemanagerrpc.h \
@@ -488,6 +502,7 @@ HEADERS += \
     util/conf/confappswalker.h \
     util/conf/confbuffer.h \
     util/conf/confdata.h \
+    util/conf/confgroupswalker.h \
     util/conf/confrodata.h \
     util/conf/confruleswalker.h \
     util/conf/confutil.h \

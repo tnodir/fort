@@ -130,6 +130,14 @@ bool DriverManager::writeRules(QByteArray &buf, bool onlyFlags)
     return writeData(code, buf);
 }
 
+bool DriverManager::writeGroups(QByteArray &buf, bool onlyFlags)
+{
+    const auto code =
+            onlyFlags ? DriverCommon::ioctlSetGroupFlag() : DriverCommon::ioctlSetGroups();
+
+    return writeData(code, buf);
+}
+
 bool DriverManager::writeData(quint32 code, QByteArray &buf)
 {
     if (!isDeviceOpened())

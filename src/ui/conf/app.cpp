@@ -36,8 +36,8 @@ bool App::isScheduleEqual(const App &o) const
 
 bool App::isOptionsEqual(const App &o) const
 {
-    return isFlagsEqual(o) && isZonesEqual(o) && groupIndex == o.groupIndex && ruleId == o.ruleId
-            && notes == o.notes && isPathsEqual(o) && isScheduleEqual(o);
+    return isFlagsEqual(o) && isZonesEqual(o) && groupIndex == o.groupIndex && groups == o.groups
+            && ruleId == o.ruleId && notes == o.notes && isPathsEqual(o) && isScheduleEqual(o);
 }
 
 bool App::isNameEqual(const App &o) const
@@ -48,6 +48,11 @@ bool App::isNameEqual(const App &o) const
 bool App::isProcWild() const
 {
     return applyParent || applyChild || killChild || killProcess;
+}
+
+bool App::hasGroup() const
+{
+    return groups != 0;
 }
 
 bool App::hasZone() const

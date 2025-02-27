@@ -28,6 +28,7 @@ public:
     bool isValid() const { return appId > 0; }
 
     bool isProcWild() const;
+    bool hasGroup() const;
     bool hasZone() const;
 
 public:
@@ -49,6 +50,8 @@ public:
     quint8 groupIndex = 0; // "Main" app. group
 
     quint16 ruleId = 0;
+
+    quint32 groups = 0;
 
     qint64 appId = 0;
 

@@ -22,10 +22,6 @@
 #include "confutil.h"
 #include "ruletextparser.h"
 
-#define APP_GROUP_MAX      FORT_CONF_GROUP_MAX
-#define APP_GROUP_NAME_MAX 128
-#define APP_PATH_MAX       FORT_CONF_APP_PATH_MAX
-
 namespace {
 
 int writeServicesHeader(char *data, int servicesCount)
@@ -301,21 +297,14 @@ bool ConfBuffer::parseAppGroups(
         EnvManager &envManager, const QList<AppGroup *> &appGroups, AppParseOptions &opt)
 {
     const int groupsCount = appGroups.size();
-    if (groupsCount < 1 || groupsCount > APP_GROUP_MAX) {
-        setErrorMessage(
-                tr("Number of Application Groups must be between 1 and %1").arg(APP_GROUP_MAX));
+    if (groupsCount < 1 || groupsCount > FORT_CONF_GROUP_MAX) {
+        setErrorMessage(tr("Number of Application Groups must be between 1 and %1")
+                        .arg(FORT_CONF_GROUP_MAX));
         return false;
     }
 
     for (int i = 0; i < groupsCount; ++i) {
         const AppGroup *appGroup = appGroups.at(i);
-
-        const QString name = appGroup->name();
-        if (name.size() > APP_GROUP_NAME_MAX) {
-            setErrorMessage(
-                    tr("Length of Application Group's Name must be < %1").arg(APP_GROUP_NAME_MAX));
-            return false;
-        }
 
         App app;
         app.applyChild = appGroup->applyChild();
@@ -408,8 +397,9 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
 
     const int kernelPathSize = kernelPath.size();
 
-    if (kernelPathSize > APP_PATH_MAX) {
-        setErrorMessage(tr("Length of Application's Path must be < %1").arg(APP_PATH_MAX));
+    if (kernelPathSize > FORT_CONF_APP_PATH_MAX) {
+        setErrorMessage(
+                tr("Length of Application's Path must be < %1").arg(FORT_CONF_APP_PATH_MAX));
         return false;
     }
 
@@ -432,8 +422,9 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .is_new = isNew,
                 .found = true,
         },
-        .group_index = app.groupIndex,
         .rule_id = app.ruleId,
+        .group_index = app.groupIndex,
+        .groups = app.groups,
         .app_id = quint32(app.appId),
         .zones = app.zones,
     };
@@ -661,4 +652,65 @@ bool ConfBuffer::writeRuleFilterValues(const RuleFilter &ruleFilter)
     range->write(confData);
 
     return true;
+}
+
+void ConfBuffer::writeGroups(const ConfGroupsWalker &confGroupsWalker)
+{
+    quint32 groupsMask;
+    quint32 enabledMask;
+    quint32 exclusiveMask;
+    quint32 dataSize;
+    QList<QByteArray> groupsData;
+
+    // Resize the buffer
+    const int groupsSize = FORT_CONF_GROUPS_DATA_OFF + dataSize;
+
+    buffer().resize(groupsSize);
+
+    // Fill the buffer
+    char *data = buffer().data();
+
+    PFORT_CONF_GROUPS confGroups = PFORT_CONF_GROUPS(data);
+
+    memset(confGroups, 0, sizeof(FORT_CONF_GROUPS_DATA_OFF));
+
+    confGroups->mask = groupsMask;
+    confGroups->enabled_mask = enabledMask;
+    confGroups->exclusive_mask = exclusiveMask;
+
+    data = confGroups->data;
+
+    ConfData confData(data);
+
+    for (const auto &groupData : groupsData) {
+        Q_ASSERT(!groupData.isEmpty());
+
+        const int groupIndex = BitUtil::bitScanForward(groupsMask);
+        if (Q_UNLIKELY(groupIndex == -1))
+            break;
+
+        const quint32 groupMask = (quint32(1) << groupIndex);
+
+        confGroups->addr_off[groupIndex] = confData.dataOffset();
+
+        confData.writeArray(groupData);
+
+        groupsMask ^= groupMask;
+    }
+}
+
+void ConfBuffer::writeGroupFlag(int groupId, bool enabled)
+{
+    // Resize the buffer
+    const int flagSize = sizeof(FORT_CONF_GROUP_FLAG);
+
+    buffer().resize(flagSize);
+
+    // Fill the buffer
+    char *data = buffer().data();
+
+    PFORT_CONF_GROUP_FLAG confGroupFlag = PFORT_CONF_GROUP_FLAG(data);
+
+    confGroupFlag->group_id = groupId;
+    confGroupFlag->enabled = enabled;
 }

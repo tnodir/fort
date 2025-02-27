@@ -5,6 +5,7 @@
 
 class AutoUpdateManager;
 class ConfAppManager;
+class ConfGroupManager;
 class ConfManager;
 class ConfRuleManager;
 class ConfZoneManager;
@@ -30,6 +31,7 @@ public:
     FortSettings *settings() const;
     ConfManager *confManager() const;
     ConfAppManager *confAppManager() const;
+    ConfGroupManager *confGroupManager() const;
     ConfRuleManager *confRuleManager() const;
     ConfZoneManager *confZoneManager() const;
     FirewallConf *conf() const;

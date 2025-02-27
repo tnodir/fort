@@ -13,6 +13,7 @@
 #include <form/dialog/passworddialog.h>
 #include <form/dialog/splashscreen.h>
 #include <form/graph/graphwindow.h>
+#include <form/group/groupswindow.h>
 #include <form/home/homewindow.h>
 #include <form/opt/optionswindow.h>
 #include <form/prog/programalertwindow.h>
@@ -190,6 +191,23 @@ void WindowManager::setupZonesWindow()
     m_zonesWindow = new ZonesWindow();
 
     connect(m_zonesWindow, &ZonesWindow::aboutToClose, this, &WindowManager::closeZonesWindow);
+}
+
+void WindowManager::setupGroupsWindow()
+{
+    m_groupsWindow = new GroupsWindow();
+
+    connect(m_groupsWindow, &GroupsWindow::aboutToClose, this, &WindowManager::closeGroupsWindow);
+}
+
+void WindowManager::setupSpeedLimitsWindow()
+{
+#if 0 // TODO
+    m_speedLimitsWindow = new SpeedLimitsWindow();
+
+    connect(m_speedLimitsWindow, &SpeedLimitsWindow::aboutToClose, this,
+            &WindowManager::closeSpeedLimitsWindow);
+#endif
 }
 
 void WindowManager::setupGraphWindow()
@@ -542,6 +560,48 @@ void WindowManager::closeZonesWindow()
     }
 }
 
+void WindowManager::showGroupsWindow()
+{
+    if (!checkWindowPassword(WindowGroups))
+        return;
+
+    if (!m_groupsWindow) {
+        setupGroupsWindow();
+    }
+
+    showWindow(m_groupsWindow);
+}
+
+void WindowManager::closeGroupsWindow()
+{
+    if (closeWindow(m_groupsWindow)) {
+        m_groupsWindow = nullptr;
+    }
+}
+
+void WindowManager::showSpeedLimitsWindow()
+{
+    if (!checkWindowPassword(WindowSpeedLimits))
+        return;
+
+    if (!m_speedLimitsWindow) {
+        setupSpeedLimitsWindow();
+    }
+
+#if 0 // TODO
+    showWindow(m_speedLimitsWindow);
+#endif
+}
+
+void WindowManager::closeSpeedLimitsWindow()
+{
+#if 0 // TODO
+    if (closeWindow(m_speedLimitsWindow)) {
+        m_speedLimitsWindow = nullptr;
+    }
+#endif
+}
+
 void WindowManager::showGraphWindow()
 {
     if (!m_graphWindow) {
@@ -572,6 +632,8 @@ void WindowManager::showWindowByCode(WindowCode code)
         [&] { showRulesWindow(); },
         [&] { showStatisticsWindow(); },
         [&] { showZonesWindow(); },
+        [&] { showGroupsWindow(); },
+        [&] { showSpeedLimitsWindow(); },
         [&] { showGraphWindow(); },
     };
 
@@ -594,6 +656,8 @@ void WindowManager::closeWindowByCode(WindowCode code)
         [&] { closeRulesWindow(); },
         [&] { closeStatisticsWindow(); },
         [&] { closeZonesWindow(); },
+        [&] { closeGroupsWindow(); },
+        [&] { closeSpeedLimitsWindow(); },
         [&] { closeGraphWindow(); },
     };
 

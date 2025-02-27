@@ -6,6 +6,7 @@
 #include "common/fortprov.h"
 
 #include "fortcnf_conf.h"
+#include "fortcnf_group.h"
 #include "fortcnf_rule.h"
 #include "fortcnf_zone.h"
 #include "fortcout.h"
@@ -377,6 +378,48 @@ static NTSTATUS fort_device_control_setruleflag(PFORT_DEVICE_CONTROL_ARG dca)
     return STATUS_UNSUCCESSFUL;
 }
 
+static NTSTATUS fort_device_control_setgroups(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PCFORT_CONF_GROUPS groups = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len >= FORT_CONF_GROUPS_DATA_OFF) {
+        PFORT_CONF_GROUPS conf_groups = fort_conf_groups_new(groups, len);
+
+        if (conf_groups == NULL) {
+            return STATUS_INSUFFICIENT_RESOURCES;
+        } else {
+            PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+
+            fort_conf_groups_set(device_conf, conf_groups);
+
+            fort_device_conf_reauth_queue(device_conf);
+
+            return STATUS_SUCCESS;
+        }
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_setgroupflag(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PCFORT_CONF_GROUP_FLAG group_flag = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len == sizeof(FORT_CONF_GROUP_FLAG)) {
+        PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
+
+        fort_conf_group_flag_set(device_conf, group_flag);
+
+        fort_device_conf_reauth_queue(device_conf);
+
+        return STATUS_SUCCESS;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
 static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETRULEFLAG) == FORT_IOCTL_INDEX_SETRULEFLAG,
         "Invalid FORT_CTL_INDEX_FROM_CODE()");
 
@@ -395,6 +438,8 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setzoneflag, // FORT_IOCTL_SETZONEFLAG
     &fort_device_control_setrules, // FORT_IOCTL_SETRULES
     &fort_device_control_setruleflag, // FORT_IOCTL_SETRULEFLAG
+    &fort_device_control_setgroups, // FORT_IOCTL_SETGROUPS
+    &fort_device_control_setgroupflag, // FORT_IOCTL_SETGROUPFLAG
 };
 
 static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)

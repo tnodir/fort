@@ -4,6 +4,11 @@
 
 #include <util/stringutil.h>
 
+int ConfUtil::zoneMaxCount()
+{
+    return FORT_CONF_ZONE_MAX;
+}
+
 int ConfUtil::ruleMaxCount()
 {
     return FORT_CONF_RULE_MAX;
@@ -29,9 +34,9 @@ int ConfUtil::ruleSetDepthMaxCount()
     return FORT_CONF_RULE_SET_DEPTH_MAX;
 }
 
-int ConfUtil::zoneMaxCount()
+int ConfUtil::groupMaxCount()
 {
-    return FORT_CONF_ZONE_MAX;
+    return FORT_CONF_GROUP_MAX;
 }
 
 QRegularExpressionMatch ConfUtil::matchWildcard(const QStringView path)

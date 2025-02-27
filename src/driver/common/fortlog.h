@@ -6,7 +6,7 @@
 #include "fortconf.h"
 
 #define FORT_BUFFER_SIZE  (16 * 1024 - 64)
-#define FORT_LOG_PATH_MAX (2 * 1024 * sizeof(WCHAR))
+#define FORT_LOG_PATH_MAX FORT_CONF_APP_PATH_MAX_SIZE
 #define FORT_LOG_ALIGN    4
 
 #define FORT_LOG_FLAG_TYPE_MASK     0x0FF00000

@@ -67,6 +67,16 @@ quint32 ioctlSetRuleFlag()
     return FORT_IOCTL_SETRULEFLAG;
 }
 
+quint32 ioctlSetGroups()
+{
+    return FORT_IOCTL_SETGROUPS;
+}
+
+quint32 ioctlSetGroupFlag()
+{
+    return FORT_IOCTL_SETGROUPFLAG;
+}
+
 quint32 userErrorCode()
 {
     return FORT_ERROR_USER_ERROR;

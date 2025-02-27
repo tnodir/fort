@@ -75,6 +75,14 @@ enum Command : qint8 {
     Rpc_ConfZoneManager_zoneRemoved,
     Rpc_ConfZoneManager_zoneUpdated,
 
+    Rpc_ConfGroupManager_addOrUpdateGroup,
+    Rpc_ConfGroupManager_deleteGroup,
+    Rpc_ConfGroupManager_updateGroupName,
+    Rpc_ConfGroupManager_updateGroupEnabled,
+    Rpc_ConfGroupManager_groupAdded,
+    Rpc_ConfGroupManager_groupRemoved,
+    Rpc_ConfGroupManager_groupUpdated,
+
     Rpc_DriverManager_updateState,
 
     Rpc_DriveListManager_onDriveListChanged,
@@ -121,6 +129,7 @@ enum RpcManager : qint8 {
     Rpc_ConfAppManager,
     Rpc_ConfRuleManager,
     Rpc_ConfZoneManager,
+    Rpc_ConfGroupManager,
     Rpc_DriverManager,
     Rpc_DriveListManager,
     Rpc_QuotaManager,

@@ -51,6 +51,19 @@ CREATE TABLE app_group(
   period_to TEXT NOT NULL
 );
 
+CREATE TABLE app_group2(
+  group_id INTEGER PRIMARY KEY,
+  enabled BOOLEAN NOT NULL,
+  exclusive BOOLEAN NOT NULL,
+  period_enabled BOOLEAN NOT NULL,
+  name TEXT NOT NULL,
+  notes TEXT,
+  period_from TEXT,
+  period_to TEXT,
+  rule_id INTEGER,
+  mod_time INTEGER NOT NULL
+);
+
 CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
   app_group_id INTEGER NOT NULL DEFAULT 0,
@@ -70,6 +83,7 @@ CREATE TABLE app(
   log_blocked_conn BOOLEAN NOT NULL DEFAULT 1,
   blocked BOOLEAN NOT NULL,
   kill_process BOOLEAN NOT NULL DEFAULT 0,
+  groups_mask INTEGER NOT NULL DEFAULT 0, -- group ids bit mask
   accept_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   rule_id INTEGER,

@@ -216,6 +216,7 @@ void IfacePage::retranslateComboHotKey()
         TrayIcon::tr("Rules"),
         TrayIcon::tr("Zones"),
         TrayIcon::tr("Groups"),
+        TrayIcon::tr("Speed Limits"),
         TrayIcon::tr("Services"),
         TrayIcon::tr("Statistics"),
         TrayIcon::tr("Traffic Graph"),

@@ -192,6 +192,7 @@ private:
     QAction *m_rulesAction = nullptr;
     QAction *m_zonesAction = nullptr;
     QAction *m_groupsAction = nullptr;
+    QAction *m_speedLimitsAction = nullptr;
     QAction *m_servicesAction = nullptr;
     QAction *m_statisticsAction = nullptr;
     QAction *m_graphAction = nullptr;

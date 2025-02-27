@@ -4,6 +4,7 @@
 #include <QByteArray>
 
 #include <util/conf/confappswalker.h>
+#include <util/conf/confgroupswalker.h>
 #include <util/conf/confruleswalker.h>
 
 #include "confdata.h"
@@ -53,6 +54,9 @@ public slots:
     void writeRuleFlag(int ruleId, bool enabled);
 
     bool validateRuleText(const QString &ruleText);
+
+    void writeGroups(const ConfGroupsWalker &confGroupsWalker);
+    void writeGroupFlag(int groupId, bool enabled);
 
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }

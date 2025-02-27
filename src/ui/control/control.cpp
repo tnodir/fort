@@ -72,6 +72,14 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfZoneManager_zoneRemoved),
     CASE_STRING(Rpc_ConfZoneManager_zoneUpdated),
 
+    CASE_STRING(Rpc_ConfGroupManager_addOrUpdateGroup),
+    CASE_STRING(Rpc_ConfGroupManager_deleteGroup),
+    CASE_STRING(Rpc_ConfGroupManager_updateGroupName),
+    CASE_STRING(Rpc_ConfGroupManager_updateGroupEnabled),
+    CASE_STRING(Rpc_ConfGroupManager_groupAdded),
+    CASE_STRING(Rpc_ConfGroupManager_groupRemoved),
+    CASE_STRING(Rpc_ConfGroupManager_groupUpdated),
+
     CASE_STRING(Rpc_DriverManager_updateState),
 
     CASE_STRING(Rpc_DriveListManager_onDriveListChanged),
@@ -117,6 +125,7 @@ static const QHash<RpcManager, const char *> g_managerNames = {
     CASE_STRING(Rpc_ConfAppManager),
     CASE_STRING(Rpc_ConfRuleManager),
     CASE_STRING(Rpc_ConfZoneManager),
+    CASE_STRING(Rpc_ConfGroupManager),
     CASE_STRING(Rpc_DriverManager),
     CASE_STRING(Rpc_DriveListManager),
     CASE_STRING(Rpc_QuotaManager),
@@ -197,6 +206,14 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneAdded,
     Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneRemoved,
     Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneUpdated,
+
+    Rpc_ConfGroupManager, // Rpc_ConfGroupManager_addOrUpdateGroup,
+    Rpc_ConfGroupManager, // Rpc_ConfGroupManager_deleteGroup,
+    Rpc_ConfGroupManager, // Rpc_ConfGroupManager_updateGroupName,
+    Rpc_ConfGroupManager, // Rpc_ConfGroupManager_updateGroupEnabled,
+    Rpc_ConfGroupManager, // Rpc_ConfGroupManager_groupAdded,
+    Rpc_ConfGroupManager, // Rpc_ConfGroupManager_groupRemoved,
+    Rpc_ConfGroupManager, // Rpc_ConfGroupManager_groupUpdated,
 
     Rpc_DriverManager, // Rpc_DriverManager_updateState,
 
@@ -301,6 +318,14 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_ConfZoneManager_zoneAdded,
     0, // Rpc_ConfZoneManager_zoneRemoved,
     0, // Rpc_ConfZoneManager_zoneUpdated,
+
+    true, // Rpc_ConfGroupManager_addOrUpdateGroup,
+    true, // Rpc_ConfGroupManager_deleteGroup,
+    true, // Rpc_ConfGroupManager_updateGroupName,
+    true, // Rpc_ConfGroupManager_updateGroupEnabled,
+    0, // Rpc_ConfGroupManager_groupAdded,
+    0, // Rpc_ConfGroupManager_groupRemoved,
+    0, // Rpc_ConfGroupManager_groupUpdated,
 
     0, // Rpc_DriverManager_updateState,
 

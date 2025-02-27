@@ -289,6 +289,27 @@ typedef struct fort_conf_rules_rt
 
 typedef const FORT_CONF_RULES_RT *PCFORT_CONF_RULES_RT;
 
+typedef struct fort_conf_groups
+{
+    UINT32 mask;
+    UINT32 enabled_mask;
+    UINT32 exclusive_mask;
+
+    UINT32 addr_off[FORT_CONF_GROUP_MAX];
+
+    char data[4];
+} FORT_CONF_GROUPS, *PFORT_CONF_GROUPS;
+
+typedef const FORT_CONF_GROUPS *PCFORT_CONF_GROUPS;
+
+typedef struct fort_conf_group_flag
+{
+    UCHAR group_id;
+    UCHAR enabled;
+} FORT_CONF_GROUP_FLAG, *PFORT_CONF_GROUP_FLAG;
+
+typedef const FORT_CONF_GROUP_FLAG *PCFORT_CONF_GROUP_FLAG;
+
 typedef struct fort_traf
 {
     union {
@@ -326,11 +347,11 @@ typedef struct fort_app_data
 {
     FORT_APP_FLAGS flags;
 
-    UCHAR reserved; /* not used */
+    UINT16 rule_id : 11;
 
-    UCHAR group_index;
+    UINT16 group_index : 5;
 
-    UINT16 rule_id;
+    UINT32 groups;
 
     UINT32 app_id;
 
@@ -482,13 +503,14 @@ typedef struct fort_conf_zones_conn_filtered_opt
     FORT_CONF_ZONES_CONN_FILTERED_RESULT reject;
 } FORT_CONF_ZONES_CONN_FILTERED_OPT, *PFORT_CONF_ZONES_CONN_FILTERED_OPT;
 
-#define FORT_CONF_DATA_OFF       offsetof(FORT_CONF, data)
-#define FORT_CONF_IO_CONF_OFF    offsetof(FORT_CONF_IO, conf)
-#define FORT_CONF_PROTO_LIST_OFF offsetof(FORT_CONF_PROTO_LIST, proto)
-#define FORT_CONF_PORT_LIST_OFF  offsetof(FORT_CONF_PORT_LIST, port)
-#define FORT_CONF_ADDR_LIST_OFF  offsetof(FORT_CONF_ADDR_LIST, ip)
-#define FORT_CONF_ADDR_GROUP_OFF offsetof(FORT_CONF_ADDR_GROUP, data)
-#define FORT_CONF_ZONES_DATA_OFF offsetof(FORT_CONF_ZONES, data)
+#define FORT_CONF_DATA_OFF        offsetof(FORT_CONF, data)
+#define FORT_CONF_IO_CONF_OFF     offsetof(FORT_CONF_IO, conf)
+#define FORT_CONF_PROTO_LIST_OFF  offsetof(FORT_CONF_PROTO_LIST, proto)
+#define FORT_CONF_PORT_LIST_OFF   offsetof(FORT_CONF_PORT_LIST, port)
+#define FORT_CONF_ADDR_LIST_OFF   offsetof(FORT_CONF_ADDR_LIST, ip)
+#define FORT_CONF_ADDR_GROUP_OFF  offsetof(FORT_CONF_ADDR_GROUP, data)
+#define FORT_CONF_GROUPS_DATA_OFF offsetof(FORT_CONF_GROUPS, data)
+#define FORT_CONF_ZONES_DATA_OFF  offsetof(FORT_CONF_ZONES, data)
 
 #define FORT_CONF_PROTO_LIST_SIZE(proto_n, pair_n)                                                 \
     (FORT_CONF_PROTO_LIST_OFF + FORT_CONF_PROTO_ARR_SIZE(proto_n)                                  \
@@ -551,6 +573,10 @@ FORT_API BOOL fort_conf_zones_ip_included(
 FORT_API BOOL fort_conf_zones_conn_filtered(PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn,
         PFORT_CONF_ZONES_CONN_FILTERED_OPT opt);
 
+FORT_API BOOL fort_conf_groups_mask_included(PCFORT_CONF_GROUPS groups, UINT32 groups_mask);
+
+FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
+
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
 FORT_API FORT_APP_DATA fort_conf_app_exe_find(
@@ -558,8 +584,6 @@ FORT_API FORT_APP_DATA fort_conf_app_exe_find(
 
 FORT_API FORT_APP_DATA fort_conf_app_find(PCFORT_CONF conf, PCFORT_APP_PATH path,
         fort_conf_app_exe_find_func *exe_find_func, PVOID exe_context);
-
-FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
 
 FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id);

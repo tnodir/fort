@@ -3,6 +3,7 @@
 #include <QAbstractButton>
 
 #include <conf/confappmanager.h>
+#include <conf/confgroupmanager.h>
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
 #include <conf/confzonemanager.h>
@@ -42,6 +43,11 @@ ConfManager *BaseController::confManager() const
 ConfAppManager *BaseController::confAppManager() const
 {
     return IoC<ConfAppManager>();
+}
+
+ConfGroupManager *BaseController::confGroupManager() const
+{
+    return IoC<ConfGroupManager>();
 }
 
 ConfRuleManager *BaseController::confRuleManager() const

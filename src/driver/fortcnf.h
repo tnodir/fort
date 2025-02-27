@@ -50,6 +50,7 @@ typedef struct fort_device_conf
 
     PFORT_CONF_ZONES zones;
     PFORT_CONF_RULES rules;
+    PFORT_CONF_GROUPS groups;
 
     EX_SPIN_LOCK lock;
 } FORT_DEVICE_CONF, *PFORT_DEVICE_CONF;

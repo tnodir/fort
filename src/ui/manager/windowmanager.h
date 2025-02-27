@@ -11,6 +11,7 @@
 class FormWindow;
 class FortSettings;
 class GraphWindow;
+class GroupsWindow;
 class HomeWindow;
 class IniUser;
 class MainWindow;
@@ -19,6 +20,7 @@ class ProgramAlertWindow;
 class ProgramsWindow;
 class RulesWindow;
 class ServicesWindow;
+class SpeedLimitsWindow;
 class StatisticsWindow;
 class TrayIcon;
 class WidgetWindow;
@@ -48,6 +50,7 @@ public:
     StatisticsWindow *statWindow() const { return m_statWindow; }
     ServicesWindow *servicesWindow() const { return m_servicesWindow; }
     ZonesWindow *zonesWindow() const { return m_zonesWindow; }
+    GroupsWindow *groupsWindow() const { return m_groupsWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
     TrayIcon *trayIcon() const { return m_trayIcon; }
 
@@ -109,6 +112,12 @@ public slots:
     void showZonesWindow();
     void closeZonesWindow();
 
+    void showGroupsWindow();
+    void closeGroupsWindow();
+
+    void showSpeedLimitsWindow();
+    void closeSpeedLimitsWindow();
+
     void showGraphWindow();
     void closeGraphWindow();
 
@@ -160,6 +169,8 @@ private:
     void setupRulesWindow();
     void setupServicesWindow();
     void setupZonesWindow();
+    void setupGroupsWindow();
+    void setupSpeedLimitsWindow();
     void setupGraphWindow();
     void setupStatisticsWindow();
 
@@ -208,6 +219,8 @@ private:
     StatisticsWindow *m_statWindow = nullptr;
     ServicesWindow *m_servicesWindow = nullptr;
     ZonesWindow *m_zonesWindow = nullptr;
+    GroupsWindow *m_groupsWindow = nullptr;
+    SpeedLimitsWindow *m_speedLimitsWindow = nullptr;
     GraphWindow *m_graphWindow = nullptr;
 };
 

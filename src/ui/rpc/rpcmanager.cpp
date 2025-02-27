@@ -12,6 +12,7 @@
 #include <rpc/appinfomanagerrpc.h>
 #include <rpc/autoupdatemanagerrpc.h>
 #include <rpc/confappmanagerrpc.h>
+#include <rpc/confgroupmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
 #include <rpc/confrulemanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
@@ -86,6 +87,7 @@ void RpcManager::setupServerSignals()
     ConfAppManagerRpc::setupServerSignals(this);
     ConfRuleManagerRpc::setupServerSignals(this);
     ConfZoneManagerRpc::setupServerSignals(this);
+    ConfGroupManagerRpc::setupServerSignals(this);
     DriverManagerRpc::setupServerSignals(this);
     QuotaManagerRpc::setupServerSignals(this);
     StatManagerRpc::setupServerSignals(this);
@@ -214,6 +216,7 @@ static const processCommand_func processManager_funcList[] = {
     &ConfAppManagerRpc::processServerCommand, // Control::Rpc_ConfAppManager,
     &ConfRuleManagerRpc::processServerCommand, // Control::Rpc_ConfRuleManager,
     &ConfZoneManagerRpc::processServerCommand, // Control::Rpc_ConfZoneManager,
+    &ConfGroupManagerRpc::processServerCommand, // Control::Rpc_ConfGroupManager,
     &DriverManagerRpc::processServerCommand, // Control::Rpc_DriverManager,
     &DriveListManagerRpc::processServerCommand, // Control::Rpc_DriveListManager,
     &QuotaManagerRpc::processServerCommand, // Control::Rpc_QuotaManager,
