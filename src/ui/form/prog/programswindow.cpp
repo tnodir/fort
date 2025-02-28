@@ -294,6 +294,7 @@ void ProgramsWindow::setupEditMenu()
     editMenu->addSeparator();
 
     m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/recycle.png"), QString());
+    m_actPurgeApps->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_P));
 
     m_actFindApps = editMenu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
     m_actFindApps->setShortcut(QKeySequence::Find);
