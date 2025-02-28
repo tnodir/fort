@@ -10,12 +10,14 @@ class ToolButton : public QToolButton
 public:
     explicit ToolButton(QWidget *parent = nullptr);
 
-signals:
-    void rightClicked();
-
 protected:
+    bool mousePressed() const { return m_mousePressed; }
+
     void mousePressEvent(QMouseEvent *e) override;
     void mouseReleaseEvent(QMouseEvent *e) override;
+
+private:
+    void onRightClicked();
 
 private:
     bool m_mousePressed : 1 = false;

@@ -13,7 +13,6 @@ OptionsButton::OptionsButton(int tabIndex, QWidget *parent) :
     setupUi();
 
     connect(this, &QToolButton::clicked, this, &OptionsButton::showOptionsWindow);
-    connect(this, &ToolButton::rightClicked, this, &OptionsButton::showMenu);
 }
 
 TrayIcon *OptionsButton::trayIcon() const

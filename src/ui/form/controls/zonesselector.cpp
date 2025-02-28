@@ -32,7 +32,7 @@ constexpr void clearZonesMask(quint32 &zones, int zoneId)
 
 }
 
-ZonesSelector::ZonesSelector(QWidget *parent) : QPushButton(parent)
+ZonesSelector::ZonesSelector(QWidget *parent) : PushButton(parent)
 {
     setupUi();
 }

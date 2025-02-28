@@ -1,13 +1,13 @@
 #ifndef ZONESSELECTOR_H
 #define ZONESSELECTOR_H
 
-#include <QPushButton>
+#include "pushbutton.h"
 
 QT_FORWARD_DECLARE_CLASS(QVBoxLayout)
 
 constexpr int DefaultMaxZoneCount = 32;
 
-class ZonesSelector : public QPushButton
+class ZonesSelector : public PushButton
 {
     Q_OBJECT
 

@@ -20,7 +20,14 @@ void ToolButton::mouseReleaseEvent(QMouseEvent *e)
 
     m_mousePressed = false;
 
-    if (e->button() == Qt::RightButton) {
-        emit rightClicked();
+    if (e->button() == Qt::RightButton && e->modifiers() == Qt::NoModifier) {
+        onRightClicked();
+    }
+}
+
+void ToolButton::onRightClicked()
+{
+    if (menu()) {
+        showMenu();
     }
 }

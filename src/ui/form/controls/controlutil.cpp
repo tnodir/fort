@@ -21,6 +21,8 @@
 #include "menubutton.h"
 #include "menuwidget.h"
 #include "optionsbutton.h"
+#include "pushbutton.h"
+#include "toolbutton.h"
 #include "sidebutton.h"
 #include "spinbox.h"
 
@@ -103,7 +105,7 @@ void ControlUtil::setComboBoxIcons(QComboBox *c, const QStringList &iconPaths)
 
 QPushButton *ControlUtil::createButton(const QString &iconPath, const QString &text)
 {
-    auto c = new QPushButton(IconCache::icon(iconPath), text);
+    auto c = new PushButton(IconCache::icon(iconPath), text);
 
     return c;
 }
@@ -111,7 +113,7 @@ QPushButton *ControlUtil::createButton(const QString &iconPath, const QString &t
 QPushButton *ControlUtil::createButton(
         const QString &iconPath, const std::function<void()> &onClicked)
 {
-    auto c = new QPushButton(IconCache::icon(iconPath), QString());
+    auto c = new PushButton(IconCache::icon(iconPath), QString());
 
     c->connect(c, &QPushButton::clicked, onClicked);
 
@@ -139,7 +141,7 @@ QToolButton *ControlUtil::createSideButton(
 
 QToolButton *ControlUtil::createToolButton(const QString &iconPath)
 {
-    auto c = new QToolButton();
+    auto c = new ToolButton();
     c->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     c->setIcon(IconCache::icon(iconPath));
     return c;

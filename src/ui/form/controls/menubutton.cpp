@@ -9,7 +9,7 @@
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 
-MenuButton::MenuButton(QWidget *parent) : QPushButton(parent)
+MenuButton::MenuButton(QWidget *parent) : PushButton(parent)
 {
     setupUi();
 }
@@ -28,21 +28,24 @@ void MenuButton::setupUi()
 
 void MenuButton::mousePressEvent(QMouseEvent *e)
 {
-    if (e->button() == Qt::LeftButton && e->modifiers() == Qt::NoModifier) {
-        QPushButton::mousePressEvent(e);
-    }
+    const bool isLeftRightButton =
+            (e->button() == Qt::LeftButton || e->button() == Qt::RightButton);
 
-    m_mousePressed = true;
+    if (isLeftRightButton && e->modifiers() == Qt::NoModifier) {
+        PushButton::mousePressEvent(e);
+    } else {
+        setMousePressed(true);
+    }
 }
 
 void MenuButton::mouseReleaseEvent(QMouseEvent *e)
 {
-    QPushButton::mouseReleaseEvent(e);
+    const bool mousePressed = this->mousePressed();
 
-    if (!m_mousePressed)
+    PushButton::mouseReleaseEvent(e);
+
+    if (!mousePressed)
         return;
-
-    m_mousePressed = false;
 
     if (menu()->isVisible())
         return; // standard behavior
