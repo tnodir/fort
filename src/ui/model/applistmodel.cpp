@@ -357,6 +357,7 @@ QString AppListModel::sqlOrderColumn() const
         "group_index", // Group
         pathColumn, // File Path
         "t.app_id", // Creation Time ~ App ID
+        "t.notes", // Notes
     };
 
     static const QStringList postOrderColumns = {
@@ -368,6 +369,7 @@ QString AppListModel::sqlOrderColumn() const
         nameColumn, // Group
         nameColumn, // File Path
         nameColumn, // Creation Time ~ App ID
+        nameColumn, // Notes
     };
 
     Q_ASSERT(sortColumn() >= 0 && sortColumn() < orderColumns.size()
@@ -407,6 +409,7 @@ QString AppListModel::columnName(const AppListColumn column)
             tr("Group"),
             tr("File Path"),
             tr("Creation Time"),
+            tr("Notes"),
         };
     }
 

@@ -56,10 +56,8 @@ bool Settings::checkIniVersionOnWrite(int &oldVersion) const
 
 void Settings::setupIni(const QString &filePath)
 {
-    const QString iniPath(filePath);
-
-    m_iniExists = FileUtil::fileExists(iniPath);
-    m_ini = new QSettings(iniPath, QSettings::IniFormat, this);
+    m_iniExists = FileUtil::fileExists(filePath);
+    m_ini = new QSettings(filePath, QSettings::IniFormat, this);
 
     migrateIniOnLoad();
 }

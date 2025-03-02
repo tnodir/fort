@@ -31,7 +31,7 @@
 
 namespace {
 
-constexpr int APPS_HEADER_VERSION = 12;
+constexpr int APPS_HEADER_VERSION = 13;
 
 QToolButton *createCheckableToolButton(
         const QString &iconPath, const std::function<void()> &onClicked)
@@ -463,6 +463,7 @@ void ProgramsWindow::setupTableAppsHeader()
     header->setSectionResizeMode(int(AppListColumn::Group), QHeaderView::Interactive);
     header->setSectionResizeMode(int(AppListColumn::FilePath), QHeaderView::Interactive);
     header->setSectionResizeMode(int(AppListColumn::CreationTime), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(AppListColumn::Notes), QHeaderView::Interactive);
     header->setStretchLastSection(true);
 
     header->resizeSection(int(AppListColumn::Name), 300);
@@ -473,6 +474,10 @@ void ProgramsWindow::setupTableAppsHeader()
     header->resizeSection(int(AppListColumn::Group), 100);
     header->resizeSection(int(AppListColumn::FilePath), 270);
     header->resizeSection(int(AppListColumn::CreationTime), 130);
+    // Hidden columns
+    header->resizeSection(int(AppListColumn::Notes), 200);
+
+    header->setSectionHidden(int(AppListColumn::Notes), /*hide=*/true);
 
     header->setSectionsMovable(true);
     header->setSectionsClickable(true);

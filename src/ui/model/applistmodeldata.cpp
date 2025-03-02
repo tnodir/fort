@@ -111,6 +111,11 @@ QVariant dataDisplayCreationTime(const App &app, int /*role*/)
     return app.creatTime;
 }
 
+QVariant dataDisplayNotes(const App &app, int /*role*/)
+{
+    return app.notes;
+}
+
 using dataDisplay_func = QVariant (*)(const App &app, int role);
 
 static const dataDisplay_func dataDisplay_funcList[] = {
@@ -122,6 +127,7 @@ static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayGroup,
     &dataDisplayFilePath,
     &dataDisplayCreationTime,
+    &dataDisplayNotes,
 };
 
 }

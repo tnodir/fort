@@ -10,6 +10,7 @@ enum class AppListColumn : qint8 {
     Group,
     FilePath,
     CreationTime,
+    Notes,
     Count
 };
 
