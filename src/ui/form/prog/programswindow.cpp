@@ -528,7 +528,7 @@ void ProgramsWindow::setupTableAppsChanged()
 void ProgramsWindow::showTableAppsHeaderMenu(const QPoint &pos)
 {
     auto menu = ControlUtil::createMenu();
-    menu->setAttribute(Qt::WA_DeleteOnClose);
+    ControlUtil::deleteOnClose(menu);
 
     auto header = m_appListView->horizontalHeader();
 

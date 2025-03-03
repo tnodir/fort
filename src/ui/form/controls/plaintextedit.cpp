@@ -3,6 +3,8 @@
 #include <QContextMenuEvent>
 #include <QMenu>
 
+#include <form/controls/controlutil.h>
+
 PlainTextEdit::PlainTextEdit(QWidget *parent) : QPlainTextEdit(parent)
 {
     setTabChangesFocus(true);
@@ -29,7 +31,7 @@ void PlainTextEdit::contextMenuEvent(QContextMenuEvent *e)
     }
 
     QMenu *menu = createStandardContextMenu();
-    menu->setAttribute(Qt::WA_DeleteOnClose);
+    ControlUtil::deleteOnClose(menu);
 
     menu->addSeparator();
     menu->addActions(m_contextActions);

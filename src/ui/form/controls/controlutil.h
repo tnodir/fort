@@ -128,6 +128,8 @@ public:
 
     static QPushButton *createMenuButton();
     static QToolButton *createOptionsButton(int tabIndex = 0);
+
+    static void deleteOnClose(QWidget *w);
 };
 
 #endif // CONTROLUTIL_H

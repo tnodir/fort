@@ -22,9 +22,9 @@
 #include "menuwidget.h"
 #include "optionsbutton.h"
 #include "pushbutton.h"
-#include "toolbutton.h"
 #include "sidebutton.h"
 #include "spinbox.h"
+#include "toolbutton.h"
 
 QCheckBox *ControlUtil::createCheckBox(
         bool checked, const std::function<void(bool checked)> &onToggled)
@@ -447,4 +447,9 @@ QPushButton *ControlUtil::createMenuButton()
 QToolButton *ControlUtil::createOptionsButton(int tabIndex)
 {
     return new OptionsButton(tabIndex);
+}
+
+void ControlUtil::deleteOnClose(QWidget *w)
+{
+    w->setAttribute(Qt::WA_DeleteOnClose);
 }

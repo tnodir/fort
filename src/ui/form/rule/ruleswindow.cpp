@@ -400,7 +400,7 @@ QModelIndex RulesWindow::ruleListCurrentIndex() const
 RulesWindow *RulesWindow::showRulesDialog(Rule::RuleType ruleType, QWidget *parent)
 {
     auto w = new RulesWindow(ruleType, parent, Qt::Dialog);
-    w->setAttribute(Qt::WA_DeleteOnClose);
+    ControlUtil::deleteOnClose(w);
 
     w->setWindowModality(Qt::WindowModal);
 
@@ -415,7 +415,7 @@ RuleEditDialog *RulesWindow::showRuleEditDialog(
     auto ctrl = new RulesController();
 
     auto w = new RuleEditDialog(ctrl, parent);
-    w->setAttribute(Qt::WA_DeleteOnClose);
+    ControlUtil::deleteOnClose(w);
 
     ctrl->setParent(w);
 

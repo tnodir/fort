@@ -3,6 +3,7 @@
 #include <QColorDialog>
 #include <QFileDialog>
 
+#include <form/controls/controlutil.h>
 #include <util/window/widgetwindow.h>
 
 QString DialogUtil::getOpenFileName(const QString &title, const QString &filter)
@@ -47,9 +48,11 @@ void DialogUtil::setupModalDialog(QWidget *box)
 QMessageBox *DialogUtil::createMessageBox(const MessageBoxArg &ba, QWidget *parent)
 {
     auto box = new QMessageBox(ba.icon, ba.title, ba.text, ba.buttons, parent);
-    box->setAttribute(Qt::WA_DeleteOnClose);
+    ControlUtil::deleteOnClose(box);
+
     box->setInformativeText(ba.info);
     setupModalDialog(box);
+
     return box;
 }
 
