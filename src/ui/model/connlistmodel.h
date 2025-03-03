@@ -80,6 +80,8 @@ protected:
 
     void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
+    qint64 connIdByIndex(int row) const;
+
     int doSqlCount() const override;
     QString sqlBase() const override;
     QString sqlWhere() const override;

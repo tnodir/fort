@@ -206,6 +206,7 @@ void ConnectionsPage::setupTableConnList()
     m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
+    m_connListView->setSortingEnabled(true);
     m_connListView->setModel(connListModel());
 
     m_connListView->setMenu(m_btEdit->menu());

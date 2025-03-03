@@ -40,6 +40,8 @@ protected:
     Qt::SortOrder sortOrder() const { return m_sortOrder; }
     void setSortOrder(Qt::SortOrder v) { m_sortOrder = v; }
 
+    bool isAscendingOrder() const { return sortOrder() == Qt::AscendingOrder; }
+
     int sqlRowCount() const { return m_sqlRowCount; }
     void setSqlRowCount(int v) const { m_sqlRowCount = v; }
 

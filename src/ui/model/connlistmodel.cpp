@@ -226,6 +226,9 @@ HostInfoCache *ConnListModel::hostInfoCache() const
 
 void ConnListModel::initialize()
 {
+    setSortColumn(int(ConnListColumn::Time));
+    setSortOrder(Qt::AscendingOrder);
+
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ConnListModel::refresh);
     connect(hostInfoCache(), &HostInfoCache::cacheChanged, this, &ConnListModel::refresh);
     connect(statConnManager(), &StatConnManager::connChanged, this,
@@ -368,7 +371,7 @@ void ConnListModel::updateConnIdRange()
 
 bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
 {
-    const qint64 connId = connIdMin() + row;
+    const qint64 connId = connIdByIndex(row);
 
     SqliteStmt stmt;
     if (!DbQuery(sqliteDb()).sql(sql()).vars({ connId }).prepareRow(stmt))
@@ -401,6 +404,11 @@ bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
     m_connRow.appPath = stmt.columnText(17);
 
     return true;
+}
+
+qint64 ConnListModel::connIdByIndex(int row) const
+{
+    return isAscendingOrder() ? (connIdMin() + row) : (connIdMax() - row);
 }
 
 int ConnListModel::doSqlCount() const

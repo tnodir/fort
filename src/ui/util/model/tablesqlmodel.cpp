@@ -70,7 +70,7 @@ QString TableSqlModel::sqlOrder() const
 
 QString TableSqlModel::sqlOrderAsc() const
 {
-    return (sortOrder() == Qt::AscendingOrder) ? " ASC" : " DESC";
+    return isAscendingOrder() ? " ASC" : " DESC";
 }
 
 QString TableSqlModel::sqlOrderColumn() const
