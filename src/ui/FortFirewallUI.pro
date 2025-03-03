@@ -406,6 +406,7 @@ HEADERS += \
     model/applistmodeldata.h \
     model/applistmodelheaderdata.h \
     model/appstatmodel.h \
+    model/connlistcolumn.h \
     model/connlistmodel.h \
     model/rulelistmodel.h \
     model/rulesetmodel.h \

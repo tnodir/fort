@@ -4,6 +4,7 @@
 #include "statbasepage.h"
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
+QT_FORWARD_DECLARE_CLASS(QHeaderView)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
@@ -44,6 +45,9 @@ private:
     void setupTableConnListHeader();
     void setupAppInfoRow();
     void setupTableConnsChanged();
+
+    void showTableConnHeaderMenu(const QPoint &pos);
+    void setupTableConnHeaderMenuColumns(QMenu *menu, QHeaderView *header);
 
     void updateAutoScroll();
     void updateShowHostNames();

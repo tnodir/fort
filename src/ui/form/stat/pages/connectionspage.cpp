@@ -16,6 +16,7 @@
 #include <form/stat/statisticscontroller.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
+#include <model/connlistcolumn.h>
 #include <model/connlistmodel.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
@@ -23,7 +24,7 @@
 
 namespace {
 
-constexpr int CONN_LIST_HEADER_VERSION = 4;
+constexpr int CONN_LIST_HEADER_VERSION = 5;
 
 }
 
@@ -216,26 +217,47 @@ void ConnectionsPage::setupTableConnListHeader()
 {
     auto header = m_connListView->horizontalHeader();
 
-    header->setSectionResizeMode(0, QHeaderView::Interactive);
-    header->setSectionResizeMode(1, QHeaderView::Interactive);
-    header->setSectionResizeMode(2, QHeaderView::Interactive);
-    header->setSectionResizeMode(3, QHeaderView::Interactive);
-    header->setSectionResizeMode(4, QHeaderView::Interactive);
-    header->setSectionResizeMode(5, QHeaderView::Fixed);
-    header->setSectionResizeMode(6, QHeaderView::Fixed);
-    header->setSectionResizeMode(7, QHeaderView::Fixed);
-    header->setSectionResizeMode(8, QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::Program), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::ProcessId), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::Protocol), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::LocalHostName), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::LocalIp), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::LocalPort), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::RemoteHostName), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::RemoteIp), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::RemotePort), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::Direction), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(ConnListColumn::Action), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(ConnListColumn::Reason), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(ConnListColumn::Time), QHeaderView::Interactive);
     header->setStretchLastSection(true);
 
-    header->resizeSection(0, 400);
-    header->resizeSection(1, 50);
-    header->resizeSection(2, 60);
-    header->resizeSection(3, 140);
-    header->resizeSection(4, 140);
-    header->resizeSection(5, 30);
-    header->resizeSection(6, 30);
-    header->resizeSection(7, 30);
-    header->resizeSection(8, 130);
+    header->resizeSection(int(ConnListColumn::Program), 300);
+    header->resizeSection(int(ConnListColumn::ProcessId), 60);
+    header->resizeSection(int(ConnListColumn::Protocol), 60);
+    header->resizeSection(int(ConnListColumn::LocalHostName), 140);
+    header->resizeSection(int(ConnListColumn::LocalIp), 100);
+    header->resizeSection(int(ConnListColumn::LocalPort), 80);
+    header->resizeSection(int(ConnListColumn::RemoteHostName), 140);
+    header->resizeSection(int(ConnListColumn::RemoteIp), 100);
+    header->resizeSection(int(ConnListColumn::RemotePort), 80);
+    header->resizeSection(int(ConnListColumn::Direction), 30);
+    header->resizeSection(int(ConnListColumn::Action), 30);
+    header->resizeSection(int(ConnListColumn::Reason), 30);
+    header->resizeSection(int(ConnListColumn::Time), 120);
+
+    // Hidden columns
+    header->setSectionHidden(int(ConnListColumn::LocalIp), /*hide=*/true);
+    header->setSectionHidden(int(ConnListColumn::RemoteIp), /*hide=*/true);
+
+    header->setSectionsMovable(true);
+    header->setSectionsClickable(true);
+    header->setSortIndicatorShown(true);
+    header->setSortIndicator(int(ConnListColumn::Time), Qt::AscendingOrder);
+
+    header->setContextMenuPolicy(Qt::CustomContextMenu);
+    connect(header, &QHeaderView::customContextMenuRequested, this,
+            &ConnectionsPage::showTableConnHeaderMenu);
 }
 
 void ConnectionsPage::setupAppInfoRow()
@@ -266,6 +288,63 @@ void ConnectionsPage::setupTableConnsChanged()
     refreshTableConnsChanged();
 
     connect(m_connListView, &TableView::currentIndexChanged, this, refreshTableConnsChanged);
+}
+
+void ConnectionsPage::showTableConnHeaderMenu(const QPoint &pos)
+{
+    auto menu = ControlUtil::createMenu();
+    ControlUtil::deleteOnClose(menu);
+
+    auto header = m_connListView->horizontalHeader();
+
+    setupTableConnHeaderMenuColumns(menu, header);
+
+    menu->addSeparator();
+
+    // Stretch last column
+    {
+        auto a = new QAction(tr("Stretch last column"), menu);
+        a->setCheckable(true);
+        a->setChecked(header->stretchLastSection());
+
+        connect(a, &QAction::triggered, this, [&](bool checked) {
+            m_connListView->horizontalHeader()->setStretchLastSection(checked);
+        });
+
+        menu->addAction(a);
+    }
+
+    menu->popup(header->mapToGlobal(pos));
+}
+
+void ConnectionsPage::setupTableConnHeaderMenuColumns(QMenu *menu, QHeaderView *header)
+{
+    const auto switchColumnVisible = [&](bool checked) {
+        const auto action = qobject_cast<QAction *>(sender());
+        const int column = action->data().toInt();
+
+        auto header = m_connListView->horizontalHeader();
+
+        header->setSectionHidden(column, !checked);
+    };
+
+    const bool canHide = (header->hiddenSectionCount() < int(ConnListColumn::Count) - 1);
+
+    for (int i = 0; i < int(ConnListColumn::Count); ++i) {
+        const auto name = ConnListModel::columnName(ConnListColumn(i));
+
+        auto a = new QAction(name, menu);
+        a->setData(i);
+
+        const bool isHidden = header->isSectionHidden(i);
+        a->setCheckable(true);
+        a->setChecked(!isHidden);
+        a->setEnabled(isHidden || canHide);
+
+        connect(a, &QAction::triggered, this, switchColumnVisible);
+
+        menu->addAction(a);
+    }
 }
 
 void ConnectionsPage::updateAutoScroll()

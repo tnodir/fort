@@ -13,7 +13,7 @@
 #include <conf/confzonemanager.h>
 #include <fortmanager.h>
 #include <hostinfo/hostinfocache.h>
-#include <log/logentryconn.h>
+#include <manager/translationmanager.h>
 #include <stat/statconnmanager.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
@@ -24,19 +24,18 @@ namespace {
 
 const QLoggingCategory LC("connListModel");
 
-QString formatIpPort(const ip_addr_t ip, quint16 port, bool isIPv6, bool resolveAddress)
+QString formatIp(const ip_addr_t ip, bool isIPv6, bool resolveAddress)
 {
-    QString address = NetFormatUtil::ipToText(ip, isIPv6);
+    const QString address = NetFormatUtil::ipToText(ip, isIPv6);
+
     if (resolveAddress) {
         const QString hostName = IoC<HostInfoCache>()->hostName(address);
         if (!hostName.isEmpty()) {
-            address = hostName;
+            return hostName;
         }
     }
-    if (isIPv6) {
-        address = '[' + address + ']';
-    }
-    return address + ':' + QString::number(port);
+
+    return address;
 }
 
 QString reasonIconPath(const ConnRow &connRow)
@@ -74,32 +73,56 @@ QString directionIconPath(const ConnRow &connRow)
     return connRow.inbound ? ":/icons/green_down.png" : ":/icons/blue_up.png";
 }
 
-QVariant dataDisplayAppName(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
+QVariant dataDisplayAppName(const ConnRow &connRow, int /*role*/)
 {
     return IoC<AppInfoCache>()->appName(connRow.appPath);
 }
 
-QVariant dataDisplayProcessId(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
+QVariant dataDisplayProcessId(const ConnRow &connRow, int /*role*/)
 {
     return connRow.pid;
 }
 
-QVariant dataDisplayProtocolName(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
+QVariant dataDisplayProtocolName(const ConnRow &connRow, int /*role*/)
 {
     return NetUtil::protocolName(connRow.ipProto);
 }
 
-QVariant dataDisplayLocalIpPort(const ConnRow &connRow, bool resolveAddress, int /*role*/)
+QVariant dataDisplayLocalHostName(const ConnRow &connRow, int role)
 {
-    return formatIpPort(connRow.localIp, connRow.localPort, connRow.isIPv6, resolveAddress);
+    const bool resolveAddress = (role >= Qt::UserRole);
+
+    return formatIp(connRow.localIp, connRow.isIPv6, resolveAddress);
 }
 
-QVariant dataDisplayRemoteIpPort(const ConnRow &connRow, bool resolveAddress, int /*role*/)
+QVariant dataDisplayLocalIp(const ConnRow &connRow, int /*role*/)
 {
-    return formatIpPort(connRow.remoteIp, connRow.remotePort, connRow.isIPv6, resolveAddress);
+    return formatIp(connRow.localIp, connRow.isIPv6, /*resolveAddress=*/false);
 }
 
-QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, int role)
+QVariant dataDisplayLocalPort(const ConnRow &connRow, int /*role*/)
+{
+    return connRow.localPort;
+}
+
+QVariant dataDisplayRemoteHostName(const ConnRow &connRow, int role)
+{
+    const bool resolveAddress = (role >= Qt::UserRole);
+
+    return formatIp(connRow.remoteIp, connRow.isIPv6, resolveAddress);
+}
+
+QVariant dataDisplayRemoteIp(const ConnRow &connRow, int /*role*/)
+{
+    return formatIp(connRow.remoteIp, connRow.isIPv6, /*resolveAddress=*/false);
+}
+
+QVariant dataDisplayRemotePort(const ConnRow &connRow, int /*role*/)
+{
+    return connRow.remotePort;
+}
+
+QVariant dataDisplayDirection(const ConnRow &connRow, int role)
 {
     if (role != Qt::ToolTipRole)
         return {};
@@ -107,7 +130,7 @@ QVariant dataDisplayDirection(const ConnRow &connRow, bool /*resolveAddress*/, i
     return connRow.inbound ? ConnListModel::tr("In") : ConnListModel::tr("Out");
 }
 
-QVariant dataDisplayAction(const ConnRow &connRow, bool /*resolveAddress*/, int role)
+QVariant dataDisplayAction(const ConnRow &connRow, int role)
 {
     if (role != Qt::ToolTipRole)
         return {};
@@ -115,7 +138,7 @@ QVariant dataDisplayAction(const ConnRow &connRow, bool /*resolveAddress*/, int 
     return connRow.blocked ? ConnListModel::tr("Blocked") : ConnListModel::tr("Allowed");
 }
 
-QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int role)
+QVariant dataDisplayReason(const ConnRow &connRow, int role)
 {
     if (role != Qt::ToolTipRole)
         return {};
@@ -141,19 +164,23 @@ QVariant dataDisplayReason(const ConnRow &connRow, bool /*resolveAddress*/, int 
     return list.join('\n');
 }
 
-QVariant dataDisplayTime(const ConnRow &connRow, bool /*resolveAddress*/, int /*role*/)
+QVariant dataDisplayTime(const ConnRow &connRow, int /*role*/)
 {
     return connRow.connTime;
 }
 
-using dataDisplay_func = QVariant (*)(const ConnRow &connRow, bool resolveAddress, int role);
+using dataDisplay_func = QVariant (*)(const ConnRow &connRow, int role);
 
 static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayAppName,
     &dataDisplayProcessId,
     &dataDisplayProtocolName,
-    &dataDisplayLocalIpPort,
-    &dataDisplayRemoteIpPort,
+    &dataDisplayLocalHostName,
+    &dataDisplayLocalIp,
+    &dataDisplayLocalPort,
+    &dataDisplayRemoteHostName,
+    &dataDisplayRemoteIp,
+    &dataDisplayRemotePort,
     &dataDisplayDirection,
     &dataDisplayAction,
     &dataDisplayReason,
@@ -209,7 +236,7 @@ void ConnListModel::initialize()
 
 int ConnListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 9;
+    return int(ConnListColumn::Count);
 }
 
 QVariant ConnListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -252,50 +279,22 @@ QVariant ConnListModel::data(const QModelIndex &index, int role) const
 
 QVariant ConnListModel::headerDataDisplay(int section, int role) const
 {
-    static const char *const headerTexts[] = {
-        QT_TR_NOOP("Program"),
-        QT_TR_NOOP("Proc. ID"),
-        QT_TR_NOOP("Protocol"),
-        QT_TR_NOOP("Local IP and Port"),
-        QT_TR_NOOP("Remote IP and Port"),
-        nullptr,
-        nullptr,
-        nullptr,
-        QT_TR_NOOP("Time"),
-    };
-
-    static const char *const headerTooltips[] = {
-        QT_TR_NOOP("Program"),
-        QT_TR_NOOP("Process ID"),
-        QT_TR_NOOP("Protocol"),
-        QT_TR_NOOP("Local IP and Port"),
-        QT_TR_NOOP("Remote IP and Port"),
-        QT_TR_NOOP("Direction"),
-        QT_TR_NOOP("Action"),
-        QT_TR_NOOP("Reason"),
-        QT_TR_NOOP("Time"),
-    };
-
-    if (section >= 0 && section <= 8) {
-        const char *const *arr = (role == Qt::ToolTipRole) ? headerTooltips : headerTexts;
-        const char *text = arr[section];
-
-        if (text != nullptr) {
-            return tr(text);
-        }
+    if (role == Qt::DisplayRole) {
+        if (section >= int(ConnListColumn::Direction) && section <= int(ConnListColumn::Reason))
+            return {};
     }
 
-    return {};
+    return ConnListModel::columnName(ConnListColumn(section));
 }
 
 QVariant ConnListModel::headerDataDecoration(int section) const
 {
-    switch (section) {
-    case 5:
+    switch (ConnListColumn(section)) {
+    case ConnListColumn::Direction:
         return IconCache::icon(":/icons/green_down.png");
-    case 6:
+    case ConnListColumn::Action:
         return IconCache::icon(":/icons/accept.png");
-    case 7:
+    case ConnListColumn::Reason:
         return IconCache::icon(":/icons/help.png");
     }
 
@@ -313,7 +312,12 @@ QVariant ConnListModel::dataDisplay(const QModelIndex &index, int role) const
 
     const dataDisplay_func func = dataDisplay_funcList[column];
 
-    return func(connRow, resolveAddress(), role);
+    if (column == int(ConnListColumn::LocalHostName)
+            || column == int(ConnListColumn::RemoteHostName)) {
+        role += resolveAddress() ? Qt::UserRole : 0;
+    }
+
+    return func(connRow, role);
 }
 
 QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
@@ -323,14 +327,14 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
 
     const auto &connRow = connRowAt(row);
 
-    switch (column) {
-    case 0:
+    switch (ConnListColumn(column)) {
+    case ConnListColumn::Program:
         return appInfoCache()->appIcon(connRow.appPath);
-    case 5:
+    case ConnListColumn::Direction:
         return IconCache::icon(directionIconPath(connRow));
-    case 6:
+    case ConnListColumn::Action:
         return IconCache::icon(actionIconPath(connRow));
-    case 7:
+    case ConnListColumn::Reason:
         return IconCache::icon(reasonIconPath(connRow));
     }
 
@@ -506,4 +510,31 @@ QString ConnListModel::reasonText(FortConnReason reason)
     }
 
     return tr("Unknown");
+}
+
+QString ConnListModel::columnName(const ConnListColumn column)
+{
+    static QStringList g_columnNames;
+    static int g_language = -1;
+
+    const int language = IoC<TranslationManager>()->language();
+    if (g_language != language) {
+        g_columnNames = {
+            tr("Program"),
+            tr("Process ID"),
+            tr("Protocol"),
+            tr("Local Host Name"),
+            tr("Local IP"),
+            tr("Local Port"),
+            tr("Remote Host Name"),
+            tr("Remote IP"),
+            tr("Remote Port"),
+            tr("Direction"),
+            tr("Action"),
+            tr("Reason"),
+            tr("Time"),
+        };
+    }
+
+    return g_columnNames.value(int(column));
 }

@@ -7,6 +7,8 @@
 #include <common/fortdef.h>
 #include <util/model/tablesqlmodel.h>
 
+#include "connlistcolumn.h"
+
 class AppInfoCache;
 class FortManager;
 class HostInfoCache;
@@ -66,6 +68,8 @@ public:
     const ConnRow &connRowAt(int row) const;
 
     static QString reasonText(FortConnReason reason);
+
+    static QString columnName(const ConnListColumn column);
 
 protected slots:
     void updateConnIdRange();
