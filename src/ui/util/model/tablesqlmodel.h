@@ -14,6 +14,11 @@ public:
 
     virtual SqliteDb *sqliteDb() const = 0;
 
+    Qt::SortOrder sortOrder() const { return m_sortOrder; }
+    void setSortOrder(Qt::SortOrder v) { m_sortOrder = v; }
+
+    bool isAscendingOrder() const { return sortOrder() == Qt::AscendingOrder; }
+
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
     void sort(int column, Qt::SortOrder order = Qt::AscendingOrder) override;
@@ -36,11 +41,6 @@ protected:
 
     int sortColumn() const { return m_sortColumn; }
     void setSortColumn(int v) { m_sortColumn = v; }
-
-    Qt::SortOrder sortOrder() const { return m_sortOrder; }
-    void setSortOrder(Qt::SortOrder v) { m_sortOrder = v; }
-
-    bool isAscendingOrder() const { return sortOrder() == Qt::AscendingOrder; }
 
     int sqlRowCount() const { return m_sqlRowCount; }
     void setSqlRowCount(int v) const { m_sqlRowCount = v; }

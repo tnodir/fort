@@ -206,7 +206,6 @@ void ConnectionsPage::setupTableConnList()
     m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
-    m_connListView->setSortingEnabled(true);
     m_connListView->setModel(connListModel());
 
     m_connListView->setMenu(m_btEdit->menu());
@@ -255,6 +254,9 @@ void ConnectionsPage::setupTableConnListHeader()
     header->setSectionsClickable(true);
     header->setSortIndicatorShown(true);
     header->setSortIndicator(int(ConnListColumn::Time), Qt::AscendingOrder);
+
+    connect(header, &QHeaderView::sortIndicatorChanged, this,
+            &ConnectionsPage::onTableConnSortClicked);
 
     header->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(header, &QHeaderView::customContextMenuRequested, this,
@@ -348,15 +350,36 @@ void ConnectionsPage::setupTableConnHeaderMenuColumns(QMenu *menu, QHeaderView *
     }
 }
 
+void ConnectionsPage::onTableConnSortClicked(int section, Qt::SortOrder order)
+{
+    if (section != int(ConnListColumn::Time)) {
+        order = connListModel()->sortOrder();
+    }
+
+    auto header = m_connListView->horizontalHeader();
+    header->setSortIndicator(int(ConnListColumn::Time), order);
+
+    connListModel()->sort(int(ConnListColumn::Time), order);
+}
+
+void ConnectionsPage::doAutoScroll()
+{
+    if (connListModel()->isAscendingOrder()) {
+        m_connListView->scrollToBottom();
+    } else {
+        m_connListView->scrollToTop();
+    }
+}
+
 void ConnectionsPage::updateAutoScroll()
 {
     if (iniUser()->statAutoScroll()) {
-        connect(connListModel(), &QAbstractItemModel::rowsInserted, m_connListView,
-                &QAbstractItemView::scrollToBottom);
-        connect(connListModel(), &QAbstractItemModel::modelReset, m_connListView,
-                &QAbstractItemView::scrollToBottom);
+        connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
+                &ConnectionsPage::doAutoScroll);
+        connect(connListModel(), &QAbstractItemModel::modelReset, this,
+                &ConnectionsPage::doAutoScroll);
 
-        m_connListView->scrollToBottom();
+        doAutoScroll();
     } else {
         connListModel()->disconnect(m_connListView);
     }

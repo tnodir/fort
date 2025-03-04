@@ -49,6 +49,9 @@ private:
     void showTableConnHeaderMenu(const QPoint &pos);
     void setupTableConnHeaderMenuColumns(QMenu *menu, QHeaderView *header);
 
+    void onTableConnSortClicked(int section, Qt::SortOrder order);
+    void doAutoScroll();
+
     void updateAutoScroll();
     void updateShowHostNames();
 
