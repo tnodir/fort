@@ -128,11 +128,8 @@ QLayout *ConnectionsPage::setupHeader()
         }
     });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
-        const int connIndex = connListCurrentIndex();
-        if (connIndex >= 0) {
-            windowManager()->showConfirmBox([&] { deleteConn(connIndex); },
-                    tr("Are you sure to remove connections till this row?"));
-        }
+        windowManager()->showConfirmBox([&] { deleteConn(connListCurrentIndex()); },
+                tr("Are you sure to remove connections till this row?"));
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
