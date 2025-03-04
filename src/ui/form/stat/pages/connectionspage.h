@@ -64,6 +64,7 @@ private:
     ConnListModel *m_connListModel = nullptr;
 
     QPushButton *m_btEdit = nullptr;
+    QAction *m_actCopyAsFilter = nullptr;
     QAction *m_actCopy = nullptr;
     QAction *m_actAddProgram = nullptr;
     QAction *m_actRemoveConn = nullptr;

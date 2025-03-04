@@ -391,6 +391,32 @@ quint8 NetUtil::protocolNumber(const QStringView name, bool &ok)
     return quint8(v);
 }
 
+QString NetUtil::serviceName(quint16 port)
+{
+    switch (port) {
+    case 21:
+        return "FTP";
+    case 22:
+        return "SSH";
+    case 35:
+        return "SMTP";
+    case 53:
+        return "DNS";
+    case 80:
+        return "HTTP";
+    case 110:
+        return "POP3";
+    case 143:
+        return "IMAP";
+    case 443:
+        return "HTTPS";
+    case 465:
+        return "SSL";
+    }
+
+    return QString::number(port);
+}
+
 quint16 NetUtil::serviceToPort(const QStringView name, ProtocolType /*proto*/, bool &ok)
 {
     const auto nameUpper = name.toString().toUpper();

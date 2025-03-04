@@ -67,6 +67,8 @@ public:
 
     const ConnRow &connRowAt(int row) const;
 
+    QString rowsAsFilter(const QVector<int> &rows) const;
+
     static QString reasonText(FortConnReason reason);
 
     static QString columnName(const ConnListColumn column);

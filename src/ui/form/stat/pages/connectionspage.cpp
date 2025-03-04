@@ -62,6 +62,7 @@ void ConnectionsPage::onRestoreWindowState(IniUser *ini)
 void ConnectionsPage::onRetranslateUi()
 {
     m_btEdit->setText(tr("Edit"));
+    m_actCopyAsFilter->setText(tr("Copy as Filter"));
     m_actCopy->setText(tr("Copy"));
     m_actAddProgram->setText(tr("Add Program"));
     m_actRemoveConn->setText(tr("Remove"));
@@ -108,6 +109,8 @@ QLayout *ConnectionsPage::setupHeader()
     // Edit Menu
     auto editMenu = ControlUtil::createMenu(this);
 
+    m_actCopyAsFilter = editMenu->addAction(IconCache::icon(":/icons/script.png"), QString());
+
     m_actCopy = editMenu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actCopy->setShortcut(Qt::Key_Copy);
 
@@ -119,6 +122,12 @@ QLayout *ConnectionsPage::setupHeader()
 
     m_actClearAll = editMenu->addAction(IconCache::icon(":/icons/broom.png"), QString());
 
+    connect(m_actCopyAsFilter, &QAction::triggered, this, [&] {
+        const auto rows = m_connListView->selectedRows();
+        const auto text = connListModel()->rowsAsFilter(rows);
+
+        GuiUtil::setClipboardData(text);
+    });
     connect(m_actCopy, &QAction::triggered, this,
             [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
@@ -279,6 +288,7 @@ void ConnectionsPage::setupTableConnsChanged()
     const auto refreshTableConnsChanged = [&] {
         const int connIndex = connListCurrentIndex();
         const bool connSelected = (connIndex >= 0);
+        m_actCopyAsFilter->setEnabled(connSelected);
         m_actCopy->setEnabled(connSelected);
         m_actAddProgram->setEnabled(connSelected);
         m_actRemoveConn->setEnabled(connSelected);

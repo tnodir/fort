@@ -24,15 +24,19 @@ namespace {
 
 const QLoggingCategory LC("connListModel");
 
-QString formatIp(const ip_addr_t ip, bool isIPv6, bool resolveAddress)
+QString formatIp(const ip_addr_t ip, bool isIPv6, bool resolveAddress = false)
 {
-    const QString address = NetFormatUtil::ipToText(ip, isIPv6);
+    QString address = NetFormatUtil::ipToText(ip, isIPv6);
 
     if (resolveAddress) {
         const QString hostName = IoC<HostInfoCache>()->hostName(address);
         if (!hostName.isEmpty()) {
             return hostName;
         }
+    }
+
+    if (isIPv6) {
+        address = '[' + address + ']';
     }
 
     return address;
@@ -97,12 +101,12 @@ QVariant dataDisplayLocalHostName(const ConnRow &connRow, int role)
 
 QVariant dataDisplayLocalIp(const ConnRow &connRow, int /*role*/)
 {
-    return formatIp(connRow.localIp, connRow.isIPv6, /*resolveAddress=*/false);
+    return formatIp(connRow.localIp, connRow.isIPv6);
 }
 
 QVariant dataDisplayLocalPort(const ConnRow &connRow, int /*role*/)
 {
-    return connRow.localPort;
+    return NetUtil::serviceName(connRow.localPort);
 }
 
 QVariant dataDisplayRemoteHostName(const ConnRow &connRow, int role)
@@ -114,12 +118,12 @@ QVariant dataDisplayRemoteHostName(const ConnRow &connRow, int role)
 
 QVariant dataDisplayRemoteIp(const ConnRow &connRow, int /*role*/)
 {
-    return formatIp(connRow.remoteIp, connRow.isIPv6, /*resolveAddress=*/false);
+    return formatIp(connRow.remoteIp, connRow.isIPv6);
 }
 
 QVariant dataDisplayRemotePort(const ConnRow &connRow, int /*role*/)
 {
-    return connRow.remotePort;
+    return NetUtil::serviceName(connRow.remotePort);
 }
 
 QVariant dataDisplayDirection(const ConnRow &connRow, int role)
@@ -349,6 +353,29 @@ const ConnRow &ConnListModel::connRowAt(int row) const
     updateRowCache(row);
 
     return m_connRow;
+}
+
+QString ConnListModel::rowsAsFilter(const QVector<int> &rows) const
+{
+    QStringList list;
+
+    for (int row : rows) {
+        const auto &connRow = connRowAt(row);
+
+        const bool isIPv6 = connRow.isIPv6;
+
+        const auto text = QString("%1:(%2):local_ip(%3):local_port(%4):dir(%5):proto(%6)")
+                                  .arg(formatIp(connRow.remoteIp, isIPv6),
+                                          NetUtil::serviceName(connRow.remotePort),
+                                          formatIp(connRow.localIp, isIPv6),
+                                          NetUtil::serviceName(connRow.localPort),
+                                          (connRow.inbound ? "IN" : "OUT"),
+                                          NetUtil::protocolName(connRow.ipProto));
+
+        list << text;
+    }
+
+    return list.join('\n');
 }
 
 void ConnListModel::updateConnIdRange()

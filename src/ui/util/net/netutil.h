@@ -35,6 +35,7 @@ public:
     static QString protocolName(quint8 ipProto);
     static quint8 protocolNumber(const QStringView name, bool &ok);
 
+    static QString serviceName(quint16 port);
     static quint16 serviceToPort(const QStringView name, ProtocolType proto, bool &ok);
 };
 
