@@ -210,19 +210,11 @@ void ProgramsWindow::setupUi()
 
 QLayout *ProgramsWindow::setupHeader()
 {
-    auto layout = new QHBoxLayout();
-
     // Edit Menu
     setupEditMenu();
 
     // Toolbar buttons
-    m_btAllowApp = ControlUtil::createFlatToolButton(":/icons/accept.png");
-    m_btBlockApp = ControlUtil::createFlatToolButton(":/icons/deny.png");
-    m_btRemoveApp = ControlUtil::createFlatToolButton(":/icons/delete.png");
-
-    connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
-    connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
-    connect(m_btRemoveApp, &QAbstractButton::clicked, m_actRemoveApp, &QAction::trigger);
+    auto toolbarButtonsLayout = setupToolbarButtonsLayout();
 
     // Search edit line
     setupEditSearch();
@@ -240,11 +232,10 @@ QLayout *ProgramsWindow::setupHeader()
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
+    auto layout = new QHBoxLayout();
     layout->addWidget(m_btEdit);
     layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_btAllowApp);
-    layout->addWidget(m_btBlockApp);
-    layout->addWidget(m_btRemoveApp);
+    layout->addLayout(toolbarButtonsLayout);
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_editSearch);
     layout->addWidget(m_btFilter);
@@ -253,6 +244,23 @@ QLayout *ProgramsWindow::setupHeader()
     layout->addStretch();
     layout->addWidget(m_btOptions);
     layout->addWidget(m_btMenu);
+
+    return layout;
+}
+
+QLayout *ProgramsWindow::setupToolbarButtonsLayout()
+{
+    m_btAllowApp = ControlUtil::createFlatToolButton(":/icons/accept.png");
+    m_btBlockApp = ControlUtil::createFlatToolButton(":/icons/deny.png");
+    m_btRemoveApp = ControlUtil::createFlatToolButton(":/icons/delete.png");
+
+    connect(m_btAllowApp, &QAbstractButton::clicked, m_actAllowApp, &QAction::trigger);
+    connect(m_btBlockApp, &QAbstractButton::clicked, m_actBlockApp, &QAction::trigger);
+    connect(m_btRemoveApp, &QAbstractButton::clicked, m_actRemoveApp, &QAction::trigger);
+
+    auto layout =
+            ControlUtil::createHLayoutByWidgets({ m_btAllowApp, m_btBlockApp, m_btRemoveApp });
+    layout->setSpacing(0);
 
     return layout;
 }

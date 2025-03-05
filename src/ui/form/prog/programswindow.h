@@ -58,6 +58,7 @@ private:
 
     void setupUi();
     QLayout *setupHeader();
+    QLayout *setupToolbarButtonsLayout();
     void setupEditMenu();
     void setupEditSearch();
     void setupFilter();
