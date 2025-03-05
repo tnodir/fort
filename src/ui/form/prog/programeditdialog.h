@@ -89,7 +89,7 @@ private:
     void setupCbSchedule();
     void setupComboScheduleType();
     QLayout *setupButtonsLayout();
-    void setupAdvancedOptions();
+    void setupOptions();
     QLayout *setupApplyChildLayout();
     void setupChildOptionsLayout();
     void setupLogOptions();
@@ -163,9 +163,9 @@ private:
 
     QPushButton *m_btOptions = nullptr;
     QToolButton *m_btSwitchWildcard = nullptr;
-    QPushButton *m_btMenu = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
+    QPushButton *m_btMenu = nullptr;
 
     AppRow m_appRow;
     QVector<qint64> m_appIdList;

@@ -296,7 +296,7 @@ void ProgramEditDialog::retranslateUi()
     retranslateScheduleIn();
     m_dteScheduleAt->unsetLocale();
 
-    m_btOptions->setToolTip(tr("Advanced Options"));
+    m_btOptions->setToolTip(tr("Options"));
     m_btSwitchWildcard->setToolTip(tr("Switch Wildcard"));
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -677,14 +677,11 @@ void ProgramEditDialog::setupComboScheduleType()
 
 QLayout *ProgramEditDialog::setupButtonsLayout()
 {
-    // Advanced Options
-    setupAdvancedOptions();
+    // Options
+    setupOptions();
 
     // Switch Wildcard
     setupSwitchWildcard();
-
-    // Menu button
-    m_btMenu = ControlUtil::createMenuButton();
 
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
@@ -700,13 +697,16 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     m_btCancel = new QPushButton();
     connect(m_btCancel, &QAbstractButton::clicked, this, &QWidget::close);
 
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btMenu, m_btOptions, m_btSwitchWildcard, /*stretch*/ nullptr, m_btOk, m_btCancel });
+    // Menu button
+    m_btMenu = ControlUtil::createMenuButton();
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btSwitchWildcard, m_btOptions,
+            /*stretch*/ nullptr, m_btOk, m_btCancel, m_btMenu });
 
     return layout;
 }
 
-void ProgramEditDialog::setupAdvancedOptions()
+void ProgramEditDialog::setupOptions()
 {
     // Parked
     m_cbParked = new QCheckBox();
