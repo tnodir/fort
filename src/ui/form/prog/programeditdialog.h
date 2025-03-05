@@ -80,6 +80,7 @@ private:
     QLayout *setupFormLayout();
     QLayout *setupPathLayout();
     QLayout *setupNameLayout();
+    QLayout *setupApplyChildGroupLayout();
     void setupComboAppGroups();
     QLayout *setupActionsLayout();
     void setupActionsGroup();
@@ -90,7 +91,6 @@ private:
     void setupComboScheduleType();
     QLayout *setupButtonsLayout();
     void setupOptions();
-    QLayout *setupApplyChildLayout();
     void setupChildOptionsLayout();
     void setupLogOptions();
     void setupSwitchWildcard();
@@ -137,6 +137,8 @@ private:
     QToolButton *m_btGetName = nullptr;
     QLabel *m_labelEditNotes = nullptr;
     PlainTextEdit *m_editNotes = nullptr;
+    QLabel *m_labelApplyChild = nullptr;
+    QComboBox *m_comboApplyChild = nullptr;
     QLabel *m_labelAppGroup = nullptr;
     QComboBox *m_comboAppGroup = nullptr;
     QRadioButton *m_rbAllow = nullptr;
@@ -144,8 +146,6 @@ private:
     QRadioButton *m_rbKillProcess = nullptr;
     QButtonGroup *m_btgActions = nullptr;
 
-    QLabel *m_labelApplyChild = nullptr;
-    QComboBox *m_comboApplyChild = nullptr;
     QCheckBox *m_cbKillChild = nullptr;
     QCheckBox *m_cbParked = nullptr;
     QCheckBox *m_cbLogAllowedConn = nullptr;

@@ -112,13 +112,13 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
 
     initializePathNameRuleFields(isSingleSelection);
 
+    updateApplyChild();
     m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
 
     m_rbAllow->setChecked(!appRow.blocked);
     m_rbBlock->setChecked(appRow.blocked);
     m_rbKillProcess->setChecked(appRow.killProcess);
 
-    updateApplyChild();
     m_cbKillChild->setChecked(appRow.killChild);
 
     m_cbParked->setChecked(appRow.parked);
@@ -269,14 +269,16 @@ void ProgramEditDialog::retranslateUi()
     m_btGetName->setToolTip(tr("Get Program Name"));
 
     m_editNotes->setPlaceholderText(tr("Notes"));
+
+    m_labelApplyChild->setText(tr("Rules inheritance:"));
+    retranslateComboApplyChild();
+
     m_labelAppGroup->setText(tr("Group:"));
 
     m_rbAllow->setText(tr("Allow"));
     m_rbBlock->setText(tr("Block"));
     m_rbKillProcess->setText(tr("Kill Process"));
 
-    m_labelApplyChild->setText(tr("Rules inheritance:"));
-    retranslateComboApplyChild();
     m_cbKillChild->setText(tr("Kill child processes"));
 
     m_cbParked->setText(tr("Parked"));
@@ -396,6 +398,9 @@ QLayout *ProgramEditDialog::setupMainLayout()
     // Form Layout
     auto formLayout = setupFormLayout();
 
+    // Apply Child, Group Layout
+    auto applyChildGroupLayout = setupApplyChildGroupLayout();
+
     // Allow/Block/Kill Actions Layout
     auto actionsLayout = setupActionsLayout();
 
@@ -413,6 +418,7 @@ QLayout *ProgramEditDialog::setupMainLayout()
     // Form
     auto layout = new QVBoxLayout();
     layout->addLayout(formLayout);
+    layout->addLayout(applyChildGroupLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addStretch();
     layout->addLayout(actionsLayout);
@@ -452,12 +458,6 @@ QLayout *ProgramEditDialog::setupFormLayout()
     m_labelEditNotes = ControlUtil::formRowLabel(layout, m_editNotes);
     m_labelEditNotes->setScaledContents(true);
     m_labelEditNotes->setFixedSize(appIconSize);
-
-    // Group
-    setupComboAppGroups();
-
-    layout->addRow("Group:", m_comboAppGroup);
-    m_labelAppGroup = ControlUtil::formRowLabel(layout, m_comboAppGroup);
 
     return layout;
 }
@@ -517,9 +517,33 @@ QLayout *ProgramEditDialog::setupNameLayout()
     return layout;
 }
 
+QLayout *ProgramEditDialog::setupApplyChildGroupLayout()
+{
+    // Apply Child
+    auto labelIcon = ControlUtil::createIconLabel(":/icons/document_tree.png", labelIconSize);
+
+    m_labelApplyChild = ControlUtil::createLabel();
+
+    m_comboApplyChild =
+            ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
+    m_comboApplyChild->setFixedWidth(150);
+
+    // Group
+    setupComboAppGroups();
+
+    m_labelAppGroup = ControlUtil::createLabel();
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ labelIcon, m_labelApplyChild,
+            /*stretch*/ nullptr, m_comboApplyChild, ControlUtil::createVSeparator(),
+            m_labelAppGroup, /*stretch*/ nullptr, m_comboAppGroup });
+
+    return layout;
+}
+
 void ProgramEditDialog::setupComboAppGroups()
 {
     m_comboAppGroup = ControlUtil::createComboBox();
+    m_comboAppGroup->setFixedWidth(150);
 
     const auto refreshComboAppGroups = [&](bool onlyFlags = false) {
         if (onlyFlags)
@@ -713,18 +737,14 @@ void ProgramEditDialog::setupOptions()
     m_cbParked->setIcon(IconCache::icon(":/icons/parking.png"));
 
     // Child Options
-    auto applyChildLayout = setupApplyChildLayout();
-
     setupChildOptionsLayout();
 
     // Log Options
     setupLogOptions();
 
     auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbParked);
-    layout->addWidget(ControlUtil::createHSeparator());
-    layout->addLayout(applyChildLayout);
     layout->addWidget(m_cbKillChild);
+    layout->addWidget(m_cbParked);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_cbLogAllowedConn);
     layout->addWidget(m_cbLogBlockedConn);
@@ -734,24 +754,6 @@ void ProgramEditDialog::setupOptions()
     m_btOptions = ControlUtil::createButton(":/icons/widgets.png");
     m_btOptions->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_M));
     m_btOptions->setMenu(menu);
-}
-
-QLayout *ProgramEditDialog::setupApplyChildLayout()
-{
-    auto labelIcon = ControlUtil::createIconLabel(":/icons/document_tree.png", labelIconSize);
-
-    m_labelApplyChild = ControlUtil::createLabel();
-
-    m_comboApplyChild =
-            ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
-    m_comboApplyChild->setFixedWidth(150);
-
-    auto layout = ControlUtil::createHLayout();
-    layout->addWidget(labelIcon);
-    layout->addWidget(m_labelApplyChild, 1);
-    layout->addWidget(m_comboApplyChild);
-
-    return layout;
 }
 
 void ProgramEditDialog::setupChildOptionsLayout()
