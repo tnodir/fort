@@ -419,13 +419,12 @@ QLayout *ProgramEditDialog::setupMainLayout()
     layout->addLayout(formLayout);
     layout->addLayout(applyChildGroupLayout);
     layout->addWidget(ControlUtil::createSeparator());
-    layout->addStretch();
     layout->addLayout(actionsLayout);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(zonesRulesLayout);
     layout->addWidget(ControlUtil::createSeparator());
-    layout->addLayout(scheduleLayout);
     layout->addStretch();
+    layout->addLayout(scheduleLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(buttonsLayout);
 
@@ -686,10 +685,11 @@ void ProgramEditDialog::setupCbSchedule()
     m_cbSchedule = ControlUtil::createCheckBox(":/icons/time.png");
 
     const auto refreshScheduleEnabled = [&](bool checked) {
-        m_comboScheduleAction->setEnabled(checked);
-        m_comboScheduleType->setEnabled(checked);
-        m_scScheduleIn->setEnabled(checked);
-        m_dteScheduleAt->setEnabled(checked);
+        m_comboScheduleAction->setVisible(checked);
+        m_comboScheduleType->setVisible(checked);
+
+        m_scScheduleIn->setVisible(checked && m_scScheduleIn->isEnabled());
+        m_dteScheduleAt->setVisible(checked && m_dteScheduleAt->isEnabled());
     };
 
     refreshScheduleEnabled(false);
@@ -702,8 +702,16 @@ void ProgramEditDialog::setupComboScheduleType()
     m_comboScheduleType = ControlUtil::createComboBox();
 
     connect(m_comboScheduleType, &QComboBox::currentIndexChanged, this, [&](int index) {
-        m_scScheduleIn->setVisible(index == ScheduleTimeIn);
-        m_dteScheduleAt->setVisible(index == ScheduleTimeAt);
+        const bool isTimeIn = (index == ScheduleTimeIn);
+        const bool isTimeAt = (index == ScheduleTimeAt);
+
+        m_scScheduleIn->setEnabled(isTimeIn);
+        m_dteScheduleAt->setEnabled(isTimeAt);
+
+        const bool checked = m_cbSchedule->isChecked();
+
+        m_scScheduleIn->setVisible(checked && isTimeIn);
+        m_dteScheduleAt->setVisible(checked && isTimeAt);
     });
 }
 
