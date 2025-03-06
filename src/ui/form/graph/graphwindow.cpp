@@ -187,6 +187,9 @@ void GraphWindow::setupUi()
 
 void GraphWindow::setupFlagsAndColors()
 {
+    setAttribute(Qt::WA_NoSystemBackground);
+    setAttribute(Qt::WA_TranslucentBackground);
+
     forceUpdateFlagsAndColors();
 
     connect(confManager(), &ConfManager::iniUserChanged, this, &GraphWindow::updateFlagsAndColors);
@@ -232,7 +235,13 @@ void GraphWindow::updateColors(const IniUser &ini)
 
     setWindowOpacityPercent(ini.graphWindowOpacity());
 
-    m_plot->setBackground(QBrush(colors[ColorBg]));
+    // Background Color
+    {
+        const auto bgColor = colors[ColorBg];
+        const bool isTransparentBg = (bgColor == Qt::transparent);
+
+        m_plot->setBackground(isTransparentBg ? Qt::NoBrush : QBrush(bgColor));
+    }
 
     // Axis
     auto yAxis = m_plot->yAxis;

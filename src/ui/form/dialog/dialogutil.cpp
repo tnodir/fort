@@ -31,7 +31,7 @@ QString DialogUtil::getExistingDir(const QString &title)
 
 QColor DialogUtil::getColor(const QColor &initial, const QString &title)
 {
-    return QColorDialog::getColor(initial, nullptr, title);
+    return QColorDialog::getColor(initial, nullptr, title, QColorDialog::ShowAlphaChannel);
 }
 
 void DialogUtil::setupModalDialog(QWidget *box)

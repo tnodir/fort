@@ -55,15 +55,16 @@ QColor MapWrapper::valueColor(const QString &key, const QColor &defaultValue) co
     if (text.isEmpty())
         return defaultValue;
 
-    if (text.at(0).isDigit())
+    if (text.at(0).isDigit()) {
         return QColor::fromRgba(text.toUInt());
+    }
 
-    return { text };
+    return QColor::fromString(text);
 }
 
 void MapWrapper::setColor(const QString &key, const QColor &v)
 {
-    setValue(key, v.name());
+    setValue(key, v.name(QColor::HexArgb));
 }
 
 QVariant MapWrapper::value(const QString &key, const QVariant &defaultValue) const

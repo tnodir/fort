@@ -22,7 +22,7 @@ QPushButton *createColorButton(const std::function<void()> &onClicked)
 
 void setButtonColor(QPushButton *c, const QColor &color)
 {
-    const auto qss = QString("background-color: %1").arg(color.name());
+    const auto qss = QString("background-color: %1").arg(color.name(QColor::HexArgb));
     c->setStyleSheet(qss);
 }
 
@@ -62,6 +62,7 @@ void LabelColor::selectDarkColor()
 {
     const auto title = tr("Select dark color for %1").arg(label()->text());
     const auto selectedColor = DialogUtil::getColor(darkColor(), title);
+
     if (selectedColor.isValid()) {
         setDarkColor(selectedColor);
     }
@@ -85,11 +86,12 @@ void LabelColor::setupButtons()
     // Light
     m_button = createColorButton([&] { selectColor(); });
 
-    connect(this, &LabelColor::colorChanged, [&] { setButtonColor(button(), color().name()); });
+    connect(this, &LabelColor::colorChanged,
+            [&] { setButtonColor(button(), color().name(QColor::HexArgb)); });
 
     // Dark
     m_darkButton = createColorButton([&] { selectDarkColor(); });
 
     connect(this, &LabelColor::darkColorChanged,
-            [&] { setButtonColor(darkButton(), darkColor().name()); });
+            [&] { setButtonColor(darkButton(), darkColor().name(QColor::HexArgb)); });
 }
