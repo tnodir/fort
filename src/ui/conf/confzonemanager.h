@@ -1,6 +1,7 @@
 #ifndef CONFZONEMANAGER_H
 #define CONFZONEMANAGER_H
 
+#include <QHash>
 #include <QObject>
 
 #include <util/classhelpers.h>
@@ -18,12 +19,13 @@ public:
     explicit ConfZoneManager(QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(ConfZoneManager)
 
-    QString zoneNameById(int zoneId);
+    QString zoneNameById(quint8 zoneId);
+    QStringList zoneNamesByMask(quint32 zonesMask);
 
     virtual bool addOrUpdateZone(Zone &zone);
-    virtual bool deleteZone(int zoneId);
-    virtual bool updateZoneName(int zoneId, const QString &zoneName);
-    virtual bool updateZoneEnabled(int zoneId, bool enabled);
+    virtual bool deleteZone(quint8 zoneId);
+    virtual bool updateZoneName(quint8 zoneId, const QString &zoneName);
+    virtual bool updateZoneEnabled(quint8 zoneId, bool enabled);
 
     bool updateZoneResult(const Zone &zone);
 
@@ -32,11 +34,17 @@ public:
 
 signals:
     void zoneAdded();
-    void zoneRemoved(int zoneId);
+    void zoneRemoved(quint8 zoneId);
     void zoneUpdated();
 
 private:
-    bool updateDriverZoneFlag(int zoneId, bool enabled);
+    void setupZoneNamesCache();
+    void clearZoneNamesCache();
+
+    bool updateDriverZoneFlag(quint8 zoneId, bool enabled);
+
+private:
+    mutable QHash<quint8, QString> m_zoneNamesCache;
 };
 
 #endif // CONFZONEMANAGER_H

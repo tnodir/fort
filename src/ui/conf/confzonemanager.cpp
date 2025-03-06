@@ -8,6 +8,7 @@
 
 #include <conf/zone.h>
 #include <driver/drivermanager.h>
+#include <util/bitutil.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
@@ -82,11 +83,38 @@ bool driverWriteZones(ConfBuffer &confBuf, bool onlyFlags = false)
 
 }
 
-ConfZoneManager::ConfZoneManager(QObject *parent) : ConfManagerBase(parent) { }
-
-QString ConfZoneManager::zoneNameById(int zoneId)
+ConfZoneManager::ConfZoneManager(QObject *parent) : ConfManagerBase(parent)
 {
-    return DbQuery(sqliteDb()).sql(sqlSelectZoneNameById).vars({ zoneId }).execute().toString();
+    setupZoneNamesCache();
+}
+
+QString ConfZoneManager::zoneNameById(quint8 zoneId)
+{
+    QString name = m_zoneNamesCache.value(zoneId);
+
+    if (name.isEmpty()) {
+        name = DbQuery(sqliteDb()).sql(sqlSelectZoneNameById).vars({ zoneId }).execute().toString();
+
+        m_zoneNamesCache.insert(zoneId, name);
+    }
+
+    return name;
+}
+
+QStringList ConfZoneManager::zoneNamesByMask(quint32 zonesMask)
+{
+    QStringList list;
+
+    while (zonesMask != 0) {
+        const int zoneIndex = BitUtil::bitScanForward(zonesMask);
+        const quint8 zoneId = zoneIndex + 1;
+
+        list << zoneNameById(zoneId);
+
+        zonesMask ^= (1u << zoneIndex);
+    }
+
+    return list;
 }
 
 bool ConfZoneManager::addOrUpdateZone(Zone &zone)
@@ -135,7 +163,7 @@ bool ConfZoneManager::addOrUpdateZone(Zone &zone)
     return true;
 }
 
-bool ConfZoneManager::deleteZone(int zoneId)
+bool ConfZoneManager::deleteZone(quint8 zoneId)
 {
     bool ok = false;
 
@@ -164,7 +192,7 @@ bool ConfZoneManager::deleteZone(int zoneId)
     return ok;
 }
 
-bool ConfZoneManager::updateZoneName(int zoneId, const QString &zoneName)
+bool ConfZoneManager::updateZoneName(quint8 zoneId, const QString &zoneName)
 {
     bool ok = false;
 
@@ -183,7 +211,7 @@ bool ConfZoneManager::updateZoneName(int zoneId, const QString &zoneName)
     return ok;
 }
 
-bool ConfZoneManager::updateZoneEnabled(int zoneId, bool enabled)
+bool ConfZoneManager::updateZoneEnabled(quint8 zoneId, bool enabled)
 {
     bool ok = false;
 
@@ -241,7 +269,18 @@ void ConfZoneManager::updateDriverZones(quint32 zonesMask, quint32 enabledMask, 
     driverWriteZones(confBuf);
 }
 
-bool ConfZoneManager::updateDriverZoneFlag(int zoneId, bool enabled)
+void ConfZoneManager::setupZoneNamesCache()
+{
+    connect(this, &ConfZoneManager::zoneRemoved, this, &ConfZoneManager::clearZoneNamesCache);
+    connect(this, &ConfZoneManager::zoneUpdated, this, &ConfZoneManager::clearZoneNamesCache);
+}
+
+void ConfZoneManager::clearZoneNamesCache()
+{
+    m_zoneNamesCache.clear();
+}
+
+bool ConfZoneManager::updateDriverZoneFlag(quint8 zoneId, bool enabled)
 {
     ConfBuffer confBuf;
 

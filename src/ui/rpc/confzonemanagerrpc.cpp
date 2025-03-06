@@ -73,18 +73,18 @@ bool ConfZoneManagerRpc::addOrUpdateZone(Zone &zone)
     return true;
 }
 
-bool ConfZoneManagerRpc::deleteZone(int zoneId)
+bool ConfZoneManagerRpc::deleteZone(quint8 zoneId)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfZoneManager_deleteZone, { zoneId });
 }
 
-bool ConfZoneManagerRpc::updateZoneName(int zoneId, const QString &zoneName)
+bool ConfZoneManagerRpc::updateZoneName(quint8 zoneId, const QString &zoneName)
 {
     return IoC<RpcManager>()->doOnServer(
             Control::Rpc_ConfZoneManager_updateZoneName, { zoneId, zoneName });
 }
 
-bool ConfZoneManagerRpc::updateZoneEnabled(int zoneId, bool enabled)
+bool ConfZoneManagerRpc::updateZoneEnabled(quint8 zoneId, bool enabled)
 {
     return IoC<RpcManager>()->doOnServer(
             Control::Rpc_ConfZoneManager_updateZoneEnabled, { zoneId, enabled });
@@ -142,7 +142,7 @@ void ConfZoneManagerRpc::setupServerSignals(RpcManager *rpcManager)
 
     connect(confZoneManager, &ConfZoneManager::zoneAdded, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfZoneManager_zoneAdded); });
-    connect(confZoneManager, &ConfZoneManager::zoneRemoved, rpcManager, [=](int zoneId) {
+    connect(confZoneManager, &ConfZoneManager::zoneRemoved, rpcManager, [=](quint8 zoneId) {
         rpcManager->invokeOnClients(Control::Rpc_ConfZoneManager_zoneRemoved, { zoneId });
     });
     connect(confZoneManager, &ConfZoneManager::zoneUpdated, rpcManager,

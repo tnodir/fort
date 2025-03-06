@@ -15,9 +15,9 @@ public:
     explicit ConfZoneManagerRpc(QObject *parent = nullptr);
 
     bool addOrUpdateZone(Zone &zone) override;
-    bool deleteZone(int zoneId) override;
-    bool updateZoneName(int zoneId, const QString &zoneName) override;
-    bool updateZoneEnabled(int zoneId, bool enabled) override;
+    bool deleteZone(quint8 zoneId) override;
+    bool updateZoneName(quint8 zoneId, const QString &zoneName) override;
+    bool updateZoneEnabled(quint8 zoneId, bool enabled) override;
 
     static QVariantList zoneToVarList(const Zone &zone);
     static Zone varListToZone(const QVariantList &v);

@@ -6,6 +6,7 @@
 #include <conf/app.h>
 #include <conf/appgroup.h>
 #include <conf/confappmanager.h>
+#include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
 #include <util/bitutil.h>
 #include <util/dateutil.h>
@@ -42,34 +43,32 @@ QVariant dataDisplayAction(const App &app, int role)
     return AppListModel::tr("Allow");
 }
 
-QString zonesCountString(quint32 mask)
-{
-    if (mask == 0)
-        return {};
-
-    const int zonesCount = BitUtil::bitCount(mask);
-
-    return QString::number(zonesCount);
-}
-
 QVariant dataDisplayZones(const App &app, int role)
 {
     if (role != Qt::ToolTipRole)
         return {};
 
-    QString countText;
+    auto confZoneManager = IoC<ConfZoneManager>();
 
-    const auto acceptCount = zonesCountString(app.zones.accept_mask);
-    if (!acceptCount.isEmpty()) {
-        countText += acceptCount;
+    QStringList list;
+
+    const auto acceptNames = confZoneManager->zoneNamesByMask(app.zones.accept_mask);
+    if (!acceptNames.isEmpty()) {
+        list << AppListModel::tr("Allowed Zones:");
+        list << acceptNames;
     }
 
-    const auto rejectCount = zonesCountString(app.zones.reject_mask);
-    if (!rejectCount.isEmpty()) {
-        countText += '^' + rejectCount;
+    const auto rejectNames = confZoneManager->zoneNamesByMask(app.zones.reject_mask);
+    if (!rejectNames.isEmpty()) {
+        if (!acceptNames.isEmpty()) {
+            list << QString();
+        }
+
+        list << AppListModel::tr("Blocked Zones:");
+        list << rejectNames;
     }
 
-    return countText;
+    return list.join('\n');
 }
 
 QVariant dataDisplayRule(const App &app, int role)
