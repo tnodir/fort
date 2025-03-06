@@ -49,10 +49,10 @@ protected:
     void setCurrentRuleId(quint16 ruleId = 0) { m_currentRuleId = ruleId; }
 
 private:
-    enum ApplyChildType : qint8 {
-        Disabled = 0,
+    enum class ApplyChildType : qint8 {
+        Invalid = -1,
+        ToChild = 0,
         ToSpecChild,
-        ToChild,
         FromParent,
     };
 
@@ -81,6 +81,7 @@ private:
     QLayout *setupPathLayout();
     QLayout *setupNameLayout();
     QLayout *setupApplyChildGroupLayout();
+    void setupCbApplyChild();
     void setupComboAppGroups();
     QLayout *setupActionsLayout();
     void setupActionsGroup();
@@ -137,7 +138,7 @@ private:
     QToolButton *m_btGetName = nullptr;
     QLabel *m_labelEditNotes = nullptr;
     PlainTextEdit *m_editNotes = nullptr;
-    QLabel *m_labelApplyChild = nullptr;
+    QCheckBox *m_cbApplyChild = nullptr;
     QComboBox *m_comboApplyChild = nullptr;
     QLabel *m_labelAppGroup = nullptr;
     QComboBox *m_comboAppGroup = nullptr;

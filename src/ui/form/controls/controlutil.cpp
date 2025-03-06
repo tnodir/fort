@@ -26,6 +26,17 @@
 #include "spinbox.h"
 #include "toolbutton.h"
 
+QCheckBox *ControlUtil::createCheckBox(const QString &iconPath)
+{
+    auto c = new QCheckBox();
+
+    if (!iconPath.isEmpty()) {
+        c->setIcon(IconCache::icon(iconPath));
+    }
+
+    return c;
+}
+
 QCheckBox *ControlUtil::createCheckBox(
         bool checked, const std::function<void(bool checked)> &onToggled)
 {

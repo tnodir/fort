@@ -39,7 +39,6 @@
 
 namespace {
 
-const QSize labelIconSize(16, 16);
 const QSize appIconSize(32, 32);
 
 const std::array appBlockInMinuteValues = { 15, 0, 1, 5, 10, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
@@ -270,7 +269,7 @@ void ProgramEditDialog::retranslateUi()
 
     m_editNotes->setPlaceholderText(tr("Notes"));
 
-    m_labelApplyChild->setText(tr("Rules inheritance:"));
+    m_cbApplyChild->setText(tr("Rules inheritance:"));
     retranslateComboApplyChild();
 
     m_labelAppGroup->setText(tr("Group:"));
@@ -330,8 +329,8 @@ void ProgramEditDialog::retranslatePathPlaceholderText()
 void ProgramEditDialog::retranslateComboApplyChild()
 {
     // Sync with ProgramEditDialog::ApplyChildType
-    const QStringList list = { tr("Disabled"), tr("Propagate to designated child processes"),
-        tr("Propagate to all child processes"), tr("Receive from the parent process") };
+    const QStringList list = { tr("Propagate to all child processes"),
+        tr("Propagate to designated child processes"), tr("Receive from the parent process") };
 
     ControlUtil::setComboBoxTexts(m_comboApplyChild, list);
 
@@ -520,24 +519,35 @@ QLayout *ProgramEditDialog::setupNameLayout()
 QLayout *ProgramEditDialog::setupApplyChildGroupLayout()
 {
     // Apply Child
-    auto labelIcon = ControlUtil::createIconLabel(":/icons/document_tree.png", labelIconSize);
-
-    m_labelApplyChild = ControlUtil::createLabel();
-
     m_comboApplyChild =
             ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
     m_comboApplyChild->setFixedWidth(150);
+
+    setupCbApplyChild();
 
     // Group
     setupComboAppGroups();
 
     m_labelAppGroup = ControlUtil::createLabel();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ labelIcon, m_labelApplyChild,
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbApplyChild,
             /*stretch*/ nullptr, m_comboApplyChild, ControlUtil::createVSeparator(),
             m_labelAppGroup, /*stretch*/ nullptr, m_comboAppGroup });
 
     return layout;
+}
+
+void ProgramEditDialog::setupCbApplyChild()
+{
+    m_cbApplyChild = ControlUtil::createCheckBox(":/icons/document_tree.png");
+
+    const auto refreshApplyChildEnabled = [&](bool checked) {
+        m_comboApplyChild->setEnabled(checked);
+    };
+
+    refreshApplyChildEnabled(false);
+
+    connect(m_cbApplyChild, &QCheckBox::toggled, this, refreshApplyChildEnabled);
 }
 
 void ProgramEditDialog::setupComboAppGroups()
@@ -596,8 +606,7 @@ void ProgramEditDialog::setupActionsGroup()
 QLayout *ProgramEditDialog::setupZonesRuleLayout()
 {
     // LAN Only
-    m_cbLanOnly = new QCheckBox();
-    m_cbLanOnly->setIcon(IconCache::icon(":/icons/hostname.png"));
+    m_cbLanOnly = ControlUtil::createCheckBox(":/icons/hostname.png");
 
     // Zones
     m_btZones = new ZonesSelector();
@@ -674,8 +683,7 @@ QLayout *ProgramEditDialog::setupScheduleLayout()
 
 void ProgramEditDialog::setupCbSchedule()
 {
-    m_cbSchedule = new QCheckBox();
-    m_cbSchedule->setIcon(IconCache::icon(":/icons/time.png"));
+    m_cbSchedule = ControlUtil::createCheckBox(":/icons/time.png");
 
     const auto refreshScheduleEnabled = [&](bool checked) {
         m_comboScheduleAction->setEnabled(checked);
@@ -733,8 +741,7 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
 void ProgramEditDialog::setupOptions()
 {
     // Parked
-    m_cbParked = new QCheckBox();
-    m_cbParked->setIcon(IconCache::icon(":/icons/parking.png"));
+    m_cbParked = ControlUtil::createCheckBox(":/icons/parking.png");
 
     // Child Options
     setupChildOptionsLayout();
@@ -759,8 +766,7 @@ void ProgramEditDialog::setupOptions()
 void ProgramEditDialog::setupChildOptionsLayout()
 {
     // Kill Child
-    m_cbKillChild = new QCheckBox();
-    m_cbKillChild->setIcon(IconCache::icon(":/icons/scull.png"));
+    m_cbKillChild = ControlUtil::createCheckBox(":/icons/scull.png");
 
     connect(m_cbKillChild, &QCheckBox::clicked, this, &ProgramEditDialog::warnDangerousOption);
 }
@@ -807,9 +813,11 @@ void ProgramEditDialog::updateApplyChild()
     const ApplyChildType type = m_appRow.applyParent ? ApplyChildType::FromParent
             : m_appRow.applySpecChild                ? ApplyChildType::ToSpecChild
             : m_appRow.applyChild                    ? ApplyChildType::ToChild
-                                                     : ApplyChildType::Disabled;
+                                                     : ApplyChildType::Invalid;
+    const bool hasApplyChild = (type != ApplyChildType::Invalid);
 
-    m_comboApplyChild->setCurrentIndex(type);
+    m_cbApplyChild->setChecked(hasApplyChild);
+    m_comboApplyChild->setCurrentIndex(int(hasApplyChild ? type : ApplyChildType::ToChild));
 }
 
 void ProgramEditDialog::updateWildcard(bool isSingleSelection)
@@ -963,20 +971,21 @@ void ProgramEditDialog::fillAppPath(App &app) const
 
 void ProgramEditDialog::fillAppApplyChild(App &app) const
 {
-    const auto type = ApplyChildType(m_comboApplyChild->currentIndex());
-
     app.applyParent = false;
     app.applyChild = false;
     app.applySpecChild = false;
 
+    if (!m_cbApplyChild->isChecked())
+        return;
+
+    const auto type = ApplyChildType(m_comboApplyChild->currentIndex());
+
     switch (type) {
-    case ApplyChildType::Disabled: {
+    case ApplyChildType::ToChild: {
+        app.applyChild = true;
     } break;
     case ApplyChildType::ToSpecChild: {
         app.applySpecChild = true;
-    }
-        Q_FALLTHROUGH();
-    case ApplyChildType::ToChild: {
         app.applyChild = true;
     } break;
     case ApplyChildType::FromParent: {

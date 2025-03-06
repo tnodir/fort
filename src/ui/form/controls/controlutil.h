@@ -28,6 +28,7 @@ class LabelSpinCombo;
 class ControlUtil
 {
 public:
+    static QCheckBox *createCheckBox(const QString &iconPath = {});
     static QCheckBox *createCheckBox(
             bool checked, const std::function<void(bool checked)> &onToggled);
     static QCheckBox *createCheckStateBox(
