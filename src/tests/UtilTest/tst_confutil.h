@@ -491,3 +491,73 @@ TEST_F(ConfUtilTest, rulesTwoFilters)
         ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/2));
     }
 }
+
+TEST_F(ConfUtilTest, ruleExclusiveTerminating)
+{
+    static Rule g_rules[] = {
+        {
+                .blocked = false,
+                .exclusive = true,
+                .terminate = true,
+                .terminateBlocked = true,
+                .ruleId = 1,
+                .ruleText = "dir(OUT):area(LOCALHOST)",
+        },
+    };
+
+    class TestRules : public ConfRulesWalker
+    {
+    public:
+        bool walkRules(
+                WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override
+        {
+            wra.maxRuleId = 1;
+
+            return walkRulesLoop(func);
+        }
+
+    private:
+        bool walkRulesLoop(const std::function<walkRulesCallback> &func) const
+        {
+            for (const auto &rule : g_rules) {
+                if (!func(rule))
+                    return false;
+            }
+
+            return true;
+        }
+    };
+
+    TestRules testRules;
+
+    ConfBuffer confBuf;
+
+    if (!confBuf.writeRules(testRules)) {
+        qCritical() << "Error:" << confBuf.errorMessage();
+        Q_UNREACHABLE();
+    }
+
+    // Check the buffer
+    const char *data = confBuf.data();
+
+    // Allowed IP
+    {
+        FORT_CONF_META_CONN conn = {
+            .is_loopback = true,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("127.0.0.1") },
+        };
+
+        ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+
+    // Blocked IP
+    {
+        FORT_CONF_META_CONN conn = {
+            .remote_port = 443,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("1.1.1.1") },
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+}

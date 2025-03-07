@@ -690,12 +690,12 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
     return FALSE;
 }
 
-inline static BOOL fort_conf_rules_rt_conn_filtered_sets(
-        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+inline static BOOL fort_conf_rules_rt_conn_filtered_sets(PCFORT_CONF_RULES_RT rules_rt,
+        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, const BOOL empty_res)
 {
     const int set_count = rule->set_count;
     if (set_count == 0)
-        return FALSE;
+        return empty_res;
 
     const UINT16 *rule_ids =
             (const UINT16 *) ((PCCH) rule + FORT_CONF_RULE_SET_INDEXES_OFFSET(rule));
@@ -730,14 +730,13 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_check(
             || fort_conf_rules_rt_conn_filtered_filters(conn, rule);
 
     const BOOL is_exclusive = (rule->exclusive && !rule->blocked);
-    if (is_exclusive ? !filter_res : filter_res) {
+
+    const BOOL is_exclusive_filtered = (is_exclusive ? !filter_res : filter_res);
+    if (is_exclusive_filtered) {
         return filter_res;
     }
 
-    if (fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule))
-        return TRUE;
-
-    return fort_conf_rules_rt_conn_filtered_terminate(conn, rule);
+    return fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule, filter_res);
 }
 
 FORT_API BOOL fort_conf_rules_rt_conn_filtered(
@@ -751,7 +750,8 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
     if (!rule->enabled)
         return FALSE;
 
-    return fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule);
+    return fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule)
+            || fort_conf_rules_rt_conn_filtered_terminate(conn, rule);
 }
 
 FORT_API BOOL fort_conf_rules_conn_filtered(
