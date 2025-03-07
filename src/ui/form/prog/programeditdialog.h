@@ -90,6 +90,9 @@ private:
     QLayout *setupScheduleLayout();
     void setupCbSchedule();
     void setupComboScheduleType();
+    void setupQuickAction();
+    void setupTimedAction();
+    void setupTimedRemove();
     QLayout *setupButtonsLayout();
     void setupOptions();
     void setupChildOptionsLayout();
@@ -99,10 +102,13 @@ private:
     void updateZonesRulesLayout();
     void updateApplyChild();
     void updateWildcard(bool isSingleSelection = true);
+    void updateQuickAction();
 
     void switchWildcardPaths();
 
     void fillEditName();
+
+    void saveScheduleAction(App::ScheduleAction action, int minutes);
 
     bool save();
     bool saveApp(App &app);
@@ -124,6 +130,8 @@ private:
 
 private:
     bool m_isWildcard = false;
+
+    App::ScheduleAction m_quickAction = App::ScheduleBlock;
 
     quint16 m_currentRuleId = 0;
 
@@ -161,6 +169,10 @@ private:
     QComboBox *m_comboScheduleType = nullptr;
     SpinCombo *m_scScheduleIn = nullptr;
     QDateTimeEdit *m_dteScheduleAt = nullptr;
+
+    QPushButton *m_btQuickAction = nullptr;
+    QToolButton *m_btTimedAction = nullptr;
+    QToolButton *m_btTimedRemove = nullptr;
 
     QPushButton *m_btOptions = nullptr;
     QToolButton *m_btSwitchWildcard = nullptr;

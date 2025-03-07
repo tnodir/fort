@@ -41,8 +41,8 @@ namespace {
 
 const QSize appIconSize(32, 32);
 
-const std::array appBlockInMinuteValues = { 15, 0, 1, 5, 10, 30, 60 * 1, 60 * 6, 60 * 12, 60 * 24,
-    60 * 24 * 7, 60 * 24 * 30 };
+const std::array appBlockInMinuteValues = { 15, 0, 1, 5, 10, 30, 60 * 1, 60 * 3, 60 * 6, 60 * 12,
+    60 * 24, 60 * 24 * 7, 60 * 24 * 30 };
 
 }
 
@@ -297,6 +297,8 @@ void ProgramEditDialog::retranslateUi()
     retranslateScheduleIn();
     m_dteScheduleAt->unsetLocale();
 
+    updateQuickAction();
+
     m_btOptions->setToolTip(tr("Options"));
     m_btSwitchWildcard->setToolTip(tr("Switch Wildcard"));
     m_btOk->setText(tr("OK"));
@@ -358,8 +360,8 @@ void ProgramEditDialog::retranslateScheduleType()
 void ProgramEditDialog::retranslateScheduleIn()
 {
     const QStringList list = { tr("Custom"), tr("1 second"), tr("1 minute"), tr("5 minutes"),
-        tr("10 minutes"), tr("30 minutes"), tr("1 hour"), tr("6 hours"), tr("12 hours"), tr("Day"),
-        tr("Week"), tr("Month") };
+        tr("10 minutes"), tr("30 minutes"), tr("1 hour"), tr("3 hours"), tr("6 hours"),
+        tr("12 hours"), tr("Day"), tr("Week"), tr("Month") };
 
     m_scScheduleIn->setNames(list);
     m_scScheduleIn->spinBox()->setSuffix(tr(" minute(s)"));
@@ -595,9 +597,9 @@ void ProgramEditDialog::setupActionsGroup()
     m_btgActions = new QButtonGroup(this);
     m_btgActions->setExclusive(true);
 
-    m_btgActions->addButton(m_rbAllow);
-    m_btgActions->addButton(m_rbBlock);
-    m_btgActions->addButton(m_rbKillProcess);
+    m_btgActions->addButton(m_rbAllow, int(App::ScheduleAllow));
+    m_btgActions->addButton(m_rbBlock, int(App::ScheduleBlock));
+    m_btgActions->addButton(m_rbKillProcess, int(App::ScheduleKillProcess));
 
     connect(m_rbAllow, &QRadioButton::toggled, this, &ProgramEditDialog::updateZonesRulesLayout);
 }
@@ -671,11 +673,17 @@ QLayout *ProgramEditDialog::setupScheduleLayout()
     m_dteScheduleAt = new QDateTimeEdit();
     m_dteScheduleAt->setCalendarPopup(true);
 
+    // Quick Actions
+    setupQuickAction();
+    setupTimedAction();
+    setupTimedRemove();
+
     // Schedule Check Box
     setupCbSchedule();
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_cbSchedule, m_comboScheduleAction,
-            m_comboScheduleType, /*stretch*/ nullptr, m_scScheduleIn, m_dteScheduleAt });
+            m_comboScheduleType, /*stretch*/ nullptr, m_scScheduleIn, m_dteScheduleAt,
+            m_btQuickAction, m_btTimedAction, m_btTimedRemove });
 
     return layout;
 }
@@ -690,6 +698,10 @@ void ProgramEditDialog::setupCbSchedule()
 
         m_scScheduleIn->setVisible(checked && m_scScheduleIn->isEnabled());
         m_dteScheduleAt->setVisible(checked && m_dteScheduleAt->isEnabled());
+
+        m_btQuickAction->setVisible(!checked);
+        m_btTimedAction->setVisible(!checked);
+        m_btTimedRemove->setVisible(!checked);
     };
 
     refreshScheduleEnabled(false);
@@ -712,6 +724,43 @@ void ProgramEditDialog::setupComboScheduleType()
 
         m_scScheduleIn->setVisible(checked && isTimeIn);
         m_dteScheduleAt->setVisible(checked && isTimeAt);
+    });
+}
+
+void ProgramEditDialog::setupQuickAction()
+{
+    m_btQuickAction = ControlUtil::createButton({}, [&] {
+        auto rb = m_btgActions->button(int(m_quickAction));
+        rb->setChecked(true);
+
+        m_btOk->click();
+    });
+
+    const auto refreshQuickActionType = [&](bool checked) {
+        m_quickAction = checked ? App::ScheduleBlock : App::ScheduleAllow;
+
+        updateQuickAction();
+    };
+
+    connect(m_rbAllow, &QRadioButton::toggled, this, refreshQuickActionType);
+}
+
+void ProgramEditDialog::setupTimedAction()
+{
+    m_btTimedAction = ControlUtil::createToolButton({}, [&] {
+        saveScheduleAction(m_quickAction, /*minutes*/ 60 * 5);
+        // TODO
+    });
+
+    m_btTimedAction->setPopupMode(QToolButton::MenuButtonPopup);
+    // m_btTimedAction->setMenu(m_menuTimedAction());
+}
+
+void ProgramEditDialog::setupTimedRemove()
+{
+    m_btTimedRemove = ControlUtil::createToolButton(":/icons/delete.png", [&] {
+        saveScheduleAction(App::ScheduleRemove, /*minutes*/ 60 * 5);
+        // TODO
     });
 }
 
@@ -837,6 +886,14 @@ void ProgramEditDialog::updateWildcard(bool isSingleSelection)
     m_labelEditNotes->setPixmap(appIcon(isSingleSelection).pixmap(appIconSize));
 }
 
+void ProgramEditDialog::updateQuickAction()
+{
+    auto rb = m_btgActions->button(int(m_quickAction));
+
+    m_btQuickAction->setIcon(rb->icon());
+    m_btQuickAction->setText(rb->text());
+}
+
 void ProgramEditDialog::switchWildcardPaths()
 {
     if (isWildcard()) {
@@ -866,6 +923,16 @@ void ProgramEditDialog::fillEditName()
     }
 
     m_editName->setStartText(appName);
+}
+
+void ProgramEditDialog::saveScheduleAction(App::ScheduleAction action, int minutes)
+{
+    m_cbSchedule->setChecked(true);
+    m_comboScheduleAction->setCurrentIndex(int(action));
+    m_comboScheduleType->setCurrentIndex(ScheduleTimeIn);
+    m_scScheduleIn->spinBox()->setValue(minutes);
+
+    m_btOk->click();
 }
 
 bool ProgramEditDialog::save()
