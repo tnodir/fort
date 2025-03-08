@@ -129,12 +129,16 @@
         <translation>Zones</translation>
     </message>
     <message>
-        <source>Never</source>
-        <translation>Jamais</translation>
+        <source>Notes</source>
+        <translation>Notes</translation>
     </message>
     <message>
-        <source>Connections Closed</source>
-        <translation>Connection fermée</translation>
+        <source>Allowed Zones:</source>
+        <translation>Zones autorisées :</translation>
+    </message>
+    <message>
+        <source>Blocked Zones:</source>
+        <translation>Zones bloquées :</translation>
     </message>
 </context>
 <context>
@@ -347,20 +351,8 @@
         <translation>Programme</translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation>ID Processeur</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>Protocole</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>IP et Port Locaux</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>IP et port distants</translation>
     </message>
     <message>
         <source>Time</source>
@@ -438,6 +430,30 @@
         <source>Zone: %1</source>
         <translation>Zone : %1</translation>
     </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation>Nom de l&apos;hôte local</translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation>IP locale</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Port local</translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation>Nom de l&apos;hôte distant</translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation>IP distante</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Port Distant</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -480,6 +496,14 @@
     <message>
         <source>Options</source>
         <translation>Options</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Copier comme filtre</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Étirer la dernière colonne</translation>
     </message>
 </context>
 <context>
@@ -1545,10 +1569,6 @@ Il peut causer un dysfonctionnement de Windows ou totalement inutilisable.</tran
         <translation>Groupe:</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Options avancées</translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation>Règle</translation>
     </message>
@@ -1563,10 +1583,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Attention : Cette option n&apos;affecte que les nouveaux processus !
 
 Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet de cette option.</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Désactivé</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1593,8 +1609,16 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <translation>Collecter les connexions autorisées</translation>
     </message>
     <message>
-        <source>On:</source>
-        <translation>Quand:</translation>
+        <source>Options</source>
+        <translation>Options</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation>3 heures</translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

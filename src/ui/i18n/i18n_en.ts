@@ -129,11 +129,15 @@
         <translation></translation>
     </message>
     <message>
-        <source>Never</source>
+        <source>Notes</source>
         <translation></translation>
     </message>
     <message>
-        <source>Connections Closed</source>
+        <source>Allowed Zones:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Blocked Zones:</source>
         <translation></translation>
     </message>
 </context>
@@ -347,19 +351,7 @@
         <translation></translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Protocol</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
         <translation></translation>
     </message>
     <message>
@@ -438,6 +430,30 @@
         <source>Zone: %1</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -479,6 +495,14 @@
     </message>
     <message>
         <source>Options</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
         <translation></translation>
     </message>
 </context>
@@ -1536,10 +1560,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation></translation>
     </message>
@@ -1551,10 +1571,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <source>Attention: This option only affects new processes!
 
 Please restart the running program to take effect of this option.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Disabled</source>
         <translation></translation>
     </message>
     <message>
@@ -1582,7 +1598,15 @@ Please restart the running program to take effect of this option.</source>
         <translation></translation>
     </message>
     <message>
-        <source>On:</source>
+        <source>Options</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
         <translation></translation>
     </message>
 </context>

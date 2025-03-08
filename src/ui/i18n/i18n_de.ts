@@ -44,7 +44,7 @@
     </message>
     <message>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet</translation>
     </message>
     <message>
         <source>Filter Local Addresses</source>
@@ -64,7 +64,7 @@
     </message>
     <message>
         <source>Block Addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation>Adressen blockieren:</translation>
     </message>
 </context>
 <context>
@@ -129,11 +129,15 @@
         <translation>Zonen</translation>
     </message>
     <message>
-        <source>Never</source>
+        <source>Notes</source>
+        <translation>Hinweise</translation>
+    </message>
+    <message>
+        <source>Allowed Zones:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Connections Closed</source>
+        <source>Blocked Zones:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -332,11 +336,11 @@
     </message>
     <message>
         <source>Blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Blockiert</translation>
     </message>
     <message>
         <source>Allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Zugelassen</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -347,20 +351,8 @@
         <translation>Programm</translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation>Proz. ID</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>Protokoll</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>Lokale IP und Port</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>Remote IP und Port</translation>
     </message>
     <message>
         <source>Time</source>
@@ -384,19 +376,19 @@
     </message>
     <message>
         <source>Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Internetadresse</translation>
     </message>
     <message>
         <source>Old connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Alte Verbindung</translation>
     </message>
     <message>
         <source>Program&apos;s action</source>
-        <translation type="unfinished"></translation>
+        <translation>Programm-Aktion</translation>
     </message>
     <message>
         <source>App. Group</source>
-        <translation type="unfinished"></translation>
+        <translation>App-Gruppe</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -404,7 +396,7 @@
     </message>
     <message>
         <source>LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Nur LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -416,11 +408,11 @@
     </message>
     <message>
         <source>Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Globale Regel vor App-Regeln</translation>
     </message>
     <message>
         <source>Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Globale Regel nach App-Regeln</translation>
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
@@ -432,10 +424,34 @@
     </message>
     <message>
         <source>Rule: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Regel: %1</translation>
     </message>
     <message>
         <source>Zone: %1</source>
+        <translation>Zone: %1</translation>
+    </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -480,6 +496,14 @@
     <message>
         <source>Options</source>
         <translation>Optionen</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation type="unfinished">Letzte Spalte strecken</translation>
     </message>
 </context>
 <context>
@@ -529,7 +553,7 @@
     </message>
     <message>
         <source>Block LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>LAN-Verkehr blockieren</translation>
     </message>
 </context>
 <context>
@@ -1123,7 +1147,7 @@
     </message>
     <message>
         <source>Import new programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Neue Programme importieren</translation>
     </message>
 </context>
 <context>
@@ -1265,7 +1289,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
-        <translation type="unfinished"></translation>
+        <translation>Tarnungsmodus (Verhindere Portscannen)</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
@@ -1545,10 +1569,6 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>Gruppe:</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Erweiterte Einstellungen</translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation>Regel</translation>
     </message>
@@ -1563,10 +1583,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Achtung: Diese Option wirkt sich nur auf neue Prozesse aus!
 
 Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Deaktiviert</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1593,7 +1609,15 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <translation>Sammle erlaubte Verbindungen</translation>
     </message>
     <message>
-        <source>On:</source>
+        <source>Options</source>
+        <translation>Optionen</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1708,7 +1732,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished"></translation>
+        <translation>Letzte Spalte strecken</translation>
     </message>
 </context>
 <context>
@@ -2104,7 +2128,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbindungen</translation>
     </message>
 </context>
 <context>
@@ -2211,11 +2235,11 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbindungen</translation>
     </message>
     <message>
         <source>Keep count for connections:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zähler für Verbindungen behalten:</translation>
     </message>
 </context>
 <context>

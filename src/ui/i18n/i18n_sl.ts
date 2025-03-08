@@ -129,12 +129,16 @@
         <translation>Področja</translation>
     </message>
     <message>
-        <source>Never</source>
-        <translation>Nikoli</translation>
+        <source>Notes</source>
+        <translation>Opombe</translation>
     </message>
     <message>
-        <source>Connections Closed</source>
-        <translation>Povezave zaprte</translation>
+        <source>Allowed Zones:</source>
+        <translation>Dovoljena območja:</translation>
+    </message>
+    <message>
+        <source>Blocked Zones:</source>
+        <translation>Blokirana območja:</translation>
     </message>
 </context>
 <context>
@@ -347,20 +351,8 @@
         <translation>Program</translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation>ID proc.</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>Protokol</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>Lokalni IP in vrata</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>Oddaljeni IP in vrata</translation>
     </message>
     <message>
         <source>Time</source>
@@ -438,6 +430,30 @@
         <source>Zone: %1</source>
         <translation>Področje: %1</translation>
     </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation>Ime lokalnega gostitelja</translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation>Lokalni IP</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Lokalno vrata</translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation>Ime oddaljenega gostitelja</translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation>Oddaljeni IP</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Oddaljena vrata</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -480,6 +496,14 @@
     <message>
         <source>Options</source>
         <translation>Možnosti</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Kopiraj kot filter</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Raztegnite zadnji stolpec</translation>
     </message>
 </context>
 <context>
@@ -1545,10 +1569,6 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>Skupina:</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Napredne možnosti</translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation>Pravilo</translation>
     </message>
@@ -1563,10 +1583,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Upozornenie: Táto možnosť ovplyvňuje iba nové procesy!
 
 Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Onemogočeno</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1593,8 +1609,16 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <translation>Zberi dovoljene povezave</translation>
     </message>
     <message>
-        <source>On:</source>
-        <translation>Pri:</translation>
+        <source>Options</source>
+        <translation>Možnosti</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation>3 ure</translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
+        <translation>%1 minut(a)</translation>
     </message>
 </context>
 <context>

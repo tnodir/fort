@@ -129,12 +129,16 @@
         <translation>구역</translation>
     </message>
     <message>
-        <source>Never</source>
-        <translation>안 함</translation>
+        <source>Notes</source>
+        <translation>참고</translation>
     </message>
     <message>
-        <source>Connections Closed</source>
-        <translation>연결이 종료됨</translation>
+        <source>Allowed Zones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocked Zones:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -347,20 +351,8 @@
         <translation>프로그램</translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation>프로세스 ID</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>프로토콜</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>로컬 IP 및 포트</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>원격 IP 및 포트</translation>
     </message>
     <message>
         <source>Time</source>
@@ -438,6 +430,30 @@
         <source>Zone: %1</source>
         <translation>영역: %1</translation>
     </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -480,6 +496,14 @@
     <message>
         <source>Options</source>
         <translation>옵션</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>마지막 열 늘리기</translation>
     </message>
 </context>
 <context>
@@ -1545,10 +1569,6 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>그룹:</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>고급 옵션</translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation>규칙</translation>
     </message>
@@ -1563,10 +1583,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>주의: 이 옵션은 새 프로세스에만 영향을 미칩니다!
 
 이 옵션을 적용하려면 실행 중인 프로그램을 다시 시작하세요.</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>사용 안 함</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1593,8 +1609,16 @@ Please restart the running program to take effect of this option.</source>
         <translation>허용된 연결 집계</translation>
     </message>
     <message>
-        <source>On:</source>
-        <translation>언제:</translation>
+        <source>Options</source>
+        <translation>옵션</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

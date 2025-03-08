@@ -129,11 +129,15 @@
         <translation>Strefy</translation>
     </message>
     <message>
-        <source>Never</source>
+        <source>Notes</source>
+        <translation>Uwagi</translation>
+    </message>
+    <message>
+        <source>Allowed Zones:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Connections Closed</source>
+        <source>Blocked Zones:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -347,20 +351,8 @@
         <translation>Program</translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation>ID proc.</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>Protokół</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>Lokalny IP i port</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>Zdalny IP i port</translation>
     </message>
     <message>
         <source>Time</source>
@@ -438,6 +430,30 @@
         <source>Zone: %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -480,6 +496,14 @@
     <message>
         <source>Options</source>
         <translation>Opcje</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1545,10 +1569,6 @@ Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowi
         <translation>Grupa:</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Opcje zaawansowane</translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation>Reguła</translation>
     </message>
@@ -1563,10 +1583,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Uwaga: Ta opcja dotyczy tylko nowych procesów!
 
 Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Wyłączone</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1593,7 +1609,15 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <translation>Zbieraj dozwolone połączenia</translation>
     </message>
     <message>
-        <source>On:</source>
+        <source>Options</source>
+        <translation>Opcje</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

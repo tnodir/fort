@@ -129,12 +129,16 @@
         <translation>Зоны</translation>
     </message>
     <message>
-        <source>Never</source>
-        <translation>Никогда</translation>
+        <source>Notes</source>
+        <translation>Заметки</translation>
     </message>
     <message>
-        <source>Connections Closed</source>
-        <translation>Закрытии соединений</translation>
+        <source>Allowed Zones:</source>
+        <translation>Разрешённые Зоны:</translation>
+    </message>
+    <message>
+        <source>Blocked Zones:</source>
+        <translation>Запрещённые Зоны:</translation>
     </message>
 </context>
 <context>
@@ -347,20 +351,8 @@
         <translation>Программа</translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation>ИД проц.</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>Протокол</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>Локал. IP и Port</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>Удал. IP и Port</translation>
     </message>
     <message>
         <source>Time</source>
@@ -438,6 +430,30 @@
         <source>Zone: %1</source>
         <translation>Зона: %1</translation>
     </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation>Локал. имя хоста</translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation>Локал. IP</translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation>Локал. порт</translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation>Удал. имя хоста</translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation>Локал. IP</translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation>Локал. порт</translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -480,6 +496,14 @@
     <message>
         <source>Options</source>
         <translation>Опции</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Копировать как фильтр</translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Растянуть последнюю колонку</translation>
     </message>
 </context>
 <context>
@@ -1545,10 +1569,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>Группа:</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Расширенные опции</translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation>Правило</translation>
     </message>
@@ -1563,10 +1583,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Внимание: эта опция влияет только на новые процессы!
 
 Перезапустите запущенную программу, чтобы эта опция вступила в силу.</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Отключено</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1593,8 +1609,16 @@ Please restart the running program to take effect of this option.</source>
         <translation>Собирать разрешённые соединения</translation>
     </message>
     <message>
-        <source>On:</source>
-        <translation>При:</translation>
+        <source>Options</source>
+        <translation>Опции</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation>3 часа</translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
+        <translation>%1 минут(ы)</translation>
     </message>
 </context>
 <context>

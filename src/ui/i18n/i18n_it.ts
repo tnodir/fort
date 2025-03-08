@@ -129,12 +129,16 @@
         <translation>Zone</translation>
     </message>
     <message>
-        <source>Never</source>
-        <translation>Mai</translation>
+        <source>Notes</source>
+        <translation>Note</translation>
     </message>
     <message>
-        <source>Connections Closed</source>
-        <translation>Connessioni chiuse</translation>
+        <source>Allowed Zones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocked Zones:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -347,20 +351,8 @@
         <translation>Programma</translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation>ID proc.</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>Protocollo</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>IP e porta locali</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>IP e porta remoti</translation>
     </message>
     <message>
         <source>Time</source>
@@ -438,6 +430,30 @@
         <source>Zone: %1</source>
         <translation>Zona: %1</translation>
     </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -480,6 +496,14 @@
     <message>
         <source>Options</source>
         <translation>Opzioni</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>Allunga l&apos;ultima colonna</translation>
     </message>
 </context>
 <context>
@@ -1545,10 +1569,6 @@ Può causare malfunzionamenti di Windows o renderlo totalmente inutilizzabile.</
         <translation>Gruppo:</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Opzioni avanzate</translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation>Regola</translation>
     </message>
@@ -1563,10 +1583,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Attenzione: quest&apos;opzione influisce solo sui nuovi processi!
 
 Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso.</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Disabilitato</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1593,8 +1609,16 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <translation>Raccogli le connessioni consentite</translation>
     </message>
     <message>
-        <source>On:</source>
-        <translation>Il:</translation>
+        <source>Options</source>
+        <translation>Opzioni</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

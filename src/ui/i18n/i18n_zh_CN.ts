@@ -129,12 +129,16 @@
         <translation>区域</translation>
     </message>
     <message>
-        <source>Never</source>
-        <translation>永不</translation>
+        <source>Notes</source>
+        <translation>注意</translation>
     </message>
     <message>
-        <source>Connections Closed</source>
-        <translation>连接已关闭</translation>
+        <source>Allowed Zones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocked Zones:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -347,20 +351,8 @@
         <translation>应用程序</translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation>进程 ID</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>协议</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>本地 IP 和端口</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>远程 IP 和端口</translation>
     </message>
     <message>
         <source>Time</source>
@@ -438,6 +430,30 @@
         <source>Zone: %1</source>
         <translation>区域： %1</translation>
     </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -480,6 +496,14 @@
     <message>
         <source>Options</source>
         <translation>选项</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation>拉伸最后一列</translation>
     </message>
 </context>
 <context>
@@ -1545,10 +1569,6 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>组：</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>高级选项</translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation>规则</translation>
     </message>
@@ -1563,10 +1583,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>请注意： 此选项仅影响新进程！
 
 请重新启动正在运行的应用程序以使此选项生效。</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>已禁用</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1593,8 +1609,16 @@ Please restart the running program to take effect of this option.</source>
         <translation>收集已允许的连接</translation>
     </message>
     <message>
-        <source>On:</source>
-        <translation>关于：</translation>
+        <source>Options</source>
+        <translation>选项</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

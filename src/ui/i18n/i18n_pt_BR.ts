@@ -129,11 +129,15 @@
         <translation>Zonas</translation>
     </message>
     <message>
-        <source>Never</source>
+        <source>Notes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Connections Closed</source>
+        <source>Allowed Zones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocked Zones:</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -347,20 +351,8 @@
         <translation>Programa</translation>
     </message>
     <message>
-        <source>Proc. ID</source>
-        <translation>ID do Proc.</translation>
-    </message>
-    <message>
         <source>Protocol</source>
         <translation>Protocolo</translation>
-    </message>
-    <message>
-        <source>Local IP and Port</source>
-        <translation>IP local e Porta</translation>
-    </message>
-    <message>
-        <source>Remote IP and Port</source>
-        <translation>IP Remoto e Porta</translation>
     </message>
     <message>
         <source>Time</source>
@@ -438,6 +430,30 @@
         <source>Zone: %1</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Local Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Local Port</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Host Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Remote Port</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ConnectionsPage</name>
@@ -480,6 +496,14 @@
     <message>
         <source>Options</source>
         <translation>Opções</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Stretch last column</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1543,10 +1567,6 @@ Isso pode causar problemas no Windows ou o deixar totalmente inutilizável.</tra
         <translation>Grupo:</translation>
     </message>
     <message>
-        <source>Advanced Options</source>
-        <translation>Opções Avançadas</translation>
-    </message>
-    <message>
         <source>Rule</source>
         <translation>Regra</translation>
     </message>
@@ -1561,10 +1581,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Atenção: Essa opção só afeta processos novos!
 
 Por favor reiniciar o programa para essa opção surtir efeito.</translation>
-    </message>
-    <message>
-        <source>Disabled</source>
-        <translation>Desativado</translation>
     </message>
     <message>
         <source>Propagate to designated child processes</source>
@@ -1591,7 +1607,15 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <translation>Coletar conexões permitidas</translation>
     </message>
     <message>
-        <source>On:</source>
+        <source>Options</source>
+        <translation type="unfinished">Opções</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 minute(s)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
