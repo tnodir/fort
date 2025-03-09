@@ -73,6 +73,8 @@ private:
     void retranslateScheduleAction();
     void retranslateScheduleType();
     void retranslateScheduleIn();
+    void retranslateTimedMenu();
+    void retranslateTimedAction(QToolButton *bt);
     virtual void retranslateWindowTitle();
 
     void setupUi();
@@ -91,8 +93,10 @@ private:
     void setupCbSchedule();
     void setupComboScheduleType();
     void setupQuickAction();
+    void setupTimedMenu();
     void setupTimedAction();
     void setupTimedRemove();
+    QToolButton *createTimedButton(const QString &iniKey);
     QLayout *setupButtonsLayout();
     void setupOptions();
     void setupChildOptionsLayout();
@@ -103,12 +107,16 @@ private:
     void updateApplyChild();
     void updateWildcard(bool isSingleSelection = true);
     void updateQuickAction();
+    void selectQuickAction();
+
+    int timedActionMinutes(QToolButton *bt);
+    void setTimedActionMinutes(QToolButton *bt, int minutes);
 
     void switchWildcardPaths();
 
     void fillEditName();
 
-    void saveScheduleAction(App::ScheduleAction action, int minutes);
+    void saveScheduleAction(App::ScheduleAction actionType, int minutes);
 
     bool save();
     bool saveApp(App &app);
@@ -131,7 +139,7 @@ private:
 private:
     bool m_isWildcard = false;
 
-    App::ScheduleAction m_quickAction = App::ScheduleBlock;
+    App::ScheduleAction m_quickActionType = App::ScheduleBlock;
 
     quint16 m_currentRuleId = 0;
 
@@ -173,6 +181,9 @@ private:
     QPushButton *m_btQuickAction = nullptr;
     QToolButton *m_btTimedAction = nullptr;
     QToolButton *m_btTimedRemove = nullptr;
+    QToolButton *m_timedMenuOwner = nullptr; // transient
+    QActionGroup *m_timedMenuActions = nullptr;
+    QMenu *m_timedMenu = nullptr;
 
     QPushButton *m_btOptions = nullptr;
     QToolButton *m_btSwitchWildcard = nullptr;

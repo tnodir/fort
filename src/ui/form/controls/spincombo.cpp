@@ -76,6 +76,12 @@ void SpinCombo::setupCombo()
     });
 }
 
+int SpinCombo::getIndexByValue(int value) const
+{
+    const int index = values().indexOf(value);
+    return (index <= 0) ? 0 : index;
+}
+
 void SpinCombo::updateSpinBoxValue(int index)
 {
     m_spinBox->setValue(values().at(index));
@@ -84,10 +90,4 @@ void SpinCombo::updateSpinBoxValue(int index)
 void SpinCombo::updateComboBoxIndex(int value)
 {
     m_comboBox->setCurrentIndex(getIndexByValue(value));
-}
-
-int SpinCombo::getIndexByValue(int value) const
-{
-    const int index = values().indexOf(value);
-    return (index <= 0) ? 0 : index;
 }

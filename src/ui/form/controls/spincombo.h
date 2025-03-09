@@ -36,6 +36,8 @@ public:
     QSpinBox *spinBox() const { return m_spinBox; }
     QComboBox *comboBox() const { return m_comboBox; }
 
+    int getIndexByValue(int value) const;
+
     template<size_t N>
     static ValuesList makeValuesList(const std::array<int, N> &arr);
 
@@ -50,7 +52,6 @@ private:
 
     void updateSpinBoxValue(int index);
     void updateComboBoxIndex(int value);
-    int getIndexByValue(int value) const;
 
 private:
     ValuesList m_values;

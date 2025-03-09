@@ -15,18 +15,17 @@ public:
 
     Settings *settings() const { return m_settings; }
 
-public slots:
-    void save() const;
-    void saveAndClear();
-
-protected:
     QVariant value(const QString &key, const QVariant &defaultValue = {}) const override;
     void setValue(
             const QString &key, const QVariant &v, const QVariant &defaultValue = {}) override;
 
     void setCacheValue(const QString &key, const QVariant &v) const;
 
-    static bool isTransientKey(const QString &key);
+    static bool isTransientKey(const QString &key) { return key.endsWith('_'); }
+
+public slots:
+    void save() const;
+    void saveAndClear();
 
 private:
     Settings *m_settings = nullptr;

@@ -6,6 +6,10 @@ ToolButton::ToolButton(QWidget *parent) : QToolButton(parent) { }
 
 void ToolButton::mousePressEvent(QMouseEvent *e)
 {
+    if (e->button() == Qt::LeftButton && popupMode() == MenuButtonPopup) {
+        emit aboutToShowMenu();
+    }
+
     QToolButton::mousePressEvent(e);
 
     m_mousePressed = true;
@@ -28,6 +32,7 @@ void ToolButton::mouseReleaseEvent(QMouseEvent *e)
 void ToolButton::onRightClicked()
 {
     if (menu()) {
+        emit aboutToShowMenu();
         showMenu();
     }
 }

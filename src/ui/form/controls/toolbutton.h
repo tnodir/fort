@@ -10,6 +10,9 @@ class ToolButton : public QToolButton
 public:
     explicit ToolButton(QWidget *parent = nullptr);
 
+signals:
+    void aboutToShowMenu();
+
 protected:
     bool mousePressed() const { return m_mousePressed; }
 

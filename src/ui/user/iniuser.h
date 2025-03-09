@@ -176,6 +176,16 @@ public:
     bool progAlertWindowAutoActive() const { return valueBool("progAlertWindow/autoActive"); }
     void setProgAlertWindowAutoActive(bool on) { setValue("progAlertWindow/autoActive", on); }
 
+    static QString progAlertWindowTimedActionMinutesKey()
+    {
+        return "progAlertWindow/timedActionMinutes";
+    }
+
+    static QString progAlertWindowTimedRemoveMinutesKey()
+    {
+        return "progAlertWindow/timedRemoveMinutes";
+    }
+
     static QString optWindowGroup() { return "optWindow"; }
 
     QRect optWindowGeometry() const { return value("optWindow/geometry").toRect(); }
