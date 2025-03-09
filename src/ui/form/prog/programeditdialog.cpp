@@ -799,7 +799,9 @@ void ProgramEditDialog::setupTimedMenu()
         retranslateTimedAction(m_timedMenuOwner);
     });
 
-    connect(m_timedMenu, &QMenu::aboutToHide, this, [&] { m_timedMenuOwner = nullptr; });
+    connect(
+            m_timedMenu, &QMenu::aboutToHide, this, [&] { m_timedMenuOwner = nullptr; },
+            Qt::QueuedConnection);
 }
 
 void ProgramEditDialog::setupTimedAction()
@@ -840,13 +842,15 @@ QToolButton *ProgramEditDialog::createTimedButton(const QString &iniKey)
     VariantUtil::setUserData(bt, iniKey);
 
     connect(bt, &ToolButton::aboutToShowMenu, this, [&] {
-        m_timedMenuOwner = qobject_cast<QToolButton *>(sender());
+        auto bt = qobject_cast<QToolButton *>(sender());
 
-        const int minutes = timedActionMinutes(m_timedMenuOwner);
+        const int minutes = timedActionMinutes(bt);
         const int index = m_scScheduleIn->getIndexByValue(minutes);
 
         auto a = m_timedMenuActions->actions().at(index);
         a->setChecked(true);
+
+        m_timedMenuOwner = bt;
     });
 
     return bt;
