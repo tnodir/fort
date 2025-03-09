@@ -1,5 +1,15 @@
 Fort Firewall ChangeLog
 
+v3.16.4, 2025-03-09:
+- UI: ProgramEdit: Add Quick Actions on right of "Schedule".
+- UI: ProgramEdit: Remove "Schedule On: Connections Closed" option.
+- UI: ProgramEdit: Tweak "Rules inheritance" and "Group" controls.
+- UI: Programs: Add "Notes" column (hidden by default).
+- UI: Programs: Show Zone names in tooltip.
+- UI: Connections: Rework columns.
+- UI: Connections: Add "Copy as Filter" menu item.
+- UI: Traffic Graph: Allow transparent background color.
+
 v3.16.3, 2025-02-19:
 - UI: ProgramEdit: Add "Schedule On: Connections Closed" option.
 - UI: Rules: Use '=' to check local port/ip is equal to remote one.
