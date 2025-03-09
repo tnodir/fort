@@ -72,12 +72,22 @@ Press ESC to cancel</source>
 エスケープキーでキャンセル</translation>
     </message>
     <message>
+        <source>カーソルは %1、%2、色: %3 です
+Press ESC to cancel</source>
+        <translation>カーソル位置 %1, %2
+エスケープキーでキャンセル</translation>
+    </message>
+    <message>
         <source>&amp;Pick Screen Color</source>
         <translation>スクリーンの色を取得(&amp;P)</translation>
     </message>
     <message>
         <source>Select Color</source>
         <translation>色を選択</translation>
+    </message>
+    <message>
+        <source>Pick Screen Color</source>
+        <translation>スクリーンの色を取得</translation>
     </message>
     <message>
         <source>&amp;Basic colors</source>

@@ -1329,7 +1329,7 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Secondes de désactivation du filtre :</translation>
     </message>
 </context>
 <context>
