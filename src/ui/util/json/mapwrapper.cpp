@@ -59,7 +59,13 @@ QColor MapWrapper::valueColor(const QString &key, const QColor &defaultValue) co
         return QColor::fromRgba(text.toUInt());
     }
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     return QColor::fromString(text);
+#else
+    QColor c;
+    c.setNamedColor(text);
+    return c;
+#endif
 }
 
 void MapWrapper::setColor(const QString &key, const QColor &v)
