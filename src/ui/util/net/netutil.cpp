@@ -11,6 +11,15 @@
 
 namespace {
 
+QHash<quint8, QString> protocolNumberNamesMap = {
+    { IPPROTO_ICMP, "ICMP" },
+    { IPPROTO_IGMP, "IGMP" },
+    { IPPROTO_TCP, "TCP" },
+    { IPPROTO_UDP, "UDP" },
+    { IPPROTO_ICMPV6, "ICMPv6" },
+    { IPPROTO_RAW, "RAWSOCKET" },
+};
+
 QHash<QString, qint16> protocolNameNumbersMap = {
     { "HOPOPT", 0 }, // IPv6 Hop-by-Hop Option
     { "ICMP", 1 }, // Internet Control Message Protocol
@@ -70,6 +79,7 @@ QHash<QString, qint16> protocolNameNumbersMap = {
     { "MOBILE", 55 }, // Mobile IP|IP Mobility (Min Encap)
     { "TLSP", 56 }, // Transport Layer Security Protocol (using Kryptonet key management)
     { "SKIP", 57 }, // Simple Key-Management for Internet Protocol
+    { "ICMPV6", 58 }, // ICMP for IPv6
     { "IPV6_ICMP", 58 }, // ICMP for IPv6
     { "IPV6_NONXT", 59 }, // No Next Header for IPv6
     { "IPV6_OPTS", 60 }, // Destination Options for IPv6
@@ -160,6 +170,21 @@ QHash<QString, qint16> protocolNameNumbersMap = {
     { "AGGFRAG", 144 }, // AGGFRAG Encapsulation Payload for ESP
     { "NSH", 145 }, // Network Service Header
     { "RAWSOCKET", 255 }, // Raw socket
+};
+
+QHash<quint16, QString> serviceNumberNamesMap = {
+    { 21, "FTP" },
+    { 22, "SSH" },
+    { 35, "SMTP" },
+    { 53, "DNS" },
+    { 80, "HTTP" },
+    { 110, "POP3" },
+    { 389, "LDAP" },
+    { 143, "IMAP" },
+    { 443, "HTTPS" },
+    { 465, "SSL" },
+    { 995, "POP3S" },
+    { 3389, "RDP" },
 };
 
 QHash<QString, quint16> serviceNameNumbersMap = {
@@ -363,20 +388,9 @@ QString NetUtil::localIpNetworksText(int count)
 
 QString NetUtil::protocolName(quint8 ipProto)
 {
-    switch (ipProto) {
-    case IPPROTO_ICMP:
-        return "ICMP";
-    case IPPROTO_IGMP:
-        return "IGMP";
-    case IPPROTO_TCP:
-        return "TCP";
-    case IPPROTO_UDP:
-        return "UDP";
-    case IPPROTO_ICMPV6:
-        return "ICMPv6";
-    }
+    const auto name = protocolNumberNamesMap.value(ipProto);
 
-    return QString::number(ipProto);
+    return !name.isEmpty() ? name : QString::number(ipProto);
 }
 
 quint8 NetUtil::protocolNumber(const QStringView name, bool &ok)
@@ -393,28 +407,9 @@ quint8 NetUtil::protocolNumber(const QStringView name, bool &ok)
 
 QString NetUtil::serviceName(quint16 port)
 {
-    switch (port) {
-    case 21:
-        return "FTP";
-    case 22:
-        return "SSH";
-    case 35:
-        return "SMTP";
-    case 53:
-        return "DNS";
-    case 80:
-        return "HTTP";
-    case 110:
-        return "POP3";
-    case 143:
-        return "IMAP";
-    case 443:
-        return "HTTPS";
-    case 465:
-        return "SSL";
-    }
+    const auto name = serviceNumberNamesMap.value(port);
 
-    return QString::number(port);
+    return !name.isEmpty() ? name : QString::number(port);
 }
 
 quint16 NetUtil::serviceToPort(const QStringView name, ProtocolType /*proto*/, bool &ok)
