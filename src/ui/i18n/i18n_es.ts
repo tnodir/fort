@@ -134,11 +134,11 @@
     </message>
     <message>
         <source>Allowed Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonas Permitidas:</translation>
     </message>
     <message>
         <source>Blocked Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonas Bloqueadas:</translation>
     </message>
 </context>
 <context>
@@ -432,27 +432,27 @@
     </message>
     <message>
         <source>Local Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombre del Host Local</translation>
     </message>
     <message>
         <source>Local IP</source>
-        <translation type="unfinished"></translation>
+        <translation>IP local</translation>
     </message>
     <message>
         <source>Local Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Puerto local</translation>
     </message>
     <message>
         <source>Remote Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombre del Host Remoto</translation>
     </message>
     <message>
         <source>Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>IP remota</translation>
     </message>
     <message>
         <source>Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Puerto remoto</translation>
     </message>
 </context>
 <context>
@@ -499,7 +499,7 @@
     </message>
     <message>
         <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar como Filtro</translation>
     </message>
     <message>
         <source>Stretch last column</source>
@@ -1617,11 +1617,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 horas</translation>
     </message>
     <message>
         <source>%1 minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 minuto(s)</translation>
     </message>
 </context>
 <context>

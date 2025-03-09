@@ -1618,7 +1618,7 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>%1 minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 minute(s)</translation>
     </message>
 </context>
 <context>

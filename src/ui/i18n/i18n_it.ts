@@ -134,11 +134,11 @@
     </message>
     <message>
         <source>Allowed Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zone permesse:</translation>
     </message>
     <message>
         <source>Blocked Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zone bloccate:</translation>
     </message>
 </context>
 <context>
@@ -432,27 +432,27 @@
     </message>
     <message>
         <source>Local Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome host locale</translation>
     </message>
     <message>
         <source>Local IP</source>
-        <translation type="unfinished"></translation>
+        <translation>IP locale</translation>
     </message>
     <message>
         <source>Local Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta locale</translation>
     </message>
     <message>
         <source>Remote Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome host remoto</translation>
     </message>
     <message>
         <source>Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>IP remoto</translation>
     </message>
     <message>
         <source>Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta remota</translation>
     </message>
 </context>
 <context>
@@ -499,7 +499,7 @@
     </message>
     <message>
         <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Copia come filtro</translation>
     </message>
     <message>
         <source>Stretch last column</source>
@@ -1614,11 +1614,11 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 ore</translation>
     </message>
     <message>
         <source>%1 minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 minuto/i</translation>
     </message>
 </context>
 <context>
