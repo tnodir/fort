@@ -196,6 +196,18 @@ TEST_F(NetUtilTest, protocolRanges)
     ASSERT_EQ(protoRange.toText(), QString("93-255\n"));
 }
 
+TEST_F(NetUtilTest, protocolNames)
+{
+    ProtoRange protoRange;
+
+    ASSERT_TRUE(protoRange.fromText("ICMP\n"
+                                    "IGMP\n"
+                                    "TCP\n"
+                                    "UDP\n"
+                                    "ICMPv6\n"
+                                    "RAWSOCKET\n"));
+}
+
 TEST_F(NetUtilTest, directionRanges)
 {
     DirRange dirRange;
