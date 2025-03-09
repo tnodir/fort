@@ -28,7 +28,7 @@
 
 namespace {
 
-const std::array autoLearnSecondsValues = { 10, 0, 20, 60, 2 * 60, 5 * 60, 10 * 60 };
+const std::array timedOptionSecondsValues = { 10, 0, 20, 60, 60 * 2, 60 * 5, 60 * 10 };
 
 void updateComboBox(
         QComboBox *c, const QStringList &names, const QStringList &iconPaths, int currentIndex)
@@ -60,6 +60,7 @@ void OptionsPage::onResetToDefault()
     m_comboBlockTraffic->setCurrentIndex(0);
     m_comboFilterMode->setCurrentIndex(0);
     m_cbGroupBlocked->setChecked(true);
+    m_lscFilterOffSeconds->spinBox()->setValue(DEFAULT_FILTER_OFF_SECONDS);
     m_lscAutoLearnSeconds->spinBox()->setValue(DEFAULT_AUTO_LEARN_SECONDS);
 
     m_cbBootFilter->setChecked(false);
@@ -142,8 +143,9 @@ void OptionsPage::onRetranslateUi()
 
     m_cbGroupBlocked->setText(tr("Block traffic for disabled App Groups"));
 
+    m_lscFilterOffSeconds->label()->setText(tr("Filter Off seconds:"));
     m_lscAutoLearnSeconds->label()->setText(tr("Auto-learn seconds:"));
-    retranslateAutoLearnSeconds();
+    retranslateTimedOptions();
 
     m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
     m_cbStealthMode->setText(tr("Stealth mode (Prevent port scanning)"));
@@ -179,13 +181,18 @@ void OptionsPage::retranslateComboFilterMode()
             FirewallConf::filterModeIconPaths(), conf()->filterMode());
 }
 
-void OptionsPage::retranslateAutoLearnSeconds()
+void OptionsPage::retranslateTimedOptions()
 {
     const QStringList list = { tr("Custom"), tr("Disabled"), tr("20 seconds"), tr("1 minute"),
         tr("2 minutes"), tr("5 minutes"), tr("10 minutes") };
 
+    const auto suffix = tr(" second(s)");
+
+    m_lscFilterOffSeconds->setNames(list);
+    m_lscFilterOffSeconds->spinBox()->setSuffix(suffix);
+
     m_lscAutoLearnSeconds->setNames(list);
-    m_lscAutoLearnSeconds->spinBox()->setSuffix(tr(" second(s)"));
+    m_lscAutoLearnSeconds->spinBox()->setSuffix(suffix);
 }
 
 void OptionsPage::retranslateEditPassword()
@@ -252,20 +259,26 @@ QLayout *OptionsPage::setupColumn2()
 
 void OptionsPage::setupTrafficBox()
 {
+    // Filter Enabled
     m_cbFilterEnabled = ControlUtil::createCheckBox(conf()->filterEnabled(), [&](bool checked) {
         conf()->setFilterEnabled(checked);
         ctrl()->setFlagsEdited();
     });
 
+    // Block Traffic
     auto blockTrafficLayout = setupBlockTrafficLayout();
 
+    // Filter Mode
     auto filterModeLayout = setupFilterModeLayout();
 
+    // Group Blocked
     m_cbGroupBlocked = ControlUtil::createCheckBox(conf()->groupBlocked(), [&](bool checked) {
         conf()->setGroupBlocked(checked);
         ctrl()->setFlagsEdited();
     });
 
+    // Timed Options
+    setupFilterOffSeconds();
     setupAutoLearnSeconds();
 
     auto layout = new QVBoxLayout();
@@ -274,6 +287,7 @@ void OptionsPage::setupTrafficBox()
     layout->addLayout(filterModeLayout);
     layout->addWidget(m_cbGroupBlocked);
     layout->addWidget(ControlUtil::createSeparator());
+    layout->addWidget(m_lscFilterOffSeconds);
     layout->addWidget(m_lscAutoLearnSeconds);
 
     m_gbTraffic = new QGroupBox();
@@ -318,11 +332,28 @@ QLayout *OptionsPage::setupFilterModeLayout()
     return ControlUtil::createRowLayout(m_labelFilterMode, m_comboFilterMode);
 }
 
+void OptionsPage::setupFilterOffSeconds()
+{
+    m_lscFilterOffSeconds = new LabelSpinCombo();
+    m_lscFilterOffSeconds->spinBox()->setRange(0, 60000); // ~16.6 hours
+    m_lscFilterOffSeconds->setValues(timedOptionSecondsValues);
+
+    m_lscFilterOffSeconds->spinBox()->setValue(ini()->filterOffSeconds());
+
+    connect(m_lscFilterOffSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
+            [&](int value) {
+                if (ini()->filterOffSeconds() != value) {
+                    ini()->setFilterOffSeconds(value);
+                    ctrl()->setIniEdited();
+                }
+            });
+}
+
 void OptionsPage::setupAutoLearnSeconds()
 {
     m_lscAutoLearnSeconds = new LabelSpinCombo();
     m_lscAutoLearnSeconds->spinBox()->setRange(0, 60000); // ~16.6 hours
-    m_lscAutoLearnSeconds->setValues(autoLearnSecondsValues);
+    m_lscAutoLearnSeconds->setValues(timedOptionSecondsValues);
 
     m_lscAutoLearnSeconds->spinBox()->setValue(ini()->autoLearnSeconds());
 

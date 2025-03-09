@@ -551,6 +551,26 @@ bool ConfManager::applyConfPeriods(bool onlyFlags)
     return true;
 }
 
+void ConfManager::applyFilterOffSeconds()
+{
+    if (!conf())
+        return;
+
+    const bool isFilterOff = !conf()->filterEnabled();
+    const int filterOffMsec = isFilterOff ? conf()->ini().filterOffSeconds() * 1000 : 0;
+
+    const bool isTimerActive =
+            (m_filterOffTimer.isActive() && m_filterOffTimer.interval() == filterOffMsec);
+    if (isTimerActive)
+        return;
+
+    m_filterOffTimer.stop();
+
+    if (filterOffMsec > 0) {
+        m_filterOffTimer.start(filterOffMsec);
+    }
+}
+
 void ConfManager::applyAutoLearnSeconds()
 {
     if (!conf())
@@ -576,6 +596,9 @@ void ConfManager::setupTimers()
     m_confTimer.setSingleShot(true);
     connect(&m_confTimer, &QTimer::timeout, this, &ConfManager::updateConfPeriods);
 
+    m_filterOffTimer.setSingleShot(true);
+    connect(&m_filterOffTimer, &QTimer::timeout, this, &ConfManager::switchFilterOff);
+
     m_autoLearnTimer.setSingleShot(true);
     connect(&m_autoLearnTimer, &QTimer::timeout, this, &ConfManager::switchAutoLearn);
 }
@@ -590,6 +613,16 @@ void ConfManager::updateConfPeriods()
     if (conf() && activeGroupBits != conf()->activeGroupBits()) {
         emit confPeriodsChanged();
     }
+}
+
+void ConfManager::switchFilterOff()
+{
+    if (!conf())
+        return;
+
+    conf()->setFilterEnabled(true);
+
+    saveFlags();
 }
 
 void ConfManager::switchAutoLearn()
@@ -711,6 +744,7 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
     }
 
     applyConfPeriods(onlyFlags);
+    applyFilterOffSeconds();
     applyAutoLearnSeconds();
 
     emit confChanged(onlyFlags, conf()->editedFlags());

@@ -3,6 +3,7 @@
 
 #include <util/ini/mapsettings.h>
 
+#define DEFAULT_FILTER_OFF_SECONDS     0 // Disabled
 #define DEFAULT_AUTO_LEARN_SECONDS     60
 #define DEFAULT_APP_GROUP_BITS         quint32(-1)
 #define DEFAULT_MONTH_START            1
@@ -29,6 +30,12 @@ public:
 
     QString password() const { return valueText("base/password_"); }
     void setPassword(const QString &v) { setValue("base/password_", v); }
+
+    int filterOffSeconds() const
+    {
+        return valueInt("conf/filterOffSeconds", DEFAULT_FILTER_OFF_SECONDS);
+    }
+    void setFilterOffSeconds(int v) { setValue("conf/filterOffSeconds", v); }
 
     int autoLearnSeconds() const
     {

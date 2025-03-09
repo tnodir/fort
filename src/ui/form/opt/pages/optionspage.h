@@ -33,7 +33,7 @@ private:
 
     void retranslateComboBlockTraffic();
     void retranslateComboFilterMode();
-    void retranslateAutoLearnSeconds();
+    void retranslateTimedOptions();
     void retranslateEditPassword();
 
     void setupUi();
@@ -43,6 +43,7 @@ private:
     void setupTrafficBox();
     QLayout *setupBlockTrafficLayout();
     QLayout *setupFilterModeLayout();
+    void setupFilterOffSeconds();
     void setupAutoLearnSeconds();
     void setupProtectionBox();
     QLayout *setupPasswordLayout();
@@ -69,6 +70,7 @@ private:
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
     QCheckBox *m_cbGroupBlocked = nullptr;
+    LabelSpinCombo *m_lscFilterOffSeconds = nullptr;
     LabelSpinCombo *m_lscAutoLearnSeconds = nullptr;
 
     QCheckBox *m_cbBootFilter = nullptr;

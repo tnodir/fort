@@ -89,10 +89,12 @@ protected:
     virtual void setupTimers();
 
     virtual bool applyConfPeriods(bool onlyFlags);
+    virtual void applyFilterOffSeconds();
     virtual void applyAutoLearnSeconds();
 
 private:
     void updateConfPeriods();
+    void switchFilterOff();
     void switchAutoLearn();
 
     bool setupDb();
@@ -120,6 +122,7 @@ private:
     IniUser *m_iniUserToEdit = nullptr;
 
     QTimer m_confTimer;
+    QTimer m_filterOffTimer;
     QTimer m_autoLearnTimer;
 };
 
