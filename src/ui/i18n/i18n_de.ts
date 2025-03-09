@@ -1327,6 +1327,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source> second(s)</source>
         <translation> Sekunde(n)</translation>
     </message>
+    <message>
+        <source>Filter Off seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

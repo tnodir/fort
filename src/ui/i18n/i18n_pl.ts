@@ -1327,6 +1327,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source> second(s)</source>
         <translation> sekund(y)</translation>
     </message>
+    <message>
+        <source>Filter Off seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

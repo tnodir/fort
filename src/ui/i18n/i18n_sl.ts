@@ -1327,6 +1327,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source> second(s)</source>
         <translation> sekundo(i)</translation>
     </message>
+    <message>
+        <source>Filter Off seconds:</source>
+        <translation>Filtriraj sekunde:</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -1325,6 +1325,10 @@ Make sure that you have a fresh backup.</source>
         <source> second(s)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Filter Off seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

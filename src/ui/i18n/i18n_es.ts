@@ -1327,6 +1327,10 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <source> second(s)</source>
         <translation> segundo(s)</translation>
     </message>
+    <message>
+        <source>Filter Off seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

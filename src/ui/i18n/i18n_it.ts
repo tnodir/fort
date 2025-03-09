@@ -1327,6 +1327,10 @@ Assicurati di avere un nuovo backup.</translation>
         <source> second(s)</source>
         <translation> secondo/i</translation>
     </message>
+    <message>
+        <source>Filter Off seconds:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
