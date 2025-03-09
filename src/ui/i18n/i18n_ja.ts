@@ -129,12 +129,16 @@
         <translation>ゾーン</translation>
     </message>
     <message>
-        <source>Never</source>
-        <translation>しない</translation>
+        <source>Notes</source>
+        <translation>備考</translation>
     </message>
     <message>
-        <source>Connections Closed</source>
-        <translation>切断済み</translation>
+        <source>Allowed Zones:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Blocked Zones:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -193,10 +197,6 @@
     <message>
         <source>Move All Lines to &apos;Block&apos;</source>
         <translation>すべての行を「ブロック」に移動</translation>
-    </message>
-    <message>
-        <source>Move All Lines to &apos;Block&apos;</source>
-        <translation>すべての行を&apos;ブロック&apos;へ移動</translation>
     </message>
     <message>
         <source>Interchange All Lines</source>
@@ -1326,6 +1326,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source> second(s)</source>
         <translation> 秒</translation>
+    </message>
+    <message>
+        <source>Filter Off seconds:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
