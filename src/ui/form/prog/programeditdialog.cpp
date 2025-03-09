@@ -302,7 +302,7 @@ void ProgramEditDialog::retranslateUi()
     m_dteScheduleAt->unsetLocale();
 
     updateQuickAction();
-    retranslateTimedMenu();
+    retranslateTimedMenuActions();
     retranslateTimedAction(m_btTimedAction);
     retranslateTimedAction(m_btTimedRemove);
 
@@ -374,10 +374,13 @@ void ProgramEditDialog::retranslateScheduleIn()
     m_scScheduleIn->spinBox()->setSuffix(tr(" minute(s)"));
 }
 
-void ProgramEditDialog::retranslateTimedMenu()
+void ProgramEditDialog::retranslateTimedMenuActions()
 {
-    const auto names = m_scScheduleIn->names();
     const auto actions = m_timedMenuActions->actions();
+    if (actions.isEmpty())
+        return;
+
+    const auto names = m_scScheduleIn->names();
 
     int index = 0;
     for (auto a : actions) {
@@ -781,14 +784,6 @@ void ProgramEditDialog::setupTimedMenu()
 
     m_timedMenuActions = new QActionGroup(m_timedMenu);
 
-    for (int minutes : appBlockInMinuteValues) {
-        auto a = m_timedMenu->addAction(QString());
-        a->setCheckable(true);
-        a->setData(minutes);
-
-        m_timedMenuActions->addAction(a);
-    }
-
     connect(m_timedMenu, &QMenu::triggered, this, [&](QAction *action) {
         if (!m_timedMenuOwner)
             return;
@@ -802,6 +797,22 @@ void ProgramEditDialog::setupTimedMenu()
     connect(
             m_timedMenu, &QMenu::aboutToHide, this, [&] { m_timedMenuOwner = nullptr; },
             Qt::QueuedConnection);
+}
+
+void ProgramEditDialog::setupTimedMenuActions()
+{
+    if (!m_timedMenuActions->actions().isEmpty())
+        return;
+
+    for (int minutes : appBlockInMinuteValues) {
+        auto a = m_timedMenu->addAction(QString());
+        a->setCheckable(true);
+        a->setData(minutes);
+
+        m_timedMenuActions->addAction(a);
+    }
+
+    retranslateTimedMenuActions();
 }
 
 void ProgramEditDialog::setupTimedAction()
@@ -847,8 +858,7 @@ QToolButton *ProgramEditDialog::createTimedButton(const QString &iniKey)
         const int minutes = timedActionMinutes(bt);
         const int index = m_scScheduleIn->getIndexByValue(minutes);
 
-        auto a = m_timedMenuActions->actions().at(index);
-        a->setChecked(true);
+        selectTimedMenuAction(index);
 
         m_timedMenuOwner = bt;
     });
@@ -992,6 +1002,14 @@ void ProgramEditDialog::selectQuickAction()
 {
     auto rb = m_btgActions->button(int(m_quickActionType));
     rb->setChecked(true);
+}
+
+void ProgramEditDialog::selectTimedMenuAction(int index)
+{
+    setupTimedMenuActions();
+
+    auto a = m_timedMenuActions->actions().at(index);
+    a->setChecked(true);
 }
 
 int ProgramEditDialog::timedActionMinutes(QToolButton *bt)

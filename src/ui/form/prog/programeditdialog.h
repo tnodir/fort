@@ -73,7 +73,7 @@ private:
     void retranslateScheduleAction();
     void retranslateScheduleType();
     void retranslateScheduleIn();
-    void retranslateTimedMenu();
+    void retranslateTimedMenuActions();
     void retranslateTimedAction(QToolButton *bt);
     virtual void retranslateWindowTitle();
 
@@ -94,6 +94,7 @@ private:
     void setupComboScheduleType();
     void setupQuickAction();
     void setupTimedMenu();
+    void setupTimedMenuActions();
     void setupTimedAction();
     void setupTimedRemove();
     QToolButton *createTimedButton(const QString &iniKey);
@@ -107,7 +108,9 @@ private:
     void updateApplyChild();
     void updateWildcard(bool isSingleSelection = true);
     void updateQuickAction();
+
     void selectQuickAction();
+    void selectTimedMenuAction(int index);
 
     int timedActionMinutes(QToolButton *bt);
     void setTimedActionMinutes(QToolButton *bt, int minutes);

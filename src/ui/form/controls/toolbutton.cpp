@@ -1,13 +1,15 @@
 #include "toolbutton.h"
 
 #include <QMouseEvent>
+#include <QStyle>
+#include <QStyleOptionToolButton>
 
 ToolButton::ToolButton(QWidget *parent) : QToolButton(parent) { }
 
 void ToolButton::mousePressEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton && popupMode() == MenuButtonPopup) {
-        emit aboutToShowMenu();
+        checkLeftPress(e);
     }
 
     QToolButton::mousePressEvent(e);
@@ -26,6 +28,19 @@ void ToolButton::mouseReleaseEvent(QMouseEvent *e)
 
     if (e->button() == Qt::RightButton && e->modifiers() == Qt::NoModifier) {
         onRightClicked();
+    }
+}
+
+void ToolButton::checkLeftPress(QMouseEvent *e)
+{
+    QStyleOptionToolButton opt;
+    initStyleOption(&opt);
+
+    const QRect popupr =
+            style()->subControlRect(QStyle::CC_ToolButton, &opt, QStyle::SC_ToolButtonMenu, this);
+
+    if (popupr.isValid() && popupr.contains(e->position().toPoint())) {
+        emit aboutToShowMenu();
     }
 }
 

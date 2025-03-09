@@ -20,6 +20,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *e) override;
 
 private:
+    void checkLeftPress(QMouseEvent *e);
     void onRightClicked();
 
 private:
