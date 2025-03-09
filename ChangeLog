@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.16.5, 2025-03-09:
+- UI: Options: Add "Filter Off Seconds" to auto-enable Filtering in specified seconds.
+- UI: Rules: Fix "ICMPv6" protocol name parsing again (v3.16.3 regression).
+- UI: Add Japanese language.
+
 v3.16.4, 2025-03-09:
 - UI: ProgramEdit: Add Quick Actions on right of "Schedule".
 - UI: ProgramEdit: Remove "Schedule On: Connections Closed" option.
