@@ -1329,7 +1329,7 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Seg. filtro desactivado:</translation>
     </message>
 </context>
 <context>

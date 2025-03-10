@@ -1329,7 +1329,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtro spento per secondi:</translation>
     </message>
 </context>
 <context>

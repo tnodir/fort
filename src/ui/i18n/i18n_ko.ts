@@ -134,11 +134,11 @@
     </message>
     <message>
         <source>Allowed Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>허용 구역:</translation>
     </message>
     <message>
         <source>Blocked Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>차단 구역:</translation>
     </message>
 </context>
 <context>
@@ -432,27 +432,27 @@
     </message>
     <message>
         <source>Local Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 호스트 이름</translation>
     </message>
     <message>
         <source>Local IP</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 IP</translation>
     </message>
     <message>
         <source>Local Port</source>
-        <translation type="unfinished"></translation>
+        <translation>로컬 포트</translation>
     </message>
     <message>
         <source>Remote Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>원격 호스트 이름</translation>
     </message>
     <message>
         <source>Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>원격 IP</translation>
     </message>
     <message>
         <source>Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>원격 포트</translation>
     </message>
 </context>
 <context>
@@ -499,7 +499,7 @@
     </message>
     <message>
         <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>필터로 복사</translation>
     </message>
     <message>
         <source>Stretch last column</source>
@@ -1329,7 +1329,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>필터 끄기 초:</translation>
     </message>
 </context>
 <context>
@@ -1618,11 +1618,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 시간</translation>
     </message>
     <message>
         <source>%1 minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>%s1 분</translation>
     </message>
 </context>
 <context>

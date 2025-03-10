@@ -134,11 +134,11 @@
     </message>
     <message>
         <source>Allowed Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>已允许的区域：</translation>
     </message>
     <message>
         <source>Blocked Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>已阻止的区域：</translation>
     </message>
 </context>
 <context>
@@ -432,27 +432,27 @@
     </message>
     <message>
         <source>Local Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>本地主机名称</translation>
     </message>
     <message>
         <source>Local IP</source>
-        <translation type="unfinished"></translation>
+        <translation>本地 IP</translation>
     </message>
     <message>
         <source>Local Port</source>
-        <translation type="unfinished"></translation>
+        <translation>本地端口</translation>
     </message>
     <message>
         <source>Remote Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>远程主机名称</translation>
     </message>
     <message>
         <source>Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>远程 IP</translation>
     </message>
     <message>
         <source>Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>远程端口</translation>
     </message>
 </context>
 <context>
@@ -499,7 +499,7 @@
     </message>
     <message>
         <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>复制为过滤器</translation>
     </message>
     <message>
         <source>Stretch last column</source>
@@ -1329,7 +1329,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>过滤器关闭秒数：</translation>
     </message>
 </context>
 <context>
@@ -1618,11 +1618,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 小时</translation>
     </message>
     <message>
         <source>%1 minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 分钟</translation>
     </message>
 </context>
 <context>
