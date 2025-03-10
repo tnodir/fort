@@ -35,6 +35,7 @@ cd %TARGET_PATH%
 	^
 	-no-feature-style-android -no-feature-style-mac -no-feature-style-windowsvista ^
 	^
+	-no-feature-icu -no-feature-winsdkicu ^
 	-no-feature-mimetype-database -no-feature-sql -no-feature-timezone ^
 	^
 	-no-feature-getifaddrs -no-feature-ipv6ifname -no-feature-libproxy ^

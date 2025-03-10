@@ -38,12 +38,13 @@ cd %TARGET_PATH%
 	^
 	-no-feature-style-android -no-feature-style-mac -no-feature-style-windowsvista ^
 	^
+	-no-feature-icu -no-feature-winsdkicu ^
 	-no-feature-mimetype-database -no-feature-sql -no-feature-timezone ^
 	^
 	-no-feature-getifaddrs -no-feature-ipv6ifname -no-feature-libproxy ^
 	-no-feature-openssl -no-feature-openssl-hash ^
-	-schannel -ssl -no-feature-sctp -no-feature-socks5 -no-feature-udpsocket ^
-	-no-feature-networkproxy -no-feature-networkdiskcache ^
+	-schannel -ssl -no-feature-sctp -no-feature-udpsocket ^
+	-no-feature-networkproxy -no-feature-socks5 -no-feature-networkdiskcache ^
 	-no-feature-dnslookup -no-feature-sspi -no-feature-networklistmanager ^
 	^
 	-no-opengl -no-feature-opengl -no-feature-dynamicgl -no-feature-directfb ^
