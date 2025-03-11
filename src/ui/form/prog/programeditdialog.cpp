@@ -555,7 +555,7 @@ QLayout *ProgramEditDialog::setupApplyChildGroupLayout()
     // Apply Child
     m_comboApplyChild =
             ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
-    m_comboApplyChild->setFixedWidth(150);
+    m_comboApplyChild->setMinimumWidth(120);
 
     setupCbApplyChild();
 
@@ -1014,7 +1014,7 @@ void ProgramEditDialog::selectTimedMenuAction(int index)
 
 int ProgramEditDialog::timedActionMinutes(QToolButton *bt)
 {
-    constexpr int defaultMinutes = 60 * 5; // 5 minutes
+    constexpr int defaultMinutes = 5;
 
     const auto iniKey = VariantUtil::userData(bt).toString();
     return iniUser()->valueInt(iniKey, defaultMinutes);
