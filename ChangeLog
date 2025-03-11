@@ -1,7 +1,7 @@
 Fort Firewall ChangeLog
 
 v3.16.6-test01, 2025-03-11:
-- UI: Options: Programs: Add "Remove new programs on Auto-Learn Off" flag.
+- UI: Options: Programs: Add "Remove alerted programs on Auto-Learn Off" flag.
 
 v3.16.5, 2025-03-09:
 - UI: Options: Add "Filter Off Seconds" to auto-enable Filtering in specified seconds.

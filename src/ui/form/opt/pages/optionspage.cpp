@@ -160,7 +160,7 @@ void OptionsPage::onRetranslateUi()
                     .arg(settings()->passwordUnlockedTillText()));
 
     m_cbLogApp->setText(tr("Collect New Programs"));
-    m_cbRemoveLearntApps->setText(tr("Remove new programs on Auto-Learn Off"));
+    m_cbRemoveLearntApps->setText(tr("Remove alerted programs on Auto-Learn Off"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
 
     m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
