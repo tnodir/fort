@@ -136,7 +136,7 @@ using AppIdsArray = QVector<qint64>;
 
 ConfAppManager::ConfAppManager(QObject *parent) : ConfManagerBase(parent)
 {
-    connect(&m_appAlertedTimer, &QTimer::timeout, this, &ConfAppManager::appAlerted);
+    connect(&m_appAlertedTimer, &QTimer::timeout, this, [&] { emit appAlerted(); });
     connect(&m_appsChangedTimer, &QTimer::timeout, this, &ConfAppManager::appsChanged);
     connect(&m_appUpdatedTimer, &QTimer::timeout, this, &ConfAppManager::appUpdated);
 
@@ -415,7 +415,15 @@ bool ConfAppManager::deleteAlertedApps()
         appIdList.append(appId);
     }
 
-    return deleteApps(appIdList);
+    if (appIdList.isEmpty())
+        return true;
+
+    if (!deleteApps(appIdList))
+        return false;
+
+    emit appAlerted(/*alerted=*/false);
+
+    return true;
 }
 
 bool ConfAppManager::clearAlerts()

@@ -226,7 +226,9 @@ bool ConfAppManagerRpc::processServerCommand(
 
     switch (p.command) {
     case Control::Rpc_ConfAppManager_appAlerted: {
-        emit confAppManager->appAlerted();
+        const bool alerted = p.args.value(0).toBool();
+
+        emit confAppManager->appAlerted(alerted);
         return true;
     }
     case Control::Rpc_ConfAppManager_appsChanged: {
@@ -249,8 +251,9 @@ void ConfAppManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
     auto confAppManager = IoC<ConfAppManager>();
 
-    connect(confAppManager, &ConfAppManager::appAlerted, rpcManager,
-            [=] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appAlerted); });
+    connect(confAppManager, &ConfAppManager::appAlerted, rpcManager, [=](bool alerted) {
+        rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appAlerted, { alerted });
+    });
     connect(confAppManager, &ConfAppManager::appsChanged, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appsChanged); });
     connect(confAppManager, &ConfAppManager::appUpdated, rpcManager,

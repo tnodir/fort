@@ -55,7 +55,7 @@ public:
     virtual bool updateDriverConf(bool onlyFlags = false);
 
 signals:
-    void appAlerted();
+    void appAlerted(bool alerted = true);
     void appsChanged();
     void appUpdated();
 
