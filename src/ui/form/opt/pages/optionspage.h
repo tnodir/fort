@@ -82,6 +82,7 @@ private:
     QToolButton *m_btPasswordLock = nullptr;
 
     QCheckBox *m_cbLogApp = nullptr;
+    QCheckBox *m_cbRemoveLearntApps = nullptr;
     QCheckBox *m_cbPurgeOnMounted = nullptr;
 
     QCheckBox *m_cbUpdateKeepCurrentVersion = nullptr;

@@ -39,6 +39,7 @@ public:
     static void setupServerSignals(RpcManager *rpcManager);
 
 protected:
+    void setupConfManager() override { }
     void setupDriveListManager() override { }
 
     void setupAppEndTimer() override { }

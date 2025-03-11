@@ -77,6 +77,7 @@ void OptionsPage::onResetToDefault()
     m_cbLogConsole->setChecked(false);
 
     m_cbLogApp->setChecked(true);
+    m_cbRemoveLearntApps->setChecked(false);
     m_cbPurgeOnMounted->setChecked(false);
 }
 
@@ -159,6 +160,7 @@ void OptionsPage::onRetranslateUi()
                     .arg(settings()->passwordUnlockedTillText()));
 
     m_cbLogApp->setText(tr("Collect New Programs"));
+    m_cbRemoveLearntApps->setText(tr("Remove new programs on Auto-Learn Off"));
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
 
     m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
@@ -471,6 +473,14 @@ void OptionsPage::setupProgBox()
 {
     setupLogApp();
 
+    m_cbRemoveLearntApps =
+            ControlUtil::createCheckBox(ini()->progRemoveLearntApps(), [&](bool checked) {
+                if (ini()->progRemoveLearntApps() != checked) {
+                    ini()->setProgRemoveLearntApps(checked);
+                    ctrl()->setIniEdited();
+                }
+            });
+
     m_cbPurgeOnMounted =
             ControlUtil::createCheckBox(ini()->progPurgeOnMounted(), [&](bool checked) {
                 if (ini()->progPurgeOnMounted() != checked) {
@@ -480,8 +490,8 @@ void OptionsPage::setupProgBox()
             });
 
     // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets(
-            { m_cbLogApp, ControlUtil::createSeparator(), m_cbPurgeOnMounted });
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbLogApp, ControlUtil::createSeparator(),
+            m_cbRemoveLearntApps, m_cbPurgeOnMounted });
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);

@@ -19,6 +19,7 @@
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/variantutil.h>
 
 #include "appgroup.h"
 #include "confmanager.h"
@@ -120,6 +121,9 @@ const char *const sqlInsertAppAlert = "INSERT INTO app_alert(app_id) VALUES(?1);
 
 const char *const sqlDeleteAppAlert = "DELETE FROM app_alert WHERE app_id = ?1;";
 
+const char *const sqlSelectAppAlertIds = "SELECT app_id FROM app_alert"
+                                         "  ORDER BY app_id DESC;";
+
 const char *const sqlDeleteAppAlerts = "DELETE FROM app_alert;";
 
 const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2, kill_process = ?3"
@@ -144,9 +148,22 @@ void ConfAppManager::setUp()
 {
     IoCDependency<ConfManager>();
 
+    setupConfManager();
     setupDriveListManager();
-
     setupAppEndTimer();
+}
+
+void ConfAppManager::setupConfManager()
+{
+    connect(
+            IoC<ConfManager>(), &ConfManager::confChanged, this,
+            [&](bool /*onlyFlags*/, uint editedFlags) {
+                if ((editedFlags & FirewallConf::AutoLearnOff) != 0
+                        && conf()->ini().progRemoveLearntApps()) {
+                    deleteAlertedApps();
+                }
+            },
+            Qt::QueuedConnection);
 }
 
 void ConfAppManager::setupDriveListManager()
@@ -385,6 +402,22 @@ bool ConfAppManager::deleteApps(const QVector<qint64> &appIdList)
     return ok;
 }
 
+bool ConfAppManager::deleteAlertedApps()
+{
+    QVector<qint64> appIdList;
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectAppAlertIds).prepare(stmt))
+        return false;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const qint64 appId = stmt.columnInt64(0);
+        appIdList.append(appId);
+    }
+
+    return deleteApps(appIdList);
+}
+
 bool ConfAppManager::clearAlerts()
 {
     const bool ok = DbQuery(sqliteDb()).sql(sqlDeleteAppAlerts).executeOk();
@@ -412,7 +445,7 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 
     endTransaction(ok);
 
-    if (ok) {
+    if (ok && !resList.isEmpty()) {
         if (resList.at(0).toBool()) {
             isWildcard = true;
         } else {

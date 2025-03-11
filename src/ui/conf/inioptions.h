@@ -110,6 +110,9 @@ public:
     bool updateAutoInstall() const { return valueBool("autoUpdate/autoInstall"); }
     void setUpdateAutoInstall(bool v) { setValue("autoUpdate/autoInstall", v); }
 
+    bool progRemoveLearntApps() const { return valueBool("prog/removeLearntApps"); }
+    void setProgRemoveLearntApps(bool v) { setValue("prog/removeLearntApps", v); }
+
     bool progPurgeOnMounted() const { return valueBool("prog/purgeOnMounted"); }
     void setProgPurgeOnMounted(bool v) { setValue("prog/purgeOnMounted", v); }
 };

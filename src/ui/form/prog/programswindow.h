@@ -87,6 +87,7 @@ private:
     void updateSelectedApps(bool blocked, bool killProcess = false);
     void deleteSelectedApps();
 
+    void deleteAlertedApps();
     void clearAlerts();
 
     int appListCurrentIndex() const;
@@ -109,6 +110,7 @@ private:
     QAction *m_actEditApp = nullptr;
     QAction *m_actRemoveApp = nullptr;
     QAction *m_actReviewAlerts = nullptr;
+    QAction *m_actDeleteAlertedApps = nullptr;
     QAction *m_actClearAlerts = nullptr;
     QAction *m_actPurgeApps = nullptr;
     QAction *m_actFindApps = nullptr;

@@ -63,6 +63,11 @@ void ProgramsController::deleteApps(const QVector<qint64> &appIdList)
     }
 }
 
+void ProgramsController::deleteAlertedApps()
+{
+    confAppManager()->deleteAlertedApps();
+}
+
 void ProgramsController::clearAlerts()
 {
     confAppManager()->clearAlerts();

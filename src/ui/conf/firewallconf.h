@@ -18,9 +18,10 @@ public:
         NoneEdited = 0,
         OptEdited = (1 << 0),
         FlagsEdited = (1 << 1),
-        IniEdited = (1 << 2),
-        TaskEdited = (1 << 3),
-        AllEdited = (OptEdited | FlagsEdited | IniEdited | TaskEdited)
+        AutoLearnOff = (1 << 2),
+        IniEdited = (1 << 3),
+        TaskEdited = (1 << 4),
+        AllEdited = (OptEdited | FlagsEdited | IniEdited | TaskEdited),
     };
     Q_ENUM(EditedFlag)
     Q_DECLARE_FLAGS(EditedFlags, EditedFlag)
@@ -54,6 +55,9 @@ public:
 
     bool flagsEdited() const { return (m_editedFlags & FlagsEdited) != 0; }
     void setFlagsEdited() { m_editedFlags |= FlagsEdited; }
+
+    bool autoLearnOff() const { return (m_editedFlags & AutoLearnOff) != 0; }
+    void setAutoLearnOff() { m_editedFlags |= AutoLearnOff; }
 
     bool iniEdited() const { return (m_editedFlags & IniEdited) != 0; }
     void setIniEdited() { m_editedFlags |= IniEdited; }

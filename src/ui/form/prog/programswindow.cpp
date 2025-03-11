@@ -154,6 +154,7 @@ void ProgramsWindow::retranslateUi()
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
     m_actReviewAlerts->setText(tr("Review Alerts"));
+    m_actDeleteAlertedApps->setText(tr("Remove Alerted Programs"));
     m_actClearAlerts->setText(tr("Clear Alerts"));
     m_actPurgeApps->setText(tr("Purge Obsolete"));
     m_actFindApps->setText(tr("Find"));
@@ -297,6 +298,7 @@ void ProgramsWindow::setupEditMenu()
     editMenu->addSeparator();
 
     m_actReviewAlerts = editMenu->addAction(IconCache::icon(":/icons/error.png"), QString());
+    m_actDeleteAlertedApps = editMenu->addAction(QString());
     m_actClearAlerts = editMenu->addAction(QString());
 
     editMenu->addSeparator();
@@ -320,6 +322,7 @@ void ProgramsWindow::setupEditMenu()
     connect(m_actRemoveApp, &QAction::triggered, this, &ProgramsWindow::deleteSelectedApps);
     connect(m_actReviewAlerts, &QAction::triggered, this,
             [&] { windowManager()->showProgramAlertWindow(); });
+    connect(m_actDeleteAlertedApps, &QAction::triggered, this, &ProgramsWindow::deleteAlertedApps);
     connect(m_actClearAlerts, &QAction::triggered, this, &ProgramsWindow::clearAlerts);
     connect(m_actPurgeApps, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox([&] { ctrl()->purgeApps(); },
@@ -733,6 +736,12 @@ void ProgramsWindow::deleteSelectedApps()
             tr("Are you sure to remove selected program(s)?")
                     // App names
                     + "\n\n" + appNames.join('\n'));
+}
+
+void ProgramsWindow::deleteAlertedApps()
+{
+    windowManager()->showConfirmBox([=, this] { ctrl()->deleteAlertedApps(); },
+            tr("Are you sure to remove alerted programs?"));
 }
 
 void ProgramsWindow::clearAlerts()
