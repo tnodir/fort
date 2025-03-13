@@ -1331,6 +1331,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <source>Filter Off seconds:</source>
         <translation>Secondes de désactivation du filtre :</translation>
     </message>
+    <message>
+        <source>Remove alerted programs on Auto-Learn Off</source>
+        <translation>Retirer les programmes en alerte lors de la désactivation de l&apos;auto-apprentissage</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1737,6 +1741,14 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Stretch last column</source>
         <translation>Étirer la dernière colonne</translation>
+    </message>
+    <message>
+        <source>Remove Alerted Programs</source>
+        <translation>Retirer les programmes alertés</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove alerted programs?</source>
+        <translation>Êtes-vous sûr de retirer les programmes qui vous ont alerté ?</translation>
     </message>
 </context>
 <context>

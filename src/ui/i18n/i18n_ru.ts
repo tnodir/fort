@@ -1331,6 +1331,10 @@ Make sure that you have a fresh backup.</source>
         <source>Filter Off seconds:</source>
         <translation>Секунды выключенного фильтра:</translation>
     </message>
+    <message>
+        <source>Remove alerted programs on Auto-Learn Off</source>
+        <translation>Удалить оповещённые программы при отключении Авто-обучения</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1737,6 +1741,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Stretch last column</source>
         <translation>Растянуть последнюю колонку</translation>
+    </message>
+    <message>
+        <source>Remove Alerted Programs</source>
+        <translation>Удалить оповещённые программы</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove alerted programs?</source>
+        <translation>Удалить оповещённые программы?</translation>
     </message>
 </context>
 <context>

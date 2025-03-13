@@ -1331,6 +1331,10 @@ Assicurati di avere un nuovo backup.</translation>
         <source>Filter Off seconds:</source>
         <translation>Filtro spento per secondi:</translation>
     </message>
+    <message>
+        <source>Remove alerted programs on Auto-Learn Off</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1737,6 +1741,14 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Stretch last column</source>
         <translation>Allunga l&apos;ultima colonna</translation>
+    </message>
+    <message>
+        <source>Remove Alerted Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove alerted programs?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

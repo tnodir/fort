@@ -1331,6 +1331,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Filter Off seconds:</source>
         <translation>Filtriraj sekunde:</translation>
     </message>
+    <message>
+        <source>Remove alerted programs on Auto-Learn Off</source>
+        <translation>Odstranite opozorjene programe pri izklopu samodejnega učenja</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1737,6 +1741,14 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Stretch last column</source>
         <translation>Raztegnite zadnji stolpec</translation>
+    </message>
+    <message>
+        <source>Remove Alerted Programs</source>
+        <translation>Odstranite opozorilne programe</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove alerted programs?</source>
+        <translation>Odstraniti opozorilne programe?</translation>
     </message>
 </context>
 <context>

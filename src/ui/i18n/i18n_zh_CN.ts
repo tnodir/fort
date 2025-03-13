@@ -1331,6 +1331,10 @@ Make sure that you have a fresh backup.</source>
         <source>Filter Off seconds:</source>
         <translation>过滤器关闭秒数：</translation>
     </message>
+    <message>
+        <source>Remove alerted programs on Auto-Learn Off</source>
+        <translation>在自动学习关闭时删除警告程序</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1737,6 +1741,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Stretch last column</source>
         <translation>拉伸最后一列</translation>
+    </message>
+    <message>
+        <source>Remove Alerted Programs</source>
+        <translation>删除警告程序</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove alerted programs?</source>
+        <translation>您确定要删除警报程序吗？</translation>
     </message>
 </context>
 <context>

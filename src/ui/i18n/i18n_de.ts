@@ -1331,6 +1331,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Filter Off seconds:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Remove alerted programs on Auto-Learn Off</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1737,6 +1741,14 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Stretch last column</source>
         <translation>Letzte Spalte strecken</translation>
+    </message>
+    <message>
+        <source>Remove Alerted Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove alerted programs?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

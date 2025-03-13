@@ -1331,6 +1331,10 @@ Make sure that you have a fresh backup.</source>
         <source>Filter Off seconds:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Remove alerted programs on Auto-Learn Off</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1737,6 +1741,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Stretch last column</source>
         <translation>最後の列を伸縮する</translation>
+    </message>
+    <message>
+        <source>Remove Alerted Programs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Are you sure to remove alerted programs?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

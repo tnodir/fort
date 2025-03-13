@@ -1331,6 +1331,10 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <source>Filter Off seconds:</source>
         <translation>Seg. filtro desactivado:</translation>
     </message>
+    <message>
+        <source>Remove alerted programs on Auto-Learn Off</source>
+        <translation>Elim. prog. alertados al desactivar Auto-aprendizaje</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1740,6 +1744,14 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Stretch last column</source>
         <translation>Ampliar la última columna</translation>
+    </message>
+    <message>
+        <source>Remove Alerted Programs</source>
+        <translation>Eliminar programas alertados</translation>
+    </message>
+    <message>
+        <source>Are you sure to remove alerted programs?</source>
+        <translation>¿Está seguro de que desea eliminar los programas alertados?</translation>
     </message>
 </context>
 <context>
