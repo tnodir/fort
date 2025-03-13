@@ -556,6 +556,7 @@ QLayout *ProgramEditDialog::setupApplyChildGroupLayout()
     m_comboApplyChild =
             ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
     m_comboApplyChild->setMinimumWidth(120);
+    m_comboApplyChild->setMaximumWidth(150);
 
     setupCbApplyChild();
 
@@ -587,7 +588,8 @@ void ProgramEditDialog::setupCbApplyChild()
 void ProgramEditDialog::setupComboAppGroups()
 {
     m_comboAppGroup = ControlUtil::createComboBox();
-    m_comboAppGroup->setFixedWidth(150);
+    m_comboAppGroup->setMinimumWidth(120);
+    m_comboAppGroup->setMaximumWidth(150);
 
     const auto refreshComboAppGroups = [&](bool onlyFlags = false) {
         if (onlyFlags)
