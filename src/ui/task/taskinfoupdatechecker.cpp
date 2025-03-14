@@ -24,9 +24,14 @@ TaskInfoUpdateChecker::TaskInfoUpdateChecker(TaskManager &taskManager) :
 
 bool TaskInfoUpdateChecker::isNewVersion() const
 {
-    return !version().isEmpty() && version() != APP_VERSION_STR
-            && QVersionNumber::fromString(version())
-            > QVersionNumber(APP_VERSION_MAJOR, APP_VERSION_MINOR, APP_VERSION_PATCH);
+    if (version().isEmpty())
+        return false;
+
+    if (version() == QLatin1String(APP_VERSION_STR) + APP_VERSION_BUILD_STR)
+        return false;
+
+    return QVersionNumber::fromString(version())
+            >= QVersionNumber(APP_VERSION_MAJOR, APP_VERSION_MINOR, APP_VERSION_PATCH);
 }
 
 QByteArray TaskInfoUpdateChecker::data() const
