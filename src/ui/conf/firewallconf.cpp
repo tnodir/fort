@@ -315,6 +315,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 
     m_bootFilter = o.bootFilter();
     m_stealthMode = o.stealthMode();
+    m_traceEvents = o.traceEvents();
     m_filterEnabled = o.filterEnabled();
     m_filterLocals = o.filterLocals();
     m_filterLocalNet = o.filterLocalNet();
@@ -366,6 +367,7 @@ QVariant FirewallConf::flagsToVariant() const
 
     map["bootFilter"] = bootFilter();
     map["stealthMode"] = stealthMode();
+    map["traceEvents"] = traceEvents();
     map["filterEnabled"] = filterEnabled();
     map["filterLocals"] = filterLocals();
     map["filterLocalNet"] = filterLocalNet();
@@ -402,6 +404,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
 
     m_bootFilter = map["bootFilter"].toBool();
     m_stealthMode = map["stealthMode"].toBool();
+    m_traceEvents = map["traceEvents"].toBool();
     m_filterEnabled = map["filterEnabled"].toBool();
     m_filterLocals = map["filterLocals"].toBool();
     m_filterLocalNet = map["filterLocalNet"].toBool();

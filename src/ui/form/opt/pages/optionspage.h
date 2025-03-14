@@ -91,6 +91,7 @@ private:
 
     QCheckBox *m_cbLogDebug = nullptr;
     QCheckBox *m_cbLogConsole = nullptr;
+    QCheckBox *m_cbTraceEvents = nullptr;
 };
 
 #endif // OPTIONSPAGE_H

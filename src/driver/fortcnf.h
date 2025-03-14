@@ -32,6 +32,7 @@ typedef struct fort_conf_ref
 #define FORT_DEVICE_BOOT_CONF_MASK                                                                 \
     (FORT_DEVICE_BOOT_FILTER | FORT_DEVICE_FILTER_LOCALS | FORT_DEVICE_STEALTH_MODE)
 
+#define FORT_DEVICE_TRACE_EVENTS        0x08
 #define FORT_DEVICE_IS_OPENED           0x10
 #define FORT_DEVICE_IS_VALIDATED        0x20
 #define FORT_DEVICE_POWER_OFF           0x40

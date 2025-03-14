@@ -1,6 +1,7 @@
 /* Fort Firewall Configuration */
 
 #include "fortcnf.h"
+#include "forttrace.h"
 
 #define FORT_DEVICE_CONF_POOL_TAG 'CwfF'
 
@@ -336,11 +337,37 @@ static void fort_device_flags_conf_set(PFORT_DEVICE_CONF device_conf, FORT_CONF_
     fort_device_flag_set(device_conf, FORT_DEVICE_BOOT_FILTER, conf_flags.boot_filter);
     fort_device_flag_set(device_conf, FORT_DEVICE_STEALTH_MODE, conf_flags.stealth_mode);
     fort_device_flag_set(device_conf, FORT_DEVICE_FILTER_LOCALS, conf_flags.filter_locals);
+    fort_device_flag_set(device_conf, FORT_DEVICE_TRACE_EVENTS, conf_flags.trace_events);
+}
+
+static void fort_device_flags_conf_copy(FORT_CONF_FLAGS *conf_flags, const UINT16 flags)
+{
+    RtlZeroMemory(conf_flags, sizeof(FORT_CONF_FLAGS));
+    conf_flags->boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0;
+    conf_flags->stealth_mode = (flags & FORT_DEVICE_STEALTH_MODE) != 0;
+    conf_flags->filter_locals = (flags & FORT_DEVICE_FILTER_LOCALS) != 0;
+    conf_flags->trace_events = (flags & FORT_DEVICE_TRACE_EVENTS) != 0;
+}
+
+static void fort_device_flags_conf_log_event(
+        const FORT_CONF_FLAGS old_conf_flags, const FORT_CONF_FLAGS conf_flags)
+{
+    if (!conf_flags.trace_events)
+        return;
+
+    if (old_conf_flags.filter_enabled != conf_flags.filter_enabled) {
+        TRACE(FORT_CONFIG_FILTER_OFF + conf_flags.filter_enabled, 0, 0, 0);
+    }
+
+    if (conf_flags.filter_enabled && old_conf_flags.filter_mode != conf_flags.filter_mode) {
+        TRACE(FORT_CONFIG_FILTER_MODE_AUTO_LEARN + conf_flags.filter_mode, 0, 0, 0);
+    }
 }
 
 FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF conf_ref)
 {
     FORT_CONF_FLAGS old_conf_flags;
+    FORT_CONF_FLAGS conf_flags;
 
     const PFORT_CONF_REF old_conf_ref = fort_conf_ref_take(device_conf);
 
@@ -349,17 +376,12 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
     } else {
         const UINT16 flags = fort_device_flags(device_conf);
 
-        RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
-        old_conf_flags.boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0;
-        old_conf_flags.stealth_mode = (flags & FORT_DEVICE_STEALTH_MODE) != 0;
-        old_conf_flags.filter_locals = (flags & FORT_DEVICE_FILTER_LOCALS) != 0;
+        fort_device_flags_conf_copy(&old_conf_flags, flags);
     }
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
-        FORT_CONF_FLAGS conf_flags;
-
         device_conf->ref = conf_ref;
 
         if (conf_ref != NULL) {
@@ -373,6 +395,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
             conf_flags.boot_filter = old_conf_flags.boot_filter;
             conf_flags.stealth_mode = old_conf_flags.stealth_mode;
             conf_flags.filter_locals = old_conf_flags.filter_locals;
+            conf_flags.trace_events = old_conf_flags.trace_events;
         }
 
         device_conf->conf_flags = conf_flags;
@@ -382,6 +405,8 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
         }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    fort_device_flags_conf_log_event(old_conf_flags, conf_flags);
 
     return old_conf_flags;
 }
@@ -406,10 +431,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
         } else {
             const UINT16 flags = fort_device_flags(device_conf);
 
-            RtlZeroMemory(&old_conf_flags, sizeof(FORT_CONF_FLAGS));
-            old_conf_flags.boot_filter = (flags & FORT_DEVICE_BOOT_FILTER) != 0;
-            old_conf_flags.stealth_mode = (flags & FORT_DEVICE_STEALTH_MODE) != 0;
-            old_conf_flags.filter_locals = (flags & FORT_DEVICE_FILTER_LOCALS) != 0;
+            fort_device_flags_conf_copy(&old_conf_flags, flags);
 
             conf_flags = old_conf_flags;
         }
@@ -417,6 +439,8 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
         device_conf->conf_flags = conf_flags;
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    fort_device_flags_conf_log_event(old_conf_flags, conf_flags);
 
     return old_conf_flags;
 }

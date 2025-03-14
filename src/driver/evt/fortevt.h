@@ -39,15 +39,16 @@
 #define FACILITY_DRIVER                  0x4
 #define FACILITY_SHAPER                  0x5
 #define FACILITY_PROCESS_TREE            0x6
+#define FACILITY_CONFIG                  0x7
 
 
 //
 // Define the severity codes
 //
 #define STATUS_SEVERITY_SUCCESS          0x0
-#define STATUS_SEVERITY_INFORMATIONAL    0x1
 #define STATUS_SEVERITY_WARNING          0x2
 #define STATUS_SEVERITY_ERROR            0x3
+#define STATUS_SEVERITY_INFORMATIONAL    0x1
 
 
 //
@@ -162,5 +163,69 @@
 // Enum Processes Error.
 //
 #define FORT_PSTREE_ENUM_PROCESSES_ERROR ((NTSTATUS)0xC0060002L)
+
+/* Config */
+//
+// MessageId: FORT_CONFIG_FILTER_OFF
+//
+// MessageText:
+//
+// Config: Filter Off.
+//
+#define FORT_CONFIG_FILTER_OFF           ((NTSTATUS)0x40070001L)
+
+//
+// MessageId: FORT_CONFIG_FILTER_ON
+//
+// MessageText:
+//
+// Config: Filter On.
+//
+#define FORT_CONFIG_FILTER_ON            ((NTSTATUS)0x40070002L)
+
+//
+// MessageId: FORT_CONFIG_FILTER_MODE_AUTO_LEARN
+//
+// MessageText:
+//
+// Config: Filter Mode: Auto-Learn.
+//
+#define FORT_CONFIG_FILTER_MODE_AUTO_LEARN ((NTSTATUS)0x40070003L)
+
+//
+// MessageId: FORT_CONFIG_FILTER_MODE_ASK
+//
+// MessageText:
+//
+// Config: Filter Mode: Ask.
+//
+#define FORT_CONFIG_FILTER_MODE_ASK      ((NTSTATUS)0x40070004L)
+
+//
+// MessageId: FORT_CONFIG_FILTER_MODE_BLOCK
+//
+// MessageText:
+//
+// Config: Filter Mode: Block.
+//
+#define FORT_CONFIG_FILTER_MODE_BLOCK    ((NTSTATUS)0x40070005L)
+
+//
+// MessageId: FORT_CONFIG_FILTER_MODE_ALLOW
+//
+// MessageText:
+//
+// Config: Filter Mode: Allow.
+//
+#define FORT_CONFIG_FILTER_MODE_ALLOW    ((NTSTATUS)0x40070006L)
+
+//
+// MessageId: FORT_CONFIG_FILTER_MODE_IGNORE
+//
+// MessageText:
+//
+// Config: Filter Mode: Ignore.
+//
+#define FORT_CONFIG_FILTER_MODE_IGNORE   ((NTSTATUS)0x40070007L)
 
 #endif // FORTEVT_H

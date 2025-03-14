@@ -74,6 +74,9 @@ public:
     bool stealthMode() const { return m_stealthMode; }
     void setStealthMode(bool v) { m_stealthMode = v; }
 
+    bool traceEvents() const { return m_traceEvents; }
+    void setTraceEvents(bool v) { m_traceEvents = v; }
+
     bool filterEnabled() const { return m_filterEnabled; }
     void setFilterEnabled(bool v) { m_filterEnabled = v; }
 
@@ -227,6 +230,7 @@ private:
 
     uint m_bootFilter : 1 = false;
     uint m_stealthMode : 1 = false;
+    uint m_traceEvents : 1 = false;
     uint m_filterEnabled : 1 = true;
     uint m_filterLocals : 1 = false;
     uint m_filterLocalNet : 1 = false;

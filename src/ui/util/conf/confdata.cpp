@@ -145,6 +145,8 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
 
     confFlags->boot_filter = conf.bootFilter();
     confFlags->stealth_mode = conf.stealthMode();
+    confFlags->trace_events = conf.traceEvents();
+
     confFlags->filter_enabled = conf.filterEnabled();
     confFlags->filter_locals = conf.filterLocals();
     confFlags->filter_local_net = conf.filterLocalNet();
@@ -158,6 +160,8 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
 
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
+
+    confFlags->filter_mode = conf.filterMode();
 
     confFlags->log_stat = true; // always enabled for driver
     confFlags->log_stat_no_filter = conf.logStatNoFilter();

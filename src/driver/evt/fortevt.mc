@@ -8,7 +8,7 @@ MessageIdTypedef = NTSTATUS
 
 SeverityNames = (
     Success = 0:STATUS_SEVERITY_SUCCESS
-    Informational = 1:STATUS_SEVERITY_INFORMATIONAL
+    Info = 1:STATUS_SEVERITY_INFORMATIONAL
     Warning = 2:STATUS_SEVERITY_WARNING
     Error = 3:STATUS_SEVERITY_ERROR
 )
@@ -21,6 +21,7 @@ FacilityNames = (
     Driver = 4:FACILITY_DRIVER
     Shaper = 5:FACILITY_SHAPER
     ProcessTree = 6:FACILITY_PROCESS_TREE
+    Config = 7:FACILITY_CONFIG
 )
 
 
@@ -94,5 +95,43 @@ MessageId=2 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_ENUM_PR
 Language=English
 Enum Processes Error.
 .
+
+
+;/* Config */
+MessageId=1 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_OFF
+Language=English
+Config: Filter Off.
+.
+
+MessageId=2 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_ON
+Language=English
+Config: Filter On.
+.
+
+MessageId=3 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_AUTO_LEARN
+Language=English
+Config: Filter Mode: Auto-Learn.
+.
+
+MessageId=4 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_ASK
+Language=English
+Config: Filter Mode: Ask.
+.
+
+MessageId=5 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_BLOCK
+Language=English
+Config: Filter Mode: Block.
+.
+
+MessageId=6 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_ALLOW
+Language=English
+Config: Filter Mode: Allow.
+.
+
+MessageId=7 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_IGNORE
+Language=English
+Config: Filter Mode: Ignore.
+.
+
 
 ;#endif // FORTEVT_H

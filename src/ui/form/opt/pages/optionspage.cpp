@@ -69,16 +69,17 @@ void OptionsPage::onResetToDefault()
     m_cbCheckPasswordOnUninstall->setChecked(false);
     m_cbPassword->setChecked(false);
 
+    m_cbLogApp->setChecked(true);
+    m_cbRemoveLearntApps->setChecked(false);
+    m_cbPurgeOnMounted->setChecked(false);
+
     m_cbUpdateKeepCurrentVersion->setChecked(false);
     m_cbUpdateAutoDownload->setChecked(false);
     m_cbUpdateAutoInstall->setChecked(false);
 
     m_cbLogDebug->setChecked(false);
     m_cbLogConsole->setChecked(false);
-
-    m_cbLogApp->setChecked(true);
-    m_cbRemoveLearntApps->setChecked(false);
-    m_cbPurgeOnMounted->setChecked(false);
+    m_cbTraceEvents->setChecked(false);
 }
 
 void OptionsPage::onAboutToSave()
@@ -169,6 +170,7 @@ void OptionsPage::onRetranslateUi()
 
     m_cbLogDebug->setText(tr("Log debug messages"));
     m_cbLogConsole->setText(tr("Show log messages in console"));
+    m_cbTraceEvents->setText(tr("Trace Driver Events"));
 }
 
 void OptionsPage::retranslateComboBlockTraffic()
@@ -543,14 +545,19 @@ void OptionsPage::setupLogsBox()
         ini()->setLogDebug(checked);
         ctrl()->setIniEdited();
     });
+
     m_cbLogConsole = ControlUtil::createCheckBox(ini()->logConsole(), [&](bool checked) {
         ini()->setLogConsole(checked);
         ctrl()->setIniEdited();
     });
 
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbLogDebug);
-    layout->addWidget(m_cbLogConsole);
+    m_cbTraceEvents = ControlUtil::createCheckBox(conf()->traceEvents(), [&](bool checked) {
+        conf()->setTraceEvents(checked);
+        ctrl()->setFlagsEdited();
+    });
+
+    auto layout =
+            ControlUtil::createVLayoutByWidgets({ m_cbLogDebug, m_cbLogConsole, m_cbTraceEvents });
 
     m_gbLogs = new QGroupBox();
     m_gbLogs->setLayout(layout);
