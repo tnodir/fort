@@ -359,7 +359,7 @@ static void fort_device_flags_conf_log_event(
         TRACE(FORT_CONFIG_FILTER_OFF + conf_flags.filter_enabled, 0, 0, 0);
     }
 
-    if (conf_flags.filter_enabled && old_conf_flags.filter_mode != conf_flags.filter_mode) {
+    if (old_conf_flags.filter_mode != conf_flags.filter_mode) {
         TRACE(FORT_CONFIG_FILTER_MODE_AUTO_LEARN + conf_flags.filter_mode, 0, 0, 0);
     }
 }
