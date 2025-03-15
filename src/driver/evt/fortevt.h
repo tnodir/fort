@@ -58,7 +58,7 @@
 //
 // Buffer OOM.
 //
-#define FORT_BUFFER_OOM                  ((NTSTATUS)0xC0010001L)
+#define FORT_BUFFER_OOM                  ((NTSTATUS)0xC001000AL)
 
 /* Callout */
 //
@@ -68,7 +68,7 @@
 //
 // Classify v4: Flow assoc. error.
 //
-#define FORT_CALLOUT_FLOW_ASSOC_ERROR    ((NTSTATUS)0xC0020001L)
+#define FORT_CALLOUT_FLOW_ASSOC_ERROR    ((NTSTATUS)0xC0020014L)
 
 //
 // MessageId: FORT_CALLOUT_REGISTER_ERROR
@@ -77,7 +77,7 @@
 //
 // Callout Register: Error.
 //
-#define FORT_CALLOUT_REGISTER_ERROR      ((NTSTATUS)0xC0020002L)
+#define FORT_CALLOUT_REGISTER_ERROR      ((NTSTATUS)0xC0020015L)
 
 //
 // MessageId: FORT_CALLOUT_CALLOUT_REAUTH_ERROR
@@ -86,7 +86,7 @@
 //
 // Callout Reauth: Error.
 //
-#define FORT_CALLOUT_CALLOUT_REAUTH_ERROR ((NTSTATUS)0xC002000EL)
+#define FORT_CALLOUT_CALLOUT_REAUTH_ERROR ((NTSTATUS)0xC0020016L)
 
 //
 // MessageId: FORT_CALLOUT_CALLOUT_TIMER_ERROR
@@ -95,7 +95,7 @@
 //
 // Callout Timer: Error.
 //
-#define FORT_CALLOUT_CALLOUT_TIMER_ERROR ((NTSTATUS)0xC002000FL)
+#define FORT_CALLOUT_CALLOUT_TIMER_ERROR ((NTSTATUS)0xC0020017L)
 
 /* Device */
 //
@@ -105,7 +105,7 @@
 //
 // Device Control: Error.
 //
-#define FORT_DEVICE_DEVICE_CONTROL_ERROR ((NTSTATUS)0xC0030001L)
+#define FORT_DEVICE_DEVICE_CONTROL_ERROR ((NTSTATUS)0xC003001EL)
 
 /* Driver */
 //
@@ -115,7 +115,7 @@
 //
 // Entry: Error.
 //
-#define FORT_DRIVER_ENTRY_ERROR          ((NTSTATUS)0xC0040001L)
+#define FORT_DRIVER_ENTRY_ERROR          ((NTSTATUS)0xC0040028L)
 
 /* Shaper */
 //
@@ -125,7 +125,7 @@
 //
 // Shaper: Packet injection error.
 //
-#define FORT_SHAPER_PACKET_INJECTION_ERROR ((NTSTATUS)0xC0050001L)
+#define FORT_SHAPER_PACKET_INJECTION_ERROR ((NTSTATUS)0xC0050032L)
 
 //
 // MessageId: FORT_SHAPER_PACKET_INJECTION_CALL_ERROR
@@ -134,7 +134,7 @@
 //
 // Shaper: Packet injection call error.
 //
-#define FORT_SHAPER_PACKET_INJECTION_CALL_ERROR ((NTSTATUS)0xC0050002L)
+#define FORT_SHAPER_PACKET_INJECTION_CALL_ERROR ((NTSTATUS)0xC0050033L)
 
 //
 // MessageId: FORT_SHAPER_PACKET_CLONE_ERROR
@@ -143,7 +143,7 @@
 //
 // Shaper: Packet clone error.
 //
-#define FORT_SHAPER_PACKET_CLONE_ERROR   ((NTSTATUS)0xC0050003L)
+#define FORT_SHAPER_PACKET_CLONE_ERROR   ((NTSTATUS)0xC0050034L)
 
 /* ProcessTree */
 //
@@ -153,7 +153,7 @@
 //
 // PsTree: Update Error.
 //
-#define FORT_PSTREE_UPDATE_ERROR         ((NTSTATUS)0xC0060001L)
+#define FORT_PSTREE_UPDATE_ERROR         ((NTSTATUS)0xC006003CL)
 
 //
 // MessageId: FORT_PSTREE_ENUM_PROCESSES_ERROR
@@ -162,7 +162,7 @@
 //
 // Enum Processes Error.
 //
-#define FORT_PSTREE_ENUM_PROCESSES_ERROR ((NTSTATUS)0xC0060002L)
+#define FORT_PSTREE_ENUM_PROCESSES_ERROR ((NTSTATUS)0xC006003DL)
 
 /* Config */
 //
@@ -172,7 +172,7 @@
 //
 // Config: Filter Off.
 //
-#define FORT_CONFIG_FILTER_OFF           ((NTSTATUS)0x40070001L)
+#define FORT_CONFIG_FILTER_OFF           ((NTSTATUS)0x400703E8L)
 
 //
 // MessageId: FORT_CONFIG_FILTER_ON
@@ -181,7 +181,7 @@
 //
 // Config: Filter On.
 //
-#define FORT_CONFIG_FILTER_ON            ((NTSTATUS)0x40070002L)
+#define FORT_CONFIG_FILTER_ON            ((NTSTATUS)0x400703E9L)
 
 //
 // MessageId: FORT_CONFIG_FILTER_MODE_AUTO_LEARN
@@ -190,7 +190,7 @@
 //
 // Config: Filter Mode: Auto-Learn.
 //
-#define FORT_CONFIG_FILTER_MODE_AUTO_LEARN ((NTSTATUS)0x40070003L)
+#define FORT_CONFIG_FILTER_MODE_AUTO_LEARN ((NTSTATUS)0x400703F2L)
 
 //
 // MessageId: FORT_CONFIG_FILTER_MODE_ASK
@@ -199,7 +199,7 @@
 //
 // Config: Filter Mode: Ask.
 //
-#define FORT_CONFIG_FILTER_MODE_ASK      ((NTSTATUS)0x40070004L)
+#define FORT_CONFIG_FILTER_MODE_ASK      ((NTSTATUS)0x400703F3L)
 
 //
 // MessageId: FORT_CONFIG_FILTER_MODE_BLOCK
@@ -208,7 +208,7 @@
 //
 // Config: Filter Mode: Block.
 //
-#define FORT_CONFIG_FILTER_MODE_BLOCK    ((NTSTATUS)0x40070005L)
+#define FORT_CONFIG_FILTER_MODE_BLOCK    ((NTSTATUS)0x400703F4L)
 
 //
 // MessageId: FORT_CONFIG_FILTER_MODE_ALLOW
@@ -217,7 +217,7 @@
 //
 // Config: Filter Mode: Allow.
 //
-#define FORT_CONFIG_FILTER_MODE_ALLOW    ((NTSTATUS)0x40070006L)
+#define FORT_CONFIG_FILTER_MODE_ALLOW    ((NTSTATUS)0x400703F5L)
 
 //
 // MessageId: FORT_CONFIG_FILTER_MODE_IGNORE
@@ -226,6 +226,6 @@
 //
 // Config: Filter Mode: Ignore.
 //
-#define FORT_CONFIG_FILTER_MODE_IGNORE   ((NTSTATUS)0x40070007L)
+#define FORT_CONFIG_FILTER_MODE_IGNORE   ((NTSTATUS)0x400703F6L)
 
 #endif // FORTEVT_H

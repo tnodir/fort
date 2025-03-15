@@ -26,109 +26,109 @@ FacilityNames = (
 
 
 ;/* Buffer */
-MessageId=1 Facility=Buffer Severity=Error SymbolicName=FORT_BUFFER_OOM
+MessageId=10 Facility=Buffer Severity=Error SymbolicName=FORT_BUFFER_OOM
 Language=English
 Buffer OOM.
 .
 
 
 ;/* Callout */
-MessageId=1 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_FLOW_ASSOC_ERROR
+MessageId=20 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_FLOW_ASSOC_ERROR
 Language=English
 Classify v4: Flow assoc. error.
 .
 
-MessageId=2 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_ERROR
+MessageId=21 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_REGISTER_ERROR
 Language=English
 Callout Register: Error.
 .
 
-MessageId=14 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_REAUTH_ERROR
+MessageId=22 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_REAUTH_ERROR
 Language=English
 Callout Reauth: Error.
 .
 
-MessageId=15 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_TIMER_ERROR
+MessageId=23 Facility=Callout Severity=Error SymbolicName=FORT_CALLOUT_CALLOUT_TIMER_ERROR
 Language=English
 Callout Timer: Error.
 .
 
 
 ;/* Device */
-MessageId=1 Facility=Device Severity=Error SymbolicName=FORT_DEVICE_DEVICE_CONTROL_ERROR
+MessageId=30 Facility=Device Severity=Error SymbolicName=FORT_DEVICE_DEVICE_CONTROL_ERROR
 Language=English
 Device Control: Error.
 .
 
 
 ;/* Driver */
-MessageId=1 Facility=Driver Severity=Error SymbolicName=FORT_DRIVER_ENTRY_ERROR
+MessageId=40 Facility=Driver Severity=Error SymbolicName=FORT_DRIVER_ENTRY_ERROR
 Language=English
 Entry: Error.
 .
 
 
 ;/* Shaper */
-MessageId=1 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_INJECTION_ERROR
+MessageId=50 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_INJECTION_ERROR
 Language=English
 Shaper: Packet injection error.
 .
 
-MessageId=2 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_INJECTION_CALL_ERROR
+MessageId=51 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_INJECTION_CALL_ERROR
 Language=English
 Shaper: Packet injection call error.
 .
 
-MessageId=3 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_CLONE_ERROR
+MessageId=52 Facility=Shaper Severity=Error SymbolicName=FORT_SHAPER_PACKET_CLONE_ERROR
 Language=English
 Shaper: Packet clone error.
 .
 
 
 ;/* ProcessTree */
-MessageId=1 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_UPDATE_ERROR
+MessageId=60 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_UPDATE_ERROR
 Language=English
 PsTree: Update Error.
 .
 
-MessageId=2 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_ENUM_PROCESSES_ERROR
+MessageId=61 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_ENUM_PROCESSES_ERROR
 Language=English
 Enum Processes Error.
 .
 
 
 ;/* Config */
-MessageId=1 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_OFF
+MessageId=1000 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_OFF
 Language=English
 Config: Filter Off.
 .
 
-MessageId=2 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_ON
+MessageId=1001 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_ON
 Language=English
 Config: Filter On.
 .
 
-MessageId=3 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_AUTO_LEARN
+MessageId=1010 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_AUTO_LEARN
 Language=English
 Config: Filter Mode: Auto-Learn.
 .
 
-MessageId=4 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_ASK
+MessageId=1011 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_ASK
 Language=English
 Config: Filter Mode: Ask.
 .
 
-MessageId=5 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_BLOCK
+MessageId=1012 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_BLOCK
 Language=English
 Config: Filter Mode: Block.
 .
 
-MessageId=6 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_ALLOW
+MessageId=1013 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_ALLOW
 Language=English
 Config: Filter Mode: Allow.
 .
 
-MessageId=7 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_IGNORE
+MessageId=1014 Facility=Config Severity=Info SymbolicName=FORT_CONFIG_FILTER_MODE_IGNORE
 Language=English
 Config: Filter Mode: Ignore.
 .
