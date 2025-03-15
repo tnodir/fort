@@ -161,7 +161,7 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();
 
-    confFlags->filter_mode = conf.filterMode();
+    confFlags->filter_mode = quint8(conf.filterMode());
 
     confFlags->log_stat = true; // always enabled for driver
     confFlags->log_stat_no_filter = conf.logStatNoFilter();
