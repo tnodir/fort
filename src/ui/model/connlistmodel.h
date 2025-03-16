@@ -84,6 +84,9 @@ protected:
 
     virtual void fillConnIdRange(qint64 &idMin, qint64 &idMax);
 
+    virtual bool isConnIdRangeOut(
+            qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax) const;
+
     virtual qint64 connIdByIndex(int row) const;
 
     int doSqlCount() const override;

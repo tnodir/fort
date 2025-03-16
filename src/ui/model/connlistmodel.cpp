@@ -378,9 +378,6 @@ void ConnListModel::updateConnIdRange()
     qint64 idMin = 0, idMax = 0;
     fillConnIdRange(idMin, idMax);
 
-    if (idMin == oldIdMin && idMax == oldIdMax)
-        return;
-
     updateConnRows(oldIdMin, oldIdMax, idMin, idMax);
 }
 
@@ -424,6 +421,15 @@ bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
 void ConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
 {
     statConnManager()->getConnIdRange(sqliteDb(), idMin, idMax);
+}
+
+bool ConnListModel::isConnIdRangeOut(
+        qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax) const
+{
+    const bool isIdMinOut = (idMin < oldIdMin || idMin >= oldIdMax);
+    const bool isIdMaxOut = (idMax < oldIdMax || oldIdMax == 0);
+
+    return !(isIdMinOut || isIdMaxOut);
 }
 
 qint64 ConnListModel::connIdByIndex(int row) const
@@ -473,10 +479,10 @@ QString ConnListModel::sqlLimitOffset() const
 
 void ConnListModel::updateConnRows(qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax)
 {
-    const bool isIdMinOut = (idMin < oldIdMin || idMin >= oldIdMax);
-    const bool isIdMaxOut = (idMax < oldIdMax || oldIdMax == 0);
+    if (idMin == oldIdMin && idMax == oldIdMax)
+        return;
 
-    if (isIdMinOut || isIdMaxOut) {
+    if (!isConnIdRangeOut(oldIdMin, oldIdMax, idMin, idMax)) {
         resetConnRows(idMin, idMax);
         return;
     }

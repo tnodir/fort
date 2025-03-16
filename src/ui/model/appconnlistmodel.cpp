@@ -38,6 +38,12 @@ void AppConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
     }
 }
 
+bool AppConnListModel::isConnIdRangeOut(
+        qint64 /*oldIdMin*/, qint64 /*oldIdMax*/, qint64 /*idMin*/, qint64 /*idMax*/) const
+{
+    return false; // always reset on any changes
+}
+
 qint64 AppConnListModel::connIdByIndex(int row) const
 {
     if (isAscendingOrder()) {
