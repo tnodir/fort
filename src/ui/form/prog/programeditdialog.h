@@ -4,9 +4,10 @@
 #include <form/controls/formwindow.h>
 #include <model/applistmodel.h>
 
+class AppConnListModel;
 class ConfAppManager;
-class ConfRuleManager;
 class ConfManager;
+class ConfRuleManager;
 class FirewallConf;
 class FortManager;
 class IniUser;
@@ -14,6 +15,7 @@ class LineEdit;
 class PlainTextEdit;
 class ProgramsController;
 class SpinCombo;
+class TableView;
 class WindowManager;
 class ZonesSelector;
 
@@ -34,6 +36,7 @@ public:
     IniUser *iniUser() const;
     WindowManager *windowManager() const;
     AppListModel *appListModel() const;
+    AppConnListModel *appConnListModel() const { return m_appConnListModel; }
 
     bool isWildcard() const { return m_isWildcard; }
     bool isNew() const { return m_appRow.appId == 0; }
@@ -99,10 +102,16 @@ private:
     void setupTimedRemove();
     QToolButton *createTimedButton(const QString &iniKey);
     QLayout *setupButtonsLayout();
+    void setupSwitchWildcard();
     void setupOptions();
     void setupChildOptionsLayout();
     void setupLogOptions();
-    void setupSwitchWildcard();
+    void setupConnections();
+    void setupConnectionsMenuLayout();
+    void closeConnectionsMenuLayout();
+    void setupConnectionsModel();
+    void setupTableConnList();
+    void setupTableConnListHeader();
 
     void updateZonesRulesLayout();
     void updateApplyChild();
@@ -147,6 +156,7 @@ private:
     quint16 m_currentRuleId = 0;
 
     ProgramsController *m_ctrl = nullptr;
+    AppConnListModel *m_appConnListModel = nullptr;
 
     QLabel *m_labelEditPath = nullptr;
     LineEdit *m_editPath = nullptr;
@@ -188,8 +198,12 @@ private:
     QActionGroup *m_timedMenuActions = nullptr;
     QMenu *m_timedMenu = nullptr;
 
-    QPushButton *m_btOptions = nullptr;
     QToolButton *m_btSwitchWildcard = nullptr;
+    QPushButton *m_btOptions = nullptr;
+    QPushButton *m_btConnections = nullptr;
+    QBoxLayout *m_connectionsLayout = nullptr;
+    TableView *m_connListView = nullptr;
+
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
     QPushButton *m_btMenu = nullptr;

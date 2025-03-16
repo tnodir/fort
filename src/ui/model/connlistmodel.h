@@ -49,7 +49,7 @@ public:
     explicit ConnListModel(QObject *parent = nullptr);
 
     bool resolveAddress() const { return m_resolveAddress; }
-    void setResolveAddress(bool v);
+    void setResolveAddress(bool v) { m_resolveAddress = v; }
 
     FortManager *fortManager() const;
     StatConnManager *statConnManager() const;
@@ -82,7 +82,9 @@ protected:
 
     void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
-    qint64 connIdByIndex(int row) const;
+    virtual void fillConnIdRange(qint64 &idMin, qint64 &idMax);
+
+    virtual qint64 connIdByIndex(int row) const;
 
     int doSqlCount() const override;
     QString sqlBase() const override;
@@ -90,14 +92,17 @@ protected:
     QString sqlLimitOffset() const override;
 
 private:
+    qint64 connIdMin() const { return m_connIdMin; }
+    void setConnIdMin(qint64 v) { m_connIdMin = v; }
+
+    qint64 connIdMax() const { return m_connIdMax; }
+    void setConnIdMax(qint64 v) { m_connIdMax = v; }
+
     QVariant headerDataDisplay(int section, int role) const;
     QVariant headerDataDecoration(int section) const;
 
     QVariant dataDisplay(const QModelIndex &index, int role) const;
     QVariant dataDecoration(const QModelIndex &index) const;
-
-    qint64 connIdMin() const { return m_connIdMin; }
-    qint64 connIdMax() const { return m_connIdMax; }
 
     void updateConnRows(qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax);
     void resetConnRows(qint64 idMin, qint64 idMax);

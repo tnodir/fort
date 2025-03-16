@@ -6,6 +6,7 @@
 #include <QComboBox>
 #include <QDateTimeEdit>
 #include <QFormLayout>
+#include <QHeaderView>
 #include <QLabel>
 #include <QMenu>
 #include <QPushButton>
@@ -22,12 +23,14 @@
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/spincombo.h>
+#include <form/controls/tableview.h>
 #include <form/controls/toolbutton.h>
 #include <form/controls/zonesselector.h>
 #include <form/dialog/dialogutil.h>
 #include <form/rule/ruleswindow.h>
 #include <fortmanager.h>
 #include <manager/windowmanager.h>
+#include <model/appconnlistmodel.h>
 #include <model/rulelistmodel.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
@@ -306,8 +309,9 @@ void ProgramEditDialog::retranslateUi()
     retranslateTimedAction(m_btTimedAction);
     retranslateTimedAction(m_btTimedRemove);
 
-    m_btOptions->setToolTip(tr("Options"));
     m_btSwitchWildcard->setToolTip(tr("Switch Wildcard"));
+    m_btOptions->setToolTip(tr("Options"));
+    m_btConnections->setToolTip(tr("Connections"));
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
 
@@ -870,11 +874,14 @@ QToolButton *ProgramEditDialog::createTimedButton(const QString &iniKey)
 
 QLayout *ProgramEditDialog::setupButtonsLayout()
 {
+    // Switch Wildcard
+    setupSwitchWildcard();
+
     // Options
     setupOptions();
 
-    // Switch Wildcard
-    setupSwitchWildcard();
+    // Connections
+    setupConnections();
 
     // OK
     m_btOk = ControlUtil::createButton(QString(), [&] {
@@ -893,10 +900,25 @@ QLayout *ProgramEditDialog::setupButtonsLayout()
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_btSwitchWildcard, m_btOptions,
-            /*stretch*/ nullptr, m_btOk, m_btCancel, m_btMenu });
+    auto layout =
+            ControlUtil::createHLayoutByWidgets({ m_btSwitchWildcard, m_btOptions, m_btConnections,
+                    /*stretch*/ nullptr, m_btOk, m_btCancel, m_btMenu });
 
     return layout;
+}
+
+void ProgramEditDialog::setupSwitchWildcard()
+{
+    m_btSwitchWildcard = ControlUtil::createIconToolButton(":/icons/coding.png", [&] {
+        m_isWildcard = !m_isWildcard;
+
+        switchWildcardPaths();
+
+        updateWildcard();
+        retranslateUi();
+    });
+
+    m_btSwitchWildcard->setCheckable(true);
 }
 
 void ProgramEditDialog::setupOptions()
@@ -941,18 +963,94 @@ void ProgramEditDialog::setupLogOptions()
     m_cbLogBlockedConn = new QCheckBox();
 }
 
-void ProgramEditDialog::setupSwitchWildcard()
+void ProgramEditDialog::setupConnections()
 {
-    m_btSwitchWildcard = ControlUtil::createIconToolButton(":/icons/coding.png", [&] {
-        m_isWildcard = !m_isWildcard;
+    m_connectionsLayout = new QVBoxLayout();
 
-        switchWildcardPaths();
+    auto menu = ControlUtil::createMenuByLayout(m_connectionsLayout, this);
 
-        updateWildcard();
-        retranslateUi();
-    });
+    m_btConnections = ControlUtil::createButton(":/icons/connect.png");
+    m_btConnections->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_C));
+    m_btConnections->setMenu(menu);
 
-    m_btSwitchWildcard->setCheckable(true);
+    connect(menu, &QMenu::aboutToShow, this, &ProgramEditDialog::setupConnectionsMenuLayout);
+    connect(menu, &QMenu::aboutToHide, this, &ProgramEditDialog::closeConnectionsMenuLayout);
+}
+
+void ProgramEditDialog::setupConnectionsMenuLayout()
+{
+    Q_ASSERT(m_connectionsLayout->isEmpty());
+
+    setupConnectionsModel();
+    setupTableConnList();
+    setupTableConnListHeader();
+
+    m_connListView->setFixedWidth(800);
+
+    m_connectionsLayout->addWidget(m_connListView);
+}
+
+void ProgramEditDialog::closeConnectionsMenuLayout()
+{
+    ControlUtil::clearLayout(m_connectionsLayout);
+
+    m_appConnListModel->deleteLater();
+}
+
+void ProgramEditDialog::setupConnectionsModel()
+{
+    m_appConnListModel = new AppConnListModel(this);
+
+    appConnListModel()->setAppPath(m_appRow.appPath);
+    appConnListModel()->setResolveAddress(true);
+    appConnListModel()->initialize();
+}
+
+void ProgramEditDialog::setupTableConnList()
+{
+    m_connListView = new TableView();
+    m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
+
+    m_connListView->setModel(appConnListModel());
+}
+
+void ProgramEditDialog::setupTableConnListHeader()
+{
+    auto header = m_connListView->horizontalHeader();
+
+    header->setSectionResizeMode(int(ConnListColumn::Program), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::ProcessId), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::Protocol), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::LocalHostName), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::LocalIp), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::LocalPort), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::RemoteHostName), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::RemoteIp), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::RemotePort), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(ConnListColumn::Direction), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(ConnListColumn::Action), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(ConnListColumn::Reason), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(ConnListColumn::Time), QHeaderView::Interactive);
+    header->setStretchLastSection(true);
+
+    header->resizeSection(int(ConnListColumn::Program), 300);
+    header->resizeSection(int(ConnListColumn::ProcessId), 60);
+    header->resizeSection(int(ConnListColumn::Protocol), 70);
+    header->resizeSection(int(ConnListColumn::LocalHostName), 140);
+    header->resizeSection(int(ConnListColumn::LocalIp), 80);
+    header->resizeSection(int(ConnListColumn::LocalPort), 60);
+    header->resizeSection(int(ConnListColumn::RemoteHostName), 140);
+    header->resizeSection(int(ConnListColumn::RemoteIp), 100);
+    header->resizeSection(int(ConnListColumn::RemotePort), 70);
+    header->resizeSection(int(ConnListColumn::Direction), 30);
+    header->resizeSection(int(ConnListColumn::Action), 30);
+    header->resizeSection(int(ConnListColumn::Reason), 30);
+    header->resizeSection(int(ConnListColumn::Time), 100);
+
+    // Hidden columns
+    header->setSectionHidden(int(ConnListColumn::Program), /*hide=*/true);
+    header->setSectionHidden(int(ConnListColumn::LocalHostName), /*hide=*/true);
 }
 
 void ProgramEditDialog::updateZonesRulesLayout()

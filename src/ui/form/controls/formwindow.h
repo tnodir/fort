@@ -5,6 +5,7 @@
 #include <util/window/widgetwindow.h>
 
 QT_FORWARD_DECLARE_CLASS(QActionGroup)
+QT_FORWARD_DECLARE_CLASS(QBoxLayout)
 QT_FORWARD_DECLARE_CLASS(QButtonGroup)
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)

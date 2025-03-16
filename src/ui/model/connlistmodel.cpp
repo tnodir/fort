@@ -195,14 +195,6 @@ static const dataDisplay_func dataDisplay_funcList[] = {
 
 ConnListModel::ConnListModel(QObject *parent) : TableSqlModel(parent) { }
 
-void ConnListModel::setResolveAddress(bool v)
-{
-    if (m_resolveAddress != v) {
-        m_resolveAddress = v;
-        refresh();
-    }
-}
-
 FortManager *ConnListModel::fortManager() const
 {
     return IoC<FortManager>();
@@ -231,7 +223,7 @@ HostInfoCache *ConnListModel::hostInfoCache() const
 void ConnListModel::initialize()
 {
     setSortColumn(int(ConnListColumn::Time));
-    setSortOrder(Qt::AscendingOrder);
+    setSortOrder(Qt::DescendingOrder);
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &ConnListModel::refresh);
     connect(hostInfoCache(), &HostInfoCache::cacheChanged, this, &ConnListModel::refresh);
@@ -383,15 +375,11 @@ void ConnListModel::updateConnIdRange()
     const qint64 oldIdMin = connIdMin();
     const qint64 oldIdMax = connIdMax();
 
-    qint64 idMin, idMax;
-    statConnManager()->getConnIdRange(sqliteDb(), idMin, idMax);
+    qint64 idMin = 0, idMax = 0;
+    fillConnIdRange(idMin, idMax);
 
     if (idMin == oldIdMin && idMax == oldIdMax)
         return;
-
-    if (idMax == 0) {
-        hostInfoCache()->clear();
-    }
 
     updateConnRows(oldIdMin, oldIdMax, idMin, idMax);
 }
@@ -431,6 +419,11 @@ bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
     m_connRow.appPath = stmt.columnText(17);
 
     return true;
+}
+
+void ConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
+{
+    statConnManager()->getConnIdRange(sqliteDb(), idMin, idMax);
 }
 
 qint64 ConnListModel::connIdByIndex(int row) const
@@ -502,8 +495,9 @@ void ConnListModel::updateConnRows(qint64 oldIdMin, qint64 oldIdMax, qint64 idMi
 
 void ConnListModel::resetConnRows(qint64 idMin, qint64 idMax)
 {
-    m_connIdMin = idMin;
-    m_connIdMax = idMax;
+    setConnIdMin(idMin);
+    setConnIdMax(idMax);
+
     reset();
 }
 

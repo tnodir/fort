@@ -147,6 +147,7 @@ SOURCES += \
     manager/servicemanager.cpp \
     manager/translationmanager.cpp \
     manager/windowmanager.cpp \
+    model/appconnlistmodel.cpp \
     model/applistmodel.cpp \
     model/applistmodeldata.cpp \
     model/applistmodelheaderdata.cpp \
@@ -401,6 +402,7 @@ HEADERS += \
     manager/servicemanager.h \
     manager/translationmanager.h \
     manager/windowmanager.h \
+    model/appconnlistmodel.h \
     model/applistcolumn.h \
     model/applistmodel.h \
     model/applistmodeldata.h \

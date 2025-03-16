@@ -485,9 +485,9 @@ void ProgramsWindow::setupTableAppsHeader()
     header->resizeSection(int(AppListColumn::Group), 100);
     header->resizeSection(int(AppListColumn::FilePath), 270);
     header->resizeSection(int(AppListColumn::CreationTime), 130);
-    // Hidden columns
     header->resizeSection(int(AppListColumn::Notes), 200);
 
+    // Hidden columns
     header->setSectionHidden(int(AppListColumn::Notes), /*hide=*/true);
 
     header->setSectionsMovable(true);

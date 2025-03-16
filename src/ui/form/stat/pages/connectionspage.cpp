@@ -16,7 +16,6 @@
 #include <form/stat/statisticscontroller.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
-#include <model/connlistcolumn.h>
 #include <model/connlistmodel.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
@@ -259,7 +258,7 @@ void ConnectionsPage::setupTableConnListHeader()
     header->setSectionsMovable(true);
     header->setSectionsClickable(true);
     header->setSortIndicatorShown(true);
-    header->setSortIndicator(int(ConnListColumn::Time), Qt::AscendingOrder);
+    header->setSortIndicator(int(ConnListColumn::Time), Qt::DescendingOrder);
 
     connect(header, &QHeaderView::sortIndicatorChanged, this,
             &ConnectionsPage::onTableConnSortClicked);
@@ -395,6 +394,7 @@ void ConnectionsPage::updateAutoScroll()
 void ConnectionsPage::updateShowHostNames()
 {
     connListModel()->setResolveAddress(iniUser()->statShowHostNames());
+    connListModel()->refresh();
 }
 
 void ConnectionsPage::deleteConn(int row)
