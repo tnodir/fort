@@ -704,6 +704,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_sets(PCFORT_CONF_RULES_RT ru
         const UINT16 rule_id = rule_ids[i];
 
         if (fort_conf_rules_rt_conn_filtered(rules_rt, conn, rule_id) || !conn->blocked) {
+            conn->rule_id = rule_id;
             return TRUE;
         }
     }

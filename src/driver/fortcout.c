@@ -282,7 +282,9 @@ inline static BOOL fort_callout_ale_conn_rule_filtered(
         return FALSE;
 
     if (fort_devconf_rules_conn_filtered(&fort_device()->conf, conn, rule_id)) {
-        conn->rule_id = rule_id;
+        if (conn->rule_id == 0) {
+            conn->rule_id = rule_id;
+        }
         conn->reason = reason;
         return TRUE;
     }
