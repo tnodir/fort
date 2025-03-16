@@ -134,11 +134,11 @@
     </message>
     <message>
         <source>Allowed Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>許可されたゾーン :</translation>
     </message>
     <message>
         <source>Blocked Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>ブロックされたゾーン :</translation>
     </message>
 </context>
 <context>
@@ -1329,11 +1329,11 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>フィルターオフ秒 :</translation>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation type="unfinished"></translation>
+        <translation>自動学習オフで警告されたプログラムを削除</translation>
     </message>
 </context>
 <context>
@@ -1744,11 +1744,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Remove Alerted Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>警告されたプログラムを削除する</translation>
     </message>
     <message>
         <source>Are you sure to remove alerted programs?</source>
-        <translation type="unfinished"></translation>
+        <translation>警告されたプログラムを本当に削除しますか?</translation>
     </message>
 </context>
 <context>
