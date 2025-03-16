@@ -196,7 +196,9 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
         if (NT_SUCCESS(status)) {
             switch (log_type) {
             case FORT_BUFFER_CONN_WRITE_APP: {
-                fort_log_app_write(out, conn->blocked, conn->process_id, &log_path);
+                const BOOL blocked = conn->app_data.flags.blocked;
+
+                fort_log_app_write(out, blocked, conn->process_id, &log_path);
             } break;
             case FORT_BUFFER_CONN_WRITE_CONN: {
                 fort_log_conn_write(out, conn, &log_path);
