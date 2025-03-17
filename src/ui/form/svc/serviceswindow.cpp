@@ -179,7 +179,7 @@ QLayout *ServicesWindow::setupHeader()
 
         const QString appPath = QStringLiteral(R"(\SvcHost\)") + serviceInfo.serviceName;
 
-        windowManager()->showProgramEditForm(appPath);
+        windowManager()->openProgramEditForm(appPath, this);
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");

@@ -44,7 +44,7 @@ public:
     ProgramAlertWindow *progAlertWindow() const { return m_progAlertWindow; }
     RulesWindow *rulesWindow() const { return m_rulesWindow; }
     OptionsWindow *optWindow() const { return m_optWindow; }
-    StatisticsWindow *connWindow() const { return m_statWindow; }
+    StatisticsWindow *statWindow() const { return m_statWindow; }
     ServicesWindow *servicesWindow() const { return m_servicesWindow; }
     ZonesWindow *zonesWindow() const { return m_zonesWindow; }
     GraphWindow *graphWindow() const { return m_graphWindow; }
@@ -84,6 +84,7 @@ public slots:
     void closeProgramsWindow();
 
     virtual bool showProgramEditForm(const QString &appPath);
+    void openProgramEditForm(const QString &appPath, FormWindow *parentForm);
 
     void showProgramAlertWindow(bool activate = true);
     void closeProgramAlertWindow();

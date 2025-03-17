@@ -7,10 +7,10 @@
 #include <util/guiutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
-#include "programscontroller.h"
+#include "programeditcontroller.h"
 
 ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) :
-    ProgramEditDialog(new ProgramsController(/*this*/), parent)
+    ProgramEditDialog(new ProgramEditController(/*this*/), parent)
 {
     setupUi();
     setupController();
@@ -59,7 +59,6 @@ void ProgramAlertWindow::closeOnSave()
 void ProgramAlertWindow::setupController()
 {
     ctrl()->setParent(this); // can't set in ctor, because the widget isn't yet fully constructed
-    ctrl()->initialize();
 }
 
 void ProgramAlertWindow::retranslateWindowTitle()

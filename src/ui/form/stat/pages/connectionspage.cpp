@@ -14,6 +14,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/stat/statisticscontroller.h>
+#include <form/stat/statisticswindow.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <model/connlistmodel.h>
@@ -132,7 +133,7 @@ QLayout *ConnectionsPage::setupHeader()
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
         const auto appPath = connListCurrentPath();
         if (!appPath.isEmpty()) {
-            windowManager()->showProgramEditForm(appPath);
+            windowManager()->openProgramEditForm(appPath, windowManager()->statWindow());
         }
     });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {

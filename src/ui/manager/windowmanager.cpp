@@ -380,6 +380,11 @@ bool WindowManager::showProgramEditForm(const QString &appPath)
     return true;
 }
 
+void WindowManager::openProgramEditForm(const QString &appPath, FormWindow *parentForm)
+{
+    ProgramsWindow::openProgramByPath(appPath, parentForm);
+}
+
 void WindowManager::showProgramAlertWindow(bool activate)
 {
     if (!checkWindowPassword(WindowProgramAlert))

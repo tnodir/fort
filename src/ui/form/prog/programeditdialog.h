@@ -1,8 +1,8 @@
 #ifndef PROGRAMEDITDIALOG_H
 #define PROGRAMEDITDIALOG_H
 
-#include <form/controls/formwindow.h>
 #include <conf/app.h>
+#include <form/controls/formwindow.h>
 
 class AppConnListModel;
 class AppListModel;
@@ -14,7 +14,7 @@ class FortManager;
 class IniUser;
 class LineEdit;
 class PlainTextEdit;
-class ProgramsController;
+class ProgramEditController;
 class SpinCombo;
 class TableView;
 class WindowManager;
@@ -26,9 +26,9 @@ class ProgramEditDialog : public FormWindow
 
 public:
     explicit ProgramEditDialog(
-            ProgramsController *ctrl, QWidget *parent = nullptr, Qt::WindowFlags f = {});
+            ProgramEditController *ctrl, QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
-    ProgramsController *ctrl() const { return m_ctrl; }
+    ProgramEditController *ctrl() const { return m_ctrl; }
     FortManager *fortManager() const;
     ConfAppManager *confAppManager() const;
     ConfRuleManager *confRuleManager() const;
@@ -36,7 +36,6 @@ public:
     FirewallConf *conf() const;
     IniUser *iniUser() const;
     WindowManager *windowManager() const;
-    AppListModel *appListModel() const;
     AppConnListModel *appConnListModel() const { return m_appConnListModel; }
 
     bool isWildcard() const { return m_isWildcard; }
@@ -156,7 +155,7 @@ private:
 
     quint16 m_currentRuleId = 0;
 
-    ProgramsController *m_ctrl = nullptr;
+    ProgramEditController *m_ctrl = nullptr;
     AppConnListModel *m_appConnListModel = nullptr;
 
     QLabel *m_labelEditPath = nullptr;

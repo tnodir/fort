@@ -19,7 +19,7 @@ void showErrorMessage(const QString &errorMessage)
 }
 
 ProgramsController::ProgramsController(QObject *parent) :
-    BaseController(parent), m_appListModel(new AppListModel(this))
+    ProgramEditController(parent), m_appListModel(new AppListModel(this))
 {
 }
 
@@ -31,21 +31,6 @@ AppInfoCache *ProgramsController::appInfoCache() const
 void ProgramsController::initialize()
 {
     appListModel()->initialize();
-}
-
-bool ProgramsController::addOrUpdateApp(App &app, bool onlyUpdate)
-{
-    return confAppManager()->addOrUpdateApp(app, onlyUpdate);
-}
-
-bool ProgramsController::updateApp(App &app)
-{
-    return confAppManager()->updateApp(app);
-}
-
-bool ProgramsController::updateAppName(qint64 appId, const QString &appName)
-{
-    return confAppManager()->updateAppName(appId, appName);
 }
 
 void ProgramsController::updateAppsBlocked(

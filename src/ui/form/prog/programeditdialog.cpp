@@ -44,7 +44,7 @@
 #include <util/textareautil.h>
 #include <util/variantutil.h>
 
-#include "programscontroller.h"
+#include "programeditcontroller.h"
 
 namespace {
 
@@ -60,7 +60,8 @@ enum ScheduleType : qint8 {
     ScheduleTimeAt,
 };
 
-ProgramEditDialog::ProgramEditDialog(ProgramsController *ctrl, QWidget *parent, Qt::WindowFlags f) :
+ProgramEditDialog::ProgramEditDialog(
+        ProgramEditController *ctrl, QWidget *parent, Qt::WindowFlags f) :
     FormWindow(parent, (f == Qt::Widget ? Qt::Dialog : f)), m_ctrl(ctrl)
 {
     setupUi();
@@ -101,11 +102,6 @@ IniUser *ProgramEditDialog::iniUser() const
 WindowManager *ProgramEditDialog::windowManager() const
 {
     return ctrl()->windowManager();
-}
-
-AppListModel *ProgramEditDialog::appListModel() const
-{
-    return ctrl()->appListModel();
 }
 
 void ProgramEditDialog::initialize(const App &app, const QVector<qint64> &appIdList)
@@ -243,7 +239,7 @@ void ProgramEditDialog::setAdvancedMode(bool on)
 
 void ProgramEditDialog::setupController()
 {
-    connect(ctrl(), &ProgramsController::retranslateUi, this, &ProgramEditDialog::retranslateUi);
+    connect(ctrl(), &ProgramEditController::retranslateUi, this, &ProgramEditDialog::retranslateUi);
 }
 
 void ProgramEditDialog::setupRuleManager()

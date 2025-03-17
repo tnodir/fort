@@ -17,6 +17,7 @@ class FirewallConf;
 class FortSettings;
 class IniOptions;
 class IniUser;
+class ProgramEditController;
 class ProgramEditDialog;
 class ProgramsController;
 class TableView;
@@ -49,6 +50,8 @@ public:
     void restoreWindowState() override;
 
     bool editProgramByPath(const QString &appPath);
+
+    static void openProgramByPath(const QString &appPath, FormWindow *parentForm);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
@@ -84,8 +87,19 @@ private:
     void convertToWildcard();
     void editSelectedPrograms();
 
-    void openAppEditForm(const App &app, const QVector<qint64> &appIdList = {});
     bool checkAppEditFormOpened() const;
+    void openAppEditForm(const App &app, const QVector<qint64> &appIdList = {});
+
+    struct OpenAppEditDialogArgs
+    {
+        const App &app;
+        const QVector<qint64> &appIdList;
+        ProgramEditController *ctrl;
+        FormWindow *parentForm;
+        ProgramEditDialog *&dialog;
+    };
+
+    static void openAppEditDialog(const OpenAppEditDialogArgs &a);
 
     void updateSelectedApps(bool blocked, bool killProcess = false);
     void deleteSelectedApps();

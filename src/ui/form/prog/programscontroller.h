@@ -1,13 +1,12 @@
 #ifndef PROGRAMSCONTROLLER_H
 #define PROGRAMSCONTROLLER_H
 
-#include <form/basecontroller.h>
+#include "programeditcontroller.h"
 
-class App;
 class AppInfoCache;
 class AppListModel;
 
-class ProgramsController : public BaseController
+class ProgramsController : public ProgramEditController
 {
     Q_OBJECT
 
@@ -20,9 +19,6 @@ public:
     void initialize();
 
 public slots:
-    bool addOrUpdateApp(App &app, bool onlyUpdate = false);
-    bool updateApp(App &app);
-    bool updateAppName(qint64 appId, const QString &appName);
     void updateAppsBlocked(const QVector<qint64> &appIdList, bool blocked, bool killProcess);
     void deleteApps(const QVector<qint64> &appIdList);
     void deleteAlertedApps();

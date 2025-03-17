@@ -637,6 +637,29 @@ bool ProgramsWindow::editProgramByPath(const QString &appPath)
     return true;
 }
 
+void ProgramsWindow::openProgramByPath(const QString &appPath, FormWindow *parentForm)
+{
+    ProgramEditDialog *formAppEdit = nullptr;
+
+    auto ctrl = new ProgramEditController();
+
+    const auto app = ctrl->confAppManager()->appByPath(appPath);
+
+    const OpenAppEditDialogArgs a = {
+        .app = app,
+        .appIdList = {},
+        .ctrl = ctrl,
+        .parentForm = parentForm,
+        .dialog = formAppEdit,
+    };
+
+    openAppEditDialog(a);
+
+    ctrl->setParent(formAppEdit);
+
+    ControlUtil::deleteOnClose(formAppEdit);
+}
+
 void ProgramsWindow::dragEnterEvent(QDragEnterEvent *event)
 {
     if (event->mimeData()->hasFormat("text/uri-list")) {
@@ -704,21 +727,6 @@ void ProgramsWindow::editSelectedPrograms()
     openAppEditForm(appRow, appIdList);
 }
 
-void ProgramsWindow::openAppEditForm(const App &app, const QVector<qint64> &appIdList)
-{
-    if (!m_formAppEdit) {
-        m_formAppEdit = new ProgramEditDialog(ctrl(), this);
-
-        m_formAppEdit->setExcludeFromCapture(this->excludeFromCapture());
-    }
-
-    m_formAppEdit->initialize(app, appIdList);
-
-    WidgetWindow::showWidget(m_formAppEdit);
-
-    m_formAppEdit->centerTo(this);
-}
-
 bool ProgramsWindow::checkAppEditFormOpened() const
 {
     if (m_formAppEdit && m_formAppEdit->isVisible()) {
@@ -726,6 +734,34 @@ bool ProgramsWindow::checkAppEditFormOpened() const
         return true;
     }
     return false;
+}
+
+void ProgramsWindow::openAppEditForm(const App &app, const QVector<qint64> &appIdList)
+{
+    const OpenAppEditDialogArgs a = {
+        .app = app,
+        .appIdList = appIdList,
+        .ctrl = ctrl(),
+        .parentForm = this,
+        .dialog = m_formAppEdit,
+    };
+
+    openAppEditDialog(a);
+}
+
+void ProgramsWindow::openAppEditDialog(const OpenAppEditDialogArgs &a)
+{
+    if (!a.dialog) {
+        a.dialog = new ProgramEditDialog(a.ctrl, a.parentForm);
+
+        a.dialog->setExcludeFromCapture(a.parentForm->excludeFromCapture());
+    }
+
+    a.dialog->initialize(a.app, a.appIdList);
+
+    WidgetWindow::showWidget(a.dialog);
+
+    a.dialog->centerTo(a.parentForm);
 }
 
 void ProgramsWindow::updateSelectedApps(bool blocked, bool killProcess)
