@@ -119,7 +119,7 @@ void TableView::currentChanged(const QModelIndex &current, const QModelIndex &pr
 
 void TableView::contextMenuEvent(QContextMenuEvent *event)
 {
-    if (m_menu) {
-        m_menu->popup(event->globalPos());
+    if (menu()) {
+        menu()->popup(event->globalPos());
     }
 }

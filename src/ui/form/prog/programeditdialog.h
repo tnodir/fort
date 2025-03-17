@@ -78,6 +78,7 @@ private:
     void retranslateScheduleIn();
     void retranslateTimedMenuActions();
     void retranslateTimedAction(QToolButton *bt);
+    void retranslateTableConnListMenu();
     virtual void retranslateWindowTitle();
 
     void setupUi();
@@ -111,6 +112,7 @@ private:
     void closeConnectionsMenuLayout();
     void setupConnectionsModel();
     void setupTableConnList();
+    void setupTableConnListMenu();
     void setupTableConnListHeader();
 
     void updateZonesRulesLayout();
@@ -203,6 +205,8 @@ private:
     QPushButton *m_btConnections = nullptr;
     QBoxLayout *m_connectionsLayout = nullptr;
     TableView *m_connListView = nullptr;
+    QAction *m_actCopyAsFilter = nullptr;
+    QAction *m_actCopy = nullptr;
 
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;

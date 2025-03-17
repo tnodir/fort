@@ -402,6 +402,12 @@ void ProgramEditDialog::retranslateTimedAction(QToolButton *bt)
     bt->setText(text);
 }
 
+void ProgramEditDialog::retranslateTableConnListMenu()
+{
+    m_actCopyAsFilter->setText(tr("Copy as Filter"));
+    m_actCopy->setText(tr("Copy"));
+}
+
 void ProgramEditDialog::retranslateWindowTitle()
 {
     this->setWindowTitle(isWildcard() ? tr("Edit Wildcard") : tr("Edit Program"));
@@ -983,6 +989,8 @@ void ProgramEditDialog::setupConnectionsMenuLayout()
     setupTableConnList();
     setupTableConnListHeader();
 
+    retranslateTableConnListMenu();
+
     m_connListView->setFixedWidth(800);
 
     m_connectionsLayout->addWidget(m_connListView);
@@ -1011,6 +1019,29 @@ void ProgramEditDialog::setupTableConnList()
     m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
 
     m_connListView->setModel(appConnListModel());
+
+    setupTableConnListMenu();
+}
+
+void ProgramEditDialog::setupTableConnListMenu()
+{
+    auto menu = ControlUtil::createMenu(m_connListView);
+
+    m_actCopyAsFilter = menu->addAction(IconCache::icon(":/icons/script.png"), QString());
+
+    m_actCopy = menu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
+    m_actCopy->setShortcut(Qt::Key_Copy);
+
+    connect(m_actCopyAsFilter, &QAction::triggered, this, [&] {
+        const auto rows = m_connListView->selectedRows();
+        const auto text = appConnListModel()->rowsAsFilter(rows);
+
+        GuiUtil::setClipboardData(text);
+    });
+    connect(m_actCopy, &QAction::triggered, this,
+            [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
+
+    m_connListView->setMenu(menu);
 }
 
 void ProgramEditDialog::setupTableConnListHeader()
