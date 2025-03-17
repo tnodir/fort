@@ -1335,6 +1335,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <source>Remove alerted programs on Auto-Learn Off</source>
         <translation>Retirer les programmes en alerte lors de la désactivation de l&apos;auto-apprentissage</translation>
     </message>
+    <message>
+        <source>Trace Driver Events</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1627,6 +1631,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>%1 minute(s)</source>
         <translation>%1 minute(s)</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Connexions</translation>
     </message>
 </context>
 <context>

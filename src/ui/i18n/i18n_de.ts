@@ -503,7 +503,7 @@
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished">Letzte Spalte strecken</translation>
+        <translation>Letzte Spalte strecken</translation>
     </message>
 </context>
 <context>
@@ -1335,6 +1335,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Remove alerted programs on Auto-Learn Off</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Trace Driver Events</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1627,6 +1631,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>%1 minute(s)</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Verbindungen</translation>
     </message>
 </context>
 <context>

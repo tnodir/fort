@@ -448,11 +448,11 @@
     </message>
     <message>
         <source>Remote IP</source>
-        <translation>Локал. IP</translation>
+        <translation>Удал. IP</translation>
     </message>
     <message>
         <source>Remote Port</source>
-        <translation>Локал. порт</translation>
+        <translation>Удал. порт</translation>
     </message>
 </context>
 <context>
@@ -1335,6 +1335,10 @@ Make sure that you have a fresh backup.</source>
         <source>Remove alerted programs on Auto-Learn Off</source>
         <translation>Удалить оповещённые программы при отключении Авто-обучения</translation>
     </message>
+    <message>
+        <source>Trace Driver Events</source>
+        <translation>Трассировка событий драйвера</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1627,6 +1631,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>%1 minute(s)</source>
         <translation>%1 минут(ы)</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Соединения</translation>
     </message>
 </context>
 <context>

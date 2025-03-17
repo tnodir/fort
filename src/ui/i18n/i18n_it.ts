@@ -1335,6 +1335,10 @@ Assicurati di avere un nuovo backup.</translation>
         <source>Remove alerted programs on Auto-Learn Off</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Trace Driver Events</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1627,6 +1631,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>%1 minute(s)</source>
         <translation>%1 minuto/i</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

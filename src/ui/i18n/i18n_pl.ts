@@ -1335,6 +1335,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source>Remove alerted programs on Auto-Learn Off</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Trace Driver Events</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1626,6 +1630,10 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>%1 minute(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connections</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

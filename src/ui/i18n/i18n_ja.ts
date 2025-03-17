@@ -1335,6 +1335,10 @@ Make sure that you have a fresh backup.</source>
         <source>Remove alerted programs on Auto-Learn Off</source>
         <translation>自動学習オフで警告されたプログラムを削除</translation>
     </message>
+    <message>
+        <source>Trace Driver Events</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1627,6 +1631,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>%1 minute(s)</source>
         <translation>%1 分</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>接続</translation>
     </message>
 </context>
 <context>

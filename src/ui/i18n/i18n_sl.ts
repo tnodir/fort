@@ -1335,6 +1335,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Remove alerted programs on Auto-Learn Off</source>
         <translation>Odstranite opozorjene programe pri izklopu samodejnega učenja</translation>
     </message>
+    <message>
+        <source>Trace Driver Events</source>
+        <translation>Sledenje dogodkom gonilnikov</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1627,6 +1631,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>%1 minute(s)</source>
         <translation>%1 minut(a)</translation>
+    </message>
+    <message>
+        <source>Connections</source>
+        <translation>Povezave</translation>
     </message>
 </context>
 <context>

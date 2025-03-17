@@ -1333,6 +1333,10 @@ Make sure that you have a fresh backup.</source>
         <source>Remove alerted programs on Auto-Learn Off</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Trace Driver Events</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1616,7 +1620,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Options</source>
-        <translation type="unfinished">Opções</translation>
+        <translation>Opções</translation>
     </message>
     <message>
         <source>3 hours</source>
@@ -1624,6 +1628,10 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>%1 minute(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Connections</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
