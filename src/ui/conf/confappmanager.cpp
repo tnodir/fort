@@ -297,6 +297,26 @@ void ConfAppManager::logApp(const LogEntryApp &logEntry)
     addApp(app);
 }
 
+App ConfAppManager::appById(qint64 appId)
+{
+    App app;
+    loadAppById(app, appId);
+    return app;
+}
+
+App ConfAppManager::appByPath(const QString &appPath)
+{
+    QString normPath;
+    const qint64 appId = appIdByPath(appPath, normPath);
+
+    App app;
+    if (!loadAppById(app, appId)) {
+        app.appOriginPath = appPath;
+        app.appPath = normPath;
+    }
+    return app;
+}
+
 qint64 ConfAppManager::appIdByPath(const QString &appOriginPath, QString &normPath)
 {
     normPath = FileUtil::normalizePath(appOriginPath);
@@ -507,8 +527,7 @@ bool ConfAppManager::updateAppBlocked(
         qint64 appId, bool blocked, bool killProcess, bool &isWildcard)
 {
     App app;
-    app.appId = appId;
-    if (!loadAppById(app))
+    if (!loadAppById(app, appId))
         return false;
 
     if (!checkAppBlockedChanged(app, blocked, killProcess))
@@ -722,14 +741,10 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     return true;
 }
 
-bool ConfAppManager::loadAppById(App &app)
+bool ConfAppManager::loadAppById(App &app, qint64 appId)
 {
     SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectAppById).prepare(stmt))
-        return false;
-
-    stmt.bindInt64(1, app.appId);
-    if (stmt.step() != SqliteStmt::StepRow)
+    if (!DbQuery(sqliteDb()).sql(sqlSelectAppById).vars({ appId }).prepareRow(stmt))
         return false;
 
     fillApp(app, stmt);

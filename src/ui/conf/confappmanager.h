@@ -28,6 +28,9 @@ public:
 
     void logApp(const LogEntryApp &logEntry);
 
+    App appById(qint64 appId);
+    App appByPath(const QString &appPath);
+
     qint64 appIdByPath(const QString &appOriginPath, QString &normPath);
 
     virtual bool addOrUpdateAppPath(const QString &appOriginPath, bool blocked, bool killProcess);
@@ -84,7 +87,7 @@ private:
     void emitAppsChanged();
     void emitAppUpdated();
 
-    bool loadAppById(App &app);
+    bool loadAppById(App &app, qint64 appId);
     static void fillApp(App &app, const SqliteStmt &stmt);
 
     bool updateDriverDeleteApp(const QString &appPath);

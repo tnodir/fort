@@ -16,6 +16,7 @@
 
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
+#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
 #include <conf/firewallconf.h>
@@ -31,6 +32,7 @@
 #include <fortmanager.h>
 #include <manager/windowmanager.h>
 #include <model/appconnlistmodel.h>
+#include <model/applistmodel.h>
 #include <model/rulelistmodel.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
@@ -106,12 +108,12 @@ AppListModel *ProgramEditDialog::appListModel() const
     return ctrl()->appListModel();
 }
 
-void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &appIdList)
+void ProgramEditDialog::initialize(const App &app, const QVector<qint64> &appIdList)
 {
     const bool isSingleSelection = (appIdList.size() <= 1);
 
-    m_isWildcard = appRow.isWildcard;
-    m_appRow = appRow;
+    m_isWildcard = app.isWildcard;
+    m_app = app;
     m_appIdList = appIdList;
 
     retranslateUi();
@@ -119,31 +121,31 @@ void ProgramEditDialog::initialize(const AppRow &appRow, const QVector<qint64> &
     initializePathNameRuleFields(isSingleSelection);
 
     updateApplyChild();
-    m_comboAppGroup->setCurrentIndex(appRow.groupIndex);
+    m_comboAppGroup->setCurrentIndex(app.groupIndex);
 
-    m_rbAllow->setChecked(!appRow.blocked);
-    m_rbBlock->setChecked(appRow.blocked);
-    m_rbKillProcess->setChecked(appRow.killProcess);
+    m_rbAllow->setChecked(!app.blocked);
+    m_rbBlock->setChecked(app.blocked);
+    m_rbKillProcess->setChecked(app.killProcess);
 
-    m_cbKillChild->setChecked(appRow.killChild);
+    m_cbKillChild->setChecked(app.killChild);
 
-    m_cbParked->setChecked(appRow.parked);
-    m_cbLogAllowedConn->setChecked(appRow.logAllowedConn);
-    m_cbLogBlockedConn->setChecked(appRow.logBlockedConn);
+    m_cbParked->setChecked(app.parked);
+    m_cbLogAllowedConn->setChecked(app.logAllowedConn);
+    m_cbLogBlockedConn->setChecked(app.logBlockedConn);
 
-    m_cbLanOnly->setChecked(appRow.lanOnly);
-    m_btZones->setZones(appRow.zones.accept_mask);
-    m_btZones->setUncheckedZones(appRow.zones.reject_mask);
+    m_cbLanOnly->setChecked(app.lanOnly);
+    m_btZones->setZones(app.zones.accept_mask);
+    m_btZones->setUncheckedZones(app.zones.reject_mask);
     updateZonesRulesLayout();
 
-    const bool hasScheduleTime = !appRow.scheduleTime.isNull();
+    const bool hasScheduleTime = !app.scheduleTime.isNull();
     const ScheduleType scheduleType = hasScheduleTime ? ScheduleTimeAt : ScheduleTimeIn;
 
     m_cbSchedule->setChecked(hasScheduleTime);
-    m_comboScheduleAction->setCurrentIndex(appRow.scheduleAction);
+    m_comboScheduleAction->setCurrentIndex(app.scheduleAction);
     m_comboScheduleType->setCurrentIndex(scheduleType);
     m_scScheduleIn->spinBox()->setValue(5);
-    m_dteScheduleAt->setDateTime(appRow.scheduleTime);
+    m_dteScheduleAt->setDateTime(app.scheduleTime);
     m_dteScheduleAt->setMinimumDateTime(DateUtil::now());
 
     m_btSwitchWildcard->setChecked(isWildcard());
@@ -168,10 +170,10 @@ void ProgramEditDialog::initializePathField(bool isSingleSelection)
     m_editPath->setReadOnly(!isPathEditable);
     m_editPath->setClearButtonEnabled(isPathEditable);
 
-    m_editPath->setText(isSingleSelection && !isWildcard() ? m_appRow.appOriginPath : QString());
+    m_editPath->setText(isSingleSelection && !isWildcard() ? m_app.appOriginPath : QString());
     m_editPath->setEnabled(isSingleSelection);
 
-    m_editWildcard->setText(isSingleSelection && isWildcard() ? m_appRow.appOriginPath : QString());
+    m_editWildcard->setText(isSingleSelection && isWildcard() ? m_app.appOriginPath : QString());
     m_editWildcard->setEnabled(isSingleSelection);
 
     m_btSelectFile->setEnabled(isSingleSelection);
@@ -179,17 +181,17 @@ void ProgramEditDialog::initializePathField(bool isSingleSelection)
 
 void ProgramEditDialog::initializeNameField(bool isSingleSelection)
 {
-    m_editName->setStartText(isSingleSelection ? m_appRow.appName : QString());
+    m_editName->setStartText(isSingleSelection ? m_app.appName : QString());
     m_editName->setEnabled(isSingleSelection);
     m_editName->setClearButtonEnabled(isSingleSelection);
 
     m_btGetName->setEnabled(isSingleSelection);
 
-    m_editNotes->setText(m_appRow.notes);
+    m_editNotes->setText(m_app.notes);
     m_editNotes->setEnabled(isSingleSelection);
 
     if (isSingleSelection) {
-        if (m_appRow.appName.isEmpty()) {
+        if (m_app.appName.isEmpty()) {
             fillEditName(); // Auto-fill the name
         }
     }
@@ -197,9 +199,9 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection)
 
 void ProgramEditDialog::initializeRuleField(bool isSingleSelection)
 {
-    setCurrentRuleId(m_appRow.ruleId);
+    setCurrentRuleId(m_app.ruleId);
 
-    m_editRuleName->setStartText(isSingleSelection ? m_appRow.ruleName : QString());
+    m_editRuleName->setStartText(isSingleSelection ? m_app.ruleName : QString());
     m_editRuleName->setEnabled(isSingleSelection);
     m_editRuleName->setClearButtonEnabled(isSingleSelection);
 
@@ -226,7 +228,7 @@ QIcon ProgramEditDialog::appIcon(bool isSingleSelection) const
         return IconCache::icon(":/icons/coding.png");
     }
 
-    return IoC<AppInfoCache>()->appIcon(m_appRow.appPath);
+    return IoC<AppInfoCache>()->appIcon(m_app.appPath);
 }
 
 void ProgramEditDialog::closeOnSave()
@@ -560,7 +562,7 @@ QLayout *ProgramEditDialog::setupApplyChildGroupLayout()
     m_comboApplyChild =
             ControlUtil::createComboBox({}, [&](int /*index*/) { warnRestartNeededOption(); });
     m_comboApplyChild->setMinimumWidth(120);
-    m_comboApplyChild->setMaximumWidth(150);
+    m_comboApplyChild->setMaximumWidth(200);
 
     setupCbApplyChild();
 
@@ -1001,7 +1003,7 @@ void ProgramEditDialog::setupConnectionsModel()
 {
     m_appConnListModel = new AppConnListModel(this);
 
-    appConnListModel()->setAppPath(m_appRow.appPath);
+    appConnListModel()->setAppPath(m_app.appPath);
     appConnListModel()->setResolveAddress(true);
     appConnListModel()->initialize();
 }
@@ -1069,10 +1071,10 @@ void ProgramEditDialog::updateZonesRulesLayout()
 
 void ProgramEditDialog::updateApplyChild()
 {
-    const ApplyChildType type = m_appRow.applyParent ? ApplyChildType::FromParent
-            : m_appRow.applySpecChild                ? ApplyChildType::ToSpecChild
-            : m_appRow.applyChild                    ? ApplyChildType::ToChild
-                                                     : ApplyChildType::Invalid;
+    const ApplyChildType type = m_app.applyParent ? ApplyChildType::FromParent
+            : m_app.applySpecChild                ? ApplyChildType::ToSpecChild
+            : m_app.applyChild                    ? ApplyChildType::ToChild
+                                                  : ApplyChildType::Invalid;
     const bool hasApplyChild = (type != ApplyChildType::Invalid);
 
     m_cbApplyChild->setChecked(hasApplyChild);
@@ -1194,14 +1196,14 @@ bool ProgramEditDialog::save()
 
 bool ProgramEditDialog::saveApp(App &app)
 {
-    if (!app.isOptionsEqual(m_appRow)) {
-        app.appId = m_appRow.appId;
+    if (!app.isOptionsEqual(m_app)) {
+        app.appId = m_app.appId;
 
         return ctrl()->updateApp(app);
     }
 
-    if (!app.isNameEqual(m_appRow)) {
-        return ctrl()->updateAppName(m_appRow.appId, app.appName);
+    if (!app.isNameEqual(m_app)) {
+        return ctrl()->updateAppName(m_app.appId, app.appName);
     }
 
     return true;
@@ -1210,7 +1212,7 @@ bool ProgramEditDialog::saveApp(App &app)
 bool ProgramEditDialog::saveMulti(App &app)
 {
     for (qint64 appId : std::as_const(m_appIdList)) {
-        const auto appRow = appListModel()->appRowById(appId);
+        const auto appRow = confAppManager()->appById(appId);
 
         app.appId = appId;
         app.appOriginPath = appRow.appOriginPath;

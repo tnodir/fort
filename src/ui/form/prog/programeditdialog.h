@@ -2,9 +2,10 @@
 #define PROGRAMEDITDIALOG_H
 
 #include <form/controls/formwindow.h>
-#include <model/applistmodel.h>
+#include <conf/app.h>
 
 class AppConnListModel;
+class AppListModel;
 class ConfAppManager;
 class ConfManager;
 class ConfRuleManager;
@@ -39,9 +40,9 @@ public:
     AppConnListModel *appConnListModel() const { return m_appConnListModel; }
 
     bool isWildcard() const { return m_isWildcard; }
-    bool isNew() const { return m_appRow.appId == 0; }
+    bool isNew() const { return m_app.appId == 0; }
 
-    void initialize(const AppRow &appRow, const QVector<qint64> &appIdList = {});
+    void initialize(const App &app, const QVector<qint64> &appIdList = {});
 
 protected:
     virtual void closeOnSave();
@@ -208,7 +209,7 @@ private:
     QPushButton *m_btCancel = nullptr;
     QPushButton *m_btMenu = nullptr;
 
-    AppRow m_appRow;
+    App m_app;
     QVector<qint64> m_appIdList;
 };
 

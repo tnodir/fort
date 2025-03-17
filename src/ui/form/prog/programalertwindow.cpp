@@ -2,6 +2,7 @@
 
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
+#include <model/applistmodel.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
@@ -27,9 +28,9 @@ bool ProgramAlertWindow::isAutoActive() const
 void ProgramAlertWindow::initialize()
 {
     const qint64 appId = confAppManager()->getAlertAppId();
-    const auto appRow = appListModel()->appRowById(appId);
+    const auto app = confAppManager()->appById(appId);
 
-    ProgramEditDialog::initialize(appRow);
+    ProgramEditDialog::initialize(app);
 }
 
 void ProgramAlertWindow::saveWindowState(bool /*wasVisible*/)

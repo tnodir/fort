@@ -232,29 +232,6 @@ const AppRow &AppListModel::appRowAt(int row) const
     return m_appRow;
 }
 
-AppRow AppListModel::appRowById(qint64 appId) const
-{
-    QVariantHash vars;
-    vars.insert(":app_id", appId);
-
-    AppRow appRow;
-    updateAppRow(sqlBase() + " WHERE t.app_id = :app_id;", vars, appRow);
-    return appRow;
-}
-
-AppRow AppListModel::appRowByPath(const QString &appPath) const
-{
-    QString normPath;
-    const qint64 appId = confAppManager()->appIdByPath(appPath, normPath);
-
-    AppRow appRow = appRowById(appId);
-    if (appRow.appId == 0) {
-        appRow.appOriginPath = appPath;
-        appRow.appPath = normPath;
-    }
-    return appRow;
-}
-
 AppStatesCount AppListModel::appStatesCount() const
 {
     const auto sql = "SELECT"

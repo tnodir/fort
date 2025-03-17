@@ -12,6 +12,7 @@
 #include <QVBoxLayout>
 
 #include <appinfo/appinfocache.h>
+#include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/appinforow.h>
@@ -72,6 +73,11 @@ FortSettings *ProgramsWindow::settings() const
 ConfManager *ProgramsWindow::confManager() const
 {
     return ctrl()->confManager();
+}
+
+ConfAppManager *ProgramsWindow::confAppManager() const
+{
+    return ctrl()->confAppManager();
 }
 
 FirewallConf *ProgramsWindow::conf() const
@@ -625,9 +631,9 @@ bool ProgramsWindow::editProgramByPath(const QString &appPath)
     if (checkAppEditFormOpened())
         return false;
 
-    const auto appRow = appListModel()->appRowByPath(appPath);
+    const auto app = confAppManager()->appByPath(appPath);
 
-    openAppEditForm(appRow);
+    openAppEditForm(app);
     return true;
 }
 
@@ -698,7 +704,7 @@ void ProgramsWindow::editSelectedPrograms()
     openAppEditForm(appRow, appIdList);
 }
 
-void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64> &appIdList)
+void ProgramsWindow::openAppEditForm(const App &app, const QVector<qint64> &appIdList)
 {
     if (!m_formAppEdit) {
         m_formAppEdit = new ProgramEditDialog(ctrl(), this);
@@ -706,7 +712,7 @@ void ProgramsWindow::openAppEditForm(const AppRow &appRow, const QVector<qint64>
         m_formAppEdit->setExcludeFromCapture(this->excludeFromCapture());
     }
 
-    m_formAppEdit->initialize(appRow, appIdList);
+    m_formAppEdit->initialize(app, appIdList);
 
     WidgetWindow::showWidget(m_formAppEdit);
 
@@ -773,10 +779,10 @@ QStringList ProgramsWindow::getAppListNames(const QVector<qint64> &appIdList, in
     const int n = appIdList.size();
     for (int i = 0; i < n;) {
         const qint64 appId = appIdList[i];
-        const auto appRow = appListModel()->appRowById(appId);
+        const auto app = confAppManager()->appById(appId);
 
         ++i;
-        list.append(QString("%1) ").arg(i) + appRow.appName);
+        list.append(QString("%1) ").arg(i) + app.appName);
 
         if (i >= maxCount && i < n) {
             list.append("...");

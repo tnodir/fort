@@ -6,10 +6,12 @@
 QT_FORWARD_DECLARE_CLASS(QHeaderView)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 
+class App;
 class AppInfoCache;
 class AppInfoRow;
 class AppListModel;
 class AppListModel;
+class ConfAppManager;
 class ConfManager;
 class FirewallConf;
 class FortSettings;
@@ -35,6 +37,7 @@ public:
     ProgramsController *ctrl() const { return m_ctrl; }
     FortSettings *settings() const;
     ConfManager *confManager() const;
+    ConfAppManager *confAppManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
@@ -81,7 +84,7 @@ private:
     void convertToWildcard();
     void editSelectedPrograms();
 
-    void openAppEditForm(const AppRow &appRow, const QVector<qint64> &appIdList = {});
+    void openAppEditForm(const App &app, const QVector<qint64> &appIdList = {});
     bool checkAppEditFormOpened() const;
 
     void updateSelectedApps(bool blocked, bool killProcess = false);
