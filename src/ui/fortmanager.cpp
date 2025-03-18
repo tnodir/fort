@@ -14,7 +14,6 @@
 #include <form/dialog/passworddialog.h>
 #include <fortsettings.h>
 #include <hostinfo/hostinfocache.h>
-#include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <manager/hotkeymanager.h>
 #include <manager/logger.h>
@@ -30,6 +29,7 @@
 #include <rpc/confrulemanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
 #include <rpc/dberrormanagerrpc.h>
+#include <rpc/drivelistmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
@@ -76,8 +76,6 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new ServiceInfoManager());
     ioc->setService(new TaskManager());
     ioc->setService(new DbErrorManager());
-
-    // For Master only
     ioc->setService(new DriveListManager());
 }
 
@@ -99,6 +97,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<ServiceInfoManager>(new ServiceInfoManagerRpc());
     ioc->setService<TaskManager>(new TaskManagerRpc());
     ioc->setService<DbErrorManager>(new DbErrorManagerRpc());
+    ioc->setService<DriveListManager>(new DriveListManagerRpc());
 }
 
 inline void setupServices(IocContainer *ioc, const FortSettings *settings)

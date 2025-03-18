@@ -169,6 +169,7 @@ SOURCES += \
     rpc/confrulemanagerrpc.cpp \
     rpc/confzonemanagerrpc.cpp \
     rpc/dberrormanagerrpc.cpp \
+    rpc/drivelistmanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
     rpc/logmanagerrpc.cpp \
     rpc/quotamanagerrpc.cpp \
@@ -428,6 +429,7 @@ HEADERS += \
     rpc/confrulemanagerrpc.h \
     rpc/confzonemanagerrpc.h \
     rpc/dberrormanagerrpc.h \
+    rpc/drivelistmanagerrpc.h \
     rpc/drivermanagerrpc.h \
     rpc/logmanagerrpc.h \
     rpc/quotamanagerrpc.h \

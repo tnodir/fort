@@ -15,6 +15,7 @@
 #include <rpc/confmanagerrpc.h>
 #include <rpc/confrulemanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
+#include <rpc/drivelistmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
 #include <rpc/serviceinfomanagerrpc.h>
@@ -224,6 +225,7 @@ static const processManager_func processManager_funcList[] = {
     &ConfRuleManagerRpc::processServerCommand, // Control::Rpc_ConfRuleManager,
     &ConfZoneManagerRpc::processServerCommand, // Control::Rpc_ConfZoneManager,
     &DriverManagerRpc::processServerCommand, // Control::Rpc_DriverManager,
+    &DriveListManagerRpc::processServerCommand, // Control::Rpc_DriveListManager,
     &QuotaManagerRpc::processServerCommand, // Control::Rpc_QuotaManager,
     &StatManagerRpc::processServerCommand, // Control::Rpc_StatManager,
     &StatConnManagerRpc::processServerCommand, // Control::Rpc_StatBlockManager,

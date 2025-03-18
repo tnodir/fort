@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include <util/ioc/iocservice.h>
+#include <util/triggertimer.h>
 
 class DriveListManager : public QObject, public IocService
 {
@@ -18,10 +19,20 @@ signals:
     void driveMaskChanged(quint32 addedMask, quint32 removedMask);
 
 public slots:
-    void onDriveListChanged();
+    virtual void onDriveListChanged();
+
+protected slots:
+    virtual void populateDriveMask();
 
 private:
+    void setDriveMask(quint32 driveMask);
+
+private:
+    bool m_isUserAdmin = false;
+
     quint32 m_driveMask = 0;
+
+    TriggerTimer m_driveListTimer;
 };
 
 #endif // DRIVELISTMANAGER_H
