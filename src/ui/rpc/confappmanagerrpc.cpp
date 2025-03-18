@@ -83,6 +83,12 @@ bool processConfAppManager_importAppsBackup(
     return confAppManager->importAppsBackup(p.args.value(0).toString());
 }
 
+bool processConfAppManager_updateDriverConf(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+{
+    return confAppManager->updateDriverConf(p.args.value(0).toBool());
+}
+
 using processConfAppManager_func = bool (*)(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs);
 
@@ -97,6 +103,7 @@ static const processConfAppManager_func processConfAppManager_funcList[] = {
     &processConfAppManager_purgeApps, // Rpc_ConfAppManager_purgeApps,
     &processConfAppManager_updateAppsBlocked, // Rpc_ConfAppManager_updateAppsBlocked,
     &processConfAppManager_importAppsBackup, // Rpc_ConfAppManager_importAppsBackup,
+    &processConfAppManager_updateDriverConf, // Rpc_ConfAppManager_updateDriverConf,
 };
 
 inline bool processConfAppManagerRpcResult(
@@ -104,7 +111,7 @@ inline bool processConfAppManagerRpcResult(
 {
     const processConfAppManager_func func = RpcManager::getProcessFunc(p.command,
             processConfAppManager_funcList, Control::Rpc_ConfAppManager_addOrUpdateAppPath,
-            Control::Rpc_ConfAppManager_importAppsBackup);
+            Control::Rpc_ConfAppManager_updateDriverConf);
 
     return func ? func(confAppManager, p, resArgs) : false;
 }
@@ -180,6 +187,12 @@ bool ConfAppManagerRpc::updateAppsBlocked(
 bool ConfAppManagerRpc::importAppsBackup(const QString &path)
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_importAppsBackup, { path });
+}
+
+bool ConfAppManagerRpc::updateDriverConf(bool onlyFlags)
+{
+    return IoC<RpcManager>()->doOnServer(
+            Control::Rpc_ConfAppManager_updateDriverConf, { onlyFlags });
 }
 
 QVariantList ConfAppManagerRpc::appToVarList(const App &app)

@@ -28,7 +28,8 @@ public:
 
     bool importAppsBackup(const QString &path) override;
 
-    bool updateDriverConf(bool /*onlyFlags*/ = false) override { return false; }
+    bool canUpdateDriverConf() const override { return false; }
+    bool updateDriverConf(bool onlyFlags = false) override;
 
     static QVariantList appToVarList(const App &app);
     static App varListToApp(const QVariantList &v);

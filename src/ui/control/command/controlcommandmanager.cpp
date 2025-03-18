@@ -4,6 +4,7 @@
 
 #include "controlcommandbackup.h"
 #include "controlcommandblock.h"
+#include "controlcommandconf.h"
 #include "controlcommandfilter.h"
 #include "controlcommandfiltermode.h"
 #include "controlcommandhome.h"
@@ -21,6 +22,7 @@ static const processCommand_func processCommand_funcList[] = {
     &ControlCommandFilterMode::processCommand, // Control::CommandFilterMode,
     &ControlCommandBlock::processCommand, // Control::CommandBlock,
     &ControlCommandProg::processCommand, // Control::CommandProg,
+    &ControlCommandConf::processCommand, // Control::CommandConf,
     &ControlCommandBackup::processCommand, // Control::CommandBackup,
     &ControlCommandZone::processCommand, // Control::CommandZone,
 };

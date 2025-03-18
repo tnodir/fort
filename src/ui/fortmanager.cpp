@@ -555,18 +555,21 @@ bool FortManager::setupDriverConf()
     return true;
 }
 
-bool FortManager::updateDriverConf(bool onlyFlags)
+void FortManager::updateDriverConf(bool onlyFlags)
 {
+    auto confAppManager = IoC<ConfAppManager>();
+
+    if (!confAppManager->canUpdateDriverConf())
+        return;
+
     updateLogManager(false);
 
-    const bool res = IoC<ConfAppManager>()->updateDriverConf(onlyFlags);
-    if (res) {
+    const bool ok = confAppManager->updateDriverConf(onlyFlags);
+    if (ok) {
         updateStatManager(IoC<ConfManager>()->conf());
     }
 
     updateLogManager(true);
-
-    return res;
 }
 
 void FortManager::updateLogManager(bool active)

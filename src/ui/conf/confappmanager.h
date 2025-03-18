@@ -55,6 +55,7 @@ public:
 
     virtual bool importAppsBackup(const QString &path);
 
+    virtual bool canUpdateDriverConf() const { return true; }
     virtual bool updateDriverConf(bool onlyFlags = false);
 
 signals:

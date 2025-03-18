@@ -14,6 +14,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(CommandFilterMode),
     CASE_STRING(CommandBlock),
     CASE_STRING(CommandProg),
+    CASE_STRING(CommandConf),
     CASE_STRING(CommandBackup),
     CASE_STRING(CommandZone),
 
@@ -47,6 +48,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfAppManager_purgeApps),
     CASE_STRING(Rpc_ConfAppManager_updateAppsBlocked),
     CASE_STRING(Rpc_ConfAppManager_importAppsBackup),
+    CASE_STRING(Rpc_ConfAppManager_updateDriverConf),
     CASE_STRING(Rpc_ConfAppManager_appAlerted),
     CASE_STRING(Rpc_ConfAppManager_appsChanged),
     CASE_STRING(Rpc_ConfAppManager_appUpdated),
@@ -132,6 +134,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_NoneManager, // CommandFilterMode,
     Rpc_NoneManager, // CommandBlock,
     Rpc_NoneManager, // CommandProg,
+    Rpc_NoneManager, // CommandConf,
     Rpc_NoneManager, // CommandBackup,
     Rpc_NoneManager, // CommandZone,
 
@@ -165,6 +168,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfAppManager, // Rpc_ConfAppManager_purgeApps,
     Rpc_ConfAppManager, // Rpc_ConfAppManager_updateAppsBlocked,
     Rpc_ConfAppManager, // Rpc_ConfAppManager_importAppsBackup,
+    Rpc_ConfAppManager, // Rpc_ConfAppManager_updateDriverConf,
     Rpc_ConfAppManager, // Rpc_ConfAppManager_appEndTimesUpdated,
     Rpc_ConfAppManager, // Rpc_ConfAppManager_appAlerted,
     Rpc_ConfAppManager, // Rpc_ConfAppManager_appsChanged,
@@ -229,6 +233,7 @@ static const qint8 g_commandValidations[] = {
     0, // CommandFilterMode,
     0, // CommandBlock,
     0, // CommandProg,
+    0, // CommandConf,
     0, // CommandBackup,
     0, // CommandZone,
 
@@ -262,6 +267,7 @@ static const qint8 g_commandValidations[] = {
     true, // Rpc_ConfAppManager_purgeApps,
     true, // Rpc_ConfAppManager_updateAppsBlocked,
     true, // Rpc_ConfAppManager_importAppsBackup,
+    true, // Rpc_ConfAppManager_updateDriverConf,
     0, // Rpc_ConfAppManager_appEndTimesUpdated,
     0, // Rpc_ConfAppManager_appAlerted,
     0, // Rpc_ConfAppManager_appsChanged,

@@ -63,7 +63,7 @@ private:
     void loadConf();
 
     bool setupDriverConf();
-    bool updateDriverConf(bool onlyFlags = false);
+    void updateDriverConf(bool onlyFlags = false);
 
     void updateLogManager(bool active);
     void updateStatManager(FirewallConf *conf);

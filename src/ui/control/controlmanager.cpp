@@ -103,6 +103,7 @@ bool ControlManager::processCommandClient()
         { "filter-mode", Control::CommandFilterMode },
         { "block", Control::CommandBlock },
         { "prog", Control::CommandProg },
+        { "conf", Control::CommandConf },
         { "backup", Control::CommandBackup },
         { "zone", Control::CommandZone },
     };
