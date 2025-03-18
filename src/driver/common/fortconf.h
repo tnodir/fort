@@ -153,6 +153,7 @@ enum FORT_RULE_FILTER_TYPE {
     FORT_RULE_FILTER_TYPE_DIRECTION,
     FORT_RULE_FILTER_TYPE_AREA,
     FORT_RULE_FILTER_TYPE_PROFILE,
+    FORT_RULE_FILTER_TYPE_ACTION,
     // Complex types
     FORT_RULE_FILTER_TYPE_PORT_TCP,
     FORT_RULE_FILTER_TYPE_PORT_UDP,
@@ -169,10 +170,13 @@ enum {
     FORT_RULE_FILTER_AREA_LOCALHOST = (1 << 0),
     FORT_RULE_FILTER_AREA_LAN = (1 << 1),
     FORT_RULE_FILTER_AREA_INET = (1 << 2),
-    // Profile ID
+    // Profile ID (Sync with WPF Profile values)
     FORT_RULE_FILTER_PROFILE_PUBLIC = (1 << 1),
     FORT_RULE_FILTER_PROFILE_PRIVATE = (1 << 2),
     FORT_RULE_FILTER_PROFILE_DOMAIN = (1 << 3),
+    // Action Type ID
+    FORT_RULE_FILTER_ACTION_ALLOW = (1 << 0),
+    FORT_RULE_FILTER_ACTION_BLOCK = (1 << 1),
 };
 
 typedef struct fort_conf_rule_filter_flags
@@ -353,6 +357,9 @@ typedef struct fort_conf_meta_conn
     UINT16 blocked : 1;
     UINT16 drop_blocked : 1;
     UINT16 ignore : 1;
+
+    UINT16 rule_filter_action : 1;
+    UINT16 reserved : 1; /* not used */
 
     UCHAR reason;
 

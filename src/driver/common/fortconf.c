@@ -496,13 +496,11 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
 }
 
 static BOOL fort_conf_rule_filter_check(
-        PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn);
+        PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn);
 
 static BOOL fort_conf_rule_filter_list_check(
-        PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn)
+        PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn, const BOOL isAnd)
 {
-    const BOOL isAnd = (rule_filter->type == FORT_RULE_FILTER_TYPE_LIST_AND);
-
     const char *end = (const char *) rule_filter + rule_filter->size;
     const char *data = (const char *) (rule_filter + 1);
 
@@ -521,32 +519,44 @@ static BOOL fort_conf_rule_filter_list_check(
     return isAnd;
 }
 
-static fort_conf_rule_filter_check_address(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_list_and_check(
+        PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn)
+{
+    const BOOL filter_res = fort_conf_rule_filter_list_check(rule_filter, conn, /*isAnd=*/TRUE);
+
+    if (!filter_res) {
+        conn->rule_filter_action = FALSE;
+    }
+
+    return filter_res;
+}
+
+static BOOL fort_conf_rule_filter_check_address(PFORT_CONF_META_CONN conn, const void *data)
 {
     return fort_conf_ip_inlist(data, conn->remote_ip, conn->isIPv6);
 }
 
-static fort_conf_rule_filter_check_port(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_check_port(PFORT_CONF_META_CONN conn, const void *data)
 {
     return fort_conf_port_inlist(conn->remote_port, data);
 }
 
-static fort_conf_rule_filter_check_local_address(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_check_local_address(PFORT_CONF_META_CONN conn, const void *data)
 {
     return fort_conf_ip_inlist(data, conn->local_ip, conn->isIPv6);
 }
 
-static fort_conf_rule_filter_check_local_port(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_check_local_port(PFORT_CONF_META_CONN conn, const void *data)
 {
     return fort_conf_port_inlist(conn->local_port, data);
 }
 
-static fort_conf_rule_filter_check_protocol(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_check_protocol(PFORT_CONF_META_CONN conn, const void *data)
 {
     return fort_conf_proto_inlist(conn->ip_proto, data);
 }
 
-static fort_conf_rule_filter_check_direction(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_check_direction(PFORT_CONF_META_CONN conn, const void *data)
 {
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
 
@@ -556,7 +566,7 @@ static fort_conf_rule_filter_check_direction(PCFORT_CONF_META_CONN conn, const v
     return (flags & conn_flags) != 0;
 }
 
-static fort_conf_rule_filter_check_area(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_check_area(PFORT_CONF_META_CONN conn, const void *data)
 {
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
 
@@ -567,7 +577,7 @@ static fort_conf_rule_filter_check_area(PCFORT_CONF_META_CONN conn, const void *
     return (flags & conn_flags) != 0;
 }
 
-static fort_conf_rule_filter_check_profile(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_check_profile(PFORT_CONF_META_CONN conn, const void *data)
 {
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
 
@@ -576,8 +586,18 @@ static fort_conf_rule_filter_check_profile(PCFORT_CONF_META_CONN conn, const voi
     return (flags & conn_flags) != 0;
 }
 
-static fort_conf_rule_filter_check_port_protocol(
-        PCFORT_CONF_META_CONN conn, const void *data, UCHAR proto)
+static BOOL fort_conf_rule_filter_check_action(PFORT_CONF_META_CONN conn, const void *data)
+{
+    const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
+
+    conn->blocked = (flags & FORT_RULE_FILTER_ACTION_BLOCK) != 0;
+    conn->rule_filter_action = TRUE;
+
+    return TRUE;
+}
+
+static BOOL fort_conf_rule_filter_check_port_protocol(
+        PFORT_CONF_META_CONN conn, const void *data, UCHAR proto)
 {
     if (conn->ip_proto != proto)
         return FALSE;
@@ -585,17 +605,17 @@ static fort_conf_rule_filter_check_port_protocol(
     return fort_conf_rule_filter_check_port(conn, data);
 }
 
-static fort_conf_rule_filter_check_port_tcp(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_check_port_tcp(PFORT_CONF_META_CONN conn, const void *data)
 {
     return fort_conf_rule_filter_check_port_protocol(conn, data, IpProto_TCP);
 }
 
-static fort_conf_rule_filter_check_port_udp(PCFORT_CONF_META_CONN conn, const void *data)
+static BOOL fort_conf_rule_filter_check_port_udp(PFORT_CONF_META_CONN conn, const void *data)
 {
     return fort_conf_rule_filter_check_port_protocol(conn, data, IpProto_UDP);
 }
 
-typedef BOOL (*FORT_CONF_RULE_FILTER_CHECK_FUNC)(PCFORT_CONF_META_CONN conn, const void *data);
+typedef BOOL (*FORT_CONF_RULE_FILTER_CHECK_FUNC)(PFORT_CONF_META_CONN conn, const void *data);
 
 static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcList[] = {
     &fort_conf_rule_filter_check_address, // FORT_RULE_FILTER_TYPE_ADDRESS,
@@ -606,13 +626,14 @@ static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcLi
     &fort_conf_rule_filter_check_direction, // FORT_RULE_FILTER_TYPE_DIRECTION,
     &fort_conf_rule_filter_check_area, // FORT_RULE_FILTER_TYPE_AREA,
     &fort_conf_rule_filter_check_profile, // FORT_RULE_FILTER_TYPE_PROFILE,
+    &fort_conf_rule_filter_check_action, // FORT_RULE_FILTER_TYPE_ACTION,
     // Complex types
     &fort_conf_rule_filter_check_port_tcp, // FORT_RULE_FILTER_TYPE_PORT_TCP,
     &fort_conf_rule_filter_check_port_udp, // FORT_RULE_FILTER_TYPE_PORT_UDP,
 };
 
 inline static BOOL fort_conf_rule_filter_check_type(
-        PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn, const int filter_type)
+        PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn, const int filter_type)
 {
     if (rule_filter->is_empty)
         return TRUE;
@@ -646,15 +667,18 @@ inline static BOOL fort_conf_rule_filter_check_equal(
 }
 
 static BOOL fort_conf_rule_filter_check(
-        PCFORT_CONF_RULE_FILTER rule_filter, PCFORT_CONF_META_CONN conn)
+        PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn)
 {
     assert(rule_filter->size != 0);
 
     const int filter_type = rule_filter->type;
 
-    if (filter_type == FORT_RULE_FILTER_TYPE_LIST_OR
-            || filter_type == FORT_RULE_FILTER_TYPE_LIST_AND) {
-        return fort_conf_rule_filter_list_check(rule_filter, conn);
+    if (filter_type == FORT_RULE_FILTER_TYPE_LIST_OR) {
+        return fort_conf_rule_filter_list_check(rule_filter, conn, /*isAnd=*/FALSE);
+    }
+
+    if (filter_type == FORT_RULE_FILTER_TYPE_LIST_AND) {
+        return fort_conf_rule_filter_list_and_check(rule_filter, conn);
     }
 
     if (filter_type < FORT_RULE_FILTER_TYPE_ADDRESS || filter_type > FORT_RULE_FILTER_TYPE_PORT_UDP)
@@ -683,7 +707,9 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
             (PCFORT_CONF_RULE_FILTER) ((PCCH) rule + FORT_CONF_RULE_SIZE(rule));
 
     if (fort_conf_rule_filter_check(rule_filter, conn)) {
-        conn->blocked = rule->blocked;
+        if (!conn->rule_filter_action) {
+            conn->blocked = rule->blocked;
+        }
         return TRUE;
     }
 
@@ -703,7 +729,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_sets(PCFORT_CONF_RULES_RT ru
     for (int i = 0; i < set_count; ++i) {
         const UINT16 rule_id = rule_ids[i];
 
-        if (fort_conf_rules_rt_conn_filtered(rules_rt, conn, rule_id) || !conn->blocked) {
+        if (fort_conf_rules_rt_conn_filtered(rules_rt, conn, rule_id)) {
             conn->rule_id = rule_id;
             return TRUE;
         }
@@ -732,7 +758,9 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_check(
 
     const BOOL is_exclusive = (rule->exclusive && !rule->blocked);
 
-    const BOOL is_exclusive_filtered = (is_exclusive ? !filter_res : filter_res);
+    const BOOL is_exclusive_filtered =
+            (is_exclusive && !conn->rule_filter_action ? !filter_res : filter_res);
+
     if (is_exclusive_filtered) {
         return filter_res;
     }

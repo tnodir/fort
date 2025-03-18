@@ -9,6 +9,7 @@
 #include "appparseoptions.h"
 #include "conf_types.h"
 
+class ActionRange;
 class AreaRange;
 class DirRange;
 class FirewallConf;
@@ -55,6 +56,7 @@ public:
     void writeDirRange(const DirRange &dirRange);
     void writeAreaRange(const AreaRange &areaRange);
     void writeProfileRange(const ProfileRange &profileRange);
+    void writeActionRange(const ActionRange &actionRange);
 
     void writeApps(const appdata_map_t &appsMap, bool useHeader = false);
 

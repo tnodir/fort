@@ -2,6 +2,7 @@
 
 #include <conf/appgroup.h>
 #include <conf/firewallconf.h>
+#include <util/net/actionrange.h>
 #include <util/net/arearange.h>
 #include <util/net/dirrange.h>
 #include <util/net/iprange.h>
@@ -283,6 +284,15 @@ void ConfData::writeProfileRange(const ProfileRange &profileRange)
     PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
 
     filter->flags = profileRange.profileId();
+
+    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
+}
+
+void ConfData::writeActionRange(const ActionRange &actionRange)
+{
+    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
+
+    filter->flags = actionRange.actionTypeId();
 
     m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
 }
