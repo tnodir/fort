@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.16.7, 2025-03-18:
+- UI: Connections/Services: Open ProgramEdit dialog inplace (#442).
+- UI: Rules: Add "action(ALLOW|BLOCK)" filter function.
+- UI: Improve drive list changes monitoring (#458).
+- UI: Add "-c conf update-driver" command-line argument (#458).
+
 v3.16.6, 2025-03-16:
 - UI: ProgramEdit: Add "Connections" button.
 - UI: Options: Programs: Add "Remove alerted programs on Auto-Learn Off" flag.
