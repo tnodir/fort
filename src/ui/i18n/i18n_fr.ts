@@ -1337,7 +1337,7 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
-        <translation type="unfinished"></translation>
+        <translation>Évènements Trace Driver</translation>
     </message>
 </context>
 <context>

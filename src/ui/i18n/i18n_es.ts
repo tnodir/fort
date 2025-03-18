@@ -1337,7 +1337,7 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
-        <translation type="unfinished"></translation>
+        <translation>Rastrear eventos del controlador</translation>
     </message>
 </context>
 <context>
