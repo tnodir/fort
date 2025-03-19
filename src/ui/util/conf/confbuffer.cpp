@@ -209,6 +209,9 @@ void ConfBuffer::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 data
         Q_ASSERT(!zoneData.isEmpty());
 
         const int zoneIndex = BitUtil::bitScanForward(zonesMask);
+        if (Q_UNLIKELY(zoneIndex == -1))
+            break;
+
         const quint32 zoneMask = (quint32(1) << zoneIndex);
 
         confZones->addr_off[zoneIndex] = confData.dataOffset();

@@ -110,6 +110,9 @@ QStringList ConfZoneManager::zoneNamesByMask(quint32 zonesMask)
 
     while (zonesMask != 0) {
         const int zoneIndex = BitUtil::bitScanForward(zonesMask);
+        if (Q_UNLIKELY(zoneIndex == -1))
+            break;
+
         const quint8 zoneId = zoneIndex + 1;
 
         list << zoneNameById(zoneId);
