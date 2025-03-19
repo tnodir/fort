@@ -38,10 +38,10 @@ signals:
     void zoneUpdated();
 
 private:
+    bool updateDriverZoneFlag(quint8 zoneId, bool enabled);
+
     void setupZoneNamesCache();
     void clearZoneNamesCache();
-
-    bool updateDriverZoneFlag(quint8 zoneId, bool enabled);
 
 private:
     mutable QHash<quint8, QString> m_zoneNamesCache;

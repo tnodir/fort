@@ -142,7 +142,18 @@ ConfRuleManager::ConfRuleManager(QObject *parent) : ConfManagerBase(parent) { }
 
 QString ConfRuleManager::ruleNameById(quint16 ruleId)
 {
-    return DbQuery(sqliteDb()).sql(sqlSelectRuleNameById).vars({ ruleId }).execute().toString();
+    if (ruleId == 0)
+        return {};
+
+    QString name = m_ruleNamesCache.value(ruleId);
+
+    if (name.isEmpty()) {
+        name = DbQuery(sqliteDb()).sql(sqlSelectRuleNameById).vars({ ruleId }).execute().toString();
+
+        m_ruleNamesCache.insert(ruleId, name);
+    }
+
+    return name;
 }
 
 void ConfRuleManager::loadRuleSet(Rule &rule, QStringList &ruleSetNames)
@@ -482,4 +493,15 @@ bool ConfRuleManager::updateDriverRuleFlag(quint16 ruleId, bool enabled)
     confBuf.writeRuleFlag(ruleId, enabled);
 
     return driverWriteRules(confBuf, /*onlyFlags=*/true);
+}
+
+void ConfRuleManager::setupRuleNamesCache()
+{
+    connect(this, &ConfRuleManager::ruleRemoved, this, &ConfRuleManager::clearRuleNamesCache);
+    connect(this, &ConfRuleManager::ruleUpdated, this, &ConfRuleManager::clearRuleNamesCache);
+}
+
+void ConfRuleManager::clearRuleNamesCache()
+{
+    m_ruleNamesCache.clear();
 }

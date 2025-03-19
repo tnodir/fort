@@ -197,7 +197,8 @@ void ProgramEditDialog::initializeRuleField(bool isSingleSelection)
 {
     setCurrentRuleId(m_app.ruleId);
 
-    m_editRuleName->setStartText(isSingleSelection ? m_app.ruleName : QString());
+    m_editRuleName->setStartText(
+            isSingleSelection ? confRuleManager()->ruleNameById(m_app.ruleId) : QString());
     m_editRuleName->setEnabled(isSingleSelection);
     m_editRuleName->setClearButtonEnabled(isSingleSelection);
 

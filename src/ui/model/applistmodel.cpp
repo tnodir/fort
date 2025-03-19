@@ -211,7 +211,6 @@ bool AppListModel::updateAppRow(const QString &sql, const QVariantHash &vars, Ap
     appRow.creatTime = stmt.columnDateTime(21);
     appRow.groupIndex = stmt.columnInt(22);
     appRow.alerted = stmt.columnBool(23);
-    appRow.ruleName = stmt.columnText(24);
 
     return true;
 }
@@ -284,12 +283,10 @@ QString AppListModel::sqlBase() const
            "    t.end_time,"
            "    t.creat_time,"
            "    g.order_index as group_index,"
-           "    (a.app_id IS NOT NULL) as alerted,"
-           "    r.name as rule_name"
+           "    (a.app_id IS NOT NULL) as alerted"
            "  FROM app t"
            "    JOIN app_group g ON g.app_group_id = t.app_group_id"
-           "    LEFT JOIN app_alert a ON a.app_id = t.app_id"
-           "    LEFT JOIN rule r ON r.rule_id = t.rule_id";
+           "    LEFT JOIN app_alert a ON a.app_id = t.app_id";
 }
 
 QString AppListModel::sqlWhere() const

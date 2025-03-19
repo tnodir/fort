@@ -6,6 +6,7 @@
 #include <conf/app.h>
 #include <conf/appgroup.h>
 #include <conf/confappmanager.h>
+#include <conf/confrulemanager.h>
 #include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
 #include <util/bitutil.h>
@@ -76,7 +77,10 @@ QVariant dataDisplayRule(const App &app, int role)
     if (role != Qt::ToolTipRole)
         return {};
 
-    return app.ruleName;
+    if (app.ruleId == 0)
+        return {};
+
+    return IoC<ConfRuleManager>()->ruleNameById(app.ruleId);
 }
 
 QVariant dataDisplayScheduled(const App &app, int role)

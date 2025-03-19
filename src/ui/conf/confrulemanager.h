@@ -50,6 +50,12 @@ private:
     static void fillRule(Rule &rule, const SqliteStmt &stmt);
 
     bool updateDriverRuleFlag(quint16 ruleId, bool enabled);
+
+    void setupRuleNamesCache();
+    void clearRuleNamesCache();
+
+private:
+    mutable QHash<quint16, QString> m_ruleNamesCache;
 };
 
 #endif // CONFRULEMANAGER_H

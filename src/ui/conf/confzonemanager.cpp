@@ -90,6 +90,9 @@ ConfZoneManager::ConfZoneManager(QObject *parent) : ConfManagerBase(parent)
 
 QString ConfZoneManager::zoneNameById(quint8 zoneId)
 {
+    if (zoneId == 0)
+        return {};
+
     QString name = m_zoneNamesCache.value(zoneId);
 
     if (name.isEmpty()) {
@@ -269,6 +272,15 @@ void ConfZoneManager::updateDriverZones(quint32 zonesMask, quint32 enabledMask, 
     driverWriteZones(confBuf);
 }
 
+bool ConfZoneManager::updateDriverZoneFlag(quint8 zoneId, bool enabled)
+{
+    ConfBuffer confBuf;
+
+    confBuf.writeZoneFlag(zoneId, enabled);
+
+    return driverWriteZones(confBuf, /*onlyFlags=*/true);
+}
+
 void ConfZoneManager::setupZoneNamesCache()
 {
     connect(this, &ConfZoneManager::zoneRemoved, this, &ConfZoneManager::clearZoneNamesCache);
@@ -278,13 +290,4 @@ void ConfZoneManager::setupZoneNamesCache()
 void ConfZoneManager::clearZoneNamesCache()
 {
     m_zoneNamesCache.clear();
-}
-
-bool ConfZoneManager::updateDriverZoneFlag(quint8 zoneId, bool enabled)
-{
-    ConfBuffer confBuf;
-
-    confBuf.writeZoneFlag(zoneId, enabled);
-
-    return driverWriteZones(confBuf, /*onlyFlags=*/true);
 }
