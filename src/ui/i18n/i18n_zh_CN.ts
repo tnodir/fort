@@ -1337,7 +1337,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Trace Driver Events</source>
-        <translation type="unfinished"></translation>
+        <translation>跟踪驱动程序事件</translation>
     </message>
 </context>
 <context>
