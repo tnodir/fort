@@ -131,7 +131,6 @@ void GraphWindow::restoreWindowState()
 void GraphWindow::setupUi()
 {
     m_plot = new GraphPlot();
-    m_plot->setContentsMargins(0, 0, 0, 0);
 
     // Interactions
     connect(m_plot, &GraphPlot::resized, this, &GraphWindow::addEmptyTraffic);
@@ -150,6 +149,12 @@ void GraphWindow::setupUi()
     auto yAxis = m_plot->yAxis;
     yAxis->setVisible(true);
     yAxis->setTickLabelPadding(2);
+    xAxis->setPadding(0);
+
+    auto yAxis2 = m_plot->yAxis2;
+    yAxis2->setVisible(true);
+    yAxis2->setTickLabels(false);
+    yAxis2->setPadding(0);
 
     // Axis Rect
     auto axisRect = m_plot->axisRect();
@@ -158,6 +163,7 @@ void GraphWindow::setupUi()
     // Axis Ticker
     m_ticker.reset(new AxisTickerSpeed());
     yAxis->setTicker(m_ticker);
+    yAxis2->setTicker(m_ticker);
 
     // Graph Inbound
     m_graphIn = new QCPBars(m_plot->xAxis, m_plot->yAxis);
@@ -245,16 +251,10 @@ void GraphWindow::updateColors(const IniUser &ini)
 
     // Axis
     auto yAxis = m_plot->yAxis;
+    updateYAxisColor(yAxis, colors);
 
-    const QColor axisColor = colors[ColorAxis];
-    yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
-    yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
-    yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
-
-    yAxis->setTickLabelColor(colors[ColorTickLabel]);
-    yAxis->setLabelColor(colors[ColorLabel]);
-
-    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), colors[ColorGrid]));
+    auto yAxis2 = m_plot->yAxis2;
+    updateYAxisColor(yAxis2, colors);
 
     // Graph Inbound
     m_graphIn->setPen(QPen(colors[ColorIn]));
@@ -268,6 +268,19 @@ void GraphWindow::updateFormat(const IniUser &ini)
     m_unitFormat = FormatUtil::graphUnitFormat(ini.graphWindowTrafUnit());
 
     m_ticker->setUnitFormat(m_unitFormat);
+}
+
+void GraphWindow::updateYAxisColor(QCPAxis *yAxis, const ColorArray &colors)
+{
+    const QColor axisColor = colors[ColorAxis];
+    yAxis->setBasePen(adjustPen(yAxis->basePen(), axisColor));
+    yAxis->setTickPen(adjustPen(yAxis->tickPen(), axisColor));
+    yAxis->setSubTickPen(adjustPen(yAxis->subTickPen(), axisColor));
+
+    yAxis->setTickLabelColor(colors[ColorTickLabel]);
+    yAxis->setLabelColor(colors[ColorLabel]);
+
+    yAxis->grid()->setPen(adjustPen(yAxis->grid()->pen(), colors[ColorGrid]));
 }
 
 void GraphWindow::setupTimer()
@@ -411,19 +424,25 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
     m_graphOut->rescaleValueAxis(true, true);
 
     // Avoid negative Y range
-    QCPRange yRange = m_plot->yAxis->range();
-    if (yRange.lower < 0) {
-        yRange.upper -= yRange.lower;
-        yRange.lower = 0;
+    {
+        auto yAxis = m_plot->yAxis;
 
-        m_plot->yAxis->setRange(yRange);
-    }
+        QCPRange yRange = yAxis->range();
+        if (yRange.lower < 0) {
+            yRange.upper -= yRange.lower;
+            yRange.lower = 0;
 
-    const qint64 yRangeMax = iniUser()->graphWindowFixedSpeed() * 1024LL;
-    if (yRangeMax > 0) {
-        yRange.upper = yRangeMax;
+            yAxis->setRange(yRange);
+        }
 
-        m_plot->yAxis->setRange(yRange);
+        const qint64 yRangeMax = iniUser()->graphWindowFixedSpeed() * 1024LL;
+        if (yRangeMax > 0) {
+            yRange.upper = yRangeMax;
+
+            yAxis->setRange(yRange);
+        }
+
+        m_plot->yAxis2->setRange(yRange);
     }
 
     m_plot->replot();
@@ -485,9 +504,9 @@ void GraphWindow::checkWindowEdges()
     }
 }
 
-QVarLengthArray<QColor, GraphWindow::ColorCount> GraphWindow::getColors(const IniUser &ini)
+GraphWindow::ColorArray GraphWindow::getColors(const IniUser &ini)
 {
-    QVarLengthArray<QColor, GraphWindow::ColorCount> colors;
+    ColorArray colors;
 
     const bool isLightTheme =
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)

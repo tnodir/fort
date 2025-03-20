@@ -5,7 +5,7 @@
 double AxisTickerSpeed::getTickStep(const QCPRange &range)
 {
     const double exactStep = range.size() / tickCount();
-    const int tickStep = 2;
+    constexpr int tickStep = 2;
 
     return qPow(tickStep, qFloor(qLn(exactStep) / qLn(tickStep) + 0.5));
 }

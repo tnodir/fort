@@ -9,8 +9,9 @@
 class AxisTickerSpeed;
 
 class ConfManager;
-class IniUser;
 class GraphPlot;
+class IniUser;
+class QCPAxis;
 class QCPBars;
 
 class GraphWindow : public FormWindow
@@ -40,6 +41,22 @@ private slots:
 
     void addEmptyTraffic();
 
+protected:
+    enum ColorType : qint8 {
+        ColorBg = 0,
+        ColorIn,
+        ColorOut,
+        ColorAxis,
+        ColorTickLabel,
+        ColorLabel,
+        ColorGrid,
+        ColorCount
+    };
+
+    using ColorArray = QVarLengthArray<QColor, ColorCount>;
+
+    static GraphWindow::ColorArray getColors(const IniUser &ini);
+
 private:
     void onMouseDoubleClick(QMouseEvent *event);
     void onMouseDragBegin(QMouseEvent *event);
@@ -59,6 +76,8 @@ private:
     void updateColors(const IniUser &ini);
     void updateFormat(const IniUser &ini);
 
+    void updateYAxisColor(QCPAxis *yAxis, const GraphWindow::ColorArray &colors);
+
     void setupTimer();
 
     void addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint32 bytes);
@@ -67,19 +86,6 @@ private:
     void setWindowOpacityPercent(int percent);
 
     void checkWindowEdges();
-
-    enum ColorType : qint8 {
-        ColorBg = 0,
-        ColorIn,
-        ColorOut,
-        ColorAxis,
-        ColorTickLabel,
-        ColorLabel,
-        ColorGrid,
-        ColorCount
-    };
-
-    static QVarLengthArray<QColor, GraphWindow::ColorCount> getColors(const IniUser &ini);
 
 protected:
     void enterEvent(QEnterEvent *event) override;
