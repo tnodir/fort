@@ -219,7 +219,7 @@ void GraphWindow::updateWindowFlags(const IniUser &ini)
 {
     const bool visible = isVisible();
 
-    setWindowFlags(Qt::Tool | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint
+    setWindowFlags(Qt::Tool | Qt::WindowCloseButtonHint
             | (ini.graphWindowAlwaysOnTop() ? Qt::WindowStaysOnTopHint : Qt::Widget)
             | (ini.graphWindowFrameless() ? Qt::FramelessWindowHint : Qt::Widget)
             | (ini.graphWindowClickThrough() ? Qt::WindowTransparentForInput : Qt::Widget));
