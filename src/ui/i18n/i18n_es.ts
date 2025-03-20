@@ -680,6 +680,10 @@
         <source>Auto-scale</source>
         <translation>Escalado automático</translation>
     </message>
+    <message>
+        <source>Tick label size:</source>
+        <translation>Tamaño de la etiqueta:</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1638,6 +1642,14 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Connections</source>
         <translation>Conexiones</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Copiar como Filtro</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copiar</translation>
     </message>
 </context>
 <context>

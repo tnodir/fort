@@ -680,6 +680,10 @@
         <source>Auto-scale</source>
         <translation>Samodejno merilo</translation>
     </message>
+    <message>
+        <source>Tick label size:</source>
+        <translation>Velikost etikete:</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1635,6 +1639,14 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Connections</source>
         <translation>Povezave</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Kopiraj kot filter</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopiraj</translation>
     </message>
 </context>
 <context>

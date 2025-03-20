@@ -680,6 +680,10 @@
         <source>Auto-scale</source>
         <translation>حجم تلقائي</translation>
     </message>
+    <message>
+        <source>Tick label size:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1635,6 +1639,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Connections</source>
         <translation>الاتصالات</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>نسخ</translation>
     </message>
 </context>
 <context>

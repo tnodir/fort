@@ -680,6 +680,10 @@
         <source>Auto-scale</source>
         <translation>Auto-dimensiona</translation>
     </message>
+    <message>
+        <source>Tick label size:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1635,6 +1639,14 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Connections</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Copia come filtro</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copia</translation>
     </message>
 </context>
 <context>

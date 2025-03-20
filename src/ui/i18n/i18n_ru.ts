@@ -680,6 +680,10 @@
         <source>Auto-scale</source>
         <translation>Автомасштабирование</translation>
     </message>
+    <message>
+        <source>Tick label size:</source>
+        <translation>Размер метки:</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1635,6 +1639,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Connections</source>
         <translation>Соединения</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Копировать как фильтр</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Копировать</translation>
     </message>
 </context>
 <context>

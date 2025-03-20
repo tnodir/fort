@@ -680,6 +680,10 @@
         <source>Auto-scale</source>
         <translation>Échelle auto</translation>
     </message>
+    <message>
+        <source>Tick label size:</source>
+        <translation>Taille de l&apos;étiquette à cocher :</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1635,6 +1639,14 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Connections</source>
         <translation>Connexions</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Copier comme filtre</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
     </message>
 </context>
 <context>

@@ -680,6 +680,10 @@
         <source>Auto-scale</source>
         <translation>自动扩展</translation>
     </message>
+    <message>
+        <source>Tick label size:</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
@@ -1635,6 +1639,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Connections</source>
         <translation>连接数</translation>
+    </message>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>复制为过滤器</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>复制</translation>
     </message>
 </context>
 <context>
