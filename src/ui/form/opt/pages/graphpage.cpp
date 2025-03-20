@@ -34,6 +34,7 @@ void GraphPage::onResetToDefault()
     m_cbGraphHideOnHover->setChecked(iniUser()->graphWindowHideOnHoverDefault());
     m_graphOpacity->spinBox()->setValue(iniUser()->graphWindowOpacityDefault());
     m_graphHoverOpacity->spinBox()->setValue(iniUser()->graphWindowHoverOpacityDefault());
+    m_graphTickLabelSize->spinBox()->setValue(iniUser()->graphWindowTickLabelSizeDefault());
     m_graphMaxSeconds->spinBox()->setValue(iniUser()->graphWindowMaxSecondsDefault());
     m_graphFixedSpeed->spinBox()->setValue(iniUser()->graphWindowFixedSpeedDefault());
     m_comboTrafUnit->setCurrentIndex(iniUser()->graphWindowTrafUnitDefault());
@@ -68,6 +69,7 @@ void GraphPage::onRetranslateUi()
     m_cbGraphHideOnHover->setText(tr("Hide on hover"));
     m_graphOpacity->label()->setText(tr("Opacity:"));
     m_graphHoverOpacity->label()->setText(tr("Hover opacity:"));
+    m_graphTickLabelSize->label()->setText(tr("Tick label size:"));
     m_graphMaxSeconds->label()->setText(tr("Max seconds:"));
     m_graphFixedSpeed->label()->setText(tr("Fixed speed:"));
     retranslateFixedSpeedCombo();
@@ -155,19 +157,21 @@ void GraphPage::setupGraphBox()
     // Traffic Units
     auto trafUnitsLayout = setupTrafUnitsLayout();
 
-    auto layout = new QVBoxLayout();
-    layout->addWidget(m_cbGraphHideOnClose);
-    layout->addWidget(ControlUtil::createSeparator());
-    layout->addWidget(m_cbGraphAlwaysOnTop);
-    layout->addWidget(m_cbGraphFrameless);
-    layout->addWidget(m_cbGraphClickThrough);
-    layout->addWidget(m_cbGraphHideOnHover);
-    layout->addWidget(ControlUtil::createSeparator());
-    layout->addWidget(m_graphOpacity);
-    layout->addWidget(m_graphHoverOpacity);
-    layout->addWidget(m_graphMaxSeconds);
-    layout->addWidget(m_graphFixedSpeed);
-    layout->addWidget(ControlUtil::createSeparator());
+    auto layout = ControlUtil::createVLayoutByWidgets({
+            m_cbGraphHideOnClose,
+            ControlUtil::createSeparator(),
+            m_cbGraphAlwaysOnTop,
+            m_cbGraphFrameless,
+            m_cbGraphClickThrough,
+            m_cbGraphHideOnHover,
+            ControlUtil::createSeparator(),
+            m_graphOpacity,
+            m_graphHoverOpacity,
+            m_graphTickLabelSize,
+            m_graphMaxSeconds,
+            m_graphFixedSpeed,
+            ControlUtil::createSeparator(),
+    });
     layout->addLayout(trafUnitsLayout);
 
     m_gbGraph = new QGroupBox();
@@ -227,6 +231,14 @@ void GraphPage::setupGraphOptions()
             ControlUtil::createSpin(iniUser()->graphWindowHoverOpacity(), 0, 100, " %", [&](int v) {
                 if (iniUser()->graphWindowHoverOpacity() != v) {
                     iniUser()->setGraphWindowHoverOpacity(v);
+                    ctrl()->setIniUserEdited();
+                }
+            });
+
+    m_graphTickLabelSize =
+            ControlUtil::createSpin(iniUser()->graphWindowTickLabelSize(), 1, 99, {}, [&](int v) {
+                if (iniUser()->graphWindowTickLabelSize() != v) {
+                    iniUser()->setGraphWindowTickLabelSize(v);
                     ctrl()->setIniUserEdited();
                 }
             });

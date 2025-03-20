@@ -218,6 +218,7 @@ void GraphWindow::updateFlagsAndColors(const IniUser &ini, bool onlyFlags)
 
     updateWindowFlags(ini);
     updateColors(ini);
+    updateFonts(ini);
     updateFormat(ini);
 }
 
@@ -261,6 +262,17 @@ void GraphWindow::updateColors(const IniUser &ini)
 
     // Graph Outbound
     m_graphOut->setPen(QPen(colors[ColorOut]));
+}
+
+void GraphWindow::updateFonts(const IniUser &ini)
+{
+    // Axis
+    auto yAxis = m_plot->yAxis;
+
+    QFont tickLabelFont = yAxis->tickLabelFont();
+    tickLabelFont.setPointSize(ini.graphWindowTickLabelSize());
+
+    yAxis->setTickLabelFont(tickLabelFont);
 }
 
 void GraphWindow::updateFormat(const IniUser &ini)
@@ -476,8 +488,8 @@ void GraphWindow::updateWindowTitleSpeed()
     const auto outBits =
             m_graphOut->data()->isEmpty() ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
-    setWindowTitle(QChar(0x2193) // ↓
-            + FormatUtil::formatSpeed(quint64(inBits), m_unitFormat) + ' ' + QChar(0x2191) // ↑
+    setWindowTitle(QChar(0x2193) // РІвЂ вЂњ
+            + FormatUtil::formatSpeed(quint64(inBits), m_unitFormat) + ' ' + QChar(0x2191) // РІвЂ вЂ
             + FormatUtil::formatSpeed(quint64(outBits), m_unitFormat));
 }
 

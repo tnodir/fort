@@ -403,6 +403,13 @@ public:
     }
     void setGraphWindowDarkGridColor(const QColor &v) { setColor("graphWindow/darkGridColor", v); }
 
+    constexpr int graphWindowTickLabelSizeDefault() const { return 9; }
+    int graphWindowTickLabelSize() const
+    {
+        return valueInt("graphWindow/tickLabelSize", graphWindowTickLabelSizeDefault());
+    }
+    void setGraphWindowTickLabelSize(int v) { setValue("graphWindow/tickLabelSize", v); }
+
     static QString statWindowGroup() { return "statWindow"; }
 
     QRect statWindowGeometry() const { return value("statWindow/geometry").toRect(); }

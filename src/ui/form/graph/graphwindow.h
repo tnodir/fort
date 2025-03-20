@@ -74,6 +74,7 @@ private:
     void updateFlagsAndColors(const IniUser &ini, bool onlyFlags);
     void updateWindowFlags(const IniUser &ini);
     void updateColors(const IniUser &ini);
+    void updateFonts(const IniUser &ini);
     void updateFormat(const IniUser &ini);
 
     void updateYAxisColor(QCPAxis *yAxis, const GraphWindow::ColorArray &colors);
