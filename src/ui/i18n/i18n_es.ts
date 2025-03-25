@@ -1337,7 +1337,7 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>Elim. prog. alertados al desactivar Auto-aprendizaje</translation>
+        <translation>Eliminar programas alertados al desactivar Autoaprendizaje</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
