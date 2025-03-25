@@ -149,7 +149,7 @@ void GraphWindow::setupUi()
     auto yAxis = m_plot->yAxis;
     yAxis->setVisible(true);
     yAxis->setTickLabelPadding(2);
-    xAxis->setPadding(0);
+    yAxis->setPadding(0);
 
     auto yAxis2 = m_plot->yAxis2;
     yAxis2->setVisible(true);
@@ -184,8 +184,7 @@ void GraphWindow::setupUi()
     group->append(m_graphOut);
 
     // Widget Layout
-    auto layout = ControlUtil::createVLayout();
-    layout->addWidget(m_plot);
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_plot }, /*margin=*/0);
     setLayout(layout);
 
     setMinimumSize(QSize(30, 10));
