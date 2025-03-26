@@ -67,6 +67,7 @@ private:
 
 private:
     void setupUi();
+    void setupYAxis(QCPAxis *yAxis, bool tickLabels = true);
 
     void setupFlagsAndColors();
 

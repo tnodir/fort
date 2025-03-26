@@ -147,14 +147,10 @@ void GraphWindow::setupUi()
     xAxis->setVisible(false);
 
     auto yAxis = m_plot->yAxis;
-    yAxis->setVisible(true);
-    yAxis->setTickLabelPadding(2);
-    yAxis->setPadding(0);
+    setupYAxis(yAxis);
 
     auto yAxis2 = m_plot->yAxis2;
-    yAxis2->setVisible(true);
-    yAxis2->setTickLabels(false);
-    yAxis2->setPadding(0);
+    setupYAxis(yAxis2, /*tickLabels=*/false);
 
     // Axis Rect
     auto axisRect = m_plot->axisRect();
@@ -188,6 +184,21 @@ void GraphWindow::setupUi()
     setLayout(layout);
 
     setMinimumSize(QSize(30, 10));
+}
+
+void GraphWindow::setupYAxis(QCPAxis *yAxis, bool tickLabels)
+{
+    yAxis->setVisible(true);
+    yAxis->setPadding(0);
+
+    yAxis->setTickLabels(tickLabels);
+    yAxis->setTickLabelPadding(2);
+
+    constexpr int tickLength = 5;
+    constexpr int subTickLength = 2;
+
+    yAxis->setTickLength(/*inside=*/0, /*outside=*/tickLength);
+    yAxis->setSubTickLength(/*inside=*/0, /*outside=*/subTickLength);
 }
 
 void GraphWindow::setupFlagsAndColors()
