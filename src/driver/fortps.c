@@ -3,6 +3,7 @@
 #include "fortps.h"
 
 #include "fortcb.h"
+#include "fortcnf_conf.h"
 #include "fortdbg.h"
 #include "fortdev.h"
 #include "forttrace.h"

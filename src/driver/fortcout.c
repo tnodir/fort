@@ -6,6 +6,7 @@
 #include "common/fortguid.h"
 #include "common/fortprov.h"
 
+#include "fortcnf_conf.h"
 #include "fortcnf_rule.h"
 #include "fortcnf_zone.h"
 #include "fortcoutarg.h"
