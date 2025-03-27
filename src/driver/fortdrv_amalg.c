@@ -22,6 +22,7 @@
 #include "fortbuf.c"
 #include "fortcb.c"
 #include "fortcnf.c"
+#include "fortcnf_rule.c"
 #include "fortcnf_zone.c"
 #include "fortdbg.c"
 #include "fortmod.c"

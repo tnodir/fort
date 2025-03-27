@@ -5,6 +5,7 @@
 #include "common/fortioctl.h"
 #include "common/fortprov.h"
 
+#include "fortcnf_rule.h"
 #include "fortcnf_zone.h"
 #include "fortcout.h"
 #include "fortdbg.h"
