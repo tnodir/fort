@@ -58,6 +58,10 @@ typedef struct fort_device_conf
 extern "C" {
 #endif
 
+FORT_API PVOID fort_conf_mem_alloc(const void *src, ULONG len);
+
+FORT_API void fort_conf_mem_free(PVOID p);
+
 FORT_API void fort_device_conf_open(PFORT_DEVICE_CONF device_conf);
 
 FORT_API UINT16 fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UINT16 flag, BOOL on);
@@ -84,19 +88,6 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
 
 FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
         PFORT_DEVICE_CONF device_conf, const FORT_CONF_FLAGS conf_flags);
-
-FORT_API PFORT_CONF_ZONES fort_conf_zones_new(PCFORT_CONF_ZONES zones, ULONG len);
-
-FORT_API void fort_conf_zones_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONES zones);
-
-FORT_API void fort_conf_zone_flag_set(
-        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_ZONE_FLAG zone_flag);
-
-FORT_API BOOL fort_devconf_zones_ip_included(PFORT_DEVICE_CONF device_conf,
-        PCFORT_CONF_META_CONN conn, UCHAR *zone_id, UINT32 zones_mask);
-
-FORT_API BOOL fort_devconf_zones_conn_filtered(PFORT_DEVICE_CONF device_conf,
-        PCFORT_CONF_META_CONN conn, PFORT_CONF_ZONES_CONN_FILTERED_OPT opt);
 
 FORT_API PFORT_CONF_RULES fort_conf_rules_new(PCFORT_CONF_RULES rules, ULONG len);
 

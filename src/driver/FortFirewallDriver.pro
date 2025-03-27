@@ -8,6 +8,7 @@ SOURCES += \
     fortbuf.c \
     fortcb.c \
     fortcnf.c \
+    fortcnf_zone.c \
     fortcout.c \
     fortdbg.c \
     fortdev.c \
@@ -46,6 +47,7 @@ HEADERS += \
     fortbuf.h \
     fortcb.h \
     fortcnf.h \
+    fortcnf_zone.h \
     fortcout.h \
     fortcoutarg.h \
     fortdbg.h \
