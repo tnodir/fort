@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.16.9, 2025-03-29:
+- UI: Rules: Add "ip_version(4, 6)" filter function (#470).
+- UI: GraphWindow: Draw ticks outside of grid (#323).
+
 v3.16.8, 2025-03-20:
 - UI: Options: TrafficGraph: Add "Tick label size" option (#323).
 - UI: GraphWindow: Show right y axis (#323).
