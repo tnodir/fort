@@ -556,6 +556,16 @@ static BOOL fort_conf_rule_filter_check_protocol(PFORT_CONF_META_CONN conn, cons
     return fort_conf_proto_inlist(conn->ip_proto, data);
 }
 
+static BOOL fort_conf_rule_filter_check_ip_version(PFORT_CONF_META_CONN conn, const void *data)
+{
+    const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
+
+    const UINT16 conn_flags =
+            (conn->isIPv6 ? FORT_RULE_FILTER_IP_VERSION_6 : FORT_RULE_FILTER_IP_VERSION_4);
+
+    return (flags & conn_flags) != 0;
+}
+
 static BOOL fort_conf_rule_filter_check_direction(PFORT_CONF_META_CONN conn, const void *data)
 {
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
@@ -623,6 +633,7 @@ static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcLi
     &fort_conf_rule_filter_check_local_address, // FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS,
     &fort_conf_rule_filter_check_local_port, // FORT_RULE_FILTER_TYPE_LOCAL_PORT,
     &fort_conf_rule_filter_check_protocol, // FORT_RULE_FILTER_TYPE_PROTOCOL,
+    &fort_conf_rule_filter_check_ip_version, // FORT_RULE_FILTER_TYPE_IP_VERSION,
     &fort_conf_rule_filter_check_direction, // FORT_RULE_FILTER_TYPE_DIRECTION,
     &fort_conf_rule_filter_check_area, // FORT_RULE_FILTER_TYPE_AREA,
     &fort_conf_rule_filter_check_profile, // FORT_RULE_FILTER_TYPE_PROFILE,

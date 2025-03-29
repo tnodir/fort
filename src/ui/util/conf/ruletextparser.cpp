@@ -298,6 +298,8 @@ bool RuleTextParser::parseName()
         { "local_port", FORT_RULE_FILTER_TYPE_LOCAL_PORT },
         { "proto", FORT_RULE_FILTER_TYPE_PROTOCOL },
         { "protocol", FORT_RULE_FILTER_TYPE_PROTOCOL },
+        { "ip_ver", FORT_RULE_FILTER_TYPE_IP_VERSION },
+        { "ip_version", FORT_RULE_FILTER_TYPE_IP_VERSION },
         { "dir", FORT_RULE_FILTER_TYPE_DIRECTION },
         { "direction", FORT_RULE_FILTER_TYPE_DIRECTION },
         { "area", FORT_RULE_FILTER_TYPE_AREA },

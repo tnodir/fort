@@ -232,6 +232,7 @@ SOURCES += \
     util/net/arearange.cpp \
     util/net/dirrange.cpp \
     util/net/iprange.cpp \
+    util/net/ipverrange.cpp \
     util/net/netdownloader.cpp \
     util/net/netformatutil.cpp \
     util/net/netutil.cpp \
@@ -498,6 +499,7 @@ HEADERS += \
     util/net/arearange.h \
     util/net/dirrange.h \
     util/net/iprange.h \
+    util/net/ipverrange.h \
     util/net/netdownloader.h \
     util/net/netformatutil.h \
     util/net/netutil.h \

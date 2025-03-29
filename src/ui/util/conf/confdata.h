@@ -11,6 +11,7 @@
 
 class ActionRange;
 class AreaRange;
+class IpVerRange;
 class DirRange;
 class FirewallConf;
 class PortRange;
@@ -53,6 +54,7 @@ public:
 
     void writePortRange(const PortRange &portRange);
     void writeProtoRange(const ProtoRange &protoRange);
+    void writeIpVerRange(const IpVerRange &ipVerRange);
     void writeDirRange(const DirRange &dirRange);
     void writeAreaRange(const AreaRange &areaRange);
     void writeProfileRange(const ProfileRange &profileRange);

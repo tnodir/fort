@@ -6,6 +6,7 @@
 #include <util/net/arearange.h>
 #include <util/net/dirrange.h>
 #include <util/net/iprange.h>
+#include <util/net/ipverrange.h>
 #include <util/net/portrange.h>
 #include <util/net/profilerange.h>
 #include <util/net/protorange.h>
@@ -256,6 +257,16 @@ void ConfData::writeProtoRange(const ProtoRange &protoRange)
     writeBytes(protoRange.protoArray());
     writeBytes(protoRange.pairFromArray());
     writeBytes(protoRange.pairToArray());
+}
+
+void ConfData::writeIpVerRange(const IpVerRange &ipVerRange)
+{
+    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
+
+    filter->flags = (ipVerRange.isV4() ? FORT_RULE_FILTER_IP_VERSION_4 : 0)
+            | (ipVerRange.isV6() ? FORT_RULE_FILTER_IP_VERSION_6 : 0);
+
+    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
 }
 
 void ConfData::writeDirRange(const DirRange &dirRange)

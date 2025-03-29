@@ -10,6 +10,7 @@
 #include <util/net/arearange.h>
 #include <util/net/dirrange.h>
 #include <util/net/iprange.h>
+#include <util/net/ipverrange.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
 #include <util/net/portrange.h>
@@ -206,6 +207,23 @@ TEST_F(NetUtilTest, protocolNames)
                                     "UDP\n"
                                     "ICMPv6\n"
                                     "RAWSOCKET\n"));
+}
+
+TEST_F(NetUtilTest, ipVerRanges)
+{
+    IpVerRange ipVerRange;
+
+    ASSERT_FALSE(ipVerRange.fromText("1"));
+    ASSERT_EQ(ipVerRange.errorLineNo(), 1);
+
+    ASSERT_TRUE(ipVerRange.fromText("4"));
+    ASSERT_EQ(ipVerRange.toText(), QString("4\n"));
+
+    ASSERT_TRUE(ipVerRange.fromText("6\n"
+                                    "4\n"));
+    ASSERT_EQ(ipVerRange.toText(),
+            QString("4\n"
+                    "6\n"));
 }
 
 TEST_F(NetUtilTest, directionRanges)
