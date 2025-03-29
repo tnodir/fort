@@ -498,14 +498,14 @@ void GraphWindow::updateWindowTitleSpeed()
     const auto outBits =
             m_graphOut->data()->isEmpty() ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
-    setWindowTitle(QChar(0x2193) // РІвЂ вЂњ
-            + FormatUtil::formatSpeed(quint64(inBits), m_unitFormat) + ' ' + QChar(0x2191) // РІвЂ вЂ
+    setWindowTitle(QChar(0x2193) // ↓
+            + FormatUtil::formatSpeed(quint64(inBits), m_unitFormat) + ' ' + QChar(0x2191) // ↑
             + FormatUtil::formatSpeed(quint64(outBits), m_unitFormat));
 }
 
 void GraphWindow::setWindowOpacityPercent(int percent)
 {
-    setWindowOpacity(qreal(qBound(1, percent, 100)) / 100.0);
+    setWindowOpacity(qreal(qBound(1, percent, 100)) / 100.0f);
 }
 
 void GraphWindow::checkWindowEdges()
