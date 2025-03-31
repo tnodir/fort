@@ -388,7 +388,7 @@ void ConnectionsPage::updateAutoScroll()
 
         doAutoScroll();
     } else {
-        connListModel()->disconnect(m_connListView);
+        connListModel()->disconnect(this);
     }
 }
 
