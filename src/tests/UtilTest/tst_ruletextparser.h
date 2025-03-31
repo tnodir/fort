@@ -102,11 +102,11 @@ TEST_F(RuleTextParserTest, lineIpValues)
 
     ASSERT_TRUE(p.parse());
 
-    ASSERT_EQ(p.ruleFilters().size(), 3);
+    ASSERT_EQ(p.ruleFilters().size(), 1);
 
     // Check IP Values
     {
-        const RuleFilter &rf = p.ruleFilters()[2];
+        const RuleFilter &rf = p.ruleFilters()[0];
         ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
         checkStringList(rf.values, { "1.1.1.1/8", "[2::]/16" });
     }
@@ -180,11 +180,11 @@ TEST_F(RuleTextParserTest, filterArea)
 
     ASSERT_TRUE(p.parse());
 
-    ASSERT_EQ(p.ruleFilters().size(), 3);
+    ASSERT_EQ(p.ruleFilters().size(), 1);
 
     // Check Area
     {
-        const RuleFilter &rf = p.ruleFilters()[2];
+        const RuleFilter &rf = p.ruleFilters()[0];
         ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_AREA);
         checkStringList(rf.values, { "localhost", "lan", "inet" });
     }
@@ -196,7 +196,7 @@ TEST_F(RuleTextParserTest, lineSectionList)
 
     ASSERT_TRUE(p.parse());
 
-    ASSERT_EQ(p.ruleFilters().size(), 6);
+    ASSERT_EQ(p.ruleFilters().size(), 4);
 
     // Check IP
     {
@@ -207,7 +207,7 @@ TEST_F(RuleTextParserTest, lineSectionList)
 
     // Check Port
     {
-        const RuleFilter &rf = p.ruleFilters()[5];
+        const RuleFilter &rf = p.ruleFilters()[3];
         ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT_TCP);
         checkStringList(rf.values, { "80" });
     }
@@ -341,11 +341,11 @@ TEST_F(RuleTextParserTest, filterNot)
 
     ASSERT_TRUE(p.parse());
 
-    ASSERT_EQ(p.ruleFilters().size(), 3);
+    ASSERT_EQ(p.ruleFilters().size(), 1);
 
     // Check IP
     {
-        const RuleFilter &rf = p.ruleFilters()[2];
+        const RuleFilter &rf = p.ruleFilters()[0];
         ASSERT_TRUE(rf.isNot);
         ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
         checkStringList(rf.values, { "1" });
@@ -415,7 +415,7 @@ TEST_F(RuleTextParserTest, lineIpPortSubList)
 
     ASSERT_TRUE(p.parse());
 
-    ASSERT_EQ(p.ruleFilters().size(), 7);
+    ASSERT_EQ(p.ruleFilters().size(), 3);
 }
 
 TEST_F(RuleTextParserTest, linesNotBracketValues)
@@ -424,11 +424,11 @@ TEST_F(RuleTextParserTest, linesNotBracketValues)
 
     ASSERT_TRUE(p.parse());
 
-    ASSERT_EQ(p.ruleFilters().size(), 5);
+    ASSERT_EQ(p.ruleFilters().size(), 3);
 
     // Check Last IP
     {
-        const RuleFilter &rf = p.ruleFilters()[4];
+        const RuleFilter &rf = p.ruleFilters()[2];
         ASSERT_TRUE(rf.isNot);
         ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
         checkStringList(rf.values, { "2.2.2.2" });
@@ -441,7 +441,7 @@ TEST_F(RuleTextParserTest, lineIpEqualValues)
 
     ASSERT_TRUE(p.parse());
 
-    ASSERT_EQ(p.ruleFilters().size(), 3);
+    ASSERT_EQ(p.ruleFilters().size(), 1);
 }
 
 TEST_F(RuleTextParserTest, linePortEqualValues)

@@ -503,14 +503,21 @@ void RuleTextParser::endList(int filterIndex)
 {
     const int currentIndex = m_ruleFilters.size() - 1;
 
-    if (currentIndex == filterIndex) {
+    const int filterListCount = currentIndex - filterIndex;
+
+    if (filterListCount == 0) {
         m_ruleFilters.removeLast(); // Empty list
         return;
     }
 
     RuleFilter &ruleFilter = m_ruleFilters[filterIndex];
 
-    ruleFilter.filterListCount = currentIndex - filterIndex;
+    if (filterListCount == 1) {
+        ruleFilter = m_ruleFilters.takeLast(); // List contains only one filter
+        return;
+    }
+
+    ruleFilter.filterListCount = filterListCount;
 }
 
 bool RuleTextParser::skipComments(RuleCharTypes expectedCharTypes)
