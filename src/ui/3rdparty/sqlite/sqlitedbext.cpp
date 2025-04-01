@@ -24,7 +24,7 @@ void extLower(sqlite3_context *ctx, int argc, sqlite3_value **argv)
 
 bool createExtLower(struct sqlite3 *db)
 {
-    return sqlite3_create_function(db, "EXT_LOWER",
+    return sqlite3_create_function(db, "LOWER",
                    /*nArg=*/1,
                    /*eTextRep=*/(SQLITE_DETERMINISTIC | SQLITE_UTF8),
                    /*pApp=*/nullptr,
