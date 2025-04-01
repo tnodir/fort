@@ -111,10 +111,13 @@ NativeEventFilter::~NativeEventFilter()
 bool NativeEventFilter::registerHotKey(
         int hotKeyId, Qt::Key keyCode, Qt::KeyboardModifiers modifiers)
 {
+    if (keyCode == Qt::Key_unknown)
+        return false;
+
     Q_ASSERT(uint(hotKeyId) <= 0xBFFF);
 
-    const quint32 nativeMod = nativeModifiers(modifiers);
-    const quint32 nativeKey = nativeKeyCode(keyCode);
+    const quint32 nativeMod = this->nativeModifiers(modifiers);
+    const quint32 nativeKey = this->nativeKeyCode(keyCode);
 
     const quint32 nativeModifiers = nativeMod | autoRepeatModifier(/*autoRepeat=*/true);
 
