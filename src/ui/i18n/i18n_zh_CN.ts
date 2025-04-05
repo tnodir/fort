@@ -682,7 +682,7 @@
     </message>
     <message>
         <source>Tick label size:</source>
-        <translation type="unfinished"></translation>
+        <translation>刻度标签文字大小：</translation>
     </message>
 </context>
 <context>

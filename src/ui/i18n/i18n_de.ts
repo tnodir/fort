@@ -134,11 +134,11 @@
     </message>
     <message>
         <source>Allowed Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>Erlaubte Zonen:</translation>
     </message>
     <message>
         <source>Blocked Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>Gesperrte Zonen:</translation>
     </message>
 </context>
 <context>
@@ -432,27 +432,27 @@
     </message>
     <message>
         <source>Local Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokaler Hostname</translation>
     </message>
     <message>
         <source>Local IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokale IP</translation>
     </message>
     <message>
         <source>Local Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Lokaler Port</translation>
     </message>
     <message>
         <source>Remote Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Name des entfernten Hosts</translation>
     </message>
     <message>
         <source>Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Entfernte IP</translation>
     </message>
     <message>
         <source>Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Entfernter Port</translation>
     </message>
 </context>
 <context>
@@ -499,7 +499,7 @@
     </message>
     <message>
         <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Als Filter kopieren</translation>
     </message>
     <message>
         <source>Stretch last column</source>
@@ -682,7 +682,7 @@
     </message>
     <message>
         <source>Tick label size:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tick label size:</translation>
     </message>
 </context>
 <context>
@@ -772,7 +772,7 @@
     </message>
     <message>
         <source>Integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Integration</translation>
     </message>
     <message>
         <source>Windows Explorer integration</source>
@@ -780,7 +780,7 @@
     </message>
     <message>
         <source>Control Panel: Sounds integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontrollbereich: Sound-Integration</translation>
     </message>
     <message>
         <source>Auto-run:</source>
@@ -1046,7 +1046,7 @@
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation type="unfinished"></translation>
+        <translation>Warnungen beim Schließen des Fensters automatisch löschen</translation>
     </message>
 </context>
 <context>
@@ -1194,7 +1194,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Nach erfolgreichem Importieren werden nur neue Programme hinzugefügt. Fortfahren?</translation>
     </message>
 </context>
 <context>
@@ -1297,7 +1297,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisches Lernen (Sekunden):</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1333,15 +1333,15 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Filter aus (Sekunden):</translation>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarmierte Programme bei deaktiviertem Automatischem lernen entfernen</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
-        <translation type="unfinished"></translation>
+        <translation>Treiberereignisse verfolgen</translation>
     </message>
 </context>
 <context>
@@ -1630,11 +1630,11 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 Stunden</translation>
     </message>
     <message>
         <source>%1 minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 Minute(n)</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -1642,7 +1642,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Als Filter kopieren</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -1764,11 +1764,11 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Remove Alerted Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarmierte Programme entfernen</translation>
     </message>
     <message>
         <source>Are you sure to remove alerted programs?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sind Sie sicher, die alarmierten Programme zu entfernen?</translation>
     </message>
 </context>
 <context>
