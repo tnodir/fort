@@ -27,7 +27,7 @@ void AreaRange::toList(QStringList &list) const
         list << "LAN";
     }
     if (isInet()) {
-        list << "INET";
+        list << "INTERNET";
     }
 }
 
@@ -37,7 +37,7 @@ TextRange::ParseError AreaRange::parseText(const QString &text)
         m_isLocalhost = true;
     } else if (text == "LAN") {
         m_isLan = true;
-    } else if (text == "INET") {
+    } else if (text == "INET" || text == "INTERNET") {
         m_isInet = true;
     } else {
         return ErrorBadText;
