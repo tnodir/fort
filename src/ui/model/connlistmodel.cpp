@@ -42,6 +42,15 @@ QString formatIp(const ip_addr_t ip, bool isIPv6, bool resolveAddress = false)
     return address;
 }
 
+QString formatPort(const quint16 port, int role)
+{
+    if (role == Qt::ToolTipRole) {
+        return NetUtil::serviceName(port);
+    }
+
+    return QString::number(port);
+}
+
 QString reasonIconPath(const ConnRow &connRow)
 {
     static const char *const reasonIcons[] = {
@@ -104,9 +113,9 @@ QVariant dataDisplayLocalIp(const ConnRow &connRow, int /*role*/)
     return formatIp(connRow.localIp, connRow.isIPv6);
 }
 
-QVariant dataDisplayLocalPort(const ConnRow &connRow, int /*role*/)
+QVariant dataDisplayLocalPort(const ConnRow &connRow, int role)
 {
-    return NetUtil::serviceName(connRow.localPort);
+    return formatPort(connRow.localPort, role);
 }
 
 QVariant dataDisplayRemoteHostName(const ConnRow &connRow, int role)
@@ -121,9 +130,9 @@ QVariant dataDisplayRemoteIp(const ConnRow &connRow, int /*role*/)
     return formatIp(connRow.remoteIp, connRow.isIPv6);
 }
 
-QVariant dataDisplayRemotePort(const ConnRow &connRow, int /*role*/)
+QVariant dataDisplayRemotePort(const ConnRow &connRow, int role)
 {
-    return NetUtil::serviceName(connRow.remotePort);
+    return formatPort(connRow.remotePort, role);
 }
 
 QVariant dataDisplayDirection(const ConnRow &connRow, int role)
@@ -358,9 +367,9 @@ QString ConnListModel::rowsAsFilter(const QVector<int> &rows) const
 
         const auto text = QString("%1:(%2):local_ip(%3):local_port(%4):dir(%5):proto(%6)")
                                   .arg(formatIp(connRow.remoteIp, isIPv6),
-                                          NetUtil::serviceName(connRow.remotePort),
+                                          QString::number(connRow.remotePort),
                                           formatIp(connRow.localIp, isIPv6),
-                                          NetUtil::serviceName(connRow.localPort),
+                                          QString::number(connRow.localPort),
                                           (connRow.inbound ? "IN" : "OUT"),
                                           NetUtil::protocolName(connRow.ipProto));
 
