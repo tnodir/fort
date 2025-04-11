@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.17.1, 2025-04-11:
+- Driver: Fix Program's Zones handling (v3.17.0 regression).
+
 v3.17.0, 2025-04-11:
 - UI: Connections: Fix disabling of auto-scroll (#474).
 - UI: Connections: Show port numbers only (#487).
