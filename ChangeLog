@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.17.0, 2025-04-11:
+- UI: Connections: Fix disabling of auto-scroll (#474).
+- UI: Connections: Show port numbers only (#487).
+- Driver: Fix Global Rules, After App Rules, for 1-st conn of new app (#484).
+- Driver: Order Global Rules by Name (#486).
+
 v3.16.9, 2025-03-29:
 - UI: Rules: Add "ip_version(4, 6)" filter function (#470).
 - UI: GraphWindow: Draw ticks outside of grid (#323).
