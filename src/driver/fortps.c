@@ -404,8 +404,8 @@ inline static void fort_pstree_proc_set_name(
     proc->ps_name = ps_name;
 }
 
-inline static void fort_pstree_check_proc_conf(
-        PFORT_PSTREE ps_tree, PFORT_PSNODE proc, PCFORT_APP_PATH path, FORT_APP_FLAGS app_flags)
+inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNODE proc,
+        PCFORT_APP_PATH path, const FORT_APP_FLAGS app_flags)
 {
     if (app_flags.found == 0)
         return;

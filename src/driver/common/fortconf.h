@@ -361,9 +361,11 @@ typedef struct fort_conf_meta_conn
     UINT16 blocked : 1;
     UINT16 drop_blocked : 1;
     UINT16 ignore : 1;
+    UINT16 ask_to_connect : 1;
 
     UINT16 rule_filter_action : 1;
-    UINT16 reserved : 1; /* not used */
+
+    UCHAR reserved; /* not used */
 
     UCHAR reason;
 
