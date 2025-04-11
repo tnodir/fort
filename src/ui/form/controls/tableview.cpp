@@ -1,7 +1,10 @@
 #include "tableview.h"
 
 #include <QContextMenuEvent>
+#include <QKeyEvent>
 #include <QMenu>
+
+#include <util/guiutil.h>
 
 TableView::TableView(QWidget *parent) : QTableView(parent)
 {
@@ -98,6 +101,11 @@ void TableView::selectCell(int row, int column)
     this->scrollTo(index);
 }
 
+void TableView::copySelectedText()
+{
+    GuiUtil::setClipboardData(selectedText());
+}
+
 void TableView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
     QTableView::selectionChanged(selected, deselected);
@@ -122,4 +130,15 @@ void TableView::contextMenuEvent(QContextMenuEvent *event)
     if (menu()) {
         menu()->popup(event->globalPos());
     }
+}
+
+void TableView::keyPressEvent(QKeyEvent *event)
+{
+    if (event == QKeySequence::Copy) {
+        copySelectedText();
+        event->accept();
+        return;
+    }
+
+    QAbstractItemView::keyPressEvent(event);
 }

@@ -128,8 +128,7 @@ QLayout *ConnectionsPage::setupHeader()
 
         GuiUtil::setClipboardData(text);
     });
-    connect(m_actCopy, &QAction::triggered, this,
-            [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
+    connect(m_actCopy, &QAction::triggered, m_connListView, &TableView::copySelectedText);
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
         const auto appPath = connListCurrentPath();
         if (!appPath.isEmpty()) {

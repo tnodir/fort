@@ -28,12 +28,16 @@ signals:
 public slots:
     void selectCell(int row, int column = 0);
 
+    void copySelectedText();
+
 protected:
     void selectionChanged(
             const QItemSelection &selected, const QItemSelection &deselected) override;
     void currentChanged(const QModelIndex &current, const QModelIndex &previous) override;
 
     void contextMenuEvent(QContextMenuEvent *event) override;
+
+    void keyPressEvent(QKeyEvent *event) override;
 
 private:
     QMenu *m_menu = nullptr;
