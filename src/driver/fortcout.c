@@ -263,7 +263,7 @@ inline static BOOL fort_callout_ale_conn_zone_filtered(
             return TRUE; /* block Rejected Zones */
         }
 
-        if (opt.accept.included || opt.accept.filtered) {
+        if (opt.accept.filtered) {
             conn->zone_id = opt.accept.zone_id;
             conn->blocked = !opt.accept.included;
             return TRUE; /* allow/block-not Accepted Zones */
