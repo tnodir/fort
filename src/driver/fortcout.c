@@ -373,7 +373,7 @@ inline static BOOL fort_callout_ale_filter_mode_filtered(
 
     /* Block/Allow All */
     if (conf_flags.app_block_all || conf_flags.app_allow_all) {
-        conn->blocked = conf_flags.app_block_all;
+        conn->blocked = (UINT16) conf_flags.app_block_all;
         return FALSE;
     }
 
