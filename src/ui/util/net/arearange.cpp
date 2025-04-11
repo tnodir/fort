@@ -27,7 +27,7 @@ void AreaRange::toList(QStringList &list) const
         list << "LAN";
     }
     if (isInet()) {
-        list << "INTERNET";
+        list << "INET";
     }
 }
 
