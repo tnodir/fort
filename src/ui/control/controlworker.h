@@ -44,6 +44,10 @@ public:
     bool sendCommandData(const QByteArray &commandData);
 
     bool sendCommand(Control::Command command, const QVariantList &args = {});
+    bool postCommand(Control::Command command, const QVariantList &args = {});
+
+    bool sendResult(bool ok, const QVariantList &args = {});
+    bool waitResult(Control::Command &resultCommand, int msecs = 700) const;
 
     bool waitForSent(int msecs = 700) const;
     bool waitForRead(int msecs = 700) const;

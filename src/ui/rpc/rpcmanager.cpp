@@ -117,24 +117,14 @@ void RpcManager::closeClient()
 
 bool RpcManager::waitResult()
 {
-    m_resultCommand = Control::CommandNone;
-
-    int waitCount = 3;
-    do {
-        if (!client()->waitForRead()) {
-            if (--waitCount <= 0)
-                return false;
-        }
-    } while (m_resultCommand == Control::CommandNone);
-
-    return true;
+    return client()->waitResult(m_resultCommand);
 }
 
 void RpcManager::sendResult(ControlWorker *w, bool ok, const QVariantList &args)
 {
     // DBG: qCDebug(LC) << "Send Result to Client: id:" << w->id() << ok << args.size();
 
-    w->sendCommand(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error, args);
+    w->sendResult(ok, args);
 }
 
 bool RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)

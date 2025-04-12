@@ -14,6 +14,9 @@ public:
     template<typename T>
     static void listToVector(const QVariantList &list, QVector<T> &array);
 
+    static QStringList listToStringList(
+            const QVariantList &list, Qt::SplitBehavior behavior = Qt::SkipEmptyParts);
+
     template<typename T>
     inline static void addToList(QList<T> &list, const T &v)
     {

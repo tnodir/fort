@@ -136,6 +136,11 @@ bool OsUtil::playSound(SoundType /*type*/)
     return PlaySoundA("MessageNudge", nullptr, flags);
 }
 
+bool OsUtil::attachConsole(quint32 processId)
+{
+    return AttachConsole(processId);
+}
+
 bool OsUtil::showConsole(bool visible)
 {
     // Close the console window
@@ -165,6 +170,14 @@ void OsUtil::writeToConsole(const QString &line)
 
     DWORD nw;
     WriteConsoleW(stdoutHandle, line.utf16(), line.size(), &nw, nullptr);
+}
+
+void OsUtil::writeToConsole(const QStringList &lines, char sep)
+{
+    if (lines.isEmpty())
+        return;
+
+    writeToConsole(lines.join(sep) + '\n');
 }
 
 bool OsUtil::setCurrentThreadName(const QString &name)

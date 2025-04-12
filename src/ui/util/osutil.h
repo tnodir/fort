@@ -36,8 +36,11 @@ public:
     static bool beep(BeepType type = BeepSimple);
     static bool playSound(SoundType type = SoundDefault);
 
+    static bool attachConsole(quint32 processId = -1);
+
     static bool showConsole(bool visible);
     static void writeToConsole(const QString &line);
+    static void writeToConsole(const QStringList &lines, char sep = ' ');
 
     static bool setCurrentThreadName(const QString &name);
     static void setThreadIsBusy(bool on);

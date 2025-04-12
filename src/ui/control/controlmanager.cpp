@@ -12,6 +12,7 @@
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
+#include <util/variantutil.h>
 
 #include "command/controlcommandmanager.h"
 #include "controlworker.h"
@@ -108,19 +109,23 @@ bool ControlManager::processCommandClient()
         { "zone", Control::CommandZone },
     };
 
+    OsUtil::attachConsole();
+
     const auto settings = IoC<FortSettings>();
 
     const Control::Command command =
             g_commandsMap.value(settings->controlCommand(), Control::CommandNone);
 
     if (command == Control::CommandNone) {
-        qCWarning(LC) << "Unknown control command:" << settings->controlCommand();
+        OsUtil::writeToConsole({ "Unknown control command:", settings->controlCommand() });
         return false;
     }
 
     const QVariantList args = ControlWorker::buildArgs(settings->args());
-    if (args.isEmpty())
+    if (args.isEmpty()) {
+        OsUtil::writeToConsole({ "Empty arguments for command:", settings->controlCommand() });
         return false;
+    }
 
     OsUtil::allowOtherForegroundWindows(); // let the running instance to activate a window
 
@@ -131,18 +136,32 @@ bool ControlManager::postCommand(Control::Command command, const QVariantList &a
 {
     QLocalSocket socket;
     ControlWorker w(&socket);
+    w.setupForAsync();
+
+    Control::Command resultCommand;
+
+    connect(&w, &ControlWorker::requestReady, this,
+            [&resultCommand](Control::Command command, const QVariantList &args) {
+                resultCommand = command;
+
+                const auto lines = VariantUtil::listToStringList(args);
+
+                OsUtil::writeToConsole(lines, '\n');
+            });
 
     // Connect to UI process or Service
     if (!connectToAnyServer(w))
         return false;
 
     // Send data
-    if (!w.sendCommand(command, args))
+    if (!w.postCommand(command, args))
         return false;
 
-    w.waitForSent();
+    // Read response
+    if (!w.waitResult(resultCommand))
+        return false;
 
-    return true;
+    return (resultCommand == Control::Rpc_Result_Ok);
 }
 
 bool ControlManager::connectToAnyServer(ControlWorker &w)
@@ -208,20 +227,22 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
     // XXX: OsUtil::setThreadIsBusy(true);
 
     QString errorMessage;
-    const bool success = ControlCommandManager::processCommand({
+    const bool ok = ControlCommandManager::processCommand({
             .worker = w,
             .command = command,
             .args = args,
             .errorMessage = errorMessage,
     });
 
-    if (!success) {
-        qCWarning(LC) << "Bad command" << errorMessage << ':' << command << args;
+    if (!ok) {
+        qCWarning(LC) << "Bad command:" << command << args << ':' << errorMessage;
     }
+
+    w->sendResult(ok, { errorMessage });
 
     // XXX: OsUtil::setThreadIsBusy(false);
 
-    return success;
+    return ok;
 }
 
 QString ControlManager::getServerName(bool isService)

@@ -249,6 +249,36 @@ bool ControlWorker::sendCommand(Control::Command command, const QVariantList &ar
     return sendCommandData(buffer);
 }
 
+bool ControlWorker::postCommand(Control::Command command, const QVariantList &args)
+{
+    if (!sendCommand(command, args))
+        return false;
+
+    waitForSent();
+
+    return true;
+}
+
+bool ControlWorker::sendResult(bool ok, const QVariantList &args)
+{
+    return sendCommand(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error, args);
+}
+
+bool ControlWorker::waitResult(Control::Command &resultCommand, int msecs) const
+{
+    resultCommand = Control::CommandNone;
+
+    int waitCount = 3;
+    do {
+        if (!waitForRead(msecs)) {
+            if (--waitCount <= 0)
+                return false;
+        }
+    } while (resultCommand == Control::CommandNone);
+
+    return true;
+}
+
 bool ControlWorker::waitForSent(int msecs) const
 {
     return socket()->bytesToWrite() <= 0 || socket()->waitForBytesWritten(msecs);
