@@ -25,6 +25,8 @@ public:
     bool isOptionsEqual(const App &o) const;
     bool isNameEqual(const App &o) const;
 
+    bool isValid() const { return appId > 0; }
+
     bool isProcWild() const;
     bool hasZone() const;
 

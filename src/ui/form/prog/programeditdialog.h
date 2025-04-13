@@ -39,7 +39,7 @@ public:
     AppConnListModel *appConnListModel() const { return m_appConnListModel; }
 
     bool isWildcard() const { return m_isWildcard; }
-    bool isNew() const { return m_app.appId == 0; }
+    bool isNew() const { return !m_app.isValid(); }
 
     void initialize(const App &app, const QVector<qint64> &appIdList = {});
 

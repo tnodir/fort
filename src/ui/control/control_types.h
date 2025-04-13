@@ -105,6 +105,7 @@ enum Command : qint8 {
 enum CommandResult : qint8 {
     CommandResultNone = 0,
     CommandResultBase = 70,
+    CommandResultError = 99,
 };
 
 enum RpcManager : qint8 {

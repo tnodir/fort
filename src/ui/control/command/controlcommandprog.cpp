@@ -1,28 +1,29 @@
 #include "controlcommandprog.h"
 
+#include <conf/app.h>
 #include <conf/confappmanager.h>
 #include <manager/windowmanager.h>
 #include <util/ioc/ioccontainer.h>
 
 namespace {
 
-enum ProgAction : quint32 {
-    ProgActionNone = 0,
-    ProgActionAdd = (1 << 0),
-    ProgActionDel = (1 << 1),
-    ProgActionAllow = (1 << 2),
-    ProgActionBlock = (1 << 3),
-    ProgActionKill = (1 << 4),
+enum ProgAction : qint8 {
+    ProgActionInvalid = -1,
+    ProgActionAllow = 0,
+    ProgActionBlock,
+    ProgActionKill,
+    ProgActionAdd,
+    ProgActionDel,
 };
 
-ProgAction progActionByText(const QString &commandText)
+QStringList progActionNames()
 {
-    if (commandText == "add")
-        return ProgActionAdd;
+    // Sync with enum ProgAction
+    return { "allow", "block", "kill" };
+}
 
-    if (commandText == "del")
-        return ProgActionDel;
-
+ProgAction progActionByText(const QString &commandText, bool &report)
+{
     if (commandText == "allow")
         return ProgActionAllow;
 
@@ -32,18 +33,47 @@ ProgAction progActionByText(const QString &commandText)
     if (commandText == "kill")
         return ProgActionKill;
 
-    return ProgActionNone;
+    if (commandText == "add")
+        return ProgActionAdd;
+
+    if (commandText == "del")
+        return ProgActionDel;
+
+    if (commandText == "report") {
+        report = true;
+    }
+
+    return ProgActionInvalid;
 }
 
-bool processCommandProgAction(ProgAction progAction, const QString &appPath)
+bool reportCommandProgAction(ProcessCommandResult &r, const QString &appPath)
 {
+    const App app = IoC<ConfAppManager>()->appByPath(appPath);
+
+    if (!app.isValid()) {
+        r.commandResult = Control::CommandResultError;
+        r.errorMessage = "App not found";
+        return true;
+    }
+
+    const auto progAction =
+            app.killProcess ? ProgActionKill : (app.blocked ? ProgActionBlock : ProgActionAllow);
+
+    r.commandResult = Control::CommandResult(Control::CommandResultBase + progAction);
+
+    r.errorMessage = progActionNames().value(progAction);
+
+    return true;
+}
+
+bool processCommandProgAction(
+        ProcessCommandResult &r, const QString &appPath, ProgAction progAction, bool report)
+{
+    if (report) {
+        return reportCommandProgAction(r, appPath);
+    }
+
     switch (progAction) {
-    case ProgActionAdd: {
-        return IoC<WindowManager>()->showProgramEditForm(appPath);
-    }
-    case ProgActionDel: {
-        return IoC<ConfAppManager>()->deleteAppPath(appPath);
-    }
     case ProgActionAllow:
     case ProgActionBlock:
     case ProgActionKill: {
@@ -51,6 +81,12 @@ bool processCommandProgAction(ProgAction progAction, const QString &appPath)
         const bool killProcess = (progAction == ProgActionKill);
 
         return IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked, killProcess);
+    }
+    case ProgActionAdd: {
+        return IoC<WindowManager>()->showProgramEditForm(appPath);
+    }
+    case ProgActionDel: {
+        return IoC<ConfAppManager>()->deleteAppPath(appPath);
     }
     default:
         return false;
@@ -61,16 +97,18 @@ bool processCommandProgAction(ProgAction progAction, const QString &appPath)
 
 bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    const ProgAction progAction = progActionByText(p.args.value(0).toString());
-    if (progAction == ProgActionNone) {
-        r.errorMessage = "Usage: prog add|del|allow|block|kill|show <app-path>";
+    bool report = false;
+    const ProgAction progAction = progActionByText(p.args.value(0).toString(), report);
+
+    if (progAction == ProgActionInvalid && !report) {
+        r.errorMessage = "Usage: prog allow|block|kill|add|del|report <app-path>";
         return false;
     }
 
-    if (!checkCommandActionPassword(r, progAction, ProgActionAdd))
+    if (!checkCommandActionPassword(r, progAction))
         return false;
 
     const QString appPath = p.args.value(1).toString();
 
-    return processCommandProgAction(progAction, appPath);
+    return processCommandProgAction(r, appPath, progAction, report);
 }

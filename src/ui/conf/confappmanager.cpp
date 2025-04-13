@@ -205,7 +205,7 @@ bool ConfAppManager::addApp(App &app)
 {
     app.appId = appIdByPath(app.appOriginPath, app.appPath);
 
-    if (app.appId > 0)
+    if (app.isValid())
         return false; // already exists
 
     app.appName = IoC<AppInfoCache>()->appName(app.appPath);
@@ -333,7 +333,7 @@ bool ConfAppManager::addOrUpdateAppPath(
 
     bool ok = addApp(app);
 
-    if (!ok && app.appId > 0) {
+    if (!ok && app.isValid()) {
         ok = updateAppsBlocked({ app.appId }, blocked, killProcess);
     }
 
