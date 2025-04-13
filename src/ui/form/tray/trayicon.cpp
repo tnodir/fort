@@ -1005,14 +1005,14 @@ void TrayIcon::processMouseClick(Qt::MouseButton button, Qt::KeyboardModifiers m
 void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType, TrayIcon::ClickType menuClickType)
 {
     QAction *action = clickAction(clickType);
-    if (!action)
-        return;
 
-    if (clickType == menuClickType && action->data().toInt() == TrayIcon::ActionShowTrayMenu) {
-        return; // already handled by context-menu logic
+    if (action) {
+        if (clickType == menuClickType && action->data().toInt() == TrayIcon::ActionShowTrayMenu) {
+            return; // already handled by context-menu logic
+        }
+
+        action->trigger();
     }
-
-    action->trigger();
 
     if (clickType == menuClickType) {
         m_menu->hide(); // revert the default action: close context-menu
