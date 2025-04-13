@@ -35,6 +35,7 @@ SOURCES += \
     control/command/controlcommandconf.cpp \
     control/command/controlcommandfilter.cpp \
     control/command/controlcommandfiltermode.cpp \
+    control/command/controlcommandgroup.cpp \
     control/command/controlcommandhome.cpp \
     control/command/controlcommandmanager.cpp \
     control/command/controlcommandprog.cpp \
@@ -293,6 +294,7 @@ HEADERS += \
     control/command/controlcommandconf.h \
     control/command/controlcommandfilter.h \
     control/command/controlcommandfiltermode.h \
+    control/command/controlcommandgroup.h \
     control/command/controlcommandhome.h \
     control/command/controlcommandmanager.h \
     control/command/controlcommandprog.h \

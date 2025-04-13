@@ -157,6 +157,7 @@ public:
     void setupAppGroupBits(quint32 v);
 
     bool appGroupEnabled(int groupIndex) const;
+    void setAppGroupEnabled(int groupIndex, bool v);
 
     AddressGroup *inetAddressGroup() const { return m_addressGroups.first(); }
 

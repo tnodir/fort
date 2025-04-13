@@ -105,6 +105,7 @@ bool ControlManager::processCommandClient(Control::CommandResult &commandResult)
         { "filter-mode", Control::CommandFilterMode },
         { "block", Control::CommandBlock },
         { "prog", Control::CommandProg },
+        { "group", Control::CommandGroup },
         { "conf", Control::CommandConf },
         { "backup", Control::CommandBackup },
         { "zone", Control::CommandZone },

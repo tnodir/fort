@@ -131,6 +131,19 @@ bool FirewallConf::appGroupEnabled(int groupIndex) const
     return (appGroupBits() & (1 << groupIndex)) != 0;
 }
 
+void FirewallConf::setAppGroupEnabled(int groupIndex, bool v)
+{
+    const quint32 groupBit = (1 << groupIndex);
+
+    if (v) {
+        m_appGroupBits |= groupBit;
+    } else {
+        m_appGroupBits &= ~groupBit;
+    }
+
+    applyAppGroupBits();
+}
+
 const AppGroup *FirewallConf::appGroupAt(int index) const
 {
     if (index < 0 || index >= appGroups().size()) {

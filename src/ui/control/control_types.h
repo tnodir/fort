@@ -16,6 +16,7 @@ enum Command : qint8 {
     CommandFilterMode,
     CommandBlock,
     CommandProg,
+    CommandGroup,
     CommandConf,
     CommandBackup,
     CommandZone,
