@@ -104,18 +104,7 @@ enum Command : qint8 {
 
 enum CommandResult : qint8 {
     CommandResultNone = 0,
-    CommandResultBase = 69,
-
-    CommandResultHome = CommandResultBase,
-    CommandResultFilter = CommandResultBase,
-    CommandResultFilter_On,
-    CommandResultFilter_Off,
-    CommandResultFilterMode = CommandResultBase,
-    CommandResultBlock = CommandResultBase,
-    CommandResultProg = CommandResultBase,
-    CommandResultConf = CommandResultBase,
-    CommandResultBackup = CommandResultBase,
-    CommandResultZone = CommandResultBase,
+    CommandResultBase = 70,
 };
 
 enum RpcManager : qint8 {

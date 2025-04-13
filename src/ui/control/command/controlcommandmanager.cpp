@@ -39,7 +39,7 @@ bool ControlCommandManager::processCommand(const ProcessCommandArgs &p, ProcessC
         r.errorMessage = "Invalid command";
     }
 
-    if (r.commandResult != Control::CommandResultNone) {
+    if (func != &ControlCommandRpc::processCommand) {
         r.ok = ok;
         r.isSendResult = true;
 

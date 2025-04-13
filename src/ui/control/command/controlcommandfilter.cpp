@@ -10,10 +10,9 @@ enum FilterAction : qint8 {
     FilterActionInvalid = -1,
     FilterActionOn = 0,
     FilterActionOff,
-    FilterActionReport,
 };
 
-FilterAction filterActionByText(const QString &commandText)
+FilterAction filterActionByText(const QString &commandText, bool &report)
 {
     if (commandText == "on")
         return FilterActionOn;
@@ -21,32 +20,32 @@ FilterAction filterActionByText(const QString &commandText)
     if (commandText == "off")
         return FilterActionOff;
 
-    if (commandText == "report")
-        return FilterActionReport;
+    if (commandText == "report") {
+        report = true;
+    }
 
     return FilterActionInvalid;
 }
 
 bool reportCommandFilter(ProcessCommandResult &r, FirewallConf *conf)
 {
-    if (conf->filterEnabled()) {
-        r.commandResult = Control::CommandResultFilter_On;
-        r.errorMessage = "on";
-    } else {
-        r.commandResult = Control::CommandResultFilter_Off;
-        r.errorMessage = "off";
-    }
+    const bool filterEnabled = conf->filterEnabled();
+
+    r.commandResult = Control::CommandResult(
+            Control::CommandResultBase + filterEnabled ? FilterActionOn : FilterActionOff);
+
+    r.errorMessage = filterEnabled ? "on" : "off";
 
     return true;
 }
 
-bool processCommandFilterAction(ProcessCommandResult &r, FilterAction filterAction)
+bool processCommandFilterAction(ProcessCommandResult &r, FilterAction filterAction, bool report)
 {
     auto confManager = IoC<ConfManager>();
 
     auto conf = confManager->conf();
 
-    if (filterAction == FilterActionReport) {
+    if (report) {
         return reportCommandFilter(r, conf);
     }
 
@@ -59,8 +58,10 @@ bool processCommandFilterAction(ProcessCommandResult &r, FilterAction filterActi
 
 bool ControlCommandFilter::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    const FilterAction filterAction = filterActionByText(p.args.value(0).toString());
-    if (filterAction == FilterActionInvalid) {
+    bool report = false;
+    const FilterAction filterAction = filterActionByText(p.args.value(0).toString(), report);
+
+    if (filterAction == FilterActionInvalid && !report) {
         r.errorMessage = "Usage: filter on|off|report";
         return false;
     }
@@ -68,5 +69,5 @@ bool ControlCommandFilter::processCommand(const ProcessCommandArgs &p, ProcessCo
     if (!checkCommandActionPassword(r, filterAction))
         return false;
 
-    return processCommandFilterAction(r, filterAction);
+    return processCommandFilterAction(r, filterAction, report);
 }
