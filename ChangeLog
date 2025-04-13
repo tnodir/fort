@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.17.2, 2025-04-13:
+- UI: Add "-c [command] report" command-line argument (#478).
+- UI: Add "-c group on|off|report [group-index]" command-line argument (#478).
+- UI: Connections: Copy selected cells by Ctrl+C (#489).
+- UI: Tray: Hide context menu for ignored right click (#490).
+
 v3.17.1, 2025-04-11:
 - Driver: Fix Program's Zones handling (v3.17.0 regression) (#488).
 
