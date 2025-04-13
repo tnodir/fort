@@ -93,8 +93,6 @@ QString ControlWorker::errorString() const
 
 void ControlWorker::setupForAsync()
 {
-    socket()->setParent(this);
-
     connect(socket(), &QLocalSocket::errorOccurred, this,
             [&](QLocalSocket::LocalSocketError socketError) {
                 if (!m_isReconnecting && socketError != QLocalSocket::PeerClosedError) {
@@ -105,6 +103,11 @@ void ControlWorker::setupForAsync()
     connect(socket(), &QLocalSocket::connected, this, &ControlWorker::onConnected);
     connect(socket(), &QLocalSocket::disconnected, this, &ControlWorker::onDisconnected);
     connect(socket(), &QLocalSocket::readyRead, this, &ControlWorker::processRequest);
+}
+
+void ControlWorker::closeForAsync()
+{
+    socket()->disconnect(this);
 }
 
 void ControlWorker::setServerName(const QString &v)

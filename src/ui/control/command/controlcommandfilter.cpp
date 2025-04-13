@@ -10,6 +10,7 @@ enum FilterAction : qint8 {
     FilterActionInvalid = -1,
     FilterActionOn = 0,
     FilterActionOff,
+    FilterActionReport,
 };
 
 FilterAction filterActionByText(const QString &commandText)
@@ -20,14 +21,35 @@ FilterAction filterActionByText(const QString &commandText)
     if (commandText == "off")
         return FilterActionOff;
 
+    if (commandText == "report")
+        return FilterActionReport;
+
     return FilterActionInvalid;
 }
 
-bool processCommandFilterAction(FilterAction filterAction)
+bool reportCommandFilter(const ProcessCommandArgs &p, FirewallConf *conf)
+{
+    if (conf->filterEnabled()) {
+        p.commandResult = Control::CommandResultFilter_On;
+        p.errorMessage = "on";
+    } else {
+        p.commandResult = Control::CommandResultFilter_Off;
+        p.errorMessage = "off";
+    }
+
+    return true;
+}
+
+bool processCommandFilterAction(const ProcessCommandArgs &p, FilterAction filterAction)
 {
     auto confManager = IoC<ConfManager>();
 
     auto conf = confManager->conf();
+
+    if (filterAction == FilterActionReport) {
+        return reportCommandFilter(p, conf);
+    }
+
     conf->setFilterEnabled(filterAction == FilterActionOn);
 
     return confManager->saveFlags();
@@ -46,5 +68,5 @@ bool ControlCommandFilter::processCommand(const ProcessCommandArgs &p)
     if (!checkCommandActionPassword(p, filterAction))
         return false;
 
-    return processCommandFilterAction(filterAction);
+    return processCommandFilterAction(p, filterAction);
 }

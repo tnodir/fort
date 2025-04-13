@@ -47,6 +47,7 @@ ControlWorker *ControlManager::newServiceClient(QObject *parent) const
 {
     auto socket = new QLocalSocket();
     auto w = new ControlWorker(socket, parent);
+    socket->setParent(w);
     w->setupForAsync();
     w->setIsServiceClient(true);
 
@@ -96,7 +97,7 @@ void ControlManager::closeAllClients()
     }
 }
 
-bool ControlManager::processCommandClient()
+bool ControlManager::processCommandClient(Control::CommandResult &commandResult)
 {
     static QHash<QString, Control::Command> g_commandsMap = {
         { "home", Control::CommandHome },
@@ -129,24 +130,34 @@ bool ControlManager::processCommandClient()
 
     OsUtil::allowOtherForegroundWindows(); // let the running instance to activate a window
 
-    return postCommand(command, args);
+    return postCommand(command, args, &commandResult);
 }
 
-bool ControlManager::postCommand(Control::Command command, const QVariantList &args)
+bool ControlManager::postCommand(
+        Control::Command command, const QVariantList &args, Control::CommandResult *commandResult)
 {
     QLocalSocket socket;
     ControlWorker w(&socket);
     w.setupForAsync();
 
-    Control::Command resultCommand;
+    Control::Command commandOk;
 
     connect(&w, &ControlWorker::requestReady, this,
-            [&resultCommand](Control::Command command, const QVariantList &args) {
-                resultCommand = command;
+            [&commandOk, commandResult](Control::Command command, const QVariantList &args) {
+                commandOk = command;
 
-                const auto lines = VariantUtil::listToStringList(args);
+                if (args.size() < 2)
+                    return;
 
-                OsUtil::writeToConsole(lines, '\n');
+                if (commandResult) {
+                    *commandResult = args[0].value<Control::CommandResult>();
+                }
+
+                const auto message = args[1].toString();
+                if (message.isEmpty())
+                    return;
+
+                OsUtil::writeToConsole(QStringList { message });
             });
 
     // Connect to UI process or Service
@@ -158,10 +169,12 @@ bool ControlManager::postCommand(Control::Command command, const QVariantList &a
         return false;
 
     // Read response
-    if (!w.waitResult(resultCommand))
+    if (!w.waitResult(commandOk))
         return false;
 
-    return (resultCommand == Control::Rpc_Result_Ok);
+    w.closeForAsync();
+
+    return (commandOk == Control::Rpc_Result_Ok);
 }
 
 bool ControlManager::connectToAnyServer(ControlWorker &w)
@@ -191,6 +204,7 @@ void ControlManager::onNewConnection()
         }
 
         auto w = new ControlWorker(socket, this);
+        socket->setParent(w);
         w->setupForAsync();
 
         w->setIsClientValidated(!hasPassword);
@@ -226,10 +240,12 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
 
     // XXX: OsUtil::setThreadIsBusy(true);
 
+    Control::CommandResult commandResult = Control::CommandResultNone;
     QString errorMessage;
     const bool ok = ControlCommandManager::processCommand({
             .worker = w,
             .command = command,
+            .commandResult = commandResult,
             .args = args,
             .errorMessage = errorMessage,
     });
@@ -238,7 +254,7 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
         qCWarning(LC) << "Bad command:" << command << args << ':' << errorMessage;
     }
 
-    w->sendResult(ok, { errorMessage });
+    w->sendResult(ok, { commandResult, errorMessage });
 
     // XXX: OsUtil::setThreadIsBusy(false);
 

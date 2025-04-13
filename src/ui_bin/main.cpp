@@ -126,7 +126,9 @@ int main(int argc, char *argv[])
 
     if (controlManager.isCommandClient()) {
         // Send control command to running instance
-        return controlManager.processCommandClient() ? 0 : FortErrorControl;
+        Control::CommandResult commandResult = Control::CommandResultNone;
+        return controlManager.processCommandClient(commandResult) ? commandResult
+                                                                  : FortErrorControl;
     }
 
     // Setup Fort Manager

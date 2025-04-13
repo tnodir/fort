@@ -36,6 +36,7 @@ public:
     QString errorString() const;
 
     void setupForAsync();
+    void closeForAsync();
 
     bool connectToServer();
     bool reconnectToServer();

@@ -102,6 +102,22 @@ enum Command : qint8 {
     Rpc_TaskManager_zonesDownloaded,
 };
 
+enum CommandResult : qint8 {
+    CommandResultNone = 0,
+    CommandResultBase = 69,
+
+    CommandResultHome = CommandResultBase,
+    CommandResultFilter = CommandResultBase,
+    CommandResultFilter_On,
+    CommandResultFilter_Off,
+    CommandResultFilterMode = CommandResultBase,
+    CommandResultBlock = CommandResultBase,
+    CommandResultProg = CommandResultBase,
+    CommandResultConf = CommandResultBase,
+    CommandResultBackup = CommandResultBase,
+    CommandResultZone = CommandResultBase,
+};
+
 enum RpcManager : qint8 {
     Rpc_NoneManager = 0,
     Rpc_AppInfoManager,
@@ -125,6 +141,7 @@ struct ProcessCommandArgs
 {
     ControlWorker *worker = nullptr;
     Control::Command command = Control::CommandNone;
+    Control::CommandResult &commandResult;
     const QVariantList &args;
     QString &errorMessage;
 };
