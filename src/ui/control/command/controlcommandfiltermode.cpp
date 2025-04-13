@@ -8,7 +8,7 @@ namespace {
 
 QStringList filterModeNames()
 {
-    // Sync with enum FilterMode
+    // Sync with enum FirewallConf::FilterMode
     return { "learn", "ask", "block", "allow", "ignore" };
 }
 
