@@ -1,5 +1,6 @@
 #include "controlcommandmanager.h"
 
+#include <control/controlworker.h>
 #include <rpc/rpcmanager.h>
 
 #include "controlcommandbackup.h"
@@ -14,8 +15,6 @@
 
 namespace {
 
-using processCommand_func = bool (*)(const ProcessCommandArgs &p);
-
 static const processCommand_func processCommand_funcList[] = {
     &ControlCommandHome::processCommand, // Control::CommandHome,
     &ControlCommandFilter::processCommand, // Control::CommandFilter,
@@ -29,15 +28,26 @@ static const processCommand_func processCommand_funcList[] = {
 
 }
 
-bool ControlCommandManager::processCommand(const ProcessCommandArgs &p)
+bool ControlCommandManager::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const processCommand_func func = RpcManager::getProcessFunc(p.command, processCommand_funcList,
             Control::CommandHome, Control::CommandZone, &ControlCommandRpc::processCommand);
 
-    const bool ok = func(p);
+    const bool ok = func(p, r);
 
-    if (!ok && p.errorMessage.isEmpty()) {
-        p.errorMessage = "Invalid command";
+    if (!ok && r.errorMessage.isEmpty()) {
+        r.errorMessage = "Invalid command";
+    }
+
+    if (r.commandResult != Control::CommandResultNone) {
+        r.ok = ok;
+        r.isSendResult = true;
+
+        r.args = { r.commandResult, r.errorMessage };
+    }
+
+    if (r.isSendResult) {
+        p.worker->sendResult(r.ok, r.args);
     }
 
     return ok;

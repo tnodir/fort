@@ -1,11 +1,10 @@
 #ifndef STATMANAGERRPC_H
 #define STATMANAGERRPC_H
 
+#include <control/control_types.h>
 #include <stat/statmanager.h>
 
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class StatManagerRpc : public StatManager
 {
@@ -20,8 +19,7 @@ public:
 
     bool resetAppTrafTotals() override;
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

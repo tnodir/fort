@@ -38,16 +38,16 @@ FirewallConf::BlockTrafficType blockActionByText(const QString &commandText)
 
 }
 
-bool ControlCommandBlock::processCommand(const ProcessCommandArgs &p)
+bool ControlCommandBlock::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const FirewallConf::BlockTrafficType blockAction =
             blockActionByText(p.args.value(0).toString());
     if (blockAction == FirewallConf::BlockTrafficInvalid) {
-        p.errorMessage = "Usage: block no|inet|lan|inet-lan|all";
+        r.errorMessage = "Usage: block no|inet|lan|inet-lan|all";
         return false;
     }
 
-    if (!checkCommandActionPassword(p, blockAction))
+    if (!checkCommandActionPassword(r, blockAction))
         return false;
 
     return processCommandBlockAction(blockAction);

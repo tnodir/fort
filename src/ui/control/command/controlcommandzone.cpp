@@ -33,15 +33,15 @@ bool processCommandZoneAction(ZoneAction zoneAction)
 
 }
 
-bool ControlCommandZone::processCommand(const ProcessCommandArgs &p)
+bool ControlCommandZone::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const ZoneAction zoneAction = zoneActionByText(p.args.value(0).toString());
     if (zoneAction == ZoneActionNone) {
-        p.errorMessage = "Usage: zone update";
+        r.errorMessage = "Usage: zone update";
         return false;
     }
 
-    if (!checkCommandActionPassword(p, zoneAction))
+    if (!checkCommandActionPassword(r, zoneAction))
         return false;
 
     return processCommandZoneAction(zoneAction);

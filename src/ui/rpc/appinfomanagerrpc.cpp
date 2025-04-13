@@ -16,8 +16,8 @@ void AppInfoManagerRpc::lookupAppInfo(const QString &appPath)
     IoC<RpcManager>()->invokeOnServer(Control::Rpc_AppInfoManager_lookupAppInfo, { appPath });
 }
 
-bool AppInfoManagerRpc::processServerCommand(const ProcessCommandArgs &p,
-        QVariantList & /*resArgs*/, bool & /*ok*/, bool & /*isSendResult*/)
+bool AppInfoManagerRpc::processServerCommand(
+        const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     auto appInfoManager = IoC<AppInfoManager>();
 

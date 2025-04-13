@@ -59,15 +59,15 @@ bool processCommandProgAction(ProgAction progAction, const QString &appPath)
 
 }
 
-bool ControlCommandProg::processCommand(const ProcessCommandArgs &p)
+bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const ProgAction progAction = progActionByText(p.args.value(0).toString());
     if (progAction == ProgActionNone) {
-        p.errorMessage = "Usage: prog add|del|allow|block|kill|show <app-path>";
+        r.errorMessage = "Usage: prog add|del|allow|block|kill|show <app-path>";
         return false;
     }
 
-    if (!checkCommandActionPassword(p, progAction, ProgActionAdd))
+    if (!checkCommandActionPassword(r, progAction, ProgActionAdd))
         return false;
 
     const QString appPath = p.args.value(1).toString();

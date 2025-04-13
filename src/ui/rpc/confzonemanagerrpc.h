@@ -2,10 +2,9 @@
 #define CONFZONEMANAGERRPC_H
 
 #include <conf/confzonemanager.h>
+#include <control/control_types.h>
 
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class ConfZoneManagerRpc : public ConfZoneManager
 {
@@ -22,8 +21,7 @@ public:
     static QVariantList zoneToVarList(const Zone &zone);
     static Zone varListToZone(const QVariantList &v);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 };

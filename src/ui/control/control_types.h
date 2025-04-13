@@ -140,10 +140,19 @@ enum RpcManager : qint8 {
 struct ProcessCommandArgs
 {
     ControlWorker *worker = nullptr;
-    Control::Command command = Control::CommandNone;
-    Control::CommandResult &commandResult;
+    const Control::Command command = Control::CommandNone;
     const QVariantList &args;
-    QString &errorMessage;
 };
+
+struct ProcessCommandResult
+{
+    bool ok : 1 = false;
+    bool isSendResult : 1 = false;
+    Control::CommandResult commandResult = Control::CommandResultNone;
+    QVariantList args;
+    QString errorMessage;
+};
+
+using processCommand_func = bool (*)(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
 #endif // CONTROL_TYPES_H

@@ -7,37 +7,37 @@
 namespace {
 
 bool processConfZoneManager_addOrUpdateZone(
-        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     Zone zone = ConfZoneManagerRpc::varListToZone(p.args);
 
     const bool ok = confZoneManager->addOrUpdateZone(zone);
-    resArgs = { zone.zoneId };
+    r.args = { zone.zoneId };
     return ok;
 }
 
 bool processConfZoneManager_deleteZone(
-        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confZoneManager->deleteZone(p.args.value(0).toLongLong());
 }
 
 bool processConfZoneManager_updateZoneName(
-        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confZoneManager->updateZoneName(
             p.args.value(0).toLongLong(), p.args.value(1).toString());
 }
 
 bool processConfZoneManager_updateZoneEnabled(
-        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confZoneManager->updateZoneEnabled(
             p.args.value(0).toLongLong(), p.args.value(1).toBool());
 }
 
 using processConfZoneManager_func = bool (*)(
-        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, ProcessCommandResult &r);
 
 static const processConfZoneManager_func processConfZoneManager_funcList[] = {
     &processConfZoneManager_addOrUpdateZone, // Rpc_ConfZoneManager_addOrUpdateZone,
@@ -47,13 +47,13 @@ static const processConfZoneManager_func processConfZoneManager_funcList[] = {
 };
 
 inline bool processConfZoneManagerRpcResult(
-        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+        ConfZoneManager *confZoneManager, const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const processConfZoneManager_func func = RpcManager::getProcessFunc(p.command,
             processConfZoneManager_funcList, Control::Rpc_ConfZoneManager_addOrUpdateZone,
             Control::Rpc_ConfZoneManager_updateZoneEnabled);
 
-    return func ? func(confZoneManager, p, resArgs) : false;
+    return func ? func(confZoneManager, p, r) : false;
 }
 
 }
@@ -110,8 +110,7 @@ Zone ConfZoneManagerRpc::varListToZone(const QVariantList &v)
     return zone;
 }
 
-bool ConfZoneManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+bool ConfZoneManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     auto confZoneManager = IoC<ConfZoneManager>();
 
@@ -129,8 +128,8 @@ bool ConfZoneManagerRpc::processServerCommand(
         return true;
     }
     default: {
-        ok = processConfZoneManagerRpcResult(confZoneManager, p, resArgs);
-        isSendResult = true;
+        r.ok = processConfZoneManagerRpcResult(confZoneManager, p, r);
+        r.isSendResult = true;
         return true;
     }
     }

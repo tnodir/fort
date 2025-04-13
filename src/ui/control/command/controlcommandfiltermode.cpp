@@ -38,15 +38,15 @@ bool processCommandFilterModeAction(FirewallConf::FilterMode filterMode)
 
 }
 
-bool ControlCommandFilterMode::processCommand(const ProcessCommandArgs &p)
+bool ControlCommandFilterMode::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const FirewallConf::FilterMode filterMode = filterModeByText(p.args.value(0).toString());
     if (filterMode == FirewallConf::ModeInvalid) {
-        p.errorMessage = "Usage: filter-mode learn|ask|block|allow|ignore";
+        r.errorMessage = "Usage: filter-mode learn|ask|block|allow|ignore";
         return false;
     }
 
-    if (!checkCommandActionPassword(p, filterMode))
+    if (!checkCommandActionPassword(r, filterMode))
         return false;
 
     return processCommandFilterModeAction(filterMode);

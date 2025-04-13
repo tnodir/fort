@@ -35,8 +35,8 @@ void ServiceInfoManagerRpc::revertService(const QString &serviceName)
             Control::Rpc_ServiceInfoManager_revertService, { serviceName });
 }
 
-bool ServiceInfoManagerRpc::processServerCommand(const ProcessCommandArgs &p,
-        QVariantList & /*resArgs*/, bool & /*ok*/, bool & /*isSendResult*/)
+bool ServiceInfoManagerRpc::processServerCommand(
+        const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     auto serviceInfoManager = IoC<ServiceInfoManager>();
 

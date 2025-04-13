@@ -189,7 +189,7 @@ void RpcManager::initClientOnServer(ControlWorker *w) const
     DriverManagerRpc::processInitClient(w);
 }
 
-bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
+bool RpcManager::processCommandRpc(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     switch (p.command) {
     case Control::Rpc_Result_Ok:
@@ -203,11 +203,11 @@ bool RpcManager::processCommandRpc(const ProcessCommandArgs &p)
         return true;
     }
     default:
-        return processManagerRpc(p);
+        return processManagerRpc(p, r);
     }
 }
 
-static const processManager_func processManager_funcList[] = {
+static const processCommand_func processManager_funcList[] = {
     &AppInfoManagerRpc::processServerCommand, // Control::Rpc_AppInfoManager,
     &AutoUpdateManagerRpc::processServerCommand, // Control::Rpc_AutoUpdateManager,
     &ConfManagerRpc::processServerCommand, // Control::Rpc_ConfManager,
@@ -223,34 +223,23 @@ static const processManager_func processManager_funcList[] = {
     &TaskManagerRpc::processServerCommand, // Control::Rpc_TaskManager,
 };
 
-bool RpcManager::processManagerRpc(const ProcessCommandArgs &p)
+bool RpcManager::processManagerRpc(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     if (commandRequiresValidation(p.command) && !checkClientValidated(p.worker)) {
-        p.errorMessage = "Client is not validated";
-        sendResult(p.worker, false);
+        r.errorMessage = "Client is not validated";
+        r.isSendResult = true;
         return false;
     }
 
     const Control::RpcManager rpcManager = Control::managerByCommand(p.command);
 
     if (rpcManager < Control::Rpc_AppInfoManager || rpcManager > Control::Rpc_TaskManager) {
-        p.errorMessage = "Unknown command";
+        r.errorMessage = "Unknown command";
         return false;
     }
 
     const int funcIndex = rpcManager - Control::Rpc_AppInfoManager;
-    const processManager_func func = processManager_funcList[funcIndex];
+    const processCommand_func func = processManager_funcList[funcIndex];
 
-    QVariantList resArgs;
-    bool ok;
-    bool isSendResult = false;
-
-    if (!func(p, resArgs, ok, isSendResult))
-        return false;
-
-    if (isSendResult) {
-        sendResult(p.worker, ok, resArgs);
-    }
-
-    return true;
+    return func(p, r);
 }

@@ -8,37 +8,37 @@
 namespace {
 
 bool processConfRuleManager_addOrUpdateRule(
-        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     Rule rule = ConfRuleManagerRpc::varListToRule(p.args);
 
     const bool ok = confRuleManager->addOrUpdateRule(rule);
-    resArgs = { rule.ruleId };
+    r.args = { rule.ruleId };
     return ok;
 }
 
 bool processConfRuleManager_deleteRule(
-        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confRuleManager->deleteRule(p.args.value(0).toLongLong());
 }
 
 bool processConfRuleManager_updateRuleName(
-        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confRuleManager->updateRuleName(
             p.args.value(0).toLongLong(), p.args.value(1).toString());
 }
 
 bool processConfRuleManager_updateRuleEnabled(
-        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confRuleManager->updateRuleEnabled(
             p.args.value(0).toLongLong(), p.args.value(1).toBool());
 }
 
 using processConfRuleManager_func = bool (*)(
-        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, ProcessCommandResult &r);
 
 static const processConfRuleManager_func processConfRuleManager_funcList[] = {
     &processConfRuleManager_addOrUpdateRule, // Rpc_ConfRuleManager_addOrUpdateRule,
@@ -48,13 +48,13 @@ static const processConfRuleManager_func processConfRuleManager_funcList[] = {
 };
 
 inline bool processConfRuleManagerRpcResult(
-        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+        ConfRuleManager *confRuleManager, const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const processConfRuleManager_func func = RpcManager::getProcessFunc(p.command,
             processConfRuleManager_funcList, Control::Rpc_ConfRuleManager_addOrUpdateRule,
             Control::Rpc_ConfRuleManager_updateRuleEnabled);
 
-    return func ? func(confRuleManager, p, resArgs) : false;
+    return func ? func(confRuleManager, p, r) : false;
 }
 
 }
@@ -121,8 +121,7 @@ Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
     return rule;
 }
 
-bool ConfRuleManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+bool ConfRuleManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     auto confRuleManager = IoC<ConfRuleManager>();
 
@@ -140,8 +139,8 @@ bool ConfRuleManagerRpc::processServerCommand(
         return true;
     }
     default: {
-        ok = processConfRuleManagerRpcResult(confRuleManager, p, resArgs);
-        isSendResult = true;
+        r.ok = processConfRuleManagerRpcResult(confRuleManager, p, r);
+        r.isSendResult = true;
         return true;
     }
     }

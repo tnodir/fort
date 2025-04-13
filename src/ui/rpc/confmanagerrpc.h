@@ -2,11 +2,10 @@
 #define CONFMANAGERRPC_H
 
 #include <conf/confmanager.h>
+#include <control/control_types.h>
 
 class RpcManager;
 class TaskManager;
-
-struct ProcessCommandArgs;
 
 class ConfManagerRpc : public ConfManager
 {
@@ -24,8 +23,7 @@ public:
 
     void onConfChanged(const QVariant &confVar);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

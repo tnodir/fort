@@ -21,25 +21,25 @@ inline bool processConfManager_confChanged(ConfManager *confManager, const Proce
 }
 
 bool processConfManager_saveVariant(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfManager *confManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confManager->saveVariant(p.args.value(0));
 }
 
 bool processConfManager_exportMasterBackup(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfManager *confManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confManager->exportMasterBackup(p.args.value(0).toString());
 }
 
 bool processConfManager_importMasterBackup(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfManager *confManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confManager->importMasterBackup(p.args.value(0).toString());
 }
 
 bool processConfManager_checkPassword(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfManager *confManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     const bool ok = confManager->checkPassword(p.args.value(0).toString());
     if (ok && !p.worker->isClientValidated()) {
@@ -49,7 +49,7 @@ bool processConfManager_checkPassword(
 }
 
 using processConfManager_func = bool (*)(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+        ConfManager *confManager, const ProcessCommandArgs &p, ProcessCommandResult &r);
 
 static const processConfManager_func processConfManager_funcList[] = {
     &processConfManager_saveVariant, // Rpc_ConfManager_saveVariant,
@@ -59,13 +59,13 @@ static const processConfManager_func processConfManager_funcList[] = {
 };
 
 inline bool processConfManagerRpcResult(
-        ConfManager *confManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+        ConfManager *confManager, const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const processConfManager_func func =
             RpcManager::getProcessFunc(p.command, processConfManager_funcList,
                     Control::Rpc_ConfManager_saveVariant, Control::Rpc_ConfManager_checkPassword);
 
-    return func ? func(confManager, p, resArgs) : false;
+    return func ? func(confManager, p, r) : false;
 }
 
 }
@@ -138,8 +138,7 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
     }
 }
 
-bool ConfManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+bool ConfManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     auto confManager = IoC<ConfManager>();
 
@@ -152,8 +151,8 @@ bool ConfManagerRpc::processServerCommand(
         return true;
     }
     default: {
-        ok = processConfManagerRpcResult(confManager, p, resArgs);
-        isSendResult = true;
+        r.ok = processConfManagerRpcResult(confManager, p, r);
+        r.isSendResult = true;
         return true;
     }
     }

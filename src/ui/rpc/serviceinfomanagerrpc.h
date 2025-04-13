@@ -1,11 +1,10 @@
 #ifndef SERVICEINFOMANAGERRPC_H
 #define SERVICEINFOMANAGERRPC_H
 
+#include <control/control_types.h>
 #include <manager/serviceinfomanager.h>
 
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class ServiceInfoManagerRpc : public ServiceInfoManager
 {
@@ -14,8 +13,7 @@ class ServiceInfoManagerRpc : public ServiceInfoManager
 public:
     explicit ServiceInfoManagerRpc(QObject *parent = nullptr);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
 public slots:
     void trackService(const QString &serviceName) override;

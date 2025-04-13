@@ -10,9 +10,6 @@
 struct ProcessCommandArgs;
 class ControlWorker;
 
-using processManager_func = bool (*)(
-        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
-
 class RpcManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -37,7 +34,7 @@ public:
 
     void invokeOnClients(Control::Command cmd, const QVariantList &args = {});
 
-    bool processCommandRpc(const ProcessCommandArgs &p);
+    bool processCommandRpc(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     template<typename F>
     constexpr static F *getProcessFunc(Control::Command command, F *const funcList[], int minIndex,
@@ -59,7 +56,7 @@ private:
     bool checkClientValidated(ControlWorker *w) const;
     void initClientOnServer(ControlWorker *w) const;
 
-    bool processManagerRpc(const ProcessCommandArgs &p);
+    bool processManagerRpc(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
 private:
     Control::Command m_resultCommand = Control::CommandNone;

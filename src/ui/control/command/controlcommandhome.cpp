@@ -3,7 +3,7 @@
 #include <manager/windowmanager.h>
 #include <util/ioc/ioccontainer.h>
 
-bool ControlCommandHome::processCommand(const ProcessCommandArgs &p)
+bool ControlCommandHome::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const auto commandText = p.args.value(0).toString();
 
@@ -11,6 +11,6 @@ bool ControlCommandHome::processCommand(const ProcessCommandArgs &p)
         return IoC<WindowManager>()->exposeHomeWindow();
     }
 
-    p.errorMessage = "Usage: home show";
+    r.errorMessage = "Usage: home show";
     return false;
 }

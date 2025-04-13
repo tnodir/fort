@@ -1,12 +1,11 @@
 #ifndef DRIVERMANAGERRPC_H
 #define DRIVERMANAGERRPC_H
 
+#include <control/control_types.h>
 #include <driver/drivermanager.h>
 
 class ControlWorker;
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class DriverManagerRpc : public DriverManager
 {
@@ -26,8 +25,7 @@ public:
 
     static bool processInitClient(ControlWorker *w);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

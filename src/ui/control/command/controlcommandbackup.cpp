@@ -38,15 +38,15 @@ bool processCommandBackupAction(BackupAction backupAction, const QString &dirPat
 
 }
 
-bool ControlCommandBackup::processCommand(const ProcessCommandArgs &p)
+bool ControlCommandBackup::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const BackupAction backupAction = backupActionByText(p.args.value(0).toString());
     if (backupAction == BackupActionNone) {
-        p.errorMessage = "Usage: backup export|import <dir-path>";
+        r.errorMessage = "Usage: backup export|import <dir-path>";
         return false;
     }
 
-    if (!checkCommandActionPassword(p, backupAction))
+    if (!checkCommandActionPassword(r, backupAction))
         return false;
 
     const QString dirPath = p.args.value(1).toString();

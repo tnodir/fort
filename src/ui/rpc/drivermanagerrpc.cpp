@@ -44,8 +44,8 @@ bool DriverManagerRpc::processInitClient(ControlWorker *w)
     return w->sendCommand(Control::Rpc_DriverManager_updateState, updateState_args());
 }
 
-bool DriverManagerRpc::processServerCommand(const ProcessCommandArgs &p, QVariantList & /*resArgs*/,
-        bool & /*ok*/, bool & /*isSendResult*/)
+bool DriverManagerRpc::processServerCommand(
+        const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     auto driverManager = IoC<DriverManager>();
 

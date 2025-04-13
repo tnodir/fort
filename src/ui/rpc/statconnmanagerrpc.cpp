@@ -31,8 +31,7 @@ void StatConnManagerRpc::deleteConn(qint64 connIdTo)
     IoC<RpcManager>()->doOnServer(Control::Rpc_StatConnManager_deleteConn, { connIdTo });
 }
 
-bool StatConnManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, QVariantList & /*resArgs*/, bool &ok, bool &isSendResult)
+bool StatConnManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     auto statConnManager = IoC<StatConnManager>();
 
@@ -42,8 +41,8 @@ bool StatConnManagerRpc::processServerCommand(
         return true;
     }
     default: {
-        ok = processStatConnManagerRpcResult(statConnManager, p);
-        isSendResult = true;
+        r.ok = processStatConnManagerRpcResult(statConnManager, p);
+        r.isSendResult = true;
         return true;
     }
     }

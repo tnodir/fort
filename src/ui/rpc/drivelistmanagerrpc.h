@@ -1,9 +1,8 @@
 #ifndef DRIVELISTMANAGERRPC_H
 #define DRIVELISTMANAGERRPC_H
 
+#include <control/control_types.h>
 #include <manager/drivelistmanager.h>
-
-struct ProcessCommandArgs;
 
 class DriveListManagerRpc : public DriveListManager
 {
@@ -12,8 +11,7 @@ class DriveListManagerRpc : public DriveListManager
 public:
     explicit DriveListManagerRpc(QObject *parent = nullptr);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
 public slots:
     void onDriveListChanged() override;

@@ -30,19 +30,19 @@ inline bool processAutoUpdateManager_restartClients(
 }
 
 bool processAutoUpdateManager_startDownload(AutoUpdateManager *autoUpdateManager,
-        const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+        const ProcessCommandArgs & /*p*/, ProcessCommandResult & /*r*/)
 {
     return autoUpdateManager->startDownload();
 }
 
 bool processAutoUpdateManager_runInstaller(AutoUpdateManager *autoUpdateManager,
-        const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+        const ProcessCommandArgs & /*p*/, ProcessCommandResult & /*r*/)
 {
     return autoUpdateManager->runInstaller();
 }
 
 using processAutoUpdateManager_func = bool (*)(
-        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p, ProcessCommandResult &r);
 
 static const processAutoUpdateManager_func processAutoUpdateManager_funcList[] = {
     &processAutoUpdateManager_startDownload, // Rpc_AutoUpdateManager_startDownload,
@@ -50,13 +50,13 @@ static const processAutoUpdateManager_func processAutoUpdateManager_funcList[] =
 };
 
 inline bool processAutoUpdateManagerRpcResult(
-        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+        AutoUpdateManager *autoUpdateManager, const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const processAutoUpdateManager_func func = RpcManager::getProcessFunc(p.command,
             processAutoUpdateManager_funcList, Control::Rpc_AutoUpdateManager_startDownload,
             Control::Rpc_AutoUpdateManager_runInstaller);
 
-    return func ? func(autoUpdateManager, p, resArgs) : false;
+    return func ? func(autoUpdateManager, p, r) : false;
 }
 
 }
@@ -99,7 +99,7 @@ bool AutoUpdateManagerRpc::processInitClient(ControlWorker *w)
 }
 
 bool AutoUpdateManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+        const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     auto autoUpdateManager = IoC<AutoUpdateManager>();
 
@@ -111,8 +111,8 @@ bool AutoUpdateManagerRpc::processServerCommand(
         return processAutoUpdateManager_restartClients(autoUpdateManager, p);
     }
     default: {
-        ok = processAutoUpdateManagerRpcResult(autoUpdateManager, p, resArgs);
-        isSendResult = true;
+        r.ok = processAutoUpdateManagerRpcResult(autoUpdateManager, p, r);
+        r.isSendResult = true;
         return true;
     }
     }

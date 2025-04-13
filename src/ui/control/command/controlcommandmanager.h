@@ -6,7 +6,7 @@
 class ControlCommandManager
 {
 public:
-    static bool processCommand(const ProcessCommandArgs &p);
+    static bool processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 };
 
 #endif // CONTROLCOMMANDMANAGER_H

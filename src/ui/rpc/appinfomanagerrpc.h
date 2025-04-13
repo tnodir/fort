@@ -2,10 +2,9 @@
 #define APPINFOMANAGERRPC_H
 
 #include <appinfo/appinfomanager.h>
+#include <control/control_types.h>
 
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class AppInfoManagerRpc : public AppInfoManager
 {
@@ -14,8 +13,7 @@ class AppInfoManagerRpc : public AppInfoManager
 public:
     explicit AppInfoManagerRpc(const QString &filePath, bool noCache, QObject *parent = nullptr);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

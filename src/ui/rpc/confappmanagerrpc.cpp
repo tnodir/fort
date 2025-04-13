@@ -12,20 +12,20 @@
 namespace {
 
 bool processConfAppManager_addOrUpdateAppPath(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confAppManager->addOrUpdateAppPath(
             p.args.value(0).toString(), p.args.value(1).toBool(), p.args.value(2).toBool());
 }
 
 bool processConfAppManager_deleteAppPath(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confAppManager->deleteAppPath(p.args.value(0).toString());
 }
 
 bool processConfAppManager_addOrUpdateApp(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     App app = ConfAppManagerRpc::varListToApp(p.args.value(0).toList());
 
@@ -33,7 +33,7 @@ bool processConfAppManager_addOrUpdateApp(
 }
 
 bool processConfAppManager_updateApp(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     App app = ConfAppManagerRpc::varListToApp(p.args);
 
@@ -41,13 +41,13 @@ bool processConfAppManager_updateApp(
 }
 
 bool processConfAppManager_updateAppName(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confAppManager->updateAppName(p.args.value(0).toLongLong(), p.args.value(1).toString());
 }
 
 bool processConfAppManager_deleteApps(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     QVector<qint64> appIdList;
     VariantUtil::listToVector(p.args.value(0).toList(), appIdList);
@@ -56,19 +56,19 @@ bool processConfAppManager_deleteApps(
 }
 
 bool processConfAppManager_clearAlerts(ConfAppManager *confAppManager,
-        const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+        const ProcessCommandArgs & /*p*/, ProcessCommandResult & /*r*/)
 {
     return confAppManager->clearAlerts();
 }
 
 bool processConfAppManager_purgeApps(ConfAppManager *confAppManager,
-        const ProcessCommandArgs & /*p*/, QVariantList & /*resArgs*/)
+        const ProcessCommandArgs & /*p*/, ProcessCommandResult & /*r*/)
 {
     return confAppManager->purgeApps();
 }
 
 bool processConfAppManager_updateAppsBlocked(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     QVector<qint64> appIdList;
     VariantUtil::listToVector(p.args.value(0).toList(), appIdList);
@@ -78,19 +78,19 @@ bool processConfAppManager_updateAppsBlocked(
 }
 
 bool processConfAppManager_importAppsBackup(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confAppManager->importAppsBackup(p.args.value(0).toString());
 }
 
 bool processConfAppManager_updateDriverConf(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList & /*resArgs*/)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     return confAppManager->updateDriverConf(p.args.value(0).toBool());
 }
 
 using processConfAppManager_func = bool (*)(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs);
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult &r);
 
 static const processConfAppManager_func processConfAppManager_funcList[] = {
     &processConfAppManager_addOrUpdateAppPath, // Rpc_ConfAppManager_addOrUpdateAppPath,
@@ -107,13 +107,13 @@ static const processConfAppManager_func processConfAppManager_funcList[] = {
 };
 
 inline bool processConfAppManagerRpcResult(
-        ConfAppManager *confAppManager, const ProcessCommandArgs &p, QVariantList &resArgs)
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const processConfAppManager_func func = RpcManager::getProcessFunc(p.command,
             processConfAppManager_funcList, Control::Rpc_ConfAppManager_addOrUpdateAppPath,
             Control::Rpc_ConfAppManager_updateDriverConf);
 
-    return func ? func(confAppManager, p, resArgs) : false;
+    return func ? func(confAppManager, p, r) : false;
 }
 
 }
@@ -232,8 +232,7 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     return app;
 }
 
-bool ConfAppManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult)
+bool ConfAppManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     auto confAppManager = IoC<ConfAppManager>();
 
@@ -253,8 +252,8 @@ bool ConfAppManagerRpc::processServerCommand(
         return true;
     }
     default: {
-        ok = processConfAppManagerRpcResult(confAppManager, p, resArgs);
-        isSendResult = true;
+        r.ok = processConfAppManagerRpcResult(confAppManager, p, r);
+        r.isSendResult = true;
         return true;
     }
     }

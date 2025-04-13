@@ -129,8 +129,7 @@ void TaskManagerRpc::abortTask(qint8 taskType)
     IoC<RpcManager>()->invokeOnServer(Control::Rpc_TaskManager_abortTask, { taskType });
 }
 
-bool TaskManagerRpc::processServerCommand(const ProcessCommandArgs &p, QVariantList & /*resArgs*/,
-        bool & /*ok*/, bool & /*isSendResult*/)
+bool TaskManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     auto taskManager = IoC<TaskManager>();
 

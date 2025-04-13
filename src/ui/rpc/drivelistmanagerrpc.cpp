@@ -5,8 +5,8 @@
 
 DriveListManagerRpc::DriveListManagerRpc(QObject *parent) : DriveListManager(parent) { }
 
-bool DriveListManagerRpc::processServerCommand(const ProcessCommandArgs &p,
-        QVariantList & /*resArgs*/, bool & /*ok*/, bool & /*isSendResult*/)
+bool DriveListManagerRpc::processServerCommand(
+        const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
     auto driveListManager = IoC<DriveListManager>();
 

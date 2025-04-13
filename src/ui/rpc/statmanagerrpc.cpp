@@ -95,8 +95,7 @@ bool StatManagerRpc::clearTraffic()
     return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_clearTraffic);
 }
 
-bool StatManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, QVariantList & /*resArgs*/, bool &ok, bool &isSendResult)
+bool StatManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     auto statManager = IoC<StatManager>();
 
@@ -109,8 +108,8 @@ bool StatManagerRpc::processServerCommand(
         return processStatManagerRpcSignal(statManager, p);
     }
     default: {
-        ok = processStatManagerRpcResult(statManager, p);
-        isSendResult = true;
+        r.ok = processStatManagerRpcResult(statManager, p);
+        r.isSendResult = true;
         return true;
     }
     }

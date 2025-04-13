@@ -27,27 +27,27 @@ FilterAction filterActionByText(const QString &commandText)
     return FilterActionInvalid;
 }
 
-bool reportCommandFilter(const ProcessCommandArgs &p, FirewallConf *conf)
+bool reportCommandFilter(ProcessCommandResult &r, FirewallConf *conf)
 {
     if (conf->filterEnabled()) {
-        p.commandResult = Control::CommandResultFilter_On;
-        p.errorMessage = "on";
+        r.commandResult = Control::CommandResultFilter_On;
+        r.errorMessage = "on";
     } else {
-        p.commandResult = Control::CommandResultFilter_Off;
-        p.errorMessage = "off";
+        r.commandResult = Control::CommandResultFilter_Off;
+        r.errorMessage = "off";
     }
 
     return true;
 }
 
-bool processCommandFilterAction(const ProcessCommandArgs &p, FilterAction filterAction)
+bool processCommandFilterAction(ProcessCommandResult &r, FilterAction filterAction)
 {
     auto confManager = IoC<ConfManager>();
 
     auto conf = confManager->conf();
 
     if (filterAction == FilterActionReport) {
-        return reportCommandFilter(p, conf);
+        return reportCommandFilter(r, conf);
     }
 
     conf->setFilterEnabled(filterAction == FilterActionOn);
@@ -57,16 +57,16 @@ bool processCommandFilterAction(const ProcessCommandArgs &p, FilterAction filter
 
 }
 
-bool ControlCommandFilter::processCommand(const ProcessCommandArgs &p)
+bool ControlCommandFilter::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const FilterAction filterAction = filterActionByText(p.args.value(0).toString());
     if (filterAction == FilterActionInvalid) {
-        p.errorMessage = "Usage: filter on|off";
+        r.errorMessage = "Usage: filter on|off|report";
         return false;
     }
 
-    if (!checkCommandActionPassword(p, filterAction))
+    if (!checkCommandActionPassword(r, filterAction))
         return false;
 
-    return processCommandFilterAction(p, filterAction);
+    return processCommandFilterAction(r, filterAction);
 }

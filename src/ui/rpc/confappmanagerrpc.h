@@ -2,10 +2,9 @@
 #define CONFAPPMANAGERRPC_H
 
 #include <conf/confappmanager.h>
+#include <control/control_types.h>
 
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class ConfAppManagerRpc : public ConfAppManager
 {
@@ -34,8 +33,7 @@ public:
     static QVariantList appToVarList(const App &app);
     static App varListToApp(const QVariantList &v);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

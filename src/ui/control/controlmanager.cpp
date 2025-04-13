@@ -240,21 +240,18 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
 
     // XXX: OsUtil::setThreadIsBusy(true);
 
-    Control::CommandResult commandResult = Control::CommandResultNone;
-    QString errorMessage;
-    const bool ok = ControlCommandManager::processCommand({
-            .worker = w,
-            .command = command,
-            .commandResult = commandResult,
-            .args = args,
-            .errorMessage = errorMessage,
-    });
+    ProcessCommandResult r;
+    const bool ok = ControlCommandManager::processCommand(
+            {
+                    .worker = w,
+                    .command = command,
+                    .args = args,
+            },
+            r);
 
     if (!ok) {
-        qCWarning(LC) << "Bad command:" << command << args << ':' << errorMessage;
+        qCDebug(LC) << "Bad command:" << command << args << "Error:" << r.errorMessage;
     }
-
-    w->sendResult(ok, { commandResult, errorMessage });
 
     // XXX: OsUtil::setThreadIsBusy(false);
 

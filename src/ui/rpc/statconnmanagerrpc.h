@@ -1,11 +1,10 @@
 #ifndef STATCONNMANAGERRPC_H
 #define STATCONNMANAGERRPC_H
 
+#include <control/control_types.h>
 #include <stat/statconnmanager.h>
 
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class StatConnManagerRpc : public StatConnManager
 {
@@ -16,8 +15,7 @@ public:
 
     void deleteConn(qint64 connIdTo = 0) override;
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

@@ -31,15 +31,15 @@ bool processCommandConfAction(ConfAction confAction)
 
 }
 
-bool ControlCommandConf::processCommand(const ProcessCommandArgs &p)
+bool ControlCommandConf::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const ConfAction confAction = confActionByText(p.args.value(0).toString());
     if (confAction == ConfActionNone) {
-        p.errorMessage = "Usage: conf update-driver";
+        r.errorMessage = "Usage: conf update-driver";
         return false;
     }
 
-    if (!checkCommandActionPassword(p, confAction, ConfActionUpdateDriver))
+    if (!checkCommandActionPassword(r, confAction, ConfActionUpdateDriver))
         return false;
 
     return processCommandConfAction(confAction);

@@ -2,10 +2,9 @@
 #define CONFRULEMANAGERRPC_H
 
 #include <conf/confrulemanager.h>
+#include <control/control_types.h>
 
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class ConfRuleManagerRpc : public ConfRuleManager
 {
@@ -22,8 +21,7 @@ public:
     static QVariantList ruleToVarList(const Rule &rule);
     static Rule varListToRule(const QVariantList &v);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 };

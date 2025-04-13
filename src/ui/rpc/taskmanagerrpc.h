@@ -1,11 +1,10 @@
 #ifndef TASKMANAGERRPC_H
 #define TASKMANAGERRPC_H
 
+#include <control/control_types.h>
 #include <task/taskmanager.h>
 
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class TaskManagerRpc : public TaskManager
 {
@@ -17,8 +16,7 @@ public:
     void onTaskStarted(qint8 taskType);
     void onTaskFinished(qint8 taskType);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 

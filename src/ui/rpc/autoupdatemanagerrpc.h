@@ -1,12 +1,10 @@
 #ifndef AUTOUPDATEMANAGERRPC_H
 #define AUTOUPDATEMANAGERRPC_H
 
+#include <control/control_types.h>
 #include <manager/autoupdatemanager.h>
 
-class ControlWorker;
 class RpcManager;
-
-struct ProcessCommandArgs;
 
 class AutoUpdateManagerRpc : public AutoUpdateManager
 {
@@ -24,8 +22,7 @@ public:
 
     static bool processInitClient(ControlWorker *w);
 
-    static bool processServerCommand(
-            const ProcessCommandArgs &p, QVariantList &resArgs, bool &ok, bool &isSendResult);
+    static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);
 
