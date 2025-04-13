@@ -25,7 +25,7 @@ void AppInfoCache::setUp()
 
 void AppInfoCache::tearDown()
 {
-    disconnect(IoC<AppInfoManager>());
+    IoC<AppInfoManager>()->disconnect(this);
 }
 
 QString AppInfoCache::appName(const QString &appPath)

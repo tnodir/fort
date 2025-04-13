@@ -72,7 +72,7 @@ void LogManager::tearDown()
 {
     const auto driverManager = IoC<DriverManager>();
 
-    disconnect(driverManager->driverWorker());
+    driverManager->driverWorker()->disconnect(this);
 }
 
 void LogManager::readLogAsync()

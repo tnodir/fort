@@ -45,7 +45,7 @@ void HotKeyManager::setUp()
 
 void HotKeyManager::tearDown()
 {
-    disconnect(IoC<NativeEventFilter>());
+    IoC<NativeEventFilter>()->disconnect(this);
 
     removeActions();
 }
