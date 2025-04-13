@@ -38,6 +38,7 @@ protected slots:
 private:
     void setupUi();
     QLayout *setupHeader();
+    void setupHeaderConnections();
     void setupOptions();
     void setupAutoScroll();
     void setupShowHostNames();

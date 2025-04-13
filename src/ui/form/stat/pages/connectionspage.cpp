@@ -88,6 +88,8 @@ void ConnectionsPage::setupUi()
     setupTableConnList();
     setupTableConnListHeader();
 
+    setupHeaderConnections();
+
     // App Info Row
     setupAppInfoRow();
 
@@ -122,6 +124,28 @@ QLayout *ConnectionsPage::setupHeader()
 
     m_actClearAll = editMenu->addAction(IconCache::icon(":/icons/broom.png"), QString());
 
+    m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setMenu(editMenu);
+
+    // Toolbar buttons
+    m_btClearAll = ControlUtil::createFlatToolButton(":/icons/broom.png");
+
+    connect(m_btClearAll, &QAbstractButton::clicked, m_actClearAll, &QAction::trigger);
+
+    // Options
+    setupOptions();
+
+    layout->addWidget(m_btEdit);
+    layout->addWidget(ControlUtil::createVSeparator());
+    layout->addWidget(m_btClearAll);
+    layout->addStretch();
+    layout->addWidget(m_btOptions);
+
+    return layout;
+}
+
+void ConnectionsPage::setupHeaderConnections()
+{
     connect(m_actCopyAsFilter, &QAction::triggered, this, [&] {
         const auto rows = m_connListView->selectedRows();
         const auto text = connListModel()->rowsAsFilter(rows);
@@ -143,25 +167,6 @@ QLayout *ConnectionsPage::setupHeader()
         windowManager()->showConfirmBox(
                 [&] { ctrl()->deleteConn(); }, tr("Are you sure to remove all connections?"));
     });
-
-    m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
-    m_btEdit->setMenu(editMenu);
-
-    // Toolbar buttons
-    m_btClearAll = ControlUtil::createFlatToolButton(":/icons/broom.png");
-
-    connect(m_btClearAll, &QAbstractButton::clicked, m_actClearAll, &QAction::trigger);
-
-    // Options
-    setupOptions();
-
-    layout->addWidget(m_btEdit);
-    layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_btClearAll);
-    layout->addStretch();
-    layout->addWidget(m_btOptions);
-
-    return layout;
 }
 
 void ConnectionsPage::setupOptions()
