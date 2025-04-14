@@ -31,8 +31,9 @@ bool reportCommandFilter(ProcessCommandResult &r, FirewallConf *conf)
 {
     const bool filterEnabled = conf->filterEnabled();
 
-    r.commandResult = Control::CommandResult(
-            Control::CommandResultBase + filterEnabled ? FilterActionOn : FilterActionOff);
+    const FilterAction filterAction = filterEnabled ? FilterActionOn : FilterActionOff;
+
+    r.commandResult = Control::CommandResult(Control::CommandResultBase + filterAction);
 
     r.errorMessage = filterEnabled ? "on" : "off";
 
