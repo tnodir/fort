@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.17.3-test01, 2025-04-14:
+- UI: Add "-o [file-path]" command-line argument (#478).
+- UI: Fix "-c filter report" command's exit code (#478).
+
 v3.17.2, 2025-04-13:
 - UI: Add "-c [command] report" command-line argument (#478).
 - UI: Add "-c group on|off|report [group-index]" command-line argument (#478).
