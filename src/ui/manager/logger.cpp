@@ -58,7 +58,7 @@ void processMessage(QtMsgType type, const QMessageLogContext &context, const QSt
 
     // Additionally write to console if needed
     if (isLogConsole) {
-        OsUtil::writeToConsole(logLine);
+        OsUtil::writeToOutput(logLine);
     }
 }
 

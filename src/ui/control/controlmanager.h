@@ -33,9 +33,10 @@ public:
 
     void closeAllClients();
 
-    bool processCommandClient(Control::CommandResult &commandResult);
-    bool postCommand(Control::Command command, const QVariantList &args,
-            Control::CommandResult *commandResult = nullptr);
+    bool processCommandClient(ProcessCommandResult &r);
+
+    bool postCommand(
+            Control::Command command, const QVariantList &args, ProcessCommandResult *r = nullptr);
 
 private slots:
     bool connectToAnyServer(ControlWorker &w);

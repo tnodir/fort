@@ -189,6 +189,15 @@ void FortSettings::processLogsOption(
     }
 }
 
+void FortSettings::processOutputOption(
+        const QCommandLineParser &parser, const QCommandLineOption &outputOption)
+{
+    // Output Path
+    if (parser.isSet(outputOption)) {
+        m_outputPath = parser.value(outputOption);
+    }
+}
+
 void FortSettings::processNoCacheOption(
         const QCommandLineParser &parser, const QCommandLineOption &noCacheOption)
 {
@@ -264,6 +273,9 @@ void FortSettings::processArguments(const QStringList &args)
     const QCommandLineOption logsOption("logs", "Directory to store logs.", "logs");
     parser.addOption(logsOption);
 
+    const QCommandLineOption outputOption("o", "Output file path.", "output");
+    parser.addOption(outputOption);
+
     const QCommandLineOption uninstallOption("u", "Uninstall boot filter and startup entries.");
     parser.addOption(uninstallOption);
 
@@ -302,6 +314,7 @@ void FortSettings::processArguments(const QStringList &args)
     processStatOption(parser, statOption);
     processCacheOption(parser, cacheOption);
     processLogsOption(parser, logsOption);
+    processOutputOption(parser, outputOption);
     processNoCacheOption(parser, noCacheOption);
     processNoSplashOption(parser, noSplashOption);
     processLangOption(parser, langOption);

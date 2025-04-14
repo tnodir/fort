@@ -64,6 +64,8 @@ public:
 
     QString logsPath() const { return m_logsPath; }
 
+    QString outputPath() const { return m_outputPath; }
+
     QString profileLogsPath() const { return profilePath() + "logs/"; }
 
     QString updatePath() const { return m_updatePath; }
@@ -117,6 +119,8 @@ private:
     void processCacheOption(
             const QCommandLineParser &parser, const QCommandLineOption &cacheOption);
     void processLogsOption(const QCommandLineParser &parser, const QCommandLineOption &logsOption);
+    void processOutputOption(
+            const QCommandLineParser &parser, const QCommandLineOption &outputOption);
     void processNoCacheOption(
             const QCommandLineParser &parser, const QCommandLineOption &noCacheOption);
     void processNoSplashOption(
@@ -156,6 +160,7 @@ private:
     QString m_cachePath;
     QString m_userPath;
     QString m_logsPath;
+    QString m_outputPath;
     QString m_updatePath;
     QString m_controlCommand;
     QStringList m_args;

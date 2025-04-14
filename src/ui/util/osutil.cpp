@@ -141,6 +141,11 @@ bool OsUtil::attachConsole(quint32 processId)
     return AttachConsole(processId);
 }
 
+bool OsUtil::freeConsole()
+{
+    return FreeConsole();
+}
+
 bool OsUtil::showConsole(bool visible)
 {
     // Close the console window
@@ -164,20 +169,20 @@ bool OsUtil::showConsole(bool visible)
     return true;
 }
 
-void OsUtil::writeToConsole(const QString &line)
+void OsUtil::writeToOutput(const QString &line, OutputType outType)
 {
-    const HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    const HANDLE outHandle =
+            GetStdHandle(outType == OUT_STDERR ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
 
     DWORD nw;
-    WriteConsoleW(stdoutHandle, line.utf16(), line.size(), &nw, nullptr);
-}
 
-void OsUtil::writeToConsole(const QStringList &lines, char sep)
-{
-    if (lines.isEmpty())
-        return;
+    if (outType == OUT_CONSOLE) {
+        WriteConsoleW(outHandle, line.utf16(), line.size(), &nw, nullptr);
+    } else {
+        const auto buf = line.toUtf8();
 
-    writeToConsole(lines.join(sep) + '\n');
+        WriteFile(outHandle, buf.data(), buf.size(), &nw, nullptr);
+    }
 }
 
 bool OsUtil::setCurrentThreadName(const QString &name)

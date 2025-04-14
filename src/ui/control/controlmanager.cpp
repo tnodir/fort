@@ -10,6 +10,7 @@
 
 #include <fortsettings.h>
 #include <rpc/rpcmanager.h>
+#include <util/consoleoutput.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 #include <util/variantutil.h>
@@ -97,7 +98,7 @@ void ControlManager::closeAllClients()
     }
 }
 
-bool ControlManager::processCommandClient(Control::CommandResult &commandResult)
+bool ControlManager::processCommandClient(ProcessCommandResult &r)
 {
     static QHash<QString, Control::Command> g_commandsMap = {
         { "home", Control::CommandHome },
@@ -111,31 +112,39 @@ bool ControlManager::processCommandClient(Control::CommandResult &commandResult)
         { "zone", Control::CommandZone },
     };
 
-    OsUtil::attachConsole();
-
     const auto settings = IoC<FortSettings>();
 
-    const Control::Command command =
-            g_commandsMap.value(settings->controlCommand(), Control::CommandNone);
+    ConsoleOutput out(settings->outputPath());
+
+    const QString controlCommand = settings->controlCommand();
+
+    const Control::Command command = g_commandsMap.value(controlCommand, Control::CommandNone);
 
     if (command == Control::CommandNone) {
-        OsUtil::writeToConsole({ "Unknown control command:", settings->controlCommand() });
+        out.write({ "Unknown control command:", controlCommand });
         return false;
     }
 
     const QVariantList args = ControlWorker::buildArgs(settings->args());
     if (args.isEmpty()) {
-        OsUtil::writeToConsole({ "Empty arguments for command:", settings->controlCommand() });
+        out.write({ "Empty arguments for command:", controlCommand });
         return false;
     }
 
     OsUtil::allowOtherForegroundWindows(); // let the running instance to activate a window
 
-    return postCommand(command, args, &commandResult);
+    if (!postCommand(command, args, &r))
+        return false;
+
+    if (!r.errorMessage.isEmpty()) {
+        out.write(QStringList { r.errorMessage });
+    }
+
+    return true;
 }
 
 bool ControlManager::postCommand(
-        Control::Command command, const QVariantList &args, Control::CommandResult *commandResult)
+        Control::Command command, const QVariantList &args, ProcessCommandResult *r)
 {
     QLocalSocket socket;
     ControlWorker w(&socket);
@@ -144,21 +153,13 @@ bool ControlManager::postCommand(
     Control::Command commandOk;
 
     connect(&w, &ControlWorker::requestReady, this,
-            [&commandOk, commandResult](Control::Command command, const QVariantList &args) {
+            [&commandOk, r](Control::Command command, const QVariantList &args) {
                 commandOk = command;
 
-                if (args.size() < 2)
-                    return;
-
-                if (commandResult) {
-                    *commandResult = args[0].value<Control::CommandResult>();
+                if (r && args.size() == 2) {
+                    r->commandResult = args[0].value<Control::CommandResult>();
+                    r->errorMessage = args[1].toString();
                 }
-
-                const auto message = args[1].toString();
-                if (message.isEmpty())
-                    return;
-
-                OsUtil::writeToConsole(QStringList { message });
             });
 
     // Connect to UI process or Service

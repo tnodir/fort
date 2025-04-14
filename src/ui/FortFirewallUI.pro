@@ -213,6 +213,7 @@ SOURCES += \
     util/conf/confrodata.cpp \
     util/conf/confutil.cpp \
     util/conf/ruletextparser.cpp \
+    util/consoleoutput.cpp \
     util/dateutil.cpp \
     util/device.cpp \
     util/dirinfo.cpp \
@@ -480,6 +481,7 @@ HEADERS += \
     util/conf/confruleswalker.h \
     util/conf/confutil.h \
     util/conf/ruletextparser.h \
+    util/consoleoutput.h \
     util/dateutil.h \
     util/device.h \
     util/dirinfo.h \
