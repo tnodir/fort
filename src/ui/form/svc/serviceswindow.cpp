@@ -216,6 +216,8 @@ void ServicesWindow::setupTableServiceList()
     m_serviceListView->setModel(serviceListModel());
 
     m_serviceListView->setMenu(m_btEdit->menu());
+
+    connect(m_serviceListView, &TableView::doubleClicked, m_actAddProgram, &QAction::trigger);
 }
 
 void ServicesWindow::setupTableServiceListHeader()
