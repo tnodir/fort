@@ -4,9 +4,9 @@
 
 #include <fort_version.h>
 
+#include <util/consoleoutput.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
-#include <util/osutil.h>
 
 namespace {
 
@@ -58,7 +58,7 @@ void processMessage(QtMsgType type, const QMessageLogContext &context, const QSt
 
     // Additionally write to console if needed
     if (isLogConsole) {
-        OsUtil::writeToOutput(logLine);
+        ConsoleOutput::writeToConsole(logLine);
     }
 }
 
@@ -103,7 +103,7 @@ void Logger::setConsole(bool v)
     m_console = v;
 
     if (!isService()) {
-        OsUtil::showConsole(console());
+        ConsoleOutput::showConsole(console());
     }
 }
 

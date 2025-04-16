@@ -3,8 +3,6 @@
 
 #include <QObject>
 
-#include "util_types.h"
-
 enum BeepType {
     BeepError = 0x10,
     BeepQuestion = 0x20,
@@ -37,13 +35,6 @@ public:
 
     static bool beep(BeepType type = BeepSimple);
     static bool playSound(SoundType type = SoundDefault);
-
-    static bool attachConsole(quint32 processId = -1);
-    static bool freeConsole();
-
-    static bool showConsole(bool visible);
-
-    static void writeToOutput(const QString &line, OutputType outType = OUT_CONSOLE);
 
     static bool setCurrentThreadName(const QString &name);
     static void setThreadIsBusy(bool on);

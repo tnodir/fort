@@ -21,14 +21,6 @@ namespace {
 
 const QLoggingCategory LC("util.osUtil");
 
-BOOL WINAPI consoleCtrlHandler(DWORD /*ctrlType*/)
-{
-    OsUtil::quit("console control");
-
-    Sleep(100); // Let the process exit gracefully
-    return TRUE;
-}
-
 }
 
 QString OsUtil::pidToPath(quint32 pid, bool isKernelPath)
@@ -134,55 +126,6 @@ bool OsUtil::playSound(SoundType /*type*/)
     constexpr DWORD flags = SND_APPLICATION | SND_ALIAS | SND_ASYNC | SND_SENTRY;
 
     return PlaySoundA("MessageNudge", nullptr, flags);
-}
-
-bool OsUtil::attachConsole(quint32 processId)
-{
-    return AttachConsole(processId);
-}
-
-bool OsUtil::freeConsole()
-{
-    return FreeConsole();
-}
-
-bool OsUtil::showConsole(bool visible)
-{
-    // Close the console window
-    if (!visible) {
-        FreeConsole();
-        return true;
-    }
-
-    // Show the console window
-    if (!AllocConsole())
-        return false;
-
-    SetConsoleCtrlHandler(consoleCtrlHandler, TRUE);
-
-    // Disable close button of console window
-    {
-        const HMENU hMenu = GetSystemMenu(GetConsoleWindow(), false);
-        DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
-    }
-
-    return true;
-}
-
-void OsUtil::writeToOutput(const QString &line, OutputType outType)
-{
-    const HANDLE outHandle =
-            GetStdHandle(outType == OUT_STDERR ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE);
-
-    DWORD nw;
-
-    if (outType == OUT_CONSOLE) {
-        WriteConsoleW(outHandle, line.utf16(), line.size(), &nw, nullptr);
-    } else {
-        const auto buf = line.toUtf8();
-
-        WriteFile(outHandle, buf.data(), buf.size(), &nw, nullptr);
-    }
 }
 
 bool OsUtil::setCurrentThreadName(const QString &name)
