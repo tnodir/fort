@@ -29,7 +29,8 @@ void ConsoleOutput::setupStdHandles()
 {
     const HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
-    if (GetFileType(handle) == FILE_TYPE_DISK) {
+    DWORD mode;
+    if (!GetConsoleMode(handle, &mode)) {
         m_hStdOut = quintptr(handle);
     }
 }
