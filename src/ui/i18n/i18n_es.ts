@@ -1041,12 +1041,12 @@
         <translation>Estilo:</translation>
     </message>
     <message>
-        <source>Update window icons</source>
-        <translation>Actualizar los iconos de las ventanas</translation>
-    </message>
-    <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>Borrar automáticamente las alertas al cerrar la ventana</translation>
+    </message>
+    <message>
+        <source>Show window icons as in tray icon</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

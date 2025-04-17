@@ -1041,12 +1041,12 @@
         <translation>Slog:</translation>
     </message>
     <message>
-        <source>Update window icons</source>
-        <translation>Posodobite ikone oken</translation>
-    </message>
-    <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>Samodejno počisti opozorila ob zaprtju okna</translation>
+    </message>
+    <message>
+        <source>Show window icons as in tray icon</source>
+        <translation>Pokaži okenske ikone kot ikono v pladnju</translation>
     </message>
 </context>
 <context>

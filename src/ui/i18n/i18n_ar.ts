@@ -1041,12 +1041,12 @@
         <translation>الأسلوب:</translation>
     </message>
     <message>
-        <source>Update window icons</source>
-        <translation>تحديث أيقونات النافذة</translation>
-    </message>
-    <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>تنظيف تلقائي للتنبيهات عند إغلاق النافذة</translation>
+    </message>
+    <message>
+        <source>Show window icons as in tray icon</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

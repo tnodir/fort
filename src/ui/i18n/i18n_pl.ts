@@ -1041,11 +1041,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Update window icons</source>
+        <source>Auto-Clear alerts on window close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Auto-Clear alerts on window close</source>
+        <source>Show window icons as in tray icon</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

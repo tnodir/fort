@@ -1041,12 +1041,12 @@
         <translation>Стиль:</translation>
     </message>
     <message>
-        <source>Update window icons</source>
-        <translation>Обновлять иконки окон</translation>
-    </message>
-    <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>Авто-удаление оповещений при закрытии окна</translation>
+    </message>
+    <message>
+        <source>Show window icons as in tray icon</source>
+        <translation>Показывать значки окон как на панели задач</translation>
     </message>
 </context>
 <context>

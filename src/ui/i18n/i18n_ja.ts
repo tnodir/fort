@@ -1041,12 +1041,12 @@
         <translation>スタイル :</translation>
     </message>
     <message>
-        <source>Update window icons</source>
-        <translation>ウィンドウ アイコンを更新</translation>
-    </message>
-    <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>ウィンドウを閉じたときに警告を自動消去する</translation>
+    </message>
+    <message>
+        <source>Show window icons as in tray icon</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

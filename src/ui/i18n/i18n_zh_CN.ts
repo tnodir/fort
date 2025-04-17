@@ -1041,12 +1041,12 @@
         <translation>样式：</translation>
     </message>
     <message>
-        <source>Update window icons</source>
-        <translation>更新窗口图标</translation>
-    </message>
-    <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>关闭窗口时自动清除提示</translation>
+    </message>
+    <message>
+        <source>Show window icons as in tray icon</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1041,12 +1041,12 @@
         <translation>스타일:</translation>
     </message>
     <message>
-        <source>Update window icons</source>
-        <translation>창 아이콘 업데이트</translation>
-    </message>
-    <message>
         <source>Auto-Clear alerts on window close</source>
         <translation>창을 닫을 때 알림 자동 지우기</translation>
+    </message>
+    <message>
+        <source>Show window icons as in tray icon</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
