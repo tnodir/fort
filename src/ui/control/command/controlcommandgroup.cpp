@@ -52,6 +52,12 @@ bool processCommandGroupAction(
 
     auto conf = confManager->conf();
 
+    if (groupIndex < 0 || groupIndex >= conf->appGroups().size()) {
+        r.commandResult = Control::CommandResultError;
+        r.errorMessage = "Group not found";
+        return true;
+    }
+
     if (report) {
         return reportCommandGroupAction(r, conf, groupIndex);
     }
