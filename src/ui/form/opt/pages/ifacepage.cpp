@@ -141,7 +141,7 @@ void IfacePage::onRetranslateUi()
 
     m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
-    m_cbUpdateWindowIcons->setText(tr("Update window icons"));
+    m_cbUpdateWindowIcons->setText(tr("Show window icons as in tray icon"));
 
     m_cbAppNotifyMessage->setText(tr("Use System Notifications for New Programs"));
     m_cbAppAlertAutoShow->setText(tr("Auto-Show Alert Window for New Programs"));
