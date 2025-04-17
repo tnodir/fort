@@ -1046,10 +1046,14 @@
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Afficher les icônes de fenêtre comme dans la barre d&apos;état</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
+        <translation>Alertes de répétition</translation>
+    </message>
+    <message>
+        <source>Switch Snooze Alerts</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -2496,7 +2500,7 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alertes de répétition</translation>
     </message>
 </context>
 <context>

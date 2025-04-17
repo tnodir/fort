@@ -1052,6 +1052,10 @@
         <source>Snooze Alerts</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Switch Snooze Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

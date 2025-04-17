@@ -1052,6 +1052,10 @@
         <source>Snooze Alerts</source>
         <translation>Отложить оповещения</translation>
     </message>
+    <message>
+        <source>Switch Snooze Alerts</source>
+        <translation>Переключить &quot;Отложить оповещения&quot;</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

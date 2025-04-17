@@ -1052,6 +1052,10 @@
         <source>Snooze Alerts</source>
         <translation>Dremež opozoril</translation>
     </message>
+    <message>
+        <source>Switch Snooze Alerts</source>
+        <translation>Preklopite opozorila na dremež</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
