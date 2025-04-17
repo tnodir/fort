@@ -1048,6 +1048,10 @@
         <source>Show window icons as in tray icon</source>
         <translation>Показывать значки окон как на панели задач</translation>
     </message>
+    <message>
+        <source>Snooze Alerts</source>
+        <translation>Отложить оповещения</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -2489,6 +2493,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Services</source>
         <translation>Службы</translation>
+    </message>
+    <message>
+        <source>Snooze Alerts</source>
+        <translation>Отложить оповещения</translation>
     </message>
 </context>
 <context>

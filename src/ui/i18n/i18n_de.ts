@@ -1048,6 +1048,10 @@
         <source>Show window icons as in tray icon</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Snooze Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -2489,6 +2493,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Services</source>
         <translation>Dienste</translation>
+    </message>
+    <message>
+        <source>Snooze Alerts</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

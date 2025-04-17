@@ -1048,6 +1048,10 @@
         <source>Show window icons as in tray icon</source>
         <translation>Pokaži okenske ikone kot ikono v pladnju</translation>
     </message>
+    <message>
+        <source>Snooze Alerts</source>
+        <translation>Dremež opozoril</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -2489,6 +2493,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Services</source>
         <translation>Storitve</translation>
+    </message>
+    <message>
+        <source>Snooze Alerts</source>
+        <translation>Dremež opozoril</translation>
     </message>
 </context>
 <context>

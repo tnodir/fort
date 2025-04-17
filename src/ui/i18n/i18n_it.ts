@@ -1048,6 +1048,10 @@
         <source>Show window icons as in tray icon</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Snooze Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -2490,6 +2494,10 @@ App</translation>
     <message>
         <source>Services</source>
         <translation>Servizi</translation>
+    </message>
+    <message>
+        <source>Snooze Alerts</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

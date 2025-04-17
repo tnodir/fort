@@ -1048,6 +1048,10 @@
         <source>Show window icons as in tray icon</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Snooze Alerts</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -2477,6 +2481,10 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Services</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Snooze Alerts</source>
         <translation></translation>
     </message>
 </context>
