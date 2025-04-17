@@ -15,6 +15,7 @@ const char *const list[] = {
     statistics,
     graph,
     filter,
+    snoozeAlerts,
     blockTrafficOff,
     blockInetTraffic,
     blockLanTraffic,

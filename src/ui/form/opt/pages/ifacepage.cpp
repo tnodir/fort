@@ -76,6 +76,7 @@ void IfacePage::onResetToDefault()
     m_cbAppAlertAutoActive->setChecked(false);
     m_cbAppAlertAutoClear->setChecked(false);
     m_cbAppAlertSound->setChecked(true);
+    m_cbSnoozeAlerts->setChecked(false);
 
     m_cbTrayShowIcon->setChecked(true);
     m_cbTrayShowAlert->setChecked(true);
@@ -152,6 +153,7 @@ void IfacePage::onRetranslateUi()
     m_cbAppAlertAutoActive->setText(tr("Alert Window is auto-active"));
     m_cbAppAlertAutoClear->setText(tr("Auto-Clear alerts on window close"));
     m_cbAppAlertSound->setText(tr("Sound Alert"));
+    m_cbSnoozeAlerts->setText(tr("Snooze Alerts"));
 
     m_cbTrayShowIcon->setText(tr("Show Icon"));
     m_cbTrayShowAlert->setText(tr("Show Alert Icon"));
@@ -540,6 +542,12 @@ void IfacePage::setupProgBox()
         ctrl()->setIniUserEdited();
     });
 
+    m_cbSnoozeAlerts =
+            ControlUtil::createCheckBox(iniUser()->progSnoozeAlerts(), [&](bool checked) {
+                iniUser()->setProgSnoozeAlerts(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     // Layout
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbAppNotifyMessage);
@@ -548,6 +556,7 @@ void IfacePage::setupProgBox()
     layout->addWidget(m_cbAppAlertAutoActive);
     layout->addWidget(m_cbAppAlertAutoClear);
     layout->addWidget(m_cbAppAlertSound);
+    layout->addWidget(m_cbSnoozeAlerts);
 
     m_gbProg = new QGroupBox();
     m_gbProg->setLayout(layout);

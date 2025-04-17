@@ -43,6 +43,7 @@ public:
         ActionShowStatistics,
         ActionShowTrafficGraph,
         ActionSwitchFilterEnabled,
+        ActionSwitchSnoozeAlerts,
         ActionShowBlockTrafficMenu,
         ActionShowFilterModeMenu,
         ActionShowTrayMenu,
@@ -177,6 +178,7 @@ private:
     QAction *m_statisticsAction = nullptr;
     QAction *m_graphAction = nullptr;
     QAction *m_filterEnabledAction = nullptr;
+    QAction *m_snoozeAlertsAction = nullptr;
     QAction *m_blockTrafficMenuAction = nullptr;
     QMenu *m_blockTrafficMenu = nullptr;
     QActionGroup *m_blockTrafficActions = nullptr;

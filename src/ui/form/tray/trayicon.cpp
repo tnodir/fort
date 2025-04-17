@@ -44,6 +44,7 @@ const QString actionShowOptions = QStringLiteral("Options");
 const QString actionShowStatistics = QStringLiteral("Statistics");
 const QString actionShowTrafficGraph = QStringLiteral("TrafficGraph");
 const QString actionSwitchFilterEnabled = QStringLiteral("FilterEnabled");
+const QString actionSwitchSnoozeAlerts = QStringLiteral("SnoozeAlerts");
 const QString actionShowBlockTrafficMenu = QStringLiteral("BlockTrafficMenu");
 const QString actionShowFilterModeMenu = QStringLiteral("FilterModeMenu");
 const QString actionShowTrayMenu = QStringLiteral("TrayMenu");
@@ -79,6 +80,7 @@ QString actionNameByType(TrayIcon::ActionType actionType)
         actionShowStatistics,
         actionShowTrafficGraph,
         actionSwitchFilterEnabled,
+        actionSwitchSnoozeAlerts,
         actionShowBlockTrafficMenu,
         actionShowFilterModeMenu,
         actionShowTrayMenu,
@@ -102,6 +104,7 @@ TrayIcon::ActionType actionTypeByName(const QString &name)
         { actionShowStatistics, TrayIcon::ActionShowStatistics },
         { actionShowTrafficGraph, TrayIcon::ActionShowTrafficGraph },
         { actionSwitchFilterEnabled, TrayIcon::ActionSwitchFilterEnabled },
+        { actionSwitchSnoozeAlerts, TrayIcon::ActionSwitchSnoozeAlerts },
         { actionShowBlockTrafficMenu, TrayIcon::ActionShowBlockTrafficMenu },
         { actionShowFilterModeMenu, TrayIcon::ActionShowFilterModeMenu },
         { actionShowTrayMenu, TrayIcon::ActionShowTrayMenu },
@@ -392,6 +395,7 @@ void TrayIcon::retranslateUi()
     m_graphAction->setText(tr("Traffic Graph"));
 
     m_filterEnabledAction->setText(tr("Filter Enabled"));
+    m_snoozeAlertsAction->setText(tr("Snooze Alerts"));
 
     m_blockTrafficMenu->setTitle(tr("Block Traffic"));
     retranslateBlockTrafficActions();
@@ -468,6 +472,10 @@ void TrayIcon::setupTrayMenu()
     m_filterEnabledAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)),
             ActionSwitchFilterEnabled, /*checkable=*/true);
     addHotKey(m_filterEnabledAction, HotKey::filter);
+
+    m_snoozeAlertsAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)),
+            ActionSwitchSnoozeAlerts, /*checkable=*/true);
+    addHotKey(m_snoozeAlertsAction, HotKey::snoozeAlerts);
 
     m_blockTrafficMenuAction = addAction(m_menu, QString(), this,
             SLOT(switchBlockTrafficMenu(bool)), ActionShowBlockTrafficMenu);
@@ -615,6 +623,9 @@ void TrayIcon::updateTrayMenuFlags()
     m_filterEnabledAction->setEnabled(editEnabled);
     m_filterEnabledAction->setChecked(conf()->filterEnabled());
 
+    m_snoozeAlertsAction->setEnabled(editEnabled);
+    m_snoozeAlertsAction->setChecked(iniUser()->progSnoozeAlerts());
+
     m_blockTrafficMenu->setEnabled(editEnabled);
     {
         const int index = conf()->blockTrafficIndex();
@@ -699,7 +710,7 @@ void TrayIcon::sendAlertMessage()
         OsUtil::playSound();
     }
 
-    if (iniUser()->progAlertWindowAutoShow()) {
+    if (iniUser()->progAlertWindowAutoShow() && !iniUser()->progSnoozeAlerts()) {
         windowManager()->showProgramAlertWindow(/*activate=*/false);
     }
 }
@@ -796,6 +807,7 @@ QString TrayIcon::trayIconBlockPath(int blockType, bool &isDefault) const
 void TrayIcon::saveTrayFlags()
 {
     conf()->setFilterEnabled(m_filterEnabledAction->isChecked());
+    iniUser()->setProgSnoozeAlerts(m_snoozeAlertsAction->isChecked());
 
     // Set Block Traffic
     {
@@ -983,6 +995,7 @@ QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
         m_statisticsAction,
         m_graphAction,
         m_filterEnabledAction,
+        m_snoozeAlertsAction,
         m_blockTrafficMenuAction,
         m_filterModeMenuAction,
         m_trayMenuAction,

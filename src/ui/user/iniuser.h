@@ -16,6 +16,7 @@ const char *const statistics = "statistics";
 const char *const graph = "graph";
 
 const char *const filter = "filter";
+const char *const snoozeAlerts = "snoozeAlerts";
 
 const char *const blockTrafficOff = "blockTrafficOff";
 const char *const blockTraffic = "blockTraffic";
@@ -88,6 +89,9 @@ public:
 
     bool progAlertSound() const { return valueBool("prog/soundAlert", true); }
     void setProgAlertSound(bool v) { setValue("prog/soundAlert", v, true); }
+
+    bool progSnoozeAlerts() const { return valueBool("prog/snoozeAlerts"); }
+    void setProgSnoozeAlerts(bool v) { setValue("prog/snoozeAlerts", v); }
 
     bool trayShowIcon() const { return valueBool("tray/showIcon", true); }
     void setTrayShowIcon(bool v) { setValue("tray/showIcon", v, true); }
