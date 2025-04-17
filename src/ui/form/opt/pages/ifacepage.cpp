@@ -200,7 +200,7 @@ void IfacePage::retranslateComboHotKey()
     QStringList list = { TrayIcon::tr("My Fort"), TrayIcon::tr("Programs"), TrayIcon::tr("Options"),
         TrayIcon::tr("Rules"), TrayIcon::tr("Zones"), TrayIcon::tr("Groups"),
         TrayIcon::tr("Services"), TrayIcon::tr("Statistics"), TrayIcon::tr("Traffic Graph"),
-        TrayIcon::tr("Filter Enabled") };
+        TrayIcon::tr("Filter Enabled"), TrayIcon::tr("Snooze Alerts") };
 
     const auto blockTraffic = tr("Block Traffic:");
     for (const auto &name : FirewallConf::blockTrafficNames()) {
@@ -238,8 +238,9 @@ void IfacePage::retranslateComboTrayAction()
     // Sync with TrayIcon::ActionType
     const QStringList list = { tr("Show My Fort"), tr("Show Programs"),
         tr("Show Programs Or Alert Window"), tr("Show Options"), tr("Show Statistics"),
-        tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Show Block Traffic Menu"),
-        tr("Show Filter Mode Menu"), tr("Show Tray Menu"), tr("Ignore") };
+        tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Snooze Alerts"),
+        tr("Show Block Traffic Menu"), tr("Show Filter Mode Menu"), tr("Show Tray Menu"),
+        tr("Ignore") };
 
     ControlUtil::setComboBoxTexts(m_comboTrayAction, list, /*currentIndex=*/-1);
 }
