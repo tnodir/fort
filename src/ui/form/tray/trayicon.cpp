@@ -292,7 +292,7 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
         onTrayActivatedByTrigger();
     } break;
     case QSystemTrayIcon::DoubleClick: {
-        onTrayActivatedByClick(DoubleClick, /*checkTriggered=*/true);
+        onTrayActivatedByClick(DoubleClick);
     } break;
     case QSystemTrayIcon::MiddleClick: {
         onTrayActivatedByClick(MiddleClick);
@@ -1041,19 +1041,20 @@ void TrayIcon::onTrayActivatedByTrigger()
 
     if (clickAction(DoubleClick)) {
         m_trayTriggered = true;
-        QTimer::singleShot(QApplication::doubleClickInterval(), this,
-                [=, this] { onTrayActivatedByClick(clickType, /*checkTriggered=*/true); });
+        QTimer::singleShot(QApplication::doubleClickInterval(), this, [=, this] {
+            if (m_trayTriggered) {
+                onTrayActivatedByClick(clickType);
+            }
+        });
     } else {
         onTrayActivatedByClick(clickType);
     }
 }
 
-void TrayIcon::onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkTriggered)
+void TrayIcon::onTrayActivatedByClick(TrayIcon::ClickType clickType)
 {
-    if (checkTriggered && !m_trayTriggered)
-        return;
-
     m_trayTriggered = false;
+
     onMouseClicked(clickType);
 }
 

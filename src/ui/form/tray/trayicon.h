@@ -34,6 +34,8 @@ public:
         RightClick,
         ClickTypeCount
     };
+    Q_ENUM(ClickType)
+
     enum ActionType : qint8 {
         ActionNone = -1,
         ActionShowHome = 0,
@@ -50,6 +52,7 @@ public:
         ActionIgnore,
         ActionTypeCount
     };
+    Q_ENUM(ActionType)
 
     explicit TrayIcon(QObject *parent = nullptr);
 
@@ -152,7 +155,7 @@ private:
     void onMouseClicked(
             TrayIcon::ClickType clickType, TrayIcon::ClickType menuClickType = RightClick);
     void onTrayActivatedByTrigger();
-    void onTrayActivatedByClick(TrayIcon::ClickType clickType, bool checkTriggered = false);
+    void onTrayActivatedByClick(TrayIcon::ClickType clickType);
 
     void onWindowVisibilityChanged(WindowCode code, bool isVisible);
 
