@@ -682,7 +682,7 @@
     </message>
     <message>
         <source>Tick label size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Scegli dimensione etichetta:</translation>
     </message>
 </context>
 <context>
@@ -1046,15 +1046,15 @@
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra le icone delle finestre come nell&apos;icona del vassoio</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Smorza allarmi</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambia smorza-allarmi</translation>
     </message>
 </context>
 <context>
@@ -2501,7 +2501,7 @@ App</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Smorza allarmi</translation>
     </message>
 </context>
 <context>

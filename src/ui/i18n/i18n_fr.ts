@@ -1054,7 +1054,7 @@
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Changer les alertes de répétition</translation>
     </message>
 </context>
 <context>

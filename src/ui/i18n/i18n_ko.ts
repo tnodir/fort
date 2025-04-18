@@ -1046,15 +1046,15 @@
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>트레이 아이콘에 창 아이콘 표시</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>스누즈 알림</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>스누즈 알림 전환</translation>
     </message>
 </context>
 <context>
@@ -2500,7 +2500,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>스누즈 알림</translation>
     </message>
 </context>
 <context>
