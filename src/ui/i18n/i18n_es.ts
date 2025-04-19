@@ -1046,15 +1046,15 @@
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar iconos de la ventana como en el icono de la bandeja</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Posponer alertas</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Activar/Desactivar posponer alertas</translation>
     </message>
 </context>
 <context>
@@ -2503,7 +2503,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Posponer alertas</translation>
     </message>
 </context>
 <context>

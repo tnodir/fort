@@ -1046,15 +1046,15 @@
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>在托盘图标中显示窗口图标</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>稍后提醒</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>切换稍后提醒</translation>
     </message>
 </context>
 <context>
@@ -2500,7 +2500,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>稍后提醒</translation>
     </message>
 </context>
 <context>
