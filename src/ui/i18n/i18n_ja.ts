@@ -1046,15 +1046,15 @@
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>ウィンドウアイコンをトレイアイコンのように表示する</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>スヌーズ通知</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>スヌーズ通知の切り替え</translation>
     </message>
 </context>
 <context>
@@ -2500,7 +2500,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>スヌーズ通知</translation>
     </message>
 </context>
 <context>
