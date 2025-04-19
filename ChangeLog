@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.17.3-test02, 2025-04-17:
+v3.17.3, 2025-04-19:
 - UI: Options: Add "Snooze Alerts" flag (#494).
 - UI: Add "-o [file-path]" command-line argument (#478).
 - UI: Services: Open Program's dialog on double-click.
