@@ -6,21 +6,21 @@
 class LogEntryApp : public LogEntry
 {
 public:
-    explicit LogEntryApp(quint32 pid = 0, const QString &kernelPath = QString());
+    explicit LogEntryApp(quint32 pid = 0, const QString &kernelPath = {});
 
     FortLogType type() const override { return FORT_LOG_TYPE_APP; }
 
     bool blocked() const { return m_blocked; }
-    void setBlocked(bool blocked) { m_blocked = blocked; }
+    void setBlocked(bool v) { m_blocked = v; }
 
     bool alerted() const { return m_alerted; }
-    void setAlerted(bool alerted) { m_alerted = alerted; }
+    void setAlerted(bool v) { m_alerted = v; }
 
     quint32 pid() const { return m_pid; }
-    void setPid(quint32 pid) { m_pid = pid; }
+    void setPid(quint32 v) { m_pid = v; }
 
     QString kernelPath() const { return m_kernelPath; }
-    void setKernelPath(const QString &kernelPath) { m_kernelPath = kernelPath; }
+    void setKernelPath(const QString &v) { m_kernelPath = v; }
 
     QString path() const;
 

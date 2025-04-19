@@ -92,7 +92,7 @@ quint32 logAppHeaderSize()
     return FORT_LOG_APP_HEADER_SIZE;
 }
 
-quint32 logAppSize(quint32 pathLen)
+quint32 logAppSize(quint16 pathLen)
 {
     return FORT_LOG_APP_SIZE(pathLen);
 }
@@ -102,7 +102,7 @@ quint32 logConnHeaderSize(bool isIPv6)
     return FORT_LOG_CONN_HEADER_SIZE(isIPv6);
 }
 
-quint32 logConnSize(quint32 pathLen, bool isIPv6)
+quint32 logConnSize(quint16 pathLen, bool isIPv6)
 {
     return FORT_LOG_CONN_SIZE(pathLen, isIPv6);
 }
@@ -112,7 +112,7 @@ quint32 logProcNewHeaderSize()
     return FORT_LOG_PROC_NEW_HEADER_SIZE;
 }
 
-quint32 logProcNewSize(quint32 pathLen)
+quint32 logProcNewSize(quint16 pathLen)
 {
     return FORT_LOG_PROC_NEW_SIZE(pathLen);
 }
@@ -142,32 +142,32 @@ quint8 logType(const char *input)
     return fort_log_type(input);
 }
 
-void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint32 pathLen)
+void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint16 pathLen)
 {
     fort_log_app_header_write(output, blocked, pid, pathLen);
 }
 
-void logAppHeaderRead(const char *input, int *blocked, quint32 *pid, quint32 *pathLen)
+void logAppHeaderRead(const char *input, int *blocked, quint32 *pid, quint16 *pathLen)
 {
     fort_log_app_header_read(input, blocked, pid, pathLen);
 }
 
-void logConnHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint32 pathLen)
+void logConnHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint16 pathLen)
 {
     fort_log_conn_header_write(output, conn, pathLen);
 }
 
-void logConnHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint32 *pathLen)
+void logConnHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen)
 {
     fort_log_conn_header_read(input, conn, pathLen);
 }
 
-void logProcNewHeaderWrite(char *output, quint32 pid, quint32 pathLen)
+void logProcNewHeaderWrite(char *output, quint32 pid, quint16 pathLen)
 {
     fort_log_proc_new_header_write(output, pid, pathLen);
 }
 
-void logProcNewHeaderRead(const char *input, quint32 *pid, quint32 *pathLen)
+void logProcNewHeaderRead(const char *input, quint32 *pid, quint16 *pathLen)
 {
     fort_log_proc_new_header_read(input, pid, pathLen);
 }

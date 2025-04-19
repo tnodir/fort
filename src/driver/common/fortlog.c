@@ -4,7 +4,7 @@
 
 #include "fortdef.h"
 
-FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT32 path_len)
+FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT16 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
@@ -24,16 +24,16 @@ FORT_API void fort_log_app_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_P
     }
 }
 
-FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len)
+FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT16 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
     *blocked = (*up & FORT_LOG_FLAG_OPT_BLOCKED) != 0;
-    *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
+    *path_len = (UINT16) (*up++ & ~FORT_LOG_FLAG_EX_MASK);
     *pid = *up;
 }
 
-FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UINT32 path_len)
+FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UINT16 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
@@ -67,7 +67,7 @@ FORT_API void fort_log_conn_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_AP
     }
 }
 
-FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn, UINT32 *path_len)
+FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
@@ -105,7 +105,7 @@ FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn
     RtlCopyMemory(conn->remote_ip.data, up, ip_size);
 }
 
-FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_len)
+FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT16 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
@@ -124,7 +124,7 @@ FORT_API void fort_log_proc_new_write(char *p, UINT32 pid, PCFORT_APP_PATH path)
     }
 }
 
-FORT_API void fort_log_proc_new_header_read(const char *p, UINT32 *pid, UINT32 *path_len)
+FORT_API void fort_log_proc_new_header_read(const char *p, UINT32 *pid, UINT16 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 

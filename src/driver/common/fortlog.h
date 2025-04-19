@@ -59,23 +59,23 @@
 extern "C" {
 #endif
 
-FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT32 path_len);
+FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT16 path_len);
 
 FORT_API void fort_log_app_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_PATH path);
 
-FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT32 *path_len);
+FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT16 *path_len);
 
-FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UINT32 path_len);
+FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UINT16 path_len);
 
 FORT_API void fort_log_conn_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_APP_PATH path);
 
-FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn, UINT32 *path_len);
+FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len);
 
-FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT32 path_len);
+FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT16 path_len);
 
 FORT_API void fort_log_proc_new_write(char *p, UINT32 pid, PCFORT_APP_PATH path);
 
-FORT_API void fort_log_proc_new_header_read(const char *p, UINT32 *pid, UINT32 *path_len);
+FORT_API void fort_log_proc_new_header_read(const char *p, UINT32 *pid, UINT16 *path_len);
 
 FORT_API void fort_log_stat_traf_header_write(char *p, UINT16 proc_count);
 
