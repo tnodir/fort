@@ -5,4 +5,4 @@
 
 @call sign-env-sectigo.bat
 
-signtool.exe sign /n "%CRT_NAME%" /fd sha256 /tr %TS_URL% %BIN_PATH%
+signtool.exe sign /n "%CRT_NAME%" /fd SHA256 /td SHA256 /tr %TS_URL% %BIN_PATH%
