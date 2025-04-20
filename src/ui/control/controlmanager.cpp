@@ -133,14 +133,13 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
 
     OsUtil::allowOtherForegroundWindows(); // let the running instance to activate a window
 
-    if (!postCommand(command, args, &r))
-        return false;
+    const bool ok = postCommand(command, args, &r);
 
     if (!r.errorMessage.isEmpty()) {
         out.write(QStringList { r.errorMessage });
     }
 
-    return true;
+    return ok;
 }
 
 bool ControlManager::postCommand(
