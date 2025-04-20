@@ -185,10 +185,8 @@ QLayout *HomePage::setupDriverLabelLayout()
 
     auto layout = new QHBoxLayout();
     layout->setSpacing(4);
-    layout->addStretch();
     layout->addWidget(m_iconDriver, 0, Qt::AlignTop);
-    layout->addWidget(m_labelDriverMessage);
-    layout->addStretch();
+    layout->addWidget(m_labelDriverMessage, 1);
 
     return layout;
 }
@@ -257,10 +255,8 @@ QLayout *HomePage::setupServiceLabelLayout()
 
     auto layout = new QHBoxLayout();
     layout->setSpacing(4);
-    layout->addStretch();
     layout->addWidget(m_iconService, 0, Qt::AlignTop);
-    layout->addWidget(m_labelServiceMessage);
-    layout->addStretch();
+    layout->addWidget(m_labelServiceMessage, 1);
 
     return layout;
 }
