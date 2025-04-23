@@ -16,6 +16,7 @@
 #include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <util/conf/confbuffer.h>
+#include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
@@ -328,6 +329,7 @@ bool ConfAppManager::addOrUpdateAppPath(
         const QString &appOriginPath, bool blocked, bool killProcess)
 {
     App app;
+    app.isWildcard = ConfUtil::hasWildcard(appOriginPath);
     app.blocked = blocked;
     app.appOriginPath = appOriginPath;
 

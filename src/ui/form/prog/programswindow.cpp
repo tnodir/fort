@@ -23,6 +23,7 @@
 #include <manager/windowmanager.h>
 #include <model/applistmodel.h>
 #include <user/iniuser.h>
+#include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/window/widgetwindowstatewatcher.h>
@@ -631,7 +632,11 @@ bool ProgramsWindow::editProgramByPath(const QString &appPath)
     if (checkAppEditFormOpened())
         return false;
 
-    const auto app = confAppManager()->appByPath(appPath);
+    App app = confAppManager()->appByPath(appPath);
+
+    if (!app.isValid()) {
+        app.isWildcard = ConfUtil::hasWildcard(appPath);
+    }
 
     openAppEditForm(app);
     return true;

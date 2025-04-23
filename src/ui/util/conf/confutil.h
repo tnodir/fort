@@ -16,6 +16,7 @@ public:
     static int zoneMaxCount();
 
     static QRegularExpressionMatch matchWildcard(const QStringView path);
+    static bool hasWildcard(const QStringView path);
 
     static QString parseAppPath(const QStringView line, bool &isWild, bool &isPrefix);
 };
