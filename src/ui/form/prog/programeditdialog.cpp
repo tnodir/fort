@@ -1206,11 +1206,14 @@ bool ProgramEditDialog::save()
         return false;
 
     App app;
+    app.appId = m_app.appId;
     fillApp(app);
 
     // Add new app or edit non-selected app
     if (appIdsCount == 0) {
-        return ctrl()->addOrUpdateApp(app);
+        const bool onlyUpdate = app.isValid();
+
+        return ctrl()->addOrUpdateApp(app, onlyUpdate);
     }
 
     // Edit selected app
@@ -1225,13 +1228,11 @@ bool ProgramEditDialog::save()
 bool ProgramEditDialog::saveApp(App &app)
 {
     if (!app.isOptionsEqual(m_app)) {
-        app.appId = m_app.appId;
-
         return ctrl()->updateApp(app);
     }
 
     if (!app.isNameEqual(m_app)) {
-        return ctrl()->updateAppName(m_app.appId, app.appName);
+        return ctrl()->updateAppName(app.appId, app.appName);
     }
 
     return true;
