@@ -74,7 +74,8 @@ bool ControlCommandGroup::processCommand(const ProcessCommandArgs &p, ProcessCom
     bool report = false;
     const GroupAction groupAction = groupActionByText(p.args.value(0).toString(), report);
 
-    if ((groupAction == GroupActionInvalid && !report) || p.args.size() < 2) {
+    const bool isValidAction = (groupAction != GroupActionInvalid || report);
+    if (!isValidAction || p.args.size() < 2) {
         r.errorMessage = "Usage: group on|off|report [group-index]";
         return false;
     }
