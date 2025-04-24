@@ -112,6 +112,7 @@ QLayout *ConnectionsPage::setupHeader()
     auto editMenu = ControlUtil::createMenu(this);
 
     m_actCopyAsFilter = editMenu->addAction(IconCache::icon(":/icons/script.png"), QString());
+    m_actCopyAsFilter->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C);
 
     m_actCopy = editMenu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actCopy->setShortcut(Qt::Key_Copy);

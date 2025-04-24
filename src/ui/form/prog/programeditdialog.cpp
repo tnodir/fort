@@ -1029,6 +1029,7 @@ void ProgramEditDialog::setupTableConnListMenu()
     auto menu = ControlUtil::createMenu(m_connListView);
 
     m_actCopyAsFilter = menu->addAction(IconCache::icon(":/icons/script.png"), QString());
+    m_actCopyAsFilter->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C);
 
     m_actCopy = menu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actCopy->setShortcut(Qt::Key_Copy);
@@ -1043,6 +1044,8 @@ void ProgramEditDialog::setupTableConnListMenu()
             [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
 
     m_connListView->setMenu(menu);
+
+    m_connListView->addAction(m_actCopyAsFilter);
 }
 
 void ProgramEditDialog::setupTableConnListHeader()
