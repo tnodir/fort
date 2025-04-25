@@ -5,6 +5,7 @@
 
 #include <sqlite/sqlite_types.h>
 
+#include <manager/dbmanagerbase.h>
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 #include <util/triggertimer.h>
@@ -13,7 +14,7 @@
 class IniOptions;
 class LogEntryConn;
 
-class StatConnManager : public WorkerManager, public IocService
+class StatConnManager : public WorkerManager, public DbManagerBase, public IocService
 {
     Q_OBJECT
 
@@ -22,7 +23,7 @@ public:
             const QString &filePath, QObject *parent = nullptr, quint32 openFlags = 0);
     CLASS_DELETE_COPY_MOVE(StatConnManager)
 
-    SqliteDb *sqliteDb() const { return m_sqliteDb.data(); }
+    SqliteDb *sqliteDb() const override { return m_sqliteDb.data(); }
     SqliteDb *roSqliteDb() const { return m_roSqliteDb.data(); }
 
     void setUp() override;
@@ -52,6 +53,8 @@ protected:
 
     virtual void setupWorker();
     virtual void setupConfManager();
+
+    virtual void checkCearConnOnExit();
 
 private:
     bool setupDb();

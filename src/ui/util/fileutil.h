@@ -59,6 +59,8 @@ bool replaceFile(const QString &filePath, const QString &newFilePath);
 bool resetFilePermissions(const QString &filePath);
 bool linkFile(const QString &filePath, const QString &linkPath);
 
+bool removeFilesByPrefix(const QString &filePath);
+
 QString readFile(const QString &filePath);
 QByteArray readFileData(const QString &filePath, qint64 maxSize = -1);
 

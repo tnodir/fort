@@ -238,6 +238,17 @@ bool SqliteDb::setEncoding(const QString &v)
     return executeStr(sql);
 }
 
+SqliteDb::SyncMode SqliteDb::synchronous()
+{
+    return SyncMode(DbQuery(this).sql("PRAGMA synchronous;").execute().toInt());
+}
+
+bool SqliteDb::setSynchronous(SqliteDb::SyncMode syncMode)
+{
+    const auto sql = QString("PRAGMA synchronous = %1;").arg(QString::number(syncMode));
+    return executeStr(sql);
+}
+
 bool SqliteDb::setBusyTimeoutMs(int v)
 {
     return sqlite3_busy_timeout(m_db, v) == SQLITE_OK;

@@ -62,6 +62,7 @@ void StatisticsPage::onResetToDefault()
     m_cbLogAllowedConn->setChecked(false);
     m_cbLogBlockedConn->setChecked(true);
     m_cbLogAlertedConn->setChecked(false);
+    m_cbClearConnOnExit->setChecked(true);
     m_lscConnKeepCount->spinBox()->setValue(DEFAULT_LOG_CONN_KEEP_COUNT);
 }
 
@@ -89,6 +90,7 @@ void StatisticsPage::onRetranslateUi()
     m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
     m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
     m_cbLogAlertedConn->setText(tr("Alerted only"));
+    m_cbClearConnOnExit->setText(tr("Clear connections on exit (relax disk writes)"));
     m_lscConnKeepCount->label()->setText(tr("Keep count for connections:"));
 
     retranslateTrafKeepDayNames();
@@ -333,8 +335,9 @@ void StatisticsPage::setupConnBox()
     setupLogConn();
 
     // Layout
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_cbLogAllowedConn, m_cbLogBlockedConn,
-            m_cbLogAlertedConn, ControlUtil::createSeparator(), m_lscConnKeepCount });
+    auto layout = ControlUtil::createVLayoutByWidgets(
+            { m_cbLogAllowedConn, m_cbLogBlockedConn, m_cbLogAlertedConn,
+                    ControlUtil::createSeparator(), m_cbClearConnOnExit, m_lscConnKeepCount });
 
     m_gbConn = new QGroupBox();
     m_gbConn->setLayout(layout);
@@ -364,6 +367,14 @@ void StatisticsPage::setupLogConn()
     m_cbLogAlertedConn = ControlUtil::createCheckBox(conf()->logAlertedConn(), [&](bool checked) {
         if (conf()->logAlertedConn() != checked) {
             conf()->setLogAlertedConn(checked);
+            ctrl()->setFlagsEdited();
+        }
+    });
+
+    // Clear Connections on Exit
+    m_cbClearConnOnExit = ControlUtil::createCheckBox(conf()->clearConnOnExit(), [&](bool checked) {
+        if (conf()->clearConnOnExit() != checked) {
+            conf()->setClearConnOnExit(checked);
             ctrl()->setFlagsEdited();
         }
     });

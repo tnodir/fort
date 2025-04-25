@@ -22,6 +22,8 @@ public:
 protected:
     void setupWorker() override { }
     void setupConfManager() override { }
+
+    void checkCearConnOnExit() override { }
 };
 
 #endif // STATCONNMANAGERRPC_H

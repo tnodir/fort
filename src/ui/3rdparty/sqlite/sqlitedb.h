@@ -36,6 +36,13 @@ public:
         OpenDefaultReadWrite = (OpenReadWrite | OpenCreate | OpenNoMutex)
     };
 
+    enum SyncMode {
+        SyncOff = 0, // OFF
+        SyncNormal, // NORMAL
+        SyncFull, // FULL
+        SyncExtra, // EXTRA
+    };
+
     struct FtsTable
     {
         const QString contentTable;
@@ -110,6 +117,9 @@ public:
 
     QString encoding();
     bool setEncoding(const QString &v);
+
+    SqliteDb::SyncMode synchronous();
+    bool setSynchronous(SqliteDb::SyncMode syncMode);
 
     bool setBusyTimeoutMs(int v);
 

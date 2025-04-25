@@ -122,6 +122,9 @@ public:
     bool logAlertedConn() const { return m_logAlertedConn; }
     void setLogAlertedConn(bool v) { m_logAlertedConn = v; }
 
+    bool clearConnOnExit() const { return m_clearConnOnExit; }
+    void setClearConnOnExit(bool v) { m_clearConnOnExit = v; }
+
     bool appBlockAll() const { return m_appBlockAll; }
     void setAppBlockAll(bool appBlockAll) { m_appBlockAll = appBlockAll; }
 
@@ -249,6 +252,7 @@ private:
     uint m_logAllowedConn : 1 = false;
     uint m_logBlockedConn : 1 = false;
     uint m_logAlertedConn : 1 = false;
+    uint m_clearConnOnExit : 1 = true;
 
     uint m_appBlockAll : 1 = true;
     uint m_appAllowAll : 1 = false;

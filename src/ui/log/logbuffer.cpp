@@ -171,7 +171,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
 void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
 {
     const QString path = logEntry->kernelPath();
-    const quint16 pathLen = quint32(path.size()) * sizeof(wchar_t);
+    const quint16 pathLen = quint16(path.size()) * sizeof(wchar_t);
 
     const int entrySize = int(DriverCommon::logProcNewSize(pathLen));
     prepareFor(entrySize);

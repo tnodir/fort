@@ -8,6 +8,8 @@ class SqliteUtilBase
 public:
     virtual SqliteDb *sqliteDb() const = 0;
 
+    void removeDbFilesToCleanOpen() const;
+
 protected:
     bool beginWriteTransaction();
     void commitTransaction();

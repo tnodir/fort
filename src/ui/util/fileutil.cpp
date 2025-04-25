@@ -368,6 +368,19 @@ bool linkFile(const QString &filePath, const QString &linkPath)
     return QFile::link(filePath, linkPath);
 }
 
+bool removeFilesByPrefix(const QString &filePath)
+{
+    const QFileInfo fi(filePath);
+    QDir dir = fi.dir();
+
+    const auto fileNames = dir.entryList({ fi.fileName() + '*' }, QDir::Files);
+    for (const auto &fileName : fileNames) {
+        if (!dir.remove(fileName))
+            return false;
+    }
+    return true;
+}
+
 QString readFile(const QString &filePath)
 {
     return QString::fromUtf8(readFileData(filePath));

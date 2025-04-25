@@ -8,6 +8,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
 #include "deleteconnjob.h"
@@ -67,6 +68,8 @@ void StatConnManager::setUp()
 void StatConnManager::tearDown()
 {
     abortWorkers();
+
+    checkCearConnOnExit();
 }
 
 void StatConnManager::logConn(const LogEntryConn &entry)
@@ -151,6 +154,8 @@ void StatConnManager::setupConfManager()
 
 bool StatConnManager::setupDb()
 {
+    removeDbFilesToCleanOpen();
+
     if (!sqliteDb()->open()) {
         qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
                        << sqliteDb()->errorMessage();
@@ -182,14 +187,23 @@ bool StatConnManager::setupDb()
 
 void StatConnManager::setupByConf()
 {
-    auto confManager = IoC<ConfManager>();
-    FirewallConf *conf = confManager->conf();
+    FirewallConf *conf = this->conf();
 
     m_logAllowedConn = conf->logAllowedConn();
     m_logBlockedConn = conf->logBlockedConn();
+
+    sqliteDb()->setSynchronous(conf->clearConnOnExit() ? SqliteDb::SyncOff : SqliteDb::SyncNormal);
 }
 
 void StatConnManager::setupByConfIni(const IniOptions &ini)
 {
     m_keepCount = ini.connKeepCount();
+}
+
+void StatConnManager::checkCearConnOnExit()
+{
+    if (!conf()->clearConnOnExit())
+        return;
+
+    deleteConn();
 }

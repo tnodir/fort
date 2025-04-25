@@ -141,6 +141,7 @@ SOURCES += \
     log/logmanager.cpp \
     manager/autoupdatemanager.cpp \
     manager/dberrormanager.cpp \
+    manager/dbmanagerbase.cpp \
     manager/drivelistmanager.cpp \
     manager/envmanager.cpp \
     manager/hotkeymanager.cpp \
@@ -403,6 +404,7 @@ HEADERS += \
     log/logmanager.h \
     manager/autoupdatemanager.h \
     manager/dberrormanager.h \
+    manager/dbmanagerbase.h \
     manager/drivelistmanager.h \
     manager/envmanager.h \
     manager/hotkeymanager.h \

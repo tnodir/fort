@@ -56,6 +56,7 @@ private:
     QCheckBox *m_cbLogAllowedConn = nullptr;
     QCheckBox *m_cbLogBlockedConn = nullptr;
     QCheckBox *m_cbLogAlertedConn = nullptr;
+    QCheckBox *m_cbClearConnOnExit = nullptr;
     LabelSpinCombo *m_lscConnKeepCount = nullptr;
 };
 

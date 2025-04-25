@@ -346,6 +346,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
     m_logAllowedConn = o.logAllowedConn();
     m_logBlockedConn = o.logBlockedConn();
     m_logAlertedConn = o.logAlertedConn();
+    m_clearConnOnExit = o.clearConnOnExit();
 
     m_appBlockAll = o.appBlockAll();
     m_appAllowAll = o.appAllowAll();
@@ -398,6 +399,7 @@ QVariant FirewallConf::flagsToVariant() const
     map["logAllowedConn"] = logAllowedConn();
     map["logBlockedConn"] = logBlockedConn();
     map["logAlertedConn"] = logAlertedConn();
+    map["clearConnOnExit"] = clearConnOnExit();
 
     map["appBlockAll"] = appBlockAll();
     map["appAllowAll"] = appAllowAll();
@@ -435,6 +437,7 @@ void FirewallConf::flagsFromVariant(const QVariant &v)
     m_logAllowedConn = map["logAllowedConn"].toBool();
     m_logBlockedConn = map["logBlockedConn"].toBool();
     m_logAlertedConn = map["logAlertedConn"].toBool();
+    m_clearConnOnExit = map["clearConnOnExit"].toBool();
 
     m_appBlockAll = map["appBlockAll"].toBool();
     m_appAllowAll = map["appAllowAll"].toBool();

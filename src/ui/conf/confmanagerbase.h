@@ -1,22 +1,15 @@
 #ifndef CONFMANAGERBASE_H
 #define CONFMANAGERBASE_H
 
-#include <QObject>
+#include <manager/dbmanagerbase.h>
 
-#include <sqlite/sqliteutilbase.h>
-
-class ConfManager;
-class FirewallConf;
-
-class ConfManagerBase : public QObject, public SqliteUtilBase
+class ConfManagerBase : public QObject, public DbManagerBase
 {
     Q_OBJECT
 
 public:
     explicit ConfManagerBase(QObject *parent = nullptr);
 
-    ConfManager *confManager() const;
-    FirewallConf *conf() const;
     SqliteDb *sqliteDb() const override;
 };
 
