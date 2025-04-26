@@ -1,5 +1,13 @@
 Fort Firewall ChangeLog
 
+v3.17.4, 2025-04-26:
+- UI: Options: Statistics: Add "Clear connections on exit (reduce disk writes)" flag (#502).
+- UI: Connections: Copy as filter by "Ctrl+Shift+C".
+- UI: ProgramEdit: Fix wildcard switch saving with edited path (#501).
+- UI: Detect wildcard path for "-c prog ..." commands (#501).
+
+Attention: The "Clear connections on exit (reduce disk writes)" flag is enabled by default!
+
 v3.17.3, 2025-04-19:
 - UI: Options: Add "Snooze Alerts" flag (#494).
 - UI: Add "-o [file-path]" command-line argument (#478).
