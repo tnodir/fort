@@ -2285,6 +2285,10 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <source>Keep count for connections:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Clear connections on exit (reduce disk writes)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

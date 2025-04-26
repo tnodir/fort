@@ -2288,6 +2288,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Keep count for connections:</source>
         <translation>Llevar la cuenta de las conexiones:</translation>
     </message>
+    <message>
+        <source>Clear connections on exit (reduce disk writes)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

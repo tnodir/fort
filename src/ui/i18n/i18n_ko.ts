@@ -2285,6 +2285,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Keep count for connections:</source>
         <translation>연결 수 유지:</translation>
     </message>
+    <message>
+        <source>Clear connections on exit (reduce disk writes)</source>
+        <translation>종료 시 연결 지우기 (디스크 쓰기 감소)</translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

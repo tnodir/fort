@@ -2285,6 +2285,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Keep count for connections:</source>
         <translation>Mantieni conteggio per le connessioni:</translation>
     </message>
+    <message>
+        <source>Clear connections on exit (reduce disk writes)</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

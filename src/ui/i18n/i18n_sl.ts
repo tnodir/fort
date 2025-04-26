@@ -2285,6 +2285,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Keep count for connections:</source>
         <translation>Štejte povezave:</translation>
     </message>
+    <message>
+        <source>Clear connections on exit (reduce disk writes)</source>
+        <translation>Očistite povezave ob izhodu (zmanjšajte število zapisov na disk)</translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

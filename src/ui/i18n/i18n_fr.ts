@@ -2285,6 +2285,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Keep count for connections:</source>
         <translation>Garder le nombre de connexions :</translation>
     </message>
+    <message>
+        <source>Clear connections on exit (reduce disk writes)</source>
+        <translation>Effacer les connexions en quittant (réduire les écritures sur le disque)</translation>
+    </message>
 </context>
 <context>
     <name>StatisticsWindow</name>

@@ -90,7 +90,7 @@ void StatisticsPage::onRetranslateUi()
     m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
     m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
     m_cbLogAlertedConn->setText(tr("Alerted only"));
-    m_cbClearConnOnExit->setText(tr("Clear connections on exit (relax disk writes)"));
+    m_cbClearConnOnExit->setText(tr("Clear connections on exit (reduce disk writes)"));
     m_lscConnKeepCount->label()->setText(tr("Keep count for connections:"));
 
     retranslateTrafKeepDayNames();
