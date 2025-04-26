@@ -187,23 +187,14 @@ static NTSTATUS fort_flow_context_set(PFORT_STAT stat, PFORT_FLOW flow, BOOL isI
     return fort_flow_context_transport_set(stat, flow_id, flowContext, isIPv6);
 }
 
-inline static void fort_flow_context_transport_remove(
-        PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, NTSTATUS *in_status, NTSTATUS *out_status)
+static BOOL fort_flow_context_remove_id(PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL *pending)
 {
     FORT_FLOW_CONTEXT_TRANSPORT_OPT opt;
 
     fort_flow_context_transport_init(stat, isIPv6, &opt);
 
-    *in_status = FwpsFlowRemoveContext0(flow_id, opt.in_layerId, opt.in_calloutId);
-
-    *out_status = FwpsFlowRemoveContext0(flow_id, opt.out_layerId, opt.out_calloutId);
-}
-
-static BOOL fort_flow_context_remove_id(PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL *pending)
-{
-    NTSTATUS in_status, out_status;
-
-    fort_flow_context_transport_remove(stat, flow_id, isIPv6, &in_status, &out_status);
+    const NTSTATUS in_status = FwpsFlowRemoveContext0(flow_id, opt.in_layerId, opt.in_calloutId);
+    const NTSTATUS out_status = FwpsFlowRemoveContext0(flow_id, opt.out_layerId, opt.out_calloutId);
 
     *pending = (in_status == STATUS_PENDING || out_status == STATUS_PENDING);
 
