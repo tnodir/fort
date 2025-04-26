@@ -54,6 +54,7 @@ protected:
     virtual void setupWorker();
     virtual void setupConfManager();
 
+    virtual void checkCearConnOnStartup();
     virtual void checkCearConnOnExit();
 
 private:

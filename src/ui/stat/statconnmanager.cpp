@@ -62,6 +62,8 @@ void StatConnManager::setUp()
     setupWorker();
     setupConfManager();
 
+    checkCearConnOnStartup();
+
     setupDb();
 }
 
@@ -154,8 +156,6 @@ void StatConnManager::setupConfManager()
 
 bool StatConnManager::setupDb()
 {
-    removeDbFilesToCleanOpen();
-
     if (!sqliteDb()->open()) {
         qCCritical(LC) << "File open error:" << sqliteDb()->filePath()
                        << sqliteDb()->errorMessage();
@@ -198,6 +198,11 @@ void StatConnManager::setupByConf()
 void StatConnManager::setupByConfIni(const IniOptions &ini)
 {
     m_keepCount = ini.connKeepCount();
+}
+
+void StatConnManager::checkCearConnOnStartup()
+{
+    removeDbFilesToCleanOpen();
 }
 
 void StatConnManager::checkCearConnOnExit()

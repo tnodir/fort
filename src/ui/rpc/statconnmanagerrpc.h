@@ -23,6 +23,7 @@ protected:
     void setupWorker() override { }
     void setupConfManager() override { }
 
+    void checkCearConnOnStartup() override { }
     void checkCearConnOnExit() override { }
 };
 
