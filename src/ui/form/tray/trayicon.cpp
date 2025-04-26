@@ -167,21 +167,29 @@ void setActionCheckable(QAction *action, bool checked = false, const QObject *re
     }
 }
 
-QAction *addAction(QWidget *widget, const QString &iconPath, const QObject *receiver = nullptr,
-        const char *member = nullptr, TrayIcon::ActionType actionType = TrayIcon::ActionNone,
-        bool checkable = false, bool checked = false)
+struct AddActionArgs
+{
+    const QString &iconPath;
+    const QObject *receiver = nullptr;
+    const char *member = nullptr;
+    TrayIcon::ActionType actionType = TrayIcon::ActionNone;
+    bool checkable = false;
+    bool checked = false;
+};
+
+QAction *addAction(QWidget *widget, const AddActionArgs &a)
 {
     auto action = new QAction(widget);
-    action->setData(actionType);
+    action->setData(a.actionType);
 
-    if (!iconPath.isEmpty()) {
-        action->setIcon(IconCache::icon(iconPath));
+    if (!a.iconPath.isEmpty()) {
+        action->setIcon(IconCache::icon(a.iconPath));
     }
-    if (receiver) {
-        QObject::connect(action, SIGNAL(triggered(bool)), receiver, member);
+    if (a.receiver) {
+        QObject::connect(action, SIGNAL(triggered(bool)), a.receiver, a.member);
     }
-    if (checkable) {
-        setActionCheckable(action, checked);
+    if (a.checkable) {
+        setActionCheckable(action, a.checked);
     }
 
     widget->addAction(action);
@@ -443,49 +451,54 @@ void TrayIcon::setupTrayMenu()
         }
     });
 
-    m_homeAction = addAction(
-            m_menu, ":/icons/fort.png", windowManager(), SLOT(showHomeWindow()), ActionShowHome);
+    m_homeAction = addAction(m_menu,
+            { ":/icons/fort.png", windowManager(), SLOT(showHomeWindow()), ActionShowHome });
     addHotKey(m_homeAction, HotKey::home);
 
-    m_programsAction = addAction(m_menu, ":/icons/application.png", windowManager(),
-            SLOT(showProgramsWindow()), ActionShowPrograms);
+    m_programsAction = addAction(m_menu,
+            { ":/icons/application.png", windowManager(), SLOT(showProgramsWindow()),
+                    ActionShowPrograms });
     addHotKey(m_programsAction, HotKey::programs);
 
-    m_programsOrAlertAction = addAction(
-            m_menu, QString(), this, SLOT(showProgramsOrAlertWindow()), ActionShowProgramsOrAlert);
+    m_programsOrAlertAction = addAction(m_menu,
+            { QString(), this, SLOT(showProgramsOrAlertWindow()), ActionShowProgramsOrAlert });
     m_programsOrAlertAction->setVisible(false);
 
     setupTrayMenuOptions();
     m_menu->addMenu(m_optionsMenu);
 
-    m_statisticsAction = addAction(m_menu, ":/icons/chart_bar.png", windowManager(),
-            SLOT(showStatisticsWindow()), ActionShowStatistics);
+    m_statisticsAction = addAction(m_menu,
+            { ":/icons/chart_bar.png", windowManager(), SLOT(showStatisticsWindow()),
+                    ActionShowStatistics });
     addHotKey(m_statisticsAction, HotKey::statistics);
 
-    m_graphAction = addAction(m_menu, ":/icons/action_log.png", windowManager(),
-            SLOT(switchGraphWindow()), ActionShowTrafficGraph, /*checkable=*/true,
-            windowManager()->isWindowOpen(WindowGraph));
+    m_graphAction = addAction(m_menu,
+            { ":/icons/action_log.png", windowManager(), SLOT(switchGraphWindow()),
+                    ActionShowTrafficGraph, /*checkable=*/true,
+                    windowManager()->isWindowOpen(WindowGraph) });
     addHotKey(m_graphAction, HotKey::graph);
 
     m_menu->addSeparator();
 
-    m_filterEnabledAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)),
-            ActionSwitchFilterEnabled, /*checkable=*/true);
+    m_filterEnabledAction = addAction(m_menu,
+            { QString(), this, SLOT(switchTrayFlag(bool)), ActionSwitchFilterEnabled,
+                    /*checkable=*/true });
     addHotKey(m_filterEnabledAction, HotKey::filter);
 
-    m_snoozeAlertsAction = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)),
-            ActionSwitchSnoozeAlerts, /*checkable=*/true);
+    m_snoozeAlertsAction = addAction(m_menu,
+            { QString(), this, SLOT(switchTrayFlag(bool)), ActionSwitchSnoozeAlerts,
+                    /*checkable=*/true });
     addHotKey(m_snoozeAlertsAction, HotKey::snoozeAlerts);
 
-    m_blockTrafficMenuAction = addAction(m_menu, QString(), this,
-            SLOT(switchBlockTrafficMenu(bool)), ActionShowBlockTrafficMenu);
+    m_blockTrafficMenuAction = addAction(m_menu,
+            { QString(), this, SLOT(switchBlockTrafficMenu(bool)), ActionShowBlockTrafficMenu });
     m_blockTrafficMenuAction->setVisible(false);
 
     setupTrayMenuBlockTraffic();
     m_menu->addMenu(m_blockTrafficMenu);
 
-    m_filterModeMenuAction = addAction(
-            m_menu, QString(), this, SLOT(switchFilterModeMenu(bool)), ActionShowFilterModeMenu);
+    m_filterModeMenuAction = addAction(m_menu,
+            { QString(), this, SLOT(switchFilterModeMenu(bool)), ActionShowFilterModeMenu });
     m_filterModeMenuAction->setVisible(false);
 
     setupTrayMenuFilterMode();
@@ -494,8 +507,8 @@ void TrayIcon::setupTrayMenu()
     m_menu->addSeparator();
 
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
-        QAction *a = addAction(m_menu, QString(), this, SLOT(switchTrayFlag(bool)), ActionNone,
-                /*checkable=*/true);
+        QAction *a = addAction(m_menu,
+                { QString(), this, SLOT(switchTrayFlag(bool)), ActionNone, /*checkable=*/true });
 
         if (i < MaxFKeyCount) {
             addHotKey(a, HotKey::appGroupModifier);
@@ -506,11 +519,11 @@ void TrayIcon::setupTrayMenu()
 
     m_menu->addSeparator();
 
-    m_quitAction = addAction(m_menu, ":/icons/standby.png", this, SLOT(quitProgram()));
+    m_quitAction = addAction(m_menu, { ":/icons/standby.png", this, SLOT(quitProgram()) });
     addHotKey(m_quitAction, HotKey::quit);
 
     m_trayMenuAction =
-            addAction(m_menu, QString(), this, SLOT(switchTrayMenu(bool)), ActionShowTrayMenu);
+            addAction(m_menu, { QString(), this, SLOT(switchTrayMenu(bool)), ActionShowTrayMenu });
     m_trayMenuAction->setVisible(false);
 }
 
@@ -519,26 +532,26 @@ void TrayIcon::setupTrayMenuOptions()
     m_optionsMenu = new QMenu(m_menu);
     m_optionsMenu->setIcon(IconCache::icon(":/icons/cog.png"));
 
-    m_optionsAction =
-            addAction(m_optionsMenu, ":/icons/cog.png", windowManager(), SLOT(showOptionsWindow()));
+    m_optionsAction = addAction(
+            m_optionsMenu, { ":/icons/cog.png", windowManager(), SLOT(showOptionsWindow()) });
     addHotKey(m_optionsAction, HotKey::options);
 
     m_rulesAction = addAction(
-            m_optionsMenu, ":/icons/script.png", windowManager(), SLOT(showRulesWindow()));
+            m_optionsMenu, { ":/icons/script.png", windowManager(), SLOT(showRulesWindow()) });
     addHotKey(m_rulesAction, HotKey::rules);
 
     m_zonesAction = addAction(
-            m_optionsMenu, ":/icons/ip_class.png", windowManager(), SLOT(showZonesWindow()));
+            m_optionsMenu, { ":/icons/ip_class.png", windowManager(), SLOT(showZonesWindow()) });
     addHotKey(m_zonesAction, HotKey::zones);
 
     m_optionsMenu->addSeparator();
 
-    m_groupsAction = addAction(m_optionsMenu, ":/icons/application_double.png", windowManager(),
-            SLOT(showAppGroupsWindow()));
+    m_groupsAction = addAction(m_optionsMenu,
+            { ":/icons/application_double.png", windowManager(), SLOT(showAppGroupsWindow()) });
     addHotKey(m_groupsAction, HotKey::groups);
 
-    m_servicesAction = addAction(
-            m_optionsMenu, ":/icons/windows-48.png", windowManager(), SLOT(showServicesWindow()));
+    m_servicesAction = addAction(m_optionsMenu,
+            { ":/icons/windows-48.png", windowManager(), SLOT(showServicesWindow()) });
     addHotKey(m_servicesAction, HotKey::services);
 
     m_servicesAction->setEnabled(settings()->hasMasterAdmin());
@@ -565,8 +578,9 @@ void TrayIcon::setupTrayMenuBlockTraffic()
 
         const char *iniKey = blockTrafficIniKeys[index];
 
-        QAction *a = addAction(m_blockTrafficMenu, /*iconPath=*/ {}, /*receiver=*/nullptr,
-                /*member=*/nullptr, ActionNone, /*checkable=*/true);
+        QAction *a = addAction(m_blockTrafficMenu,
+                { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, ActionNone,
+                        /*checkable=*/true });
         a->setText(name);
 
         addHotKey(a, iniKey);
@@ -599,8 +613,9 @@ void TrayIcon::setupTrayMenuFilterMode()
 
         const char *iniKey = filterModeIniKeys[index];
 
-        QAction *a = addAction(m_filterModeMenu, /*iconPath=*/ {}, /*receiver=*/nullptr,
-                /*member=*/nullptr, ActionNone, /*checkable=*/true);
+        QAction *a = addAction(m_filterModeMenu,
+                { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, ActionNone,
+                        /*checkable=*/true });
         a->setText(name);
 
         addHotKey(a, iniKey);
