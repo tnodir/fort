@@ -6,7 +6,7 @@ v3.17.4, 2025-04-26:
 - UI: ProgramEdit: Fix wildcard switch saving with edited path (#501).
 - UI: Detect wildcard path for "-c prog ..." commands (#501).
 
-Attention: The "Clear connections on exit (reduce disk writes)" flag is enabled by default!
+Attention: The "Clear connections on exit (reduce disk writes)" flag will be enabled by default for new installations from next release!
 
 v3.17.3, 2025-04-19:
 - UI: Options: Add "Snooze Alerts" flag (#494).
