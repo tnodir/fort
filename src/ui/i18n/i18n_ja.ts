@@ -2287,7 +2287,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
-        <translation type="unfinished"></translation>
+        <translation>終了時に接続を削除する(ディスク書き込みを削減)</translation>
     </message>
 </context>
 <context>
