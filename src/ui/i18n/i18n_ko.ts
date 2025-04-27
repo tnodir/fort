@@ -1056,6 +1056,10 @@
         <source>Switch Snooze Alerts</source>
         <translation>스누즈 알림 전환</translation>
     </message>
+    <message>
+        <source>Auto-Show Window</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

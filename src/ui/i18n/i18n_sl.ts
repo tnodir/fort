@@ -1056,6 +1056,10 @@
         <source>Switch Snooze Alerts</source>
         <translation>Preklopite opozorila na dremež</translation>
     </message>
+    <message>
+        <source>Auto-Show Window</source>
+        <translation>Samodejni prikaz okna</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

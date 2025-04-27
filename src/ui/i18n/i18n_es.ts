@@ -1056,6 +1056,10 @@
         <source>Switch Snooze Alerts</source>
         <translation>Activar/Desactivar posponer alertas</translation>
     </message>
+    <message>
+        <source>Auto-Show Window</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -2290,7 +2294,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
-        <translation type="unfinished"></translation>
+        <translation>Cerrar conexiones al salir (reduce escrituras en disco)</translation>
     </message>
 </context>
 <context>

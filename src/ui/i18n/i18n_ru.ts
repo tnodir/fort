@@ -1056,6 +1056,10 @@
         <source>Switch Snooze Alerts</source>
         <translation>Переключить &quot;Отложить оповещения&quot;</translation>
     </message>
+    <message>
+        <source>Auto-Show Window</source>
+        <translation>Авто-показ окна</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
