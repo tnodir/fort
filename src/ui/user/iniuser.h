@@ -122,6 +122,9 @@ public:
     bool homeWindowMaximized() const { return valueBool("homeWindow/maximized"); }
     void setHomeWindowMaximized(bool on) { setValue("homeWindow/maximized", on); }
 
+    bool homeWindowAutoShowWindow() const { return valueBool("homeWindow/autoShowWindow", true); }
+    void setHomeWindowAutoShowWindow(bool v) { setValue("homeWindow/autoShowWindow", v, true); }
+
     bool homeWindowAutoShowMenu() const { return valueBool("homeWindow/autoShowMenu"); }
     void setHomeWindowAutoShowMenu(bool v) { setValue("homeWindow/autoShowMenu", v); }
 

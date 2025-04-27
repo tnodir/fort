@@ -63,6 +63,7 @@ void IfacePage::onResetToDefault()
     }
     refreshEditShortcut();
 
+    m_cbHomeAutoShowWindow->setChecked(true);
     m_cbHomeAutoShowMenu->setChecked(false);
     m_cbSplashVisible->setChecked(true);
     m_cbUpdateWindowIcons->setChecked(false);
@@ -140,6 +141,7 @@ void IfacePage::onRetranslateUi()
     retranslateComboHotKey();
     refreshEditShortcut();
 
+    m_cbHomeAutoShowWindow->setText(tr("Auto-Show Window"));
     m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
     m_cbUpdateWindowIcons->setText(tr("Show window icons as in tray icon"));
@@ -482,6 +484,12 @@ QLayout *IfacePage::setupEditShortcutLayout()
 
 void IfacePage::setupHomeBox()
 {
+    m_cbHomeAutoShowWindow =
+            ControlUtil::createCheckBox(iniUser()->homeWindowAutoShowWindow(), [&](bool checked) {
+                iniUser()->setHomeWindowAutoShowWindow(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     m_cbHomeAutoShowMenu =
             ControlUtil::createCheckBox(iniUser()->homeWindowAutoShowMenu(), [&](bool checked) {
                 iniUser()->setHomeWindowAutoShowMenu(checked);
@@ -501,6 +509,7 @@ void IfacePage::setupHomeBox()
             });
 
     auto layout = new QVBoxLayout();
+    layout->addWidget(m_cbHomeAutoShowWindow);
     layout->addWidget(m_cbHomeAutoShowMenu);
     layout->addWidget(m_cbSplashVisible);
     layout->addWidget(m_cbUpdateWindowIcons);

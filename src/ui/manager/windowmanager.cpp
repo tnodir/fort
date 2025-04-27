@@ -247,7 +247,7 @@ void WindowManager::updateTrayIconVisibility(const IniUser &ini)
     } else {
         closeTrayIcon();
 
-        if (!homeWindow()) {
+        if (ini.homeWindowAutoShowWindow() && !homeWindow()) {
             showHomeWindow();
         }
     }

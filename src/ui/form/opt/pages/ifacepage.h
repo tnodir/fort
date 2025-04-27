@@ -92,6 +92,7 @@ private:
     QLabel *m_labelShortcut = nullptr;
     QKeySequenceEdit *m_editShortcut = nullptr;
 
+    QCheckBox *m_cbHomeAutoShowWindow = nullptr;
     QCheckBox *m_cbHomeAutoShowMenu = nullptr;
     QCheckBox *m_cbSplashVisible = nullptr;
     QCheckBox *m_cbUpdateWindowIcons = nullptr;
