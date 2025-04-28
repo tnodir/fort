@@ -1058,11 +1058,11 @@
     </message>
     <message>
         <source>Auto-Show Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenêtre d&apos;affichage automatique</translation>
     </message>
     <message>
         <source>Auto-Show Window, when Tray Icon is hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenêtre d’affichage automatique lorsque l’icône de la barre d’état est masquée</translation>
     </message>
 </context>
 <context>
