@@ -140,7 +140,13 @@ void WindowManager::setupHomeWindow()
 {
     m_homeWindow = new HomeWindow();
 
-    connect(m_homeWindow, &HomeWindow::aboutToClose, this, &WindowManager::quitHomeWindow);
+    connect(m_homeWindow, &HomeWindow::aboutToClose, this, [&](QEvent *event) {
+        const IniUser &ini = IoC<UserSettings>()->iniUser();
+
+        if (ini.homeWindowAutoShowWindow()) {
+            quitHomeWindow(event);
+        }
+    });
 }
 
 void WindowManager::setupProgramsWindow()

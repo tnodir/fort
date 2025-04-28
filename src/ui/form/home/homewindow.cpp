@@ -10,7 +10,6 @@
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/dialog/splashscreen.h>
-#include <form/tray/trayicon.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
