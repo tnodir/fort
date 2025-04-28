@@ -1058,11 +1058,11 @@
     </message>
     <message>
         <source>Auto-Show Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar ventana automática</translation>
     </message>
     <message>
         <source>Auto-Show Window, when Tray Icon is hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar ventana automáticamente, cuando se oculta el icono de la bandeja</translation>
     </message>
 </context>
 <context>
