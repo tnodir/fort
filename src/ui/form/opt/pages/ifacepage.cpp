@@ -142,6 +142,7 @@ void IfacePage::onRetranslateUi()
     refreshEditShortcut();
 
     m_cbHomeAutoShowWindow->setText(tr("Auto-Show Window"));
+    m_cbHomeAutoShowWindow->setToolTip(tr("Auto-Show Window, when Tray Icon is hidden"));
     m_cbHomeAutoShowMenu->setText(tr("Auto-Show Menu"));
     m_cbSplashVisible->setText(tr("Show Splash screen on startup"));
     m_cbUpdateWindowIcons->setText(tr("Show window icons as in tray icon"));

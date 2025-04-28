@@ -882,7 +882,7 @@
     </message>
     <message>
         <source>Auto-Show Menu</source>
-        <translation>Авто-показ Меню</translation>
+        <translation>Автопоказ Меню</translation>
     </message>
     <message>
         <source>Show Splash screen on startup</source>
@@ -1018,7 +1018,7 @@
     </message>
     <message>
         <source>Auto-Show Alert Window for New Programs</source>
-        <translation>Авто-показ Окна Оповещения для новых программ</translation>
+        <translation>Автопоказ Окна Оповещения для новых программ</translation>
     </message>
     <message>
         <source>Alert Window is Always on top</source>
@@ -1058,7 +1058,11 @@
     </message>
     <message>
         <source>Auto-Show Window</source>
-        <translation>Авто-показ окна</translation>
+        <translation>Автопоказ окна</translation>
+    </message>
+    <message>
+        <source>Auto-Show Window, when Tray Icon is hidden</source>
+        <translation>Автопоказ окна, когда значок в трее скрыт</translation>
     </message>
 </context>
 <context>

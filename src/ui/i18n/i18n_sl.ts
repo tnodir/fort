@@ -1060,6 +1060,10 @@
         <source>Auto-Show Window</source>
         <translation>Samodejni prikaz okna</translation>
     </message>
+    <message>
+        <source>Auto-Show Window, when Tray Icon is hidden</source>
+        <translation>Samodejni prikaz okna, ko je ikona v sistemski vrstici skrita</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

@@ -1060,6 +1060,10 @@
         <source>Auto-Show Window</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Auto-Show Window, when Tray Icon is hidden</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
