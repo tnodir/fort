@@ -407,7 +407,7 @@ inline static int fort_conf_app_prefix_cmp(PCFORT_APP_ENTRY app_entry, PCFORT_AP
 
 inline static FORT_APP_DATA fort_conf_app_prefix_find(PCFORT_CONF conf, PCFORT_APP_PATH path)
 {
-    const FORT_APP_DATA app_data = { 0 };
+    FORT_APP_DATA app_data = { 0 };
 
     const UINT16 count = conf->prefix_apps_n;
     if (count == 0)
@@ -429,10 +429,10 @@ inline static FORT_APP_DATA fort_conf_app_prefix_find(PCFORT_CONF conf, PCFORT_A
 
         if (res < 0) {
             high = mid - 1;
-        } else if (res > 0) {
-            low = mid + 1;
         } else {
-            return app_entry->app_data;
+            low = mid + 1;
+
+            app_data = (res > 0) ? app_data : app_entry->app_data;
         }
     } while (low <= high);
 
