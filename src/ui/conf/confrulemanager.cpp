@@ -141,7 +141,10 @@ bool driverWriteRules(ConfBuffer &confBuf, bool onlyFlags = false)
 
 }
 
-ConfRuleManager::ConfRuleManager(QObject *parent) : ConfManagerBase(parent) { }
+ConfRuleManager::ConfRuleManager(QObject *parent) : ConfManagerBase(parent)
+{
+    setupRuleNamesCache();
+}
 
 QString ConfRuleManager::ruleNameById(quint16 ruleId)
 {
