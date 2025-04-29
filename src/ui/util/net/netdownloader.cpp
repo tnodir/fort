@@ -7,8 +7,8 @@ namespace {
 
 const QLoggingCategory LC("util.net.downloader");
 
-constexpr int DownloadTimeout = 30 * 1000; // 30 seconds timeout
-constexpr int DownloadMaxSize = 16 * 1024 * 1024;
+constexpr int DownloadTimeout = 60 * 1000; // 1 minute
+constexpr int DownloadMaxSize = 32 * 1024 * 1024;
 
 }
 
