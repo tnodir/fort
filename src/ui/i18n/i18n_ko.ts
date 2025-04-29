@@ -1058,11 +1058,11 @@
     </message>
     <message>
         <source>Auto-Show Window</source>
-        <translation type="unfinished"></translation>
+        <translation>자동 표시 창</translation>
     </message>
     <message>
         <source>Auto-Show Window, when Tray Icon is hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>트레이 아이콘이 숨겨져 있을 때 자동 표시 창</translation>
     </message>
 </context>
 <context>
