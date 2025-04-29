@@ -6,7 +6,7 @@
 #include "fortconf.h"
 
 #define FORT_BUFFER_SIZE  (16 * 1024 - 64)
-#define FORT_LOG_PATH_MAX 512
+#define FORT_LOG_PATH_MAX 2048
 #define FORT_LOG_ALIGN    4
 
 #define FORT_LOG_FLAG_TYPE_MASK     0x0FF00000
@@ -24,8 +24,6 @@
 
 #define FORT_LOG_APP_SIZE(path_len)                                                                \
     FORT_ALIGN_SIZE(FORT_LOG_APP_HEADER_SIZE + (path_len), FORT_LOG_ALIGN)
-
-#define FORT_LOG_APP_SIZE_MAX FORT_LOG_APP_SIZE(FORT_LOG_PATH_MAX)
 
 #define FORT_IP_ADDR_SIZE(isIPv6) ((isIPv6) ? sizeof(ip6_addr_t) : sizeof(UINT32))
 
@@ -53,7 +51,7 @@
 
 #define FORT_LOG_TIME_SIZE (sizeof(UINT32) + sizeof(INT64))
 
-#define FORT_LOG_SIZE_MAX FORT_LOG_APP_SIZE_MAX
+#define FORT_LOG_SIZE_MIN FORT_LOG_APP_SIZE(128)
 
 #if defined(__cplusplus)
 extern "C" {

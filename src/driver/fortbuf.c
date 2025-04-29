@@ -117,7 +117,7 @@ inline static NTSTATUS fort_buffer_prepare_pending(
     UINT32 new_top = out_top + len;
 
     /* Is it time to flush logs? */
-    if (buf->out_len - new_top < FORT_LOG_SIZE_MAX) {
+    if (buf->out_len - new_top < FORT_LOG_SIZE_MIN) {
         PIRP *irp = &irp_info->irp;
 
         if (irp != NULL && *irp == NULL) {
