@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.17.5, 2025-04-29:
+- UI: Options: My Fort: Add "Auto-Show Window" flag (#506).
+- UI: Rule: Fix name changes checking (#504).
+- Driver: fortconf: Exaustive search of path prefix (#507).
+- Driver: fortlog: Increase a path limit to 1024 chars (#511).
+
 v3.17.4, 2025-04-26:
 - UI: Options: Statistics: Add "Clear connections on exit (reduce disk writes)" flag (#502).
 - UI: Connections: Copy as filter by "Ctrl+Shift+C".
