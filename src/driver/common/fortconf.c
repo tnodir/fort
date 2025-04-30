@@ -372,15 +372,28 @@ static BOOL fort_conf_app_wild_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH
 
 typedef BOOL fort_conf_app_equal_func(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
-static FORT_APP_DATA fort_conf_app_find_loop(PCFORT_CONF conf, PCFORT_APP_PATH path,
-        UINT32 apps_off, UINT16 apps_n, fort_conf_app_equal_func *app_equal_func)
+typedef struct fort_conf_app_find_loop_opt
+{
+    UINT32 apps_off;
+    UINT16 apps_n;
+    fort_conf_app_equal_func *app_equal_func;
+} FORT_CONF_APP_FIND_LOOP_OPT, *PFORT_CONF_APP_FIND_LOOP_OPT;
+
+typedef const FORT_CONF_APP_FIND_LOOP_OPT *PCFORT_CONF_APP_FIND_LOOP_OPT;
+
+static FORT_APP_DATA fort_conf_app_find_loop(
+        PCFORT_CONF conf, PCFORT_APP_PATH path, PCFORT_CONF_APP_FIND_LOOP_OPT opt)
 {
     const FORT_APP_DATA app_data = { 0 };
+
+    UINT16 apps_n = opt->apps_n;
 
     if (apps_n == 0)
         return app_data;
 
-    const char *app_entries = (const char *) (conf->data + apps_off);
+    const char *app_entries = (const char *) (conf->data + opt->apps_off);
+
+    fort_conf_app_equal_func *app_equal_func = opt->app_equal_func;
 
     do {
         PCFORT_APP_ENTRY app_entry = (PCFORT_APP_ENTRY) app_entries;
@@ -398,14 +411,24 @@ FORT_API FORT_APP_DATA fort_conf_app_exe_find(PCFORT_CONF conf, PVOID context, P
 {
     UNUSED(context);
 
-    return fort_conf_app_find_loop(
-            conf, path, conf->exe_apps_off, conf->exe_apps_n, fort_conf_app_exe_equal);
+    const FORT_CONF_APP_FIND_LOOP_OPT opt = {
+        .apps_off = conf->exe_apps_off,
+        .apps_n = conf->exe_apps_n,
+        .app_equal_func = fort_conf_app_exe_equal,
+    };
+
+    return fort_conf_app_find_loop(conf, path, &opt);
 }
 
 inline static FORT_APP_DATA fort_conf_app_wild_find(PCFORT_CONF conf, PCFORT_APP_PATH path)
 {
-    return fort_conf_app_find_loop(
-            conf, path, conf->wild_apps_off, conf->wild_apps_n, fort_conf_app_wild_equal);
+    const FORT_CONF_APP_FIND_LOOP_OPT opt = {
+        .apps_off = conf->wild_apps_off,
+        .apps_n = conf->wild_apps_n,
+        .app_equal_func = fort_conf_app_wild_equal,
+    };
+
+    return fort_conf_app_find_loop(conf, path, &opt);
 }
 
 inline static int fort_conf_app_prefix_cmp(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
