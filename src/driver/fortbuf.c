@@ -113,28 +113,33 @@ FORT_API void fort_buffer_clear(PFORT_BUFFER buf)
 inline static NTSTATUS fort_buffer_prepare_pending(
         PFORT_BUFFER buf, UINT32 len, PCHAR *out, PFORT_IRP_INFO irp_info)
 {
+    const ULONG out_len = buf->out_len;
+    if (out_len == 0)
+        return FALSE;
+
     const UINT32 out_top = buf->out_top;
-    UINT32 new_top = out_top + len;
+    const UINT32 new_top = out_top + len;
 
-    /* Is it time to flush logs? */
-    if (buf->out_len - new_top < FORT_LOG_SIZE_MIN) {
-        PIRP *irp = &irp_info->irp;
+    /* Use the pending buffer? */
+    if (out_len >= new_top) {
+        *out = buf->out + out_top;
+        buf->out_top = new_top;
 
-        if (irp != NULL && *irp == NULL) {
-            *irp = buf->irp;
-            buf->irp = NULL;
-
-            irp_info->info = new_top;
-            new_top = 0;
-        }
-
-        buf->out_len = new_top;
+        return TRUE;
     }
 
-    *out = buf->out + out_top;
-    buf->out_top = new_top;
+    /* Flush logs? */
+    PIRP *irp = &irp_info->irp;
 
-    return STATUS_SUCCESS;
+    if (irp != NULL && *irp == NULL) {
+        *irp = buf->irp;
+        buf->irp = NULL;
+
+        irp_info->info = out_top;
+        buf->out_len = 0;
+    }
+
+    return FALSE;
 }
 
 inline static NTSTATUS fort_buffer_prepare_new(PFORT_BUFFER buf, UINT32 len, PCHAR *out)
@@ -157,11 +162,8 @@ FORT_API NTSTATUS fort_buffer_prepare(
 {
     /* Check a pending buffer */
     if (buf->data_head == NULL) {
-        const ULONG out_len = buf->out_len;
-
-        if (out_len != 0 && buf->out_top < out_len) {
-            return fort_buffer_prepare_pending(buf, len, out, irp_info);
-        }
+        if (fort_buffer_prepare_pending(buf, len, out, irp_info))
+            return STATUS_SUCCESS;
     }
 
     return fort_buffer_prepare_new(buf, len, out);
