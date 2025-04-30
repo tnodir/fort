@@ -519,14 +519,18 @@ FORT_API PCFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(PCFORT_CONF conf, int a
 #define fort_conf_addr_group_exclude_list_ref(addr_group)                                          \
     ((PFORT_CONF_ADDR_LIST) ((addr_group)->data + (addr_group)->exclude_off))
 
-FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_included_func zone_func,
-        void *ctx, PCFORT_CONF_META_CONN conn, UCHAR *zone_id, int addr_group_index);
+typedef struct fort_conf_addr_group_ip_included_opt
+{
+    fort_conf_zones_ip_included_func *zone_func;
+    void *ctx;
+    int addr_group_index;
+    UCHAR *zone_id;
+} FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT, *PFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT;
 
-#define fort_conf_ip_is_inet(conf, zone_func, ctx, conn, zone_id)                                  \
-    fort_conf_ip_included((conf), (zone_func), (ctx), (conn), (zone_id), /*addr_group_index=*/0)
+typedef const FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT *PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT;
 
-#define fort_conf_ip_inet_included(conf, zone_func, ctx, conn, zone_id)                            \
-    fort_conf_ip_included((conf), (zone_func), (ctx), (conn), (zone_id), /*addr_group_index=*/1)
+FORT_API BOOL fort_conf_addr_group_ip_included(
+        PCFORT_CONF conf, PCFORT_CONF_META_CONN conn, PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt);
 
 FORT_API BOOL fort_conf_zones_ip_included(
         PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, UCHAR *zone_id, UINT32 zones_mask);

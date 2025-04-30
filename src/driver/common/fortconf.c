@@ -251,18 +251,36 @@ FORT_API PCFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(PCFORT_CONF conf, int a
     return (PCFORT_CONF_ADDR_GROUP) (addr_group_data + addr_group_offsets[addr_group_index]);
 }
 
-static BOOL fort_conf_ip_included_check(PCFORT_CONF_ADDR_LIST addr_list,
-        fort_conf_zones_ip_included_func zone_func, void *ctx, PCFORT_CONF_META_CONN conn,
-        UCHAR *zone_id, UINT32 zones_mask, BOOL list_is_empty)
+static BOOL fort_conf_ip_included_check(PCFORT_CONF_META_CONN conn,
+        PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt, PCFORT_CONF_ADDR_GROUP addr_group,
+        BOOL is_exclude)
 {
-    return (!list_is_empty && fort_conf_ip_inlist(addr_list, conn->remote_ip, conn->isIPv6))
-            || (zone_func != NULL && zone_func(ctx, conn, zone_id, zones_mask));
+    const BOOL list_is_empty =
+            is_exclude ? addr_group->exclude_is_empty : addr_group->include_is_empty;
+
+    if (!list_is_empty) {
+        PCFORT_CONF_ADDR_LIST addr_list = is_exclude
+                ? fort_conf_addr_group_exclude_list_ref(addr_group)
+                : fort_conf_addr_group_include_list_ref(addr_group);
+
+        if (fort_conf_ip_inlist(addr_list, conn->remote_ip, conn->isIPv6))
+            return TRUE;
+    }
+
+    if (opt->zone_func != NULL) {
+        const UINT32 zones_mask =
+                is_exclude ? addr_group->exclude_zones : addr_group->include_zones;
+
+        return opt->zone_func(opt->ctx, conn, opt->zone_id, zones_mask);
+    }
+
+    return FALSE;
 }
 
-FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_included_func zone_func,
-        void *ctx, PCFORT_CONF_META_CONN conn, UCHAR *zone_id, int addr_group_index)
+FORT_API BOOL fort_conf_addr_group_ip_included(
+        PCFORT_CONF conf, PCFORT_CONF_META_CONN conn, PCFORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt)
 {
-    PCFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addr_group_index);
+    PCFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, opt->addr_group_index);
 
     const BOOL include_all = addr_group->include_all;
     const BOOL exclude_all = addr_group->exclude_all;
@@ -270,17 +288,13 @@ FORT_API BOOL fort_conf_ip_included(PCFORT_CONF conf, fort_conf_zones_ip_include
     /* Include All */
     const BOOL ip_excluded = exclude_all
             ? TRUE
-            : fort_conf_ip_included_check(fort_conf_addr_group_exclude_list_ref(addr_group),
-                      zone_func, ctx, conn, zone_id, addr_group->exclude_zones,
-                      addr_group->exclude_is_empty);
+            : fort_conf_ip_included_check(conn, opt, addr_group, /*is_exclude=*/TRUE);
     if (include_all)
         return !ip_excluded;
 
     /* Exclude All */
     const BOOL ip_included = /* include_all ? TRUE : */
-            fort_conf_ip_included_check(fort_conf_addr_group_include_list_ref(addr_group),
-                    zone_func, ctx, conn, zone_id, addr_group->include_zones,
-                    addr_group->include_is_empty);
+            fort_conf_ip_included_check(conn, opt, addr_group, /*is_exclude=*/FALSE);
     if (exclude_all)
         return ip_included;
 

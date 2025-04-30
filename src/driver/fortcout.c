@@ -459,20 +459,35 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
 
     fort_callout_ale_fill_meta_conn(ca, conn);
 
-    UCHAR local_zone_id;
-    conn->is_local_net = !fort_conf_ip_is_inet(&conf_ref->conf,
-            (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
-            &fort_device()->conf, conn, &local_zone_id);
+    /* LAN addresses */
+    {
+        UCHAR local_zone_id;
+        const FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt = {
+            .zone_func = (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
+            .ctx = &fort_device()->conf,
+            .addr_group_index = 0, /* LAN */
+            .zone_id = &local_zone_id,
+        };
+        conn->is_local_net = !fort_conf_addr_group_ip_included(&conf_ref->conf, conn, &opt);
 
-    if (fort_callout_ale_check_filter_net_flags(conn, conf_flags)) {
-        return TRUE; /* block net */
+        if (fort_callout_ale_check_filter_net_flags(conn, conf_flags)) {
+            return TRUE; /* block net */
+        }
     }
 
-    if (!fort_conf_ip_inet_included(&conf_ref->conf,
-                (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
-                &fort_device()->conf, conn, &conn->zone_id)) {
-        conn->reason = FORT_CONN_REASON_IP_INET;
-        return TRUE; /* block address */
+    /* INET addresses */
+    {
+        const FORT_CONF_ADDR_GROUP_IP_INCLUDED_OPT opt = {
+            .zone_func = (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
+            .ctx = &fort_device()->conf,
+            .addr_group_index = 1, /* INET */
+            .zone_id = &conn->zone_id,
+        };
+
+        if (!fort_conf_addr_group_ip_included(&conf_ref->conf, conn, &opt)) {
+            conn->reason = FORT_CONN_REASON_IP_INET;
+            return TRUE; /* block address */
+        }
     }
 
     return FALSE;
