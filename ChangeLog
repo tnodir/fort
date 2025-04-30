@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.17.6, 2025-04-30:
+- Driver: fortbuf: Fix buffer handling for long paths (v3.17.5 regression).
+
 v3.17.5, 2025-04-29:
 - UI: Options: My Fort: Add "Auto-Show Window" flag (#506).
 - UI: Rule: Fix name changes checking (#504).
