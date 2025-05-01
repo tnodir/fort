@@ -1058,11 +1058,11 @@
     </message>
     <message>
         <source>Auto-Show Window</source>
-        <translation type="unfinished"></translation>
+        <translation>自动显示窗口</translation>
     </message>
     <message>
         <source>Auto-Show Window, when Tray Icon is hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>当托盘图标隐藏时自动显示窗口</translation>
     </message>
 </context>
 <context>
@@ -2295,7 +2295,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
-        <translation type="unfinished"></translation>
+        <translation>退出时清除连接（减少磁盘写入）</translation>
     </message>
 </context>
 <context>

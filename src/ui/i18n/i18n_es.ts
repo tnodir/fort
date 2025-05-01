@@ -1349,7 +1349,7 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation>Seg. filtro desactivado:</translation>
+        <translation>Filtro desactivado en segundos:</translation>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
