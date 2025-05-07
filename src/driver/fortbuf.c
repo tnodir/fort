@@ -110,6 +110,20 @@ FORT_API void fort_buffer_clear(PFORT_BUFFER buf)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+inline static void fort_buffer_prepare_pending_flush(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 out_top)
+{
+    PIRP *irp = &irp_info->irp;
+
+    if (irp != NULL && *irp == NULL) {
+        *irp = buf->irp;
+        buf->irp = NULL;
+
+        irp_info->info = out_top;
+        buf->out_len = 0;
+    }
+}
+
 inline static NTSTATUS fort_buffer_prepare_pending(
         PFORT_BUFFER buf, UINT32 len, PCHAR *out, PFORT_IRP_INFO irp_info)
 {
@@ -120,26 +134,22 @@ inline static NTSTATUS fort_buffer_prepare_pending(
     const UINT32 out_top = buf->out_top;
     const UINT32 new_top = out_top + len;
 
+    const INT32 free_len = (INT32) out_len - (INT32) new_top;
+
     /* Use the pending buffer? */
-    if (out_len >= new_top) {
+    const BOOL use_buffer = (free_len >= 0);
+    if (use_buffer) {
         *out = buf->out + out_top;
         buf->out_top = new_top;
-
-        return TRUE;
     }
 
     /* Flush logs? */
-    PIRP *irp = &irp_info->irp;
-
-    if (irp != NULL && *irp == NULL) {
-        *irp = buf->irp;
-        buf->irp = NULL;
-
-        irp_info->info = out_top;
-        buf->out_len = 0;
+    const BOOL flush_logs = (free_len < FORT_LOG_TIME_SIZE);
+    if (flush_logs) {
+        fort_buffer_prepare_pending_flush(buf, irp_info, out_top);
     }
 
-    return FALSE;
+    return use_buffer;
 }
 
 inline static NTSTATUS fort_buffer_prepare_new(PFORT_BUFFER buf, UINT32 len, PCHAR *out)
