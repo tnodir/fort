@@ -87,13 +87,14 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
             continue;
 
         const quint16 trackFlags = getServiceTrackFlags(svcReg);
+        const quint32 processId = service->ServiceStatusProcess.dwProcessId;
 
         ServiceInfo info;
-        info.isRunning = (service->ServiceStatusProcess.dwCurrentState == SERVICE_RUNNING);
+        info.isRunning = (processId != 0);
         info.isHostSplitDisabled = svcReg.value(serviceHostSplitDisableKey).toInt() != 0;
         info.serviceType = ServiceInfo::Type(service->ServiceStatusProcess.dwServiceType);
         info.trackFlags = trackFlags;
-        info.processId = service->ServiceStatusProcess.dwProcessId;
+        info.processId = processId;
         info.serviceName = serviceName;
         info.realServiceName = realServiceName;
 
