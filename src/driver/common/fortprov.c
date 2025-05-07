@@ -155,16 +155,16 @@ static void fort_prov_init_boot_filters(void)
     const FORT_PROV_INIT_FILTER_ARGS args[] = {
         /* ofilter4 */
         { FORT_GUID_BOOT_FILTER_CONNECT_V4, FWPM_LAYER_ALE_AUTH_CONNECT_V4, d.subLayerKey,
-                L"FortBootFilterOut4", d.descr, d.weight, d.flags, d.actionType },
+                L"FortBootFilterConnect4", d.descr, d.weight, d.flags, d.actionType },
         /* ofilter6 */
         { FORT_GUID_BOOT_FILTER_CONNECT_V6, FWPM_LAYER_ALE_AUTH_CONNECT_V6, d.subLayerKey,
-                L"FortBootFilterOut6", d.descr, d.weight, d.flags, d.actionType },
+                L"FortBootFilterConnect6", d.descr, d.weight, d.flags, d.actionType },
         /* ifilter4 */
         { FORT_GUID_BOOT_FILTER_ACCEPT_V4, FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V4, d.subLayerKey,
-                L"FortBootFilterIn4", d.descr, d.weight, d.flags, d.actionType },
+                L"FortBootFilterAccept4", d.descr, d.weight, d.flags, d.actionType },
         /* ifilter6 */
         { FORT_GUID_BOOT_FILTER_ACCEPT_V6, FWPM_LAYER_ALE_AUTH_RECV_ACCEPT_V6, d.subLayerKey,
-                L"FortBootFilterIn6", d.descr, d.weight, d.flags, d.actionType },
+                L"FortBootFilterAccept6", d.descr, d.weight, d.flags, d.actionType },
     };
 
     fort_prov_init_filters(g_provGlobal.boot_filters, args, FORT_PROV_BOOT_FILTERS_COUNT);
