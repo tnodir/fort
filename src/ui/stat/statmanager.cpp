@@ -51,6 +51,18 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     return true;
 }
 
+SqliteDb::MigrateOptions migrateOptions()
+{
+    SqliteDb::MigrateOptions opt = {
+        .sqlDir = ":/stat/migrations/traf",
+        .version = DATABASE_USER_VERSION,
+        .recreate = true,
+        .migrateFunc = &migrateFunc,
+    };
+
+    return opt;
+}
+
 }
 
 StatManager::StatManager(const QString &filePath, QObject *parent, quint32 openFlags) :
@@ -195,12 +207,7 @@ bool StatManager::setupDb()
         return false;
     }
 
-    SqliteDb::MigrateOptions opt = {
-        .sqlDir = ":/stat/migrations/traf",
-        .version = DATABASE_USER_VERSION,
-        .recreate = true,
-        .migrateFunc = &migrateFunc,
-    };
+    SqliteDb::MigrateOptions opt = migrateOptions();
 
     if (!sqliteDb()->migrate(opt)) {
         qCCritical(LC) << "Migration error" << sqliteDb()->filePath();
@@ -286,17 +293,19 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
     {
         const quint32 *procTrafBytes = entry.procTrafBytes();
 
-        const SqliteStmtList insertTrafAppStmts = SqliteStmtList()
-                << getTrafficStmt(StatSql::sqlInsertTrafAppHour, m_trafHour)
-                << getTrafficStmt(StatSql::sqlInsertTrafAppDay, m_trafDay)
-                << getTrafficStmt(StatSql::sqlInsertTrafAppMonth, m_trafMonth)
-                << getTrafficStmt(StatSql::sqlInsertTrafAppTotal, m_trafHour);
+        const SqliteStmtList insertTrafAppStmts = {
+            getTrafficStmt(StatSql::sqlInsertTrafAppHour, m_trafHour),
+            getTrafficStmt(StatSql::sqlInsertTrafAppDay, m_trafDay),
+            getTrafficStmt(StatSql::sqlInsertTrafAppMonth, m_trafMonth),
+            getTrafficStmt(StatSql::sqlInsertTrafAppTotal, m_trafHour),
+        };
 
-        const SqliteStmtList updateTrafAppStmts = SqliteStmtList()
-                << getTrafficStmt(StatSql::sqlUpdateTrafAppHour, m_trafHour)
-                << getTrafficStmt(StatSql::sqlUpdateTrafAppDay, m_trafDay)
-                << getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, m_trafMonth)
-                << getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1);
+        const SqliteStmtList updateTrafAppStmts = {
+            getTrafficStmt(StatSql::sqlUpdateTrafAppHour, m_trafHour),
+            getTrafficStmt(StatSql::sqlUpdateTrafAppDay, m_trafDay),
+            getTrafficStmt(StatSql::sqlUpdateTrafAppMonth, m_trafMonth),
+            getTrafficStmt(StatSql::sqlUpdateTrafAppTotal, -1),
+        };
 
         for (int i = 0; i < procCount; ++i) {
             const quint32 pidFlag = *procTrafBytes++;
@@ -316,15 +325,17 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
     }
 
     if (logStat) {
-        const SqliteStmtList insertTrafStmts = SqliteStmtList()
-                << getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour)
-                << getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay)
-                << getTrafficStmt(StatSql::sqlInsertTrafMonth, m_trafMonth);
+        const SqliteStmtList insertTrafStmts = {
+            getTrafficStmt(StatSql::sqlInsertTrafHour, m_trafHour),
+            getTrafficStmt(StatSql::sqlInsertTrafDay, m_trafDay),
+            getTrafficStmt(StatSql::sqlInsertTrafMonth, m_trafMonth),
+        };
 
-        const SqliteStmtList updateTrafStmts = SqliteStmtList()
-                << getTrafficStmt(StatSql::sqlUpdateTrafHour, m_trafHour)
-                << getTrafficStmt(StatSql::sqlUpdateTrafDay, m_trafDay)
-                << getTrafficStmt(StatSql::sqlUpdateTrafMonth, m_trafMonth);
+        const SqliteStmtList updateTrafStmts = {
+            getTrafficStmt(StatSql::sqlUpdateTrafHour, m_trafHour),
+            getTrafficStmt(StatSql::sqlUpdateTrafDay, m_trafDay),
+            getTrafficStmt(StatSql::sqlUpdateTrafMonth, m_trafMonth),
+        };
 
         // Update or insert total bytes
         updateTrafficList(insertTrafStmts, updateTrafStmts, sumInBytes, sumOutBytes);
@@ -590,6 +601,58 @@ void StatManager::getTraffic(
     }
 
     stmt->reset();
+}
+
+bool StatManager::exportBackup(const QString &path)
+{
+    FileUtil::makePath(path);
+
+    const QString outPath = FileUtil::pathSlash(path);
+
+    // Export DB
+    if (!exportMasterBackup(outPath)) {
+        qCWarning(LC) << "Export error:" << path;
+        return false;
+    }
+
+    return true;
+}
+
+bool StatManager::exportMasterBackup(const QString &path)
+{
+    // Export Db
+    if (!backupDbFile(path)) {
+        qCWarning(LC) << "Export Db error:" << sqliteDb()->errorMessage();
+        return false;
+    }
+
+    return true;
+}
+
+bool StatManager::importBackup(const QString &path)
+{
+    const QString inPath = FileUtil::pathSlash(path);
+
+    // Import DB
+    if (!importMasterBackup(inPath)) {
+        qCWarning(LC) << "Import error:" << path;
+        return false;
+    }
+
+    return true;
+}
+
+bool StatManager::importMasterBackup(const QString &path)
+{
+    // Import Db
+    SqliteDb::MigrateOptions opt = migrateOptions();
+
+    opt.backupFilePath = path + FileUtil::fileName(sqliteDb()->filePath());
+
+    if (!sqliteDb()->import(opt))
+        return false;
+
+    return true;
 }
 
 SqliteStmt *StatManager::getStmt(const char *sql)

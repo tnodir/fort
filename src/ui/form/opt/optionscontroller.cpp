@@ -9,6 +9,7 @@
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
+#include <stat/statmanager.h>
 #include <user/iniuser.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -165,6 +166,8 @@ void OptionsController::exportBackup()
     if (path.isEmpty())
         return;
 
+    IoC<StatManager>()->exportBackup(path);
+
     const bool ok = confManager()->exportBackup(path);
 
     const auto icon = ok ? QMessageBox::Information : QMessageBox::Critical;
@@ -179,8 +182,14 @@ void OptionsController::importBackup(bool onlyNewApps)
     if (path.isEmpty())
         return;
 
-    const bool ok = onlyNewApps ? confAppManager()->importAppsBackup(path)
-                                : confManager()->importBackup(path);
+    bool ok;
+    if (onlyNewApps) {
+        ok = confAppManager()->importAppsBackup(path);
+    } else {
+        IoC<StatManager>()->importBackup(path);
+
+        ok = confManager()->importBackup(path);
+    }
 
     const auto icon = ok ? QMessageBox::Information : QMessageBox::Critical;
     const auto title = ok ? tr("Backup Imported Successfully") : tr("Cannot Import Backup");

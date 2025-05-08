@@ -1,6 +1,7 @@
 #include "controlcommandbackup.h"
 
 #include <conf/confmanager.h>
+#include <stat/statmanager.h>
 #include <util/ioc/ioccontainer.h>
 
 namespace {
@@ -24,12 +25,19 @@ BackupAction backupActionByText(const QString &commandText)
 
 bool processCommandBackupAction(BackupAction backupAction, const QString &dirPath)
 {
+    auto statManager = IoC<StatManager>();
+    auto confManager = IoC<ConfManager>();
+
     switch (backupAction) {
     case BackupActionExport: {
-        return IoC<ConfManager>()->exportBackup(dirPath);
+        statManager->exportBackup(dirPath);
+
+        return confManager->exportBackup(dirPath);
     }
     case BackupActionImport: {
-        return IoC<ConfManager>()->importBackup(dirPath);
+        statManager->importBackup(dirPath);
+
+        return confManager->importBackup(dirPath);
     }
     default:
         return false;

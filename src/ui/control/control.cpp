@@ -78,6 +78,8 @@ static const QHash<Command, const char *> g_commandNames = {
 
     CASE_STRING(Rpc_StatManager_deleteStatApp),
     CASE_STRING(Rpc_StatManager_resetAppTrafTotals),
+    CASE_STRING(Rpc_StatManager_exportMasterBackup),
+    CASE_STRING(Rpc_StatManager_importMasterBackup),
     CASE_STRING(Rpc_StatManager_clearTraffic),
     CASE_STRING(Rpc_StatManager_trafficCleared),
     CASE_STRING(Rpc_StatManager_appStatRemoved),
@@ -200,6 +202,8 @@ static const RpcManager g_commandManagers[] = {
 
     Rpc_StatManager, // Rpc_StatManager_deleteStatApp,
     Rpc_StatManager, // Rpc_StatManager_resetAppTrafTotals,
+    Rpc_StatManager, // Rpc_StatManager_exportMasterBackup,
+    Rpc_StatManager, // Rpc_StatManager_importMasterBackup,
     Rpc_StatManager, // Rpc_StatManager_clearTraffic,
     Rpc_StatManager, // Rpc_StatManager_trafficCleared,
     Rpc_StatManager, // Rpc_StatManager_appStatRemoved,
@@ -300,6 +304,8 @@ static const qint8 g_commandValidations[] = {
 
     true, // Rpc_StatManager_deleteStatApp,
     true, // Rpc_StatManager_resetAppTrafTotals,
+    true, // Rpc_StatManager_exportMasterBackup,
+    true, // Rpc_StatManager_importMasterBackup,
     true, // Rpc_StatManager_clearTraffic,
     0, // Rpc_StatManager_trafficCleared,
     0, // Rpc_StatManager_appStatRemoved,

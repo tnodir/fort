@@ -49,14 +49,18 @@ public:
     void getTraffic(
             const char *sql, qint32 trafTime, qint64 &inBytes, qint64 &outBytes, qint64 appId = 0);
 
+    bool exportBackup(const QString &path);
+    virtual bool exportMasterBackup(const QString &path);
+
+    bool importBackup(const QString &path);
+    virtual bool importMasterBackup(const QString &path);
+
 signals:
     void trafficCleared();
 
     void appStatRemoved(qint64 appId);
     void appCreated(qint64 appId, const QString &appPath);
     void trafficAdded(qint64 unixTime, quint32 inBytes, quint32 outBytes);
-
-    void connChanged();
 
     void appTrafTotalsResetted();
 

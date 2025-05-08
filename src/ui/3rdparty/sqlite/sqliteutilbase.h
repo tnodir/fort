@@ -10,6 +10,8 @@ public:
 
     void removeDbFilesToCleanOpen() const;
 
+    bool backupDbFile(const QString &path) const;
+
 protected:
     bool beginWriteTransaction();
     void commitTransaction();

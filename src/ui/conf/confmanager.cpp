@@ -230,18 +230,18 @@ SqliteDb::MigrateOptions migrateOptions()
         .recreate = true,
         .migrateFunc = &migrateFunc,
         .ftsTables = {
-                {
-                        .contentTable = "app",
-                        .contentRowid = "app_id",
-                        .columns = { "path", "name", "notes" }
-                },
-                {
-                        .contentTable = "rule",
-                        .contentRowid = "rule_id",
-                        .columns = { "name", "notes" }
-                },
-                },
-        };
+            {
+                .contentTable = "app",
+                .contentRowid = "app_id",
+                .columns = { "path", "name", "notes" }
+            },
+            {
+                .contentTable = "rule",
+                .contentRowid = "rule_id",
+                .columns = { "name", "notes" }
+            },
+        },
+    };
 
     return opt;
 }
@@ -891,16 +891,9 @@ bool ConfManager::exportMasterBackup(const QString &path)
     }
 
     // Export Db
-    {
-        const QString fileName = FileUtil::fileName(sqliteDb()->filePath());
-        const QString destFilePath = path + fileName;
-
-        FileUtil::removeFile(destFilePath);
-
-        if (!sqliteDb()->vacuumInto(destFilePath)) {
-            qCWarning(LC) << "Export Db error:" << sqliteDb()->errorMessage();
-            return false;
-        }
+    if (!backupDbFile(path)) {
+        qCWarning(LC) << "Export Db error:" << sqliteDb()->errorMessage();
+        return false;
     }
 
     return true;

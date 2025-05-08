@@ -66,6 +66,10 @@ inline bool processStatManagerRpcResult(StatManager *statManager, const ProcessC
         return statManager->deleteStatApp(p.args.value(0).toLongLong());
     case Control::Rpc_StatManager_resetAppTrafTotals:
         return statManager->resetAppTrafTotals();
+    case Control::Rpc_StatManager_exportMasterBackup:
+        return statManager->exportMasterBackup(p.args.value(0).toString());
+    case Control::Rpc_StatManager_importMasterBackup:
+        return statManager->importMasterBackup(p.args.value(0).toString());
     case Control::Rpc_StatManager_clearTraffic:
         return statManager->clearTraffic();
     default:
@@ -88,6 +92,16 @@ bool StatManagerRpc::deleteStatApp(qint64 appId)
 bool StatManagerRpc::resetAppTrafTotals()
 {
     return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_resetAppTrafTotals);
+}
+
+bool StatManagerRpc::exportMasterBackup(const QString &path)
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_exportMasterBackup, { path });
+}
+
+bool StatManagerRpc::importMasterBackup(const QString &path)
+{
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_importMasterBackup, { path });
 }
 
 bool StatManagerRpc::clearTraffic()

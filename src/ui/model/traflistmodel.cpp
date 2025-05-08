@@ -106,13 +106,13 @@ QVariant TrafListModel::headerData(int section, Qt::Orientation orientation, int
             return tr("Sum");
         }
     }
-    return QVariant();
+    return {};
 }
 
 QVariant TrafListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid())
-        return QVariant();
+        return {};
 
     if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
         const int row = index.row();
@@ -132,7 +132,7 @@ QVariant TrafListModel::data(const QModelIndex &index, int role) const
         }
     }
 
-    return QVariant();
+    return {};
 }
 
 void TrafListModel::clear()

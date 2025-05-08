@@ -81,6 +81,8 @@ enum Command : qint8 {
 
     Rpc_StatManager_deleteStatApp,
     Rpc_StatManager_resetAppTrafTotals,
+    Rpc_StatManager_exportMasterBackup,
+    Rpc_StatManager_importMasterBackup,
     Rpc_StatManager_clearTraffic,
     Rpc_StatManager_trafficCleared,
     Rpc_StatManager_appStatRemoved,

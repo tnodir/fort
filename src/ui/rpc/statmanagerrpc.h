@@ -19,6 +19,9 @@ public:
 
     bool resetAppTrafTotals() override;
 
+    bool exportMasterBackup(const QString &path) override;
+    bool importMasterBackup(const QString &path) override;
+
     static bool processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r);
 
     static void setupServerSignals(RpcManager *rpcManager);

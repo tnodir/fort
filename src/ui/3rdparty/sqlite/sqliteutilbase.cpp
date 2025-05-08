@@ -14,6 +14,16 @@ void SqliteUtilBase::removeDbFilesToCleanOpen() const
     FileUtil::removeFilesByPrefix(filePath);
 }
 
+bool SqliteUtilBase::backupDbFile(const QString &path) const
+{
+    const QString fileName = FileUtil::fileName(sqliteDb()->filePath());
+    const QString destFilePath = path + fileName;
+
+    FileUtil::removeFile(destFilePath);
+
+    return sqliteDb()->vacuumInto(destFilePath);
+}
+
 bool SqliteUtilBase::beginWriteTransaction()
 {
     return sqliteDb()->beginWriteTransaction();
