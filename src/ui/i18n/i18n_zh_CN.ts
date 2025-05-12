@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>全部</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>应用程序</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>下载</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>上传</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2373,10 +2385,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>清除</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>删除应用程序</translation>
     </message>
@@ -2427,6 +2435,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>您确定要清除所有统计信息吗？</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>编辑</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>添加应用程序</translation>
     </message>
 </context>
 <context>

@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>الكل</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>البرنامج</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>الرفع</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2373,10 +2385,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>تحديث</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>مسح</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>حذف البرامج</translation>
     </message>
@@ -2427,6 +2435,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>هل تريد مسح جميع الإحصائيات؟</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>تعديل</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>إضافة برنامج</translation>
     </message>
 </context>
 <context>

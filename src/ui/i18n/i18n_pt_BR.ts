@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>Todos</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>Programa</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Download</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Upload</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2371,10 +2383,6 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <translation>Atualizar</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>Limpar</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>Remover Aplicativo</translation>
     </message>
@@ -2425,6 +2433,14 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Tem certeza que quer limpar todas as estatísticas?</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Editar</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Adicionar Programa</translation>
     </message>
 </context>
 <context>

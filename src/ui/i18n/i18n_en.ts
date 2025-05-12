@@ -147,6 +147,18 @@
         <source>All</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2362,10 +2374,6 @@ Please restart the running program to take effect of this option.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation></translation>
     </message>
@@ -2415,6 +2423,14 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to clear all statistics?</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Add Program</source>
         <translation></translation>
     </message>
 </context>

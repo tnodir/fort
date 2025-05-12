@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>Wszystkie</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>Program</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Wysyłanie</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2373,10 +2385,6 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <translation>Odśwież</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>Czyść</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>Usuń aplikację</translation>
     </message>
@@ -2427,6 +2435,14 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Czy na pewno wyczyścić wszystkie statystyki?</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Dodaj program</translation>
     </message>
 </context>
 <context>

@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>Tutti</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>Programma</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Scarica</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Carica</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -1058,11 +1070,11 @@
     </message>
     <message>
         <source>Auto-Show Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra automaticamente finestra</translation>
     </message>
     <message>
         <source>Auto-Show Window, when Tray Icon is hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra automaticamente la finestra, quando l&apos;icona del vassoio è nascosta</translation>
     </message>
 </context>
 <context>
@@ -2295,7 +2307,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
-        <translation type="unfinished"></translation>
+        <translation>Cancella le connessioni all&apos;uscita (riduce le scritture del disco)</translation>
     </message>
 </context>
 <context>
@@ -2373,10 +2385,6 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <translation>Aggiorna</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>Cancella</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>Rimuovi applicazione</translation>
     </message>
@@ -2427,6 +2435,14 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Sei sicuro di cancellare tutte le statistiche?</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Modifica</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Aggiungi programma</translation>
     </message>
 </context>
 <context>

@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>모두</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>프로그램</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>다운로드</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>업로드</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2373,10 +2385,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>새로 고침</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>지우기</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>응용 프로그램 제거</translation>
     </message>
@@ -2427,6 +2435,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>모든 통계를 삭제하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>편집</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>프로그램 추가</translation>
     </message>
 </context>
 <context>

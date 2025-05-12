@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>Tout</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>Programme</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Télécharger</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Chargement</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2373,10 +2385,6 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <translation>Actualiser</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>Effacer</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>Retirer l&apos;application</translation>
     </message>
@@ -2427,6 +2435,14 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Êtes-vous sûr de vouloir effacer toutes les statistiques?</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Éditer</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Ajouter un programme</translation>
     </message>
 </context>
 <context>

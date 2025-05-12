@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>Alle</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>Programm</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Download</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Upload</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -682,7 +694,7 @@
     </message>
     <message>
         <source>Tick label size:</source>
-        <translation type="unfinished">Tick label size:</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2373,10 +2385,6 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <translation>Aktualisieren</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>Leeren</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>Anwendung entfernen</translation>
     </message>
@@ -2427,6 +2435,14 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Sind Sie sicher, alle Statistiken zu löschen?</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Bearbeiten</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Programm hinzufügen</translation>
     </message>
 </context>
 <context>

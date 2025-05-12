@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>Все</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>Программа</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Загрузка</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Отдача</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2373,10 +2385,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>Обновить</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>Очистить</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>Удалить приложение</translation>
     </message>
@@ -2427,6 +2435,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Очистить всю статистику?</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Изменить</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Добавить программу</translation>
     </message>
 </context>
 <context>

@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>Vse</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>Program</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>Prenos</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>Nalaganje</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2373,10 +2385,6 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <translation>Osveži</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>Počisti</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>Odstrani aplikacijo</translation>
     </message>
@@ -2427,6 +2435,14 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>Ali ste prepričani, da želite počistiti vso statistiko?</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>Uredi</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>Dodaj program</translation>
     </message>
 </context>
 <context>

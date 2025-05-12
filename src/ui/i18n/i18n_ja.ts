@@ -147,6 +147,18 @@
         <source>All</source>
         <translation>すべて</translation>
     </message>
+    <message>
+        <source>Program</source>
+        <translation>プログラム</translation>
+    </message>
+    <message>
+        <source>Download</source>
+        <translation>ダウンロード</translation>
+    </message>
+    <message>
+        <source>Upload</source>
+        <translation>アップロード</translation>
+    </message>
 </context>
 <context>
     <name>ApplicationsPage</name>
@@ -2373,10 +2385,6 @@ Please restart the running program to take effect of this option.</source>
         <translation>更新</translation>
     </message>
     <message>
-        <source>Clear</source>
-        <translation>消去</translation>
-    </message>
-    <message>
         <source>Remove Application</source>
         <translation>アプリケーションの削除</translation>
     </message>
@@ -2427,6 +2435,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to clear all statistics?</source>
         <translation>すべての統計を消去しますか?</translation>
+    </message>
+    <message>
+        <source>Edit</source>
+        <translation>編集</translation>
+    </message>
+    <message>
+        <source>Add Program</source>
+        <translation>プログラムの追加</translation>
     </message>
 </context>
 <context>
