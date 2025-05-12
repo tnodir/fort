@@ -17,6 +17,7 @@ public:
     StatConnManager *statConnManager() const;
 
     void clearTraffic();
+    void deleteStatApp(qint64 appId);
     void resetAppTotals();
 
     void deleteConn(qint64 connIdTo = 0);

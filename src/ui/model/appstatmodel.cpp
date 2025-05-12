@@ -69,6 +69,7 @@ void AppStatModel::initialize()
     setSortColumn(int(AppStatColumn::Download));
     setSortOrder(Qt::DescendingOrder);
 
+    connect(statManager(), &StatManager::trafficCleared, this, &AppStatModel::resetLater);
     connect(statManager(), &StatManager::appStatRemoved, this, &AppStatModel::refresh);
     connect(statManager(), &StatManager::appCreated, this, &AppStatModel::refresh);
 
@@ -183,16 +184,6 @@ const AppStatRow &AppStatModel::appStatRowAt(int row) const
     updateRowCache(row);
 
     return m_appStatRow;
-}
-
-void AppStatModel::remove(int row)
-{
-    updateRowCache(row);
-
-    if (Q_UNLIKELY(m_appStatRow.isNull()))
-        return;
-
-    statManager()->deleteStatApp(m_appStatRow.appId);
 }
 
 bool AppStatModel::updateTableRow(const QVariantHash &vars, int /*row*/) const

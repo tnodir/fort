@@ -55,9 +55,6 @@ public:
 
     static QString columnName(const AppStatColumn column);
 
-public slots:
-    void remove(int row = -1);
-
 protected:
     bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_appStatRow; }

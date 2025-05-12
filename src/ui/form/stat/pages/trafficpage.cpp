@@ -177,7 +177,14 @@ void TrafficPage::setupClearMenu()
         }
     });
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox([&] { appStatModel()->remove(appListCurrentIndex()); },
+        windowManager()->showConfirmBox(
+                [&] {
+                    const auto &appStatRow = currentAppStatRow();
+
+                    if (!appStatRow.isNull()) {
+                        ctrl()->deleteStatApp(appStatRow.appId);
+                    }
+                },
                 tr("Are you sure to remove statistics for selected application?"));
     });
     connect(m_actResetTotal, &QAction::triggered, this, [&] {

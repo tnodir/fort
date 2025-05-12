@@ -21,6 +21,11 @@ void StatisticsController::clearTraffic()
     statManager()->clearTraffic();
 }
 
+void StatisticsController::deleteStatApp(qint64 appId)
+{
+    statManager()->deleteStatApp(appId);
+}
+
 void StatisticsController::resetAppTotals()
 {
     statManager()->resetAppTrafTotals();
