@@ -8,7 +8,7 @@ class TriggerTimer : public QTimer
     Q_OBJECT
 
 public:
-    constexpr static int DefaultInterval = 200;
+    constexpr static int DefaultInterval = 100;
 
     explicit TriggerTimer(QObject *parent = nullptr);
     explicit TriggerTimer(int interval, QObject *parent = nullptr);

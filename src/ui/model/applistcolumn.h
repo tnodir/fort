@@ -11,7 +11,7 @@ enum class AppListColumn : qint8 {
     FilePath,
     CreationTime,
     Notes,
-    Count
+    Count,
 };
 
 #endif // APPLISTCOLUMN_H

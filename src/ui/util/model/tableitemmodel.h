@@ -36,7 +36,9 @@ public:
 
 public slots:
     void resetLater();
-    void reset();
+    virtual void reset();
+
+    void refreshLater();
     void refresh();
 
 protected:
@@ -55,6 +57,7 @@ protected:
 
 private:
     TriggerTimer *m_resetTimer = nullptr;
+    TriggerTimer *m_refreshTimer = nullptr;
 };
 
 #endif // TABLEITEMMODEL_H

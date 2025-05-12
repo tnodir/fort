@@ -109,24 +109,24 @@ QLayout *ConnectionsPage::setupHeader()
     auto layout = new QHBoxLayout();
 
     // Edit Menu
-    auto editMenu = ControlUtil::createMenu(this);
+    auto menu = ControlUtil::createMenu(this);
 
-    m_actCopyAsFilter = editMenu->addAction(IconCache::icon(":/icons/script.png"), QString());
+    m_actCopyAsFilter = menu->addAction(IconCache::icon(":/icons/script.png"), QString());
     m_actCopyAsFilter->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C);
 
-    m_actCopy = editMenu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
+    m_actCopy = menu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actCopy->setShortcut(Qt::Key_Copy);
 
-    m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
+    m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
     m_actAddProgram->setShortcut(Qt::Key_Insert);
 
-    m_actRemoveConn = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveConn = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveConn->setShortcut(Qt::Key_Delete);
 
-    m_actClearAll = editMenu->addAction(IconCache::icon(":/icons/broom.png"), QString());
+    m_actClearAll = menu->addAction(IconCache::icon(":/icons/broom.png"), QString());
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
-    m_btEdit->setMenu(editMenu);
+    m_btEdit->setMenu(menu);
 
     // Toolbar buttons
     m_btClearAll = ControlUtil::createFlatToolButton(":/icons/broom.png");

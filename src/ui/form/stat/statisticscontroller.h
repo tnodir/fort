@@ -4,6 +4,7 @@
 #include <form/basecontroller.h>
 
 class StatConnManager;
+class StatManager;
 
 class StatisticsController : public BaseController
 {
@@ -12,7 +13,11 @@ class StatisticsController : public BaseController
 public:
     explicit StatisticsController(QObject *parent = nullptr);
 
+    StatManager *statManager() const;
     StatConnManager *statConnManager() const;
+
+    void clearTraffic();
+    void resetAppTotals();
 
     void deleteConn(qint64 connIdTo = 0);
 

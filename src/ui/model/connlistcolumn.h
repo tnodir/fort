@@ -15,7 +15,7 @@ enum class ConnListColumn : qint8 {
     Action,
     Reason,
     Time,
-    Count
+    Count,
 };
 
 #endif // CONNLISTCOLUMN_H

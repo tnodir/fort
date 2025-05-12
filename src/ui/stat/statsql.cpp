@@ -8,10 +8,6 @@ const char *const StatSql::sqlDeleteAppId = "DELETE FROM app WHERE app_id = ?1 R
 
 const char *const StatSql::sqlSelectStatAppExists = "SELECT 1 FROM traffic_app WHERE app_id = ?1;";
 
-const char *const StatSql::sqlSelectStatAppList = "SELECT t.app_id, t.path FROM app t"
-                                                  "  JOIN traffic_app ta ON ta.app_id = t.app_id"
-                                                  "  ORDER BY t.app_id;";
-
 const char *const StatSql::sqlInsertTrafAppHour =
         "INSERT INTO traffic_app_hour(app_id, traf_time, in_bytes, out_bytes)"
         "  VALUES(?4, ?1, ?2, ?3);";

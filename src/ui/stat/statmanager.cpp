@@ -492,17 +492,6 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     DbUtil::doList(deleteTrafStmts);
 }
 
-void StatManager::getStatAppList(QStringList &list, QVector<qint64> &appIds)
-{
-    SqliteStmt *stmt = getStmt(StatSql::sqlSelectStatAppList);
-
-    while (stmt->step() == SqliteStmt::StepRow) {
-        appIds.append(stmt->columnInt64(0));
-        list.append(stmt->columnText(1));
-    }
-    stmt->reset();
-}
-
 void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
         const SqliteStmtList &updateStmtList, quint32 &sumInBytes, quint32 &sumOutBytes,
         quint32 pid, quint32 inBytes, quint32 outBytes, qint64 unixTime, bool logStat)

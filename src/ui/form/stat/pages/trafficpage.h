@@ -9,7 +9,7 @@ QT_FORWARD_DECLARE_CLASS(QTableView)
 class AppInfoCache;
 class AppInfoRow;
 class AppStatModel;
-class ListView;
+class TableView;
 class TrafListModel;
 
 class TrafficPage : public StatBasePage
@@ -39,11 +39,20 @@ private:
     void setupRefresh();
     void setupTrafUnits();
     void setupAppListView();
+    void setupAppListHeader();
     void setupTabBar();
     void setupTableTraf();
+    void setupTableTrafType();
+    void setupTableTrafApp();
+    void setupTableTrafTime();
     void setupTableTrafHeader();
+    void setupSplitter();
     void setupAppInfoRow();
     void setupAppListViewChanged();
+
+    void updateTrafType();
+    void updateTrafApp();
+    void updateAppListTime();
 
     void updateTrafUnit();
     void updateTableTrafUnit();
@@ -51,11 +60,14 @@ private:
     int appListCurrentIndex() const;
     QString appListCurrentPath() const;
 
+    int tableTrafCurrentIndex() const;
+
 private:
     AppStatModel *m_appStatModel = nullptr;
     TrafListModel *m_trafListModel = nullptr;
 
-    QPushButton *m_btClear = nullptr;
+    QPushButton *m_btEdit = nullptr;
+    QAction *m_actAddProgram = nullptr;
     QAction *m_actRemoveApp = nullptr;
     QAction *m_actResetTotal = nullptr;
     QAction *m_actClearAll = nullptr;
@@ -63,9 +75,9 @@ private:
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;
     QSplitter *m_splitter = nullptr;
-    ListView *m_appListView = nullptr;
+    TableView *m_appListView = nullptr;
     QTabBar *m_tabBar = nullptr;
-    QTableView *m_tableTraf = nullptr;
+    TableView *m_tableTraf = nullptr;
     AppInfoRow *m_appInfoRow = nullptr;
 };
 

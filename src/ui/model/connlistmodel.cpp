@@ -563,6 +563,8 @@ QString ConnListModel::columnName(const ConnListColumn column)
 
     const int language = IoC<TranslationManager>()->language();
     if (g_language != language) {
+        g_language = language;
+
         g_columnNames = {
             tr("Program"),
             tr("Process ID"),

@@ -17,14 +17,20 @@
 #include <conf/confmanager.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
-#include <form/controls/listview.h>
 #include <form/controls/tableview.h>
 #include <form/stat/statisticscontroller.h>
+#include <form/stat/statisticswindow.h>
 #include <manager/windowmanager.h>
 #include <model/appstatmodel.h>
 #include <model/traflistmodel.h>
 #include <user/iniuser.h>
 #include <util/iconcache.h>
+
+namespace {
+
+constexpr int APP_LIST_HEADER_VERSION = 1;
+
+}
 
 TrafficPage::TrafficPage(StatisticsController *ctrl, QWidget *parent) :
     StatBasePage(ctrl, parent),
@@ -44,17 +50,27 @@ AppInfoCache *TrafficPage::appInfoCache() const
 
 void TrafficPage::onSaveWindowState(IniUser *ini)
 {
+    auto header = m_appListView->horizontalHeader();
+    ini->setStatAppListHeader(header->saveState());
+    ini->setStatAppListHeaderVersion(APP_LIST_HEADER_VERSION);
+
     ini->setStatWindowTrafSplit(m_splitter->saveState());
 }
 
 void TrafficPage::onRestoreWindowState(IniUser *ini)
 {
+    if (ini->statAppListHeaderVersion() == APP_LIST_HEADER_VERSION) {
+        auto header = m_appListView->horizontalHeader();
+        header->restoreState(ini->statAppListHeader());
+    }
+
     m_splitter->restoreState(ini->statWindowTrafSplit());
 }
 
 void TrafficPage::onRetranslateUi()
 {
-    m_btClear->setText(tr("Clear"));
+    m_btEdit->setText(tr("Edit"));
+    m_actAddProgram->setText(tr("Add Program"));
     m_actRemoveApp->setText(tr("Remove Application"));
     m_actResetTotal->setText(tr("Reset Total"));
     m_actClearAll->setText(tr("Clear All"));
@@ -91,41 +107,37 @@ void TrafficPage::retranslateTabBar()
 
 void TrafficPage::setupUi()
 {
-    auto layout = new QVBoxLayout();
-
     // Header
     auto header = setupHeader();
-    layout->addLayout(header);
 
-    // Content
-    m_splitter = new QSplitter();
-
+    // App List
     setupAppListView();
-    m_splitter->addWidget(m_appListView);
+    setupAppListHeader();
 
     // Tab Bar
     setupTabBar();
 
-    auto trafLayout = ControlUtil::createVLayout();
-    trafLayout->addWidget(m_tabBar);
-
     // Traf Table
     setupTableTraf();
+    setupTableTrafType();
+    setupTableTrafApp();
+    setupTableTrafTime();
     setupTableTrafHeader();
-    trafLayout->addWidget(m_tableTraf);
 
-    auto trafWidget = new QWidget();
-    trafWidget->setLayout(trafLayout);
-    m_splitter->addWidget(trafWidget);
-
-    layout->addWidget(m_splitter, 1);
+    // Splitter
+    setupSplitter();
 
     // App Info Row
     setupAppInfoRow();
-    layout->addWidget(m_appInfoRow);
 
     // Actions on app list view's current changed
     setupAppListViewChanged();
+
+    // Layout
+    auto layout = new QVBoxLayout();
+    layout->addLayout(header);
+    layout->addWidget(m_splitter, 1);
+    layout->addWidget(m_appInfoRow);
 
     this->setLayout(layout);
 }
@@ -137,7 +149,7 @@ QLayout *TrafficPage::setupHeader()
     setupTrafUnits();
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btClear, ControlUtil::createVSeparator(), m_btRefresh,
+            { m_btEdit, ControlUtil::createVSeparator(), m_btRefresh,
                     /*stretch*/ nullptr, m_traphUnits, m_comboTrafUnit });
 
     return layout;
@@ -147,32 +159,40 @@ void TrafficPage::setupClearMenu()
 {
     auto menu = ControlUtil::createMenu(this);
 
+    m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
+    m_actAddProgram->setShortcut(Qt::Key_Insert);
+
     m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
     m_actResetTotal = menu->addAction(QString());
-    m_actClearAll = menu->addAction(QString());
+    m_actClearAll = menu->addAction(IconCache::icon(":/icons/broom.png"), QString());
 
+    connect(m_actAddProgram, &QAction::triggered, this, [&] {
+        const auto appPath = appListCurrentPath();
+        if (!appPath.isEmpty()) {
+            windowManager()->openProgramEditForm(appPath, windowManager()->statWindow());
+        }
+    });
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox([&] { appStatModel()->remove(appListCurrentIndex()); },
                 tr("Are you sure to remove statistics for selected application?"));
     });
     connect(m_actResetTotal, &QAction::triggered, this, [&] {
-        windowManager()->showConfirmBox([&] { trafListModel()->resetAppTotals(); },
-                tr("Are you sure to reset total statistics?"));
+        windowManager()->showConfirmBox(
+                [&] { ctrl()->resetAppTotals(); }, tr("Are you sure to reset total statistics?"));
     });
     connect(m_actClearAll, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
                 [&] {
                     m_appListView->clearSelection();
-                    trafListModel()->clear();
-                    appStatModel()->clear();
+                    ctrl()->clearTraffic();
                 },
                 tr("Are you sure to clear all statistics?"));
     });
 
-    m_btClear = ControlUtil::createButton(":/icons/broom.png");
-    m_btClear->setMenu(menu);
+    m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
+    m_btEdit->setMenu(menu);
 }
 
 void TrafficPage::setupRefresh()
@@ -199,14 +219,31 @@ void TrafficPage::setupTrafUnits()
 
 void TrafficPage::setupAppListView()
 {
-    m_appListView = new ListView();
-    m_appListView->setFlow(QListView::TopToBottom);
-    m_appListView->setViewMode(QListView::ListMode);
-    m_appListView->setIconSize(QSize(24, 24));
-    m_appListView->setUniformItemSizes(true);
-    m_appListView->setAlternatingRowColors(true);
+    m_appListView = new TableView();
+    m_appListView->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_appListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
+    m_appListView->setSortingEnabled(true);
     m_appListView->setModel(appStatModel());
+
+    m_appListView->setMenu(m_btEdit->menu());
+
+    connect(m_appListView, &TableView::doubleClicked, m_actAddProgram, &QAction::trigger);
+}
+
+void TrafficPage::setupAppListHeader()
+{
+    auto header = m_appListView->horizontalHeader();
+
+    header->setSectionResizeMode(int(AppStatColumn::Program), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(AppStatColumn::Download), QHeaderView::Stretch);
+    header->setSectionResizeMode(int(AppStatColumn::Upload), QHeaderView::Stretch);
+
+    header->resizeSection(int(AppStatColumn::Program), 240);
+
+    header->setSectionsClickable(true);
+    header->setSortIndicatorShown(true);
+    header->setSortIndicator(int(AppStatColumn::Download), Qt::DescendingOrder);
 }
 
 void TrafficPage::setupTabBar()
@@ -223,20 +260,30 @@ void TrafficPage::setupTableTraf()
 {
     m_tableTraf = new TableView();
     m_tableTraf->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_tableTraf->setSelectionBehavior(QAbstractItemView::SelectItems);
+    m_tableTraf->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     m_tableTraf->setModel(trafListModel());
+}
 
-    const auto resetTableTraf = [&] {
-        trafListModel()->setType(static_cast<TrafListModel::TrafType>(m_tabBar->currentIndex()));
-        trafListModel()->setAppId(appStatModel()->appIdByRow(appListCurrentIndex()));
-        trafListModel()->resetTraf();
-    };
+void TrafficPage::setupTableTrafType()
+{
+    updateTrafType();
 
-    resetTableTraf();
+    connect(m_tabBar, &QTabBar::currentChanged, this, &TrafficPage::updateTrafType);
+}
 
-    connect(m_tabBar, &QTabBar::currentChanged, this, resetTableTraf);
-    connect(m_appListView, &ListView::currentIndexChanged, this, resetTableTraf);
+void TrafficPage::setupTableTrafApp()
+{
+    updateTrafApp();
+
+    connect(m_appListView, &TableView::currentIndexChanged, this, &TrafficPage::updateTrafApp);
+}
+
+void TrafficPage::setupTableTrafTime()
+{
+    updateAppListTime();
+
+    connect(m_tableTraf, &TableView::currentIndexChanged, this, &TrafficPage::updateAppListTime);
 }
 
 void TrafficPage::setupTableTrafHeader()
@@ -258,6 +305,18 @@ void TrafficPage::setupTableTrafHeader()
     connect(header, &QHeaderView::geometriesChanged, this, refreshTableTrafHeader);
 }
 
+void TrafficPage::setupSplitter()
+{
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_tabBar, m_tableTraf });
+
+    auto trafWidget = new QWidget();
+    trafWidget->setLayout(layout);
+
+    m_splitter = new QSplitter();
+    m_splitter->addWidget(m_appListView);
+    m_splitter->addWidget(trafWidget);
+}
+
 void TrafficPage::setupAppInfoRow()
 {
     m_appInfoRow = new AppInfoRow();
@@ -268,7 +327,7 @@ void TrafficPage::setupAppInfoRow()
 
     refreshAppInfoVersion();
 
-    connect(m_appListView, &ListView::currentIndexChanged, this, refreshAppInfoVersion);
+    connect(m_appListView, &TableView::currentIndexChanged, this, refreshAppInfoVersion);
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, refreshAppInfoVersion);
 }
 
@@ -276,13 +335,52 @@ void TrafficPage::setupAppListViewChanged()
 {
     const auto refreshAppListViewChanged = [&] {
         const bool appSelected = (appListCurrentIndex() > 0);
+        m_actAddProgram->setEnabled(appSelected);
         m_actRemoveApp->setEnabled(appSelected);
         m_appInfoRow->setVisible(appSelected);
     };
 
     refreshAppListViewChanged();
 
-    connect(m_appListView, &ListView::currentIndexChanged, this, refreshAppListViewChanged);
+    connect(m_appListView, &TableView::currentIndexChanged, this, refreshAppListViewChanged);
+}
+
+void TrafficPage::updateTrafType()
+{
+    const auto trafType = TrafUnitType::TrafType(m_tabBar->currentIndex());
+
+    if (!trafListModel()->hasApp()) {
+        appStatModel()->setType(trafType);
+    }
+
+    trafListModel()->setType(trafType);
+}
+
+void TrafficPage::updateTrafApp()
+{
+    const auto &appStatRow = appStatModel()->appStatRowAt(appListCurrentIndex());
+    const qint64 appId = appStatRow.isNull() ? 0 : appStatRow.appId;
+
+    const bool oldHasApp = trafListModel()->hasApp();
+
+    trafListModel()->setAppId(appId);
+
+    if (oldHasApp && !trafListModel()->hasApp()) {
+        updateTrafType();
+        updateAppListTime();
+    }
+}
+
+void TrafficPage::updateAppListTime()
+{
+    if (trafListModel()->hasApp())
+        return;
+
+    const auto &trafficRow = trafListModel()->trafficRowAt(tableTrafCurrentIndex());
+    const qint32 trafTime =
+            trafficRow.isNull() ? trafListModel()->maxTrafTime() : trafficRow.trafTime;
+
+    appStatModel()->setTrafTime(trafTime);
 }
 
 void TrafficPage::updateTrafUnit()
@@ -292,12 +390,10 @@ void TrafficPage::updateTrafUnit()
 
 void TrafficPage::updateTableTrafUnit()
 {
-    const auto trafUnit = static_cast<TrafListModel::TrafUnit>(iniUser()->statTrafUnit());
+    const auto trafUnit = TrafUnitType::TrafUnit(iniUser()->statTrafUnit());
 
-    if (trafListModel()->unit() != trafUnit) {
-        trafListModel()->setUnit(trafUnit);
-        trafListModel()->refresh();
-    }
+    appStatModel()->setUnit(trafUnit);
+    trafListModel()->setUnit(trafUnit);
 }
 
 int TrafficPage::appListCurrentIndex() const
@@ -307,5 +403,12 @@ int TrafficPage::appListCurrentIndex() const
 
 QString TrafficPage::appListCurrentPath() const
 {
-    return appStatModel()->appPathByRow(appListCurrentIndex());
+    const auto &appStatRow = appStatModel()->appStatRowAt(appListCurrentIndex());
+
+    return appStatRow.appPath;
+}
+
+int TrafficPage::tableTrafCurrentIndex() const
+{
+    return m_tableTraf->currentRow();
 }

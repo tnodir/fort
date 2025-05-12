@@ -434,6 +434,12 @@ public:
     QByteArray statWindowTrafSplit() const { return valueByteArray("statWindow/trafSplit"); }
     void setStatWindowTrafSplit(const QByteArray &v) { setValue("statWindow/trafSplit", v); }
 
+    int statAppListHeaderVersion() const { return valueInt("statWindow/appListHeaderVersion"); }
+    void setStatAppListHeaderVersion(int v) { setValue("statWindow/appListHeaderVersion", v); }
+
+    QByteArray statAppListHeader() const { return valueByteArray("statWindow/appListHeader"); }
+    void setStatAppListHeader(const QByteArray &v) { setValue("statWindow/appListHeader", v); }
+
     int connListHeaderVersion() const { return valueInt("statWindow/connListHeaderVersion"); }
     void setConnListHeaderVersion(int v) { setValue("statWindow/connListHeaderVersion", v); }
 

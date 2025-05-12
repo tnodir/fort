@@ -105,8 +105,6 @@ private:
     QVariant dataForeground(const QModelIndex &index) const;
     QVariant dataTextAlignment(const QModelIndex &index) const;
 
-    bool updateAppRow(const QString &sql, const QVariantHash &vars, AppRow &appRow) const;
-
     AppListModelData appDataAt(const QModelIndex &index, int role = Qt::DisplayRole) const;
 
 private:

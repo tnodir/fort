@@ -37,8 +37,6 @@ public:
     bool logProcNew(const LogEntryProcNew &entry, qint64 unixTime = 0);
     bool logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime = 0);
 
-    void getStatAppList(QStringList &list, QVector<qint64> &appIds);
-
     virtual bool deleteStatApp(qint64 appId);
 
     virtual bool resetAppTrafTotals();

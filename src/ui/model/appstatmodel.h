@@ -1,46 +1,81 @@
 #ifndef APPSTATMODEL_H
 #define APPSTATMODEL_H
 
-#include <util/model/stringlistmodel.h>
+#include <sqlite/sqlite_types.h>
+
+#include <util/model/tablesqlmodel.h>
+
+#include "appstatcolumn.h"
+#include "trafunittype.h"
 
 class AppInfoCache;
 class StatManager;
 
-class AppStatModel : public StringListModel
+struct AppStatRow : TableRow
+{
+    qint64 appId = 0;
+
+    qint64 inBytes = 0;
+    qint64 outBytes = 0;
+
+    QString appPath;
+};
+
+class AppStatModel : public TableSqlModel
 {
     Q_OBJECT
 
 public:
     explicit AppStatModel(QObject *parent = nullptr);
 
+    TrafUnitType::TrafUnit unit() const { return m_unitType.unit(); }
+    void setUnit(TrafUnitType::TrafUnit v);
+
+    TrafUnitType::TrafType type() const { return m_unitType.type(); }
+    void setType(TrafUnitType::TrafType v);
+
+    qint32 trafTime() const { return m_trafTime; }
+    void setTrafTime(qint32 v);
+
     StatManager *statManager() const;
     AppInfoCache *appInfoCache() const;
+    SqliteDb *sqliteDb() const override;
 
     void initialize();
 
-    qint64 appIdByRow(int row) const;
-    QString appPathByRow(int row) const;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
+    QVariant headerData(
+            int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
+    const AppStatRow &appStatRowAt(int row) const;
+
+    static QString columnName(const AppStatColumn column);
+
 public slots:
-    void clear() override;
+    void remove(int row = -1);
 
-    void remove(int row = -1) override;
+protected:
+    bool updateTableRow(const QVariantHash &vars, int row) const override;
+    TableRow &tableRow() const override { return m_appStatRow; }
 
-private slots:
-    void onStatAppRemoved(qint64 appId);
-
-    void handleCreatedApp(qint64 appId, const QString &appPath);
+    QString sqlBase() const override;
+    QString sqlOrderColumn() const override;
 
 private:
-    void updateList();
+    QVariant headerDataDisplay(int section, int role) const;
+    QVariant headerDataDecoration(int section) const;
 
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataDecoration(const QModelIndex &index) const;
 
 private:
-    QVector<qint64> m_appIds;
+    TrafUnitType m_unitType;
+
+    qint32 m_trafTime = -1;
+
+    mutable AppStatRow m_appStatRow;
 };
 
 #endif // APPSTATMODEL_H

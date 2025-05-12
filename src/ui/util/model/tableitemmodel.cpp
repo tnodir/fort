@@ -28,17 +28,6 @@ Qt::ItemFlags TableItemModel::flags(const QModelIndex &index) const
             | flagIsEnabled(index);
 }
 
-void TableItemModel::resetLater()
-{
-    if (!m_resetTimer) {
-        m_resetTimer = new TriggerTimer(this);
-
-        connect(m_resetTimer, &QTimer::timeout, this, &TableItemModel::reset);
-    }
-
-    m_resetTimer->startTrigger();
-}
-
 Qt::ItemFlags TableItemModel::flagHasChildren(const QModelIndex & /*index*/) const
 {
     return Qt::ItemNeverHasChildren;
@@ -54,11 +43,33 @@ Qt::ItemFlags TableItemModel::flagIsEnabled(const QModelIndex & /*index*/) const
     return Qt::ItemIsEnabled;
 }
 
+void TableItemModel::resetLater()
+{
+    if (!m_resetTimer) {
+        m_resetTimer = new TriggerTimer(this);
+
+        connect(m_resetTimer, &QTimer::timeout, this, &TableItemModel::reset);
+    }
+
+    m_resetTimer->startTrigger();
+}
+
 void TableItemModel::reset()
 {
     beginResetModel();
     invalidateRowCache();
     endResetModel();
+}
+
+void TableItemModel::refreshLater()
+{
+    if (!m_refreshTimer) {
+        m_refreshTimer = new TriggerTimer(this);
+
+        connect(m_refreshTimer, &QTimer::timeout, this, &TableItemModel::refresh);
+    }
+
+    m_refreshTimer->startTrigger();
 }
 
 void TableItemModel::refresh()
