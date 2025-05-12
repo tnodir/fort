@@ -78,7 +78,9 @@ QString TableView::selectedText() const
             prevColumn = column;
         }
 
-        text.append(cellText(index));
+        const QString s = cellText(index).trimmed().replace('\n', '|');
+
+        text.append(s);
     }
 
     return text;
