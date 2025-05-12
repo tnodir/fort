@@ -13,6 +13,8 @@ class StatManager;
 
 struct AppStatRow : TableRow
 {
+    quint32 confAppId = 0;
+
     qint64 appId = 0;
 
     qint64 inBytes = 0;

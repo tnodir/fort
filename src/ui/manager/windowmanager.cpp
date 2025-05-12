@@ -386,9 +386,10 @@ bool WindowManager::showProgramEditForm(const QString &appPath)
     return true;
 }
 
-void WindowManager::openProgramEditForm(const QString &appPath, FormWindow *parentForm)
+void WindowManager::openProgramEditForm(
+        const QString &appPath, qint64 appId, FormWindow *parentForm)
 {
-    ProgramsWindow::openProgramByPath(appPath, parentForm);
+    ProgramsWindow::openProgramByPath(appPath, appId, parentForm);
 }
 
 void WindowManager::showProgramAlertWindow(bool activate)

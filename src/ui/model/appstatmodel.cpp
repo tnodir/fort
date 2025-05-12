@@ -204,9 +204,10 @@ bool AppStatModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     }
 
     m_appStatRow.appId = stmt.columnInt64(0);
-    m_appStatRow.appPath = stmt.columnText(1);
-    m_appStatRow.inBytes = stmt.columnInt64(2);
-    m_appStatRow.outBytes = stmt.columnInt64(3);
+    m_appStatRow.confAppId = stmt.columnInt64(1);
+    m_appStatRow.appPath = stmt.columnText(2);
+    m_appStatRow.inBytes = stmt.columnInt64(3);
+    m_appStatRow.outBytes = stmt.columnInt64(4);
 
     return true;
 }
@@ -241,15 +242,17 @@ QString AppStatModel::sqlBase() const
     const auto sqlTrafTime = (useTrafTime ? ("ta.traf_time = " + QString::number(m_trafTime))
                                           : QLatin1String("1 = 1"));
 
-    const auto sqlTotalTraf = QString("SELECT t.app_id, t.path, ta.in_bytes, ta.out_bytes"
-                                      "  FROM (SELECT 0 AS app_id, '' AS path) t"
-                                      "  LEFT JOIN %1 ta ON %2")
-                                      .arg(trafTotalTable, sqlTrafTime);
+    const auto sqlTotalTraf =
+            QString("SELECT t.app_id, t.conf_app_id, t.path, ta.in_bytes, ta.out_bytes"
+                    "  FROM (SELECT 0 AS app_id, 0 AS conf_app_id, '' AS path) t"
+                    "  LEFT JOIN %1 ta ON %2")
+                    .arg(trafTotalTable, sqlTrafTime);
 
-    const auto sqlAppTraf = QString("SELECT t.app_id, t.path, ta.in_bytes, ta.out_bytes"
-                                    "  FROM app t"
-                                    "  LEFT JOIN %1 ta ON ta.app_id = t.app_id AND %2")
-                                    .arg(trafAppTable, sqlTrafTime);
+    const auto sqlAppTraf =
+            QString("SELECT t.app_id, t.conf_app_id, t.path, ta.in_bytes, ta.out_bytes"
+                    "  FROM app t"
+                    "  LEFT JOIN %1 ta ON ta.app_id = t.app_id AND %2")
+                    .arg(trafAppTable, sqlTrafTime);
 
     return sqlTotalTraf + " UNION ALL " + sqlAppTraf;
 }

@@ -10,6 +10,9 @@ public:
 
     FortLogType type() const override { return FORT_LOG_TYPE_PROC_NEW; }
 
+    quint32 appId() const { return m_appId; }
+    void setAppId(quint32 v) { m_appId = v; }
+
     quint32 pid() const { return m_pid; }
     void setPid(quint32 pid);
 
@@ -19,6 +22,7 @@ public:
     QString path() const;
 
 private:
+    quint32 m_appId = 0;
     quint32 m_pid = 0;
     QString m_kernelPath;
 };

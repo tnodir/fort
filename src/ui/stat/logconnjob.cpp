@@ -58,7 +58,7 @@ void LogConnJob::emitFinished()
 
 bool LogConnJob::processEntry(const LogEntryConn &entry)
 {
-    const qint64 appId = getOrCreateAppId(entry.path(), entry.connTime());
+    const qint64 appId = getOrCreateAppId(entry.path(), entry.appId(), entry.connTime());
     if (appId == INVALID_APP_ID)
         return false;
 
@@ -88,12 +88,13 @@ qint64 LogConnJob::getAppId(const QString &appPath)
     return appId;
 }
 
-qint64 LogConnJob::createAppId(const QString &appPath, qint64 unixTime)
+qint64 LogConnJob::createAppId(const QString &appPath, quint32 confAppId, qint64 unixTime)
 {
     SqliteStmt *stmt = getStmt(StatSql::sqlInsertAppId);
 
-    stmt->bindText(1, appPath);
-    stmt->bindInt64(2, unixTime);
+    stmt->bindInt64(1, confAppId);
+    stmt->bindText(2, appPath);
+    stmt->bindInt64(3, unixTime);
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();
@@ -102,14 +103,14 @@ qint64 LogConnJob::createAppId(const QString &appPath, qint64 unixTime)
     return INVALID_APP_ID;
 }
 
-qint64 LogConnJob::getOrCreateAppId(const QString &appPath, qint64 unixTime)
+qint64 LogConnJob::getOrCreateAppId(const QString &appPath, quint32 confAppId, qint64 unixTime)
 {
     qint64 appId = getAppId(appPath);
     if (appId == INVALID_APP_ID) {
-        appId = createAppId(appPath, unixTime);
-    }
+        appId = createAppId(appPath, confAppId, unixTime);
 
-    Q_ASSERT(appId != INVALID_APP_ID);
+        Q_ASSERT(appId != INVALID_APP_ID);
+    }
 
     return appId;
 }

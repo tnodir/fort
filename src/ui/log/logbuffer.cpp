@@ -120,6 +120,9 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         .process_id = logEntry->pid(),
         .local_ip = logEntry->localIp(),
         .remote_ip = logEntry->remoteIp(),
+        .app_data = {
+            .app_id = logEntry->appId(),
+        },
     };
 
     DriverCommon::logConnHeaderWrite(output, &conn, pathLen);
@@ -161,6 +164,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setRemotePort(conn.remote_port);
     logEntry->setLocalIp(conn.local_ip);
     logEntry->setRemoteIp(conn.remote_ip);
+    logEntry->setAppId(conn.app_data.app_id);
     logEntry->setPid(conn.process_id);
     logEntry->setKernelPath(path);
 
@@ -178,7 +182,7 @@ void LogBuffer::writeEntryProcNew(const LogEntryProcNew *logEntry)
 
     char *output = this->output();
 
-    DriverCommon::logProcNewHeaderWrite(output, logEntry->pid(), pathLen);
+    DriverCommon::logProcNewHeaderWrite(output, logEntry->appId(), logEntry->pid(), pathLen);
 
     if (pathLen > 0) {
         output += DriverCommon::logProcNewHeaderSize();
@@ -194,9 +198,10 @@ void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
 
     const char *input = this->input();
 
+    quint32 appId;
     quint32 pid;
     quint16 pathLen;
-    DriverCommon::logProcNewHeaderRead(input, &pid, &pathLen);
+    DriverCommon::logProcNewHeaderRead(input, &appId, &pid, &pathLen);
 
     QString path;
     if (pathLen > 0) {
@@ -204,6 +209,7 @@ void LogBuffer::readEntryProcNew(LogEntryProcNew *logEntry)
         path = QString::fromWCharArray((const wchar_t *) input, pathLen / sizeof(wchar_t));
     }
 
+    logEntry->setAppId(appId);
     logEntry->setPid(pid);
     logEntry->setKernelPath(path);
 

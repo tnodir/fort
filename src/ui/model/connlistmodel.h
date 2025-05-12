@@ -31,6 +31,7 @@ struct ConnRow : TableRow
     ip_addr_t localIp;
     ip_addr_t remoteIp;
 
+    quint32 confAppId = 0;
     quint32 pid = 0;
 
     qint64 connId = 0;

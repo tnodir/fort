@@ -19,6 +19,8 @@ class IniUser;
 class StatisticsController;
 class TableView;
 
+struct ConnRow;
+
 class ConnectionsPage : public StatBasePage
 {
     Q_OBJECT
@@ -59,7 +61,7 @@ private:
     void deleteConn(int row);
 
     int connListCurrentIndex() const;
-    QString connListCurrentPath() const;
+    const ConnRow &currentConnRow() const;
 
 private:
     ConnListModel *m_connListModel = nullptr;

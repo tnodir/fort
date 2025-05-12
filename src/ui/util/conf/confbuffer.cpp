@@ -434,6 +434,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
         },
         .group_index = app.groupIndex,
         .rule_id = app.ruleId,
+        .app_id = quint32(app.appId),
         .zones = app.zones,
     };
 

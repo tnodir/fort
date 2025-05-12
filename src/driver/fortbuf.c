@@ -219,7 +219,7 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
                 fort_log_conn_write(out, conn, &log_path);
             } break;
             case FORT_BUFFER_CONN_WRITE_PROC_NEW: {
-                fort_log_proc_new_write(out, conn->process_id, &log_path);
+                fort_log_proc_new_write(out, conn->app_data.app_id, conn->process_id, &log_path);
             } break;
             }
         }

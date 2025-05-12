@@ -169,9 +169,11 @@ void TrafficPage::setupClearMenu()
     m_actClearAll = menu->addAction(IconCache::icon(":/icons/broom.png"), QString());
 
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
-        const auto appPath = appListCurrentPath();
-        if (!appPath.isEmpty()) {
-            windowManager()->openProgramEditForm(appPath, windowManager()->statWindow());
+        const auto &appStatRow = currentAppStatRow();
+
+        if (!appStatRow.isNull()) {
+            windowManager()->openProgramEditForm(
+                    appStatRow.appPath, appStatRow.confAppId, windowManager()->statWindow());
         }
     });
     connect(m_actRemoveApp, &QAction::triggered, this, [&] {
@@ -322,7 +324,10 @@ void TrafficPage::setupAppInfoRow()
     m_appInfoRow = new AppInfoRow();
 
     const auto refreshAppInfoVersion = [&] {
-        m_appInfoRow->refreshAppInfoVersion(appListCurrentPath(), appInfoCache());
+        const auto &appStatRow = currentAppStatRow();
+        const auto appPath = appStatRow.isNull() ? QString() : appStatRow.appPath;
+
+        m_appInfoRow->refreshAppInfoVersion(appPath, appInfoCache());
     };
 
     refreshAppInfoVersion();
@@ -358,7 +363,7 @@ void TrafficPage::updateTrafType()
 
 void TrafficPage::updateTrafApp()
 {
-    const auto &appStatRow = appStatModel()->appStatRowAt(appListCurrentIndex());
+    const auto &appStatRow = currentAppStatRow();
     const qint64 appId = appStatRow.isNull() ? 0 : appStatRow.appId;
 
     const bool oldHasApp = trafListModel()->hasApp();
@@ -401,11 +406,9 @@ int TrafficPage::appListCurrentIndex() const
     return m_appListView->currentRow();
 }
 
-QString TrafficPage::appListCurrentPath() const
+const AppStatRow &TrafficPage::currentAppStatRow() const
 {
-    const auto &appStatRow = appStatModel()->appStatRowAt(appListCurrentIndex());
-
-    return appStatRow.appPath;
+    return appStatModel()->appStatRowAt(appListCurrentIndex());
 }
 
 int TrafficPage::tableTrafCurrentIndex() const

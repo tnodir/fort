@@ -52,8 +52,8 @@ void logAppHeaderRead(const char *input, int *blocked, quint32 *pid, quint16 *pa
 void logConnHeaderWrite(char *output, PCFORT_CONF_META_CONN conn, quint16 pathLen);
 void logConnHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint16 *pathLen);
 
-void logProcNewHeaderWrite(char *output, quint32 pid, quint16 pathLen);
-void logProcNewHeaderRead(const char *input, quint32 *pid, quint16 *pathLen);
+void logProcNewHeaderWrite(char *output, quint32 appId, quint32 pid, quint16 pathLen);
+void logProcNewHeaderRead(const char *input, quint32 *appId, quint32 *pid, quint16 *pathLen);
 
 void logStatTrafHeaderRead(const char *input, quint16 *procCount);
 

@@ -422,7 +422,8 @@ bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
     m_connRow.zoneId = stmt.columnInt(15);
     m_connRow.ruleId = stmt.columnInt(16);
 
-    m_connRow.appPath = stmt.columnText(17);
+    m_connRow.confAppId = stmt.columnInt64(17);
+    m_connRow.appPath = stmt.columnText(18);
 
     return true;
 }
@@ -471,6 +472,7 @@ QString ConnListModel::sqlBase() const
            "    t.remote_ip6,"
            "    t.zone_id,"
            "    t.rule_id,"
+           "    a.conf_app_id,"
            "    a.path"
            "  FROM conn t"
            "    JOIN app a ON a.app_id = t.app_id";

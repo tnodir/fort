@@ -51,7 +51,7 @@ public:
 
     bool editProgramByPath(const QString &appPath);
 
-    static void openProgramByPath(const QString &appPath, FormWindow *parentForm);
+    static void openProgramByPath(const QString &appPath, qint64 appId, FormWindow *parentForm);
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;

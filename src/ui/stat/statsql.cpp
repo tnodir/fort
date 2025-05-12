@@ -2,7 +2,8 @@
 
 const char *const StatSql::sqlSelectAppId = "SELECT app_id FROM app WHERE path = ?1;";
 
-const char *const StatSql::sqlInsertAppId = "INSERT INTO app(path, creat_time) VALUES(?1, ?2);";
+const char *const StatSql::sqlInsertAppId = "INSERT INTO app(conf_app_id, path, creat_time)"
+                                            "  VALUES(?1, ?2, ?3);";
 
 const char *const StatSql::sqlDeleteAppId = "DELETE FROM app WHERE app_id = ?1 RETURNING path;";
 

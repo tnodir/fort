@@ -12,6 +12,8 @@ class AppStatModel;
 class TableView;
 class TrafListModel;
 
+struct AppStatRow;
+
 class TrafficPage : public StatBasePage
 {
     Q_OBJECT
@@ -58,7 +60,7 @@ private:
     void updateTableTrafUnit();
 
     int appListCurrentIndex() const;
-    QString appListCurrentPath() const;
+    const AppStatRow &currentAppStatRow() const;
 
     int tableTrafCurrentIndex() const;
 

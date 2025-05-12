@@ -155,9 +155,11 @@ void ConnectionsPage::setupHeaderConnections()
     });
     connect(m_actCopy, &QAction::triggered, m_connListView, &TableView::copySelectedText);
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
-        const auto appPath = connListCurrentPath();
-        if (!appPath.isEmpty()) {
-            windowManager()->openProgramEditForm(appPath, windowManager()->statWindow());
+        const auto &connRow = currentConnRow();
+
+        if (!connRow.isNull()) {
+            windowManager()->openProgramEditForm(
+                    connRow.appPath, connRow.confAppId, windowManager()->statWindow());
         }
     });
     connect(m_actRemoveConn, &QAction::triggered, this, [&] {
@@ -279,7 +281,10 @@ void ConnectionsPage::setupAppInfoRow()
     m_appInfoRow = new AppInfoRow();
 
     const auto refreshAppInfoVersion = [&] {
-        m_appInfoRow->refreshAppInfoVersion(connListCurrentPath(), appInfoCache());
+        const auto &connRow = currentConnRow();
+        const auto appPath = connRow.isNull() ? QString() : connRow.appPath;
+
+        m_appInfoRow->refreshAppInfoVersion(appPath, appInfoCache());
     };
 
     refreshAppInfoVersion();
@@ -417,8 +422,7 @@ int ConnectionsPage::connListCurrentIndex() const
     return m_connListView->currentRow();
 }
 
-QString ConnectionsPage::connListCurrentPath() const
+const ConnRow &ConnectionsPage::currentConnRow() const
 {
-    const auto &connRow = connListModel()->connRowAt(connListCurrentIndex());
-    return connRow.isNull() ? QString() : connRow.appPath;
+    return connListModel()->connRowAt(connListCurrentIndex());
 }

@@ -44,6 +44,7 @@ FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UI
             | ((UINT32) conn->ip_proto << 16);
     *up++ = ((UINT32) conn->rule_id) | ((UINT32) conn->zone_id << 16);
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
+    *up++ = conn->app_data.app_id;
     *up++ = conn->process_id;
 
     const int ip_size = FORT_IP_ADDR_SIZE(conn->isIPv6);
@@ -93,6 +94,9 @@ FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn
     conn->remote_port = (UINT16) (v >> 16);
 
     v = *up++;
+    conn->app_data.app_id = v;
+
+    v = *up++;
     conn->process_id = v;
 
     const int ip_size = FORT_IP_ADDR_SIZE(conn->isIPv6);
@@ -105,30 +109,33 @@ FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn
     RtlCopyMemory(conn->remote_ip.data, up, ip_size);
 }
 
-FORT_API void fort_log_proc_new_header_write(char *p, UINT32 pid, UINT16 path_len)
+FORT_API void fort_log_proc_new_header_write(char *p, UINT32 app_id, UINT32 pid, UINT16 path_len)
 {
     UINT32 *up = (UINT32 *) p;
 
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_PROC_NEW) | path_len;
+    *up++ = app_id;
     *up = pid;
 }
 
-FORT_API void fort_log_proc_new_write(char *p, UINT32 pid, PCFORT_APP_PATH path)
+FORT_API void fort_log_proc_new_write(char *p, UINT32 app_id, UINT32 pid, PCFORT_APP_PATH path)
 {
     const UINT16 path_len = path->len;
 
-    fort_log_proc_new_header_write(p, pid, path_len);
+    fort_log_proc_new_header_write(p, app_id, pid, path_len);
 
     if (path_len != 0) {
         RtlCopyMemory(p + FORT_LOG_PROC_NEW_HEADER_SIZE, path->buffer, path_len);
     }
 }
 
-FORT_API void fort_log_proc_new_header_read(const char *p, UINT32 *pid, UINT16 *path_len)
+FORT_API void fort_log_proc_new_header_read(
+        const char *p, UINT32 *app_id, UINT32 *pid, UINT16 *path_len)
 {
     const UINT32 *up = (const UINT32 *) p;
 
     *path_len = (*up++ & ~FORT_LOG_FLAG_EX_MASK);
+    *app_id = *up++;
     *pid = *up;
 }
 

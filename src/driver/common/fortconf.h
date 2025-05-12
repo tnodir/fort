@@ -327,8 +327,12 @@ typedef struct fort_app_data
 
     UINT16 rule_id;
 
+    UINT32 app_id;
+
     FORT_CONF_RULE_ZONES zones;
 } FORT_APP_DATA, *PFORT_APP_DATA;
+
+typedef const FORT_APP_DATA *PCFORT_APP_DATA;
 
 typedef struct fort_app_entry
 {

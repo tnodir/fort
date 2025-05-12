@@ -642,13 +642,21 @@ bool ProgramsWindow::editProgramByPath(const QString &appPath)
     return true;
 }
 
-void ProgramsWindow::openProgramByPath(const QString &appPath, FormWindow *parentForm)
+void ProgramsWindow::openProgramByPath(const QString &appPath, qint64 appId, FormWindow *parentForm)
 {
     ProgramEditDialog *formAppEdit = nullptr;
 
     auto ctrl = new ProgramEditController();
 
-    const auto app = ctrl->confAppManager()->appByPath(appPath);
+    auto confAppManager = ctrl->confAppManager();
+
+    App app;
+    if (appId > 0) {
+        app = confAppManager->appById(appId);
+    }
+    if (!app.isValid()) {
+        app = confAppManager->appByPath(appPath);
+    }
 
     const OpenAppEditDialogArgs a = {
         .app = app,

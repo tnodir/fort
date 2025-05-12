@@ -37,6 +37,9 @@ public:
     quint16 remotePort() const { return m_remotePort; }
     void setRemotePort(quint16 port) { m_remotePort = port; }
 
+    quint32 appId() const { return m_appId; }
+    void setAppId(quint32 v) { m_appId = v; }
+
     qint64 connTime() const { return m_connTime; }
     void setConnTime(qint64 connTime) { m_connTime = connTime; }
 
@@ -72,6 +75,7 @@ private:
     quint16 m_ruleId = 0;
     quint16 m_localPort = 0;
     quint16 m_remotePort = 0;
+    quint32 m_appId = 0;
     qint64 m_connTime = 0;
     ip_addr_t m_localIp;
     ip_addr_t m_remoteIp;

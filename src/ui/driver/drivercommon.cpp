@@ -162,14 +162,14 @@ void logConnHeaderRead(const char *input, PFORT_CONF_META_CONN conn, quint16 *pa
     fort_log_conn_header_read(input, conn, pathLen);
 }
 
-void logProcNewHeaderWrite(char *output, quint32 pid, quint16 pathLen)
+void logProcNewHeaderWrite(char *output, quint32 appId, quint32 pid, quint16 pathLen)
 {
-    fort_log_proc_new_header_write(output, pid, pathLen);
+    fort_log_proc_new_header_write(output, appId, pid, pathLen);
 }
 
-void logProcNewHeaderRead(const char *input, quint32 *pid, quint16 *pathLen)
+void logProcNewHeaderRead(const char *input, quint32 *appId, quint32 *pid, quint16 *pathLen)
 {
-    fort_log_proc_new_header_read(input, pid, pathLen);
+    fort_log_proc_new_header_read(input, appId, pid, pathLen);
 }
 
 void logStatTrafHeaderRead(const char *input, quint16 *procCount)

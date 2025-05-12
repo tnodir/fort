@@ -82,7 +82,7 @@ private:
 
     void logClear();
 
-    void addLoggedProcessId(const QString &appPath, quint32 pid);
+    void addLoggedProcessId(const QString &appPath, const LogEntryProcNew &entry);
     void removeLoggedProcessId(quint32 pid);
     QString getLoggedProcessIdPath(quint32 pid);
 
@@ -92,8 +92,9 @@ private:
     void clearAppIdCache();
 
     qint64 getAppId(const QString &appPath);
-    qint64 createAppId(const QString &appPath, qint64 unixTime);
-    qint64 getOrCreateAppId(const QString &appPath, qint64 unixTime = 0);
+    qint64 createAppId(const QString &appPath, quint32 confAppId, qint64 unixTime);
+    qint64 getOrCreateAppId(const QString &appPath, quint32 confAppId, qint64 unixTime = 0);
+    qint64 getOrCreateCachedAppId(const QString &appPath, quint32 confAppId, qint64 unixTime = 0);
     bool deleteAppId(qint64 appId);
 
     void deleteOldTraffic(qint32 trafHour);

@@ -22,7 +22,7 @@ namespace {
 
 const QLoggingCategory LC("stat");
 
-constexpr int DATABASE_USER_VERSION = 7;
+constexpr int DATABASE_USER_VERSION = 8;
 
 constexpr qint64 INVALID_APP_ID = Q_INT64_C(-1);
 
@@ -222,8 +222,10 @@ void StatManager::logClear()
     m_appPidPathMap.clear();
 }
 
-void StatManager::addLoggedProcessId(const QString &appPath, quint32 pid)
+void StatManager::addLoggedProcessId(const QString &appPath, const LogEntryProcNew &entry)
 {
+    const quint32 pid = entry.pid();
+
     Q_ASSERT(!m_appPidPathMap.contains(pid));
 
     m_appPidPathMap.insert(pid, appPath);
@@ -261,12 +263,11 @@ void StatManager::clearAppIdCache()
 
 bool StatManager::logProcNew(const LogEntryProcNew &entry, qint64 unixTime)
 {
-    const quint32 pid = entry.pid();
     const QString appPath = entry.path();
 
-    addLoggedProcessId(appPath, pid);
+    addLoggedProcessId(appPath, entry);
 
-    return getOrCreateAppId(appPath, unixTime) != INVALID_APP_ID;
+    return getOrCreateCachedAppId(appPath, entry.appId(), unixTime) != INVALID_APP_ID;
 }
 
 bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
@@ -412,12 +413,13 @@ qint64 StatManager::getAppId(const QString &appPath)
     return appId;
 }
 
-qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime)
+qint64 StatManager::createAppId(const QString &appPath, quint32 confAppId, qint64 unixTime)
 {
     SqliteStmt *stmt = getStmt(StatSql::sqlInsertAppId);
 
-    stmt->bindText(1, appPath);
-    stmt->bindInt64(2, unixTime);
+    stmt->bindInt64(1, confAppId);
+    stmt->bindText(2, appPath);
+    stmt->bindInt64(3, unixTime);
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();
@@ -426,19 +428,26 @@ qint64 StatManager::createAppId(const QString &appPath, qint64 unixTime)
     return INVALID_APP_ID;
 }
 
-qint64 StatManager::getOrCreateAppId(const QString &appPath, qint64 unixTime)
+qint64 StatManager::getOrCreateAppId(const QString &appPath, quint32 confAppId, qint64 unixTime)
+{
+    qint64 appId = getAppId(appPath);
+    if (appId == INVALID_APP_ID) {
+        if (unixTime == 0) {
+            unixTime = DateUtil::getUnixTime();
+        }
+        appId = createAppId(appPath, confAppId, unixTime);
+
+        Q_ASSERT(appId != INVALID_APP_ID);
+    }
+    return appId;
+}
+
+qint64 StatManager::getOrCreateCachedAppId(
+        const QString &appPath, quint32 confAppId, qint64 unixTime)
 {
     qint64 appId = getCachedAppId(appPath);
     if (appId == INVALID_APP_ID) {
-        appId = getAppId(appPath);
-        if (appId == INVALID_APP_ID) {
-            if (unixTime == 0) {
-                unixTime = DateUtil::getUnixTime();
-            }
-            appId = createAppId(appPath, unixTime);
-        }
-
-        Q_ASSERT(appId != INVALID_APP_ID);
+        appId = getOrCreateAppId(appPath, confAppId, unixTime);
 
         addCachedAppId(appPath, appId);
     }
@@ -507,7 +516,7 @@ void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
     if (inBytes == 0 && outBytes == 0)
         return;
 
-    const qint64 appId = getOrCreateAppId(appPath, unixTime);
+    const qint64 appId = getOrCreateCachedAppId(appPath, /*confAppId=*/0, unixTime);
     Q_ASSERT(appId != INVALID_APP_ID);
 
     if (logStat) {
