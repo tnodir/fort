@@ -2,6 +2,7 @@
 
 #include <QLoggingCategory>
 
+#include <sqlite/dbvar.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -92,7 +93,7 @@ qint64 LogConnJob::createAppId(const QString &appPath, quint32 confAppId, qint64
 {
     SqliteStmt *stmt = getStmt(StatSql::sqlInsertAppId);
 
-    stmt->bindInt64(1, confAppId);
+    stmt->bindVar(1, DbVar::nullable(confAppId));
     stmt->bindText(2, appPath);
     stmt->bindInt64(3, unixTime);
 

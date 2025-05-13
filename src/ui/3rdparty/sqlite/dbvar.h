@@ -12,8 +12,10 @@ public:
     {
         return isNull ? QVariant() : QVariant(v);
     }
-    static QVariant nullable(bool v);
-    static QVariant nullable(int v);
+    inline static QVariant nullable(bool v) { return nullable(v, !v); }
+    inline static QVariant nullable(int v) { return nullable(v, v == 0); }
+    inline static QVariant nullable(quint32 v) { return nullable(v, v == 0); }
+    inline static QVariant nullable(qint64 v) { return nullable(v, v == 0); }
     static QVariant nullable(const QString &v);
     static QVariant nullable(const QDateTime &v);
 };

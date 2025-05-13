@@ -3,16 +3,6 @@
 #include "sqlitedb.h"
 #include "sqlitestmt.h"
 
-QVariant DbVar::nullable(bool v)
-{
-    return nullable(v, !v);
-}
-
-QVariant DbVar::nullable(int v)
-{
-    return nullable(v, v == 0);
-}
-
 QVariant DbVar::nullable(const QString &v)
 {
     return nullable(v, v.isEmpty());

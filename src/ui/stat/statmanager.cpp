@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 
 #include <sqlite/dbutil.h>
+#include <sqlite/dbvar.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -22,7 +23,7 @@ namespace {
 
 const QLoggingCategory LC("stat");
 
-constexpr int DATABASE_USER_VERSION = 8;
+constexpr int DATABASE_USER_VERSION = 9;
 
 constexpr qint64 INVALID_APP_ID = Q_INT64_C(-1);
 
@@ -417,7 +418,7 @@ qint64 StatManager::createAppId(const QString &appPath, quint32 confAppId, qint6
 {
     SqliteStmt *stmt = getStmt(StatSql::sqlInsertAppId);
 
-    stmt->bindInt64(1, confAppId);
+    stmt->bindVar(1, DbVar::nullable(confAppId));
     stmt->bindText(2, appPath);
     stmt->bindInt64(3, unixTime);
 

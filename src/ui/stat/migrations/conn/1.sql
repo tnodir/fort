@@ -1,6 +1,6 @@
 CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
-  conf_app_id INTEGER NOT NULL DEFAULT 0,
+  conf_app_id INTEGER,
   path TEXT NOT NULL,
   creat_time INTEGER NOT NULL
 );
