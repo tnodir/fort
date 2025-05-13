@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.17.7, 2025-05-13:
+- UI: Statistics: Rework Traffic view (#208, #226).
+- UI: Statistics: Open original program entry (#523).
+- UI: Options: Backup: Export/Import Statistics traffic (#253).
+- UI: Connections: Copy selected text with replaced new-lines (#522).
+- UI: Update SQLite to 3.49.2
+
 v3.17.6, 2025-04-30:
 - Driver: fortbuf: Fix buffer handling for long paths (v3.17.5 regression).
 
