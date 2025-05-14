@@ -190,7 +190,7 @@ void IfacePage::retranslateComboTheme()
 
 void IfacePage::retranslateComboStyle()
 {
-    const QStringList list = { IniUser::styleDefault(), "Windows11" };
+    const QStringList list = { IniUser::styleDefault(), "Windows11", "WindowsVista", "Windows" };
 
     ControlUtil::setComboBoxTexts(m_comboStyle, list);
 
