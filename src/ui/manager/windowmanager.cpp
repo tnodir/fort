@@ -35,6 +35,8 @@ namespace {
 
 const QLoggingCategory LC("manager.window");
 
+bool g_isFusionStyle = false;
+
 inline bool isWindowVisible(WidgetWindow *w)
 {
     return w && w->isVisible();
@@ -99,6 +101,9 @@ void WindowManager::setupAppPalette()
 
 void WindowManager::refreshAppPalette()
 {
+    if (!g_isFusionStyle)
+        return;
+
     const QPalette palette = QApplication::style()->standardPalette();
 
     QApplication::setPalette(palette);
@@ -241,7 +246,11 @@ void WindowManager::updateTheme(const IniUser &ini)
 
 void WindowManager::updateStyle(const IniUser &ini)
 {
-    QApplication::setStyle(ini.style());
+    const QString style = ini.style();
+
+    g_isFusionStyle = (style == ini.styleDefault());
+
+    QApplication::setStyle(style);
 
     refreshAppPalette();
 }
