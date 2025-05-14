@@ -101,10 +101,8 @@ void WindowManager::setupAppPalette()
 
 void WindowManager::refreshAppPalette()
 {
-    if (!g_isFusionStyle)
-        return;
-
-    const QPalette palette = QApplication::style()->standardPalette();
+    const QPalette palette =
+            g_isFusionStyle ? QApplication::style()->standardPalette() : QPalette();
 
     QApplication::setPalette(palette);
 }
