@@ -50,15 +50,19 @@ AppInfoCache *TrafficPage::appInfoCache() const
 
 void TrafficPage::onSaveWindowState(IniUser *ini)
 {
-    auto header = m_appListView->horizontalHeader();
-    ini->setStatAppListHeader(header->saveState());
-    ini->setStatAppListHeaderVersion(APP_LIST_HEADER_VERSION);
+    // App List
+    {
+        auto header = m_appListView->horizontalHeader();
+        ini->setStatAppListHeader(header->saveState());
+        ini->setStatAppListHeaderVersion(APP_LIST_HEADER_VERSION);
+    }
 
     ini->setStatWindowTrafSplit(m_splitter->saveState());
 }
 
 void TrafficPage::onRestoreWindowState(IniUser *ini)
 {
+    // App List
     if (ini->statAppListHeaderVersion() == APP_LIST_HEADER_VERSION) {
         auto header = m_appListView->horizontalHeader();
         header->restoreState(ini->statAppListHeader());
@@ -316,7 +320,7 @@ void TrafficPage::setupTableTrafHeader()
 
 void TrafficPage::setupSplitter()
 {
-    auto layout = ControlUtil::createVLayoutByWidgets({ m_tabBar, m_tableTraf });
+    auto layout = ControlUtil::createVLayoutByWidgets({ m_tabBar, m_tableTraf }, /*margin=*/0);
 
     auto trafWidget = new QWidget();
     trafWidget->setLayout(layout);
