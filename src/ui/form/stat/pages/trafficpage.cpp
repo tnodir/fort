@@ -68,6 +68,9 @@ void TrafficPage::onRestoreWindowState(IniUser *ini)
         header->restoreState(ini->statAppListHeader());
     }
 
+    // Traf Table
+    m_tabBar->setCurrentIndex(qBound(0, ini->statTrafTabIndex(), m_tabBar->count() - 1));
+
     m_splitter->restoreState(ini->statWindowTrafSplit());
 }
 

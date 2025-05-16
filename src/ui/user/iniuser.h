@@ -428,6 +428,9 @@ public:
     int statTabIndex() const { return valueInt("statWindow/tabIndex"); }
     void setStatTabIndex(int v) { setValue("statWindow/tabIndex", v); }
 
+    int statTrafTabIndex() const { return valueInt("statWindow/trafTabIndex"); }
+    void setStatTrafTabIndex(int v) { setValue("statWindow/trafTabIndex", v); }
+
     int statTrafUnit() const { return valueInt("statWindow/trafUnit"); }
     void setStatTrafUnit(int v) { setValue("statWindow/trafUnit", v); }
 
