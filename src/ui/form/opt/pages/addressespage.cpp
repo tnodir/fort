@@ -199,7 +199,7 @@ void AddressesPage::setupBlockInetBox()
     setupEditBlockInetText();
 
     // Layout
-    auto layout = ControlUtil::createVLayout();
+    auto layout = ControlUtil::createVLayout(/*margin=*/-1);
     layout->addLayout(blockInetHeaderLayout);
     layout->addWidget(m_editBlockInetText, 1);
 
