@@ -812,6 +812,7 @@ QString TrayIcon::trayIconBlockPath(int blockType, bool &isDefault) const
     case FirewallConf::BlockTrafficInetLan:
         return ":/icons/fort_red.png";
     case FirewallConf::BlockTrafficInet:
+    case FirewallConf::BlockTrafficLan:
         return ":/icons/fort_orange.png";
     default:
         isDefault = true;
