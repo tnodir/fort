@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.17.8-test02, 2025-05-16:
+v3.17.8, 2025-05-20:
 - UI: Options: Interface: Fix "Windows11" style; Add "WindowsVista", "Windows" styles (#527).
 - UI: Statistics: Traffic: Default tab on open (#530).
 - UI: Tray: Change color for "Block LAN Traffic" (#531).
