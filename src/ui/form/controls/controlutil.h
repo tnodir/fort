@@ -44,6 +44,9 @@ public:
             QComboBox *c, const QStringList &texts = {}, int currentIndex = -2);
     static void setComboBoxIcons(QComboBox *c, const QStringList &iconPaths);
 
+    static void setComboBoxItemsEnabled(
+            QComboBox *c, bool enabled, int fromIndex, int toIndex = -1);
+
     static QPushButton *createButton(const QString &iconPath, const QString &text = QString());
     static QPushButton *createButton(
             const QString &iconPath, const std::function<void()> &onClicked);

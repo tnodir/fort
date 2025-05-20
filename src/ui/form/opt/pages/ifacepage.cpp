@@ -194,6 +194,10 @@ void IfacePage::retranslateComboStyle()
 
     ControlUtil::setComboBoxTexts(m_comboStyle, list);
 
+#if QT_VERSION < QT_VERSION_CHECK(6, 8, 0)
+    ControlUtil::setComboBoxItemsEnabled(m_comboStyle, /*enabled=*/false, 1, 2);
+#endif
+
     updateStyle();
 }
 

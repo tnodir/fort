@@ -6,6 +6,7 @@
 #include <QMenu>
 #include <QPushButton>
 #include <QScrollArea>
+#include <QStandardItemModel>
 #include <QToolButton>
 #include <QWidgetAction>
 
@@ -111,6 +112,23 @@ void ControlUtil::setComboBoxIcons(QComboBox *c, const QStringList &iconPaths)
         c->setItemIcon(index, IconCache::icon(iconPath));
 
         ++index;
+    }
+}
+
+void ControlUtil::setComboBoxItemsEnabled(QComboBox *c, bool enabled, int fromIndex, int toIndex)
+{
+    auto comboModel = qobject_cast<QStandardItemModel *>(c->model());
+    Q_ASSERT(comboModel);
+
+    if (toIndex == -1) {
+        toIndex = fromIndex;
+    }
+
+    for (int i = fromIndex; i <= toIndex; ++i) {
+        auto item = comboModel->item(i);
+        Q_ASSERT(item);
+
+        item->setEnabled(enabled);
     }
 }
 

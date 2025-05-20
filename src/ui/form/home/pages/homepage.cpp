@@ -5,7 +5,6 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
-#include <QStandardItemModel>
 #include <QVBoxLayout>
 
 #include <driver/drivermanager.h>
@@ -108,15 +107,8 @@ void HomePage::retranslateComboAutoRun()
     }
 
     // Disable the item for all users
-    {
-        auto comboModel = qobject_cast<QStandardItemModel *>(m_comboAutoRun->model());
-        Q_ASSERT(comboModel);
-
-        auto item = comboModel->item(StartupUtil::StartupAllUsers);
-        Q_ASSERT(item);
-
-        item->setEnabled(false);
-    }
+    ControlUtil::setComboBoxItemsEnabled(
+            m_comboAutoRun, /*enabled=*/false, StartupUtil::StartupAllUsers);
 }
 
 void HomePage::setupUi()
