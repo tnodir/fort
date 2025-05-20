@@ -72,9 +72,9 @@ Press ESC to cancel</source>
 エスケープキーでキャンセル</translation>
     </message>
     <message>
-        <source>カーソルは %1、%2、色: %3 です
+        <source>Cursor at %1, %2, color: %3
 Press ESC to cancel</source>
-        <translation>カーソル位置 %1, %2
+        <translation>カーソルは %1、%2、色: %3 です
 エスケープキーでキャンセル</translation>
     </message>
     <message>
