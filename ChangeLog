@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.17.9, 2025-05-22:
+- UI: Traffic Graph: Fix window's opacity handling (#535).
+- UI: Options: Interface: Disable "Windows11", "WindowsVista" styles for 32-bit installer.
+
 v3.17.8, 2025-05-20:
 - UI: Options: Interface: Fix "Windows11" style; Add "WindowsVista", "Windows" styles (#527).
 - UI: Statistics: Traffic: Default tab on open (#530).
