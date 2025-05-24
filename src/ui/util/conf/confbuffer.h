@@ -35,7 +35,7 @@ public:
 public slots:
     void writeVersion();
 
-    void writeServices(const QVector<ServiceInfo> &services, int runningServicesCount);
+    void writeServices(const QVector<ServiceInfo> &services, int processCount);
 
     bool writeConf(
             const FirewallConf &conf, const ConfAppsWalker *confAppsWalker, EnvManager &envManager);

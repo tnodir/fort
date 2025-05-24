@@ -21,7 +21,7 @@ public:
     static QVector<ServiceInfo> loadServiceInfoList(
             ServiceInfo::Type serviceType = ServiceInfo::TypeWin32,
             ServiceInfo::State state = ServiceInfo::StateAll, bool displayName = true,
-            int *runningServicesCount = nullptr);
+            int *processCount = nullptr);
 
     static QString getSvcHostServiceDll(const QString &serviceName);
 

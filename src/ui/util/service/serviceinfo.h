@@ -22,9 +22,10 @@ public:
     };
 
     bool isTracked() const { return trackFlags != 0; }
+    bool isOwnProcess() const { return serviceType == ServiceInfo::TypeWin32OwnProcess; }
 
 public:
-    bool isRunning : 1 = false;
+    bool hasProcess : 1 = false;
     bool isHostSplitDisabled : 1 = false;
     Type serviceType = TypeUnknown;
     quint16 trackFlags = 0;

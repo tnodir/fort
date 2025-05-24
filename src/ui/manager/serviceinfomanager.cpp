@@ -73,7 +73,7 @@ quint16 getServiceTrackFlags(const RegKey &svcReg)
 
 void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesReg,
         const ENUM_SERVICE_STATUS_PROCESSW *service, DWORD serviceCount, bool displayName,
-        int &runningCount)
+        int *processCount = nullptr)
 {
     for (int infoIndex = infoList.size(); serviceCount > 0;
             --serviceCount, ++service, ++infoIndex) {
@@ -88,11 +88,12 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
 
         const quint16 trackFlags = getServiceTrackFlags(svcReg);
         const quint32 processId = service->ServiceStatusProcess.dwProcessId;
+        const auto serviceType = ServiceInfo::Type(service->ServiceStatusProcess.dwServiceType);
 
         ServiceInfo info;
-        info.isRunning = (processId != 0);
+        info.hasProcess = (processId != 0);
         info.isHostSplitDisabled = svcReg.value(serviceHostSplitDisableKey).toInt() != 0;
-        info.serviceType = ServiceInfo::Type(service->ServiceStatusProcess.dwServiceType);
+        info.serviceType = serviceType;
         info.trackFlags = trackFlags;
         info.processId = processId;
         info.serviceName = serviceName;
@@ -102,8 +103,8 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
             info.displayName = QString::fromUtf16((const char16_t *) service->lpDisplayName);
         }
 
-        if (info.isRunning) {
-            ++runningCount;
+        if (info.hasProcess && processCount) {
+            *processCount += 1;
         }
 
         infoList.append(info);
@@ -111,8 +112,7 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
 }
 
 QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERVICE_WIN32,
-        DWORD state = SERVICE_STATE_ALL, bool displayName = true,
-        int *runningServicesCount = nullptr)
+        DWORD state = SERVICE_STATE_ALL, bool displayName = true, int *processCount = nullptr)
 {
     QVector<ServiceInfo> infoList;
 
@@ -130,13 +130,8 @@ QVector<ServiceInfo> getServiceInfoList(SC_HANDLE mngr, DWORD serviceType = SERV
 
         const ENUM_SERVICE_STATUS_PROCESSW *service = &buffer[0];
 
-        int runningCount = 0;
         fillServiceInfoList(
-                infoList, servicesReg, service, serviceCount, displayName, runningCount);
-
-        if (runningServicesCount) {
-            *runningServicesCount += runningCount;
-        }
+                infoList, servicesReg, service, serviceCount, displayName, processCount);
 
         if (bytesRemaining == 0)
             break;
@@ -155,13 +150,13 @@ void ServiceInfoManager::setUp()
 }
 
 QVector<ServiceInfo> ServiceInfoManager::loadServiceInfoList(ServiceInfo::Type serviceType,
-        ServiceInfo::State state, bool displayName, int *runningServicesCount)
+        ServiceInfo::State state, bool displayName, int *processCount)
 {
     QVector<ServiceInfo> list;
     const SC_HANDLE mngr =
             OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT | SC_MANAGER_ENUMERATE_SERVICE);
     if (mngr) {
-        list = getServiceInfoList(mngr, serviceType, state, displayName, runningServicesCount);
+        list = getServiceInfoList(mngr, serviceType, state, displayName, processCount);
         CloseServiceHandle(mngr);
     }
     return list;
@@ -190,7 +185,7 @@ void ServiceInfoManager::trackService(const QString &serviceName)
 
     const quint32 shareType = svcReg.value(serviceTypeKey).toUInt();
     svcReg.setValue(serviceTypeOldKey, shareType);
-    svcReg.setValue(serviceTypeKey, 0x10); // Own process
+    svcReg.setValue(serviceTypeKey, ServiceInfo::TypeWin32OwnProcess);
 
     svcReg.setValue(serviceTrackFlagsKey, ServiceInfo::TrackImagePath | ServiceInfo::TrackType);
 }
@@ -270,7 +265,7 @@ void ServiceInfoManager::onServicesCreated(const QStringList &serviceNames)
     const RegKey servicesReg(RegKey::HKLM, servicesSubKey);
 
     for (const QString &name : serviceNames) {
-        const QString serviceName = resolveSvcHostServiceName(servicesReg, name);
+        const auto serviceName = resolveSvcHostServiceName(servicesReg, name);
 
         const RegKey svcReg(servicesReg, serviceName);
 
@@ -302,7 +297,7 @@ void ServiceInfoManager::onServiceStarted(ServiceMonitor *serviceMonitor)
     QVector<ServiceInfo> services(servicesCount);
 
     ServiceInfo &info = services[0];
-    info.isRunning = true;
+    info.hasProcess = true;
     info.processId = serviceMonitor->processId();
     info.serviceName = serviceMonitor->serviceName();
 

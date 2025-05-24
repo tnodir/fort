@@ -991,26 +991,26 @@ void ConfManager::updateServices()
 }
 
 void ConfManager::updateDriverServices(
-        const QVector<ServiceInfo> &services, int runningServicesCount)
+        const QVector<ServiceInfo> &services, int processCount)
 {
     ConfBuffer confBuf;
 
-    confBuf.writeServices(services, runningServicesCount);
+    confBuf.writeServices(services, processCount);
 
     IoC<DriverManager>()->writeServices(confBuf.buffer());
 }
 
 void ConfManager::updateOwnProcessServices(ServiceInfoManager *serviceInfoManager)
 {
-    int runningServicesCount = 0;
+    int processCount = 0;
     const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
             ServiceInfo::TypeWin32OwnProcess, ServiceInfo::StateAll,
-            /*displayName=*/false, &runningServicesCount);
+            /*displayName=*/false, &processCount);
 
     serviceInfoManager->monitorServices(services);
 
-    if (runningServicesCount > 0) {
-        updateDriverServices(services, runningServicesCount);
+    if (processCount > 0) {
+        updateDriverServices(services, processCount);
     }
 }
 

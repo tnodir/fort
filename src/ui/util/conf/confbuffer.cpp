@@ -71,21 +71,21 @@ void ConfBuffer::writeVersion()
     confVer->driver_version = DRIVER_VERSION;
 }
 
-void ConfBuffer::writeServices(const QVector<ServiceInfo> &services, int runningServicesCount)
+void ConfBuffer::writeServices(const QVector<ServiceInfo> &services, int processCount)
 {
     // Resize the buffer to max size
     const int servicesSize =
-            FORT_SERVICE_INFO_LIST_MIN_SIZE + runningServicesCount * FORT_SERVICE_INFO_MAX_SIZE;
+            FORT_SERVICE_INFO_LIST_MIN_SIZE + processCount * FORT_SERVICE_INFO_MAX_SIZE;
 
     buffer().resize(servicesSize);
 
     // Fill the buffer
     char *data = buffer().data();
 
-    int outSize = writeServicesHeader(data, runningServicesCount);
+    int outSize = writeServicesHeader(data, processCount);
 
     for (const ServiceInfo &info : services) {
-        if (!info.isRunning)
+        if (!info.hasProcess)
             continue;
 
         outSize += writeServiceInfo(data + outSize, info);
