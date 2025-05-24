@@ -219,9 +219,6 @@ void ServiceInfoManager::revertService(const QString &serviceName)
 void ServiceInfoManager::monitorServices(const QVector<ServiceInfo> &serviceInfoList)
 {
     for (const ServiceInfo &serviceInfo : serviceInfoList) {
-        if ((serviceInfo.trackFlags & ServiceInfo::TrackImagePath) != 0)
-            continue;
-
         setupServiceMonitor(serviceInfo.serviceName);
     }
 }
@@ -278,11 +275,6 @@ void ServiceInfoManager::onServicesCreated(const QStringList &serviceNames)
         const RegKey svcReg(servicesReg, serviceName);
 
         if (!checkIsSvcHostService(svcReg))
-            continue;
-
-        const quint16 trackFlags = getServiceTrackFlags(svcReg);
-
-        if ((trackFlags & ServiceInfo::TrackImagePath) != 0)
             continue;
 
         setupServiceMonitor(serviceName);
