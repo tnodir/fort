@@ -43,9 +43,13 @@ QString startupShortcutPath()
             + qApp->applicationName() + ".lnk";
 }
 
-QString wrappedAppFilePath()
+QString nativeAppFilePath()
 {
-    const auto filePath = FileUtil::toNativeSeparators(FileUtil::nativeAppFilePath());
+    return FileUtil::toNativeSeparators(FileUtil::nativeAppFilePath());
+}
+
+QString wrappedFilePath(const QString &filePath)
+{
     return QString("\"%1\"").arg(filePath);
 }
 
@@ -149,7 +153,7 @@ void StartupUtil::setServiceInstalled(bool install)
         return;
     }
 
-    const QString command = wrappedAppFilePath() + " --service";
+    const QString command = wrappedFilePath(nativeAppFilePath()) + " --service";
 
     const CreateServiceArg csa = {
         .serviceName = serviceNameStr,
@@ -215,7 +219,7 @@ void StartupUtil::setAutoRunMode(int mode, const QString &defaultLanguage)
     if (mode == StartupDisabled)
         return;
 
-    QStringList commandList = { wrappedAppFilePath(), "--launch" };
+    QStringList commandList = { wrappedFilePath(nativeAppFilePath()), "--launch" };
 
     if (!defaultLanguage.isEmpty()) {
         commandList << "--lang" << defaultLanguage;
@@ -248,13 +252,14 @@ void StartupUtil::setExplorerIntegrated(bool integrate)
             integrate ? RegKey::DefaultCreate : RegKey::DefaultReadWrite);
 
     if (integrate) {
-        const QString wrappedPath = wrappedAppFilePath();
+        const QString appFilePath = nativeAppFilePath();
+        const QString wrappedPath = wrappedFilePath(appFilePath);
 
         RegKey reg(regShell, APP_NAME, RegKey::DefaultCreate);
-        reg.setValue("icon", wrappedPath);
+        reg.setValue("Icon", appFilePath + QLatin1String(",0"));
         reg.setValue("MUIVerb", APP_NAME + QLatin1String(" ..."));
 
-        RegKey regCommand(reg, "command", RegKey::DefaultCreate);
+        RegKey regCommand(reg, "Command", RegKey::DefaultCreate);
         regCommand.setDefaultValue(wrappedPath + " -c prog add \"%1\"");
     } else {
         regShell.removeRecursively(APP_NAME);
