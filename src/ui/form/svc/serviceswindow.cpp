@@ -142,7 +142,7 @@ QLayout *ServicesWindow::setupHeader()
     // Edit Menu
     auto editMenu = ControlUtil::createMenu(this);
 
-    m_actTrack = editMenu->addAction(IconCache::icon(":/icons/widgets.png"), QString());
+    m_actTrack = editMenu->addAction(IconCache::icon(":/icons/tick.png"), QString());
     m_actRevert = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
 
     m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
@@ -186,7 +186,7 @@ QLayout *ServicesWindow::setupHeader()
     m_btEdit->setMenu(editMenu);
 
     // Toolbar buttons
-    m_btTrack = ControlUtil::createFlatToolButton(":/icons/widgets.png");
+    m_btTrack = ControlUtil::createFlatToolButton(":/icons/tick.png");
     m_btRevert = ControlUtil::createFlatToolButton(":/icons/delete.png");
     m_btRefresh = ControlUtil::createFlatToolButton(":/icons/arrow_refresh_small.png");
 
