@@ -143,6 +143,10 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     case Qt::ForegroundRole:
         return dataForeground(index);
 
+    // Font
+    case Qt::FontRole:
+        return dataFont(index);
+
     // Text Alignment
     case Qt::TextAlignmentRole:
         return dataTextAlignment(index);
@@ -170,6 +174,13 @@ QVariant AppListModel::dataForeground(const QModelIndex &index) const
     const AppListModelData data = appDataAt(index);
 
     return data.dataForeground();
+}
+
+QVariant AppListModel::dataFont(const QModelIndex &index) const
+{
+    const AppListModelData data = appDataAt(index);
+
+    return data.dataFont();
 }
 
 QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const

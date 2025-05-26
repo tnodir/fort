@@ -25,7 +25,7 @@ void AppInfoJob::loadAppInfo(AppInfoManager *manager)
     bool loadedFromDb = manager->loadInfoFromDb(appPath(), m_appInfo);
 
     // Was the file modified?
-    if (loadedFromDb && m_appInfo.isFileModified(appPath())) {
+    if (loadedFromDb && m_appInfo.checkFileModified(appPath())) {
         loadedFromDb = false;
         manager->deleteAppInfo(appPath(), m_appInfo);
     }

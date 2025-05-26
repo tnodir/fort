@@ -195,6 +195,13 @@ QVariant AppListModelData::appGroupColor() const
     return {};
 }
 
+bool AppListModelData::appFileExists() const
+{
+    const AppInfo appInfo = IoC<AppInfoCache>()->appInfo(app().appPath);
+
+    return appInfo.fileExists;
+}
+
 QIcon AppListModelData::appIcon() const
 {
     if (app().isWildcard) {
@@ -253,6 +260,20 @@ QVariant AppListModelData::dataForeground() const
         return appActionColor();
     case AppListColumn::Group:
         return appGroupColor();
+    }
+
+    return {};
+}
+
+QVariant AppListModelData::dataFont() const
+{
+    switch (AppListColumn(column())) {
+    case AppListColumn::Name:
+        if (!appFileExists()) {
+            QFont font;
+            font.setStrikeOut(true);
+            return font;
+        }
     }
 
     return {};

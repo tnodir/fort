@@ -1,5 +1,6 @@
 #include "appinfoutil.h"
 
+#include <QFileInfo>
 #include <QImage>
 #include <QVarLengthArray>
 
@@ -254,14 +255,17 @@ bool fileExists(const QString &appPath)
     return res;
 }
 
-QDateTime fileModTime(const QString &appPath)
+QDateTime fileModTime(const QString &appPath, bool &fileExists)
 {
     if (appPath.isEmpty() || FileUtil::isSystemApp(appPath))
         return {};
 
     const auto wow64FsRedir = disableWow64FsRedirection();
 
-    const QDateTime res = FileUtil::fileModTime(appPath);
+    const QFileInfo fi(appPath);
+    fileExists = fi.exists();
+
+    const QDateTime res = fileExists ? FileUtil::fileModTime(fi) : QDateTime();
 
     revertWow64FsRedirection(wow64FsRedir);
 

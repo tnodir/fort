@@ -15,7 +15,8 @@ void initThread();
 void doneThread();
 
 bool fileExists(const QString &appPath);
-QDateTime fileModTime(const QString &appPath);
+
+QDateTime fileModTime(const QString &appPath, bool &fileExists);
 
 bool openFolder(const QString &appPath);
 

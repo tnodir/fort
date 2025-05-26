@@ -5,6 +5,7 @@
 #include <QObject>
 
 QT_FORWARD_DECLARE_CLASS(QDir)
+QT_FORWARD_DECLARE_CLASS(QFileInfo)
 
 namespace FileUtil {
 
@@ -68,6 +69,7 @@ bool writeFile(const QString &filePath, const QString &text);
 bool writeFileData(const QString &filePath, const QByteArray &data);
 
 QDateTime fileModTime(const QString &filePath);
+QDateTime fileModTime(const QFileInfo &fileInfo);
 
 QString expandPath(const QString &path);
 

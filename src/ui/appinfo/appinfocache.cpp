@@ -67,10 +67,10 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
     appInfoCached(appPath, appInfo, lookupRequired);
 
     if (!lookupRequired) {
-        lookupRequired = appInfo.isValid() && appInfo.isFileModified(appPath);
+        lookupRequired = appInfo.isValid() && appInfo.checkFileModified(appPath);
     }
 
-    if (lookupRequired) {
+    if (lookupRequired && appInfo.fileExists) {
         IoC<AppInfoManager>()->lookupAppInfo(appPath);
     }
 

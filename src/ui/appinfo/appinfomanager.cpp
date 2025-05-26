@@ -94,6 +94,9 @@ void AppInfoManager::checkLookupInfoFinished(const QString &appPath)
 
 bool AppInfoManager::loadInfoFromFs(const QString &appPath, AppInfo &appInfo)
 {
+    if (!appInfo.fileExists)
+        return false;
+
     return AppInfoUtil::getInfo(appPath, appInfo);
 }
 

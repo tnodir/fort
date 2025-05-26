@@ -414,7 +414,12 @@ bool writeFileData(const QString &filePath, const QByteArray &data)
 QDateTime fileModTime(const QString &filePath)
 {
     const QFileInfo fi(filePath);
-    return fi.lastModified(
+    return fileModTime(fi);
+}
+
+QDateTime fileModTime(const QFileInfo &fileInfo)
+{
+    return fileInfo.lastModified(
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
             QTimeZone::UTC
 #endif

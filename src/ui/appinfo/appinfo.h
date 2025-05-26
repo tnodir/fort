@@ -8,11 +8,13 @@ class AppInfo
 {
 public:
     QString filePath(const QString &appPath) const;
-    bool isFileModified(const QString &appPath) const;
+    bool checkFileModified(const QString &appPath);
 
     bool isValid() const { return iconId != 0; }
 
 public:
+    bool fileExists = true; // transient
+
     qint64 iconId = 0;
 
     QDateTime fileModTime;
