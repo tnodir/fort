@@ -696,6 +696,10 @@
         <source>Tick label size:</source>
         <translation>Velikost etikete:</translation>
     </message>
+    <message>
+        <source>Show speed</source>
+        <translation>Prikaži hitrost</translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>

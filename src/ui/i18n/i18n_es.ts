@@ -696,6 +696,10 @@
         <source>Tick label size:</source>
         <translation>Tamaño de la etiqueta:</translation>
     </message>
+    <message>
+        <source>Show speed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>

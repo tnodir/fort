@@ -696,6 +696,10 @@
         <source>Tick label size:</source>
         <translation>刻度标签文字大小：</translation>
     </message>
+    <message>
+        <source>Show speed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>

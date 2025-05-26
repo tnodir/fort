@@ -696,6 +696,10 @@
         <source>Tick label size:</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Show speed</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>HomeMainPage</name>
