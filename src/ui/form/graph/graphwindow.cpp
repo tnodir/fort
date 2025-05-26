@@ -179,6 +179,12 @@ void GraphWindow::setupUi()
     group->append(m_graphIn);
     group->append(m_graphOut);
 
+    // Text Speed
+    m_textSpeed = new QCPItemText(m_plot);
+    m_textSpeed->setPositionAlignment(Qt::AlignTop | Qt::AlignHCenter);
+    m_textSpeed->position->setType(QCPItemPosition::ptAxisRectRatio);
+    m_textSpeed->position->setCoords(0.5, 0);
+
     // Widget Layout
     auto layout = ControlUtil::createVLayoutByWidgets({ m_plot }, /*margin=*/0);
     setLayout(layout);
@@ -272,6 +278,9 @@ void GraphWindow::updateColors(const IniUser &ini)
 
     // Graph Outbound
     m_graphOut->setPen(QPen(colors[ColorOut]));
+
+    // Text Speed
+    m_textSpeed->setColor(colors[ColorLabel]);
 }
 
 void GraphWindow::updateFonts(const IniUser &ini)
@@ -283,6 +292,10 @@ void GraphWindow::updateFonts(const IniUser &ini)
     tickLabelFont.setPointSize(ini.graphWindowTickLabelSize());
 
     yAxis->setTickLabelFont(tickLabelFont);
+
+    // Text Speed
+    m_textSpeed->setFont(tickLabelFont);
+    m_textSpeed->setVisible(ini.graphWindowShowSpeed());
 }
 
 void GraphWindow::updateFormat(const IniUser &ini)
@@ -429,7 +442,7 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
     if (m_lastUnixTime != unixTime) {
         m_lastUnixTime = unixTime;
 
-        updateWindowTitleSpeed();
+        updateSpeed();
     }
 
     const qint64 rangeLower = unixTime - iniUser()->graphWindowMaxSeconds();
@@ -488,19 +501,35 @@ void GraphWindow::addData(QCPBars *graph, double rangeLowerKey, double unixTimeK
     data->add(QCPBarsData(unixTimeKey, bits));
 }
 
-void GraphWindow::updateWindowTitleSpeed()
+void GraphWindow::updateSpeed()
 {
-    if (windowFlags() & Qt::FramelessWindowHint)
+    const bool showTextSpeed = m_textSpeed->visible();
+    const bool showWindowSpeed = (windowFlags() & Qt::FramelessWindowHint) == 0;
+
+    if (!(showTextSpeed || showWindowSpeed))
         return;
 
+    const auto text = getSpeedText();
+
+    if (showTextSpeed) {
+        m_textSpeed->setText(text);
+    }
+
+    if (showWindowSpeed) {
+        setWindowTitle(text);
+    }
+}
+
+QString GraphWindow::getSpeedText() const
+{
     const auto inBits =
             m_graphIn->data()->isEmpty() ? 0 : (m_graphIn->data()->constEnd() - 1)->mainValue();
     const auto outBits =
             m_graphOut->data()->isEmpty() ? 0 : (m_graphOut->data()->constEnd() - 1)->mainValue();
 
-    setWindowTitle(QChar(0x2193) // ↓
-            + FormatUtil::formatSpeed(quint64(inBits), m_unitFormat) + ' ' + QChar(0x2191) // ↑
-            + FormatUtil::formatSpeed(quint64(outBits), m_unitFormat));
+    return QChar(0x2193) // ↓
+            + FormatUtil::formatSpeed(quint64(inBits), m_unitFormat) + "  " + QChar(0x2191) // ↑
+            + FormatUtil::formatSpeed(quint64(outBits), m_unitFormat);
 }
 
 void GraphWindow::setWindowOpacityPercent(int percent)

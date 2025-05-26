@@ -283,6 +283,10 @@ public:
     bool graphWindowHideOnHover() const { return valueBool("graphWindow/hideOnHover"); }
     void setGraphWindowHideOnHover(bool on) { setValue("graphWindow/hideOnHover", on); }
 
+    constexpr bool graphWindowShowSpeedDefault() const { return false; }
+    bool graphWindowShowSpeed() const { return valueBool("graphWindow/showSpeed"); }
+    void setGraphWindowShowSpeed(bool on) { setValue("graphWindow/showSpeed", on); }
+
     constexpr int graphWindowOpacityDefault() const { return 90; }
     int graphWindowOpacity() const { return valueInt("graphWindow/opacity", 90); }
     void setGraphWindowOpacity(int v) { setValue("graphWindow/opacity", v); }

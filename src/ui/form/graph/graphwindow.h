@@ -13,6 +13,7 @@ class GraphPlot;
 class IniUser;
 class QCPAxis;
 class QCPBars;
+class QCPItemText;
 
 class GraphWindow : public FormWindow
 {
@@ -84,7 +85,9 @@ private:
 
     void addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint32 bytes);
 
-    void updateWindowTitleSpeed();
+    void updateSpeed();
+    QString getSpeedText() const;
+
     void setWindowOpacityPercent(int percent);
 
     void checkWindowEdges();
@@ -106,6 +109,7 @@ private:
     QSharedPointer<AxisTickerSpeed> m_ticker;
     QCPBars *m_graphIn = nullptr;
     QCPBars *m_graphOut = nullptr;
+    QCPItemText *m_textSpeed = nullptr;
 
     QPoint m_mousePressPoint;
     QPoint m_posOnMousePress;

@@ -47,6 +47,7 @@ private:
     QCheckBox *m_cbGraphFrameless = nullptr;
     QCheckBox *m_cbGraphClickThrough = nullptr;
     QCheckBox *m_cbGraphHideOnHover = nullptr;
+    QCheckBox *m_cbGraphShowSpeed = nullptr;
     LabelSpin *m_graphOpacity = nullptr;
     LabelSpin *m_graphHoverOpacity = nullptr;
     LabelSpin *m_graphTickLabelSize = nullptr;
