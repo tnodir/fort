@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.18.0, 2025-05-26:
+- UI: ProgramAlert: Fix password handling (#540).
+- UI: Programs: Strike name of non-existent apps (#538).
+- UI: Services: Check for obsolete tracks (#537).
+- UI: Traffic Graph: Add abilty to show speed inside of window (#96).
+- Explorer Integration: Fix icon for Windows 11 (#536).
+
 v3.17.9, 2025-05-22:
 - UI: Traffic Graph: Fix window's opacity handling (#535).
 - UI: Options: Interface: Disable "Windows11", "WindowsVista" styles for 32-bit installer.
