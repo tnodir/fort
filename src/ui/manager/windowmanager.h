@@ -133,7 +133,7 @@ public slots:
     static void showMessageBox(QMessageBox::Icon icon, const QString &text,
             const QString &title = QString(), QWidget *parent = nullptr);
 
-    static bool showPasswordDialog(QString &password, int *unlockType = nullptr);
+    static bool showPasswordDialog(QString &password, int &unlockType);
 
     static bool activateModalWidget();
 

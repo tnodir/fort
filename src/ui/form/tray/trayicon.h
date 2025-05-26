@@ -99,6 +99,8 @@ protected slots:
 
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
 
+    void onAppAlerted(bool alerted = true);
+
     void showProgramsOrAlertWindow();
 
     void saveTrayFlags();

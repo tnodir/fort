@@ -225,13 +225,8 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::setupByIniUser);
 
-    connect(confAppManager(), &ConfAppManager::appAlerted, this, [&](bool alerted) {
-        updateTrayIcon(alerted);
-
-        if (alerted) {
-            sendAlertMessage();
-        }
-    });
+    connect(confAppManager(), &ConfAppManager::appAlerted, this, &TrayIcon::onAppAlerted,
+            Qt::QueuedConnection);
 
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this,
             &TrayIcon::updateTrayIconShape);
@@ -310,6 +305,15 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
     } break;
     default:
         break;
+    }
+}
+
+void TrayIcon::onAppAlerted(bool alerted)
+{
+    updateTrayIcon(alerted);
+
+    if (alerted) {
+        sendAlertMessage();
     }
 }
 

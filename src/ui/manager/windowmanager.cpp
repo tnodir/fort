@@ -643,7 +643,7 @@ bool WindowManager::checkPassword(bool temporary)
     int unlockType = FortSettings::UnlockDisabled;
     bool passwordChecked = false;
 
-    if (showPasswordDialog(password, &unlockType) // input the password
+    if (showPasswordDialog(password, unlockType) // input the password
             && IoC<ConfManager>()->checkPassword(password)) {
 
         if (!temporary || unlockType != FortSettings::UnlockWindow) {
@@ -716,27 +716,21 @@ void WindowManager::showMessageBox(
     DialogUtil::showDialog(box);
 }
 
-bool WindowManager::showPasswordDialog(QString &password, int *unlockType)
+bool WindowManager::showPasswordDialog(QString &password, int &unlockType)
 {
     auto box = new PasswordDialog();
-    QScopedPointer<PasswordDialog> deferBox(box);
 
     DialogUtil::setupModalDialog(box);
-
     DialogUtil::showDialog(box);
 
-    if (box->exec() != QDialog::Accepted)
-        return false;
+    const bool accepted = (box->exec() == QDialog::Accepted);
 
     password = box->password();
-    if (password.isEmpty())
-        return false;
+    unlockType = box->unlockType();
 
-    if (unlockType) {
-        *unlockType = box->unlockType();
-    }
+    box->deleteLater();
 
-    return true;
+    return accepted && !password.isEmpty();
 }
 
 void WindowManager::onTrayMessageClicked()

@@ -192,8 +192,10 @@ void HomeWindow::setupPasswordButtons()
     m_btPasswordLock = ControlUtil::createToolButton(
             ":/icons/lock.png", [&] { settings()->resetCheckedPassword(); });
 
-    m_btPasswordUnlock = ControlUtil::createToolButton(
-            ":/icons/lock_open.png", [&] { windowManager()->checkPassword(); });
+    m_btPasswordUnlock = ControlUtil::createToolButton(":/icons/lock_open.png");
+
+    connect(m_btPasswordUnlock, &QToolButton::clicked, windowManager(),
+            &WindowManager::checkPassword, Qt::QueuedConnection);
 
     const auto refreshPasswordButtons = [&] {
         m_btPasswordLock->setVisible(settings()->hasPassword() && !ctrl()->passwordLocked());
