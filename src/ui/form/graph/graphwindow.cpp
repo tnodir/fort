@@ -280,7 +280,13 @@ void GraphWindow::updateColors(const IniUser &ini)
     m_graphOut->setPen(QPen(colors[ColorOut]));
 
     // Text Speed
-    m_textSpeed->setColor(colors[ColorLabel]);
+    {
+        QColor bgColor = colors[ColorBg];
+        bgColor.setAlpha(130);
+
+        m_textSpeed->setBrush(QBrush(bgColor));
+        m_textSpeed->setColor(colors[ColorLabel]);
+    }
 }
 
 void GraphWindow::updateFonts(const IniUser &ini)
@@ -294,8 +300,14 @@ void GraphWindow::updateFonts(const IniUser &ini)
     yAxis->setTickLabelFont(tickLabelFont);
 
     // Text Speed
-    m_textSpeed->setFont(tickLabelFont);
-    m_textSpeed->setVisible(ini.graphWindowShowSpeed());
+    {
+        QFont font = tickLabelFont;
+        font.setPointSize(qRound(font.pointSize() * 1.1f));
+        font.setWeight(QFont::DemiBold);
+
+        m_textSpeed->setFont(font);
+        m_textSpeed->setVisible(ini.graphWindowShowSpeed());
+    }
 }
 
 void GraphWindow::updateFormat(const IniUser &ini)
