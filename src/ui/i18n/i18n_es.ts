@@ -698,7 +698,7 @@
     </message>
     <message>
         <source>Show speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar velocidad</translation>
     </message>
 </context>
 <context>

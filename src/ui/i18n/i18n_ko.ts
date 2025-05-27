@@ -698,7 +698,7 @@
     </message>
     <message>
         <source>Show speed</source>
-        <translation type="unfinished"></translation>
+        <translation>속도 표시</translation>
     </message>
 </context>
 <context>
