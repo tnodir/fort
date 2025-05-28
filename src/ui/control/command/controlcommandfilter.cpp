@@ -70,5 +70,9 @@ bool ControlCommandFilter::processCommand(const ProcessCommandArgs &p, ProcessCo
     if (!checkCommandActionPassword(r, filterAction))
         return false;
 
-    return processCommandFilterAction(r, filterAction, report);
+    const bool ok = processCommandFilterAction(r, filterAction, report);
+
+    uncheckCommandActionPassword();
+
+    return ok;
 }

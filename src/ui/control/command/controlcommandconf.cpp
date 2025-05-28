@@ -42,5 +42,9 @@ bool ControlCommandConf::processCommand(const ProcessCommandArgs &p, ProcessComm
     if (!checkCommandActionPassword(r, confAction, ConfActionUpdateDriver))
         return false;
 
-    return processCommandConfAction(confAction);
+    const bool ok = processCommandConfAction(confAction);
+
+    uncheckCommandActionPassword();
+
+    return ok;
 }

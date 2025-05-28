@@ -44,5 +44,9 @@ bool ControlCommandZone::processCommand(const ProcessCommandArgs &p, ProcessComm
     if (!checkCommandActionPassword(r, zoneAction))
         return false;
 
-    return processCommandZoneAction(zoneAction);
+    const bool ok = processCommandZoneAction(zoneAction);
+
+    uncheckCommandActionPassword();
+
+    return ok;
 }

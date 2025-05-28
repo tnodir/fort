@@ -59,5 +59,9 @@ bool ControlCommandBackup::processCommand(const ProcessCommandArgs &p, ProcessCo
 
     const QString dirPath = p.args.value(1).toString();
 
-    return processCommandBackupAction(backupAction, dirPath);
+    const bool ok = processCommandBackupAction(backupAction, dirPath);
+
+    uncheckCommandActionPassword();
+
+    return ok;
 }

@@ -74,6 +74,7 @@ public:
 
     const QStringList &args() const { return m_args; }
 
+    bool passwordTemporaryChecked() const { return m_passwordTemporaryChecked; }
     bool passwordChecked() const { return m_passwordChecked; }
     int passwordUnlockType() const { return m_passwordUnlockType; }
 
@@ -85,6 +86,7 @@ public:
 
     bool isPasswordRequired() const;
 
+    void setPasswordTemporaryChecked(bool checked);
     void setPasswordChecked(bool checked, UnlockType unlockType = UnlockDisabled);
     void resetCheckedPassword(UnlockType unlockType = UnlockDisabled);
 
@@ -150,6 +152,7 @@ private:
     uint m_isService : 1 = false;
     uint m_hasService : 1 = false;
     uint m_isUserAdmin : 1 = false;
+    uint m_passwordTemporaryChecked : 1 = false;
     uint m_passwordChecked : 1 = false;
 
     UnlockType m_passwordUnlockType = UnlockDisabled;

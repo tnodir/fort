@@ -85,5 +85,9 @@ bool ControlCommandGroup::processCommand(const ProcessCommandArgs &p, ProcessCom
 
     const int groupIndex = p.args.value(1).toInt();
 
-    return processCommandGroupAction(r, groupIndex, groupAction, report);
+    const bool ok = processCommandGroupAction(r, groupIndex, groupAction, report);
+
+    uncheckCommandActionPassword();
+
+    return ok;
 }

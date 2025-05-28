@@ -79,5 +79,9 @@ bool ControlCommandBlock::processCommand(const ProcessCommandArgs &p, ProcessCom
     if (!checkCommandActionPassword(r, blockAction))
         return false;
 
-    return processCommandBlockAction(r, blockAction, report);
+    const bool ok = processCommandBlockAction(r, blockAction, report);
+
+    uncheckCommandActionPassword();
+
+    return ok;
 }

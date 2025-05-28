@@ -634,7 +634,7 @@ bool WindowManager::checkPassword(bool temporary)
 
     const auto settings = IoC<FortSettings>();
 
-    if (!settings->isPasswordRequired())
+    if (!settings->isPasswordRequired() || settings->passwordTemporaryChecked())
         return true;
 
     windowOpened(WindowPasswordDialog);
@@ -646,7 +646,11 @@ bool WindowManager::checkPassword(bool temporary)
     if (showPasswordDialog(password, unlockType) // input the password
             && IoC<ConfManager>()->checkPassword(password)) {
 
-        if (!temporary || unlockType != FortSettings::UnlockWindow) {
+        if (temporary) {
+            settings->setPasswordTemporaryChecked(/*checked=*/true);
+        }
+
+        if (unlockType != FortSettings::UnlockWindow) {
             settings->setPasswordChecked(
                     /*checked=*/true, FortSettings::UnlockType(unlockType));
         }
@@ -657,6 +661,15 @@ bool WindowManager::checkPassword(bool temporary)
     windowClosed(WindowPasswordDialog);
 
     return passwordChecked;
+}
+
+bool WindowManager::uncheckTemporaryPassword()
+{
+    const auto settings = IoC<FortSettings>();
+
+    settings->setPasswordTemporaryChecked(/*checked=*/false);
+
+    return true;
 }
 
 void WindowManager::showErrorBox(const QString &text, const QString &title, QWidget *parent)

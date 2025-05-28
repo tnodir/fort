@@ -76,6 +76,11 @@ bool FortSettings::isPasswordRequired() const
     return hasPassword() && !passwordChecked();
 }
 
+void FortSettings::setPasswordTemporaryChecked(bool checked)
+{
+    m_passwordTemporaryChecked = checked;
+}
+
 void FortSettings::setPasswordChecked(bool checked, UnlockType unlockType)
 {
     if (m_passwordChecked == checked && m_passwordUnlockType == unlockType)

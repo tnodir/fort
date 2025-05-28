@@ -110,5 +110,9 @@ bool ControlCommandProg::processCommand(const ProcessCommandArgs &p, ProcessComm
 
     const QString appPath = p.args.value(1).toString();
 
-    return processCommandProgAction(r, appPath, progAction, report);
+    const bool ok = processCommandProgAction(r, appPath, progAction, report);
+
+    uncheckCommandActionPassword();
+
+    return ok;
 }

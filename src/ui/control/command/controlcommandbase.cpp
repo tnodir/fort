@@ -16,3 +16,8 @@ bool ControlCommandBase::checkCommandActionPassword(
 
     return true;
 }
+
+void ControlCommandBase::uncheckCommandActionPassword()
+{
+    IoC<WindowManager>()->uncheckTemporaryPassword();
+}

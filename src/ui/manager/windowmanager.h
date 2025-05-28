@@ -120,6 +120,7 @@ public slots:
 
     bool checkWindowPassword(WindowCode code);
     virtual bool checkPassword(bool temporary = false);
+    bool uncheckTemporaryPassword();
 
     virtual void showErrorBox(
             const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
