@@ -84,6 +84,8 @@ public slots:
     void updateTrayIcon(bool alerted = false);
 
     void showTrayMenu(const QPoint &pos);
+    void hideTrayMenuLater();
+
     void updateTrayMenu(bool onlyFlags = false);
 
     void quitProgram();

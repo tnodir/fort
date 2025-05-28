@@ -337,6 +337,11 @@ void TrayIcon::showTrayMenu(const QPoint &pos)
     m_menu->popup(pos);
 }
 
+void TrayIcon::hideTrayMenuLater()
+{
+    QMetaObject::invokeMethod(m_menu, &QMenu::hide, Qt::QueuedConnection);
+}
+
 void TrayIcon::updateTrayMenu(bool onlyFlags)
 {
     if (!onlyFlags) {
@@ -451,7 +456,7 @@ void TrayIcon::setupTrayMenu()
 
     connect(m_menu, &QMenu::aboutToShow, this, [&] {
         if (WindowManager::activateModalWidget()) {
-            QMetaObject::invokeMethod(m_menu, &QMenu::hide, Qt::QueuedConnection);
+            hideTrayMenuLater();
         }
     });
 
@@ -1049,7 +1054,7 @@ void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType, TrayIcon::ClickType
 
     if (clickType == menuClickType) {
         // revert the default action: close context-menu
-        QMetaObject::invokeMethod(m_menu, &QMenu::hide, Qt::QueuedConnection);
+        hideTrayMenuLater();
     }
 }
 
