@@ -1044,11 +1044,12 @@ void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType, TrayIcon::ClickType
             return; // already handled by context-menu logic
         }
 
-        action->trigger();
+        QMetaObject::invokeMethod(action, &QAction::trigger, Qt::QueuedConnection);
     }
 
     if (clickType == menuClickType) {
-        m_menu->hide(); // revert the default action: close context-menu
+        // revert the default action: close context-menu
+        QMetaObject::invokeMethod(m_menu, &QMenu::hide, Qt::QueuedConnection);
     }
 }
 
