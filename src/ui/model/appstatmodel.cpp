@@ -1,5 +1,6 @@
 #include "appstatmodel.h"
 
+#include <QFont>
 #include <QIcon>
 
 #include <sqlite/dbquery.h>
@@ -16,6 +17,17 @@
 #include <util/ioc/ioccontainer.h>
 
 #include "traflistmodel.h"
+
+namespace {
+
+bool appFileExists(const QString &appPath)
+{
+    const AppInfo appInfo = IoC<AppInfoCache>()->appInfo(appPath);
+
+    return appInfo.fileExists;
+}
+
+}
 
 AppStatModel::AppStatModel(QObject *parent) : TableSqlModel(parent) { }
 
@@ -136,6 +148,10 @@ QVariant AppStatModel::data(const QModelIndex &index, int role) const
     // Icon
     case Qt::DecorationRole:
         return dataDecoration(index);
+
+    // Font
+    case Qt::FontRole:
+        return dataFont(index);
     }
 
     return {};
@@ -177,6 +193,22 @@ QVariant AppStatModel::dataDecoration(const QModelIndex &index) const
     updateRowCache(row);
 
     return appInfoCache()->appIcon(m_appStatRow.appPath);
+}
+
+QVariant AppStatModel::dataFont(const QModelIndex &index) const
+{
+    if (AppStatColumn(index.column()) != AppStatColumn::Program)
+        return {};
+
+    updateRowCache(index.row());
+
+    if (!appFileExists(m_appStatRow.appPath)) {
+        QFont font;
+        font.setStrikeOut(true);
+        return font;
+    }
+
+    return {};
 }
 
 const AppStatRow &AppStatModel::appStatRowAt(int row) const
