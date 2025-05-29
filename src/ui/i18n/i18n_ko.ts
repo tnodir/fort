@@ -1080,6 +1080,10 @@
         <source>Auto-Show Window, when Tray Icon is hidden</source>
         <translation>트레이 아이콘이 숨겨져 있을 때 자동 표시 창</translation>
     </message>
+    <message>
+        <source>Auto-focus the alert window, when it&apos;s shown</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1374,6 +1378,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Trace Driver Events</source>
         <translation>드라이버 이벤트 추적</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the last downloaded installer after installation</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1679,6 +1687,22 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Copy</source>
         <translation>복사</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

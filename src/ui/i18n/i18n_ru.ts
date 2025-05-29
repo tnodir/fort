@@ -1080,6 +1080,10 @@
         <source>Auto-Show Window, when Tray Icon is hidden</source>
         <translation>Автопоказ окна, когда значок в трее скрыт</translation>
     </message>
+    <message>
+        <source>Auto-focus the alert window, when it&apos;s shown</source>
+        <translation>Авто-фокусировка окна оповещения при показе</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1374,6 +1378,10 @@ Make sure that you have a fresh backup.</source>
     <message>
         <source>Trace Driver Events</source>
         <translation>Трассировка событий драйвера</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the last downloaded installer after installation</source>
+        <translation>Не удалять последний загруженный установщик после установки</translation>
     </message>
 </context>
 <context>
@@ -1679,6 +1687,22 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Copy</source>
         <translation>Копировать</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation>Установить иконку</translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation>Удалить иконку</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation>Иконка для программы</translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation>Иконки (*.ico; *.png)</translation>
     </message>
 </context>
 <context>

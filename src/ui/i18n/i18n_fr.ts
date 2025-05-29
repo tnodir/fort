@@ -1080,6 +1080,10 @@
         <source>Auto-Show Window, when Tray Icon is hidden</source>
         <translation>Fenêtre d’affichage automatique lorsque l’icône de la barre d’état est masquée</translation>
     </message>
+    <message>
+        <source>Auto-focus the alert window, when it&apos;s shown</source>
+        <translation>Mise au point auto de la fenêtre d&apos;alerte, lorsqu&apos;il est&apos;s affiché</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1374,6 +1378,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
     <message>
         <source>Trace Driver Events</source>
         <translation>Évènements Trace Driver</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the last downloaded installer after installation</source>
+        <translation>Ne&apos;pas supprimer le dernier installateur téléchargé après l&apos;installation</translation>
     </message>
 </context>
 <context>
@@ -1679,6 +1687,22 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Copy</source>
         <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation>Définir l&apos;icône</translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation>Supprimer l&apos;icône</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation>Icône du programme</translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation>Icônes (*.ico; *.png)</translation>
     </message>
 </context>
 <context>

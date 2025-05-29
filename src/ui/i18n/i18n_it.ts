@@ -1080,6 +1080,10 @@
         <source>Auto-Show Window, when Tray Icon is hidden</source>
         <translation>Mostra automaticamente la finestra, quando l&apos;icona del vassoio è nascosta</translation>
     </message>
+    <message>
+        <source>Auto-focus the alert window, when it&apos;s shown</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1373,6 +1377,10 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1679,6 +1687,22 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Copy</source>
         <translation>Copia</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

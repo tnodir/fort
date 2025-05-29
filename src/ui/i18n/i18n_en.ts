@@ -1080,6 +1080,10 @@
         <source>Auto-Show Window, when Tray Icon is hidden</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Auto-focus the alert window, when it&apos;s shown</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1371,6 +1375,10 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Trace Driver Events</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation></translation>
     </message>
 </context>
@@ -1667,6 +1675,22 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Copy</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
         <translation></translation>
     </message>
 </context>

@@ -1080,6 +1080,10 @@
         <source>Auto-Show Window, when Tray Icon is hidden</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Auto-focus the alert window, when it&apos;s shown</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1374,6 +1378,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     <message>
         <source>Trace Driver Events</source>
         <translation>Treiberereignisse verfolgen</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the last downloaded installer after installation</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1679,6 +1687,22 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Copy</source>
         <translation>Kopieren</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -1080,6 +1080,10 @@
         <source>Auto-Show Window, when Tray Icon is hidden</source>
         <translation>Samodejni prikaz okna, ko je ikona v sistemski vrstici skrita</translation>
     </message>
+    <message>
+        <source>Auto-focus the alert window, when it&apos;s shown</source>
+        <translation>Samodejno ostrenje okna z opozorili, ko je prikazano</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
@@ -1374,6 +1378,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
     <message>
         <source>Trace Driver Events</source>
         <translation>Sledenje dogodkom gonilnikov</translation>
+    </message>
+    <message>
+        <source>Don&apos;t delete the last downloaded installer after installation</source>
+        <translation>Po namestitvi ne izbrišite zadnjega prenesenega namestitvenega programa</translation>
     </message>
 </context>
 <context>
@@ -1679,6 +1687,22 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Copy</source>
         <translation>Kopiraj</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation>Nastavi ikono</translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation>Ikona za brisanje</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation>Ikona za program</translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation>Ikone (*.ico; *.png)</translation>
     </message>
 </context>
 <context>
