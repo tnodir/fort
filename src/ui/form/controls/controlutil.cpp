@@ -453,7 +453,7 @@ static QLabel *formRowLabelField(QWidget *field)
     auto label = qobject_cast<QLabel *>(field);
     Q_ASSERT(label);
 
-    label->setMinimumWidth(100);
+    label->setMinimumWidth(70);
 
     return label;
 }
