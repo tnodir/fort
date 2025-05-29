@@ -448,9 +448,9 @@ LabelColor *ControlUtil::createLabelColor(const QColor &color, const QColor &dar
     return c;
 }
 
-QLabel *ControlUtil::formRowLabel(QFormLayout *formLayout, QWidget *field)
+static QLabel *formRowLabelField(QWidget *field)
 {
-    auto label = qobject_cast<QLabel *>(formLayout->labelForField(field));
+    auto label = qobject_cast<QLabel *>(field);
     Q_ASSERT(label);
 
     label->setMinimumWidth(100);
@@ -458,14 +458,14 @@ QLabel *ControlUtil::formRowLabel(QFormLayout *formLayout, QWidget *field)
     return label;
 }
 
+QLabel *ControlUtil::formRowLabel(QFormLayout *formLayout, QWidget *field)
+{
+    return formRowLabelField(formLayout->labelForField(field));
+}
+
 QLabel *ControlUtil::formRowLabel(QFormLayout *formLayout, QLayout *field)
 {
-    auto label = qobject_cast<QLabel *>(formLayout->labelForField(field));
-    Q_ASSERT(label);
-
-    label->setMinimumWidth(100);
-
-    return label;
+    return formRowLabelField(formLayout->labelForField(field));
 }
 
 QPushButton *ControlUtil::createMenuButton()
