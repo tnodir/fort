@@ -165,6 +165,8 @@ void OptionsPage::onRetranslateUi()
     m_cbPurgeOnMounted->setText(tr("Purge Obsolete only on mounted drives"));
 
     m_cbUpdateKeepCurrentVersion->setText(tr("Keep current version"));
+    m_cbUpdateKeepCurrentVersion->setToolTip(
+            tr("Don't delete the last downloaded installer after installation"));
     m_cbUpdateAutoDownload->setText(tr("Auto-download new version"));
     m_cbUpdateAutoInstall->setText(tr("Auto-install after download"));
 
