@@ -9,6 +9,7 @@
 #include <util/taskbarbutton.h>
 
 class FormWindow;
+class FortSettings;
 class GraphWindow;
 class HomeWindow;
 class IniUser;
@@ -166,6 +167,8 @@ private:
 
     void closeAll();
     void quitApp();
+
+    bool checkPasswordDialog(FortSettings *settings, bool temporary = false);
 
     void onTrayMessageClicked();
 

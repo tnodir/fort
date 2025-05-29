@@ -639,28 +639,11 @@ bool WindowManager::checkPassword(bool temporary)
 
     windowOpened(WindowPasswordDialog);
 
-    QString password;
-    int unlockType = FortSettings::UnlockDisabled;
-    bool passwordChecked = false;
-
-    if (showPasswordDialog(password, unlockType) // input the password
-            && IoC<ConfManager>()->checkPassword(password)) {
-
-        if (temporary) {
-            settings->setPasswordTemporaryChecked(/*checked=*/true);
-        }
-
-        if (unlockType != FortSettings::UnlockWindow) {
-            settings->setPasswordChecked(
-                    /*checked=*/true, FortSettings::UnlockType(unlockType));
-        }
-
-        passwordChecked = true;
-    }
+    const bool ok = checkPasswordDialog(settings, temporary);
 
     windowClosed(WindowPasswordDialog);
 
-    return passwordChecked;
+    return ok;
 }
 
 bool WindowManager::uncheckTemporaryPassword()
@@ -744,6 +727,29 @@ bool WindowManager::showPasswordDialog(QString &password, int &unlockType)
     box->deleteLater();
 
     return accepted && !password.isEmpty();
+}
+
+bool WindowManager::checkPasswordDialog(FortSettings *settings, bool temporary)
+{
+    QString password;
+    int unlockType = FortSettings::UnlockDisabled;
+
+    if (!showPasswordDialog(password, unlockType))
+        return false;
+
+    if (!IoC<ConfManager>()->checkPassword(password))
+        return false;
+
+    if (temporary) {
+        settings->setPasswordTemporaryChecked(/*checked=*/true);
+    }
+
+    if (unlockType != FortSettings::UnlockWindow) {
+        settings->setPasswordChecked(
+                /*checked=*/true, FortSettings::UnlockType(unlockType));
+    }
+
+    return true;
 }
 
 void WindowManager::onTrayMessageClicked()
