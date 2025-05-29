@@ -200,8 +200,8 @@ QVariantList ConfAppManagerRpc::appToVarList(const App &app)
     return { app.isWildcard, app.applyParent, app.applyChild, app.applySpecChild, app.killChild,
         app.lanOnly, app.parked, app.logAllowedConn, app.logBlockedConn, app.blocked,
         app.killProcess, app.groupIndex, app.zones.accept_mask, app.zones.reject_mask, app.ruleId,
-        app.appId, app.appOriginPath, app.appPath, app.appName, app.notes, app.scheduleAction,
-        app.scheduleTime };
+        app.appId, app.appOriginPath, app.appPath, app.iconPath, app.appName, app.notes,
+        app.scheduleAction, app.scheduleTime };
 }
 
 App ConfAppManagerRpc::varListToApp(const QVariantList &v)
@@ -225,10 +225,11 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.appId = v.value(15).toLongLong();
     app.appOriginPath = v.value(16).toString();
     app.appPath = v.value(17).toString();
-    app.appName = v.value(18).toString();
-    app.notes = v.value(19).toString();
-    app.scheduleAction = v.value(20).toInt();
-    app.scheduleTime = v.value(21).toDateTime();
+    app.iconPath = v.value(18).toString();
+    app.appName = v.value(19).toString();
+    app.notes = v.value(20).toString();
+    app.scheduleAction = v.value(21).toInt();
+    app.scheduleTime = v.value(22).toDateTime();
     return app;
 }
 

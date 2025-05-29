@@ -56,6 +56,7 @@ public:
 
     QString appOriginPath;
     QString appPath;
+    QString iconPath;
     QString appName;
     QString notes;
 

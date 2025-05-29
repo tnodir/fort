@@ -26,7 +26,7 @@ bool App::isZonesEqual(const App &o) const
 
 bool App::isPathsEqual(const App &o) const
 {
-    return appOriginPath == o.appOriginPath && appPath == o.appPath;
+    return appOriginPath == o.appOriginPath && appPath == o.appPath && iconPath == o.iconPath;
 }
 
 bool App::isScheduleEqual(const App &o) const

@@ -56,6 +56,7 @@ CREATE TABLE app(
   app_group_id INTEGER NOT NULL DEFAULT 0,
   origin_path TEXT,
   path TEXT,
+  icon_path TEXT,
   name TEXT,
   notes TEXT,
   is_wildcard BOOLEAN NOT NULL DEFAULT 0,

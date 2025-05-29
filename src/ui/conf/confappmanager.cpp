@@ -37,6 +37,7 @@ constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
     "    t.app_id,"                                                                                \
     "    t.origin_path,"                                                                           \
     "    t.path,"                                                                                  \
+    "    t.icon_path,"                                                                             \
     "    t.name,"                                                                                  \
     "    t.notes,"                                                                                 \
     "    t.is_wildcard,"                                                                           \
@@ -84,33 +85,33 @@ const char *const sqlSelectEndedApps = "SELECT" SELECT_APP_FIELDS "  FROM app t"
 const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1;";
 
 const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, path,"
-                                 "    name, notes, is_wildcard,"
+                                 "    icon_path, name, notes, is_wildcard,"
                                  "    apply_parent, apply_child, apply_spec_child, kill_child,"
                                  "    lan_only, parked, log_allowed_conn, log_blocked_conn,"
                                  "    blocked, kill_process, accept_zones, reject_zones,"
                                  "    rule_id, end_action, end_time, creat_time)"
                                  "  VALUES(?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
-                                 "    ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23)"
+                                 "    ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24)"
                                  "  ON CONFLICT(path) DO UPDATE"
-                                 "  SET app_group_id = ?2, origin_path = ?3,"
-                                 "    name = ?5, notes = ?6, is_wildcard = ?7,"
-                                 "    apply_parent = ?8, apply_child = ?9, apply_spec_child = ?10,"
-                                 "    kill_child = ?11, lan_only = ?12, parked = ?13,"
-                                 "    log_allowed_conn = ?14, log_blocked_conn = ?15,"
-                                 "    blocked = ?16, kill_process = ?17,"
-                                 "    accept_zones = ?18, reject_zones = ?19, rule_id = ?20,"
-                                 "    end_action = ?21, end_time = ?22"
+                                 "  SET app_group_id = ?2, origin_path = ?3, icon_path = ?5,"
+                                 "    name = ?6, notes = ?7, is_wildcard = ?8,"
+                                 "    apply_parent = ?9, apply_child = ?10, apply_spec_child = ?11,"
+                                 "    kill_child = ?12, lan_only = ?13, parked = ?14,"
+                                 "    log_allowed_conn = ?15, log_blocked_conn = ?16,"
+                                 "    blocked = ?17, kill_process = ?18,"
+                                 "    accept_zones = ?19, reject_zones = ?20, rule_id = ?21,"
+                                 "    end_action = ?22, end_time = ?23"
                                  "  RETURNING app_id;";
 
 const char *const sqlUpdateApp = "UPDATE app"
                                  "  SET app_group_id = ?2, origin_path = ?3, path = ?4,"
-                                 "    name = ?5, notes = ?6, is_wildcard = ?7,"
-                                 "    apply_parent = ?8, apply_child = ?9, apply_spec_child = ?10,"
-                                 "    kill_child = ?11, lan_only = ?12, parked = ?13,"
-                                 "    log_allowed_conn = ?14, log_blocked_conn = ?15,"
-                                 "    blocked = ?16, kill_process = ?17,"
-                                 "    accept_zones = ?18, reject_zones = ?19, rule_id = ?20,"
-                                 "    end_action = ?21, end_time = ?22"
+                                 "    icon_path = ?5, name = ?6, notes = ?7, is_wildcard = ?8,"
+                                 "    apply_parent = ?9, apply_child = ?10, apply_spec_child = ?11,"
+                                 "    kill_child = ?12, lan_only = ?13, parked = ?14,"
+                                 "    log_allowed_conn = ?15, log_blocked_conn = ?16,"
+                                 "    blocked = ?17, kill_process = ?18,"
+                                 "    accept_zones = ?19, reject_zones = ?20, rule_id = ?21,"
+                                 "    end_action = ?22, end_time = ?23"
                                  "  WHERE app_id = ?1"
                                  "  RETURNING app_id;";
 
@@ -228,6 +229,7 @@ void ConfAppManager::beginAddOrUpdateApp(
         appGroup.id(),
         app.appOriginPath,
         DbVar::nullable(app.appPath),
+        DbVar::nullable(app.iconPath),
         app.appName,
         app.notes,
         app.isWildcard,
@@ -759,26 +761,27 @@ void ConfAppManager::fillApp(App &app, const SqliteStmt &stmt)
     app.appId = stmt.columnInt64(0);
     app.appOriginPath = stmt.columnText(1);
     app.appPath = stmt.columnText(2);
-    app.appName = stmt.columnText(3);
-    app.notes = stmt.columnText(4);
-    app.isWildcard = stmt.columnBool(5);
-    app.applyParent = stmt.columnBool(6);
-    app.applyChild = stmt.columnBool(7);
-    app.applySpecChild = stmt.columnBool(8);
-    app.killChild = stmt.columnBool(9);
-    app.lanOnly = stmt.columnBool(10);
-    app.parked = stmt.columnBool(11);
-    app.logAllowedConn = stmt.columnBool(12);
-    app.logBlockedConn = stmt.columnBool(13);
-    app.blocked = stmt.columnBool(14);
-    app.killProcess = stmt.columnBool(15);
-    app.zones.accept_mask = stmt.columnUInt(16);
-    app.zones.reject_mask = stmt.columnUInt(17);
-    app.ruleId = stmt.columnUInt(18);
-    app.scheduleAction = stmt.columnInt(19);
-    app.scheduleTime = stmt.columnDateTime(20);
-    app.groupIndex = stmt.columnInt(21);
-    app.alerted = stmt.columnBool(22);
+    app.iconPath = stmt.columnText(3);
+    app.appName = stmt.columnText(4);
+    app.notes = stmt.columnText(5);
+    app.isWildcard = stmt.columnBool(6);
+    app.applyParent = stmt.columnBool(7);
+    app.applyChild = stmt.columnBool(8);
+    app.applySpecChild = stmt.columnBool(9);
+    app.killChild = stmt.columnBool(10);
+    app.lanOnly = stmt.columnBool(11);
+    app.parked = stmt.columnBool(12);
+    app.logAllowedConn = stmt.columnBool(13);
+    app.logBlockedConn = stmt.columnBool(14);
+    app.blocked = stmt.columnBool(15);
+    app.killProcess = stmt.columnBool(16);
+    app.zones.accept_mask = stmt.columnUInt(17);
+    app.zones.reject_mask = stmt.columnUInt(18);
+    app.ruleId = stmt.columnUInt(19);
+    app.scheduleAction = stmt.columnInt(20);
+    app.scheduleTime = stmt.columnDateTime(21);
+    app.groupIndex = stmt.columnInt(22);
+    app.alerted = stmt.columnBool(23);
 }
 
 bool ConfAppManager::updateDriverDeleteApp(const QString &appPath)
