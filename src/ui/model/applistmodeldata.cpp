@@ -204,6 +204,11 @@ bool AppListModelData::appFileExists() const
 
 QIcon AppListModelData::appIcon() const
 {
+    const auto iconPath = app().iconPath;
+    if (!iconPath.isEmpty()) {
+        return IconCache::icon(iconPath);
+    }
+
     if (app().isWildcard) {
         return IconCache::icon(":/icons/coding.png");
     }

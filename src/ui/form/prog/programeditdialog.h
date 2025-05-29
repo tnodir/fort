@@ -62,6 +62,7 @@ private:
     void initializePathNameRuleFields(bool isSingleSelection = true);
     void initializePathField(bool isSingleSelection);
     void initializeNameField(bool isSingleSelection);
+    void initializeNotesField(bool isSingleSelection);
     void initializeRuleField(bool isSingleSelection);
     void initializeFocus();
 
@@ -86,6 +87,7 @@ private:
     QLayout *setupFormLayout();
     QLayout *setupPathLayout();
     QLayout *setupNameLayout();
+    QLayout *setupNotesLayout();
     QLayout *setupApplyChildGroupLayout();
     void setupCbApplyChild();
     void setupComboAppGroups();
@@ -117,7 +119,8 @@ private:
 
     void updateZonesRulesLayout();
     void updateApplyChild();
-    void updateWildcard(bool isSingleSelection = true);
+    void updateWildcard();
+    void updateAppIcon();
     void updateQuickAction();
 
     void selectQuickAction();
@@ -144,6 +147,8 @@ private:
 
     QString getEditText() const;
 
+    void setIconPath(const QString &iconPath);
+
     void selectRuleDialog();
     void editRuleDialog(int ruleId);
 
@@ -168,7 +173,10 @@ private:
     LineEdit *m_editName = nullptr;
     QToolButton *m_btGetName = nullptr;
     QLabel *m_labelEditNotes = nullptr;
+    QString m_iconPath;
     PlainTextEdit *m_editNotes = nullptr;
+    QToolButton *m_btSetIcon = nullptr;
+    QToolButton *m_btDeleteIcon = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
     QComboBox *m_comboApplyChild = nullptr;
     QLabel *m_labelAppGroup = nullptr;

@@ -147,7 +147,7 @@ void ProgramEditDialog::initialize(const App &app, const QVector<qint64> &appIdL
     m_btSwitchWildcard->setChecked(isWildcard());
     m_btSwitchWildcard->setEnabled(isSingleSelection);
 
-    updateWildcard(isSingleSelection);
+    updateWildcard();
 
     initializeFocus();
 }
@@ -156,6 +156,7 @@ void ProgramEditDialog::initializePathNameRuleFields(bool isSingleSelection)
 {
     initializePathField(isSingleSelection);
     initializeNameField(isSingleSelection);
+    initializeNotesField(isSingleSelection);
     initializeRuleField(isSingleSelection);
 }
 
@@ -183,14 +184,24 @@ void ProgramEditDialog::initializeNameField(bool isSingleSelection)
 
     m_btGetName->setEnabled(isSingleSelection);
 
-    m_editNotes->setText(m_app.notes);
-    m_editNotes->setEnabled(isSingleSelection);
-
     if (isSingleSelection) {
         if (m_app.appName.isEmpty()) {
             fillEditName(); // Auto-fill the name
         }
     }
+}
+
+void ProgramEditDialog::initializeNotesField(bool isSingleSelection)
+{
+    m_labelEditNotes->setEnabled(isSingleSelection);
+
+    m_editNotes->setText(m_app.notes);
+    m_editNotes->setEnabled(isSingleSelection);
+
+    m_btSetIcon->setEnabled(isSingleSelection);
+    m_btDeleteIcon->setEnabled(isSingleSelection);
+
+    setIconPath(m_app.iconPath);
 }
 
 void ProgramEditDialog::initializeRuleField(bool isSingleSelection)
@@ -274,6 +285,8 @@ void ProgramEditDialog::retranslateUi()
     m_btGetName->setToolTip(tr("Get Program Name"));
 
     m_editNotes->setPlaceholderText(tr("Notes"));
+    m_btSetIcon->setToolTip(tr("Set Icon"));
+    m_btDeleteIcon->setToolTip(tr("Delete Icon"));
 
     m_cbApplyChild->setText(tr("Rules inheritance:"));
     retranslateComboApplyChild();
@@ -493,11 +506,10 @@ QLayout *ProgramEditDialog::setupFormLayout()
     m_labelEditName = ControlUtil::formRowLabel(layout, nameLayout);
 
     // Notes
-    m_editNotes = new PlainTextEdit();
-    m_editNotes->setFixedHeight(40);
+    auto notesLayout = setupNotesLayout();
 
-    layout->addRow("Notes:", m_editNotes);
-    m_labelEditNotes = ControlUtil::formRowLabel(layout, m_editNotes);
+    layout->addRow("Notes:", notesLayout);
+    m_labelEditNotes = ControlUtil::formRowLabel(layout, notesLayout);
     m_labelEditNotes->setScaledContents(true);
     m_labelEditNotes->setFixedSize(appIconSize);
 
@@ -555,6 +567,32 @@ QLayout *ProgramEditDialog::setupNameLayout()
             ":/icons/arrow_refresh_small.png", [&] { fillEditName(); });
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_editName, m_btGetName });
+
+    return layout;
+}
+
+QLayout *ProgramEditDialog::setupNotesLayout()
+{
+    m_editNotes = new PlainTextEdit();
+    m_editNotes->setFixedHeight(40);
+
+    m_btSetIcon = ControlUtil::createIconToolButton(":/icons/application.png", [&] {
+        const auto filePath =
+                DialogUtil::getOpenFileName(tr("Icon for program"), tr("Icons (*.ico; *.png)"));
+
+        if (filePath.isEmpty())
+            return;
+
+        setIconPath(filePath);
+    });
+
+    m_btDeleteIcon =
+            ControlUtil::createIconToolButton(":/icons/delete.png", [&] { setIconPath({}); });
+
+    auto layout = ControlUtil::createHLayout();
+    layout->addWidget(m_editNotes);
+    layout->addWidget(m_btSetIcon, 0, Qt::AlignTop);
+    layout->addWidget(m_btDeleteIcon, 0, Qt::AlignTop);
 
     return layout;
 }
@@ -1112,13 +1150,28 @@ void ProgramEditDialog::updateApplyChild()
     m_comboApplyChild->setCurrentIndex(int(hasApplyChild ? type : ApplyChildType::ToChild));
 }
 
-void ProgramEditDialog::updateWildcard(bool isSingleSelection)
+void ProgramEditDialog::updateWildcard()
 {
     m_editPath->setVisible(!isWildcard());
 
     m_editWildcard->setVisible(isWildcard());
 
-    m_labelEditNotes->setPixmap(appIcon(isSingleSelection).pixmap(appIconSize));
+    updateAppIcon();
+}
+
+void ProgramEditDialog::updateAppIcon()
+{
+    QPixmap pixmap;
+
+    if (!m_iconPath.isEmpty()) {
+        pixmap = IconCache::pixmap(m_iconPath, appIconSize);
+    } else {
+        const bool isSingleSelection = m_labelEditNotes->isEnabled();
+
+        pixmap = appIcon(isSingleSelection).pixmap(appIconSize);
+    }
+
+    m_labelEditNotes->setPixmap(pixmap);
 }
 
 void ProgramEditDialog::updateQuickAction()
@@ -1293,6 +1346,7 @@ void ProgramEditDialog::fillApp(App &app) const
     app.ruleId = currentRuleId();
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();
+    app.iconPath = m_iconPath;
 
     app.zones.accept_mask = m_btZones->zones();
     app.zones.reject_mask = m_btZones->uncheckedZones();
@@ -1361,6 +1415,18 @@ void ProgramEditDialog::fillAppEndTime(App &app) const
 QString ProgramEditDialog::getEditText() const
 {
     return isWildcard() ? m_editWildcard->toPlainText() : m_editPath->text();
+}
+
+void ProgramEditDialog::setIconPath(const QString &iconPath)
+{
+    m_iconPath = iconPath;
+
+    const bool hasIconPath = !m_iconPath.isEmpty();
+
+    m_btSetIcon->setVisible(!hasIconPath);
+    m_btDeleteIcon->setVisible(hasIconPath);
+
+    updateAppIcon();
 }
 
 void ProgramEditDialog::selectRuleDialog()

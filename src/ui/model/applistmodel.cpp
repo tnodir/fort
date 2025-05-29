@@ -238,27 +238,28 @@ bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appRow.appId = stmt.columnInt64(0);
     m_appRow.appOriginPath = stmt.columnText(1);
     m_appRow.appPath = stmt.columnText(2);
-    m_appRow.appName = stmt.columnText(3);
-    m_appRow.notes = stmt.columnText(4);
-    m_appRow.isWildcard = stmt.columnBool(5);
-    m_appRow.applyParent = stmt.columnBool(6);
-    m_appRow.applyChild = stmt.columnBool(7);
-    m_appRow.applySpecChild = stmt.columnBool(8);
-    m_appRow.killChild = stmt.columnBool(9);
-    m_appRow.lanOnly = stmt.columnBool(10);
-    m_appRow.parked = stmt.columnBool(11);
-    m_appRow.logAllowedConn = stmt.columnBool(12);
-    m_appRow.logBlockedConn = stmt.columnBool(13);
-    m_appRow.blocked = stmt.columnBool(14);
-    m_appRow.killProcess = stmt.columnBool(15);
-    m_appRow.zones.accept_mask = stmt.columnUInt(16);
-    m_appRow.zones.reject_mask = stmt.columnUInt(17);
-    m_appRow.ruleId = stmt.columnUInt(18);
-    m_appRow.scheduleAction = stmt.columnInt(19);
-    m_appRow.scheduleTime = stmt.columnDateTime(20);
-    m_appRow.creatTime = stmt.columnDateTime(21);
-    m_appRow.groupIndex = stmt.columnInt(22);
-    m_appRow.alerted = stmt.columnBool(23);
+    m_appRow.iconPath = stmt.columnText(3);
+    m_appRow.appName = stmt.columnText(4);
+    m_appRow.notes = stmt.columnText(5);
+    m_appRow.isWildcard = stmt.columnBool(6);
+    m_appRow.applyParent = stmt.columnBool(7);
+    m_appRow.applyChild = stmt.columnBool(8);
+    m_appRow.applySpecChild = stmt.columnBool(9);
+    m_appRow.killChild = stmt.columnBool(10);
+    m_appRow.lanOnly = stmt.columnBool(11);
+    m_appRow.parked = stmt.columnBool(12);
+    m_appRow.logAllowedConn = stmt.columnBool(13);
+    m_appRow.logBlockedConn = stmt.columnBool(14);
+    m_appRow.blocked = stmt.columnBool(15);
+    m_appRow.killProcess = stmt.columnBool(16);
+    m_appRow.zones.accept_mask = stmt.columnUInt(17);
+    m_appRow.zones.reject_mask = stmt.columnUInt(18);
+    m_appRow.ruleId = stmt.columnUInt(19);
+    m_appRow.scheduleAction = stmt.columnInt(20);
+    m_appRow.scheduleTime = stmt.columnDateTime(21);
+    m_appRow.creatTime = stmt.columnDateTime(22);
+    m_appRow.groupIndex = stmt.columnInt(23);
+    m_appRow.alerted = stmt.columnBool(24);
 
     return true;
 }
@@ -269,6 +270,7 @@ QString AppListModel::sqlBase() const
            "    t.app_id,"
            "    t.origin_path,"
            "    t.path,"
+           "    t.icon_path,"
            "    t.name,"
            "    t.notes,"
            "    t.is_wildcard,"
