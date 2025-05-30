@@ -1082,7 +1082,7 @@
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation type="unfinished"></translation>
+        <translation>警告ウィンドウが表示されたら自動的にフォーカスする</translation>
     </message>
 </context>
 <context>
@@ -1381,7 +1381,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
-        <translation type="unfinished"></translation>
+        <translation>インストール後に最後にダウンロードしたインストーラを削除しない</translation>
     </message>
 </context>
 <context>
@@ -1690,19 +1690,19 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Set Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンの設定</translation>
     </message>
     <message>
         <source>Delete Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコンを削除</translation>
     </message>
     <message>
         <source>Icon for program</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラムのアイコン</translation>
     </message>
     <message>
         <source>Icons (*.ico; *.png)</source>
-        <translation type="unfinished"></translation>
+        <translation>アイコン (*.ico; *.png)</translation>
     </message>
 </context>
 <context>
