@@ -698,7 +698,7 @@
     </message>
     <message>
         <source>Show speed</source>
-        <translation type="unfinished"></translation>
+        <translation>显示速度</translation>
     </message>
 </context>
 <context>
@@ -1082,7 +1082,7 @@
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation type="unfinished"></translation>
+        <translation>显示警报窗口时自动聚焦</translation>
     </message>
 </context>
 <context>
@@ -1381,7 +1381,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
-        <translation type="unfinished"></translation>
+        <translation>安装后不删除最后下载的安装程序</translation>
     </message>
 </context>
 <context>
@@ -1690,19 +1690,19 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Set Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>设置图标</translation>
     </message>
     <message>
         <source>Delete Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>删除图标</translation>
     </message>
     <message>
         <source>Icon for program</source>
-        <translation type="unfinished"></translation>
+        <translation>程序图标</translation>
     </message>
     <message>
         <source>Icons (*.ico; *.png)</source>
-        <translation type="unfinished"></translation>
+        <translation>Icons (*.ico; *.png)</translation>
     </message>
 </context>
 <context>

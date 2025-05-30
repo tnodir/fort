@@ -698,7 +698,7 @@
     </message>
     <message>
         <source>Show speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostra velocità</translation>
     </message>
 </context>
 <context>
@@ -1082,7 +1082,7 @@
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation type="unfinished"></translation>
+        <translation>Focalizza la finestra di avviso quand&apos;è mostrata</translation>
     </message>
 </context>
 <context>
@@ -1381,7 +1381,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Non eliminare l&apos;ultimo installatore scaricato dopo l&apos;installazione</translation>
     </message>
 </context>
 <context>
@@ -1690,19 +1690,19 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Set Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Imposta icona</translation>
     </message>
     <message>
         <source>Delete Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Elimina icona</translation>
     </message>
     <message>
         <source>Icon for program</source>
-        <translation type="unfinished"></translation>
+        <translation>Icona per il programma</translation>
     </message>
     <message>
         <source>Icons (*.ico; *.png)</source>
-        <translation type="unfinished"></translation>
+        <translation>Icona (*.ico; *.png)</translation>
     </message>
 </context>
 <context>

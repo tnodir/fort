@@ -1082,7 +1082,7 @@
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation type="unfinished"></translation>
+        <translation>알림 창이 표시될 때 자동으로 초점 맞추기</translation>
     </message>
 </context>
 <context>
@@ -1381,7 +1381,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
-        <translation type="unfinished"></translation>
+        <translation>설치 후 마지막으로 다운로드한 설치 프로그램을 삭제하지 않습니다</translation>
     </message>
 </context>
 <context>
@@ -1690,19 +1690,19 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Set Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>아이콘 설정</translation>
     </message>
     <message>
         <source>Delete Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>아이콘 삭제</translation>
     </message>
     <message>
         <source>Icon for program</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램 아이콘</translation>
     </message>
     <message>
         <source>Icons (*.ico; *.png)</source>
-        <translation type="unfinished"></translation>
+        <translation>아이콘 (*.ico; *.png)</translation>
     </message>
 </context>
 <context>
