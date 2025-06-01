@@ -694,11 +694,11 @@
     </message>
     <message>
         <source>Tick label size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tick-Labelgröße:</translation>
     </message>
     <message>
         <source>Show speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Geschwindigkeit anzeigen</translation>
     </message>
 </context>
 <context>
@@ -1062,27 +1062,27 @@
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenstersymbole genauso wie als Traysymbol anzeigen</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarm schlummern</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarm schlummern umschalten</translation>
     </message>
     <message>
         <source>Auto-Show Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenster automatisch anzeigen</translation>
     </message>
     <message>
         <source>Auto-Show Window, when Tray Icon is hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>Fenster automatisch anzeigen, wenn Traysymbol ausgeblendet wird</translation>
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisches Fokussieren des Alarmfensters, wenn es angezeigt wird</translation>
     </message>
 </context>
 <context>
@@ -1381,7 +1381,7 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
     </message>
     <message>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Den zuletzt heruntergeladenen Installer nach der Installation nicht löschen</translation>
     </message>
 </context>
 <context>
@@ -1690,19 +1690,19 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Set Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Symbol festlegen</translation>
     </message>
     <message>
         <source>Delete Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Symbol löschen</translation>
     </message>
     <message>
         <source>Icon for program</source>
-        <translation type="unfinished"></translation>
+        <translation>Symbol für Programm</translation>
     </message>
     <message>
         <source>Icons (*.ico; *.png)</source>
-        <translation type="unfinished"></translation>
+        <translation>Symbole (*.ico; *.png)</translation>
     </message>
 </context>
 <context>
@@ -2335,7 +2335,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
-        <translation type="unfinished"></translation>
+        <translation>Verbindungen beim Beenden löschen (reduziert Schreibvorgänge auf Datenträger)</translation>
     </message>
 </context>
 <context>
@@ -2556,7 +2556,7 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alarm schlummern</translation>
     </message>
 </context>
 <context>
