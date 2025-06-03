@@ -11,6 +11,7 @@ QT_FORWARD_DECLARE_CLASS(QTimer)
 
 class ConfAppManager;
 class ConfManager;
+class ConfRuleManager;
 class DriverManager;
 class FirewallConf;
 class FortSettings;
@@ -65,6 +66,7 @@ public:
     FortSettings *settings() const;
     ConfManager *confManager() const;
     ConfAppManager *confAppManager() const;
+    ConfRuleManager *confRuleManager() const;
     FirewallConf *conf() const;
     IniOptions *ini() const;
     IniUser *iniUser() const;
@@ -111,6 +113,8 @@ protected slots:
     void switchBlockTraffic(QAction *action);
     void switchFilterMode(QAction *action);
 
+    void switchTrayRuleFlag(bool checked);
+
 private:
     void setIconPath(const QString &v);
 
@@ -128,6 +132,7 @@ private:
 
     void updateTrayMenuFlags();
     void updateAppGroupActions();
+    void updateRuleActions();
 
     void updateBlockTrafficMenuIcon(int index);
     void updateFilterModeMenuIcon(int index);
@@ -195,6 +200,7 @@ private:
     QAction *m_quitAction = nullptr;
     QAction *m_trayMenuAction = nullptr;
     QList<QAction *> m_appGroupActions;
+    QList<QAction *> m_ruleActions;
     QVector<const char *> m_actionIniKeys;
 
     QAction *m_clickActions[ClickTypeCount] = { nullptr };

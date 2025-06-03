@@ -64,6 +64,7 @@ enum Command : qint8 {
     Rpc_ConfRuleManager_ruleAdded,
     Rpc_ConfRuleManager_ruleRemoved,
     Rpc_ConfRuleManager_ruleUpdated,
+    Rpc_ConfRuleManager_trayMenuUpdated,
 
     Rpc_ConfZoneManager_addOrUpdateZone,
     Rpc_ConfZoneManager_deleteZone,

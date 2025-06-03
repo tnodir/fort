@@ -27,6 +27,7 @@ const char *const list[] = {
     filterModeAllow,
     filterModeIgnore,
     appGroupModifier,
+    ruleModifier,
     quit,
 };
 const int listCount = int(std::size(list));

@@ -31,6 +31,7 @@ const char *const filterModeAllow = "filterModeAllow";
 const char *const filterModeIgnore = "filterModeIgnore";
 
 const char *const appGroupModifier = "appGroupModifier";
+const char *const ruleModifier = "ruleModifier";
 const char *const quit = "quit";
 
 extern const char *const list[];

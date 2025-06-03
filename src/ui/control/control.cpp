@@ -61,6 +61,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfRuleManager_ruleAdded),
     CASE_STRING(Rpc_ConfRuleManager_ruleRemoved),
     CASE_STRING(Rpc_ConfRuleManager_ruleUpdated),
+    CASE_STRING(Rpc_ConfRuleManager_trayMenuUpdated),
 
     CASE_STRING(Rpc_ConfZoneManager_addOrUpdateZone),
     CASE_STRING(Rpc_ConfZoneManager_deleteZone),
@@ -185,6 +186,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfRuleManager, // Rpc_ConfRuleManager_ruleAdded,
     Rpc_ConfRuleManager, // Rpc_ConfRuleManager_ruleRemoved,
     Rpc_ConfRuleManager, // Rpc_ConfRuleManager_ruleUpdated,
+    Rpc_ConfRuleManager, // Rpc_ConfRuleManager_trayMenuUpdated,
 
     Rpc_ConfZoneManager, // Rpc_ConfZoneManager_addOrUpdateZone,
     Rpc_ConfZoneManager, // Rpc_ConfZoneManager_deleteZone,
@@ -287,6 +289,7 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_ConfRuleManager_ruleAdded,
     0, // Rpc_ConfRuleManager_ruleRemoved,
     0, // Rpc_ConfRuleManager_ruleUpdated,
+    0, // Rpc_ConfRuleManager_trayMenuUpdated,
 
     true, // Rpc_ConfZoneManager_addOrUpdateZone,
     true, // Rpc_ConfZoneManager_deleteZone,

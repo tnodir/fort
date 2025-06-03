@@ -20,6 +20,8 @@ public:
 
     QString ruleNameById(quint16 ruleId);
 
+    QVector<quint16> getRuleMenuIds() const;
+
     void loadRuleSet(Rule &rule, QStringList &ruleSetNames);
     void saveRuleSet(Rule &rule);
 
@@ -41,6 +43,7 @@ signals:
     void ruleAdded();
     void ruleRemoved(quint16 ruleId, int appRulesCount);
     void ruleUpdated(quint16 ruleId);
+    void trayMenuUpdated();
 
 private:
     void walkRulesMap(WalkRulesArgs &wra) const;

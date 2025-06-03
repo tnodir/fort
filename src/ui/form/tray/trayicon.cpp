@@ -9,6 +9,7 @@
 #include <conf/appgroup.h>
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
+#include <conf/confrulemanager.h>
 #include <conf/firewallconf.h>
 #include <driver/drivermanager.h>
 #include <form/controls/clickablemenu.h>
@@ -28,7 +29,8 @@
 
 namespace {
 
-constexpr int MaxFKeyCount = 12;
+constexpr int MAX_FKEY_COUNT = 12;
+constexpr int MAX_RULE_ACTIONS_COUNT = 8;
 
 const QString eventSingleClick = QStringLiteral("singleClick");
 const QString eventCtrlSingleClick = QStringLiteral("ctrlSingleClick");
@@ -180,7 +182,10 @@ struct AddActionArgs
 QAction *addAction(QWidget *widget, const AddActionArgs &a)
 {
     auto action = new QAction(widget);
-    action->setData(a.actionType);
+
+    if (a.actionType != TrayIcon::ActionNone) {
+        action->setData(a.actionType);
+    }
 
     if (!a.iconPath.isEmpty()) {
         action->setIcon(IconCache::icon(a.iconPath));
@@ -228,6 +233,9 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     connect(confAppManager(), &ConfAppManager::appAlerted, this, &TrayIcon::onAppAlerted,
             Qt::QueuedConnection);
 
+    connect(confRuleManager(), &ConfRuleManager::trayMenuUpdated, this,
+            &TrayIcon::updateRuleActions, Qt::QueuedConnection);
+
     connect(driverManager(), &DriverManager::isDeviceOpenedChanged, this,
             &TrayIcon::updateTrayIconShape);
 }
@@ -253,6 +261,11 @@ ConfManager *TrayIcon::confManager() const
 ConfAppManager *TrayIcon::confAppManager() const
 {
     return ctrl()->confAppManager();
+}
+
+ConfRuleManager *TrayIcon::confRuleManager() const
+{
+    return ctrl()->confRuleManager();
 }
 
 FirewallConf *TrayIcon::conf() const
@@ -446,6 +459,8 @@ void TrayIcon::setupUi()
     setupTrayMenu();
     updateTrayMenu();
 
+    updateRuleActions();
+
     this->setContextMenu(m_menu);
     this->setToolTip(QApplication::applicationDisplayName());
 }
@@ -519,11 +534,25 @@ void TrayIcon::setupTrayMenu()
         QAction *a = addAction(m_menu,
                 { QString(), this, SLOT(switchTrayFlag(bool)), ActionNone, /*checkable=*/true });
 
-        if (i < MaxFKeyCount) {
+        if (i < MAX_FKEY_COUNT) {
             addHotKey(a, HotKey::appGroupModifier);
         }
 
         m_appGroupActions.append(a);
+    }
+
+    m_menu->addSeparator();
+
+    for (int i = 0; i < MAX_RULE_ACTIONS_COUNT; ++i) {
+        QAction *a = addAction(m_menu,
+                { QString(), this, SLOT(switchTrayRuleFlag(bool)), ActionNone,
+                        /*checkable=*/true });
+
+        if (i < MAX_FKEY_COUNT) {
+            addHotKey(a, HotKey::ruleModifier);
+        }
+
+        m_ruleActions.append(a);
     }
 
     m_menu->addSeparator();
@@ -685,7 +714,7 @@ void TrayIcon::updateTrayMenuFlags()
 void TrayIcon::updateAppGroupActions()
 {
     const int trayMaxGroups = iniUser()->trayMaxGroups(MAX_APP_GROUP_COUNT);
-    const int appGroupsCount = qMin(conf()->appGroups().count(), trayMaxGroups);
+    const int appGroupsCount = qMin(conf()->appGroups().size(), trayMaxGroups);
 
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
         QAction *action = m_appGroupActions.at(i);
@@ -699,6 +728,30 @@ void TrayIcon::updateAppGroupActions()
         }
 
         action->setText(menuLabel);
+        action->setVisible(visible);
+        action->setEnabled(visible);
+    }
+}
+
+void TrayIcon::updateRuleActions()
+{
+    const auto ruleIds = confRuleManager()->getRuleMenuIds();
+    const int rulesCount = ruleIds.size();
+
+    for (int i = 0; i < MAX_RULE_ACTIONS_COUNT; ++i) {
+        QAction *action = m_ruleActions.at(i);
+
+        const bool visible = (i < rulesCount);
+        quint16 ruleId = 0;
+        QString menuLabel;
+
+        if (visible) {
+            ruleId = ruleIds[i];
+            menuLabel = confRuleManager()->ruleNameById(ruleId);
+        }
+
+        action->setText(menuLabel);
+        action->setData(ruleId);
         action->setVisible(visible);
         action->setEnabled(visible);
     }
@@ -932,9 +985,19 @@ void TrayIcon::switchFilterMode(QAction *action)
     }
 }
 
+void TrayIcon::switchTrayRuleFlag(bool checked)
+{
+    const auto action = qobject_cast<QAction *>(sender());
+
+    const quint16 ruleId = action->data().toUInt();
+
+    confRuleManager()->updateRuleEnabled(ruleId, checked);
+}
+
 void TrayIcon::updateActionHotKeys()
 {
     int groupIndex = 0;
+    int ruleIndex = 0;
     int index = 0;
     for (auto action : hotKeyManager()->actions()) {
         const auto &iniKey = m_actionIniKeys[index];
@@ -947,6 +1010,13 @@ void TrayIcon::updateActionHotKeys()
 
             shortcut = key.keyboardModifiers() | (Qt::Key_F1 + groupIndex);
             ++groupIndex;
+        }
+
+        if (!shortcut.isEmpty() && iniKey == HotKey::ruleModifier) {
+            const QKeyCombination key = shortcut[0];
+
+            shortcut = key.keyboardModifiers() | (Qt::Key_F1 + ruleIndex);
+            ++ruleIndex;
         }
 
         action->setShortcut(shortcut);

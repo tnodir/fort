@@ -205,10 +205,19 @@ void IfacePage::retranslateComboStyle()
 void IfacePage::retranslateComboHotKey()
 {
     // Sync with TrayIcon::retranslateUi() & HotKey::list[]
-    QStringList list = { TrayIcon::tr("My Fort"), TrayIcon::tr("Programs"), TrayIcon::tr("Options"),
-        TrayIcon::tr("Rules"), TrayIcon::tr("Zones"), TrayIcon::tr("Groups"),
-        TrayIcon::tr("Services"), TrayIcon::tr("Statistics"), TrayIcon::tr("Traffic Graph"),
-        TrayIcon::tr("Filter Enabled"), TrayIcon::tr("Snooze Alerts") };
+    QStringList list = {
+        TrayIcon::tr("My Fort"),
+        TrayIcon::tr("Programs"),
+        TrayIcon::tr("Options"),
+        TrayIcon::tr("Rules"),
+        TrayIcon::tr("Zones"),
+        TrayIcon::tr("Groups"),
+        TrayIcon::tr("Services"),
+        TrayIcon::tr("Statistics"),
+        TrayIcon::tr("Traffic Graph"),
+        TrayIcon::tr("Filter Enabled"),
+        TrayIcon::tr("Snooze Alerts"),
+    };
 
     const auto blockTraffic = tr("Block Traffic:");
     for (const auto &name : FirewallConf::blockTrafficNames()) {
@@ -220,7 +229,11 @@ void IfacePage::retranslateComboHotKey()
         list.append(filterMode + ' ' + name);
     }
 
-    list.append({ TrayIcon::tr("App Group Modifier"), TrayIcon::tr("Quit") });
+    list.append({
+            TrayIcon::tr("App Group Modifier"),
+            TrayIcon::tr("Rule Modifier"),
+            TrayIcon::tr("Quit"),
+    });
 
     const int currentIndex = qMax(m_comboHotKey->currentIndex(), 0);
 
@@ -230,8 +243,14 @@ void IfacePage::retranslateComboHotKey()
 void IfacePage::retranslateComboTrayEvent()
 {
     // Sync with TrayIcon::ClickType
-    const QStringList list = { tr("Single Click"), tr("Ctrl + Single Click"),
-        tr("Alt + Single Click"), tr("Double Click"), tr("Middle Click"), tr("Right Click") };
+    const QStringList list = {
+        tr("Single Click"),
+        tr("Ctrl + Single Click"),
+        tr("Alt + Single Click"),
+        tr("Double Click"),
+        tr("Middle Click"),
+        tr("Right Click"),
+    };
 
     const int currentIndex = qMax(m_comboTrayEvent->currentIndex(), 0);
 
@@ -244,11 +263,20 @@ void IfacePage::retranslateComboTrayAction()
     Q_UNUSED(type);
 
     // Sync with TrayIcon::ActionType
-    const QStringList list = { tr("Show My Fort"), tr("Show Programs"),
-        tr("Show Programs Or Alert Window"), tr("Show Options"), tr("Show Statistics"),
-        tr("Show/Hide Traffic Graph"), tr("Switch Filter Enabled"), tr("Switch Snooze Alerts"),
-        tr("Show Block Traffic Menu"), tr("Show Filter Mode Menu"), tr("Show Tray Menu"),
-        tr("Ignore") };
+    const QStringList list = {
+        tr("Show My Fort"),
+        tr("Show Programs"),
+        tr("Show Programs Or Alert Window"),
+        tr("Show Options"),
+        tr("Show Statistics"),
+        tr("Show/Hide Traffic Graph"),
+        tr("Switch Filter Enabled"),
+        tr("Switch Snooze Alerts"),
+        tr("Show Block Traffic Menu"),
+        tr("Show Filter Mode Menu"),
+        tr("Show Tray Menu"),
+        tr("Ignore"),
+    };
 
     ControlUtil::setComboBoxTexts(m_comboTrayAction, list, /*currentIndex=*/-1);
 }

@@ -140,6 +140,10 @@ bool ConfRuleManagerRpc::processServerCommand(const ProcessCommandArgs &p, Proce
         emit confRuleManager->ruleUpdated(p.args.value(0).toInt());
         return true;
     }
+    case Control::Rpc_ConfRuleManager_trayMenuUpdated: {
+        emit confRuleManager->trayMenuUpdated();
+        return true;
+    }
     default: {
         r.ok = processConfRuleManagerRpcResult(confRuleManager, p, r);
         r.isSendResult = true;
@@ -162,4 +166,6 @@ void ConfRuleManagerRpc::setupServerSignals(RpcManager *rpcManager)
     connect(confRuleManager, &ConfRuleManager::ruleUpdated, rpcManager, [=](quint16 ruleId) {
         rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleUpdated, { ruleId });
     });
+    connect(confRuleManager, &ConfRuleManager::trayMenuUpdated, rpcManager,
+            [=] { rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_trayMenuUpdated); });
 }

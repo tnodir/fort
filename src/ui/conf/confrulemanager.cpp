@@ -74,6 +74,9 @@ const char *const sqlInsertRuleMenu = "INSERT INTO rule_menu(rule_id) VALUES(?1)
 
 const char *const sqlDeleteRuleMenu = "DELETE FROM rule_menu WHERE rule_id = ?1;";
 
+const char *const sqlSelectRuleMenuIds = "SELECT rule_id FROM rule_menu"
+                                         "  ORDER BY rule_id;";
+
 const char *const sqlSelectRuleNameById = "SELECT name FROM rule WHERE rule_id = ?1;";
 
 const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
@@ -168,6 +171,22 @@ QString ConfRuleManager::ruleNameById(quint16 ruleId)
     return name;
 }
 
+QVector<quint16> ConfRuleManager::getRuleMenuIds() const
+{
+    QVector<quint16> ruleIdList;
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectRuleMenuIds).prepare(stmt))
+        return {};
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const quint16 ruleId = stmt.columnInt(0);
+        ruleIdList.append(ruleId);
+    }
+
+    return ruleIdList;
+}
+
 void ConfRuleManager::loadRuleSet(Rule &rule, QStringList &ruleSetNames)
 {
     rule.ruleSetEdited = false;
@@ -231,6 +250,7 @@ bool ConfRuleManager::checkRuleSetValid(quint16 ruleId, quint16 subRuleId, int e
 bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 {
     bool ok = true;
+    bool isTrayMenuUpdated = false;
 
     beginWriteTransaction();
 
@@ -267,7 +287,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
         {
             const char *sql = rule.trayMenu ? sqlInsertRuleMenu : sqlDeleteRuleMenu;
 
-            DbQuery(sqliteDb()).sql(sql).vars({ rule.ruleId }).executeOk();
+            isTrayMenuUpdated = DbQuery(sqliteDb()).sql(sql).vars({ rule.ruleId }).executeOk();
         }
 
         saveRuleSet(rule);
@@ -286,12 +306,17 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
         emit ruleUpdated(rule.ruleId);
     }
 
+    if (isTrayMenuUpdated) {
+        emit trayMenuUpdated();
+    }
+
     return true;
 }
 
 bool ConfRuleManager::deleteRule(quint16 ruleId)
 {
     bool ok = false;
+    bool isTrayMenuUpdated = false;
     int appRulesCount = 0;
 
     beginWriteTransaction();
@@ -307,7 +332,7 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
         appRulesCount = sqliteDb()->changes();
 
         // Delete the Tray Menu
-        DbQuery(sqliteDb()).sql(sqlDeleteRuleMenu).vars(vars).executeOk();
+        isTrayMenuUpdated = DbQuery(sqliteDb()).sql(sqlDeleteRuleMenu).vars(vars).executeOk();
 
         // Delete the Preset Rule from Rules
         DbQuery(sqliteDb()).sql(sqlDeleteRuleSet).vars(vars).executeOk();
@@ -316,13 +341,18 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
 
     endTransaction(ok);
 
-    if (ok) {
-        updateDriverRules();
+    if (!ok)
+        return false;
 
-        emit ruleRemoved(ruleId, appRulesCount);
+    updateDriverRules();
+
+    emit ruleRemoved(ruleId, appRulesCount);
+
+    if (isTrayMenuUpdated) {
+        emit trayMenuUpdated();
     }
 
-    return ok;
+    return true;
 }
 
 bool ConfRuleManager::updateRuleName(quint16 ruleId, const QString &ruleName)
