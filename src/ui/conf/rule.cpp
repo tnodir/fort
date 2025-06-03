@@ -12,8 +12,9 @@ bool Rule::isOptionsEqual(const Rule &o) const
 
 bool Rule::isFlagsEqual(const Rule &o) const
 {
-    return enabled == o.enabled && blocked == o.blocked && exclusive == o.exclusive
-            && terminate == o.terminate && terminateBlocked == o.terminateBlocked;
+    return enabled == o.enabled && trayMenu == o.trayMenu && blocked == o.blocked
+            && exclusive == o.exclusive && terminate == o.terminate
+            && terminateBlocked == o.terminateBlocked;
 }
 
 bool Rule::isZonesEqual(const Rule &o) const

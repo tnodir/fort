@@ -72,6 +72,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_comboRuleType->setEnabled(isEmpty());
 
     m_cbEnabled->setChecked(ruleRow.enabled);
+    m_cbTrayMenu->setChecked(ruleRow.trayMenu);
 
     m_rbAllow->setChecked(!ruleRow.blocked);
     m_rbBlock->setChecked(ruleRow.blocked);
@@ -125,6 +126,7 @@ void RuleEditDialog::retranslateUi()
     retranslateComboRuleType();
 
     m_cbEnabled->setText(tr("Enabled"));
+    m_cbTrayMenu->setText(tr("Tray Menu"));
 
     m_rbAllow->setText(tr("Allow"));
     m_rbBlock->setText(tr("Block"));
@@ -277,10 +279,22 @@ QLayout *RuleEditDialog::setupFormLayout()
     layout->addRow("Type:", m_comboRuleType);
     m_labelRuleType = ControlUtil::formRowLabel(layout, m_comboRuleType);
 
-    // Enabled
-    m_cbEnabled = new QCheckBox();
+    // Enabled; Tray Menu
+    auto enabledLayout = setupEnabledLayout();
 
-    layout->addRow(QString(), m_cbEnabled);
+    layout->addRow(QString(), enabledLayout);
+
+    return layout;
+}
+
+QLayout *RuleEditDialog::setupEnabledLayout()
+{
+    m_cbEnabled = new QCheckBox();
+    m_cbTrayMenu = new QCheckBox();
+
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_cbEnabled, ControlUtil::createVSeparator(), m_cbTrayMenu, /*stretch*/ nullptr });
+    layout->setSpacing(10);
 
     return layout;
 }
@@ -546,6 +560,7 @@ void RuleEditDialog::fillRule(Rule &rule) const
     rule.ruleType = Rule::RuleType(m_comboRuleType->currentIndex());
 
     rule.enabled = m_cbEnabled->isChecked();
+    rule.trayMenu = m_cbTrayMenu->isChecked();
     rule.blocked = !m_rbAllow->isChecked();
     rule.exclusive = m_cbExclusive->isChecked();
 

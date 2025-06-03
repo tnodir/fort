@@ -29,9 +29,11 @@ const QLoggingCategory LC("confRule");
     "    t.rule_text,"                                                                             \
     "    t.rule_type,"                                                                             \
     "    t.accept_zones,"                                                                          \
-    "    t.reject_zones"
+    "    t.reject_zones,"                                                                          \
+    "    (menu.rule_id IS NOT NULL) AS tray_menu"
 
 const char *const sqlSelectRules = "SELECT" SELECT_RULE_FIELDS "  FROM rule t"
+                                   "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
                                    "  ORDER BY t.rule_id;";
 
 const char *const sqlSelectRuleSets =
@@ -67,6 +69,10 @@ const char *const sqlUpdateRule = "UPDATE rule"
                                   "    notes = ?8, rule_text = ?9, rule_type = ?10,"
                                   "    accept_zones = ?11, reject_zones = ?12, mod_time = ?13"
                                   "  WHERE rule_id = ?1;";
+
+const char *const sqlInsertRuleMenu = "INSERT INTO rule_menu(rule_id) VALUES(?1);";
+
+const char *const sqlDeleteRuleMenu = "DELETE FROM rule_menu WHERE rule_id = ?1;";
 
 const char *const sqlSelectRuleNameById = "SELECT name FROM rule WHERE rule_id = ?1;";
 
@@ -254,6 +260,15 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
         };
 
         DbQuery(sqliteDb(), &ok).sql(isNew ? sqlInsertRule : sqlUpdateRule).vars(vars).executeOk();
+    }
+
+    if (ok) {
+        // Tray Menu
+        {
+            const char *sql = rule.trayMenu ? sqlInsertRuleMenu : sqlDeleteRuleMenu;
+
+            DbQuery(sqliteDb()).sql(sql).vars({ rule.ruleId }).executeOk();
+        }
 
         saveRuleSet(rule);
     }
@@ -282,6 +297,7 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
     beginWriteTransaction();
 
     DbQuery(sqliteDb(), &ok).sql(sqlDeleteRule).vars({ ruleId }).executeOk();
+
     if (ok) {
         const QVariantList vars = { ruleId };
 
@@ -289,6 +305,9 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
         DbQuery(sqliteDb()).sql(sqlDeleteAppRule).vars(vars).executeOk();
 
         appRulesCount = sqliteDb()->changes();
+
+        // Delete the Tray Menu
+        DbQuery(sqliteDb()).sql(sqlDeleteRuleMenu).vars(vars).executeOk();
 
         // Delete the Preset Rule from Rules
         DbQuery(sqliteDb()).sql(sqlDeleteRuleSet).vars(vars).executeOk();
@@ -481,6 +500,7 @@ void ConfRuleManager::fillRule(Rule &rule, const SqliteStmt &stmt)
     rule.ruleType = Rule::RuleType(stmt.columnInt(7));
     rule.zones.accept_mask = stmt.columnUInt64(8);
     rule.zones.reject_mask = stmt.columnUInt64(9);
+    rule.trayMenu = stmt.columnBool(10);
 }
 
 void ConfRuleManager::updateDriverRules()

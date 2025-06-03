@@ -313,6 +313,7 @@ bool RuleListModel::updateRuleRow(
     ruleRow.zones.accept_mask = stmt.columnUInt(10);
     ruleRow.zones.reject_mask = stmt.columnUInt(11);
     ruleRow.modTime = stmt.columnDateTime(12);
+    ruleRow.trayMenu = stmt.columnBool(13);
 
     return true;
 }
@@ -320,20 +321,22 @@ bool RuleListModel::updateRuleRow(
 QString RuleListModel::sqlBase() const
 {
     return "SELECT"
-           "    rule_id,"
-           "    enabled,"
-           "    blocked,"
-           "    exclusive,"
-           "    terminate,"
-           "    term_blocked,"
-           "    name,"
-           "    notes,"
-           "    rule_text,"
-           "    rule_type,"
-           "    accept_zones,"
-           "    reject_zones,"
-           "    mod_time"
+           "    t.rule_id,"
+           "    t.enabled,"
+           "    t.blocked,"
+           "    t.exclusive,"
+           "    t.terminate,"
+           "    t.term_blocked,"
+           "    t.name,"
+           "    t.notes,"
+           "    t.rule_text,"
+           "    t.rule_type,"
+           "    t.accept_zones,"
+           "    t.reject_zones,"
+           "    t.mod_time,"
+           "    (menu.rule_id IS NOT NULL) AS tray_menu"
            "  FROM rule t"
+           "  LEFT JOIN rule_menu menu ON menu.rule_id = t.rule_id"
            "  WHERE rule_type = :type";
 }
 

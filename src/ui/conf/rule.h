@@ -36,6 +36,7 @@ public:
 
 public:
     bool enabled : 1 = true;
+    bool trayMenu : 1 = false;
     bool blocked : 1 = false;
     bool exclusive : 1 = false;
     bool terminate : 1 = false;

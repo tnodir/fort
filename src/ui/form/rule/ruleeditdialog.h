@@ -52,6 +52,7 @@ private:
     void setupUi();
     QLayout *setupMainLayout();
     QLayout *setupFormLayout();
+    QLayout *setupEnabledLayout();
     QLayout *setupActionsLayout();
     QLayout *setupZonesLayout();
     void setupEditRuleText();
@@ -91,6 +92,7 @@ private:
     QLabel *m_labelRuleType = nullptr;
     QComboBox *m_comboRuleType = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
+    QCheckBox *m_cbTrayMenu = nullptr;
     QRadioButton *m_rbAllow = nullptr;
     QRadioButton *m_rbBlock = nullptr;
     QCheckBox *m_cbExclusive = nullptr;
