@@ -1935,6 +1935,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Terminating Rule:</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Tray Menu</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -2545,6 +2549,10 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Snooze Alerts</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Rule Modifier</source>
         <translation></translation>
     </message>
 </context>

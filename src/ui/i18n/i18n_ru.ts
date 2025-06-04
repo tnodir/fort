@@ -1946,6 +1946,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Terminating Rule:</source>
         <translation>Завершающее правило:</translation>
     </message>
+    <message>
+        <source>Tray Menu</source>
+        <translation>Меню в трее</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -2557,6 +2561,10 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Snooze Alerts</source>
         <translation>Отложить оповещения</translation>
+    </message>
+    <message>
+        <source>Rule Modifier</source>
+        <translation>Модификатор правил</translation>
     </message>
 </context>
 <context>

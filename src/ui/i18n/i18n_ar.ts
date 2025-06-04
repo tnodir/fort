@@ -1946,6 +1946,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Terminating Rule:</source>
         <translation>قاعدة الإنهاء:</translation>
     </message>
+    <message>
+        <source>Tray Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -2556,6 +2560,10 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Snooze Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule Modifier</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

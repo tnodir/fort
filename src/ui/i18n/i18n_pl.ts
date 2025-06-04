@@ -1946,6 +1946,10 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <source>Terminating Rule:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Tray Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -2556,6 +2560,10 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rule Modifier</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

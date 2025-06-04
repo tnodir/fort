@@ -1946,6 +1946,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Terminating Rule:</source>
         <translation>Règle de résiliation :</translation>
     </message>
+    <message>
+        <source>Tray Menu</source>
+        <translation>Menu de la barre d&apos;état</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -2557,6 +2561,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Snooze Alerts</source>
         <translation>Alertes de répétition</translation>
+    </message>
+    <message>
+        <source>Rule Modifier</source>
+        <translation>Modificateur de règle</translation>
     </message>
 </context>
 <context>

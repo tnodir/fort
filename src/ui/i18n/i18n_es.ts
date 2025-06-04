@@ -1949,6 +1949,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Terminating Rule:</source>
         <translation>Regla de finalización:</translation>
     </message>
+    <message>
+        <source>Tray Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -2560,6 +2564,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Snooze Alerts</source>
         <translation>Posponer alertas</translation>
+    </message>
+    <message>
+        <source>Rule Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

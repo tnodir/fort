@@ -1946,6 +1946,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <source>Terminating Rule:</source>
         <translation>Terminierungsregel:</translation>
     </message>
+    <message>
+        <source>Tray Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -2557,6 +2561,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Snooze Alerts</source>
         <translation>Alarm schlummern</translation>
+    </message>
+    <message>
+        <source>Rule Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

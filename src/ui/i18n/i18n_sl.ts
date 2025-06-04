@@ -1946,6 +1946,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Terminating Rule:</source>
         <translation>Končno pravilo:</translation>
     </message>
+    <message>
+        <source>Tray Menu</source>
+        <translation>Meni pladnja</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -2557,6 +2561,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Snooze Alerts</source>
         <translation>Dremež opozoril</translation>
+    </message>
+    <message>
+        <source>Rule Modifier</source>
+        <translation>Spreminjevalec pravil</translation>
     </message>
 </context>
 <context>

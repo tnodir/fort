@@ -1946,6 +1946,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Terminating Rule:</source>
         <translation>Regola terminante:</translation>
     </message>
+    <message>
+        <source>Tray Menu</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
@@ -2558,6 +2562,10 @@ App</translation>
     <message>
         <source>Snooze Alerts</source>
         <translation>Smorza allarmi</translation>
+    </message>
+    <message>
+        <source>Rule Modifier</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
