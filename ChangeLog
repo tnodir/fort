@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.18.2, 2025-06-04:
+- UI: Rules: Add "Tray Menu" flag (#549).
+- UI: Update icons.
+- UI: Update SQLite to 3.50.0
+
 v3.18.1, 2025-05-30:
 - UI: ProgramEdit: Add ability to set custom icon (#544).
 - UI: Options: Add tool-tips (#543).
