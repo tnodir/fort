@@ -1082,7 +1082,7 @@
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation>显示警报窗口时自动聚焦</translation>
+        <translation>显示警告窗口时自动聚焦</translation>
     </message>
 </context>
 <context>
@@ -1702,7 +1702,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Icons (*.ico; *.png)</source>
-        <translation>Icons (*.ico; *.png)</translation>
+        <translation>图标文件 (*.ico; *.png)</translation>
     </message>
 </context>
 <context>
@@ -1824,7 +1824,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Are you sure to remove alerted programs?</source>
-        <translation>您确定要删除警报程序吗？</translation>
+        <translation>您确定要删除警告程序吗？</translation>
     </message>
 </context>
 <context>
@@ -1948,7 +1948,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>托盘菜单</translation>
     </message>
 </context>
 <context>
@@ -2564,7 +2564,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Rule Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>规则修改器</translation>
     </message>
 </context>
 <context>

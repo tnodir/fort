@@ -1951,7 +1951,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menú de bandeja</translation>
     </message>
 </context>
 <context>
@@ -2567,7 +2567,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Rule Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Modificador de regla</translation>
     </message>
 </context>
 <context>
