@@ -1948,7 +1948,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>トレイメニュー</translation>
     </message>
 </context>
 <context>
@@ -2564,7 +2564,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Rule Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>ルール編集ツール</translation>
     </message>
 </context>
 <context>
