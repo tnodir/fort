@@ -46,6 +46,8 @@ signals:
     void trayMenuUpdated();
 
 private:
+    bool doAddOrUpdateRule(Rule &rule, bool &isNew, bool &isTrayMenuUpdated);
+
     void walkRulesMap(WalkRulesArgs &wra) const;
     bool walkRulesLoop(const std::function<walkRulesCallback> &func) const;
     bool walkGlobalRule(const std::function<walkRulesCallback> &func, quint16 ruleId) const;

@@ -249,17 +249,39 @@ bool ConfRuleManager::checkRuleSetValid(quint16 ruleId, quint16 subRuleId, int e
 
 bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 {
-    bool ok = true;
+    bool isNew = false;
     bool isTrayMenuUpdated = false;
+
+    if (!doAddOrUpdateRule(rule, isNew, isTrayMenuUpdated))
+        return false;
+
+    updateDriverRules();
+
+    if (isNew) {
+        emit ruleAdded();
+    } else {
+        emit ruleUpdated(rule.ruleId);
+    }
+
+    if (isTrayMenuUpdated) {
+        emit trayMenuUpdated();
+    }
+
+    return true;
+}
+
+bool ConfRuleManager::doAddOrUpdateRule(Rule &rule, bool &isNew, bool &isTrayMenuUpdated)
+{
+    bool ok = true;
 
     beginWriteTransaction();
 
-    const bool isNew = (rule.ruleId == 0);
-    if (isNew) {
+    if (rule.ruleId == 0) {
         rule.ruleId = DbQuery(sqliteDb(), &ok)
                               .sql(sqlSelectRuleIds)
                               .vars({ ConfUtil::ruleMaxCount() })
                               .getFreeId(/*maxId=*/ConfUtil::ruleMaxCount() - 1);
+        isNew = true;
     }
 
     if (ok) {
@@ -295,22 +317,7 @@ bool ConfRuleManager::addOrUpdateRule(Rule &rule)
 
     endTransaction(ok);
 
-    if (!ok)
-        return false;
-
-    updateDriverRules();
-
-    if (isNew) {
-        emit ruleAdded();
-    } else {
-        emit ruleUpdated(rule.ruleId);
-    }
-
-    if (isTrayMenuUpdated) {
-        emit trayMenuUpdated();
-    }
-
-    return true;
+    return ok;
 }
 
 bool ConfRuleManager::deleteRule(quint16 ruleId)
