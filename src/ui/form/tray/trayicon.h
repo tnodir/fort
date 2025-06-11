@@ -126,9 +126,13 @@ private:
 
     void setupUi();
     void setupTrayMenu();
+    void setupTrayMenuTopActions();
     void setupTrayMenuOptions();
     void setupTrayMenuBlockTraffic();
     void setupTrayMenuFilterMode();
+    void setupTrayMenuGroupActions();
+    void setupTrayMenuRuleActions();
+    void setupTrayMenuBottomActions();
 
     void updateTrayMenuFlags();
     void updateAppGroupActions();

@@ -475,6 +475,20 @@ void TrayIcon::setupTrayMenu()
         }
     });
 
+    setupTrayMenuTopActions();
+
+    m_menu->addSeparator();
+    setupTrayMenuGroupActions();
+
+    m_menu->addSeparator();
+    setupTrayMenuRuleActions();
+
+    m_menu->addSeparator();
+    setupTrayMenuBottomActions();
+}
+
+void TrayIcon::setupTrayMenuTopActions()
+{
     m_homeAction = addAction(m_menu,
             { ":/icons/fort.png", windowManager(), SLOT(showHomeWindow()), ActionShowHome });
     addHotKey(m_homeAction, HotKey::home);
@@ -527,42 +541,6 @@ void TrayIcon::setupTrayMenu()
 
     setupTrayMenuFilterMode();
     m_menu->addMenu(m_filterModeMenu);
-
-    m_menu->addSeparator();
-
-    for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
-        QAction *a = addAction(m_menu,
-                { QString(), this, SLOT(switchTrayFlag(bool)), ActionNone, /*checkable=*/true });
-
-        if (i < MAX_FKEY_COUNT) {
-            addHotKey(a, HotKey::appGroupModifier);
-        }
-
-        m_appGroupActions.append(a);
-    }
-
-    m_menu->addSeparator();
-
-    for (int i = 0; i < MAX_RULE_ACTIONS_COUNT; ++i) {
-        QAction *a = addAction(m_menu,
-                { QString(), this, SLOT(switchTrayRuleFlag(bool)), ActionNone,
-                        /*checkable=*/true });
-
-        if (i < MAX_FKEY_COUNT) {
-            addHotKey(a, HotKey::ruleModifier);
-        }
-
-        m_ruleActions.append(a);
-    }
-
-    m_menu->addSeparator();
-
-    m_quitAction = addAction(m_menu, { ":/icons/standby.png", this, SLOT(quitProgram()) });
-    addHotKey(m_quitAction, HotKey::quit);
-
-    m_trayMenuAction =
-            addAction(m_menu, { QString(), this, SLOT(switchTrayMenu(bool)), ActionShowTrayMenu });
-    m_trayMenuAction->setVisible(false);
 }
 
 void TrayIcon::setupTrayMenuOptions()
@@ -666,6 +644,45 @@ void TrayIcon::setupTrayMenuFilterMode()
     }
 
     connect(m_filterModeActions, &QActionGroup::triggered, this, &TrayIcon::switchFilterMode);
+}
+
+void TrayIcon::setupTrayMenuGroupActions()
+{
+    for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
+        QAction *a = addAction(m_menu,
+                { QString(), this, SLOT(switchTrayFlag(bool)), ActionNone, /*checkable=*/true });
+
+        if (i < MAX_FKEY_COUNT) {
+            addHotKey(a, HotKey::appGroupModifier);
+        }
+
+        m_appGroupActions.append(a);
+    }
+}
+
+void TrayIcon::setupTrayMenuRuleActions()
+{
+    for (int i = 0; i < MAX_RULE_ACTIONS_COUNT; ++i) {
+        QAction *a = addAction(m_menu,
+                { QString(), this, SLOT(switchTrayRuleFlag(bool)), ActionNone,
+                        /*checkable=*/true });
+
+        if (i < MAX_FKEY_COUNT) {
+            addHotKey(a, HotKey::ruleModifier);
+        }
+
+        m_ruleActions.append(a);
+    }
+}
+
+void TrayIcon::setupTrayMenuBottomActions()
+{
+    m_quitAction = addAction(m_menu, { ":/icons/standby.png", this, SLOT(quitProgram()) });
+    addHotKey(m_quitAction, HotKey::quit);
+
+    m_trayMenuAction =
+            addAction(m_menu, { QString(), this, SLOT(switchTrayMenu(bool)), ActionShowTrayMenu });
+    m_trayMenuAction->setVisible(false);
 }
 
 void TrayIcon::updateTrayMenuFlags()
