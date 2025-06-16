@@ -517,6 +517,10 @@
         <source>Stretch last column</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
@@ -1704,6 +1708,10 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <source>Icons (*.ico; *.png)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1825,6 +1833,14 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     <message>
         <source>Are you sure to remove alerted programs?</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy Path</source>
+        <translation>Kopiuj ścieżkę</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Otwórz folder</translation>
     </message>
 </context>
 <context>

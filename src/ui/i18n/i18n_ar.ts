@@ -517,6 +517,10 @@
         <source>Stretch last column</source>
         <translation>توسيع العمود الأخير</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
@@ -1704,6 +1708,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Icons (*.ico; *.png)</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1825,6 +1833,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to remove alerted programs?</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy Path</source>
+        <translation>نسخ المسار</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>فتح المجلد</translation>
     </message>
 </context>
 <context>

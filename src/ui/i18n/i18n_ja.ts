@@ -517,6 +517,10 @@
         <source>Stretch last column</source>
         <translation>最後の列を伸ばす</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
@@ -1704,6 +1708,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Icons (*.ico; *.png)</source>
         <translation>アイコン (*.ico; *.png)</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1825,6 +1833,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to remove alerted programs?</source>
         <translation>警告されたプログラムを本当に削除しますか?</translation>
+    </message>
+    <message>
+        <source>Copy Path</source>
+        <translation>パスをコピー</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>フォルダーを開く</translation>
     </message>
 </context>
 <context>

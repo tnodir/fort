@@ -71,7 +71,7 @@
     <name>AppInfoRow</name>
     <message>
         <source>Copy Path</source>
-        <translation>Copier chemin</translation>
+        <translation>경로 복사</translation>
     </message>
     <message>
         <source>Open Folder</source>
@@ -516,6 +516,10 @@
     <message>
         <source>Stretch last column</source>
         <translation>마지막 열 늘리기</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>조회 IP</translation>
     </message>
 </context>
 <context>
@@ -1704,6 +1708,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Icons (*.ico; *.png)</source>
         <translation>아이콘 (*.ico; *.png)</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>조회 IP</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1825,6 +1833,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to remove alerted programs?</source>
         <translation>경고된 프로그램을 제거하시겠습니까?</translation>
+    </message>
+    <message>
+        <source>Copy Path</source>
+        <translation>경로 복사</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>폴더 열기</translation>
     </message>
 </context>
 <context>

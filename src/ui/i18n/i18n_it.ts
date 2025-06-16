@@ -517,6 +517,10 @@
         <source>Stretch last column</source>
         <translation>Allunga l&apos;ultima colonna</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Ricerca IP</translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
@@ -1373,11 +1377,11 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Rimuovere i programmi con allarme da Auto-Learn Off</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
-        <translation type="unfinished"></translation>
+        <translation>Traccia eventi Driver</translation>
     </message>
     <message>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
@@ -1678,7 +1682,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Connessioni</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -1703,6 +1707,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Icons (*.ico; *.png)</source>
         <translation>Icona (*.ico; *.png)</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Ricerca IP</translation>
     </message>
 </context>
 <context>
@@ -1820,11 +1828,19 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Remove Alerted Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Rimuovi programmi con allarme</translation>
     </message>
     <message>
         <source>Are you sure to remove alerted programs?</source>
-        <translation type="unfinished"></translation>
+        <translation>Sei sicuro di voler rimuovere i programmi con allarme?</translation>
+    </message>
+    <message>
+        <source>Copy Path</source>
+        <translation>Copia percorso</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Apri cartella</translation>
     </message>
 </context>
 <context>
@@ -1948,7 +1964,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menu&apos; Vassoio</translation>
     </message>
 </context>
 <context>
@@ -2565,7 +2581,7 @@ App</translation>
     </message>
     <message>
         <source>Rule Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Modificatore regole</translation>
     </message>
 </context>
 <context>
