@@ -20,6 +20,10 @@ public:
 
     void refreshAppInfoVersion(const QString &appPath, AppInfoCache *appInfoCache);
 
+public slots:
+    void appCopyPath();
+    void appOpenFolder();
+
 private:
     void setupUi();
 

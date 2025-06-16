@@ -126,6 +126,8 @@ private:
     QAction *m_actToWildcard = nullptr;
     QAction *m_actEditApp = nullptr;
     QAction *m_actRemoveApp = nullptr;
+    QAction *m_actAppCopyPath = nullptr;
+    QAction *m_actAppOpenFolder = nullptr;
     QAction *m_actReviewAlerts = nullptr;
     QAction *m_actDeleteAlertedApps = nullptr;
     QAction *m_actClearAlerts = nullptr;

@@ -160,6 +160,10 @@ void ProgramsWindow::retranslateUi()
     m_actToWildcard->setText(tr("Convert to Wildcard"));
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
+
+    m_actAppCopyPath->setText(tr("Copy Path"));
+    m_actAppOpenFolder->setText(tr("Open Folder"));
+
     m_actReviewAlerts->setText(tr("Review Alerts"));
     m_actDeleteAlertedApps->setText(tr("Remove Alerted Programs"));
     m_actClearAlerts->setText(tr("Clear Alerts"));
@@ -304,6 +308,14 @@ void ProgramsWindow::setupEditMenu()
 
     editMenu->addSeparator();
 
+    m_actAppCopyPath = editMenu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
+    m_actAppCopyPath->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_C));
+
+    m_actAppOpenFolder = editMenu->addAction(IconCache::icon(":/icons/folder.png"), QString());
+    m_actAppOpenFolder->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_O));
+
+    editMenu->addSeparator();
+
     m_actReviewAlerts = editMenu->addAction(IconCache::icon(":/icons/error.png"), QString());
     m_actDeleteAlertedApps = editMenu->addAction(QString());
     m_actClearAlerts = editMenu->addAction(QString());
@@ -327,6 +339,10 @@ void ProgramsWindow::setupEditMenu()
     connect(m_actToWildcard, &QAction::triggered, this, &ProgramsWindow::convertToWildcard);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
     connect(m_actRemoveApp, &QAction::triggered, this, &ProgramsWindow::deleteSelectedApps);
+
+    connect(m_actAppCopyPath, &QAction::triggered, this, [&] { m_appInfoRow->appCopyPath(); });
+    connect(m_actAppOpenFolder, &QAction::triggered, this, [&] { m_appInfoRow->appOpenFolder(); });
+
     connect(m_actReviewAlerts, &QAction::triggered, this,
             [&] { windowManager()->showProgramAlertWindow(); });
     connect(m_actDeleteAlertedApps, &QAction::triggered, this, &ProgramsWindow::deleteAlertedApps);
@@ -532,6 +548,8 @@ void ProgramsWindow::setupTableAppsChanged()
         m_actToWildcard->setEnabled(appSelected);
         m_actEditApp->setEnabled(appSelected);
         m_actRemoveApp->setEnabled(appSelected);
+        m_actAppCopyPath->setEnabled(appSelected);
+        m_actAppOpenFolder->setEnabled(appSelected);
         m_btAllowApp->setEnabled(appSelected);
         m_btBlockApp->setEnabled(appSelected);
         m_btRemoveApp->setEnabled(appSelected);

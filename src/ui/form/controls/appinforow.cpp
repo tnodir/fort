@@ -34,10 +34,8 @@ void AppInfoRow::setupUi()
 
     m_labelAppCompanyName = ControlUtil::createLabel();
 
-    connect(m_btAppCopyPath, &QAbstractButton::clicked, this,
-            [&] { GuiUtil::setClipboardData(m_lineAppPath->text()); });
-    connect(m_btAppOpenFolder, &QAbstractButton::clicked, this,
-            [&] { AppInfoUtil::openFolder(m_filePath); });
+    connect(m_btAppCopyPath, &QAbstractButton::clicked, this, &AppInfoRow::appCopyPath);
+    connect(m_btAppOpenFolder, &QAbstractButton::clicked, this, &AppInfoRow::appOpenFolder);
 
     auto layout = ControlUtil::createHLayout();
     layout->addWidget(m_btAppCopyPath);
@@ -62,4 +60,14 @@ void AppInfoRow::refreshAppInfoVersion(const QString &appPath, AppInfoCache *app
 
     m_labelAppCompanyName->setVisible(!appInfo.companyName.isEmpty());
     m_labelAppCompanyName->setText(appInfo.companyName);
+}
+
+void AppInfoRow::appCopyPath()
+{
+    GuiUtil::setClipboardData(m_lineAppPath->text());
+}
+
+void AppInfoRow::appOpenFolder()
+{
+    AppInfoUtil::openFolder(m_filePath);
 }
