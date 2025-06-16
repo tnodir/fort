@@ -519,7 +519,7 @@
     </message>
     <message>
         <source>Lookup IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Buscar IP</translation>
     </message>
 </context>
 <context>
@@ -1713,7 +1713,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Lookup IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Buscar IP</translation>
     </message>
 </context>
 <context>
