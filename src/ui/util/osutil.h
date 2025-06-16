@@ -24,6 +24,8 @@ public:
     static bool openUrl(const QUrl &url);
     static bool openUrlOrFolder(const QString &path);
 
+    static bool openIpLocationUrl(const QString &ip);
+
     static void *createMutex(const char *name, bool &isSingleInstance);
     static void closeMutex(void *mutexHandle);
 

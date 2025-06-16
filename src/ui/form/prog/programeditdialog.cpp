@@ -40,6 +40,7 @@
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
 #include <util/stringutil.h>
 #include <util/textareautil.h>
 #include <util/variantutil.h>
@@ -420,6 +421,7 @@ void ProgramEditDialog::retranslateTableConnListMenu()
 {
     m_actCopyAsFilter->setText(tr("Copy as Filter"));
     m_actCopy->setText(tr("Copy"));
+    m_actLookupIp->setText(tr("Lookup IP"));
 }
 
 void ProgramEditDialog::retranslateWindowTitle()
@@ -1072,18 +1074,28 @@ void ProgramEditDialog::setupTableConnListMenu()
     m_actCopy = menu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actCopy->setShortcut(Qt::Key_Copy);
 
+    m_actLookupIp = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actLookupIp->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_L);
+
     connect(m_actCopyAsFilter, &QAction::triggered, this, [&] {
         const auto rows = m_connListView->selectedRows();
         const auto text = appConnListModel()->rowsAsFilter(rows);
 
         GuiUtil::setClipboardData(text);
     });
-    connect(m_actCopy, &QAction::triggered, this,
-            [&] { GuiUtil::setClipboardData(m_connListView->selectedText()); });
+    connect(m_actCopy, &QAction::triggered, m_connListView, &TableView::copySelectedText);
+    connect(m_actLookupIp, &QAction::triggered, this, [&] {
+        const auto row = m_connListView->currentRow();
+        const auto index = appConnListModel()->index(row, int(ConnListColumn::RemoteIp));
+        const auto textIp = appConnListModel()->data(index).toString();
+
+        OsUtil::openIpLocationUrl(textIp);
+    });
 
     m_connListView->setMenu(menu);
 
     m_connListView->addAction(m_actCopyAsFilter);
+    m_connListView->addAction(m_actLookupIp);
 }
 
 void ProgramEditDialog::setupTableConnListHeader()
@@ -1107,17 +1119,17 @@ void ProgramEditDialog::setupTableConnListHeader()
 
     header->resizeSection(int(ConnListColumn::Program), 300);
     header->resizeSection(int(ConnListColumn::ProcessId), 60);
-    header->resizeSection(int(ConnListColumn::Protocol), 70);
+    header->resizeSection(int(ConnListColumn::Protocol), 60);
     header->resizeSection(int(ConnListColumn::LocalHostName), 140);
-    header->resizeSection(int(ConnListColumn::LocalIp), 80);
+    header->resizeSection(int(ConnListColumn::LocalIp), 100);
     header->resizeSection(int(ConnListColumn::LocalPort), 60);
-    header->resizeSection(int(ConnListColumn::RemoteHostName), 140);
+    header->resizeSection(int(ConnListColumn::RemoteHostName), 150);
     header->resizeSection(int(ConnListColumn::RemoteIp), 100);
     header->resizeSection(int(ConnListColumn::RemotePort), 70);
     header->resizeSection(int(ConnListColumn::Direction), 30);
     header->resizeSection(int(ConnListColumn::Action), 30);
     header->resizeSection(int(ConnListColumn::Reason), 30);
-    header->resizeSection(int(ConnListColumn::Time), 100);
+    header->resizeSection(int(ConnListColumn::Time), 80);
 
     // Hidden columns
     header->setSectionHidden(int(ConnListColumn::Program), /*hide=*/true);

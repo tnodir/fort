@@ -215,6 +215,7 @@ private:
     TableView *m_connListView = nullptr;
     QAction *m_actCopyAsFilter = nullptr;
     QAction *m_actCopy = nullptr;
+    QAction *m_actLookupIp = nullptr;
 
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;

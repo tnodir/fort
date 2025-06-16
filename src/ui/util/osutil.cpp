@@ -56,6 +56,11 @@ bool OsUtil::openUrlOrFolder(const QString &path)
     return openUrl(url);
 }
 
+bool OsUtil::openIpLocationUrl(const QString &ip)
+{
+    return openUrl("https://www.iplocation.net/ip-lookup?query=" + ip);
+}
+
 void *OsUtil::createMutex(const char *name, bool &isSingleInstance)
 {
     void *h = CreateMutexA(nullptr, FALSE, name);

@@ -21,6 +21,7 @@
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/osutil.h>
 
 namespace {
 
@@ -64,6 +65,8 @@ void ConnectionsPage::onRetranslateUi()
     m_btEdit->setText(tr("Edit"));
     m_actCopyAsFilter->setText(tr("Copy as Filter"));
     m_actCopy->setText(tr("Copy"));
+    m_actLookupIp->setText(tr("Lookup IP"));
+
     m_actAddProgram->setText(tr("Add Program"));
     m_actRemoveConn->setText(tr("Remove"));
     m_actClearAll->setText(tr("Clear All"));
@@ -117,6 +120,9 @@ QLayout *ConnectionsPage::setupHeader()
     m_actCopy = menu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actCopy->setShortcut(Qt::Key_Copy);
 
+    m_actLookupIp = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actLookupIp->setShortcut(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_L);
+
     m_actAddProgram = menu->addAction(IconCache::icon(":/icons/application.png"), QString());
     m_actAddProgram->setShortcut(Qt::Key_Insert);
 
@@ -154,6 +160,14 @@ void ConnectionsPage::setupHeaderConnections()
         GuiUtil::setClipboardData(text);
     });
     connect(m_actCopy, &QAction::triggered, m_connListView, &TableView::copySelectedText);
+    connect(m_actLookupIp, &QAction::triggered, this, [&] {
+        const auto row = m_connListView->currentRow();
+        const auto index = connListModel()->index(row, int(ConnListColumn::RemoteIp));
+        const auto textIp = connListModel()->data(index).toString();
+
+        OsUtil::openIpLocationUrl(textIp);
+    });
+
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
         const auto &connRow = currentConnRow();
 
@@ -300,6 +314,7 @@ void ConnectionsPage::setupTableConnsChanged()
         const bool connSelected = (connIndex >= 0);
         m_actCopyAsFilter->setEnabled(connSelected);
         m_actCopy->setEnabled(connSelected);
+        m_actLookupIp->setEnabled(connSelected);
         m_actAddProgram->setEnabled(connSelected);
         m_actRemoveConn->setEnabled(connSelected);
         m_appInfoRow->setVisible(connSelected);

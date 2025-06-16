@@ -69,6 +69,7 @@ private:
     QPushButton *m_btEdit = nullptr;
     QAction *m_actCopyAsFilter = nullptr;
     QAction *m_actCopy = nullptr;
+    QAction *m_actLookupIp = nullptr;
     QAction *m_actAddProgram = nullptr;
     QAction *m_actRemoveConn = nullptr;
     QAction *m_actClearAll = nullptr;
