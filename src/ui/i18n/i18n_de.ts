@@ -517,6 +517,10 @@
         <source>Stretch last column</source>
         <translation>Letzte Spalte strecken</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
@@ -1704,6 +1708,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <source>Icons (*.ico; *.png)</source>
         <translation>Symbole (*.ico; *.png)</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1825,6 +1833,14 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Are you sure to remove alerted programs?</source>
         <translation>Sind Sie sicher, die alarmierten Programme zu entfernen?</translation>
+    </message>
+    <message>
+        <source>Copy Path</source>
+        <translation>Pfad kopieren</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Ordner öffnen</translation>
     </message>
 </context>
 <context>

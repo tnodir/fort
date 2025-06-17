@@ -517,6 +517,10 @@
         <source>Stretch last column</source>
         <translation>Raztegnite zadnji stolpec</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Iskanje IP-ja</translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
@@ -1704,6 +1708,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Icons (*.ico; *.png)</source>
         <translation>Ikone (*.ico; *.png)</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Iskanje IP-ja</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1825,6 +1833,14 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Are you sure to remove alerted programs?</source>
         <translation>Odstraniti opozorilne programe?</translation>
+    </message>
+    <message>
+        <source>Copy Path</source>
+        <translation>Kopiraj pot</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>Odpri mapo</translation>
     </message>
 </context>
 <context>

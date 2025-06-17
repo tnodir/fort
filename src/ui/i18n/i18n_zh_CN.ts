@@ -517,6 +517,10 @@
         <source>Stretch last column</source>
         <translation>拉伸最后一列</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>查找IP</translation>
+    </message>
 </context>
 <context>
     <name>DbErrorManager</name>
@@ -1704,6 +1708,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Icons (*.ico; *.png)</source>
         <translation>图标文件 (*.ico; *.png)</translation>
     </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>查找IP</translation>
+    </message>
 </context>
 <context>
     <name>ProgramsController</name>
@@ -1825,6 +1833,14 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Are you sure to remove alerted programs?</source>
         <translation>您确定要删除警告程序吗？</translation>
+    </message>
+    <message>
+        <source>Copy Path</source>
+        <translation>复制路径</translation>
+    </message>
+    <message>
+        <source>Open Folder</source>
+        <translation>打开文件夹</translation>
     </message>
 </context>
 <context>
