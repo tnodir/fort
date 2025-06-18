@@ -31,6 +31,7 @@ private:
     void retranslateWindowTitle() override;
 
     void setupUi();
+    void setupControls();
 };
 
 #endif // PROGRAMALERTWINDOW_H

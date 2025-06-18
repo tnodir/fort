@@ -1,5 +1,7 @@
 #include "programalertwindow.h"
 
+#include <QRadioButton>
+
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <model/applistmodel.h>
@@ -68,8 +70,7 @@ void ProgramAlertWindow::retranslateWindowTitle()
 
 void ProgramAlertWindow::setupUi()
 {
-    // Advanced Mode
-    setAdvancedMode(false);
+    setupControls();
 
     // Modality
     this->setWindowModality(Qt::NonModal);
@@ -77,4 +78,9 @@ void ProgramAlertWindow::setupUi()
     // Top Window
     this->setWindowFlag(Qt::WindowStaysOnTopHint, iniUser()->progAlertWindowAlwaysOnTop());
     this->setAttribute(Qt::WA_ShowWithoutActivating, !isAutoActive());
+}
+
+void ProgramAlertWindow::setupControls()
+{
+    m_rbKillProcess->setVisible(false);
 }
