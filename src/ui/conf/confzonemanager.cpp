@@ -193,6 +193,8 @@ bool ConfZoneManager::deleteZone(quint8 zoneId)
 
     if (ok) {
         emit zoneRemoved(zoneId);
+
+        updateDriverZoneFlag(zoneId, /*enabled=*/false);
     }
 
     return ok;
