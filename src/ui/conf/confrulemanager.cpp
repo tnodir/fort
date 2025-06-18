@@ -351,7 +351,7 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
     if (!ok)
         return false;
 
-    updateDriverRules();
+    updateDriverRuleFlag(ruleId, /*enabled=*/false);
 
     emit ruleRemoved(ruleId, appRulesCount);
 
