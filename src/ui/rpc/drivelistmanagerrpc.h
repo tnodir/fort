@@ -2,7 +2,7 @@
 #define DRIVELISTMANAGERRPC_H
 
 #include <control/control_types.h>
-#include <manager/drivelistmanager.h>
+#include <drivelist/drivelistmanager.h>
 
 class DriveListManagerRpc : public DriveListManager
 {

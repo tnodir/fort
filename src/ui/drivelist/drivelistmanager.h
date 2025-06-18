@@ -14,6 +14,7 @@ public:
     explicit DriveListManager(QObject *parent = nullptr);
 
     void setUp() override;
+    void tearDown() override;
 
 signals:
     void driveMaskChanged(quint32 addedMask, quint32 removedMask);

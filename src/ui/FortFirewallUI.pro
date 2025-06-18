@@ -44,6 +44,7 @@ SOURCES += \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
+    drivelist/drivelistmanager.cpp \
     driver/drivercommon.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
@@ -142,7 +143,6 @@ SOURCES += \
     manager/autoupdatemanager.cpp \
     manager/dberrormanager.cpp \
     manager/dbmanagerbase.cpp \
-    manager/drivelistmanager.cpp \
     manager/envmanager.cpp \
     manager/hotkeymanager.cpp \
     manager/logger.cpp \
@@ -307,6 +307,7 @@ HEADERS += \
     control/control_types.h \
     control/controlmanager.h \
     control/controlworker.h \
+    drivelist/drivelistmanager.h \
     driver/drivercommon.h \
     driver/drivermanager.h \
     driver/driverworker.h \
@@ -406,7 +407,6 @@ HEADERS += \
     manager/autoupdatemanager.h \
     manager/dberrormanager.h \
     manager/dbmanagerbase.h \
-    manager/drivelistmanager.h \
     manager/envmanager.h \
     manager/hotkeymanager.h \
     manager/logger.h \

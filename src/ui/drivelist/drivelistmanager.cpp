@@ -35,6 +35,11 @@ void DriveListManager::setUp()
     populateDriveMask();
 }
 
+void DriveListManager::tearDown()
+{
+    //
+}
+
 void DriveListManager::onDriveListChanged()
 {
     m_driveListTimer.startTrigger();

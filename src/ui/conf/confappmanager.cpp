@@ -10,10 +10,10 @@
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
 #include <conf/app.h>
+#include <drivelist/drivelistmanager.h>
 #include <driver/drivermanager.h>
 #include <log/logentryapp.h>
 #include <log/logmanager.h>
-#include <manager/drivelistmanager.h>
 #include <manager/envmanager.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
