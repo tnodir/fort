@@ -54,12 +54,9 @@ void DriveListManager::populateDriveMask()
         return;
     }
 
-    QThreadPool::globalInstance()->start([this] {
-        const quint32 driveMask = FileUtil::mountedDriveMask(quint32(-1));
+    const quint32 driveMask = FileUtil::mountedDriveMask(quint32(-1));
 
-        QMetaObject::invokeMethod(
-                this, [this, driveMask] { setDriveMask(driveMask); }, Qt::QueuedConnection);
-    });
+    setDriveMask(driveMask);
 }
 
 void DriveListManager::setDriveMask(quint32 driveMask)
