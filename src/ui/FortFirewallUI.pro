@@ -45,6 +45,7 @@ SOURCES += \
     control/controlmanager.cpp \
     control/controlworker.cpp \
     drivelist/drivelistmanager.cpp \
+    drivelist/drivelistworker.cpp \
     driver/drivercommon.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
@@ -309,6 +310,7 @@ HEADERS += \
     control/controlmanager.h \
     control/controlworker.h \
     drivelist/drivelistmanager.h \
+    drivelist/drivelistworker.h \
     driver/drivercommon.h \
     driver/drivermanager.h \
     driver/driverworker.h \

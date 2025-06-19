@@ -14,7 +14,9 @@ class DriverWorker : public QObject, public QRunnable
     Q_OBJECT
 
 public:
-    explicit DriverWorker(Device *device, QObject *parent = nullptr);
+    explicit DriverWorker(Device &device, QObject *parent = nullptr);
+
+    Device &device() { return m_device; }
 
     void run() override;
 
@@ -38,7 +40,7 @@ private:
     volatile bool m_cancelled = false;
     volatile bool m_aborted = false;
 
-    Device *m_device = nullptr;
+    Device &m_device;
 
     LogBuffer *m_logBuffer = nullptr;
 

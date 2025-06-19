@@ -17,8 +17,6 @@ public:
     bool isDeviceOpened() const override { return m_isDeviceOpened; }
     void setIsDeviceOpened(bool v);
 
-    void setUp() override { }
-
     void updateState(quint32 errorCode, bool isDeviceOpened);
 
     static QVariantList updateState_args();

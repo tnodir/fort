@@ -6,9 +6,9 @@
 
 #include "classhelpers.h"
 
-class Device : public QObject
+class Device
 {
-    Q_OBJECT
+    Q_GADGET
 
 public:
     enum OpenFlag : qint8 {
@@ -16,10 +16,11 @@ public:
         ReadWrite = 0x02,
         Overlapped = 0x04,
     };
+    Q_ENUM(OpenFlag)
     Q_DECLARE_FLAGS(OpenFlags, OpenFlag)
 
-    explicit Device(QObject *parent = nullptr);
-    ~Device() override;
+    explicit Device();
+    virtual ~Device();
     CLASS_DELETE_COPY_MOVE(Device)
 
     bool isOverlapped() const { return (m_flags & Overlapped) != 0; }

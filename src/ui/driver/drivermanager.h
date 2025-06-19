@@ -2,12 +2,13 @@
 #define DRIVERMANAGER_H
 
 #include <QObject>
+#include <QPointer>
 
 #include <util/classhelpers.h>
+#include <util/device.h>
 #include <util/ioc/iocservice.h>
 
-class Device;
-class DriverWorker;
+#include "driverworker.h"
 
 class DriverManager : public QObject, public IocService
 {
@@ -18,8 +19,10 @@ public:
     ~DriverManager() override;
     CLASS_DELETE_COPY_MOVE(DriverManager)
 
-    Device *device() const { return m_device; }
-    DriverWorker *driverWorker() const { return m_driverWorker; }
+    Device &device() { return m_device; }
+    const Device &device() const { return m_device; }
+
+    DriverWorker *driverWorker() const { return m_driverWorker.data(); }
 
     quint32 errorCode() const { return m_errorCode; }
     QString errorMessage() const;
@@ -65,8 +68,9 @@ private:
 private:
     quint32 m_errorCode = 0;
 
-    Device *m_device = nullptr;
-    DriverWorker *m_driverWorker = nullptr;
+    Device m_device;
+
+    QPointer<DriverWorker> m_driverWorker;
 };
 
 #endif // DRIVERMANAGER_H

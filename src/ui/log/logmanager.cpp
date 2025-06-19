@@ -62,35 +62,35 @@ void LogManager::setCurrentUnixTime(qint64 unixTime)
 
 void LogManager::setUp()
 {
-    const auto driverManager = IoCDependency<DriverManager>();
+    const auto driverWorker = IoC<DriverManager>()->driverWorker();
 
-    connect(driverManager->driverWorker(), &DriverWorker::readLogResult, this,
-            &LogManager::processLogBuffer, Qt::QueuedConnection);
+    connect(driverWorker, &DriverWorker::readLogResult, this, &LogManager::processLogBuffer,
+            Qt::QueuedConnection);
 }
 
 void LogManager::tearDown()
 {
-    const auto driverManager = IoC<DriverManager>();
+    const auto driverWorker = IoC<DriverManager>()->driverWorker();
 
-    driverManager->driverWorker()->disconnect(this);
+    driverWorker->disconnect(this);
 }
 
 void LogManager::readLogAsync()
 {
-    const auto driverManager = IoC<DriverManager>();
+    const auto driverWorker = IoC<DriverManager>()->driverWorker();
 
     LogBuffer *logBuffer = getFreeBuffer();
 
-    if (!driverManager->driverWorker()->readLogAsync(logBuffer)) {
+    if (!driverWorker->readLogAsync(logBuffer)) {
         addFreeBuffer(logBuffer);
     }
 }
 
 void LogManager::cancelAsyncIo()
 {
-    const auto driverManager = IoC<DriverManager>();
+    const auto driverWorker = IoC<DriverManager>()->driverWorker();
 
-    driverManager->driverWorker()->cancelAsyncIo();
+    driverWorker->cancelAsyncIo();
 }
 
 LogBuffer *LogManager::getFreeBuffer()

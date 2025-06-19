@@ -10,7 +10,7 @@
 #include <util/ioc/ioccontainer.h>
 
 namespace {
-const QLoggingCategory LC("manager.driveList");
+const QLoggingCategory LC("driveList.manager");
 }
 
 DriveListManager::DriveListManager(QObject *parent) : QObject(parent)
@@ -25,6 +25,8 @@ void DriveListManager::setUp()
     m_isUserAdmin = settings->isUserAdmin();
 
     if (settings->isService()) {
+        setupWorker();
+
         connect(IoC<ServiceManager>(), &ServiceManager::driveListChanged, this,
                 &DriveListManager::onDriveListChanged);
     } else {
@@ -37,7 +39,7 @@ void DriveListManager::setUp()
 
 void DriveListManager::tearDown()
 {
-    //
+    closeWorker();
 }
 
 void DriveListManager::onDriveListChanged()
@@ -76,5 +78,22 @@ void DriveListManager::setDriveMask(quint32 driveMask)
 
     if (oldDriveMask != 0) {
         emit driveMaskChanged(addedMask, removedMask);
+    }
+}
+
+void DriveListManager::setupWorker()
+{
+    m_driveListWorker = new DriveListWorker(); // autoDelete = true
+
+    connect(driveListWorker(), &DriveListWorker::driveListChanged, this,
+            &DriveListManager::onDriveListChanged, Qt::QueuedConnection);
+
+    QThreadPool::globalInstance()->start(driveListWorker());
+}
+
+void DriveListManager::closeWorker()
+{
+    if (driveListWorker()) {
+        driveListWorker()->close();
     }
 }

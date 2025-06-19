@@ -5,7 +5,7 @@
 #include <util/device.h>
 #include <util/osutil.h>
 
-DriverWorker::DriverWorker(Device *device, QObject *parent) : QObject(parent), m_device(device) { }
+DriverWorker::DriverWorker(Device &device, QObject *parent) : QObject(parent), m_device(device) { }
 
 void DriverWorker::run()
 {
@@ -41,7 +41,7 @@ bool DriverWorker::cancelAsyncIo()
     m_cancelled = true;
 
     if (m_isLogReading) {
-        m_device->cancelIo();
+        device().cancelIo();
 
         do {
             m_cancelledWaitCondition.wait(&m_mutex);
@@ -112,7 +112,7 @@ void DriverWorker::readLog()
     QByteArray &array = m_logBuffer->array();
     qsizetype nr = 0;
 
-    const bool success = m_device->ioctl(
+    const bool success = device().ioctl(
             DriverCommon::ioctlGetLog(), nullptr, 0, array.data(), array.size(), &nr);
 
     quint32 errorCode = 0;

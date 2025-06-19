@@ -2,9 +2,12 @@
 #define DRIVELISTMANAGER_H
 
 #include <QObject>
+#include <QPointer>
 
 #include <util/ioc/iocservice.h>
 #include <util/triggertimer.h>
+
+#include "drivelistworker.h"
 
 class DriveListManager : public QObject, public IocService
 {
@@ -12,6 +15,8 @@ class DriveListManager : public QObject, public IocService
 
 public:
     explicit DriveListManager(QObject *parent = nullptr);
+
+    DriveListWorker *driveListWorker() const { return m_driveListWorker.data(); }
 
     void setUp() override;
     void tearDown() override;
@@ -28,12 +33,17 @@ protected slots:
 private:
     void setDriveMask(quint32 driveMask);
 
+    void setupWorker();
+    void closeWorker();
+
 private:
     bool m_isUserAdmin = false;
 
     quint32 m_driveMask = 0;
 
     TriggerTimer m_driveListTimer;
+
+    QPointer<DriveListWorker> m_driveListWorker;
 };
 
 #endif // DRIVELISTMANAGER_H

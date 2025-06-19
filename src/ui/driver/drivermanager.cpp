@@ -6,11 +6,8 @@
 
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
-#include <util/device.h>
 #include <util/fileutil.h>
 #include <util/osutil.h>
-
-#include "driverworker.h"
 
 namespace {
 
@@ -55,17 +52,18 @@ bool DriverManager::isDeviceError() const
 
 bool DriverManager::isDeviceOpened() const
 {
-    return device()->isOpened();
+    return device().isOpened();
 }
 
 void DriverManager::setUp()
 {
-    QThreadPool::globalInstance()->start(driverWorker());
+    if (driverWorker()) {
+        QThreadPool::globalInstance()->start(driverWorker());
+    }
 }
 
 void DriverManager::setupWorker()
 {
-    m_device = new Device(this);
     m_driverWorker = new DriverWorker(device()); // autoDelete = true
 }
 
@@ -78,24 +76,24 @@ void DriverManager::closeWorker()
 
 bool DriverManager::openDevice()
 {
-    const bool res = device()->open(DriverCommon::deviceName());
+    const bool ok = device().open(DriverCommon::deviceName());
 
-    updateErrorCode(res);
+    updateErrorCode(ok);
 
     emit isDeviceOpenedChanged();
 
-    return res;
+    return ok;
 }
 
 bool DriverManager::closeDevice()
 {
-    const bool res = device()->close();
+    const bool ok = device().close();
 
     updateErrorCode(true);
 
     emit isDeviceOpenedChanged();
 
-    return res;
+    return ok;
 }
 
 bool DriverManager::validate(QByteArray &buf)
@@ -139,15 +137,15 @@ bool DriverManager::writeData(quint32 code, QByteArray &buf)
 
     const bool wasCancelled = driverWorker()->cancelAsyncIo();
 
-    const bool res = device()->ioctl(code, buf.data(), buf.size());
+    const bool ok = device().ioctl(code, buf.data(), buf.size());
 
-    updateErrorCode(res);
+    updateErrorCode(ok);
 
     if (wasCancelled) {
         driverWorker()->continueAsyncIo();
     }
 
-    return res;
+    return ok;
 }
 
 bool DriverManager::checkReinstallDriver()

@@ -4,10 +4,7 @@
 #include <qt_windows.h>
 #include <winioctl.h>
 
-Device::Device(QObject *parent) :
-    QObject(parent), m_handle(INVALID_HANDLE_VALUE), m_buffer(sizeof(OVERLAPPED))
-{
-}
+Device::Device() : m_handle(INVALID_HANDLE_VALUE), m_buffer(sizeof(OVERLAPPED)) { }
 
 Device::~Device()
 {
