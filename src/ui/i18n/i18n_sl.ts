@@ -1453,7 +1453,7 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
     </message>
 </context>
 <context>
-    <name>ProgramEditDialog</name>
+    <name>ProgramEditDialogBase</name>
     <message>
         <source>Select File</source>
         <translation>Izberi datoteko</translation>

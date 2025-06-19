@@ -1453,7 +1453,7 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
-    <name>ProgramEditDialog</name>
+    <name>ProgramEditDialogBase</name>
     <message>
         <source>Select File</source>
         <translation>파일 선택</translation>

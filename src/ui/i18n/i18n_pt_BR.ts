@@ -1451,7 +1451,7 @@ Você quer abrir um fio de discussão no navegador?</translation>
     </message>
 </context>
 <context>
-    <name>ProgramEditDialog</name>
+    <name>ProgramEditDialogBase</name>
     <message>
         <source>Select File</source>
         <translation>Selecionar Arquivo</translation>

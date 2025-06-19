@@ -1453,7 +1453,7 @@ Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
     </message>
 </context>
 <context>
-    <name>ProgramEditDialog</name>
+    <name>ProgramEditDialogBase</name>
     <message>
         <source>Select File</source>
         <translation>Sélectionner fichier</translation>

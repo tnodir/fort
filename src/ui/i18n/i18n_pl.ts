@@ -1453,7 +1453,7 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
     </message>
 </context>
 <context>
-    <name>ProgramEditDialog</name>
+    <name>ProgramEditDialogBase</name>
     <message>
         <source>Select File</source>
         <translation>Wybierz plik</translation>

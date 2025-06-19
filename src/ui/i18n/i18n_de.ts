@@ -1453,7 +1453,7 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
     </message>
 </context>
 <context>
-    <name>ProgramEditDialog</name>
+    <name>ProgramEditDialogBase</name>
     <message>
         <source>Select File</source>
         <translation>Datei auswählen</translation>
