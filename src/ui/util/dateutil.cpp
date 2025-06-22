@@ -156,3 +156,46 @@ bool DateUtil::isTimeInPeriod(QTime time, QTime from, QTime to)
 {
     return (from <= to) ? (time >= from && time < to) : (time >= from || time < to);
 }
+
+QTime DateUtil::timeLeft(const QDateTime &dateTime, const QDateTime &fromDateTime)
+{
+    constexpr int maxSecs = 24 * 60 * 60;
+
+    const qint64 secs = fromDateTime.secsTo(dateTime);
+
+    if (secs <= 0)
+        return {};
+
+    if (secs > maxSecs)
+        return QTime(23, 59, 59);
+
+    return QTime(0, 0).addSecs(secs);
+}
+
+QString DateUtil::formatTimeLeft(const QTime &time)
+{
+    constexpr int maxHours = 12;
+
+    const int h = time.hour();
+    if (h > maxHours) {
+        return tr(">%1h").arg(maxHours);
+    }
+
+    QStringList list;
+
+    if (h > 0) {
+        list << tr("%1h").arg(h);
+    }
+
+    const int m = time.minute();
+    if (m > 0) {
+        list << tr("%1m").arg(m);
+    }
+
+    const int s = time.second();
+    if (s > 0) {
+        list << tr("%1s").arg(s);
+    }
+
+    return list.join(' ');
+}

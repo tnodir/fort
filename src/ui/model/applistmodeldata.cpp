@@ -88,11 +88,14 @@ QVariant dataDisplayScheduled(const App &app, int role)
     if (role != Qt::ToolTipRole)
         return {};
 
-    if (!app.scheduleTime.isNull()) {
-        return DateUtil::localeDateTime(app.scheduleTime);
-    }
+    if (app.scheduleTime.isNull())
+        return {};
 
-    return {};
+    const QTime timeLeft = DateUtil::timeLeft(app.scheduleTime);
+    const auto timeLeftStr = DateUtil::formatTimeLeft(timeLeft);
+
+    return DateUtil::localeDateTime(app.scheduleTime) + '\n'
+            + AppListModel::tr("Time left: %1").arg(timeLeftStr);
 }
 
 QVariant dataDisplayGroup(const App &app, int /*role*/)
