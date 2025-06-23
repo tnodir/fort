@@ -1,5 +1,14 @@
 Fort Firewall ChangeLog
 
+v3.18.3, 2025-06-23:
+- UI: Programs: Add "Timer" menu actions; Show "Time left" for scheduled action (#568).
+- UI: Programs: Add "Copy Path", "Open Folder" menu items (#562).
+- UI: Connections: Add "Lookup IP" menu item (#563).
+- UI: ConfZoneManager: Update driver on zone remove (#566).
+- UI: Update SQLite to 3.50.1
+
+Attention: Installers will be signed by GPG signature (#569)!
+
 v3.18.2, 2025-06-04:
 - UI: Rules: Add "Tray Menu" flag (#549).
 - UI: Update icons.
