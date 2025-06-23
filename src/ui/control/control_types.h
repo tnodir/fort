@@ -50,6 +50,7 @@ enum Command : qint8 {
     Rpc_ConfAppManager_clearAlerts,
     Rpc_ConfAppManager_purgeApps,
     Rpc_ConfAppManager_updateAppsBlocked,
+    Rpc_ConfAppManager_updateAppsTimer,
     Rpc_ConfAppManager_importAppsBackup,
     Rpc_ConfAppManager_updateDriverConf,
     Rpc_ConfAppManager_appEndTimesUpdated,

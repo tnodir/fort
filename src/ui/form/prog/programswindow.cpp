@@ -1,5 +1,6 @@
 #include "programswindow.h"
 
+#include <QActionGroup>
 #include <QCheckBox>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -34,6 +35,8 @@
 namespace {
 
 constexpr int APPS_HEADER_VERSION = 13;
+
+const std::array timerMinuteValues = { -1, 1, 5, 10, 30, 60 * 1, 60 * 3, 60 * 6 };
 
 QToolButton *createCheckableToolButton(
         const QString &iconPath, const std::function<void()> &onClicked)
@@ -151,6 +154,9 @@ void ProgramsWindow::retranslateUi()
 {
     this->unsetLocale();
 
+    m_timerMenu->setTitle(tr("Timer"));
+    retranslateTimerMenuActions();
+
     m_btEdit->setText(tr("Edit"));
     m_actAllowApp->setText(tr("Allow"));
     m_actBlockApp->setText(tr("Block"));
@@ -186,6 +192,18 @@ void ProgramsWindow::retranslateUi()
     m_appInfoRow->retranslateUi();
 
     this->setWindowTitle(tr("Programs"));
+}
+
+void ProgramsWindow::retranslateTimerMenuActions()
+{
+    const QStringList list = { tr("Disable"), tr("1 minute"), tr("5 minutes"), tr("10 minutes"),
+        tr("30 minutes"), tr("1 hour"), tr("3 hours"), tr("6 hours") };
+
+    int i = 0;
+    const auto actions = m_timerMenuActions->actions();
+    for (QAction *a : actions) {
+        a->setText(list[i++]);
+    }
 }
 
 void ProgramsWindow::setupUi()
@@ -281,6 +299,9 @@ void ProgramsWindow::setupEditMenu()
 {
     auto editMenu = ControlUtil::createMenu(this);
 
+    m_timerMenu = editMenu->addMenu(IconCache::icon(":/icons/time.png"), QString());
+    setupTimerMenuActions();
+
     m_actAllowApp = editMenu->addAction(IconCache::icon(":/icons/accept.png"), QString());
     m_actAllowApp->setShortcut(Qt::Key_A);
 
@@ -355,6 +376,23 @@ void ProgramsWindow::setupEditMenu()
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
+}
+
+void ProgramsWindow::setupTimerMenuActions()
+{
+    m_timerMenuActions = new QActionGroup(m_timerMenu);
+
+    for (int minutes : timerMinuteValues) {
+        auto a = m_timerMenu->addAction(QString());
+        a->setData(minutes);
+
+        m_timerMenuActions->addAction(a);
+    }
+
+    connect(m_timerMenuActions, &QActionGroup::triggered, this, [&](QAction *a) {
+        const int minutes = a->data().toInt();
+        ctrl()->updateAppsTimer(selectedAppIdList(), minutes);
+    });
 }
 
 void ProgramsWindow::setupEditSearch()
@@ -542,6 +580,7 @@ void ProgramsWindow::setupTableAppsChanged()
     const auto refreshTableAppsChanged = [&] {
         const int appIndex = appListCurrentIndex();
         const bool appSelected = (appIndex >= 0);
+        m_timerMenu->setEnabled(appSelected);
         m_actAllowApp->setEnabled(appSelected);
         m_actBlockApp->setEnabled(appSelected);
         m_actKillApp->setEnabled(appSelected);

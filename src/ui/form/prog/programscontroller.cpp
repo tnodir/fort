@@ -41,6 +41,13 @@ void ProgramsController::updateAppsBlocked(
     }
 }
 
+void ProgramsController::updateAppsTimer(const QVector<qint64> &appIdList, int minutes)
+{
+    if (!confAppManager()->updateAppsTimer(appIdList, minutes)) {
+        showErrorMessage(tr("Cannot update program's state"));
+    }
+}
+
 void ProgramsController::deleteApps(const QVector<qint64> &appIdList)
 {
     if (!confAppManager()->deleteApps(appIdList)) {

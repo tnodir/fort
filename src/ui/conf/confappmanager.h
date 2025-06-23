@@ -45,11 +45,9 @@ public:
     virtual bool purgeApps();
     virtual bool updateAppsBlocked(
             const QVector<qint64> &appIdList, bool blocked, bool killProcess);
+    virtual bool updateAppsTimer(const QVector<qint64> &appIdList, int minutes);
 
     bool walkApps(const std::function<walkAppsCallback> &func) const override;
-
-    bool saveAppBlocked(const App &app);
-    void updateAppEndTimes();
 
     qint64 getAlertAppId();
 
@@ -81,7 +79,13 @@ private:
     bool updateAppBlocked(qint64 appId, bool blocked, bool killProcess, bool &isWildcard);
     bool checkAppBlockedChanged(App &app, bool blocked, bool killProcess);
 
+    bool updateAppTimer(qint64 appId, QDateTime scheduleTime, bool &isWildcard);
+
     QVector<qint64> collectObsoleteApps(quint32 driveMask);
+
+    bool saveAppBlocked(const App &app);
+    bool saveAppTimer(const App &app);
+    void updateAppEndTimes();
 
 private:
     void emitAppAlerted();

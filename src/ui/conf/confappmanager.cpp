@@ -131,6 +131,10 @@ const char *const sqlDeleteAppAlerts = "DELETE FROM app_alert;";
 const char *const sqlUpdateAppBlocked = "UPDATE app SET blocked = ?2, kill_process = ?3"
                                         "  WHERE app_id = ?1;";
 
+const char *const sqlUpdateAppTimer = "UPDATE app SET blocked = ?2, kill_process = ?3,"
+                                      "    end_action = ?4, end_time = ?5"
+                                      "  WHERE app_id = ?1;";
+
 using AppsMap = QHash<qint64, QString>;
 using AppIdsArray = QVector<qint64>;
 
@@ -527,6 +531,27 @@ bool ConfAppManager::updateAppsBlocked(
     return ok;
 }
 
+bool ConfAppManager::updateAppsTimer(const QVector<qint64> &appIdList, int minutes)
+{
+    bool ok = true;
+    bool isWildcard = false;
+
+    const auto scheduleTime = (minutes > 0) ? DateUtil::now().addSecs(minutes * 60) : QDateTime();
+
+    for (const qint64 appId : appIdList) {
+        if (!updateAppTimer(appId, scheduleTime, isWildcard)) {
+            ok = false;
+            break;
+        }
+    }
+
+    if (isWildcard) {
+        updateDriverConf();
+    }
+
+    return ok;
+}
+
 bool ConfAppManager::updateAppBlocked(
         qint64 appId, bool blocked, bool killProcess, bool &isWildcard)
 {
@@ -540,7 +565,7 @@ bool ConfAppManager::updateAppBlocked(
     if (!saveAppBlocked(app))
         return false;
 
-    if (app.isWildcard) {
+    if (isWildcard || app.isWildcard) {
         isWildcard = true;
     } else {
         updateDriverUpdateApp(app);
@@ -561,6 +586,31 @@ bool ConfAppManager::checkAppBlockedChanged(App &app, bool blocked, bool killPro
 
     app.blocked = blocked;
     app.killProcess = killProcess;
+
+    return true;
+}
+
+bool ConfAppManager::updateAppTimer(qint64 appId, QDateTime scheduleTime, bool &isWildcard)
+{
+    App app;
+    if (!loadAppById(app, appId))
+        return false;
+
+    const bool timerDisabled = scheduleTime.isNull();
+
+    app.blocked = timerDisabled;
+    app.killProcess = false;
+    app.scheduleAction = timerDisabled ? App::ScheduleAllow : App::ScheduleBlock;
+    app.scheduleTime = scheduleTime;
+
+    if (!saveAppTimer(app))
+        return false;
+
+    if (isWildcard || app.isWildcard) {
+        isWildcard = true;
+    } else {
+        updateDriverUpdateApp(app);
+    }
 
     return true;
 }
@@ -623,6 +673,27 @@ bool ConfAppManager::saveAppBlocked(const App &app)
     }
 
     endTransaction(ok);
+
+    if (ok) {
+        emitAppUpdated();
+    }
+
+    return ok;
+}
+
+bool ConfAppManager::saveAppTimer(const App &app)
+{
+    bool ok = true;
+
+    const QVariantList vars = {
+        app.appId,
+        app.blocked,
+        app.killProcess,
+        app.scheduleAction,
+        DbVar::nullable(app.scheduleTime),
+    };
+
+    DbQuery(sqliteDb(), &ok).sql(sqlUpdateAppTimer).vars(vars).executeOk();
 
     if (ok) {
         emitAppUpdated();

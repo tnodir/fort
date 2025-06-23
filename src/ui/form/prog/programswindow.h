@@ -61,11 +61,13 @@ private:
     void setupController();
 
     void retranslateUi();
+    void retranslateTimerMenuActions();
 
     void setupUi();
     QLayout *setupHeader();
     QLayout *setupToolbarButtonsLayout();
     void setupEditMenu();
+    void setupTimerMenuActions();
     void setupEditSearch();
     void setupFilter();
     void setupFilterCheckBoxes();
@@ -118,6 +120,8 @@ private:
 private:
     ProgramsController *m_ctrl = nullptr;
 
+    QMenu *m_timerMenu = nullptr;
+    QActionGroup *m_timerMenuActions = nullptr;
     QAction *m_actAllowApp = nullptr;
     QAction *m_actBlockApp = nullptr;
     QAction *m_actKillApp = nullptr;

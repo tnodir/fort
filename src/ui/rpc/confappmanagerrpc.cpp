@@ -77,6 +77,15 @@ bool processConfAppManager_updateAppsBlocked(
             appIdList, p.args.value(1).toBool(), p.args.value(2).toBool());
 }
 
+bool processConfAppManager_updateAppsTimer(
+        ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
+{
+    QVector<qint64> appIdList;
+    VariantUtil::listToVector(p.args.value(0).toList(), appIdList);
+
+    return confAppManager->updateAppsTimer(appIdList, p.args.value(1).toInt());
+}
+
 bool processConfAppManager_importAppsBackup(
         ConfAppManager *confAppManager, const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
@@ -102,6 +111,7 @@ static const processConfAppManager_func processConfAppManager_funcList[] = {
     &processConfAppManager_clearAlerts, // Rpc_ConfAppManager_clearAlerts,
     &processConfAppManager_purgeApps, // Rpc_ConfAppManager_purgeApps,
     &processConfAppManager_updateAppsBlocked, // Rpc_ConfAppManager_updateAppsBlocked,
+    &processConfAppManager_updateAppsTimer, // Rpc_ConfAppManager_updateAppsTimer,
     &processConfAppManager_importAppsBackup, // Rpc_ConfAppManager_importAppsBackup,
     &processConfAppManager_updateDriverConf, // Rpc_ConfAppManager_updateDriverConf,
 };
@@ -182,6 +192,18 @@ bool ConfAppManagerRpc::updateAppsBlocked(
     args << blocked << killProcess;
 
     return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_updateAppsBlocked, args);
+}
+
+bool ConfAppManagerRpc::updateAppsTimer(const QVector<qint64> &appIdList, int minutes)
+{
+    QVariantList appIdVarList;
+    VariantUtil::vectorToList(appIdList, appIdVarList);
+
+    QVariantList args;
+    VariantUtil::addToList(args, QVariant(appIdVarList));
+    args << minutes;
+
+    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_updateAppsTimer, args);
 }
 
 bool ConfAppManagerRpc::importAppsBackup(const QString &path)

@@ -24,6 +24,7 @@ public:
     bool purgeApps() override;
     bool updateAppsBlocked(
             const QVector<qint64> &appIdList, bool blocked, bool killProcess) override;
+    bool updateAppsTimer(const QVector<qint64> &appIdList, int minutes) override;
 
     bool importAppsBackup(const QString &path) override;
 
