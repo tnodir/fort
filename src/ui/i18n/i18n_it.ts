@@ -142,7 +142,7 @@
     </message>
     <message>
         <source>Time left: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Tempo rimasto: %1</translation>
     </message>
 </context>
 <context>
@@ -530,19 +530,19 @@
     <name>DateUtil</name>
     <message>
         <source>&gt;%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>oltre %1o</translation>
     </message>
     <message>
         <source>%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>%1o</translation>
     </message>
     <message>
         <source>%1m</source>
-        <translation type="unfinished"></translation>
+        <translation>%1m</translation>
     </message>
     <message>
         <source>%1s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1sec</translation>
     </message>
 </context>
 <context>
@@ -1867,11 +1867,11 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     </message>
     <message>
         <source>Timer</source>
-        <translation type="unfinished"></translation>
+        <translation>Tempo</translation>
     </message>
     <message>
         <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation>Disabilita</translation>
     </message>
     <message>
         <source>1 minute</source>

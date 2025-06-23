@@ -142,7 +142,7 @@
     </message>
     <message>
         <source>Time left: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>남은 시간: %1</translation>
     </message>
 </context>
 <context>
@@ -530,19 +530,19 @@
     <name>DateUtil</name>
     <message>
         <source>&gt;%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>&gt;%1시간</translation>
     </message>
     <message>
         <source>%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>%1시간</translation>
     </message>
     <message>
         <source>%1m</source>
-        <translation type="unfinished"></translation>
+        <translation>%1분</translation>
     </message>
     <message>
         <source>%1s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1초</translation>
     </message>
 </context>
 <context>
@@ -1867,11 +1867,11 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Timer</source>
-        <translation type="unfinished"></translation>
+        <translation>타이머</translation>
     </message>
     <message>
         <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation>사용 안 함</translation>
     </message>
     <message>
         <source>1 minute</source>
