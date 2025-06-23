@@ -140,6 +140,10 @@
         <source>Blocked Zones:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Time left: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -519,6 +523,25 @@
     </message>
     <message>
         <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DateUtil</name>
+    <message>
+        <source>&gt;%1h</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1h</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1m</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1s</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1841,6 +1864,42 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Open Folder</source>
         <translation>فتح المجلد</translation>
+    </message>
+    <message>
+        <source>Timer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation type="unfinished">دقيقة واحدة</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation type="unfinished">5 دقائق</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation type="unfinished">10 دقائق</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation type="unfinished">30 دقيقة</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation type="unfinished">ساعة واحدة</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation type="unfinished">6 ساعات</translation>
     </message>
 </context>
 <context>

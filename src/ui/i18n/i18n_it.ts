@@ -140,6 +140,10 @@
         <source>Blocked Zones:</source>
         <translation>Zone bloccate:</translation>
     </message>
+    <message>
+        <source>Time left: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -520,6 +524,25 @@
     <message>
         <source>Lookup IP</source>
         <translation>Ricerca IP</translation>
+    </message>
+</context>
+<context>
+    <name>DateUtil</name>
+    <message>
+        <source>&gt;%1h</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1h</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1m</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1s</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1841,6 +1864,42 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Open Folder</source>
         <translation>Apri cartella</translation>
+    </message>
+    <message>
+        <source>Timer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuto</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minuti</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minuti</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 minuti</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 ora</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation>3 ore</translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation>6 ore</translation>
     </message>
 </context>
 <context>

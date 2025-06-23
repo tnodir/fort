@@ -140,6 +140,10 @@
         <source>Blocked Zones:</source>
         <translation>Запрещённые Зоны:</translation>
     </message>
+    <message>
+        <source>Time left: %1</source>
+        <translation>Оставшееся время: %1</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -520,6 +524,25 @@
     <message>
         <source>Lookup IP</source>
         <translation>Поиск IP</translation>
+    </message>
+</context>
+<context>
+    <name>DateUtil</name>
+    <message>
+        <source>&gt;%1h</source>
+        <translation>&gt;%1ч</translation>
+    </message>
+    <message>
+        <source>%1h</source>
+        <translation>%1ч</translation>
+    </message>
+    <message>
+        <source>%1m</source>
+        <translation>%1м</translation>
+    </message>
+    <message>
+        <source>%1s</source>
+        <translation>%1с</translation>
     </message>
 </context>
 <context>
@@ -1841,6 +1864,42 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Open Folder</source>
         <translation>Открыть папку</translation>
+    </message>
+    <message>
+        <source>Timer</source>
+        <translation>Таймер</translation>
+    </message>
+    <message>
+        <source>Disable</source>
+        <translation>Отключить</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 минута</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 минут</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 минут</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 минут</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 час</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation>3 часа</translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation>6 часов</translation>
     </message>
 </context>
 <context>

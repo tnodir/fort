@@ -140,6 +140,10 @@
         <source>Blocked Zones:</source>
         <translation>Zones bloquées :</translation>
     </message>
+    <message>
+        <source>Time left: %1</source>
+        <translation>Temps restant&#xa0;: %1</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -520,6 +524,25 @@
     <message>
         <source>Lookup IP</source>
         <translation>Consultation de l&apos;IP</translation>
+    </message>
+</context>
+<context>
+    <name>DateUtil</name>
+    <message>
+        <source>&gt;%1h</source>
+        <translation>&gt;%1h</translation>
+    </message>
+    <message>
+        <source>%1h</source>
+        <translation>%1h</translation>
+    </message>
+    <message>
+        <source>%1m</source>
+        <translation>%1m</translation>
+    </message>
+    <message>
+        <source>%1s</source>
+        <translation>%1s</translation>
     </message>
 </context>
 <context>
@@ -1472,7 +1495,7 @@ Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation>OK</translation>
+        <translation>Ok</translation>
     </message>
     <message>
         <source>Cancel</source>
@@ -1841,6 +1864,42 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Open Folder</source>
         <translation>Ouvrir dossier</translation>
+    </message>
+    <message>
+        <source>Timer</source>
+        <translation>Minuteur</translation>
+    </message>
+    <message>
+        <source>Disable</source>
+        <translation>Désactiver</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minute</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minutes</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minutes</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 minutes</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 heure</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation>3 heures</translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation>6 heures</translation>
     </message>
 </context>
 <context>

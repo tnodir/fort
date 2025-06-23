@@ -140,6 +140,10 @@
         <source>Blocked Zones:</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Time left: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -519,6 +523,25 @@
     </message>
     <message>
         <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>DateUtil</name>
+    <message>
+        <source>&gt;%1h</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1h</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1m</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1s</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1839,6 +1862,42 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     <message>
         <source>Open Folder</source>
         <translation>Abrir Pasta</translation>
+    </message>
+    <message>
+        <source>Timer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Disable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuto</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 Minutos</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 Minutos</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 Minutos</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 hora</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation>6 horas</translation>
     </message>
 </context>
 <context>

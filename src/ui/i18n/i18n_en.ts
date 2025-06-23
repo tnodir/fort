@@ -140,6 +140,10 @@
         <source>Blocked Zones:</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Time left: %1</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -519,6 +523,25 @@
     </message>
     <message>
         <source>Lookup IP</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>DateUtil</name>
+    <message>
+        <source>&gt;%1h</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1h</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1m</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>%1s</source>
         <translation></translation>
     </message>
 </context>
@@ -1829,6 +1852,42 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Open Folder</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Timer</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Disable</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>6 hours</source>
         <translation></translation>
     </message>
 </context>

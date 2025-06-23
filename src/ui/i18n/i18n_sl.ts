@@ -140,6 +140,10 @@
         <source>Blocked Zones:</source>
         <translation>Blokirana območja:</translation>
     </message>
+    <message>
+        <source>Time left: %1</source>
+        <translation>Preostali čas: %1</translation>
+    </message>
 </context>
 <context>
     <name>AppStatModel</name>
@@ -520,6 +524,25 @@
     <message>
         <source>Lookup IP</source>
         <translation>Iskanje IP-ja</translation>
+    </message>
+</context>
+<context>
+    <name>DateUtil</name>
+    <message>
+        <source>&gt;%1h</source>
+        <translation>&gt;%1u</translation>
+    </message>
+    <message>
+        <source>%1h</source>
+        <translation>%1u</translation>
+    </message>
+    <message>
+        <source>%1m</source>
+        <translation>%1m</translation>
+    </message>
+    <message>
+        <source>%1s</source>
+        <translation>%1s</translation>
     </message>
 </context>
 <context>
@@ -1841,6 +1864,42 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Open Folder</source>
         <translation>Odpri mapo</translation>
+    </message>
+    <message>
+        <source>Timer</source>
+        <translation>Časovnik</translation>
+    </message>
+    <message>
+        <source>Disable</source>
+        <translation>Onemogoči</translation>
+    </message>
+    <message>
+        <source>1 minute</source>
+        <translation>1 minuta</translation>
+    </message>
+    <message>
+        <source>5 minutes</source>
+        <translation>5 minut</translation>
+    </message>
+    <message>
+        <source>10 minutes</source>
+        <translation>10 minut</translation>
+    </message>
+    <message>
+        <source>30 minutes</source>
+        <translation>30 minut</translation>
+    </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 uro</translation>
+    </message>
+    <message>
+        <source>3 hours</source>
+        <translation>3 ure</translation>
+    </message>
+    <message>
+        <source>6 hours</source>
+        <translation>6 ur</translation>
     </message>
 </context>
 <context>
