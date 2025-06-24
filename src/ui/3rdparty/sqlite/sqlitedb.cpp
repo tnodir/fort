@@ -396,7 +396,9 @@ bool SqliteDb::migrateSqlScripts(const MigrateOptions &opt, int userVersion, boo
 
         beginSavepoint();
 
-        ok = migrateSqlScript(sqlDir, userVersion);
+        if (userVersion == 1 || !opt.recreate) {
+            ok = migrateSqlScript(sqlDir, userVersion);
+        }
 
         if (ok && opt.migrateFunc) {
             ok = opt.migrateFunc(this, userVersion, isNewDb, opt.migrateContext);
