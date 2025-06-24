@@ -294,7 +294,8 @@ QString AppListModel::sqlBase() const
            "    (a.app_id IS NOT NULL) as alerted"
            "  FROM app t"
            "    JOIN app_group g ON g.app_group_id = t.app_group_id"
-           "    LEFT JOIN app_alert a ON a.app_id = t.app_id";
+           "    LEFT JOIN app_alert a ON a.app_id = t.app_id"
+           "    LEFT JOIN rule r ON r.rule_id = t.rule_id";
 }
 
 QString AppListModel::sqlWhere() const
@@ -333,7 +334,7 @@ QString AppListModel::sqlOrderColumn() const
     static const QStringList orderColumns = {
         nameColumn, // Name
         "t.accept_zones, t.reject_zones", // Zones
-        "t.rule_id", // Rule
+        "r.rule_type ASC NULLS LAST, lower(r.name)", // Rule
         "t.end_action, t.end_time", // Scheduled
         "t.blocked", // Action
         "group_index", // Group
