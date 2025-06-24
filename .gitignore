@@ -5,13 +5,8 @@
 *.qm
 *.sys
 
-deploy/out/*.sig
-
 build*/
 
-*.pro.u*
-*Makefile*
-
-.qmake.stash
-uic_wrapper.bat
+/deploy/out/*.sig
+/src/*.pro.user
 
