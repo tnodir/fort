@@ -1111,6 +1111,10 @@
         <source>Auto-focus the alert window, when it&apos;s shown</source>
         <translation>警告ウィンドウが表示されたら自動的にフォーカスする</translation>
     </message>
+    <message>
+        <source>Switch Window visibility</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

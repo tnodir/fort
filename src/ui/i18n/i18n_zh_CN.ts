@@ -1111,6 +1111,10 @@
         <source>Auto-focus the alert window, when it&apos;s shown</source>
         <translation>显示警告窗口时自动聚焦</translation>
     </message>
+    <message>
+        <source>Switch Window visibility</source>
+        <translation>切换窗口可见性</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

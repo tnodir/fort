@@ -1111,6 +1111,10 @@
         <source>Auto-focus the alert window, when it&apos;s shown</source>
         <translation>Focalizza la finestra di avviso quand&apos;è mostrata</translation>
     </message>
+    <message>
+        <source>Switch Window visibility</source>
+        <translation>Cambia visibilità finestra</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

@@ -1111,6 +1111,10 @@
         <source>Auto-focus the alert window, when it&apos;s shown</source>
         <translation>알림 창이 표시될 때 자동으로 초점 맞추기</translation>
     </message>
+    <message>
+        <source>Switch Window visibility</source>
+        <translation>스위치 창 가시성</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>

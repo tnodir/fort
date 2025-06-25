@@ -142,7 +142,7 @@
     </message>
     <message>
         <source>Time left: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiempo restante: %1</translation>
     </message>
 </context>
 <context>
@@ -530,19 +530,19 @@
     <name>DateUtil</name>
     <message>
         <source>&gt;%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>&gt;%1h</translation>
     </message>
     <message>
         <source>%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>%1h</translation>
     </message>
     <message>
         <source>%1m</source>
-        <translation type="unfinished"></translation>
+        <translation>%1m</translation>
     </message>
     <message>
         <source>%1s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1s</translation>
     </message>
 </context>
 <context>
@@ -1110,6 +1110,10 @@
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
         <translation>Enfocar automáticamente la ventana de alerta al mostrarse</translation>
+    </message>
+    <message>
+        <source>Switch Window visibility</source>
+        <translation>Cambiar visibilidad de la ventana</translation>
     </message>
 </context>
 <context>
@@ -1870,11 +1874,11 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Timer</source>
-        <translation type="unfinished"></translation>
+        <translation>Temporizador</translation>
     </message>
     <message>
         <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation>Desactivar</translation>
     </message>
     <message>
         <source>1 minute</source>

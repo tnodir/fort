@@ -1111,6 +1111,10 @@
         <source>Auto-focus the alert window, when it&apos;s shown</source>
         <translation>Samodejno ostrenje okna z opozorili, ko je prikazano</translation>
     </message>
+    <message>
+        <source>Switch Window visibility</source>
+        <translation>Preklop vidnosti okna</translation>
+    </message>
 </context>
 <context>
     <name>IpRange</name>
