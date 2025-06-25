@@ -113,6 +113,10 @@ public slots:
     void closeGraphWindow();
     void switchGraphWindow();
 
+    void showWindowByCode(WindowCode code);
+    void closeWindowByCode(WindowCode code);
+    void switchWindowByCode(WindowCode code);
+
     void closeAllWindows();
 
     void quit();

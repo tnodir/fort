@@ -572,6 +572,81 @@ void WindowManager::switchGraphWindow()
     }
 }
 
+void WindowManager::showWindowByCode(WindowCode code)
+{
+    switch (code) {
+    case WindowHome: {
+        showHomeWindow();
+    } break;
+    case WindowPrograms: {
+        showProgramsWindow();
+    } break;
+    case WindowProgramAlert: {
+        showProgramAlertWindow();
+    } break;
+    case WindowServices: {
+        showServicesWindow();
+    } break;
+    case WindowOptions: {
+        showOptionsWindow();
+    } break;
+    case WindowRules: {
+        showRulesWindow();
+    } break;
+    case WindowStatistics: {
+        showStatisticsWindow();
+    } break;
+    case WindowZones: {
+        showZonesWindow();
+    } break;
+    case WindowGraph: {
+        showGraphWindow();
+    } break;
+    }
+}
+
+void WindowManager::closeWindowByCode(WindowCode code)
+{
+    switch (code) {
+    case WindowHome: {
+        closeHomeWindow();
+    } break;
+    case WindowPrograms: {
+        closeProgramsWindow();
+    } break;
+    case WindowProgramAlert: {
+        closeProgramAlertWindow();
+    } break;
+    case WindowServices: {
+        closeServicesWindow();
+    } break;
+    case WindowOptions: {
+        closeOptionsWindow();
+    } break;
+    case WindowRules: {
+        closeRulesWindow();
+    } break;
+    case WindowStatistics: {
+        closeStatisticsWindow();
+    } break;
+    case WindowZones: {
+        closeZonesWindow();
+    } break;
+    case WindowGraph: {
+        closeGraphWindow();
+    } break;
+    }
+}
+
+void WindowManager::switchWindowByCode(WindowCode code)
+{
+    if (isAnyWindowOpen(code)) {
+        closeWindowByCode(code);
+    } else {
+        showWindowByCode(code);
+    }
+}
+
 void WindowManager::closeAllWindows()
 {
     closeGraphWindow();

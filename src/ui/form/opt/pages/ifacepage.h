@@ -119,6 +119,7 @@ private:
     QComboBox *m_comboTrayEvent = nullptr;
     QLabel *m_labelTrayAction = nullptr;
     QComboBox *m_comboTrayAction = nullptr;
+    QCheckBox *m_cbTraySwitchWindow = nullptr;
     QCheckBox *m_cbConfirmTrayFlags = nullptr;
     QCheckBox *m_cbConfirmQuit = nullptr;
 };

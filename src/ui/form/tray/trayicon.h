@@ -109,6 +109,8 @@ protected slots:
 
     void saveTrayFlags();
 
+    void onShowWindowAction();
+
     void switchTrayFlag(bool checked);
     void switchBlockTraffic(QAction *action);
     void switchFilterMode(QAction *action);

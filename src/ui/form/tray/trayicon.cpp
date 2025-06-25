@@ -174,7 +174,7 @@ struct AddActionArgs
     const QString &iconPath;
     const QObject *receiver = nullptr;
     const char *member = nullptr;
-    TrayIcon::ActionType actionType = TrayIcon::ActionNone;
+    QVariant userData;
     bool checkable = false;
     bool checked = false;
 };
@@ -183,8 +183,8 @@ QAction *addAction(QWidget *widget, const AddActionArgs &a)
 {
     auto action = new QAction(widget);
 
-    if (a.actionType != TrayIcon::ActionNone) {
-        action->setData(a.actionType);
+    if (a.userData.isValid()) {
+        action->setData(a.userData);
     }
 
     if (!a.iconPath.isEmpty()) {
@@ -489,13 +489,12 @@ void TrayIcon::setupTrayMenu()
 
 void TrayIcon::setupTrayMenuTopActions()
 {
-    m_homeAction = addAction(m_menu,
-            { ":/icons/fort.png", windowManager(), SLOT(showHomeWindow()), ActionShowHome });
+    m_homeAction =
+            addAction(m_menu, { ":/icons/fort.png", this, SLOT(onShowWindowAction()), WindowHome });
     addHotKey(m_homeAction, HotKey::home);
 
     m_programsAction = addAction(m_menu,
-            { ":/icons/application.png", windowManager(), SLOT(showProgramsWindow()),
-                    ActionShowPrograms });
+            { ":/icons/application.png", this, SLOT(onShowWindowAction()), WindowPrograms });
     addHotKey(m_programsAction, HotKey::programs);
 
     m_programsOrAlertAction = addAction(m_menu,
@@ -506,14 +505,12 @@ void TrayIcon::setupTrayMenuTopActions()
     m_menu->addMenu(m_optionsMenu);
 
     m_statisticsAction = addAction(m_menu,
-            { ":/icons/chart_bar.png", windowManager(), SLOT(showStatisticsWindow()),
-                    ActionShowStatistics });
+            { ":/icons/chart_bar.png", this, SLOT(onShowWindowAction()), WindowStatistics });
     addHotKey(m_statisticsAction, HotKey::statistics);
 
     m_graphAction = addAction(m_menu,
-            { ":/icons/action_log.png", windowManager(), SLOT(switchGraphWindow()),
-                    ActionShowTrafficGraph, /*checkable=*/true,
-                    windowManager()->isWindowOpen(WindowGraph) });
+            { ":/icons/action_log.png", this, SLOT(onShowWindowAction()), WindowGraph,
+                    /*checkable=*/true, windowManager()->isWindowOpen(WindowGraph) });
     addHotKey(m_graphAction, HotKey::graph);
 
     m_menu->addSeparator();
@@ -549,15 +546,15 @@ void TrayIcon::setupTrayMenuOptions()
     m_optionsMenu->setIcon(IconCache::icon(":/icons/cog.png"));
 
     m_optionsAction = addAction(
-            m_optionsMenu, { ":/icons/cog.png", windowManager(), SLOT(showOptionsWindow()) });
+            m_optionsMenu, { ":/icons/cog.png", this, SLOT(onShowWindowAction()), WindowOptions });
     addHotKey(m_optionsAction, HotKey::options);
 
     m_rulesAction = addAction(
-            m_optionsMenu, { ":/icons/script.png", windowManager(), SLOT(showRulesWindow()) });
+            m_optionsMenu, { ":/icons/script.png", this, SLOT(onShowWindowAction()), WindowRules });
     addHotKey(m_rulesAction, HotKey::rules);
 
-    m_zonesAction = addAction(
-            m_optionsMenu, { ":/icons/ip_class.png", windowManager(), SLOT(showZonesWindow()) });
+    m_zonesAction = addAction(m_optionsMenu,
+            { ":/icons/ip_class.png", this, SLOT(onShowWindowAction()), WindowZones });
     addHotKey(m_zonesAction, HotKey::zones);
 
     m_optionsMenu->addSeparator();
@@ -567,7 +564,7 @@ void TrayIcon::setupTrayMenuOptions()
     addHotKey(m_groupsAction, HotKey::groups);
 
     m_servicesAction = addAction(m_optionsMenu,
-            { ":/icons/windows-48.png", windowManager(), SLOT(showServicesWindow()) });
+            { ":/icons/windows-48.png", this, SLOT(onShowWindowAction()), WindowServices });
     addHotKey(m_servicesAction, HotKey::services);
 
     m_servicesAction->setEnabled(settings()->hasMasterAdmin());
@@ -935,6 +932,20 @@ void TrayIcon::saveTrayFlags()
     }
 
     confManager()->saveFlags();
+}
+
+void TrayIcon::onShowWindowAction()
+{
+    const auto action = qobject_cast<QAction *>(sender());
+    Q_ASSERT(action);
+
+    const auto windowCode = WindowCode(action->data().toInt());
+
+    if (iniUser()->traySwitchWindow()) {
+        windowManager()->switchWindowByCode(windowCode);
+    } else {
+        windowManager()->showWindowByCode(windowCode);
+    }
 }
 
 void TrayIcon::switchTrayFlag(bool checked)

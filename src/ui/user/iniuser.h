@@ -109,6 +109,9 @@ public:
     QString trayAction(const QString &event) const { return valueText("tray/" + event); }
     void setTrayAction(const QString &event, const QString &v) { setValue("tray/" + event, v); }
 
+    bool traySwitchWindow() const { return valueBool("tray/switchWindow"); }
+    void setTraySwitchWindow(bool v) { setValue("tray/switchWindow", v); }
+
     bool confirmTrayFlags() const { return valueBool("confirm/trayFlags"); }
     void setConfirmTrayFlags(bool v) { setValue("confirm/trayFlags", v); }
 

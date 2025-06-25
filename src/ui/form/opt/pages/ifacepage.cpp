@@ -91,6 +91,8 @@ void IfacePage::onResetToDefault()
     }
     refreshComboTrayAction();
 
+    m_cbTraySwitchWindow->setChecked(false);
+
     m_cbConfirmTrayFlags->setChecked(false);
     m_cbConfirmQuit->setChecked(true);
 }
@@ -168,6 +170,8 @@ void IfacePage::onRetranslateUi()
     retranslateComboTrayEvent();
     retranslateComboTrayAction();
     refreshComboTrayAction();
+
+    m_cbTraySwitchWindow->setText(tr("Switch Window visibility"));
 
     m_cbConfirmTrayFlags->setText(tr("Operations from Tray Menu"));
     m_cbConfirmQuit->setText(tr("Quit"));
@@ -695,6 +699,12 @@ void IfacePage::setupTrayBox()
     auto eventLayout = setupTrayEventLayout();
     auto actionLayout = setupTrayActionLayout();
 
+    m_cbTraySwitchWindow =
+            ControlUtil::createCheckBox(iniUser()->traySwitchWindow(), [&](bool checked) {
+                iniUser()->setTraySwitchWindow(checked);
+                ctrl()->setIniUserEdited();
+            });
+
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbTrayShowIcon);
     layout->addWidget(m_cbTrayShowAlert);
@@ -703,6 +713,7 @@ void IfacePage::setupTrayBox()
     layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(eventLayout);
     layout->addLayout(actionLayout);
+    layout->addWidget(m_cbTraySwitchWindow);
 
     m_gbTray = new QGroupBox();
     m_gbTray->setLayout(layout);
