@@ -85,6 +85,8 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_btZones->setUncheckedZones(ruleRow.zones.reject_mask);
     updateZonesLayout();
 
+    m_cbInlineZones->setChecked(ruleRow.inlineZones);
+
     m_cbTerminate->setChecked(ruleRow.terminate);
     m_comboTerminateAction->setCurrentIndex(ruleRow.terminateActionType());
 
@@ -133,6 +135,7 @@ void RuleEditDialog::retranslateUi()
 
     m_cbExclusive->setText(tr("Exclusive"));
     m_btZones->retranslateUi();
+    m_cbInlineZones->setText(tr("Inline Zones"));
 
     retranslateRulePlaceholderText();
     m_actRuleHelp->setText(tr("Help"));
@@ -328,8 +331,11 @@ QLayout *RuleEditDialog::setupZonesLayout()
     m_btZones = new ZonesSelector();
     m_btZones->setIsTristate(true);
 
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_cbExclusive, ControlUtil::createVSeparator(), m_btZones, /*stretch*/ nullptr });
+    // Inline Zones
+    m_cbInlineZones = new QCheckBox();
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbExclusive,
+            ControlUtil::createVSeparator(), m_btZones, m_cbInlineZones, /*stretch*/ nullptr });
 
     return layout;
 }
@@ -569,6 +575,8 @@ void RuleEditDialog::fillRule(Rule &rule) const
 
     rule.zones.accept_mask = m_btZones->zones();
     rule.zones.reject_mask = m_btZones->uncheckedZones();
+
+    rule.inlineZones = m_cbInlineZones->isChecked();
 
     rule.ruleName = m_editName->text();
     rule.notes = m_editNotes->toPlainText();

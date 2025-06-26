@@ -97,6 +97,7 @@ private:
     QRadioButton *m_rbBlock = nullptr;
     QCheckBox *m_cbExclusive = nullptr;
     ZonesSelector *m_btZones = nullptr;
+    QCheckBox *m_cbInlineZones = nullptr;
     QAction *m_actRuleHelp = nullptr;
     PlainTextEdit *m_editRuleText = nullptr;
     QToolButton *m_btAddPresetRule = nullptr;

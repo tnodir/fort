@@ -96,8 +96,8 @@ QVariantList ConfRuleManagerRpc::ruleToVarList(const Rule &rule)
     QVariantList ruleSetList;
     VariantUtil::vectorToList(rule.ruleSet, ruleSetList);
 
-    return { rule.enabled, rule.trayMenu, rule.blocked, rule.exclusive, rule.terminate,
-        rule.terminateBlocked, rule.ruleSetEdited, rule.ruleType, rule.ruleId,
+    return { rule.enabled, rule.trayMenu, rule.blocked, rule.exclusive, rule.inlineZones,
+        rule.terminate, rule.terminateBlocked, rule.ruleSetEdited, rule.ruleType, rule.ruleId,
         rule.zones.accept_mask, rule.zones.reject_mask, rule.ruleName, rule.notes, rule.ruleText,
         ruleSetList };
 }
@@ -109,17 +109,18 @@ Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
     rule.trayMenu = v.value(1).toBool();
     rule.blocked = v.value(2).toBool();
     rule.exclusive = v.value(3).toBool();
-    rule.terminate = v.value(4).toBool();
-    rule.terminateBlocked = v.value(5).toBool();
-    rule.ruleSetEdited = v.value(6).toBool();
-    rule.ruleType = Rule::RuleType(v.value(7).toInt());
-    rule.ruleId = v.value(8).toInt();
-    rule.zones.accept_mask = v.value(9).toUInt();
-    rule.zones.reject_mask = v.value(10).toUInt();
-    rule.ruleName = v.value(11).toString();
-    rule.notes = v.value(12).toString();
-    rule.ruleText = v.value(13).toString();
-    VariantUtil::listToVector(v.value(14).toList(), rule.ruleSet);
+    rule.inlineZones = v.value(4).toBool();
+    rule.terminate = v.value(5).toBool();
+    rule.terminateBlocked = v.value(6).toBool();
+    rule.ruleSetEdited = v.value(7).toBool();
+    rule.ruleType = Rule::RuleType(v.value(8).toInt());
+    rule.ruleId = v.value(9).toInt();
+    rule.zones.accept_mask = v.value(10).toUInt();
+    rule.zones.reject_mask = v.value(11).toUInt();
+    rule.ruleName = v.value(12).toString();
+    rule.notes = v.value(13).toString();
+    rule.ruleText = v.value(14).toString();
+    VariantUtil::listToVector(v.value(15).toList(), rule.ruleSet);
     return rule;
 }
 

@@ -499,6 +499,7 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     confRule.enabled = rule.enabled;
     confRule.blocked = rule.blocked;
     confRule.exclusive = rule.exclusive;
+    confRule.inline_zones = rule.inlineZones;
     confRule.terminate = rule.terminate;
     confRule.term_blocked = rule.terminateBlocked;
 

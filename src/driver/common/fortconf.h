@@ -206,6 +206,7 @@ typedef struct fort_conf_rule
     UCHAR enabled : 1;
     UCHAR blocked : 1;
     UCHAR exclusive : 1;
+    UCHAR inline_zones : 1;
     UCHAR terminate : 1;
     UCHAR term_blocked : 1;
 

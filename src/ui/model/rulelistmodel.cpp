@@ -304,16 +304,17 @@ bool RuleListModel::updateRuleRow(
     ruleRow.enabled = stmt.columnBool(1);
     ruleRow.blocked = stmt.columnBool(2);
     ruleRow.exclusive = stmt.columnBool(3);
-    ruleRow.terminate = stmt.columnBool(4);
-    ruleRow.terminateBlocked = stmt.columnBool(5);
-    ruleRow.ruleName = stmt.columnText(6);
-    ruleRow.notes = stmt.columnText(7);
-    ruleRow.ruleText = stmt.columnText(8);
-    ruleRow.ruleType = Rule::RuleType(stmt.columnInt(9));
-    ruleRow.zones.accept_mask = stmt.columnUInt(10);
-    ruleRow.zones.reject_mask = stmt.columnUInt(11);
-    ruleRow.modTime = stmt.columnDateTime(12);
-    ruleRow.trayMenu = stmt.columnBool(13);
+    ruleRow.inlineZones = stmt.columnBool(4);
+    ruleRow.terminate = stmt.columnBool(5);
+    ruleRow.terminateBlocked = stmt.columnBool(6);
+    ruleRow.ruleName = stmt.columnText(7);
+    ruleRow.notes = stmt.columnText(8);
+    ruleRow.ruleText = stmt.columnText(9);
+    ruleRow.ruleType = Rule::RuleType(stmt.columnInt(10));
+    ruleRow.zones.accept_mask = stmt.columnUInt(11);
+    ruleRow.zones.reject_mask = stmt.columnUInt(12);
+    ruleRow.modTime = stmt.columnDateTime(13);
+    ruleRow.trayMenu = stmt.columnBool(14);
 
     return true;
 }
@@ -325,6 +326,7 @@ QString RuleListModel::sqlBase() const
            "    t.enabled,"
            "    t.blocked,"
            "    t.exclusive,"
+           "    t.inline_zones,"
            "    t.terminate,"
            "    t.term_blocked,"
            "    t.name,"

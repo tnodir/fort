@@ -39,6 +39,7 @@ public:
     bool trayMenu : 1 = false;
     bool blocked : 1 = false;
     bool exclusive : 1 = false;
+    bool inlineZones : 1 = false;
     bool terminate : 1 = false;
     bool terminateBlocked : 1 = true;
     bool ruleSetEdited : 1 = false; // transient
