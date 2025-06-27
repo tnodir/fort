@@ -2029,6 +2029,10 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <source>Tray Menu</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Inline Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

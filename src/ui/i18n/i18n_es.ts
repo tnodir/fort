@@ -2032,6 +2032,10 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Tray Menu</source>
         <translation>Menú de bandeja</translation>
     </message>
+    <message>
+        <source>Inline Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

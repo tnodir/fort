@@ -2029,6 +2029,10 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Tray Menu</source>
         <translation>Menu de la barre d&apos;état</translation>
     </message>
+    <message>
+        <source>Inline Zones</source>
+        <translation>Zones en ligne</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

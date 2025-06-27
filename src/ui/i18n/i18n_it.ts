@@ -2029,6 +2029,10 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Tray Menu</source>
         <translation>Menu&apos; Vassoio</translation>
     </message>
+    <message>
+        <source>Inline Zones</source>
+        <translation>Zone incluse</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

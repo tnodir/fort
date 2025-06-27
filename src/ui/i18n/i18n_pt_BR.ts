@@ -2027,6 +2027,10 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <source>Tray Menu</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Inline Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

@@ -2029,6 +2029,10 @@ Please restart the running program to take effect of this option.</source>
         <source>Tray Menu</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Inline Zones</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>

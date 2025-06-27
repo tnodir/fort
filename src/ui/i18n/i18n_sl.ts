@@ -2029,6 +2029,10 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Tray Menu</source>
         <translation>Meni pladnja</translation>
     </message>
+    <message>
+        <source>Inline Zones</source>
+        <translation>Vključite cone</translation>
+    </message>
 </context>
 <context>
     <name>RuleListModel</name>
