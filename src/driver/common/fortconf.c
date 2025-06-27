@@ -504,18 +504,36 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
     return conf_flags.group_blocked;
 }
 
+inline static BOOL fort_conf_rules_rt_conn_filtered_zones_result(PFORT_CONF_META_CONN conn,
+        PCFORT_CONF_RULE rule, const FORT_CONF_ZONES_CONN_FILTERED_OPT opt)
+{
+    const BOOL accepted = (!opt.accept.filtered || opt.accept.included);
+    const BOOL rejected = (opt.reject.filtered && opt.reject.included);
+
+    if (rule->inline_zones) {
+        conn->zones_filtered = TRUE;
+        conn->zones_accepted = (UCHAR) accepted;
+        conn->zones_rejected = (UCHAR) rejected;
+        return FALSE;
+    }
+
+    if (accepted && !rejected) {
+        conn->zone_id = opt.accept.zone_id;
+        conn->blocked = rule->blocked;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
-    const BOOL inline_zones = rule->inline_zones;
-    if (inline_zones) {
+    if (rule->inline_zones) {
         conn->zones_filtered = FALSE;
     }
 
-    if (!rule->has_zones)
-        return FALSE;
-
-    PCFORT_CONF_ZONES zones = rules_rt->zones;
+    PCFORT_CONF_ZONES zones = rule->has_zones ? rules_rt->zones : NULL;
     if (!zones)
         return FALSE;
 
@@ -524,21 +542,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
     };
 
     if (fort_conf_zones_conn_filtered(zones, conn, &opt)) {
-        const BOOL accepted = (!opt.accept.filtered || opt.accept.included);
-        const BOOL rejected = (opt.reject.filtered && opt.reject.included);
-
-        if (inline_zones) {
-            conn->zones_filtered = TRUE;
-            conn->zones_accepted = (UCHAR) accepted;
-            conn->zones_rejected = (UCHAR) rejected;
-            return FALSE;
-        }
-
-        if (accepted && !rejected) {
-            conn->zone_id = opt.accept.zone_id;
-            conn->blocked = rule->blocked;
-            return TRUE;
-        }
+        return fort_conf_rules_rt_conn_filtered_zones_result(conn, rule, opt);
     }
 
     return FALSE;
