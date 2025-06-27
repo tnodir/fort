@@ -25,7 +25,7 @@ public:
 
     void selectTab(int index);
 
-    void cancelChanges();
+    void cancelChanges() override;
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;

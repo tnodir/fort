@@ -438,7 +438,6 @@ void WindowManager::showOptionsWindow()
 void WindowManager::closeOptionsWindow()
 {
     if (closeWindow(m_optWindow)) {
-        m_optWindow->cancelChanges();
         m_optWindow = nullptr;
     }
 }
@@ -869,6 +868,7 @@ bool WindowManager::closeWindow(FormWindow *w)
     }
 
     if (m_isAppQuitting || w->deleteOnClose()) {
+        w->cancelChanges();
         w->deleteLater();
         return true;
     }

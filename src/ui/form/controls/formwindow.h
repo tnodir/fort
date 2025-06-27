@@ -39,6 +39,8 @@ public:
     virtual void saveWindowState(bool wasVisible) { Q_UNUSED(wasVisible); }
     virtual void restoreWindowState() { }
 
+    virtual void cancelChanges() { }
+
 protected:
     void setupFormWindow(IniUser *iniUser, const QString &iniGroup);
 
