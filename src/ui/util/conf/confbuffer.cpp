@@ -603,7 +603,7 @@ bool ConfBuffer::writeRuleFilter(const RuleFilter &ruleFilter)
 
         confFilter->is_not = ruleFilter.isNot;
         confFilter->equal_values = ruleFilter.equalValues;
-        confFilter->is_empty = !ruleFilter.hasValues();
+        confFilter->is_empty = ruleFilter.isEmpty();
         confFilter->type = ruleFilter.type;
 
         const quint32 filterSize = buffer().size() - oldSize;

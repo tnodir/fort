@@ -10,6 +10,7 @@
 #include <util/net/portrange.h>
 #include <util/net/profilerange.h>
 #include <util/net/protorange.h>
+#include <util/net/zonesrange.h>
 
 namespace {
 
@@ -275,6 +276,16 @@ void ConfData::writeDirRange(const DirRange &dirRange)
 
     filter->flags = (dirRange.isIn() ? FORT_RULE_FILTER_DIRECTION_IN : 0)
             | (dirRange.isOut() ? FORT_RULE_FILTER_DIRECTION_OUT : 0);
+
+    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
+}
+
+void ConfData::writeZonesRange(const ZonesRange &zonesRange)
+{
+    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
+
+    filter->flags = (zonesRange.isAccepted() ? FORT_RULE_FILTER_ZONES_ACCEPTED : 0)
+            | (zonesRange.isRejected() ? FORT_RULE_FILTER_ZONES_REJECTED : 0);
 
     m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
 }

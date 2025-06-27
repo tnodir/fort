@@ -248,6 +248,7 @@ SOURCES += \
     util/net/textrange.cpp \
     util/net/valuerange.cpp \
     util/net/valuerangeutil.cpp \
+    util/net/zonesrange.cpp \
     util/osutil.cpp \
     util/processinfo.cpp \
     util/regkey.cpp \
@@ -523,6 +524,7 @@ HEADERS += \
     util/net/textrange.h \
     util/net/valuerange.h \
     util/net/valuerangeutil.h \
+    util/net/zonesrange.h \
     util/osutil.h \
     util/processinfo.h \
     util/regkey.h \

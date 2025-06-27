@@ -152,6 +152,7 @@ enum FORT_RULE_FILTER_TYPE {
     FORT_RULE_FILTER_TYPE_PROTOCOL,
     FORT_RULE_FILTER_TYPE_IP_VERSION,
     FORT_RULE_FILTER_TYPE_DIRECTION,
+    FORT_RULE_FILTER_TYPE_ZONES,
     FORT_RULE_FILTER_TYPE_AREA,
     FORT_RULE_FILTER_TYPE_PROFILE,
     FORT_RULE_FILTER_TYPE_ACTION,
@@ -170,6 +171,9 @@ enum {
     // Direction
     FORT_RULE_FILTER_DIRECTION_IN = (1 << 0),
     FORT_RULE_FILTER_DIRECTION_OUT = (1 << 1),
+    // Zones
+    FORT_RULE_FILTER_ZONES_ACCEPTED = (1 << 0),
+    FORT_RULE_FILTER_ZONES_REJECTED = (1 << 1),
     // Area
     FORT_RULE_FILTER_AREA_LOCALHOST = (1 << 0),
     FORT_RULE_FILTER_AREA_LAN = (1 << 1),
@@ -367,10 +371,13 @@ typedef struct fort_conf_meta_conn
     UINT16 drop_blocked : 1;
     UINT16 ignore : 1;
     UINT16 ask_to_connect : 1;
+    UINT16 reserved : 1; /* not used */
 
     UINT16 rule_filter_action : 1;
 
-    UCHAR reserved; /* not used */
+    UCHAR zones_filtered : 1;
+    UCHAR zones_accepted : 1;
+    UCHAR zones_rejected : 1;
 
     UCHAR reason;
 

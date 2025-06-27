@@ -507,6 +507,11 @@ FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT
 inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
+    const BOOL inline_zones = rule->inline_zones;
+    if (inline_zones) {
+        conn->zones_filtered = conn->zones_accepted = conn->zones_rejected = FALSE;
+    }
+
     if (!rule->has_zones)
         return FALSE;
 
@@ -521,6 +526,13 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
     if (fort_conf_zones_conn_filtered(zones, conn, &opt)) {
         const BOOL accepted = (!opt.accept.filtered || opt.accept.included);
         const BOOL rejected = (opt.reject.filtered && opt.reject.included);
+
+        if (inline_zones) {
+            conn->zones_filtered = TRUE;
+            conn->zones_accepted = (UCHAR) accepted;
+            conn->zones_rejected = (UCHAR) rejected;
+            return FALSE;
+        }
 
         if (accepted && !rejected) {
             conn->zone_id = opt.accept.zone_id;
@@ -613,6 +625,26 @@ static BOOL fort_conf_rule_filter_check_direction(PFORT_CONF_META_CONN conn, con
     return (flags & conn_flags) != 0;
 }
 
+static BOOL fort_conf_rule_filter_check_zones(PFORT_CONF_META_CONN conn, const void *data)
+{
+    if (!conn->zones_filtered)
+        return FALSE;
+
+    const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
+
+    const BOOL accepted = conn->zones_accepted;
+    const BOOL rejected = conn->zones_rejected;
+
+    switch (flags) {
+    case FORT_RULE_FILTER_ZONES_ACCEPTED:
+        return accepted;
+    case FORT_RULE_FILTER_ZONES_REJECTED:
+        return rejected;
+    default:
+        return accepted && !rejected;
+    }
+}
+
 static BOOL fort_conf_rule_filter_check_area(PFORT_CONF_META_CONN conn, const void *data)
 {
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
@@ -672,6 +704,7 @@ static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcLi
     &fort_conf_rule_filter_check_protocol, // FORT_RULE_FILTER_TYPE_PROTOCOL,
     &fort_conf_rule_filter_check_ip_version, // FORT_RULE_FILTER_TYPE_IP_VERSION,
     &fort_conf_rule_filter_check_direction, // FORT_RULE_FILTER_TYPE_DIRECTION,
+    &fort_conf_rule_filter_check_zones, // FORT_RULE_FILTER_TYPE_ZONES,
     &fort_conf_rule_filter_check_area, // FORT_RULE_FILTER_TYPE_AREA,
     &fort_conf_rule_filter_check_profile, // FORT_RULE_FILTER_TYPE_PROFILE,
     &fort_conf_rule_filter_check_action, // FORT_RULE_FILTER_TYPE_ACTION,

@@ -11,13 +11,14 @@
 
 class ActionRange;
 class AreaRange;
-class IpVerRange;
 class DirRange;
 class FirewallConf;
+class IpVerRange;
 class PortRange;
 class ProfileRange;
 class ProtoRange;
 class ValueRange;
+class ZonesRange;
 
 struct ParseAddressGroupsArgs
 {
@@ -56,6 +57,7 @@ public:
     void writeProtoRange(const ProtoRange &protoRange);
     void writeIpVerRange(const IpVerRange &ipVerRange);
     void writeDirRange(const DirRange &dirRange);
+    void writeZonesRange(const ZonesRange &zonesRange);
     void writeAreaRange(const AreaRange &areaRange);
     void writeProfileRange(const ProfileRange &profileRange);
     void writeActionRange(const ActionRange &actionRange);

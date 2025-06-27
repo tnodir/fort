@@ -67,12 +67,23 @@ RuleCharType getCharType(RuleCharType prevCharType, const QChar c, const char *e
 
 bool RuleFilter::isTypeAddress() const
 {
-    return type == FORT_RULE_FILTER_TYPE_ADDRESS || type == FORT_RULE_FILTER_TYPE_AREA;
+    return type == FORT_RULE_FILTER_TYPE_ADDRESS || type == FORT_RULE_FILTER_TYPE_ZONES
+            || type == FORT_RULE_FILTER_TYPE_AREA;
 }
 
 bool RuleFilter::isTypeList() const
 {
     return type == FORT_RULE_FILTER_TYPE_LIST_AND || type == FORT_RULE_FILTER_TYPE_LIST_OR;
+}
+
+bool RuleFilter::isEmpty() const
+{
+    return !(hasValues() || hasDefaultValue());
+}
+
+bool RuleFilter::hasDefaultValue() const
+{
+    return type == FORT_RULE_FILTER_TYPE_ZONES;
 }
 
 RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent), m_text(text)
@@ -302,6 +313,7 @@ bool RuleTextParser::parseName()
         { "ip_version", FORT_RULE_FILTER_TYPE_IP_VERSION },
         { "dir", FORT_RULE_FILTER_TYPE_DIRECTION },
         { "direction", FORT_RULE_FILTER_TYPE_DIRECTION },
+        { "zones", FORT_RULE_FILTER_TYPE_ZONES },
         { "area", FORT_RULE_FILTER_TYPE_AREA },
         { "profile", FORT_RULE_FILTER_TYPE_PROFILE },
         { "act", FORT_RULE_FILTER_TYPE_ACTION },
@@ -454,7 +466,7 @@ bool RuleTextParser::checkValueEnd(bool &expectValueEnd)
 
 bool RuleTextParser::checkAddFilter()
 {
-    if (!(m_ruleFilter.hasValues() || m_ruleFilter.equalValues))
+    if (m_ruleFilter.isEmpty() && !m_ruleFilter.equalValues)
         return true;
 
     if (m_ruleFilter.type == FORT_RULE_FILTER_TYPE_INVALID) {

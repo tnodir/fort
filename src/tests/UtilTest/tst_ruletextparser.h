@@ -174,6 +174,22 @@ TEST_F(RuleTextParserTest, filterDirUdp)
     }
 }
 
+TEST_F(RuleTextParserTest, filterZones)
+{
+    RuleTextParser p("zones()");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 1);
+
+    // Check Zones
+    {
+        const RuleFilter &rf = p.ruleFilters()[0];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ZONES);
+        ASSERT_TRUE(rf.values.isEmpty());
+    }
+}
+
 TEST_F(RuleTextParserTest, filterArea)
 {
     RuleTextParser p("area(localhost,lan,inet)");

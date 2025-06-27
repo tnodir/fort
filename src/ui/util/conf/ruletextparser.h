@@ -40,8 +40,10 @@ class RuleFilter
 public:
     bool isTypeAddress() const;
     bool isTypeList() const;
-    bool hasValues() const { return !values.isEmpty(); }
+    bool isEmpty() const;
+    bool hasDefaultValue() const;
 
+    bool hasValues() const { return !values.isEmpty(); }
     void addValue(const QStringView v) { values.append(v); }
 
 public:

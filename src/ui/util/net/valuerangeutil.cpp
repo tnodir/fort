@@ -10,6 +10,7 @@
 #include "portrange.h"
 #include "profilerange.h"
 #include "protorange.h"
+#include "zonesrange.h"
 
 namespace {
 
@@ -19,6 +20,7 @@ enum RangeType : qint8 {
     RangeTypeProto,
     RangeTypeIpVer,
     RangeTypeDir,
+    RangeTypeZones,
     RangeTypeArea,
     RangeTypeProfile,
     RangeTypeAction,
@@ -33,6 +35,7 @@ RangeType g_filterRangeTypes[] = {
     RangeTypeProto, // FORT_RULE_FILTER_TYPE_PROTOCOL,
     RangeTypeIpVer, // FORT_RULE_FILTER_TYPE_IP_VERSION,
     RangeTypeDir, // FORT_RULE_FILTER_TYPE_DIRECTION,
+    RangeTypeZones, // FORT_RULE_FILTER_TYPE_ZONES,
     RangeTypeArea, // FORT_RULE_FILTER_TYPE_AREA,
     RangeTypeProfile, // FORT_RULE_FILTER_TYPE_PROFILE,
     RangeTypeAction, // FORT_RULE_FILTER_TYPE_ACTION,
@@ -55,6 +58,7 @@ static const createRange_func createRange_funcList[] = {
     &createRange<ProtoRange>, // RangeTypeProto
     &createRange<IpVerRange>, // RangeTypeIpVer
     &createRange<DirRange>, // RangeTypeDir
+    &createRange<ZonesRange>, // RangeZonesZones
     &createRange<AreaRange>, // RangeTypeArea
     &createRange<ProfileRange>, // RangeTypeProfile
     &createRange<ActionRange>, // RangeTypeAction
