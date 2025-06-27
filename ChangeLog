@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.18.4, 2025-06-27:
+- UI: Rule: Add "Inline Zones" flag (#571).
+- UI: Options: Tray: Add "Switch Window visibility" flag (#557).
+- UI: Programs: Sort Rules by name (#558).
+
 v3.18.3, 2025-06-23:
 - UI: Programs: Add "Timer" menu actions; Show "Time left" for scheduled action (#568).
 - UI: Programs: Add "Copy Path", "Open Folder" menu items (#562).
