@@ -509,7 +509,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
 {
     const BOOL inline_zones = rule->inline_zones;
     if (inline_zones) {
-        conn->zones_filtered = conn->zones_accepted = conn->zones_rejected = FALSE;
+        conn->zones_filtered = FALSE;
     }
 
     if (!rule->has_zones)
