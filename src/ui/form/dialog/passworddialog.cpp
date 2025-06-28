@@ -77,6 +77,9 @@ void PasswordDialog::setupUi()
 
     // Icon
     this->setWindowIcon(GuiUtil::overlayIcon(":/icons/fort.png", ":/icons/key.png"));
+
+    // Size Grip
+    this->setSizeGripEnabled(true);
 }
 
 QLayout *PasswordDialog::setupPasswordLayout()
