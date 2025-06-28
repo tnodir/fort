@@ -278,7 +278,7 @@ void ZonesWindow::editSelectedZone()
     openZoneEditForm(zoneRow);
 }
 
-void ZonesWindow::openZoneEditForm(const ZoneRow &zoneRow)
+void ZonesWindow::openZoneEditForm(const Zone &zone)
 {
     if (!m_formZoneEdit) {
         m_formZoneEdit = new ZoneEditDialog(ctrl(), this);
@@ -288,7 +288,7 @@ void ZonesWindow::openZoneEditForm(const ZoneRow &zoneRow)
         });
     }
 
-    m_formZoneEdit->initialize(zoneRow);
+    m_formZoneEdit->initialize(zone);
 
     WidgetWindow::showWidget(m_formZoneEdit);
 }

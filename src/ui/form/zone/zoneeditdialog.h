@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include <model/zonelistmodel.h>
+#include <conf/zone.h>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QComboBox)
@@ -28,9 +28,9 @@ public:
     ZonesController *ctrl() const { return m_ctrl; }
     ZoneListModel *zoneListModel() const;
 
-    bool isEmpty() const { return m_zoneRow.zoneId == 0; }
+    bool isEmpty() const { return m_zone.zoneId == 0; }
 
-    void initialize(const ZoneRow &zoneRow);
+    void initialize(const Zone &zone);
 
 signals:
     void saved();
@@ -81,7 +81,7 @@ private:
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 
-    ZoneRow m_zoneRow;
+    Zone m_zone;
 };
 
 #endif // ZONEEDITDIALOG_H

@@ -12,6 +12,7 @@
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
 #include <manager/windowmanager.h>
+#include <model/zonelistmodel.h>
 #include <model/zonesourcewrapper.h>
 #include <util/guiutil.h>
 #include <util/net/netutil.h>
@@ -30,22 +31,22 @@ ZoneListModel *ZoneEditDialog::zoneListModel() const
     return ctrl()->zoneListModel();
 }
 
-void ZoneEditDialog::initialize(const ZoneRow &zoneRow)
+void ZoneEditDialog::initialize(const Zone &zone)
 {
-    m_zoneRow = zoneRow;
+    m_zone = zone;
 
     retranslateUi();
 
-    const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(zoneRow.sourceCode));
+    const ZoneSourceWrapper zoneSource(zoneListModel()->zoneSourceByCode(zone.sourceCode));
 
-    m_editName->setStartText(zoneRow.zoneName);
+    m_editName->setStartText(zone.zoneName);
     m_comboSources->setCurrentIndex(zoneSource.id());
-    m_cbEnabled->setChecked(zoneRow.enabled);
+    m_cbEnabled->setChecked(zone.enabled);
 
-    m_cbCustomUrl->setChecked(zoneRow.customUrl);
-    m_editUrl->setText(zoneRow.url);
-    m_editFormData->setText(zoneRow.formData);
-    m_editText->setText(zoneRow.textInline);
+    m_cbCustomUrl->setChecked(zone.customUrl);
+    m_editUrl->setText(zone.url);
+    m_editFormData->setText(zone.formData);
+    m_editText->setText(zone.textInline);
 
     initializeBySource(zoneSource);
 
@@ -299,14 +300,14 @@ bool ZoneEditDialog::save()
 
 bool ZoneEditDialog::saveZone(Zone &zone)
 {
-    if (!zone.isOptionsEqual(m_zoneRow)) {
-        zone.zoneId = m_zoneRow.zoneId;
+    if (!zone.isOptionsEqual(m_zone)) {
+        zone.zoneId = m_zone.zoneId;
 
         return ctrl()->addOrUpdateZone(zone);
     }
 
-    if (!zone.isNameEqual(m_zoneRow)) {
-        return ctrl()->updateZoneName(m_zoneRow.zoneId, zone.zoneName);
+    if (!zone.isNameEqual(m_zone)) {
+        return ctrl()->updateZoneName(m_zone.zoneId, zone.zoneName);
     }
 
     return true;

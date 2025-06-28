@@ -9,11 +9,10 @@ class IniUser;
 class TableView;
 class TaskManager;
 class WindowManager;
+class Zone;
 class ZoneEditDialog;
 class ZoneListModel;
 class ZonesController;
-
-struct ZoneRow;
 
 class ZonesWindow : public FormWindow
 {
@@ -53,7 +52,7 @@ private:
     void addNewZone();
     void editSelectedZone();
 
-    void openZoneEditForm(const ZoneRow &zoneRow);
+    void openZoneEditForm(const Zone &zone);
 
     void deleteZone(int row);
     void deleteSelectedZone();
