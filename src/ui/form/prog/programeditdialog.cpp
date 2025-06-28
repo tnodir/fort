@@ -52,8 +52,6 @@ ProgramEditDialog::ProgramEditDialog(
     ProgramEditDialogBase(ctrl, parent, f)
 {
     setupUi();
-    setupController();
-    setupRuleManager();
 }
 
 void ProgramEditDialog::initialize(const App &app, const QVector<qint64> &appIdList)
