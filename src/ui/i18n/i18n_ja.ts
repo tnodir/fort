@@ -1113,7 +1113,7 @@
     </message>
     <message>
         <source>Switch Window visibility</source>
-        <translation type="unfinished"></translation>
+        <translation>ウィンドウの表示を切り替える</translation>
     </message>
 </context>
 <context>
@@ -2031,7 +2031,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Inline Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>インライン ゾーン</translation>
     </message>
 </context>
 <context>
