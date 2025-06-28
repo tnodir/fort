@@ -25,6 +25,7 @@
 #include <fortsettings.h>
 #include <stat/statmanager.h>
 #include <user/usersettings.h>
+#include <util/bitutil.h>
 #include <util/guiutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
@@ -573,68 +574,46 @@ void WindowManager::switchGraphWindow()
 
 void WindowManager::showWindowByCode(WindowCode code)
 {
-    switch (code) {
-    case WindowHome: {
-        showHomeWindow();
-    } break;
-    case WindowPrograms: {
-        showProgramsWindow();
-    } break;
-    case WindowProgramAlert: {
-        showProgramAlertWindow();
-    } break;
-    case WindowServices: {
-        showServicesWindow();
-    } break;
-    case WindowOptions: {
-        showOptionsWindow();
-    } break;
-    case WindowRules: {
-        showRulesWindow();
-    } break;
-    case WindowStatistics: {
-        showStatisticsWindow();
-    } break;
-    case WindowZones: {
-        showZonesWindow();
-    } break;
-    case WindowGraph: {
-        showGraphWindow();
-    } break;
-    }
+    if (Q_UNLIKELY(code < WindowHome || code > WindowGraph))
+        return;
+
+    static const std::function<void()> showFuncs[] = {
+        [&] { showHomeWindow(); },
+        [&] { showProgramsWindow(); },
+        [&] { showProgramAlertWindow(); },
+        [&] { showServicesWindow(); },
+        [&] { showOptionsWindow(); },
+        [&] { showRulesWindow(); },
+        [&] { showStatisticsWindow(); },
+        [&] { showZonesWindow(); },
+        [&] { showGraphWindow(); },
+    };
+
+    const int index = BitUtil::bitScanForward(code);
+
+    showFuncs[index]();
 }
 
 void WindowManager::closeWindowByCode(WindowCode code)
 {
-    switch (code) {
-    case WindowHome: {
-        closeHomeWindow();
-    } break;
-    case WindowPrograms: {
-        closeProgramsWindow();
-    } break;
-    case WindowProgramAlert: {
-        closeProgramAlertWindow();
-    } break;
-    case WindowServices: {
-        closeServicesWindow();
-    } break;
-    case WindowOptions: {
-        closeOptionsWindow();
-    } break;
-    case WindowRules: {
-        closeRulesWindow();
-    } break;
-    case WindowStatistics: {
-        closeStatisticsWindow();
-    } break;
-    case WindowZones: {
-        closeZonesWindow();
-    } break;
-    case WindowGraph: {
-        closeGraphWindow();
-    } break;
-    }
+    if (Q_UNLIKELY(code < WindowHome || code > WindowGraph))
+        return;
+
+    static const std::function<void()> closeFuncs[] = {
+        [&] { closeHomeWindow(); },
+        [&] { closeProgramsWindow(); },
+        [&] { closeProgramAlertWindow(); },
+        [&] { closeServicesWindow(); },
+        [&] { closeOptionsWindow(); },
+        [&] { closeRulesWindow(); },
+        [&] { closeStatisticsWindow(); },
+        [&] { closeZonesWindow(); },
+        [&] { closeGraphWindow(); },
+    };
+
+    const int index = BitUtil::bitScanForward(code);
+
+    closeFuncs[index]();
 }
 
 void WindowManager::switchWindowByCode(WindowCode code)
