@@ -213,8 +213,10 @@ void TrafficPage::setupClearMenu()
 
 void TrafficPage::setupRefresh()
 {
-    m_btRefresh = ControlUtil::createFlatToolButton(
-            ":/icons/arrow_refresh_small.png", [&] { trafListModel()->reset(); });
+    m_btRefresh = ControlUtil::createFlatToolButton(":/icons/arrow_refresh_small.png", [&] {
+        appStatModel()->refresh();
+        trafListModel()->reset();
+    });
 }
 
 void TrafficPage::setupTrafUnits()
