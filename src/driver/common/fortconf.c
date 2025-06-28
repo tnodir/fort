@@ -511,7 +511,8 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones_result(PFORT_CONF_META
     const BOOL rejected = (opt.reject.filtered && opt.reject.included);
 
     if (rule->inline_zones) {
-        conn->zones_filtered = TRUE;
+        conn->zones_accept_filtered = opt.accept.filtered;
+        conn->zones_reject_filtered = opt.reject.filtered;
         conn->zones_accepted = (UCHAR) accepted;
         conn->zones_rejected = (UCHAR) rejected;
         return FALSE;
@@ -530,7 +531,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
     if (rule->inline_zones) {
-        conn->zones_filtered = FALSE;
+        conn->zones_accept_filtered = conn->zones_reject_filtered = FALSE;
     }
 
     PCFORT_CONF_ZONES zones = rule->has_zones ? rules_rt->zones : NULL;
@@ -631,21 +632,18 @@ static BOOL fort_conf_rule_filter_check_direction(PFORT_CONF_META_CONN conn, con
 
 static BOOL fort_conf_rule_filter_check_zones(PFORT_CONF_META_CONN conn, const void *data)
 {
-    if (!conn->zones_filtered)
+    if (!(conn->zones_accept_filtered || conn->zones_reject_filtered))
         return FALSE;
 
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
 
-    const BOOL accepted = conn->zones_accepted;
-    const BOOL rejected = conn->zones_rejected;
-
     switch (flags) {
     case FORT_RULE_FILTER_ZONES_ACCEPTED:
-        return accepted;
+        return conn->zones_accept_filtered && conn->zones_accepted;
     case FORT_RULE_FILTER_ZONES_REJECTED:
-        return rejected;
+        return conn->zones_reject_filtered && conn->zones_rejected;
     default:
-        return accepted && !rejected;
+        return conn->zones_accepted && !conn->zones_rejected;
     }
 }
 

@@ -375,7 +375,8 @@ typedef struct fort_conf_meta_conn
 
     UINT16 rule_filter_action : 1;
 
-    UCHAR zones_filtered : 1;
+    UCHAR zones_accept_filtered : 1;
+    UCHAR zones_reject_filtered : 1;
     UCHAR zones_accepted : 1;
     UCHAR zones_rejected : 1;
 
