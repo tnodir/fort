@@ -10,8 +10,6 @@ class WidgetWindow : public QWidget
 public:
     explicit WidgetWindow(QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
-    virtual bool deleteOnClose() const { return true; }
-
     void showWindow(bool activate = true);
     void exposeWindow();
 

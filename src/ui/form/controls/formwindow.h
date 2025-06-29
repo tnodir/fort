@@ -31,6 +31,8 @@ public:
     virtual WindowCode windowCode() const { return WindowNone; }
     virtual QString windowOverlayIconPath() const { return {}; }
 
+    virtual bool deleteOnClose() const { return true; }
+
     bool excludeFromCapture() const { return m_excludeFromCapture; }
     void setExcludeFromCapture(bool v);
 
@@ -39,7 +41,8 @@ public:
     virtual void saveWindowState(bool wasVisible) { Q_UNUSED(wasVisible); }
     virtual void restoreWindowState() { }
 
-    virtual void cancelChanges() { }
+signals:
+    void aboutToDelete();
 
 protected:
     void setupFormWindow(IniUser *iniUser, const QString &iniGroup);

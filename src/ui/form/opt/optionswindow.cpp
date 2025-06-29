@@ -24,6 +24,7 @@ OptionsWindow::OptionsWindow(QWidget *parent) :
     setupFormWindow(iniUser(), IniUser::optWindowGroup());
 
     connect(this, &OptionsWindow::aboutToShow, this, &OptionsWindow::checkDeprecated);
+    connect(this, &OptionsWindow::aboutToDelete, this, &OptionsWindow::cancelChanges);
 }
 
 ConfManager *OptionsWindow::confManager() const
@@ -39,13 +40,6 @@ IniUser *OptionsWindow::iniUser() const
 void OptionsWindow::selectTab(int index)
 {
     m_mainPage->selectTab(index);
-}
-
-void OptionsWindow::cancelChanges()
-{
-    if (ctrl()->confToEdit() && ctrl()->anyEdited()) {
-        ctrl()->resetEdited();
-    }
 }
 
 void OptionsWindow::saveWindowState(bool /*wasVisible*/)
@@ -64,6 +58,13 @@ void OptionsWindow::restoreWindowState()
             iniUser()->optWindowMaximized());
 
     emit ctrl()->afterRestoreWindowState(iniUser());
+}
+
+void OptionsWindow::cancelChanges()
+{
+    if (ctrl()->confToEdit() && ctrl()->anyEdited()) {
+        ctrl()->resetEdited();
+    }
 }
 
 void OptionsWindow::setupController()

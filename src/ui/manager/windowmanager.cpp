@@ -847,7 +847,7 @@ bool WindowManager::closeWindow(FormWindow *w)
     }
 
     if (m_isAppQuitting || w->deleteOnClose()) {
-        w->cancelChanges();
+        emit w->aboutToDelete();
         w->deleteLater();
         return true;
     }

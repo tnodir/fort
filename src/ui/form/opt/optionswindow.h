@@ -25,10 +25,11 @@ public:
 
     void selectTab(int index);
 
-    void cancelChanges() override;
-
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
+
+protected slots:
+    void cancelChanges();
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
