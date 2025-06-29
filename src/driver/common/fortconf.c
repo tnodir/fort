@@ -630,6 +630,21 @@ static BOOL fort_conf_rule_filter_check_direction(PFORT_CONF_META_CONN conn, con
     return (flags & conn_flags) != 0;
 }
 
+inline static BOOL fort_conf_rule_filter_check_zones_accepted(PFORT_CONF_META_CONN conn)
+{
+    return conn->zones_accept_filtered && conn->zones_accepted;
+}
+
+inline static BOOL fort_conf_rule_filter_check_zones_rejected(PFORT_CONF_META_CONN conn)
+{
+    return conn->zones_reject_filtered && conn->zones_rejected;
+}
+
+inline static BOOL fort_conf_rule_filter_check_zones_result(PFORT_CONF_META_CONN conn)
+{
+    return conn->zones_accepted && !conn->zones_rejected;
+}
+
 static BOOL fort_conf_rule_filter_check_zones(PFORT_CONF_META_CONN conn, const void *data)
 {
     if (!(conn->zones_accept_filtered || conn->zones_reject_filtered))
@@ -639,11 +654,11 @@ static BOOL fort_conf_rule_filter_check_zones(PFORT_CONF_META_CONN conn, const v
 
     switch (flags) {
     case FORT_RULE_FILTER_ZONES_ACCEPTED:
-        return conn->zones_accept_filtered && conn->zones_accepted;
+        return fort_conf_rule_filter_check_zones_accepted(conn);
     case FORT_RULE_FILTER_ZONES_REJECTED:
-        return conn->zones_reject_filtered && conn->zones_rejected;
+        return fort_conf_rule_filter_check_zones_rejected(conn);
     default:
-        return conn->zones_accepted && !conn->zones_rejected;
+        return fort_conf_rule_filter_check_zones_result(conn);
     }
 }
 
