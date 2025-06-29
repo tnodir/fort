@@ -497,8 +497,8 @@ void TrayIcon::setupTrayMenuTopActions()
             { ":/icons/application.png", this, SLOT(onShowWindowAction()), WindowPrograms });
     addHotKey(m_programsAction, HotKey::programs);
 
-    m_programsOrAlertAction = addAction(m_menu,
-            { QString(), this, SLOT(showProgramsOrAlertWindow()), ActionShowProgramsOrAlert });
+    m_programsOrAlertAction =
+            addAction(m_menu, { QString(), this, SLOT(showProgramsOrAlertWindow()) });
     m_programsOrAlertAction->setVisible(false);
 
     setupTrayMenuOptions();
@@ -1187,7 +1187,7 @@ void TrayIcon::showProgramsOrAlertWindow()
     if (m_alerted) {
         windowManager()->showProgramAlertWindow();
     } else {
-        windowManager()->showProgramsWindow();
+        m_programsAction->trigger();
     }
 }
 
