@@ -14,6 +14,7 @@ public:
     void exposeWindow();
 
     void centerTo(QWidget *w);
+    void centerTo(QScreen *s);
 
     static void showWidget(QWidget *w, bool activate = true);
     static void exposeWidget(QWidget *w);
@@ -44,6 +45,8 @@ protected:
 
     void changeEvent(QEvent *event) override;
     bool event(QEvent *event) override;
+
+    void ensureWindowScreenBounds();
 };
 
 #endif // WIDGETWINDOW_H

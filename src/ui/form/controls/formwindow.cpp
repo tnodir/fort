@@ -60,6 +60,8 @@ void FormWindow::setupStateWatcher()
     m_stateWatcher->install(this);
 
     restoreWindowState();
+
+    ensureWindowScreenBounds();
 }
 
 void FormWindow::setupWindowCapture(IniUser *iniUser, const QString &iniGroup)

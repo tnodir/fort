@@ -1,5 +1,6 @@
 #include "widgetwindow.h"
 
+#include <QGuiApplication>
 #include <QWindowStateChangeEvent>
 
 #include <util/osutil.h>
@@ -23,6 +24,13 @@ void WidgetWindow::exposeWindow()
 void WidgetWindow::centerTo(QWidget *w)
 {
     this->move(w->frameGeometry().topLeft() + w->rect().center() - this->rect().center());
+}
+
+void WidgetWindow::centerTo(QScreen *s)
+{
+    const QRect r = s->availableGeometry();
+
+    this->move(r.topLeft() + r.center() - this->rect().center());
 }
 
 void WidgetWindow::showWidget(QWidget *w, bool activate)
@@ -146,4 +154,14 @@ bool WidgetWindow::event(QEvent *event)
     }
 
     return res;
+}
+
+void WidgetWindow::ensureWindowScreenBounds()
+{
+    const auto p = this->geometry().center();
+    const auto screen = QGuiApplication::screenAt(p);
+
+    if (!screen) {
+        centerTo(QGuiApplication::primaryScreen());
+    }
 }
