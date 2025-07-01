@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.18.5, 2025-07-01:
+- UI: Ensure window's center is visible on screen (#577).
+- UI: Tray: Improve "Show Programs or Alert Window" action (#557).
+- UI: Statistics: Make the Ctrl+DoubleClick-ed tab active when window opens (#247).
+- UI: Statistics: Traffic: "Refresh" updates apps too.
+- UI: Update SQLite to 3.50.2
+
 v3.18.4, 2025-06-27:
 - UI: Rule: Add "Inline Zones" flag (#571).
 - UI: Options: Tray: Add "Switch Window visibility" flag (#557).
