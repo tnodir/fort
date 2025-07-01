@@ -2300,6 +2300,13 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     </message>
 </context>
 <context>
+    <name>StatBasePage</name>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>Naj bo ta zavihek aktiven, ko se odpre okno?</translation>
+    </message>
+</context>
+<context>
     <name>StatMainPage</name>
     <message>
         <source>Traffic</source>

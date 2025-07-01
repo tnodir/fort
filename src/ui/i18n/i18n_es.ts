@@ -2034,7 +2034,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     </message>
     <message>
         <source>Inline Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonas en línea</translation>
     </message>
 </context>
 <context>
@@ -2300,6 +2300,13 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Please restart the computer to reload changed services!</source>
         <translation>¡Por favor, reinicie el equipo para recargar los servicios modificados!</translation>
+    </message>
+</context>
+<context>
+    <name>StatBasePage</name>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

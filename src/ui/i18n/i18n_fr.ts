@@ -2300,6 +2300,13 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     </message>
 </context>
 <context>
+    <name>StatBasePage</name>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>StatMainPage</name>
     <message>
         <source>Traffic</source>

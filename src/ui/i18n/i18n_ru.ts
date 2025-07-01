@@ -2300,6 +2300,13 @@ Please restart the running program to take effect of this option.</source>
     </message>
 </context>
 <context>
+    <name>StatBasePage</name>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation>Сделать эту вкладку активной при открытии окна?</translation>
+    </message>
+</context>
+<context>
     <name>StatMainPage</name>
     <message>
         <source>Traffic</source>

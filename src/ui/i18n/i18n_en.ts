@@ -2289,6 +2289,13 @@ Please restart the running program to take effect of this option.</source>
     </message>
 </context>
 <context>
+    <name>StatBasePage</name>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>StatMainPage</name>
     <message>
         <source>Traffic</source>

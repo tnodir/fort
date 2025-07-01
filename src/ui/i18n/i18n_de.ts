@@ -2300,6 +2300,13 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     </message>
 </context>
 <context>
+    <name>StatBasePage</name>
+    <message>
+        <source>Make this tab active when window opens?</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>StatMainPage</name>
     <message>
         <source>Traffic</source>
