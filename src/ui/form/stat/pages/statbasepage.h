@@ -44,6 +44,8 @@ protected slots:
 
     virtual void onRetranslateUi() { }
 
+    void saveTabIndex(const QString &iniKey, int tabIndex);
+
 private:
     void setupController();
 

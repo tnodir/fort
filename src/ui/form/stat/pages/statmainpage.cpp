@@ -54,6 +54,9 @@ void StatMainPage::setupTabBar()
     m_tabWidget->addTab(connectionsPage, IconCache::icon(":/icons/connect.png"), QString());
 
     setupCornerWidget();
+
+    connect(m_tabWidget, &QTabWidget::tabBarDoubleClicked, this,
+            [&](int index) { saveTabIndex(iniUser()->statTabIndexKey(), index); });
 }
 
 void StatMainPage::setupCornerWidget()

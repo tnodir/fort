@@ -272,6 +272,9 @@ void TrafficPage::setupTabBar()
     for (int n = 4; --n >= 0;) {
         m_tabBar->addTab(QString());
     }
+
+    connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this,
+            [&](int index) { saveTabIndex(iniUser()->statTrafTabIndexKey(), index); });
 }
 
 void TrafficPage::setupTableTraf()

@@ -1,8 +1,11 @@
 #include "statbasepage.h"
 
+#include <QGuiApplication>
+
 #include <conf/firewallconf.h>
 #include <form/stat/statisticscontroller.h>
 #include <fortmanager.h>
+#include <manager/windowmanager.h>
 #include <user/iniuser.h>
 
 StatBasePage::StatBasePage(StatisticsController *ctrl, QWidget *parent) :
@@ -39,6 +42,15 @@ TranslationManager *StatBasePage::translationManager() const
 WindowManager *StatBasePage::windowManager() const
 {
     return ctrl()->windowManager();
+}
+
+void StatBasePage::saveTabIndex(const QString &iniKey, int tabIndex)
+{
+    if (QGuiApplication::keyboardModifiers() != Qt::ControlModifier)
+        return;
+
+    windowManager()->showConfirmBox([=, this] { iniUser()->setValue(iniKey, tabIndex); },
+            tr("Make this tab active when window opens?"));
 }
 
 void StatBasePage::setupController()

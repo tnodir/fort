@@ -433,11 +433,13 @@ public:
     bool statWindowMaximized() const { return valueBool("statWindow/maximized"); }
     void setStatWindowMaximized(bool on) { setValue("statWindow/maximized", on); }
 
-    int statTabIndex() const { return valueInt("statWindow/tabIndex"); }
-    void setStatTabIndex(int v) { setValue("statWindow/tabIndex", v); }
+    static QString statTabIndexKey() { return "statWindow/tabIndex"; }
+    int statTabIndex() const { return valueInt(statTabIndexKey()); }
+    void setStatTabIndex(int v) { setValue(statTabIndexKey(), v); }
 
-    int statTrafTabIndex() const { return valueInt("statWindow/trafTabIndex"); }
-    void setStatTrafTabIndex(int v) { setValue("statWindow/trafTabIndex", v); }
+    static QString statTrafTabIndexKey() { return "statWindow/trafTabIndex"; }
+    int statTrafTabIndex() const { return valueInt(statTrafTabIndexKey()); }
+    void setStatTrafTabIndex(int v) { setValue(statTrafTabIndexKey(), v); }
 
     int statTrafUnit() const { return valueInt("statWindow/trafUnit"); }
     void setStatTrafUnit(int v) { setValue("statWindow/trafUnit", v); }
