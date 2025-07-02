@@ -2303,7 +2303,7 @@ Please restart the running program to take effect of this option.</source>
     <name>StatBasePage</name>
     <message>
         <source>Make this tab active when window opens?</source>
-        <translation type="unfinished"></translation>
+        <translation>창이 열리면 이 탭을 활성화하시겠습니까?</translation>
     </message>
 </context>
 <context>

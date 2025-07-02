@@ -2303,7 +2303,7 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <name>StatBasePage</name>
     <message>
         <source>Make this tab active when window opens?</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendere questa scheda attiva quando si apre la finestra?</translation>
     </message>
 </context>
 <context>

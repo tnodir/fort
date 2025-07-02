@@ -2303,7 +2303,7 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <name>StatBasePage</name>
     <message>
         <source>Make this tab active when window opens?</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendre cet onglet actif quand la fenêtre s&apos;ouvre ?</translation>
     </message>
 </context>
 <context>

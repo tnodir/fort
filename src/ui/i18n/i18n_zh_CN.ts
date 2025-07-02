@@ -2303,7 +2303,7 @@ Please restart the running program to take effect of this option.</source>
     <name>StatBasePage</name>
     <message>
         <source>Make this tab active when window opens?</source>
-        <translation type="unfinished"></translation>
+        <translation>当窗口打开时启用此标签吗？</translation>
     </message>
 </context>
 <context>

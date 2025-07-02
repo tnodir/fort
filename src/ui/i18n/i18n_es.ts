@@ -2306,7 +2306,7 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <name>StatBasePage</name>
     <message>
         <source>Make this tab active when window opens?</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Hacer esta pestaña activa al abrir la ventana?</translation>
     </message>
 </context>
 <context>
