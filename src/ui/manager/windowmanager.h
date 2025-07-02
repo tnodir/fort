@@ -123,8 +123,7 @@ public slots:
     void processRestartRequired(const QString &info = {});
 
     bool checkWindowPassword(WindowCode code);
-    virtual bool checkPassword(bool temporary = false);
-    bool uncheckTemporaryPassword();
+    virtual bool checkPassword(WindowCode code = WindowNone);
 
     virtual void showErrorBox(
             const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
@@ -171,7 +170,7 @@ private:
     void closeAll();
     void quitApp();
 
-    bool checkPasswordDialog(FortSettings *settings, bool temporary = false);
+    bool checkPasswordDialog(WindowCode code, FortSettings *settings);
 
     void onTrayMessageClicked();
 
@@ -182,10 +181,14 @@ private:
     void windowClosed(WindowCode code);
     bool isAnyWindowOpen(quint32 codes) const;
 
+    void windowUnlocked(WindowCode code);
+    bool isAnyWindowUnlocked(quint32 codes = quint32(-1)) const;
+
 private:
     bool m_isAppQuitting = false;
 
     quint32 m_openedWindows = 0;
+    quint32 m_unlockedWindows = 0;
 
     TrayMessageType m_lastTrayMessageType = TrayMessageOptions;
 

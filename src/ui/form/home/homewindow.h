@@ -34,6 +34,8 @@ public slots:
 private slots:
     void onActivationChanged(bool isActive);
 
+    void onPasswordUnlock();
+
 private:
     void setupController();
 

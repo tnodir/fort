@@ -96,6 +96,13 @@ void HomeWindow::onActivationChanged(bool isActive)
     }
 }
 
+void HomeWindow::onPasswordUnlock()
+{
+    if (windowManager()->checkPassword()) {
+        ctrl()->setPasswordLocked(false);
+    }
+}
+
 void HomeWindow::retranslateUi()
 {
     this->unsetLocale();
@@ -194,8 +201,8 @@ void HomeWindow::setupPasswordButtons()
 
     m_btPasswordUnlock = ControlUtil::createToolButton(":/icons/lock_open.png");
 
-    connect(m_btPasswordUnlock, &QToolButton::clicked, windowManager(),
-            &WindowManager::checkPassword, Qt::QueuedConnection);
+    connect(m_btPasswordUnlock, &QToolButton::clicked, this, &HomeWindow::onPasswordUnlock,
+            Qt::QueuedConnection);
 
     const auto refreshPasswordButtons = [&] {
         m_btPasswordLock->setVisible(settings()->hasPassword() && !ctrl()->passwordLocked());

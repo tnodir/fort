@@ -18,7 +18,7 @@ public slots:
 
     bool showProgramEditForm(const QString &appPath) override;
 
-    bool checkPassword(bool temporary = false) override;
+    bool checkPassword(WindowCode code = WindowNone) override;
 
     void showErrorBox(const QString &text, const QString &title = QString(),
             QWidget *parent = nullptr) override;

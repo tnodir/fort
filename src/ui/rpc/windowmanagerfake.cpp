@@ -21,7 +21,7 @@ bool WindowManagerFake::showProgramEditForm(const QString & /*appPath*/)
     return false;
 }
 
-bool WindowManagerFake::checkPassword(bool /*temporary*/)
+bool WindowManagerFake::checkPassword(WindowCode /*code*/)
 {
     return !IoC<FortSettings>()->hasPassword();
 }
