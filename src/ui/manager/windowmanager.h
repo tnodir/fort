@@ -111,7 +111,6 @@ public slots:
 
     void showGraphWindow();
     void closeGraphWindow();
-    void switchGraphWindow();
 
     void showWindowByCode(WindowCode code);
     void closeWindowByCode(WindowCode code);

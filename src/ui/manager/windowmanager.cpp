@@ -38,11 +38,6 @@ const QLoggingCategory LC("manager.window");
 
 bool g_isFusionStyle = false;
 
-inline bool isWindowVisible(WidgetWindow *w)
-{
-    return w && w->isVisible();
-}
-
 }
 
 WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
@@ -560,15 +555,6 @@ void WindowManager::closeGraphWindow()
 {
     if (closeWindow(m_graphWindow)) {
         m_graphWindow = nullptr;
-    }
-}
-
-void WindowManager::switchGraphWindow()
-{
-    if (isWindowVisible(m_graphWindow)) {
-        closeGraphWindow();
-    } else {
-        showGraphWindow();
     }
 }
 

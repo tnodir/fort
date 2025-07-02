@@ -941,7 +941,9 @@ void TrayIcon::onShowWindowAction()
 
     const auto windowCode = WindowCode(action->data().toInt());
 
-    if (iniUser()->traySwitchWindow()) {
+    constexpr int alwaysSwitchWindows = WindowGraph;
+
+    if ((windowCode & alwaysSwitchWindows) != 0 || iniUser()->traySwitchWindow()) {
         windowManager()->switchWindowByCode(windowCode);
     } else {
         windowManager()->showWindowByCode(windowCode);
