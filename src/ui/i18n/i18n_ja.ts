@@ -2303,7 +2303,7 @@ Please restart the running program to take effect of this option.</source>
     <name>StatBasePage</name>
     <message>
         <source>Make this tab active when window opens?</source>
-        <translation type="unfinished"></translation>
+        <translation>ウィンドウを開いた時にこのタブをアクティブにしますか？</translation>
     </message>
 </context>
 <context>
