@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.18.6, 2025-07-02:
+- UI: Tray: "Traffic Graph" window always switches (v3.18.4 regression) (#582).
+
 v3.18.5, 2025-07-01:
 - UI: Ensure window's center is visible on screen (#577).
 - UI: Tray: Improve "Show Programs or Alert Window" action (#557).
