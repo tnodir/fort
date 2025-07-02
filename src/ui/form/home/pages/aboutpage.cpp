@@ -169,4 +169,6 @@ void AboutPage::refreshAutoUpdate()
     m_btInstall->setVisible(hasUpdate && isDownloaded);
 
     m_btInstall->setToolTip(isDownloaded ? manager->installerPath() : QString());
+
+    m_btCheckUpdate->setVisible(!isDownloading);
 }
