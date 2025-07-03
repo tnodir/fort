@@ -834,14 +834,6 @@ void WindowManager::windowOpened(WindowCode code)
     emit windowVisibilityChanged(code, /*isVisible=*/true);
 }
 
-void WindowManager::windowClosed(WindowCode code)
-{
-    m_openedWindows &= ~code;
-    m_unlockedWindows &= ~code;
-
-    emit windowVisibilityChanged(code, /*isVisible=*/false);
-}
-
 bool WindowManager::isAnyWindowOpen(quint32 codes) const
 {
     return (m_openedWindows & codes) != 0;
@@ -861,6 +853,14 @@ bool WindowManager::isAnyWindowUnlocked(quint32 codes) const
     const quint32 openedOrUnlockedWindows = (openedProtectedWindows | m_unlockedWindows);
 
     return (openedOrUnlockedWindows & codes) != 0;
+}
+
+void WindowManager::windowClosed(WindowCode code)
+{
+    m_openedWindows &= ~code;
+    m_unlockedWindows &= ~code;
+
+    emit windowVisibilityChanged(code, /*isVisible=*/false);
 }
 
 bool WindowManager::activateModalWidget()

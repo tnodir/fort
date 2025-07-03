@@ -178,11 +178,12 @@ private:
     bool closeWindow(FormWindow *w);
 
     void windowOpened(WindowCode code);
-    void windowClosed(WindowCode code);
     bool isAnyWindowOpen(quint32 codes) const;
 
     void windowUnlocked(WindowCode code);
     bool isAnyWindowUnlocked(quint32 codes = quint32(-1)) const;
+
+    void windowClosed(WindowCode code);
 
 private:
     bool m_isAppQuitting = false;
