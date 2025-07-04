@@ -66,6 +66,7 @@ protected:
     bool updateRuleRow(const QString &sql, const QVariantHash &vars, RuleRow &ruleRow) const;
 
     QString sqlBase() const override;
+    QString sqlWhereRegexp() const override;
     QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;
 

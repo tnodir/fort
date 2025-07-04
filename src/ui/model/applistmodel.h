@@ -94,6 +94,7 @@ protected:
 
     QString sqlBase() const override;
     QString sqlWhere() const override;
+    QString sqlWhereRegexp() const override;
     QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;
 

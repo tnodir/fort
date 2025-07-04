@@ -315,6 +315,11 @@ QString AppListModel::sqlWhere() const
     return sql;
 }
 
+QString AppListModel::sqlWhereRegexp() const
+{
+    return " WHERE " + regexpFilterColumns();
+}
+
 QString AppListModel::sqlWhereFts() const
 {
     return " WHERE t.app_id IN ( SELECT rowid FROM app_fts(:match) )";

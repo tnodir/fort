@@ -88,8 +88,3 @@ QString FtsTableSqlModel::sqlWhere() const
 
     return {};
 }
-
-QString FtsTableSqlModel::sqlWhereRegexp() const
-{
-    return " WHERE " + regexpFilterColumns();
-}

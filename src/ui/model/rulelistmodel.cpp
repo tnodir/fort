@@ -342,6 +342,11 @@ QString RuleListModel::sqlBase() const
            "  WHERE rule_type = :type";
 }
 
+QString RuleListModel::sqlWhereRegexp() const
+{
+    return " AND " + regexpFilterColumns();
+}
+
 QString RuleListModel::sqlWhereFts() const
 {
     return " AND t.rule_id IN ( SELECT rowid FROM rule_fts(:match) )";

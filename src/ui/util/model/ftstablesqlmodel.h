@@ -26,7 +26,7 @@ protected:
     void fillQueryVars(QVariantHash &vars) const override;
 
     QString sqlWhere() const override;
-    virtual QString sqlWhereRegexp() const;
+    virtual QString sqlWhereRegexp() const = 0;
     virtual QString sqlWhereFts() const = 0;
 
     virtual const QStringList &regexpColumns() const = 0;
