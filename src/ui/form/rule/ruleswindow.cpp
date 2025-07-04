@@ -209,7 +209,7 @@ QLayout *RulesWindow::setupHeader()
 void RulesWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createLineEdit(
-            QString(), [&](const QString &text) { ruleListModel()->setFtsFilter(text); });
+            QString(), [&](const QString &text) { ruleListModel()->setTextFilter(text); });
     m_editSearch->setClearButtonEnabled(true);
     m_editSearch->setMaxLength(200);
     m_editSearch->setMinimumWidth(100);

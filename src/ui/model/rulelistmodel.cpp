@@ -352,6 +352,13 @@ QString RuleListModel::sqlOrderColumn() const
     return "rule_type, lower(name)";
 }
 
+const QStringList &RuleListModel::regexpColumns() const
+{
+    static const QStringList g_regexpColumns = { "t.name", "t.notes" };
+
+    return g_regexpColumns;
+}
+
 void RuleListModel::setSqlRuleType(qint8 v) const
 {
     if (m_sqlRuleType == v)

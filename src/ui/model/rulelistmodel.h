@@ -69,6 +69,8 @@ protected:
     QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;
 
+    const QStringList &regexpColumns() const override;
+
     quint8 sqlRuleType() const { return m_sqlRuleType; }
     void setSqlRuleType(qint8 v) const;
     void setSqlRuleType(const QModelIndex &index) const;

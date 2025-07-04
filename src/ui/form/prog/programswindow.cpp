@@ -398,7 +398,7 @@ void ProgramsWindow::setupTimerMenuActions()
 void ProgramsWindow::setupEditSearch()
 {
     m_editSearch = ControlUtil::createLineEdit(
-            QString(), [&](const QString &text) { appListModel()->setFtsFilter(text); });
+            QString(), [&](const QString &text) { appListModel()->setTextFilter(text); });
     m_editSearch->setClearButtonEnabled(true);
     m_editSearch->setMaxLength(200);
     m_editSearch->setMinimumWidth(100);

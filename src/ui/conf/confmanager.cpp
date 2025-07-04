@@ -233,12 +233,12 @@ SqliteDb::MigrateOptions migrateOptions()
             {
                 .contentTable = "app",
                 .contentRowid = "app_id",
-                .columns = { "path", "name", "notes" }
+                .columns = { "path", "name", "notes" },
             },
             {
                 .contentTable = "rule",
                 .contentRowid = "rule_id",
-                .columns = { "name", "notes" }
+                .columns = { "name", "notes" },
             },
         },
     };
@@ -990,8 +990,7 @@ void ConfManager::updateServices()
     updateOwnProcessServices(serviceInfoManager);
 }
 
-void ConfManager::updateDriverServices(
-        const QVector<ServiceInfo> &services, int processCount)
+void ConfManager::updateDriverServices(const QVector<ServiceInfo> &services, int processCount)
 {
     ConfBuffer confBuf;
 

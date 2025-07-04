@@ -97,6 +97,8 @@ protected:
     QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;
 
+    const QStringList &regexpColumns() const override;
+
     void addSqlFilter(QStringList &list, const QString &name, FilterFlag flag) const;
 
 private:

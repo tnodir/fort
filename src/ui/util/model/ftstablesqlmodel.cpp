@@ -2,6 +2,20 @@
 
 namespace {
 
+QString makeRegexpFilterColumns(const QStringList &columns)
+{
+    if (columns.isEmpty())
+        return {};
+
+    QStringList list;
+
+    for (const QString &column : columns) {
+        list << (column + " REGEXP :regexp");
+    }
+
+    return '(' + list.join(" OR ") + ')';
+}
+
 QString makeFtsFilterMatch(const QString &filter)
 {
     if (filter.isEmpty())
@@ -18,29 +32,64 @@ QString makeFtsFilterMatch(const QString &filter)
 
 FtsTableSqlModel::FtsTableSqlModel(QObject *parent) : TableSqlModel(parent) { }
 
-void FtsTableSqlModel::setFtsFilter(const QString &filter)
+void FtsTableSqlModel::setTextFilter(const QString &filter)
 {
-    if (m_ftsFilter == filter)
+    if (m_textFilter == filter)
         return;
 
-    m_ftsFilter = filter;
+    m_textFilter = filter;
 
-    m_ftsFilterMatch = makeFtsFilterMatch(m_ftsFilter);
+    if (filter.startsWith('/')) {
+        setupRegexpFilter();
+    } else {
+        setupFtsFilter();
+    }
 
     resetLater();
 }
 
+void FtsTableSqlModel::setupRegexpFilter()
+{
+    m_regexpFilterMatch = textFilter().mid(1);
+    m_regexpFilterColumns = makeRegexpFilterColumns(regexpColumns());
+
+    m_ftsFilterMatch.clear();
+}
+
+void FtsTableSqlModel::setupFtsFilter()
+{
+    m_ftsFilterMatch = makeFtsFilterMatch(textFilter());
+
+    m_regexpFilterMatch.clear();
+    m_regexpFilterColumns.clear();
+}
+
 void FtsTableSqlModel::fillQueryVars(QVariantHash &vars) const
 {
-    if (!ftsFilterMatch().isEmpty()) {
+    // Regexp
+    if (!regexpFilterMatch().isEmpty()) {
+        vars.insert(":regexp", regexpFilterMatch());
+    }
+    // FTS
+    else if (!ftsFilterMatch().isEmpty()) {
         vars.insert(":match", ftsFilterMatch());
     }
 }
 
 QString FtsTableSqlModel::sqlWhere() const
 {
-    if (ftsFilterMatch().isEmpty())
-        return {};
+    if (!regexpFilterMatch().isEmpty()) {
+        return sqlWhereRegexp();
+    }
 
-    return sqlWhereFts();
+    if (!ftsFilterMatch().isEmpty()) {
+        return sqlWhereFts();
+    }
+
+    return {};
+}
+
+QString FtsTableSqlModel::sqlWhereRegexp() const
+{
+    return " WHERE " + regexpFilterColumns();
 }

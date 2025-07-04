@@ -367,6 +367,13 @@ QString AppListModel::sqlOrderColumn() const
     return sortStateStr + columnsStr + sqlOrderAsc() + ", " + postColumnsStr;
 }
 
+const QStringList &AppListModel::regexpColumns() const
+{
+    static const QStringList g_regexpColumns = { "t.path", "t.name", "t.notes" };
+
+    return g_regexpColumns;
+}
+
 void AppListModel::addSqlFilter(QStringList &list, const QString &name, FilterFlag flag) const
 {
     if (filters().testFlag(flag)) {
