@@ -125,6 +125,8 @@ public slots:
     bool checkWindowPassword(WindowCode code);
     virtual bool checkPassword(WindowCode code = WindowNone);
 
+    void resetCheckedPassword();
+
     virtual void showErrorBox(
             const QString &text, const QString &title = QString(), QWidget *parent = nullptr);
     virtual void showInfoBox(
@@ -181,7 +183,7 @@ private:
     bool isAnyWindowOpen(quint32 codes) const;
 
     void windowUnlocked(WindowCode code);
-    bool isAnyWindowUnlocked(quint32 codes = quint32(-1)) const;
+    bool isAnyWindowUnlocked() const;
 
     void windowClosed(WindowCode code);
 

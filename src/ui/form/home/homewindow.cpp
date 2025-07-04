@@ -190,7 +190,7 @@ void HomeWindow::setupHeaderButtons()
 void HomeWindow::setupPasswordButtons()
 {
     m_btPasswordLock = ControlUtil::createToolButton(
-            ":/icons/lock.png", [&] { settings()->resetCheckedPassword(); });
+            ":/icons/lock.png", [&] { windowManager()->resetCheckedPassword(); });
 
     m_btPasswordUnlock = ControlUtil::createToolButton(":/icons/lock_open.png");
 
