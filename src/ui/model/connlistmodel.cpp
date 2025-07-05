@@ -360,18 +360,20 @@ QString ConnListModel::rowsAsFilter(const QVector<int> &rows) const
 {
     QStringList list;
 
+    const QLatin1String filterTemplate("%1:%2:local_ip(%3):local_port(%4):dir(%5):proto(%6)");
+
     for (int row : rows) {
         const auto &connRow = connRowAt(row);
 
         const bool isIPv6 = connRow.isIPv6;
+        const auto remoteIp = formatIp(connRow.remoteIp, isIPv6);
+        const auto remotePort = QString::number(connRow.remotePort);
+        const auto localIp = formatIp(connRow.localIp, isIPv6);
+        const auto localPort = QString::number(connRow.localPort);
+        const auto dir = QLatin1String(connRow.inbound ? "IN" : "OUT");
+        const auto proto = NetUtil::protocolName(connRow.ipProto);
 
-        const auto text = QString("%1:(%2):local_ip(%3):local_port(%4):dir(%5):proto(%6)")
-                                  .arg(formatIp(connRow.remoteIp, isIPv6),
-                                          QString::number(connRow.remotePort),
-                                          formatIp(connRow.localIp, isIPv6),
-                                          QString::number(connRow.localPort),
-                                          (connRow.inbound ? "IN" : "OUT"),
-                                          NetUtil::protocolName(connRow.ipProto));
+        const auto text = filterTemplate.arg(remoteIp, remotePort, localIp, localPort, dir, proto);
 
         list << text;
     }
