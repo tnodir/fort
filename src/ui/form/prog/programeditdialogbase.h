@@ -117,6 +117,7 @@ private:
     void setupTableConnList();
     void setupTableConnListMenu();
     void setupTableConnListHeader();
+    void setupTableConnsChanged();
 
     void updateZonesRulesLayout();
     void updateApplyChild();

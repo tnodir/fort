@@ -880,6 +880,8 @@ void ProgramEditDialogBase::setupConnectionsMenuLayout()
     setupTableConnList();
     setupTableConnListHeader();
 
+    setupTableConnsChanged();
+
     retranslateTableConnListMenu();
 
     m_connListView->setFixedWidth(800);
@@ -984,6 +986,21 @@ void ProgramEditDialogBase::setupTableConnListHeader()
     // Hidden columns
     header->setSectionHidden(int(ConnListColumn::Program), /*hide=*/true);
     header->setSectionHidden(int(ConnListColumn::LocalHostName), /*hide=*/true);
+}
+
+void ProgramEditDialogBase::setupTableConnsChanged()
+{
+    const auto refreshTableConnsChanged = [&] {
+        const int connIndex = m_connListView->currentRow();
+        const bool connSelected = (connIndex >= 0);
+        m_actCopyAsFilter->setEnabled(connSelected);
+        m_actCopy->setEnabled(connSelected);
+        m_actLookupIp->setEnabled(connSelected);
+    };
+
+    refreshTableConnsChanged();
+
+    connect(m_connListView, &TableView::currentIndexChanged, this, refreshTableConnsChanged);
 }
 
 void ProgramEditDialogBase::updateZonesRulesLayout()
