@@ -22,6 +22,7 @@ public:
     virtual void processControl(quint32 code, quint32 eventType) = 0;
 
     static bool isDeviceEvent(quint32 eventType);
+    static bool isPowerEvent(quint32 eventType);
 
 protected:
     void setupAcceptedControls();

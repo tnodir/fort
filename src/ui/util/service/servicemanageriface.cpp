@@ -56,7 +56,7 @@ void ServiceManagerIface::unregisterDeviceNotification()
 
 void ServiceManagerIface::setupAcceptedControls()
 {
-    g_service.status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN
+    g_service.status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN | SERVICE_ACCEPT_POWEREVENT
             | (acceptStop() ? SERVICE_ACCEPT_STOP : 0)
             | (acceptPauseContinue() ? SERVICE_ACCEPT_PAUSE_CONTINUE : 0);
 }
@@ -77,6 +77,16 @@ bool ServiceManagerIface::isDeviceEvent(quint32 eventType)
     switch (eventType) {
     case DBT_DEVICEARRIVAL:
     case DBT_DEVICEREMOVECOMPLETE:
+        return true;
+    default:
+        return false;
+    }
+}
+
+bool ServiceManagerIface::isPowerEvent(quint32 eventType)
+{
+    switch (eventType) {
+    case PBT_APMRESUMEAUTOMATIC:
         return true;
     default:
         return false;

@@ -41,6 +41,7 @@ private:
     inline void processWmHotKey(void *message);
     inline void processWmSettingChange(void *message);
     inline void processWmWtsSessionChange(void *message);
+    inline void processWmPowerBroadcast(void *message);
     inline void processWmDeviceChange(void *message);
 
     static quint32 nativeKeyCode(Qt::Key keyCode);

@@ -74,6 +74,16 @@ quint32 processControlDeviceEvent(
     return 0;
 }
 
+quint32 processControlPowerEvent(
+        ServiceManager *serviceManager, quint32 /*code*/, quint32 eventType)
+{
+    if (ServiceManagerIface::isPowerEvent(eventType)) {
+        emit serviceManager->driveListChanged();
+    }
+
+    return 0;
+}
+
 enum ServiceControlHandlerCode : qint8 {
     ControlHandlerNone = -1,
     ControlHandlerPause = 0,
@@ -81,6 +91,7 @@ enum ServiceControlHandlerCode : qint8 {
     ControlHandlerStop,
     ControlHandlerShutdown,
     ControlHandlerDeviceEvent,
+    ControlHandlerPowerEvent,
 };
 
 inline ServiceControlHandlerCode toControlHandlerCode(quint32 code)
@@ -94,6 +105,7 @@ inline ServiceControlHandlerCode toControlHandlerCode(quint32 code)
         { ServiceControlStopUninstall, ControlHandlerShutdown },
         { SERVICE_CONTROL_SHUTDOWN, ControlHandlerShutdown },
         { SERVICE_CONTROL_DEVICEEVENT, ControlHandlerDeviceEvent },
+        { SERVICE_CONTROL_POWEREVENT, ControlHandlerPowerEvent },
     };
 
     return controlHandlerCodes.value(code, ControlHandlerNone);
@@ -108,6 +120,7 @@ static const controlHandler_func controlHandler_funcList[] = {
     &processControlStopState, // ControlHandlerStop,
     &processControlShutdownState, // ControlHandlerShutdown,
     &processControlDeviceEvent, // ControlHandlerDeviceEvent,
+    &processControlPowerEvent, // ControlHandlerPowerEvent,
 };
 
 inline quint32 processControlState(ServiceManager *serviceManager, quint32 code, quint32 eventType)
