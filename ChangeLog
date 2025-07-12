@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.18.8-test01, 2025-07-12:
+- UI: Detect power resume to update driver's config (#593).
+
 v3.18.7, 2025-07-04:
 - UI: Programs/Rules: Search the "/..." by regexp (#585).
 - UI: MyFort: Unlock password until window closed (#584).
