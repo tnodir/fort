@@ -68,6 +68,8 @@ protected:
     virtual void setupAppEndTimer();
     void updateAppEndTimer();
 
+    void checkAppAlerted();
+
 private:
     bool addApp(App &app);
 

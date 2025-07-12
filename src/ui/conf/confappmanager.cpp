@@ -157,6 +157,8 @@ void ConfAppManager::setUp()
     setupConfManager();
     setupDriveListManager();
     setupAppEndTimer();
+
+    checkAppAlerted();
 }
 
 void ConfAppManager::setupConfManager()
@@ -205,6 +207,13 @@ void ConfAppManager::updateAppEndTimer()
             qint64(APP_END_TIMER_INTERVAL_MIN), deltaMsecs, qint64(APP_END_TIMER_INTERVAL_MAX));
 
     m_appEndTimer.start(interval);
+}
+
+void ConfAppManager::checkAppAlerted()
+{
+    if (getAlertAppId() != 0) {
+        emitAppAlerted();
+    }
 }
 
 bool ConfAppManager::addApp(App &app)
