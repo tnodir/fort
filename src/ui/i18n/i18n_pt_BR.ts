@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>Current Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Versão Atual</translation>
     </message>
 </context>
 <context>
@@ -44,7 +44,7 @@
     </message>
     <message>
         <source>Internet</source>
-        <translation type="unfinished"></translation>
+        <translation>Internet</translation>
     </message>
     <message>
         <source>Filter Local Addresses</source>
@@ -60,11 +60,11 @@
     </message>
     <message>
         <source>Local Network Addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation>Endereços de Rede Local:</translation>
     </message>
     <message>
         <source>Block Addresses:</source>
-        <translation type="unfinished"></translation>
+        <translation>Endereços Bloqueados:</translation>
     </message>
 </context>
 <context>
@@ -130,19 +130,19 @@
     </message>
     <message>
         <source>Notes</source>
-        <translation type="unfinished"></translation>
+        <translation>Notas</translation>
     </message>
     <message>
         <source>Allowed Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonas Permitidas:</translation>
     </message>
     <message>
         <source>Blocked Zones:</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonas Bloqueadas:</translation>
     </message>
     <message>
         <source>Time left: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Tempo restante: %1</translation>
     </message>
 </context>
 <context>
@@ -315,7 +315,7 @@
     </message>
     <message>
         <source>Too many values</source>
-        <translation type="unfinished"></translation>
+        <translation>Muitos valores</translation>
     </message>
 </context>
 <context>
@@ -352,11 +352,11 @@
     </message>
     <message>
         <source>Blocked</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloqueado</translation>
     </message>
     <message>
         <source>Allowed</source>
-        <translation type="unfinished"></translation>
+        <translation>Permitido</translation>
     </message>
     <message>
         <source>Inherited</source>
@@ -392,19 +392,19 @@
     </message>
     <message>
         <source>Internet address</source>
-        <translation type="unfinished"></translation>
+        <translation>Endereço de Internet</translation>
     </message>
     <message>
         <source>Old connection</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexão anterior</translation>
     </message>
     <message>
         <source>Program&apos;s action</source>
-        <translation type="unfinished"></translation>
+        <translation>Ação do programa</translation>
     </message>
     <message>
         <source>App. Group</source>
-        <translation type="unfinished"></translation>
+        <translation>Grupo de Aplicativos</translation>
     </message>
     <message>
         <source>Filter Mode</source>
@@ -412,7 +412,7 @@
     </message>
     <message>
         <source>LAN only</source>
-        <translation type="unfinished"></translation>
+        <translation>Somente LAN</translation>
     </message>
     <message>
         <source>Zone</source>
@@ -424,11 +424,11 @@
     </message>
     <message>
         <source>Global Rule before App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regra Global antes das Regras de Aplicativos</translation>
     </message>
     <message>
         <source>Global Rule after App Rules</source>
-        <translation type="unfinished"></translation>
+        <translation>Regra Global após as Regras de Aplicativos</translation>
     </message>
     <message>
         <source>Limit of Ask to Connect</source>
@@ -440,35 +440,35 @@
     </message>
     <message>
         <source>Rule: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Regra: %1</translation>
     </message>
     <message>
         <source>Zone: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Zona: %1</translation>
     </message>
     <message>
         <source>Local Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome do Host Local</translation>
     </message>
     <message>
         <source>Local IP</source>
-        <translation type="unfinished"></translation>
+        <translation>IP Local</translation>
     </message>
     <message>
         <source>Local Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta Local</translation>
     </message>
     <message>
         <source>Remote Host Name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome do Host Remoto</translation>
     </message>
     <message>
         <source>Remote IP</source>
-        <translation type="unfinished"></translation>
+        <translation>IP Remoto</translation>
     </message>
     <message>
         <source>Remote Port</source>
-        <translation type="unfinished"></translation>
+        <translation>Porta Remota</translation>
     </message>
 </context>
 <context>
@@ -515,34 +515,34 @@
     </message>
     <message>
         <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar como filtro</translation>
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished"></translation>
+        <translation>Expandir última coluna</translation>
     </message>
     <message>
         <source>Lookup IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Consultar IP</translation>
     </message>
 </context>
 <context>
     <name>DateUtil</name>
     <message>
         <source>&gt;%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>&gt;%1h</translation>
     </message>
     <message>
         <source>%1h</source>
-        <translation type="unfinished"></translation>
+        <translation>%1h</translation>
     </message>
     <message>
         <source>%1m</source>
-        <translation type="unfinished"></translation>
+        <translation>%1m</translation>
     </message>
     <message>
         <source>%1s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1s</translation>
     </message>
 </context>
 <context>
@@ -584,15 +584,15 @@
     </message>
     <message>
         <source>No Block</source>
-        <translation type="unfinished"></translation>
+        <translation>Sem Bloqueio</translation>
     </message>
     <message>
         <source>Block Internet and LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear tráfego da Internet e da rede local (LAN)</translation>
     </message>
     <message>
         <source>Block LAN Traffic</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear tráfego da rede local (LAN)</translation>
     </message>
 </context>
 <context>
@@ -615,7 +615,7 @@
     </message>
     <message>
         <source>Run Fort Firewall as Administrator or install its Windows Service to access the Driver!</source>
-        <translation type="unfinished"></translation>
+        <translation>Execute o Fort Firewall com Privilégios de Administrador ou instale o Serviço do Windows para acessar o Driver!</translation>
     </message>
 </context>
 <context>
@@ -705,11 +705,11 @@
     </message>
     <message>
         <source>Colors (Light | Dark)</source>
-        <translation type="unfinished"></translation>
+        <translation>Cores (Claro | Escuro)</translation>
     </message>
     <message>
         <source>Fixed speed:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velocidade fixa:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -717,15 +717,15 @@
     </message>
     <message>
         <source>Auto-scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuste automático</translation>
     </message>
     <message>
         <source>Tick label size:</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamanho dos rótulos dos eixos:</translation>
     </message>
     <message>
         <source>Show speed</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar velocidade</translation>
     </message>
 </context>
 <context>
@@ -787,27 +787,27 @@
     </message>
     <message>
         <source>Driver Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Driver Instalado</translation>
     </message>
     <message>
         <source>Driver Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Driver Não Instalado</translation>
     </message>
     <message>
         <source>Service Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Serviço Instalado</translation>
     </message>
     <message>
         <source>Service Not Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Serviço Não Instalado</translation>
     </message>
     <message>
         <source>Are you sure to install the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza de que deseja instalar o serviço?</translation>
     </message>
     <message>
         <source>Are you sure to remove the Service?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza de que deseja remover o serviço?</translation>
     </message>
     <message>
         <source>Windows Service installation changed.</source>
@@ -815,7 +815,7 @@
     </message>
     <message>
         <source>Integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Integração</translation>
     </message>
     <message>
         <source>Windows Explorer integration</source>
@@ -823,7 +823,7 @@
     </message>
     <message>
         <source>Control Panel: Sounds integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Painel de Controle: Integração de sons</translation>
     </message>
     <message>
         <source>Auto-run:</source>
@@ -874,7 +874,7 @@
     </message>
     <message>
         <source>Service Logs</source>
-        <translation type="unfinished"></translation>
+        <translation>Logs de Serviço</translation>
     </message>
 </context>
 <context>
@@ -1073,47 +1073,47 @@
     </message>
     <message>
         <source>Operations from Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Ações no Menu da Bandeja</translation>
     </message>
     <message>
         <source>Sound Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>Alerta sonoro</translation>
     </message>
     <message>
         <source>Style:</source>
-        <translation type="unfinished"></translation>
+        <translation>Estilo:</translation>
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpar alertas automaticamente ao fechar a janela</translation>
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar ícones das janelas como no ícone da bandeja</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Adiar alertas</translation>
     </message>
     <message>
         <source>Switch Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alternar adiamento de alertas</translation>
     </message>
     <message>
         <source>Auto-Show Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar janela automaticamente</translation>
     </message>
     <message>
         <source>Auto-Show Window, when Tray Icon is hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar janela automaticamente quando o ícone da bandeja estiver oculto</translation>
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation type="unfinished"></translation>
+        <translation>Focar automaticamente a janela de alerta ao exibi-la</translation>
     </message>
     <message>
         <source>Switch Window visibility</source>
-        <translation type="unfinished"></translation>
+        <translation>Alternar visibilidade da janela</translation>
     </message>
 </context>
 <context>
@@ -1147,7 +1147,7 @@
     </message>
     <message>
         <source>Select dark color for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecione cor escura para %1</translation>
     </message>
 </context>
 <context>
@@ -1218,7 +1218,7 @@
     </message>
     <message>
         <source>Import new programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Importar novos programas</translation>
     </message>
 </context>
 <context>
@@ -1255,11 +1255,12 @@
         <source>All Options and Programs will be replaced after successful import. Continue?
 
 Make sure that you have a fresh backup.</source>
-        <translation type="unfinished"></translation>
+        <translation>Após a importação, todas as opções e programas serão substituídos. Continuar?
+Certifique-se de que possui um backup recente.</translation>
     </message>
     <message>
         <source>Only new Programs will be added after successful import. Continue?</source>
-        <translation type="unfinished"></translation>
+        <translation>Após a importação, somente novos programas serão adicionados. Continuar?</translation>
     </message>
 </context>
 <context>
@@ -1338,31 +1339,31 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Auto Update</source>
-        <translation type="unfinished"></translation>
+        <translation>Atualização Automática</translation>
     </message>
     <message>
         <source>Keep current version</source>
-        <translation type="unfinished"></translation>
+        <translation>Manter a versão atual</translation>
     </message>
     <message>
         <source>Auto-download new version</source>
-        <translation type="unfinished"></translation>
+        <translation>Baixar nova versão automaticamente</translation>
     </message>
     <message>
         <source>Block traffic for disabled App Groups</source>
-        <translation type="unfinished"></translation>
+        <translation>Bloquear o tráfego para grupos de aplicativos desativados</translation>
     </message>
     <message>
         <source>Auto-install after download</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalar automaticamente após o download</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo furtivo (impede varredura de portas)</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Segundos de autoaprendizado:</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1374,7 +1375,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>20 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>20 segundos</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1382,7 +1383,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>2 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>2 minutos</translation>
     </message>
     <message>
         <source>5 minutes</source>
@@ -1394,23 +1395,23 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source> second(s)</source>
-        <translation type="unfinished"></translation>
+        <translation> segundo(s)</translation>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished"></translation>
+        <translation>Segundos com o filtro desativado:</translation>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation type="unfinished"></translation>
+        <translation>Remover programas com alertas ao desativar o autoaprendizado</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
-        <translation type="unfinished"></translation>
+        <translation>Rastrear eventos do driver</translation>
     </message>
     <message>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Não excluir o último instalador baixado após a instalação</translation>
     </message>
 </context>
 <context>
@@ -1687,7 +1688,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
-        <translation type="unfinished"></translation>
+        <translation>Alternar uso de caractere curinga</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
@@ -1699,19 +1700,19 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 horas</translation>
     </message>
     <message>
         <source>%1 minute(s)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 minuto(s)</translation>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexões</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar como Filtro</translation>
     </message>
     <message>
         <source>Copy</source>
@@ -1719,23 +1720,23 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Set Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Definir Ícone</translation>
     </message>
     <message>
         <source>Delete Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Excluir Ícone</translation>
     </message>
     <message>
         <source>Icon for program</source>
-        <translation type="unfinished"></translation>
+        <translation>Ícone do programa</translation>
     </message>
     <message>
         <source>Icons (*.ico; *.png)</source>
-        <translation type="unfinished"></translation>
+        <translation>Ícones (*.ico; *.png)</translation>
     </message>
     <message>
         <source>Lookup IP</source>
-        <translation type="unfinished"></translation>
+        <translation>Consultar IP</translation>
     </message>
 </context>
 <context>
@@ -1845,19 +1846,19 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alertas</translation>
     </message>
     <message>
         <source>Stretch last column</source>
-        <translation type="unfinished"></translation>
+        <translation>Expandir última coluna</translation>
     </message>
     <message>
         <source>Remove Alerted Programs</source>
-        <translation type="unfinished"></translation>
+        <translation>Remover Programas com Alertas</translation>
     </message>
     <message>
         <source>Are you sure to remove alerted programs?</source>
-        <translation type="unfinished"></translation>
+        <translation>Tem certeza de que deseja remover os programas com alertas?</translation>
     </message>
     <message>
         <source>Copy Path</source>
@@ -1869,11 +1870,11 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Timer</source>
-        <translation type="unfinished"></translation>
+        <translation>Temporizador</translation>
     </message>
     <message>
         <source>Disable</source>
-        <translation type="unfinished"></translation>
+        <translation>Desativar</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -1897,7 +1898,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>3 hours</source>
-        <translation type="unfinished"></translation>
+        <translation>3 horas</translation>
     </message>
     <message>
         <source>6 hours</source>
@@ -1916,7 +1917,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Bad Protocol</source>
-        <translation type="unfinished"></translation>
+        <translation>Protocolo Inválido</translation>
     </message>
 </context>
 <context>
@@ -2021,15 +2022,15 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Terminating Rule:</source>
-        <translation type="unfinished"></translation>
+        <translation>Regra de Encerramento:</translation>
     </message>
     <message>
         <source>Tray Menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Menu da Bandeja</translation>
     </message>
     <message>
         <source>Inline Zones</source>
-        <translation type="unfinished"></translation>
+        <translation>Zonas em linha</translation>
     </message>
 </context>
 <context>
@@ -2067,39 +2068,39 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Unexpected start of line</source>
-        <translation type="unfinished"></translation>
+        <translation>Início inesperado da linha</translation>
     </message>
     <message>
         <source>Unexpected end of list</source>
-        <translation type="unfinished"></translation>
+        <translation>Fim inesperado da lista</translation>
     </message>
     <message>
         <source>Max list depth exceeded: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Limite máximo da lista excedida: %1</translation>
     </message>
     <message>
         <source>Unexpected symbol of list end</source>
-        <translation type="unfinished"></translation>
+        <translation>Símbolo inesperado de fim de lista</translation>
     </message>
     <message>
         <source>Extra filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtro extra nomeado: %1</translation>
     </message>
     <message>
         <source>Bad filter name: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome do filtro inválido: %1</translation>
     </message>
     <message>
         <source>Unexpected end of values list</source>
-        <translation type="unfinished"></translation>
+        <translation>Fim inesperado da lista de valores</translation>
     </message>
     <message>
         <source>Unexpected end of value</source>
-        <translation type="unfinished"></translation>
+        <translation>Fim inesperado do valor</translation>
     </message>
     <message>
         <source>No filter name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nome do filtro não informado</translation>
     </message>
 </context>
 <context>
@@ -2212,11 +2213,19 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Delay startup to retry&apos;s seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>Segundos para nova tentativa de inicialização</translation>
+    </message>
+    <message>
+        <source>Maximum retries count:</source>
+        <translation>Número máximo de tentativas:</translation>
+    </message>
+    <message>
+        <source>Delay seconds to retry:</source>
+        <translation>Atraso em segundos antes da nova tentativa:</translation>
     </message>
     <message>
         <source>20 seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>20 segundos</translation>
     </message>
     <message>
         <source>1 minute</source>
@@ -2224,7 +2233,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>2 minutes</source>
-        <translation type="unfinished"></translation>
+        <translation>2 minutos</translation>
     </message>
     <message>
         <source>5 minutes</source>
@@ -2236,15 +2245,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source> second(s)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Maximum retries count:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delay seconds to retry:</source>
-        <translation type="unfinished"></translation>
+        <translation> segundo(s)</translation>
     </message>
     <message>
         <source>Disabled</source>
@@ -2301,7 +2302,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     <name>StatBasePage</name>
     <message>
         <source>Make this tab active when window opens?</source>
-        <translation type="unfinished"></translation>
+        <translation>Deixar esta aba ativa quando a janela abrir?</translation>
     </message>
 </context>
 <context>
@@ -2312,7 +2313,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexões</translation>
     </message>
 </context>
 <context>
@@ -2419,15 +2420,15 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Conexões</translation>
     </message>
     <message>
         <source>Keep count for connections:</source>
-        <translation type="unfinished"></translation>
+        <translation>Manter contagem de conexões:</translation>
     </message>
     <message>
         <source>Clear connections on exit (reduce disk writes)</source>
-        <translation type="unfinished"></translation>
+        <translation>Limpar conexões ao sair (reduz gravações no disco)</translation>
     </message>
 </context>
 <context>
@@ -2476,7 +2477,7 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Maximum retries count</source>
-        <translation type="unfinished"></translation>
+        <translation>Número máximo de tentativas</translation>
     </message>
 </context>
 <context>
@@ -2648,11 +2649,11 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Snooze Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Adiar alertas</translation>
     </message>
     <message>
         <source>Rule Modifier</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuste de regra</translation>
     </message>
 </context>
 <context>
@@ -2740,23 +2741,23 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
     <message>
         <source>Addresses from Inline Text</source>
-        <translation type="unfinished"></translation>
+        <translation>Endereços a partir de texto em linha</translation>
     </message>
     <message>
         <source>Addresses from Local File</source>
-        <translation type="unfinished"></translation>
+        <translation>Endereços a partir de Arquivo Local</translation>
     </message>
     <message>
         <source>WindowsSpyBlocker</source>
-        <translation type="unfinished"></translation>
+        <translation>WindowsSpyBlocker</translation>
     </message>
     <message>
         <source>FireHOL Level-1</source>
-        <translation type="unfinished"></translation>
+        <translation>FireHOL Level-1</translation>
     </message>
     <message>
         <source>TAS-IX Addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>Endereços TAS-IX</translation>
     </message>
 </context>
 <context>
