@@ -8,5 +8,5 @@
 build*/
 
 /deploy/out/*.sig
-/src/*.pro.user
+/src/.qtcreator/
 
