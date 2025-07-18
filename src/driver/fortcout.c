@@ -635,9 +635,6 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
     const UINT32 classify_flags = ca->inFixedValues->incomingValue[ca->fi->flags].value.uint32;
 
     const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0;
-    if (is_reauth) {
-        ca->inbound = (ca->inMetaValues->packetDirection == FWP_DIRECTION_INBOUND);
-    }
 
     FORT_CALLOUT_ALE_EXTRA cx = {
         .conn = {
