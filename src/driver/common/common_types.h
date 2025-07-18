@@ -32,6 +32,7 @@ typedef union ip_addr_t {
 
 typedef struct fort_app_path
 {
+    char drive;
     unsigned short len;
     const void *buffer;
 } FORT_APP_PATH, *PFORT_APP_PATH;

@@ -26,13 +26,20 @@ typedef struct fort_psname
     WCHAR data[1];
 } FORT_PSNAME, *PFORT_PSNAME;
 
-#define FORT_PSNODE_NAME_INHERIT      0x0001
-#define FORT_PSNODE_NAME_INHERIT_SPEC 0x0002
-#define FORT_PSNODE_NAME_INHERITED    0x0004
-#define FORT_PSNODE_NAME_CUSTOM       0x0008
-#define FORT_PSNODE_KILL_PROCESS      0x0010
-#define FORT_PSNODE_KILL_CHILD        0x0020
-#define FORT_PSNODE_IS_SVCHOST        0x0040
+#define FORT_PSNODE_NAME_INHERIT      0x01
+#define FORT_PSNODE_NAME_INHERIT_SPEC 0x02
+#define FORT_PSNODE_NAME_INHERITED    0x04
+#define FORT_PSNODE_NAME_CUSTOM       0x08
+#define FORT_PSNODE_KILL_PROCESS      0x10
+#define FORT_PSNODE_KILL_CHILD        0x20
+#define FORT_PSNODE_IS_SVCHOST        0x40
+
+typedef struct fort_psopt
+{
+    UCHAR flags;
+    CHAR path_drive;
+    UINT16 path_size;
+} FORT_PSOPT, *PFORT_PSOPT;
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
@@ -46,7 +53,7 @@ typedef struct fort_psnode
 
     UINT32 process_id;
 
-    UINT16 volatile flags;
+    FORT_PSOPT volatile ps_opt;
 } FORT_PSNODE, *PFORT_PSNODE;
 
 typedef struct _SYSTEM_PROCESSES
@@ -306,7 +313,7 @@ static void fort_pstree_proc_set_service_name(PFORT_PSNODE proc, PFORT_PSNAME ps
 
     if (ps_name != NULL) {
         /* Service can't inherit parent's name */
-        proc->flags |= FORT_PSNODE_NAME_CUSTOM;
+        proc->ps_opt.flags |= FORT_PSNODE_NAME_CUSTOM;
     }
 }
 
@@ -316,7 +323,7 @@ static void fort_pstree_proc_check_svchost(
     if (!fort_pstree_svchost_path_check(psi->path))
         return;
 
-    proc->flags |= FORT_PSNODE_IS_SVCHOST;
+    proc->ps_opt.flags |= FORT_PSNODE_IS_SVCHOST;
 
     UNICODE_STRING serviceName;
     if (!fort_pstree_svchost_name_check(psi->commandLine, &serviceName))
@@ -414,7 +421,7 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
     const UINT16 kill_child_flag = (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
     const UINT16 kill_flags = kill_process_flag | kill_child_flag;
 
-    proc->flags |= kill_flags;
+    proc->ps_opt.flags |= kill_flags;
 
     if (kill_flags == 0 && app_flags.apply_child) {
         const BOOL has_ps_name = (proc->ps_name != NULL);
@@ -423,7 +430,7 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
             fort_pstree_proc_set_name(ps_tree, proc, path);
         }
 
-        proc->flags |= FORT_PSNODE_NAME_INHERIT
+        proc->ps_opt.flags |= FORT_PSNODE_NAME_INHERIT
                 | (app_flags.apply_spec_child ? FORT_PSNODE_NAME_INHERIT_SPEC : 0);
     }
 }
@@ -438,12 +445,12 @@ inline static BOOL fort_pstree_check_proc_inherited(
     if (parent == NULL)
         return FALSE;
 
-    const UINT16 parent_flags = parent->flags;
+    const UCHAR parent_flags = parent->ps_opt.flags;
 
     if ((parent_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
         return FALSE;
 
-    const UINT16 inherit_spec_flag = (parent_flags & FORT_PSNODE_NAME_INHERIT_SPEC);
+    const UCHAR inherit_spec_flag = (parent_flags & FORT_PSNODE_NAME_INHERIT_SPEC);
 
     if (inherit_spec_flag != 0 && app_flags.apply_parent == 0)
         return FALSE;
@@ -454,7 +461,7 @@ inline static BOOL fort_pstree_check_proc_inherited(
     ++ps_name->refcount;
     proc->ps_name = ps_name;
 
-    proc->flags |= inherit_spec_flag | FORT_PSNODE_NAME_INHERITED;
+    proc->ps_opt.flags |= inherit_spec_flag | FORT_PSNODE_NAME_INHERITED;
 
     return TRUE;
 }
@@ -497,7 +504,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
         return NULL;
 
     proc->process_id = psi->processId;
-    proc->flags = 0;
+    proc->ps_opt.flags = 0;
 
     fort_pstree_proc_check_svchost(ps_tree, psi, proc);
 
@@ -509,7 +516,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
 inline static BOOL fort_pstree_check_kill_proc(
         PFORT_PSNODE proc, PPS_CREATE_NOTIFY_INFO createInfo, UINT16 flags)
 {
-    if (proc != NULL && (proc->flags & flags) != 0) {
+    if (proc != NULL && (proc->ps_opt.flags & flags) != 0) {
         createInfo->CreationStatus = STATUS_ACCESS_DENIED;
         /* later arrives notification about the process's close event */
         return TRUE;
@@ -796,16 +803,16 @@ static BOOL fort_pstree_get_proc_name_locked(
     if (ps_name == NULL)
         return FALSE;
 
-    const UINT16 procFlags = proc->flags;
+    const UCHAR proc_flags = proc->ps_opt.flags;
 
-    if ((procFlags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
+    if ((proc_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
             == FORT_PSNODE_NAME_INHERIT)
         return FALSE;
 
     path->len = ps_name->size;
     path->buffer = ps_name->data;
 
-    *inherited = (procFlags & FORT_PSNODE_NAME_INHERITED) != 0;
+    *inherited = (proc_flags & FORT_PSNODE_NAME_INHERITED) != 0;
 
     return TRUE;
 }
@@ -835,7 +842,7 @@ inline static void fort_pstree_update_service_proc(
         proc = fort_pstree_proc_new(ps_tree, pid_hash);
 
         proc->process_id = processId;
-        proc->flags = FORT_PSNODE_IS_SVCHOST;
+        proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST;
     }
 
     if (proc->ps_name == NULL) {
