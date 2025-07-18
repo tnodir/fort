@@ -1,7 +1,10 @@
 Fort Firewall ChangeLog
 
-v3.18.8-test01, 2025-07-12:
+v3.18.8-test02, 2025-07-18:
+- Driver: Fix connection's direction on reauth (#597).
 - UI: Detect power resume to update driver's config (#593).
+- UI: Show alert popup on startup too.
+- UI: Update SQLite to 3.50.3
 
 v3.18.7, 2025-07-04:
 - UI: Programs/Rules: Search the "/..." by regexp (#585).
