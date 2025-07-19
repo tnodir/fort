@@ -26,20 +26,13 @@ typedef struct fort_psname
     WCHAR data[1];
 } FORT_PSNAME, *PFORT_PSNAME;
 
-#define FORT_PSNODE_NAME_INHERIT      0x01
-#define FORT_PSNODE_NAME_INHERIT_SPEC 0x02
-#define FORT_PSNODE_NAME_INHERITED    0x04
-#define FORT_PSNODE_NAME_CUSTOM       0x08
-#define FORT_PSNODE_KILL_PROCESS      0x10
-#define FORT_PSNODE_KILL_CHILD        0x20
-#define FORT_PSNODE_IS_SVCHOST        0x40
-
-typedef struct fort_psopt
-{
-    UCHAR flags;
-    CHAR path_drive;
-    UINT16 path_size;
-} FORT_PSOPT, *PFORT_PSOPT;
+#define FORT_PSNODE_NAME_INHERIT      0x0001
+#define FORT_PSNODE_NAME_INHERIT_SPEC 0x0002
+#define FORT_PSNODE_NAME_INHERITED    0x0004
+#define FORT_PSNODE_NAME_CUSTOM       0x0008
+#define FORT_PSNODE_KILL_PROCESS      0x0010
+#define FORT_PSNODE_KILL_CHILD        0x0020
+#define FORT_PSNODE_IS_SVCHOST        0x0040
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
@@ -53,7 +46,9 @@ typedef struct fort_psnode
 
     UINT32 process_id;
 
-    FORT_PSOPT volatile ps_opt;
+    UINT16 volatile flags;
+
+    FORT_APP_PATH_DRIVE ps_drive;
 } FORT_PSNODE, *PFORT_PSNODE;
 
 typedef struct _SYSTEM_PROCESSES
@@ -126,6 +121,52 @@ inline static BOOL fort_is_system_process(DWORD processId, DWORD parentProcessId
 {
     /* System (sub)processes */
     return (processId == 0 || processId == 4 || parentProcessId == 4);
+}
+
+static void GetImageNameDriveNumber(PCUNICODE_STRING path, PFORT_APP_PATH_DRIVE ps_drive)
+{
+    const PWCHAR volume_sep = fort_path_prefix_volume_sep(path);
+    if (volume_sep == NULL)
+        return;
+
+    const PWCHAR p = path->Buffer;
+    const UCHAR volume_end = (UCHAR) (volume_sep - p);
+
+    UNICODE_STRING volume;
+    volume.Length = volume_end * sizeof(WCHAR);
+    volume.MaximumLength = volume.Length;
+    volume.Buffer = p;
+
+    NTSTATUS status;
+
+    HANDLE fileHandle;
+    status = fort_file_open(&volume, &fileHandle);
+
+    if (!NT_SUCCESS(status))
+        return;
+
+    PFILE_OBJECT fileObj = NULL;
+    status = ObReferenceObjectByHandle(
+            fileHandle, FILE_ALL_ACCESS, NULL, KernelMode, &fileObj, NULL);
+
+    ZwClose(fileHandle);
+
+    if (!NT_SUCCESS(status))
+        return;
+
+    UNICODE_STRING dosName;
+    status = IoVolumeDeviceToDosName(fileObj->DeviceObject, &dosName);
+    const BOOL hasDrive = NT_SUCCESS(status);
+
+    ObDereferenceObject(fileObj);
+
+    ps_drive->pos = volume_end - (hasDrive ? 2 : 1);
+
+    if (hasDrive) {
+        ps_drive->num = dosName.Buffer[0] - L'A' + 1;
+
+        fort_mem_free_notag(dosName.Buffer);
+    }
 }
 
 static NTSTATUS GetProcessImageName(HANDLE processHandle, PFORT_PATH_BUFFER pb)
@@ -313,7 +354,7 @@ static void fort_pstree_proc_set_service_name(PFORT_PSNODE proc, PFORT_PSNAME ps
 
     if (ps_name != NULL) {
         /* Service can't inherit parent's name */
-        proc->ps_opt.flags |= FORT_PSNODE_NAME_CUSTOM;
+        proc->flags |= FORT_PSNODE_NAME_CUSTOM;
     }
 }
 
@@ -323,7 +364,7 @@ static void fort_pstree_proc_check_svchost(
     if (!fort_pstree_svchost_path_check(psi->path))
         return;
 
-    proc->ps_opt.flags |= FORT_PSNODE_IS_SVCHOST;
+    proc->flags |= FORT_PSNODE_IS_SVCHOST;
 
     UNICODE_STRING serviceName;
     if (!fort_pstree_svchost_name_check(psi->commandLine, &serviceName))
@@ -421,7 +462,7 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
     const UINT16 kill_child_flag = (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
     const UINT16 kill_flags = kill_process_flag | kill_child_flag;
 
-    proc->ps_opt.flags |= kill_flags;
+    proc->flags |= kill_flags;
 
     if (kill_flags == 0 && app_flags.apply_child) {
         const BOOL has_ps_name = (proc->ps_name != NULL);
@@ -430,7 +471,7 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
             fort_pstree_proc_set_name(ps_tree, proc, path);
         }
 
-        proc->ps_opt.flags |= FORT_PSNODE_NAME_INHERIT
+        proc->flags |= FORT_PSNODE_NAME_INHERIT
                 | (app_flags.apply_spec_child ? FORT_PSNODE_NAME_INHERIT_SPEC : 0);
     }
 }
@@ -445,12 +486,12 @@ inline static BOOL fort_pstree_check_proc_inherited(
     if (parent == NULL)
         return FALSE;
 
-    const UCHAR parent_flags = parent->ps_opt.flags;
+    const UINT16 parent_flags = parent->flags;
 
     if ((parent_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
         return FALSE;
 
-    const UCHAR inherit_spec_flag = (parent_flags & FORT_PSNODE_NAME_INHERIT_SPEC);
+    const UINT16 inherit_spec_flag = (parent_flags & FORT_PSNODE_NAME_INHERIT_SPEC);
 
     if (inherit_spec_flag != 0 && app_flags.apply_parent == 0)
         return FALSE;
@@ -461,7 +502,7 @@ inline static BOOL fort_pstree_check_proc_inherited(
     ++ps_name->refcount;
     proc->ps_name = ps_name;
 
-    proc->ps_opt.flags |= inherit_spec_flag | FORT_PSNODE_NAME_INHERITED;
+    proc->flags |= inherit_spec_flag | FORT_PSNODE_NAME_INHERITED;
 
     return TRUE;
 }
@@ -497,14 +538,16 @@ static void fort_pstree_check_proc_inheritance(
     fort_conf_ref_put(device_conf, conf_ref);
 }
 
-static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi)
+static PFORT_PSNODE fort_pstree_handle_new_proc(
+        PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi, const FORT_APP_PATH_DRIVE ps_drive)
 {
     PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, psi->pid_hash);
     if (proc == NULL)
         return NULL;
 
     proc->process_id = psi->processId;
-    proc->ps_opt.flags = 0;
+    proc->flags = 0;
+    proc->ps_drive = ps_drive;
 
     fort_pstree_proc_check_svchost(ps_tree, psi, proc);
 
@@ -516,7 +559,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
 inline static BOOL fort_pstree_check_kill_proc(
         PFORT_PSNODE proc, PPS_CREATE_NOTIFY_INFO createInfo, UINT16 flags)
 {
-    if (proc != NULL && (proc->ps_opt.flags & flags) != 0) {
+    if (proc != NULL && (proc->flags & flags) != 0) {
         createInfo->CreationStatus = STATUS_ACCESS_DENIED;
         /* later arrives notification about the process's close event */
         return TRUE;
@@ -534,12 +577,16 @@ inline static PFORT_PSNODE fort_pstree_handle_opened_proc(
         return NULL;
     }
 
+    /* GetImageNameDriveNumber() must be called in PASSIVE level only! */
+    FORT_APP_PATH_DRIVE ps_drive = { 0 };
+    GetImageNameDriveNumber(&pb->path, &ps_drive);
+
     PFORT_PSNODE proc;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        proc = fort_pstree_handle_new_proc(ps_tree, psi);
+        proc = fort_pstree_handle_new_proc(ps_tree, psi, ps_drive);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -803,7 +850,7 @@ static BOOL fort_pstree_get_proc_name_locked(
     if (ps_name == NULL)
         return FALSE;
 
-    const UCHAR proc_flags = proc->ps_opt.flags;
+    const UINT16 proc_flags = proc->flags;
 
     if ((proc_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
             == FORT_PSNODE_NAME_INHERIT)
@@ -842,7 +889,7 @@ inline static void fort_pstree_update_service_proc(
         proc = fort_pstree_proc_new(ps_tree, pid_hash);
 
         proc->process_id = processId;
-        proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST;
+        proc->flags = FORT_PSNODE_IS_SVCHOST;
     }
 
     if (proc->ps_name == NULL) {

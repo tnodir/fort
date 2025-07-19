@@ -30,9 +30,16 @@ typedef union ip_addr_t {
     char data[sizeof(ip6_addr_t)];
 } ip_addr_t;
 
+typedef struct fort_app_path_drive
+{
+    unsigned char num; /* 1..25 */
+    unsigned char pos;
+} FORT_APP_PATH_DRIVE, *PFORT_APP_PATH_DRIVE;
+
 typedef struct fort_app_path
 {
-    char drive;
+    FORT_APP_PATH_DRIVE drive;
+
     unsigned short len;
     const void *buffer;
 } FORT_APP_PATH, *PFORT_APP_PATH;

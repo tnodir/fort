@@ -113,6 +113,13 @@ NTSTATUS IoDeleteSymbolicLink(PUNICODE_STRING symbolicLink)
     return STATUS_SUCCESS;
 }
 
+NTSTATUS IoVolumeDeviceToDosName(PVOID volumeDeviceObject, PUNICODE_STRING dosName)
+{
+    UNUSED(volumeDeviceObject);
+    UNUSED(dosName);
+    return STATUS_SUCCESS;
+}
+
 NTSTATUS KeDelayExecutionThread(
         KPROCESSOR_MODE waitMode, BOOLEAN alertable, PLARGE_INTEGER interval)
 {

@@ -293,6 +293,56 @@ typedef struct _FILE_STANDARD_INFORMATION
     BOOLEAN Directory;
 } FILE_STANDARD_INFORMATION, *PFILE_STANDARD_INFORMATION;
 
+typedef struct _VPB *PVPB;
+
+typedef struct _SECTION_OBJECT_POINTERS
+{
+    PVOID DataSectionObject;
+    PVOID SharedCacheMap;
+    PVOID ImageSectionObject;
+} SECTION_OBJECT_POINTERS, *PSECTION_OBJECT_POINTERS;
+
+typedef struct _IO_COMPLETION_CONTEXT
+{
+    PVOID Port;
+    PVOID Key;
+    LONG_PTR UsageCount;
+} IO_COMPLETION_CONTEXT, *PIO_COMPLETION_CONTEXT;
+
+typedef struct _FILE_OBJECT
+{
+    short Type;
+    short Size;
+    PDEVICE_OBJECT DeviceObject;
+    PVPB Vpb;
+    PVOID FsContext;
+    PVOID FsContext2;
+    PSECTION_OBJECT_POINTERS SectionObjectPointer;
+    PVOID PrivateCacheMap;
+    NTSTATUS FinalStatus;
+    struct _FILE_OBJECT *RelatedFileObject;
+    BOOLEAN LockOperation;
+    BOOLEAN DeletePending;
+    BOOLEAN ReadAccess;
+    BOOLEAN WriteAccess;
+    BOOLEAN DeleteAccess;
+    BOOLEAN SharedRead;
+    BOOLEAN SharedWrite;
+    BOOLEAN SharedDelete;
+    ULONG Flags;
+    UNICODE_STRING FileName;
+    LARGE_INTEGER CurrentByteOffset;
+    __volatile ULONG Waiters;
+    __volatile ULONG Busy;
+    PVOID LastLock;
+    KEVENT Lock;
+    KEVENT Event;
+    __volatile PIO_COMPLETION_CONTEXT CompletionContext;
+    KSPIN_LOCK IrpListLock;
+    LIST_ENTRY IrpList;
+    __volatile struct _IOP_FILE_OBJECT_EXTENSION *FileObjectExtension;
+} FILE_OBJECT, *PFILE_OBJECT;
+
 typedef NTSTATUS DRIVER_INITIALIZE(PDRIVER_OBJECT driverObject, PUNICODE_STRING registryPath);
 typedef DRIVER_INITIALIZE *PDRIVER_INITIALIZE;
 
@@ -344,6 +394,8 @@ FORT_API VOID IoDeleteDevice(PDEVICE_OBJECT device);
 
 FORT_API NTSTATUS IoCreateSymbolicLink(PUNICODE_STRING symbolicLink, PUNICODE_STRING deviceName);
 FORT_API NTSTATUS IoDeleteSymbolicLink(PUNICODE_STRING symbolicLink);
+
+FORT_API NTSTATUS IoVolumeDeviceToDosName(PVOID volumeDeviceObject, PUNICODE_STRING dosName);
 
 FORT_API NTSTATUS KeDelayExecutionThread(
         KPROCESSOR_MODE waitMode, BOOLEAN alertable, PLARGE_INTEGER interval);

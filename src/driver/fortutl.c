@@ -193,7 +193,24 @@ inline static BOOL fort_path_prefix_is_device_alias(PUNICODE_STRING path)
 {
     PCWCHAR p = path->Buffer;
 
-    return (p[0] == '\\' && p[1] == '?' && p[2] == '?' && p[3] == '\\' && p[5] == ':');
+    return (p[0] == L'\\' && p[1] == L'?' && p[2] == L'?' && p[3] == L'\\' && p[5] == L':');
+}
+
+FORT_API PWCHAR fort_path_prefix_volume_sep(PCUNICODE_STRING path)
+{
+    PWCHAR sp = (PWCHAR) path->Buffer;
+
+    if (*sp != L'\\')
+        return NULL;
+
+    const int sep_count = 2;
+    for (int i = 0; i < sep_count; ++i) {
+        sp = wcschr(++sp, L'\\');
+        if (sp == NULL)
+            break;
+    }
+
+    return sp;
 }
 
 FORT_API void fort_path_prefix_adjust(PUNICODE_STRING path)
@@ -404,8 +421,8 @@ FORT_API NTSTATUS fort_file_open(PUNICODE_STRING filePath, HANDLE *outHandle)
             &fileAttr, filePath, OBJ_CASE_INSENSITIVE | OBJ_KERNEL_HANDLE, NULL, NULL);
 
     IO_STATUS_BLOCK statusBlock;
-    return ZwOpenFile(outHandle, GENERIC_READ | SYNCHRONIZE, &fileAttr, &statusBlock, 0,
-            FILE_SYNCHRONOUS_IO_NONALERT);
+    return ZwOpenFile(outHandle, GENERIC_READ | SYNCHRONIZE, &fileAttr, &statusBlock,
+            (FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE), FILE_SYNCHRONOUS_IO_NONALERT);
 }
 
 FORT_API USHORT fort_le_u16_read(const char *cp, int offset)
