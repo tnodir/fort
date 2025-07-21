@@ -74,21 +74,10 @@ void ServiceManagerIface::reportStatus(quint32 code)
 
 bool ServiceManagerIface::isDeviceEvent(quint32 eventType)
 {
-    switch (eventType) {
-    case DBT_DEVICEARRIVAL:
-    case DBT_DEVICEREMOVECOMPLETE:
-        return true;
-    default:
-        return false;
-    }
+    return eventType == DBT_DEVICEARRIVAL || eventType == DBT_DEVICEREMOVECOMPLETE;
 }
 
 bool ServiceManagerIface::isPowerEvent(quint32 eventType)
 {
-    switch (eventType) {
-    case PBT_APMRESUMEAUTOMATIC:
-        return true;
-    default:
-        return false;
-    }
+    return eventType == PBT_APMRESUMEAUTOMATIC;
 }
