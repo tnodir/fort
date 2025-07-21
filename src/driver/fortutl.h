@@ -3,6 +3,19 @@
 
 #include "fortdrv.h"
 
+#define FORT_PATH_BUFFER_DATA_MIN      128
+#define FORT_PATH_BUFFER_DATA_MIN_SIZE (FORT_PATH_BUFFER_DATA_MIN * sizeof(WCHAR))
+
+typedef struct fort_path_buffer
+{
+    void *buffer;
+
+    UNICODE_STRING path;
+    WCHAR data[FORT_PATH_BUFFER_DATA_MIN];
+} FORT_PATH_BUFFER, *PFORT_PATH_BUFFER;
+
+#define FORT_PATH_BUFFER_PATH_OFF offsetof(FORT_PATH_BUFFER, path)
+
 typedef NTSTATUS (*FORT_EXPAND_STACK_FUNC)(PVOID param);
 
 #if defined(__cplusplus)
@@ -37,6 +50,10 @@ FORT_API UINT32 fort_bits_duplicate16(UINT16 num);
 FORT_API void fort_irp_set_cancel_routine(PIRP irp, PDRIVER_CANCEL routine);
 
 FORT_API NTSTATUS fort_expand_stack(FORT_EXPAND_STACK_FUNC func, PVOID param);
+
+FORT_API void fort_path_buffer_init(PFORT_PATH_BUFFER pb);
+FORT_API BOOL fort_path_buffer_alloc(PFORT_PATH_BUFFER pb, UINT16 size);
+FORT_API void fort_path_buffer_free(PFORT_PATH_BUFFER pb);
 
 #ifdef __cplusplus
 } // extern "C"

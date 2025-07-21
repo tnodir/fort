@@ -84,12 +84,6 @@ NTSTATUS NTAPI ZwQueryInformationProcess(HANDLE processHandle, ULONG processInfo
 #define FORT_COMMAND_LINE_LEN  512
 #define FORT_COMMAND_LINE_SIZE (FORT_COMMAND_LINE_LEN * sizeof(WCHAR))
 
-typedef struct fort_path_buffer
-{
-    UNICODE_STRING path;
-    WCHAR buffer[FORT_CONF_APP_PATH_MAX];
-} FORT_PATH_BUFFER, *PFORT_PATH_BUFFER;
-
 typedef struct fort_psinfo_hash
 {
     tommy_key_t pid_hash;
@@ -169,22 +163,48 @@ static void GetImageNameDriveNumber(PCUNICODE_STRING path, PFORT_APP_PATH_DRIVE 
     }
 }
 
+inline static NTSTATUS GetProcessImageNameBuffer(
+        HANDLE processHandle, PFORT_PATH_BUFFER pb, DWORD bufferSize, NTSTATUS status)
+{
+    if (bufferSize == 0)
+        return status;
+
+    if (!fort_path_buffer_alloc(pb, bufferSize + sizeof(WCHAR)))
+        return STATUS_INSUFFICIENT_RESOURCES;
+
+    PUNICODE_STRING outBuffer = pb->buffer;
+
+    ULONG outLength;
+    status = ZwQueryInformationProcess(
+            processHandle, ProcessImageFileName, outBuffer, bufferSize, &outLength);
+
+    pb->path = *outBuffer;
+
+    return status;
+}
+
 static NTSTATUS GetProcessImageName(HANDLE processHandle, PFORT_PATH_BUFFER pb)
 {
     NTSTATUS status;
 
-    ULONG outLength;
+    const DWORD pathSize = sizeof(FORT_PATH_BUFFER) - FORT_PATH_BUFFER_PATH_OFF - sizeof(WCHAR);
+
+    ULONG outLength = 0;
     status = ZwQueryInformationProcess(
-            processHandle, ProcessImageFileName, pb, sizeof(FORT_PATH_BUFFER), &outLength);
+            processHandle, ProcessImageFileName, &pb->path, pathSize, &outLength);
 
-    if (!NT_SUCCESS(status))
-        return status;
+    if (!NT_SUCCESS(status)) {
+        status = GetProcessImageNameBuffer(processHandle, pb, outLength, status);
 
-    if (outLength == 0 || pb->path.Length == 0)
+        if (!NT_SUCCESS(status))
+            return status;
+    }
+
+    if (pb->path.Length == 0)
         return STATUS_OBJECT_NAME_NOT_FOUND;
 
     RtlDowncaseUnicodeString(&pb->path, &pb->path, FALSE);
-    pb->buffer[pb->path.Length / sizeof(WCHAR)] = L'\0';
+    pb->data[pb->path.Length / sizeof(WCHAR)] = L'\0';
 
     return STATUS_SUCCESS;
 }
@@ -222,19 +242,6 @@ UCHAR fort_pstree_flags_set(PFORT_PSTREE ps_tree, UCHAR flags, BOOL on)
 UCHAR fort_pstree_flags(PFORT_PSTREE ps_tree)
 {
     return fort_pstree_flags_set(ps_tree, 0, TRUE);
-}
-
-static PFORT_PATH_BUFFER fort_pstree_path_buffer_new(void)
-{
-    PFORT_PATH_BUFFER pb = fort_mem_alloc(sizeof(FORT_PATH_BUFFER), FORT_PSTREE_POOL_TAG);
-    if (pb == NULL)
-        return NULL;
-
-    pb->path.Length = 0;
-    pb->path.MaximumLength = FORT_CONF_APP_PATH_MAX_SIZE;
-    pb->path.Buffer = pb->buffer;
-
-    return pb;
 }
 
 static PFORT_PSNAME fort_pstree_name_new(PFORT_PSTREE ps_tree, UINT16 name_size)
@@ -458,9 +465,8 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
     if (app_flags.found == 0)
         return;
 
-    const UINT16 kill_process_flag = (app_flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0);
-    const UINT16 kill_child_flag = (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
-    const UINT16 kill_flags = kill_process_flag | kill_child_flag;
+    const UINT16 kill_flags = (app_flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0)
+            | (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
 
     proc->flags |= kill_flags;
 
@@ -599,17 +605,15 @@ static PFORT_PSNODE fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT_
     if (processHandle == NULL)
         return NULL;
 
-    PFORT_PSNODE proc = NULL;
+    FORT_PATH_BUFFER pb;
+    fort_path_buffer_init(&pb);
 
-    PFORT_PATH_BUFFER pb = fort_pstree_path_buffer_new();
-    if (pb != NULL) {
-        psi->processHandle = processHandle;
-        psi->path = &pb->path;
+    psi->processHandle = processHandle;
+    psi->path = &pb.path;
 
-        proc = fort_pstree_handle_opened_proc(ps_tree, psi, pb);
+    PFORT_PSNODE proc = fort_pstree_handle_opened_proc(ps_tree, psi, &pb);
 
-        fort_mem_free(pb, FORT_PSTREE_POOL_TAG);
-    }
+    fort_path_buffer_free(&pb);
 
     ZwClose(processHandle);
 

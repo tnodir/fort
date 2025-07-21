@@ -508,3 +508,26 @@ FORT_API NTSTATUS fort_expand_stack(FORT_EXPAND_STACK_FUNC func, PVOID param)
 
     return !NT_SUCCESS(status) ? status : arg.status;
 }
+
+FORT_API void fort_path_buffer_init(PFORT_PATH_BUFFER pb)
+{
+    pb->buffer = NULL;
+
+    pb->path.Length = 0;
+    pb->path.MaximumLength = FORT_PATH_BUFFER_DATA_MIN_SIZE;
+    pb->path.Buffer = pb->data;
+}
+
+FORT_API BOOL fort_path_buffer_alloc(PFORT_PATH_BUFFER pb, UINT16 size)
+{
+    pb->buffer = fort_mem_alloc(size, FORT_UTL_POOL_TAG);
+
+    return (pb->buffer != NULL);
+}
+
+FORT_API void fort_path_buffer_free(PFORT_PATH_BUFFER pb)
+{
+    if (pb->buffer != NULL) {
+        fort_mem_free(pb->buffer, FORT_UTL_POOL_TAG);
+    }
+}
