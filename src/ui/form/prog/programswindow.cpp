@@ -179,7 +179,7 @@ void ProgramsWindow::retranslateUi()
     m_btAllowApp->setText(tr("Allow"));
     m_btBlockApp->setText(tr("Block"));
     m_btRemoveApp->setText(tr("Remove"));
-    m_editSearch->setPlaceholderText(tr("Search"));
+    m_editSearch->setPlaceholderText(tr("Search") + " /");
     m_btFilter->setToolTip(tr("Filters"));
     m_btClearFilter->setText(tr("Clear Filters"));
     m_cbFilterAlerted->setText(tr("Alerts"));

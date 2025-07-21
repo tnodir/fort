@@ -117,7 +117,7 @@ void RulesWindow::retranslateUi()
     m_actAddRule->setText(tr("Add"));
     m_actEditRule->setText(tr("Edit"));
     m_actRemoveRule->setText(tr("Remove"));
-    m_editSearch->setPlaceholderText(tr("Search"));
+    m_editSearch->setPlaceholderText(tr("Search") + " /");
 
     ruleListModel()->refresh();
 
