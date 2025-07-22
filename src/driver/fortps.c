@@ -171,11 +171,11 @@ static NTSTATUS GetProcessImageName(HANDLE processHandle, PFORT_PATH_BUFFER pb)
 {
     NTSTATUS status;
 
-    const DWORD pathSize = (FORT_PATH_BUFFER_DATA_MIN - 1) * sizeof(WCHAR);
+    const DWORD bufSize = (FORT_PATH_BUFFER_DATA_MIN - 1) * sizeof(WCHAR);
 
     ULONG outLength = 0;
     status = ZwQueryInformationProcess(
-            processHandle, ProcessImageFileName, &pb->data, pathSize, &outLength);
+            processHandle, ProcessImageFileName, &pb->data, bufSize, &outLength);
 
     if (!NT_SUCCESS(status)) {
         status = GetProcessImageNameBuffer(processHandle, pb, outLength, status);

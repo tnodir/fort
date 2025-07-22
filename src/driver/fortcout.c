@@ -64,16 +64,20 @@ inline static void fort_callout_ale_fill_meta_path_drive(
         return;
 
     PFORT_PATH_BUFFER pb = &conn->path_buf;
-
-    if (!fort_path_buffer_alloc(pb, processPath.size))
-        return;
-
-    RtlCopyMemory(pb->buffer, processPath.data, processPath.size);
-
     PFORT_APP_PATH path = &pb->path;
 
+    if (processPath.size > FORT_PATH_BUFFER_DATA_MIN * sizeof(WCHAR)) {
+        if (!fort_path_buffer_alloc(pb, processPath.size))
+            return;
+
+        path->buffer = pb->buffer;
+    } else {
+        path->buffer = pb->data;
+    }
+
     path->len = processPath.size - sizeof(WCHAR); /* chop terminating zero */
-    path->buffer = pb->buffer;
+
+    RtlCopyMemory((PVOID) path->buffer, processPath.data, processPath.size);
 
     fort_path_drive_adjust(path, ps_drive);
 
