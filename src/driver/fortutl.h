@@ -3,18 +3,7 @@
 
 #include "fortdrv.h"
 
-#define FORT_PATH_BUFFER_DATA_MIN      128
-#define FORT_PATH_BUFFER_DATA_MIN_SIZE (FORT_PATH_BUFFER_DATA_MIN * sizeof(WCHAR))
-
-typedef struct fort_path_buffer
-{
-    void *buffer;
-
-    UNICODE_STRING path;
-    WCHAR data[FORT_PATH_BUFFER_DATA_MIN];
-} FORT_PATH_BUFFER, *PFORT_PATH_BUFFER;
-
-#define FORT_PATH_BUFFER_PATH_OFF offsetof(FORT_PATH_BUFFER, path)
+#include "common/fortconf.h"
 
 typedef NTSTATUS (*FORT_EXPAND_STACK_FUNC)(PVOID param);
 
@@ -27,13 +16,15 @@ FORT_API NTSTATUS fort_driver_path(
 
 FORT_API DWORD fort_reg_value(PCWSTR name, DWORD defaultValue);
 
-FORT_API PWCHAR fort_path_prefix_volume_sep(PCUNICODE_STRING path);
+FORT_API PWCHAR fort_path_prefix_volume_sep(PCFORT_APP_PATH path);
 
 FORT_API void fort_path_prefix_adjust(PUNICODE_STRING path);
 
 FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING regPath);
 FORT_API PUNICODE_STRING fort_system32_path(void);
 FORT_API PUNICODE_STRING fort_system_drive_path(void);
+
+FORT_API BOOL fort_svchost_path_check(PCFORT_APP_PATH path);
 
 FORT_API NTSTATUS fort_resolve_link(PUNICODE_STRING linkPath, PUNICODE_STRING outPath);
 
@@ -52,8 +43,10 @@ FORT_API void fort_irp_set_cancel_routine(PIRP irp, PDRIVER_CANCEL routine);
 FORT_API NTSTATUS fort_expand_stack(FORT_EXPAND_STACK_FUNC func, PVOID param);
 
 FORT_API void fort_path_buffer_init(PFORT_PATH_BUFFER pb);
-FORT_API BOOL fort_path_buffer_alloc(PFORT_PATH_BUFFER pb, UINT16 size);
+FORT_API BOOL fort_path_buffer_alloc(PFORT_PATH_BUFFER pb, DWORD size);
 FORT_API void fort_path_buffer_free(PFORT_PATH_BUFFER pb);
+
+FORT_API void fort_path_drive_adjust(PFORT_APP_PATH path, const FORT_APP_PATH_DRIVE ps_drive);
 
 #ifdef __cplusplus
 } // extern "C"

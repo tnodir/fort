@@ -99,25 +99,16 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     ASSERT_TRUE(DriverCommon::confAppFind(data, "System").flags.found);
 
-    ASSERT_TRUE(DriverCommon::confAppFind(
-            data, FileUtil::pathToKernelPath("C:\\Program Files\\Skype\\Phone\\Skype.exe"))
+    ASSERT_TRUE(DriverCommon::confAppFind(data, "C:\\Program Files\\Skype\\Phone\\Skype.exe")
                     .flags.found);
-    ASSERT_TRUE(DriverCommon::confAppFind(
-            data, FileUtil::pathToKernelPath("C:\\Utils\\Dev\\Git\\git.exe"))
-                    .flags.found);
-    ASSERT_TRUE(DriverCommon::confAppFind(
-            data, FileUtil::pathToKernelPath("D:\\Utils\\Dev\\Git\\bin\\git.exe"))
-                    .flags.found);
-    ASSERT_TRUE(DriverCommon::confAppFind(
-            data, FileUtil::pathToKernelPath("D:\\My\\Programs\\Test.exe"))
-                    .flags.found);
+    ASSERT_TRUE(DriverCommon::confAppFind(data, "C:\\Utils\\Dev\\Git\\git.exe").flags.found);
+    ASSERT_TRUE(DriverCommon::confAppFind(data, "D:\\Utils\\Dev\\Git\\bin\\git.exe").flags.found);
+    ASSERT_TRUE(DriverCommon::confAppFind(data, "D:\\My\\Programs\\Test.exe").flags.found);
 
-    ASSERT_FALSE(DriverCommon::confAppFind(
-            data, FileUtil::pathToKernelPath("C:\\Program Files\\Test.exe"))
-                    .flags.found);
+    ASSERT_FALSE(DriverCommon::confAppFind(data, "C:\\Program Files\\Test.exe").flags.found);
 
-    const auto firefoxData = DriverCommon::confAppFind(
-            data, FileUtil::pathToKernelPath("C:\\Utils\\Firefox\\Bin\\firefox.exe"));
+    const auto firefoxData =
+            DriverCommon::confAppFind(data, "C:\\Utils\\Firefox\\Bin\\firefox.exe");
     ASSERT_EQ(int(firefoxData.group_index), 1);
 }
 

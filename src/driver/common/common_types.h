@@ -38,8 +38,6 @@ typedef struct fort_app_path_drive
 
 typedef struct fort_app_path
 {
-    FORT_APP_PATH_DRIVE drive;
-
     unsigned short len;
     const void *buffer;
 } FORT_APP_PATH, *PFORT_APP_PATH;
@@ -53,7 +51,5 @@ typedef struct fort_conf_rule_zones
 } FORT_CONF_RULE_ZONES, *PFORT_CONF_RULE_ZONES;
 
 typedef const FORT_CONF_RULE_ZONES *PCFORT_CONF_RULE_ZONES;
-
-#define UNUSED(p) ((void) (p))
 
 #endif // COMMON_TYPES_H

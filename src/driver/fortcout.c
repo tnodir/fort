@@ -57,18 +57,47 @@ inline static void fort_callout_ale_set_app_flags(
     conn->app_data = app_data;
 }
 
+inline static void fort_callout_ale_fill_meta_path_drive(
+        PFORT_CONF_META_CONN conn, const FWP_BYTE_BLOB processPath, FORT_APP_PATH_DRIVE ps_drive)
+{
+    if (ps_drive.pos == 0)
+        return;
+
+    PFORT_PATH_BUFFER pb = &conn->path_buf;
+
+    if (!fort_path_buffer_alloc(pb, processPath.size))
+        return;
+
+    RtlCopyMemory(pb->buffer, processPath.data, processPath.size);
+
+    PFORT_APP_PATH path = &pb->path;
+
+    path->len = processPath.size - sizeof(WCHAR); /* chop terminating zero */
+    path->buffer = pb->buffer;
+
+    fort_path_drive_adjust(path, ps_drive);
+
+    conn->path = conn->real_path = *path;
+}
+
 static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
 {
     PFORT_APP_PATH real_path = &conn->real_path;
 
-    real_path->len = (UINT16) (ca->inMetaValues->processPath->size
-            - sizeof(WCHAR)); /* chop terminating zero */
-    real_path->buffer = (PCWSTR) ca->inMetaValues->processPath->data;
+    const FWP_BYTE_BLOB processPath = *ca->inMetaValues->processPath;
+
+    real_path->len = (UINT16) (processPath.size - sizeof(WCHAR)); /* chop terminating zero */
+    real_path->buffer = (PCWSTR) processPath.data;
 
     PFORT_APP_PATH path = &conn->path;
+
+    FORT_PS_OPT ps_opt = { 0 };
     BOOL inherited = FALSE;
 
-    if (fort_pstree_get_proc_name(&fort_device()->ps_tree, conn->process_id, path, &inherited)) {
+    if (fort_pstree_get_proc_name(&fort_device()->ps_tree, conn->process_id, path, &ps_opt)) {
+        ps_opt.ps_drive.pos = 0; /* don't use the drive info */
+
+        inherited = (ps_opt.flags & FORT_PSNODE_NAME_INHERITED) != 0;
         if (!inherited) {
             *real_path = *path;
         }
@@ -77,6 +106,8 @@ static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_ME
     }
 
     conn->inherited = (UCHAR) inherited;
+
+    fort_callout_ale_fill_meta_path_drive(conn, processPath, ps_opt.ps_drive);
 }
 
 static void fort_callout_fill_meta_ip(PCFORT_CALLOUT_ARG ca, UCHAR ipIndex, ip_addr_t *ip)
@@ -568,6 +599,9 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
     }
 
     fort_callout_ale_classify_action(ca, conn);
+
+    /* Free the allocated path */
+    fort_path_buffer_free(&conn->path_buf);
 }
 
 inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
@@ -575,7 +609,9 @@ inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT
 {
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
 
-    if (conf_ref == NULL) {
+    const BOOL ps_enumerating = fort_device_flag(device_conf, FORT_DEVICE_PS_ENUMERATING) != 0;
+
+    if (conf_ref == NULL || ps_enumerating) {
         fort_callout_ale_classify_boot_action(ca, device_conf);
         return;
     }

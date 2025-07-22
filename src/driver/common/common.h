@@ -71,4 +71,6 @@
 
 #define FORT_ALIGN_SIZE(size, align) ((((size) + ((align) - 1)) & ~((align) - 1)))
 
+#define UNUSED(p) ((void) (p))
+
 #endif // COMMON_H

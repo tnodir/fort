@@ -354,6 +354,18 @@ typedef const FORT_APP_ENTRY *PCFORT_APP_ENTRY;
 #define FORT_CONF_APP_ENTRY_SIZE(path_len)                                                         \
     (FORT_CONF_APP_ENTRY_PATH_OFF + (path_len) + sizeof(WCHAR)) /* include terminating zero */
 
+#define FORT_PATH_BUFFER_DATA_MIN (128 + 32)
+
+typedef struct fort_path_buffer
+{
+    void *buffer;
+
+    FORT_APP_PATH path;
+    WCHAR data[FORT_PATH_BUFFER_DATA_MIN];
+} FORT_PATH_BUFFER, *PFORT_PATH_BUFFER;
+
+#define FORT_PATH_BUFFER_PATH_OFF offsetof(FORT_PATH_BUFFER, path)
+
 typedef struct fort_conf_meta_conn
 {
     UINT16 conn_filled : 1;
@@ -397,10 +409,12 @@ typedef struct fort_conf_meta_conn
     ip_addr_t local_ip;
     ip_addr_t remote_ip;
 
+    FORT_APP_DATA app_data;
+
     FORT_APP_PATH path;
     FORT_APP_PATH real_path;
 
-    FORT_APP_DATA app_data;
+    FORT_PATH_BUFFER path_buf;
 } FORT_CONF_META_CONN, *PFORT_CONF_META_CONN;
 
 typedef const FORT_CONF_META_CONN *PCFORT_CONF_META_CONN;

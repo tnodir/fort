@@ -401,19 +401,19 @@ bool ConfBuffer::parseAppLine(App &app, const QStringView line, AppParseOptions 
 
 bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize)
 {
-    const QString kernelPath = FileUtil::pathToKernelPath(app.appPath);
+    const QString appPath = app.appPath;
 
-    if (appsMap.contains(kernelPath))
+    if (appsMap.contains(appPath))
         return true;
 
-    const int kernelPathSize = kernelPath.size();
+    const int appPathSize = appPath.size();
 
-    if (kernelPathSize > APP_PATH_MAX) {
+    if (appPathSize > APP_PATH_MAX) {
         setErrorMessage(tr("Length of Application's Path must be < %1").arg(APP_PATH_MAX));
         return false;
     }
 
-    const quint16 appPathLen = quint16(kernelPathSize * sizeof(wchar_t));
+    const quint16 appPathLen = quint16(appPathSize * sizeof(wchar_t));
     const quint32 appSize = FORT_CONF_APP_ENTRY_SIZE(appPathLen);
 
     appsSize += appSize;
@@ -438,7 +438,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
         .zones = app.zones,
     };
 
-    appsMap.insert(kernelPath, appData);
+    appsMap.insert(appPath, appData);
 
     m_driveMask |= FileUtil::driveMaskByPath(app.appPath);
 

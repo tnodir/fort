@@ -13,6 +13,8 @@
 
 #define FORT_KERNEL_STACK_SIZE (8 * 1024)
 
+#define FORT_SVCHOST_EXE L"svchost.exe"
+
 typedef struct fort_expand_stack_arg
 {
     FORT_EXPAND_STACK_FUNC func;
@@ -196,9 +198,9 @@ inline static BOOL fort_path_prefix_is_device_alias(PUNICODE_STRING path)
     return (p[0] == L'\\' && p[1] == L'?' && p[2] == L'?' && p[3] == L'\\' && p[5] == L':');
 }
 
-FORT_API PWCHAR fort_path_prefix_volume_sep(PCUNICODE_STRING path)
+FORT_API PWCHAR fort_path_prefix_volume_sep(PCFORT_APP_PATH path)
 {
-    PWCHAR sp = (PWCHAR) path->Buffer;
+    PWCHAR sp = (PWCHAR) path->buffer;
 
     if (*sp != L'\\')
         return NULL;
@@ -272,6 +274,42 @@ FORT_API PUNICODE_STRING fort_system32_path(void)
 FORT_API PUNICODE_STRING fort_system_drive_path(void)
 {
     return &g_systemDrivePath;
+}
+
+FORT_API BOOL fort_svchost_path_check(PCFORT_APP_PATH path)
+{
+    if (path == NULL)
+        return FALSE;
+
+    const USHORT svchostSize = sizeof(FORT_SVCHOST_EXE) - sizeof(WCHAR); /* skip terminating zero */
+
+    const USHORT pathLength = path->len;
+    const PCHAR pathBuffer = (PCHAR) path->buffer;
+
+    PCUNICODE_STRING sysDrivePath = fort_system_drive_path();
+    PCUNICODE_STRING sys32Path = fort_system32_path();
+
+    const USHORT sys32DrivePrefixSize = 2 * sizeof(WCHAR); /* C: */
+    const USHORT sys32PathSize = sys32Path->Length - sys32DrivePrefixSize;
+
+    /* Check the total path length */
+    if (pathLength != sysDrivePath->Length + sys32PathSize + svchostSize)
+        return FALSE;
+
+    /* Check the file name */
+    if (!fort_mem_eql(pathBuffer + (pathLength - svchostSize), FORT_SVCHOST_EXE, svchostSize))
+        return FALSE;
+
+    /* Check the drive */
+    if (!fort_mem_eql(pathBuffer, sysDrivePath->Buffer, sysDrivePath->Length))
+        return FALSE;
+
+    /* Check the path */
+    if (!fort_mem_eql(pathBuffer + sysDrivePath->Length,
+                (PCHAR) sys32Path->Buffer + sys32DrivePrefixSize, sys32PathSize))
+        return FALSE;
+
+    return TRUE;
 }
 
 inline static NTSTATUS fort_resolve_link_handle(HANDLE linkHandle, PUNICODE_STRING outPath)
@@ -513,12 +551,10 @@ FORT_API void fort_path_buffer_init(PFORT_PATH_BUFFER pb)
 {
     pb->buffer = NULL;
 
-    pb->path.Length = 0;
-    pb->path.MaximumLength = FORT_PATH_BUFFER_DATA_MIN_SIZE;
-    pb->path.Buffer = pb->data;
+    pb->path.len = 0;
 }
 
-FORT_API BOOL fort_path_buffer_alloc(PFORT_PATH_BUFFER pb, UINT16 size)
+FORT_API BOOL fort_path_buffer_alloc(PFORT_PATH_BUFFER pb, DWORD size)
 {
     pb->buffer = fort_mem_alloc(size, FORT_UTL_POOL_TAG);
 
@@ -529,5 +565,24 @@ FORT_API void fort_path_buffer_free(PFORT_PATH_BUFFER pb)
 {
     if (pb->buffer != NULL) {
         fort_mem_free(pb->buffer, FORT_UTL_POOL_TAG);
+    }
+}
+
+FORT_API void fort_path_drive_adjust(PFORT_APP_PATH path, const FORT_APP_PATH_DRIVE ps_drive)
+{
+    if (ps_drive.pos == 0)
+        return;
+
+    PWCHAR p = (PWCHAR) path->buffer;
+    p += ps_drive.pos;
+
+    path->buffer = p;
+    path->len -= ps_drive.pos * sizeof(WCHAR);
+
+    if (ps_drive.num > 0) {
+        *p++ = ps_drive.num + L'A' - 1;
+        *p = L':';
+    } else {
+        *p = L'\\';
     }
 }

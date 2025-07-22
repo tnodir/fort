@@ -11,8 +11,6 @@
 
 #define FORT_PSTREE_POOL_TAG 'PwfF'
 
-#define FORT_SVCHOST_EXE L"svchost.exe"
-
 #define FORT_PSTREE_NAME_LEN_MAX      120
 #define FORT_PSTREE_NAME_LEN_MAX_SIZE (FORT_PSTREE_NAME_LEN_MAX * sizeof(WCHAR))
 #define FORT_PSTREE_NAMES_POOL_SIZE   (4 * 1024)
@@ -26,14 +24,6 @@ typedef struct fort_psname
     WCHAR data[1];
 } FORT_PSNAME, *PFORT_PSNAME;
 
-#define FORT_PSNODE_NAME_INHERIT      0x0001
-#define FORT_PSNODE_NAME_INHERIT_SPEC 0x0002
-#define FORT_PSNODE_NAME_INHERITED    0x0004
-#define FORT_PSNODE_NAME_CUSTOM       0x0008
-#define FORT_PSNODE_KILL_PROCESS      0x0010
-#define FORT_PSNODE_KILL_CHILD        0x0020
-#define FORT_PSNODE_IS_SVCHOST        0x0040
-
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_psnode
 {
@@ -46,9 +36,7 @@ typedef struct fort_psnode
 
     UINT32 process_id;
 
-    UINT16 volatile flags;
-
-    FORT_APP_PATH_DRIVE ps_drive;
+    FORT_PS_OPT volatile ps_opt;
 } FORT_PSNODE, *PFORT_PSNODE;
 
 typedef struct _SYSTEM_PROCESSES
@@ -91,7 +79,7 @@ typedef struct fort_psinfo_hash
     DWORD processId;
     DWORD parentProcessId;
 
-    PCUNICODE_STRING path;
+    PCFORT_APP_PATH path;
     PCUNICODE_STRING commandLine;
 } FORT_PSINFO_HASH, *PFORT_PSINFO_HASH;
 
@@ -117,19 +105,19 @@ inline static BOOL fort_is_system_process(DWORD processId, DWORD parentProcessId
     return (processId == 0 || processId == 4 || parentProcessId == 4);
 }
 
-static void GetImageNameDriveNumber(PCUNICODE_STRING path, PFORT_APP_PATH_DRIVE ps_drive)
+static void GetImageNameDriveNumber(PCFORT_APP_PATH path, PFORT_APP_PATH_DRIVE ps_drive)
 {
     const PWCHAR volume_sep = fort_path_prefix_volume_sep(path);
     if (volume_sep == NULL)
         return;
 
-    const PWCHAR p = path->Buffer;
+    const PWCHAR p = (PWCHAR) path->buffer;
     const UCHAR volume_end = (UCHAR) (volume_sep - p);
 
-    UNICODE_STRING volume;
-    volume.Length = volume_end * sizeof(WCHAR);
-    volume.MaximumLength = volume.Length;
-    volume.Buffer = p;
+    UNICODE_STRING volume = {
+        .Length = volume_end * sizeof(WCHAR),
+        .Buffer = p,
+    };
 
     NTSTATUS status;
 
@@ -172,13 +160,9 @@ inline static NTSTATUS GetProcessImageNameBuffer(
     if (!fort_path_buffer_alloc(pb, bufferSize + sizeof(WCHAR)))
         return STATUS_INSUFFICIENT_RESOURCES;
 
-    PUNICODE_STRING outBuffer = pb->buffer;
-
     ULONG outLength;
     status = ZwQueryInformationProcess(
-            processHandle, ProcessImageFileName, outBuffer, bufferSize, &outLength);
-
-    pb->path = *outBuffer;
+            processHandle, ProcessImageFileName, pb->buffer, bufferSize, &outLength);
 
     return status;
 }
@@ -187,11 +171,11 @@ static NTSTATUS GetProcessImageName(HANDLE processHandle, PFORT_PATH_BUFFER pb)
 {
     NTSTATUS status;
 
-    const DWORD pathSize = sizeof(FORT_PATH_BUFFER) - FORT_PATH_BUFFER_PATH_OFF - sizeof(WCHAR);
+    const DWORD pathSize = (FORT_PATH_BUFFER_DATA_MIN - 1) * sizeof(WCHAR);
 
     ULONG outLength = 0;
     status = ZwQueryInformationProcess(
-            processHandle, ProcessImageFileName, &pb->path, pathSize, &outLength);
+            processHandle, ProcessImageFileName, &pb->data, pathSize, &outLength);
 
     if (!NT_SUCCESS(status)) {
         status = GetProcessImageNameBuffer(processHandle, pb, outLength, status);
@@ -200,11 +184,19 @@ static NTSTATUS GetProcessImageName(HANDLE processHandle, PFORT_PATH_BUFFER pb)
             return status;
     }
 
-    if (pb->path.Length == 0)
+    PUNICODE_STRING path_str = pb->buffer ? pb->buffer : pb->data;
+
+    const UINT16 path_size = path_str->Length;
+    if (path_size == 0)
         return STATUS_OBJECT_NAME_NOT_FOUND;
 
-    RtlDowncaseUnicodeString(&pb->path, &pb->path, FALSE);
-    pb->data[pb->path.Length / sizeof(WCHAR)] = L'\0';
+    PWCHAR path_buffer = path_str->Buffer;
+
+    RtlDowncaseUnicodeString(path_str, path_str, FALSE);
+    path_buffer[path_size / sizeof(WCHAR)] = L'\0';
+
+    pb->path.len = path_size;
+    pb->path.buffer = path_buffer;
 
     return STATUS_SUCCESS;
 }
@@ -266,42 +258,6 @@ static void fort_pstree_name_del(PFORT_PSTREE ps_tree, PFORT_PSNAME ps_name)
     }
 }
 
-static BOOL fort_pstree_svchost_path_check(PCUNICODE_STRING path)
-{
-    if (path == NULL)
-        return FALSE;
-
-    const USHORT svchostSize = sizeof(FORT_SVCHOST_EXE) - sizeof(WCHAR); /* skip terminating zero */
-
-    const USHORT pathLength = path->Length;
-    const PCHAR pathBuffer = (PCHAR) path->Buffer;
-
-    PCUNICODE_STRING sysDrivePath = fort_system_drive_path();
-    PCUNICODE_STRING sys32Path = fort_system32_path();
-
-    const USHORT sys32DrivePrefixSize = 2 * sizeof(WCHAR); /* C: */
-    const USHORT sys32PathSize = sys32Path->Length - sys32DrivePrefixSize;
-
-    /* Check the total path length */
-    if (pathLength != sysDrivePath->Length + sys32PathSize + svchostSize)
-        return FALSE;
-
-    /* Check the file name */
-    if (!fort_mem_eql(pathBuffer + (pathLength - svchostSize), FORT_SVCHOST_EXE, svchostSize))
-        return FALSE;
-
-    /* Check the drive */
-    if (!fort_mem_eql(pathBuffer, sysDrivePath->Buffer, sysDrivePath->Length))
-        return FALSE;
-
-    /* Check the path */
-    if (!fort_mem_eql(pathBuffer + sysDrivePath->Length,
-                (PCHAR) sys32Path->Buffer + sys32DrivePrefixSize, sys32PathSize))
-        return FALSE;
-
-    return TRUE;
-}
-
 static BOOL fort_pstree_svchost_name_check(
         PCUNICODE_STRING commandLine, PUNICODE_STRING serviceName)
 {
@@ -361,17 +317,17 @@ static void fort_pstree_proc_set_service_name(PFORT_PSNODE proc, PFORT_PSNAME ps
 
     if (ps_name != NULL) {
         /* Service can't inherit parent's name */
-        proc->flags |= FORT_PSNODE_NAME_CUSTOM;
+        proc->ps_opt.flags |= FORT_PSNODE_NAME_CUSTOM;
     }
 }
 
 static void fort_pstree_proc_check_svchost(
         PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi, PFORT_PSNODE proc)
 {
-    if (!fort_pstree_svchost_path_check(psi->path))
+    if (!fort_svchost_path_check(psi->path))
         return;
 
-    proc->flags |= FORT_PSNODE_IS_SVCHOST;
+    proc->ps_opt.flags |= FORT_PSNODE_IS_SVCHOST;
 
     UNICODE_STRING serviceName;
     if (!fort_pstree_svchost_name_check(psi->commandLine, &serviceName))
@@ -468,7 +424,7 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
     const UINT16 kill_flags = (app_flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0)
             | (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
 
-    proc->flags |= kill_flags;
+    proc->ps_opt.flags |= kill_flags;
 
     if (kill_flags == 0 && app_flags.apply_child) {
         const BOOL has_ps_name = (proc->ps_name != NULL);
@@ -477,7 +433,7 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
             fort_pstree_proc_set_name(ps_tree, proc, path);
         }
 
-        proc->flags |= FORT_PSNODE_NAME_INHERIT
+        proc->ps_opt.flags |= FORT_PSNODE_NAME_INHERIT
                 | (app_flags.apply_spec_child ? FORT_PSNODE_NAME_INHERIT_SPEC : 0);
     }
 }
@@ -492,7 +448,7 @@ inline static BOOL fort_pstree_check_proc_inherited(
     if (parent == NULL)
         return FALSE;
 
-    const UINT16 parent_flags = parent->flags;
+    const UINT16 parent_flags = parent->ps_opt.flags;
 
     if ((parent_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
         return FALSE;
@@ -508,7 +464,7 @@ inline static BOOL fort_pstree_check_proc_inherited(
     ++ps_name->refcount;
     proc->ps_name = ps_name;
 
-    proc->flags |= inherit_spec_flag | FORT_PSNODE_NAME_INHERITED;
+    proc->ps_opt.flags |= inherit_spec_flag | FORT_PSNODE_NAME_INHERITED;
 
     return TRUE;
 }
@@ -527,8 +483,8 @@ static void fort_pstree_check_proc_inheritance(
 
     const BOOL has_ps_name = (proc->ps_name != NULL);
     const FORT_APP_PATH path = {
-        .len = has_ps_name ? proc->ps_name->size : psi->path->Length,
-        .buffer = has_ps_name ? proc->ps_name->data : psi->path->Buffer,
+        .len = has_ps_name ? proc->ps_name->size : psi->path->len,
+        .buffer = has_ps_name ? proc->ps_name->data : psi->path->buffer,
     };
 
     PCFORT_CONF conf = &conf_ref->conf;
@@ -552,8 +508,8 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(
         return NULL;
 
     proc->process_id = psi->processId;
-    proc->flags = 0;
-    proc->ps_drive = ps_drive;
+    proc->ps_opt.flags = 0;
+    proc->ps_opt.ps_drive = ps_drive;
 
     fort_pstree_proc_check_svchost(ps_tree, psi, proc);
 
@@ -565,7 +521,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(
 inline static BOOL fort_pstree_check_kill_proc(
         PFORT_PSNODE proc, PPS_CREATE_NOTIFY_INFO createInfo, UINT16 flags)
 {
-    if (proc != NULL && (proc->flags & flags) != 0) {
+    if (proc != NULL && (proc->ps_opt.flags & flags) != 0) {
         createInfo->CreationStatus = STATUS_ACCESS_DENIED;
         /* later arrives notification about the process's close event */
         return TRUE;
@@ -586,6 +542,8 @@ inline static PFORT_PSNODE fort_pstree_handle_opened_proc(
     /* GetImageNameDriveNumber() must be called in PASSIVE level only! */
     FORT_APP_PATH_DRIVE ps_drive = { 0 };
     GetImageNameDriveNumber(&pb->path, &ps_drive);
+
+    fort_path_drive_adjust(&pb->path, ps_drive);
 
     PFORT_PSNODE proc;
 
@@ -844,17 +802,20 @@ FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
 }
 
 static BOOL fort_pstree_get_proc_name_locked(
-        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, BOOL *inherited)
+        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt)
 {
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
     if (proc == NULL)
         return FALSE;
 
+    const FORT_PS_OPT proc_ps_opt = proc->ps_opt;
+    *ps_opt = proc_ps_opt;
+
     PFORT_PSNAME ps_name = proc->ps_name;
     if (ps_name == NULL)
         return FALSE;
 
-    const UINT16 proc_flags = proc->flags;
+    const UINT16 proc_flags = proc_ps_opt.flags;
 
     if ((proc_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
             == FORT_PSNODE_NAME_INHERIT)
@@ -863,20 +824,18 @@ static BOOL fort_pstree_get_proc_name_locked(
     path->len = ps_name->size;
     path->buffer = ps_name->data;
 
-    *inherited = (proc_flags & FORT_PSNODE_NAME_INHERITED) != 0;
-
     return TRUE;
 }
 
 FORT_API BOOL fort_pstree_get_proc_name(
-        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, BOOL *inherited)
+        PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt)
 {
     BOOL res;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        res = fort_pstree_get_proc_name_locked(ps_tree, processId, path, inherited);
+        res = fort_pstree_get_proc_name_locked(ps_tree, processId, path, ps_opt);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -893,7 +852,7 @@ inline static void fort_pstree_update_service_proc(
         proc = fort_pstree_proc_new(ps_tree, pid_hash);
 
         proc->process_id = processId;
-        proc->flags = FORT_PSNODE_IS_SVCHOST;
+        proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST;
     }
 
     if (proc->ps_name == NULL) {
