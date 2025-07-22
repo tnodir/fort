@@ -10,7 +10,6 @@
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
 #include <conf/app.h>
-#include <drivelist/drivelistmanager.h>
 #include <driver/drivermanager.h>
 #include <log/logentryapp.h>
 #include <log/logmanager.h>
@@ -155,7 +154,6 @@ void ConfAppManager::setUp()
     IoCDependency<ConfManager>();
 
     setupConfManager();
-    setupDriveListManager();
     setupAppEndTimer();
 
     checkAppAlerted();
@@ -172,16 +170,6 @@ void ConfAppManager::setupConfManager()
                 }
             },
             Qt::QueuedConnection);
-}
-
-void ConfAppManager::setupDriveListManager()
-{
-    connect(IoC<DriveListManager>(), &DriveListManager::driveMaskChanged, this,
-            [&](quint32 addedMask, quint32 /*removedMask*/) {
-                if ((m_driveMask & addedMask) != 0) {
-                    updateDriverConf();
-                }
-            });
 }
 
 void ConfAppManager::setupAppEndTimer()
@@ -820,8 +808,6 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
         return false;
     }
 
-    m_driveMask = confBuf.driveMask();
-
     return true;
 }
 
@@ -886,8 +872,6 @@ bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
     }
-
-    m_driveMask |= remove ? 0 : confBuf.driveMask();
 
     return true;
 }

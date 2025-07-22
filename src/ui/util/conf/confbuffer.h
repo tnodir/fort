@@ -20,8 +20,6 @@ class ConfBuffer : public QObject
 public:
     explicit ConfBuffer(const QByteArray &buffer = {}, QObject *parent = nullptr);
 
-    quint32 driveMask() const { return m_driveMask; }
-
     QString errorMessage() const { return m_errorMessage; }
 
     bool hasError() const { return !errorMessage().isEmpty(); }
@@ -79,8 +77,6 @@ private:
     bool writeRuleFilterValues(const RuleFilter &ruleFilter);
 
 private:
-    quint32 m_driveMask = 0;
-
     QString m_errorMessage;
 
     QByteArray m_buffer;

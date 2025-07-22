@@ -208,27 +208,6 @@ void NativeEventFilter::processWmWtsSessionChange(void *message)
     }
 }
 
-void NativeEventFilter::processWmPowerBroadcast(void *message)
-{
-    const MSG *msg = static_cast<MSG *>(message);
-
-    switch (msg->wParam) {
-    case PBT_APMRESUMEAUTOMATIC:
-        emit driveListChanged();
-    }
-}
-
-void NativeEventFilter::processWmDeviceChange(void *message)
-{
-    const MSG *msg = static_cast<MSG *>(message);
-
-    switch (msg->wParam) {
-    case DBT_DEVICEARRIVAL:
-    case DBT_DEVICEREMOVECOMPLETE:
-        emit driveListChanged();
-    }
-}
-
 bool NativeEventFilter::nativeEventFilter(
         const QByteArray &eventType, void *message, qintptr *result)
 {
@@ -246,12 +225,6 @@ bool NativeEventFilter::nativeEventFilter(
     } break;
     case WM_WTSSESSION_CHANGE: {
         processWmWtsSessionChange(message);
-    } break;
-    case WM_POWERBROADCAST: {
-        processWmPowerBroadcast(message);
-    } break;
-    case WM_DEVICECHANGE: {
-        processWmDeviceChange(message);
     } break;
     }
 

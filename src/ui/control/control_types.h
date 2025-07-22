@@ -77,8 +77,6 @@ enum Command : qint8 {
 
     Rpc_DriverManager_updateState,
 
-    Rpc_DriveListManager_onDriveListChanged,
-
     Rpc_QuotaManager_alert,
 
     Rpc_StatManager_deleteStatApp,
@@ -122,7 +120,6 @@ enum RpcManager : qint8 {
     Rpc_ConfRuleManager,
     Rpc_ConfZoneManager,
     Rpc_DriverManager,
-    Rpc_DriveListManager,
     Rpc_QuotaManager,
     Rpc_StatManager,
     Rpc_StatConnManager,

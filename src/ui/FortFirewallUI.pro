@@ -44,8 +44,6 @@ SOURCES += \
     control/control.cpp \
     control/controlmanager.cpp \
     control/controlworker.cpp \
-    drivelist/drivelistmanager.cpp \
-    drivelist/drivelistworker.cpp \
     driver/drivercommon.cpp \
     driver/drivermanager.cpp \
     driver/driverworker.cpp \
@@ -175,7 +173,6 @@ SOURCES += \
     rpc/confrulemanagerrpc.cpp \
     rpc/confzonemanagerrpc.cpp \
     rpc/dberrormanagerrpc.cpp \
-    rpc/drivelistmanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
     rpc/logmanagerrpc.cpp \
     rpc/quotamanagerrpc.cpp \
@@ -310,8 +307,6 @@ HEADERS += \
     control/control_types.h \
     control/controlmanager.h \
     control/controlworker.h \
-    drivelist/drivelistmanager.h \
-    drivelist/drivelistworker.h \
     driver/drivercommon.h \
     driver/drivermanager.h \
     driver/driverworker.h \
@@ -446,7 +441,6 @@ HEADERS += \
     rpc/confrulemanagerrpc.h \
     rpc/confzonemanagerrpc.h \
     rpc/dberrormanagerrpc.h \
-    rpc/drivelistmanagerrpc.h \
     rpc/drivermanagerrpc.h \
     rpc/logmanagerrpc.h \
     rpc/quotamanagerrpc.h \

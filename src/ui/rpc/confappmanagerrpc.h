@@ -40,7 +40,6 @@ public:
 
 protected:
     void setupConfManager() override { }
-    void setupDriveListManager() override { }
 
     void setupAppEndTimer() override { }
 };

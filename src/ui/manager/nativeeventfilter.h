@@ -31,7 +31,6 @@ signals:
     void hotKeyPressed(int hotKeyId);
     void environmentChanged();
     void sessionLocked();
-    void driveListChanged();
 
 private:
     void setKeyId(int hotKeyId, quint32 nativeMod, quint32 nativeKey);
@@ -41,8 +40,6 @@ private:
     inline void processWmHotKey(void *message);
     inline void processWmSettingChange(void *message);
     inline void processWmWtsSessionChange(void *message);
-    inline void processWmPowerBroadcast(void *message);
-    inline void processWmDeviceChange(void *message);
 
     static quint32 nativeKeyCode(Qt::Key keyCode);
     static quint32 nativeModifiers(Qt::KeyboardModifiers modifiers);

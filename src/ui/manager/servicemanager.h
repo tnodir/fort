@@ -18,7 +18,6 @@ public:
     CLASS_DELETE_COPY_MOVE(ServiceManager)
 
     void setUp() override;
-    void tearDown() override;
 
     bool controlEnabled() const { return m_controlEnabled; }
     void setControlEnabled(bool v);
@@ -38,7 +37,6 @@ signals:
     void pauseRequested();
     void continueRequested();
     void stopRestartingRequested(bool restarting);
-    void driveListChanged();
 
 protected:
     void setupControlManager();

@@ -440,8 +440,6 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
 
     appsMap.insert(appPath, appData);
 
-    m_driveMask |= FileUtil::driveMaskByPath(app.appPath);
-
     return true;
 }
 

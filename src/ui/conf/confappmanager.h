@@ -63,7 +63,6 @@ signals:
 
 protected:
     virtual void setupConfManager();
-    virtual void setupDriveListManager();
 
     virtual void setupAppEndTimer();
     void updateAppEndTimer();
@@ -102,8 +101,6 @@ private:
     bool updateDriverUpdateAppConf(const App &app);
 
 private:
-    quint32 m_driveMask = 0;
-
     TriggerTimer m_appAlertedTimer;
     TriggerTimer m_appsChangedTimer;
     TriggerTimer m_appUpdatedTimer;

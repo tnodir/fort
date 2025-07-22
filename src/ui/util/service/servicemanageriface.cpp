@@ -30,33 +30,9 @@ void ServiceManagerIface::initialize(qintptr hstatus)
     reportStatus(SERVICE_RUNNING);
 }
 
-void ServiceManagerIface::registerDeviceNotification()
-{
-    if (g_service.hdevnotify)
-        return;
-
-    DEV_BROADCAST_DEVICEINTERFACE filter;
-    ZeroMemory(&filter, sizeof(DEV_BROADCAST_DEVICEINTERFACE));
-    filter.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
-    filter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
-
-    g_service.hdevnotify = RegisterDeviceNotification(g_service.hstatus, &filter,
-            DEVICE_NOTIFY_SERVICE_HANDLE | DEVICE_NOTIFY_ALL_INTERFACE_CLASSES);
-}
-
-void ServiceManagerIface::unregisterDeviceNotification()
-{
-    if (!g_service.hdevnotify)
-        return;
-
-    UnregisterDeviceNotification(g_service.hdevnotify);
-
-    g_service.hdevnotify = nullptr;
-}
-
 void ServiceManagerIface::setupAcceptedControls()
 {
-    g_service.status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN | SERVICE_ACCEPT_POWEREVENT
+    g_service.status.dwControlsAccepted = SERVICE_ACCEPT_SHUTDOWN
             | (acceptStop() ? SERVICE_ACCEPT_STOP : 0)
             | (acceptPauseContinue() ? SERVICE_ACCEPT_PAUSE_CONTINUE : 0);
 }
@@ -70,14 +46,4 @@ void ServiceManagerIface::reportStatus(quint32 code)
     if (g_service.hstatus) {
         SetServiceStatus(g_service.hstatus, &g_service.status);
     }
-}
-
-bool ServiceManagerIface::isDeviceEvent(quint32 eventType)
-{
-    return eventType == DBT_DEVICEARRIVAL || eventType == DBT_DEVICEREMOVECOMPLETE;
-}
-
-bool ServiceManagerIface::isPowerEvent(quint32 eventType)
-{
-    return eventType == PBT_APMRESUMEAUTOMATIC;
 }

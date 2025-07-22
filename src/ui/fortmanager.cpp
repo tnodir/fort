@@ -29,7 +29,6 @@
 #include <rpc/confrulemanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
 #include <rpc/dberrormanagerrpc.h>
-#include <rpc/drivelistmanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
 #include <rpc/logmanagerrpc.h>
 #include <rpc/quotamanagerrpc.h>
@@ -76,7 +75,6 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new ServiceInfoManager());
     ioc->setService(new TaskManager());
     ioc->setService(new DbErrorManager());
-    ioc->setService(new DriveListManager());
 }
 
 inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
@@ -97,7 +95,6 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<ServiceInfoManager>(new ServiceInfoManagerRpc());
     ioc->setService<TaskManager>(new TaskManagerRpc());
     ioc->setService<DbErrorManager>(new DbErrorManagerRpc());
-    ioc->setService<DriveListManager>(new DriveListManagerRpc());
 }
 
 inline void setupServices(IocContainer *ioc, const FortSettings *settings)

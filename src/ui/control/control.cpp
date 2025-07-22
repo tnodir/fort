@@ -74,8 +74,6 @@ static const QHash<Command, const char *> g_commandNames = {
 
     CASE_STRING(Rpc_DriverManager_updateState),
 
-    CASE_STRING(Rpc_DriveListManager_onDriveListChanged),
-
     CASE_STRING(Rpc_QuotaManager_alert),
 
     CASE_STRING(Rpc_StatManager_deleteStatApp),
@@ -118,7 +116,6 @@ static const QHash<RpcManager, const char *> g_managerNames = {
     CASE_STRING(Rpc_ConfRuleManager),
     CASE_STRING(Rpc_ConfZoneManager),
     CASE_STRING(Rpc_DriverManager),
-    CASE_STRING(Rpc_DriveListManager),
     CASE_STRING(Rpc_QuotaManager),
     CASE_STRING(Rpc_StatManager),
     CASE_STRING(Rpc_StatConnManager),
@@ -199,8 +196,6 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfZoneManager, // Rpc_ConfZoneManager_zoneUpdated,
 
     Rpc_DriverManager, // Rpc_DriverManager_updateState,
-
-    Rpc_DriveListManager, // Rpc_DriveListManager_onDriveListChanged,
 
     Rpc_QuotaManager, // Rpc_QuotaManager_alert,
 
@@ -303,8 +298,6 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_ConfZoneManager_zoneUpdated,
 
     0, // Rpc_DriverManager_updateState,
-
-    true, // Rpc_DriveListManager_onDriveListChanged,
 
     0, // Rpc_QuotaManager_alert,
 

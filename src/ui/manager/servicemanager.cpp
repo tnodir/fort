@@ -64,34 +64,12 @@ quint32 processControlShutdownState(
     return SERVICE_STOP_PENDING;
 }
 
-quint32 processControlDeviceEvent(
-        ServiceManager *serviceManager, quint32 /*code*/, quint32 eventType)
-{
-    if (ServiceManagerIface::isDeviceEvent(eventType)) {
-        emit serviceManager->driveListChanged();
-    }
-
-    return 0;
-}
-
-quint32 processControlPowerEvent(
-        ServiceManager *serviceManager, quint32 /*code*/, quint32 eventType)
-{
-    if (ServiceManagerIface::isPowerEvent(eventType)) {
-        emit serviceManager->driveListChanged();
-    }
-
-    return 0;
-}
-
 enum ServiceControlHandlerCode : qint8 {
     ControlHandlerNone = -1,
     ControlHandlerPause = 0,
     ControlHandlerContinue,
     ControlHandlerStop,
     ControlHandlerShutdown,
-    ControlHandlerDeviceEvent,
-    ControlHandlerPowerEvent,
 };
 
 inline ServiceControlHandlerCode toControlHandlerCode(quint32 code)
@@ -104,8 +82,6 @@ inline ServiceControlHandlerCode toControlHandlerCode(quint32 code)
         { ServiceControlStopRestarting, ControlHandlerShutdown },
         { ServiceControlStopUninstall, ControlHandlerShutdown },
         { SERVICE_CONTROL_SHUTDOWN, ControlHandlerShutdown },
-        { SERVICE_CONTROL_DEVICEEVENT, ControlHandlerDeviceEvent },
-        { SERVICE_CONTROL_POWEREVENT, ControlHandlerPowerEvent },
     };
 
     return controlHandlerCodes.value(code, ControlHandlerNone);
@@ -119,8 +95,6 @@ static const controlHandler_func controlHandler_funcList[] = {
     &processControlContinueState, // ControlHandlerContinue,
     &processControlStopState, // ControlHandlerStop,
     &processControlShutdownState, // ControlHandlerShutdown,
-    &processControlDeviceEvent, // ControlHandlerDeviceEvent,
-    &processControlPowerEvent, // ControlHandlerPowerEvent,
 };
 
 inline quint32 processControlState(ServiceManager *serviceManager, quint32 code, quint32 eventType)
@@ -146,11 +120,6 @@ void ServiceManager::setUp()
     setupConfManager();
 }
 
-void ServiceManager::tearDown()
-{
-    unregisterDeviceNotification();
-}
-
 void ServiceManager::setControlEnabled(bool v)
 {
     if (m_controlEnabled == v)
@@ -165,8 +134,6 @@ void ServiceManager::setControlEnabled(bool v)
 void ServiceManager::initialize(qintptr hstatus)
 {
     ServiceManagerIface::initialize(hstatus);
-
-    registerDeviceNotification();
 }
 
 void ServiceManager::setupControlManager()
