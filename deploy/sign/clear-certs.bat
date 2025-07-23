@@ -3,4 +3,4 @@
 
 @set BIN_PATH=%1
 
-signtool.exe remove /s %BIN_PATH%
+signtool.exe remove /s /v %BIN_PATH%
