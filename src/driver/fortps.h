@@ -34,7 +34,7 @@ typedef struct fort_pstree
 
 typedef struct fort_ps_opt
 {
-    UINT16 volatile flags;
+    UINT16 flags;
 
     FORT_APP_PATH_DRIVE ps_drive;
 } FORT_PS_OPT, *PFORT_PS_OPT;

@@ -36,7 +36,7 @@ typedef struct fort_psnode
 
     UINT32 process_id;
 
-    FORT_PS_OPT volatile ps_opt;
+    FORT_PS_OPT ps_opt;
 } FORT_PSNODE, *PFORT_PSNODE;
 
 typedef struct _SYSTEM_PROCESSES
@@ -142,7 +142,8 @@ static void GetImageNameDriveNumber(PCFORT_APP_PATH path, PFORT_APP_PATH_DRIVE p
 
     ObDereferenceObject(fileObj);
 
-    ps_drive->pos = volume_end - (hasDrive ? 2 : 1);
+    const UCHAR driveOff = (hasDrive) ? 2 : 1;
+    ps_drive->pos = volume_end - driveOff;
 
     if (hasDrive) {
         ps_drive->num = dosName.Buffer[0] - L'A' + 1;
@@ -808,14 +809,16 @@ static BOOL fort_pstree_get_proc_name_locked(
     if (proc == NULL)
         return FALSE;
 
-    const FORT_PS_OPT proc_ps_opt = proc->ps_opt;
-    *ps_opt = proc_ps_opt;
+    /* Device number may be changed (e.g. after hibernation) */
+    fort_path_drive_validate(path, &proc->ps_opt.ps_drive);
+
+    *ps_opt = proc->ps_opt;
 
     PFORT_PSNAME ps_name = proc->ps_name;
     if (ps_name == NULL)
         return FALSE;
 
-    const UINT16 proc_flags = proc_ps_opt.flags;
+    const UINT16 proc_flags = proc->ps_opt.flags;
 
     if ((proc_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
             == FORT_PSNODE_NAME_INHERIT)

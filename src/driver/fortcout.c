@@ -86,14 +86,15 @@ inline static void fort_callout_ale_fill_meta_path_drive(
 
 static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
 {
-    PFORT_APP_PATH real_path = &conn->real_path;
-
     const FWP_BYTE_BLOB processPath = *ca->inMetaValues->processPath;
+
+    PFORT_APP_PATH real_path = &conn->real_path;
 
     real_path->len = (UINT16) (processPath.size - sizeof(WCHAR)); /* chop terminating zero */
     real_path->buffer = (PCWSTR) processPath.data;
 
     PFORT_APP_PATH path = &conn->path;
+    *path = *real_path;
 
     FORT_PS_OPT ps_opt = { 0 };
     BOOL inherited = FALSE;
@@ -105,8 +106,6 @@ static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_ME
         if (!inherited) {
             *real_path = *path;
         }
-    } else {
-        *path = *real_path;
     }
 
     conn->inherited = (UCHAR) inherited;

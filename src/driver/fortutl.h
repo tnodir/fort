@@ -47,6 +47,7 @@ FORT_API BOOL fort_path_buffer_alloc(PFORT_PATH_BUFFER pb, DWORD size);
 FORT_API void fort_path_buffer_free(PFORT_PATH_BUFFER pb);
 
 FORT_API void fort_path_drive_adjust(PFORT_APP_PATH path, const FORT_APP_PATH_DRIVE ps_drive);
+FORT_API void fort_path_drive_validate(PCFORT_APP_PATH path, PFORT_APP_PATH_DRIVE ps_drive);
 
 #ifdef __cplusplus
 } // extern "C"
