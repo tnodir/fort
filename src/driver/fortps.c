@@ -428,9 +428,7 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
     proc->ps_opt.flags |= kill_flags;
 
     if (kill_flags == 0 && app_flags.apply_child) {
-        const BOOL has_ps_name = (proc->ps_name != NULL);
-
-        if (!has_ps_name) {
+        if (proc->ps_name == NULL) {
             fort_pstree_proc_set_name(ps_tree, proc, path);
         }
 
@@ -439,8 +437,8 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
     }
 }
 
-inline static BOOL fort_pstree_check_proc_inherited(
-        PFORT_PSTREE ps_tree, PFORT_PSNODE proc, DWORD parentProcessId, FORT_APP_FLAGS app_flags)
+inline static BOOL fort_pstree_check_proc_inherited(PFORT_PSTREE ps_tree, PFORT_PSNODE proc,
+        const DWORD parentProcessId, const FORT_APP_FLAGS app_flags)
 {
     if (proc->ps_name != NULL)
         return FALSE;
@@ -449,12 +447,12 @@ inline static BOOL fort_pstree_check_proc_inherited(
     if (parent == NULL)
         return FALSE;
 
-    const UINT16 parent_flags = parent->ps_opt.flags;
+    const FORT_PS_OPT parent_opt = parent->ps_opt;
 
-    if ((parent_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
+    if ((parent_opt.flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
         return FALSE;
 
-    const UINT16 inherit_spec_flag = (parent_flags & FORT_PSNODE_NAME_INHERIT_SPEC);
+    const UINT16 inherit_spec_flag = (parent_opt.flags & FORT_PSNODE_NAME_INHERIT_SPEC);
 
     if (inherit_spec_flag != 0 && app_flags.apply_parent == 0)
         return FALSE;
@@ -520,9 +518,9 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(
 }
 
 inline static BOOL fort_pstree_check_kill_proc(
-        PFORT_PSNODE proc, PPS_CREATE_NOTIFY_INFO createInfo, UINT16 flags)
+        PFORT_PSNODE proc, PPS_CREATE_NOTIFY_INFO createInfo, const UINT16 killFlag)
 {
-    if (proc != NULL && (proc->ps_opt.flags & flags) != 0) {
+    if (proc != NULL && (proc->ps_opt.flags & killFlag) != 0) {
         createInfo->CreationStatus = STATUS_ACCESS_DENIED;
         /* later arrives notification about the process's close event */
         return TRUE;
@@ -814,15 +812,15 @@ static BOOL fort_pstree_get_proc_name_locked(
 
     *ps_opt = proc->ps_opt;
 
+    if ((ps_opt->flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
+            == FORT_PSNODE_NAME_INHERIT)
+        return FALSE;
+
     PFORT_PSNAME ps_name = proc->ps_name;
     if (ps_name == NULL)
         return FALSE;
 
-    const UINT16 proc_flags = proc->ps_opt.flags;
-
-    if ((proc_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
-            == FORT_PSNODE_NAME_INHERIT)
-        return FALSE;
+    ps_opt->ps_drive.pos = 0; /* don't use the drive info */
 
     path->len = ps_name->size;
     path->buffer = ps_name->data;

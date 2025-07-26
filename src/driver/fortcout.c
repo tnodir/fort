@@ -57,8 +57,8 @@ inline static void fort_callout_ale_set_app_flags(
     conn->app_data = app_data;
 }
 
-inline static void fort_callout_ale_fill_meta_path_drive(
-        PFORT_CONF_META_CONN conn, const FWP_BYTE_BLOB processPath, FORT_APP_PATH_DRIVE ps_drive)
+inline static void fort_callout_ale_fill_meta_path_drive(PFORT_CONF_META_CONN conn,
+        const FWP_BYTE_BLOB processPath, const FORT_APP_PATH_DRIVE ps_drive)
 {
     if (ps_drive.pos == 0)
         return;
@@ -100,8 +100,6 @@ static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_ME
     BOOL inherited = FALSE;
 
     if (fort_pstree_get_proc_name(&fort_device()->ps_tree, conn->process_id, path, &ps_opt)) {
-        ps_opt.ps_drive.pos = 0; /* don't use the drive info */
-
         inherited = (ps_opt.flags & FORT_PSNODE_NAME_INHERITED) != 0;
         if (!inherited) {
             *real_path = *path;
