@@ -1,6 +1,6 @@
 Fort Firewall ChangeLog
 
-v3.18.8-test03, 2025-07-23:
+v3.18.8, 2025-07-26:
 - Driver: Fix connection's direction on reauth (#597).
 - Driver: Rework paths handling (#593).
 - UI: Show alert popup on startup too.
