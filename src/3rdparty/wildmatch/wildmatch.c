@@ -59,7 +59,7 @@ const uchar sane_ctype[256] = {
     /* Nothing in the 128.. range */
 };
 
-#define sane_istest(x, mask) ((sane_ctype[(uchar)(x)] & (mask)) != 0)
+#define sane_istest(x, mask) ((sane_ctype[(uchar) (x)] & (mask)) != 0)
 #define is_glob_special(x)   (ISASCII(x) && sane_istest(x, GIT_GLOB_SPECIAL))
 
 /* Match the "pattern" against the "text" string. */

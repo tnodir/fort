@@ -6,6 +6,10 @@
 #define WM_ABORT_ALL         -1
 #define WM_ABORT_TO_STARSTAR -2
 
+#ifndef WILDMATCH_API
+#    define WILDMATCH_API
+#endif
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
