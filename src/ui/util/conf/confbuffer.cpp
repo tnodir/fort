@@ -401,7 +401,7 @@ bool ConfBuffer::parseAppLine(App &app, const QStringView line, AppParseOptions 
 
 bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quint32 &appsSize)
 {
-    const QString appPath = app.appPath;
+    const QString appPath = FileUtil::normalizePath(app.appPath);
 
     if (appsMap.contains(appPath))
         return true;
