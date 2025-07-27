@@ -724,7 +724,7 @@ QLayout *IfacePage::setupTrayMaxGroupsLayout()
     m_labelTrayMaxGroups = ControlUtil::createLabel();
 
     m_spinTrayMaxGroups = ControlUtil::createSpinBox();
-    m_spinTrayMaxGroups->setFixedWidth(50);
+    m_spinTrayMaxGroups->setFixedWidth(70);
 
     m_spinTrayMaxGroups->setRange(0, trayMaxGroups);
     m_spinTrayMaxGroups->setValue(iniUser()->trayMaxGroups(trayMaxGroups));
