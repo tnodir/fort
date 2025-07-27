@@ -1,9 +1,11 @@
 #include "drivercommon.h"
 
+#include <common/fort_wildmatch.h>
 #include <common/fortconf.h>
 #include <common/fortioctl.h>
 #include <common/fortlog.h>
 #include <common/fortprov.h>
+#include <util/fileutil.h>
 
 namespace DriverCommon {
 
@@ -218,20 +220,33 @@ bool confIp6InRange(const void *drvConf, const ip6_addr_t ip, bool included, int
     return confIpInRange(drvConf, ip_addr, /*isIPv6=*/true, included, addrGroupIndex);
 }
 
-FORT_APP_DATA confAppFind(const void *drvConf, const QString &kernelPath)
+FORT_APP_DATA confAppFind(const void *drvConf, const QString &appPath)
 {
     PCFORT_CONF conf = PCFORT_CONF(drvConf);
-    const QString kernelPathLower = kernelPath.startsWith('\\') ? kernelPath.toLower() : kernelPath;
+    const QString normPath = FileUtil::normalizePath(appPath);
 
     const FORT_APP_PATH path = {
-        .len = quint16(kernelPathLower.size() * sizeof(WCHAR)),
-        .buffer = kernelPathLower.utf16(),
+        .len = quint16(normPath.size() * sizeof(WCHAR)),
+        .buffer = normPath.utf16(),
     };
 
     const FORT_APP_DATA app_data =
             fort_conf_app_find(conf, &path, fort_conf_app_exe_find, /*exe_context=*/nullptr);
 
     return app_data;
+}
+
+bool wildMatch(const QString &pattern, const QString &text)
+{
+    return wildmatch((const wm_char *) pattern.utf16(), (const wm_char *) text.utf16()) == WM_MATCH;
+}
+
+bool wildMatchPath(const QString &pattern, const QString &path)
+{
+    const auto normPattern = FileUtil::normalizePath(pattern);
+    const auto normPath = FileUtil::normalizePath(path);
+
+    return wildMatch(normPattern, normPath);
 }
 
 bool confRulesConnFiltered(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)

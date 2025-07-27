@@ -8,7 +8,8 @@ HEADERS += \
     tst_ioccontainer.h \
     tst_netutil.h \
     tst_ruletextparser.h \
-    tst_stringutil.h
+    tst_stringutil.h \
+    tst_wildmatch.h
 
 SOURCES += \
     tst_main.cpp

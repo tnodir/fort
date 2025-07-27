@@ -41,7 +41,7 @@ QRegularExpressionMatch ConfUtil::matchWildcard(const QStringView path)
     return StringUtil::match(wildMatcher, path);
 }
 
-bool ConfUtil::hasWildcard(const QStringView path)
+bool ConfUtil::hasWildcard(const QString &path)
 {
     return matchWildcard(path).hasMatch();
 }

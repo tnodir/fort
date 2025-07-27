@@ -179,30 +179,12 @@ inline QString convertDrivePathToKernelPath(const QString &path)
     return path;
 }
 
-inline bool isWildDrive(const QString &path)
-{
-    const QChar char1 = path.at(0);
-    return ((char1 == '?' || char1 == '*') && path.at(1) == ':');
-}
-
-inline QString convertWildPathToKernelPath(const QString &path)
-{
-    if (isWildDrive(path)) {
-        // Replace "?:\\" with "\\Device\\*\\"
-        return "\\Device\\*" + path.mid(2);
-    }
-
-    return path;
-}
-
 inline QString convertPathToKernelPath(const QString &path)
 {
     if (path.size() <= 1)
         return path;
 
-    const QChar char1 = path.at(0);
-    const QString kernelPath = char1.isLetter() ? convertDrivePathToKernelPath(path)
-                                                : convertWildPathToKernelPath(path);
+    const QString kernelPath = convertDrivePathToKernelPath(path);
 
     return toNativeSeparators(kernelPath);
 }
@@ -216,6 +198,15 @@ QString pathToKernelPath(const QString &path, bool lower)
     const QString kernelPath = convertPathToKernelPath(path);
 
     return lower ? kernelPath.toLower() : kernelPath;
+}
+
+void pathDriveToUpper(QString &path)
+{
+    const int endIndex = isDriveFilePath(path) ? 1 : (path[0] == '[' ? path.indexOf(']', 1) : 0);
+
+    for (int i = 0; i < endIndex; ++i) {
+        path[i] = path[i].toUpper();
+    }
 }
 
 QString fileName(const QString &path)
@@ -253,9 +244,7 @@ QString normalizePath(const QString &path)
 
     QString pathLower = pathTrimmed.toLower();
 
-    if (isDriveFilePath(pathLower)) {
-        pathLower[0] = pathLower[0].toUpper();
-    }
+    pathDriveToUpper(pathLower);
 
     return toNativeSeparators(pathLower);
 }

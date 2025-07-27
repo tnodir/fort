@@ -6,6 +6,7 @@
 #include "tst_netutil.h"
 #include "tst_ruletextparser.h"
 #include "tst_stringutil.h"
+#include "tst_wildmatch.h"
 
 #include <QCoreApplication>
 
