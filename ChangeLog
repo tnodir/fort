@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.18.9, 2025-07-27:
+- UI: Check for `^` prefix of wildcard paths (#602).
+- UI: Update QCustomPlot to 2.1.1 (#599).
+
 v3.18.8, 2025-07-26:
 - Driver: Fix connection's direction on reauth (#597).
 - Driver: Rework paths handling (#593).
