@@ -56,13 +56,19 @@ QString ConfUtil::parseAppPath(const QStringView line, bool &isWild, bool &isPre
     if (path.isEmpty())
         return QString();
 
-    const auto wildMatch = matchWildcard(path);
-    if (wildMatch.hasMatch()) {
-        if (wildMatch.capturedStart() == path.size() - 2 && path.endsWith(QLatin1String("**"))) {
-            path.chop(2);
-            isPrefix = true;
-        } else {
-            isWild = true;
+    if (path.startsWith('^')) {
+        path = path.mid(1);
+        isWild = true;
+    } else {
+        const auto wildMatch = matchWildcard(path);
+        if (wildMatch.hasMatch()) {
+            if (wildMatch.capturedStart() == path.size() - 2
+                    && path.endsWith(QLatin1String("**"))) {
+                path.chop(2);
+                isPrefix = true;
+            } else {
+                isWild = true;
+            }
         }
     }
 
