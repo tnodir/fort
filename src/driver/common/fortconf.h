@@ -354,7 +354,8 @@ typedef const FORT_APP_ENTRY *PCFORT_APP_ENTRY;
 #define FORT_CONF_APP_ENTRY_SIZE(path_len)                                                         \
     (FORT_CONF_APP_ENTRY_PATH_OFF + (path_len) + sizeof(WCHAR)) /* include terminating zero */
 
-#define FORT_PATH_BUFFER_DATA_MIN (128 + 32)
+#define FORT_PATH_BUFFER_DATA_MIN      (128 + 32)
+#define FORT_PATH_BUFFER_DATA_MIN_SIZE (FORT_PATH_BUFFER_DATA_MIN * sizeof(WCHAR))
 
 typedef struct fort_path_buffer
 {

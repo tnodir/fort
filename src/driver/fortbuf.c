@@ -9,17 +9,6 @@
 
 #define FORT_BUFFER_POOL_TAG 'BwfF'
 
-static FORT_APP_PATH fort_buffer_adjust_log_path(PCFORT_CONF_META_CONN conn)
-{
-    FORT_APP_PATH log_path = conn->real_path;
-
-    if (log_path.len > FORT_LOG_PATH_MAX) {
-        log_path.len = 0; /* drop too long path */
-    }
-
-    return log_path;
-}
-
 static PFORT_BUFFER_DATA fort_buffer_data_new(PFORT_BUFFER buf)
 {
     PFORT_BUFFER_DATA data = buf->data_free;
@@ -182,25 +171,49 @@ FORT_API NTSTATUS fort_buffer_prepare(
     return fort_buffer_prepare_new(buf, len, out);
 }
 
+inline static FORT_APP_PATH fort_buffer_get_log_path(
+        PCFORT_CONF_META_CONN conn, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
+{
+}
+
+inline static FORT_APP_PATH fort_buffer_conn_write_path(
+        PCFORT_CONF_META_CONN conn, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
+{
+    FORT_APP_PATH log_path =
+            (log_type == FORT_BUFFER_CONN_WRITE_APP) ? conn->path : conn->real_path;
+
+    if (log_path.len > FORT_LOG_PATH_MAX) {
+        log_path.len = 0; /* drop too long path */
+    }
+
+    return log_path;
+}
+
+inline static UINT32 fort_buffer_conn_write_len(PCFORT_CONF_META_CONN conn, const UINT32 path_len,
+        const FORT_BUFFER_CONN_WRITE_TYPE log_type)
+{
+    switch (log_type) {
+    case FORT_BUFFER_CONN_WRITE_APP:
+        return FORT_LOG_APP_SIZE(path_len);
+    case FORT_BUFFER_CONN_WRITE_CONN:
+        return FORT_LOG_CONN_SIZE(path_len, conn->isIPv6);
+    case FORT_BUFFER_CONN_WRITE_PROC_NEW:
+        return FORT_LOG_PROC_NEW_SIZE(path_len);
+    default:
+        return 0;
+    }
+}
+
 FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn,
-        PFORT_IRP_INFO irp_info, FORT_BUFFER_CONN_WRITE_TYPE log_type)
+        PFORT_IRP_INFO irp_info, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
 {
     NTSTATUS status;
 
-    const FORT_APP_PATH log_path = fort_buffer_adjust_log_path(conn);
+    const FORT_APP_PATH log_path = fort_buffer_conn_write_path(conn, log_type);
 
-    UINT32 len;
-    switch (log_type) {
-    case FORT_BUFFER_CONN_WRITE_APP: {
-        len = FORT_LOG_APP_SIZE(log_path.len);
-    } break;
-    case FORT_BUFFER_CONN_WRITE_CONN: {
-        len = FORT_LOG_CONN_SIZE(log_path.len, conn->isIPv6);
-    } break;
-    case FORT_BUFFER_CONN_WRITE_PROC_NEW: {
-        len = FORT_LOG_PROC_NEW_SIZE(log_path.len);
-    } break;
-    }
+    const UINT32 len = fort_buffer_conn_write_len(conn, log_path.len, log_type);
+    if (len == 0)
+        return STATUS_INVALID_PARAMETER;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);

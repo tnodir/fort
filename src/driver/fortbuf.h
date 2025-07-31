@@ -48,7 +48,7 @@ FORT_API NTSTATUS fort_buffer_prepare(
         PFORT_BUFFER buf, UINT32 len, PCHAR *out, PFORT_IRP_INFO irp_info);
 
 FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn,
-        PFORT_IRP_INFO irp_info, FORT_BUFFER_CONN_WRITE_TYPE log_type);
+        PFORT_IRP_INFO irp_info, const FORT_BUFFER_CONN_WRITE_TYPE log_type);
 
 FORT_API NTSTATUS fort_buffer_xmove(
         PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len);

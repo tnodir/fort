@@ -39,6 +39,8 @@ typedef struct fort_ps_opt
     FORT_APP_PATH_DRIVE ps_drive;
 } FORT_PS_OPT, *PFORT_PS_OPT;
 
+typedef const FORT_PS_OPT *PCFORT_PS_OPT;
+
 #if defined(__cplusplus)
 extern "C" {
 #endif

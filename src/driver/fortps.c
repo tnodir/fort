@@ -172,7 +172,7 @@ static NTSTATUS GetProcessImageName(HANDLE processHandle, PFORT_PATH_BUFFER pb)
 {
     NTSTATUS status;
 
-    const DWORD bufSize = (FORT_PATH_BUFFER_DATA_MIN - 1) * sizeof(WCHAR);
+    const DWORD bufSize = FORT_PATH_BUFFER_DATA_MIN_SIZE - sizeof(WCHAR);
 
     ULONG outLength = 0;
     status = ZwQueryInformationProcess(
@@ -819,8 +819,6 @@ static BOOL fort_pstree_get_proc_name_locked(
     PFORT_PSNAME ps_name = proc->ps_name;
     if (ps_name == NULL)
         return FALSE;
-
-    ps_opt->ps_drive.pos = 0; /* don't use the drive info */
 
     path->len = ps_name->size;
     path->buffer = ps_name->data;

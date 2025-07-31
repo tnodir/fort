@@ -57,7 +57,7 @@ inline static void fort_callout_ale_set_app_flags(
     conn->app_data = app_data;
 }
 
-inline static void fort_callout_ale_fill_meta_path_drive(PFORT_CONF_META_CONN conn,
+inline static void fort_callout_ale_fill_meta_path_real(PFORT_CONF_META_CONN conn,
         const FWP_BYTE_BLOB processPath, const FORT_APP_PATH_DRIVE ps_drive)
 {
     if (ps_drive.pos == 0)
@@ -66,7 +66,7 @@ inline static void fort_callout_ale_fill_meta_path_drive(PFORT_CONF_META_CONN co
     PFORT_PATH_BUFFER pb = &conn->path_buf;
     PFORT_APP_PATH path = &pb->path;
 
-    if (processPath.size > FORT_PATH_BUFFER_DATA_MIN * sizeof(WCHAR)) {
+    if (processPath.size > FORT_PATH_BUFFER_DATA_MIN_SIZE) {
         if (!fort_path_buffer_alloc(pb, processPath.size))
             return;
 
@@ -81,34 +81,39 @@ inline static void fort_callout_ale_fill_meta_path_drive(PFORT_CONF_META_CONN co
 
     fort_path_drive_adjust(path, ps_drive);
 
-    conn->path = conn->real_path = *path;
+    conn->real_path = *path;
 }
 
 static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
 {
     const FWP_BYTE_BLOB processPath = *ca->inMetaValues->processPath;
 
-    PFORT_APP_PATH real_path = &conn->real_path;
-
-    real_path->len = (UINT16) (processPath.size - sizeof(WCHAR)); /* chop terminating zero */
-    real_path->buffer = (PCWSTR) processPath.data;
-
     PFORT_APP_PATH path = &conn->path;
-    *path = *real_path;
+
+    path->len = (UINT16) (processPath.size - sizeof(WCHAR)); /* chop terminating zero */
+    path->buffer = (PCWSTR) processPath.data;
+
+    PFORT_APP_PATH real_path = &conn->real_path;
+    *real_path = *path;
 
     FORT_PS_OPT ps_opt = { 0 };
-    BOOL inherited = FALSE;
 
     if (fort_pstree_get_proc_name(&fort_device()->ps_tree, conn->process_id, path, &ps_opt)) {
-        inherited = (ps_opt.flags & FORT_PSNODE_NAME_INHERITED) != 0;
+
+        const BOOL inherited = (ps_opt.flags & FORT_PSNODE_NAME_INHERITED) != 0;
         if (!inherited) {
             *real_path = *path;
+            return;
         }
+
+        conn->inherited = TRUE;
     }
 
-    conn->inherited = (UCHAR) inherited;
+    fort_callout_ale_fill_meta_path_real(conn, processPath, ps_opt.ps_drive);
 
-    fort_callout_ale_fill_meta_path_drive(conn, processPath, ps_opt.ps_drive);
+    if (!conn->inherited) {
+        *path = *real_path;
+    }
 }
 
 static void fort_callout_fill_meta_ip(PCFORT_CALLOUT_ARG ca, UCHAR ipIndex, ip_addr_t *ip)
