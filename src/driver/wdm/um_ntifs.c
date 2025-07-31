@@ -1,5 +1,10 @@
 #include "um_ntifs.h"
 
+WCHAR RtlUpcaseUnicodeChar(WCHAR sourceCharacter)
+{
+    return sourceCharacter;
+}
+
 NTSTATUS RtlDowncaseUnicodeString(PUNICODE_STRING destinationString, PCUNICODE_STRING sourceString,
         BOOLEAN allocateDestinationString)
 {

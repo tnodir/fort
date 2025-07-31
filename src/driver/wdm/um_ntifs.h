@@ -31,6 +31,8 @@ typedef struct _KAPC_STATE
     };
 } KAPC_STATE, *PKAPC_STATE, *PRKAPC_STATE;
 
+FORT_API WCHAR RtlUpcaseUnicodeChar(WCHAR sourceCharacter);
+
 FORT_API NTSTATUS RtlDowncaseUnicodeString(PUNICODE_STRING destinationString,
         PCUNICODE_STRING sourceString, BOOLEAN allocateDestinationString);
 

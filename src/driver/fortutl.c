@@ -23,10 +23,7 @@ typedef struct fort_expand_stack_arg
 } FORT_EXPAND_STACK_ARG, *PFORT_EXPAND_STACK_ARG;
 
 static WCHAR g_system32PathBuffer[64];
-static UNICODE_STRING g_system32Path;
-
-static WCHAR g_systemDrivePathBuffer[32];
-static UNICODE_STRING g_systemDrivePath;
+static FORT_APP_PATH g_system32Path;
 
 static NTSTATUS fort_string_new(ULONG len, PCWSTR src, PUNICODE_STRING outData)
 {
@@ -151,40 +148,23 @@ FORT_API DWORD fort_reg_value(PCWSTR name, DWORD defaultValue)
     return NT_SUCCESS(status) ? value : defaultValue;
 }
 
-static void fort_system_drive_init(PCUNICODE_STRING path)
-{
-    UNICODE_STRING linkPath = {
-        .Length = 2 * sizeof(WCHAR), .MaximumLength = 2 * sizeof(WCHAR), .Buffer = path->Buffer
-    };
-
-    WCHAR drivePathBuffer[sizeof(g_systemDrivePathBuffer) / sizeof(WCHAR)];
-    UNICODE_STRING drivePath = {
-        .Length = 0, .MaximumLength = sizeof(drivePathBuffer), .Buffer = drivePathBuffer
-    };
-
-    fort_resolve_link(&linkPath, &drivePath);
-
-    g_systemDrivePath.Length = drivePath.Length;
-    g_systemDrivePath.MaximumLength = sizeof(g_systemDrivePathBuffer);
-    g_systemDrivePath.Buffer = g_systemDrivePathBuffer;
-
-    RtlDowncaseUnicodeString(&g_systemDrivePath, &drivePath, FALSE);
-    g_systemDrivePathBuffer[drivePath.Length / sizeof(WCHAR)] = L'\0';
-}
-
 static NTSTATUS fort_system32_path_set(PCUNICODE_STRING path)
 {
     if (path->Length > sizeof(g_system32PathBuffer) - sizeof(WCHAR))
         return STATUS_BUFFER_TOO_SMALL;
 
-    g_system32Path.Length = path->Length;
-    g_system32Path.MaximumLength = sizeof(g_system32PathBuffer);
-    g_system32Path.Buffer = g_system32PathBuffer;
+    UNICODE_STRING system32Path = {
+        .Length = path->Length,
+        .MaximumLength = sizeof(g_system32PathBuffer),
+        .Buffer = g_system32PathBuffer,
+    };
 
-    RtlDowncaseUnicodeString(&g_system32Path, path, FALSE);
-    g_system32PathBuffer[path->Length / sizeof(WCHAR)] = L'\0';
+    RtlDowncaseUnicodeString(&system32Path, path, FALSE);
+    system32Path.Buffer[0] = RtlUpcaseUnicodeChar(system32Path.Buffer[0]);
+    system32Path.Buffer[system32Path.Length / sizeof(WCHAR)] = L'\0';
 
-    fort_system_drive_init(path);
+    g_system32Path.len = system32Path.Length;
+    g_system32Path.buffer = system32Path.Buffer;
 
     return STATUS_SUCCESS;
 }
@@ -266,16 +246,6 @@ FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING
     return status;
 }
 
-FORT_API PUNICODE_STRING fort_system32_path(void)
-{
-    return &g_system32Path;
-}
-
-FORT_API PUNICODE_STRING fort_system_drive_path(void)
-{
-    return &g_systemDrivePath;
-}
-
 FORT_API BOOL fort_svchost_path_check(PCFORT_APP_PATH path)
 {
     if (path == NULL)
@@ -286,27 +256,18 @@ FORT_API BOOL fort_svchost_path_check(PCFORT_APP_PATH path)
     const USHORT pathLength = path->len;
     const PCHAR pathBuffer = (PCHAR) path->buffer;
 
-    PCUNICODE_STRING sysDrivePath = fort_system_drive_path();
-    PCUNICODE_STRING sys32Path = fort_system32_path();
-
-    const USHORT sys32DrivePrefixSize = 2 * sizeof(WCHAR); /* C: */
-    const USHORT sys32PathSize = sys32Path->Length - sys32DrivePrefixSize;
+    const USHORT sys32PathSize = g_system32Path.len;
 
     /* Check the total path length */
-    if (pathLength != sysDrivePath->Length + sys32PathSize + svchostSize)
+    if (pathLength != sys32PathSize + svchostSize)
         return FALSE;
 
     /* Check the file name */
     if (!fort_mem_eql(pathBuffer + (pathLength - svchostSize), FORT_SVCHOST_EXE, svchostSize))
         return FALSE;
 
-    /* Check the drive */
-    if (!fort_mem_eql(pathBuffer, sysDrivePath->Buffer, sysDrivePath->Length))
-        return FALSE;
-
     /* Check the path */
-    if (!fort_mem_eql(pathBuffer + sysDrivePath->Length,
-                (PCHAR) sys32Path->Buffer + sys32DrivePrefixSize, sys32PathSize))
+    if (!fort_mem_eql(pathBuffer, g_system32Path.buffer, sys32PathSize))
         return FALSE;
 
     return TRUE;

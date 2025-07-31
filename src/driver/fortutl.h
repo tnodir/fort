@@ -21,8 +21,6 @@ FORT_API PWCHAR fort_path_prefix_volume_sep(PCFORT_APP_PATH path);
 FORT_API void fort_path_prefix_adjust(PUNICODE_STRING path);
 
 FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING regPath);
-FORT_API PUNICODE_STRING fort_system32_path(void);
-FORT_API PUNICODE_STRING fort_system_drive_path(void);
 
 FORT_API BOOL fort_svchost_path_check(PCFORT_APP_PATH path);
 
