@@ -171,11 +171,6 @@ FORT_API NTSTATUS fort_buffer_prepare(
     return fort_buffer_prepare_new(buf, len, out);
 }
 
-inline static FORT_APP_PATH fort_buffer_get_log_path(
-        PCFORT_CONF_META_CONN conn, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
-{
-}
-
 inline static FORT_APP_PATH fort_buffer_conn_write_path(
         PCFORT_CONF_META_CONN conn, const FORT_BUFFER_CONN_WRITE_TYPE log_type)
 {
