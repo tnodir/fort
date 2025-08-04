@@ -152,6 +152,12 @@ public:
     QByteArray progAppsHeader() const { return valueByteArray("progWindow/appsHeader"); }
     void setProgAppsHeader(const QByteArray &v) { setValue("progWindow/appsHeader", v); }
 
+    int progAppsRowsHeight(int defaultValue) const
+    {
+        return valueInt("progWindow/appsRowsHeight", defaultValue);
+    }
+    void setProgAppsHeader(int v) { setValue("progWindow/appsRowsHeight", v); }
+
     bool progWindowAutoClearAlerts() const { return valueBool("progWindow/autoClearAlerts"); }
     void setProgWindowAutoClearAlerts(bool on) { setValue("progWindow/autoClearAlerts", on); }
 

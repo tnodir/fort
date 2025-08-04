@@ -123,9 +123,12 @@ void ProgramsWindow::saveWindowState(bool /*wasVisible*/)
     iniUser()->setProgWindowGeometry(stateWatcher()->geometry());
     iniUser()->setProgWindowMaximized(stateWatcher()->maximized());
 
-    auto header = m_appListView->horizontalHeader();
-    iniUser()->setProgAppsHeader(header->saveState());
-    iniUser()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
+    // Apps header
+    {
+        auto header = m_appListView->horizontalHeader();
+        iniUser()->setProgAppsHeader(header->saveState());
+        iniUser()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
+    }
 
     confManager()->saveIniUser();
 }
@@ -135,9 +138,17 @@ void ProgramsWindow::restoreWindowState()
     stateWatcher()->restore(this, QSize(1024, 768), iniUser()->progWindowGeometry(),
             iniUser()->progWindowMaximized());
 
+    // Apps header
     if (iniUser()->progAppsHeaderVersion() == APPS_HEADER_VERSION) {
         auto header = m_appListView->horizontalHeader();
         header->restoreState(iniUser()->progAppsHeader());
+    }
+
+    // Apps rows
+    {
+        auto header = m_appListView->verticalHeader();
+        header->setDefaultSectionSize(
+                qBound(7, iniUser()->progAppsRowsHeight(header->defaultSectionSize()), 999));
     }
 }
 
