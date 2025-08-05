@@ -644,14 +644,13 @@ inline static BOOL fort_addr_is_local_broadcast(PCFORT_CONF_META_CONN conn)
     return conn->remote_ip.v4 == 0xFFFFFFFF;
 }
 
-inline static BOOL fort_callout_ale_is_local_address(PFORT_CALLOUT_ARG ca,
-        PFORT_CALLOUT_ALE_EXTRA cx, const FORT_CONF_FLAGS conf_flags, const UINT32 classify_flags)
+inline static BOOL fort_callout_ale_is_local_address(
+        PFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx, const FORT_CONF_FLAGS conf_flags)
 {
     PFORT_CONF_META_CONN conn = &cx->conn;
 
     fort_callout_fill_meta_ip(ca, ca->fi->remoteIp, &conn->remote_ip);
 
-    conn->is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
     conn->is_broadcast = (UINT16) fort_addr_is_local_broadcast(conn);
 
     if (conf_flags.filter_locals)
@@ -676,12 +675,14 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
 
     const UINT32 classify_flags = ca->inFixedValues->incomingValue[ca->fi->flags].value.uint32;
 
+    const BOOL is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
     const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0;
 
     FORT_CALLOUT_ALE_EXTRA cx = {
         .conn = {
                 .inbound = ca->inbound,
                 .isIPv6 = ca->isIPv6,
+                .is_loopback = is_loopback,
                 .is_reauth = is_reauth,
         },
     };
@@ -689,11 +690,12 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
     const FORT_CONF_FLAGS conf_flags = device_conf->conf_flags;
 
-    if (fort_callout_ale_is_local_address(ca, &cx, conf_flags, classify_flags)) {
+    if (fort_callout_ale_is_local_address(ca, &cx, conf_flags)) {
         fort_callout_classify_permit(ca->filter, ca->classifyOut);
-    } else {
-        fort_callout_ale_by_conf(ca, &cx, device_conf, conf_flags);
+        return;
     }
+
+    fort_callout_ale_by_conf(ca, &cx, device_conf, conf_flags);
 }
 
 inline static void fort_callout_ale_classify_v(const FWPS_INCOMING_VALUES0 *inFixedValues,
