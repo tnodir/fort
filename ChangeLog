@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.18.11, 2025-08-05:
+- Driver: Fix closed processes handling (v3.18.8 regression) (#607).
+- UI: Programs: Add ability to set rows height (#608).
+
 v3.18.10, 2025-08-01:
 - Driver: Fix detecting of SvcHost shared service with "-s" argument (v3.18.8 regression).
 - UI: Update SQLite to 3.50.4
