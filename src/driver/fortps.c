@@ -593,6 +593,16 @@ inline static void fort_pstree_notify_process_created(
     fort_pstree_check_kill_proc(proc, createInfo, FORT_PSNODE_KILL_PROCESS);
 }
 
+inline static void fort_pstree_notify_process_closed(
+        PFORT_PSTREE ps_tree, PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSNODE proc)
+{
+    if (createInfo == NULL) {
+        proc->ps_opt.flags |= FORT_PSNODE_CLOSED;
+    } else {
+        fort_pstree_proc_del(ps_tree, proc);
+    }
+}
+
 inline static BOOL fort_pstree_notify_process_prepare(
         PFORT_PSTREE ps_tree, PPS_CREATE_NOTIFY_INFO createInfo, PFORT_PSINFO_HASH psi)
 {
@@ -603,7 +613,7 @@ inline static BOOL fort_pstree_notify_process_prepare(
 
     PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, psi->processId, psi->pid_hash);
     if (proc != NULL) {
-        fort_pstree_proc_del(ps_tree, proc);
+        fort_pstree_notify_process_closed(ps_tree, createInfo, proc);
     }
 
     /* Check parent process */
@@ -791,7 +801,7 @@ FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
 
     status = ZwQuerySystemInformation(SystemProcessInformation, buffer, bufferSize, NULL);
     if (NT_SUCCESS(status)) {
-        fort_pstree_enum_processes_loop(&fort_device()->ps_tree, buffer);
+        fort_pstree_enum_processes_loop(ps_tree, buffer);
     } else {
         LOG("PsTree: Enum Processes Error: %x\n", status);
         TRACE(FORT_PSTREE_ENUM_PROCESSES_ERROR, status, 0, 0);

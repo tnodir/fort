@@ -613,9 +613,9 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
 inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
         PFORT_DEVICE_CONF device_conf, const FORT_CONF_FLAGS conf_flags)
 {
-    const BOOL ps_enumerating = fort_device_flag(device_conf, FORT_DEVICE_PS_ENUMERATING) != 0;
+    const BOOL ps_enumerated = fort_device_flag(device_conf, FORT_DEVICE_PS_ENUMERATED) != 0;
 
-    PFORT_CONF_REF conf_ref = ps_enumerating ? NULL : fort_conf_ref_take(device_conf);
+    PFORT_CONF_REF conf_ref = ps_enumerated ? fort_conf_ref_take(device_conf) : NULL;
 
     if (conf_ref == NULL) {
         fort_callout_ale_classify_boot_action(ca, device_conf);

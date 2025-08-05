@@ -37,7 +37,7 @@ typedef struct fort_conf_ref
 #define FORT_DEVICE_IS_VALIDATED        0x0020
 #define FORT_DEVICE_POWER_OFF           0x0040
 #define FORT_DEVICE_SHUTDOWN_REGISTERED 0x0080
-#define FORT_DEVICE_PS_ENUMERATING      0x0100
+#define FORT_DEVICE_PS_ENUMERATED       0x0100
 
 typedef struct fort_device_conf
 {

@@ -173,10 +173,6 @@ inline static NTSTATUS fort_device_control_setconf_ref(
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
     const BOOL was_null_conf = (device_conf->ref == NULL);
 
-    if (was_null_conf) {
-        fort_device_flag_set(device_conf, FORT_DEVICE_PS_ENUMERATING, TRUE);
-    }
-
     const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(device_conf, conf_ref);
 
     fort_stat_conf_update(&fort_device()->stat, conf_io);
@@ -186,7 +182,7 @@ inline static NTSTATUS fort_device_control_setconf_ref(
     if (was_null_conf) {
         fort_pstree_enum_processes(&fort_device()->ps_tree);
 
-        fort_device_flag_set(device_conf, FORT_DEVICE_PS_ENUMERATING, FALSE);
+        fort_device_flag_set(device_conf, FORT_DEVICE_PS_ENUMERATED, TRUE);
     }
 
     return fort_device_reauth_force(old_conf_flags);

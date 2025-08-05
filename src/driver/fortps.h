@@ -31,6 +31,7 @@ typedef struct fort_pstree
 #define FORT_PSNODE_KILL_PROCESS      0x0010
 #define FORT_PSNODE_KILL_CHILD        0x0020
 #define FORT_PSNODE_IS_SVCHOST        0x0040
+#define FORT_PSNODE_CLOSED            0x0080
 
 typedef struct fort_ps_opt
 {
