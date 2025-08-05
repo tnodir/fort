@@ -146,6 +146,8 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
 {
     PFORT_CONF_FLAGS confFlags = PFORT_CONF_FLAGS(m_data);
 
+    confFlags->version_updating = conf.versionUpdating();
+
     confFlags->boot_filter = conf.bootFilter();
     confFlags->stealth_mode = conf.stealthMode();
     confFlags->trace_events = conf.traceEvents();

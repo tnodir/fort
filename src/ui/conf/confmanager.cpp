@@ -615,6 +615,16 @@ void ConfManager::updateConfPeriods()
     }
 }
 
+void ConfManager::switchVersionUpdating()
+{
+    if (!conf())
+        return;
+
+    conf()->setVersionUpdating(true);
+
+    saveFlags();
+}
+
 void ConfManager::switchFilterOff()
 {
     if (!conf())

@@ -326,6 +326,7 @@ void FirewallConf::copyFlags(const FirewallConf &o)
 {
     m_editedFlags = o.editedFlags();
 
+    m_versionUpdating = o.versionUpdating();
     m_bootFilter = o.bootFilter();
     m_stealthMode = o.stealthMode();
     m_traceEvents = o.traceEvents();
