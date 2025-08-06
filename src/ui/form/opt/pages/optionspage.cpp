@@ -28,7 +28,8 @@
 
 namespace {
 
-const std::array timedOptionSecondsValues = { 10, 0, 20, 60, 60 * 2, 60 * 5, 60 * 10 };
+const std::array timedOptionSecondsValues = { 10, 0, 20, 60, 60 * 2, 60 * 5, 60 * 10,
+    60 * 60 /* 1 hour */, 60 * 60 * 24 /* 1 day */ };
 
 void updateComboBox(
         QComboBox *c, const QStringList &names, const QStringList &iconPaths, int currentIndex)
@@ -190,7 +191,7 @@ void OptionsPage::retranslateComboFilterMode()
 void OptionsPage::retranslateTimedOptions()
 {
     const QStringList list = { tr("Custom"), tr("Disabled"), tr("20 seconds"), tr("1 minute"),
-        tr("2 minutes"), tr("5 minutes"), tr("10 minutes") };
+        tr("2 minutes"), tr("5 minutes"), tr("10 minutes"), tr("1 hour"), tr("1 day") };
 
     const auto suffix = tr(" second(s)");
 
@@ -341,7 +342,7 @@ QLayout *OptionsPage::setupFilterModeLayout()
 void OptionsPage::setupFilterOffSeconds()
 {
     m_lscFilterOffSeconds = new LabelSpinCombo();
-    m_lscFilterOffSeconds->spinBox()->setRange(0, 60000); // ~16.6 hours
+    m_lscFilterOffSeconds->spinBox()->setRange(0, 99999); // ~27.7 hours
     m_lscFilterOffSeconds->setValues(timedOptionSecondsValues);
 
     m_lscFilterOffSeconds->spinBox()->setValue(ini()->filterOffSeconds());
@@ -358,7 +359,7 @@ void OptionsPage::setupFilterOffSeconds()
 void OptionsPage::setupAutoLearnSeconds()
 {
     m_lscAutoLearnSeconds = new LabelSpinCombo();
-    m_lscAutoLearnSeconds->spinBox()->setRange(0, 60000); // ~16.6 hours
+    m_lscAutoLearnSeconds->spinBox()->setRange(0, 99999); // ~27.7 hours
     m_lscAutoLearnSeconds->setValues(timedOptionSecondsValues);
 
     m_lscAutoLearnSeconds->spinBox()->setValue(ini()->autoLearnSeconds());
