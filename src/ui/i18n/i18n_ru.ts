@@ -1414,6 +1414,14 @@ Make sure that you have a fresh backup.</source>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation>Не удалять последний загруженный установщик после установки</translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 час</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation>1 день</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -1414,6 +1414,14 @@ Make sure that you have a fresh backup.</source>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation>설치 후 마지막으로 다운로드한 설치 프로그램을 삭제하지 않습니다</translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 시간</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation>1일</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

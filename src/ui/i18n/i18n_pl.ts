@@ -1414,6 +1414,14 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 godzina</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

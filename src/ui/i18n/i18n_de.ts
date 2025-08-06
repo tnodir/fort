@@ -1414,6 +1414,14 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation>Den zuletzt heruntergeladenen Installer nach der Installation nicht löschen</translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 Stunde</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

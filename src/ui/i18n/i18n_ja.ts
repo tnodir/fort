@@ -1414,6 +1414,14 @@ Make sure that you have a fresh backup.</source>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation>インストール後に最後にダウンロードしたインストーラを削除しない</translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 時間</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

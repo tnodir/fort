@@ -1414,6 +1414,14 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation>Po namestitvi ne izbrišite zadnjega prenesenega namestitvenega programa</translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 uro</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation>1 dan</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

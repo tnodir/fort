@@ -1412,6 +1412,14 @@ Make sure that you have a fresh backup.</source>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation></translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

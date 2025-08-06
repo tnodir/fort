@@ -1413,6 +1413,14 @@ Certifique-se de que possui um backup recente.</translation>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation>Não excluir o último instalador baixado após a instalação</translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 hora</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation>1 dia</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

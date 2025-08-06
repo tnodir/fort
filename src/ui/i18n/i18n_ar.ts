@@ -1414,6 +1414,14 @@ Make sure that you have a fresh backup.</source>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>ساعة واحدة</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
@@ -1879,23 +1887,23 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>1 minute</source>
-        <translation type="unfinished">دقيقة واحدة</translation>
+        <translation>دقيقة واحدة</translation>
     </message>
     <message>
         <source>5 minutes</source>
-        <translation type="unfinished">5 دقائق</translation>
+        <translation>5 دقائق</translation>
     </message>
     <message>
         <source>10 minutes</source>
-        <translation type="unfinished">10 دقائق</translation>
+        <translation>10 دقائق</translation>
     </message>
     <message>
         <source>30 minutes</source>
-        <translation type="unfinished">30 دقيقة</translation>
+        <translation>30 دقيقة</translation>
     </message>
     <message>
         <source>1 hour</source>
-        <translation type="unfinished">ساعة واحدة</translation>
+        <translation>ساعة واحدة</translation>
     </message>
     <message>
         <source>3 hours</source>
@@ -1903,7 +1911,7 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>6 hours</source>
-        <translation type="unfinished">6 ساعات</translation>
+        <translation>6 ساعات</translation>
     </message>
 </context>
 <context>

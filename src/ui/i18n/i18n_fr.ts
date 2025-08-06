@@ -1414,6 +1414,14 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation>Ne&apos;pas supprimer le dernier installateur téléchargé après l&apos;installation</translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 heure</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation>1 jour</translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

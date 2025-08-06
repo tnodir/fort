@@ -1414,6 +1414,14 @@ Make sure that you have a fresh backup.</source>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation>安装后不删除最后下载的安装程序</translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 小时</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>

@@ -1414,6 +1414,14 @@ Assicurati di avere un nuovo backup.</translation>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
         <translation>Non eliminare l&apos;ultimo installatore scaricato dopo l&apos;installazione</translation>
     </message>
+    <message>
+        <source>1 hour</source>
+        <translation>1 ora</translation>
+    </message>
+    <message>
+        <source>1 day</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>OptionsWindow</name>
