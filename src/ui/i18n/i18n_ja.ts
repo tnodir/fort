@@ -1420,7 +1420,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>1 day</source>
-        <translation type="unfinished"></translation>
+        <translation>1 日</translation>
     </message>
 </context>
 <context>
