@@ -75,8 +75,7 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
         const ENUM_SERVICE_STATUS_PROCESSW *service, DWORD serviceCount, bool displayName,
         int *processCount = nullptr)
 {
-    for (int infoIndex = infoList.size(); serviceCount > 0;
-            --serviceCount, ++service, ++infoIndex) {
+    for (; serviceCount > 0; --serviceCount, ++service) {
 
         const auto realServiceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
 
