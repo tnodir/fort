@@ -1420,7 +1420,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>1 day</source>
-        <translation type="unfinished"></translation>
+        <translation>1 giorno</translation>
     </message>
 </context>
 <context>
