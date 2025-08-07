@@ -258,8 +258,6 @@ bool AutoUpdateManager::runInstaller()
     }
 
     QTimer::singleShot(100, this, [&] { // Let clients to restart
-        IoC<ConfManager>()->switchVersionUpdating();
-
         OsUtil::quit("new version install");
     });
 

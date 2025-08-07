@@ -30,8 +30,6 @@
 
 typedef struct fort_conf_flags
 {
-    UINT32 version_updating : 1;
-
     UINT32 boot_filter : 1;
     UINT32 stealth_mode : 1;
     UINT32 trace_events : 1;
@@ -61,7 +59,7 @@ typedef struct fort_conf_flags
     UINT32 log_blocked_conn : 1;
     UINT32 log_alerted_conn : 1;
 
-    UINT32 reserved_flags : 8; /* not used */
+    UINT32 reserved_flags : 9; /* not used */
 
     UINT16 group_bits;
     UINT16 reserved; /* not used */

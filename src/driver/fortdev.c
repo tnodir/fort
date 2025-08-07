@@ -124,15 +124,13 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
         fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
 
         fort_device_reauth_force(old_conf_flags);
-
-        /* Close flows */
-        if (old_conf_flags.version_updating) {
-            fort_stat_close_flows(&fort_device()->stat);
-        }
     }
 
     /* Clear pending packets */
     fort_pending_clear(&fort_device()->pending);
+
+    /* Close flows */
+    fort_stat_close_flows(&fort_device()->stat);
 
     /* Clear buffer */
     fort_buffer_clear(&fort_device()->buffer);

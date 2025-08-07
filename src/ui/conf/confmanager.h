@@ -51,8 +51,6 @@ public:
     void applySavedConf(FirewallConf *newConf);
     bool save(FirewallConf *newConf);
 
-    void switchVersionUpdating();
-
     bool saveFlags();
     void saveIni();
     void saveIniUser(bool edited = false, bool onlyFlags = false);

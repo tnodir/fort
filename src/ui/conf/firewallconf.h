@@ -68,9 +68,6 @@ public:
     bool anyEdited() const { return m_editedFlags != NoneEdited; }
     void resetEdited(EditedFlags v = NoneEdited) { m_editedFlags = v; }
 
-    bool versionUpdating() const { return m_versionUpdating; }
-    void setVersionUpdating(bool v) { m_versionUpdating = v; }
-
     bool bootFilter() const { return m_bootFilter; }
     void setBootFilter(bool v) { m_bootFilter = v; }
 
@@ -234,8 +231,6 @@ private:
 
 private:
     uint m_editedFlags : 8 = AllEdited; // update all on load()!
-
-    uint m_versionUpdating : 1 = false;
 
     uint m_bootFilter : 1 = false;
     uint m_stealthMode : 1 = false;
