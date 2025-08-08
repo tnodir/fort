@@ -1420,7 +1420,7 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
     </message>
     <message>
         <source>1 day</source>
-        <translation type="unfinished"></translation>
+        <translation>1 día</translation>
     </message>
 </context>
 <context>
