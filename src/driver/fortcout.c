@@ -75,7 +75,7 @@ inline static void fort_callout_ale_fill_meta_path_real(PFORT_CONF_META_CONN con
         path->buffer = pb->data;
     }
 
-    path->len = processPath.size - sizeof(WCHAR); /* chop terminating zero */
+    path->len = (UINT16) (processPath.size - sizeof(WCHAR)); /* chop terminating zero */
 
     RtlCopyMemory((PVOID) path->buffer, processPath.data, processPath.size);
 

@@ -82,8 +82,6 @@ void fillServiceInfoList(QVector<ServiceInfo> &infoList, const RegKey &servicesR
         const auto serviceName = resolveSvcHostServiceName(servicesReg, realServiceName);
         const RegKey svcReg(servicesReg, serviceName);
 
-        qDebug() << "TEST> Svc:" << serviceName << checkIsSvcHostService(svcReg);
-
         if (!checkIsSvcHostService(svcReg))
             continue;
 

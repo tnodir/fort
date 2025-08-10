@@ -787,7 +787,7 @@ void ProgramsWindow::convertToWildcard()
 
     windowManager()->showConfirmBox(
             [=, this] {
-                App app = appRow.app();
+                App app = appRow;
                 app.isWildcard = true;
 
                 ctrl()->updateApp(app);

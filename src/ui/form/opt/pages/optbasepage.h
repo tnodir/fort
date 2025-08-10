@@ -20,7 +20,6 @@ QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class ConfManager;
 class FirewallConf;
-class FortManager;
 class FortSettings;
 class IniOptions;
 class IniUser;
@@ -38,7 +37,6 @@ public:
     explicit OptBasePage(OptionsController *ctrl, QWidget *parent = nullptr);
 
     OptionsController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
     FortSettings *settings() const;
     ConfManager *confManager() const;
     FirewallConf *conf() const;

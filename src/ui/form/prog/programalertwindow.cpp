@@ -22,6 +22,21 @@ ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) :
     initialize();
 }
 
+ConfAppManager *ProgramAlertWindow::confAppManager() const
+{
+    return ctrl()->confAppManager();
+}
+
+ConfManager *ProgramAlertWindow::confManager() const
+{
+    return ctrl()->confManager();
+}
+
+IniUser *ProgramAlertWindow::iniUser() const
+{
+    return ctrl()->iniUser();
+}
+
 bool ProgramAlertWindow::isAutoActive() const
 {
     return iniUser()->progAlertWindowAutoActive();
@@ -58,29 +73,22 @@ void ProgramAlertWindow::closeOnSave()
     }
 }
 
-void ProgramAlertWindow::setupController()
-{
-    ctrl()->setParent(this); // can't set in ctor, because the widget isn't yet fully constructed
-}
-
 void ProgramAlertWindow::retranslateWindowTitle()
 {
     this->setWindowTitle(tr("Alert Program"));
 }
 
+void ProgramAlertWindow::setupController()
+{
+    ctrl()->setParent(this); // can't set in ctor, because the widget isn't yet fully constructed
+}
+
 void ProgramAlertWindow::setupUi()
 {
-    setupControls();
-
     // Modality
     this->setWindowModality(Qt::NonModal);
 
     // Top Window
     this->setWindowFlag(Qt::WindowStaysOnTopHint, iniUser()->progAlertWindowAlwaysOnTop());
     this->setAttribute(Qt::WA_ShowWithoutActivating, !isAutoActive());
-}
-
-void ProgramAlertWindow::setupControls()
-{
-    m_rbKillProcess->setVisible(false);
 }

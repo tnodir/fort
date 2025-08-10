@@ -1,9 +1,13 @@
 #ifndef PROGRAMEDITDIALOG_H
 #define PROGRAMEDITDIALOG_H
 
-#include "programeditdialogbase.h"
+#include <form/controls/formwindow.h>
 
-class ProgramEditDialog : public ProgramEditDialogBase
+class App;
+class ProgramEditController;
+class ProgMainPage;
+
+class ProgramEditDialog : public FormWindow
 {
     Q_OBJECT
 
@@ -11,31 +15,28 @@ public:
     explicit ProgramEditDialog(
             ProgramEditController *ctrl, QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
+    ProgramEditController *ctrl() const { return m_ctrl; }
+
     void initialize(const App &app, const QVector<qint64> &appIdList = {});
 
-protected:
-    void saveScheduleAction(App::ScheduleAction actionType, int minutes) override;
+    bool isNew() const;
 
-    bool save() override;
+protected:
+    virtual void closeOnSave() { close(); }
+
+protected slots:
+    void retranslateUi();
+    virtual void retranslateWindowTitle();
 
 private:
-    void initializePathNameRuleFields(bool isSingleSelection = true);
-    void initializePathField(bool isSingleSelection);
-    void initializeNameField(bool isSingleSelection);
-    void initializeNotesField(bool isSingleSelection);
-    void initializeRuleField(bool isSingleSelection);
-    void initializeFocus();
+    void setupController();
 
     void setupUi();
 
-    bool saveApp(App &app);
-    bool saveMulti(App &app);
+private:
+    ProgramEditController *m_ctrl = nullptr;
 
-    bool validateFields() const;
-    void fillApp(App &app) const;
-    void fillAppPath(App &app) const;
-    void fillAppApplyChild(App &app) const;
-    void fillAppEndTime(App &app) const;
+    ProgMainPage *m_mainPage = nullptr;
 };
 
 #endif // PROGRAMEDITDIALOG_H

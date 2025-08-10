@@ -104,10 +104,14 @@ SOURCES += \
     form/opt/pages/optmainpage.cpp \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
+    form/prog/pages/progbasepage.cpp \
+    form/prog/pages/proggeneralpage.cpp \
+    form/prog/pages/progmainpage.cpp \
+    form/prog/pages/progmorepage.cpp \
+    form/prog/pages/prognetworkpage.cpp \
     form/prog/programalertwindow.cpp \
     form/prog/programeditcontroller.cpp \
     form/prog/programeditdialog.cpp \
-    form/prog/programeditdialogbase.cpp \
     form/prog/programscontroller.cpp \
     form/prog/programswindow.cpp \
     form/rule/ruleeditdialog.cpp \
@@ -368,10 +372,14 @@ HEADERS += \
     form/opt/pages/optmainpage.h \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
+    form/prog/pages/progbasepage.h \
+    form/prog/pages/proggeneralpage.h \
+    form/prog/pages/progmainpage.h \
+    form/prog/pages/progmorepage.h \
+    form/prog/pages/prognetworkpage.h \
     form/prog/programalertwindow.h \
     form/prog/programeditcontroller.h \
     form/prog/programeditdialog.h \
-    form/prog/programeditdialogbase.h \
     form/prog/programscontroller.h \
     form/prog/programswindow.h \
     form/rule/ruleeditdialog.h \

@@ -18,7 +18,6 @@ class ConfManager;
 
 struct AppRow : TableRow, public App
 {
-    const App &app() const { return *this; }
 };
 
 struct AppStatesCount

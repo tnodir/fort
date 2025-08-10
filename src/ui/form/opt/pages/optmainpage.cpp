@@ -64,7 +64,7 @@ void OptMainPage::setupUi()
     setupTabBar();
 
     // Dialog buttons
-    auto buttonsLayout = setupDialogButtons();
+    auto buttonsLayout = setupButtonsLayout();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
     layout->addWidget(m_tabWidget);
@@ -82,9 +82,6 @@ void OptMainPage::setupTabBar()
     auto statisticsPage = new StatisticsPage(ctrl());
     auto graphPage = new GraphPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
-
-    m_pages = { optionsPage, ifacePage, addressesPage, applicationsPage, statisticsPage, graphPage,
-        schedulePage };
 
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(optionsPage),
@@ -105,10 +102,10 @@ void OptMainPage::setupTabBar()
     m_tabWidget->setCornerWidget(m_btMenu);
 
     connect(m_tabWidget, &QTabWidget::currentChanged, this,
-            [&](int tabIndex) { m_pages[tabIndex]->onPageActivated(); });
+            [&](int tabIndex) { pageAt(tabIndex)->onPageActivated(); });
 }
 
-QLayout *OptMainPage::setupDialogButtons()
+QLayout *OptMainPage::setupButtonsLayout()
 {
     setupBackup();
     setupDefault();
@@ -179,5 +176,10 @@ void OptMainPage::setupApplyCancelButtons()
 
 OptBasePage *OptMainPage::currentPage() const
 {
-    return m_pages[m_tabWidget->currentIndex()];
+    return pageAt(m_tabWidget->currentIndex());
+}
+
+OptBasePage *OptMainPage::pageAt(int index) const
+{
+    return static_cast<OptBasePage *>(m_tabWidget->widget(index));
 }

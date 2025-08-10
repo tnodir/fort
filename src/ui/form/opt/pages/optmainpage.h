@@ -1,8 +1,6 @@
 #ifndef OPTMAINPAGE_H
 #define OPTMAINPAGE_H
 
-#include <QVarLengthArray>
-
 #include "optbasepage.h"
 
 QT_FORWARD_DECLARE_CLASS(QTabWidget)
@@ -22,12 +20,13 @@ protected slots:
 private:
     void setupUi();
     void setupTabBar();
-    QLayout *setupDialogButtons();
+    QLayout *setupButtonsLayout();
     void setupBackup();
     void setupDefault();
     void setupApplyCancelButtons();
 
     OptBasePage *currentPage() const;
+    OptBasePage *pageAt(int index) const;
 
 private:
     QTabWidget *m_tabWidget = nullptr;
@@ -44,8 +43,6 @@ private:
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btApply = nullptr;
     QPushButton *m_btCancel = nullptr;
-
-    QVarLengthArray<OptBasePage *, 7> m_pages;
 };
 
 #endif // OPTMAINPAGE_H
