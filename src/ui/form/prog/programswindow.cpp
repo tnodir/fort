@@ -27,6 +27,7 @@
 #include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+#include <util/ioc/ioccontainer.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "programeditdialog.h"
@@ -174,7 +175,6 @@ void ProgramsWindow::retranslateUi()
     m_actKillApp->setText(tr("Kill Process"));
     m_actAddApp->setText(tr("Add"));
     m_actAddWildcard->setText(tr("Add Wildcard"));
-    m_actToWildcard->setText(tr("Convert to Wildcard"));
     m_actEditApp->setText(tr("Edit"));
     m_actRemoveApp->setText(tr("Remove"));
 
@@ -330,8 +330,6 @@ void ProgramsWindow::setupEditMenu()
     m_actAddWildcard = editMenu->addAction(IconCache::icon(":/icons/coding.png"), QString());
     m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
-    m_actToWildcard = editMenu->addAction(IconCache::icon(":/icons/coding.png"), QString());
-
     m_actEditApp = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditApp->setShortcut(Qt::Key_Enter);
 
@@ -368,7 +366,6 @@ void ProgramsWindow::setupEditMenu()
             [&] { updateSelectedApps(/*blocked=*/true, /*killProcess=*/true); });
     connect(m_actAddApp, &QAction::triggered, this, &ProgramsWindow::addNewProgram);
     connect(m_actAddWildcard, &QAction::triggered, this, &ProgramsWindow::addNewWildcard);
-    connect(m_actToWildcard, &QAction::triggered, this, &ProgramsWindow::convertToWildcard);
     connect(m_actEditApp, &QAction::triggered, this, &ProgramsWindow::editSelectedPrograms);
     connect(m_actRemoveApp, &QAction::triggered, this, &ProgramsWindow::deleteSelectedApps);
 
@@ -595,7 +592,6 @@ void ProgramsWindow::setupTableAppsChanged()
         m_actAllowApp->setEnabled(appSelected);
         m_actBlockApp->setEnabled(appSelected);
         m_actKillApp->setEnabled(appSelected);
-        m_actToWildcard->setEnabled(appSelected);
         m_actEditApp->setEnabled(appSelected);
         m_actRemoveApp->setEnabled(appSelected);
         m_actAppCopyPath->setEnabled(appSelected);
@@ -714,9 +710,7 @@ void ProgramsWindow::openProgramByPath(const QString &appPath, qint64 appId, For
 {
     ProgramEditDialog *formAppEdit = nullptr;
 
-    auto ctrl = new ProgramEditController();
-
-    auto confAppManager = ctrl->confAppManager();
+    auto confAppManager = IoC<ConfAppManager>();
 
     App app;
     if (appId > 0) {
@@ -729,14 +723,11 @@ void ProgramsWindow::openProgramByPath(const QString &appPath, qint64 appId, For
     const OpenAppEditDialogArgs a = {
         .app = app,
         .appIdList = {},
-        .ctrl = ctrl,
         .parentForm = parentForm,
         .dialog = formAppEdit,
     };
 
     openAppEditDialog(a);
-
-    ctrl->setParent(formAppEdit);
 
     ControlUtil::deleteOnClose(formAppEdit);
 }
@@ -776,25 +767,6 @@ void ProgramsWindow::addNewWildcard()
     openAppEditForm(appRow);
 }
 
-void ProgramsWindow::convertToWildcard()
-{
-    const AppRow appRow = appListCurrentRow();
-    if (appRow.isNull())
-        return;
-
-    if (appRow.isWildcard)
-        return;
-
-    windowManager()->showConfirmBox(
-            [=, this] {
-                App app = appRow;
-                app.isWildcard = true;
-
-                ctrl()->updateApp(app);
-            },
-            tr("Are you sure to convert selected program to wildcard?"));
-}
-
 void ProgramsWindow::editSelectedPrograms()
 {
     const auto appIdList = selectedAppIdList();
@@ -822,7 +794,6 @@ void ProgramsWindow::openAppEditForm(const App &app, const QVector<qint64> &appI
     const OpenAppEditDialogArgs a = {
         .app = app,
         .appIdList = appIdList,
-        .ctrl = ctrl(),
         .parentForm = this,
         .dialog = m_formAppEdit,
     };
@@ -833,7 +804,7 @@ void ProgramsWindow::openAppEditForm(const App &app, const QVector<qint64> &appI
 void ProgramsWindow::openAppEditDialog(const OpenAppEditDialogArgs &a)
 {
     if (!a.dialog) {
-        a.dialog = new ProgramEditDialog(a.ctrl, a.parentForm);
+        a.dialog = new ProgramEditDialog(a.parentForm);
 
         a.dialog->setExcludeFromCapture(a.parentForm->excludeFromCapture());
     }

@@ -37,8 +37,6 @@ protected slots:
     void retranslateWindowTitle() override;
 
 private:
-    void setupController();
-
     void setupUi();
 };
 

@@ -12,8 +12,7 @@ class ProgramEditDialog : public FormWindow
     Q_OBJECT
 
 public:
-    explicit ProgramEditDialog(
-            ProgramEditController *ctrl, QWidget *parent = nullptr, Qt::WindowFlags f = {});
+    explicit ProgramEditDialog(QWidget *parent = nullptr, Qt::WindowFlags f = {});
 
     ProgramEditController *ctrl() const { return m_ctrl; }
 

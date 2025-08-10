@@ -6,7 +6,7 @@
 class AppInfoCache;
 class AppListModel;
 
-class ProgramsController : public ProgramEditController
+class ProgramsController : public BaseController
 {
     Q_OBJECT
 

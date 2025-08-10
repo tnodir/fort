@@ -19,7 +19,7 @@ void showErrorMessage(const QString &errorMessage)
 }
 
 ProgramsController::ProgramsController(QObject *parent) :
-    ProgramEditController(parent), m_appListModel(new AppListModel(this))
+    BaseController(parent), m_appListModel(new AppListModel(this))
 {
 }
 

@@ -11,11 +11,9 @@
 
 #include "programeditcontroller.h"
 
-ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) :
-    ProgramEditDialog(new ProgramEditController(/*this*/), parent)
+ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) : ProgramEditDialog(parent)
 {
     setupUi();
-    setupController();
 
     setupFormWindow(iniUser(), IniUser::progAlertWindowGroup());
 
@@ -76,11 +74,6 @@ void ProgramAlertWindow::closeOnSave()
 void ProgramAlertWindow::retranslateWindowTitle()
 {
     this->setWindowTitle(tr("Alert Program"));
-}
-
-void ProgramAlertWindow::setupController()
-{
-    ctrl()->setParent(this); // can't set in ctor, because the widget isn't yet fully constructed
 }
 
 void ProgramAlertWindow::setupUi()

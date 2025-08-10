@@ -45,9 +45,8 @@
 
 #include "programeditcontroller.h"
 
-ProgramEditDialog::ProgramEditDialog(
-        ProgramEditController *ctrl, QWidget *parent, Qt::WindowFlags f) :
-    FormWindow(parent, (f == Qt::Widget ? Qt::Dialog : f)), m_ctrl(ctrl)
+ProgramEditDialog::ProgramEditDialog(QWidget *parent, Qt::WindowFlags f) :
+    FormWindow(parent, (f == Qt::Widget ? Qt::Dialog : f)), m_ctrl(new ProgramEditController(this))
 {
     setupUi();
     setupController();
