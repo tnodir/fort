@@ -11,6 +11,7 @@
 ProgBasePage::ProgBasePage(ProgramEditController *ctrl, QWidget *parent) :
     QFrame(parent), m_ctrl(ctrl)
 {
+    setupController();
 }
 
 ConfAppManager *ProgBasePage::confAppManager() const

@@ -266,7 +266,7 @@ void ProgGeneralPage::retranslateTimedAction(QToolButton *bt)
 void ProgGeneralPage::setupController()
 {
     connect(ctrl(), &ProgramEditController::isWildcardSwitched, this,
-            &ProgGeneralPage::switchWildcardPaths);
+            &ProgGeneralPage::onWildcardSwitched);
 }
 
 void ProgGeneralPage::setupUi()
@@ -334,6 +334,7 @@ QLayout *ProgGeneralPage::setupPathLayout()
 
     // Wildcard
     m_editWildcard = new PlainTextEdit();
+    m_editWildcard->setVisible(false);
 
     // Select File
     m_btSelectFile = ControlUtil::createIconToolButton(":/icons/folder.png", [&] {
@@ -775,14 +776,11 @@ QString ProgGeneralPage::getEditText() const
     return isWildcard() ? m_editWildcard->toPlainText() : m_editPath->text();
 }
 
-void ProgGeneralPage::switchWildcardPaths()
+void ProgGeneralPage::onWildcardSwitched()
 {
     if (isWildcard()) {
         m_editWildcard->setText(m_editPath->text());
-        return;
-    }
-
-    if (!m_editPath->isReadOnly()) {
+    } else if (!m_editPath->isReadOnly()) {
         const auto line = StringUtil::firstLine(m_editWildcard->toPlainText());
 
         m_editPath->setText(line);

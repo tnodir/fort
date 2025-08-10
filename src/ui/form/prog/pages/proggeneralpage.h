@@ -89,7 +89,7 @@ private:
 
     QString getEditText() const;
 
-    void switchWildcardPaths();
+    void onWildcardSwitched();
 
     void setIconPath(const QString &iconPath);
 
