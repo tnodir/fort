@@ -157,7 +157,7 @@
     </message>
     <message>
         <source>Download</source>
-        <translation type="unfinished"></translation>
+        <translation>تنزيل</translation>
     </message>
     <message>
         <source>Upload</source>
@@ -1481,21 +1481,46 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
-    <name>ProgramAlertWindow</name>
+    <name>ProgGeneralPage</name>
     <message>
-        <source>Alert Program</source>
-        <translation>تحذير محاولة اتصال</translation>
+        <source>Wildcard Paths:</source>
+        <translation>مسار حرف الاستبدال (Wildcard):</translation>
     </message>
-</context>
-<context>
-    <name>ProgramEditDialogBase</name>
+    <message>
+        <source>File Path:</source>
+        <translation>مسار الملف:</translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation>اختيار ملف برنامج</translation>
     </message>
     <message>
+        <source>Name:</source>
+        <translation>الاسم:</translation>
+    </message>
+    <message>
         <source>Get Program Name</source>
         <translation>الحصول على اسم البرنامج</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>ملاحظات</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rules inheritance:</source>
+        <translation>قواعد التوريث:</translation>
+    </message>
+    <message>
+        <source>Group:</source>
+        <translation>مجموعة:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1506,90 +1531,12 @@ Do you want to open a discussion thread in browser?</source>
         <translation>حظر</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>موافق</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>إلغاء</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>تعديل البرنامج</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>مخصص</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>ساعة واحدة</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 ساعات</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 ساعة</translation>
-    </message>
-    <message>
-        <source>Day</source>
-        <translation>اليوم</translation>
-    </message>
-    <message>
-        <source>Week</source>
-        <translation>الاسبوع</translation>
-    </message>
-    <message>
-        <source>Month</source>
-        <translation>الشهر</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>البرامج (*.exe);;كل الملفات (*.*)</translation>
-    </message>
-    <message>
-        <source>File Path:</source>
-        <translation>مسار الملف:</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>الاسم:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>تسجيل محاولات الاتصال المحظورة</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>إنهاء العملية</translation>
     </message>
     <message>
-        <source>Block Internet Traffic</source>
-        <translation>إيقاف حركة الإنترنت</translation>
-    </message>
-    <message>
-        <source>Edit Wildcard</source>
-        <translation>تعديل حرف الاستبدال (Wildcard)</translation>
-    </message>
-    <message>
-        <source>Kill child processes</source>
-        <translation>انهاء العمليات الفرعية</translation>
-    </message>
-    <message>
-        <source>Attention: This option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>تحذير: هذا الخيار قد يكون غير آمن!
-
-            كن حذرًا عند إنهاء عملية من عمليات نظام التشغيل أو أي برنامج مهم بالنسبة لك!
-        قد يسبب هذا عدم استقرار نظام التشغيل، أو عدم استجابته إطلاقًا.</translation>
-    </message>
-    <message>
-        <source>Wildcard Paths:</source>
-        <translation>مسار حرف الاستبدال (Wildcard):</translation>
+        <source>Schedule</source>
+        <translation>الجدول</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1608,16 +1555,32 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation># متغيرات البيئة:</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>تأجيل</translation>
+        <source>Propagate to all child processes</source>
+        <translation>نشر إلى جميع العمليات الفرعية</translation>
     </message>
     <message>
-        <source>Don&apos;t purge as obsolete</source>
-        <translation>لا تتخلص كبرنامج مفقود</translation>
+        <source>Propagate to designated child processes</source>
+        <translation>نشر إلى العمليات الفرعية المعينة</translation>
     </message>
     <message>
-        <source>Notes</source>
-        <translation>ملاحظات</translation>
+        <source>Receive from the parent process</source>
+        <translation>تلقي من العملية الأصلية</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>حذف</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>خلال:</translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation>عند:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>مخصص</translation>
     </message>
     <message>
         <source>1 second</source>
@@ -1640,84 +1603,83 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>30 دقيقة</translation>
     </message>
     <message>
-        <source> minute(s)</source>
-        <translation>دقائق</translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation>الجدول</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>حذف</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>خلال:</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation>عند:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>مجموعة:</translation>
-    </message>
-    <message>
-        <source>Rule</source>
-        <translation>قاعدة</translation>
-    </message>
-    <message>
-        <source>Select Rule</source>
-        <translation>تحديد القاعدة</translation>
-    </message>
-    <message>
-        <source>Attention: This option only affects new processes!
-
-Please restart the running program to take effect of this option.</source>
-        <translation>تنبيه: هذا الخيار يؤثر فقط على العمليات الجديدة!
-
-الرجاء إعادة تشغيل البرنامج لتفعيل هذا الخيار.</translation>
-    </message>
-    <message>
-        <source>Propagate to designated child processes</source>
-        <translation>نشر إلى العمليات الفرعية المعينة</translation>
-    </message>
-    <message>
-        <source>Propagate to all child processes</source>
-        <translation>نشر إلى جميع العمليات الفرعية</translation>
-    </message>
-    <message>
-        <source>Receive from the parent process</source>
-        <translation>تلقي من العملية الأصلية</translation>
-    </message>
-    <message>
-        <source>Rules inheritance:</source>
-        <translation>قواعد التوريث:</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>تبديل حرف الاستبدال (Wildcard)</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>تسجيل عمليات الاتصال المسموح لها</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="unfinished"></translation>
+        <source>1 hour</source>
+        <translation>ساعة واحدة</translation>
     </message>
     <message>
         <source>3 hours</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>6 hours</source>
+        <translation>6 ساعات</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 ساعة</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>اليوم</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>الاسبوع</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>الشهر</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation>دقائق</translation>
+    </message>
+    <message>
         <source>%1 minute(s)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>البرامج (*.exe);;كل الملفات (*.*)</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProgMainPage</name>
+    <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation>تبديل حرف الاستبدال (Wildcard)</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>الاتصالات</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>موافق</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>إلغاء</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -1728,24 +1690,85 @@ Please restart the running program to take effect of this option.</source>
         <translation>نسخ</translation>
     </message>
     <message>
-        <source>Set Icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete Icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icon for program</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Lookup IP</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProgMorePage</name>
+    <message>
+        <source>Kill child processes</source>
+        <translation>انهاء العمليات الفرعية</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>تأجيل</translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation>لا تتخلص كبرنامج مفقود</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>تسجيل عمليات الاتصال المسموح لها</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>تسجيل محاولات الاتصال المحظورة</translation>
+    </message>
+</context>
+<context>
+    <name>ProgNetworkPage</name>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>إيقاف حركة الإنترنت</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>قاعدة</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>تحديد القاعدة</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation>تحذير محاولة اتصال</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditController</name>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>تحذير: هذا الخيار قد يكون غير آمن!
+
+            كن حذرًا عند إنهاء عملية من عمليات نظام التشغيل أو أي برنامج مهم بالنسبة لك!
+        قد يسبب هذا عدم استقرار نظام التشغيل، أو عدم استجابته إطلاقًا.</translation>
+    </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>تنبيه: هذا الخيار يؤثر فقط على العمليات الجديدة!
+
+الرجاء إعادة تشغيل البرنامج لتفعيل هذا الخيار.</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditDialog</name>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation>تعديل حرف الاستبدال (Wildcard)</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>تعديل البرنامج</translation>
     </message>
 </context>
 <context>
@@ -1832,14 +1855,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Wildcard Paths</source>
         <translation>مسارات البدل</translation>
-    </message>
-    <message>
-        <source>Convert to Wildcard</source>
-        <translation>تحويل إلى بطاقة برية</translation>
-    </message>
-    <message>
-        <source>Are you sure to convert selected program to wildcard?</source>
-        <translation>هل أنت متأكد من تحويل البرنامج المحدد إلى كارت حر؟</translation>
     </message>
     <message>
         <source>Parked</source>

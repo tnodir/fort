@@ -1481,21 +1481,46 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
-    <name>ProgramAlertWindow</name>
+    <name>ProgGeneralPage</name>
     <message>
-        <source>Alert Program</source>
-        <translation>Оповещение Программы</translation>
+        <source>Wildcard Paths:</source>
+        <translation>Подстановочные пути:</translation>
     </message>
-</context>
-<context>
-    <name>ProgramEditDialogBase</name>
+    <message>
+        <source>File Path:</source>
+        <translation>Путь файла:</translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation>Выбрать файл</translation>
     </message>
     <message>
+        <source>Name:</source>
+        <translation>Наименование:</translation>
+    </message>
+    <message>
         <source>Get Program Name</source>
         <translation>Получить наименование программы</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>Заметки</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation>Установить иконку</translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation>Удалить иконку</translation>
+    </message>
+    <message>
+        <source>Rules inheritance:</source>
+        <translation>Наследование правил:</translation>
+    </message>
+    <message>
+        <source>Group:</source>
+        <translation>Группа:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1506,90 +1531,12 @@ Do you want to open a discussion thread in browser?</source>
         <translation>Блокировать</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>ОК</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Отмена</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>Редактирование программы</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Нестандартный</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 час</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 часов</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 часов</translation>
-    </message>
-    <message>
-        <source>Day</source>
-        <translation>День</translation>
-    </message>
-    <message>
-        <source>Week</source>
-        <translation>Неделя</translation>
-    </message>
-    <message>
-        <source>Month</source>
-        <translation>Месяц</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Программы (*.exe);;Все файлы (*.*)</translation>
-    </message>
-    <message>
-        <source>File Path:</source>
-        <translation>Путь файла:</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>Наименование:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Собирать заблокированные соединения</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>Убить процесс</translation>
     </message>
     <message>
-        <source>Block Internet Traffic</source>
-        <translation>Блокировать Интернет трафик</translation>
-    </message>
-    <message>
-        <source>Edit Wildcard</source>
-        <translation>Редактирование подстановки</translation>
-    </message>
-    <message>
-        <source>Kill child processes</source>
-        <translation>Убить дочерние процессы</translation>
-    </message>
-    <message>
-        <source>Attention: This option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>Внимание: Эта опция очень опасна!!!
-
-Будьте осторожны, прекращая работу системных служб или других важных программ!
-Это может привести к сбоям в работе Windows или полной неработоспособности.</translation>
-    </message>
-    <message>
-        <source>Wildcard Paths:</source>
-        <translation>Подстановочные пути:</translation>
+        <source>Schedule</source>
+        <translation>Запланировать</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1608,16 +1555,32 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation># Переменная окружения:</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>Припаркован</translation>
+        <source>Propagate to all child processes</source>
+        <translation>Распространить на все дочерние процессы</translation>
     </message>
     <message>
-        <source>Don&apos;t purge as obsolete</source>
-        <translation>Не удалять как устаревшее</translation>
+        <source>Propagate to designated child processes</source>
+        <translation>Распространить на указанные дочерние процессы</translation>
     </message>
     <message>
-        <source>Notes</source>
-        <translation>Заметки</translation>
+        <source>Receive from the parent process</source>
+        <translation>Получить от родительского процесса</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Удалить</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>Через:</translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation>В:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Нестандартный</translation>
     </message>
     <message>
         <source>1 second</source>
@@ -1640,84 +1603,83 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>30 минут</translation>
     </message>
     <message>
-        <source> minute(s)</source>
-        <translation>минут(ы)</translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation>Запланировать</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Удалить</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>Через:</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation>В:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>Группа:</translation>
-    </message>
-    <message>
-        <source>Rule</source>
-        <translation>Правило</translation>
-    </message>
-    <message>
-        <source>Select Rule</source>
-        <translation>Выбрать правило</translation>
-    </message>
-    <message>
-        <source>Attention: This option only affects new processes!
-
-Please restart the running program to take effect of this option.</source>
-        <translation>Внимание: эта опция влияет только на новые процессы!
-
-Перезапустите запущенную программу, чтобы эта опция вступила в силу.</translation>
-    </message>
-    <message>
-        <source>Propagate to designated child processes</source>
-        <translation>Распространить на указанные дочерние процессы</translation>
-    </message>
-    <message>
-        <source>Propagate to all child processes</source>
-        <translation>Распространить на все дочерние процессы</translation>
-    </message>
-    <message>
-        <source>Receive from the parent process</source>
-        <translation>Получить от родительского процесса</translation>
-    </message>
-    <message>
-        <source>Rules inheritance:</source>
-        <translation>Наследование правил:</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Переключить режим подстановочных знаков</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>Собирать разрешённые соединения</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Опции</translation>
+        <source>1 hour</source>
+        <translation>1 час</translation>
     </message>
     <message>
         <source>3 hours</source>
         <translation>3 часа</translation>
     </message>
     <message>
+        <source>6 hours</source>
+        <translation>6 часов</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 часов</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>День</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>Неделя</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Месяц</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation>минут(ы)</translation>
+    </message>
+    <message>
         <source>%1 minute(s)</source>
         <translation>%1 минут(ы)</translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Программы (*.exe);;Все файлы (*.*)</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation>Иконка для программы</translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation>Иконки (*.ico; *.png)</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMainPage</name>
+    <message>
+        <source>General</source>
+        <translation>Общий</translation>
+    </message>
+    <message>
+        <source>Network Filters</source>
+        <translation>Сетевые фильтры</translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation>Больше</translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation>Переключить режим подстановочных знаков</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Соединения</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>ОК</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Отмена</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -1728,24 +1690,85 @@ Please restart the running program to take effect of this option.</source>
         <translation>Копировать</translation>
     </message>
     <message>
-        <source>Set Icon</source>
-        <translation>Установить иконку</translation>
-    </message>
-    <message>
-        <source>Delete Icon</source>
-        <translation>Удалить иконку</translation>
-    </message>
-    <message>
-        <source>Icon for program</source>
-        <translation>Иконка для программы</translation>
-    </message>
-    <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Иконки (*.ico; *.png)</translation>
-    </message>
-    <message>
         <source>Lookup IP</source>
         <translation>Поиск IP</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMorePage</name>
+    <message>
+        <source>Kill child processes</source>
+        <translation>Убить дочерние процессы</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>Припаркован</translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation>Не удалять как устаревшее</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Собирать разрешённые соединения</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Собирать заблокированные соединения</translation>
+    </message>
+</context>
+<context>
+    <name>ProgNetworkPage</name>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Блокировать Интернет трафик</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Правило</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Выбрать правило</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation>Оповещение Программы</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditController</name>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>Внимание: Эта опция очень опасна!!!
+
+Будьте осторожны, прекращая работу системных служб или других важных программ!
+Это может привести к сбоям в работе Windows или полной неработоспособности.</translation>
+    </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>Внимание: эта опция влияет только на новые процессы!
+
+Перезапустите запущенную программу, чтобы эта опция вступила в силу.</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditDialog</name>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation>Редактирование подстановки</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>Редактирование программы</translation>
     </message>
 </context>
 <context>
@@ -1832,14 +1855,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Wildcard Paths</source>
         <translation>Подстановочные пути</translation>
-    </message>
-    <message>
-        <source>Convert to Wildcard</source>
-        <translation>Преобразовать в подстановочный путь</translation>
-    </message>
-    <message>
-        <source>Are you sure to convert selected program to wildcard?</source>
-        <translation>Преобразовать выбыранную программу в подстановочный путь?</translation>
     </message>
     <message>
         <source>Parked</source>

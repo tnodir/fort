@@ -1481,21 +1481,46 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
     </message>
 </context>
 <context>
-    <name>ProgramAlertWindow</name>
+    <name>ProgGeneralPage</name>
     <message>
-        <source>Alert Program</source>
-        <translation>Alarmprogramm</translation>
+        <source>Wildcard Paths:</source>
+        <translation>Platzhalter-Pfade:</translation>
     </message>
-</context>
-<context>
-    <name>ProgramEditDialogBase</name>
+    <message>
+        <source>File Path:</source>
+        <translation>Dateipfad:</translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation>Datei auswählen</translation>
     </message>
     <message>
+        <source>Name:</source>
+        <translation>Name:</translation>
+    </message>
+    <message>
         <source>Get Program Name</source>
         <translation>Programmnamen abrufen</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>Hinweise</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation>Symbol festlegen</translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation>Symbol löschen</translation>
+    </message>
+    <message>
+        <source>Rules inheritance:</source>
+        <translation>Regelvererbung:</translation>
+    </message>
+    <message>
+        <source>Group:</source>
+        <translation>Gruppe:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1506,90 +1531,12 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
         <translation>Blockieren</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Abbrechen</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>Programm bearbeiten</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Benutzerdefiniert</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 Stunde</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 Stunden</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 Stunden</translation>
-    </message>
-    <message>
-        <source>Day</source>
-        <translation>Tag</translation>
-    </message>
-    <message>
-        <source>Week</source>
-        <translation>Woche</translation>
-    </message>
-    <message>
-        <source>Month</source>
-        <translation>Monat</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Programme (*.exe);;Alle Dateien (*.*)</translation>
-    </message>
-    <message>
-        <source>File Path:</source>
-        <translation>Dateipfad:</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>Name:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Sammle blockierte Verbindungen</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>Prozess beenden</translation>
     </message>
     <message>
-        <source>Block Internet Traffic</source>
-        <translation>Internetdatenverkehr blockieren</translation>
-    </message>
-    <message>
-        <source>Edit Wildcard</source>
-        <translation>Platzhalter bearbeiten</translation>
-    </message>
-    <message>
-        <source>Kill child processes</source>
-        <translation>Unterprozesse beenden</translation>
-    </message>
-    <message>
-        <source>Attention: This option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>Achtung: Diese Option ist sehr gefährlich!!!
-
-Seien Sie vorsichtig, wenn Sie Systemdienste oder andere wichtige Programme beenden!
-Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</translation>
-    </message>
-    <message>
-        <source>Wildcard Paths:</source>
-        <translation>Platzhalter-Pfade:</translation>
+        <source>Schedule</source>
+        <translation>Zeitplan</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1608,16 +1555,32 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation># Umgebungsvariable:</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>Geparkt</translation>
+        <source>Propagate to all child processes</source>
+        <translation>Auf alle untergeordneten Prozesse verteilen</translation>
     </message>
     <message>
-        <source>Don&apos;t purge as obsolete</source>
-        <translation>Nicht löschen wenn veraltet</translation>
+        <source>Propagate to designated child processes</source>
+        <translation>An bestimmte untergeordnete Prozesse verteilen</translation>
     </message>
     <message>
-        <source>Notes</source>
-        <translation>Hinweise</translation>
+        <source>Receive from the parent process</source>
+        <translation>Von übergeordnetem Prozess erhalten</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Entfernen</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>In:</translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation>An:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Benutzerdefiniert</translation>
     </message>
     <message>
         <source>1 second</source>
@@ -1640,84 +1603,83 @@ Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</
         <translation>30 Minuten</translation>
     </message>
     <message>
-        <source> minute(s)</source>
-        <translation> Minute(n)</translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation>Zeitplan</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Entfernen</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>In:</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation>An:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>Gruppe:</translation>
-    </message>
-    <message>
-        <source>Rule</source>
-        <translation>Regel</translation>
-    </message>
-    <message>
-        <source>Select Rule</source>
-        <translation>Regel auswählen</translation>
-    </message>
-    <message>
-        <source>Attention: This option only affects new processes!
-
-Please restart the running program to take effect of this option.</source>
-        <translation>Achtung: Diese Option wirkt sich nur auf neue Prozesse aus!
-
-Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</translation>
-    </message>
-    <message>
-        <source>Propagate to designated child processes</source>
-        <translation>An bestimmte untergeordnete Prozesse verteilen</translation>
-    </message>
-    <message>
-        <source>Propagate to all child processes</source>
-        <translation>Auf alle untergeordneten Prozesse verteilen</translation>
-    </message>
-    <message>
-        <source>Receive from the parent process</source>
-        <translation>Von übergeordnetem Prozess erhalten</translation>
-    </message>
-    <message>
-        <source>Rules inheritance:</source>
-        <translation>Regelvererbung:</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Platzhalter wechseln</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>Sammle erlaubte Verbindungen</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Optionen</translation>
+        <source>1 hour</source>
+        <translation>1 Stunde</translation>
     </message>
     <message>
         <source>3 hours</source>
         <translation>3 Stunden</translation>
     </message>
     <message>
+        <source>6 hours</source>
+        <translation>6 Stunden</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 Stunden</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>Tag</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>Woche</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Monat</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation> Minute(n)</translation>
+    </message>
+    <message>
         <source>%1 minute(s)</source>
         <translation>%1 Minute(n)</translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Programme (*.exe);;Alle Dateien (*.*)</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation>Symbol für Programm</translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation>Symbole (*.ico; *.png)</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMainPage</name>
+    <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation>Platzhalter wechseln</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Verbindungen</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -1728,24 +1690,85 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <translation>Kopieren</translation>
     </message>
     <message>
-        <source>Set Icon</source>
-        <translation>Symbol festlegen</translation>
-    </message>
-    <message>
-        <source>Delete Icon</source>
-        <translation>Symbol löschen</translation>
-    </message>
-    <message>
-        <source>Icon for program</source>
-        <translation>Symbol für Programm</translation>
-    </message>
-    <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Symbole (*.ico; *.png)</translation>
-    </message>
-    <message>
         <source>Lookup IP</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProgMorePage</name>
+    <message>
+        <source>Kill child processes</source>
+        <translation>Unterprozesse beenden</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>Geparkt</translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation>Nicht löschen wenn veraltet</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Sammle erlaubte Verbindungen</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Sammle blockierte Verbindungen</translation>
+    </message>
+</context>
+<context>
+    <name>ProgNetworkPage</name>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Internetdatenverkehr blockieren</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Regel</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Regel auswählen</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation>Alarmprogramm</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditController</name>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>Achtung: Diese Option ist sehr gefährlich!!!
+
+Seien Sie vorsichtig, wenn Sie Systemdienste oder andere wichtige Programme beenden!
+Es kann zu einer Fehlfunktion führen oder Windows völlig unbrauchbar machen.</translation>
+    </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>Achtung: Diese Option wirkt sich nur auf neue Prozesse aus!
+
+Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditDialog</name>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation>Platzhalter bearbeiten</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>Programm bearbeiten</translation>
     </message>
 </context>
 <context>
@@ -1832,14 +1855,6 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
     <message>
         <source>Wildcard Paths</source>
         <translation>Platzhalter-Pfade</translation>
-    </message>
-    <message>
-        <source>Convert to Wildcard</source>
-        <translation>In Platzhalter umwandeln</translation>
-    </message>
-    <message>
-        <source>Are you sure to convert selected program to wildcard?</source>
-        <translation>Sind Sie sicher, das ausgewählte Programm in eine Platzhalter umzuwandeln?</translation>
     </message>
     <message>
         <source>Parked</source>

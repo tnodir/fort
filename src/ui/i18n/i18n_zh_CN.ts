@@ -1420,7 +1420,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>1 day</source>
-        <translation type="unfinished"></translation>
+        <translation>1天</translation>
     </message>
 </context>
 <context>
@@ -1481,21 +1481,46 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
-    <name>ProgramAlertWindow</name>
+    <name>ProgGeneralPage</name>
     <message>
-        <source>Alert Program</source>
-        <translation>提示应用程序</translation>
+        <source>Wildcard Paths:</source>
+        <translation>通配符路径：</translation>
     </message>
-</context>
-<context>
-    <name>ProgramEditDialogBase</name>
+    <message>
+        <source>File Path:</source>
+        <translation>文件路径：</translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation>选择文件</translation>
     </message>
     <message>
+        <source>Name:</source>
+        <translation>名称：</translation>
+    </message>
+    <message>
         <source>Get Program Name</source>
         <translation>获取应用程序名称</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>注意</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation>设置图标</translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation>删除图标</translation>
+    </message>
+    <message>
+        <source>Rules inheritance:</source>
+        <translation>规则继承：</translation>
+    </message>
+    <message>
+        <source>Group:</source>
+        <translation>组：</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1506,90 +1531,12 @@ Do you want to open a discussion thread in browser?</source>
         <translation>阻止</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>确定</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>取消</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>编辑应用程序</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>自定义</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 小时</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 小时</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 小时</translation>
-    </message>
-    <message>
-        <source>Day</source>
-        <translation>日</translation>
-    </message>
-    <message>
-        <source>Week</source>
-        <translation>周</translation>
-    </message>
-    <message>
-        <source>Month</source>
-        <translation>月</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>应用程序 (*.exe);;所有文件 (*.*)</translation>
-    </message>
-    <message>
-        <source>File Path:</source>
-        <translation>文件路径：</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>名称：</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>收集被阻止的连接</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>终止进程</translation>
     </message>
     <message>
-        <source>Block Internet Traffic</source>
-        <translation>阻止互联网流量</translation>
-    </message>
-    <message>
-        <source>Edit Wildcard</source>
-        <translation>编辑通配符</translation>
-    </message>
-    <message>
-        <source>Kill child processes</source>
-        <translation>终止子进程</translation>
-    </message>
-    <message>
-        <source>Attention: This option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>注意：此选项非常危险！！！
-
-在终止系统服务或其他重要应用程序时请务必小心！
-这可能会导致 Windows 故障或完全无法使用。</translation>
-    </message>
-    <message>
-        <source>Wildcard Paths:</source>
-        <translation>通配符路径：</translation>
+        <source>Schedule</source>
+        <translation>计划</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1608,16 +1555,32 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation># 环境变量：</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>停靠的</translation>
+        <source>Propagate to all child processes</source>
+        <translation>传播到所有子进程</translation>
     </message>
     <message>
-        <source>Don&apos;t purge as obsolete</source>
-        <translation>不清理过时的数据</translation>
+        <source>Propagate to designated child processes</source>
+        <translation>传播到指定的子进程</translation>
     </message>
     <message>
-        <source>Notes</source>
-        <translation>注意</translation>
+        <source>Receive from the parent process</source>
+        <translation>从父进程中接收</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>在：</translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation>于：</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>自定义</translation>
     </message>
     <message>
         <source>1 second</source>
@@ -1640,84 +1603,83 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation>30 分钟</translation>
     </message>
     <message>
-        <source> minute(s)</source>
-        <translation> 分钟</translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation>计划</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>删除</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>在：</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation>于：</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>组：</translation>
-    </message>
-    <message>
-        <source>Rule</source>
-        <translation>规则</translation>
-    </message>
-    <message>
-        <source>Select Rule</source>
-        <translation>选择规则</translation>
-    </message>
-    <message>
-        <source>Attention: This option only affects new processes!
-
-Please restart the running program to take effect of this option.</source>
-        <translation>请注意： 此选项仅影响新进程！
-
-请重新启动正在运行的应用程序以使此选项生效。</translation>
-    </message>
-    <message>
-        <source>Propagate to designated child processes</source>
-        <translation>传播到指定的子进程</translation>
-    </message>
-    <message>
-        <source>Propagate to all child processes</source>
-        <translation>传播到所有子进程</translation>
-    </message>
-    <message>
-        <source>Receive from the parent process</source>
-        <translation>从父进程中接收</translation>
-    </message>
-    <message>
-        <source>Rules inheritance:</source>
-        <translation>规则继承：</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>切换通配符</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>收集已允许的连接</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>选项</translation>
+        <source>1 hour</source>
+        <translation>1 小时</translation>
     </message>
     <message>
         <source>3 hours</source>
         <translation>3 小时</translation>
     </message>
     <message>
+        <source>6 hours</source>
+        <translation>6 小时</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 小时</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>日</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>周</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>月</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation> 分钟</translation>
+    </message>
+    <message>
         <source>%1 minute(s)</source>
         <translation>%1 分钟</translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>应用程序 (*.exe);;所有文件 (*.*)</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation>程序图标</translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation>图标文件 (*.ico; *.png)</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMainPage</name>
+    <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation>切换通配符</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>连接数</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>确定</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>取消</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -1728,24 +1690,85 @@ Please restart the running program to take effect of this option.</source>
         <translation>复制</translation>
     </message>
     <message>
-        <source>Set Icon</source>
-        <translation>设置图标</translation>
-    </message>
-    <message>
-        <source>Delete Icon</source>
-        <translation>删除图标</translation>
-    </message>
-    <message>
-        <source>Icon for program</source>
-        <translation>程序图标</translation>
-    </message>
-    <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>图标文件 (*.ico; *.png)</translation>
-    </message>
-    <message>
         <source>Lookup IP</source>
         <translation>查找IP</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMorePage</name>
+    <message>
+        <source>Kill child processes</source>
+        <translation>终止子进程</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>停靠的</translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation>不清理过时的数据</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>收集已允许的连接</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>收集被阻止的连接</translation>
+    </message>
+</context>
+<context>
+    <name>ProgNetworkPage</name>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>阻止互联网流量</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>规则</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>选择规则</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation>提示应用程序</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditController</name>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>注意：此选项非常危险！！！
+
+在终止系统服务或其他重要应用程序时请务必小心！
+这可能会导致 Windows 故障或完全无法使用。</translation>
+    </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>请注意： 此选项仅影响新进程！
+
+请重新启动正在运行的应用程序以使此选项生效。</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditDialog</name>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation>编辑通配符</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>编辑应用程序</translation>
     </message>
 </context>
 <context>
@@ -1832,14 +1855,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Wildcard Paths</source>
         <translation>通配符路径</translation>
-    </message>
-    <message>
-        <source>Convert to Wildcard</source>
-        <translation>转换为通配符</translation>
-    </message>
-    <message>
-        <source>Are you sure to convert selected program to wildcard?</source>
-        <translation>您确定要将所选应用程序转换为通配符吗？</translation>
     </message>
     <message>
         <source>Parked</source>

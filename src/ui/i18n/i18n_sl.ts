@@ -1481,21 +1481,46 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
     </message>
 </context>
 <context>
-    <name>ProgramAlertWindow</name>
+    <name>ProgGeneralPage</name>
     <message>
-        <source>Alert Program</source>
-        <translation>Opozorilni program</translation>
+        <source>Wildcard Paths:</source>
+        <translation>Poti z nadomestnimi znaki:</translation>
     </message>
-</context>
-<context>
-    <name>ProgramEditDialogBase</name>
+    <message>
+        <source>File Path:</source>
+        <translation>Pot do datoteke:</translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation>Izberi datoteko</translation>
     </message>
     <message>
+        <source>Name:</source>
+        <translation>Ime:</translation>
+    </message>
+    <message>
         <source>Get Program Name</source>
         <translation>Dobi ime programa</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>Opombe</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation>Nastavi ikono</translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation>Ikona za brisanje</translation>
+    </message>
+    <message>
+        <source>Rules inheritance:</source>
+        <translation>Pravila dedovanja:</translation>
+    </message>
+    <message>
+        <source>Group:</source>
+        <translation>Skupina:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1506,90 +1531,12 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
         <translation>Blokiraj</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>Vredu</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Prekliči</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>Uredi program</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Po meri</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 uro</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 ur</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 ur</translation>
-    </message>
-    <message>
-        <source>Day</source>
-        <translation>Dan</translation>
-    </message>
-    <message>
-        <source>Week</source>
-        <translation>Teden</translation>
-    </message>
-    <message>
-        <source>Month</source>
-        <translation>Mesec</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Programi (*.exe);;Vse datoteke (*.*)</translation>
-    </message>
-    <message>
-        <source>File Path:</source>
-        <translation>Pot do datoteke:</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>Ime:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Zberi blokirane povezave</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>Uniči proces</translation>
     </message>
     <message>
-        <source>Block Internet Traffic</source>
-        <translation>Onemogoči internetni promet</translation>
-    </message>
-    <message>
-        <source>Edit Wildcard</source>
-        <translation>Uredi nadomestni znak</translation>
-    </message>
-    <message>
-        <source>Kill child processes</source>
-        <translation>Uniči podrejene procese</translation>
-    </message>
-    <message>
-        <source>Attention: This option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>Pozor: Ta možnost je zelo nevarna!!!
-
-Bodite previdni pri uničevanju sistemskih storitev ali drugih pomembnih programov!
-To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</translation>
-    </message>
-    <message>
-        <source>Wildcard Paths:</source>
-        <translation>Poti z nadomestnimi znaki:</translation>
+        <source>Schedule</source>
+        <translation>Načrtuj</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1608,16 +1555,32 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation># Spremenljivka okolja:</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>Parkirano</translation>
+        <source>Propagate to all child processes</source>
+        <translation>Razširi na vse podrejene procese</translation>
     </message>
     <message>
-        <source>Don&apos;t purge as obsolete</source>
-        <translation>Ne počisti kot zastarelo</translation>
+        <source>Propagate to designated child processes</source>
+        <translation>Razširi na določene podrejene procese</translation>
     </message>
     <message>
-        <source>Notes</source>
-        <translation>Opombe</translation>
+        <source>Receive from the parent process</source>
+        <translation>Prejmi iz nadrejenega procesa</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Odstrani</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>V:</translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation>Ob:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Po meri</translation>
     </message>
     <message>
         <source>1 second</source>
@@ -1640,84 +1603,83 @@ To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</tra
         <translation>30 minut</translation>
     </message>
     <message>
-        <source> minute(s)</source>
-        <translation> minut</translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation>Načrtuj</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Odstrani</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>V:</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation>Ob:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>Skupina:</translation>
-    </message>
-    <message>
-        <source>Rule</source>
-        <translation>Pravilo</translation>
-    </message>
-    <message>
-        <source>Select Rule</source>
-        <translation>Izberite Pravilo</translation>
-    </message>
-    <message>
-        <source>Attention: This option only affects new processes!
-
-Please restart the running program to take effect of this option.</source>
-        <translation>Upozornenie: Táto možnosť ovplyvňuje iba nové procesy!
-
-Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
-    </message>
-    <message>
-        <source>Propagate to designated child processes</source>
-        <translation>Razširi na določene podrejene procese</translation>
-    </message>
-    <message>
-        <source>Propagate to all child processes</source>
-        <translation>Razširi na vse podrejene procese</translation>
-    </message>
-    <message>
-        <source>Receive from the parent process</source>
-        <translation>Prejmi iz nadrejenega procesa</translation>
-    </message>
-    <message>
-        <source>Rules inheritance:</source>
-        <translation>Pravila dedovanja:</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>Preklopi način nadomestnih znakov</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>Zberi dovoljene povezave</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Možnosti</translation>
+        <source>1 hour</source>
+        <translation>1 uro</translation>
     </message>
     <message>
         <source>3 hours</source>
         <translation>3 ure</translation>
     </message>
     <message>
+        <source>6 hours</source>
+        <translation>6 ur</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 ur</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>Dan</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>Teden</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Mesec</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation> minut</translation>
+    </message>
+    <message>
         <source>%1 minute(s)</source>
         <translation>%1 minut(a)</translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Programi (*.exe);;Vse datoteke (*.*)</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation>Ikona za program</translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation>Ikone (*.ico; *.png)</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMainPage</name>
+    <message>
+        <source>General</source>
+        <translation>Splošno</translation>
+    </message>
+    <message>
+        <source>Network Filters</source>
+        <translation>Omrežni filtri</translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation>Več</translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation>Preklopi način nadomestnih znakov</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>Povezave</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>Vredu</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Prekliči</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -1728,24 +1690,85 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <translation>Kopiraj</translation>
     </message>
     <message>
-        <source>Set Icon</source>
-        <translation>Nastavi ikono</translation>
-    </message>
-    <message>
-        <source>Delete Icon</source>
-        <translation>Ikona za brisanje</translation>
-    </message>
-    <message>
-        <source>Icon for program</source>
-        <translation>Ikona za program</translation>
-    </message>
-    <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>Ikone (*.ico; *.png)</translation>
-    </message>
-    <message>
         <source>Lookup IP</source>
         <translation>Iskanje IP-ja</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMorePage</name>
+    <message>
+        <source>Kill child processes</source>
+        <translation>Uniči podrejene procese</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>Parkirano</translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation>Ne počisti kot zastarelo</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Zberi dovoljene povezave</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Zberi blokirane povezave</translation>
+    </message>
+</context>
+<context>
+    <name>ProgNetworkPage</name>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Onemogoči internetni promet</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Pravilo</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Izberite Pravilo</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation>Opozorilni program</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditController</name>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>Pozor: Ta možnost je zelo nevarna!!!
+
+Bodite previdni pri uničevanju sistemskih storitev ali drugih pomembnih programov!
+To lahko povzroči okvaro sistema Windows ali njegovo popolno neuporabnost.</translation>
+    </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>Upozornenie: Táto možnosť ovplyvňuje iba nové procesy!
+
+Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditDialog</name>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation>Uredi nadomestni znak</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>Uredi program</translation>
     </message>
 </context>
 <context>
@@ -1832,14 +1855,6 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     <message>
         <source>Wildcard Paths</source>
         <translation>Poti z nadomestnimi znaki</translation>
-    </message>
-    <message>
-        <source>Convert to Wildcard</source>
-        <translation>Pretvori v nadomestni znak</translation>
-    </message>
-    <message>
-        <source>Are you sure to convert selected program to wildcard?</source>
-        <translation>Ali ste prepričani, da boste izbrani program pretvorili v nadomestni znak?</translation>
     </message>
     <message>
         <source>Parked</source>

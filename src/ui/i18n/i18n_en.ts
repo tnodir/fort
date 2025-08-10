@@ -1475,20 +1475,45 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
-    <name>ProgramAlertWindow</name>
+    <name>ProgGeneralPage</name>
     <message>
-        <source>Alert Program</source>
+        <source>Wildcard Paths:</source>
         <translation></translation>
     </message>
-</context>
-<context>
-    <name>ProgramEditDialogBase</name>
+    <message>
+        <source>File Path:</source>
+        <translation></translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation></translation>
     </message>
     <message>
+        <source>Name:</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Get Program Name</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Rules inheritance:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Group:</source>
         <translation></translation>
     </message>
     <message>
@@ -1500,86 +1525,11 @@ Do you want to open a discussion thread in browser?</source>
         <translation></translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Day</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Week</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Month</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>File Path:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation></translation>
     </message>
     <message>
-        <source>Block Internet Traffic</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Edit Wildcard</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Kill child processes</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Attention: This option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Wildcard Paths:</source>
+        <source>Schedule</source>
         <translation></translation>
     </message>
     <message>
@@ -1599,15 +1549,31 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Parked</source>
+        <source>Propagate to all child processes</source>
         <translation></translation>
     </message>
     <message>
-        <source>Don&apos;t purge as obsolete</source>
+        <source>Propagate to designated child processes</source>
         <translation></translation>
     </message>
     <message>
-        <source>Notes</source>
+        <source>Receive from the parent process</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Custom</source>
         <translation></translation>
     </message>
     <message>
@@ -1631,69 +1597,7 @@ It can cause a Windows malfunction or totally unusable.</source>
         <translation></translation>
     </message>
     <message>
-        <source> minute(s)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Rule</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Select Rule</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Attention: This option only affects new processes!
-
-Please restart the running program to take effect of this option.</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Propagate to designated child processes</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Propagate to all child processes</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Receive from the parent process</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Rules inheritance:</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Options</source>
+        <source>1 hour</source>
         <translation></translation>
     </message>
     <message>
@@ -1701,11 +1605,74 @@ Please restart the running program to take effect of this option.</source>
         <translation></translation>
     </message>
     <message>
+        <source>6 hours</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>%1 minute(s)</source>
         <translation></translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ProgMainPage</name>
+    <message>
+        <source>General</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Network Filters</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
         <translation></translation>
     </message>
     <message>
@@ -1717,23 +1684,79 @@ Please restart the running program to take effect of this option.</source>
         <translation></translation>
     </message>
     <message>
-        <source>Set Icon</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Delete Icon</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Icon for program</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation></translation>
-    </message>
-    <message>
         <source>Lookup IP</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ProgMorePage</name>
+    <message>
+        <source>Kill child processes</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ProgNetworkPage</name>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditController</name>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditDialog</name>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
         <translation></translation>
     </message>
 </context>
@@ -1820,14 +1843,6 @@ Please restart the running program to take effect of this option.</source>
     </message>
     <message>
         <source>Wildcard Paths</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Convert to Wildcard</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Are you sure to convert selected program to wildcard?</source>
         <translation></translation>
     </message>
     <message>

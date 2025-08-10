@@ -1481,21 +1481,46 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
-    <name>ProgramAlertWindow</name>
+    <name>ProgGeneralPage</name>
     <message>
-        <source>Alert Program</source>
-        <translation>警告プログラム</translation>
+        <source>Wildcard Paths:</source>
+        <translation>ワイルドカードのパス :</translation>
     </message>
-</context>
-<context>
-    <name>ProgramEditDialogBase</name>
+    <message>
+        <source>File Path:</source>
+        <translation>ファイルのパス :</translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation>ファイルの選択</translation>
     </message>
     <message>
+        <source>Name:</source>
+        <translation>名前 :</translation>
+    </message>
+    <message>
         <source>Get Program Name</source>
         <translation>プログラム名の取得</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>備考</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation>アイコンの設定</translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation>アイコンを削除</translation>
+    </message>
+    <message>
+        <source>Rules inheritance:</source>
+        <translation>ルールの継承 :</translation>
+    </message>
+    <message>
+        <source>Group:</source>
+        <translation>グループ :</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1506,90 +1531,12 @@ Do you want to open a discussion thread in browser?</source>
         <translation>ブロック</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>キャンセル</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>プログラムの編集</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>カスタム</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 時間</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 時間</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 時間</translation>
-    </message>
-    <message>
-        <source>Day</source>
-        <translation>日</translation>
-    </message>
-    <message>
-        <source>Week</source>
-        <translation>週</translation>
-    </message>
-    <message>
-        <source>Month</source>
-        <translation>月</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>プログラム (*.exe);;すべてのファイル (*.*)</translation>
-    </message>
-    <message>
-        <source>File Path:</source>
-        <translation>ファイルのパス :</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>名前 :</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>ブロックされた接続を収集する</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>プロセスの強制終了</translation>
     </message>
     <message>
-        <source>Block Internet Traffic</source>
-        <translation>インターネット トラフィックをブロック</translation>
-    </message>
-    <message>
-        <source>Edit Wildcard</source>
-        <translation>ワイルドカードの編集</translation>
-    </message>
-    <message>
-        <source>Kill child processes</source>
-        <translation>子プロセスの強制終了</translation>
-    </message>
-    <message>
-        <source>Attention: This option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>注意 : このオプションは非常に危険です!!!
-
-システム サービスやその他の重要なプログラムを終了するときは注意してください!
-Windows が誤動作したり、完全に使用できなくなる可能性があります。</translation>
-    </message>
-    <message>
-        <source>Wildcard Paths:</source>
-        <translation>ワイルドカードのパス :</translation>
+        <source>Schedule</source>
+        <translation>スケジュール</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1608,16 +1555,32 @@ Windows が誤動作したり、完全に使用できなくなる可能性があ
         <translation># 環境変数 :</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>停止済み</translation>
+        <source>Propagate to all child processes</source>
+        <translation>すべての子プロセスに継承する</translation>
     </message>
     <message>
-        <source>Don&apos;t purge as obsolete</source>
-        <translation>不要になったとして削除しない</translation>
+        <source>Propagate to designated child processes</source>
+        <translation>指定された子プロセスに継承する</translation>
     </message>
     <message>
-        <source>Notes</source>
-        <translation>備考</translation>
+        <source>Receive from the parent process</source>
+        <translation>親プロセスから受信</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>削除</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>開始 :</translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation>終了 :</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>カスタム</translation>
     </message>
     <message>
         <source>1 second</source>
@@ -1640,84 +1603,83 @@ Windows が誤動作したり、完全に使用できなくなる可能性があ
         <translation>30 分</translation>
     </message>
     <message>
-        <source> minute(s)</source>
-        <translation> 分</translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation>スケジュール</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>削除</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>開始 :</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation>終了 :</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>グループ :</translation>
-    </message>
-    <message>
-        <source>Rule</source>
-        <translation>ルール</translation>
-    </message>
-    <message>
-        <source>Select Rule</source>
-        <translation>ルールの選択</translation>
-    </message>
-    <message>
-        <source>Attention: This option only affects new processes!
-
-Please restart the running program to take effect of this option.</source>
-        <translation>注意 : このオプションは新しいプロセスにのみ影響します。
-
-このオプションを有効にするには、実行中のプログラムを再起動してください。</translation>
-    </message>
-    <message>
-        <source>Propagate to designated child processes</source>
-        <translation>指定された子プロセスに継承する</translation>
-    </message>
-    <message>
-        <source>Propagate to all child processes</source>
-        <translation>すべての子プロセスに継承する</translation>
-    </message>
-    <message>
-        <source>Receive from the parent process</source>
-        <translation>親プロセスから受信</translation>
-    </message>
-    <message>
-        <source>Rules inheritance:</source>
-        <translation>ルールの継承 :</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>ワイルドカードの切り替え</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>許可された接続を収集する</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>オプション</translation>
+        <source>1 hour</source>
+        <translation>1 時間</translation>
     </message>
     <message>
         <source>3 hours</source>
         <translation>3 時間</translation>
     </message>
     <message>
+        <source>6 hours</source>
+        <translation>6 時間</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 時間</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>日</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>週</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>月</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation> 分</translation>
+    </message>
+    <message>
         <source>%1 minute(s)</source>
         <translation>%1 分</translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>プログラム (*.exe);;すべてのファイル (*.*)</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation>プログラムのアイコン</translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation>アイコン (*.ico; *.png)</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMainPage</name>
+    <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation>ワイルドカードの切り替え</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>接続</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>キャンセル</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -1728,24 +1690,85 @@ Please restart the running program to take effect of this option.</source>
         <translation>コピー</translation>
     </message>
     <message>
-        <source>Set Icon</source>
-        <translation>アイコンの設定</translation>
-    </message>
-    <message>
-        <source>Delete Icon</source>
-        <translation>アイコンを削除</translation>
-    </message>
-    <message>
-        <source>Icon for program</source>
-        <translation>プログラムのアイコン</translation>
-    </message>
-    <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>アイコン (*.ico; *.png)</translation>
-    </message>
-    <message>
         <source>Lookup IP</source>
         <translation>IP 検索</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMorePage</name>
+    <message>
+        <source>Kill child processes</source>
+        <translation>子プロセスの強制終了</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>停止済み</translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation>不要になったとして削除しない</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>許可された接続を収集する</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>ブロックされた接続を収集する</translation>
+    </message>
+</context>
+<context>
+    <name>ProgNetworkPage</name>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>インターネット トラフィックをブロック</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>ルール</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>ルールの選択</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation>警告プログラム</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditController</name>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>注意 : このオプションは非常に危険です!!!
+
+システム サービスやその他の重要なプログラムを終了するときは注意してください!
+Windows が誤動作したり、完全に使用できなくなる可能性があります。</translation>
+    </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>注意 : このオプションは新しいプロセスにのみ影響します。
+
+このオプションを有効にするには、実行中のプログラムを再起動してください。</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditDialog</name>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation>ワイルドカードの編集</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>プログラムの編集</translation>
     </message>
 </context>
 <context>
@@ -1832,14 +1855,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Wildcard Paths</source>
         <translation>ワイルドカードのパス</translation>
-    </message>
-    <message>
-        <source>Convert to Wildcard</source>
-        <translation>ワイルドカードへ変換</translation>
-    </message>
-    <message>
-        <source>Are you sure to convert selected program to wildcard?</source>
-        <translation>選択したプログラムをワイルドカードに変換しますか?</translation>
     </message>
     <message>
         <source>Parked</source>

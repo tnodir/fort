@@ -1481,21 +1481,46 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
-    <name>ProgramAlertWindow</name>
+    <name>ProgGeneralPage</name>
     <message>
-        <source>Alert Program</source>
-        <translation>경고 프로그램</translation>
+        <source>Wildcard Paths:</source>
+        <translation>와일드카드 경로:</translation>
     </message>
-</context>
-<context>
-    <name>ProgramEditDialogBase</name>
+    <message>
+        <source>File Path:</source>
+        <translation>파일 경로:</translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation>파일 선택</translation>
     </message>
     <message>
+        <source>Name:</source>
+        <translation>이름:</translation>
+    </message>
+    <message>
         <source>Get Program Name</source>
         <translation>프로그램 이름 가져오기</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>참고</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation>아이콘 설정</translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation>아이콘 삭제</translation>
+    </message>
+    <message>
+        <source>Rules inheritance:</source>
+        <translation>규칙 상속:</translation>
+    </message>
+    <message>
+        <source>Group:</source>
+        <translation>그룹:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1506,90 +1531,12 @@ Do you want to open a discussion thread in browser?</source>
         <translation>차단</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>확인</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>취소</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>프로그램 편집</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>사용자 지정</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 시간</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 시간</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 시간</translation>
-    </message>
-    <message>
-        <source>Day</source>
-        <translation>일</translation>
-    </message>
-    <message>
-        <source>Week</source>
-        <translation>주</translation>
-    </message>
-    <message>
-        <source>Month</source>
-        <translation>달</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
-    </message>
-    <message>
-        <source>File Path:</source>
-        <translation>파일 경로:</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>이름:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>차단된 연결 집계</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>프로세스 종료</translation>
     </message>
     <message>
-        <source>Block Internet Traffic</source>
-        <translation>인터넷 트래픽 차단</translation>
-    </message>
-    <message>
-        <source>Edit Wildcard</source>
-        <translation>와일드카드 편집</translation>
-    </message>
-    <message>
-        <source>Kill child processes</source>
-        <translation>하위 프로세스 종료</translation>
-    </message>
-    <message>
-        <source>Attention: This option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>주의: 이 옵션은 매우 위험합니다!!!
-
-시스템 서비스 또는 기타 중요한 프로그램을 종료할 때 주의하십시오!
-Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니다.</translation>
-    </message>
-    <message>
-        <source>Wildcard Paths:</source>
-        <translation>와일드카드 경로:</translation>
+        <source>Schedule</source>
+        <translation>예약</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1608,16 +1555,32 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation># 환경 변수:</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>압축됨</translation>
+        <source>Propagate to all child processes</source>
+        <translation>모든 하위 프로세스에 전파</translation>
     </message>
     <message>
-        <source>Don&apos;t purge as obsolete</source>
-        <translation>쓸모없는 것으로 정리하지 않음</translation>
+        <source>Propagate to designated child processes</source>
+        <translation>지정된 하위 프로세스로 전파</translation>
     </message>
     <message>
-        <source>Notes</source>
-        <translation>참고</translation>
+        <source>Receive from the parent process</source>
+        <translation>상위 프로세스에서 받기</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>제거</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>수신인:</translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation>위치:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>사용자 지정</translation>
     </message>
     <message>
         <source>1 second</source>
@@ -1640,84 +1603,83 @@ Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니�
         <translation>30분</translation>
     </message>
     <message>
-        <source> minute(s)</source>
-        <translation>분</translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation>예약</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>제거</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>수신인:</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation>위치:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>그룹:</translation>
-    </message>
-    <message>
-        <source>Rule</source>
-        <translation>규칙</translation>
-    </message>
-    <message>
-        <source>Select Rule</source>
-        <translation>규칙 선택</translation>
-    </message>
-    <message>
-        <source>Attention: This option only affects new processes!
-
-Please restart the running program to take effect of this option.</source>
-        <translation>주의: 이 옵션은 새 프로세스에만 영향을 미칩니다!
-
-이 옵션을 적용하려면 실행 중인 프로그램을 다시 시작하세요.</translation>
-    </message>
-    <message>
-        <source>Propagate to designated child processes</source>
-        <translation>지정된 하위 프로세스로 전파</translation>
-    </message>
-    <message>
-        <source>Propagate to all child processes</source>
-        <translation>모든 하위 프로세스에 전파</translation>
-    </message>
-    <message>
-        <source>Receive from the parent process</source>
-        <translation>상위 프로세스에서 받기</translation>
-    </message>
-    <message>
-        <source>Rules inheritance:</source>
-        <translation>규칙 상속:</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation>와일드카드 전환</translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>허용된 연결 집계</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>옵션</translation>
+        <source>1 hour</source>
+        <translation>1 시간</translation>
     </message>
     <message>
         <source>3 hours</source>
         <translation>3 시간</translation>
     </message>
     <message>
+        <source>6 hours</source>
+        <translation>6 시간</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 시간</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>일</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>주</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>달</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation>분</translation>
+    </message>
+    <message>
         <source>%1 minute(s)</source>
         <translation>%s1 분</translation>
     </message>
     <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>프로그램 (*.exe);;모든 파일 (*.*)</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation>프로그램 아이콘</translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation>아이콘 (*.ico; *.png)</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMainPage</name>
+    <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
+        <translation>와일드카드 전환</translation>
+    </message>
+    <message>
         <source>Connections</source>
         <translation>연결</translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>확인</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>취소</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -1728,24 +1690,85 @@ Please restart the running program to take effect of this option.</source>
         <translation>복사</translation>
     </message>
     <message>
-        <source>Set Icon</source>
-        <translation>아이콘 설정</translation>
-    </message>
-    <message>
-        <source>Delete Icon</source>
-        <translation>아이콘 삭제</translation>
-    </message>
-    <message>
-        <source>Icon for program</source>
-        <translation>프로그램 아이콘</translation>
-    </message>
-    <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation>아이콘 (*.ico; *.png)</translation>
-    </message>
-    <message>
         <source>Lookup IP</source>
         <translation>조회 IP</translation>
+    </message>
+</context>
+<context>
+    <name>ProgMorePage</name>
+    <message>
+        <source>Kill child processes</source>
+        <translation>하위 프로세스 종료</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation>압축됨</translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation>쓸모없는 것으로 정리하지 않음</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>허용된 연결 집계</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>차단된 연결 집계</translation>
+    </message>
+</context>
+<context>
+    <name>ProgNetworkPage</name>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>인터넷 트래픽 차단</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>규칙</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>규칙 선택</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation>경고 프로그램</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditController</name>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>주의: 이 옵션은 매우 위험합니다!!!
+
+시스템 서비스 또는 기타 중요한 프로그램을 종료할 때 주의하십시오!
+Windows가 오작동하거나 완전히 사용할 수 없게 될 수 있습니다.</translation>
+    </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>주의: 이 옵션은 새 프로세스에만 영향을 미칩니다!
+
+이 옵션을 적용하려면 실행 중인 프로그램을 다시 시작하세요.</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditDialog</name>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation>와일드카드 편집</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>프로그램 편집</translation>
     </message>
 </context>
 <context>
@@ -1832,14 +1855,6 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Wildcard Paths</source>
         <translation>와일드카드 경로</translation>
-    </message>
-    <message>
-        <source>Convert to Wildcard</source>
-        <translation>와일드카드로 변환</translation>
-    </message>
-    <message>
-        <source>Are you sure to convert selected program to wildcard?</source>
-        <translation>선택한 프로그램을 와일드카드로 변환하시겠습니까?</translation>
     </message>
     <message>
         <source>Parked</source>

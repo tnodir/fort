@@ -1481,21 +1481,46 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
     </message>
 </context>
 <context>
-    <name>ProgramAlertWindow</name>
+    <name>ProgGeneralPage</name>
     <message>
-        <source>Alert Program</source>
-        <translation>Ostrzeżenie o programie</translation>
+        <source>Wildcard Paths:</source>
+        <translation>Ścieżki wieloznaczne:</translation>
     </message>
-</context>
-<context>
-    <name>ProgramEditDialogBase</name>
+    <message>
+        <source>File Path:</source>
+        <translation>Ścieżka pliku:</translation>
+    </message>
     <message>
         <source>Select File</source>
         <translation>Wybierz plik</translation>
     </message>
     <message>
+        <source>Name:</source>
+        <translation>Nazwa:</translation>
+    </message>
+    <message>
         <source>Get Program Name</source>
         <translation>Pobierz nazwę programu</translation>
+    </message>
+    <message>
+        <source>Notes</source>
+        <translation>Uwagi</translation>
+    </message>
+    <message>
+        <source>Set Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Delete Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Rules inheritance:</source>
+        <translation>Reguły dziedziczenia:</translation>
+    </message>
+    <message>
+        <source>Group:</source>
+        <translation>Grupa:</translation>
     </message>
     <message>
         <source>Allow</source>
@@ -1506,90 +1531,12 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
         <translation>Blokuj</translation>
     </message>
     <message>
-        <source>OK</source>
-        <translation>OK</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation>Anuluj</translation>
-    </message>
-    <message>
-        <source>Edit Program</source>
-        <translation>Edycja programu</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <translation>Własne</translation>
-    </message>
-    <message>
-        <source>1 hour</source>
-        <translation>1 godzina</translation>
-    </message>
-    <message>
-        <source>6 hours</source>
-        <translation>6 godzin</translation>
-    </message>
-    <message>
-        <source>12 hours</source>
-        <translation>12 godzin</translation>
-    </message>
-    <message>
-        <source>Day</source>
-        <translation>Dzień</translation>
-    </message>
-    <message>
-        <source>Week</source>
-        <translation>Tydzień</translation>
-    </message>
-    <message>
-        <source>Month</source>
-        <translation>Miesiąc</translation>
-    </message>
-    <message>
-        <source>Programs (*.exe);;All files (*.*)</source>
-        <translation>Programy (*.exe);;Wszystkie pliki (*.*)</translation>
-    </message>
-    <message>
-        <source>File Path:</source>
-        <translation>Ścieżka pliku:</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation>Nazwa:</translation>
-    </message>
-    <message>
-        <source>Collect blocked connections</source>
-        <translation>Zbieraj blokowane połączenia</translation>
-    </message>
-    <message>
         <source>Kill Process</source>
         <translation>Zakończ proces</translation>
     </message>
     <message>
-        <source>Block Internet Traffic</source>
-        <translation>Blokuj ruch internetowy</translation>
-    </message>
-    <message>
-        <source>Edit Wildcard</source>
-        <translation>Edytuj wieloznaczne</translation>
-    </message>
-    <message>
-        <source>Kill child processes</source>
-        <translation>Zakończ procesy potomne</translation>
-    </message>
-    <message>
-        <source>Attention: This option is very dangerous!!!
-
-Be careful when killing a system services or other important programs!
-It can cause a Windows malfunction or totally unusable.</source>
-        <translation>Uwaga: Ta opcja jest bardzo niebezpieczna!!!
-
-Należy zachować ostrożność podczas ubijania usług systemowych lub innych ważnych programów!
-Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowitą bezużyteczność.</translation>
-    </message>
-    <message>
-        <source>Wildcard Paths:</source>
-        <translation>Ścieżki wieloznaczne:</translation>
+        <source>Schedule</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1608,16 +1555,32 @@ Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowi
         <translation># Zmienna środowiskowa:</translation>
     </message>
     <message>
-        <source>Parked</source>
-        <translation>Zaparkowana</translation>
+        <source>Propagate to all child processes</source>
+        <translation>Propagacja do wszystkich procesów podrzędnych</translation>
     </message>
     <message>
-        <source>Don&apos;t purge as obsolete</source>
-        <translation>Nie czyść jako przestarzałe</translation>
+        <source>Propagate to designated child processes</source>
+        <translation>Propagacja do wyznaczonych procesów podrzędnych</translation>
     </message>
     <message>
-        <source>Notes</source>
-        <translation>Uwagi</translation>
+        <source>Receive from the parent process</source>
+        <translation>Odbieranie z procesu nadrzędnego</translation>
+    </message>
+    <message>
+        <source>Remove</source>
+        <translation>Usuń</translation>
+    </message>
+    <message>
+        <source>In:</source>
+        <translation>W:</translation>
+    </message>
+    <message>
+        <source>At:</source>
+        <translation>Na:</translation>
+    </message>
+    <message>
+        <source>Custom</source>
+        <translation>Własne</translation>
     </message>
     <message>
         <source>1 second</source>
@@ -1640,84 +1603,83 @@ Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowi
         <translation>30 minut</translation>
     </message>
     <message>
-        <source> minute(s)</source>
-        <translation> minut(a)</translation>
-    </message>
-    <message>
-        <source>Schedule</source>
-        <translation>Zaplanuj</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Usuń</translation>
-    </message>
-    <message>
-        <source>In:</source>
-        <translation>W:</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation>Na:</translation>
-    </message>
-    <message>
-        <source>Group:</source>
-        <translation>Grupa:</translation>
-    </message>
-    <message>
-        <source>Rule</source>
-        <translation>Reguła</translation>
-    </message>
-    <message>
-        <source>Select Rule</source>
-        <translation>Wybierz regułę</translation>
-    </message>
-    <message>
-        <source>Attention: This option only affects new processes!
-
-Please restart the running program to take effect of this option.</source>
-        <translation>Uwaga: Ta opcja dotyczy tylko nowych procesów!
-
-Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
-    </message>
-    <message>
-        <source>Propagate to designated child processes</source>
-        <translation>Propagacja do wyznaczonych procesów podrzędnych</translation>
-    </message>
-    <message>
-        <source>Propagate to all child processes</source>
-        <translation>Propagacja do wszystkich procesów podrzędnych</translation>
-    </message>
-    <message>
-        <source>Receive from the parent process</source>
-        <translation>Odbieranie z procesu nadrzędnego</translation>
-    </message>
-    <message>
-        <source>Rules inheritance:</source>
-        <translation>Reguły dziedziczenia:</translation>
-    </message>
-    <message>
-        <source>Switch Wildcard</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Collect allowed connections</source>
-        <translation>Zbieraj dozwolone połączenia</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation>Opcje</translation>
+        <source>1 hour</source>
+        <translation>1 godzina</translation>
     </message>
     <message>
         <source>3 hours</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>6 hours</source>
+        <translation>6 godzin</translation>
+    </message>
+    <message>
+        <source>12 hours</source>
+        <translation>12 godzin</translation>
+    </message>
+    <message>
+        <source>Day</source>
+        <translation>Dzień</translation>
+    </message>
+    <message>
+        <source>Week</source>
+        <translation>Tydzień</translation>
+    </message>
+    <message>
+        <source>Month</source>
+        <translation>Miesiąc</translation>
+    </message>
+    <message>
+        <source> minute(s)</source>
+        <translation> minut(a)</translation>
+    </message>
+    <message>
         <source>%1 minute(s)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Programs (*.exe);;All files (*.*)</source>
+        <translation>Programy (*.exe);;Wszystkie pliki (*.*)</translation>
+    </message>
+    <message>
+        <source>Icon for program</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Icons (*.ico; *.png)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProgMainPage</name>
+    <message>
+        <source>General</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Network Filters</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>More</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Switch Wildcard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Connections</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Anuluj</translation>
     </message>
     <message>
         <source>Copy as Filter</source>
@@ -1728,24 +1690,85 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
         <translation>Kopiuj</translation>
     </message>
     <message>
-        <source>Set Icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Delete Icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icon for program</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Icons (*.ico; *.png)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Lookup IP</source>
         <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ProgMorePage</name>
+    <message>
+        <source>Kill child processes</source>
+        <translation>Zakończ procesy potomne</translation>
+    </message>
+    <message>
+        <source>Parked</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Don&apos;t purge as obsolete</source>
+        <translation>Nie czyść jako przestarzałe</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Zbieraj dozwolone połączenia</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Zbieraj blokowane połączenia</translation>
+    </message>
+</context>
+<context>
+    <name>ProgNetworkPage</name>
+    <message>
+        <source>Block Internet Traffic</source>
+        <translation>Blokuj ruch internetowy</translation>
+    </message>
+    <message>
+        <source>Rule</source>
+        <translation>Reguła</translation>
+    </message>
+    <message>
+        <source>Select Rule</source>
+        <translation>Wybierz regułę</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramAlertWindow</name>
+    <message>
+        <source>Alert Program</source>
+        <translation>Ostrzeżenie o programie</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditController</name>
+    <message>
+        <source>Attention: This option is very dangerous!!!
+
+Be careful when killing a system services or other important programs!
+It can cause a Windows malfunction or totally unusable.</source>
+        <translation>Uwaga: Ta opcja jest bardzo niebezpieczna!!!
+
+Należy zachować ostrożność podczas ubijania usług systemowych lub innych ważnych programów!
+Może to spowodować nieprawidłowe działanie systemu Windows lub jego całkowitą bezużyteczność.</translation>
+    </message>
+    <message>
+        <source>Attention: This option only affects new processes!
+
+Please restart the running program to take effect of this option.</source>
+        <translation>Uwaga: Ta opcja dotyczy tylko nowych procesów!
+
+Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
+    </message>
+</context>
+<context>
+    <name>ProgramEditDialog</name>
+    <message>
+        <source>Edit Wildcard</source>
+        <translation>Edytuj wieloznaczne</translation>
+    </message>
+    <message>
+        <source>Edit Program</source>
+        <translation>Edycja programu</translation>
     </message>
 </context>
 <context>
@@ -1832,14 +1855,6 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     <message>
         <source>Wildcard Paths</source>
         <translation>Ścieżki wieloznaczne</translation>
-    </message>
-    <message>
-        <source>Convert to Wildcard</source>
-        <translation>Konwertuj na wieloznacznik</translation>
-    </message>
-    <message>
-        <source>Are you sure to convert selected program to wildcard?</source>
-        <translation>Czy na pewno chcesz przekonwertować zaznaczony program na wieloznacznik?</translation>
     </message>
     <message>
         <source>Parked</source>
