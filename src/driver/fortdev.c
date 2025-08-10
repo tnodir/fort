@@ -129,9 +129,6 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
     /* Clear pending packets */
     fort_pending_clear(&fort_device()->pending);
 
-    /* Close flows */
-    fort_stat_close_flows(&fort_device()->stat);
-
     /* Clear buffer */
     fort_buffer_clear(&fort_device()->buffer);
 
