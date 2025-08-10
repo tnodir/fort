@@ -31,6 +31,7 @@ private:
     void setupController();
 
     void setupUi();
+    void setupMainLayout();
 
 private:
     ProgramEditController *m_ctrl = nullptr;

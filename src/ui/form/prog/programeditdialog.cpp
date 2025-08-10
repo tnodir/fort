@@ -74,12 +74,8 @@ void ProgramEditDialog::setupController()
 
 void ProgramEditDialog::setupUi()
 {
-    auto layout = ControlUtil::createVLayout();
-
-    m_mainPage = new ProgMainPage(ctrl());
-    layout->addWidget(m_mainPage);
-
-    this->setLayout(layout);
+    // Main Layout
+    setupMainLayout();
 
     // Font
     this->setFont(WindowManager::defaultFont());
@@ -92,6 +88,16 @@ void ProgramEditDialog::setupUi()
 
     // Size
     this->setMinimumWidth(500);
+}
+
+void ProgramEditDialog::setupMainLayout()
+{
+    auto layout = ControlUtil::createVLayout();
+
+    m_mainPage = new ProgMainPage(ctrl());
+    layout->addWidget(m_mainPage);
+
+    this->setLayout(layout);
 }
 
 void ProgramEditDialog::retranslateUi()
