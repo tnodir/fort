@@ -63,6 +63,8 @@ void ProgMainPage::onPageInitialize(const App &app)
     m_btSwitchWildcard->setEnabled(isSingleSelection());
 
     setNetworkTabEnabled(!app.blocked);
+
+    selectTab(0);
 }
 
 void ProgMainPage::onRetranslateUi()
