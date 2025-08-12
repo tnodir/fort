@@ -1655,15 +1655,15 @@ Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
     <name>ProgMainPage</name>
     <message>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>Général</translation>
     </message>
     <message>
         <source>Network Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtres de réseau</translation>
     </message>
     <message>
         <source>More</source>
-        <translation type="unfinished"></translation>
+        <translation>Plus</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>

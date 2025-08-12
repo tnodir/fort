@@ -1655,15 +1655,15 @@ Do you want to open a discussion thread in browser?</source>
     <name>ProgMainPage</name>
     <message>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>General</translation>
     </message>
     <message>
         <source>Network Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtros de red</translation>
     </message>
     <message>
         <source>More</source>
-        <translation type="unfinished"></translation>
+        <translation>Más</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
