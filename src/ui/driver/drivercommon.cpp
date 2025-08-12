@@ -179,14 +179,24 @@ void logStatTrafHeaderRead(const char *input, quint16 *procCount)
     fort_log_stat_traf_header_read(input, procCount);
 }
 
-void logTimeWrite(char *output, int systemTimeChanged, qint64 unixTime)
+void logTimeWrite(char *output, qint64 unixTime, int systemTimeChanged)
 {
-    fort_log_time_write(output, systemTimeChanged, unixTime);
+    fort_log_time_write(output, unixTime, systemTimeChanged);
 }
 
-void logTimeRead(const char *input, int *systemTimeChanged, qint64 *unixTime)
+void logTimeRead(const char *input, qint64 *unixTime, int *systemTimeChanged)
 {
-    fort_log_time_read(input, systemTimeChanged, unixTime);
+    fort_log_time_read(input, unixTime, systemTimeChanged);
+}
+
+void logProcKillWrite(char *output, quint32 pid)
+{
+    fort_log_proc_kill_write(output, pid);
+}
+
+void logProcKillRead(const char *input, quint32 *pid)
+{
+    fort_log_proc_kill_read(input, pid);
 }
 
 bool confIpInRange(

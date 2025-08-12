@@ -49,6 +49,8 @@
 
 #define FORT_LOG_TIME_SIZE (sizeof(UINT32) + sizeof(INT64))
 
+#define FORT_LOG_PROC_KILL_SIZE (sizeof(UINT32) * 2)
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
@@ -76,9 +78,13 @@ FORT_API void fort_log_stat_traf_header_write(char *p, UINT16 proc_count);
 
 FORT_API void fort_log_stat_traf_header_read(const char *p, UINT16 *proc_count);
 
-FORT_API void fort_log_time_write(char *p, BOOL system_time_changed, INT64 unix_time);
+FORT_API void fort_log_time_write(char *p, INT64 unix_time, BOOL system_time_changed);
 
-FORT_API void fort_log_time_read(const char *p, BOOL *system_time_changed, INT64 *unix_time);
+FORT_API void fort_log_time_read(const char *p, INT64 *unix_time, BOOL *system_time_changed);
+
+FORT_API void fort_log_proc_kill_write(char *p, UINT32 pid);
+
+FORT_API void fort_log_proc_kill_read(const char *p, UINT32 *pid);
 
 #ifdef __cplusplus
 } // extern "C"

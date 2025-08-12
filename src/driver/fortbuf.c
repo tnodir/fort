@@ -237,6 +237,38 @@ FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN
     return status;
 }
 
+FORT_API NTSTATUS fort_buffer_system_time_write_locked(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, INT64 unix_time, BOOL system_time_changed)
+{
+    PCHAR out;
+    const NTSTATUS status = fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, irp_info);
+
+    if (NT_SUCCESS(status)) {
+        fort_log_time_write(out, unix_time, system_time_changed);
+    }
+
+    return status;
+}
+
+FORT_API NTSTATUS fort_buffer_proc_kill_write(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 pid)
+{
+    NTSTATUS status;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
+    {
+        PCHAR out;
+        status = fort_buffer_prepare(buf, FORT_LOG_PROC_KILL_SIZE, &out, irp_info);
+
+        if (NT_SUCCESS(status)) {
+            fort_log_proc_kill_write(out, pid);
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return status;
+}
+
 inline static NTSTATUS fort_buffer_xmove_locked_empty(
         PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
 {

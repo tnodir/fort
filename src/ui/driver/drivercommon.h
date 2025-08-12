@@ -57,8 +57,11 @@ void logProcNewHeaderRead(const char *input, quint32 *appId, quint32 *pid, quint
 
 void logStatTrafHeaderRead(const char *input, quint16 *procCount);
 
-void logTimeWrite(char *output, int systemTimeChanged, qint64 unixTime);
-void logTimeRead(const char *input, int *systemTimeChanged, qint64 *unixTime);
+void logTimeWrite(char *output, qint64 unixTime, int systemTimeChanged);
+void logTimeRead(const char *input, qint64 *unixTime, int *systemTimeChanged);
+
+void logProcKillWrite(char *output, quint32 pid);
+void logProcKillRead(const char *input, quint32 *pid);
 
 bool confIpInRange(const void *drvConf, const ip_addr_t ip, bool isIPv6 = false,
         bool included = false, int addrGroupIndex = 0);

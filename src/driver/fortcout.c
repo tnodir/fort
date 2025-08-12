@@ -1242,16 +1242,12 @@ inline static void fort_callout_update_system_time(
 
     stat->system_time = system_time;
 
-    PCHAR out;
-    if (NT_SUCCESS(fort_buffer_prepare(buf, FORT_LOG_TIME_SIZE, &out, irp_info))) {
-        const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
+    const INT64 unix_time = fort_system_to_unix_time(system_time.QuadPart);
 
-        const UCHAR old_stat_flags =
-                fort_stat_flags_set(stat, FORT_STAT_SYSTEM_TIME_CHANGED, FALSE);
-        const BOOL system_time_changed = (old_stat_flags & FORT_STAT_SYSTEM_TIME_CHANGED) != 0;
+    const UCHAR old_stat_flags = fort_stat_flags_set(stat, FORT_STAT_SYSTEM_TIME_CHANGED, FALSE);
+    const BOOL system_time_changed = (old_stat_flags & FORT_STAT_SYSTEM_TIME_CHANGED) != 0;
 
-        fort_log_time_write(out, system_time_changed, unix_time);
-    }
+    fort_buffer_system_time_write_locked(buf, irp_info, unix_time, system_time_changed);
 }
 
 inline static void fort_callout_flush_stat_traf(

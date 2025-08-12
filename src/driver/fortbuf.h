@@ -50,6 +50,12 @@ FORT_API NTSTATUS fort_buffer_prepare(
 FORT_API NTSTATUS fort_buffer_conn_write(PFORT_BUFFER buf, PCFORT_CONF_META_CONN conn,
         PFORT_IRP_INFO irp_info, const FORT_BUFFER_CONN_WRITE_TYPE log_type);
 
+FORT_API NTSTATUS fort_buffer_system_time_write_locked(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, INT64 unix_time, BOOL system_time_changed);
+
+FORT_API NTSTATUS fort_buffer_proc_kill_write(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 pid);
+
 FORT_API NTSTATUS fort_buffer_xmove(
         PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len);
 

@@ -244,7 +244,7 @@ void LogBuffer::writeEntryTime(const LogEntryTime *logEntry)
 
     char *output = this->output();
 
-    DriverCommon::logTimeWrite(output, logEntry->systemTimeChanged(), logEntry->unixTime());
+    DriverCommon::logTimeWrite(output, logEntry->unixTime(), logEntry->systemTimeChanged());
 
     m_top += entrySize;
 }
@@ -255,9 +255,9 @@ void LogBuffer::readEntryTime(LogEntryTime *logEntry)
 
     const char *input = this->input();
 
-    int systemTimeChanged;
     qint64 unixTime;
-    DriverCommon::logTimeRead(input, &systemTimeChanged, &unixTime);
+    int systemTimeChanged;
+    DriverCommon::logTimeRead(input, &unixTime, &systemTimeChanged);
 
     logEntry->setSystemTimeChanged(systemTimeChanged != 0);
     logEntry->setUnixTime(unixTime);
