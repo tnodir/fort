@@ -93,7 +93,12 @@ PsTree: Update Error.
 
 MessageId=61 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_ENUM_PROCESSES_ERROR
 Language=English
-Enum Processes Error.
+PsTree: Enum Processes Error.
+.
+
+MessageId=62 Facility=ProcessTree Severity=Error SymbolicName=FORT_PSTREE_PROCESS_PATH_ERROR
+Language=English
+PsTree: Process Path Error.
 .
 
 

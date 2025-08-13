@@ -573,6 +573,7 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc(
 
     if (!NT_SUCCESS(status)) {
         LOG("PsTree: DOS Device Name Error: %x\n", status);
+        TRACE(FORT_PSTREE_PROCESS_PATH_ERROR, status, 0, 0);
         return 0;
     }
 

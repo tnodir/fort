@@ -160,9 +160,18 @@
 //
 // MessageText:
 //
-// Enum Processes Error.
+// PsTree: Enum Processes Error.
 //
 #define FORT_PSTREE_ENUM_PROCESSES_ERROR ((NTSTATUS)0xC006003DL)
+
+//
+// MessageId: FORT_PSTREE_PROCESS_PATH_ERROR
+//
+// MessageText:
+//
+// PsTree: Process Path Error.
+//
+#define FORT_PSTREE_PROCESS_PATH_ERROR   ((NTSTATUS)0xC006003EL)
 
 /* Config */
 //
