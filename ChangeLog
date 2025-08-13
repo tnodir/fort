@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.19.0, 2025-08-13:
+- UI: ProgramEdit: Add tabs (#614).
+- UI: ProgramEdit: Terminate processes on "Kill Process" action (#615).
+- UI: Programs: Remove "Convert to Wildcard" menu item (use Program Edit's switch wildcard button instead).
+
 v3.18.11, 2025-08-05:
 - Driver: Fix closed processes handling (v3.18.8 regression) (#607).
 - UI: Programs: Add ability to set rows height (#608).
