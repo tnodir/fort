@@ -521,8 +521,7 @@ static void fort_pstree_check_proc_inheritance(
     fort_conf_ref_put(device_conf, conf_ref);
 }
 
-static PFORT_PSNODE fort_pstree_handle_new_proc(
-        PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi, const FORT_APP_PATH_DRIVE ps_drive)
+static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi)
 {
     PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, psi->pid_hash);
     if (proc == NULL)
@@ -530,7 +529,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(
 
     proc->process_id = psi->processId;
     proc->ps_opt.flags = FORT_PSNODE_FOUND;
-    proc->ps_opt.ps_drive = ps_drive;
+    proc->ps_opt.ps_drive = fort_path_drive_get(psi->path);
 
     fort_pstree_proc_check_svchost(ps_tree, psi, proc);
 
@@ -549,12 +548,12 @@ inline static BOOL fort_pstree_check_kill_proc(
 }
 
 inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc_locked(
-        PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi, const FORT_APP_PATH_DRIVE ps_drive)
+        PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi)
 {
     PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, psi->processId, psi->pid_hash);
 
     if (proc == NULL) {
-        proc = fort_pstree_handle_new_proc(ps_tree, psi, ps_drive);
+        proc = fort_pstree_handle_new_proc(ps_tree, psi);
         if (proc == NULL)
             return 0;
     }
@@ -577,14 +576,12 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc(
         return 0;
     }
 
-    const FORT_APP_PATH_DRIVE ps_drive = fort_path_drive_get(&pb->path);
-
     FORT_PS_FLAGS ps_flags;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        ps_flags = fort_pstree_handle_opened_proc_locked(ps_tree, psi, ps_drive);
+        ps_flags = fort_pstree_handle_opened_proc_locked(ps_tree, psi);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
