@@ -139,6 +139,11 @@ quint32 logTimeSize()
     return FORT_LOG_TIME_SIZE;
 }
 
+quint32 logProcKillSize()
+{
+    return FORT_LOG_PROC_KILL_SIZE;
+}
+
 quint8 logType(const char *input)
 {
     return fort_log_type(input);

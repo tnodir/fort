@@ -279,6 +279,11 @@ static NTSTATUS fort_device_control_app(PFORT_DEVICE_CONTROL_ARG dca, BOOL is_ad
     fort_conf_ref_put(&fort_device()->conf, conf_ref);
 
     if (NT_SUCCESS(status)) {
+        /* Enumerate processes */
+        if (app_entry->app_data.flags.kill_process) {
+            fort_pstree_enum_processes(&fort_device()->ps_tree);
+        }
+
         fort_device_reauth_queue();
     }
 

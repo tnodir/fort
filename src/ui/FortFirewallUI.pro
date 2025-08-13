@@ -140,6 +140,7 @@ SOURCES += \
     log/logentry.cpp \
     log/logentryapp.cpp \
     log/logentryconn.cpp \
+    log/logentryprockill.cpp \
     log/logentryprocnew.cpp \
     log/logentrystattraf.cpp \
     log/logentrytime.cpp \
@@ -408,6 +409,7 @@ HEADERS += \
     log/logentry.h \
     log/logentryapp.h \
     log/logentryconn.h \
+    log/logentryprockill.h \
     log/logentryprocnew.h \
     log/logentrystattraf.h \
     log/logentrytime.h \

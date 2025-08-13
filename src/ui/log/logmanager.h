@@ -50,6 +50,7 @@ private:
     bool processLogEntryProcNew(LogBuffer *logBuffer);
     bool processLogEntryStatTraf(LogBuffer *logBuffer);
     bool processLogEntryTime(LogBuffer *logBuffer);
+    bool processLogEntryProcKill(LogBuffer *logBuffer);
     bool processLogEntryError(LogBuffer *logBuffer, FortLogType logType);
 
 private:

@@ -4,6 +4,7 @@
 
 #include "logentryapp.h"
 #include "logentryconn.h"
+#include "logentryprockill.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "logentrytime.h"
@@ -263,5 +264,20 @@ void LogBuffer::readEntryTime(LogEntryTime *logEntry)
     logEntry->setUnixTime(unixTime);
 
     const int entrySize = int(DriverCommon::logTimeSize());
+    m_offset += entrySize;
+}
+
+void LogBuffer::readEntryProcKill(LogEntryProcKill *logEntry)
+{
+    Q_ASSERT(m_offset < m_top);
+
+    const char *input = this->input();
+
+    quint32 pid;
+    DriverCommon::logProcKillRead(input, &pid);
+
+    logEntry->setPid(pid);
+
+    const int entrySize = int(DriverCommon::logProcKillSize());
     m_offset += entrySize;
 }

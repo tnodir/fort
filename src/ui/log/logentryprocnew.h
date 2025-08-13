@@ -14,10 +14,10 @@ public:
     void setAppId(quint32 v) { m_appId = v; }
 
     quint32 pid() const { return m_pid; }
-    void setPid(quint32 pid);
+    void setPid(quint32 pid) { m_pid = pid; }
 
     QString kernelPath() const { return m_kernelPath; }
-    void setKernelPath(const QString &kernelPath);
+    void setKernelPath(const QString &kernelPath) { m_kernelPath = kernelPath; }
 
     QString path() const;
 

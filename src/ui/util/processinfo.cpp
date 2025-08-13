@@ -5,7 +5,7 @@
 
 #define PROC_PATH_MAX 65536
 
-ProcessInfo::ProcessInfo(quint32 pid) : m_pid(pid)
+ProcessInfo::ProcessInfo(quint32 pid, quint8 openFlags) : m_openFlags(openFlags), m_pid(pid)
 {
     openProcess();
 }
@@ -28,7 +28,8 @@ void ProcessInfo::openProcess()
     if (m_pid == currentPid()) {
         m_handle = GetCurrentProcess();
     } else {
-        const DWORD access = PROCESS_QUERY_LIMITED_INFORMATION;
+        const DWORD access = PROCESS_QUERY_LIMITED_INFORMATION
+                | ((m_openFlags & OpenTerminate) != 0 ? PROCESS_TERMINATE : 0);
 
         m_handle = OpenProcess(access, FALSE, m_pid);
     }
@@ -56,4 +57,9 @@ QString ProcessInfo::path(bool isKernelPath) const
     }
 
     return QString();
+}
+
+bool ProcessInfo::terminateProcess(int exitCode)
+{
+    return TerminateProcess(m_handle, exitCode) != 0;
 }

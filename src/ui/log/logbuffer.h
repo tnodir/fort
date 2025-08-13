@@ -8,6 +8,7 @@
 
 class LogEntryApp;
 class LogEntryConn;
+class LogEntryProcKill;
 class LogEntryProcNew;
 class LogEntryStatTraf;
 class LogEntryTime;
@@ -39,6 +40,8 @@ public:
 
     void writeEntryTime(const LogEntryTime *logEntry);
     void readEntryTime(LogEntryTime *logEntry);
+
+    void readEntryProcKill(LogEntryProcKill *logEntry);
 
 public slots:
     void reset(int top = 0);

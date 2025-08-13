@@ -44,6 +44,8 @@ quint32 logStatSize(quint16 procCount);
 
 quint32 logTimeSize();
 
+quint32 logProcKillSize();
+
 quint8 logType(const char *input);
 
 void logAppHeaderWrite(char *output, bool blocked, quint32 pid, quint16 pathLen);

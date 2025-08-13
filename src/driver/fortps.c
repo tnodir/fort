@@ -529,7 +529,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(
         return NULL;
 
     proc->process_id = psi->processId;
-    proc->ps_opt.flags = 0;
+    proc->ps_opt.flags = FORT_PSNODE_FOUND;
     proc->ps_opt.ps_drive = ps_drive;
 
     fort_pstree_proc_check_svchost(ps_tree, psi, proc);
@@ -754,19 +754,31 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-inline static BOOL fort_pstree_enum_process_exists(
+inline static void fort_pstree_enum_process_check_kill(DWORD processId, const FORT_PS_OPT ps_opt)
+{
+    const BOOL is_kill_process = (ps_opt.flags & FORT_PSNODE_KILL_PROCESS) != 0;
+
+    if (is_kill_process) {
+        fort_buffer_proc_kill_write(&fort_device()->buffer, /*irp_info=*/NULL, processId);
+    }
+}
+
+inline static FORT_PS_OPT fort_pstree_enum_process_opt(
         PFORT_PSTREE ps_tree, DWORD processId, tommy_key_t pid_hash)
 {
-    PFORT_PSNODE proc;
+    FORT_PS_OPT ps_opt = { 0 };
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
+        const PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
+        if (proc != NULL) {
+            ps_opt = proc->ps_opt;
+        }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    return (proc != NULL);
+    return ps_opt;
 }
 
 inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
@@ -779,8 +791,11 @@ inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCES
 
     const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
 
-    if (fort_pstree_enum_process_exists(ps_tree, processId, pid_hash))
+    const FORT_PS_OPT ps_opt = fort_pstree_enum_process_opt(ps_tree, processId, pid_hash);
+    if (ps_opt.flags != 0) {
+        fort_pstree_enum_process_check_kill(processId, ps_opt);
         return;
+    }
 
     FORT_PSINFO_HASH psi = {
         .pid_hash = pid_hash,
@@ -880,7 +895,7 @@ inline static void fort_pstree_update_service_proc(
         proc = fort_pstree_proc_new(ps_tree, pid_hash);
 
         proc->process_id = processId;
-        proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST;
+        proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST | FORT_PSNODE_FOUND;
     }
 
     if (proc->ps_name == NULL) {

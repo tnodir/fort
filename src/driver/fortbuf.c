@@ -101,10 +101,11 @@ FORT_API void fort_buffer_clear(PFORT_BUFFER buf)
 
 static void fort_buffer_flush_pending_out(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 out_top)
 {
-    PIRP *irp = &irp_info->irp;
+    if (irp_info == NULL)
+        return;
 
-    if (irp != NULL && *irp == NULL) {
-        *irp = buf->irp;
+    if (irp_info->irp == NULL) {
+        irp_info->irp = buf->irp;
         buf->irp = NULL;
 
         irp_info->info = out_top;

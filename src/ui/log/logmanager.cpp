@@ -13,10 +13,12 @@
 #include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
+#include <util/processinfo.h>
 
 #include "logbuffer.h"
 #include "logentryapp.h"
 #include "logentryconn.h"
+#include "logentryprockill.h"
 #include "logentryprocnew.h"
 #include "logentrystattraf.h"
 #include "logentrytime.h"
@@ -157,6 +159,8 @@ bool LogManager::processLogEntry(LogBuffer *logBuffer, FortLogType logType)
         return processLogEntryStatTraf(logBuffer);
     case FORT_LOG_TYPE_TIME:
         return processLogEntryTime(logBuffer);
+    case FORT_LOG_TYPE_PROC_KILL:
+        return processLogEntryProcKill(logBuffer);
     default:
         return processLogEntryError(logBuffer, logType);
     }
@@ -217,6 +221,19 @@ bool LogManager::processLogEntryTime(LogBuffer *logBuffer)
 
     if (timeEntry.systemTimeChanged()) {
         emit systemTimeChanged();
+    }
+
+    return true;
+}
+
+bool LogManager::processLogEntryProcKill(LogBuffer *logBuffer)
+{
+    LogEntryProcKill procKillEntry;
+    logBuffer->readEntryProcKill(&procKillEntry);
+
+    ProcessInfo pi(procKillEntry.pid(), ProcessInfo::OpenTerminate);
+    if (pi.isValid()) {
+        pi.terminateProcess(procKillEntry.pid());
     }
 
     return true;
