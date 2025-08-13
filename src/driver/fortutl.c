@@ -533,32 +533,38 @@ FORT_API FORT_APP_PATH_DRIVE fort_path_drive_get(PCFORT_APP_PATH path)
 {
     PWCHAR p = (PWCHAR) path->buffer;
 
-    const UCHAR driveNum = (path->len > 2 && p[1] == L':') ? (UCHAR) (p[0] - L'A' + 1) : 0;
+    const BOOL is_letter = (path->len > 2 && p[1] == L':');
+    const UCHAR drive_num = is_letter ? (UCHAR) (p[0] - L'A') : 0;
 
     const FORT_APP_PATH_DRIVE ps_drive = {
-        .num = driveNum,
+        .is_valid = TRUE,
+        .is_letter = is_letter,
+        .num = drive_num,
     };
     return ps_drive;
 }
 
 FORT_API void fort_path_drive_adjust(PFORT_APP_PATH path, const FORT_APP_PATH_DRIVE ps_drive)
 {
+    if (!ps_drive.is_valid)
+        return;
+
     PWCHAR volume_sep = fort_path_prefix_volume_sep(path);
     if (volume_sep == NULL)
         return;
 
-    const BOOL hasDrive = (ps_drive.num > 0);
+    const BOOL is_letter = ps_drive.is_letter;
 
     PWCHAR p = (PWCHAR) path->buffer;
-    const UINT16 volume_len = (UINT16) (volume_sep - p) - (hasDrive ? 2 : 1);
+    const UINT16 volume_len = (UINT16) (volume_sep - p) - (is_letter ? 2 : 1);
 
     p += volume_len;
 
     path->buffer = p;
     path->len -= volume_len * sizeof(WCHAR);
 
-    if (hasDrive) {
-        *p++ = ps_drive.num + L'A' - 1;
+    if (is_letter) {
+        *p++ = ps_drive.num + L'A';
         *p = L':';
     } else {
         *p = L'\\';

@@ -32,7 +32,9 @@ typedef union ip_addr_t {
 
 typedef struct fort_app_path_drive
 {
-    unsigned char num; /* 1..26 (A..Z) */
+    unsigned char is_valid : 1;
+    unsigned char is_letter : 1;
+    unsigned char num : 5; /* 0..25 (A..Z) */
 } FORT_APP_PATH_DRIVE, *PFORT_APP_PATH_DRIVE;
 
 typedef struct fort_app_path
