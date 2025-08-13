@@ -531,6 +531,11 @@ FORT_API void fort_path_buffer_free(PFORT_PATH_BUFFER pb)
 
 FORT_API FORT_APP_PATH_DRIVE fort_path_drive_get(PCFORT_APP_PATH path)
 {
+    if (path == NULL) {
+        const FORT_APP_PATH_DRIVE ps_drive = { 0 };
+        return ps_drive;
+    }
+
     PWCHAR p = (PWCHAR) path->buffer;
 
     const BOOL is_letter = (path->len > 2 && p[1] == L':');

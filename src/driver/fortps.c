@@ -529,7 +529,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
 
     proc->process_id = psi->processId;
     proc->ps_opt.flags = FORT_PSNODE_FOUND;
-    proc->ps_opt.ps_drive = fort_path_drive_get(psi->path);
+    proc->ps_opt.path_drive = fort_path_drive_get(psi->path);
 
     fort_pstree_proc_check_svchost(ps_tree, psi, proc);
 
@@ -570,10 +570,11 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc(
             ? GetFileDosDeviceName(psi->fileObject, pb)
             : GetProcessDosDeviceName(psi->processHandle, pb);
 
-    if (!NT_SUCCESS(status)) {
-        LOG("PsTree: DOS Device Name Error: %x\n", status);
+    if (NT_SUCCESS(status)) {
+        psi->path = &pb->path;
+    } else {
+        LOG("PsTree: DOS Device Name Error: %x fo=%p\n", status, psi->fileObject);
         TRACE(FORT_PSTREE_PROCESS_PATH_ERROR, status, 0, 0);
-        return 0;
     }
 
     FORT_PS_FLAGS ps_flags;
@@ -594,11 +595,10 @@ static FORT_PS_FLAGS fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT
     if (processHandle == NULL)
         return 0;
 
+    psi->processHandle = processHandle;
+
     FORT_PATH_BUFFER pb;
     fort_path_buffer_init(&pb);
-
-    psi->processHandle = processHandle;
-    psi->path = &pb.path;
 
     /* Must be called in PASSIVE level only! */
     const FORT_PS_FLAGS ps_flags = fort_pstree_handle_opened_proc(ps_tree, psi, &pb);

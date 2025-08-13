@@ -40,7 +40,7 @@ typedef struct fort_ps_opt
 {
     FORT_PS_FLAGS flags;
 
-    FORT_APP_PATH_DRIVE ps_drive;
+    FORT_APP_PATH_DRIVE path_drive;
 } FORT_PS_OPT, *PFORT_PS_OPT;
 
 typedef const FORT_PS_OPT *PCFORT_PS_OPT;

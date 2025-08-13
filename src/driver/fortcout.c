@@ -106,7 +106,7 @@ static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_ME
         conn->inherited = TRUE;
     }
 
-    fort_callout_ale_fill_meta_path_real(conn, processPath, ps_opt.ps_drive);
+    fort_callout_ale_fill_meta_path_real(conn, processPath, ps_opt.path_drive);
 
     if (!conn->inherited) {
         *path = *real_path;
