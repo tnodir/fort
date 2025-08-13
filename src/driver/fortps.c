@@ -79,6 +79,8 @@ typedef struct fort_psinfo_hash
     DWORD processId;
     DWORD parentProcessId;
 
+    PFILE_OBJECT fileObject;
+
     PCFORT_APP_PATH path;
     PCUNICODE_STRING commandLine;
 } FORT_PSINFO_HASH, *PFORT_PSINFO_HASH;
@@ -105,51 +107,56 @@ inline static BOOL fort_is_system_process(DWORD processId, DWORD parentProcessId
     return (processId == 0 || processId == 4 || parentProcessId == 4);
 }
 
-static void GetImageNameDriveNumber(PCFORT_APP_PATH path, PFORT_APP_PATH_DRIVE ps_drive)
+static NTSTATUS GetFileDosDeviceName(PFILE_OBJECT fileObject, PFORT_PATH_BUFFER pb)
 {
-    const PWCHAR volume_sep = fort_path_prefix_volume_sep(path);
-    if (volume_sep == NULL)
-        return;
-
-    const PWCHAR p = (PWCHAR) path->buffer;
-    const UCHAR volume_end = (UCHAR) (volume_sep - p);
-
-    UNICODE_STRING volume = {
-        .Length = volume_end * sizeof(WCHAR),
-        .Buffer = p,
-    };
-
-    NTSTATUS status;
-
-    HANDLE fileHandle;
-    status = fort_file_open(&volume, &fileHandle);
+    POBJECT_NAME_INFORMATION nameInfo;
+    const NTSTATUS status = IoQueryFileDosDeviceName(fileObject, &nameInfo);
 
     if (!NT_SUCCESS(status))
-        return;
+        return status;
 
-    PFILE_OBJECT fileObj = NULL;
-    status = ObReferenceObjectByHandle(
-            fileHandle, FILE_ALL_ACCESS, NULL, KernelMode, &fileObj, NULL);
+    PUNICODE_STRING name = &nameInfo->Name;
+
+    const UINT16 name_size = name->Length;
+    const PWCHAR name_buf = name->Buffer;
+
+    RtlDowncaseUnicodeString(name, name, FALSE);
+    name_buf[0] = RtlUpcaseUnicodeChar(name_buf[0]);
+    /* the string is already zero terminated */
+
+    fort_path_buffer_free(pb);
+
+    pb->buffer = nameInfo;
+    pb->path.len = name_size;
+    pb->path.buffer = name_buf;
+
+    return STATUS_SUCCESS;
+}
+
+static NTSTATUS GetImageNameFileObject(PCFORT_APP_PATH path, PFILE_OBJECT *fileObj)
+{
+    NTSTATUS status;
+
+    /* Open the file */
+    HANDLE fileHandle;
+    {
+        UNICODE_STRING volume = {
+            .Length = path->len,
+            .Buffer = (PWCHAR) path->buffer,
+        };
+
+        status = fort_file_open(&volume, &fileHandle);
+        if (!NT_SUCCESS(status))
+            return status;
+    }
+
+    /* Get the file object */
+    status =
+            ObReferenceObjectByHandle(fileHandle, FILE_ALL_ACCESS, NULL, KernelMode, fileObj, NULL);
 
     ZwClose(fileHandle);
 
-    if (!NT_SUCCESS(status))
-        return;
-
-    UNICODE_STRING dosName;
-    status = IoVolumeDeviceToDosName(fileObj->DeviceObject, &dosName);
-    const BOOL hasDrive = NT_SUCCESS(status);
-
-    ObDereferenceObject(fileObj);
-
-    const UCHAR driveOff = (hasDrive) ? 2 : 1;
-    ps_drive->pos = volume_end - driveOff;
-
-    if (hasDrive) {
-        ps_drive->num = dosName.Buffer[0] - L'A' + 1;
-
-        fort_mem_free_notag(dosName.Buffer);
-    }
+    return status;
 }
 
 inline static NTSTATUS GetProcessImageNameBuffer(
@@ -191,15 +198,30 @@ static NTSTATUS GetProcessImageName(HANDLE processHandle, PFORT_PATH_BUFFER pb)
     if (path_size == 0)
         return STATUS_OBJECT_NAME_NOT_FOUND;
 
-    PWCHAR path_buffer = path_str->Buffer;
-
-    RtlDowncaseUnicodeString(path_str, path_str, FALSE);
-    path_buffer[path_size / sizeof(WCHAR)] = L'\0';
-
     pb->path.len = path_size;
-    pb->path.buffer = path_buffer;
+    pb->path.buffer = path_str->Buffer;
 
     return STATUS_SUCCESS;
+}
+
+static NTSTATUS GetProcessDosDeviceName(HANDLE processHandle, PFORT_PATH_BUFFER pb)
+{
+    NTSTATUS status;
+
+    status = GetProcessImageName(processHandle, pb);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    PFILE_OBJECT fileObject = NULL;
+    status = GetImageNameFileObject(&pb->path, &fileObject);
+    if (!NT_SUCCESS(status))
+        return status;
+
+    status = GetFileDosDeviceName(fileObject, pb);
+
+    ObDereferenceObject(fileObject);
+
+    return status;
 }
 
 static HANDLE OpenProcessById(DWORD processId)
@@ -531,18 +553,16 @@ inline static BOOL fort_pstree_check_kill_proc(
 inline static PFORT_PSNODE fort_pstree_handle_opened_proc(
         PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb)
 {
-    /* GetProcessImageName() must be called in PASSIVE level only! */
-    const NTSTATUS status = GetProcessImageName(psi->processHandle, pb);
+    const NTSTATUS status = (psi->fileObject != NULL)
+            ? GetFileDosDeviceName(psi->fileObject, pb)
+            : GetProcessDosDeviceName(psi->processHandle, pb);
+
     if (!NT_SUCCESS(status)) {
-        LOG("PsTree: Image Name Error: %x\n", status);
+        LOG("PsTree: DOS Device Name Error: %x\n", status);
         return NULL;
     }
 
-    /* GetImageNameDriveNumber() must be called in PASSIVE level only! */
-    FORT_APP_PATH_DRIVE ps_drive = { 0 };
-    GetImageNameDriveNumber(&pb->path, &ps_drive);
-
-    fort_path_drive_adjust(&pb->path, ps_drive);
+    const FORT_APP_PATH_DRIVE ps_drive = fort_path_drive_get(&pb->path);
 
     PFORT_PSNODE proc;
 
@@ -568,6 +588,7 @@ static PFORT_PSNODE fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT_
     psi->processHandle = processHandle;
     psi->path = &pb.path;
 
+    /* Must be called in PASSIVE level only! */
     PFORT_PSNODE proc = fort_pstree_handle_opened_proc(ps_tree, psi, &pb);
 
     fort_path_buffer_free(&pb);
@@ -586,6 +607,7 @@ inline static void fort_pstree_notify_process_created(
     if (fort_is_system_process(psi->processId, psi->parentProcessId))
         return; /* skip System (sub)processes */
 
+    psi->fileObject = createInfo->FileObject;
     psi->commandLine = createInfo->CommandLine;
 
     PFORT_PSNODE proc = fort_pstree_handle_created_proc(ps_tree, psi);
@@ -816,9 +838,6 @@ static BOOL fort_pstree_get_proc_name_locked(
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
     if (proc == NULL)
         return FALSE;
-
-    /* Device number may be changed (e.g. after hibernation) */
-    fort_path_drive_validate(path, &proc->ps_opt.ps_drive);
 
     *ps_opt = proc->ps_opt;
 

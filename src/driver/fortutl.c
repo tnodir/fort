@@ -529,51 +529,38 @@ FORT_API void fort_path_buffer_free(PFORT_PATH_BUFFER pb)
     }
 }
 
+FORT_API FORT_APP_PATH_DRIVE fort_path_drive_get(PCFORT_APP_PATH path)
+{
+    PWCHAR p = (PWCHAR) path->buffer;
+
+    const UCHAR driveNum = (path->len > 2 && p[1] == L':') ? (UCHAR) (p[0] - L'A' + 1) : 0;
+
+    const FORT_APP_PATH_DRIVE ps_drive = {
+        .num = driveNum,
+    };
+    return ps_drive;
+}
+
 FORT_API void fort_path_drive_adjust(PFORT_APP_PATH path, const FORT_APP_PATH_DRIVE ps_drive)
 {
-    if (ps_drive.pos == 0)
+    PWCHAR volume_sep = fort_path_prefix_volume_sep(path);
+    if (volume_sep == NULL)
         return;
 
+    const BOOL hasDrive = (ps_drive.num > 0);
+
     PWCHAR p = (PWCHAR) path->buffer;
-    p += ps_drive.pos;
+    const UINT16 volume_len = (UINT16) (volume_sep - p) - (hasDrive ? 2 : 1);
+
+    p += volume_len;
 
     path->buffer = p;
-    path->len -= ps_drive.pos * sizeof(WCHAR);
+    path->len -= volume_len * sizeof(WCHAR);
 
-    if (ps_drive.num > 0) {
+    if (hasDrive) {
         *p++ = ps_drive.num + L'A' - 1;
         *p = L':';
     } else {
         *p = L'\\';
-    }
-}
-
-FORT_API void fort_path_drive_validate(PCFORT_APP_PATH path, PFORT_APP_PATH_DRIVE ps_drive)
-{
-    if (ps_drive->pos == 0)
-        return;
-
-    const PCWCHAR p = (PCWCHAR) path->buffer;
-
-    const UCHAR driveOff = (ps_drive->num > 0) ? 2 : 1;
-
-    /* Check the separator */
-    {
-        const PCWCHAR sep = &p[ps_drive->pos + driveOff];
-        if (*sep == L'\\')
-            return;
-    }
-
-    /* Find new position of separator */
-    {
-        const PCWCHAR volume_sep = fort_path_prefix_volume_sep(path);
-        if (volume_sep == NULL) {
-            ps_drive->pos = 0;
-            return; /* Reset the drive position */
-        }
-
-        const UCHAR volume_end = (UCHAR) (volume_sep - p);
-
-        ps_drive->pos = volume_end - driveOff;
     }
 }

@@ -35,6 +35,14 @@ NTSTATUS ObOpenObjectByPointer(PVOID object, ULONG handleAttributes,
     return STATUS_SUCCESS;
 }
 
+NTSTATUS IoQueryFileDosDeviceName(
+        PFILE_OBJECT fileObject, POBJECT_NAME_INFORMATION *objectNameInformation)
+{
+    UNUSED(fileObject);
+    UNUSED(objectNameInformation);
+    return STATUS_SUCCESS;
+}
+
 void KeStackAttachProcess(PRKPROCESS process, PRKAPC_STATE apcState)
 {
     UNUSED(process);

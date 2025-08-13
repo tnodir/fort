@@ -3,9 +3,10 @@
 
 #include "um_wdm.h"
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
+typedef struct _OBJECT_NAME_INFORMATION
+{
+    UNICODE_STRING Name;
+} OBJECT_NAME_INFORMATION, *POBJECT_NAME_INFORMATION;
 
 typedef struct _KAPC_STATE
 {
@@ -31,6 +32,10 @@ typedef struct _KAPC_STATE
     };
 } KAPC_STATE, *PKAPC_STATE, *PRKAPC_STATE;
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 FORT_API WCHAR RtlUpcaseUnicodeChar(WCHAR sourceCharacter);
 
 FORT_API NTSTATUS RtlDowncaseUnicodeString(PUNICODE_STRING destinationString,
@@ -42,9 +47,12 @@ FORT_API NTSTATUS ObOpenObjectByPointer(PVOID object, ULONG handleAttributes,
         PACCESS_STATE passedAccessState, ACCESS_MASK desiredAccess, POBJECT_TYPE objectType,
         KPROCESSOR_MODE accessMode, PHANDLE handle);
 
-FORT_API VOID KeStackAttachProcess(PRKPROCESS process, PRKAPC_STATE apcState);
+FORT_API NTSTATUS IoQueryFileDosDeviceName(
+        PFILE_OBJECT fileObject, POBJECT_NAME_INFORMATION *objectNameInformation);
 
-FORT_API VOID KeUnstackDetachProcess(PRKAPC_STATE apcState);
+FORT_API void KeStackAttachProcess(PRKPROCESS process, PRKAPC_STATE apcState);
+
+FORT_API void KeUnstackDetachProcess(PRKAPC_STATE apcState);
 
 FORT_API ULONG RtlRandomEx(PULONG seed);
 

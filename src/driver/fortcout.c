@@ -60,9 +60,6 @@ inline static void fort_callout_ale_set_app_flags(
 inline static void fort_callout_ale_fill_meta_path_real(PFORT_CONF_META_CONN conn,
         const FWP_BYTE_BLOB processPath, const FORT_APP_PATH_DRIVE ps_drive)
 {
-    if (ps_drive.pos == 0)
-        return;
-
     PFORT_PATH_BUFFER pb = &conn->path_buf;
     PFORT_APP_PATH path = &pb->path;
 
