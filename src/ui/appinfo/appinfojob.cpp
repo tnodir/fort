@@ -9,14 +9,14 @@
 
 AppInfoJob::AppInfoJob(const QString &appPath) : AppBaseJob(appPath) { }
 
-void AppInfoJob::doJob(WorkerObject &worker)
+void AppInfoJob::doJob(WorkerManager *manager)
 {
-    loadAppInfo(static_cast<AppInfoManager *>(worker.manager()));
+    loadAppInfo(static_cast<AppInfoManager *>(manager));
 }
 
-void AppInfoJob::reportResult(WorkerObject &worker)
+void AppInfoJob::reportResult(WorkerManager *manager)
 {
-    emitFinished(static_cast<AppInfoManager *>(worker.manager()));
+    emitFinished(static_cast<AppInfoManager *>(manager));
 }
 
 void AppInfoJob::loadAppInfo(AppInfoManager *manager)

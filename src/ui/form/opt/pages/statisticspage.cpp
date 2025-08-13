@@ -372,10 +372,10 @@ void StatisticsPage::setupLogConn()
     });
 
     // Clear Connections on Exit
-    m_cbClearConnOnExit = ControlUtil::createCheckBox(conf()->clearConnOnExit(), [&](bool checked) {
-        if (conf()->clearConnOnExit() != checked) {
-            conf()->setClearConnOnExit(checked);
-            ctrl()->setFlagsEdited();
+    m_cbClearConnOnExit = ControlUtil::createCheckBox(ini()->connClearOnExit(), [&](bool checked) {
+        if (ini()->connClearOnExit() != checked) {
+            ini()->setConnClearOnExit(checked);
+            ctrl()->setIniEdited();
         }
     });
 

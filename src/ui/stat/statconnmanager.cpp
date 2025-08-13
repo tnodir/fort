@@ -8,6 +8,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <fortsettings.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
@@ -69,9 +70,9 @@ void StatConnManager::setUp()
 
 void StatConnManager::tearDown()
 {
-    abortWorkers();
+    checkClearConnOnExit();
 
-    checkCearConnOnExit();
+    abortWorkers();
 }
 
 void StatConnManager::logConn(const LogEntryConn &entry)
@@ -89,7 +90,7 @@ void StatConnManager::logConn(const LogEntryConn &entry)
 void StatConnManager::deleteConn(qint64 connIdTo)
 {
     if (connIdTo <= 0) {
-        clear(); // delete all
+        clear(); // remove jobs, because we delete all connections
     }
 
     enqueueJob(WorkerJobPtr(new DeleteConnJob(connIdTo)));
@@ -191,24 +192,34 @@ void StatConnManager::setupByConf()
 
     m_logAllowedConn = conf->logAllowedConn();
     m_logBlockedConn = conf->logBlockedConn();
-
-    sqliteDb()->setSynchronous(conf->clearConnOnExit() ? SqliteDb::SyncOff : SqliteDb::SyncNormal);
 }
 
 void StatConnManager::setupByConfIni(const IniOptions &ini)
 {
+    m_clearOnExit = ini.connClearOnExit();
     m_keepCount = ini.connKeepCount();
+
+    sqliteDb()->setSynchronous(m_clearOnExit ? SqliteDb::SyncOff : SqliteDb::SyncNormal);
 }
 
 void StatConnManager::checkCearConnOnStartup()
 {
+    const IniOptions ini(IoC<FortSettings>());
+
+    m_clearOnExit = ini.connClearOnExit();
+
+    if (!m_clearOnExit)
+        return;
+
     removeDbFilesToCleanOpen();
 }
 
-void StatConnManager::checkCearConnOnExit()
+void StatConnManager::checkClearConnOnExit()
 {
-    if (!conf()->clearConnOnExit())
+    if (!m_clearOnExit)
         return;
 
     deleteConn();
+
+    runQueuedJobs();
 }

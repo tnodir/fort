@@ -5,10 +5,6 @@
 #include "workerjob.h"
 #include "workerobject.h"
 
-namespace {
-constexpr unsigned long WORKER_TIMEOUT_MSEC = 5000;
-}
-
 WorkerManager::WorkerManager(QObject *parent) : QObject(parent) { }
 
 WorkerManager::~WorkerManager()
@@ -112,12 +108,12 @@ void WorkerManager::enqueueJob(WorkerJobPtr job)
     m_jobWaitCondition.wakeOne();
 }
 
-WorkerJobPtr WorkerManager::dequeueJob()
+WorkerJobPtr WorkerManager::dequeueJob(unsigned long timeoutMsec)
 {
     QMutexLocker locker(&m_mutex);
 
     while (!aborted() && m_jobQueue.isEmpty()) {
-        if (!m_jobWaitCondition.wait(&m_mutex, WORKER_TIMEOUT_MSEC))
+        if (!m_jobWaitCondition.wait(&m_mutex, timeoutMsec))
             break; // timed out
     }
 
@@ -125,4 +121,16 @@ WorkerJobPtr WorkerManager::dequeueJob()
         return nullptr;
 
     return m_jobQueue.dequeue();
+}
+
+void WorkerManager::runQueuedJobs()
+{
+    for (;;) {
+        WorkerJobPtr job = dequeueJob(/*timeoutMsec=*/0);
+        if (!job)
+            break;
+
+        job->doJob(this);
+        job->reportResult(this);
+    }
 }

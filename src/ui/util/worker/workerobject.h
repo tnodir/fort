@@ -21,6 +21,8 @@ public:
     void run() override;
 
 protected:
+    void doJobs();
+
     virtual void doJob(WorkerJob &job);
 
 private:

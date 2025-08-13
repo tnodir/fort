@@ -17,8 +17,8 @@ public:
 
     bool mergeJob(const WorkerJob &job) override;
 
-    void doJob(WorkerObject &worker) override;
-    void reportResult(WorkerObject &worker) override;
+    void doJob(WorkerManager *manager) override;
+    void reportResult(WorkerManager *manager) override;
 
     virtual StatConnJobType jobType() const = 0;
 

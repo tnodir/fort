@@ -21,8 +21,8 @@ public:
         return false;
     }
 
-    virtual void doJob(WorkerObject &worker) { Q_UNUSED(worker); }
-    virtual void reportResult(WorkerObject &worker) { Q_UNUSED(worker); }
+    virtual void doJob(WorkerManager * /*manager*/) { }
+    virtual void reportResult(WorkerManager * /*manager*/) { }
 
 private:
     const QString m_text;

@@ -18,6 +18,13 @@ void WorkerObject::run()
 
     OsUtil::setCurrentThreadName(workerName());
 
+    doJobs();
+
+    manager()->workerFinished(this);
+}
+
+void WorkerObject::doJobs()
+{
     for (;;) {
         WorkerJobPtr job = manager()->dequeueJob();
         if (!job)
@@ -25,15 +32,13 @@ void WorkerObject::run()
 
         doJob(*job);
     }
-
-    manager()->workerFinished(this);
 }
 
 void WorkerObject::doJob(WorkerJob &job)
 {
-    job.doJob(*this);
+    job.doJob(manager());
 
     if (!manager()->aborted()) {
-        job.reportResult(*this);
+        job.reportResult(manager());
     }
 }

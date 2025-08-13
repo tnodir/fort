@@ -19,14 +19,14 @@ bool StatConnBaseJob::mergeJob(const WorkerJob &job)
     return jobType() == statJob.jobType() && processMerge(statJob);
 }
 
-void StatConnBaseJob::doJob(WorkerObject &worker)
+void StatConnBaseJob::doJob(WorkerManager *manager)
 {
-    m_manager = static_cast<StatConnManager *>(worker.manager());
+    m_manager = static_cast<StatConnManager *>(manager);
 
     processJob();
 }
 
-void StatConnBaseJob::reportResult(WorkerObject & /*worker*/)
+void StatConnBaseJob::reportResult(WorkerManager * /*manager*/)
 {
     if (resultCount() > 0) {
         emitFinished();

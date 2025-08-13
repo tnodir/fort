@@ -12,6 +12,8 @@
 
 #include "worker_types.h"
 
+constexpr unsigned long WORKER_TIMEOUT_MSEC = 5000;
+
 class WorkerManager : public QObject
 {
     Q_OBJECT
@@ -33,7 +35,9 @@ public slots:
     void abortWorkers();
 
     void enqueueJob(WorkerJobPtr job);
-    WorkerJobPtr dequeueJob();
+    WorkerJobPtr dequeueJob(unsigned long timeoutMsec = WORKER_TIMEOUT_MSEC);
+
+    void runQueuedJobs();
 
     void workerFinished(WorkerObject *worker);
 

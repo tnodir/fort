@@ -95,6 +95,9 @@ public:
     }
     void setTrafMonthKeepMonths(int v) { setValue("stat/trafMonthKeepMonths", v); }
 
+    bool connClearOnExit() const { return valueBool("stat/connClearOnExit", true); }
+    void setConnClearOnExit(bool v) { setValue("stat/connClearOnExit", v); }
+
     int connKeepCount() const
     {
         return valueInt("stat/connKeepCount", DEFAULT_LOG_CONN_KEEP_COUNT);

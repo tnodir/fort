@@ -55,7 +55,7 @@ protected:
     virtual void setupConfManager();
 
     virtual void checkCearConnOnStartup();
-    virtual void checkCearConnOnExit();
+    virtual void checkClearConnOnExit();
 
 private:
     bool setupDb();
@@ -66,6 +66,8 @@ private:
 private:
     bool m_logAllowedConn = false;
     bool m_logBlockedConn = false;
+
+    bool m_clearOnExit = false;
 
     int m_keepCount = 0;
 
