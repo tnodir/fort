@@ -469,12 +469,12 @@ inline static BOOL fort_pstree_check_proc_inherited(PFORT_PSTREE ps_tree, PFORT_
     if (parent == NULL)
         return FALSE;
 
-    const FORT_PS_OPT parent_opt = parent->ps_opt;
+    const FORT_PS_FLAGS parent_flags = parent->ps_opt.flags;
 
-    if ((parent_opt.flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
+    if ((parent_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
         return FALSE;
 
-    const UINT16 inherit_spec_flag = (parent_opt.flags & FORT_PSNODE_NAME_INHERIT_SPEC);
+    const FORT_PS_FLAGS inherit_spec_flag = (parent_flags & FORT_PSNODE_NAME_INHERIT_SPEC);
 
     if (inherit_spec_flag != 0 && app_flags.apply_parent == 0)
         return FALSE;
@@ -534,15 +534,13 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(
 
     fort_pstree_proc_check_svchost(ps_tree, psi, proc);
 
-    fort_pstree_check_proc_inheritance(ps_tree, psi, proc);
-
     return proc;
 }
 
 inline static BOOL fort_pstree_check_kill_proc(
-        PFORT_PSNODE proc, PPS_CREATE_NOTIFY_INFO createInfo, const UINT16 killFlag)
+        PPS_CREATE_NOTIFY_INFO createInfo, const FORT_PS_FLAGS ps_flags, const UINT16 killFlag)
 {
-    if (proc != NULL && (proc->ps_opt.flags & killFlag) != 0) {
+    if ((ps_flags & killFlag) != 0) {
         createInfo->CreationStatus = STATUS_ACCESS_DENIED;
         /* later arrives notification about the process's close event */
         return TRUE;
@@ -550,7 +548,23 @@ inline static BOOL fort_pstree_check_kill_proc(
     return FALSE;
 }
 
-inline static PFORT_PSNODE fort_pstree_handle_opened_proc(
+inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc_locked(
+        PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi, const FORT_APP_PATH_DRIVE ps_drive)
+{
+    PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, psi->processId, psi->pid_hash);
+
+    if (proc == NULL) {
+        proc = fort_pstree_handle_new_proc(ps_tree, psi, ps_drive);
+        if (proc == NULL)
+            return 0;
+    }
+
+    fort_pstree_check_proc_inheritance(ps_tree, psi, proc);
+
+    return proc->ps_opt.flags;
+}
+
+inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc(
         PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb)
 {
     const NTSTATUS status = (psi->fileObject != NULL)
@@ -559,28 +573,28 @@ inline static PFORT_PSNODE fort_pstree_handle_opened_proc(
 
     if (!NT_SUCCESS(status)) {
         LOG("PsTree: DOS Device Name Error: %x\n", status);
-        return NULL;
+        return 0;
     }
 
     const FORT_APP_PATH_DRIVE ps_drive = fort_path_drive_get(&pb->path);
 
-    PFORT_PSNODE proc;
+    FORT_PS_FLAGS ps_flags;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        proc = fort_pstree_handle_new_proc(ps_tree, psi, ps_drive);
+        ps_flags = fort_pstree_handle_opened_proc_locked(ps_tree, psi, ps_drive);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    return proc;
+    return ps_flags;
 }
 
-static PFORT_PSNODE fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi)
+static FORT_PS_FLAGS fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi)
 {
     const HANDLE processHandle = OpenProcessById(psi->processId);
     if (processHandle == NULL)
-        return NULL;
+        return 0;
 
     FORT_PATH_BUFFER pb;
     fort_path_buffer_init(&pb);
@@ -589,13 +603,13 @@ static PFORT_PSNODE fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT_
     psi->path = &pb.path;
 
     /* Must be called in PASSIVE level only! */
-    PFORT_PSNODE proc = fort_pstree_handle_opened_proc(ps_tree, psi, &pb);
+    const FORT_PS_FLAGS ps_flags = fort_pstree_handle_opened_proc(ps_tree, psi, &pb);
 
     fort_path_buffer_free(&pb);
 
     ZwClose(processHandle);
 
-    return proc;
+    return ps_flags;
 }
 
 inline static void fort_pstree_notify_process_created(
@@ -610,9 +624,9 @@ inline static void fort_pstree_notify_process_created(
     psi->fileObject = createInfo->FileObject;
     psi->commandLine = createInfo->CommandLine;
 
-    PFORT_PSNODE proc = fort_pstree_handle_created_proc(ps_tree, psi);
+    const FORT_PS_FLAGS ps_flags = fort_pstree_handle_created_proc(ps_tree, psi);
 
-    fort_pstree_check_kill_proc(proc, createInfo, FORT_PSNODE_KILL_PROCESS);
+    fort_pstree_check_kill_proc(createInfo, ps_flags, FORT_PSNODE_KILL_PROCESS);
 }
 
 inline static void fort_pstree_notify_process_closed(
@@ -644,7 +658,10 @@ inline static BOOL fort_pstree_notify_process_prepare(
         PFORT_PSNODE parentProc =
                 fort_pstree_find_proc_hash(ps_tree, psi->parentProcessId, ppid_hash);
 
-        res = !fort_pstree_check_kill_proc(parentProc, createInfo, FORT_PSNODE_KILL_CHILD);
+        if (parentProc != NULL) {
+            res = !fort_pstree_check_kill_proc(
+                    createInfo, parentProc->ps_opt.flags, FORT_PSNODE_KILL_CHILD);
+        }
     }
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
@@ -754,31 +771,14 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-inline static void fort_pstree_enum_process_check_kill(DWORD processId, const FORT_PS_OPT ps_opt)
+inline static void fort_pstree_enum_process_check_kill(
+        const DWORD processId, const FORT_PS_FLAGS ps_flags)
 {
-    const BOOL is_kill_process = (ps_opt.flags & FORT_PSNODE_KILL_PROCESS) != 0;
+    const BOOL is_kill_process = (ps_flags & FORT_PSNODE_KILL_PROCESS) != 0;
 
     if (is_kill_process) {
         fort_buffer_proc_kill_write(&fort_device()->buffer, /*irp_info=*/NULL, processId);
     }
-}
-
-inline static FORT_PS_OPT fort_pstree_enum_process_opt(
-        PFORT_PSTREE ps_tree, DWORD processId, tommy_key_t pid_hash)
-{
-    FORT_PS_OPT ps_opt = { 0 };
-
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
-    {
-        const PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
-        if (proc != NULL) {
-            ps_opt = proc->ps_opt;
-        }
-    }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    return ps_opt;
 }
 
 inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCESSES processEntry)
@@ -789,21 +789,15 @@ inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCES
     if (fort_is_system_process(processId, parentProcessId))
         return; /* skip System (sub)processes */
 
-    const tommy_key_t pid_hash = fort_pstree_proc_hash(processId);
-
-    const FORT_PS_OPT ps_opt = fort_pstree_enum_process_opt(ps_tree, processId, pid_hash);
-    if (ps_opt.flags != 0) {
-        fort_pstree_enum_process_check_kill(processId, ps_opt);
-        return;
-    }
-
     FORT_PSINFO_HASH psi = {
-        .pid_hash = pid_hash,
+        .pid_hash = fort_pstree_proc_hash(processId),
         .processId = processId,
         .parentProcessId = parentProcessId,
     };
 
-    fort_pstree_handle_created_proc(ps_tree, &psi);
+    const FORT_PS_FLAGS ps_flags = fort_pstree_handle_created_proc(ps_tree, &psi);
+
+    fort_pstree_enum_process_check_kill(processId, ps_flags);
 }
 
 inline static void fort_pstree_enum_processes_loop(

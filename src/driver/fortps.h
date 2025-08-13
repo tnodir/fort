@@ -34,9 +34,11 @@ typedef struct fort_pstree
 #define FORT_PSNODE_CLOSED            0x0080
 #define FORT_PSNODE_FOUND             0x8000
 
+typedef UINT16 FORT_PS_FLAGS, *PFORT_PS_FLAGS;
+
 typedef struct fort_ps_opt
 {
-    UINT16 flags;
+    FORT_PS_FLAGS flags;
 
     FORT_APP_PATH_DRIVE ps_drive;
 } FORT_PS_OPT, *PFORT_PS_OPT;
