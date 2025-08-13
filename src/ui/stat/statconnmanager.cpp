@@ -63,7 +63,7 @@ void StatConnManager::setUp()
     setupWorker();
     setupConfManager();
 
-    checkCearConnOnStartup();
+    checkClearConnOnStartup();
 
     setupDb();
 }
@@ -202,7 +202,7 @@ void StatConnManager::setupByConfIni(const IniOptions &ini)
     sqliteDb()->setSynchronous(m_clearOnExit ? SqliteDb::SyncOff : SqliteDb::SyncNormal);
 }
 
-void StatConnManager::checkCearConnOnStartup()
+void StatConnManager::checkClearConnOnStartup()
 {
     const IniOptions ini(IoC<FortSettings>());
 
