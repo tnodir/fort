@@ -6,7 +6,6 @@
 </p>
 
 [![Release](https://img.shields.io/github/release/tnodir/fort.svg)](https://github.com/tnodir/fort/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/tnodir/fort/total.svg?maxAge=86400)](https://github.com/tnodir/fort/releases)
 [![Crowdin](https://badges.crowdin.net/fort-firewall/localized.svg)](https://crowdin.com/project/fort-firewall)
 [![CodeScene Code Health](https://codescene.io/projects/5344/status-badges/code-health)](https://codescene.io/projects/5344)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tnodir_fort&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=tnodir_fort)
