@@ -25,6 +25,8 @@ public:
     TrafListModel *trafListModel() const { return m_trafListModel; }
     AppInfoCache *appInfoCache() const;
 
+    void selectTrafTab(int index);
+
 protected slots:
     void onSaveWindowState(IniUser *ini) override;
     void onRestoreWindowState(IniUser *ini) override;

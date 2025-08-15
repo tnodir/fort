@@ -12,6 +12,8 @@ class StatMainPage : public StatBasePage
 public:
     explicit StatMainPage(StatisticsController *ctrl = nullptr, QWidget *parent = nullptr);
 
+    void selectTab(int index);
+
 protected slots:
     void onRestoreWindowState(IniUser *ini) override;
 

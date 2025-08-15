@@ -48,6 +48,11 @@ AppInfoCache *TrafficPage::appInfoCache() const
     return appStatModel()->appInfoCache();
 }
 
+void TrafficPage::selectTrafTab(int index)
+{
+    m_tabBar->setCurrentIndex(index);
+}
+
 void TrafficPage::onSaveWindowState(IniUser *ini)
 {
     // App List
@@ -69,7 +74,11 @@ void TrafficPage::onRestoreWindowState(IniUser *ini)
     }
 
     // Traf Table
-    m_tabBar->setCurrentIndex(qBound(0, ini->statTrafTabIndex(), m_tabBar->count() - 1));
+    {
+        const int tabIndex = qBound(0, ini->statTrafTabIndex(), m_tabBar->count() - 1);
+
+        m_tabBar->setCurrentIndex(tabIndex);
+    }
 
     m_splitter->restoreState(ini->statWindowTrafSplit());
 }

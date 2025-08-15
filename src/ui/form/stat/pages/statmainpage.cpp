@@ -22,9 +22,16 @@ StatMainPage::StatMainPage(StatisticsController *ctrl, QWidget *parent) : StatBa
     setupUi();
 }
 
+void StatMainPage::selectTab(int index)
+{
+    m_tabWidget->setCurrentIndex(index);
+}
+
 void StatMainPage::onRestoreWindowState(IniUser *ini)
 {
-    m_tabWidget->setCurrentIndex(qBound(0, ini->statTabIndex(), m_tabWidget->count() - 1));
+    const int tabIndex = qBound(0, ini->statTabIndex(), m_tabWidget->count() - 1);
+
+    selectTab(tabIndex);
 }
 
 void StatMainPage::onRetranslateUi()
