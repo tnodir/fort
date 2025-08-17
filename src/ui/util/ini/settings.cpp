@@ -38,7 +38,7 @@ bool Settings::checkQtVersionIsValid() const
 {
     const int verDiff = qtVersion() - QT_VERSION;
 
-    const bool ok = verDiff <= 0 || verDiff < QT_VERSION_CHECK(0, 3, 0);
+    const bool ok = verDiff < QT_VERSION_CHECK(0, 3, 0); // || verDiff <= 0
 
     return ok;
 }
