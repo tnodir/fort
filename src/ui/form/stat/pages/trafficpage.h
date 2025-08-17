@@ -40,6 +40,7 @@ private:
     void setupUi();
     QLayout *setupHeader();
     void setupClearMenu();
+    void setupEditSearch();
     void setupRefresh();
     void setupTrafUnits();
     void setupAppListView();
@@ -75,6 +76,8 @@ private:
     QAction *m_actRemoveApp = nullptr;
     QAction *m_actResetTotal = nullptr;
     QAction *m_actClearAll = nullptr;
+    QAction *m_actFindApps = nullptr;
+    QLineEdit *m_editSearch = nullptr;
     QToolButton *m_btRefresh = nullptr;
     QLabel *m_traphUnits = nullptr;
     QComboBox *m_comboTrafUnit = nullptr;

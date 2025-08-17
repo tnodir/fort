@@ -5,6 +5,7 @@
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
+#include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
 #include <QSplitter>
@@ -90,7 +91,9 @@ void TrafficPage::onRetranslateUi()
     m_actRemoveApp->setText(tr("Remove Application"));
     m_actResetTotal->setText(tr("Reset Total"));
     m_actClearAll->setText(tr("Clear All"));
+    m_actFindApps->setText(tr("Find"));
 
+    m_editSearch->setPlaceholderText(tr("Search") + " /");
     m_btRefresh->setText(tr("Refresh"));
 
     m_traphUnits->setText(tr("Units:"));
@@ -161,12 +164,13 @@ void TrafficPage::setupUi()
 QLayout *TrafficPage::setupHeader()
 {
     setupClearMenu();
+    setupEditSearch();
     setupRefresh();
     setupTrafUnits();
 
-    auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btEdit, ControlUtil::createVSeparator(), m_btRefresh,
-                    /*stretch*/ nullptr, m_traphUnits, m_comboTrafUnit });
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
+            m_editSearch, ControlUtil::createVSeparator(), m_btRefresh,
+            /*stretch*/ nullptr, m_traphUnits, m_comboTrafUnit });
 
     return layout;
 }
@@ -183,6 +187,9 @@ void TrafficPage::setupClearMenu()
 
     m_actResetTotal = menu->addAction(QString());
     m_actClearAll = menu->addAction(IconCache::icon(":/icons/broom.png"), QString());
+
+    m_actFindApps = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFindApps->setShortcut(QKeySequence::Find);
 
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
         const auto &appStatRow = currentAppStatRow();
@@ -215,6 +222,7 @@ void TrafficPage::setupClearMenu()
                 },
                 tr("Are you sure to clear all statistics?"));
     });
+    connect(m_actFindApps, &QAction::triggered, this, [&] { m_editSearch->setFocus(); });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(menu);
@@ -226,6 +234,16 @@ void TrafficPage::setupRefresh()
         appStatModel()->refresh();
         trafListModel()->reset();
     });
+}
+
+void TrafficPage::setupEditSearch()
+{
+    m_editSearch = ControlUtil::createLineEdit(
+            QString(), [&](const QString &text) { appStatModel()->setTextFilter(text); });
+    m_editSearch->setClearButtonEnabled(true);
+    m_editSearch->setMaxLength(200);
+    m_editSearch->setMinimumWidth(100);
+    m_editSearch->setMaximumWidth(200);
 }
 
 void TrafficPage::setupTrafUnits()

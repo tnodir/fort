@@ -29,7 +29,7 @@ bool appFileExists(const QString &appPath)
 
 }
 
-AppStatModel::AppStatModel(QObject *parent) : TableSqlModel(parent) { }
+AppStatModel::AppStatModel(QObject *parent) : FtsTableSqlModel(parent) { }
 
 void AppStatModel::setUnit(TrafUnitType::TrafUnit v)
 {
@@ -159,18 +159,11 @@ QVariant AppStatModel::data(const QModelIndex &index, int role) const
 
 QVariant AppStatModel::dataDisplay(const QModelIndex &index) const
 {
-    const int row = index.row();
-
-    updateRowCache(row);
+    updateRowCache(index.row());
 
     switch (AppStatColumn(index.column())) {
-    case AppStatColumn::Program: {
-        if (row == 0) {
-            return tr("All");
-        }
-
-        return appInfoCache()->appName(m_appStatRow.appPath);
-    }
+    case AppStatColumn::Program:
+        return dataDisplayName(index);
     case AppStatColumn::Download:
         return m_unitType.formatTrafUnit(m_appStatRow.inBytes);
     case AppStatColumn::Upload:
@@ -178,6 +171,19 @@ QVariant AppStatModel::dataDisplay(const QModelIndex &index) const
     }
 
     return {};
+}
+
+QVariant AppStatModel::dataDisplayName(const QModelIndex &index) const
+{
+    if (index.row() == 0) {
+        return tr("All");
+    }
+
+    if (!m_appStatRow.appName.isEmpty()) {
+        return m_appStatRow.appName;
+    }
+
+    return appInfoCache()->appName(m_appStatRow.appPath);
 }
 
 QVariant AppStatModel::dataDecoration(const QModelIndex &index) const
@@ -229,8 +235,9 @@ bool AppStatModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appStatRow.appId = stmt.columnInt64(0);
     m_appStatRow.confAppId = stmt.columnInt64(1);
     m_appStatRow.appPath = stmt.columnText(2);
-    m_appStatRow.inBytes = stmt.columnInt64(3);
-    m_appStatRow.outBytes = stmt.columnInt64(4);
+    m_appStatRow.appName = stmt.columnText(3);
+    m_appStatRow.inBytes = stmt.columnInt64(4);
+    m_appStatRow.outBytes = stmt.columnInt64(5);
 
     return true;
 }
@@ -265,25 +272,35 @@ QString AppStatModel::sqlBase() const
     const auto sqlTrafTime = (useTrafTime ? ("ta.traf_time = " + QString::number(m_trafTime))
                                           : QLatin1String("1 = 1"));
 
-    const auto sqlTotalTraf =
-            QString("SELECT t.app_id, t.conf_app_id, t.path, ta.in_bytes, ta.out_bytes"
-                    "  FROM (SELECT 0 AS app_id, 0 AS conf_app_id, '' AS path) t"
-                    "  LEFT JOIN %1 ta ON %2")
-                    .arg(trafTotalTable, sqlTrafTime);
+    const auto sqlTotalTraf = QString("SELECT t.app_id, t.conf_app_id, '' AS path, '' AS name,"
+                                      "    ta.in_bytes, ta.out_bytes"
+                                      "  FROM (SELECT 0 AS app_id, 0 AS conf_app_id) t"
+                                      "  LEFT JOIN %1 ta ON %2")
+                                      .arg(trafTotalTable, sqlTrafTime);
 
-    const auto sqlAppTraf =
-            QString("SELECT t.app_id, t.conf_app_id, t.path, ta.in_bytes, ta.out_bytes"
-                    "  FROM app t"
-                    "  LEFT JOIN %1 ta ON ta.app_id = t.app_id AND %2")
-                    .arg(trafAppTable, sqlTrafTime);
+    const auto sqlAppTraf = QString("SELECT t.app_id, t.conf_app_id, t.path, t.name,"
+                                    "    ta.in_bytes, ta.out_bytes"
+                                    "  FROM app t"
+                                    "  LEFT JOIN %1 ta ON ta.app_id = t.app_id AND %2")
+                                    .arg(trafAppTable, sqlTrafTime);
 
     return sqlTotalTraf + " UNION ALL " + sqlAppTraf;
+}
+
+QString AppStatModel::sqlWhereRegexp() const
+{
+    return " WHERE " + regexpFilterColumns();
+}
+
+QString AppStatModel::sqlWhereFts() const
+{
+    return " WHERE t.app_id IN ( SELECT rowid FROM app_fts(:match) )";
 }
 
 QString AppStatModel::sqlOrderColumn() const
 {
     static const QStringList orderColumns = {
-        "path", // Program
+        "lower(name)", // Program
         "in_bytes", // Download
         "out_bytes", // Upload
     };
@@ -293,6 +310,13 @@ QString AppStatModel::sqlOrderColumn() const
     const auto &columnsStr = orderColumns.at(sortColumn());
 
     return columnsStr + sqlOrderAsc() + ", path";
+}
+
+const QStringList &AppStatModel::regexpColumns() const
+{
+    static const QStringList g_regexpColumns = { "path", "name" };
+
+    return g_regexpColumns;
 }
 
 QString AppStatModel::columnName(const AppStatColumn column)

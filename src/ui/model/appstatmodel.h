@@ -3,7 +3,7 @@
 
 #include <sqlite/sqlite_types.h>
 
-#include <util/model/tablesqlmodel.h>
+#include <util/model/ftstablesqlmodel.h>
 
 #include "appstatcolumn.h"
 #include "trafunittype.h"
@@ -21,9 +21,10 @@ struct AppStatRow : TableRow
     qint64 outBytes = 0;
 
     QString appPath;
+    QString appName;
 };
 
-class AppStatModel : public TableSqlModel
+class AppStatModel : public FtsTableSqlModel
 {
     Q_OBJECT
 
@@ -60,13 +61,18 @@ protected:
     TableRow &tableRow() const override { return m_appStatRow; }
 
     QString sqlBase() const override;
+    QString sqlWhereRegexp() const override;
+    QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;
+
+    const QStringList &regexpColumns() const override;
 
 private:
     QVariant headerDataDisplay(int section, int role) const;
     QVariant headerDataDecoration(int section) const;
 
     QVariant dataDisplay(const QModelIndex &index) const;
+    QVariant dataDisplayName(const QModelIndex &index) const;
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataFont(const QModelIndex &index) const;
 

@@ -308,54 +308,54 @@ QLayout *ProgramsWindow::setupToolbarButtonsLayout()
 
 void ProgramsWindow::setupEditMenu()
 {
-    auto editMenu = ControlUtil::createMenu(this);
+    auto menu = ControlUtil::createMenu(this);
 
-    m_timerMenu = editMenu->addMenu(IconCache::icon(":/icons/time.png"), QString());
+    m_timerMenu = menu->addMenu(IconCache::icon(":/icons/time.png"), QString());
     setupTimerMenuActions();
 
-    m_actAllowApp = editMenu->addAction(IconCache::icon(":/icons/accept.png"), QString());
+    m_actAllowApp = menu->addAction(IconCache::icon(":/icons/accept.png"), QString());
     m_actAllowApp->setShortcut(Qt::Key_A);
 
-    m_actBlockApp = editMenu->addAction(IconCache::icon(":/icons/deny.png"), QString());
+    m_actBlockApp = menu->addAction(IconCache::icon(":/icons/deny.png"), QString());
     m_actBlockApp->setShortcut(Qt::Key_B);
 
-    m_actKillApp = editMenu->addAction(IconCache::icon(":/icons/scull.png"), QString());
+    m_actKillApp = menu->addAction(IconCache::icon(":/icons/scull.png"), QString());
     m_actKillApp->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_K));
 
-    editMenu->addSeparator();
+    menu->addSeparator();
 
-    m_actAddApp = editMenu->addAction(IconCache::icon(":/icons/add.png"), QString());
+    m_actAddApp = menu->addAction(IconCache::icon(":/icons/add.png"), QString());
     m_actAddApp->setShortcut(Qt::Key_Plus);
 
-    m_actAddWildcard = editMenu->addAction(IconCache::icon(":/icons/coding.png"), QString());
+    m_actAddWildcard = menu->addAction(IconCache::icon(":/icons/coding.png"), QString());
     m_actAddWildcard->setShortcut(QKeyCombination(Qt::CTRL, Qt::Key_N));
 
-    m_actEditApp = editMenu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
+    m_actEditApp = menu->addAction(IconCache::icon(":/icons/pencil.png"), QString());
     m_actEditApp->setShortcut(Qt::Key_Enter);
 
-    m_actRemoveApp = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRemoveApp = menu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveApp->setShortcut(Qt::Key_Delete);
 
-    editMenu->addSeparator();
+    menu->addSeparator();
 
-    m_actAppCopyPath = editMenu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
+    m_actAppCopyPath = menu->addAction(IconCache::icon(":/icons/page_copy.png"), QString());
     m_actAppCopyPath->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_C));
 
-    m_actAppOpenFolder = editMenu->addAction(IconCache::icon(":/icons/folder.png"), QString());
+    m_actAppOpenFolder = menu->addAction(IconCache::icon(":/icons/folder.png"), QString());
     m_actAppOpenFolder->setShortcut(QKeyCombination(Qt::CTRL | Qt::SHIFT, Qt::Key_O));
 
-    editMenu->addSeparator();
+    menu->addSeparator();
 
-    m_actReviewAlerts = editMenu->addAction(IconCache::icon(":/icons/error.png"), QString());
-    m_actDeleteAlertedApps = editMenu->addAction(QString());
-    m_actClearAlerts = editMenu->addAction(QString());
+    m_actReviewAlerts = menu->addAction(IconCache::icon(":/icons/error.png"), QString());
+    m_actDeleteAlertedApps = menu->addAction(QString());
+    m_actClearAlerts = menu->addAction(QString());
 
-    editMenu->addSeparator();
+    menu->addSeparator();
 
-    m_actPurgeApps = editMenu->addAction(IconCache::icon(":/icons/recycle.png"), QString());
+    m_actPurgeApps = menu->addAction(IconCache::icon(":/icons/recycle.png"), QString());
     m_actPurgeApps->setShortcut(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_P));
 
-    m_actFindApps = editMenu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFindApps = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
     m_actFindApps->setShortcut(QKeySequence::Find);
 
     connect(m_actAllowApp, &QAction::triggered, this,
@@ -383,7 +383,7 @@ void ProgramsWindow::setupEditMenu()
     connect(m_actFindApps, &QAction::triggered, this, [&] { m_editSearch->setFocus(); });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
-    m_btEdit->setMenu(editMenu);
+    m_btEdit->setMenu(menu);
 }
 
 void ProgramsWindow::setupTimerMenuActions()

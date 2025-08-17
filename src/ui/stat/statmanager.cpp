@@ -7,6 +7,7 @@
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
+#include <appinfo/appinfocache.h>
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
 #include <log/logentryprocnew.h>
@@ -23,7 +24,7 @@ namespace {
 
 const QLoggingCategory LC("stat");
 
-constexpr int DATABASE_USER_VERSION = 9;
+constexpr int DATABASE_USER_VERSION = 10;
 
 constexpr qint64 INVALID_APP_ID = Q_INT64_C(-1);
 
@@ -59,6 +60,13 @@ SqliteDb::MigrateOptions migrateOptions()
         .version = DATABASE_USER_VERSION,
         .recreate = true,
         .migrateFunc = &migrateFunc,
+        .ftsTables = {
+            {
+                .contentTable = "app",
+                .contentRowid = "app_id",
+                .columns = { "path", "name" },
+            },
+        },
     };
 
     return opt;
@@ -416,11 +424,14 @@ qint64 StatManager::getAppId(const QString &appPath)
 
 qint64 StatManager::createAppId(const QString &appPath, quint32 confAppId, qint64 unixTime)
 {
+    const auto appName = IoC<AppInfoCache>()->appName(appPath);
+
     SqliteStmt *stmt = getStmt(StatSql::sqlInsertAppId);
 
     stmt->bindVar(1, DbVar::nullable(confAppId));
     stmt->bindText(2, appPath);
-    stmt->bindInt64(3, unixTime);
+    stmt->bindText(3, appName);
+    stmt->bindInt64(4, unixTime);
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();

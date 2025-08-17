@@ -95,7 +95,8 @@ qint64 LogConnJob::createAppId(const QString &appPath, quint32 confAppId, qint64
 
     stmt->bindVar(1, DbVar::nullable(confAppId));
     stmt->bindText(2, appPath);
-    stmt->bindInt64(3, unixTime);
+    stmt->bindNull(3); // appName
+    stmt->bindInt64(4, unixTime);
 
     if (sqliteDb()->done(stmt)) {
         return sqliteDb()->lastInsertRowid();

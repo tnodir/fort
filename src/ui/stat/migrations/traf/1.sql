@@ -2,10 +2,12 @@ CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
   conf_app_id INTEGER,
   path TEXT NOT NULL,
+  name TEXT,
   creat_time INTEGER NOT NULL
 );
 
 CREATE UNIQUE INDEX app_path_uk ON app(path);
+CREATE INDEX app_name_idx ON app(lower(name));
 
 CREATE TABLE traffic_app(
   app_id INTEGER PRIMARY KEY,
