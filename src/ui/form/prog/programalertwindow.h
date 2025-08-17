@@ -34,6 +34,8 @@ protected:
     void closeOnSave() override;
 
 protected slots:
+    void onAppDeleted(qint64 appId);
+
     void retranslateWindowTitle() override;
 
 private:

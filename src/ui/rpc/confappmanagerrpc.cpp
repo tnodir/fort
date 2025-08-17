@@ -274,6 +274,12 @@ bool ConfAppManagerRpc::processServerCommand(const ProcessCommandArgs &p, Proces
         emit confAppManager->appUpdated();
         return true;
     }
+    case Control::Rpc_ConfAppManager_appDeleted: {
+        const qint64 appId = p.args.value(0).toLongLong();
+
+        emit confAppManager->appDeleted(appId);
+        return true;
+    }
     default: {
         r.ok = processConfAppManagerRpcResult(confAppManager, p, r);
         r.isSendResult = true;
@@ -293,4 +299,7 @@ void ConfAppManagerRpc::setupServerSignals(RpcManager *rpcManager)
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appsChanged); });
     connect(confAppManager, &ConfAppManager::appUpdated, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appUpdated); });
+    connect(confAppManager, &ConfAppManager::appDeleted, rpcManager, [=](qint64 appId) {
+        rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appDeleted, { appId });
+    });
 }

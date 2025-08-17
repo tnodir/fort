@@ -57,6 +57,7 @@ enum Command : qint8 {
     Rpc_ConfAppManager_appAlerted,
     Rpc_ConfAppManager_appsChanged,
     Rpc_ConfAppManager_appUpdated,
+    Rpc_ConfAppManager_appDeleted,
 
     Rpc_ConfRuleManager_addOrUpdateRule,
     Rpc_ConfRuleManager_deleteRule,

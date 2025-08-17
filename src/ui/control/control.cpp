@@ -54,6 +54,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfAppManager_appAlerted),
     CASE_STRING(Rpc_ConfAppManager_appsChanged),
     CASE_STRING(Rpc_ConfAppManager_appUpdated),
+    CASE_STRING(Rpc_ConfAppManager_appDeleted),
 
     CASE_STRING(Rpc_ConfRuleManager_addOrUpdateRule),
     CASE_STRING(Rpc_ConfRuleManager_deleteRule),
@@ -177,6 +178,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfAppManager, // Rpc_ConfAppManager_appAlerted,
     Rpc_ConfAppManager, // Rpc_ConfAppManager_appsChanged,
     Rpc_ConfAppManager, // Rpc_ConfAppManager_appUpdated,
+    Rpc_ConfAppManager, // Rpc_ConfAppManager_appDeleted,
 
     Rpc_ConfRuleManager, // Rpc_ConfRuleManager_addOrUpdateRule,
     Rpc_ConfRuleManager, // Rpc_ConfRuleManager_deleteRule,
@@ -279,6 +281,7 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_ConfAppManager_appAlerted,
     0, // Rpc_ConfAppManager_appsChanged,
     0, // Rpc_ConfAppManager_appUpdated,
+    0, // Rpc_ConfAppManager_appDeleted,
 
     true, // Rpc_ConfRuleManager_addOrUpdateRule,
     true, // Rpc_ConfRuleManager_deleteRule,

@@ -60,6 +60,7 @@ signals:
     void appAlerted(bool alerted = true);
     void appsChanged();
     void appUpdated();
+    void appDeleted(qint64 appId);
 
 protected:
     virtual void setupConfManager();

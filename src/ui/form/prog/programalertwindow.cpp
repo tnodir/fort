@@ -18,6 +18,8 @@ ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) : ProgramEditDialog(pare
     setupFormWindow(iniUser(), IniUser::progAlertWindowGroup());
 
     initialize();
+
+    connect(confAppManager(), &ConfAppManager::appDeleted, this, &ProgramAlertWindow::onAppDeleted);
 }
 
 ConfAppManager *ProgramAlertWindow::confAppManager() const
@@ -68,6 +70,13 @@ void ProgramAlertWindow::closeOnSave()
 
     if (isNew()) {
         ProgramEditDialog::closeOnSave();
+    }
+}
+
+void ProgramAlertWindow::onAppDeleted(qint64 appId)
+{
+    if (appId == ctrl()->app().appId) {
+        close(); // The alerted app was deleted, close the alert window
     }
 }
 

@@ -488,6 +488,8 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
         }
 
         emitAppsChanged();
+
+        emit appDeleted(appId);
     }
 
     return ok;
