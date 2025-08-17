@@ -83,7 +83,7 @@ void AppStatModel::initialize()
 
     connect(statManager(), &StatManager::trafficCleared, this, &AppStatModel::resetLater);
     connect(statManager(), &StatManager::appStatRemoved, this, &AppStatModel::refresh);
-    connect(statManager(), &StatManager::appCreated, this, &AppStatModel::refresh);
+    connect(statManager(), &StatManager::appCreated, this, &AppStatModel::resetLater);
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppStatModel::refresh);
 }
