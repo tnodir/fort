@@ -2589,6 +2589,14 @@ Please restart the running program to take effect of this option.</source>
         <source>Add Program</source>
         <translation>Добавить программу</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>Найти</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Поиск</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>

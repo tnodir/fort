@@ -1536,7 +1536,7 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
     </message>
     <message>
         <source>Schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>Harmonogram</translation>
     </message>
     <message>
         <source># Examples:</source>
@@ -1702,7 +1702,7 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
     </message>
     <message>
         <source>Parked</source>
-        <translation type="unfinished"></translation>
+        <translation>Zaparkowany</translation>
     </message>
     <message>
         <source>Don&apos;t purge as obsolete</source>
@@ -2588,6 +2588,14 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     <message>
         <source>Add Program</source>
         <translation>Dodaj program</translation>
+    </message>
+    <message>
+        <source>Find</source>
+        <translation>Znajdź</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Szukaj</translation>
     </message>
 </context>
 <context>

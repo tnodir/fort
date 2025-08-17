@@ -2589,6 +2589,14 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
         <source>Add Program</source>
         <translation>Aggiungi programma</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>Trova</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Cerca</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>

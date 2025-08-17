@@ -2589,6 +2589,14 @@ Please restart the running program to take effect of this option.</source>
         <source>Add Program</source>
         <translation>프로그램 추가</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>찾기</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>검색</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>

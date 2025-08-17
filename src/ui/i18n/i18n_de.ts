@@ -2589,6 +2589,14 @@ Bitte starten Sie das laufende Programm neu, um diese Option zu nutzen.</transla
         <source>Add Program</source>
         <translation>Programm hinzufügen</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>Suchen</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Suche</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>

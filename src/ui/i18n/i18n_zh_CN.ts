@@ -2589,6 +2589,14 @@ Please restart the running program to take effect of this option.</source>
         <source>Add Program</source>
         <translation>添加应用程序</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>查找</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>搜索</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>

@@ -2588,6 +2588,14 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
         <source>Add Program</source>
         <translation>Adicionar Programa</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>Localizar</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Buscar</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>

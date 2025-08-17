@@ -2589,6 +2589,14 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
         <source>Add Program</source>
         <translation>Ajouter un programme</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>Chercher</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Rechercher</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>

@@ -2589,6 +2589,14 @@ Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
         <source>Add Program</source>
         <translation>Dodaj program</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>Poišči</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Poišči</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>

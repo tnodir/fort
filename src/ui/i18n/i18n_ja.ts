@@ -2589,6 +2589,14 @@ Please restart the running program to take effect of this option.</source>
         <source>Add Program</source>
         <translation>プログラムの追加</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>検索</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>検索</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>

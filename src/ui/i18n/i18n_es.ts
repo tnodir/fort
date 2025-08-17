@@ -2592,6 +2592,14 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
         <source>Add Program</source>
         <translation>Añadir programa</translation>
     </message>
+    <message>
+        <source>Find</source>
+        <translation>Buscar</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Buscar</translation>
+    </message>
 </context>
 <context>
     <name>TranslationManager</name>
