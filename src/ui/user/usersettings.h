@@ -19,6 +19,9 @@ public:
     void setUp() override;
 
 protected:
+    void migrateQtVerOnLoad() override;
+    void migrateQtVerOnWrite() override;
+
     void migrateIniOnLoad() override;
     void migrateIniOnWrite() override;
 

@@ -16,6 +16,28 @@ void UserSettings::setUp()
     setupIni(settings->userPath() + APP_BASE + ".user.ini");
 }
 
+void UserSettings::migrateQtVerOnLoad()
+{
+    if (checkQtVersionIsValid())
+        return;
+
+    const QVariant emptyArray = QByteArray();
+
+    setCacheValue("progWindow/appsHeader", emptyArray);
+    setCacheValue("ruleWindow/rulesHeader", emptyArray);
+    setCacheValue("serviceWindow/servicesHeader", emptyArray);
+    setCacheValue("zoneWindow/zonesHeader", emptyArray);
+    setCacheValue("statWindow/connListHeader", emptyArray);
+}
+
+void UserSettings::migrateQtVerOnWrite()
+{
+    if (checkQtVersionIsEqual())
+        return;
+
+    Settings::migrateQtVerOnWrite();
+}
+
 void UserSettings::migrateIniOnLoad()
 {
     if (!iniExists()) {

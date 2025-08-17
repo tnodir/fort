@@ -29,6 +29,20 @@ bool Settings::canMigrate(QString &viaVersion) const
     return true;
 }
 
+bool Settings::checkQtVersionIsEqual() const
+{
+    return qtVersion() == QT_VERSION;
+}
+
+bool Settings::checkQtVersionIsValid() const
+{
+    const int verDiff = qtVersion() - QT_VERSION;
+
+    const bool ok = verDiff <= 0 || verDiff < QT_VERSION_CHECK(0, 3, 0);
+
+    return ok;
+}
+
 bool Settings::checkIniVersion(int &oldVersion) const
 {
     if (!iniExists())
@@ -56,10 +70,14 @@ bool Settings::checkIniVersionOnWrite(int &oldVersion) const
 
 void Settings::setupIni(const QString &filePath)
 {
-    m_iniExists = FileUtil::fileExists(filePath);
     m_ini = new QSettings(filePath, QSettings::IniFormat, this);
 
-    migrateIniOnLoad();
+    reload();
+}
+
+void Settings::migrateQtVerOnWrite()
+{
+    setQtVersion(QT_VERSION);
 }
 
 void Settings::migrateIniOnWrite()
@@ -178,10 +196,11 @@ void Settings::setCacheValue(const QString &key, const QVariant &value) const
 
 void Settings::reload()
 {
-    m_iniExists = true;
+    m_iniExists = FileUtil::fileExists(ini()->fileName());
 
     clearCache();
 
+    migrateQtVerOnLoad();
     migrateIniOnLoad();
 }
 
@@ -214,6 +233,7 @@ QStringList Settings::iniChildKeys(const QString &prefix) const
 
 void Settings::iniFlush()
 {
+    migrateQtVerOnWrite();
     migrateIniOnWrite();
 
     iniSync();

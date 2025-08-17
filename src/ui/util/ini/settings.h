@@ -24,6 +24,12 @@ public:
     bool canMigrate(QString &viaVersion) const;
 
 protected:
+    int qtVersion() const { return iniInt("base/qtVersion"); }
+    void setQtVersion(int v) { setIniValue("base/qtVersion", v); }
+
+    bool checkQtVersionIsEqual() const;
+    bool checkQtVersionIsValid() const;
+
     bool iniVersionSet() const { return ini()->contains("base/version"); }
 
     int iniVersion() const { return iniInt("base/version", appVersion()); }
@@ -37,6 +43,9 @@ protected:
     QSettings *ini() const { return m_ini; }
 
     void setupIni(const QString &filePath);
+
+    virtual void migrateQtVerOnLoad() { }
+    virtual void migrateQtVerOnWrite();
 
     virtual void migrateIniOnLoad() { }
     virtual void migrateIniOnWrite();
