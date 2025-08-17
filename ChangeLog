@@ -1,5 +1,11 @@
 Fort Firewall ChangeLog
 
+v3.19.1, 2025-08-17:
+- UI: Fix connections clearing on startup (#616).
+- UI: Check Qt version on headers' state restoration (#619).
+- UI: Statistics: Add "Search" field for apps (#622).
+- UI: ProgramAlert: Close the window on program deletion (#623).
+
 v3.19.0, 2025-08-13:
 - UI: ProgramEdit: Add tabs (#614).
 - UI: ProgramEdit: Terminate processes on "Kill Process" action (#615).
