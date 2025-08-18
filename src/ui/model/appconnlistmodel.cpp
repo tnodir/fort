@@ -9,8 +9,9 @@ namespace {
 
 const char *const sqlSelectAppConnIds = "SELECT conn_id"
                                         "  FROM conn"
-                                        "  WHERE app_id = ("
-                                        "    SELECT app_id FROM app WHERE path = ?1"
+                                        "  WHERE app_id IN ("
+                                        "    SELECT app_id FROM app"
+                                        "      WHERE conf_app_id = ?1 OR path = ?2"
                                         "  )"
                                         "  ORDER BY conn_id DESC"
                                         "  LIMIT 100;";
@@ -24,7 +25,13 @@ void AppConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
     m_connIds.clear();
 
     SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectAppConnIds).vars({ appPath() }).prepare(stmt))
+    if (!DbQuery(sqliteDb())
+                    .sql(sqlSelectAppConnIds)
+                    .vars({
+                            DbVar::nullable(confAppId()),
+                            DbVar::nullable(appPath()),
+                    })
+                    .prepare(stmt))
         return;
 
     while (stmt.step() == SqliteStmt::StepRow) {

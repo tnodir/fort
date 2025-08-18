@@ -7,6 +7,7 @@ CREATE TABLE app(
 );
 
 CREATE UNIQUE INDEX app_path_uk ON app(path);
+CREATE INDEX app_conf_app_id_idx ON app(conf_app_id);
 
 CREATE TABLE conn(
   conn_id INTEGER PRIMARY KEY,

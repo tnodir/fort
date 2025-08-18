@@ -12,6 +12,9 @@ class AppConnListModel : public ConnListModel
 public:
     explicit AppConnListModel(QObject *parent = nullptr);
 
+    qint64 confAppId() const { return m_confAppId; }
+    void setConfAppId(qint64 v) { m_confAppId = v; }
+
     const QString &appPath() const { return m_appPath; }
     void setAppPath(const QString &v) { m_appPath = v; }
 
@@ -26,6 +29,7 @@ protected:
     int doSqlCount() const override { return m_connIds.size(); }
 
 private:
+    qint64 m_confAppId;
     QString m_appPath;
 
     QVector<qint64> m_connIds;

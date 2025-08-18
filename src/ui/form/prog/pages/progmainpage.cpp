@@ -204,7 +204,10 @@ void ProgMainPage::setupConnectionsModel()
 {
     m_appConnListModel = new AppConnListModel(this);
 
-    appConnListModel()->setAppPath(app().appPath);
+    appConnListModel()->setConfAppId(app().appId);
+    if (!app().isWildcard) {
+        appConnListModel()->setAppPath(app().appPath);
+    }
     appConnListModel()->setResolveAddress(true);
     appConnListModel()->initialize();
 }
