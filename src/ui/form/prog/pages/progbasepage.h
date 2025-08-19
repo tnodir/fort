@@ -23,6 +23,7 @@ QT_FORWARD_DECLARE_CLASS(QTabBar)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class App;
+class AppInfoCache;
 class ConfAppManager;
 class ConfManager;
 class ConfRuleManager;
@@ -46,6 +47,7 @@ public:
     FirewallConf *conf() const;
     IniUser *iniUser() const;
     WindowManager *windowManager() const;
+    AppInfoCache *appInfoCache() const;
 
     const App &app() const;
 

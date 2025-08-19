@@ -7,7 +7,9 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+#include <appinfo/appinfocache.h>
 #include <conf/firewallconf.h>
+#include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/controls/toolbutton.h>
@@ -84,6 +86,8 @@ void ProgMainPage::retranslateTableConnListMenu()
     m_actCopyAsFilter->setText(tr("Copy as Filter"));
     m_actCopy->setText(tr("Copy"));
     m_actLookupIp->setText(tr("Lookup IP"));
+
+    m_appInfoRow->retranslateUi();
 }
 
 void ProgMainPage::setupController()
@@ -183,6 +187,7 @@ void ProgMainPage::setupConnectionsMenuLayout()
     setupConnectionsModel();
     setupTableConnList();
     setupTableConnListHeader();
+    setupConnectionsAppInfoRow();
 
     setupTableConnsChanged();
 
@@ -190,7 +195,8 @@ void ProgMainPage::setupConnectionsMenuLayout()
 
     m_connListView->setFixedWidth(800);
 
-    m_connectionsLayout->addWidget(m_connListView);
+    m_connectionsLayout->addWidget(m_connListView, 1);
+    m_connectionsLayout->addWidget(m_appInfoRow);
 }
 
 void ProgMainPage::closeConnectionsMenuLayout()
@@ -295,6 +301,20 @@ void ProgMainPage::setupTableConnListHeader()
     header->setSectionHidden(int(ConnListColumn::LocalHostName), /*hide=*/true);
 }
 
+void ProgMainPage::setupConnectionsAppInfoRow()
+{
+    m_appInfoRow = new AppInfoRow();
+
+    const auto refreshAppInfoVersion = [&] {
+        m_appInfoRow->refreshAppInfoVersion(connListCurrentPath(), appInfoCache());
+    };
+
+    refreshAppInfoVersion();
+
+    connect(m_connListView, &TableView::currentIndexChanged, m_appInfoRow, refreshAppInfoVersion);
+    connect(appInfoCache(), &AppInfoCache::cacheChanged, m_appInfoRow, refreshAppInfoVersion);
+}
+
 void ProgMainPage::setupTableConnsChanged()
 {
     const auto refreshTableConnsChanged = [&] {
@@ -303,11 +323,28 @@ void ProgMainPage::setupTableConnsChanged()
         m_actCopyAsFilter->setEnabled(connSelected);
         m_actCopy->setEnabled(connSelected);
         m_actLookupIp->setEnabled(connSelected);
+        m_appInfoRow->setVisible(connSelected);
     };
 
     refreshTableConnsChanged();
 
     connect(m_connListView, &TableView::currentIndexChanged, this, refreshTableConnsChanged);
+}
+
+int ProgMainPage::connListCurrentIndex() const
+{
+    return m_connListView->currentRow();
+}
+
+const ConnRow &ProgMainPage::connListCurrentRow() const
+{
+    return m_appConnListModel->connRowAt(connListCurrentIndex());
+}
+
+QString ProgMainPage::connListCurrentPath() const
+{
+    const auto &connRow = connListCurrentRow();
+    return connRow.isNull() ? QString() : connRow.appPath;
 }
 
 void ProgMainPage::setNetworkTabEnabled(bool enabled)

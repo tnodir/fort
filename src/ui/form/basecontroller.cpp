@@ -2,6 +2,7 @@
 
 #include <QAbstractButton>
 
+#include <appinfo/appinfocache.h>
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
@@ -87,6 +88,11 @@ TranslationManager *BaseController::translationManager() const
 WindowManager *BaseController::windowManager() const
 {
     return IoC<WindowManager>();
+}
+
+AppInfoCache *BaseController::appInfoCache() const
+{
+    return IoC<AppInfoCache>();
 }
 
 AutoUpdateManager *BaseController::autoUpdateManager() const

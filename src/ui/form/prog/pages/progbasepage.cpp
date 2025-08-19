@@ -44,6 +44,11 @@ WindowManager *ProgBasePage::windowManager() const
     return IoC<WindowManager>();
 }
 
+AppInfoCache *ProgBasePage::appInfoCache() const
+{
+    return ctrl()->appInfoCache();
+}
+
 const App &ProgBasePage::app() const
 {
     return ctrl()->app();

@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+class AppInfoCache;
 class AutoUpdateManager;
 class ConfAppManager;
 class ConfManager;
@@ -39,6 +40,7 @@ public:
     DriverManager *driverManager() const;
     TranslationManager *translationManager() const;
     WindowManager *windowManager() const;
+    AppInfoCache *appInfoCache() const;
     AutoUpdateManager *autoUpdateManager() const;
     TaskManager *taskManager() const;
 

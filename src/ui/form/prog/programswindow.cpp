@@ -773,7 +773,7 @@ void ProgramsWindow::editSelectedPrograms()
     if (appIdList.isEmpty())
         return;
 
-    const auto appRow = appListCurrentRow();
+    const auto &appRow = appListCurrentRow();
     if (appRow.isNull())
         return;
 
@@ -849,14 +849,14 @@ int ProgramsWindow::appListCurrentIndex() const
     return m_appListView->currentRow();
 }
 
-AppRow ProgramsWindow::appListCurrentRow() const
+const AppRow &ProgramsWindow::appListCurrentRow() const
 {
     return appListModel()->appRowAt(appListCurrentIndex());
 }
 
 QString ProgramsWindow::appListCurrentPath() const
 {
-    const auto appRow = appListCurrentRow();
+    const auto &appRow = appListCurrentRow();
     return appRow.isNull() ? QString() : appRow.appPath;
 }
 

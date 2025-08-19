@@ -7,7 +7,10 @@ QT_FORWARD_DECLARE_CLASS(QTabWidget)
 
 class App;
 class AppConnListModel;
+class AppInfoRow;
 class TableView;
+
+struct ConnRow;
 
 class ProgMainPage : public ProgBasePage
 {
@@ -44,7 +47,12 @@ private:
     void setupTableConnList();
     void setupTableConnListMenu();
     void setupTableConnListHeader();
+    void setupConnectionsAppInfoRow();
     void setupTableConnsChanged();
+
+    int connListCurrentIndex() const;
+    const ConnRow &connListCurrentRow() const;
+    QString connListCurrentPath() const;
 
     void setNetworkTabEnabled(bool enabled);
 
@@ -66,6 +74,7 @@ private:
     QAction *m_actCopyAsFilter = nullptr;
     QAction *m_actCopy = nullptr;
     QAction *m_actLookupIp = nullptr;
+    AppInfoRow *m_appInfoRow = nullptr;
 
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
