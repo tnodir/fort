@@ -413,8 +413,7 @@ QLayout *ProgGeneralPage::setupApplyChildGroupLayout()
     // Apply Child
     m_comboApplyChild = ControlUtil::createComboBox(
             {}, [&](int /*index*/) { ctrl()->warnRestartNeededOption(); });
-    m_comboApplyChild->setMinimumWidth(120);
-    m_comboApplyChild->setMaximumWidth(200);
+    m_comboApplyChild->setMinimumWidth(150);
 
     setupCbApplyChild();
 

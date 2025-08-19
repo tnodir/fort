@@ -87,7 +87,7 @@ void ProgramEditDialog::setupUi()
     this->setWindowModality(Qt::WindowModal);
 
     // Size
-    this->setMinimumWidth(500);
+    this->setMinimumWidth(550);
 }
 
 void ProgramEditDialog::setupMainLayout()
