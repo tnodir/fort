@@ -33,7 +33,8 @@ protected:
 
     virtual QString sql() const;
     virtual QString sqlBase() const = 0;
-    virtual QString sqlWhere() const;
+    virtual QString sqlEnd() const { return QString(); }
+    virtual QString sqlWhere() const { return QString(); }
     virtual QString sqlOrder() const;
     virtual QString sqlOrderAsc() const;
     virtual QString sqlOrderColumn() const;

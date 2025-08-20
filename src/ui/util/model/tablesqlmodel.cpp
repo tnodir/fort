@@ -47,17 +47,12 @@ int TableSqlModel::doSqlCount() const
 
 QString TableSqlModel::sqlCount() const
 {
-    return "SELECT COUNT(*) FROM (" + sqlBase() + sqlWhere() + ");";
+    return "SELECT COUNT(*) FROM (" + sqlBase() + sqlWhere() + sqlEnd() + ");";
 }
 
 QString TableSqlModel::sql() const
 {
-    return sqlBase() + sqlWhere() + sqlOrder() + sqlLimitOffset() + ';';
-}
-
-QString TableSqlModel::sqlWhere() const
-{
-    return QString();
+    return sqlBase() + sqlWhere() + sqlOrder() + sqlEnd() + sqlLimitOffset() + ';';
 }
 
 QString TableSqlModel::sqlOrder() const

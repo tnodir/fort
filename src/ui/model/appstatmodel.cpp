@@ -278,13 +278,19 @@ QString AppStatModel::sqlBase() const
                                       "  LEFT JOIN %1 ta ON %2")
                                       .arg(trafTotalTable, sqlTrafTime);
 
-    const auto sqlAppTraf = QString("SELECT t.app_id, t.conf_app_id, t.path, t.name,"
-                                    "    ta.in_bytes, ta.out_bytes"
-                                    "  FROM app t"
-                                    "  LEFT JOIN %1 ta ON ta.app_id = t.app_id AND %2")
+    const auto sqlAppTraf = QString("SELECT * FROM ("
+                                    "  SELECT t.app_id, t.conf_app_id, t.path, t.name,"
+                                    "      ta.in_bytes, ta.out_bytes"
+                                    "    FROM app t"
+                                    "    LEFT JOIN %1 ta ON ta.app_id = t.app_id AND %2")
                                     .arg(trafAppTable, sqlTrafTime);
 
     return sqlTotalTraf + " UNION ALL " + sqlAppTraf;
+}
+
+QString AppStatModel::sqlEnd() const
+{
+    return ")";
 }
 
 QString AppStatModel::sqlWhereRegexp() const

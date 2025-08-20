@@ -61,6 +61,7 @@ protected:
     TableRow &tableRow() const override { return m_appStatRow; }
 
     QString sqlBase() const override;
+    QString sqlEnd() const override;
     QString sqlWhereRegexp() const override;
     QString sqlWhereFts() const override;
     QString sqlOrderColumn() const override;
