@@ -18,11 +18,11 @@
 
 namespace {
 
-const auto alertColor = QColor("orange");
-const auto allowColor = QColor("green");
-const auto blockColor = QColor("red");
-const auto killProcessColor = QColor("magenta");
-const auto inactiveColor = QColor("slategray");
+constexpr QColor alertColor = QColorConstants::Svg::orange;
+constexpr QColor allowColor = QColorConstants::Svg::green;
+constexpr QColor blockColor = QColorConstants::Svg::red;
+constexpr QColor killProcessColor = QColorConstants::Svg::magenta;
+constexpr QColor inactiveColor = QColorConstants::Svg::slategray;
 
 QVariant dataDisplayName(const App &app, int role)
 {
