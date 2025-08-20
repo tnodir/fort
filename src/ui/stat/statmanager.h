@@ -40,7 +40,6 @@ public:
     virtual bool deleteStatApp(qint64 appId);
 
     virtual bool resetAppTrafTotals();
-    bool hasAppTraf(qint64 appId);
 
     qint32 getTrafficTime(const char *sql, qint64 appId = 0);
 

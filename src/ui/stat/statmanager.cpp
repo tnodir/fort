@@ -396,17 +396,6 @@ bool StatManager::resetAppTrafTotals()
     return ok;
 }
 
-bool StatManager::hasAppTraf(qint64 appId)
-{
-    SqliteStmt *stmt = getStmt(StatSql::sqlSelectStatAppExists);
-
-    stmt->bindInt64(1, appId);
-    const bool res = (stmt->step() == SqliteStmt::StepRow);
-    stmt->reset();
-
-    return res;
-}
-
 qint64 StatManager::getAppId(const QString &appPath)
 {
     qint64 appId = INVALID_APP_ID;
@@ -450,6 +439,8 @@ qint64 StatManager::getOrCreateAppId(const QString &appPath, quint32 confAppId, 
         appId = createAppId(appPath, confAppId, unixTime);
 
         Q_ASSERT(appId != INVALID_APP_ID);
+
+        emit appCreated(appId, appPath);
     }
     return appId;
 }
@@ -470,12 +461,16 @@ bool StatManager::deleteAppId(qint64 appId)
 {
     SqliteStmt *stmt = getIdStmt(StatSql::sqlDeleteAppId, appId);
 
-    const bool ok = (stmt->step() == SqliteStmt::StepDone && sqliteDb()->changes() != 0);
+    const auto stepRes = stmt->step();
+    const bool ok = (stepRes != SqliteStmt::StepError && sqliteDb()->changes() != 0);
+
     if (ok) {
         const QString appPath = stmt->columnText(0);
         removeCachedAppId(appPath);
     }
+
     stmt->reset();
+
     return ok;
 }
 
@@ -532,10 +527,6 @@ void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
     Q_ASSERT(appId != INVALID_APP_ID);
 
     if (logStat) {
-        if (!hasAppTraf(appId)) {
-            emit appCreated(appId, appPath);
-        }
-
         // Update or insert app bytes
         updateTrafficList(insertStmtList, updateStmtList, inBytes, outBytes, appId);
     }
