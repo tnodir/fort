@@ -311,6 +311,11 @@ void TrafficPage::setupTableTraf()
     m_tableTraf->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     m_tableTraf->setModel(trafListModel());
+
+    connect(m_tableTraf, &TableView::doubleClicked, this, [&](const QModelIndex &index) {
+        m_appListView->selectRow(0);
+        m_tableTraf->selectRow(index.row());
+    });
 }
 
 void TrafficPage::setupTableTrafType()
@@ -400,15 +405,19 @@ void TrafficPage::updateTrafType()
 {
     const auto trafType = TrafUnitType::TrafType(m_tabBar->currentIndex());
 
-    if (!trafListModel()->hasApp()) {
-        appStatModel()->setType(trafType);
-    }
+    appStatModel()->setType(trafType);
+    appStatModel()->setTrafTime(-1);
 
     trafListModel()->setType(trafType);
 }
 
-void TrafficPage::updateTrafApp()
+void TrafficPage::updateTrafApp(const QModelIndex &index)
 {
+    if (!index.isValid()) {
+        m_appListView->selectRow(0);
+        return;
+    }
+
     const auto &appStatRow = currentAppStatRow();
     const qint64 appId = appStatRow.isNull() ? 0 : appStatRow.appId;
 
@@ -422,8 +431,18 @@ void TrafficPage::updateTrafApp()
     }
 }
 
-void TrafficPage::updateAppListTime()
+void TrafficPage::updateAppListTime(const QModelIndex &index)
 {
+    if (!index.isValid()) {
+        const int row =
+                trafListModel()->rowByTime(appStatModel()->trafTime(), appStatModel()->type());
+
+        if (row >= 0) {
+            m_tableTraf->selectRow(row);
+            return;
+        }
+    }
+
     if (trafListModel()->hasApp())
         return;
 

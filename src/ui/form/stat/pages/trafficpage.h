@@ -1,6 +1,8 @@
 #ifndef TRAFFICPAGE_H
 #define TRAFFICPAGE_H
 
+#include <QModelIndex>
+
 #include "statbasepage.h"
 
 QT_FORWARD_DECLARE_CLASS(QSplitter)
@@ -56,8 +58,8 @@ private:
     void setupAppListViewChanged();
 
     void updateTrafType();
-    void updateTrafApp();
-    void updateAppListTime();
+    void updateTrafApp(const QModelIndex &index = {});
+    void updateAppListTime(const QModelIndex &index = {});
 
     void updateTrafUnit();
     void updateTableTrafUnit();

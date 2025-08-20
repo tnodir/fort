@@ -210,6 +210,15 @@ const TrafficRow &TrafListModel::trafficRowAt(int row) const
     return m_trafRow;
 }
 
+int TrafListModel::rowByTime(qint32 trafTime, TrafUnitType::TrafType type) const
+{
+    if (type != this->type() || trafTime <= 0) {
+        return (m_trafCount > 0) ? 0 : -1;
+    }
+
+    return getTrafRow(trafTime);
+}
+
 void TrafListModel::reset()
 {
     const auto type = this->type();
@@ -257,6 +266,23 @@ qint32 TrafListModel::getTrafTime(int row) const
         return m_minTrafTime;
     }
     return 0;
+}
+
+int TrafListModel::getTrafRow(qint32 trafTime) const
+{
+    if (m_trafCount == 0)
+        return -1;
+
+    if (trafTime < m_minTrafTime || trafTime > m_maxTrafTime)
+        return -1;
+
+    const qint32 rowTime = (m_maxTrafTime - m_minTrafTime + 1) / m_trafCount;
+    if (rowTime == 0)
+        return -1;
+
+    const int row = (m_maxTrafTime - trafTime) / rowTime;
+
+    return qBound(0, row, m_trafCount - 1);
 }
 
 qint32 TrafListModel::getTrafCount(

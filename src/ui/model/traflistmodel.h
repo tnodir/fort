@@ -51,6 +51,8 @@ public:
 
     const TrafficRow &trafficRowAt(int row) const;
 
+    int rowByTime(qint32 trafTime, TrafUnitType::TrafType type) const;
+
 public slots:
     void reset() override;
 
@@ -61,6 +63,7 @@ protected:
     void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
     qint32 getTrafTime(int row) const;
+    int getTrafRow(qint32 trafTime) const;
 
     static qint32 getTrafCount(TrafUnitType::TrafType type, qint32 minTrafTime, qint32 maxTrafTime);
     static qint32 getMaxTrafTime(TrafUnitType::TrafType type);
