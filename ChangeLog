@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.19.3-test01, 2025-08-21:
+- UI: Options: Statistics: Fix "Reset to default current tab".
+
 v3.19.2, 2025-08-21:
 - UI: ProgramEdit: Show connections for wildcards too (#624).
 - UI: Statistics: Improve traffic selection (#626).
