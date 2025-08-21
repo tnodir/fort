@@ -1,5 +1,9 @@
 Fort Firewall ChangeLog
 
+v3.19.2, 2025-08-21:
+- UI: ProgramEdit: Show connections for wildcards too (#624).
+- UI: Statistics: Improve traffic selection (#626).
+
 v3.19.1, 2025-08-17:
 - UI: Fix connections clearing on startup (#616).
 - UI: Check Qt version on headers' state restoration (#619).
