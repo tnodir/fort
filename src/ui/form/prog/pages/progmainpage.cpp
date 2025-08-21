@@ -120,6 +120,8 @@ void ProgMainPage::setupTabBar()
     auto networkPage = new ProgNetworkPage(ctrl());
     auto morePage = new ProgMorePage(ctrl());
 
+    m_pages = { generalPage, networkPage, morePage };
+
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(generalPage, QString());
     m_tabWidget->addTab(networkPage, QString());
@@ -359,5 +361,5 @@ ProgBasePage *ProgMainPage::currentPage() const
 
 ProgBasePage *ProgMainPage::pageAt(int index) const
 {
-    return static_cast<ProgBasePage *>(m_tabWidget->widget(index));
+    return m_pages.at(index);
 }

@@ -83,6 +83,16 @@ void OptMainPage::setupTabBar()
     auto graphPage = new GraphPage(ctrl());
     auto schedulePage = new SchedulePage(ctrl());
 
+    m_pages = {
+        optionsPage,
+        ifacePage,
+        addressesPage,
+        applicationsPage,
+        statisticsPage,
+        graphPage,
+        schedulePage,
+    };
+
     m_tabWidget = new QTabWidget();
     m_tabWidget->addTab(ControlUtil::wrapToScrollArea(optionsPage),
             IconCache::icon(":/icons/cog.png"), QString());
@@ -181,5 +191,5 @@ OptBasePage *OptMainPage::currentPage() const
 
 OptBasePage *OptMainPage::pageAt(int index) const
 {
-    return static_cast<OptBasePage *>(m_tabWidget->widget(index));
+    return m_pages.at(index);
 }

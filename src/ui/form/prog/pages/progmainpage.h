@@ -78,6 +78,8 @@ private:
 
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
+
+    QList<ProgBasePage *> m_pages;
 };
 
 #endif // PROGMAINPAGE_H
