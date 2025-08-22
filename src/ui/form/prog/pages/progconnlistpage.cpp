@@ -126,16 +126,16 @@ void ProgConnListPage::setupConnListHeader()
     header->resizeSection(int(ConnListColumn::Program), 300);
     header->resizeSection(int(ConnListColumn::ProcessId), 80);
     header->resizeSection(int(ConnListColumn::Protocol), 60);
-    header->resizeSection(int(ConnListColumn::LocalHostName), 140);
-    header->resizeSection(int(ConnListColumn::LocalIp), 100);
+    header->resizeSection(int(ConnListColumn::LocalHostName), 120);
+    header->resizeSection(int(ConnListColumn::LocalIp), 120);
     header->resizeSection(int(ConnListColumn::LocalPort), 80);
-    header->resizeSection(int(ConnListColumn::RemoteHostName), 170);
-    header->resizeSection(int(ConnListColumn::RemoteIp), 100);
+    header->resizeSection(int(ConnListColumn::RemoteHostName), 200);
+    header->resizeSection(int(ConnListColumn::RemoteIp), 120);
     header->resizeSection(int(ConnListColumn::RemotePort), 80);
     header->resizeSection(int(ConnListColumn::Direction), 30);
     header->resizeSection(int(ConnListColumn::Action), 30);
     header->resizeSection(int(ConnListColumn::Reason), 30);
-    header->resizeSection(int(ConnListColumn::Time), 80);
+    header->resizeSection(int(ConnListColumn::Time), 120);
 
     // Hidden columns
     header->setSectionHidden(int(ConnListColumn::Program), /*hide=*/true);
