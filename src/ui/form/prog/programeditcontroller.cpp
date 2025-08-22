@@ -18,7 +18,13 @@ void ProgramEditController::initialize(const App &app, const QVector<qint64> &ap
 
 bool ProgramEditController::addOrUpdateApp(App &app, bool onlyUpdate)
 {
-    return confAppManager()->addOrUpdateApp(app, onlyUpdate);
+    if (confAppManager()->addOrUpdateApp(app, onlyUpdate))
+        return true;
+
+    windowManager()->showErrorBox(
+            tr("Failed to save the program!\nPlease check other program with the same path."));
+
+    return false;
 }
 
 bool ProgramEditController::updateApp(App &app)
