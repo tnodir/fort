@@ -105,6 +105,7 @@ SOURCES += \
     form/opt/pages/schedulepage.cpp \
     form/opt/pages/statisticspage.cpp \
     form/prog/pages/progbasepage.cpp \
+    form/prog/pages/progconnlistpage.cpp \
     form/prog/pages/proggeneralpage.cpp \
     form/prog/pages/progmainpage.cpp \
     form/prog/pages/progmorepage.cpp \
@@ -374,6 +375,7 @@ HEADERS += \
     form/opt/pages/schedulepage.h \
     form/opt/pages/statisticspage.h \
     form/prog/pages/progbasepage.h \
+    form/prog/pages/progconnlistpage.h \
     form/prog/pages/proggeneralpage.h \
     form/prog/pages/progmainpage.h \
     form/prog/pages/progmorepage.h \

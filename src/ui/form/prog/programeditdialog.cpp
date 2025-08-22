@@ -45,8 +45,15 @@
 
 #include "programeditcontroller.h"
 
+namespace {
+
+constexpr Qt::WindowFlags dialogFlags =
+        Qt::Dialog | Qt::WindowMaximizeButtonHint | Qt::WindowCloseButtonHint;
+
+}
+
 ProgramEditDialog::ProgramEditDialog(QWidget *parent, Qt::WindowFlags f) :
-    FormWindow(parent, (f == Qt::Widget ? Qt::Dialog : f)), m_ctrl(new ProgramEditController(this))
+    FormWindow(parent, (f == Qt::Widget ? dialogFlags : f)), m_ctrl(new ProgramEditController(this))
 {
     setupUi();
     setupController();
