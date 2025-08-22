@@ -1759,6 +1759,12 @@ Please restart the running program to take effect of this option.</source>
 
 Перезапустите запущенную программу, чтобы эта опция вступила в силу.</translation>
     </message>
+    <message>
+        <source>Failed to save the program!
+Please check other program with the same path.</source>
+        <translation>Не удалось сохранить программу!
+Проверьте, есть ли другая программа по тому же пути.</translation>
+    </message>
 </context>
 <context>
     <name>ProgramEditDialog</name>

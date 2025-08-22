@@ -1762,6 +1762,11 @@ Esta opción solo afecta a los nuevos procesos.
 
 Por favor, reinicie el programa en ejecución para que esta opción tenga efecto.</translation>
     </message>
+    <message>
+        <source>Failed to save the program!
+Please check other program with the same path.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramEditDialog</name>

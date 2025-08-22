@@ -1759,6 +1759,12 @@ Please restart the running program to take effect of this option.</source>
 
 Reštartujte spustený program, aby sa táto možnosť prejavila.</translation>
     </message>
+    <message>
+        <source>Failed to save the program!
+Please check other program with the same path.</source>
+        <translation>Shranjevanje programa ni uspelo!
+Preverite drug program z isto potjo.</translation>
+    </message>
 </context>
 <context>
     <name>ProgramEditDialog</name>

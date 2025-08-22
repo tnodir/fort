@@ -1759,6 +1759,11 @@ Please restart the running program to take effect of this option.</source>
 
 请重新启动正在运行的应用程序以使此选项生效。</translation>
     </message>
+    <message>
+        <source>Failed to save the program!
+Please check other program with the same path.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramEditDialog</name>

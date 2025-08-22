@@ -1758,6 +1758,11 @@ Please restart the running program to take effect of this option.</source>
 
 Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     </message>
+    <message>
+        <source>Failed to save the program!
+Please check other program with the same path.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramEditDialog</name>

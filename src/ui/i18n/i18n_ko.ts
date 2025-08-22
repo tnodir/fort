@@ -1759,6 +1759,11 @@ Please restart the running program to take effect of this option.</source>
 
 이 옵션을 적용하려면 실행 중인 프로그램을 다시 시작하세요.</translation>
     </message>
+    <message>
+        <source>Failed to save the program!
+Please check other program with the same path.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ProgramEditDialog</name>
