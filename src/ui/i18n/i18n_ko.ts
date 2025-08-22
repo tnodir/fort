@@ -1762,7 +1762,8 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Failed to save the program!
 Please check other program with the same path.</source>
-        <translation type="unfinished"></translation>
+        <translation>프로그램을 저장하지 못했습니다!
+같은 경로를 가진 다른 프로그램을 확인해 주세요.</translation>
     </message>
 </context>
 <context>
