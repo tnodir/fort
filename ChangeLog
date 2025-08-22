@@ -1,7 +1,8 @@
 Fort Firewall ChangeLog
 
-v3.19.3-test01, 2025-08-21:
+v3.19.3-test02, 2025-08-22:
 - UI: Options: Statistics: Fix "Reset to default current tab".
+- UI: ProgramEdit: Warn about save failing (#627).
 
 v3.19.2, 2025-08-21:
 - UI: ProgramEdit: Show connections for wildcards too (#624).
