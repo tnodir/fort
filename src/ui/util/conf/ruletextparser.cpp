@@ -318,6 +318,8 @@ bool RuleTextParser::parseName()
         { "profile", FORT_RULE_FILTER_TYPE_PROFILE },
         { "act", FORT_RULE_FILTER_TYPE_ACTION },
         { "action", FORT_RULE_FILTER_TYPE_ACTION },
+        { "opt", FORT_RULE_FILTER_TYPE_OPTION },
+        { "option", FORT_RULE_FILTER_TYPE_OPTION },
         { "tcp", FORT_RULE_FILTER_TYPE_PORT_TCP },
         { "udp", FORT_RULE_FILTER_TYPE_PORT_UDP },
         { "icmp_type", FORT_RULE_FILTER_TYPE_LOCAL_PORT },

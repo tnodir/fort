@@ -156,6 +156,7 @@ enum FORT_RULE_FILTER_TYPE {
     FORT_RULE_FILTER_TYPE_AREA,
     FORT_RULE_FILTER_TYPE_PROFILE,
     FORT_RULE_FILTER_TYPE_ACTION,
+    FORT_RULE_FILTER_TYPE_OPTION,
     // Complex types
     FORT_RULE_FILTER_TYPE_PORT_TCP,
     FORT_RULE_FILTER_TYPE_PORT_UDP,
@@ -178,13 +179,16 @@ enum {
     FORT_RULE_FILTER_AREA_LOCALHOST = (1 << 0),
     FORT_RULE_FILTER_AREA_LAN = (1 << 1),
     FORT_RULE_FILTER_AREA_INET = (1 << 2),
-    // Profile ID (Sync with WPF Profile values)
+    // Profile (Sync with WPF Profile values)
     FORT_RULE_FILTER_PROFILE_PUBLIC = (1 << 1),
     FORT_RULE_FILTER_PROFILE_PRIVATE = (1 << 2),
     FORT_RULE_FILTER_PROFILE_DOMAIN = (1 << 3),
-    // Action Type ID
+    // Action
     FORT_RULE_FILTER_ACTION_ALLOW = (1 << 0),
     FORT_RULE_FILTER_ACTION_BLOCK = (1 << 1),
+    // Options
+    FORT_RULE_FILTER_OPTION_LOG = (1 << 0),
+    FORT_RULE_FILTER_OPTION_ALERT = (1 << 1),
 };
 
 typedef struct fort_conf_rule_filter_flags
@@ -386,7 +390,8 @@ typedef struct fort_conf_meta_conn
     UINT16 ask_to_connect : 1;
     UINT16 reserved : 1; /* not used */
 
-    UINT16 rule_filter_action : 1;
+    UCHAR conn_log : 1;
+    UCHAR conn_alert : 1;
 
     UCHAR zones_accept_filtered : 1;
     UCHAR zones_reject_filtered : 1;
@@ -419,6 +424,16 @@ typedef struct fort_conf_meta_conn
 } FORT_CONF_META_CONN, *PFORT_CONF_META_CONN;
 
 typedef const FORT_CONF_META_CONN *PCFORT_CONF_META_CONN;
+
+enum {
+    FORT_CONN_FILTER_RESULT_FALSE = 0,
+    FORT_CONN_FILTER_RESULT_TRUE = (1 << 0),
+    FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION = (1 << 1),
+    FORT_CONN_FILTER_RESULT_CONN_LOG = (1 << 2),
+    FORT_CONN_FILTER_RESULT_CONN_ALERT = (1 << 3),
+};
+
+typedef UINT16 FORT_CONN_FILTER_RESULT;
 
 typedef struct fort_speed_limit
 {

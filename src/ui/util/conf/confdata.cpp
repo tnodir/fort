@@ -7,6 +7,7 @@
 #include <util/net/dirrange.h>
 #include <util/net/iprange.h>
 #include <util/net/ipverrange.h>
+#include <util/net/optionrange.h>
 #include <util/net/portrange.h>
 #include <util/net/profilerange.h>
 #include <util/net/protorange.h>
@@ -315,6 +316,15 @@ void ConfData::writeActionRange(const ActionRange &actionRange)
     PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
 
     filter->flags = actionRange.actionTypeId();
+
+    m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
+}
+
+void ConfData::writeOptionRange(const OptionRange &optionRange)
+{
+    PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
+
+    filter->flags = optionRange.optionTypeId();
 
     m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
 }

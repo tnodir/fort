@@ -245,6 +245,7 @@ SOURCES += \
     util/net/netdownloader.cpp \
     util/net/netformatutil.cpp \
     util/net/netutil.cpp \
+    util/net/optionrange.cpp \
     util/net/portrange.cpp \
     util/net/profilerange.cpp \
     util/net/protorange.cpp \
@@ -524,6 +525,7 @@ HEADERS += \
     util/net/netdownloader.h \
     util/net/netformatutil.h \
     util/net/netutil.h \
+    util/net/optionrange.h \
     util/net/portrange.h \
     util/net/profilerange.h \
     util/net/protorange.h \

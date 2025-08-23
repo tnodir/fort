@@ -580,7 +580,7 @@ bool ConfBuffer::writeRuleText(const QString &ruleText, int &filtersCount)
         return true;
 
     const auto &ruleFilter = parser.ruleFilters().first();
-    Q_ASSERT(ruleFilter.isTypeList());
+    Q_ASSERT(ruleFilter.isTypeList() || filtersCount == 1);
 
     return writeRuleFilter(ruleFilter);
 }
