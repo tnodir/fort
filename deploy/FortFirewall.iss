@@ -169,6 +169,11 @@ begin
   Result := ParamExists('/SILENT') or ParamExists('/VERYSILENT');
 end;
 
+function IsNoCancel: Boolean;
+begin
+  Result := ParamExists('/NOCANCEL');
+end;
+
 function ShouldLaunch: Boolean;
 begin
   Result := ParamExists('/LAUNCH') or not IsSilentInstall;
@@ -318,6 +323,13 @@ function CheckPasswordHash(): Boolean;
 var
   passwordHash: String;
 begin
+  { Skip on auto-update }
+  if IsSilentInstall() and IsNoCancel() then
+  begin
+    Result := True;
+    Exit;
+  end;
+
   RegQueryStringValue(HKEY_LOCAL_MACHINE, ExpandConstant('SOFTWARE\{#APP_NAME}'),
       'passwordHash', passwordHash);
 
