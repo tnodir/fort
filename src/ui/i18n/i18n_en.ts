@@ -1475,6 +1475,21 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
+    <name>ProgConnListPage</name>
+    <message>
+        <source>Copy as Filter</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -1673,18 +1688,6 @@ Do you want to open a discussion thread in browser?</source>
     </message>
     <message>
         <source>Cancel</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation></translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
         <translation></translation>
     </message>
 </context>

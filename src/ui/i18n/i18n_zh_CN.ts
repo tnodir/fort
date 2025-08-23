@@ -1481,6 +1481,21 @@ Do you want to open a discussion thread in browser?</source>
     </message>
 </context>
 <context>
+    <name>ProgConnListPage</name>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>复制为过滤器</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>复制</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>查找IP</translation>
+    </message>
+</context>
+<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -1680,18 +1695,6 @@ Do you want to open a discussion thread in browser?</source>
     <message>
         <source>Cancel</source>
         <translation>取消</translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>复制为过滤器</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>复制</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation>查找IP</translation>
     </message>
 </context>
 <context>

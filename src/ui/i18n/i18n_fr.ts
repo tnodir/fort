@@ -1481,6 +1481,21 @@ Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
     </message>
 </context>
 <context>
+    <name>ProgConnListPage</name>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Copier comme filtre</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Consultation de l&apos;IP</translation>
+    </message>
+</context>
+<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -1681,18 +1696,6 @@ Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
         <source>Cancel</source>
         <translation>Annuler</translation>
     </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>Copier comme filtre</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation>Consultation de l&apos;IP</translation>
-    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -1762,7 +1765,8 @@ Veuillez redémarrer le programme en cours d&apos;exécution pour prendre effet 
     <message>
         <source>Failed to save the program!
 Please check other program with the same path.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible d&apos;enregistrer le programme !
+Veuillez vérifier un autre programme avec le même chemin.</translation>
     </message>
 </context>
 <context>

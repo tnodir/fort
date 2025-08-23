@@ -8,7 +8,7 @@ LanguageCodePage=949
 ; *** Fort Firewall messages
 WindowsExplorerIntegration=Windows 탐색기 통합
 WindowsService=Windows 서비스
-Portable=휴대용
+Portable=포터블
 UninstallPassword=암호 제거
 UninstallPasswordOK=확인
 UninstallPasswordCancel=취소

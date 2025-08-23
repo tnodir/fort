@@ -1481,6 +1481,21 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
     </message>
 </context>
 <context>
+    <name>ProgConnListPage</name>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Kopiraj kot filter</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopiraj</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Iskanje IP-ja</translation>
+    </message>
+</context>
+<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -1680,18 +1695,6 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
     <message>
         <source>Cancel</source>
         <translation>Prekliči</translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>Kopiraj kot filter</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Kopiraj</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation>Iskanje IP-ja</translation>
     </message>
 </context>
 <context>

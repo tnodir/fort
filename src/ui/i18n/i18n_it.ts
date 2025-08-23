@@ -1481,6 +1481,21 @@ Vuoi aprire una discussione nel browser?</translation>
     </message>
 </context>
 <context>
+    <name>ProgConnListPage</name>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Copia come filtro</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copia</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Ricerca IP</translation>
+    </message>
+</context>
+<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -1681,18 +1696,6 @@ Vuoi aprire una discussione nel browser?</translation>
         <source>Cancel</source>
         <translation>Annulla</translation>
     </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>Copia come filtro</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copia</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation>Ricerca IP</translation>
-    </message>
 </context>
 <context>
     <name>ProgMorePage</name>
@@ -1762,7 +1765,8 @@ Riavviare il programma in esecuzione affinché quest&apos;opzione agisca su esso
     <message>
         <source>Failed to save the program!
 Please check other program with the same path.</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossibile salvare il programma!
+Controllare un altro programma con lo stesso percorso.</translation>
     </message>
 </context>
 <context>

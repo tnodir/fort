@@ -1481,6 +1481,21 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
     </message>
 </context>
 <context>
+    <name>ProgConnListPage</name>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Als Filter kopieren</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopieren</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -1680,18 +1695,6 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
     <message>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>Als Filter kopieren</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Kopieren</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

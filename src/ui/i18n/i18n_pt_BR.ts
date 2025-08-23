@@ -1480,6 +1480,21 @@ Você quer abrir um fio de discussão no navegador?</translation>
     </message>
 </context>
 <context>
+    <name>ProgConnListPage</name>
+    <message>
+        <source>Copy as Filter</source>
+        <translation>Copiar como Filtro</translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Copiar</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation>Consultar IP</translation>
+    </message>
+</context>
+<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -1679,18 +1694,6 @@ Você quer abrir um fio de discussão no navegador?</translation>
     <message>
         <source>Cancel</source>
         <translation>Cancelar</translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation>Copiar como Filtro</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copiar</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation>Consultar IP</translation>
     </message>
 </context>
 <context>

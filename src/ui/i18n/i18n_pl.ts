@@ -1481,6 +1481,21 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
     </message>
 </context>
 <context>
+    <name>ProgConnListPage</name>
+    <message>
+        <source>Copy as Filter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy</source>
+        <translation>Kopiuj</translation>
+    </message>
+    <message>
+        <source>Lookup IP</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>ProgGeneralPage</name>
     <message>
         <source>Wildcard Paths:</source>
@@ -1680,18 +1695,6 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
     <message>
         <source>Cancel</source>
         <translation>Anuluj</translation>
-    </message>
-    <message>
-        <source>Copy as Filter</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Kopiuj</translation>
-    </message>
-    <message>
-        <source>Lookup IP</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
