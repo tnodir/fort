@@ -29,6 +29,7 @@ public:
     bool isNameEqual(const Rule &o) const;
     bool isOptionsEqual(const Rule &o) const;
     bool isFlagsEqual(const Rule &o) const;
+    bool isLogFlagsEqual(const Rule &o) const;
     bool isZonesEqual(const Rule &o) const;
 
     int terminateActionType() const;
@@ -42,6 +43,8 @@ public:
     bool inlineZones : 1 = false;
     bool terminate : 1 = false;
     bool terminateBlocked : 1 = true;
+    bool logAllowedConn : 1 = true;
+    bool logBlockedConn : 1 = true;
     bool ruleSetEdited : 1 = false; // transient
 
     RuleType ruleType = AppRule;

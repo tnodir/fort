@@ -187,8 +187,7 @@ enum {
     FORT_RULE_FILTER_ACTION_ALLOW = (1 << 0),
     FORT_RULE_FILTER_ACTION_BLOCK = (1 << 1),
     // Options
-    FORT_RULE_FILTER_OPTION_LOG = (1 << 0),
-    FORT_RULE_FILTER_OPTION_ALERT = (1 << 1),
+    // FORT_CONN_FILTER_RESULT_CONN_*
 };
 
 typedef struct fort_conf_rule_filter_flags
@@ -217,11 +216,13 @@ typedef struct fort_conf_rule
     UCHAR inline_zones : 1;
     UCHAR terminate : 1;
     UCHAR term_blocked : 1;
+    UCHAR log_allowed_conn : 1;
+    UCHAR log_blocked_conn : 1;
 
     UCHAR has_zones : 1;
     UCHAR has_filters : 1;
 
-    UCHAR set_count;
+    UCHAR set_count : 6;
 } FORT_CONF_RULE, *PFORT_CONF_RULE;
 
 typedef const FORT_CONF_RULE *PCFORT_CONF_RULE;
@@ -430,7 +431,8 @@ enum {
     FORT_CONN_FILTER_RESULT_TRUE = (1 << 0),
     FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION = (1 << 1),
     FORT_CONN_FILTER_RESULT_CONN_LOG = (1 << 2),
-    FORT_CONN_FILTER_RESULT_CONN_ALERT = (1 << 3),
+    FORT_CONN_FILTER_RESULT_CONN_NOLOG = (1 << 3),
+    FORT_CONN_FILTER_RESULT_CONN_ALERT = (1 << 4),
 };
 
 typedef UINT16 FORT_CONN_FILTER_RESULT;

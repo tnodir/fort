@@ -36,10 +36,11 @@ public:
 
     int bindParameterIndex(const QString &name) const;
 
+    bool bindNull(int index = 1);
     bool bindInt(int index, qint32 number);
     bool bindInt64(int index, qint64 number);
     bool bindDouble(int index, double number);
-    bool bindNull(int index = 1);
+    bool bindBool(int index, bool v);
     bool bindText(int index, const QString &text);
     bool bindDateTime(int index, const QDateTime &dateTime);
     bool bindBlob(int index, const QByteArray &data);
@@ -60,6 +61,8 @@ public:
     int columnCount() const;
 
     QString columnName(int column = 0) const;
+
+    bool columnIsNull(int column = 0) const;
     virtual qint32 columnInt(int column = 0) const;
     quint32 columnUInt(int column = 0) const;
     qint64 columnInt64(int column = 0) const;
@@ -72,7 +75,6 @@ public:
     QByteArray columnBlob(int column = 0, bool isView = false) const;
     QVariant columnDataStream(int column = 0) const;
     QVariant columnVar(int column = 0) const;
-    bool columnIsNull(int column = 0) const;
 
 private:
     sqlite3_stmt *m_stmt = nullptr;

@@ -18,6 +18,7 @@ struct ConnRow : TableRow
 {
     bool isIPv6 : 1 = false;
     bool blocked : 1 = false;
+    bool alerted : 1 = false;
     bool inherited : 1 = false;
     bool inbound : 1 = false;
 

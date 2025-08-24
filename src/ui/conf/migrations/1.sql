@@ -116,6 +116,8 @@ CREATE TABLE rule(
   inline_zones BOOLEAN NOT NULL DEFAULT 0,
   terminate BOOLEAN NOT NULL DEFAULT 0,
   term_blocked BOOLEAN NOT NULL DEFAULT 1,
+  log_allowed_conn BOOLEAN NOT NULL DEFAULT 1,
+  log_blocked_conn BOOLEAN NOT NULL DEFAULT 1,
   name TEXT NOT NULL,
   notes TEXT,
   rule_text TEXT NOT NULL,

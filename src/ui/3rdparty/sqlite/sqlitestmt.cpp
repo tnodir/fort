@@ -114,6 +114,11 @@ int SqliteStmt::bindParameterIndex(const QString &name) const
     return sqlite3_bind_parameter_index(m_stmt, name.toUtf8());
 }
 
+bool SqliteStmt::bindNull(int index)
+{
+    return checkBindResult(sqlite3_bind_null(m_stmt, index));
+}
+
 bool SqliteStmt::bindInt(int index, qint32 number)
 {
     return checkBindResult(sqlite3_bind_int(m_stmt, index, number));
@@ -129,9 +134,9 @@ bool SqliteStmt::bindDouble(int index, double number)
     return checkBindResult(sqlite3_bind_double(m_stmt, index, number));
 }
 
-bool SqliteStmt::bindNull(int index)
+bool SqliteStmt::bindBool(int index, bool v)
 {
-    return checkBindResult(sqlite3_bind_null(m_stmt, index));
+    return bindInt(index, v ? 1 : 0);
 }
 
 bool SqliteStmt::bindText(int index, const QString &text)
@@ -278,6 +283,11 @@ QString SqliteStmt::columnName(int column) const
     return QString::fromUtf8(name);
 }
 
+bool SqliteStmt::columnIsNull(int column) const
+{
+    return sqlite3_column_type(m_stmt, column) == SQLITE_NULL;
+}
+
 qint32 SqliteStmt::columnInt(int column) const
 {
     return sqlite3_column_int(m_stmt, column);
@@ -388,10 +398,5 @@ QVariant SqliteStmt::columnVar(int column) const
         Q_UNREACHABLE();
     }
 
-    return QVariant();
-}
-
-bool SqliteStmt::columnIsNull(int column) const
-{
-    return sqlite3_column_type(m_stmt, column) == SQLITE_NULL;
+    return {};
 }

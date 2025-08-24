@@ -90,6 +90,9 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
     m_cbTerminate->setChecked(ruleRow.terminate);
     m_comboTerminateAction->setCurrentIndex(ruleRow.terminateActionType());
 
+    m_cbLogAllowedConn->setChecked(ruleRow.logAllowedConn);
+    m_cbLogBlockedConn->setChecked(ruleRow.logBlockedConn);
+
     initializeFocus();
 }
 
@@ -148,6 +151,9 @@ void RuleEditDialog::retranslateUi()
 
     m_cbTerminate->setText(tr("Terminating Rule:"));
     retranslateComboTerminate();
+
+    m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
+    m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -231,6 +237,9 @@ QLayout *RuleEditDialog::setupMainLayout()
     // Terminate Layout
     auto terminateLayout = setupTerminateLayout();
 
+    // Log Layout
+    auto logLayout = setupLogLayout();
+
     // OK/Cancel
     auto buttonsLayout = setupButtons();
 
@@ -247,6 +256,7 @@ QLayout *RuleEditDialog::setupMainLayout()
     layout->addWidget(m_ruleSetView);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(terminateLayout);
+    layout->addLayout(logLayout);
     layout->addStretch();
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(buttonsLayout);
@@ -433,6 +443,17 @@ void RuleEditDialog::setupCbTerminate()
     connect(m_cbTerminate, &QCheckBox::toggled, this, refreshTerminateEnabled);
 }
 
+QLayout *RuleEditDialog::setupLogLayout()
+{
+    m_cbLogAllowedConn = new QCheckBox();
+    m_cbLogBlockedConn = new QCheckBox();
+
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbLogAllowedConn,
+            ControlUtil::createVSeparator(), m_cbLogBlockedConn, /*stretch*/ nullptr });
+
+    return layout;
+}
+
 QLayout *RuleEditDialog::setupButtons()
 {
     // OK
@@ -572,6 +593,9 @@ void RuleEditDialog::fillRule(Rule &rule) const
 
     rule.terminate = m_cbTerminate->isChecked();
     rule.setTerminateActionType(m_comboTerminateAction->currentIndex());
+
+    rule.logAllowedConn = m_cbLogAllowedConn->isChecked();
+    rule.logBlockedConn = m_cbLogBlockedConn->isChecked();
 
     rule.zones.accept_mask = m_btZones->zones();
     rule.zones.reject_mask = m_btZones->uncheckedZones();

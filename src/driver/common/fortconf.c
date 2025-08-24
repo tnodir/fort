@@ -713,14 +713,7 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_option(
 
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
 
-    FORT_CONN_FILTER_RESULT filter_res = 0;
-
-    filter_res |= (flags & FORT_RULE_FILTER_OPTION_LOG) != 0 ? FORT_CONN_FILTER_RESULT_CONN_LOG : 0;
-
-    filter_res |=
-            (flags & FORT_RULE_FILTER_OPTION_ALERT) != 0 ? FORT_CONN_FILTER_RESULT_CONN_ALERT : 0;
-
-    return filter_res;
+    return flags;
 }
 
 static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_port_protocol(
@@ -860,7 +853,9 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
             conn->blocked = rule->blocked;
         }
 
-        conn->conn_log = (filter_res & FORT_CONN_FILTER_RESULT_CONN_LOG) != 0;
+        conn->conn_log |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_LOG) != 0;
+        conn->conn_log &= !(filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG);
+
         conn->conn_alert = (filter_res & FORT_CONN_FILTER_RESULT_CONN_ALERT) != 0;
 
         return TRUE;

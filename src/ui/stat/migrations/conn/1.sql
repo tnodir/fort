@@ -16,6 +16,7 @@ CREATE TABLE conn(
   process_id INTEGER NOT NULL,
   reason INTEGER NOT NULL,
   blocked BOOLEAN NOT NULL,
+  alerted BOOLEAN NOT NULL DEFAULT 0,
   inherited BOOLEAN NOT NULL,
   inbound BOOLEAN NOT NULL,
   ip_proto INTEGER NOT NULL,

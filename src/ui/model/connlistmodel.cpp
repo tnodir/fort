@@ -406,26 +406,27 @@ bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
     m_connRow.pid = stmt.columnInt(3);
     m_connRow.reason = stmt.columnInt(4);
     m_connRow.blocked = stmt.columnBool(5);
-    m_connRow.inherited = stmt.columnBool(6);
-    m_connRow.inbound = stmt.columnBool(7);
-    m_connRow.ipProto = stmt.columnInt(8);
-    m_connRow.localPort = stmt.columnInt(9);
-    m_connRow.remotePort = stmt.columnInt(10);
+    m_connRow.alerted = stmt.columnBool(6);
+    m_connRow.inherited = stmt.columnBool(7);
+    m_connRow.inbound = stmt.columnBool(8);
+    m_connRow.ipProto = stmt.columnInt(9);
+    m_connRow.localPort = stmt.columnInt(10);
+    m_connRow.remotePort = stmt.columnInt(11);
 
-    m_connRow.isIPv6 = stmt.columnIsNull(11);
+    m_connRow.isIPv6 = stmt.columnIsNull(12);
     if (!m_connRow.isIPv6) {
-        m_connRow.localIp.v4 = stmt.columnInt(11);
-        m_connRow.remoteIp.v4 = stmt.columnInt(12);
+        m_connRow.localIp.v4 = stmt.columnInt(12);
+        m_connRow.remoteIp.v4 = stmt.columnInt(13);
     } else {
-        m_connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(13, /*isView=*/true));
-        m_connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(14, /*isView=*/true));
+        m_connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(14, /*isView=*/true));
+        m_connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(15, /*isView=*/true));
     }
 
-    m_connRow.zoneId = stmt.columnInt(15);
-    m_connRow.ruleId = stmt.columnInt(16);
+    m_connRow.zoneId = stmt.columnInt(16);
+    m_connRow.ruleId = stmt.columnInt(17);
 
-    m_connRow.confAppId = stmt.columnInt64(17);
-    m_connRow.appPath = stmt.columnText(18);
+    m_connRow.confAppId = stmt.columnInt64(18);
+    m_connRow.appPath = stmt.columnText(19);
 
     return true;
 }
@@ -463,6 +464,7 @@ QString ConnListModel::sqlBase() const
            "    t.process_id,"
            "    t.reason,"
            "    t.blocked,"
+           "    t.alerted,"
            "    t.inherited,"
            "    t.inbound,"
            "    t.ip_proto,"

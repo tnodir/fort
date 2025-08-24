@@ -7,7 +7,8 @@ bool Rule::isNameEqual(const Rule &o) const
 
 bool Rule::isOptionsEqual(const Rule &o) const
 {
-    return isFlagsEqual(o) && isZonesEqual(o) && notes == o.notes && ruleText == o.ruleText;
+    return isFlagsEqual(o) && isLogFlagsEqual(o) && isZonesEqual(o) && notes == o.notes
+            && ruleText == o.ruleText;
 }
 
 bool Rule::isFlagsEqual(const Rule &o) const
@@ -15,6 +16,11 @@ bool Rule::isFlagsEqual(const Rule &o) const
     return enabled == o.enabled && trayMenu == o.trayMenu && blocked == o.blocked
             && exclusive == o.exclusive && inlineZones == o.inlineZones && terminate == o.terminate
             && terminateBlocked == o.terminateBlocked;
+}
+
+bool Rule::isLogFlagsEqual(const Rule &o) const
+{
+    return logAllowedConn == o.logAllowedConn && logBlockedConn == o.logBlockedConn;
 }
 
 bool Rule::isZonesEqual(const Rule &o) const
