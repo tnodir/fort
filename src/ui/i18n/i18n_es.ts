@@ -1768,7 +1768,8 @@ Por favor, reinicie el programa en ejecución para que esta opción tenga efecto
     <message>
         <source>Failed to save the program!
 Please check other program with the same path.</source>
-        <translation type="unfinished"></translation>
+        <translation>¡Error al guardar el programa!
+Por favor, verifica si hay otro programa con la misma ruta.</translation>
     </message>
 </context>
 <context>
