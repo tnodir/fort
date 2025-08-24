@@ -324,7 +324,7 @@ void ConfData::writeOptionRange(const OptionRange &optionRange)
 {
     PFORT_CONF_RULE_FILTER_FLAGS filter = PFORT_CONF_RULE_FILTER_FLAGS(m_data);
 
-    filter->flags = optionRange.optionTypeId();
+    filter->flags = optionRange.optionTypeIds();
 
     m_data += sizeof(FORT_CONF_RULE_FILTER_FLAGS);
 }

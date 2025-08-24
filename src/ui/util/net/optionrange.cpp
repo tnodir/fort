@@ -8,22 +8,22 @@ OptionRange::OptionRange(QObject *parent) : TextRange(parent) { }
 
 bool OptionRange::isEmpty() const
 {
-    return m_optionTypeId == 0;
+    return m_optionTypeIds == 0;
 }
 
 void OptionRange::clear()
 {
     TextRange::clear();
 
-    m_optionTypeId = 0;
+    m_optionTypeIds = 0;
 }
 
 void OptionRange::toList(QStringList &list) const
 {
-    if (m_optionTypeId == FORT_RULE_FILTER_OPTION_LOG) {
+    if ((m_optionTypeIds & FORT_RULE_FILTER_OPTION_LOG) != 0) {
         list << "LOG";
     }
-    if (m_optionTypeId == FORT_RULE_FILTER_OPTION_ALERT) {
+    if ((m_optionTypeIds & FORT_RULE_FILTER_OPTION_ALERT) != 0) {
         list << "ALERT";
     }
 }
@@ -31,9 +31,9 @@ void OptionRange::toList(QStringList &list) const
 TextRange::ParseError OptionRange::parseText(const QString &text)
 {
     if (text == "LOG") {
-        m_optionTypeId = FORT_RULE_FILTER_OPTION_LOG;
+        m_optionTypeIds |= FORT_RULE_FILTER_OPTION_LOG;
     } else if (text == "ALERT") {
-        m_optionTypeId = FORT_RULE_FILTER_OPTION_ALERT;
+        m_optionTypeIds |= FORT_RULE_FILTER_OPTION_ALERT;
     } else {
         return ErrorBadText;
     }

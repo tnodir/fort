@@ -12,7 +12,7 @@ class OptionRange : public TextRange
 public:
     explicit OptionRange(QObject *parent = nullptr);
 
-    quint8 optionTypeId() const { return m_optionTypeId; }
+    quint8 optionTypeIds() const { return m_optionTypeIds; }
 
     bool isEmpty() const override;
 
@@ -26,7 +26,7 @@ protected:
     TextRange::ParseError parseText(const QString &text);
 
 private:
-    quint8 m_optionTypeId = 0;
+    quint8 m_optionTypeIds = 0;
 };
 
 #endif // OPTIONRANGE_H

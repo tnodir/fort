@@ -553,14 +553,15 @@ TEST_F(ConfUtilTest, ruleExclusiveTerminating)
     }
 }
 
-TEST_F(ConfUtilTest, ruleFilterAction)
+TEST_F(ConfUtilTest, ruleFilterActionOption)
 {
     static Rule g_rules[] = {
         {
                 .blocked = false,
                 .ruleId = 1,
                 .ruleText = "dir(IN):act(BLOCK)\n"
-                            "area(LOCALHOST):act(BLOCK)\n",
+                            "area(LOCALHOST):act(BLOCK)\n"
+                            "{ act(BLOCK) }:opt(LOG, ALERT):port(111)\n",
         },
     };
 
@@ -636,5 +637,17 @@ TEST_F(ConfUtilTest, ruleFilterAction)
         };
 
         ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+    }
+
+    // Action in the block and Options
+    {
+        FORT_CONF_META_CONN conn = {
+            .remote_port = 111,
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
+
+        ASSERT_TRUE(conn.conn_log);
+        ASSERT_TRUE(conn.conn_alert);
     }
 }

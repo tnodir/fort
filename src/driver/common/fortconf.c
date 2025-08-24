@@ -703,7 +703,7 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_action(
 
     conn->blocked = (flags & FORT_RULE_FILTER_ACTION_BLOCK) != 0;
 
-    return FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION;
+    return FORT_CONN_FILTER_RESULT_TRUE | FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION;
 }
 
 static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_option(
