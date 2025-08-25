@@ -286,6 +286,8 @@ typedef const FORT_CONF_ZONE_FLAG *PCFORT_CONF_ZONE_FLAG;
 
 typedef struct fort_conf_rules_rt
 {
+    UINT16 max_rule_id;
+
     const UINT32 *rule_offsets;
     const char *rules_data;
 

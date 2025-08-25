@@ -901,24 +901,24 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
 inline static BOOL fort_conf_rules_rt_conn_filtered_check(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
-    const BOOL filter_res = fort_conf_rules_rt_conn_filtered_zones(rules_rt, conn, rule)
+    const BOOL is_filter_res = fort_conf_rules_rt_conn_filtered_zones(rules_rt, conn, rule)
             || fort_conf_rules_rt_conn_filtered_filters(conn, rule);
 
     const BOOL is_exclusive = (rule->exclusive && !rule->blocked);
 
-    const BOOL is_exclusive_filtered = (is_exclusive ? !filter_res : filter_res);
+    const BOOL is_exclusive_filtered = (is_exclusive ? !is_filter_res : is_filter_res);
 
     if (is_exclusive_filtered) {
-        return filter_res;
+        return is_filter_res;
     }
 
-    return fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule, filter_res);
+    return fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule, is_filter_res);
 }
 
 FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
-    if (rule_id == 0)
+    if (rule_id == 0 || rule_id > rules_rt->max_rule_id)
         return FALSE;
 
     PCFORT_CONF_RULE rule = fort_conf_rules_rt_rule(rules_rt, rule_id);
@@ -933,9 +933,6 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
 FORT_API BOOL fort_conf_rules_conn_filtered(
         PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
-    if (rule_id > rules->max_rule_id)
-        return FALSE;
-
     const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, zones);
 
     return fort_conf_rules_rt_conn_filtered(&rules_rt, conn, rule_id);
@@ -945,6 +942,7 @@ FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
         PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones)
 {
     const FORT_CONF_RULES_RT rules_rt = {
+        .max_rule_id = rules->max_rule_id,
         .rule_offsets = (PUINT32) rules->data - 1, /* exclude zero index */
         .rules_data = rules->data,
         .zones = zones,
