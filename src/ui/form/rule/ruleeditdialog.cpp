@@ -256,6 +256,7 @@ QLayout *RuleEditDialog::setupMainLayout()
     layout->addWidget(m_ruleSetView);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(terminateLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(logLayout);
     layout->addStretch();
     layout->addWidget(ControlUtil::createHSeparator());
