@@ -19,6 +19,8 @@
 
 namespace {
 
+constexpr auto iconSize = QSize(16, 16);
+
 QGroupBox *createGroupBox()
 {
     auto c = new QGroupBox();
@@ -35,6 +37,23 @@ QGroupBox *createGroupBox()
 QVBoxLayout *groupBoxLayout(QGroupBox *c)
 {
     return static_cast<QVBoxLayout *>(c->layout());
+}
+
+QLabel *createMessageLabel()
+{
+    auto c = ControlUtil::createLabel();
+    c->setWordWrap(true);
+    c->setFont(GuiUtil::fontBold());
+    return c;
+}
+
+QLayout *createMessageLabelLayout(QLabel *icon, QLabel *label)
+{
+    auto l = new QHBoxLayout();
+    l->setSpacing(4);
+    l->addWidget(icon, 0, Qt::AlignTop);
+    l->addWidget(label, 1);
+    return l;
 }
 
 }
@@ -60,6 +79,7 @@ void HomePage::onRetranslateUi()
     m_btInstallService->setToolTip(tr("Run Fort Firewall as a Service in background"));
     m_btRemoveService->setText(tr("Remove"));
 
+    retranslatePortableMessage();
     m_btUninstallPortable->setText(tr("Uninstall"));
 
     m_cbExplorerMenu->setText(tr("Windows Explorer integration"));
@@ -83,6 +103,11 @@ void HomePage::retranslateServiceMessage()
     const auto text = hasService() ? tr("Service Installed") : tr("Service Not Installed");
 
     m_labelServiceMessage->setText(text);
+}
+
+void HomePage::retranslatePortableMessage()
+{
+    m_labelPortableMessage->setText(tr("Portable Installed"));
 }
 
 void HomePage::retranslateComboAutoRun()
@@ -167,25 +192,17 @@ void HomePage::setupDriverBox()
 
 QLayout *HomePage::setupDriverLabelLayout()
 {
-    // Message
-    m_labelDriverMessage = ControlUtil::createLabel();
-    m_labelDriverMessage->setWordWrap(true);
-    m_labelDriverMessage->setFont(GuiUtil::fontBold());
-
     // Icon
     setupDriverIcon();
 
-    auto layout = new QHBoxLayout();
-    layout->setSpacing(4);
-    layout->addWidget(m_iconDriver, 0, Qt::AlignTop);
-    layout->addWidget(m_labelDriverMessage, 1);
+    // Message
+    m_labelDriverMessage = createMessageLabel();
 
-    return layout;
+    return createMessageLabelLayout(m_iconDriver, m_labelDriverMessage);
 }
 
 void HomePage::setupDriverIcon()
 {
-    const QSize iconSize(16, 16);
     m_iconDriver = ControlUtil::createIconLabel(":/icons/server_components.png", iconSize);
 
     const auto refreshDriverInfo = [&] {
@@ -237,26 +254,13 @@ void HomePage::setupServiceBox()
 
 QLayout *HomePage::setupServiceLabelLayout()
 {
-    // Message
-    m_labelServiceMessage = ControlUtil::createLabel();
-    m_labelServiceMessage->setWordWrap(true);
-    m_labelServiceMessage->setFont(GuiUtil::fontBold());
-
     // Icon
-    setupServiceIcon();
-
-    auto layout = new QHBoxLayout();
-    layout->setSpacing(4);
-    layout->addWidget(m_iconService, 0, Qt::AlignTop);
-    layout->addWidget(m_labelServiceMessage, 1);
-
-    return layout;
-}
-
-void HomePage::setupServiceIcon()
-{
-    const QSize iconSize(16, 16);
     m_iconService = ControlUtil::createIconLabel(":/icons/widgets.png", iconSize);
+
+    // Message
+    m_labelServiceMessage = createMessageLabel();
+
+    return createMessageLabelLayout(m_iconService, m_labelServiceMessage);
 }
 
 QLayout *HomePage::setupServiceButtonsLayout()
@@ -283,13 +287,28 @@ QLayout *HomePage::setupServiceButtonsLayout()
 
 void HomePage::setupPortableBox()
 {
+    // Label Row
+    auto labelLayout = setupPortableLabelLayout();
+
     // Buttons Row
     auto buttonsLayout = setupPortableButtonsLayout();
 
     m_gbPortable = createGroupBox();
 
     auto layout = groupBoxLayout(m_gbPortable);
+    layout->addLayout(labelLayout);
     layout->addLayout(buttonsLayout);
+}
+
+QLayout *HomePage::setupPortableLabelLayout()
+{
+    // Icon
+    m_iconPortable = ControlUtil::createIconLabel(":/icons/luggage_brown.png", iconSize);
+
+    // Message
+    m_labelPortableMessage = createMessageLabel();
+
+    return createMessageLabelLayout(m_iconPortable, m_labelPortableMessage);
 }
 
 QLayout *HomePage::setupPortableButtonsLayout()
