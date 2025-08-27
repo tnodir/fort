@@ -342,17 +342,17 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
     case ConnListColumn::Direction:
         return IconCache::icon(directionIconPath(connRow));
     case ConnListColumn::Action:
-        return IconCache::icon(actionIconPath(connRow));
+        return dataDecorationAction(connRow);
     case ConnListColumn::Reason:
-        return dataDecorationReason(connRow);
+        return IconCache::icon(reasonIconPath(connRow));
     }
 
     return {};
 }
 
-QVariant ConnListModel::dataDecorationReason(const ConnRow &connRow) const
+QVariant ConnListModel::dataDecorationAction(const ConnRow &connRow) const
 {
-    const auto iconPath = reasonIconPath(connRow);
+    const auto iconPath = actionIconPath(connRow);
 
     return connRow.alerted ? GuiUtil::overlayIcon(iconPath, ":/icons/error.png")
                            : IconCache::icon(iconPath);
