@@ -15,6 +15,7 @@
 #include <hostinfo/hostinfocache.h>
 #include <manager/translationmanager.h>
 #include <stat/statconnmanager.h>
+#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netformatutil.h>
@@ -73,7 +74,7 @@ QString reasonIconPath(const ConnRow &connRow)
         return reasonIcons[index];
     }
 
-    return ":/icons/error.png";
+    return ":/icons/information.png";
 }
 
 QString actionIconPath(const ConnRow &connRow)
@@ -343,10 +344,18 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
     case ConnListColumn::Action:
         return IconCache::icon(actionIconPath(connRow));
     case ConnListColumn::Reason:
-        return IconCache::icon(reasonIconPath(connRow));
+        return dataDecorationReason(connRow);
     }
 
     return {};
+}
+
+QVariant ConnListModel::dataDecorationReason(const ConnRow &connRow) const
+{
+    const auto iconPath = reasonIconPath(connRow);
+
+    return connRow.alerted ? GuiUtil::overlayIcon(iconPath, ":/icons/error.png")
+                           : IconCache::icon(iconPath);
 }
 
 const ConnRow &ConnListModel::connRowAt(int row) const
