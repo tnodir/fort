@@ -187,6 +187,10 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
         IoC<AskPendingManager>()->logConn(connEntry);
     } else {
         IoC<StatConnManager>()->logConn(connEntry);
+
+        if (connEntry.alerted() && connEntry.appId() != 0) {
+            IoC<ConfAppManager>()->addAlertedApp(connEntry.appId());
+        }
     }
 
     return true;

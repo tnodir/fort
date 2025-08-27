@@ -427,6 +427,17 @@ bool ConfAppManager::deleteApps(const QVector<qint64> &appIdList)
     return ok;
 }
 
+bool ConfAppManager::addAlertedApp(qint64 appId)
+{
+    const bool ok = DbQuery(sqliteDb()).sql(sqlInsertAppAlert).vars({ appId }).executeOk();
+
+    if (ok) {
+        emitAppAlerted();
+    }
+
+    return ok;
+}
+
 bool ConfAppManager::deleteAlertedApps()
 {
     QVector<qint64> appIdList;
