@@ -1764,7 +1764,8 @@ Por favor reiniciar o programa para essa opção surtir efeito.</translation>
     <message>
         <source>Failed to save the program!
 Please check other program with the same path.</source>
-        <translation type="unfinished"></translation>
+        <translation>Falha ao salvar o programa!
+Por favor verifique se existe outro programa com o mesmo caminho.</translation>
     </message>
 </context>
 <context>
