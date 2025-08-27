@@ -13,7 +13,7 @@ static_assert(sizeof(FORT_CONF_FLAGS) == sizeof(UINT64), "FORT_CONF_FLAGS size m
 static_assert(
         sizeof(FORT_CONF_RULE_FILTER) == sizeof(UINT32), "FORT_CONF_RULE_FILTER size mismatch");
 static_assert(sizeof(FORT_CONF_RULE_ZONES) == sizeof(UINT64), "FORT_CONF_RULE_ZONES size mismatch");
-static_assert(sizeof(FORT_CONF_RULE) == sizeof(UINT16), "FORT_CONF_RULE size mismatch");
+static_assert(sizeof(FORT_CONF_RULE) == sizeof(UINT32), "FORT_CONF_RULE size mismatch");
 
 static_assert((FORT_CONF_RULE_GLOBAL_MAX + FORT_CONF_RULE_SET_MAX) < 256,
         "FORT_CONF_RULE_GLOBAL_MAX count mismatch");
@@ -892,6 +892,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
     /* Terminating Rule? */
     if (rule->terminate) {
         conn->blocked = rule->term_blocked;
+        conn->conn_alert = rule->term_alert;
         return TRUE;
     }
 

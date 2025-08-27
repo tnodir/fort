@@ -97,8 +97,8 @@ QVariantList ConfRuleManagerRpc::ruleToVarList(const Rule &rule)
     VariantUtil::vectorToList(rule.ruleSet, ruleSetList);
 
     return { rule.enabled, rule.trayMenu, rule.blocked, rule.exclusive, rule.inlineZones,
-        rule.terminate, rule.terminateBlocked, rule.logAllowedConn, rule.logBlockedConn,
-        rule.ruleSetEdited, rule.ruleType, rule.ruleId, rule.zones.accept_mask,
+        rule.terminate, rule.terminateBlocked, rule.terminateAlert, rule.logAllowedConn,
+        rule.logBlockedConn, rule.ruleSetEdited, rule.ruleType, rule.ruleId, rule.zones.accept_mask,
         rule.zones.reject_mask, rule.ruleName, rule.notes, rule.ruleText, ruleSetList };
 }
 
@@ -112,17 +112,18 @@ Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
     rule.inlineZones = v.value(4).toBool();
     rule.terminate = v.value(5).toBool();
     rule.terminateBlocked = v.value(6).toBool();
-    rule.logAllowedConn = v.value(7).toBool();
-    rule.logBlockedConn = v.value(8).toBool();
-    rule.ruleSetEdited = v.value(9).toBool();
-    rule.ruleType = Rule::RuleType(v.value(10).toInt());
-    rule.ruleId = v.value(11).toInt();
-    rule.zones.accept_mask = v.value(12).toUInt();
-    rule.zones.reject_mask = v.value(13).toUInt();
-    rule.ruleName = v.value(14).toString();
-    rule.notes = v.value(15).toString();
-    rule.ruleText = v.value(16).toString();
-    VariantUtil::listToVector(v.value(17).toList(), rule.ruleSet);
+    rule.terminateAlert = v.value(7).toBool();
+    rule.logAllowedConn = v.value(8).toBool();
+    rule.logBlockedConn = v.value(9).toBool();
+    rule.ruleSetEdited = v.value(10).toBool();
+    rule.ruleType = Rule::RuleType(v.value(11).toInt());
+    rule.ruleId = v.value(12).toInt();
+    rule.zones.accept_mask = v.value(13).toUInt();
+    rule.zones.reject_mask = v.value(14).toUInt();
+    rule.ruleName = v.value(15).toString();
+    rule.notes = v.value(16).toString();
+    rule.ruleText = v.value(17).toString();
+    VariantUtil::listToVector(v.value(18).toList(), rule.ruleSet);
     return rule;
 }
 

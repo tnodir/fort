@@ -109,6 +109,7 @@ private:
     ListView *m_ruleSetView = nullptr;
     QCheckBox *m_cbTerminate = nullptr;
     QComboBox *m_comboTerminateAction = nullptr;
+    QCheckBox *m_cbTerminateAlert = nullptr;
     QCheckBox *m_cbLogAllowedConn = nullptr;
     QCheckBox *m_cbLogBlockedConn = nullptr;
     QPushButton *m_btOk = nullptr;

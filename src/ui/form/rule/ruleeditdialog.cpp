@@ -89,6 +89,7 @@ void RuleEditDialog::initialize(const RuleRow &ruleRow)
 
     m_cbTerminate->setChecked(ruleRow.terminate);
     m_comboTerminateAction->setCurrentIndex(ruleRow.terminateActionType());
+    m_cbTerminateAlert->setChecked(ruleRow.terminateAlert);
 
     m_cbLogAllowedConn->setChecked(ruleRow.logAllowedConn);
     m_cbLogBlockedConn->setChecked(ruleRow.logBlockedConn);
@@ -151,6 +152,7 @@ void RuleEditDialog::retranslateUi()
 
     m_cbTerminate->setText(tr("Terminating Rule:"));
     retranslateComboTerminate();
+    m_cbTerminateAlert->setText(tr("Alert"));
 
     m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
     m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
@@ -422,11 +424,14 @@ QLayout *RuleEditDialog::setupTerminateLayout()
     m_comboTerminateAction = ControlUtil::createComboBox();
     m_comboTerminateAction->setMinimumWidth(100);
 
+    // Terminate Alert
+    m_cbTerminateAlert = new QCheckBox();
+
     // Terminate Check Box
     setupCbTerminate();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbTerminate, m_comboTerminateAction,
-            /*stretch*/ nullptr });
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_cbTerminate, m_comboTerminateAction, m_cbTerminateAlert, /*stretch*/ nullptr });
 
     return layout;
 }
@@ -437,6 +442,7 @@ void RuleEditDialog::setupCbTerminate()
 
     const auto refreshTerminateEnabled = [&](bool checked) {
         m_comboTerminateAction->setEnabled(checked);
+        m_cbTerminateAlert->setEnabled(checked);
     };
 
     refreshTerminateEnabled(false);
@@ -594,6 +600,7 @@ void RuleEditDialog::fillRule(Rule &rule) const
 
     rule.terminate = m_cbTerminate->isChecked();
     rule.setTerminateActionType(m_comboTerminateAction->currentIndex());
+    rule.terminateAlert = m_cbTerminateAlert->isChecked();
 
     rule.logAllowedConn = m_cbLogAllowedConn->isChecked();
     rule.logBlockedConn = m_cbLogBlockedConn->isChecked();

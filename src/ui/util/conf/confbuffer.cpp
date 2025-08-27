@@ -500,6 +500,7 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     confRule.inline_zones = rule.inlineZones;
     confRule.terminate = rule.terminate;
     confRule.term_blocked = rule.terminateBlocked;
+    confRule.term_alert = rule.terminateAlert;
     confRule.log_allowed_conn = rule.logAllowedConn;
     confRule.log_blocked_conn = rule.logBlockedConn;
 

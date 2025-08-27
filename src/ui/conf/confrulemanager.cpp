@@ -27,6 +27,7 @@ const QLoggingCategory LC("confRule");
     "    t.inline_zones,"                                                                          \
     "    t.terminate,"                                                                             \
     "    t.term_blocked,"                                                                          \
+    "    t.term_alert,"                                                                            \
     "    t.log_allowed_conn,"                                                                      \
     "    t.log_blocked_conn,"                                                                      \
     "    t.rule_text,"                                                                             \
@@ -62,16 +63,17 @@ const char *const sqlSelectGlobMinRuleIdByType = "SELECT MIN(t.rule_id) FROM rul
 
 const char *const sqlInsertRule =
         "INSERT INTO rule(rule_id, enabled, blocked, exclusive, inline_zones,"
-        "    terminate, term_blocked, log_allowed_conn, log_blocked_conn,"
+        "    terminate, term_blocked, term_alert, log_allowed_conn, log_blocked_conn,"
         "    name, notes, rule_text, rule_type, accept_zones, reject_zones, mod_time)"
-        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16);";
+        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17);";
 
 const char *const sqlUpdateRule = "UPDATE rule"
                                   "  SET enabled = ?2, blocked = ?3, exclusive = ?4,"
-                                  "    inline_zones = ?5, terminate = ?6, term_blocked = ?7,"
-                                  "    log_allowed_conn = ?8, log_blocked_conn = ?9,"
-                                  "    name = ?10, notes = ?11, rule_text = ?12, rule_type = ?13,"
-                                  "    accept_zones = ?14, reject_zones = ?15, mod_time = ?16"
+                                  "    inline_zones = ?5, terminate = ?6,"
+                                  "    term_blocked = ?7, term_alert = ?8,"
+                                  "    log_allowed_conn = ?9, log_blocked_conn = ?10,"
+                                  "    name = ?11, notes = ?12, rule_text = ?13, rule_type = ?14,"
+                                  "    accept_zones = ?15, reject_zones = ?16, mod_time = ?17"
                                   "  WHERE rule_id = ?1;";
 
 const char *const sqlInsertRuleMenu = "INSERT INTO rule_menu(rule_id) VALUES(?1);";
@@ -297,6 +299,7 @@ bool ConfRuleManager::doAddOrUpdateRule(Rule &rule, bool &isNew, bool &isTrayMen
             rule.inlineZones,
             rule.terminate,
             rule.terminateBlocked,
+            rule.terminateAlert,
             rule.logAllowedConn,
             rule.logBlockedConn,
             rule.ruleName,
@@ -541,13 +544,14 @@ void ConfRuleManager::fillRule(Rule &rule, const SqliteStmt &stmt)
     rule.inlineZones = stmt.columnBool(4);
     rule.terminate = stmt.columnBool(5);
     rule.terminateBlocked = stmt.columnBool(6);
-    rule.logAllowedConn = stmt.columnBool(7);
-    rule.logBlockedConn = stmt.columnBool(8);
-    rule.ruleText = stmt.columnText(9);
-    rule.ruleType = Rule::RuleType(stmt.columnInt(10));
-    rule.zones.accept_mask = stmt.columnUInt64(11);
-    rule.zones.reject_mask = stmt.columnUInt64(12);
-    rule.trayMenu = stmt.columnBool(13);
+    rule.terminateAlert = stmt.columnBool(7);
+    rule.logAllowedConn = stmt.columnBool(8);
+    rule.logBlockedConn = stmt.columnBool(9);
+    rule.ruleText = stmt.columnText(10);
+    rule.ruleType = Rule::RuleType(stmt.columnInt(11));
+    rule.zones.accept_mask = stmt.columnUInt64(12);
+    rule.zones.reject_mask = stmt.columnUInt64(13);
+    rule.trayMenu = stmt.columnBool(14);
 }
 
 void ConfRuleManager::updateDriverRules()
