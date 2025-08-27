@@ -841,6 +841,10 @@
         <source>For all users</source>
         <translation>Para todos los usuarios</translation>
     </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -2067,6 +2071,18 @@ Por favor, verifica si hay otro programa con la misma ruta.</translation>
     <message>
         <source>Inline Zones</source>
         <translation>Zonas en línea</translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Registrar conexiones permitidas</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Registrar conexiones bloqueadas</translation>
     </message>
 </context>
 <context>

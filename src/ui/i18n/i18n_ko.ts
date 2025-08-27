@@ -841,6 +841,10 @@
         <source>For all users</source>
         <translation>모든 사용자용</translation>
     </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -2064,6 +2068,18 @@ Please check other program with the same path.</source>
     <message>
         <source>Inline Zones</source>
         <translation>인라인 영역</translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>허용된 연결 집계</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>차단된 연결 집계</translation>
     </message>
 </context>
 <context>

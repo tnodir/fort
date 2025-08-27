@@ -841,6 +841,10 @@
         <source>For all users</source>
         <translation>لكل المستخدمين</translation>
     </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -2063,6 +2067,18 @@ Please check other program with the same path.</source>
     <message>
         <source>Inline Zones</source>
         <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>تسجيل عمليات الاتصال المسموح لها</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>عمليات الاتصال المحظورة</translation>
     </message>
 </context>
 <context>

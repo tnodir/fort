@@ -841,6 +841,10 @@
         <source>For all users</source>
         <translation>Za vse uporabnike</translation>
     </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>Prenosni nameščeni</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -2064,6 +2068,18 @@ Preverite drug program z isto potjo.</translation>
     <message>
         <source>Inline Zones</source>
         <translation>Vključite cone</translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>Opozorilo</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Zberi dovoljene povezave</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Zberi blokirane povezave</translation>
     </message>
 </context>
 <context>

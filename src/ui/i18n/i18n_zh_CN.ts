@@ -841,6 +841,10 @@
         <source>For all users</source>
         <translation>对于所有用户</translation>
     </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -2063,6 +2067,18 @@ Please check other program with the same path.</source>
     <message>
         <source>Inline Zones</source>
         <translation>内嵌区域</translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>收集已允许的连接</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>收集被阻止的连接</translation>
     </message>
 </context>
 <context>

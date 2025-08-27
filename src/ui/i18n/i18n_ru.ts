@@ -841,6 +841,10 @@
         <source>For all users</source>
         <translation>Для всех пользователей</translation>
     </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation>Портативно установлена</translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -2064,6 +2068,18 @@ Please check other program with the same path.</source>
     <message>
         <source>Inline Zones</source>
         <translation>Встроить зоны</translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation>Оповещение</translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation>Собирать разрешённые соединения</translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
+        <translation>Собирать заблокированные соединения</translation>
     </message>
 </context>
 <context>

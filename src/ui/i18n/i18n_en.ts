@@ -841,6 +841,10 @@
         <source>For all users</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Portable Installed</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>HomeWindow</name>
@@ -2051,6 +2055,18 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Inline Zones</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Alert</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect allowed connections</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Collect blocked connections</source>
         <translation></translation>
     </message>
 </context>
