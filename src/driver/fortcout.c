@@ -227,17 +227,32 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     fort_buffer_conn_write(&fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_APP);
 }
 
+inline static BOOL fort_callout_ale_log_conn_check_app(
+        PFORT_CONF_META_CONN conn, const FORT_APP_DATA app_data, const FORT_CONF_FLAGS conf_flags)
+{
+    const BOOL log_conn = app_data.flags.found == 0
+            || (conn->blocked ? app_data.flags.log_blocked_conn : app_data.flags.log_allowed_conn);
+
+    if (!log_conn)
+        return FALSE;
+
+    conn->conn_alert |= app_data.flags.alerted;
+
+    const BOOL log_alert = (conn->conn_alert || !conf_flags.log_alerted_conn);
+
+    return log_alert && !conn->conn_nolog;
+}
+
 inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn,
         PFORT_CONF_REF conf_ref, const FORT_CONF_FLAGS conf_flags)
 {
     if (conn->ignore || conn->reason == FORT_CONN_REASON_UNKNOWN)
         return FALSE;
 
-    const BOOL blocked = conn->blocked;
-
     /* Conf */
     {
-        const BOOL log_conn = (blocked ? conf_flags.log_blocked_conn : conf_flags.log_allowed_conn);
+        const BOOL log_conn =
+                (conn->blocked ? conf_flags.log_blocked_conn : conf_flags.log_allowed_conn);
 
         if (!(log_conn || conn->ask_to_connect))
             return FALSE;
@@ -247,17 +262,7 @@ inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca, PFORT_
     {
         const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, conn, conf_ref);
 
-        const BOOL app_log_conn = app_data.flags.found == 0
-                || (blocked ? app_data.flags.log_blocked_conn : app_data.flags.log_allowed_conn);
-
-        if (!app_log_conn)
-            return FALSE;
-
-        conn->conn_alert |= app_data.flags.alerted;
-
-        const BOOL log_alert = (conn->conn_alert || !conf_flags.log_alerted_conn);
-
-        return log_alert && !conn->conn_nolog;
+        return fort_callout_ale_log_conn_check_app(conn, app_data, conf_flags);
     }
 }
 
