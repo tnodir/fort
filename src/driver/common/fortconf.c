@@ -931,6 +931,7 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         return FALSE;
 
     conn->conn_log |= conn->blocked ? rule->log_blocked_conn : rule->log_allowed_conn;
+    conn->conn_nolog |= !conn->conn_log;
 
     return TRUE;
 }

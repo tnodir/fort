@@ -257,7 +257,7 @@ inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca, PFORT_
 
         const BOOL log_alert = (conn->conn_alert || !conf_flags.log_alerted_conn);
 
-        return log_alert && (conn->conn_log && !conn->conn_nolog);
+        return log_alert && !conn->conn_nolog;
     }
 }
 
