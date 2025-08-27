@@ -227,15 +227,6 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     fort_buffer_conn_write(&fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_APP);
 }
 
-inline static BOOL fort_callout_ale_log_conn_check_app(
-        FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data, BOOL blocked)
-{
-    const BOOL log_conn = app_data.flags.found == 0
-            || (blocked ? app_data.flags.log_blocked_conn : app_data.flags.log_allowed_conn);
-
-    return log_conn && (app_data.flags.alerted || !conf_flags.log_alerted_conn);
-}
-
 inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn,
         PFORT_CONF_REF conf_ref, const FORT_CONF_FLAGS conf_flags)
 {
@@ -243,14 +234,31 @@ inline static BOOL fort_callout_ale_log_conn_check(PCFORT_CALLOUT_ARG ca, PFORT_
         return FALSE;
 
     const BOOL blocked = conn->blocked;
-    const BOOL log_conn = (blocked ? conf_flags.log_blocked_conn : conf_flags.log_allowed_conn);
 
-    if (!(log_conn || conn->ask_to_connect))
-        return FALSE;
+    /* Conf */
+    {
+        const BOOL log_conn = (blocked ? conf_flags.log_blocked_conn : conf_flags.log_allowed_conn);
 
-    const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, conn, conf_ref);
+        if (!(log_conn || conn->ask_to_connect))
+            return FALSE;
+    }
 
-    return fort_callout_ale_log_conn_check_app(conf_flags, app_data, blocked);
+    /* App */
+    {
+        const FORT_APP_DATA app_data = fort_callout_ale_conf_app_data(ca, conn, conf_ref);
+
+        const BOOL app_log_conn = app_data.flags.found == 0
+                || (blocked ? app_data.flags.log_blocked_conn : app_data.flags.log_allowed_conn);
+
+        if (!app_log_conn)
+            return FALSE;
+
+        conn->conn_alert |= app_data.flags.alerted;
+
+        const BOOL log_alert = (conn->conn_alert || !conf_flags.log_alerted_conn);
+
+        return log_alert && (conn->conn_log && !conn->conn_nolog);
+    }
 }
 
 inline static BOOL fort_callout_ale_add_pending(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)

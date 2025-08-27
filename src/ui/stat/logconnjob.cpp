@@ -126,9 +126,9 @@ qint64 LogConnJob::insertConn(const LogEntryConn &entry, qint64 appId)
     stmt->bindInt(3, entry.pid());
     stmt->bindInt(4, entry.reason());
     stmt->bindBool(5, entry.blocked());
-    stmt->bindBool(6, entry.inherited());
-    stmt->bindBool(7, entry.inbound());
-    stmt->bindBool(8, entry.alerted());
+    stmt->bindBool(6, entry.alerted());
+    stmt->bindBool(7, entry.inherited());
+    stmt->bindBool(8, entry.inbound());
     stmt->bindInt(9, entry.ipProto());
     stmt->bindInt(10, entry.localPort());
     stmt->bindInt(11, entry.remotePort());

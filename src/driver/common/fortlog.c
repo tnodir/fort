@@ -40,7 +40,8 @@ FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UI
     *up++ = fort_log_flag_type(FORT_LOG_TYPE_CONN) | (conn->blocked ? FORT_LOG_FLAG_OPT_BLOCKED : 0)
             | path_len;
     *up++ = (conn->isIPv6 ? FORT_LOG_CONN_IP6 : 0) | (conn->inbound ? FORT_LOG_CONN_INBOUND : 0)
-            | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0) | ((UINT32) conn->reason << 8)
+            | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0)
+            | (conn->conn_alert ? FORT_LOG_CONN_ALERTED : 0) | ((UINT32) conn->reason << 8)
             | ((UINT32) conn->ip_proto << 16);
     *up++ = ((UINT32) conn->rule_id) | ((UINT32) conn->zone_id << 16);
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
@@ -82,6 +83,7 @@ FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn
     conn->isIPv6 = (flags & FORT_LOG_CONN_IP6) != 0;
     conn->inbound = (flags & FORT_LOG_CONN_INBOUND) != 0;
     conn->inherited = (flags & FORT_LOG_CONN_INHERITED) != 0;
+    conn->conn_alert = (flags & FORT_LOG_CONN_ALERTED) != 0;
     conn->reason = (UCHAR) (v >> 8);
     conn->ip_proto = (UCHAR) (v >> 16);
 

@@ -154,6 +154,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     }
 
     logEntry->setBlocked(conn.blocked);
+    logEntry->setAlerted(conn.conn_alert);
     logEntry->setIsIPv6(conn.isIPv6);
     logEntry->setInbound(conn.inbound);
     logEntry->setInherited(conn.inherited);

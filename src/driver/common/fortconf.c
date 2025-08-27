@@ -854,7 +854,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
         }
 
         conn->conn_log |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_LOG) != 0;
-        conn->conn_log &= !(filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG);
+        conn->conn_nolog = (filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG) != 0;
 
         conn->conn_alert = (filter_res & FORT_CONN_FILTER_RESULT_CONN_ALERT) != 0;
 
@@ -926,8 +926,13 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
     if (!rule->enabled)
         return FALSE;
 
-    return fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule)
-            || fort_conf_rules_rt_conn_filtered_terminate(conn, rule);
+    if (!(fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule)
+                || fort_conf_rules_rt_conn_filtered_terminate(conn, rule)))
+        return FALSE;
+
+    conn->conn_log |= conn->blocked ? rule->log_blocked_conn : rule->log_allowed_conn;
+
+    return TRUE;
 }
 
 FORT_API BOOL fort_conf_rules_conn_filtered(

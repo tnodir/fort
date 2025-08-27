@@ -394,6 +394,7 @@ typedef struct fort_conf_meta_conn
     UINT16 reserved : 1; /* not used */
 
     UCHAR conn_log : 1;
+    UCHAR conn_nolog : 1;
     UCHAR conn_alert : 1;
 
     UCHAR zones_accept_filtered : 1;
