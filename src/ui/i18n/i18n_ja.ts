@@ -843,7 +843,7 @@
     </message>
     <message>
         <source>Portable Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>ポータブル</translation>
     </message>
 </context>
 <context>
@@ -1769,7 +1769,8 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Failed to save the program!
 Please check other program with the same path.</source>
-        <translation type="unfinished"></translation>
+        <translation>プログラムの保存に失敗!
+同じパスにある他のプログラムを確認してください。</translation>
     </message>
 </context>
 <context>
@@ -2070,7 +2071,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>警告</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
