@@ -1,5 +1,12 @@
 Fort Firewall ChangeLog
 
+v3.19.4, 2025-08-28:
+- UI: MyFort: Add "Portable Installed" label (#634).
+- UI: Rule: Add "Log Allowed/Blocked Connections", "Terminate: Alert" flags (#241).
+- UI: Connections: Show alerted action icon (#241).
+- Driver: Add "option(log, nolog, alert)" filter function (#241).
+- Installer: Skip password checking on auto-update (#629).
+
 v3.19.3, 2025-08-22:
 - UI: ProgramEdit: Add "Connections" tab (#614).
 - UI: ProgramEdit: Warn about save failing (#627).
