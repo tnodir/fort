@@ -843,7 +843,7 @@
     </message>
     <message>
         <source>Portable Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Portátil instalado</translation>
     </message>
 </context>
 <context>
@@ -2074,7 +2074,7 @@ Por favor, verifica si hay otro programa con la misma ruta.</translation>
     </message>
     <message>
         <source>Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>Alerta</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>

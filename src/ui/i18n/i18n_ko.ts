@@ -843,7 +843,7 @@
     </message>
     <message>
         <source>Portable Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>포터블 설치됨</translation>
     </message>
 </context>
 <context>
@@ -2071,7 +2071,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>경고</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
