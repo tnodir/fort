@@ -15,6 +15,15 @@ NTSTATUS PsSetCreateProcessNotifyRoutineEx(
     return STATUS_SUCCESS;
 }
 
+NTSTATUS PsSetCreateProcessNotifyRoutineEx2(PSCREATEPROCESSNOTIFYTYPE notifyType,
+        PCREATE_PROCESS_NOTIFY_ROUTINE_EX notifyRoutine, BOOLEAN remove)
+{
+    UNUSED(notifyType);
+    UNUSED(notifyRoutine);
+    UNUSED(remove);
+    return STATUS_SUCCESS;
+}
+
 NTSTATUS KeExpandKernelStackAndCallout(PEXPAND_STACK_CALLOUT callout, PVOID parameter, SIZE_T size)
 {
     UNUSED(callout);

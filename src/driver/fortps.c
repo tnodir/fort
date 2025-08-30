@@ -728,7 +728,11 @@ static void fort_pstree_update(PFORT_PSTREE ps_tree, BOOL active)
     if (was_active == active)
         return;
 
+#if defined(FORT_WIN7_COMPAT)
     const NTSTATUS status = PsSetCreateProcessNotifyRoutineEx(
+#else
+    const NTSTATUS status = PsSetCreateProcessNotifyRoutineEx2(PsCreateProcessNotifySubsystems,
+#endif
             FORT_CALLBACK(FORT_CALLBACK_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX,
                     &fort_pstree_notify),
             /*remove=*/!active);
