@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.19.5-test01, 2025-08-31:
+- Driver: Use PsSetCreateProcessNotifyRoutineEx2() to track WSL pico-processes (#640).
+
 v3.19.4, 2025-08-28:
 - UI: MyFort: Add "Portable Installed" label (#634).
 - UI: Rule: Add "Log Allowed/Blocked Connections", "Terminate: Alert" flags (#241).
