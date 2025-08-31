@@ -564,4 +564,15 @@ ULONG_PTR IoGetRemainingStackSize(void)
 void KeBugCheckEx(ULONG bugCheckCode, ULONG_PTR bugCheckParameter1, ULONG_PTR bugCheckParameter2,
         ULONG_PTR bugCheckParameter3, ULONG_PTR bugCheckParameter4)
 {
+    UNUSED(bugCheckCode);
+    UNUSED(bugCheckParameter1);
+    UNUSED(bugCheckParameter2);
+    UNUSED(bugCheckParameter3);
+    UNUSED(bugCheckParameter4);
+}
+
+PVOID MmGetSystemRoutineAddress(PUNICODE_STRING systemRoutineName)
+{
+    UNUSED(systemRoutineName);
+    return NULL;
 }

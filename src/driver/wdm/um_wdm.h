@@ -544,6 +544,8 @@ FORT_API ULONG_PTR IoGetRemainingStackSize(void);
 FORT_API void KeBugCheckEx(ULONG bugCheckCode, ULONG_PTR bugCheckParameter1,
         ULONG_PTR bugCheckParameter2, ULONG_PTR bugCheckParameter3, ULONG_PTR bugCheckParameter4);
 
+FORT_API PVOID MmGetSystemRoutineAddress(PUNICODE_STRING systemRoutineName);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif
