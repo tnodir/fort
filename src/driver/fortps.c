@@ -578,15 +578,18 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc_locked(
 inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc(
         PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb)
 {
-    const NTSTATUS status = (psi->fileObject != NULL)
-            ? GetFileDosDeviceName(psi->fileObject, pb)
-            : GetProcessDosDeviceName(psi->processHandle, pb);
+    const BOOL hasFileObject = (psi->fileObject != NULL);
+    const NTSTATUS status = hasFileObject ? GetFileDosDeviceName(psi->fileObject, pb)
+                                          : GetProcessDosDeviceName(psi->processHandle, pb);
 
     if (NT_SUCCESS(status)) {
         psi->path = &pb->path;
     } else {
-        LOG("PsTree: DOS Device Name Error: %x fo=%p\n", status, psi->fileObject);
-        TRACE(FORT_PSTREE_PROCESS_PATH_ERROR, status, 0, 0);
+        if (status != STATUS_OBJECT_PATH_SYNTAX_BAD) {
+            LOG("PsTree: DOS Device Name Error: %x pid=%d fo=%d\n", status, psi->processId,
+                    hasFileObject);
+            TRACE(FORT_PSTREE_PROCESS_PATH_ERROR, status, psi->processId, hasFileObject);
+        }
     }
 
     FORT_PS_FLAGS ps_flags;
