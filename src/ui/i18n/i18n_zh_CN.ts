@@ -843,7 +843,7 @@
     </message>
     <message>
         <source>Portable Installed</source>
-        <translation type="unfinished"></translation>
+        <translation>便携版已安装</translation>
     </message>
 </context>
 <context>
@@ -1073,7 +1073,7 @@
     </message>
     <message>
         <source>Alert Window is auto-active</source>
-        <translation>提示窗口是自动激活的</translation>
+        <translation>提示窗口可自动激活</translation>
     </message>
     <message>
         <source>Operations from Tray Menu</source>
@@ -1113,7 +1113,7 @@
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation>显示警告窗口时自动聚焦</translation>
+        <translation>显示提示窗口时自动聚焦</translation>
     </message>
     <message>
         <source>Switch Window visibility</source>
@@ -1408,7 +1408,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation>在自动学习关闭时删除警告程序</translation>
+        <translation>在自动学习关闭时删除提示程序</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
@@ -1674,15 +1674,15 @@ Do you want to open a discussion thread in browser?</source>
     <name>ProgMainPage</name>
     <message>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>通用</translation>
     </message>
     <message>
         <source>Network Filters</source>
-        <translation type="unfinished"></translation>
+        <translation>网络过滤器</translation>
     </message>
     <message>
         <source>More</source>
-        <translation type="unfinished"></translation>
+        <translation>更多</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
@@ -1769,7 +1769,8 @@ Please restart the running program to take effect of this option.</source>
     <message>
         <source>Failed to save the program!
 Please check other program with the same path.</source>
-        <translation type="unfinished"></translation>
+        <translation>程序保存失败！
+请检查是否有其他程序正在使用相同路径。</translation>
     </message>
 </context>
 <context>
@@ -1890,11 +1891,11 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Remove Alerted Programs</source>
-        <translation>删除警告程序</translation>
+        <translation>删除提示程序</translation>
     </message>
     <message>
         <source>Are you sure to remove alerted programs?</source>
-        <translation>您确定要删除警告程序吗？</translation>
+        <translation>您确定要删除提示程序吗？</translation>
     </message>
     <message>
         <source>Copy Path</source>
@@ -2070,7 +2071,7 @@ Please check other program with the same path.</source>
     </message>
     <message>
         <source>Alert</source>
-        <translation type="unfinished"></translation>
+        <translation>提示</translation>
     </message>
     <message>
         <source>Collect allowed connections</source>
