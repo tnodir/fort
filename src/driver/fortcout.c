@@ -685,15 +685,12 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
 
     const UINT32 classify_flags = ca->inFixedValues->incomingValue[ca->fi->flags].value.uint32;
 
-    const BOOL is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0;
-    const BOOL is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0;
-
     FORT_CALLOUT_ALE_EXTRA cx = {
         .conn = {
-                .inbound = ca->inbound,
-                .isIPv6 = ca->isIPv6,
-                .is_loopback = is_loopback,
-                .is_reauth = is_reauth,
+            .inbound = ca->inbound,
+            .isIPv6 = ca->isIPv6,
+            .is_loopback = (classify_flags & FWP_CONDITION_FLAG_IS_LOOPBACK) != 0,
+            .is_reauth = (classify_flags & FWP_CONDITION_FLAG_IS_REAUTHORIZE) != 0,
         },
     };
 
