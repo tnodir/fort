@@ -88,26 +88,6 @@ CREATE TABLE app_alert(
   app_id INTEGER PRIMARY KEY
 );
 
-CREATE TABLE net_filter(
-  filter_id INTEGER PRIMARY KEY,
-  filter_type INTEGER NOT NULL, -- app, rule
-  enabled BOOLEAN NOT NULL,
-  blocked BOOLEAN NOT NULL,
-  name TEXT NOT NULL,
-  notes TEXT,
-  filter_text TEXT NOT NULL,
-  mod_time INTEGER NOT NULL
-);
-
-CREATE TABLE app_filter(
-  app_filter_id INTEGER PRIMARY KEY,
-  app_id INTEGER NOT NULL,
-  filter_id INTEGER NOT NULL,
-  order_index INTEGER NOT NULL
-);
-
-CREATE INDEX app_filter_app_id_idx ON app_filter(app_id);
-
 CREATE TABLE rule(
   rule_id INTEGER PRIMARY KEY,
   enabled BOOLEAN NOT NULL,
@@ -129,6 +109,19 @@ CREATE TABLE rule(
 );
 
 CREATE INDEX rule_rule_type_name_idx ON rule(rule_type, lower(name));
+
+CREATE TABLE rule_filter(
+  filter_id INTEGER PRIMARY KEY,
+  rule_id INTEGER NOT NULL,
+  order_index INTEGER NOT NULL,
+  enabled BOOLEAN NOT NULL,
+  blocked BOOLEAN NOT NULL,
+  name TEXT NOT NULL,
+  notes TEXT,
+  filter_text TEXT NOT NULL
+);
+
+CREATE INDEX rule_filter_rule_id_idx ON rule_filter(rule_id);
 
 CREATE TABLE rule_menu(
   rule_id INTEGER PRIMARY KEY
