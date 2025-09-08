@@ -329,8 +329,8 @@ bool WindowManager::showProgramAlertWindow(bool activate)
     auto w = progAlertWindow();
 
     if (w->isNew()) {
+        showProgramsWindow(); // reuse checked password
         closeProgramAlertWindow();
-        showProgramsWindow();
     } else {
         if (activate || w->isAutoActive()) {
             w->activateWindow();
