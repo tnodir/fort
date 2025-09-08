@@ -44,11 +44,11 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 
 FormPointer &WindowManager::formByCode(WindowCode code) const
 {
-    const int index = BitUtil::bitScanForward(code);
+    int index = BitUtil::bitScanForward(code);
 
-    if (Q_UNLIKELY(index < 0 || code >= WindowCount)) {
-        static FormPointer g_emptyForm;
-        return g_emptyForm;
+    if (Q_UNLIKELY(index < 0 || index >= WindowCount)) {
+        Q_UNREACHABLE();
+        index = 0;
     }
 
     return m_forms[index];
