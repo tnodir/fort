@@ -459,14 +459,13 @@ void FortManager::setupTaskManager()
     auto taskManager = IoC<TaskManager>();
 
     connect(taskManager, &TaskManager::appVersionDownloaded, this, [&](const QString &version) {
-        IoC<WindowManager>()->showTrayMessage(tr("New version v%1 available!").arg(version),
-                WindowManager::TrayMessageNewVersion);
+        IoC<WindowManager>()->showTrayMessage(
+                tr("New version v%1 available!").arg(version), tray::MessageNewVersion);
     });
 
     connect(taskManager, &TaskManager::zonesDownloaded, this, [&](const QStringList &zoneNames) {
         IoC<WindowManager>()->showTrayMessage(
-                tr("Zone Addresses Updated: %1.").arg(zoneNames.join(", ")),
-                WindowManager::TrayMessageZones);
+                tr("Zone Addresses Updated: %1.").arg(zoneNames.join(", ")), tray::MessageZones);
     });
 
     connect(taskManager, &TaskManager::zonesUpdated, IoC<ConfZoneManager>(),

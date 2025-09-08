@@ -52,27 +52,27 @@ const QString actionShowFilterModeMenu = QStringLiteral("FilterModeMenu");
 const QString actionShowTrayMenu = QStringLiteral("TrayMenu");
 const QString actionIgnore = QStringLiteral("Ignore");
 
-QString clickNameByType(TrayIcon::ClickType clickType)
+QString clickNameByType(tray::ClickType clickType)
 {
     switch (clickType) {
-    case TrayIcon::SingleClick:
+    case tray::SingleClick:
         return eventSingleClick;
-    case TrayIcon::CtrlSingleClick:
+    case tray::CtrlSingleClick:
         return eventCtrlSingleClick;
-    case TrayIcon::AltSingleClick:
+    case tray::AltSingleClick:
         return eventAltSingleClick;
-    case TrayIcon::DoubleClick:
+    case tray::DoubleClick:
         return eventDoubleClick;
-    case TrayIcon::MiddleClick:
+    case tray::MiddleClick:
         return eventMiddleClick;
-    case TrayIcon::RightClick:
+    case tray::RightClick:
         return eventRightClick;
     default:
         return QString();
     }
 }
 
-QString actionNameByType(TrayIcon::ActionType actionType)
+QString actionNameByType(tray::ActionType actionType)
 {
     static const QString actionNames[] = {
         actionShowHome,
@@ -89,73 +89,70 @@ QString actionNameByType(TrayIcon::ActionType actionType)
         actionIgnore,
     };
 
-    if (actionType > TrayIcon::ActionNone && actionType < TrayIcon::ActionTypeCount) {
+    if (actionType > tray::ActionNone && actionType < tray::ActionTypeCount) {
         return actionNames[actionType];
     }
 
     return {};
 }
 
-TrayIcon::ActionType actionTypeByName(const QString &name)
+tray::ActionType actionTypeByName(const QString &name)
 {
-    static const QHash<QString, TrayIcon::ActionType> actionTypeNamesMap = {
-        { actionShowHome, TrayIcon::ActionShowHome },
-        { actionShowPrograms, TrayIcon::ActionShowPrograms },
-        { actionShowProgramsOrAlert, TrayIcon::ActionShowProgramsOrAlert },
-        { actionShowOptions, TrayIcon::ActionShowOptions },
-        { actionShowStatistics, TrayIcon::ActionShowStatistics },
-        { actionShowTrafficGraph, TrayIcon::ActionShowTrafficGraph },
-        { actionSwitchFilterEnabled, TrayIcon::ActionSwitchFilterEnabled },
-        { actionSwitchSnoozeAlerts, TrayIcon::ActionSwitchSnoozeAlerts },
-        { actionShowBlockTrafficMenu, TrayIcon::ActionShowBlockTrafficMenu },
-        { actionShowFilterModeMenu, TrayIcon::ActionShowFilterModeMenu },
-        { actionShowTrayMenu, TrayIcon::ActionShowTrayMenu },
-        { actionIgnore, TrayIcon::ActionIgnore }
+    static const QHash<QString, tray::ActionType> actionTypeNamesMap = {
+        { actionShowHome, tray::ActionShowHome }, { actionShowPrograms, tray::ActionShowPrograms },
+        { actionShowProgramsOrAlert, tray::ActionShowProgramsOrAlert },
+        { actionShowOptions, tray::ActionShowOptions },
+        { actionShowStatistics, tray::ActionShowStatistics },
+        { actionShowTrafficGraph, tray::ActionShowTrafficGraph },
+        { actionSwitchFilterEnabled, tray::ActionSwitchFilterEnabled },
+        { actionSwitchSnoozeAlerts, tray::ActionSwitchSnoozeAlerts },
+        { actionShowBlockTrafficMenu, tray::ActionShowBlockTrafficMenu },
+        { actionShowFilterModeMenu, tray::ActionShowFilterModeMenu },
+        { actionShowTrayMenu, tray::ActionShowTrayMenu }, { actionIgnore, tray::ActionIgnore }
     };
 
-    return name.isEmpty() ? TrayIcon::ActionNone
-                          : actionTypeNamesMap.value(name, TrayIcon::ActionNone);
+    return name.isEmpty() ? tray::ActionNone : actionTypeNamesMap.value(name, tray::ActionNone);
 }
 
-TrayIcon::ActionType defaultActionTypeByClick(TrayIcon::ClickType clickType)
+tray::ActionType defaultActionTypeByClick(tray::ClickType clickType)
 {
     switch (clickType) {
-    case TrayIcon::SingleClick:
-        return TrayIcon::ActionShowProgramsOrAlert;
-    case TrayIcon::CtrlSingleClick:
-        return TrayIcon::ActionShowOptions;
-    case TrayIcon::AltSingleClick:
-        return TrayIcon::ActionIgnore;
-    case TrayIcon::DoubleClick:
-        return TrayIcon::ActionIgnore;
-    case TrayIcon::MiddleClick:
-        return TrayIcon::ActionShowStatistics;
-    case TrayIcon::RightClick:
-        return TrayIcon::ActionShowTrayMenu;
+    case tray::SingleClick:
+        return tray::ActionShowProgramsOrAlert;
+    case tray::CtrlSingleClick:
+        return tray::ActionShowOptions;
+    case tray::AltSingleClick:
+        return tray::ActionIgnore;
+    case tray::DoubleClick:
+        return tray::ActionIgnore;
+    case tray::MiddleClick:
+        return tray::ActionShowStatistics;
+    case tray::RightClick:
+        return tray::ActionShowTrayMenu;
     default:
-        return TrayIcon::ActionNone;
+        return tray::ActionNone;
     }
 }
 
-TrayIcon::ClickType clickTypeByMouse(Qt::MouseButton button, Qt::KeyboardModifiers modifiers)
+tray::ClickType clickTypeByMouse(Qt::MouseButton button, Qt::KeyboardModifiers modifiers)
 {
     switch (button) {
     case Qt::LeftButton: {
         if (modifiers & Qt::ControlModifier) {
-            return TrayIcon::CtrlSingleClick;
+            return tray::CtrlSingleClick;
         } else if (modifiers & Qt::AltModifier) {
-            return TrayIcon::AltSingleClick;
+            return tray::AltSingleClick;
         }
     } break;
     case Qt::MiddleButton: {
-        return TrayIcon::MiddleClick;
+        return tray::MiddleClick;
     } break;
     case Qt::RightButton: {
-        return TrayIcon::RightClick;
+        return tray::RightClick;
     } break;
     }
 
-    return TrayIcon::SingleClick;
+    return tray::SingleClick;
 }
 
 void setActionCheckable(QAction *action, bool checked = false, const QObject *receiver = nullptr,
@@ -226,6 +223,9 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     setupController();
 
     connect(this, &QSystemTrayIcon::activated, this, &TrayIcon::onTrayActivated);
+
+    connect(this, &QSystemTrayIcon::messageClicked, this, &TrayIcon::onTrayMessageClicked,
+            Qt::QueuedConnection);
 
     connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
     connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::setupByIniUser);
@@ -308,16 +308,35 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
         onTrayActivatedByTrigger();
     } break;
     case QSystemTrayIcon::DoubleClick: {
-        onTrayActivatedByClick(DoubleClick);
+        onTrayActivatedByClick(tray::DoubleClick);
     } break;
     case QSystemTrayIcon::MiddleClick: {
-        onTrayActivatedByClick(MiddleClick);
+        onTrayActivatedByClick(tray::MiddleClick);
     } break;
     case QSystemTrayIcon::Context: {
-        onTrayActivatedByClick(RightClick);
+        onTrayActivatedByClick(tray::RightClick);
     } break;
     default:
         break;
+    }
+}
+
+void TrayIcon::onTrayMessageClicked()
+{
+    auto windowManager = this->windowManager();
+
+    switch (m_lastTrayMessageType) {
+    case tray::MessageNewVersion: {
+        windowManager->showHomeWindowAbout();
+    } break;
+    case tray::MessageZones: {
+        windowManager->showZonesWindow();
+    } break;
+    case tray::MessageAlert: {
+        windowManager->showProgramAlertWindow();
+    } break;
+    default:
+        windowManager->showOptionsWindow();
     }
 }
 
@@ -343,6 +362,13 @@ void TrayIcon::updateTrayIcon(bool alerted)
 
     updateAlertTimer();
     updateTrayIconShape();
+}
+
+void TrayIcon::showTrayMessage(const QString &message, tray::MessageType type)
+{
+    m_lastTrayMessageType = type;
+
+    showMessage(QGuiApplication::applicationDisplayName(), message);
 }
 
 void TrayIcon::showTrayMenu(const QPoint &pos)
@@ -516,24 +542,25 @@ void TrayIcon::setupTrayMenuTopActions()
     m_menu->addSeparator();
 
     m_filterEnabledAction = addAction(m_menu,
-            { QString(), this, SLOT(switchTrayFlag(bool)), ActionSwitchFilterEnabled,
+            { QString(), this, SLOT(switchTrayFlag(bool)), tray::ActionSwitchFilterEnabled,
                     /*checkable=*/true });
     addHotKey(m_filterEnabledAction, HotKey::filter);
 
     m_snoozeAlertsAction = addAction(m_menu,
-            { QString(), this, SLOT(switchTrayFlag(bool)), ActionSwitchSnoozeAlerts,
+            { QString(), this, SLOT(switchTrayFlag(bool)), tray::ActionSwitchSnoozeAlerts,
                     /*checkable=*/true });
     addHotKey(m_snoozeAlertsAction, HotKey::snoozeAlerts);
 
     m_blockTrafficMenuAction = addAction(m_menu,
-            { QString(), this, SLOT(switchBlockTrafficMenu(bool)), ActionShowBlockTrafficMenu });
+            { QString(), this, SLOT(switchBlockTrafficMenu(bool)),
+                    tray::ActionShowBlockTrafficMenu });
     m_blockTrafficMenuAction->setVisible(false);
 
     setupTrayMenuBlockTraffic();
     m_menu->addMenu(m_blockTrafficMenu);
 
     m_filterModeMenuAction = addAction(m_menu,
-            { QString(), this, SLOT(switchFilterModeMenu(bool)), ActionShowFilterModeMenu });
+            { QString(), this, SLOT(switchFilterModeMenu(bool)), tray::ActionShowFilterModeMenu });
     m_filterModeMenuAction->setVisible(false);
 
     setupTrayMenuFilterMode();
@@ -592,7 +619,7 @@ void TrayIcon::setupTrayMenuBlockTraffic()
         const char *iniKey = blockTrafficIniKeys[index];
 
         QAction *a = addAction(m_blockTrafficMenu,
-                { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, ActionNone,
+                { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, tray::ActionNone,
                         /*checkable=*/true });
         a->setText(name);
 
@@ -627,7 +654,7 @@ void TrayIcon::setupTrayMenuFilterMode()
         const char *iniKey = filterModeIniKeys[index];
 
         QAction *a = addAction(m_filterModeMenu,
-                { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, ActionNone,
+                { /*iconPath=*/ {}, /*receiver=*/nullptr, /*member=*/nullptr, tray::ActionNone,
                         /*checkable=*/true });
         a->setText(name);
 
@@ -647,7 +674,8 @@ void TrayIcon::setupTrayMenuGroupActions()
 {
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
         QAction *a = addAction(m_menu,
-                { QString(), this, SLOT(switchTrayFlag(bool)), ActionNone, /*checkable=*/true });
+                { QString(), this, SLOT(switchTrayFlag(bool)), tray::ActionNone,
+                        /*checkable=*/true });
 
         if (i < MAX_FKEY_COUNT) {
             addHotKey(a, HotKey::appGroupModifier);
@@ -661,7 +689,7 @@ void TrayIcon::setupTrayMenuRuleActions()
 {
     for (int i = 0; i < MAX_RULE_ACTIONS_COUNT; ++i) {
         QAction *a = addAction(m_menu,
-                { QString(), this, SLOT(switchTrayRuleFlag(bool)), ActionNone,
+                { QString(), this, SLOT(switchTrayRuleFlag(bool)), tray::ActionNone,
                         /*checkable=*/true });
 
         if (i < MAX_FKEY_COUNT) {
@@ -677,8 +705,8 @@ void TrayIcon::setupTrayMenuBottomActions()
     m_quitAction = addAction(m_menu, { ":/icons/standby.png", this, SLOT(quitProgram()) });
     addHotKey(m_quitAction, HotKey::quit);
 
-    m_trayMenuAction =
-            addAction(m_menu, { QString(), this, SLOT(switchTrayMenu(bool)), ActionShowTrayMenu });
+    m_trayMenuAction = addAction(
+            m_menu, { QString(), this, SLOT(switchTrayMenu(bool)), tray::ActionShowTrayMenu });
     m_trayMenuAction->setVisible(false);
 }
 
@@ -793,8 +821,7 @@ void TrayIcon::sendAlertMessage()
         return;
 
     if (iniUser()->progNotifyMessage()) {
-        windowManager()->showTrayMessage(
-                tr("New program detected!"), WindowManager::TrayMessageAlert);
+        showTrayMessage(tr("New program detected!"), tray::MessageAlert);
     }
 
     if (iniUser()->progAlertSound()) {
@@ -1067,16 +1094,17 @@ void TrayIcon::updateHotKeys()
     hotKeyManager()->initialize(iniUser()->hotKeyEnabled(), iniUser()->hotKeyGlobal());
 }
 
-TrayIcon::ActionType TrayIcon::clickEventActionType(IniUser *iniUser, ClickType clickType)
+tray::ActionType TrayIcon::clickEventActionType(IniUser *iniUser, tray::ClickType clickType)
 {
     const QString eventName = clickNameByType(clickType);
     const QString actionName = iniUser->trayAction(eventName);
 
-    const ActionType actionType = actionTypeByName(actionName);
-    return (actionType != ActionNone) ? actionType : defaultActionTypeByClick(clickType);
+    const auto actionType = actionTypeByName(actionName);
+    return (actionType != tray::ActionNone) ? actionType : defaultActionTypeByClick(clickType);
 }
 
-void TrayIcon::setClickEventActionType(IniUser *iniUser, ClickType clickType, ActionType actionType)
+void TrayIcon::setClickEventActionType(
+        IniUser *iniUser, tray::ClickType clickType, tray::ActionType actionType)
 {
     const QString eventName = clickNameByType(clickType);
     const QString actionName = actionNameByType(actionType);
@@ -1084,33 +1112,33 @@ void TrayIcon::setClickEventActionType(IniUser *iniUser, ClickType clickType, Ac
     iniUser->setTrayAction(eventName, actionName);
 }
 
-void TrayIcon::resetClickEventActionType(IniUser *iniUser, ClickType clickType)
+void TrayIcon::resetClickEventActionType(IniUser *iniUser, tray::ClickType clickType)
 {
-    const TrayIcon::ActionType actionType = defaultActionTypeByClick(clickType);
+    const tray::ActionType actionType = defaultActionTypeByClick(clickType);
 
     setClickEventActionType(iniUser, clickType, actionType);
 }
 
 void TrayIcon::updateClickActions()
 {
-    for (int i = 0; i < ClickTypeCount; ++i) {
-        m_clickActions[i] = clickActionFromIni(ClickType(i));
+    for (int i = 0; i < tray::ClickTypeCount; ++i) {
+        m_clickActions[i] = clickActionFromIni(tray::ClickType(i));
     }
 }
 
-QAction *TrayIcon::clickAction(TrayIcon::ClickType clickType) const
+QAction *TrayIcon::clickAction(tray::ClickType clickType) const
 {
     return m_clickActions[clickType];
 }
 
-QAction *TrayIcon::clickActionFromIni(TrayIcon::ClickType clickType) const
+QAction *TrayIcon::clickActionFromIni(tray::ClickType clickType) const
 {
-    const ActionType actionType = clickEventActionType(iniUser(), clickType);
+    const tray::ActionType actionType = clickEventActionType(iniUser(), clickType);
 
     return clickActionByType(actionType);
 }
 
-QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
+QAction *TrayIcon::clickActionByType(tray::ActionType actionType) const
 {
     QAction *const actions[] = {
         m_homeAction,
@@ -1126,7 +1154,7 @@ QAction *TrayIcon::clickActionByType(TrayIcon::ActionType actionType) const
         m_trayMenuAction,
     };
 
-    if (actionType > TrayIcon::ActionNone && actionType < TrayIcon::ActionIgnore) {
+    if (actionType > tray::ActionNone && actionType < tray::ActionIgnore) {
         return actions[actionType];
     }
 
@@ -1137,15 +1165,15 @@ void TrayIcon::processMouseClick(Qt::MouseButton button, Qt::KeyboardModifiers m
 {
     const auto clickType = clickTypeByMouse(button, modifiers);
 
-    onMouseClicked(clickType, /*menuClickType=*/SingleClick);
+    onMouseClicked(clickType, /*menuClickType=*/tray::SingleClick);
 }
 
-void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType, TrayIcon::ClickType menuClickType)
+void TrayIcon::onMouseClicked(tray::ClickType clickType, tray::ClickType menuClickType)
 {
     QAction *action = clickAction(clickType);
 
     if (action) {
-        if (clickType == menuClickType && action->data().toInt() == TrayIcon::ActionShowTrayMenu) {
+        if (clickType == menuClickType && action->data().toInt() == tray::ActionShowTrayMenu) {
             return; // already handled by context-menu logic
         }
 
@@ -1161,11 +1189,11 @@ void TrayIcon::onMouseClicked(TrayIcon::ClickType clickType, TrayIcon::ClickType
 void TrayIcon::onTrayActivatedByTrigger()
 {
     const Qt::KeyboardModifiers modifiers = QApplication::queryKeyboardModifiers();
-    const ClickType clickType = (modifiers & Qt::ControlModifier) != 0
-            ? CtrlSingleClick
-            : ((modifiers & Qt::AltModifier) != 0 ? AltSingleClick : SingleClick);
+    const tray::ClickType clickType = (modifiers & Qt::ControlModifier) != 0
+            ? tray::CtrlSingleClick
+            : ((modifiers & Qt::AltModifier) != 0 ? tray::AltSingleClick : tray::SingleClick);
 
-    if (clickAction(DoubleClick)) {
+    if (clickAction(tray::DoubleClick)) {
         m_trayTriggered = true;
         QTimer::singleShot(QApplication::doubleClickInterval(), this, [=, this] {
             if (m_trayTriggered) {
@@ -1177,7 +1205,7 @@ void TrayIcon::onTrayActivatedByTrigger()
     }
 }
 
-void TrayIcon::onTrayActivatedByClick(TrayIcon::ClickType clickType)
+void TrayIcon::onTrayActivatedByClick(tray::ClickType clickType)
 {
     m_trayTriggered = false;
 

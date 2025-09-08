@@ -122,9 +122,10 @@ void WindowManager::tearDown()
 
 void WindowManager::initialize()
 {
-    const IniUser &ini = IoC<UserSettings>()->iniUser();
+    Q_ASSERT(!m_trayIcon);
+    m_trayIcon = new TrayIcon(this);
 
-    setupTrayIcon();
+    const IniUser &ini = IoC<UserSettings>()->iniUser();
 
     if (ini.splashWindowVisible() && !IoC<FortSettings>()->noSplash()) {
         showSplashScreen();
@@ -265,16 +266,6 @@ void WindowManager::updateGraphWindowVisibility(const IniUser &ini)
     }
 }
 
-void WindowManager::setupTrayIcon()
-{
-    Q_ASSERT(!m_trayIcon);
-
-    m_trayIcon = new TrayIcon(this);
-
-    connect(m_trayIcon, &QSystemTrayIcon::messageClicked, this,
-            &WindowManager::onTrayMessageClicked, Qt::QueuedConnection);
-}
-
 void WindowManager::showTrayIcon()
 {
     m_trayIcon->show();
@@ -285,13 +276,11 @@ void WindowManager::closeTrayIcon()
     m_trayIcon->hide();
 }
 
-void WindowManager::showTrayMessage(const QString &message, WindowManager::TrayMessageType type)
+void WindowManager::showTrayMessage(const QString &message, tray::MessageType type)
 {
-    if (!m_trayIcon)
-        return;
-
-    m_lastTrayMessageType = type;
-    m_trayIcon->showMessage(QGuiApplication::applicationDisplayName(), message);
+    if (m_trayIcon) {
+        m_trayIcon->showTrayMessage(message, type);
+    }
 }
 
 void WindowManager::showSplashScreen()
@@ -570,23 +559,6 @@ bool WindowManager::checkPasswordDialog(WindowCode code, FortSettings *settings)
     settings->setPasswordChecked(true, FortSettings::UnlockType(unlockType));
 
     return true;
-}
-
-void WindowManager::onTrayMessageClicked()
-{
-    switch (m_lastTrayMessageType) {
-    case TrayMessageNewVersion: {
-        showHomeWindowAbout();
-    } break;
-    case TrayMessageZones: {
-        showZonesWindow();
-    } break;
-    case TrayMessageAlert: {
-        showProgramAlertWindow();
-    } break;
-    default:
-        showOptionsWindow();
-    }
 }
 
 void WindowManager::windowOpened(WindowCode code)

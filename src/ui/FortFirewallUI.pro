@@ -401,6 +401,7 @@ HEADERS += \
     form/svc/serviceswindow.h \
     form/tray/traycontroller.h \
     form/tray/trayicon.h \
+    form/tray/trayicon_types.h \
     form/zone/zoneeditdialog.h \
     form/zone/zonescontroller.h \
     form/zone/zoneswindow.h \

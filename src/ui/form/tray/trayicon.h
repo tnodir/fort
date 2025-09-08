@@ -5,6 +5,8 @@
 
 #include <form/form_types.h>
 
+#include "trayicon_types.h"
+
 QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QTimer)
@@ -26,35 +28,6 @@ class TrayIcon : public QSystemTrayIcon
     Q_OBJECT
 
 public:
-    enum ClickType : qint8 {
-        SingleClick = 0,
-        CtrlSingleClick,
-        AltSingleClick,
-        DoubleClick,
-        MiddleClick,
-        RightClick,
-        ClickTypeCount
-    };
-    Q_ENUM(ClickType)
-
-    enum ActionType : qint8 {
-        ActionNone = -1,
-        ActionShowHome = 0,
-        ActionShowPrograms,
-        ActionShowProgramsOrAlert,
-        ActionShowOptions,
-        ActionShowStatistics,
-        ActionShowTrafficGraph,
-        ActionSwitchFilterEnabled,
-        ActionSwitchSnoozeAlerts,
-        ActionShowBlockTrafficMenu,
-        ActionShowFilterModeMenu,
-        ActionShowTrayMenu,
-        ActionIgnore,
-        ActionTypeCount
-    };
-    Q_ENUM(ActionType)
-
     explicit TrayIcon(QObject *parent = nullptr);
 
     QString iconPath() const { return m_iconPath; }
@@ -74,16 +47,18 @@ public:
     DriverManager *driverManager() const;
     WindowManager *windowManager() const;
 
-    static ActionType clickEventActionType(IniUser *iniUser, ClickType clickType);
+    static tray::ActionType clickEventActionType(IniUser *iniUser, tray::ClickType clickType);
     static void setClickEventActionType(
-            IniUser *iniUser, ClickType clickType, ActionType actionType);
-    static void resetClickEventActionType(IniUser *iniUser, ClickType clickType);
+            IniUser *iniUser, tray::ClickType clickType, tray::ActionType actionType);
+    static void resetClickEventActionType(IniUser *iniUser, tray::ClickType clickType);
 
 signals:
     void iconPathChanged(const QString &iconPath);
 
 public slots:
     void updateTrayIcon(bool alerted = false);
+
+    void showTrayMessage(const QString &message, tray::MessageType type = tray::MessageOptions);
 
     void showTrayMenu(const QPoint &pos);
     void hideTrayMenuLater();
@@ -102,6 +77,8 @@ protected slots:
     void switchFilterModeMenu(bool checked);
 
     void onTrayActivated(QSystemTrayIcon::ActivationReason reason);
+
+    void onTrayMessageClicked();
 
     void onAppAlerted(bool alerted = true);
 
@@ -163,14 +140,14 @@ private:
 
     void updateClickActions();
 
-    QAction *clickAction(TrayIcon::ClickType clickType) const;
-    QAction *clickActionFromIni(TrayIcon::ClickType clickType) const;
-    QAction *clickActionByType(TrayIcon::ActionType actionType) const;
+    QAction *clickAction(tray::ClickType clickType) const;
+    QAction *clickActionFromIni(tray::ClickType clickType) const;
+    QAction *clickActionByType(tray::ActionType actionType) const;
 
     void onMouseClicked(
-            TrayIcon::ClickType clickType, TrayIcon::ClickType menuClickType = RightClick);
+            tray::ClickType clickType, tray::ClickType menuClickType = tray::RightClick);
     void onTrayActivatedByTrigger();
-    void onTrayActivatedByClick(TrayIcon::ClickType clickType);
+    void onTrayActivatedByClick(tray::ClickType clickType);
 
     void onWindowVisibilityChanged(WindowCode code, bool isVisible);
 
@@ -178,6 +155,8 @@ private:
     bool m_trayTriggered : 1 = false;
     bool m_alerted : 1 = false;
     bool m_animatedAlert : 1 = false;
+
+    tray::MessageType m_lastTrayMessageType = tray::MessageOptions;
 
     QString m_iconPath;
 
@@ -209,7 +188,7 @@ private:
     QList<QAction *> m_ruleActions;
     QVector<const char *> m_actionIniKeys;
 
-    QAction *m_clickActions[ClickTypeCount] = { nullptr };
+    QAction *m_clickActions[tray::ClickTypeCount] = { nullptr };
 
     QTimer *m_alertTimer = nullptr;
 };

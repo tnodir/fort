@@ -86,8 +86,8 @@ void IfacePage::onResetToDefault()
     m_spinTrayMaxGroups->setValue(trayMaxGroups);
 
     // Reset Tray Actions
-    for (int i = 0; i < TrayIcon::ClickTypeCount; ++i) {
-        TrayIcon::resetClickEventActionType(iniUser(), TrayIcon::ClickType(i));
+    for (int i = 0; i < tray::ClickTypeCount; ++i) {
+        TrayIcon::resetClickEventActionType(iniUser(), tray::ClickType(i));
     }
     refreshComboTrayAction();
 
@@ -263,7 +263,7 @@ void IfacePage::retranslateComboTrayEvent()
 
 void IfacePage::retranslateComboTrayAction()
 {
-    const TrayIcon::ActionType type = TrayIcon::ActionNone; // to find the enum usages
+    const tray::ActionType type = tray::ActionNone; // to find the enum usages
     Q_UNUSED(type);
 
     // Sync with TrayIcon::ActionType
@@ -739,10 +739,10 @@ QLayout *IfacePage::setupTrayMaxGroupsLayout()
 
 void IfacePage::refreshComboTrayAction()
 {
-    const TrayIcon::ClickType clickType =
-            static_cast<TrayIcon::ClickType>(m_comboTrayEvent->currentIndex());
+    const tray::ClickType clickType =
+            static_cast<tray::ClickType>(m_comboTrayEvent->currentIndex());
 
-    const TrayIcon::ActionType actionType = TrayIcon::clickEventActionType(iniUser(), clickType);
+    const tray::ActionType actionType = TrayIcon::clickEventActionType(iniUser(), clickType);
 
     m_comboTrayAction->setCurrentIndex(actionType);
 }
@@ -763,9 +763,9 @@ QLayout *IfacePage::setupTrayActionLayout()
     m_labelTrayAction = ControlUtil::createLabel();
 
     m_comboTrayAction = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        const TrayIcon::ClickType clickType =
-                static_cast<TrayIcon::ClickType>(m_comboTrayEvent->currentIndex());
-        const TrayIcon::ActionType actionType = static_cast<TrayIcon::ActionType>(index);
+        const tray::ClickType clickType =
+                static_cast<tray::ClickType>(m_comboTrayEvent->currentIndex());
+        const tray::ActionType actionType = static_cast<tray::ActionType>(index);
 
         TrayIcon::setClickEventActionType(iniUser(), clickType, actionType);
         ctrl()->setIniUserEdited(true);

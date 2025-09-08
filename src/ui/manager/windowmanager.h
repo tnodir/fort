@@ -6,6 +6,7 @@
 
 #include <form/form_types.h>
 #include <form/formpointer.h>
+#include <form/tray/trayicon_types.h>
 #include <util/ioc/iocservice.h>
 #include <util/taskbarbutton.h>
 
@@ -32,14 +33,6 @@ class WindowManager : public QObject, public IocService
     friend class FormPointer;
 
 public:
-    enum TrayMessageType : qint8 {
-        TrayMessageOptions,
-        TrayMessageNewVersion,
-        TrayMessageZones,
-        TrayMessageAlert,
-    };
-    Q_ENUM(TrayMessageType)
-
     explicit WindowManager(QObject *parent = nullptr);
 
     bool isAppQuitting() const { return m_isAppQuitting; }
@@ -75,11 +68,10 @@ signals:
     void windowVisibilityChanged(WindowCode code, bool isVisible);
 
 public slots:
-    void setupTrayIcon();
     void showTrayIcon();
     void closeTrayIcon();
-    void showTrayMessage(
-            const QString &message, WindowManager::TrayMessageType type = TrayMessageOptions);
+
+    void showTrayMessage(const QString &message, tray::MessageType type = tray::MessageOptions);
 
     void showSplashScreen();
 
@@ -167,8 +159,6 @@ private:
 
     bool checkPasswordDialog(WindowCode code, FortSettings *settings);
 
-    void onTrayMessageClicked();
-
     void windowOpened(WindowCode code);
     bool isAnyWindowOpen(quint32 codes) const;
 
@@ -187,8 +177,6 @@ private:
 
     quint32 m_openedWindows = 0;
     quint32 m_unlockedWindows = 0;
-
-    TrayMessageType m_lastTrayMessageType = TrayMessageOptions;
 
     TaskbarButton m_taskbarButton;
 
