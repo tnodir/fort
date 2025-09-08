@@ -83,6 +83,7 @@ SOURCES += \
     form/dialog/dialogutil.cpp \
     form/dialog/passworddialog.cpp \
     form/dialog/splashscreen.cpp \
+    form/formpointer.cpp \
     form/graph/axistickerspeed.cpp \
     form/graph/graphplot.cpp \
     form/graph/graphwindow.cpp \
@@ -354,6 +355,7 @@ HEADERS += \
     form/dialog/passworddialog.h \
     form/dialog/splashscreen.h \
     form/form_types.h \
+    form/formpointer.h \
     form/graph/axistickerspeed.h \
     form/graph/graphplot.h \
     form/graph/graphwindow.h \

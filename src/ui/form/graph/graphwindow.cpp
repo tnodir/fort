@@ -7,6 +7,9 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/tray/trayicon.h>
+#include <manager/windowmanager.h>
+#include <stat/statmanager.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
 #include <util/guiutil.h>
@@ -95,6 +98,12 @@ GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
     setupTimer();
 
     setupFormWindow(iniUser(), IniUser::graphWindowGroup());
+
+    connect(this, &GraphWindow::mouseRightClick, this, [&](QMouseEvent *event) {
+        IoC<WindowManager>()->trayIcon()->showTrayMenu(GuiUtil::globalPos(event));
+    });
+
+    connect(IoC<StatManager>(), &StatManager::trafficAdded, this, &GraphWindow::addTraffic);
 }
 
 bool GraphWindow::deleteOnClose() const

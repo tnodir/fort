@@ -5,6 +5,7 @@
 #include <QObject>
 
 #include <form/form_types.h>
+#include <form/formpointer.h>
 #include <util/ioc/iocservice.h>
 #include <util/taskbarbutton.h>
 
@@ -28,6 +29,8 @@ class WindowManager : public QObject, public IocService
 {
     Q_OBJECT
 
+    friend class FormPointer;
+
 public:
     enum TrayMessageType : qint8 {
         TrayMessageOptions,
@@ -39,19 +42,25 @@ public:
 
     explicit WindowManager(QObject *parent = nullptr);
 
-    MainWindow *mainWindow() const { return m_mainWindow; }
-    HomeWindow *homeWindow() const { return m_homeWindow; }
-    ProgramsWindow *progWindow() const { return m_progWindow; }
-    ProgramAlertWindow *progAlertWindow() const { return m_progAlertWindow; }
-    RulesWindow *rulesWindow() const { return m_rulesWindow; }
-    OptionsWindow *optWindow() const { return m_optWindow; }
-    StatisticsWindow *statWindow() const { return m_statWindow; }
-    ServicesWindow *servicesWindow() const { return m_servicesWindow; }
-    ZonesWindow *zonesWindow() const { return m_zonesWindow; }
-    GraphWindow *graphWindow() const { return m_graphWindow; }
-    TrayIcon *trayIcon() const { return m_trayIcon; }
+    bool isAppQuitting() const { return m_isAppQuitting; }
 
     TaskbarButton &taskbarButton() { return m_taskbarButton; }
+
+    MainWindow *mainWindow() const { return m_mainWindow; }
+    TrayIcon *trayIcon() const { return m_trayIcon; }
+
+    FormPointer &formByCode(WindowCode code) const;
+    FormWindow *windowByCode(WindowCode code) const;
+
+    HomeWindow *homeWindow() const;
+    ProgramsWindow *progWindow() const;
+    ProgramAlertWindow *progAlertWindow() const;
+    RulesWindow *rulesWindow() const;
+    OptionsWindow *optWindow() const;
+    StatisticsWindow *statWindow() const;
+    ServicesWindow *servicesWindow() const;
+    ZonesWindow *zonesWindow() const;
+    GraphWindow *graphWindow() const;
 
     void setUp() override;
     void tearDown() override;
@@ -74,46 +83,40 @@ public slots:
 
     void showSplashScreen();
 
-    void showHomeWindow();
-    void closeHomeWindow();
-    void quitHomeWindow(QEvent *event);
+    bool showHomeWindow() { return showWindowByCode(WindowHome); }
 
     virtual bool exposeHomeWindow();
     void showHomeWindowAbout();
 
-    bool showProgramsWindow();
-    void closeProgramsWindow();
+    bool showProgramsWindow() { return showWindowByCode(WindowPrograms); }
+    bool closeProgramsWindow() { return closeWindowByCode(WindowPrograms); }
 
     virtual bool showProgramEditForm(const QString &appPath);
     void openProgramEditForm(const QString &appPath, qint64 appId, FormWindow *parentForm);
 
-    void showProgramAlertWindow(bool activate = true);
-    void closeProgramAlertWindow();
+    bool showProgramAlertWindow(bool activate = true);
+    bool closeProgramAlertWindow() { return closeWindowByCode(WindowProgramAlert); }
 
-    void showOptionsWindow();
-    void closeOptionsWindow();
-    void reloadOptionsWindow(const QString &reason);
+    bool showServicesWindow() { return showWindowByCode(WindowServices); }
 
-    void showRulesWindow();
-    void closeRulesWindow();
+    bool showOptionsWindow() { return showWindowByCode(WindowOptions); }
+    bool closeOptionsWindow() { return closeWindowByCode(WindowOptions); }
 
-    void showStatisticsWindow();
-    void closeStatisticsWindow();
+    bool reloadOptionsWindow(const QString &reason);
 
-    void showOptionsWindowTab(int index);
+    bool showOptionsWindowTab(int index);
     void showAppGroupsWindow();
 
-    void showServicesWindow();
-    void closeServicesWindow();
+    bool showRulesWindow() { return showWindowByCode(WindowRules); }
 
-    void showZonesWindow();
-    void closeZonesWindow();
+    bool showStatisticsWindow() { return showWindowByCode(WindowStatistics); }
 
-    void showGraphWindow();
-    void closeGraphWindow();
+    bool showZonesWindow() { return showWindowByCode(WindowZones); }
 
-    void showWindowByCode(WindowCode code);
-    void closeWindowByCode(WindowCode code);
+    bool showGraphWindow() { return showWindowByCode(WindowGraph, /*activate=*/false); }
+
+    bool showWindowByCode(WindowCode code, bool activate = true);
+    bool closeWindowByCode(WindowCode code);
     void switchWindowByCode(WindowCode code);
 
     void closeAllWindows();
@@ -153,16 +156,6 @@ private:
     void setupMainWindow();
     void closeMainWindow();
 
-    void setupHomeWindow();
-    void setupProgramsWindow();
-    void setupProgramAlertWindow();
-    void setupOptionsWindow();
-    void setupRulesWindow();
-    void setupServicesWindow();
-    void setupZonesWindow();
-    void setupGraphWindow();
-    void setupStatisticsWindow();
-
     void setupConfManager();
     void setupByIniUser(const IniUser &ini);
 
@@ -176,9 +169,6 @@ private:
 
     void onTrayMessageClicked();
 
-    void showWindow(FormWindow *w, bool activate = true);
-    bool closeWindow(FormWindow *w);
-
     void windowOpened(WindowCode code);
     bool isAnyWindowOpen(quint32 codes) const;
 
@@ -186,6 +176,11 @@ private:
     bool isAnyWindowUnlocked() const;
 
     void windowClosed(WindowCode code);
+
+    using WindowFunc = bool (WindowManager::*)(void);
+    using WindowFuncArray = std::array<WindowFunc, WindowCount>;
+
+    bool doWindowFunc(const WindowFuncArray &funcs, WindowCode code);
 
 private:
     bool m_isAppQuitting = false;
@@ -197,18 +192,20 @@ private:
 
     TaskbarButton m_taskbarButton;
 
+    MainWindow *m_mainWindow = nullptr;
     TrayIcon *m_trayIcon = nullptr;
 
-    MainWindow *m_mainWindow = nullptr;
-    HomeWindow *m_homeWindow = nullptr;
-    ProgramsWindow *m_progWindow = nullptr;
-    ProgramAlertWindow *m_progAlertWindow = nullptr;
-    OptionsWindow *m_optWindow = nullptr;
-    RulesWindow *m_rulesWindow = nullptr;
-    StatisticsWindow *m_statWindow = nullptr;
-    ServicesWindow *m_servicesWindow = nullptr;
-    ZonesWindow *m_zonesWindow = nullptr;
-    GraphWindow *m_graphWindow = nullptr;
+    mutable std::array<FormPointer, WindowCount> m_forms = {
+        FormPointer(WindowHome),
+        FormPointer(WindowPrograms),
+        FormPointer(WindowProgramAlert),
+        FormPointer(WindowServices),
+        FormPointer(WindowOptions),
+        FormPointer(WindowRules),
+        FormPointer(WindowStatistics),
+        FormPointer(WindowZones),
+        FormPointer(WindowGraph),
+    };
 };
 
 #endif // WINDOWMANAGER_H

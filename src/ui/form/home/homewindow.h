@@ -31,6 +31,9 @@ public:
 public slots:
     void selectAboutTab();
 
+protected slots:
+    void onAboutToClose(QEvent *event) override;
+
 private slots:
     void onActivationChanged(bool isActive);
 

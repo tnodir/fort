@@ -42,6 +42,69 @@ bool g_isFusionStyle = false;
 
 WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 
+FormPointer &WindowManager::formByCode(WindowCode code) const
+{
+    const int index = BitUtil::bitScanForward(code);
+
+    if (Q_UNLIKELY(index < 0 || code >= WindowCount)) {
+        static FormPointer g_emptyForm;
+        return g_emptyForm;
+    }
+
+    return m_forms[index];
+}
+
+FormWindow *WindowManager::windowByCode(WindowCode code) const
+{
+    const auto &form = formByCode(code);
+    return form.window();
+}
+
+HomeWindow *WindowManager::homeWindow() const
+{
+    return static_cast<HomeWindow *>(windowByCode(WindowHome));
+}
+
+ProgramsWindow *WindowManager::progWindow() const
+{
+    return static_cast<ProgramsWindow *>(windowByCode(WindowPrograms));
+}
+
+ProgramAlertWindow *WindowManager::progAlertWindow() const
+{
+    return static_cast<ProgramAlertWindow *>(windowByCode(WindowProgramAlert));
+}
+
+RulesWindow *WindowManager::rulesWindow() const
+{
+    return static_cast<RulesWindow *>(windowByCode(WindowRules));
+}
+
+OptionsWindow *WindowManager::optWindow() const
+{
+    return static_cast<OptionsWindow *>(windowByCode(WindowOptions));
+}
+
+StatisticsWindow *WindowManager::statWindow() const
+{
+    return static_cast<StatisticsWindow *>(windowByCode(WindowStatistics));
+}
+
+ServicesWindow *WindowManager::servicesWindow() const
+{
+    return static_cast<ServicesWindow *>(windowByCode(WindowServices));
+}
+
+ZonesWindow *WindowManager::zonesWindow() const
+{
+    return static_cast<ZonesWindow *>(windowByCode(WindowZones));
+}
+
+GraphWindow *WindowManager::graphWindow() const
+{
+    return static_cast<GraphWindow *>(windowByCode(WindowGraph));
+}
+
 void WindowManager::setUp()
 {
     setupAppPalette();
@@ -135,83 +198,6 @@ void WindowManager::closeMainWindow()
     m_mainWindow = nullptr;
 }
 
-void WindowManager::setupHomeWindow()
-{
-    m_homeWindow = new HomeWindow();
-
-    connect(m_homeWindow, &HomeWindow::aboutToClose, this, [&](QEvent *event) {
-        const IniUser &ini = IoC<UserSettings>()->iniUser();
-
-        if (ini.homeWindowAutoShowWindow()) {
-            quitHomeWindow(event);
-        }
-    });
-}
-
-void WindowManager::setupProgramsWindow()
-{
-    m_progWindow = new ProgramsWindow();
-
-    connect(m_progWindow, &ProgramsWindow::aboutToClose, this, &WindowManager::closeProgramsWindow);
-}
-
-void WindowManager::setupProgramAlertWindow()
-{
-    m_progAlertWindow = new ProgramAlertWindow();
-
-    connect(m_progAlertWindow, &ProgramAlertWindow::aboutToClose, this,
-            &WindowManager::closeProgramAlertWindow);
-}
-
-void WindowManager::setupOptionsWindow()
-{
-    m_optWindow = new OptionsWindow();
-
-    connect(m_optWindow, &OptionsWindow::aboutToClose, this, &WindowManager::closeOptionsWindow);
-}
-
-void WindowManager::setupRulesWindow()
-{
-    m_rulesWindow = new RulesWindow();
-
-    connect(m_rulesWindow, &RulesWindow::aboutToClose, this, &WindowManager::closeRulesWindow);
-}
-
-void WindowManager::setupServicesWindow()
-{
-    m_servicesWindow = new ServicesWindow();
-
-    connect(m_servicesWindow, &ServicesWindow::aboutToClose, this,
-            &WindowManager::closeServicesWindow);
-}
-
-void WindowManager::setupZonesWindow()
-{
-    m_zonesWindow = new ZonesWindow();
-
-    connect(m_zonesWindow, &ZonesWindow::aboutToClose, this, &WindowManager::closeZonesWindow);
-}
-
-void WindowManager::setupGraphWindow()
-{
-    m_graphWindow = new GraphWindow();
-
-    connect(m_graphWindow, &GraphWindow::aboutToClose, this, [&] { closeGraphWindow(); });
-    connect(m_graphWindow, &GraphWindow::mouseRightClick, this,
-            [&](QMouseEvent *event) { m_trayIcon->showTrayMenu(GuiUtil::globalPos(event)); });
-
-    connect(IoC<StatManager>(), &StatManager::trafficAdded, m_graphWindow,
-            &GraphWindow::addTraffic);
-}
-
-void WindowManager::setupStatisticsWindow()
-{
-    m_statWindow = new StatisticsWindow();
-
-    connect(m_statWindow, &StatisticsWindow::aboutToClose, this,
-            &WindowManager::closeStatisticsWindow);
-}
-
 void WindowManager::setupConfManager()
 {
     auto confManager = IoCDependency<ConfManager>();
@@ -264,15 +250,18 @@ void WindowManager::updateTrayIconVisibility(const IniUser &ini)
 
 void WindowManager::updateGraphWindowVisibility(const IniUser &ini)
 {
-    if (graphWindow() && graphWindow()->isVisible())
+    auto &form = formByCode(WindowGraph);
+    const auto w = form.window();
+
+    if (w && w->isVisible())
         return;
 
     if (ini.graphWindowHideOnClose()) {
-        if (!graphWindow()) {
-            setupGraphWindow();
+        if (!w) {
+            form.initialize();
         }
     } else {
-        closeGraphWindow();
+        form.close();
     }
 }
 
@@ -311,37 +300,6 @@ void WindowManager::showSplashScreen()
     splash->showFading();
 }
 
-void WindowManager::showHomeWindow()
-{
-    if (!m_homeWindow) {
-        setupHomeWindow();
-    }
-
-    showWindow(m_homeWindow);
-}
-
-void WindowManager::closeHomeWindow()
-{
-    if (closeWindow(m_homeWindow)) {
-        m_homeWindow = nullptr;
-    }
-}
-
-void WindowManager::quitHomeWindow(QEvent *event)
-{
-    if (trayIcon()->isVisible()) {
-        closeHomeWindow();
-        return;
-    }
-
-    if (m_isAppQuitting)
-        return;
-
-    event->ignore();
-
-    trayIcon()->quitProgram();
-}
-
 bool WindowManager::exposeHomeWindow()
 {
     showHomeWindow();
@@ -355,33 +313,12 @@ void WindowManager::showHomeWindowAbout()
     homeWindow()->selectAboutTab();
 }
 
-bool WindowManager::showProgramsWindow()
-{
-    if (!checkWindowPassword(WindowPrograms))
-        return false;
-
-    if (!m_progWindow) {
-        setupProgramsWindow();
-    }
-
-    showWindow(m_progWindow);
-
-    return true;
-}
-
-void WindowManager::closeProgramsWindow()
-{
-    if (closeWindow(m_progWindow)) {
-        m_progWindow = nullptr;
-    }
-}
-
 bool WindowManager::showProgramEditForm(const QString &appPath)
 {
     if (!showProgramsWindow())
         return false;
 
-    if (!m_progWindow->editProgramByPath(appPath)) {
+    if (!progWindow()->editProgramByPath(appPath)) {
         showErrorBox(tr("Please close already opened Edit Program window and try again."));
         return false;
     }
@@ -395,53 +332,29 @@ void WindowManager::openProgramEditForm(
     ProgramsWindow::openProgramByPath(appPath, appId, parentForm);
 }
 
-void WindowManager::showProgramAlertWindow(bool activate)
+bool WindowManager::showProgramAlertWindow(bool activate)
 {
-    if (!checkWindowPassword(WindowProgramAlert))
-        return;
+    if (!showWindowByCode(WindowProgramAlert, /*activate=*/false))
+        return false;
 
-    if (!m_progAlertWindow) {
-        setupProgramAlertWindow();
-    }
+    auto w = progAlertWindow();
 
-    if (m_progAlertWindow->isNew()) {
+    if (w->isNew()) {
         closeProgramAlertWindow();
         showProgramsWindow();
     } else {
-        showWindow(m_progAlertWindow, activate || m_progAlertWindow->isAutoActive());
-    }
-}
-
-void WindowManager::closeProgramAlertWindow()
-{
-    if (closeWindow(m_progAlertWindow)) {
-        m_progAlertWindow = nullptr;
-    }
-}
-
-void WindowManager::showOptionsWindow()
-{
-    if (!checkWindowPassword(WindowOptions))
-        return;
-
-    if (!m_optWindow) {
-        setupOptionsWindow();
+        if (activate || w->isAutoActive()) {
+            w->activateWindow();
+        }
     }
 
-    showWindow(m_optWindow);
+    return true;
 }
 
-void WindowManager::closeOptionsWindow()
+bool WindowManager::reloadOptionsWindow(const QString &reason)
 {
-    if (closeWindow(m_optWindow)) {
-        m_optWindow = nullptr;
-    }
-}
-
-void WindowManager::reloadOptionsWindow(const QString &reason)
-{
-    if (!m_optWindow)
-        return;
+    if (!optWindow())
+        return false;
 
     // Unsaved changes are lost
     closeOptionsWindow();
@@ -450,53 +363,18 @@ void WindowManager::reloadOptionsWindow(const QString &reason)
     QMetaObject::invokeMethod(this, &WindowManager::showOptionsWindow, Qt::QueuedConnection);
 
     showTrayMessage(reason);
+
+    return true;
 }
 
-void WindowManager::showRulesWindow()
+bool WindowManager::showOptionsWindowTab(int index)
 {
-    if (!checkWindowPassword(WindowRules))
-        return;
+    if (!showOptionsWindow())
+        return false;
 
-    if (!m_rulesWindow) {
-        setupRulesWindow();
-    }
+    optWindow()->selectTab(index);
 
-    showWindow(m_rulesWindow);
-}
-
-void WindowManager::closeRulesWindow()
-{
-    if (closeWindow(m_rulesWindow)) {
-        m_rulesWindow = nullptr;
-    }
-}
-
-void WindowManager::showStatisticsWindow()
-{
-    if (!checkWindowPassword(WindowStatistics))
-        return;
-
-    if (!m_statWindow) {
-        setupStatisticsWindow();
-    }
-
-    showWindow(m_statWindow);
-}
-
-void WindowManager::closeStatisticsWindow()
-{
-    if (closeWindow(m_statWindow)) {
-        m_statWindow = nullptr;
-    }
-}
-
-void WindowManager::showOptionsWindowTab(int index)
-{
-    showOptionsWindow();
-
-    if (m_optWindow) {
-        m_optWindow->selectTab(index);
-    }
+    return true;
 }
 
 void WindowManager::showAppGroupsWindow()
@@ -504,102 +382,16 @@ void WindowManager::showAppGroupsWindow()
     showOptionsWindowTab(3);
 }
 
-void WindowManager::showServicesWindow()
+bool WindowManager::showWindowByCode(WindowCode code, bool activate)
 {
-    if (!checkWindowPassword(WindowServices))
-        return;
-
-    if (!m_servicesWindow) {
-        setupServicesWindow();
-    }
-
-    showWindow(m_servicesWindow);
+    auto &form = formByCode(code);
+    return form.show(activate);
 }
 
-void WindowManager::closeServicesWindow()
+bool WindowManager::closeWindowByCode(WindowCode code)
 {
-    if (closeWindow(m_servicesWindow)) {
-        m_servicesWindow = nullptr;
-    }
-}
-
-void WindowManager::showZonesWindow()
-{
-    if (!checkWindowPassword(WindowZones))
-        return;
-
-    if (!m_zonesWindow) {
-        setupZonesWindow();
-    }
-
-    showWindow(m_zonesWindow);
-}
-
-void WindowManager::closeZonesWindow()
-{
-    if (closeWindow(m_zonesWindow)) {
-        m_zonesWindow = nullptr;
-    }
-}
-
-void WindowManager::showGraphWindow()
-{
-    if (!m_graphWindow) {
-        setupGraphWindow();
-    }
-
-    showWindow(m_graphWindow, /*activate=*/false);
-}
-
-void WindowManager::closeGraphWindow()
-{
-    if (closeWindow(m_graphWindow)) {
-        m_graphWindow = nullptr;
-    }
-}
-
-void WindowManager::showWindowByCode(WindowCode code)
-{
-    if (Q_UNLIKELY(code < WindowHome || code > WindowGraph))
-        return;
-
-    static const std::function<void()> showFuncs[] = {
-        [&] { showHomeWindow(); },
-        [&] { showProgramsWindow(); },
-        [&] { showProgramAlertWindow(); },
-        [&] { showServicesWindow(); },
-        [&] { showOptionsWindow(); },
-        [&] { showRulesWindow(); },
-        [&] { showStatisticsWindow(); },
-        [&] { showZonesWindow(); },
-        [&] { showGraphWindow(); },
-    };
-
-    const int index = BitUtil::bitScanForward(code);
-
-    showFuncs[index]();
-}
-
-void WindowManager::closeWindowByCode(WindowCode code)
-{
-    if (Q_UNLIKELY(code < WindowHome || code > WindowGraph))
-        return;
-
-    static const std::function<void()> closeFuncs[] = {
-        [&] { closeHomeWindow(); },
-        [&] { closeProgramsWindow(); },
-        [&] { closeProgramAlertWindow(); },
-        [&] { closeServicesWindow(); },
-        [&] { closeOptionsWindow(); },
-        [&] { closeRulesWindow(); },
-        [&] { closeStatisticsWindow(); },
-        [&] { closeZonesWindow(); },
-        [&] { closeGraphWindow(); },
-    };
-
-    const int index = BitUtil::bitScanForward(code);
-
-    closeFuncs[index]();
+    auto &form = formByCode(code);
+    return form.close();
 }
 
 void WindowManager::switchWindowByCode(WindowCode code)
@@ -613,14 +405,10 @@ void WindowManager::switchWindowByCode(WindowCode code)
 
 void WindowManager::closeAllWindows()
 {
-    closeGraphWindow();
-    closeHomeWindow();
-    closeProgramsWindow();
-    closeOptionsWindow();
-    closeRulesWindow();
-    closeServicesWindow();
-    closeZonesWindow();
-    closeStatisticsWindow();
+    for (int i = 0; i < WindowCount; ++i) {
+        auto &form = m_forms[i];
+        form.close();
+    }
 }
 
 void WindowManager::closeAll()
@@ -801,39 +589,6 @@ void WindowManager::onTrayMessageClicked()
     }
 }
 
-void WindowManager::showWindow(FormWindow *w, bool activate)
-{
-    w->showWindow(activate);
-
-    windowOpened(w->windowCode());
-}
-
-bool WindowManager::closeWindow(FormWindow *w)
-{
-    if (!w) {
-        return false;
-    }
-
-    if (w->isVisible()) {
-        w->saveWindowState(m_isAppQuitting);
-        w->hide();
-
-        windowClosed(w->windowCode());
-
-        if (!isAnyWindowUnlocked()) {
-            IoC<FortSettings>()->resetCheckedPassword(FortSettings::UnlockWindow);
-        }
-    }
-
-    if (m_isAppQuitting || w->deleteOnClose()) {
-        emit w->aboutToDelete();
-        w->deleteLater();
-        return true;
-    }
-
-    return false;
-}
-
 void WindowManager::windowOpened(WindowCode code)
 {
     m_openedWindows |= code;
@@ -866,6 +621,16 @@ void WindowManager::windowClosed(WindowCode code)
     m_unlockedWindows &= ~code;
 
     emit windowVisibilityChanged(code, /*isVisible=*/false);
+}
+
+bool WindowManager::doWindowFunc(const WindowFuncArray &funcs, WindowCode code)
+{
+    const int index = BitUtil::bitScanForward(code);
+
+    if (Q_UNLIKELY(index < 0 || code >= WindowCount))
+        return false;
+
+    return std::invoke(funcs[index], this);
 }
 
 bool WindowManager::activateModalWidget()

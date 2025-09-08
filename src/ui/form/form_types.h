@@ -14,6 +14,7 @@ enum WindowCode {
     WindowStatistics = (1 << 6),
     WindowZones = (1 << 7),
     WindowGraph = (1 << 8),
+    WindowCount = 9,
     WindowPasswordDialog = (1 << 9),
 };
 

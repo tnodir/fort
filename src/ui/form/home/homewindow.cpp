@@ -10,6 +10,7 @@
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/dialog/splashscreen.h>
+#include <form/tray/trayicon.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
@@ -69,7 +70,7 @@ void HomeWindow::saveWindowState(bool /*wasVisible*/)
     iniUser()->setHomeWindowGeometry(stateWatcher()->geometry());
     iniUser()->setHomeWindowMaximized(stateWatcher()->maximized());
 
-    emit ctrl()->afterSaveWindowState(iniUser());
+    emit ctrl() -> afterSaveWindowState(iniUser());
 
     confManager()->saveIniUser();
 }
@@ -79,12 +80,33 @@ void HomeWindow::restoreWindowState()
     stateWatcher()->restore(this, QSize(600, 400), iniUser()->homeWindowGeometry(),
             iniUser()->homeWindowMaximized());
 
-    emit ctrl()->afterRestoreWindowState(iniUser());
+    emit ctrl() -> afterRestoreWindowState(iniUser());
 }
 
 void HomeWindow::selectAboutTab()
 {
     m_mainPage->setCurrentTab(HomeMainPage::TabAbout);
+}
+
+void HomeWindow::onAboutToClose(QEvent *event)
+{
+    if (!iniUser()->homeWindowAutoShowWindow())
+        return;
+
+    auto windowManager = this->windowManager();
+    auto trayIcon = windowManager->trayIcon();
+
+    if (trayIcon->isVisible()) {
+        FormWindow::onAboutToClose(event);
+        return;
+    }
+
+    if (windowManager->isAppQuitting())
+        return;
+
+    event->ignore();
+
+    trayIcon->quitProgram();
 }
 
 void HomeWindow::onActivationChanged(bool isActive)
@@ -116,7 +138,7 @@ void HomeWindow::setupController()
 {
     connect(ctrl(), &HomeController::retranslateUi, this, &HomeWindow::retranslateUi);
 
-    emit ctrl()->retranslateUi();
+    emit ctrl() -> retranslateUi();
 }
 
 void HomeWindow::setupUi()
