@@ -9,7 +9,6 @@
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
 #include <form/zone/zoneswindow.h>
-#include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <util/bitutil.h>
 #include <util/ioc/ioccontainer.h>
@@ -96,10 +95,6 @@ bool FormPointer::close()
         w->hide();
 
         windowManager->windowClosed(code());
-
-        if (!windowManager->isAnyWindowUnlocked()) {
-            IoC<FortSettings>()->resetCheckedPassword(FortSettings::UnlockWindow);
-        }
     }
 
     if (isAppQuitting || w->deleteOnClose()) {

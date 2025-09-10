@@ -593,6 +593,10 @@ void WindowManager::windowClosed(WindowCode code)
     m_unlockedWindows &= ~code;
 
     emit windowVisibilityChanged(code, /*isVisible=*/false);
+
+    if (!isAnyWindowUnlocked()) {
+        IoC<FortSettings>()->resetCheckedPassword(FortSettings::UnlockWindow);
+    }
 }
 
 bool WindowManager::doWindowFunc(const WindowFuncArray &funcs, WindowCode code)
