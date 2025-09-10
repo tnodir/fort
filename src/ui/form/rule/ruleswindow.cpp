@@ -223,7 +223,7 @@ void RulesWindow::setupTreeRules()
     m_ruleListView = new TreeView();
     m_ruleListView->setAlternatingRowColors(true);
     m_ruleListView->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_ruleListView->setSelectionBehavior(QAbstractItemView::SelectItems);
+    m_ruleListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     m_ruleListView->setupItemDelegate();
     m_ruleListView->setModel(ruleListModel());

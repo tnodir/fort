@@ -231,7 +231,7 @@ void ConnectionsPage::setupTableConnList()
 {
     m_connListView = new TableView();
     m_connListView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    m_connListView->setSelectionBehavior(QAbstractItemView::SelectItems);
+    m_connListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     m_connListView->setModel(connListModel());
 

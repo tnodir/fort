@@ -211,7 +211,7 @@ void ZonesWindow::setupTableZones()
 {
     m_zoneListView = new TableView();
     m_zoneListView->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_zoneListView->setSelectionBehavior(QAbstractItemView::SelectItems);
+    m_zoneListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     m_zoneListView->setModel(zoneListModel());
 
