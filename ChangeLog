@@ -1,7 +1,7 @@
 Fort Firewall ChangeLog
 
 v3.19.6, 2025-09-10:
-- UI: ProgramEdit: Fix crash on close.
+- UI: ProgramEdit: Fix crash on close (v3.19.5 regression).
 
 v3.19.5, 2025-09-10:
 - UI: Tables: Select rows.
