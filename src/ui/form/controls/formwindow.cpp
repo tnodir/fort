@@ -25,7 +25,9 @@ void FormWindow::setExcludeFromCapture(bool v)
 
 void FormWindow::onAboutToClose(QEvent * /*event*/)
 {
-    IoC<WindowManager>()->closeWindowByCode(windowCode());
+    if (WindowManager::hasForm(windowCode())) {
+        IoC<WindowManager>()->closeWindowByCode(windowCode());
+    }
 }
 
 void FormWindow::setupFormWindow(IniUser *iniUser, const QString &iniGroup)

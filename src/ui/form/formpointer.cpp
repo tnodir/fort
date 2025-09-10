@@ -101,7 +101,7 @@ bool FormPointer::close()
         emit w->aboutToDelete();
         w->deleteLater();
 
-        m_window.reset();
+        m_window.take(); // will be deleted later
         return true;
     }
 

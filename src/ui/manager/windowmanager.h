@@ -42,6 +42,7 @@ public:
     MainWindow *mainWindow() const { return m_mainWindow; }
     TrayIcon *trayIcon() const { return m_trayIcon; }
 
+    static bool hasForm(WindowCode code);
     FormPointer &formByCode(WindowCode code) const;
     FormWindow *windowByCode(WindowCode code) const;
 

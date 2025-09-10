@@ -42,8 +42,19 @@ bool g_isFusionStyle = false;
 
 WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 
+bool WindowManager::hasForm(WindowCode code)
+{
+    constexpr quint32 windowForms =
+            (WindowHome | WindowPrograms | WindowProgramAlert | WindowServices | WindowOptions
+                    | WindowRules | WindowStatistics | WindowZones | WindowGraph);
+
+    return (code & windowForms) != 0;
+}
+
 FormPointer &WindowManager::formByCode(WindowCode code) const
 {
+    Q_ASSERT(hasForm(code));
+
     int index = BitUtil::bitScanForward(code);
 
     if (Q_UNLIKELY(index < 0 || index >= WindowCount)) {
