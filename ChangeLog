@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.19.7, 2025-09-11:
+- Driver: Don't use MmGetSystemRoutineAddress() to avoid BSOD (v3.19.5 regression).
+
 v3.19.6, 2025-09-10:
 - UI: ProgramEdit: Fix crash on close (v3.19.5 regression).
 
