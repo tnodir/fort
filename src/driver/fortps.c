@@ -735,44 +735,6 @@ static void NTAPI fort_pstree_notify(
     fort_expand_stack(&fort_pstree_notify_expand, &pna);
 }
 
-#if defined(FORT_WIN7_COMPAT)
-inline static NTSTATUS fort_process_notify_routine_old(PSCREATEPROCESSNOTIFYTYPE notifyType,
-        PCREATE_PROCESS_NOTIFY_ROUTINE_EX notifyRoutine, BOOLEAN remove)
-{
-    UNUSED(notifyType);
-
-    return PsSetCreateProcessNotifyRoutineEx(notifyRoutine, remove);
-}
-#endif
-
-inline static NTSTATUS fort_process_notify_routine(BOOL active)
-{
-    PCREATE_PROCESS_NOTIFY_ROUTINE_EX notifyRoutine = FORT_CALLBACK(
-            FORT_CALLBACK_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, &fort_pstree_notify);
-
-#if defined(FORT_WIN7_COMPAT)
-    static PFUNC_SET_CREATE_PROCESS_NOTIFY_ROUTINE_EX2 Func_PsSetCreateProcessNotifyRoutineEx2 =
-            NULL;
-
-    if (Func_PsSetCreateProcessNotifyRoutineEx2 == NULL) {
-        UNICODE_STRING routineName;
-        RtlInitUnicodeString(&routineName, L"PsSetCreateProcessNotifyRoutineEx2");
-
-        Func_PsSetCreateProcessNotifyRoutineEx2 = MmGetSystemRoutineAddress(&routineName);
-
-        if (Func_PsSetCreateProcessNotifyRoutineEx2 == NULL) {
-            Func_PsSetCreateProcessNotifyRoutineEx2 = &fort_process_notify_routine_old;
-        }
-    }
-
-    return Func_PsSetCreateProcessNotifyRoutineEx2(
-            PsCreateProcessNotifySubsystems, notifyRoutine, /*remove=*/!active);
-#else
-    return PsSetCreateProcessNotifyRoutineEx2(
-            PsCreateProcessNotifySubsystems, notifyRoutine, /*remove=*/!active);
-#endif
-}
-
 static void fort_pstree_update(PFORT_PSTREE ps_tree, BOOL active)
 {
     const UCHAR flags = fort_pstree_flags_set(ps_tree, FORT_PSTREE_ACTIVE, active);
@@ -781,7 +743,16 @@ static void fort_pstree_update(PFORT_PSTREE ps_tree, BOOL active)
     if (was_active == active)
         return;
 
-    const NTSTATUS status = fort_process_notify_routine(active);
+    PCREATE_PROCESS_NOTIFY_ROUTINE_EX notifyRoutine = FORT_CALLBACK(
+            FORT_CALLBACK_PSTREE_NOTIFY, PCREATE_PROCESS_NOTIFY_ROUTINE_EX, &fort_pstree_notify);
+
+    const NTSTATUS status =
+#if defined(FORT_WIN7_COMPAT)
+            PsSetCreateProcessNotifyRoutineEx(notifyRoutine, /*remove=*/!active);
+#else
+            PsSetCreateProcessNotifyRoutineEx2(
+                    PsCreateProcessNotifySubsystems, notifyRoutine, /*remove=*/!active);
+#endif
 
     if (!NT_SUCCESS(status)) {
         LOG("PsTree: Update Error: %x\n", status);
