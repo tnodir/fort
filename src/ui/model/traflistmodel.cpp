@@ -19,44 +19,44 @@ bool checkTrafType(TrafUnitType::TrafType type)
     return false;
 }
 
-static const char *const sqlSelectMinTrafApps[] = {
-    StatSql::sqlSelectMinTrafAppHour,
-    StatSql::sqlSelectMinTrafAppDay,
-    StatSql::sqlSelectMinTrafAppMonth,
-    StatSql::sqlSelectMinTrafAppTotal,
-};
-
-static const char *const sqlSelectMinTrafs[] = {
-    StatSql::sqlSelectMinTrafHour,
-    StatSql::sqlSelectMinTrafDay,
-    StatSql::sqlSelectMinTrafMonth,
-    StatSql::sqlSelectMinTrafTotal,
-};
-
 const char *getSqlMinTrafTime(TrafUnitType::TrafType type, qint64 appId)
 {
+    static const char *const sqlSelectMinTrafApps[] = {
+        StatSql::sqlSelectMinTrafAppHour,
+        StatSql::sqlSelectMinTrafAppDay,
+        StatSql::sqlSelectMinTrafAppMonth,
+        StatSql::sqlSelectMinTrafAppTotal,
+    };
+
+    static const char *const sqlSelectMinTrafs[] = {
+        StatSql::sqlSelectMinTrafHour,
+        StatSql::sqlSelectMinTrafDay,
+        StatSql::sqlSelectMinTrafMonth,
+        StatSql::sqlSelectMinTrafTotal,
+    };
+
     if (!checkTrafType(type))
         return nullptr;
 
     return (appId != 0 ? sqlSelectMinTrafApps : sqlSelectMinTrafs)[type];
 }
 
-static const char *const sqlSelectTrafApps[] = {
-    StatSql::sqlSelectTrafAppHour,
-    StatSql::sqlSelectTrafAppDay,
-    StatSql::sqlSelectTrafAppMonth,
-    StatSql::sqlSelectTrafAppTotal,
-};
-
-static const char *const sqlSelectTrafs[] = {
-    StatSql::sqlSelectTrafHour,
-    StatSql::sqlSelectTrafDay,
-    StatSql::sqlSelectTrafMonth,
-    StatSql::sqlSelectTrafTotal,
-};
-
 const char *getSqlSelectTraffic(TrafUnitType::TrafType type, qint64 appId)
 {
+    static const char *const sqlSelectTrafApps[] = {
+        StatSql::sqlSelectTrafAppHour,
+        StatSql::sqlSelectTrafAppDay,
+        StatSql::sqlSelectTrafAppMonth,
+        StatSql::sqlSelectTrafAppTotal,
+    };
+
+    static const char *const sqlSelectTrafs[] = {
+        StatSql::sqlSelectTrafHour,
+        StatSql::sqlSelectTrafDay,
+        StatSql::sqlSelectTrafMonth,
+        StatSql::sqlSelectTrafTotal,
+    };
+
     if (!checkTrafType(type))
         return nullptr;
 
