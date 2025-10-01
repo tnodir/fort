@@ -74,7 +74,8 @@ static PFORT_STAT_PROC fort_stat_proc_add(PFORT_STAT stat, UINT32 process_id)
 
     proc->process_id = process_id;
     proc->traf.v = 0;
-    proc->log_stat = FALSE;
+    proc->proc_stat = FALSE;
+    proc->log_stat = TRUE;
     proc->active = FALSE;
     proc->refcount = 0;
 
@@ -85,7 +86,7 @@ static void fort_stat_proc_unlog(PVOID proc_node)
 {
     PFORT_STAT_PROC proc = proc_node;
 
-    proc->log_stat = FALSE;
+    proc->proc_stat = FALSE;
 }
 
 inline static void fort_stat_proc_inc(PFORT_STAT_PROC proc)
@@ -100,7 +101,7 @@ inline static void fort_stat_proc_dec(PFORT_STAT stat, UINT16 proc_index)
     if (--proc->refcount != 0 || proc->active)
         return;
 
-    if (proc->log_stat) {
+    if (proc->proc_stat) {
         fort_stat_proc_active_add(stat, proc);
     } else {
         /* The process is terminated */
@@ -463,8 +464,10 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN con
         status = fort_flow_add(stat, conn, proc);
 
         if (NT_SUCCESS(status)) {
-            *proc_stat = proc->log_stat;
-            proc->log_stat = TRUE;
+            *proc_stat = proc->proc_stat;
+            proc->proc_stat = TRUE;
+
+            proc->log_stat = conn->app_data.flags.log_stat;
         } else if (is_new_proc) {
             fort_stat_proc_free(stat, proc);
         }
@@ -514,7 +517,7 @@ FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 dat
 
     PFORT_STAT_PROC proc = tommy_arrayof_ref(&stat->procs, flow->opt.proc_index);
 
-    if (proc->log_stat) {
+    if (proc->proc_stat && proc->log_stat) {
         UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes : &proc->traf.out_bytes;
 
         /* Add traffic to process's bytes */

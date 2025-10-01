@@ -22,11 +22,11 @@
 #include "confutil.h"
 #include "ruletextparser.h"
 
-#define APP_GROUP_MAX      FORT_CONF_GROUP_MAX
-#define APP_GROUP_NAME_MAX 128
-#define APP_PATH_MAX       FORT_CONF_APP_PATH_MAX
-
 namespace {
+
+constexpr int APP_GROUP_MAX = FORT_CONF_GROUP_MAX;
+constexpr int APP_GROUP_NAME_MAX = 128;
+constexpr int APP_PATH_MAX = FORT_CONF_APP_PATH_MAX;
 
 int writeServicesHeader(char *data, int servicesCount)
 {
@@ -425,6 +425,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .apply_spec_child = app.applySpecChild,
                 .kill_child = app.killChild,
                 .lan_only = app.lanOnly,
+                .log_stat = app.logStat,
                 .log_allowed_conn = app.logAllowedConn,
                 .log_blocked_conn = app.logBlockedConn,
                 .blocked = app.blocked,

@@ -14,7 +14,7 @@ bool App::isBaseFlagsEqual(const App &o) const
 
 bool App::isExtraFlagsEqual(const App &o) const
 {
-    return parked == o.parked && logBlockedConn == o.logBlockedConn
+    return parked == o.parked && logStat == o.logStat && logBlockedConn == o.logBlockedConn
             && logAllowedConn == o.logAllowedConn && blocked == o.blocked
             && killProcess == o.killProcess;
 }

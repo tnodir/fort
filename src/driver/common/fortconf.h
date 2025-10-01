@@ -318,6 +318,8 @@ typedef struct fort_app_flags
     UINT16 apply_spec_child : 1;
     UINT16 kill_child : 1;
     UINT16 lan_only : 1;
+
+    UINT16 log_stat : 1;
     UINT16 log_allowed_conn : 1;
     UINT16 log_blocked_conn : 1;
 
@@ -328,7 +330,7 @@ typedef struct fort_app_flags
     UINT16 found : 1; /* is app data not empty? */
     UINT16 alerted : 1;
 
-    UINT16 reserved : 4; /* not used */
+    UINT16 reserved : 3; /* not used */
 } FORT_APP_FLAGS, *PFORT_APP_FLAGS;
 
 typedef struct fort_app_data

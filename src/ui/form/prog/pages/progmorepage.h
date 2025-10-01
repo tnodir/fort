@@ -26,6 +26,7 @@ private:
 private:
     QCheckBox *m_cbKillChild = nullptr;
     QCheckBox *m_cbParked = nullptr;
+    QCheckBox *m_cbLogStat = nullptr;
     QCheckBox *m_cbLogAllowedConn = nullptr;
     QCheckBox *m_cbLogBlockedConn = nullptr;
 };

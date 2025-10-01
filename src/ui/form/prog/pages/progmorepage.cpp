@@ -15,6 +15,7 @@ void ProgMorePage::onPageInitialize(const App &app)
 {
     m_cbKillChild->setChecked(app.killChild);
     m_cbParked->setChecked(app.parked);
+    m_cbLogStat->setChecked(app.logStat);
     m_cbLogAllowedConn->setChecked(app.logAllowedConn);
     m_cbLogBlockedConn->setChecked(app.logBlockedConn);
 }
@@ -25,6 +26,8 @@ void ProgMorePage::onRetranslateUi()
 
     m_cbParked->setText(tr("Parked"));
     m_cbParked->setToolTip(tr("Don't purge as obsolete"));
+
+    m_cbLogStat->setText(tr("Collect Traffic Statistics"));
 
     m_cbLogAllowedConn->setText(tr("Collect allowed connections"));
     m_cbLogBlockedConn->setText(tr("Collect blocked connections"));
@@ -39,6 +42,8 @@ void ProgMorePage::setupUi()
     auto layout = new QVBoxLayout();
     layout->addWidget(m_cbKillChild);
     layout->addWidget(m_cbParked);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_cbLogStat);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_cbLogAllowedConn);
     layout->addWidget(m_cbLogBlockedConn);
@@ -61,6 +66,9 @@ void ProgMorePage::setupOptions()
 
 void ProgMorePage::setupLogConn()
 {
+    // Collect Traffic Statistics
+    m_cbLogStat = new QCheckBox();
+
     // Log Allowed Connections
     m_cbLogAllowedConn = new QCheckBox();
 
@@ -72,6 +80,7 @@ void ProgMorePage::fillApp(App &app) const
 {
     app.killChild = m_cbKillChild->isChecked();
     app.parked = m_cbParked->isChecked();
+    app.logStat = m_cbLogStat->isChecked();
     app.logAllowedConn = m_cbLogAllowedConn->isChecked();
     app.logBlockedConn = m_cbLogBlockedConn->isChecked();
 }

@@ -206,6 +206,7 @@ inline static void fort_callout_ale_log_app_path(PFORT_CALLOUT_ALE_EXTRA cx,
     if (conn->ignore || !fort_callout_ale_log_app_path_check(conf_flags, app_data))
         return;
 
+    app_data.flags.log_stat = TRUE;
     app_data.flags.log_allowed_conn = TRUE;
     app_data.flags.log_blocked_conn = TRUE;
     app_data.flags.blocked = !(conf_flags.allow_all_new || conf_flags.app_allow_all);

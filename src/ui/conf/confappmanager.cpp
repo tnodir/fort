@@ -46,6 +46,7 @@ constexpr int APP_END_TIMER_INTERVAL_MAX = 24 * 60 * 60 * 1000; // 1 day
     "    t.kill_child,"                                                                            \
     "    t.lan_only,"                                                                              \
     "    t.parked,"                                                                                \
+    "    t.log_stat,"                                                                              \
     "    t.log_allowed_conn,"                                                                      \
     "    t.log_blocked_conn,"                                                                      \
     "    t.blocked,"                                                                               \
@@ -86,20 +87,21 @@ const char *const sqlSelectAppIdByPath = "SELECT app_id FROM app WHERE path = ?1
 const char *const sqlUpsertApp = "INSERT INTO app(app_group_id, origin_path, path,"
                                  "    icon_path, name, notes, is_wildcard,"
                                  "    apply_parent, apply_child, apply_spec_child, kill_child,"
-                                 "    lan_only, parked, log_allowed_conn, log_blocked_conn,"
-                                 "    blocked, kill_process, accept_zones, reject_zones,"
-                                 "    rule_id, end_action, end_time, creat_time)"
+                                 "    lan_only, parked, log_stat, log_allowed_conn,"
+                                 "    log_blocked_conn, blocked, kill_process,"
+                                 "    accept_zones, reject_zones, rule_id,"
+                                 "    end_action, end_time, creat_time)"
                                  "  VALUES(?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14,"
-                                 "    ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24)"
+                                 "    ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22, ?23, ?24, ?25)"
                                  "  ON CONFLICT(path) DO UPDATE"
                                  "  SET app_group_id = ?2, origin_path = ?3, icon_path = ?5,"
                                  "    name = ?6, notes = ?7, is_wildcard = ?8,"
                                  "    apply_parent = ?9, apply_child = ?10, apply_spec_child = ?11,"
                                  "    kill_child = ?12, lan_only = ?13, parked = ?14,"
-                                 "    log_allowed_conn = ?15, log_blocked_conn = ?16,"
-                                 "    blocked = ?17, kill_process = ?18,"
-                                 "    accept_zones = ?19, reject_zones = ?20, rule_id = ?21,"
-                                 "    end_action = ?22, end_time = ?23"
+                                 "    log_stat = ?15, log_allowed_conn = ?16,"
+                                 "    log_blocked_conn = ?17, blocked = ?18, kill_process = ?19,"
+                                 "    accept_zones = ?20, reject_zones = ?21, rule_id = ?22,"
+                                 "    end_action = ?23, end_time = ?24"
                                  "  RETURNING app_id;";
 
 const char *const sqlUpdateApp = "UPDATE app"
@@ -107,10 +109,10 @@ const char *const sqlUpdateApp = "UPDATE app"
                                  "    icon_path = ?5, name = ?6, notes = ?7, is_wildcard = ?8,"
                                  "    apply_parent = ?9, apply_child = ?10, apply_spec_child = ?11,"
                                  "    kill_child = ?12, lan_only = ?13, parked = ?14,"
-                                 "    log_allowed_conn = ?15, log_blocked_conn = ?16,"
-                                 "    blocked = ?17, kill_process = ?18,"
-                                 "    accept_zones = ?19, reject_zones = ?20, rule_id = ?21,"
-                                 "    end_action = ?22, end_time = ?23"
+                                 "    log_stat = ?15, log_allowed_conn = ?16,"
+                                 "    log_blocked_conn = ?17, blocked = ?18, kill_process = ?19,"
+                                 "    accept_zones = ?20, reject_zones = ?21, rule_id = ?22,"
+                                 "    end_action = ?23, end_time = ?24"
                                  "  WHERE app_id = ?1"
                                  "  RETURNING app_id;";
 
@@ -240,6 +242,7 @@ void ConfAppManager::beginAddOrUpdateApp(
         app.killChild,
         app.lanOnly,
         app.parked,
+        app.logStat,
         app.logAllowedConn,
         app.logBlockedConn,
         app.blocked,
@@ -765,7 +768,7 @@ bool ConfAppManager::importAppsBackup(const QString &path)
 
     const QString columnNames = "origin_path, path, name, notes, is_wildcard,"
                                 " apply_parent, apply_child, apply_spec_child, kill_child,"
-                                " lan_only, parked, log_allowed_conn, log_blocked_conn,"
+                                " lan_only, parked, log_stat, log_allowed_conn, log_blocked_conn,"
                                 " blocked, kill_process, end_action, end_time, creat_time";
 
     const QString sql = "INSERT INTO app(app_group_id, " + columnNames + ") SELECT 1, "
@@ -850,17 +853,18 @@ void ConfAppManager::fillApp(App &app, const SqliteStmt &stmt)
     app.killChild = stmt.columnBool(10);
     app.lanOnly = stmt.columnBool(11);
     app.parked = stmt.columnBool(12);
-    app.logAllowedConn = stmt.columnBool(13);
-    app.logBlockedConn = stmt.columnBool(14);
-    app.blocked = stmt.columnBool(15);
-    app.killProcess = stmt.columnBool(16);
-    app.zones.accept_mask = stmt.columnUInt(17);
-    app.zones.reject_mask = stmt.columnUInt(18);
-    app.ruleId = stmt.columnUInt(19);
-    app.scheduleAction = stmt.columnInt(20);
-    app.scheduleTime = stmt.columnDateTime(21);
-    app.groupIndex = stmt.columnInt(22);
-    app.alerted = stmt.columnBool(23);
+    app.logStat = stmt.columnBool(13);
+    app.logAllowedConn = stmt.columnBool(14);
+    app.logBlockedConn = stmt.columnBool(15);
+    app.blocked = stmt.columnBool(16);
+    app.killProcess = stmt.columnBool(17);
+    app.zones.accept_mask = stmt.columnUInt(18);
+    app.zones.reject_mask = stmt.columnUInt(19);
+    app.ruleId = stmt.columnUInt(20);
+    app.scheduleAction = stmt.columnInt(21);
+    app.scheduleTime = stmt.columnDateTime(22);
+    app.groupIndex = stmt.columnInt(23);
+    app.alerted = stmt.columnBool(24);
 }
 
 bool ConfAppManager::updateDriverDeleteApp(const QString &appPath)

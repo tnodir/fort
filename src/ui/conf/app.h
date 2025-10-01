@@ -38,6 +38,7 @@ public:
     bool killChild : 1 = false;
     bool lanOnly : 1 = false;
     bool parked : 1 = false;
+    bool logStat : 1 = true;
     bool logAllowedConn : 1 = true;
     bool logBlockedConn : 1 = true;
     bool blocked : 1 = false;

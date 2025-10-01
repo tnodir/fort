@@ -33,6 +33,7 @@ typedef struct fort_stat_proc
 
     UINT16 proc_index;
 
+    UINT16 proc_stat : 1;
     UINT16 log_stat : 1;
     UINT16 active : 1;
 
