@@ -1,5 +1,8 @@
 Fort Firewall ChangeLog
 
+v3.19.8, 2025-10-01:
+- UI: ProgramEdit: Add "Collect Traffic Statistics" flag (#665).
+
 v3.19.7, 2025-09-11:
 - Driver: Don't use MmGetSystemRoutineAddress() to avoid BSOD (v3.19.5 regression).
 
