@@ -1723,6 +1723,10 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
         <source>Collect blocked connections</source>
         <translation>Zbieraj blokowane połączenia</translation>
     </message>
+    <message>
+        <source>Collect Traffic Statistics</source>
+        <translation>Zbieraj statystyki ruchu</translation>
+    </message>
 </context>
 <context>
     <name>ProgNetworkPage</name>

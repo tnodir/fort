@@ -1723,6 +1723,10 @@ Ali želite odpreti nit razprave v brskalniku?</translation>
         <source>Collect blocked connections</source>
         <translation>Zberi blokirane povezave</translation>
     </message>
+    <message>
+        <source>Collect Traffic Statistics</source>
+        <translation>Zberi statistiko prometa</translation>
+    </message>
 </context>
 <context>
     <name>ProgNetworkPage</name>

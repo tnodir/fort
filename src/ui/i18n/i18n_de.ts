@@ -1723,6 +1723,10 @@ Möchten Sie einen Diskussionsbeitrag im Browser öffnen?</translation>
         <source>Collect blocked connections</source>
         <translation>Sammle blockierte Verbindungen</translation>
     </message>
+    <message>
+        <source>Collect Traffic Statistics</source>
+        <translation>Datenverkehrstatistik sammeln</translation>
+    </message>
 </context>
 <context>
     <name>ProgNetworkPage</name>

@@ -1723,6 +1723,10 @@ Do you want to open a discussion thread in browser?</source>
         <source>Collect blocked connections</source>
         <translation>ブロックされた接続を収集する</translation>
     </message>
+    <message>
+        <source>Collect Traffic Statistics</source>
+        <translation>トラフィック統計を収集する</translation>
+    </message>
 </context>
 <context>
     <name>ProgNetworkPage</name>

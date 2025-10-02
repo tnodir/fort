@@ -1717,6 +1717,10 @@ Do you want to open a discussion thread in browser?</source>
         <source>Collect blocked connections</source>
         <translation></translation>
     </message>
+    <message>
+        <source>Collect Traffic Statistics</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>ProgNetworkPage</name>

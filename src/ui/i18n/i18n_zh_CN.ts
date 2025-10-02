@@ -1723,6 +1723,10 @@ Do you want to open a discussion thread in browser?</source>
         <source>Collect blocked connections</source>
         <translation>收集被阻止的连接</translation>
     </message>
+    <message>
+        <source>Collect Traffic Statistics</source>
+        <translation>收集流量统计数据</translation>
+    </message>
 </context>
 <context>
     <name>ProgNetworkPage</name>

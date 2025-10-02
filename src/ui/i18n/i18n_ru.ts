@@ -1723,6 +1723,10 @@ Do you want to open a discussion thread in browser?</source>
         <source>Collect blocked connections</source>
         <translation>Собирать заблокированные соединения</translation>
     </message>
+    <message>
+        <source>Collect Traffic Statistics</source>
+        <translation>Собирать статистику трафика</translation>
+    </message>
 </context>
 <context>
     <name>ProgNetworkPage</name>

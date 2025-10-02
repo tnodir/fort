@@ -1723,6 +1723,10 @@ Voulez-vous ouvrir un fil de discussion dans le navigateur ?</translation>
         <source>Collect blocked connections</source>
         <translation>Collecter les connexions bloquées</translation>
     </message>
+    <message>
+        <source>Collect Traffic Statistics</source>
+        <translation>Collecter des statistiques du trafic</translation>
+    </message>
 </context>
 <context>
     <name>ProgNetworkPage</name>

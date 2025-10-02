@@ -1722,6 +1722,10 @@ Você quer abrir um fio de discussão no navegador?</translation>
         <source>Collect blocked connections</source>
         <translation>Coletar conexões bloqueadas</translation>
     </message>
+    <message>
+        <source>Collect Traffic Statistics</source>
+        <translation>Coletar Estatísticas de Tráfego</translation>
+    </message>
 </context>
 <context>
     <name>ProgNetworkPage</name>
