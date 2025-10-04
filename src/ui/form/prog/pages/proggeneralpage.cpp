@@ -422,9 +422,9 @@ QLayout *ProgGeneralPage::setupApplyChildGroupLayout()
 
     m_labelAppGroup = ControlUtil::createLabel();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbApplyChild,
-            /*stretch*/ nullptr, m_comboApplyChild, ControlUtil::createVSeparator(),
-            m_labelAppGroup, /*stretch*/ nullptr, m_comboAppGroup });
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbApplyChild, m_comboApplyChild,
+            ControlUtil::createVSeparator(), m_labelAppGroup, m_comboAppGroup,
+            /*stretch*/ nullptr });
 
     return layout;
 }
