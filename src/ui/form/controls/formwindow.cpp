@@ -10,7 +10,6 @@
 FormWindow::FormWindow(QWidget *parent, Qt::WindowFlags f) :
     WidgetWindow(parent, f), m_stateWatcher(new WidgetWindowStateWatcher(this))
 {
-    connect(this, &FormWindow::aboutToClose, this, &FormWindow::onAboutToClose);
 }
 
 void FormWindow::setExcludeFromCapture(bool v)
@@ -21,13 +20,6 @@ void FormWindow::setExcludeFromCapture(bool v)
     m_excludeFromCapture = v;
 
     excludeWindowFromCapture(this, excludeFromCapture());
-}
-
-void FormWindow::onAboutToClose(QEvent * /*event*/)
-{
-    if (WindowManager::hasForm(windowCode())) {
-        IoC<WindowManager>()->closeWindowByCode(windowCode());
-    }
 }
 
 void FormWindow::setupFormWindow(IniUser *iniUser, const QString &iniGroup)

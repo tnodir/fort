@@ -57,6 +57,8 @@ FormWindow *FormPointer::initialize()
     auto w = createWindowByCode(code());
     m_window.reset(w);
 
+    QObject::connect(w, &FormWindow::aboutToClose, [&] { close(); });
+
     return w;
 }
 

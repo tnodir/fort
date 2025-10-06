@@ -29,9 +29,12 @@ signals:
     void visibilityChanged(bool isVisible);
 
     void aboutToShow();
-    void aboutToClose(QEvent *event);
+    void aboutToClose();
 
     void defaultKeyPressed();
+
+protected slots:
+    virtual bool checkAboutToClose() { return true; }
 
 protected:
     void moveEvent(QMoveEvent *event) override;

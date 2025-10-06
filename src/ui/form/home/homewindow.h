@@ -32,7 +32,7 @@ public slots:
     void selectAboutTab();
 
 protected slots:
-    void onAboutToClose(QEvent *event) override;
+    bool checkAboutToClose() override;
 
 private slots:
     void onActivationChanged(bool isActive);

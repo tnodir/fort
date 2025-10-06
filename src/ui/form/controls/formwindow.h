@@ -44,9 +44,6 @@ public:
 signals:
     void aboutToDelete();
 
-protected slots:
-    virtual void onAboutToClose(QEvent *event);
-
 protected:
     void setupFormWindow(IniUser *iniUser, const QString &iniGroup);
 

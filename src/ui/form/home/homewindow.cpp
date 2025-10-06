@@ -88,25 +88,23 @@ void HomeWindow::selectAboutTab()
     m_mainPage->setCurrentTab(HomeMainPage::TabAbout);
 }
 
-void HomeWindow::onAboutToClose(QEvent *event)
+bool HomeWindow::checkAboutToClose()
 {
     if (!iniUser()->homeWindowAutoShowWindow())
-        return;
+        return true;
 
     auto windowManager = this->windowManager();
     auto trayIcon = windowManager->trayIcon();
 
-    if (trayIcon->isVisible()) {
-        FormWindow::onAboutToClose(event);
-        return;
-    }
+    if (trayIcon->isVisible())
+        return true;
 
     if (windowManager->isAppQuitting())
-        return;
-
-    event->ignore();
+        return true;
 
     trayIcon->quitProgram();
+
+    return false;
 }
 
 void HomeWindow::onActivationChanged(bool isActive)

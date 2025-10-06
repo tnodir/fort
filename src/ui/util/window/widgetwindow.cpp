@@ -97,9 +97,13 @@ void WidgetWindow::hideEvent(QHideEvent *event)
 
 void WidgetWindow::closeEvent(QCloseEvent *event)
 {
-    event->accept();
+    if (checkAboutToClose()) {
+        event->accept();
 
-    emit aboutToClose(event);
+        emit aboutToClose();
+    } else {
+        event->ignore();
+    }
 }
 
 void WidgetWindow::keyPressEvent(QKeyEvent *event)
