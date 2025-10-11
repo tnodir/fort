@@ -466,6 +466,11 @@ ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openF
     setupTimers();
 }
 
+IniOptions &ConfManager::iniOpt() const
+{
+    return IoC<FortSettings>()->iniOpt();
+}
+
 IniUser &ConfManager::iniUser() const
 {
     return IoC<UserSettings>()->iniUser();
@@ -535,7 +540,7 @@ void ConfManager::setConf(FirewallConf *newConf)
 
 FirewallConf *ConfManager::createConf()
 {
-    FirewallConf *conf = new FirewallConf(IoC<FortSettings>(), this);
+    FirewallConf *conf = new FirewallConf(this);
     return conf;
 }
 
@@ -557,7 +562,7 @@ void ConfManager::applyFilterOffSeconds()
         return;
 
     const bool isFilterOff = !conf()->filterEnabled();
-    const int filterOffMsec = isFilterOff ? conf()->ini().filterOffSeconds() * 1000 : 0;
+    const int filterOffMsec = isFilterOff ? iniOpt().filterOffSeconds() * 1000 : 0;
 
     const bool isTimerActive =
             (m_filterOffTimer.isActive() && m_filterOffTimer.interval() == filterOffMsec);
@@ -577,7 +582,7 @@ void ConfManager::applyAutoLearnSeconds()
         return;
 
     const bool isAutoLearn = (conf()->filterMode() == FirewallConf::ModeAutoLearn);
-    const int autoLearnMsec = isAutoLearn ? conf()->ini().autoLearnSeconds() * 1000 : 0;
+    const int autoLearnMsec = isAutoLearn ? iniOpt().autoLearnSeconds() * 1000 : 0;
 
     const bool isTimerActive =
             (m_autoLearnTimer.isActive() && m_autoLearnTimer.interval() == autoLearnMsec);
@@ -718,11 +723,16 @@ bool ConfManager::saveConf(FirewallConf &conf)
 
     IoC<FortSettings>()->writeConfIni(conf);
 
-    if (conf.taskEdited()) {
-        saveTasksByIni(conf.ini());
-    }
+    // Ini Options
+    {
+        auto &ini = iniOpt();
 
-    conf.afterSaved();
+        if (conf.taskEdited()) {
+            saveTasksByIni(ini);
+        }
+
+        ini.clear();
+    }
 
     return true;
 }
@@ -750,7 +760,7 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
     emit confChanged(onlyFlags, conf()->editedFlags());
 
     if (conf()->iniEdited()) {
-        emit iniChanged(conf()->ini());
+        emit iniChanged(iniOpt());
     }
 
     conf()->resetEdited();
@@ -795,9 +805,10 @@ void ConfManager::saveIniUser(bool edited, bool onlyFlags)
 
 QVariant ConfManager::toPatchVariant(bool onlyFlags, uint editedFlags) const
 {
-    return onlyFlags ? conf()->toVariant(/*onlyEdited=*/true) // send only flags to clients
-                     : FirewallConf::editedFlagsToVariant(
-                               editedFlags); // clients have to reload all from storage
+    return onlyFlags
+            ? conf()->toVariant(iniOpt(), /*onlyEdited=*/true) // send only flags to clients
+            : FirewallConf::editedFlagsToVariant(
+                      editedFlags); // clients have to reload all from storage
 }
 
 bool ConfManager::saveVariant(const QVariant &confVar)
@@ -815,7 +826,7 @@ bool ConfManager::saveVariant(const QVariant &confVar)
         conf = this->conf();
     }
 
-    conf->fromVariant(confVar, /*onlyEdited=*/true);
+    conf->fromVariant(iniOpt(), confVar, /*onlyEdited=*/true);
 
     if (!saveConf(*conf)) {
         if (isNewConf) {
@@ -884,7 +895,7 @@ bool ConfManager::exportMasterBackup(const QString &path)
 {
     // Export Ini
     {
-        Settings *settings = conf()->ini().settings();
+        Settings *settings = iniOpt().settings();
 
         if (!exportFile(settings->filePath(), path))
             return false;
@@ -931,7 +942,7 @@ bool ConfManager::importMasterBackup(const QString &path)
 {
     // Import Ini
     {
-        Settings *settings = conf()->ini().settings();
+        Settings *settings = iniOpt().settings();
 
         if (!importFile(settings->filePath(), path))
             return false;

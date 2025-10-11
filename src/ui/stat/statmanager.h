@@ -28,7 +28,7 @@ public:
     const FirewallConf *conf() const { return m_conf; }
     virtual void setConf(const FirewallConf *conf);
 
-    const IniOptions *ini() const;
+    IniOptions &ini() const;
 
     SqliteDb *sqliteDb() const { return m_sqliteDb.data(); }
 

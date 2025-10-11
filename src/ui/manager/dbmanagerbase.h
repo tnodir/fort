@@ -7,12 +7,14 @@
 
 class ConfManager;
 class FirewallConf;
+class FortSettings;
 
 class DbManagerBase : public SqliteUtilBase
 {
 public:
     ConfManager *confManager() const;
     FirewallConf *conf() const;
+    FortSettings *settings() const;
     SqliteDb *sqliteDb() const override;
 };
 

@@ -54,7 +54,7 @@ FirewallConf *QuotaManager::conf() const
 
 IniOptions &QuotaManager::ini() const
 {
-    return conf()->ini();
+    return confManager()->iniOpt();
 }
 
 void QuotaManager::setUp()
@@ -178,9 +178,8 @@ void QuotaManager::setQuotaMonthAlerted(int v)
 void QuotaManager::processQuotaExceed(AlertType alertType)
 {
     FirewallConf *conf = this->conf();
-    IniOptions &ini = conf->ini();
 
-    if (ini.quotaBlockInetTraffic() && !conf->blockInetTraffic()) {
+    if (ini().quotaBlockInetTraffic() && !conf->blockInetTraffic()) {
         conf->setBlockInetTraffic(true);
         confManager()->saveFlags();
     }

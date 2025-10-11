@@ -10,6 +10,7 @@
 #include <appinfo/appinfocache.h>
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
+#include <fortsettings.h>
 #include <log/logentryprocnew.h>
 #include <log/logentrystattraf.h>
 #include <stat/quotamanager.h>
@@ -86,9 +87,9 @@ void StatManager::setConf(const FirewallConf *conf)
     setupByConf();
 }
 
-const IniOptions *StatManager::ini() const
+IniOptions &StatManager::ini() const
 {
-    return &conf()->ini();
+    return IoC<FortSettings>()->iniOpt();
 }
 
 void StatManager::setUp()
@@ -169,7 +170,7 @@ bool StatManager::updateTrafDay(qint64 unixTime)
     const bool isNewDay = (trafDay != m_trafDay);
 
     const qint32 trafMonth =
-            isNewDay ? DateUtil::getUnixMonth(unixTime, ini()->monthStart()) : m_trafMonth;
+            isNewDay ? DateUtil::getUnixMonth(unixTime, ini().monthStart()) : m_trafMonth;
     const bool isNewMonth = (trafMonth != m_trafMonth);
 
     // Initialize quotas traffic bytes
@@ -479,7 +480,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     SqliteStmtList deleteTrafStmts;
 
     // Traffic Hour
-    const int trafHourKeepDays = ini()->trafHourKeepDays();
+    const int trafHourKeepDays = ini().trafHourKeepDays();
     if (trafHourKeepDays >= 0) {
         const qint32 oldTrafHour = trafHour - 24 * trafHourKeepDays;
 
@@ -488,7 +489,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     }
 
     // Traffic Day
-    const int trafDayKeepDays = ini()->trafDayKeepDays();
+    const int trafDayKeepDays = ini().trafDayKeepDays();
     if (trafDayKeepDays >= 0) {
         const qint32 oldTrafDay = trafHour - 24 * trafDayKeepDays;
 
@@ -497,7 +498,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
     }
 
     // Traffic Month
-    const int trafMonthKeepMonths = ini()->trafMonthKeepMonths();
+    const int trafMonthKeepMonths = ini().trafMonthKeepMonths();
     if (trafMonthKeepMonths >= 0) {
         const qint32 oldTrafMonth = DateUtil::addUnixMonths(trafHour, -trafMonthKeepMonths);
 

@@ -62,7 +62,7 @@ FirewallConf *BaseController::conf() const
 
 IniOptions *BaseController::ini() const
 {
-    return &conf()->ini();
+    return &confManager()->iniOpt();
 }
 
 IniUser *BaseController::iniUser() const

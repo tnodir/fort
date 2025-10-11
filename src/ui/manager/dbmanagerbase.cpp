@@ -1,5 +1,6 @@
 #include "dbmanagerbase.h"
 
+#include <fortsettings.h>
 #include <util/ioc/ioccontainer.h>
 
 #include <conf/confmanager.h>
@@ -12,6 +13,11 @@ ConfManager *DbManagerBase::confManager() const
 FirewallConf *DbManagerBase::conf() const
 {
     return confManager()->conf();
+}
+
+FortSettings *DbManagerBase::settings() const
+{
+    return IoC<FortSettings>();
 }
 
 SqliteDb *DbManagerBase::sqliteDb() const

@@ -30,6 +30,8 @@ public:
     FirewallConf *conf() const { return m_conf; }
     FirewallConf *confToEdit() const { return m_confToEdit; }
 
+    IniOptions &iniOpt() const;
+
     IniUser &iniUser() const;
     IniUser *iniUserToEdit() const { return m_iniUserToEdit; }
 

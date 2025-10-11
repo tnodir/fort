@@ -7,7 +7,7 @@
 #include "addressgroup.h"
 #include "appgroup.h"
 
-FirewallConf::FirewallConf(Settings *settings, QObject *parent) : QObject(parent), m_ini(settings)
+FirewallConf::FirewallConf(QObject *parent) : QObject(parent)
 {
     setupAddressGroups();
 }
@@ -310,11 +310,6 @@ void FirewallConf::prepareToSave()
     }
 }
 
-void FirewallConf::afterSaved()
-{
-    ini().clear();
-}
-
 bool FirewallConf::updateGroupPeriods(bool /*onlyFlags*/)
 {
     loadGroupPeriodBits();
@@ -501,7 +496,7 @@ void FirewallConf::removedAppGroupIdListFromVariant(const QVariant &v)
     }
 }
 
-QVariant FirewallConf::toVariant(bool onlyEdited) const
+QVariant FirewallConf::toVariant(const IniOptions &ini, bool onlyEdited) const
 {
     QVariantMap map;
 
@@ -523,7 +518,7 @@ QVariant FirewallConf::toVariant(bool onlyEdited) const
     }
 
     if ((flags & (IniEdited | TaskEdited)) != 0) {
-        const QVariantMap iniMap = ini().map();
+        const QVariantMap iniMap = ini.map();
         if (!iniMap.isEmpty()) {
             map["ini"] = iniMap;
         }
@@ -532,7 +527,7 @@ QVariant FirewallConf::toVariant(bool onlyEdited) const
     return map;
 }
 
-void FirewallConf::fromVariant(const QVariant &v, bool onlyEdited)
+void FirewallConf::fromVariant(IniOptions &ini, const QVariant &v, bool onlyEdited)
 {
     const QVariantMap map = v.toMap();
 
@@ -551,7 +546,7 @@ void FirewallConf::fromVariant(const QVariant &v, bool onlyEdited)
     }
 
     if (iniEdited() || taskEdited()) {
-        ini().setMap(map["ini"].toMap());
+        ini.setMap(map["ini"].toMap());
     }
 }
 

@@ -31,7 +31,7 @@ QString expandPath(const QString &path, EnvManager *envManager = nullptr)
 
 }
 
-FortSettings::FortSettings(QObject *parent) : Settings(parent) { }
+FortSettings::FortSettings(QObject *parent) : Settings(parent), m_iniOpt(this) { }
 
 QString FortSettings::confFilePath() const
 {
@@ -453,7 +453,7 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     ini()->endGroup();
 
     // Ini Options
-    readConfIniOptions(conf.ini());
+    readConfIniOptions(iniOpt());
 }
 
 void FortSettings::readConfIniOptions(const IniOptions &ini) const
@@ -504,7 +504,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
 
     // Ini Options
     if (conf.iniEdited()) {
-        writeConfIniOptions(conf.ini());
+        writeConfIniOptions(iniOpt());
 
         changed = true;
     }

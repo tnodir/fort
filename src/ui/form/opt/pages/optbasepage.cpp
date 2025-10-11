@@ -26,7 +26,7 @@ FirewallConf *OptBasePage::conf() const
 
 IniOptions *OptBasePage::ini() const
 {
-    return &conf()->ini();
+    return ctrl()->ini();
 }
 
 IniUser *OptBasePage::iniUser() const

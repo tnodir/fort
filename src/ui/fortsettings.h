@@ -1,6 +1,7 @@
 #ifndef FORTSETTINGS_H
 #define FORTSETTINGS_H
 
+#include <conf/inioptions.h>
 #include <util/ini/settings.h>
 
 QT_FORWARD_DECLARE_CLASS(QCommandLineOption)
@@ -74,6 +75,9 @@ public:
     bool hasControlCommand() const { return !controlCommand().isEmpty(); }
 
     const QStringList &args() const { return m_args; }
+
+    IniOptions &iniOpt() { return m_iniOpt; }
+    const IniOptions &iniOpt() const { return m_iniOpt; }
 
     bool passwordTemporaryChecked() const { return m_passwordTemporaryChecked; }
     bool passwordChecked() const { return m_passwordChecked; }
@@ -168,6 +172,8 @@ private:
     QString m_updatePath;
     QString m_controlCommand;
     QStringList m_args;
+
+    IniOptions m_iniOpt;
 };
 
 #endif // FORTSETTINGS_H

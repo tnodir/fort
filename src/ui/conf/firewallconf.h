@@ -46,7 +46,7 @@ public:
     };
     Q_ENUM(FilterMode)
 
-    explicit FirewallConf(Settings *settings = nullptr, QObject *parent = nullptr);
+    explicit FirewallConf(QObject *parent = nullptr);
 
     EditedFlags editedFlags() const { return EditedFlags(m_editedFlags); }
 
@@ -175,14 +175,11 @@ public:
     const QVector<qint64> &removedAppGroupIdList() const { return m_removedAppGroupIdList; }
     void clearRemovedAppGroupIdList() const;
 
-    IniOptions &ini() { return m_ini; }
-    const IniOptions &ini() const { return m_ini; }
-
     void copyFlags(const FirewallConf &o);
     void copy(const FirewallConf &o);
 
-    QVariant toVariant(bool onlyEdited = false) const;
-    void fromVariant(const QVariant &v, bool onlyEdited = false);
+    QVariant toVariant(const IniOptions &ini, bool onlyEdited = false) const;
+    void fromVariant(IniOptions &ini, const QVariant &v, bool onlyEdited = false);
 
     static QVariant editedFlagsToVariant(uint editedFlags);
     static uint editedFlagsFromVariant(const QVariant &v);
@@ -200,7 +197,6 @@ public slots:
     void setupDefaultAddressGroups();
 
     void prepareToSave();
-    void afterSaved();
 
     bool updateGroupPeriods(bool onlyFlags);
 
@@ -266,8 +262,6 @@ private:
 
     QList<AppGroup *> m_appGroups;
     mutable QVector<qint64> m_removedAppGroupIdList;
-
-    IniOptions m_ini;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(FirewallConf::EditedFlags)

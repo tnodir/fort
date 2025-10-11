@@ -11,6 +11,7 @@
 #include <appinfo/appinfoutil.h>
 #include <conf/app.h>
 #include <driver/drivermanager.h>
+#include <fortsettings.h>
 #include <log/logentryapp.h>
 #include <log/logmanager.h>
 #include <manager/envmanager.h>
@@ -167,7 +168,7 @@ void ConfAppManager::setupConfManager()
             IoC<ConfManager>(), &ConfManager::confChanged, this,
             [&](bool /*onlyFlags*/, uint editedFlags) {
                 if ((editedFlags & FirewallConf::AutoLearnOff) != 0
-                        && conf()->ini().progRemoveLearntApps()) {
+                        && settings()->iniOpt().progRemoveLearntApps()) {
                     deleteAlertedApps();
                 }
             },
@@ -512,7 +513,7 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 bool ConfAppManager::purgeApps()
 {
     quint32 driveMask = -1;
-    if (conf()->ini().progPurgeOnMounted()) {
+    if (settings()->iniOpt().progPurgeOnMounted()) {
         driveMask = FileUtil::mountedDriveMask(FileUtil::driveMask());
     }
 

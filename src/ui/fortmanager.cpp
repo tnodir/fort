@@ -214,12 +214,13 @@ void FortManager::setupLogger()
 
 void FortManager::updateLogger()
 {
-    const FirewallConf *conf = IoC<ConfManager>()->conf();
+    const auto settings = IoC<FortSettings>();
+    const auto &ini = settings->iniOpt();
 
     Logger *logger = Logger::instance();
 
-    logger->setDebug(conf->ini().logDebug());
-    logger->setConsole(conf->ini().logConsole());
+    logger->setDebug(ini.logDebug());
+    logger->setConsole(ini.logConsole());
 }
 
 void FortManager::createManagers()
