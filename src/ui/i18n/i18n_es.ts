@@ -1371,6 +1371,10 @@ Asegúrese de tener una copia de seguridad reciente.</translation>
         <translation>Segundos de autoaprendizaje:</translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>Personalizado</translation>
     </message>

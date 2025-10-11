@@ -1371,6 +1371,10 @@ Make sure that you have a fresh backup.</source>
         <translation>Секунды авто-обучения:</translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation>Отключить управление командной строкой</translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>Нестандартный</translation>
     </message>

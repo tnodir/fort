@@ -1371,6 +1371,10 @@ Prepričajte se, da imate svežo varnostno kopijo.</translation>
         <translation>Sekunde samodejnega učenja:</translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation>Onemogoči upravljanje ukazne vrstice</translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>Po meri</translation>
     </message>

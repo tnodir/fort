@@ -1371,6 +1371,10 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>Własne</translation>
     </message>

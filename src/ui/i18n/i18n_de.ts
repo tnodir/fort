@@ -1371,6 +1371,10 @@ Stellen Sie sicher, dass Sie eine neue Sicherung haben.</translation>
         <translation>Automatisches Lernen (Sekunden):</translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>Benutzerdefiniert</translation>
     </message>

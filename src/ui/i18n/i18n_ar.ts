@@ -1371,6 +1371,10 @@ Make sure that you have a fresh backup.</source>
         <translation>التعلم التلقائي للثوان:</translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>مخصص</translation>
     </message>

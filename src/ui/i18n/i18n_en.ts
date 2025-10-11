@@ -1369,6 +1369,10 @@ Make sure that you have a fresh backup.</source>
         <translation></translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation></translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation></translation>
     </message>

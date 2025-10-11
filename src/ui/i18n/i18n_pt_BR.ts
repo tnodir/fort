@@ -1370,6 +1370,10 @@ Certifique-se de que possui um backup recente.</translation>
         <translation>Segundos de autoaprendizado:</translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>Personalizar</translation>
     </message>

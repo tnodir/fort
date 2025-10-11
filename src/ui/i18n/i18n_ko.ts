@@ -1371,6 +1371,10 @@ Make sure that you have a fresh backup.</source>
         <translation>자동 학습 초:</translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>사용자 지정</translation>
     </message>

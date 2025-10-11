@@ -1371,6 +1371,10 @@ Assurez-vous que vous avez une nouvelle sauvegarde.</translation>
         <translation>Secondes d&apos;auto-apprentissage :</translation>
     </message>
     <message>
+        <source>Disable command line management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Custom</source>
         <translation>Personnalisée</translation>
     </message>
