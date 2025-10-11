@@ -1372,7 +1372,7 @@ Make sure that you have a fresh backup.</source>
     </message>
     <message>
         <source>Disable command line management</source>
-        <translation type="unfinished"></translation>
+        <translation>コマンドライン管理を無効にする</translation>
     </message>
     <message>
         <source>Custom</source>
