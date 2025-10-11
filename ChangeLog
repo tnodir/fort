@@ -1,5 +1,10 @@
 Fort Firewall ChangeLog
 
+v3.19.9, 2025-10-11:
+- UI: Options: Add "Disable command line management" flag (#667).
+- UI: Rules: Fix windows closing (#664).
+- UI: Rule: Parse '|' as new line.
+
 v3.19.8, 2025-10-01:
 - UI: ProgramEdit: Add "Collect Traffic Statistics" flag (#665).
 
