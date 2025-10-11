@@ -132,6 +132,7 @@ SOURCES += \
     form/zone/zoneeditdialog.cpp \
     form/zone/zonescontroller.cpp \
     form/zone/zoneswindow.cpp \
+    fortglobal.cpp \
     fortmanager.cpp \
     fortsettings.cpp \
     hostinfo/hostinfo.cpp \
@@ -149,7 +150,6 @@ SOURCES += \
     log/logmanager.cpp \
     manager/autoupdatemanager.cpp \
     manager/dberrormanager.cpp \
-    manager/dbmanagerbase.cpp \
     manager/envmanager.cpp \
     manager/hotkeymanager.cpp \
     manager/logger.cpp \
@@ -405,6 +405,7 @@ HEADERS += \
     form/zone/zoneeditdialog.h \
     form/zone/zonescontroller.h \
     form/zone/zoneswindow.h \
+    fortglobal.h \
     fortmanager.h \
     fortsettings.h \
     hostinfo/hostinfo.h \
@@ -422,7 +423,6 @@ HEADERS += \
     log/logmanager.h \
     manager/autoupdatemanager.h \
     manager/dberrormanager.h \
-    manager/dbmanagerbase.h \
     manager/envmanager.h \
     manager/hotkeymanager.h \
     manager/logger.h \

@@ -9,6 +9,7 @@
 #include <conf/confrulemanager.h>
 #include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
+#include <fortglobal.h>
 #include <util/bitutil.h>
 #include <util/dateutil.h>
 #include <util/iconcache.h>
@@ -100,9 +101,7 @@ QVariant dataDisplayScheduled(const App &app, int role)
 
 QVariant dataDisplayGroup(const App &app, int /*role*/)
 {
-    const FirewallConf *conf = IoC<ConfAppManager>()->conf();
-
-    const AppGroup *appGroup = conf->appGroupAt(app.groupIndex);
+    const AppGroup *appGroup = Fort::conf()->appGroupAt(app.groupIndex);
 
     return appGroup->name();
 }
@@ -189,9 +188,7 @@ QColor AppListModelData::appActionColor() const
 
 QVariant AppListModelData::appGroupColor() const
 {
-    const FirewallConf *conf = IoC<ConfAppManager>()->conf();
-
-    const AppGroup *appGroup = conf->appGroupAt(app().groupIndex);
+    const AppGroup *appGroup = Fort::conf()->appGroupAt(app().groupIndex);
     if (!appGroup->enabled())
         return inactiveColor;
 

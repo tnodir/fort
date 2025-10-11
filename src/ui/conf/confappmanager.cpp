@@ -11,6 +11,7 @@
 #include <appinfo/appinfoutil.h>
 #include <conf/app.h>
 #include <driver/drivermanager.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <log/logentryapp.h>
 #include <log/logmanager.h>
@@ -168,7 +169,7 @@ void ConfAppManager::setupConfManager()
             IoC<ConfManager>(), &ConfManager::confChanged, this,
             [&](bool /*onlyFlags*/, uint editedFlags) {
                 if ((editedFlags & FirewallConf::AutoLearnOff) != 0
-                        && settings()->iniOpt().progRemoveLearntApps()) {
+                        && Fort::iniOpt().progRemoveLearntApps()) {
                     deleteAlertedApps();
                 }
             },
@@ -362,7 +363,7 @@ bool ConfAppManager::deleteAppPath(const QString &appOriginPath)
 
 bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
 {
-    const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
+    const AppGroup *appGroup = Fort::conf()->appGroupAt(app.groupIndex);
     if (appGroup->isNull())
         return false;
 
@@ -513,7 +514,7 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 bool ConfAppManager::purgeApps()
 {
     quint32 driveMask = -1;
-    if (settings()->iniOpt().progPurgeOnMounted()) {
+    if (Fort::iniOpt().progPurgeOnMounted()) {
         driveMask = FileUtil::mountedDriveMask(FileUtil::driveMask());
     }
 
@@ -811,8 +812,10 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
 {
     ConfBuffer confBuf;
 
-    const bool ok = onlyFlags ? (confBuf.writeFlags(*conf()), true)
-                              : confBuf.writeConf(*conf(), this, *IoC<EnvManager>());
+    const auto &conf = *Fort::conf();
+
+    const bool ok = onlyFlags ? (confBuf.writeFlags(conf), true)
+                              : confBuf.writeConf(conf, this, *IoC<EnvManager>());
 
     if (!ok) {
         qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();

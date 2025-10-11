@@ -4,8 +4,8 @@
 #include <QObject>
 
 #include <sqlite/sqlite_types.h>
+#include <sqlite/sqliteutilbase.h>
 
-#include <manager/dbmanagerbase.h>
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 #include <util/triggertimer.h>
@@ -14,7 +14,7 @@
 class IniOptions;
 class LogEntryConn;
 
-class StatConnManager : public WorkerManager, public DbManagerBase, public IocService
+class StatConnManager : public WorkerManager, public SqliteUtilBase, public IocService
 {
     Q_OBJECT
 

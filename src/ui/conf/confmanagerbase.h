@@ -1,9 +1,11 @@
 #ifndef CONFMANAGERBASE_H
 #define CONFMANAGERBASE_H
 
-#include <manager/dbmanagerbase.h>
+#include <QObject>
 
-class ConfManagerBase : public QObject, public DbManagerBase
+#include <sqlite/sqliteutilbase.h>
+
+class ConfManagerBase : public QObject, public SqliteUtilBase
 {
     Q_OBJECT
 

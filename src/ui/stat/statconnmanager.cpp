@@ -8,6 +8,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
@@ -188,7 +189,7 @@ bool StatConnManager::setupDb()
 
 void StatConnManager::setupByConf()
 {
-    FirewallConf *conf = this->conf();
+    FirewallConf *conf = Fort::conf();
 
     m_logAllowedConn = conf->logAllowedConn();
     m_logBlockedConn = conf->logBlockedConn();
