@@ -468,3 +468,12 @@ TEST_F(RuleTextParserTest, linePortEqualValues)
 
     ASSERT_EQ(p.ruleFilters().size(), 5);
 }
+
+TEST_F(RuleTextParserTest, lineVerticalLine)
+{
+    RuleTextParser p("1|2");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 3);
+}
