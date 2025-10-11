@@ -8,6 +8,7 @@
 
 #include <fort_version.h>
 
+#include <conf/inioptions.h>
 #include <fortsettings.h>
 #include <rpc/rpcmanager.h>
 #include <util/consoleoutput.h>
@@ -24,6 +25,12 @@ constexpr int maxClientsCount = 9;
 
 const QLoggingCategory LC("control");
 
+bool getDisableCmdLine()
+{
+    const IniOptions ini(IoC<FortSettings>());
+    return ini.disableCmdLine();
+}
+
 }
 
 ControlManager::ControlManager(QObject *parent) : QObject(parent) { }
@@ -37,11 +44,6 @@ void ControlManager::setUp()
 {
     // Process control commands from clients
     listen();
-}
-
-bool ControlManager::isCommandClient() const
-{
-    return !IoC<FortSettings>()->controlCommand().isEmpty();
 }
 
 ControlWorker *ControlManager::newServiceClient(QObject *parent) const
@@ -242,6 +244,8 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
     // XXX: OsUtil::setThreadIsBusy(true);
 
     ProcessCommandResult r;
+    r.disableCmdLine = getDisableCmdLine();
+
     const bool ok = ControlCommandManager::processCommand(
             {
                     .worker = w,

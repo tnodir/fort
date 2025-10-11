@@ -71,6 +71,7 @@ public:
     QString updatePath() const { return m_updatePath; }
 
     QString controlCommand() const { return m_controlCommand; }
+    bool hasControlCommand() const { return !controlCommand().isEmpty(); }
 
     const QStringList &args() const { return m_args; }
 

@@ -67,6 +67,7 @@ void OptionsPage::onResetToDefault()
     m_cbBootFilter->setChecked(false);
     m_cbStealthMode->setChecked(false);
     m_cbNoServiceControl->setChecked(false);
+    m_cbDisableCmdLine->setChecked(false);
     m_cbCheckPasswordOnUninstall->setChecked(false);
     m_cbPassword->setChecked(false);
 
@@ -153,8 +154,9 @@ void OptionsPage::onRetranslateUi()
     m_cbBootFilter->setText(tr("Block traffic when Fort Firewall is not running"));
     m_cbStealthMode->setText(tr("Stealth mode (Prevent port scanning)"));
     m_cbNoServiceControl->setText(tr("Disable Service controls"));
-    m_cbCheckPasswordOnUninstall->setText(tr("Check password on Uninstall"));
+    m_cbDisableCmdLine->setText(tr("Disable command line management"));
 
+    m_cbCheckPasswordOnUninstall->setText(tr("Check password on Uninstall"));
     m_cbPassword->setText(tr("Password:"));
     retranslateEditPassword();
 
@@ -391,6 +393,11 @@ void OptionsPage::setupProtectionBox()
                 ctrl()->setIniEdited();
             });
 
+    m_cbDisableCmdLine = ControlUtil::createCheckBox(ini()->disableCmdLine(), [&](bool checked) {
+        ini()->setDisableCmdLine(checked);
+        ctrl()->setIniEdited();
+    });
+
     m_cbCheckPasswordOnUninstall =
             ControlUtil::createCheckBox(ini()->checkPasswordOnUninstall(), [&](bool checked) {
                 ini()->setCheckPasswordOnUninstall(checked);
@@ -409,6 +416,7 @@ void OptionsPage::setupProtectionBox()
     layout->addWidget(m_cbBootFilter);
     layout->addWidget(m_cbStealthMode);
     layout->addWidget(m_cbNoServiceControl);
+    layout->addWidget(m_cbDisableCmdLine);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addWidget(m_cbCheckPasswordOnUninstall);
     layout->addLayout(passwordLayout);
@@ -420,9 +428,6 @@ void OptionsPage::setupProtectionBox()
 
 QLayout *OptionsPage::setupPasswordLayout()
 {
-    auto layout = new QHBoxLayout();
-    layout->setSpacing(6);
-
     m_cbPassword = ControlUtil::createCheckBox(settings()->hasPassword(), [&](bool checked) {
         if (checked) {
             m_editPassword->setFocus();
@@ -437,6 +442,8 @@ QLayout *OptionsPage::setupPasswordLayout()
 
     setupEditPassword();
 
+    auto layout = new QHBoxLayout();
+    layout->setSpacing(6);
     layout->addWidget(m_cbPassword);
     layout->addWidget(m_editPassword);
 

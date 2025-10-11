@@ -79,6 +79,13 @@ void setupCrashHandler(CrashHandler &crashHandler, const FortSettings &settings)
     crashHandler.install(dumpPath);
 }
 
+int processControlCommand(ControlManager &controlManager)
+{
+    // Send control command to running instance
+    ProcessCommandResult r;
+    return controlManager.processCommandClient(r) ? r.commandResult : FortErrorControl;
+}
+
 }
 
 int main(int argc, char *argv[])
@@ -124,10 +131,9 @@ int main(int argc, char *argv[])
     ControlManager controlManager;
     ioc.setService<ControlManager>(controlManager);
 
-    if (controlManager.isCommandClient()) {
-        // Send control command to running instance
-        ProcessCommandResult r;
-        return controlManager.processCommandClient(r) ? r.commandResult : FortErrorControl;
+    if (settings.hasControlCommand()) {
+        // Process control command
+        return processControlCommand(controlManager);
     }
 
     // Setup Fort Manager

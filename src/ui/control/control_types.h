@@ -141,6 +141,8 @@ struct ProcessCommandResult
 {
     bool ok : 1 = false;
     bool isSendResult : 1 = false;
+    bool disableCmdLine : 1 = false;
+
     Control::CommandResult commandResult = Control::CommandResultNone;
     QVariantList args;
     QString errorMessage;

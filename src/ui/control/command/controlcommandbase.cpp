@@ -10,6 +10,11 @@ bool ControlCommandBase::checkCommandActionPassword(
     if ((action & passwordNotRequiredActions) != 0)
         return true;
 
+    if (r.disableCmdLine) {
+        r.errorMessage = "Command line disabled";
+        return false;
+    }
+
     if (!IoC<WindowManager>()->checkPassword()) {
         r.errorMessage = "Password required";
         return false;

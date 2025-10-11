@@ -24,8 +24,6 @@ public:
 
     void setUp() override;
 
-    bool isCommandClient() const;
-
     ControlWorker *newServiceClient(QObject *parent = nullptr) const;
 
     bool listen();

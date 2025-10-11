@@ -51,6 +51,9 @@ public:
     bool noServiceControl() const { return valueBool("protect/noServiceControl"); }
     void setNoServiceControl(bool v) { setValue("protect/noServiceControl", v); }
 
+    bool disableCmdLine() const { return valueBool("protect/disableCmdLine"); }
+    void setDisableCmdLine(bool v) { setValue("protect/disableCmdLine", v); }
+
     bool checkPasswordOnUninstallSet() const
     {
         return contains("protect/checkPasswordOnUninstall");
