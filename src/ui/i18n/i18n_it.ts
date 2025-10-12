@@ -1372,7 +1372,7 @@ Assicurati di avere un nuovo backup.</translation>
     </message>
     <message>
         <source>Disable command line management</source>
-        <translation type="unfinished"></translation>
+        <translation>Disabilita la gestione della riga di comando</translation>
     </message>
     <message>
         <source>Custom</source>
