@@ -1371,7 +1371,7 @@ Certifique-se de que possui um backup recente.</translation>
     </message>
     <message>
         <source>Disable command line management</source>
-        <translation type="unfinished"></translation>
+        <translation>Desativar gerenciamento da linha de comando</translation>
     </message>
     <message>
         <source>Custom</source>
