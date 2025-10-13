@@ -27,6 +27,8 @@
 #include "confmanager.h"
 #include "firewallconf.h"
 
+using namespace Fort;
+
 namespace {
 
 const QLoggingCategory LC("confApp");
@@ -166,10 +168,10 @@ void ConfAppManager::setUp()
 void ConfAppManager::setupConfManager()
 {
     connect(
-            IoC<ConfManager>(), &ConfManager::confChanged, this,
+            confManager(), &ConfManager::confChanged, this,
             [&](bool /*onlyFlags*/, uint editedFlags) {
                 if ((editedFlags & FirewallConf::AutoLearnOff) != 0
-                        && Fort::iniOpt().progRemoveLearntApps()) {
+                        && ini().progRemoveLearntApps()) {
                     deleteAlertedApps();
                 }
             },
@@ -178,9 +180,7 @@ void ConfAppManager::setupConfManager()
 
 void ConfAppManager::setupAppEndTimer()
 {
-    auto logManager = IoC<LogManager>();
-
-    connect(logManager, &LogManager::systemTimeChanged, this, &ConfAppManager::updateAppEndTimer);
+    connect(logManager(), &LogManager::systemTimeChanged, this, &ConfAppManager::updateAppEndTimer);
 
     updateAppEndTimer();
 }
@@ -215,7 +215,7 @@ bool ConfAppManager::addApp(App &app)
     if (app.isValid())
         return false; // already exists
 
-    app.appName = IoC<AppInfoCache>()->appName(app.appPath);
+    app.appName = appInfoCache()->appName(app.appPath);
 
     const bool ok = addOrUpdateApp(app);
 
@@ -363,7 +363,7 @@ bool ConfAppManager::deleteAppPath(const QString &appOriginPath)
 
 bool ConfAppManager::addOrUpdateApp(App &app, bool onlyUpdate)
 {
-    const AppGroup *appGroup = Fort::conf()->appGroupAt(app.groupIndex);
+    const AppGroup *appGroup = conf()->appGroupAt(app.groupIndex);
     if (appGroup->isNull())
         return false;
 
@@ -514,7 +514,7 @@ bool ConfAppManager::deleteApp(qint64 appId, bool &isWildcard)
 bool ConfAppManager::purgeApps()
 {
     quint32 driveMask = -1;
-    if (Fort::iniOpt().progPurgeOnMounted()) {
+    if (ini().progPurgeOnMounted()) {
         driveMask = FileUtil::mountedDriveMask(FileUtil::driveMask());
     }
 
@@ -815,14 +815,15 @@ bool ConfAppManager::updateDriverConf(bool onlyFlags)
     const auto &conf = *Fort::conf();
 
     const bool ok = onlyFlags ? (confBuf.writeFlags(conf), true)
-                              : confBuf.writeConf(conf, this, *IoC<EnvManager>());
+                              : confBuf.writeConf(conf, this, *envManager());
 
     if (!ok) {
         qCWarning(LC) << "Driver config error:" << confBuf.errorMessage();
         return false;
     }
 
-    auto driverManager = IoC<DriverManager>();
+    auto driverManager = Fort::driverManager();
+
     if (!driverManager->writeConf(confBuf.buffer(), onlyFlags)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;
@@ -888,7 +889,8 @@ bool ConfAppManager::updateDriverUpdateApp(const App &app, bool remove)
         return false;
     }
 
-    auto driverManager = IoC<DriverManager>();
+    auto driverManager = Fort::driverManager();
+
     if (!driverManager->writeApp(confBuf.buffer(), remove)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;

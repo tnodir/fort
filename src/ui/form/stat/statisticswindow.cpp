@@ -4,6 +4,7 @@
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
@@ -11,6 +12,8 @@
 
 #include "pages/statmainpage.h"
 #include "statisticscontroller.h"
+
+using namespace Fort;
 
 StatisticsWindow::StatisticsWindow(QWidget *parent) :
     FormWindow(parent), m_ctrl(new StatisticsController(this))
@@ -21,32 +24,26 @@ StatisticsWindow::StatisticsWindow(QWidget *parent) :
     setupFormWindow(iniUser(), IniUser::statWindowGroup());
 }
 
-ConfManager *StatisticsWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-IniUser *StatisticsWindow::iniUser() const
-{
-    return ctrl()->iniUser();
-}
-
 void StatisticsWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setStatWindowGeometry(stateWatcher()->geometry());
-    iniUser()->setStatWindowMaximized(stateWatcher()->maximized());
+    auto &iniUser = Fort::iniUser();
 
-    emit ctrl()->afterSaveWindowState(iniUser());
+    iniUser.setStatWindowGeometry(stateWatcher()->geometry());
+    iniUser.setStatWindowMaximized(stateWatcher()->maximized());
+
+    emit ctrl()->afterSaveWindowState(iniUser);
 
     confManager()->saveIniUser();
 }
 
 void StatisticsWindow::restoreWindowState()
 {
-    stateWatcher()->restore(this, QSize(1024, 768), iniUser()->statWindowGeometry(),
-            iniUser()->statWindowMaximized());
+    auto &iniUser = Fort::iniUser();
 
-    emit ctrl()->afterRestoreWindowState(iniUser());
+    stateWatcher()->restore(this, QSize(1024, 768), iniUser.statWindowGeometry(),
+            iniUser.statWindowMaximized());
+
+    emit ctrl()->afterRestoreWindowState(iniUser);
 }
 
 void StatisticsWindow::setupController()

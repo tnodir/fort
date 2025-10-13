@@ -12,10 +12,13 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
+#include <fortglobal.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 #include <util/service/service_types.h>
 #include <util/startuputil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -151,12 +154,12 @@ void ServiceManager::setupConfManager()
 {
     auto confManager = IoCDependency<ConfManager>();
 
-    connect(confManager, &ConfManager::iniChanged, this, &ServiceManager::setupByConf);
+    connect(confManager, &ConfManager::iniChanged, this, &ServiceManager::setupByConfIni);
 }
 
-void ServiceManager::setupByConf(const IniOptions &ini)
+void ServiceManager::setupByConfIni()
 {
-    setControlEnabled(!ini.noServiceControl());
+    setControlEnabled(!ini().noServiceControl());
 }
 
 const wchar_t *ServiceManager::serviceName() const

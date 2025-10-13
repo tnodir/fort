@@ -7,8 +7,6 @@
 #include <util/ioc/iocservice.h>
 #include <util/service/servicemanageriface.h>
 
-class IniOptions;
-
 class ServiceManager : public QObject, public ServiceManagerIface, public IocService
 {
     Q_OBJECT
@@ -43,7 +41,7 @@ protected:
     void setupConfManager();
 
 private:
-    void setupByConf(const IniOptions &ini);
+    void setupByConfIni();
 
 private:
     bool m_controlEnabled = false;

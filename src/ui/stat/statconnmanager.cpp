@@ -195,8 +195,10 @@ void StatConnManager::setupByConf()
     m_logBlockedConn = conf->logBlockedConn();
 }
 
-void StatConnManager::setupByConfIni(const IniOptions &ini)
+void StatConnManager::setupByConfIni()
 {
+    const auto &ini = Fort::ini();
+
     m_clearOnExit = ini.connClearOnExit();
     m_keepCount = ini.connKeepCount();
 

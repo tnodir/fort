@@ -8,9 +8,6 @@
 #include "appstatcolumn.h"
 #include "trafunittype.h"
 
-class AppInfoCache;
-class StatManager;
-
 struct AppStatRow : TableRow
 {
     quint32 confAppId = 0;
@@ -40,8 +37,6 @@ public:
     qint32 trafTime() const { return m_trafTime; }
     void setTrafTime(qint32 v);
 
-    StatManager *statManager() const;
-    AppInfoCache *appInfoCache() const;
     SqliteDb *sqliteDb() const override;
 
     void initialize();

@@ -7,6 +7,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/servicemanager.h>
 #include <rpc/rpcmanager.h>
@@ -16,6 +17,8 @@
 #include <util/ioc/ioccontainer.h>
 #include <util/net/netdownloader.h>
 #include <util/osutil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -91,14 +94,14 @@ void AutoUpdateManager::setupConfManager()
 {
     auto confManager = IoCDependency<ConfManager>();
 
-    setupByConf(confManager->iniOpt());
+    connect(confManager, &ConfManager::iniChanged, this, &AutoUpdateManager::setupByConfIni);
 
-    connect(confManager, &ConfManager::iniChanged, this, &AutoUpdateManager::setupByConf);
+    setupByConfIni();
 }
 
 void AutoUpdateManager::setupTaskManager()
 {
-    auto taskManager = IoCDependency<TaskManager>();
+    auto taskManager = Fort::taskManager();
     auto taskInfo = taskManager->taskInfoUpdateChecker();
 
     connect(this, &AutoUpdateManager::keepCurrentVersionChanged, taskManager,
@@ -231,8 +234,10 @@ bool AutoUpdateManager::saveInstaller(const QByteArray &fileData)
     return true;
 }
 
-void AutoUpdateManager::setupByConf(const IniOptions &ini)
+void AutoUpdateManager::setupByConfIni()
 {
+    const auto &ini = Fort::ini();
+
     setKeepCurrentVersion(ini.updateKeepCurrentVersion());
     setAutoDownload(ini.updateAutoDownload());
     setAutoInstall(ini.updateAutoInstall());
@@ -240,7 +245,7 @@ void AutoUpdateManager::setupByConf(const IniOptions &ini)
 
 bool AutoUpdateManager::runInstaller()
 {
-    auto settings = IoC<FortSettings>();
+    auto settings = Fort::settings();
 
     const QString installerPath = this->installerPath();
     const QStringList args = installerArgs(settings);

@@ -8,16 +8,18 @@
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
 #include <form/tray/trayicon.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <stat/statmanager.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
 #include <util/guiutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "axistickerspeed.h"
 #include "graphplot.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -100,41 +102,35 @@ GraphWindow::GraphWindow(QWidget *parent) : FormWindow(parent)
     setupFormWindow(iniUser(), IniUser::graphWindowGroup());
 
     connect(this, &GraphWindow::mouseRightClick, this, [&](QMouseEvent *event) {
-        IoC<WindowManager>()->trayIcon()->showTrayMenu(GuiUtil::globalPos(event));
+        windowManager()->trayIcon()->showTrayMenu(GuiUtil::globalPos(event));
     });
 
-    connect(IoC<StatManager>(), &StatManager::trafficAdded, this, &GraphWindow::addTraffic);
+    connect(statManager(), &StatManager::trafficAdded, this, &GraphWindow::addTraffic);
 }
 
 bool GraphWindow::deleteOnClose() const
 {
-    return !iniUser()->graphWindowHideOnClose();
-}
-
-ConfManager *GraphWindow::confManager() const
-{
-    return IoC<ConfManager>();
-}
-
-IniUser *GraphWindow::iniUser() const
-{
-    return &confManager()->iniUser();
+    return !iniUser().graphWindowHideOnClose();
 }
 
 void GraphWindow::saveWindowState(bool wasVisible)
 {
-    iniUser()->setGraphWindowGeometry(stateWatcher()->geometry());
-    iniUser()->setGraphWindowMaximized(stateWatcher()->maximized());
+    auto &iniUser = Fort::iniUser();
 
-    iniUser()->setGraphWindowVisible(wasVisible);
+    iniUser.setGraphWindowGeometry(stateWatcher()->geometry());
+    iniUser.setGraphWindowMaximized(stateWatcher()->maximized());
+
+    iniUser.setGraphWindowVisible(wasVisible);
 
     confManager()->saveIniUser();
 }
 
 void GraphWindow::restoreWindowState()
 {
-    stateWatcher()->restore(this, QSize(400, 300), iniUser()->graphWindowGeometry(),
-            iniUser()->graphWindowMaximized());
+    const auto &iniUser = Fort::iniUser();
+
+    stateWatcher()->restore(
+            this, QSize(400, 300), iniUser.graphWindowGeometry(), iniUser.graphWindowMaximized());
 }
 
 void GraphWindow::setupUi()
@@ -233,7 +229,7 @@ void GraphWindow::setupFlagsAndColors()
 
 void GraphWindow::forceUpdateFlagsAndColors()
 {
-    updateFlagsAndColors(*iniUser(), /*onlyFlags=*/false);
+    updateFlagsAndColors(iniUser(), /*onlyFlags=*/false);
 }
 
 void GraphWindow::updateFlagsAndColors(const IniUser &ini, bool onlyFlags)
@@ -416,20 +412,20 @@ void GraphWindow::enterEvent(QEnterEvent *event)
 {
     Q_UNUSED(event);
 
-    if (iniUser()->graphWindowHideOnHover()) {
+    if (iniUser().graphWindowHideOnHover()) {
         hide();
         m_hoverTimer.start();
         return;
     }
 
-    setWindowOpacityPercent(iniUser()->graphWindowHoverOpacity());
+    setWindowOpacityPercent(iniUser().graphWindowHoverOpacity());
 }
 
 void GraphWindow::leaveEvent(QEvent *event)
 {
     Q_UNUSED(event);
 
-    setWindowOpacityPercent(iniUser()->graphWindowOpacity());
+    setWindowOpacityPercent(iniUser().graphWindowOpacity());
 }
 
 void GraphWindow::keyPressEvent(QKeyEvent *event)
@@ -466,7 +462,7 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
         updateSpeed();
     }
 
-    const qint64 rangeLower = unixTime - iniUser()->graphWindowMaxSeconds();
+    const qint64 rangeLower = unixTime - iniUser().graphWindowMaxSeconds();
 
     const double rangeLowerKey = double(rangeLower);
     const double unixTimeKey = double(unixTime);
@@ -491,7 +487,7 @@ void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
             yAxis->setRange(yRange);
         }
 
-        const qint64 yRangeMax = iniUser()->graphWindowFixedSpeed() * 1024LL;
+        const qint64 yRangeMax = iniUser().graphWindowFixedSpeed() * 1024LL;
         if (yRangeMax > 0) {
             yRange.upper = yRangeMax;
 

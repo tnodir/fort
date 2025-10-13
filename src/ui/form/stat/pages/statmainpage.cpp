@@ -7,15 +7,14 @@
 #include <QVBoxLayout>
 
 #include <form/controls/controlutil.h>
-#include <form/stat/statisticscontroller.h>
-#include <form/tray/trayicon.h>
-#include <fortsettings.h>
-#include <manager/windowmanager.h>
+#include <fortglobal.h>
 #include <user/iniuser.h>
 #include <util/iconcache.h>
 
 #include "connectionspage.h"
 #include "trafficpage.h"
+
+using namespace Fort;
 
 StatMainPage::StatMainPage(StatisticsController *ctrl, QWidget *parent) : StatBasePage(ctrl, parent)
 {
@@ -27,9 +26,9 @@ void StatMainPage::selectTab(int index)
     m_tabWidget->setCurrentIndex(index);
 }
 
-void StatMainPage::onRestoreWindowState(IniUser *ini)
+void StatMainPage::onRestoreWindowState(IniUser &ini)
 {
-    const int tabIndex = qBound(0, ini->statTabIndex(), m_tabWidget->count() - 1);
+    const int tabIndex = qBound(0, ini.statTabIndex(), m_tabWidget->count() - 1);
 
     selectTab(tabIndex);
 }
@@ -63,7 +62,7 @@ void StatMainPage::setupTabBar()
     setupCornerWidget();
 
     connect(m_tabWidget, &QTabWidget::tabBarDoubleClicked, this,
-            [&](int index) { saveTabIndex(iniUser()->statTabIndexKey(), index); });
+            [&](int index) { saveTabIndex(iniUser().statTabIndexKey(), index); });
 }
 
 void StatMainPage::setupCornerWidget()

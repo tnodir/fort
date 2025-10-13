@@ -11,16 +11,19 @@
 #include <form/controls/controlutil.h>
 #include <form/dialog/splashscreen.h>
 #include <form/tray/trayicon.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
-#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
+#include <util/osutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "homecontroller.h"
 #include "pages/homemainpage.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -45,42 +48,26 @@ HomeWindow::HomeWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new HomeCon
             Qt::QueuedConnection); // queued to properly show the menu after window opening
 }
 
-FortSettings *HomeWindow::settings() const
-{
-    return ctrl()->settings();
-}
-
-ConfManager *HomeWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-IniUser *HomeWindow::iniUser() const
-{
-    return ctrl()->iniUser();
-}
-
-WindowManager *HomeWindow::windowManager() const
-{
-    return ctrl()->windowManager();
-}
-
 void HomeWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setHomeWindowGeometry(stateWatcher()->geometry());
-    iniUser()->setHomeWindowMaximized(stateWatcher()->maximized());
+    auto &iniUser = Fort::iniUser();
 
-    emit ctrl() -> afterSaveWindowState(iniUser());
+    iniUser.setHomeWindowGeometry(stateWatcher()->geometry());
+    iniUser.setHomeWindowMaximized(stateWatcher()->maximized());
+
+    emit ctrl()->afterSaveWindowState(iniUser);
 
     confManager()->saveIniUser();
 }
 
 void HomeWindow::restoreWindowState()
 {
-    stateWatcher()->restore(this, QSize(600, 400), iniUser()->homeWindowGeometry(),
-            iniUser()->homeWindowMaximized());
+    auto &iniUser = Fort::iniUser();
 
-    emit ctrl() -> afterRestoreWindowState(iniUser());
+    stateWatcher()->restore(
+            this, QSize(600, 400), iniUser.homeWindowGeometry(), iniUser.homeWindowMaximized());
+
+    emit ctrl()->afterRestoreWindowState(iniUser);
 }
 
 void HomeWindow::selectAboutTab()
@@ -90,10 +77,10 @@ void HomeWindow::selectAboutTab()
 
 bool HomeWindow::checkAboutToClose()
 {
-    if (!iniUser()->homeWindowAutoShowWindow())
+    if (!iniUser().homeWindowAutoShowWindow())
         return true;
 
-    auto windowManager = this->windowManager();
+    auto windowManager = Fort::windowManager();
     auto trayIcon = windowManager->trayIcon();
 
     if (trayIcon->isVisible())
@@ -109,10 +96,18 @@ bool HomeWindow::checkAboutToClose()
 
 void HomeWindow::onActivationChanged(bool isActive)
 {
-    if (isActive && iniUser()->homeWindowAutoShowMenu()) {
+    if (isActive && iniUser().homeWindowAutoShowMenu()) {
         if (isActiveWindow()) {
             m_btMenu->showMenu();
         }
+    }
+}
+
+void HomeWindow::onLinkClicked()
+{
+    auto button = qobject_cast<QAbstractButton *>(sender());
+    if (button) {
+        OsUtil::openUrlOrFolder(button->windowFilePath());
     }
 }
 
@@ -136,7 +131,7 @@ void HomeWindow::setupController()
 {
     connect(ctrl(), &HomeController::retranslateUi, this, &HomeWindow::retranslateUi);
 
-    emit ctrl() -> retranslateUi();
+    emit ctrl()->retranslateUi();
 }
 
 void HomeWindow::setupUi()
@@ -239,11 +234,11 @@ QLayout *HomeWindow::setupDialogButtons()
     m_btServiceLogs->setVisible(
             settings()->hasService() && settings()->profileLogsPath() != settings()->logsPath());
 
-    connect(m_btProfile, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
-    connect(m_btLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
-    connect(m_btServiceLogs, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
-    connect(m_btReleases, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
-    connect(m_btHelp, &QAbstractButton::clicked, ctrl(), &BaseController::onLinkClicked);
+    connect(m_btProfile, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
+    connect(m_btLogs, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
+    connect(m_btServiceLogs, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
+    connect(m_btReleases, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
+    connect(m_btHelp, &QAbstractButton::clicked, this, &HomeWindow::onLinkClicked);
 
     auto layout = ControlUtil::createHLayoutByWidgets({ m_btProfile, m_btLogs, m_btServiceLogs,
             m_btReleases, m_btHelp, /*stretch*/ nullptr });

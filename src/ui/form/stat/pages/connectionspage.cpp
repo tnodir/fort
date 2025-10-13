@@ -9,19 +9,20 @@
 
 #include <appinfo/appinfocache.h>
 #include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/stat/statisticscontroller.h>
 #include <form/stat/statisticswindow.h>
-#include <fortsettings.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/connlistmodel.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/osutil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -40,23 +41,18 @@ ConnectionsPage::ConnectionsPage(StatisticsController *ctrl, QWidget *parent) :
     connListModel()->initialize();
 }
 
-AppInfoCache *ConnectionsPage::appInfoCache() const
-{
-    return connListModel()->appInfoCache();
-}
-
-void ConnectionsPage::onSaveWindowState(IniUser *ini)
+void ConnectionsPage::onSaveWindowState(IniUser &ini)
 {
     auto header = m_connListView->horizontalHeader();
-    ini->setConnListHeader(header->saveState());
-    ini->setConnListHeaderVersion(CONN_LIST_HEADER_VERSION);
+    ini.setConnListHeader(header->saveState());
+    ini.setConnListHeaderVersion(CONN_LIST_HEADER_VERSION);
 }
 
-void ConnectionsPage::onRestoreWindowState(IniUser *ini)
+void ConnectionsPage::onRestoreWindowState(IniUser &ini)
 {
-    if (ini->connListHeaderVersion() == CONN_LIST_HEADER_VERSION) {
+    if (ini.connListHeaderVersion() == CONN_LIST_HEADER_VERSION) {
         auto header = m_connListView->horizontalHeader();
-        header->restoreState(ini->connListHeader());
+        header->restoreState(ini.connListHeader());
     }
 }
 
@@ -202,11 +198,11 @@ void ConnectionsPage::setupOptions()
 
 void ConnectionsPage::setupAutoScroll()
 {
-    m_cbAutoScroll = ControlUtil::createCheckBox(iniUser()->statAutoScroll(), [&](bool checked) {
-        if (iniUser()->statAutoScroll() == checked)
+    m_cbAutoScroll = ControlUtil::createCheckBox(iniUser().statAutoScroll(), [&](bool checked) {
+        if (iniUser().statAutoScroll() == checked)
             return;
 
-        iniUser()->setStatAutoScroll(checked);
+        iniUser().setStatAutoScroll(checked);
         confManager()->saveIniUser();
 
         updateAutoScroll();
@@ -216,11 +212,11 @@ void ConnectionsPage::setupAutoScroll()
 void ConnectionsPage::setupShowHostNames()
 {
     m_cbShowHostNames =
-            ControlUtil::createCheckBox(iniUser()->statShowHostNames(), [&](bool checked) {
-                if (iniUser()->statShowHostNames() == checked)
+            ControlUtil::createCheckBox(iniUser().statShowHostNames(), [&](bool checked) {
+                if (iniUser().statShowHostNames() == checked)
                     return;
 
-                iniUser()->setStatShowHostNames(checked);
+                iniUser().setStatShowHostNames(checked);
                 confManager()->saveIniUser();
 
                 updateShowHostNames();
@@ -405,7 +401,7 @@ void ConnectionsPage::doAutoScroll()
 
 void ConnectionsPage::updateAutoScroll()
 {
-    if (iniUser()->statAutoScroll()) {
+    if (iniUser().statAutoScroll()) {
         connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
                 &ConnectionsPage::doAutoScroll);
         connect(connListModel(), &QAbstractItemModel::modelReset, this,
@@ -419,7 +415,7 @@ void ConnectionsPage::updateAutoScroll()
 
 void ConnectionsPage::updateShowHostNames()
 {
-    connListModel()->setResolveAddress(iniUser()->statShowHostNames());
+    connListModel()->setResolveAddress(iniUser().statShowHostNames());
     connListModel()->refresh();
 }
 

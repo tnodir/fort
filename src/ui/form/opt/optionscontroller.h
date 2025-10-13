@@ -3,6 +3,7 @@
 
 #include <form/basecontroller.h>
 
+class IniUser;
 class ZoneListModel;
 
 class OptionsController : public BaseController
@@ -15,7 +16,6 @@ public:
 
     FirewallConf *confToEdit() const;
     IniUser *iniUserToEdit() const;
-    ZoneListModel *zoneListModel() const;
 
     bool anyEdited() const;
 
@@ -26,8 +26,8 @@ signals:
     void editResetted();
     void resetToDefault();
 
-    void afterSaveWindowState(IniUser *ini);
-    void afterRestoreWindowState(IniUser *ini);
+    void afterSaveWindowState(IniUser &ini);
+    void afterRestoreWindowState(IniUser &ini);
 
 public slots:
     void setOptEdited();

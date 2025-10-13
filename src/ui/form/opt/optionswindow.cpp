@@ -6,14 +6,16 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
-#include <util/guiutil.h>
 #include <util/osutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "optionscontroller.h"
 #include "pages/optmainpage.h"
+
+using namespace Fort;
 
 OptionsWindow::OptionsWindow(QWidget *parent) :
     FormWindow(parent), m_ctrl(new OptionsController(this))
@@ -27,16 +29,6 @@ OptionsWindow::OptionsWindow(QWidget *parent) :
     connect(this, &OptionsWindow::aboutToDelete, this, &OptionsWindow::cancelChanges);
 }
 
-ConfManager *OptionsWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-IniUser *OptionsWindow::iniUser() const
-{
-    return ctrl()->iniUser();
-}
-
 void OptionsWindow::selectTab(int index)
 {
     m_mainPage->selectTab(index);
@@ -44,20 +36,24 @@ void OptionsWindow::selectTab(int index)
 
 void OptionsWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setOptWindowGeometry(stateWatcher()->geometry());
-    iniUser()->setOptWindowMaximized(stateWatcher()->maximized());
+    auto &iniUser = Fort::iniUser();
 
-    emit ctrl()->afterSaveWindowState(iniUser());
+    iniUser.setOptWindowGeometry(stateWatcher()->geometry());
+    iniUser.setOptWindowMaximized(stateWatcher()->maximized());
+
+    emit ctrl()->afterSaveWindowState(iniUser);
 
     confManager()->saveIniUser();
 }
 
 void OptionsWindow::restoreWindowState()
 {
-    stateWatcher()->restore(this, QSize(1024, 768), iniUser()->optWindowGeometry(),
-            iniUser()->optWindowMaximized());
+    auto &iniUser = Fort::iniUser();
 
-    emit ctrl()->afterRestoreWindowState(iniUser());
+    stateWatcher()->restore(
+            this, QSize(1024, 768), iniUser.optWindowGeometry(), iniUser.optWindowMaximized());
+
+    emit ctrl()->afterRestoreWindowState(iniUser);
 }
 
 void OptionsWindow::cancelChanges()
@@ -121,8 +117,8 @@ void OptionsWindow::checkDeprecated()
 
 void OptionsWindow::checkDeprecatedAppGroups()
 {
-    if (!ctrl()->conf()->checkDeprecatedAppGroups()) {
-        ctrl()->windowManager()->showConfirmBox(
+    if (!conf()->checkDeprecatedAppGroups()) {
+        windowManager()->showConfirmBox(
                 [&] { OsUtil::openUrlOrFolder("https://github.com/tnodir/fort/discussions/210"); },
                 tr("Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!"
                    "\n\n(They are read-only now and will be removed in v4.)"

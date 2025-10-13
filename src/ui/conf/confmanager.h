@@ -30,15 +30,16 @@ public:
     FirewallConf *conf() const { return m_conf; }
     FirewallConf *confToEdit() const { return m_confToEdit; }
 
-    IniOptions &iniOpt() const;
-
-    IniUser &iniUser() const;
+    IniOptions *iniOptToEdit() const { return m_iniOptToEdit; }
     IniUser *iniUserToEdit() const { return m_iniUserToEdit; }
 
     void setUp() override;
 
     void initConfToEdit();
     void setConfToEdit(FirewallConf *conf);
+
+    void initIniOptToEdit();
+    void setIniOptToEdit(IniOptions *iniOpt);
 
     void initIniUserToEdit();
     void setIniUserToEdit(IniUser *iniUser);
@@ -81,7 +82,7 @@ signals:
     void imported();
     void confChanged(bool onlyFlags, uint editedFlags);
     void confPeriodsChanged();
-    void iniChanged(const IniOptions &ini);
+    void iniChanged();
     void iniUserChanged(const IniUser &ini, bool onlyFlags);
 
 protected:
@@ -121,6 +122,7 @@ private:
     FirewallConf *m_conf = nullptr;
     FirewallConf *m_confToEdit = nullptr;
 
+    IniOptions *m_iniOptToEdit = nullptr;
     IniUser *m_iniUserToEdit = nullptr;
 
     QTimer m_confTimer;

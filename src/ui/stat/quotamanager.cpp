@@ -2,11 +2,14 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <fortglobal.h>
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
 #include <util/ioc/ioccontainer.h>
 
 #include "statsql.h"
+
+using namespace Fort;
 
 QuotaManager::QuotaManager(QObject *parent) : QObject(parent) { }
 
@@ -40,21 +43,6 @@ void QuotaManager::setTrafDayBytes(qint64 bytes)
 void QuotaManager::setTrafMonthBytes(qint64 bytes)
 {
     m_trafMonthBytes = bytes;
-}
-
-ConfManager *QuotaManager::confManager() const
-{
-    return IoC<ConfManager>();
-}
-
-FirewallConf *QuotaManager::conf() const
-{
-    return confManager()->conf();
-}
-
-IniOptions &QuotaManager::ini() const
-{
-    return confManager()->iniOpt();
 }
 
 void QuotaManager::setUp()
@@ -138,7 +126,7 @@ void QuotaManager::setupConfManager()
 {
     auto confManager = IoCDependency<ConfManager>();
 
-    connect(confManager, &ConfManager::iniChanged, this, &QuotaManager::setupByConf);
+    connect(confManager, &ConfManager::iniChanged, this, &QuotaManager::setupByConfIni);
 }
 
 int QuotaManager::quotaDayAlerted() const
@@ -148,7 +136,7 @@ int QuotaManager::quotaDayAlerted() const
 
 void QuotaManager::setQuotaDayAlerted(int v)
 {
-    IniOptions &ini = this->ini();
+    auto &ini = Fort::ini();
 
     m_quotaDayAlerted = v;
 
@@ -165,7 +153,7 @@ int QuotaManager::quotaMonthAlerted() const
 
 void QuotaManager::setQuotaMonthAlerted(int v)
 {
-    IniOptions &ini = this->ini();
+    auto &ini = Fort::ini();
 
     m_quotaMonthAlerted = v;
 
@@ -177,7 +165,7 @@ void QuotaManager::setQuotaMonthAlerted(int v)
 
 void QuotaManager::processQuotaExceed(AlertType alertType)
 {
-    FirewallConf *conf = this->conf();
+    auto conf = Fort::conf();
 
     if (ini().quotaBlockInetTraffic() && !conf->blockInetTraffic()) {
         conf->setBlockInetTraffic(true);
@@ -187,8 +175,10 @@ void QuotaManager::processQuotaExceed(AlertType alertType)
     emit alert(alertType);
 }
 
-void QuotaManager::setupByConf(const IniOptions &ini)
+void QuotaManager::setupByConfIni()
 {
+    const auto &ini = Fort::ini();
+
     setQuotaDayBytes(qint64(ini.quotaDayMb()) * 1024 * 1024);
     setQuotaMonthBytes(qint64(ini.quotaMonthMb()) * 1024 * 1024);
 
@@ -196,7 +186,8 @@ void QuotaManager::setupByConf(const IniOptions &ini)
     const qint32 trafDay = DateUtil::getUnixDay(unixTime);
     const qint32 trafMonth = DateUtil::getUnixMonth(unixTime, ini.monthStart());
 
-    auto statManager = IoC<StatManager>();
+    auto statManager = Fort::statManager();
+
     qint64 inBytes, outBytes;
 
     statManager->getTraffic(StatSql::sqlSelectTrafDay, trafDay, inBytes, outBytes);

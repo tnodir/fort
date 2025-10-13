@@ -21,11 +21,14 @@
 #include <form/controls/tableview.h>
 #include <form/stat/statisticscontroller.h>
 #include <form/stat/statisticswindow.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/appstatmodel.h>
 #include <model/traflistmodel.h>
 #include <user/iniuser.h>
 #include <util/iconcache.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -44,44 +47,39 @@ TrafficPage::TrafficPage(StatisticsController *ctrl, QWidget *parent) :
     trafListModel()->initialize();
 }
 
-AppInfoCache *TrafficPage::appInfoCache() const
-{
-    return appStatModel()->appInfoCache();
-}
-
 void TrafficPage::selectTrafTab(int index)
 {
     m_tabBar->setCurrentIndex(index);
 }
 
-void TrafficPage::onSaveWindowState(IniUser *ini)
+void TrafficPage::onSaveWindowState(IniUser &ini)
 {
     // App List
     {
         auto header = m_appListView->horizontalHeader();
-        ini->setStatAppListHeader(header->saveState());
-        ini->setStatAppListHeaderVersion(APP_LIST_HEADER_VERSION);
+        ini.setStatAppListHeader(header->saveState());
+        ini.setStatAppListHeaderVersion(APP_LIST_HEADER_VERSION);
     }
 
-    ini->setStatWindowTrafSplit(m_splitter->saveState());
+    ini.setStatWindowTrafSplit(m_splitter->saveState());
 }
 
-void TrafficPage::onRestoreWindowState(IniUser *ini)
+void TrafficPage::onRestoreWindowState(IniUser &ini)
 {
     // App List
-    if (ini->statAppListHeaderVersion() == APP_LIST_HEADER_VERSION) {
+    if (ini.statAppListHeaderVersion() == APP_LIST_HEADER_VERSION) {
         auto header = m_appListView->horizontalHeader();
-        header->restoreState(ini->statAppListHeader());
+        header->restoreState(ini.statAppListHeader());
     }
 
     // Traf Table
     {
-        const int tabIndex = qBound(0, ini->statTrafTabIndex(), m_tabBar->count() - 1);
+        const int tabIndex = qBound(0, ini.statTrafTabIndex(), m_tabBar->count() - 1);
 
         m_tabBar->setCurrentIndex(tabIndex);
     }
 
-    m_splitter->restoreState(ini->statWindowTrafSplit());
+    m_splitter->restoreState(ini.statWindowTrafSplit());
 }
 
 void TrafficPage::onRetranslateUi()
@@ -251,10 +249,10 @@ void TrafficPage::setupTrafUnits()
     m_traphUnits = ControlUtil::createLabel();
 
     m_comboTrafUnit = ControlUtil::createComboBox(QStringList(), [&](int index) {
-        if (iniUser()->statTrafUnit() == index)
+        if (iniUser().statTrafUnit() == index)
             return;
 
-        iniUser()->setStatTrafUnit(index);
+        iniUser().setStatTrafUnit(index);
         updateTableTrafUnit();
 
         confManager()->saveIniUser();
@@ -301,7 +299,7 @@ void TrafficPage::setupTabBar()
     }
 
     connect(m_tabBar, &QTabBar::tabBarDoubleClicked, this,
-            [&](int index) { saveTabIndex(iniUser()->statTrafTabIndexKey(), index); });
+            [&](int index) { saveTabIndex(iniUser().statTrafTabIndexKey(), index); });
 }
 
 void TrafficPage::setupTableTraf()
@@ -455,12 +453,12 @@ void TrafficPage::updateAppListTime(const QModelIndex &index)
 
 void TrafficPage::updateTrafUnit()
 {
-    m_comboTrafUnit->setCurrentIndex(iniUser()->statTrafUnit());
+    m_comboTrafUnit->setCurrentIndex(iniUser().statTrafUnit());
 }
 
 void TrafficPage::updateTableTrafUnit()
 {
-    const auto trafUnit = TrafUnitType::TrafUnit(iniUser()->statTrafUnit());
+    const auto trafUnit = TrafUnitType::TrafUnit(iniUser().statTrafUnit());
 
     appStatModel()->setUnit(trafUnit);
     trafListModel()->setUnit(trafUnit);

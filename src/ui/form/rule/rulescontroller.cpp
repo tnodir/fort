@@ -1,16 +1,17 @@
 #include "rulescontroller.h"
 
 #include <conf/confrulemanager.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/rulelistmodel.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
 void showErrorMessage(const QString &errorMessage)
 {
-    IoC<WindowManager>()->showErrorBox(
-            errorMessage, RulesController::tr("Rule Configuration Error"));
+    windowManager()->showErrorBox(errorMessage, RulesController::tr("Rule Configuration Error"));
 }
 
 }

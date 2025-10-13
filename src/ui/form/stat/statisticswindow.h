@@ -3,8 +3,6 @@
 
 #include <form/controls/formwindow.h>
 
-class ConfManager;
-class IniUser;
 class StatisticsController;
 
 class StatisticsWindow : public FormWindow
@@ -18,8 +16,6 @@ public:
     QString windowOverlayIconPath() const override { return ":/icons/chart_bar.png"; }
 
     StatisticsController *ctrl() const { return m_ctrl; }
-    ConfManager *confManager() const;
-    IniUser *iniUser() const;
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;

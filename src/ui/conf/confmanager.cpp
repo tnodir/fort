@@ -9,6 +9,7 @@
 #include <sqlite/sqlitestmt.h>
 
 #include <driver/drivermanager.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/envmanager.h>
 #include <manager/serviceinfomanager.h>
@@ -19,12 +20,13 @@
 #include <user/usersettings.h>
 #include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "addressgroup.h"
 #include "appgroup.h"
 #include "confappmanager.h"
 #include "firewallconf.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -455,7 +457,7 @@ bool importFile(const QString &filePath, const QString &path)
 
 void showErrorMessage(const QString &errorMessage)
 {
-    IoC<WindowManager>()->showErrorBox(errorMessage);
+    windowManager()->showErrorBox(errorMessage);
 }
 
 }
@@ -464,16 +466,6 @@ ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openF
     QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags)), m_conf(createConf())
 {
     setupTimers();
-}
-
-IniOptions &ConfManager::iniOpt() const
-{
-    return IoC<FortSettings>()->iniOpt();
-}
-
-IniUser &ConfManager::iniUser() const
-{
-    return IoC<UserSettings>()->iniUser();
 }
 
 void ConfManager::setUp()
@@ -504,9 +496,29 @@ void ConfManager::setConfToEdit(FirewallConf *conf)
     m_confToEdit = conf;
 }
 
+void ConfManager::initIniOptToEdit()
+{
+    if (m_iniOptToEdit)
+        return;
+
+    auto newIniOpt = new IniOptions(settings());
+
+    setIniOptToEdit(newIniOpt);
+}
+
+void ConfManager::setIniOptToEdit(IniOptions *iniOpt)
+{
+    if (m_iniOptToEdit == iniOpt)
+        return;
+
+    delete m_iniOptToEdit;
+
+    m_iniOptToEdit = iniOpt;
+}
+
 void ConfManager::initIniUserToEdit()
 {
-    if (iniUserToEdit())
+    if (m_iniUserToEdit)
         return;
 
     auto newIniUser = new IniUser(iniUser().settings());
@@ -516,12 +528,10 @@ void ConfManager::initIniUserToEdit()
 
 void ConfManager::setIniUserToEdit(IniUser *iniUser)
 {
-    if (iniUserToEdit() == iniUser)
+    if (m_iniUserToEdit == iniUser)
         return;
 
-    if (iniUserToEdit() && iniUserToEdit() != &this->iniUser()) {
-        delete m_iniUserToEdit;
-    }
+    delete m_iniUserToEdit;
 
     m_iniUserToEdit = iniUser;
 }
@@ -562,7 +572,7 @@ void ConfManager::applyFilterOffSeconds()
         return;
 
     const bool isFilterOff = !conf()->filterEnabled();
-    const int filterOffMsec = isFilterOff ? iniOpt().filterOffSeconds() * 1000 : 0;
+    const int filterOffMsec = isFilterOff ? ini().filterOffSeconds() * 1000 : 0;
 
     const bool isTimerActive =
             (m_filterOffTimer.isActive() && m_filterOffTimer.interval() == filterOffMsec);
@@ -582,7 +592,7 @@ void ConfManager::applyAutoLearnSeconds()
         return;
 
     const bool isAutoLearn = (conf()->filterMode() == FirewallConf::ModeAutoLearn);
-    const int autoLearnMsec = isAutoLearn ? iniOpt().autoLearnSeconds() * 1000 : 0;
+    const int autoLearnMsec = isAutoLearn ? ini().autoLearnSeconds() * 1000 : 0;
 
     const bool isTimerActive =
             (m_autoLearnTimer.isActive() && m_autoLearnTimer.interval() == autoLearnMsec);
@@ -689,7 +699,7 @@ bool ConfManager::loadConf(FirewallConf &conf)
         }
     }
 
-    IoC<FortSettings>()->readConfIni(conf);
+    settings()->readConfIni(conf);
 
     return true;
 }
@@ -721,11 +731,11 @@ bool ConfManager::saveConf(FirewallConf &conf)
     if (conf.optEdited() && !saveToDb(conf))
         return false;
 
-    IoC<FortSettings>()->writeConfIni(conf);
+    settings()->writeConfIni(conf);
 
     // Ini Options
     {
-        auto &ini = iniOpt();
+        auto &ini = Fort::ini();
 
         if (conf.taskEdited()) {
             saveTasksByIni(ini);
@@ -760,7 +770,7 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
     emit confChanged(onlyFlags, conf()->editedFlags());
 
     if (conf()->iniEdited()) {
-        emit iniChanged(iniOpt());
+        emit iniChanged();
     }
 
     conf()->resetEdited();
@@ -895,7 +905,7 @@ bool ConfManager::exportMasterBackup(const QString &path)
 {
     // Export Ini
     {
-        Settings *settings = iniOpt().settings();
+        auto settings = Fort::settings();
 
         if (!exportFile(settings->filePath(), path))
             return false;
@@ -942,7 +952,7 @@ bool ConfManager::importMasterBackup(const QString &path)
 {
     // Import Ini
     {
-        Settings *settings = iniOpt().settings();
+        auto settings = Fort::settings();
 
         if (!importFile(settings->filePath(), path))
             return false;
@@ -967,7 +977,7 @@ bool ConfManager::importMasterBackup(const QString &path)
 
 bool ConfManager::checkPassword(const QString &password)
 {
-    return IoC<FortSettings>()->checkPassword(password);
+    return settings()->checkPassword(password);
 }
 
 bool ConfManager::validateConf(const FirewallConf &newConf)
@@ -977,7 +987,7 @@ bool ConfManager::validateConf(const FirewallConf &newConf)
 
     ConfBuffer confBuf;
 
-    if (!confBuf.writeConf(newConf, IoC<ConfAppManager>(), *IoC<EnvManager>())) {
+    if (!confBuf.writeConf(newConf, confAppManager(), *envManager())) {
         qCCritical(LC) << "Conf save error:" << confBuf.errorMessage();
         return false;
     }
@@ -991,14 +1001,12 @@ bool ConfManager::validateDriver()
 
     confBuf.writeVersion();
 
-    return IoC<DriverManager>()->validate(confBuf.buffer());
+    return driverManager()->validate(confBuf.buffer());
 }
 
 void ConfManager::updateServices()
 {
-    auto serviceInfoManager = IoC<ServiceInfoManager>();
-
-    updateOwnProcessServices(serviceInfoManager);
+    updateOwnProcessServices(serviceInfoManager());
 }
 
 void ConfManager::updateDriverServices(const QVector<ServiceInfo> &services, int processCount)
@@ -1007,7 +1015,7 @@ void ConfManager::updateDriverServices(const QVector<ServiceInfo> &services, int
 
     confBuf.writeServices(services, processCount);
 
-    IoC<DriverManager>()->writeServices(confBuf.buffer());
+    driverManager()->writeServices(confBuf.buffer());
 }
 
 void ConfManager::updateOwnProcessServices(ServiceInfoManager *serviceInfoManager)
@@ -1063,7 +1071,7 @@ void ConfManager::saveTasksByIni(const IniOptions &ini)
 {
     // Task Info List
     if (ini.taskInfoListSet()) {
-        IoC<TaskManager>()->saveVariant(ini.taskInfoList());
+        taskManager()->saveVariant(ini.taskInfoList());
     }
 }
 

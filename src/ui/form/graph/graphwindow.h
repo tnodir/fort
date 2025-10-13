@@ -7,8 +7,6 @@
 #include <util/formatutil.h>
 
 class AxisTickerSpeed;
-
-class ConfManager;
 class GraphPlot;
 class IniUser;
 class QCPAxis;
@@ -24,9 +22,6 @@ public:
 
     WindowCode windowCode() const override { return WindowGraph; }
     bool deleteOnClose() const override;
-
-    ConfManager *confManager() const;
-    IniUser *iniUser() const;
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;

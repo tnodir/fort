@@ -5,10 +5,6 @@
 
 #include "programeditdialog.h"
 
-class ConfAppManager;
-class ConfManager;
-class IniUser;
-
 class ProgramAlertWindow : public ProgramEditDialog
 {
     Q_OBJECT
@@ -18,10 +14,6 @@ public:
 
     WindowCode windowCode() const override { return WindowProgramAlert; }
     QString windowOverlayIconPath() const override { return ":/icons/error.png"; }
-
-    ConfAppManager *confAppManager() const;
-    ConfManager *confManager() const;
-    IniUser *iniUser() const;
 
     bool isAutoActive() const;
 

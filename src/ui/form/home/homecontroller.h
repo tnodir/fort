@@ -3,6 +3,8 @@
 
 #include <form/basecontroller.h>
 
+class IniUser;
+
 class HomeController : public BaseController
 {
     Q_OBJECT
@@ -14,8 +16,8 @@ public:
     void setPasswordLocked(bool v);
 
 signals:
-    void afterSaveWindowState(IniUser *ini);
-    void afterRestoreWindowState(IniUser *ini);
+    void afterSaveWindowState(IniUser &ini);
+    void afterRestoreWindowState(IniUser &ini);
 
     void passwordLockedChanged();
 

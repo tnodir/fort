@@ -4,12 +4,13 @@
 
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
-#include <model/applistmodel.h>
+#include <fortglobal.h>
 #include <user/iniuser.h>
-#include <util/guiutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "programeditcontroller.h"
+
+using namespace Fort;
 
 ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) : ProgramEditDialog(parent)
 {
@@ -22,24 +23,9 @@ ProgramAlertWindow::ProgramAlertWindow(QWidget *parent) : ProgramEditDialog(pare
     connect(confAppManager(), &ConfAppManager::appDeleted, this, &ProgramAlertWindow::onAppDeleted);
 }
 
-ConfAppManager *ProgramAlertWindow::confAppManager() const
-{
-    return ctrl()->confAppManager();
-}
-
-ConfManager *ProgramAlertWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-IniUser *ProgramAlertWindow::iniUser() const
-{
-    return ctrl()->iniUser();
-}
-
 bool ProgramAlertWindow::isAutoActive() const
 {
-    return iniUser()->progAlertWindowAutoActive();
+    return iniUser().progAlertWindowAutoActive();
 }
 
 void ProgramAlertWindow::initialize()
@@ -52,16 +38,20 @@ void ProgramAlertWindow::initialize()
 
 void ProgramAlertWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setProgAlertWindowGeometry(stateWatcher()->geometry());
-    iniUser()->setProgAlertWindowMaximized(stateWatcher()->maximized());
+    auto &iniUser = Fort::iniUser();
+
+    iniUser.setProgAlertWindowGeometry(stateWatcher()->geometry());
+    iniUser.setProgAlertWindowMaximized(stateWatcher()->maximized());
 
     confManager()->saveIniUser();
 }
 
 void ProgramAlertWindow::restoreWindowState()
 {
-    stateWatcher()->restore(this, QSize(500, 400), iniUser()->progAlertWindowGeometry(),
-            iniUser()->progAlertWindowMaximized());
+    const auto &iniUser = Fort::iniUser();
+
+    stateWatcher()->restore(this, QSize(500, 400), iniUser.progAlertWindowGeometry(),
+            iniUser.progAlertWindowMaximized());
 }
 
 void ProgramAlertWindow::closeOnSave()
@@ -91,6 +81,6 @@ void ProgramAlertWindow::setupUi()
     this->setWindowModality(Qt::NonModal);
 
     // Top Window
-    this->setWindowFlag(Qt::WindowStaysOnTopHint, iniUser()->progAlertWindowAlwaysOnTop());
+    this->setWindowFlag(Qt::WindowStaysOnTopHint, iniUser().progAlertWindowAlwaysOnTop());
     this->setAttribute(Qt::WA_ShowWithoutActivating, !isAutoActive());
 }

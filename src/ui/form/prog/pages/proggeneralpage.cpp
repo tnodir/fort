@@ -24,14 +24,16 @@
 #include <form/controls/toolbutton.h>
 #include <form/dialog/dialogutil.h>
 #include <form/prog/programeditcontroller.h>
+#include <fortglobal.h>
 #include <user/iniuser.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/stringutil.h>
 #include <util/textareautil.h>
 #include <util/variantutil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -626,7 +628,7 @@ void ProgGeneralPage::setupTimedMenuActions()
 
 void ProgGeneralPage::setupTimedAction()
 {
-    m_btTimedAction = createTimedButton(iniUser()->progAlertWindowTimedActionMinutesKey());
+    m_btTimedAction = createTimedButton(iniUser().progAlertWindowTimedActionMinutesKey());
 
     connect(m_btTimedAction, &QToolButton::clicked, this, [&] {
         const auto currentActionType = App::ScheduleAction(m_btgActions->checkedId());
@@ -641,7 +643,7 @@ void ProgGeneralPage::setupTimedAction()
 
 void ProgGeneralPage::setupTimedRemove()
 {
-    m_btTimedRemove = createTimedButton(iniUser()->progAlertWindowTimedRemoveMinutesKey());
+    m_btTimedRemove = createTimedButton(iniUser().progAlertWindowTimedRemoveMinutesKey());
     m_btTimedRemove->setIcon(IconCache::icon(":/icons/delete.png"));
 
     connect(m_btTimedRemove, &QToolButton::clicked, this, [&] {
@@ -744,13 +746,13 @@ int ProgGeneralPage::timedActionMinutes(QToolButton *bt)
     constexpr int defaultMinutes = 5;
 
     const auto iniKey = VariantUtil::userData(bt).toString();
-    return iniUser()->valueInt(iniKey, defaultMinutes);
+    return iniUser().valueInt(iniKey, defaultMinutes);
 }
 
 void ProgGeneralPage::setTimedActionMinutes(QToolButton *bt, int minutes)
 {
     const auto iniKey = VariantUtil::userData(bt).toString();
-    iniUser()->setValue(iniKey, minutes);
+    iniUser().setValue(iniKey, minutes);
 }
 
 void ProgGeneralPage::fillEditName()
@@ -764,7 +766,7 @@ void ProgGeneralPage::fillEditName()
         appName = StringUtil::firstLine(appPath);
     } else {
         const QString normPath = FileUtil::normalizePath(appPath);
-        appName = IoC<AppInfoCache>()->appName(normPath);
+        appName = appInfoCache()->appName(normPath);
     }
 
     m_editName->setStartText(appName);
@@ -809,7 +811,7 @@ QIcon ProgGeneralPage::appIcon(bool isSingleSelection) const
         return IconCache::icon(":/icons/coding.png");
     }
 
-    return IoC<AppInfoCache>()->appIcon(app().appPath);
+    return appInfoCache()->appIcon(app().appPath);
 }
 
 void ProgGeneralPage::saveScheduleAction(App::ScheduleAction actionType, int minutes)

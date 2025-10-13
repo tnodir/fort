@@ -5,10 +5,13 @@
 #include <QTranslator>
 
 #include <conf/confmanager.h>
+#include <fortglobal.h>
 #include <user/iniuser.h>
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 #include <util/stringutil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -38,7 +41,7 @@ void TranslationManager::setUp()
 
     connect(confManager, &ConfManager::iniUserChanged, this, &TranslationManager::setupByIniUser);
 
-    setupByIniUser(confManager->iniUser());
+    setupByIniUser(iniUser());
 }
 
 void TranslationManager::setupTranslation()

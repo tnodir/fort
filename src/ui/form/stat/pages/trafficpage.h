@@ -8,7 +8,6 @@
 QT_FORWARD_DECLARE_CLASS(QSplitter)
 QT_FORWARD_DECLARE_CLASS(QTableView)
 
-class AppInfoCache;
 class AppInfoRow;
 class AppStatModel;
 class TableView;
@@ -25,13 +24,12 @@ public:
 
     AppStatModel *appStatModel() const { return m_appStatModel; }
     TrafListModel *trafListModel() const { return m_trafListModel; }
-    AppInfoCache *appInfoCache() const;
 
     void selectTrafTab(int index);
 
 protected slots:
-    void onSaveWindowState(IniUser *ini) override;
-    void onRestoreWindowState(IniUser *ini) override;
+    void onSaveWindowState(IniUser &ini) override;
+    void onRestoreWindowState(IniUser &ini) override;
 
     void onRetranslateUi() override;
 

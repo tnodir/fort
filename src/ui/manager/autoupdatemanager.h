@@ -99,7 +99,7 @@ private:
 
     bool saveInstaller(const QByteArray &fileData);
 
-    void setupByConf(const IniOptions &ini);
+    void setupByConfIni();
 
     static QStringList installerArgs(FortSettings *settings);
     static QString installerPortableTasks(FortSettings *settings);

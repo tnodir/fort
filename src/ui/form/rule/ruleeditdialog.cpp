@@ -17,17 +17,19 @@
 #include <form/controls/listview.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/zonesselector.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/rulesetmodel.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
-#include <util/net/netutil.h>
 #include <util/osutil.h>
 
 #include "rulescontroller.h"
 #include "ruleswindow.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -40,16 +42,6 @@ RuleEditDialog::RuleEditDialog(RulesController *ctrl, QWidget *parent) :
 {
     setupUi();
     setupController();
-}
-
-ConfRuleManager *RuleEditDialog::confRuleManager() const
-{
-    return ctrl()->confRuleManager();
-}
-
-WindowManager *RuleEditDialog::windowManager() const
-{
-    return ctrl()->windowManager();
 }
 
 void RuleEditDialog::initialize(const RuleRow &ruleRow)

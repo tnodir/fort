@@ -3,9 +3,6 @@
 
 #include <form/controls/formwindow.h>
 
-class ConfManager;
-class FortManager;
-class IniUser;
 class OptMainPage;
 class OptionsController;
 
@@ -20,8 +17,6 @@ public:
     QString windowOverlayIconPath() const override { return ":/icons/cog.png"; }
 
     OptionsController *ctrl() const { return m_ctrl; }
-    ConfManager *confManager() const;
-    IniUser *iniUser() const;
 
     void selectTab(int index);
 

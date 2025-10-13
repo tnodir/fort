@@ -9,11 +9,6 @@
 
 #include "connlistcolumn.h"
 
-class AppInfoCache;
-class FortManager;
-class HostInfoCache;
-class StatConnManager;
-
 struct ConnRow : TableRow
 {
     bool isIPv6 : 1 = false;
@@ -53,11 +48,7 @@ public:
     bool resolveAddress() const { return m_resolveAddress; }
     void setResolveAddress(bool v) { m_resolveAddress = v; }
 
-    FortManager *fortManager() const;
-    StatConnManager *statConnManager() const;
     SqliteDb *sqliteDb() const override;
-    AppInfoCache *appInfoCache() const;
-    HostInfoCache *hostInfoCache() const;
 
     void initialize();
 

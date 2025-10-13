@@ -18,11 +18,14 @@
 #include <form/controls/labelspincombo.h>
 #include <form/controls/tableview.h>
 #include <form/opt/optionscontroller.h>
+#include <fortglobal.h>
 #include <task/taskinfo.h>
 #include <task/tasklistmodel.h>
 #include <task/taskmanager.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -53,7 +56,7 @@ void SchedulePage::onResetToDefault()
 void SchedulePage::onAboutToSave()
 {
     if (conf()->taskEdited()) {
-        ini()->setTaskInfoList(taskListModel()->toVariant());
+        ini().setTaskInfoList(taskListModel()->toVariant());
     }
 }
 

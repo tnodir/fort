@@ -10,12 +10,15 @@
 #include <driver/drivermanager.h>
 #include <form/controls/controlutil.h>
 #include <form/home/homecontroller.h>
+#include <fortglobal.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/startuputil.h>
+
+using namespace Fort;
 
 namespace {
 

@@ -9,10 +9,13 @@
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
+#include <fortglobal.h>
 #include <model/appconnlistmodel.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/osutil.h>
+
+using namespace Fort;
 
 ProgConnListPage::ProgConnListPage(ProgramEditController *ctrl, QWidget *parent) :
     ProgBasePage(ctrl, parent), m_appConnListModel(new AppConnListModel(this))

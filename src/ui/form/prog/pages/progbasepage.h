@@ -23,15 +23,7 @@ QT_FORWARD_DECLARE_CLASS(QTabBar)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class App;
-class AppInfoCache;
-class ConfAppManager;
-class ConfManager;
-class ConfRuleManager;
-class FirewallConf;
-class IniOptions;
-class IniUser;
 class ProgramEditController;
-class WindowManager;
 
 class ProgBasePage : public QFrame
 {
@@ -41,13 +33,6 @@ public:
     explicit ProgBasePage(ProgramEditController *ctrl, QWidget *parent = nullptr);
 
     ProgramEditController *ctrl() const { return m_ctrl; }
-    ConfAppManager *confAppManager() const;
-    ConfRuleManager *confRuleManager() const;
-    ConfManager *confManager() const;
-    FirewallConf *conf() const;
-    IniUser *iniUser() const;
-    WindowManager *windowManager() const;
-    AppInfoCache *appInfoCache() const;
 
     const App &app() const;
 

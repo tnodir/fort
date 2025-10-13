@@ -15,7 +15,7 @@ public:
     void selectTab(int index);
 
 protected slots:
-    void onRestoreWindowState(IniUser *ini) override;
+    void onRestoreWindowState(IniUser &ini) override;
 
     void onRetranslateUi() override;
 

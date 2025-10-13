@@ -1,7 +1,10 @@
 #include "programeditcontroller.h"
 
 #include <conf/confappmanager.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
+
+using namespace Fort;
 
 ProgramEditController::ProgramEditController(QObject *parent) : BaseController(parent) { }
 

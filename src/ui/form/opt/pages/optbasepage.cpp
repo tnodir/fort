@@ -1,22 +1,10 @@
 #include "optbasepage.h"
 
-#include <conf/firewallconf.h>
 #include <form/opt/optionscontroller.h>
-#include <user/iniuser.h>
 
 OptBasePage::OptBasePage(OptionsController *ctrl, QWidget *parent) : QFrame(parent), m_ctrl(ctrl)
 {
     setupController();
-}
-
-FortSettings *OptBasePage::settings() const
-{
-    return ctrl()->settings();
-}
-
-ConfManager *OptBasePage::confManager() const
-{
-    return ctrl()->confManager();
 }
 
 FirewallConf *OptBasePage::conf() const
@@ -24,34 +12,20 @@ FirewallConf *OptBasePage::conf() const
     return ctrl()->confToEdit();
 }
 
-IniOptions *OptBasePage::ini() const
+IniOptions &OptBasePage::ini() const
 {
-    return ctrl()->ini();
+    auto ini = ctrl()->iniOptToEdit();
+    Q_ASSERT(ini);
+
+    return *ini;
 }
 
-IniUser *OptBasePage::iniUser() const
+IniUser &OptBasePage::iniUser() const
 {
-    return ctrl()->iniUserToEdit();
-}
+    auto iniUser = ctrl()->iniUserToEdit();
+    Q_ASSERT(iniUser);
 
-TranslationManager *OptBasePage::translationManager() const
-{
-    return ctrl()->translationManager();
-}
-
-WindowManager *OptBasePage::windowManager() const
-{
-    return ctrl()->windowManager();
-}
-
-TaskManager *OptBasePage::taskManager() const
-{
-    return ctrl()->taskManager();
-}
-
-ZoneListModel *OptBasePage::zoneListModel() const
-{
-    return ctrl()->zoneListModel();
+    return *iniUser;
 }
 
 void OptBasePage::setupController()

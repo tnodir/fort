@@ -1,52 +1,14 @@
 #include "progbasepage.h"
 
-#include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <form/prog/programeditcontroller.h>
-#include <fortmanager.h>
-#include <manager/windowmanager.h>
-#include <user/iniuser.h>
-#include <util/ioc/ioccontainer.h>
+#include <fortglobal.h>
+
+using namespace Fort;
 
 ProgBasePage::ProgBasePage(ProgramEditController *ctrl, QWidget *parent) :
     QFrame(parent), m_ctrl(ctrl)
 {
     setupController();
-}
-
-ConfAppManager *ProgBasePage::confAppManager() const
-{
-    return ctrl()->confAppManager();
-}
-
-ConfRuleManager *ProgBasePage::confRuleManager() const
-{
-    return ctrl()->confRuleManager();
-}
-
-ConfManager *ProgBasePage::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-FirewallConf *ProgBasePage::conf() const
-{
-    return confManager()->conf();
-}
-
-IniUser *ProgBasePage::iniUser() const
-{
-    return &confManager()->iniUser();
-}
-
-WindowManager *ProgBasePage::windowManager() const
-{
-    return IoC<WindowManager>();
-}
-
-AppInfoCache *ProgBasePage::appInfoCache() const
-{
-    return ctrl()->appInfoCache();
 }
 
 const App &ProgBasePage::app() const

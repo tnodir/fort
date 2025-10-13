@@ -18,6 +18,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/labelspincombo.h>
 #include <form/opt/optionscontroller.h>
+#include <fortglobal.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
 #include <manager/translationmanager.h>
@@ -95,7 +96,7 @@ void OptionsPage::onAboutToSave_filterMode()
     if (filterModeEdited())
         return;
 
-    const auto oldFilterMode = confManager()->conf()->filterMode();
+    const auto oldFilterMode = Fort::conf()->filterMode();
 
     if (conf()->filterMode() != oldFilterMode) {
         // Reset to the new value, when auto-switched from Auto-learn
@@ -105,17 +106,20 @@ void OptionsPage::onAboutToSave_filterMode()
 
 void OptionsPage::onAboutToSave_password()
 {
+    auto settings = Fort::settings();
+    auto &ini = this->ini();
+
     if (passwordEdited()) {
-        const bool isPasswordCleared = (ini()->hasPassword() && ini()->password().isEmpty());
-        if (isPasswordCleared && !settings()->hasPassword()) {
+        const bool isPasswordCleared = (ini.hasPassword() && ini.password().isEmpty());
+        if (isPasswordCleared && !settings->hasPassword()) {
             m_cbPassword->setChecked(false);
         }
 
-        if (!ini()->hasPassword()) {
-            settings()->resetCheckedPassword();
+        if (!ini.hasPassword()) {
+            settings->resetCheckedPassword();
         }
     } else if (conf()->iniEdited()) {
-        ini()->setHasPassword(settings()->hasPassword());
+        ini.setHasPassword(settings->hasPassword());
     }
 }
 
@@ -161,7 +165,7 @@ void OptionsPage::onRetranslateUi()
     retranslateEditPassword();
 
     m_btPasswordLock->setText(tr("Lock the password (unlocked till \"%1\")")
-                    .arg(settings()->passwordUnlockedTillText()));
+                    .arg(Fort::settings()->passwordUnlockedTillText()));
 
     m_cbLogApp->setText(tr("Collect New Programs"));
     m_cbRemoveLearntApps->setText(tr("Remove alerted programs on Auto-Learn Off"));
@@ -207,7 +211,7 @@ void OptionsPage::retranslateTimedOptions()
 void OptionsPage::retranslateEditPassword()
 {
     m_editPassword->setPlaceholderText(
-            settings()->hasPassword() ? tr("Installed") : tr("Not Installed"));
+            Fort::settings()->hasPassword() ? tr("Installed") : tr("Not Installed"));
 }
 
 void OptionsPage::setupUi()
@@ -347,12 +351,12 @@ void OptionsPage::setupFilterOffSeconds()
     m_lscFilterOffSeconds->spinBox()->setRange(0, 99999); // ~27.7 hours
     m_lscFilterOffSeconds->setValues(timedOptionSecondsValues);
 
-    m_lscFilterOffSeconds->spinBox()->setValue(ini()->filterOffSeconds());
+    m_lscFilterOffSeconds->spinBox()->setValue(ini().filterOffSeconds());
 
     connect(m_lscFilterOffSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                if (ini()->filterOffSeconds() != value) {
-                    ini()->setFilterOffSeconds(value);
+                if (ini().filterOffSeconds() != value) {
+                    ini().setFilterOffSeconds(value);
                     ctrl()->setIniEdited();
                 }
             });
@@ -364,12 +368,12 @@ void OptionsPage::setupAutoLearnSeconds()
     m_lscAutoLearnSeconds->spinBox()->setRange(0, 99999); // ~27.7 hours
     m_lscAutoLearnSeconds->setValues(timedOptionSecondsValues);
 
-    m_lscAutoLearnSeconds->spinBox()->setValue(ini()->autoLearnSeconds());
+    m_lscAutoLearnSeconds->spinBox()->setValue(ini().autoLearnSeconds());
 
     connect(m_lscAutoLearnSeconds->spinBox(), QOverload<int>::of(&QSpinBox::valueChanged), this,
             [&](int value) {
-                if (ini()->autoLearnSeconds() != value) {
-                    ini()->setAutoLearnSeconds(value);
+                if (ini().autoLearnSeconds() != value) {
+                    ini().setAutoLearnSeconds(value);
                     ctrl()->setIniEdited();
                 }
             });
@@ -387,24 +391,23 @@ void OptionsPage::setupProtectionBox()
         ctrl()->setFlagsEdited();
     });
 
-    m_cbNoServiceControl =
-            ControlUtil::createCheckBox(ini()->noServiceControl(), [&](bool checked) {
-                ini()->setNoServiceControl(checked);
-                ctrl()->setIniEdited();
-            });
+    m_cbNoServiceControl = ControlUtil::createCheckBox(ini().noServiceControl(), [&](bool checked) {
+        ini().setNoServiceControl(checked);
+        ctrl()->setIniEdited();
+    });
 
-    m_cbDisableCmdLine = ControlUtil::createCheckBox(ini()->disableCmdLine(), [&](bool checked) {
-        ini()->setDisableCmdLine(checked);
+    m_cbDisableCmdLine = ControlUtil::createCheckBox(ini().disableCmdLine(), [&](bool checked) {
+        ini().setDisableCmdLine(checked);
         ctrl()->setIniEdited();
     });
 
     m_cbCheckPasswordOnUninstall =
-            ControlUtil::createCheckBox(ini()->checkPasswordOnUninstall(), [&](bool checked) {
-                ini()->setCheckPasswordOnUninstall(checked);
+            ControlUtil::createCheckBox(ini().checkPasswordOnUninstall(), [&](bool checked) {
+                ini().setCheckPasswordOnUninstall(checked);
                 ctrl()->setIniEdited();
             });
 
-    if (!settings()->hasMasterAdmin()) {
+    if (!Fort::settings()->hasMasterAdmin()) {
         m_cbCheckPasswordOnUninstall->setEnabled(false);
     }
 
@@ -428,14 +431,14 @@ void OptionsPage::setupProtectionBox()
 
 QLayout *OptionsPage::setupPasswordLayout()
 {
-    m_cbPassword = ControlUtil::createCheckBox(settings()->hasPassword(), [&](bool checked) {
+    m_cbPassword = ControlUtil::createCheckBox(Fort::settings()->hasPassword(), [&](bool checked) {
         if (checked) {
             m_editPassword->setFocus();
         } else {
             m_editPassword->clear();
         }
 
-        ini()->setHasPassword(checked);
+        ini().setHasPassword(checked);
         ctrl()->setIniEdited();
         setPasswordEdited(true);
     });
@@ -455,7 +458,7 @@ void OptionsPage::setupEditPassword()
     m_editPassword = ControlUtil::createLineEdit(QString(), [&](const QString &text) {
         m_cbPassword->setChecked(!text.isEmpty());
 
-        ini()->setPassword(text);
+        ini().setPassword(text);
         ctrl()->setIniEdited();
     });
     m_editPassword->setClearButtonEnabled(true);
@@ -467,18 +470,18 @@ void OptionsPage::setupEditPassword()
 void OptionsPage::setupPasswordLock()
 {
     m_btPasswordLock = ControlUtil::createToolButton(":/icons/lock_open.png", [&] {
-        settings()->resetCheckedPassword();
+        Fort::settings()->resetCheckedPassword();
         m_btPasswordLock->hide();
     });
 
     const auto refreshPasswordLock = [&] {
-        m_btPasswordLock->setVisible(settings()->hasPassword()
-                && settings()->passwordUnlockType() > FortSettings::UnlockWindow);
+        m_btPasswordLock->setVisible(Fort::settings()->hasPassword()
+                && Fort::settings()->passwordUnlockType() > FortSettings::UnlockWindow);
     };
 
     refreshPasswordLock();
 
-    connect(settings(), &FortSettings::passwordCheckedChanged, this, refreshPasswordLock);
+    connect(Fort::settings(), &FortSettings::passwordCheckedChanged, this, refreshPasswordLock);
 }
 
 void OptionsPage::setupProgBox()
@@ -486,20 +489,19 @@ void OptionsPage::setupProgBox()
     setupLogApp();
 
     m_cbRemoveLearntApps =
-            ControlUtil::createCheckBox(ini()->progRemoveLearntApps(), [&](bool checked) {
-                if (ini()->progRemoveLearntApps() != checked) {
-                    ini()->setProgRemoveLearntApps(checked);
+            ControlUtil::createCheckBox(ini().progRemoveLearntApps(), [&](bool checked) {
+                if (ini().progRemoveLearntApps() != checked) {
+                    ini().setProgRemoveLearntApps(checked);
                     ctrl()->setIniEdited();
                 }
             });
 
-    m_cbPurgeOnMounted =
-            ControlUtil::createCheckBox(ini()->progPurgeOnMounted(), [&](bool checked) {
-                if (ini()->progPurgeOnMounted() != checked) {
-                    ini()->setProgPurgeOnMounted(checked);
-                    ctrl()->setIniEdited();
-                }
-            });
+    m_cbPurgeOnMounted = ControlUtil::createCheckBox(ini().progPurgeOnMounted(), [&](bool checked) {
+        if (ini().progPurgeOnMounted() != checked) {
+            ini().setProgPurgeOnMounted(checked);
+            ctrl()->setIniEdited();
+        }
+    });
 
     // Layout
     auto layout = ControlUtil::createVLayoutByWidgets({ m_cbLogApp, ControlUtil::createSeparator(),
@@ -524,20 +526,20 @@ void OptionsPage::setupLogApp()
 void OptionsPage::setupUpdateBox()
 {
     m_cbUpdateKeepCurrentVersion =
-            ControlUtil::createCheckBox(ini()->updateKeepCurrentVersion(), [&](bool checked) {
-                ini()->setUpdateKeepCurrentVersion(checked);
+            ControlUtil::createCheckBox(ini().updateKeepCurrentVersion(), [&](bool checked) {
+                ini().setUpdateKeepCurrentVersion(checked);
                 ctrl()->setIniEdited();
             });
 
     m_cbUpdateAutoDownload =
-            ControlUtil::createCheckBox(ini()->updateAutoDownload(), [&](bool checked) {
-                ini()->setUpdateAutoDownload(checked);
+            ControlUtil::createCheckBox(ini().updateAutoDownload(), [&](bool checked) {
+                ini().setUpdateAutoDownload(checked);
                 ctrl()->setIniEdited();
             });
 
     m_cbUpdateAutoInstall =
-            ControlUtil::createCheckBox(ini()->updateAutoInstall(), [&](bool checked) {
-                ini()->setUpdateAutoInstall(checked);
+            ControlUtil::createCheckBox(ini().updateAutoInstall(), [&](bool checked) {
+                ini().setUpdateAutoInstall(checked);
                 ctrl()->setIniEdited();
             });
 
@@ -551,13 +553,13 @@ void OptionsPage::setupUpdateBox()
 
 void OptionsPage::setupLogsBox()
 {
-    m_cbLogDebug = ControlUtil::createCheckBox(ini()->logDebug(), [&](bool checked) {
-        ini()->setLogDebug(checked);
+    m_cbLogDebug = ControlUtil::createCheckBox(ini().logDebug(), [&](bool checked) {
+        ini().setLogDebug(checked);
         ctrl()->setIniEdited();
     });
 
-    m_cbLogConsole = ControlUtil::createCheckBox(ini()->logConsole(), [&](bool checked) {
-        ini()->setLogConsole(checked);
+    m_cbLogConsole = ControlUtil::createCheckBox(ini().logConsole(), [&](bool checked) {
+        ini().setLogConsole(checked);
         ctrl()->setIniEdited();
     });
 

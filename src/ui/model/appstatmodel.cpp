@@ -9,20 +9,22 @@
 
 #include <appinfo/appinfo.h>
 #include <appinfo/appinfocache.h>
+#include <fortglobal.h>
 #include <fortmanager.h>
 #include <manager/translationmanager.h>
 #include <stat/statmanager.h>
 #include <util/fileutil.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "traflistmodel.h"
+
+using namespace Fort;
 
 namespace {
 
 bool appFileExists(const QString &appPath)
 {
-    const AppInfo appInfo = IoC<AppInfoCache>()->appInfo(appPath);
+    const AppInfo appInfo = appInfoCache()->appInfo(appPath);
 
     return appInfo.fileExists;
 }
@@ -59,16 +61,6 @@ void AppStatModel::setTrafTime(qint32 v)
     m_trafTime = v;
 
     resetLater();
-}
-
-StatManager *AppStatModel::statManager() const
-{
-    return IoC<StatManager>();
-}
-
-AppInfoCache *AppStatModel::appInfoCache() const
-{
-    return IoC<AppInfoCache>();
 }
 
 SqliteDb *AppStatModel::sqliteDb() const
@@ -330,7 +322,7 @@ QString AppStatModel::columnName(const AppStatColumn column)
     static QStringList g_columnNames;
     static int g_language = -1;
 
-    const int language = IoC<TranslationManager>()->language();
+    const int language = translationManager()->language();
     if (g_language != language) {
         g_language = language;
 

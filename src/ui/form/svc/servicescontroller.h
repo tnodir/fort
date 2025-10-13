@@ -3,7 +3,6 @@
 
 #include <form/basecontroller.h>
 
-class ServiceInfoManager;
 class ServiceListModel;
 
 class ServicesController : public BaseController
@@ -13,7 +12,6 @@ class ServicesController : public BaseController
 public:
     explicit ServicesController(QObject *parent = nullptr);
 
-    ServiceInfoManager *serviceInfoManager() const;
     ServiceListModel *serviceListModel() const { return m_serviceListModel; }
 
     void initialize();

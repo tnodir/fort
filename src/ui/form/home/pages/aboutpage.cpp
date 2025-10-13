@@ -9,12 +9,15 @@
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/home/homecontroller.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/autoupdatemanager.h>
 #include <task/taskinfoupdatechecker.h>
 #include <task/taskmanager.h>
 #include <util/dateutil.h>
 #include <util/iconcache.h>
+
+using namespace Fort;
 
 AboutPage::AboutPage(HomeController *ctrl, QWidget *parent) : HomeBasePage(ctrl, parent)
 {
@@ -112,7 +115,7 @@ void AboutPage::setupNewVersionUpdate()
     const auto refreshNewVersion = [&] {
         auto taskInfo = taskManager()->taskInfoUpdateChecker();
 
-        m_keepCurrentVersion = ini()->updateKeepCurrentVersion();
+        m_keepCurrentVersion = ini().updateKeepCurrentVersion();
         m_isNewVersion = taskInfo->isNewVersion();
         m_lastCheckTime = taskInfo->lastSuccess();
 

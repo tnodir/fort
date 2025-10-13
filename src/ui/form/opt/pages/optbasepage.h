@@ -18,16 +18,10 @@ QT_FORWARD_DECLARE_CLASS(QSplitter)
 QT_FORWARD_DECLARE_CLASS(QTabBar)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
-class ConfManager;
 class FirewallConf;
-class FortSettings;
 class IniOptions;
 class IniUser;
 class OptionsController;
-class TaskManager;
-class TranslationManager;
-class WindowManager;
-class ZoneListModel;
 
 class OptBasePage : public QFrame
 {
@@ -37,15 +31,9 @@ public:
     explicit OptBasePage(OptionsController *ctrl, QWidget *parent = nullptr);
 
     OptionsController *ctrl() const { return m_ctrl; }
-    FortSettings *settings() const;
-    ConfManager *confManager() const;
     FirewallConf *conf() const;
-    IniOptions *ini() const;
-    IniUser *iniUser() const;
-    TranslationManager *translationManager() const;
-    WindowManager *windowManager() const;
-    TaskManager *taskManager() const;
-    ZoneListModel *zoneListModel() const;
+    IniOptions &ini() const;
+    IniUser &iniUser() const;
 
 public slots:
     virtual void onPageActivated() { }
@@ -55,8 +43,8 @@ protected slots:
     virtual void onAboutToSave() { }
     virtual void onEditResetted() { }
 
-    virtual void onSaveWindowState(IniUser * /*ini*/) { }
-    virtual void onRestoreWindowState(IniUser * /*ini*/) { }
+    virtual void onSaveWindowState(IniUser & /*ini*/) { }
+    virtual void onRestoreWindowState(IniUser & /*ini*/) { }
 
     virtual void onRetranslateUi() { }
 

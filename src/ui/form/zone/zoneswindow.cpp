@@ -7,10 +7,10 @@
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/dialog/dialogutil.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
 #include <task/taskinfozonedownloader.h>
@@ -23,6 +23,8 @@
 
 #include "zoneeditdialog.h"
 #include "zonescontroller.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -38,31 +40,6 @@ ZonesWindow::ZonesWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new Zones
     setupFormWindow(iniUser(), IniUser::zoneWindowGroup());
 }
 
-ConfManager *ZonesWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-IniOptions *ZonesWindow::ini() const
-{
-    return ctrl()->ini();
-}
-
-IniUser *ZonesWindow::iniUser() const
-{
-    return ctrl()->iniUser();
-}
-
-WindowManager *ZonesWindow::windowManager() const
-{
-    return ctrl()->windowManager();
-}
-
-TaskManager *ZonesWindow::taskManager() const
-{
-    return ctrl()->taskManager();
-}
-
 ZoneListModel *ZonesWindow::zoneListModel() const
 {
     return ctrl()->zoneListModel();
@@ -70,24 +47,28 @@ ZoneListModel *ZonesWindow::zoneListModel() const
 
 void ZonesWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setZoneWindowGeometry(stateWatcher()->geometry());
-    iniUser()->setZoneWindowMaximized(stateWatcher()->maximized());
+    auto &iniUser = Fort::iniUser();
+
+    iniUser.setZoneWindowGeometry(stateWatcher()->geometry());
+    iniUser.setZoneWindowMaximized(stateWatcher()->maximized());
 
     auto header = m_zoneListView->horizontalHeader();
-    iniUser()->setZonesHeader(header->saveState());
-    iniUser()->setZonesHeaderVersion(ZONES_HEADER_VERSION);
+    iniUser.setZonesHeader(header->saveState());
+    iniUser.setZonesHeaderVersion(ZONES_HEADER_VERSION);
 
     confManager()->saveIniUser();
 }
 
 void ZonesWindow::restoreWindowState()
 {
-    stateWatcher()->restore(this, QSize(900, 400), iniUser()->zoneWindowGeometry(),
-            iniUser()->zoneWindowMaximized());
+    const auto &iniUser = Fort::iniUser();
 
-    if (iniUser()->zonesHeaderVersion() == ZONES_HEADER_VERSION) {
+    stateWatcher()->restore(
+            this, QSize(900, 400), iniUser.zoneWindowGeometry(), iniUser.zoneWindowMaximized());
+
+    if (iniUser.zonesHeaderVersion() == ZONES_HEADER_VERSION) {
         auto header = m_zoneListView->horizontalHeader();
-        header->restoreState(iniUser()->zonesHeader());
+        header->restoreState(iniUser.zonesHeader());
     }
 }
 

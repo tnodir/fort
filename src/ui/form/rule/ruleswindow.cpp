@@ -8,20 +8,20 @@
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/treeview.h>
 #include <form/dialog/dialogutil.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/rulelistmodel.h>
 #include <user/iniuser.h>
-#include <util/conf/confutil.h>
-#include <util/guiutil.h>
 #include <util/iconcache.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "ruleeditdialog.h"
 #include "rulescontroller.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -43,31 +43,6 @@ RulesWindow::RulesWindow(Rule::RuleType ruleType, QWidget *parent, Qt::WindowFla
     setupFormWindow(iniUser(), IniUser::ruleWindowGroup());
 }
 
-ConfManager *RulesWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-FirewallConf *RulesWindow::conf() const
-{
-    return ctrl()->conf();
-}
-
-IniOptions *RulesWindow::ini() const
-{
-    return ctrl()->ini();
-}
-
-IniUser *RulesWindow::iniUser() const
-{
-    return ctrl()->iniUser();
-}
-
-WindowManager *RulesWindow::windowManager() const
-{
-    return ctrl()->windowManager();
-}
-
 RuleListModel *RulesWindow::ruleListModel() const
 {
     return ctrl()->ruleListModel();
@@ -75,29 +50,33 @@ RuleListModel *RulesWindow::ruleListModel() const
 
 void RulesWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setRuleWindowGeometry(stateWatcher()->geometry());
-    iniUser()->setRuleWindowMaximized(stateWatcher()->maximized());
+    auto &iniUser = Fort::iniUser();
+
+    iniUser.setRuleWindowGeometry(stateWatcher()->geometry());
+    iniUser.setRuleWindowMaximized(stateWatcher()->maximized());
 
     auto header = m_ruleListView->header();
-    iniUser()->setRulesHeader(header->saveState());
-    iniUser()->setRulesHeaderVersion(RULES_HEADER_VERSION);
+    iniUser.setRulesHeader(header->saveState());
+    iniUser.setRulesHeaderVersion(RULES_HEADER_VERSION);
 
-    iniUser()->setRulesExpanded(m_expandedRuleTypes);
+    iniUser.setRulesExpanded(m_expandedRuleTypes);
 
     confManager()->saveIniUser();
 }
 
 void RulesWindow::restoreWindowState()
 {
-    stateWatcher()->restore(this, QSize(500, 600), iniUser()->ruleWindowGeometry(),
-            iniUser()->ruleWindowMaximized());
+    const auto &iniUser = Fort::iniUser();
 
-    if (iniUser()->rulesHeaderVersion() == RULES_HEADER_VERSION) {
+    stateWatcher()->restore(
+            this, QSize(500, 600), iniUser.ruleWindowGeometry(), iniUser.ruleWindowMaximized());
+
+    if (iniUser.rulesHeaderVersion() == RULES_HEADER_VERSION) {
         auto header = m_ruleListView->header();
-        header->restoreState(iniUser()->rulesHeader());
+        header->restoreState(iniUser.rulesHeader());
     }
 
-    m_expandedRuleTypes = iniUser()->rulesExpanded();
+    m_expandedRuleTypes = iniUser.rulesExpanded();
 
     expandTreeRules();
 }

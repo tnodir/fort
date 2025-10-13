@@ -1,16 +1,18 @@
 #include "zonescontroller.h"
 
 #include <conf/confzonemanager.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
 #include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
 void showErrorMessage(const QString &errorMessage)
 {
-    IoC<WindowManager>()->showErrorBox(
-            errorMessage, ZonesController::tr("Zone Configuration Error"));
+    windowManager()->showErrorBox(errorMessage, ZonesController::tr("Zone Configuration Error"));
 }
 
 }

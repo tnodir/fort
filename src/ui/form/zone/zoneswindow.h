@@ -3,12 +3,7 @@
 
 #include <form/controls/formwindow.h>
 
-class ConfManager;
-class IniOptions;
-class IniUser;
 class TableView;
-class TaskManager;
-class WindowManager;
 class Zone;
 class ZoneEditDialog;
 class ZoneListModel;
@@ -25,11 +20,6 @@ public:
     QString windowOverlayIconPath() const override { return ":/icons/ip_class.png"; }
 
     ZonesController *ctrl() const { return m_ctrl; }
-    ConfManager *confManager() const;
-    IniOptions *ini() const;
-    IniUser *iniUser() const;
-    WindowManager *windowManager() const;
-    TaskManager *taskManager() const;
     ZoneListModel *zoneListModel() const;
 
     void saveWindowState(bool wasVisible) override;

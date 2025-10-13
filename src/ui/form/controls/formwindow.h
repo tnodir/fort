@@ -45,13 +45,13 @@ signals:
     void aboutToDelete();
 
 protected:
-    void setupFormWindow(IniUser *iniUser, const QString &iniGroup);
+    void setupFormWindow(IniUser &iniUser, const QString &iniGroup);
 
 private:
-    void setupWindowIcon(IniUser *iniUser);
+    void setupWindowIcon(IniUser &iniUser);
 
     void setupStateWatcher();
-    void setupWindowCapture(IniUser *iniUser, const QString &iniGroup);
+    void setupWindowCapture(IniUser &iniUser, const QString &iniGroup);
 
 private:
     bool m_excludeFromCapture : 1 = false;

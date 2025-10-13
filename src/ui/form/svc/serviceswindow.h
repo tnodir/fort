@@ -6,13 +6,9 @@
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
-class ConfManager;
-class IniUser;
-class ServiceInfoManager;
 class ServiceListModel;
 class ServicesController;
 class TableView;
-class WindowManager;
 
 class ServicesWindow : public FormWindow
 {
@@ -25,10 +21,6 @@ public:
     QString windowOverlayIconPath() const override { return ":/icons/windows-48.png"; }
 
     ServicesController *ctrl() const { return m_ctrl; }
-    ConfManager *confManager() const;
-    IniUser *iniUser() const;
-    WindowManager *windowManager() const;
-    ServiceInfoManager *serviceInfoManager() const;
     ServiceListModel *serviceListModel() const;
 
     void saveWindowState(bool wasVisible) override;

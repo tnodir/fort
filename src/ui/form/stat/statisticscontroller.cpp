@@ -1,20 +1,12 @@
 #include "statisticscontroller.h"
 
+#include <fortglobal.h>
 #include <stat/statconnmanager.h>
 #include <stat/statmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 StatisticsController::StatisticsController(QObject *parent) : BaseController(parent) { }
-
-StatManager *StatisticsController::statManager() const
-{
-    return IoC<StatManager>();
-}
-
-StatConnManager *StatisticsController::statConnManager() const
-{
-    return IoC<StatConnManager>();
-}
 
 void StatisticsController::clearTraffic()
 {

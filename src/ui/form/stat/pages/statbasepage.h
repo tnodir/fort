@@ -14,13 +14,8 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 QT_FORWARD_DECLARE_CLASS(QTabBar)
 
-class ConfManager;
-class FirewallConf;
-class FortManager;
 class IniUser;
 class StatisticsController;
-class TranslationManager;
-class WindowManager;
 
 class StatBasePage : public QFrame
 {
@@ -31,16 +26,10 @@ public:
 
 protected:
     StatisticsController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
-    ConfManager *confManager() const;
-    FirewallConf *conf() const;
-    IniUser *iniUser() const;
-    TranslationManager *translationManager() const;
-    WindowManager *windowManager() const;
 
 protected slots:
-    virtual void onSaveWindowState(IniUser * /*ini*/) { }
-    virtual void onRestoreWindowState(IniUser * /*ini*/) { }
+    virtual void onSaveWindowState(IniUser & /*ini*/) { }
+    virtual void onRestoreWindowState(IniUser & /*ini*/) { }
 
     virtual void onRetranslateUi() { }
 

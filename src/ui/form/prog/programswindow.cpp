@@ -19,7 +19,7 @@
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
-#include <form/tray/trayicon.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <model/applistmodel.h>
@@ -27,11 +27,12 @@
 #include <util/conf/confutil.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "programeditdialog.h"
 #include "programscontroller.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -70,46 +71,6 @@ ProgramsWindow::ProgramsWindow(QWidget *parent) :
     setupFormWindow(iniUser(), IniUser::progWindowGroup());
 }
 
-FortSettings *ProgramsWindow::settings() const
-{
-    return ctrl()->settings();
-}
-
-ConfManager *ProgramsWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-ConfAppManager *ProgramsWindow::confAppManager() const
-{
-    return ctrl()->confAppManager();
-}
-
-FirewallConf *ProgramsWindow::conf() const
-{
-    return ctrl()->conf();
-}
-
-IniOptions *ProgramsWindow::ini() const
-{
-    return ctrl()->ini();
-}
-
-IniUser *ProgramsWindow::iniUser() const
-{
-    return ctrl()->iniUser();
-}
-
-WindowManager *ProgramsWindow::windowManager() const
-{
-    return ctrl()->windowManager();
-}
-
-AppInfoCache *ProgramsWindow::appInfoCache() const
-{
-    return ctrl()->appInfoCache();
-}
-
 AppListModel *ProgramsWindow::appListModel() const
 {
     return ctrl()->appListModel();
@@ -117,18 +78,20 @@ AppListModel *ProgramsWindow::appListModel() const
 
 void ProgramsWindow::saveWindowState(bool /*wasVisible*/)
 {
-    if (iniUser()->progWindowAutoClearAlerts()) {
+    auto &iniUser = Fort::iniUser();
+
+    if (iniUser.progWindowAutoClearAlerts()) {
         ctrl()->clearAlerts();
     }
 
-    iniUser()->setProgWindowGeometry(stateWatcher()->geometry());
-    iniUser()->setProgWindowMaximized(stateWatcher()->maximized());
+    iniUser.setProgWindowGeometry(stateWatcher()->geometry());
+    iniUser.setProgWindowMaximized(stateWatcher()->maximized());
 
     // Apps header
     {
         auto header = m_appListView->horizontalHeader();
-        iniUser()->setProgAppsHeader(header->saveState());
-        iniUser()->setProgAppsHeaderVersion(APPS_HEADER_VERSION);
+        iniUser.setProgAppsHeader(header->saveState());
+        iniUser.setProgAppsHeaderVersion(APPS_HEADER_VERSION);
     }
 
     confManager()->saveIniUser();
@@ -136,20 +99,22 @@ void ProgramsWindow::saveWindowState(bool /*wasVisible*/)
 
 void ProgramsWindow::restoreWindowState()
 {
-    stateWatcher()->restore(this, QSize(1024, 768), iniUser()->progWindowGeometry(),
-            iniUser()->progWindowMaximized());
+    const auto &iniUser = Fort::iniUser();
+
+    stateWatcher()->restore(
+            this, QSize(1024, 768), iniUser.progWindowGeometry(), iniUser.progWindowMaximized());
 
     // Apps header
-    if (iniUser()->progAppsHeaderVersion() == APPS_HEADER_VERSION) {
+    if (iniUser.progAppsHeaderVersion() == APPS_HEADER_VERSION) {
         auto header = m_appListView->horizontalHeader();
-        header->restoreState(iniUser()->progAppsHeader());
+        header->restoreState(iniUser.progAppsHeader());
     }
 
     // Apps rows
     {
         auto header = m_appListView->verticalHeader();
         header->setDefaultSectionSize(
-                qBound(7, iniUser()->progAppsRowsHeight(header->defaultSectionSize()), 999));
+                qBound(7, iniUser.progAppsRowsHeight(header->defaultSectionSize()), 999));
     }
 }
 
@@ -495,7 +460,7 @@ QLayout *ProgramsWindow::setupSortStatesLayout()
             ":/icons/error.png", [&] { onSortStateClicked(AppListModel::SortAlerted); });
 
     appListModel()->setSortState(qBound(AppListModel::SortNone,
-            AppListModel::SortState(iniUser()->progWindowSortState()), AppListModel::SortAlerted));
+            AppListModel::SortState(iniUser().progWindowSortState()), AppListModel::SortAlerted));
 
     const auto refreshSortStates = [&] {
         const auto sortState = appListModel()->sortState();
@@ -672,7 +637,7 @@ void ProgramsWindow::onSortStateClicked(int sortState)
 
     appListModel()->setSortState(AppListModel::SortState(sortState));
 
-    iniUser()->setProgWindowSortState(sortState);
+    iniUser().setProgWindowSortState(sortState);
 }
 
 void ProgramsWindow::updateSortStateCounts()
@@ -710,7 +675,7 @@ void ProgramsWindow::openProgramByPath(const QString &appPath, qint64 appId, For
 {
     ProgramEditDialog *formAppEdit = nullptr;
 
-    auto confAppManager = IoC<ConfAppManager>();
+    auto confAppManager = Fort::confAppManager();
 
     App app;
     if (appId > 0) {

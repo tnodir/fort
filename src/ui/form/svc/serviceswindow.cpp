@@ -13,16 +13,18 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/opt/optionscontroller.h>
+#include <fortglobal.h>
 #include <manager/serviceinfomanager.h>
 #include <manager/windowmanager.h>
 #include <model/servicelistmodel.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "servicescontroller.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -39,26 +41,6 @@ ServicesWindow::ServicesWindow(QWidget *parent) :
     setupFormWindow(iniUser(), IniUser::serviceWindowGroup());
 }
 
-ConfManager *ServicesWindow::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-IniUser *ServicesWindow::iniUser() const
-{
-    return ctrl()->iniUser();
-}
-
-WindowManager *ServicesWindow::windowManager() const
-{
-    return ctrl()->windowManager();
-}
-
-ServiceInfoManager *ServicesWindow::serviceInfoManager() const
-{
-    return ctrl()->serviceInfoManager();
-}
-
 ServiceListModel *ServicesWindow::serviceListModel() const
 {
     return ctrl()->serviceListModel();
@@ -66,24 +48,28 @@ ServiceListModel *ServicesWindow::serviceListModel() const
 
 void ServicesWindow::saveWindowState(bool /*wasVisible*/)
 {
-    iniUser()->setServiceWindowGeometry(stateWatcher()->geometry());
-    iniUser()->setServiceWindowMaximized(stateWatcher()->maximized());
+    auto &iniUser = Fort::iniUser();
+
+    iniUser.setServiceWindowGeometry(stateWatcher()->geometry());
+    iniUser.setServiceWindowMaximized(stateWatcher()->maximized());
 
     auto header = m_serviceListView->horizontalHeader();
-    iniUser()->setServicesHeader(header->saveState());
-    iniUser()->setServicesHeaderVersion(SERVICES_HEADER_VERSION);
+    iniUser.setServicesHeader(header->saveState());
+    iniUser.setServicesHeaderVersion(SERVICES_HEADER_VERSION);
 
     confManager()->saveIniUser();
 }
 
 void ServicesWindow::restoreWindowState()
 {
-    stateWatcher()->restore(this, QSize(800, 600), iniUser()->serviceWindowGeometry(),
-            iniUser()->serviceWindowMaximized());
+    const auto &iniUser = Fort::iniUser();
 
-    if (iniUser()->servicesHeaderVersion() == SERVICES_HEADER_VERSION) {
+    stateWatcher()->restore(this, QSize(800, 600), iniUser.serviceWindowGeometry(),
+            iniUser.serviceWindowMaximized());
+
+    if (iniUser.servicesHeaderVersion() == SERVICES_HEADER_VERSION) {
         auto header = m_serviceListView->horizontalHeader();
-        header->restoreState(iniUser()->servicesHeader());
+        header->restoreState(iniUser.servicesHeader());
     }
 }
 

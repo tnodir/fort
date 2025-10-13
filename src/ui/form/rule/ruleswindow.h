@@ -4,15 +4,10 @@
 #include <conf/rule.h>
 #include <form/controls/formwindow.h>
 
-class ConfManager;
-class FirewallConf;
-class IniOptions;
-class IniUser;
 class RuleEditDialog;
 class RuleListModel;
 class RulesController;
 class TreeView;
-class WindowManager;
 
 struct RuleRow;
 
@@ -31,11 +26,6 @@ public:
     bool isOpenSelectRule() const { return ruleType() != Rule::RuleNone; }
 
     RulesController *ctrl() const { return m_ctrl; }
-    ConfManager *confManager() const;
-    FirewallConf *conf() const;
-    IniOptions *ini() const;
-    IniUser *iniUser() const;
-    WindowManager *windowManager() const;
     RuleListModel *ruleListModel() const;
 
     void saveWindowState(bool wasVisible) override;

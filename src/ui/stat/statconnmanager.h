@@ -61,7 +61,7 @@ private:
     bool setupDb();
 
     void setupByConf();
-    void setupByConfIni(const IniOptions &ini);
+    void setupByConfIni();
 
 private:
     bool m_logAllowedConn = false;

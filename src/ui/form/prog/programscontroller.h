@@ -3,7 +3,6 @@
 
 #include "programeditcontroller.h"
 
-class AppInfoCache;
 class AppListModel;
 
 class ProgramsController : public BaseController
@@ -13,7 +12,6 @@ class ProgramsController : public BaseController
 public:
     explicit ProgramsController(QObject *parent = nullptr);
 
-    AppInfoCache *appInfoCache() const;
     AppListModel *appListModel() const { return m_appListModel; }
 
     void initialize();

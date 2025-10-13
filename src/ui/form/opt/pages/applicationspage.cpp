@@ -25,6 +25,7 @@
 #include <form/controls/textarea2splitterhandle.h>
 #include <form/dialog/dialogutil.h>
 #include <form/opt/optionscontroller.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <user/iniuser.h>
 #include <util/formatutil.h>
@@ -32,6 +33,8 @@
 #include <util/textareautil.h>
 
 #include "apps/appscolumn.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -135,14 +138,14 @@ void ApplicationsPage::setAppGroupIndex(int v)
     }
 }
 
-void ApplicationsPage::onSaveWindowState(IniUser *ini)
+void ApplicationsPage::onSaveWindowState(IniUser &ini)
 {
-    ini->setOptWindowAppsSplit(m_allowSplitter->saveState());
+    ini.setOptWindowAppsSplit(m_allowSplitter->saveState());
 }
 
-void ApplicationsPage::onRestoreWindowState(IniUser *ini)
+void ApplicationsPage::onRestoreWindowState(IniUser &ini)
 {
-    m_allowSplitter->restoreState(ini->optWindowAppsSplit());
+    m_allowSplitter->restoreState(ini.optWindowAppsSplit());
 }
 
 void ApplicationsPage::onRetranslateUi()

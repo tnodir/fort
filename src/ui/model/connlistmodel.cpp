@@ -11,15 +11,16 @@
 #include <appinfo/appinfocache.h>
 #include <conf/confrulemanager.h>
 #include <conf/confzonemanager.h>
-#include <fortmanager.h>
+#include <fortglobal.h>
 #include <hostinfo/hostinfocache.h>
 #include <manager/translationmanager.h>
 #include <stat/statconnmanager.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -30,7 +31,7 @@ QString formatIp(const ip_addr_t ip, bool isIPv6, bool resolveAddress = false)
     QString address = NetFormatUtil::ipToText(ip, isIPv6);
 
     if (resolveAddress) {
-        const QString hostName = IoC<HostInfoCache>()->hostName(address);
+        const QString hostName = hostInfoCache()->hostName(address);
         if (!hostName.isEmpty()) {
             return hostName;
         }
@@ -89,7 +90,7 @@ QString directionIconPath(const ConnRow &connRow)
 
 QVariant dataDisplayAppName(const ConnRow &connRow, int /*role*/)
 {
-    return IoC<AppInfoCache>()->appName(connRow.appPath);
+    return appInfoCache()->appName(connRow.appPath);
 }
 
 QVariant dataDisplayProcessId(const ConnRow &connRow, int /*role*/)
@@ -160,13 +161,13 @@ QVariant dataDisplayReason(const ConnRow &connRow, int role)
     QStringList list = { ConnListModel::reasonText(FortConnReason(connRow.reason)) };
 
     if (connRow.ruleId != 0) {
-        const QString ruleName = IoC<ConfRuleManager>()->ruleNameById(connRow.ruleId);
+        const QString ruleName = confRuleManager()->ruleNameById(connRow.ruleId);
 
         list << ConnListModel::tr("Rule: %1").arg(ruleName);
     }
 
     if (connRow.zoneId != 0) {
-        const QString zoneName = IoC<ConfZoneManager>()->zoneNameById(connRow.zoneId);
+        const QString zoneName = confZoneManager()->zoneNameById(connRow.zoneId);
 
         list << ConnListModel::tr("Zone: %1").arg(zoneName);
     }
@@ -205,29 +206,9 @@ static const dataDisplay_func dataDisplay_funcList[] = {
 
 ConnListModel::ConnListModel(QObject *parent) : TableSqlModel(parent) { }
 
-FortManager *ConnListModel::fortManager() const
-{
-    return IoC<FortManager>();
-}
-
-StatConnManager *ConnListModel::statConnManager() const
-{
-    return IoC<StatConnManager>();
-}
-
 SqliteDb *ConnListModel::sqliteDb() const
 {
     return statConnManager()->roSqliteDb();
-}
-
-AppInfoCache *ConnListModel::appInfoCache() const
-{
-    return IoC<AppInfoCache>();
-}
-
-HostInfoCache *ConnListModel::hostInfoCache() const
-{
-    return IoC<HostInfoCache>();
 }
 
 void ConnListModel::initialize()
@@ -576,7 +557,7 @@ QString ConnListModel::columnName(const ConnListColumn column)
     static QStringList g_columnNames;
     static int g_language = -1;
 
-    const int language = IoC<TranslationManager>()->language();
+    const int language = translationManager()->language();
     if (g_language != language) {
         g_language = language;
 

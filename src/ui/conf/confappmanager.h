@@ -12,8 +12,6 @@
 
 class App;
 class AppGroup;
-class ConfManager;
-class FirewallConf;
 class LogEntryApp;
 
 class ConfAppManager : public ConfManagerBase, public ConfAppsWalker, public IocService

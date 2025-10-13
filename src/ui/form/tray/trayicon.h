@@ -11,17 +11,8 @@ QT_FORWARD_DECLARE_CLASS(QAction)
 QT_FORWARD_DECLARE_CLASS(QActionGroup)
 QT_FORWARD_DECLARE_CLASS(QTimer)
 
-class ConfAppManager;
-class ConfManager;
-class ConfRuleManager;
-class DriverManager;
-class FirewallConf;
-class FortSettings;
-class HotKeyManager;
-class IniOptions;
 class IniUser;
 class TrayController;
-class WindowManager;
 
 class TrayIcon : public QSystemTrayIcon
 {
@@ -36,21 +27,11 @@ public:
     QMenu *optionsMenu() const { return m_optionsMenu; }
 
     TrayController *ctrl() const { return m_ctrl; }
-    FortSettings *settings() const;
-    ConfManager *confManager() const;
-    ConfAppManager *confAppManager() const;
-    ConfRuleManager *confRuleManager() const;
-    FirewallConf *conf() const;
-    IniOptions *ini() const;
-    IniUser *iniUser() const;
-    HotKeyManager *hotKeyManager() const;
-    DriverManager *driverManager() const;
-    WindowManager *windowManager() const;
 
-    static tray::ActionType clickEventActionType(IniUser *iniUser, tray::ClickType clickType);
+    static tray::ActionType clickEventActionType(IniUser &iniUser, tray::ClickType clickType);
     static void setClickEventActionType(
-            IniUser *iniUser, tray::ClickType clickType, tray::ActionType actionType);
-    static void resetClickEventActionType(IniUser *iniUser, tray::ClickType clickType);
+            IniUser &iniUser, tray::ClickType clickType, tray::ActionType actionType);
+    static void resetClickEventActionType(IniUser &iniUser, tray::ClickType clickType);
 
 signals:
     void iconPathChanged(const QString &iconPath);

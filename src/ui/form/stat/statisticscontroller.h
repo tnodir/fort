@@ -3,8 +3,7 @@
 
 #include <form/basecontroller.h>
 
-class StatConnManager;
-class StatManager;
+class IniUser;
 
 class StatisticsController : public BaseController
 {
@@ -13,9 +12,6 @@ class StatisticsController : public BaseController
 public:
     explicit StatisticsController(QObject *parent = nullptr);
 
-    StatManager *statManager() const;
-    StatConnManager *statConnManager() const;
-
     void clearTraffic();
     void deleteStatApp(qint64 appId);
     void resetAppTotals();
@@ -23,8 +19,8 @@ public:
     void deleteConn(qint64 connIdTo = 0);
 
 signals:
-    void afterSaveWindowState(IniUser *ini);
-    void afterRestoreWindowState(IniUser *ini);
+    void afterSaveWindowState(IniUser &ini);
+    void afterRestoreWindowState(IniUser &ini);
 };
 
 #endif // STATISTICSCONTROLLER_H

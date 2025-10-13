@@ -1,14 +1,16 @@
 #include "homecontroller.h"
 
 #include <conf/confmanager.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 HomeController::HomeController(QObject *parent) : BaseController(parent)
 {
-    connect(IoC<ConfManager>(), &ConfManager::iniChanged, this,
-            &HomeController::updatePasswordLocked);
-    connect(IoC<FortSettings>(), &FortSettings::passwordCheckedChanged, this,
+    connect(confManager(), &ConfManager::iniChanged, this, &HomeController::updatePasswordLocked);
+
+    connect(settings(), &FortSettings::passwordCheckedChanged, this,
             &HomeController::updatePasswordLocked);
 
     updatePasswordLocked();
@@ -25,7 +27,5 @@ void HomeController::setPasswordLocked(bool v)
 
 void HomeController::updatePasswordLocked()
 {
-    auto settings = IoC<FortSettings>();
-
-    setPasswordLocked(settings->isPasswordRequired());
+    setPasswordLocked(settings()->isPasswordRequired());
 }

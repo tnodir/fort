@@ -7,21 +7,12 @@ QT_FORWARD_DECLARE_CLASS(QHeaderView)
 QT_FORWARD_DECLARE_CLASS(QMenu)
 
 class App;
-class AppInfoCache;
 class AppInfoRow;
 class AppListModel;
-class AppListModel;
-class ConfAppManager;
-class ConfManager;
-class FirewallConf;
-class FortSettings;
-class IniOptions;
-class IniUser;
 class ProgramEditController;
 class ProgramEditDialog;
 class ProgramsController;
 class TableView;
-class WindowManager;
 
 struct AppRow;
 
@@ -36,14 +27,6 @@ public:
     QString windowOverlayIconPath() const override { return ":/icons/application.png"; }
 
     ProgramsController *ctrl() const { return m_ctrl; }
-    FortSettings *settings() const;
-    ConfManager *confManager() const;
-    ConfAppManager *confAppManager() const;
-    FirewallConf *conf() const;
-    IniOptions *ini() const;
-    IniUser *iniUser() const;
-    WindowManager *windowManager() const;
-    AppInfoCache *appInfoCache() const;
     AppListModel *appListModel() const;
 
     void saveWindowState(bool wasVisible) override;

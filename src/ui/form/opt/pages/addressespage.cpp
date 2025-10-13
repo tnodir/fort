@@ -18,12 +18,15 @@
 #include <form/controls/plaintextedit.h>
 #include <form/controls/zonesselector.h>
 #include <form/opt/optionscontroller.h>
+#include <fortglobal.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
 #include <user/iniuser.h>
 #include <util/iconcache.h>
 #include <util/net/netutil.h>
 #include <util/textareautil.h>
+
+using namespace Fort;
 
 AddressesPage::AddressesPage(OptionsController *ctrl, QWidget *parent) : OptBasePage(ctrl, parent)
 {

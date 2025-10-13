@@ -22,7 +22,7 @@ void FormWindow::setExcludeFromCapture(bool v)
     excludeWindowFromCapture(this, excludeFromCapture());
 }
 
-void FormWindow::setupFormWindow(IniUser *iniUser, const QString &iniGroup)
+void FormWindow::setupFormWindow(IniUser &iniUser, const QString &iniGroup)
 {
     setupWindowIcon(iniUser);
 
@@ -30,7 +30,7 @@ void FormWindow::setupFormWindow(IniUser *iniUser, const QString &iniGroup)
     setupWindowCapture(iniUser, iniGroup);
 }
 
-void FormWindow::setupWindowIcon(IniUser *iniUser)
+void FormWindow::setupWindowIcon(IniUser &iniUser)
 {
     const auto refreshWindowIcon = [&](const QString &iconPath) {
         this->setWindowIcon(GuiUtil::overlayIcon(iconPath, windowOverlayIconPath()));
@@ -38,7 +38,7 @@ void FormWindow::setupWindowIcon(IniUser *iniUser)
 
     QString iconPath;
 
-    if (iniUser->updateWindowIcons()) {
+    if (iniUser.updateWindowIcons()) {
         auto trayIcon = IoC<WindowManager>()->trayIcon();
 
         iconPath = trayIcon->iconPath();
@@ -64,9 +64,9 @@ void FormWindow::setupStateWatcher()
     ensureWindowScreenBounds();
 }
 
-void FormWindow::setupWindowCapture(IniUser *iniUser, const QString &iniGroup)
+void FormWindow::setupWindowCapture(IniUser &iniUser, const QString &iniGroup)
 {
-    if (iniUser->valueBool(iniGroup + "/excludeFromCapture", iniUser->excludeFromCapture())) {
+    if (iniUser.valueBool(iniGroup + "/excludeFromCapture", iniUser.excludeFromCapture())) {
         setExcludeFromCapture(true);
     }
 }

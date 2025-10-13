@@ -9,7 +9,10 @@
 #include <form/controls/toolbutton.h>
 #include <form/controls/zonesselector.h>
 #include <form/rule/ruleswindow.h>
+#include <fortglobal.h>
 #include <model/rulelistmodel.h>
+
+using namespace Fort;
 
 ProgNetworkPage::ProgNetworkPage(ProgramEditController *ctrl, QWidget *parent) :
     ProgBasePage(ctrl, parent)

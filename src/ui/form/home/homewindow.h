@@ -3,12 +3,8 @@
 
 #include <form/controls/formwindow.h>
 
-class ConfManager;
-class FortSettings;
 class HomeController;
 class HomeMainPage;
-class IniUser;
-class WindowManager;
 
 class HomeWindow : public FormWindow
 {
@@ -20,10 +16,6 @@ public:
     WindowCode windowCode() const override { return WindowHome; }
 
     HomeController *ctrl() const { return m_ctrl; }
-    FortSettings *settings() const;
-    ConfManager *confManager() const;
-    IniUser *iniUser() const;
-    WindowManager *windowManager() const;
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;
@@ -36,6 +28,8 @@ protected slots:
 
 private slots:
     void onActivationChanged(bool isActive);
+
+    void onLinkClicked();
 
 private:
     void setupController();

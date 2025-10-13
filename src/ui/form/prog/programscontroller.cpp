@@ -1,19 +1,19 @@
 #include "programscontroller.h"
 
-#include <appinfo/appinfocache.h>
 #include <conf/confappmanager.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/applistmodel.h>
 #include <task/taskinfoapppurger.h>
 #include <task/taskmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
 void showErrorMessage(const QString &errorMessage)
 {
-    IoC<WindowManager>()->showErrorBox(
-            errorMessage, ProgramsController::tr("App Configuration Error"));
+    windowManager()->showErrorBox(errorMessage, ProgramsController::tr("App Configuration Error"));
 }
 
 }
@@ -21,11 +21,6 @@ void showErrorMessage(const QString &errorMessage)
 ProgramsController::ProgramsController(QObject *parent) :
     BaseController(parent), m_appListModel(new AppListModel(this))
 {
-}
-
-AppInfoCache *ProgramsController::appInfoCache() const
-{
-    return IoC<AppInfoCache>();
 }
 
 void ProgramsController::initialize()

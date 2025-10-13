@@ -16,6 +16,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/mainwindow.h>
 #include <form/form_types.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/hotkeymanager.h>
 #include <manager/windowmanager.h>
@@ -26,6 +27,8 @@
 #include <util/window/widgetwindow.h>
 
 #include "traycontroller.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -199,17 +202,17 @@ QAction *addAction(QWidget *widget, const AddActionArgs &a)
     return action;
 }
 
-bool checkAlertFilterMode(FirewallConf *conf, IniUser *iniUser)
+bool checkAlertFilterMode(FirewallConf *conf, const IniUser &iniUser)
 {
     switch (conf->filterMode()) {
     case FirewallConf::ModeAutoLearn:
-        return iniUser->progAlertWindowAutoLearn();
+        return iniUser.progAlertWindowAutoLearn();
     case FirewallConf::ModeAskToConnect:
         return true;
     case FirewallConf::ModeBlockAll:
-        return iniUser->progAlertWindowBlockAll();
+        return iniUser.progAlertWindowBlockAll();
     case FirewallConf::ModeAllowAll:
-        return iniUser->progAlertWindowAllowAll();
+        return iniUser.progAlertWindowAllowAll();
     default:
         return false;
     }
@@ -248,56 +251,6 @@ void TrayIcon::setIconPath(const QString &v)
     }
 }
 
-FortSettings *TrayIcon::settings() const
-{
-    return ctrl()->settings();
-}
-
-ConfManager *TrayIcon::confManager() const
-{
-    return ctrl()->confManager();
-}
-
-ConfAppManager *TrayIcon::confAppManager() const
-{
-    return ctrl()->confAppManager();
-}
-
-ConfRuleManager *TrayIcon::confRuleManager() const
-{
-    return ctrl()->confRuleManager();
-}
-
-FirewallConf *TrayIcon::conf() const
-{
-    return ctrl()->conf();
-}
-
-IniOptions *TrayIcon::ini() const
-{
-    return ctrl()->ini();
-}
-
-IniUser *TrayIcon::iniUser() const
-{
-    return ctrl()->iniUser();
-}
-
-HotKeyManager *TrayIcon::hotKeyManager() const
-{
-    return ctrl()->hotKeyManager();
-}
-
-DriverManager *TrayIcon::driverManager() const
-{
-    return ctrl()->driverManager();
-}
-
-WindowManager *TrayIcon::windowManager() const
-{
-    return ctrl()->windowManager();
-}
-
 void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 {
     if (WindowManager::activateModalWidget())
@@ -323,7 +276,7 @@ void TrayIcon::onTrayActivated(QSystemTrayIcon::ActivationReason reason)
 
 void TrayIcon::onTrayMessageClicked()
 {
-    auto windowManager = this->windowManager();
+    auto windowManager = Fort::windowManager();
 
     switch (m_lastTrayMessageType) {
     case tray::MessageNewVersion: {
@@ -357,7 +310,7 @@ void TrayIcon::updateTrayIcon(bool alerted)
     m_alerted = alerted;
     m_animatedAlert = false;
 
-    if (m_alerted && !iniUser()->trayShowAlert())
+    if (m_alerted && !iniUser().trayShowAlert())
         return;
 
     updateAlertTimer();
@@ -396,7 +349,7 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
 
 void TrayIcon::quitProgram()
 {
-    if (iniUser()->confirmQuit()) {
+    if (iniUser().confirmQuit()) {
         windowManager()->showConfirmBox(
                 [&] { windowManager()->quit(); }, tr("Are you sure you want to quit the program?"));
     } else {
@@ -719,7 +672,7 @@ void TrayIcon::updateTrayMenuFlags()
     m_filterEnabledAction->setChecked(conf()->filterEnabled());
 
     m_snoozeAlertsAction->setEnabled(editEnabled);
-    m_snoozeAlertsAction->setChecked(iniUser()->progSnoozeAlerts());
+    m_snoozeAlertsAction->setChecked(iniUser().progSnoozeAlerts());
 
     m_blockTrafficMenu->setEnabled(editEnabled);
     {
@@ -755,7 +708,7 @@ void TrayIcon::updateTrayMenuFlags()
 
 void TrayIcon::updateAppGroupActions()
 {
-    const int trayMaxGroups = iniUser()->trayMaxGroups(MAX_APP_GROUP_COUNT);
+    const int trayMaxGroups = iniUser().trayMaxGroups(MAX_APP_GROUP_COUNT);
     const int appGroupsCount = qMin(conf()->appGroups().size(), trayMaxGroups);
 
     for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
@@ -817,25 +770,27 @@ void TrayIcon::updateFilterModeMenuIcon(int index)
 
 void TrayIcon::sendAlertMessage()
 {
-    if (!checkAlertFilterMode(conf(), iniUser()))
+    const auto &iniUser = Fort::iniUser();
+
+    if (!checkAlertFilterMode(conf(), iniUser))
         return;
 
-    if (iniUser()->progNotifyMessage()) {
+    if (iniUser.progNotifyMessage()) {
         showTrayMessage(tr("New program detected!"), tray::MessageAlert);
     }
 
-    if (iniUser()->progAlertSound()) {
+    if (iniUser.progAlertSound()) {
         OsUtil::playSound();
     }
 
-    if (iniUser()->progAlertWindowAutoShow() && !iniUser()->progSnoozeAlerts()) {
+    if (iniUser.progAlertWindowAutoShow() && !iniUser.progSnoozeAlerts()) {
         windowManager()->showProgramAlertWindow(/*activate=*/false);
     }
 }
 
 void TrayIcon::updateAlertTimer()
 {
-    if (!iniUser()->trayAnimateAlert()) {
+    if (!iniUser().trayAnimateAlert()) {
         removeAlertTimer();
         return;
     }
@@ -926,7 +881,7 @@ QString TrayIcon::trayIconBlockPath(int blockType, bool &isDefault) const
 void TrayIcon::saveTrayFlags()
 {
     conf()->setFilterEnabled(m_filterEnabledAction->isChecked());
-    iniUser()->setProgSnoozeAlerts(m_snoozeAlertsAction->isChecked());
+    iniUser().setProgSnoozeAlerts(m_snoozeAlertsAction->isChecked());
 
     // Set Block Traffic
     {
@@ -970,7 +925,7 @@ void TrayIcon::onShowWindowAction()
 
     constexpr int alwaysSwitchWindows = WindowGraph;
 
-    if ((windowCode & alwaysSwitchWindows) != 0 || iniUser()->traySwitchWindow()) {
+    if ((windowCode & alwaysSwitchWindows) != 0 || iniUser().traySwitchWindow()) {
         windowManager()->switchWindowByCode(windowCode);
     } else {
         windowManager()->showWindowByCode(windowCode);
@@ -979,7 +934,7 @@ void TrayIcon::onShowWindowAction()
 
 void TrayIcon::switchTrayFlag(bool checked)
 {
-    if (iniUser()->confirmTrayFlags()) {
+    if (iniUser().confirmTrayFlags()) {
         const auto action = qobject_cast<QAction *>(sender());
         Q_ASSERT(action);
 
@@ -1003,7 +958,7 @@ void TrayIcon::switchBlockTraffic(QAction *action)
     if (index < 0 || index == conf()->blockTrafficIndex())
         return;
 
-    if (iniUser()->confirmTrayFlags()) {
+    if (iniUser().confirmTrayFlags()) {
         windowManager()->showQuestionBox(
                 [=, this](bool confirmed) {
                     if (confirmed) {
@@ -1026,7 +981,7 @@ void TrayIcon::switchFilterMode(QAction *action)
     if (index < 0 || index == conf()->filterMode())
         return;
 
-    if (iniUser()->confirmTrayFlags()) {
+    if (iniUser().confirmTrayFlags()) {
         windowManager()->showQuestionBox(
                 [=, this](bool confirmed) {
                     if (confirmed) {
@@ -1059,7 +1014,7 @@ void TrayIcon::updateActionHotKeys()
     for (auto action : hotKeyManager()->actions()) {
         const auto &iniKey = m_actionIniKeys[index];
 
-        const QString shortcutText = iniUser()->hotKeyValue(iniKey);
+        const QString shortcutText = iniUser().hotKeyValue(iniKey);
         QKeySequence shortcut = QKeySequence::fromString(shortcutText);
 
         if (!shortcut.isEmpty() && iniKey == HotKey::appGroupModifier) {
@@ -1091,28 +1046,30 @@ void TrayIcon::addHotKey(QAction *action, const char *iniKey)
 
 void TrayIcon::updateHotKeys()
 {
-    hotKeyManager()->initialize(iniUser()->hotKeyEnabled(), iniUser()->hotKeyGlobal());
+    const auto &iniUser = Fort::iniUser();
+
+    hotKeyManager()->initialize(iniUser.hotKeyEnabled(), iniUser.hotKeyGlobal());
 }
 
-tray::ActionType TrayIcon::clickEventActionType(IniUser *iniUser, tray::ClickType clickType)
+tray::ActionType TrayIcon::clickEventActionType(IniUser &iniUser, tray::ClickType clickType)
 {
     const QString eventName = clickNameByType(clickType);
-    const QString actionName = iniUser->trayAction(eventName);
+    const QString actionName = iniUser.trayAction(eventName);
 
     const auto actionType = actionTypeByName(actionName);
     return (actionType != tray::ActionNone) ? actionType : defaultActionTypeByClick(clickType);
 }
 
 void TrayIcon::setClickEventActionType(
-        IniUser *iniUser, tray::ClickType clickType, tray::ActionType actionType)
+        IniUser &iniUser, tray::ClickType clickType, tray::ActionType actionType)
 {
     const QString eventName = clickNameByType(clickType);
     const QString actionName = actionNameByType(actionType);
 
-    iniUser->setTrayAction(eventName, actionName);
+    iniUser.setTrayAction(eventName, actionName);
 }
 
-void TrayIcon::resetClickEventActionType(IniUser *iniUser, tray::ClickType clickType)
+void TrayIcon::resetClickEventActionType(IniUser &iniUser, tray::ClickType clickType)
 {
     const tray::ActionType actionType = defaultActionTypeByClick(clickType);
 

@@ -14,18 +14,8 @@ QT_FORWARD_DECLARE_CLASS(QProgressBar)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
-class AutoUpdateManager;
-class ConfManager;
-class DriverManager;
-class FirewallConf;
-class FortManager;
-class FortSettings ;
 class HomeController;
-class IniOptions;
 class IniUser;
-class TaskManager;
-class TranslationManager;
-class WindowManager;
 
 class HomeBasePage : public QFrame
 {
@@ -36,21 +26,10 @@ public:
 
 protected:
     HomeController *ctrl() const { return m_ctrl; }
-    FortManager *fortManager() const;
-    FortSettings *settings() const;
-    ConfManager *confManager() const;
-    FirewallConf *conf() const;
-    IniOptions *ini() const;
-    IniUser *iniUser() const;
-    DriverManager *driverManager() const;
-    AutoUpdateManager *autoUpdateManager() const;
-    TaskManager *taskManager() const;
-    TranslationManager *translationManager() const;
-    WindowManager *windowManager() const;
 
 protected slots:
-    virtual void onSaveWindowState(IniUser * /*ini*/) { }
-    virtual void onRestoreWindowState(IniUser * /*ini*/) { }
+    virtual void onSaveWindowState(IniUser & /*ini*/) { }
+    virtual void onRestoreWindowState(IniUser & /*ini*/) { }
 
     virtual void onRetranslateUi() { }
 

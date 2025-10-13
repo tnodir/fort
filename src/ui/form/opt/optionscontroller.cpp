@@ -6,12 +6,13 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/dialog/dialogutil.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
-#include <model/zonelistmodel.h>
 #include <stat/statmanager.h>
 #include <user/iniuser.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -19,7 +20,7 @@ const QLoggingCategory LC("optionsCtrl");
 
 void showErrorMessage(const QString &errorMessage)
 {
-    IoC<WindowManager>()->showErrorBox(errorMessage, ConfManager::tr("Configuration Error"));
+    windowManager()->showErrorBox(errorMessage, ConfManager::tr("Configuration Error"));
 }
 
 }
@@ -166,7 +167,7 @@ void OptionsController::exportBackup()
     if (path.isEmpty())
         return;
 
-    IoC<StatManager>()->exportBackup(path);
+    statManager()->exportBackup(path);
 
     const bool ok = confManager()->exportBackup(path);
 
@@ -186,7 +187,7 @@ void OptionsController::importBackup(bool onlyNewApps)
     if (onlyNewApps) {
         ok = confAppManager()->importAppsBackup(path);
     } else {
-        IoC<StatManager>()->importBackup(path);
+        statManager()->importBackup(path);
 
         ok = confManager()->importBackup(path);
     }

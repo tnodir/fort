@@ -8,13 +8,8 @@ QT_FORWARD_DECLARE_CLASS(QHeaderView)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
-class AppInfoCache;
 class AppInfoRow;
-class ConfManager;
 class ConnListModel;
-class FirewallConf;
-class FortManager;
-class FortSettings;
 class IniUser;
 class StatisticsController;
 class TableView;
@@ -29,11 +24,10 @@ public:
     explicit ConnectionsPage(StatisticsController *ctrl = nullptr, QWidget *parent = nullptr);
 
     ConnListModel *connListModel() const { return m_connListModel; }
-    AppInfoCache *appInfoCache() const;
 
 protected slots:
-    void onSaveWindowState(IniUser *ini) override;
-    void onRestoreWindowState(IniUser *ini) override;
+    void onSaveWindowState(IniUser &ini) override;
+    void onRestoreWindowState(IniUser &ini) override;
 
     void onRetranslateUi() override;
 
