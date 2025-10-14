@@ -2,11 +2,14 @@
 
 #include <QLocale>
 
+#include <fortglobal.h>
 #include <stat/statmanager.h>
 #include <stat/statsql.h>
 #include <util/dateutil.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -97,15 +100,12 @@ void TrafListModel::setAppId(qint64 appId)
     resetLater();
 }
 
-StatManager *TrafListModel::statManager() const
-{
-    return IoC<StatManager>();
-}
-
 void TrafListModel::initialize()
 {
-    connect(statManager(), &StatManager::trafficCleared, this, &TrafListModel::resetLater);
-    connect(statManager(), &StatManager::appTrafTotalsResetted, this, &TrafListModel::resetLater);
+    auto statManager = Fort::statManager();
+
+    connect(statManager, &StatManager::trafficCleared, this, &TrafListModel::resetLater);
+    connect(statManager, &StatManager::appTrafTotalsResetted, this, &TrafListModel::resetLater);
 }
 
 int TrafListModel::rowCount(const QModelIndex &parent) const

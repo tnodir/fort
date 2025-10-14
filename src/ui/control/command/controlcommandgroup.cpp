@@ -2,8 +2,10 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -48,7 +50,7 @@ bool reportCommandGroupAction(ProcessCommandResult &r, FirewallConf *conf, int g
 bool processCommandGroupAction(
         ProcessCommandResult &r, int groupIndex, GroupAction groupAction, bool report)
 {
-    auto confManager = IoC<ConfManager>();
+    auto confManager = Fort::confManager();
 
     auto conf = confManager->conf();
 

@@ -9,9 +9,11 @@
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
 #include <form/zone/zoneswindow.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <util/bitutil.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -64,7 +66,7 @@ FormWindow *FormPointer::initialize()
 
 bool FormPointer::show(bool activate)
 {
-    auto windowManager = IoC<WindowManager>();
+    auto windowManager = Fort::windowManager();
 
     if (!windowManager->checkWindowPassword(code()))
         return false;
@@ -89,7 +91,7 @@ bool FormPointer::close()
         return false;
     }
 
-    auto windowManager = IoC<WindowManager>();
+    auto windowManager = Fort::windowManager();
     const bool isAppQuitting = windowManager->isAppQuitting();
 
     if (w->isVisible()) {

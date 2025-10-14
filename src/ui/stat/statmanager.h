@@ -13,7 +13,6 @@
 #include <util/ioc/iocservice.h>
 
 class FirewallConf;
-class IniOptions;
 class LogEntryProcNew;
 class LogEntryStatTraf;
 
@@ -27,8 +26,6 @@ public:
 
     const FirewallConf *conf() const { return m_conf; }
     virtual void setConf(const FirewallConf *conf);
-
-    IniOptions &ini() const;
 
     SqliteDb *sqliteDb() const { return m_sqliteDb.data(); }
 

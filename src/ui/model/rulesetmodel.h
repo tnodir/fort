@@ -4,8 +4,6 @@
 #include <conf/rule.h>
 #include <util/model/stringlistmodel.h>
 
-class ConfRuleManager;
-
 struct RuleRow;
 
 class RuleSetModel : public StringListModel
@@ -19,8 +17,6 @@ public:
     void setEdited(bool v);
 
     const RuleSetList &ruleSet() const { return m_ruleSet; }
-
-    ConfRuleManager *confRuleManager() const;
 
     void initialize(const RuleRow &ruleRow, const QStringList &ruleSetNames);
 

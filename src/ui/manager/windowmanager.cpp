@@ -22,15 +22,17 @@
 #include <form/svc/serviceswindow.h>
 #include <form/tray/trayicon.h>
 #include <form/zone/zoneswindow.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <stat/statmanager.h>
 #include <user/usersettings.h>
 #include <util/bitutil.h>
 #include <util/guiutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 
 #include "nativeeventfilter.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -136,9 +138,9 @@ void WindowManager::initialize()
     Q_ASSERT(!m_trayIcon);
     m_trayIcon = new TrayIcon(this);
 
-    const IniUser &ini = IoC<UserSettings>()->iniUser();
+    const auto &ini = Fort::iniUser();
 
-    if (ini.splashWindowVisible() && !IoC<FortSettings>()->noSplash()) {
+    if (ini.splashWindowVisible() && !settings()->noSplash()) {
         showSplashScreen();
     }
 
@@ -186,12 +188,12 @@ void WindowManager::setupMainWindow()
     m_mainWindow->setFont(defaultFont());
 
     // Register Native events
-    auto nativeEventFilter = IoCDependency<NativeEventFilter>();
+    auto nativeEventFilter = Fort::dependency<NativeEventFilter>();
 
     nativeEventFilter->registerSessionNotification(mainWindow()->winId());
 
     connect(nativeEventFilter, &NativeEventFilter::sessionLocked, this,
-            [&] { IoC<FortSettings>()->resetCheckedPassword(FortSettings::UnlockSession); });
+            [&] { settings()->resetCheckedPassword(FortSettings::UnlockSession); });
 }
 
 void WindowManager::closeMainWindow()
@@ -200,7 +202,7 @@ void WindowManager::closeMainWindow()
         return;
 
     // Unregister Native events
-    auto nativeEventFilter = IoC<NativeEventFilter>();
+    auto nativeEventFilter = Fort::nativeEventFilter();
 
     nativeEventFilter->unregisterHotKeys();
     nativeEventFilter->unregisterSessionNotification(mainWindow()->winId());
@@ -212,7 +214,7 @@ void WindowManager::closeMainWindow()
 
 void WindowManager::setupConfManager()
 {
-    auto confManager = IoCDependency<ConfManager>();
+    auto confManager = Fort::dependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniUserChanged, this, &WindowManager::setupByIniUser);
 }
@@ -462,7 +464,7 @@ bool WindowManager::checkPassword(WindowCode code)
     if (isAnyWindowUnlocked())
         return true;
 
-    const auto settings = IoC<FortSettings>();
+    const auto settings = Fort::settings();
 
     if (!settings->isPasswordRequired() || settings->passwordTemporaryChecked())
         return true;
@@ -474,7 +476,7 @@ void WindowManager::resetCheckedPassword()
 {
     m_unlockedWindows = 0;
 
-    IoC<FortSettings>()->resetCheckedPassword();
+    settings()->resetCheckedPassword();
 }
 
 void WindowManager::showErrorBox(const QString &text, const QString &title, QWidget *parent)
@@ -562,7 +564,7 @@ bool WindowManager::checkPasswordDialog(WindowCode code, FortSettings *settings)
 
     windowClosed(WindowPasswordDialog);
 
-    if (!(ok && IoC<ConfManager>()->checkPassword(password)))
+    if (!(ok && confManager()->checkPassword(password)))
         return false;
 
     windowUnlocked(code);
@@ -606,7 +608,7 @@ void WindowManager::windowClosed(WindowCode code)
     emit windowVisibilityChanged(code, /*isVisible=*/false);
 
     if (!isAnyWindowUnlocked()) {
-        IoC<FortSettings>()->resetCheckedPassword(FortSettings::UnlockWindow);
+        settings()->resetCheckedPassword(FortSettings::UnlockWindow);
     }
 }
 

@@ -10,11 +10,7 @@
 
 #include "applistcolumn.h"
 
-class AppGroup;
-class AppInfoCache;
 class AppListModelData;
-class ConfAppManager;
-class ConfManager;
 
 struct AppRow : TableRow, public App
 {
@@ -64,9 +60,6 @@ public:
 
     void clearFilters();
 
-    ConfManager *confManager() const;
-    ConfAppManager *confAppManager() const;
-    AppInfoCache *appInfoCache() const;
     SqliteDb *sqliteDb() const override;
 
     void initialize();

@@ -2,8 +2,10 @@
 
 #include <sqlite/sqlitedb.h>
 
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 AppInfoManagerRpc::AppInfoManagerRpc(const QString &filePath, bool noCache, QObject *parent) :
     AppInfoManager(filePath, parent,
@@ -13,13 +15,13 @@ AppInfoManagerRpc::AppInfoManagerRpc(const QString &filePath, bool noCache, QObj
 
 void AppInfoManagerRpc::lookupAppInfo(const QString &appPath)
 {
-    IoC<RpcManager>()->invokeOnServer(Control::Rpc_AppInfoManager_lookupAppInfo, { appPath });
+    rpcManager()->invokeOnServer(Control::Rpc_AppInfoManager_lookupAppInfo, { appPath });
 }
 
 bool AppInfoManagerRpc::processServerCommand(
         const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
-    auto appInfoManager = IoC<AppInfoManager>();
+    auto appInfoManager = Fort::appInfoManager();
 
     switch (p.command) {
     case Control::Rpc_AppInfoManager_lookupAppInfo: {
@@ -37,7 +39,7 @@ bool AppInfoManagerRpc::processServerCommand(
 
 void AppInfoManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto appInfoManager = IoC<AppInfoManager>();
+    auto appInfoManager = Fort::appInfoManager();
 
     connect(appInfoManager, &AppInfoManager::lookupInfoFinished, rpcManager,
             [=](const QString &appPath, const AppInfo & /*appInfo*/) {

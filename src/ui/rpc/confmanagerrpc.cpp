@@ -4,10 +4,10 @@
 
 #include <conf/firewallconf.h>
 #include <control/controlworker.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <rpc/rpcmanager.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/variantutil.h>
 
 namespace {
@@ -83,9 +83,10 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 
     const QVariant confVar = newConf.toVariant(iniOpt(), /*onlyEdited=*/true);
 
+    auto rpcManager = Fort::rpcManager();
+
     setSaving(true);
-    const bool ok =
-            IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_saveVariant, { confVar });
+    const bool ok = rpcManager->doOnServer(Control::Rpc_ConfManager_saveVariant, { confVar });
     setSaving(false);
 
     if (!ok)
@@ -103,22 +104,28 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
 
 bool ConfManagerRpc::exportMasterBackup(const QString &path)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_exportMasterBackup, { path });
+    auto rpcManager = Fort::rpcManager();
+
+    return rpcManager->doOnServer(Control::Rpc_ConfManager_exportMasterBackup, { path });
 }
 
 bool ConfManagerRpc::importMasterBackup(const QString &path)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_importMasterBackup, { path });
+    auto rpcManager = Fort::rpcManager();
+
+    return rpcManager->doOnServer(Control::Rpc_ConfManager_importMasterBackup, { path });
 }
 
 bool ConfManagerRpc::checkPassword(const QString &password)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
+    auto rpcManager = Fort::rpcManager();
+
+    return rpcManager->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
 }
 
 void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 {
-    IoC<FortSettings>()->clearCache(); // FirewallConf::IniEdited is handled here
+    Fort::settings()->clearCache(); // FirewallConf::IniEdited is handled here
 
     const uint editedFlags = FirewallConf::editedFlagsFromVariant(confVar);
 
@@ -134,13 +141,13 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
     applySavedConf(conf());
 
     if (!saving()) {
-        IoC<WindowManager>()->reloadOptionsWindow(tr("Settings changed by someone else"));
+        Fort::windowManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
     }
 }
 
 bool ConfManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    auto confManager = IoC<ConfManager>();
+    auto confManager = Fort::confManager();
 
     switch (p.command) {
     case Control::Rpc_ConfManager_confChanged: {
@@ -160,11 +167,12 @@ bool ConfManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCo
 
 void ConfManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto confManager = IoC<ConfManager>();
+    auto confManager = Fort::confManager();
 
     connect(confManager, &ConfManager::confChanged, rpcManager,
             [=](bool onlyFlags, uint editedFlags) {
-                const QVariant confVar = IoC<ConfManager>()->toPatchVariant(onlyFlags, editedFlags);
+                const QVariant confVar =
+                        Fort::confManager()->toPatchVariant(onlyFlags, editedFlags);
                 rpcManager->invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
             });
     connect(confManager, &ConfManager::imported, rpcManager,

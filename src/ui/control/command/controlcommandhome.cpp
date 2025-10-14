@@ -1,14 +1,16 @@
 #include "controlcommandhome.h"
 
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 bool ControlCommandHome::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     const auto commandText = p.args.value(0).toString();
 
     if (commandText == "show") {
-        return IoC<WindowManager>()->exposeHomeWindow();
+        return windowManager()->exposeHomeWindow();
     }
 
     r.errorMessage = "Usage: home show";

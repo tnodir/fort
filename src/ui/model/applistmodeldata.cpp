@@ -13,9 +13,10 @@
 #include <util/bitutil.h>
 #include <util/dateutil.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "applistmodel.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -50,7 +51,7 @@ QVariant dataDisplayZones(const App &app, int role)
     if (role != Qt::ToolTipRole)
         return {};
 
-    auto confZoneManager = IoC<ConfZoneManager>();
+    auto confZoneManager = Fort::confZoneManager();
 
     QStringList list;
 
@@ -81,7 +82,7 @@ QVariant dataDisplayRule(const App &app, int role)
     if (app.ruleId == 0)
         return {};
 
-    return IoC<ConfRuleManager>()->ruleNameById(app.ruleId);
+    return confRuleManager()->ruleNameById(app.ruleId);
 }
 
 QVariant dataDisplayScheduled(const App &app, int role)
@@ -197,7 +198,7 @@ QVariant AppListModelData::appGroupColor() const
 
 bool AppListModelData::appFileExists() const
 {
-    const AppInfo appInfo = IoC<AppInfoCache>()->appInfo(app().appPath);
+    const AppInfo appInfo = appInfoCache()->appInfo(app().appPath);
 
     return appInfo.fileExists;
 }
@@ -213,7 +214,7 @@ QIcon AppListModelData::appIcon() const
         return IconCache::icon(":/icons/coding.png");
     }
 
-    return IoC<AppInfoCache>()->appIcon(app().appPath);
+    return appInfoCache()->appIcon(app().appPath);
 }
 
 QIcon AppListModelData::appZonesIcon() const

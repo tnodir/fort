@@ -1,8 +1,11 @@
 #include "autoupdatemanagerrpc.h"
 
 #include <control/controlworker.h>
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
 #include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -84,7 +87,7 @@ void AutoUpdateManagerRpc::updateState(
 
 QVariantList AutoUpdateManagerRpc::updateState_args()
 {
-    auto autoUpdateManager = IoC<AutoUpdateManager>();
+    auto autoUpdateManager = Fort::autoUpdateManager();
 
     const auto flags = autoUpdateManager->flags();
     const auto bytesReceived = autoUpdateManager->bytesReceived();
@@ -101,7 +104,7 @@ bool AutoUpdateManagerRpc::processInitClient(ControlWorker *w)
 bool AutoUpdateManagerRpc::processServerCommand(
         const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    auto autoUpdateManager = IoC<AutoUpdateManager>();
+    auto autoUpdateManager = Fort::autoUpdateManager();
 
     switch (p.command) {
     case Control::Rpc_AutoUpdateManager_updateState: {
@@ -120,7 +123,7 @@ bool AutoUpdateManagerRpc::processServerCommand(
 
 void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto autoUpdateManager = IoC<AutoUpdateManager>();
+    auto autoUpdateManager = Fort::autoUpdateManager();
 
     const auto updateClientStates = [=] {
         rpcManager->invokeOnClients(Control::Rpc_AutoUpdateManager_updateState,
@@ -140,12 +143,12 @@ void AutoUpdateManagerRpc::setupServerSignals(RpcManager *rpcManager)
 
 bool AutoUpdateManagerRpc::startDownload()
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_AutoUpdateManager_startDownload);
+    return rpcManager()->doOnServer(Control::Rpc_AutoUpdateManager_startDownload);
 }
 
 bool AutoUpdateManagerRpc::runInstaller()
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_AutoUpdateManager_runInstaller);
+    return rpcManager()->doOnServer(Control::Rpc_AutoUpdateManager_runInstaller);
 }
 
 void AutoUpdateManagerRpc::setupManager()
@@ -155,9 +158,7 @@ void AutoUpdateManagerRpc::setupManager()
 
 void AutoUpdateManagerRpc::setupClientSignals()
 {
-    auto rpcManager = IoCDependency<RpcManager>();
-
-    connect(this, &AutoUpdateManager::restartClients, rpcManager, [=](bool restarting) {
-        rpcManager->invokeOnServer(Control::Rpc_AutoUpdateManager_restartClients, { restarting });
+    connect(this, &AutoUpdateManager::restartClients, rpcManager(), [=](bool restarting) {
+        rpcManager()->invokeOnServer(Control::Rpc_AutoUpdateManager_restartClients, { restarting });
     });
 }

@@ -12,6 +12,7 @@
 #include <control/controlmanager.h>
 #include <driver/drivercommon.h>
 #include <form/dialog/passworddialog.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <hostinfo/hostinfocache.h>
 #include <manager/envmanager.h>
@@ -45,6 +46,8 @@
 #include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 #include <util/startuputil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -159,7 +162,7 @@ bool FortManager::checkRunningInstance(bool isService, bool isLaunch)
     if (isService) {
         qCWarning(LC) << "Quit due Service is already running!";
     } else if (!isLaunch) {
-        if (!IoC<ControlManager>()->postCommand(Control::CommandHome, { "show" })) {
+        if (!controlManager()->postCommand(Control::CommandHome, { "show" })) {
             QMessageBox::warning(nullptr, QString(), tr("Application is already running!"));
         }
     }
@@ -203,7 +206,7 @@ void FortManager::setupLogger()
 {
     Logger *logger = Logger::instance();
 
-    const auto settings = IoC<FortSettings>();
+    const auto settings = Fort::settings();
 
     logger->setIsPortable(settings->isPortable());
     logger->setIsService(settings->isService());
@@ -214,8 +217,7 @@ void FortManager::setupLogger()
 
 void FortManager::updateLogger()
 {
-    const auto settings = IoC<FortSettings>();
-    const auto &ini = settings->iniOpt();
+    const auto &ini = Fort::ini();
 
     Logger *logger = Logger::instance();
 
@@ -227,7 +229,7 @@ void FortManager::createManagers()
 {
     IocContainer *ioc = IoCPinned();
 
-    const auto settings = IoC<FortSettings>();
+    const auto settings = Fort::settings();
 
     setupServices(ioc, settings);
 
@@ -297,7 +299,7 @@ void FortManager::uninstall(const char *arg)
 
 bool FortManager::installDriver()
 {
-    const bool hasService = IoC<FortSettings>()->hasService();
+    const bool hasService = settings()->hasService();
 
     if (hasService) {
         StartupUtil::stopService();
@@ -305,7 +307,7 @@ bool FortManager::installDriver()
         closeDriver();
     }
 
-    IoC<DriverManager>()->reinstallDriver();
+    driverManager()->reinstallDriver();
 
     if (hasService) {
         StartupUtil::setServiceInstalled();
@@ -323,14 +325,14 @@ bool FortManager::removeDriver()
 {
     closeDriver();
 
-    IoC<DriverManager>()->uninstallDriver();
+    driverManager()->uninstallDriver();
 
     return true;
 }
 
 bool FortManager::setupDriver()
 {
-    auto driverManager = IoC<DriverManager>();
+    auto driverManager = Fort::driverManager();
 
     if (!driverManager->openDevice())
         return false;
@@ -348,14 +350,14 @@ void FortManager::closeDriver()
     updateLogManager(false);
     updateStatManager(nullptr);
 
-    IoC<DriverManager>()->closeDevice();
+    driverManager()->closeDevice();
 
     QCoreApplication::sendPostedEvents(this);
 }
 
 void FortManager::checkRemoveDriver()
 {
-    const auto settings = IoC<FortSettings>();
+    const auto settings = Fort::settings();
 
     if (!canInstallDriver(settings))
         return;
@@ -368,16 +370,16 @@ void FortManager::checkRemoveDriver()
 
 void FortManager::checkReinstallDriver()
 {
-    const auto settings = IoC<FortSettings>();
+    const auto settings = Fort::settings();
 
     if (!settings->hasService() && canInstallDriver(settings)) {
-        IoC<DriverManager>()->checkReinstallDriver();
+        driverManager()->checkReinstallDriver();
     }
 }
 
 void FortManager::checkStartService()
 {
-    const auto settings = IoC<FortSettings>();
+    const auto settings = Fort::settings();
 
     if (settings->isMaster() || StartupUtil::isServiceRunning())
         return;
@@ -392,7 +394,7 @@ void FortManager::checkStartService()
 
 void FortManager::checkDriverAccess()
 {
-    const auto settings = IoC<FortSettings>();
+    const auto settings = Fort::settings();
 
     const bool hasService = settings->hasService();
     const bool isAdmin = settings->isUserAdmin();
@@ -406,9 +408,9 @@ void FortManager::checkDriverAccess()
 
 void FortManager::setupEnvManager()
 {
-    auto envManager = IoC<EnvManager>();
+    auto envManager = Fort::envManager();
 
-    connect(IoC<NativeEventFilter>(), &NativeEventFilter::environmentChanged, envManager,
+    connect(nativeEventFilter(), &NativeEventFilter::environmentChanged, envManager,
             &EnvManager::onEnvironmentChanged);
 
     connect(envManager, &EnvManager::environmentUpdated, this, [&] { updateDriverConf(); });
@@ -416,10 +418,9 @@ void FortManager::setupEnvManager()
 
 void FortManager::setupConfManager()
 {
-    auto confManager = IoC<ConfManager>();
+    auto confManager = Fort::confManager();
 
-    connect(confManager, &ConfManager::imported, IoC<WindowManager>(),
-            &WindowManager::closeAllWindows);
+    connect(confManager, &ConfManager::imported, windowManager(), &WindowManager::closeAllWindows);
 
     connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags, uint editedFlags) {
         if ((editedFlags & FirewallConf::IniEdited) != 0) {
@@ -437,9 +438,7 @@ void FortManager::setupConfManager()
 
 void FortManager::setupConfRuleManager()
 {
-    auto confRuleManager = IoC<ConfRuleManager>();
-
-    connect(confRuleManager, &ConfRuleManager::ruleRemoved, this,
+    connect(confRuleManager(), &ConfRuleManager::ruleRemoved, this,
             [&](int /*ruleId*/, int appRulesCount) {
                 if (appRulesCount > 0) {
                     updateDriverConf(); // Update all apps
@@ -449,31 +448,30 @@ void FortManager::setupConfRuleManager()
 
 void FortManager::setupQuotaManager()
 {
-    connect(IoC<QuotaManager>(), &QuotaManager::alert, this, [&](qint8 alertType) {
-        IoC<WindowManager>()->showInfoBox(
-                QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
+    connect(quotaManager(), &QuotaManager::alert, this, [&](qint8 alertType) {
+        windowManager()->showInfoBox(QuotaManager::alertTypeText(alertType), tr("Quota Alert"));
     });
 }
 
 void FortManager::setupTaskManager()
 {
-    auto taskManager = IoC<TaskManager>();
+    auto taskManager = Fort::taskManager();
 
     connect(taskManager, &TaskManager::appVersionDownloaded, this, [&](const QString &version) {
-        IoC<WindowManager>()->showTrayMessage(
+        windowManager()->showTrayMessage(
                 tr("New version v%1 available!").arg(version), tray::MessageNewVersion);
     });
 
     connect(taskManager, &TaskManager::zonesDownloaded, this, [&](const QStringList &zoneNames) {
-        IoC<WindowManager>()->showTrayMessage(
+        windowManager()->showTrayMessage(
                 tr("Zone Addresses Updated: %1.").arg(zoneNames.join(", ")), tray::MessageZones);
     });
 
-    connect(taskManager, &TaskManager::zonesUpdated, IoC<ConfZoneManager>(),
+    connect(taskManager, &TaskManager::zonesUpdated, confZoneManager(),
             &ConfZoneManager::updateDriverZones);
 
     connect(taskManager, &TaskManager::taskDoubleClicked, this, [&](qint8 taskType) {
-        auto windowManager = IoC<WindowManager>();
+        auto windowManager = Fort::windowManager();
 
         switch (taskType) {
         case TaskInfo::UpdateChecker: {
@@ -491,9 +489,7 @@ void FortManager::setupTaskManager()
 
 void FortManager::setupServiceInfoManager()
 {
-    auto serviceInfoManager = IoC<ServiceInfoManager>();
-
-    connect(serviceInfoManager, &ServiceInfoManager::servicesStarted, IoC<ConfManager>(),
+    connect(serviceInfoManager(), &ServiceInfoManager::servicesStarted, confManager(),
             &ConfManager::updateDriverServices);
 }
 
@@ -501,8 +497,8 @@ void FortManager::processRestartRequired(const QString &info)
 {
     qCDebug(LC) << "Restart required:" << info;
 
-    if (IoC<FortSettings>()->isService()) {
-        IoC<ServiceManager>()->restart();
+    if (settings()->isService()) {
+        serviceManager()->restart();
     } else {
         OsUtil::restart();
     }
@@ -510,8 +506,8 @@ void FortManager::processRestartRequired(const QString &info)
 
 void FortManager::loadConf()
 {
-    auto confManager = IoC<ConfManager>();
-    const auto settings = IoC<FortSettings>();
+    auto confManager = Fort::confManager();
+    const auto settings = Fort::settings();
 
     // Validate migration
     if (!confManager->checkCanMigrate(settings)) {
@@ -528,7 +524,7 @@ void FortManager::loadConf()
 
 bool FortManager::setupDriverConf()
 {
-    auto confManager = IoC<ConfManager>();
+    auto confManager = Fort::confManager();
 
     if (!confManager->validateDriver())
         return false;
@@ -538,15 +534,15 @@ bool FortManager::setupDriverConf()
 
     // Zones
     {
-        auto zd = IoC<TaskManager>()->taskInfoZoneDownloader();
+        auto zd = taskManager()->taskInfoZoneDownloader();
 
-        IoC<ConfZoneManager>()->updateDriverZones(
+        confZoneManager()->updateDriverZones(
                 zd->dataZonesMask(), zd->enabledMask(), zd->dataSize(), zd->zonesData());
     }
 
     // Rules
     {
-        IoC<ConfRuleManager>()->updateDriverRules();
+        confRuleManager()->updateDriverRules();
     }
 
     return true;
@@ -554,7 +550,7 @@ bool FortManager::setupDriverConf()
 
 void FortManager::updateDriverConf(bool onlyFlags)
 {
-    auto confAppManager = IoC<ConfAppManager>();
+    auto confAppManager = Fort::confAppManager();
 
     if (!confAppManager->canUpdateDriverConf())
         return;
@@ -563,7 +559,7 @@ void FortManager::updateDriverConf(bool onlyFlags)
 
     const bool ok = confAppManager->updateDriverConf(onlyFlags);
     if (ok) {
-        updateStatManager(IoC<ConfManager>()->conf());
+        updateStatManager(conf());
     }
 
     updateLogManager(true);
@@ -571,12 +567,12 @@ void FortManager::updateDriverConf(bool onlyFlags)
 
 void FortManager::updateLogManager(bool active)
 {
-    IoC<LogManager>()->setActive(active);
+    logManager()->setActive(active);
 }
 
 void FortManager::updateStatManager(FirewallConf *conf)
 {
-    IoC<StatManager>()->setConf(conf);
+    statManager()->setConf(conf);
 }
 
 void FortManager::setupPortableResource()

@@ -1,7 +1,9 @@
 #include "controlcommandconf.h"
 
 #include <conf/confappmanager.h>
-#include <util/ioc/ioccontainer.h>
+#include <fortglobal.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -22,7 +24,7 @@ bool processCommandConfAction(ConfAction confAction)
 {
     switch (confAction) {
     case ConfActionUpdateDriver: {
-        return IoC<ConfAppManager>()->updateDriverConf();
+        return confAppManager()->updateDriverConf();
     }
     default:
         return false;

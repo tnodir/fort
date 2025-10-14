@@ -5,18 +5,24 @@
 #include <QMouseEvent>
 
 #include <form/tray/trayicon.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
+
+namespace {
+
+TrayIcon *trayIcon()
+{
+    return windowManager()->trayIcon();
+}
+
+}
 
 MenuButton::MenuButton(QWidget *parent) : PushButton(parent)
 {
     setupUi();
-}
-
-TrayIcon *MenuButton::trayIcon() const
-{
-    return IoC<WindowManager>()->trayIcon();
 }
 
 void MenuButton::setupUi()

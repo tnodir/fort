@@ -7,8 +7,6 @@
 #include <util/ioc/iocservice.h>
 #include <util/model/tablesqlmodel.h>
 
-class ConfManager;
-class ConfZoneManager;
 class ZoneSourceWrapper;
 
 struct ZoneRow : TableRow, public Zone
@@ -22,8 +20,6 @@ class ZoneListModel : public TableSqlModel, public IocService
 public:
     explicit ZoneListModel(QObject *parent = nullptr);
 
-    ConfManager *confManager() const;
-    ConfZoneManager *confZoneManager() const;
     SqliteDb *sqliteDb() const override;
 
     void setUp() override;

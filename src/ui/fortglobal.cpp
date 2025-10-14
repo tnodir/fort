@@ -1,11 +1,13 @@
 #include "fortglobal.h"
 
 #include <appinfo/appinfocache.h>
+#include <appinfo/appinfomanager.h>
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
 #include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
+#include <control/controlmanager.h>
 #include <driver/drivermanager.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
@@ -14,10 +16,15 @@
 #include <manager/autoupdatemanager.h>
 #include <manager/envmanager.h>
 #include <manager/hotkeymanager.h>
+#include <manager/nativeeventfilter.h>
 #include <manager/serviceinfomanager.h>
+#include <manager/servicemanager.h>
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
+#include <rpc/rpcmanager.h>
+#include <stat/askpendingmanager.h>
+#include <stat/quotamanager.h>
 #include <stat/statconnmanager.h>
 #include <stat/statmanager.h>
 #include <task/taskmanager.h>
@@ -26,9 +33,25 @@
 
 namespace Fort {
 
+template<class T>
+T *dependency()
+{
+    return IoCDependency<T>();
+}
+
 AppInfoCache *appInfoCache()
 {
     return IoC<AppInfoCache>();
+}
+
+AppInfoManager *appInfoManager()
+{
+    return IoC<AppInfoManager>();
+}
+
+AskPendingManager *askPendingManager()
+{
+    return IoC<AskPendingManager>();
 }
 
 AutoUpdateManager *autoUpdateManager()
@@ -54,6 +77,11 @@ ConfRuleManager *confRuleManager()
 ConfZoneManager *confZoneManager()
 {
     return IoC<ConfZoneManager>();
+}
+
+ControlManager *controlManager()
+{
+    return IoC<ControlManager>();
 }
 
 DriverManager *driverManager()
@@ -111,9 +139,29 @@ LogManager *logManager()
     return IoC<LogManager>();
 }
 
+NativeEventFilter *nativeEventFilter()
+{
+    return IoC<NativeEventFilter>();
+}
+
+QuotaManager *quotaManager()
+{
+    return IoC<QuotaManager>();
+}
+
+RpcManager *rpcManager()
+{
+    return IoC<RpcManager>();
+}
+
 ServiceInfoManager *serviceInfoManager()
 {
     return IoC<ServiceInfoManager>();
+}
+
+ServiceManager *serviceManager()
+{
+    return IoC<ServiceManager>();
 }
 
 StatManager *statManager()

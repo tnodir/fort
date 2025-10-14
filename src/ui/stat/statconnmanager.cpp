@@ -11,12 +11,13 @@
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <util/fileutil.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "deleteconnjob.h"
 #include "logconnjob.h"
 #include "statconnworker.h"
 #include "statsql.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -150,7 +151,7 @@ void StatConnManager::setupWorker()
 
 void StatConnManager::setupConfManager()
 {
-    auto confManager = IoCDependency<ConfManager>();
+    auto confManager = Fort::dependency<ConfManager>();
 
     connect(confManager, &ConfManager::confChanged, this, &StatConnManager::setupByConf);
     connect(confManager, &ConfManager::iniChanged, this, &StatConnManager::setupByConfIni);
@@ -207,9 +208,7 @@ void StatConnManager::setupByConfIni()
 
 void StatConnManager::checkClearConnOnStartup()
 {
-    const IniOptions ini(IoC<FortSettings>());
-
-    m_clearOnExit = ini.connClearOnExit();
+    m_clearOnExit = ini().connClearOnExit();
 
     if (!m_clearOnExit)
         return;

@@ -14,7 +14,6 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 class LineEdit;
 class PlainTextEdit;
 class Zone;
-class ZoneListModel;
 class ZoneSourceWrapper;
 class ZonesController;
 
@@ -26,7 +25,6 @@ public:
     explicit ZoneEditDialog(ZonesController *ctrl, QWidget *parent = nullptr);
 
     ZonesController *ctrl() const { return m_ctrl; }
-    ZoneListModel *zoneListModel() const;
 
     bool isEmpty() const { return m_zone.zoneId == 0; }
 

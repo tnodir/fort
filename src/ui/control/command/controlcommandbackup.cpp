@@ -1,8 +1,10 @@
 #include "controlcommandbackup.h"
 
 #include <conf/confmanager.h>
+#include <fortglobal.h>
 #include <stat/statmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -25,8 +27,8 @@ BackupAction backupActionByText(const QString &commandText)
 
 bool processCommandBackupAction(BackupAction backupAction, const QString &dirPath)
 {
-    auto statManager = IoC<StatManager>();
-    auto confManager = IoC<ConfManager>();
+    auto statManager = Fort::statManager();
+    auto confManager = Fort::confManager();
 
     switch (backupAction) {
     case BackupActionExport: {

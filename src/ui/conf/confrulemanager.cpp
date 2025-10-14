@@ -8,12 +8,14 @@
 #include <sqlite/sqlitestmt.h>
 
 #include <driver/drivermanager.h>
+#include <fortglobal.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "confmanager.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -145,7 +147,8 @@ bool driverWriteRules(ConfBuffer &confBuf, bool onlyFlags = false)
         return false;
     }
 
-    auto driverManager = IoC<DriverManager>();
+    auto driverManager = Fort::driverManager();
+
     if (!driverManager->writeRules(confBuf.buffer(), onlyFlags)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;

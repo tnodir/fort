@@ -13,8 +13,6 @@ class ZonesController : public BaseController
 public:
     explicit ZonesController(QObject *parent = nullptr);
 
-    ZoneListModel *zoneListModel() const;
-
 public slots:
     bool addOrUpdateZone(Zone &zone);
     void deleteZone(int zoneId);

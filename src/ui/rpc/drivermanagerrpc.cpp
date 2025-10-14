@@ -1,8 +1,10 @@
 #include "drivermanagerrpc.h"
 
 #include <control/controlworker.h>
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 DriverManagerRpc::DriverManagerRpc(QObject *parent) : DriverManager(parent, /*useDevice=*/false) { }
 
@@ -34,7 +36,7 @@ bool DriverManagerRpc::closeDevice()
 
 QVariantList DriverManagerRpc::updateState_args()
 {
-    auto driverManager = IoC<DriverManager>();
+    auto driverManager = Fort::driverManager();
 
     return { driverManager->errorCode(), driverManager->isDeviceOpened() };
 }
@@ -47,7 +49,7 @@ bool DriverManagerRpc::processInitClient(ControlWorker *w)
 bool DriverManagerRpc::processServerCommand(
         const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
-    auto driverManager = IoC<DriverManager>();
+    auto driverManager = Fort::driverManager();
 
     switch (p.command) {
     case Control::Rpc_DriverManager_updateState: {
@@ -63,7 +65,7 @@ bool DriverManagerRpc::processServerCommand(
 
 void DriverManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto driverManager = IoC<DriverManager>();
+    auto driverManager = Fort::driverManager();
 
     const auto updateClientStates = [=] {
         rpcManager->invokeOnClients(

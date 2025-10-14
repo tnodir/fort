@@ -1,8 +1,10 @@
 #include "controlcommandzone.h"
 
+#include <fortglobal.h>
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -23,7 +25,7 @@ bool processCommandZoneAction(ZoneAction zoneAction)
 {
     switch (zoneAction) {
     case ZoneActionUpdate: {
-        IoC<TaskManager>()->runTask(TaskInfo::ZoneDownloader);
+        taskManager()->runTask(TaskInfo::ZoneDownloader);
         return true;
     }
     default:

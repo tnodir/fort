@@ -9,8 +9,6 @@
 #include <conf/rule.h>
 #include <util/model/ftstablesqlmodel.h>
 
-class ConfManager;
-
 struct RuleRow : TableRow, public Rule
 {
 };
@@ -27,7 +25,6 @@ public:
 
     explicit RuleListModel(QObject *parent = nullptr);
 
-    ConfManager *confManager() const;
     SqliteDb *sqliteDb() const override;
 
     void initialize();

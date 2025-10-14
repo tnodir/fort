@@ -3,9 +3,20 @@
 #include <QMenu>
 
 #include <form/tray/trayicon.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
+
+namespace {
+
+TrayIcon *trayIcon()
+{
+    return windowManager()->trayIcon();
+}
+
+}
 
 OptionsButton::OptionsButton(int tabIndex, QWidget *parent) :
     ToolButton(parent), m_tabIndex(tabIndex)
@@ -15,14 +26,9 @@ OptionsButton::OptionsButton(int tabIndex, QWidget *parent) :
     connect(this, &QToolButton::clicked, this, &OptionsButton::showOptionsWindow);
 }
 
-TrayIcon *OptionsButton::trayIcon() const
-{
-    return IoC<WindowManager>()->trayIcon();
-}
-
 void OptionsButton::showOptionsWindow()
 {
-    IoC<WindowManager>()->showOptionsWindowTab(m_tabIndex);
+    windowManager()->showOptionsWindowTab(m_tabIndex);
 }
 
 void OptionsButton::setupUi()

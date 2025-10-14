@@ -1,7 +1,9 @@
 #include "serviceinfomanagerrpc.h"
 
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -25,20 +27,18 @@ ServiceInfoManagerRpc::ServiceInfoManagerRpc(QObject *parent) : ServiceInfoManag
 
 void ServiceInfoManagerRpc::trackService(const QString &serviceName)
 {
-    IoC<RpcManager>()->invokeOnServer(
-            Control::Rpc_ServiceInfoManager_trackService, { serviceName });
+    rpcManager()->invokeOnServer(Control::Rpc_ServiceInfoManager_trackService, { serviceName });
 }
 
 void ServiceInfoManagerRpc::revertService(const QString &serviceName)
 {
-    IoC<RpcManager>()->invokeOnServer(
-            Control::Rpc_ServiceInfoManager_revertService, { serviceName });
+    rpcManager()->invokeOnServer(Control::Rpc_ServiceInfoManager_revertService, { serviceName });
 }
 
 bool ServiceInfoManagerRpc::processServerCommand(
         const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
-    auto serviceInfoManager = IoC<ServiceInfoManager>();
+    auto serviceInfoManager = Fort::serviceInfoManager();
 
     switch (p.command) {
     case Control::Rpc_ServiceInfoManager_trackService: {

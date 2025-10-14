@@ -7,6 +7,7 @@
 #include <conf/zone.h>
 #include <control/controlmanager.h>
 #include <control/controlworker.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <rpc/appinfomanagerrpc.h>
@@ -21,9 +22,10 @@
 #include <rpc/statconnmanagerrpc.h>
 #include <rpc/statmanagerrpc.h>
 #include <rpc/taskmanagerrpc.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 #include <util/variantutil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -31,7 +33,7 @@ const QLoggingCategory LC("rpc");
 
 void showErrorBox(const QString &text)
 {
-    auto windowManager = IoC<WindowManager>();
+    auto windowManager = Fort::windowManager();
 
     QMetaObject::invokeMethod(
             windowManager, [=] { windowManager->showErrorBox(text); }, Qt::QueuedConnection);
@@ -65,7 +67,7 @@ RpcManager::RpcManager(QObject *parent) : QObject(parent) { }
 
 void RpcManager::setUp()
 {
-    if (IoC<FortSettings>()->isService()) {
+    if (settings()->isService()) {
         setupServerSignals();
     } else {
         setupClient();
@@ -94,7 +96,7 @@ void RpcManager::setupServerSignals()
 
 void RpcManager::setupClient()
 {
-    auto controlManager = IoCDependency<ControlManager>();
+    auto controlManager = Fort::dependency<ControlManager>();
 
     m_client = controlManager->newServiceClient(this);
 
@@ -158,7 +160,7 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args, QVar
 
 void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 {
-    const auto &clients = IoC<ControlManager>()->clients();
+    const auto &clients = controlManager()->clients();
     if (clients.isEmpty())
         return;
 
@@ -177,7 +179,7 @@ void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
 
 bool RpcManager::checkClientValidated(ControlWorker *w) const
 {
-    return !IoC<FortSettings>()->isPasswordRequired() || w->isClientValidated();
+    return !settings()->isPasswordRequired() || w->isClientValidated();
 }
 
 void RpcManager::initClientOnServer(ControlWorker *w) const

@@ -5,7 +5,6 @@
 #include <fortglobal.h>
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "statsql.h"
 
@@ -124,7 +123,7 @@ QString QuotaManager::alertTypeText(qint8 alertType)
 
 void QuotaManager::setupConfManager()
 {
-    auto confManager = IoCDependency<ConfManager>();
+    auto confManager = Fort::dependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniChanged, this, &QuotaManager::setupByConfIni);
 }

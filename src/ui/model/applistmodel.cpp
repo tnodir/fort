@@ -7,13 +7,15 @@
 #include <appinfo/appinfocache.h>
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
+#include <fortglobal.h>
 #include <manager/translationmanager.h>
 #include <util/conf/confutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/net/netutil.h>
 
 #include "applistmodeldata.h"
 #include "applistmodelheaderdata.h"
+
+using namespace Fort;
 
 AppListModel::AppListModel(QObject *parent) : FtsTableSqlModel(parent) { }
 
@@ -61,21 +63,6 @@ void AppListModel::clearFilters()
     m_filterValues = FilterNone;
 
     setFilters(FilterNone);
-}
-
-ConfManager *AppListModel::confManager() const
-{
-    return IoC<ConfManager>();
-}
-
-ConfAppManager *AppListModel::confAppManager() const
-{
-    return IoC<ConfAppManager>();
-}
-
-AppInfoCache *AppListModel::appInfoCache() const
-{
-    return IoC<AppInfoCache>();
 }
 
 SqliteDb *AppListModel::sqliteDb() const
@@ -395,7 +382,7 @@ QString AppListModel::columnName(const AppListColumn column)
     static QStringList g_columnNames;
     static int g_language = -1;
 
-    const int language = IoC<TranslationManager>()->language();
+    const int language = translationManager()->language();
     if (g_language != language) {
         g_language = language;
 

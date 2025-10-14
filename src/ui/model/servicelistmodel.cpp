@@ -5,21 +5,14 @@
 #include <conf/appgroup.h>
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <fortglobal.h>
 #include <manager/serviceinfomanager.h>
 #include <util/iconcache.h>
 #include <util/ioc/ioccontainer.h>
 
+using namespace Fort;
+
 ServiceListModel::ServiceListModel(QObject *parent) : TableItemModel(parent) { }
-
-ConfManager *ServiceListModel::confManager() const
-{
-    return IoC<ConfManager>();
-}
-
-FirewallConf *ServiceListModel::conf() const
-{
-    return confManager()->conf();
-}
 
 void ServiceListModel::initialize()
 {

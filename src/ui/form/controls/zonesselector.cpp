@@ -6,10 +6,12 @@
 
 #include <conf/confzonemanager.h>
 #include <form/controls/controlutil.h>
+#include <fortglobal.h>
 #include <model/zonelistmodel.h>
 #include <util/bitutil.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -111,7 +113,7 @@ void ZonesSelector::setupZones()
 
 void ZonesSelector::setupZonesChanged()
 {
-    auto confZoneManager = IoC<ConfZoneManager>();
+    auto confZoneManager = Fort::confZoneManager();
 
     connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, [&](int zoneId) {
         removeZone(zoneId);
@@ -125,7 +127,7 @@ void ZonesSelector::setupZonesChanged()
 
     refreshZonesMenu();
 
-    auto zoneListModel = IoC<ZoneListModel>();
+    auto zoneListModel = Fort::zoneListModel();
 
     connect(zoneListModel, &ZoneListModel::modelReset, this, refreshZonesMenu);
     connect(zoneListModel, &ZoneListModel::dataChanged, this, refreshZonesMenu);
@@ -146,7 +148,7 @@ void ZonesSelector::clearZonesMenu()
 
 void ZonesSelector::createZonesMenu()
 {
-    auto zoneListModel = IoC<ZoneListModel>();
+    auto zoneListModel = Fort::zoneListModel();
 
     const int zoneCount = qMin(zoneListModel->rowCount(), maxZoneCount());
     for (int row = 0; row < zoneCount; ++row) {
@@ -186,7 +188,7 @@ void ZonesSelector::updateZonesMenu()
 
 void ZonesSelector::updateZonesMenuEnabled()
 {
-    auto zoneListModel = IoC<ZoneListModel>();
+    auto zoneListModel = Fort::zoneListModel();
 
     const bool isZoneExist = (zoneListModel->rowCount() != 0);
 

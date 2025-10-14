@@ -5,9 +5,11 @@
 
 #include <sqlite/sqlitedb.h>
 
+#include <fortglobal.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -48,13 +50,13 @@ void DbErrorManager::checkProfileDir()
 
     if (m_confDir.open()) {
         // Restart on profile's drive mounted
-        IoC<FortManager>()->processRestartRequired(tr("Profile's drive mounted"));
+        fortManager()->processRestartRequired(tr("Profile's drive mounted"));
     }
 }
 
 void DbErrorManager::setupTimer()
 {
-    auto settings = IoC<FortSettings>();
+    auto settings = Fort::settings();
 
     const bool checkProfileOnline = (settings->checkProfileOnline() || settings->isPortable());
     if (!checkProfileOnline)

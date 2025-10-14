@@ -6,7 +6,6 @@
 #include "taskinfo.h"
 
 class TaskZoneDownloader;
-class ZoneListModel;
 
 class TaskInfoZoneDownloader : public TaskInfo
 {
@@ -23,7 +22,6 @@ public:
     const QList<QByteArray> &zonesData() const { return m_zonesData; }
 
     TaskZoneDownloader *zoneDownloader() const;
-    ZoneListModel *zoneListModel() const;
 
     void initialize() override;
 

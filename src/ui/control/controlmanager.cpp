@@ -9,27 +9,23 @@
 #include <fort_version.h>
 
 #include <conf/inioptions.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <rpc/rpcmanager.h>
 #include <util/consoleoutput.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 #include <util/variantutil.h>
 
 #include "command/controlcommandmanager.h"
 #include "controlworker.h"
 
+using namespace Fort;
+
 namespace {
 
 constexpr int maxClientsCount = 9;
 
 const QLoggingCategory LC("control");
-
-bool getDisableCmdLine()
-{
-    const IniOptions ini(IoC<FortSettings>());
-    return ini.disableCmdLine();
-}
 
 }
 
@@ -67,7 +63,7 @@ bool ControlManager::listen()
         return m_server->isListening();
     }
 
-    const bool isService = IoC<FortSettings>()->isService();
+    const bool isService = settings()->isService();
 
     m_server = new QLocalServer(this);
     m_server->setMaxPendingConnections(maxClientsCount);
@@ -114,7 +110,7 @@ bool ControlManager::processCommandClient(ProcessCommandResult &r)
         { "zone", Control::CommandZone },
     };
 
-    const auto settings = IoC<FortSettings>();
+    const auto settings = Fort::settings();
 
     ConsoleOutput out(settings->outputPath());
 
@@ -197,7 +193,7 @@ bool ControlManager::connectToAnyServer(ControlWorker &w)
 
 void ControlManager::onNewConnection()
 {
-    const bool hasPassword = IoC<FortSettings>()->hasPassword();
+    const bool hasPassword = settings()->hasPassword();
 
     while (QLocalSocket *socket = m_server->nextPendingConnection()) {
         if (m_clients.size() > maxClientsCount) {
@@ -244,7 +240,7 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
     // XXX: OsUtil::setThreadIsBusy(true);
 
     ProcessCommandResult r;
-    r.disableCmdLine = getDisableCmdLine();
+    r.disableCmdLine = ini().disableCmdLine();
 
     const bool ok = ControlCommandManager::processCommand(
             {

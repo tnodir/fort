@@ -2,8 +2,10 @@
 
 #include <sqlite/sqlitedb.h>
 
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -86,32 +88,32 @@ StatManagerRpc::StatManagerRpc(const QString &filePath, QObject *parent) :
 
 bool StatManagerRpc::deleteStatApp(qint64 appId)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_deleteStatApp, { appId });
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_deleteStatApp, { appId });
 }
 
 bool StatManagerRpc::resetAppTrafTotals()
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_resetAppTrafTotals);
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_resetAppTrafTotals);
 }
 
 bool StatManagerRpc::exportMasterBackup(const QString &path)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_exportMasterBackup, { path });
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_exportMasterBackup, { path });
 }
 
 bool StatManagerRpc::importMasterBackup(const QString &path)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_importMasterBackup, { path });
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_importMasterBackup, { path });
 }
 
 bool StatManagerRpc::clearTraffic()
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_StatManager_clearTraffic);
+    return rpcManager()->doOnServer(Control::Rpc_StatManager_clearTraffic);
 }
 
 bool StatManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    auto statManager = IoC<StatManager>();
+    auto statManager = Fort::statManager();
 
     switch (p.command) {
     case Control::Rpc_StatManager_trafficCleared:
@@ -131,7 +133,7 @@ bool StatManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCo
 
 void StatManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto statManager = IoC<StatManager>();
+    auto statManager = Fort::statManager();
 
     connect(statManager, &StatManager::trafficCleared, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_StatManager_trafficCleared); });

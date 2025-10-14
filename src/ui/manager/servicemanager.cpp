@@ -13,7 +13,6 @@
 #include <conf/firewallconf.h>
 #include <control/controlmanager.h>
 #include <fortglobal.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 #include <util/service/service_types.h>
 #include <util/startuputil.h>
@@ -141,7 +140,7 @@ void ServiceManager::initialize(qintptr hstatus)
 
 void ServiceManager::setupControlManager()
 {
-    auto controlManager = IoCDependency<ControlManager>();
+    auto controlManager = Fort::dependency<ControlManager>();
 
     connect(this, &ServiceManager::pauseRequested, controlManager, [controlManager] {
         controlManager->close();
@@ -152,7 +151,7 @@ void ServiceManager::setupControlManager()
 
 void ServiceManager::setupConfManager()
 {
-    auto confManager = IoCDependency<ConfManager>();
+    auto confManager = Fort::dependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniChanged, this, &ServiceManager::setupByConfIni);
 }

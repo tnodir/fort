@@ -9,29 +9,21 @@
 
 #include <conf/confmanager.h>
 #include <conf/confzonemanager.h>
+#include <fortglobal.h>
 #include <util/conf/confutil.h>
 #include <util/fileutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/json/jsonutil.h>
 
 #include "zonesourcewrapper.h"
 #include "zonetypewrapper.h"
+
+using namespace Fort;
 
 namespace {
 const QLoggingCategory LC("model.zoneList");
 }
 
 ZoneListModel::ZoneListModel(QObject *parent) : TableSqlModel(parent) { }
-
-ConfManager *ZoneListModel::confManager() const
-{
-    return IoC<ConfManager>();
-}
-
-ConfZoneManager *ZoneListModel::confZoneManager() const
-{
-    return IoC<ConfZoneManager>();
-}
 
 SqliteDb *ZoneListModel::sqliteDb() const
 {
@@ -40,8 +32,8 @@ SqliteDb *ZoneListModel::sqliteDb() const
 
 void ZoneListModel::setUp()
 {
-    auto confManager = IoCDependency<ConfManager>();
-    auto confZoneManager = IoCDependency<ConfZoneManager>();
+    auto confManager = Fort::dependency<ConfManager>();
+    auto confZoneManager = Fort::dependency<ConfZoneManager>();
 
     setupZoneTypes();
     setupZoneSources();

@@ -3,11 +3,13 @@
 #include <conf/app.h>
 #include <conf/firewallconf.h>
 #include <conf/zone.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <rpc/rpcmanager.h>
 #include <task/taskmanager.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/variantutil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -133,31 +135,29 @@ ConfAppManagerRpc::ConfAppManagerRpc(QObject *parent) : ConfAppManager(parent) {
 bool ConfAppManagerRpc::addOrUpdateAppPath(
         const QString &appOriginPath, bool blocked, bool killProcess)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_addOrUpdateAppPath,
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_addOrUpdateAppPath,
             { appOriginPath, blocked, killProcess });
 }
 
 bool ConfAppManagerRpc::deleteAppPath(const QString &appOriginPath)
 {
-    return IoC<RpcManager>()->doOnServer(
-            Control::Rpc_ConfAppManager_deleteAppPath, { appOriginPath });
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_deleteAppPath, { appOriginPath });
 }
 
 bool ConfAppManagerRpc::addOrUpdateApp(App &app, bool onlyUpdate)
 {
-    return IoC<RpcManager>()->doOnServer(
+    return rpcManager()->doOnServer(
             Control::Rpc_ConfAppManager_addOrUpdateApp, { appToVarList(app), onlyUpdate });
 }
 
 bool ConfAppManagerRpc::updateApp(App &app)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_updateApp, appToVarList(app));
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_updateApp, appToVarList(app));
 }
 
 bool ConfAppManagerRpc::updateAppName(qint64 appId, const QString &appName)
 {
-    return IoC<RpcManager>()->doOnServer(
-            Control::Rpc_ConfAppManager_updateAppName, { appId, appName });
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_updateAppName, { appId, appName });
 }
 
 bool ConfAppManagerRpc::deleteApps(const QVector<qint64> &appIdList)
@@ -168,17 +168,17 @@ bool ConfAppManagerRpc::deleteApps(const QVector<qint64> &appIdList)
     QVariantList args;
     VariantUtil::addToList(args, QVariant(appIdVarList));
 
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_deleteApps, args);
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_deleteApps, args);
 }
 
 bool ConfAppManagerRpc::clearAlerts()
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_clearAlerts);
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_clearAlerts);
 }
 
 bool ConfAppManagerRpc::purgeApps()
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_purgeApps);
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_purgeApps);
 }
 
 bool ConfAppManagerRpc::updateAppsBlocked(
@@ -191,7 +191,7 @@ bool ConfAppManagerRpc::updateAppsBlocked(
     VariantUtil::addToList(args, QVariant(appIdVarList));
     args << blocked << killProcess;
 
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_updateAppsBlocked, args);
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_updateAppsBlocked, args);
 }
 
 bool ConfAppManagerRpc::updateAppsTimer(const QVector<qint64> &appIdList, int minutes)
@@ -203,18 +203,17 @@ bool ConfAppManagerRpc::updateAppsTimer(const QVector<qint64> &appIdList, int mi
     VariantUtil::addToList(args, QVariant(appIdVarList));
     args << minutes;
 
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_updateAppsTimer, args);
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_updateAppsTimer, args);
 }
 
 bool ConfAppManagerRpc::importAppsBackup(const QString &path)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfAppManager_importAppsBackup, { path });
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_importAppsBackup, { path });
 }
 
 bool ConfAppManagerRpc::updateDriverConf(bool onlyFlags)
 {
-    return IoC<RpcManager>()->doOnServer(
-            Control::Rpc_ConfAppManager_updateDriverConf, { onlyFlags });
+    return rpcManager()->doOnServer(Control::Rpc_ConfAppManager_updateDriverConf, { onlyFlags });
 }
 
 QVariantList ConfAppManagerRpc::appToVarList(const App &app)
@@ -258,7 +257,7 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
 
 bool ConfAppManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    auto confAppManager = IoC<ConfAppManager>();
+    auto confAppManager = Fort::confAppManager();
 
     switch (p.command) {
     case Control::Rpc_ConfAppManager_appAlerted: {
@@ -291,7 +290,7 @@ bool ConfAppManagerRpc::processServerCommand(const ProcessCommandArgs &p, Proces
 
 void ConfAppManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto confAppManager = IoC<ConfAppManager>();
+    auto confAppManager = Fort::confAppManager();
 
     connect(confAppManager, &ConfAppManager::appAlerted, rpcManager, [=](bool alerted) {
         rpcManager->invokeOnClients(Control::Rpc_ConfAppManager_appAlerted, { alerted });

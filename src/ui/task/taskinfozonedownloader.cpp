@@ -4,16 +4,18 @@
 #include <QLoggingCategory>
 
 #include <conf/confzonemanager.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <model/zonelistmodel.h>
 #include <model/zonesourcewrapper.h>
 #include <model/zonetypewrapper.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "taskmanager.h"
 #include "taskzonedownloader.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -29,11 +31,6 @@ TaskInfoZoneDownloader::TaskInfoZoneDownloader(TaskManager &taskManager) :
 TaskZoneDownloader *TaskInfoZoneDownloader::zoneDownloader() const
 {
     return static_cast<TaskZoneDownloader *>(taskWorker());
-}
-
-ZoneListModel *TaskInfoZoneDownloader::zoneListModel() const
-{
-    return IoC<ZoneListModel>();
 }
 
 void TaskInfoZoneDownloader::initialize()
@@ -157,7 +154,7 @@ void TaskInfoZoneDownloader::processSubResult(bool success)
     zone.lastRun = DateUtil::now();
     zone.lastSuccess = success ? zone.lastRun : worker->lastSuccess();
 
-    IoC<ConfZoneManager>()->updateZoneResult(zone);
+    confZoneManager()->updateZoneResult(zone);
 
     addSubResult(worker, success);
 }
@@ -237,5 +234,5 @@ void TaskInfoZoneDownloader::removeOrphanCacheFiles()
 
 QString TaskInfoZoneDownloader::cachePath() const
 {
-    return IoC<FortSettings>()->cachePath() + "zones/";
+    return settings()->cachePath() + "zones/";
 }

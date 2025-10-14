@@ -6,7 +6,6 @@
 class TableView;
 class Zone;
 class ZoneEditDialog;
-class ZoneListModel;
 class ZonesController;
 
 class ZonesWindow : public FormWindow
@@ -20,7 +19,6 @@ public:
     QString windowOverlayIconPath() const override { return ":/icons/ip_class.png"; }
 
     ZonesController *ctrl() const { return m_ctrl; }
-    ZoneListModel *zoneListModel() const;
 
     void saveWindowState(bool wasVisible) override;
     void restoreWindowState() override;

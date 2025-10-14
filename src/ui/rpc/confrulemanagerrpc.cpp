@@ -1,9 +1,11 @@
 #include "confrulemanagerrpc.h"
 
 #include <conf/rule.h>
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/variantutil.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -65,7 +67,7 @@ bool ConfRuleManagerRpc::addOrUpdateRule(Rule &rule)
 {
     QVariantList resArgs;
 
-    if (!IoC<RpcManager>()->doOnServer(
+    if (!rpcManager()->doOnServer(
                 Control::Rpc_ConfRuleManager_addOrUpdateRule, ruleToVarList(rule), &resArgs))
         return false;
 
@@ -76,18 +78,18 @@ bool ConfRuleManagerRpc::addOrUpdateRule(Rule &rule)
 
 bool ConfRuleManagerRpc::deleteRule(quint16 ruleId)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfRuleManager_deleteRule, { ruleId });
+    return rpcManager()->doOnServer(Control::Rpc_ConfRuleManager_deleteRule, { ruleId });
 }
 
 bool ConfRuleManagerRpc::updateRuleName(quint16 ruleId, const QString &ruleName)
 {
-    return IoC<RpcManager>()->doOnServer(
+    return rpcManager()->doOnServer(
             Control::Rpc_ConfRuleManager_updateRuleName, { ruleId, ruleName });
 }
 
 bool ConfRuleManagerRpc::updateRuleEnabled(quint16 ruleId, bool enabled)
 {
-    return IoC<RpcManager>()->doOnServer(
+    return rpcManager()->doOnServer(
             Control::Rpc_ConfRuleManager_updateRuleEnabled, { ruleId, enabled });
 }
 
@@ -129,7 +131,7 @@ Rule ConfRuleManagerRpc::varListToRule(const QVariantList &v)
 
 bool ConfRuleManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    auto confRuleManager = IoC<ConfRuleManager>();
+    auto confRuleManager = Fort::confRuleManager();
 
     switch (p.command) {
     case Control::Rpc_ConfRuleManager_ruleAdded: {
@@ -158,7 +160,7 @@ bool ConfRuleManagerRpc::processServerCommand(const ProcessCommandArgs &p, Proce
 
 void ConfRuleManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto confRuleManager = IoC<ConfRuleManager>();
+    auto confRuleManager = Fort::confRuleManager();
 
     connect(confRuleManager, &ConfRuleManager::ruleAdded, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfRuleManager_ruleAdded); });

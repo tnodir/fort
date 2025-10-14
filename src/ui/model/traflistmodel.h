@@ -6,8 +6,6 @@
 #include "traflistcolumn.h"
 #include "trafunittype.h"
 
-class StatManager;
-
 struct TrafficRow : TableRow
 {
     qint32 trafTime = 0;
@@ -37,8 +35,6 @@ public:
     qint32 maxTrafTime() const { return m_maxTrafTime; }
 
     bool isEmpty() const { return minTrafTime() == 0; }
-
-    StatManager *statManager() const;
 
     void initialize();
 

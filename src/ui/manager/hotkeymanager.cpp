@@ -3,11 +3,13 @@
 #include <QAction>
 #include <QKeySequence>
 
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 
 #include "nativeeventfilter.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -37,15 +39,13 @@ void HotKeyManager::initialize(bool enabled, bool global)
 
 void HotKeyManager::setUp()
 {
-    auto nativeEventFilter = IoCDependency<NativeEventFilter>();
-
-    connect(nativeEventFilter, &NativeEventFilter::hotKeyPressed, this,
+    connect(nativeEventFilter(), &NativeEventFilter::hotKeyPressed, this,
             &HotKeyManager::onHotKeyPressed);
 }
 
 void HotKeyManager::tearDown()
 {
-    IoC<NativeEventFilter>()->disconnect(this);
+    nativeEventFilter()->disconnect(this);
 
     removeActions();
 }
@@ -62,7 +62,7 @@ bool HotKeyManager::addAction(QAction *action)
 
 void HotKeyManager::removeActions()
 {
-    IoC<NativeEventFilter>()->unregisterHotKeys();
+    nativeEventFilter()->unregisterHotKeys();
 
     m_actions.clear();
     m_keys.clear();
@@ -70,9 +70,9 @@ void HotKeyManager::removeActions()
 
 void HotKeyManager::updateActions()
 {
-    auto eventFilter = IoC<NativeEventFilter>();
+    auto nativeEventFilter = Fort::nativeEventFilter();
 
-    eventFilter->unregisterHotKeys();
+    nativeEventFilter->unregisterHotKeys();
 
     int hotKeyId = 0;
     for (QAction *action : std::as_const(m_actions)) {
@@ -82,7 +82,7 @@ void HotKeyManager::updateActions()
         m_keys[hotKeyId] = key;
 
         if (enabled() && global()) {
-            eventFilter->registerHotKey(hotKeyId, key);
+            nativeEventFilter->registerHotKey(hotKeyId, key);
         }
 
         ++hotKeyId;

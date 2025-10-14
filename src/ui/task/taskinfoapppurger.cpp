@@ -3,9 +3,11 @@
 #include <QLoggingCategory>
 
 #include <conf/confappmanager.h>
-#include <util/ioc/ioccontainer.h>
+#include <fortglobal.h>
 
 #include "taskmanager.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -19,7 +21,7 @@ TaskInfoAppPurger::TaskInfoAppPurger(TaskManager &taskManager) :
 void TaskInfoAppPurger::runTaskWorker()
 {
     // TODO: Use worker to run in a separate thread to not block the UI
-    const bool ok = IoC<ConfAppManager>()->purgeApps();
+    const bool ok = confAppManager()->purgeApps();
 
     qCDebug(LC) << "Purged:" << ok;
 

@@ -6,8 +6,6 @@
 #include <util/model/tableitemmodel.h>
 #include <util/service/serviceinfo.h>
 
-class ConfManager;
-class FirewallConf;
 class ServiceInfo;
 
 class ServiceListModel : public TableItemModel
@@ -16,9 +14,6 @@ class ServiceListModel : public TableItemModel
 
 public:
     explicit ServiceListModel(QObject *parent = nullptr);
-
-    ConfManager *confManager() const;
-    FirewallConf *conf() const;
 
     void initialize();
 

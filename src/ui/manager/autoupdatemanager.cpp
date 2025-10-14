@@ -14,7 +14,6 @@
 #include <task/taskinfoupdatechecker.h>
 #include <task/taskmanager.h>
 #include <util/fileutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/net/netdownloader.h>
 #include <util/osutil.h>
 
@@ -92,7 +91,7 @@ void AutoUpdateManager::setupManager()
 
 void AutoUpdateManager::setupConfManager()
 {
-    auto confManager = IoCDependency<ConfManager>();
+    auto confManager = Fort::dependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniChanged, this, &AutoUpdateManager::setupByConfIni);
 
@@ -115,8 +114,8 @@ void AutoUpdateManager::setupTaskManager()
 
 void AutoUpdateManager::setupRestart()
 {
-    if (IoC<FortSettings>()->isService()) {
-        connect(IoC<ServiceManager>(), &ServiceManager::stopRestartingRequested, this,
+    if (settings()->isService()) {
+        connect(serviceManager(), &ServiceManager::stopRestartingRequested, this,
                 &AutoUpdateManager::onRestartClientsRequested);
     } else {
         if (!OsUtil::registerAppRestart()) {

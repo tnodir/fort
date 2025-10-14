@@ -2,8 +2,10 @@
 
 #include <QLoggingCategory>
 
+#include <fortglobal.h>
 #include <fortsettings.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 const QLoggingCategory LC("rpc.window");
@@ -23,7 +25,7 @@ bool WindowManagerFake::showProgramEditForm(const QString & /*appPath*/)
 
 bool WindowManagerFake::checkPassword(WindowCode /*code*/)
 {
-    return !IoC<FortSettings>()->hasPassword();
+    return !settings()->hasPassword();
 }
 
 void WindowManagerFake::showErrorBox(

@@ -3,8 +3,6 @@
 #include <conf/confzonemanager.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
-#include <model/zonelistmodel.h>
-#include <util/ioc/ioccontainer.h>
 
 using namespace Fort;
 
@@ -18,11 +16,6 @@ void showErrorMessage(const QString &errorMessage)
 }
 
 ZonesController::ZonesController(QObject *parent) : BaseController(parent) { }
-
-ZoneListModel *ZonesController::zoneListModel() const
-{
-    return IoC<ZoneListModel>();
-}
 
 bool ZonesController::addOrUpdateZone(Zone &zone)
 {

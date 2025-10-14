@@ -3,10 +3,12 @@
 #include <QIcon>
 #include <QImage>
 
+#include <fortglobal.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "appinfomanager.h"
+
+using namespace Fort;
 
 AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
 {
@@ -15,7 +17,7 @@ AppInfoCache::AppInfoCache(QObject *parent) : QObject(parent), m_cache(1000)
 
 void AppInfoCache::setUp()
 {
-    auto appInfoManager = IoCDependency<AppInfoManager>();
+    auto appInfoManager = Fort::dependency<AppInfoManager>();
 
     connect(appInfoManager, &AppInfoManager::lookupInfoFinished, this,
             &AppInfoCache::handleFinishedInfoLookup);
@@ -25,14 +27,14 @@ void AppInfoCache::setUp()
 
 void AppInfoCache::tearDown()
 {
-    IoC<AppInfoManager>()->disconnect(this);
+    appInfoManager()->disconnect(this);
 }
 
 QString AppInfoCache::appName(const QString &appPath)
 {
     AppInfo appInfo = this->appInfo(appPath);
     if (!appInfo.isValid()) {
-        IoC<AppInfoManager>()->loadInfoFromFs(appPath, appInfo);
+        appInfoManager()->loadInfoFromFs(appPath, appInfo);
     }
     return appInfo.fileDescription;
 }
@@ -45,7 +47,7 @@ QIcon AppInfoCache::appIcon(const QString &appPath, const QString &nullIconPath)
 
     const auto info = appInfo(appPath);
     if (info.isValid()) {
-        IoC<AppInfoManager>()->lookupAppIcon(appPath, info.iconId);
+        appInfoManager()->lookupAppIcon(appPath, info.iconId);
     }
 
     icon = IconCache::icon(
@@ -71,7 +73,7 @@ AppInfo AppInfoCache::appInfo(const QString &appPath)
     }
 
     if (lookupRequired && appInfo.fileExists) {
-        IoC<AppInfoManager>()->lookupAppInfo(appPath);
+        appInfoManager()->lookupAppInfo(appPath);
     }
 
     return appInfo;
@@ -111,7 +113,7 @@ void AppInfoCache::appInfoCached(const QString &appPath, AppInfo &info, bool &lo
 
         info = *cachedInfo;
     } else {
-        lookupRequired = !IoC<AppInfoManager>()->loadInfoFromDb(appPath, info);
+        lookupRequired = !appInfoManager()->loadInfoFromDb(appPath, info);
 
         cachedInfo = new AppInfo();
 

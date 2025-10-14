@@ -11,6 +11,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/zonelistmodel.h>
 #include <model/zonesourcewrapper.h>
@@ -19,16 +20,13 @@
 
 #include "zonescontroller.h"
 
+using namespace Fort;
+
 ZoneEditDialog::ZoneEditDialog(ZonesController *ctrl, QWidget *parent) :
     QDialog(parent), m_ctrl(ctrl)
 {
     setupUi();
     setupController();
-}
-
-ZoneListModel *ZoneEditDialog::zoneListModel() const
-{
-    return ctrl()->zoneListModel();
 }
 
 void ZoneEditDialog::initialize(const Zone &zone)

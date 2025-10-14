@@ -40,11 +40,6 @@ ZonesWindow::ZonesWindow(QWidget *parent) : FormWindow(parent), m_ctrl(new Zones
     setupFormWindow(iniUser(), IniUser::zoneWindowGroup());
 }
 
-ZoneListModel *ZonesWindow::zoneListModel() const
-{
-    return ctrl()->zoneListModel();
-}
-
 void ZonesWindow::saveWindowState(bool /*wasVisible*/)
 {
     auto &iniUser = Fort::iniUser();

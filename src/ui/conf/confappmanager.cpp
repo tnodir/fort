@@ -20,7 +20,6 @@
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/variantutil.h>
 
 #include "appgroup.h"
@@ -157,8 +156,6 @@ ConfAppManager::ConfAppManager(QObject *parent) : ConfManagerBase(parent)
 
 void ConfAppManager::setUp()
 {
-    IoCDependency<ConfManager>();
-
     setupConfManager();
     setupAppEndTimer();
 
@@ -167,8 +164,10 @@ void ConfAppManager::setUp()
 
 void ConfAppManager::setupConfManager()
 {
+    auto confManager = Fort::dependency<ConfManager>();
+
     connect(
-            confManager(), &ConfManager::confChanged, this,
+            confManager, &ConfManager::confChanged, this,
             [&](bool /*onlyFlags*/, uint editedFlags) {
                 if ((editedFlags & FirewallConf::AutoLearnOff) != 0
                         && ini().progRemoveLearntApps()) {

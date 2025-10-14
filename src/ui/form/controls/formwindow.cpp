@@ -1,11 +1,13 @@
 #include "formwindow.h"
 
 #include <form/tray/trayicon.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/window/widgetwindowstatewatcher.h>
+
+using namespace Fort;
 
 FormWindow::FormWindow(QWidget *parent, Qt::WindowFlags f) :
     WidgetWindow(parent, f), m_stateWatcher(new WidgetWindowStateWatcher(this))
@@ -39,7 +41,7 @@ void FormWindow::setupWindowIcon(IniUser &iniUser)
     QString iconPath;
 
     if (iniUser.updateWindowIcons()) {
-        auto trayIcon = IoC<WindowManager>()->trayIcon();
+        auto trayIcon = windowManager()->trayIcon();
 
         iconPath = trayIcon->iconPath();
 
@@ -51,7 +53,7 @@ void FormWindow::setupWindowIcon(IniUser &iniUser)
     refreshWindowIcon(iconPath);
 
     QMetaObject::invokeMethod(
-            this, [&] { IoC<WindowManager>()->taskbarButton().setWindowBadge(windowHandle()); },
+            this, [&] { windowManager()->taskbarButton().setWindowBadge(windowHandle()); },
             Qt::QueuedConnection);
 }
 

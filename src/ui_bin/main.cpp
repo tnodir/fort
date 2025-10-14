@@ -9,6 +9,7 @@
 #include <fort_version.h>
 
 #include <control/controlmanager.h>
+#include <fortglobal.h>
 #include <fortmanager.h>
 #include <fortsettings.h>
 #include <manager/envmanager.h>
@@ -149,9 +150,9 @@ int main(int argc, char *argv[])
     fortManager.initialize();
 
     if (settings.isService()) {
-        ServiceWorker::run(IoC<ServiceManager>());
+        ServiceWorker::run(Fort::serviceManager());
     } else {
-        IoC<WindowManager>()->initialize();
+        Fort::windowManager()->initialize();
     }
 
     return QApplication::exec();

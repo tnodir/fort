@@ -1,9 +1,11 @@
 #include "controlcommandrpc.h"
 
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 bool ControlCommandRpc::processCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    return IoC<RpcManager>()->processCommandRpc(p, r);
+    return rpcManager()->processCommandRpc(p, r);
 }

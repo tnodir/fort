@@ -3,10 +3,12 @@
 #include <QLoggingCategory>
 
 #include <conf/confrulemanager.h>
+#include <fortglobal.h>
 #include <util/conf/confutil.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "rulelistmodel.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -23,11 +25,6 @@ void RuleSetModel::setEdited(bool v)
     if (m_edited) {
         emit rowCountChanged();
     }
-}
-
-ConfRuleManager *RuleSetModel::confRuleManager() const
-{
-    return IoC<ConfRuleManager>();
 }
 
 void RuleSetModel::initialize(const RuleRow &ruleRow, const QStringList &ruleSetNames)

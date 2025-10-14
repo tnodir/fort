@@ -1,8 +1,10 @@
 #include "taskmanagerrpc.h"
 
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
 #include <task/taskinfo.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -121,17 +123,17 @@ void TaskManagerRpc::onTaskFinished(qint8 taskType)
 
 void TaskManagerRpc::runTask(qint8 taskType)
 {
-    IoC<RpcManager>()->invokeOnServer(Control::Rpc_TaskManager_runTask, { taskType });
+    rpcManager()->invokeOnServer(Control::Rpc_TaskManager_runTask, { taskType });
 }
 
 void TaskManagerRpc::abortTask(qint8 taskType)
 {
-    IoC<RpcManager>()->invokeOnServer(Control::Rpc_TaskManager_abortTask, { taskType });
+    rpcManager()->invokeOnServer(Control::Rpc_TaskManager_abortTask, { taskType });
 }
 
 bool TaskManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
 {
-    auto taskManager = IoC<TaskManager>();
+    auto taskManager = Fort::taskManager();
 
     switch (p.command) {
     case Control::Rpc_TaskManager_appVersionUpdated:
@@ -146,7 +148,7 @@ bool TaskManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCo
 
 void TaskManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto taskManager = IoC<TaskManager>();
+    auto taskManager = Fort::taskManager();
 
     connect(taskManager, &TaskManager::taskStarted, rpcManager, [=](qint8 taskType) {
         rpcManager->invokeOnClients(Control::Rpc_TaskManager_taskStarted, { taskType });

@@ -10,9 +10,11 @@
 
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
+#include <fortglobal.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -50,11 +52,6 @@ RuleListModel::RuleListModel(QObject *parent) : FtsTableSqlModel(parent)
     initialize();
 }
 
-ConfManager *RuleListModel::confManager() const
-{
-    return IoC<ConfManager>();
-}
-
 SqliteDb *RuleListModel::sqliteDb() const
 {
     return confManager()->sqliteDb();
@@ -62,7 +59,7 @@ SqliteDb *RuleListModel::sqliteDb() const
 
 void RuleListModel::initialize()
 {
-    auto confRuleManager = IoC<ConfRuleManager>();
+    auto confRuleManager = Fort::confRuleManager();
 
     connect(confRuleManager, &ConfRuleManager::ruleAdded, this, &TableItemModel::reset);
     connect(confRuleManager, &ConfRuleManager::ruleRemoved, this, &TableItemModel::reset);

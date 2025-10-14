@@ -8,13 +8,15 @@
 
 #include <conf/zone.h>
 #include <driver/drivermanager.h>
+#include <fortglobal.h>
 #include <util/bitutil.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "confmanager.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -72,7 +74,8 @@ bool driverWriteZones(ConfBuffer &confBuf, bool onlyFlags = false)
         return false;
     }
 
-    auto driverManager = IoC<DriverManager>();
+    auto driverManager = Fort::driverManager();
+
     if (!driverManager->writeZones(confBuf.buffer(), onlyFlags)) {
         qCWarning(LC) << "Update driver error:" << driverManager->errorMessage();
         return false;

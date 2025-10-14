@@ -1,8 +1,10 @@
 #include "confzonemanagerrpc.h"
 
 #include <conf/zone.h>
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -64,7 +66,7 @@ bool ConfZoneManagerRpc::addOrUpdateZone(Zone &zone)
 {
     QVariantList resArgs;
 
-    if (!IoC<RpcManager>()->doOnServer(
+    if (!rpcManager()->doOnServer(
                 Control::Rpc_ConfZoneManager_addOrUpdateZone, zoneToVarList(zone), &resArgs))
         return false;
 
@@ -75,18 +77,18 @@ bool ConfZoneManagerRpc::addOrUpdateZone(Zone &zone)
 
 bool ConfZoneManagerRpc::deleteZone(quint8 zoneId)
 {
-    return IoC<RpcManager>()->doOnServer(Control::Rpc_ConfZoneManager_deleteZone, { zoneId });
+    return rpcManager()->doOnServer(Control::Rpc_ConfZoneManager_deleteZone, { zoneId });
 }
 
 bool ConfZoneManagerRpc::updateZoneName(quint8 zoneId, const QString &zoneName)
 {
-    return IoC<RpcManager>()->doOnServer(
+    return rpcManager()->doOnServer(
             Control::Rpc_ConfZoneManager_updateZoneName, { zoneId, zoneName });
 }
 
 bool ConfZoneManagerRpc::updateZoneEnabled(quint8 zoneId, bool enabled)
 {
-    return IoC<RpcManager>()->doOnServer(
+    return rpcManager()->doOnServer(
             Control::Rpc_ConfZoneManager_updateZoneEnabled, { zoneId, enabled });
 }
 
@@ -112,7 +114,7 @@ Zone ConfZoneManagerRpc::varListToZone(const QVariantList &v)
 
 bool ConfZoneManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    auto confZoneManager = IoC<ConfZoneManager>();
+    auto confZoneManager = Fort::confZoneManager();
 
     switch (p.command) {
     case Control::Rpc_ConfZoneManager_zoneAdded: {
@@ -137,7 +139,7 @@ bool ConfZoneManagerRpc::processServerCommand(const ProcessCommandArgs &p, Proce
 
 void ConfZoneManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto confZoneManager = IoC<ConfZoneManager>();
+    auto confZoneManager = Fort::confZoneManager();
 
     connect(confZoneManager, &ConfZoneManager::zoneAdded, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfZoneManager_zoneAdded); });

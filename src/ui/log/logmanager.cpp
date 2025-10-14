@@ -7,11 +7,11 @@
 #include <driver/drivercommon.h>
 #include <driver/drivermanager.h>
 #include <driver/driverworker.h>
+#include <fortglobal.h>
 #include <stat/askpendingmanager.h>
 #include <stat/statconnmanager.h>
 #include <stat/statmanager.h>
 #include <util/dateutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 #include <util/processinfo.h>
 
@@ -23,8 +23,17 @@
 #include "logentrystattraf.h"
 #include "logentrytime.h"
 
+using namespace Fort;
+
 namespace {
+
 const QLoggingCategory LC("log");
+
+DriverWorker *driverWorker()
+{
+    return driverManager()->driverWorker();
+}
+
 }
 
 LogManager::LogManager(QObject *parent) : QObject(parent) { }
@@ -64,35 +73,27 @@ void LogManager::setCurrentUnixTime(qint64 unixTime)
 
 void LogManager::setUp()
 {
-    const auto driverWorker = IoC<DriverManager>()->driverWorker();
-
-    connect(driverWorker, &DriverWorker::readLogResult, this, &LogManager::processLogBuffer,
+    connect(driverWorker(), &DriverWorker::readLogResult, this, &LogManager::processLogBuffer,
             Qt::QueuedConnection);
 }
 
 void LogManager::tearDown()
 {
-    const auto driverWorker = IoC<DriverManager>()->driverWorker();
-
-    driverWorker->disconnect(this);
+    driverWorker()->disconnect(this);
 }
 
 void LogManager::readLogAsync()
 {
-    const auto driverWorker = IoC<DriverManager>()->driverWorker();
-
     LogBuffer *logBuffer = getFreeBuffer();
 
-    if (!driverWorker->readLogAsync(logBuffer)) {
+    if (!driverWorker()->readLogAsync(logBuffer)) {
         addFreeBuffer(logBuffer);
     }
 }
 
 void LogManager::cancelAsyncIo()
 {
-    const auto driverWorker = IoC<DriverManager>()->driverWorker();
-
-    driverWorker->cancelAsyncIo();
+    driverWorker()->cancelAsyncIo();
 }
 
 LogBuffer *LogManager::getFreeBuffer()
@@ -171,7 +172,7 @@ bool LogManager::processLogEntryApp(LogBuffer *logBuffer)
     LogEntryApp appEntry;
     logBuffer->readEntryApp(&appEntry);
 
-    IoC<ConfAppManager>()->logApp(appEntry);
+    confAppManager()->logApp(appEntry);
 
     return true;
 }
@@ -184,12 +185,12 @@ bool LogManager::processLogEntryConn(LogBuffer *logBuffer)
     connEntry.setConnTime(currentUnixTime());
 
     if (connEntry.isAskPending()) {
-        IoC<AskPendingManager>()->logConn(connEntry);
+        askPendingManager()->logConn(connEntry);
     } else {
-        IoC<StatConnManager>()->logConn(connEntry);
+        statConnManager()->logConn(connEntry);
 
         if (connEntry.alerted() && connEntry.appId() != 0) {
-            IoC<ConfAppManager>()->addAlertedApp(connEntry.appId());
+            confAppManager()->addAlertedApp(connEntry.appId());
         }
     }
 
@@ -201,7 +202,7 @@ bool LogManager::processLogEntryProcNew(LogBuffer *logBuffer)
     LogEntryProcNew procNewEntry;
     logBuffer->readEntryProcNew(&procNewEntry);
 
-    IoC<StatManager>()->logProcNew(procNewEntry, currentUnixTime());
+    statManager()->logProcNew(procNewEntry, currentUnixTime());
 
     return true;
 }
@@ -211,7 +212,7 @@ bool LogManager::processLogEntryStatTraf(LogBuffer *logBuffer)
     LogEntryStatTraf statTrafEntry;
     logBuffer->readEntryStatTraf(&statTrafEntry);
 
-    IoC<StatManager>()->logStatTraf(statTrafEntry, currentUnixTime());
+    statManager()->logStatTraf(statTrafEntry, currentUnixTime());
 
     return true;
 }

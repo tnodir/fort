@@ -2,12 +2,14 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
+#include <fortglobal.h>
 #include <util/dateutil.h>
-#include <util/ioc/ioccontainer.h>
 
 #include "taskinfoapppurger.h"
 #include "taskinfoupdatechecker.h"
 #include "taskinfozonedownloader.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -47,7 +49,7 @@ TaskInfo *TaskManager::taskInfoAt(int row) const
 
 void TaskManager::setUp()
 {
-    auto confManager = IoCDependency<ConfManager>();
+    auto confManager = Fort::dependency<ConfManager>();
 
     loadSettings();
     initializeTasks();
@@ -97,12 +99,12 @@ void TaskManager::appendTaskInfo(TaskInfo *taskInfo)
 
 void TaskManager::loadSettings()
 {
-    IoC<ConfManager>()->loadTasks(taskInfoList());
+    confManager()->loadTasks(taskInfoList());
 }
 
 bool TaskManager::saveSettings()
 {
-    return IoC<ConfManager>()->saveTasks(taskInfoList());
+    return confManager()->saveTasks(taskInfoList());
 }
 
 bool TaskManager::saveVariant(const QVariant &v)

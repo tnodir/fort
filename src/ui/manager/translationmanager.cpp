@@ -8,7 +8,6 @@
 #include <fortglobal.h>
 #include <user/iniuser.h>
 #include <util/fileutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/stringutil.h>
 
 using namespace Fort;
@@ -37,7 +36,7 @@ QString TranslationManager::languageName() const
 
 void TranslationManager::setUp()
 {
-    auto confManager = IoCDependency<ConfManager>();
+    auto confManager = Fort::dependency<ConfManager>();
 
     connect(confManager, &ConfManager::iniUserChanged, this, &TranslationManager::setupByIniUser);
 

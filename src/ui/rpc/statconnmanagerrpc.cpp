@@ -2,8 +2,10 @@
 
 #include <sqlite/sqlitedb.h>
 
+#include <fortglobal.h>
 #include <rpc/rpcmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -28,12 +30,12 @@ StatConnManagerRpc::StatConnManagerRpc(const QString &filePath, QObject *parent)
 
 void StatConnManagerRpc::deleteConn(qint64 connIdTo)
 {
-    IoC<RpcManager>()->doOnServer(Control::Rpc_StatConnManager_deleteConn, { connIdTo });
+    rpcManager()->doOnServer(Control::Rpc_StatConnManager_deleteConn, { connIdTo });
 }
 
 bool StatConnManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    auto statConnManager = IoC<StatConnManager>();
+    auto statConnManager = Fort::statConnManager();
 
     switch (p.command) {
     case Control::Rpc_StatConnManager_connChanged: {
@@ -50,7 +52,7 @@ bool StatConnManagerRpc::processServerCommand(const ProcessCommandArgs &p, Proce
 
 void StatConnManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto statConnManager = IoC<StatConnManager>();
+    auto statConnManager = Fort::statConnManager();
 
     connect(statConnManager, &StatConnManager::connChanged, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_StatConnManager_connChanged); });

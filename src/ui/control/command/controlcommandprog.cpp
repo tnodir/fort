@@ -2,8 +2,10 @@
 
 #include <conf/app.h>
 #include <conf/confappmanager.h>
+#include <fortglobal.h>
 #include <manager/windowmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -48,7 +50,7 @@ ProgAction progActionByText(const QString &commandText, bool &report)
 
 bool reportCommandProgAction(ProcessCommandResult &r, const QString &appPath)
 {
-    const App app = IoC<ConfAppManager>()->appByPath(appPath);
+    const App app = confAppManager()->appByPath(appPath);
 
     if (!app.isValid()) {
         r.commandResult = Control::CommandResultError;
@@ -80,13 +82,13 @@ bool processCommandProgAction(
         const bool blocked = (progAction != ProgActionAllow);
         const bool killProcess = (progAction == ProgActionKill);
 
-        return IoC<ConfAppManager>()->addOrUpdateAppPath(appPath, blocked, killProcess);
+        return confAppManager()->addOrUpdateAppPath(appPath, blocked, killProcess);
     }
     case ProgActionAdd: {
-        return IoC<WindowManager>()->showProgramEditForm(appPath);
+        return windowManager()->showProgramEditForm(appPath);
     }
     case ProgActionDel: {
-        return IoC<ConfAppManager>()->deleteAppPath(appPath);
+        return confAppManager()->deleteAppPath(appPath);
     }
     default:
         return false;

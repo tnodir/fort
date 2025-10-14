@@ -10,16 +10,18 @@
 #include <appinfo/appinfocache.h>
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <log/logentryprocnew.h>
 #include <log/logentrystattraf.h>
 #include <stat/quotamanager.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
-#include <util/ioc/ioccontainer.h>
 #include <util/osutil.h>
 
 #include "statsql.h"
+
+using namespace Fort;
 
 namespace {
 
@@ -87,11 +89,6 @@ void StatManager::setConf(const FirewallConf *conf)
     setupByConf();
 }
 
-IniOptions &StatManager::ini() const
-{
-    return IoC<FortSettings>()->iniOpt();
-}
-
 void StatManager::setUp()
 {
     setupDb();
@@ -142,7 +139,7 @@ void StatManager::updateActivePeriod(qint32 tickSecs)
 
 void StatManager::clearQuotas(bool isNewDay, bool isNewMonth)
 {
-    auto quotaManager = IoC<QuotaManager>();
+    auto quotaManager = Fort::quotaManager();
 
     quotaManager->clear(isNewDay && m_trafDay != 0, isNewMonth && m_trafMonth != 0);
 }
@@ -152,7 +149,7 @@ void StatManager::checkQuotas(quint32 inBytes)
     if (!m_isActivePeriod)
         return;
 
-    auto quotaManager = IoC<QuotaManager>();
+    auto quotaManager = Fort::quotaManager();
 
     // Update quota traffic bytes
     quotaManager->addTraf(inBytes);
@@ -202,7 +199,7 @@ bool StatManager::clearTraffic()
 
     setupTrafDate();
 
-    IoC<QuotaManager>()->clear();
+    quotaManager()->clear();
 
     emit trafficCleared();
 
@@ -414,7 +411,7 @@ qint64 StatManager::getAppId(const QString &appPath)
 
 qint64 StatManager::createAppId(const QString &appPath, quint32 confAppId, qint64 unixTime)
 {
-    const auto appName = IoC<AppInfoCache>()->appName(appPath);
+    const auto appName = appInfoCache()->appName(appPath);
 
     SqliteStmt *stmt = getStmt(StatSql::sqlInsertAppId);
 

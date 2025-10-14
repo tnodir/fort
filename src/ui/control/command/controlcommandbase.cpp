@@ -1,8 +1,10 @@
 #include "controlcommandbase.h"
 
+#include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
-#include <util/ioc/ioccontainer.h>
+
+using namespace Fort;
 
 bool ControlCommandBase::checkCommandActionPassword(
         ProcessCommandResult &r, quint32 action, quint32 passwordNotRequiredActions)
@@ -15,17 +17,17 @@ bool ControlCommandBase::checkCommandActionPassword(
         return false;
     }
 
-    if (!IoC<WindowManager>()->checkPassword()) {
+    if (!windowManager()->checkPassword()) {
         r.errorMessage = "Password required";
         return false;
     }
 
-    IoC<FortSettings>()->setPasswordTemporaryChecked(true);
+    settings()->setPasswordTemporaryChecked(true);
 
     return true;
 }
 
 void ControlCommandBase::uncheckCommandActionPassword()
 {
-    IoC<FortSettings>()->setPasswordTemporaryChecked(false);
+    settings()->setPasswordTemporaryChecked(false);
 }

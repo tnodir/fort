@@ -2,7 +2,9 @@
 
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
-#include <util/ioc/ioccontainer.h>
+#include <fortglobal.h>
+
+using namespace Fort;
 
 namespace {
 
@@ -42,7 +44,7 @@ bool reportCommandFilter(ProcessCommandResult &r, FirewallConf *conf)
 
 bool processCommandFilterAction(ProcessCommandResult &r, FilterAction filterAction, bool report)
 {
-    auto confManager = IoC<ConfManager>();
+    auto confManager = Fort::confManager();
 
     auto conf = confManager->conf();
 
