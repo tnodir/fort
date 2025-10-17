@@ -29,15 +29,8 @@
 #include <stat/statmanager.h>
 #include <task/taskmanager.h>
 #include <user/usersettings.h>
-#include <util/ioc/ioccontainer.h>
 
 namespace Fort {
-
-template<class T>
-T *dependency()
-{
-    return IoCDependency<T>();
-}
 
 AppInfoCache *appInfoCache()
 {

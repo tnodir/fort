@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <util/ioc/ioccontainer.h>
+
 class AppInfoCache;
 class AppInfoManager;
 class AskPendingManager;
@@ -38,7 +40,10 @@ class ZoneListModel;
 namespace Fort {
 
 template<class T>
-T *dependency();
+constexpr T *dependency()
+{
+    return IoCDependency<T>();
+}
 
 AppInfoCache *appInfoCache();
 AppInfoManager *appInfoManager();
