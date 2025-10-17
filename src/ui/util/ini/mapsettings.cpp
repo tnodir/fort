@@ -31,7 +31,7 @@ void MapSettings::setCacheValue(const QString &key, const QVariant &v) const
     settings()->setCacheValue(key, v);
 }
 
-void MapSettings::save() const
+void MapSettings::save()
 {
     Q_ASSERT(settings());
 

@@ -232,6 +232,15 @@ void FirewallConf::removeAppGroup(int from, int to)
     setAppGroupsEdited(lo, m_appGroups.size() - 1);
 }
 
+void FirewallConf::clearAppGroups()
+{
+    for (AppGroup *appGroup : m_appGroups) {
+        appGroup->deleteLater();
+    }
+
+    m_appGroups.clear();
+}
+
 void FirewallConf::clearRemovedAppGroupIdList() const
 {
     m_removedAppGroupIdList.clear();
@@ -360,6 +369,8 @@ void FirewallConf::copy(const FirewallConf &o)
         addressGroup->copy(*ag);
     }
 
+    clearAppGroups();
+
     for (const AppGroup *ag : o.appGroups()) {
         auto appGroup = new AppGroup();
         appGroup->copy(*ag);
@@ -471,6 +482,8 @@ QVariant FirewallConf::appGroupsToVariant() const
 
 void FirewallConf::appGroupsFromVariant(const QVariant &v)
 {
+    clearAppGroups();
+
     const QVariantList groups = v.toList();
     for (const QVariant &gv : groups) {
         auto appGroup = new AppGroup();

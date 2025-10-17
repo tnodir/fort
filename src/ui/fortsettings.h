@@ -112,8 +112,8 @@ public slots:
     void readConfIni(FirewallConf &conf) const;
     void readConfIniOptions(const IniOptions &ini) const;
 
-    void writeConfIni(const FirewallConf &conf);
-    void writeConfIniOptions(const IniOptions &ini);
+    void writeConfIni(const FirewallConf &conf, IniOptions &iniOpt);
+    void writeConfIniOptions(IniOptions &ini);
 
 protected:
     void migrateIniOnLoad() override;

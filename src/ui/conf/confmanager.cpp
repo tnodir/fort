@@ -16,7 +16,6 @@
 #include <manager/windowmanager.h>
 #include <task/taskinfo.h>
 #include <task/taskmanager.h>
-#include <user/iniuser.h>
 #include <user/usersettings.h>
 #include <util/conf/confbuffer.h>
 #include <util/fileutil.h>
@@ -24,7 +23,6 @@
 #include "addressgroup.h"
 #include "appgroup.h"
 #include "confappmanager.h"
-#include "firewallconf.h"
 
 using namespace Fort;
 
@@ -321,6 +319,8 @@ bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
     if (!DbQuery(db).sql(sqlSelectAppGroups).prepare(stmt))
         return false;
 
+    conf.clearAppGroups();
+
     while (stmt.step() == SqliteStmt::StepRow) {
         auto appGroup = new AppGroup();
 
@@ -463,7 +463,7 @@ void showErrorMessage(const QString &errorMessage)
 }
 
 ConfManager::ConfManager(const QString &filePath, QObject *parent, quint32 openFlags) :
-    QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags)), m_conf(createConf())
+    QObject(parent), m_sqliteDb(new SqliteDb(filePath, openFlags))
 {
     setupTimers();
 }
@@ -473,92 +473,11 @@ void ConfManager::setUp()
     setupDb();
 }
 
-void ConfManager::initConfToEdit()
-{
-    if (confToEdit())
-        return;
-
-    auto newConf = createConf();
-    newConf->copy(*conf());
-
-    setConfToEdit(newConf);
-}
-
-void ConfManager::setConfToEdit(FirewallConf *conf)
-{
-    if (confToEdit() == conf)
-        return;
-
-    if (confToEdit() && confToEdit() != this->conf()) {
-        confToEdit()->deleteLater();
-    }
-
-    m_confToEdit = conf;
-}
-
-void ConfManager::initIniOptToEdit()
-{
-    if (m_iniOptToEdit)
-        return;
-
-    auto newIniOpt = new IniOptions(settings());
-
-    setIniOptToEdit(newIniOpt);
-}
-
-void ConfManager::setIniOptToEdit(IniOptions *iniOpt)
-{
-    if (m_iniOptToEdit == iniOpt)
-        return;
-
-    delete m_iniOptToEdit;
-
-    m_iniOptToEdit = iniOpt;
-}
-
-void ConfManager::initIniUserToEdit()
-{
-    if (m_iniUserToEdit)
-        return;
-
-    auto newIniUser = new IniUser(iniUser().settings());
-
-    setIniUserToEdit(newIniUser);
-}
-
-void ConfManager::setIniUserToEdit(IniUser *iniUser)
-{
-    if (m_iniUserToEdit == iniUser)
-        return;
-
-    delete m_iniUserToEdit;
-
-    m_iniUserToEdit = iniUser;
-}
-
-void ConfManager::setConf(FirewallConf *newConf)
-{
-    Q_ASSERT(newConf);
-
-    conf()->deleteLater();
-    m_conf = newConf;
-
-    if (confToEdit() == conf()) {
-        setConfToEdit(nullptr);
-    }
-}
-
-FirewallConf *ConfManager::createConf()
-{
-    FirewallConf *conf = new FirewallConf(this);
-    return conf;
-}
-
 bool ConfManager::applyConfPeriods(bool onlyFlags)
 {
     m_confTimer.stop();
 
-    if (!conf() || !conf()->updateGroupPeriods(onlyFlags))
+    if (!conf()->updateGroupPeriods(onlyFlags))
         return false;
 
     m_confTimer.start(CONF_PERIODS_UPDATE_INTERVAL);
@@ -568,9 +487,6 @@ bool ConfManager::applyConfPeriods(bool onlyFlags)
 
 void ConfManager::applyFilterOffSeconds()
 {
-    if (!conf())
-        return;
-
     const bool isFilterOff = !conf()->filterEnabled();
     const int filterOffMsec = isFilterOff ? ini().filterOffSeconds() * 1000 : 0;
 
@@ -588,9 +504,6 @@ void ConfManager::applyFilterOffSeconds()
 
 void ConfManager::applyAutoLearnSeconds()
 {
-    if (!conf())
-        return;
-
     const bool isAutoLearn = (conf()->filterMode() == FirewallConf::ModeAutoLearn);
     const int autoLearnMsec = isAutoLearn ? ini().autoLearnSeconds() * 1000 : 0;
 
@@ -706,23 +619,28 @@ bool ConfManager::loadConf(FirewallConf &conf)
 
 void ConfManager::load()
 {
-    Q_ASSERT(conf());
-
     if (!loadConf(*conf())) {
         showErrorMessage(tr("Cannot load Settings"));
         return;
     }
 
-    applySavedConf(conf());
+    applySavedConf(*conf());
 }
 
-void ConfManager::reload()
+bool ConfManager::save(FirewallConf *newConf, IniOptions &ini)
 {
-    setConf(createConf());
-    load();
+    if (!newConf->anyEdited())
+        return true;
+
+    if (!(validateConf(*newConf) && saveConf(*newConf, ini)))
+        return false;
+
+    applySavedConf(*newConf);
+
+    return true;
 }
 
-bool ConfManager::saveConf(FirewallConf &conf)
+bool ConfManager::saveConf(FirewallConf &conf, IniOptions &ini)
 {
     qCDebug(LC) << "Conf save";
 
@@ -731,35 +649,31 @@ bool ConfManager::saveConf(FirewallConf &conf)
     if (conf.optEdited() && !saveToDb(conf))
         return false;
 
-    settings()->writeConfIni(conf);
+    settings()->writeConfIni(conf, ini);
 
-    // Ini Options
-    {
-        auto &ini = Fort::ini();
-
-        if (conf.taskEdited()) {
-            saveTasksByIni(ini);
-        }
-
-        ini.clear();
+    // Tasks
+    if (conf.taskEdited()) {
+        saveTasksByIni(ini);
     }
+
+    ini.clear();
 
     return true;
 }
 
-void ConfManager::applySavedConf(FirewallConf *newConf)
+void ConfManager::applySavedConf(FirewallConf &newConf)
 {
-    if (!newConf->anyEdited())
+    if (!newConf.anyEdited())
         return;
 
-    const bool onlyFlags = !newConf->optEdited();
+    const bool onlyFlags = !newConf.optEdited();
 
-    if (conf() != newConf) {
+    if (conf() != &newConf) {
         if (onlyFlags) {
-            conf()->copyFlags(*newConf);
-            newConf->resetEdited();
+            conf()->copyFlags(newConf);
+            newConf.resetEdited();
         } else {
-            setConf(newConf);
+            conf()->copy(newConf);
         }
     }
 
@@ -776,76 +690,51 @@ void ConfManager::applySavedConf(FirewallConf *newConf)
     conf()->resetEdited();
 }
 
-bool ConfManager::save(FirewallConf *newConf)
-{
-    if (!newConf->anyEdited())
-        return true;
-
-    if (!(validateConf(*newConf) && saveConf(*newConf)))
-        return false;
-
-    applySavedConf(newConf);
-
-    return true;
-}
-
 bool ConfManager::saveFlags()
 {
     conf()->setFlagsEdited();
-    return save(conf());
+
+    return save(conf(), ini());
 }
 
 void ConfManager::saveIni()
 {
     conf()->setIniEdited();
 
-    saveConf(*conf());
+    saveConf(*conf(), ini());
 
     conf()->resetEdited();
 }
 
-void ConfManager::saveIniUser(bool edited, bool onlyFlags)
+void ConfManager::saveIniUser()
 {
     iniUser().saveAndClear();
-
-    if (edited) {
-        emit iniUserChanged(onlyFlags);
-    }
 }
 
-QVariant ConfManager::toPatchVariant(bool onlyFlags, uint editedFlags) const
+void ConfManager::saveIniUser(IniUser &iniUser, bool onlyFlags)
 {
-    return onlyFlags
-            ? conf()->toVariant(iniOpt(), /*onlyEdited=*/true) // send only flags to clients
-            : FirewallConf::editedFlagsToVariant(
-                      editedFlags); // clients have to reload all from storage
+    iniUser.saveAndClear();
+
+    emit iniUserChanged(onlyFlags);
+}
+
+QVariant ConfManager::toPatchVariant(const IniOptions &ini, bool onlyFlags, uint editedFlags) const
+{
+    return onlyFlags ? conf()->toVariant(ini, /*onlyEdited=*/true) // send only flags to clients
+                     : FirewallConf::editedFlagsToVariant(
+                               editedFlags); // clients have to reload all from storage
 }
 
 bool ConfManager::saveVariant(const QVariant &confVar)
 {
-    const uint editedFlags = FirewallConf::editedFlagsFromVariant(confVar);
+    auto &ini = Fort::ini();
 
-    FirewallConf *conf;
-    bool isNewConf = false;
+    conf()->fromVariant(ini, confVar, /*onlyEdited=*/true);
 
-    if ((editedFlags & FirewallConf::OptEdited) != 0) {
-        conf = createConf();
-        conf->copyFlags(*this->conf());
-        isNewConf = true;
-    } else {
-        conf = this->conf();
-    }
-
-    conf->fromVariant(iniOpt(), confVar, /*onlyEdited=*/true);
-
-    if (!saveConf(*conf)) {
-        if (isNewConf) {
-            delete conf;
-        }
+    if (!saveConf(*conf(), ini))
         return false;
-    }
 
-    applySavedConf(conf);
+    applySavedConf(*conf());
 
     return true;
 }
@@ -885,12 +774,8 @@ bool ConfManager::exportBackup(const QString &path)
     const QString outPath = FileUtil::pathSlash(path);
 
     // Export User Ini
-    {
-        Settings *settings = iniUser().settings();
-
-        if (!exportFile(settings->filePath(), outPath))
-            return false;
-    }
+    if (!exportFile(userSettings()->filePath(), outPath))
+        return false;
 
     // Export DB
     if (!exportMasterBackup(outPath)) {
@@ -970,7 +855,7 @@ bool ConfManager::importMasterBackup(const QString &path)
 
     emit imported();
 
-    reload(); // Reload conf
+    load(); // Reload conf
 
     return true;
 }
@@ -980,14 +865,14 @@ bool ConfManager::checkPassword(const QString &password)
     return settings()->checkPassword(password);
 }
 
-bool ConfManager::validateConf(const FirewallConf &newConf)
+bool ConfManager::validateConf(const FirewallConf &conf)
 {
-    if (!newConf.optEdited())
+    if (!conf.optEdited())
         return true;
 
     ConfBuffer confBuf;
 
-    if (!confBuf.writeConf(newConf, confAppManager(), *envManager())) {
+    if (!confBuf.writeConf(conf, confAppManager(), envManager())) {
         qCCritical(LC) << "Conf save error:" << confBuf.errorMessage();
         return false;
     }

@@ -14,18 +14,12 @@ FirewallConf *OptBasePage::conf() const
 
 IniOptions &OptBasePage::ini() const
 {
-    auto ini = ctrl()->iniOptToEdit();
-    Q_ASSERT(ini);
-
-    return *ini;
+    return ctrl()->iniOptToEdit();
 }
 
 IniUser &OptBasePage::iniUser() const
 {
-    auto iniUser = ctrl()->iniUserToEdit();
-    Q_ASSERT(iniUser);
-
-    return *iniUser;
+    return ctrl()->iniUserToEdit();
 }
 
 void OptBasePage::setupController()

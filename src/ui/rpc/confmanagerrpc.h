@@ -4,6 +4,7 @@
 #include <conf/confmanager.h>
 #include <control/control_types.h>
 
+class IniOptions;
 class RpcManager;
 class TaskManager;
 
@@ -14,7 +15,9 @@ class ConfManagerRpc : public ConfManager
 public:
     explicit ConfManagerRpc(const QString &filePath, QObject *parent = nullptr);
 
-    bool saveConf(FirewallConf &newConf) override;
+    bool saveConf(FirewallConf &conf, IniOptions &ini) override;
+
+    bool saveVariant(const QVariant &confVar) override;
 
     bool exportMasterBackup(const QString &path) override;
     bool importMasterBackup(const QString &path) override;

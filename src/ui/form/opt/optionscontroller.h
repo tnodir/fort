@@ -1,9 +1,11 @@
 #ifndef OPTIONSCONTROLLER_H
 #define OPTIONSCONTROLLER_H
 
+#include <conf/firewallconf.h>
+#include <conf/inioptions.h>
 #include <form/basecontroller.h>
+#include <user/iniuser.h>
 
-class IniUser;
 class ZoneListModel;
 
 class OptionsController : public BaseController
@@ -12,10 +14,15 @@ class OptionsController : public BaseController
 
 public:
     explicit OptionsController(QObject *parent = nullptr);
-    ~OptionsController() override;
 
-    FirewallConf *confToEdit() const;
-    IniUser *iniUserToEdit() const;
+    FirewallConf *confToEdit() { return &m_confToEdit; }
+    const FirewallConf *confToEdit() const { return &m_confToEdit; }
+
+    IniOptions &iniOptToEdit() { return m_iniOptToEdit; }
+    const IniOptions &iniOptToEdit() const { return m_iniOptToEdit; }
+
+    IniUser &iniUserToEdit() { return m_iniUserToEdit; }
+    const IniUser &iniUserToEdit() const { return m_iniUserToEdit; }
 
     bool anyEdited() const;
 
@@ -54,13 +61,18 @@ private:
     void save(bool closeOnSuccess);
     void saveIniUser(bool onlyFlags);
 
-    void initConfManagerToEdit();
-    void closeConfManagerToEdit();
+    void initConfToEdit();
+    void resetConfToEdit();
 
 private:
     bool m_iniUserEdited : 1 = false;
     bool m_iniUserDataChanged : 1 = false;
     bool m_iniUserFlagsChanged : 1 = false;
+
+    FirewallConf m_confToEdit;
+
+    IniOptions m_iniOptToEdit;
+    IniUser m_iniUserToEdit;
 };
 
 #endif // OPTIONSCONTROLLER_H

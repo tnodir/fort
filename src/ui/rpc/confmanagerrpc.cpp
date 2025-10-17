@@ -77,15 +77,11 @@ ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
 {
 }
 
-bool ConfManagerRpc::saveConf(FirewallConf &newConf)
+bool ConfManagerRpc::saveConf(FirewallConf &conf, IniOptions &ini)
 {
-    Q_ASSERT(&newConf == conf() || &newConf == confToEdit()); // else newConf.deleteLater()
+    conf.prepareToSave();
 
-    newConf.prepareToSave();
-
-    const QVariant confVar = newConf.toVariant(iniOpt(), /*onlyEdited=*/true);
-
-    auto rpcManager = Fort::rpcManager();
+    const QVariant confVar = conf.toVariant(ini, /*onlyEdited=*/true);
 
     setSaving(true);
     const bool ok = saveVariant(confVar);
@@ -95,11 +91,7 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
         return false;
 
     // Already applied by onConfChanged() & applySavedConf()
-    newConf.resetEdited();
-
-    if (&newConf == confToEdit()) {
-        setConfToEdit(nullptr);
-    }
+    conf.resetEdited();
 
     return true;
 }
@@ -132,14 +124,13 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 
     if ((editedFlags & FirewallConf::OptEdited) != 0) {
         // Reload from storage
-        setConf(createConf());
-        loadConf(*conf());
+        load();
     } else {
         // Apply only flags
-        conf()->fromVariant(iniOpt(), confVar, /*onlyEdited=*/true);
-    }
+        conf()->fromVariant(ini(), confVar, /*onlyEdited=*/true);
 
-    applySavedConf(conf());
+        applySavedConf(*conf());
+    }
 
     if (!saving()) {
         windowManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
@@ -173,7 +164,7 @@ void ConfManagerRpc::setupServerSignals(RpcManager *rpcManager)
     connect(confManager, &ConfManager::confChanged, rpcManager,
             [=](bool onlyFlags, uint editedFlags) {
                 const QVariant confVar =
-                        Fort::confManager()->toPatchVariant(onlyFlags, editedFlags);
+                        Fort::confManager()->toPatchVariant(Fort::ini(), onlyFlags, editedFlags);
                 rpcManager->invokeOnClients(Control::Rpc_ConfManager_confChanged, { confVar });
             });
     connect(confManager, &ConfManager::imported, rpcManager,

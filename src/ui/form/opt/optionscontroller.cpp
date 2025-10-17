@@ -4,13 +4,12 @@
 
 #include <conf/confappmanager.h>
 #include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <form/dialog/dialogutil.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
 #include <manager/windowmanager.h>
 #include <stat/statmanager.h>
-#include <user/iniuser.h>
+#include <user/usersettings.h>
 
 using namespace Fort;
 
@@ -25,29 +24,10 @@ void showErrorMessage(const QString &errorMessage)
 
 }
 
-OptionsController::OptionsController(QObject *parent) : BaseController(parent)
+OptionsController::OptionsController(QObject *parent) :
+    BaseController(parent), m_iniOptToEdit(settings()), m_iniUserToEdit(userSettings())
 {
-    initConfManagerToEdit();
-}
-
-OptionsController::~OptionsController()
-{
-    closeConfManagerToEdit();
-}
-
-FirewallConf *OptionsController::confToEdit() const
-{
-    return confManager()->confToEdit();
-}
-
-IniUser *OptionsController::iniUserToEdit() const
-{
-    return confManager()->iniUserToEdit();
-}
-
-ZoneListModel *OptionsController::zoneListModel() const
-{
-    return IoC<ZoneListModel>();
+    initConfToEdit();
 }
 
 bool OptionsController::anyEdited() const
@@ -122,7 +102,7 @@ void OptionsController::save(bool closeOnSuccess)
         qCDebug(LC) << "Conf save";
     }
 
-    if (!confManager()->save(confToEdit())) {
+    if (!confManager()->save(confToEdit(), iniOptToEdit())) {
         showErrorMessage(tr("Cannot save the options"));
         return;
     }
@@ -135,7 +115,7 @@ void OptionsController::save(bool closeOnSuccess)
     if (closeOnSuccess) {
         closeWindow();
     } else if (isAnyEdited) {
-        initConfManagerToEdit();
+        resetConfToEdit();
         resetEdited();
     }
 }
@@ -144,21 +124,20 @@ void OptionsController::saveIniUser(bool onlyFlags)
 {
     qCDebug(LC) << "IniUser save";
 
-    iniUserToEdit()->saveAndClear();
-
-    confManager()->saveIniUser(/*edited=*/true, onlyFlags);
+    confManager()->saveIniUser(iniUserToEdit(), onlyFlags);
 }
 
-void OptionsController::initConfManagerToEdit()
+void OptionsController::initConfToEdit()
 {
-    confManager()->initConfToEdit();
-    confManager()->initIniUserToEdit();
+    confToEdit()->copy(*conf());
 }
 
-void OptionsController::closeConfManagerToEdit()
+void OptionsController::resetConfToEdit()
 {
-    confManager()->setConfToEdit(nullptr);
-    confManager()->setIniUserToEdit(nullptr);
+    confToEdit()->resetEdited();
+
+    iniOptToEdit().clear();
+    iniUserToEdit().clear();
 }
 
 void OptionsController::exportBackup()

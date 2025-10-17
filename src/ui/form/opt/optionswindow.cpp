@@ -58,7 +58,7 @@ void OptionsWindow::restoreWindowState()
 
 void OptionsWindow::cancelChanges()
 {
-    if (ctrl()->confToEdit() && ctrl()->anyEdited()) {
+    if (ctrl()->anyEdited()) {
         ctrl()->resetEdited();
     }
 }

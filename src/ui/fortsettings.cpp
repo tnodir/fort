@@ -464,7 +464,7 @@ void FortSettings::readConfIniOptions(const IniOptions &ini) const
     }
 }
 
-void FortSettings::writeConfIni(const FirewallConf &conf)
+void FortSettings::writeConfIni(const FirewallConf &conf, IniOptions &iniOpt)
 {
     bool changed = false;
 
@@ -504,7 +504,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
 
     // Ini Options
     if (conf.iniEdited()) {
-        writeConfIniOptions(iniOpt());
+        writeConfIniOptions(iniOpt);
 
         changed = true;
     }
@@ -514,7 +514,7 @@ void FortSettings::writeConfIni(const FirewallConf &conf)
     }
 }
 
-void FortSettings::writeConfIniOptions(const IniOptions &ini)
+void FortSettings::writeConfIniOptions(IniOptions &ini)
 {
     // Save changed keys
     ini.save();

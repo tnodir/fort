@@ -24,7 +24,7 @@ public:
     static bool isTransientKey(const QString &key) { return key.endsWith('_'); }
 
 public slots:
-    void save() const;
+    void save();
     void saveAndClear();
 
 private:

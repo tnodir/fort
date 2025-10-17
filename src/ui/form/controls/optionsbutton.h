@@ -12,8 +12,6 @@ class OptionsButton : public ToolButton
 public:
     explicit OptionsButton(int tabIndex = 0, QWidget *parent = nullptr);
 
-    TrayIcon *trayIcon() const;
-
 public slots:
     void showOptionsWindow();
 
