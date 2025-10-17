@@ -76,7 +76,7 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     ConfBuffer confBuf;
 
-    if (!confBuf.writeConf(conf, nullptr, envManager)) {
+    if (!confBuf.writeConf(conf, nullptr, &envManager)) {
         qCritical() << "Error:" << confBuf.errorMessage();
         Q_UNREACHABLE();
     }

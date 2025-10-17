@@ -95,7 +95,7 @@ void ConfBuffer::writeServices(const QVector<ServiceInfo> &services, int process
 }
 
 bool ConfBuffer::writeConf(
-        const FirewallConf &conf, const ConfAppsWalker *confAppsWalker, EnvManager &envManager)
+        const FirewallConf &conf, const ConfAppsWalker *confAppsWalker, EnvManager *envManager)
 {
     WriteConfArgs wca = {
         .conf = conf,
@@ -109,10 +109,10 @@ bool ConfBuffer::writeConf(
 
     AppParseOptions opt;
 
-    if (!parseExeApps(envManager, confAppsWalker, opt))
+    if (!parseExeApps(*envManager, confAppsWalker, opt))
         return false;
 
-    if (!parseAppGroups(envManager, conf.appGroups(), opt))
+    if (!parseAppGroups(*envManager, conf.appGroups(), opt))
         return false;
 
     const quint32 appsSize = opt.wildAppsSize + opt.prefixAppsSize + opt.exeAppsSize;
