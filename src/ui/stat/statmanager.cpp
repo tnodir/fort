@@ -141,7 +141,13 @@ void StatManager::clearQuotas(bool isNewDay, bool isNewMonth)
 {
     auto quotaManager = Fort::quotaManager();
 
-    quotaManager->clear(isNewDay && m_trafDay != 0, isNewMonth && m_trafMonth != 0);
+    if (isNewDay && m_trafDay != 0) {
+        quotaManager->clear(QuotaManager::AlertDay);
+    }
+
+    if (isNewMonth && m_trafMonth != 0) {
+        quotaManager->clear(QuotaManager::AlertMonth);
+    }
 }
 
 void StatManager::checkQuotas(quint32 inBytes)
@@ -154,8 +160,8 @@ void StatManager::checkQuotas(quint32 inBytes)
     // Update quota traffic bytes
     quotaManager->addTraf(inBytes);
 
-    quotaManager->checkQuotaDay(m_trafDay);
-    quotaManager->checkQuotaMonth(m_trafMonth);
+    quotaManager->checkQuota(QuotaManager::AlertDay, m_trafDay);
+    quotaManager->checkQuota(QuotaManager::AlertMonth, m_trafMonth);
 }
 
 bool StatManager::updateTrafDay(qint64 unixTime)

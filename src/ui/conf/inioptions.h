@@ -62,11 +62,8 @@ public:
     bool checkPasswordOnUninstall() const { return valueBool("protect/checkPasswordOnUninstall"); }
     void setCheckPasswordOnUninstall(bool v) { setValue("protect/checkPasswordOnUninstall", v); }
 
-    int quotaDayAlerted() const { return valueInt("quota/dayAlerted"); }
-    void setQuotaDayAlerted(int v) { setValue("quota/dayAlerted", v); }
-
-    int quotaMonthAlerted() const { return valueInt("quota/monthAlerted"); }
-    void setQuotaMonthAlerted(int v) { setValue("quota/monthAlerted", v); }
+    static QString quotaDayAlertedKey() { return "quota/dayAlerted"; }
+    static QString quotaMonthAlertedKey() { return "quota/monthAlerted"; }
 
     int quotaDayMb() const { return valueInt("quota/quotaDayMb"); }
     void setQuotaDayMb(int v) { setValue("quota/quotaDayMb", v); }

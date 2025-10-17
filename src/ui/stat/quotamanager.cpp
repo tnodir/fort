@@ -12,36 +12,27 @@ using namespace Fort;
 
 QuotaManager::QuotaManager(QObject *parent) : QObject(parent) { }
 
-void QuotaManager::setQuotaDayBytes(qint64 bytes)
+void QuotaManager::setQuotaMBytes(AlertType alertType, qint64 mBytes)
 {
-    if (m_quotaDayBytes != bytes) {
-        if (m_quotaDayBytes != 0) {
-            setQuotaDayAlerted(0);
-        }
+    const qint64 bytes = mBytes * 1024 * 1024;
 
-        m_quotaDayBytes = bytes;
+    auto &qi = quotaInfo(alertType);
+
+    if (qi.quotaBytes == bytes)
+        return;
+
+    if (qi.quotaBytes != 0) {
+        setQuotaAlerted(alertType, 0);
     }
+
+    qi.quotaBytes = bytes;
 }
 
-void QuotaManager::setQuotaMonthBytes(qint64 bytes)
+void QuotaManager::setTrafBytes(AlertType alertType, qint64 bytes)
 {
-    if (m_quotaMonthBytes != bytes) {
-        if (m_quotaMonthBytes != 0) {
-            setQuotaMonthAlerted(0);
-        }
+    auto &qi = quotaInfo(alertType);
 
-        m_quotaMonthBytes = bytes;
-    }
-}
-
-void QuotaManager::setTrafDayBytes(qint64 bytes)
-{
-    m_trafDayBytes = bytes;
-}
-
-void QuotaManager::setTrafMonthBytes(qint64 bytes)
-{
-    m_trafMonthBytes = bytes;
+    qi.trafBytes = bytes;
 }
 
 void QuotaManager::setUp()
@@ -49,62 +40,50 @@ void QuotaManager::setUp()
     setupConfManager();
 }
 
-void QuotaManager::clear(bool clearDay, bool clearMonth)
+void QuotaManager::clear()
 {
-    if (clearDay) {
-        m_trafDayBytes = 0;
+    clear(AlertDay);
+    clear(AlertMonth);
+}
 
-        setQuotaDayAlerted(0);
-    }
+void QuotaManager::clear(AlertType alertType)
+{
+    setTrafBytes(alertType, 0);
 
-    if (clearMonth) {
-        m_trafMonthBytes = 0;
-
-        setQuotaMonthAlerted(0);
-    }
+    setQuotaAlerted(alertType, 0);
 }
 
 void QuotaManager::addTraf(qint64 bytes)
 {
-    m_trafDayBytes += bytes;
-    m_trafMonthBytes += bytes;
+    addQuotaTraf(AlertDay, bytes);
+    addQuotaTraf(AlertMonth, bytes);
 }
 
-void QuotaManager::checkQuotaDay(qint32 trafDay)
+void QuotaManager::addQuotaTraf(AlertType alertType, qint64 bytes)
 {
-    if (m_quotaDayBytes == 0)
-        return;
+    auto &qi = quotaInfo(alertType);
 
-    if (m_quotaDayAlerted == 0) {
-        m_quotaDayAlerted = quotaDayAlerted();
-    }
-
-    if (m_quotaDayAlerted == trafDay)
-        return;
-
-    if (m_trafDayBytes > m_quotaDayBytes) {
-        setQuotaDayAlerted(trafDay);
-
-        processQuotaExceed(AlertDay);
-    }
+    qi.trafBytes += bytes;
 }
 
-void QuotaManager::checkQuotaMonth(qint32 trafMonth)
+void QuotaManager::checkQuota(AlertType alertType, qint32 trafAt)
 {
-    if (m_quotaMonthBytes == 0)
+    auto &qi = quotaInfo(alertType);
+
+    if (qi.quotaBytes == 0)
         return;
 
-    if (m_quotaMonthAlerted == 0) {
-        m_quotaMonthAlerted = quotaMonthAlerted();
+    if (qi.quotaAlerted == 0) {
+        qi.quotaAlerted = quotaAlerted(alertType);
     }
 
-    if (m_quotaMonthAlerted == trafMonth)
+    if (qi.quotaAlerted == trafAt)
         return;
 
-    if (m_trafMonthBytes > m_quotaMonthBytes) {
-        setQuotaMonthAlerted(trafMonth);
+    if (qi.trafBytes > qi.quotaBytes) {
+        setQuotaAlerted(alertType, trafAt);
 
-        processQuotaExceed(AlertMonth);
+        processQuotaExceed(alertType);
     }
 }
 
@@ -128,38 +107,48 @@ void QuotaManager::setupConfManager()
     connect(confManager, &ConfManager::iniChanged, this, &QuotaManager::setupByConfIni);
 }
 
-int QuotaManager::quotaDayAlerted() const
-{
-    return ini().quotaDayAlerted();
-}
-
-void QuotaManager::setQuotaDayAlerted(int v)
+qint32 QuotaManager::quotaAlerted(AlertType alertType) const
 {
     auto &ini = Fort::ini();
 
-    m_quotaDayAlerted = v;
+    return quotaAlertedByIni(alertType, ini);
+}
 
-    if (ini.quotaDayAlerted() != v) {
-        ini.setQuotaDayAlerted(v);
+void QuotaManager::setQuotaAlerted(AlertType alertType, qint32 v)
+{
+    auto &qi = quotaInfo(alertType);
+    qi.quotaAlerted = v;
+
+    auto &ini = Fort::ini();
+
+    const int value = quotaAlertedByIni(alertType, ini);
+    if (value != v) {
+        setQuotaAlertedByIni(alertType, v, ini);
         confManager()->saveIni();
     }
 }
 
-int QuotaManager::quotaMonthAlerted() const
+int QuotaManager::quotaAlertedByIni(AlertType alertType, IniOptions &ini)
 {
-    return ini().quotaMonthAlerted();
+    return ini.valueInt(quotaAlertedIniKey(alertType));
 }
 
-void QuotaManager::setQuotaMonthAlerted(int v)
+void QuotaManager::setQuotaAlertedByIni(AlertType alertType, qint32 v, IniOptions &ini)
 {
-    auto &ini = Fort::ini();
+    ini.setValue(quotaAlertedIniKey(alertType), v);
+}
 
-    m_quotaMonthAlerted = v;
-
-    if (ini.quotaMonthAlerted() != v) {
-        ini.setQuotaMonthAlerted(v);
-        confManager()->saveIni();
-    }
+QString QuotaManager::quotaAlertedIniKey(AlertType alertType)
+{
+    switch (alertType) {
+    case AlertDay:
+        return IniOptions::quotaDayAlertedKey();
+    case AlertMonth:
+        return IniOptions::quotaMonthAlertedKey();
+    default:
+        Q_UNREACHABLE();
+        return {};
+    };
 }
 
 void QuotaManager::processQuotaExceed(AlertType alertType)
@@ -178,8 +167,8 @@ void QuotaManager::setupByConfIni()
 {
     const auto &ini = Fort::ini();
 
-    setQuotaDayBytes(qint64(ini.quotaDayMb()) * 1024 * 1024);
-    setQuotaMonthBytes(qint64(ini.quotaMonthMb()) * 1024 * 1024);
+    setQuotaMBytes(AlertDay, ini.quotaDayMb());
+    setQuotaMBytes(AlertMonth, ini.quotaMonthMb());
 
     const qint64 unixTime = DateUtil::getUnixTime();
     const qint32 trafDay = DateUtil::getUnixDay(unixTime);
@@ -190,8 +179,8 @@ void QuotaManager::setupByConfIni()
     qint64 inBytes, outBytes;
 
     statManager->getTraffic(StatSql::sqlSelectTrafDay, trafDay, inBytes, outBytes);
-    setTrafDayBytes(inBytes);
+    setTrafBytes(AlertDay, inBytes);
 
     statManager->getTraffic(StatSql::sqlSelectTrafMonth, trafMonth, inBytes, outBytes);
-    setTrafMonthBytes(inBytes);
+    setTrafBytes(AlertMonth, inBytes);
 }

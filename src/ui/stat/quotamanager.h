@@ -5,28 +5,37 @@
 
 #include <util/ioc/iocservice.h>
 
+class IniOptions;
+
+struct QuotaInfo
+{
+    qint32 quotaAlerted = 0;
+    qint64 quotaBytes = 0;
+    qint64 trafBytes = 0;
+};
+
 class QuotaManager : public QObject, public IocService
 {
     Q_OBJECT
 
 public:
-    enum AlertType : qint8 { AlertDay = 1, AlertMonth };
+    enum AlertType : qint8 { AlertDay = 0, AlertMonth, AlertCount };
 
     explicit QuotaManager(QObject *parent = nullptr);
 
-    void setQuotaDayBytes(qint64 bytes);
-    void setQuotaMonthBytes(qint64 bytes);
+    void setQuotaMBytes(AlertType alertType, qint64 mBytes);
 
-    void setTrafDayBytes(qint64 bytes);
-    void setTrafMonthBytes(qint64 bytes);
+    void setTrafBytes(AlertType alertType, qint64 bytes);
 
     void setUp() override;
 
-    void clear(bool clearDay = true, bool clearMonth = true);
-    void addTraf(qint64 bytes);
+    void clear();
+    void clear(AlertType alertType);
 
-    void checkQuotaDay(qint32 trafDay);
-    void checkQuotaMonth(qint32 trafMonth);
+    void addTraf(qint64 bytes);
+    void addQuotaTraf(AlertType alertType, qint64 bytes);
+
+    void checkQuota(AlertType alertType, qint32 trafAt);
 
     static QString alertTypeText(qint8 alertType);
 
@@ -36,11 +45,14 @@ signals:
 protected:
     virtual void setupConfManager();
 
-    virtual int quotaDayAlerted() const;
-    virtual void setQuotaDayAlerted(qint32 v);
+    virtual qint32 quotaAlerted(AlertType alertType) const;
+    virtual void setQuotaAlerted(AlertType alertType, qint32 v);
 
-    virtual int quotaMonthAlerted() const;
-    virtual void setQuotaMonthAlerted(qint32 v);
+    static int quotaAlertedByIni(AlertType alertType, IniOptions &ini);
+    static void setQuotaAlertedByIni(AlertType alertType, qint32 v, IniOptions &ini);
+    static QString quotaAlertedIniKey(AlertType alertType);
+
+    constexpr QuotaInfo &quotaInfo(AlertType alertType) { return m_quotaInfos[alertType]; }
 
 private:
     void processQuotaExceed(AlertType alertType);
@@ -48,14 +60,7 @@ private:
     void setupByConfIni();
 
 private:
-    int m_quotaDayAlerted = 0;
-    int m_quotaMonthAlerted = 0;
-
-    qint64 m_quotaDayBytes = 0;
-    qint64 m_quotaMonthBytes = 0;
-
-    qint64 m_trafDayBytes = 0;
-    qint64 m_trafMonthBytes = 0;
+    QuotaInfo m_quotaInfos[AlertCount];
 };
 
 #endif // QUOTAMANAGER_H

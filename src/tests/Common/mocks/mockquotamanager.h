@@ -13,11 +13,8 @@ public:
     explicit MockQuotaManager(QObject *parent = nullptr);
 
 protected:
-    MOCK_METHOD(qint32, quotaDayAlerted, (), (const));
-    MOCK_METHOD(void, setQuotaDayAlerted, (qint32 v));
-
-    MOCK_METHOD(qint32, quotaMonthAlerted, (), (const));
-    MOCK_METHOD(void, setQuotaMonthAlerted, (qint32 v));
+    MOCK_METHOD(qint32, quotaAlerted, (QuotaManager::AlertType alertType), (const));
+    MOCK_METHOD(void, setQuotaAlerted, (QuotaManager::AlertType alertType, qint32 v));
 };
 
 #endif // MOCKQUOTAMANAGER_H
