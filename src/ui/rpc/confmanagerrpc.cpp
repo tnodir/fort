@@ -10,6 +10,8 @@
 #include <rpc/rpcmanager.h>
 #include <util/variantutil.h>
 
+using namespace Fort;
+
 namespace {
 
 inline bool processConfManager_confChanged(ConfManager *confManager, const ProcessCommandArgs &p)
@@ -86,7 +88,7 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
     auto rpcManager = Fort::rpcManager();
 
     setSaving(true);
-    const bool ok = rpcManager->doOnServer(Control::Rpc_ConfManager_saveVariant, { confVar });
+    const bool ok = saveVariant(confVar);
     setSaving(false);
 
     if (!ok)
@@ -102,30 +104,29 @@ bool ConfManagerRpc::saveConf(FirewallConf &newConf)
     return true;
 }
 
+bool ConfManagerRpc::saveVariant(const QVariant &confVar)
+{
+    return rpcManager()->doOnServer(Control::Rpc_ConfManager_saveVariant, { confVar });
+}
+
 bool ConfManagerRpc::exportMasterBackup(const QString &path)
 {
-    auto rpcManager = Fort::rpcManager();
-
-    return rpcManager->doOnServer(Control::Rpc_ConfManager_exportMasterBackup, { path });
+    return rpcManager()->doOnServer(Control::Rpc_ConfManager_exportMasterBackup, { path });
 }
 
 bool ConfManagerRpc::importMasterBackup(const QString &path)
 {
-    auto rpcManager = Fort::rpcManager();
-
-    return rpcManager->doOnServer(Control::Rpc_ConfManager_importMasterBackup, { path });
+    return rpcManager()->doOnServer(Control::Rpc_ConfManager_importMasterBackup, { path });
 }
 
 bool ConfManagerRpc::checkPassword(const QString &password)
 {
-    auto rpcManager = Fort::rpcManager();
-
-    return rpcManager->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
+    return rpcManager()->doOnServer(Control::Rpc_ConfManager_checkPassword, { password });
 }
 
 void ConfManagerRpc::onConfChanged(const QVariant &confVar)
 {
-    Fort::settings()->clearCache(); // FirewallConf::IniEdited is handled here
+    settings()->clearCache(); // FirewallConf::IniEdited is handled here
 
     const uint editedFlags = FirewallConf::editedFlagsFromVariant(confVar);
 
@@ -141,7 +142,7 @@ void ConfManagerRpc::onConfChanged(const QVariant &confVar)
     applySavedConf(conf());
 
     if (!saving()) {
-        Fort::windowManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
+        windowManager()->reloadOptionsWindow(tr("Settings changed by someone else"));
     }
 }
 

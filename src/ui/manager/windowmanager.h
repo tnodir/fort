@@ -150,7 +150,7 @@ private:
     void closeMainWindow();
 
     void setupConfManager();
-    void setupByIniUser(const IniUser &ini);
+    void setupByIniUser();
 
     void updateTrayIconVisibility(const IniUser &ini);
     void updateGraphWindowVisibility(const IniUser &ini);

@@ -83,7 +83,7 @@ signals:
     void confChanged(bool onlyFlags, uint editedFlags);
     void confPeriodsChanged();
     void iniChanged();
-    void iniUserChanged(const IniUser &ini, bool onlyFlags);
+    void iniUserChanged(bool onlyFlags);
 
 protected:
     void setConf(FirewallConf *newConf);

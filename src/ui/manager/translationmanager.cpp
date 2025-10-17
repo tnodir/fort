@@ -40,7 +40,7 @@ void TranslationManager::setUp()
 
     connect(confManager, &ConfManager::iniUserChanged, this, &TranslationManager::setupByIniUser);
 
-    setupByIniUser(iniUser());
+    setupByIniUser();
 }
 
 void TranslationManager::setupTranslation()
@@ -199,8 +199,10 @@ void TranslationManager::setupDefaultLocale()
     QLocale::setDefault(m_useSystemLocale ? QLocale::system() : m_locale);
 }
 
-void TranslationManager::setupByIniUser(const IniUser &ini)
+void TranslationManager::setupByIniUser()
 {
+    const auto &ini = Fort::iniUser();
+
     m_useSystemLocale = ini.useSystemLocale();
 
     switchLanguageByName(ini.language());

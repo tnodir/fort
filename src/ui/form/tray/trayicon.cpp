@@ -231,7 +231,7 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
             Qt::QueuedConnection);
 
     connect(confManager(), &ConfManager::confChanged, this, &TrayIcon::updateTrayMenu);
-    connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::setupByIniUser);
+    connect(confManager(), &ConfManager::iniUserChanged, this, &TrayIcon::updateTrayMenu);
 
     connect(confAppManager(), &ConfAppManager::appAlerted, this, &TrayIcon::onAppAlerted,
             Qt::QueuedConnection);
@@ -355,11 +355,6 @@ void TrayIcon::quitProgram()
     } else {
         windowManager()->quit();
     }
-}
-
-void TrayIcon::setupByIniUser(const IniUser & /*ini*/, bool onlyFlags)
-{
-    updateTrayMenu(onlyFlags);
 }
 
 void TrayIcon::switchTrayMenu(bool /*checked*/)

@@ -68,7 +68,7 @@ private:
     void setupFlagsAndColors();
 
     void forceUpdateFlagsAndColors();
-    void updateFlagsAndColors(const IniUser &ini, bool onlyFlags);
+    void updateFlagsAndColors(bool onlyFlags = false);
     void updateWindowFlags(const IniUser &ini);
     void updateColors(const IniUser &ini);
     void updateFonts(const IniUser &ini);

@@ -51,8 +51,6 @@ public slots:
     void processMouseClick(Qt::MouseButton button, Qt::KeyboardModifiers modifiers);
 
 protected slots:
-    void setupByIniUser(const IniUser &ini, bool onlyFlags);
-
     void switchTrayMenu(bool checked);
     void switchBlockTrafficMenu(bool checked);
     void switchFilterModeMenu(bool checked);

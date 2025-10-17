@@ -809,7 +809,7 @@ void ConfManager::saveIniUser(bool edited, bool onlyFlags)
     iniUser().saveAndClear();
 
     if (edited) {
-        emit iniUserChanged(iniUser(), onlyFlags);
+        emit iniUserChanged(onlyFlags);
     }
 }
 
@@ -926,7 +926,7 @@ bool ConfManager::importBackup(const QString &path)
 
     // Import User Ini
     {
-        Settings *settings = iniUser().settings();
+        auto settings = Fort::userSettings();
 
         if (!checkCanMigrate(settings))
             return false;
@@ -936,7 +936,7 @@ bool ConfManager::importBackup(const QString &path)
 
         settings->reload();
 
-        emit iniUserChanged(iniUser(), /*onlyFlags=*/false);
+        emit iniUserChanged(/*onlyFlags=*/false);
     }
 
     // Import DB

@@ -148,7 +148,7 @@ void WindowManager::initialize()
         showGraphWindow();
     }
 
-    setupByIniUser(ini);
+    setupByIniUser();
 }
 
 QFont WindowManager::defaultFont()
@@ -219,8 +219,10 @@ void WindowManager::setupConfManager()
     connect(confManager, &ConfManager::iniUserChanged, this, &WindowManager::setupByIniUser);
 }
 
-void WindowManager::setupByIniUser(const IniUser &ini)
+void WindowManager::setupByIniUser()
 {
+    const auto &ini = Fort::iniUser();
+
     updateTheme(ini);
     updateStyle(ini);
     updateTrayIconVisibility(ini);

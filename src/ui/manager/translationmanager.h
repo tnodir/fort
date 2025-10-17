@@ -11,8 +11,6 @@
 
 QT_FORWARD_DECLARE_CLASS(QTranslator)
 
-class IniUser;
-
 class TranslationManager : public QObject, public IocService
 {
     Q_OBJECT
@@ -56,7 +54,7 @@ private:
 
     void setupDefaultLocale();
 
-    void setupByIniUser(const IniUser &ini);
+    void setupByIniUser();
 
     static QString systemLocaleDisplay();
     static QString localeDisplay(const QLocale &locale, bool isWithCountry);

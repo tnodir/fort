@@ -229,13 +229,15 @@ void GraphWindow::setupFlagsAndColors()
 
 void GraphWindow::forceUpdateFlagsAndColors()
 {
-    updateFlagsAndColors(iniUser(), /*onlyFlags=*/false);
+    updateFlagsAndColors();
 }
 
-void GraphWindow::updateFlagsAndColors(const IniUser &ini, bool onlyFlags)
+void GraphWindow::updateFlagsAndColors(bool onlyFlags)
 {
     if (onlyFlags)
         return;
+
+    const auto &ini = Fort::iniUser();
 
     updateWindowFlags(ini);
     updateColors(ini);
