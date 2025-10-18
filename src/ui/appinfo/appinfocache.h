@@ -19,7 +19,7 @@ public:
     void setUp() override;
     void tearDown() override;
 
-    QString appName(const QString &appPath);
+    virtual QString appName(const QString &appPath);
 
     QIcon appIcon(const QString &appPath, const QString &nullIconPath = QString());
 

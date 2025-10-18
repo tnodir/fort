@@ -22,35 +22,46 @@ public:
     const int size() const { return m_size; }
 
     template<class T>
-    void set(T *obj)
+    inline constexpr std::enable_if_t<!std::is_base_of_v<IocService, T>, void> set(T *obj)
     {
         setObject(getTypeId<T>(), obj);
     }
 
     template<class T>
-    void set(T &obj)
+    inline constexpr std::enable_if_t<std::is_base_of_v<IocService, T>, void> set(T *obj)
     {
-        set(&obj);
+        setService<T>(obj, IsService);
     }
 
     template<class T>
-    void remove()
+    inline constexpr std::enable_if_t<!std::is_base_of_v<IocService, T>, void> set(T &obj)
+    {
+        set<T>(&obj);
+    }
+
+    template<class T>
+    inline constexpr std::enable_if_t<std::is_base_of_v<IocService, T>, void> set(T &obj)
+    {
+        setService(obj);
+    }
+
+    template<class T>
+    inline constexpr void remove()
     {
         set<T>(nullptr);
     }
 
     template<class T>
-    void setService(T *obj, quint8 flags = AutoDelete | IsService)
+    inline constexpr void setService(T *obj, quint8 flags = AutoDelete | IsService)
     {
         auto svc = static_cast<IocService *>(obj);
-        Q_ASSERT(svc);
         setObject(getTypeId<T>(), svc, flags);
     }
 
     template<class T>
-    void setService(T &obj)
+    inline constexpr void setService(T &obj)
     {
-        setService(&obj, IsService);
+        setService<T>(&obj, IsService);
     }
 
     template<class T>

@@ -29,8 +29,6 @@ void IocContainer::setObject(int typeId, IocObject *obj, quint8 flags)
     }
 
     m_objects[typeId] = obj;
-
-    Q_ASSERT(obj || flags == 0);
     m_objectFlags[typeId] = flags;
 }
 

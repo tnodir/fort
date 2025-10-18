@@ -20,6 +20,7 @@
 #include <util/fileutil.h>
 #include <util/ioc/ioccontainer.h>
 
+#include <mocks/mockappinfocache.h>
 #include <mocks/mockquotamanager.h>
 
 class StatTest : public Test
@@ -103,7 +104,10 @@ TEST_F(StatTest, dbWriteRead)
     IocContainer ioc;
     ioc.pinToThread();
 
+    NiceMock<MockAppInfoCache> appInfoCache;
     NiceMock<MockQuotaManager> quotaManager;
+
+    ioc.set<AppInfoCache>(appInfoCache);
     ioc.set<QuotaManager>(quotaManager);
 
     StatManager statManager(":memory:");
