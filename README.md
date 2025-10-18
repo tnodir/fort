@@ -24,7 +24,7 @@ Fort is an effective firewall designed for Windows 7 and later versions, offerin
   - Blocklists via "Zones"
   - Saves traffic statistics
   - Graphical display of the bandwidth
-  - Has its own kernel driver based on the Windows Filtering Platform (WFP)
+  - Standalone firewall with own driver
 
 ## [System Requirements](https://github.com/tnodir/fort/wiki/User-Guide#system-requirements)
 
