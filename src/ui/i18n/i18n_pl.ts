@@ -823,7 +823,7 @@
     </message>
     <message>
         <source>Control Panel: Sounds integration</source>
-        <translation type="unfinished">Control Panel: Sounds integration</translation>
+        <translation>Panel sterowania: Integracja dźwięków</translation>
     </message>
     <message>
         <source>Auto-run:</source>
@@ -843,7 +843,7 @@
     </message>
     <message>
         <source>Portable Installed</source>
-        <translation type="unfinished">Portable Installed</translation>
+        <translation>Portable zainstalowany</translation>
     </message>
 </context>
 <context>
@@ -1089,7 +1089,7 @@
     </message>
     <message>
         <source>Auto-Clear alerts on window close</source>
-        <translation type="unfinished">Auto-Clear alerts on window close</translation>
+        <translation>Automatyczne czyszczenie alertów przy zamknięciu okna</translation>
     </message>
     <message>
         <source>Show window icons as in tray icon</source>
@@ -1109,11 +1109,11 @@
     </message>
     <message>
         <source>Auto-Show Window, when Tray Icon is hidden</source>
-        <translation type="unfinished">Auto-Show Window, when Tray Icon is hidden</translation>
+        <translation>Okno automatycznego wyświetlania, gdy ikona w zasobniku jest ukryta</translation>
     </message>
     <message>
         <source>Auto-focus the alert window, when it&apos;s shown</source>
-        <translation type="unfinished">Auto-focus the alert window, when it&apos;s shown</translation>
+        <translation>Automatycznie ustaw ostrość okna alertu, gdy jest wyświetlane</translation>
     </message>
     <message>
         <source>Switch Window visibility</source>
@@ -1360,19 +1360,19 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     </message>
     <message>
         <source>Auto-install after download</source>
-        <translation type="unfinished">Auto-install after download</translation>
+        <translation>Automatyczna instalacja po pobraniu</translation>
     </message>
     <message>
         <source>Stealth mode (Prevent port scanning)</source>
-        <translation type="unfinished">Stealth mode (Prevent port scanning)</translation>
+        <translation>Tryb ukryty (zapobiega skanowaniu portów)</translation>
     </message>
     <message>
         <source>Auto-learn seconds:</source>
-        <translation type="unfinished">Auto-learn seconds:</translation>
+        <translation>Automatyczne uczenie sekund:</translation>
     </message>
     <message>
         <source>Disable command line management</source>
-        <translation type="unfinished">Disable command line management</translation>
+        <translation>Wyłącz zarządzanie wierszem poleceń</translation>
     </message>
     <message>
         <source>Custom</source>
@@ -1408,15 +1408,15 @@ Upewnij się, że masz świeżą kopię zapasową.</translation>
     </message>
     <message>
         <source>Filter Off seconds:</source>
-        <translation type="unfinished">Filter Off seconds:</translation>
+        <translation>Wyłączenie filtra w sekundach:</translation>
     </message>
     <message>
         <source>Remove alerted programs on Auto-Learn Off</source>
-        <translation type="unfinished">Remove alerted programs on Auto-Learn Off</translation>
+        <translation>Usuń programy z alertami przy wyłączonym automatycznym uczeniu</translation>
     </message>
     <message>
         <source>Trace Driver Events</source>
-        <translation type="unfinished">Trace Driver Events</translation>
+        <translation>Śledź zdarzenia sterownika</translation>
     </message>
     <message>
         <source>Don&apos;t delete the last downloaded installer after installation</source>
@@ -1690,7 +1690,7 @@ Czy chcesz otworzyć wątek dyskusji w preglądarce?</translation>
     </message>
     <message>
         <source>Switch Wildcard</source>
-        <translation type="unfinished">Switch Wildcard</translation>
+        <translation>Przełącz symbol wieloznaczny(Wildcard)</translation>
     </message>
     <message>
         <source>Connections</source>
@@ -1777,8 +1777,8 @@ Uruchom ponownie uruchomiony program, aby wprowadzić tę opcję.</translation>
     <message>
         <source>Failed to save the program!
 Please check other program with the same path.</source>
-        <translation type="unfinished">Failed to save the program!
-Please check other program with the same path.</translation>
+        <translation>Nie udało się zapisać programu!
+Sprawdź inny program o tej samej ścieżce.</translation>
     </message>
 </context>
 <context>
@@ -1899,11 +1899,11 @@ Please check other program with the same path.</translation>
     </message>
     <message>
         <source>Remove Alerted Programs</source>
-        <translation type="unfinished">Remove Alerted Programs</translation>
+        <translation>Usuń programy z alertami</translation>
     </message>
     <message>
         <source>Are you sure to remove alerted programs?</source>
-        <translation type="unfinished">Are you sure to remove alerted programs?</translation>
+        <translation>Czy na pewno chcesz usunąć programy, które otrzymały alert?</translation>
     </message>
     <message>
         <source>Copy Path</source>
@@ -2075,7 +2075,7 @@ Please check other program with the same path.</translation>
     </message>
     <message>
         <source>Inline Zones</source>
-        <translation type="unfinished">Inline Zones</translation>
+        <translation>Strefy liniowe</translation>
     </message>
     <message>
         <source>Alert</source>
