@@ -61,6 +61,24 @@ const char *const sqlUpdateZoneName = "UPDATE zone SET name = ?2 WHERE zone_id =
 
 const char *const sqlUpdateZoneEnabled = "UPDATE zone SET enabled = ?2 WHERE zone_id = ?1;";
 
+const char *const sqlSelectZoneIdDpendentAddressGroupIds =
+        "SELECT addr_group_id FROM address_group "
+        "WHERE (include_zones & ?1) <> 0 OR (exclude_zones & ?1) <> 0 "
+        "ORDER BY addr_group_id;";
+
+const char *const sqlSelectZoneIdDpendentApps =
+        "SELECT CASE "
+        "  WHEN name IS NOT NULL AND name != '' THEN name "
+        "  ELSE path "
+        "END AS display_name FROM app "
+        "WHERE (accept_zones & ?1) <> 0 OR (reject_zones & ?1) <> 0 "
+        "ORDER BY lower(display_name);";
+
+const char *const sqlSelectZoneIdDpendentRules =
+        "SELECT name, rule_type FROM rule "
+        "WHERE (accept_zones & ?1) <> 0 OR (reject_zones & ?1) <> 0 "
+        "ORDER BY rule_type, lower(name);";
+
 const char *const sqlUpdateZoneResult =
         "UPDATE zone"
         "  SET address_count = ?2, text_checksum = ?3, bin_checksum = ?4,"
@@ -241,6 +259,36 @@ bool ConfZoneManager::updateZoneEnabled(quint8 zoneId, bool enabled)
     }
 
     return ok;
+}
+
+ConfZoneManager::ZoneDependentsInfo ConfZoneManager::getZoneDependentsInfo(quint8 zoneId) const
+{
+    ZoneDependentsInfo depsInfo;
+    SqliteStmt stmt;
+
+    const quint32 zoneBit = (quint32(1) << (zoneId - 1));
+
+    if (DbQuery(sqliteDb()).sql(sqlSelectZoneIdDpendentAddressGroupIds).vars({ zoneBit }).prepare(stmt)) {
+        while (stmt.step() == SqliteStmt::StepRow) {
+            depsInfo.addressGroupIds << stmt.columnInt(0);
+        }
+    }
+
+    if (DbQuery(sqliteDb()).sql(sqlSelectZoneIdDpendentApps).vars({ zoneBit }).prepare(stmt)) {
+        while (stmt.step() == SqliteStmt::StepRow) {
+            depsInfo.appNames << stmt.columnText(0);
+        }
+    }
+
+    if (DbQuery(sqliteDb()).sql(sqlSelectZoneIdDpendentRules).vars({ zoneBit }).prepare(stmt)) {
+        while (stmt.step() == SqliteStmt::StepRow) {
+            QString name = stmt.columnText(0);
+            Rule::RuleType type = static_cast<Rule::RuleType>(stmt.columnInt(1));
+            depsInfo.ruleNamesByType[type] << name;
+        }
+    }
+
+    return depsInfo;
 }
 
 bool ConfZoneManager::updateZoneResult(const Zone &zone)

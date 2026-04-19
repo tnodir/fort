@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
+#include <conf/confrulemanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/treeview.h>
 #include <form/dialog/dialogutil.h>
@@ -96,6 +97,7 @@ void RulesWindow::retranslateUi()
     m_actAddRule->setText(tr("Add"));
     m_actEditRule->setText(tr("Edit"));
     m_actRemoveRule->setText(tr("Remove"));
+    m_actShowRuleUsage->setText(tr("Show Usage"));
     m_editSearch->setPlaceholderText(tr("Search") + " /");
 
     ruleListModel()->refresh();
@@ -160,12 +162,18 @@ QLayout *RulesWindow::setupHeader()
     m_actRemoveRule = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveRule->setShortcut(Qt::Key_Delete);
 
+    editMenu->addSeparator();
+
+    m_actShowRuleUsage = editMenu->addAction(IconCache::icon(":/icons/information.png"), QString());
+    m_actShowRuleUsage->setShortcut(Qt::Key_Exclam);
+
     connect(m_actAddRule, &QAction::triggered, this, &RulesWindow::addNewRule);
     connect(m_actEditRule, &QAction::triggered, this, &RulesWindow::editSelectedRule);
     connect(m_actRemoveRule, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
                 [&] { deleteSelectedRule(); }, tr("Are you sure to remove selected rule?"));
     });
+    connect(m_actShowRuleUsage, &QAction::triggered, this, &RulesWindow::showRuleUsage);
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
@@ -252,6 +260,13 @@ void RulesWindow::setupTreeRulesChanged()
         const bool isRuleSelected = RuleListModel::isIndexRule(ruleIndex);
         m_actEditRule->setEnabled(isRuleSelected);
         m_actRemoveRule->setEnabled(isRuleSelected);
+
+        bool isRuleSelectedNonGlobal = isRuleSelected;
+        if (isRuleSelected) {
+            const auto ruleType = RuleListModel::indexRuleType(ruleIndex);
+            isRuleSelectedNonGlobal = ruleType == Rule::AppRule || ruleType == Rule::PresetRule;
+        }
+        m_actShowRuleUsage->setEnabled(isRuleSelectedNonGlobal);
     };
 
     refreshTreeRulesChanged();
@@ -369,6 +384,70 @@ void RulesWindow::deleteSelectedRule()
         return;
 
     ctrl()->deleteRule(ruleRow.ruleId);
+}
+
+void RulesWindow::showRuleUsage()
+{
+    const auto ruleIndex = ruleListCurrentIndex();
+    if (!RuleListModel::isIndexRule(ruleIndex))
+        return;
+    //get rule row
+    const auto &ruleRow = ruleListModel()->ruleRowAt(ruleIndex);
+    if (ruleRow.isNull())
+        return;
+
+    //dependents
+    ConfRuleManager::RuleDependentsInfo depsInfo = confRuleManager()->getRuleDependentsInfo(
+            ruleRow.ruleId, ruleRow.ruleType);
+
+    if (depsInfo.isEmpty()) {
+        QString msg;
+        if (ruleRow.ruleType == Rule::AppRule) {
+            msg = tr("This rule is currently not in use by any programs.");
+        } else if (ruleRow.ruleType == Rule::PresetRule) {
+            msg = tr("This rule is currently not in use by any other rules.");
+        } else {
+            msg = tr("This rule is currently not in use.");
+        }
+        windowManager()->showInfoBox(msg, tr("Rule Usage"));
+        return;
+    }
+
+    QStringList output;
+    const QString itemPrefix = "<span style='white-space: normal;'>&nbsp;&nbsp;";
+    const QString itemSuffix = "</span>";
+    if (!depsInfo.appNames.isEmpty()) {
+        output << "<b>" + tr("In Programs").toHtmlEscaped() + "</b>";
+        for (const QString &app : std::as_const(depsInfo.appNames)) {
+            output << itemPrefix + app.toHtmlEscaped() + itemSuffix;
+        }
+        output << "";
+    }
+    for (auto it = depsInfo.ruleNamesByType.cbegin(); it != depsInfo.ruleNamesByType.cend(); ++it) {
+        QString header;
+        switch (it.key()) {
+        case Rule::AppRule:
+            header = RuleListModel::tr("Application Rules");
+            break;
+        case Rule::GlobalBeforeAppsRule:
+            header = RuleListModel::tr("Global Rules, applied before App Rules");
+            break;
+        case Rule::GlobalAfterAppsRule:
+            header = RuleListModel::tr("Global Rules, applied after App Rules");
+            break;
+        case Rule::PresetRule:
+            header = RuleListModel::tr("Preset Rules");
+            break;
+        default:
+            continue;
+        }
+        output << "<b>" + header.toHtmlEscaped() + "</b>";
+        for (const QString &name : it.value()) {
+            output << itemPrefix + name.toHtmlEscaped() + itemSuffix;
+        }
+        output << "";
+    }
+    windowManager()->showInfoBox(output.join("<br>").trimmed(), tr("Rule Usage"));
 }
 
 QModelIndex RulesWindow::ruleListCurrentIndex() const

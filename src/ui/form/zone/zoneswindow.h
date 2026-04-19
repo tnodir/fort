@@ -45,6 +45,8 @@ private:
     void deleteZone(int row);
     void deleteSelectedZone();
 
+    void showZoneUsage();
+
     void downloadZones();
 
     int zoneListCurrentIndex() const;
@@ -56,6 +58,7 @@ private:
     QAction *m_actAddZone = nullptr;
     QAction *m_actEditZone = nullptr;
     QAction *m_actRemoveZone = nullptr;
+    QAction *m_actShowZoneUsage = nullptr;
     QToolButton *m_btSaveAsText = nullptr;
     QToolButton *m_btUpdateZones = nullptr;
     QToolButton *m_btOptions = nullptr;

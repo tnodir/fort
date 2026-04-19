@@ -64,6 +64,8 @@ private:
 
     void deleteSelectedRule();
 
+    void showRuleUsage();
+
     QModelIndex ruleListCurrentIndex() const;
 
 private:
@@ -77,6 +79,7 @@ private:
     QAction *m_actAddRule = nullptr;
     QAction *m_actEditRule = nullptr;
     QAction *m_actRemoveRule = nullptr;
+    QAction *m_actShowRuleUsage = nullptr;
     QLineEdit *m_editSearch = nullptr;
     QToolButton *m_btOptions = nullptr;
     QPushButton *m_btMenu = nullptr;

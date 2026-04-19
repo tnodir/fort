@@ -4,6 +4,7 @@
 #include <QHash>
 #include <QObject>
 
+#include <conf/rule.h>
 #include <util/classhelpers.h>
 #include <util/ioc/iocservice.h>
 
@@ -26,6 +27,17 @@ public:
     virtual bool deleteZone(quint8 zoneId);
     virtual bool updateZoneName(quint8 zoneId, const QString &zoneName);
     virtual bool updateZoneEnabled(quint8 zoneId, bool enabled);
+
+    struct ZoneDependentsInfo {
+        QList<int> addressGroupIds;
+        QStringList appNames;
+        QMap<Rule::RuleType, QStringList> ruleNamesByType;
+
+        bool isEmpty() const {
+            return appNames.isEmpty() && addressGroupIds.isEmpty() && ruleNamesByType.isEmpty();
+        }
+    };
+    ZoneDependentsInfo getZoneDependentsInfo(quint8 zoneId) const;
 
     bool updateZoneResult(const Zone &zone);
 

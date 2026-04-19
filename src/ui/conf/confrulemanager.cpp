@@ -140,6 +140,20 @@ const char *const sqlUpdateRuleName = "UPDATE rule SET name = ?2 WHERE rule_id =
 
 const char *const sqlUpdateRuleEnabled = "UPDATE rule SET enabled = ?2 WHERE rule_id = ?1;";
 
+const char *const sqlSelectRuleIdDpendentApps =
+        "SELECT CASE "
+        "  WHEN name IS NOT NULL AND name != '' THEN name "
+        "  ELSE path "
+        "END AS display_name "
+        "FROM app WHERE rule_id = ?1 "
+        "ORDER BY lower(display_name);";
+
+const char *const sqlSelectRuleIdDpendentRules =
+        "SELECT r.name, r.rule_type FROM rule r "
+        "JOIN rule_set rs ON rs.rule_id = r.rule_id "
+        "WHERE rs.sub_rule_id = ?1 "
+        "ORDER BY r.rule_type, lower(r.name);";
+
 bool driverWriteRules(ConfBuffer &confBuf, bool onlyFlags = false)
 {
     if (confBuf.hasError()) {
@@ -413,6 +427,32 @@ bool ConfRuleManager::updateRuleEnabled(quint16 ruleId, bool enabled)
     }
 
     return ok;
+}
+
+ConfRuleManager::RuleDependentsInfo ConfRuleManager::getRuleDependentsInfo(quint16 ruleId, Rule::RuleType ruleType) const
+{
+    RuleDependentsInfo depsInfo;
+    SqliteStmt stmt;
+
+    if (ruleType == Rule::AppRule) {
+        if (DbQuery(sqliteDb()).sql(sqlSelectRuleIdDpendentApps).vars({ ruleId }).prepare(stmt)) {
+            while (stmt.step() == SqliteStmt::StepRow) {
+                depsInfo.appNames << stmt.columnText(0);
+            }
+        }
+    }
+
+    if (ruleType == Rule::PresetRule) {
+        if (DbQuery(sqliteDb()).sql(sqlSelectRuleIdDpendentRules).vars({ ruleId }).prepare(stmt)) {
+            while (stmt.step() == SqliteStmt::StepRow) {
+                QString name = stmt.columnText(0);
+                Rule::RuleType type = static_cast<Rule::RuleType>(stmt.columnInt(1));
+                depsInfo.ruleNamesByType[type] << name;
+            }
+        }
+    }
+
+    return depsInfo;
 }
 
 bool ConfRuleManager::walkRules(
