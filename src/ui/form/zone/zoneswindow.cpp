@@ -293,7 +293,7 @@ void ZonesWindow::deleteSelectedZone()
     deleteZone(zoneListCurrentIndex());
 }
 
-void ZonesWindow::showZoneUsage()
+void ZonesWindow::showZoneUsage() const
 {
     const auto zoneIndex = zoneListCurrentIndex();
     if (zoneIndex < 0)
@@ -314,48 +314,23 @@ void ZonesWindow::showZoneUsage()
     QStringList output;
     const QString itemPrefix = "<span style='white-space: normal;'>&nbsp;&nbsp;";
     const QString itemSuffix = "</span>";
+
     if (!depsInfo.addressGroupIds.isEmpty()) {
         output << "<b>" + tr("In Address Groups").toHtmlEscaped() + "</b>";
         for (const int &addressGroupId : std::as_const(depsInfo.addressGroupIds)) {
             QString addressGroupName;
             if (addressGroupId == 1) { addressGroupName = tr("Local Network Addresses"); }
             else if (addressGroupId == 2) { addressGroupName = tr("Block Addresses"); }
-            else { addressGroupName = tr("Address Group ID %1").arg(addressGroupId);; }
+            else { addressGroupName = tr("Address Group ID %1").arg(addressGroupId); }
             output << itemPrefix + addressGroupName.toHtmlEscaped() + itemSuffix;
         }
         output << "";
     }
-    if (!depsInfo.appNames.isEmpty()) {
-        output << "<b>" + tr("In Programs").toHtmlEscaped() + "</b>";
-        for (const QString &appName : std::as_const(depsInfo.appNames)) {
-            output << itemPrefix + appName.toHtmlEscaped() + itemSuffix;
-        }
-        output << "";
-    }
-    for (auto it = depsInfo.ruleNamesByType.cbegin(); it != depsInfo.ruleNamesByType.cend(); ++it) {
-        QString header;
-        switch (it.key()) {
-        case Rule::AppRule:
-            header = RuleListModel::tr("Application Rules");
-            break;
-        case Rule::GlobalBeforeAppsRule:
-            header = RuleListModel::tr("Global Rules, applied before App Rules");
-            break;
-        case Rule::GlobalAfterAppsRule:
-            header = RuleListModel::tr("Global Rules, applied after App Rules");
-            break;
-        case Rule::PresetRule:
-            header = RuleListModel::tr("Preset Rules");
-            break;
-        default:
-            continue;
-        }
-        output << "<b>" + header.toHtmlEscaped() + "</b>";
-        for (const QString &name : it.value()) {
-            output << itemPrefix + name.toHtmlEscaped() + itemSuffix;
-        }
-        output << "";
-    }
+
+    const auto usageInAppRule = ConfUtil::formatUsageInAppRule(depsInfo.appNames, depsInfo.ruleNamesByType,
+            itemPrefix, itemSuffix);
+    output << usageInAppRule;
+
     windowManager()->showInfoBox(output.join("<br>").trimmed(), tr("Zone Usage"));
 }
 

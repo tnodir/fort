@@ -14,8 +14,6 @@
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
 
-#include "confmanager.h"
-
 using namespace Fort;
 
 namespace {
@@ -283,7 +281,7 @@ ConfZoneManager::ZoneDependentsInfo ConfZoneManager::getZoneDependentsInfo(quint
     if (DbQuery(sqliteDb()).sql(sqlSelectZoneIdDpendentRules).vars({ zoneBit }).prepare(stmt)) {
         while (stmt.step() == SqliteStmt::StepRow) {
             QString name = stmt.columnText(0);
-            Rule::RuleType type = static_cast<Rule::RuleType>(stmt.columnInt(1));
+            auto type = static_cast<Rule::RuleType>(stmt.columnInt(1));
             depsInfo.ruleNamesByType[type] << name;
         }
     }

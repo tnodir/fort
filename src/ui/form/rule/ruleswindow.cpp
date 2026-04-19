@@ -16,6 +16,7 @@
 #include <manager/windowmanager.h>
 #include <model/rulelistmodel.h>
 #include <user/iniuser.h>
+#include <util/conf/confutil.h>
 #include <util/iconcache.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
@@ -386,7 +387,7 @@ void RulesWindow::deleteSelectedRule()
     ctrl()->deleteRule(ruleRow.ruleId);
 }
 
-void RulesWindow::showRuleUsage()
+void RulesWindow::showRuleUsage() const
 {
     const auto ruleIndex = ruleListCurrentIndex();
     if (!RuleListModel::isIndexRule(ruleIndex))
@@ -416,37 +417,11 @@ void RulesWindow::showRuleUsage()
     QStringList output;
     const QString itemPrefix = "<span style='white-space: normal;'>&nbsp;&nbsp;";
     const QString itemSuffix = "</span>";
-    if (!depsInfo.appNames.isEmpty()) {
-        output << "<b>" + tr("In Programs").toHtmlEscaped() + "</b>";
-        for (const QString &app : std::as_const(depsInfo.appNames)) {
-            output << itemPrefix + app.toHtmlEscaped() + itemSuffix;
-        }
-        output << "";
-    }
-    for (auto it = depsInfo.ruleNamesByType.cbegin(); it != depsInfo.ruleNamesByType.cend(); ++it) {
-        QString header;
-        switch (it.key()) {
-        case Rule::AppRule:
-            header = RuleListModel::tr("Application Rules");
-            break;
-        case Rule::GlobalBeforeAppsRule:
-            header = RuleListModel::tr("Global Rules, applied before App Rules");
-            break;
-        case Rule::GlobalAfterAppsRule:
-            header = RuleListModel::tr("Global Rules, applied after App Rules");
-            break;
-        case Rule::PresetRule:
-            header = RuleListModel::tr("Preset Rules");
-            break;
-        default:
-            continue;
-        }
-        output << "<b>" + header.toHtmlEscaped() + "</b>";
-        for (const QString &name : it.value()) {
-            output << itemPrefix + name.toHtmlEscaped() + itemSuffix;
-        }
-        output << "";
-    }
+
+    const auto usageInAppRule = ConfUtil::formatUsageInAppRule(depsInfo.appNames, depsInfo.ruleNamesByType,
+            itemPrefix, itemSuffix);
+    output << usageInAppRule;
+
     windowManager()->showInfoBox(output.join("<br>").trimmed(), tr("Rule Usage"));
 }
 

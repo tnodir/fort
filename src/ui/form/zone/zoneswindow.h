@@ -45,7 +45,7 @@ private:
     void deleteZone(int row);
     void deleteSelectedZone();
 
-    void showZoneUsage();
+    void showZoneUsage() const;
 
     void downloadZones();
 

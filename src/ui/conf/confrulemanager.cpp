@@ -13,8 +13,6 @@
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
 
-#include "confmanager.h"
-
 using namespace Fort;
 
 namespace {
@@ -434,21 +432,19 @@ ConfRuleManager::RuleDependentsInfo ConfRuleManager::getRuleDependentsInfo(quint
     RuleDependentsInfo depsInfo;
     SqliteStmt stmt;
 
-    if (ruleType == Rule::AppRule) {
-        if (DbQuery(sqliteDb()).sql(sqlSelectRuleIdDpendentApps).vars({ ruleId }).prepare(stmt)) {
-            while (stmt.step() == SqliteStmt::StepRow) {
-                depsInfo.appNames << stmt.columnText(0);
-            }
+    if (ruleType == Rule::AppRule &&
+        DbQuery(sqliteDb()).sql(sqlSelectRuleIdDpendentApps).vars({ ruleId }).prepare(stmt)) {
+        while (stmt.step() == SqliteStmt::StepRow) {
+            depsInfo.appNames << stmt.columnText(0);
         }
     }
 
-    if (ruleType == Rule::PresetRule) {
-        if (DbQuery(sqliteDb()).sql(sqlSelectRuleIdDpendentRules).vars({ ruleId }).prepare(stmt)) {
-            while (stmt.step() == SqliteStmt::StepRow) {
-                QString name = stmt.columnText(0);
-                Rule::RuleType type = static_cast<Rule::RuleType>(stmt.columnInt(1));
-                depsInfo.ruleNamesByType[type] << name;
-            }
+    if (ruleType == Rule::PresetRule &&
+        DbQuery(sqliteDb()).sql(sqlSelectRuleIdDpendentRules).vars({ ruleId }).prepare(stmt)) {
+        while (stmt.step() == SqliteStmt::StepRow) {
+            QString name = stmt.columnText(0);
+            auto type = static_cast<Rule::RuleType>(stmt.columnInt(1));
+            depsInfo.ruleNamesByType[type] << name;
         }
     }
 

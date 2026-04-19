@@ -64,7 +64,7 @@ private:
 
     void deleteSelectedRule();
 
-    void showRuleUsage();
+    void showRuleUsage() const;
 
     QModelIndex ruleListCurrentIndex() const;
 
