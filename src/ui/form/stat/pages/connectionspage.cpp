@@ -384,10 +384,135 @@ void ConnectionsPage::onTableConnSortClicked(int section, Qt::SortOrder order)
         order = connListModel()->sortOrder();
     }
 
+    const bool sortChanged = section == int(ConnListColumn::Time);
+
+    if (sortChanged) { selectedRowsSave(true); }
+
     auto header = m_connListView->horizontalHeader();
     header->setSortIndicator(int(ConnListColumn::Time), order);
 
     connListModel()->sort(int(ConnListColumn::Time), order);
+
+    if (sortChanged) {
+        selectedRowsRestore(true);
+        updateSelectedRowsRestore(true);
+    }
+}
+
+void ConnectionsPage::selectedRowsSave(const bool monitorPause)
+{
+    if (m_selectedRowsMonitorPaused) { return; }
+
+    if (monitorPause) { m_selectedRowsMonitorPaused = true; }
+
+    const auto *model = connListModel();
+
+    const auto currentRow = connListCurrentIndex();
+    m_selectedRowsStore.focused = (currentRow >= 0) ? model->getConnIdByIndex(currentRow) : -1;
+
+    m_selectedRowsStore.selecteds.clear();
+    const auto rows = m_connListView->selectedSelRows();
+    for (const auto &row : rows) {
+        m_selectedRowsStore.selecteds.insert(model->getConnIdByIndex(row));
+    }
+}
+
+void ConnectionsPage::selectedRowsSaveDo() {
+    selectedRowsSave();
+}
+
+void ConnectionsPage::selectedRowsRestore(const bool monitorUnpause)
+{
+    if (monitorUnpause) { m_selectedRowsMonitorPaused = false; }
+
+    m_connListView->setCurrentIndex(QModelIndex());
+    m_connListView->clearSelection();
+
+    const auto selectedEmpty = m_selectedRowsStore.selecteds.isEmpty();
+    if (selectedEmpty && m_selectedRowsStore.focused == -1) { return; }
+
+    auto *selModel = m_connListView->selectionModel();
+    const auto *model = connListModel();
+
+    const auto originalAutoScroll = m_connListView->hasAutoScroll();
+    m_connListView->setAutoScroll(false);
+
+    if (m_selectedRowsStore.focused != -1) {
+        int row = model->getIndexByConnId(m_selectedRowsStore.focused);
+        if (row >= 0) {
+            selModel->setCurrentIndex(model->index(row, 0),
+                    QItemSelectionModel::NoUpdate);
+        }
+    }
+
+    if (!selectedEmpty) {
+
+        QItemSelection selection;
+        const auto lastCol = model->columnCount() - 1;
+        for (const auto &connId : std::as_const(m_selectedRowsStore.selecteds)) {
+            const auto row = model->getIndexByConnId(connId);
+            if (row >= 0) {
+                selection.select(model->index(row, 0), model->index(row, lastCol));
+            }
+        }
+
+        if (!selection.isEmpty()) {
+            selModel->select(selection,
+                    QItemSelectionModel::Select | QItemSelectionModel::Rows);
+        }
+    }
+
+    m_connListView->setAutoScroll(originalAutoScroll);
+}
+
+void ConnectionsPage::selectedRowsRestoreDo() {
+    selectedRowsRestore();
+}
+
+void ConnectionsPage::updateSelectedRowsRestore(bool fromSort)
+{
+    const bool enable = !connListModel()->isAscendingOrder();
+
+    if (enable) {
+        connect(connListModel(), &QAbstractItemModel::rowsAboutToBeInserted, this,
+                &ConnectionsPage::selectedRowsSaveDo);
+        connect(connListModel(), &QAbstractItemModel::rowsAboutToBeRemoved, this,
+                &ConnectionsPage::selectedRowsSaveDo);
+        connect(connListModel(), &QAbstractItemModel::layoutAboutToBeChanged, this,
+                &ConnectionsPage::selectedRowsSaveDo);
+        connect(connListModel(), &QAbstractItemModel::modelAboutToBeReset, this,
+                &ConnectionsPage::selectedRowsSaveDo);
+
+        connect(connListModel(), &QAbstractItemModel::rowsInserted, this,
+                &ConnectionsPage::selectedRowsRestoreDo);
+        connect(connListModel(), &QAbstractItemModel::rowsRemoved, this,
+                &ConnectionsPage::selectedRowsRestoreDo);
+        connect(connListModel(), &QAbstractItemModel::layoutChanged, this,
+                &ConnectionsPage::selectedRowsRestoreDo);
+        connect(connListModel(), &QAbstractItemModel::modelReset, this,
+                &ConnectionsPage::selectedRowsRestoreDo);
+
+        if (fromSort) { updateAutoScroll(); }
+    }
+    else {
+        disconnect(connListModel(), &QAbstractItemModel::rowsAboutToBeInserted, this,
+                &ConnectionsPage::selectedRowsSaveDo);
+        disconnect(connListModel(), &QAbstractItemModel::rowsAboutToBeRemoved, this,
+                &ConnectionsPage::selectedRowsSaveDo);
+        disconnect(connListModel(), &QAbstractItemModel::layoutAboutToBeChanged, this,
+                &ConnectionsPage::selectedRowsSaveDo);
+        disconnect(connListModel(), &QAbstractItemModel::modelAboutToBeReset, this,
+                &ConnectionsPage::selectedRowsSaveDo);
+
+        disconnect(connListModel(), &QAbstractItemModel::rowsInserted, this,
+                &ConnectionsPage::selectedRowsRestoreDo);
+        disconnect(connListModel(), &QAbstractItemModel::rowsRemoved, this,
+                &ConnectionsPage::selectedRowsRestoreDo);
+        disconnect(connListModel(), &QAbstractItemModel::layoutChanged, this,
+                &ConnectionsPage::selectedRowsRestoreDo);
+        disconnect(connListModel(), &QAbstractItemModel::modelReset, this,
+                &ConnectionsPage::selectedRowsRestoreDo);
+    }
 }
 
 void ConnectionsPage::doAutoScroll()
@@ -409,7 +534,10 @@ void ConnectionsPage::updateAutoScroll()
 
         doAutoScroll();
     } else {
-        connListModel()->disconnect(this);
+        disconnect(connListModel(), &QAbstractItemModel::rowsInserted, this,
+                &ConnectionsPage::doAutoScroll);
+        disconnect(connListModel(), &QAbstractItemModel::modelReset, this,
+                &ConnectionsPage::doAutoScroll);
     }
 }
 

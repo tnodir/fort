@@ -47,6 +47,17 @@ private:
     void setupTableConnHeaderMenuColumns(QMenu *menu, QHeaderView *header);
 
     void onTableConnSortClicked(int section, Qt::SortOrder order);
+
+    struct selectedRowsStore {
+        qint64 focused = -1;
+        QSet<qint64> selecteds;
+    };
+    void selectedRowsSave(const bool monitorPause = false);
+    void selectedRowsSaveDo();
+    void selectedRowsRestore(const bool monitorUnpause = false);
+    void selectedRowsRestoreDo();
+    void updateSelectedRowsRestore(const bool fromSort = false);
+
     void doAutoScroll();
 
     void updateAutoScroll();
@@ -59,6 +70,9 @@ private:
 
 private:
     ConnListModel *m_connListModel = nullptr;
+
+    bool m_selectedRowsMonitorPaused = false;
+    selectedRowsStore m_selectedRowsStore;
 
     QPushButton *m_btEdit = nullptr;
     QAction *m_actCopyAsFilter = nullptr;

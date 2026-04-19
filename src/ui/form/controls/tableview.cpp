@@ -45,6 +45,19 @@ QVector<int> TableView::selectedRows() const
     return rows.toVector();
 }
 
+QVector<int> TableView::selectedSelRows() const
+{
+    QSet<int> rowsSet;
+    const auto indexes = selectedIndexes();
+    for (const auto &index : indexes) {
+        rowsSet.insert(index.row());
+    }
+
+    auto rows = rowsSet.values();
+    std::sort(rows.begin(), rows.end());
+    return rows.toVector();
+}
+
 QModelIndexList TableView::sortedSelectedIndexes() const
 {
     auto indexes = selectedIndexes();
