@@ -33,6 +33,16 @@ public:
     virtual bool updateRuleName(quint16 ruleId, const QString &ruleName);
     virtual bool updateRuleEnabled(quint16 ruleId, bool enabled);
 
+    struct RuleDependentsInfo {
+        QStringList appNames;
+        QMap<Rule::RuleType, QStringList> ruleNamesByType;
+
+        bool isEmpty() const {
+            return appNames.isEmpty() && ruleNamesByType.isEmpty();
+        }
+    };
+    RuleDependentsInfo getRuleDependentsInfo(quint16 ruleId, Rule::RuleType ruleType) const;
+
     bool walkRules(WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override;
 
     static void walkRulesMapByStmt(WalkRulesArgs &wra, SqliteStmt &stmt);

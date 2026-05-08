@@ -7,11 +7,13 @@
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
+#include <conf/confzonemanager.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/dialog/dialogutil.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
+#include <model/rulelistmodel.h>
 #include <model/zonelistmodel.h>
 #include <task/taskinfozonedownloader.h>
 #include <task/taskmanager.h>
@@ -82,6 +84,7 @@ void ZonesWindow::retranslateUi()
     m_actAddZone->setText(tr("Add"));
     m_actEditZone->setText(tr("Edit"));
     m_actRemoveZone->setText(tr("Remove"));
+    m_actShowZoneUsage->setText(tr("Show Usage"));
     m_btSaveAsText->setText(tr("Save As Text"));
     m_btUpdateZones->setText(tr("Update Zones"));
 
@@ -132,12 +135,18 @@ QLayout *ZonesWindow::setupHeader()
     m_actRemoveZone = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
     m_actRemoveZone->setShortcut(Qt::Key_Delete);
 
+    editMenu->addSeparator();
+
+    m_actShowZoneUsage = editMenu->addAction(IconCache::icon(":/icons/information.png"), QString());
+    m_actShowZoneUsage->setShortcut(Qt::Key_Exclam);
+
     connect(m_actAddZone, &QAction::triggered, this, &ZonesWindow::addNewZone);
     connect(m_actEditZone, &QAction::triggered, this, &ZonesWindow::editSelectedZone);
     connect(m_actRemoveZone, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
                 [&] { deleteSelectedZone(); }, tr("Are you sure to remove selected zone?"));
     });
+    connect(m_actShowZoneUsage, &QAction::triggered, this, &ZonesWindow::showZoneUsage);
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
@@ -218,6 +227,7 @@ void ZonesWindow::setupTableZonesChanged()
         const bool zoneSelected = (zoneIndex >= 0);
         m_actEditZone->setEnabled(zoneSelected);
         m_actRemoveZone->setEnabled(zoneSelected);
+        m_actShowZoneUsage->setEnabled(zoneSelected);
         m_btSaveAsText->setEnabled(zoneSelected);
     };
 
@@ -281,6 +291,47 @@ void ZonesWindow::deleteZone(int row)
 void ZonesWindow::deleteSelectedZone()
 {
     deleteZone(zoneListCurrentIndex());
+}
+
+void ZonesWindow::showZoneUsage() const
+{
+    const auto zoneIndex = zoneListCurrentIndex();
+    if (zoneIndex < 0)
+        return;
+    //get zone row
+    const auto &zoneRow = zoneListModel()->zoneRowAt(zoneIndex);
+    if (zoneRow.isNull())
+        return;
+
+    //dependents
+    ConfZoneManager::ZoneDependentsInfo depsInfo = confZoneManager()->getZoneDependentsInfo(zoneRow.zoneId);
+
+    if (depsInfo.isEmpty()) {
+        windowManager()->showInfoBox(tr("This zone is currently not in use."), tr("Zone Usage"));
+        return;
+    }
+
+    QStringList output;
+    const QString itemPrefix = "<span style='white-space: normal;'>&nbsp;&nbsp;";
+    const QString itemSuffix = "</span>";
+
+    if (!depsInfo.addressGroupIds.isEmpty()) {
+        output << "<b>" + tr("In Address Groups").toHtmlEscaped() + "</b>";
+        for (const int &addressGroupId : std::as_const(depsInfo.addressGroupIds)) {
+            QString addressGroupName;
+            if (addressGroupId == 1) { addressGroupName = tr("Local Network Addresses"); }
+            else if (addressGroupId == 2) { addressGroupName = tr("Block Addresses"); }
+            else { addressGroupName = tr("Address Group ID %1").arg(addressGroupId); }
+            output << itemPrefix + addressGroupName.toHtmlEscaped() + itemSuffix;
+        }
+        output << "";
+    }
+
+    const auto usageInAppRule = ConfUtil::formatUsageInAppRule(depsInfo.appNames, depsInfo.ruleNamesByType,
+            itemPrefix, itemSuffix);
+    output << usageInAppRule;
+
+    windowManager()->showInfoBox(output.join("<br>").trimmed(), tr("Zone Usage"));
 }
 
 void ZonesWindow::downloadZones()
