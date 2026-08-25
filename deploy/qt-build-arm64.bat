@@ -49,7 +49,8 @@ cd %TARGET_PATH%
 	^
 	-no-feature-gif -no-feature-jpeg ^
 	^
-	-no-feature-androiddeployqt -no-feature-dbus -no-feature-macdeployqt ^
+	-no-feature-androiddeployqt -no-feature-dbus ^
+	-no-feature-harmonydeployqt -no-feature-macdeployqt ^
 	-no-feature-vkgen -no-feature-vulkan -no-feature-windeployqt
 
 cmake --build . --parallel && cmake --install .
