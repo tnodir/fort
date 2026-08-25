@@ -63,7 +63,7 @@ FORT_API BOOL fort_devconf_zones_conn_filtered(PFORT_DEVICE_CONF device_conf,
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
     PCFORT_CONF_ZONES zones = device_conf->zones;
     if (zones != NULL) {
-        res = fort_conf_zones_conn_filtered(zones, conn, opt);
+        res = fort_conf_zones_conn_filtered(zones, conn, opt, /*fast_check=*/TRUE);
     }
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 

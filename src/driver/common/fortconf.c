@@ -340,19 +340,20 @@ static BOOL fort_conf_zones_masks_conn_check(PCFORT_CONF_ZONES zones, PCFORT_CON
     return TRUE;
 }
 
-FORT_API BOOL fort_conf_zones_conn_filtered(
-        PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn, PFORT_CONF_ZONES_CONN_FILTERED_OPT opt)
+FORT_API BOOL fort_conf_zones_conn_filtered(PCFORT_CONF_ZONES zones, PCFORT_CONF_META_CONN conn,
+        PFORT_CONF_ZONES_CONN_FILTERED_OPT opt, BOOL fast_check)
 {
     const BOOL reject_filtered = fort_conf_zones_masks_conn_check(
             zones, conn, opt->rule_zones.reject_mask, &opt->reject);
 
-    if (reject_filtered && opt->reject.included)
-        return TRUE; /* rejected */
+    const BOOL rejected = (reject_filtered && opt->reject.included);
+    if (rejected && fast_check)
+        return TRUE;
 
     const BOOL accept_filtered = fort_conf_zones_masks_conn_check(
             zones, conn, opt->rule_zones.accept_mask, &opt->accept);
 
-    return accept_filtered;
+    return reject_filtered || accept_filtered;
 }
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
@@ -542,7 +543,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
         .rule_zones = *((PCFORT_CONF_RULE_ZONES) (rule + 1)),
     };
 
-    if (fort_conf_zones_conn_filtered(zones, conn, &opt)) {
+    if (fort_conf_zones_conn_filtered(zones, conn, &opt, /*fast_check=*/!rule->inline_zones)) {
         return fort_conf_rules_rt_conn_filtered_zones_result(conn, rule, opt);
     }
 
