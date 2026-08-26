@@ -26,7 +26,7 @@ cd %TARGET_PATH%
 	-no-feature-hijricalendar -no-feature-islamiccivilcalendar -no-feature-jalalicalendar ^
 	-no-feature-itemmodeltester -no-feature-lcdnumber -no-feature-listwidget ^
 	-no-feature-mdiarea -no-feature-movie -no-feature-pdf -no-feature-picture ^
-	-no-feature-printsupport -no-feature-proxymodel -no-feature-rangemodel ^
+	-no-feature-printsupport -no-feature-rangemodel ^
 	-no-feature-raster-64bit -no-feature-textbrowser -no-feature-textodfwriter ^
 	-no-feature-undocommand -no-feature-undogroup -no-feature-undostack -no-feature-undoview ^
 	-no-feature-whatsthis -no-feature-wizard ^
