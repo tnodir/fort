@@ -440,6 +440,16 @@ qint64 ConnListModel::connIdByIndex(int row) const
     return isAscendingOrder() ? (connIdMin() + row) : (connIdMax() - row);
 }
 
+int ConnListModel::indexByConnId(qint64 connId) const
+{
+    const qint64 min = connIdMin();
+    const qint64 max = connIdMax();
+
+    if (connId < min || connId > max) return -1;
+
+    return isAscendingOrder() ? int(connId - min) : int(max - connId);
+}
+
 int ConnListModel::doSqlCount() const
 {
     return connIdMax() <= 0 ? 0 : int(connIdMax() - connIdMin()) + 1;
@@ -514,7 +524,11 @@ void ConnListModel::resetConnRows(qint64 idMin, qint64 idMax)
 
 void ConnListModel::removeConnRows(qint64 idMin, int count)
 {
-    beginRemoveRows({}, 0, count - 1);
+    if (isAscendingOrder()) {
+        beginRemoveRows({}, 0, count - 1);
+    } else {
+        beginRemoveRows({}, rowCount() - count, rowCount() - 1);
+    }
     m_connIdMin = idMin;
     invalidateRowCache();
     endRemoveRows();

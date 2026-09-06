@@ -60,6 +60,13 @@ public:
 
     const ConnRow &connRowAt(int row) const;
 
+    qint64 getConnIdByIndex(int row) const {
+        return connIdByIndex(row);
+    }
+    qint64 getIndexByConnId(qint64 connId) const {
+        return indexByConnId(connId);
+    }
+
     QString rowsAsFilter(const QVector<int> &rows) const;
 
     static QString reasonText(FortConnReason reason);
@@ -81,6 +88,7 @@ protected:
             qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax) const;
 
     virtual qint64 connIdByIndex(int row) const;
+    virtual int indexByConnId(qint64 connId) const;
 
     int doSqlCount() const override;
     QString sqlBase() const override;
