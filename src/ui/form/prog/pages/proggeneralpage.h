@@ -5,6 +5,7 @@
 
 #include "progbasepage.h"
 
+class GroupsSelector;
 class LineEdit;
 class PlainTextEdit;
 class SpinCombo;
@@ -122,6 +123,7 @@ private:
     QComboBox *m_comboApplyChild = nullptr;
     QLabel *m_labelAppGroup = nullptr;
     QComboBox *m_comboAppGroup = nullptr;
+    GroupsSelector *m_btGroups = nullptr;
     QRadioButton *m_rbAllow = nullptr;
     QRadioButton *m_rbBlock = nullptr;
     QRadioButton *m_rbKillProcess = nullptr;

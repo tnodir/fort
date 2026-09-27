@@ -17,6 +17,7 @@
 #include <conf/confmanager.h>
 #include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/groupsselector.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/spincombo.h>
@@ -26,6 +27,7 @@
 #include <form/prog/programeditcontroller.h>
 #include <fortglobal.h>
 #include <user/iniuser.h>
+#include <util/conf/confutil.h>
 #include <util/dateutil.h>
 #include <util/fileutil.h>
 #include <util/iconcache.h>
@@ -59,6 +61,7 @@ void ProgGeneralPage::onPageInitialize(const App &app)
 
     updateApplyChild();
     m_comboAppGroup->setCurrentIndex(app.groupIndex);
+    m_btGroups->setGroups(app.groups);
 
     m_rbAllow->setChecked(!app.blocked);
     m_rbBlock->setChecked(app.blocked);
@@ -162,6 +165,7 @@ void ProgGeneralPage::onRetranslateUi()
     retranslateComboApplyChild();
 
     m_labelAppGroup->setText(tr("Group:"));
+    m_btGroups->retranslateUi();
 
     m_rbAllow->setText(tr("Allow"));
     m_rbBlock->setText(tr("Block"));
@@ -424,9 +428,14 @@ QLayout *ProgGeneralPage::setupApplyChildGroupLayout()
 
     m_labelAppGroup = ControlUtil::createLabel();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbApplyChild, m_comboApplyChild,
-            ControlUtil::createVSeparator(), m_labelAppGroup, m_comboAppGroup,
-            /*stretch*/ nullptr });
+    // Groups
+    m_btGroups = new GroupsSelector();
+    m_btGroups->setMaxGroupCount(ConfUtil::groupMaxCount());
+
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_cbApplyChild, m_comboApplyChild, ControlUtil::createVSeparator(), m_labelAppGroup,
+                    m_comboAppGroup, ControlUtil::createVSeparator(), m_btGroups,
+                    /*stretch*/ nullptr });
 
     return layout;
 }
@@ -851,6 +860,7 @@ void ProgGeneralPage::fillApp(App &app) const
     app.blocked = !m_rbAllow->isChecked();
     app.killProcess = m_rbKillProcess->isChecked();
     app.groupIndex = m_comboAppGroup->currentIndex();
+    app.groups = m_btGroups->groups();
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();
     app.iconPath = m_iconPath;

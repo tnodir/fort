@@ -240,14 +240,15 @@ bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appRow.logBlockedConn = stmt.columnBool(15);
     m_appRow.blocked = stmt.columnBool(16);
     m_appRow.killProcess = stmt.columnBool(17);
-    m_appRow.zones.accept_mask = stmt.columnUInt(18);
-    m_appRow.zones.reject_mask = stmt.columnUInt(19);
-    m_appRow.ruleId = stmt.columnUInt(20);
-    m_appRow.scheduleAction = stmt.columnInt(21);
-    m_appRow.scheduleTime = stmt.columnDateTime(22);
-    m_appRow.creatTime = stmt.columnDateTime(23);
-    m_appRow.groupIndex = stmt.columnInt(24);
-    m_appRow.alerted = stmt.columnBool(25);
+    m_appRow.groups = stmt.columnUInt(18);
+    m_appRow.zones.accept_mask = stmt.columnUInt(19);
+    m_appRow.zones.reject_mask = stmt.columnUInt(20);
+    m_appRow.ruleId = stmt.columnUInt(21);
+    m_appRow.scheduleAction = stmt.columnInt(22);
+    m_appRow.scheduleTime = stmt.columnDateTime(23);
+    m_appRow.creatTime = stmt.columnDateTime(24);
+    m_appRow.groupIndex = stmt.columnInt(25);
+    m_appRow.alerted = stmt.columnBool(26);
 
     return true;
 }
@@ -273,6 +274,7 @@ QString AppListModel::sqlBase() const
            "    t.log_blocked_conn,"
            "    t.blocked,"
            "    t.kill_process,"
+           "    t.groups_mask,"
            "    t.accept_zones,"
            "    t.reject_zones,"
            "    t.rule_id,"
