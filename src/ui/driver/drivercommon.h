@@ -78,6 +78,8 @@ FORT_APP_DATA confAppFind(const void *drvConf, const QString &appPath);
 bool wildMatch(const QString &pattern, const QString &text);
 bool wildMatchPath(const QString &pattern, const QString &path);
 
+bool confGroupsMaskBlocked(const void *drvGroups, quint32 groupsMask);
+
 bool confRulesConnFiltered(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId,
         const void *drvZones = nullptr);
 bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId);

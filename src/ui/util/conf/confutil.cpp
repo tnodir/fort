@@ -36,7 +36,7 @@ int ConfUtil::ruleSetDepthMaxCount()
 
 int ConfUtil::groupMaxCount()
 {
-    return FORT_CONF_GROUP_MAX;
+    return FORT_CONF_GROUP2_MAX;
 }
 
 int ConfUtil::wildcardPos(const QStringView path)

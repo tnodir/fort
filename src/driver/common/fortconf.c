@@ -21,6 +21,7 @@ static_assert((FORT_CONF_RULE_GLOBAL_MAX + FORT_CONF_RULE_SET_MAX) < 256,
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
 static_assert(sizeof(FORT_APP_DATA) == 5 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
+static_assert(sizeof(FORT_CONF_GROUPS) == 3 * sizeof(UINT32), "FORT_CONF_GROUPS size mismatch");
 
 static_assert(
         sizeof(FORT_CONF_CONN_ACTIONS) == sizeof(UINT16), "FORT_CONF_CONN_ACTIONS size mismatch");
@@ -382,11 +383,26 @@ FORT_API BOOL fort_conf_zones_conn_filtered(PCFORT_CONF_ZONES zones, PCFORT_CONF
     return reject_filtered || accept_filtered;
 }
 
-FORT_API BOOL fort_conf_groups_mask_included(PCFORT_CONF_GROUPS groups, UINT32 groups_mask)
+FORT_API BOOL fort_conf_groups_mask_blocked(PCFORT_CONF_GROUPS groups, UINT32 groups_mask)
 {
-    groups_mask &= (groups->mask & groups->enabled_mask);
+    /* Ignore the Groups which don't exist anymore */
+    groups_mask &= groups->mask;
 
-    return groups_mask != 0;
+    if (groups_mask == 0)
+        return FALSE; /* the App is not in any Group */
+
+    const UINT32 enabled_mask = (groups_mask & groups->enabled_mask);
+
+    /* All the App's exclusive Groups must be enabled */
+    const UINT32 excl_mask = (groups_mask & groups->exclusive_mask);
+    if ((excl_mask & ~enabled_mask) != 0)
+        return TRUE;
+
+    /* Any of the App's Groups must be enabled */
+    if (enabled_mask == 0)
+        return TRUE;
+
+    return FALSE;
 }
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)

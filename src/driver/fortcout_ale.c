@@ -5,6 +5,7 @@
 #include "common/fortdef.h"
 
 #include "fortcnf_conf.h"
+#include "fortcnf_group.h"
 #include "fortcnf_rule.h"
 #include "fortcnf_zone.h"
 #include "fortcout.h"
@@ -352,7 +353,13 @@ inline static BOOL fort_callout_ale_app_flags_blocked(
 
     if (fort_conf_app_group_blocked(conf_flags, app_data)) {
         conn->reason = FORT_CONN_REASON_APP_GROUP;
-        return TRUE; /* block Group */
+        return TRUE; /* block App. Group */
+    }
+
+    if (conf_flags.group_blocked
+            && fort_devconf_groups_mask_blocked(&fort_device()->conf, app_data.groups)) {
+        conn->reason = FORT_CONN_REASON_APP_GROUP;
+        return TRUE; /* block Groups */
     }
 
     return FALSE;

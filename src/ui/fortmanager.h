@@ -56,6 +56,7 @@ private:
     void setupEnvManager();
     void setupConfManager();
     void setupConfRuleManager();
+    void setupConfGroupManager();
     void setupQuotaManager();
     void setupTaskManager();
     void setupServiceInfoManager();

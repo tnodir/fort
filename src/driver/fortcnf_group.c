@@ -40,14 +40,17 @@ FORT_API void fort_conf_group_flag_set(
     ExReleaseSpinLockExclusive(&device_conf->lock, oldIrql);
 }
 
-FORT_API BOOL fort_devconf_groups_mask_included(PFORT_DEVICE_CONF device_conf, UINT32 groups_mask)
+FORT_API BOOL fort_devconf_groups_mask_blocked(PFORT_DEVICE_CONF device_conf, UINT32 groups_mask)
 {
+    if (groups_mask == 0)
+        return FALSE; /* the App is not in any Group: don't lock */
+
     BOOL res = FALSE;
 
     KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
     PCFORT_CONF_GROUPS groups = device_conf->groups;
     if (groups != NULL) {
-        res = fort_conf_groups_mask_included(groups, groups_mask);
+        res = fort_conf_groups_mask_blocked(groups, groups_mask);
     }
     ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
 

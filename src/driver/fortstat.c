@@ -318,7 +318,7 @@ inline static void fort_flow_opt_set(PFORT_STAT stat, PCFORT_FLOW_ADD_ARG faa)
     PFORT_FLOW flow = faa->flow;
     PCFORT_CONF_META_CONN conn = faa->conn;
 
-    const UCHAR group_index = conn->app_data.group_index;
+    const UCHAR group_index = (UCHAR) conn->app_data.group_index;
 
     const UCHAR speed_limit = fort_stat_group_speed_limit(&stat->conf_group, group_index);
 

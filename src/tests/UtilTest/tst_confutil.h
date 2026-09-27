@@ -8,12 +8,14 @@
 #include <conf/appgroup.h>
 #include <conf/confrulemanager.h>
 #include <conf/firewallconf.h>
+#include <conf/group.h>
 #include <conf/rule.h>
 #include <driver/drivercommon.h>
 #include <log/logentryconn.h>
 #include <manager/envmanager.h>
 #include <util/conf/confappswalker.h>
 #include <util/conf/confbuffer.h>
+#include <util/conf/confgroupswalker.h>
 #include <util/conf/confruleswalker.h>
 #include <util/fileutil.h>
 #include <util/net/iprange.h>
@@ -111,6 +113,7 @@ TEST_F(ConfUtilTest, confWriteRead)
     const auto firefoxData =
             DriverCommon::confAppFind(data, "C:\\Utils\\Firefox\\Bin\\firefox.exe");
     ASSERT_EQ(int(firefoxData.group_index), 1);
+    ASSERT_EQ(firefoxData.groups, 0u); // legacy App. Groups must not fill the new mask
 }
 
 TEST_F(ConfUtilTest, stringCmp)
@@ -232,6 +235,77 @@ TEST_F(ConfUtilTest, checkEnvManager)
     ASSERT_EQ(envManager.expandString("%d%"), "a");
 
     ASSERT_NE(envManager.expandString("%HOME%"), QString());
+}
+
+TEST_F(ConfUtilTest, groupsWriteRead)
+{
+    static Group g_groups[] = {
+        { .enabled = true, .exclusive = false, .groupId = 1 },
+        { .enabled = false, .exclusive = false, .groupId = 2 },
+        { .enabled = true, .exclusive = true, .groupId = 3 },
+        { .enabled = false, .exclusive = true, .groupId = 4 },
+        { .enabled = true, .exclusive = false, .groupId = 7 },
+        { .enabled = true, .exclusive = true, .groupId = 31 },
+        { .enabled = false, .exclusive = false, .groupId = 32 },
+        { .enabled = true, .exclusive = false, .groupId = 33 }, // out of range
+    };
+
+    class TestGroups : public ConfGroupsWalker
+    {
+    public:
+        bool walkGroups(const std::function<walkGroupsCallback> &func) const override
+        {
+            for (Group &group : g_groups) {
+                if (!func(group))
+                    return false;
+            }
+            return true;
+        }
+    };
+
+    ConfBuffer confBuf;
+    TestGroups testGroups;
+
+    confBuf.writeGroups(testGroups);
+    ASSERT_EQ(size_t(confBuf.buffer().size()), sizeof(FORT_CONF_GROUPS));
+
+    const char *data = confBuf.buffer().constData();
+
+    PCFORT_CONF_GROUPS confGroups = PCFORT_CONF_GROUPS(data);
+
+    // Bit N is Group id N + 1
+    ASSERT_EQ(confGroups->mask, (1u << 31) | (1u << 30) | 0b1001111u);
+    ASSERT_EQ(confGroups->enabled_mask, (1u << 30) | 0b1000101u);
+    ASSERT_EQ(confGroups->exclusive_mask, (1u << 30) | 0b0001100u);
+
+#define TEST_GROUP_BIT(id) (quint32(1) << ((id) - 1))
+#define TEST_BLOCKED(mask) DriverCommon::confGroupsMaskBlocked(data, (mask))
+
+    ASSERT_FALSE(TEST_BLOCKED(0)); // not in any Group
+
+    ASSERT_FALSE(TEST_BLOCKED(TEST_GROUP_BIT(1))); // non-exclusive enabled
+    ASSERT_TRUE(TEST_BLOCKED(TEST_GROUP_BIT(2))); // non-exclusive disabled
+    ASSERT_FALSE(TEST_BLOCKED(TEST_GROUP_BIT(1) | TEST_GROUP_BIT(2)));
+
+    ASSERT_FALSE(TEST_BLOCKED(TEST_GROUP_BIT(3))); // exclusive enabled
+    ASSERT_TRUE(TEST_BLOCKED(TEST_GROUP_BIT(4))); // exclusive disabled
+    ASSERT_TRUE(TEST_BLOCKED(TEST_GROUP_BIT(3) | TEST_GROUP_BIT(4)));
+
+    ASSERT_TRUE(TEST_BLOCKED(TEST_GROUP_BIT(1) | TEST_GROUP_BIT(4)));
+    ASSERT_FALSE(TEST_BLOCKED(TEST_GROUP_BIT(1) | TEST_GROUP_BIT(3)));
+    ASSERT_FALSE(TEST_BLOCKED(TEST_GROUP_BIT(2) | TEST_GROUP_BIT(3))); // any Group enabled
+    ASSERT_TRUE(TEST_BLOCKED(TEST_GROUP_BIT(2) | TEST_GROUP_BIT(4))); // no Group enabled
+
+    ASSERT_FALSE(TEST_BLOCKED(TEST_GROUP_BIT(20))); // removed Group is ignored
+
+    ASSERT_FALSE(TEST_BLOCKED(TEST_GROUP_BIT(31)));
+    ASSERT_FALSE(TEST_BLOCKED(TEST_GROUP_BIT(2) | TEST_GROUP_BIT(31)));
+
+    ASSERT_TRUE(TEST_BLOCKED(TEST_GROUP_BIT(32))); // the last Group id
+    ASSERT_FALSE(TEST_BLOCKED(TEST_GROUP_BIT(1) | TEST_GROUP_BIT(32)));
+
+#undef TEST_BLOCKED
+#undef TEST_GROUP_BIT
 }
 
 TEST_F(ConfUtilTest, rulesWriteRead)

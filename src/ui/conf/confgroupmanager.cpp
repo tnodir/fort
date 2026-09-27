@@ -144,8 +144,6 @@ bool ConfGroupManager::addOrUpdateGroup(Group &group)
                                 .sql(sqlSelectGroupIds)
                                 .vars({ ConfUtil::groupMaxCount() })
                                 .getFreeId(/*maxId=*/ConfUtil::groupMaxCount());
-    } else {
-        updateDriverGroupFlag(group.groupId, group.enabled);
     }
 
     if (ok) {
@@ -179,6 +177,8 @@ bool ConfGroupManager::addOrUpdateGroup(Group &group)
         emit groupUpdated();
     }
 
+    updateDriverGroups();
+
     return true;
 }
 
@@ -203,6 +203,8 @@ bool ConfGroupManager::deleteGroup(quint8 groupId)
 
     if (ok) {
         emit groupRemoved(groupId);
+
+        updateDriverGroups();
     }
 
     return ok;

@@ -149,7 +149,7 @@ void OptionsPage::onRetranslateUi()
     m_labelFilterMode->setText(tr("Filter Mode:"));
     retranslateComboFilterMode();
 
-    m_cbGroupBlocked->setText(tr("Block traffic for disabled App Groups"));
+    m_cbGroupBlocked->setText(tr("Block traffic for disabled Groups"));
 
     m_lscFilterOffSeconds->label()->setText(tr("Filter Off seconds:"));
     m_lscAutoLearnSeconds->label()->setText(tr("Auto-learn seconds:"));

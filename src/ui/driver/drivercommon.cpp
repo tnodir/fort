@@ -284,6 +284,13 @@ bool confRulesConnFiltered(
     return fort_conf_rules_conn_filtered(rules, zones, conn, ruleId);
 }
 
+bool confGroupsMaskBlocked(const void *drvGroups, quint32 groupsMask)
+{
+    PCFORT_CONF_GROUPS groups = static_cast<PCFORT_CONF_GROUPS>(drvGroups);
+
+    return fort_conf_groups_mask_blocked(groups, groupsMask);
+}
+
 bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)
 {
     conn->act.blocked = TRUE; /* default block */

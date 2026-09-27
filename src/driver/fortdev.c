@@ -115,6 +115,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
 
         fort_conf_zones_set(&fort_device()->conf, NULL);
         fort_conf_rules_set(&fort_device()->conf, NULL);
+        fort_conf_groups_set(&fort_device()->conf, NULL);
 
         fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
         fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
@@ -382,7 +383,7 @@ static NTSTATUS fort_device_control_setgroups(PFORT_DEVICE_CONTROL_ARG dca)
     PCFORT_CONF_GROUPS groups = dca->buffer;
     const ULONG len = dca->in_len;
 
-    if (len >= FORT_CONF_GROUPS_DATA_OFF) {
+    if (len == sizeof(FORT_CONF_GROUPS)) {
         PFORT_CONF_GROUPS conf_groups = fort_conf_groups_new(groups, len);
 
         if (conf_groups == NULL) {

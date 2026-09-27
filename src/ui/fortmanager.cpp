@@ -188,6 +188,7 @@ void FortManager::initialize()
     setupEnvManager();
     setupConfManager();
     setupConfRuleManager();
+    setupConfGroupManager();
     setupQuotaManager();
     setupTaskManager();
     setupServiceInfoManager();
@@ -457,6 +458,12 @@ void FortManager::setupConfRuleManager()
                     updateDriverConf(); // Update all apps
                 }
             });
+}
+
+void FortManager::setupConfGroupManager()
+{
+    // The deleted Group's id can be reused: clear it from the driver's apps
+    connect(confGroupManager(), &ConfGroupManager::groupRemoved, this, [&] { updateDriverConf(); });
 }
 
 void FortManager::setupQuotaManager()

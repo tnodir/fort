@@ -9,6 +9,7 @@
 #include <conf/app.h>
 #include <conf/appgroup.h>
 #include <conf/firewallconf.h>
+#include <conf/group.h>
 #include <conf/rule.h>
 #include <manager/envmanager.h>
 #include <util/bitutil.h>
@@ -667,47 +668,32 @@ bool ConfBuffer::writeRuleFilterValues(const RuleFilter &ruleFilter)
 
 void ConfBuffer::writeGroups(const ConfGroupsWalker &confGroupsWalker)
 {
-    quint32 groupsMask;
-    quint32 enabledMask;
-    quint32 exclusiveMask;
-    quint32 dataSize;
-    QList<QByteArray> groupsData;
-
     // Resize the buffer
-    const int groupsSize = FORT_CONF_GROUPS_DATA_OFF + dataSize;
-
-    buffer().resize(groupsSize);
+    buffer().resize(sizeof(FORT_CONF_GROUPS));
+    buffer().fill('\0');
 
     // Fill the buffer
-    char *data = buffer().data();
+    PFORT_CONF_GROUPS confGroups = PFORT_CONF_GROUPS(buffer().data());
 
-    PFORT_CONF_GROUPS confGroups = PFORT_CONF_GROUPS(data);
+    confGroupsWalker.walkGroups([&](Group &group) -> bool {
+        if (Q_UNLIKELY(group.groupId <= 0 || group.groupId > ConfUtil::groupMaxCount()))
+            return true; // skip an out of range Group
 
-    memset(confGroups, 0, sizeof(FORT_CONF_GROUPS_DATA_OFF));
+        const int groupIndex = group.groupId - 1;
+        const quint32 groupBit = (quint32(1) << groupIndex);
 
-    confGroups->mask = groupsMask;
-    confGroups->enabled_mask = enabledMask;
-    confGroups->exclusive_mask = exclusiveMask;
+        confGroups->mask |= groupBit;
 
-    data = confGroups->data;
+        if (group.enabled) {
+            confGroups->enabled_mask |= groupBit;
+        }
 
-    ConfData confData(data);
+        if (group.exclusive) {
+            confGroups->exclusive_mask |= groupBit;
+        }
 
-    for (const auto &groupData : groupsData) {
-        Q_ASSERT(!groupData.isEmpty());
-
-        const int groupIndex = BitUtil::bitScanForward(groupsMask);
-        if (Q_UNLIKELY(groupIndex == -1))
-            break;
-
-        const quint32 groupMask = (quint32(1) << groupIndex);
-
-        confGroups->addr_off[groupIndex] = confData.dataOffset();
-
-        confData.writeArray(groupData);
-
-        groupsMask ^= groupMask;
-    }
+        return true;
+    });
 }
 
 void ConfBuffer::writeGroupFlag(int groupId, bool enabled)
