@@ -21,6 +21,8 @@ namespace {
 
 const QLoggingCategory LC("confGroup");
 
+inline constexpr int GROUP_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
+
 #define SELECT_GROUP_FIELDS                                                                        \
     "    t.group_id,"                                                                              \
     "    t.enabled,"                                                                               \
@@ -62,6 +64,10 @@ const char *const sqlUpdateGroupName = "UPDATE app_group2 SET name = ?2 WHERE gr
 
 const char *const sqlUpdateGroupEnabled = "UPDATE app_group2 SET enabled = ?2 WHERE group_id = ?1;";
 
+const char *const sqlSelectAnyGroupPeriod = "SELECT 1 FROM app_group2"
+                                            "  WHERE enabled = 1 AND period_enabled = 1"
+                                            "  LIMIT 1;";
+
 bool driverWriteGroups(ConfBuffer &confBuf, bool onlyFlags = false)
 {
     if (confBuf.hasError()) {
@@ -82,6 +88,7 @@ bool driverWriteGroups(ConfBuffer &confBuf, bool onlyFlags = false)
 
 ConfGroupManager::ConfGroupManager(QObject *parent) : ConfManagerBase(parent)
 {
+    setupPeriodsTimer();
     setupGroupNamesCache();
 }
 
@@ -244,7 +251,7 @@ bool ConfGroupManager::updateGroupEnabled(quint8 groupId, bool enabled)
     if (ok) {
         emit groupUpdated();
 
-        updateDriverGroupFlag(groupId, enabled);
+        updateDriverGroupFlags(); // the Group's period may keep it inactive
     }
 
     return ok;
@@ -269,20 +276,83 @@ bool ConfGroupManager::walkGroups(const std::function<walkGroupsCallback> &func)
 
 void ConfGroupManager::updateDriverGroups()
 {
+    stopPeriodsTimer();
+
+    const quint32 activeMask = activeGroupsMask();
+
     ConfBuffer confBuf;
 
-    confBuf.writeGroups(*this);
+    confBuf.writeGroups(*this, activeMask);
 
-    driverWriteGroups(confBuf);
+    if (driverWriteGroups(confBuf)) {
+        m_driverActiveMask = activeMask;
+    }
+
+    startPeriodsTimer();
 }
 
-bool ConfGroupManager::updateDriverGroupFlag(quint8 groupId, bool enabled)
+void ConfGroupManager::updateDriverGroupFlags()
 {
-    ConfBuffer confBuf;
+    stopPeriodsTimer();
 
-    confBuf.writeGroupFlag(groupId, enabled);
+    const quint32 activeMask = activeGroupsMask();
 
-    return driverWriteGroups(confBuf, /*onlyFlags=*/true);
+    if (activeMask != m_driverActiveMask) {
+        ConfBuffer confBuf;
+
+        confBuf.writeGroupFlags(activeMask);
+
+        if (driverWriteGroups(confBuf, /*onlyFlags=*/true)) {
+            m_driverActiveMask = activeMask;
+        }
+    }
+
+    startPeriodsTimer();
+}
+
+quint32 ConfGroupManager::activeGroupsMask() const
+{
+    const QTime now = DateUtil::currentTime();
+
+    quint32 activeMask = 0;
+
+    walkGroups([&](Group &group) -> bool {
+        if (Q_UNLIKELY(group.groupId <= 0 || group.groupId > ConfUtil::groupMaxCount()))
+            return true; // skip an out of range Group
+
+        if (group.isActive(now)) {
+            activeMask |= (quint32(1) << (group.groupId - 1));
+        }
+
+        return true;
+    });
+
+    return activeMask;
+}
+
+void ConfGroupManager::setupPeriodsTimer()
+{
+    m_periodsTimer.setSingleShot(true);
+    m_periodsTimer.setTimerType(Qt::PreciseTimer); // not earlier than the next minute
+
+    connect(&m_periodsTimer, &QTimer::timeout, this, &ConfGroupManager::updateDriverGroupFlags);
+}
+
+void ConfGroupManager::startPeriodsTimer()
+{
+    const bool anyPeriodEnabled =
+            DbQuery(sqliteDb()).sql(sqlSelectAnyGroupPeriod).execute().toBool();
+
+    if (anyPeriodEnabled) {
+        // Wake up at the start of the next minute: the periods are in "hh:mm"
+        const int msecs = DateUtil::currentTime().msecsSinceStartOfDay();
+        m_periodsTimer.start(GROUP_PERIODS_UPDATE_INTERVAL - msecs % GROUP_PERIODS_UPDATE_INTERVAL);
+    }
+}
+
+void ConfGroupManager::stopPeriodsTimer()
+{
+    m_periodsTimer.stop();
 }
 
 void ConfGroupManager::setupGroupNamesCache()

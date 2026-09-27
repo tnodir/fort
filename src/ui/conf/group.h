@@ -11,6 +11,8 @@ public:
     bool isOptionsEqual(const Group &o) const;
     bool isNameEqual(const Group &o) const;
 
+    bool isActive(QTime time) const;
+
     QString menuLabel() const;
 
 public:

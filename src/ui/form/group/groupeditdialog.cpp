@@ -5,8 +5,10 @@
 #include <QFormLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QTimeEdit>
 #include <QVBoxLayout>
 
+#include <form/controls/checktimeperiod.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
@@ -37,6 +39,10 @@ void GroupEditDialog::initialize(const Group &group)
     m_cbEnabled->setChecked(group.enabled);
     m_cbExclusive->setChecked(group.exclusive);
 
+    m_ctpPeriod->checkBox()->setChecked(group.periodEnabled);
+    m_ctpPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(group.periodFrom));
+    m_ctpPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(group.periodTo));
+
     initializeFocus();
 }
 
@@ -57,6 +63,9 @@ void GroupEditDialog::retranslateUi()
     m_cbExclusive->setToolTip(
             tr("A program is enabled only if ALL of its exclusive groups are enabled,"
                " and at least one of its groups is enabled."));
+
+    m_ctpPeriod->checkBox()->setText(tr("time period:"));
+    m_ctpPeriod->setToolTip(tr("The Group is active only in this time period."));
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -135,6 +144,11 @@ QLayout *GroupEditDialog::setupNameLayout()
 
     layout->addRow(QString(), m_cbExclusive);
 
+    // Period
+    m_ctpPeriod = new CheckTimePeriod();
+
+    layout->addRow(QString(), m_ctpPeriod);
+
     return layout;
 }
 
@@ -199,10 +213,10 @@ void GroupEditDialog::fillGroup(Group &group) const
     group.notes = m_editNotes->toPlainText();
     group.enabled = m_cbEnabled->isChecked();
     group.exclusive = m_cbExclusive->isChecked();
+    group.periodEnabled = m_ctpPeriod->checkBox()->isChecked();
+    group.periodFrom = CheckTimePeriod::fromTime(m_ctpPeriod->timeEdit1()->time());
+    group.periodTo = CheckTimePeriod::fromTime(m_ctpPeriod->timeEdit2()->time());
 
     // Not editable yet: preserve, don't reset
-    group.periodEnabled = m_group.periodEnabled;
-    group.periodFrom = m_group.periodFrom;
-    group.periodTo = m_group.periodTo;
     group.ruleId = m_group.ruleId;
 }

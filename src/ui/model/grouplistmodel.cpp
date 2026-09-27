@@ -88,7 +88,7 @@ QVariant GroupListModel::dataDisplay(const QModelIndex &index) const
 
     switch (column) {
     case 0:
-        return QString("%1) %2").arg(QString::number(groupRow.groupId), groupRow.groupName);
+        return QString("%1) %2").arg(QString::number(groupRow.groupId), groupRow.menuLabel());
     case 1:
         return groupRow.modTime;
     }

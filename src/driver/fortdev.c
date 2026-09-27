@@ -402,15 +402,15 @@ static NTSTATUS fort_device_control_setgroups(PFORT_DEVICE_CONTROL_ARG dca)
     return STATUS_UNSUCCESSFUL;
 }
 
-static NTSTATUS fort_device_control_setgroupflag(PFORT_DEVICE_CONTROL_ARG dca)
+static NTSTATUS fort_device_control_setgroupflags(PFORT_DEVICE_CONTROL_ARG dca)
 {
-    PCFORT_CONF_GROUP_FLAG group_flag = dca->buffer;
+    PCFORT_CONF_GROUP_FLAGS group_flags = dca->buffer;
     const ULONG len = dca->in_len;
 
-    if (len == sizeof(FORT_CONF_GROUP_FLAG)) {
+    if (len == sizeof(FORT_CONF_GROUP_FLAGS)) {
         PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
 
-        fort_conf_group_flag_set(device_conf, group_flag);
+        fort_conf_group_flags_set(device_conf, group_flags);
 
         fort_device_conf_reauth_queue(device_conf);
 
@@ -439,7 +439,7 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setrules, // FORT_IOCTL_SETRULES
     &fort_device_control_setruleflag, // FORT_IOCTL_SETRULEFLAG
     &fort_device_control_setgroups, // FORT_IOCTL_SETGROUPS
-    &fort_device_control_setgroupflag, // FORT_IOCTL_SETGROUPFLAG
+    &fort_device_control_setgroupflags, // FORT_IOCTL_SETGROUPFLAGS
 };
 
 static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)

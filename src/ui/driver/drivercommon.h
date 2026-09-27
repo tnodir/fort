@@ -21,7 +21,7 @@ quint32 ioctlSetZoneFlag();
 quint32 ioctlSetRules();
 quint32 ioctlSetRuleFlag();
 quint32 ioctlSetGroups();
-quint32 ioctlSetGroupFlag();
+quint32 ioctlSetGroupFlags();
 
 quint32 userErrorCode();
 

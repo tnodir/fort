@@ -18,6 +18,18 @@ bool Group::isNameEqual(const Group &o) const
     return groupName == o.groupName;
 }
 
+bool Group::isActive(QTime time) const
+{
+    if (!enabled)
+        return false;
+
+    if (!periodEnabled)
+        return true;
+
+    return DateUtil::isTimeInPeriod(
+            time, DateUtil::parseTime(periodFrom), DateUtil::parseTime(periodTo));
+}
+
 QString Group::menuLabel() const
 {
     QString text = groupName;

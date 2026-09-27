@@ -11,8 +11,8 @@ FORT_API PFORT_CONF_GROUPS fort_conf_groups_new(PCFORT_CONF_GROUPS groups, ULONG
 
 FORT_API void fort_conf_groups_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_GROUPS groups);
 
-FORT_API void fort_conf_group_flag_set(
-        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_GROUP_FLAG group_flag);
+FORT_API void fort_conf_group_flags_set(
+        PFORT_DEVICE_CONF device_conf, PCFORT_CONF_GROUP_FLAGS group_flags);
 
 FORT_API BOOL fort_devconf_groups_mask_blocked(PFORT_DEVICE_CONF device_conf, UINT32 groups_mask);
 

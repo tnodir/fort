@@ -307,6 +307,7 @@ typedef struct fort_conf_groups
 {
     UINT32 mask; /* configured Groups */
 
+    /* Effectively active Groups: the UI folds the Group's active period into it. */
     UINT32 enabled_mask;
 
     UINT32 exclusive_mask;
@@ -314,13 +315,12 @@ typedef struct fort_conf_groups
 
 typedef const FORT_CONF_GROUPS *PCFORT_CONF_GROUPS;
 
-typedef struct fort_conf_group_flag
+typedef struct fort_conf_group_flags
 {
-    UCHAR group_id;
-    UCHAR enabled;
-} FORT_CONF_GROUP_FLAG, *PFORT_CONF_GROUP_FLAG;
+    UINT32 enabled_mask; /* effectively active Groups */
+} FORT_CONF_GROUP_FLAGS, *PFORT_CONF_GROUP_FLAGS;
 
-typedef const FORT_CONF_GROUP_FLAG *PCFORT_CONF_GROUP_FLAG;
+typedef const FORT_CONF_GROUP_FLAGS *PCFORT_CONF_GROUP_FLAGS;
 
 typedef struct fort_traf
 {

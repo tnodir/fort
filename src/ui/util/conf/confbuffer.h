@@ -53,8 +53,8 @@ public slots:
 
     bool validateRuleText(const QString &ruleText);
 
-    void writeGroups(const ConfGroupsWalker &confGroupsWalker);
-    void writeGroupFlag(int groupId, bool enabled);
+    void writeGroups(const ConfGroupsWalker &confGroupsWalker, quint32 activeMask);
+    void writeGroupFlags(quint32 activeMask);
 
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }

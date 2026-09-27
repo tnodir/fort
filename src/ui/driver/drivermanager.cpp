@@ -133,7 +133,7 @@ bool DriverManager::writeRules(QByteArray &buf, bool onlyFlags)
 bool DriverManager::writeGroups(QByteArray &buf, bool onlyFlags)
 {
     const auto code =
-            onlyFlags ? DriverCommon::ioctlSetGroupFlag() : DriverCommon::ioctlSetGroups();
+            onlyFlags ? DriverCommon::ioctlSetGroupFlags() : DriverCommon::ioctlSetGroups();
 
     return writeData(code, buf);
 }

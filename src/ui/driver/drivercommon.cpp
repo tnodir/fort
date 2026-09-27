@@ -75,9 +75,9 @@ quint32 ioctlSetGroups()
     return FORT_IOCTL_SETGROUPS;
 }
 
-quint32 ioctlSetGroupFlag()
+quint32 ioctlSetGroupFlags()
 {
-    return FORT_IOCTL_SETGROUPFLAG;
+    return FORT_IOCTL_SETGROUPFLAGS;
 }
 
 quint32 userErrorCode()

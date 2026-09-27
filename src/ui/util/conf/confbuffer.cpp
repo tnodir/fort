@@ -666,7 +666,7 @@ bool ConfBuffer::writeRuleFilterValues(const RuleFilter &ruleFilter)
     return true;
 }
 
-void ConfBuffer::writeGroups(const ConfGroupsWalker &confGroupsWalker)
+void ConfBuffer::writeGroups(const ConfGroupsWalker &confGroupsWalker, quint32 activeMask)
 {
     // Resize the buffer
     buffer().resize(sizeof(FORT_CONF_GROUPS));
@@ -684,30 +684,23 @@ void ConfBuffer::writeGroups(const ConfGroupsWalker &confGroupsWalker)
 
         confGroups->mask |= groupBit;
 
-        if (group.enabled) {
-            confGroups->enabled_mask |= groupBit;
-        }
-
         if (group.exclusive) {
             confGroups->exclusive_mask |= groupBit;
         }
 
         return true;
     });
+
+    confGroups->enabled_mask = (activeMask & confGroups->mask);
 }
 
-void ConfBuffer::writeGroupFlag(int groupId, bool enabled)
+void ConfBuffer::writeGroupFlags(quint32 activeMask)
 {
     // Resize the buffer
-    const int flagSize = sizeof(FORT_CONF_GROUP_FLAG);
-
-    buffer().resize(flagSize);
+    buffer().resize(sizeof(FORT_CONF_GROUP_FLAGS));
 
     // Fill the buffer
-    char *data = buffer().data();
+    PFORT_CONF_GROUP_FLAGS confGroupFlags = PFORT_CONF_GROUP_FLAGS(buffer().data());
 
-    PFORT_CONF_GROUP_FLAG confGroupFlag = PFORT_CONF_GROUP_FLAG(data);
-
-    confGroupFlag->group_id = groupId;
-    confGroupFlag->enabled = enabled;
+    confGroupFlags->enabled_mask = activeMask;
 }

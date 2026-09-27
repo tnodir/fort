@@ -11,6 +11,7 @@ QT_FORWARD_DECLARE_CLASS(QFrame)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 
+class CheckTimePeriod;
 class Group;
 class GroupsController;
 class LineEdit;
@@ -56,6 +57,7 @@ private:
     PlainTextEdit *m_editNotes = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
     QCheckBox *m_cbExclusive = nullptr;
+    CheckTimePeriod *m_ctpPeriod = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 
