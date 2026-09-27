@@ -58,6 +58,11 @@ public:
     FilterFlags filterValues() const { return m_filterValues; }
     void setFilterValue(FilterFlag v, Qt::CheckState checkState);
 
+    quint32 filterGroups() const { return m_filterGroups; }
+    void setFilterGroups(quint32 v);
+
+    bool hasFilters() const { return m_filters != FilterNone || m_filterGroups != 0; }
+
     void clearFilters();
 
     SqliteDb *sqliteDb() const override;
@@ -108,6 +113,8 @@ private:
 
     FilterFlags m_filters = FilterNone;
     FilterFlags m_filterValues = FilterNone;
+
+    quint32 m_filterGroups = 0;
 
     mutable AppRow m_appRow;
 };

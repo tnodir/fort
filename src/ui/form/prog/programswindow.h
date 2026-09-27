@@ -9,6 +9,7 @@ QT_FORWARD_DECLARE_CLASS(QMenu)
 class App;
 class AppInfoRow;
 class AppListModel;
+class GroupsSelector;
 class ProgramEditController;
 class ProgramEditDialog;
 class ProgramsController;
@@ -54,6 +55,7 @@ private:
     void setupEditSearch();
     void setupFilter();
     void setupFilterCheckBoxes();
+    void setupFilterGroups();
     void setupFilterClear();
     QLayout *setupSortStatesLayout();
     void setupTableApps();
@@ -128,6 +130,7 @@ private:
     QCheckBox *m_cbFilterWildcard = nullptr;
     QCheckBox *m_cbFilterParked = nullptr;
     QCheckBox *m_cbFilterKillProcess = nullptr;
+    GroupsSelector *m_btFilterGroups = nullptr;
     QToolButton *m_btSortAllowed = nullptr;
     QToolButton *m_btSortBlocked = nullptr;
     QToolButton *m_btSortAlerted = nullptr;

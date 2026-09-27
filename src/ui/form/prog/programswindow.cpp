@@ -18,6 +18,7 @@
 #include <conf/firewallconf.h>
 #include <form/controls/appinforow.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/groupsselector.h>
 #include <form/controls/tableview.h>
 #include <fortglobal.h>
 #include <fortsettings.h>
@@ -36,7 +37,7 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr int APPS_HEADER_VERSION = 13;
+inline constexpr int APPS_HEADER_VERSION = 14;
 
 const std::array timerMinuteValues = { -1, 1, 5, 10, 30, 60 * 1, 60 * 3, 60 * 6 };
 
@@ -162,6 +163,8 @@ void ProgramsWindow::retranslateUi()
     m_cbFilterWildcard->setText(tr("Wildcard Paths"));
     m_cbFilterParked->setText(tr("Parked"));
     m_cbFilterKillProcess->setText(tr("Kill Process"));
+    m_btFilterGroups->retranslateUi();
+    m_btFilterGroups->setToolTip(tr("Filter by Groups"));
 
     appListModel()->refresh();
 
@@ -383,6 +386,7 @@ void ProgramsWindow::setupEditSearch()
 void ProgramsWindow::setupFilter()
 {
     setupFilterCheckBoxes();
+    setupFilterGroups();
     setupFilterClear();
 
     auto layout = new QVBoxLayout();
@@ -390,6 +394,8 @@ void ProgramsWindow::setupFilter()
     layout->addWidget(m_cbFilterWildcard);
     layout->addWidget(m_cbFilterParked);
     layout->addWidget(m_cbFilterKillProcess);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_btFilterGroups, 0, Qt::AlignLeft);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addWidget(m_btClearFilter, 0, Qt::AlignCenter);
 
@@ -399,7 +405,7 @@ void ProgramsWindow::setupFilter()
     m_btFilter->setMenu(menu);
 
     const auto refreshFilter = [&] {
-        const auto isEmpty = (appListModel()->filters() == AppListModel::FilterNone);
+        const auto isEmpty = !appListModel()->hasFilters();
 
         m_btFilter->setIcon(isEmpty
                         ? IconCache::icon(":/icons/filter.png")
@@ -438,6 +444,15 @@ void ProgramsWindow::setupFilterCheckBoxes()
             });
 }
 
+void ProgramsWindow::setupFilterGroups()
+{
+    m_btFilterGroups = new GroupsSelector();
+    m_btFilterGroups->setMaxGroupCount(ConfUtil::groupMaxCount());
+
+    connect(m_btFilterGroups, &GroupsSelector::groupsChanged, this,
+            [&] { appListModel()->setFilterGroups(m_btFilterGroups->groups()); });
+}
+
 void ProgramsWindow::setupFilterClear()
 {
     m_btClearFilter = ControlUtil::createFlatToolButton(":/icons/broom.png", [&] {
@@ -447,6 +462,7 @@ void ProgramsWindow::setupFilterClear()
         m_cbFilterWildcard->setCheckState(Qt::PartiallyChecked);
         m_cbFilterParked->setCheckState(Qt::PartiallyChecked);
         m_cbFilterKillProcess->setCheckState(Qt::PartiallyChecked);
+        m_btFilterGroups->setGroups(0);
     });
 }
 
@@ -503,6 +519,7 @@ void ProgramsWindow::setupTableAppsHeader()
     header->setSectionResizeMode(int(AppListColumn::Name), QHeaderView::Interactive);
     header->setSectionResizeMode(int(AppListColumn::Zones), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Rule), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(AppListColumn::Groups), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Scheduled), QHeaderView::Fixed);
     header->setSectionResizeMode(int(AppListColumn::Action), QHeaderView::Interactive);
     header->setSectionResizeMode(int(AppListColumn::Group), QHeaderView::Interactive);
@@ -514,6 +531,7 @@ void ProgramsWindow::setupTableAppsHeader()
     header->resizeSection(int(AppListColumn::Name), 300);
     header->resizeSection(int(AppListColumn::Zones), 30);
     header->resizeSection(int(AppListColumn::Rule), 30);
+    header->resizeSection(int(AppListColumn::Groups), 30);
     header->resizeSection(int(AppListColumn::Scheduled), 30);
     header->resizeSection(int(AppListColumn::Action), 100);
     header->resizeSection(int(AppListColumn::Group), 100);

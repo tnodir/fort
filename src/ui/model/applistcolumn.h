@@ -5,6 +5,7 @@ enum class AppListColumn : qint8 {
     Name = 0,
     Zones,
     Rule,
+    Groups,
     Scheduled,
     Action,
     Group,

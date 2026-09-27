@@ -6,6 +6,7 @@
 #include <conf/app.h>
 #include <conf/appgroup.h>
 #include <conf/confappmanager.h>
+#include <conf/confgroupmanager.h>
 #include <conf/confrulemanager.h>
 #include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
@@ -100,6 +101,14 @@ QVariant dataDisplayScheduled(const App &app, int role)
             + AppListModel::tr("Time left: %1").arg(timeLeftStr);
 }
 
+QVariant dataDisplayGroups(const App &app, int role)
+{
+    if (role != Qt::ToolTipRole)
+        return {};
+
+    return confGroupManager()->groupNamesByMask(app.groups).join('\n');
+}
+
 QVariant dataDisplayGroup(const App &app, int /*role*/)
 {
     const AppGroup *appGroup = conf().appGroupAt(app.groupIndex);
@@ -128,6 +137,7 @@ static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayName,
     &dataDisplayZones,
     &dataDisplayRule,
+    &dataDisplayGroups,
     &dataDisplayScheduled,
     &dataDisplayAction,
     &dataDisplayGroup,
@@ -227,6 +237,11 @@ QIcon AppListModelData::appRuleIcon() const
     return (app().ruleId != 0) ? IconCache::icon(":/icons/script.png") : QIcon();
 }
 
+QIcon AppListModelData::appGroupsIcon() const
+{
+    return app().hasGroup() ? IconCache::icon(":/icons/application_double.png") : QIcon();
+}
+
 QIcon AppListModelData::appScheduledIcon() const
 {
     if (!app().scheduleTime.isNull()) {
@@ -250,6 +265,8 @@ QVariant AppListModelData::dataDecorationIcon() const
         return appZonesIcon();
     case AppListColumn::Rule:
         return appRuleIcon();
+    case AppListColumn::Groups:
+        return appGroupsIcon();
     case AppListColumn::Scheduled:
         return appScheduledIcon();
     case AppListColumn::Action:

@@ -6,6 +6,7 @@
 
 #include <appinfo/appinfocache.h>
 #include <conf/confappmanager.h>
+#include <conf/confgroupmanager.h>
 #include <conf/confmanager.h>
 #include <fortglobal.h>
 #include <manager/translationmanager.h>
@@ -58,10 +59,22 @@ void AppListModel::setFilterValue(FilterFlag v, Qt::CheckState checkState)
     resetLater();
 }
 
+void AppListModel::setFilterGroups(quint32 v)
+{
+    if (m_filterGroups == v)
+        return;
+
+    m_filterGroups = v;
+    emit filtersChanged();
+
+    resetLater();
+}
+
 void AppListModel::clearFilters()
 {
     m_filterValues = FilterNone;
 
+    setFilterGroups(0);
     setFilters(FilterNone);
 }
 
@@ -79,6 +92,9 @@ void AppListModel::initialize()
 
     connect(confAppManager(), &ConfAppManager::appsChanged, this, &TableItemModel::reset);
     connect(confAppManager(), &ConfAppManager::appUpdated, this, &TableItemModel::refresh);
+
+    connect(confGroupManager(), &ConfGroupManager::groupRemoved, this, &TableItemModel::reset);
+    connect(confGroupManager(), &ConfGroupManager::groupUpdated, this, &TableItemModel::refresh);
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);
 }
@@ -293,13 +309,20 @@ QString AppListModel::sqlWhere() const
 {
     QString sql = FtsTableSqlModel::sqlWhere();
 
+    QStringList list;
+
     if (filters() != FilterNone) {
-        QStringList list;
         addSqlFilter(list, "alerted", FilterAlerted);
         addSqlFilter(list, "t.is_wildcard", FilterWildcard);
         addSqlFilter(list, "t.parked", FilterParked);
         addSqlFilter(list, "t.kill_process", FilterKillProcess);
+    }
 
+    if (filterGroups() != 0) {
+        list << QString("(t.groups_mask & %1) <> 0").arg(filterGroups());
+    }
+
+    if (!list.isEmpty()) {
         sql += QLatin1String(sql.isEmpty() ? " WHERE " : " AND ") + list.join(" AND ");
     }
 
@@ -331,6 +354,7 @@ QString AppListModel::sqlOrderColumn() const
         nameColumn, // Name
         "t.accept_zones, t.reject_zones", // Zones
         "r.rule_type ASC NULLS LAST, lower(r.name)", // Rule
+        "t.groups_mask", // Groups
         "t.end_action, t.end_time", // Scheduled
         "t.blocked", // Action
         "group_index", // Group
@@ -343,6 +367,7 @@ QString AppListModel::sqlOrderColumn() const
         pathColumn, // Name
         nameColumn, // Zones
         nameColumn, // Rule
+        nameColumn, // Groups
         nameColumn, // Scheduled
         nameColumn, // Action
         nameColumn, // Group
@@ -392,6 +417,7 @@ QString AppListModel::columnName(const AppListColumn column)
             tr("Name"),
             tr("Zones"),
             tr("Rule"),
+            tr("Groups"),
             tr("Scheduled"),
             tr("Action"),
             tr("Group"),
