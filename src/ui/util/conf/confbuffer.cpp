@@ -196,7 +196,7 @@ void ConfBuffer::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 data
 
     PFORT_CONF_ZONES confZones = PFORT_CONF_ZONES(data);
 
-    memset(confZones, 0, sizeof(FORT_CONF_ZONES_DATA_OFF));
+    memset(confZones, 0, FORT_CONF_ZONES_DATA_OFF);
 
     confZones->mask = zonesMask;
     confZones->enabled_mask = enabledMask;
