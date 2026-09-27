@@ -56,6 +56,7 @@ public:
     StatisticsWindow *statWindow() const;
     ServicesWindow *servicesWindow() const;
     ZonesWindow *zonesWindow() const;
+    GroupsWindow *groupsWindow() const;
     GraphWindow *graphWindow() const;
 
     void setUp() override;

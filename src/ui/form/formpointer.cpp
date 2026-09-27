@@ -1,6 +1,7 @@
 #include "formpointer.h"
 
 #include <form/graph/graphwindow.h>
+#include <form/group/groupswindow.h>
 #include <form/home/homewindow.h>
 #include <form/opt/optionswindow.h>
 #include <form/prog/programalertwindow.h>
@@ -34,8 +35,13 @@ static const createWindow_func createWindow_funcList[] = {
     &createWindow<RulesWindow>,
     &createWindow<StatisticsWindow>,
     &createWindow<ZonesWindow>,
+    &createWindow<GroupsWindow>,
+    nullptr, // WindowSpeedLimits: no window yet
     &createWindow<GraphWindow>,
 };
+
+static_assert(sizeof(createWindow_funcList) / sizeof(createWindow_funcList[0]) == WindowCount,
+        "Missing a WindowCode in createWindow_funcList[]");
 
 FormWindow *createWindowByCode(WindowCode code)
 {

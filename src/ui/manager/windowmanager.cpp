@@ -49,7 +49,7 @@ bool WindowManager::hasForm(WindowCode code)
 {
     constexpr quint32 windowForms =
             (WindowHome | WindowPrograms | WindowProgramAlert | WindowServices | WindowOptions
-                    | WindowRules | WindowStatistics | WindowZones | WindowGraph);
+                    | WindowRules | WindowStatistics | WindowZones | WindowGroups | WindowGraph);
 
     return (code & windowForms) != 0;
 }
@@ -112,6 +112,11 @@ ServicesWindow *WindowManager::servicesWindow() const
 ZonesWindow *WindowManager::zonesWindow() const
 {
     return static_cast<ZonesWindow *>(windowByCode(WindowZones));
+}
+
+GroupsWindow *WindowManager::groupsWindow() const
+{
+    return static_cast<GroupsWindow *>(windowByCode(WindowGroups));
 }
 
 GraphWindow *WindowManager::graphWindow() const
