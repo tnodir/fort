@@ -30,7 +30,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 58;
+inline constexpr int DATABASE_USER_VERSION = 59;
 
 inline constexpr int CONF_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
 
