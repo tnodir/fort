@@ -33,7 +33,9 @@ void GroupEditDialog::initialize(const Group &group)
     retranslateUi();
 
     m_editName->setStartText(group.groupName);
+    m_editNotes->setText(group.notes);
     m_cbEnabled->setChecked(group.enabled);
+    m_cbExclusive->setChecked(group.exclusive);
 
     initializeFocus();
 }
@@ -48,9 +50,13 @@ void GroupEditDialog::retranslateUi()
     this->unsetLocale();
 
     m_labelName->setText(tr("Name:"));
+    m_labelNotes->setText(tr("Notes:"));
 
     m_cbEnabled->setText(tr("Enabled"));
     m_cbExclusive->setText(tr("Exclusive"));
+    m_cbExclusive->setToolTip(
+            tr("A program is enabled only if ALL of its exclusive groups are enabled,"
+               " and at least one of its groups is enabled."));
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -112,10 +118,22 @@ QLayout *GroupEditDialog::setupNameLayout()
     layout->addRow("Name:", m_editName);
     m_labelName = ControlUtil::formRowLabel(layout, m_editName);
 
+    // Notes
+    m_editNotes = new PlainTextEdit();
+    m_editNotes->setFixedHeight(40);
+
+    layout->addRow("Notes:", m_editNotes);
+    m_labelNotes = ControlUtil::formRowLabel(layout, m_editNotes);
+
     // Enabled
     m_cbEnabled = new QCheckBox();
 
     layout->addRow(QString(), m_cbEnabled);
+
+    // Exclusive
+    m_cbExclusive = new QCheckBox();
+
+    layout->addRow(QString(), m_cbExclusive);
 
     return layout;
 }
@@ -143,6 +161,11 @@ QLayout *GroupEditDialog::setupButtons()
 
 bool GroupEditDialog::save()
 {
+    if (m_editName->text().isEmpty()) {
+        m_editName->setFocus();
+        return false;
+    }
+
     Group group;
     fillGroup(group);
 
@@ -151,7 +174,7 @@ bool GroupEditDialog::save()
         return ctrl()->addOrUpdateGroup(group);
     }
 
-    // Edit selected zone
+    // Edit selected group
     return saveGroup(group);
 }
 
@@ -173,6 +196,13 @@ bool GroupEditDialog::saveGroup(Group &group)
 void GroupEditDialog::fillGroup(Group &group) const
 {
     group.groupName = m_editName->text();
+    group.notes = m_editNotes->toPlainText();
     group.enabled = m_cbEnabled->isChecked();
     group.exclusive = m_cbExclusive->isChecked();
+
+    // Not editable yet: preserve, don't reset
+    group.periodEnabled = m_group.periodEnabled;
+    group.periodFrom = m_group.periodFrom;
+    group.periodTo = m_group.periodTo;
+    group.ruleId = m_group.ruleId;
 }

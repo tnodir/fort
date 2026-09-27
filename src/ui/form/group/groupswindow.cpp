@@ -7,7 +7,6 @@
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/tableview.h>
 #include <form/dialog/dialogutil.h>
@@ -133,7 +132,7 @@ QLayout *GroupsWindow::setupHeader()
     connect(m_actEditGroup, &QAction::triggered, this, &GroupsWindow::editSelectedGroup);
     connect(m_actRemoveGroup, &QAction::triggered, this, [&] {
         windowManager()->showConfirmBox(
-                [&] { deleteSelectedGroup(); }, tr("Are you sure to remove selected Рїroup?"));
+                [&] { deleteSelectedGroup(); }, tr("Are you sure to remove selected group?"));
     });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
@@ -155,7 +154,7 @@ void GroupsWindow::setupTableGroups()
 {
     m_groupListView = new TableView();
     m_groupListView->setSelectionMode(QAbstractItemView::SingleSelection);
-    m_groupListView->setSelectionBehavior(QAbstractItemView::SelectItems);
+    m_groupListView->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     m_groupListView->setModel(groupListModel());
 

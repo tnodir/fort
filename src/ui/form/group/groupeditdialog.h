@@ -14,6 +14,7 @@ QT_FORWARD_DECLARE_CLASS(QPushButton)
 class Group;
 class GroupsController;
 class LineEdit;
+class PlainTextEdit;
 
 class GroupEditDialog : public QDialog
 {
@@ -51,6 +52,8 @@ private:
 
     QLabel *m_labelName = nullptr;
     LineEdit *m_editName = nullptr;
+    QLabel *m_labelNotes = nullptr;
+    PlainTextEdit *m_editNotes = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
     QCheckBox *m_cbExclusive = nullptr;
     QPushButton *m_btOk = nullptr;
