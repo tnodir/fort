@@ -79,6 +79,10 @@ void TaskInfoZoneDownloader::setupNextTaskWorker()
 {
     const int rowCount = zoneListModel()->rowCount();
     if (m_zoneIndex >= rowCount) {
+        if (aborted()) {
+            loadZones(); // the rest of the Zones from the cache
+        }
+
         emitZonesUpdated();
 
         TaskInfo::handleFinished(m_success);
@@ -212,6 +216,10 @@ bool TaskInfoZoneDownloader::containsZoneId(quint32 zonesMask, int zoneId) const
 
 void TaskInfoZoneDownloader::loadZones()
 {
+    m_zonesMask = 0;
+
+    clearSubResults();
+
     TaskZoneDownloader worker;
 
     const int rowCount = zoneListModel()->rowCount();
