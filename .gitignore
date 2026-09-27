@@ -10,3 +10,4 @@ build*/
 /deploy/out/*.sig
 /src/.qtcreator/
 
+CLAUDE.local.md
