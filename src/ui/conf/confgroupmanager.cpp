@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 
 #include <sqlite/dbquery.h>
+#include <sqlite/dbvar.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -163,7 +164,7 @@ bool ConfGroupManager::addOrUpdateGroup(Group &group)
             group.periodEnabled,
             group.periodFrom,
             group.periodTo,
-            group.ruleId,
+            DbVar::nullable(group.ruleId),
             DateUtil::now(),
         };
 

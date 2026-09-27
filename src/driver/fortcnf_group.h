@@ -16,6 +16,9 @@ FORT_API void fort_conf_group_flags_set(
 
 FORT_API BOOL fort_devconf_groups_mask_blocked(PFORT_DEVICE_CONF device_conf, UINT32 groups_mask);
 
+FORT_API UINT16 fort_devconf_groups_rules_conn_filtered(
+        PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, UINT32 groups_mask);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

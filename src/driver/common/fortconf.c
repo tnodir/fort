@@ -21,7 +21,9 @@ static_assert((FORT_CONF_RULE_GLOBAL_MAX + FORT_CONF_RULE_SET_MAX) < 256,
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
 static_assert(sizeof(FORT_APP_DATA) == 5 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
-static_assert(sizeof(FORT_CONF_GROUPS) == 3 * sizeof(UINT32), "FORT_CONF_GROUPS size mismatch");
+static_assert(
+        sizeof(FORT_CONF_GROUPS) == 3 * sizeof(UINT32) + FORT_CONF_GROUP2_MAX * sizeof(UINT16),
+        "FORT_CONF_GROUPS size mismatch");
 
 static_assert(
         sizeof(FORT_CONF_CONN_ACTIONS) == sizeof(UINT16), "FORT_CONF_CONN_ACTIONS size mismatch");
@@ -403,6 +405,30 @@ FORT_API BOOL fort_conf_groups_mask_blocked(PCFORT_CONF_GROUPS groups, UINT32 gr
         return TRUE;
 
     return FALSE;
+}
+
+FORT_API UINT16 fort_conf_groups_rules_conn_filtered(PCFORT_CONF_GROUPS groups,
+        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn,
+        UINT32 groups_mask)
+{
+    /* Only the App's existing and enabled Groups */
+    groups_mask &= (groups->mask & groups->enabled_mask);
+
+    const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, zones);
+
+    while (groups_mask != 0) {
+        const int group_index = fort_bit_scan_forward(groups_mask);
+        if (group_index < 0 || group_index >= FORT_CONF_GROUP2_MAX)
+            break;
+
+        groups_mask ^= (1u << group_index);
+
+        const UINT16 rule_id = groups->rule_ids[group_index];
+        if (rule_id != 0 && fort_conf_rules_rt_conn_filtered(&rules_rt, conn, rule_id))
+            return rule_id; /* filtered by the Group's Rule */
+    }
+
+    return 0;
 }
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data)

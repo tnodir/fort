@@ -311,6 +311,8 @@ typedef struct fort_conf_groups
     UINT32 enabled_mask;
 
     UINT32 exclusive_mask;
+
+    UINT16 rule_ids[FORT_CONF_GROUP2_MAX]; /* by Group index, 0 - no Rule */
 } FORT_CONF_GROUPS, *PFORT_CONF_GROUPS;
 
 typedef const FORT_CONF_GROUPS *PCFORT_CONF_GROUPS;
@@ -640,6 +642,10 @@ FORT_API BOOL fort_conf_zones_conn_filtered(PCFORT_CONF_ZONES zones, PCFORT_CONF
         PFORT_CONF_ZONES_CONN_FILTERED_OPT opt, BOOL fast_check);
 
 FORT_API BOOL fort_conf_groups_mask_blocked(PCFORT_CONF_GROUPS groups, UINT32 groups_mask);
+
+FORT_API UINT16 fort_conf_groups_rules_conn_filtered(PCFORT_CONF_GROUPS groups,
+        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn,
+        UINT32 groups_mask);
 
 FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
 

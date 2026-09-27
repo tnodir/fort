@@ -240,13 +240,13 @@ TEST_F(ConfUtilTest, checkEnvManager)
 TEST_F(ConfUtilTest, groupsWriteRead)
 {
     static Group g_groups[] = {
-        { .enabled = true, .exclusive = false, .groupId = 1 },
-        { .enabled = false, .exclusive = false, .groupId = 2 },
+        { .enabled = true, .exclusive = false, .groupId = 1, .ruleId = 5 },
+        { .enabled = false, .exclusive = false, .groupId = 2, .ruleId = 6 },
         { .enabled = true, .exclusive = true, .groupId = 3 },
         { .enabled = false, .exclusive = true, .groupId = 4 },
-        { .enabled = true, .exclusive = false, .groupId = 7 },
-        { .enabled = true, .exclusive = true, .groupId = 31 },
-        { .enabled = false, .exclusive = false, .groupId = 32 },
+        { .enabled = true, .exclusive = false, .groupId = 7, .ruleId = 9 },
+        { .enabled = true, .exclusive = true, .groupId = 31, .ruleId = 10 },
+        { .enabled = false, .exclusive = false, .groupId = 32, .ruleId = 11 },
         { .enabled = true, .exclusive = false, .groupId = 33 }, // out of range
     };
 
@@ -278,6 +278,13 @@ TEST_F(ConfUtilTest, groupsWriteRead)
     ASSERT_EQ(confGroups->mask, (1u << 31) | (1u << 30) | 0b1001111u);
     ASSERT_EQ(confGroups->enabled_mask, (1u << 30) | 0b1000101u);
     ASSERT_EQ(confGroups->exclusive_mask, (1u << 30) | 0b0001100u);
+
+    ASSERT_EQ(confGroups->rule_ids[0], 5);
+    ASSERT_EQ(confGroups->rule_ids[1], 6);
+    ASSERT_EQ(confGroups->rule_ids[2], 0);
+    ASSERT_EQ(confGroups->rule_ids[6], 9);
+    ASSERT_EQ(confGroups->rule_ids[30], 10);
+    ASSERT_EQ(confGroups->rule_ids[31], 11);
 
 #define TEST_GROUP_BIT(id) (quint32(1) << ((id) - 1))
 #define TEST_BLOCKED(mask) DriverCommon::confGroupsMaskBlocked(data, (mask))
@@ -332,6 +339,77 @@ TEST_F(ConfUtilTest, groupIsActive)
     ASSERT_TRUE(group.isActive(QTime(23, 0)));
     ASSERT_TRUE(group.isActive(QTime(5, 59)));
     ASSERT_FALSE(group.isActive(QTime(12, 0)));
+}
+
+TEST_F(ConfUtilTest, groupsRulesConnFiltered)
+{
+    static Rule g_rules[] = {
+        { .blocked = true, .ruleId = 1, .ruleText = "1.1.1.1:80" },
+        { .blocked = true, .ruleId = 2, .ruleText = "2.2.2.2:80" },
+    };
+
+    class TestRules : public ConfRulesWalker
+    {
+    public:
+        bool walkRules(
+                WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override
+        {
+            wra.maxRuleId = 2;
+
+            for (const auto &rule : g_rules) {
+                if (!func(rule))
+                    return false;
+            }
+            return true;
+        }
+    };
+
+    static Group g_groups[] = {
+        { .enabled = true, .groupId = 1, .ruleId = 1 },
+        { .enabled = false, .groupId = 2, .ruleId = 2 },
+        { .enabled = true, .groupId = 3, .ruleId = 2 },
+        { .enabled = true, .groupId = 4 },
+    };
+
+    class TestGroups : public ConfGroupsWalker
+    {
+    public:
+        bool walkGroups(const std::function<walkGroupsCallback> &func) const override
+        {
+            for (Group &group : g_groups) {
+                if (!func(group))
+                    return false;
+            }
+            return true;
+        }
+    };
+
+    TestRules testRules;
+    ConfBuffer rulesBuf;
+    ASSERT_TRUE(rulesBuf.writeRules(testRules));
+
+    TestGroups testGroups;
+    ConfBuffer groupsBuf;
+    groupsBuf.writeGroups(testGroups, /*activeMask=*/0b1101u);
+
+    const auto filtered = [&](const char *ip, quint32 groupsMask) -> quint16 {
+        FORT_CONF_META_CONN conn = {
+            .inbound = false,
+            .ip_proto = IpProto_TCP,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4(ip) },
+        };
+
+        return DriverCommon::confGroupsRulesConnFiltered(
+                groupsBuf.data(), rulesBuf.data(), &conn, groupsMask);
+    };
+
+    ASSERT_EQ(filtered("1.1.1.1", 0), 0); // not in any Group
+    ASSERT_EQ(filtered("1.1.1.1", 0b0011u), 1);
+    ASSERT_EQ(filtered("2.2.2.2", 0b0011u), 0); // the Group 2 is disabled
+    ASSERT_EQ(filtered("2.2.2.2", 0b0111u), 2);
+    ASSERT_EQ(filtered("2.2.2.2", 0b1000u), 0); // the Group 4 has no Rule
+    ASSERT_EQ(filtered("3.3.3.3", 0b1111u), 0); // not filtered by the Rules
 }
 
 TEST_F(ConfUtilTest, rulesWriteRead)

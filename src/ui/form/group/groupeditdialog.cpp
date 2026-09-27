@@ -12,6 +12,7 @@
 #include <form/controls/controlutil.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/ruleselector.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <model/grouplistmodel.h>
@@ -43,6 +44,8 @@ void GroupEditDialog::initialize(const Group &group)
     m_ctpPeriod->timeEdit1()->setTime(CheckTimePeriod::toTime(group.periodFrom));
     m_ctpPeriod->timeEdit2()->setTime(CheckTimePeriod::toTime(group.periodTo));
 
+    m_ruleSelector->setRuleId(group.ruleId);
+
     initializeFocus();
 }
 
@@ -66,6 +69,11 @@ void GroupEditDialog::retranslateUi()
 
     m_ctpPeriod->checkBox()->setText(tr("time period:"));
     m_ctpPeriod->setToolTip(tr("The Group is active only in this time period."));
+
+    m_labelRule->setText(tr("Rule:"));
+    m_ruleSelector->retranslateUi();
+    m_ruleSelector->setToolTip(tr("The Rule is applied to the Group's programs"
+                                  " before their own Rule, while the Group is active."));
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -149,6 +157,12 @@ QLayout *GroupEditDialog::setupNameLayout()
 
     layout->addRow(QString(), m_ctpPeriod);
 
+    // Rule
+    m_ruleSelector = new RuleSelector();
+
+    layout->addRow("Rule:", m_ruleSelector);
+    m_labelRule = ControlUtil::formRowLabel(layout, m_ruleSelector);
+
     return layout;
 }
 
@@ -216,7 +230,5 @@ void GroupEditDialog::fillGroup(Group &group) const
     group.periodEnabled = m_ctpPeriod->checkBox()->isChecked();
     group.periodFrom = CheckTimePeriod::fromTime(m_ctpPeriod->timeEdit1()->time());
     group.periodTo = CheckTimePeriod::fromTime(m_ctpPeriod->timeEdit2()->time());
-
-    // Not editable yet: preserve, don't reset
-    group.ruleId = m_group.ruleId;
+    group.ruleId = m_ruleSelector->ruleId();
 }

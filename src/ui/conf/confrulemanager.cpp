@@ -13,6 +13,7 @@
 #include <util/conf/confutil.h>
 #include <util/dateutil.h>
 
+#include "confgroupmanager.h"
 #include "confmanager.h"
 
 using namespace Fort;
@@ -95,6 +96,10 @@ const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 const char *const sqlDeleteAppRule = "UPDATE app"
                                      "  SET rule_id = NULL"
                                      "  WHERE rule_id = ?1;";
+
+const char *const sqlDeleteGroupRule = "UPDATE app_group2"
+                                       "  SET rule_id = NULL"
+                                       "  WHERE rule_id = ?1;";
 
 const char *const sqlInsertRuleSet = "INSERT INTO rule_set(rule_id, sub_rule_id, order_index)"
                                      "  VALUES(?1, ?2, ?3);";
@@ -346,6 +351,7 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
     bool ok = false;
     bool isTrayMenuUpdated = false;
     int appRulesCount = 0;
+    int groupRulesCount = 0;
 
     beginWriteTransaction();
 
@@ -358,6 +364,11 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
         DbQuery(sqliteDb()).sql(sqlDeleteAppRule).vars(vars).executeOk();
 
         appRulesCount = sqliteDb()->changes();
+
+        // Delete the Group Rule from Groups
+        DbQuery(sqliteDb()).sql(sqlDeleteGroupRule).vars(vars).executeOk();
+
+        groupRulesCount = sqliteDb()->changes();
 
         // Delete the Tray Menu
         isTrayMenuUpdated = DbQuery(sqliteDb()).sql(sqlDeleteRuleMenu).vars(vars).executeOk();
@@ -373,6 +384,10 @@ bool ConfRuleManager::deleteRule(quint16 ruleId)
         return false;
 
     updateDriverRuleFlag(ruleId, /*enabled=*/false);
+
+    if (groupRulesCount > 0) {
+        confGroupManager()->updateDriverGroups(); // the Rule's id can be reused
+    }
 
     emit ruleRemoved(ruleId, appRulesCount);
 

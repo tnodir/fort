@@ -8,6 +8,7 @@
 
 #include <conf/confgroupmanager.h>
 #include <conf/confmanager.h>
+#include <conf/confrulemanager.h>
 #include <fortglobal.h>
 #include <util/conf/confutil.h>
 
@@ -28,12 +29,16 @@ void GroupListModel::setUp()
 {
     auto confManager = Fort::dependency<ConfManager>();
     auto confGroupManager = Fort::dependency<ConfGroupManager>();
+    auto confRuleManager = Fort::dependency<ConfRuleManager>();
 
     connect(confManager, &ConfManager::imported, this, &TableItemModel::reset);
 
     connect(confGroupManager, &ConfGroupManager::groupAdded, this, &TableItemModel::reset);
     connect(confGroupManager, &ConfGroupManager::groupRemoved, this, &TableItemModel::reset);
     connect(confGroupManager, &ConfGroupManager::groupUpdated, this, &TableItemModel::refresh);
+
+    // The deleted Rule is cleared from the Groups
+    connect(confRuleManager, &ConfRuleManager::ruleRemoved, this, &TableItemModel::refresh);
 }
 
 int GroupListModel::columnCount(const QModelIndex & /*parent*/) const

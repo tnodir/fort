@@ -79,6 +79,8 @@ bool wildMatch(const QString &pattern, const QString &text);
 bool wildMatchPath(const QString &pattern, const QString &path);
 
 bool confGroupsMaskBlocked(const void *drvGroups, quint32 groupsMask);
+quint16 confGroupsRulesConnFiltered(
+        const void *drvGroups, const void *drvRules, PFORT_CONF_META_CONN conn, quint32 groupsMask);
 
 bool confRulesConnFiltered(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId,
         const void *drvZones = nullptr);

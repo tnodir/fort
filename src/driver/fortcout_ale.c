@@ -365,6 +365,22 @@ inline static BOOL fort_callout_ale_app_flags_blocked(
     return FALSE;
 }
 
+inline static BOOL fort_callout_ale_conn_groups_rule_filtered(
+        PFORT_CONF_META_CONN conn, UINT32 groups_mask)
+{
+    const UINT16 rule_id =
+            fort_devconf_groups_rules_conn_filtered(&fort_device()->conf, conn, groups_mask);
+    if (rule_id == 0)
+        return FALSE;
+
+    if (conn->rule_id == 0) {
+        conn->rule_id = rule_id;
+    }
+    conn->reason = FORT_CONN_REASON_RULE;
+
+    return TRUE; /* filtered by the Group's Rule */
+}
+
 static BOOL fort_callout_ale_app_filtered(
         PFORT_CONF_META_CONN conn, const FORT_CONF_FLAGS conf_flags, const FORT_APP_DATA app_data)
 {
@@ -377,6 +393,9 @@ static BOOL fort_callout_ale_app_filtered(
         conn->reason = FORT_CONN_REASON_ZONE;
         return TRUE; /* filtered by Zones */
     }
+
+    if (fort_callout_ale_conn_groups_rule_filtered(conn, app_data.groups))
+        return TRUE; /* filtered by the Groups' Rules */
 
     return fort_callout_ale_conn_rule_filtered(conn, app_data.rule_id, FORT_CONN_REASON_RULE);
 }

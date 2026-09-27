@@ -44,3 +44,24 @@ FORT_API BOOL fort_devconf_groups_mask_blocked(PFORT_DEVICE_CONF device_conf, UI
 
     return res;
 }
+
+FORT_API UINT16 fort_devconf_groups_rules_conn_filtered(
+        PFORT_DEVICE_CONF device_conf, PFORT_CONF_META_CONN conn, UINT32 groups_mask)
+{
+    if (groups_mask == 0)
+        return 0; /* the App is not in any Group: don't lock */
+
+    UINT16 rule_id = 0;
+
+    /* The Groups and Rules are under the same lock */
+    KIRQL oldIrql = ExAcquireSpinLockShared(&device_conf->lock);
+    PCFORT_CONF_GROUPS groups = device_conf->groups;
+    PCFORT_CONF_RULES rules = device_conf->rules;
+    if (groups != NULL && rules != NULL) {
+        rule_id = fort_conf_groups_rules_conn_filtered(
+                groups, rules, device_conf->zones, conn, groups_mask);
+    }
+    ExReleaseSpinLockShared(&device_conf->lock, oldIrql);
+
+    return rule_id;
+}

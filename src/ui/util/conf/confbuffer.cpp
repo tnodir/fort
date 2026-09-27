@@ -688,6 +688,8 @@ void ConfBuffer::writeGroups(const ConfGroupsWalker &confGroupsWalker, quint32 a
             confGroups->exclusive_mask |= groupBit;
         }
 
+        confGroups->rule_ids[groupIndex] = group.ruleId;
+
         return true;
     });
 

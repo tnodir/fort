@@ -16,6 +16,7 @@ class Group;
 class GroupsController;
 class LineEdit;
 class PlainTextEdit;
+class RuleSelector;
 
 class GroupEditDialog : public QDialog
 {
@@ -58,6 +59,8 @@ private:
     QCheckBox *m_cbEnabled = nullptr;
     QCheckBox *m_cbExclusive = nullptr;
     CheckTimePeriod *m_ctpPeriod = nullptr;
+    QLabel *m_labelRule = nullptr;
+    RuleSelector *m_ruleSelector = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 
