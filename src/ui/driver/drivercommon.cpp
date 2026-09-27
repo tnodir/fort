@@ -264,11 +264,13 @@ bool wildMatchPath(const QString &pattern, const QString &path)
     return wildMatch(normPattern, normPath);
 }
 
-bool confRulesConnFiltered(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)
+bool confRulesConnFiltered(
+        const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId, const void *drvZones)
 {
     PCFORT_CONF_RULES rules = PCFORT_CONF_RULES(drvRules);
+    PCFORT_CONF_ZONES zones = PCFORT_CONF_ZONES(drvZones);
 
-    return fort_conf_rules_conn_filtered(rules, /*zones=*/nullptr, conn, ruleId);
+    return fort_conf_rules_conn_filtered(rules, zones, conn, ruleId);
 }
 
 bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)

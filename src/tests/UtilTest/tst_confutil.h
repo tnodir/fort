@@ -16,6 +16,7 @@
 #include <util/conf/confbuffer.h>
 #include <util/conf/confruleswalker.h>
 #include <util/fileutil.h>
+#include <util/net/iprange.h>
 #include <util/net/netformatutil.h>
 #include <util/net/netutil.h>
 #include <util/stringutil.h>
@@ -649,5 +650,168 @@ TEST_F(ConfUtilTest, ruleFilterActionOption)
 
         ASSERT_TRUE(conn.conn_log);
         ASSERT_TRUE(conn.conn_alert);
+    }
+}
+
+TEST_F(ConfUtilTest, ruleZones)
+{
+    // Zones: 1 - "10.0.0.0/8", 2 - "10.1.0.0/16"
+    constexpr quint32 zone1 = (1 << 0);
+    constexpr quint32 zone2 = (1 << 1);
+
+    static Rule g_rules[] = {
+        { .blocked = false, .ruleId = 1, .zones = { .accept_mask = zone1 } },
+        { .blocked = false, .ruleId = 2, .zones = { .reject_mask = zone2 } },
+        { .blocked = false, .ruleId = 3, .zones = { .accept_mask = zone1, .reject_mask = zone2 } },
+        {
+                .blocked = true,
+                .inlineZones = true,
+                .ruleId = 4,
+                .zones = { .accept_mask = zone1, .reject_mask = zone2 },
+                .ruleText = "zones()",
+        },
+        {
+                .blocked = true,
+                .inlineZones = true,
+                .ruleId = 5,
+                .zones = { .accept_mask = zone1, .reject_mask = zone2 },
+                .ruleText = "zones(ACCEPTED)",
+        },
+        {
+                .blocked = true,
+                .inlineZones = true,
+                .ruleId = 6,
+                .zones = { .accept_mask = zone1, .reject_mask = zone2 },
+                .ruleText = "zones(REJECTED)",
+        },
+        {
+                .blocked = true,
+                .inlineZones = true,
+                .ruleId = 7,
+                .zones = { .reject_mask = zone2 },
+                .ruleText = "zones()",
+        },
+    };
+
+    class TestRules : public ConfRulesWalker
+    {
+    public:
+        bool walkRules(
+                WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override
+        {
+            wra.maxRuleId = 7;
+
+            return walkRulesLoop(func);
+        }
+
+    private:
+        bool walkRulesLoop(const std::function<walkRulesCallback> &func) const
+        {
+            for (const auto &rule : g_rules) {
+                if (!func(rule))
+                    return false;
+            }
+
+            return true;
+        }
+    };
+
+    TestRules testRules;
+
+    ConfBuffer confBuf;
+
+    if (!confBuf.writeRules(testRules)) {
+        qCritical() << "Error:" << confBuf.errorMessage();
+        Q_UNREACHABLE();
+    }
+
+    // Write the zones
+    const auto zoneData = [](const QString &text) {
+        IpRange ipRange;
+        if (!ipRange.fromText(text)) {
+            qCritical() << "Error:" << ipRange.errorLineAndMessageDetails();
+            Q_UNREACHABLE();
+        }
+
+        ConfBuffer zoneBuf;
+        zoneBuf.writeZone(ipRange);
+
+        return zoneBuf.buffer();
+    };
+
+    const QList<QByteArray> zonesData = { zoneData("10.0.0.0/8"), zoneData("10.1.0.0/16") };
+    const quint32 zonesDataSize = zonesData[0].size() + zonesData[1].size();
+
+    ConfBuffer zonesBuf;
+    zonesBuf.writeZones(zone1 | zone2, zone1 | zone2, zonesDataSize, zonesData);
+
+    // Check the buffers
+    const char *data = confBuf.data();
+    const char *zones = zonesBuf.data();
+
+    const auto connFiltered = [&](quint16 ruleId, const char *ip, FORT_CONF_META_CONN &conn) {
+        conn = {
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4(ip) },
+        };
+
+        return DriverCommon::confRulesConnFiltered(data, &conn, ruleId, zones);
+    };
+
+    FORT_CONF_META_CONN conn;
+
+    // Accept only: Rule's action
+    {
+        ASSERT_TRUE(connFiltered(/*ruleId=*/1, "10.2.2.2", conn));
+        ASSERT_FALSE(conn.blocked);
+        ASSERT_EQ(conn.zone_id, 1);
+
+        ASSERT_FALSE(connFiltered(/*ruleId=*/1, "8.8.8.8", conn));
+    }
+
+    // Reject only: Rule's action, if not Rejected
+    {
+        ASSERT_FALSE(connFiltered(/*ruleId=*/2, "10.1.1.1", conn));
+
+        ASSERT_TRUE(connFiltered(/*ruleId=*/2, "8.8.8.8", conn));
+        ASSERT_FALSE(conn.blocked);
+        ASSERT_EQ(conn.zone_id, 0);
+    }
+
+    // Accept and Reject: Rejected is ignored
+    {
+        ASSERT_FALSE(connFiltered(/*ruleId=*/3, "10.1.1.1", conn));
+
+        ASSERT_TRUE(connFiltered(/*ruleId=*/3, "10.2.2.2", conn));
+        ASSERT_FALSE(conn.blocked);
+        ASSERT_EQ(conn.zone_id, 1);
+
+        ASSERT_FALSE(connFiltered(/*ruleId=*/3, "8.8.8.8", conn));
+    }
+
+    // Inline Zones: Result
+    {
+        ASSERT_TRUE(connFiltered(/*ruleId=*/4, "10.2.2.2", conn));
+        ASSERT_FALSE(connFiltered(/*ruleId=*/4, "10.1.1.1", conn));
+        ASSERT_FALSE(connFiltered(/*ruleId=*/4, "8.8.8.8", conn));
+    }
+
+    // Inline Zones: Accepted, even if Rejected
+    {
+        ASSERT_TRUE(connFiltered(/*ruleId=*/5, "10.2.2.2", conn));
+        ASSERT_TRUE(connFiltered(/*ruleId=*/5, "10.1.1.1", conn));
+        ASSERT_FALSE(connFiltered(/*ruleId=*/5, "8.8.8.8", conn));
+    }
+
+    // Inline Zones: Rejected
+    {
+        ASSERT_TRUE(connFiltered(/*ruleId=*/6, "10.1.1.1", conn));
+        ASSERT_FALSE(connFiltered(/*ruleId=*/6, "10.2.2.2", conn));
+        ASSERT_FALSE(connFiltered(/*ruleId=*/6, "8.8.8.8", conn));
+    }
+
+    // Inline Zones: Reject only
+    {
+        ASSERT_FALSE(connFiltered(/*ruleId=*/7, "10.1.1.1", conn));
+        ASSERT_TRUE(connFiltered(/*ruleId=*/7, "8.8.8.8", conn));
     }
 }
