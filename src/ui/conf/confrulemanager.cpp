@@ -289,7 +289,7 @@ bool ConfRuleManager::doAddOrUpdateRule(Rule &rule, bool &isNew, bool &isTrayMen
         rule.ruleId = DbQuery(sqliteDb(), &ok)
                               .sql(sqlSelectRuleIds)
                               .vars({ ConfUtil::ruleMaxCount() })
-                              .getFreeId(/*maxId=*/ConfUtil::ruleMaxCount() - 1);
+                              .getFreeId(/*maxId=*/ConfUtil::ruleMaxCount());
         isNew = true;
     }
 

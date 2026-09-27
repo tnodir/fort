@@ -229,7 +229,7 @@ void ZonesWindow::setupTableZonesChanged()
 void ZonesWindow::setupZoneListModelChanged()
 {
     const auto refreshAddZone = [&] {
-        m_actAddZone->setEnabled(zoneListModel()->rowCount() < ConfUtil::zoneMaxCount());
+        m_actAddZone->setEnabled(zoneListModel()->rowCount() < ConfUtil::zoneMaxCount() - 1);
     };
 
     refreshAddZone();

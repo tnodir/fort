@@ -137,7 +137,7 @@ bool ConfZoneManager::addOrUpdateZone(Zone &zone)
         zone.zoneId = DbQuery(sqliteDb(), &ok)
                               .sql(sqlSelectZoneIds)
                               .vars({ ConfUtil::zoneMaxCount() })
-                              .getFreeId(/*maxId=*/ConfUtil::zoneMaxCount() - 1);
+                              .getFreeId(/*maxId=*/ConfUtil::zoneMaxCount());
     } else {
         updateDriverZoneFlag(zone.zoneId, zone.enabled);
     }
