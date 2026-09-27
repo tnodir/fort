@@ -71,6 +71,7 @@ protected slots:
     void switchBlockTraffic(QAction *action);
     void switchFilterMode(QAction *action);
 
+    void switchTrayGroupFlag(bool checked);
     void switchTrayRuleFlag(bool checked);
 
 private:
@@ -89,11 +90,15 @@ private:
     void setupTrayMenuBlockTraffic();
     void setupTrayMenuFilterMode();
     void setupTrayMenuGroupActions();
+    void setupTrayMenuGroupFlagActions();
     void setupTrayMenuRuleActions();
     void setupTrayMenuBottomActions();
 
+    bool isEditEnabled() const;
+
     void updateTrayMenuFlags();
     void updateAppGroupActions();
+    void updateGroupFlagActions();
     void updateRuleActions();
 
     void updateBlockTrafficMenuIcon(int index);
@@ -165,6 +170,7 @@ private:
     QAction *m_quitAction = nullptr;
     QAction *m_trayMenuAction = nullptr;
     QList<QAction *> m_appGroupActions;
+    QList<QAction *> m_groupFlagActions;
     QList<QAction *> m_ruleActions;
     QVector<const char *> m_actionIniKeys;
 

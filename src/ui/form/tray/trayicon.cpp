@@ -8,6 +8,7 @@
 #include <conf/addressgroup.h>
 #include <conf/appgroup.h>
 #include <conf/confappmanager.h>
+#include <conf/confgroupmanager.h>
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
 #include <conf/firewallconf.h>
@@ -20,6 +21,7 @@
 #include <fortsettings.h>
 #include <manager/hotkeymanager.h>
 #include <manager/windowmanager.h>
+#include <model/grouplistmodel.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
@@ -33,6 +35,7 @@ using namespace Fort;
 namespace {
 
 inline constexpr int MAX_FKEY_COUNT = 12;
+inline constexpr int MAX_GROUP_FLAG_ACTIONS_COUNT = 16;
 inline constexpr int MAX_RULE_ACTIONS_COUNT = 8;
 
 const QString eventSingleClick = QStringLiteral("singleClick");
@@ -236,6 +239,11 @@ TrayIcon::TrayIcon(QObject *parent) : QSystemTrayIcon(parent), m_ctrl(new TrayCo
     connect(confAppManager(), &ConfAppManager::appAlerted, this, &TrayIcon::onAppAlerted,
             Qt::QueuedConnection);
 
+    connect(groupListModel(), &GroupListModel::modelReset, this, &TrayIcon::updateGroupFlagActions,
+            Qt::QueuedConnection);
+    connect(groupListModel(), &GroupListModel::dataChanged, this, &TrayIcon::updateGroupFlagActions,
+            Qt::QueuedConnection);
+
     connect(confRuleManager(), &ConfRuleManager::trayMenuUpdated, this,
             &TrayIcon::updateRuleActions, Qt::QueuedConnection);
 
@@ -338,6 +346,7 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
 {
     if (!onlyFlags) {
         updateAppGroupActions();
+        updateGroupFlagActions();
         updateRuleActions();
     }
 
@@ -453,6 +462,9 @@ void TrayIcon::setupTrayMenu()
 
     m_menu->addSeparator();
     setupTrayMenuGroupActions();
+
+    m_menu->addSeparator();
+    setupTrayMenuGroupFlagActions();
 
     m_menu->addSeparator();
     setupTrayMenuRuleActions();
@@ -639,6 +651,17 @@ void TrayIcon::setupTrayMenuGroupActions()
     }
 }
 
+void TrayIcon::setupTrayMenuGroupFlagActions()
+{
+    for (int i = 0; i < MAX_GROUP_FLAG_ACTIONS_COUNT; ++i) {
+        QAction *a = addAction(m_menu,
+                { QString(), this, SLOT(switchTrayGroupFlag(bool)), tray::ActionNone,
+                        /*checkable=*/true });
+
+        m_groupFlagActions.append(a);
+    }
+}
+
 void TrayIcon::setupTrayMenuRuleActions()
 {
     for (int i = 0; i < MAX_RULE_ACTIONS_COUNT; ++i) {
@@ -664,10 +687,14 @@ void TrayIcon::setupTrayMenuBottomActions()
     m_trayMenuAction->setVisible(false);
 }
 
+bool TrayIcon::isEditEnabled() const
+{
+    return !settings()->isPasswordRequired() && !windowManager()->isWindowOpen(WindowOptions);
+}
+
 void TrayIcon::updateTrayMenuFlags()
 {
-    const bool editEnabled =
-            (!settings()->isPasswordRequired() && !windowManager()->isWindowOpen(WindowOptions));
+    const bool editEnabled = isEditEnabled();
 
     m_filterEnabledAction->setEnabled(editEnabled);
     m_filterEnabledAction->setChecked(conf().filterEnabled());
@@ -705,6 +732,10 @@ void TrayIcon::updateTrayMenuFlags()
         action->setEnabled(editEnabled);
         action->setChecked(appGroupEnabled);
     }
+
+    for (QAction *action : std::as_const(m_groupFlagActions)) {
+        action->setEnabled(editEnabled && action->isVisible());
+    }
 }
 
 void TrayIcon::updateAppGroupActions()
@@ -726,6 +757,39 @@ void TrayIcon::updateAppGroupActions()
         action->setText(menuLabel);
         action->setVisible(visible);
         action->setEnabled(visible);
+    }
+}
+
+void TrayIcon::updateGroupFlagActions()
+{
+    const bool editEnabled = isEditEnabled();
+
+    const auto groupListModel = Fort::groupListModel();
+
+    const int trayMaxGroups = iniUser().trayMaxGroups(MAX_GROUP_FLAG_ACTIONS_COUNT);
+    const int groupsCount = qMin(groupListModel->rowCount(), trayMaxGroups);
+
+    for (int i = 0; i < MAX_GROUP_FLAG_ACTIONS_COUNT; ++i) {
+        QAction *action = m_groupFlagActions.at(i);
+
+        const bool visible = (i < groupsCount);
+        quint8 groupId = 0;
+        bool enabled = false;
+        QString menuLabel;
+
+        if (visible) {
+            const auto &groupRow = groupListModel->groupRowAt(i);
+
+            groupId = groupRow.groupId;
+            enabled = groupRow.enabled;
+            menuLabel = groupRow.menuLabel();
+        }
+
+        action->setText(menuLabel);
+        action->setData(groupId);
+        action->setChecked(enabled);
+        action->setVisible(visible);
+        action->setEnabled(visible && editEnabled);
     }
 }
 
@@ -996,6 +1060,16 @@ void TrayIcon::switchFilterMode(QAction *action)
     } else {
         saveTrayFlags();
     }
+}
+
+void TrayIcon::switchTrayGroupFlag(bool checked)
+{
+    const auto action = qobject_cast<QAction *>(sender());
+    Q_ASSERT(action);
+
+    const quint8 groupId = action->data().toUInt();
+
+    confGroupManager()->updateGroupEnabled(groupId, checked);
 }
 
 void TrayIcon::switchTrayRuleFlag(bool checked)
