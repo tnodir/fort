@@ -146,7 +146,7 @@ using AppIdsArray = QVector<qint64>;
 
 ConfAppManager::ConfAppManager(QObject *parent) : ConfManagerBase(parent)
 {
-    connect(&m_appAlertedTimer, &QTimer::timeout, this, [&] { emit appAlerted(); });
+    connect(&m_appAlertedTimer, &QTimer::timeout, this, [&] { emit appAlerted(m_alerted); });
     connect(&m_appsChangedTimer, &QTimer::timeout, this, &ConfAppManager::appsChanged);
     connect(&m_appUpdatedTimer, &QTimer::timeout, this, &ConfAppManager::appUpdated);
 
@@ -279,8 +279,10 @@ void ConfAppManager::endAddOrUpdateApp(const App &app, bool onlyUpdate)
     updateDriverUpdateAppConf(app);
 }
 
-void ConfAppManager::emitAppAlerted()
+void ConfAppManager::emitAppAlerted(bool alerted)
 {
+    m_alerted = alerted;
+
     m_appAlertedTimer.startTrigger();
 }
 
@@ -461,7 +463,7 @@ bool ConfAppManager::deleteAlertedApps()
     if (!deleteApps(appIdList))
         return false;
 
-    emit appAlerted(/*alerted=*/false);
+    emitAppAlerted(/*alerted=*/false);
 
     return true;
 }

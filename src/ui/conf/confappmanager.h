@@ -89,7 +89,7 @@ private:
     void updateAppEndTimes();
 
 private:
-    void emitAppAlerted();
+    void emitAppAlerted(bool alerted = true);
     void emitAppsChanged();
     void emitAppUpdated();
 
@@ -101,6 +101,8 @@ private:
     bool updateDriverUpdateAppConf(const App &app);
 
 private:
+    bool m_alerted = false;
+
     TriggerTimer m_appAlertedTimer;
     TriggerTimer m_appsChangedTimer;
     TriggerTimer m_appUpdatedTimer;
