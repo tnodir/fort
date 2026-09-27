@@ -8,6 +8,7 @@
 
 #include <conf/group.h>
 #include <driver/drivermanager.h>
+#include <fortglobal.h>
 #include <util/bitutil.h>
 #include <util/conf/confbuffer.h>
 #include <util/conf/confutil.h>
@@ -82,6 +83,14 @@ bool driverWriteGroups(ConfBuffer &confBuf, bool onlyFlags = false)
 ConfGroupManager::ConfGroupManager(QObject *parent) : ConfManagerBase(parent)
 {
     setupGroupNamesCache();
+}
+
+void ConfGroupManager::setUp()
+{
+    auto confManager = Fort::dependency<ConfManager>();
+
+    // The imported DB may reuse the ids
+    connect(confManager, &ConfManager::imported, this, &ConfGroupManager::clearGroupNamesCache);
 }
 
 QString ConfGroupManager::groupNameById(quint8 groupId)

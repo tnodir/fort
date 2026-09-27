@@ -26,7 +26,10 @@ SqliteDb *GroupListModel::sqliteDb() const
 
 void GroupListModel::setUp()
 {
+    auto confManager = Fort::dependency<ConfManager>();
     auto confGroupManager = Fort::dependency<ConfGroupManager>();
+
+    connect(confManager, &ConfManager::imported, this, &TableItemModel::reset);
 
     connect(confGroupManager, &ConfGroupManager::groupAdded, this, &TableItemModel::reset);
     connect(confGroupManager, &ConfGroupManager::groupRemoved, this, &TableItemModel::reset);

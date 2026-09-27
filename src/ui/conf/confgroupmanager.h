@@ -20,6 +20,8 @@ public:
     explicit ConfGroupManager(QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(ConfGroupManager)
 
+    void setUp() override;
+
     QString groupNameById(quint8 groupId);
     QStringList groupNamesByMask(quint32 groupsMask);
 

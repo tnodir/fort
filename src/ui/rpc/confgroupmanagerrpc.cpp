@@ -115,7 +115,7 @@ Group ConfGroupManagerRpc::varListToGroup(const QVariantList &v)
 
 bool ConfGroupManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
-    auto confGroupManager = IoC<ConfGroupManager>();
+    auto confGroupManager = Fort::confGroupManager();
 
     switch (p.command) {
     case Control::Rpc_ConfGroupManager_groupAdded: {
@@ -140,7 +140,7 @@ bool ConfGroupManagerRpc::processServerCommand(const ProcessCommandArgs &p, Proc
 
 void ConfGroupManagerRpc::setupServerSignals(RpcManager *rpcManager)
 {
-    auto confGroupManager = IoC<ConfGroupManager>();
+    auto confGroupManager = Fort::confGroupManager();
 
     connect(confGroupManager, &ConfGroupManager::groupAdded, rpcManager,
             [=] { rpcManager->invokeOnClients(Control::Rpc_ConfGroupManager_groupAdded); });

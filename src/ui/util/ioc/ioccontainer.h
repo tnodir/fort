@@ -9,7 +9,7 @@
 
 using IocObject = void;
 
-constexpr int IOC_MAX_SIZE = 32;
+constexpr int IOC_MAX_SIZE = 40;
 
 class IocContainer final
 {

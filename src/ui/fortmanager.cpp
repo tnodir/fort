@@ -21,6 +21,7 @@
 #include <manager/nativeeventfilter.h>
 #include <manager/servicemanager.h>
 #include <manager/translationmanager.h>
+#include <model/grouplistmodel.h>
 #include <model/zonelistmodel.h>
 #include <rpc/appinfomanagerrpc.h>
 #include <rpc/askpendingmanagerrpc.h>
@@ -68,6 +69,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new ConfAppManager());
     ioc->setService(new ConfRuleManager());
     ioc->setService(new ConfZoneManager());
+    ioc->setService(new ConfGroupManager());
     ioc->setService(new QuotaManager());
     ioc->setService(new StatManager(settings->statFilePath()));
     ioc->setService(new StatConnManager(settings->statConnFilePath()));
@@ -87,6 +89,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<ConfAppManager>(new ConfAppManagerRpc());
     ioc->setService<ConfRuleManager>(new ConfRuleManagerRpc());
     ioc->setService<ConfZoneManager>(new ConfZoneManagerRpc());
+    ioc->setService<ConfGroupManager>(new ConfGroupManagerRpc());
     ioc->setService<QuotaManager>(new QuotaManagerRpc());
     ioc->setService<StatManager>(new StatManagerRpc(settings->statFilePath()));
     ioc->setService<StatConnManager>(new StatConnManagerRpc(settings->statConnFilePath()));
@@ -131,6 +134,7 @@ inline void setupServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new AppInfoCache());
     ioc->setService(new HostInfoCache());
     ioc->setService(new ZoneListModel());
+    ioc->setService(new GroupListModel());
 }
 
 }
@@ -424,9 +428,10 @@ void FortManager::setupConfManager()
     connect(confManager, &ConfManager::imported, this, [&] {
         windowManager()->closeAllWindows();
 
-        // The Rules are written to the driver on its setup only, the Zones by their task
+        // The Rules and Groups are written to the driver on its setup only, the Zones by their task
         if (confAppManager()->canUpdateDriverConf()) {
             confRuleManager()->updateDriverRules();
+            confGroupManager()->updateDriverGroups();
         }
     });
 
