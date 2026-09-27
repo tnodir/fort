@@ -164,6 +164,14 @@ ConfRuleManager::ConfRuleManager(QObject *parent) : ConfManagerBase(parent)
     setupRuleNamesCache();
 }
 
+void ConfRuleManager::setUp()
+{
+    auto confManager = Fort::dependency<ConfManager>();
+
+    // The imported DB may reuse the ids
+    connect(confManager, &ConfManager::imported, this, &ConfRuleManager::clearRuleNamesCache);
+}
+
 QString ConfRuleManager::ruleNameById(quint16 ruleId)
 {
     if (ruleId == 0)

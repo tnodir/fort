@@ -31,6 +31,8 @@ protected:
     void initializeTasks() override { }
 
     void setupTimer(int /*secs*/) override { }
+
+    void setupConfImport(ConfManager * /*confManager*/) override { }
 };
 
 #endif // TASKMANAGERRPC_H

@@ -67,6 +67,7 @@ public:
     void updateServices();
 
 signals:
+    void aboutToImport();
     void imported();
     void confChanged(bool onlyFlags, uint editedFlags);
     void confPeriodsChanged();

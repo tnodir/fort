@@ -420,7 +420,14 @@ void FortManager::setupConfManager()
 {
     auto confManager = Fort::confManager();
 
-    connect(confManager, &ConfManager::imported, windowManager(), &WindowManager::closeAllWindows);
+    connect(confManager, &ConfManager::imported, this, [&] {
+        windowManager()->closeAllWindows();
+
+        // The Rules are written to the driver on its setup only, the Zones by their task
+        if (confAppManager()->canUpdateDriverConf()) {
+            confRuleManager()->updateDriverRules();
+        }
+    });
 
     connect(confManager, &ConfManager::confChanged, this, [&](bool onlyFlags, uint editedFlags) {
         if ((editedFlags & FirewallConf::IniEdited) != 0) {

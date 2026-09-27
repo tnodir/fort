@@ -18,6 +18,8 @@ public:
     explicit ConfRuleManager(QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(ConfRuleManager)
 
+    void setUp() override;
+
     QString ruleNameById(quint16 ruleId);
 
     QVector<quint16> getRuleMenuIds() const;

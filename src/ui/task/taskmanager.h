@@ -1,12 +1,14 @@
 #ifndef TASKMANAGER_H
 #define TASKMANAGER_H
 
+#include <QDateTime>
 #include <QObject>
 #include <QTimer>
 #include <QVariant>
 
 #include <util/ioc/iocservice.h>
 
+class ConfManager;
 class TaskInfo;
 class TaskInfoAppPurger;
 class TaskInfoUpdateChecker;
@@ -61,6 +63,8 @@ protected:
 
     virtual void setupTimer(int secs);
 
+    virtual void setupConfImport(ConfManager *confManager);
+
     TaskInfo *taskInfoByType(qint8 taskType) const;
 
 private:
@@ -68,7 +72,8 @@ private:
 
     void appendTaskInfo(TaskInfo *taskInfo);
 
-    bool runExpiredTask(TaskInfo *taskInfo, const QDateTime &now, qint64 &secsToRun);
+    bool runExpiredTask(
+            TaskInfo *taskInfo, qint64 &secsToRun, const QDateTime &now = {}, bool force = false);
 
 private:
     bool m_isFirstRun = true;

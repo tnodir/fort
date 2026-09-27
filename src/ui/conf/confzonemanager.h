@@ -19,6 +19,8 @@ public:
     explicit ConfZoneManager(QObject *parent = nullptr);
     CLASS_DELETE_COPY_MOVE(ConfZoneManager)
 
+    void setUp() override;
+
     QString zoneNameById(quint8 zoneId);
     QStringList zoneNamesByMask(quint32 zonesMask);
 

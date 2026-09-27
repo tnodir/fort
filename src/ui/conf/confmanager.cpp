@@ -829,6 +829,8 @@ bool ConfManager::importBackup(const QString &path)
 
 bool ConfManager::importMasterBackup(const QString &path)
 {
+    emit aboutToImport();
+
     // Import Ini
     {
         auto settings = Fort::settings();

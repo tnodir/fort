@@ -175,6 +175,12 @@ void ConfAppManager::setupConfManager()
                 }
             },
             Qt::QueuedConnection);
+
+    connect(confManager, &ConfManager::imported, this, [&] {
+        updateAppEndTimer();
+
+        emitAppAlerted(getAlertAppId() != 0);
+    });
 }
 
 void ConfAppManager::setupAppEndTimer()

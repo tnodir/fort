@@ -64,6 +64,25 @@ void TaskManager::setUp()
 
         runExpiredTasks();
     });
+
+    setupConfImport(confManager);
+}
+
+void TaskManager::setupConfImport(ConfManager *confManager)
+{
+    // The Zones' download walks the Zones of the DB being replaced
+    connect(confManager, &ConfManager::aboutToImport, this,
+            [&] { abortTask(TaskInfo::ZoneDownloader); });
+
+    // Load the imported Zones from the cache or download them, and write them to the driver.
+    // Queued: after the Import is complete, with the imported tasks' settings.
+    connect(
+            confManager, &ConfManager::imported, this,
+            [&] {
+                qint64 secsToRun;
+                runExpiredTask(taskInfoZoneDownloader(), secsToRun, /*now=*/ {}, /*force=*/true);
+            },
+            Qt::QueuedConnection);
 }
 
 void TaskManager::initializeTasks()
@@ -161,7 +180,7 @@ void TaskManager::runExpiredTasks()
 
     for (TaskInfo *taskInfo : taskInfoList()) {
         qint64 secsToRun;
-        if (runExpiredTask(taskInfo, now, secsToRun)) {
+        if (runExpiredTask(taskInfo, secsToRun, now)) {
             sleepSecs = (sleepSecs < 0) ? secsToRun : qMin(sleepSecs, secsToRun);
         }
     }
@@ -173,7 +192,8 @@ void TaskManager::runExpiredTasks()
     setupTimer(secs);
 }
 
-bool TaskManager::runExpiredTask(TaskInfo *taskInfo, const QDateTime &now, qint64 &secsToRun)
+bool TaskManager::runExpiredTask(
+        TaskInfo *taskInfo, qint64 &secsToRun, const QDateTime &now, bool force)
 {
     if (!taskInfo->enabled())
         return false;
@@ -183,7 +203,7 @@ bool TaskManager::runExpiredTask(TaskInfo *taskInfo, const QDateTime &now, qint6
         return true;
     }
 
-    secsToRun = taskInfo->secondsToRun(now, m_isFirstRun);
+    secsToRun = force ? 0 : taskInfo->secondsToRun(now, m_isFirstRun);
 
     if (secsToRun <= 1) {
         secsToRun = TIMER_DEFAULT_SECONDS;

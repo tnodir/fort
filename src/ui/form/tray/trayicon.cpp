@@ -338,6 +338,7 @@ void TrayIcon::updateTrayMenu(bool onlyFlags)
 {
     if (!onlyFlags) {
         updateAppGroupActions();
+        updateRuleActions();
     }
 
     updateTrayMenuFlags();
@@ -432,8 +433,6 @@ void TrayIcon::setupUi()
 {
     setupTrayMenu();
     updateTrayMenu();
-
-    updateRuleActions();
 
     this->setContextMenu(m_menu);
     this->setToolTip(QApplication::applicationDisplayName());

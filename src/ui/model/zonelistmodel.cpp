@@ -38,7 +38,7 @@ void ZoneListModel::setUp()
     setupZoneTypes();
     setupZoneSources();
 
-    connect(confManager, &ConfManager::confChanged, this, &ZoneListModel::refresh);
+    connect(confManager, &ConfManager::imported, this, &TableItemModel::reset);
 
     connect(confZoneManager, &ConfZoneManager::zoneAdded, this, &TableItemModel::reset);
     connect(confZoneManager, &ConfZoneManager::zoneRemoved, this, &TableItemModel::reset);

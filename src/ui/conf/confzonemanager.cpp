@@ -91,6 +91,14 @@ ConfZoneManager::ConfZoneManager(QObject *parent) : ConfManagerBase(parent)
     setupZoneNamesCache();
 }
 
+void ConfZoneManager::setUp()
+{
+    auto confManager = Fort::dependency<ConfManager>();
+
+    // The imported DB may reuse the ids
+    connect(confManager, &ConfManager::imported, this, &ConfZoneManager::clearZoneNamesCache);
+}
+
 QString ConfZoneManager::zoneNameById(quint8 zoneId)
 {
     if (zoneId == 0)
