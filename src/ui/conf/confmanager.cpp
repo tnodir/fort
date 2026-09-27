@@ -849,6 +849,9 @@ bool ConfManager::importMasterBackup(const QString &path)
 
     emit imported();
 
+    // The edited flags are reset after the first load()
+    conf().resetEdited(FirewallConf::AllEdited);
+
     load(); // Reload conf
 
     return true;
