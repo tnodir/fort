@@ -25,14 +25,16 @@ typedef struct fort_expand_stack_arg
 static WCHAR g_system32PathBuffer[64];
 static FORT_APP_PATH g_system32Path;
 
-static NTSTATUS fort_string_new(ULONG len, PCWSTR src, PUNICODE_STRING outData)
+static NTSTATUS fort_string_new(ULONG data_len, PCWSTR src, PUNICODE_STRING outData)
 {
+    const ULONG len = data_len + sizeof(WCHAR); /* with terminating '\0' */
+
     PWSTR buf = fort_mem_alloc(len, FORT_UTL_POOL_TAG);
     if (buf == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
 
-    RtlCopyMemory(buf, src, len);
-    buf[len / sizeof(WCHAR) - sizeof(WCHAR)] = L'\0';
+    RtlCopyMemory(buf, src, data_len);
+    buf[data_len / sizeof(WCHAR)] = L'\0';
 
     RtlInitUnicodeString(outData, buf);
 
@@ -56,9 +58,8 @@ static NTSTATUS fort_reg_value_path(
 
     if (NT_SUCCESS(status)) {
         const PUCHAR src = keyInfo->Data;
-        const ULONG len = keyInfo->DataLength + sizeof(WCHAR); /* with terminating '\0' */
 
-        status = fort_string_new(len, (PCWSTR) src, outData);
+        status = fort_string_new(keyInfo->DataLength, (PCWSTR) src, outData);
     }
 
     fort_mem_free(keyInfo, FORT_UTL_POOL_TAG);
@@ -216,11 +217,16 @@ FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING
     if (!NT_SUCCESS(status))
         return status;
 
-    /* Overwrite last symbol to be sure about terminating zero */
-    driverPath.Buffer[driverPath.Length / sizeof(WCHAR) - sizeof(WCHAR)] = L'\0';
+    WCHAR *sp = NULL;
 
-    /* Find Drivers\ separator */
-    WCHAR *sp = wcsrchr(driverPath.Buffer, L'\\');
+    if (driverPath.Length >= sizeof(WCHAR)) {
+        /* Overwrite last symbol to be sure about terminating zero */
+        driverPath.Buffer[driverPath.Length / sizeof(WCHAR) - 1] = L'\0';
+
+        /* Find Drivers\ separator */
+        sp = wcsrchr(driverPath.Buffer, L'\\');
+    }
+
     if (sp != NULL) {
         *sp = L'\0';
 
@@ -241,7 +247,9 @@ FORT_API NTSTATUS fort_system32_path_init(PDRIVER_OBJECT driver, PUNICODE_STRING
     }
 
     /* Free the allocated driver path */
-    fort_mem_free_notag(driverPath.Buffer);
+    if (driverPath.Buffer != NULL) {
+        fort_mem_free_notag(driverPath.Buffer);
+    }
 
     return status;
 }
