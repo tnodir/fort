@@ -1138,8 +1138,10 @@ static PFORT_PENDING_PROC fort_pending_proc_get_locked(PFORT_PENDING pending, UI
     proc->packet_count = 0;
     proc->process_id = process_id;
 
+#if 0 // TODO
     proc->next = pending->procs_head;
     pending->procs_head = proc;
+#endif
 
     pending->proc_count++;
 
