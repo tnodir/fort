@@ -208,6 +208,8 @@ typedef struct fort_conf_rule_filter
 
 typedef const FORT_CONF_RULE_FILTER *PCFORT_CONF_RULE_FILTER;
 
+#define FORT_CONF_RULE_FILTER_SIZE_MAX ((1u << 25) - 1)
+
 typedef struct fort_conf_rule
 {
     UINT16 enabled : 1;

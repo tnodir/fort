@@ -615,6 +615,11 @@ bool ConfBuffer::writeRuleFilter(const RuleFilter &ruleFilter)
         const quint32 filterSize = buffer().size() - oldSize;
         Q_ASSERT(filterSize > 0);
 
+        if (filterSize > FORT_CONF_RULE_FILTER_SIZE_MAX) {
+            setErrorMessage(tr("Too many values"));
+            return false;
+        }
+
         confFilter->size = filterSize;
     }
 
