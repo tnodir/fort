@@ -815,3 +815,364 @@ TEST_F(ConfUtilTest, ruleZones)
         ASSERT_TRUE(connFiltered(/*ruleId=*/7, "8.8.8.8", conn));
     }
 }
+
+namespace {
+
+class TestRulesWalker : public ConfRulesWalker
+{
+public:
+    explicit TestRulesWalker(const QList<Rule> &rules, quint16 maxRuleId) :
+        m_maxRuleId(maxRuleId), m_rules(rules)
+    {
+    }
+
+    void addRuleSet(quint16 ruleId, const QList<quint16> &subRuleIds)
+    {
+        const RuleSetInfo ruleSetInfo = {
+            .index = quint32(m_ruleSetIds.size()),
+            .count = quint8(subRuleIds.size()),
+        };
+
+        m_ruleSetMap.insert(ruleId, ruleSetInfo);
+        m_ruleSetIds.append(subRuleIds);
+    }
+
+    bool walkRules(WalkRulesArgs &wra, const std::function<walkRulesCallback> &func) const override
+    {
+        wra.maxRuleId = m_maxRuleId;
+        wra.ruleSetMap = m_ruleSetMap;
+        wra.ruleSetIds = m_ruleSetIds;
+
+        for (const auto &rule : m_rules) {
+            if (!func(rule))
+                return false;
+        }
+
+        return true;
+    }
+
+private:
+    quint16 m_maxRuleId = 0;
+    QList<Rule> m_rules;
+
+    ruleset_map_t m_ruleSetMap;
+    ruleid_arr_t m_ruleSetIds;
+};
+
+QByteArray writeTestRules(const TestRulesWalker &testRules)
+{
+    ConfBuffer confBuf;
+
+    if (!confBuf.writeRules(testRules)) {
+        qCritical() << "Error:" << confBuf.errorMessage();
+        Q_UNREACHABLE();
+    }
+
+    return confBuf.buffer();
+}
+
+QByteArray writeTestZone(const QString &text)
+{
+    IpRange ipRange;
+    if (!ipRange.fromText(text)) {
+        qCritical() << "Error:" << ipRange.errorLineAndMessageDetails();
+        Q_UNREACHABLE();
+    }
+
+    ConfBuffer zoneBuf;
+    zoneBuf.writeZone(ipRange);
+
+    return zoneBuf.buffer();
+}
+
+QByteArray writeTestZones(quint32 zonesMask, const QList<QByteArray> &zonesData)
+{
+    quint32 zonesDataSize = 0;
+    for (const auto &zoneData : zonesData) {
+        zonesDataSize += zoneData.size();
+    }
+
+    ConfBuffer zonesBuf;
+    zonesBuf.writeZones(zonesMask, zonesMask, zonesDataSize, zonesData);
+
+    return zonesBuf.buffer();
+}
+
+}
+
+TEST_F(ConfUtilTest, confValid)
+{
+    EnvManager envManager;
+    FirewallConf conf;
+
+    AddressGroup *inetGroup = conf.inetAddressGroup();
+    inetGroup->setIncludeAll(true);
+    inetGroup->setExcludeText(NetUtil::localIpNetworksText());
+
+    AppGroup *appGroup = new AppGroup();
+    appGroup->setName("Base");
+    appGroup->setEnabled(true);
+    appGroup->setAllowText("C:\\Program Files\\Skype\\Phone\\Skype.exe\n"
+                           "?:\\Utils\\Dev\\Git\\**\n"
+                           "D:\\Programs\\**\n");
+    conf.addAppGroup(appGroup);
+
+    conf.resetEdited(FirewallConf::AllEdited);
+    conf.prepareToSave();
+
+    ConfBuffer confBuf;
+
+    if (!confBuf.writeConf(conf, nullptr, &envManager)) {
+        qCritical() << "Error:" << confBuf.errorMessage();
+        Q_UNREACHABLE();
+    }
+
+    const QByteArray buf = confBuf.buffer();
+
+    const auto confValid = [](const QByteArray &buf, quint32 len) {
+        return DriverCommon::confIoValid(buf.data(), len);
+    };
+
+    const auto confRef = [](QByteArray &buf) { return &PFORT_CONF_IO(buf.data())->conf; };
+
+    ASSERT_TRUE(confValid(buf, buf.size()));
+
+    // Truncated
+    ASSERT_FALSE(confValid(buf, buf.size() - 8));
+    ASSERT_FALSE(confValid(buf, DriverCommon::confIoConfOff()));
+
+    // Unordered offsets
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF conf = confRef(badBuf);
+        conf->wild_apps_off = conf->exe_apps_off + 4;
+
+        ASSERT_FALSE(confValid(badBuf, badBuf.size()));
+    }
+
+    // Too many apps
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF conf = confRef(badBuf);
+        ASSERT_NE(conf->exe_apps_n, 0);
+        ++conf->exe_apps_n;
+
+        ASSERT_FALSE(confValid(badBuf, badBuf.size()));
+    }
+
+    // Invalid app's path length
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF conf = confRef(badBuf);
+        PFORT_APP_ENTRY app_entry = PFORT_APP_ENTRY(conf->data + conf->exe_apps_off);
+        app_entry->path_len = 0xFFFE;
+
+        ASSERT_FALSE(confValid(badBuf, badBuf.size()));
+    }
+
+    // Invalid app's group index
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF conf = confRef(badBuf);
+        PFORT_APP_ENTRY app_entry = PFORT_APP_ENTRY(conf->data + conf->exe_apps_off);
+        app_entry->app_data.group_index = FORT_CONF_GROUP_MAX;
+
+        ASSERT_FALSE(confValid(badBuf, badBuf.size()));
+    }
+
+    // Invalid address group's offset
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF conf = confRef(badBuf);
+        quint32 *addr_group_offsets = (quint32 *) (conf->data + conf->addr_groups_off);
+        addr_group_offsets[1] = conf->wild_apps_off;
+
+        ASSERT_FALSE(confValid(badBuf, badBuf.size()));
+    }
+}
+
+TEST_F(ConfUtilTest, zonesValid)
+{
+    constexpr quint32 zone1 = (1 << 0);
+    constexpr quint32 zone2 = (1 << 1);
+
+    const QByteArray zone1Data = writeTestZone("10.0.0.0/8\n::1");
+    const QByteArray zone2Data = writeTestZone("10.1.0.0/16");
+
+    const QByteArray buf = writeTestZones(zone1 | zone2, { zone1Data, zone2Data });
+
+    const auto zonesValid = [](const QByteArray &buf, quint32 len) {
+        return DriverCommon::confZonesValid(buf.data(), len);
+    };
+
+    ASSERT_TRUE(zonesValid(buf, buf.size()));
+
+    // Truncated
+    ASSERT_FALSE(zonesValid(buf, buf.size() - 4));
+
+    // Invalid zone's offset
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF_ZONES zones = PFORT_CONF_ZONES(badBuf.data());
+        zones->addr_off[1] = badBuf.size();
+
+        ASSERT_FALSE(zonesValid(badBuf, badBuf.size()));
+    }
+
+    // Too many addresses
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF_ZONES zones = PFORT_CONF_ZONES(badBuf.data());
+        PFORT_CONF_ADDR_LIST addr_list = PFORT_CONF_ADDR_LIST(zones->data + zones->addr_off[0]);
+        addr_list->ip_n = FORT_CONF_IP_MAX + 1;
+
+        ASSERT_FALSE(zonesValid(badBuf, badBuf.size()));
+    }
+
+    // Migrated zone's data without IPv6 addresses
+    {
+        PCFORT_CONF_ADDR_LIST addr_list = PCFORT_CONF_ADDR_LIST(zone2Data.data());
+        const QByteArray oldZone2Data =
+                zone2Data.left(FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n));
+
+        const QByteArray migratedBuf = writeTestZones(zone1 | zone2, { zone1Data, oldZone2Data });
+
+        ASSERT_TRUE(zonesValid(migratedBuf, migratedBuf.size()));
+    }
+}
+
+TEST_F(ConfUtilTest, rulesValid)
+{
+    // Nested lists of the max depth
+    QString nestedText = "1.1.1.1:port(80)\n2.2.2.2";
+    for (int i = 0; i < FORT_CONF_RULE_FILTER_DEPTH_MAX; ++i) {
+        nestedText = QString("{ %1 }:port(80)\n3.3.3.%2").arg(nestedText).arg(i + 1);
+    }
+
+    const QList<Rule> rules = {
+        { .ruleId = 1, .ruleText = "1.1.1.1:80\ntcp(80-90)\nudp(53)\ndir(in):area(lan)" },
+        { .blocked = true, .ruleId = 3, .ruleText = nestedText },
+        { .ruleId = 4, .zones = { .accept_mask = 1 } },
+    };
+
+    const QByteArray buf = writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/4));
+
+    const auto rulesValid = [](const QByteArray &buf, quint32 len) {
+        return DriverCommon::confRulesValid(buf.data(), len);
+    };
+
+    const auto ruleRef = [](QByteArray &buf, quint16 ruleId) {
+        PFORT_CONF_RULES rules = PFORT_CONF_RULES(buf.data());
+        const quint32 *rule_offsets = (const quint32 *) rules->data - 1;
+
+        return PFORT_CONF_RULE(rules->data + rule_offsets[ruleId]);
+    };
+
+    const auto ruleFilterRef = [&](QByteArray &buf, quint16 ruleId) {
+        PFORT_CONF_RULE rule = ruleRef(buf, ruleId);
+
+        return PFORT_CONF_RULE_FILTER((char *) rule + FORT_CONF_RULE_SIZE(rule));
+    };
+
+    ASSERT_TRUE(rulesValid(buf, buf.size()));
+
+    // Absent rule
+    {
+        FORT_CONF_META_CONN conn = {
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("1.1.1.1") },
+        };
+
+        ASSERT_FALSE(DriverCommon::confRulesConnFiltered(buf.data(), &conn, /*ruleId=*/2));
+    }
+
+    // Nested lists
+    {
+        FORT_CONF_META_CONN conn = {
+            .ip_proto = IpProto_TCP,
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("1.1.1.1") },
+        };
+
+        ASSERT_TRUE(DriverCommon::confRulesConnBlocked(buf.data(), &conn, /*ruleId=*/3));
+    }
+
+    // Truncated
+    ASSERT_FALSE(rulesValid(buf, buf.size() - 4));
+
+    // Too many rules
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF_RULES rules = PFORT_CONF_RULES(badBuf.data());
+        rules->max_rule_id = FORT_CONF_RULE_MAX + 1;
+
+        ASSERT_FALSE(rulesValid(badBuf, badBuf.size()));
+    }
+
+    // Overlapped rules
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF_RULES rules = PFORT_CONF_RULES(badBuf.data());
+        quint32 *rule_offsets = (quint32 *) rules->data - 1;
+        rule_offsets[3] = rule_offsets[1];
+
+        ASSERT_FALSE(rulesValid(badBuf, badBuf.size()));
+    }
+
+    // Rule's offset in the rules' offsets
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF_RULES rules = PFORT_CONF_RULES(badBuf.data());
+        quint32 *rule_offsets = (quint32 *) rules->data - 1;
+        rule_offsets[1] = 1;
+
+        ASSERT_FALSE(rulesValid(badBuf, badBuf.size()));
+    }
+
+    // Zero filter's size
+    {
+        QByteArray badBuf = buf;
+        ruleFilterRef(badBuf, 1)->size = 0;
+
+        ASSERT_FALSE(rulesValid(badBuf, badBuf.size()));
+    }
+
+    // Too big filter's size
+    {
+        QByteArray badBuf = buf;
+        ruleFilterRef(badBuf, 3)->size += 4;
+
+        ASSERT_FALSE(rulesValid(badBuf, badBuf.size()));
+    }
+
+    // Invalid list's filter
+    {
+        QByteArray badBuf = buf;
+        PFORT_CONF_RULE_FILTER rule_filter = ruleFilterRef(badBuf, 1);
+        ASSERT_EQ(rule_filter->type, FORT_RULE_FILTER_TYPE_LIST_OR);
+
+        PFORT_CONF_RULE_FILTER sub_filter = rule_filter + 1;
+        sub_filter->size = rule_filter->size;
+
+        ASSERT_FALSE(rulesValid(badBuf, badBuf.size()));
+    }
+}
+
+TEST_F(ConfUtilTest, ruleSetsLoop)
+{
+    const QList<Rule> rules = {
+        { .ruleId = 1 },
+        { .ruleId = 2 },
+    };
+
+    TestRulesWalker testRules(rules, /*maxRuleId=*/2);
+    testRules.addRuleSet(1, { 2 });
+    testRules.addRuleSet(2, { 1 });
+
+    const QByteArray buf = writeTestRules(testRules);
+
+    ASSERT_TRUE(DriverCommon::confRulesValid(buf.data(), buf.size()));
+
+    FORT_CONF_META_CONN conn = {};
+
+    ASSERT_FALSE(DriverCommon::confRulesConnFiltered(buf.data(), &conn, /*ruleId=*/1));
+}

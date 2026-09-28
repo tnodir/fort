@@ -2,6 +2,7 @@
 
 #include <common/fort_wildmatch.h>
 #include <common/fortconf.h>
+#include <common/fortconf_valid.h>
 #include <common/fortioctl.h>
 #include <common/fortlog.h>
 #include <common/fortprov.h>
@@ -278,6 +279,21 @@ bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint
     conn->blocked = TRUE; /* default block */
 
     return confRulesConnFiltered(drvRules, conn, ruleId) && conn->blocked;
+}
+
+bool confIoValid(const void *drvConfIo, quint32 len)
+{
+    return fort_conf_io_valid(PCFORT_CONF_IO(drvConfIo), len);
+}
+
+bool confZonesValid(const void *drvZones, quint32 len)
+{
+    return fort_conf_zones_valid(PCFORT_CONF_ZONES(drvZones), len);
+}
+
+bool confRulesValid(const void *drvRules, quint32 len)
+{
+    return fort_conf_rules_valid(PCFORT_CONF_RULES(drvRules), len);
 }
 
 bool provRegister(bool bootFilter)

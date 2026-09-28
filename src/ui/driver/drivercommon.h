@@ -80,6 +80,10 @@ bool confRulesConnFiltered(const void *drvRules, PFORT_CONF_META_CONN conn, quin
         const void *drvZones = nullptr);
 bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId);
 
+bool confIoValid(const void *drvConfIo, quint32 len);
+bool confZonesValid(const void *drvZones, quint32 len);
+bool confRulesValid(const void *drvRules, quint32 len);
+
 bool provRegister(bool bootFilter);
 void provUnregister();
 
