@@ -845,13 +845,18 @@ inline static UINT32 fort_packet_data_size(const FWPS_INCOMING_METADATA_VALUES0 
     if (netBufList == NULL)
         return 0;
 
-    PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
-    const UINT32 dataSize = NET_BUFFER_DATA_LENGTH(netBuf);
-
     const UINT32 headerSize =
             inbound ? inMetaValues->ipHeaderSize + inMetaValues->transportHeaderSize : 0;
 
-    return dataSize + headerSize;
+    UINT32 dataSize = 0;
+
+    /* The packets list may contain several segments */
+    PNET_BUFFER netBuf = NET_BUFFER_LIST_FIRST_NB(netBufList);
+    for (; netBuf != NULL; netBuf = NET_BUFFER_NEXT_NB(netBuf)) {
+        dataSize += NET_BUFFER_DATA_LENGTH(netBuf) + headerSize;
+    }
+
+    return dataSize;
 }
 
 inline static BOOL fort_callout_transport_classify_packet_blocked(FWPS_CLASSIFY_OUT0 *classifyOut)
