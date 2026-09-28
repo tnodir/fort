@@ -4,6 +4,9 @@
 
 #define FORT_CONF_ADDR_GROUP_COUNT 2 /* LAN and INET */
 
+/* Each list's level is an OR-list of lines with AND-lists of sections */
+#define FORT_CONF_RULE_FILTER_LIST_DEPTH_MAX (2 * (FORT_CONF_RULE_FILTER_DEPTH_MAX + 1))
+
 static UINT32 fort_conf_addr_list_part_size(
         PCFORT_CONF_ADDR_LIST addr_list, UINT32 len, BOOL isIPv6)
 {
@@ -161,6 +164,132 @@ FORT_API BOOL fort_conf_io_valid(PCFORT_CONF_IO conf_io, UINT32 len)
                     data + prefix_apps_off, exe_apps_off - prefix_apps_off, conf->prefix_apps_n)
             && fort_conf_app_entries_valid(
                     data + exe_apps_off, data_len - exe_apps_off, conf->exe_apps_n);
+}
+
+static BOOL fort_conf_rule_filter_values_valid(int filter_type, const char *data, UINT32 len)
+{
+    switch (filter_type) {
+    case FORT_RULE_FILTER_TYPE_ADDRESS:
+    case FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS: {
+        return fort_conf_addr_list_valid((PCFORT_CONF_ADDR_LIST) data, len);
+    }
+    case FORT_RULE_FILTER_TYPE_PORT:
+    case FORT_RULE_FILTER_TYPE_LOCAL_PORT:
+    case FORT_RULE_FILTER_TYPE_PORT_TCP:
+    case FORT_RULE_FILTER_TYPE_PORT_UDP: {
+        PCFORT_CONF_PORT_LIST port_list = (PCFORT_CONF_PORT_LIST) data;
+
+        return len >= FORT_CONF_PORT_LIST_OFF
+                && FORT_CONF_PORT_LIST_SIZE(port_list->port_n, port_list->pair_n) <= len;
+    }
+    case FORT_RULE_FILTER_TYPE_PROTOCOL: {
+        PCFORT_CONF_PROTO_LIST proto_list = (PCFORT_CONF_PROTO_LIST) data;
+
+        return len >= FORT_CONF_PROTO_LIST_OFF
+                && FORT_CONF_PROTO_LIST_SIZE(proto_list->proto_n, proto_list->pair_n) <= len;
+    }
+    default:
+        return len >= sizeof(FORT_CONF_RULE_FILTER_FLAGS);
+    }
+}
+
+static BOOL fort_conf_rule_filter_valid(
+        PCFORT_CONF_RULE_FILTER rule_filter, UINT32 len, int list_depth)
+{
+    if (len < sizeof(FORT_CONF_RULE_FILTER))
+        return FALSE;
+
+    const UINT32 size = rule_filter->size;
+    if (size < sizeof(FORT_CONF_RULE_FILTER) || size > len)
+        return FALSE;
+
+    const char *data = (const char *) (rule_filter + 1);
+    UINT32 data_len = size - sizeof(FORT_CONF_RULE_FILTER);
+
+    const int filter_type = rule_filter->type;
+
+    if (filter_type == FORT_RULE_FILTER_TYPE_LIST_OR
+            || filter_type == FORT_RULE_FILTER_TYPE_LIST_AND) {
+        if (++list_depth > FORT_CONF_RULE_FILTER_LIST_DEPTH_MAX)
+            return FALSE;
+
+        /* The list is not empty and its filters fill it exactly */
+        do {
+            PCFORT_CONF_RULE_FILTER sub_filter = (PCFORT_CONF_RULE_FILTER) data;
+
+            if (!fort_conf_rule_filter_valid(sub_filter, data_len, list_depth))
+                return FALSE;
+
+            data += sub_filter->size;
+            data_len -= sub_filter->size;
+        } while (data_len != 0);
+
+        return TRUE;
+    }
+
+    if (rule_filter->is_empty)
+        return TRUE;
+
+    return fort_conf_rule_filter_values_valid(filter_type, data, data_len);
+}
+
+static BOOL fort_conf_rule_valid(
+        PCFORT_CONF_RULES_RT rules_rt, UINT32 rule_off, UINT32 data_len, UINT32 *rule_end)
+{
+    const UINT32 len = data_len - rule_off;
+
+    if (len < sizeof(FORT_CONF_RULE))
+        return FALSE;
+
+    PCFORT_CONF_RULE rule = (PCFORT_CONF_RULE) (rules_rt->rules_data + rule_off);
+
+    UINT32 rule_size = FORT_CONF_RULE_SIZE(rule);
+    if (rule_size > len)
+        return FALSE;
+
+    if (rule->has_filters) {
+        PCFORT_CONF_RULE_FILTER rule_filter = (PCFORT_CONF_RULE_FILTER) ((PCCH) rule + rule_size);
+
+        if (!fort_conf_rule_filter_valid(rule_filter, len - rule_size, /*list_depth=*/0))
+            return FALSE;
+
+        rule_size += rule_filter->size;
+    }
+
+    *rule_end = rule_off + rule_size;
+
+    return TRUE;
+}
+
+FORT_API BOOL fort_conf_rules_valid(PCFORT_CONF_RULES rules, UINT32 len)
+{
+    if (len < FORT_CONF_RULES_DATA_OFF)
+        return FALSE;
+
+    const UINT16 max_rule_id = rules->max_rule_id;
+    if (max_rule_id > FORT_CONF_RULE_MAX)
+        return FALSE;
+
+    const UINT32 data_len = len - FORT_CONF_RULES_DATA_OFF;
+
+    UINT32 rules_end = FORT_CONF_RULES_OFFSETS_SIZE(max_rule_id);
+    if (rules_end > data_len)
+        return FALSE;
+
+    const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, /*zones=*/NULL);
+
+    /* The rules follow their offsets ordered by id, so SETRULEFLAG changes only its rule */
+    for (UINT16 rule_id = 1; rule_id <= max_rule_id; ++rule_id) {
+        const UINT32 rule_off = rules_rt.rule_offsets[rule_id];
+        if (rule_off == 0)
+            continue; /* absent rule */
+
+        if (rule_off < rules_end || rule_off > data_len
+                || !fort_conf_rule_valid(&rules_rt, rule_off, data_len, &rules_end))
+            return FALSE;
+    }
+
+    return TRUE;
 }
 
 FORT_API BOOL fort_conf_zones_valid(PCFORT_CONF_ZONES zones, UINT32 len)

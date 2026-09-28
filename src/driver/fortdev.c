@@ -344,7 +344,10 @@ static NTSTATUS fort_device_control_setrules(PFORT_DEVICE_CONTROL_ARG dca)
 
     PFORT_CONF_RULES conf_rules = NULL;
 
-    if (len >= FORT_CONF_RULES_DATA_OFF) {
+    if (len != 0) {
+        if (!fort_conf_rules_valid(rules, len))
+            return STATUS_UNSUCCESSFUL;
+
         conf_rules = fort_conf_rules_new(rules, len);
 
         if (conf_rules == NULL) {
