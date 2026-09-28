@@ -81,9 +81,27 @@ inline static void fort_callout_ale_fill_meta_path_real(PFORT_CONF_META_CONN con
     conn->real_path = *path;
 }
 
+inline static FWP_BYTE_BLOB fort_callout_meta_process_path(
+        const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues)
+{
+    if (FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_PROCESS_PATH)
+            && inMetaValues->processPath->size >= sizeof(WCHAR)) {
+
+        return *inMetaValues->processPath;
+    }
+
+    /* The empty path with terminating zero */
+    const FWP_BYTE_BLOB emptyPath = {
+        .size = sizeof(WCHAR),
+        .data = (UINT8 *) L"",
+    };
+
+    return emptyPath;
+}
+
 static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
 {
-    const FWP_BYTE_BLOB processPath = *ca->inMetaValues->processPath;
+    const FWP_BYTE_BLOB processPath = fort_callout_meta_process_path(ca->inMetaValues);
 
     PFORT_APP_PATH path = &conn->path;
 
@@ -130,7 +148,11 @@ static void fort_callout_fill_meta_ip(PCFORT_CALLOUT_ARG ca, UCHAR ipIndex, ip_a
 inline static void fort_callout_ale_fill_meta_conn_proc(
         PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
 {
-    conn->process_id = (UINT32) ca->inMetaValues->processId;
+    const FWPS_INCOMING_METADATA_VALUES0 *inMetaValues = ca->inMetaValues;
+
+    conn->process_id = FWPS_IS_METADATA_FIELD_PRESENT(inMetaValues, FWPS_METADATA_FIELD_PROCESS_ID)
+            ? (UINT32) inMetaValues->processId
+            : 0;
 }
 
 static void fort_callout_ale_fill_meta_conn(PCFORT_CALLOUT_ARG ca, PFORT_CONF_META_CONN conn)
