@@ -113,6 +113,43 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_EQ(int(firefoxData.group_index), 1);
 }
 
+TEST_F(ConfUtilTest, stringCmp)
+{
+    const auto stringCmp = [](const wchar_t *s1, int n1, const wchar_t *s2, int n2,
+                                   UINT16 &common_n) {
+        return fort_string_cmp(s1, UINT16(n1), s2, UINT16(n2), &common_n);
+    };
+
+    UINT16 common_n;
+
+    // Equal
+    ASSERT_EQ(stringCmp(L"abc", 3, L"abc", 3, common_n), 0);
+    ASSERT_EQ(common_n, 3);
+
+    // Prefix is less
+    ASSERT_LT(stringCmp(L"ab", 2, L"abc", 3, common_n), 0);
+    ASSERT_EQ(common_n, 2);
+
+    ASSERT_GT(stringCmp(L"abcd", 4, L"abc", 3, common_n), 0);
+    ASSERT_EQ(common_n, 3);
+
+    // Different chars
+    ASSERT_LT(stringCmp(L"abx", 3, L"aby", 3, common_n), 0);
+    ASSERT_EQ(common_n, 2);
+
+    // UTF-16 code units, not bytes: 'z' (0x007A) < 'я' (0x044F)
+    ASSERT_LT(stringCmp(L"z", 1, L"я", 1, common_n), 0);
+    ASSERT_EQ(common_n, 0);
+
+    // Only the given length is compared
+    ASSERT_EQ(stringCmp(L"abcdef", 3, L"abc", 3, common_n), 0);
+    ASSERT_EQ(common_n, 3);
+
+    // Empty
+    ASSERT_LT(stringCmp(L"", 0, L"a", 1, common_n), 0);
+    ASSERT_EQ(common_n, 0);
+}
+
 TEST_F(ConfUtilTest, confAppPrefixFind)
 {
     EnvManager envManager;
