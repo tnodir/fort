@@ -5,7 +5,7 @@
 
 typedef struct fort_thread
 {
-    PVOID thread_obj;
+    HANDLE thread_handle;
 } FORT_THREAD, *PFORT_THREAD;
 
 #if defined(__cplusplus)

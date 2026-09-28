@@ -387,6 +387,14 @@ NTSTATUS ZwClose(HANDLE handle)
     return STATUS_SUCCESS;
 }
 
+NTSTATUS ZwWaitForSingleObject(HANDLE handle, BOOLEAN alertable, PLARGE_INTEGER timeout)
+{
+    UNUSED(handle);
+    UNUSED(alertable);
+    UNUSED(timeout);
+    return STATUS_SUCCESS;
+}
+
 NTSTATUS ZwQueryValueKey(HANDLE keyHandle, PUNICODE_STRING valueName,
         KEY_VALUE_INFORMATION_CLASS keyValueInformationClass, PVOID keyValueInformation,
         ULONG length, PULONG resultLength)

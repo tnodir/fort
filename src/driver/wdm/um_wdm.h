@@ -471,6 +471,8 @@ FORT_API NTSTATUS ZwOpenKey(
         PHANDLE keyHandle, ACCESS_MASK desiredAccess, POBJECT_ATTRIBUTES objectAttributes);
 FORT_API NTSTATUS ZwClose(HANDLE handle);
 
+FORT_API NTSTATUS ZwWaitForSingleObject(HANDLE handle, BOOLEAN alertable, PLARGE_INTEGER timeout);
+
 FORT_API NTSTATUS ZwQueryValueKey(HANDLE keyHandle, PUNICODE_STRING valueName,
         KEY_VALUE_INFORMATION_CLASS keyValueInformationClass, PVOID keyValueInformation,
         ULONG length, PULONG resultLength);
