@@ -67,7 +67,7 @@ static void fort_conf_ref_exe_new_path(
     if (exe_node != NULL) {
         tommy_list_remove_existing(&conf_ref->free_nodes, exe_node);
     } else {
-        const UINT16 index = conf->exe_apps_n;
+        const tommy_size_t index = tommy_arrayof_size(exe_nodes);
 
         tommy_arrayof_grow(exe_nodes, index + 1);
 
@@ -234,6 +234,9 @@ FORT_API PFORT_CONF_REF fort_conf_ref_new(PCFORT_CONF conf, ULONG len)
 
     if (conf_ref != NULL) {
         RtlCopyMemory(&conf_ref->conf, conf, conf_len);
+
+        /* The exe apps are counted on their filling */
+        conf_ref->conf.exe_apps_n = 0;
 
         fort_conf_ref_init(conf_ref);
         fort_pool_init(&conf_ref->pool_list, len - conf_len);
