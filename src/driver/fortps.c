@@ -937,9 +937,12 @@ inline static void fort_pstree_update_service_proc(
     PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
     if (proc == NULL) {
         proc = fort_pstree_proc_new(ps_tree, pid_hash);
+        if (proc == NULL)
+            return;
 
         proc->process_id = processId;
         proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST | FORT_PSNODE_FOUND;
+        proc->ps_opt.path_drive = fort_path_drive_get(NULL);
     }
 
     if (proc->ps_name == NULL) {
