@@ -13,7 +13,7 @@ typedef struct fort_pstree
 {
     UCHAR volatile flags;
 
-    UINT16 procs_n;
+    UINT32 procs_n;
 
     FORT_POOL_LIST pool_list;
     tommy_list free_procs;
