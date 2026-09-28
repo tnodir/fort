@@ -84,7 +84,7 @@ static NTSTATUS fort_conf_ref_exe_new_entry(PFORT_CONF_REF conf_ref, PCFORT_APP_
 {
     const UINT16 path_len = path->len;
 
-    const UINT16 entry_size = (UINT16) FORT_CONF_APP_ENTRY_SIZE(path_len);
+    const UINT32 entry_size = FORT_CONF_APP_ENTRY_SIZE(path_len);
     PFORT_APP_ENTRY entry = fort_pool_malloc(&conf_ref->pool_list, entry_size);
 
     if (entry == NULL)
