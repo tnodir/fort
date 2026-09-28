@@ -368,6 +368,48 @@ TEST_F(RuleTextParserTest, filterNot)
     }
 }
 
+TEST_F(RuleTextParserTest, listNot)
+{
+    // The list's negation
+    {
+        RuleTextParser p("!{1\n2}");
+
+        ASSERT_TRUE(p.parse());
+
+        ASSERT_EQ(p.ruleFilters().size(), 5);
+
+        const RuleFilter &rf = p.ruleFilters()[2];
+        ASSERT_TRUE(rf.isNot);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_LIST_OR);
+    }
+
+    // The collapsed list's negation
+    {
+        RuleTextParser p("!{1}");
+
+        ASSERT_TRUE(p.parse());
+
+        ASSERT_EQ(p.ruleFilters().size(), 1);
+
+        const RuleFilter &rf = p.ruleFilters()[0];
+        ASSERT_TRUE(rf.isNot);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "1" });
+    }
+
+    // The collapsed list's double negation
+    {
+        RuleTextParser p("!{!1}");
+
+        ASSERT_TRUE(p.parse());
+
+        ASSERT_EQ(p.ruleFilters().size(), 1);
+
+        const RuleFilter &rf = p.ruleFilters()[0];
+        ASSERT_FALSE(rf.isNot);
+    }
+}
+
 TEST_F(RuleTextParserTest, lineEndNot)
 {
     RuleTextParser p("1!2");
