@@ -738,10 +738,16 @@ static void fort_shaper_create_queues(
         if (queue == NULL)
             continue;
 
-        queue->limit = limits[i];
+        /* The shaper's thread uses them under the queue's lock */
+        KLOCK_QUEUE_HANDLE lock_queue;
+        KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
+        {
+            queue->limit = limits[i];
 
-        queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
-        queue->last_tick = now;
+            queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
+            queue->last_tick = now;
+        }
+        KeReleaseInStackQueuedSpinLock(&lock_queue);
     }
 }
 
