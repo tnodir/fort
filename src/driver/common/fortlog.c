@@ -4,6 +4,18 @@
 
 #include "fortdef.h"
 
+static void fort_log_path_write(char *p, PCFORT_APP_PATH path)
+{
+    const UINT16 path_len = path->len;
+
+    if (path_len != 0) {
+        RtlCopyMemory(p, path->buffer, path_len);
+    }
+
+    /* Zero the alignment's padding, which is copied to user mode */
+    RtlZeroMemory(p + path_len, FORT_ALIGN_SIZE(path_len, FORT_LOG_ALIGN) - path_len);
+}
+
 FORT_API void fort_log_app_header_write(char *p, BOOL blocked, UINT32 pid, UINT16 path_len)
 {
     UINT32 *up = (UINT32 *) p;
@@ -19,9 +31,7 @@ FORT_API void fort_log_app_write(char *p, BOOL blocked, UINT32 pid, PCFORT_APP_P
 
     fort_log_app_header_write(p, blocked, pid, path_len);
 
-    if (path_len != 0) {
-        RtlCopyMemory(p + FORT_LOG_APP_HEADER_SIZE, path->buffer, path_len);
-    }
+    fort_log_path_write(p + FORT_LOG_APP_HEADER_SIZE, path);
 }
 
 FORT_API void fort_log_app_header_read(const char *p, BOOL *blocked, UINT32 *pid, UINT16 *path_len)
@@ -64,9 +74,7 @@ FORT_API void fort_log_conn_write(char *p, PCFORT_CONF_META_CONN conn, PCFORT_AP
 
     fort_log_conn_header_write(p, conn, path_len);
 
-    if (path_len != 0) {
-        RtlCopyMemory(p + FORT_LOG_CONN_HEADER_SIZE(conn->isIPv6), path->buffer, path_len);
-    }
+    fort_log_path_write(p + FORT_LOG_CONN_HEADER_SIZE(conn->isIPv6), path);
 }
 
 FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn, UINT16 *path_len)
@@ -126,9 +134,7 @@ FORT_API void fort_log_proc_new_write(char *p, UINT32 app_id, UINT32 pid, PCFORT
 
     fort_log_proc_new_header_write(p, app_id, pid, path_len);
 
-    if (path_len != 0) {
-        RtlCopyMemory(p + FORT_LOG_PROC_NEW_HEADER_SIZE, path->buffer, path_len);
-    }
+    fort_log_path_write(p + FORT_LOG_PROC_NEW_HEADER_SIZE, path);
 }
 
 FORT_API void fort_log_proc_new_header_read(
