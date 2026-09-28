@@ -47,6 +47,9 @@ FORT_API void fort_path_buffer_free(PFORT_PATH_BUFFER pb);
 FORT_API FORT_APP_PATH_DRIVE fort_path_drive_get(PCFORT_APP_PATH path);
 FORT_API void fort_path_drive_adjust(PFORT_APP_PATH path, const FORT_APP_PATH_DRIVE ps_drive);
 
+FORT_API BOOL fort_command_line_arg(
+        PCUNICODE_STRING commandLine, PCUNICODE_STRING argName, PUNICODE_STRING value);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

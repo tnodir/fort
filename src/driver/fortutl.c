@@ -583,3 +583,38 @@ FORT_API void fort_path_drive_adjust(PFORT_APP_PATH path, const FORT_APP_PATH_DR
         *p = L'\\';
     }
 }
+
+FORT_API BOOL fort_command_line_arg(
+        PCUNICODE_STRING commandLine, PCUNICODE_STRING argName, PUNICODE_STRING value)
+{
+    /* The command line may be not zero terminated */
+    PWCHAR argp = commandLine->Buffer;
+    PCWCHAR end = argp + commandLine->Length / sizeof(WCHAR);
+
+    /* Find the argument */
+    const int argSize = argName->Length; /* without terminating zero */
+    const int argLen = argSize / sizeof(WCHAR);
+
+    while (argp + argLen <= end && !fort_mem_eql(argp, argName->Buffer, argSize)) {
+        ++argp;
+    }
+
+    if (argp + argLen > end)
+        return FALSE;
+
+    argp += argLen;
+
+    /* Find the arg's end */
+    PCWCHAR endp = argp;
+    while (endp < end && *endp != L' ') {
+        ++endp;
+    }
+
+    const USHORT nameLen = (USHORT) ((PCHAR) endp - (PCHAR) argp);
+
+    value->Length = nameLen;
+    value->MaximumLength = nameLen;
+    value->Buffer = argp;
+
+    return TRUE;
+}

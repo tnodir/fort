@@ -312,26 +312,13 @@ static BOOL fort_pstree_svchost_name_check(
     if (commandLine == NULL)
         return FALSE;
 
-    PWCHAR argp = wcsstr(commandLine->Buffer, L"-s ");
-    if (argp == NULL)
+    UNICODE_STRING argName;
+    RtlInitUnicodeString(&argName, L"-s ");
+
+    if (!fort_command_line_arg(commandLine, &argName, serviceName))
         return FALSE;
 
-    argp += (sizeof(L"-s ") - sizeof(WCHAR)) / sizeof(WCHAR); /* skip terminating zero */
-
-    PCWCHAR endp = wcschr(argp, L' ');
-    if (endp == NULL) {
-        endp = (PCWCHAR) ((PCHAR) commandLine->Buffer + commandLine->Length);
-    }
-
-    const USHORT nameLen = (USHORT) ((PCHAR) endp - (PCHAR) argp);
-    if (nameLen >= FORT_PSTREE_NAME_LEN_MAX_SIZE)
-        return FALSE;
-
-    serviceName->Length = nameLen;
-    serviceName->MaximumLength = nameLen;
-    serviceName->Buffer = argp;
-
-    return TRUE;
+    return (serviceName->Length < FORT_PSTREE_NAME_LEN_MAX_SIZE);
 }
 
 static PFORT_PSNAME fort_pstree_create_service_name(
