@@ -857,21 +857,9 @@ inline static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_equal(
     return equal_res ? FORT_CONN_FILTER_RESULT_TRUE : FORT_CONN_FILTER_RESULT_FALSE;
 }
 
-static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check(
-        PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn)
+static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_values(
+        PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn, const int filter_type)
 {
-    assert(rule_filter->size != 0);
-
-    const int filter_type = rule_filter->type;
-
-    if (filter_type == FORT_RULE_FILTER_TYPE_LIST_OR) {
-        return fort_conf_rule_filter_list_check(rule_filter, conn, /*isAnd=*/FALSE);
-    }
-
-    if (filter_type == FORT_RULE_FILTER_TYPE_LIST_AND) {
-        return fort_conf_rule_filter_list_check(rule_filter, conn, /*isAnd=*/TRUE);
-    }
-
     if (filter_type < FORT_RULE_FILTER_TYPE_ADDRESS || filter_type > FORT_RULE_FILTER_TYPE_PORT_UDP)
         return FORT_CONN_FILTER_RESULT_FALSE;
 
@@ -887,7 +875,31 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check(
         }
     }
 
-    /* Is Not? */
+    return filter_res;
+}
+
+static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check(
+        PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn)
+{
+    assert(rule_filter->size != 0);
+
+    const int filter_type = rule_filter->type;
+
+    FORT_CONN_FILTER_RESULT filter_res;
+
+    switch (filter_type) {
+    case FORT_RULE_FILTER_TYPE_LIST_OR: {
+        filter_res = fort_conf_rule_filter_list_check(rule_filter, conn, /*isAnd=*/FALSE);
+    } break;
+    case FORT_RULE_FILTER_TYPE_LIST_AND: {
+        filter_res = fort_conf_rule_filter_list_check(rule_filter, conn, /*isAnd=*/TRUE);
+    } break;
+    default: {
+        filter_res = fort_conf_rule_filter_check_values(rule_filter, conn, filter_type);
+    } break;
+    }
+
+    /* Is Not? (also for the lists) */
     if (rule_filter->is_not) {
         filter_res ^= FORT_CONN_FILTER_RESULT_TRUE;
     }
