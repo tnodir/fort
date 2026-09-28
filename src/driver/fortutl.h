@@ -50,6 +50,8 @@ FORT_API void fort_path_drive_adjust(PFORT_APP_PATH path, const FORT_APP_PATH_DR
 FORT_API BOOL fort_command_line_arg(
         PCUNICODE_STRING commandLine, PCUNICODE_STRING argName, PUNICODE_STRING value);
 
+FORT_API void fort_thread_delay(int msecs);
+
 #ifdef __cplusplus
 } // extern "C"
 #endif

@@ -2,6 +2,8 @@
 
 #include "fortstat.h"
 
+#include "fortutl.h"
+
 #define FORT_STAT_POOL_TAG 'SwfF'
 
 #define FORT_PROC_BAD_INDEX ((UINT16) - 1)
@@ -376,11 +378,7 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
         KeReleaseInStackQueuedSpinLock(&lock_queue);
 
         /* Wait for asynchronously deleting flows */
-        LARGE_INTEGER delay = {
-            .QuadPart = -50 * 1000 * 10 /* sleep 50000us (50ms) */
-        };
-
-        KeDelayExecutionThread(KernelMode, FALSE, &delay);
+        fort_thread_delay(/*msecs=*/50);
     }
 }
 

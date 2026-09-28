@@ -618,3 +618,11 @@ FORT_API BOOL fort_command_line_arg(
 
     return TRUE;
 }
+
+FORT_API void fort_thread_delay(int msecs)
+{
+    /* negative value for relative time */
+    LARGE_INTEGER delay = { .QuadPart = msecs * -1000LL * 10 };
+
+    KeDelayExecutionThread(KernelMode, FALSE, &delay);
+}
