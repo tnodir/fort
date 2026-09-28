@@ -524,6 +524,9 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     fort_timer_open(&fort_device()->log_timer, 500, /*flags=*/0, &fort_callout_timer);
     fort_pstree_open(&fort_device()->ps_tree);
 
+    /* The opened data must be closed on unload */
+    fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_IS_LOADED, TRUE);
+
     /* Register filters provider */
     status = fort_device_register_provider();
     if (!NT_SUCCESS(status))
@@ -555,6 +558,10 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
 FORT_API void fort_device_unload(void)
 {
     FORT_CHECK_STACK(FORT_DEVICE_UNLOAD);
+
+    /* The device's data isn't opened on the device's creation error */
+    if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_IS_LOADED) == 0)
+        return;
 
     /* Stop system notifiers */
     fort_syscb_power_unregister();
