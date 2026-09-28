@@ -920,7 +920,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_check(
 FORT_API BOOL fort_conf_rules_rt_conn_filtered(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id)
 {
-    if (rule_id == 0 || rule_id > rules_rt->max_rule_id)
+    if (!fort_conf_rules_rt_rule_exists(rules_rt, rule_id))
         return FALSE;
 
     PCFORT_CONF_RULE rule = fort_conf_rules_rt_rule(rules_rt, rule_id);

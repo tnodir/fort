@@ -611,6 +611,10 @@ FORT_API BOOL fort_conf_rules_conn_filtered(PCFORT_CONF_RULES rules, PCFORT_CONF
 #define fort_conf_rules_rt_rule(rt, rule_id)                                                       \
     ((PFORT_CONF_RULE) ((rt)->rules_data + (rt)->rule_offsets[rule_id]))
 
+/* The absent rule has zero offset */
+#define fort_conf_rules_rt_rule_exists(rt, rule_id)                                                \
+    ((rule_id) != 0 && (rule_id) <= (rt)->max_rule_id && (rt)->rule_offsets[rule_id] != 0)
+
 FORT_API FORT_CONF_RULES_RT fort_conf_rules_rt_make(
         PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones);
 
