@@ -27,7 +27,7 @@ FORT_API void fort_conf_rules_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_RULE
 inline static void fort_conf_rule_flag_set_locked(
         PFORT_CONF_RULES rules, PCFORT_CONF_RULE_FLAG rule_flag)
 {
-    if (rule_flag->rule_id > rules->max_rule_id)
+    if (rule_flag->rule_id == 0 || rule_flag->rule_id > rules->max_rule_id)
         return;
 
     const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, /*zones=*/NULL);
