@@ -480,8 +480,8 @@ static void fort_shaper_packet_list_cut_packet(PFORT_PACKET_LIST pkt_list, PFORT
     }
 }
 
-static PFORT_FLOW_PACKET fort_shaper_packet_list_get_flow_packets(
-        PFORT_PACKET_LIST pkt_list, PFORT_FLOW flow, PFORT_FLOW_PACKET pkt_chain)
+static PFORT_FLOW_PACKET fort_shaper_packet_list_get_flow_packets(PFORT_PACKET_LIST pkt_list,
+        PFORT_FLOW flow, PFORT_FLOW_PACKET pkt_chain, UINT64 *data_length)
 {
     PFORT_FLOW_PACKET pkt_prev = NULL;
     PFORT_FLOW_PACKET pkt = pkt_list->packet_head;
@@ -491,6 +491,8 @@ static PFORT_FLOW_PACKET fort_shaper_packet_list_get_flow_packets(
 
         if (pkt->flow == flow) {
             fort_shaper_packet_list_cut_packet(pkt_list, pkt, pkt_prev, pkt_next);
+
+            *data_length += pkt->data_length;
 
             pkt->next = pkt_chain;
             pkt_chain = pkt;
@@ -632,11 +634,19 @@ static PFORT_FLOW_PACKET fort_shaper_queue_get_packets(
 static PFORT_FLOW_PACKET fort_shaper_queue_get_flow_packets(
         PFORT_PACKET_QUEUE queue, PFORT_FLOW flow, PFORT_FLOW_PACKET pkt)
 {
+    UINT64 bandwidth_length = 0;
+    UINT64 latency_length = 0;
+
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
 
-    pkt = fort_shaper_packet_list_get_flow_packets(&queue->bandwidth_list, flow, pkt);
-    pkt = fort_shaper_packet_list_get_flow_packets(&queue->latency_list, flow, pkt);
+    pkt = fort_shaper_packet_list_get_flow_packets(
+            &queue->bandwidth_list, flow, pkt, &bandwidth_length);
+    pkt = fort_shaper_packet_list_get_flow_packets(
+            &queue->latency_list, flow, pkt, &latency_length);
+
+    /* The queued bytes are counted for the bandwidth list only */
+    queue->queued_bytes -= bandwidth_length;
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
