@@ -122,6 +122,8 @@ typedef struct fort_pending
     HANDLE injection_transport6_in_id;
     HANDLE injection_transport6_out_id;
 
+    LONG volatile inject_count; /* asynchronous injections in progress */
+
     UINT16 proc_count;
 
     PFORT_PENDING_PROC proc_free;

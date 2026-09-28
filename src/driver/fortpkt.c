@@ -184,6 +184,8 @@ static void NTAPI fort_packet_inject_complete(
         fort_pending_packet_free((PFORT_PENDING_PACKET) pkt);
     } break;
     }
+
+    InterlockedDecrement(&fort_device()->pending.inject_count);
 }
 
 static NTSTATUS fort_packet_inject_in(
@@ -250,10 +252,15 @@ static NTSTATUS fort_packet_inject(PFORT_PACKET_IO pkt)
     const ADDRESS_FAMILY addressFamily = (isIPv6 ? AF_INET6 : AF_INET);
     const HANDLE injection_id = fort_packet_injection_id(isIPv6, inbound);
 
+    /* The injection's completion is called asynchronously on success */
+    InterlockedIncrement(&fort_device()->pending.inject_count);
+
     status = inbound ? fort_packet_inject_in(pkt, injection_id, addressFamily)
                      : fort_packet_inject_out(pkt, injection_id, addressFamily);
 
     if (!NT_SUCCESS(status)) {
+        InterlockedDecrement(&fort_device()->pending.inject_count);
+
         LOG("Shaper: Packet injection call error: %x\n", status);
         TRACE(FORT_SHAPER_PACKET_INJECTION_CALL_ERROR, status, 0, 0);
     }
@@ -1248,8 +1255,23 @@ static void fort_pending_done(PFORT_PENDING pending)
     tommy_arrayof_done(&pending->procs);
 }
 
+static void fort_pending_wait_injections(PFORT_PENDING pending)
+{
+    for (;;) {
+        const LONG inject_count = InterlockedOr(&pending->inject_count, 0);
+
+        fort_thread_delay(/*msecs=*/10);
+
+        if (inject_count == 0)
+            break; /* Check the extra one time to ensure the completion's exit */
+    }
+}
+
 FORT_API void fort_pending_close(PFORT_PENDING pending)
 {
+    /* Wait for the asynchronous injections before their handles' destruction */
+    fort_pending_wait_injections(pending);
+
     fort_pending_done(pending);
 
     FwpsInjectionHandleDestroy0(pending->injection_transport4_in_id);
