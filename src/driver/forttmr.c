@@ -48,10 +48,9 @@ FORT_API void fort_timer_open(
 
 FORT_API void fort_timer_close(PFORT_TIMER timer)
 {
-    const UCHAR old_flags = fort_timer_flags_set(timer, FORT_TIMER_RUNNING, FALSE);
-    if ((old_flags & FORT_TIMER_RUNNING) == 0)
-        return;
+    fort_timer_flags_set(timer, FORT_TIMER_RUNNING, FALSE);
 
+    /* The timer's DPC may be queued, even if the timer isn't running */
     KeCancelTimer(&timer->id);
     KeFlushQueuedDpcs();
 }
