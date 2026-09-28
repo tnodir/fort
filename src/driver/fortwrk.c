@@ -20,11 +20,12 @@ static NTSTATUS fort_worker_callback_expand(PVOID context)
 {
     PFORT_WORKER worker = context;
 
-    InterlockedDecrement16(&worker->queue_size);
-
     const UCHAR id_bits = InterlockedAnd8(&worker->id_bits, 0);
 
     fort_worker_callback_run(worker, FORT_WORKER_REAUTH, id_bits);
+
+    /* The worker's wait checks it, so the funcs must be finished */
+    InterlockedDecrement16(&worker->queue_size);
 
     return STATUS_SUCCESS;
 }
