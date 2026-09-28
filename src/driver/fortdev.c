@@ -411,6 +411,10 @@ static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)
     if (control_index >= FORT_IOCTL_INDEX_COUNT)
         return STATUS_INVALID_PARAMETER;
 
+    /* The handlers expect the SystemBuffer */
+    if (METHOD_FROM_CTL_CODE(dca->control_code) != METHOD_BUFFERED)
+        return STATUS_INVALID_PARAMETER;
+
     if (control_index != FORT_IOCTL_INDEX_VALIDATE
             && fort_device_flag(&fort_device()->conf, FORT_DEVICE_IS_VALIDATED) == 0)
         return STATUS_INVALID_DEVICE_REQUEST;
