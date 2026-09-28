@@ -66,6 +66,7 @@ public:
 
     void writeApps(const appdata_map_t &appsMap, bool useHeader = false);
 
+    static quint32 migrateZoneDataSize(const QByteArray &zoneData);
     void migrateZoneData(const QByteArray &zoneData);
 
     void writeBytes(const bytes_arr_t &array);

@@ -186,6 +186,10 @@ void ConfBuffer::writeZone(const IpRange &ipRange)
 void ConfBuffer::writeZones(quint32 zonesMask, quint32 enabledMask, quint32 dataSize,
         const QList<QByteArray> &zonesData)
 {
+    for (const auto &zoneData : zonesData) {
+        dataSize += ConfData::migrateZoneDataSize(zoneData);
+    }
+
     // Resize the buffer
     const int zonesSize = FORT_CONF_ZONES_DATA_OFF + dataSize;
 

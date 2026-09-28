@@ -370,11 +370,20 @@ void ConfData::writeApps(const appdata_map_t &appsMap, bool useHeader)
     m_data += offTableSize + FORT_CONF_STR_DATA_SIZE(off);
 }
 
+quint32 ConfData::migrateZoneDataSize(const QByteArray &zoneData)
+{
+    PCFORT_CONF_ADDR_LIST addr_list = PCFORT_CONF_ADDR_LIST(zoneData.data());
+
+    // Old zone's data contains only the IPv4 list
+    if (FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n) == zoneData.size())
+        return FORT_CONF_ADDR6_LIST_SIZE(0, 0);
+
+    return 0;
+}
+
 void ConfData::migrateZoneData(const QByteArray &zoneData)
 {
-    PFORT_CONF_ADDR_LIST addr_list = PFORT_CONF_ADDR_LIST(zoneData.data());
-
-    if (FORT_CONF_ADDR4_LIST_SIZE(addr_list->ip_n, addr_list->pair_n) == zoneData.size()) {
+    if (migrateZoneDataSize(zoneData) != 0) {
         IpRange ipRange;
         writeIpRange(ipRange, /*isIPv6=*/true);
     }
