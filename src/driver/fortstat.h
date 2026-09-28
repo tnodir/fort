@@ -7,6 +7,7 @@
 #include "forttds.h"
 
 #define FORT_STATUS_FLOW_BLOCK STATUS_NOT_SAME_DEVICE
+#define FORT_STATUS_FLOW_SKIP  STATUS_DEVICE_DATA_ERROR
 
 /* Synchronize with tommy_hashdyn_node! */
 typedef struct fort_stat_proc

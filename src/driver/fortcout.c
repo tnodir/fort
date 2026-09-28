@@ -173,6 +173,9 @@ inline static BOOL fort_callout_ale_associate_flow(
 
     const NTSTATUS status = fort_flow_associate(&fort_device()->stat, conn, &proc_stat);
 
+    if (status == FORT_STATUS_FLOW_SKIP)
+        return FALSE; /* the stat is closed or not yet enabled */
+
     if (!NT_SUCCESS(status)) {
         if (status != FORT_STATUS_FLOW_BLOCK) {
             LOG("Classify v4: Flow assoc. error: %x\n", status);

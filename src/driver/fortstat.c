@@ -443,7 +443,7 @@ static NTSTATUS fort_flow_associate_proc(
         PFORT_STAT stat, UINT32 process_id, BOOL *is_new_proc, PFORT_STAT_PROC *proc)
 {
     if ((fort_stat_flags(stat) & FORT_STAT_LOG) == 0)
-        return STATUS_DEVICE_DATA_ERROR;
+        return FORT_STATUS_FLOW_SKIP;
 
     const tommy_key_t pid_hash = fort_stat_proc_hash(process_id);
 
