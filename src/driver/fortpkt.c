@@ -841,7 +841,8 @@ static void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL dr
     if (group_io_bits == 0)
         return;
 
-    group_io_bits &= fort_shaper_io_bits_set(&shaper->active_io_bits, group_io_bits, FALSE);
+    /* The active bits are cleared while the thread processes the queues, so flush all given */
+    fort_shaper_io_bits_set(&shaper->active_io_bits, group_io_bits, FALSE);
 
     /* Collect packets from Queues */
     PFORT_FLOW_PACKET pkt_chain = fort_shaper_flush_queues(shaper, group_io_bits);
@@ -1066,12 +1067,12 @@ FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowCont
     /* Collect flow's packets from Queues */
     PFORT_FLOW_PACKET pkt_chain = NULL;
 
-    UINT32 active_io_bits = fort_shaper_io_bits(&shaper->active_io_bits)
-            & (speed_limit << (flow->opt.group_index * 2));
+    /* The active bits are cleared while the thread processes the queues, so check the flow's */
+    UINT32 flow_io_bits = ((UINT32) speed_limit << (flow->opt.group_index * 2));
 
-    for (int i = 0; active_io_bits != 0; ++i) {
-        const BOOL queue_exists = (active_io_bits & 1) != 0;
-        active_io_bits >>= 1;
+    for (int i = 0; flow_io_bits != 0; ++i) {
+        const BOOL queue_exists = (flow_io_bits & 1) != 0;
+        flow_io_bits >>= 1;
 
         if (!queue_exists)
             continue;
