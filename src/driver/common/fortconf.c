@@ -590,9 +590,8 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones_result(PFORT_CONF_META
 inline static BOOL fort_conf_rules_rt_conn_filtered_zones(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
 {
-    if (rule->inline_zones) {
-        conn->zones_accept_filtered = conn->zones_reject_filtered = FALSE;
-    }
+    /* The zones() filter checks the rule's own inline zones only */
+    conn->zones_accept_filtered = conn->zones_reject_filtered = FALSE;
 
     PCFORT_CONF_ZONES zones = rule->has_zones ? rules_rt->zones : NULL;
     if (!zones)
