@@ -721,7 +721,7 @@ static void fort_shaper_create_queues(
 
 static void fort_shaper_free_queues(PFORT_SHAPER shaper)
 {
-    for (int i = 0; i < FORT_CONF_GROUP_MAX; ++i) {
+    for (int i = 0; i < FORT_CONF_GROUP_MAX * 2; ++i) {
         PFORT_PACKET_QUEUE queue = shaper->queues[i];
         if (queue == NULL)
             continue;
