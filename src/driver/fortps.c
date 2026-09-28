@@ -122,7 +122,7 @@ inline static BOOL fort_is_system_process(DWORD processId, DWORD parentProcessId
 static NTSTATUS GetFileDosDeviceName(PFILE_OBJECT fileObject, PFORT_PATH_BUFFER pb)
 {
     POBJECT_NAME_INFORMATION nameInfo;
-    const NTSTATUS status = IoQueryFileDosDeviceName(fileObject, &nameInfo);
+    NTSTATUS status = IoQueryFileDosDeviceName(fileObject, &nameInfo);
 
     if (!NT_SUCCESS(status))
         return status;
@@ -130,19 +130,32 @@ static NTSTATUS GetFileDosDeviceName(PFILE_OBJECT fileObject, PFORT_PATH_BUFFER 
     PUNICODE_STRING name = &nameInfo->Name;
 
     const UINT16 name_size = name->Length;
-    const PWCHAR name_buf = name->Buffer;
-
-    RtlDowncaseUnicodeString(name, name, FALSE);
-    name_buf[0] = RtlUpcaseUnicodeChar(name_buf[0]);
-    /* the string is already zero terminated */
 
     fort_path_buffer_free(pb);
 
-    pb->buffer = nameInfo;
-    pb->path.len = name_size;
-    pb->path.buffer = name_buf;
+    /* Copy the name to the driver's non-paged buffer, it's used under spin locks */
+    if (fort_path_buffer_alloc(pb, name_size + sizeof(WCHAR))) {
+        const PWCHAR name_buf = pb->buffer;
 
-    return STATUS_SUCCESS;
+        UNICODE_STRING nameString = {
+            .Length = name_size,
+            .MaximumLength = name_size,
+            .Buffer = name_buf,
+        };
+
+        RtlDowncaseUnicodeString(&nameString, name, FALSE);
+        name_buf[0] = RtlUpcaseUnicodeChar(name_buf[0]);
+        name_buf[name_size / sizeof(WCHAR)] = L'\0';
+
+        pb->path.len = name_size;
+        pb->path.buffer = name_buf;
+    } else {
+        status = STATUS_INSUFFICIENT_RESOURCES;
+    }
+
+    fort_mem_free_notag(nameInfo);
+
+    return status;
 }
 
 static NTSTATUS GetImageNameFileObject(PCFORT_APP_PATH path, PFILE_OBJECT *fileObj)
