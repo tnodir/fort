@@ -194,6 +194,28 @@ static BOOL fort_conf_rule_filter_values_valid(int filter_type, const char *data
 }
 
 static BOOL fort_conf_rule_filter_valid(
+        PCFORT_CONF_RULE_FILTER rule_filter, UINT32 len, int list_depth);
+
+static BOOL fort_conf_rule_filter_list_valid(const char *data, UINT32 data_len, int list_depth)
+{
+    if (++list_depth > FORT_CONF_RULE_FILTER_LIST_DEPTH_MAX)
+        return FALSE;
+
+    /* The list is not empty and its filters fill it exactly */
+    do {
+        PCFORT_CONF_RULE_FILTER sub_filter = (PCFORT_CONF_RULE_FILTER) data;
+
+        if (!fort_conf_rule_filter_valid(sub_filter, data_len, list_depth))
+            return FALSE;
+
+        data += sub_filter->size;
+        data_len -= sub_filter->size;
+    } while (data_len != 0);
+
+    return TRUE;
+}
+
+static BOOL fort_conf_rule_filter_valid(
         PCFORT_CONF_RULE_FILTER rule_filter, UINT32 len, int list_depth)
 {
     if (len < sizeof(FORT_CONF_RULE_FILTER))
@@ -204,27 +226,14 @@ static BOOL fort_conf_rule_filter_valid(
         return FALSE;
 
     const char *data = (const char *) (rule_filter + 1);
-    UINT32 data_len = size - sizeof(FORT_CONF_RULE_FILTER);
+    const UINT32 data_len = size - sizeof(FORT_CONF_RULE_FILTER);
 
     const int filter_type = rule_filter->type;
 
     if (filter_type == FORT_RULE_FILTER_TYPE_LIST_OR
             || filter_type == FORT_RULE_FILTER_TYPE_LIST_AND) {
-        if (++list_depth > FORT_CONF_RULE_FILTER_LIST_DEPTH_MAX)
-            return FALSE;
 
-        /* The list is not empty and its filters fill it exactly */
-        do {
-            PCFORT_CONF_RULE_FILTER sub_filter = (PCFORT_CONF_RULE_FILTER) data;
-
-            if (!fort_conf_rule_filter_valid(sub_filter, data_len, list_depth))
-                return FALSE;
-
-            data += sub_filter->size;
-            data_len -= sub_filter->size;
-        } while (data_len != 0);
-
-        return TRUE;
+        return fort_conf_rule_filter_list_valid(data, data_len, list_depth);
     }
 
     if (rule_filter->is_empty)

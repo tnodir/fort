@@ -871,15 +871,13 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
 static BOOL fort_conf_rules_rt_conn_filtered_depth(
         PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id, int depth);
 
-inline static BOOL fort_conf_rules_rt_conn_filtered_sets(PCFORT_CONF_RULES_RT rules_rt,
-        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, const BOOL empty_res, int depth)
+inline static BOOL fort_conf_rules_rt_conn_filtered_sets(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, int depth)
 {
-    const int set_count = rule->set_count;
-    if (set_count == 0)
-        return empty_res;
-
     const UINT16 *rule_ids =
             (const UINT16 *) ((PCCH) rule + FORT_CONF_RULE_SET_INDEXES_OFFSET(rule));
+
+    const int set_count = rule->set_count;
 
     for (int i = 0; i < set_count; ++i) {
         const UINT16 rule_id = rule_ids[i];
@@ -916,11 +914,11 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_check(
 
     const BOOL is_exclusive_filtered = (is_exclusive ? !is_filter_res : is_filter_res);
 
-    if (is_exclusive_filtered) {
+    if (is_exclusive_filtered || rule->set_count == 0) {
         return is_filter_res;
     }
 
-    return fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule, is_filter_res, depth);
+    return fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule, depth);
 }
 
 static BOOL fort_conf_rules_rt_conn_filtered_depth(

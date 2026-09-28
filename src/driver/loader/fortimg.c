@@ -6,12 +6,25 @@
 
 #include "../fortutl.h"
 
+#define FORT_IMAGE_VERIFY_DIGEST_SIZE 256
+
+typedef struct fort_image_verify_arg
+{
+    const DWORD dataSize;
+    const DWORD signatureSize;
+    DWORD digestSize;
+
+    const PUCHAR data;
+    const PUCHAR signature;
+
+    UCHAR digest[FORT_IMAGE_VERIFY_DIGEST_SIZE];
+} FORT_IMAGE_VERIFY_ARG, *PFORT_IMAGE_VERIFY_ARG;
+
 static const UCHAR g_publicKeyBlob[] = {
 #include "fort.rsa.pub"
 };
 
-static NTSTATUS fort_image_verify_signature(
-        const PUCHAR signature, DWORD signatureSize, const PUCHAR digest, DWORD digestSize)
+static NTSTATUS fort_image_verify_signature(PFORT_IMAGE_VERIFY_ARG iva)
 {
     NTSTATUS status;
 
@@ -27,8 +40,8 @@ static NTSTATUS fort_image_verify_signature(
             BCRYPT_PKCS1_PADDING_INFO padInfo;
             padInfo.pszAlgId = BCRYPT_SHA256_ALGORITHM;
 
-            status = BCryptVerifySignature(keyHandle, &padInfo, digest, digestSize, signature,
-                    signatureSize, BCRYPT_PAD_PKCS1);
+            status = BCryptVerifySignature(keyHandle, &padInfo, iva->digest, iva->digestSize,
+                    iva->signature, iva->signatureSize, BCRYPT_PAD_PKCS1);
 
             BCryptDestroyKey(keyHandle);
         }
@@ -39,8 +52,7 @@ static NTSTATUS fort_image_verify_signature(
     return status;
 }
 
-static NTSTATUS fort_image_hash_create(BCRYPT_ALG_HANDLE algHandle, const PUCHAR data,
-        DWORD dataSize, PUCHAR digest, DWORD *digestSize)
+static NTSTATUS fort_image_hash_create(BCRYPT_ALG_HANDLE algHandle, PFORT_IMAGE_VERIFY_ARG iva)
 {
     NTSTATUS status;
 
@@ -51,20 +63,20 @@ static NTSTATUS fort_image_hash_create(BCRYPT_ALG_HANDLE algHandle, const PUCHAR
     if (!NT_SUCCESS(status))
         return status;
 
-    if (hashDigestLen > *digestSize)
+    if (hashDigestLen > iva->digestSize)
         return STATUS_BUFFER_TOO_SMALL;
 
     BCRYPT_KEY_HANDLE hashHandle;
     status = BCryptCreateHash(algHandle, &hashHandle, NULL, 0, NULL, 0, 0);
 
     if (NT_SUCCESS(status)) {
-        status = BCryptHashData(hashHandle, (PUCHAR) data, dataSize, 0);
+        status = BCryptHashData(hashHandle, (PUCHAR) iva->data, iva->dataSize, 0);
 
         if (NT_SUCCESS(status)) {
-            status = BCryptFinishHash(hashHandle, digest, hashDigestLen, 0);
+            status = BCryptFinishHash(hashHandle, iva->digest, hashDigestLen, 0);
 
             if (NT_SUCCESS(status)) {
-                *digestSize = hashDigestLen;
+                iva->digestSize = hashDigestLen;
             }
         }
 
@@ -74,7 +86,7 @@ static NTSTATUS fort_image_hash_create(BCRYPT_ALG_HANDLE algHandle, const PUCHAR
     return status;
 }
 
-static NTSTATUS fort_image_hash(const PUCHAR data, DWORD dataSize, PUCHAR digest, DWORD *digestSize)
+static NTSTATUS fort_image_hash(PFORT_IMAGE_VERIFY_ARG iva)
 {
     NTSTATUS status;
 
@@ -82,7 +94,7 @@ static NTSTATUS fort_image_hash(const PUCHAR data, DWORD dataSize, PUCHAR digest
     status = BCryptOpenAlgorithmProvider(&algHandle, BCRYPT_SHA256_ALGORITHM, NULL, 0);
 
     if (NT_SUCCESS(status)) {
-        status = fort_image_hash_create(algHandle, data, dataSize, digest, digestSize);
+        status = fort_image_hash_create(algHandle, iva);
 
         BCryptCloseAlgorithmProvider(algHandle, 0);
     }
@@ -90,17 +102,14 @@ static NTSTATUS fort_image_hash(const PUCHAR data, DWORD dataSize, PUCHAR digest
     return status;
 }
 
-static NTSTATUS fort_image_verify(
-        const PUCHAR data, DWORD dataSize, const PUCHAR signature, DWORD signatureSize)
+static NTSTATUS fort_image_verify(PFORT_IMAGE_VERIFY_ARG iva)
 {
     NTSTATUS status;
 
-    UCHAR digest[256];
-    DWORD digestSize = sizeof(digest);
-    status = fort_image_hash(data, dataSize, digest, &digestSize);
+    status = fort_image_hash(iva);
 
     if (NT_SUCCESS(status)) {
-        status = fort_image_verify_signature(signature, signatureSize, digest, digestSize);
+        status = fort_image_verify_signature(iva);
     }
 
     return status;
@@ -129,16 +138,27 @@ FORT_API NTSTATUS fort_image_payload(
             dataSize, signatureSize, alignedSignatureSize, payloadSize);
 #endif
 
+    if (signatureSize < FORT_IMAGE_SIGNATURE_SIZE_MIN || signatureSize > alignedSignatureSize)
+        return STATUS_INVALID_IMAGE_FORMAT;
+
     const DWORD sizeMax = dataSize - FORT_IMAGE_LOADER_SIZE_MIN - FORT_IMAGE_PAYLOAD_INFO_SIZE;
 
-    if (signatureSize < FORT_IMAGE_SIGNATURE_SIZE_MIN || signatureSize > alignedSignatureSize
-            || alignedSignatureSize > sizeMax || payloadSize > sizeMax - alignedSignatureSize)
+    if (alignedSignatureSize > sizeMax || payloadSize > sizeMax - alignedSignatureSize)
         return STATUS_INVALID_IMAGE_FORMAT;
 
     const PUCHAR signature = paylodInfo - alignedSignatureSize;
     const PUCHAR payload = signature - payloadSize;
 
-    status = fort_image_verify(payload, payloadSize, signature, signatureSize);
+    FORT_IMAGE_VERIFY_ARG iva = {
+        .dataSize = payloadSize,
+        .signatureSize = signatureSize,
+        .digestSize = sizeof(iva.digest),
+
+        .data = payload,
+        .signature = signature,
+    };
+
+    status = fort_image_verify(&iva);
     if (!NT_SUCCESS(status))
         return status;
 
