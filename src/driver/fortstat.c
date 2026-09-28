@@ -214,17 +214,22 @@ static void fort_flow_context_remove(PVOID stat_arg, PVOID flow_node)
     const UCHAR flow_flags = fort_flow_flags(flow);
     const BOOL isIPv6 = (flow_flags & FORT_FLOW_IP6);
 
+    /* Don't abort the flow on the next closing pass */
+    if ((flow_flags & FORT_FLOW_CONTEXT_REMOVED) != 0)
+        return;
+
     BOOL pending = FALSE;
 
-    if (!fort_flow_context_remove_id(stat, flow_id, isIPv6, &pending)) {
-#if !defined(FORT_WIN7_COMPAT)
-        if (!pending) {
-            /* The flow has associated context, but FwpsFlowRemoveContext0()
-             * returns that there is no context as STATUS_UNSUCCESSFUL. */
-            FwpsFlowAbort0(flow_id);
-        }
-#endif
+    if (fort_flow_context_remove_id(stat, flow_id, isIPv6, &pending) || pending) {
+        fort_flow_flags_set(flow, FORT_FLOW_CONTEXT_REMOVED, TRUE);
+        return;
     }
+
+#if !defined(FORT_WIN7_COMPAT)
+    /* The flow has associated context, but FwpsFlowRemoveContext0()
+     * returns that there is no context as STATUS_UNSUCCESSFUL. */
+    FwpsFlowAbort0(flow_id);
+#endif
 }
 
 static PFORT_FLOW fort_flow_get(PFORT_STAT stat, UINT64 flow_id, tommy_key_t flow_hash)
