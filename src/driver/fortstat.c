@@ -167,13 +167,15 @@ inline static NTSTATUS fort_flow_context_transport_set(
 
     NTSTATUS status;
 
-    status = FwpsFlowAssociateContext0(flow_id, opt.in_layerId, opt.in_calloutId, flowContext);
+    /* The outbound callout's flowDeleteFn doesn't lock the stat, so it's associated first */
+    status = FwpsFlowAssociateContext0(flow_id, opt.out_layerId, opt.out_calloutId, flowContext);
     if (!NT_SUCCESS(status)) {
         return status;
     }
 
-    status = FwpsFlowAssociateContext0(flow_id, opt.out_layerId, opt.out_calloutId, flowContext);
+    status = FwpsFlowAssociateContext0(flow_id, opt.in_layerId, opt.in_calloutId, flowContext);
     if (!NT_SUCCESS(status)) {
+        FwpsFlowRemoveContext0(flow_id, opt.out_layerId, opt.out_calloutId);
         return status;
     }
 
@@ -239,15 +241,20 @@ static PFORT_FLOW fort_flow_get(PFORT_STAT stat, UINT64 flow_id, tommy_key_t flo
     return NULL;
 }
 
-static void fort_flow_free(PFORT_STAT stat, PFORT_FLOW flow)
+static void fort_flow_drop(PFORT_STAT stat, PFORT_FLOW flow)
 {
-    fort_stat_proc_dec(stat, flow->opt.proc_index);
-
     tommy_hashdyn_remove_existing(&stat->flows_map, (tommy_hashdyn_node *) flow);
 
     /* Add to free list */
     flow->next = stat->flow_free;
     stat->flow_free = flow;
+}
+
+static void fort_flow_free(PFORT_STAT stat, PFORT_FLOW flow)
+{
+    fort_stat_proc_dec(stat, flow->opt.proc_index);
+
+    fort_flow_drop(stat, flow);
 }
 
 static PFORT_FLOW fort_flow_new(PFORT_STAT stat, UINT64 flow_id, const tommy_key_t flow_hash)
@@ -291,7 +298,8 @@ inline static NTSTATUS fort_flow_add_new(
 
     NTSTATUS status = fort_flow_context_set(stat, *flow, conn->isIPv6);
     if (!NT_SUCCESS(status)) {
-        fort_flow_free(stat, *flow);
+        /* The flow's process isn't referenced yet */
+        fort_flow_drop(stat, *flow);
 
         /* Can't remove existing context, because of possible deadlock */
         status = conn->is_reauth ? FORT_STATUS_FLOW_BLOCK : status;
