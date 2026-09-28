@@ -159,6 +159,7 @@ typedef struct
     union {
         PVOID SystemBuffer;
     } AssociatedIrp;
+    BOOLEAN Cancel;
     KIRQL CancelIrql;
 } IRP, *PIRP;
 

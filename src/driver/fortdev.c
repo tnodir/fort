@@ -237,13 +237,7 @@ static NTSTATUS fort_device_control_getlog(PFORT_DEVICE_CONTROL_ARG dca)
 
     PFORT_IRP_INFO irp_info = dca->irp_info;
 
-    const NTSTATUS status = fort_buffer_xmove(&fort_device()->buffer, irp_info, out, out_len);
-
-    if (status == STATUS_PENDING) {
-        fort_buffer_irp_mark_pending(irp_info);
-    }
-
-    return status;
+    return fort_buffer_xmove(&fort_device()->buffer, irp_info, out, out_len);
 }
 
 inline static NTSTATUS fort_device_control_app_conf(

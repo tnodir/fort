@@ -270,55 +270,6 @@ FORT_API NTSTATUS fort_buffer_proc_kill_write(PFORT_BUFFER buf, PFORT_IRP_INFO i
     return status;
 }
 
-inline static NTSTATUS fort_buffer_xmove_locked_empty(
-        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
-{
-    if (buf->out_len != 0)
-        return STATUS_UNSUCCESSFUL; /* collision */
-
-    buf->irp = irp_info->irp;
-    buf->out = out;
-    buf->out_len = out_len;
-    buf->out_top = 0;
-
-    return STATUS_PENDING;
-}
-
-static NTSTATUS fort_buffer_xmove_locked(
-        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
-{
-    PFORT_BUFFER_DATA data = buf->data_head;
-    const UINT32 buf_top = (data ? data->top : 0);
-
-    irp_info->info = buf_top;
-
-    if (buf_top == 0) {
-        return fort_buffer_xmove_locked_empty(buf, irp_info, out, out_len);
-    }
-
-    if (out_len < buf_top)
-        return STATUS_BUFFER_TOO_SMALL;
-
-    RtlCopyMemory(out, data->p, buf_top);
-
-    fort_buffer_data_shift(buf);
-
-    return STATUS_SUCCESS;
-}
-
-FORT_API NTSTATUS fort_buffer_xmove(
-        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
-{
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
-
-    const NTSTATUS status = fort_buffer_xmove_locked(buf, irp_info, out, out_len);
-
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    return status;
-}
-
 inline static NTSTATUS fort_buffer_cancel_pending(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
 {
     NTSTATUS status = STATUS_NOT_FOUND;
@@ -367,13 +318,63 @@ static void fort_device_cancel_pending(PDEVICE_OBJECT device, PIRP irp)
     }
 }
 
-FORT_API void fort_buffer_irp_mark_pending(PFORT_IRP_INFO irp_info)
+inline static NTSTATUS fort_buffer_xmove_locked_empty(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
 {
+    if (buf->out_len != 0)
+        return STATUS_UNSUCCESSFUL; /* collision */
+
     PIRP irp = irp_info->irp;
+
+    /* The cancel routine waits for the buffer's lock to find the IRP */
+    IoSetCancelRoutine(irp, &fort_device_cancel_pending);
+
+    if (irp->Cancel && IoSetCancelRoutine(irp, NULL) != NULL)
+        return STATUS_CANCELLED;
 
     IoMarkIrpPending(irp);
 
-    fort_irp_set_cancel_routine(irp, &fort_device_cancel_pending);
+    buf->irp = irp;
+    buf->out = out;
+    buf->out_len = out_len;
+    buf->out_top = 0;
+
+    return STATUS_PENDING;
+}
+
+static NTSTATUS fort_buffer_xmove_locked(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
+{
+    PFORT_BUFFER_DATA data = buf->data_head;
+    const UINT32 buf_top = (data ? data->top : 0);
+
+    irp_info->info = buf_top;
+
+    if (buf_top == 0) {
+        return fort_buffer_xmove_locked_empty(buf, irp_info, out, out_len);
+    }
+
+    if (out_len < buf_top)
+        return STATUS_BUFFER_TOO_SMALL;
+
+    RtlCopyMemory(out, data->p, buf_top);
+
+    fort_buffer_data_shift(buf);
+
+    return STATUS_SUCCESS;
+}
+
+FORT_API NTSTATUS fort_buffer_xmove(
+        PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, PVOID out, ULONG out_len)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
+
+    const NTSTATUS status = fort_buffer_xmove_locked(buf, irp_info, out, out_len);
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return status;
 }
 
 FORT_API void fort_buffer_irp_clear_pending(PFORT_IRP_INFO irp_info)
