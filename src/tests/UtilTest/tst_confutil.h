@@ -113,6 +113,56 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_EQ(int(firefoxData.group_index), 1);
 }
 
+TEST_F(ConfUtilTest, confAppPrefixFind)
+{
+    EnvManager envManager;
+    FirewallConf conf;
+
+    AppGroup *appGroup = new AppGroup();
+    appGroup->setName("Prefixes");
+    appGroup->setEnabled(true);
+    appGroup->setAllowText("C:\\A\\**\n"
+                           "C:\\Я\\**\n");
+    appGroup->setBlockText("C:\\A\\B\\**\n"
+                           "C:\\A\\C\\**\n"
+                           "C:\\A\\D\\**\n"
+                           "C:\\A\\Z\\**\n"
+                           "C:\\Z\\**\n");
+    conf.addAppGroup(appGroup);
+
+    conf.resetEdited(FirewallConf::AllEdited);
+    conf.prepareToSave();
+
+    ConfBuffer confBuf;
+
+    if (!confBuf.writeConf(conf, nullptr, &envManager)) {
+        qCritical() << "Error:" << confBuf.errorMessage();
+        Q_UNREACHABLE();
+    }
+
+    const char *data = confBuf.data() + DriverCommon::confIoConfOff();
+
+    const auto appFind = [&](const QString &path) { return DriverCommon::confAppFind(data, path); };
+
+    // Nested prefixes
+    ASSERT_TRUE(appFind("C:\\A\\e.exe").flags.found);
+    ASSERT_FALSE(appFind("C:\\A\\e.exe").flags.blocked);
+
+    ASSERT_TRUE(appFind("C:\\A\\B\\x.exe").flags.blocked);
+    ASSERT_TRUE(appFind("C:\\A\\Z\\y.exe").flags.blocked);
+
+    // Non-Latin prefix is sorted by UTF-16 code units
+    ASSERT_TRUE(appFind("C:\\Я\\x.exe").flags.found);
+    ASSERT_FALSE(appFind("C:\\Я\\x.exe").flags.blocked);
+
+    ASSERT_TRUE(appFind("C:\\Z\\x.exe").flags.blocked);
+
+    // Path shorter than the prefix
+    ASSERT_FALSE(appFind("C:\\A").flags.found);
+
+    ASSERT_FALSE(appFind("C:\\B\\x.exe").flags.found);
+}
+
 TEST_F(ConfUtilTest, checkEnvManager)
 {
     EnvManager envManager;
