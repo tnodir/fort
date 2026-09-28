@@ -1263,3 +1263,38 @@ TEST_F(ConfUtilTest, ruleSetsLoop)
 
     ASSERT_FALSE(DriverCommon::confRulesConnFiltered(buf.data(), &conn, /*ruleId=*/1));
 }
+
+TEST_F(ConfUtilTest, ruleZonesOwnInline)
+{
+    // Zones: 1 - "10.0.0.0/8", 2 - "10.1.0.0/16"
+    constexpr quint32 zone1 = (1 << 0);
+    constexpr quint32 zone2 = (1 << 1);
+
+    const QList<Rule> rules = {
+        { .ruleId = 1 },
+        {
+                .blocked = true,
+                .inlineZones = true,
+                .ruleId = 2,
+                .zones = { .accept_mask = zone1, .reject_mask = zone2 },
+                .ruleText = "zones(REJECTED)",
+        },
+        { .blocked = true, .ruleId = 3, .ruleText = "zones()" },
+    };
+
+    TestRulesWalker testRules(rules, /*maxRuleId=*/3);
+    testRules.addRuleSet(1, { 2, 3 });
+
+    const QByteArray buf = writeTestRules(testRules);
+
+    const QByteArray zonesBuf = writeTestZones(
+            zone1 | zone2, { writeTestZone("10.0.0.0/8"), writeTestZone("10.1.0.0/16") });
+
+    FORT_CONF_META_CONN conn = {
+        .remote_ip = { .v4 = NetFormatUtil::textToIp4("10.2.2.2") },
+    };
+
+    // The rule 3 without inline zones doesn't see the rule 2's inline zones
+    ASSERT_FALSE(
+            DriverCommon::confRulesConnFiltered(buf.data(), &conn, /*ruleId=*/1, zonesBuf.data()));
+}
