@@ -148,8 +148,13 @@ static NTSTATUS PerformBaseRelocation(
 
     PIMAGE_BASE_RELOCATION relocation =
             (PIMAGE_BASE_RELOCATION) (codeBase + directory->VirtualAddress);
+    const PUCHAR relocationEnd = (PUCHAR) relocation + directory->Size;
 
-    while (relocation->VirtualAddress > 0) {
+    while ((PUCHAR) relocation + sizeof(IMAGE_BASE_RELOCATION) <= relocationEnd
+            && relocation->VirtualAddress > 0) {
+        if (relocation->SizeOfBlock < sizeof(IMAGE_BASE_RELOCATION))
+            return STATUS_INVALID_IMAGE_FORMAT;
+
         PatchAddressRelocations(codeBase, relocation, locationDelta);
 
         /* Advance to next relocation block */
@@ -402,7 +407,9 @@ static NTSTATUS InitializeModuleImage(const PFORT_MODULE_IMAGE mi)
     const ptrdiff_t locationDelta = pImage - (PUCHAR) mi->pNtHeaders->OptionalHeader.ImageBase;
 
     if (locationDelta != 0) {
-        PerformBaseRelocation(pImage, pNtHeaders, locationDelta);
+        status = PerformBaseRelocation(pImage, pNtHeaders, locationDelta);
+        if (!NT_SUCCESS(status))
+            return status;
     }
 
     /* Adjust function table of imports */
