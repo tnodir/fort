@@ -1298,3 +1298,30 @@ TEST_F(ConfUtilTest, ruleZonesOwnInline)
     ASSERT_FALSE(
             DriverCommon::confRulesConnFiltered(buf.data(), &conn, /*ruleId=*/1, zonesBuf.data()));
 }
+
+TEST_F(ConfUtilTest, ruleFilterListNot)
+{
+    const QList<Rule> rules = {
+        { .blocked = true, .ruleId = 1, .ruleText = "!{ 1.1.1.1\n2.2.2.2 }" },
+        { .blocked = true, .ruleId = 2, .ruleText = "!{ 1.1.1.1 }" },
+    };
+
+    const QByteArray buf = writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/2));
+
+    const auto connBlocked = [&](quint16 ruleId, const char *ip) {
+        FORT_CONF_META_CONN conn = {
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4(ip) },
+        };
+
+        return DriverCommon::confRulesConnBlocked(buf.data(), &conn, ruleId);
+    };
+
+    // Negated list
+    ASSERT_FALSE(connBlocked(/*ruleId=*/1, "1.1.1.1"));
+    ASSERT_FALSE(connBlocked(/*ruleId=*/1, "2.2.2.2"));
+    ASSERT_TRUE(connBlocked(/*ruleId=*/1, "3.3.3.3"));
+
+    // Negated list of one filter
+    ASSERT_FALSE(connBlocked(/*ruleId=*/2, "1.1.1.1"));
+    ASSERT_TRUE(connBlocked(/*ruleId=*/2, "3.3.3.3"));
+}
