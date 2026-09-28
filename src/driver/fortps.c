@@ -862,42 +862,58 @@ FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree)
     fort_mem_free(buffer, FORT_PSTREE_POOL_TAG);
 }
 
-static BOOL fort_pstree_get_proc_name_locked(
+static PFORT_PSNAME fort_pstree_get_proc_name_locked(
         PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt)
 {
     PFORT_PSNODE proc = fort_pstree_find_proc(ps_tree, processId);
     if (proc == NULL)
-        return FALSE;
+        return NULL;
 
     *ps_opt = proc->ps_opt;
 
     if ((ps_opt->flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_CUSTOM))
             == FORT_PSNODE_NAME_INHERIT)
-        return FALSE;
+        return NULL;
 
     PFORT_PSNAME ps_name = proc->ps_name;
     if (ps_name == NULL)
-        return FALSE;
+        return NULL;
 
     path->len = ps_name->size;
     path->buffer = ps_name->data;
 
-    return TRUE;
+    /* The process may be deleted, while its name is used */
+    ++ps_name->refcount;
+
+    return ps_name;
 }
 
-FORT_API BOOL fort_pstree_get_proc_name(
+FORT_API PVOID fort_pstree_get_proc_name(
         PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt)
 {
-    BOOL res;
+    PFORT_PSNAME ps_name;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
     {
-        res = fort_pstree_get_proc_name_locked(ps_tree, processId, path, ps_opt);
+        ps_name = fort_pstree_get_proc_name_locked(ps_tree, processId, path, ps_opt);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    return res;
+    return ps_name;
+}
+
+FORT_API void fort_pstree_put_proc_name(PFORT_PSTREE ps_tree, PVOID ps_name)
+{
+    if (ps_name == NULL)
+        return;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
+    {
+        fort_pstree_name_del(ps_tree, ps_name);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
 inline static void fort_pstree_update_service_proc(

@@ -429,6 +429,8 @@ typedef struct fort_conf_meta_conn
     FORT_APP_PATH real_path;
 
     FORT_PATH_BUFFER path_buf;
+
+    PVOID ps_name; /* referenced process's name */
 } FORT_CONF_META_CONN, *PFORT_CONF_META_CONN;
 
 typedef const FORT_CONF_META_CONN *PCFORT_CONF_META_CONN;

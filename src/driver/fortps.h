@@ -55,8 +55,11 @@ FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree);
 
 FORT_API void fort_pstree_enum_processes(PFORT_PSTREE ps_tree);
 
-FORT_API BOOL fort_pstree_get_proc_name(
+/* Returns the process's name, which is referenced until fort_pstree_put_proc_name() */
+FORT_API PVOID fort_pstree_get_proc_name(
         PFORT_PSTREE ps_tree, DWORD processId, PFORT_APP_PATH path, PFORT_PS_OPT ps_opt);
+
+FORT_API void fort_pstree_put_proc_name(PFORT_PSTREE ps_tree, PVOID ps_name);
 
 FORT_API void fort_pstree_update_services(
         PFORT_PSTREE ps_tree, PCFORT_SERVICE_INFO_LIST services, ULONG data_len);

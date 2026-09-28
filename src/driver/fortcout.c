@@ -95,7 +95,10 @@ static void fort_callout_ale_fill_meta_path(PCFORT_CALLOUT_ARG ca, PFORT_CONF_ME
 
     FORT_PS_OPT ps_opt = { 0 };
 
-    if (fort_pstree_get_proc_name(&fort_device()->ps_tree, conn->process_id, path, &ps_opt)) {
+    conn->ps_name =
+            fort_pstree_get_proc_name(&fort_device()->ps_tree, conn->process_id, path, &ps_opt);
+
+    if (conn->ps_name != NULL) {
 
         const BOOL inherited = (ps_opt.flags & FORT_PSNODE_NAME_INHERITED) != 0;
         if (!inherited) {
@@ -622,6 +625,9 @@ inline static void fort_callout_ale_check_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALL
 
     /* Free the allocated path */
     fort_path_buffer_free(&conn->path_buf);
+
+    /* Release the process's name */
+    fort_pstree_put_proc_name(&fort_device()->ps_tree, conn->ps_name);
 }
 
 inline static void fort_callout_ale_by_conf(PCFORT_CALLOUT_ARG ca, PFORT_CALLOUT_ALE_EXTRA cx,
