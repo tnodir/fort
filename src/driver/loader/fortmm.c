@@ -206,7 +206,7 @@ static NTSTATUS BuildImportTableLibrary(
 static NTSTATUS BuildImportTableEntries(
         PFORT_MODULE_IMP moduleImp, PUCHAR codeBase, PIMAGE_DATA_DIRECTORY directory)
 {
-    NTSTATUS status;
+    NTSTATUS status = STATUS_SUCCESS;
 
     GetModuleInfoFallbackProc getModuleInfoFallback = moduleImp->getModuleInfoFallback;
     BuildImportTableLibraryBeginProc buildImportTableLibraryBegin =
@@ -272,8 +272,10 @@ static NTSTATUS BuildImportTable(const PFORT_MODULE_IMAGE mi)
     driverImportsSetup(&moduleImp);
 
     status = moduleImp.buildImportTableEntriesBegin(&moduleImp, mi->pModule, mi->pNtHeaders);
-    if (!NT_SUCCESS(status))
+    if (!NT_SUCCESS(status)) {
+        FreeModuleInfoList(modules);
         return status;
+    }
 
     if (status == STATUS_ALREADY_COMPLETE) {
         status = STATUS_SUCCESS;
