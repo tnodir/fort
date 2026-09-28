@@ -159,6 +159,9 @@ static int fort_conf_blob_index(const char *arr, const char *p, UINT32 blob_len,
     return -1;
 }
 
+/* Just to stop on the rule sets' loops */
+#define FORT_CONF_RULE_SET_LOOP_DEPTH_MAX (2 * FORT_CONF_RULE_SET_DEPTH_MAX)
+
 #define fort_conf_proto_inarr(proto_arr, proto, count)                                             \
     fort_conf_proto_find(proto_arr, proto, count, /*is_range=*/FALSE)
 
@@ -865,8 +868,11 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
     return FALSE;
 }
 
+static BOOL fort_conf_rules_rt_conn_filtered_depth(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id, int depth);
+
 inline static BOOL fort_conf_rules_rt_conn_filtered_sets(PCFORT_CONF_RULES_RT rules_rt,
-        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, const BOOL empty_res)
+        PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, const BOOL empty_res, int depth)
 {
     const int set_count = rule->set_count;
     if (set_count == 0)
@@ -878,7 +884,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_sets(PCFORT_CONF_RULES_RT ru
     for (int i = 0; i < set_count; ++i) {
         const UINT16 rule_id = rule_ids[i];
 
-        if (fort_conf_rules_rt_conn_filtered(rules_rt, conn, rule_id)) {
+        if (fort_conf_rules_rt_conn_filtered_depth(rules_rt, conn, rule_id, depth + 1)) {
             conn->rule_id = rule_id;
             return TRUE;
         }
@@ -901,7 +907,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
 }
 
 inline static BOOL fort_conf_rules_rt_conn_filtered_check(
-        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule)
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, PCFORT_CONF_RULE rule, int depth)
 {
     const BOOL is_filter_res = fort_conf_rules_rt_conn_filtered_zones(rules_rt, conn, rule)
             || fort_conf_rules_rt_conn_filtered_filters(conn, rule);
@@ -914,12 +920,15 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_check(
         return is_filter_res;
     }
 
-    return fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule, is_filter_res);
+    return fort_conf_rules_rt_conn_filtered_sets(rules_rt, conn, rule, is_filter_res, depth);
 }
 
-FORT_API BOOL fort_conf_rules_rt_conn_filtered(
-        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id)
+static BOOL fort_conf_rules_rt_conn_filtered_depth(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id, int depth)
 {
+    if (depth > FORT_CONF_RULE_SET_LOOP_DEPTH_MAX)
+        return FALSE;
+
     if (!fort_conf_rules_rt_rule_exists(rules_rt, rule_id))
         return FALSE;
 
@@ -928,7 +937,7 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
     if (!rule->enabled)
         return FALSE;
 
-    if (!(fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule)
+    if (!(fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule, depth)
                 || fort_conf_rules_rt_conn_filtered_terminate(conn, rule)))
         return FALSE;
 
@@ -936,6 +945,12 @@ FORT_API BOOL fort_conf_rules_rt_conn_filtered(
     conn->conn_nolog |= !conn->conn_log;
 
     return TRUE;
+}
+
+FORT_API BOOL fort_conf_rules_rt_conn_filtered(
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT16 rule_id)
+{
+    return fort_conf_rules_rt_conn_filtered_depth(rules_rt, conn, rule_id, /*depth=*/0);
 }
 
 FORT_API BOOL fort_conf_rules_conn_filtered(
