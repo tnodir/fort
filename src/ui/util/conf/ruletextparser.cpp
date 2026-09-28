@@ -527,7 +527,12 @@ void RuleTextParser::endList(int filterIndex)
     RuleFilter &ruleFilter = m_ruleFilters[filterIndex];
 
     if (filterListCount == 1) {
+        const bool isListNot = ruleFilter.isNot;
+
         ruleFilter = m_ruleFilters.takeLast(); // List contains only one filter
+
+        // Keep the list's negation
+        ruleFilter.isNot = (ruleFilter.isNot != isListNot);
         return;
     }
 
