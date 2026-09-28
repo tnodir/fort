@@ -759,6 +759,9 @@ static void fort_pstree_update(PFORT_PSTREE ps_tree, BOOL active)
     if (!NT_SUCCESS(status)) {
         LOG("PsTree: Update Error: %x\n", status);
         TRACE(FORT_PSTREE_UPDATE_ERROR, status, 0, 0);
+
+        /* Keep the process monitor's actual state */
+        fort_pstree_flags_set(ps_tree, FORT_PSTREE_ACTIVE, was_active);
     }
 }
 
@@ -780,6 +783,10 @@ FORT_API void fort_pstree_open(PFORT_PSTREE ps_tree)
 FORT_API void fort_pstree_close(PFORT_PSTREE ps_tree)
 {
     fort_pstree_update(ps_tree, /*active=*/FALSE); /* Stop process monitor */
+
+    /* The process monitor still uses the data on its removal error */
+    if ((fort_pstree_flags(ps_tree) & FORT_PSTREE_ACTIVE) != 0)
+        return;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&ps_tree->lock, &lock_queue);
