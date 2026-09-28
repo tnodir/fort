@@ -214,6 +214,24 @@ FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len)
     return RtlCompareMemory(p1, p2, len) == len;
 }
 
+FORT_API int fort_string_cmp(PCWSTR s1, UINT16 n1, PCWSTR s2, UINT16 n2, UINT16 *common_n)
+{
+    const UINT16 min_n = (n1 < n2) ? n1 : n2;
+
+    UINT16 n = 0;
+    while (n < min_n && s1[n] == s2[n]) {
+        ++n;
+    }
+
+    *common_n = n;
+
+    if (n < min_n) {
+        return (int) s1[n] - (int) s2[n];
+    }
+
+    return (int) n1 - (int) n2;
+}
+
 static BOOL fort_conf_proto_inlist(const UINT8 proto, PCFORT_CONF_PROTO_LIST proto_list)
 {
     return fort_conf_proto_inarr(
@@ -435,47 +453,85 @@ inline static FORT_APP_DATA fort_conf_app_wild_find(PCFORT_CONF conf, PCFORT_APP
     return fort_conf_app_find_loop(conf, path, &opt);
 }
 
-inline static int fort_conf_app_prefix_cmp(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path)
+/* Compare the path's first path_n chars with the entry by UTF-16 code units, as the UI sorts */
+inline static int fort_conf_app_prefix_cmp(
+        PCFORT_APP_ENTRY app_entry, PCWSTR path, UINT16 path_n, UINT16 *common_n)
 {
-    UINT16 path_len = path->len;
+    const UINT16 entry_n = app_entry->path_len / sizeof(WCHAR);
 
-    if (path_len > app_entry->path_len) {
-        path_len = app_entry->path_len;
+    return fort_string_cmp(path, path_n, app_entry->path, entry_n, common_n);
+}
+
+typedef struct fort_conf_app_prefix_find_arg
+{
+    const UINT32 *app_offsets;
+    const char *app_entries;
+    PCWSTR path;
+
+    int high; /* the last entry's index to search */
+    UINT16 path_n; /* the path's chars to compare */
+
+    /* Found entry */
+    int index;
+    UINT16 common_n;
+    PCFORT_APP_ENTRY app_entry;
+} FORT_CONF_APP_PREFIX_FIND_ARG, *PFORT_CONF_APP_PREFIX_FIND_ARG;
+
+/* Find the greatest entry, which is not greater than the path's first path_n chars */
+static BOOL fort_conf_app_prefix_find_entry(PFORT_CONF_APP_PREFIX_FIND_ARG pfa)
+{
+    BOOL res = FALSE;
+    int low = 0;
+    int high = pfa->high;
+
+    while (low <= high) {
+        const int mid = (low + high) / 2;
+        PCFORT_APP_ENTRY app_entry = (PCFORT_APP_ENTRY) (pfa->app_entries + pfa->app_offsets[mid]);
+
+        UINT16 common_n;
+        if (fort_conf_app_prefix_cmp(app_entry, pfa->path, pfa->path_n, &common_n) < 0) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+
+            pfa->index = mid;
+            pfa->common_n = common_n;
+            pfa->app_entry = app_entry;
+            res = TRUE;
+        }
     }
 
-    return fort_mem_cmp(path->buffer, app_entry->path, path_len);
+    return res;
 }
 
 inline static FORT_APP_DATA fort_conf_app_prefix_find(PCFORT_CONF conf, PCFORT_APP_PATH path)
 {
-    FORT_APP_DATA app_data = { 0 };
+    const FORT_APP_DATA app_data = { 0 };
 
     const UINT16 count = conf->prefix_apps_n;
     if (count == 0)
         return app_data;
 
-    const char *data = conf->data;
-    const UINT32 *app_offsets = (const UINT32 *) (data + conf->prefix_apps_off);
+    const UINT32 *app_offsets = (const UINT32 *) (conf->data + conf->prefix_apps_off);
 
-    const char *app_entries = (const char *) (app_offsets + count + 1);
-    int low = 0;
-    int high = count - 1;
+    FORT_CONF_APP_PREFIX_FIND_ARG pfa = {
+        .app_offsets = app_offsets,
+        .app_entries = (const char *) (app_offsets + count + 1),
+        .path = path->buffer,
+        .high = count - 1,
+        .path_n = path->len / sizeof(WCHAR),
+    };
 
-    do {
-        const int mid = (low + high) / 2;
-        const UINT32 app_off = app_offsets[mid];
-        PCFORT_APP_ENTRY app_entry = (PCFORT_APP_ENTRY) (app_entries + app_off);
-
-        const int res = fort_conf_app_prefix_cmp(app_entry, path);
-
-        if (res < 0) {
-            high = mid - 1;
-        } else {
-            low = mid + 1;
-
-            app_data = (res > 0) ? app_data : app_entry->app_data;
+    while (fort_conf_app_prefix_find_entry(&pfa)) {
+        /* The greatest prefix of the path is the longest one */
+        if (pfa.common_n == pfa.app_entry->path_len / sizeof(WCHAR)) {
+            return pfa.app_entry->app_data;
         }
-    } while (low <= high);
+
+        /* Shorter prefixes are prefixes of the common part too and are less than the entry */
+        pfa.path_n = pfa.common_n;
+        pfa.high = pfa.index - 1;
+    }
 
     return app_data;
 }

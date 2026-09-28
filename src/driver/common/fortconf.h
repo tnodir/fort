@@ -565,6 +565,9 @@ FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len);
 
 FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len);
 
+/* Compare by UTF-16 code units (as QString) and return the common prefix's length */
+FORT_API int fort_string_cmp(PCWSTR s1, UINT16 n1, PCWSTR s2, UINT16 n2, UINT16 *common_n);
+
 FORT_API BOOL fort_conf_ip_inlist(PCFORT_CONF_ADDR_LIST addr_list, const ip_addr_t ip, BOOL isIPv6);
 
 FORT_API PCFORT_CONF_ADDR_GROUP fort_conf_addr_group_ref(PCFORT_CONF conf, int addr_group_index);
