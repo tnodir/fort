@@ -439,6 +439,9 @@ FORT_API NTSTATUS LoadModuleFromMemory(PLOADEDMODULE pModule, const PUCHAR lpDat
     if (pImage == NULL)
         return STATUS_NO_MEMORY;
 
+    /* Sections' uninitialized data (VirtualSize > SizeOfRawData) must be zeroed */
+    RtlZeroMemory(pImage, imageSize);
+
 #ifdef FORT_DEBUG
     LOG("Loader Module: image=%p\n", pImage);
 #endif
