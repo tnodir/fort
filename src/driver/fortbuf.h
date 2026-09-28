@@ -31,6 +31,8 @@ typedef struct fort_buffer
     ULONG out_len;
     UINT32 out_top;
 
+    UINT32 data_count; /* allocated data blocks */
+
     KSPIN_LOCK lock;
 } FORT_BUFFER, *PFORT_BUFFER;
 

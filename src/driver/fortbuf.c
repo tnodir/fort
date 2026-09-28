@@ -9,14 +9,20 @@
 
 #define FORT_BUFFER_POOL_TAG 'BwfF'
 
+#define FORT_BUFFER_DATA_COUNT_MAX 256 /* ~4 MB of not read logs */
+
 static PFORT_BUFFER_DATA fort_buffer_data_new(PFORT_BUFFER buf)
 {
     PFORT_BUFFER_DATA data = buf->data_free;
 
     if (data != NULL) {
         buf->data_free = data->next;
-    } else {
+    } else if (buf->data_count < FORT_BUFFER_DATA_COUNT_MAX) {
         data = fort_mem_alloc(sizeof(FORT_BUFFER_DATA), FORT_BUFFER_POOL_TAG);
+
+        if (data != NULL) {
+            ++buf->data_count;
+        }
     }
 
     return data;
@@ -97,6 +103,7 @@ FORT_API void fort_buffer_clear(PFORT_BUFFER buf)
     buf->data_head = NULL;
     buf->data_tail = NULL;
     buf->data_free = NULL;
+    buf->data_count = 0;
 
     /* Detach the pending IRP */
     irp_info.irp = buf->irp;
@@ -162,6 +169,10 @@ inline static NTSTATUS fort_buffer_prepare_new(PFORT_BUFFER buf, UINT32 len, PCH
 {
     PFORT_BUFFER_DATA data = fort_buffer_data_alloc(buf, len);
     if (data == NULL) {
+        /* The client doesn't read the logs */
+        if (buf->data_count >= FORT_BUFFER_DATA_COUNT_MAX)
+            return STATUS_BUFFER_OVERFLOW;
+
         LOG("Buffer OOM: len=%d\n", len);
         TRACE(FORT_BUFFER_OOM, STATUS_INSUFFICIENT_RESOURCES, len, 0);
         return STATUS_INSUFFICIENT_RESOURCES;
