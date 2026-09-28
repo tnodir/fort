@@ -276,6 +276,17 @@ FORT_API void fort_conf_ref_put(PFORT_DEVICE_CONF device_conf, PFORT_CONF_REF co
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+static PFORT_CONF_REF fort_conf_ref_take_locked(PFORT_DEVICE_CONF device_conf)
+{
+    PFORT_CONF_REF conf_ref = device_conf->ref;
+
+    if (conf_ref != NULL) {
+        ++conf_ref->refcount;
+    }
+
+    return conf_ref;
+}
+
 FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
 {
     if (device_conf->ref == NULL)
@@ -286,10 +297,7 @@ FORT_API PFORT_CONF_REF fort_conf_ref_take(PFORT_DEVICE_CONF device_conf)
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
-        conf_ref = device_conf->ref;
-        if (conf_ref != NULL) {
-            ++conf_ref->refcount;
-        }
+        conf_ref = fort_conf_ref_take_locked(device_conf);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
@@ -333,19 +341,20 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
     FORT_CONF_FLAGS old_conf_flags;
     FORT_CONF_FLAGS conf_flags;
 
-    const PFORT_CONF_REF old_conf_ref = fort_conf_ref_take(device_conf);
-
-    if (old_conf_ref != NULL) {
-        old_conf_flags = old_conf_ref->conf.flags;
-    } else {
-        const UINT16 flags = fort_device_flags(device_conf);
-
-        fort_device_flags_conf_copy(&old_conf_flags, flags);
-    }
-
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&device_conf->ref_lock, &lock_queue);
     {
+        /* Replace the old conf under the lock to not lose a concurrently set conf */
+        const PFORT_CONF_REF old_conf_ref = fort_conf_ref_take_locked(device_conf);
+
+        if (old_conf_ref != NULL) {
+            old_conf_flags = old_conf_ref->conf.flags;
+        } else {
+            const UINT16 flags = fort_device_flags(device_conf);
+
+            fort_device_flags_conf_copy(&old_conf_flags, flags);
+        }
+
         device_conf->ref = conf_ref;
 
         if (conf_ref != NULL) {
