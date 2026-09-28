@@ -197,7 +197,7 @@ FORT_API PWCHAR fort_path_prefix_volume_sep(PCFORT_APP_PATH path)
 
 FORT_API void fort_path_prefix_adjust(PUNICODE_STRING path)
 {
-    if (path->Length < 7)
+    if (path->Length < 7 * sizeof(WCHAR))
         return;
 
     if (fort_path_prefix_is_device_alias(path)) {
