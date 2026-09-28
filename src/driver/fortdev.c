@@ -566,6 +566,12 @@ FORT_API void fort_device_unload(void)
     /* Stop worker threads */
     fort_worker_unregister(&fort_device()->worker);
 
+    /* Remove the flows' contexts to uninstall callouts */
+    fort_stat_close_flows(&fort_device()->stat);
+
+    /* Uninstall callouts before closing their data */
+    fort_callout_remove();
+
     /* Stop process monitor */
     fort_pstree_close(&fort_device()->ps_tree);
 
@@ -576,9 +582,6 @@ FORT_API void fort_device_unload(void)
     /* Stop stat & buffer controllers */
     fort_stat_close(&fort_device()->stat);
     fort_buffer_close(&fort_device()->buffer);
-
-    /* Uninstall callouts */
-    fort_callout_remove();
 
     /* Unregister filters provider */
     if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_BOOT_FILTER) == 0) {

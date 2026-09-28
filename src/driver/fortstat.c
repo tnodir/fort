@@ -386,8 +386,6 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
 
 FORT_API void fort_stat_close(PFORT_STAT stat)
 {
-    fort_stat_close_flows(stat);
-
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
