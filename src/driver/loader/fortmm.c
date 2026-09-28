@@ -308,11 +308,11 @@ static BOOL CheckPEHeaderSections(const PIMAGE_NT_HEADERS pNtHeaders)
 
     const SIZE_T imageSize = MAX_ALIGNED(pNtHeaders->OptionalHeader.SizeOfImage, PAGE_SIZE);
     if (imageSize != MAX_ALIGNED(lastSectionEnd, PAGE_SIZE))
-        return STATUS_INVALID_IMAGE_FORMAT;
+        return FALSE;
 
     /* Check entry point */
     if (pNtHeaders->OptionalHeader.AddressOfEntryPoint == 0)
-        return STATUS_DRIVER_ENTRYPOINT_NOT_FOUND;
+        return FALSE;
 
     return TRUE;
 }
