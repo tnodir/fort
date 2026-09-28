@@ -87,6 +87,8 @@ FORT_API void fort_buffer_close(PFORT_BUFFER buf)
 
 FORT_API void fort_buffer_clear(PFORT_BUFFER buf)
 {
+    FORT_IRP_INFO irp_info = { .irp = NULL };
+
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &lock_queue);
 
@@ -96,7 +98,18 @@ FORT_API void fort_buffer_clear(PFORT_BUFFER buf)
     buf->data_tail = NULL;
     buf->data_free = NULL;
 
+    /* Detach the pending IRP */
+    irp_info.irp = buf->irp;
+    buf->irp = NULL;
+    buf->out_len = 0;
+    buf->out_top = 0;
+
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    if (irp_info.irp != NULL) {
+        fort_buffer_irp_clear_pending(&irp_info);
+        fort_request_complete_info(&irp_info, STATUS_CANCELLED);
+    }
 }
 
 static void fort_buffer_flush_pending_out(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info, UINT32 out_top)
