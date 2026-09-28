@@ -527,7 +527,7 @@ FORT_API void fort_prov_unregister(HANDLE engine)
 FORT_API void fort_prov_trans_unregister(void)
 {
     HANDLE engine;
-    if (NT_SUCCESS(fort_prov_trans_open(&engine))) {
+    if (fort_prov_trans_open(&engine) == 0) {
 
         fort_prov_unregister(engine);
 
@@ -625,7 +625,7 @@ FORT_API DWORD fort_prov_trans_register(const FORT_PROV_BOOT_CONF boot_conf)
     HANDLE engine;
     DWORD status = fort_prov_trans_open(&engine);
 
-    if (NT_SUCCESS(status)) {
+    if (status == 0) {
 
         status = fort_prov_register(engine, boot_conf);
 
