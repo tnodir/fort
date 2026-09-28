@@ -106,6 +106,12 @@ FORT_API FARPROC ModuleGetProcAddress(PLOADEDMODULE pModule, LPCSTR funcName)
         return NULL; /* exported symbol not found or name <-> ordinal number don't match */
 
     /* AddressOfFunctions contains the RVAs to the "real" functions */
-    return (FARPROC) (PVOID) (codeBase
-            + *(DWORD *) (codeBase + exports->AddressOfFunctions + (SIZE_T) idx * 4));
+    const DWORD funcRva = *(DWORD *) (codeBase + exports->AddressOfFunctions + (SIZE_T) idx * 4);
+
+    /* The forwarded function's RVA points to its "Module.Function" name in the export directory */
+    if (funcRva >= directory->VirtualAddress
+            && funcRva < directory->VirtualAddress + directory->Size)
+        return NULL;
+
+    return (FARPROC) (PVOID) (codeBase + funcRva);
 }
