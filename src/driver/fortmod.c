@@ -29,13 +29,9 @@ FORT_API NTSTATUS GetModuleInfo(PLOADEDMODULE pModule, LPCSTR name,
     return STATUS_PROCEDURE_NOT_FOUND;
 }
 
-FORT_API NTSTATUS GetModuleInfoList(PAUX_MODULE_EXTENDED_INFO *outModules, DWORD *outModulesCount)
+static NTSTATUS GetModuleInfoData(PUCHAR *outData, ULONG *outSize)
 {
     NTSTATUS status;
-
-    status = AuxKlibInitialize();
-    if (!NT_SUCCESS(status))
-        return status;
 
     ULONG size = 0;
     status = AuxKlibQueryModuleInformation(&size, sizeof(AUX_MODULE_EXTENDED_INFO), NULL);
@@ -51,6 +47,32 @@ FORT_API NTSTATUS GetModuleInfoList(PAUX_MODULE_EXTENDED_INFO *outModules, DWORD
         fort_mem_free(data, FORT_MODULE_POOL_TAG);
         return status;
     }
+
+    *outData = data;
+    *outSize = size;
+
+    return STATUS_SUCCESS;
+}
+
+FORT_API NTSTATUS GetModuleInfoList(PAUX_MODULE_EXTENDED_INFO *outModules, DWORD *outModulesCount)
+{
+    NTSTATUS status;
+
+    status = AuxKlibInitialize();
+    if (!NT_SUCCESS(status))
+        return status;
+
+    PUCHAR data;
+    ULONG size;
+
+    /* The modules may be loaded between the size and data queries */
+    int retryCount = 3;
+    do {
+        status = GetModuleInfoData(&data, &size);
+    } while (status == STATUS_BUFFER_TOO_SMALL && --retryCount > 0);
+
+    if (!NT_SUCCESS(status))
+        return status;
 
     *outModules = (PAUX_MODULE_EXTENDED_INFO) data;
     *outModulesCount = size / sizeof(AUX_MODULE_EXTENDED_INFO);
