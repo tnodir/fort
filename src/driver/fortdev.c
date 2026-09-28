@@ -194,7 +194,7 @@ static NTSTATUS fort_device_control_setconf(PFORT_DEVICE_CONTROL_ARG dca)
     PCFORT_CONF_IO conf_io = dca->buffer;
     const ULONG len = dca->in_len;
 
-    if (len > sizeof(FORT_CONF_IO)) {
+    if (fort_conf_io_valid(conf_io, len)) {
         PCFORT_CONF conf = &conf_io->conf;
         PFORT_CONF_REF conf_ref = fort_conf_ref_new(conf, len - FORT_CONF_IO_CONF_OFF);
 
@@ -261,7 +261,7 @@ static NTSTATUS fort_device_control_app(PFORT_DEVICE_CONTROL_ARG dca, BOOL is_ad
     PCFORT_APP_ENTRY app_entry = dca->buffer;
     const ULONG len = dca->in_len;
 
-    if (len < sizeof(FORT_APP_ENTRY) || len < FORT_CONF_APP_ENTRY_SIZE(app_entry->path_len))
+    if (!fort_conf_app_entry_valid(app_entry, len))
         return STATUS_UNSUCCESSFUL;
 
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(&fort_device()->conf);
