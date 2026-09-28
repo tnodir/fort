@@ -325,6 +325,8 @@ static PFORT_PSNAME fort_pstree_create_service_name(
         PFORT_PSTREE ps_tree, PCUNICODE_STRING serviceName)
 {
     const USHORT nameLen = serviceName->Length;
+    if (nameLen >= FORT_PSTREE_NAME_LEN_MAX_SIZE)
+        return NULL;
 
     PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, FORT_SVCHOST_PREFIX_SIZE + nameLen);
 
