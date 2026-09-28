@@ -520,10 +520,19 @@ static void fort_shaper_queue_advance_available(
     queue->last_tick = now;
 
     const UINT64 bps = queue->limit.bps;
+    const INT64 qpcFrequency = shaper->qpcFrequency.QuadPart;
+
+    /* The available bytes are limited by 1 second's bandwidth, so limit the elapsed ticks too
+     * to avoid the multiplication's overflow after a long idle */
+    INT64 elapsed_ticks = now.QuadPart - last_tick.QuadPart;
+    if (elapsed_ticks < 0) {
+        elapsed_ticks = 0;
+    } else if (elapsed_ticks > qpcFrequency) {
+        elapsed_ticks = qpcFrequency;
+    }
 
     /* Advance the available bytes */
-    const UINT64 accumulated =
-            (bps * (now.QuadPart - last_tick.QuadPart)) / shaper->qpcFrequency.QuadPart;
+    const UINT64 accumulated = (bps * (UINT64) elapsed_ticks) / (UINT64) qpcFrequency;
 
     queue->available_bytes += accumulated;
 
