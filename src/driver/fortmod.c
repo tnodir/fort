@@ -102,7 +102,7 @@ FORT_API FARPROC ModuleGetProcAddress(PLOADEDMODULE pModule, LPCSTR funcName)
 
     const int idx = ModuleGetProcIndex(codeBase, exports, funcName);
 
-    if (idx < 0 || idx > (int) exports->NumberOfFunctions)
+    if (idx < 0 || idx >= (int) exports->NumberOfFunctions)
         return NULL; /* exported symbol not found or name <-> ordinal number don't match */
 
     /* AddressOfFunctions contains the RVAs to the "real" functions */
