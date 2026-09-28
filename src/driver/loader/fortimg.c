@@ -106,26 +106,37 @@ static NTSTATUS fort_image_verify(
     return status;
 }
 
+#define FORT_IMAGE_LOADER_SIZE_MIN    1024
+#define FORT_IMAGE_PAYLOAD_INFO_SIZE  8
+#define FORT_IMAGE_SIGNATURE_SIZE_MIN 512
+
 FORT_API NTSTATUS fort_image_payload(
         const PUCHAR data, DWORD dataSize, PUCHAR *outPayload, DWORD *outPayloadSize)
 {
     NTSTATUS status;
 
-    const PUCHAR paylodInfo = data + dataSize - 8;
-    const int signatureSize = fort_le_u16_read(paylodInfo, 0);
-    const int alignedSignatureSize = fort_le_u16_read(paylodInfo, 2);
-    const int payloadSize = fort_le_u32_read(paylodInfo, 4);
+    /* The data: loader, payload, aligned signature and payload info */
+    if (dataSize < FORT_IMAGE_LOADER_SIZE_MIN + FORT_IMAGE_PAYLOAD_INFO_SIZE)
+        return STATUS_INVALID_IMAGE_FORMAT;
+
+    const PUCHAR paylodInfo = data + dataSize - FORT_IMAGE_PAYLOAD_INFO_SIZE;
+    const DWORD signatureSize = fort_le_u16_read(paylodInfo, 0);
+    const DWORD alignedSignatureSize = fort_le_u16_read(paylodInfo, 2);
+    const DWORD payloadSize = fort_le_u32_read(paylodInfo, 4);
 
 #ifdef FORT_DEBUG
     LOG("Loader Image Load: size=%d signatureSize=%d alignedSignatureSize=%d payloadSize=%d\n",
             dataSize, signatureSize, alignedSignatureSize, payloadSize);
 #endif
 
+    const DWORD sizeMax = dataSize - FORT_IMAGE_LOADER_SIZE_MIN - FORT_IMAGE_PAYLOAD_INFO_SIZE;
+
+    if (signatureSize < FORT_IMAGE_SIGNATURE_SIZE_MIN || signatureSize > alignedSignatureSize
+            || alignedSignatureSize > sizeMax || payloadSize > sizeMax - alignedSignatureSize)
+        return STATUS_INVALID_IMAGE_FORMAT;
+
     const PUCHAR signature = paylodInfo - alignedSignatureSize;
     const PUCHAR payload = signature - payloadSize;
-
-    if (signatureSize < 512 || payload - data < 1024)
-        return STATUS_INVALID_IMAGE_FORMAT;
 
     status = fort_image_verify(payload, payloadSize, signature, signatureSize);
     if (!NT_SUCCESS(status))
