@@ -2,6 +2,7 @@
 
 #include "fortdev.h"
 
+#include "common/fortconf_valid.h"
 #include "common/fortioctl.h"
 #include "common/fortprov.h"
 
@@ -299,7 +300,7 @@ static NTSTATUS fort_device_control_setzones(PFORT_DEVICE_CONTROL_ARG dca)
     PCFORT_CONF_ZONES zones = dca->buffer;
     const ULONG len = dca->in_len;
 
-    if (len >= FORT_CONF_ZONES_DATA_OFF) {
+    if (fort_conf_zones_valid(zones, len)) {
         PFORT_CONF_ZONES conf_zones = fort_conf_zones_new(zones, len);
 
         if (conf_zones == NULL) {

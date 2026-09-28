@@ -555,6 +555,8 @@ typedef BOOL fort_conf_zones_ip_included_func(
 extern "C" {
 #endif
 
+FORT_API int fort_bit_scan_forward(ULONG mask);
+
 FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len);
 
 #define fort_ip6_cmp(l, r) fort_mem_cmp(l, r, sizeof(ip6_addr_t))

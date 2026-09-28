@@ -9,6 +9,7 @@
 */
 
 #include "common/fortconf.c"
+#include "common/fortconf_valid.c"
 #include "common/fortlog.c"
 #include "common/fortprov.c"
 #include "common/fort_wildmatch.c"

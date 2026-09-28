@@ -22,7 +22,7 @@ static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
 static_assert(sizeof(FORT_APP_DATA) == 5 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
 
-static int bit_scan_forward(ULONG mask)
+FORT_API int fort_bit_scan_forward(ULONG mask)
 {
     unsigned long index;
     return _BitScanForward(&index, mask) ? index : -1;
@@ -308,7 +308,7 @@ FORT_API BOOL fort_conf_zones_ip_included(
     zones_mask &= (zones->mask & zones->enabled_mask);
 
     while (zones_mask != 0) {
-        const int zone_index = bit_scan_forward(zones_mask);
+        const int zone_index = fort_bit_scan_forward(zones_mask);
 
         if (zone_index == -1)
             break; /* never, but to avoid static analizers warning */
