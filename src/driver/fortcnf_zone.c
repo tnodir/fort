@@ -20,7 +20,12 @@ FORT_API void fort_conf_zones_set(PFORT_DEVICE_CONF device_conf, PFORT_CONF_ZONE
 inline static void fort_conf_zone_flag_set_locked(
         PFORT_CONF_ZONES zones, PCFORT_CONF_ZONE_FLAG zone_flag)
 {
-    const UINT32 zone_mask = (1u << (zone_flag->zone_id - 1));
+    const UCHAR zone_id = zone_flag->zone_id;
+
+    if (zone_id == 0 || zone_id > FORT_CONF_ZONE_MAX)
+        return;
+
+    const UINT32 zone_mask = (1u << (zone_id - 1));
 
     if (zone_flag->enabled) {
         zones->enabled_mask |= zone_mask;
