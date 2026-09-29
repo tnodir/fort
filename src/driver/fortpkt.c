@@ -916,7 +916,8 @@ FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, PCFORT_CONF_IO conf_i
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
     {
-        flush_io_bits = (limit_io_bits ^ shaper->group_io_bits);
+        /* Flush the queues, which are shaped no more (e.g. the group is disabled) */
+        flush_io_bits = (group_io_bits ^ shaper->group_io_bits);
 
         fort_shaper_create_queues(shaper, conf_group->limits, limit_io_bits);
 
