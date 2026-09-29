@@ -1350,6 +1350,47 @@ TEST_F(ConfUtilTest, ruleFilterListNot)
     ASSERT_TRUE(connBlocked(/*ruleId=*/2, "3.3.3.3"));
 }
 
+TEST_F(ConfUtilTest, ruleFilterListNotActionOption)
+{
+    const QList<Rule> rules = {
+        { .blocked = false, .ruleId = 1, .ruleText = "port(80):!{ 1.1.1.1:act(BLOCK) }" },
+        {
+                .blocked = false,
+                .logAllowedConn = false,
+                .ruleId = 2,
+                .ruleText = "port(80):!{ 1.1.1.1:opt(LOG) }",
+        },
+    };
+
+    const QByteArray buf = writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/2));
+
+    const auto connFiltered = [&](quint16 ruleId, const char *ip, FORT_CONF_META_CONN &conn) {
+        conn = {
+            .act = { .blocked = true },
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4(ip) },
+        };
+
+        return DriverCommon::confRulesConnFiltered(buf.data(), &conn, ruleId);
+    };
+
+    FORT_CONF_META_CONN conn;
+
+    // The negated list's matched action doesn't match the rule
+    ASSERT_FALSE(connFiltered(/*ruleId=*/1, "1.1.1.1", conn));
+    ASSERT_TRUE(conn.act.blocked);
+
+    ASSERT_TRUE(connFiltered(/*ruleId=*/1, "2.2.2.2", conn));
+    ASSERT_FALSE(conn.act.blocked);
+
+    // The negated list's matched option doesn't match the rule
+    ASSERT_FALSE(connFiltered(/*ruleId=*/2, "1.1.1.1", conn));
+    ASSERT_FALSE(conn.act.conn_log);
+
+    ASSERT_TRUE(connFiltered(/*ruleId=*/2, "2.2.2.2", conn));
+    ASSERT_FALSE(conn.act.conn_log);
+}
+
 TEST_F(ConfUtilTest, ruleExclusiveSetNotFiltered)
 {
     const QList<Rule> rules = {

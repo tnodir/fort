@@ -628,7 +628,9 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_list_check(
 
         const FORT_CONN_FILTER_RESULT filter_res = fort_conf_rule_filter_check(sub_filter, conn);
 
-        if (isAnd ? (filter_res == 0) : (filter_res & FORT_CONN_FILTER_RESULT_TRUE) != 0) {
+        const BOOL is_filter_res = (filter_res & FORT_CONN_FILTER_RESULT_TRUE) != 0;
+
+        if (isAnd ? !is_filter_res : is_filter_res) {
             return isAnd ? 0 : filter_res;
         }
 
@@ -788,7 +790,8 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_option(
 
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
 
-    return flags;
+    /* The options are applied only by the matched filters */
+    return FORT_CONN_FILTER_RESULT_TRUE | flags;
 }
 
 static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_port_protocol(
