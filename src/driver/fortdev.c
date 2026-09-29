@@ -123,6 +123,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
         fort_conf_rules_set(&fort_device()->conf, NULL);
 
         fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
+        fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
 
         fort_device_reauth_force(old_conf_flags);
     }
