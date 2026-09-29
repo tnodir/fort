@@ -244,8 +244,7 @@ void StatManager::addLoggedProcessId(const QString &appPath, const LogEntryProcN
 {
     const quint32 pid = entry.pid();
 
-    Q_ASSERT(!m_appPidPathMap.contains(pid));
-
+    // The exited process's ID may be reused by a new process with another path
     m_appPidPathMap.insert(pid, appPath);
 }
 
