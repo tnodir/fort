@@ -296,12 +296,29 @@ inline static UCHAR fort_stat_group_speed_limit(PFORT_CONF_GROUP conf_group, UCH
     return (((conf_group->limit_io_bits) >> (group_index * 2)) & 3);
 }
 
-inline static NTSTATUS fort_flow_add_new(
-        PFORT_STAT stat, PFORT_FLOW *flow, tommy_key_t flow_hash, PCFORT_CONF_META_CONN conn)
+inline static void fort_flow_opt_set(
+        PFORT_STAT stat, PFORT_FLOW flow, PCFORT_CONF_META_CONN conn, PFORT_STAT_PROC proc)
+{
+    const UCHAR group_index = conn->app_data.group_index;
+
+    const UCHAR speed_limit = fort_stat_group_speed_limit(&stat->conf_group, group_index);
+
+    flow->opt.flags = speed_limit | (conn->ip_proto == IPPROTO_TCP ? FORT_FLOW_TCP : 0)
+            | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0);
+
+    flow->opt.group_index = group_index;
+    flow->opt.proc_index = proc->proc_index;
+}
+
+inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW *flow, tommy_key_t flow_hash,
+        PCFORT_CONF_META_CONN conn, PFORT_STAT_PROC proc)
 {
     *flow = fort_flow_new(stat, conn->flow_id, flow_hash);
     if (*flow == NULL)
         return STATUS_INSUFFICIENT_RESOURCES;
+
+    /* The flow's options are used by the classify callouts after the context's association */
+    fort_flow_opt_set(stat, *flow, conn, proc);
 
     NTSTATUS status = fort_flow_context_set(stat, *flow, conn->isIPv6);
     if (!NT_SUCCESS(status)) {
@@ -323,23 +340,15 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT
     PFORT_FLOW flow = fort_flow_get(stat, flow_id, flow_hash);
 
     if (flow == NULL) {
-        const NTSTATUS status = fort_flow_add_new(stat, &flow, flow_hash, conn);
+        const NTSTATUS status = fort_flow_add_new(stat, &flow, flow_hash, conn, proc);
 
         if (!NT_SUCCESS(status))
             return status;
 
         fort_stat_proc_inc(proc);
+    } else {
+        fort_flow_opt_set(stat, flow, conn, proc);
     }
-
-    const UCHAR group_index = conn->app_data.group_index;
-
-    const UCHAR speed_limit = fort_stat_group_speed_limit(&stat->conf_group, group_index);
-
-    flow->opt.flags = speed_limit | (conn->ip_proto == IPPROTO_TCP ? FORT_FLOW_TCP : 0)
-            | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0);
-
-    flow->opt.group_index = group_index;
-    flow->opt.proc_index = proc->proc_index;
 
     return STATUS_SUCCESS;
 }
