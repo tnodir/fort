@@ -962,11 +962,21 @@ static void fort_shaper_packet_queue_add_packet(
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+/* RtlRandomEx() can't be called at DISPATCH_LEVEL, so use the LCG */
+inline static UINT32 fort_shaper_random(PFORT_SHAPER shaper)
+{
+    const UINT32 seed = shaper->randomSeed * 1664525u + 1013904223u;
+
+    shaper->randomSeed = seed;
+
+    return seed >> 8; /* the low bits are less random */
+}
+
 inline static BOOL fort_shaper_packet_queue_check_plr(PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue)
 {
     const UINT16 plr = queue->limit.plr;
     if (plr > 0) {
-        const ULONG random = RtlRandomEx(&shaper->randomSeed) % 10000; /* PLR range is 0-10000 */
+        const UINT32 random = fort_shaper_random(shaper) % 10000; /* PLR range is 0-10000 */
         if (random < plr)
             return FALSE;
     }
