@@ -567,11 +567,11 @@ FORT_API void fort_device_unload(void)
     fort_syscb_power_unregister();
     fort_syscb_time_unregister();
 
+    /* Stop worker threads before timers, because the worker's reauth may run the timer */
+    fort_worker_unregister(&fort_device()->worker);
+
     /* Stop timers */
     fort_timer_close(&fort_device()->log_timer);
-
-    /* Stop worker threads */
-    fort_worker_unregister(&fort_device()->worker);
 
     /* Remove the flows' contexts to uninstall callouts */
     fort_stat_close_flows(&fort_device()->stat);
