@@ -642,8 +642,9 @@ static PFORT_FLOW_PACKET fort_shaper_queue_get_packets(
 
     queue->queued_bytes = 0;
 
-    pkt = fort_shaper_packet_list_get(&queue->latency_list, pkt);
+    /* Keep the packets' order: the latency list's older packets are first */
     pkt = fort_shaper_packet_list_get(&queue->bandwidth_list, pkt);
+    pkt = fort_shaper_packet_list_get(&queue->latency_list, pkt);
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
