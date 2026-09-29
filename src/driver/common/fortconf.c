@@ -837,11 +837,29 @@ static const FORT_CONF_RULE_FILTER_CHECK_FUNC fort_conf_rule_filter_check_funcLi
     &fort_conf_rule_filter_check_port_udp, // FORT_RULE_FILTER_TYPE_PORT_UDP,
 };
 
+inline static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_empty(
+        PCFORT_CONF_META_CONN conn, const int filter_type)
+{
+    switch (filter_type) {
+    case FORT_RULE_FILTER_TYPE_PORT_TCP:
+    case FORT_RULE_FILTER_TYPE_PORT_UDP: {
+        /* The protocol is checked even without the ports */
+        const UCHAR proto =
+                (filter_type == FORT_RULE_FILTER_TYPE_PORT_TCP) ? IpProto_TCP : IpProto_UDP;
+
+        return (conn->ip_proto == proto) ? FORT_CONN_FILTER_RESULT_TRUE
+                                         : FORT_CONN_FILTER_RESULT_FALSE;
+    }
+    default:
+        return FORT_CONN_FILTER_RESULT_TRUE;
+    }
+}
+
 inline static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_type(
         PCFORT_CONF_RULE_FILTER rule_filter, PFORT_CONF_META_CONN conn, const int filter_type)
 {
     if (rule_filter->is_empty) {
-        return FORT_CONN_FILTER_RESULT_TRUE;
+        return fort_conf_rule_filter_check_empty(conn, filter_type);
     }
 
     const FORT_CONF_RULE_FILTER_CHECK_FUNC func = fort_conf_rule_filter_check_funcList[filter_type];
@@ -866,7 +884,9 @@ inline static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_equal(
         equal_res = fort_mem_eql(p1, p2, len);
     } break;
     case FORT_RULE_FILTER_TYPE_PORT:
-    case FORT_RULE_FILTER_TYPE_LOCAL_PORT: {
+    case FORT_RULE_FILTER_TYPE_LOCAL_PORT:
+    case FORT_RULE_FILTER_TYPE_PORT_TCP:
+    case FORT_RULE_FILTER_TYPE_PORT_UDP: {
         equal_res = conn->local_port == conn->remote_port;
     } break;
     default:

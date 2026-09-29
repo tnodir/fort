@@ -1391,6 +1391,43 @@ TEST_F(ConfUtilTest, ruleFilterListNotActionOption)
     ASSERT_FALSE(conn.act.conn_log);
 }
 
+TEST_F(ConfUtilTest, ruleFilterEqualProtocolPorts)
+{
+    const QList<Rule> rules = {
+        { .blocked = true, .ruleId = 1, .ruleText = "=tcp" },
+        { .blocked = true, .ruleId = 2, .ruleText = "=tcp(21)" },
+        { .blocked = true, .ruleId = 3, .ruleText = "=udp" },
+    };
+
+    const QByteArray buf = writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/3));
+
+    const auto connBlocked = [&](quint16 ruleId, quint8 ipProto, quint16 localPort,
+                                     quint16 remotePort) {
+        FORT_CONF_META_CONN conn = {
+            .ip_proto = ipProto,
+            .local_port = localPort,
+            .remote_port = remotePort,
+        };
+
+        return DriverCommon::confRulesConnBlocked(buf.data(), &conn, ruleId);
+    };
+
+    // TCP with equal ports
+    ASSERT_TRUE(connBlocked(/*ruleId=*/1, IpProto_TCP, 21, 21));
+    ASSERT_FALSE(connBlocked(/*ruleId=*/1, IpProto_TCP, 50000, 80));
+    ASSERT_FALSE(connBlocked(/*ruleId=*/1, IpProto_UDP, 53, 53));
+
+    // TCP with the equal port 21
+    ASSERT_TRUE(connBlocked(/*ruleId=*/2, IpProto_TCP, 21, 21));
+    ASSERT_FALSE(connBlocked(/*ruleId=*/2, IpProto_TCP, 50000, 21));
+    ASSERT_FALSE(connBlocked(/*ruleId=*/2, IpProto_UDP, 21, 21));
+
+    // UDP with equal ports
+    ASSERT_TRUE(connBlocked(/*ruleId=*/3, IpProto_UDP, 53, 53));
+    ASSERT_FALSE(connBlocked(/*ruleId=*/3, IpProto_UDP, 50000, 53));
+    ASSERT_FALSE(connBlocked(/*ruleId=*/3, IpProto_TCP, 53, 53));
+}
+
 TEST_F(ConfUtilTest, ruleExclusiveSetNotFiltered)
 {
     const QList<Rule> rules = {
