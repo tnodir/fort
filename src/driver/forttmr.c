@@ -44,6 +44,8 @@ FORT_API void fort_timer_open(
             FORT_CALLBACK(FORT_CALLBACK_TIMER_CALLBACK, PKDEFERRED_ROUTINE, &fort_timer_callback),
             timer);
     KeInitializeTimer(&timer->id);
+
+    KeInitializeSpinLock(&timer->lock);
 }
 
 FORT_API void fort_timer_close(PFORT_TIMER timer)
@@ -61,7 +63,7 @@ FORT_API BOOL fort_timer_is_running(PFORT_TIMER timer)
     return (flags & FORT_TIMER_RUNNING) != 0;
 }
 
-void fort_timer_set_running(PFORT_TIMER timer, BOOL run)
+static void fort_timer_set_running_locked(PFORT_TIMER timer, BOOL run)
 {
     const UCHAR flags = fort_timer_flags_set(timer, FORT_TIMER_RUNNING, run);
 
@@ -82,4 +84,15 @@ void fort_timer_set_running(PFORT_TIMER timer, BOOL run)
     } else {
         KeCancelTimer(&timer->id);
     }
+}
+
+FORT_API void fort_timer_set_running(PFORT_TIMER timer, BOOL run)
+{
+    /* The running flag and the timer's state must be changed together */
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&timer->lock, &lock_queue);
+    {
+        fort_timer_set_running_locked(timer, run);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
 }

@@ -19,6 +19,8 @@ typedef struct fort_timer
 
     KDPC dpc;
     KTIMER id;
+
+    KSPIN_LOCK lock;
 } FORT_TIMER, *PFORT_TIMER;
 
 #if defined(__cplusplus)
