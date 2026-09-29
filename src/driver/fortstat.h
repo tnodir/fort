@@ -177,6 +177,8 @@ FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const FORT_CONF_FLAGS
 
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, BOOL *proc_stat);
 
+FORT_API void fort_flow_proc_unlog(PFORT_STAT stat, UINT32 process_id);
+
 FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext);
 
 FORT_API void fort_flow_classify(

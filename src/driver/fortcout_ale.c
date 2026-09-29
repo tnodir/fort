@@ -177,8 +177,13 @@ inline static BOOL fort_callout_ale_associate_flow(
     }
 
     if (!proc_stat) {
-        fort_buffer_conn_write(
+        const NTSTATUS write_status = fort_buffer_conn_write(
                 &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_PROC_NEW);
+
+        /* Log the process again by its next flow */
+        if (!NT_SUCCESS(write_status)) {
+            fort_flow_proc_unlog(&fort_device()->stat, conn->process_id);
+        }
     }
 
     return FALSE;

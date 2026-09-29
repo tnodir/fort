@@ -524,6 +524,21 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN con
     return status;
 }
 
+FORT_API void fort_flow_proc_unlog(PFORT_STAT stat, UINT32 process_id)
+{
+    const tommy_key_t pid_hash = fort_stat_proc_hash(process_id);
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
+    {
+        PFORT_STAT_PROC proc = fort_stat_proc_get(stat, process_id, pid_hash);
+        if (proc != NULL) {
+            fort_stat_proc_unlog(proc);
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
 static BOOL fort_flow_delete_closing(PFORT_STAT stat, PFORT_FLOW flow)
 {
     if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) != 0) {
