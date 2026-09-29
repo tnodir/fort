@@ -510,6 +510,10 @@ static void fort_pstree_check_proc_inheritance(
     if (psi->path == NULL)
         return;
 
+    /* The inherited name is checked on the process's creation only */
+    if ((proc->ps_opt.flags & FORT_PSNODE_NAME_INHERITED) != 0)
+        return;
+
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
 
     PFORT_CONF_REF conf_ref = fort_conf_ref_take(device_conf);
