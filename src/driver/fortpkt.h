@@ -87,6 +87,7 @@ typedef struct fort_packet_queue
 
     UINT64 queued_bytes; /* accumulated size of queued packets */
     INT64 available_bytes; /* accumulated bytes available for sending, negative on debt */
+    UINT64 available_rem; /* fractional part of the available bytes, multiplied by QPC frequency */
     LARGE_INTEGER last_tick; /* last time the queue was checked */
 
     KSPIN_LOCK lock;

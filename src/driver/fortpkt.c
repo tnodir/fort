@@ -531,8 +531,11 @@ static void fort_shaper_queue_advance_available(
         elapsed_ticks = qpcFrequency;
     }
 
-    /* Advance the available bytes */
-    const UINT64 accumulated = (bps * (UINT64) elapsed_ticks) / (UINT64) qpcFrequency;
+    /* Advance the available bytes, keep the fractional remainder for the next time */
+    const UINT64 accumulated_ticks = bps * (UINT64) elapsed_ticks + queue->available_rem;
+    const UINT64 accumulated = accumulated_ticks / (UINT64) qpcFrequency;
+
+    queue->available_rem = accumulated_ticks % (UINT64) qpcFrequency;
 
     queue->available_bytes += (INT64) accumulated;
 
@@ -749,6 +752,7 @@ static void fort_shaper_create_queues(
             queue->limit = limits[i];
 
             queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
+            queue->available_rem = 0;
             queue->last_tick = now;
         }
         KeReleaseInStackQueuedSpinLock(&lock_queue);
