@@ -356,7 +356,7 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         };
 
         ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
-        ASSERT_FALSE(conn.blocked);
+        ASSERT_FALSE(conn.act.blocked);
     }
 
     // Allowed IP
@@ -382,7 +382,7 @@ TEST_F(ConfUtilTest, rulesWriteRead)
         };
 
         ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/10));
-        ASSERT_TRUE(conn.blocked);
+        ASSERT_TRUE(conn.act.blocked);
     }
 }
 
@@ -744,8 +744,8 @@ TEST_F(ConfUtilTest, ruleFilterActionOption)
 
         ASSERT_TRUE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
 
-        ASSERT_TRUE(conn.conn_log);
-        ASSERT_TRUE(conn.conn_alert);
+        ASSERT_TRUE(conn.act.conn_log);
+        ASSERT_TRUE(conn.act.conn_alert);
     }
 }
 
@@ -858,7 +858,7 @@ TEST_F(ConfUtilTest, ruleZones)
     // Accept only: Rule's action
     {
         ASSERT_TRUE(connFiltered(/*ruleId=*/1, "10.2.2.2", conn));
-        ASSERT_FALSE(conn.blocked);
+        ASSERT_FALSE(conn.act.blocked);
         ASSERT_EQ(conn.zone_id, 1);
 
         ASSERT_FALSE(connFiltered(/*ruleId=*/1, "8.8.8.8", conn));
@@ -869,7 +869,7 @@ TEST_F(ConfUtilTest, ruleZones)
         ASSERT_FALSE(connFiltered(/*ruleId=*/2, "10.1.1.1", conn));
 
         ASSERT_TRUE(connFiltered(/*ruleId=*/2, "8.8.8.8", conn));
-        ASSERT_FALSE(conn.blocked);
+        ASSERT_FALSE(conn.act.blocked);
         ASSERT_EQ(conn.zone_id, 0);
     }
 
@@ -878,7 +878,7 @@ TEST_F(ConfUtilTest, ruleZones)
         ASSERT_FALSE(connFiltered(/*ruleId=*/3, "10.1.1.1", conn));
 
         ASSERT_TRUE(connFiltered(/*ruleId=*/3, "10.2.2.2", conn));
-        ASSERT_FALSE(conn.blocked);
+        ASSERT_FALSE(conn.act.blocked);
         ASSERT_EQ(conn.zone_id, 1);
 
         ASSERT_FALSE(connFiltered(/*ruleId=*/3, "8.8.8.8", conn));

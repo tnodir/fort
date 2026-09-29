@@ -380,6 +380,15 @@ typedef struct fort_path_buffer
 
 #define FORT_PATH_BUFFER_PATH_OFF offsetof(FORT_PATH_BUFFER, path)
 
+typedef struct fort_conf_conn_actions
+{
+    UCHAR blocked : 1;
+    UCHAR drop_blocked : 1;
+    UCHAR conn_log : 1;
+    UCHAR conn_nolog : 1;
+    UCHAR conn_alert : 1;
+} FORT_CONF_CONN_ACTIONS;
+
 typedef struct fort_conf_meta_conn
 {
     UINT16 conn_filled : 1;
@@ -393,15 +402,11 @@ typedef struct fort_conf_meta_conn
     UINT16 is_broadcast : 1;
     UINT16 is_local_net : 1;
     UINT16 inherited : 1;
-    UINT16 blocked : 1;
-    UINT16 drop_blocked : 1;
     UINT16 ignore : 1;
     UINT16 ask_to_connect : 1;
-    UINT16 reserved : 1; /* not used */
+    UINT16 reserved : 3; /* not used */
 
-    UCHAR conn_log : 1;
-    UCHAR conn_nolog : 1;
-    UCHAR conn_alert : 1;
+    FORT_CONF_CONN_ACTIONS act;
 
     UCHAR zones_accept_filtered : 1;
     UCHAR zones_reject_filtered : 1;

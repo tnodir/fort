@@ -276,9 +276,9 @@ bool confRulesConnFiltered(
 
 bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)
 {
-    conn->blocked = TRUE; /* default block */
+    conn->act.blocked = TRUE; /* default block */
 
-    return confRulesConnFiltered(drvRules, conn, ruleId) && conn->blocked;
+    return confRulesConnFiltered(drvRules, conn, ruleId) && conn->act.blocked;
 }
 
 bool confIoValid(const void *drvConfIo, quint32 len)

@@ -22,6 +22,9 @@ static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
 static_assert(sizeof(FORT_APP_DATA) == 5 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
 
+static_assert(
+        sizeof(FORT_CONF_CONN_ACTIONS) == sizeof(UCHAR), "FORT_CONF_CONN_ACTIONS size mismatch");
+
 FORT_API int fort_bit_scan_forward(ULONG mask)
 {
     unsigned long index;
@@ -580,7 +583,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones_result(PFORT_CONF_META
 
     if (accepted && !rejected) {
         conn->zone_id = opt.accept.zone_id;
-        conn->blocked = rule->blocked;
+        conn->act.blocked = (UCHAR) rule->blocked;
         return TRUE;
     }
 
@@ -760,7 +763,7 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_action(
 {
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
 
-    conn->blocked = (flags & FORT_RULE_FILTER_ACTION_BLOCK) != 0;
+    conn->act.blocked = (flags & FORT_RULE_FILTER_ACTION_BLOCK) != 0;
 
     return FORT_CONN_FILTER_RESULT_TRUE | FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION;
 }
@@ -921,13 +924,13 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
     if ((filter_res & FORT_CONN_FILTER_RESULT_TRUE) != 0) {
 
         if ((filter_res & FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION) == 0) {
-            conn->blocked = rule->blocked;
+            conn->act.blocked = (UCHAR) rule->blocked;
         }
 
-        conn->conn_log |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_LOG) != 0;
-        conn->conn_nolog = (filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG) != 0;
+        conn->act.conn_log |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_LOG) != 0;
+        conn->act.conn_nolog = (filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG) != 0;
 
-        conn->conn_alert = (filter_res & FORT_CONN_FILTER_RESULT_CONN_ALERT) != 0;
+        conn->act.conn_alert = (filter_res & FORT_CONN_FILTER_RESULT_CONN_ALERT) != 0;
 
         return TRUE;
     }
@@ -963,8 +966,8 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
 {
     /* Terminating Rule? */
     if (rule->terminate) {
-        conn->blocked = rule->term_blocked;
-        conn->conn_alert = (UCHAR) rule->term_alert;
+        conn->act.blocked = (UCHAR) rule->term_blocked;
+        conn->act.conn_alert = (UCHAR) rule->term_alert;
         return TRUE;
     }
 
@@ -1006,8 +1009,8 @@ static BOOL fort_conf_rules_rt_conn_filtered_depth(
                 || fort_conf_rules_rt_conn_filtered_terminate(conn, rule)))
         return FALSE;
 
-    conn->conn_log |= conn->blocked ? rule->log_blocked_conn : rule->log_allowed_conn;
-    conn->conn_nolog |= !conn->conn_log;
+    conn->act.conn_log |= conn->act.blocked ? rule->log_blocked_conn : rule->log_allowed_conn;
+    conn->act.conn_nolog |= !conn->act.conn_log;
 
     return TRUE;
 }
