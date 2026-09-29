@@ -545,11 +545,6 @@ static void fort_shaper_queue_advance_available(
         queue->available_bytes = max_available;
     }
 
-    if (fort_shaper_packet_list_is_empty(&queue->bandwidth_list)
-            && queue->available_bytes > FORT_QUEUE_INITIAL_TOKEN_COUNT) {
-        queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
-    }
-
     /*
     LOG("Shaper: BAND: queued=%d avail=%d ms=%d\n", (UINT32) queue->queued_bytes,
             (UINT32) queue->available_bytes,
@@ -960,6 +955,15 @@ static void fort_shaper_packet_queue_add_packet(
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
     {
+        /* Limit the idle queue's available bytes by its first packet */
+        if (fort_shaper_packet_list_is_empty(&queue->bandwidth_list)) {
+            fort_shaper_queue_advance_available(shaper, queue, KeQueryPerformanceCounter(NULL));
+
+            if (queue->available_bytes > FORT_QUEUE_INITIAL_TOKEN_COUNT) {
+                queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
+            }
+        }
+
         queue->queued_bytes += pkt->data_length;
 
         fort_shaper_packet_list_add_chain(&queue->bandwidth_list, pkt, pkt);
