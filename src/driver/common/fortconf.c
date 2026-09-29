@@ -214,22 +214,24 @@ FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len)
     return RtlCompareMemory(p1, p2, len) == len;
 }
 
-FORT_API int fort_string_cmp(PCWSTR s1, UINT16 n1, PCWSTR s2, UINT16 n2, UINT16 *common_n)
+FORT_API int fort_string_cmp(PFORT_STRING_CMP_ARG sca)
 {
-    const UINT16 min_n = (n1 < n2) ? n1 : n2;
+    PCWSTR s1 = sca->s1;
+    PCWSTR s2 = sca->s2;
+    const UINT16 min_n = (sca->n1 < sca->n2) ? sca->n1 : sca->n2;
 
     UINT16 n = 0;
     while (n < min_n && s1[n] == s2[n]) {
         ++n;
     }
 
-    *common_n = n;
+    sca->common_n = n;
 
     if (n < min_n) {
         return (int) s1[n] - (int) s2[n];
     }
 
-    return (int) n1 - (int) n2;
+    return (int) sca->n1 - (int) sca->n2;
 }
 
 static BOOL fort_conf_proto_inlist(const UINT8 proto, PCFORT_CONF_PROTO_LIST proto_list)
@@ -453,15 +455,6 @@ inline static FORT_APP_DATA fort_conf_app_wild_find(PCFORT_CONF conf, PCFORT_APP
     return fort_conf_app_find_loop(conf, path, &opt);
 }
 
-/* Compare the path's first path_n chars with the entry by UTF-16 code units, as the UI sorts */
-inline static int fort_conf_app_prefix_cmp(
-        PCFORT_APP_ENTRY app_entry, PCWSTR path, UINT16 path_n, UINT16 *common_n)
-{
-    const UINT16 entry_n = app_entry->path_len / sizeof(WCHAR);
-
-    return fort_string_cmp(path, path_n, app_entry->path, entry_n, common_n);
-}
-
 typedef struct fort_conf_app_prefix_find_arg
 {
     const UINT32 *app_offsets;
@@ -488,14 +481,21 @@ static BOOL fort_conf_app_prefix_find_entry(PFORT_CONF_APP_PREFIX_FIND_ARG pfa)
         const int mid = (low + high) / 2;
         PCFORT_APP_ENTRY app_entry = (PCFORT_APP_ENTRY) (pfa->app_entries + pfa->app_offsets[mid]);
 
-        UINT16 common_n;
-        if (fort_conf_app_prefix_cmp(app_entry, pfa->path, pfa->path_n, &common_n) < 0) {
+        /* Compare the path's first path_n chars with the entry, as the UI sorts */
+        FORT_STRING_CMP_ARG sca = {
+            .s1 = pfa->path,
+            .s2 = app_entry->path,
+            .n1 = pfa->path_n,
+            .n2 = app_entry->path_len / sizeof(WCHAR),
+        };
+
+        if (fort_string_cmp(&sca) < 0) {
             high = mid - 1;
         } else {
             low = mid + 1;
 
             pfa->index = mid;
-            pfa->common_n = common_n;
+            pfa->common_n = sca.common_n;
             pfa->app_entry = app_entry;
             res = TRUE;
         }

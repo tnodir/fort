@@ -117,7 +117,16 @@ TEST_F(ConfUtilTest, stringCmp)
 {
     const auto stringCmp = [](const wchar_t *s1, int n1, const wchar_t *s2, int n2,
                                    UINT16 &common_n) {
-        return fort_string_cmp(s1, UINT16(n1), s2, UINT16(n2), &common_n);
+        FORT_STRING_CMP_ARG sca = {
+            .s1 = s1,
+            .s2 = s2,
+            .n1 = UINT16(n1),
+            .n2 = UINT16(n2),
+        };
+
+        const int res = fort_string_cmp(&sca);
+        common_n = sca.common_n;
+        return res;
     };
 
     UINT16 common_n;
