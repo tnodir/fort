@@ -1378,3 +1378,30 @@ TEST_F(ConfUtilTest, ruleExclusiveSetNotFiltered)
 
     ASSERT_TRUE(conn.act.blocked);
 }
+
+TEST_F(ConfUtilTest, ruleFilterActionNotMatched)
+{
+    const QList<Rule> rules = {
+        {
+                .blocked = true,
+                .ruleId = 1,
+                .ruleText = "act(ALLOW):{ act(BLOCK):port(1) | port(80) }",
+        },
+    };
+
+    const QByteArray buf = writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/1));
+
+    const auto connBlocked = [&](quint16 port) {
+        FORT_CONF_META_CONN conn = {
+            .remote_port = port,
+        };
+
+        return DriverCommon::confRulesConnBlocked(buf.data(), &conn, /*ruleId=*/1);
+    };
+
+    // The not matched list's line doesn't apply its action
+    ASSERT_FALSE(connBlocked(80));
+
+    // The block action wins
+    ASSERT_TRUE(connBlocked(1));
+}

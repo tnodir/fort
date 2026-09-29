@@ -761,11 +761,15 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_profile(
 static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_action(
         PFORT_CONF_META_CONN conn, const void *data)
 {
+    UNUSED(conn);
+
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
 
-    conn->act.blocked = (flags & FORT_RULE_FILTER_ACTION_BLOCK) != 0;
+    /* The action is applied only by the matched filters */
+    const FORT_CONN_FILTER_RESULT block_res =
+            (flags & FORT_RULE_FILTER_ACTION_BLOCK) != 0 ? FORT_CONN_FILTER_RESULT_ACTION_BLOCK : 0;
 
-    return FORT_CONN_FILTER_RESULT_TRUE | FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION;
+    return FORT_CONN_FILTER_RESULT_TRUE | FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION | block_res;
 }
 
 static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_option(
@@ -923,9 +927,10 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
 
     if ((filter_res & FORT_CONN_FILTER_RESULT_TRUE) != 0) {
 
-        if ((filter_res & FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION) == 0) {
-            conn->act.blocked = (UCHAR) rule->blocked;
-        }
+        const BOOL has_action = (filter_res & FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION) != 0;
+
+        conn->act.blocked = has_action ? (filter_res & FORT_CONN_FILTER_RESULT_ACTION_BLOCK) != 0
+                                       : (UCHAR) rule->blocked;
 
         conn->act.conn_log |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_LOG) != 0;
         conn->act.conn_nolog = (filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG) != 0;
