@@ -34,6 +34,8 @@ typedef struct fort_psnode
 
     tommy_key_t pid_hash; /* tommy_hashdyn_node::index */
 
+    INT64 create_time; /* 0, when unknown */
+
     UINT32 process_id;
 
     FORT_PS_OPT ps_opt;
@@ -90,6 +92,8 @@ typedef struct fort_psinfo_hash
     HANDLE processHandle;
     DWORD processId;
     DWORD parentProcessId;
+
+    INT64 createTime;
 
     PFILE_OBJECT fileObject;
 
@@ -248,6 +252,16 @@ static NTSTATUS GetProcessDosDeviceName(HANDLE processHandle, PFORT_PATH_BUFFER 
     ObDereferenceObject(fileObject);
 
     return status;
+}
+
+static INT64 GetProcessCreateTime(HANDLE processHandle)
+{
+    KERNEL_USER_TIMES times = { 0 };
+
+    const NTSTATUS status =
+            ZwQueryInformationProcess(processHandle, ProcessTimes, &times, sizeof(times), NULL);
+
+    return NT_SUCCESS(status) ? times.CreateTime.QuadPart : 0;
 }
 
 static HANDLE OpenProcessById(DWORD processId)
@@ -501,6 +515,10 @@ inline static BOOL fort_pstree_check_proc_inherited(PFORT_PSTREE ps_tree, PFORT_
     if (parent == NULL)
         return FALSE;
 
+    /* The exited parent's ID is reused by a newer process */
+    if (proc->create_time != 0 && parent->create_time > proc->create_time)
+        return FALSE;
+
     const FORT_PS_FLAGS parent_flags = parent->ps_opt.flags;
 
     if ((parent_flags & (FORT_PSNODE_NAME_INHERIT | FORT_PSNODE_NAME_INHERITED)) == 0)
@@ -568,6 +586,7 @@ static PFORT_PSNODE fort_pstree_handle_new_proc(PFORT_PSTREE ps_tree, PCFORT_PSI
     if (proc == NULL)
         return NULL;
 
+    proc->create_time = psi->createTime;
     proc->process_id = psi->processId;
     proc->ps_opt.flags = FORT_PSNODE_FOUND;
     proc->ps_opt.path_drive = fort_path_drive_get(psi->path);
@@ -597,6 +616,9 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc_locked(
         proc = fort_pstree_handle_new_proc(ps_tree, psi);
         if (proc == NULL)
             return 0;
+    } else if (psi->createTime != 0) {
+        /* The existing process may be added without the time, e.g. by the services' update */
+        proc->create_time = psi->createTime;
     }
 
     fort_pstree_check_proc_inheritance(ps_tree, psi, proc);
@@ -664,6 +686,7 @@ static FORT_PS_FLAGS fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT
         return 0;
 
     psi->processHandle = processHandle;
+    psi->createTime = GetProcessCreateTime(processHandle);
 
     FORT_PATH_BUFFER pb;
     fort_path_buffer_init(&pb);
@@ -985,6 +1008,7 @@ inline static void fort_pstree_update_service_proc(
         if (proc == NULL)
             return;
 
+        proc->create_time = 0; /* unknown */
         proc->process_id = processId;
         proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST | FORT_PSNODE_FOUND;
         proc->ps_opt.path_drive = fort_path_drive_get(NULL);

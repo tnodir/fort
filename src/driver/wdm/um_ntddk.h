@@ -27,6 +27,18 @@ typedef struct _PS_CREATE_NOTIFY_INFO
     NTSTATUS CreationStatus;
 } PS_CREATE_NOTIFY_INFO, *PPS_CREATE_NOTIFY_INFO;
 
+// Missing in winternl.h
+// typedef enum _PROCESSINFOCLASS {
+#define ProcessTimes 4
+
+typedef struct _KERNEL_USER_TIMES
+{
+    LARGE_INTEGER CreateTime;
+    LARGE_INTEGER ExitTime;
+    LARGE_INTEGER KernelTime;
+    LARGE_INTEGER UserTime;
+} KERNEL_USER_TIMES, *PKERNEL_USER_TIMES;
+
 typedef VOID (*PCREATE_PROCESS_NOTIFY_ROUTINE_EX)(
         PEPROCESS process, HANDLE processId, PPS_CREATE_NOTIFY_INFO createInfo);
 
