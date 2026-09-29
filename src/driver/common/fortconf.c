@@ -1005,9 +1005,15 @@ static BOOL fort_conf_rules_rt_conn_filtered_depth(
     if (!rule->enabled)
         return FALSE;
 
-    if (!(fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule, depth)
-                || fort_conf_rules_rt_conn_filtered_terminate(conn, rule)))
-        return FALSE;
+    const FORT_CONF_CONN_ACTIONS act = conn->act;
+
+    if (!fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule, depth)) {
+        /* The not filtered rule's filters mustn't change the connection's actions */
+        conn->act = act;
+
+        if (!fort_conf_rules_rt_conn_filtered_terminate(conn, rule))
+            return FALSE;
+    }
 
     conn->act.conn_log |= conn->act.blocked ? rule->log_blocked_conn : rule->log_allowed_conn;
     conn->act.conn_nolog |= !conn->act.conn_log;

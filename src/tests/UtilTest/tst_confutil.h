@@ -736,6 +736,21 @@ TEST_F(ConfUtilTest, ruleFilterActionOption)
         ASSERT_FALSE(DriverCommon::confRulesConnBlocked(data, &conn, /*ruleId=*/1));
     }
 
+    // Not filtered rule keeps the actions
+    {
+        FORT_CONF_META_CONN conn = {
+            .act = { .blocked = false },
+            .remote_port = 80,
+            .remote_ip = { .v4 = NetFormatUtil::textToIp4("1.1.1.1") },
+        };
+
+        ASSERT_FALSE(DriverCommon::confRulesConnFiltered(data, &conn, /*ruleId=*/1));
+
+        ASSERT_FALSE(conn.act.blocked);
+        ASSERT_FALSE(conn.act.conn_log);
+        ASSERT_FALSE(conn.act.conn_alert);
+    }
+
     // Action in the block and Options
     {
         FORT_CONF_META_CONN conn = {
@@ -1333,4 +1348,33 @@ TEST_F(ConfUtilTest, ruleFilterListNot)
     // Negated list of one filter
     ASSERT_FALSE(connBlocked(/*ruleId=*/2, "1.1.1.1"));
     ASSERT_TRUE(connBlocked(/*ruleId=*/2, "3.3.3.3"));
+}
+
+TEST_F(ConfUtilTest, ruleExclusiveSetNotFiltered)
+{
+    const QList<Rule> rules = {
+        {
+                .blocked = false,
+                .exclusive = true,
+                .ruleId = 1,
+                .ruleText = "dir(OUT)",
+        },
+        { .blocked = false, .ruleId = 2, .ruleText = "port(445)" },
+    };
+
+    TestRulesWalker testRules(rules, /*maxRuleId=*/2);
+    testRules.addRuleSet(1, { 2 });
+
+    const QByteArray buf = writeTestRules(testRules);
+
+    FORT_CONF_META_CONN conn = {
+        .inbound = false,
+        .act = { .blocked = true },
+        .remote_port = 80,
+    };
+
+    // The rule's filter is matched, but its set isn't
+    ASSERT_FALSE(DriverCommon::confRulesConnFiltered(buf.data(), &conn, /*ruleId=*/1));
+
+    ASSERT_TRUE(conn.act.blocked);
 }
