@@ -95,6 +95,7 @@ typedef struct fort_psinfo_hash
 
     PCFORT_APP_PATH path;
     PCUNICODE_STRING commandLine;
+    PCUNICODE_STRING serviceName;
 } FORT_PSINFO_HASH, *PFORT_PSINFO_HASH;
 
 typedef const FORT_PSINFO_HASH *PCFORT_PSINFO_HASH;
@@ -366,11 +367,10 @@ static void fort_pstree_proc_check_svchost(
 
     proc->ps_opt.flags |= FORT_PSNODE_IS_SVCHOST;
 
-    UNICODE_STRING serviceName;
-    if (!fort_pstree_svchost_name_check(psi->commandLine, &serviceName))
+    if (psi->serviceName == NULL)
         return;
 
-    PFORT_PSNAME ps_name = fort_pstree_create_service_name(ps_tree, &serviceName);
+    PFORT_PSNAME ps_name = fort_pstree_create_service_name(ps_tree, psi->serviceName);
 
     fort_pstree_proc_set_service_name(proc, ps_name);
 }
@@ -581,6 +581,25 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc_locked(
     return proc->ps_opt.flags;
 }
 
+inline static void fort_pstree_svchost_name_copy(
+        PFORT_PSINFO_HASH psi, PUNICODE_STRING serviceName, PWCHAR buffer)
+{
+    if (!fort_svchost_path_check(psi->path))
+        return;
+
+    UNICODE_STRING name;
+    if (!fort_pstree_svchost_name_check(psi->commandLine, &name))
+        return;
+
+    RtlCopyMemory(buffer, name.Buffer, name.Length);
+
+    serviceName->Length = name.Length;
+    serviceName->MaximumLength = name.Length;
+    serviceName->Buffer = buffer;
+
+    psi->serviceName = serviceName;
+}
+
 inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc(
         PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi, PFORT_PATH_BUFFER pb)
 {
@@ -597,6 +616,11 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc(
             TRACE(FORT_PSTREE_PROCESS_PATH_ERROR, status, psi->processId, hasFileObject);
         }
     }
+
+    /* The command line may be in paged memory, so copy the service name before the lock */
+    WCHAR serviceNameBuffer[FORT_PSTREE_NAME_LEN_MAX];
+    UNICODE_STRING serviceName;
+    fort_pstree_svchost_name_copy(psi, &serviceName, serviceNameBuffer);
 
     FORT_PS_FLAGS ps_flags;
 
