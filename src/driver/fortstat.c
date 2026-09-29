@@ -192,7 +192,12 @@ static NTSTATUS fort_flow_context_set(PFORT_STAT stat, PFORT_FLOW flow, BOOL isI
     return fort_flow_context_transport_set(stat, flow_id, flowContext, isIPv6);
 }
 
-static BOOL fort_flow_context_remove_id(PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6, BOOL *pending)
+inline static BOOL fort_flow_context_removed(NTSTATUS status)
+{
+    return status == STATUS_SUCCESS || status == STATUS_PENDING;
+}
+
+static BOOL fort_flow_context_remove_id(PFORT_STAT stat, UINT64 flow_id, BOOL isIPv6)
 {
     FORT_FLOW_CONTEXT_TRANSPORT_OPT opt;
 
@@ -201,9 +206,8 @@ static BOOL fort_flow_context_remove_id(PFORT_STAT stat, UINT64 flow_id, BOOL is
     const NTSTATUS in_status = FwpsFlowRemoveContext0(flow_id, opt.in_layerId, opt.in_calloutId);
     const NTSTATUS out_status = FwpsFlowRemoveContext0(flow_id, opt.out_layerId, opt.out_calloutId);
 
-    *pending = (in_status == STATUS_PENDING || out_status == STATUS_PENDING);
-
-    return in_status == 0 && out_status == 0;
+    /* Both contexts must be removed, else the flow is aborted */
+    return fort_flow_context_removed(in_status) && fort_flow_context_removed(out_status);
 }
 
 static void fort_flow_context_remove(PVOID stat_arg, PVOID flow_node)
@@ -220,9 +224,7 @@ static void fort_flow_context_remove(PVOID stat_arg, PVOID flow_node)
     if ((flow_flags & FORT_FLOW_CONTEXT_REMOVED) != 0)
         return;
 
-    BOOL pending = FALSE;
-
-    if (fort_flow_context_remove_id(stat, flow_id, isIPv6, &pending) || pending) {
+    if (fort_flow_context_remove_id(stat, flow_id, isIPv6)) {
         fort_flow_flags_set(flow, FORT_FLOW_CONTEXT_REMOVED, TRUE);
         return;
     }
