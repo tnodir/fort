@@ -86,7 +86,7 @@ typedef struct fort_packet_queue
     FORT_SPEED_LIMIT limit;
 
     UINT64 queued_bytes; /* accumulated size of queued packets */
-    UINT64 available_bytes; /* accumulated bytes available for sending */
+    INT64 available_bytes; /* accumulated bytes available for sending, negative on debt */
     LARGE_INTEGER last_tick; /* last time the queue was checked */
 
     KSPIN_LOCK lock;

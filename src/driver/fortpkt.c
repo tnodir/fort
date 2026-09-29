@@ -534,9 +534,9 @@ static void fort_shaper_queue_advance_available(
     /* Advance the available bytes */
     const UINT64 accumulated = (bps * (UINT64) elapsed_ticks) / (UINT64) qpcFrequency;
 
-    queue->available_bytes += accumulated;
+    queue->available_bytes += (INT64) accumulated;
 
-    const UINT64 max_available = bps;
+    const INT64 max_available = (INT64) bps;
     if (queue->available_bytes > max_available) {
         queue->available_bytes = max_available;
     }
@@ -564,12 +564,15 @@ static void fort_shaper_queue_process_bandwidth(
     if (pkt_chain == NULL)
         return;
 
+    const INT64 max_available = (INT64) queue->limit.bps;
+
     PFORT_FLOW_PACKET pkt_tail = NULL;
     PFORT_FLOW_PACKET pkt = pkt_chain;
     do {
-        const UINT64 pkt_length = pkt->data_length;
+        const INT64 pkt_length = pkt->data_length;
 
-        if (queue->available_bytes < pkt_length)
+        /* The packet bigger than 1 second's bandwidth is sent in debt, when the bytes are full */
+        if (queue->available_bytes < pkt_length && queue->available_bytes < max_available)
             break;
 
         queue->available_bytes -= pkt_length;
