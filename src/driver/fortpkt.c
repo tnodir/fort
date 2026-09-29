@@ -13,6 +13,8 @@
 
 #define FORT_QUEUE_INITIAL_TOKEN_COUNT 1500
 
+#define FORT_QUEUE_ELAPSED_SECONDS_MAX 3600 /* to repay the big packet's debt */
+
 #define HTONL(l) _byteswap_ulong(l)
 
 typedef void FORT_SHAPER_PACKET_FOREACH_FUNC(PFORT_SHAPER, PFORT_FLOW_PACKET);
@@ -516,18 +518,23 @@ static void fort_shaper_queue_advance_available(
     const UINT64 bps = queue->limit.bps;
     const INT64 qpcFrequency = shaper->qpcFrequency.QuadPart;
 
-    /* The available bytes are limited by 1 second's bandwidth, so limit the elapsed ticks too
-     * to avoid the multiplication's overflow after a long idle */
     INT64 elapsed_ticks = now.QuadPart - last_tick.QuadPart;
     if (elapsed_ticks < 0) {
         elapsed_ticks = 0;
-    } else if (elapsed_ticks > qpcFrequency) {
-        elapsed_ticks = qpcFrequency;
     }
 
+    /* The debt is repaid by the elapsed seconds, so limit them
+     * to avoid the multiplication's overflow after a long idle */
+    UINT64 elapsed_seconds = (UINT64) (elapsed_ticks / qpcFrequency);
+    if (elapsed_seconds > FORT_QUEUE_ELAPSED_SECONDS_MAX) {
+        elapsed_seconds = FORT_QUEUE_ELAPSED_SECONDS_MAX;
+    }
+
+    const UINT64 elapsed_rem_ticks = (UINT64) (elapsed_ticks % qpcFrequency);
+
     /* Advance the available bytes, keep the fractional remainder for the next time */
-    const UINT64 accumulated_ticks = bps * (UINT64) elapsed_ticks + queue->available_rem;
-    const UINT64 accumulated = accumulated_ticks / (UINT64) qpcFrequency;
+    const UINT64 accumulated_ticks = bps * elapsed_rem_ticks + queue->available_rem;
+    const UINT64 accumulated = bps * elapsed_seconds + accumulated_ticks / (UINT64) qpcFrequency;
 
     queue->available_rem = accumulated_ticks % (UINT64) qpcFrequency;
 
