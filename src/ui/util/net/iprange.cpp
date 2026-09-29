@@ -46,10 +46,20 @@ void sortIp6PairArray(ip6_arr_t &fromArray, ip6_arr_t &toArray)
     std::sort(pairArray.begin(), pairArray.end(),
             [](const Ip6Pair &l, const Ip6Pair &r) { return compareLessIp6(l.from, r.from); });
 
-    for (int i = 0; i < arraySize; ++i) {
-        const Ip6Pair &pair = pairArray[i];
-        fromArray[i] = pair.from;
-        toArray[i] = pair.to;
+    fromArray.clear();
+    toArray.clear();
+
+    for (const Ip6Pair &pair : std::as_const(pairArray)) {
+        // try to merge overlapping ranges
+        if (!toArray.isEmpty() && !compareLessIp6(toArray.last(), pair.from)) {
+            if (compareLessIp6(toArray.last(), pair.to)) {
+                toArray.last() = pair.to;
+            }
+            // else skip it
+        } else {
+            fromArray.append(pair.from);
+            toArray.append(pair.to);
+        }
     }
 }
 

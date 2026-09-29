@@ -158,9 +158,19 @@ TEST_F(NetUtilTest, ip6Ranges)
 
     ASSERT_TRUE(ipRange.fromText("[::2]/126\n"
                                  "[::1]/126\n"));
+    ASSERT_EQ(ipRange.toText(), QString("::1-::3\n"));
+
+    // Merge ranges
+    ASSERT_TRUE(ipRange.fromText("2002::/16\n"
+                                 "2002:1::/32\n"
+                                 "2002:ffff:ffff:ffff:ffff:ffff:ffff:ffff - 2003::1\n"
+                                 "::1 - ::5\n"
+                                 "::5 - ::7\n"
+                                 "::9 - ::a\n"));
     ASSERT_EQ(ipRange.toText(),
-            QString("::1-::3\n"
-                    "::2-::3\n"));
+            QString("::1-::7\n"
+                    "::9-::a\n"
+                    "2002::-2003::1\n"));
 }
 
 TEST_F(NetUtilTest, portRanges)
