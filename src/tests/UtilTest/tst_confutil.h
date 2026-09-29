@@ -1428,6 +1428,38 @@ TEST_F(ConfUtilTest, ruleFilterEqualProtocolPorts)
     ASSERT_FALSE(connBlocked(/*ruleId=*/3, IpProto_TCP, 53, 53));
 }
 
+TEST_F(ConfUtilTest, ruleSetKeepsParentOptions)
+{
+    const QList<Rule> rules = {
+        {
+                .blocked = false,
+                .exclusive = true,
+                .ruleId = 1,
+                .ruleText = "dir(OUT):opt(ALERT, NOLOG)",
+        },
+        { .blocked = false, .ruleId = 2, .ruleText = "port(80)" },
+    };
+
+    TestRulesWalker testRules(rules, /*maxRuleId=*/2);
+    testRules.addRuleSet(1, { 2 });
+
+    const QByteArray buf = writeTestRules(testRules);
+
+    FORT_CONF_META_CONN conn = {
+        .inbound = false,
+        .act = { .blocked = true },
+        .remote_port = 80,
+    };
+
+    ASSERT_TRUE(DriverCommon::confRulesConnFiltered(buf.data(), &conn, /*ruleId=*/1));
+
+    ASSERT_FALSE(conn.act.blocked);
+
+    // The set's filtered rule keeps the parent's options
+    ASSERT_TRUE(conn.act.conn_alert);
+    ASSERT_TRUE(conn.act.conn_nolog);
+}
+
 TEST_F(ConfUtilTest, ruleExclusiveSetNotFiltered)
 {
     const QList<Rule> rules = {

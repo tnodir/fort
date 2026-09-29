@@ -966,9 +966,9 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
         conn->act.drop_blocked = (filter_res & FORT_CONN_FILTER_RESULT_ACTION_DROP) != 0;
 
         conn->act.conn_log |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_LOG) != 0;
-        conn->act.conn_nolog = (filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG) != 0;
+        conn->act.conn_nolog |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG) != 0;
 
-        conn->act.conn_alert = (filter_res & FORT_CONN_FILTER_RESULT_CONN_ALERT) != 0;
+        conn->act.conn_alert |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_ALERT) != 0;
 
         return TRUE;
     }
