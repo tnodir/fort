@@ -468,16 +468,23 @@ inline static void fort_pstree_check_proc_name(PFORT_PSTREE ps_tree, PFORT_PSNOD
             | (app_flags.apply_spec_child ? FORT_PSNODE_NAME_INHERIT_SPEC : 0);
 }
 
+inline static UINT16 fort_pstree_check_proc_kill(PFORT_PSNODE proc, const FORT_APP_FLAGS app_flags)
+{
+    const UINT16 kill_flags = (app_flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0)
+            | (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
+
+    proc->ps_opt.flags |= kill_flags;
+
+    return kill_flags;
+}
+
 inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNODE proc,
         PCFORT_APP_PATH path, const FORT_APP_FLAGS app_flags)
 {
     if (app_flags.found == 0)
         return;
 
-    const UINT16 kill_flags = (app_flags.kill_process ? FORT_PSNODE_KILL_PROCESS : 0)
-            | (app_flags.kill_child ? FORT_PSNODE_KILL_CHILD : 0);
-
-    proc->ps_opt.flags |= kill_flags;
+    const UINT16 kill_flags = fort_pstree_check_proc_kill(proc, app_flags);
 
     if (kill_flags == 0 && app_flags.apply_child) {
         fort_pstree_check_proc_name(ps_tree, proc, path, app_flags);
@@ -543,8 +550,13 @@ static void fort_pstree_check_proc_inheritance(
             ? fort_conf_app_find(conf, &path, fort_conf_exe_find, conf_ref)
             : fort_conf_exe_find(conf, conf_ref, &path);
 
-    if (!fort_pstree_check_proc_inherited(ps_tree, proc, psi->parentProcessId, app_data.flags)) {
-        fort_pstree_check_proc_conf(ps_tree, proc, &path, app_data.flags);
+    const FORT_APP_FLAGS app_flags = app_data.flags;
+
+    if (!fort_pstree_check_proc_inherited(ps_tree, proc, psi->parentProcessId, app_flags)) {
+        fort_pstree_check_proc_conf(ps_tree, proc, &path, app_flags);
+    } else if (app_flags.found != 0) {
+        /* The inherited name doesn't cancel the process's own kill flags */
+        fort_pstree_check_proc_kill(proc, app_flags);
     }
 
     fort_conf_ref_put(device_conf, conf_ref);
