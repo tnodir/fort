@@ -593,12 +593,14 @@ inline static void fort_callout_ale_classify_action(
     if (conn->ignore) {
         /* Continue the search */
         fort_callout_classify_continue(classifyOut);
-    } else if (conn->act.drop_blocked) {
-        /* Drop the connection */
-        fort_callout_classify_drop(classifyOut);
     } else if (conn->act.blocked) {
-        /* Block the connection */
-        fort_callout_classify_block(classifyOut);
+        if (conn->act.drop_blocked) {
+            /* Drop the connection */
+            fort_callout_classify_drop(classifyOut);
+        } else {
+            /* Block the connection */
+            fort_callout_classify_block(classifyOut);
+        }
     } else {
         /* Allow the connection */
         fort_callout_classify_permit(ca->filter, classifyOut);

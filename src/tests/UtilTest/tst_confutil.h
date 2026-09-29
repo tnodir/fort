@@ -1405,3 +1405,43 @@ TEST_F(ConfUtilTest, ruleFilterActionNotMatched)
     // The block action wins
     ASSERT_TRUE(connBlocked(1));
 }
+
+TEST_F(ConfUtilTest, ruleFilterActionDrop)
+{
+    const QList<Rule> rules = {
+        { .blocked = false, .ruleId = 1, .ruleText = "act(DROP):port(80)" },
+        { .blocked = true, .ruleId = 2, .ruleText = "act(ALLOW):{ act(DROP):port(1) | port(80) }" },
+    };
+
+    const QByteArray buf = writeTestRules(TestRulesWalker(rules, /*maxRuleId=*/2));
+
+    const auto connFiltered = [&](quint16 ruleId, quint16 port, FORT_CONF_META_CONN &conn) {
+        conn = {
+            .act = { .blocked = true },
+            .remote_port = port,
+        };
+
+        return DriverCommon::confRulesConnFiltered(buf.data(), &conn, ruleId);
+    };
+
+    FORT_CONF_META_CONN conn;
+
+    // Dropped
+    ASSERT_TRUE(connFiltered(/*ruleId=*/1, 80, conn));
+    ASSERT_TRUE(conn.act.blocked);
+    ASSERT_TRUE(conn.act.drop_blocked);
+
+    // Not filtered
+    ASSERT_FALSE(connFiltered(/*ruleId=*/1, 81, conn));
+    ASSERT_FALSE(conn.act.drop_blocked);
+
+    // The not matched list's line doesn't drop
+    ASSERT_TRUE(connFiltered(/*ruleId=*/2, 80, conn));
+    ASSERT_FALSE(conn.act.blocked);
+    ASSERT_FALSE(conn.act.drop_blocked);
+
+    // The drop action wins
+    ASSERT_TRUE(connFiltered(/*ruleId=*/2, 1, conn));
+    ASSERT_TRUE(conn.act.blocked);
+    ASSERT_TRUE(conn.act.drop_blocked);
+}

@@ -584,6 +584,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones_result(PFORT_CONF_META
     if (accepted && !rejected) {
         conn->zone_id = opt.accept.zone_id;
         conn->act.blocked = (UCHAR) rule->blocked;
+        conn->act.drop_blocked = FALSE;
         return TRUE;
     }
 
@@ -766,10 +767,18 @@ static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_action(
     const UINT16 flags = ((PCFORT_CONF_RULE_FILTER_FLAGS) data)->flags;
 
     /* The action is applied only by the matched filters */
-    const FORT_CONN_FILTER_RESULT block_res =
-            (flags & FORT_RULE_FILTER_ACTION_BLOCK) != 0 ? FORT_CONN_FILTER_RESULT_ACTION_BLOCK : 0;
+    FORT_CONN_FILTER_RESULT action_res =
+            FORT_CONN_FILTER_RESULT_TRUE | FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION;
 
-    return FORT_CONN_FILTER_RESULT_TRUE | FORT_CONN_FILTER_RESULT_RULE_FILTER_ACTION | block_res;
+    if ((flags & (FORT_RULE_FILTER_ACTION_BLOCK | FORT_RULE_FILTER_ACTION_DROP)) != 0) {
+        action_res |= FORT_CONN_FILTER_RESULT_ACTION_BLOCK;
+    }
+
+    if ((flags & FORT_RULE_FILTER_ACTION_DROP) != 0) {
+        action_res |= FORT_CONN_FILTER_RESULT_ACTION_DROP;
+    }
+
+    return action_res;
 }
 
 static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_option(
@@ -931,6 +940,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_filters(
 
         conn->act.blocked = has_action ? (filter_res & FORT_CONN_FILTER_RESULT_ACTION_BLOCK) != 0
                                        : (UCHAR) rule->blocked;
+        conn->act.drop_blocked = (filter_res & FORT_CONN_FILTER_RESULT_ACTION_DROP) != 0;
 
         conn->act.conn_log |= (filter_res & FORT_CONN_FILTER_RESULT_CONN_LOG) != 0;
         conn->act.conn_nolog = (filter_res & FORT_CONN_FILTER_RESULT_CONN_NOLOG) != 0;
@@ -972,6 +982,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_terminate(
     /* Terminating Rule? */
     if (rule->terminate) {
         conn->act.blocked = (UCHAR) rule->term_blocked;
+        conn->act.drop_blocked = FALSE;
         conn->act.conn_alert = (UCHAR) rule->term_alert;
         return TRUE;
     }

@@ -26,6 +26,9 @@ void ActionRange::toList(QStringList &list) const
     if (m_actionTypeId == FORT_RULE_FILTER_ACTION_BLOCK) {
         list << "BLOCK";
     }
+    if (m_actionTypeId == FORT_RULE_FILTER_ACTION_DROP) {
+        list << "DROP";
+    }
 }
 
 TextRange::ParseError ActionRange::parseText(const QString &text)
@@ -34,6 +37,8 @@ TextRange::ParseError ActionRange::parseText(const QString &text)
         m_actionTypeId = FORT_RULE_FILTER_ACTION_ALLOW;
     } else if (text == "BLOCK") {
         m_actionTypeId = FORT_RULE_FILTER_ACTION_BLOCK;
+    } else if (text == "DROP") {
+        m_actionTypeId = FORT_RULE_FILTER_ACTION_DROP;
     } else {
         return ErrorBadText;
     }

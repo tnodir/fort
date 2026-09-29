@@ -186,6 +186,7 @@ enum {
     // Action
     FORT_RULE_FILTER_ACTION_ALLOW = (1 << 0),
     FORT_RULE_FILTER_ACTION_BLOCK = (1 << 1),
+    FORT_RULE_FILTER_ACTION_DROP = (1 << 2),
     // Options
     // FORT_CONN_FILTER_RESULT_CONN_*
 };
