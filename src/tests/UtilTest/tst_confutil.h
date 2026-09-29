@@ -94,7 +94,7 @@ TEST_F(ConfUtilTest, confWriteRead)
     ASSERT_FALSE(DriverCommon::confIp4InRange(data, NetFormatUtil::textToIp4("193.0.0.0")));
     ASSERT_TRUE(DriverCommon::confIp4InRange(data, NetFormatUtil::textToIp4("239.255.255.250")));
     ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::1")));
-    ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::2")));
+    ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::2")));
     ASSERT_TRUE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("::ffff:0:2")));
     ASSERT_FALSE(DriverCommon::confIp6InRange(data, NetFormatUtil::textToIp6("65::")));
 

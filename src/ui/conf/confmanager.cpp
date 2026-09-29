@@ -30,7 +30,7 @@ namespace {
 
 const QLoggingCategory LC("conf");
 
-inline constexpr int DATABASE_USER_VERSION = 57;
+inline constexpr int DATABASE_USER_VERSION = 58;
 
 inline constexpr int CONF_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
 
@@ -205,6 +205,50 @@ bool migrateAppPaths(SqliteDb *db)
     return true;
 }
 
+using AddrGroupTextsMap = QHash<qint64, QString>;
+
+bool fillAddrGroupExcludeTextsMap(SqliteDb *db, AddrGroupTextsMap &textsMap)
+{
+    const char *const sql = "SELECT addr_group_id, exclude_text FROM address_group;";
+
+    SqliteStmt stmt;
+    if (!DbQuery(db).sql(sql).prepare(stmt))
+        return false;
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        const qint64 addrGroupId = stmt.columnInt64(0);
+        QStringList lines = stmt.columnText(1).split('\n');
+
+        const auto removedCount = lines.removeIf(
+                [](const QString &line) { return line.trimmed() == QLatin1String("::/0"); });
+
+        if (removedCount > 0) {
+            textsMap.insert(addrGroupId, lines.join('\n'));
+        }
+    }
+
+    return true;
+}
+
+// The old local networks list had "::/0", which is the whole IPv6 address space
+bool migrateAddrGroupExcludeTexts(SqliteDb *db)
+{
+    AddrGroupTextsMap textsMap;
+
+    if (!fillAddrGroupExcludeTextsMap(db, textsMap))
+        return false;
+
+    const char *const sql = "UPDATE address_group SET exclude_text = ?2 WHERE addr_group_id = ?1;";
+
+    auto it = textsMap.constBegin();
+    for (; it != textsMap.constEnd(); ++it) {
+        if (!DbQuery(db).sql(sql).vars({ it.key(), it.value() }).executeOk())
+            return false;
+    }
+
+    return true;
+}
+
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
@@ -217,6 +261,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     // COMPAT: DB content
     if (version < 21) {
         migrateAppPaths(db);
+    }
+
+    // COMPAT: Remove "::/0" from addr group's exclude
+    if (version < 58) {
+        migrateAddrGroupExcludeTexts(db);
     }
 
     return true;

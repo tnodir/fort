@@ -362,7 +362,6 @@ QStringList NetUtil::localIpNetworks()
         "224.0.0.0/24", // Multicast addresses
         "239.255.255.250/32", // IP Multicast for DLNA/UPNP
         "255.255.255.255/32", // IP Broadcast
-        "::/0", // non-routable meta-address
         "::/128", // Unspecified Address
         "::1/128", // Loopback
         "::ffff:0:0/96", // IPv4-mapped Address
