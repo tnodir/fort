@@ -90,12 +90,6 @@ inline static BOOL fort_packet_is_ipsec_protected(PCFORT_CALLOUT_ARG ca)
     return info.isSecure;
 }
 
-inline static BOOL fort_packet_is_ipsec_tunneled(PCFORT_CALLOUT_ARG ca)
-{
-    const FWPS_PACKET_LIST_INBOUND_IPSEC_INFORMATION0 info = fort_packet_get_ipsec_inbound_info(ca);
-    return info.isTunnelMode && !info.isDeTunneled;
-}
-
 inline static PFORT_FLOW_PACKET fort_shaper_packet_new(void)
 {
     return fort_mem_alloc(sizeof(FORT_FLOW_PACKET), FORT_PACKET_POOL_TAG);
@@ -1069,9 +1063,10 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG 
         return FALSE;
     }
 
-    if (fort_packet_is_ipsec_tunneled(ca)) {
+    if (ca->inbound && fort_packet_is_ipsec_protected(ca)) {
         /* To be compatible with Vista's IpSec implementation, we must not
-         * intercept not-yet-detunneled IpSec traffic. */
+         * intercept not-yet-detunneled IpSec traffic.
+         * Also the IpSec protected packets are re-injected with the rebuilt IP header only. */
         return FALSE;
     }
 
