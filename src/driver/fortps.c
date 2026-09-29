@@ -468,6 +468,10 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
             fort_pstree_proc_set_name(ps_tree, proc, path);
         }
 
+        /* The children inherit the allocated name only */
+        if (proc->ps_name == NULL)
+            return;
+
         proc->ps_opt.flags |= FORT_PSNODE_NAME_INHERIT
                 | (app_flags.apply_spec_child ? FORT_PSNODE_NAME_INHERIT_SPEC : 0);
     }
