@@ -104,8 +104,8 @@ static void ValueRange::fillRangeArrays(const FillRangeArraysArgs<T> &fra)
     for (; it != end; ++it) {
         const ValuePair<T> v { it.key(), it.value() };
 
-        // try to merge colliding addresses
-        if (prevIndex >= 0 && v.from <= prevPair.to + 1) {
+        // try to merge colliding addresses (v.from > prevPair.from, so v.from - 1 can't overflow)
+        if (prevIndex >= 0 && v.from - 1 <= prevPair.to) {
             if (v.to > prevPair.to) {
                 fra.pairToArray.replace(prevIndex, v.to);
 

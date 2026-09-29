@@ -126,6 +126,13 @@ TEST_F(NetUtilTest, ip4Ranges)
         ASSERT_EQ(ipPair1.to, NetFormatUtil::textToIp4("10.0.2.0"));
     }
 
+    // Merge ranges up to the max address
+    {
+        ASSERT_TRUE(ipRange.fromText("0.0.0.0/0\n"
+                                     "10.0.0.0/8\n"));
+        ASSERT_EQ(ipRange.toText(), QString("0.0.0.0-255.255.255.255\n"));
+    }
+
     // Keep the widest range with the same start
     {
         ASSERT_TRUE(ipRange.fromText("10.0.0.0/8\n"
