@@ -1445,3 +1445,27 @@ TEST_F(ConfUtilTest, ruleFilterActionDrop)
     ASSERT_TRUE(conn.act.blocked);
     ASSERT_TRUE(conn.act.drop_blocked);
 }
+
+TEST_F(ConfUtilTest, ruleSetsNestedRuleId)
+{
+    const QList<Rule> rules = {
+        { .ruleId = 1 },
+        { .ruleId = 2 },
+        { .blocked = true, .ruleId = 3, .ruleText = "port(80)" },
+    };
+
+    TestRulesWalker testRules(rules, /*maxRuleId=*/3);
+    testRules.addRuleSet(1, { 2 });
+    testRules.addRuleSet(2, { 3 });
+
+    const QByteArray buf = writeTestRules(testRules);
+
+    FORT_CONF_META_CONN conn = {
+        .remote_port = 80,
+    };
+
+    ASSERT_TRUE(DriverCommon::confRulesConnFiltered(buf.data(), &conn, /*ruleId=*/1));
+
+    // The deepest filtered rule
+    ASSERT_EQ(conn.rule_id, 3);
+}

@@ -968,7 +968,10 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_sets(
         const UINT16 rule_id = rule_ids[i];
 
         if (fort_conf_rules_rt_conn_filtered_depth(rules_rt, conn, rule_id, depth + 1)) {
-            conn->rule_id = rule_id;
+            /* Keep the deepest filtered rule's id */
+            if (conn->rule_id == 0) {
+                conn->rule_id = rule_id;
+            }
             return TRUE;
         }
     }
