@@ -438,18 +438,34 @@ static PFORT_PSNODE fort_pstree_find_proc(PFORT_PSTREE ps_tree, DWORD processId)
     return fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
 }
 
-inline static void fort_pstree_proc_set_name(
+inline static BOOL fort_pstree_proc_set_name(
         PFORT_PSTREE ps_tree, PFORT_PSNODE proc, PCFORT_APP_PATH path)
 {
     const UINT16 path_len = path->len;
 
     PFORT_PSNAME ps_name = fort_pstree_name_new(ps_tree, path_len);
     if (ps_name == NULL)
-        return;
+        return FALSE;
 
     RtlCopyMemory(ps_name->data, path->buffer, path_len);
 
     proc->ps_name = ps_name;
+
+    return TRUE;
+}
+
+inline static void fort_pstree_check_proc_name(PFORT_PSTREE ps_tree, PFORT_PSNODE proc,
+        PCFORT_APP_PATH path, const FORT_APP_FLAGS app_flags)
+{
+    if (proc->ps_name == NULL) {
+        if (!fort_pstree_proc_set_name(ps_tree, proc, path))
+            return;
+
+        /* The children inherit the allocated name only */
+    }
+
+    proc->ps_opt.flags |= FORT_PSNODE_NAME_INHERIT
+            | (app_flags.apply_spec_child ? FORT_PSNODE_NAME_INHERIT_SPEC : 0);
 }
 
 inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNODE proc,
@@ -464,16 +480,7 @@ inline static void fort_pstree_check_proc_conf(PFORT_PSTREE ps_tree, PFORT_PSNOD
     proc->ps_opt.flags |= kill_flags;
 
     if (kill_flags == 0 && app_flags.apply_child) {
-        if (proc->ps_name == NULL) {
-            fort_pstree_proc_set_name(ps_tree, proc, path);
-        }
-
-        /* The children inherit the allocated name only */
-        if (proc->ps_name == NULL)
-            return;
-
-        proc->ps_opt.flags |= FORT_PSNODE_NAME_INHERIT
-                | (app_flags.apply_spec_child ? FORT_PSNODE_NAME_INHERIT_SPEC : 0);
+        fort_pstree_check_proc_name(ps_tree, proc, path, app_flags);
     }
 }
 
