@@ -616,9 +616,16 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc_locked(
         proc = fort_pstree_handle_new_proc(ps_tree, psi);
         if (proc == NULL)
             return 0;
-    } else if (psi->createTime != 0) {
+    } else {
         /* The existing process may be added without the time, e.g. by the services' update */
-        proc->create_time = psi->createTime;
+        if (psi->createTime != 0) {
+            proc->create_time = psi->createTime;
+        }
+
+        /* The existing process may be added without the service name, e.g. by the enumeration */
+        if (proc->ps_name == NULL) {
+            fort_pstree_proc_check_svchost(ps_tree, psi, proc);
+        }
     }
 
     fort_pstree_check_proc_inheritance(ps_tree, psi, proc);
