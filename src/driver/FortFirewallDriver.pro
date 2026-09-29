@@ -12,6 +12,8 @@ SOURCES += \
     fortcnf_rule.c \
     fortcnf_zone.c \
     fortcout.c \
+    fortcout_ale.c \
+    fortcout_pkt.c \
     fortdbg.c \
     fortdev.c \
     fortdrv.c \
@@ -53,6 +55,8 @@ HEADERS += \
     fortcnf_rule.h \
     fortcnf_zone.h \
     fortcout.h \
+    fortcout_ale.h \
+    fortcout_pkt.h \
     fortcoutarg.h \
     fortdbg.h \
     fortdev.h \

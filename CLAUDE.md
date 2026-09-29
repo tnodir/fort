@@ -96,7 +96,7 @@ No Qt SQL — a hand-rolled SQLite wrapper in `src/ui/3rdparty/sqlite/` (`Sqlite
 
 ### Driver internals (`src/driver/`)
 
-`fortdrv.c` entry point; `fortcout.c` WFP classify callouts; `fortcnf*.c` the live configuration (conf/rules/groups/zones) with reader-writer locks; `fortbuf.c` the log ring buffer read back by the UI; `fortstat.c` traffic accounting; `fortps.c` process tracking; `fortpool.c`/`forttlsf.c` allocators (TLSF from `src/3rdparty/tlsf`); `fortmod.c` + `loader/` the self-loading module (fortfwdl.sys unpacks the signed payload); `proxycb/` callout trampolines (with .asm variants per arch).
+`fortdrv.c` entry point; `fortcout.c` WFP callouts registration, `fortcout_ale.c` ALE and `fortcout_pkt.c` packet classify callouts; `fortcnf*.c` the live configuration (conf/rules/groups/zones) with reader-writer locks; `fortbuf.c` the log ring buffer read back by the UI; `fortstat.c` traffic accounting; `fortps.c` process tracking; `fortpool.c`/`forttlsf.c` allocators (TLSF from `src/3rdparty/tlsf`); `fortmod.c` + `loader/` the self-loading module (fortfwdl.sys unpacks the signed payload); `proxycb/` callout trampolines (with .asm variants per arch).
 
 ### UI layer
 

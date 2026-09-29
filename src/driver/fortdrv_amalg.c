@@ -39,5 +39,7 @@
 #include "fortutl.c"
 #include "fortwrk.c"
 #include "fortcout.c"
+#include "fortcout_ale.c"
+#include "fortcout_pkt.c"
 #include "fortdev.c"
 #include "fortdrv.c"
