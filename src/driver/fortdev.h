@@ -15,8 +15,6 @@ typedef struct fort_device
 {
     PDEVICE_OBJECT device;
 
-    EX_RUNDOWN_REF reauth_rundown;
-
     PCALLBACK_OBJECT power_cb_obj;
     PVOID power_cb_reg;
 

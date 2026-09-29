@@ -40,14 +40,7 @@ FORT_API void fort_device_set(PFORT_DEVICE device)
 
 static NTSTATUS fort_device_reauth_force(const FORT_CONF_FLAGS old_conf_flags)
 {
-    PEX_RUNDOWN_REF reauth_rundown = &fort_device()->reauth_rundown;
-    ExAcquireRundownProtection(reauth_rundown);
-
-    const NTSTATUS status = fort_callout_force_reauth(old_conf_flags);
-
-    ExReleaseRundownProtection(reauth_rundown);
-
-    return status;
+    return fort_callout_force_reauth(old_conf_flags);
 }
 
 static void fort_device_reauth(void)
@@ -512,8 +505,6 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
     NTSTATUS status;
 
     PDEVICE_OBJECT device = device_param;
-
-    ExInitializeRundownProtection(&fort_device()->reauth_rundown);
 
     fort_worker_func_set(&fort_device()->worker, FORT_WORKER_REAUTH, &fort_device_reauth);
 
