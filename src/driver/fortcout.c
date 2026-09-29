@@ -225,7 +225,12 @@ FORT_API void fort_callout_remove(void)
 
     for (int i = 0; i < FORT_STAT_CALLOUT_IDS_COUNT; ++i) {
         PUINT32 calloutId = &calloutIds[i];
-        FwpsCalloutUnregisterById0(*calloutId);
+
+        /* Wait for the asynchronously deleting flow contexts */
+        while (FwpsCalloutUnregisterById0(*calloutId) == STATUS_DEVICE_BUSY) {
+            fort_thread_delay(/*msecs=*/50);
+        }
+
         *calloutId = 0;
     }
 }
