@@ -499,9 +499,12 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN con
     return status;
 }
 
-static BOOL fort_flow_delete_closing(PFORT_STAT stat)
+static BOOL fort_flow_delete_closing(PFORT_STAT stat, PFORT_FLOW flow)
 {
     if ((fort_stat_flags(stat) & FORT_STAT_CLOSED) != 0) {
+        /* Don't remove the deleted flow's context on the next closing pass */
+        fort_flow_flags_set(flow, FORT_FLOW_CONTEXT_REMOVED, TRUE);
+
         InterlockedDecrement(&stat->flow_closing_count);
         return TRUE;
     }
@@ -512,14 +515,14 @@ FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
 {
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
-    if (fort_flow_delete_closing(stat))
+    if (fort_flow_delete_closing(stat, flow))
         return;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
 
     /* Double check for locked flows */
-    if (!fort_flow_delete_closing(stat)) {
+    if (!fort_flow_delete_closing(stat, flow)) {
         fort_flow_free(stat, flow);
     }
 
