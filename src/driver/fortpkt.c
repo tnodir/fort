@@ -706,7 +706,8 @@ static BOOL fort_shaper_queue_process(PFORT_SHAPER shaper, PFORT_PACKET_QUEUE qu
     return is_active;
 }
 
-inline static PFORT_PACKET_QUEUE fort_shaper_create_queue(PFORT_SHAPER shaper, int queue_index)
+inline static PFORT_PACKET_QUEUE fort_shaper_create_queue(
+        PFORT_SHAPER shaper, int queue_index, const LARGE_INTEGER now)
 {
     PFORT_PACKET_QUEUE queue = shaper->queues[queue_index];
     if (queue != NULL)
@@ -717,6 +718,10 @@ inline static PFORT_PACKET_QUEUE fort_shaper_create_queue(PFORT_SHAPER shaper, i
         return NULL;
 
     RtlZeroMemory(queue, sizeof(FORT_PACKET_QUEUE));
+
+    /* The existing queue keeps its available bytes on the conf update */
+    queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
+    queue->last_tick = now;
 
     KeInitializeSpinLock(&queue->lock);
 
@@ -737,19 +742,15 @@ static void fort_shaper_create_queues(
         if (!queue_exists)
             continue;
 
-        PFORT_PACKET_QUEUE queue = fort_shaper_create_queue(shaper, i);
+        PFORT_PACKET_QUEUE queue = fort_shaper_create_queue(shaper, i, now);
         if (queue == NULL)
             continue;
 
-        /* The shaper's thread uses them under the queue's lock */
+        /* The shaper's thread uses it under the queue's lock */
         KLOCK_QUEUE_HANDLE lock_queue;
         KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
         {
             queue->limit = limits[i];
-
-            queue->available_bytes = FORT_QUEUE_INITIAL_TOKEN_COUNT;
-            queue->available_rem = 0;
-            queue->last_tick = now;
         }
         KeReleaseInStackQueuedSpinLock(&lock_queue);
     }
