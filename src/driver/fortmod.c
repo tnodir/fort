@@ -88,7 +88,7 @@ void FreeModuleInfoList(PAUX_MODULE_EXTENDED_INFO modules)
 static int ModuleGetProcIndex(
         const PUCHAR codeBase, const PIMAGE_EXPORT_DIRECTORY exports, LPCSTR funcName)
 {
-    if (HIWORD(funcName) == 0) {
+    if (((ULONG_PTR) funcName >> 16) == 0) {
         /* Load function by ordinal value */
         return LOWORD(funcName) - exports->Base;
     }
