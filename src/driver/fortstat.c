@@ -476,7 +476,10 @@ FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN con
             *proc_stat = proc->proc_stat;
             proc->proc_stat = TRUE;
 
-            proc->log_stat = conn->app_data.flags.log_stat;
+            /* The not found (e.g. new) app's traffic is collected too */
+            const FORT_APP_FLAGS app_flags = conn->app_data.flags;
+
+            proc->log_stat = (app_flags.found == 0 || app_flags.log_stat);
         } else if (is_new_proc) {
             fort_stat_proc_free(stat, proc);
         }
