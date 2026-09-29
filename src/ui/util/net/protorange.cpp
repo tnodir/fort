@@ -116,7 +116,7 @@ ProtoRange::ParseError ProtoRange::parseProtoRange(const QStringView proto,
         to = from;
     }
 
-    protoRangeMap.insert(from, to);
+    insertRange(protoRangeMap, from, to);
 
     if (from != to) {
         ++pairSize;

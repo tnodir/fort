@@ -125,6 +125,14 @@ TEST_F(NetUtilTest, ip4Ranges)
         ASSERT_EQ(ipPair1.from, NetFormatUtil::textToIp4("10.0.0.0"));
         ASSERT_EQ(ipPair1.to, NetFormatUtil::textToIp4("10.0.2.0"));
     }
+
+    // Keep the widest range with the same start
+    {
+        ASSERT_TRUE(ipRange.fromText("10.0.0.0/8\n"
+                                     "10.0.0.0/24\n"
+                                     "10.0.0.0\n"));
+        ASSERT_EQ(ipRange.toText(), QString("10.0.0.0-10.255.255.255\n"));
+    }
 }
 
 TEST_F(NetUtilTest, ip6Ranges)
@@ -156,6 +164,11 @@ TEST_F(NetUtilTest, portRanges)
     ASSERT_EQ(portRange.errorLineNo(), 1);
 
     ASSERT_TRUE(portRange.fromText("1-128"));
+    ASSERT_EQ(portRange.toText(), QString("1-128\n"));
+
+    // Keep the widest range with the same start
+    ASSERT_TRUE(portRange.fromText("1-128\n"
+                                   "1-16\n"));
     ASSERT_EQ(portRange.toText(), QString("1-128\n"));
 
     // TCP Prots

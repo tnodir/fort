@@ -61,6 +61,9 @@ protected:
     };
 
     template<typename T>
+    static void insertRange(QMap<T, T> &rangeMap, T from, T to);
+
+    template<typename T>
     static void fillRangeArrays(const FillRangeArraysArgs<T> &fra);
 
 private:
@@ -68,6 +71,18 @@ private:
     QString m_errorMessage;
     QString m_errorDetails;
 };
+
+template<typename T>
+void ValueRange::insertRange(QMap<T, T> &rangeMap, T from, T to)
+{
+    // keep the widest range with the same start
+    auto it = rangeMap.find(from);
+    if (it == rangeMap.end()) {
+        rangeMap.insert(from, to);
+    } else if (to > it.value()) {
+        it.value() = to;
+    }
+}
 
 template<typename T>
 static void ValueRange::fillRangeArrays(const FillRangeArraysArgs<T> &fra)

@@ -198,7 +198,7 @@ IpRange::ParseError IpRange::parseIp4Address(const QStringView ip, const QString
     if (err != ErrorOk)
         return err;
 
-    ip4RangeMap.insert(from, to);
+    insertRange(ip4RangeMap, from, to);
 
     if (from != to) {
         ++pair4Size;

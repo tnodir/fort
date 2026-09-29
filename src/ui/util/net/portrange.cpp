@@ -116,7 +116,7 @@ PortRange::ParseError PortRange::parsePortRange(const QStringView port, const QS
         to = from;
     }
 
-    portRangeMap.insert(from, to);
+    insertRange(portRangeMap, from, to);
 
     if (from != to) {
         ++pairSize;
