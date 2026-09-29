@@ -791,6 +791,9 @@ inline static void fort_pstree_notify_process(PFORT_PSTREE ps_tree, PCFORT_PSTRE
         return;
 
     if (createInfo != NULL) {
+        /* The exited process's ID may be reused, so the new process's flows will log it again */
+        fort_flow_proc_unlog(&fort_device()->stat, processId);
+
         fort_pstree_notify_process_created(ps_tree, createInfo, &psi);
     }
 }
