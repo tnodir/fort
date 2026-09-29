@@ -499,7 +499,63 @@ TEST_F(RuleTextParserTest, lineIpEqualValues)
 
     ASSERT_TRUE(p.parse());
 
-    ASSERT_EQ(p.ruleFilters().size(), 1);
+    ASSERT_EQ(p.ruleFilters().size(), 4);
+
+    // Check Local IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[3];
+        ASSERT_TRUE(rf.equalValues);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS);
+        ASSERT_TRUE(rf.values.isEmpty());
+    }
+}
+
+TEST_F(RuleTextParserTest, lineZonesAtLineEnd)
+{
+    RuleTextParser p("dir(in):!zones\n1.1.1.1");
+
+    ASSERT_TRUE(p.parse());
+
+    ASSERT_EQ(p.ruleFilters().size(), 5);
+
+    // Check Zones
+    {
+        const RuleFilter &rf = p.ruleFilters()[3];
+        ASSERT_TRUE(rf.isNot);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ZONES);
+    }
+
+    // Check IP
+    {
+        const RuleFilter &rf = p.ruleFilters()[4];
+        ASSERT_FALSE(rf.isNot);
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ADDRESS);
+        checkStringList(rf.values, { "1.1.1.1" });
+    }
+}
+
+TEST_F(RuleTextParserTest, lineZonesAtListEnd)
+{
+    RuleTextParser p("{dir(in):zones}:tcp(80)");
+
+    ASSERT_TRUE(p.parse());
+
+    const auto &ruleFilters = p.ruleFilters();
+
+    ASSERT_EQ(ruleFilters.size(), 7);
+
+    // Check Zones
+    {
+        const RuleFilter &rf = ruleFilters[5];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_ZONES);
+    }
+
+    // Check TCP
+    {
+        const RuleFilter &rf = ruleFilters[6];
+        ASSERT_EQ(rf.type, FORT_RULE_FILTER_TYPE_PORT_TCP);
+        checkStringList(rf.values, { "80" });
+    }
 }
 
 TEST_F(RuleTextParserTest, linePortEqualValues)

@@ -83,7 +83,8 @@ bool RuleFilter::isEmpty() const
 
 bool RuleFilter::hasDefaultValue() const
 {
-    return type == FORT_RULE_FILTER_TYPE_ZONES;
+    // The type is kept after the previous filter, so the name is required
+    return type == FORT_RULE_FILTER_TYPE_ZONES && hasFilterName;
 }
 
 RuleTextParser::RuleTextParser(const QString &text, QObject *parent) : QObject(parent), m_text(text)
@@ -174,22 +175,23 @@ bool RuleTextParser::parseLine()
 
 bool RuleTextParser::processSectionFilter()
 {
-    if (m_ruleFilter.isLineEnd || m_ruleFilter.isListEnd)
-        return false;
-
     if (!checkAddFilter())
         return false;
 
+    const bool isLineEnd = m_ruleFilter.isLineEnd || m_ruleFilter.isListEnd;
+
     resetFilter();
 
-    return true;
+    return !isLineEnd;
 }
 
 bool RuleTextParser::parseLineSection(RuleCharTypes expectedSeparator)
 {
     for (;;) {
-        if (!nextCharType(CharLineBegin | expectedSeparator, CharSpace))
-            return false;
+        if (!nextCharType(CharLineBegin | expectedSeparator, CharSpace)) {
+            m_ruleFilter.isLineEnd = true; // End of text or unexpected symbol
+            break;
+        }
 
         if (!parseSection())
             break;
@@ -486,7 +488,6 @@ void RuleTextParser::resetFilter()
     m_ruleFilter.isNot = false;
     m_ruleFilter.equalValues = false;
     m_ruleFilter.hasFilterName = false;
-    m_ruleFilter.isListEnd = false;
     m_ruleFilter.isLineEnd = false;
     m_ruleFilter.isSectionEnd = false;
 
