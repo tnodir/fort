@@ -297,7 +297,7 @@ inline static UCHAR fort_stat_group_speed_limit(PFORT_CONF_GROUP conf_group, UCH
     if (((conf_group->group_bits & conf_group->limit_bits) & (1 << group_index)) == 0)
         return 0;
 
-    return (((conf_group->limit_io_bits) >> (group_index * 2)) & 3);
+    return (((conf_group->limit_io_bits) >> (group_index * 2)) & FORT_FLOW_SPEED_LIMIT_FLAGS);
 }
 
 typedef struct fort_flow_add_arg
