@@ -63,10 +63,6 @@ FORT_API NTSTATUS fort_buffer_xmove(
 
 FORT_API void fort_buffer_irp_clear_pending(PFORT_IRP_INFO irp_info);
 
-FORT_API void fort_buffer_dpc_begin(PFORT_BUFFER buf, PKLOCK_QUEUE_HANDLE lock_queue);
-
-FORT_API void fort_buffer_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue);
-
 FORT_API void fort_buffer_flush_pending(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info);
 
 #ifdef __cplusplus

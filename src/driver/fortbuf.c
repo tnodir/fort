@@ -408,16 +408,6 @@ FORT_API void fort_buffer_irp_clear_pending(PFORT_IRP_INFO irp_info)
     fort_irp_set_cancel_routine(irp, NULL);
 }
 
-FORT_API void fort_buffer_dpc_begin(PFORT_BUFFER buf, PKLOCK_QUEUE_HANDLE lock_queue)
-{
-    KeAcquireInStackQueuedSpinLockAtDpcLevel(&buf->lock, lock_queue);
-}
-
-FORT_API void fort_buffer_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue)
-{
-    KeReleaseInStackQueuedSpinLockFromDpcLevel(lock_queue);
-}
-
 FORT_API void fort_buffer_flush_pending(PFORT_BUFFER buf, PFORT_IRP_INFO irp_info)
 {
     UINT32 out_top = buf->out_top;

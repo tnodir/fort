@@ -396,11 +396,11 @@ FORT_API void fort_callout_timer(void)
 
     /* Lock buffer */
     KLOCK_QUEUE_HANDLE buf_lock_queue;
-    fort_buffer_dpc_begin(buf, &buf_lock_queue);
+    KeAcquireInStackQueuedSpinLock(&buf->lock, &buf_lock_queue);
 
     /* Lock stat */
     KLOCK_QUEUE_HANDLE stat_lock_queue;
-    fort_stat_dpc_begin(stat, &stat_lock_queue);
+    KeAcquireInStackQueuedSpinLock(&stat->lock, &stat_lock_queue);
 
     /* Get current Unix time */
     fort_callout_update_system_time(stat, buf, &irp_info);
@@ -409,7 +409,7 @@ FORT_API void fort_callout_timer(void)
     fort_callout_flush_stat_traf(stat, buf, &irp_info);
 
     /* Unlock stat */
-    fort_stat_dpc_end(&stat_lock_queue);
+    KeReleaseInStackQueuedSpinLock(&stat_lock_queue);
 
     /* Flush pending buffer */
     if (irp_info.irp == NULL) {
@@ -417,7 +417,7 @@ FORT_API void fort_callout_timer(void)
     }
 
     /* Unlock buffer */
-    fort_buffer_dpc_end(&buf_lock_queue);
+    KeReleaseInStackQueuedSpinLock(&buf_lock_queue);
 
     if (irp_info.irp != NULL) {
         fort_buffer_irp_clear_pending(&irp_info);

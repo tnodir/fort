@@ -601,16 +601,6 @@ FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 dat
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-FORT_API void fort_stat_dpc_begin(PFORT_STAT stat, PKLOCK_QUEUE_HANDLE lock_queue)
-{
-    KeAcquireInStackQueuedSpinLockAtDpcLevel(&stat->lock, lock_queue);
-}
-
-FORT_API void fort_stat_dpc_end(PKLOCK_QUEUE_HANDLE lock_queue)
-{
-    KeReleaseInStackQueuedSpinLockFromDpcLevel(lock_queue);
-}
-
 static void fort_stat_traf_flush_proc(PFORT_STAT stat, PFORT_STAT_PROC proc, PCHAR *out)
 {
     PUINT32 out_proc = (PUINT32) *out;
