@@ -11,6 +11,9 @@
 #define FORT_PROC_BAD_INDEX ((UINT16) - 1)
 #define FORT_PROC_COUNT_MAX 0xFFFF
 
+#define FORT_STAT_CLOSE_FLOWS_DELAY   50 /* msecs */
+#define FORT_STAT_CLOSE_FLOWS_TIMEOUT 2000 /* msecs, when not waiting for all flows */
+
 #define fort_stat_proc_hash(process_id) tommy_inthash_u32((UINT32) (process_id))
 #define fort_flow_hash(flow_id)         tommy_inthash_u32((UINT32) (flow_id))
 
@@ -397,7 +400,7 @@ FORT_API void fort_stat_open(PFORT_STAT stat)
     KeInitializeSpinLock(&stat->lock);
 }
 
-FORT_API void fort_stat_close_flows(PFORT_STAT stat)
+FORT_API void fort_stat_close_flows(PFORT_STAT stat, BOOL wait_all)
 {
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
@@ -412,6 +415,8 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
+    int wait_msecs = 0;
+
     while (InterlockedAdd(&stat->flow_closing_count, 0) > 0) {
         KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
         {
@@ -419,8 +424,14 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat)
         }
         KeReleaseInStackQueuedSpinLock(&lock_queue);
 
+        /* Don't wait for the flows, which can't be aborted on Windows 7 */
+        if (!wait_all && wait_msecs >= FORT_STAT_CLOSE_FLOWS_TIMEOUT)
+            break;
+
         /* Wait for asynchronously deleting flows */
-        fort_thread_delay(/*msecs=*/50);
+        fort_thread_delay(FORT_STAT_CLOSE_FLOWS_DELAY);
+
+        wait_msecs += FORT_STAT_CLOSE_FLOWS_DELAY;
     }
 }
 

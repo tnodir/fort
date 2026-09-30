@@ -164,7 +164,7 @@ FORT_API UCHAR fort_flow_flags(PFORT_FLOW flow);
 
 FORT_API void fort_stat_open(PFORT_STAT stat);
 
-FORT_API void fort_stat_close_flows(PFORT_STAT stat);
+FORT_API void fort_stat_close_flows(PFORT_STAT stat, BOOL wait_all);
 
 FORT_API void fort_stat_close(PFORT_STAT stat);
 

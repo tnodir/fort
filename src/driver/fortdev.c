@@ -457,7 +457,8 @@ FORT_API NTSTATUS fort_device_shutdown(PDEVICE_OBJECT device, PIRP irp)
     FORT_CHECK_STACK(FORT_DEVICE_SHUTDOWN);
 
     if (fort_device() != NULL) {
-        fort_stat_close_flows(&fort_device()->stat);
+        /* The system doesn't unload the driver on shutdown, so the flows may stay */
+        fort_stat_close_flows(&fort_device()->stat, /*wait_all=*/FALSE);
     }
 
     fort_request_complete(irp, STATUS_SUCCESS);
@@ -575,7 +576,7 @@ FORT_API void fort_device_unload(void)
     fort_timer_close(&fort_device()->log_timer);
 
     /* Remove the flows' contexts to uninstall callouts */
-    fort_stat_close_flows(&fort_device()->stat);
+    fort_stat_close_flows(&fort_device()->stat, /*wait_all=*/TRUE);
 
     /* Uninstall callouts before closing their data */
     fort_callout_remove();
