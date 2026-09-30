@@ -1003,8 +1003,13 @@ inline static BOOL fort_shaper_packet_queue_check_buffer(
         PFORT_PACKET_QUEUE queue, ULONG data_length)
 {
     const UINT32 buffer_bytes = queue->limit.buffer_bytes;
+    if (buffer_bytes == 0)
+        return TRUE;
 
-    return buffer_bytes == 0 || (UINT64) buffer_bytes >= (queue->queued_bytes + data_length);
+    const UINT64 queued_bytes = queue->queued_bytes;
+
+    /* Accept a packet bigger than the buffer into the empty queue */
+    return queued_bytes == 0 || (UINT64) buffer_bytes >= (queued_bytes + data_length);
 }
 
 static BOOL fort_shaper_packet_queue_check_packet(
