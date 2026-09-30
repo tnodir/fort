@@ -298,6 +298,12 @@ bool confRulesValid(const void *drvRules, quint32 len)
 
 bool provRegister(bool bootFilter)
 {
+    const FORT_PROV_INIT_CONF init_conf = {
+        .sublayer_weight = FORT_SUBLAYER_MAX_WEIGHT,
+    };
+
+    fort_prov_init(init_conf);
+
     const FORT_PROV_BOOT_CONF boot_conf = {
         .boot_filter = bootFilter,
     };
