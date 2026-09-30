@@ -940,10 +940,11 @@ void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const FORT_CONF_FLAGS co
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
     {
-        flush_io_bits = (group_io_bits ^ shaper->group_io_bits);
+        const UINT32 limit_group_io_bits = (shaper->limit_io_bits & group_io_bits);
 
-        fort_shaper_io_bits_exchange(
-                &shaper->group_io_bits, (shaper->limit_io_bits & group_io_bits));
+        flush_io_bits = (limit_group_io_bits ^ shaper->group_io_bits);
+
+        fort_shaper_io_bits_exchange(&shaper->group_io_bits, limit_group_io_bits);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
