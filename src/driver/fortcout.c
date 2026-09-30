@@ -323,7 +323,7 @@ FORT_API NTSTATUS fort_callout_force_reauth(const FORT_CONF_FLAGS old_conf_flags
 
     NTSTATUS status;
 
-    const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
+    const FORT_CONF_FLAGS conf_flags = fort_device_conf_flags(&fort_device()->conf);
 
     /* Handle log_stat */
     fort_stat_log_update(&fort_device()->stat, conf_flags.log_stat);

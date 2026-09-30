@@ -700,7 +700,7 @@ static void fort_callout_ale_classify(PFORT_CALLOUT_ARG ca)
     };
 
     PFORT_DEVICE_CONF device_conf = &fort_device()->conf;
-    const FORT_CONF_FLAGS conf_flags = device_conf->conf_flags;
+    const FORT_CONF_FLAGS conf_flags = fort_device_conf_flags(device_conf);
 
     if (fort_callout_ale_is_local_address(ca, &cx, conf_flags)) {
         fort_callout_classify_permit(ca->filter, ca->classifyOut);

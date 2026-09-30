@@ -371,7 +371,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_set(PFORT_DEVICE_CONF device_conf, PFORT_
             conf_flags.trace_events = old_conf_flags.trace_events;
         }
 
-        device_conf->conf_flags = conf_flags;
+        fort_device_conf_flags_set(device_conf, conf_flags);
 
         if (old_conf_ref != NULL) {
             fort_conf_ref_put_locked(device_conf, old_conf_ref);
@@ -409,7 +409,7 @@ FORT_API FORT_CONF_FLAGS fort_conf_ref_flags_set(
             conf_flags = old_conf_flags;
         }
 
-        device_conf->conf_flags = conf_flags;
+        fort_device_conf_flags_set(device_conf, conf_flags);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 

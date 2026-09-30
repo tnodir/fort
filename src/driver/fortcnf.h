@@ -40,13 +40,19 @@ typedef struct fort_conf_ref
 #define FORT_DEVICE_SHUTDOWN_REGISTERED 0x0200
 #define FORT_DEVICE_PS_ENUMERATED       0x0400
 
+/* The conf's flags are read by the classify callouts without the lock, so access them atomically */
+typedef union fort_device_conf_flags {
+    FORT_CONF_FLAGS flags;
+    LONG64 value;
+} FORT_DEVICE_CONF_FLAGS;
+
 typedef struct fort_device_conf
 {
     UINT16 volatile flags;
 
     FORT_CONF_RULES_GLOB volatile rules_glob;
 
-    FORT_CONF_FLAGS volatile conf_flags;
+    FORT_DEVICE_CONF_FLAGS volatile conf_flags;
     PFORT_CONF_REF volatile ref;
     KSPIN_LOCK ref_lock;
 
@@ -71,6 +77,10 @@ FORT_API UINT16 fort_device_flag_set(PFORT_DEVICE_CONF device_conf, UINT16 flag,
 FORT_API UINT16 fort_device_flags(PFORT_DEVICE_CONF device_conf);
 
 FORT_API UINT16 fort_device_flag(PFORT_DEVICE_CONF device_conf, UINT16 flag);
+
+FORT_API FORT_CONF_FLAGS fort_device_conf_flags(PFORT_DEVICE_CONF device_conf);
+
+FORT_API void fort_device_conf_flags_set(PFORT_DEVICE_CONF device_conf, FORT_CONF_FLAGS flags);
 
 #ifdef __cplusplus
 } // extern "C"

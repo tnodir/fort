@@ -45,7 +45,7 @@ static NTSTATUS fort_device_reauth_force(const FORT_CONF_FLAGS old_conf_flags)
 
 static void fort_device_reauth(void)
 {
-    const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
+    const FORT_CONF_FLAGS conf_flags = fort_device_conf_flags(&fort_device()->conf);
 
     fort_device_reauth_force(conf_flags);
 }
@@ -110,7 +110,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
     /* Clear conf */
     {
         const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(&fort_device()->conf, NULL);
-        const FORT_CONF_FLAGS conf_flags = fort_device()->conf.conf_flags;
+        const FORT_CONF_FLAGS conf_flags = fort_device_conf_flags(&fort_device()->conf);
 
         fort_conf_zones_set(&fort_device()->conf, NULL);
         fort_conf_rules_set(&fort_device()->conf, NULL);
