@@ -276,7 +276,7 @@ FORT_API BOOL fort_conf_rules_valid(PCFORT_CONF_RULES rules, UINT32 len)
         return FALSE;
 
     const UINT16 max_rule_id = rules->max_rule_id;
-    if (max_rule_id > FORT_CONF_RULE_MAX)
+    if (max_rule_id > FORT_CONF_RULE_ID_MAX)
         return FALSE;
 
     const UINT32 data_len = len - FORT_CONF_RULES_DATA_OFF;

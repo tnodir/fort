@@ -1214,7 +1214,7 @@ TEST_F(ConfUtilTest, rulesValid)
     {
         QByteArray badBuf = buf;
         PFORT_CONF_RULES rules = PFORT_CONF_RULES(badBuf.data());
-        rules->max_rule_id = FORT_CONF_RULE_MAX + 1;
+        rules->max_rule_id = FORT_CONF_RULE_ID_MAX + 1;
 
         ASSERT_FALSE(rulesValid(badBuf, badBuf.size()));
     }

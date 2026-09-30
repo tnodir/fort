@@ -15,6 +15,7 @@
 #define FORT_CONF_IP4_RANGE_SIZE(n)     (FORT_CONF_IP4_ARR_SIZE(n) * 2)
 #define FORT_CONF_IP6_RANGE_SIZE(n)     (FORT_CONF_IP6_ARR_SIZE(n) * 2)
 #define FORT_CONF_RULE_MAX              1024
+#define FORT_CONF_RULE_ID_MAX           (FORT_CONF_RULE_MAX + 2) /* with 2 Global rules */
 #define FORT_CONF_RULE_GLOBAL_MAX       64
 #define FORT_CONF_RULE_SET_MAX          32
 #define FORT_CONF_RULE_FILTER_DEPTH_MAX 7
