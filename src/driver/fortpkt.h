@@ -78,7 +78,7 @@ typedef struct fort_packet_queue
      * When they are added to the latency queue they are timestamped when they
      * entered and they are released when the appropriate latency has expired.
      * Only the bandwidth queue is affected by the queue buffer size.
-     * The latency queue has no limit.
+     * The latency queue has no limit, except the shaper's limit of held inbound packets.
      */
     FORT_PACKET_LIST bandwidth_list;
     FORT_PACKET_LIST latency_list;
@@ -145,6 +145,8 @@ typedef struct fort_shaper
 
     LONG volatile group_io_bits;
     LONG volatile active_io_bits;
+
+    LONG volatile in_packet_count; /* held inbound packets */
 
     UINT32 randomSeed;
     LARGE_INTEGER qpcFrequency;

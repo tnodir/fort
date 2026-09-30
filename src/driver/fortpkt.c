@@ -15,6 +15,9 @@
 
 #define FORT_QUEUE_ELAPSED_SECONDS_MAX 3600 /* to repay the big packet's debt */
 
+/* The held inbound packets' clones keep the NIC's receive buffers, so limit their count */
+#define FORT_SHAPER_IN_PACKET_COUNT_MAX 512
+
 #define HTONL(l) _byteswap_ulong(l)
 
 typedef void FORT_SHAPER_PACKET_FOREACH_FUNC(PFORT_SHAPER, PFORT_FLOW_PACKET);
@@ -133,8 +136,12 @@ static void fort_packet_free(PFORT_PACKET_IO pkt)
     fort_packet_free_cloned(pkt->netBufList);
 }
 
-static void fort_shaper_packet_free(PFORT_FLOW_PACKET pkt)
+static void fort_shaper_packet_free(PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt)
 {
+    if ((pkt->io.flags & FORT_PACKET_INBOUND) != 0) {
+        InterlockedDecrement(&shaper->in_packet_count);
+    }
+
     fort_packet_free(&pkt->io);
 
     fort_shaper_packet_del(pkt);
@@ -142,9 +149,7 @@ static void fort_shaper_packet_free(PFORT_FLOW_PACKET pkt)
 
 static void fort_shaper_packet_drop(PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt)
 {
-    UNUSED(shaper);
-
-    fort_shaper_packet_free(pkt);
+    fort_shaper_packet_free(shaper, pkt);
 }
 
 inline static PFORT_PENDING_PACKET fort_pending_packet_new(void)
@@ -174,7 +179,7 @@ static void NTAPI fort_packet_inject_complete(
 
     switch (pkt->flags & FORT_PACKET_TYPE_MASK) {
     case FORT_PACKET_TYPE_FLOW: {
-        fort_shaper_packet_free((PFORT_FLOW_PACKET) pkt);
+        fort_shaper_packet_free(&fort_device()->shaper, (PFORT_FLOW_PACKET) pkt);
     } break;
     case FORT_PACKET_TYPE_PENDING: {
         fort_pending_packet_free((PFORT_PENDING_PACKET) pkt);
@@ -406,14 +411,12 @@ static NTSTATUS fort_packet_fill(PCFORT_CALLOUT_ARG ca, PFORT_PACKET_IO pkt, UCH
 
 static void fort_shaper_packet_inject(PFORT_SHAPER shaper, PFORT_FLOW_PACKET pkt)
 {
-    UNUSED(shaper);
-
     NTSTATUS status;
 
     status = fort_packet_inject(&pkt->io);
 
     if (!NT_SUCCESS(status)) {
-        fort_shaper_packet_free(pkt);
+        fort_shaper_packet_free(shaper, pkt);
     }
 }
 
@@ -1020,6 +1023,11 @@ static BOOL fort_shaper_packet_queue_check_packet(
     return res;
 }
 
+inline static BOOL fort_shaper_packet_queue_check_in_count(PFORT_SHAPER shaper, BOOL inbound)
+{
+    return !inbound || shaper->in_packet_count < FORT_SHAPER_IN_PACKET_COUNT_MAX;
+}
+
 inline static NTSTATUS fort_shaper_packet_queue(
         PFORT_SHAPER shaper, PCFORT_CALLOUT_ARG ca, PFORT_FLOW flow)
 {
@@ -1036,7 +1044,8 @@ inline static NTSTATUS fort_shaper_packet_queue(
         return STATUS_NO_SUCH_GROUP;
 
     /* Check the Queue for new Packet */
-    if (!fort_shaper_packet_queue_check_packet(shaper, queue, ca->dataSize)) {
+    if (!fort_shaper_packet_queue_check_in_count(shaper, ca->inbound)
+            || !fort_shaper_packet_queue_check_packet(shaper, queue, ca->dataSize)) {
         return STATUS_SUCCESS; /* drop the packet */
     }
 
@@ -1048,8 +1057,14 @@ inline static NTSTATUS fort_shaper_packet_queue(
     RtlZeroMemory(pkt, sizeof(FORT_FLOW_PACKET));
 
     const NTSTATUS status = fort_packet_fill(ca, &pkt->io, FORT_PACKET_TYPE_FLOW);
+
+    /* The filled inbound packet is counted until its free */
+    if ((pkt->io.flags & FORT_PACKET_INBOUND) != 0) {
+        InterlockedIncrement(&shaper->in_packet_count);
+    }
+
     if (!NT_SUCCESS(status)) {
-        fort_shaper_packet_free(pkt);
+        fort_shaper_packet_free(shaper, pkt);
         return status;
     }
 
