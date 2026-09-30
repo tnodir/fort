@@ -530,7 +530,7 @@ FORT_API NTSTATUS fort_device_load(PVOID device_param)
         return status;
 
     /* Register worker */
-    status = fort_worker_register(device, &fort_device()->worker);
+    status = fort_worker_register(&fort_device()->worker);
     if (!NT_SUCCESS(status))
         return status;
 

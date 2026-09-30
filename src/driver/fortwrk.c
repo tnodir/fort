@@ -4,9 +4,18 @@
 
 #include <assert.h>
 
-#include "fortcb.h"
 #include "fortdbg.h"
 #include "fortutl.h"
+
+static UCHAR fort_worker_flags_set(PFORT_WORKER worker, UCHAR flags, BOOL on)
+{
+    return on ? InterlockedOr8(&worker->flags, flags) : InterlockedAnd8(&worker->flags, ~flags);
+}
+
+static UCHAR fort_worker_flags(PFORT_WORKER worker)
+{
+    return fort_worker_flags_set(worker, 0, TRUE);
+}
 
 static void fort_worker_callback_run(
         PFORT_WORKER worker, enum FORT_WORKER_TYPE worker_type, UCHAR id_bits)
@@ -24,33 +33,23 @@ static NTSTATUS fort_worker_callback_expand(PVOID context)
 
     fort_worker_callback_run(worker, FORT_WORKER_REAUTH, id_bits);
 
-    /* The worker's wait checks it, so the funcs must be finished */
-    InterlockedDecrement16(&worker->queue_size);
-
     return STATUS_SUCCESS;
 }
 
-static void NTAPI fort_worker_callback(PDEVICE_OBJECT device, PVOID context)
+static void fort_worker_thread_loop(PVOID context)
 {
-    UNUSED(device);
-
     FORT_CHECK_STACK(FORT_WORKER_CALLBACK);
 
-    const NTSTATUS status = fort_expand_stack(&fort_worker_callback_expand, context);
-    UNUSED(status);
-}
-
-static void fort_worker_wait(PFORT_WORKER worker)
-{
-    InterlockedAnd8(&worker->id_bits, 0);
+    PFORT_WORKER worker = context;
 
     for (;;) {
-        const SHORT queue_size = InterlockedOr16(&worker->queue_size, 0);
+        KeWaitForSingleObject(&worker->thread_event, Executive, KernelMode, FALSE, NULL);
 
-        fort_thread_delay(/*msecs=*/50);
+        if ((fort_worker_flags(worker) & FORT_WORKER_CLOSED) != 0)
+            break;
 
-        if (queue_size == 0)
-            break; /* Check the extra one time to ensure thread's exit from callback function */
+        const NTSTATUS status = fort_expand_stack(&fort_worker_callback_expand, worker);
+        UNUSED(status);
     }
 }
 
@@ -66,33 +65,28 @@ FORT_API void fort_worker_queue(PFORT_WORKER worker, UCHAR work_id)
     const UCHAR id_bits = InterlockedOr8(&worker->id_bits, (1 << work_id));
 
     if (id_bits == 0) {
-        InterlockedIncrement16(&worker->queue_size);
-
-        IoQueueWorkItem(worker->item,
-                FORT_CALLBACK(
-                        FORT_CALLBACK_WORKER_CALLBACK, PIO_WORKITEM_ROUTINE, &fort_worker_callback),
-                DelayedWorkQueue, worker);
+        KeSetEvent(&worker->thread_event, IO_NO_INCREMENT, FALSE);
     }
 }
 
-FORT_API NTSTATUS fort_worker_register(PDEVICE_OBJECT device, PFORT_WORKER worker)
+FORT_API NTSTATUS fort_worker_register(PFORT_WORKER worker)
 {
-    PIO_WORKITEM item = IoAllocateWorkItem(device);
-    if (item == NULL) {
-        return STATUS_INSUFFICIENT_RESOURCES;
-    }
+    KeInitializeEvent(&worker->thread_event, SynchronizationEvent, FALSE);
 
-    worker->item = item;
-
-    return STATUS_SUCCESS;
+    return fort_thread_run(
+            &worker->thread, &fort_worker_thread_loop, worker, /*priorityIncrement=*/0);
 }
 
 FORT_API void fort_worker_unregister(PFORT_WORKER worker)
 {
-    if (worker->item != NULL) {
-        fort_worker_wait(worker);
+    if (worker->thread.thread_handle == NULL)
+        return;
 
-        IoFreeWorkItem(worker->item);
-        worker->item = NULL;
-    }
+    /* The queued funcs aren't run after the close */
+    fort_worker_flags_set(worker, FORT_WORKER_CLOSED, TRUE);
+
+    KeSetEvent(&worker->thread_event, IO_NO_INCREMENT, FALSE);
+
+    /* Wait for the thread's exit, then the driver's code isn't running by it */
+    fort_thread_wait(&worker->thread);
 }
