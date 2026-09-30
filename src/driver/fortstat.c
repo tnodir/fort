@@ -2,6 +2,8 @@
 
 #include "fortstat.h"
 
+#include <assert.h>
+
 #include "fortutl.h"
 
 #define FORT_STAT_POOL_TAG 'SwfF'
@@ -372,6 +374,12 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT
 
         fort_stat_proc_inc(proc);
     } else {
+        /* The reauthorized flow keeps its process's reference:
+         * WFP takes the process ID from the socket's endpoint,
+         * and the flow's handle isn't reused until the flow's deletion.
+         */
+        assert(faa.flow->opt.proc_index == proc->proc_index);
+
         fort_flow_opt_set(stat, &faa);
     }
 
