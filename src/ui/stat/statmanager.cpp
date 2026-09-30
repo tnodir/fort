@@ -148,7 +148,7 @@ void StatManager::clearQuotas(bool isNewDay, bool isNewMonth)
     }
 }
 
-void StatManager::checkQuotas(quint32 inBytes)
+void StatManager::checkQuotas(quint64 inBytes)
 {
     if (!m_isActivePeriod)
         return;
@@ -304,8 +304,8 @@ bool StatManager::logStatTraf(const LogEntryStatTraf &entry, qint64 unixTime)
     }
 
     // Sum traffic bytes
-    quint32 sumInBytes = 0;
-    quint32 sumOutBytes = 0;
+    quint64 sumInBytes = 0;
+    quint64 sumOutBytes = 0;
 
     const quint16 procCount = entry.procCount();
     {
@@ -517,7 +517,7 @@ void StatManager::deleteOldTraffic(qint32 trafHour)
 }
 
 void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
-        const SqliteStmtList &updateStmtList, quint32 &sumInBytes, quint32 &sumOutBytes,
+        const SqliteStmtList &updateStmtList, quint64 &sumInBytes, quint64 &sumOutBytes,
         quint32 pid, quint32 inBytes, quint32 outBytes, qint64 unixTime, bool logStat)
 {
     const QString appPath = getLoggedProcessIdPath(pid);
@@ -545,7 +545,7 @@ void StatManager::logTrafBytes(const SqliteStmtList &insertStmtList,
 }
 
 void StatManager::updateTrafficList(const SqliteStmtList &insertStmtList,
-        const SqliteStmtList &updateStmtList, quint32 inBytes, quint32 outBytes, qint64 appId)
+        const SqliteStmtList &updateStmtList, quint64 inBytes, quint64 outBytes, qint64 appId)
 {
     int i = 0;
     for (SqliteStmt *stmtUpdate : updateStmtList) {
@@ -561,7 +561,7 @@ void StatManager::updateTrafficList(const SqliteStmtList &insertStmtList,
     }
 }
 
-bool StatManager::updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBytes, qint64 appId)
+bool StatManager::updateTraffic(SqliteStmt *stmt, quint64 inBytes, quint64 outBytes, qint64 appId)
 {
     stmt->bindInt64(2, inBytes);
     stmt->bindInt64(3, outBytes);

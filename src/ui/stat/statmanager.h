@@ -52,7 +52,7 @@ signals:
 
     void appStatRemoved(qint64 appId);
     void appCreated(qint64 appId, const QString &appPath);
-    void trafficAdded(qint64 unixTime, quint32 inBytes, quint32 outBytes);
+    void trafficAdded(qint64 unixTime, quint64 inBytes, quint64 outBytes);
 
     void appTrafTotalsResetted();
 
@@ -72,7 +72,7 @@ private:
     void updateActivePeriod(qint32 tickSecs);
 
     void clearQuotas(bool isNewDay, bool isNewMonth);
-    void checkQuotas(quint32 inBytes);
+    void checkQuotas(quint64 inBytes);
 
     bool updateTrafDay(qint64 unixTime);
 
@@ -96,14 +96,14 @@ private:
     void deleteOldTraffic(qint32 trafHour);
 
     void logTrafBytes(const SqliteStmtList &insertStmtList, const SqliteStmtList &updateStmtList,
-            quint32 &sumInBytes, quint32 &sumOutBytes, quint32 pid, quint32 inBytes,
+            quint64 &sumInBytes, quint64 &sumOutBytes, quint32 pid, quint32 inBytes,
             quint32 outBytes, qint64 unixTime, bool logStat);
 
     void updateTrafficList(const SqliteStmtList &insertStmtList,
-            const SqliteStmtList &updateStmtList, quint32 inBytes, quint32 outBytes,
+            const SqliteStmtList &updateStmtList, quint64 inBytes, quint64 outBytes,
             qint64 appId = 0);
 
-    bool updateTraffic(SqliteStmt *stmt, quint32 inBytes, quint32 outBytes, qint64 appId = 0);
+    bool updateTraffic(SqliteStmt *stmt, quint64 inBytes, quint64 outBytes, qint64 appId = 0);
 
     SqliteStmt *getStmt(const char *sql);
     SqliteStmt *getTrafficStmt(const char *sql, qint32 trafTime);

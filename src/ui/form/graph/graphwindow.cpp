@@ -72,13 +72,13 @@ bool clearGraphData(
 }
 
 void adjustGraphData(
-        const QSharedPointer<QCPBarsDataContainer> &data, double unixTimeKey, quint32 &bits)
+        const QSharedPointer<QCPBarsDataContainer> &data, double unixTimeKey, quint64 &bits)
 {
     const auto hi = data->constEnd() - 1;
 
     // Check existing key
     if (qFuzzyCompare(unixTimeKey, hi->mainKey())) {
-        bits += quint32(hi->mainValue());
+        bits += quint64(hi->mainValue());
     }
 
     data->removeAfter(unixTimeKey);
@@ -456,7 +456,7 @@ void GraphWindow::checkHoverLeave()
     }
 }
 
-void GraphWindow::addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes)
+void GraphWindow::addTraffic(qint64 unixTime, quint64 inBytes, quint64 outBytes)
 {
     if (m_lastUnixTime != unixTime) {
         m_lastUnixTime = unixTime;
@@ -507,10 +507,10 @@ void GraphWindow::addEmptyTraffic()
     addTraffic(DateUtil::getUnixTime(), 0, 0);
 }
 
-void GraphWindow::addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint32 bytes)
+void GraphWindow::addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint64 bytes)
 {
     auto data = graph->data();
-    quint32 bits = bytes * 8;
+    quint64 bits = bytes * 8;
 
     if (!clearGraphData(data, rangeLowerKey, unixTimeKey)) {
         adjustGraphData(data, unixTimeKey, bits);

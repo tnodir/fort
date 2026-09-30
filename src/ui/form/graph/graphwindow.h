@@ -30,7 +30,7 @@ signals:
     void mouseRightClick(QMouseEvent *event);
 
 public slots:
-    void addTraffic(qint64 unixTime, quint32 inBytes, quint32 outBytes);
+    void addTraffic(qint64 unixTime, quint64 inBytes, quint64 outBytes);
 
 private slots:
     void checkHoverLeave();
@@ -78,7 +78,7 @@ private:
 
     void setupTimer();
 
-    void addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint32 bytes);
+    void addData(QCPBars *graph, double rangeLowerKey, double unixTimeKey, quint64 bytes);
 
     void updateSpeed();
     QString getSpeedText() const;

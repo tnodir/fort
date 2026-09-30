@@ -29,8 +29,8 @@ bool processStatManager_appCreated(StatManager *statManager, const ProcessComman
 
 bool processStatManager_trafficAdded(StatManager *statManager, const ProcessCommandArgs &p)
 {
-    emit statManager->trafficAdded(
-            p.args.value(0).toLongLong(), p.args.value(1).toUInt(), p.args.value(2).toUInt());
+    emit statManager->trafficAdded(p.args.value(0).toLongLong(), p.args.value(1).toULongLong(),
+            p.args.value(2).toULongLong());
     return true;
 }
 
@@ -146,7 +146,7 @@ void StatManagerRpc::setupServerSignals(RpcManager *rpcManager)
                         Control::Rpc_StatManager_appCreated, { appId, appPath });
             });
     connect(statManager, &StatManager::trafficAdded, rpcManager,
-            [=](qint64 unixTime, quint32 inBytes, quint32 outBytes) {
+            [=](qint64 unixTime, quint64 inBytes, quint64 outBytes) {
                 rpcManager->invokeOnClients(
                         Control::Rpc_StatManager_trafficAdded, { unixTime, inBytes, outBytes });
             });
