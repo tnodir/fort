@@ -113,6 +113,8 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         .isIPv6 = logEntry->isIPv6(),
         .inherited = logEntry->inherited(),
         .act = {
+            .blocked = logEntry->blocked(),
+            .conn_alert = logEntry->alerted(),
             .zone_id = logEntry->zoneId(),
         },
         .reason = logEntry->reason(),

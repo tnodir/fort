@@ -97,6 +97,8 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
     for (int i = 0; i < testCount; ++i) {
         int v = i;
         entry.setInbound((v & 1) != 0);
+        entry.setBlocked((v & 2) != 0);
+        entry.setAlerted((v & 4) != 0);
         entry.setReason(++v);
         entry.setIpProto(++v);
         entry.setLocalPort(++v);
@@ -117,6 +119,8 @@ TEST_F(LogBufferTest, blockedIp4WriteRead)
         ASSERT_EQ(entry.type(), FORT_LOG_TYPE_CONN);
         ASSERT_FALSE(entry.isIPv6());
         ASSERT_EQ(entry.inbound(), (v & 1) != 0);
+        ASSERT_EQ(entry.blocked(), (v & 2) != 0);
+        ASSERT_EQ(entry.alerted(), (v & 4) != 0);
         ASSERT_EQ(entry.reason(), ++v);
         ASSERT_EQ(entry.ipProto(), ++v);
         ASSERT_EQ(entry.localPort(), ++v);
@@ -151,6 +155,8 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
     for (int i = 0; i < testCount; ++i) {
         int v = i;
         entry.setInbound((v & 1) != 0);
+        entry.setBlocked((v & 2) != 0);
+        entry.setAlerted((v & 4) != 0);
         entry.setReason(++v);
         entry.setIpProto(++v);
         entry.setLocalPort(++v);
@@ -171,6 +177,8 @@ TEST_F(LogBufferTest, blockedIp6WriteRead)
         ASSERT_EQ(entry.type(), FORT_LOG_TYPE_CONN);
         ASSERT_TRUE(entry.isIPv6());
         ASSERT_EQ(entry.inbound(), (v & 1) != 0);
+        ASSERT_EQ(entry.blocked(), (v & 2) != 0);
+        ASSERT_EQ(entry.alerted(), (v & 4) != 0);
         ASSERT_EQ(entry.reason(), ++v);
         ASSERT_EQ(entry.ipProto(), ++v);
         ASSERT_EQ(entry.localPort(), ++v);
