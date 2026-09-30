@@ -491,6 +491,15 @@ static NTSTATUS fort_device_register_provider(void)
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_STEALTH_MODE, boot_conf.stealth_mode);
     fort_device_flag_set(&fort_device()->conf, FORT_DEVICE_FILTER_LOCALS, boot_conf.filter_locals);
 
+    /* The classify checks the Conf flags before the first conf is set */
+    const FORT_CONF_FLAGS conf_flags = {
+        .boot_filter = boot_conf.boot_filter,
+        .stealth_mode = boot_conf.stealth_mode,
+        .filter_locals = boot_conf.filter_locals,
+    };
+
+    fort_device_conf_flags_set(&fort_device()->conf, conf_flags);
+
     fort_prov_unregister(engine);
 
     status = fort_prov_register(engine, boot_conf);
