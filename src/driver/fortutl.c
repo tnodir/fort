@@ -79,13 +79,17 @@ static NTSTATUS fort_reg_value_dword(HANDLE regKey, PUNICODE_STRING valueName, P
     status = ZwQueryValueKey(
             regKey, valueName, KeyValuePartialInformation, keyInfo, sizeof(buf), &keyInfoSize);
 
-    if (NT_SUCCESS(status)) {
-        const PUCHAR src = keyInfo->Data;
+    if (!NT_SUCCESS(status))
+        return status;
 
-        *outData = *((PDWORD) src);
-    }
+    if (keyInfo->Type != REG_DWORD || keyInfo->DataLength != sizeof(DWORD))
+        return STATUS_OBJECT_TYPE_MISMATCH;
 
-    return status;
+    const PUCHAR src = keyInfo->Data;
+
+    *outData = *((PDWORD) src);
+
+    return STATUS_SUCCESS;
 }
 
 FORT_API NTSTATUS fort_driver_path(
