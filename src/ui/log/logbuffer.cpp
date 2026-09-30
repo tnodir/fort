@@ -112,9 +112,11 @@ void LogBuffer::writeEntryConn(const LogEntryConn *logEntry)
         .inbound = logEntry->inbound(),
         .isIPv6 = logEntry->isIPv6(),
         .inherited = logEntry->inherited(),
+        .act = {
+            .zone_id = logEntry->zoneId(),
+        },
         .reason = logEntry->reason(),
         .ip_proto = logEntry->ipProto(),
-        .zone_id = logEntry->zoneId(),
         .rule_id = logEntry->ruleId(),
         .local_port = logEntry->localPort(),
         .remote_port = logEntry->remotePort(),
@@ -160,7 +162,7 @@ void LogBuffer::readEntryConn(LogEntryConn *logEntry)
     logEntry->setInherited(conn.inherited);
     logEntry->setReason(conn.reason);
     logEntry->setIpProto(conn.ip_proto);
-    logEntry->setZoneId(conn.zone_id);
+    logEntry->setZoneId(conn.act.zone_id);
     logEntry->setRuleId(conn.rule_id);
     logEntry->setLocalPort(conn.local_port);
     logEntry->setRemotePort(conn.remote_port);

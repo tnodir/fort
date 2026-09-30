@@ -53,7 +53,7 @@ FORT_API void fort_log_conn_header_write(char *p, PCFORT_CONF_META_CONN conn, UI
             | (conn->inherited ? FORT_LOG_CONN_INHERITED : 0)
             | (conn->act.conn_alert ? FORT_LOG_CONN_ALERTED : 0) | ((UINT32) conn->reason << 8)
             | ((UINT32) conn->ip_proto << 16);
-    *up++ = ((UINT32) conn->rule_id) | ((UINT32) conn->zone_id << 16);
+    *up++ = ((UINT32) conn->rule_id) | ((UINT32) conn->act.zone_id << 16);
     *up++ = conn->local_port | ((UINT32) conn->remote_port << 16);
     *up++ = conn->app_data.app_id;
     *up++ = conn->process_id;
@@ -96,7 +96,7 @@ FORT_API void fort_log_conn_header_read(const char *p, PFORT_CONF_META_CONN conn
     conn->ip_proto = (UCHAR) (v >> 16);
 
     v = *up++;
-    conn->zone_id = (UCHAR) (v >> 16);
+    conn->act.zone_id = (UCHAR) (v >> 16);
     conn->rule_id = (UINT16) v;
 
     v = *up++;

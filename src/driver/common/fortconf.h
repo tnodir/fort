@@ -388,6 +388,8 @@ typedef struct fort_conf_conn_actions
     UCHAR conn_log : 1;
     UCHAR conn_nolog : 1;
     UCHAR conn_alert : 1;
+
+    UCHAR zone_id;
 } FORT_CONF_CONN_ACTIONS;
 
 typedef struct fort_conf_meta_conn
@@ -418,7 +420,6 @@ typedef struct fort_conf_meta_conn
 
     UCHAR ip_proto;
 
-    UCHAR zone_id;
     UINT16 rule_id;
 
     UINT16 local_port;

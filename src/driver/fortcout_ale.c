@@ -305,13 +305,13 @@ inline static BOOL fort_callout_ale_conn_zone_filtered(
 
     if (fort_devconf_zones_conn_filtered(&fort_device()->conf, conn, &opt)) {
         if (opt.reject.included) {
-            conn->zone_id = opt.reject.zone_id;
+            conn->act.zone_id = opt.reject.zone_id;
             conn->act.blocked = TRUE;
             return TRUE; /* block Rejected Zones */
         }
 
         if (opt.accept.filtered) {
-            conn->zone_id = opt.accept.zone_id;
+            conn->act.zone_id = opt.accept.zone_id;
             conn->act.blocked = !opt.accept.included;
             return TRUE; /* allow/block-not Accepted Zones */
         }
@@ -528,7 +528,7 @@ inline static BOOL fort_callout_ale_check_filter_flags(PCFORT_CALLOUT_ARG ca,
             .zone_func = (fort_conf_zones_ip_included_func *) &fort_devconf_zones_ip_included,
             .ctx = &fort_device()->conf,
             .addr_group_index = 1, /* INET */
-            .zone_id = &conn->zone_id,
+            .zone_id = &conn->act.zone_id,
         };
 
         if (!fort_conf_addr_group_ip_included(&conf_ref->conf, conn, &opt)) {

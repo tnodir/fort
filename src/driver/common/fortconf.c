@@ -23,7 +23,7 @@ static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mis
 static_assert(sizeof(FORT_APP_DATA) == 5 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
 
 static_assert(
-        sizeof(FORT_CONF_CONN_ACTIONS) == sizeof(UCHAR), "FORT_CONF_CONN_ACTIONS size mismatch");
+        sizeof(FORT_CONF_CONN_ACTIONS) == sizeof(UINT16), "FORT_CONF_CONN_ACTIONS size mismatch");
 
 FORT_API int fort_bit_scan_forward(ULONG mask)
 {
@@ -582,7 +582,7 @@ inline static BOOL fort_conf_rules_rt_conn_filtered_zones_result(PFORT_CONF_META
     }
 
     if (accepted && !rejected) {
-        conn->zone_id = opt.accept.zone_id;
+        conn->act.zone_id = opt.accept.zone_id;
         conn->act.blocked = (UCHAR) rule->blocked;
         conn->act.drop_blocked = FALSE;
         return TRUE;
@@ -1050,7 +1050,7 @@ static BOOL fort_conf_rules_rt_conn_filtered_depth(
     const FORT_CONF_CONN_ACTIONS act = conn->act;
 
     if (!fort_conf_rules_rt_conn_filtered_check(rules_rt, conn, rule, depth)) {
-        /* The not filtered rule's filters mustn't change the connection's actions */
+        /* The not filtered rule's filters mustn't change the connection's actions and zone */
         conn->act = act;
 
         if (!fort_conf_rules_rt_conn_filtered_terminate(conn, rule))
