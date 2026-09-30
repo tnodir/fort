@@ -76,7 +76,14 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
     if (fort_callout_transport_classify_packet(classifyOut, &ca))
         return;
 
-    fort_flow_classify(&fort_device()->stat, flowContext, ca.dataSize, inbound);
+    PFORT_STAT stat = &fort_device()->stat;
+
+    if (!fort_flow_classify(stat, flowContext, ca.dataSize, inbound)) {
+        /* Flush the traffic statistics on the process's bytes' overflow */
+        fort_callout_timer();
+
+        fort_flow_classify(stat, flowContext, ca.dataSize, inbound);
+    }
 
     fort_callout_classify_continue(classifyOut); /* continue */
 }

@@ -181,7 +181,7 @@ FORT_API void fort_flow_proc_unlog(PFORT_STAT stat, UINT32 process_id);
 
 FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext);
 
-FORT_API void fort_flow_classify(
+FORT_API BOOL fort_flow_classify(
         PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL inbound);
 
 FORT_API void fort_stat_traf_flush(PFORT_STAT stat, UINT16 proc_count, PCHAR out);

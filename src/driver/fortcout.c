@@ -394,6 +394,8 @@ FORT_API void fort_callout_timer(void)
 
     FORT_IRP_INFO irp_info = { .irp = NULL };
 
+    /* Called also by the packet's classify at PASSIVE level, so the locks raise the IRQL */
+
     /* Lock buffer */
     KLOCK_QUEUE_HANDLE buf_lock_queue;
     KeAcquireInStackQueuedSpinLock(&buf->lock, &buf_lock_queue);

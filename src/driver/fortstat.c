@@ -577,12 +577,14 @@ FORT_API void fort_flow_delete(PFORT_STAT stat, UINT64 flowContext)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
-FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL inbound)
+FORT_API BOOL fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 data_len, BOOL inbound)
 {
     if (data_len == 0)
-        return;
+        return TRUE;
 
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
+
+    BOOL res = TRUE;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
@@ -592,13 +594,20 @@ FORT_API void fort_flow_classify(PFORT_STAT stat, UINT64 flowContext, UINT32 dat
     if (proc->proc_stat && proc->log_stat) {
         UINT32 *proc_bytes = inbound ? &proc->traf.in_bytes : &proc->traf.out_bytes;
 
-        /* Add traffic to process's bytes */
-        *proc_bytes += data_len;
+        if (*proc_bytes > MAXUINT32 - data_len) {
+            /* The process's bytes must be flushed before the overflow */
+            res = FALSE;
+        } else {
+            /* Add traffic to process's bytes */
+            *proc_bytes += data_len;
 
-        fort_stat_proc_active_add(stat, proc);
+            fort_stat_proc_active_add(stat, proc);
+        }
     }
 
     KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    return res;
 }
 
 static void fort_stat_traf_flush_proc(PFORT_STAT stat, PFORT_STAT_PROC proc, PCHAR *out)
