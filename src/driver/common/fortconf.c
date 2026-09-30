@@ -141,7 +141,7 @@ static BOOL fort_conf_ip6_find(
 static int fort_conf_blob_index(const char *arr, const char *p, UINT32 blob_len, UINT32 count)
 {
     if (count == 0)
-        return FALSE;
+        return -1;
 
     int low = 0;
     int high = count - 1;
