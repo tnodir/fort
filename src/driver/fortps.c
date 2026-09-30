@@ -692,8 +692,16 @@ static FORT_PS_FLAGS fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT
     if (processHandle == NULL)
         return 0;
 
+    const INT64 createTime = GetProcessCreateTime(processHandle);
+
+    /* The enumerated process's ID may be reused by a newer process */
+    if (psi->createTime != 0 && createTime != 0 && psi->createTime != createTime) {
+        ZwClose(processHandle);
+        return 0;
+    }
+
     psi->processHandle = processHandle;
-    psi->createTime = GetProcessCreateTime(processHandle);
+    psi->createTime = createTime;
 
     FORT_PATH_BUFFER pb;
     fort_path_buffer_init(&pb);
@@ -905,6 +913,7 @@ inline static void fort_pstree_enum_process(PFORT_PSTREE ps_tree, PSYSTEM_PROCES
         .pid_hash = fort_pstree_proc_hash(processId),
         .processId = processId,
         .parentProcessId = parentProcessId,
+        .createTime = processEntry->CreateTime.QuadPart,
     };
 
     const FORT_PS_FLAGS ps_flags = fort_pstree_handle_created_proc(ps_tree, &psi);
