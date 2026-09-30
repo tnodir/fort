@@ -135,7 +135,7 @@ static void fort_buffer_flush_pending_out(PFORT_BUFFER buf, PFORT_IRP_INFO irp_i
     }
 }
 
-inline static NTSTATUS fort_buffer_prepare_pending(
+inline static BOOL fort_buffer_prepare_pending(
         PFORT_BUFFER buf, UINT32 len, PCHAR *out, PFORT_IRP_INFO irp_info)
 {
     const ULONG out_len = buf->out_len;
