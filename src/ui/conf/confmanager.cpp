@@ -328,7 +328,9 @@ bool migrateOldAppGroup(SqliteDb *db, const OldAppGroup &appGroup)
 bool migrateOldAppGroupSpeedLimit(SqliteDb *db, const OldAppGroup &appGroup, bool inbound)
 {
     const quint32 kbps = inbound ? appGroup.speedLimitIn : appGroup.speedLimitOut;
-    const bool limitEnabled = inbound ? appGroup.limitInEnabled : appGroup.limitOutEnabled;
+    // The disabled App. Group didn't limit its Programs
+    const bool limitEnabled =
+            appGroup.enabled && (inbound ? appGroup.limitInEnabled : appGroup.limitOutEnabled);
 
     if (kbps == 0)
         return true;
