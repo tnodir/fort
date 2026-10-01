@@ -7,6 +7,7 @@
 #include <form/prog/programalertwindow.h>
 #include <form/prog/programswindow.h>
 #include <form/rule/ruleswindow.h>
+#include <form/speedlimit/speedlimitswindow.h>
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
 #include <form/zone/zoneswindow.h>
@@ -36,7 +37,7 @@ static const createWindow_func createWindow_funcList[] = {
     &createWindow<StatisticsWindow>,
     &createWindow<ZonesWindow>,
     &createWindow<GroupsWindow>,
-    nullptr, // WindowSpeedLimits: no window yet
+    &createWindow<SpeedLimitsWindow>,
     &createWindow<GraphWindow>,
 };
 

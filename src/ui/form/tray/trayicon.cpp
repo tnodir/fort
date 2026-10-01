@@ -550,10 +550,8 @@ void TrayIcon::setupTrayMenuOptions()
             { ":/icons/application_double.png", this, SLOT(onShowWindowAction()), WindowGroups });
     addHotKey(m_groupsAction, HotKey::groups);
 
-    // TODO: Show the Speed Limits window
     m_speedLimitsAction = addAction(m_optionsMenu,
-            // { ":/icons/speedometer.png", this, SLOT(onShowWindowAction()), WindowSpeedLimits });
-            { ":/icons/speedometer.png", windowManager(), SLOT(showAppGroupsWindow()) });
+            { ":/icons/speedometer.png", this, SLOT(onShowWindowAction()), WindowSpeedLimits });
     addHotKey(m_speedLimitsAction, HotKey::speedLimits);
 
     m_servicesAction = addAction(m_optionsMenu,

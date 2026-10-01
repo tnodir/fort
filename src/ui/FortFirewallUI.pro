@@ -128,6 +128,9 @@ SOURCES += \
     form/rule/ruleeditdialog.cpp \
     form/rule/rulescontroller.cpp \
     form/rule/ruleswindow.cpp \
+    form/speedlimit/speedlimiteditdialog.cpp \
+    form/speedlimit/speedlimitscontroller.cpp \
+    form/speedlimit/speedlimitswindow.cpp \
     form/stat/pages/connectionspage.cpp \
     form/stat/pages/statbasepage.cpp \
     form/stat/pages/statmainpage.cpp \
@@ -177,6 +180,7 @@ SOURCES += \
     model/rulelistmodel.cpp \
     model/rulesetmodel.cpp \
     model/servicelistmodel.cpp \
+    model/speedlimitlistmodel.cpp \
     model/traflistmodel.cpp \
     model/trafunittype.cpp \
     model/zonelistmodel.cpp \
@@ -412,6 +416,9 @@ HEADERS += \
     form/rule/ruleeditdialog.h \
     form/rule/rulescontroller.h \
     form/rule/ruleswindow.h \
+    form/speedlimit/speedlimiteditdialog.h \
+    form/speedlimit/speedlimitscontroller.h \
+    form/speedlimit/speedlimitswindow.h \
     form/stat/pages/connectionspage.h \
     form/stat/pages/statbasepage.h \
     form/stat/pages/statmainpage.h \
@@ -465,6 +472,7 @@ HEADERS += \
     model/rulelistmodel.h \
     model/rulesetmodel.h \
     model/servicelistmodel.h \
+    model/speedlimitlistmodel.h \
     model/traflistcolumn.h \
     model/traflistmodel.h \
     model/trafunittype.h \

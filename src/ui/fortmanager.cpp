@@ -22,6 +22,7 @@
 #include <manager/servicemanager.h>
 #include <manager/translationmanager.h>
 #include <model/grouplistmodel.h>
+#include <model/speedlimitlistmodel.h>
 #include <model/zonelistmodel.h>
 #include <rpc/appinfomanagerrpc.h>
 #include <rpc/askpendingmanagerrpc.h>
@@ -138,6 +139,7 @@ inline void setupServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new HostInfoCache());
     ioc->setService(new ZoneListModel());
     ioc->setService(new GroupListModel());
+    ioc->setService(new SpeedLimitListModel());
 }
 
 }

@@ -249,6 +249,32 @@ public:
     QByteArray groupsHeader() const { return valueByteArray("groupWindow/groupsHeader"); }
     void setGroupsHeader(const QByteArray &v) { setValue("groupWindow/groupsHeader", v); }
 
+    static QString speedLimitWindowGroup() { return "speedLimitWindow"; }
+
+    QRect speedLimitWindowGeometry() const { return value("speedLimitWindow/geometry").toRect(); }
+    void setSpeedLimitWindowGeometry(const QRect &v) { setValue("speedLimitWindow/geometry", v); }
+
+    bool speedLimitWindowMaximized() const { return valueBool("speedLimitWindow/maximized"); }
+    void setSpeedLimitWindowMaximized(bool on) { setValue("speedLimitWindow/maximized", on); }
+
+    int speedLimitsHeaderVersion() const
+    {
+        return valueInt("speedLimitWindow/speedLimitsHeaderVersion");
+    }
+    void setSpeedLimitsHeaderVersion(int v)
+    {
+        setValue("speedLimitWindow/speedLimitsHeaderVersion", v);
+    }
+
+    QByteArray speedLimitsHeader() const
+    {
+        return valueByteArray("speedLimitWindow/speedLimitsHeader");
+    }
+    void setSpeedLimitsHeader(const QByteArray &v)
+    {
+        setValue("speedLimitWindow/speedLimitsHeader", v);
+    }
+
     static QString serviceWindowGroup() { return "serviceWindow"; }
 
     QRect serviceWindowGeometry() const { return value("serviceWindow/geometry").toRect(); }

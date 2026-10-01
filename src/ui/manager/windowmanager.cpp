@@ -19,6 +19,7 @@
 #include <form/prog/programalertwindow.h>
 #include <form/prog/programswindow.h>
 #include <form/rule/ruleswindow.h>
+#include <form/speedlimit/speedlimitswindow.h>
 #include <form/stat/statisticswindow.h>
 #include <form/svc/serviceswindow.h>
 #include <form/tray/trayicon.h>
@@ -47,9 +48,9 @@ WindowManager::WindowManager(QObject *parent) : QObject(parent) { }
 
 bool WindowManager::hasForm(WindowCode code)
 {
-    constexpr quint32 windowForms =
-            (WindowHome | WindowPrograms | WindowProgramAlert | WindowServices | WindowOptions
-                    | WindowRules | WindowStatistics | WindowZones | WindowGroups | WindowGraph);
+    constexpr quint32 windowForms = (WindowHome | WindowPrograms | WindowProgramAlert
+            | WindowServices | WindowOptions | WindowRules | WindowStatistics | WindowZones
+            | WindowGroups | WindowSpeedLimits | WindowGraph);
 
     return (code & windowForms) != 0;
 }
@@ -117,6 +118,11 @@ ZonesWindow *WindowManager::zonesWindow() const
 GroupsWindow *WindowManager::groupsWindow() const
 {
     return static_cast<GroupsWindow *>(windowByCode(WindowGroups));
+}
+
+SpeedLimitsWindow *WindowManager::speedLimitsWindow() const
+{
+    return static_cast<SpeedLimitsWindow *>(windowByCode(WindowSpeedLimits));
 }
 
 GraphWindow *WindowManager::graphWindow() const

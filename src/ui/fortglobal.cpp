@@ -24,6 +24,7 @@
 #include <manager/translationmanager.h>
 #include <manager/windowmanager.h>
 #include <model/grouplistmodel.h>
+#include <model/speedlimitlistmodel.h>
 #include <model/zonelistmodel.h>
 #include <rpc/rpcmanager.h>
 #include <stat/askpendingmanager.h>
@@ -173,6 +174,11 @@ ServiceInfoManager *serviceInfoManager()
 ServiceManager *serviceManager()
 {
     return IoC<ServiceManager>();
+}
+
+SpeedLimitListModel *speedLimitListModel()
+{
+    return IoC<SpeedLimitListModel>();
 }
 
 StatConnManager *statConnManager()

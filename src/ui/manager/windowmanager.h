@@ -57,6 +57,7 @@ public:
     ServicesWindow *servicesWindow() const;
     ZonesWindow *zonesWindow() const;
     GroupsWindow *groupsWindow() const;
+    SpeedLimitsWindow *speedLimitsWindow() const;
     GraphWindow *graphWindow() const;
 
     void setUp() override;
