@@ -117,7 +117,7 @@ FORT_API NTSTATUS fort_device_cleanup(PDEVICE_OBJECT device, PIRP irp)
         fort_conf_rules_set(&fort_device()->conf, NULL);
         fort_conf_groups_set(&fort_device()->conf, NULL);
 
-        fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
+        fort_shaper_speed_limits_set(&fort_device()->shaper, NULL);
         fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
 
         fort_device_reauth_force(old_conf_flags);
@@ -172,8 +172,7 @@ inline static NTSTATUS fort_device_control_setconf_ref(
 
     const FORT_CONF_FLAGS old_conf_flags = fort_conf_ref_set(device_conf, conf_ref);
 
-    fort_stat_conf_update(&fort_device()->stat, conf_io);
-    fort_shaper_conf_update(&fort_device()->shaper, conf_io);
+    fort_shaper_conf_flags_update(&fort_device()->shaper, conf_io->conf.flags);
 
     /* Enumerate processes */
     if (was_null_conf) {
@@ -215,7 +214,6 @@ static NTSTATUS fort_device_control_setflags(PFORT_DEVICE_CONTROL_ARG dca)
         const FORT_CONF_FLAGS old_conf_flags =
                 fort_conf_ref_flags_set(&fort_device()->conf, conf_flags);
 
-        fort_stat_conf_flags_update(&fort_device()->stat, conf_flags);
         fort_shaper_conf_flags_update(&fort_device()->shaper, conf_flags);
 
         return fort_device_reauth_force(old_conf_flags);
@@ -420,6 +418,34 @@ static NTSTATUS fort_device_control_setgroupflags(PFORT_DEVICE_CONTROL_ARG dca)
     return STATUS_UNSUCCESSFUL;
 }
 
+static NTSTATUS fort_device_control_setspeedlimits(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PCFORT_CONF_SPEED_LIMITS speed_limits = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len == sizeof(FORT_CONF_SPEED_LIMITS)) {
+        fort_shaper_speed_limits_set(&fort_device()->shaper, speed_limits);
+
+        return STATUS_SUCCESS;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
+static NTSTATUS fort_device_control_setspeedlimitflags(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PCFORT_CONF_SPEED_LIMIT_FLAGS limit_flags = dca->buffer;
+    const ULONG len = dca->in_len;
+
+    if (len == sizeof(FORT_CONF_SPEED_LIMIT_FLAGS)) {
+        fort_shaper_speed_limit_flags_set(&fort_device()->shaper, limit_flags);
+
+        return STATUS_SUCCESS;
+    }
+
+    return STATUS_UNSUCCESSFUL;
+}
+
 static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETRULEFLAG) == FORT_IOCTL_INDEX_SETRULEFLAG,
         "Invalid FORT_CTL_INDEX_FROM_CODE()");
 
@@ -440,6 +466,8 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setruleflag, // FORT_IOCTL_SETRULEFLAG
     &fort_device_control_setgroups, // FORT_IOCTL_SETGROUPS
     &fort_device_control_setgroupflags, // FORT_IOCTL_SETGROUPFLAGS
+    &fort_device_control_setspeedlimits, // FORT_IOCTL_SETSPEEDLIMITS
+    &fort_device_control_setspeedlimitflags, // FORT_IOCTL_SETSPEEDLIMITFLAGS
 };
 
 static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)

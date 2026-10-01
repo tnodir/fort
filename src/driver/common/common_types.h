@@ -53,4 +53,10 @@ typedef struct fort_conf_rule_zones
 
 typedef const FORT_CONF_RULE_ZONES *PCFORT_CONF_RULE_ZONES;
 
+typedef struct fort_speed_limit_ids
+{
+    unsigned char in_limit_id; /* 0 - no Speed Limit */
+    unsigned char out_limit_id;
+} FORT_SPEED_LIMIT_IDS, *PFORT_SPEED_LIMIT_IDS;
+
 #endif // COMMON_TYPES_H

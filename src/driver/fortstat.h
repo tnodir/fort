@@ -58,7 +58,6 @@ typedef struct fort_flow_opt
         struct
         {
             UCHAR volatile flags;
-            UCHAR group_index;
             UINT16 proc_index;
         };
 
@@ -88,6 +87,8 @@ typedef struct fort_flow
 #else
     UINT64 flow_id;
 #endif
+
+    FORT_SPEED_LIMIT_IDS speed_limits;
 } FORT_FLOW, *PFORT_FLOW;
 
 #define FORT_STAT_LOG                 0x01
@@ -143,8 +144,6 @@ typedef struct fort_stat
     tommy_arrayof flows;
     tommy_hashdyn flows_map;
 
-    FORT_CONF_GROUP conf_group;
-
     LARGE_INTEGER system_time;
 
     KSPIN_LOCK lock;
@@ -169,10 +168,6 @@ FORT_API void fort_stat_close_flows(PFORT_STAT stat, BOOL wait_all);
 FORT_API void fort_stat_close(PFORT_STAT stat);
 
 FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat);
-
-FORT_API void fort_stat_conf_update(PFORT_STAT stat, PCFORT_CONF_IO conf_io);
-
-FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags);
 
 FORT_API NTSTATUS fort_flow_associate(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, BOOL *proc_stat);
 

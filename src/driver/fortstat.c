@@ -295,14 +295,6 @@ static PFORT_FLOW fort_flow_new(PFORT_STAT stat, UINT64 flow_id, const tommy_key
     return flow;
 }
 
-inline static UCHAR fort_stat_group_speed_limit(PFORT_CONF_GROUP conf_group, UCHAR group_index)
-{
-    if (((conf_group->group_bits & conf_group->limit_bits) & (1 << group_index)) == 0)
-        return 0;
-
-    return (((conf_group->limit_io_bits) >> (group_index * 2)) & FORT_FLOW_SPEED_LIMIT_FLAGS);
-}
-
 typedef struct fort_flow_add_arg
 {
     PFORT_FLOW flow;
@@ -313,20 +305,27 @@ typedef struct fort_flow_add_arg
 
 typedef const FORT_FLOW_ADD_ARG *PCFORT_FLOW_ADD_ARG;
 
-inline static void fort_flow_opt_set(PFORT_STAT stat, PCFORT_FLOW_ADD_ARG faa)
+inline static UCHAR fort_flow_speed_limit_flags(const FORT_SPEED_LIMIT_IDS speed_limits)
+{
+    return (speed_limits.in_limit_id != 0 ? FORT_FLOW_SPEED_LIMIT_IN : 0)
+            | (speed_limits.out_limit_id != 0 ? FORT_FLOW_SPEED_LIMIT_OUT : 0);
+}
+
+inline static void fort_flow_opt_set(PCFORT_FLOW_ADD_ARG faa)
 {
     PFORT_FLOW flow = faa->flow;
     PCFORT_CONF_META_CONN conn = faa->conn;
 
-    const UCHAR group_index = (UCHAR) conn->app_data.group_index;
+    const FORT_SPEED_LIMIT_IDS speed_limits = conn->app_data.speed_limits;
 
-    const UCHAR speed_limit = fort_stat_group_speed_limit(&stat->conf_group, group_index);
+    const UCHAR speed_limit = fort_flow_speed_limit_flags(speed_limits);
 
     flow->opt.flags = speed_limit | (conn->ip_proto == IPPROTO_TCP ? FORT_FLOW_TCP : 0)
             | (conn->isIPv6 ? FORT_FLOW_IP6 : 0) | (conn->inbound ? FORT_FLOW_INBOUND : 0);
 
-    flow->opt.group_index = group_index;
     flow->opt.proc_index = faa->proc->proc_index;
+
+    flow->speed_limits = speed_limits;
 }
 
 inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW_ADD_ARG faa)
@@ -340,7 +339,7 @@ inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW_ADD_ARG faa
     faa->flow = flow;
 
     /* The flow's options are used by the classify callouts after the context's association */
-    fort_flow_opt_set(stat, faa);
+    fort_flow_opt_set(faa);
 
     NTSTATUS status = fort_flow_context_set(stat, flow, conn->isIPv6);
     if (!NT_SUCCESS(status)) {
@@ -383,7 +382,7 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT
          */
         assert(faa.flow->opt.proc_index == proc->proc_index);
 
-        fort_flow_opt_set(stat, &faa);
+        fort_flow_opt_set(&faa);
     }
 
     return STATUS_SUCCESS;
@@ -465,26 +464,6 @@ FORT_API void fort_stat_log_update(PFORT_STAT stat, BOOL log_stat)
     /* Clear the processes' logged flag */
     tommy_hashdyn_foreach_node(&stat->procs_map, &fort_stat_proc_unlog);
 
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-}
-
-FORT_API void fort_stat_conf_update(PFORT_STAT stat, PCFORT_CONF_IO conf_io)
-{
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
-    {
-        stat->conf_group = conf_io->conf_group;
-    }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-}
-
-FORT_API void fort_stat_conf_flags_update(PFORT_STAT stat, const FORT_CONF_FLAGS conf_flags)
-{
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&stat->lock, &lock_queue);
-    {
-        stat->conf_group.group_bits = (UINT16) conf_flags.group_bits;
-    }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 

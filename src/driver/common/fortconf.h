@@ -23,6 +23,7 @@
 #define FORT_CONF_ZONE_MAX              32
 #define FORT_CONF_GROUP_MAX             16
 #define FORT_CONF_GROUP2_MAX            32
+#define FORT_CONF_SPEED_LIMIT_MAX       32
 #define FORT_CONF_APPS_LEN_MAX          (64 * 1024 * 1024)
 #define FORT_CONF_APP_PATH_MAX          (2 * 1024)
 #define FORT_CONF_APP_PATH_MAX_SIZE     (FORT_CONF_APP_PATH_MAX * sizeof(WCHAR))
@@ -367,6 +368,8 @@ typedef struct fort_app_data
 
     UINT16 group_index : 5;
 
+    FORT_SPEED_LIMIT_IDS speed_limits;
+
     UINT32 groups; /* Group ids bit mask, 0 - no Group */
 
     UINT32 app_id;
@@ -504,6 +507,23 @@ typedef struct fort_conf_group
 } FORT_CONF_GROUP, *PFORT_CONF_GROUP;
 
 typedef const FORT_CONF_GROUP *PCFORT_CONF_GROUP;
+
+typedef struct fort_conf_speed_limits
+{
+    UINT32 mask; /* configured Speed Limits */
+    UINT32 enabled_mask;
+
+    FORT_SPEED_LIMIT limits[FORT_CONF_SPEED_LIMIT_MAX]; /* by Speed Limit index */
+} FORT_CONF_SPEED_LIMITS, *PFORT_CONF_SPEED_LIMITS;
+
+typedef const FORT_CONF_SPEED_LIMITS *PCFORT_CONF_SPEED_LIMITS;
+
+typedef struct fort_conf_speed_limit_flags
+{
+    UINT32 enabled_mask;
+} FORT_CONF_SPEED_LIMIT_FLAGS, *PFORT_CONF_SPEED_LIMIT_FLAGS;
+
+typedef const FORT_CONF_SPEED_LIMIT_FLAGS *PCFORT_CONF_SPEED_LIMIT_FLAGS;
 
 typedef struct fort_conf
 {

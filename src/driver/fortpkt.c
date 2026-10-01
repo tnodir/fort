@@ -47,6 +47,14 @@ static LONG fort_shaper_io_bits(volatile LONG *io_bits)
     return fort_shaper_io_bits_set(io_bits, 0, TRUE);
 }
 
+inline static UINT32 fort_shaper_limit_bit(UCHAR limit_id)
+{
+    if (limit_id == 0 || limit_id > FORT_CONF_SPEED_LIMIT_MAX)
+        return 0;
+
+    return (1u << (limit_id - 1));
+}
+
 inline static HANDLE fort_packet_injection_id(BOOL isIPv6, BOOL inbound)
 {
     PFORT_PENDING pending = &fort_device()->pending;
@@ -734,13 +742,13 @@ inline static PFORT_PACKET_QUEUE fort_shaper_create_queue(
 }
 
 static void fort_shaper_create_queues(
-        PFORT_SHAPER shaper, PCFORT_SPEED_LIMIT limits, UINT32 limit_io_bits)
+        PFORT_SHAPER shaper, PCFORT_SPEED_LIMIT limits, UINT32 limit_bits)
 {
     const LARGE_INTEGER now = KeQueryPerformanceCounter(NULL);
 
-    for (int i = 0; limit_io_bits != 0; ++i) {
-        const BOOL queue_exists = (limit_io_bits & 1) != 0;
-        limit_io_bits >>= 1;
+    for (int i = 0; limit_bits != 0; ++i) {
+        const BOOL queue_exists = (limit_bits & 1) != 0;
+        limit_bits >>= 1;
 
         if (!queue_exists)
             continue;
@@ -761,7 +769,7 @@ static void fort_shaper_create_queues(
 
 static void fort_shaper_free_queues(PFORT_SHAPER shaper)
 {
-    for (int i = 0; i < FORT_CONF_GROUP_MAX * 2; ++i) {
+    for (int i = 0; i < FORT_CONF_SPEED_LIMIT_MAX; ++i) {
         PFORT_PACKET_QUEUE queue = shaper->queues[i];
         if (queue == NULL)
             continue;
@@ -791,7 +799,7 @@ inline static ULONG fort_shaper_thread_process_queues(PFORT_SHAPER shaper, ULONG
             continue;
 
         if (fort_shaper_queue_process(shaper, queue)) {
-            new_active_io_bits |= (1 << i);
+            new_active_io_bits |= (1u << i);
         }
     }
 
@@ -845,13 +853,13 @@ static void fort_shaper_thread_close(PFORT_SHAPER shaper)
     fort_thread_wait(&shaper->thread);
 }
 
-inline static PFORT_FLOW_PACKET fort_shaper_flush_queues(PFORT_SHAPER shaper, UINT32 group_io_bits)
+inline static PFORT_FLOW_PACKET fort_shaper_flush_queues(PFORT_SHAPER shaper, UINT32 queue_bits)
 {
     PFORT_FLOW_PACKET pkt_chain = NULL;
 
-    for (int i = 0; group_io_bits != 0; ++i) {
-        const BOOL queue_exists = (group_io_bits & 1) != 0;
-        group_io_bits >>= 1;
+    for (int i = 0; queue_bits != 0; ++i) {
+        const BOOL queue_exists = (queue_bits & 1) != 0;
+        queue_bits >>= 1;
 
         if (!queue_exists)
             continue;
@@ -866,16 +874,16 @@ inline static PFORT_FLOW_PACKET fort_shaper_flush_queues(PFORT_SHAPER shaper, UI
     return pkt_chain;
 }
 
-static void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 group_io_bits, BOOL drop)
+static void fort_shaper_flush(PFORT_SHAPER shaper, UINT32 queue_bits, BOOL drop)
 {
-    if (group_io_bits == 0)
+    if (queue_bits == 0)
         return;
 
     /* The active bits are cleared while the thread processes the queues, so flush all given */
-    fort_shaper_io_bits_set(&shaper->active_io_bits, group_io_bits, FALSE);
+    fort_shaper_io_bits_set(&shaper->active_io_bits, queue_bits, FALSE);
 
     /* Collect packets from Queues */
-    PFORT_FLOW_PACKET pkt_chain = fort_shaper_flush_queues(shaper, group_io_bits);
+    PFORT_FLOW_PACKET pkt_chain = fort_shaper_flush_queues(shaper, queue_bits);
 
     /* Process the packets */
     if (pkt_chain != NULL) {
@@ -906,52 +914,76 @@ FORT_API void fort_shaper_close(PFORT_SHAPER shaper)
     fort_shaper_free_queues(shaper);
 }
 
-FORT_API void fort_shaper_conf_update(PFORT_SHAPER shaper, PCFORT_CONF_IO conf_io)
+/* Returns the bits of the queues to flush */
+inline static UINT32 fort_shaper_enabled_bits_update_locked(PFORT_SHAPER shaper)
 {
-    PCFORT_CONF_GROUP conf_group = &conf_io->conf_group;
-    PCFORT_CONF_FLAGS conf_flags = &conf_io->conf.flags;
+    const BOOL shaper_enabled = (fort_shaper_flags(shaper) & FORT_SHAPER_ENABLED) != 0;
 
-    const UINT32 limit_io_bits = conf_group->limit_io_bits;
-    const UINT32 group_io_bits = conf_flags->filter_enabled
-            ? (limit_io_bits & fort_bits_duplicate16(conf_group->group_bits))
-            : 0;
-    UINT32 flush_io_bits;
+    const UINT32 enabled_bits =
+            shaper_enabled ? (shaper->limit_bits & shaper->limit_enabled_bits) : 0;
 
-    KLOCK_QUEUE_HANDLE lock_queue;
-    KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
-    {
-        /* Flush the queues, which are shaped no more (e.g. the group is disabled) */
-        flush_io_bits = (group_io_bits ^ shaper->group_io_bits);
+    /* Flush the queues, which are shaped no more (e.g. the Speed Limit is disabled) */
+    const UINT32 flush_bits = (enabled_bits ^ shaper->enabled_bits);
 
-        fort_shaper_create_queues(shaper, conf_group->limits, limit_io_bits);
+    fort_shaper_io_bits_exchange(&shaper->enabled_bits, enabled_bits);
 
-        shaper->limit_io_bits = limit_io_bits;
-
-        fort_shaper_io_bits_exchange(&shaper->group_io_bits, group_io_bits);
-    }
-    KeReleaseInStackQueuedSpinLock(&lock_queue);
-
-    fort_shaper_flush(shaper, flush_io_bits, /*drop=*/FALSE);
+    return flush_bits;
 }
 
-void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const FORT_CONF_FLAGS conf_flags)
+FORT_API void fort_shaper_speed_limits_set(
+        PFORT_SHAPER shaper, PCFORT_CONF_SPEED_LIMITS speed_limits)
 {
-    const UINT32 group_io_bits =
-            conf_flags.filter_enabled ? fort_bits_duplicate16((UINT16) conf_flags.group_bits) : 0;
-    UINT32 flush_io_bits;
+    const UINT32 limit_bits = (speed_limits != NULL) ? speed_limits->mask : 0;
+    UINT32 flush_bits;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
     {
-        const UINT32 limit_group_io_bits = (shaper->limit_io_bits & group_io_bits);
+        if (speed_limits != NULL) {
+            fort_shaper_create_queues(shaper, speed_limits->limits, limit_bits);
+        }
 
-        flush_io_bits = (limit_group_io_bits ^ shaper->group_io_bits);
+        shaper->limit_bits = limit_bits;
+        shaper->limit_enabled_bits = (speed_limits != NULL) ? speed_limits->enabled_mask : 0;
 
-        fort_shaper_io_bits_exchange(&shaper->group_io_bits, limit_group_io_bits);
+        flush_bits = fort_shaper_enabled_bits_update_locked(shaper);
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    fort_shaper_flush(shaper, flush_io_bits, /*drop=*/FALSE);
+    fort_shaper_flush(shaper, flush_bits, /*drop=*/FALSE);
+}
+
+FORT_API void fort_shaper_speed_limit_flags_set(
+        PFORT_SHAPER shaper, PCFORT_CONF_SPEED_LIMIT_FLAGS limit_flags)
+{
+    UINT32 flush_bits;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
+    {
+        shaper->limit_enabled_bits = limit_flags->enabled_mask;
+
+        flush_bits = fort_shaper_enabled_bits_update_locked(shaper);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    fort_shaper_flush(shaper, flush_bits, /*drop=*/FALSE);
+}
+
+FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const FORT_CONF_FLAGS conf_flags)
+{
+    UINT32 flush_bits;
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
+    {
+        fort_shaper_flags_set(shaper, FORT_SHAPER_ENABLED, conf_flags.filter_enabled);
+
+        flush_bits = fort_shaper_enabled_bits_update_locked(shaper);
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+
+    fort_shaper_flush(shaper, flush_bits, /*drop=*/FALSE);
 }
 
 static void fort_shaper_packet_queue_add_packet(
@@ -1036,15 +1068,16 @@ inline static BOOL fort_shaper_packet_queue_check_in_count(PFORT_SHAPER shaper, 
 inline static NTSTATUS fort_shaper_packet_queue(
         PFORT_SHAPER shaper, PCFORT_CALLOUT_ARG ca, PFORT_FLOW flow)
 {
-    const UINT16 queue_index = flow->opt.group_index * 2 + (ca->inbound ? 0 : 1);
+    const FORT_SPEED_LIMIT_IDS speed_limits = flow->speed_limits;
+    const UCHAR limit_id = ca->inbound ? speed_limits.in_limit_id : speed_limits.out_limit_id;
 
-    const UINT32 group_io_bits = fort_shaper_io_bits(&shaper->group_io_bits);
+    const UINT32 enabled_bits = fort_shaper_io_bits(&shaper->enabled_bits);
 
-    const UINT32 queue_bit = (1 << queue_index);
-    if ((group_io_bits & queue_bit) == 0)
+    const UINT32 queue_bit = fort_shaper_limit_bit(limit_id);
+    if ((enabled_bits & queue_bit) == 0)
         return STATUS_NO_SUCH_GROUP;
 
-    PFORT_PACKET_QUEUE queue = shaper->queues[queue_index];
+    PFORT_PACKET_QUEUE queue = shaper->queues[limit_id - 1];
     if (queue == NULL)
         return STATUS_NO_SUCH_GROUP;
 
@@ -1137,7 +1170,17 @@ FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowCont
     PFORT_FLOW_PACKET pkt_chain = NULL;
 
     /* The active bits are cleared while the thread processes the queues, so check the flow's */
-    UINT32 flow_io_bits = ((UINT32) speed_limit << (flow->opt.group_index * 2));
+    const FORT_SPEED_LIMIT_IDS speed_limits = flow->speed_limits;
+
+    UINT32 flow_io_bits = 0;
+
+    if ((speed_limit & FORT_FLOW_SPEED_LIMIT_IN) != 0) {
+        flow_io_bits |= fort_shaper_limit_bit(speed_limits.in_limit_id);
+    }
+
+    if ((speed_limit & FORT_FLOW_SPEED_LIMIT_OUT) != 0) {
+        flow_io_bits |= fort_shaper_limit_bit(speed_limits.out_limit_id);
+    }
 
     for (int i = 0; flow_io_bits != 0; ++i) {
         const BOOL queue_exists = (flow_io_bits & 1) != 0;

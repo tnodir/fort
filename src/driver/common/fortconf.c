@@ -20,7 +20,7 @@ static_assert((FORT_CONF_RULE_GLOBAL_MAX + FORT_CONF_RULE_SET_MAX) < 256,
 
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
-static_assert(sizeof(FORT_APP_DATA) == 5 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
+static_assert(sizeof(FORT_APP_DATA) == 6 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
 static_assert(
         sizeof(FORT_CONF_GROUPS) == 3 * sizeof(UINT32) + FORT_CONF_GROUP2_MAX * sizeof(UINT16),
         "FORT_CONF_GROUPS size mismatch");
