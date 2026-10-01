@@ -22,7 +22,6 @@ public:
     QString appScheduleIconPath() const;
 
     QColor appActionColor() const;
-    QVariant appGroupColor() const;
 
     bool appFileExists() const;
     QIcon appIcon() const;
@@ -36,7 +35,6 @@ public:
     QVariant dataDecorationIcon() const;
     QVariant dataForeground() const;
     QVariant dataFont() const;
-    QVariant dataTextAlignment() const;
     QVariant dataDisplayRow() const;
 
 private:

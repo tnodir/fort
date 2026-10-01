@@ -238,7 +238,7 @@ void IfacePage::retranslateComboHotKey()
     }
 
     list.append({
-            TrayIcon::tr("App Group Modifier"),
+            TrayIcon::tr("Group Modifier"),
             TrayIcon::tr("Rule Modifier"),
             TrayIcon::tr("Quit"),
     });

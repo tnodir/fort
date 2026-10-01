@@ -104,7 +104,6 @@ private:
     QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataForeground(const QModelIndex &index) const;
     QVariant dataFont(const QModelIndex &index) const;
-    QVariant dataTextAlignment(const QModelIndex &index) const;
 
     AppListModelData appDataAt(const QModelIndex &index, int role = Qt::DisplayRole) const;
 

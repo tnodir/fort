@@ -89,7 +89,6 @@ private:
     void setupTrayMenuOptions();
     void setupTrayMenuBlockTraffic();
     void setupTrayMenuFilterMode();
-    void setupTrayMenuGroupActions();
     void setupTrayMenuGroupFlagActions();
     void setupTrayMenuRuleActions();
     void setupTrayMenuBottomActions();
@@ -97,7 +96,6 @@ private:
     bool isEditEnabled() const;
 
     void updateTrayMenuFlags();
-    void updateAppGroupActions();
     void updateGroupFlagActions();
     void updateRuleActions();
 
@@ -169,7 +167,6 @@ private:
     QActionGroup *m_filterModeActions = nullptr;
     QAction *m_quitAction = nullptr;
     QAction *m_trayMenuAction = nullptr;
-    QList<QAction *> m_appGroupActions;
     QList<QAction *> m_groupFlagActions;
     QList<QAction *> m_ruleActions;
     QVector<const char *> m_actionIniKeys;

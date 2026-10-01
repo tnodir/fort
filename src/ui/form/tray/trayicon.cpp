@@ -6,7 +6,6 @@
 #include <QTimer>
 
 #include <conf/addressgroup.h>
-#include <conf/appgroup.h>
 #include <conf/confappmanager.h>
 #include <conf/confgroupmanager.h>
 #include <conf/confmanager.h>
@@ -345,7 +344,6 @@ void TrayIcon::hideTrayMenuLater()
 void TrayIcon::updateTrayMenu(bool onlyFlags)
 {
     if (!onlyFlags) {
-        updateAppGroupActions();
         updateGroupFlagActions();
         updateRuleActions();
     }
@@ -459,9 +457,6 @@ void TrayIcon::setupTrayMenu()
     });
 
     setupTrayMenuTopActions();
-
-    m_menu->addSeparator();
-    setupTrayMenuGroupActions();
 
     m_menu->addSeparator();
     setupTrayMenuGroupFlagActions();
@@ -634,27 +629,16 @@ void TrayIcon::setupTrayMenuFilterMode()
     connect(m_filterModeActions, &QActionGroup::triggered, this, &TrayIcon::switchFilterMode);
 }
 
-void TrayIcon::setupTrayMenuGroupActions()
-{
-    for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
-        QAction *a = addAction(m_menu,
-                { QString(), this, SLOT(switchTrayFlag(bool)), tray::ActionNone,
-                        /*checkable=*/true });
-
-        if (i < MAX_FKEY_COUNT) {
-            addHotKey(a, HotKey::appGroupModifier);
-        }
-
-        m_appGroupActions.append(a);
-    }
-}
-
 void TrayIcon::setupTrayMenuGroupFlagActions()
 {
     for (int i = 0; i < MAX_GROUP_FLAG_ACTIONS_COUNT; ++i) {
         QAction *a = addAction(m_menu,
                 { QString(), this, SLOT(switchTrayGroupFlag(bool)), tray::ActionNone,
                         /*checkable=*/true });
+
+        if (i < MAX_FKEY_COUNT) {
+            addHotKey(a, HotKey::appGroupModifier);
+        }
 
         m_groupFlagActions.append(a);
     }
@@ -720,41 +704,8 @@ void TrayIcon::updateTrayMenuFlags()
         }
     }
 
-    int appGroupIndex = 0;
-    for (QAction *action : std::as_const(m_appGroupActions)) {
-        if (!action->isVisible())
-            break;
-
-        const bool appGroupEnabled = conf().appGroupEnabled(appGroupIndex++);
-
-        action->setEnabled(editEnabled);
-        action->setChecked(appGroupEnabled);
-    }
-
     for (QAction *action : std::as_const(m_groupFlagActions)) {
         action->setEnabled(editEnabled && action->isVisible());
-    }
-}
-
-void TrayIcon::updateAppGroupActions()
-{
-    const int trayMaxGroups = iniUser().trayMaxGroups(MAX_APP_GROUP_COUNT);
-    const int appGroupsCount = qMin(conf().appGroups().size(), trayMaxGroups);
-
-    for (int i = 0; i < MAX_APP_GROUP_COUNT; ++i) {
-        QAction *action = m_appGroupActions.at(i);
-
-        const bool visible = (i < appGroupsCount);
-        QString menuLabel;
-
-        if (visible) {
-            const AppGroup *appGroup = conf().appGroups().at(i);
-            menuLabel = appGroup->menuLabel();
-        }
-
-        action->setText(menuLabel);
-        action->setVisible(visible);
-        action->setEnabled(visible);
     }
 }
 
@@ -964,16 +915,6 @@ void TrayIcon::saveTrayFlags()
             conf().setFilterMode(FirewallConf::FilterMode(index));
             updateFilterModeMenuIcon(index);
         }
-    }
-
-    // Set App. Groups' enabled states
-    int i = 0;
-    for (AppGroup *appGroup : conf().appGroups()) {
-        const QAction *action = m_appGroupActions.at(i++);
-        if (!action->isVisible())
-            break;
-
-        appGroup->setEnabled(action->isChecked());
     }
 
     confManager()->saveFlags();

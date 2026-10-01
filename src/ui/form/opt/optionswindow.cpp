@@ -4,7 +4,6 @@
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -25,7 +24,6 @@ OptionsWindow::OptionsWindow(QWidget *parent) :
 
     setupFormWindow(iniUser(), IniUser::optWindowGroup());
 
-    connect(this, &OptionsWindow::aboutToShow, this, &OptionsWindow::checkDeprecated);
     connect(this, &OptionsWindow::aboutToDelete, this, &OptionsWindow::cancelChanges);
 }
 
@@ -108,21 +106,4 @@ void OptionsWindow::setupUi()
 
     // Size
     this->setMinimumSize(800, 500);
-}
-
-void OptionsWindow::checkDeprecated()
-{
-    checkDeprecatedAppGroups();
-}
-
-void OptionsWindow::checkDeprecatedAppGroups()
-{
-    if (!conf().checkDeprecatedAppGroups()) {
-        windowManager()->showConfirmBox(
-                [&] { OsUtil::openUrlOrFolder("https://github.com/tnodir/fort/discussions/210"); },
-                tr("Please move Texts of Allow/Block fields from App Groups to Wildcard Programs!!!"
-                   "\n\n(They are read-only now and will be removed in v4.)"
-                   "\n\nDo you want to open a discussion thread in browser?"),
-                {}, this);
-    }
 }

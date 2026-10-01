@@ -105,8 +105,6 @@ SOURCES += \
     form/opt/optionscontroller.cpp \
     form/opt/optionswindow.cpp \
     form/opt/pages/addressespage.cpp \
-    form/opt/pages/applicationspage.cpp \
-    form/opt/pages/apps/appscolumn.cpp \
     form/opt/pages/graphpage.cpp \
     form/opt/pages/ifacepage.cpp \
     form/opt/pages/optbasepage.cpp \
@@ -393,8 +391,6 @@ HEADERS += \
     form/opt/optionscontroller.h \
     form/opt/optionswindow.h \
     form/opt/pages/addressespage.h \
-    form/opt/pages/applicationspage.h \
-    form/opt/pages/apps/appscolumn.h \
     form/opt/pages/graphpage.h \
     form/opt/pages/ifacepage.h \
     form/opt/pages/optbasepage.h \

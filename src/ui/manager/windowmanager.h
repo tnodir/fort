@@ -102,7 +102,6 @@ public slots:
     bool reloadOptionsWindow(const QString &reason);
 
     bool showOptionsWindowTab(int index);
-    void showAppGroupsWindow();
 
     bool showRulesWindow() { return showWindowByCode(WindowRules); }
 

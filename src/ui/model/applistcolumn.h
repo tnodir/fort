@@ -9,7 +9,6 @@ enum class AppListColumn : qint8 {
     SpeedLimits,
     Scheduled,
     Action,
-    Group,
     FilePath,
     CreationTime,
     Notes,

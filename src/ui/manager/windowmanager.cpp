@@ -393,11 +393,6 @@ bool WindowManager::showOptionsWindowTab(int index)
     return true;
 }
 
-void WindowManager::showAppGroupsWindow()
-{
-    showOptionsWindowTab(3);
-}
-
 bool WindowManager::showWindowByCode(WindowCode code, bool activate)
 {
     auto &form = formByCode(code);

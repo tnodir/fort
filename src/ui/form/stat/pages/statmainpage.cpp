@@ -78,7 +78,7 @@ void StatMainPage::setupCornerWidget()
 QLayout *StatMainPage::setupCornerLayout()
 {
     // Options button
-    m_btOptions = ControlUtil::createOptionsButton(4);
+    m_btOptions = ControlUtil::createOptionsButton(3);
 
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();

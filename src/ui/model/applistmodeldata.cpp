@@ -4,13 +4,11 @@
 
 #include <appinfo/appinfocache.h>
 #include <conf/app.h>
-#include <conf/appgroup.h>
 #include <conf/confappmanager.h>
 #include <conf/confgroupmanager.h>
 #include <conf/confrulemanager.h>
 #include <conf/confspeedlimitmanager.h>
 #include <conf/confzonemanager.h>
-#include <conf/firewallconf.h>
 #include <fortglobal.h>
 #include <util/bitutil.h>
 #include <util/dateutil.h>
@@ -26,7 +24,6 @@ inline constexpr QColor alertColor = QColorConstants::Svg::orange;
 inline constexpr QColor allowColor = QColorConstants::Svg::green;
 inline constexpr QColor blockColor = QColorConstants::Svg::red;
 inline constexpr QColor killProcessColor = QColorConstants::Svg::magenta;
-inline constexpr QColor inactiveColor = QColorConstants::Svg::slategray;
 
 QVariant dataDisplayName(const App &app, int role)
 {
@@ -130,13 +127,6 @@ QVariant dataDisplaySpeedLimits(const App &app, int role)
     return list.join('\n');
 }
 
-QVariant dataDisplayGroup(const App &app, int /*role*/)
-{
-    const AppGroup *appGroup = conf().appGroupAt(app.groupIndex);
-
-    return appGroup->name();
-}
-
 QVariant dataDisplayFilePath(const App &app, int /*role*/)
 {
     return app.appOriginPath;
@@ -162,7 +152,6 @@ static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplaySpeedLimits,
     &dataDisplayScheduled,
     &dataDisplayAction,
-    &dataDisplayGroup,
     &dataDisplayFilePath,
     &dataDisplayCreationTime,
     &dataDisplayNotes,
@@ -217,15 +206,6 @@ QColor AppListModelData::appActionColor() const
         return blockColor;
 
     return allowColor;
-}
-
-QVariant AppListModelData::appGroupColor() const
-{
-    const AppGroup *appGroup = conf().appGroupAt(app().groupIndex);
-    if (!appGroup->enabled())
-        return inactiveColor;
-
-    return {};
 }
 
 bool AppListModelData::appFileExists() const
@@ -310,8 +290,6 @@ QVariant AppListModelData::dataForeground() const
     switch (AppListColumn(column())) {
     case AppListColumn::Action:
         return appActionColor();
-    case AppListColumn::Group:
-        return appGroupColor();
     }
 
     return {};
@@ -326,16 +304,6 @@ QVariant AppListModelData::dataFont() const
             font.setStrikeOut(true);
             return font;
         }
-    }
-
-    return {};
-}
-
-QVariant AppListModelData::dataTextAlignment() const
-{
-    switch (AppListColumn(column())) {
-    case AppListColumn::Group:
-        return int(Qt::AlignHCenter | Qt::AlignVCenter);
     }
 
     return {};

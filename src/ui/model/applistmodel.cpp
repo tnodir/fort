@@ -155,10 +155,6 @@ QVariant AppListModel::data(const QModelIndex &index, int role) const
     // Font
     case Qt::FontRole:
         return dataFont(index);
-
-    // Text Alignment
-    case Qt::TextAlignmentRole:
-        return dataTextAlignment(index);
     }
 
     return {};
@@ -190,13 +186,6 @@ QVariant AppListModel::dataFont(const QModelIndex &index) const
     const AppListModelData data = appDataAt(index);
 
     return data.dataFont();
-}
-
-QVariant AppListModel::dataTextAlignment(const QModelIndex &index) const
-{
-    const AppListModelData data = appDataAt(index);
-
-    return data.dataTextAlignment();
 }
 
 AppListModelData AppListModel::appDataAt(const QModelIndex &index, int role) const
@@ -271,8 +260,7 @@ bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appRow.scheduleAction = stmt.columnInt(24);
     m_appRow.scheduleTime = stmt.columnDateTime(25);
     m_appRow.creatTime = stmt.columnDateTime(26);
-    m_appRow.groupIndex = stmt.columnInt(27);
-    m_appRow.alerted = stmt.columnBool(28);
+    m_appRow.alerted = stmt.columnBool(27);
 
     return true;
 }
@@ -307,10 +295,8 @@ QString AppListModel::sqlBase() const
            "    t.end_action,"
            "    t.end_time,"
            "    t.creat_time,"
-           "    g.order_index as group_index,"
            "    (a.app_id IS NOT NULL) as alerted"
            "  FROM app t"
-           "    JOIN app_group g ON g.app_group_id = t.app_group_id"
            "    LEFT JOIN app_alert a ON a.app_id = t.app_id"
            "    LEFT JOIN rule r ON r.rule_id = t.rule_id";
 }
@@ -368,7 +354,6 @@ QString AppListModel::sqlOrderColumn() const
         "t.in_limit_id, t.out_limit_id", // Speed Limits
         "t.end_action, t.end_time", // Scheduled
         "t.blocked", // Action
-        "group_index", // Group
         pathColumn, // File Path
         "t.app_id", // Creation Time ~ App ID
         "t.notes", // Notes
@@ -382,7 +367,6 @@ QString AppListModel::sqlOrderColumn() const
         nameColumn, // Speed Limits
         nameColumn, // Scheduled
         nameColumn, // Action
-        nameColumn, // Group
         nameColumn, // File Path
         nameColumn, // Creation Time ~ App ID
         nameColumn, // Notes
@@ -433,7 +417,6 @@ QString AppListModel::columnName(const AppListColumn column)
             tr("Speed Limits"),
             tr("Scheduled"),
             tr("Action"),
-            tr("Group"),
             tr("File Path"),
             tr("Creation Time"),
             tr("Notes"),
