@@ -368,6 +368,9 @@ static const qint8 g_commandValidations[] = {
     true, // Rpc_StatConnManager_deleteConn,
     0, // Rpc_StatConnManager_connChanged,
 
+    true, // Rpc_ServiceInfoManager_trackService,
+    true, // Rpc_ServiceInfoManager_revertService,
+
     true, // Rpc_TaskManager_runTask,
     true, // Rpc_TaskManager_abortTask,
     0, // Rpc_TaskManager_taskStarted,
