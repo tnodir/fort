@@ -303,9 +303,9 @@ bool ConfBuffer::parseAppGroups(
         EnvManager &envManager, const QList<AppGroup *> &appGroups, AppParseOptions &opt)
 {
     const int groupsCount = appGroups.size();
-    if (groupsCount < 1 || groupsCount > FORT_CONF_GROUP_MAX) {
+    if (groupsCount < 1 || groupsCount > MAX_APP_GROUP_COUNT) {
         setErrorMessage(tr("Number of Application Groups must be between 1 and %1")
-                        .arg(FORT_CONF_GROUP_MAX));
+                        .arg(MAX_APP_GROUP_COUNT));
         return false;
     }
 

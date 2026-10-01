@@ -1,6 +1,5 @@
 #include "confdata.h"
 
-#include <conf/appgroup.h>
 #include <conf/firewallconf.h>
 #include <util/net/actionrange.h>
 #include <util/net/arearange.h>
@@ -12,89 +11,6 @@
 #include <util/net/profilerange.h>
 #include <util/net/protorange.h>
 #include <util/net/zonesrange.h>
-
-namespace {
-
-void writeAppGroupFlags(PFORT_CONF_GROUP out, const FirewallConf &conf)
-{
-    out->group_bits = 0;
-    out->log_blocked = 0;
-    out->log_conn = 0;
-
-    int i = 0;
-    for (const AppGroup *appGroup : conf.appGroups()) {
-        if (appGroup->enabled()) {
-            out->group_bits |= (1 << i);
-        }
-        if (appGroup->logBlocked()) {
-            out->log_blocked |= (1 << i);
-        }
-        if (appGroup->logConn()) {
-            out->log_conn |= (1 << i);
-        }
-        ++i;
-    }
-}
-
-void writeLimitBps(PFORT_SPEED_LIMIT limit, quint32 kBits)
-{
-    limit->bps = quint64(kBits) * (1024LL / 8); /* to bytes per second */
-}
-
-void writeLimitIn(PFORT_SPEED_LIMIT limit, const AppGroup *appGroup)
-{
-    limit->plr = appGroup->limitPacketLoss();
-    limit->latency_ms = appGroup->limitLatency();
-    limit->buffer_bytes = appGroup->limitBufferSizeIn();
-
-    writeLimitBps(limit, appGroup->speedLimitIn());
-}
-
-void writeLimitOut(PFORT_SPEED_LIMIT limit, const AppGroup *appGroup)
-{
-    limit->plr = appGroup->limitPacketLoss();
-    limit->latency_ms = appGroup->limitLatency();
-    limit->buffer_bytes = appGroup->limitBufferSizeOut();
-
-    writeLimitBps(limit, appGroup->speedLimitOut());
-}
-
-void writeLimits(PFORT_CONF_GROUP out, const QList<AppGroup *> &appGroups)
-{
-    PFORT_SPEED_LIMIT limits = out->limits;
-
-    out->limit_bits = 0;
-    out->limit_io_bits = 0;
-
-    const int groupsCount = appGroups.size();
-    for (int i = 0; i < groupsCount; ++i, limits += 2) {
-        const AppGroup *appGroup = appGroups.at(i);
-
-        const quint32 limitIn = appGroup->enabledSpeedLimitIn();
-        const quint32 limitOut = appGroup->enabledSpeedLimitOut();
-
-        const bool isLimitIn = (limitIn != 0);
-        const bool isLimitOut = (limitOut != 0);
-
-        if (isLimitIn || isLimitOut) {
-            out->limit_bits |= (1 << i);
-
-            if (isLimitIn) {
-                out->limit_io_bits |= (1 << (i * 2 + 0));
-
-                writeLimitIn(&limits[0], appGroup);
-            }
-
-            if (isLimitOut) {
-                out->limit_io_bits |= (1 << (i * 2 + 1));
-
-                writeLimitOut(&limits[1], appGroup);
-            }
-        }
-    }
-}
-
-}
 
 ConfData::ConfData(void *data) : m_data((char *) data), m_base((char *) data) { }
 
@@ -121,12 +37,6 @@ void ConfData::writeConf(const WriteConfArgs &wca, AppParseOptions &opt)
 
     exeAppsOff = dataOffset();
     writeApps(opt.exeAppsMap);
-
-    PFORT_CONF_GROUP conf_group = &drvConfIo->conf_group;
-
-    writeAppGroupFlags(conf_group, wca.conf);
-
-    writeLimits(conf_group, wca.conf.appGroups());
 
     ConfData(&drvConf->flags).writeConfFlags(wca.conf);
 

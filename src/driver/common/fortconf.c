@@ -21,8 +21,7 @@ static_assert((FORT_CONF_RULE_GLOBAL_MAX + FORT_CONF_RULE_SET_MAX) < 256,
 static_assert(sizeof(FORT_TRAF) == sizeof(UINT64), "FORT_TRAF size mismatch");
 static_assert(sizeof(FORT_APP_FLAGS) == sizeof(UINT16), "FORT_APP_FLAGS size mismatch");
 static_assert(sizeof(FORT_APP_DATA) == 6 * sizeof(UINT32), "FORT_APP_DATA size mismatch");
-static_assert(
-        sizeof(FORT_CONF_GROUPS) == 3 * sizeof(UINT32) + FORT_CONF_GROUP2_MAX * sizeof(UINT16),
+static_assert(sizeof(FORT_CONF_GROUPS) == 3 * sizeof(UINT32) + FORT_CONF_GROUP_MAX * sizeof(UINT16),
         "FORT_CONF_GROUPS size mismatch");
 
 static_assert(
@@ -418,7 +417,7 @@ FORT_API UINT16 fort_conf_groups_rules_conn_filtered(PCFORT_CONF_GROUPS groups,
 
     while (groups_mask != 0) {
         const int group_index = fort_bit_scan_forward(groups_mask);
-        if (group_index < 0 || group_index >= FORT_CONF_GROUP2_MAX)
+        if (group_index < 0 || group_index >= FORT_CONF_GROUP_MAX)
             break;
 
         groups_mask ^= (1u << group_index);

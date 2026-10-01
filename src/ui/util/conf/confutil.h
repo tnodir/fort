@@ -7,6 +7,7 @@ class ConfUtil
 {
 public:
     static int zoneMaxCount();
+    static int groupMaxCount();
     static int speedLimitMaxCount();
 
     static int ruleMaxCount();
@@ -14,8 +15,6 @@ public:
     static int ruleSetMaxCount();
     static int ruleDepthFilterMaxCount();
     static int ruleSetDepthMaxCount();
-
-    static int groupMaxCount();
 
     static int wildcardPos(const QStringView path);
     static bool hasWildcard(const QString &path);

@@ -9,6 +9,11 @@ int ConfUtil::zoneMaxCount()
     return FORT_CONF_ZONE_MAX;
 }
 
+int ConfUtil::groupMaxCount()
+{
+    return FORT_CONF_GROUP_MAX;
+}
+
 int ConfUtil::speedLimitMaxCount()
 {
     return FORT_CONF_SPEED_LIMIT_MAX;
@@ -37,11 +42,6 @@ int ConfUtil::ruleDepthFilterMaxCount()
 int ConfUtil::ruleSetDepthMaxCount()
 {
     return FORT_CONF_RULE_SET_DEPTH_MAX;
-}
-
-int ConfUtil::groupMaxCount()
-{
-    return FORT_CONF_GROUP2_MAX;
 }
 
 int ConfUtil::wildcardPos(const QStringView path)
