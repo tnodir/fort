@@ -23,14 +23,25 @@ protected slots:
 
 private:
     void initializeRuleField(bool isSingleSelection);
+    void initializeSpeedLimitFields();
+
+    void retranslateSpeedLimitFields();
 
     void setupUi();
     QLayout *setupZonesRuleLayout();
+    QLayout *setupSpeedLimitsLayout();
+    void setupSpeedLimitsChanged();
+
+    void updateSpeedLimitCombos();
 
 private:
     QCheckBox *m_cbLanOnly = nullptr;
     ZonesSelector *m_btZones = nullptr;
     RuleSelector *m_ruleSelector = nullptr;
+    QLabel *m_labelSpeedLimitIn = nullptr;
+    QComboBox *m_comboSpeedLimitIn = nullptr;
+    QLabel *m_labelSpeedLimitOut = nullptr;
+    QComboBox *m_comboSpeedLimitOut = nullptr;
 };
 
 #endif // PROGNETWORKPAGE_H
