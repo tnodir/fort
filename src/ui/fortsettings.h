@@ -105,6 +105,9 @@ public:
 
     static QStringList unlockTypeStrings();
 
+    // COMPAT: The App. Groups' enabled bits by their indexes
+    quint32 appGroupBits() const { return iniUInt("confFlags/appGroupBits", quint32(-1)); }
+
 signals:
     void passwordCheckedChanged();
 

@@ -577,6 +577,11 @@ void FortSettings::migrateIniOnLoad()
         setCacheValue("confFlags/logBlockedConn", ini()->value("confFlags/logBlockedIp"));
         setCacheValue("confFlags/logAlertedConn", ini()->value("confFlags/logAlertedBlockedIp"));
     }
+
+    // COMPAT: v3.20.0: Keep the App. Groups' enabled bits for the conf DB's migration
+    if (version < 0x032000) {
+        setCacheValue("confFlags/appGroupBits", ini()->value("confFlags/appGroupBits"));
+    }
 }
 
 void FortSettings::migrateIniOnWrite()
@@ -631,6 +636,11 @@ void FortSettings::migrateIniOnWrite()
         ini()->setValue("confFlags/logApp", cacheValue("confFlags/logApp"));
         ini()->setValue("confFlags/logBlockedConn", cacheValue("confFlags/logBlockedConn"));
         ini()->setValue("confFlags/logAlertedConn", cacheValue("confFlags/logAlertedConn"));
+    }
+
+    // COMPAT: v3.20.0
+    if (version < 0x032000) {
+        removeIniKey("confFlags/appGroupBits");
     }
 }
 

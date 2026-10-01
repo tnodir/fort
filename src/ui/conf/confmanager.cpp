@@ -18,6 +18,8 @@
 #include <task/taskmanager.h>
 #include <user/usersettings.h>
 #include <util/conf/confbuffer.h>
+#include <util/conf/confutil.h>
+#include <util/dateutil.h>
 #include <util/fileutil.h>
 
 #include "addressgroup.h"
@@ -205,6 +207,196 @@ bool migrateAddrGroupExcludeTexts(SqliteDb *db)
     return true;
 }
 
+struct OldAppGroup
+{
+    bool enabled : 1 = false;
+    bool periodEnabled : 1 = false;
+    bool limitInEnabled : 1 = false;
+    bool limitOutEnabled : 1 = false;
+
+    quint16 limitPacketLoss = 0;
+
+    quint32 limitLatency = 0;
+    quint32 speedLimitIn = 0;
+    quint32 speedLimitOut = 0;
+    quint32 limitBufferSizeIn = 0;
+    quint32 limitBufferSizeOut = 0;
+
+    qint64 appGroupId = 0;
+
+    QString name;
+    QString periodFrom;
+    QString periodTo;
+};
+
+QString oldEntityName(const QString &tableName)
+{
+    return SqliteDb::entityName(SqliteDb::migrationOldSchemaName(), tableName);
+}
+
+bool loadOldAppGroups(SqliteDb *db, quint32 appGroupBits, QList<OldAppGroup> &appGroups)
+{
+    // Skip the default "Main" App. Group: it has all the Programs
+    const QString sql = "SELECT app_group_id, order_index, period_enabled,"
+                        "    limit_in_enabled, limit_out_enabled,"
+                        "    limit_packet_loss, limit_latency,"
+                        "    speed_limit_in, speed_limit_out,"
+                        "    limit_bufsize_in, limit_bufsize_out,"
+                        "    name, period_from, period_to"
+                        "  FROM "
+            + oldEntityName("app_group") + "  WHERE order_index > 0 ORDER BY order_index;";
+
+    SqliteStmt stmt;
+    if (!DbQuery(db).sql(sql).prepare(stmt))
+        return false; // there are no App. Groups
+
+    while (stmt.step() == SqliteStmt::StepRow) {
+        OldAppGroup appGroup;
+        appGroup.appGroupId = stmt.columnInt64(0);
+        // The App. Group's enabled flag is kept in the .ini by its index
+        const int orderIndex = stmt.columnInt(1);
+        appGroup.enabled = (orderIndex < 32 && (appGroupBits & (1u << orderIndex)) != 0);
+        appGroup.periodEnabled = stmt.columnBool(2);
+        appGroup.limitInEnabled = stmt.columnBool(3);
+        appGroup.limitOutEnabled = stmt.columnBool(4);
+        appGroup.limitPacketLoss = stmt.columnInt(5);
+        appGroup.limitLatency = stmt.columnUInt(6);
+        appGroup.speedLimitIn = stmt.columnUInt(7);
+        appGroup.speedLimitOut = stmt.columnUInt(8);
+        appGroup.limitBufferSizeIn = stmt.columnUInt(9);
+        appGroup.limitBufferSizeOut = stmt.columnUInt(10);
+        appGroup.name = stmt.columnText(11);
+        appGroup.periodFrom = stmt.columnText(12);
+        appGroup.periodTo = stmt.columnText(13);
+
+        appGroups.append(appGroup);
+    }
+
+    return true;
+}
+
+QString oldAppGroupAppIdsSql()
+{
+    return "SELECT app_id FROM " + oldEntityName("app") + " WHERE app_group_id = ?1";
+}
+
+bool migrateOldAppGroup(SqliteDb *db, const OldAppGroup &appGroup)
+{
+    bool ok = true;
+
+    const int groupId = DbQuery(db, &ok)
+                                .sql("SELECT group_id FROM app_group"
+                                     "  WHERE group_id <= ?1 ORDER BY group_id;")
+                                .vars({ ConfUtil::groupMaxCount() })
+                                .getFreeId(/*maxId=*/ConfUtil::groupMaxCount());
+    if (!ok) {
+        qCWarning(LC) << "Migrate: No free Group id for the App. Group:" << appGroup.name;
+        return false;
+    }
+
+    const QVariantList vars = {
+        groupId,
+        appGroup.enabled,
+        appGroup.periodEnabled,
+        appGroup.name,
+        appGroup.periodFrom,
+        appGroup.periodTo,
+        DateUtil::now(),
+    };
+
+    DbQuery(db, &ok)
+            .sql("INSERT INTO app_group(group_id, enabled, exclusive, period_enabled,"
+                 "    name, period_from, period_to, mod_time)"
+                 "  VALUES(?1, ?2, 0, ?3, ?4, ?5, ?6, ?7);")
+            .vars(vars)
+            .executeOk();
+    if (!ok)
+        return false;
+
+    const quint32 groupBit = (quint32(1) << (groupId - 1));
+
+    DbQuery(db, &ok)
+            .sql("UPDATE app SET groups_mask = groups_mask | ?2"
+                 "  WHERE app_id IN ("
+                    + oldAppGroupAppIdsSql() + ");")
+            .vars({ appGroup.appGroupId, groupBit })
+            .executeOk();
+
+    return ok;
+}
+
+bool migrateOldAppGroupSpeedLimit(SqliteDb *db, const OldAppGroup &appGroup, bool inbound)
+{
+    const quint32 kbps = inbound ? appGroup.speedLimitIn : appGroup.speedLimitOut;
+    const bool limitEnabled = inbound ? appGroup.limitInEnabled : appGroup.limitOutEnabled;
+
+    if (kbps == 0)
+        return true;
+
+    bool ok = true;
+
+    const int limitId = DbQuery(db, &ok)
+                                .sql("SELECT limit_id FROM speed_limit"
+                                     "  WHERE limit_id <= ?1 ORDER BY limit_id;")
+                                .vars({ ConfUtil::speedLimitMaxCount() })
+                                .getFreeId(/*maxId=*/ConfUtil::speedLimitMaxCount());
+    if (!ok) {
+        qCWarning(LC) << "Migrate: No free Speed Limit id for the App. Group:" << appGroup.name;
+        return false;
+    }
+
+    const QVariantList vars = {
+        limitId,
+        limitEnabled,
+        inbound,
+        appGroup.name,
+        appGroup.limitPacketLoss,
+        appGroup.limitLatency,
+        kbps,
+        inbound ? appGroup.limitBufferSizeIn : appGroup.limitBufferSizeOut,
+        DateUtil::now(),
+    };
+
+    DbQuery(db, &ok)
+            .sql("INSERT INTO speed_limit(limit_id, enabled, inbound, name,"
+                 "    packet_loss, latency, kbps, bufsize, mod_time)"
+                 "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9);")
+            .vars(vars)
+            .executeOk();
+    if (!ok)
+        return false;
+
+    const QString sql =
+            QString("UPDATE app SET %1 = ?2 WHERE app_id IN (%2);")
+                    .arg(inbound ? "in_limit_id" : "out_limit_id", oldAppGroupAppIdsSql());
+
+    DbQuery(db, &ok).sql(sql).vars({ appGroup.appGroupId, limitId }).executeOk();
+
+    return ok;
+}
+
+// The App. Groups are replaced by the Groups and Speed Limits
+void migrateAppGroups(SqliteDb *db, quint32 appGroupBits)
+{
+    // The old App. Groups are copied to the Groups' table with the same name
+    db->execute("DELETE FROM app_group;");
+
+    QList<OldAppGroup> appGroups;
+
+    if (!loadOldAppGroups(db, appGroupBits, appGroups))
+        return;
+
+    for (const OldAppGroup &appGroup : std::as_const(appGroups)) {
+        qCDebug(LC) << "Migrate: App. Group:" << appGroup.name;
+
+        if (!migrateOldAppGroup(db, appGroup))
+            continue;
+
+        migrateOldAppGroupSpeedLimit(db, appGroup, /*inbound=*/true);
+        migrateOldAppGroupSpeedLimit(db, appGroup, /*inbound=*/false);
+    }
+}
+
 bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
 {
     Q_UNUSED(ctx);
@@ -222,6 +414,11 @@ bool migrateFunc(SqliteDb *db, int version, bool isNewDb, void *ctx)
     // COMPAT: Remove "::/0" from addr group's exclude
     if (version < 58) {
         migrateAddrGroupExcludeTexts(db);
+    }
+
+    // COMPAT: Migrate the App. Groups to the Groups and Speed Limits
+    if (version < 59) {
+        migrateAppGroups(db, settings()->appGroupBits());
     }
 
     return true;
