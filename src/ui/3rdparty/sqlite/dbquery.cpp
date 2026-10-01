@@ -97,14 +97,14 @@ int DbQuery::getFreeId(int maxId, int minId)
         while (stmt.step() == SqliteStmt::StepRow) {
             const int id = stmt.columnInt(0);
 
-            if (resId < id || id >= maxId)
+            if (resId < id || id > maxId)
                 break;
 
             resId = id + 1;
         }
     }
 
-    setResult(resId < maxId);
+    setResult(resId <= maxId);
 
     return resId;
 }

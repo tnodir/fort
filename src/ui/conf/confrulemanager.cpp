@@ -88,7 +88,7 @@ const char *const sqlSelectRuleMenuIds = "SELECT rule_id FROM rule_menu"
 const char *const sqlSelectRuleNameById = "SELECT name FROM rule WHERE rule_id = ?1;";
 
 const char *const sqlSelectRuleIds = "SELECT rule_id FROM rule"
-                                     "  WHERE rule_id < ?1 ORDER BY rule_id;";
+                                     "  WHERE rule_id <= ?1 ORDER BY rule_id;";
 
 const char *const sqlDeleteRule = "DELETE FROM rule WHERE rule_id = ?1;";
 

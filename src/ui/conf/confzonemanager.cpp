@@ -35,7 +35,7 @@ const char *const sqlUpdateZone = "UPDATE zone"
 const char *const sqlSelectZoneNameById = "SELECT name FROM zone WHERE zone_id = ?1;";
 
 const char *const sqlSelectZoneIds = "SELECT zone_id FROM zone"
-                                     "  WHERE zone_id < ?1 ORDER BY zone_id;";
+                                     "  WHERE zone_id <= ?1 ORDER BY zone_id;";
 
 const char *const sqlDeleteZone = "DELETE FROM zone WHERE zone_id = ?1;";
 
