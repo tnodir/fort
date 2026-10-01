@@ -977,7 +977,8 @@ FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const FORT_CONF
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
     {
-        fort_shaper_flags_set(shaper, FORT_SHAPER_ENABLED, conf_flags.filter_enabled);
+        fort_shaper_flags_set(shaper, FORT_SHAPER_ENABLED,
+                conf_flags.filter_enabled && conf_flags.speed_limiter_enabled);
 
         flush_bits = fort_shaper_enabled_bits_update_locked(shaper);
     }

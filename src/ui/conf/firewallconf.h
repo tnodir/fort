@@ -104,6 +104,9 @@ public:
     bool groupBlocked() const { return m_groupBlocked; }
     void setGroupBlocked(bool v) { m_groupBlocked = v; }
 
+    bool speedLimiterEnabled() const { return m_speedLimiterEnabled; }
+    void setSpeedLimiterEnabled(bool v) { m_speedLimiterEnabled = v; }
+
     bool logStat() const { return m_logStat; }
     void setLogStat(bool v) { m_logStat = v; }
 
@@ -238,6 +241,7 @@ private:
     uint m_allowAllNew : 1 = false;
     uint m_askToConnect : 1 = false;
     uint m_groupBlocked : 1 = true;
+    uint m_speedLimiterEnabled : 1 = true;
 
     uint m_logStat : 1 = false;
     uint m_logStatNoFilter : 1 = false;

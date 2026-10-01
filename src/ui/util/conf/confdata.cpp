@@ -161,6 +161,7 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
     confFlags->allow_all_new = conf.allowAllNew();
     confFlags->ask_to_connect = conf.askToConnect();
     confFlags->group_blocked = conf.groupBlocked();
+    confFlags->speed_limiter_enabled = conf.speedLimiterEnabled();
 
     confFlags->app_block_all = conf.appBlockAll();
     confFlags->app_allow_all = conf.appAllowAll();

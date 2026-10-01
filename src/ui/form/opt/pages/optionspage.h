@@ -70,6 +70,7 @@ private:
     QLabel *m_labelFilterMode = nullptr;
     QComboBox *m_comboFilterMode = nullptr;
     QCheckBox *m_cbGroupBlocked = nullptr;
+    QCheckBox *m_cbSpeedLimiterEnabled = nullptr;
     LabelSpinCombo *m_lscFilterOffSeconds = nullptr;
     LabelSpinCombo *m_lscAutoLearnSeconds = nullptr;
 

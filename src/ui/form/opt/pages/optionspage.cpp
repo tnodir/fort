@@ -62,6 +62,7 @@ void OptionsPage::onResetToDefault()
     m_comboBlockTraffic->setCurrentIndex(0);
     m_comboFilterMode->setCurrentIndex(0);
     m_cbGroupBlocked->setChecked(true);
+    m_cbSpeedLimiterEnabled->setChecked(true);
     m_lscFilterOffSeconds->spinBox()->setValue(DEFAULT_FILTER_OFF_SECONDS);
     m_lscAutoLearnSeconds->spinBox()->setValue(DEFAULT_AUTO_LEARN_SECONDS);
 
@@ -150,6 +151,7 @@ void OptionsPage::onRetranslateUi()
     retranslateComboFilterMode();
 
     m_cbGroupBlocked->setText(tr("Block traffic for disabled Groups"));
+    m_cbSpeedLimiterEnabled->setText(tr("Speed Limiter Enabled"));
 
     m_lscFilterOffSeconds->label()->setText(tr("Filter Off seconds:"));
     m_lscAutoLearnSeconds->label()->setText(tr("Auto-learn seconds:"));
@@ -290,6 +292,13 @@ void OptionsPage::setupTrafficBox()
         ctrl()->setFlagsEdited();
     });
 
+    // Speed Limiter Enabled
+    m_cbSpeedLimiterEnabled =
+            ControlUtil::createCheckBox(conf().speedLimiterEnabled(), [&](bool checked) {
+                conf().setSpeedLimiterEnabled(checked);
+                ctrl()->setFlagsEdited();
+            });
+
     // Timed Options
     setupFilterOffSeconds();
     setupAutoLearnSeconds();
@@ -299,6 +308,7 @@ void OptionsPage::setupTrafficBox()
     layout->addLayout(blockTrafficLayout);
     layout->addLayout(filterModeLayout);
     layout->addWidget(m_cbGroupBlocked);
+    layout->addWidget(m_cbSpeedLimiterEnabled);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addWidget(m_lscFilterOffSeconds);
     layout->addWidget(m_lscAutoLearnSeconds);

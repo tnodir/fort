@@ -48,6 +48,7 @@ typedef struct fort_conf_flags
     UINT32 allow_all_new : 1;
     UINT32 ask_to_connect : 1;
     UINT32 group_blocked : 1;
+    UINT32 speed_limiter_enabled : 1;
 
     UINT32 app_block_all : 1;
     UINT32 app_allow_all : 1;
@@ -62,7 +63,7 @@ typedef struct fort_conf_flags
     UINT32 log_blocked_conn : 1;
     UINT32 log_alerted_conn : 1;
 
-    UINT32 reserved_flags : 9; /* not used */
+    UINT32 reserved_flags : 8; /* not used */
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
 typedef const FORT_CONF_FLAGS *PCFORT_CONF_FLAGS;
