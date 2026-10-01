@@ -62,7 +62,6 @@ private:
     QLayout *setupNotesLayout();
     QLayout *setupApplyChildGroupLayout();
     void setupCbApplyChild();
-    void setupComboAppGroups();
     QLayout *setupActionsLayout();
     void setupActionsGroup();
     QLayout *setupScheduleLayout();
@@ -121,8 +120,6 @@ private:
     QToolButton *m_btDeleteIcon = nullptr;
     QCheckBox *m_cbApplyChild = nullptr;
     QComboBox *m_comboApplyChild = nullptr;
-    QLabel *m_labelAppGroup = nullptr;
-    QComboBox *m_comboAppGroup = nullptr;
     GroupsSelector *m_btGroups = nullptr;
     QRadioButton *m_rbAllow = nullptr;
     QRadioButton *m_rbBlock = nullptr;

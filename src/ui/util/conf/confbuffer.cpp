@@ -7,7 +7,6 @@
 
 #include <conf/addressgroup.h>
 #include <conf/app.h>
-#include <conf/appgroup.h>
 #include <conf/firewallconf.h>
 #include <conf/group.h>
 #include <conf/rule.h>
@@ -108,9 +107,6 @@ bool ConfBuffer::writeConf(
     AppParseOptions opt;
 
     if (!parseExeApps(*envManager, confAppsWalker, opt))
-        return false;
-
-    if (!parseAppGroups(*envManager, conf.appGroups(), opt))
         return false;
 
     const quint32 appsSize = opt.wildAppsSize + opt.prefixAppsSize + opt.exeAppsSize;
@@ -294,47 +290,6 @@ bool ConfBuffer::parseAddressGroups(const QList<AddressGroup *> &addressGroups,
                         incRange.ip6Size(), incRange.pair6Size())
                 + FORT_CONF_ADDR_LIST_SIZE(excRange.ip4Size(), excRange.pair4Size(),
                         excRange.ip6Size(), excRange.pair6Size());
-    }
-
-    return true;
-}
-
-bool ConfBuffer::parseAppGroups(
-        EnvManager &envManager, const QList<AppGroup *> &appGroups, AppParseOptions &opt)
-{
-    const int groupsCount = appGroups.size();
-    if (groupsCount < 1 || groupsCount > MAX_APP_GROUP_COUNT) {
-        setErrorMessage(tr("Number of Application Groups must be between 1 and %1")
-                        .arg(MAX_APP_GROUP_COUNT));
-        return false;
-    }
-
-    for (int i = 0; i < groupsCount; ++i) {
-        const AppGroup *appGroup = appGroups.at(i);
-
-        App app;
-        app.applyChild = appGroup->applyChild();
-        app.lanOnly = appGroup->lanOnly();
-        app.logAllowedConn = appGroup->logConn();
-        app.logBlockedConn = appGroup->logBlocked();
-        app.groupIndex = i;
-
-        app.appOriginPath = appGroup->killText();
-        app.blocked = true;
-        app.killProcess = true;
-        if (!parseAppsText(envManager, app, opt))
-            return false;
-
-        app.appOriginPath = appGroup->blockText();
-        app.blocked = true;
-        app.killProcess = false;
-        if (!parseAppsText(envManager, app, opt))
-            return false;
-
-        app.appOriginPath = appGroup->allowText();
-        app.blocked = false;
-        if (!parseAppsText(envManager, app, opt))
-            return false;
     }
 
     return true;

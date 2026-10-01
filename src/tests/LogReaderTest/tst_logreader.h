@@ -7,7 +7,6 @@
 #include <googletest.h>
 
 #include <conf/addressgroup.h>
-#include <conf/appgroup.h>
 #include <conf/firewallconf.h>
 #include <driver/drivercommon.h>
 #include <log/logbuffer.h>
@@ -62,9 +61,6 @@ void setConf(Device &device)
     inetGroup->setExcludeAll(false);
 
     inetGroup->setExcludeText(NetUtil::localIpNetworksText());
-
-    // Application Groups
-    conf.addDefaultAppGroup();
 
     conf.setAppBlockAll(true);
     conf.setAppAllowAll(false);

@@ -11,7 +11,6 @@
 #include "confdata.h"
 
 class AddressGroup;
-class AppGroup;
 class EnvManager;
 class RuleFilter;
 
@@ -66,8 +65,6 @@ private:
     bool parseAddressGroups(const QList<AddressGroup *> &addressGroups, ParseAddressGroupsArgs &ad,
             quint32 &addressGroupsSize);
 
-    bool parseAppGroups(
-            EnvManager &envManager, const QList<AppGroup *> &appGroups, AppParseOptions &opt);
 
     bool parseExeApps(
             EnvManager &envManager, const ConfAppsWalker *confAppsWalker, AppParseOptions &opt);

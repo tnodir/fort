@@ -21,7 +21,6 @@
 #include <util/fileutil.h>
 
 #include "addressgroup.h"
-#include "appgroup.h"
 #include "confappmanager.h"
 
 using namespace Fort;
@@ -31,8 +30,6 @@ namespace {
 const QLoggingCategory LC("conf");
 
 inline constexpr int DATABASE_USER_VERSION = 59;
-
-inline constexpr int CONF_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
 
 const char *const sqlSelectAddressGroups = "SELECT addr_group_id, include_all, exclude_all,"
                                            "    include_zones, exclude_zones,"
@@ -51,47 +48,6 @@ const char *const sqlUpdateAddressGroup = "UPDATE address_group"
                                           "    include_zones = ?4, exclude_zones = ?5,"
                                           "    include_text = ?6, exclude_text = ?7"
                                           "  WHERE addr_group_id = ?1;";
-
-const char *const sqlSelectAppGroups = "SELECT app_group_id, enabled, apply_child,"
-                                       "    lan_only, log_blocked, log_conn, period_enabled,"
-                                       "    limit_in_enabled, limit_out_enabled,"
-                                       "    speed_limit_in, speed_limit_out,"
-                                       "    limit_packet_loss, limit_latency,"
-                                       "    limit_bufsize_in, limit_bufsize_out,"
-                                       "    name, kill_text, block_text, allow_text,"
-                                       "    period_from, period_to"
-                                       "  FROM app_group"
-                                       "  ORDER BY order_index;";
-
-const char *const sqlInsertAppGroup = "INSERT INTO app_group(app_group_id, order_index, enabled,"
-                                      "    apply_child, lan_only, log_blocked, log_conn,"
-                                      "    period_enabled, limit_in_enabled, limit_out_enabled,"
-                                      "    speed_limit_in, speed_limit_out,"
-                                      "    limit_packet_loss, limit_latency,"
-                                      "    limit_bufsize_in, limit_bufsize_out,"
-                                      "    name, kill_text, block_text, allow_text,"
-                                      "    period_from, period_to)"
-                                      "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12,"
-                                      "    ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, ?21, ?22);";
-
-const char *const sqlUpdateAppGroup = "UPDATE app_group"
-                                      "  SET order_index = ?2, enabled = ?3,"
-                                      "    apply_child = ?4, lan_only = ?5,"
-                                      "    log_blocked = ?6, log_conn = ?7, period_enabled = ?8,"
-                                      "    limit_in_enabled = ?9, limit_out_enabled = ?10,"
-                                      "    speed_limit_in = ?11, speed_limit_out = ?12,"
-                                      "    limit_packet_loss = ?13, limit_latency = ?14,"
-                                      "    limit_bufsize_in = ?15, limit_bufsize_out = ?16,"
-                                      "    name = ?17, kill_text = ?18, block_text = ?19,"
-                                      "    allow_text = ?20, period_from = ?21, period_to = ?22"
-                                      "  WHERE app_group_id = ?1;";
-
-const char *const sqlDeleteAppGroup = "DELETE FROM app_group"
-                                      "  WHERE app_group_id = ?1;";
-
-const char *const sqlUpdateAppResetGroup = "UPDATE app"
-                                           "  SET app_group_id = ?2"
-                                           "  WHERE app_group_id = ?1;";
 
 const char *const sqlSelectTaskByName = "SELECT task_id, enabled,"
                                         "    run_on_startup, delay_startup,"
@@ -362,117 +318,6 @@ bool saveAddressGroups(SqliteDb *db, const FirewallConf &conf)
     return true;
 }
 
-bool loadAppGroups(SqliteDb *db, FirewallConf &conf)
-{
-    SqliteStmt stmt;
-    if (!DbQuery(db).sql(sqlSelectAppGroups).prepare(stmt))
-        return false;
-
-    conf.clearAppGroups();
-
-    while (stmt.step() == SqliteStmt::StepRow) {
-        auto appGroup = new AppGroup();
-
-        appGroup->setId(stmt.columnInt64(0));
-        appGroup->setEnabled(stmt.columnBool(1));
-        appGroup->setApplyChild(stmt.columnBool(2));
-        appGroup->setLanOnly(stmt.columnBool(3));
-        appGroup->setLogBlocked(stmt.columnBool(4));
-        appGroup->setLogConn(stmt.columnBool(5));
-        appGroup->setPeriodEnabled(stmt.columnBool(6));
-        appGroup->setLimitInEnabled(stmt.columnBool(7));
-        appGroup->setLimitOutEnabled(stmt.columnBool(8));
-        appGroup->setSpeedLimitIn(quint32(stmt.columnInt(9)));
-        appGroup->setSpeedLimitOut(quint32(stmt.columnInt(10)));
-        appGroup->setLimitPacketLoss(quint16(stmt.columnInt(11)));
-        appGroup->setLimitLatency(quint32(stmt.columnInt(12)));
-        appGroup->setLimitBufferSizeIn(quint32(stmt.columnInt(13)));
-        appGroup->setLimitBufferSizeOut(quint32(stmt.columnInt(14)));
-        appGroup->setName(stmt.columnText(15));
-        appGroup->setKillText(stmt.columnText(16));
-        appGroup->setBlockText(stmt.columnText(17));
-        appGroup->setAllowText(stmt.columnText(18));
-        appGroup->setPeriodFrom(stmt.columnText(19));
-        appGroup->setPeriodTo(stmt.columnText(20));
-        appGroup->setEdited(false);
-
-        conf.addAppGroup(appGroup);
-    }
-
-    return true;
-}
-
-bool saveAppGroup(SqliteDb *db, AppGroup *appGroup, int orderIndex)
-{
-    const bool rowExists = (appGroup->id() != 0);
-    if (!appGroup->edited() && rowExists)
-        return true;
-
-    const QVariantList vars = {
-        DbVar::nullable(appGroup->id(), !rowExists),
-        orderIndex,
-        appGroup->enabled(),
-        appGroup->applyChild(),
-        appGroup->lanOnly(),
-        appGroup->logBlocked(),
-        appGroup->logConn(),
-        appGroup->periodEnabled(),
-        appGroup->limitInEnabled(),
-        appGroup->limitOutEnabled(),
-        appGroup->speedLimitIn(),
-        appGroup->speedLimitOut(),
-        appGroup->limitPacketLoss(),
-        appGroup->limitLatency(),
-        appGroup->limitBufferSizeIn(),
-        appGroup->limitBufferSizeOut(),
-        appGroup->name(),
-        appGroup->killText(),
-        appGroup->blockText(),
-        appGroup->allowText(),
-        appGroup->periodFrom(),
-        appGroup->periodTo(),
-    };
-
-    const char *sql = rowExists ? sqlUpdateAppGroup : sqlInsertAppGroup;
-
-    if (!DbQuery(db).sql(sql).vars(vars).executeOk())
-        return false;
-
-    if (!rowExists) {
-        appGroup->setId(db->lastInsertRowid());
-    }
-    appGroup->setEdited(false);
-
-    return true;
-}
-
-bool saveAppGroups(SqliteDb *db, const FirewallConf &conf)
-{
-    int orderIndex = 0;
-    for (AppGroup *appGroup : conf.appGroups()) {
-        if (!saveAppGroup(db, appGroup, orderIndex++))
-            return false;
-    }
-    return true;
-}
-
-bool removeAppGroupsInDb(SqliteDb *db, const FirewallConf &conf)
-{
-    Q_ASSERT(!conf.appGroups().isEmpty());
-    const auto defaultAppGroupId = conf.appGroups().at(0)->id();
-
-    for (const qint64 appGroupId : conf.removedAppGroupIdList()) {
-        DbQuery(db).sql(sqlUpdateAppResetGroup).vars({ appGroupId, defaultAppGroupId }).executeOk();
-
-        if (!DbQuery(db).sql(sqlDeleteAppGroup).vars({ appGroupId }).executeOk())
-            return false;
-    }
-
-    conf.clearRemovedAppGroupIdList();
-
-    return true;
-}
-
 bool exportFile(const QString &filePath, const QString &path)
 {
     const QString fileName = FileUtil::fileName(filePath);
@@ -522,18 +367,6 @@ void ConfManager::setUp()
     setupDb();
 }
 
-bool ConfManager::applyConfPeriods(bool onlyFlags)
-{
-    m_confTimer.stop();
-
-    if (!conf().updateGroupPeriods(onlyFlags))
-        return false;
-
-    m_confTimer.start(CONF_PERIODS_UPDATE_INTERVAL);
-
-    return true;
-}
-
 void ConfManager::applyFilterOffSeconds()
 {
     const bool isFilterOff = !conf().filterEnabled();
@@ -570,26 +403,11 @@ void ConfManager::applyAutoLearnSeconds()
 
 void ConfManager::setupTimers()
 {
-    m_confTimer.setSingleShot(true);
-    connect(&m_confTimer, &QTimer::timeout, this, &ConfManager::updateConfPeriods);
-
     m_filterOffTimer.setSingleShot(true);
     connect(&m_filterOffTimer, &QTimer::timeout, this, &ConfManager::switchFilterOff);
 
     m_autoLearnTimer.setSingleShot(true);
     connect(&m_autoLearnTimer, &QTimer::timeout, this, &ConfManager::switchAutoLearn);
-}
-
-void ConfManager::updateConfPeriods()
-{
-    const auto activeGroupBits = conf().activeGroupBits();
-
-    if (!applyConfPeriods(/*onlyFlags=*/false))
-        return;
-
-    if (activeGroupBits != conf().activeGroupBits()) {
-        emit confPeriodsChanged();
-    }
 }
 
 void ConfManager::switchFilterOff()
@@ -627,7 +445,6 @@ bool ConfManager::setupDb()
 void ConfManager::setupDefault(FirewallConf &conf) const
 {
     conf.setupDefaultAddressGroups();
-    conf.addDefaultAppGroup();
 }
 
 bool ConfManager::checkCanMigrate(Settings *settings) const
@@ -687,8 +504,6 @@ bool ConfManager::saveConf(FirewallConf &conf, IniOptions &ini)
 {
     qCDebug(LC) << "Conf save";
 
-    conf.prepareToSave();
-
     if (conf.optEdited() && !saveToDb(conf))
         return false;
 
@@ -720,7 +535,6 @@ void ConfManager::applySavedConf(FirewallConf &newConf)
         }
     }
 
-    applyConfPeriods(onlyFlags);
     applyFilterOffSeconds();
     applyAutoLearnSeconds();
 
@@ -980,10 +794,6 @@ bool ConfManager::loadFromDb(FirewallConf &conf, bool &isNew)
         isNew = false;
     }
 
-    // Load App Groups
-    if (!loadAppGroups(sqliteDb(), conf))
-        return false;
-
     return true;
 }
 
@@ -991,9 +801,7 @@ bool ConfManager::saveToDb(const FirewallConf &conf)
 {
     beginWriteTransaction();
 
-    bool ok = saveAddressGroups(sqliteDb(), conf) // Save Address Groups
-            && saveAppGroups(sqliteDb(), conf) // Save App Groups
-            && removeAppGroupsInDb(sqliteDb(), conf); // Remove App Groups
+    bool ok = saveAddressGroups(sqliteDb(), conf); // Save Address Groups
 
     endTransaction(ok);
 

@@ -14,8 +14,6 @@
 
 #include <appinfo/appinfocache.h>
 #include <appinfo/appinfoutil.h>
-#include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <form/controls/controlutil.h>
 #include <form/controls/groupsselector.h>
 #include <form/controls/lineedit.h>
@@ -60,7 +58,6 @@ void ProgGeneralPage::onPageInitialize(const App &app)
     updateWildcard();
 
     updateApplyChild();
-    m_comboAppGroup->setCurrentIndex(app.groupIndex);
     m_btGroups->setGroups(app.groups);
 
     m_rbAllow->setChecked(!app.blocked);
@@ -164,7 +161,6 @@ void ProgGeneralPage::onRetranslateUi()
     m_cbApplyChild->setText(tr("Rules inheritance:"));
     retranslateComboApplyChild();
 
-    m_labelAppGroup->setText(tr("Group:"));
     m_btGroups->retranslateUi();
 
     m_rbAllow->setText(tr("Allow"));
@@ -423,18 +419,12 @@ QLayout *ProgGeneralPage::setupApplyChildGroupLayout()
 
     setupCbApplyChild();
 
-    // Group
-    setupComboAppGroups();
-
-    m_labelAppGroup = ControlUtil::createLabel();
-
     // Groups
     m_btGroups = new GroupsSelector();
     m_btGroups->setMaxGroupCount(ConfUtil::groupMaxCount());
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_cbApplyChild, m_comboApplyChild, ControlUtil::createVSeparator(), m_labelAppGroup,
-                    m_comboAppGroup, ControlUtil::createVSeparator(), m_btGroups,
+            { m_cbApplyChild, m_comboApplyChild, ControlUtil::createVSeparator(), m_btGroups,
                     /*stretch*/ nullptr });
 
     return layout;
@@ -451,24 +441,6 @@ void ProgGeneralPage::setupCbApplyChild()
     refreshApplyChildEnabled(false);
 
     connect(m_cbApplyChild, &QCheckBox::toggled, this, refreshApplyChildEnabled);
-}
-
-void ProgGeneralPage::setupComboAppGroups()
-{
-    m_comboAppGroup = ControlUtil::createComboBox();
-    m_comboAppGroup->setMinimumWidth(120);
-    m_comboAppGroup->setMaximumWidth(150);
-
-    const auto refreshComboAppGroups = [&](bool onlyFlags = false) {
-        if (onlyFlags)
-            return;
-
-        ControlUtil::setComboBoxTexts(m_comboAppGroup, conf().appGroupNames(), /*currentIndex=*/0);
-    };
-
-    refreshComboAppGroups();
-
-    connect(confManager(), &ConfManager::confChanged, this, refreshComboAppGroups);
 }
 
 QLayout *ProgGeneralPage::setupActionsLayout()
@@ -859,7 +831,6 @@ void ProgGeneralPage::fillApp(App &app) const
     app.isWildcard = isWildcard();
     app.blocked = !m_rbAllow->isChecked();
     app.killProcess = m_rbKillProcess->isChecked();
-    app.groupIndex = m_comboAppGroup->currentIndex();
     app.groups = m_btGroups->groups();
     app.appName = m_editName->text();
     app.notes = m_editNotes->toPlainText();

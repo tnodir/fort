@@ -19,7 +19,6 @@ SOURCES += \
     appinfo/appinfoworker.cpp \
     conf/addressgroup.cpp \
     conf/app.cpp \
-    conf/appgroup.cpp \
     conf/confappmanager.cpp \
     conf/confgroupmanager.cpp \
     conf/confmanager.cpp \
@@ -303,7 +302,6 @@ HEADERS += \
     appinfo/appinfoworker.h \
     conf/addressgroup.h \
     conf/app.h \
-    conf/appgroup.h \
     conf/confappmanager.h \
     conf/confgroupmanager.h \
     conf/confmanager.h \

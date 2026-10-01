@@ -70,19 +70,16 @@ signals:
     void aboutToImport();
     void imported();
     void confChanged(bool onlyFlags, uint editedFlags);
-    void confPeriodsChanged();
     void iniChanged();
     void iniUserChanged(bool onlyFlags);
 
 protected:
     virtual void setupTimers();
 
-    virtual bool applyConfPeriods(bool onlyFlags);
     virtual void applyFilterOffSeconds();
     virtual void applyAutoLearnSeconds();
 
 private:
-    void updateConfPeriods();
     void switchFilterOff();
     void switchAutoLearn();
 
@@ -107,7 +104,6 @@ private:
 
     FirewallConf m_conf;
 
-    QTimer m_confTimer;
     QTimer m_filterOffTimer;
     QTimer m_autoLearnTimer;
 };

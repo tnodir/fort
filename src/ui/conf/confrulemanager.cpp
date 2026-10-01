@@ -97,7 +97,7 @@ const char *const sqlDeleteAppRule = "UPDATE app"
                                      "  SET rule_id = NULL"
                                      "  WHERE rule_id = ?1;";
 
-const char *const sqlDeleteGroupRule = "UPDATE app_group2"
+const char *const sqlDeleteGroupRule = "UPDATE app_group"
                                        "  SET rule_id = NULL"
                                        "  WHERE rule_id = ?1;";
 

@@ -11,7 +11,6 @@
 #include "confmanagerbase.h"
 
 class App;
-class AppGroup;
 class LogEntryApp;
 
 class ConfAppManager : public ConfManagerBase, public ConfAppsWalker, public IocService
@@ -72,7 +71,7 @@ protected:
 private:
     bool addApp(App &app);
 
-    void beginAddOrUpdateApp(App &app, const AppGroup &appGroup, bool onlyUpdate, bool &ok);
+    void beginAddOrUpdateApp(App &app, bool onlyUpdate, bool &ok);
     void endAddOrUpdateApp(const App &app, bool onlyUpdate);
 
     bool deleteApp(qint64 appId, bool &isWildcard);

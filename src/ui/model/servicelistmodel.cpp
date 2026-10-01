@@ -2,9 +2,6 @@
 
 #include <QIcon>
 
-#include <conf/appgroup.h>
-#include <conf/confmanager.h>
-#include <conf/firewallconf.h>
 #include <fortglobal.h>
 #include <manager/serviceinfomanager.h>
 #include <util/iconcache.h>

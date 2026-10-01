@@ -79,8 +79,6 @@ ConfManagerRpc::ConfManagerRpc(const QString &filePath, QObject *parent) :
 
 bool ConfManagerRpc::saveConf(FirewallConf &conf, IniOptions &ini)
 {
-    conf.prepareToSave();
-
     const QVariant confVar = conf.toVariant(ini, /*onlyEdited=*/true);
 
     setSaving(true);

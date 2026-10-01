@@ -444,7 +444,6 @@ void FortSettings::readConfIni(FirewallConf &conf) const
     conf.setLogAlertedConn(iniBool("logAlertedConn"));
     conf.setAppBlockAll(iniBool("appBlockAll", true));
     conf.setAppAllowAll(iniBool("appAllowAll"));
-    conf.setupAppGroupBits(iniUInt("appGroupBits", DEFAULT_APP_GROUP_BITS));
     ini()->endGroup();
 
     ini()->beginGroup("stat");
@@ -492,7 +491,6 @@ void FortSettings::writeConfIni(const FirewallConf &conf, IniOptions &iniOpt)
         setIniValue("logAlertedConn", conf.logAlertedConn());
         setIniValue("appBlockAll", conf.appBlockAll());
         setIniValue("appAllowAll", conf.appAllowAll());
-        setIniValue("appGroupBits", conf.appGroupBits(), DEFAULT_APP_GROUP_BITS);
         ini()->endGroup();
 
         ini()->beginGroup("stat");

@@ -50,8 +50,6 @@ public:
 
     qint8 scheduleAction : 4 = ScheduleBlock;
 
-    quint8 groupIndex = 0; // "Main" app. group
-
     FORT_SPEED_LIMIT_IDS speedLimits = {};
 
     quint16 ruleId = 0;

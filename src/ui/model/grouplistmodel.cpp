@@ -178,5 +178,5 @@ QString GroupListModel::sqlBase() const
            "    period_to,"
            "    rule_id,"
            "    mod_time"
-           "  FROM app_group2";
+           "  FROM app_group";
 }

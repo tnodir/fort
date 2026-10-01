@@ -42,9 +42,8 @@ bool App::isScheduleEqual(const App &o) const
 
 bool App::isOptionsEqual(const App &o) const
 {
-    return isFlagsEqual(o) && isZonesEqual(o) && isSpeedLimitsEqual(o) && groupIndex == o.groupIndex
-            && groups == o.groups && ruleId == o.ruleId && notes == o.notes && isPathsEqual(o)
-            && isScheduleEqual(o);
+    return isFlagsEqual(o) && isZonesEqual(o) && isSpeedLimitsEqual(o) && groups == o.groups
+            && ruleId == o.ruleId && notes == o.notes && isPathsEqual(o) && isScheduleEqual(o);
 }
 
 bool App::isNameEqual(const App &o) const

@@ -7,7 +7,6 @@
 #include "inioptions.h"
 
 class AddressGroup;
-class AppGroup;
 
 class FirewallConf : public QObject
 {
@@ -152,31 +151,9 @@ public:
     QString activePeriodTo() const { return m_activePeriodTo; }
     void setActivePeriodTo(const QString &v) { m_activePeriodTo = v; }
 
-    quint32 appGroupBits() const { return m_appGroupBits; }
-    void setAppGroupBits(quint32 v) { m_appGroupBits = v; }
-
-    quint32 activeGroupBits() const { return m_appGroupBits & m_groupActivePeriodBits; }
-
-    void setupAppGroupBits(quint32 v);
-
-    bool appGroupEnabled(int groupIndex) const;
-    void setAppGroupEnabled(int groupIndex, bool v);
-
     AddressGroup *inetAddressGroup() const { return m_addressGroups.first(); }
 
     const QList<AddressGroup *> &addressGroups() const { return m_addressGroups; }
-
-    const AppGroup *appGroupAt(int index) const;
-    QStringList appGroupNames() const;
-
-    AppGroup *appGroupByName(const QString &name) const;
-
-    const QList<AppGroup *> &appGroups() const { return m_appGroups; }
-
-    bool checkDeprecatedAppGroups() const; // TODO: COMPAT: Remove after v4.1.0
-
-    const QVector<qint64> &removedAppGroupIdList() const { return m_removedAppGroupIdList; }
-    void clearRemovedAppGroupIdList() const;
 
     void copyFlags(const FirewallConf &o);
     void copy(const FirewallConf &o);
@@ -187,44 +164,17 @@ public:
     static QVariant editedFlagsToVariant(uint editedFlags);
     static uint editedFlagsFromVariant(const QVariant &v);
 
-signals:
-    void appGroupsChanged();
-
 public slots:
-    void addAppGroup(AppGroup *appGroup);
-    AppGroup *addAppGroupByName(const QString &name);
-    void addDefaultAppGroup();
-    void moveAppGroup(int from, int to);
-    void removeAppGroup(int from, int to);
-    void clearAppGroups();
-
     void setupDefaultAddressGroups();
-
-    void prepareToSave();
-
-    bool updateGroupPeriods(bool onlyFlags);
 
 private:
     void setupAddressGroups();
-
-    void setAppGroupsEdited(int from, int to);
-
-    void loadGroupPeriodBits();
-
-    void loadAppGroupBits();
-    void applyAppGroupBits();
 
     QVariant flagsToVariant() const;
     void flagsFromVariant(const QVariant &v);
 
     QVariant addressesToVariant() const;
     void addressesFromVariant(const QVariant &v);
-
-    QVariant appGroupsToVariant() const;
-    void appGroupsFromVariant(const QVariant &v);
-
-    QVariant removedAppGroupIdListToVariant() const;
-    void removedAppGroupIdListFromVariant(const QVariant &v);
 
 private:
     uint m_editedFlags : 8 = AllEdited; // update all on load()!
@@ -255,18 +205,11 @@ private:
     uint m_appAllowAll : 1 = false;
 
     uint m_activePeriodEnabled : 1 = false;
-    uint m_anyGroupPeriodEnabled : 1 = false;
-
-    quint32 m_appGroupBits = 0;
-    quint32 m_groupActivePeriodBits = quint32(-1); // transient
 
     QString m_activePeriodFrom;
     QString m_activePeriodTo;
 
     QList<AddressGroup *> m_addressGroups;
-
-    QList<AppGroup *> m_appGroups;
-    mutable QVector<qint64> m_removedAppGroupIdList;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(FirewallConf::EditedFlags)

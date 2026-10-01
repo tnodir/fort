@@ -36,39 +36,39 @@ inline constexpr int GROUP_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
     "    t.rule_id,"                                                                               \
     "    t.mod_time"
 
-const char *const sqlSelectGroups = "SELECT" SELECT_GROUP_FIELDS "  FROM app_group2 t"
+const char *const sqlSelectGroups = "SELECT" SELECT_GROUP_FIELDS "  FROM app_group t"
                                     "  ORDER BY t.group_id;";
 
-const char *const sqlSelectGroupByIndex = "SELECT" SELECT_GROUP_FIELDS "  FROM app_group2 t"
+const char *const sqlSelectGroupByIndex = "SELECT" SELECT_GROUP_FIELDS "  FROM app_group t"
                                           "  ORDER BY t.group_id LIMIT 1 OFFSET ?1;";
 
-const char *const sqlInsertGroup = "INSERT INTO app_group2(group_id, name, notes, enabled,"
+const char *const sqlInsertGroup = "INSERT INTO app_group(group_id, name, notes, enabled,"
                                    "    exclusive, period_enabled, period_from, period_to,"
                                    "    rule_id, mod_time)"
                                    "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10);";
 
-const char *const sqlUpdateGroup = "UPDATE app_group2"
+const char *const sqlUpdateGroup = "UPDATE app_group"
                                    "  SET name = ?2, notes = ?3, enabled = ?4, exclusive = ?5,"
                                    "    period_enabled = ?6, period_from = ?7, period_to = ?8,"
                                    "    rule_id = ?9, mod_time = ?10"
                                    "  WHERE group_id = ?1;";
 
-const char *const sqlSelectGroupNameById = "SELECT name FROM app_group2 WHERE group_id = ?1;";
+const char *const sqlSelectGroupNameById = "SELECT name FROM app_group WHERE group_id = ?1;";
 
-const char *const sqlSelectGroupIds = "SELECT group_id FROM app_group2"
+const char *const sqlSelectGroupIds = "SELECT group_id FROM app_group"
                                       "  WHERE group_id <= ?1 ORDER BY group_id;";
 
-const char *const sqlDeleteGroup = "DELETE FROM app_group2 WHERE group_id = ?1;";
+const char *const sqlDeleteGroup = "DELETE FROM app_group WHERE group_id = ?1;";
 
 const char *const sqlDeleteAppGroup = "UPDATE app"
                                       "  SET groups_mask = groups_mask & ~?1"
                                       "  WHERE (groups_mask & ?1) <> 0;";
 
-const char *const sqlUpdateGroupName = "UPDATE app_group2 SET name = ?2 WHERE group_id = ?1;";
+const char *const sqlUpdateGroupName = "UPDATE app_group SET name = ?2 WHERE group_id = ?1;";
 
-const char *const sqlUpdateGroupEnabled = "UPDATE app_group2 SET enabled = ?2 WHERE group_id = ?1;";
+const char *const sqlUpdateGroupEnabled = "UPDATE app_group SET enabled = ?2 WHERE group_id = ?1;";
 
-const char *const sqlSelectAnyGroupPeriod = "SELECT 1 FROM app_group2"
+const char *const sqlSelectAnyGroupPeriod = "SELECT 1 FROM app_group"
                                             "  WHERE enabled = 1 AND period_enabled = 1"
                                             "  LIMIT 1;";
 

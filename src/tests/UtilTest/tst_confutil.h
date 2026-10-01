@@ -5,7 +5,7 @@
 #include <googletest.h>
 
 #include <conf/addressgroup.h>
-#include <conf/appgroup.h>
+#include <conf/app.h>
 #include <conf/confrulemanager.h>
 #include <conf/firewallconf.h>
 #include <conf/group.h>
@@ -26,6 +26,37 @@
 #include <util/stringutil.h>
 
 #include <mocks/mocksqlitestmt.h>
+
+namespace {
+
+class TestApps : public ConfAppsWalker
+{
+public:
+    explicit TestApps(const QList<App> &apps) : m_apps(apps) { }
+
+    bool walkApps(const std::function<walkAppsCallback> &func) const override
+    {
+        for (App app : m_apps) {
+            if (!func(app))
+                return false;
+        }
+        return true;
+    }
+
+private:
+    QList<App> m_apps;
+};
+
+App wildcardApp(const QString &pathsText, bool blocked = false)
+{
+    App app;
+    app.isWildcard = true;
+    app.blocked = blocked;
+    app.appOriginPath = pathsText;
+    return app;
+}
+
+}
 
 class ConfUtilTest : public Test
 {
@@ -55,33 +86,19 @@ TEST_F(ConfUtilTest, confWriteRead)
     conf.setAppBlockAll(true);
     conf.setAppAllowAll(false);
 
-    AppGroup *appGroup1 = new AppGroup();
-    appGroup1->setName("Base");
-    appGroup1->setEnabled(true);
-    appGroup1->setPeriodEnabled(true);
-    appGroup1->setPeriodFrom("00:00");
-    appGroup1->setPeriodTo("12:00");
-    appGroup1->setBlockText("System");
-    appGroup1->setAllowText("C:\\Program Files\\Skype\\Phone\\Skype.exe\n"
-                            "?:\\Utils\\Dev\\Git\\**\n"
-                            "D:\\**\\Programs\\**\n");
-
-    AppGroup *appGroup2 = new AppGroup();
-    appGroup2->setName("Browser");
-    appGroup2->setEnabled(false);
-    appGroup2->setAllowText("C:\\Utils\\Firefox\\Bin\\firefox.exe");
-    appGroup2->setLimitInEnabled(true);
-    appGroup2->setSpeedLimitIn(1024);
-
-    conf.addAppGroup(appGroup1);
-    conf.addAppGroup(appGroup2);
+    const TestApps testApps({
+            wildcardApp("System", /*blocked=*/true),
+            wildcardApp("C:\\Program Files\\Skype\\Phone\\Skype.exe\n"
+                        "?:\\Utils\\Dev\\Git\\**\n"
+                        "D:\\**\\Programs\\**\n"),
+            wildcardApp("C:\\Utils\\Firefox\\Bin\\firefox.exe"),
+    });
 
     conf.resetEdited(FirewallConf::AllEdited);
-    conf.prepareToSave();
 
     ConfBuffer confBuf;
 
-    if (!confBuf.writeConf(conf, nullptr, &envManager)) {
+    if (!confBuf.writeConf(conf, &testApps, &envManager)) {
         qCritical() << "Error:" << confBuf.errorMessage();
         Q_UNREACHABLE();
     }
@@ -114,7 +131,7 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     const auto firefoxData =
             DriverCommon::confAppFind(data, "C:\\Utils\\Firefox\\Bin\\firefox.exe");
-    ASSERT_EQ(firefoxData.groups, 0u); // legacy App. Groups must not fill the new mask
+    ASSERT_EQ(firefoxData.groups, 0u); // in no Group
 }
 
 TEST_F(ConfUtilTest, stringCmp)
@@ -168,24 +185,22 @@ TEST_F(ConfUtilTest, confAppPrefixFind)
     EnvManager envManager;
     FirewallConf conf;
 
-    AppGroup *appGroup = new AppGroup();
-    appGroup->setName("Prefixes");
-    appGroup->setEnabled(true);
-    appGroup->setAllowText("C:\\A\\**\n"
-                           "C:\\Я\\**\n");
-    appGroup->setBlockText("C:\\A\\B\\**\n"
-                           "C:\\A\\C\\**\n"
-                           "C:\\A\\D\\**\n"
-                           "C:\\A\\Z\\**\n"
-                           "C:\\Z\\**\n");
-    conf.addAppGroup(appGroup);
+    const TestApps testApps({
+            wildcardApp("C:\\A\\**\n"
+                        "C:\\Я\\**\n"),
+            wildcardApp("C:\\A\\B\\**\n"
+                        "C:\\A\\C\\**\n"
+                        "C:\\A\\D\\**\n"
+                        "C:\\A\\Z\\**\n"
+                        "C:\\Z\\**\n",
+                    /*blocked=*/true),
+    });
 
     conf.resetEdited(FirewallConf::AllEdited);
-    conf.prepareToSave();
 
     ConfBuffer confBuf;
 
-    if (!confBuf.writeConf(conf, nullptr, &envManager)) {
+    if (!confBuf.writeConf(conf, &testApps, &envManager)) {
         qCritical() << "Error:" << confBuf.errorMessage();
         Q_UNREACHABLE();
     }
@@ -1260,20 +1275,17 @@ TEST_F(ConfUtilTest, confValid)
     inetGroup->setIncludeAll(true);
     inetGroup->setExcludeText(NetUtil::localIpNetworksText());
 
-    AppGroup *appGroup = new AppGroup();
-    appGroup->setName("Base");
-    appGroup->setEnabled(true);
-    appGroup->setAllowText("C:\\Program Files\\Skype\\Phone\\Skype.exe\n"
-                           "?:\\Utils\\Dev\\Git\\**\n"
-                           "D:\\Programs\\**\n");
-    conf.addAppGroup(appGroup);
+    const TestApps testApps({
+            wildcardApp("C:\\Program Files\\Skype\\Phone\\Skype.exe\n"
+                        "?:\\Utils\\Dev\\Git\\**\n"
+                        "D:\\Programs\\**\n"),
+    });
 
     conf.resetEdited(FirewallConf::AllEdited);
-    conf.prepareToSave();
 
     ConfBuffer confBuf;
 
-    if (!confBuf.writeConf(conf, nullptr, &envManager)) {
+    if (!confBuf.writeConf(conf, &testApps, &envManager)) {
         qCritical() << "Error:" << confBuf.errorMessage();
         Q_UNREACHABLE();
     }

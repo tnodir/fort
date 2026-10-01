@@ -27,41 +27,16 @@ CREATE TABLE address_group(
 );
 
 CREATE TABLE app_group(
-  app_group_id INTEGER PRIMARY KEY,
-  order_index INTEGER NOT NULL,
-  enabled BOOLEAN NOT NULL,
-  apply_child BOOLEAN NOT NULL DEFAULT 0,
-  lan_only BOOLEAN NOT NULL DEFAULT 0,
-  log_blocked BOOLEAN NOT NULL DEFAULT 1,
-  log_conn BOOLEAN NOT NULL DEFAULT 1,
-  period_enabled BOOLEAN NOT NULL,
-  limit_in_enabled BOOLEAN NOT NULL,
-  limit_out_enabled BOOLEAN NOT NULL,
-  speed_limit_in INTEGER NOT NULL,
-  speed_limit_out INTEGER NOT NULL,
-  limit_packet_loss INTEGER NOT NULL DEFAULT 0,
-  limit_latency INTEGER NOT NULL DEFAULT 0,
-  limit_bufsize_in INTEGER NOT NULL DEFAULT 150000,
-  limit_bufsize_out INTEGER NOT NULL DEFAULT 150000,
-  name TEXT NOT NULL,
-  kill_text TEXT,
-  block_text TEXT NOT NULL,
-  allow_text TEXT NOT NULL,
-  period_from TEXT NOT NULL,
-  period_to TEXT NOT NULL
-);
-
-CREATE TABLE app_group2(
   group_id INTEGER PRIMARY KEY,
   enabled BOOLEAN NOT NULL,
-  exclusive BOOLEAN NOT NULL,
+  exclusive BOOLEAN NOT NULL DEFAULT 0,
   period_enabled BOOLEAN NOT NULL,
   name TEXT NOT NULL,
   notes TEXT,
   period_from TEXT,
   period_to TEXT,
   rule_id INTEGER,
-  mod_time INTEGER NOT NULL
+  mod_time INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE speed_limit(
@@ -79,7 +54,6 @@ CREATE TABLE speed_limit(
 
 CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
-  app_group_id INTEGER NOT NULL DEFAULT 0,
   origin_path TEXT,
   path TEXT,
   icon_path TEXT,
@@ -109,7 +83,6 @@ CREATE TABLE app(
   end_time INTEGER
 );
 
-CREATE INDEX app_app_group_id_idx ON app(app_group_id);
 CREATE UNIQUE INDEX app_path_uk ON app(path);
 CREATE INDEX app_name_idx ON app(lower(name));
 CREATE INDEX app_in_limit_id_idx ON app(in_limit_id);

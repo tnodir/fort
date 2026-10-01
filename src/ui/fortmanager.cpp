@@ -453,9 +453,6 @@ void FortManager::setupConfManager()
             updateDriverConf(onlyFlags);
         }
     });
-
-    connect(confManager, &ConfManager::confPeriodsChanged, this,
-            [&] { updateDriverConf(/*onlyFlags=*/true); });
 }
 
 void FortManager::setupConfRuleManager()

@@ -33,7 +33,6 @@ public:
 protected:
     void setupTimers() override { }
 
-    bool applyConfPeriods(bool /*onlyFlags*/) override { return false; }
     void applyAutoLearnSeconds() override { }
 
 private:
