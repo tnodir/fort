@@ -114,7 +114,6 @@ TEST_F(ConfUtilTest, confWriteRead)
 
     const auto firefoxData =
             DriverCommon::confAppFind(data, "C:\\Utils\\Firefox\\Bin\\firefox.exe");
-    ASSERT_EQ(int(firefoxData.group_index), 1);
     ASSERT_EQ(firefoxData.groups, 0u); // legacy App. Groups must not fill the new mask
 }
 
@@ -1318,16 +1317,6 @@ TEST_F(ConfUtilTest, confValid)
         PFORT_CONF conf = confRef(badBuf);
         PFORT_APP_ENTRY app_entry = PFORT_APP_ENTRY(conf->data + conf->exe_apps_off);
         app_entry->path_len = 0xFFFE;
-
-        ASSERT_FALSE(confValid(badBuf, badBuf.size()));
-    }
-
-    // Invalid app's group index
-    {
-        QByteArray badBuf = buf;
-        PFORT_CONF conf = confRef(badBuf);
-        PFORT_APP_ENTRY app_entry = PFORT_APP_ENTRY(conf->data + conf->exe_apps_off);
-        app_entry->app_data.group_index = FORT_CONF_GROUP_MAX;
 
         ASSERT_FALSE(confValid(badBuf, badBuf.size()));
     }

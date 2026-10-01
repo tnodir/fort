@@ -89,8 +89,7 @@ FORT_API BOOL fort_conf_app_entry_valid(PCFORT_APP_ENTRY app_entry, UINT32 len)
     const UINT16 path_len = app_entry->path_len;
 
     return FORT_CONF_APP_ENTRY_SIZE(path_len) <= len
-            && app_entry->path[path_len / sizeof(WCHAR)] == L'\0'
-            && app_entry->app_data.group_index < FORT_CONF_GROUP_MAX;
+            && app_entry->path[path_len / sizeof(WCHAR)] == L'\0';
 }
 
 static BOOL fort_conf_app_entries_valid(const char *data, UINT32 len, UINT16 count)

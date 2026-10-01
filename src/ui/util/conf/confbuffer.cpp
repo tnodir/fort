@@ -430,7 +430,6 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
                 .found = true,
         },
         .rule_id = app.ruleId,
-        .group_index = app.groupIndex,
         .speed_limits = app.speedLimits,
         .groups = app.groups,
         .app_id = quint32(app.appId),

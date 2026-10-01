@@ -351,14 +351,9 @@ inline static BOOL fort_callout_ale_app_flags_blocked(
         return TRUE; /* block LAN Only */
     }
 
-    if (fort_conf_app_group_blocked(conf_flags, app_data)) {
-        conn->reason = FORT_CONN_REASON_APP_GROUP;
-        return TRUE; /* block App. Group */
-    }
-
     if (conf_flags.group_blocked
             && fort_devconf_groups_mask_blocked(&fort_device()->conf, app_data.groups)) {
-        conn->reason = FORT_CONN_REASON_APP_GROUP;
+        conn->reason = FORT_CONN_REASON_GROUP;
         return TRUE; /* block Groups */
     }
 

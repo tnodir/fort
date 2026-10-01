@@ -43,7 +43,7 @@ typedef struct fort_conf_ref
 /* The conf's flags are read by the classify callouts without the lock, so access them atomically */
 typedef union fort_device_conf_flags {
     FORT_CONF_FLAGS flags;
-    LONG64 value;
+    LONG value;
 } FORT_DEVICE_CONF_FLAGS;
 
 typedef struct fort_device_conf

@@ -63,9 +63,6 @@ typedef struct fort_conf_flags
     UINT32 log_alerted_conn : 1;
 
     UINT32 reserved_flags : 9; /* not used */
-
-    UINT16 group_bits;
-    UINT16 reserved; /* not used */
 } FORT_CONF_FLAGS, *PFORT_CONF_FLAGS;
 
 typedef const FORT_CONF_FLAGS *PCFORT_CONF_FLAGS;
@@ -364,9 +361,7 @@ typedef struct fort_app_data
 {
     FORT_APP_FLAGS flags;
 
-    UINT16 rule_id : 11;
-
-    UINT16 group_index : 5;
+    UINT16 rule_id;
 
     FORT_SPEED_LIMIT_IDS speed_limits;
 
@@ -666,8 +661,6 @@ FORT_API BOOL fort_conf_groups_mask_blocked(PCFORT_CONF_GROUPS groups, UINT32 gr
 FORT_API UINT16 fort_conf_groups_rules_conn_filtered(PCFORT_CONF_GROUPS groups,
         PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn,
         UINT32 groups_mask);
-
-FORT_API BOOL fort_conf_app_group_blocked(const FORT_CONF_FLAGS conf_flags, FORT_APP_DATA app_data);
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 

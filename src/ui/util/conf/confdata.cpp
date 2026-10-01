@@ -174,8 +174,6 @@ void ConfData::writeConfFlags(const FirewallConf &conf)
     confFlags->log_allowed_conn = conf.logAllowedConn();
     confFlags->log_blocked_conn = conf.logBlockedConn();
     confFlags->log_alerted_conn = conf.logAlertedConn();
-
-    confFlags->group_bits = conf.activeGroupBits();
 }
 
 void ConfData::writeAddressRanges(const addrranges_arr_t &addressRanges)

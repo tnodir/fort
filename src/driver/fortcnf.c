@@ -44,7 +44,7 @@ FORT_API UINT16 fort_device_flag(PFORT_DEVICE_CONF device_conf, UINT16 flag)
 FORT_API FORT_CONF_FLAGS fort_device_conf_flags(PFORT_DEVICE_CONF device_conf)
 {
     FORT_DEVICE_CONF_FLAGS conf_flags;
-    conf_flags.value = InterlockedCompareExchange64(&device_conf->conf_flags.value, 0, 0);
+    conf_flags.value = InterlockedCompareExchange(&device_conf->conf_flags.value, 0, 0);
 
     return conf_flags.flags;
 }
@@ -54,5 +54,5 @@ FORT_API void fort_device_conf_flags_set(PFORT_DEVICE_CONF device_conf, FORT_CON
     FORT_DEVICE_CONF_FLAGS conf_flags;
     conf_flags.flags = flags;
 
-    InterlockedExchange64(&device_conf->conf_flags.value, conf_flags.value);
+    InterlockedExchange(&device_conf->conf_flags.value, conf_flags.value);
 }
