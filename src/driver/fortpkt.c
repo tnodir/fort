@@ -1161,27 +1161,21 @@ FORT_API void fort_shaper_drop_flow_packets(PFORT_SHAPER shaper, UINT64 flowCont
 {
     PFORT_FLOW flow = (PFORT_FLOW) flowContext;
 
-    const UCHAR flow_flags = fort_flow_flags(flow);
-    const UCHAR speed_limit = (flow_flags & FORT_FLOW_SPEED_LIMIT_FLAGS);
+    /* The active bits are cleared while the thread processes the queues, so check the flow's:
+     * its current and previous (changed by a reauthorization) Speed Limits' queues */
+    const FORT_SPEED_LIMIT_IDS speed_limits = flow->speed_limits;
+    const FORT_SPEED_LIMIT_IDS old_speed_limits = flow->old_speed_limits;
 
-    if (speed_limit == 0)
+    UINT32 flow_io_bits = fort_shaper_limit_bit(speed_limits.in_limit_id)
+            | fort_shaper_limit_bit(speed_limits.out_limit_id)
+            | fort_shaper_limit_bit(old_speed_limits.in_limit_id)
+            | fort_shaper_limit_bit(old_speed_limits.out_limit_id);
+
+    if (flow_io_bits == 0)
         return;
 
     /* Collect flow's packets from Queues */
     PFORT_FLOW_PACKET pkt_chain = NULL;
-
-    /* The active bits are cleared while the thread processes the queues, so check the flow's */
-    const FORT_SPEED_LIMIT_IDS speed_limits = flow->speed_limits;
-
-    UINT32 flow_io_bits = 0;
-
-    if ((speed_limit & FORT_FLOW_SPEED_LIMIT_IN) != 0) {
-        flow_io_bits |= fort_shaper_limit_bit(speed_limits.in_limit_id);
-    }
-
-    if ((speed_limit & FORT_FLOW_SPEED_LIMIT_OUT) != 0) {
-        flow_io_bits |= fort_shaper_limit_bit(speed_limits.out_limit_id);
-    }
 
     for (int i = 0; flow_io_bits != 0; ++i) {
         const BOOL queue_exists = (flow_io_bits & 1) != 0;

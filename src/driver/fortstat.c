@@ -291,6 +291,7 @@ static PFORT_FLOW fort_flow_new(PFORT_STAT stat, UINT64 flow_id, const tommy_key
     tommy_hashdyn_insert(&stat->flows_map, (tommy_hashdyn_node *) flow, NULL, flow_hash);
 
     flow->flow_id = flow_id;
+    flow->old_speed_limits = (FORT_SPEED_LIMIT_IDS) { 0 };
 
     return flow;
 }
@@ -381,6 +382,16 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT
          * and the flow's handle isn't reused until the flow's deletion.
          */
         assert(faa.flow->opt.proc_index == proc->proc_index);
+
+        const FORT_SPEED_LIMIT_IDS speed_limits = faa.flow->speed_limits;
+        const FORT_SPEED_LIMIT_IDS new_speed_limits = conn->app_data.speed_limits;
+
+        /* Keep the changed Speed Limits: their queues may have the flow's packets */
+        if (speed_limits.in_limit_id != new_speed_limits.in_limit_id
+                || speed_limits.out_limit_id != new_speed_limits.out_limit_id) {
+
+            faa.flow->old_speed_limits = speed_limits;
+        }
 
         fort_flow_opt_set(&faa);
     }

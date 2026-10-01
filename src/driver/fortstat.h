@@ -89,6 +89,7 @@ typedef struct fort_flow
 #endif
 
     FORT_SPEED_LIMIT_IDS speed_limits;
+    FORT_SPEED_LIMIT_IDS old_speed_limits; /* the previous queues may have the flow's packets */
 } FORT_FLOW, *PFORT_FLOW;
 
 #define FORT_STAT_LOG                 0x01
