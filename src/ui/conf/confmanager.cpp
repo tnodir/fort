@@ -383,6 +383,9 @@ void migrateAppGroups(SqliteDb *db, quint32 appGroupBits)
     // The old App. Groups are copied to the Groups' table with the same name
     db->execute("DELETE FROM app_group;");
 
+    // The old App. Groups' speed limits replace the current Speed Limits on import
+    db->execute("DELETE FROM speed_limit;");
+
     QList<OldAppGroup> appGroups;
 
     if (!loadOldAppGroups(db, appGroupBits, appGroups))
