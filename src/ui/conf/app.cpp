@@ -66,3 +66,8 @@ bool App::hasZone() const
 {
     return zones.accept_mask != 0 || zones.reject_mask != 0;
 }
+
+bool App::hasSpeedLimit() const
+{
+    return speedLimits.in_limit_id != 0 || speedLimits.out_limit_id != 0;
+}

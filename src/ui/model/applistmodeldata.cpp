@@ -8,6 +8,7 @@
 #include <conf/confappmanager.h>
 #include <conf/confgroupmanager.h>
 #include <conf/confrulemanager.h>
+#include <conf/confspeedlimitmanager.h>
 #include <conf/confzonemanager.h>
 #include <conf/firewallconf.h>
 #include <fortglobal.h>
@@ -109,6 +110,26 @@ QVariant dataDisplayGroups(const App &app, int role)
     return confGroupManager()->groupNamesByMask(app.groups).join('\n');
 }
 
+QVariant dataDisplaySpeedLimits(const App &app, int role)
+{
+    if (role != Qt::ToolTipRole)
+        return {};
+
+    auto confSpeedLimitManager = Fort::confSpeedLimitManager();
+
+    QStringList list;
+
+    if (app.speedLimits.in_limit_id != 0) {
+        list << confSpeedLimitManager->speedLimitNameById(app.speedLimits.in_limit_id);
+    }
+
+    if (app.speedLimits.out_limit_id != 0) {
+        list << confSpeedLimitManager->speedLimitNameById(app.speedLimits.out_limit_id);
+    }
+
+    return list.join('\n');
+}
+
 QVariant dataDisplayGroup(const App &app, int /*role*/)
 {
     const AppGroup *appGroup = conf().appGroupAt(app.groupIndex);
@@ -138,6 +159,7 @@ static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayZones,
     &dataDisplayRule,
     &dataDisplayGroups,
+    &dataDisplaySpeedLimits,
     &dataDisplayScheduled,
     &dataDisplayAction,
     &dataDisplayGroup,
@@ -242,6 +264,11 @@ QIcon AppListModelData::appGroupsIcon() const
     return app().hasGroup() ? IconCache::icon(":/icons/application_double.png") : QIcon();
 }
 
+QIcon AppListModelData::appSpeedLimitsIcon() const
+{
+    return app().hasSpeedLimit() ? IconCache::icon(":/icons/speedometer.png") : QIcon();
+}
+
 QIcon AppListModelData::appScheduledIcon() const
 {
     if (!app().scheduleTime.isNull()) {
@@ -267,6 +294,8 @@ QVariant AppListModelData::dataDecorationIcon() const
         return appRuleIcon();
     case AppListColumn::Groups:
         return appGroupsIcon();
+    case AppListColumn::SpeedLimits:
+        return appSpeedLimitsIcon();
     case AppListColumn::Scheduled:
         return appScheduledIcon();
     case AppListColumn::Action:

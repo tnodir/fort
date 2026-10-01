@@ -30,6 +30,8 @@ QVariant AppListModelHeaderData::headerDataDecoration() const
         return IconCache::icon(":/icons/script.png");
     case AppListColumn::Groups:
         return IconCache::icon(":/icons/application_double.png");
+    case AppListColumn::SpeedLimits:
+        return IconCache::icon(":/icons/speedometer.png");
     case AppListColumn::Scheduled:
         return IconCache::icon(":/icons/time.png");
     }

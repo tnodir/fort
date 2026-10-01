@@ -31,6 +31,7 @@ public:
     bool isProcWild() const;
     bool hasGroup() const;
     bool hasZone() const;
+    bool hasSpeedLimit() const;
 
 public:
     bool isWildcard : 1 = false;

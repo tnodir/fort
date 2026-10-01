@@ -6,6 +6,7 @@ enum class AppListColumn : qint8 {
     Zones,
     Rule,
     Groups,
+    SpeedLimits,
     Scheduled,
     Action,
     Group,

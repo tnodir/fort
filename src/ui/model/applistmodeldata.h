@@ -29,6 +29,7 @@ public:
     QIcon appZonesIcon() const;
     QIcon appRuleIcon() const;
     QIcon appGroupsIcon() const;
+    QIcon appSpeedLimitsIcon() const;
     QIcon appScheduledIcon() const;
     QIcon appActionIcon() const;
 

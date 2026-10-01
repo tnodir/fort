@@ -8,6 +8,7 @@
 #include <conf/confappmanager.h>
 #include <conf/confgroupmanager.h>
 #include <conf/confmanager.h>
+#include <conf/confspeedlimitmanager.h>
 #include <fortglobal.h>
 #include <manager/translationmanager.h>
 #include <util/conf/confutil.h>
@@ -95,6 +96,11 @@ void AppListModel::initialize()
 
     connect(confGroupManager(), &ConfGroupManager::groupRemoved, this, &TableItemModel::reset);
     connect(confGroupManager(), &ConfGroupManager::groupUpdated, this, &TableItemModel::refresh);
+
+    connect(confSpeedLimitManager(), &ConfSpeedLimitManager::speedLimitRemoved, this,
+            &TableItemModel::reset);
+    connect(confSpeedLimitManager(), &ConfSpeedLimitManager::speedLimitUpdated, this,
+            &TableItemModel::refresh);
 
     connect(appInfoCache(), &AppInfoCache::cacheChanged, this, &AppListModel::refresh);
 }
@@ -257,14 +263,16 @@ bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appRow.blocked = stmt.columnBool(16);
     m_appRow.killProcess = stmt.columnBool(17);
     m_appRow.groups = stmt.columnUInt(18);
-    m_appRow.zones.accept_mask = stmt.columnUInt(19);
-    m_appRow.zones.reject_mask = stmt.columnUInt(20);
-    m_appRow.ruleId = stmt.columnUInt(21);
-    m_appRow.scheduleAction = stmt.columnInt(22);
-    m_appRow.scheduleTime = stmt.columnDateTime(23);
-    m_appRow.creatTime = stmt.columnDateTime(24);
-    m_appRow.groupIndex = stmt.columnInt(25);
-    m_appRow.alerted = stmt.columnBool(26);
+    m_appRow.speedLimits.in_limit_id = stmt.columnUInt(19);
+    m_appRow.speedLimits.out_limit_id = stmt.columnUInt(20);
+    m_appRow.zones.accept_mask = stmt.columnUInt(21);
+    m_appRow.zones.reject_mask = stmt.columnUInt(22);
+    m_appRow.ruleId = stmt.columnUInt(23);
+    m_appRow.scheduleAction = stmt.columnInt(24);
+    m_appRow.scheduleTime = stmt.columnDateTime(25);
+    m_appRow.creatTime = stmt.columnDateTime(26);
+    m_appRow.groupIndex = stmt.columnInt(27);
+    m_appRow.alerted = stmt.columnBool(28);
 
     return true;
 }
@@ -291,6 +299,8 @@ QString AppListModel::sqlBase() const
            "    t.blocked,"
            "    t.kill_process,"
            "    t.groups_mask,"
+           "    t.in_limit_id,"
+           "    t.out_limit_id,"
            "    t.accept_zones,"
            "    t.reject_zones,"
            "    t.rule_id,"
@@ -355,6 +365,7 @@ QString AppListModel::sqlOrderColumn() const
         "t.accept_zones, t.reject_zones", // Zones
         "r.rule_type ASC NULLS LAST, lower(r.name)", // Rule
         "t.groups_mask", // Groups
+        "t.in_limit_id, t.out_limit_id", // Speed Limits
         "t.end_action, t.end_time", // Scheduled
         "t.blocked", // Action
         "group_index", // Group
@@ -368,6 +379,7 @@ QString AppListModel::sqlOrderColumn() const
         nameColumn, // Zones
         nameColumn, // Rule
         nameColumn, // Groups
+        nameColumn, // Speed Limits
         nameColumn, // Scheduled
         nameColumn, // Action
         nameColumn, // Group
@@ -418,6 +430,7 @@ QString AppListModel::columnName(const AppListColumn column)
             tr("Zones"),
             tr("Rule"),
             tr("Groups"),
+            tr("Speed Limits"),
             tr("Scheduled"),
             tr("Action"),
             tr("Group"),
