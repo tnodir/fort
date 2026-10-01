@@ -138,6 +138,14 @@ bool DriverManager::writeGroups(QByteArray &buf, bool onlyFlags)
     return writeData(code, buf);
 }
 
+bool DriverManager::writeSpeedLimits(QByteArray &buf, bool onlyFlags)
+{
+    const auto code = onlyFlags ? DriverCommon::ioctlSetSpeedLimitFlags()
+                                : DriverCommon::ioctlSetSpeedLimits();
+
+    return writeData(code, buf);
+}
+
 bool DriverManager::writeData(quint32 code, QByteArray &buf)
 {
     if (!isDeviceOpened())

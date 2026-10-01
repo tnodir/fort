@@ -64,6 +64,19 @@ CREATE TABLE app_group2(
   mod_time INTEGER NOT NULL
 );
 
+CREATE TABLE speed_limit(
+  limit_id INTEGER PRIMARY KEY,
+  enabled BOOLEAN NOT NULL,
+  inbound BOOLEAN NOT NULL,
+  name TEXT NOT NULL,
+  notes TEXT,
+  packet_loss INTEGER NOT NULL DEFAULT 0, -- in 1/100 percent
+  latency INTEGER NOT NULL DEFAULT 0, -- milliseconds
+  kbps INTEGER NOT NULL, -- kilobits per second
+  bufsize INTEGER NOT NULL DEFAULT 150000, -- bytes
+  mod_time INTEGER NOT NULL
+);
+
 CREATE TABLE app(
   app_id INTEGER PRIMARY KEY,
   app_group_id INTEGER NOT NULL DEFAULT 0,
@@ -85,6 +98,8 @@ CREATE TABLE app(
   blocked BOOLEAN NOT NULL,
   kill_process BOOLEAN NOT NULL DEFAULT 0,
   groups_mask INTEGER NOT NULL DEFAULT 0, -- group ids bit mask
+  in_limit_id INTEGER,
+  out_limit_id INTEGER,
   accept_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   reject_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask
   rule_id INTEGER,
@@ -97,6 +112,8 @@ CREATE TABLE app(
 CREATE INDEX app_app_group_id_idx ON app(app_group_id);
 CREATE UNIQUE INDEX app_path_uk ON app(path);
 CREATE INDEX app_name_idx ON app(lower(name));
+CREATE INDEX app_in_limit_id_idx ON app(in_limit_id);
+CREATE INDEX app_out_limit_id_idx ON app(out_limit_id);
 CREATE INDEX app_rule_id_idx ON app(rule_id);
 CREATE INDEX app_private_rule_id_idx ON app(private_rule_id);
 CREATE INDEX app_end_time_idx ON app(end_time);

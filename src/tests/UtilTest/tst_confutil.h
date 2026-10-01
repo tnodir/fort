@@ -10,6 +10,7 @@
 #include <conf/firewallconf.h>
 #include <conf/group.h>
 #include <conf/rule.h>
+#include <conf/speedlimit.h>
 #include <driver/drivercommon.h>
 #include <log/logentryconn.h>
 #include <manager/envmanager.h>
@@ -17,6 +18,7 @@
 #include <util/conf/confbuffer.h>
 #include <util/conf/confgroupswalker.h>
 #include <util/conf/confruleswalker.h>
+#include <util/conf/confspeedlimitswalker.h>
 #include <util/fileutil.h>
 #include <util/net/iprange.h>
 #include <util/net/netformatutil.h>
@@ -410,6 +412,67 @@ TEST_F(ConfUtilTest, groupsRulesConnFiltered)
     ASSERT_EQ(filtered("2.2.2.2", 0b0111u), 2);
     ASSERT_EQ(filtered("2.2.2.2", 0b1000u), 0); // the Group 4 has no Rule
     ASSERT_EQ(filtered("3.3.3.3", 0b1111u), 0); // not filtered by the Rules
+}
+
+TEST_F(ConfUtilTest, speedLimitsWriteRead)
+{
+    static SpeedLimit g_limits[] = {
+        { .enabled = true,
+                .inbound = true,
+                .limitId = 1,
+                .packetLoss = 150,
+                .latency = 20,
+                .kbps = 1024,
+                .bufferSize = 1000 },
+        { .enabled = false, .limitId = 3, .kbps = 8 },
+        { .enabled = true, .limitId = 5, .kbps = 0 }, // no limit
+        { .enabled = true, .limitId = 31, .kbps = 64 },
+        { .enabled = false, .limitId = 32, .kbps = 128 },
+        { .enabled = true, .limitId = 33, .kbps = 64 }, // out of range
+    };
+
+    class TestSpeedLimits : public ConfSpeedLimitsWalker
+    {
+    public:
+        bool walkSpeedLimits(const std::function<walkSpeedLimitsCallback> &func) const override
+        {
+            for (const SpeedLimit &limit : g_limits) {
+                if (!func(limit))
+                    return false;
+            }
+            return true;
+        }
+    };
+
+    ConfBuffer confBuf;
+    TestSpeedLimits testLimits;
+
+    confBuf.writeSpeedLimits(testLimits);
+    ASSERT_EQ(size_t(confBuf.buffer().size()), sizeof(FORT_CONF_SPEED_LIMITS));
+
+    PCFORT_CONF_SPEED_LIMITS confLimits = PCFORT_CONF_SPEED_LIMITS(confBuf.buffer().constData());
+
+    // Bit N is Speed Limit id N + 1
+    ASSERT_EQ(confLimits->mask, (1u << 31) | (1u << 30) | 0b101u);
+    ASSERT_EQ(confLimits->enabled_mask, (1u << 30) | 0b001u);
+
+    const FORT_SPEED_LIMIT &limit1 = confLimits->limits[0];
+    ASSERT_EQ(limit1.plr, 150);
+    ASSERT_EQ(limit1.latency_ms, 20u);
+    ASSERT_EQ(limit1.buffer_bytes, 1000u);
+    ASSERT_EQ(limit1.bps, 1024u * 1024 / 8);
+
+    ASSERT_EQ(confLimits->limits[2].bps, 8u * 1024 / 8);
+    ASSERT_EQ(confLimits->limits[4].bps, 0u);
+    ASSERT_EQ(confLimits->limits[30].bps, 64u * 1024 / 8);
+    ASSERT_EQ(confLimits->limits[31].bps, 128u * 1024 / 8); // the last Speed Limit id
+
+    confBuf.writeSpeedLimitFlags(0b100u);
+    ASSERT_EQ(size_t(confBuf.buffer().size()), sizeof(FORT_CONF_SPEED_LIMIT_FLAGS));
+
+    PCFORT_CONF_SPEED_LIMIT_FLAGS confLimitFlags =
+            PCFORT_CONF_SPEED_LIMIT_FLAGS(confBuf.buffer().constData());
+    ASSERT_EQ(confLimitFlags->enabled_mask, 0b100u);
 }
 
 TEST_F(ConfUtilTest, rulesWriteRead)

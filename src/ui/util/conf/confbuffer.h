@@ -6,6 +6,7 @@
 #include <util/conf/confappswalker.h>
 #include <util/conf/confgroupswalker.h>
 #include <util/conf/confruleswalker.h>
+#include <util/conf/confspeedlimitswalker.h>
 
 #include "confdata.h"
 
@@ -55,6 +56,9 @@ public slots:
 
     void writeGroups(const ConfGroupsWalker &confGroupsWalker, quint32 activeMask);
     void writeGroupFlags(quint32 activeMask);
+
+    void writeSpeedLimits(const ConfSpeedLimitsWalker &confSpeedLimitsWalker);
+    void writeSpeedLimitFlags(quint32 enabledMask);
 
 private:
     void setErrorMessage(const QString &errorMessage) { m_errorMessage = errorMessage; }

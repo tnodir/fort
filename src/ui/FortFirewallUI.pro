@@ -25,11 +25,13 @@ SOURCES += \
     conf/confmanager.cpp \
     conf/confmanagerbase.cpp \
     conf/confrulemanager.cpp \
+    conf/confspeedlimitmanager.cpp \
     conf/confzonemanager.cpp \
     conf/firewallconf.cpp \
     conf/group.cpp \
     conf/inioptions.cpp \
     conf/rule.cpp \
+    conf/speedlimit.cpp \
     conf/zone.cpp \
     control/command/controlcommandbackup.cpp \
     control/command/controlcommandbase.cpp \
@@ -187,6 +189,7 @@ SOURCES += \
     rpc/confgroupmanagerrpc.cpp \
     rpc/confmanagerrpc.cpp \
     rpc/confrulemanagerrpc.cpp \
+    rpc/confspeedlimitmanagerrpc.cpp \
     rpc/confzonemanagerrpc.cpp \
     rpc/dberrormanagerrpc.cpp \
     rpc/drivermanagerrpc.cpp \
@@ -304,11 +307,13 @@ HEADERS += \
     conf/confmanager.h \
     conf/confmanagerbase.h \
     conf/confrulemanager.h \
+    conf/confspeedlimitmanager.h \
     conf/confzonemanager.h \
     conf/firewallconf.h \
     conf/group.h \
     conf/inioptions.h \
     conf/rule.h \
+    conf/speedlimit.h \
     conf/zone.h \
     control/command/controlcommandbackup.h \
     control/command/controlcommandbase.h \
@@ -473,6 +478,7 @@ HEADERS += \
     rpc/confgroupmanagerrpc.h \
     rpc/confmanagerrpc.h \
     rpc/confrulemanagerrpc.h \
+    rpc/confspeedlimitmanagerrpc.h \
     rpc/confzonemanagerrpc.h \
     rpc/dberrormanagerrpc.h \
     rpc/drivermanagerrpc.h \
@@ -519,6 +525,7 @@ HEADERS += \
     util/conf/confgroupswalker.h \
     util/conf/confrodata.h \
     util/conf/confruleswalker.h \
+    util/conf/confspeedlimitswalker.h \
     util/conf/confutil.h \
     util/conf/ruletextparser.h \
     util/consoleoutput.h \

@@ -30,6 +30,7 @@
 #include <rpc/confgroupmanagerrpc.h>
 #include <rpc/confmanagerrpc.h>
 #include <rpc/confrulemanagerrpc.h>
+#include <rpc/confspeedlimitmanagerrpc.h>
 #include <rpc/confzonemanagerrpc.h>
 #include <rpc/dberrormanagerrpc.h>
 #include <rpc/drivermanagerrpc.h>
@@ -70,6 +71,7 @@ inline void setupMasterServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService(new ConfRuleManager());
     ioc->setService(new ConfZoneManager());
     ioc->setService(new ConfGroupManager());
+    ioc->setService(new ConfSpeedLimitManager());
     ioc->setService(new QuotaManager());
     ioc->setService(new StatManager(settings->statFilePath()));
     ioc->setService(new StatConnManager(settings->statConnFilePath()));
@@ -90,6 +92,7 @@ inline void setupClientServices(IocContainer *ioc, const FortSettings *settings)
     ioc->setService<ConfRuleManager>(new ConfRuleManagerRpc());
     ioc->setService<ConfZoneManager>(new ConfZoneManagerRpc());
     ioc->setService<ConfGroupManager>(new ConfGroupManagerRpc());
+    ioc->setService<ConfSpeedLimitManager>(new ConfSpeedLimitManagerRpc());
     ioc->setService<QuotaManager>(new QuotaManagerRpc());
     ioc->setService<StatManager>(new StatManagerRpc(settings->statFilePath()));
     ioc->setService<StatConnManager>(new StatConnManagerRpc(settings->statConnFilePath()));
@@ -189,6 +192,7 @@ void FortManager::initialize()
     setupConfManager();
     setupConfRuleManager();
     setupConfGroupManager();
+    setupConfSpeedLimitManager();
     setupQuotaManager();
     setupTaskManager();
     setupServiceInfoManager();
@@ -429,10 +433,12 @@ void FortManager::setupConfManager()
     connect(confManager, &ConfManager::imported, this, [&] {
         windowManager()->closeAllWindows();
 
-        // The Rules and Groups are written to the driver on its setup only, the Zones by their task
+        // The Rules, Groups and Speed Limits are written to the driver on its setup only,
+        // the Zones by their task
         if (confAppManager()->canUpdateDriverConf()) {
             confRuleManager()->updateDriverRules();
             confGroupManager()->updateDriverGroups();
+            confSpeedLimitManager()->updateDriverSpeedLimits();
         }
     });
 
@@ -464,6 +470,13 @@ void FortManager::setupConfGroupManager()
 {
     // The deleted Group's id can be reused: clear it from the driver's apps
     connect(confGroupManager(), &ConfGroupManager::groupRemoved, this, [&] { updateDriverConf(); });
+}
+
+void FortManager::setupConfSpeedLimitManager()
+{
+    // The deleted Speed Limit's id can be reused: clear it from the driver's apps
+    connect(confSpeedLimitManager(), &ConfSpeedLimitManager::speedLimitRemoved, this,
+            [&] { updateDriverConf(); });
 }
 
 void FortManager::setupQuotaManager()
@@ -565,6 +578,9 @@ bool FortManager::setupDriverConf()
 
     // Groups
     confGroupManager()->updateDriverGroups();
+
+    // Speed Limits
+    confSpeedLimitManager()->updateDriverSpeedLimits();
 
     return true;
 }

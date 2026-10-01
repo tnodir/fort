@@ -20,6 +20,7 @@ public:
     bool isBaseFlagsEqual(const App &o) const;
     bool isExtraFlagsEqual(const App &o) const;
     bool isZonesEqual(const App &o) const;
+    bool isSpeedLimitsEqual(const App &o) const;
     bool isPathsEqual(const App &o) const;
     bool isScheduleEqual(const App &o) const;
     bool isOptionsEqual(const App &o) const;
@@ -49,6 +50,8 @@ public:
     qint8 scheduleAction : 4 = ScheduleBlock;
 
     quint8 groupIndex = 0; // "Main" app. group
+
+    FORT_SPEED_LIMIT_IDS speedLimits = {};
 
     quint16 ruleId = 0;
 

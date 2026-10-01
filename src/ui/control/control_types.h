@@ -84,6 +84,14 @@ enum Command : qint8 {
     Rpc_ConfGroupManager_groupRemoved,
     Rpc_ConfGroupManager_groupUpdated,
 
+    Rpc_ConfSpeedLimitManager_addOrUpdateSpeedLimit,
+    Rpc_ConfSpeedLimitManager_deleteSpeedLimit,
+    Rpc_ConfSpeedLimitManager_updateSpeedLimitName,
+    Rpc_ConfSpeedLimitManager_updateSpeedLimitEnabled,
+    Rpc_ConfSpeedLimitManager_speedLimitAdded,
+    Rpc_ConfSpeedLimitManager_speedLimitRemoved,
+    Rpc_ConfSpeedLimitManager_speedLimitUpdated,
+
     Rpc_DriverManager_updateState,
 
     Rpc_QuotaManager_alert,
@@ -129,6 +137,7 @@ enum RpcManager : qint8 {
     Rpc_ConfRuleManager,
     Rpc_ConfZoneManager,
     Rpc_ConfGroupManager,
+    Rpc_ConfSpeedLimitManager,
     Rpc_DriverManager,
     Rpc_QuotaManager,
     Rpc_StatManager,

@@ -22,6 +22,8 @@ quint32 ioctlSetRules();
 quint32 ioctlSetRuleFlag();
 quint32 ioctlSetGroups();
 quint32 ioctlSetGroupFlags();
+quint32 ioctlSetSpeedLimits();
+quint32 ioctlSetSpeedLimitFlags();
 
 quint32 userErrorCode();
 

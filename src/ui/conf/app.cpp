@@ -24,6 +24,12 @@ bool App::isZonesEqual(const App &o) const
     return zones.accept_mask == o.zones.accept_mask && zones.reject_mask == o.zones.reject_mask;
 }
 
+bool App::isSpeedLimitsEqual(const App &o) const
+{
+    return speedLimits.in_limit_id == o.speedLimits.in_limit_id
+            && speedLimits.out_limit_id == o.speedLimits.out_limit_id;
+}
+
 bool App::isPathsEqual(const App &o) const
 {
     return appOriginPath == o.appOriginPath && appPath == o.appPath && iconPath == o.iconPath;
@@ -36,8 +42,9 @@ bool App::isScheduleEqual(const App &o) const
 
 bool App::isOptionsEqual(const App &o) const
 {
-    return isFlagsEqual(o) && isZonesEqual(o) && groupIndex == o.groupIndex && groups == o.groups
-            && ruleId == o.ruleId && notes == o.notes && isPathsEqual(o) && isScheduleEqual(o);
+    return isFlagsEqual(o) && isZonesEqual(o) && isSpeedLimitsEqual(o) && groupIndex == o.groupIndex
+            && groups == o.groups && ruleId == o.ruleId && notes == o.notes && isPathsEqual(o)
+            && isScheduleEqual(o);
 }
 
 bool App::isNameEqual(const App &o) const

@@ -57,6 +57,7 @@ private:
     void setupConfManager();
     void setupConfRuleManager();
     void setupConfGroupManager();
+    void setupConfSpeedLimitManager();
     void setupQuotaManager();
     void setupTaskManager();
     void setupServiceInfoManager();

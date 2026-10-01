@@ -9,6 +9,11 @@ int ConfUtil::zoneMaxCount()
     return FORT_CONF_ZONE_MAX;
 }
 
+int ConfUtil::speedLimitMaxCount()
+{
+    return FORT_CONF_SPEED_LIMIT_MAX;
+}
+
 int ConfUtil::ruleMaxCount()
 {
     return FORT_CONF_RULE_MAX;

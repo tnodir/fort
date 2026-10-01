@@ -80,6 +80,16 @@ quint32 ioctlSetGroupFlags()
     return FORT_IOCTL_SETGROUPFLAGS;
 }
 
+quint32 ioctlSetSpeedLimits()
+{
+    return FORT_IOCTL_SETSPEEDLIMITS;
+}
+
+quint32 ioctlSetSpeedLimitFlags()
+{
+    return FORT_IOCTL_SETSPEEDLIMITFLAGS;
+}
+
 quint32 userErrorCode()
 {
     return FORT_ERROR_USER_ERROR;

@@ -11,6 +11,7 @@
 #include <conf/firewallconf.h>
 #include <conf/group.h>
 #include <conf/rule.h>
+#include <conf/speedlimit.h>
 #include <manager/envmanager.h>
 #include <util/bitutil.h>
 #include <util/fileutil.h>
@@ -430,6 +431,7 @@ bool ConfBuffer::addApp(const App &app, bool isNew, appdata_map_t &appsMap, quin
         },
         .rule_id = app.ruleId,
         .group_index = app.groupIndex,
+        .speed_limits = app.speedLimits,
         .groups = app.groups,
         .app_id = quint32(app.appId),
         .zones = app.zones,
@@ -705,4 +707,51 @@ void ConfBuffer::writeGroupFlags(quint32 activeMask)
     PFORT_CONF_GROUP_FLAGS confGroupFlags = PFORT_CONF_GROUP_FLAGS(buffer().data());
 
     confGroupFlags->enabled_mask = activeMask;
+}
+
+void ConfBuffer::writeSpeedLimits(const ConfSpeedLimitsWalker &confSpeedLimitsWalker)
+{
+    // Resize the buffer
+    buffer().resize(sizeof(FORT_CONF_SPEED_LIMITS));
+    buffer().fill('\0');
+
+    // Fill the buffer
+    PFORT_CONF_SPEED_LIMITS confLimits = PFORT_CONF_SPEED_LIMITS(buffer().data());
+
+    confSpeedLimitsWalker.walkSpeedLimits([&](const SpeedLimit &limit) -> bool {
+        if (Q_UNLIKELY(limit.limitId <= 0 || limit.limitId > ConfUtil::speedLimitMaxCount()))
+            return true; // skip an out of range Speed Limit
+
+        if (limit.kbps == 0)
+            return true; // the zero speed means no limit, it would stall the queue
+
+        const int limitIndex = limit.limitId - 1;
+        const quint32 limitBit = (quint32(1) << limitIndex);
+
+        confLimits->mask |= limitBit;
+
+        if (limit.enabled) {
+            confLimits->enabled_mask |= limitBit;
+        }
+
+        PFORT_SPEED_LIMIT confLimit = &confLimits->limits[limitIndex];
+
+        confLimit->plr = limit.packetLoss;
+        confLimit->latency_ms = limit.latency;
+        confLimit->buffer_bytes = limit.bufferSize;
+        confLimit->bps = quint64(limit.kbps) * (1024LL / 8); /* to bytes per second */
+
+        return true;
+    });
+}
+
+void ConfBuffer::writeSpeedLimitFlags(quint32 enabledMask)
+{
+    // Resize the buffer
+    buffer().resize(sizeof(FORT_CONF_SPEED_LIMIT_FLAGS));
+
+    // Fill the buffer
+    PFORT_CONF_SPEED_LIMIT_FLAGS confLimitFlags = PFORT_CONF_SPEED_LIMIT_FLAGS(buffer().data());
+
+    confLimitFlags->enabled_mask = enabledMask;
 }

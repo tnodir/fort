@@ -7,6 +7,7 @@ class ConfUtil
 {
 public:
     static int zoneMaxCount();
+    static int speedLimitMaxCount();
 
     static int ruleMaxCount();
     static int ruleGlobalMaxCount();

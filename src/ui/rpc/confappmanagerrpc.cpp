@@ -220,9 +220,10 @@ QVariantList ConfAppManagerRpc::appToVarList(const App &app)
 {
     return { app.isWildcard, app.applyParent, app.applyChild, app.applySpecChild, app.killChild,
         app.lanOnly, app.parked, app.logStat, app.logAllowedConn, app.logBlockedConn, app.blocked,
-        app.killProcess, app.groups, app.groupIndex, app.zones.accept_mask, app.zones.reject_mask,
-        app.ruleId, app.appId, app.appOriginPath, app.appPath, app.iconPath, app.appName, app.notes,
-        app.scheduleAction, app.scheduleTime };
+        app.killProcess, app.groups, app.speedLimits.in_limit_id, app.speedLimits.out_limit_id,
+        app.groupIndex, app.zones.accept_mask, app.zones.reject_mask, app.ruleId, app.appId,
+        app.appOriginPath, app.appPath, app.iconPath, app.appName, app.notes, app.scheduleAction,
+        app.scheduleTime };
 }
 
 App ConfAppManagerRpc::varListToApp(const QVariantList &v)
@@ -241,18 +242,20 @@ App ConfAppManagerRpc::varListToApp(const QVariantList &v)
     app.blocked = v.value(10).toBool();
     app.killProcess = v.value(11).toBool();
     app.groups = v.value(12).toUInt();
-    app.groupIndex = v.value(13).toInt();
-    app.zones.accept_mask = v.value(14).toUInt();
-    app.zones.reject_mask = v.value(15).toUInt();
-    app.ruleId = v.value(16).toUInt();
-    app.appId = v.value(17).toLongLong();
-    app.appOriginPath = v.value(18).toString();
-    app.appPath = v.value(19).toString();
-    app.iconPath = v.value(20).toString();
-    app.appName = v.value(21).toString();
-    app.notes = v.value(22).toString();
-    app.scheduleAction = v.value(23).toInt();
-    app.scheduleTime = v.value(24).toDateTime();
+    app.speedLimits.in_limit_id = v.value(13).toUInt();
+    app.speedLimits.out_limit_id = v.value(14).toUInt();
+    app.groupIndex = v.value(15).toInt();
+    app.zones.accept_mask = v.value(16).toUInt();
+    app.zones.reject_mask = v.value(17).toUInt();
+    app.ruleId = v.value(18).toUInt();
+    app.appId = v.value(19).toLongLong();
+    app.appOriginPath = v.value(20).toString();
+    app.appPath = v.value(21).toString();
+    app.iconPath = v.value(22).toString();
+    app.appName = v.value(23).toString();
+    app.notes = v.value(24).toString();
+    app.scheduleAction = v.value(25).toInt();
+    app.scheduleTime = v.value(26).toDateTime();
     return app;
 }
 
