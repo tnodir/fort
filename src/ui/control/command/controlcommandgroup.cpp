@@ -1,9 +1,8 @@
 #include "controlcommandgroup.h"
 
-#include <conf/confmanager.h>
-#include <conf/firewallconf.h>
+#include <conf/confgroupmanager.h>
+#include <conf/group.h>
 #include <fortglobal.h>
-#include <manager/windowmanager.h>
 
 using namespace Fort;
 
@@ -36,9 +35,9 @@ GroupAction groupActionByText(const QString &commandText, bool &report)
     return GroupActionInvalid;
 }
 
-bool reportCommandGroupAction(ProcessCommandResult &r, const FirewallConf &conf, int groupIndex)
+bool reportCommandGroupAction(ProcessCommandResult &r, const Group &group)
 {
-    const auto groupAction = conf.appGroupEnabled(groupIndex) ? GroupActionOn : GroupActionOff;
+    const auto groupAction = group.enabled ? GroupActionOn : GroupActionOff;
 
     r.commandResult = Control::CommandResult(Control::CommandResultBase + groupAction);
 
@@ -50,23 +49,21 @@ bool reportCommandGroupAction(ProcessCommandResult &r, const FirewallConf &conf,
 bool processCommandGroupAction(
         ProcessCommandResult &r, int groupIndex, GroupAction groupAction, bool report)
 {
-    auto confManager = Fort::confManager();
+    auto confGroupManager = Fort::confGroupManager();
 
-    auto &conf = confManager->conf();
+    Group group;
 
-    if (groupIndex < 0 || groupIndex >= conf.appGroups().size()) {
+    if (!confGroupManager->loadGroupByIndex(group, groupIndex)) {
         r.commandResult = Control::CommandResultError;
         r.errorMessage = "Group not found";
         return true;
     }
 
     if (report) {
-        return reportCommandGroupAction(r, conf, groupIndex);
+        return reportCommandGroupAction(r, group);
     }
 
-    conf.setAppGroupEnabled(groupIndex, groupAction == GroupActionOn);
-
-    return confManager->saveFlags();
+    return confGroupManager->updateGroupEnabled(group.groupId, groupAction == GroupActionOn);
 }
 
 }
@@ -85,7 +82,8 @@ bool ControlCommandGroup::processCommand(const ProcessCommandArgs &p, ProcessCom
     if (!checkCommandActionPassword(r, groupAction))
         return false;
 
-    const int groupIndex = p.args.value(1).toInt();
+    // The Group's index starts from 1
+    const int groupIndex = p.args.value(1).toInt() - 1;
 
     const bool ok = processCommandGroupAction(r, groupIndex, groupAction, report);
 

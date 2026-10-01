@@ -39,6 +39,9 @@ inline constexpr int GROUP_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
 const char *const sqlSelectGroups = "SELECT" SELECT_GROUP_FIELDS "  FROM app_group2 t"
                                     "  ORDER BY t.group_id;";
 
+const char *const sqlSelectGroupByIndex = "SELECT" SELECT_GROUP_FIELDS "  FROM app_group2 t"
+                                          "  ORDER BY t.group_id LIMIT 1 OFFSET ?1;";
+
 const char *const sqlInsertGroup = "INSERT INTO app_group2(group_id, name, notes, enabled,"
                                    "    exclusive, period_enabled, period_from, period_to,"
                                    "    rule_id, mod_time)"
@@ -256,6 +259,20 @@ bool ConfGroupManager::updateGroupEnabled(quint8 groupId, bool enabled)
     }
 
     return ok;
+}
+
+bool ConfGroupManager::loadGroupByIndex(Group &group, int groupIndex) const
+{
+    if (groupIndex < 0)
+        return false;
+
+    SqliteStmt stmt;
+    if (!DbQuery(sqliteDb()).sql(sqlSelectGroupByIndex).vars({ groupIndex }).prepareRow(stmt))
+        return false;
+
+    fillGroup(group, stmt);
+
+    return true;
 }
 
 bool ConfGroupManager::walkGroups(const std::function<walkGroupsCallback> &func) const
