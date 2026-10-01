@@ -72,6 +72,7 @@ SOURCES += \
     form/controls/optionsbutton.cpp \
     form/controls/plaintextedit.cpp \
     form/controls/pushbutton.cpp \
+    form/controls/ruleselector.cpp \
     form/controls/sidebutton.cpp \
     form/controls/spinbox.cpp \
     form/controls/spincombo.cpp \
@@ -351,6 +352,7 @@ HEADERS += \
     form/controls/optionsbutton.h \
     form/controls/plaintextedit.h \
     form/controls/pushbutton.h \
+    form/controls/ruleselector.h \
     form/controls/sidebutton.h \
     form/controls/spinbox.h \
     form/controls/spincombo.h \

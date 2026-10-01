@@ -3,7 +3,7 @@
 
 #include "progbasepage.h"
 
-class LineEdit;
+class RuleSelector;
 class ZonesSelector;
 
 class ProgNetworkPage : public ProgBasePage
@@ -12,9 +12,6 @@ class ProgNetworkPage : public ProgBasePage
 
 public:
     explicit ProgNetworkPage(ProgramEditController *ctrl = nullptr, QWidget *parent = nullptr);
-
-    quint16 currentRuleId() const { return m_currentRuleId; }
-    void setCurrentRuleId(quint16 ruleId = 0) { m_currentRuleId = ruleId; }
 
 public slots:
     void fillApp(App &app) const override;
@@ -29,18 +26,11 @@ private:
 
     void setupUi();
     QLayout *setupZonesRuleLayout();
-    QLayout *setupRuleLayout();
-
-    void selectRuleDialog();
-    void editRuleDialog(int ruleId);
 
 private:
-    quint16 m_currentRuleId = 0;
-
     QCheckBox *m_cbLanOnly = nullptr;
     ZonesSelector *m_btZones = nullptr;
-    LineEdit *m_editRuleName = nullptr;
-    QToolButton *m_btSelectRule = nullptr;
+    RuleSelector *m_ruleSelector = nullptr;
 };
 
 #endif // PROGNETWORKPAGE_H
