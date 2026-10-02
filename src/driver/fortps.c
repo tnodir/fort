@@ -540,6 +540,14 @@ inline static BOOL fort_pstree_check_proc_inherited(PFORT_PSTREE ps_tree, PFORT_
     return TRUE;
 }
 
+inline static FORT_APP_DATA fort_pstree_find_app_data(PFORT_CONF_REF conf_ref, PCFORT_APP_PATH path)
+{
+    PCFORT_CONF conf = &conf_ref->conf;
+
+    return conf->proc_wild ? fort_conf_app_find(conf, path, fort_conf_exe_find, conf_ref)
+                           : fort_conf_exe_find(conf, conf_ref, path);
+}
+
 static void fort_pstree_check_proc_inheritance(
         PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi, PFORT_PSNODE proc)
 {
@@ -562,11 +570,7 @@ static void fort_pstree_check_proc_inheritance(
         .buffer = has_ps_name ? proc->ps_name->data : psi->path->buffer,
     };
 
-    PCFORT_CONF conf = &conf_ref->conf;
-
-    const FORT_APP_DATA app_data = conf->proc_wild
-            ? fort_conf_app_find(conf, &path, fort_conf_exe_find, conf_ref)
-            : fort_conf_exe_find(conf, conf_ref, &path);
+    const FORT_APP_DATA app_data = fort_pstree_find_app_data(conf_ref, &path);
 
     const FORT_APP_FLAGS app_flags = app_data.flags;
 
@@ -692,6 +696,15 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc(
     return ps_flags;
 }
 
+/* The enumerated process's ID may be reused by a newer process */
+inline static BOOL fort_pstree_create_time_changed(INT64 oldTime, INT64 newTime)
+{
+    if (oldTime == 0 || newTime == 0)
+        return FALSE; /* unknown */
+
+    return oldTime != newTime;
+}
+
 static FORT_PS_FLAGS fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi)
 {
     const HANDLE processHandle = OpenProcessById(psi->processId);
@@ -700,8 +713,7 @@ static FORT_PS_FLAGS fort_pstree_handle_created_proc(PFORT_PSTREE ps_tree, PFORT
 
     const INT64 createTime = GetProcessCreateTime(processHandle);
 
-    /* The enumerated process's ID may be reused by a newer process */
-    if (psi->createTime != 0 && createTime != 0 && psi->createTime != createTime) {
+    if (fort_pstree_create_time_changed(psi->createTime, createTime)) {
         ZwClose(processHandle);
         return 0;
     }
