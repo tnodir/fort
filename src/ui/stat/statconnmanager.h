@@ -37,6 +37,7 @@ public:
 
 signals:
     void connChanged();
+    void connCleared();
 
     void logConnFinished(int count, qint64 newConnId);
     void deleteConnFinished(qint64 connIdTo);

@@ -106,6 +106,7 @@ static const QHash<Command, const char *> g_commandNames = {
 
     CASE_STRING(Rpc_StatConnManager_deleteConn),
     CASE_STRING(Rpc_StatConnManager_connChanged),
+    CASE_STRING(Rpc_StatConnManager_connCleared),
 
     CASE_STRING(Rpc_ServiceInfoManager_trackService),
     CASE_STRING(Rpc_ServiceInfoManager_revertService),
@@ -248,6 +249,7 @@ static const RpcManager g_commandManagers[] = {
 
     Rpc_StatConnManager, // Rpc_StatConnManager_deleteConn,
     Rpc_StatConnManager, // Rpc_StatConnManager_connChanged,
+    Rpc_StatConnManager, // Rpc_StatConnManager_connCleared,
 
     Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_trackService,
     Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_revertService,
@@ -367,6 +369,7 @@ static const qint8 g_commandValidations[] = {
 
     true, // Rpc_StatConnManager_deleteConn,
     0, // Rpc_StatConnManager_connChanged,
+    0, // Rpc_StatConnManager_connCleared,
 
     true, // Rpc_ServiceInfoManager_trackService,
     true, // Rpc_ServiceInfoManager_revertService,

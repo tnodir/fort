@@ -130,8 +130,13 @@ void StatConnManager::onLogConnFinished(int count, qint64 /*newConnId*/)
     }
 }
 
-void StatConnManager::onDeleteConnFinished(qint64 /*connIdTo*/)
+void StatConnManager::onDeleteConnFinished(qint64 connIdTo)
 {
+    /* The conn_id-s are reused after the table's clearing */
+    if (connIdTo <= 0) {
+        emit connCleared();
+    }
+
     emitConnChanged();
 }
 
