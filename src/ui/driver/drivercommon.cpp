@@ -8,6 +8,23 @@
 #include <common/fortprov.h>
 #include <util/fileutil.h>
 
+namespace {
+
+PCFORT_CONF_ADDR_LIST confAddrList(const void *drvConf, bool included, int addrGroupIndex)
+{
+    PCFORT_CONF conf = (PCFORT_CONF) drvConf;
+    PCFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addrGroupIndex);
+
+    const bool is_empty = included ? addr_group->include_is_empty : addr_group->exclude_is_empty;
+    if (is_empty)
+        return nullptr;
+
+    return included ? fort_conf_addr_group_include_list_ref(addr_group)
+                    : fort_conf_addr_group_exclude_list_ref(addr_group);
+}
+
+}
+
 namespace DriverCommon {
 
 QString deviceName()
@@ -225,35 +242,26 @@ void logProcKillRead(const char *input, quint32 *pid)
     fort_log_proc_kill_read(input, pid);
 }
 
-bool confIpInRange(
-        const void *drvConf, const ip_addr_t ip, bool isIPv6, bool included, int addrGroupIndex)
-{
-    PCFORT_CONF conf = (PCFORT_CONF) drvConf;
-    PCFORT_CONF_ADDR_GROUP addr_group = fort_conf_addr_group_ref(conf, addrGroupIndex);
-
-    const bool is_empty = included ? addr_group->include_is_empty : addr_group->exclude_is_empty;
-    if (is_empty)
-        return false;
-
-    const PFORT_CONF_ADDR_LIST addr_list = included
-            ? fort_conf_addr_group_include_list_ref(addr_group)
-            : fort_conf_addr_group_exclude_list_ref(addr_group);
-
-    return fort_conf_ip_inlist(addr_list, ip, isIPv6);
-}
-
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included, int addrGroupIndex)
 {
+    PCFORT_CONF_ADDR_LIST addr_list = confAddrList(drvConf, included, addrGroupIndex);
+    if (addr_list == nullptr)
+        return false;
+
     const ip_addr_t ip_addr = { .v4 = ip };
 
-    return confIpInRange(drvConf, ip_addr, /*isIPv6=*/false, included, addrGroupIndex);
+    return fort_conf_ip_inlist(addr_list, ip_addr, /*isIPv6=*/false);
 }
 
 bool confIp6InRange(const void *drvConf, const ip6_addr_t ip, bool included, int addrGroupIndex)
 {
+    PCFORT_CONF_ADDR_LIST addr_list = confAddrList(drvConf, included, addrGroupIndex);
+    if (addr_list == nullptr)
+        return false;
+
     const ip_addr_t ip_addr = { .v6 = ip };
 
-    return confIpInRange(drvConf, ip_addr, /*isIPv6=*/true, included, addrGroupIndex);
+    return fort_conf_ip_inlist(addr_list, ip_addr, /*isIPv6=*/true);
 }
 
 FORT_APP_DATA confAppFind(const void *drvConf, const QString &appPath)

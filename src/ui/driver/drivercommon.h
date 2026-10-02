@@ -70,8 +70,6 @@ void logTimeRead(const char *input, qint64 *unixTime, int *systemTimeChanged);
 void logProcKillWrite(char *output, quint32 pid);
 void logProcKillRead(const char *input, quint32 *pid);
 
-bool confIpInRange(const void *drvConf, const ip_addr_t ip, bool isIPv6 = false,
-        bool included = false, int addrGroupIndex = 0);
 bool confIp4InRange(const void *drvConf, quint32 ip, bool included = false, int addrGroupIndex = 0);
 bool confIp6InRange(
         const void *drvConf, const ip6_addr_t ip, bool included = false, int addrGroupIndex = 0);
