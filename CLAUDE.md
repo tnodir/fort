@@ -35,6 +35,8 @@ src\driver\msvcbuild-win7-32.bat         :: msvcbuild.bat <PLAT> <CONFIG> <ARCH>
 src\driver\loader\msvcbuild-win10-64.bat :: driver loader (fortfwdl.sys payload wrapper)
 ```
 
+With an EWDK instead of an installed WDK, set up the environment non-interactively (`LaunchBuildEnv.cmd` opens a `cmd /k`): `cmd /c "<EWDK>\BuildEnv\SetupBuildEnv.cmd amd64 && src\driver\msvcbuild-win10-64.bat"`. The `win7` targets need an older EWDK (WDK 10.0.20348 builds them; the 26100 one is for `win10`/arm64).
+
 `fortdrv.vcxproj` compiles **only `fortdrv_amalg.c`** (an amalgamation that `#include`s every driver .c). A new driver source file must be added there *and* to `FortFirewallDriver.pro`.
 
 `src/driver/FortFirewallDriver.pro` builds the driver code as a **user-mode** console app (`driver/test/main.c` plus the `wdm/um_*.c` shims that emulate the kernel APIs) — that is how driver logic is exercised without loading a real driver.
@@ -49,6 +51,14 @@ build-win10\tests\UtilTest\UtilTest.exe --gtest_filter=ConfUtilTest.*   :: singl
 ```
 
 Suites: `UtilTest` (bitutil, confutil, dateutil, fileutil, ioccontainer, netutil, ruletextparser, stringutil, wildmatch), `StatTest`, `LogBufferTest`, `LogReaderTest`. `LogReaderTest` needs the loaded kernel driver: run it only manually from a console, never as part of an automated test run. Each `tst_*.h` is included from the suite's `tst_main.cpp` and must also be listed in the suite's `.pro`.
+
+### Testing the real driver (test-mode VM)
+
+- The machine needs `bcdedit /set testsigning on` and Secure Boot off. A self-signed code-signing certificate is enough (`signtool sign /fd sha256 /f test.pfx fortfw.sys`); test mode doesn't need it imported.
+- Install the plain `fortfw.sys`, bypassing the loader/payload, with **demand start**, so a reboot after a crash comes up without it: copy it to `%SystemRoot%\System32\drivers` and `sc create fortfw binPath= %SystemRoot%\System32\drivers\fortfw.sys type= kernel start= demand group= NetworkProvider depend= BFE`, then `sc start fortfw`. (`driver/scripts/install.bat` uses `start= auto`.)
+- `FortFirewall.exe -i service` installs and starts `FortFirewallSvc` (depends on `fortfw`; `sc config FortFirewallSvc start= demand` to keep reboots clean). With a service the app doesn't run `check-reinstall.bat`, so it won't reinstall the driver.
+- LAN addresses aren't filtered by default and the first minute after install is the learn mode, so remote access (SSH/RDP over LAN) survives.
+- Smoke test via the control CLI: `FortFirewall.exe -c filter report`, `-c filter-mode report`, `-c prog allow|block|report <app-path>`. A `report` returns `70 + value index` as the exit code (e.g. filter-mode `learn` = 70, `block` = 72; prog `allow` = 70, `block` = 71), `99` = error. A renamed copy of `curl.exe` works as an unknown program.
 
 ### Translations & deployment
 
