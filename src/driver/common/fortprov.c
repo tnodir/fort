@@ -428,8 +428,10 @@ static DWORD fort_prov_add_filters(HANDLE engine, const FWPM_FILTER0 *filters, i
 {
     for (int i = 0; i < count; ++i) {
         const DWORD status = FwpmFilterAdd0(engine, &filters[i], NULL, NULL);
-        if (status)
+        if (status) {
+            LOG("Prov Filter Add: %ws: Error: %x\n", filters[i].displayData.name, status);
             return status;
+        }
     }
 
     return 0;
