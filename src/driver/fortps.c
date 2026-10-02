@@ -172,6 +172,7 @@ static NTSTATUS GetImageNameFileObject(PCFORT_APP_PATH path, PFILE_OBJECT *fileO
     {
         UNICODE_STRING volume = {
             .Length = path->len,
+            .MaximumLength = path->len,
             .Buffer = (PWCHAR) path->buffer,
         };
 
