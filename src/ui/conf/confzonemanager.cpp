@@ -104,13 +104,14 @@ QString ConfZoneManager::zoneNameById(quint8 zoneId)
     if (zoneId == 0)
         return {};
 
-    QString name = m_zoneNamesCache.value(zoneId);
+    const auto it = m_zoneNamesCache.constFind(zoneId);
+    if (it != m_zoneNamesCache.constEnd())
+        return it.value();
 
-    if (name.isEmpty()) {
-        name = DbQuery(sqliteDb()).sql(sqlSelectZoneNameById).vars({ zoneId }).execute().toString();
+    const QString name =
+            DbQuery(sqliteDb()).sql(sqlSelectZoneNameById).vars({ zoneId }).execute().toString();
 
-        m_zoneNamesCache.insert(zoneId, name);
-    }
+    m_zoneNamesCache.insert(zoneId, name);
 
     return name;
 }
@@ -299,6 +300,7 @@ bool ConfZoneManager::updateDriverZoneFlag(quint8 zoneId, bool enabled)
 
 void ConfZoneManager::setupZoneNamesCache()
 {
+    connect(this, &ConfZoneManager::zoneAdded, this, &ConfZoneManager::clearZoneNamesCache);
     connect(this, &ConfZoneManager::zoneRemoved, this, &ConfZoneManager::clearZoneNamesCache);
     connect(this, &ConfZoneManager::zoneUpdated, this, &ConfZoneManager::clearZoneNamesCache);
 }

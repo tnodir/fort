@@ -182,13 +182,14 @@ QString ConfRuleManager::ruleNameById(quint16 ruleId)
     if (ruleId == 0)
         return {};
 
-    QString name = m_ruleNamesCache.value(ruleId);
+    const auto it = m_ruleNamesCache.constFind(ruleId);
+    if (it != m_ruleNamesCache.constEnd())
+        return it.value();
 
-    if (name.isEmpty()) {
-        name = DbQuery(sqliteDb()).sql(sqlSelectRuleNameById).vars({ ruleId }).execute().toString();
+    const QString name =
+            DbQuery(sqliteDb()).sql(sqlSelectRuleNameById).vars({ ruleId }).execute().toString();
 
-        m_ruleNamesCache.insert(ruleId, name);
-    }
+    m_ruleNamesCache.insert(ruleId, name);
 
     return name;
 }
@@ -600,6 +601,7 @@ bool ConfRuleManager::updateDriverRuleFlag(quint16 ruleId, bool enabled)
 
 void ConfRuleManager::setupRuleNamesCache()
 {
+    connect(this, &ConfRuleManager::ruleAdded, this, &ConfRuleManager::clearRuleNamesCache);
     connect(this, &ConfRuleManager::ruleRemoved, this, &ConfRuleManager::clearRuleNamesCache);
     connect(this, &ConfRuleManager::ruleUpdated, this, &ConfRuleManager::clearRuleNamesCache);
 }
