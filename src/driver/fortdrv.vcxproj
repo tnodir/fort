@@ -39,7 +39,6 @@
   <PropertyGroup Label="Configuration-Common">
     <TargetVersion Condition="'$(Config)'=='win7'">WindowsV6.3</TargetVersion>
     <TargetVersion Condition="'$(Config)'!='win7'">Windows10</TargetVersion>
-    <KernelBufferOverflowLib Condition="'$(Config)'=='win7'">$(DDK_LIB_PATH)\BufferOverflowK.lib</KernelBufferOverflowLib>
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
     <ConfigurationType>Driver</ConfigurationType>
     <DriverType>WDM</DriverType>
@@ -55,6 +54,9 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup Condition="'$(Config)'=='win7'">
+    <KernelBufferOverflowLib>$(DDK_LIB_PATH)BufferOverflowK.lib</KernelBufferOverflowLib>
+  </PropertyGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
