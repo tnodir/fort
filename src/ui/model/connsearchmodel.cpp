@@ -1,5 +1,7 @@
 #include "connsearchmodel.h"
 
+#include <QHash>
+
 #include <algorithm>
 
 #include <sqlite/dbquery.h>
@@ -18,14 +20,25 @@ namespace {
 inline constexpr int searchTimerInterval = 150;
 inline constexpr int searchConnsMax = 5000;
 
-QString connRowSearchText(const ConnRow &connRow)
+using AppTextHash = QHash<QString, QString>; // by app path
+
+const QString &appSearchText(AppTextHash &appTexts, const QString &appPath)
 {
-    const QString &appPath = connRow.appPath;
+    QString &text = appTexts[appPath];
+
+    if (text.isEmpty()) {
+        text = FileUtil::fileName(appPath) + '\n' + appInfoCache()->appName(appPath);
+    }
+
+    return text;
+}
+
+QString connRowSearchText(const ConnRow &connRow, const QString &appText)
+{
     const bool isIPv6 = connRow.isIPv6;
 
     const QStringList list = {
-        FileUtil::fileName(appPath),
-        appInfoCache()->appName(appPath),
+        appText,
         QString::number(connRow.pid),
         NetUtil::protocolName(connRow.ipProto),
         NetFormatUtil::ipToText(connRow.localIp, isIPv6),
@@ -198,13 +211,16 @@ void ConnSearchModel::loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows
         return;
 
     ConnRow connRow;
+    AppTextHash appTexts;
 
     while (stmt.step() == SqliteStmt::StepRow) {
         fillConnRow(connRow, stmt);
 
         m_lastConnId = connRow.connId;
 
-        if (isTextMatched(connRowSearchText(connRow))) {
+        const QString &appText = appSearchText(appTexts, connRow.appPath);
+
+        if (isTextMatched(connRowSearchText(connRow, appText))) {
             connRows.append(connRow);
         }
     }
