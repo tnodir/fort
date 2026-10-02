@@ -157,6 +157,18 @@ static FORT_APP_DATA fort_callout_ale_conf_app_data(
     return app_data;
 }
 
+inline static void fort_callout_ale_associate_flow_log(
+        PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_META_CONN conn)
+{
+    const NTSTATUS status = fort_buffer_conn_write(
+            &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_PROC_NEW);
+
+    /* Log the process again by its next flow */
+    if (!NT_SUCCESS(status)) {
+        fort_flow_proc_unlog(&fort_device()->stat, conn->process_id);
+    }
+}
+
 inline static BOOL fort_callout_ale_associate_flow(
         PFORT_CALLOUT_ALE_EXTRA cx, PFORT_CONF_META_CONN conn)
 {
@@ -178,13 +190,7 @@ inline static BOOL fort_callout_ale_associate_flow(
     }
 
     if (!proc_stat) {
-        const NTSTATUS write_status = fort_buffer_conn_write(
-                &fort_device()->buffer, conn, &cx->irp_info, FORT_BUFFER_CONN_WRITE_PROC_NEW);
-
-        /* Log the process again by its next flow */
-        if (!NT_SUCCESS(write_status)) {
-            fort_flow_proc_unlog(&fort_device()->stat, conn->process_id);
-        }
+        fort_callout_ale_associate_flow_log(cx, conn);
     }
 
     return FALSE;

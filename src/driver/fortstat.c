@@ -356,6 +356,30 @@ inline static NTSTATUS fort_flow_add_new(PFORT_STAT stat, PFORT_FLOW_ADD_ARG faa
     return status;
 }
 
+inline static NTSTATUS fort_flow_add_old(
+        PCFORT_CONF_META_CONN conn, PFORT_STAT_PROC proc, PFORT_FLOW_ADD_ARG faa)
+{
+    /* The reauthorized flow keeps its process's reference:
+     * WFP takes the process ID from the socket's endpoint,
+     * and the flow's handle isn't reused until the flow's deletion.
+     */
+    assert(faa->flow->opt.proc_index == proc->proc_index);
+
+    const FORT_SPEED_LIMIT_IDS speed_limits = faa->flow->speed_limits;
+    const FORT_SPEED_LIMIT_IDS new_speed_limits = conn->app_data.speed_limits;
+
+    /* Keep the changed Speed Limits: their queues may have the flow's packets */
+    if (speed_limits.in_limit_id != new_speed_limits.in_limit_id
+            || speed_limits.out_limit_id != new_speed_limits.out_limit_id) {
+
+        faa->flow->old_speed_limits = speed_limits;
+    }
+
+    fort_flow_opt_set(faa);
+
+    return STATUS_SUCCESS;
+}
+
 static NTSTATUS fort_flow_add(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT_STAT_PROC proc)
 {
     const UINT64 flow_id = conn->flow_id;
@@ -369,32 +393,16 @@ static NTSTATUS fort_flow_add(PFORT_STAT stat, PCFORT_CONF_META_CONN conn, PFORT
         .flow_hash = flow_hash,
     };
 
-    if (faa.flow == NULL) {
-        const NTSTATUS status = fort_flow_add_new(stat, &faa);
-
-        if (!NT_SUCCESS(status))
-            return status;
-
-        fort_stat_proc_inc(proc);
-    } else {
-        /* The reauthorized flow keeps its process's reference:
-         * WFP takes the process ID from the socket's endpoint,
-         * and the flow's handle isn't reused until the flow's deletion.
-         */
-        assert(faa.flow->opt.proc_index == proc->proc_index);
-
-        const FORT_SPEED_LIMIT_IDS speed_limits = faa.flow->speed_limits;
-        const FORT_SPEED_LIMIT_IDS new_speed_limits = conn->app_data.speed_limits;
-
-        /* Keep the changed Speed Limits: their queues may have the flow's packets */
-        if (speed_limits.in_limit_id != new_speed_limits.in_limit_id
-                || speed_limits.out_limit_id != new_speed_limits.out_limit_id) {
-
-            faa.flow->old_speed_limits = speed_limits;
-        }
-
-        fort_flow_opt_set(&faa);
+    if (faa.flow != NULL) {
+        return fort_flow_add_old(conn, proc, &faa);
     }
+
+    const NTSTATUS status = fort_flow_add_new(stat, &faa);
+
+    if (!NT_SUCCESS(status))
+        return status;
+
+    fort_stat_proc_inc(proc);
 
     return STATUS_SUCCESS;
 }
