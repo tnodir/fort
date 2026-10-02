@@ -138,25 +138,29 @@ static BOOL fort_conf_prefix_app_entries_valid(const char *data, UINT32 len, UIN
     return TRUE;
 }
 
-FORT_API BOOL fort_conf_io_valid(PCFORT_CONF_IO conf_io, UINT32 len)
+/* The data are ordered: address groups, wildcard, prefix and exe apps */
+static BOOL fort_conf_data_offsets_valid(PCFORT_CONF conf, UINT32 data_len)
 {
-    if (len < FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF)
+    if (conf->addr_groups_off > conf->wild_apps_off)
         return FALSE;
 
-    PCFORT_CONF conf = &conf_io->conf;
+    if (conf->wild_apps_off > conf->prefix_apps_off)
+        return FALSE;
 
+    if (conf->prefix_apps_off > conf->exe_apps_off)
+        return FALSE;
+
+    return conf->exe_apps_off <= data_len;
+}
+
+static BOOL fort_conf_data_valid(PCFORT_CONF conf, UINT32 data_len)
+{
     const char *data = conf->data;
-    const UINT32 data_len = len - (FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF);
 
     const UINT32 addr_groups_off = conf->addr_groups_off;
     const UINT32 wild_apps_off = conf->wild_apps_off;
     const UINT32 prefix_apps_off = conf->prefix_apps_off;
     const UINT32 exe_apps_off = conf->exe_apps_off;
-
-    /* The data are ordered: address groups, wildcard, prefix and exe apps */
-    if (!(addr_groups_off <= wild_apps_off && wild_apps_off <= prefix_apps_off
-                && prefix_apps_off <= exe_apps_off && exe_apps_off <= data_len))
-        return FALSE;
 
     return fort_conf_addr_groups_valid(data + addr_groups_off, wild_apps_off - addr_groups_off)
             && fort_conf_app_entries_valid(
@@ -167,31 +171,80 @@ FORT_API BOOL fort_conf_io_valid(PCFORT_CONF_IO conf_io, UINT32 len)
                     data + exe_apps_off, data_len - exe_apps_off, conf->exe_apps_n);
 }
 
+FORT_API BOOL fort_conf_io_valid(PCFORT_CONF_IO conf_io, UINT32 len)
+{
+    if (len < FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF)
+        return FALSE;
+
+    PCFORT_CONF conf = &conf_io->conf;
+
+    const UINT32 data_len = len - (FORT_CONF_IO_CONF_OFF + FORT_CONF_DATA_OFF);
+
+    return fort_conf_data_offsets_valid(conf, data_len) && fort_conf_data_valid(conf, data_len);
+}
+
+static BOOL fort_conf_rule_filter_address_valid(const char *data, UINT32 len)
+{
+    return fort_conf_addr_list_valid((PCFORT_CONF_ADDR_LIST) data, len);
+}
+
+static BOOL fort_conf_rule_filter_port_valid(const char *data, UINT32 len)
+{
+    PCFORT_CONF_PORT_LIST port_list = (PCFORT_CONF_PORT_LIST) data;
+
+    return len >= FORT_CONF_PORT_LIST_OFF
+            && FORT_CONF_PORT_LIST_SIZE(port_list->port_n, port_list->pair_n) <= len;
+}
+
+static BOOL fort_conf_rule_filter_protocol_valid(const char *data, UINT32 len)
+{
+    PCFORT_CONF_PROTO_LIST proto_list = (PCFORT_CONF_PROTO_LIST) data;
+
+    return len >= FORT_CONF_PROTO_LIST_OFF
+            && FORT_CONF_PROTO_LIST_SIZE(proto_list->proto_n, proto_list->pair_n) <= len;
+}
+
+static BOOL fort_conf_rule_filter_flags_valid(const char *data, UINT32 len)
+{
+    UNUSED(data);
+
+    return len >= sizeof(FORT_CONF_RULE_FILTER_FLAGS);
+}
+
+typedef BOOL (*FORT_CONF_RULE_FILTER_VALID_FUNC)(const char *data, UINT32 len);
+
+static const FORT_CONF_RULE_FILTER_VALID_FUNC fort_conf_rule_filter_valid_funcList[] = {
+    &fort_conf_rule_filter_address_valid, // FORT_RULE_FILTER_TYPE_ADDRESS,
+    &fort_conf_rule_filter_port_valid, // FORT_RULE_FILTER_TYPE_PORT,
+    &fort_conf_rule_filter_address_valid, // FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS,
+    &fort_conf_rule_filter_port_valid, // FORT_RULE_FILTER_TYPE_LOCAL_PORT,
+    &fort_conf_rule_filter_protocol_valid, // FORT_RULE_FILTER_TYPE_PROTOCOL,
+    &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_IP_VERSION,
+    &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_DIRECTION,
+    &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_ZONES,
+    &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_AREA,
+    &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_PROFILE,
+    &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_ACTION,
+    &fort_conf_rule_filter_flags_valid, // FORT_RULE_FILTER_TYPE_OPTION,
+    // Complex types
+    &fort_conf_rule_filter_port_valid, // FORT_RULE_FILTER_TYPE_PORT_TCP,
+    &fort_conf_rule_filter_port_valid, // FORT_RULE_FILTER_TYPE_PORT_UDP,
+};
+
+static_assert(
+        FORT_ARRAY_SIZE(fort_conf_rule_filter_valid_funcList) == FORT_RULE_FILTER_TYPE_PORT_UDP + 1,
+        "fort_conf_rule_filter_valid_funcList size mismatch");
+
 static BOOL fort_conf_rule_filter_values_valid(int filter_type, const char *data, UINT32 len)
 {
-    switch (filter_type) {
-    case FORT_RULE_FILTER_TYPE_ADDRESS:
-    case FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS: {
-        return fort_conf_addr_list_valid((PCFORT_CONF_ADDR_LIST) data, len);
-    }
-    case FORT_RULE_FILTER_TYPE_PORT:
-    case FORT_RULE_FILTER_TYPE_LOCAL_PORT:
-    case FORT_RULE_FILTER_TYPE_PORT_TCP:
-    case FORT_RULE_FILTER_TYPE_PORT_UDP: {
-        PCFORT_CONF_PORT_LIST port_list = (PCFORT_CONF_PORT_LIST) data;
+    const UINT32 index = (UINT32) filter_type;
 
-        return len >= FORT_CONF_PORT_LIST_OFF
-                && FORT_CONF_PORT_LIST_SIZE(port_list->port_n, port_list->pair_n) <= len;
-    }
-    case FORT_RULE_FILTER_TYPE_PROTOCOL: {
-        PCFORT_CONF_PROTO_LIST proto_list = (PCFORT_CONF_PROTO_LIST) data;
+    const FORT_CONF_RULE_FILTER_VALID_FUNC func =
+            (index < FORT_ARRAY_SIZE(fort_conf_rule_filter_valid_funcList))
+            ? fort_conf_rule_filter_valid_funcList[index]
+            : &fort_conf_rule_filter_flags_valid;
 
-        return len >= FORT_CONF_PROTO_LIST_OFF
-                && FORT_CONF_PROTO_LIST_SIZE(proto_list->proto_n, proto_list->pair_n) <= len;
-    }
-    default:
-        return len >= sizeof(FORT_CONF_RULE_FILTER_FLAGS);
-    }
+    return func(data, len);
 }
 
 static BOOL fort_conf_rule_filter_valid(
@@ -271,6 +324,19 @@ static BOOL fort_conf_rule_valid(
     return TRUE;
 }
 
+static BOOL fort_conf_rule_id_valid(
+        PCFORT_CONF_RULES_RT rules_rt, UINT16 rule_id, UINT32 data_len, UINT32 *rules_end)
+{
+    const UINT32 rule_off = rules_rt->rule_offsets[rule_id];
+    if (rule_off == 0)
+        return TRUE; /* absent rule */
+
+    if (rule_off < *rules_end || rule_off > data_len)
+        return FALSE;
+
+    return fort_conf_rule_valid(rules_rt, rule_off, data_len, rules_end);
+}
+
 FORT_API BOOL fort_conf_rules_valid(PCFORT_CONF_RULES rules, UINT32 len)
 {
     if (len < FORT_CONF_RULES_DATA_OFF)
@@ -290,12 +356,7 @@ FORT_API BOOL fort_conf_rules_valid(PCFORT_CONF_RULES rules, UINT32 len)
 
     /* The rules follow their offsets ordered by id, so SETRULEFLAG changes only its rule */
     for (UINT16 rule_id = 1; rule_id <= max_rule_id; ++rule_id) {
-        const UINT32 rule_off = rules_rt.rule_offsets[rule_id];
-        if (rule_off == 0)
-            continue; /* absent rule */
-
-        if (rule_off < rules_end || rule_off > data_len
-                || !fort_conf_rule_valid(&rules_rt, rule_off, data_len, &rules_end))
+        if (!fort_conf_rule_id_valid(&rules_rt, rule_id, data_len, &rules_end))
             return FALSE;
     }
 
