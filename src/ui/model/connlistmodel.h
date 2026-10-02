@@ -63,18 +63,25 @@ public:
     QString rowsAsFilter(const QVector<int> &rows) const;
 
     static QString reasonText(FortConnReason reason);
+    static QString reasonDetailsText(const ConnRow &connRow);
+
+    static QString directionText(bool inbound);
+    static QString actionText(bool blocked);
 
     static QString columnName(const ConnListColumn column);
 
 protected slots:
-    void updateConnIdRange();
-    void clearConnRows();
+    virtual void updateConnIdRange();
+    virtual void clearConnRows();
 
 protected:
     bool updateTableRow(const QVariantHash &vars, int row) const override;
     TableRow &tableRow() const override { return m_connRow; }
+    ConnRow &connRow() const { return m_connRow; }
 
     void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
+
+    static void fillConnRow(ConnRow &connRow, const SqliteStmt &stmt);
 
     virtual void fillConnIdRange(qint64 &idMin, qint64 &idMax);
 
@@ -87,6 +94,8 @@ protected:
     QString sqlBase() const override;
     QString sqlWhere() const override;
     QString sqlLimitOffset() const override;
+
+    void resetConnRows(qint64 idMin, qint64 idMax);
 
 private:
     qint64 connIdMin() const { return m_connIdMin; }
@@ -103,7 +112,6 @@ private:
     QVariant dataDecorationAction(const ConnRow &connRow) const;
 
     void updateConnRows(qint64 oldIdMin, qint64 oldIdMax, qint64 idMin, qint64 idMax);
-    void resetConnRows(qint64 idMin, qint64 idMax);
     void removeConnRows(qint64 idMin, int count);
     void insertConnRows(qint64 idMax, int endRow, int count);
 

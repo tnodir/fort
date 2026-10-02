@@ -173,6 +173,7 @@ SOURCES += \
     model/applistmodelheaderdata.cpp \
     model/appstatmodel.cpp \
     model/connlistmodel.cpp \
+    model/connsearchmodel.cpp \
     model/grouplistmodel.cpp \
     model/rulelistmodel.cpp \
     model/rulesetmodel.cpp \
@@ -462,6 +463,7 @@ HEADERS += \
     model/appstatmodel.h \
     model/connlistcolumn.h \
     model/connlistmodel.h \
+    model/connsearchmodel.h \
     model/grouplistmodel.h \
     model/rulelistmodel.h \
     model/rulesetmodel.h \

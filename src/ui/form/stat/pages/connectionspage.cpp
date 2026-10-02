@@ -2,6 +2,7 @@
 
 #include <QCheckBox>
 #include <QHeaderView>
+#include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
 #include <QToolButton>
@@ -16,7 +17,7 @@
 #include <form/stat/statisticswindow.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
-#include <model/connlistmodel.h>
+#include <model/connsearchmodel.h>
 #include <user/iniuser.h>
 #include <util/guiutil.h>
 #include <util/iconcache.h>
@@ -31,7 +32,7 @@ inline constexpr int CONN_LIST_HEADER_VERSION = 5;
 }
 
 ConnectionsPage::ConnectionsPage(StatisticsController *ctrl, QWidget *parent) :
-    StatBasePage(ctrl, parent), m_connListModel(new ConnListModel(this))
+    StatBasePage(ctrl, parent), m_connListModel(new ConnSearchModel(this))
 {
     setupUi();
 
@@ -66,6 +67,9 @@ void ConnectionsPage::onRetranslateUi()
     m_actAddProgram->setText(tr("Add Program"));
     m_actRemoveConn->setText(tr("Remove"));
     m_actClearAll->setText(tr("Clear All"));
+    m_actFind->setText(tr("Find"));
+
+    m_editSearch->setPlaceholderText(tr("Search") + " /");
 
     m_btClearAll->setText(tr("Clear All"));
 
@@ -127,6 +131,11 @@ QLayout *ConnectionsPage::setupHeader()
 
     m_actClearAll = menu->addAction(IconCache::icon(":/icons/broom.png"), QString());
 
+    menu->addSeparator();
+
+    m_actFind = menu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFind->setShortcut(QKeySequence::Find);
+
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(menu);
 
@@ -135,10 +144,15 @@ QLayout *ConnectionsPage::setupHeader()
 
     connect(m_btClearAll, &QAbstractButton::clicked, m_actClearAll, &QAction::trigger);
 
+    // Search
+    setupEditSearch();
+
     // Options
     setupOptions();
 
     layout->addWidget(m_btEdit);
+    layout->addWidget(ControlUtil::createVSeparator());
+    layout->addWidget(m_editSearch);
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btClearAll);
     layout->addStretch();
@@ -180,6 +194,20 @@ void ConnectionsPage::setupHeaderConnections()
         windowManager()->showConfirmBox(
                 [&] { ctrl()->deleteConn(); }, tr("Are you sure to remove all connections?"));
     });
+    connect(m_actFind, &QAction::triggered, this, [&] {
+        m_editSearch->setFocus();
+        m_editSearch->selectAll();
+    });
+}
+
+void ConnectionsPage::setupEditSearch()
+{
+    m_editSearch = ControlUtil::createLineEdit(
+            QString(), [&](const QString &text) { connListModel()->setTextFilter(text); });
+    m_editSearch->setClearButtonEnabled(true);
+    m_editSearch->setMaxLength(200);
+    m_editSearch->setMinimumWidth(100);
+    m_editSearch->setMaximumWidth(200);
 }
 
 void ConnectionsPage::setupOptions()
@@ -308,11 +336,14 @@ void ConnectionsPage::setupTableConnsChanged()
     const auto refreshTableConnsChanged = [&] {
         const int connIndex = connListCurrentIndex();
         const bool connSelected = (connIndex >= 0);
+
         m_actCopyAsFilter->setEnabled(connSelected);
         m_actCopy->setEnabled(connSelected);
         m_actLookupIp->setEnabled(connSelected);
         m_actAddProgram->setEnabled(connSelected);
-        m_actRemoveConn->setEnabled(connSelected);
+
+        /* Removing till the row would remove the filtered out connections too */
+        m_actRemoveConn->setEnabled(connSelected && !connListModel()->isFiltering());
         m_appInfoRow->setVisible(connSelected);
     };
 

@@ -142,7 +142,7 @@ QVariant dataDisplayDirection(const ConnRow &connRow, int role)
     if (role != Qt::ToolTipRole)
         return {};
 
-    return connRow.inbound ? ConnListModel::tr("In") : ConnListModel::tr("Out");
+    return ConnListModel::directionText(connRow.inbound);
 }
 
 QVariant dataDisplayAction(const ConnRow &connRow, int role)
@@ -150,7 +150,7 @@ QVariant dataDisplayAction(const ConnRow &connRow, int role)
     if (role != Qt::ToolTipRole)
         return {};
 
-    return connRow.blocked ? ConnListModel::tr("Blocked") : ConnListModel::tr("Allowed");
+    return ConnListModel::actionText(connRow.blocked);
 }
 
 QVariant dataDisplayReason(const ConnRow &connRow, int role)
@@ -158,25 +158,7 @@ QVariant dataDisplayReason(const ConnRow &connRow, int role)
     if (role != Qt::ToolTipRole)
         return {};
 
-    QStringList list = { ConnListModel::reasonText(FortConnReason(connRow.reason)) };
-
-    if (connRow.ruleId != 0) {
-        const QString ruleName = confRuleManager()->ruleNameById(connRow.ruleId);
-
-        list << ConnListModel::tr("Rule: %1").arg(ruleName);
-    }
-
-    if (connRow.zoneId != 0) {
-        const QString zoneName = confZoneManager()->zoneNameById(connRow.zoneId);
-
-        list << ConnListModel::tr("Zone: %1").arg(zoneName);
-    }
-
-    if (connRow.inherited) {
-        list << ConnListModel::tr("Inherited");
-    }
-
-    return list.join('\n');
+    return ConnListModel::reasonDetailsText(connRow);
 }
 
 QVariant dataDisplayTime(const ConnRow &connRow, int /*role*/)
@@ -396,35 +378,40 @@ bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
     if (!DbQuery(sqliteDb()).sql(sql()).vars({ connId }).prepareRow(stmt))
         return false;
 
-    m_connRow.connId = stmt.columnInt64(0);
-    m_connRow.appId = stmt.columnInt64(1);
-    m_connRow.connTime = stmt.columnUnixTime(2);
-    m_connRow.pid = stmt.columnInt(3);
-    m_connRow.reason = stmt.columnInt(4);
-    m_connRow.blocked = stmt.columnBool(5);
-    m_connRow.alerted = stmt.columnBool(6);
-    m_connRow.inherited = stmt.columnBool(7);
-    m_connRow.inbound = stmt.columnBool(8);
-    m_connRow.ipProto = stmt.columnInt(9);
-    m_connRow.localPort = stmt.columnInt(10);
-    m_connRow.remotePort = stmt.columnInt(11);
-
-    m_connRow.isIPv6 = stmt.columnIsNull(12);
-    if (!m_connRow.isIPv6) {
-        m_connRow.localIp.v4 = stmt.columnInt(12);
-        m_connRow.remoteIp.v4 = stmt.columnInt(13);
-    } else {
-        m_connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(14, /*isView=*/true));
-        m_connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(15, /*isView=*/true));
-    }
-
-    m_connRow.zoneId = stmt.columnInt(16);
-    m_connRow.ruleId = stmt.columnInt(17);
-
-    m_connRow.confAppId = stmt.columnInt64(18);
-    m_connRow.appPath = stmt.columnText(19);
+    fillConnRow(m_connRow, stmt);
 
     return true;
+}
+
+void ConnListModel::fillConnRow(ConnRow &connRow, const SqliteStmt &stmt)
+{
+    connRow.connId = stmt.columnInt64(0);
+    connRow.appId = stmt.columnInt64(1);
+    connRow.connTime = stmt.columnUnixTime(2);
+    connRow.pid = stmt.columnInt(3);
+    connRow.reason = stmt.columnInt(4);
+    connRow.blocked = stmt.columnBool(5);
+    connRow.alerted = stmt.columnBool(6);
+    connRow.inherited = stmt.columnBool(7);
+    connRow.inbound = stmt.columnBool(8);
+    connRow.ipProto = stmt.columnInt(9);
+    connRow.localPort = stmt.columnInt(10);
+    connRow.remotePort = stmt.columnInt(11);
+
+    connRow.isIPv6 = stmt.columnIsNull(12);
+    if (!connRow.isIPv6) {
+        connRow.localIp.v4 = stmt.columnInt(12);
+        connRow.remoteIp.v4 = stmt.columnInt(13);
+    } else {
+        connRow.localIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(14, /*isView=*/true));
+        connRow.remoteIp.v6 = NetUtil::arrayViewToIp6(stmt.columnBlob(15, /*isView=*/true));
+    }
+
+    connRow.zoneId = stmt.columnInt(16);
+    connRow.ruleId = stmt.columnInt(17);
+
+    connRow.confAppId = stmt.columnInt64(18);
+    connRow.appPath = stmt.columnText(19);
 }
 
 void ConnListModel::fillConnIdRange(qint64 &idMin, qint64 &idMax)
@@ -556,6 +543,39 @@ QString ConnListModel::reasonText(FortConnReason reason)
     }
 
     return tr("Unknown");
+}
+
+QString ConnListModel::reasonDetailsText(const ConnRow &connRow)
+{
+    QStringList list = { reasonText(FortConnReason(connRow.reason)) };
+
+    if (connRow.ruleId != 0) {
+        const QString ruleName = confRuleManager()->ruleNameById(connRow.ruleId);
+
+        list << tr("Rule: %1").arg(ruleName);
+    }
+
+    if (connRow.zoneId != 0) {
+        const QString zoneName = confZoneManager()->zoneNameById(connRow.zoneId);
+
+        list << tr("Zone: %1").arg(zoneName);
+    }
+
+    if (connRow.inherited) {
+        list << tr("Inherited");
+    }
+
+    return list.join('\n');
+}
+
+QString ConnListModel::directionText(bool inbound)
+{
+    return inbound ? tr("In") : tr("Out");
+}
+
+QString ConnListModel::actionText(bool blocked)
+{
+    return blocked ? tr("Blocked") : tr("Allowed");
 }
 
 QString ConnListModel::columnName(const ConnListColumn column)

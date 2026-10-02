@@ -5,11 +5,12 @@
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
 QT_FORWARD_DECLARE_CLASS(QHeaderView)
+QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
 class AppInfoRow;
-class ConnListModel;
+class ConnSearchModel;
 class IniUser;
 class StatisticsController;
 class TableView;
@@ -23,7 +24,7 @@ class ConnectionsPage : public StatBasePage
 public:
     explicit ConnectionsPage(StatisticsController *ctrl = nullptr, QWidget *parent = nullptr);
 
-    ConnListModel *connListModel() const { return m_connListModel; }
+    ConnSearchModel *connListModel() const { return m_connListModel; }
 
 protected slots:
     void onSaveWindowState(IniUser &ini) override;
@@ -35,6 +36,7 @@ private:
     void setupUi();
     QLayout *setupHeader();
     void setupHeaderConnections();
+    void setupEditSearch();
     void setupOptions();
     void setupAutoScroll();
     void setupShowHostNames();
@@ -58,7 +60,7 @@ private:
     const ConnRow &currentConnRow() const;
 
 private:
-    ConnListModel *m_connListModel = nullptr;
+    ConnSearchModel *m_connListModel = nullptr;
 
     QPushButton *m_btEdit = nullptr;
     QAction *m_actCopyAsFilter = nullptr;
@@ -67,6 +69,8 @@ private:
     QAction *m_actAddProgram = nullptr;
     QAction *m_actRemoveConn = nullptr;
     QAction *m_actClearAll = nullptr;
+    QAction *m_actFind = nullptr;
+    QLineEdit *m_editSearch = nullptr;
     QToolButton *m_btClearAll = nullptr;
     QPushButton *m_btOptions = nullptr;
     QCheckBox *m_cbAutoScroll = nullptr;
