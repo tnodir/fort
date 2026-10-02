@@ -1,6 +1,7 @@
 include($$PWD/Driver-include.pri)
 
 SOURCES += \
+    $$PWD/common/fortcmnutl.c \
     $$PWD/common/fortconf.c \
     $$PWD/common/fortconf_valid.c \
     $$PWD/common/fortlog.c \
@@ -10,6 +11,7 @@ SOURCES += \
 HEADERS += \
     $$PWD/common/common.h \
     $$PWD/common/common_types.h \
+    $$PWD/common/fortcmnutl.h \
     $$PWD/common/fortconf.h \
     $$PWD/common/fortconf_valid.h \
     $$PWD/common/fortdef.h \

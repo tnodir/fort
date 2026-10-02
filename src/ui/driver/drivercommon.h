@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+#include <common/fortcmnutl.h>
 #include <common/fortconf.h>
 
 namespace DriverCommon {

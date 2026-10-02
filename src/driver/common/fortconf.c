@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "fort_wildmatch.h"
+#include "fortcmnutl.h"
 #include "fortdef.h"
 
 static_assert(sizeof(ip6_addr_t) == 16, "ip6_addr_t size mismatch");
@@ -26,12 +27,6 @@ static_assert(sizeof(FORT_CONF_GROUPS) == 3 * sizeof(UINT32) + FORT_CONF_GROUP_M
 
 static_assert(
         sizeof(FORT_CONF_CONN_ACTIONS) == sizeof(UINT16), "FORT_CONF_CONN_ACTIONS size mismatch");
-
-FORT_API int fort_bit_scan_forward(ULONG mask)
-{
-    unsigned long index;
-    return _BitScanForward(&index, mask) ? index : -1;
-}
 
 static BOOL fort_conf_proto_find(const UINT8 *proto_arr, UINT8 proto, UINT16 count, BOOL is_range)
 {
@@ -207,37 +202,6 @@ static int fort_conf_blob_index(const char *arr, const char *p, UINT32 blob_len,
 
 #define fort_conf_addr_list_pair6_ref(addr6_list)                                                  \
     (fort_conf_addr_list_ip6_ref(addr6_list) + (addr6_list)->ip_n)
-
-FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len)
-{
-    const size_t n = RtlCompareMemory(p1, p2, len);
-    return (n == len) ? 0 : (((unsigned char *) p1)[n] - ((unsigned char *) p2)[n]);
-}
-
-FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len)
-{
-    return RtlCompareMemory(p1, p2, len) == len;
-}
-
-FORT_API int fort_string_cmp(PFORT_STRING_CMP_ARG sca)
-{
-    PCWSTR s1 = sca->s1;
-    PCWSTR s2 = sca->s2;
-    const UINT16 min_n = (sca->n1 < sca->n2) ? sca->n1 : sca->n2;
-
-    UINT16 n = 0;
-    while (n < min_n && s1[n] == s2[n]) {
-        ++n;
-    }
-
-    sca->common_n = n;
-
-    if (n < min_n) {
-        return (int) s1[n] - (int) s2[n];
-    }
-
-    return (int) sca->n1 - (int) sca->n2;
-}
 
 static BOOL fort_conf_proto_inlist(const UINT8 proto, PCFORT_CONF_PROTO_LIST proto_list)
 {

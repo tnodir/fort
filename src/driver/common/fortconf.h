@@ -555,16 +555,6 @@ typedef struct fort_conf_zones_conn_filtered_opt
     FORT_CONF_ZONES_CONN_FILTERED_RESULT reject;
 } FORT_CONF_ZONES_CONN_FILTERED_OPT, *PFORT_CONF_ZONES_CONN_FILTERED_OPT;
 
-typedef struct fort_string_cmp_arg
-{
-    PCWSTR s1;
-    PCWSTR s2;
-    UINT16 n1;
-    UINT16 n2;
-
-    UINT16 common_n; /* the common prefix's length */
-} FORT_STRING_CMP_ARG, *PFORT_STRING_CMP_ARG;
-
 #define FORT_CONF_DATA_OFF       offsetof(FORT_CONF, data)
 #define FORT_CONF_IO_CONF_OFF    offsetof(FORT_CONF_IO, conf)
 #define FORT_CONF_PROTO_LIST_OFF offsetof(FORT_CONF_PROTO_LIST, proto)
@@ -598,17 +588,6 @@ typedef BOOL fort_conf_zones_ip_included_func(
 #if defined(__cplusplus)
 extern "C" {
 #endif
-
-FORT_API int fort_bit_scan_forward(ULONG mask);
-
-FORT_API int fort_mem_cmp(const void *p1, const void *p2, UINT32 len);
-
-#define fort_ip6_cmp(l, r) fort_mem_cmp(l, r, sizeof(ip6_addr_t))
-
-FORT_API BOOL fort_mem_eql(const void *p1, const void *p2, UINT32 len);
-
-/* Compare by UTF-16 code units (as QString) and set the common prefix's length */
-FORT_API int fort_string_cmp(PFORT_STRING_CMP_ARG sca);
 
 FORT_API BOOL fort_conf_ip_inlist(PCFORT_CONF_ADDR_LIST addr_list, const ip_addr_t ip, BOOL isIPv6);
 

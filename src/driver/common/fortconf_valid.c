@@ -2,6 +2,8 @@
 
 #include "fortconf_valid.h"
 
+#include "fortcmnutl.h"
+
 #define FORT_CONF_ADDR_GROUP_COUNT 2 /* LAN and INET */
 
 /* Each list's level is an OR-list of lines with AND-lists of sections */

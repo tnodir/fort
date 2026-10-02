@@ -8,6 +8,7 @@
 #define FORT_DEBUG_STACK
 */
 
+#include "common/fortcmnutl.c"
 #include "common/fortconf.c"
 #include "common/fortconf_valid.c"
 #include "common/fortlog.c"

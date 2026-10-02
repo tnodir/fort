@@ -1,5 +1,6 @@
 #include "iprange.h"
 
+#include <common/fortcmnutl.h>
 #include <common/fortconf.h>
 
 #include <util/conf/confdata.h>

@@ -4,6 +4,8 @@
 #define FORT_DRIVER
 #define FORT_DEBUG
 
+#include "../common/fortcmnutl.c"
+
 #include "../fortmod.c"
 #include "../fortutl.c"
 

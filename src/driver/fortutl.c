@@ -2,6 +2,8 @@
 
 #include "fortutl.h"
 
+#include "common/fortcmnutl.h"
+
 #include "../version/fort_version_l.h"
 
 #define FORT_UTL_POOL_TAG 'UwfF'
