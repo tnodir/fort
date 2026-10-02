@@ -250,7 +250,10 @@ TEST_F(ConfUtilTest, checkEnvManager)
 
     ASSERT_EQ(envManager.expandString("%d%"), "a");
 
-    ASSERT_NE(envManager.expandString("%HOME%"), QString());
+    /* The HOME is not set on Windows by default */
+    const auto systemRoot = qEnvironmentVariable("SystemRoot");
+    ASSERT_FALSE(systemRoot.isEmpty());
+    ASSERT_EQ(envManager.expandString("%SystemRoot%"), systemRoot);
 }
 
 TEST_F(ConfUtilTest, groupsWriteRead)
