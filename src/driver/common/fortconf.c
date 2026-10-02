@@ -871,31 +871,46 @@ inline static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_type(
     return func(conn, data);
 }
 
+static BOOL fort_conf_rule_filter_equal_address(PCFORT_CONF_META_CONN conn)
+{
+    const UINT32 len = conn->isIPv6 ? sizeof(ip6_addr_t) : sizeof(UINT32);
+
+    return fort_mem_eql(conn->local_ip.data, conn->remote_ip.data, len);
+}
+
+static BOOL fort_conf_rule_filter_equal_port(PCFORT_CONF_META_CONN conn)
+{
+    return conn->local_port == conn->remote_port;
+}
+
+typedef BOOL (*FORT_CONF_RULE_FILTER_EQUAL_FUNC)(PCFORT_CONF_META_CONN conn);
+
+static const FORT_CONF_RULE_FILTER_EQUAL_FUNC fort_conf_rule_filter_equal_funcList[] = {
+    &fort_conf_rule_filter_equal_address, // FORT_RULE_FILTER_TYPE_ADDRESS,
+    &fort_conf_rule_filter_equal_port, // FORT_RULE_FILTER_TYPE_PORT,
+    &fort_conf_rule_filter_equal_address, // FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS,
+    &fort_conf_rule_filter_equal_port, // FORT_RULE_FILTER_TYPE_LOCAL_PORT,
+    NULL, // FORT_RULE_FILTER_TYPE_PROTOCOL,
+    NULL, // FORT_RULE_FILTER_TYPE_IP_VERSION,
+    NULL, // FORT_RULE_FILTER_TYPE_DIRECTION,
+    NULL, // FORT_RULE_FILTER_TYPE_ZONES,
+    NULL, // FORT_RULE_FILTER_TYPE_AREA,
+    NULL, // FORT_RULE_FILTER_TYPE_PROFILE,
+    NULL, // FORT_RULE_FILTER_TYPE_ACTION,
+    NULL, // FORT_RULE_FILTER_TYPE_OPTION,
+    // Complex types
+    &fort_conf_rule_filter_equal_port, // FORT_RULE_FILTER_TYPE_PORT_TCP,
+    &fort_conf_rule_filter_equal_port, // FORT_RULE_FILTER_TYPE_PORT_UDP,
+};
+
 inline static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_equal(
         PCFORT_CONF_META_CONN conn, const int filter_type)
 {
-    BOOL equal_res;
-
-    switch (filter_type) {
-    case FORT_RULE_FILTER_TYPE_ADDRESS:
-    case FORT_RULE_FILTER_TYPE_LOCAL_ADDRESS: {
-        const void *p1 = conn->local_ip.data;
-        const void *p2 = conn->remote_ip.data;
-        const UINT32 len = conn->isIPv6 ? sizeof(ip6_addr_t) : sizeof(UINT32);
-
-        equal_res = fort_mem_eql(p1, p2, len);
-    } break;
-    case FORT_RULE_FILTER_TYPE_PORT:
-    case FORT_RULE_FILTER_TYPE_LOCAL_PORT:
-    case FORT_RULE_FILTER_TYPE_PORT_TCP:
-    case FORT_RULE_FILTER_TYPE_PORT_UDP: {
-        equal_res = conn->local_port == conn->remote_port;
-    } break;
-    default:
+    const FORT_CONF_RULE_FILTER_EQUAL_FUNC func = fort_conf_rule_filter_equal_funcList[filter_type];
+    if (func == NULL)
         return FORT_CONN_FILTER_RESULT_TRUE;
-    }
 
-    return equal_res ? FORT_CONN_FILTER_RESULT_TRUE : FORT_CONN_FILTER_RESULT_FALSE;
+    return func(conn) ? FORT_CONN_FILTER_RESULT_TRUE : FORT_CONN_FILTER_RESULT_FALSE;
 }
 
 static FORT_CONN_FILTER_RESULT fort_conf_rule_filter_check_values(
