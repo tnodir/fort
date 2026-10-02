@@ -307,7 +307,9 @@ quint16 confGroupsRulesConnFiltered(
     PCFORT_CONF_GROUPS groups = static_cast<PCFORT_CONF_GROUPS>(drvGroups);
     PCFORT_CONF_RULES rules = static_cast<PCFORT_CONF_RULES>(drvRules);
 
-    return fort_conf_groups_rules_conn_filtered(groups, rules, /*zones=*/nullptr, conn, groupsMask);
+    const FORT_CONF_RULES_RT rules_rt = fort_conf_rules_rt_make(rules, /*zones=*/nullptr);
+
+    return fort_conf_groups_rules_conn_filtered(groups, &rules_rt, conn, groupsMask);
 }
 
 bool confRulesConnBlocked(const void *drvRules, PFORT_CONF_META_CONN conn, quint16 ruleId)

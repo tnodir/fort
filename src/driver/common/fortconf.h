@@ -621,8 +621,7 @@ FORT_API BOOL fort_conf_zones_conn_filtered(PCFORT_CONF_ZONES zones, PCFORT_CONF
 FORT_API BOOL fort_conf_groups_mask_blocked(PCFORT_CONF_GROUPS groups, UINT32 groups_mask);
 
 FORT_API UINT16 fort_conf_groups_rules_conn_filtered(PCFORT_CONF_GROUPS groups,
-        PCFORT_CONF_RULES rules, PCFORT_CONF_ZONES zones, PFORT_CONF_META_CONN conn,
-        UINT32 groups_mask);
+        PCFORT_CONF_RULES_RT rules_rt, PFORT_CONF_META_CONN conn, UINT32 groups_mask);
 
 FORT_API BOOL fort_conf_app_exe_equal(PCFORT_APP_ENTRY app_entry, PCFORT_APP_PATH path);
 
