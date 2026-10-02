@@ -446,7 +446,7 @@ bool ConfBuffer::writeRule(const Rule &rule, const WalkRulesArgs &wra)
     const quint16 ruleId = rule.ruleId;
     const auto ruleSetInfo = wra.ruleSetMap[ruleId];
 
-    FORT_CONF_RULE confRule;
+    FORT_CONF_RULE confRule {}; /* zero the reserved bits */
     confRule.enabled = rule.enabled;
     confRule.blocked = rule.blocked;
     confRule.exclusive = rule.exclusive;
