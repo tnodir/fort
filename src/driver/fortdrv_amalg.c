@@ -31,6 +31,8 @@
 #include "fortdbg.c"
 #include "fortmod.c"
 #include "fortpkt.c"
+#include "fortpkt_pending.c"
+#include "fortpkt_shaper.c"
 #include "fortpool.c"
 #include "fortps.c"
 #include "fortstat.c"

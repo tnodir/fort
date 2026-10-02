@@ -20,6 +20,8 @@ SOURCES += \
     fortdrv.c \
     fortmod.c \
     fortpkt.c \
+    fortpkt_pending.c \
+    fortpkt_shaper.c \
     fortpool.c \
     fortps.c \
     fortscb.c \
@@ -65,6 +67,8 @@ HEADERS += \
     fortdrv.h \
     fortmod.h \
     fortpkt.h \
+    fortpkt_pending.h \
+    fortpkt_shaper.h \
     fortpool.h \
     fortps.h \
     fortscb.h \

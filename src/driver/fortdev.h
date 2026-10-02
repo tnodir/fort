@@ -5,7 +5,8 @@
 
 #include "fortbuf.h"
 #include "fortcnf.h"
-#include "fortpkt.h"
+#include "fortpkt_pending.h"
+#include "fortpkt_shaper.h"
 #include "fortps.h"
 #include "fortstat.h"
 #include "forttmr.h"
