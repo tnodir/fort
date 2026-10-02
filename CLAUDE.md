@@ -21,7 +21,7 @@ cd build-win10
 jom      :: or nmake
 ```
 
-- Qt is a **custom static build** (`<qt-static>` is the `-prefix` of the scripts below) — see `deploy/qt-build.bat` (win10 x64), `deploy/qt-build-win7.bat`, `deploy/qt-build-arm64.bat`. Many Qt features are disabled (`-no-feature-sql`, `-no-feature-printsupport`, no OpenGL/dbus/icu…), so do not use Qt SQL, QPrinter, QDial, QUndoStack, QMimeDatabase, QDockWidget, etc.
+- Qt is a **custom static build** (`<qt-static>` is the `-prefix` of the scripts below) — see `deploy/qt-build.bat` (win10 x64), `deploy/qt-build-win7.bat`, `deploy/qt-build-arm64.bat`. Many Qt features are disabled (`-no-feature-sql`, `-no-feature-printsupport`, no OpenGL/dbus/icu…), so do not use Qt SQL, QPrinter, QDial, QUndoStack, QMimeDatabase, QDockWidget, etc. It is configured `-release` only, and the release builds (as well as the `msvcbuild-*.bat` driver builds) define `NDEBUG`, so `assert()` isn't compiled at all and a typo inside one goes unnoticed. For a debug build (asserts on) use a regular Qt install (`QT_HOME`, which has the debug libs) in a separate build dir: `%QT_HOME%\bin\qmake.exe -o Makefile ..\src\FortFirewall.pro -spec win32-msvc "CONFIG+=debug" "CONFIG-=release" "CONFIG+=tests"` + `jom`; run its binaries with `%QT_HOME%\bin` in `PATH`.
 - `CONFIG+=tests` adds the `driver` (user-mode driver test app) and `tests` subprojects; `CONFIG+=driver_payload` adds `driver_payload`. Without them only `ui` + `ui_bin` are built.
 - Subproject layout: `ui/` builds the static lib `FortFirewallUILib`, `ui_bin/` links it into `FortFirewall.exe`, tests link the same lib. **New .cpp/.h files must be added explicitly to `SOURCES`/`HEADERS` in `src/ui/FortFirewallUI.pro`.**
 
@@ -37,7 +37,7 @@ src\driver\loader\msvcbuild-win10-64.bat :: driver loader (fortfwdl.sys payload 
 
 With an EWDK instead of an installed WDK, set up the environment non-interactively (`LaunchBuildEnv.cmd` opens a `cmd /k`): `cmd /c "<EWDK>\BuildEnv\SetupBuildEnv.cmd amd64 && src\driver\msvcbuild-win10-64.bat"`. The `win7` targets need an older EWDK (WDK 10.0.20348 builds them; the 26100 one is for `win10`/arm64).
 
-`fortdrv.vcxproj` compiles **only `fortdrv_amalg.c`** (an amalgamation that `#include`s every driver .c). A new driver source file must be added there *and* to `FortFirewallDriver.pro`.
+`fortdrv.vcxproj` compiles **only `fortdrv_amalg.c`** (an amalgamation that `#include`s every driver .c). A new driver source file must be added there *and* to `FortFirewallDriver.pro`. In the amalgamation `FORT_API` is `static` (`driver/common/common.h`), so a function called from another driver .c needs `FORT_API` and a prototype in its header; the user-mode build below compiles each .c separately (`FORT_API` = `extern`) and catches a missing one.
 
 `src/driver/FortFirewallDriver.pro` builds the driver code as a **user-mode** console app (`driver/test/main.c` plus the `wdm/um_*.c` shims that emulate the kernel APIs) — that is how driver logic is exercised without loading a real driver.
 
@@ -63,7 +63,7 @@ Suites: `UtilTest` (bitutil, confutil, dateutil, fileutil, ioccontainer, netutil
 ### Translations & deployment
 
 ```bat
-set QT_HOME=<Qt>\6.9.1\msvc2022_64    :: a regular Qt install with lupdate/lrelease
+set QT_HOME=<Qt>\<version>\msvc2022_64    :: a regular Qt install with lupdate/lrelease
 src\scripts\i18n\update_ts.bat     :: lupdate all src/ui/i18n/*.ts
 src\scripts\i18n\release_ts.bat    :: lrelease -> *.qm (merges i18n/qt/qtbase_*.ts)
 
@@ -106,7 +106,7 @@ No Qt SQL — a hand-rolled SQLite wrapper in `src/ui/3rdparty/sqlite/` (`Sqlite
 
 ### Driver internals (`src/driver/`)
 
-`fortdrv.c` entry point; `fortcout.c` WFP callouts registration, `fortcout_ale.c` ALE and `fortcout_pkt.c` packet classify callouts; `fortcnf*.c` the live configuration (conf/rules/groups/zones) with reader-writer locks; `fortbuf.c` the log ring buffer read back by the UI; `fortstat.c` traffic accounting; `fortps.c` process tracking; `fortpool.c`/`forttlsf.c` allocators (TLSF from `src/3rdparty/tlsf`); `fortmod.c` + `loader/` the self-loading module (fortfwdl.sys unpacks the signed payload); `proxycb/` callout trampolines (with .asm variants per arch).
+`fortdrv.c` entry point; `fortcout.c` WFP callouts registration, `fortcout_ale.c` ALE and `fortcout_pkt.c` packet classify callouts; `fortcnf*.c` the live configuration (conf/rules/groups/zones) with reader-writer locks; `fortbuf.c` the log ring buffer read back by the UI; `fortpkt.c` packets' cloning and re-injection, `fortpkt_shaper.c` the Speed Limits' shaper queues, `fortpkt_pending.c` the pended (Ask to Connect) packets; `fortstat.c` traffic accounting; `fortps.c` process tracking; `fortpool.c`/`forttlsf.c` allocators (TLSF from `src/3rdparty/tlsf`); `fortmod.c` + `loader/` the self-loading module (fortfwdl.sys unpacks the signed payload); `proxycb/` callout trampolines (with .asm variants per arch).
 
 ### UI layer
 
@@ -115,6 +115,7 @@ No Qt SQL — a hand-rolled SQLite wrapper in `src/ui/3rdparty/sqlite/` (`Sqlite
 ## Conventions
 
 - Format with `src/_clang-format` (WebKit-based Qt style, 100 columns, `PointerBindsToType: false`, braces on their own line after functions/classes only).
+- Keep each function's cyclomatic complexity below 9: CodeScene reports a "Complex Method" otherwise. Every `case`/`default` label, `if`, loop, `continue`, `&&`, `||` and `?:` adds one (`break` doesn't); split long `switch`es into helpers or a function table indexed by the enum (e.g. `fort_conf_rule_filter_check_funcList` in `driver/common/fortconf.c`). Likewise keep at most 4 arguments per function ("Excess Number of Function Arguments"), grouping them into a struct if needed (cf. `FORT_CALLOUT_ARG`), and at most one `&&`/`||` in an `if`/`while` condition ("Complex Conditional"): move the rest into a named helper or early returns. Nest a conditional or loop in at most one of a function's top-level branches/loop bodies ("Bumpy Road"); move the others into helpers.
 - Commit subjects are prefixed by area: `UI:`, `Driver:`, `Tests:`, `Deploy:`, `Installer:`, `README:` — e.g. `UI: ConfManager: Refactor save()`.
 - User-visible changes get a line in `ChangeLog` under the release heading, referencing the GitHub issue number where applicable.
 - App version lives in `src/version/fort_version.h` (`APP_VERSION_*` and `DRIVER_VERSION`).
