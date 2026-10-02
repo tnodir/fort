@@ -7,8 +7,6 @@
 
 #include <util/bitutil.h>
 
-#include "netformatutil.h"
-
 namespace {
 
 QHash<quint8, QString> protocolNumberNamesMap = {
@@ -334,18 +332,24 @@ const ip6_addr_t &NetUtil::arrayViewToIp6(const QByteArrayView &buf)
 
 QString NetUtil::getHostName(const QString &address)
 {
-    WCHAR hostName[NI_MAXHOST];
+    /* Parse the IPv4 or IPv6 address */
+    const ADDRINFOW hints = {
+        .ai_flags = AI_NUMERICHOST,
+        .ai_family = AF_UNSPEC,
+    };
 
-    struct sockaddr_in sa;
-    memset(&sa, 0, sizeof(struct sockaddr_in));
-    sa.sin_family = AF_INET;
-    sa.sin_addr.s_addr = htonl(NetFormatUtil::textToIp4(address));
-
-    if (GetNameInfoW((struct sockaddr *) &sa, sizeof(struct sockaddr), hostName, NI_MAXHOST,
-                nullptr, 0, 0))
+    PADDRINFOW addrInfo = nullptr;
+    if (GetAddrInfoW((PCWSTR) address.utf16(), nullptr, &hints, &addrInfo) != 0)
         return QString();
 
-    return QString::fromWCharArray(hostName);
+    WCHAR hostName[NI_MAXHOST];
+
+    const int res = GetNameInfoW(
+            addrInfo->ai_addr, int(addrInfo->ai_addrlen), hostName, NI_MAXHOST, nullptr, 0, 0);
+
+    FreeAddrInfoW(addrInfo);
+
+    return (res != 0) ? QString() : QString::fromWCharArray(hostName);
 }
 
 QStringList NetUtil::localIpNetworks()
