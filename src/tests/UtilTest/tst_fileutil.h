@@ -1,6 +1,9 @@
 #pragma once
 
+#include <QDir>
+#include <QFile>
 #include <QSignalSpy>
+#include <QTemporaryDir>
 
 #include <googletest.h>
 
@@ -55,9 +58,29 @@ TEST_F(FileUtilTest, realPath)
 {
     ASSERT_EQ(FileUtil::realPath(FileUtil::systemApp()), FileUtil::systemApp());
 
+    /* The SystemRoot's case may differ from the stored one, e.g. "C:\WINDOWS" */
     const auto taskMgrPath = qEnvironmentVariable("SystemRoot") + R"(\System32\Taskmgr.exe)";
+    const auto taskMgrRealPath = FileUtil::realPath(taskMgrPath.toLower());
 
-    ASSERT_EQ(FileUtil::realPath(taskMgrPath.toLower()), taskMgrPath);
+    ASSERT_EQ(taskMgrRealPath.compare(taskMgrPath, Qt::CaseInsensitive), 0);
+    ASSERT_TRUE(taskMgrRealPath.endsWith(R"(\System32\Taskmgr.exe)"));
+}
+
+TEST_F(FileUtilTest, realPathCase)
+{
+    QTemporaryDir tempDir;
+    ASSERT_TRUE(tempDir.isValid());
+    ASSERT_TRUE(QDir(tempDir.path()).mkdir("MiXeD"));
+
+    QFile file(tempDir.filePath("MiXeD/FiLe.txt"));
+    ASSERT_TRUE(file.open(QIODevice::WriteOnly));
+    file.close();
+
+    const auto filePath = QDir::toNativeSeparators(file.fileName());
+    const auto realPath = FileUtil::realPath(filePath.toLower());
+
+    ASSERT_EQ(realPath.compare(filePath, Qt::CaseInsensitive), 0);
+    ASSERT_TRUE(realPath.endsWith(R"(\MiXeD\FiLe.txt)"));
 }
 
 TEST_F(FileUtilTest, process)
