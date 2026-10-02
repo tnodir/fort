@@ -1083,10 +1083,11 @@ inline static NTSTATUS fort_shaper_packet_queue(
         return STATUS_NO_SUCH_GROUP;
 
     /* Check the Queue for new Packet */
-    if (!fort_shaper_packet_queue_check_in_count(shaper, ca->inbound)
-            || !fort_shaper_packet_queue_check_packet(shaper, queue, ca->dataSize)) {
+    if (!fort_shaper_packet_queue_check_in_count(shaper, ca->inbound))
         return STATUS_SUCCESS; /* drop the packet */
-    }
+
+    if (!fort_shaper_packet_queue_check_packet(shaper, queue, ca->dataSize))
+        return STATUS_SUCCESS; /* drop the packet */
 
     /* Create the Packet */
     PFORT_FLOW_PACKET pkt = fort_shaper_packet_new();
@@ -1137,13 +1138,15 @@ FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG 
         return FALSE;
     }
 
+    if (fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF) != 0)
+        return FALSE;
+
     PFORT_FLOW flow = (PFORT_FLOW) ca->flowContext;
 
     const UCHAR flow_flags = fort_flow_flags(flow);
     const UCHAR speed_limit = ca->inbound ? FORT_FLOW_SPEED_LIMIT_IN : FORT_FLOW_SPEED_LIMIT_OUT;
 
-    if ((flow_flags & speed_limit) == 0
-            || fort_device_flag(&fort_device()->conf, FORT_DEVICE_POWER_OFF) != 0)
+    if ((flow_flags & speed_limit) == 0)
         return FALSE;
 
     ca->isIPv6 = (flow_flags & FORT_FLOW_IP6) != 0;

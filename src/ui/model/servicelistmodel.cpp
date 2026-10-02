@@ -32,16 +32,16 @@ int ServiceListModel::columnCount(const QModelIndex & /*parent*/) const
 
 QVariant ServiceListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
-        switch (section) {
-        case 0:
-            return tr("Service Name");
-        case 1:
-            return tr("Display Name");
-        case 2:
-            return tr("Process ID");
-        }
+    if (orientation != Qt::Horizontal)
+        return {};
+
+    switch (role) {
+    // Label
+    case Qt::DisplayRole:
+    case Qt::ToolTipRole:
+        return headerDataDisplay(section);
     }
+
     return {};
 }
 
@@ -61,6 +61,19 @@ QVariant ServiceListModel::data(const QModelIndex &index, int role) const
         return dataDecoration(index);
     }
 
+    return {};
+}
+
+QVariant ServiceListModel::headerDataDisplay(int section) const
+{
+    switch (section) {
+    case 0:
+        return tr("Service Name");
+    case 1:
+        return tr("Display Name");
+    case 2:
+        return tr("Process ID");
+    }
     return {};
 }
 

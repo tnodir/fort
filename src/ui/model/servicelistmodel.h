@@ -36,6 +36,7 @@ protected:
     void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
 private:
+    QVariant headerDataDisplay(int section) const;
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataDisplayProcessId(const ServiceInfo &info) const;
     QVariant dataDecoration(const QModelIndex &index) const;

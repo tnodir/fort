@@ -45,9 +45,16 @@ int SpeedLimitListModel::columnCount(const QModelIndex & /*parent*/) const
 
 QVariant SpeedLimitListModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    if (orientation == Qt::Horizontal && (role == Qt::DisplayRole || role == Qt::ToolTipRole)) {
+    if (orientation != Qt::Horizontal)
+        return {};
+
+    switch (role) {
+    // Label
+    case Qt::DisplayRole:
+    case Qt::ToolTipRole:
         return headerDataDisplay(section);
     }
+
     return {};
 }
 
