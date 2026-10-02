@@ -220,6 +220,7 @@ void ConnListModel::initialize()
     connect(hostInfoCache(), &HostInfoCache::cacheChanged, this, &ConnListModel::refresh);
     connect(statConnManager(), &StatConnManager::connChanged, this,
             &ConnListModel::updateConnIdRange);
+    connect(statConnManager(), &StatConnManager::connCleared, this, &ConnListModel::clearConnRows);
 
     updateConnIdRange();
 }
@@ -380,6 +381,11 @@ void ConnListModel::updateConnIdRange()
     fillConnIdRange(idMin, idMax);
 
     updateConnRows(oldIdMin, oldIdMax, idMin, idMax);
+}
+
+void ConnListModel::clearConnRows()
+{
+    resetConnRows(0, 0);
 }
 
 bool ConnListModel::updateTableRow(const QVariantHash & /*vars*/, int row) const
