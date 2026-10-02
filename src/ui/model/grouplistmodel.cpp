@@ -10,7 +10,6 @@
 #include <conf/confmanager.h>
 #include <conf/confrulemanager.h>
 #include <fortglobal.h>
-#include <util/conf/confutil.h>
 
 using namespace Fort;
 

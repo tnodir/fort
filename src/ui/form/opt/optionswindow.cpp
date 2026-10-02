@@ -8,7 +8,6 @@
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
 #include <user/iniuser.h>
-#include <util/osutil.h>
 #include <util/window/widgetwindowstatewatcher.h>
 
 #include "optionscontroller.h"

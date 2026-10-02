@@ -215,9 +215,6 @@ public:
     QByteArray optWindowAddrSplit() const { return valueByteArray("optWindow/addrSplit"); }
     void setOptWindowAddrSplit(const QByteArray &v) { setValue("optWindow/addrSplit", v); }
 
-    QByteArray optWindowAppsSplit() const { return valueByteArray("optWindow/appsSplit"); }
-    void setOptWindowAppsSplit(const QByteArray &v) { setValue("optWindow/appsSplit", v); }
-
     static QString ruleWindowGroup() { return "ruleWindow"; }
 
     QRect ruleWindowGeometry() const { return value("ruleWindow/geometry").toRect(); }
