@@ -607,6 +607,20 @@ inline static BOOL fort_pstree_check_kill_proc(
     return FALSE;
 }
 
+inline static void fort_pstree_handle_existing_proc(
+        PFORT_PSTREE ps_tree, PCFORT_PSINFO_HASH psi, PFORT_PSNODE proc)
+{
+    /* The existing process may be added without the time, e.g. by the services' update */
+    if (psi->createTime != 0) {
+        proc->create_time = psi->createTime;
+    }
+
+    /* The existing process may be added without the service name, e.g. by the enumeration */
+    if (proc->ps_name == NULL) {
+        fort_pstree_proc_check_svchost(ps_tree, psi, proc);
+    }
+}
+
 inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc_locked(
         PFORT_PSTREE ps_tree, PFORT_PSINFO_HASH psi)
 {
@@ -617,15 +631,7 @@ inline static FORT_PS_FLAGS fort_pstree_handle_opened_proc_locked(
         if (proc == NULL)
             return 0;
     } else {
-        /* The existing process may be added without the time, e.g. by the services' update */
-        if (psi->createTime != 0) {
-            proc->create_time = psi->createTime;
-        }
-
-        /* The existing process may be added without the service name, e.g. by the enumeration */
-        if (proc->ps_name == NULL) {
-            fort_pstree_proc_check_svchost(ps_tree, psi, proc);
-        }
+        fort_pstree_handle_existing_proc(ps_tree, psi, proc);
     }
 
     fort_pstree_check_proc_inheritance(ps_tree, psi, proc);
@@ -1016,6 +1022,21 @@ FORT_API void fort_pstree_put_proc_name(PFORT_PSTREE ps_tree, PVOID ps_name)
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 }
 
+inline static PFORT_PSNODE fort_pstree_new_service_proc(
+        PFORT_PSTREE ps_tree, tommy_key_t pid_hash, DWORD processId)
+{
+    PFORT_PSNODE proc = fort_pstree_proc_new(ps_tree, pid_hash);
+    if (proc == NULL)
+        return NULL;
+
+    proc->create_time = 0; /* unknown */
+    proc->process_id = processId;
+    proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST | FORT_PSNODE_FOUND;
+    proc->ps_opt.path_drive = fort_path_drive_get(NULL);
+
+    return proc;
+}
+
 inline static void fort_pstree_update_service_proc(
         PFORT_PSTREE ps_tree, PCUNICODE_STRING serviceName, DWORD processId)
 {
@@ -1023,21 +1044,14 @@ inline static void fort_pstree_update_service_proc(
 
     PFORT_PSNODE proc = fort_pstree_find_proc_hash(ps_tree, processId, pid_hash);
     if (proc == NULL) {
-        proc = fort_pstree_proc_new(ps_tree, pid_hash);
+        proc = fort_pstree_new_service_proc(ps_tree, pid_hash, processId);
         if (proc == NULL)
             return;
+    } else if ((proc->ps_opt.flags & (FORT_PSNODE_IS_SVCHOST | FORT_PSNODE_CLOSED))
+            != FORT_PSNODE_IS_SVCHOST) {
 
-        proc->create_time = 0; /* unknown */
-        proc->process_id = processId;
-        proc->ps_opt.flags = FORT_PSNODE_IS_SVCHOST | FORT_PSNODE_FOUND;
-        proc->ps_opt.path_drive = fort_path_drive_get(NULL);
-    } else {
-        if ((proc->ps_opt.flags & (FORT_PSNODE_IS_SVCHOST | FORT_PSNODE_CLOSED))
-                != FORT_PSNODE_IS_SVCHOST) {
-
-            /* The service's process ID may be reused by another process */
-            return;
-        }
+        /* The service's process ID may be reused by another process */
+        return;
     }
 
     if (proc->ps_name == NULL) {
