@@ -3,6 +3,7 @@
 
 #include <form/controls/formwindow.h>
 
+QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
@@ -33,6 +34,7 @@ private:
 
     void setupUi();
     QLayout *setupHeader();
+    void setupEditSearch();
     void setupOptions();
     void setupTableServiceList();
     void setupTableServiceListHeader();
@@ -47,10 +49,12 @@ private:
     QAction *m_actTrack = nullptr;
     QAction *m_actRevert = nullptr;
     QAction *m_actAddProgram = nullptr;
+    QAction *m_actFind = nullptr;
     QPushButton *m_btEdit = nullptr;
     QToolButton *m_btTrack = nullptr;
     QToolButton *m_btRevert = nullptr;
     QToolButton *m_btRefresh = nullptr;
+    QLineEdit *m_editSearch = nullptr;
     QToolButton *m_btOptions = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_serviceListView = nullptr;

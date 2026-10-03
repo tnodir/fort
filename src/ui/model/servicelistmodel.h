@@ -5,6 +5,7 @@
 
 #include <util/model/tableitemmodel.h>
 #include <util/service/serviceinfo.h>
+#include <util/textmatcher.h>
 
 class ServiceInfo;
 
@@ -16,6 +17,9 @@ public:
     explicit ServiceListModel(QObject *parent = nullptr);
 
     void initialize();
+
+    const QString &textFilter() const { return m_textFilter; }
+    void setTextFilter(const QString &filter);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -36,13 +40,20 @@ protected:
     void fillQueryVarsForRow(QVariantHash & /*vars*/, int /*row*/) const override { }
 
 private:
+    void updateServices();
+
     QVariant headerDataDisplay(int section) const;
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataDisplayProcessId(const ServiceInfo &info) const;
     QVariant dataDecoration(const QModelIndex &index) const;
 
 private:
-    QVector<ServiceInfo> m_services;
+    QString m_textFilter;
+
+    TextMatcher m_textMatcher;
+
+    QVector<ServiceInfo> m_allServices;
+    QVector<ServiceInfo> m_services; // matched
 
     mutable TableRow m_serviceRow;
 };

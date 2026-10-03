@@ -9,11 +9,50 @@
 
 using namespace Fort;
 
+namespace {
+
+QString serviceSearchText(const ServiceInfo &info)
+{
+    QStringList list = { info.realServiceName, info.displayName };
+
+    if (info.processId != 0) {
+        list.append(QString::number(info.processId));
+    }
+
+    return list.join('\n');
+}
+
+}
+
 ServiceListModel::ServiceListModel(QObject *parent) : TableItemModel(parent) { }
 
 void ServiceListModel::initialize()
 {
-    m_services = ServiceInfoManager::loadServiceInfoList();
+    m_allServices = ServiceInfoManager::loadServiceInfoList();
+
+    updateServices();
+}
+
+void ServiceListModel::setTextFilter(const QString &filter)
+{
+    if (m_textFilter == filter)
+        return;
+
+    m_textFilter = filter;
+    m_textMatcher.setFilter(filter);
+
+    updateServices();
+}
+
+void ServiceListModel::updateServices()
+{
+    m_services.clear();
+
+    for (const auto &info : std::as_const(m_allServices)) {
+        if (m_textMatcher.isMatched(serviceSearchText(info))) {
+            m_services.append(info);
+        }
+    }
 
     reset();
 }

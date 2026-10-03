@@ -4,6 +4,7 @@
 #include <QFormLayout>
 #include <QHeaderView>
 #include <QLabel>
+#include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
 #include <QToolButton>
@@ -81,10 +82,13 @@ void ServicesWindow::retranslateUi()
     m_actTrack->setText(tr("Make Trackable"));
     m_actRevert->setText(tr("Revert Changes"));
     m_actAddProgram->setText(tr("Add Program"));
+    m_actFind->setText(tr("Find"));
 
     m_btTrack->setText(tr("Make Trackable"));
     m_btRevert->setText(tr("Revert Changes"));
     m_btRefresh->setText(tr("Refresh"));
+
+    m_editSearch->setPlaceholderText(tr("Search") + " /");
 
     this->setWindowTitle(tr("Services"));
 }
@@ -134,6 +138,11 @@ QLayout *ServicesWindow::setupHeader()
     m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
     m_actAddProgram->setShortcut(Qt::Key_Insert);
 
+    editMenu->addSeparator();
+
+    m_actFind = editMenu->addAction(IconCache::icon(":/icons/magnifier.png"), QString());
+    m_actFind->setShortcut(QKeySequence::Find);
+
     connect(m_actTrack, &QAction::triggered, this, [&] {
         const int serviceIndex = serviceListCurrentIndex();
         if (serviceIndex < 0)
@@ -167,6 +176,10 @@ QLayout *ServicesWindow::setupHeader()
 
         windowManager()->openProgramEditForm(appPath, /*appId=*/0, this);
     });
+    connect(m_actFind, &QAction::triggered, this, [&] {
+        m_editSearch->setFocus();
+        m_editSearch->selectAll();
+    });
 
     m_btEdit = ControlUtil::createButton(":/icons/pencil.png");
     m_btEdit->setMenu(editMenu);
@@ -180,17 +193,33 @@ QLayout *ServicesWindow::setupHeader()
     connect(m_btRevert, &QAbstractButton::clicked, m_actRevert, &QAction::trigger);
     connect(m_btRefresh, &QAbstractButton::clicked, this, &ServicesWindow::updateServiceListModel);
 
+    // Search field
+    setupEditSearch();
+
     // Options button
     m_btOptions = ControlUtil::createOptionsButton();
 
     // Menu button
     m_btMenu = ControlUtil::createMenuButton();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_btEdit, ControlUtil::createVSeparator(),
-            m_btTrack, m_btRevert, ControlUtil::createVSeparator(), m_btRefresh,
-            /*stretch*/ nullptr, m_btOptions, m_btMenu });
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { m_btEdit, ControlUtil::createVSeparator(), m_btTrack, m_btRevert,
+                    ControlUtil::createVSeparator(), m_btRefresh, ControlUtil::createVSeparator(),
+                    m_editSearch, /*stretch*/ nullptr, m_btOptions, m_btMenu });
 
     return layout;
+}
+
+void ServicesWindow::setupEditSearch()
+{
+    m_editSearch = ControlUtil::createLineEdit(
+            QString(), [&](const QString &text) { serviceListModel()->setTextFilter(text); });
+    m_editSearch->setClearButtonEnabled(true);
+    m_editSearch->setMaxLength(200);
+    m_editSearch->setMinimumWidth(100);
+    m_editSearch->setMaximumWidth(200);
+
+    connect(this, &ServicesWindow::aboutToShow, m_editSearch, qOverload<>(&QWidget::setFocus));
 }
 
 void ServicesWindow::setupTableServiceList()
