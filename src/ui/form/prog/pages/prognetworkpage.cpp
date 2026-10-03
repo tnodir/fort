@@ -15,13 +15,22 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr auto iconSize = QSize(16, 16);
-
 void selectComboSpeedLimit(QComboBox *combo, quint8 limitId)
 {
     const int index = combo->findData(int(limitId));
 
     combo->setCurrentIndex(index < 0 ? 0 : index); // the deleted Speed Limit is "No Limit"
+}
+
+QComboBox *createComboSpeedLimit(QCheckBox *cb)
+{
+    auto c = ControlUtil::createComboBox();
+    c->setMinimumWidth(150);
+    c->setEnabled(false);
+
+    QObject::connect(cb, &QCheckBox::toggled, c, &QComboBox::setEnabled);
+
+    return c;
 }
 
 }
@@ -49,8 +58,8 @@ void ProgNetworkPage::onRetranslateUi()
 
     m_ruleSelector->retranslateUi();
 
-    m_labelSpeedLimitIn->setText(tr("Download:"));
-    m_labelSpeedLimitOut->setText(tr("Upload:"));
+    m_cbSpeedLimitIn->setText(tr("Download:"));
+    m_cbSpeedLimitOut->setText(tr("Upload:"));
 
     retranslateSpeedLimitFields();
 }
@@ -64,7 +73,11 @@ void ProgNetworkPage::initializeRuleField(bool isSingleSelection)
 
 void ProgNetworkPage::initializeSpeedLimitFields()
 {
-    const FORT_SPEED_LIMIT_IDS speedLimits = app().speedLimits;
+    const App &app = this->app();
+    const FORT_SPEED_LIMIT_IDS speedLimits = app.speedLimits;
+
+    m_cbSpeedLimitIn->setChecked(app.inLimitEnabled);
+    m_cbSpeedLimitOut->setChecked(app.outLimitEnabled);
 
     selectComboSpeedLimit(m_comboSpeedLimitIn, speedLimits.in_limit_id);
     selectComboSpeedLimit(m_comboSpeedLimitOut, speedLimits.out_limit_id);
@@ -123,26 +136,17 @@ QLayout *ProgNetworkPage::setupZonesRuleLayout()
 QLayout *ProgNetworkPage::setupSpeedLimitsLayout()
 {
     // Download
-    auto iconSpeedLimitIn = ControlUtil::createIconLabel(":/icons/green_down.png", iconSize);
-
-    m_labelSpeedLimitIn = ControlUtil::createLabel();
-
-    m_comboSpeedLimitIn = ControlUtil::createComboBox();
-    m_comboSpeedLimitIn->setMinimumWidth(150);
+    m_cbSpeedLimitIn = ControlUtil::createCheckBox(":/icons/green_down.png");
+    m_comboSpeedLimitIn = createComboSpeedLimit(m_cbSpeedLimitIn);
 
     // Upload
-    auto iconSpeedLimitOut = ControlUtil::createIconLabel(":/icons/blue_up.png", iconSize);
-
-    m_labelSpeedLimitOut = ControlUtil::createLabel();
-
-    m_comboSpeedLimitOut = ControlUtil::createComboBox();
-    m_comboSpeedLimitOut->setMinimumWidth(150);
+    m_cbSpeedLimitOut = ControlUtil::createCheckBox(":/icons/blue_up.png");
+    m_comboSpeedLimitOut = createComboSpeedLimit(m_cbSpeedLimitOut);
 
     setupSpeedLimitsChanged();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ iconSpeedLimitIn, m_labelSpeedLimitIn,
-            m_comboSpeedLimitIn, ControlUtil::createVSeparator(), iconSpeedLimitOut,
-            m_labelSpeedLimitOut, m_comboSpeedLimitOut, /*stretch*/ nullptr });
+    auto layout = ControlUtil::createHLayoutByWidgets({ m_cbSpeedLimitIn, m_comboSpeedLimitIn,
+            /*stretch*/ nullptr, m_cbSpeedLimitOut, m_comboSpeedLimitOut, /*stretch*/ nullptr });
 
     return layout;
 }
@@ -200,6 +204,9 @@ void ProgNetworkPage::fillApp(App &app) const
     app.zones.reject_mask = m_btZones->uncheckedZones();
 
     app.ruleId = m_ruleSelector->ruleId();
+
+    app.inLimitEnabled = m_cbSpeedLimitIn->isChecked();
+    app.outLimitEnabled = m_cbSpeedLimitOut->isChecked();
 
     app.speedLimits.in_limit_id = m_comboSpeedLimitIn->currentData().toUInt();
     app.speedLimits.out_limit_id = m_comboSpeedLimitOut->currentData().toUInt();

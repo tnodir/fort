@@ -38,9 +38,9 @@ private:
     QCheckBox *m_cbLanOnly = nullptr;
     ZonesSelector *m_btZones = nullptr;
     RuleSelector *m_ruleSelector = nullptr;
-    QLabel *m_labelSpeedLimitIn = nullptr;
+    QCheckBox *m_cbSpeedLimitIn = nullptr;
     QComboBox *m_comboSpeedLimitIn = nullptr;
-    QLabel *m_labelSpeedLimitOut = nullptr;
+    QCheckBox *m_cbSpeedLimitOut = nullptr;
     QComboBox *m_comboSpeedLimitOut = nullptr;
 };
 
