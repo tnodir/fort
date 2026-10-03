@@ -172,7 +172,7 @@ QLayout *SpeedLimitEditDialog::setupLimitLayout()
 
     // Speed
     m_spinSpeed = ControlUtil::createSpinBox();
-    m_spinSpeed->setRange(0, SPEED_LIMIT_KBPS_MAX);
+    m_spinSpeed->setRange(1, SPEED_LIMIT_KBPS_MAX); // the zero speed would be ignored
     m_spinSpeed->setSuffix(" Kb/s");
 
     layout->addRow("Speed:", m_spinSpeed);
