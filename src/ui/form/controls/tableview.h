@@ -17,6 +17,7 @@ public:
 
     int currentRow() const;
     QVector<int> selectedRows() const;
+    QVector<int> selectedSelRows() const;
     QModelIndexList sortedSelectedIndexes() const;
 
     QString selectedText() const;
