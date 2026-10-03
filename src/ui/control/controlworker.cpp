@@ -1,6 +1,7 @@
 #include "controlworker.h"
 
 #include <QDataStream>
+#include <QDeadlineTimer>
 #include <QLocalSocket>
 #include <QLoggingCategory>
 #include <QTimer>
@@ -271,15 +272,21 @@ bool ControlWorker::waitResult(Control::Command &resultCommand, int msecs) const
 {
     resultCommand = Control::CommandNone;
 
+    // Other messages from the server must not prolong the wait for the result
+    const QDeadlineTimer deadline(3 * msecs);
+
     int waitCount = 3;
     do {
-        if (!waitForRead(msecs)) {
-            if (--waitCount <= 0)
-                return false;
-        }
-    } while (resultCommand == Control::CommandNone);
+        const int waitMsecs = qMin(msecs, int(deadline.remainingTime()));
 
-    return true;
+        if (!waitForRead(waitMsecs) && --waitCount <= 0)
+            return false;
+
+        if (resultCommand != Control::CommandNone)
+            return true;
+    } while (!deadline.hasExpired());
+
+    return false;
 }
 
 bool ControlWorker::waitForSent(int msecs) const
