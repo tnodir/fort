@@ -15,6 +15,7 @@ QT_FORWARD_DECLARE_CLASS(QSpinBox)
 class LineEdit;
 class PlainTextEdit;
 class SpeedLimitsController;
+class SpinCombo;
 
 class SpeedLimitEditDialog : public QDialog
 {
@@ -34,6 +35,8 @@ protected slots:
 
 private:
     void initializeFocus();
+
+    void retranslateSpeedNames();
 
     void setupController();
 
@@ -59,7 +62,7 @@ private:
     QLabel *m_labelDirection = nullptr;
     QComboBox *m_comboDirection = nullptr;
     QLabel *m_labelSpeed = nullptr;
-    QSpinBox *m_spinSpeed = nullptr;
+    SpinCombo *m_scSpeed = nullptr;
     QLabel *m_labelLatency = nullptr;
     QSpinBox *m_spinLatency = nullptr;
     QLabel *m_labelPacketLoss = nullptr;

@@ -12,12 +12,19 @@
 #include <form/controls/doublespinbox.h>
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
+#include <form/controls/spincombo.h>
 #include <manager/windowmanager.h>
+#include <util/formatutil.h>
 #include <util/guiutil.h>
 
 #include "speedlimitscontroller.h"
 
 namespace {
+
+// The first value is for the "Custom" item
+inline constexpr std::array speedLimitValues = { 10, 20, 30, 50, 75, 100, 150, 200, 300, 500, 900,
+    1024, qRound(1.5 * 1024), 2 * 1024, 3 * 1024, 5 * 1024, qRound(7.5 * 1024), 10 * 1024,
+    15 * 1024, 20 * 1024, 30 * 1024, 50 * 1024 };
 
 inline constexpr int SPEED_LIMIT_KBPS_MAX = 9999999;
 inline constexpr int SPEED_LIMIT_LATENCY_MAX = 30000;
@@ -43,7 +50,7 @@ void SpeedLimitEditDialog::initialize(const SpeedLimit &speedLimit)
     m_cbEnabled->setChecked(speedLimit.enabled);
     m_comboDirection->setCurrentIndex(speedLimit.inbound ? 0 : 1);
     m_comboDirection->setEnabled(isEmpty()); // the Programs refer to the Speed Limit by direction
-    m_spinSpeed->setValue(int(speedLimit.kbps));
+    m_scSpeed->spinBox()->setValue(int(speedLimit.kbps));
     m_spinLatency->setValue(int(speedLimit.latency));
     m_spinPacketLoss->setValue(double(speedLimit.packetLoss) / 100.0);
     m_spinBufferSize->setValue(int(speedLimit.bufferSize));
@@ -74,6 +81,7 @@ void SpeedLimitEditDialog::retranslateUi()
     }
 
     m_labelSpeed->setText(tr("Speed:"));
+    retranslateSpeedNames();
     m_labelLatency->setText(tr("Latency:"));
     m_labelPacketLoss->setText(tr("Packet Loss:"));
     m_labelBufferSize->setText(tr("Buffer Size:"));
@@ -82,6 +90,19 @@ void SpeedLimitEditDialog::retranslateUi()
     m_btCancel->setText(tr("Cancel"));
 
     this->setWindowTitle(tr("Edit Speed Limit"));
+}
+
+void SpeedLimitEditDialog::retranslateSpeedNames()
+{
+    QStringList list = { tr("Custom") };
+
+    const auto values = m_scSpeed->values().mid(1);
+
+    for (const int kbps : values) {
+        list.append(FormatUtil::formatSpeed(kbps * 1024LL));
+    }
+
+    m_scSpeed->setNames(list);
 }
 
 void SpeedLimitEditDialog::setupController()
@@ -171,12 +192,13 @@ QLayout *SpeedLimitEditDialog::setupLimitLayout()
     m_labelDirection = ControlUtil::formRowLabel(layout, m_comboDirection);
 
     // Speed
-    m_spinSpeed = ControlUtil::createSpinBox();
-    m_spinSpeed->setRange(1, SPEED_LIMIT_KBPS_MAX); // the zero speed would be ignored
-    m_spinSpeed->setSuffix(" Kb/s");
+    m_scSpeed = new SpinCombo();
+    m_scSpeed->setValues(speedLimitValues);
+    m_scSpeed->spinBox()->setRange(1, SPEED_LIMIT_KBPS_MAX); // the zero speed would be ignored
+    m_scSpeed->spinBox()->setSuffix(" Kb/s");
 
-    layout->addRow("Speed:", m_spinSpeed);
-    m_labelSpeed = ControlUtil::formRowLabel(layout, m_spinSpeed);
+    layout->addRow("Speed:", m_scSpeed);
+    m_labelSpeed = ControlUtil::formRowLabel(layout, m_scSpeed);
 
     // Latency
     m_spinLatency = ControlUtil::createSpinBox();
@@ -267,7 +289,7 @@ void SpeedLimitEditDialog::fillSpeedLimit(SpeedLimit &speedLimit) const
     speedLimit.notes = m_editNotes->toPlainText();
     speedLimit.enabled = m_cbEnabled->isChecked();
     speedLimit.inbound = (m_comboDirection->currentIndex() == 0);
-    speedLimit.kbps = quint32(m_spinSpeed->value());
+    speedLimit.kbps = quint32(m_scSpeed->spinBox()->value());
     speedLimit.latency = quint32(m_spinLatency->value());
     speedLimit.packetLoss = quint16(qRound(m_spinPacketLoss->value() * 100.0));
     speedLimit.bufferSize = quint32(m_spinBufferSize->value());
