@@ -24,9 +24,13 @@ public:
     bool isTracked() const { return trackFlags != 0; }
     bool isOwnProcess() const { return (serviceType & TypeWin32OwnProcess) != 0; }
 
+    // The running service's process doesn't have the changes yet
+    bool isTrackPending() const { return isTracked() && isProcessShared; }
+
 public:
     bool hasProcess : 1 = false;
     bool isHostSplitDisabled : 1 = false;
+    bool isProcessShared : 1 = false; // the service's process hosts other services too
     Type serviceType = TypeUnknown;
     quint16 trackFlags = 0;
     quint32 processId = 0;

@@ -7,6 +7,7 @@
 
 #include <util/fileutil.h>
 #include <util/regkey.h>
+#include <util/service/servicehandle.h>
 #include <util/service/servicelistmonitor.h>
 #include <util/service/servicemonitor.h>
 
@@ -24,9 +25,17 @@ const char *const serviceParametersKey = "Parameters";
 const char *const serviceTypeOldKey = "_Fort_Type";
 const char *const serviceTrackFlagsKey = "_FortTrackFlags";
 
+struct ServiceConfig
+{
+    bool expandImagePath = false;
+    quint32 serviceType = 0;
+    QString imagePath;
+};
+
 struct ServiceInfoListArgs
 {
     bool displayName = true;
+    QHash<quint32, int> processServicesCounts; // process id -> services count
     QVector<ServiceInfo> infoList;
 };
 
@@ -86,6 +95,70 @@ quint16 getServiceTrackFlags(const RegKey &svcReg)
     return svcReg.value(serviceTrackFlagsKey).toUInt();
 }
 
+QString getServiceImagePathSuffix(const QString &serviceName)
+{
+    return " -s " + serviceName;
+}
+
+ServiceConfig getServiceConfig(const RegKey &svcReg)
+{
+    ServiceConfig conf;
+    conf.imagePath = svcReg.value(serviceImagePathKey, &conf.expandImagePath).toString();
+    conf.serviceType = svcReg.value(serviceTypeKey).toUInt();
+
+    return conf;
+}
+
+// Change the SCM's database too to apply the changes on the service's restart
+void setServiceConfig(RegKey &svcReg, const QString &serviceName, const ServiceConfig &conf)
+{
+    ServiceHandle svc((LPCWSTR) serviceName.utf16(), SC_MANAGER_CONNECT, SERVICE_CHANGE_CONFIG);
+    if (svc.changeServiceConfig(conf.serviceType, (LPCWSTR) conf.imagePath.utf16()))
+        return;
+
+    qCWarning(LC) << "Change service config error:" << serviceName << GetLastError();
+
+    // The changes will be applied on the system's restart
+    svcReg.setValue(serviceImagePathKey, conf.imagePath, conf.expandImagePath);
+    svcReg.setValue(serviceTypeKey, conf.serviceType);
+}
+
+void trackServiceImagePath(RegKey &svcReg, const QString &serviceName, ServiceConfig &conf)
+{
+    svcReg.setValue(serviceImagePathOldKey, conf.imagePath, conf.expandImagePath);
+    conf.imagePath += getServiceImagePathSuffix(serviceName);
+}
+
+void trackServiceType(RegKey &svcReg, ServiceConfig &conf)
+{
+    svcReg.setValue(serviceTypeOldKey, conf.serviceType);
+    conf.serviceType = ServiceInfo::TypeWin32OwnProcess;
+}
+
+void revertServiceImagePath(RegKey &svcReg, ServiceConfig &conf)
+{
+    bool expand = false;
+    const QString imagePath = svcReg.value(serviceImagePathOldKey, &expand).toString();
+
+    if (!imagePath.isEmpty()) {
+        conf.imagePath = imagePath;
+        conf.expandImagePath = expand;
+    }
+
+    svcReg.removeValue(serviceImagePathOldKey);
+}
+
+void revertServiceType(RegKey &svcReg, ServiceConfig &conf)
+{
+    const quint32 shareType = svcReg.value(serviceTypeOldKey).toUInt();
+
+    if (shareType != 0) {
+        conf.serviceType = shareType;
+    }
+
+    svcReg.removeValue(serviceTypeOldKey);
+}
+
 void fillServiceInfo(ServiceInfo &info, const RegKey &svcReg,
         const ENUM_SERVICE_STATUS_PROCESSW *service, bool displayName)
 {
@@ -107,6 +180,12 @@ void fillServiceInfoList(ServiceInfoListArgs &ila, const RegKey &servicesReg,
         const ENUM_SERVICE_STATUS_PROCESSW *service, DWORD serviceCount)
 {
     for (; serviceCount > 0; --serviceCount, ++service) {
+        const quint32 processId = service->ServiceStatusProcess.dwProcessId;
+
+        // Count all services to check the shared processes
+        if (processId != 0) {
+            ++ila.processServicesCounts[processId];
+        }
 
         const auto realServiceName = QString::fromUtf16((const char16_t *) service->lpServiceName);
 
@@ -123,6 +202,21 @@ void fillServiceInfoList(ServiceInfoListArgs &ila, const RegKey &servicesReg,
         fillServiceInfo(info, svcReg, service, ila.displayName);
 
         ila.infoList.append(info);
+    }
+}
+
+bool checkIsServiceProcessShared(const ServiceInfoListArgs &ila, const ServiceInfo &info)
+{
+    if (!info.hasProcess)
+        return false;
+
+    return ila.processServicesCounts.value(info.processId) > 1;
+}
+
+void updateServiceInfoListProcesses(ServiceInfoListArgs &ila)
+{
+    for (ServiceInfo &info : ila.infoList) {
+        info.isProcessShared = checkIsServiceProcessShared(ila, info);
     }
 }
 
@@ -147,6 +241,8 @@ void getServiceInfoList(SC_HANDLE mngr, DWORD state, ServiceInfoListArgs &ila)
         if (bytesRemaining == 0)
             break;
     }
+
+    updateServiceInfoListProcesses(ila);
 }
 
 }
@@ -179,7 +275,8 @@ QVector<ServiceInfo> ServiceInfoManager::ownProcessServices(
     QVector<ServiceInfo> list;
 
     for (const ServiceInfo &info : serviceInfoList) {
-        if (!info.isOwnProcess())
+        // The changed service type may be not applied to the running service yet
+        if (!info.isOwnProcess() || info.isProcessShared)
             continue;
 
         if (info.hasProcess) {
@@ -208,14 +305,12 @@ void ServiceInfoManager::trackService(const QString &serviceName)
     const RegKey servicesReg(RegKey::HKLM, servicesSubKey);
     RegKey svcReg(servicesReg, serviceName, RegKey::DefaultReadWrite);
 
-    bool expand;
-    const QString imagePath = svcReg.value(serviceImagePathKey, &expand).toString();
-    svcReg.setValue(serviceImagePathOldKey, imagePath, expand);
-    svcReg.setValue(serviceImagePathKey, imagePath + " -s " + serviceName, expand);
+    ServiceConfig conf = getServiceConfig(svcReg);
 
-    const quint32 shareType = svcReg.value(serviceTypeKey).toUInt();
-    svcReg.setValue(serviceTypeOldKey, shareType);
-    svcReg.setValue(serviceTypeKey, ServiceInfo::TypeWin32OwnProcess);
+    trackServiceImagePath(svcReg, serviceName, conf);
+    trackServiceType(svcReg, conf);
+
+    setServiceConfig(svcReg, serviceName, conf);
 
     svcReg.setValue(serviceTrackFlagsKey, ServiceInfo::TrackImagePath | ServiceInfo::TrackType);
 }
@@ -225,18 +320,12 @@ void ServiceInfoManager::revertService(const QString &serviceName)
     const RegKey servicesReg(RegKey::HKLM, servicesSubKey);
     RegKey svcReg(servicesReg, serviceName, RegKey::DefaultReadWrite);
 
-    bool expand;
-    const QString imagePath = svcReg.value(serviceImagePathOldKey, &expand).toString();
-    if (!imagePath.isEmpty()) {
-        svcReg.setValue(serviceImagePathKey, imagePath, expand);
-    }
-    svcReg.removeValue(serviceImagePathOldKey);
+    ServiceConfig conf = getServiceConfig(svcReg);
 
-    const quint32 shareType = svcReg.value(serviceTypeOldKey).toUInt();
-    if (shareType != 0) {
-        svcReg.setValue(serviceTypeKey, shareType);
-    }
-    svcReg.removeValue(serviceTypeOldKey);
+    revertServiceImagePath(svcReg, conf);
+    revertServiceType(svcReg, conf);
+
+    setServiceConfig(svcReg, serviceName, conf);
 
     svcReg.removeValue(serviceTrackFlagsKey);
 }

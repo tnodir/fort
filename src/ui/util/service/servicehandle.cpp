@@ -50,6 +50,12 @@ bool ServiceHandle::stopService(ServiceControlCode controlCode)
     return false;
 }
 
+bool ServiceHandle::changeServiceConfig(quint32 serviceType, const wchar_t *binaryPath)
+{
+    return ChangeServiceConfigW(SC_HANDLE(m_serviceHandle), serviceType, SERVICE_NO_CHANGE,
+            SERVICE_NO_CHANGE, binaryPath, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+}
+
 bool ServiceHandle::createService(const CreateServiceArg &csa)
 {
     m_serviceHandle = CreateServiceW(SC_HANDLE(m_managerHandle), csa.serviceName,

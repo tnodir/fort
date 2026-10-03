@@ -150,7 +150,8 @@ QVariant ServiceListModel::dataDecoration(const QModelIndex &index) const
         const auto &info = serviceInfoAt(row);
 
         if (info.isTracked()) {
-            return IconCache::icon(info.isOwnProcess() ? ":/icons/tick.png" : ":/icons/cross.png");
+            return IconCache::icon(
+                    info.isTrackPending() ? ":/icons/cross.png" : ":/icons/tick.png");
         }
     }
 

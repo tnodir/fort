@@ -32,6 +32,8 @@ public:
     bool startService();
     bool stopService(ServiceControlCode controlCode = ServiceControlStop);
 
+    bool changeServiceConfig(quint32 serviceType, const wchar_t *binaryPath);
+
     bool createService(const CreateServiceArg &csa);
     bool deleteService();
 
