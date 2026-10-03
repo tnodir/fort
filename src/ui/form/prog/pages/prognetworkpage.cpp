@@ -15,6 +15,8 @@ using namespace Fort;
 
 namespace {
 
+inline constexpr auto iconSize = QSize(16, 16);
+
 void selectComboSpeedLimit(QComboBox *combo, quint8 limitId)
 {
     const int index = combo->findData(int(limitId));
@@ -121,12 +123,16 @@ QLayout *ProgNetworkPage::setupZonesRuleLayout()
 QLayout *ProgNetworkPage::setupSpeedLimitsLayout()
 {
     // Download
+    auto iconSpeedLimitIn = ControlUtil::createIconLabel(":/icons/green_down.png", iconSize);
+
     m_labelSpeedLimitIn = ControlUtil::createLabel();
 
     m_comboSpeedLimitIn = ControlUtil::createComboBox();
     m_comboSpeedLimitIn->setMinimumWidth(150);
 
     // Upload
+    auto iconSpeedLimitOut = ControlUtil::createIconLabel(":/icons/blue_up.png", iconSize);
+
     m_labelSpeedLimitOut = ControlUtil::createLabel();
 
     m_comboSpeedLimitOut = ControlUtil::createComboBox();
@@ -134,9 +140,9 @@ QLayout *ProgNetworkPage::setupSpeedLimitsLayout()
 
     setupSpeedLimitsChanged();
 
-    auto layout = ControlUtil::createHLayoutByWidgets({ m_labelSpeedLimitIn, m_comboSpeedLimitIn,
-            ControlUtil::createVSeparator(), m_labelSpeedLimitOut, m_comboSpeedLimitOut,
-            /*stretch*/ nullptr });
+    auto layout = ControlUtil::createHLayoutByWidgets({ iconSpeedLimitIn, m_labelSpeedLimitIn,
+            m_comboSpeedLimitIn, ControlUtil::createVSeparator(), iconSpeedLimitOut,
+            m_labelSpeedLimitOut, m_comboSpeedLimitOut, /*stretch*/ nullptr });
 
     return layout;
 }
