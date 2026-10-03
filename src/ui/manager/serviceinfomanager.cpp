@@ -26,6 +26,9 @@ const char *const serviceParametersKey = "Parameters";
 const char *const serviceTypeOldKey = "_Fort_Type";
 const char *const serviceTrackFlagsKey = "_FortTrackFlags";
 
+// SERVICE_USER_SERVICE | SERVICE_USERSERVICE_INSTANCE
+inline constexpr quint32 userServiceInstanceTypeMask = 0xC0;
+
 inline constexpr int serviceRestartCheckInterval = 100; // msec
 inline constexpr int serviceRestartCheckCount = 300; // 30 seconds
 
@@ -60,8 +63,8 @@ QString resolveSvcHostServiceName(const RegKey &servicesReg, const QString &serv
 
     const quint32 serviceType = svcReg.value(serviceTypeKey).toUInt();
 
-    // Check a per-user service
-    if (serviceType == 224) {
+    // Check a per-user service's instance
+    if ((serviceType & userServiceInstanceTypeMask) == userServiceInstanceTypeMask) {
         const int pos = serviceName.lastIndexOf('_');
         if (pos > 0) {
             return serviceName.left(pos);
@@ -118,9 +121,26 @@ bool isServiceImagePathTracked(const QString &imagePath, const QString &serviceN
     return endPos == imagePath.size() || imagePath.at(endPos).isSpace();
 }
 
-bool isServiceTypeTracked(quint32 serviceType)
+bool isOwnProcessType(quint32 serviceType)
 {
-    return serviceType == ServiceInfo::TypeWin32OwnProcess;
+    return (serviceType & ServiceInfo::TypeWin32) == ServiceInfo::TypeWin32OwnProcess;
+}
+
+// The per-user service's own process instance doesn't start: keep its type,
+// the unique image path runs it in a separate process anyway
+quint32 getServiceTrackedType(quint32 serviceType)
+{
+    if ((serviceType & ServiceInfo::TypeUserService) != 0)
+        return serviceType;
+
+    return (serviceType & ~quint32(ServiceInfo::TypeWin32)) | ServiceInfo::TypeWin32OwnProcess;
+}
+
+bool isServiceTypeTracked(const RegKey &svcReg, quint32 serviceType)
+{
+    const quint32 origType = svcReg.value(serviceTypeOldKey).toUInt();
+
+    return serviceType == getServiceTrackedType(origType);
 }
 
 ServiceConfig getServiceConfig(const RegKey &svcReg)
@@ -155,7 +175,7 @@ bool checkIsServiceTrackReset(const RegKey &svcReg, const QString &serviceName, 
     const ServiceConfig conf = getServiceConfig(svcReg);
 
     return !isServiceImagePathTracked(conf.imagePath, serviceName)
-            || !isServiceTypeTracked(conf.serviceType);
+            || !isServiceTypeTracked(svcReg, conf.serviceType);
 }
 
 void trackServiceImagePath(RegKey &svcReg, const QString &serviceName, ServiceConfig &conf)
@@ -169,11 +189,15 @@ void trackServiceImagePath(RegKey &svcReg, const QString &serviceName, ServiceCo
 
 void trackServiceType(RegKey &svcReg, ServiceConfig &conf)
 {
-    if (isServiceTypeTracked(conf.serviceType) && svcReg.contains(serviceTypeOldKey))
-        return;
+    // The own process type is set by us (or the per-user service's type was broken by us)
+    // or it's the original one
+    if (!isOwnProcessType(conf.serviceType) || !svcReg.contains(serviceTypeOldKey)) {
+        svcReg.setValue(serviceTypeOldKey, conf.serviceType);
+    }
 
-    svcReg.setValue(serviceTypeOldKey, conf.serviceType);
-    conf.serviceType = ServiceInfo::TypeWin32OwnProcess;
+    const quint32 origType = svcReg.value(serviceTypeOldKey).toUInt();
+
+    conf.serviceType = getServiceTrackedType(origType);
 }
 
 // Revert only own changes: Windows Update may set the new original values
@@ -194,7 +218,7 @@ void revertServiceType(RegKey &svcReg, ServiceConfig &conf)
 {
     const quint32 shareType = svcReg.value(serviceTypeOldKey).toUInt();
 
-    if (isServiceTypeTracked(conf.serviceType) && shareType != 0) {
+    if (isOwnProcessType(conf.serviceType) && shareType != 0) {
         conf.serviceType = shareType;
     }
 
