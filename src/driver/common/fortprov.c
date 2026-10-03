@@ -8,6 +8,7 @@
 #define FORT_PROV_PERSIST_FILTERS_COUNT 4
 #define FORT_PROV_CALLOUT_FILTERS_COUNT 4
 #define FORT_PROV_PACKET_FILTERS_COUNT  4
+#define FORT_PROV_STAT_FILTERS_COUNT    4
 #define FORT_PROV_DISCARD_FILTERS_COUNT 4
 #define FORT_PROV_REAUTH_FILTERS_COUNT  4
 
@@ -34,6 +35,7 @@ static struct
     FWPM_FILTER0 callout_boot_filters[FORT_PROV_CALLOUT_FILTERS_COUNT];
 
     FWPM_FILTER0 packet_filters[FORT_PROV_PACKET_FILTERS_COUNT];
+    FWPM_FILTER0 stat_filters[FORT_PROV_STAT_FILTERS_COUNT];
     FWPM_FILTER0 discard_filters[FORT_PROV_DISCARD_FILTERS_COUNT];
 
     FWPM_FILTER0 reauth_filters[FORT_PROV_REAUTH_FILTERS_COUNT];
@@ -274,6 +276,38 @@ static void fort_prov_init_packet_filters(void)
     fort_prov_init_filters(g_provGlobal.packet_filters, args, FORT_PROV_PACKET_FILTERS_COUNT);
 }
 
+static void fort_prov_init_stat_filters(void)
+{
+    /* The lowest weight sublayer's filters see the packets after the others' callouts:
+     * the packets absorbed (to be re-injected) by them are blocked and not counted twice */
+    const FORT_PROV_INIT_FILTER_ARGS d = {
+        .subLayerKey = FWPM_SUBLAYER_INSPECTION,
+        .flags = 0,
+        .actionType = FWP_ACTION_CALLOUT_INSPECTION,
+    };
+
+    const FORT_PROV_INIT_FILTER_ARGS args[] = {
+        /* itsfilter4 */
+        { FORT_GUID_FILTER_IN_TRANSPORT_STAT_V4, FWPM_LAYER_INBOUND_TRANSPORT_V4, d.subLayerKey,
+                L"FortFilterInTransportStat4", L"Fort Firewall Filter Inbound Transport Stat V4",
+                d.weight, d.flags, d.actionType, FORT_GUID_CALLOUT_IN_TRANSPORT_V4 },
+        /* itsfilter6 */
+        { FORT_GUID_FILTER_IN_TRANSPORT_STAT_V6, FWPM_LAYER_INBOUND_TRANSPORT_V6, d.subLayerKey,
+                L"FortFilterInTransportStat6", L"Fort Firewall Filter Inbound Transport Stat V6",
+                d.weight, d.flags, d.actionType, FORT_GUID_CALLOUT_IN_TRANSPORT_V6 },
+        /* otsfilter4 */
+        { FORT_GUID_FILTER_OUT_TRANSPORT_STAT_V4, FWPM_LAYER_OUTBOUND_TRANSPORT_V4, d.subLayerKey,
+                L"FortFilterOutTransportStat4", L"Fort Firewall Filter Outbound Transport Stat V4",
+                d.weight, d.flags, d.actionType, FORT_GUID_CALLOUT_OUT_TRANSPORT_V4 },
+        /* otsfilter6 */
+        { FORT_GUID_FILTER_OUT_TRANSPORT_STAT_V6, FWPM_LAYER_OUTBOUND_TRANSPORT_V6, d.subLayerKey,
+                L"FortFilterOutTransportStat6", L"Fort Firewall Filter Outbound Transport Stat V6",
+                d.weight, d.flags, d.actionType, FORT_GUID_CALLOUT_OUT_TRANSPORT_V6 },
+    };
+
+    fort_prov_init_filters(g_provGlobal.stat_filters, args, FORT_PROV_STAT_FILTERS_COUNT);
+}
+
 static void fort_prov_init_discard_filters(void)
 {
     const FORT_PROV_INIT_FILTER_ARGS d = {
@@ -380,6 +414,7 @@ FORT_API void fort_prov_init(const FORT_PROV_INIT_CONF init_conf)
     fort_prov_init_callout_boot_filters();
 
     fort_prov_init_packet_filters();
+    fort_prov_init_stat_filters();
     fort_prov_init_discard_filters();
 
     fort_prov_init_reauth_filters();
@@ -512,6 +547,11 @@ FORT_API void fort_prov_flow_unregister(HANDLE engine)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_V6);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V4);
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_V6);
+
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_STAT_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_IN_TRANSPORT_STAT_V6);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_STAT_V4);
+    FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_OUT_TRANSPORT_STAT_V6);
 
     // TODO: COMPAT: Remove after v4.1.0 (via v4.0.0)
     FwpmFilterDeleteByKey0(engine, (GUID *) &FORT_GUID_FILTER_STREAM_V4);
@@ -658,8 +698,12 @@ FORT_API BOOL fort_prov_get_boot_conf(HANDLE engine, PFORT_PROV_BOOT_CONF boot_c
 
 FORT_API DWORD fort_prov_flow_register(HANDLE engine)
 {
-    return fort_prov_add_filters(
+    const DWORD status = fort_prov_add_filters(
             engine, g_provGlobal.packet_filters, FORT_PROV_PACKET_FILTERS_COUNT);
+    if (status)
+        return status;
+
+    return fort_prov_add_filters(engine, g_provGlobal.stat_filters, FORT_PROV_STAT_FILTERS_COUNT);
 }
 
 FORT_API void fort_prov_reauth(HANDLE engine)
