@@ -78,17 +78,17 @@ void ProgNetworkPage::retranslateSpeedLimitFields()
 
 void ProgNetworkPage::setupUi()
 {
-    // Zones/Rule
-    auto zonesRuleLayout = setupZonesRuleLayout();
-
     // Speed Limits
     auto speedLimitsLayout = setupSpeedLimitsLayout();
 
+    // Zones/Rule
+    auto zonesRuleLayout = setupZonesRuleLayout();
+
     // Main Layout
     auto layout = new QVBoxLayout();
-    layout->addLayout(zonesRuleLayout);
-    layout->addWidget(ControlUtil::createSeparator());
     layout->addLayout(speedLimitsLayout);
+    layout->addWidget(ControlUtil::createSeparator());
+    layout->addLayout(zonesRuleLayout);
     layout->addWidget(ControlUtil::createSeparator());
     layout->addStretch();
 
