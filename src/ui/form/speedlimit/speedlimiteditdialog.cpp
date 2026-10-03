@@ -1,10 +1,10 @@
 #include "speedlimiteditdialog.h"
 
 #include <QCheckBox>
-#include <QComboBox>
 #include <QFormLayout>
 #include <QLabel>
 #include <QPushButton>
+#include <QRadioButton>
 #include <QSpinBox>
 #include <QVBoxLayout>
 
@@ -16,6 +16,7 @@
 #include <manager/windowmanager.h>
 #include <util/formatutil.h>
 #include <util/guiutil.h>
+#include <util/iconcache.h>
 
 #include "speedlimitscontroller.h"
 
@@ -48,8 +49,13 @@ void SpeedLimitEditDialog::initialize(const SpeedLimit &speedLimit)
     m_editName->setStartText(speedLimit.name);
     m_editNotes->setText(speedLimit.notes);
     m_cbEnabled->setChecked(speedLimit.enabled);
-    m_comboDirection->setCurrentIndex(speedLimit.inbound ? 0 : 1);
-    m_comboDirection->setEnabled(isEmpty()); // the Programs refer to the Speed Limit by direction
+    m_rbDownload->setChecked(speedLimit.inbound);
+    m_rbUpload->setChecked(!speedLimit.inbound);
+
+    // The Programs refer to the Speed Limit by direction
+    m_rbDownload->setEnabled(isEmpty());
+    m_rbUpload->setEnabled(isEmpty());
+
     m_scSpeed->spinBox()->setValue(int(speedLimit.kbps));
     m_spinLatency->setValue(int(speedLimit.latency));
     m_spinPacketLoss->setValue(double(speedLimit.packetLoss) / 100.0);
@@ -72,13 +78,8 @@ void SpeedLimitEditDialog::retranslateUi()
 
     m_cbEnabled->setText(tr("Enabled"));
 
-    m_labelDirection->setText(tr("Direction:"));
-    {
-        const int index = m_comboDirection->currentIndex();
-        m_comboDirection->clear();
-        m_comboDirection->addItems({ tr("Download"), tr("Upload") });
-        m_comboDirection->setCurrentIndex(index);
-    }
+    m_rbDownload->setText(tr("Download"));
+    m_rbUpload->setText(tr("Upload"));
 
     m_labelSpeed->setText(tr("Speed:"));
     retranslateSpeedNames();
@@ -138,6 +139,9 @@ QLayout *SpeedLimitEditDialog::setupMainLayout()
     // Name
     auto nameLayout = setupNameLayout();
 
+    // Download/Upload Direction
+    auto directionLayout = setupDirectionLayout();
+
     // Limit
     auto limitLayout = setupLimitLayout();
 
@@ -146,6 +150,8 @@ QLayout *SpeedLimitEditDialog::setupMainLayout()
 
     auto layout = new QVBoxLayout();
     layout->addLayout(nameLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addLayout(directionLayout);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(limitLayout);
     layout->addWidget(ControlUtil::createHSeparator());
@@ -180,16 +186,27 @@ QLayout *SpeedLimitEditDialog::setupNameLayout()
     return layout;
 }
 
+QLayout *SpeedLimitEditDialog::setupDirectionLayout()
+{
+    // Download
+    m_rbDownload = new QRadioButton();
+    m_rbDownload->setIcon(IconCache::icon(":/icons/green_down.png"));
+    m_rbDownload->setChecked(true);
+
+    // Upload
+    m_rbUpload = new QRadioButton();
+    m_rbUpload->setIcon(IconCache::icon(":/icons/blue_up.png"));
+
+    auto layout = ControlUtil::createHLayoutByWidgets(
+            { /*stretch*/ nullptr, m_rbDownload, m_rbUpload, /*stretch*/ nullptr });
+    layout->setSpacing(20);
+
+    return layout;
+}
+
 QLayout *SpeedLimitEditDialog::setupLimitLayout()
 {
     auto layout = new QFormLayout();
-
-    // Direction
-    m_comboDirection = ControlUtil::createComboBox();
-    m_comboDirection->setMinimumWidth(150);
-
-    layout->addRow("Direction:", m_comboDirection);
-    m_labelDirection = ControlUtil::formRowLabel(layout, m_comboDirection);
 
     // Speed
     m_scSpeed = new SpinCombo();
@@ -288,7 +305,7 @@ void SpeedLimitEditDialog::fillSpeedLimit(SpeedLimit &speedLimit) const
     speedLimit.name = m_editName->text();
     speedLimit.notes = m_editNotes->toPlainText();
     speedLimit.enabled = m_cbEnabled->isChecked();
-    speedLimit.inbound = (m_comboDirection->currentIndex() == 0);
+    speedLimit.inbound = m_rbDownload->isChecked();
     speedLimit.kbps = quint32(m_scSpeed->spinBox()->value());
     speedLimit.latency = quint32(m_spinLatency->value());
     speedLimit.packetLoss = quint16(qRound(m_spinPacketLoss->value() * 100.0));

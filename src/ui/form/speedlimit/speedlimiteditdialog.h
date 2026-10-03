@@ -6,10 +6,10 @@
 #include <conf/speedlimit.h>
 
 QT_FORWARD_DECLARE_CLASS(QCheckBox)
-QT_FORWARD_DECLARE_CLASS(QComboBox)
 QT_FORWARD_DECLARE_CLASS(QDoubleSpinBox)
 QT_FORWARD_DECLARE_CLASS(QLabel)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
+QT_FORWARD_DECLARE_CLASS(QRadioButton)
 QT_FORWARD_DECLARE_CLASS(QSpinBox)
 
 class LineEdit;
@@ -43,6 +43,7 @@ private:
     void setupUi();
     QLayout *setupMainLayout();
     QLayout *setupNameLayout();
+    QLayout *setupDirectionLayout();
     QLayout *setupLimitLayout();
     QLayout *setupButtons();
 
@@ -59,8 +60,8 @@ private:
     QLabel *m_labelNotes = nullptr;
     PlainTextEdit *m_editNotes = nullptr;
     QCheckBox *m_cbEnabled = nullptr;
-    QLabel *m_labelDirection = nullptr;
-    QComboBox *m_comboDirection = nullptr;
+    QRadioButton *m_rbDownload = nullptr;
+    QRadioButton *m_rbUpload = nullptr;
     QLabel *m_labelSpeed = nullptr;
     SpinCombo *m_scSpeed = nullptr;
     QLabel *m_labelLatency = nullptr;

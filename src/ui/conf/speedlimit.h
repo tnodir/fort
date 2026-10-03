@@ -16,7 +16,7 @@ public:
 
 public:
     bool enabled : 1 = true;
-    bool inbound : 1 = false;
+    bool inbound : 1 = true;
 
     quint8 limitId = 0;
 
