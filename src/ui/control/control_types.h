@@ -93,6 +93,7 @@ enum Command : qint8 {
     Rpc_ConfSpeedLimitManager_speedLimitUpdated,
 
     Rpc_DriverManager_updateState,
+    Rpc_DriverManager_readSpeedLimitStatus,
 
     Rpc_QuotaManager_alert,
 

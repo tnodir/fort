@@ -31,6 +31,8 @@ public slots:
     bool openDevice() override;
     bool closeDevice() override;
 
+    bool readSpeedLimitStatus(QByteArray &buf) override;
+
 private:
     bool m_isDeviceOpened : 1 = false;
 };

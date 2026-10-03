@@ -34,6 +34,22 @@ bool DriverManagerRpc::closeDevice()
     return false;
 }
 
+bool DriverManagerRpc::readSpeedLimitStatus(QByteArray &buf)
+{
+    // It's polled, so don't show the "Service isn't available" error box
+    if (!isDeviceOpened() || !rpcManager()->client()->isConnected())
+        return false;
+
+    QVariantList resArgs;
+
+    if (!rpcManager()->doOnServer(Control::Rpc_DriverManager_readSpeedLimitStatus, {}, &resArgs))
+        return false;
+
+    buf = resArgs.value(0).toByteArray();
+
+    return true;
+}
+
 QVariantList DriverManagerRpc::updateState_args()
 {
     auto driverManager = Fort::driverManager();
@@ -46,8 +62,7 @@ bool DriverManagerRpc::processInitClient(ControlWorker *w)
     return w->sendCommand(Control::Rpc_DriverManager_updateState, updateState_args());
 }
 
-bool DriverManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
+bool DriverManagerRpc::processServerCommand(const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     auto driverManager = Fort::driverManager();
 
@@ -56,6 +71,13 @@ bool DriverManagerRpc::processServerCommand(
         if (auto dm = qobject_cast<DriverManagerRpc *>(driverManager)) {
             dm->updateState(p.args.value(0).toUInt(), p.args.value(1).toBool());
         }
+        return true;
+    }
+    case Control::Rpc_DriverManager_readSpeedLimitStatus: {
+        QByteArray buf;
+        r.ok = driverManager->readSpeedLimitStatus(buf);
+        r.args = { buf };
+        r.isSendResult = true;
         return true;
     }
     default:

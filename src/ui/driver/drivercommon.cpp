@@ -107,6 +107,11 @@ quint32 ioctlSetSpeedLimitFlags()
     return FORT_IOCTL_SETSPEEDLIMITFLAGS;
 }
 
+quint32 ioctlGetSpeedLimitStatus()
+{
+    return FORT_IOCTL_GETSPEEDLIMITSTATUS;
+}
+
 quint32 userErrorCode()
 {
     return FORT_ERROR_USER_ERROR;
@@ -120,6 +125,36 @@ qint64 systemToUnixTime(qint64 systemTime)
 int bufferSize()
 {
     return FORT_BUFFER_SIZE;
+}
+
+int speedLimitsStatusSize()
+{
+    return sizeof(FORT_SPEED_LIMITS_STATUS);
+}
+
+SpeedLimitStatus speedLimitStatus(const QByteArray &data, quint8 limitId)
+{
+    SpeedLimitStatus status;
+
+    if (data.size() < speedLimitsStatusSize())
+        return status;
+
+    const int index = limitId - 1;
+    if (index < 0 || index >= FORT_CONF_SPEED_LIMIT_MAX)
+        return status;
+
+    PCFORT_SPEED_LIMITS_STATUS limitsStatus = PCFORT_SPEED_LIMITS_STATUS(data.constData());
+    if ((limitsStatus->mask & (1u << index)) == 0)
+        return status;
+
+    PCFORT_SPEED_LIMIT_STATUS limitStatus = &limitsStatus->limits[index];
+
+    status.isValid = true;
+    status.queuedBytes = limitStatus->queued_bytes;
+    status.droppedCount = limitStatus->dropped_count;
+    status.lostCount = limitStatus->lost_count;
+
+    return status;
 }
 
 quint32 confIoConfOff()

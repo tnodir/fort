@@ -6,6 +6,8 @@
 #include <common/fortcmnutl.h>
 #include <common/fortconf.h>
 
+#include <conf/speedlimit.h>
+
 namespace DriverCommon {
 
 QString deviceName();
@@ -25,12 +27,16 @@ quint32 ioctlSetGroups();
 quint32 ioctlSetGroupFlags();
 quint32 ioctlSetSpeedLimits();
 quint32 ioctlSetSpeedLimitFlags();
+quint32 ioctlGetSpeedLimitStatus();
 
 quint32 userErrorCode();
 
 qint64 systemToUnixTime(qint64 systemTime);
 
 int bufferSize();
+
+int speedLimitsStatusSize();
+SpeedLimitStatus speedLimitStatus(const QByteArray &data, quint8 limitId);
 
 quint32 confIoConfOff();
 

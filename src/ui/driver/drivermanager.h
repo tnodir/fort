@@ -54,6 +54,8 @@ public slots:
     bool writeGroups(QByteArray &buf, bool onlyFlags = false);
     bool writeSpeedLimits(QByteArray &buf, bool onlyFlags = false);
 
+    virtual bool readSpeedLimitStatus(QByteArray &buf);
+
 protected:
     void setErrorCode(quint32 v);
 
@@ -64,6 +66,7 @@ private:
     void closeWorker();
 
     bool writeData(quint32 code, QByteArray &buf);
+    bool ioctlData(quint32 code, QByteArray &inBuf, QByteArray &outBuf);
 
     static bool executeCommand(const QString &fileName);
 

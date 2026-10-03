@@ -146,20 +146,45 @@ bool DriverManager::writeSpeedLimits(QByteArray &buf, bool onlyFlags)
     return writeData(code, buf);
 }
 
+bool DriverManager::readSpeedLimitStatus(QByteArray &buf)
+{
+    if (!isDeviceOpened())
+        return false;
+
+    QByteArray inBuf;
+    buf.resize(DriverCommon::speedLimitsStatusSize());
+
+    return ioctlData(DriverCommon::ioctlGetSpeedLimitStatus(), inBuf, buf);
+}
+
 bool DriverManager::writeData(quint32 code, QByteArray &buf)
 {
     if (!isDeviceOpened())
         return true;
 
-    const bool wasCancelled = driverWorker()->cancelAsyncIo();
+    QByteArray outBuf;
 
-    const bool ok = device().ioctl(code, buf.data(), buf.size());
+    const bool ok = ioctlData(code, buf, outBuf);
 
     updateErrorCode(ok);
+
+    return ok;
+}
+
+bool DriverManager::ioctlData(quint32 code, QByteArray &inBuf, QByteArray &outBuf)
+{
+    const bool wasCancelled = driverWorker()->cancelAsyncIo();
+
+    qsizetype retSize = 0;
+
+    const bool ok = device().ioctl(
+            code, inBuf.data(), inBuf.size(), outBuf.data(), outBuf.size(), &retSize);
 
     if (wasCancelled) {
         driverWorker()->continueAsyncIo();
     }
+
+    outBuf.resize(retSize);
 
     return ok;
 }

@@ -90,6 +90,7 @@ static const QHash<Command, const char *> g_commandNames = {
     CASE_STRING(Rpc_ConfSpeedLimitManager_speedLimitUpdated),
 
     CASE_STRING(Rpc_DriverManager_updateState),
+    CASE_STRING(Rpc_DriverManager_readSpeedLimitStatus),
 
     CASE_STRING(Rpc_QuotaManager_alert),
 
@@ -234,6 +235,7 @@ static const RpcManager g_commandManagers[] = {
     Rpc_ConfSpeedLimitManager, // Rpc_ConfSpeedLimitManager_speedLimitUpdated,
 
     Rpc_DriverManager, // Rpc_DriverManager_updateState,
+    Rpc_DriverManager, // Rpc_DriverManager_readSpeedLimitStatus,
 
     Rpc_QuotaManager, // Rpc_QuotaManager_alert,
 
@@ -355,6 +357,7 @@ static const qint8 g_commandValidations[] = {
     0, // Rpc_ConfSpeedLimitManager_speedLimitUpdated,
 
     0, // Rpc_DriverManager_updateState,
+    0, // Rpc_DriverManager_readSpeedLimitStatus,
 
     0, // Rpc_QuotaManager_alert,
 

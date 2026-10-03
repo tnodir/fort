@@ -32,4 +32,13 @@ public:
     QDateTime modTime;
 };
 
+struct SpeedLimitStatus
+{
+    bool isValid = false; // the driver has the Speed Limit's queue
+
+    quint64 queuedBytes = 0;
+    quint64 droppedCount = 0; // on the buffer's overflow
+    quint64 lostCount = 0; // by the packet loss rate
+};
+
 #endif // SPEEDLIMIT_H
