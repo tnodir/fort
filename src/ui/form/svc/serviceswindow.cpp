@@ -144,37 +144,26 @@ QLayout *ServicesWindow::setupHeader()
     m_actFind->setShortcut(QKeySequence::Find);
 
     connect(m_actTrack, &QAction::triggered, this, [&] {
-        const int serviceIndex = serviceListCurrentIndex();
-        if (serviceIndex < 0)
-            return;
+        if (const auto serviceInfo = currentServiceInfo()) {
+            serviceInfoManager()->trackService(serviceInfo->serviceName);
+            updateServiceListModel();
 
-        const auto &serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
-
-        serviceInfoManager()->trackService(serviceInfo.serviceName);
-        updateServiceListModel();
-
-        windowManager()->showInfoBox(tr("Please restart the computer to reload changed services!"));
+            windowManager()->showInfoBox(
+                    tr("Please restart the computer to reload changed services!"));
+        }
     });
     connect(m_actRevert, &QAction::triggered, this, [&] {
-        const int serviceIndex = serviceListCurrentIndex();
-        if (serviceIndex < 0)
-            return;
-
-        const auto &serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
-
-        serviceInfoManager()->revertService(serviceInfo.serviceName);
-        updateServiceListModel();
+        if (const auto serviceInfo = currentServiceInfo()) {
+            serviceInfoManager()->revertService(serviceInfo->serviceName);
+            updateServiceListModel();
+        }
     });
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
-        const int serviceIndex = serviceListCurrentIndex();
-        if (serviceIndex < 0)
-            return;
+        if (const auto serviceInfo = currentServiceInfo()) {
+            const QString appPath = QStringLiteral(R"(\SvcHost\)") + serviceInfo->serviceName;
 
-        const auto &serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
-
-        const QString appPath = QStringLiteral(R"(\SvcHost\)") + serviceInfo.serviceName;
-
-        windowManager()->openProgramEditForm(appPath, /*appId=*/0, this);
+            windowManager()->openProgramEditForm(appPath, /*appId=*/0, this);
+        }
     });
     connect(m_actFind, &QAction::triggered, this, [&] {
         m_editSearch->setFocus();
@@ -252,12 +241,11 @@ void ServicesWindow::setupTableServiceListHeader()
 void ServicesWindow::setupTableServicesChanged()
 {
     const auto refreshTableServicesChanged = [&] {
-        const int serviceIndex = serviceListCurrentIndex();
-        const bool serviceSelected = (serviceIndex >= 0);
-        const auto &serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
+        const auto serviceInfo = currentServiceInfo();
+        const bool serviceSelected = (serviceInfo != nullptr);
 
-        m_actTrack->setEnabled(serviceSelected && serviceInfo.canTrack());
-        m_actRevert->setEnabled(serviceSelected && serviceInfo.isTracked());
+        m_actTrack->setEnabled(serviceSelected && serviceInfo->canTrack());
+        m_actRevert->setEnabled(serviceSelected && serviceInfo->isTracked());
         m_actAddProgram->setEnabled(serviceSelected);
         m_btTrack->setEnabled(m_actTrack->isEnabled());
         m_btRevert->setEnabled(m_actRevert->isEnabled());
@@ -271,6 +259,15 @@ void ServicesWindow::setupTableServicesChanged()
 void ServicesWindow::updateServiceListModel()
 {
     serviceListModel()->initialize();
+}
+
+const ServiceInfo *ServicesWindow::currentServiceInfo() const
+{
+    const int serviceIndex = serviceListCurrentIndex();
+    if (serviceIndex < 0)
+        return nullptr;
+
+    return &serviceListModel()->serviceInfoAt(serviceIndex);
 }
 
 int ServicesWindow::serviceListCurrentIndex() const

@@ -7,6 +7,7 @@ QT_FORWARD_DECLARE_CLASS(QLineEdit)
 QT_FORWARD_DECLARE_CLASS(QPushButton)
 QT_FORWARD_DECLARE_CLASS(QToolButton)
 
+class ServiceInfo;
 class ServiceListModel;
 class ServicesController;
 class TableView;
@@ -41,6 +42,7 @@ private:
     void setupTableServicesChanged();
 
     void updateServiceListModel();
+    const ServiceInfo *currentServiceInfo() const;
     int serviceListCurrentIndex() const;
 
 private:
