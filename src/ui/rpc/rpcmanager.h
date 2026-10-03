@@ -26,7 +26,7 @@ public:
     void tearDown() override;
 
     bool waitResult();
-    void sendResult(ControlWorker *w, bool ok, const QVariantList &args = {});
+    void sendResult(ControlWorker *w, quint32 requestId, bool ok, const QVariantList &args = {});
 
     bool invokeOnServer(Control::Command cmd, const QVariantList &args = {});
     bool doOnServer(
@@ -60,6 +60,7 @@ private:
 
 private:
     Control::Command m_resultCommand = Control::CommandNone;
+    quint32 m_resultRequestId = 0;
     QVariantList m_resultArgs;
 
     ControlWorker *m_client = nullptr;

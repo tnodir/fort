@@ -125,11 +125,11 @@ bool RpcManager::waitResult()
     return client()->waitResult(m_resultCommand);
 }
 
-void RpcManager::sendResult(ControlWorker *w, bool ok, const QVariantList &args)
+void RpcManager::sendResult(ControlWorker *w, quint32 requestId, bool ok, const QVariantList &args)
 {
     // DBG: qCDebug(LC) << "Send Result to Client: id:" << w->id() << ok << args.size();
 
-    w->sendResult(ok, args);
+    w->sendResult(requestId, ok, args);
 }
 
 bool RpcManager::invokeOnServer(Control::Command cmd, const QVariantList &args)
@@ -146,6 +146,8 @@ bool RpcManager::doOnServer(Control::Command cmd, const QVariantList &args, QVar
 {
     if (!invokeOnServer(cmd, args))
         return false;
+
+    m_resultRequestId = client()->lastRequestId();
 
     if (!waitResult()) {
         showErrorBox(tr("Service isn't responding."));
@@ -168,7 +170,7 @@ void RpcManager::invokeOnClients(Control::Command cmd, const QVariantList &args)
     if (clients.isEmpty())
         return;
 
-    const QByteArray buffer = ControlWorker::buildCommandData(cmd, args);
+    const QByteArray buffer = ControlWorker::buildCommandData(cmd, /*requestId=*/0, args);
     if (buffer.isEmpty()) {
         qCWarning(LC) << "Bad RPC command to invoke:" << cmd << args;
         return;
@@ -199,8 +201,11 @@ bool RpcManager::processCommandRpc(const ProcessCommandArgs &p, ProcessCommandRe
     switch (p.command) {
     case Control::Rpc_Result_Ok:
     case Control::Rpc_Result_Error: {
-        m_resultCommand = p.command;
-        m_resultArgs = p.args;
+        // Skip the late result of a previous request
+        if (p.requestId == m_resultRequestId) {
+            m_resultCommand = p.command;
+            m_resultArgs = p.args;
+        }
         return true;
     }
     case Control::Rpc_RpcManager_initClient: {

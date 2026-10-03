@@ -205,14 +205,15 @@ void ControlWorker::stopReconnectTimer()
     }
 }
 
-QByteArray ControlWorker::buildCommandData(Control::Command command, const QVariantList &args)
+QByteArray ControlWorker::buildCommandData(
+        Control::Command command, quint32 requestId, const QVariantList &args)
 {
     QByteArray data;
     bool compressed = false;
     if (!buildArgsData(data, args, compressed))
         return {};
 
-    RequestHeader request(command, compressed, data.size());
+    RequestHeader request(command, compressed, data.size(), requestId);
 
     QByteArray buffer;
     buffer.append((const char *) &request, sizeof(RequestHeader));
@@ -242,15 +243,7 @@ bool ControlWorker::sendCommandData(const QByteArray &commandData)
 
 bool ControlWorker::sendCommand(Control::Command command, const QVariantList &args)
 {
-    // DBG: qCDebug(LC) << "Send Command: id:" << id() << command << args.size();
-
-    const QByteArray buffer = buildCommandData(command, args);
-    if (buffer.isEmpty()) {
-        qCWarning(LC) << "Bad RPC command to send:" << command << args;
-        return false;
-    }
-
-    return sendCommandData(buffer);
+    return sendRequest(command, ++m_lastRequestId, args);
 }
 
 bool ControlWorker::postCommand(Control::Command command, const QVariantList &args)
@@ -263,9 +256,9 @@ bool ControlWorker::postCommand(Control::Command command, const QVariantList &ar
     return true;
 }
 
-bool ControlWorker::sendResult(bool ok, const QVariantList &args)
+bool ControlWorker::sendResult(quint32 requestId, bool ok, const QVariantList &args)
 {
-    return sendCommand(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error, args);
+    return sendRequest(ok ? Control::Rpc_Result_Ok : Control::Rpc_Result_Error, requestId, args);
 }
 
 bool ControlWorker::waitResult(Control::Command &resultCommand, int msecs) const
@@ -318,6 +311,20 @@ void ControlWorker::processRequest()
     }
 }
 
+bool ControlWorker::sendRequest(
+        Control::Command command, quint32 requestId, const QVariantList &args)
+{
+    // DBG: qCDebug(LC) << "Send Command: id:" << id() << command << args.size();
+
+    const QByteArray buffer = buildCommandData(command, requestId, args);
+    if (buffer.isEmpty()) {
+        qCWarning(LC) << "Bad RPC command to send:" << command << args;
+        return false;
+    }
+
+    return sendCommandData(buffer);
+}
+
 void ControlWorker::clearRequest()
 {
     m_requestHeader.clear();
@@ -351,12 +358,13 @@ bool ControlWorker::readRequest()
         return false;
 
     const Control::Command command = m_requestHeader.command();
+    const quint32 requestId = m_requestHeader.requestId();
 
     clearRequest();
 
     // DBG: qCDebug(LC) << "requestReady>" << id() << command << args;
 
-    emit requestReady(command, args);
+    emit requestReady(command, requestId, args);
 
     return true;
 }

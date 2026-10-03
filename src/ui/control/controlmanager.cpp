@@ -150,7 +150,8 @@ bool ControlManager::postCommand(
     Control::Command commandOk;
 
     connect(&w, &ControlWorker::requestReady, this,
-            [&commandOk, r](Control::Command command, const QVariantList &args) {
+            [&commandOk, r](
+                    Control::Command command, quint32 /*requestId*/, const QVariantList &args) {
                 commandOk = command;
 
                 if (r && args.size() == 2) {
@@ -229,7 +230,8 @@ void ControlManager::onDisconnected()
     m_clients.removeOne(w);
 }
 
-bool ControlManager::processRequest(Control::Command command, const QVariantList &args)
+bool ControlManager::processRequest(
+        Control::Command command, quint32 requestId, const QVariantList &args)
 {
     ControlWorker *w = qobject_cast<ControlWorker *>(sender());
     if (Q_UNLIKELY(!w))
@@ -246,6 +248,7 @@ bool ControlManager::processRequest(Control::Command command, const QVariantList
             {
                     .worker = w,
                     .command = command,
+                    .requestId = requestId,
                     .args = args,
             },
             r);

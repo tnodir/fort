@@ -153,6 +153,7 @@ struct ProcessCommandArgs
 {
     ControlWorker *worker = nullptr;
     const Control::Command command = Control::CommandNone;
+    const quint32 requestId = 0;
     const QVariantList &args;
 };
 

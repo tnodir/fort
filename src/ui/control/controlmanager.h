@@ -42,7 +42,7 @@ private slots:
     void onNewConnection();
     void onDisconnected();
 
-    bool processRequest(Control::Command command, const QVariantList &args);
+    bool processRequest(Control::Command command, quint32 requestId, const QVariantList &args);
 
 private:
     static QString getServerName(bool isService = false);

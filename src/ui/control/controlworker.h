@@ -27,6 +27,8 @@ public:
 
     quint32 id() const { return m_id; }
 
+    quint32 lastRequestId() const { return m_lastRequestId; }
+
     QString serverName() const { return m_serverName; }
     void setServerName(const QString &v);
 
@@ -41,13 +43,14 @@ public:
     bool connectToServer();
     bool reconnectToServer();
 
-    static QByteArray buildCommandData(Control::Command command, const QVariantList &args = {});
+    static QByteArray buildCommandData(
+            Control::Command command, quint32 requestId = 0, const QVariantList &args = {});
     bool sendCommandData(const QByteArray &commandData);
 
     bool sendCommand(Control::Command command, const QVariantList &args = {});
     bool postCommand(Control::Command command, const QVariantList &args = {});
 
-    bool sendResult(bool ok, const QVariantList &args = {});
+    bool sendResult(quint32 requestId, bool ok, const QVariantList &args = {});
     bool waitResult(Control::Command &resultCommand, int msecs = 700) const;
 
     bool waitForSent(int msecs = 700) const;
@@ -58,7 +61,7 @@ public:
 signals:
     void connected();
     void disconnected();
-    void requestReady(Control::Command command, const QVariantList &args);
+    void requestReady(Control::Command command, quint32 requestId, const QVariantList &args);
 
 public slots:
     void close();
@@ -73,6 +76,8 @@ private slots:
     void processRequest();
 
 private:
+    bool sendRequest(Control::Command command, quint32 requestId, const QVariantList &args);
+
     void clearRequest();
     bool readRequest();
 
@@ -82,26 +87,32 @@ protected:
     struct RequestHeader
     {
         RequestHeader(Control::Command command = Control::CommandNone, bool compressed = false,
-                quint32 dataSize = 0) :
-            m_command(command), m_compressed(compressed), m_dataSize(dataSize)
+                quint32 dataSize = 0, quint32 requestId = 0) :
+            m_command(command),
+            m_compressed(compressed),
+            m_dataSize(dataSize),
+            m_requestId(requestId)
         {
         }
 
         Control::Command command() const { return static_cast<Control::Command>(m_command); }
         bool compressed() const { return m_compressed; }
         quint32 dataSize() const { return m_dataSize; }
+        quint32 requestId() const { return m_requestId; }
 
         void clear()
         {
             m_command = Control::CommandNone;
             m_compressed = false;
             m_dataSize = 0;
+            m_requestId = 0;
         }
 
     private:
         quint32 m_command : 7;
         quint32 m_compressed : 1;
         quint32 m_dataSize : 24;
+        quint32 m_requestId; // the result has the request's id
     };
 
 private:
@@ -113,6 +124,7 @@ private:
     QAtomicInt m_processing = 0;
 
     const quint32 m_id = 0;
+    quint32 m_lastRequestId = 0;
 
     RequestHeader m_requestHeader;
     QByteArray m_requestBuffer;

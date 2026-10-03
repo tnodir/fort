@@ -49,7 +49,7 @@ bool ControlCommandManager::processCommand(const ProcessCommandArgs &p, ProcessC
     }
 
     if (r.isSendResult) {
-        p.worker->sendResult(r.ok, r.args);
+        p.worker->sendResult(p.requestId, r.ok, r.args);
     }
 
     return ok;
