@@ -5,6 +5,8 @@
 
 #define FORT_SUBLAYER_MAX_WEIGHT 0xFFFF
 
+#define FORT_PROV_FILTER_CONTEXT_STAT 1 /* the traffic statistics' packet filter */
+
 typedef struct fort_prov_init_conf
 {
     UINT16 sublayer_weight;

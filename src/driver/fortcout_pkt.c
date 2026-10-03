@@ -2,6 +2,8 @@
 
 #include "fortcout_pkt.h"
 
+#include "common/fortprov.h"
+
 #include "fortcout.h"
 #include "fortcoutarg.h"
 #include "fortdbg.h"
@@ -27,23 +29,11 @@ inline static UINT32 fort_packet_data_size(const FWPS_INCOMING_METADATA_VALUES0 
     return dataSize;
 }
 
-inline static BOOL fort_callout_transport_classify_packet_blocked(FWPS_CLASSIFY_OUT0 *classifyOut)
-{
-    if (classifyOut->actionType == FWP_ACTION_BLOCK) {
-        fort_callout_classify_continue(classifyOut); /* continue */
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-inline static BOOL fort_callout_transport_classify_packet(
+inline static BOOL fort_callout_transport_classify_shaper(
         FWPS_CLASSIFY_OUT0 *classifyOut, PFORT_CALLOUT_ARG ca)
 {
-    if ((classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0) {
-        /* Can't act on the packet */
-        return fort_callout_transport_classify_packet_blocked(classifyOut);
-    }
+    if ((classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0)
+        return FALSE; /* Can't act on the packet */
 
     if (fort_shaper_packet_process(&fort_device()->shaper, ca)) {
         fort_callout_classify_drop(classifyOut); /* drop */
@@ -51,6 +41,29 @@ inline static BOOL fort_callout_transport_classify_packet(
     }
 
     return FALSE;
+}
+
+inline static BOOL fort_callout_transport_classify_blocked(const FWPS_CLASSIFY_OUT0 *classifyOut)
+{
+    return (classifyOut->rights & FWPS_RIGHT_ACTION_WRITE) == 0
+            && classifyOut->actionType == FWP_ACTION_BLOCK;
+}
+
+static void fort_callout_transport_classify_stat(
+        const FWPS_CLASSIFY_OUT0 *classifyOut, PCFORT_CALLOUT_ARG ca)
+{
+    /* Skip the packet blocked or absorbed (to be re-injected) by a higher sublayer's callout */
+    if (fort_callout_transport_classify_blocked(classifyOut))
+        return;
+
+    PFORT_STAT stat = &fort_device()->stat;
+
+    if (!fort_flow_classify(stat, ca->flowContext, ca->dataSize, ca->inbound)) {
+        /* Flush the traffic statistics on the process's bytes' overflow */
+        fort_callout_timer();
+
+        fort_flow_classify(stat, ca->flowContext, ca->dataSize, ca->inbound);
+    }
 }
 
 static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixedValues,
@@ -73,16 +86,10 @@ static void fort_callout_transport_classify(const FWPS_INCOMING_VALUES0 *inFixed
         .inbound = inbound,
     };
 
-    if (fort_callout_transport_classify_packet(classifyOut, &ca))
+    if (filter->context == FORT_PROV_FILTER_CONTEXT_STAT) {
+        fort_callout_transport_classify_stat(classifyOut, &ca);
+    } else if (fort_callout_transport_classify_shaper(classifyOut, &ca)) {
         return;
-
-    PFORT_STAT stat = &fort_device()->stat;
-
-    if (!fort_flow_classify(stat, flowContext, ca.dataSize, inbound)) {
-        /* Flush the traffic statistics on the process's bytes' overflow */
-        fort_callout_timer();
-
-        fort_flow_classify(stat, flowContext, ca.dataSize, inbound);
     }
 
     fort_callout_classify_continue(classifyOut); /* continue */
