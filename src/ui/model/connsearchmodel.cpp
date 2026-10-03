@@ -132,7 +132,7 @@ int ConnSearchModel::doSqlCount() const
 
 void ConnSearchModel::updateSearch()
 {
-    setupTerms();
+    m_textMatcher.setFilter(m_textFilter);
 
     m_connRows.clear();
     m_lastConnId = 0;
@@ -147,21 +147,6 @@ void ConnSearchModel::updateSearch()
     fillConnIdRange(idMin, idMax);
 
     resetConnRows(idMin, idMax);
-}
-
-void ConnSearchModel::setupTerms()
-{
-    m_regexp = {};
-    m_words.clear();
-
-    if (m_textFilter.startsWith('/')) {
-        const QString pattern = m_textFilter.mid(1);
-        if (!pattern.isEmpty()) {
-            m_regexp = QRegularExpression(pattern, QRegularExpression::CaseInsensitiveOption);
-        }
-    } else {
-        m_words = m_textFilter.split(' ', Qt::SkipEmptyParts);
-    }
 }
 
 void ConnSearchModel::removeConnRowsBefore(qint64 idMin)
@@ -220,21 +205,8 @@ void ConnSearchModel::loadConnRows(qint64 connIdFrom, QVector<ConnRow> &connRows
 
         const QString &appText = appSearchText(appTexts, connRow.appPath);
 
-        if (isTextMatched(connRowSearchText(connRow, appText))) {
+        if (m_textMatcher.isMatched(connRowSearchText(connRow, appText))) {
             connRows.append(connRow);
         }
     }
-}
-
-bool ConnSearchModel::isTextMatched(const QString &text) const
-{
-    if (!m_regexp.pattern().isEmpty())
-        return m_regexp.match(text).hasMatch();
-
-    for (const QString &word : m_words) {
-        if (!text.contains(word, Qt::CaseInsensitive))
-            return false;
-    }
-
-    return true;
 }

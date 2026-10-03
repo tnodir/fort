@@ -281,6 +281,7 @@ SOURCES += \
     util/stringutil.cpp \
     util/taskbarbutton.cpp \
     util/textareautil.cpp \
+    util/textmatcher.cpp \
     util/threadstorage.cpp \
     util/triggertimer.cpp \
     util/variantutil.cpp \
@@ -580,6 +581,7 @@ HEADERS += \
     util/stringutil.h \
     util/taskbarbutton.h \
     util/textareautil.h \
+    util/textmatcher.h \
     util/threadstorage.h \
     util/triggertimer.h \
     util/util_types.h \
