@@ -66,6 +66,7 @@ public:
     static QString reasonDetailsText(const ConnRow &connRow);
 
     static QString directionText(bool inbound);
+    static QString directionIconPath(bool inbound);
     static QString actionText(bool blocked);
 
     static QString columnName(const ConnListColumn column);

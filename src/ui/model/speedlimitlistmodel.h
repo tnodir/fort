@@ -7,6 +7,13 @@
 #include <util/ioc/iocservice.h>
 #include <util/model/tablesqlmodel.h>
 
+enum class SpeedLimitListColumn : qint8 {
+    Name = 0,
+    Direction,
+    ModTime,
+    Count,
+};
+
 struct SpeedLimitRow : TableRow, public SpeedLimit
 {
 };
@@ -31,6 +38,8 @@ public:
 
     const SpeedLimitRow &speedLimitRowAt(int row) const;
 
+    static QString columnName(const SpeedLimitListColumn column);
+
 protected:
     Qt::ItemFlags flagIsUserCheckable(const QModelIndex &index) const override;
 
@@ -43,8 +52,11 @@ protected:
     QString sqlBase() const override;
 
 private:
-    QVariant headerDataDisplay(int section) const;
-    QVariant dataDisplay(const QModelIndex &index) const;
+    QVariant headerDataDisplay(int section, int role) const;
+    QVariant headerDataDecoration(int section) const;
+
+    QVariant dataDisplay(const QModelIndex &index, int role) const;
+    QVariant dataDecoration(const QModelIndex &index) const;
     QVariant dataCheckState(const QModelIndex &index) const;
 
 private:

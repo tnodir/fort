@@ -24,7 +24,7 @@ using namespace Fort;
 
 namespace {
 
-inline constexpr int SPEED_LIMITS_HEADER_VERSION = 1;
+inline constexpr int SPEED_LIMITS_HEADER_VERSION = 2;
 
 }
 
@@ -167,12 +167,14 @@ void SpeedLimitsWindow::setupTableSpeedLimitsHeader()
 {
     auto header = m_speedLimitListView->horizontalHeader();
 
-    header->setSectionResizeMode(0, QHeaderView::Interactive);
-    header->setSectionResizeMode(1, QHeaderView::Interactive);
+    header->setSectionResizeMode(int(SpeedLimitListColumn::Name), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(SpeedLimitListColumn::Direction), QHeaderView::Fixed);
+    header->setSectionResizeMode(int(SpeedLimitListColumn::ModTime), QHeaderView::Interactive);
     header->setStretchLastSection(true);
 
-    header->resizeSection(0, 360);
-    header->resizeSection(1, 130);
+    header->resizeSection(int(SpeedLimitListColumn::Name), 330);
+    header->resizeSection(int(SpeedLimitListColumn::Direction), 30);
+    header->resizeSection(int(SpeedLimitListColumn::ModTime), 130);
 }
 
 void SpeedLimitsWindow::setupTableSpeedLimitsChanged()

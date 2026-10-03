@@ -9,11 +9,43 @@
 #include <conf/confmanager.h>
 #include <conf/confspeedlimitmanager.h>
 #include <fortglobal.h>
+#include <model/connlistmodel.h>
+#include <util/iconcache.h>
 
 using namespace Fort;
 
 namespace {
+
 const QLoggingCategory LC("model.speedLimitList");
+
+using dataDisplay_func = QVariant (*)(const SpeedLimitRow &speedLimitRow, int role);
+
+QVariant dataDisplayName(const SpeedLimitRow &speedLimitRow, int /*role*/)
+{
+    return QString("%1) %2").arg(QString::number(speedLimitRow.limitId), speedLimitRow.menuLabel());
+}
+
+QVariant dataDisplayDirection(const SpeedLimitRow &speedLimitRow, int role)
+{
+    if (role != Qt::ToolTipRole)
+        return {};
+
+    return ConnListModel::directionText(speedLimitRow.inbound);
+}
+
+QVariant dataDisplayModTime(const SpeedLimitRow &speedLimitRow, int /*role*/)
+{
+    return speedLimitRow.modTime;
+}
+
+static const dataDisplay_func dataDisplay_funcList[] = {
+    &dataDisplayName,
+    &dataDisplayDirection,
+    &dataDisplayModTime,
+};
+
+static_assert(std::size(dataDisplay_funcList) == int(SpeedLimitListColumn::Count));
+
 }
 
 SpeedLimitListModel::SpeedLimitListModel(QObject *parent) : TableSqlModel(parent) { }
@@ -40,7 +72,7 @@ void SpeedLimitListModel::setUp()
 
 int SpeedLimitListModel::columnCount(const QModelIndex & /*parent*/) const
 {
-    return 2;
+    return int(SpeedLimitListColumn::Count);
 }
 
 QVariant SpeedLimitListModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -52,7 +84,11 @@ QVariant SpeedLimitListModel::headerData(int section, Qt::Orientation orientatio
     // Label
     case Qt::DisplayRole:
     case Qt::ToolTipRole:
-        return headerDataDisplay(section);
+        return headerDataDisplay(section, role);
+
+    // Icon
+    case Qt::DecorationRole:
+        return headerDataDecoration(section);
     }
 
     return {};
@@ -67,7 +103,11 @@ QVariant SpeedLimitListModel::data(const QModelIndex &index, int role) const
     // Label
     case Qt::DisplayRole:
     case Qt::ToolTipRole:
-        return dataDisplay(index);
+        return dataDisplay(index, role);
+
+    // Icon
+    case Qt::DecorationRole:
+        return dataDecoration(index);
 
     // Enabled
     case Qt::CheckStateRole:
@@ -77,33 +117,47 @@ QVariant SpeedLimitListModel::data(const QModelIndex &index, int role) const
     return {};
 }
 
-QVariant SpeedLimitListModel::headerDataDisplay(int section) const
+QVariant SpeedLimitListModel::headerDataDisplay(int section, int role) const
 {
-    switch (section) {
-    case 0:
-        return tr("Speed Limit");
-    case 1:
-        return tr("Change Time");
-    }
+    const auto column = SpeedLimitListColumn(section);
+
+    if (role == Qt::DisplayRole && column == SpeedLimitListColumn::Direction)
+        return {};
+
+    return columnName(column);
+}
+
+QVariant SpeedLimitListModel::headerDataDecoration(int section) const
+{
+    if (SpeedLimitListColumn(section) == SpeedLimitListColumn::Direction)
+        return IconCache::icon(":/icons/green_down.png");
+
     return {};
 }
 
-QVariant SpeedLimitListModel::dataDisplay(const QModelIndex &index) const
+QVariant SpeedLimitListModel::dataDisplay(const QModelIndex &index, int role) const
 {
-    const int row = index.row();
     const int column = index.column();
 
-    const auto &speedLimitRow = speedLimitRowAt(row);
+    const auto &speedLimitRow = speedLimitRowAt(index.row());
+    if (speedLimitRow.isNull())
+        return {};
 
-    switch (column) {
-    case 0:
-        return QString("%1) %2").arg(
-                QString::number(speedLimitRow.limitId), speedLimitRow.menuLabel());
-    case 1:
-        return speedLimitRow.modTime;
-    }
+    const dataDisplay_func func = dataDisplay_funcList[column];
 
-    return {};
+    return func(speedLimitRow, role);
+}
+
+QVariant SpeedLimitListModel::dataDecoration(const QModelIndex &index) const
+{
+    if (SpeedLimitListColumn(index.column()) != SpeedLimitListColumn::Direction)
+        return {};
+
+    const auto &speedLimitRow = speedLimitRowAt(index.row());
+    if (speedLimitRow.isNull())
+        return {};
+
+    return IconCache::icon(ConnListModel::directionIconPath(speedLimitRow.inbound));
 }
 
 QVariant SpeedLimitListModel::dataCheckState(const QModelIndex &index) const
@@ -143,6 +197,17 @@ const SpeedLimitRow &SpeedLimitListModel::speedLimitRowAt(int row) const
     updateRowCache(row);
 
     return m_speedLimitRow;
+}
+
+QString SpeedLimitListModel::columnName(const SpeedLimitListColumn column)
+{
+    const QStringList columnNames = {
+        tr("Speed Limit"),
+        tr("Direction"),
+        tr("Change Time"),
+    };
+
+    return columnNames.value(int(column));
 }
 
 bool SpeedLimitListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const

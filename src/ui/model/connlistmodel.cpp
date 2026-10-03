@@ -83,11 +83,6 @@ QString actionIconPath(const ConnRow &connRow)
     return connRow.blocked ? ":/icons/deny.png" : ":/icons/accept.png";
 }
 
-QString directionIconPath(const ConnRow &connRow)
-{
-    return connRow.inbound ? ":/icons/green_down.png" : ":/icons/blue_up.png";
-}
-
 QVariant dataDisplayAppName(const ConnRow &connRow, int /*role*/)
 {
     return appInfoCache()->appName(connRow.appPath);
@@ -304,7 +299,7 @@ QVariant ConnListModel::dataDecoration(const QModelIndex &index) const
     case ConnListColumn::Program:
         return appInfoCache()->appIcon(connRow.appPath);
     case ConnListColumn::Direction:
-        return IconCache::icon(directionIconPath(connRow));
+        return IconCache::icon(directionIconPath(connRow.inbound));
     case ConnListColumn::Action:
         return dataDecorationAction(connRow);
     case ConnListColumn::Reason:
@@ -571,6 +566,11 @@ QString ConnListModel::reasonDetailsText(const ConnRow &connRow)
 QString ConnListModel::directionText(bool inbound)
 {
     return inbound ? tr("In") : tr("Out");
+}
+
+QString ConnListModel::directionIconPath(bool inbound)
+{
+    return inbound ? ":/icons/green_down.png" : ":/icons/blue_up.png";
 }
 
 QString ConnListModel::actionText(bool blocked)
