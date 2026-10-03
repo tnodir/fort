@@ -21,6 +21,12 @@ inline bool serviceInfoManager_revertService(
     return true;
 }
 
+inline bool serviceInfoManager_restartService(
+        ServiceInfoManager *serviceInfoManager, const ProcessCommandArgs &p)
+{
+    return serviceInfoManager->restartService(p.args.value(0).toString());
+}
+
 }
 
 ServiceInfoManagerRpc::ServiceInfoManagerRpc(QObject *parent) : ServiceInfoManager(parent) { }
@@ -35,8 +41,14 @@ void ServiceInfoManagerRpc::revertService(const QString &serviceName)
     rpcManager()->invokeOnServer(Control::Rpc_ServiceInfoManager_revertService, { serviceName });
 }
 
+bool ServiceInfoManagerRpc::restartService(const QString &serviceName)
+{
+    return rpcManager()->doOnServer(
+            Control::Rpc_ServiceInfoManager_restartService, { serviceName });
+}
+
 bool ServiceInfoManagerRpc::processServerCommand(
-        const ProcessCommandArgs &p, ProcessCommandResult & /*r*/)
+        const ProcessCommandArgs &p, ProcessCommandResult &r)
 {
     auto serviceInfoManager = Fort::serviceInfoManager();
 
@@ -46,6 +58,11 @@ bool ServiceInfoManagerRpc::processServerCommand(
     }
     case Control::Rpc_ServiceInfoManager_revertService: {
         return serviceInfoManager_revertService(serviceInfoManager, p);
+    }
+    case Control::Rpc_ServiceInfoManager_restartService: {
+        r.ok = serviceInfoManager_restartService(serviceInfoManager, p);
+        r.isSendResult = true;
+        return true;
     }
     default:
         return false;

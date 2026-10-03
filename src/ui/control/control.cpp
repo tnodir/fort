@@ -110,6 +110,7 @@ static const QHash<Command, const char *> g_commandNames = {
 
     CASE_STRING(Rpc_ServiceInfoManager_trackService),
     CASE_STRING(Rpc_ServiceInfoManager_revertService),
+    CASE_STRING(Rpc_ServiceInfoManager_restartService),
 
     CASE_STRING(Rpc_TaskManager_runTask),
     CASE_STRING(Rpc_TaskManager_abortTask),
@@ -253,6 +254,7 @@ static const RpcManager g_commandManagers[] = {
 
     Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_trackService,
     Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_revertService,
+    Rpc_ServiceInfoManager, // Rpc_ServiceInfoManager_restartService,
 
     Rpc_TaskManager, // Rpc_TaskManager_runTask,
     Rpc_TaskManager, // Rpc_TaskManager_abortTask,
@@ -373,6 +375,7 @@ static const qint8 g_commandValidations[] = {
 
     true, // Rpc_ServiceInfoManager_trackService,
     true, // Rpc_ServiceInfoManager_revertService,
+    true, // Rpc_ServiceInfoManager_restartService,
 
     true, // Rpc_TaskManager_runTask,
     true, // Rpc_TaskManager_abortTask,

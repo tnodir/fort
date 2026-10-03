@@ -113,6 +113,7 @@ enum Command : qint8 {
 
     Rpc_ServiceInfoManager_trackService,
     Rpc_ServiceInfoManager_revertService,
+    Rpc_ServiceInfoManager_restartService,
 
     Rpc_TaskManager_runTask,
     Rpc_TaskManager_abortTask,

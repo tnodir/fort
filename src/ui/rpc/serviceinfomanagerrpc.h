@@ -18,6 +18,7 @@ public:
 public slots:
     void trackService(const QString &serviceName) override;
     void revertService(const QString &serviceName) override;
+    bool restartService(const QString &serviceName) override;
 
 protected:
     void setupServiceListMonitor() override { }

@@ -32,6 +32,7 @@ signals:
 public slots:
     virtual void trackService(const QString &serviceName);
     virtual void revertService(const QString &serviceName);
+    virtual bool restartService(const QString &serviceName);
 
     void repairTrackedServices(const QVector<ServiceInfo> &serviceInfoList);
     void monitorServices(const QVector<ServiceInfo> &serviceInfoList);
@@ -45,6 +46,8 @@ protected:
     void stopServiceMonitor(ServiceMonitor *serviceMonitor);
 
 private:
+    void startStoppedService(const QString &serviceName, int checkCount);
+
     void onServicesCreated(const QStringList &serviceNames);
     void onServiceStateChanged(ServiceMonitor *serviceMonitor);
     void onServiceStarted(ServiceMonitor *serviceMonitor);

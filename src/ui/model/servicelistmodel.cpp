@@ -180,10 +180,11 @@ QString ServiceListModel::trackStatusText(const ServiceInfo &info) const
     if (info.isTrackReset)
         return tr("The changes were reset by the system. Make the service trackable again.");
 
-    if (info.isTrackPending())
-        return tr("Please restart the service to apply the changes.");
+    if (!info.isTrackPending())
+        return {};
 
-    return {};
+    return info.isRestartable() ? tr("Please restart the service to apply the changes.")
+                                : tr("Please restart the computer to apply the changes.");
 }
 
 QString ServiceListModel::trackIconPath(const ServiceInfo &info)

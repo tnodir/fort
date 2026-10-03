@@ -28,9 +28,11 @@ public:
     bool isServiceOpened() const { return m_serviceHandle != 0; }
 
     bool queryIsRunning();
+    bool queryIsStopped();
 
     bool startService();
     bool stopService(ServiceControlCode controlCode = ServiceControlStop);
+    bool stopServiceWait(ServiceControlCode controlCode = ServiceControlStop);
 
     bool changeServiceConfig(quint32 serviceType, const wchar_t *binaryPath);
 
@@ -40,6 +42,8 @@ public:
     bool setupServiceRestartConfig();
 
 private:
+    quint32 queryState();
+
     void openService(const wchar_t *serviceName, quint32 managerAccess, quint32 serviceAccess);
     void closeService();
 

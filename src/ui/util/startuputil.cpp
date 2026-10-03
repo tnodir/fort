@@ -117,7 +117,7 @@ bool uninstallService(const wchar_t *serviceName)
 {
     ServiceHandle svc(serviceName, SC_MANAGER_ALL_ACCESS, SERVICE_ALL_ACCESS | DELETE);
     if (svc.isServiceOpened()) {
-        svc.stopService();
+        svc.stopServiceWait();
 
         return svc.deleteService();
     }
@@ -195,7 +195,7 @@ bool StartupUtil::stopService(ServiceControlCode controlCode)
 {
     ServiceHandle svc(serviceNameStr, SC_MANAGER_ALL_ACCESS, SERVICE_ALL_ACCESS);
     if (svc.isServiceOpened()) {
-        return svc.stopService(controlCode);
+        return svc.stopServiceWait(controlCode);
     }
 
     return false;

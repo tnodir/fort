@@ -7,6 +7,7 @@
 #include <QLineEdit>
 #include <QMenu>
 #include <QPushButton>
+#include <QTimer>
 #include <QToolButton>
 #include <QVBoxLayout>
 
@@ -30,6 +31,8 @@ using namespace Fort;
 namespace {
 
 inline constexpr int SERVICES_HEADER_VERSION = 2;
+
+inline constexpr int SERVICE_RESTART_REFRESH_DELAY = 3000; // msec
 
 }
 
@@ -81,11 +84,13 @@ void ServicesWindow::retranslateUi()
     m_btEdit->setText(tr("Edit"));
     m_actTrack->setText(tr("Make Trackable"));
     m_actRevert->setText(tr("Revert Changes"));
+    m_actRestart->setText(tr("Restart Service"));
     m_actAddProgram->setText(tr("Add Program"));
     m_actFind->setText(tr("Find"));
 
     m_btTrack->setText(tr("Make Trackable"));
     m_btRevert->setText(tr("Revert Changes"));
+    m_btRestart->setText(tr("Restart Service"));
     m_btRefresh->setText(tr("Refresh"));
 
     m_editSearch->setPlaceholderText(tr("Search") + " /");
@@ -134,6 +139,8 @@ QLayout *ServicesWindow::setupHeader()
 
     m_actTrack = editMenu->addAction(IconCache::icon(":/icons/tick.png"), QString());
     m_actRevert = editMenu->addAction(IconCache::icon(":/icons/delete.png"), QString());
+    m_actRestart =
+            editMenu->addAction(IconCache::icon(":/icons/arrow_rotate_clockwise.png"), QString());
 
     m_actAddProgram = editMenu->addAction(IconCache::icon(":/icons/application.png"), QString());
     m_actAddProgram->setShortcut(Qt::Key_Insert);
@@ -145,17 +152,18 @@ QLayout *ServicesWindow::setupHeader()
 
     connect(m_actTrack, &QAction::triggered, this, [&] {
         if (const auto serviceInfo = currentServiceInfo()) {
-            serviceInfoManager()->trackService(serviceInfo->serviceName);
-            updateServiceListModel();
-
-            windowManager()->showInfoBox(
-                    tr("Please restart the computer to reload changed services!"));
+            trackService(*serviceInfo);
         }
     });
     connect(m_actRevert, &QAction::triggered, this, [&] {
         if (const auto serviceInfo = currentServiceInfo()) {
             serviceInfoManager()->revertService(serviceInfo->serviceName);
             updateServiceListModel();
+        }
+    });
+    connect(m_actRestart, &QAction::triggered, this, [&] {
+        if (const auto serviceInfo = currentServiceInfo()) {
+            confirmRestartService(serviceInfo->realServiceName, tr("Restart the service \"%1\"?"));
         }
     });
     connect(m_actAddProgram, &QAction::triggered, this, [&] {
@@ -176,10 +184,12 @@ QLayout *ServicesWindow::setupHeader()
     // Toolbar buttons
     m_btTrack = ControlUtil::createFlatToolButton(":/icons/tick.png");
     m_btRevert = ControlUtil::createFlatToolButton(":/icons/delete.png");
+    m_btRestart = ControlUtil::createFlatToolButton(":/icons/arrow_rotate_clockwise.png");
     m_btRefresh = ControlUtil::createFlatToolButton(":/icons/arrow_refresh_small.png");
 
     connect(m_btTrack, &QAbstractButton::clicked, m_actTrack, &QAction::trigger);
     connect(m_btRevert, &QAbstractButton::clicked, m_actRevert, &QAction::trigger);
+    connect(m_btRestart, &QAbstractButton::clicked, m_actRestart, &QAction::trigger);
     connect(m_btRefresh, &QAbstractButton::clicked, this, &ServicesWindow::updateServiceListModel);
 
     // Search field
@@ -192,7 +202,7 @@ QLayout *ServicesWindow::setupHeader()
     m_btMenu = ControlUtil::createMenuButton();
 
     auto layout = ControlUtil::createHLayoutByWidgets(
-            { m_btEdit, ControlUtil::createVSeparator(), m_btTrack, m_btRevert,
+            { m_btEdit, ControlUtil::createVSeparator(), m_btTrack, m_btRevert, m_btRestart,
                     ControlUtil::createVSeparator(), m_btRefresh, ControlUtil::createVSeparator(),
                     m_editSearch, /*stretch*/ nullptr, m_btOptions, m_btMenu });
 
@@ -246,14 +256,55 @@ void ServicesWindow::setupTableServicesChanged()
 
         m_actTrack->setEnabled(serviceSelected && serviceInfo->canTrack());
         m_actRevert->setEnabled(serviceSelected && serviceInfo->isTracked());
+        m_actRestart->setEnabled(serviceSelected && serviceInfo->isStoppable);
         m_actAddProgram->setEnabled(serviceSelected);
         m_btTrack->setEnabled(m_actTrack->isEnabled());
         m_btRevert->setEnabled(m_actRevert->isEnabled());
+        m_btRestart->setEnabled(m_actRestart->isEnabled());
     };
 
     refreshTableServicesChanged();
 
     connect(m_serviceListView, &TableView::currentIndexChanged, this, refreshTableServicesChanged);
+}
+
+// The serviceInfo is copied: the services list is reloaded
+void ServicesWindow::trackService(ServiceInfo serviceInfo)
+{
+    serviceInfoManager()->trackService(serviceInfo.serviceName);
+    updateServiceListModel();
+
+    // The running service's process doesn't have the changes
+    if (!serviceInfo.isProcessShared)
+        return;
+
+    if (serviceInfo.isRestartable()) {
+        confirmRestartService(serviceInfo.realServiceName,
+                tr("Restart the service \"%1\" to apply the changes?"));
+    } else {
+        windowManager()->showInfoBox(tr("Please restart the computer to apply the changes."));
+    }
+}
+
+void ServicesWindow::confirmRestartService(const QString &serviceName, const QString &question)
+{
+    windowManager()->showConfirmBox(
+            [=, this] { restartService(serviceName); }, question.arg(serviceName), QString(), this);
+}
+
+void ServicesWindow::restartService(const QString &serviceName)
+{
+    if (!serviceInfoManager()->restartService(serviceName)) {
+        windowManager()->showErrorBox(
+                tr("Cannot restart the service \"%1\".").arg(serviceName), QString(), this);
+        return;
+    }
+
+    updateServiceListModel();
+
+    // Refresh the list when the service is started
+    QTimer::singleShot(
+            SERVICE_RESTART_REFRESH_DELAY, this, &ServicesWindow::updateServiceListModel);
 }
 
 void ServicesWindow::updateServiceListModel()

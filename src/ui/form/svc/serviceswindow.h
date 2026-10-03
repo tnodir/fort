@@ -41,6 +41,10 @@ private:
     void setupTableServiceListHeader();
     void setupTableServicesChanged();
 
+    void trackService(ServiceInfo serviceInfo);
+    void confirmRestartService(const QString &serviceName, const QString &question);
+    void restartService(const QString &serviceName);
+
     void updateServiceListModel();
     const ServiceInfo *currentServiceInfo() const;
     int serviceListCurrentIndex() const;
@@ -50,11 +54,13 @@ private:
 
     QAction *m_actTrack = nullptr;
     QAction *m_actRevert = nullptr;
+    QAction *m_actRestart = nullptr;
     QAction *m_actAddProgram = nullptr;
     QAction *m_actFind = nullptr;
     QPushButton *m_btEdit = nullptr;
     QToolButton *m_btTrack = nullptr;
     QToolButton *m_btRevert = nullptr;
+    QToolButton *m_btRestart = nullptr;
     QToolButton *m_btRefresh = nullptr;
     QLineEdit *m_editSearch = nullptr;
     QToolButton *m_btOptions = nullptr;

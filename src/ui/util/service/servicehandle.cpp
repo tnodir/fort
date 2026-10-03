@@ -21,11 +21,12 @@ ServiceHandle::~ServiceHandle()
 
 bool ServiceHandle::queryIsRunning()
 {
-    SERVICE_STATUS status;
-    if (QueryServiceStatus(SC_HANDLE(m_serviceHandle), &status)) {
-        return (status.dwCurrentState == SERVICE_RUNNING);
-    }
-    return false;
+    return queryState() == SERVICE_RUNNING;
+}
+
+bool ServiceHandle::queryIsStopped()
+{
+    return queryState() == SERVICE_STOPPED;
 }
 
 bool ServiceHandle::startService()
@@ -35,14 +36,18 @@ bool ServiceHandle::startService()
 
 bool ServiceHandle::stopService(ServiceControlCode controlCode)
 {
+    SERVICE_STATUS status;
+    return ControlService(SC_HANDLE(m_serviceHandle), controlCode, &status);
+}
+
+bool ServiceHandle::stopServiceWait(ServiceControlCode controlCode)
+{
     int n = 3; /* count of attempts to stop the service */
     do {
-        SERVICE_STATUS status;
-        if (QueryServiceStatus(SC_HANDLE(m_serviceHandle), &status)
-                && status.dwCurrentState == SERVICE_STOPPED)
+        if (queryIsStopped())
             return true;
 
-        ControlService(SC_HANDLE(m_serviceHandle), controlCode, &status);
+        stopService(controlCode);
 
         QThread::msleep(100);
     } while (--n > 0);
@@ -97,6 +102,15 @@ bool ServiceHandle::setupServiceRestartConfig()
     sfa.lpsaActions = actions;
 
     return ChangeServiceConfig2(SC_HANDLE(m_serviceHandle), SERVICE_CONFIG_FAILURE_ACTIONS, &sfa);
+}
+
+quint32 ServiceHandle::queryState()
+{
+    SERVICE_STATUS status;
+    if (QueryServiceStatus(SC_HANDLE(m_serviceHandle), &status)) {
+        return status.dwCurrentState;
+    }
+    return 0;
 }
 
 void ServiceHandle::openService(

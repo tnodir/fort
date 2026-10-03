@@ -1,6 +1,7 @@
 #include "serviceinfomanager.h"
 
 #include <QLoggingCategory>
+#include <QTimer>
 
 #define WIN32_LEAN_AND_MEAN
 #include <qt_windows.h>
@@ -24,6 +25,9 @@ const char *const serviceDllKey = "ServiceDll";
 const char *const serviceParametersKey = "Parameters";
 const char *const serviceTypeOldKey = "_Fort_Type";
 const char *const serviceTrackFlagsKey = "_FortTrackFlags";
+
+inline constexpr int serviceRestartCheckInterval = 100; // msec
+inline constexpr int serviceRestartCheckCount = 300; // 30 seconds
 
 struct ServiceConfig
 {
@@ -206,6 +210,7 @@ void fillServiceInfo(ServiceInfo &info, const RegKey &svcReg,
     info.hasProcess = (status.dwProcessId != 0);
     info.isHostSplitDisabled = svcReg.value(serviceHostSplitDisableKey).toInt() != 0;
     info.isTrackReset = checkIsServiceTrackReset(svcReg, info.serviceName, trackFlags);
+    info.isStoppable = (status.dwControlsAccepted & SERVICE_ACCEPT_STOP) != 0;
     info.serviceType = ServiceInfo::Type(status.dwServiceType);
     info.trackFlags = trackFlags;
     info.processId = status.dwProcessId;
@@ -369,6 +374,22 @@ void ServiceInfoManager::revertService(const QString &serviceName)
     svcReg.removeValue(serviceTrackFlagsKey);
 }
 
+bool ServiceInfoManager::restartService(const QString &serviceName)
+{
+    ServiceHandle svc(
+            (LPCWSTR) serviceName.utf16(), SC_MANAGER_CONNECT, SERVICE_STOP | SERVICE_QUERY_STATUS);
+
+    // The service may be still stopping: startStoppedService() waits for it
+    if (!svc.stopService(ServiceControlStopStandard) && svc.queryIsRunning()) {
+        qCWarning(LC) << "Stop service error:" << serviceName;
+        return false;
+    }
+
+    startStoppedService(serviceName, serviceRestartCheckCount);
+
+    return true;
+}
+
 void ServiceInfoManager::monitorServices(const QVector<ServiceInfo> &serviceInfoList)
 {
     for (const ServiceInfo &serviceInfo : serviceInfoList) {
@@ -386,6 +407,27 @@ void ServiceInfoManager::repairTrackedServices(const QVector<ServiceInfo> &servi
 
         trackService(info.serviceName);
     }
+}
+
+void ServiceInfoManager::startStoppedService(const QString &serviceName, int checkCount)
+{
+    ServiceHandle svc((LPCWSTR) serviceName.utf16(), SC_MANAGER_CONNECT,
+            SERVICE_QUERY_STATUS | SERVICE_START);
+
+    if (svc.queryIsStopped()) {
+        if (!svc.startService()) {
+            qCWarning(LC) << "Start service error:" << serviceName << GetLastError();
+        }
+        return;
+    }
+
+    if (--checkCount <= 0) {
+        qCWarning(LC) << "Stop service timeout:" << serviceName;
+        return;
+    }
+
+    QTimer::singleShot(serviceRestartCheckInterval, this,
+            [=, this] { startStoppedService(serviceName, checkCount); });
 }
 
 void ServiceInfoManager::setupServiceListMonitor()
