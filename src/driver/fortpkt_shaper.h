@@ -44,6 +44,9 @@ typedef struct fort_packet_queue
     UINT64 available_rem; /* fractional part of the available bytes, multiplied by QPC frequency */
     LARGE_INTEGER last_tick; /* last time the queue was checked */
 
+    UINT64 dropped_count; /* packets dropped on the buffer's overflow */
+    UINT64 lost_count; /* packets dropped by the packet loss rate */
+
     KSPIN_LOCK lock;
 } FORT_PACKET_QUEUE, *PFORT_PACKET_QUEUE;
 
@@ -94,6 +97,9 @@ FORT_API void fort_shaper_speed_limit_flags_set(
         PFORT_SHAPER shaper, PCFORT_CONF_SPEED_LIMIT_FLAGS limit_flags);
 
 FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const FORT_CONF_FLAGS conf_flags);
+
+FORT_API void fort_shaper_speed_limits_status(
+        PFORT_SHAPER shaper, PFORT_SPEED_LIMITS_STATUS limits_status);
 
 FORT_API BOOL fort_shaper_packet_process(PFORT_SHAPER shaper, PFORT_CALLOUT_ARG ca);
 

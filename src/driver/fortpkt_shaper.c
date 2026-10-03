@@ -404,10 +404,30 @@ inline static PFORT_PACKET_QUEUE fort_shaper_create_queue(
     return queue;
 }
 
+static void fort_shaper_queue_set_limit(
+        PFORT_PACKET_QUEUE queue, PCFORT_SPEED_LIMIT limit, BOOL is_new_limit)
+{
+    /* The shaper's thread uses it under the queue's lock */
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
+    {
+        queue->limit = *limit;
+
+        /* The new Speed Limit may reuse the old one's queue */
+        if (is_new_limit) {
+            queue->dropped_count = 0;
+            queue->lost_count = 0;
+        }
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
 static void fort_shaper_create_queues(
         PFORT_SHAPER shaper, PCFORT_SPEED_LIMIT limits, UINT32 limit_bits)
 {
     const LARGE_INTEGER now = KeQueryPerformanceCounter(NULL);
+
+    const UINT32 old_limit_bits = shaper->limit_bits;
 
     for (int i = 0; limit_bits != 0; ++i) {
         const BOOL queue_exists = (limit_bits & 1) != 0;
@@ -420,13 +440,9 @@ static void fort_shaper_create_queues(
         if (queue == NULL)
             continue;
 
-        /* The shaper's thread uses it under the queue's lock */
-        KLOCK_QUEUE_HANDLE lock_queue;
-        KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
-        {
-            queue->limit = limits[i];
-        }
-        KeReleaseInStackQueuedSpinLock(&lock_queue);
+        const BOOL is_new_limit = (old_limit_bits & (1u << i)) == 0;
+
+        fort_shaper_queue_set_limit(queue, &limits[i], is_new_limit);
     }
 }
 
@@ -700,6 +716,48 @@ FORT_API void fort_shaper_conf_flags_update(PFORT_SHAPER shaper, const FORT_CONF
     fort_shaper_flush(shaper, flush_bits, /*drop=*/FALSE);
 }
 
+static void fort_shaper_queue_status(
+        PFORT_PACKET_QUEUE queue, PFORT_SPEED_LIMIT_STATUS limit_status)
+{
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
+    {
+        limit_status->queued_bytes = queue->queued_bytes;
+        limit_status->dropped_count = queue->dropped_count;
+        limit_status->lost_count = queue->lost_count;
+    }
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
+FORT_API void fort_shaper_speed_limits_status(
+        PFORT_SHAPER shaper, PFORT_SPEED_LIMITS_STATUS limits_status)
+{
+    RtlZeroMemory(limits_status, sizeof(FORT_SPEED_LIMITS_STATUS));
+
+    KLOCK_QUEUE_HANDLE lock_queue;
+    KeAcquireInStackQueuedSpinLock(&shaper->lock, &lock_queue);
+
+    UINT32 limit_bits = shaper->limit_bits;
+
+    for (int i = 0; limit_bits != 0; ++i) {
+        const BOOL queue_exists = (limit_bits & 1) != 0;
+        limit_bits >>= 1;
+
+        if (!queue_exists)
+            continue;
+
+        PFORT_PACKET_QUEUE queue = shaper->queues[i];
+        if (queue == NULL)
+            continue;
+
+        fort_shaper_queue_status(queue, &limits_status->limits[i]);
+
+        limits_status->mask |= (1u << i);
+    }
+
+    KeReleaseInStackQueuedSpinLock(&lock_queue);
+}
+
 static void fort_shaper_packet_queue_add_packet(
         PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue, PFORT_FLOW_PACKET pkt, UINT32 queue_bit)
 {
@@ -758,25 +816,44 @@ inline static BOOL fort_shaper_packet_queue_check_buffer(
     return queued_bytes == 0 || (UINT64) buffer_bytes >= (queued_bytes + data_length);
 }
 
-static BOOL fort_shaper_packet_queue_check_packet(
-        PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue, ULONG data_length)
+inline static BOOL fort_shaper_packet_queue_check_in_count(PFORT_SHAPER shaper, BOOL inbound)
 {
-    BOOL res;
+    return !inbound || shaper->in_packet_count < FORT_SHAPER_IN_PACKET_COUNT_MAX;
+}
+
+/* Returns the counter of the packet's drop reason or NULL to queue the packet */
+inline static UINT64 *fort_shaper_packet_queue_drop_counter(
+        PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue, PCFORT_CALLOUT_ARG ca)
+{
+    if (!fort_shaper_packet_queue_check_in_count(shaper, ca->inbound))
+        return &queue->dropped_count;
+
+    if (!fort_shaper_packet_queue_check_plr(shaper, queue))
+        return &queue->lost_count;
+
+    if (!fort_shaper_packet_queue_check_buffer(queue, ca->dataSize))
+        return &queue->dropped_count;
+
+    return NULL;
+}
+
+static BOOL fort_shaper_packet_queue_check_packet(
+        PFORT_SHAPER shaper, PFORT_PACKET_QUEUE queue, PCFORT_CALLOUT_ARG ca)
+{
+    UINT64 *drop_counter;
 
     KLOCK_QUEUE_HANDLE lock_queue;
     KeAcquireInStackQueuedSpinLock(&queue->lock, &lock_queue);
     {
-        res = fort_shaper_packet_queue_check_plr(shaper, queue)
-                && fort_shaper_packet_queue_check_buffer(queue, data_length);
+        drop_counter = fort_shaper_packet_queue_drop_counter(shaper, queue, ca);
+
+        if (drop_counter != NULL) {
+            ++(*drop_counter);
+        }
     }
     KeReleaseInStackQueuedSpinLock(&lock_queue);
 
-    return res;
-}
-
-inline static BOOL fort_shaper_packet_queue_check_in_count(PFORT_SHAPER shaper, BOOL inbound)
-{
-    return !inbound || shaper->in_packet_count < FORT_SHAPER_IN_PACKET_COUNT_MAX;
+    return (drop_counter == NULL);
 }
 
 inline static NTSTATUS fort_shaper_packet_queue(
@@ -796,10 +873,7 @@ inline static NTSTATUS fort_shaper_packet_queue(
         return STATUS_NO_SUCH_GROUP;
 
     /* Check the Queue for new Packet */
-    if (!fort_shaper_packet_queue_check_in_count(shaper, ca->inbound))
-        return STATUS_SUCCESS; /* drop the packet */
-
-    if (!fort_shaper_packet_queue_check_packet(shaper, queue, ca->dataSize))
+    if (!fort_shaper_packet_queue_check_packet(shaper, queue, ca))
         return STATUS_SUCCESS; /* drop the packet */
 
     /* Create the Packet */

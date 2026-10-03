@@ -446,6 +446,21 @@ static NTSTATUS fort_device_control_setspeedlimitflags(PFORT_DEVICE_CONTROL_ARG 
     return STATUS_UNSUCCESSFUL;
 }
 
+static NTSTATUS fort_device_control_getspeedlimitstatus(PFORT_DEVICE_CONTROL_ARG dca)
+{
+    PFORT_SPEED_LIMITS_STATUS limits_status = dca->buffer;
+    const ULONG out_len = dca->out_len;
+
+    if (out_len < sizeof(FORT_SPEED_LIMITS_STATUS))
+        return STATUS_BUFFER_TOO_SMALL;
+
+    fort_shaper_speed_limits_status(&fort_device()->shaper, limits_status);
+
+    dca->irp_info->info = sizeof(FORT_SPEED_LIMITS_STATUS);
+
+    return STATUS_SUCCESS;
+}
+
 static_assert(FORT_CTL_INDEX_FROM_CODE(FORT_IOCTL_SETRULEFLAG) == FORT_IOCTL_INDEX_SETRULEFLAG,
         "Invalid FORT_CTL_INDEX_FROM_CODE()");
 
@@ -468,6 +483,7 @@ static PFORT_DEVICE_CONTROL_PROCESS_FUNC fortDeviceControlProcess_funcList[] = {
     &fort_device_control_setgroupflags, // FORT_IOCTL_SETGROUPFLAGS
     &fort_device_control_setspeedlimits, // FORT_IOCTL_SETSPEEDLIMITS
     &fort_device_control_setspeedlimitflags, // FORT_IOCTL_SETSPEEDLIMITFLAGS
+    &fort_device_control_getspeedlimitstatus, // FORT_IOCTL_GETSPEEDLIMITSTATUS
 };
 
 static NTSTATUS fort_device_control_process(PFORT_DEVICE_CONTROL_ARG dca)

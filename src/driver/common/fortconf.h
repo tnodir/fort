@@ -505,6 +505,24 @@ typedef struct fort_conf_speed_limit_flags
 
 typedef const FORT_CONF_SPEED_LIMIT_FLAGS *PCFORT_CONF_SPEED_LIMIT_FLAGS;
 
+typedef struct fort_speed_limit_status
+{
+    UINT64 queued_bytes; /* size of the packets waiting for the bandwidth */
+    UINT64 dropped_count; /* packets dropped on the buffer's overflow */
+    UINT64 lost_count; /* packets dropped by the packet loss rate */
+} FORT_SPEED_LIMIT_STATUS, *PFORT_SPEED_LIMIT_STATUS;
+
+typedef const FORT_SPEED_LIMIT_STATUS *PCFORT_SPEED_LIMIT_STATUS;
+
+typedef struct fort_speed_limits_status
+{
+    UINT32 mask; /* Speed Limits with queues */
+
+    FORT_SPEED_LIMIT_STATUS limits[FORT_CONF_SPEED_LIMIT_MAX]; /* by Speed Limit index */
+} FORT_SPEED_LIMITS_STATUS, *PFORT_SPEED_LIMITS_STATUS;
+
+typedef const FORT_SPEED_LIMITS_STATUS *PCFORT_SPEED_LIMITS_STATUS;
+
 typedef struct fort_conf
 {
     FORT_CONF_FLAGS flags;
