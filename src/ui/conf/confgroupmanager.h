@@ -31,7 +31,7 @@ public:
     virtual bool updateGroupName(quint8 groupId, const QString &groupName);
     virtual bool updateGroupEnabled(quint8 groupId, bool enabled);
 
-    bool loadGroupByIndex(Group &group, int groupIndex) const;
+    bool loadGroupById(Group &group, int groupId) const;
 
     bool walkGroups(const std::function<walkGroupsCallback> &func) const override;
 

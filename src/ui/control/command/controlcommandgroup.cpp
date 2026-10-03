@@ -47,13 +47,13 @@ bool reportCommandGroupAction(ProcessCommandResult &r, const Group &group)
 }
 
 bool processCommandGroupAction(
-        ProcessCommandResult &r, int groupIndex, GroupAction groupAction, bool report)
+        ProcessCommandResult &r, int groupId, GroupAction groupAction, bool report)
 {
     auto confGroupManager = Fort::confGroupManager();
 
     Group group;
 
-    if (!confGroupManager->loadGroupByIndex(group, groupIndex)) {
+    if (!confGroupManager->loadGroupById(group, groupId)) {
         r.commandResult = Control::CommandResultError;
         r.errorMessage = "Group not found";
         return true;
@@ -75,17 +75,16 @@ bool ControlCommandGroup::processCommand(const ProcessCommandArgs &p, ProcessCom
 
     const bool isValidAction = (groupAction != GroupActionInvalid || report);
     if (!isValidAction || p.args.size() < 2) {
-        r.errorMessage = "Usage: group on|off|report [group-index]";
+        r.errorMessage = "Usage: group on|off|report [group-id]";
         return false;
     }
 
     if (!checkCommandActionPassword(r, groupAction))
         return false;
 
-    // The Group's index starts from 1
-    const int groupIndex = p.args.value(1).toInt() - 1;
+    const int groupId = p.args.value(1).toInt();
 
-    const bool ok = processCommandGroupAction(r, groupIndex, groupAction, report);
+    const bool ok = processCommandGroupAction(r, groupId, groupAction, report);
 
     uncheckCommandActionPassword();
 

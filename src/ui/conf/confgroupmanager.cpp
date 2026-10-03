@@ -39,8 +39,8 @@ inline constexpr int GROUP_PERIODS_UPDATE_INTERVAL = 60 * 1000; // 1 minute
 const char *const sqlSelectGroups = "SELECT" SELECT_GROUP_FIELDS "  FROM app_group t"
                                     "  ORDER BY t.group_id;";
 
-const char *const sqlSelectGroupByIndex = "SELECT" SELECT_GROUP_FIELDS "  FROM app_group t"
-                                          "  ORDER BY t.group_id LIMIT 1 OFFSET ?1;";
+const char *const sqlSelectGroupById = "SELECT" SELECT_GROUP_FIELDS "  FROM app_group t"
+                                       "  WHERE t.group_id = ?1;";
 
 const char *const sqlInsertGroup = "INSERT INTO app_group(group_id, name, notes, enabled,"
                                    "    exclusive, period_enabled, period_from, period_to,"
@@ -261,13 +261,10 @@ bool ConfGroupManager::updateGroupEnabled(quint8 groupId, bool enabled)
     return ok;
 }
 
-bool ConfGroupManager::loadGroupByIndex(Group &group, int groupIndex) const
+bool ConfGroupManager::loadGroupById(Group &group, int groupId) const
 {
-    if (groupIndex < 0)
-        return false;
-
     SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectGroupByIndex).vars({ groupIndex }).prepareRow(stmt))
+    if (!DbQuery(sqliteDb()).sql(sqlSelectGroupById).vars({ groupId }).prepareRow(stmt))
         return false;
 
     fillGroup(group, stmt);
