@@ -15,10 +15,11 @@ RegKey::RegKey(RegHandle parentHandle, const QString &subKey, quint32 flags)
 
     if ((flags & Create) != 0) {
         DWORD disposition;
-        RegCreateKeyEx((HKEY) parentHandle, subKeyStr, 0, nullptr, 0, samDesired, nullptr,
-                (PHKEY) &m_handle, &disposition);
+        m_openError = RegCreateKeyEx((HKEY) parentHandle, subKeyStr, 0, nullptr, 0, samDesired,
+                nullptr, (PHKEY) &m_handle, &disposition);
     } else {
-        RegOpenKeyEx((HKEY) parentHandle, subKeyStr, 0, samDesired, (PHKEY) &m_handle);
+        m_openError =
+                RegOpenKeyEx((HKEY) parentHandle, subKeyStr, 0, samDesired, (PHKEY) &m_handle);
     }
 }
 
@@ -37,6 +38,11 @@ RegKey::~RegKey()
     if (!isNull()) {
         RegCloseKey((HKEY) handle());
     }
+}
+
+bool RegKey::isAccessDenied() const
+{
+    return m_openError == ERROR_ACCESS_DENIED;
 }
 
 bool RegKey::removeKey(const QString &subKey)

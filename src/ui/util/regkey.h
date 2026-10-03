@@ -43,6 +43,7 @@ public:
     CLASS_DELETE_COPY_MOVE(RegKey)
 
     bool isNull() const { return m_handle == nullptr; }
+    bool isAccessDenied() const;
 
     bool removeKey(const QString &subKey);
     bool clearTree(const QString &subKey = QString());
@@ -67,6 +68,8 @@ private:
     static RegKey::RegHandle predefinedRootHandle(Root root);
 
 private:
+    qint32 m_openError = 0;
+
     RegHandle m_handle = nullptr;
 };
 

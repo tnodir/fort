@@ -19,15 +19,17 @@ const char *const serviceImagePathKey = "ImagePath";
 const char *const serviceImagePathOldKey = "_Fort_ImagePath";
 const char *const serviceTypeKey = "Type";
 const char *const serviceHostSplitDisableKey = "SvcHostSplitDisable";
+const char *const serviceDllKey = "ServiceDll";
+const char *const serviceParametersKey = "Parameters";
 const char *const serviceTypeOldKey = "_Fort_Type";
 const char *const serviceTrackFlagsKey = "_FortTrackFlags";
 
 QString getServiceDll(const RegKey &svcReg, bool *expand = nullptr)
 {
-    QVariant dllPathVar = svcReg.value("ServiceDll", expand);
+    QVariant dllPathVar = svcReg.value(serviceDllKey, expand);
     if (dllPathVar.isNull()) {
-        const RegKey paramsReg(svcReg, "Parameters");
-        dllPathVar = paramsReg.value("ServiceDll", expand);
+        const RegKey paramsReg(svcReg, serviceParametersKey);
+        dllPathVar = paramsReg.value(serviceDllKey, expand);
     }
 
     return dllPathVar.toString();
@@ -50,6 +52,17 @@ QString resolveSvcHostServiceName(const RegKey &servicesReg, const QString &serv
     return serviceName;
 }
 
+bool hasServiceDll(const RegKey &svcReg)
+{
+    if (!getServiceDll(svcReg).isEmpty())
+        return true;
+
+    // The non-elevated UI process may have no read access to the key (e.g. of "lmhosts")
+    const RegKey paramsReg(svcReg, serviceParametersKey);
+
+    return paramsReg.isAccessDenied();
+}
+
 bool checkIsSvcHostService(const RegKey &svcReg)
 {
     const auto imagePath = svcReg.value(serviceImagePathKey).toString();
@@ -59,11 +72,7 @@ bool checkIsSvcHostService(const RegKey &svcReg)
     if (!svcReg.contains("ServiceSidType"))
         return false;
 
-    const QString dllPath = getServiceDll(svcReg);
-    if (dllPath.isEmpty())
-        return false;
-
-    return true;
+    return hasServiceDll(svcReg);
 }
 
 quint16 getServiceTrackFlags(const RegKey &svcReg)
