@@ -1,8 +1,10 @@
 #include "speedlimitscontroller.h"
 
 #include <conf/confspeedlimitmanager.h>
+#include <driver/drivermanager.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
+#include <model/speedlimitlistmodel.h>
 
 using namespace Fort;
 
@@ -41,4 +43,20 @@ bool SpeedLimitsController::updateSpeedLimitName(int limitId, const QString &nam
         return false;
     }
     return true;
+}
+
+void SpeedLimitsController::readSpeedLimitStatus()
+{
+    QByteArray buf;
+
+    if (!driverManager()->readSpeedLimitStatus(buf)) {
+        buf.clear();
+    }
+
+    speedLimitListModel()->setStatusData(buf);
+}
+
+void SpeedLimitsController::clearSpeedLimitStatus()
+{
+    speedLimitListModel()->setStatusData({});
 }

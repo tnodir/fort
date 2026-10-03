@@ -150,7 +150,12 @@ void ProgNetworkPage::setupSpeedLimitsChanged()
     connect(speedLimitListModel, &SpeedLimitListModel::modelReset, this,
             &ProgNetworkPage::updateSpeedLimitCombos);
     connect(speedLimitListModel, &SpeedLimitListModel::dataChanged, this,
-            &ProgNetworkPage::updateSpeedLimitCombos);
+            [&](const QModelIndex &topLeft) {
+                // Skip the queues' status updates
+                if (topLeft.column() == int(SpeedLimitListColumn::Name)) {
+                    updateSpeedLimitCombos();
+                }
+            });
 }
 
 void ProgNetworkPage::updateSpeedLimitCombos()

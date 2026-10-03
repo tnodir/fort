@@ -21,6 +21,7 @@ class TableItemModel : public QAbstractItemModel
 public:
     enum TableItemRole {
         EnabledRole = Qt::UserRole,
+        ProgressRole, // percent to draw by ProgressItemDelegate
         EndRole,
     };
 

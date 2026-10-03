@@ -3,6 +3,8 @@
 
 #include <form/controls/formwindow.h>
 
+QT_FORWARD_DECLARE_CLASS(QTimer)
+
 class SpeedLimitEditDialog;
 class SpeedLimitsController;
 class TableView;
@@ -35,6 +37,9 @@ private:
     void setupTableSpeedLimitsHeader();
     void setupTableSpeedLimitsChanged();
     void setupSpeedLimitListModelChanged();
+    void setupStatusTimer();
+
+    void updateStatusTimer();
 
     void addNewSpeedLimit();
     void editSelectedSpeedLimit();
@@ -56,6 +61,8 @@ private:
     QToolButton *m_btOptions = nullptr;
     QPushButton *m_btMenu = nullptr;
     TableView *m_speedLimitListView = nullptr;
+
+    QTimer *m_statusTimer = nullptr;
 
     SpeedLimitEditDialog *m_formSpeedLimitEdit = nullptr;
 };

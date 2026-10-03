@@ -8,8 +8,10 @@
 
 #include <conf/confmanager.h>
 #include <conf/confspeedlimitmanager.h>
+#include <driver/drivercommon.h>
 #include <fortglobal.h>
 #include <model/connlistmodel.h>
+#include <util/formatutil.h>
 #include <util/iconcache.h>
 
 using namespace Fort;
@@ -18,14 +20,45 @@ namespace {
 
 const QLoggingCategory LC("model.speedLimitList");
 
-using dataDisplay_func = QVariant (*)(const SpeedLimitRow &speedLimitRow, int role);
+using dataDisplay_func = QVariant (*)(
+        const SpeedLimitRow &speedLimitRow, const SpeedLimitStatus &status, int role);
 
-QVariant dataDisplayName(const SpeedLimitRow &speedLimitRow, int /*role*/)
+QVariant dataDisplayName(
+        const SpeedLimitRow &speedLimitRow, const SpeedLimitStatus & /*status*/, int /*role*/)
 {
     return QString("%1) %2").arg(QString::number(speedLimitRow.limitId), speedLimitRow.menuLabel());
 }
 
-QVariant dataDisplayDirection(const SpeedLimitRow &speedLimitRow, int role)
+QVariant dataDisplayQueue(
+        const SpeedLimitRow &speedLimitRow, const SpeedLimitStatus &status, int /*role*/)
+{
+    if (!status.isValid)
+        return {};
+
+    const QString queuedText = FormatUtil::formatDataSize(qint64(status.queuedBytes));
+
+    if (speedLimitRow.bufferSize == 0)
+        return queuedText;
+
+    return queuedText + " / " + FormatUtil::formatDataSize(speedLimitRow.bufferSize);
+}
+
+QVariant dataDisplayDropped(
+        const SpeedLimitRow & /*speedLimitRow*/, const SpeedLimitStatus &status, int role)
+{
+    if (!status.isValid)
+        return {};
+
+    if (role == Qt::ToolTipRole) {
+        return SpeedLimitListModel::tr("Buffer overflow: %1\nPacket loss: %2")
+                .arg(QString::number(status.droppedCount), QString::number(status.lostCount));
+    }
+
+    return QString::number(status.droppedCount + status.lostCount);
+}
+
+QVariant dataDisplayDirection(
+        const SpeedLimitRow &speedLimitRow, const SpeedLimitStatus & /*status*/, int role)
 {
     if (role != Qt::ToolTipRole)
         return {};
@@ -33,18 +66,33 @@ QVariant dataDisplayDirection(const SpeedLimitRow &speedLimitRow, int role)
     return ConnListModel::directionText(speedLimitRow.inbound);
 }
 
-QVariant dataDisplayModTime(const SpeedLimitRow &speedLimitRow, int /*role*/)
+QVariant dataDisplayModTime(
+        const SpeedLimitRow &speedLimitRow, const SpeedLimitStatus & /*status*/, int /*role*/)
 {
     return speedLimitRow.modTime;
 }
 
 static const dataDisplay_func dataDisplay_funcList[] = {
     &dataDisplayName,
+    &dataDisplayQueue,
+    &dataDisplayDropped,
     &dataDisplayDirection,
     &dataDisplayModTime,
 };
 
 static_assert(std::size(dataDisplay_funcList) == int(SpeedLimitListColumn::Count));
+
+QVariant dataProgressQueue(const SpeedLimitRow &speedLimitRow, const SpeedLimitStatus &status)
+{
+    const quint32 bufferSize = speedLimitRow.bufferSize;
+
+    if (!status.isValid || bufferSize == 0)
+        return {};
+
+    const quint64 percent = status.queuedBytes * 100 / bufferSize;
+
+    return int(qMin(percent, quint64(100)));
+}
 
 }
 
@@ -103,6 +151,7 @@ QVariant SpeedLimitListModel::data(const QModelIndex &index, int role) const
     // Label
     case Qt::DisplayRole:
     case Qt::ToolTipRole:
+    case ProgressRole:
         return dataDisplay(index, role);
 
     // Icon
@@ -143,9 +192,18 @@ QVariant SpeedLimitListModel::dataDisplay(const QModelIndex &index, int role) co
     if (speedLimitRow.isNull())
         return {};
 
+    const auto status = DriverCommon::speedLimitStatus(m_statusData, speedLimitRow.limitId);
+
+    if (role == ProgressRole) {
+        if (column != int(SpeedLimitListColumn::Queue))
+            return {};
+
+        return dataProgressQueue(speedLimitRow, status);
+    }
+
     const dataDisplay_func func = dataDisplay_funcList[column];
 
-    return func(speedLimitRow, role);
+    return func(speedLimitRow, status, role);
 }
 
 QVariant SpeedLimitListModel::dataDecoration(const QModelIndex &index) const
@@ -199,10 +257,27 @@ const SpeedLimitRow &SpeedLimitListModel::speedLimitRowAt(int row) const
     return m_speedLimitRow;
 }
 
+void SpeedLimitListModel::setStatusData(const QByteArray &v)
+{
+    if (m_statusData == v)
+        return;
+
+    m_statusData = v;
+
+    const int rowCount = this->rowCount();
+    if (rowCount <= 0)
+        return;
+
+    emit dataChanged(index(0, int(SpeedLimitListColumn::Queue)),
+            index(rowCount - 1, int(SpeedLimitListColumn::Dropped)));
+}
+
 QString SpeedLimitListModel::columnName(const SpeedLimitListColumn column)
 {
     const QStringList columnNames = {
         tr("Speed Limit"),
+        tr("Queue"),
+        tr("Dropped"),
         tr("Direction"),
         tr("Change Time"),
     };

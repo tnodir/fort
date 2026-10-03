@@ -72,6 +72,7 @@ SOURCES += \
     form/controls/menuwidget.cpp \
     form/controls/optionsbutton.cpp \
     form/controls/plaintextedit.cpp \
+    form/controls/progressitemdelegate.cpp \
     form/controls/pushbutton.cpp \
     form/controls/ruleselector.cpp \
     form/controls/sidebutton.cpp \
@@ -358,6 +359,7 @@ HEADERS += \
     form/controls/menuwidget.h \
     form/controls/optionsbutton.h \
     form/controls/plaintextedit.h \
+    form/controls/progressitemdelegate.h \
     form/controls/pushbutton.h \
     form/controls/ruleselector.h \
     form/controls/sidebutton.h \

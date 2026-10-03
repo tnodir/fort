@@ -3,11 +3,13 @@
 #include <QHeaderView>
 #include <QMenu>
 #include <QPushButton>
+#include <QTimer>
 #include <QToolButton>
 #include <QVBoxLayout>
 
 #include <conf/confmanager.h>
 #include <form/controls/controlutil.h>
+#include <form/controls/progressitemdelegate.h>
 #include <form/controls/tableview.h>
 #include <fortglobal.h>
 #include <manager/windowmanager.h>
@@ -25,6 +27,8 @@ using namespace Fort;
 namespace {
 
 inline constexpr int SPEED_LIMITS_HEADER_VERSION = 2;
+
+inline constexpr int SPEED_LIMIT_STATUS_INTERVAL_MSEC = 500;
 
 }
 
@@ -55,7 +59,7 @@ void SpeedLimitsWindow::restoreWindowState()
 {
     const auto &iniUser = Fort::iniUser();
 
-    stateWatcher()->restore(this, QSize(500, 600), iniUser.speedLimitWindowGeometry(),
+    stateWatcher()->restore(this, QSize(700, 600), iniUser.speedLimitWindowGeometry(),
             iniUser.speedLimitWindowMaximized());
 
     if (iniUser.speedLimitsHeaderVersion() == SPEED_LIMITS_HEADER_VERSION) {
@@ -99,6 +103,9 @@ void SpeedLimitsWindow::setupUi()
 
     // Actions on speed limit list model's changed
     setupSpeedLimitListModelChanged();
+
+    // Queues' status of the driver
+    setupStatusTimer();
 
     auto layout = ControlUtil::createVLayout(/*margin=*/6);
     layout->addLayout(header);
@@ -158,6 +165,9 @@ void SpeedLimitsWindow::setupTableSpeedLimits()
 
     m_speedLimitListView->setModel(speedLimitListModel());
 
+    m_speedLimitListView->setItemDelegateForColumn(
+            int(SpeedLimitListColumn::Queue), new ProgressItemDelegate(m_speedLimitListView));
+
     m_speedLimitListView->setMenu(m_btEdit->menu());
 
     connect(m_speedLimitListView, &TableView::activated, m_actEditSpeedLimit, &QAction::trigger);
@@ -168,11 +178,15 @@ void SpeedLimitsWindow::setupTableSpeedLimitsHeader()
     auto header = m_speedLimitListView->horizontalHeader();
 
     header->setSectionResizeMode(int(SpeedLimitListColumn::Name), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(SpeedLimitListColumn::Queue), QHeaderView::Interactive);
+    header->setSectionResizeMode(int(SpeedLimitListColumn::Dropped), QHeaderView::Interactive);
     header->setSectionResizeMode(int(SpeedLimitListColumn::Direction), QHeaderView::Fixed);
     header->setSectionResizeMode(int(SpeedLimitListColumn::ModTime), QHeaderView::Interactive);
     header->setStretchLastSection(true);
 
-    header->resizeSection(int(SpeedLimitListColumn::Name), 330);
+    header->resizeSection(int(SpeedLimitListColumn::Name), 300);
+    header->resizeSection(int(SpeedLimitListColumn::Queue), 140);
+    header->resizeSection(int(SpeedLimitListColumn::Dropped), 70);
     header->resizeSection(int(SpeedLimitListColumn::Direction), 30);
     header->resizeSection(int(SpeedLimitListColumn::ModTime), 130);
 }
@@ -203,6 +217,34 @@ void SpeedLimitsWindow::setupSpeedLimitListModelChanged()
 
     connect(speedLimitListModel(), &SpeedLimitListModel::modelReset, this, refreshAddSpeedLimit);
     connect(speedLimitListModel(), &SpeedLimitListModel::rowsRemoved, this, refreshAddSpeedLimit);
+}
+
+void SpeedLimitsWindow::setupStatusTimer()
+{
+    m_statusTimer = new QTimer(this);
+    m_statusTimer->setInterval(SPEED_LIMIT_STATUS_INTERVAL_MSEC);
+
+    connect(m_statusTimer, &QTimer::timeout, ctrl(), &SpeedLimitsController::readSpeedLimitStatus);
+
+    connect(this, &SpeedLimitsWindow::visibilityChanged, this,
+            &SpeedLimitsWindow::updateStatusTimer);
+}
+
+void SpeedLimitsWindow::updateStatusTimer()
+{
+    // The minimized window keeps visible
+    const bool isActive = isVisible() && !isMinimized();
+
+    if (isActive == m_statusTimer->isActive())
+        return;
+
+    if (isActive) {
+        ctrl()->readSpeedLimitStatus();
+        m_statusTimer->start();
+    } else {
+        m_statusTimer->stop();
+        ctrl()->clearSpeedLimitStatus();
+    }
 }
 
 void SpeedLimitsWindow::addNewSpeedLimit()

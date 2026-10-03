@@ -16,6 +16,9 @@ public slots:
     bool addOrUpdateSpeedLimit(SpeedLimit &limit);
     void deleteSpeedLimit(int limitId);
     bool updateSpeedLimitName(int limitId, const QString &name);
+
+    void readSpeedLimitStatus();
+    void clearSpeedLimitStatus();
 };
 
 #endif // SPEEDLIMITSCONTROLLER_H

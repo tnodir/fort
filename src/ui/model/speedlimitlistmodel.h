@@ -9,6 +9,8 @@
 
 enum class SpeedLimitListColumn : qint8 {
     Name = 0,
+    Queue,
+    Dropped,
     Direction,
     ModTime,
     Count,
@@ -38,6 +40,8 @@ public:
 
     const SpeedLimitRow &speedLimitRowAt(int row) const;
 
+    void setStatusData(const QByteArray &v);
+
     static QString columnName(const SpeedLimitListColumn column);
 
 protected:
@@ -60,6 +64,8 @@ private:
     QVariant dataCheckState(const QModelIndex &index) const;
 
 private:
+    QByteArray m_statusData; // FORT_SPEED_LIMITS_STATUS from the driver
+
     mutable SpeedLimitRow m_speedLimitRow;
 };
 
