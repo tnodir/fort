@@ -22,7 +22,7 @@ public:
     };
 
     bool isTracked() const { return trackFlags != 0; }
-    bool isOwnProcess() const { return serviceType == ServiceInfo::TypeWin32OwnProcess; }
+    bool isOwnProcess() const { return (serviceType & TypeWin32OwnProcess) != 0; }
 
 public:
     bool hasProcess : 1 = false;

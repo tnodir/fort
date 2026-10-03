@@ -19,9 +19,10 @@ public:
     void setUp() override;
 
     static QVector<ServiceInfo> loadServiceInfoList(
-            ServiceInfo::Type serviceType = ServiceInfo::TypeWin32,
-            ServiceInfo::State state = ServiceInfo::StateAll, bool displayName = true,
-            int *processCount = nullptr);
+            ServiceInfo::State state = ServiceInfo::StateAll, bool displayName = true);
+
+    static QVector<ServiceInfo> ownProcessServices(
+            const QVector<ServiceInfo> &serviceInfoList, int &processCount);
 
     static QString getSvcHostServiceDll(const QString &serviceName);
 

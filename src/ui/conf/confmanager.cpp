@@ -969,10 +969,12 @@ void ConfManager::updateDriverServices(const QVector<ServiceInfo> &services, int
 
 void ConfManager::updateOwnProcessServices(ServiceInfoManager *serviceInfoManager)
 {
+    const QVector<ServiceInfo> allServices =
+            ServiceInfoManager::loadServiceInfoList(ServiceInfo::StateAll, /*displayName=*/false);
+
     int processCount = 0;
-    const QVector<ServiceInfo> services = serviceInfoManager->loadServiceInfoList(
-            ServiceInfo::TypeWin32OwnProcess, ServiceInfo::StateAll,
-            /*displayName=*/false, &processCount);
+    const QVector<ServiceInfo> services =
+            ServiceInfoManager::ownProcessServices(allServices, processCount);
 
     serviceInfoManager->monitorServices(services);
 
