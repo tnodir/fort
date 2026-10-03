@@ -65,6 +65,10 @@ typedef struct fort_shaper
     UINT32 randomSeed;
     LARGE_INTEGER qpcFrequency;
 
+#if !defined(FORT_WIN7_COMPAT)
+    PEX_TIMER thread_timer; /* wakes the thread up with high resolution */
+#endif
+
     KEVENT thread_event;
     FORT_THREAD thread;
 

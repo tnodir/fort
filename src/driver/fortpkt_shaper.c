@@ -14,6 +14,8 @@
 
 #define FORT_QUEUE_ELAPSED_SECONDS_MAX 3600 /* to repay the big packet's debt */
 
+#define FORT_SHAPER_THREAD_DELAY (-2 * 1000 * 10) /* sleep 2000us (2ms) */
+
 /* The held inbound packets' clones keep the NIC's receive buffers, so limit their count */
 #define FORT_SHAPER_IN_PACKET_COUNT_MAX 512
 
@@ -486,25 +488,68 @@ inline static BOOL fort_shaper_thread_process(PFORT_SHAPER shaper)
     return FALSE;
 }
 
+/* The default system clock's interval (15.6ms) rounds the delay up, so it's a fallback */
+static void fort_shaper_thread_wait_delay(PFORT_SHAPER shaper, BOOL is_active)
+{
+    LARGE_INTEGER delay = {
+        .QuadPart = FORT_SHAPER_THREAD_DELAY,
+    };
+
+    KeWaitForSingleObject(
+            &shaper->thread_event, Executive, KernelMode, FALSE, (is_active ? &delay : NULL));
+}
+
+#if !defined(FORT_WIN7_COMPAT)
+/* The high resolution timer raises the system clock's rate only while it's set */
+static void fort_shaper_thread_wait_timer(PFORT_SHAPER shaper, PEX_TIMER timer)
+{
+    ExSetTimer(timer, FORT_SHAPER_THREAD_DELAY, /*period=*/0, /*parameters=*/NULL);
+
+    PVOID objects[] = { &shaper->thread_event, timer };
+
+    KeWaitForMultipleObjects(
+            2, objects, WaitAny, Executive, KernelMode, FALSE, /*timeout=*/NULL, NULL);
+}
+#endif
+
+static void fort_shaper_thread_wait(PFORT_SHAPER shaper, BOOL is_active)
+{
+#if !defined(FORT_WIN7_COMPAT)
+    PEX_TIMER timer = shaper->thread_timer;
+
+    if (is_active && timer != NULL) {
+        fort_shaper_thread_wait_timer(shaper, timer);
+        return;
+    }
+#endif
+
+    fort_shaper_thread_wait_delay(shaper, is_active);
+}
+
 static void fort_shaper_thread_loop(PVOID context)
 {
     PFORT_SHAPER shaper = context;
-    PKEVENT thread_event = &shaper->thread_event;
 
-    LARGE_INTEGER delay = {
-        .QuadPart = -2 * 1000 * 10 /* sleep 2000us (2ms) */
-    };
-
-    PLARGE_INTEGER timeout = NULL;
+    BOOL is_active = FALSE;
 
     do {
-        KeWaitForSingleObject(thread_event, Executive, KernelMode, FALSE, timeout);
+        fort_shaper_thread_wait(shaper, is_active);
 
-        const BOOL is_active = fort_shaper_thread_process(shaper);
-
-        timeout = is_active ? &delay : NULL;
+        is_active = fort_shaper_thread_process(shaper);
 
     } while ((fort_shaper_flags(shaper) & FORT_SHAPER_CLOSED) == 0);
+}
+
+static void fort_shaper_thread_open(PFORT_SHAPER shaper)
+{
+    KeInitializeEvent(&shaper->thread_event, SynchronizationEvent, FALSE);
+
+#if !defined(FORT_WIN7_COMPAT)
+    shaper->thread_timer = ExAllocateTimer(
+            /*callback=*/NULL, /*callbackContext=*/NULL, EX_TIMER_HIGH_RESOLUTION);
+#endif
+
+    fort_thread_run(&shaper->thread, &fort_shaper_thread_loop, shaper, /*priorityIncrement=*/0);
 }
 
 static void fort_shaper_thread_close(PFORT_SHAPER shaper)
@@ -512,6 +557,15 @@ static void fort_shaper_thread_close(PFORT_SHAPER shaper)
     fort_shaper_thread_set_event(shaper);
 
     fort_thread_wait(&shaper->thread);
+
+#if !defined(FORT_WIN7_COMPAT)
+    PEX_TIMER timer = shaper->thread_timer;
+    if (timer != NULL) {
+        shaper->thread_timer = NULL;
+
+        ExDeleteTimer(timer, /*cancel=*/TRUE, /*wait=*/TRUE, /*parameters=*/NULL);
+    }
+#endif
 }
 
 inline static PFORT_FLOW_PACKET fort_shaper_flush_queues(PFORT_SHAPER shaper, UINT32 queue_bits)
@@ -560,9 +614,7 @@ FORT_API void fort_shaper_open(PFORT_SHAPER shaper)
 
     KeInitializeSpinLock(&shaper->lock);
 
-    KeInitializeEvent(&shaper->thread_event, SynchronizationEvent, FALSE);
-
-    fort_thread_run(&shaper->thread, &fort_shaper_thread_loop, shaper, /*priorityIncrement=*/0);
+    fort_shaper_thread_open(shaper);
 }
 
 FORT_API void fort_shaper_close(PFORT_SHAPER shaper)

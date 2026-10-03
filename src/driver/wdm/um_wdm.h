@@ -239,7 +239,21 @@ typedef enum _KWAIT_REASON {
     Executive,
 } KWAIT_REASON;
 
+typedef enum _WAIT_TYPE {
+    WaitAll,
+    WaitAny,
+} WAIT_TYPE;
+
+typedef LONG KWAIT_BLOCK, *PKWAIT_BLOCK;
+
 typedef LONG KTIMER, *PKTIMER;
+
+typedef LONG *PEX_TIMER;
+typedef LONG *PEXT_CALLBACK;
+typedef LONG *PEXT_SET_PARAMETERS;
+typedef LONG *PEXT_DELETE_PARAMETERS;
+
+#define EX_TIMER_HIGH_RESOLUTION 0x4
 
 typedef LONG *PIO_WORKITEM;
 typedef VOID IO_WORKITEM_ROUTINE(PDEVICE_OBJECT DeviceObject, PVOID Context);
@@ -435,6 +449,12 @@ FORT_API BOOLEAN KeCancelTimer(PKTIMER timer);
 FORT_API BOOLEAN KeSetCoalescableTimer(
         PKTIMER timer, LARGE_INTEGER dueTime, ULONG period, ULONG tolerableDelay, PKDPC dpc);
 
+FORT_API PEX_TIMER ExAllocateTimer(PEXT_CALLBACK callback, PVOID callbackContext, ULONG attributes);
+FORT_API BOOLEAN ExSetTimer(
+        PEX_TIMER timer, LONGLONG dueTime, LONGLONG period, PEXT_SET_PARAMETERS parameters);
+FORT_API BOOLEAN ExDeleteTimer(
+        PEX_TIMER timer, BOOLEAN cancel, BOOLEAN wait, PEXT_DELETE_PARAMETERS parameters);
+
 FORT_API void ExInitializeRundownProtection(PEX_RUNDOWN_REF runRef);
 FORT_API BOOLEAN ExAcquireRundownProtection(PEX_RUNDOWN_REF runRef);
 FORT_API void ExReleaseRundownProtection(PEX_RUNDOWN_REF runRef);
@@ -445,6 +465,9 @@ FORT_API LONG KeSetEvent(PRKEVENT event, KPRIORITY increment, BOOLEAN wait);
 
 FORT_API NTSTATUS KeWaitForSingleObject(PVOID object, KWAIT_REASON waitReason,
         KPROCESSOR_MODE waitMode, BOOLEAN alertable, PLARGE_INTEGER timeout);
+FORT_API NTSTATUS KeWaitForMultipleObjects(ULONG count, PVOID objects[], WAIT_TYPE waitType,
+        KWAIT_REASON waitReason, KPROCESSOR_MODE waitMode, BOOLEAN alertable,
+        PLARGE_INTEGER timeout, PKWAIT_BLOCK waitBlockArray);
 
 FORT_API PIO_WORKITEM IoAllocateWorkItem(PDEVICE_OBJECT device);
 FORT_API void IoFreeWorkItem(PIO_WORKITEM workItem);

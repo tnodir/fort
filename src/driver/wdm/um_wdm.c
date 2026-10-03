@@ -252,6 +252,34 @@ BOOLEAN KeSetCoalescableTimer(
     return FALSE;
 }
 
+PEX_TIMER ExAllocateTimer(PEXT_CALLBACK callback, PVOID callbackContext, ULONG attributes)
+{
+    UNUSED(callback);
+    UNUSED(callbackContext);
+    UNUSED(attributes);
+    return NULL;
+}
+
+BOOLEAN ExSetTimer(
+        PEX_TIMER timer, LONGLONG dueTime, LONGLONG period, PEXT_SET_PARAMETERS parameters)
+{
+    UNUSED(timer);
+    UNUSED(dueTime);
+    UNUSED(period);
+    UNUSED(parameters);
+    return FALSE;
+}
+
+BOOLEAN ExDeleteTimer(
+        PEX_TIMER timer, BOOLEAN cancel, BOOLEAN wait, PEXT_DELETE_PARAMETERS parameters)
+{
+    UNUSED(timer);
+    UNUSED(cancel);
+    UNUSED(wait);
+    UNUSED(parameters);
+    return FALSE;
+}
+
 void ExInitializeRundownProtection(PEX_RUNDOWN_REF runRef)
 {
     UNUSED(runRef);
@@ -296,6 +324,21 @@ NTSTATUS KeWaitForSingleObject(PVOID object, KWAIT_REASON waitReason, KPROCESSOR
     UNUSED(waitMode);
     UNUSED(alertable);
     UNUSED(timeout);
+    return STATUS_SUCCESS;
+}
+
+NTSTATUS KeWaitForMultipleObjects(ULONG count, PVOID objects[], WAIT_TYPE waitType,
+        KWAIT_REASON waitReason, KPROCESSOR_MODE waitMode, BOOLEAN alertable,
+        PLARGE_INTEGER timeout, PKWAIT_BLOCK waitBlockArray)
+{
+    UNUSED(count);
+    UNUSED(objects);
+    UNUSED(waitType);
+    UNUSED(waitReason);
+    UNUSED(waitMode);
+    UNUSED(alertable);
+    UNUSED(timeout);
+    UNUSED(waitBlockArray);
     return STATUS_SUCCESS;
 }
 
