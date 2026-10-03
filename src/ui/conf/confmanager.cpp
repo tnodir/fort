@@ -972,6 +972,8 @@ void ConfManager::updateOwnProcessServices(ServiceInfoManager *serviceInfoManage
     const QVector<ServiceInfo> allServices =
             ServiceInfoManager::loadServiceInfoList(ServiceInfo::StateAll, /*displayName=*/false);
 
+    serviceInfoManager->repairTrackedServices(allServices);
+
     int processCount = 0;
     const QVector<ServiceInfo> services =
             ServiceInfoManager::ownProcessServices(allServices, processCount);

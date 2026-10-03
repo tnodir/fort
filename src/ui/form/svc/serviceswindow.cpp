@@ -256,7 +256,7 @@ void ServicesWindow::setupTableServicesChanged()
         const bool serviceSelected = (serviceIndex >= 0);
         const auto &serviceInfo = serviceListModel()->serviceInfoAt(serviceIndex);
 
-        m_actTrack->setEnabled(serviceSelected && !serviceInfo.isTracked());
+        m_actTrack->setEnabled(serviceSelected && serviceInfo.canTrack());
         m_actRevert->setEnabled(serviceSelected && serviceInfo.isTracked());
         m_actAddProgram->setEnabled(serviceSelected);
         m_btTrack->setEnabled(m_actTrack->isEnabled());

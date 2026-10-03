@@ -92,8 +92,10 @@ QVariant ServiceListModel::data(const QModelIndex &index, int role) const
     switch (role) {
     // Label
     case Qt::DisplayRole:
-    case Qt::ToolTipRole:
         return dataDisplay(index);
+
+    case Qt::ToolTipRole:
+        return dataToolTip(index);
 
     // Icon
     case Qt::DecorationRole:
@@ -140,6 +142,22 @@ QVariant ServiceListModel::dataDisplayProcessId(const ServiceInfo &info) const
     return (info.processId == 0) ? QVariant() : QVariant(info.processId);
 }
 
+QVariant ServiceListModel::dataToolTip(const QModelIndex &index) const
+{
+    const QVariant text = dataDisplay(index);
+
+    if (index.column() != 0)
+        return text;
+
+    const auto &info = serviceInfoAt(index.row());
+
+    const QString trackText = trackStatusText(info);
+    if (trackText.isEmpty())
+        return text;
+
+    return text.toString() + "\n\n" + trackText;
+}
+
 QVariant ServiceListModel::dataDecoration(const QModelIndex &index) const
 {
     const int column = index.column();
@@ -150,12 +168,30 @@ QVariant ServiceListModel::dataDecoration(const QModelIndex &index) const
         const auto &info = serviceInfoAt(row);
 
         if (info.isTracked()) {
-            return IconCache::icon(
-                    info.isTrackPending() ? ":/icons/cross.png" : ":/icons/tick.png");
+            return IconCache::icon(trackIconPath(info));
         }
     }
 
     return {};
+}
+
+QString ServiceListModel::trackStatusText(const ServiceInfo &info) const
+{
+    if (info.isTrackReset)
+        return tr("The changes were reset by the system. Make the service trackable again.");
+
+    if (info.isTrackPending())
+        return tr("Please restart the service to apply the changes.");
+
+    return {};
+}
+
+QString ServiceListModel::trackIconPath(const ServiceInfo &info)
+{
+    if (info.isTrackReset)
+        return ":/icons/error.png";
+
+    return info.isTrackPending() ? ":/icons/cross.png" : ":/icons/tick.png";
 }
 
 Qt::ItemFlags ServiceListModel::flagIsEnabled(const QModelIndex &index) const

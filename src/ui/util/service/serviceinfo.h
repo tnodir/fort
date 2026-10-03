@@ -27,9 +27,12 @@ public:
     // The running service's process doesn't have the changes yet
     bool isTrackPending() const { return isTracked() && isProcessShared; }
 
+    bool canTrack() const { return !isTracked() || isTrackReset; }
+
 public:
     bool hasProcess : 1 = false;
     bool isHostSplitDisabled : 1 = false;
+    bool isTrackReset : 1 = false; // the tracked service's registry values were reset
     bool isProcessShared : 1 = false; // the service's process hosts other services too
     Type serviceType = TypeUnknown;
     quint16 trackFlags = 0;

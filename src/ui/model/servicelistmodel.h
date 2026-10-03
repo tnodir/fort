@@ -45,7 +45,12 @@ private:
     QVariant headerDataDisplay(int section) const;
     QVariant dataDisplay(const QModelIndex &index) const;
     QVariant dataDisplayProcessId(const ServiceInfo &info) const;
+    QVariant dataToolTip(const QModelIndex &index) const;
     QVariant dataDecoration(const QModelIndex &index) const;
+
+    QString trackStatusText(const ServiceInfo &info) const;
+
+    static QString trackIconPath(const ServiceInfo &info);
 
 private:
     QString m_textFilter;

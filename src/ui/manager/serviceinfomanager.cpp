@@ -100,6 +100,25 @@ QString getServiceImagePathSuffix(const QString &serviceName)
     return " -s " + serviceName;
 }
 
+// Other arguments may be added after ours
+bool isServiceImagePathTracked(const QString &imagePath, const QString &serviceName)
+{
+    const QString arg = getServiceImagePathSuffix(serviceName);
+
+    const int pos = imagePath.indexOf(arg, 0, Qt::CaseInsensitive);
+    if (pos < 0)
+        return false;
+
+    const int endPos = pos + arg.size();
+
+    return endPos == imagePath.size() || imagePath.at(endPos).isSpace();
+}
+
+bool isServiceTypeTracked(quint32 serviceType)
+{
+    return serviceType == ServiceInfo::TypeWin32OwnProcess;
+}
+
 ServiceConfig getServiceConfig(const RegKey &svcReg)
 {
     ServiceConfig conf;
@@ -123,24 +142,43 @@ void setServiceConfig(RegKey &svcReg, const QString &serviceName, const ServiceC
     svcReg.setValue(serviceTypeKey, conf.serviceType);
 }
 
+// Windows Update may restore the service's original registry values
+bool checkIsServiceTrackReset(const RegKey &svcReg, const QString &serviceName, quint16 trackFlags)
+{
+    if (trackFlags == 0)
+        return false;
+
+    const ServiceConfig conf = getServiceConfig(svcReg);
+
+    return !isServiceImagePathTracked(conf.imagePath, serviceName)
+            || !isServiceTypeTracked(conf.serviceType);
+}
+
 void trackServiceImagePath(RegKey &svcReg, const QString &serviceName, ServiceConfig &conf)
 {
+    if (isServiceImagePathTracked(conf.imagePath, serviceName))
+        return;
+
     svcReg.setValue(serviceImagePathOldKey, conf.imagePath, conf.expandImagePath);
     conf.imagePath += getServiceImagePathSuffix(serviceName);
 }
 
 void trackServiceType(RegKey &svcReg, ServiceConfig &conf)
 {
+    if (isServiceTypeTracked(conf.serviceType) && svcReg.contains(serviceTypeOldKey))
+        return;
+
     svcReg.setValue(serviceTypeOldKey, conf.serviceType);
     conf.serviceType = ServiceInfo::TypeWin32OwnProcess;
 }
 
-void revertServiceImagePath(RegKey &svcReg, ServiceConfig &conf)
+// Revert only own changes: Windows Update may set the new original values
+void revertServiceImagePath(RegKey &svcReg, const QString &serviceName, ServiceConfig &conf)
 {
     bool expand = false;
     const QString imagePath = svcReg.value(serviceImagePathOldKey, &expand).toString();
 
-    if (!imagePath.isEmpty()) {
+    if (isServiceImagePathTracked(conf.imagePath, serviceName) && !imagePath.isEmpty()) {
         conf.imagePath = imagePath;
         conf.expandImagePath = expand;
     }
@@ -152,7 +190,7 @@ void revertServiceType(RegKey &svcReg, ServiceConfig &conf)
 {
     const quint32 shareType = svcReg.value(serviceTypeOldKey).toUInt();
 
-    if (shareType != 0) {
+    if (isServiceTypeTracked(conf.serviceType) && shareType != 0) {
         conf.serviceType = shareType;
     }
 
@@ -167,6 +205,7 @@ void fillServiceInfo(ServiceInfo &info, const RegKey &svcReg,
 
     info.hasProcess = (status.dwProcessId != 0);
     info.isHostSplitDisabled = svcReg.value(serviceHostSplitDisableKey).toInt() != 0;
+    info.isTrackReset = checkIsServiceTrackReset(svcReg, info.serviceName, trackFlags);
     info.serviceType = ServiceInfo::Type(status.dwServiceType);
     info.trackFlags = trackFlags;
     info.processId = status.dwProcessId;
@@ -322,7 +361,7 @@ void ServiceInfoManager::revertService(const QString &serviceName)
 
     ServiceConfig conf = getServiceConfig(svcReg);
 
-    revertServiceImagePath(svcReg, conf);
+    revertServiceImagePath(svcReg, serviceName, conf);
     revertServiceType(svcReg, conf);
 
     setServiceConfig(svcReg, serviceName, conf);
@@ -334,6 +373,18 @@ void ServiceInfoManager::monitorServices(const QVector<ServiceInfo> &serviceInfo
 {
     for (const ServiceInfo &serviceInfo : serviceInfoList) {
         setupServiceMonitor(serviceInfo.serviceName);
+    }
+}
+
+void ServiceInfoManager::repairTrackedServices(const QVector<ServiceInfo> &serviceInfoList)
+{
+    for (const ServiceInfo &info : serviceInfoList) {
+        if (!info.isTrackReset)
+            continue;
+
+        qCWarning(LC) << "Repair the reset trackable service:" << info.serviceName;
+
+        trackService(info.serviceName);
     }
 }
 
