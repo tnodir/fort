@@ -26,7 +26,8 @@ bool App::isZonesEqual(const App &o) const
 
 bool App::isSpeedLimitsEqual(const App &o) const
 {
-    return speedLimits.in_limit_id == o.speedLimits.in_limit_id
+    return inLimitEnabled == o.inLimitEnabled && outLimitEnabled == o.outLimitEnabled
+            && speedLimits.in_limit_id == o.speedLimits.in_limit_id
             && speedLimits.out_limit_id == o.speedLimits.out_limit_id;
 }
 
@@ -68,5 +69,15 @@ bool App::hasZone() const
 
 bool App::hasSpeedLimit() const
 {
-    return speedLimits.in_limit_id != 0 || speedLimits.out_limit_id != 0;
+    const FORT_SPEED_LIMIT_IDS limits = activeSpeedLimits();
+
+    return limits.in_limit_id != 0 || limits.out_limit_id != 0;
+}
+
+FORT_SPEED_LIMIT_IDS App::activeSpeedLimits() const
+{
+    return {
+        .in_limit_id = quint8(inLimitEnabled ? speedLimits.in_limit_id : 0),
+        .out_limit_id = quint8(outLimitEnabled ? speedLimits.out_limit_id : 0),
+    };
 }

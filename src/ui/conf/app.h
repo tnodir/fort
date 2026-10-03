@@ -33,6 +33,8 @@ public:
     bool hasZone() const;
     bool hasSpeedLimit() const;
 
+    FORT_SPEED_LIMIT_IDS activeSpeedLimits() const;
+
 public:
     bool isWildcard : 1 = false;
     bool applyParent : 1 = false;
@@ -47,6 +49,8 @@ public:
     bool blocked : 1 = false;
     bool killProcess : 1 = false;
     bool alerted : 1 = false;
+    bool inLimitEnabled : 1 = true;
+    bool outLimitEnabled : 1 = true;
 
     qint8 scheduleAction : 4 = ScheduleBlock;
 

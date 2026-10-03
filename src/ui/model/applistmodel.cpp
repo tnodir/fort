@@ -252,15 +252,17 @@ bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appRow.blocked = stmt.columnBool(16);
     m_appRow.killProcess = stmt.columnBool(17);
     m_appRow.groups = stmt.columnUInt(18);
-    m_appRow.speedLimits.in_limit_id = stmt.columnUInt(19);
-    m_appRow.speedLimits.out_limit_id = stmt.columnUInt(20);
-    m_appRow.zones.accept_mask = stmt.columnUInt(21);
-    m_appRow.zones.reject_mask = stmt.columnUInt(22);
-    m_appRow.ruleId = stmt.columnUInt(23);
-    m_appRow.scheduleAction = stmt.columnInt(24);
-    m_appRow.scheduleTime = stmt.columnDateTime(25);
-    m_appRow.creatTime = stmt.columnDateTime(26);
-    m_appRow.alerted = stmt.columnBool(27);
+    m_appRow.inLimitEnabled = stmt.columnBool(19);
+    m_appRow.outLimitEnabled = stmt.columnBool(20);
+    m_appRow.speedLimits.in_limit_id = stmt.columnUInt(21);
+    m_appRow.speedLimits.out_limit_id = stmt.columnUInt(22);
+    m_appRow.zones.accept_mask = stmt.columnUInt(23);
+    m_appRow.zones.reject_mask = stmt.columnUInt(24);
+    m_appRow.ruleId = stmt.columnUInt(25);
+    m_appRow.scheduleAction = stmt.columnInt(26);
+    m_appRow.scheduleTime = stmt.columnDateTime(27);
+    m_appRow.creatTime = stmt.columnDateTime(28);
+    m_appRow.alerted = stmt.columnBool(29);
 
     return true;
 }
@@ -287,6 +289,8 @@ QString AppListModel::sqlBase() const
            "    t.blocked,"
            "    t.kill_process,"
            "    t.groups_mask,"
+           "    t.in_limit_enabled,"
+           "    t.out_limit_enabled,"
            "    t.in_limit_id,"
            "    t.out_limit_id,"
            "    t.accept_zones,"

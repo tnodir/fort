@@ -72,6 +72,8 @@ CREATE TABLE app(
   blocked BOOLEAN NOT NULL,
   kill_process BOOLEAN NOT NULL DEFAULT 0,
   groups_mask INTEGER NOT NULL DEFAULT 0, -- group ids bit mask
+  in_limit_enabled BOOLEAN NOT NULL DEFAULT 1,
+  out_limit_enabled BOOLEAN NOT NULL DEFAULT 1,
   in_limit_id INTEGER,
   out_limit_id INTEGER,
   accept_zones INTEGER NOT NULL DEFAULT 0, -- zone ids bit mask

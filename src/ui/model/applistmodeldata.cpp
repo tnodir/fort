@@ -114,14 +114,16 @@ QVariant dataDisplaySpeedLimits(const App &app, int role)
 
     auto confSpeedLimitManager = Fort::confSpeedLimitManager();
 
+    const FORT_SPEED_LIMIT_IDS speedLimits = app.activeSpeedLimits();
+
     QStringList list;
 
-    if (app.speedLimits.in_limit_id != 0) {
-        list << confSpeedLimitManager->speedLimitNameById(app.speedLimits.in_limit_id);
+    if (speedLimits.in_limit_id != 0) {
+        list << confSpeedLimitManager->speedLimitNameById(speedLimits.in_limit_id);
     }
 
-    if (app.speedLimits.out_limit_id != 0) {
-        list << confSpeedLimitManager->speedLimitNameById(app.speedLimits.out_limit_id);
+    if (speedLimits.out_limit_id != 0) {
+        list << confSpeedLimitManager->speedLimitNameById(speedLimits.out_limit_id);
     }
 
     return list.join('\n');
