@@ -70,8 +70,8 @@ private:
     QAction *m_actRemoveConn = nullptr;
     QAction *m_actClearAll = nullptr;
     QAction *m_actFind = nullptr;
-    QLineEdit *m_editSearch = nullptr;
     QToolButton *m_btClearAll = nullptr;
+    QLineEdit *m_editSearch = nullptr;
     QPushButton *m_btOptions = nullptr;
     QCheckBox *m_cbAutoScroll = nullptr;
     QCheckBox *m_cbShowHostNames = nullptr;

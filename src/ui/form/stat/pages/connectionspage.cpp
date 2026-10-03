@@ -69,9 +69,9 @@ void ConnectionsPage::onRetranslateUi()
     m_actClearAll->setText(tr("Clear All"));
     m_actFind->setText(tr("Find"));
 
-    m_editSearch->setPlaceholderText(tr("Search") + " /");
-
     m_btClearAll->setText(tr("Clear All"));
+
+    m_editSearch->setPlaceholderText(tr("Search") + " /");
 
     m_btOptions->setText(tr("Options"));
     m_cbAutoScroll->setText(tr("Auto scroll"));
@@ -152,9 +152,9 @@ QLayout *ConnectionsPage::setupHeader()
 
     layout->addWidget(m_btEdit);
     layout->addWidget(ControlUtil::createVSeparator());
-    layout->addWidget(m_editSearch);
-    layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btClearAll);
+    layout->addWidget(ControlUtil::createVSeparator());
+    layout->addWidget(m_editSearch);
     layout->addStretch();
     layout->addWidget(m_btOptions);
 
