@@ -207,6 +207,7 @@ QLayout *SpeedLimitEditDialog::setupDirectionLayout()
 QLayout *SpeedLimitEditDialog::setupLimitLayout()
 {
     auto layout = new QFormLayout();
+    layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
 
     // Speed
     m_scSpeed = new SpinCombo();
@@ -219,6 +220,7 @@ QLayout *SpeedLimitEditDialog::setupLimitLayout()
 
     // Latency
     m_spinLatency = ControlUtil::createSpinBox();
+    m_spinLatency->setFixedWidth(110);
     m_spinLatency->setRange(0, SPEED_LIMIT_LATENCY_MAX);
     m_spinLatency->setSuffix(" ms");
 
@@ -227,6 +229,7 @@ QLayout *SpeedLimitEditDialog::setupLimitLayout()
 
     // Packet Loss
     m_spinPacketLoss = new DoubleSpinBox();
+    m_spinPacketLoss->setFixedWidth(110);
     m_spinPacketLoss->setRange(0, 100.0);
     m_spinPacketLoss->setDecimals(2);
     m_spinPacketLoss->setSuffix(" %");
@@ -236,6 +239,7 @@ QLayout *SpeedLimitEditDialog::setupLimitLayout()
 
     // Buffer Size
     m_spinBufferSize = ControlUtil::createSpinBox();
+    m_spinBufferSize->setFixedWidth(110);
     m_spinBufferSize->setRange(0, SPEED_LIMIT_BUFFER_SIZE_MAX);
     m_spinBufferSize->setSuffix(" bytes");
 
