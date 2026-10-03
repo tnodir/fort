@@ -1,4 +1,7 @@
-/* Fort Firewall Packets Shaping */
+/* Fort Firewall Packets Shaping
+ *
+ * Based on win-shaper's packet_queue.c, Copyright 2016 Google Inc., Apache License 2.0
+ */
 
 #include "fortpkt_shaper.h"
 
