@@ -215,6 +215,8 @@ struct OldAppGroup
     bool limitInEnabled : 1 = false;
     bool limitOutEnabled : 1 = false;
 
+    quint8 periodId = 0; // migrated Time Period
+
     quint16 limitPacketLoss = 0;
 
     quint32 limitLatency = 0;
@@ -336,7 +338,7 @@ QString oldAppGroupAppIdsSql()
     return "SELECT app_id FROM " + oldEntityName("app") + " WHERE app_group_id = ?1";
 }
 
-bool migrateOldAppGroup(SqliteDb *db, const OldAppGroup &appGroup)
+bool migrateOldAppGroup(SqliteDb *db, OldAppGroup &appGroup)
 {
     bool ok = true;
 
@@ -350,8 +352,7 @@ bool migrateOldAppGroup(SqliteDb *db, const OldAppGroup &appGroup)
         return false;
     }
 
-    const int periodId =
-            hasOldPeriod(appGroup.periodEnabled, appGroup.periodFrom, appGroup.periodTo)
+    appGroup.periodId = hasOldPeriod(appGroup.periodEnabled, appGroup.periodFrom, appGroup.periodTo)
             ? migrateTimePeriod(db, appGroup.periodFrom, appGroup.periodTo)
             : 0;
 
@@ -360,7 +361,7 @@ bool migrateOldAppGroup(SqliteDb *db, const OldAppGroup &appGroup)
         appGroup.enabled,
         appGroup.periodEnabled,
         appGroup.name,
-        DbVar::nullable(periodId),
+        DbVar::nullable(appGroup.periodId),
         DateUtil::now(),
     };
 
@@ -411,7 +412,9 @@ bool migrateOldAppGroupSpeedLimit(SqliteDb *db, const OldAppGroup &appGroup, boo
         limitId,
         limitEnabled,
         inbound,
+        appGroup.periodEnabled, // nor did it limit out of its period
         appGroup.name,
+        DbVar::nullable(appGroup.periodId),
         appGroup.limitPacketLoss,
         appGroup.limitLatency,
         kbps,
@@ -420,9 +423,9 @@ bool migrateOldAppGroupSpeedLimit(SqliteDb *db, const OldAppGroup &appGroup, boo
     };
 
     DbQuery(db, &ok)
-            .sql("INSERT INTO speed_limit(limit_id, enabled, inbound, name,"
-                 "    packet_loss, latency, kbps, bufsize, mod_time)"
-                 "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9);")
+            .sql("INSERT INTO speed_limit(limit_id, enabled, inbound, period_enabled, name,"
+                 "    period_id, packet_loss, latency, kbps, bufsize, mod_time)"
+                 "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11);")
             .vars(vars)
             .executeOk();
     if (!ok)
@@ -454,7 +457,7 @@ void migrateAppGroups(SqliteDb *db, quint32 appGroupBits)
     if (!loadOldAppGroups(db, appGroupBits, appGroups))
         return;
 
-    for (const OldAppGroup &appGroup : std::as_const(appGroups)) {
+    for (OldAppGroup &appGroup : appGroups) {
         qCDebug(LC) << "Migrate: App. Group:" << appGroup.name;
 
         if (!migrateOldAppGroup(db, appGroup))

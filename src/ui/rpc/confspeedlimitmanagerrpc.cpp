@@ -100,8 +100,8 @@ bool ConfSpeedLimitManagerRpc::updateSpeedLimitEnabled(quint8 limitId, bool enab
 
 QVariantList ConfSpeedLimitManagerRpc::speedLimitToVarList(const SpeedLimit &limit)
 {
-    return { limit.enabled, limit.inbound, limit.limitId, limit.packetLoss, limit.latency,
-        limit.kbps, limit.bufferSize, limit.name, limit.notes };
+    return { limit.enabled, limit.inbound, limit.periodEnabled, limit.limitId, limit.periodId,
+        limit.packetLoss, limit.latency, limit.kbps, limit.bufferSize, limit.name, limit.notes };
 }
 
 SpeedLimit ConfSpeedLimitManagerRpc::varListToSpeedLimit(const QVariantList &v)
@@ -109,13 +109,15 @@ SpeedLimit ConfSpeedLimitManagerRpc::varListToSpeedLimit(const QVariantList &v)
     SpeedLimit limit;
     limit.enabled = v.value(0).toBool();
     limit.inbound = v.value(1).toBool();
-    limit.limitId = v.value(2).toUInt();
-    limit.packetLoss = v.value(3).toUInt();
-    limit.latency = v.value(4).toUInt();
-    limit.kbps = v.value(5).toUInt();
-    limit.bufferSize = v.value(6).toUInt();
-    limit.name = v.value(7).toString();
-    limit.notes = v.value(8).toString();
+    limit.periodEnabled = v.value(2).toBool();
+    limit.limitId = v.value(3).toUInt();
+    limit.periodId = v.value(4).toUInt();
+    limit.packetLoss = v.value(5).toUInt();
+    limit.latency = v.value(6).toUInt();
+    limit.kbps = v.value(7).toUInt();
+    limit.bufferSize = v.value(8).toUInt();
+    limit.name = v.value(9).toString();
+    limit.notes = v.value(10).toString();
     return limit;
 }
 

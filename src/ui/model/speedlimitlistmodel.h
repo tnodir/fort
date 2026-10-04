@@ -40,6 +40,8 @@ public:
 
     const SpeedLimitRow &speedLimitRowAt(int row) const;
 
+    static QString menuLabel(const SpeedLimitRow &speedLimitRow);
+
     void setStatusData(const QByteArray &v);
 
     static QString columnName(const SpeedLimitListColumn column);

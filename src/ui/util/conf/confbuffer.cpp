@@ -664,7 +664,8 @@ void ConfBuffer::writeGroupFlags(quint32 activeMask)
     confGroupFlags->enabled_mask = activeMask;
 }
 
-void ConfBuffer::writeSpeedLimits(const ConfSpeedLimitsWalker &confSpeedLimitsWalker)
+void ConfBuffer::writeSpeedLimits(
+        const ConfSpeedLimitsWalker &confSpeedLimitsWalker, quint32 activeMask)
 {
     // Resize the buffer
     buffer().resize(sizeof(FORT_CONF_SPEED_LIMITS));
@@ -685,10 +686,6 @@ void ConfBuffer::writeSpeedLimits(const ConfSpeedLimitsWalker &confSpeedLimitsWa
 
         confLimits->mask |= limitBit;
 
-        if (limit.enabled) {
-            confLimits->enabled_mask |= limitBit;
-        }
-
         PFORT_SPEED_LIMIT confLimit = &confLimits->limits[limitIndex];
 
         confLimit->plr = limit.packetLoss;
@@ -698,6 +695,8 @@ void ConfBuffer::writeSpeedLimits(const ConfSpeedLimitsWalker &confSpeedLimitsWa
 
         return true;
     });
+
+    confLimits->enabled_mask = (activeMask & confLimits->mask);
 }
 
 void ConfBuffer::writeSpeedLimitFlags(quint32 enabledMask)

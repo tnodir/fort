@@ -9,16 +9,19 @@ inline constexpr int DefaultSpeedLimitBufferSize = 150000;
 class SpeedLimit
 {
 public:
+    bool isPeriodEqual(const SpeedLimit &o) const;
     bool isOptionsEqual(const SpeedLimit &o) const;
     bool isNameEqual(const SpeedLimit &o) const;
 
-    QString menuLabel() const;
+    QString menuLabel(const QString &periodName) const;
 
 public:
     bool enabled : 1 = true;
     bool inbound : 1 = true;
+    bool periodEnabled : 1 = true;
 
     quint8 limitId = 0;
+    quint8 periodId = 0;
 
     quint16 packetLoss = 0; // in 1/100 percent
 

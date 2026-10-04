@@ -61,8 +61,10 @@ CREATE TABLE speed_limit(
   limit_id INTEGER PRIMARY KEY,
   enabled BOOLEAN NOT NULL,
   inbound BOOLEAN NOT NULL,
+  period_enabled BOOLEAN NOT NULL DEFAULT 1,
   name TEXT NOT NULL,
   notes TEXT,
+  period_id INTEGER,
   packet_loss INTEGER NOT NULL DEFAULT 0, -- in 1/100 percent
   latency INTEGER NOT NULL DEFAULT 0, -- milliseconds
   kbps INTEGER NOT NULL, -- kilobits per second

@@ -16,6 +16,7 @@ class LineEdit;
 class PlainTextEdit;
 class SpeedLimitsController;
 class SpinCombo;
+class TimePeriodSelector;
 
 class SpeedLimitEditDialog : public QDialog
 {
@@ -70,6 +71,7 @@ private:
     QDoubleSpinBox *m_spinPacketLoss = nullptr;
     QLabel *m_labelBufferSize = nullptr;
     QSpinBox *m_spinBufferSize = nullptr;
+    TimePeriodSelector *m_periodSelector = nullptr;
     QPushButton *m_btOk = nullptr;
     QPushButton *m_btCancel = nullptr;
 

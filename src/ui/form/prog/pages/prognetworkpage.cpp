@@ -200,7 +200,7 @@ void ProgNetworkPage::updateSpeedLimitCombos()
 
         QComboBox *combo = speedLimitRow.inbound ? m_comboSpeedLimitIn : m_comboSpeedLimitOut;
 
-        combo->addItem(speedLimitRow.menuLabel(), int(speedLimitRow.limitId));
+        combo->addItem(SpeedLimitListModel::menuLabel(speedLimitRow), int(speedLimitRow.limitId));
     }
 
     retranslateSpeedLimitFields();

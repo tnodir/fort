@@ -13,6 +13,7 @@
 #include <form/controls/lineedit.h>
 #include <form/controls/plaintextedit.h>
 #include <form/controls/spincombo.h>
+#include <form/controls/timeperiodselector.h>
 #include <manager/windowmanager.h>
 #include <util/formatutil.h>
 #include <util/guiutil.h>
@@ -61,6 +62,9 @@ void SpeedLimitEditDialog::initialize(const SpeedLimit &speedLimit)
     m_spinPacketLoss->setValue(double(speedLimit.packetLoss) / 100.0);
     m_spinBufferSize->setValue(int(speedLimit.bufferSize));
 
+    m_periodSelector->setPeriodEnabled(speedLimit.periodEnabled);
+    m_periodSelector->setPeriodId(speedLimit.periodId);
+
     initializeFocus();
 }
 
@@ -86,6 +90,9 @@ void SpeedLimitEditDialog::retranslateUi()
     m_labelLatency->setText(tr("Latency:"));
     m_labelPacketLoss->setText(tr("Packet Loss:"));
     m_labelBufferSize->setText(tr("Buffer Size:"));
+
+    m_periodSelector->retranslateUi();
+    m_periodSelector->setToolTip(tr("The Speed Limit is active only in this Time Period."));
 
     m_btOk->setText(tr("OK"));
     m_btCancel->setText(tr("Cancel"));
@@ -145,6 +152,9 @@ QLayout *SpeedLimitEditDialog::setupMainLayout()
     // Limit
     auto limitLayout = setupLimitLayout();
 
+    // Time Period
+    m_periodSelector = new TimePeriodSelector();
+
     // OK/Cancel
     auto buttonsLayout = setupButtons();
 
@@ -154,6 +164,8 @@ QLayout *SpeedLimitEditDialog::setupMainLayout()
     layout->addLayout(directionLayout);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(limitLayout);
+    layout->addWidget(ControlUtil::createHSeparator());
+    layout->addWidget(m_periodSelector, 0, Qt::AlignLeft);
     layout->addWidget(ControlUtil::createHSeparator());
     layout->addLayout(buttonsLayout);
 
@@ -314,4 +326,6 @@ void SpeedLimitEditDialog::fillSpeedLimit(SpeedLimit &speedLimit) const
     speedLimit.latency = quint32(m_spinLatency->value());
     speedLimit.packetLoss = quint16(qRound(m_spinPacketLoss->value() * 100.0));
     speedLimit.bufferSize = quint32(m_spinBufferSize->value());
+    speedLimit.periodEnabled = m_periodSelector->periodEnabled();
+    speedLimit.periodId = m_periodSelector->periodId();
 }

@@ -3,6 +3,7 @@
 #include <QLoggingCategory>
 
 #include <sqlite/dbquery.h>
+#include <sqlite/dbvar.h>
 #include <sqlite/sqlitedb.h>
 #include <sqlite/sqlitestmt.h>
 
@@ -15,6 +16,7 @@
 #include <util/ioc/ioccontainer.h>
 
 #include "confmanager.h"
+#include "conftimeperiodmanager.h"
 
 namespace {
 
@@ -24,6 +26,8 @@ const QLoggingCategory LC("confSpeedLimit");
     "    t.limit_id,"                                                                              \
     "    t.enabled,"                                                                               \
     "    t.inbound,"                                                                               \
+    "    t.period_enabled,"                                                                        \
+    "    t.period_id,"                                                                             \
     "    t.packet_loss,"                                                                           \
     "    t.latency,"                                                                               \
     "    t.kbps,"                                                                                  \
@@ -36,14 +40,16 @@ const char *const sqlSelectSpeedLimits = "SELECT" SELECT_SPEED_LIMIT_FIELDS "  F
                                          "  ORDER BY t.limit_id;";
 
 const char *const sqlInsertSpeedLimit = "INSERT INTO speed_limit(limit_id, name, notes, enabled,"
-                                        "    inbound, packet_loss, latency, kbps, bufsize,"
-                                        "    mod_time)"
-                                        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10);";
+                                        "    inbound, period_enabled, period_id, packet_loss,"
+                                        "    latency, kbps, bufsize, mod_time)"
+                                        "  VALUES(?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11,"
+                                        "    ?12);";
 
 const char *const sqlUpdateSpeedLimit = "UPDATE speed_limit"
                                         "  SET name = ?2, notes = ?3, enabled = ?4, inbound = ?5,"
-                                        "    packet_loss = ?6, latency = ?7, kbps = ?8,"
-                                        "    bufsize = ?9, mod_time = ?10"
+                                        "    period_enabled = ?6, period_id = ?7,"
+                                        "    packet_loss = ?8, latency = ?9, kbps = ?10,"
+                                        "    bufsize = ?11, mod_time = ?12"
                                         "  WHERE limit_id = ?1;";
 
 const char *const sqlSelectSpeedLimitNameById = "SELECT name FROM speed_limit WHERE limit_id = ?1;";
@@ -63,9 +69,6 @@ const char *const sqlUpdateSpeedLimitName = "UPDATE speed_limit SET name = ?2 WH
 
 const char *const sqlUpdateSpeedLimitEnabled =
         "UPDATE speed_limit SET enabled = ?2 WHERE limit_id = ?1;";
-
-const char *const sqlSelectEnabledSpeedLimitIds = "SELECT limit_id FROM speed_limit"
-                                                  "  WHERE enabled = 1;";
 
 bool driverWriteSpeedLimits(ConfBuffer &confBuf, bool onlyFlags = false)
 {
@@ -93,10 +96,14 @@ ConfSpeedLimitManager::ConfSpeedLimitManager(QObject *parent) : ConfManagerBase(
 void ConfSpeedLimitManager::setUp()
 {
     auto confManager = Fort::dependency<ConfManager>();
+    auto confTimePeriodManager = Fort::dependency<ConfTimePeriodManager>();
 
     // The imported DB may reuse the ids
     connect(confManager, &ConfManager::imported, this,
             &ConfSpeedLimitManager::clearSpeedLimitNamesCache);
+
+    connect(confTimePeriodManager, &ConfTimePeriodManager::activePeriodsChanged, this,
+            &ConfSpeedLimitManager::updateDriverSpeedLimitFlags);
 }
 
 QString ConfSpeedLimitManager::speedLimitNameById(quint8 limitId)
@@ -140,6 +147,8 @@ bool ConfSpeedLimitManager::addOrUpdateSpeedLimit(SpeedLimit &limit)
             limit.notes,
             limit.enabled,
             limit.inbound,
+            limit.periodEnabled,
+            DbVar::nullable(limit.periodId),
             limit.packetLoss,
             limit.latency,
             limit.kbps,
@@ -228,7 +237,7 @@ bool ConfSpeedLimitManager::updateSpeedLimitEnabled(quint8 limitId, bool enabled
     if (ok) {
         emit speedLimitUpdated();
 
-        updateDriverSpeedLimitFlags();
+        updateDriverSpeedLimitFlags(); // the Speed Limit's Time Period may keep it inactive
     }
 
     return ok;
@@ -254,34 +263,52 @@ bool ConfSpeedLimitManager::walkSpeedLimits(
 
 void ConfSpeedLimitManager::updateDriverSpeedLimits()
 {
+    const quint32 activeMask = activeSpeedLimitsMask();
+
     ConfBuffer confBuf;
 
-    confBuf.writeSpeedLimits(*this);
+    confBuf.writeSpeedLimits(*this, activeMask);
 
-    driverWriteSpeedLimits(confBuf);
+    if (driverWriteSpeedLimits(confBuf)) {
+        m_driverActiveMask = activeMask;
+    }
 }
 
 void ConfSpeedLimitManager::updateDriverSpeedLimitFlags()
 {
-    quint32 enabledMask = 0;
+    const quint32 activeMask = activeSpeedLimitsMask();
 
-    SqliteStmt stmt;
-    if (!DbQuery(sqliteDb()).sql(sqlSelectEnabledSpeedLimitIds).prepare(stmt))
+    if (activeMask == m_driverActiveMask)
         return;
-
-    while (stmt.step() == SqliteStmt::StepRow) {
-        const int limitId = stmt.columnInt(0);
-
-        if (limitId > 0 && limitId <= ConfUtil::speedLimitMaxCount()) {
-            enabledMask |= (quint32(1) << (limitId - 1));
-        }
-    }
 
     ConfBuffer confBuf;
 
-    confBuf.writeSpeedLimitFlags(enabledMask);
+    confBuf.writeSpeedLimitFlags(activeMask);
 
-    driverWriteSpeedLimits(confBuf, /*onlyFlags=*/true);
+    if (driverWriteSpeedLimits(confBuf, /*onlyFlags=*/true)) {
+        m_driverActiveMask = activeMask;
+    }
+}
+
+quint32 ConfSpeedLimitManager::activeSpeedLimitsMask() const
+{
+    auto confTimePeriodManager = Fort::confTimePeriodManager();
+
+    quint32 activeMask = 0;
+
+    walkSpeedLimits([&](const SpeedLimit &limit) -> bool {
+        if (Q_UNLIKELY(limit.limitId <= 0 || limit.limitId > ConfUtil::speedLimitMaxCount()))
+            return true; // skip an out of range Speed Limit
+
+        if (limit.enabled
+                && confTimePeriodManager->isTimePeriodActive(limit.periodEnabled, limit.periodId)) {
+            activeMask |= (quint32(1) << (limit.limitId - 1));
+        }
+
+        return true;
+    });
+
+    return activeMask;
 }
 
 void ConfSpeedLimitManager::setupSpeedLimitNamesCache()
@@ -302,11 +329,13 @@ void ConfSpeedLimitManager::fillSpeedLimit(SpeedLimit &limit, const SqliteStmt &
     limit.limitId = stmt.columnInt(0);
     limit.enabled = stmt.columnBool(1);
     limit.inbound = stmt.columnBool(2);
-    limit.packetLoss = stmt.columnInt(3);
-    limit.latency = stmt.columnUInt(4);
-    limit.kbps = stmt.columnUInt(5);
-    limit.bufferSize = stmt.columnUInt(6);
-    limit.name = stmt.columnText(7);
-    limit.notes = stmt.columnText(8);
-    limit.modTime = stmt.columnDateTime(9);
+    limit.periodEnabled = stmt.columnBool(3);
+    limit.periodId = stmt.columnInt(4);
+    limit.packetLoss = stmt.columnInt(5);
+    limit.latency = stmt.columnUInt(6);
+    limit.kbps = stmt.columnUInt(7);
+    limit.bufferSize = stmt.columnUInt(8);
+    limit.name = stmt.columnText(9);
+    limit.notes = stmt.columnText(10);
+    limit.modTime = stmt.columnDateTime(11);
 }

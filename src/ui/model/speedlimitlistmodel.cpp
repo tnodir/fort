@@ -8,6 +8,7 @@
 
 #include <conf/confmanager.h>
 #include <conf/confspeedlimitmanager.h>
+#include <conf/conftimeperiodmanager.h>
 #include <driver/drivercommon.h>
 #include <fortglobal.h>
 #include <model/connlistmodel.h>
@@ -26,7 +27,8 @@ using dataDisplay_func = QVariant (*)(
 QVariant dataDisplayName(
         const SpeedLimitRow &speedLimitRow, const SpeedLimitStatus & /*status*/, int /*role*/)
 {
-    return QString("%1) %2").arg(QString::number(speedLimitRow.limitId), speedLimitRow.menuLabel());
+    return QString("%1) %2").arg(
+            QString::number(speedLimitRow.limitId), SpeedLimitListModel::menuLabel(speedLimitRow));
 }
 
 QVariant dataDisplayQueue(
@@ -107,6 +109,7 @@ void SpeedLimitListModel::setUp()
 {
     auto confManager = Fort::dependency<ConfManager>();
     auto confSpeedLimitManager = Fort::dependency<ConfSpeedLimitManager>();
+    auto confTimePeriodManager = Fort::dependency<ConfTimePeriodManager>();
 
     connect(confManager, &ConfManager::imported, this, &TableItemModel::reset);
 
@@ -115,6 +118,12 @@ void SpeedLimitListModel::setUp()
     connect(confSpeedLimitManager, &ConfSpeedLimitManager::speedLimitRemoved, this,
             &TableItemModel::reset);
     connect(confSpeedLimitManager, &ConfSpeedLimitManager::speedLimitUpdated, this,
+            &TableItemModel::refresh);
+
+    // The Time Periods' names are shown, the deleted Time Period is cleared from the Speed Limits
+    connect(confTimePeriodManager, &ConfTimePeriodManager::timePeriodRemoved, this,
+            &TableItemModel::refresh);
+    connect(confTimePeriodManager, &ConfTimePeriodManager::timePeriodUpdated, this,
             &TableItemModel::refresh);
 }
 
@@ -257,6 +266,13 @@ const SpeedLimitRow &SpeedLimitListModel::speedLimitRowAt(int row) const
     return m_speedLimitRow;
 }
 
+QString SpeedLimitListModel::menuLabel(const SpeedLimitRow &speedLimitRow)
+{
+    const quint8 periodId = speedLimitRow.periodEnabled ? speedLimitRow.periodId : 0;
+
+    return speedLimitRow.menuLabel(confTimePeriodManager()->timePeriodNameById(periodId));
+}
+
 void SpeedLimitListModel::setStatusData(const QByteArray &v)
 {
     if (m_statusData == v)
@@ -300,13 +316,15 @@ bool SpeedLimitListModel::updateSpeedLimitRow(
     speedLimitRow.limitId = stmt.columnInt(0);
     speedLimitRow.enabled = stmt.columnBool(1);
     speedLimitRow.inbound = stmt.columnBool(2);
-    speedLimitRow.packetLoss = stmt.columnInt(3);
-    speedLimitRow.latency = stmt.columnUInt(4);
-    speedLimitRow.kbps = stmt.columnUInt(5);
-    speedLimitRow.bufferSize = stmt.columnUInt(6);
-    speedLimitRow.name = stmt.columnText(7);
-    speedLimitRow.notes = stmt.columnText(8);
-    speedLimitRow.modTime = stmt.columnDateTime(9);
+    speedLimitRow.periodEnabled = stmt.columnBool(3);
+    speedLimitRow.periodId = stmt.columnInt(4);
+    speedLimitRow.packetLoss = stmt.columnInt(5);
+    speedLimitRow.latency = stmt.columnUInt(6);
+    speedLimitRow.kbps = stmt.columnUInt(7);
+    speedLimitRow.bufferSize = stmt.columnUInt(8);
+    speedLimitRow.name = stmt.columnText(9);
+    speedLimitRow.notes = stmt.columnText(10);
+    speedLimitRow.modTime = stmt.columnDateTime(11);
 
     return true;
 }
@@ -317,6 +335,8 @@ QString SpeedLimitListModel::sqlBase() const
            "    limit_id,"
            "    enabled,"
            "    inbound,"
+           "    period_enabled,"
+           "    period_id,"
            "    packet_loss,"
            "    latency,"
            "    kbps,"

@@ -42,12 +42,16 @@ signals:
     void speedLimitUpdated();
 
 private:
+    quint32 activeSpeedLimitsMask() const;
+
     void setupSpeedLimitNamesCache();
     void clearSpeedLimitNamesCache();
 
     static void fillSpeedLimit(SpeedLimit &limit, const SqliteStmt &stmt);
 
 private:
+    quint32 m_driverActiveMask = 0; // last written to the driver
+
     mutable QHash<quint8, QString> m_speedLimitNamesCache;
 };
 

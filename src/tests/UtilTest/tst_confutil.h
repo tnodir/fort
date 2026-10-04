@@ -440,14 +440,14 @@ TEST_F(ConfUtilTest, speedLimitsWriteRead)
     ConfBuffer confBuf;
     TestSpeedLimits testLimits;
 
-    confBuf.writeSpeedLimits(testLimits);
+    confBuf.writeSpeedLimits(testLimits, /*activeMask=*/(1u << 30) | (1u << 4) | 0b001u);
     ASSERT_EQ(size_t(confBuf.buffer().size()), sizeof(FORT_CONF_SPEED_LIMITS));
 
     PCFORT_CONF_SPEED_LIMITS confLimits = PCFORT_CONF_SPEED_LIMITS(confBuf.buffer().constData());
 
     // Bit N is Speed Limit id N + 1
     ASSERT_EQ(confLimits->mask, (1u << 31) | (1u << 30) | 0b101u);
-    ASSERT_EQ(confLimits->enabled_mask, (1u << 30) | 0b001u);
+    ASSERT_EQ(confLimits->enabled_mask, (1u << 30) | 0b001u); // only the configured ones
 
     const FORT_SPEED_LIMIT &limit1 = confLimits->limits[0];
     ASSERT_EQ(limit1.plr, 150);

@@ -56,7 +56,7 @@ public slots:
     void writeGroups(const ConfGroupsWalker &confGroupsWalker, quint32 activeMask);
     void writeGroupFlags(quint32 activeMask);
 
-    void writeSpeedLimits(const ConfSpeedLimitsWalker &confSpeedLimitsWalker);
+    void writeSpeedLimits(const ConfSpeedLimitsWalker &confSpeedLimitsWalker, quint32 activeMask);
     void writeSpeedLimitFlags(quint32 enabledMask);
 
 private:
