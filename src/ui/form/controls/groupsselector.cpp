@@ -59,8 +59,8 @@ void GroupsSelector::retranslateUi()
     retranslateGroupsText();
 
     this->setToolTip(tr("Select Groups.\n"
-                        "A program is enabled only if ALL of its exclusive groups are enabled,"
-                        " and at least one of its groups is enabled."));
+                        "A program is enabled only if ANY of its exclusive groups is enabled,"
+                        " or, without exclusive groups, ANY of its groups is enabled."));
 }
 
 void GroupsSelector::retranslateGroupsText()

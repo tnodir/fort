@@ -64,8 +64,8 @@ void GroupEditDialog::retranslateUi()
     m_cbEnabled->setText(tr("Enabled"));
     m_cbExclusive->setText(tr("Exclusive"));
     m_cbExclusive->setToolTip(
-            tr("A program is enabled only if ALL of its exclusive groups are enabled,"
-               " and at least one of its groups is enabled."));
+            tr("A program is enabled only if ANY of its exclusive groups is enabled,"
+               " or, without exclusive groups, ANY of its groups is enabled."));
 
     m_ctpPeriod->checkBox()->setText(tr("time period:"));
     m_ctpPeriod->setToolTip(tr("The Group is active only in this time period."));

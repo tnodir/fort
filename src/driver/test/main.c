@@ -174,12 +174,14 @@ static void test_conf_groups(void)
 
     assert(!TEST_BLOCKED(TEST_GROUP_BIT(3))); /* exclusive enabled */
     assert(TEST_BLOCKED(TEST_GROUP_BIT(4))); /* exclusive disabled */
-    assert(TEST_BLOCKED(TEST_GROUP_BIT(3) | TEST_GROUP_BIT(4))); /* all exclusive must be enabled */
+    assert(!TEST_BLOCKED(TEST_GROUP_BIT(3) | TEST_GROUP_BIT(4))); /* any exclusive enabled */
 
     assert(TEST_BLOCKED(TEST_GROUP_BIT(1) | TEST_GROUP_BIT(4))); /* exclusive beats non-exclusive */
     assert(!TEST_BLOCKED(TEST_GROUP_BIT(1) | TEST_GROUP_BIT(3))); /* both satisfied */
-    assert(!TEST_BLOCKED(TEST_GROUP_BIT(2) | TEST_GROUP_BIT(3))); /* any Group enabled */
+    assert(!TEST_BLOCKED(TEST_GROUP_BIT(2) | TEST_GROUP_BIT(3))); /* exclusive enabled */
     assert(TEST_BLOCKED(TEST_GROUP_BIT(2) | TEST_GROUP_BIT(4))); /* no Group enabled */
+    assert(!TEST_BLOCKED(TEST_GROUP_BIT(2) | TEST_GROUP_BIT(3) | TEST_GROUP_BIT(4)));
+    assert(TEST_BLOCKED(TEST_GROUP_BIT(1) | TEST_GROUP_BIT(31) | TEST_GROUP_BIT(4)));
 
     assert(!TEST_BLOCKED(TEST_GROUP_BIT(20))); /* removed Group is ignored */
     assert(TEST_BLOCKED(TEST_GROUP_BIT(2) | TEST_GROUP_BIT(20)));

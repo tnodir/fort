@@ -358,16 +358,14 @@ FORT_API BOOL fort_conf_groups_mask_blocked(PCFORT_CONF_GROUPS groups, UINT32 gr
 
     const UINT32 enabled_mask = (groups_mask & groups->enabled_mask);
 
-    /* All the App's exclusive Groups must be enabled */
+    /* Any of the App's exclusive Groups must be enabled */
     const UINT32 excl_mask = (groups_mask & groups->exclusive_mask);
-    if ((excl_mask & ~enabled_mask) != 0)
-        return TRUE;
+    if (excl_mask != 0) {
+        return (excl_mask & enabled_mask) == 0;
+    }
 
     /* Any of the App's Groups must be enabled */
-    if (enabled_mask == 0)
-        return TRUE;
-
-    return FALSE;
+    return enabled_mask == 0;
 }
 
 FORT_API UINT16 fort_conf_groups_rules_conn_filtered(PCFORT_CONF_GROUPS groups,
