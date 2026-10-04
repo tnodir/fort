@@ -352,6 +352,11 @@ inline static BOOL fort_callout_ale_app_flags_blocked(
         return TRUE; /* block Program */
     }
 
+    if (app_data.flags.block_inbound && conn->inbound) {
+        conn->reason = FORT_CONN_REASON_BLOCK_INBOUND;
+        return TRUE; /* block Inbound */
+    }
+
     if (app_data.flags.lan_only && !conn->is_local_net) {
         conn->reason = FORT_CONN_REASON_LAN_ONLY;
         return TRUE; /* block LAN Only */
