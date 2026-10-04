@@ -84,6 +84,7 @@ SOURCES += \
     form/controls/tableview.cpp \
     form/controls/textarea2splitter.cpp \
     form/controls/textarea2splitterhandle.cpp \
+    form/controls/timeperiodselector.cpp \
     form/controls/toolbutton.cpp \
     form/controls/treeitemdelegate.cpp \
     form/controls/treeview.cpp \
@@ -380,6 +381,7 @@ HEADERS += \
     form/controls/tableview.h \
     form/controls/textarea2splitter.h \
     form/controls/textarea2splitterhandle.h \
+    form/controls/timeperiodselector.h \
     form/controls/toolbutton.h \
     form/controls/treeitemdelegate.h \
     form/controls/treeview.h \
