@@ -244,25 +244,26 @@ bool AppListModel::updateTableRow(const QVariantHash &vars, int /*row*/) const
     m_appRow.applyChild = stmt.columnBool(8);
     m_appRow.applySpecChild = stmt.columnBool(9);
     m_appRow.killChild = stmt.columnBool(10);
-    m_appRow.lanOnly = stmt.columnBool(11);
-    m_appRow.parked = stmt.columnBool(12);
-    m_appRow.logStat = stmt.columnBool(13);
-    m_appRow.logAllowedConn = stmt.columnBool(14);
-    m_appRow.logBlockedConn = stmt.columnBool(15);
-    m_appRow.blocked = stmt.columnBool(16);
-    m_appRow.killProcess = stmt.columnBool(17);
-    m_appRow.groups = stmt.columnUInt(18);
-    m_appRow.inLimitEnabled = stmt.columnBool(19);
-    m_appRow.outLimitEnabled = stmt.columnBool(20);
-    m_appRow.speedLimits.in_limit_id = stmt.columnUInt(21);
-    m_appRow.speedLimits.out_limit_id = stmt.columnUInt(22);
-    m_appRow.zones.accept_mask = stmt.columnUInt(23);
-    m_appRow.zones.reject_mask = stmt.columnUInt(24);
-    m_appRow.ruleId = stmt.columnUInt(25);
-    m_appRow.scheduleAction = stmt.columnInt(26);
-    m_appRow.scheduleTime = stmt.columnDateTime(27);
-    m_appRow.creatTime = stmt.columnDateTime(28);
-    m_appRow.alerted = stmt.columnBool(29);
+    m_appRow.blockInbound = stmt.columnBool(11);
+    m_appRow.lanOnly = stmt.columnBool(12);
+    m_appRow.parked = stmt.columnBool(13);
+    m_appRow.logStat = stmt.columnBool(14);
+    m_appRow.logAllowedConn = stmt.columnBool(15);
+    m_appRow.logBlockedConn = stmt.columnBool(16);
+    m_appRow.blocked = stmt.columnBool(17);
+    m_appRow.killProcess = stmt.columnBool(18);
+    m_appRow.groups = stmt.columnUInt(19);
+    m_appRow.inLimitEnabled = stmt.columnBool(20);
+    m_appRow.outLimitEnabled = stmt.columnBool(21);
+    m_appRow.speedLimits.in_limit_id = stmt.columnUInt(22);
+    m_appRow.speedLimits.out_limit_id = stmt.columnUInt(23);
+    m_appRow.zones.accept_mask = stmt.columnUInt(24);
+    m_appRow.zones.reject_mask = stmt.columnUInt(25);
+    m_appRow.ruleId = stmt.columnUInt(26);
+    m_appRow.scheduleAction = stmt.columnInt(27);
+    m_appRow.scheduleTime = stmt.columnDateTime(28);
+    m_appRow.creatTime = stmt.columnDateTime(29);
+    m_appRow.alerted = stmt.columnBool(30);
 
     return true;
 }
@@ -281,6 +282,7 @@ QString AppListModel::sqlBase() const
            "    t.apply_child,"
            "    t.apply_spec_child,"
            "    t.kill_child,"
+           "    t.block_inbound,"
            "    t.lan_only,"
            "    t.parked,"
            "    t.log_stat,"

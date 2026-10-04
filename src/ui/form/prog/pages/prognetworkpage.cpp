@@ -43,6 +43,7 @@ ProgNetworkPage::ProgNetworkPage(ProgramEditController *ctrl, QWidget *parent) :
 
 void ProgNetworkPage::onPageInitialize(const App &app)
 {
+    m_cbBlockInbound->setChecked(app.blockInbound);
     m_cbLanOnly->setChecked(app.lanOnly);
     m_btZones->setZones(app.zones.accept_mask);
     m_btZones->setUncheckedZones(app.zones.reject_mask);
@@ -53,7 +54,11 @@ void ProgNetworkPage::onPageInitialize(const App &app)
 
 void ProgNetworkPage::onRetranslateUi()
 {
-    m_cbLanOnly->setText(tr("Block Internet Traffic"));
+    m_labelBlock->setText(tr("Block:"));
+    m_cbBlockInbound->setText(tr("Inbound"));
+    m_cbBlockInbound->setToolTip(tr("Block Inbound Connections"));
+    m_cbLanOnly->setText(tr("Internet"));
+    m_cbLanOnly->setToolTip(tr("Block Internet Traffic"));
     m_btZones->retranslateUi();
 
     m_ruleSelector->retranslateUi();
@@ -112,6 +117,12 @@ void ProgNetworkPage::setupUi()
 
 QLayout *ProgNetworkPage::setupZonesRuleLayout()
 {
+    // Block
+    m_labelBlock = ControlUtil::createLabel();
+
+    // Block Inbound
+    m_cbBlockInbound = ControlUtil::createCheckBox();
+
     // LAN Only
     m_cbLanOnly = ControlUtil::createCheckBox(":/icons/hostname.png");
 
@@ -124,6 +135,8 @@ QLayout *ProgNetworkPage::setupZonesRuleLayout()
     m_ruleSelector->setMaximumWidth(300);
 
     auto layout = new QHBoxLayout();
+    layout->addWidget(m_labelBlock);
+    layout->addWidget(m_cbBlockInbound);
     layout->addWidget(m_cbLanOnly);
     layout->addWidget(ControlUtil::createVSeparator());
     layout->addWidget(m_btZones);
@@ -198,6 +211,7 @@ void ProgNetworkPage::updateSpeedLimitCombos()
 
 void ProgNetworkPage::fillApp(App &app) const
 {
+    app.blockInbound = m_cbBlockInbound->isChecked();
     app.lanOnly = m_cbLanOnly->isChecked();
 
     app.zones.accept_mask = m_btZones->zones();
